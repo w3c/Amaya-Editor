@@ -1271,6 +1271,21 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
+   PutQuestionMark put a question mark in the current PI.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         PutQuestionMark (char c)
+#else
+static void         PutQuestionMark (c)
+char                c;
+ 
+#endif
+{
+   PutInBuffer ('?');
+   PutInBuffer (c);
+}
+
+/*----------------------------------------------------------------------
    EndOfDeclaration
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1446,10 +1461,14 @@ static sourceTransition sourceAutomaton[] =
    {18, '>', (Proc) EndOfEmptyTag, 0},
 /* state 20: "<?" has been read; beginning of a Processing Instruction */
    {20, 'S', (Proc) Do_nothing, 20},
+   {20, '?', (Proc) Do_nothing, 22},
    {20, '*', (Proc) PutInBuffer, 21},
 /* state 21: reading a Processing Instruction */
-   {21, '>', (Proc) EndOfPI, 0},
+   {21, '?', (Proc) Do_nothing, 22},
    {21, '*', (Proc) PutInBuffer, 21},
+/* state 22: a question mark has been read in a Processing Instruction */
+   {22, '>', (Proc) EndOfPI, 0},
+   {22, '*', (Proc) PutQuestionMark, 21},
 
 /* sub automaton for reading entities in various contexts */
 /* state -1 means "return to calling state" */
