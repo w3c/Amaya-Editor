@@ -1061,9 +1061,10 @@ ThotWidget          toplevel;
    Parameters:
    document: the concerned document.
    view: the concerned view.
-   picture: label of the new entry. None creates a spave between buttons.
+   picture: label of the new entry. None creates a space between buttons.
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
+   info: text to display when the cursor stays on the button.
    Returns index
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1075,7 +1076,6 @@ View                view;
 Pixmap              picture;
 void                (*procedure) ();
 char               *info;
-
 #endif /* __STDC__ */
 {
    int                 frame, i, n, index;

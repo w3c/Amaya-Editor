@@ -1651,6 +1651,11 @@ View                view;
    list = fopen (localname, "w");
    TtaListView (document, view, list);
    fclose (list);
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, "/boxes.debug");
+   list = fopen (localname, "w");
+   TtaListBoxes (document, view, list);
+   fclose (list);
 #endif
 }
 

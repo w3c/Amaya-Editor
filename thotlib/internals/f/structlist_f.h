@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CountNodes ( PtrElement Noeud,
-                         FILE * outfile,
+extern void CountNodes ( PtrElement pNode,
+                         FILE * fileDescriptor,
                          int level );
 extern void TtaListAbstractTree ( Element root,
                                   FILE * fileDescriptor );
@@ -17,14 +17,17 @@ extern void TtaListView ( Document document,
 extern void NumberAbsBoxes ( PtrAbstractBox pP );
 extern void ListAbsBoxes ( PtrAbstractBox pAb,
                            int Indent,
-                           FILE * outfile );
-extern void ListBoxes ( Name fname,
-                        int frame );
+                           FILE * fileDescriptor );
+extern void ListBoxes ( int frame,
+                        FILE * fileDescriptor );
+extern void TtaListBoxes ( Document document,
+			   View view,
+			   FILE * fileDescriptor );
 
 #else /* __STDC__ */
 
-extern void CountNodes (/* PtrElement Noeud,
-                           FILE * outfile,
+extern void CountNodes (/* PtrElement pNode,
+                           FILE * fileDescriptor,
                            int level */);
 extern void TtaListAbstractTree (/* Element root,
                                     FILE * fileDescriptor */);
@@ -34,9 +37,12 @@ extern void TtaListView (/* Document document,
 extern void NumberAbsBoxes (/* PtrAbstractBox pP */);
 extern void ListAbsBoxes (/* PtrAbstractBox pAb,
                              int Indent,
-                             FILE * outfile */);
-extern void ListBoxes (/* Name fname,
-                          int frame */);
+                             FILE * fileDescriptor */);
+extern void ListBoxes (/* int frame,
+                          FILE * fileDescriptor */);
+extern void TtaListBoxes (/* Document document,
+			     View view,
+			     FILE * fileDescriptor */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
