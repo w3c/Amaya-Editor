@@ -1433,15 +1433,16 @@ int                 ymax;
       (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
     {
       /* Empty */
+      selected = (box == pFrame->FrSelectionBegin.VsBox &&
+		  box == pFrame->FrSelectionEnd.VsBox);
       if (pAb->AbLeafType == LtSymbol)
 	DisplayEmptyBox (box, frame, '2', selected);
       else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtGraphics)
 	{
-	  if ( box == pFrame->FrSelectionBegin.VsBox &&
-	       box == pFrame->FrSelectionEnd.VsBox)
-	     DisplayStringSelection (frame, 0, box->BxWidth, box);
-	     else if (ThotLocalActions[T_emptybox] != NULL)
-	     (*ThotLocalActions[T_emptybox]) (box, frame, '2', selected);
+	  if (selected)
+	    DisplayStringSelection (frame, 0, box->BxWidth, box);
+	  else if (ThotLocalActions[T_emptybox] != NULL)
+	    (*ThotLocalActions[T_emptybox]) (box, frame, '2', selected);
 	}
     }
   else if (pAb->AbLeafType == LtText)

@@ -397,9 +397,9 @@ PtrBox       pBox;
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
       
-      if (pBox->BxType == BoGhost
-	  || (pAb != NULL
-	      && TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
+      if (pBox->BxType == BoGhost ||
+	  (pAb != NULL &&
+	   TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
 	{
 	  /* the box is not displayed, select its children */
 	  if (pAb->AbFirstEnclosed != NULL)
@@ -469,8 +469,11 @@ PtrAbstractBox      pAb;
 		 pAb->AbLeafType == LtCompound ||
 		 (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
 		  pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+	       {
 		 /* it's not a terminal extremity of the selection */
-	       DisplayBgBoxSelection (frame, pAb->AbBox);
+		 if (pAb->AbVolume > 0)
+		   DisplayBgBoxSelection (frame, pAb->AbBox);
+	       }
 	  }
 	else if (pAb->AbLeafType == LtCompound)
 	   /* Sinon on parcours le sous-arbre */

@@ -1693,10 +1693,8 @@ int                 value;
 ThotBool            motif_conversion;
 #endif /* __STDC__ */
 {
-  if (DOT_PER_INCHE != 83)
-    /* converts the resolution of the screen, if needed */
-    value = (int) (((float) (value * DOT_PER_INCHE)) / 83.);
-  value = (value * 254) / (DOT_PER_INCHE * 10);
+  /* converts the resolution of the screen, if needed */
+  value = (int) (((float) value) * 25.4 / DOT_PER_INCHE);
   return value;
 }
 
@@ -1713,9 +1711,7 @@ int                 value;
 ThotBool            motif_conversion;
 #endif /* __STDC__ */
 {
-  if (DOT_PER_INCHE != 83)
-    value = (int) ((float) (value * 83) / (float) DOT_PER_INCHE);
-  value = (value * DOT_PER_INCHE * 10) / 254;
+  value = (int) (((float) (value * DOT_PER_INCHE)) / 25.4);
   return value;
 }
 
@@ -1756,13 +1752,10 @@ int                *height;
       else
 	{
 	  /* convertit si necessaire en fonction de la resolution de l'ecran */
-	  if (DOT_PER_INCHE != 83)
-	    {
-	      *x = mmtopixel (*x, TRUE);
-	      *y = mmtopixel (*y, TRUE);
-	      *width = mmtopixel (*width, TRUE);
-	      *height = mmtopixel (*height, TRUE);
-	    }
+	  *x = mmtopixel (*x, TRUE);
+	  *y = mmtopixel (*y, TRUE);
+	  *width = mmtopixel (*width, TRUE);
+	  *height = mmtopixel (*height, TRUE);
 	  result = TRUE;
 	}
     }
