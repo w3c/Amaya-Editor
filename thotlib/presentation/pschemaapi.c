@@ -45,7 +45,6 @@ SSchema             nature;
 {
    PtrSSchema          pSS = NULL;
    PtrHandlePSchema    result, pHd;
-   int i;
 
    result = NULL;
    /* check parameter doc */
@@ -60,14 +59,7 @@ SSchema             nature;
 	   nature == (SSchema)(LoadedDocument[doc - 1]->DocSSchema))
 	 pSS = LoadedDocument[doc - 1]->DocSSchema;
        else
-	 {
-	   i = 0;
-	   while (pSS == NULL && i < LoadedDocument[doc - 1]->DocNNatures)
-	     if (LoadedDocument[doc - 1]->DocNatureSSchema[i] == (PtrSSchema) nature)
-	       pSS = (PtrSSchema) nature;
-	     else
-	       i++;
-	 }
+	 pSS = (PtrSSchema) nature;
        if (pSS != NULL)
 	 {
 	   pHd = pSS->SsFirstPSchemaExtens;
