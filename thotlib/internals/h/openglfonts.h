@@ -33,14 +33,14 @@ typedef struct _GL_glyph
 typedef struct _Cache_index {
   unsigned int  index;
   unsigned int  character;
+  GL_glyph      glyph;  
   struct _Cache_index *next;
 } Char_Cache_index;
 
 typedef struct _GL_font
 {
-  FT_Face   *face;
+  FT_Face   face;
   int       kerning;
-  GL_glyph  **glyphList;
   int       Cache_index;
   unsigned int size;
   int       height;
@@ -69,8 +69,7 @@ static int           FontDescender (GL_font *font);
 
 static int           FontFaceSize (GL_font *font,
 			   unsigned int size,
-			   unsigned int res,
-			   ThotBool Cached);
+			   unsigned int res);
 
 static int           FontCharMap (GL_font *font,
 				  FT_Encoding encoding,
@@ -81,7 +80,6 @@ static void          FontBBox (GL_font *font,
 			       float *llx, float *lly, 
 			       float *llz, float *urx, 
 			       float  *ury, float *urz);
-static void          FreeGlyphList (GL_font *font);
 
 
 
@@ -93,8 +91,10 @@ void                 FTLibraryFree ();
 static float          FaceKernAdvance (FT_Face face, 
 				       unsigned int index1, 
 				       unsigned int index2);
-static GL_glyph      *MakeBitmapGlyph (GL_font *font,
-				       unsigned int g);
+
+static void           MakeBitmapGlyph (GL_font *font,
+				       unsigned int g,
+				       GL_glyph *BitmapGlyph);
 
 #ifndef PADDING
 #define PADDING 1
