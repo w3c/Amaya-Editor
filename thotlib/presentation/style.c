@@ -2933,6 +2933,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     case PtAdjust:
       setting->type = PRAdjust;
       break;
+    case PtHorizRef:
+      setting->type = PRHorizRef;
+      break;
     case PtFunction:
       switch (rule->PrPresFunction)
 	{
@@ -3178,6 +3181,14 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "width: %g", fval);
       else
 	sprintf (buffer, "width: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRHorizRef:
+      strcpy (buffer, "vertical-align: ");
+      if (real)
+	sprintf (buffer, "vertical-align: %g", fval);
+      else
+	sprintf (buffer, "vertical-align: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginTop:
