@@ -1603,7 +1603,7 @@ void ValidateGeneralConf (void)
   int         i;
 
   /* normalize and validate the zoom factor */
-  SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
+  SetDlgItemInt (GeneralHwnd, IDC_ZOOM, GProp_General.Zoom, TRUE);
 
   /* 
   **validate the tmp dir
@@ -2358,7 +2358,8 @@ static void BuildCharsetList (void)
   while (i < nbcharset && CharsetTxt[i] != EOS)
     {
       /* keep in mind the current selected entry */
-      if (*CharsetType && !strcmp (GProp_Publish.CharsetType, CharsetTxt[i]))
+      if (GProp_Publish.CharsetType &&
+		  !strcmp (GProp_Publish.CharsetType, CharsetTxt[i]))
 	CurrentCharset = i;
       if (!strcasecmp (CharsetTxt[i], "iso-8859-1"))
 	i_default = i;
@@ -2369,7 +2370,7 @@ static void BuildCharsetList (void)
     CurrentCharset = i_default;
   SendMessage (CharsetList, LB_SETCURSEL, (WPARAM)CurrentCharset, (LPARAM)0);
 
-  if (*CharsetType)
+  if (GProp_Publish.CharsetType)
   strcpy (NewCharset, GProp_Publish.CharsetType);
 }
 
@@ -2792,7 +2793,7 @@ static void BuildScreensList (void)
   while (i < nbscreens && ScreensTxt[i] != EOS)
     {
       /* keep in mind the current selected entry */
-      if (*ScreenType && !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
+      if (GProp_Browse.ScreenType && !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
 	CurrentScreen = i;
       SendMessage (ScreensList, LB_INSERTSTRING, i, (LPARAM) ScreensTxt[i]);
       i++;
@@ -3286,18 +3287,18 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CHANGCOLOR:
 	  TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE);
 	  if (fgcolor != -1)
-	    strcpy (FgColor, ColorName (fgcolor));
+	    strcpy (GProp_Color.FgColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    strcpy (BgColor, ColorName (bgcolor));
+	    strcpy (GProp_Color.BgColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
 	case IDC_CHANGCOLOR2:
 	  TtcGetPaletteColors (&fgcolor, &bgcolor, FALSE);
 	  if (fgcolor != -1)
-	    strcpy (FgSelColor, ColorName (fgcolor));
+	    strcpy (GProp_Color.FgSelColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    strcpy (BgSelColor, ColorName (bgcolor));
+	    strcpy (GProp_Color.BgSelColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;

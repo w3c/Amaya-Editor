@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.14  2004-09-21 16:10:19  vatton
+ ** Revision 1.15  2004-09-21 16:34:32  cvs
+ ** Fixing compiling troubles.
+ ** Irene
+ **
+ ** Revision 1.14  2004/09/21 16:10:19  vatton
  ** Clean up MENUconf.c (not tested on Windows platforms).
  ** Prepare the WebDAV configuration (hidden when DAV is not active).
  ** Irene
@@ -137,7 +141,7 @@ void SetProp_DAV( const Prop_DAV * prop )
 /*----------------------------------------------------------------------
   Use to get the Amaya global variables (WebDAV preferences)
   ----------------------------------------------------------------------*/
-Prop_LanNeg GetProp_DAV()
+Prop_DAV GetProp_DAV()
 {
 #ifdef _WX
   return GProp_DAV;
@@ -908,7 +912,7 @@ void DAVGetPreferences (void)
    GProp_DAV.toggleAwareness1 = (DAVAwareness)?TRUE:FALSE;
    GProp_DAV.toggleAwareness2 = (DAVAwarenessExit)?TRUE:FALSE;
 
-#ifdef _WINGUI
+#ifdef _WINGUI_IV
    SetWindowText (GetDlgItem (DAVHwnd, IDC_DAVUSER), GProp_DAV.textUserReference);
    SetWindowText (GetDlgItem (DAVDlg, IDC_DAVRESOURCES), GProp_DAV.textUserResources);
    if (!strcmp (GProp_DAV.radioDepth, "0"))
