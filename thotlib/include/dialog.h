@@ -366,8 +366,9 @@ extern ThotWidget TtaAddSubTree (ThotWidget parent);
    user_data is what the user wants to feed to the callback function.
    Returns the reference of the new widget.
   ----------------------------------------------------------------------*/
-extern ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, void *callback, 
-				  void *user_data);
+extern ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, 
+				  ThotBool selected, ThotBool collapsed,
+				  void *callback, void *user_data);
 
 /*----------------------------------------------------------------------
    TtaNewTreeForm

@@ -168,6 +168,8 @@ extern void TtaSetNumberForm ( int ref,
 extern ThotWidget TtaAddSubTree ( ThotWidget parent );
 extern ThotWidget TtaAddTreeItem ( ThotWidget parent,
                                    char *item_label,
+                                   ThotBool selected,
+                                   ThotBool collapsed,
                                    void *callback,
                                    void *user_data );
 extern ThotWidget TtaNewTreeForm ( int ref,
@@ -347,6 +349,8 @@ extern void TtaSetNumberForm (/* int ref,
 extern ThotWidget TtaAddSubTree (/* ThotWidget parent */);
 extern ThotWidget TtaAddTreeItem (/* ThotWidget parent,
                                      char *item_label,
+                                     ThotBool selected,
+                                     ThotBool collapsed,
                                      void *callback,
                                      void *user_data */);
 extern ThotWidget TtaNewTreeForm (/* int ref,

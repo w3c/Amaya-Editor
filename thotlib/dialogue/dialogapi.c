@@ -8252,7 +8252,9 @@ ThotWidget TtaAddSubTree (ThotWidget parent)
    user_data is what the user wants to feed to the callback function.
    Returns the reference of the new widget.
   ----------------------------------------------------------------------*/
-ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, void *callback, void *user_data)
+ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, 
+			   ThotBool selected, ThotBool collapsed, 
+			   void *callback, void *user_data)
 {
   ThotWidget tree_item = NULL;
 
@@ -8274,6 +8276,12 @@ ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label, void *callback, 
     label = gtk_label_new ("");
 
   gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+
+  if (selected)
+    gtk_tree_item_select (GTK_TREE_ITEM (tree_item));
+
+  if (!collapsed)
+    gtk_tree_item_expand (GTK_TREE_ITEM (tree_item));
 
   /* memorize callback function and client data */
   gtk_object_set_data (GTK_OBJECT(tree_item), 
@@ -8379,7 +8387,6 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	/* add some tree stuff here */
 	{
 	  GtkWidget *scrolled_window;
-	  GtkWidget *label = NULL;
 
 	  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 	  gtk_scrolled_window_set_policy
@@ -8391,21 +8398,11 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 
 	  tree = gtk_tree_new();
 	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
-	  if (multiple)
-	    gtk_tree_set_selection_mode (GTK_TREE(tree),
-					 GTK_SELECTION_MULTIPLE);
+	  gtk_tree_set_selection_mode (GTK_TREE(tree),
+				       (multiple) ? GTK_SELECTION_MULTIPLE :
+				       GTK_SELECTION_BROWSE);
 	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), 
 						 tree);
-#if 0
-	  subtree = gtk_tree_new();
-	  gtk_tree_set_view_lines(GTK_TREE(subtree), TRUE);
-
-	  gtk_tree_item_set_subtree(GTK_TREE_ITEM(tree_item),
-				    subtree);
-	  tree_item =  NewTreeItem ("Blue whales");
-	  gtk_tree_append(GTK_TREE(subtree), tree_item);
-#endif
-
 	}
 	  
 	catalogue->Cat_Widget = w;
