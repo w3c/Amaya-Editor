@@ -1219,10 +1219,14 @@ View                view;
    ActiveTransfer (newdoc);
    if (IsW3Path (pathname))
      {
-	/* load the document from the Web */
-       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
-			       AMAYA_SYNC | AMAYA_NOCACHE,
+       /* load the document from the Web */
+#ifdef AMAYA_JAVA
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
 			       NULL, NULL, NULL, NULL, YES);
+#else /* AMAYA_JAVA */
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC,
+			       NULL, NULL, NULL, NULL, YES);
+#endif /* AMAYA_JAVA */
 	TtaHandlePendingEvents ();
      }
    if (toparse != -1)
@@ -1604,7 +1608,6 @@ boolean		    history;
 	       else if (CE_event == CE_HELP)
 		 {
 		   /* help document has to be in read-only mode */
-		   TtaSetDocumentAccessMode (newdoc, 0);
 		   TtcSwitchCommands (newdoc, 1);
 		   HelpDocuments[newdoc] = TRUE;
 		   TtaSetMenuOff (newdoc, 1, Edit_);
@@ -1696,13 +1699,13 @@ boolean		    history;
 		 }
 	       else
 		 {
-		   if (DocumentURLs[(int) newdoc] == NULL)
+		   if (DocumentURLs[newdoc] == NULL)
 		     {
 		       /* save the document name into the document table */
 		       i = strlen (pathname) + 1;
 		       s = TtaGetMemory (i);
 		       strcpy (s, pathname);
-		       DocumentURLs[(int) newdoc] = s;
+		       DocumentURLs[newdoc] = s;
 		       TtaSetTextZone (newdoc, 1, 1, s);
 		     }
 		   W3Loading = 0;	/* loading is complete now */
@@ -1733,6 +1736,8 @@ boolean		    history;
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
+   if (HelpDocuments[newdoc])
+     TtaSetDocumentAccessMode (newdoc, 0);
    return (newdoc);
 }
 

@@ -332,85 +332,80 @@ Document            doc;
 char               *localfile;
 char               *remotefile;
 PicType             filetype;
-
 #endif
 {
-    int res;
-    char msg[MAX_LENGTH];
-    char tempfile[MAX_LENGTH]; /* Name of the file used to refetch */
-    char tempURL[MAX_LENGTH];  /* May be redirected */
-    char *no_reread_check;
-    char *no_write_check;
+  char msg[MAX_LENGTH];
+  char tempfile[MAX_LENGTH]; /* Name of the file used to refetch */
+  char tempURL[MAX_LENGTH];  /* May be redirected */
+  char *no_reread_check;
+  char *no_write_check;
+  int res;
 
-    no_reread_check = TtaGetEnvString("NO_REREAD_CHECK");
-    no_write_check = TtaGetEnvString("NO_WRITE_CHECK");
-
+  no_reread_check = TtaGetEnvString("NO_REREAD_CHECK");
+  no_write_check = TtaGetEnvString("NO_WRITE_CHECK");
+  
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 
-    /* Save. */
-    res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE,
-			filetype, NULL, NULL);
-    if (res)
-      /* The HTTP PUT method failed ! */
-      return (res);
-    if (no_reread_check != NULL)
-      return (0);
+  /* Save */
+#ifdef AMAYA_JAVA
+  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
+#else /* AMAYA_JAVA */
+  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC, filetype, NULL, NULL);
+#endif /* AMAYA_JAVA */
+  if (res)
+    /* The HTTP PUT method failed ! */
+    return (res);
+  if (no_reread_check != NULL)
+    return (0);
 
-    /* Refetch */
+  /* Refetch */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 
-    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
-    strcpy (tempURL, remotefile);
-    res = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC | AMAYA_NOCACHE,
-			NULL, NULL, NULL, NULL, NO);
-    if (res)
-      {
-        /* The HTTP GET method failed ! */
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED), remotefile);
-	InitConfirm (doc, 1, msg);
-	if (!UserAnswer)
-	   /* Trigger the error */
-	   return (res);
+  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
+  strcpy (tempURL, remotefile);
+#ifdef AMAYA_JAVA
+  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
+		      NULL, NULL, NULL, NULL, NO);
+#else /* AMAYA_JAVA */
+  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+#endif /* AMAYA_JAVA */
+  if (res)
+    {
+      /* The HTTP GET method failed ! */
+      sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED), remotefile);
+      InitConfirm (doc, 1, msg);
+      if (UserAnswer)
 	/* Ignore the read failure */
-	return (0);
+	res = 0;
+    }
+  else if (strcmp (remotefile, tempURL))
+    {
+      /* Warning : redirect... */
+      sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED), remotefile, tempURL);
+      InitConfirm (doc, 1, msg);
+      if (!UserAnswer)
+	/* Trigger the error */
+	res = -1;
     }
 
-    /* Compare URLs In case of redirection. */
-    if (strcmp (remotefile, tempURL))
-      {
-        /*
-	 * Warning : redirect...
-	 */
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED), remotefile, tempURL);
-	InitConfirm (doc, 1, msg);
-	if (!UserAnswer)
-	  {
-	    /* Trigger the error */
-	    TtaFileUnlink (tempfile);
-	    return (-1);
-	  } 
-      }
-
-    if (no_write_check != NULL)
-      return (0);
-
-    /* Compare content. */
+  if (no_write_check == NULL && res == 0)
+    {
+      /* Compare content. */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);)
+#ifdef AMAYA_JAVA
+      if (! TtaCompareFiles(tempfile, localfile))
+	{
+	  sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED), remotefile);
+	  InitConfirm (doc, 1, msg);
+	  if (!UserAnswer)
+	    res = -1;
+	}
+#endif /* AMAYA_JAVA */
+    }
 
-    if (! TtaCompareFiles(tempfile, localfile))
-      {
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED), remotefile);
-	InitConfirm (doc, 1, msg);
-	if (!UserAnswer)
-	  {
-	    /* Trigger the error */
-	    TtaFileUnlink (tempfile);
-	    return (-1);
-	  }
-      }
-
+  if (TtaFileExist (tempfile))
     TtaFileUnlink (tempfile);
-    return(0);
+  return(res);
 }
 
 /*----------------------------------------------------------------------
