@@ -15,7 +15,7 @@
  */
  
 /*
-   gestion de l'heritage des attributs.
+   This module handles attribute presentation
 
  */
 
@@ -33,12 +33,18 @@
 #include "changeabsbox_f.h"
 
 /*----------------------------------------------------------------------
-   CreateInheritedAttrTable alloue et remplit une table de type          
-   InheritAttrTable. Un element de cette table indique pour  
-   un element les attributs dont il herite des regles de   
-   presentation. table[att] = TRUE si le schema de		
-   presentation contient dans la section ATTRIBUTES des	
-   		regles du type ATTRIBUTES : "att(El) : ...".		
+   CreateInheritedAttrTable
+
+   Allocate and initialize an InheritAttrTable for element pEl.
+   This table indicates attributes that transmit presentation rules
+   to element pEl.
+   table[attr] = TRUE if the presentation schema contains in its
+   ATTRIBUTES section a rule of the form
+
+      AttrName(ElType): ...
+
+   AttrName is the name of attribute attr (rank of attribute definition
+   in structure schema) and ElType is the type of element pEl.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -61,7 +67,7 @@ PtrElement          pEl;
    if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
       /* memory exhausted */
       return;
-   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE) ;
+   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
    if (pEl->ElStructSchema->SsPSchema != NULL)
      {
 	pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
@@ -83,12 +89,20 @@ PtrElement          pEl;
 
 
 /*----------------------------------------------------------------------
-   Alloue et remplit une table de type ComparAttrTable.		
-   	Un element de cette table indique pour chaque attribut les	
-   	autres attributs qui se comparent a cet attribut pour		
-   	l'application des regles de presentation a` cet attribut.	
-   	table[i] = TRUE si, dans la section ATTRIBUTES, le schema de	
-   	presentation contient des regles du type "GetAttributeOfElement > n : ...".	
+  CreateComparAttrTable
+
+  Allocate and initialize a ComparAttrTable for attribute pAttr.
+
+  For each attribute, this table indicates the other attributes that compare
+  to the attribute for applying some presentation rules.
+
+  table[attr] = TRUE if the presentation schema contains in its
+  ATTRIBUTES section a rule of the form
+
+     AttrName > n : ...
+
+  AttrName is the name of attribute attr (rank of attribute definition
+  in structure schema).
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -116,10 +130,10 @@ PtrAttribute        pAttr;
       return;
    if (pPS != NULL)
      {
-	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE) ;
+	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
 	attNum = pAttr->AeAttrNum;
 	pPS->PsComparAttr[attNum - 1] = table;
-	/* parcours l'ensemble des attributs */
+	/* scan all attributes defined in the structure schema */
 	for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
 	   /* check only integer attributes */
 	   if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
@@ -152,9 +166,11 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   TransmitElementContent transmet la valeur de l'element pEl a`		
-   l'attribut de nom attrName des documents inclus dans le document
-   pDoc par la regle inclRule du schema de structure pSchS	
+  TransmitElementContent
+
+  Takes the contents of element pEl and make it the value of the
+  attribute named attrName for all documents included in document
+  pDoc by the rule inclRule from the pSS structure schema.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -183,31 +199,31 @@ PtrSSchema          pSS;
    boolean             found;
    int                 len;
 
-   /* Cherche tous les documents du type voulu inclus dans pDoc */
+   /* Search all documents of the type in question included in document pDoc */
    pReferredD = pDoc->DocReferredEl;
-   /* saute le premier descripteur (bidon) */
+   /* skip the first descriptor (it's a fake descriptor) */
    if (pReferredD != NULL)
       pReferredD = pReferredD->ReNext;
-   /* parcourt la chaine des descripteurs d'elements references */
+   /* scan all referred element descriptors */
    while (pReferredD != NULL)
      {
 	if (pReferredD->ReExternalRef)
-	   /* c'est un descripteur d'element reference' externe */
+	   /* this referred element is in another document */
 	  {
 	     pRef = pReferredD->ReFirstReference;
-	     /* parcourt les references a cet element externe */
+	     /* scan all references to that external element */
 	     while (pRef != NULL)
 	       {
-		  /* on ne s'interesse qu'aux inclusions */
+		  /* consider only inclusion references */
 		  if (pRef->RdTypeRef == RefInclusion)
 		    {
-		       /* l'element qui reference est du type cherche' */
-		       /* accede au document inclus (a sa racine) */
-		       pIncludedEl = ReferredElement (pRef, &IncludedDocIdent, &pIncludedDoc);
+		       /* get the root of the included document */
+		       pIncludedEl = ReferredElement (pRef, &IncludedDocIdent,
+						      &pIncludedDoc);
 		       if (pIncludedEl != NULL)
 			 {
-			    /* le document inclus est charge', cherche */
-			    /* l'attribut dans son schema de structure */
+			    /* the included document is loaded. Search the */
+			    /* attribute in its structure schema */
 			    att = 0;
 			    found = FALSE;
 			    while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
@@ -215,23 +231,22 @@ PtrSSchema          pSS;
 			      {
 				 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
 				 if (AttrDef->AttrType == AtTextAttr)
-				    /* c'est un attribut textuel */
+				    /* that's a text attribute */
 				    if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
-				       /* il a le nom cherche' */
+				       /* that's the rigth attribute */
 				       found = TRUE;
 			      }
 			    if (found)
 			      {
-				 /* l'attribut est bien defini dans le schema */
-				 /* de structure du document inclus */
 				 GetAttribute (&pAttr);
 				 pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
 				 pAttr->AeAttrNum = att;
 				 pAttr->AeAttrType = AtTextAttr;
 				 GetTextBuffer (&pAttr->AeAttrText);
-				 /* copie le texte de l'element pEl dans l'attribut */
+				 /* copy the contents of element pEl into */
+				 /* the attribute */
 				 pChild = pEl;
-				 /* cherche la premiere feuille de texte */
+				 /* first, get the first text leaf of pEl */
 				 found = FALSE;
 				 while (pChild != NULL && !found)
 				    if (pChild->ElTerminal)
@@ -243,10 +258,11 @@ PtrSSchema          pSS;
 				       pChild = pChild->ElFirstChild;
 				 if (found)
 				   {
-				      /* copie le contenu de la feuille */
+				      /* copy the contents of that leaf */
 				      CopyTextToText ((PtrTextBuffer) pChild->ElText->BuContent,
 						   pAttr->AeAttrText, &len);
-				      /* met l'attribut sur la racine du document */
+				      /* associate the attribute with the */
+				      /* of the included document */
 				      AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr);
 				   }
 				 DeleteAttribute (NULL, pAttr);
@@ -262,10 +278,11 @@ PtrSSchema          pSS;
 
 
 /*----------------------------------------------------------------------
-   	Si l'element pEl (appartenant au document pDoc) est une		
-   	reference d'inclusion d'un document externe, applique toutes	
-   	les regles de transmission qui donnent leurs valeurs aux	
-   	attributs du document inclus.					
+  ApplyTransmitRules
+
+  If element pEl (belonging to document pDoc) is a reference that
+  includes an external document, apply all Transmit rules that
+  assign a value to attributes of the included document.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -292,50 +309,52 @@ PtrDocument         pDoc;
    if (pEl != NULL)
       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
 	{
-	   /* c'est un lien d'inclusion d'un document externe */
-	   /* cherche le schema de presentation qui s'applique a` l'element */
+	   /* it's an inclusion of an external document */
+	   /* search the presentation schema that applies to the element */
 	   SearchPresSchema (pEl, &pPSch, &entry, &pSS);
-	   /* ce schema contient-il une regle Transmit qui transmet le */
-	   /* contenu d'un type d'element a des documents de la classe du */
-	   /* document inclus ? */
-	   /* examine toutes les regles Transmit du schema */
+	   /* does this schema contain a Transmit rule that transmits the */
+	   /* contents of some element to documents of the type of the */
+	   /* included document ? */
+	   /* scans all Transmit rule in the schema */
 	   for (rule = 0; rule < pPSch->PsNTransmElems; rule++)
 	     {
-		/* pTransR: pointeur sur une regle Transmit */
+		/* pTransR: pointer to a Transmit rule */
 		pTransR = &(pPSch->PsTransmElem[rule]);
-		/*if (pTransR->TeTargetDoc == pEl->ElTypeNumber) */
 		if (pTransR->TeTargetDoc == entry)
-		   /* cette regle Transmit transmet a un document de la */
-		   /* classe du document inclus */
+		   /* this Transmit rule acts on a document of the type of */
+		   /* the included document */
 		  {
-		     /* quel est le type d'element qui transmet sa valeur ? */
+		     /* what element type does transmit its contents? */
 		     for (srcNumType = 0; srcNumType < pSS->SsNRules &&
-			  pPSch->PsElemTransmit[srcNumType] != rule + 1; srcNumType++) ;
+			  pPSch->PsElemTransmit[srcNumType] != rule + 1; srcNumType++);
 		     if (pPSch->PsElemTransmit[srcNumType] == rule + 1)
 		       {
-			  /* les elements de type srcNumType+1 transmettent leur valeur */
-			  /* aux documents qui nous interessent. On cherche un */
-			  /* element de ce type a partir de la racine du document */
-			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement, srcNumType + 1, pSS);
+			  /* elements of type srcNumType+1 transmit their */
+			  /* content to the documents of interest */
+			  /* Search an element of that type in the document */
+			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement,
+						       srcNumType + 1, pSS);
 			  if (pSrcEl != NULL)
-			     /* applique la regle Transmit a l'element trouve' */
-			     TransmitElementContent (pSrcEl, pDoc, pTransR->TeTargetAttr,
-						 pTransR->TeTargetDoc, pSS);
+			     /* apply the Transmit rule to the element found */
+			     TransmitElementContent (pSrcEl, pDoc,
+						    pTransR->TeTargetAttr,
+						    pTransR->TeTargetDoc, pSS);
 		       }
 		  }
 	     }
-	   /* le schema de presentation contient-il des compteurs qui */
-	   /* transmettent leur valeur a des attributs du document inclus ? */
-	   /* examine tous les compteurs definis dans le schema */
+	   /* does the presentation schema contain counters that transmit */
+	   /* their value to some attribute in the included document? */
+	   /* scan all counters defined in the presentation schema */
 	   for (counter = 0; counter < pPSch->PsNCounters; counter++)
 	     {
 		pCounter = &pPSch->PsCounter[counter];
-		/* examine toutes les regles Transmit du compteur courant */
+		/* scan all Transmit rules for that counter */
 		for (rule = 0; rule < pCounter->CnNTransmAttrs; rule++)
 		   if (pCounter->CnTransmSSchemaAttr[rule] == entry)
 		     {
-			/* cette regle Transmit transmet le compteur a un document */
-			/* de la classe du document inclus, on applique la regle */
+			/* this Transmit rule transmit the counter value to */
+			/* a document of the type of the included document */
+			/* apply the Transmit rule */
 			TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[rule],
 					    counter + 1, pPSch, pSS);
 		     }
@@ -344,7 +363,10 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   									
+  RepApplyTransmitRules
+
+  Apply all Transmit rules to all elements of the same type as
+  pTransmEl that follow element pEl in document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RepApplyTransmitRules (PtrElement pTransmEl, PtrElement pEl, PtrDocument pDoc)
@@ -361,9 +383,8 @@ PtrDocument         pDoc;
    if (pTransmEl != NULL)
       while (pEl != NULL)
 	{
-	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElStructSchema);
-	   if (pEl != NULL)
-	      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
-		 ApplyTransmitRules (pEl, pDoc);
+	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber,
+				     pTransmEl->ElStructSchema);
+	   ApplyTransmitRules (pEl, pDoc);
 	}
 }
