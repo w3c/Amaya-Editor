@@ -83,8 +83,6 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_off.gif" ) );
 
   m_pFloatingPanel = NULL;
-  //  m_pFloatingPanel = new AmayaFloatingPanel( this, -1 );
-  //  m_pFloatingPanel->Hide(); // not floating by default
 
   // setup labels
   XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTACHDETACH)));
@@ -156,17 +154,11 @@ void AmayaSubPanel::DoFloat()
 {
   wxLogDebug( _T("AmayaSubPanel::DoFloat") );
 
-  // setup panel style
-  /*  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-  p_panel_detach->SetWindowStyle( p_panel_detach->GetWindowStyle() & ~wxSIMPLE_BORDER );
-  */
-
   // open the floating panel
   if (!m_pFloatingPanel)
     m_pFloatingPanel = new AmayaFloatingPanel( m_pParentNWindow, this );
   m_pFloatingPanel->SetPosition(wxGetMousePosition());
   m_pFloatingPanel->Raise();
-  //  m_pPanel_xhtml     = new AmayaXHTMLPanel( this, p_parent_nwindow );
 
   Refresh();
   GetParent()->Layout();
@@ -189,11 +181,6 @@ void AmayaSubPanel::DoUnfloat()
   if (m_pFloatingPanel)
     m_pFloatingPanel->Destroy();
   m_pFloatingPanel = NULL;
-
-  // setup panel style
-  /*  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-  p_panel_detach->SetWindowStyle( p_panel_detach->GetWindowStyle() | wxSIMPLE_BORDER );
-  */
 
   GetParent()->Layout();
   Refresh();
