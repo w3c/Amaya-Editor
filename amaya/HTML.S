@@ -354,7 +354,7 @@ EXCEPT
 	Definition_Item: Hidden;
 	Comment_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
-	PICTURE:	NoMove, Resize;
+	PICTURE:	MoveResize;
 	Invalid_element: NoCreate;
 	Pseudo_paragraph:	ParagraphBreak, Hidden;
 	Paragraph:	ParagraphBreak;
