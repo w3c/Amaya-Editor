@@ -2075,14 +2075,6 @@ void UpdateDoctypeMenu (Document doc)
  
   docType = DocumentTypes[doc];
 
-  if (docType == docText || docType == docCSS ||
-      docType == docSource || docType == docLog)
-    {
-      /* Don't change the doctype for a text document */
-      TtaSetItemOff (doc, 1, File, Doctype1);
-      return;
-    }
-
   TtaSetItemOn  (doc, 1, File, Doctype1);
   TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
@@ -2094,6 +2086,16 @@ void UpdateDoctypeMenu (Document doc)
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMath);
   TtaSetItemOff (doc, 1, File, BDoctypeMathML);
   TtaSetItemOff (doc, 1, File, BDoctypeSVG);
+
+
+  if (docType == docText || docType == docCSS ||
+      docType == docSource || docType == docLog)
+    {
+      /* Don't change the doctype for a text document */
+      TtaSetItemOff (doc, 1, File, Doctype1);
+      TtaSetItemOff (doc, 1, File, BRemoveDoctype);
+      return;
+    }
 
   /* look for the MathML nature used in the document */
   nature = NULL;
