@@ -105,34 +105,13 @@
 
 
 /* presentation rule type */
+#define C_PR_VERTOVERFLOW     L'O'
 #define C_PR_VISIBILITY       L'V'
 #define C_PR_FUNCTION         L'f'
-#define C_PR_VREF             L'v'
 #define C_PR_HREF             L'h'
-#define C_PR_DEPTH            L'P'
-#define C_PR_VERTOVERFLOW     L'O'
 #define C_PR_HORIZOVERFLOW    L'o'
-#define C_PR_MARGINTOP		L'a'
-#define C_PR_MARGINRIGHT	L'c'
-#define C_PR_MARGINBOTTOM	L'd'
-#define C_PR_MARGINLEFT		L'e'
-#define C_PR_PADDINGTOP		L'g'
-#define C_PR_PADDINGRIGHT	L'i'
-#define C_PR_PADDINGBOTTOM	L'j'
-#define C_PR_PADDINGLEFT	L'k'
-#define C_PR_BORDERTOPWIDTH	L'm'
-#define C_PR_BORDERRIGHTWIDTH	L'n'
-#define C_PR_BORDERBOTTOMWIDTH	L'q'
-#define C_PR_BORDERLEFTWIDTH	L'r'
-#define C_PR_BORDERTOPCOLOR	L's'
-#define C_PR_BORDERRIGHTCOLOR	L'u'
-#define C_PR_BORDERBOTTOMCOLOR	L'x'
-#define C_PR_BORDERLEFTCOLOR	L'y'
-#define C_PR_BORDERTOPSTYLE	L'^'
-#define C_PR_BORDERRIGHTSTYLE	L'>'
-#define C_PR_BORDERBOTTOMSTYLE	L'_'
-#define C_PR_BORDERLEFTSTYLE	L'<'
-/*  other presentation rule types are defined in constpiv.h */
+#define C_PR_VREF             L'v'
+/* other presentation rule types are defined in constpiv.h */
 
 /* properties computing mode */
 #define C_IMMEDIATE           L'V'
@@ -289,33 +268,12 @@
 
 
 /* presentation rule type */
+#define C_PR_VERTOVERFLOW     'O'
 #define C_PR_VISIBILITY       'V'
 #define C_PR_FUNCTION         'f'
-#define C_PR_VREF             'v'
 #define C_PR_HREF             'h'
-#define C_PR_DEPTH            'P'
-#define C_PR_VERTOVERFLOW     'O'
 #define C_PR_HORIZOVERFLOW    'o'
-#define C_PR_MARGINTOP		'a'
-#define C_PR_MARGINRIGHT	'c'
-#define C_PR_MARGINBOTTOM	'd'
-#define C_PR_MARGINLEFT		'e'
-#define C_PR_PADDINGTOP		'g'
-#define C_PR_PADDINGRIGHT	'i'
-#define C_PR_PADDINGBOTTOM	'j'
-#define C_PR_PADDINGLEFT	'k'
-#define C_PR_BORDERTOPWIDTH	'm'
-#define C_PR_BORDERRIGHTWIDTH	'n'
-#define C_PR_BORDERBOTTOMWIDTH	'q'
-#define C_PR_BORDERLEFTWIDTH	'r'
-#define C_PR_BORDERTOPCOLOR	's'
-#define C_PR_BORDERRIGHTCOLOR	'u'
-#define C_PR_BORDERBOTTOMCOLOR	'x'
-#define C_PR_BORDERLEFTCOLOR	'y'
-#define C_PR_BORDERTOPSTYLE	'^'
-#define C_PR_BORDERRIGHTSTYLE	'>'
-#define C_PR_BORDERBOTTOMSTYLE	'_'
-#define C_PR_BORDERLEFTSTYLE	'<'
+#define C_PR_VREF             'v'
 /*  other presentation rule types are defined in constpiv.h */
 
 /* properties computing mode */

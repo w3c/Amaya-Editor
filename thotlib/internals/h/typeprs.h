@@ -448,7 +448,7 @@ typedef struct _PresRule
       {
 	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern,
 	           PtBackground, PtForeground, PtBorderTopColor,
-                   PtBorderRightColor, BorderBottomColor, BorderLeftColor */
+                   PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor*/
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 

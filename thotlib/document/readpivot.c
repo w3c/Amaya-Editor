@@ -1740,7 +1740,7 @@ ThotBool            link;
   unit = UnRelative;
   /* lit le numero de vue */
   TtaReadShort (pivFile, &view);
-  /* lit le numero de la boite de present. concernee par la regle */
+  /* lit le numero de la boite de presentation concernee par la regle */
   TtaReadShort (pivFile, &box);
   /* lit le type de la regle */
   if (!TtaReadByte (pivFile, &ch))
@@ -1762,8 +1762,8 @@ ThotBool            link;
     case C_PR_HPOS:
       TypeRP = PtHorizPos;
       break;
-    case C_PR_SIZE:
-      TypeRP = PtSize;
+    case C_PR_FONT:
+      TypeRP = PtFont;
       break;
     case C_PR_STYLE:
       TypeRP = PtStyle;
@@ -1771,14 +1771,26 @@ ThotBool            link;
     case C_PR_WEIGHT:
       TypeRP = PtWeight;
       break;
-    case C_PR_FONT:
-      TypeRP = PtFont;
-      break;
     case C_PR_UNDERLINE:
       TypeRP = PtUnderline;
       break;
     case C_PR_UNDER_THICK:
       TypeRP = PtThickness;
+      break;
+    case C_PR_LINESTYLE:
+      TypeRP = PtLineStyle;
+      break;
+    case C_PR_BORDERTOPSTYLE:
+      TypeRP = PtBorderTopStyle;
+      break;
+    case C_PR_BORDERRIGHTSTYLE:
+      TypeRP = PtBorderRightStyle;
+      break;
+    case C_PR_BORDERBOTTOMSTYLE:
+      TypeRP = PtBorderBottomStyle;
+      break;
+    case C_PR_BORDERLEFTSTYLE:
+      TypeRP = PtBorderLeftStyle;
       break;
     case C_PR_BREAK1:
       TypeRP = PtBreak1;
@@ -1786,14 +1798,53 @@ ThotBool            link;
     case C_PR_BREAK2:
       TypeRP = PtBreak2;
       break;
-    case C_PR_PICTURE:
-      TypeRP = PtPictInfo;
-      break;
     case C_PR_INDENT:
       TypeRP = PtIndent;
       break;
+    case C_PR_SIZE:
+      TypeRP = PtSize;
+      break;
     case C_PR_LINESPACING:
       TypeRP = PtLineSpacing;
+      break;
+    case C_PR_LINEWEIGHT:
+      TypeRP = PtLineWeight;
+      break;
+    case C_PR_MARGINTOP:
+      TypeRP = PtMarginTop;
+      break;
+    case C_PR_MARGINRIGHT:
+      TypeRP = PtMarginRight;
+      break;
+    case C_PR_MARGINBOTTOM:
+      TypeRP = PtMarginBottom;
+      break;
+    case C_PR_MARGINLEFT:
+      TypeRP = PtMarginLeft;
+      break;
+    case C_PR_PADDINGTOP:
+      TypeRP = PtPaddingTop;
+      break;
+    case C_PR_PADDINGRIGHT:
+      TypeRP = PtPaddingRight;
+      break;
+    case C_PR_PADDINGBOTTOM:
+      TypeRP = PtPaddingBottom;
+      break;
+    case C_PR_PADDINGLEFT:
+      TypeRP = PtPaddingLeft;
+      break;
+    case C_PR_BORDERTOPWIDTH:
+      TypeRP = PtBorderTopWidth;
+      break;
+    case C_PR_BORDERRIGHTWIDTH:
+      TypeRP = PtBorderRightWidth;
+      break;
+    case C_PR_BORDERBOTTOMWIDTH:
+      TypeRP = PtBorderBottomWidth;
+      break;
+    case C_PR_BORDERLEFTWIDTH:
+      TypeRP = PtBorderLeftWidth;
       break;
     case C_PR_JUSTIFY:
       TypeRP = PtJustify;
@@ -1801,11 +1852,8 @@ ThotBool            link;
     case C_PR_HYPHENATE:
       TypeRP = PtHyphenate;
       break;
-    case C_PR_LINESTYLE:
-      TypeRP = PtLineStyle;
-      break;
-    case C_PR_LINEWEIGHT:
-      TypeRP = PtLineWeight;
+    case C_PR_DEPTH:
+      TypeRP = PtDepth;
       break;
     case C_PR_FILLPATTERN:
       TypeRP = PtFillPattern;
@@ -1815,6 +1863,21 @@ ThotBool            link;
       break;
     case C_PR_FOREGROUND:
       TypeRP = PtForeground;
+      break;
+    case C_PR_BORDERTOPCOLOR:
+      TypeRP = PtBorderTopColor;
+      break;
+    case C_PR_BORDERRIGHTCOLOR:
+      TypeRP = PtBorderRightColor;
+      break;
+    case C_PR_BORDERBOTTOMCOLOR:
+      TypeRP = PtBorderBottomColor;
+      break;
+    case C_PR_BORDERLEFTCOLOR:
+      TypeRP = PtBorderLeftColor;
+      break;
+    case C_PR_PICTURE:
+      TypeRP = PtPictInfo;
       break;
     default:
       PivotError (pivFile);
@@ -1848,16 +1911,35 @@ ThotBool            link;
       case PtSize:
       case PtLineSpacing:
       case PtLineWeight:
+      case PtMarginTop:
+      case PtMarginRight:
+      case PtMarginBottom:
+      case PtMarginLeft:
+      case PtPaddingTop:
+      case PtPaddingRight:
+      case PtPaddingBottom:
+      case PtPaddingLeft:
+      case PtBorderTopWidth:
+      case PtBorderRightWidth:
+      case PtBorderBottomWidth:
+      case PtBorderLeftWidth:
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
-	if (TypeRP == PtIndent)
+	if (TypeRP == PtIndent || TypeRP == PtMarginTop ||
+	    TypeRP == PtMarginRight || TypeRP == PtMarginBottom ||
+	    TypeRP == PtMarginLeft)
 	  sign = ReadSign (pivFile);
 	break;
       case PtFillPattern:
+      case PtDepth:
 	TtaReadShort (pivFile, &val);
 	break;
       case PtBackground:
       case PtForeground:
+      case PtBorderTopColor:
+      case PtBorderRightColor:
+      case PtBorderBottomColor:
+      case PtBorderLeftColor:
 	if (pDoc->DocPivotVersion < 5)
 	  TtaReadShort (pivFile, &val);
 	else
@@ -1873,6 +1955,10 @@ ThotBool            link;
       case PtUnderline:
       case PtThickness:
       case PtLineStyle:
+      case PtBorderTopStyle:
+      case PtBorderRightStyle:
+      case PtBorderBottomStyle:
+      case PtBorderLeftStyle:
 	if (!TtaReadByte (pivFile, &ch))
 	  PivotError (pivFile);
 	break;
@@ -1970,19 +2056,38 @@ ThotBool            link;
 	  case PtSize:
 	  case PtLineSpacing:
 	  case PtLineWeight:
+	  case PtMarginTop:
+	  case PtMarginRight:
+	  case PtMarginBottom:
+	  case PtMarginLeft:
+	  case PtPaddingTop:
+	  case PtPaddingRight:
+	  case PtPaddingBottom:
+	  case PtPaddingLeft:
+	  case PtBorderTopWidth:
+	  case PtBorderRightWidth:
+	  case PtBorderBottomWidth:
+	  case PtBorderLeftWidth:
 	    pPRule->PrMinAttr = FALSE;
 	    pPRule->PrMinValue = val;
 	    pPRule->PrMinUnit = unit;
-	    if (pPRule->PrType == PtIndent)
+	if (pPRule->PrType == PtIndent || pPRule->PrType == PtMarginTop ||
+	    pPRule->PrType == PtMarginRight || pPRule->PrType == PtMarginBottom ||
+	    pPRule->PrType == PtMarginLeft)
 	      if (!sign)
 		pPRule->PrMinValue = -pPRule->PrMinValue;
 	    break;
 	  case PtFillPattern:
+	  case PtDepth:
 	    pPRule->PrAttrValue = FALSE;
 	    pPRule->PrIntValue = val;
 	    break;
 	  case PtBackground:
 	  case PtForeground:
+	  case PtBorderTopColor:
+	  case PtBorderRightColor:
+	  case PtBorderBottomColor:
+	  case PtBorderLeftColor:
 	    pPRule->PrAttrValue = FALSE;
 	    /* convertit les couleurs des anciennes versions */
 	    if (pDoc->DocPivotVersion < 4)
@@ -1990,7 +2095,9 @@ ThotBool            link;
 	    if (pDoc->DocPivotVersion < 5)
 	      pPRule->PrIntValue = val;
 	    else
-	      pPRule->PrIntValue = TtaGetThotColor ((unsigned short) red, (unsigned short) green, (unsigned short) blue);
+	      pPRule->PrIntValue = TtaGetThotColor ((unsigned short) red,
+						    (unsigned short) green,
+						    (unsigned short) blue);
 	    break;
 	  case PtFont:
 	  case PtStyle:
@@ -1998,6 +2105,10 @@ ThotBool            link;
 	  case PtUnderline:
 	  case PtThickness:
 	  case PtLineStyle:
+          case PtBorderTopStyle:
+          case PtBorderRightStyle:
+          case PtBorderBottomStyle:
+          case PtBorderLeftStyle:
 	    pPRule->PrChrValue = ch;
 	    break;
 	  case PtJustify:
@@ -2032,7 +2143,8 @@ ThotBool            link;
 	      pPRule1->PrNextPRule = pPRule;
 	    }
 	  if (pPRule->PrType == PtBackground &&
-	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
+	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber,
+				 pEl->ElStructSchema))
 	    /* add a ShowBox rule for the Background rule */
 	    {
 	      GetPresentRule (&pPRule1);

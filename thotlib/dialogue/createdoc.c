@@ -83,12 +83,14 @@ STRING              data;
      {
 	if (ref != 0)
 	   if (CurrentDialog == NumFormCreateDoc)
+	     /* confirme la creation */
 	     {
-		/* confirme la creation */
-		CreateDocument (&pDoc);		/* acquiert un contexte de document */
+		/* acquiert un contexte de document */
+		CreateDocument (&pDoc);
 		if (pDoc != NULL)
 		   /* cree un document dans ce contexte */
-		   NewDocument (&pDoc, (PtrBuffer) ClassDocToCreate, NameDocToCreate, DirectoryDocToCreate);
+		   NewDocument (&pDoc, ClassDocToCreate, NameDocToCreate,
+				DirectoryDocToCreate);
 	     }
 	   else if (CurrentDialog == NumFormSaveAs)
 	      if (CurrentDialog != 0)
