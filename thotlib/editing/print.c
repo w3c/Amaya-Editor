@@ -2567,11 +2567,10 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   int        argc;
   char**   argv;
 #endif /*_WINDOWS_DLL*/
-#endif  /* _WINDOWS */
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#else  /* _WINDOWS */
 int main (int argc, char **argv)
 {
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* _WINDOWS */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
