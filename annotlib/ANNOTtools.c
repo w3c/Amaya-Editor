@@ -546,7 +546,6 @@ Document doc;
 
   fp = fopen ("/tmp/rdf.tmp", "w");
   /* write the prologue */
-  /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
 	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
@@ -607,17 +606,14 @@ Document doc;
   fp2 = fopen (ptr, "r");
   if (fp2)
     {
-      /* skip the first 3 lines (to have a valid XML doc )*/
-      /* ahem, skip the first 3 lines, in the hard way! */
-      {
-	int i;
-	char c;
-	for (i = 0; i<3; i++)
+      /* skip any prologue (to have a valid XML doc )*/
+      while (!feof(fp2)) {
+	fgets (tmp_str, 79, fp2);
+	if (strncmp(tmp_str, "<h", 2) == 0) /* looking for <html... */
 	  {
-	    while ((c = getc (fp2)) != '\n');
+	    break;
 	  }
       }
-      fgets (tmp_str, 79, fp2);
       while (!feof (fp2)) {
 	fprintf (fp, "  %s", tmp_str);
 	fgets (tmp_str, 79, fp2);
