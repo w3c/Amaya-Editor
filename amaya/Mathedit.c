@@ -653,7 +653,6 @@ View                view;
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
-  KeyboardsLoadResources ();
 }
 
 
@@ -670,6 +669,7 @@ View                view;
 {
   TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
+  KeyboardsLoadResources ();
 }
 
 
