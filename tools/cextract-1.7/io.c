@@ -1792,6 +1792,8 @@ out_proto(omode, f_ptr, mode, do_comments)
 
   /* remove all prototypes with inlines */
   if (strstr(f_ptr->ftype, "inline")) return;
+  /* remove all runction returning __xxx or named _xxx */
+  if (strstr(f_ptr->ftype, " __")) return;
 
   /* initial comment output */
   if (get_option(OPT_FIRSTCOMMENT) &&

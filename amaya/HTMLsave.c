@@ -12,7 +12,7 @@
  *
  */
 
-#define DEBUG_AMAYA_SAVE /* Print out debug informations when saving */
+/* DEBUG_AMAYA_SAVE Print out debug informations when saving */
 
 #ifdef DEBUG_AMAYA_SAVE
 #define DBG(a) a

@@ -2292,9 +2292,12 @@ PtrPSchema          pSPR;
 {
 #ifdef __COLPAGE__
   boolean           bool;
+#endif /* __COLPAGE__ */
 
   if (pRP == NULL)
      return;
+
+#ifdef __COLPAGE__
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);

@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void InitJavaSelect ( void );
 extern int JavaSelect ( int n,
                         fd_set *readfds,
@@ -33,7 +32,6 @@ extern void JavaLoadResources ( void );
 extern void throwOutOfMemory ( void );
 
 #else /* __STDC__ */
-
 extern void InitJavaSelect (/* void */);
 extern int JavaSelect (/* int n,
                           fd_set *readfds,
