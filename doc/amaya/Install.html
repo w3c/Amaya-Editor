@@ -1,4 +1,4 @@
-<!doctype html public "-//w3c//dtd html 3.2 final//en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
 <title>
@@ -11,29 +11,29 @@ How to install the Amaya Binary Release</title>
 <a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
 <a href="../"><img border="0" src="amaya.gif" alt="Amaya"></a> <a
 href="./"><img border="0" src="../../Icons/WWW/guide48x" alt="Using"></a></p>
-<h1>How to install the Amaya Binary Release</h1>
 
+<h1>How to install the Unix Amaya Binary Release</h1>
 <p>
 <img src="warning.gif"> In the following, we assume that the path stored in
 the archive begins with the <code><strong>Thot</strong></code> directory (this
 change was introduced for the source distribution). Older binary distributions
 use <code><strong>Amaya</strong></code> as the top directory name instead.</p>
-<h3>Choose a place for Amaya</h3>
 
+<h3>Choose a place for Amaya</h3>
 <p>
 Supposing the binary distribution was loaded fine, one must choose a place to
 install it. We suggest</p>
 <ul>
-  <li>
-  /usr/local for a system wide installation
-  <li>
-  the user home directory for a personnal installation
+<li>
+/usr/local for a system wide installation 
+<li>
+the user home directory for a personnal installation 
 </ul>
 <p>
 A Linux version doesn't need more that 5 Megabytes of disk space, even a RISC
 architecture distribution should not exceed 10 Megabytes.</p>
-<h3>Extract the distribution</h3>
 
+<h3>Extract the distribution</h3>
 <p>
 Move the distribution to this directory, check that the rights on this
 directory allow you to create a directory and extract the distribution.</p>
@@ -56,8 +56,8 @@ create a new directory called <code>Thot</code> populated with a few files and
 directories. If not, your distribution file was probably corrupted during
 transfer, please get a new one. Read carefully the <code>COPYRIGHT</code>,
 <code>README</code> and <code>AboutTho</code>t  files.</p>
-<h3>Set up the environment and start Amaya</h3>
 
+<h3>Set up the environment and start Amaya</h3>
 <p>
 The file <code>Thot/SYSTEM/bin/amaya</code> is the <strong>Amaya</strong>
 binary, the best thing is to add the path to the Thot/SYSTEM/bin directory to
@@ -75,39 +75,39 @@ Maybe this command should be added to the .login startup script. Once done one
 can lauch <strong>Amaya</strong> simply by typing "amaya" to the shell prompt.
 The <strong>Amaya</strong> main window should open and display the first page
 of the <strong>Amaya</strong> documentation.</p>
-<h3>If something goes wrong</h3>
 
+<h3>If something goes wrong</h3>
 <ul>
-  <li>
-  If <strong>Amaya</strong> doesn't seems to work, check the following points:
-  <ol>
-    <li>
-    the <code>DISPLAY</code> variable is correctly set.
-    <li>
-    eventually remove your previous registry file $HOME/.thotrc. 
-    <li>
-    The binary just installed is the correct one, i.e. it is the correct
-    binaries for the current machine (don't try to start the Linux-ELF version
-    on a Solaris machine or an old Linux a.out installation).
-    <li>
-    If the binary version is ok, check the availability of the dynamic
-    libraries needed by the executable file amayamain (located under
-    <code>Thot/bin/SYSTEM/amaya</code>). for example on a
-    <strong>Linux-ELF</strong> system type
-    <p>
-    <code>ldd Thot/LINUX-ELF/bin/amaya</code></p>
-    <p>
-    and check that there is no missing libraries.</p>
-  </ol>
-  <li>
-  One can install packages for different platform under the same directory
-  (for example on a server filesystem exported via NFS to an heterogenous set
-  of machines), use the appropriate <code>PATH</code> on each platform.
-  <li>
-  All the traffic on the Amaya mailing-list is archived <a
-  href="http://opera.inrialpes.fr/amaya/messages/">here</a>. Please have a
-  look at it before sending us mail if something goes wrong. Remember, it's an
-  Alpha release.
+<li>
+If <strong>Amaya</strong> doesn't seems to work, check the following points: 
+<ol>
+<li>
+the <code>DISPLAY</code> variable is correctly set. 
+<li>
+eventually remove your previous registry file $HOME/.thotrc. 
+<li>
+The binary just installed is the correct one, i.e. it is the correct binaries
+for the current machine (don't try to start the Linux-ELF version on a Solaris
+machine or an old Linux a.out installation). 
+<li>
+If the binary version is ok, check the availability of the dynamic libraries
+needed by the executable file amayamain (located under
+<code>Thot/bin/SYSTEM/amaya</code>). for example on a
+<strong>Linux-ELF</strong> system type 
+<p>
+<code>ldd Thot/LINUX-ELF/bin/amaya</code></p>
+<p>
+and check that there is no missing libraries.</p>
+</ol>
+<li>
+One can install packages for different platform under the same directory (for
+example on a server filesystem exported via NFS to an heterogenous set of
+machines), use the appropriate <code>PATH</code> on each platform. 
+<li>
+All the traffic on the Amaya mailing-list is archived <a
+href="http://opera.inrialpes.fr/amaya/messages/">here</a>. Please have a look
+at it before sending us mail if something goes wrong. Remember, it's an Alpha
+release. 
 </ul>
 <hr>
 <address>
