@@ -147,6 +147,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaPopupList.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaPrintNotify.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaQuickSplitButton.cpp
 # End Source File
 # Begin Source File
@@ -160,6 +164,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaSimpleWindow.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaSubPanel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaSubPanelManager.cpp
 # End Source File
 # Begin Source File
 

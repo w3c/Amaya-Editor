@@ -1150,7 +1150,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
 	    return;
 	  /* get the window's panel */
 	  AmayaPanel * p_panel = p_window->GetAmayaPanel();
-	  wxASSERT( p_panel );
+      /* it is possible to have no panel, for example with AmayaSimpleWindow (ShowAppliedStyle) */
 	  if ( !p_panel )
 	    return;
 
