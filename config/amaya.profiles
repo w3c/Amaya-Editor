@@ -119,6 +119,7 @@ ShowMapAreas
 +bdi-text-module
 +clientside-module
 +css-style
++edit-module
 +forms
 +hypertext-module
 +image-module
@@ -153,6 +154,7 @@ ShowMapAreas
 +bdi-text-module
 +clientside-module
 +css-style
++edit-module
 +forms
 +hypertext-module
 +image-module
