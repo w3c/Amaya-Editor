@@ -156,14 +156,18 @@ static void InitFormLanguage (Document doc, View view,
      {
        /* on cree un selecteur */
        if (nbItem >= 6)
-	 length = 6;
+	 i = 6;
        else
-	 length = nbItem;
+	 i = nbItem;
        TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		       TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
-		       length, NULL, TRUE, TRUE);
+		       i, NULL, TRUE, TRUE);
      }
-   if (defItem < 0)
+   if (defItem >= 0)
+     TtaSetSelector (NumSelectLanguage, defItem, NULL);
+   else if (ptr)
+     TtaSetSelector (NumSelectLanguage, -1, ptr);
+   else
      TtaSetSelector (NumSelectLanguage, -1, NULL);
 #endif /* _WINDOWS */
    if (languageCode[0] == EOS)

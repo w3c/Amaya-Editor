@@ -678,33 +678,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "%%%%Pages: (atend)\n");
 	  fprintf (PSfile, "%%%%EndComments\n\n");
 	  
-	  fprintf (PSfile, "/ThotDict 100 dict def\n");
-	  fprintf (PSfile, "ThotDict begin\n\n");
-	  fprintf (PSfile, "statusdict begin\n");
-
-	  if (manualFeed == 0)
-	    {
-	      if (!strcmp (pageSize, "A3"))
-		fprintf (PSfile, "a3tray\n");
-	    }
-	  else
-	    {
-	      fprintf (PSfile, "/manualfeed true def\n");
-	    }
-	  if (BlackAndWhite != 0)
-	    fprintf (PSfile, "1 setprocesscolors\n");
-	  fprintf (PSfile, "end\n");
-	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
-	  fprintf (PSfile, "/reduction %d def\n", Zoom);
-	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
-	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
-	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
-	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
-	  fprintf (PSfile, "/evenodd 0 def\n");
-	  fprintf (PSfile, "/HPrinterOff 0 def\n");
-	  fprintf (PSfile, "/VPrinterOff 0 def\n");
-	  fprintf (PSfile, "/user_orientation 0 def  \n");
-	  
+	  fprintf (PSfile, "%%%%BeginProlog\n");
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
 	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
 	  fprintf (PSfile, "setpatterndict begin\n");
@@ -1351,6 +1325,33 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "%%%%EndProlog\n");
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
+	  
+	  fprintf (PSfile, "/ThotDict 100 dict def\n");
+	  fprintf (PSfile, "ThotDict begin\n\n");
+	  fprintf (PSfile, "statusdict begin\n");
+
+	  if (manualFeed == 0)
+	    {
+	      if (!strcmp (pageSize, "A3"))
+		fprintf (PSfile, "a3tray\n");
+	    }
+	  else
+	    {
+	      fprintf (PSfile, "/manualfeed true def\n");
+	    }
+	  if (BlackAndWhite != 0)
+	    fprintf (PSfile, "1 setprocesscolors\n");
+	  fprintf (PSfile, "end\n");
+	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
+	  fprintf (PSfile, "/reduction %d def\n", Zoom);
+	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
+	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
+	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
+	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
+	  fprintf (PSfile, "/evenodd 0 def\n");
+	  fprintf (PSfile, "/HPrinterOff 0 def\n");
+	  fprintf (PSfile, "/VPrinterOff 0 def\n");
+	  fprintf (PSfile, "/user_orientation 0 def  \n");
 	  fprintf (PSfile, "/UserMatrice \n");
 	  fprintf (PSfile, "[reduction 100 div 0 0 2 index 0 0] \n");
 	  fprintf (PSfile, "[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
