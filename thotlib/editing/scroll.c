@@ -554,30 +554,54 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
   ----------------------------------------------------------------------*/
 void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {
+   PtrAbstractBox      pBlock;
+   PtrBox              pBox1;
+   PtrLine             pLine;
+   ViewFrame          *pFrame;
    int                 ymin, ymax;
    int                 width, height;
    int                 y, dy, h;
-   PtrBox              pBox1;
-   ViewFrame          *pFrame;
 
    if (pBox == NULL)
       return;
    pBox1 = pBox;
-   while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
-     pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
-   if (!pBox)
+   pBlock = NULL;
+   pLine = NULL;
+   if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
      {
-       pBox = pBox1;
-       while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-	 pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+       while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+	 pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+       if (!pBox)
+	 {
+	   pBox = pBox1;
+	   while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+	     pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+	 }
+       /* manage the line instead of the box itself */
+       pLine = SearchLine (pBox);
+       if (pLine)
+	 {
+	   pBlock = pBox->BxAbstractBox;
+	   while (pBlock && pBlock->AbBox->BxType != BoBlock &&
+		  pBlock->AbBox->BxType != BoFloatBlock)
+	     pBlock = pBlock->AbEnclosing;
+	 }
      }
 
    if (pBox->BxType == BoSplit)
      pBox = pBox->BxNexChild;
 
    pFrame = &ViewFrameTable[frame - 1];
-   y = pBox->BxYOrg;
-   h = pBox->BxHeight;
+   if (pBlock && pBlock->AbBox)
+     {
+       y = pBlock->AbBox->BxYOrg + pLine->LiYOrg;
+       h = pLine->LiHeight;
+     }
+   else
+     {
+       y = pBox->BxYOrg;
+       h = pBox->BxHeight;
+     }
    /* largeur et hauteur de la fenetre */
    GetSizesFrame (frame, &width, &height);
    ymin = pFrame->FrYOrg;

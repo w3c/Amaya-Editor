@@ -2413,7 +2413,7 @@ PtrLine SearchLine (PtrBox pBox)
 		     pBoxPiece = pBoxInLine;
 		  if (pBoxPiece == pBox)
 		    {
-		       /* the line is founs */
+		       /* the line is found */
 		       still = FALSE;
 		       pBoxPiece = pLine->LiLastBox;
 		    }
