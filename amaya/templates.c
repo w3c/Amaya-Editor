@@ -52,8 +52,9 @@ View view;
    URLform = TtaGetEnvString (TEXT("URL_TEMPLATE"));
    if (URLform != NULL)
      {
-      templateSelect = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
-     /*  SetBrowserEditor(templateSelect);*/ 
+    /*  templateSelect = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);*/
+       doc = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+       /* SetBrowserEditor(doc); */ 
      }
 }
 /*----------------------------------------------------------------------
@@ -139,14 +140,22 @@ Document doc;
       /* set the document name and dir */
       
       URLname = ustrrchr (buffer, URL_SEP);
-      URLname[0] = EOS;
-      URLname++;
-      URLdir = buffer;
-      TtaSetDocumentDirectory (doc, URLdir);
-      TtaSetDocumentName (doc,URLname);
-      
+      if (URLname)
+	{
+	  URLname[0] = EOS;
+	  URLname++;
+	  URLdir = buffer;
+	  TtaSetDocumentDirectory (doc, URLdir);
+	  TtaSetDocumentName (doc,URLname);
+	  /* SetBrowserEditor(doc); */ 
+	}
+      else
+	{
+	  TtaSetDocumentDirectory (doc, "");
+	  TtaSetDocumentName (doc, buffer);
+	}
     }
-   /* SetBrowserEditor(doc); */
+    
 }
   
 /*----------------------------------------------------------------------
@@ -154,13 +163,14 @@ Document doc;
   to reload a template
   ----------------------------------------------------------------------*/
 #ifdef __STDC__    
-void ReloadTemplateParams (STRING docURL, ClickEvent *method)
+void ReloadTemplateParams (STRING *docURL, ClickEvent *method)
 #else /* __STDC__ */
 void ReloadTemplateParams (docURL, method)
-STRING docURL;
+STRING *docURL;
 ClickEvent *method;
 #endif /* __STDC__ */
 {
    *method = CE_FORM_GET;
-   ustrcpy (docURL, script_URL);
+   TtaFreeMemory (*docURL);
+   *docURL = TtaStrdup (script_URL);
 }

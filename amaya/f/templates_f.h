@@ -9,7 +9,7 @@
 extern void NewTemplate ( Document doc,
                           View view );
 extern void OpenTemplateDocument ( Document doc );
-extern void ReloadTemplateParams ( STRING docURL,
+extern void ReloadTemplateParams ( STRING *docURL,
                                    ClickEvent *method );
 
 #else /* __STDC__ */
@@ -17,7 +17,7 @@ extern void ReloadTemplateParams ( STRING docURL,
 extern void NewTemplate (/* Document doc,
                             View view */);
 extern void OpenTemplateDocument (/* Document doc */);
-extern void ReloadTemplateParams (/* STRING docURL,
+extern void ReloadTemplateParams (/* STRING *docURL,
                                      ClickEvent *method */);
 
 #endif /* __STDC__ */
