@@ -1304,9 +1304,7 @@ View                view;
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
 # else /* _WINDOWS */
-  /*
-  CreateGraphDlgWindow (TtaGetViewFrame (doc, view), GraphDialogue,
-		       TtaGetThotWindow (GetWindowNumber (doc, view))); */
+  CreateGraphicsDlgWindow (GraphDialogue, FormGraph, MenuGraph, TtaGetThotWindow (GetWindowNumber (doc, view)));
 # endif /* _WINDOWS */
 }
 

@@ -225,7 +225,7 @@
 #define IDB_GALPHA1                     410
 #define IDB_GALPHA2                     411
 #define IDB_GGROUP                      412
-#define GRAPHDIALOG                     413
+#define GRAPHICSDIALOG                  413
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002

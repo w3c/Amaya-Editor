@@ -121,6 +121,9 @@ static int          menuAlphaLanguage;
 static int          LangValue;
 static int          cssSelect;
 static int          formCss;
+static int          graphDialog; 
+static int          formGraph; 
+static int          menuGraph;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -164,6 +167,7 @@ LRESULT CALLBACK Align3DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK GraphicsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveListDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK LanguageDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -189,6 +193,7 @@ LRESULT CALLBACK Align3DlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
+LRESULT CALLBACK GraphicsDlgProc ();
 LRESULT CALLBACK SaveListDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
 LRESULT CALLBACK LanguageDlgProc ();
@@ -493,6 +498,27 @@ int   doc_type;
 
 	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 	strcpy (doc_to_open, urlToOpen);
+}
+
+/*-----------------------------------------------------------------------
+ CreateGraphicsDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void  CreateGraphicsDlgWindow (int graph_dlg, int form_graph, int menu_graph, HWND frame)
+#else  /* !__STDC__ */
+void  CreateGraphicsDlgWindow (graph_dlg, form_graph, menu_graph, frame)
+int  graph_dlg; 
+int  form_graph; 
+int  menu_graph;
+HWND frame;
+#endif /* __STDC__ */
+{
+    currentFrame = frame;
+    graphDialog  = graph_dlg;
+    formGraph    = form_graph;
+    menuGraph    = menu_graph;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -934,7 +960,7 @@ LPARAM lParam;
 }
 	
 /*-----------------------------------------------------------------------
- LinkDlgProc
+ MathDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK MathDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -1611,6 +1637,86 @@ LPARAM lParam;
 				default: return FALSE;
 	}
 	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ GraphicsDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK GraphicsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK GraphicsDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+           case WM_COMMAND:
+                SetFocus (currentFrame);
+	            switch (LOWORD (wParam)) {
+				       case ID_DONE:
+							EndDialog (hwnDlg, ID_DONE);
+					        break;
+
+				       case WM_DESTROY:
+							EndDialog (hwnDlg, ID_DONE);
+					        break;
+
+                       case IDC_GLINE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)0);
+                            break;
+
+                       case IDC_GRECT:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)1);
+                            break;
+
+                       case IDC_GRRECT:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)2);
+                            break;
+
+                       case IDC_GCIRCLE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)3);
+                            break;
+
+                       case IDC_GELLIPSE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)4);
+                            break;
+
+                       case IDC_GPOLYLINE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)5);
+                            break;
+
+                       case IDC_GCPOLYLINE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)6);
+                            break;
+
+                       case IDC_GCURVE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)7);
+                            break;
+
+                       case IDC_GCCURVE:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)8);
+                            break;
+
+                       case IDC_GALPHA1:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)9);
+                            break;
+
+                       case IDC_GALPHA2:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)10);
+                            break;
+
+                       case IDC_GGROUP:
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (char*)11);
+                            break;
+				}
+				break;
+
+           default: return (FALSE) ;
+    }
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
