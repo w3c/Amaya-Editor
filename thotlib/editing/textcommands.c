@@ -41,7 +41,7 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-
+#include "applicationapi_f.h"
 #include "appli_f.h"
 #include "tree_f.h"
 #include "textcommands_f.h"
@@ -175,20 +175,23 @@ int                 yDelta;
       pLastBox = pLastBox->BxNext;
 
    pBox = pLastBox;
+   max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
    /* recherche la boite limite dans la ligne */
    if (xDelta > 0)
      {
-	max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
 	pLimitBox = GetClickedLeafBox (frame, max, y);
 	if (pLimitBox == NULL)
 	   pLimitBox = pLastBox;
      }
    else if (xDelta < 0)
      {
-	max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
 	pLimitBox = GetClickedLeafBox (frame, 0, y);
 	if (pLimitBox == NULL)
 	   pLimitBox = pLastBox;
+     }
+   else
+     {
+       pLimitBox = NULL;
      }
 
    i = 0;
@@ -473,6 +476,7 @@ unsigned char     **buffer;
    PtrElement          pFirstEl, pLastEl;
    PtrElement          pEl;
 
+   j = 0;
    /* Recupere la selection courante */
    if (!GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
       /* Rien a copier */
