@@ -1,10 +1,9 @@
-*/
+/*
    Ce programme compile un schema de presentation contenu dans un fichier
    de type .P
    Il est dirige par la grammaire du langage de presentation
    contenue, sous forme codee, dans le fichier PRESEN.GRM.
-   Il produit un fichier de type .PRS qui sera ensuite utilise
-   par l'Editeur.
+   Il produit un fichier de type .PRS qui sera ensuite utilise par Thot
  */
 
 #include "thot_sys.h"

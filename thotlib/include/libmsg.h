@@ -135,7 +135,7 @@
 #define INVALID_CHILD		             127
 #define ATTR_REQUIRED_FOR_EL		             128
 #define PAGE				             129
-#define UNKNOWN_TYPE			             130
+#define LIB_UNKNOWN_TYPE			             130
 #define LANGUAGE			                     131
 #define ATTR			                     132
 #define SEARCH_REF		                     133
