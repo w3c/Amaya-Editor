@@ -4606,7 +4606,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 
   /*  A rule applying to BODY is really meant to address HTML */
   elType = TtaGetElementType (el);
-
+  NewLineSkipped = 0;
   /* store the current line for eventually reported errors */
   LineNumber = TtaGetElementLineNumber (el);
   if (destroy)
@@ -4706,7 +4706,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   ctxt->cssLine = LineNumber + NewLineSkipped;
   ctxt->cssURL = url;
 
+  skippedNL = NewLineSkipped;
   selector = SkipBlanksAndComments (selector);
+  NewLineSkipped = skippedNL;
   cur = &sel[0];
   max = 0; /* number of loops */
   while (1)
@@ -4991,7 +4993,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  }
       }
 
+      skippedNL = NewLineSkipped;
       selector = SkipBlanksAndComments (selector);
+      NewLineSkipped = skippedNL;
+
       /* is it a multi-level selector? */
       if (*selector == EOS)
 	/* end of the selector */
@@ -5000,7 +5005,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	{
 	  /* end of the current selector */
 	  selector++;
+	  skippedNL = NewLineSkipped;
 	  next = SkipBlanksAndComments (selector);
+	  NewLineSkipped = skippedNL;
 	  if (*next == EOS)
 	    /* nothing after the comma. Invalid selector */
 	    {
@@ -5015,14 +5022,18 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    {
 	      /* handle immediat parent as a simple parent */
 	      selector++;
+	      skippedNL = NewLineSkipped;
 	      selector = SkipBlanksAndComments (selector);
+	      NewLineSkipped = skippedNL;
 	      rel[0] = RelImmediat;
 	    }
 	  else if (*selector == '+')
 	    {
 	      /* handle immediat parent as a simple parent */
 	      selector++;
+	      skippedNL = NewLineSkipped;
 	      selector = SkipBlanksAndComments (selector);
+	      NewLineSkipped = skippedNL;
 	      rel[0] = RelPrevious;
 	    }
 	  /* shifts the list to make room for the new name */
@@ -5432,7 +5443,11 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   cssRule = SkipBlanksAndComments (cssRule);
   decl_end = cssRule;
   while (*decl_end != EOS && *decl_end != '{')
-    decl_end++;
+    {
+      if (*decl_end == EOL)
+	NewLineSkipped++;
+      decl_end++;
+    }
   if (*decl_end == EOS)
     {
       CSSPrintError ("Invalid selector", cssRule);

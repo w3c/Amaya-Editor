@@ -1453,7 +1453,7 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
       TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
       if (loadcss)
 	ParseHTMLSpecificStyle (context->lastElement, attrValue,
-				context->doc, 100, FALSE);
+				context->doc, 200, FALSE);
       done = TRUE;
     }
   else

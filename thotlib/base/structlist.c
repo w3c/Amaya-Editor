@@ -3870,11 +3870,11 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
       l++;
     }
   if (rule->PrSpecificity == 200)
-    fprintf (fileDescriptor, " line %d, Style Attribute\n", rule->PrCSSLine);
+    fprintf (fileDescriptor, " line %d, style attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
-    fprintf (fileDescriptor, " line %d, File %s\n", rule->PrCSSLine, rule->PrCSSURL);
+    fprintf (fileDescriptor, " line %d, file %s\n", rule->PrCSSLine, rule->PrCSSURL);
   else
-    fprintf (fileDescriptor, " line %d, Style Element\n", rule->PrCSSLine);
+    fprintf (fileDescriptor, " line %d, style element\n", rule->PrCSSLine);
 }
 
 /*----------------------------------------------------------------------

@@ -2844,7 +2844,7 @@ static ThotBool ShowTextLine (Element el, Document doc)
 	       if (ptr)
 		 sscanf (&ptr[4], "%d", &index);
 	       /* Is there a file name in the current line */
-	       ptr = strstr (utf8value, ", File ");
+	       ptr = strstr (utf8value, ", file ");
 	       if (ptr)
 		 ptr += 7;
 	     }
