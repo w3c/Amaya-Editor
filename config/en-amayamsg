@@ -103,7 +103,7 @@
 102 Plugins
 103 Unknown error while saving URL %s
 104 Cannot make a connection to the server
-105 Access to %s is forbidden by rule
+105 Access to %s is forbidden by the server
 106 Operation succeded for %s
 107 %s has been created
 108 %s has been updated
@@ -130,3 +130,4 @@
 129 repeat
 130 repeat-x
 131 Your previous Amaya session failed. Do you want to reload backup documents?
+132 Authentication failed. Retry?
