@@ -114,7 +114,7 @@ int                *nbEntry;
 		  nbentrees++;
 	       }
 	     /* indique que la vue est dans le menu */
-	     LesVuesImprimables[i - 1].VdOpen = True;
+	     LesVuesImprimables[i - 1].VdOpen = TRUE;
 	  }
      }
    /* met ensuite dans le menu les autres vues */
@@ -145,6 +145,8 @@ int                *nbEntry;
 		  }
 	     }
      }
+   if((nbentrees > 0) && !LesVuesImprimables[0].VdOpen)
+     LesVuesImprimables[0].VdOpen=TRUE;
    *nbEntry = nbentrees;
 }
 
@@ -277,10 +279,14 @@ View                view;
    /* sous menu options */
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
+   i = strlen(BufMenu) +1;
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PAGINATE));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
-		TtaGetMessage (LIB, TMSG_OPTIONS), 1, BufMenu, NULL, FALSE);
+		TtaGetMessage (LIB, TMSG_OPTIONS), 2, BufMenu, NULL, FALSE);
    if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
+   if (Paginate)
+      TtaSetToggleMenu (NumMenuOptions, 1, TRUE);
 
   
    /* deuxieme colonne */

@@ -71,6 +71,7 @@ static int          defLastPage = 999;
 static int          defNbCopies = 1;
 static int          defReduction = 100;
 static int          defPagesPerSheet = 1;
+static int          defPaginate = TRUE;
 static int          defPageSize= PP_A4;
 
 /*----------------------------------------------------------------------
@@ -220,6 +221,7 @@ char               *viewsToPrint;
    /* transmit the path or source file */
    i = strlen (cmd);
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
+   sprintf (stderr, " %s", cmd);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -260,6 +262,7 @@ PtrDocument pDoc;
        defReduction = 100;
        defPagesPerSheet = 1;
        defPageSize= PP_A4;
+       defPaginate = TRUE;
      }
 
    if (pDoc != pDocPrint)
@@ -273,6 +276,7 @@ PtrDocument pDoc;
        NbCopies = defNbCopies ;
        Reduction = defReduction ;
        PagesPerSheet = defPagesPerSheet ;
+       Paginate = defPaginate;
        if (defPageSize == PP_A4)
          strcpy(PageSize,"A4");
        else
@@ -395,7 +399,7 @@ char               *viewNames;
 		  0, 0, orientation,
 		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
-		  1,
+		  Paginate,
 		  viewNames);
 	else if (PSdir[0] != '\0')
 	   Print (tmpDocName,
@@ -407,7 +411,7 @@ char               *viewNames;
 		  0, 0, orientation,
 		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
-		  1,
+		  Paginate,
 		  viewNames);
      }
    /* restores the presentation scheme */
@@ -477,7 +481,24 @@ int value;
           NbCopies = value;
         }
        break;
-     case PP_ManualFeed:
+     case PP_Paginate:
+       if (value != PP_ON || value!= PP_OFF )
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          if(value == PP_ON)
+            {
+              defPaginate = TRUE;
+              Paginate = TRUE;
+            }
+          else
+            {
+              defPaginate = FALSE;
+              Paginate = FALSE;
+            }
+        }
+       break;
+      case PP_ManualFeed:
        if (value != PP_ON || value!= PP_OFF )
           TtaError(ERR_invalid_parameter);
        else
@@ -605,8 +626,17 @@ char               *txt;
 			   }
 		     break;
 		  case NumMenuOptions:
-		     /* Manual feed option */
-		     ManualFeed = !ManualFeed;
+		    switch (val)
+                      {
+                       case 0:
+                         /* Manual feed option */
+                         ManualFeed = !ManualFeed;
+                         break;
+                       case 1:
+                         /* Repagination option */
+                         Paginate = !Paginate;
+                         break;
+                       }
 		     break;
 		  case NumZonePrinterName:
 		     if (txt[0] != '\0')

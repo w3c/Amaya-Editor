@@ -300,8 +300,9 @@
 #define TMSG_2_PAGE_SHEET					282
 #define TMSG_4_PAGE_SHEET					283
 #define TMSG_NB_PAGE_SHEET					284
-#define TMSG_VIEWS_TO_PRINT					285
-#define TMSG_CHANGE_PSCH					286
-#define TMSG_LIB_MSG_MAX				     287
+#define TMSG_PAGINATE					285
+#define TMSG_VIEWS_TO_PRINT					286
+#define TMSG_CHANGE_PSCH					287
+#define TMSG_LIB_MSG_MAX				     288
 
 #endif

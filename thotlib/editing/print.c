@@ -1784,6 +1784,7 @@ int                 lastPage;
 	pAb = AbsBoxesCreate (TheDoc->DocRootElement, TheDoc, CurrentView,
 			      TRUE, TRUE, &full);
 	RootAbsBox = pAb;
+	TheDoc->DocViewRootAb[CurrentView - 1] = pAb;
 	/* les numeros de pages a imprimer ne sont significatifs que pour la */
 	/* vue principale de l'arbre principal */
 	if (pViewD->DvPSchemaView != 1)

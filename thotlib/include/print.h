@@ -25,6 +25,7 @@ typedef int PrintParameter;
 #define PP_PagesPerSheet 5
 #define PP_PaperSize 6
 #define PP_Destination 7
+#define PP_Paginate 8
 #define PP_ON 1
 #define PP_OFF 0
 #define PP_A4 0
