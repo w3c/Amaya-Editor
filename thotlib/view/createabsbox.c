@@ -3386,6 +3386,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       schemaOfSelectedRule[i] = NULL;
       attrOfSelectedRule[i] = NULL;
     }
+if (!strcmp (pEl->ElLabel, "L134"))
+  printf ("ApplyPresRules\n");
 
   /* get all rules associated with the element type in the main presentation */
   /* schema (default stylesheet of the user agent in CSS terms) */
@@ -3639,6 +3641,11 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  if (ruleToApply && DoesViewExist (pEl, pDoc, viewNb))
 			    /* this rule applies to the element */
 			    {
+if (!strcmp (pEl->ElLabel, "L134"))
+  {
+    if (ruleToApply->PrType == PtFillPattern)
+      printf ("pattern2: %d\n", ruleToApply->PrIntValue);
+  }
 			      if (viewSch == 1 &&
 				  (ruleToApply->PrType != PtFunction ||
 				   (ruleToApply->PrType == PtFunction &&

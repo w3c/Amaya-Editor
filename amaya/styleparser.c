@@ -4382,14 +4382,13 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
    separated selector items, it parses them one at a time and  
    return the end of the selector string to be handled or NULL 
   ----------------------------------------------------------------------*/
-static char *ParseGenericSelector (char *selector, char *cssRule,
+static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
 				   GenericContext ctxt, Document doc,
 				   CSSInfoPtr css)
 {
   ElementType        elType;
   PSchema            tsch;
   AttributeType      attrType;
-  char               sel[MAX_ANCESTORS * 50];
   char              *deb, *cur, c;
   char              *schemaName, *mappedName;
   char              *names[MAX_ANCESTORS];
@@ -5024,6 +5023,7 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
 				    CSSInfoPtr css, ThotBool destroy)
 {
   GenericContext      ctxt;
+  char                sel[MAX_ANCESTORS * 50];
   char               *decl_end;
   char               *sel_end;
   char               *selector;
@@ -5062,8 +5062,8 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
     return;
   ctxt->destroy = destroy;
 
-  while ((selector != NULL) && (*selector != EOS))
-    selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css);
+  while (selector && *selector != EOS)
+    selector = ParseGenericSelector (selector, cssRule, sel, ctxt, doc, css);
   TtaFreeMemory (ctxt);
 }
 
@@ -5320,7 +5320,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
 		  styleElement);
-
   /* look for the CSS descriptor that points to the extension schema */
   refcss = css;
   if (import)
