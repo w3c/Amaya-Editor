@@ -52,7 +52,7 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
-AC_ARG_WITH(more-shared, [  --with-included-jpeg  Use provided libjpeg, libpng.])
+AC_ARG_WITH(more-shared, [  --with-included-jpeg    use provided libjpeg, libpng.])
 if test "$with_included_jpeg" != "yes" ; then
 dnl
     AC_MSG_CHECKING([for libjpeg version = 6b])
@@ -410,8 +410,8 @@ dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR THOT AND AMAYA
 dnl
 dnl  ***************************************************************
 
-THOT_VER="2.3"
-AMAYA_VER="3.1"
+THOT_VER="2.4"
+AMAYA_VER="3.2"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -420,14 +420,6 @@ dnl
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
 
-dnl
-dnl Check when building with Insure from Parasoft
-dnl
-
-AC_ARG_WITH(insure, [  --with-insure           Uses Insure Parasoft debugger])
-if test "$with_insure" = "yes" ; then
-    CC=insight
-fi
 
 dnl
 dnl Adjust the some variables depending on the host and compiler
@@ -451,9 +443,6 @@ dnl
 dnl Check for availability of amaya and thot editor sources
 dnl
 
-AC_ARG_WITH(thot, [  --with-thot             Build the Thot editor])
-AC_ARG_WITH(amaya, [  --with-amaya            Build the Amaya HTML browser/editor])
-
 build_thot="yes"
 build_amaya="yes"
 
@@ -476,42 +465,11 @@ fi
 
  
 dnl
-dnl Check for external, Thot related programs
-dnl
-
-build_misc="no"
-if test "$build_thot" = "yes" ;  then
-    if test -f $srcdir/misc/Makefile.in ; then
-	build_misc="yes"
-	build_annotations="no"
-	if test -f $srcdir/misc/annotations/Makefile.in ; then
-	    build_annotations="yes"
-	fi
-	if test -f $srcdir/misc/util/Makefile.in ; then
-	    build_util="yes"
-	    build_tableaux="no"
-	    build_transform="no"
-	    build_versions="no"
-	    if test -f $srcdir/misc/util/tableaux/Makefile.in ; then
-		build_tableaux="yes"
-	    fi
-	    if test -f $srcdir/misc/util/transform/Makefile.in ; then
-		build_transform="yes"
-	    fi
-	    if test -f $srcdir/misc/util/versions/Makefile.in ; then
-		build_versions="yes"
-	    fi
-	fi
-    fi
-fi
-
-dnl
 dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
-AC_ARG_ENABLE(math,    [  --enable-math           Add Math support ])
-AC_ARG_ENABLE(graph,   [  --enable-graph          Add Graphics support ])
-AC_ARG_ENABLE(annot,   [  --enable-annot          Add Annotations support ])
+AC_ARG_ENABLE(graph,   [  --disable-graph         remove Graphics support ])
+AC_ARG_ENABLE(annot,   [  --disable-annot         remove Annotations support ])
 
 dnl
 dnl plugins support is disabled by default
@@ -524,17 +482,6 @@ if test "$with_plugin" = "" ; then
     with_plugin="no"
   fi
 fi  
-
-dnl
-dnl math is enabled by default
-dnl
-if test "$with_math" = "" ; then
-    if test "$enable_math" = "no" ; then
-	with_math="no"
-    else
-	with_math="yes"
-    fi
-fi
 
 dnl
 dnl graph is disabled by default
@@ -551,10 +498,10 @@ dnl
 dnl annotations is disabled by default
 dnl
 if test "$with_annot" = "" ; then
-    if test "$enable_annot" = "yes" ; then
-	with_annot="yes"
-    else
+    if test "$enable_annot" = "no" ; then
 	with_annot="no"
+    else
+	with_annot="yes"
     fi
 fi
 
