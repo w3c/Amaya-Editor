@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include "ustring.h"
 
+#ifndef MAX_TXT_LEN
+#define MAX_TXT_LEN 1024
+#endif 
+
 #ifdef __STDC__
 extern int           uctoi                              (const STRING);
 extern long          uctol                              (const STRING);

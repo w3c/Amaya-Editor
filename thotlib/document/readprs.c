@@ -1371,10 +1371,10 @@ PtrPRule           *pNextPRule;
    	chargement reussi, NULL si echec.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPSchema          ReadPresentationSchema (Name fileName, PtrSSchema pSS)
+PtrPSchema          ReadPresentationSchema (CUSName fileName, PtrSSchema pSS)
 #else  /* __STDC__ */
 PtrPSchema          ReadPresentationSchema (fileName, pSS)
-Name                fileName;
+CUSName             fileName;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */

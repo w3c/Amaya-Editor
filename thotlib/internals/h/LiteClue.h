@@ -25,7 +25,11 @@ gary@compgen.com
 */
 /* Revision History:
 $Log$
-Revision 1.2  1998-06-08 07:12:51  cvs
+Revision 1.3  2000-02-22 16:45:53  cvs
+Unicode.
+Ramzi
+
+Revision 1.2  1998/06/08 07:12:51  cvs
 New version of LiteClue.
 Improvement of table formatting.
 Irene
@@ -72,7 +76,7 @@ extern "C" {
 extern WidgetClass xcgLiteClueWidgetClass; 
 typedef struct _LiteClueClassRec *XcgLiteClueWidgetClass;
 typedef struct _LiteClueRec      *XcgLiteClueWidget;
-void XcgLiteClueAddWidget(Widget w, Widget watch,  char * text, int size, int option );
+void XcgLiteClueAddWidget(Widget w, Widget watch,  STRING text, int size, int option );
 void XcgLiteClueDeleteWidget(Widget w, Widget watch);
 void XcgLiteClueSetSensitive(Widget w, Widget watch, Boolean sensitive);
 Boolean XcgLiteClueGetSensitive(Widget w, Widget watch);

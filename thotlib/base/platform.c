@@ -140,7 +140,7 @@ ThotDirBrowse      *me;
    int                 ls_car;
    ThotBool            notEof;
    struct stat         fileStat;
-   char                fName[MAX_LENGTH];
+   char                fName[MAX_TXT_LEN];
 
    while (TRUE)
      {
@@ -173,7 +173,7 @@ ThotDirBrowse      *me;
 	   return 0;
 
 #   ifdef _I18N_
-    wcstombs (fName, me->buf, MAX_LENGTH);
+    wcstombs (fName, me->buf, MAX_TXT_LEN);
 	if (stat (fName, &fileStat) == -1)
 #   else  /* !_I18N_ */
 	if (stat (me->buf, &fileStat) == -1)
@@ -434,9 +434,15 @@ ThotFileMode        mode;
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* _WINDOWS && !__GNUC__ */
-   char fName [MAX_LENGTH];
+#  ifdef _I18N_
+   char fName [MAX_TXT_LEN];
+#  else  /* !_I18N_ */
+   char* fName = name;
+#  endif /* !_I18N_ */
 
-   wcstombs (fName, name, MAX_LENGTH);
+#  ifdef _I18N_
+   wcstombs (fName, name, MAX_TXT_LEN);
+#  endif /* _I18N_ */
 #ifdef _WINDOWS_
    ret = open (fName, mode | _O_BINARY, 0777);
 #else

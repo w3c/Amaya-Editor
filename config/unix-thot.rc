@@ -34,6 +34,7 @@ HTTP_PROXY=
 NO_PROXY=
 ENABLE_LOST_UPDATE_CHECK=Yes
 PERSIST_CX_TIMEOUT=600
+SAFE_PUT_REDIRECT=Yes
 Profiles_File=amaya.profiles
 Profile=editor
 

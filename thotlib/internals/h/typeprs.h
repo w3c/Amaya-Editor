@@ -704,7 +704,7 @@ typedef ThotBool ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
 typedef struct _PresentSchema
 {
   PtrPSchema    PsNext;    		/* for free blocks linking */
-  Name	 	PsStructName;    	/* name of the structure schema */
+  Name          PsStructName;    	/* name of the structure schema */
   Name		PsPresentName;		/* name of this presentation schema */
   int	 	PsStructCode;    	/* code identifying the version of this
 					   structure schema */

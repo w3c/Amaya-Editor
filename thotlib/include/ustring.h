@@ -5,8 +5,9 @@
 
 #ifdef _WINDOWS
 #include <windows.h>
-#include <wchar.h>
 #endif /* _WINDOWS */
+
+#include <wchar.h>
 
 #ifdef _WINDOWS
 #define strncasecmp _strnicmp

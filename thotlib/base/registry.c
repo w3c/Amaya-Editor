@@ -995,9 +995,9 @@ char*   name;
   RegistryEntry cour;
   CHAR_T*       value;
   char*         EnvVarVal;
-# if defined(_I18N_) && defined(_WINDOWS)
+# ifdef _I18N_
   CHAR_T        tmp[MAX_TXT_LEN];
-# endif /* defined(_I18N_) && defined(_WINDOWS) */
+# endif /* _I18N_ */
 
   if (AppRegistryInitialized == 0)
      return WGetEnv (name);
