@@ -198,9 +198,9 @@ sub start_hndl {
 	}
 	elsif ($element eq "messages") { #warning: messageS != message
 		if ($recopy) { 
-			open ( HEADFILE, ">$head_name") || die "can't create $head_name because: $! \n";
+			open ( HEADFILE, ">$head_name") || die "can't product $head_name because: $! \n";
 			push (@list_of_dialogues_files ,"$head_name");
-			print "$comment_for_begining_of_h_file\n";
+			print  HEADFILE "$comment_for_begining_of_h_file\n";
 		}
 	}
 	elsif ( $element eq "") {
@@ -215,6 +215,10 @@ sub start_hndl {
 sub open_file {
   my ($filename) = shift;
   my $fh;
+  if (-r $filename) {
+  	rename ( $filename, $filename . ".old" )  || 	
+		 	warn "can't rename the old $filename to $filename.old before Export because of: $!\n";
+  }
   
   $fh = IO::File->new( ">$filename" ) || die "pb with creating $filename: &!";
   

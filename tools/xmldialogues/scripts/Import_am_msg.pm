@@ -150,7 +150,7 @@ sub import_a_language {
 	print "\tEnd Add/Update a language\n";
 	
 	if ($debug) {
-		print "\tThere is ",$_ = @list_of_lang_occur,"langues presentes:\n\t" ;
+		print "\tThere is ",$_ = @list_of_lang_occur,"languages :\n\t" ;
 		foreach ( @list_of_lang_occur ) {
 			print $_ . " ";
 		}

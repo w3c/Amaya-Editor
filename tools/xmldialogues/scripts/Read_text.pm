@@ -100,7 +100,9 @@ my @rest = ();
 	}
 	print "\tThere are $i texts recognised\n"	;
 	$_ = @list_of_references_that_dont_have_a_translate;
-	print "\tAnd there are $_ references that aren't already translale\n";
+	if ( $_ != 0) {
+		print "\tAnd there are $_ references that aren't already translated\n";
+	}
 	############### if you want the list of those reference read @list_of_references_that_dont_have_a_translate
 	print "\tEND of reading $file\n";
 	

@@ -130,12 +130,12 @@ sub menu {
 			"\t\tAmaya Dialogues Manager\n";
 	do {
 		do {
-			print "\nWhat dialogue type would you like to process?\n";
+			print "\n\tWhat dialogue type would you like to process?\n";
 			$count = 0;
 			foreach (@list) {
-				print "\t" . $count++ . "=>\t$_\n";
+				print "\t  " . $count++ . "=>\t$_\n";
 			}
-			print "Our choice [0]:\t";
+			print "\tOur choice [0]:\t";
 			$choice = <STDIN> ;
 			chomp ($choice);
 			if ($choice eq "") {
@@ -174,7 +174,7 @@ sub menu1 {
 	my $choice;
 	my $of_what = $index{ $last_choice}; 
 	my @list = ( 
-		"Go to the previous menu", 					#0
+		"Go to the previous menu (and Export the current result)", 					#0
 		"Init the XML base" ,							#1
 		"Add/Update a language", 						#2
 		"Export all dialogues files",					#3
@@ -188,12 +188,12 @@ sub menu1 {
 #show the menu
 do { # to continue to treat the same type of dialogue 			
 	do {
-		print "\nWhat kind of thing would you proceed on ",$types{$last_choice}, "?\n";
+		print "\n\tWhat kind of thing would you proceed on ",$types{$last_choice}, "?\n";
 		$count = 0;
 		foreach (@list) {
-			print "\t" . $count++ . "=>\t$_\n";
+			print "\t  " . $count++ . "=>\t$_\n";
 		}
-		print "Our choice [0]:\t";
+		print "\tOur choice [0]:\t";
 		$choice = <STDIN> ;
 		chomp ($choice);
 		if ($choice eq "") {
