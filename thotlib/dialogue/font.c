@@ -690,7 +690,7 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
 	  strcat (r_nameX, "new century schoolbook");
 	  break;
 	case 'h':
-	  strcat (r_nameX, "helvetica");
+	  strcat (r_nameX, "avantgarde");
 	  break;
 	case 'c':
 	  strcat (r_nameX, "courier");
@@ -733,16 +733,17 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
       break;
     case 'i':
     case 'o':
-      strcat (r_nameX, "medium-");
       if (UseAdobeFamily)
-	strcat (r_nameX, "i");
+	strcat (r_nameX, "medium-i");
       else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
-	strcat (r_nameX, "o");
+	strcat (r_nameX, "medium-o");
       else
-	strcat (r_nameX, "i");
+	strcat (r_nameX, "medium-i");
       break;
     case 'b':
-      if (UseLucidaFamily && TOLOWER (family) == 't')
+      if (UseAdobeFamily && TOLOWER (family) == 'h')
+	strcat (r_nameX, "demi");
+      else if (UseLucidaFamily && TOLOWER (family) == 't')
 	strcat (r_nameX, "demibold");
       else
 	strcat (r_nameX, "bold");
@@ -750,7 +751,9 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
       break;
     case 'g':
     case 'q':
-      if (UseLucidaFamily && TOLOWER (family) == 't')
+      if (UseAdobeFamily && TOLOWER (family) == 'h')
+	strcat (r_nameX, "demi");
+      else if (UseLucidaFamily && TOLOWER (family) == 't')
 	strcat (r_nameX, "demibold");
       else
 	strcat (r_nameX, "bold");

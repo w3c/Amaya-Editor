@@ -1767,12 +1767,15 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	      key = GetKeyState (VK_CONTROL);
 	      if (HIBYTE (key))
 		isSpecial = FALSE;
-	      key = GetKeyState (VK_MENU);
-	      if (HIBYTE (key))
-		isSpecial = FALSE;
 	      else
-		/* don't handle a simple 0-9 */
-		return 0;
+		{
+		  key = GetKeyState (VK_MENU);
+		  if (HIBYTE (key))
+		    isSpecial = FALSE;
+		  else
+		    /* don't handle a simple 0-9 */
+		    return 0;
+		}
 	    }
 	  else
 	    isSpecial = TRUE;
