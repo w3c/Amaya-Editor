@@ -963,7 +963,7 @@ int value;
 	TtaError(ERR_invalid_parameter);
       break;
     case PP_PagesPerSheet:
-      if (value != 1 || value != 2 || value != 4)
+      if (value != 1 && value != 2 && value != 4)
 	TtaError(ERR_invalid_parameter);
       else
 	PagesPerSheet = value;
