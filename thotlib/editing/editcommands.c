@@ -2267,7 +2267,11 @@ static void ContentEditing (int editType)
 			       frame, &ClipboardThot);
 	      /* vide le clipboard du Mediateur */
 	      if (editType == TEXT_CUT && !FromKeyboard)
-		CutCommand (TRUE);
+		{
+		  /* close the current text insertion */
+		  CloseTextInsertion ();
+		  CutCommand (TRUE);
+		}
 	      else if (editType == TEXT_COPY && !FromKeyboard)
 		CopyCommand ();
 	    }
@@ -2443,10 +2447,14 @@ static void ContentEditing (int editType)
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);		      
 		    else if (ThotLocalActions[T_deletenextchar] != NULL)
-		      (*(Proc3)ThotLocalActions[T_deletenextchar]) (
-				(void *)frame,
-				(void *)pAb->AbElement,
-				(void *)FALSE);
+		      {
+			/* close the current text insertion */
+			CloseTextInsertion ();
+			(*(Proc3)ThotLocalActions[T_deletenextchar]) (
+				 (void *)frame,
+				 (void *)pAb->AbElement,
+				 (void *)FALSE);
+		      }
 		    else
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);
