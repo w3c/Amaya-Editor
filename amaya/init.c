@@ -5537,12 +5537,12 @@ void                InitAmaya (NotifyEvent * event)
    TtaFreeMemory (tempname);
    restoredDoc = RestoreAmayaDocs ();
    s = NULL;
+   if (restoredDoc)
+     /* old documents are restored */
+     return;
    if (appArgc % 2 == 0)
       /* The last argument in the command line is the document to be opened */
       s = appArgv[appArgc - 1];
-   else if (restoredDoc)
-     /* old documents are restored */
-     return;
 #ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));              
