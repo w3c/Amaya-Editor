@@ -693,10 +693,12 @@ PicType             filetype;
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 
   /* Save */
+  /* JK: SYNC requests assume that the remotefile name is a static array */
+  strcpy (tempfile, remotefile);
 #ifdef AMAYA_JAVA
-  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, tempfile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
 #else /* AMAYA_JAVA */
-  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, tempfile, AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, filetype, NULL, NULL);
 #endif /* AMAYA_JAVA */
   if (res != 0)
     /* The HTTP PUT method failed ! */
