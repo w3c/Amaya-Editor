@@ -1583,7 +1583,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_DOWN)
 	{
 	  key = (int) wParam;
-	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (char *)&key))
+	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, TRUE);
 	  if (wParam != VK_MENU)
 	    return 0;
@@ -1593,7 +1593,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_SYSCHAR:
     case WM_CHAR:
       key = (int) wParam;
-      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (char *)&key))
+      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
       if (wParam != VK_MENU)
 	return 0;
