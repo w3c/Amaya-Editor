@@ -1790,7 +1790,7 @@ void StyleCallbackDialogue (int ref, int typedata, char  *data)
       break;
     case AClassSelect:
       strcpy (CurrentClass, data);
-      DoApplyClass (ApplyClassDoc);
+      /*DoApplyClass (ApplyClassDoc);*/
       break;
     case AClassForm:
       if (val == 1)
