@@ -25,7 +25,7 @@
 ## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
 
 ################# AMAYA EDITOR
-<XHTML-transitional (editor)>
+<XHTML 1.0 Transitional (editor)>
 +amayabase
 +annot
 +base-module
@@ -54,38 +54,8 @@
 +templates
 +views
 
-################# XHTML1.1
-<XHTML-1.1 (editor)>
-&CreateRuby
-+amayabase
-+annot
-+base-module
-+bdi-text-module
-+browsing
-+clientside-module
-+config
-+css-style
-+edit
-+forms
-+link-module
-+edit-module
-+meta-module
-+presentation-module
-+makebook
-+makeid
-+maths
-+object-module
-+print
-+script-module
-+source-view
-+spell
-+svg
-+tables
-+templates
-+views
-
 ################# XHTML-STRICT
-<XHTML-strict (editor)>
+<XHTML 1.0 Strict (editor)>
 +amayabase
 +annot
 +base-module
@@ -114,7 +84,7 @@
 +views
 
 ################# AMAYA XHTML-BASIC
-<XHTML-basic (editor)>
+<XHTML Basic (editor)>
 +amayabase
 +basic-form-module
 +basic-table-module
@@ -134,8 +104,38 @@
 +text-module
 +views
 
+################# XHTML1.1
+<XHTML 1.1 (editor)>
+&CreateRuby
++amayabase
++annot
++base-module
++bdi-text-module
++browsing
++clientside-module
++config
++css-style
++edit
++forms
++link-module
++edit-module
++meta-module
++presentation-module
++makebook
++makeid
++maths
++object-module
++print
++script-module
++source-view
++spell
++svg
++tables
++templates
++views
+
 ################# AMAYA MINI-EDITOR
-<XHTML-transitional (mini-editor)>
+<XHTML 1.0 Transitional (mini-editor)>
 +amayabase
 +css-style
 +edit
@@ -143,7 +143,7 @@
 +source-view
 
 ################# AMAYA BROWSER
-<XHTML-transitional (browser)>
+<XHTML 1.0 Transitional (browser)>
 +amayabase
 +browsing
 +config
@@ -154,7 +154,7 @@
 ShowMapAreas
 
 ################# AMAYA MINI-BROWSER
-<XHTML-transitional (mini-browser)>
+<XHTML 1.0 Transitional (mini-browser)>
 +amayabase
 +browsing
 +print
