@@ -5493,12 +5493,13 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 				     GTK_SIGNAL_FUNC(CallMenu),
 						   catalogue);
 		     */
-		    
+		    /* disconnecte the callback to avoid multiple connect */
+		    /*		    RemoveSignalGTK (GTK_OBJECT(w), "activate");
 		    if (activate)
 		      ConnectSignalGTK (GTK_OBJECT(w),
 					"activate",
 					GTK_SIGNAL_FUNC(CallMenuGTK),
-					(gpointer)catalogue);
+					(gpointer)catalogue);*/
 		    /*		     else
 		       gtk_signal_disconnect_by_func(GTK_OBJECT(w),
 						     GTK_SIGNAL_FUNC(CallMenuGTK),

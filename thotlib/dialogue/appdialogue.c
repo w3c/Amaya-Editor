@@ -2293,7 +2293,7 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   guint id;
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
-  gtk_signal_disconnect (GTK_OBJECT (w), id); 
+  gtk_signal_disconnect (GTK_OBJECT (w), id);
 }
 #endif
 
