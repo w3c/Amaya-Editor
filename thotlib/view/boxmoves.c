@@ -2053,7 +2053,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    {
 	    if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
 	      RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
-	    else
+	    else if (pBox->BxType != BoGhost)
 	      {
 		pAb = pCurrentAb->AbFirstEnclosed;
 		while (pAb != NULL)
@@ -2198,7 +2198,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  if (!toMove)
 	    {
 	      /* look for the enclosing block of lines  */
-	      while (pAb->AbBox->BxType != BoBlock &&
+	      while (pAb &&
+		     pAb->AbBox->BxType != BoBlock &&
 		     pAb->AbBox->BxType != BoFloatBlock)
 		pAb = pAb->AbEnclosing;
 	    }
