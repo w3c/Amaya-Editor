@@ -529,8 +529,6 @@ void GL_SetForeground (int fg)
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
-  char              dash[2];
-
   if (style >= 5)
     {
       /* solid */
