@@ -24,7 +24,6 @@
 static BinFile      outfile;
 
 #include "memory_f.h"
-#include "fileaccess_f.h"
 #include "writeprs_f.h"
 
 /*----------------------------------------------------------------------

@@ -35,7 +35,6 @@
 #include "content_f.h"
 #include "exceptions_f.h"
 #include "externalref_f.h"
-#include "fileaccess_f.h"
 #include "labelalloc_f.h"
 #include "memory_f.h"
 #include "references_f.h"

@@ -119,7 +119,6 @@ int                 NbUsed_Dict;
 PtrDict             PtFree_Dict;
 
 #include "memory_f.h"
-#include "fileaccess_f.h"
 #include "abspictures_f.h"
 
 #ifndef IV_DEBUG

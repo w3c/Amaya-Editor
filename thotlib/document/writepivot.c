@@ -24,6 +24,7 @@
 #include "appaction.h"
 #include "appstruct.h"
 #include "typecorr.h"
+#include "zlib.h"
 #include "fileaccess.h"
 #include "labelAllocator.h"
 #include "application.h"

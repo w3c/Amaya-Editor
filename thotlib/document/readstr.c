@@ -14,6 +14,7 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "zlib.h"
 #include "fileaccess.h"
 
 /* variables importees */

@@ -14,6 +14,7 @@
 #include "constmedia.h"
 #include "constpiv.h"
 #include "typemedia.h"
+#include "zlib.h"
 #include "fileaccess.h"
 #include "libmsg.h"
 #include "message.h"

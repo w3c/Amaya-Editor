@@ -21,7 +21,6 @@
 #define THOT_EXPORT extern
 static BinFile      outfile;
 
-#include "fileaccess_f.h"
 #include "writestr_f.h"
 
 /*----------------------------------------------------------------------

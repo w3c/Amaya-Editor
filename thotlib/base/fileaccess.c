@@ -21,6 +21,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "zlib.h"
 #include "fileaccess.h"
 #include "message_wx.h"
 

@@ -20,6 +20,7 @@
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
+#include "zlib.h"
 #include "fileaccess.h"
 #include "typecorr.h"
 #include "appdialogue.h"
