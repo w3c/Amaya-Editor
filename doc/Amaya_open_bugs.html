@@ -41,12 +41,16 @@
       <td class="categ"><a href="#interface">User Interface</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#xhtml">(X)HTML</a></td>
+      <td class="categ"><a href="#GL">GL</a></td>
       <td class="categ"><a href="#XML">XML</a></td>
     </tr>
     <tr>
-      <td class="categ"><a href="#I18N">I18N</a></td>
+      <td class="categ"><a href="#xhtml">(X)HTML</a></td>
       <td class="categ"><a href="#miscellaneous">Miscellaneous</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#I18N">I18N</a></td>
+      <td></td>
     </tr>
     <tr>
       <td class="categ"><a href="#images">Images</a></td>
@@ -113,9 +117,16 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>Crash with most of XHTML media type test documents
+
+        <p><a
+        href="http://www.w3.org/People/mimasa/test/xhtml/media-types/Amaya8.1">http://www.w3.org/People/mimasa/test/xhtml/media-types/Amaya8.1</a></p>
+
+        <p>Seems to be a problem with the CSS rule "[dir="ltr"] {direction:
+        ltr}</p>
+      </td>
+      <td>2003-07-10</td>
+      <td>Masayasu</td>
       <td></td>
       <td></td>
     </tr>
@@ -155,7 +166,10 @@
         "Before selection" first and then "In the whole document".</p>
       </td>
       <td>2002-07-10</td>
-      <td>K.M. Schneider</td>
+      <td>K.M.
+
+        <p>Schneider</p>
+      </td>
       <td>Irène</td>
       <td></td>
     </tr>
@@ -168,7 +182,10 @@
         attribute set to application/x-javascript, it nested the script
         element within an address element.</td>
       <td>2002-07-10</td>
-      <td>B. L. Gurganus</td>
+      <td>B. L.
+
+        <p>Gurganus</p>
+      </td>
       <td></td>
       <td></td>
     </tr>
@@ -180,7 +197,8 @@
         synchonization is ended).
 
         <p><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html">http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html</a></p>
+        href="http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html">http://lists.w3.org/Archives/Public/www-amaya/</a><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html">2002OctDec/0032.html</a></p>
       </td>
       <td>2002-10-13</td>
       <td>S. Zanelli</td>
@@ -219,7 +237,30 @@
         started it again it knew that I had unsaved documents before the
         crash but it failed to find them :(</td>
       <td>2003-04</td>
-      <td>Charles McCathieNevile</td>
+      <td>Charles McCathie
+
+        <p>Nevile</p>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>No linebreaks for copy+paste under windows
+
+        <p>When trying to copy some text from an Amaya window into a mail
+        message (Netscape), all linebreaks get lost (or rather: not
+        converted- there are some weird characters where the linebreaks
+        should be).</p>
+      </td>
+      <td>2003-07-09</td>
+      <td>P. Hoschka</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Bug in copying structures on Windows</td>
+      <td>2003-07-10</td>
+      <td>Marja</td>
       <td></td>
       <td></td>
     </tr>
@@ -339,8 +380,44 @@
       <td></td>
       <td></td>
     </tr>
+    <tr>
+      <td><a href="../misc/amaya/browsebox.htm">This form doesn't work at all
+        .....</a> (aka "form not finished")</td>
+      <td>2003-07-10</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="GL">GL</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Crash with 8.1 version
+
+        <p>follow "a demonstration of animation" link, and Amaya always
+        crashes</p>
+      </td>
+      <td>2003-07-10</td>
+      <td>Masayasu</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
 
 <p></p>
 
@@ -407,7 +484,23 @@
       <td>Problem with the input of Unicode characters on Windows XP
         platforms.</td>
       <td></td>
-      <td>J.C.Woestenburg</td>
+      <td>J.C.&nbsp;Woes-
+
+        <p>tenburg</p>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>I just noticed that amaya respects the LANG (or LC_ALL? didn't
+        check that) when creating the http date header. At least the askemos
+        server rejects such a request. However I'm not sure whether localized
+        headers are conforming to w3 standard. I believe the string should be
+        in rfc 822 format, i.e., english. Please drop me a note if you can
+        point me towards any definition what the server should do instead of
+        terminating the connection</td>
+      <td></td>
+      <td>Joerg&nbsp;F. Wit tenberger</td>
       <td></td>
       <td></td>
     </tr>
@@ -613,6 +706,20 @@
       <td></td>
       <td></td>
     </tr>
+    <tr>
+      <td>Wrong table cell calculations.
+
+        <p><a
+        href="http://home.cogeco.ca/~ve3ll/jssked.htm#students">http://home.cogeco.ca/~ve3ll/jssked.htm#students</a></p>
+
+        <p><a
+        href="http://home.cogeco.ca/~ve3ll/htmlsked.htm#students">http://home.cogeco.ca/~ve3ll/htmlsked.htm#students</a></p>
+      </td>
+      <td>2003-07-09</td>
+      <td>John Russell</td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
@@ -762,7 +869,7 @@
     <tr>
       <td>Need a different set of shortcuts for different languages.</td>
       <td>2003-04</td>
-      <td>Charles McCathieNevile</td>
+      <td>C.McCathie Nevile</td>
       <td></td>
       <td></td>
     </tr>
