@@ -186,9 +186,9 @@ ThotDirBrowse      *me;
    strcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
-   if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->mask & ThotDirBrowse_DIRECTORIES))
+   if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
       return 0;
-   if (attr & FILE_ATTRIBUTE_NORMAL && !(me->mask & ThotDirBrowse_FILES))
+   if (attr & FILE_ATTRIBUTE_NORMAL && !(me->PicMask & ThotDirBrowse_FILES))
       return 0;
    return 1;
 #else  /* WWW_MSWINDOWS */
@@ -228,10 +228,10 @@ ThotDirBrowse      *me;
 	   return 0;
 	if (stat (me->buf, &fileStat) == -1)
 	   return -1;
-	/* next if fileStat is not included in our mask */
-	if (S_ISDIR (fileStat.st_mode) && !(me->mask & ThotDirBrowse_DIRECTORIES))
+	/* next if fileStat is not included in our PicMask */
+	if (S_ISDIR (fileStat.st_mode) && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
 	   continue;
-	if (S_ISREG (fileStat.st_mode) && !(me->mask & ThotDirBrowse_FILES))
+	if (S_ISREG (fileStat.st_mode) && !(me->PicMask & ThotDirBrowse_FILES))
 	   continue;
 	return 1;
      }

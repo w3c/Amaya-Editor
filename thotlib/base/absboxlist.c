@@ -136,7 +136,7 @@ FILE               *outfile;
    PtrPosRelations      pTa1;
    BoxRelation           *pRe1;
    PtrDimRelations      pTabD1;
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
    if (pAb->AbBox != NULL)
      {
@@ -285,16 +285,16 @@ FILE               *outfile;
 			 fprintf (outfile, "\'");
 			 break;
 		      case LtPicture:
-			 image = (ImageDescriptor *) pAb->AbImageDescriptor;
+			 image = (PictInfo *) pAb->AbPictInfo;
 			 fprintf (outfile, "PICTURE\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
 			 if (image == NULL)
-			    fprintf (outfile, "ImageDescriptor = NULL");
+			    fprintf (outfile, "PictInfo = NULL");
 			 else
 			    fprintf (outfile, "x = %d, y = %d, w = %d, h = %d, name = %s",
-			     image->xcf, image->ycf, image->wcf, image->hcf,
-				     image->imageFileName);
+			     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+				     image->PicFileName);
 			 break;
 		      case LtPageColBreak:
 			 fprintf (outfile, "PAGE");

@@ -30,7 +30,7 @@
 * XpmRdFToI.c:                                                                *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an XPM file and create the image and possibly its mask               *
+*  Parse an XPM file and create the image and possibly its PicMask               *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

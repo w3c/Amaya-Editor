@@ -178,13 +178,13 @@ int              Vue;
    pRegle->PrSpecifAttr = 0;
    pRegle->PrSpecifAttrSSchema = NULL;
    pRegle->PrViewNum = Vue;
-   pRegle->PrType = PtImDescr;
-   pRegle->PrImageDescr.xcf = 0;
-   pRegle->PrImageDescr.ycf = 0;
-   pRegle->PrImageDescr.wcf = 0;
-   pRegle->PrImageDescr.hcf = 0;
-   pRegle->PrImageDescr.imagePres = pres;
-   pRegle->PrImageDescr.imageType = typeimage;
+   pRegle->PrType = PtPictInfo;
+   pRegle->PrPictInfo.PicXArea = 0;
+   pRegle->PrPictInfo.PicYArea = 0;
+   pRegle->PrPictInfo.PicWArea = 0;
+   pRegle->PrPictInfo.PicHArea = 0;
+   pRegle->PrPictInfo.PicPresent = pres;
+   pRegle->PrPictInfo.PicType = typeimage;
    /* chaine la nouvelle regle */
    pRegle->PrNextPRule = pEl->ElFirstPRule;
    pEl->ElFirstPRule = pRegle;
@@ -567,7 +567,7 @@ boolean             oldformat;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdImageType lit le type de l'image d'un ImageDescriptor.        | */
+/* |    rdImageType lit le type de l'image d'un PictInfo.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -591,19 +591,19 @@ BinFile             fich;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdCroppingFrame lit la cropping frame d'un ImageDescriptor.     | */
+/* |    rdCroppingFrame lit la cropping frame d'un PictInfo.     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         rdCroppingFrame (BinFile fich, int *xcf, int *ycf, int *wcf, int *hcf)
+static void         rdCroppingFrame (BinFile fich, int *PicXArea, int *PicYArea, int *PicWArea, int *PicHArea)
 
 #else  /* __STDC__ */
-static void         rdCroppingFrame (fich, xcf, ycf, wcf, hcf)
+static void         rdCroppingFrame (fich, PicXArea, PicYArea, PicWArea, PicHArea)
 BinFile             fich;
-int                *xcf;
-int                *ycf;
-int                *wcf;
-int                *hcf;
+int                *PicXArea;
+int                *PicYArea;
+int                *PicWArea;
+int                *PicHArea;
 
 #endif /* __STDC__ */
 
@@ -611,17 +611,17 @@ int                *hcf;
    int                 n;
 
    BIOreadShort (fich, &n);
-   *xcf = PtEnPixel (n, 1);
+   *PicXArea = PtEnPixel (n, 1);
    BIOreadShort (fich, &n);
-   *ycf = PtEnPixel (n, 0);
+   *PicYArea = PtEnPixel (n, 0);
    BIOreadShort (fich, &n);
-   *wcf = PtEnPixel (n, 1);
+   *PicWArea = PtEnPixel (n, 1);
    BIOreadShort (fich, &n);
-   *hcf = PtEnPixel (n, 0);
+   *PicHArea = PtEnPixel (n, 0);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdImagePresentation lit la presentation d'un ImageDescriptor.   | */
+/* |    rdImagePresentation lit la presentation d'un PictInfo.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1535,7 +1535,7 @@ boolean             Attache;
    boolean             just;
    int                 val;
    int                 typeimage;
-   int                 xcf, ycf, wcf, hcf;
+   int                 PicXArea, PicYArea, PicWArea, PicHArea;
    PictureScaling           pres;
    PtrPRule        pR1;
    PtrPRule        pRegle;
@@ -1603,7 +1603,7 @@ boolean             Attache;
 	       TypeRP = PtBreak2;
 	       break;
 	    case C_PR_PICTURE:
-	       TypeRP = PtImDescr;
+	       TypeRP = PtPictInfo;
 	       break;
 	    case C_PR_INDENT:
 	       TypeRP = PtIndent;
@@ -1686,8 +1686,8 @@ boolean             Attache;
 	       case PtHyphenate:
 		  just = rdBooleen (fichpiv);
 		  break;
-	       case PtImDescr:
-		  rdCroppingFrame (fichpiv, &xcf, &ycf, &wcf, &hcf);
+	       case PtPictInfo:
+		  rdCroppingFrame (fichpiv, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
 		  pres = rdImagePresentation (fichpiv);
 		  typeimage = rdImageType (fichpiv);
 		  break;
@@ -1798,13 +1798,13 @@ boolean             Attache;
 		    case PtHyphenate:
 		       pRegle->PrJustify = just;
 		       break;
-		    case PtImDescr:
-		       pRegle->PrImageDescr.xcf = xcf;
-		       pRegle->PrImageDescr.ycf = ycf;
-		       pRegle->PrImageDescr.wcf = wcf;
-		       pRegle->PrImageDescr.hcf = hcf;
-		       pRegle->PrImageDescr.imagePres = pres;
-		       pRegle->PrImageDescr.imageType = typeimage;
+		    case PtPictInfo:
+		       pRegle->PrPictInfo.PicXArea = PicXArea;
+		       pRegle->PrPictInfo.PicYArea = PicYArea;
+		       pRegle->PrPictInfo.PicWArea = PicWArea;
+		       pRegle->PrPictInfo.PicHArea = PicHArea;
+		       pRegle->PrPictInfo.PicPresent = pres;
+		       pRegle->PrPictInfo.PicType = typeimage;
 		       break;
 		    default:
 		       break;
@@ -2485,7 +2485,7 @@ boolean             creedesc;
 						     if (trouvetype)
 						       {
 							  /* on a trouve une image v1, on cree une regle */
-							  /* de presentation ImageDescriptor pour l'element */
+							  /* de presentation PictInfo pour l'element */
 							  CreateReglePres (pEl, typeimage, pres, Vue);
 						       }
 						     pEl->ElNameLength += n;

@@ -4006,7 +4006,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
   char            c;
   int             VueSch;
   PtrAbstractBox         pPa1;
-  ImageDescriptor *myImageDescriptor;
+  PictInfo *myImageDescriptor;
 #ifdef __COLPAGE__
   *pavedetruit = False;
 #else /* __COLPAGE__ */
@@ -4435,10 +4435,10 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    }
 	  
 	  break;
-	case PtImDescr:
-	  UpdateImageDescriptor(pPa1->AbImageDescriptor, (int *)&(pRegle->PrImageDescr));
-	  myImageDescriptor = (ImageDescriptor *)pPa1->AbImageDescriptor;
-	  myImageDescriptor->imageFileName = pPa1->AbElement->ElText->BuContent;
+	case PtPictInfo:
+	  UpdateImageDescriptor(pPa1->AbPictInfo, (int *)&(pRegle->PrPictInfo));
+	  myImageDescriptor = (PictInfo *)pPa1->AbPictInfo;
+	  myImageDescriptor->PicFileName = pPa1->AbElement->ElText->BuContent;
 	  break;
 	default:
 	  break;

@@ -122,8 +122,8 @@ FILE               *outfile;
 	    case PtForeground:
 	       fprintf (outfile, "Foreground");
 	       break;
-	    case PtImDescr:
-	       fprintf (outfile, "ImageDescriptor");
+	    case PtPictInfo:
+	       fprintf (outfile, "PictInfo");
 	       break;
 	    default:
 	       fprintf (outfile, "PrType ????");
@@ -960,7 +960,7 @@ FILE               *outfile;
    SRule              *pRe1;
    AbDimension       *pPavDim;
    PtrAttribute         pAt1;
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
    if (pAb != NULL)
      {
@@ -1087,13 +1087,13 @@ FILE               *outfile;
 
 		    break;
 		 case LtPicture:
-		    image = (ImageDescriptor *) pPa1->AbImageDescriptor;
+		    image = (PictInfo *) pPa1->AbPictInfo;
 		    if (image == NULL)
-		       fprintf (outfile, "AbImageDescriptor = NULL");
+		       fprintf (outfile, "AbPictInfo = NULL");
 		    else
 		       fprintf (outfile, "x = %d, y = %d, w = %d, h = %d, name = %s",
-			     image->xcf, image->ycf, image->wcf, image->hcf,
-				image->imageFileName);
+			     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+				image->PicFileName);
 		    break;
 		 case LtText:
 		 case LtReference:

@@ -68,7 +68,7 @@ typedef FAST_FLOAT FLOAT_MULT_TYPE; /* preferred floating type */
  * Each IDCT routine is responsible for range-limiting its results and
  * converting them to unsigned form (0..MAXJSAMPLE).  The raw outputs could
  * be quite far out of range if the input data is corrupt, so a bulletproof
- * range-limiting step is required.  We use a mask-and-table-lookup method
+ * range-limiting step is required.  We use a PicMask-and-table-lookup method
  * to do the combined operations quickly.  See the comments with
  * prepare_range_limit_table (in jdmaster.c) for more info.
  */

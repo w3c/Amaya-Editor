@@ -30,7 +30,7 @@
 * XpmCrBufFrP.c:                                                              *
 *                                                                             *
 *  XPM library                                                                *
-*  Scan a pixmap and possibly its mask and create an XPM buffer               *
+*  Scan a pixmap and possibly its PicMask and create an XPM buffer               *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

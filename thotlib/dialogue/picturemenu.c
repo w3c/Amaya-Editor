@@ -301,7 +301,7 @@ PtrBox            pBox;
    char               *Source;
    int                 imageTypeCount, longueur;
    char                BufMenu[MAX_TXT_LEN];
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
 
    IndexTypeImage = GetImTypeIndex (*typim);
@@ -373,10 +373,10 @@ PtrBox            pBox;
 	strcpy (nom, NomImage);
 	*typim = GetImageType (IndexTypeImage);
 	*pres = GetImagePresentation (IndexPresImage);
-	image = (ImageDescriptor *) pBox->BxImageDescriptor;
-	strcpy (image->imageFileName, nom);
-	image->imagePres = *pres;
-	image->imageType = *typim;
+	image = (PictInfo *) pBox->BxPictInfo;
+	strcpy (image->PicFileName, nom);
+	image->PicPresent = *pres;
+	image->PicType = *typim;
      }
    *result = redisplayPicture;
 }

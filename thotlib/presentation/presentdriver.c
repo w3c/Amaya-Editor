@@ -148,7 +148,7 @@ int                 specific;
 	       break;
 	    case PtAdjust:
 	       break;
-	    case PtImDescr:
+	    case PtPictInfo:
 	       break;
 	 }
 
@@ -418,7 +418,7 @@ PRule               pRule;
 	       break;
 	    case PtAdjust:
 	       break;
-	    case PtImDescr:
+	    case PtPictInfo:
 	       break;
 	 }
 

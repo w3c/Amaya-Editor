@@ -481,7 +481,7 @@ XEvent             *event;
 #endif /* __STDC__ */
 {
    int                 i, retour;
-   int                 mask;
+   int                 PicMask;
    int                 frame;
    unsigned char       chaine[2];
    XComposeStatus      ComS;
@@ -510,19 +510,19 @@ XEvent             *event;
 	retour = XLookupString ((XKeyEvent *) event, chaine, 2, &KS, &ComS);
      }
 
-   mask = 0;
+   PicMask = 0;
    if (i & ShiftMask)
-      mask |= THOT_MOD_SHIFT;
+      PicMask |= THOT_MOD_SHIFT;
    if (i & LockMask)
-      mask |= THOT_MOD_SHIFT;
+      PicMask |= THOT_MOD_SHIFT;
    if (i & ControlMask)
-      mask |= THOT_MOD_CTRL;
+      PicMask |= THOT_MOD_CTRL;
    if (i & Mod1Mask)
-      mask |= THOT_MOD_META;
+      PicMask |= THOT_MOD_META;
    if (i & Mod2Mask)
-      mask |= THOT_MOD_ALT;
+      PicMask |= THOT_MOD_ALT;
 
-   MaTranslation (frame, &chaine[0], retour, mask, KS);
+   MaTranslation (frame, &chaine[0], retour, PicMask, KS);
 }
 #endif /* WWW_XWINDOWS */
 
@@ -531,13 +531,13 @@ XEvent             *event;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                MaTranslation (int frame, unsigned char *chaine, unsigned int nb,
-				   int mask, int key)
+				   int PicMask, int key)
 #else  /* __STDC__ */
-void                MaTranslation (frame, chaine, nb, mask, key)
+void                MaTranslation (frame, chaine, nb, PicMask, key)
 int                 frame;
 unsigned char      *chaine;
 unsigned int        nb;
-int                 mask;
+int                 PicMask;
 int                 key;
 
 #endif /* __STDC__ */
@@ -572,22 +572,22 @@ int                 key;
 	     Automate_current = NULL;
 
 	     /* Teste s'il y a un modifieur en jeu */
-	     if (mask & THOT_MOD_CTRL)
-		if (mask & THOT_MOD_SHIFT)
+	     if (PicMask & THOT_MOD_CTRL)
+		if (PicMask & THOT_MOD_SHIFT)
 		   modtype = THOT_MOD_S_CTRL;
 		else
 		   modtype = THOT_MOD_CTRL;
-	     else if (mask & THOT_MOD_META)
-		if (mask & THOT_MOD_SHIFT)
+	     else if (PicMask & THOT_MOD_META)
+		if (PicMask & THOT_MOD_SHIFT)
 		   modtype = THOT_MOD_S_META;
 		else
 		   modtype = THOT_MOD_META;
-	     else if (mask & THOT_MOD_ALT)
-		if (mask & THOT_MOD_SHIFT)
+	     else if (PicMask & THOT_MOD_ALT)
+		if (PicMask & THOT_MOD_SHIFT)
 		   modtype = THOT_MOD_S_ALT;
 		else
 		   modtype = THOT_MOD_ALT;
-	     else if (mask & THOT_MOD_SHIFT)
+	     else if (PicMask & THOT_MOD_SHIFT)
 		modtype = THOT_MOD_SHIFT;
 	     else
 		modtype = THOT_SANS_MOD;
@@ -609,18 +609,18 @@ int                 key;
 	  {
 	     /* Faut-il parcourir un automate de 1er niveau ? */
 	     /* Teste s'il y a un modifieur en jeu */
-	     if (mask & THOT_MOD_CTRL)
-		if (mask & THOT_MOD_SHIFT)
+	     if (PicMask & THOT_MOD_CTRL)
+		if (PicMask & THOT_MOD_SHIFT)
 		   ptr = Automate_CTRL;
 		else
 		   ptr = Automate_ctrl;
-	     else if (mask & THOT_MOD_META)
-		if (mask & THOT_MOD_SHIFT)
+	     else if (PicMask & THOT_MOD_META)
+		if (PicMask & THOT_MOD_SHIFT)
 		   ptr = Automate_META;
 		else
 		   ptr = Automate_meta;
-	     else if (mask & THOT_MOD_ALT)
-		if (mask & THOT_MOD_SHIFT)
+	     else if (PicMask & THOT_MOD_ALT)
+		if (PicMask & THOT_MOD_SHIFT)
 		   ptr = Automate_ALT;
 		else
 		   ptr = Automate_alt;

@@ -1694,7 +1694,7 @@ void               *param;
 	 * sanity check on the value contained in magic2.
 	 */
 	if ((rule != NULL) && (rule->PrType >= PtVisibility) &&
-	    (rule->PrType <= PtImDescr))
+	    (rule->PrType <= PtPictInfo))
 	   goto found_first_prule;
      }
 

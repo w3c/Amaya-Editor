@@ -325,10 +325,10 @@ int                *haut;
 {
    ptrfont             font;
    PtrBox            pBo1;
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
    pBo1 = pAb->AbBox;
-   image = (ImageDescriptor *) pBo1->BxImageDescriptor;
+   image = (PictInfo *) pBo1->BxPictInfo;
 /***todo: revoir la condition suivante... definition d'une image vide */
    if (pAb->AbVolume == 0 || image == NULL)
      {
@@ -338,8 +338,8 @@ int                *haut;
      }
    else
      {
-	*large = image->wcf;
-	*haut = image->hcf;
+	*large = image->PicWArea;
+	*haut = image->PicHArea;
      }
 }				/* EvalPic */
 
@@ -882,7 +882,7 @@ int                *place;
    boolean             eclate;
    ptrfont             font;
    PtrBox            pBo1;
-   ImageDescriptor    *image;
+   PictInfo    *image;
    char                alphabet;
 
    if (pAb->AbDead)
@@ -993,9 +993,9 @@ int                *place;
 		    break;
 		 case LtPicture:
 		    pBo1->BxType = BoPicture;
-		    image = (ImageDescriptor *) pAb->AbImageDescriptor;
-		    pBo1->BxImageDescriptor = pAb->AbImageDescriptor;
-		    if (!pAb->AbPresentationBox && pAb->AbVolume != 0 && pBo1->BxImageDescriptor != NULL)
+		    image = (PictInfo *) pAb->AbPictInfo;
+		    pBo1->BxPictInfo = pAb->AbPictInfo;
+		    if (!pAb->AbPresentationBox && pAb->AbVolume != 0 && pBo1->BxPictInfo != NULL)
 		      {
 
 			 /* Il faut se proteger des boites de taille negative */
@@ -1005,7 +1005,7 @@ int                *place;
 			    ChangeHauteur (pBo1, pBo1, NULL, 10 - pBo1->BxHeight, frame);
 		      }
 
-		    if (image->imagePixmap == None)
+		    if (image->PicPixmap == None)
 		       ReadImage (frame, pBo1, image);
 		    EvalPic (pAb, &large, &haut);
 		    break;
@@ -1026,7 +1026,7 @@ int                *place;
 		    /* Prend une copie des points de controle */
 		    pBo1->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
 		    pBo1->BxNChars = pAb->AbVolume;	/* Nombre de points */
-		    pBo1->BxImageDescriptor = NULL;
+		    pBo1->BxPictInfo = NULL;
 		    pBo1->BxXRatio = 1;
 		    pBo1->BxYRation = 1;
 		    EvalPolyLine (pAb, &large, &haut);
@@ -1386,11 +1386,11 @@ PtrBox            pBox;
 	  }
      }
 
-   if (pBox->BxImageDescriptor != NULL)
+   if (pBox->BxPictInfo != NULL)
      {
 	/* libere les points de controle */
-	free ((char *) pBox->BxImageDescriptor);
-	pBox->BxImageDescriptor = NULL;
+	free ((char *) pBox->BxPictInfo);
+	pBox->BxPictInfo = NULL;
      }
 }				/*FreePolyline */
 /*fin */
@@ -1939,12 +1939,12 @@ int                 frame;
 	  {
 	     pAb->AbAspectChange = False;
 	     if (pAb->AbLeafType == LtPicture
-		 && ((ImageDescriptor *) pBox->BxImageDescriptor)->imageType == Bitmap_drvr)
+		 && ((PictInfo *) pBox->BxPictInfo)->PicType == XBM_FORMAT)
 	       {
 		  /* Il faut forcer le rechargement des images */
 
 		  SetCursorWatch (frame);
-		  ReadImage (frame, pBox, (ImageDescriptor *) pBox->BxImageDescriptor);
+		  ReadImage (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		  ResetCursorWatch (frame);
 	       }
 	     else if (pBox->BxType == BoSplit)
@@ -2023,7 +2023,7 @@ int                 frame;
 			      if (pAb->AbChange)
 				{
 				   SetCursorWatch (frame);
-				   ReadImage (frame, pBox, (ImageDescriptor *) pBox->BxImageDescriptor);
+				   ReadImage (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);
 				   EvalPic (pAb, &large, &haut);
 				}

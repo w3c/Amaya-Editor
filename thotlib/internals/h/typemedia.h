@@ -185,7 +185,7 @@ typedef struct _Box
 #define BxNPixels u.s0._BxNPixels_
 #define BxSpaceWidth u.s0._BxSpaceWidth_
 #define BxFirstChar u.s0._BxFirstChar_
-#define BxImageDescriptor u.s1._BxImageDescriptor_
+#define BxPictInfo u.s1._BxImageDescriptor_
 #define BxXRatio u.s1._BxXRatio_
 #define BxYRation u.s1._BxYRation_
 #define BxFirstLine u.s2._BxFirstLine_
@@ -376,7 +376,7 @@ typedef struct _AbstractBox
 #define AbShape u.s2._AbShape_
 #define AbGraphAlphabet u.s2._AbGraphAlphabet_
 #define AbRealShape u.s2._AbRealShape_
-#define AbImageDescriptor u.s3._AbImageDescriptor_
+#define AbPictInfo u.s3._AbImageDescriptor_
 #define AbPolyLineBuffer u.s4._AbPolyLineBuffer_
 #define AbPolyLineShape u.s4._AbPolyLineShape_
 

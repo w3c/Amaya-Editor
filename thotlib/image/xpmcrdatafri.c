@@ -30,7 +30,7 @@
 * XpmCrDataFI.c:                                                              *
 *                                                                             *
 *  XPM library                                                                *
-*  Scan an image and possibly its mask and create an XPM array                *
+*  Scan an image and possibly its PicMask and create an XPM array                *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

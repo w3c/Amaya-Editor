@@ -30,7 +30,7 @@
 * XpmRdFToP.c:                                                                *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an XPM file and create the pixmap and possibly its mask              *
+*  Parse an XPM file and create the pixmap and possibly its PicMask              *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

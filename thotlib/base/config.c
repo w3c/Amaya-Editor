@@ -504,7 +504,7 @@ void                ConfigReadConfigFiles ()
 		  /* commande "ls" sur le directory */
 		  thotDir.buf = fname;
 		  thotDir.bufLen = sizeof (fname);
-		  thotDir.mask = ThotDirBrowse_FILES;
+		  thotDir.PicMask = ThotDirBrowse_FILES;
 		  if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
 		     do
 		       {

@@ -25,7 +25,7 @@ typedef enum
 
 typedef struct
 {
-  char     menuName[MAXFORMATNAMELENGHT];
+  char     menuName[MAX_FORMAT_NAMELENGHT];
   Drawable (*CreateImage) ();
   void     (*PrintImage) ();
   boolean  (*IsFormat) ();
@@ -47,9 +47,9 @@ XVisualInfo        *vptr;
 Visual             *theVisual;
 #endif
 
-static PictureHandler  PictureHandlerTable[MAXNBDRIVER];
-static int          ImageIDType[MAXNBDRIVER];
-static int          ImageMenuType[MAXNBDRIVER];
+static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
+static int          ImageIDType[MAX_PICT_FORMATS];
+static int          ImageMenuType[MAX_PICT_FORMATS];
 static char        *ImageMenu;
 static int          ImageDrvrCount;
 static Pixmap       ImageLostPixmapID;
@@ -125,7 +125,7 @@ char               *fileName;
   if (PictureHandlerTable[typeImage].IsFormat != NULL)
     return (*(PictureHandlerTable[typeImage].IsFormat)) (fileName);
   else
-    return MAXNBDRIVER;
+    return MAX_PICT_FORMATS;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -175,24 +175,24 @@ Pixmap              pix;
 /* |            imdesc avec le pixmap pix.                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         SetImageDescPixmap (ImageDescriptor * imdesc, Pixmap pix, Pixmap mask)
+static void         SetImageDescPixmap (PictInfo * imdesc, Pixmap pix, Pixmap PicMask)
 #else  /* __STDC__ */
-static void         SetImageDescPixmap (imdesc, pix, mask)
-ImageDescriptor    *imdesc;
+static void         SetImageDescPixmap (imdesc, pix, PicMask)
+PictInfo    *imdesc;
 Pixmap              pix;
-Pixmap              mask;
+Pixmap              PicMask;
 #endif /* __STDC__ */
 {
-   FreePixmap (imdesc->imagePixmap);
-   FreePixmap (imdesc->mask);
-   imdesc->imagePixmap = pix;
-   imdesc->mask = mask;
+   FreePixmap (imdesc->PicPixmap);
+   FreePixmap (imdesc->PicMask);
+   imdesc->PicPixmap = pix;
+   imdesc->PicMask = PicMask;
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    CentreImage met a jour les parametres xtranslate, ytranslate,   | */
-/* |            pxorig, pyorig en fonction des valeur de wcf, hcf, wif, | */
+/* |            pxorig, pyorig en fonction des valeur de PicWArea, PicHArea, wif, | */
 /* |            hif et pres.                                            | */
 /* |            - Si on presente ReScale, la translation se    | */
 /* |            fait dans une seule direction.                          | */
@@ -263,28 +263,28 @@ int                *pyorig;
 /* | On teste si on a recupere une Cropping frame                    | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         IsCropOk (int *wcf, int *hcf, int wif, int hif, ImageDescriptor * imageDesc)
+static void         IsCropOk (int *PicWArea, int *PicHArea, int wif, int hif, PictInfo * imageDesc)
 #else  /* __STDC__ */
-static void         IsCropOk (wcf, hcf, wif, hif, imageDesc)
-int                *wcf;
-int                *hcf;
+static void         IsCropOk (PicWArea, PicHArea, wif, hif, imageDesc)
+int                *PicWArea;
+int                *PicHArea;
 int                 wif;
 int                 hif;
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 #endif /* __STDC__ */
 {
-   if (((imageDesc->wcf == 0) && (imageDesc->hcf == 0)) ||
-       ((imageDesc->wcf > 32768) || (imageDesc->hcf > 32768)))
+   if (((imageDesc->PicWArea == 0) && (imageDesc->PicHArea == 0)) ||
+       ((imageDesc->PicWArea > 32768) || (imageDesc->PicHArea > 32768)))
       /*TODO : valeur 32768 pour essayer de pallier aux imageDesc archifaux */
       /* obtenus avec plusieurs vues */
      {
-	*wcf = wif;
-	*hcf = hif;
+	*PicWArea = wif;
+	*PicHArea = hif;
      }
    else
      {
-	*wcf = imageDesc->wcf;
-	*hcf = imageDesc->hcf;
+	*PicWArea = imageDesc->PicWArea;
+	*PicHArea = imageDesc->PicHArea;
      }
 }
 
@@ -367,11 +367,11 @@ static Pixmap       ImageBadPixmap ()
 /* |            les 2 directions.                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      PixmapIsOk (PtrBox box, ImageDescriptor * imageDesc)
+static boolean      PixmapIsOk (PtrBox box, PictInfo * imageDesc)
 #else  /* __STDC__ */
 static boolean      PixmapIsOk (box, imageDesc)
 PtrBox            box;
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 #endif /* __STDC__ */
 {
    boolean             pixmapok;
@@ -379,21 +379,21 @@ ImageDescriptor    *imageDesc;
    Drawable            root;
 
    pixmapok = True;
-   if ((imageDesc->imagePixmap == ImageLostPixmapID)
-       || (imageDesc->imagePixmap == ImageBadPixmapID)
-       || (imageDesc->imagePixmap == ImageEPSFPixmapID))
+   if ((imageDesc->PicPixmap == ImageLostPixmapID)
+       || (imageDesc->PicPixmap == ImageBadPixmapID)
+       || (imageDesc->PicPixmap == ImageEPSFPixmapID))
       return True;
 
-   if (imageDesc->imagePixmap == None)
+   if (imageDesc->PicPixmap == None)
      {
 	return False;
      }
    else
      {
 #ifndef NEW_WILLOWS
-	XGetGeometry (GDp (0), imageDesc->imagePixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
+	XGetGeometry (GDp (0), imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
 #endif /* NEW_WILLOWS */
-	switch (imageDesc->imagePres)
+	switch (imageDesc->PicPresent)
 	      {
 		 case RealSize:
 		    pixmapok = True;	/* tout au plus un centrage */
@@ -424,33 +424,33 @@ char               *fileName;
    int                 i;
    int                 l = 0;
 
-   i = MAXNBDRIVER - 1;
+   i = MAX_PICT_FORMATS - 1;
    l = strlen (fileName);
    if (l > 4)
      {
 	if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
 	  {
-	     return Bitmap_drvr;
+	     return XBM_FORMAT;
 	  }
 	if (strcmp (fileName + l - 4, ".eps") == 0 || strcmp (fileName + l - 3, ".ps") == 0)
 	  {
-	     return EPSF_drvr;
+	     return EPS_FORMAT;
 	  }
 	if (strcmp (fileName + l - 4, ".xpm") == 0)
 	  {
-	     return Pixmap_drvr;
+	     return XPM_FORMAT;
 	  }
 	if ((strcmp (fileName + l - 4, ".gif") == 0) || (strcmp (fileName + l - 4, ".GIF") == 0))
 	  {
-	     return Gif_drvr;
+	     return GIF_FORMAT;
 	  }
 	if (strcmp (fileName + l - 4, ".jpg") == 0)
 	  {
-	     return Jpeg_drvr;
+	     return JPEG_FORMAT;
 	  }
 	if (strcmp (fileName + l - 4, ".png") == 0)
 	  {
-	     return Png_drvr;
+	     return PNG_FORMAT;
 	  }
      }
    while (i > UNKNOWN_FORMAT)
@@ -489,7 +489,7 @@ int                *typeImage;
    FileStatus          status;
 
    /* on ne prend que des types connus */
-   if (*typeImage >= MAXNBDRIVER || *typeImage < 0)
+   if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
       *typeImage = UNKNOWN_FORMAT;
 
    if (FileExist (fileName))
@@ -572,58 +572,58 @@ boolean    printing;
 
    Printing = printing;
    i = 0;
-   strncpy (PictureHandlerTable[i].menuName, BitmapName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, BitmapName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = BitmapCreateImage;
    PictureHandlerTable[i].PrintImage = BitmapPrintImage;
    PictureHandlerTable[i].IsFormat = BitmapIsFormat;
 
-   ImageIDType[i] = Bitmap_drvr;
-   ImageMenuType[i] = Bitmap_drvr;
+   ImageIDType[i] = XBM_FORMAT;
+   ImageMenuType[i] = XBM_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, EPSFName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, EPSFName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = EPSFCreateImage;
    PictureHandlerTable[i].PrintImage = EPSFPrintImage;
    PictureHandlerTable[i].IsFormat = EPSFIsFormat;
 
-   ImageIDType[i] = EPSF_drvr;
-   ImageMenuType[i] = EPSF_drvr;
+   ImageIDType[i] = EPS_FORMAT;
+   ImageMenuType[i] = EPS_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, PixmapName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, PixmapName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = PixmapCreateImage;
    PictureHandlerTable[i].PrintImage = PixmapPrintImage;
    PictureHandlerTable[i].IsFormat = PixmapIsFormat;
 
-   ImageIDType[i] = Pixmap_drvr;
-   ImageMenuType[i] = Pixmap_drvr;
+   ImageIDType[i] = XPM_FORMAT;
+   ImageMenuType[i] = XPM_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, GifName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, GifName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = GifCreateImage;
    PictureHandlerTable[i].PrintImage = GifPrintImage;
    PictureHandlerTable[i].IsFormat = GifIsFormat;
 
-   ImageIDType[i] = Gif_drvr;
-   ImageMenuType[i] = Gif_drvr;
+   ImageIDType[i] = GIF_FORMAT;
+   ImageMenuType[i] = GIF_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, JpegName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, JpegName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = JpegCreateImage;
    PictureHandlerTable[i].PrintImage = JpegPrintImage;
    PictureHandlerTable[i].IsFormat = JpegIsFormat;
 
-   ImageIDType[i] = Jpeg_drvr;
-   ImageMenuType[i] = Jpeg_drvr;
+   ImageIDType[i] = JPEG_FORMAT;
+   ImageMenuType[i] = JPEG_FORMAT;
    i++;
 
-   strncpy (PictureHandlerTable[i].menuName, PngName, MAXFORMATNAMELENGHT);
+   strncpy (PictureHandlerTable[i].menuName, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[i].CreateImage = PngCreateImage;
    PictureHandlerTable[i].PrintImage = PngPrintImage;
    PictureHandlerTable[i].IsFormat = PngIsFormat;
 
-   ImageIDType[i] = Png_drvr;
-   ImageMenuType[i] = Png_drvr;
+   ImageIDType[i] = PNG_FORMAT;
+   ImageMenuType[i] = PNG_FORMAT;
    i++;
    ImageDrvrCount = i;
 }
@@ -663,11 +663,11 @@ char               *buffer;
 /* | On dessine la boite correspondant a l'image + logo              | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DrawImageBox (PtrBox box, ImageDescriptor * imageDesc, int frame, int wlogo, int hlogo)
+void                DrawImageBox (PtrBox box, PictInfo * imageDesc, int frame, int wlogo, int hlogo)
 #else  /* __STDC__ */
 void                DrawImageBox (box, imageDesc, frame, wlogo, hlogo)
 PtrBox            box;
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 int                 frame;
 int                 wlogo;
 int                 hlogo;
@@ -689,25 +689,25 @@ int                 hlogo;
    y = 0;
    w = 0;
    h = 0;
-   switch (imageDesc->imagePres)
+   switch (imageDesc->PicPresent)
 	 {
 	    case RealSize:
-	       w = imageDesc->wcf;
-	       h = imageDesc->hcf;
+	       w = imageDesc->PicWArea;
+	       h = imageDesc->PicHArea;
 	       break;
 	    case ReScale:
 	       /* what is the smallest scale */
-	       Scx = (float) box->BxWidth / (float) imageDesc->wcf;
-	       Scy = (float) box->BxHeight / (float) imageDesc->hcf;
+	       Scx = (float) box->BxWidth / (float) imageDesc->PicWArea;
+	       Scy = (float) box->BxHeight / (float) imageDesc->PicHArea;
 	       if (Scx <= Scy)
 		 {
 		    w = box->BxWidth;
-		    h = (int) ((float) imageDesc->hcf * Scx);
+		    h = (int) ((float) imageDesc->PicHArea * Scx);
 		 }
 	       else
 		 {
 		    h = box->BxHeight;
-		    w = (int) ((float) imageDesc->wcf * Scy);
+		    w = (int) ((float) imageDesc->PicWArea * Scy);
 		 }
 	       break;
 	    case FillFrame:
@@ -754,7 +754,7 @@ int                 hlogo;
 	pyorig = 0;
      }
 #ifndef NEW_WILLOWS
-   XCopyArea (GDp (0), imageDesc->imagePixmap, pix, GCdialogue (0), pxorig, pyorig,
+   XCopyArea (GDp (0), imageDesc->PicPixmap, pix, GCdialogue (0), pxorig, pyorig,
 	      wif, hif, xif, yif);
 
    /* Affichage dans la boite */
@@ -781,7 +781,7 @@ int                 hlogo;
    XSetLineAttributes (GDp (0), GCtrait (0), 1, LineSolid, CapButt, JoinMiter);
    XDrawRectangle (GDp (0), drawable, GCtrait (0), xif, yif, wif - 1, hif - 1);
    /* writing the filename */
-   BaseName (imageDesc->imageFileName, filename, 0, 0);
+   BaseName (imageDesc->PicFileName, filename, 0, 0);
    fileNameWidth = XTextWidth ((XFontStruct *) FontMenu, filename, strlen (filename));
    if ((fileNameWidth + wlogo <= wif) && (FontHeight (FontMenu) + hlogo <= hif))
      {
@@ -798,11 +798,11 @@ int                 hlogo;
 /* | On dessine une image dans une fenetre frame                          | */
 /* ------------------------------------------------------------------------ */
 #ifdef __STDC__
-void                DrawImage (PtrBox box, ImageDescriptor * imageDesc, int frame)
+void                DrawImage (PtrBox box, PictInfo * imageDesc, int frame)
 #else  /* __STDC__ */
 void                DrawImage (box, imageDesc, frame)
 PtrBox            box;
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 int                 frame;
 #endif /* __STDC__ */
 {
@@ -811,7 +811,7 @@ int                 frame;
   char                fileName[1023];
   PictureScaling           pres;
   int                 xif, yif, wif, hif;
-  int                 xcf, ycf, wcf, hcf;
+  int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 xtranslate, ytranslate, pxorig, pyorig;
   Drawable            myDrawable;
   Drawable            drawable;
@@ -824,51 +824,51 @@ int                 frame;
   pyorig = 0;
   drawable = TtaGetThotWindow (frame);
   GetXYOrg (frame, &XOrg, &YOrg);
-  typeImage = imageDesc->imageType;
-  GetImageFileName (imageDesc->imageFileName, fileName);
+  typeImage = imageDesc->PicType;
+  GetImageFileName (imageDesc->PicFileName, fileName);
 
-  pres = imageDesc->imagePres;
+  pres = imageDesc->PicPresent;
   xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
   yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
   wif = box->BxWidth;
   hif = box->BxHeight;
-  xcf = imageDesc->xcf;
-  ycf = imageDesc->ycf;
-  wcf = imageDesc->wcf;
-  hcf = imageDesc->hcf;
+  PicXArea = imageDesc->PicXArea;
+  PicYArea = imageDesc->PicYArea;
+  PicWArea = imageDesc->PicWArea;
+  PicHArea = imageDesc->PicHArea;
   BackGroundPixel = box->BxAbstractBox->AbBackground;
 
-  IsCropOk (&wcf, &hcf, wif, hif, imageDesc);
+  IsCropOk (&PicWArea, &PicHArea, wif, hif, imageDesc);
   if (!Printing)
     {
       SetCursorWatch (frame);
-      if (imageDesc->imagePixmap == ImageEPSFPixmapID)
+      if (imageDesc->PicPixmap == ImageEPSFPixmapID)
 	DrawImageBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
 	  if (!PixmapIsOk (box, imageDesc))
 	    {
 	      ReadImage (frame, box, imageDesc);
-	      myDrawable = imageDesc->imagePixmap;
+	      myDrawable = imageDesc->PicPixmap;
 	    }
 	  else
 	    {
 	      /* affichage de l'image dans la boite */
-	      if (imageDesc->imagePres != FillFrame)
-		CentreImage (wcf, hcf, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
+	      if (imageDesc->PicPresent != FillFrame)
+		CentreImage (PicWArea, PicHArea, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
 
-	      if (imageDesc->mask)
+	      if (imageDesc->PicMask)
 		{
 		  XSetClipOrigin (GDp (0), graphicGC (0), xif - pxorig + xtranslate, yif - pyorig + ytranslate);
-		  XSetClipMask (GDp (0), graphicGC (0), imageDesc->mask);
+		  XSetClipMask (GDp (0), graphicGC (0), imageDesc->PicMask);
 		}
-	      if (wcf < wif)
-		wif = wcf;
-	      if (hcf < hif)
-		hif = hcf;
-	      CopyOnScreen (imageDesc->imagePixmap, drawable, pxorig, pyorig,
+	      if (PicWArea < wif)
+		wif = PicWArea;
+	      if (PicHArea < hif)
+		hif = PicHArea;
+	      CopyOnScreen (imageDesc->PicPixmap, drawable, pxorig, pyorig,
 			    wif, hif, xif + xtranslate, yif + ytranslate);
-	      if (imageDesc->mask)
+	      if (imageDesc->PicMask)
 		{
 		  XSetClipMask (GDp (0), graphicGC (0), None);
 		  XSetClipOrigin (GDp (0), graphicGC (0), 0, 0);
@@ -878,7 +878,7 @@ int                 frame;
       ResetCursorWatch (frame);
     }
   else if (typeImage < ImageDrvrCount && typeImage > -1)
-    (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf,
+    (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 						    (FILE *) drawable, BackGroundPixel);
 #endif /* NEW_WILLOWS */
 }
@@ -888,12 +888,12 @@ int                 frame;
 /* | Demande au driver une image au format specifie dans imageDesc      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ReadImage (int frame, PtrBox box, ImageDescriptor * imageDesc)
+void                ReadImage (int frame, PtrBox box, PictInfo * imageDesc)
 #else  /* __STDC__ */
 void                ReadImage (frame, box, imageDesc)
 int                 frame;
 PtrBox            box;
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
@@ -903,18 +903,18 @@ ImageDescriptor    *imageDesc;
    int                 xif = 0;
    int                 yif = 0;
    int                 wif, hif, w, h;
-   Drawable            mask = None;
+   Drawable            PicMask = None;
    Drawable            myDrawable = None;
    FileStatus          status;
    boolean             noCroppingFrame;
    unsigned long       Bgcolor;
 
-   if (imageDesc->imageFileName == NULL)
+   if (imageDesc->PicFileName == NULL)
       return;
-   if (imageDesc->imageFileName[0] == '\0')
+   if (imageDesc->PicFileName[0] == '\0')
       return;
-   GetImageFileName (imageDesc->imageFileName, fileName);
-   typeImage = imageDesc->imageType;
+   GetImageFileName (imageDesc->PicFileName, fileName);
+   typeImage = imageDesc->PicType;
 
    status = FileIsOk (fileName, &typeImage);
    w = 0;
@@ -922,8 +922,8 @@ ImageDescriptor    *imageDesc;
    switch (status)
 	 {
 	    case (int) ExisteTypeOK:
-	       imageDesc->imageType = typeImage;
-	       pres = imageDesc->imagePres;
+	       imageDesc->PicType = typeImage;
+	       pres = imageDesc->PicPresent;
 	       if (box == NULL)
 		 {
 		    w = 20;
@@ -965,7 +965,7 @@ ImageDescriptor    *imageDesc;
 	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
 
 	       myDrawable = (*(PictureHandlerTable[typeImage].
-			       CreateImage)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &mask);
+			       CreateImage)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
 
 	       noCroppingFrame = ((wif == 0) && (hif == 0));
 	       /* utilise' pour le cgm */
@@ -974,10 +974,10 @@ ImageDescriptor    *imageDesc;
 	       if (myDrawable == None)
 		 {
 		    myDrawable = ImageBadPixmap ();
-		    imageDesc->imageType = -1;
+		    imageDesc->PicType = -1;
 		    w = 40;
 		    h = 40;
-		    mask = None;
+		    PicMask = None;
 		 }
 	       else
 		 {
@@ -997,19 +997,19 @@ ImageDescriptor    *imageDesc;
 	    case (int) MauvaisType:
 	    case (int) ExistePas:
 	       myDrawable = ImageLostPixmap ();
-	       imageDesc->imageType = -1;
+	       imageDesc->PicType = -1;
 	       w = 40;
 	       h = 40;
-	       mask = None;
+	       PicMask = None;
 	       break;
 	 }
-   imageDesc->xcf = xif;
-   imageDesc->ycf = yif;
-   imageDesc->wcf = w;
-   imageDesc->hcf = h;
+   imageDesc->PicXArea = xif;
+   imageDesc->PicYArea = yif;
+   imageDesc->PicWArea = w;
+   imageDesc->PicHArea = h;
 
-   if (!Printing || imageDesc->imagePixmap != ImageEPSFPixmapID)
-      SetImageDescPixmap (imageDesc, myDrawable, mask);
+   if (!Printing || imageDesc->PicPixmap != ImageEPSFPixmapID)
+      SetImageDescPixmap (imageDesc, myDrawable, PicMask);
 
 
 #endif /* NEW_WILLOWS */
@@ -1020,10 +1020,10 @@ ImageDescriptor    *imageDesc;
 /* | On traduit l'image dans un format de sortie                     | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PrintImage (int typeImage, char *name, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, FILE * fd, unsigned long BackGroundPixel)
+void                PrintImage (int typeImage, char *name, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
 
 #else  /* __STDC__ */
-void                PrintImage (typeImage, name, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
+void                PrintImage (typeImage, name, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 int                 typeImage;
 char               *name;
 PictureScaling           pres;
@@ -1031,8 +1031,8 @@ int                 xif;
 int                 yif;
 int                 wif;
 int                 hif;
-int                 xcf;
-int                 ycf;
+int                 PicXArea;
+int                 PicYArea;
 FILE               *fd;
 unsigned long       BackGroundPixel;
 #endif /* __STDC__ */
@@ -1040,7 +1040,7 @@ unsigned long       BackGroundPixel;
    char                fileName[1023];
 
    GetImageFileName (name, fileName);
-   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel);
+   (*(PictureHandlerTable[typeImage].PrintImage)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel);
 
 }				/*PrintImage */
 
@@ -1048,21 +1048,21 @@ unsigned long       BackGroundPixel;
 /* |    FreeImage libere l'image du descripteur.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                FreeImage (ImageDescriptor * imageDesc)
+void                FreeImage (PictInfo * imageDesc)
 #else  /* __STDC__ */
 void                FreeImage (imageDesc)
-ImageDescriptor    *imageDesc;
+PictInfo    *imageDesc;
 #endif /* __STDC__ */
 {
 
 #ifndef NEW_WILLOWS
-   if (imageDesc->imagePixmap != None)
+   if (imageDesc->PicPixmap != None)
      {
 
-	FreePixmap (imageDesc->imagePixmap);
-	FreePixmap (imageDesc->mask);
-	imageDesc->imagePixmap = None;
-	imageDesc->mask = None;
+	FreePixmap (imageDesc->PicPixmap);
+	FreePixmap (imageDesc->PicMask);
+	imageDesc->PicPixmap = None;
+	imageDesc->PicMask = None;
      }
 #endif /* NEW_WILLOWS */
 }				/*FreeImage */
@@ -1094,20 +1094,20 @@ int                 menuIndex;
 /* |            retourne 0.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetImTypeIndex (int imageType)
+int                 GetImTypeIndex (int PicType)
 #else  /* __STDC__ */
-int                 GetImTypeIndex (imageType)
-int                 imageType;
+int                 GetImTypeIndex (PicType)
+int                 PicType;
 #endif /* __STDC__ */
 {
    int                 i = 0;
 
-   if (imageType == UNKNOWN_FORMAT)
+   if (PicType == UNKNOWN_FORMAT)
       return 0;
 
    while (i <= ImageDrvrCount)
      {
-	if (ImageMenuType[i] == imageType)
+	if (ImageMenuType[i] == PicType)
 	   return i;
 	else
 	   i++;
@@ -1122,20 +1122,20 @@ int                 imageType;
 /* |            inconnue, on retourne RealSize.                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetImPresIndex (PictureScaling imagePres)
+int                 GetImPresIndex (PictureScaling PicPresent)
 #else  /* __STDC__ */
-int                 GetImPresIndex (imagePres)
-PictureScaling           imagePres;
+int                 GetImPresIndex (PicPresent)
+PictureScaling           PicPresent;
 #endif /* __STDC__ */
 {
    int                 i;
 
-   switch (imagePres)
+   switch (PicPresent)
 	 {
 	    case RealSize:
 	    case ReScale:
 	    case FillFrame:
-	       i = (int) imagePres;
+	       i = (int) PicPresent;
 	       break;
 	    default:
 	       i = (int) RealSize;
@@ -1210,7 +1210,7 @@ char               *imageFile;
   char fileName[MAX_PATH];
   int  typeImage;
   Drawable   myDrawable = None;
-  Drawable   mask;
+  Drawable   PicMask;
   int xif,yif,wif,hif;
   PictureScaling  pres;
   unsigned long Bgcolor;
@@ -1221,10 +1221,10 @@ char               *imageFile;
   typeImage = GetImageFileFormat(fileName);
   myDrawable = (*(PictureHandlerTable[typeImage].
 		  CreateImage))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
-		                &mask );
+		                &PicMask );
   XSetWindowBackgroundPixmap(GDp(0),w,myDrawable);
   FreePixmap(myDrawable);
-  FreePixmap(mask);
+  FreePixmap(PicMask);
  ****************************************/
    return (0);
 }				/*TtaSetMainThotWindowBackgroundImage */

@@ -216,7 +216,7 @@ typedef struct {
 #define XpmComments        XpmInfos
 #define XpmReturnComments  XpmComments
 
-/* XpmAttributes mask_pixel value when there is no mask */
+/* XpmAttributes mask_pixel value when there is no PicMask */
 #ifndef FOR_MSW
 #define XpmUndefPixel 0x80000000
 #else
@@ -420,10 +420,10 @@ extern "C" {
 #define XpmPixmapNoMemory    XpmNoMemory
 #define XpmPixmapColorFailed XpmColorFailed
 
-#define XpmReadPixmapFile(dpy, d, file, pix, mask, att) \
-    XpmReadFileToPixmap(dpy, d, file, pix, mask, att)
-#define XpmWritePixmapFile(dpy, file, pix, mask, att) \
-    XpmWriteFileFromPixmap(dpy, file, pix, mask, att)
+#define XpmReadPixmapFile(dpy, d, file, pix, PicMask, att) \
+    XpmReadFileToPixmap(dpy, d, file, pix, PicMask, att)
+#define XpmWritePixmapFile(dpy, file, pix, PicMask, att) \
+    XpmWriteFileFromPixmap(dpy, file, pix, PicMask, att)
 
 /* for version 3.0b */
 #define PixmapColorError  XpmColorError
@@ -435,14 +435,14 @@ extern "C" {
 
 #define ColorSymbol XpmColorSymbol
 
-#define XReadPixmapFile(dpy, d, file, pix, mask, att) \
-    XpmReadFileToPixmap(dpy, d, file, pix, mask, att)
-#define XWritePixmapFile(dpy, file, pix, mask, att) \
-    XpmWriteFileFromPixmap(dpy, file, pix, mask, att)
-#define XCreatePixmapFromData(dpy, d, data, pix, mask, att) \
-    XpmCreatePixmapFromData(dpy, d, data, pix, mask, att)
-#define XCreateDataFromPixmap(dpy, data, pix, mask, att) \
-    XpmCreateDataFromPixmap(dpy, data, pix, mask, att)
+#define XReadPixmapFile(dpy, d, file, pix, PicMask, att) \
+    XpmReadFileToPixmap(dpy, d, file, pix, PicMask, att)
+#define XWritePixmapFile(dpy, file, pix, PicMask, att) \
+    XpmWriteFileFromPixmap(dpy, file, pix, PicMask, att)
+#define XCreatePixmapFromData(dpy, d, data, pix, PicMask, att) \
+    XpmCreatePixmapFromData(dpy, d, data, pix, PicMask, att)
+#define XCreateDataFromPixmap(dpy, data, pix, PicMask, att) \
+    XpmCreateDataFromPixmap(dpy, data, pix, PicMask, att)
 
 #endif /* XPM_NUMBERS */
 #endif

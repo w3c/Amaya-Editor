@@ -5,7 +5,7 @@
 extern unsigned char *ReadJpeg ( FILE *fd, int *w, int *h, ThotColorStruct colrs[256] );
 extern unsigned char *ReadJpegToData ( char *datafile, int *w, int *h,  ThotColorStruct colrs[256] );
 extern Drawable JpegCreateImage ( char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 );
-extern void JpegPrintImage ( char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel);
+extern void JpegPrintImage ( char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel);
 extern boolean JpegIsFormat ( char * fn );
 
 #else /* __STDC__ */
@@ -13,7 +13,7 @@ extern boolean JpegIsFormat ( char * fn );
 extern unsigned char *ReadJpeg (/* FILE *fd, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256] */);
 extern unsigned char *ReadJpegToData (/* char *datafile, int *w, int *h, ThotColorStruct colrs[256] */);
 extern Drawable JpegCreateImage (/* char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 */);
-extern void JpegPrintImage (/* char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel*/);
+extern void JpegPrintImage (/* char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel*/);
 extern boolean JpegIsFormat (/* char * fn */);
 
 #endif /* __STDC__ */

@@ -116,7 +116,7 @@ PtrAbstractBox             pAb;
 	       NouvPave->AbRealShape = pAb->AbRealShape;
 	       break;
 	    case LtPicture:
-	       NouvPave->AbImageDescriptor = pAb->AbImageDescriptor;
+	       NouvPave->AbPictInfo = pAb->AbPictInfo;
 	       break;
 	    case LtPairedElem:
 	    case LtPlyLine:
@@ -3003,8 +3003,8 @@ boolean            *arret;
 				 {
 				    if (!pAb->AbElement->ElTerminal || pAb->AbElement->ElLeafType != LtPicture)
 				       /* ce n'est pas un element image */
-				       FreeImageDescriptor (pAb->AbImageDescriptor);
-				    pAb->AbImageDescriptor = NULL;
+				       FreeImageDescriptor (pAb->AbPictInfo);
+				    pAb->AbPictInfo = NULL;
 				 }
 			       FreePave (pAb);
 

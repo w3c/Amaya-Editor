@@ -1471,10 +1471,10 @@ int                 ym;
 		       encore = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
 		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, encore);
 		       /* Pour les courbes il faut recalculer les points de controle */
-		       if (pBox->BxImageDescriptor != NULL)
+		       if (pBox->BxPictInfo != NULL)
 			 {
-			    free ((char *) pBox->BxImageDescriptor);
-			    pBox->BxImageDescriptor = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+			    free ((char *) pBox->BxPictInfo);
+			    pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
 			 }
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);

@@ -31,7 +31,7 @@
 *                                                                             *
 *  XPM library                                                                *
 *  Parse an Xpm buffer (file in memory) and create the image and possibly its *
-*  mask                                                                       *
+*  PicMask                                                                       *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
 

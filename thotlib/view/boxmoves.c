@@ -277,11 +277,11 @@ boolean             Saisie;
 	j++;
      }
 
-   if (pBox->BxImageDescriptor != NULL && !Saisie)
+   if (pBox->BxPictInfo != NULL && !Saisie)
      {
 	/* le calcul des points de controle doit etre reexecute */
-	free ((char *) pBox->BxImageDescriptor);
-	pBox->BxImageDescriptor = NULL;
+	free ((char *) pBox->BxPictInfo);
+	pBox->BxPictInfo = NULL;
      }
 }
 
@@ -1767,11 +1767,11 @@ int                 frame;
 		   pBox->BxMoved = NULL;
 
 		/* Force la reevaluation des points de controle de la polyline */
-		if (pavebox->AbLeafType == LtPlyLine && pBox->BxImageDescriptor != NULL)
+		if (pavebox->AbLeafType == LtPlyLine && pBox->BxPictInfo != NULL)
 		  {
 		     /* libere les points de controle */
-		     free ((char *) pBox->BxImageDescriptor);
-		     pBox->BxImageDescriptor = NULL;
+		     free ((char *) pBox->BxPictInfo);
+		     pBox->BxPictInfo = NULL;
 		  }
 
 		/* On regarde si les regles de dependance sont valides */
@@ -2193,11 +2193,11 @@ int                 frame;
 		   pBox->BxMoved = NULL;
 
 		/* Force la reevaluation des points de controle de la polyline */
-		if (pavebox->AbLeafType == LtPlyLine && pBox->BxImageDescriptor != NULL)
+		if (pavebox->AbLeafType == LtPlyLine && pBox->BxPictInfo != NULL)
 		  {
 		     /* libere les points de controle */
-		     free ((char *) pBox->BxImageDescriptor);
-		     pBox->BxImageDescriptor = NULL;
+		     free ((char *) pBox->BxPictInfo);
+		     pBox->BxPictInfo = NULL;
 		  }
 
 		/* On regarde si les regles de dependance sont valides */

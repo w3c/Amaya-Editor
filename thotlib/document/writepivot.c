@@ -512,27 +512,27 @@ int                *imageDesc;
 
 #endif /* __STDC__ */
 {
-   ImageDescriptor    *imageDescriptor;
+   PictInfo    *imageDescriptor;
 
-   imageDescriptor = (ImageDescriptor *) imageDesc;
-   PutShort (fich, PixelEnPt (imageDescriptor->xcf, 1));
-   PutShort (fich, PixelEnPt (imageDescriptor->ycf, 0));
-   PutShort (fich, PixelEnPt (imageDescriptor->wcf, 1));
-   PutShort (fich, PixelEnPt (imageDescriptor->hcf, 0));
+   imageDescriptor = (PictInfo *) imageDesc;
+   PutShort (fich, PixelEnPt (imageDescriptor->PicXArea, 1));
+   PutShort (fich, PixelEnPt (imageDescriptor->PicYArea, 0));
+   PutShort (fich, PixelEnPt (imageDescriptor->PicWArea, 1));
+   PutShort (fich, PixelEnPt (imageDescriptor->PicHArea, 0));
 }				/*PutCroppingFrame */
 
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutPresentation (BinFile fich, PictureScaling imagePres)
+static void         PutPresentation (BinFile fich, PictureScaling PicPresent)
 #else  /* __STDC__ */
-static void         PutPresentation (fich, imagePres)
+static void         PutPresentation (fich, PicPresent)
 BinFile             fich;
-PictureScaling           imagePres;
+PictureScaling           PicPresent;
 
 #endif /* __STDC__ */
 {
-   switch (imagePres)
+   switch (PicPresent)
 	 {
 	    case RealSize:
 	       BIOwriteByte (fich, C_PIV_REALSIZE);
@@ -745,7 +745,7 @@ PtrPRule        pRegle;
 	|| pRegle->PrType == PtSize || pRegle->PrType == PtStyle
 	|| pRegle->PrType == PtUnderline || pRegle->PrType == PtThickness
 	|| pRegle->PrType == PtFont || pRegle->PrType == PtBreak1
-	|| pRegle->PrType == PtBreak2 || pRegle->PrType == PtImDescr
+	|| pRegle->PrType == PtBreak2 || pRegle->PrType == PtPictInfo
 	|| pRegle->PrType == PtIndent || pRegle->PrType == PtLineSpacing
 	|| pRegle->PrType == PtAdjust || pRegle->PrType == PtJustify
 	|| pRegle->PrType == PtHyphenate
@@ -826,11 +826,11 @@ PtrPRule        pRegle;
 		    PutShort (fichpiv, pRegle->PrMinValue);
 		    PutUnit (fichpiv, pRegle->PrMinUnit);
 		    break;
-		 case PtImDescr:
+		 case PtPictInfo:
 		    BIOwriteByte (fichpiv, C_PR_PICTURE);
-		    PutCroppingFrame (fichpiv, (int *) &(pRegle->PrImageDescr));
-		    PutPresentation (fichpiv, pRegle->PrImageDescr.imagePres);
-		    PutImageType (fichpiv, pRegle->PrImageDescr.imageType);
+		    PutCroppingFrame (fichpiv, (int *) &(pRegle->PrPictInfo));
+		    PutPresentation (fichpiv, pRegle->PrPictInfo.PicPresent);
+		    PutImageType (fichpiv, pRegle->PrPictInfo.PicType);
 		    break;
 		 case PtIndent:
 		    BIOwriteByte (fichpiv, C_PR_INDENT);

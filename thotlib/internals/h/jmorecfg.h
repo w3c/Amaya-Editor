@@ -27,7 +27,7 @@
  * Maximum number of components (color channels) allowed in JPEG image.
  * To meet the letter of the JPEG spec, set this to 255.  However, darn
  * few applications need more than 4 channels (maybe 5 for CMYK + alpha
- * mask).  We recommend 10 as a reasonable compromise; use 4 if you are
+ * PicMask).  We recommend 10 as a reasonable compromise; use 4 if you are
  * really short on memory.  (Each allowed component costs a hundred or so
  * bytes of storage, whether actually used in an image or not.)
  */
@@ -51,7 +51,7 @@
 
 #if BITS_IN_JSAMPLE == 8
 /* JSAMPLE should be the smallest type that will hold the values 0..255.
- * You can use a signed char by having GETJSAMPLE mask it with 0xFF.
+ * You can use a signed char by having GETJSAMPLE PicMask it with 0xFF.
  */
 
 #ifdef HAVE_UNSIGNED_CHAR

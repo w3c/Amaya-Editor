@@ -113,7 +113,7 @@ int                 frame;
 	if (haut > i)
 	   haut = i;
 
-	DrawImage (pBox, (ImageDescriptor *) pBox->BxImageDescriptor, frame);
+	DrawImage (pBox, (PictInfo *) pBox->BxPictInfo, frame);
 
 	pFrame = &FntrTable[frame - 1];
 	/* Est-ce qu'il faut completer la ligne avec des pointilles */
@@ -737,10 +737,10 @@ int                 frame;
 		       else
 			  fleche = 3;
 		       /* calcul des points de controles */
-		       if (pBox->BxImageDescriptor == NULL)
-			  pBox->BxImageDescriptor = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+		       if (pBox->BxPictInfo == NULL)
+			  pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
 		       AfCourbe (frame, i, style, xd, yd, pBox->BxBuffer,
-				 pBox->BxNChars, RO, op, fg, fleche, (C_points *) pBox->BxImageDescriptor);
+				 pBox->BxNChars, RO, op, fg, fleche, (C_points *) pBox->BxPictInfo);
 		       break;
 		    case 'p':	/* polygone */
 		       AfPolygone (frame, i, style, xd, yd, pBox->BxBuffer,
@@ -748,10 +748,10 @@ int                 frame;
 		       break;
 		    case 's':	/* spline fermee */
 		       /* calcul des points de controles */
-		       if (pBox->BxImageDescriptor == NULL)
-			  pBox->BxImageDescriptor = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
+		       if (pBox->BxPictInfo == NULL)
+			  pBox->BxPictInfo = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
 		       AfSpline (frame, i, style, xd, yd, pBox->BxBuffer,
-				 pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern, (C_points *) pBox->BxImageDescriptor);
+				 pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern, (C_points *) pBox->BxPictInfo);
 		       break;
 		    default:
 		       break;

@@ -51,7 +51,7 @@ PtrElement          pEl;
 				 * l'element */
 	while (pRegle == NULL)
 	  {
-	     if (pR->PrType == PtImDescr)
+	     if (pR->PrType == PtPictInfo)
 		/* la regle existe deja */
 		pRegle = pR;
 	     else if (pR->PrNextPRule != NULL)
@@ -69,18 +69,18 @@ PtrElement          pEl;
      }
    if (new)
      {
-	pRegle->PrType = PtImDescr;
+	pRegle->PrType = PtPictInfo;
 	pRegle->PrNextPRule = NULL;
 	pRegle->PrViewNum = 0;
 	pRegle->PrSpecifAttr = 0;
 	pRegle->PrSpecifAttrSSchema = NULL;
 	pRegle->PrPresMode = PresImmediate;
-	pRegle->PrImageDescr.xcf = 0;
-	pRegle->PrImageDescr.ycf = 0;
-	pRegle->PrImageDescr.wcf = 0;
-	pRegle->PrImageDescr.hcf = 0;
-	pRegle->PrImageDescr.imagePres = RealSize;
-	pRegle->PrImageDescr.imageType = Bitmap_drvr;
+	pRegle->PrPictInfo.PicXArea = 0;
+	pRegle->PrPictInfo.PicYArea = 0;
+	pRegle->PrPictInfo.PicWArea = 0;
+	pRegle->PrPictInfo.PicHArea = 0;
+	pRegle->PrPictInfo.PicPresent = RealSize;
+	pRegle->PrPictInfo.PicType = XBM_FORMAT;
      }
    return pRegle;
 
@@ -112,12 +112,12 @@ int                 typeimage;
    pRegle = FindImageDescriptor (pEl);
    if (pRegle != NULL)
      {
-	pRegle->PrImageDescr.xcf = x;
-	pRegle->PrImageDescr.ycf = y;
-	pRegle->PrImageDescr.wcf = w;
-	pRegle->PrImageDescr.hcf = h;
-	pRegle->PrImageDescr.imagePres = presimage;
-	pRegle->PrImageDescr.imageType = typeimage;
+	pRegle->PrPictInfo.PicXArea = x;
+	pRegle->PrPictInfo.PicYArea = y;
+	pRegle->PrPictInfo.PicWArea = w;
+	pRegle->PrPictInfo.PicHArea = h;
+	pRegle->PrPictInfo.PicPresent = presimage;
+	pRegle->PrPictInfo.PicType = typeimage;
      }
 
 }				/*SetImageRule */
@@ -145,7 +145,7 @@ int                 imagetype;
 
 {
    PtrTextBuffer      pBuffer;
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
    if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
      {
@@ -153,46 +153,46 @@ int                 imagetype;
 	if (ppav->AbElement->ElImageDescriptor == NULL)
 	  {
 	     /* Creation du descripteur */
-	     image = (ImageDescriptor *) TtaGetMemory (sizeof (ImageDescriptor));
+	     image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	     if (filename == NULL)
 	       {
 		  GetBufTexte (&pBuffer);
 		  ppav->AbElement->ElText = pBuffer;
 		  filename = &pBuffer->BuContent[0];
 	       }
-	     image->imageFileName = filename;
-	     image->imagePixmap = 0;
-	     image->mask = 0;
-	     image->imagePres = RealSize;
-	     image->imageType = imagetype;
-	     image->xcf = 0;
-	     image->ycf = 0;
-	     image->wcf = 0;
-	     image->hcf = 0;
+	     image->PicFileName = filename;
+	     image->PicPixmap = 0;
+	     image->PicMask = 0;
+	     image->PicPresent = RealSize;
+	     image->PicType = imagetype;
+	     image->PicXArea = 0;
+	     image->PicYArea = 0;
+	     image->PicWArea = 0;
+	     image->PicHArea = 0;
 	     ppav->AbElement->ElImageDescriptor = (int *) image;
 	  }
-	ppav->AbImageDescriptor = ppav->AbElement->ElImageDescriptor;
+	ppav->AbPictInfo = ppav->AbElement->ElImageDescriptor;
      }
    else
      {
 	/*  Ce n'est pas un element image -> Creation du descripteur */
-	image = (ImageDescriptor *) TtaGetMemory (sizeof (ImageDescriptor));
+	image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	if (filename == NULL)
 	  {
 	     GetBufTexte (&pBuffer);
 	     ppav->AbElement->ElText = pBuffer;
 	     filename = &pBuffer->BuContent[0];
 	  }
-	image->imageFileName = filename;
-	image->imagePixmap = 0;
-	image->mask = 0;
-	image->imagePres = RealSize;
-	image->imageType = imagetype;
-	image->xcf = 0;
-	image->ycf = 0;
-	image->wcf = 0;
-	image->hcf = 0;
-	ppav->AbImageDescriptor = (int *) image;
+	image->PicFileName = filename;
+	image->PicPixmap = 0;
+	image->PicMask = 0;
+	image->PicPresent = RealSize;
+	image->PicType = imagetype;
+	image->PicXArea = 0;
+	image->PicYArea = 0;
+	image->PicWArea = 0;
+	image->PicHArea = 0;
+	ppav->AbPictInfo = (int *) image;
      }
 
 }				/*NewImageDescriptor */
@@ -212,11 +212,11 @@ int                *desc;
 #endif /* __STDC__ */
 
 {
-   ImageDescriptor    *image;
+   PictInfo    *image;
 
    if (desc != NULL)
      {
-	image = (ImageDescriptor *) desc;
+	image = (PictInfo *) desc;
 	FreeImage (image);
 	TtaFreeMemory ((char *) image);
      }
@@ -226,7 +226,7 @@ int                *desc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FnCopy d'un ImageDescriptor                                      | */
+/* |    FnCopy d'un PictInfo                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                UpdateImageDescriptor (int *Imdcopie, int *Imdsource)
@@ -239,15 +239,15 @@ int                *Imdsource;
 #endif /* __STDC__ */
 
 {
-   ImageDescriptor    *imagec;
-   ImageDescriptor    *images;
+   PictInfo    *imagec;
+   PictInfo    *images;
 
-   imagec = (ImageDescriptor *) Imdcopie;
-   images = (ImageDescriptor *) Imdsource;
-   imagec->xcf = images->xcf;
-   imagec->ycf = images->ycf;
-   imagec->wcf = images->wcf;
-   imagec->hcf = images->hcf;
-   imagec->imagePres = images->imagePres;
-   imagec->imageType = images->imageType;
+   imagec = (PictInfo *) Imdcopie;
+   images = (PictInfo *) Imdsource;
+   imagec->PicXArea = images->PicXArea;
+   imagec->PicYArea = images->PicYArea;
+   imagec->PicWArea = images->PicWArea;
+   imagec->PicHArea = images->PicHArea;
+   imagec->PicPresent = images->PicPresent;
+   imagec->PicType = images->PicType;
 }

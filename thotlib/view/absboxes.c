@@ -217,8 +217,8 @@ PtrAbstractBox             pAb;
 		       if (!pPa1->AbElement->ElTerminal || pPa1->AbElement->ElLeafType != LtPicture)
 			 {
 			    /* ce n'est pas un element image */
-			    FreeImageDescriptor (pPa1->AbImageDescriptor);
-			    pPa1->AbImageDescriptor = NULL;
+			    FreeImageDescriptor (pPa1->AbPictInfo);
+			    pPa1->AbPictInfo = NULL;
 			 }
 		       break;
 		    default:

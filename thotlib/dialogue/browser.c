@@ -73,7 +73,7 @@ char               *suffix;
 
 	thotDir.buf = command;
 	thotDir.bufLen = sizeof (command);
-	thotDir.mask = ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES;
+	thotDir.PicMask = ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES;
 	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
 	ThotDirBrowse_close (&thotDir);
      }
@@ -162,7 +162,7 @@ int                 fileRef;
 	     stop = False;
 	     thotDir.buf = word;
 	     thotDir.bufLen = sizeof (word);
-	     thotDir.mask = ThotDirBrowse_DIRECTORIES;
+	     thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
 	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", "") == 1)
 	       {
 		  do
@@ -202,7 +202,7 @@ int                 fileRef;
 
 	     thotDir.buf = word;
 	     thotDir.bufLen = sizeof (word);
-	     thotDir.mask = ThotDirBrowse_FILES;
+	     thotDir.PicMask = ThotDirBrowse_FILES;
 
 	     ls_unixFiles[0] = '\0';
 	     ls_fileNbr = 0;

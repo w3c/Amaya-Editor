@@ -11,7 +11,7 @@ extern int LWZReadByte ( FILE *fd, int flag, int input_code_size );
 extern unsigned char *ReadGifToData ( char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256] );
 extern void GifPrintErrorMsg ( int ErrorNumber );
 extern Drawable GifCreateImage ( char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 );
-extern void GifPrintImage ( char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel);
+extern void GifPrintImage ( char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel);
 extern boolean GifIsFormat ( char * fn );
 
 #else /* __STDC__ */
@@ -25,7 +25,7 @@ extern int LWZReadByte (/* FILE *fd, int flag, int input_code_size */);
 extern unsigned char *ReadGifToData (/* char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256] */);
 extern void GifPrintErrorMsg (/* int ErrorNumber */);
 extern Drawable GifCreateImage (/* char * fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1 */);
-extern void GifPrintImage (/* char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel*/);
+extern void GifPrintImage (/* char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel*/);
 extern boolean GifIsFormat (/* char * fn */);
 
 #endif /* __STDC__ */

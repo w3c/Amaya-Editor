@@ -2568,8 +2568,8 @@ boolean             CreateurComplet;
 			    if (!pAb->AbElement->ElTerminal ||
 				pAb->AbElement->ElLeafType != LtPicture)
 			       /* ce n'est pas un element image */
-			       FreeImageDescriptor (pAb->AbImageDescriptor);
-			    pAb->AbImageDescriptor = NULL;
+			       FreeImageDescriptor (pAb->AbPictInfo);
+			    pAb->AbPictInfo = NULL;
 			 }
 		       FreePave (pAb);
 		    }
@@ -2840,7 +2840,7 @@ boolean             CreateurComplet;
 		  if (PavCree->AbLeafType == LtPicture)
 		    {
 		       /* a priori l'image prendra les dimensions de son pave' */
-		       ((ImageDescriptor *) (PavCree->AbImageDescriptor))->imagePres =
+		       ((PictInfo *) (PavCree->AbPictInfo))->PicPresent =
 			  ReScale;
 		       if (!PavCree->AbWidth.DimIsPosition)
 			  if (PavCree->AbWidth.DimValue == 0)
@@ -2851,7 +2851,7 @@ boolean             CreateurComplet;
 					 /* le pave prend la hauteur et la largeur de son
 					    contenu */
 					 /* l'image doit etre affichee telle quelle */
-					 ((ImageDescriptor *) (PavCree->AbImageDescriptor))->imagePres = RealSize;
+					 ((PictInfo *) (PavCree->AbPictInfo))->PicPresent = RealSize;
 		    }
 	       }
 	  }
@@ -4433,7 +4433,7 @@ PtrAbstractBox             NouvPave;
      {
 	if (!(pEl->ElTypeNumber == PageBreak + 1 && pR->PrType == PtHeight))
 	   if ((pR->PrViewNum == VueSch
-		|| pR->PrType == PtImDescr)
+		|| pR->PrType == PtPictInfo)
 	       && NouvPave != NULL
 	       && VueExiste (pEl, pDoc, VueNb))
 	     {

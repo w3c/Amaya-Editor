@@ -30,7 +30,7 @@
 * XpmCrDataFP.c:                                                              *
 *                                                                             *
 *  XPM library                                                                *
-*  Scan a pixmap and possibly its mask and create an XPM array                *
+*  Scan a pixmap and possibly its PicMask and create an XPM array                *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

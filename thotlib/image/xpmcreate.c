@@ -30,7 +30,7 @@
 * create.c:                                                                   *
 *                                                                             *
 *  XPM library                                                                *
-*  Create an X image and possibly its related shape mask                      *
+*  Create an X image and possibly its related shape PicMask                      *
 *  from the given xpmInternAttrib.                                            *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
@@ -831,7 +831,7 @@ XpmAttributes      *attributes;
 			   image->data, ximage_pixels);
 #endif
      }
-   /* create the shape mask image */
+   /* create the shape PicMask image */
    if (mask_pixel != XpmUndefPixel && shapeimage_return)
      {
 	ErrorStatus = CreateXImage (display, visual, 1, image->width,

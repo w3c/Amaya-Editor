@@ -1219,7 +1219,7 @@ PtrAbstractBox             pAb;
 
    if (pAb->AbLeafType == LtPicture)
      {
-	/* FreeImage(pAb->AbBox, pAb->AbBox->BxImageDescriptor ); */
+	/* FreeImage(pAb->AbBox, pAb->AbBox->BxPictInfo ); */
      }
    pAb->AbElement = NULL;
    pAb->AbEnclosing = NULL;

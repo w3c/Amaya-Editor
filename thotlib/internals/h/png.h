@@ -1090,7 +1090,7 @@ png_build_gamma_table PNGARG((png_structp png_ptr));
 
 /* combine a row of data, dealing with alpha, etc. if requested */
 extern void png_combine_row PNGARG((png_structp png_ptr, png_bytep row,
-   int mask));
+   int PicMask));
 
 #if defined(PNG_READ_INTERLACING_SUPPORTED)
 /* expand an interlaced row */

@@ -660,19 +660,19 @@ Drawable PngCreateImage(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 /* |	PngPrintImage convertit un Png en PostScript.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void PngPrintImage(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
+void PngPrintImage(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else /* __STDC__ */
-void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
+void PngPrintImage(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 	char *     fn;
 	PictureScaling pres;
 	int xif;
 	int yif;
 	int wif;
 	int hif;
-	int xcf;
-	int ycf;
-	int wcf;
-	int hcf;
+	int PicXArea;
+	int PicYArea;
+	int PicWArea;
+	int PicHArea;
 	int fd;
 	unsigned long BackGroundPixel;
 #endif /* __STDC__ */
@@ -706,8 +706,8 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
        return ;
     }
   
-  wcf = w;
-  hcf = h;
+  PicWArea = w;
+  PicHArea = h;
   
   xtmp = 0;
   ytmp = 0;
@@ -718,7 +718,7 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
       
       /* on centre l'image en x */
       /* quelle place a-t-on de chaque cote ? */
-      delta = (wif - wcf)/2;
+      delta = (wif - PicWArea)/2;
       if (delta > 0)
 	{
 	  /* on a de la place entre l'if et le cf */
@@ -727,7 +727,7 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 	  /* decale'e de delta vers le centre */
 	  xif += delta;
 	  /* la largeur de la boite est celle du cf */
-	  wif = wcf;
+	  wif = PicWArea;
 	}
       else
 	{
@@ -735,11 +735,11 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 	  /* on va retailler dans le pixmap pour que ca rentre */
 	  /* on sauve delta pour savoir ou couper */
 	  xtmp = -delta;
-	  /* on met a jour wcf pour etre coherent */
-	  wcf = wif;
+	  /* on met a jour PicWArea pour etre coherent */
+	  PicWArea = wif;
 	}     
       /* on centre l'image en y */
-      delta = (hif - hcf)/2;
+      delta = (hif - PicHArea)/2;
       if (delta > 0)
 	{
 	  /* on a de la place entre l'if et le cf */
@@ -748,7 +748,7 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 	  /* decale'e de delta vers le centre */
 	  yif += delta ;
 	  /* la hauteur de la boite est celle du cf */
-	  hif = hcf;
+	  hif = PicHArea;
 	}
       else
 	{
@@ -757,22 +757,22 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
 	  /* on sauve delta pour savoir ou couper */
 
 	  ytmp = - delta;
-	  /* on met a jour hcf pour etre coherent */
-	  hcf = hif;
+	  /* on met a jour PicHArea pour etre coherent */
+	  PicHArea = hif;
 	}   
       break;
     case ReScale:
-	if ((float) hcf / (float) wcf <= (float) hif / (float) wif)
+	if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 	    {
-	    Scx = (float) wif / (float) wcf;
-	    yif += (hif - (hcf * Scx)) / 2;
-	             hif = hcf * Scx;
+	    Scx = (float) wif / (float) PicWArea;
+	    yif += (hif - (PicHArea * Scx)) / 2;
+	             hif = PicHArea * Scx;
 	    }
 	else
 	    {
-	    Scy = (float) hif / (float) hcf;
-	    xif += (wif - (wcf * Scy)) / 2;
-	    wif = wcf * Scy;
+	    Scy = (float) hif / (float) PicHArea;
+	    xif += (wif - (PicWArea * Scy)) / 2;
+	    wif = PicWArea * Scy;
 	    }
       break;
     case FillFrame:
@@ -793,7 +793,7 @@ void PngPrintImage(fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGro
   /* chaque pt = RRGGBB en hexa */
   
   fprintf((FILE *)fd, "gsave %d -%d translate\n", PixelEnPt(xif, 1), PixelEnPt(yif + hif, 0));
-  fprintf((FILE *)fd, "%d %d %d %d DumpImage2\n", wcf, hcf, PixelEnPt(wif, 1), PixelEnPt(hif, 0));
+  fprintf((FILE *)fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelEnPt(wif, 1), PixelEnPt(hif, 0));
   fprintf((FILE *)fd, "\n"); 
   NbCharPerLine = wim ;
   

@@ -65,19 +65,19 @@ Drawable           *mask1;
 /* |    BitmapPrintImage convertit un bitmap en PostScript.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                BitmapPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned int BackGroundPixel)
+void                BitmapPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
 #else  /* __STDC__ */
-void                BitmapPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
+void                BitmapPrintImage (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
 PictureScaling           pres;
 int                 xif;
 int                 yif;
 int                 wif;
 int                 hif;
-int                 xcf;
-int                 ycf;
-int                 wcf;
-int                 hcf;
+int                 PicXArea;
+int                 PicYArea;
+int                 PicWArea;
+int                 PicHArea;
 int                 fd;
 unsigned int        BackGroundPixel;
 #endif /* __STDC__ */
@@ -95,7 +95,7 @@ unsigned int        BackGroundPixel;
    Pixmap              pix;
 
    /* on va transformer le bitmap du fichier en un pixmap */
-   i = XReadBitmapFile (GDp (0), GRootW (0), fn, &wcf, &hcf, &pix, &xtmp, &ytmp);
+   i = XReadBitmapFile (GDp (0), GRootW (0), fn, &PicWArea, &PicHArea, &pix, &xtmp, &ytmp);
    if (i != BitmapSuccess)
       return;
    xtmp = 0;
@@ -106,7 +106,7 @@ unsigned int        BackGroundPixel;
 	    case RealSize:
 	       /* on centre l'image en x */
 	       /* quelle place a-t-on de chaque cote ? */
-	       delta = (wif - wcf) / 2;
+	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
 		    /* on a de la place entre l'if et le cf */
@@ -115,7 +115,7 @@ unsigned int        BackGroundPixel;
 		    /* decale'e de delta vers le centre */
 		    xif += delta;
 		    /* la largeur de la boite est celle du cf */
-		    wif = wcf;
+		    wif = PicWArea;
 		 }
 	       else
 		 {
@@ -123,11 +123,11 @@ unsigned int        BackGroundPixel;
 		    /* on va retailler dans le pixmap pour que ca rentre */
 		    /* on sauve delta pour savoir ou couper */
 		    xtmp = -delta;
-		    /* on met a jour wcf pour etre coherent */
-		    wcf = wif;
+		    /* on met a jour PicWArea pour etre coherent */
+		    PicWArea = wif;
 		 }
 	       /* on centre l'image en y */
-	       delta = (hif - hcf) / 2;
+	       delta = (hif - PicHArea) / 2;
 	       if (delta > 0)
 		 {
 		    /* on a de la place entre l'if et le cf */
@@ -136,7 +136,7 @@ unsigned int        BackGroundPixel;
 		    /* decale'e de delta vers le centre */
 		    yif += delta;
 		    /* la hauteur de la boite est celle du cf */
-		    hif = hcf;
+		    hif = PicHArea;
 		 }
 	       else
 		 {
@@ -145,22 +145,22 @@ unsigned int        BackGroundPixel;
 		    /* on sauve delta pour savoir ou couper */
 
 		    ytmp = -delta;
-		    /* on met a jour hcf pour etre coherent */
-		    hcf = hif;
+		    /* on met a jour PicHArea pour etre coherent */
+		    PicHArea = hif;
 		 }
 	       break;
 	    case ReScale:
-	       if ((float) hcf / (float) wcf <= (float) hif / (float) wif)
+	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 		 {
-		    Scx = (float) wif / (float) wcf;
-		    yif += (hif - (hcf * Scx)) / 2;
-		    hif = hcf * Scx;
+		    Scx = (float) wif / (float) PicWArea;
+		    yif += (hif - (PicHArea * Scx)) / 2;
+		    hif = PicHArea * Scx;
 		 }
 	       else
 		 {
-		    Scy = (float) hif / (float) hcf;
-		    xif += (wif - (wcf * Scy)) / 2;
-		    wif = wcf * Scy;
+		    Scy = (float) hif / (float) PicHArea;
+		    xif += (wif - (PicWArea * Scy)) / 2;
+		    wif = PicWArea * Scy;
 		 }
 	       break;
 	    case FillFrame:
@@ -176,7 +176,7 @@ unsigned int        BackGroundPixel;
 	/* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
 	/* dans le pixmap (cas RealSize) */
 	Im = XGetImage (GDp (0), pix, xtmp, ytmp,
-			(unsigned int) wcf, (unsigned int) hcf,
+			(unsigned int) PicWArea, (unsigned int) PicHArea,
 			AllPlanes, XYPixmap);
 
 	wim = Im->width;

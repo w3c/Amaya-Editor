@@ -22,7 +22,7 @@ extern void XCharTranslation ( XEvent *event );
 extern XtTranslations InitTranslations (char *appliname);
 #endif /* WWW_XWINDOWS */
 extern void MaTranslation(int fen, unsigned char *chaine, unsigned int nb,
-                          int mask, int key);
+                          int PicMask, int key);
 
 #else /* __STDC__ */
 extern void DeleteSelection(/*int fen*/);
@@ -44,7 +44,7 @@ extern void XCharTranslation ( /* XEvent *event */ );
 extern XtTranslations InitTranslations (/* char *appliname */);
 #endif /* WWW_XWINDOWS */
 extern void MaTranslation(/* int fen, unsigned char *chaine, unsigned int nb,
-                          int mask, int key */);
+                          int PicMask, int key */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

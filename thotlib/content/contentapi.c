@@ -201,7 +201,7 @@ Document            document;
 	       {
 		  /* On libere la pixmap */
 		  if (((PtrElement) element)->ElImageDescriptor != NULL)
-		     FreeImage ((ImageDescriptor *) (((PtrElement) element)->ElImageDescriptor));
+		     FreeImage ((PictInfo *) (((PtrElement) element)->ElImageDescriptor));
 	       }
 
 #ifndef NODISPLAY

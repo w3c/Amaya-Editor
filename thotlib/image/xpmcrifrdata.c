@@ -30,7 +30,7 @@
 * XpmCrIFrData.c:                                                             *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an Xpm array and create the image and possibly its mask              *
+*  Parse an Xpm array and create the image and possibly its PicMask              *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/

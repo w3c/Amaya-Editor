@@ -74,7 +74,7 @@ char              **d;
 {
 #ifndef NEW_WILLOWS
    Pixmap              pixmap;
-   Pixmap              mask;
+   Pixmap              PicMask;
    XpmAttributes       att;
    XpmColorSymbol      cs;
 
@@ -99,10 +99,10 @@ char              **d;
 #ifdef WWW_MSWINDOWS
 	/* whatever the windows version is - @@@ */
 #else
-	XpmCreatePixmapFromData (GDp (0), GRootW (0), d, &pixmap, &mask, &att);
+	XpmCreatePixmapFromData (GDp (0), GRootW (0), d, &pixmap, &PicMask, &att);
 #endif
-	if (mask)
-	   XFreePixmap (GDp (0), mask);
+	if (PicMask)
+	   XFreePixmap (GDp (0), PicMask);
      }
    return (pixmap);
 #endif /* NEW_WILLOWS */

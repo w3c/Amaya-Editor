@@ -10,7 +10,7 @@ typedef struct {
 #else /* WWW_MSWINDOWS */
   FILE		*ls_stream;
 #endif /* !WWW_MSWINDOWS */
-  ThotDirBrowse_mask	mask;
+  ThotDirBrowse_mask	PicMask;
   char * buf;
   size_t bufLen;
   int dirLen;

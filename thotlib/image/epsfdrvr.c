@@ -112,9 +112,9 @@ FILE               *ifd;
 /* | On lit une image contenue dans le fichier fn                    | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-ThotBitmap          EPSFCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask)
+ThotBitmap          EPSFCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * PicMask)
 #else  /* __STDC__ */
-ThotBitmap          EPSFCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask)
+ThotBitmap          EPSFCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, PicMask)
 char               *fn;
 PictureScaling           pres;
 int                *xif;
@@ -122,7 +122,7 @@ int                *yif;
 int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
-Drawable           *mask;
+Drawable           *PicMask;
 #endif /* __STDC__ */
 {
 #ifdef NEW_WILLOWS
@@ -130,7 +130,7 @@ Drawable           *mask;
 #else  /* NEW_WILLOWS */
 
 #ifndef NEW_WILLOWS
-   *mask = None;
+   *PicMask = None;
 #endif
 
    FindBoundingBox (fn, xif, yif, wif, hif);
@@ -148,19 +148,19 @@ Drawable           *mask;
 /* | On imprime une image                                            | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-void                EPSFPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, FILE * fd, unsigned long BackGroundPixel)
+void                EPSFPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
-void                EPSFPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
+void                EPSFPrintImage (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
 PictureScaling           pres;
 int                 xif;
 int                 yif;
 int                 wif;
 int                 hif;
-int                 xcf;
-int                 ycf;
-int                 wcf;
-int                 hcf;
+int                 PicXArea;
+int                 PicYArea;
+int                 PicWArea;
+int                 PicHArea;
 FILE               *fd;
 unsigned long       BackGroundPixel;
 #endif /* __STDC__ */
@@ -174,7 +174,7 @@ unsigned long       BackGroundPixel;
    int                 c;
 
    /* On relit la bounding box au moment de l'impression */
-   FindBoundingBox (fn, &xcf, &ycf, &wcf, &hcf);
+   FindBoundingBox (fn, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
    xif = PixelEnPt (xif, 1);
    yif = PixelEnPt (yif, 0);
    wif = PixelEnPt (wif, 1);
@@ -194,40 +194,40 @@ unsigned long       BackGroundPixel;
    switch (pres)
 	 {
 	    case RealSize:
-	       x = xif - xcf + (wif - wcf) / 2;
-	       y = yif + ycf - (hif - hcf) / 2;
+	       x = xif - PicXArea + (wif - PicWArea) / 2;
+	       y = yif + PicYArea - (hif - PicHArea) / 2;
 	       /* on fait juste un translate au bon endroit */
 	       fprintf (fd, "  %d %d translate\n", x, -y);
 	       break;
 	    case ReScale:
 	       /* meme echelle X et Y, centre'  */
-	       Scx = (float) wif / (float) wcf;
-	       Scy = (float) hif / (float) hcf;
+	       Scx = (float) wif / (float) PicWArea;
+	       Scy = (float) hif / (float) PicHArea;
 	       /* on cherche dans quel sens ca risque de coincer */
 	       if (Scy <= Scx)
 		 {
 		    /* mise ajour des formules Nabil */
 		    Scx = Scy;
-		    x = (int) ((float) xif - (Scx * (float) xcf) + ((float) (wif - (wcf * Scx)) / 2.));
+		    x = (int) ((float) xif - (Scx * (float) PicXArea) + ((float) (wif - (PicWArea * Scx)) / 2.));
 		    /* recentrer en X */
-		    y = (int) ((float) yif + (Scy * (float) ycf));
+		    y = (int) ((float) yif + (Scy * (float) PicYArea));
 		 }
 	       else
 		 {
 		    Scy = Scx;
-		    x = (int) ((float) xif - (Scx * (float) xcf));
+		    x = (int) ((float) xif - (Scx * (float) PicXArea));
 		    /* recentrer en Y */
-		    y = (int) ((float) yif + (Scy * (float) ycf) - ((float) (hif - (hcf * Scy)) / 2.));
+		    y = (int) ((float) yif + (Scy * (float) PicYArea) - ((float) (hif - (PicHArea * Scy)) / 2.));
 		 }
 	       /* on fait un translate et un scale */
 	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
 	       break;
 	    case FillFrame:
 	       /* remplissage du cadre (echelle XY) */
-	       Scx = (float) wif / (float) wcf;
-	       Scy = (float) hif / (float) hcf;
-	       x = (int) ((float) xif - (Scx * (float) xcf));
-	       y = (int) ((float) yif + (Scy * (float) ycf));
+	       Scx = (float) wif / (float) PicWArea;
+	       Scy = (float) hif / (float) PicHArea;
+	       x = (int) ((float) xif - (Scx * (float) PicXArea));
+	       y = (int) ((float) yif + (Scy * (float) PicYArea));
 	       /* on fait un translate et un scale */
 	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
 	       break;
