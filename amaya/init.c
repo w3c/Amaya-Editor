@@ -2297,6 +2297,36 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
   char      *label;
 
   /* get the window geometry */
+  if (docType == docAnnot)
+    label = "Annot_Formatted_view";
+  else if (docType == docBookmark)
+    label = "Topics_Formatted_view";
+#ifndef _WX
+  else if (docType == docSource)
+    label = "Source_view";
+  else
+    label = "Formatted_view";
+#else /* _WX */
+  else
+    label = "Wx_Window";
+#endif /* _WX */
+  TtaGetViewGeometry (doc, label, x, y, w, h);
+
+#ifdef _WX
+  if (w == 0 || h == 0)
+    TtaGetViewGeometry (doc, "Formatted_view", x, y, w, h);
+#else /* _WX */
+  if (docType == docMath)
+    {
+      *h = 300;
+      *w = 580;
+    }
+#endif /* _WX */
+
+  /* change the position slightly to avoid hiding completely the main
+     view of other documents */
+  *x = *x + (doc - 1) * 10;
+  *y = *y + (doc - 1) * 10;
   if (docType == docLog)
     {
       *x += 100;
@@ -2306,48 +2336,20 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
     }
   else if (method == CE_HELP  || docType == docBookmark)
     {
-      *x += 500;
+      *x += 300;
       *y += 200;
       *h = 500;
       *w = 800;
     }
   else if (docType == docLibrary)
     {
-      *x += 500;
+      *x += 300;
       *y += 200;
       *h = 500;
       *w = 400;
     }
   else
     {
-      if (docType == docAnnot)
-	label = "Annot_Formatted_view";
-      else if (docType == docBookmark)
-	label = "Topics_Formatted_view";
-#ifndef _WX
-      else if (docType == docSource)
-	label = "Source_view";
-      else
-	label = "Formatted_view";
-#else /* _WX */
-      else
-	label = "Wx_Window";
-#endif /* _WX */
-      TtaGetViewGeometry (doc, label, x, y, w, h);
-#ifdef _WX
-      if (w == 0 || h == 0)
-	TtaGetViewGeometry (doc, "Formatted_view", x, y, w, h);
-#else /* _WX */
-      if (docType == docMath)
-	{
-	  *h = 300;
-	  *w = 580;
-	}
-#endif /* _WX */
-      /* change the position slightly to avoid hiding completely the main
-	 view of other documents */
-      *x = *x + (doc - 1) * 10;
-      *y = *y + (doc - 1) * 10;
     }
 }
 
@@ -3363,12 +3365,18 @@ static Document LoadDocument (Document doc, char *pathname,
     {
       /* we're loading a CSS file */
       docType = docCSS;
+      /* if a CSS document has a xml header, CheckDocHeader will detect that the document is XML !
+       * (ex: http://www.inrialpes.fr has a css with a xml header :( )
+       * when we know that the document is CSS (method == CE_CSS) we should force docType to docCSS */
       isXML   = FALSE;
       unknown = FALSE;
     }
-  /* if a CSS document has a xml header, CheckDocHeader will detect that the document is XML !
-   * (ex: http://www.inrialpes.fr has a css with a xml header :( )
-   * when we know that the document is CSS (method == CE_CSS) we should force docType to docCSS */
+  else if (method == CE_LOG)
+    {
+      docType = docLog;
+      isXML   = FALSE;
+      unknown = FALSE;
+    }
   else if (content_type == NULL || content_type[0] == EOS)
     /* Local document - no content type  */
     {
@@ -3927,15 +3935,18 @@ static Document LoadDocument (Document doc, char *pathname,
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
-#ifdef _SVG
-	  if (DocumentTypes[newdoc] == docLibrary)
+	  if (DocumentTypes[newdoc] != docLog)
 	    {
-	      SelectLibraryFromPath (DocumentURLs[newdoc]);
-              TtaSetTextZone (newdoc, 1, SVGlib_list);
-	    }
-	  else
+#ifdef _SVG
+	      if (DocumentTypes[newdoc] == docLibrary)
+		{
+		  SelectLibraryFromPath (DocumentURLs[newdoc]);
+		  TtaSetTextZone (newdoc, 1, SVGlib_list);
+		}
+	      else
 #endif /* _SVG */
-	    TtaSetTextZone (newdoc, 1, URL_list);
+		TtaSetTextZone (newdoc, 1, URL_list);
+	    }
 	}
 
       tempdir = (char *)TtaGetMemory (MAX_LENGTH);
@@ -4927,6 +4938,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 #endif /* _SVG */
   else if (method == CE_CSS)
     docType = docCSS;
+  else if (method == CE_LOG)
+    docType = docLog;
   else
     docType = docHTML;
   
