@@ -1830,7 +1830,9 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
   PtrTextBuffer       pCurrentBuffer;
-  SpecFont             font;
+  PtrDocument         pDoc;
+  SpecFont            font;
+  int                 view;
   int                 ind;
   int                 i, l;
   int                 xDelta, yDelta;
@@ -1921,6 +1923,8 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 		  BoxUpdate (pBox, pLine, charsDelta, spacesDelta, xDelta, adjust,
 			     0, frame, FALSE);
 	       CloseTextInsertion ();
+	       GetDocAndView (frame, &pDoc, &view);
+	       CloseHistorySequence (pDoc);
 	       break;
 	    case LtPicture:
 	       pCurrentBuffer = pAb->AbElement->ElText;
