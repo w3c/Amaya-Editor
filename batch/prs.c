@@ -1991,13 +1991,11 @@ static void         CheckDefaultRules ()
      }
    if (GetTypedRule (PtBorderTopColor, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle BorderTopColor par defaut, on en cree une : */
-      /* BorderTopColor: same as foreground; */
+      /* BorderTopColor: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtBorderTopColor;
-	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrAttrValue = FALSE;
-        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBorderRightColor, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle BorderRightColor par defaut, on en cree une : */
@@ -2005,9 +2003,7 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtBorderRightColor;
-	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrAttrValue = FALSE;
-        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBorderBottomColor, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle BorderBottomColor par defaut, on en cree une : */
@@ -2015,9 +2011,7 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtBorderBottomColor;
-	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrAttrValue = FALSE;
-        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBorderLeftColor, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle BorderLeftColor par defaut, on en cree une : */
@@ -2025,9 +2019,7 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtBorderLeftColor;
-	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrAttrValue = FALSE;
-        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBorderTopStyle, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle BorderTopStyle par defaut, on en cree une : */
