@@ -1133,6 +1133,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_defer, "DEFER", HTML_ATTR_defer_VAL_Yes_},
    {HTML_ATTR_disabled, "DISABLED", HTML_ATTR_disabled_VAL_Yes_},
    {HTML_ATTR_readonly, "READONLY", HTML_ATTR_readonly_VAL_Yes_},
+   {HTML_ATTR_no_resize, "NORESIZE", HTML_ATTR_no_resize_VAL_Yes_},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 
