@@ -1661,8 +1661,9 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
       base = GetBaseURL (doc);
       if (base)
 	{
-        value = MakeRelativeURL (tempURI, base);
-        TtaFreeMemory (base);
+	  TtaFreeMemory (value);
+	  value = MakeRelativeURL (tempURI, base);
+	  TtaFreeMemory (base);
         }
       TtaSetAttributeText (attr, value, el, doc);
       TtaFreeMemory (tempURI);

@@ -4121,12 +4121,13 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 		  CSSindex = CSScomment - 1; /* will be incremented later */
 		  CSScomment = MAX_CSS_LENGTH;
 		  /* clean up the buffer */
-		  if (newlines &&CSSindex >= 0)
-		    while (CSSbuffer[CSSindex] == SPACE ||
-			   CSSbuffer[CSSindex] == BSPACE ||
-			   CSSbuffer[CSSindex] == EOL ||
-			   CSSbuffer[CSSindex] == TAB ||
-			   CSSbuffer[CSSindex] == __CR__)
+		  if (newlines && CSSindex > 0)
+		    while (CSSindex > 0 &&
+			   (CSSbuffer[CSSindex] == SPACE ||
+			    CSSbuffer[CSSindex] == BSPACE ||
+			    CSSbuffer[CSSindex] == EOL ||
+			    CSSbuffer[CSSindex] == TAB ||
+			    CSSbuffer[CSSindex] == __CR__))
 		      {
 			if ( CSSbuffer[CSSindex] == EOL)
 			  {

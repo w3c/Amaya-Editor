@@ -1519,7 +1519,9 @@ static void       StartOfXmlStartElement (char *name)
   int             nslevel;
   static int      old_nslevel;
   PtrParserCtxt   savParserCtxt = NULL;
-      
+
+  elementName = NULL;
+  buffer = NULL;
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (errorNotWellFormed, "**FATAL** Too many XML levels", 0);
@@ -1643,6 +1645,8 @@ static void       StartOfXmlStartElement (char *name)
 		  XmlParseError (errorParsingProfile, msgBuffer, 0);
 		  UnknownElement = TRUE;
 		}
+	      TtaFreeMemory (elementName);
+	      TtaFreeMemory (buffer);
 	      return;
 	    }
 	  else
