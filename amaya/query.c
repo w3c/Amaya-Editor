@@ -3388,13 +3388,11 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    char               *tmp;
    char               *esc_url;
    int                 UsePreconditions;
-   ThotBool            lost_update_check = TRUE;
    char                url_name[MAX_LENGTH];
    char               *resource_name;
    char               *tmp2;
-#ifdef _WINDOWS
    char                file_name[MAX_LENGTH];
-#endif /* _WINDOWS */
+   ThotBool            lost_update_check = TRUE;
 
    if (mode & AMAYA_SIMPLE_PUT)
      {
@@ -3519,18 +3517,25 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
        me->outputfile = (char  *) NULL; 
      }
 
+   /* @@IV 18/08/2004 eencode spaces in the local filename */
+   fileURL = EscapeURL (fileName);
+   if (fileURL)
+   {
+     strcpy (file_name, fileURL);
+     TtaFreeMemory (fileURL);
+   }
+   else
+     strcpy (file_name, fileName);
+   fileURL = NULL;
+
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
       so we sidestep it */
-
-   fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
-   strcpy (file_name, fileName);
    StrAllocCat (fileURL, file_name);
 #endif /* _WINDOWS */
-
 #if defined(_UNIX)
-   fileURL = HTParse (fileName, "file:/", PARSE_ALL);
+   fileURL = HTParse (file_name, "file:/", PARSE_ALL);
 #endif /* #if defined(_UNIX) */
 
    me->source = HTAnchor_findAddress (fileURL);
