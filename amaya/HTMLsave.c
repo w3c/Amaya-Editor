@@ -2651,9 +2651,12 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 		       fprintf(stderr, "     SRC from %s to %s\n", buf, url);
 #endif
 		       if ((src_is_local) && (!dst_is_local))
+			 {
 			   /* add the localfile to the images list */
 			   AddLocalImage (buf, imgname, tempname, doc, &pImage);
-		       
+			    /* get image type */
+			   pImage->imageType = TtaGetPictureType (el);
+			 }
 		       /* mark the image descriptor or copy the file */
 		       if (dst_is_local)
 			 {
