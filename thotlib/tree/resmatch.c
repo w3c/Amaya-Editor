@@ -163,10 +163,12 @@ int IDst;
 	 }
        else
 	 {
-	   if (CSrc == 'N') /* deux natures */
+	   /****
+	   if (CSrc == 'N') ** deux natures **
 	     ;
-	   if (CSrc == 'R') /* deux references */
+	   if (CSrc == 'R') ** deux references **
 	     ;
+	   ****/
 	   result = EQUIVALENCE;
 	 }
      }
