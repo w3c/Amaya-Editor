@@ -7,11 +7,112 @@
 #include "JavaTypes_f.h"
 
 /*
+ * General conversion routines between java types and C types.
+ */
+
+void *JavaLong2CPtr(jlong in)
+{
+    /*
+     * a Java long is a 64 bit entity by definition,
+     * a C pointer may be 32 or 64 bits.
+     */
+#if SIZEOF_INT == SIZEOF_VOIDP
+    unsigned int tmp = (unsigned int) in;
+#elif SIZEOF_LONG == SIZEOF_VOIDP
+    unsigned long tmp = (unsigned long) in;
+#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
+    unsigned long long tmp = (unsigned long long) in;
+#elif SIZEOF___INT64 == SIZEOF_VOIDP
+    unsigned int64 tmp = (unsigned int64) in;
+#else
+#error "couldn't find an appropriate type to hold pointers"
+#endif
+    return ((void *) tmp);
+}
+
+jlong CPtr2JavaLong(void *in)
+{
+    /*
+     * a Java long is a 64 bit entity by definition,
+     * a C pointer may be 32 or 64 bits.
+     */
+#if SIZEOF_INT == SIZEOF_VOIDP
+    unsigned int tmp = (unsigned int) in;
+#elif SIZEOF_LONG == SIZEOF_VOIDP
+    unsigned long tmp = (unsigned long) in;
+#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
+    unsigned long long tmp = (unsigned long long) in;
+#elif SIZEOF___INT64 == SIZEOF_VOIDP
+    unsigned int64 tmp = (unsigned int64) in;
+#else
+#error "couldn't find an appropriate type to hold pointers"
+#endif
+    return ((jlong) tmp);
+}
+
+/*
+ * Broblem when storing pointers in Java long and passing them
+ * by address :
+ *
+ * a Java long is a 64 bit entity by definition,
+ * a C pointer may be 64 or 32 bits. In the lastest case,
+ * depending on whether the architecture is LSBF or MSBF,
+ * casting a jlong pointer directly to an int pointer may
+ * or may not be a good idea, let's assume the value is
+ * 0xAABBCCDD :
+ *
+ *    pointer to the Java jlong
+ *       |    --------------> increasing mem addresses
+ *       V
+ * LSBF [AA,BB,CC,DD,00,00,00,00]
+ *       ^
+ *       |
+ *       pointer to the 32 bits value
+ *
+ * MSBF [00,00,00,00,DD,CC,BB,AA]
+ *                   ^
+ *                   |
+ *                   pointer to the 32 bits value
+ */
+static int int_ptr_need_shift = -1;
+
+void do_ptr_need_shift(void) {
+    jlong value = 0xAABBCCDD;
+    jlong *jptr = &value;
+    int   *iptr;
+
+    iptr = (int   *) jptr;
+    if (*iptr == 0xAABBCCDD) {
+fprintf(stderr,"do_ptr_need_shift() : no\n");
+        int_ptr_need_shift = 0;
+	return;
+    }
+    iptr++;
+    if (*iptr == 0xAABBCCDD) {
+fprintf(stderr,"do_ptr_need_shift() : yes\n");
+        int_ptr_need_shift = 1;
+	return;
+    }
+    fprintf(stderr,"do_ptr_need_shift() : memory storage error !\n");
+    exit(1);
+}
+
+int *JavaLongPtr2CIntPtr(jlong *in)
+{
+    int *res = (int *) in;
+
+    if (int_ptr_need_shift < 0) do_ptr_need_shift();
+
+    if (int_ptr_need_shift) res++;
+    return (res);
+}
+
+/*
  * C object <=> Java object content
  */
 void JavaElement2CElement(struct Hthotlib_Element *in, Element *out)
 {
-    *out = (Element) unhand(in)->element;
+    *out = (Element) JavaLong2CPtr(unhand(in)->element);
 }
 
 /*
@@ -19,7 +120,7 @@ void JavaElement2CElement(struct Hthotlib_Element *in, Element *out)
  */
 void JavaElement2CElementPtr(struct Hthotlib_Element* in, Element **out)
 {
-    *out = (Element *) &(unhand(in)->element);
+    *out = (Element *) JavaLongPtr2CIntPtr(&(unhand(in)->element));
 }
 void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
 {
@@ -28,25 +129,25 @@ void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
 void JavaElementType2CElementTypePtr(struct Hthotlib_ElementType* in, ElementType **out)
 {
     *out = (ElementType *) malloc(sizeof(ElementType));
-    (*out)->ElSSchema = (SSchema) (unhand(in)->sschema);
+    (*out)->ElSSchema = (SSchema) JavaLong2CPtr(unhand(in)->sschema);
     (*out)->ElTypeNum = (int) (unhand(in)->type);
 }
 void CElementTypePtr2JavaElementType(ElementType *in, struct Hthotlib_ElementType** out)
 {
-    unhand(*out)->sschema = (jlong) in->ElSSchema;
+    unhand(*out)->sschema = CPtr2JavaLong(in->ElSSchema);
     unhand(*out)->type = (jint) in->ElTypeNum;
     free(in);
 }
 void CElementType2JavaElementType(ElementType in, struct Hthotlib_ElementType* out)
 {
-    unhand(out)->sschema = (jlong) in.ElSSchema;
+    unhand(out)->sschema = CPtr2JavaLong(in.ElSSchema);
     unhand(out)->type = (jint) in.ElTypeNum;
 }
 
 
 void JavaDocument2CDocumentPtr(struct Hthotlib_Document* in, Document **out)
 {
-    *out = (Document *) &(unhand(in)->document);
+    *out = (Document *) JavaLongPtr2CIntPtr(&(unhand(in)->document));
 }
 void CDocumentPtr2JavaDocument(Document *in, struct Hthotlib_Document** out)
 {
@@ -54,7 +155,7 @@ void CDocumentPtr2JavaDocument(Document *in, struct Hthotlib_Document** out)
 
 void JavaSSchema2CSSchemaPtr(struct Hthotlib_SSchema* in, SSchema **out)
 {
-    *out = (SSchema *) &(unhand(in)->sschema);
+    *out = (SSchema *) JavaLongPtr2CIntPtr(&(unhand(in)->sschema));
 }
 void CSSchemaPtr2JavaSSchema(SSchema *in, struct Hthotlib_SSchema** out)
 {
@@ -62,7 +163,7 @@ void CSSchemaPtr2JavaSSchema(SSchema *in, struct Hthotlib_SSchema** out)
 
 void JavaAttribute2CAttributePtr(struct Hthotlib_Attribute* in, Attribute **out)
 {
-    *out = (Attribute *) &(unhand(in)->attribute);
+    *out = (Attribute *) JavaLongPtr2CIntPtr(&(unhand(in)->attribute));
 }
 void CAttributePtr2JavaAttribute(Attribute *in, struct Hthotlib_Attribute** out)
 {
@@ -70,7 +171,7 @@ void CAttributePtr2JavaAttribute(Attribute *in, struct Hthotlib_Attribute** out)
 
 void JavaPRule2CPRulePtr(struct Hthotlib_PRule* in, PRule **out)
 {
-    *out = (PRule *) &(unhand(in)->prule);
+    *out = (PRule *) JavaLongPtr2CIntPtr(&(unhand(in)->prule));
 }
 void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
 {
@@ -79,12 +180,12 @@ void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
 void JavaAttributeType2CAttributeTypePtr(struct Hthotlib_AttributeType* in, AttributeType **out)
 {
     *out = (AttributeType *) malloc(sizeof(AttributeType));
-    (*out)->AttrSSchema = (SSchema) (unhand(in)->sschema);
+    (*out)->AttrSSchema = (SSchema) JavaLong2CPtr(unhand(in)->sschema);
     (*out)->AttrTypeNum = (int) (unhand(in)->type);
 }
 void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_AttributeType** out)
 {
-    unhand(*out)->sschema = (jlong) in->AttrSSchema;
+    unhand(*out)->sschema = CPtr2JavaLong(in->AttrSSchema);
     unhand(*out)->type = (jint) in->AttrTypeNum;
     free(in);
 }
@@ -164,118 +265,58 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
 
 void CPixmap2Javalong(Pixmap in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong((void *) in);
 }
 void Javalong2CPixmap(jlong in, Pixmap *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = (Pixmap) JavaLong2CPtr(in);
 }
 
 void CElement2Javalong(Element in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong(in);
 }
 void Javalong2CElement(jlong in, Element *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = JavaLong2CPtr(in);
 }
 
 void CSSchema2Javalong(SSchema in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong(in);
 }
 void Javalong2CSSchema(jlong in, SSchema *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = JavaLong2CPtr(in);
 }
 
 
 void CAttribute2Javalong(Attribute in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong(in);
 }
 void Javalong2CAttribute(jlong in, Attribute *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = JavaLong2CPtr(in);
 }
 
 
 void CPRule2Javalong(PRule in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong(in);
 }
 void Javalong2CPRule(jlong in, PRule *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = JavaLong2CPtr(in);
 }
 
 
 void CThotWidget2Javalong(ThotWidget in, jlong *out)
 {
-    *out = (jlong) in;
+    *out = CPtr2JavaLong(in);
 }
 void Javalong2CThotWidget(jlong in, ThotWidget *out)
 {
-#if SIZEOF_VOIDP == SIZEOF_INT
-    unsigned int temp;
-    temp = (unsigned int) in;
-    *out = (void *) temp;
-#elif SIZEOF_VOIDP == SIZEOF_LONG
-    *out = (void *) (unsigned long) in;
-#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
-    *out = (void *) (unsigned long long) in;
-#elif SIZEOF_VOIDP == SIZEOF___INT64
-    *out = (void *) (unsigned __int64) in;
-#endif
+    *out = JavaLong2CPtr(in);
 }
 
