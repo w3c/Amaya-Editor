@@ -32,10 +32,12 @@
 
 static void ProcessElements(char * element);
 static void InsertTable(STRING string, STRING * Table, int * nbelem);
-static void FileToTable(FILE * File,  STRING * Table,int * nbelem, int maxelem);
+static void FileToTable(FILE * File,  STRING * Table,
+			int * nbelem, int maxelem);
 static void SortTable (STRING * Table, int nbelem);
 static void DeleteTable(STRING * Table, int  *nbelem);
-static int  SearchInTable(char * StringToFind, STRING * Table, int nbelem, ThotBool sort);
+static int  SearchInTable(char * StringToFind, STRING * Table, 
+			  int nbelem, ThotBool sort);
 static void SkipNewLineSymbol(char  * Astring);
 static void SkipAllBlanks (char * Astring);
 static char * AddHooks (char * Astring);
@@ -69,8 +71,7 @@ static int                  Edition_nbelem = 0;
 static char                 CurrentProfile[MAX_PRO_LENGTH];
                 
 /* User Profile (taken from the thot.rc) */  
-static char                  * UserProfile;
-//static char                 UserProfile[MAX_PRO_LENGTH];
+static char                 UserProfile[MAX_PRO_LENGTH];
 
 static char                 TempString[MAX_PRO_LENGTH];
 
@@ -97,19 +98,18 @@ void Prof_InitTable(void)
   /* Retrive thot.rc variables and open usefull files */
   ptr = TtaGetEnvString(TEXT("Profiles_File"));
   if (ptr && *ptr)
-      Prof_FILE = fopen(ptr,"r");
+    Prof_FILE = fopen(ptr,"r");
   else
-	  Prof_FILE = NULL;
-
+    Prof_FILE = NULL;
+  
   ptr = TtaGetEnvString (TEXT("Profile"));
   if (ptr && *ptr)
   {
-	UserProfile = TtaGetMemory (strlen(ptr) + sizeof(char));
-	strcpy (UserProfile, AddHooks (ptr));	
+    strcpy (UserProfile, AddHooks (ptr));	
   }
   else
-	// UserProfile[0] = EOS;
-	UserProfile = NULL;
+     UserProfile[0] = EOS;
+    
   
   ptr = TtaGetEnvString(TEXT("THOTDIR"));
   ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
@@ -121,17 +121,17 @@ void Prof_InitTable(void)
     }
   else
     Def_FILE = NULL;
- 
+  
   if (Def_FILE && Prof_FILE && UserProfile)
      {    
        
        /* Fill a table for modules definition */
        FileToTable (Def_FILE, Def_Table, &Def_nbelem, MAX_DEF);
-
+       
        /* Generate a functions table*/
        while (fgets(TempString, sizeof(TempString), Prof_FILE))
          {
-			
+	   
 	   SkipAllBlanks(TempString);
   	   ProcessElements(TempString);
 	 } 
@@ -148,7 +148,7 @@ void Prof_InitTable(void)
 	   if (SearchInTable (Fun_Table[i], Edition_Table, Edition_nbelem, TRUE))
 	     Prof_ReadOnly = FALSE;
 	 }
-
+       
      }       
   else
     {
@@ -156,7 +156,7 @@ void Prof_InitTable(void)
     }
   if (Fun_nbelem > 0)
     defined_profile = TRUE;
-
+  
   /* Close the open files */
   if (Def_FILE) 
       fclose(Def_FILE);
@@ -181,28 +181,28 @@ int  Prof_RebuildProTable(STRING prof_file)
   
   Prof_FILE = fopen(prof_file,"r");
   DeleteTable(Pro_Table, &Pro_nbelem);
-   if (Prof_FILE)
-     {
-       while (fgets(TempString, sizeof(TempString), Prof_FILE))
-	 {
-	   SkipAllBlanks(TempString);
-  	   if (TempString[0] == PROFILE_START)
-	     {
-	       if (Pro_nbelem < MAX_PRO)
-		 {
-		   RemoveHooks(TempString);
-		   InsertTable(TempString, Pro_Table, & Pro_nbelem);
-		 }
-	     }
-	 } 
-       fclose(Prof_FILE);
-       return (Pro_nbelem > 0);
-     }
-   else
-     {
-       /* file not found, table is empty */
-       return 0;
-     }
+  if (Prof_FILE)
+    {
+      while (fgets(TempString, sizeof(TempString), Prof_FILE))
+	{
+	  SkipAllBlanks(TempString);
+	  if (TempString[0] == PROFILE_START)
+	    {
+	      if (Pro_nbelem < MAX_PRO)
+		{
+		  RemoveHooks(TempString);
+		  InsertTable(TempString, Pro_Table, & Pro_nbelem);
+		}
+	    }
+	} 
+      fclose(Prof_FILE);
+      return (Pro_nbelem > 0);
+    }
+  else
+    {
+      /* file not found, table is empty */
+      return 0;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -334,14 +334,13 @@ void Prof_DeleteFunTable(void)
 #endif /* __STDC__ */
 {
   DeleteTable(Fun_Table, & Fun_nbelem);
-  TtaFreeMemory (UserProfile);
 }
 
 
 /*-----------------------------------------------------------------------
     Prof_AddButton : Add a button if the function associated to that button
     belongs to the user profile
-  ----------------------------------------------------------------------*/
+    ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool Prof_AddButton(STRING FunctionName)
 #else  /* __STDC__ */
