@@ -1648,6 +1648,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  break;
 	}
       break;
+    case PtListStyleImage:
+      rule->PrIntValue = value;
+      break;
     case PtFloat:
       switch (value)
 	{
@@ -2333,6 +2336,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	  break;
 	 }
        break;
+    case PtListStyleImage:
+       value = rule->PrIntValue;
+       break;
     case PtFloat:
        switch (rule->PrChrValue)
 	{
@@ -2873,7 +2879,9 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 				    c->cssLine);
       if (pRule)
 	{
-	  if (type == PRBackgroundPicture)
+	  if (type == PRBackgroundPicture ||
+	      (type == PRListStyleImage &&
+	       v.typed_data.value != 0))
 	    {
 	      if (!generic)
 		tsch = (PSchema) PresentationSchema (LoadedDocument[doc - 1]->DocSSchema, LoadedDocument[doc - 1]);
@@ -3134,13 +3142,15 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
   
   /* second decoding step : read the value contained */
   setting->value = PRuleToPresentationValue (rule);
-  if (setting->type == PRBackgroundPicture)
+  if (setting->type == PRBackgroundPicture ||
+      setting->type == PRListStyleImage)
     {
       /* get the string instead of the box index */
       cst = setting->value.typed_data.value;
-      if (cst < 0)
+      if (cst <= 0)
 	setting->value.pointer = NULL;
-      setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
+      else
+	setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
     }
 }
 
@@ -3751,6 +3761,13 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	default:
 	  break;
 	}
+      break;
+    case PRListStyleImage:
+      if (settings->value.pointer != NULL)
+	sprintf (buffer, "list-style-image: url(%s)",
+		 (char*)(settings->value.pointer));
+      else
+	strcpy (buffer, "list-style-image: none");
       break;
     case PRFloat:
       switch (settings->value.typed_data.value)

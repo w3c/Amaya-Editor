@@ -1354,7 +1354,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      image = (ThotPictInfo *) pAb->AbPictBackground;
 	      if (image != NULL)
 		 {
-		 fprintf (fileDescriptor, "Picture: w = %d h = %d, name = \"",
+		 fprintf (fileDescriptor, "BgPicture: w=%d h=%d, name=\"",
 			  image->PicWArea, image->PicHArea);
 		 if (image->PicFileName)
 		    fprintf (fileDescriptor, "%s\" ", image->PicFileName);
@@ -1375,6 +1375,19 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	         for (j = 1; j <= Indent + 6; j++)
 		    fprintf (fileDescriptor, " ");
 		 }
+	      image = (ThotPictInfo *) pAb->AbPictListStyle;
+	      if (image != NULL)
+		 {
+		 fprintf (fileDescriptor, "ListPicture: w=%d h=%d, name=\"",
+			  image->PicWArea, image->PicHArea);
+		 if (image->PicFileName)
+		    fprintf (fileDescriptor, "%s\" ", image->PicFileName);
+		 else
+		    fprintf (fileDescriptor, "\"");
+		 fprintf (fileDescriptor, "\n");
+	         for (j = 1; j <= Indent + 6; j++)
+		    fprintf (fileDescriptor, " ");
+		 }
 	      fprintf (fileDescriptor, "ShowBox:");
 	      if (pAb->AbFillBox)
 		 fprintf (fileDescriptor, "Y");
@@ -1386,7 +1399,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      if (image == NULL)
 		 fprintf (fileDescriptor, "AbPictInfo = NULL");
 	      else
-		 fprintf (fileDescriptor, "Picture: w = %d, h = %d, name =  \"%s \"",
+		 fprintf (fileDescriptor, "Picture: w=%d, h=%d, name=\"%s\"",
 			  image->PicWArea,
 			  image->PicHArea, image->PicFileName);
 	      fprintf (fileDescriptor, " Mode:");
@@ -1523,6 +1536,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	for (j = 1; j <= Indent + 6; j++)
 	  fprintf (fileDescriptor, " ");
         fprintf (fileDescriptor, "ListStyleType:%c", pAb->AbListStyleType);
+        fprintf (fileDescriptor, " ListStyleImage:%c", pAb->AbListStyleImage);
         fprintf (fileDescriptor, " ListStylePosition:%c",
 		 pAb->AbListStylePosition);
 	if (pAb->AbBuildAll)
@@ -2605,6 +2619,16 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 	    fprintf (fileDescriptor, "Outside");
 	    break;
 	  }
+      else if (pR->PrType == PtListStyleImage)
+	{
+	  if (pR->PrIntValue == 0)
+	    fprintf (fileDescriptor, "none");
+	  else
+	    {
+	      fprintf (fileDescriptor, "Cste");
+	      wrnumber (pR->PrIntValue, fileDescriptor);
+	    }
+	}
       else if (pR->PrType == PtFloat)
 	switch (pR->PrChrValue)
 	  {

@@ -440,6 +440,9 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 	       case PtListStylePosition:
 		 val = pAbb->AbListStylePosition;
 		 break;
+	       case PtListStyleImage:
+		 val = pAbb->AbListStyleImage;
+		 break;
 	       case PtFloat:
 		 val = pAbb->AbFloat;
 		 break;
@@ -1700,7 +1703,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	      lg = ustrlen (pEl->ElText->BuContent) * 2 + 1;
 	      text = (char *)TtaGetMemory (lg);
 	      CopyBuffer2MBs (pEl->ElText, 0, (unsigned char *)text, lg);
-	      NewPictInfo (pAb, text, UNKNOWN_FORMAT);
+	      NewPictInfo (pAb, text, UNKNOWN_FORMAT, False);
 	    }
 	  pAb->AbVolume = pEl->ElTextLength;
 	  break;
@@ -3273,7 +3276,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			       MakeCompleteName (pConst->PdString, "",
 						 directoryName, fname, &i);
 			      }
-			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
+			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT, False);
 			}
 		    }
 		}
@@ -3285,21 +3288,21 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      pAb->AbElement->ElLeafType == LtPicture)
 		    {
 		      if (pAb->AbElement->ElPictInfo == NULL)
-			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
 		      ((ThotPictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		    }
 		  else if (pAb->AbPresentationBox)
 		    {
 		      if (pAb->AbPictInfo == NULL)
-			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
 		      ((ThotPictInfo *) (pAb->AbPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		    }
 		  else if (pAb->AbLeafType == LtCompound)
 		    {
 		      if (pAb->AbPictBackground == NULL)
-			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
 		      ((ThotPictInfo *) (pAb->AbPictBackground))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		    }
@@ -4031,7 +4034,67 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    }
 	  break;
 	case PtListStyleImage:
-	  appl = TRUE;   /***** not implemented ****/
+	  if (pPRule->PrPresMode == PresInherit)
+	    pAb->AbListStyleImage = CharRule (pPRule, pAb->AbElement,
+					      pAb->AbDocView, &appl);
+	  else if (pPRule->PrPresMode == PresImmediate &&
+		   pPRule->PrViewNum == viewSch)
+	    {
+	      if (pPRule->PrIntValue <= 0)
+		/* it's a rule "ListStylePicture = None" */
+		{
+		  pAb->AbListStyleImage = 'N';
+		  if (pAb->AbPictListStyle &&
+		      pAb->AbLeafType == LtCompound)
+		    /* remove the list-style image */
+		    {
+		      image = (ThotPictInfo *)pAb->AbPictListStyle;
+		      CleanPictInfo (image);
+		      TtaFreeMemory (image->PicFileName);
+		      TtaFreeMemory (pAb->AbPictListStyle);
+		      pAb->AbPictListStyle = NULL;
+		    } 
+		  appl = TRUE;
+		}
+	      else
+		/* there is an URL for the list-style image */
+		{
+		  appl = TRUE;
+		  if (pAb->AbLeafType == LtCompound)
+		    {
+		      pAb->AbListStyleImage = 'Y';
+		      if (pSchP == NULL)
+			pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
+		      pConst = &pSchP->PsConstant[pPRule->PrIntValue - 1];
+		      if (pConst->PdString[0] != EOS)
+			{
+#ifndef _WINDOWS
+			  if (pConst->PdString[0] == DIR_SEP)
+#else  /* _WINDOWS */
+			    if (pConst->PdString[0] == DIR_SEP ||
+				(pConst->PdString[1] == ':' &&
+				 pConst->PdString[2] == DIR_SEP))
+#endif /* _WINDOWS */
+			      /* absolute file name */
+			      strncpy (fname, pConst->PdString, MAX_PATH - 1);
+			    else
+			      /* relative file name */
+			      {
+				strncpy (directoryName, SchemaPath, MAX_PATH-1);
+				MakeCompleteName (pConst->PdString, "",
+						  directoryName, fname, &i);
+			      }
+			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT, True);
+			}
+		    }
+		}
+	    }
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbListStyleImage = 'N';  /* none */
+	      appl = TRUE;
+	    }
 	  break;
 	case PtFloat:
 	  pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,

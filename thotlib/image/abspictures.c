@@ -74,9 +74,11 @@ void CleanPictInfo (ThotPictInfo *imageDesc)
    ElPictInfo dans l'element), la procedure recopie 
    le champ ElPictInfo dans le pave.                
    Si le pointeur sur le descripteur n'existe pas, la      
-   procedure commence par creer le descripteur.            
+   procedure commence par creer le descripteur.
+   if liststyleimage, the picture is a list-style picture
   ----------------------------------------------------------------------*/
-void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
+void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
+		  ThotBool liststyleimage)
 {
   ThotPictInfo       *imageDesc = NULL;
   char               *ptr = NULL;
@@ -121,13 +123,20 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
     }
   else if (pAb->AbLeafType == LtCompound)
     {
-      /*  It's a background image -> Create the descriptor */
-      imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
+      /*  It's a background image or a list-style image.
+	  Create the descriptor */
+      if (liststyleimage)
+	imageDesc = (ThotPictInfo *) pAb->AbPictListStyle;
+      else
+	imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
       if (imageDesc == NULL)
 	{
 	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
 	  memset (imageDesc, 0, sizeof (ThotPictInfo));
-	  pAb->AbPictBackground = (int *) imageDesc;
+	  if (liststyleimage)
+	    pAb->AbPictListStyle = (int *) imageDesc;
+	  else
+	    pAb->AbPictBackground = (int *) imageDesc;
 	}
       else
 	{

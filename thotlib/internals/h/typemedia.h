@@ -502,6 +502,8 @@ typedef struct _AbstractBox
   char            AbDisplay;          /* Display mode */
   char            AbListStyleType;    /* type of the list item marker */
   char            AbListStylePosition;/* position of the list item marker */
+  char            AbListStyleImage;   /* 'Y' = display an image instead of the
+					 list item marker */
   char            AbFloat;            /* Float mode */
   char            AbClear;            /* Clear mode */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
@@ -559,7 +561,8 @@ typedef struct _AbstractBox
   {
     struct /* AbLeafType = LtCompound */
     {
-      int       *_AbPictBackground_;    /* Picture in background */
+      int       *_AbPictBackground_;    /* background picture */
+      int       *_AbPictListStyle_;     /* list-style image */
       ThotBool   _AbFillBox_;           /* True: a fill box is displayed */
       ThotBool	 _AbInLine_;
       /* The following two fields only make sense if AbInLine = False */
@@ -598,6 +601,7 @@ typedef struct _AbstractBox
 } AbstractBox;
 
 #define AbPictBackground u.s0._AbPictBackground_
+#define AbPictListStyle u.s0._AbPictListStyle_
 #define AbFillBox u.s0._AbFillBox_
 #define AbInLine u.s0._AbInLine_
 #define AbTruncatedHead u.s0._AbTruncatedHead_

@@ -972,6 +972,13 @@ void FreeAbstractBox (PtrAbstractBox pAb)
       TtaFreeMemory (pAb->AbPictBackground);
       pAb->AbPictBackground = NULL;
     }
+  if (pAb->AbLeafType == LtCompound && pAb->AbPictListStyle)
+    {
+      TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
+      CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
+      TtaFreeMemory (pAb->AbPictListStyle);
+      pAb->AbPictListStyle = NULL;
+    }
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pAb);
 #else

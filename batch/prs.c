@@ -378,7 +378,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
        CurRule->PrAttrValue = False;
        CurRule->PrIntValue = 1000;
      case PtListStyleType:
-       CurRule->PrChrValue = 'N';    /* None par defaut */
+       CurRule->PrChrValue = 'N';       /* None par defaut */
      case PtListStylePosition:
        CurRule->PrChrValue = 'O';       /* Outside par defaut */
      case PtDisplay:
@@ -1772,13 +1772,11 @@ static void         CheckDefaultRules ()
      }
    if (GetTypedRule (PtListStyleImage, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle PtListStyleImage par defaut, on en cree une : */
-      /* ListStyleImage: None; */
+      /* ListStyleImage: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtListStyleImage;
-	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrAttrValue = False;
-	CurRule->PrIntValue = 0;
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtListStylePosition, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle PtListStylePosition par defaut, on en cree une : */
@@ -5803,6 +5801,12 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 			inputLine, LineNum);
      else
        {
+	 if (gCode == RULE_ListStyleImageURI)
+	   {
+	     NewConst (wi);
+	     CurRule->PrAttrValue = False;
+	     CurRule->PrIntValue = pPSchema->PsNConstants;
+	   }
 	 pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
 	 for (i = 0; i < wl - 1; i++)
 	   pPresConst->PdString[i] = inputLine[wi + i - 1];

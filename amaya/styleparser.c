@@ -22,14 +22,15 @@
 #include "XML.h"
 #include "document.h"
 
-typedef struct _BackgroundImageCallbackBlock
+typedef struct _CSSImageCallbackBlock
 {
   Element                el;
   PSchema                tsch;
   CSSInfoPtr             css;
   PresentationContext    ctxt;
+  unsigned int           ruleType;
 }
-BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
+CSSImageCallbackBlock, *CSSImageCallbackPtr;
 
 #include "AHTURLTools_f.h"
 #include "HTMLpresentation_f.h"
@@ -1746,6 +1747,181 @@ static char *ParseCSSUrl (char *cssRule, char **url)
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSImageCallback: Callback called asynchronously by
+  FetchImage when a CSS image (background-image or list-style-image)
+  has been fetched.
+  ----------------------------------------------------------------------*/
+void ParseCSSImageCallback (Document doc, Element element, char *file,
+			    void *extra, ThotBool isnew)
+{
+  DisplayMode                dispMode = DisplayImmediately;
+  CSSImageCallbackPtr        callblock;
+  Element                    el;
+  PSchema                    tsch;
+  CSSInfoPtr                 css;
+  PInfoPtr                   pInfo;
+  PresentationContext        ctxt;
+  PresentationValue          image;
+  PresentationValue          value;
+  ThotBool                   enabled;
+
+  callblock = (CSSImageCallbackPtr) extra;
+  if (callblock == NULL)
+    return;
+
+  css = NULL;
+  el = callblock->el;
+  tsch = callblock->tsch;
+  ctxt = callblock->ctxt;
+  if (doc == 0 && !isnew)
+    /* apply to the current document only */
+    doc = ctxt->doc;
+  if (doc)
+    {
+      /* avoid too many redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+    }
+  else
+    {
+      /* check if the CSS still exists */
+      css = CSSList;
+      while (css && css != callblock->css)
+	css = css->NextCSS;
+      if (css == NULL)
+	tsch = NULL;
+    }
+
+  if (el || tsch)
+    {
+      /* Ok the image was fetched */
+      image.typed_data.unit = UNIT_REL;
+      image.typed_data.real = FALSE;
+      image.pointer = file;
+      TtaSetStylePresentation (callblock->ruleType, el, tsch, ctxt, image);
+      
+      if (callblock->ruleType == PRBackgroundPicture)
+	/* enforce the showbox */
+	{
+	  value.typed_data.value = 1;
+	  value.typed_data.unit = UNIT_REL;
+	  value.typed_data.real = FALSE;
+	  TtaSetStylePresentation (PRShowBox, el, tsch, ctxt, value);
+	}
+      /* check if the context can be freed */
+      ctxt->uses -= 1;
+      if (ctxt->uses == 0)
+	/* no other image loading */
+	TtaFreeMemory (ctxt);
+    }
+
+  TtaFreeMemory (callblock);
+  /* restore the display mode */
+  if (doc)
+    {
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+    }
+  else if (css)
+    {
+      for (doc = 1; doc < DocumentTableLength; doc++)
+	if (css->infos[doc] &&
+	    /* don't manage a document used by make book */
+	    (DocumentMeta[doc] == NULL ||
+	     DocumentMeta[doc]->method != CE_MAKEBOOK))
+	  {
+	    pInfo = css->infos[doc];
+	    enabled = FALSE;
+	    while (pInfo && !enabled)
+	      {
+		enabled = pInfo->PiEnabled;
+		pInfo = pInfo->PiNext;
+	      }
+	    /* Change the Display Mode to take into account the new
+	       presentation */
+	    dispMode = TtaGetDisplayMode (doc);
+	    if (dispMode == DisplayImmediately)
+	      {
+		TtaSetDisplayMode (doc, NoComputedDisplay);
+		/* Restore the display mode */
+		TtaSetDisplayMode (doc, dispMode);
+	      }
+	  }
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetCSSImage fetch the image referred by a background-image or a
+  list-style-image property.
+  ----------------------------------------------------------------------*/
+static char *SetCSSImage (Element element, PSchema tsch,
+			 PresentationContext ctxt, char *cssRule,
+			 CSSInfoPtr css, unsigned int ruleType)
+{
+  CSSImageCallbackPtr        callblock;
+  Element                    el;
+  char                      *url;
+  PresentationValue          image, value;
+  char                      *bg_image;
+  char                       tempname[MAX_LENGTH];
+  char                       imgname[MAX_LENGTH];
+
+  if (element)
+    el = element;
+  else
+    /* default element for FetchImage */
+    el = TtaGetMainRoot (ctxt->doc);
+  url = NULL;
+  cssRule = ParseCSSUrl (cssRule, &url);
+  cssRule = CheckImportantRule (cssRule, ctxt);
+  if (ctxt->destroy)
+    {
+      /* remove the background image PRule */
+      image.pointer = NULL;
+      TtaSetStylePresentation (ruleType, element, tsch, ctxt,image);
+    }
+  else if (url)
+    {
+      bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
+      if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
+	/* background images are enabled */
+	{
+	  callblock = (CSSImageCallbackPtr) TtaGetMemory (sizeof (CSSImageCallbackBlock));
+	  if (callblock)
+	    {
+	      callblock->el = element;
+	      callblock->tsch = tsch;
+	      callblock->css = css;
+	      callblock->ctxt = ctxt;
+	      callblock->ruleType = ruleType;
+	      /* new use of the context */
+	      ctxt->uses += 1;
+	      /* check if the image url is related to an external CSS */
+	      if (css)
+		{
+		  if (css->url)
+		    /* the image concerns a CSS file */
+		    NormalizeURL (url, 0, tempname, imgname, css->url);
+		  else
+		    /* the image concerns a style element */
+		    NormalizeURL (url, ctxt->doc, tempname, imgname, NULL);
+		  /* fetch and display background image of element */
+		  FetchImage (0, el, tempname, AMAYA_LOAD_IMAGE,
+			      ParseCSSImageCallback, callblock);
+		}
+	      else
+		FetchImage (ctxt->doc, el, url, AMAYA_LOAD_IMAGE,
+			    ParseCSSImageCallback, callblock);
+	    }
+	}
+    }
+  if (url)
+    TtaFreeMemory (url);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseCSSListStyleImage: parse a CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
@@ -1766,14 +1942,15 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
     {
       cssRule += 4;
       cssRule = CheckImportantRule (cssRule, ctxt);
-      /* @@@@@@@@@@@@@ */
+      pval.typed_data.value = 0;
+      if (DoApply)
+	TtaSetStylePresentation (PRListStyleImage, element, tsch, ctxt, pval);
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = ParseCSSUrl (cssRule, &url);
-      cssRule = CheckImportantRule (cssRule, ctxt);
-     /* @@@@@@@@@@@@@ */
+      cssRule = SetCSSImage (element, tsch, ctxt, cssRule, css,
+			     PRListStyleImage);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
@@ -3846,106 +4023,6 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSBackgroundImageCallback: Callback called asynchronously by
-  FetchImage when a background image has been fetched.
-  ----------------------------------------------------------------------*/
-void ParseCSSBackgroundImageCallback (Document doc, Element element,
-				      char *file, void *extra,
-				      ThotBool isnew)
-{
-  DisplayMode                dispMode = DisplayImmediately;
-  BackgroundImageCallbackPtr callblock;
-  Element                    el;
-  PSchema                    tsch;
-  CSSInfoPtr                 css;
-  PInfoPtr                   pInfo;
-  PresentationContext        ctxt;
-  PresentationValue          image;
-  PresentationValue          value;
-  ThotBool                   enabled;
-  callblock = (BackgroundImageCallbackPtr) extra;
-  if (callblock == NULL)
-    return;
-
-  css = NULL;
-  el = callblock->el;
-  tsch = callblock->tsch;
-  ctxt = callblock->ctxt;
-  if (doc == 0 && !isnew)
-    /* apply to the current document only */
-    doc = ctxt->doc;
-  if (doc)
-    {
-      /* avoid too many redisplay */
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, DeferredDisplay);
-    }
-  else
-    {
-      /* check if the CSS still exists */
-      css = CSSList;
-      while (css && css != callblock->css)
-	css = css->NextCSS;
-      if (css == NULL)
-	tsch = NULL;
-    }
-
-  if (el || tsch)
-    {
-      /* Ok the image was fetched, finish the background-image handling */
-      image.typed_data.unit = UNIT_REL;
-      image.typed_data.real = FALSE;
-      image.pointer = file;
-      TtaSetStylePresentation (PRBackgroundPicture, el, tsch, ctxt, image);
-      
-      /* enforce the showbox */
-      value.typed_data.value = 1;
-      value.typed_data.unit = UNIT_REL;
-      value.typed_data.real = FALSE;
-      TtaSetStylePresentation (PRShowBox, el, tsch, ctxt, value);
-      /* check if the context can be freed */
-      ctxt->uses -= 1;
-      if (ctxt->uses == 0)
-	/* no other image loading */
-	TtaFreeMemory (ctxt);
-    }
-
-  TtaFreeMemory (callblock);
-  /* restore the display mode */
-  if (doc)
-    {
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, dispMode);
-    }
-  else if (css)
-    {
-      for (doc = 1; doc < DocumentTableLength; doc++)
-	if (css->infos[doc] &&
-	    /* don't manage a document used by make book */
-	    (DocumentMeta[doc] == NULL ||
-	     DocumentMeta[doc]->method != CE_MAKEBOOK))
-	  {
-	    pInfo = css->infos[doc];
-	    enabled = FALSE;
-	    while (pInfo && !enabled)
-	      {
-		enabled = pInfo->PiEnabled;
-		pInfo = pInfo->PiNext;
-	      }
-	    /* Change the Display Mode to take into account the new presentation */
-	    dispMode = TtaGetDisplayMode (doc);
-	    if (dispMode == DisplayImmediately)
-	      {
-		TtaSetDisplayMode (doc, NoComputedDisplay);
-		/* Restore the display mode */
-		TtaSetDisplayMode (doc, dispMode);
-	      }
-	  }
-    }
-}
-
-/*----------------------------------------------------------------------
    GetCSSBackgroundURL searches a CSS BackgroundImage url within
    the cssRule.
    Returns NULL or a new allocated url string.
@@ -4001,21 +4078,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 				      char *cssRule, CSSInfoPtr css,
 				      ThotBool isHTML)
 {
-  Element                    el;
-  BackgroundImageCallbackPtr callblock;
   PresentationValue          image, value;
-  char                      *url;
-  char                      *bg_image;
-  char                       tempname[MAX_LENGTH];
-  char                       imgname[MAX_LENGTH];
 
-  if (element)
-    el = element;
-  else
-    /* default element for FetchImage */
-    el = TtaGetMainRoot (ctxt->doc);
-    
-  url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
     {
@@ -4025,7 +4089,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	{
 	  /* no background image */
 	  image.pointer = NULL;
-	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
+	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt,
+				   image);
 	  /* no background color */
 	  value.typed_data.unit = UNIT_INVALID;
 	  value.typed_data.real = FALSE;
@@ -4037,14 +4102,11 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = ParseCSSUrl (cssRule, &url);
+      cssRule = SetCSSImage (element, tsch, ctxt, cssRule, css,
+			     PRBackgroundPicture);
       if (ctxt->destroy)
-	{
-	  /* remove the background image PRule */
-	  image.pointer = NULL;
-	  cssRule = CheckImportantRule (cssRule, ctxt);
-	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
-	  if (TtaGetStylePresentation (PRFillPattern, element, tsch, ctxt, &value) < 0)
+	if (TtaGetStylePresentation (PRFillPattern, element, tsch, ctxt,
+				     &value) < 0)
 	    {
 	      /* there is no FillPattern rule -> remove ShowBox rule */
 	      value.typed_data.value = 1;
@@ -4052,44 +4114,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	      value.typed_data.real = FALSE;
 	      TtaSetStylePresentation (PRShowBox, element, tsch, ctxt, value);
 	    }
-	}
-      else if (url)
-	{
-	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
-	  if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
-	    /* background images are enabled */
-	    {
-	      cssRule = CheckImportantRule (cssRule, ctxt);
-	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory (sizeof (BackgroundImageCallbackBlock));
-	      if (callblock)
-		{
-		  callblock->el = element;
-		  callblock->tsch = tsch;
-		  callblock->css = css;
-		  callblock->ctxt = ctxt;
-		  /* new use of the context */
-		  ctxt->uses += 1;
-		  /* check if the image url is related to an external CSS */
-		  if (css)
-		    {
-		      if (css->url)
-			/* the image concerns a CSS file */
-			NormalizeURL (url, 0, tempname, imgname, css->url);
-		      else
-			/* the image concerns a style element */
-			NormalizeURL (url, ctxt->doc, tempname, imgname, NULL);
-		      /* fetch and display background image of element */
-		      FetchImage (0, el, tempname, AMAYA_LOAD_IMAGE,
-				  ParseCSSBackgroundImageCallback, callblock);
-		    }
-		  else
-		    FetchImage (ctxt->doc, el, url, AMAYA_LOAD_IMAGE,
-				ParseCSSBackgroundImageCallback, callblock);
-		}
-	    }
-	}
-      if (url)
-	TtaFreeMemory (url);
     }
   return (cssRule);
 }

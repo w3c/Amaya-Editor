@@ -411,6 +411,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbDisplay = 'U';
    pAb->AbListStyleType = 'D';
    pAb->AbListStylePosition = 'O';
+   pAb->AbListStyleImage = 'N';
    pAb->AbFloat = 'N';
    pAb->AbClear = 'N';
    pAb->AbAdjust = AlignLeft;
@@ -537,7 +538,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       pAb->AbVolume = pAb->AbText->BuLength;
       break;
     case tt_Picture:
-      NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);
+      NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT, False);
       pAb->AbLeafType = LtPicture;
       pAb->AbVolume = 100;
       break;
@@ -1691,9 +1692,10 @@ ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
 			       PtrPSchema pSchP)
 {
   PtrElement       pEl;
-  PtrAbstractBox   pMarkerAb, pDescAb, pNextAb;
+  PtrAbstractBox   pMarkerAb, pDescAb, pNextAb, pAscAb;
   PtrPRule         pRule;
   DocViewNumber    viewNb;
+  ThotPictInfo    *imageDesc;
   ThotBool         stop, ok, done;
 
   if (pAb->AbListStyleType == 'N')
@@ -1867,6 +1869,7 @@ ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
       pMarkerAb->AbPSchema = NULL; /* this box is not defined in any P schema*/
       pMarkerAb->AbCreatorAttr = pAttr; /* box not created by an attribute */
       pMarkerAb->AbListStyleType = pAb->AbListStyleType;
+      pMarkerAb->AbListStyleImage = pAb->AbListStyleImage;
       pMarkerAb->AbListStylePosition = pAb->AbListStylePosition;
       pMarkerAb->AbDisplay = pAb->AbDisplay;
       pMarkerAb->AbPresentationBox = TRUE;
@@ -1915,60 +1918,100 @@ ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
       if (pRule)
 	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
 
-      /* set content and size, according to the marker type */
-      if (pAb->AbListStyleType == 'D' ||   /* disc */
-	  pAb->AbListStyleType == 'C' ||   /* circle */
-	  pAb->AbListStyleType == 'S')   /* square */
-	/* content is a graphic shape */
+      done = False;
+      if (pAb->AbListStyleImage == 'Y' && pAb->AbLeafType == LtCompound)
+	/* display an image instead of the regular marker */
 	{
-	  /* HorizRef: * . Bottom; */
-	  pMarkerAb->AbHorizRef.PosEdge = HorizRef;
-	  pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
-	  pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
-	  /* Height: 0.4 em */
-	  pMarkerAb->AbHeight.DimValue = 4;
-	  pMarkerAb->AbHeight.DimAbRef = NULL;
-	  pMarkerAb->AbHeight.DimUnit = UnRelative;
-	  pMarkerAb->AbHeight.DimSameDimension = FALSE;
-	  /* Width: 0.4 em */
-	  pMarkerAb->AbWidth.DimValue = 4;
-	  pMarkerAb->AbWidth.DimAbRef = NULL;
-	  pMarkerAb->AbWidth.DimUnit = UnRelative;
-	  pMarkerAb->AbWidth.DimSameDimension = FALSE;	  
-	  /* LineWeight: 1 px */
-	  pMarkerAb->AbLineWeight = 1;
-	  pMarkerAb->AbLineWeightUnit = UnPixel;
-	  /* FillPattern: foregroundcolor */
-	  if (pAb->AbListStyleType == 'D' ||
-	      pAb->AbListStyleType == 'S')
-	    /* disc or square */
-	    pMarkerAb->AbFillPattern = 1;
-	  /* set content */
-	  pMarkerAb->AbLeafType = LtGraphics;
-	  if (pAb->AbListStyleType == 'S')
-	    /* square */
-	    pMarkerAb->AbShape = 'R';
-	  else
-	    /* circle or disc */
-	    pMarkerAb->AbShape = 'c';
-	  pMarkerAb->AbGraphScript = 'L';
-	  pMarkerAb->AbVolume = 1;
+	  imageDesc = NULL;
+	  pAscAb = pAb;
+	  do
+	    {
+	      if (pAscAb->AbPictListStyle)
+		imageDesc = (ThotPictInfo *) pAscAb->AbPictListStyle;
+	      else
+		pAscAb = pAscAb->AbEnclosing;
+	    }
+	  while (imageDesc == NULL && pAscAb);
+	  if (imageDesc)
+	    {
+	      /* HorizRef: * . Bottom; */
+	      pMarkerAb->AbHorizRef.PosEdge = HorizRef;
+	      pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
+	      pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
+	      /* Height: Enclosed = */
+	      pMarkerAb->AbHeight.DimValue = -1;
+	      pMarkerAb->AbHeight.DimAbRef = NULL;
+	      pMarkerAb->AbHeight.DimUnit = UnRelative;
+	      pMarkerAb->AbHeight.DimSameDimension = TRUE;
+	      /* Width: Enclosed = */
+	      pMarkerAb->AbWidth.DimValue = -1;
+	      pMarkerAb->AbWidth.DimAbRef = NULL;
+	      pMarkerAb->AbWidth.DimUnit = UnRelative;
+	      pMarkerAb->AbWidth.DimSameDimension = TRUE;
+	      pMarkerAb->AbPictInfo = NULL;
+	      NewPictInfo (pMarkerAb, imageDesc->PicFileName,
+			   imageDesc->PicType, False);
+	      pMarkerAb->AbLeafType = LtPicture;
+	      pMarkerAb->AbVolume = 100;
+	      done = True;
+	    }
 	}
-      else if (pAb->AbListStyleType == '1' ||  /* decimal */
-	       pAb->AbListStyleType == 'Z' ||  /* decimal-leading-zero */
-	       pAb->AbListStyleType == 'i' ||  /* lower-roman */
-	       pAb->AbListStyleType == 'I' ||  /* Upper-Roman */
-	       pAb->AbListStyleType == 'g' ||  /* lower greek */
-	       pAb->AbListStyleType == 'a' ||  /* lower-latin */
-	       pAb->AbListStyleType == 'A')    /* upper-latin */
-	/* it's a counter */
-	{
-	  pMarkerAb->AbLeafType = LtText;
-	  if (pMarkerAb->AbText == NULL)
-	    GetConstantBuffer (pMarkerAb);
-	  pMarkerAb->AbLang = TtaGetDefaultLanguage ();
-	  ComputeListItemNumber (pMarkerAb);
-	}
+
+      if (!done)
+	/* set content and size, according to the marker type */
+	if (pAb->AbListStyleType == 'D' ||   /* disc */
+	    pAb->AbListStyleType == 'C' ||   /* circle */
+	    pAb->AbListStyleType == 'S')   /* square */
+	  /* content is a graphic shape */
+	  {
+	    /* HorizRef: * . Bottom; */
+	    pMarkerAb->AbHorizRef.PosEdge = HorizRef;
+	    pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
+	    pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
+	    /* Height: 0.4 em */
+	    pMarkerAb->AbHeight.DimValue = 4;
+	    pMarkerAb->AbHeight.DimAbRef = NULL;
+	    pMarkerAb->AbHeight.DimUnit = UnRelative;
+	    pMarkerAb->AbHeight.DimSameDimension = FALSE;
+	    /* Width: 0.4 em */
+	    pMarkerAb->AbWidth.DimValue = 4;
+	    pMarkerAb->AbWidth.DimAbRef = NULL;
+	    pMarkerAb->AbWidth.DimUnit = UnRelative;
+	    pMarkerAb->AbWidth.DimSameDimension = FALSE;	  
+	    /* LineWeight: 1 px */
+	    pMarkerAb->AbLineWeight = 1;
+	    pMarkerAb->AbLineWeightUnit = UnPixel;
+	    /* FillPattern: foregroundcolor */
+	    if (pAb->AbListStyleType == 'D' ||
+		pAb->AbListStyleType == 'S')
+	      /* disc or square */
+	      pMarkerAb->AbFillPattern = 1;
+	    /* set content */
+	    pMarkerAb->AbLeafType = LtGraphics;
+	    if (pAb->AbListStyleType == 'S')
+	      /* square */
+	      pMarkerAb->AbShape = 'R';
+	    else
+	      /* circle or disc */
+	      pMarkerAb->AbShape = 'c';
+	    pMarkerAb->AbGraphScript = 'L';
+	    pMarkerAb->AbVolume = 1;
+	  }
+	else if (pAb->AbListStyleType == '1' ||  /* decimal */
+		 pAb->AbListStyleType == 'Z' ||  /* decimal-leading-zero */
+		 pAb->AbListStyleType == 'i' ||  /* lower-roman */
+		 pAb->AbListStyleType == 'I' ||  /* Upper-Roman */
+		 pAb->AbListStyleType == 'g' ||  /* lower greek */
+		 pAb->AbListStyleType == 'a' ||  /* lower-latin */
+		 pAb->AbListStyleType == 'A')    /* upper-latin */
+	  /* it's a counter */
+	  {
+	    pMarkerAb->AbLeafType = LtText;
+	    if (pMarkerAb->AbText == NULL)
+	      GetConstantBuffer (pMarkerAb);
+	    pMarkerAb->AbLang = TtaGetDefaultLanguage ();
+	    ComputeListItemNumber (pMarkerAb);
+	  }
     }
   return TRUE;
 }

@@ -9,7 +9,8 @@
 extern void CleanPictInfo ( ThotPictInfo *imageDesc );
 extern void NewPictInfo ( PtrAbstractBox pAb,
                           PathBuffer filename,
-                          int imagetype );
+                          int imagetype,
+			  ThotBool liststyleimage );
 extern void CopyPictInfo ( int *Imdcopie,
                            int *Imdsource );
 
@@ -18,7 +19,8 @@ extern void CopyPictInfo ( int *Imdcopie,
 extern void CleanPictInfo ( ThotPictInfo *imageDesc );
 extern void NewPictInfo ( PtrAbstractBox pAb,
                             PathBuffer filename,
-                            int imagetype );
+                            int imagetype,
+			    ThotBool liststyleimage );
 extern void CopyPictInfo ( int *Imdcopie,
                              int *Imdsource );
 
