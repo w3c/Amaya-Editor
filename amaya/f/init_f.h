@@ -49,7 +49,7 @@ extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenNew ( Document document,
                       View view,
-                      ThotBool isHTML );
+                      int docType );
 extern void GoToHome ( Document doc,
                        View view );
 extern Document InitDocView ( Document doc,
@@ -210,7 +210,7 @@ extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
 extern void OpenNew (/* Document document,
                         View view,
-                        ThotBool isHTML */);
+                        int docType */);
 extern void GoToHome (/* Document doc,
                          View view */);
 extern Document InitDocView (/* Document doc,

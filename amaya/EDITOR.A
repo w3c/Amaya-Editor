@@ -26,7 +26,9 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-	view:1 File.New1 button:BHtml -> New;
+	view:1 File.New1 button:BHtml -> NewXHTML;
+	view:1 File.New1 button:BMathml -> NewMathML;
+	view:1 File.New1 button:BSvg -> NewSVG;
 	view:1 File.New1 button:BTemplate -> NewTemplate;
 	view:1 File.New1 button:BCss -> NewCss;
 	view:1 File button:BOpenDoc -> OpenDoc;

@@ -4256,7 +4256,7 @@ ThotBool    xmlDoctype;
       ErrFile = (FILE*) 0;
       ErrFileName[0] = WC_EOS;
 
-      /* Get the document charset */
+      /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
       if (charset != UNDEFINED_CHARSET && charset != US_ASCII &&
 	  charset != ISO_8859_1   && charset !=  ISO_8859_2   &&

@@ -16,211 +16,213 @@
 14 Hilfe
 15 Neu
 16 Leer...
-17 Schablone
-18 CSS...
-19 Öffne Dokument...
-20 Öffne Dokument (neues Fenster)...
-21 Neu laden
-22 Zurück
-23 Vorwärts
-24 Speichern
-25 Speichern unter...
-26 Synchronisieren
-27 Einstellungen und Druck...
-28 Drucken
-29 Schließen
-30 Beenden
-31 Schließe Fenster
-32 Rückgängig
-33 Wiederherstellen
-34 Ausschneiden
-35 Kopieren
-36 Einfügen
-37 Löschen
-38 Editormodus
-39 Suchen/Ersetzen...
-40 Rechtschreibung...
-41 Umformatieren...
-42 Basisadresse für rel. Verknüpfungen (base)
-43 Meta-Information (meta)
-44 Verweis (link)
-45 Javascript (script)
-46 Style-Sheet (style)
-47 Kommentar (<!-- -->)
-48 Titel ändern...
-49 Autorenadresse (address)
-50 Aktiver Grafikbereich (area)
-51 Kreis
-52 Polygon
-53 Rechteck
-54 Eingerücktes Zitat (blockquote)
-55 Zeilenumbruch (br)
-56 logischer Textabschnitt (div)
-57 Formular
-58 Formular (form)
-59 Druckknopf (button)
-60 Ankreuzkästchen, mehrere von... (checkbox)
-61 Feld für Dateiname (file)
-62 Verborgenes Feld (hidden)
-63 Grafik (image)...
-64 Paßwortfeld (password)
-65 Auswahlknopf, einer von... (radio)
-66 Knopf zum Zurücksetzen (reset)
-67 OK-Knopf (submit)
-68 Eingabezeile (input)
-69 Feldgruppe (fieldset)
-70 Feldbeschriftung (label)
-71 Auswahlpunkt (option)
-72 Unter-Auswahlliste (optgroup)
-73 Texteingabe (textarea)
-74 Überschrift
-75 h1 (groß)
-76 h2
-77 h3
-78 h4
-79 h5
-80 h6 (klein)
-81 Waagerechte Linie (hr)
-82 Inline-Frame (iframe)
-83 Grafik (img)...
-84 Liste
-85 mit Punkten (li)
-86 numeriert (ol)
-87 Definitionsliste (dl)
-88 Term (dt)
-89 Definition (dd)
-90 Formel
-91 Formel (math)
-92 Nur text (mtext)
-93 Identifizierer (mi)
-94 Zahl (mn)
-95 Operator (mo)
-96 Zeichen (&xxx;)
-97 Wurzel (mroot)
-98 Quadratwurzel (msqrt)
-99 Einfügen (menclose)
-100 Quotient (mfrac)
-101 Term mit Index und Exponent (msubsup)
-102 Term mit Index (msub)
-103 Term mit Exponent (msup)
-104 Term mit Unter- und Überschrift (munderover)
-105 Term mit Unterschrift (munder)
-106 Term mit Überschrift (mover)
-107 Term in Klammern (mrow)
-108 Term mit Indices links/rechts oben/unten (mmultiscripts)
-109 Matrix (mtable)
-110 Matrixspalte löschen
-111 Alternative ohne Scripts (noscript)
-112 Objekt
-113 Objekt (object)
-114 Objekt-Parameter (param)
-115 Absatz (p)
-116 Vorformatierter Text (pre)
-117 Tabelle
-118 Tabelle (table)
-119 Überschrift (caption)
-120 colgroup
-121 Tabellenspalte (col)
-122 Tabellenkopf (thead)
-123 Tabellenkörper (tbody)
-124 Fußzeile (tfoot)
-125 Zeile (tr)
-126 Zelle (td)
-127 Kopfzelle (th)
-128 Tabellenspalte löschen
-129 Verknüpfen mit Ziel
-130 Markierung als Verknüfung definieren...
-131 Markierung als Verknüpfungsziel definieren
-132 Verknüpfungsziel löschen
-133 Symbolleiste
-134 Dokumentadresse
-135 Aktive Grafikbereiche markieren
-136 Verknüpfungsziele anzeigen
-137 Schrift vergrößern
-138 Schrift verkleinern
-139 Strukturfenster
-140 Textbrowserfenster
-141 Verknüpfungsfenster
-142 Inhaltsverzeichnisfenster
-143 Quelltext-Fenster
-144 Zeichen...
-145 Farben...
-146 Ausrichtung...
-147 Hintergrundbild...
-148 Format in Stylesheet übernehmen...
-149 Klasse anwenden...
-150 Stylesheets bearbeiten
-151 Mit neuem verknüpfen...
-152 Öffnen...
-153 Deaktivieren...
-154 Aktivieren...
-155 Entfernen...
-156 Logische Formate
-157 Betont (em)
-158 Hervorgehoben (strong)
-159 Zitat (cite)
-160 Definition (dfn)
-161 Programmtext (code)
-162 Variablenwert (var)
-163 Beispiel (samp)
-164 Tastatureingabe (kbd)
-165 Abkürzung (abbr)
-166 Akronym (acronym)
-167 Eingefügte Version (ins)
-168 Veraltete Version (del)
-169 Direkte Formate
-170 Kursiv (i)
-171 Fett (b)
-172 Schreibmaschinenschrift (tt)
-173 Größer (big)
-174 Kleiner (small)
-175 Tiefgestellt (sub)
-176 Hochgestellt (sup)
-177 Zitat im Fließtext (q)
-178 Textrichtung LTR/RTL (bdo)
-179 Abschnittsnummern
-180 Buch zusammenfügen
-181 **Add/Remove IDs...
-182 Logdatei anzeigen
-183 Einstellungen
-184 Allgemein...
-185 Veröffentlichen...
-186 Cache...
-187 Proxy...
-188 Farben...
-189 Fenstergeometrie...
-190 Akzeptierte sprachen...
-191 Profiles...
-192 Seitenvorlagen...
-193 **Annotate selection
-194 **Annotate document
-195 Anmerkung veröffentlichen
-196 **Delete annotation
-197 Anmerkungen laden
-198 Abfrage anpassen...
-199 Lokaler filter...
-200 Konfigurieren...
-201 Info
-202 Über Amaya beim W3C
-203 Verknüpfungen folgen/Dokumente öffnen
-204 Auswählen
-205 Suchen
-206 Ansichten
-207 Einfügen von Elementen
-208 Verknüpfungen bearbeiten
-209 Umformatieren
-210 Tabellen
-211 Formeln
-212 Graphics
-213 Aktive Grafikbereiche
-214 Formate/Stylesheets
-215 Attribute
-216 Rechtschreibung
-217 Speichern/Publizieren
-218 Drucken
-219 Abschnittsnummern
-220 Buch zusammenfügen
-221 **Annotations
-222 Konfiguration
-223 **ShortCuts
-224 Benutzerfreundlichkeit
+17 Leer...
+18 Leer...
+19 Schablone
+20 CSS...
+21 Öffne Dokument...
+22 Öffne Dokument (neues Fenster)...
+23 Neu laden
+24 Zurück
+25 Vorwärts
+26 Speichern
+27 Speichern unter...
+28 Synchronisieren
+29 Einstellungen und Druck...
+30 Drucken
+31 Schließen
+32 Beenden
+33 Schließe Fenster
+34 Rückgängig
+35 Wiederherstellen
+36 Ausschneiden
+37 Kopieren
+38 Einfügen
+39 Löschen
+40 Editormodus
+41 Suchen/Ersetzen...
+42 Rechtschreibung...
+43 Umformatieren...
+44 Basisadresse für rel. Verknüpfungen (base)
+45 Meta-Information (meta)
+46 Verweis (link)
+47 Javascript (script)
+48 Style-Sheet (style)
+49 Kommentar (<!-- -->)
+50 Titel ändern...
+51 Autorenadresse (address)
+52 Aktiver Grafikbereich (area)
+53 Kreis
+54 Polygon
+55 Rechteck
+56 Eingerücktes Zitat (blockquote)
+57 Zeilenumbruch (br)
+58 logischer Textabschnitt (div)
+59 Formular
+60 Formular (form)
+61 Druckknopf (button)
+62 Ankreuzkästchen, mehrere von... (checkbox)
+63 Feld für Dateiname (file)
+64 Verborgenes Feld (hidden)
+65 Grafik (image)...
+66 Paßwortfeld (password)
+67 Auswahlknopf, einer von... (radio)
+68 Knopf zum Zurücksetzen (reset)
+69 OK-Knopf (submit)
+70 Eingabezeile (input)
+71 Feldgruppe (fieldset)
+72 Feldbeschriftung (label)
+73 Auswahlpunkt (option)
+74 Unter-Auswahlliste (optgroup)
+75 Texteingabe (textarea)
+76 Überschrift
+77 h1 (groß)
+78 h2
+79 h3
+80 h4
+81 h5
+82 h6 (klein)
+83 Waagerechte Linie (hr)
+84 Inline-Frame (iframe)
+85 Grafik (img)...
+86 Liste
+87 mit Punkten (li)
+88 numeriert (ol)
+89 Definitionsliste (dl)
+90 Term (dt)
+91 Definition (dd)
+92 Formel
+93 Formel (math)
+94 Nur text (mtext)
+95 Identifizierer (mi)
+96 Zahl (mn)
+97 Operator (mo)
+98 Zeichen (&xxx;)
+99 Wurzel (mroot)
+100 Quadratwurzel (msqrt)
+101 Einfügen (menclose)
+102 Quotient (mfrac)
+103 Term mit Index und Exponent (msubsup)
+104 Term mit Index (msub)
+105 Term mit Exponent (msup)
+106 Term mit Unter- und Überschrift (munderover)
+107 Term mit Unterschrift (munder)
+108 Term mit Überschrift (mover)
+109 Term in Klammern (mrow)
+110 Term mit Indices links/rechts oben/unten (mmultiscripts)
+111 Matrix (mtable)
+112 Matrixspalte löschen
+113 Alternative ohne Scripts (noscript)
+114 Objekt
+115 Objekt (object)
+116 Objekt-Parameter (param)
+117 Absatz (p)
+118 Vorformatierter Text (pre)
+119 Tabelle
+120 Tabelle (table)
+121 Überschrift (caption)
+122 colgroup
+123 Tabellenspalte (col)
+124 Tabellenkopf (thead)
+125 Tabellenkörper (tbody)
+126 Fußzeile (tfoot)
+127 Zeile (tr)
+128 Zelle (td)
+129 Kopfzelle (th)
+130 Tabellenspalte löschen
+131 Verknüpfen mit Ziel
+132 Markierung als Verknüfung definieren...
+133 Markierung als Verknüpfungsziel definieren
+134 Verknüpfungsziel löschen
+135 Symbolleiste
+136 Dokumentadresse
+137 Aktive Grafikbereiche markieren
+138 Verknüpfungsziele anzeigen
+139 Schrift vergrößern
+140 Schrift verkleinern
+141 Strukturfenster
+142 Textbrowserfenster
+143 Verknüpfungsfenster
+144 Inhaltsverzeichnisfenster
+145 Quelltext-Fenster
+146 Zeichen...
+147 Farben...
+148 Ausrichtung...
+149 Hintergrundbild...
+150 Format in Stylesheet übernehmen...
+151 Klasse anwenden...
+152 Stylesheets bearbeiten
+153 Mit neuem verknüpfen...
+154 Öffnen...
+155 Deaktivieren...
+156 Aktivieren...
+157 Entfernen...
+158 Logische Formate
+159 Betont (em)
+160 Hervorgehoben (strong)
+161 Zitat (cite)
+162 Definition (dfn)
+163 Programmtext (code)
+164 Variablenwert (var)
+165 Beispiel (samp)
+166 Tastatureingabe (kbd)
+167 Abkürzung (abbr)
+168 Akronym (acronym)
+169 Eingefügte Version (ins)
+170 Veraltete Version (del)
+171 Direkte Formate
+172 Kursiv (i)
+173 Fett (b)
+174 Schreibmaschinenschrift (tt)
+175 Größer (big)
+176 Kleiner (small)
+177 Tiefgestellt (sub)
+178 Hochgestellt (sup)
+179 Zitat im Fließtext (q)
+180 Textrichtung LTR/RTL (bdo)
+181 Abschnittsnummern
+182 Buch zusammenfügen
+183 **Add/Remove IDs...
+184 Logdatei anzeigen
+185 Einstellungen
+186 Allgemein...
+187 Veröffentlichen...
+188 Cache...
+189 Proxy...
+190 Farben...
+191 Fenstergeometrie...
+192 Akzeptierte sprachen...
+193 Profiles...
+194 Seitenvorlagen...
+195 **Annotate selection
+196 **Annotate document
+197 Anmerkung veröffentlichen
+198 **Delete annotation
+199 Anmerkungen laden
+200 Abfrage anpassen...
+201 Lokaler filter...
+202 Konfigurieren...
+203 Info
+204 Über Amaya beim W3C
+205 Verknüpfungen folgen/Dokumente öffnen
+206 Auswählen
+207 Suchen
+208 Ansichten
+209 Einfügen von Elementen
+210 Verknüpfungen bearbeiten
+211 Umformatieren
+212 Tabellen
+213 Formeln
+214 Graphics
+215 Aktive Grafikbereiche
+216 Formate/Stylesheets
+217 Attribute
+218 Rechtschreibung
+219 Speichern/Publizieren
+220 Drucken
+221 Abschnittsnummern
+222 Buch zusammenfügen
+223 **Annotations
+224 Konfiguration
+225 **ShortCuts
+226 Benutzerfreundlichkeit

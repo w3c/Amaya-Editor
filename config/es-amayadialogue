@@ -15,212 +15,214 @@
 13 Anotaciones
 14 Ayuda
 15 Nuevo
-16 Documento HTML nuevo...
-17 Desde plantilla
-18 Nueva hoja de estilo CSS...
-19 Abrir documento...
-20 Abrir en ventana nueva...
-21 Recargar documento
-22 Volver
-23 Avanzar
-24 Guardar
-25 Guardar como...
-26 Sinchronizar
-27 Configurar e imprimir...
-28 Imprimir
-29 Cerrar ventana
-30 Salir de Amaya
-31 Cerrar vista
-32 Deshacer
-33 Rehacer
-34 Cortar
-35 Copiar
-36 Pegar
-37 Borrar
-38 Modo Editor
-39 Buscar...
-40 Verificar ortografía...
-41 Transformar...
-42 base
-43 meta
-44 link
-45 script
-46 stilo
-47 Comentario
-48 Cambiar Título...
-49 dirección
-50 área
-51 Círculo
-52 Polígono
-53 Rectángulo
-54 blockquote
-55 Salto línea (br)
-56 División (div)
-57 Formulario
-58 formulario
-59 Botón (input)
-60 Casilla verificacion (input)
-61 Selector de Fichero (input)
-62 Oculto (Hidden input)
-63 Imagen (input)...
-64 Password (input)
-65 Radio (input)
-66 Reset (input)
-67 Aceptar (input)
-68 Texto (input)
-69 campos
-70 etiqueta
-71 Menu (option)
-72 Submenu (optgroup)
-73 textarea
-74 Cabecera
-75 h1
-76 h2
-77 h3
-78 h4
-79 h5
-80 h6
-81 Línea Horizontal (hr)
-82 Inline frame (iframe)
-83 Imagen (img)...
-84 Lista
-85 Lista con boliche (ul)
-86 List numerada (ol)
-87 Lista de Definición (dl)
-88 Term (dt)
-89 Definicion (dd)
-90 Matemáticas
-91 Fórmula nueva(math)
-92 Texto simple (mtext)
-93 Identificador (mi)
-94 Número (mn)
-95 Operador (mo)
-96 Carácter (&xxx;)
-97 Raíz (mroot)
-98 Raíz cuadrada (msqrt)
-99 Enclose (menclose)
-100 Fracción (mfrac)
-101 Subíndice and superíndice (msubsup)
-102 Subíndice (msub)
-103 Superíndice (msup)
-104 Bajo y sobre (munderover)
-105 Bajo (munder)
-106 Sobre (mover)
-107 Paréntesis (mrow)
-108 Multiscripts (mmultiscripts)
-109 Matriz (mtable)
-110 Eliminar columna de matriz
-111 noscript
-112 Objeto
-113 objeto
-114 Parámetro (param)
-115 Párrafo (p)
-116 Preformateado (pre)
-117 Tabla
-118 tabla
-119 título
-120 colgroup
-121 col
-122 thead
-123 tbody
-124 tfoot
-125 Fila (tr)
-126 Celda datos (td)
-127 Celda cabecera (th)
-128 Eliminar columna de tabla
-129 Enlazar el destino previo
-130 Crear o cambiar enlace...
-131 Crear destino
-132 Borrar ancla
-133 Mostar barra de botones
-134 Mostrar dirección
-135 Mostrar áreas de mapas
-136 Mostrar destinos
-137 Zoom mas
-138 Zoom menos
-139 Mostrar estructura
-140 Mostrar alternativo
-141 Mostrar enlaces
-142 Mostrar tabla de contenidos
-143 Mostrar fuente
-144 Estilo de carácter...
-145 Colores...
-146 Formato...
-147 Imagen de fondo...
-148 Crear regla...
-149 Aplicar clase...
-150 Hojas de estilos
-151 Enlace...
-152 Abrir...
-153 Desactivar...
-154 Activar...
-155 Eliminar...
-156 Tipo de Información
-157 Enfasis (em)
-158 strong
-159 cite
-160 Definición (dfn)
-161 código
-162 Variable (var)
-163 Ejemplo (samp)
-164 Teclado (kbd)
-165 Abreviatura (abbr)
-166 acrónimo
-167 Inserción (ins)
-168 Borrado (del)
-169 Elemento carácter
-170 Itálica (i)
-171 Negrita (b)
-172 Teletipo (tt)
-173 grande
-174 pequeña
-175 Subíndice (sub)
-176 Superíndice (sup)
-177 Remarcado (Quotation q)
-178 BiDi override (bdo)
-179 Numeracón de sección
-180 Hacer libro
-181 Crear/Suprimir attributos ID...
-182 Mostrar fichero log
-183 Preferencias
-184 General...
-185 Publicar...
-186 Cache...
-187 Proxy...
-188 Colores...
-189 Geometría de la ventana...
-190 Negociación de idioma...
-191 Perfiles...
-192 Plantillas...
-193 **Annotate selection
-194 **Annotate document
-195 Post anotacion
-196 **Delete annotation
-197 Cargar anotaciones
-198 Personalizar consulta...
-199 Filtro local...
-200 Configurar...
-201 Sobre Amaya
-202 Sobre Amaya en W3C
-203 Hojear
-204 Seleccionar
-205 Buscar
-206 Vistas
-207 Creación de elementos
-208 Enlaces
-209 Restructuración
-210 Tablas
-211 Matemáticas
-212 Graphics
-213 Mapas de imagen
-214 Hojas de estilo
-215 Atributos
-216 Comprobar ortografía
-217 Publicar
-218 Imprimir
-219 Numerar
-220 Crear libros
-221 **Annotations
-222 Configurar Amaya
-223 **ShortCuts
-224 Accesibilidad en Amaya
+16 Documento XHTML nuevo...
+17 Documento MathML nuevo...
+18 Documento SVG nuevo...
+19 Desde plantilla
+20 Nueva hoja de estilo CSS...
+21 Abrir documento...
+22 Abrir en ventana nueva...
+23 Recargar documento
+24 Volver
+25 Avanzar
+26 Guardar
+27 Guardar como...
+28 Sinchronizar
+29 Configurar e imprimir...
+30 Imprimir
+31 Cerrar ventana
+32 Salir de Amaya
+33 Cerrar vista
+34 Deshacer
+35 Rehacer
+36 Cortar
+37 Copiar
+38 Pegar
+39 Borrar
+40 Modo Editor
+41 Buscar...
+42 Verificar ortografía...
+43 Transformar...
+44 base
+45 meta
+46 link
+47 script
+48 stilo
+49 Comentario
+50 Cambiar Título...
+51 dirección
+52 área
+53 Círculo
+54 Polígono
+55 Rectángulo
+56 blockquote
+57 Salto línea (br)
+58 División (div)
+59 Formulario
+60 formulario
+61 Botón (input)
+62 Casilla verificacion (input)
+63 Selector de Fichero (input)
+64 Oculto (Hidden input)
+65 Imagen (input)...
+66 Password (input)
+67 Radio (input)
+68 Reset (input)
+69 Aceptar (input)
+70 Texto (input)
+71 campos
+72 etiqueta
+73 Menu (option)
+74 Submenu (optgroup)
+75 textarea
+76 Cabecera
+77 h1
+78 h2
+79 h3
+80 h4
+81 h5
+82 h6
+83 Línea Horizontal (hr)
+84 Inline frame (iframe)
+85 Imagen (img)...
+86 Lista
+87 Lista con boliche (ul)
+88 List numerada (ol)
+89 Lista de Definición (dl)
+90 Term (dt)
+91 Definicion (dd)
+92 Matemáticas
+93 Fórmula nueva(math)
+94 Texto simple (mtext)
+95 Identificador (mi)
+96 Número (mn)
+97 Operador (mo)
+98 Carácter (&xxx;)
+99 Raíz (mroot)
+100 Raíz cuadrada (msqrt)
+101 Enclose (menclose)
+102 Fracción (mfrac)
+103 Subíndice and superíndice (msubsup)
+104 Subíndice (msub)
+105 Superíndice (msup)
+106 Bajo y sobre (munderover)
+107 Bajo (munder)
+108 Sobre (mover)
+109 Paréntesis (mrow)
+110 Multiscripts (mmultiscripts)
+111 Matriz (mtable)
+112 Eliminar columna de matriz
+113 noscript
+114 Objeto
+115 objeto
+116 Parámetro (param)
+117 Párrafo (p)
+118 Preformateado (pre)
+119 Tabla
+120 tabla
+121 título
+122 colgroup
+123 col
+124 thead
+125 tbody
+126 tfoot
+127 Fila (tr)
+128 Celda datos (td)
+129 Celda cabecera (th)
+130 Eliminar columna de tabla
+131 Enlazar el destino previo
+132 Crear o cambiar enlace...
+133 Crear destino
+134 Borrar ancla
+135 Mostar barra de botones
+136 Mostrar dirección
+137 Mostrar áreas de mapas
+138 Mostrar destinos
+139 Zoom mas
+140 Zoom menos
+141 Mostrar estructura
+142 Mostrar alternativo
+143 Mostrar enlaces
+144 Mostrar tabla de contenidos
+145 Mostrar fuente
+146 Estilo de carácter...
+147 Colores...
+148 Formato...
+149 Imagen de fondo...
+150 Crear regla...
+151 Aplicar clase...
+152 Hojas de estilos
+153 Enlace...
+154 Abrir...
+155 Desactivar...
+156 Activar...
+157 Eliminar...
+158 Tipo de Información
+159 Enfasis (em)
+160 strong
+161 cite
+162 Definición (dfn)
+163 código
+164 Variable (var)
+165 Ejemplo (samp)
+166 Teclado (kbd)
+167 Abreviatura (abbr)
+168 acrónimo
+169 Inserción (ins)
+170 Borrado (del)
+171 Elemento carácter
+172 Itálica (i)
+173 Negrita (b)
+174 Teletipo (tt)
+175 grande
+176 pequeña
+177 Subíndice (sub)
+178 Superíndice (sup)
+179 Remarcado (Quotation q)
+180 BiDi override (bdo)
+181 Numeracón de sección
+182 Hacer libro
+183 Crear/Suprimir attributos ID...
+184 Mostrar fichero log
+185 Preferencias
+186 General...
+187 Publicar...
+188 Cache...
+189 Proxy...
+190 Colores...
+191 Geometría de la ventana...
+192 Negociación de idioma...
+193 Perfiles...
+194 Plantillas...
+195 **Annotate selection
+196 **Annotate document
+197 Post anotacion
+198 **Delete annotation
+199 Cargar anotaciones
+200 Personalizar consulta...
+201 Filtro local...
+202 Configurar...
+203 Sobre Amaya
+204 Sobre Amaya en W3C
+205 Hojear
+206 Seleccionar
+207 Buscar
+208 Vistas
+209 Creación de elementos
+210 Enlaces
+211 Restructuración
+212 Tablas
+213 Matemáticas
+214 Graphics
+215 Mapas de imagen
+216 Hojas de estilo
+217 Atributos
+218 Comprobar ortografía
+219 Publicar
+220 Imprimir
+221 Numerar
+222 Crear libros
+223 **Annotations
+224 Configurar Amaya
+225 **ShortCuts
+226 Accesibilidad en Amaya

@@ -98,8 +98,8 @@ CHAR_T DocToOpen [MAX_LENGTH];
 #include "helpmenu.h"
 
 static int          AmayaInitialized = 0;
-static ThotBool     NewCSSfile = FALSE;
-static ThotBool     NewHTMLfile = FALSE;
+static ThotBool     NewFile = FALSE;
+static int          NewDocType = 0;
 /* we have to mark the initial loading status to avoid to re-open the
    document view twice */
 static int          Loading_method = CE_INIT;
@@ -1397,12 +1397,12 @@ View                view;
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        OpenNew (Document document, View view, ThotBool isHTML)
+void        OpenNew (Document document, View view, int docType)
 #else
-void        OpenNew (document, view, isHTML)
-Document    document;
-View        view;
-ThotBool    isHTML;
+void        OpenNew (document, view, docType)
+Document   document;
+View       view;
+int        docType;
 #endif
 {
   CHAR_T  tempfile[MAX_LENGTH];
@@ -1410,10 +1410,11 @@ ThotBool    isHTML;
 
   /* create a new document */
   InNewWindow = TRUE;
-  if (isHTML)
+  NewFile = TRUE;
+  NewDocType = docType;
+
+  if (NewDocType == docHTML)
     {
-      NewCSSfile = FALSE;
-      NewHTMLfile = TRUE;
       /* generate a default name for the new document */
       if (LastURLName[0] != WC_EOS)
 	{
@@ -1433,10 +1434,50 @@ ThotBool    isHTML;
 	ustrcpy (DocumentName, TEXT("New.html"));
       InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
     }
+  else if (NewDocType == docMath)
+    {
+      /* generate a default name for the new document */
+      if (LastURLName[0] != WC_EOS)
+	{
+	  TtaExtractName (LastURLName, tempfile, DocumentName);
+	  if (IsW3Path (LastURLName))
+	  {
+		i = ustrlen (tempfile);
+		if (tempfile[i - 1] == TEXT (':'))
+		  /* LastURLName is the root of the server */
+		  i = ustrlen (LastURLName);
+	    usprintf (&LastURLName[i], TEXT("%cNew.mml"), WC_URL_SEP);
+	  }
+	  else
+	    usprintf (LastURLName, TEXT("%s%cNew.mml"), tempfile, WC_DIR_SEP);
+	}
+      else
+	ustrcpy (DocumentName, TEXT("New.mml"));
+      InitOpenDocForm (document, view, TtaGetMessage (1, BMathml));
+    }
+  else if (NewDocType == docSVG)
+    {
+      /* generate a default name for the new document */
+      if (LastURLName[0] != WC_EOS)
+	{
+	  TtaExtractName (LastURLName, tempfile, DocumentName);
+	  if (IsW3Path (LastURLName))
+	  {
+		i = ustrlen (tempfile);
+		if (tempfile[i - 1] == TEXT (':'))
+		  /* LastURLName is the root of the server */
+		  i = ustrlen (LastURLName);
+	    usprintf (&LastURLName[i], TEXT("%cNew.svg"), WC_URL_SEP);
+	  }
+	  else
+	    usprintf (LastURLName, TEXT("%s%cNew.svg"), tempfile, WC_DIR_SEP);
+	}
+      else
+	ustrcpy (DocumentName, TEXT("New.svg"));
+      InitOpenDocForm (document, view, TtaGetMessage (1, BSvg));
+    }
   else
     {
-      NewCSSfile = TRUE;
-      NewHTMLfile = FALSE;
       if (LastURLName[0] != WC_EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
@@ -1629,6 +1670,8 @@ ThotBool     readOnly;
        if (docType == docLog)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtml);
+	   TtaSetItemOff (doc, 1, File, BMathml);
+	   TtaSetItemOff (doc, 1, File, BSvg);
 	   TtaSetItemOff (doc, 1, File, BTemplate);
 	   TtaSetItemOff (doc, 1, File, BCss);
 	   TtaSetItemOff (doc, 1, File, BOpenDoc);
@@ -2894,6 +2937,8 @@ View                view;
 	 TtcSwitchCommands (sourceDoc, 1); /* no command open */
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
 	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
+	 TtaSetItemOff (sourceDoc, 1, File, BMathml);
+	 TtaSetItemOff (sourceDoc, 1, File, BSvg);
 	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
 	 TtaSetItemOff (sourceDoc, 1, File, BCss);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
@@ -3787,8 +3832,8 @@ CHAR_T*             data;
 	     {
 	       if (LastURLName[0] != WC_EOS)
 		 {
-		   if (NewCSSfile || NewHTMLfile)
-		       InitializeNewDoc (LastURLName, NewHTMLfile);
+		   if (NewFile)
+		       InitializeNewDoc (LastURLName, NewDocType);
 		   /* load an URL */
 		   else if (InNewWindow)
 		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
@@ -3817,8 +3862,8 @@ CHAR_T*             data;
 					  CurrentDocument, Loading_method,
 					  TRUE, NULL, NULL);
 		     }
-		   else if (NewCSSfile || NewHTMLfile)
-		     InitializeNewDoc (tempfile, NewHTMLfile);
+		   else if (NewFile)
+		     InitializeNewDoc (tempfile, NewDocType);
 		   else
 		     TtaSetStatus (CurrentDocument, 1,
 				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
@@ -3840,16 +3885,14 @@ CHAR_T*             data;
 				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 				   TEXT(""));
 		 }
-	       NewCSSfile = FALSE;
-	       NewHTMLfile = FALSE;
+	       NewFile = FALSE;
 	       CurrentDocument = 0;
 	     }
-	   else if (NewCSSfile || NewHTMLfile)
+	   else if (NewFile)
 	     {
 	       /* the command is aborted */
 	       CheckAmayaClosed ();
-	       NewCSSfile = FALSE;
-	       NewHTMLfile = FALSE;
+	       NewFile = FALSE;
 	     }
 	 }
        break;
@@ -4948,7 +4991,7 @@ NotifyEvent        *event;
 	 }
     else
         /* Create a new document */
-        New (0, 0);
+        NewXHTML (0, 0);
     }
    Loading_method = CE_ABSOLUTE;
 }

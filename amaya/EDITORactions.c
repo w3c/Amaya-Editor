@@ -43,17 +43,45 @@
 #include "UIcss_f.h"
 
 /*----------------------------------------------------------------------
-  New: Create a new XHTML document
+  NewXHTML: Create a new XHTML document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                New (Document document, View view)
+void                NewXHTML (Document document, View view)
 #else  /* __STDC__ */
-void                New (document, view)
+void                NewXHTML (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-  OpenNew (document, view, TRUE);
+  OpenNew (document, view, docHTML);
+}
+
+/*----------------------------------------------------------------------
+  NewMathML: Create a new MathML document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                NewMathML (Document document, View view)
+#else  /* __STDC__ */
+void                NewMathML (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+  OpenNew (document, view, docMath);
+}
+
+/*----------------------------------------------------------------------
+  NewSVG: Create a new XHTML document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                NewSVG (Document document, View view)
+#else  /* __STDC__ */
+void                NewSVG (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+  OpenNew (document, view, docSVG);
 }
 
 /*----------------------------------------------------------------------
@@ -67,7 +95,7 @@ Document           document;
 View               view;
 #endif /* __STDC__ */
 {
-  OpenNew (document, view, FALSE);
+  OpenNew (document, view, docCSS);
 }
 
 
@@ -75,11 +103,11 @@ View               view;
   InitializeNewDoc builds the initial contents of a new document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitializeNewDoc (STRING url, ThotBool isHTML)
+void                InitializeNewDoc (STRING url, int docType)
 #else  /* __STDC__ */
-void                InitializeNewDoc (url, isHTML)
-STRING              url;
-ThotBool            isHTML;
+void                InitializeNewDoc (url, docType)
+STRING       url;
+int          docType;
 #endif /* __STDC__ */
 {
   ElementType          elType;
@@ -97,10 +125,7 @@ ThotBool            isHTML;
   pathname = TtaAllocString (MAX_LENGTH);
   documentname = TtaAllocString (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
-  if (isHTML)
-    doc = InitDocView (0, documentname, docHTML, 0, FALSE);
-  else
-    doc = InitDocView (0, documentname, docCSS, 0, FALSE);
+  doc = InitDocView (0, documentname, docType, 0, FALSE);
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);
 
@@ -127,8 +152,10 @@ ThotBool            isHTML;
 
   elType = TtaGetElementType (root);
   attrType.AttrSSchema = elType.ElSSchema;
-  if (isHTML)
+
+  if (docType == docHTML)
     {
+      /*-------------  New XHTML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       /* check the current profile */
@@ -212,6 +239,18 @@ ThotBool            isHTML;
 	UpdateContextSensitiveMenus (SelectionDoc);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc);
+    }
+  else if (docType == docMath)
+    {
+      /*-------------  New MathML document ------------*/
+      /* force the XML parsing */
+      DocumentMeta[doc]->xmlformat = TRUE;
+    }
+  else if (docType == docSVG)
+    {
+      /*-------------  New SVG document ------------*/
+      /* force the XML parsing */
+      DocumentMeta[doc]->xmlformat = TRUE;
     }
   else
     {

@@ -136,12 +136,26 @@
 	<message xml:lang="tr">Yeni</message>
 	<message xml:lang="es">Nuevo</message>
 </label>
-<label define="BHtml">
-	<message xml:lang="en">New HTML document...</message>
-	<message xml:lang="fr">Nouveau document HTML...</message>
+<label define="BXhtml">
+	<message xml:lang="en">New XHTML document...</message>
+	<message xml:lang="fr">Nouveau document XHTML...</message>
 	<message xml:lang="de">Leer...</message>
-	<message xml:lang="it">Nuovo documento HTML...</message>
-	<message xml:lang="es">Documento HTML nuevo...</message>
+	<message xml:lang="it">Nuovo documento XHTML...</message>
+	<message xml:lang="es">Documento XHTML nuevo...</message>
+</label>
+<label define="BMathml">
+	<message xml:lang="en">New MathML document...</message>
+	<message xml:lang="fr">Nouveau document MathML...</message>
+	<message xml:lang="de">Leer...</message>
+	<message xml:lang="it">Nuovo documento MathML...</message>
+	<message xml:lang="es">Documento MathML nuevo...</message>
+</label>
+<label define="BSvg">
+	<message xml:lang="en">New SVG document...</message>
+	<message xml:lang="fr">Nouveau document SVG...</message>
+	<message xml:lang="de">Leer...</message>
+	<message xml:lang="it">Nuovo documento SVG...</message>
+	<message xml:lang="es">Documento SVG nuevo...</message>
 </label>
 <label define="BTemplate">
 	<message xml:lang="en">From template</message>

@@ -6,12 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void New ( Document document,
-                  View view );
+extern void NewXHTML ( Document document,
+                       View view );
+extern void NewMathML ( Document document,
+                        View view );
+extern void NewSVG ( Document document,
+                     View view );
 extern void NewCss ( Document document,
                      View view );
 extern void InitializeNewDoc ( STRING url,
-                               ThotBool isHTML );
+                               int docType );
 extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
@@ -174,12 +178,16 @@ extern void CustomQuery ( Document document,
 
 #else /* __STDC__ */
 
-extern void New (/* Document document,
-                    View view */);
+extern void NewXHTML (/* Document document,
+                         View view */);
+extern void NewMathML (/* Document document,
+                          View view */);
+extern void NewSVG (/* Document document,
+                       View view */);
 extern void NewCss (/* Document document,
                        View view */);
 extern void InitializeNewDoc (/* STRING url,
-                                 ThotBool isHTML */);
+                                 int docType */);
 extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,
