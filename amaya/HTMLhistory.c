@@ -906,19 +906,25 @@ static void DisplayHelp (int doc, int index)
   Document    document;
   char        localname[MAX_LENGTH];
   char       *s, *lang;
+  char       *helpdir;
 
+#ifdef _WX
+  helpdir = "WX";
+#else /* _WX */
+  helpdir = "html";
+#endif /* _WX */
   lang = TtaGetVarLANG ();
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     {
       /* get the documentation in the current language */
-      sprintf (localname, "%s%cdoc%chtml%c%s.%s", s, DIR_SEP, DIR_SEP,
-		DIR_SEP, Manual[index], lang);
+      sprintf (localname, "%s%cdoc%c%s%c%s.%s", s, DIR_SEP, DIR_SEP,
+		helpdir, DIR_SEP, Manual[index], lang);
 
       if (!TtaFileExist (localname))
       /* get the standard english documentation */
-	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
-		  DIR_SEP, Manual[index]);
+	sprintf (localname, "%s%cdoc%c%s%c%s", s, DIR_SEP, DIR_SEP,
+		  helpdir, DIR_SEP, Manual[index]);
     }
 #ifdef _WX
   LoadDefaultOpeningLocation();
