@@ -666,6 +666,20 @@ void PasteCommand ()
 	      if (pCell)
 		{
 		  before = beginning;
+		  if (TableRowsSaved && before)
+		    {
+		      /* check if there is a previous cell */
+		      pEl = pCell->ElPrevious;
+		      while (pEl && before)
+			{
+			  if (TypeHasException (ExcIsCell, pCell->ElTypeNumber,
+						pCell->ElStructSchema))
+			    before = FALSE;
+			  else
+			    pEl = pEl->ElPrevious;
+			}
+		    }
+		  else
 		  withinTable = TRUE;
 		}
 	      else
