@@ -2244,6 +2244,75 @@ Element             el;
 	 }
 }
 
+/*----------------------------------------------------------------------
+   RemoveEndingSpaces
+   If element el is a block-level element, remove all spaces contained
+   at the end of that element.
+   Return TRUE if spaces have been removed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      RemoveEndingSpaces (Element el)
+#else
+static boolean      RemoveEndingSpaces (el)
+Element el;
+
+#endif
+{
+   int                 length, nbspaces;
+   ElementType         elType;
+   Element             lastLeaf;
+   char                lastChar[2];
+   boolean             endingSpacesDeleted;
+
+   endingSpacesDeleted = FALSE;
+   if (IsBlockElement (el))
+      /* it's a block element. */
+      {
+      /* skip pseudo-paragraphs, as they could be temporary elements
+	 (see function CheckBlocksInCharElem) */
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum != HTML_EL_Pseudo_paragraph)
+	 {
+	   /* Search the last leaf in the element's tree */
+	   lastLeaf = LastLeafInElement (el);
+	   if (lastLeaf != NULL)
+	     {
+	       elType = TtaGetElementType (lastLeaf);
+	       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		 /* the las leaf is a TEXT element */
+		 {
+		   length = TtaGetTextLength (lastLeaf);
+		   if (length > 0)
+		     {
+		       /* count ending spaces */
+		       nbspaces = 0;
+		       do
+			 {
+			   TtaGiveSubString (lastLeaf, lastChar, length,
+					     1);
+			   if (lastChar[0] == SPACE)
+			     {
+			       length--;
+			       nbspaces++;
+			     }
+			 }
+		       while (lastChar[0] == SPACE && length > 0);
+		       if (nbspaces > 0)
+			 if (length == 0)
+			   /* empty TEXT element */
+			   TtaDeleteTree (lastLeaf, theDocument);
+			 else
+			   /* remove the ending spaces */
+			   TtaDeleteTextContent (lastLeaf, length + 1,
+						 nbspaces, theDocument);
+		     }
+		 }
+	     }
+	   endingSpacesDeleted = TRUE;
+	 }
+      }
+   return endingSpacesDeleted;
+}
 
 /*----------------------------------------------------------------------
    CloseElement
@@ -2264,11 +2333,10 @@ int                 start;
 
 #endif
 {
-   int                 i, length, nbspaces;
+   int                 i;
    ElementType         elType, parentType;
-   Element             el, parent, lastLeaf;
-   char                lastChar[2];
-   boolean             ret, stop, lastSpacesDeleted;
+   Element             el, parent;
+   boolean             ret, stop, spacesDeleted;
 
    ret = FALSE;
    /* the closed HTML element corresponds to a Thot element. */
@@ -2384,51 +2452,14 @@ int                 start;
 	   if (el != lastElement)
 	     if (!TtaIsAncestor(el, lastElement))
 	       el = NULL;
-	   lastSpacesDeleted = FALSE;
+	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
 	       ElementComplete (el);
-	       /* If the element closed is a block-element, remove */
-	       /* spaces contained at the end of that element */
-	       if (!lastSpacesDeleted && IsBlockElement (el))
-		 {
-		   /* it's a block element. Search its last leaf */
-		   lastLeaf = LastLeafInElement (el);
-		   if (lastLeaf != NULL)
-		     {
-		       elType = TtaGetElementType (lastLeaf);
-		       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			 /* the las leaf is a TEXT element */
-			 /* count its ending spaces */
-			 {
-			   length = TtaGetTextLength (lastLeaf);
-			   if (length > 0)
-			     {
-			       nbspaces = 0;
-			       do
-				 {
-				   TtaGiveSubString (lastLeaf, lastChar, length,
-						     1);
-				   if (lastChar[0] == SPACE)
-				     {
-				       length--;
-				       nbspaces++;
-				     }
-				 }
-			       while (lastChar[0] == SPACE && length > 0);
-			       if (nbspaces > 0)
-				 if (length == 0)
-				   /* empty TEXT element */
-				   TtaDeleteTree (lastLeaf, theDocument);
-				 else
-				   /* remove the last spaces */
-				   TtaDeleteTextContent (lastLeaf, length + 1,
-							 nbspaces, theDocument);
-			     }
-			 }
-		     }
-		   lastSpacesDeleted = TRUE;
-		 }
+	       if (!spacesDeleted)
+	          /* If the element closed is a block-element, remove */
+	          /* spaces contained at the end of that element */
+	          spacesDeleted = RemoveEndingSpaces (el);
 	       if (el == lastElement)
 		 el = NULL;
 	       else
@@ -4286,7 +4317,7 @@ char               *HTMLbuf;
 			   /* ignore NL after a <PRE> tag */
 			   charRead = '\0';
 			else
-			   /* generate a Thor new line character */
+			   /* generate a Thot new line character */
 			   charRead = (unsigned char) 138;
 		      else
 			/* new line in ordinary text */
