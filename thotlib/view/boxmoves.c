@@ -47,7 +47,9 @@
   ----------------------------------------------------------------------*/
 void GetSystemOrigins (PtrAbstractBox pAb, int *x, int *y)
 {
+#ifdef _GL
   PtrAbstractBox      parent;
+#endif /* _GL */
 
   *x = 0;
   *y = 0;
@@ -61,7 +63,6 @@ void GetSystemOrigins (PtrAbstractBox pAb, int *x, int *y)
 	{
 	  *x = parent->AbBox->BxXOrg;
 	  *y = parent->AbBox->BxYOrg;
-/*printf ("Origin y=%d\n", parent->AbBox->BxYOrg);*/
 	}
       pAb = parent;
     } 
