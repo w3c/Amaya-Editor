@@ -3504,7 +3504,7 @@ BOXES
 	BEGIN
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
-	Width: Enclosing . Width - TableSimpleHSpace;
+	Width: Creator . Width - TableSimpleHSpace;
 	Height: 3 px;
 	LineStyle: Solid;
 	LineWeight: Border px;
@@ -3518,7 +3518,7 @@ BOXES
 	BEGIN
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
-	Width: Enclosing . Width - TableSimpleHSpace;
+	Width: Creator . Width - TableSimpleHSpace;
 	Height: 3 px;
 	LineStyle: Solid;
 	LineWeight: Border px;
@@ -3532,7 +3532,7 @@ BOXES
 	BEGIN
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
-	Width: Enclosing . Width - TableSimpleHSpace;
+	Width: Creator . Width - TableSimpleHSpace;
 	Height: 3 px;
 	LineStyle: Solid;
 	LineWeight: Border px;
