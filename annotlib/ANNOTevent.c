@@ -1140,15 +1140,18 @@ void *context;
      return;
  
   /* select the source of the annotation */
-  if (ctx->doc_annot)
+  if (status == HT_OK && ctx->doc_annot)
     {
       /* select the annotated text and memorize the last selected 
 	 annotation */ 
       last_selected_annotation[doc] =  
 	LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot], TRUE);
     }
+  else
+    last_selected_annotation[doc] = NULL;
 
-  TtaFreeMemory (ctx->url);
+  if (ctx->url)
+    TtaFreeMemory (ctx->url);
   TtaFreeMemory (ctx);
 }
 
@@ -1170,7 +1173,7 @@ NotifyElement *event;
   ThotBool	   docModified;
   int              length;
   Document         targetDocument;
-  CHAR_T          *url;
+  CHAR_T          *url = NULL;
   RAISESOURCEDOC_context *ctx;
 
   /* initialize from the context */

@@ -195,7 +195,12 @@ AnnotMeta *annot;
       XPointer_free (ctx);
     }
   else
-    first  = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
+    {
+      first  = TtaSearchElementByLabel(annot->labf, 
+				       TtaGetMainRoot (source_doc));
+      c1 = annot->c1;
+      cN = annot->cl;
+    }
 
   if (first)
     /* we found it */
@@ -309,7 +314,7 @@ AnnotMeta *annot;
 		TtaInsertSibling (anchor, first, FALSE, source_doc);
 	      else
 		{
-		  /* add it in the midle */
+		  /* add it in the middle */
 		  TtaSplitText (first, c1 - 1, source_doc);
 		  TtaNextSibling (&first);
 		  TtaInsertSibling (anchor, first, TRUE, source_doc);

@@ -342,6 +342,9 @@ SelType  selector;
     case BY_SERVER:
       list_item = AnnotMetaData[doc].servers;
       break;
+    default:
+      list_item = NULL;
+      break;
     }
 
   nb_entries = 0;
@@ -363,6 +366,7 @@ SelType  selector;
 	       status_char = TEXT('-');
 	       break;
 
+	     default:
 	     case 1: /* show */
 	       status_char = TEXT(' ');
 	       break;
@@ -419,7 +423,7 @@ ThotBool show;
   CHAR_T             *name;
   AnnotMeta          *annot;
   int                 length;
-  ThotBool            annot_show;
+  ThotBool            annot_show = TRUE;
   SSchema             XLinkSchema;
 
   ElementType         elType;
@@ -452,8 +456,14 @@ ThotBool show;
     case BY_SERVER:
       list_item = AnnotMetaData[doc].servers;
       break;
+    default: 
+      list_item = NULL;
+      break;
     }
   
+  if (!list_item)
+    return;
+
   while (list_item)
     {
       filter = (AnnotFilterData *) list_item->object;

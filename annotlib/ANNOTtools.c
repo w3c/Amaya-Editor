@@ -187,6 +187,9 @@ ThotBool show;
     case BY_SERVER:
       list_item = AnnotMetaData[doc].servers;
       break;
+    default:
+      list_item = NULL;
+      break;
     }
   
   while (list_item)
@@ -271,10 +274,15 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
       me = &annotMeta->servers;
       isString = TRUE;
       break;
+
+    default:
+      me = NULL;
+      break;
     }
 
-  /* object already in the filter */
-  if (*me && AnnotFilter_search (*me, object, isString))
+  /* no selection or object already in the filter */
+  if (!me 
+      || (*me && AnnotFilter_search (*me, object, isString)))
     return;
 
   /* initialize the filter */
@@ -417,6 +425,10 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
 	    tmp = annot->body_url;
 	  GetServerName (tmp, server);
 	  compare = !ustrcmp (server, (char *) object);
+	  break;
+
+	default:
+	  compare = 0;
 	  break;
 	}
       if (compare)  /* update the status */
@@ -587,9 +599,9 @@ List *AnnotList_search (List *list, CHAR_T *object)
 AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch searchType)
 {
   List *item = list;
-  AnnotMeta *annot;
+  AnnotMeta *annot = NULL;
   ThotBool found = FALSE;
-  CHAR_T *ptr;
+  CHAR_T *ptr = NULL;
 
   while (item)
     {
@@ -615,7 +627,6 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
 	case AM_ANAME:
 	  ptr = annot->name;
 	  break;
-
 	}
 
       if (ptr && !ustrcasecmp (ptr, url))
@@ -645,7 +656,7 @@ ThotBool useAnnotUrl;
 #endif /* __STDC__ */
 {
   List *item, *prev;
-  AnnotMeta *annot;
+  AnnotMeta *annot = NULL;
   ThotBool found = FALSE;
   CHAR_T *ptr;
 
@@ -669,7 +680,7 @@ ThotBool useAnnotUrl;
       item = item->next;
     }
 
-  if (found)
+  if (found && annot)
     {
       /* update the pointers */
       if (prev)
