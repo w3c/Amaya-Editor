@@ -961,6 +961,9 @@ static void UpdateBrowserMenus (Document doc)
 #ifdef _SVGLIB
       SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
+#ifdef _SVGANIM
+      SwitchIconAnim (doc, 1, FALSE);
+#endif /* _SVGANIM */
 #endif /* _SVG */
       
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
@@ -1085,6 +1088,9 @@ static void UpdateEditorMenus (Document doc)
 #ifdef _SVGLIB
 	  SwitchIconLibrary (doc, 1, TRUE);
 #endif /* _SVGLIB */
+#ifdef _SVGANIM
+	 SwitchIconAnim (doc, 1, TRUE);
+#endif /* _SVGANIM */
 #endif /* _SVG */
 	}
       else
@@ -2812,6 +2818,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVGLIB
 	 SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
+#ifdef _SVGANIM
+	 SwitchIconAnim (doc, 1, FALSE);
+#endif /* _SVGANIM */
 #endif /* _SVG */
 	 if (ReadOnlyDocument[doc])
 	   {
