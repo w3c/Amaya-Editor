@@ -474,7 +474,7 @@ struct Cat_Context* catalogue;
 #endif /* __STDC__ */
 {
    int frame = GetMenuParentNumber (parent) ;
-   /*
+   
    if (frame == - 1) {
       int     frameIndex = 0 ;
       boolean found      = FALSE ;
@@ -501,16 +501,27 @@ struct Cat_Context* catalogue;
                frameIndex++ ;
       }
    }
-   */
+   
    if (frame != -1) {
       int found = FALSE ;
       int i = 0;
       while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) && !found)
-            if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref)
+	    if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref) {
                found = TRUE ;
-            else
-               i++ ;
-      if (i < MAX_FRAMECAT) 
+               FrameCatList[frame].Cat_Table[i] = catalogue ;
+	    } else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref) {
+                   struct Cat_Context* tmpCat = FrameCatList[frame].Cat_Table[i] ;
+                   do {
+                       FrameCatList[frame].Cat_Table[i] = catalogue ;
+                       catalogue = tmpCat ;
+                       i++ ;
+                       tmpCat = FrameCatList[frame].Cat_Table[i];
+                   } while (tmpCat) ;
+                   FrameCatList[frame].Cat_Table[i] = catalogue;
+                   found = TRUE ;
+            } else
+                  i++ ;
+      if (i < MAX_FRAMECAT && !found) 
          FrameCatList[frame].Cat_Table[i] = catalogue ;
    }
 }
@@ -2337,9 +2348,11 @@ char               *equiv;
 	return;
      }
    catalogue = CatEntry (ref);
+
 #ifndef _WINDOWS
    title_string = 0;
 #endif /* _WINDOWS */
+
 #ifdef _WINDOWS
    fprintf (stderr, "TtaNewPulldown(ref %d, parent %X, title %s, number %d,\n text %s, equiv %s)\n",
 	    ref, parent, title, number, text, equiv);
@@ -7027,6 +7040,7 @@ LPARAM lParam;
    switch (catalogue->Cat_Type)
 	 {
 	    case CAT_PULL:
+	    case CAT_MENU:
 	       CallMenu (no, catalogue, NULL);
 	       break;
 	    default:
