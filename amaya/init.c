@@ -1287,7 +1287,10 @@ void ShowLogFile (Document doc, View view)
 			NULL, TtaGetDefaultCharset ());
   /* store the relation with the original document */
   if (newdoc)
-    DocumentSource[newdoc] = doc;
+    {
+      DocumentSource[newdoc] = doc;
+      TtaSetStatus (newdoc, 1, "   ", NULL);
+    }
 }
 
 /*----------------------------------------------------------------------

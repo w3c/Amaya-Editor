@@ -7,6 +7,7 @@ DEFAULT
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
 	ElemSelect.Post -> SynchronizeSourceView;
+	ElemLClick.Pre -> ShowError;
    END;
 
 ATTRIBUTES

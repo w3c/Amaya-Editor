@@ -2417,6 +2417,80 @@ void SynchronizeSourceView (NotifyElement *event)
 
 
 /*----------------------------------------------------------------------
+  ShowError points the corresponding error in the souce view.
+ -----------------------------------------------------------------------*/
+ThotBool ShowError (NotifyElement *event)
+{
+  Element             el, child;
+  ElementType         elType;
+  Document	      doc, otherDoc;
+  Language            lang;
+  char               *buffer, *ptr;
+  int                 len, line = 0, index = 0, i;
+
+  doc = event->document;
+  el = event->element;
+  if (DocumentTypes[doc] == docLog)
+    {
+      /* get the document concerned */
+      otherDoc = DocumentSource[doc];
+      /* get the error string */
+      if (el && otherDoc)
+	 {
+	   len = TtaGetTextLength (el);
+	   if (len > 0)
+	     {
+	       buffer = TtaGetMemory (len + 1);
+	       TtaGiveTextContent (el, buffer, &len, &lang);
+	       /* extract the line number and the index within the line */
+	       ptr = strstr (buffer, "line");
+	       if (ptr)
+		 sscanf (&ptr[4], "%d", &line);
+	       if (ptr)
+		 ptr = strstr (ptr, "char");
+	       if (ptr)
+		 sscanf (&ptr[4], "%d", &index);
+	       TtaFreeMemory (buffer);
+	     }
+	   if (line)
+	     {
+	       /* open the source file */
+	       if (DocumentSource[otherDoc] == 0)
+		 ShowSource (otherDoc, 1);
+	       doc = DocumentSource[otherDoc];
+	       /* look for an element with the same line number in the other doc */
+	       /* line numbers are increasing in document order */
+	       el = TtaGetMainRoot (doc);
+	       elType = TtaGetElementType (el);
+	       elType.ElTypeNum = TextFile_EL_Line_;
+	       i = 0;
+	       while (el && i < line)
+		 {
+		   /*TtaNextSibling (&el);*/
+		   el = TtaSearchTypedElement (elType, SearchForward, el);
+		   i++;
+		 }
+	       if (el)
+		 {
+		   child = TtaGetFirstChild (el);
+		   if (child)
+		     {
+		       TtaSelectString (doc, child, index, index);
+		       TtaSetStatus (doc, 1, "   ", NULL);
+		       /* synchronize other views */
+		       event->document = doc;
+		       SynchronizeSourceView (event);
+		     }
+		   return TRUE; /* don't let Thot perform normal operation */
+		 }
+	       TtaSetStatus (doc, 1, "   ", NULL);
+	     }
+	 }
+    }
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
