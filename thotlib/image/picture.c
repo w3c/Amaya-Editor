@@ -31,7 +31,6 @@
 #include "fileaccess.h"
 #include "png.h"
 #include "fileaccess.h"
-
 #ifdef _WINGUI
   #include "winsys.h"
 #endif /* _WINGUI */
@@ -74,8 +73,8 @@
 #include "glprint.h"
 #endif /* _GL */
 
-
 static char*    PictureMenu;
+
 #ifdef _GL
 static ThotPixmap PictureLogo;
 #else /*_GL*/
@@ -157,16 +156,10 @@ static Pic_Cache *PicCache = NULL;
   ----------------------------------------------------------------------*/
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Cache->texbind) printf ( "GLBUG - Free_Pic_Chache : glIsTexture=%s\n", glIsTexture (Cache->texbind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-  if ( glIsTexture(Cache->texbind) )
-    glDeleteTextures (1, 
-		      (const GLuint*)&(Cache->texbind));
-  
+  if (glIsTexture(Cache->texbind))
+    glDeleteTextures (1, (const GLuint*)&(Cache->texbind));
 #ifdef _PCLDEBUG
-  printf ("\n Free Image %s from cache", 
-	   Cache->filename);
+  printf ("\n Free Image %s from cache", Cache->filename);
 #endif /*_PCLDEBUG*/ 
   TtaFreeMemory (Cache->filename);
   Cache->filename = NULL;
@@ -203,9 +196,9 @@ static int FreeAPicCache (int texbind, int frame)
 	  if (Cache->RefCount)
 	     return 1;	
       if (!Before)
-			PicCache = PicCache->next;
+	PicCache = PicCache->next;
       else
-			Before->next = Cache->next;
+	Before->next = Cache->next;
       Free_Pic_Chache (Cache);
       return 1;
     }
@@ -254,9 +247,9 @@ static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
   Cache->TexCoordW = Image->TexCoordW;  
   Cache->TexCoordH = Image->TexCoordH; 
   if (forever)
-	Cache->RefCount = -1;
+    Cache->RefCount = -1;
   else
-	Cache->RefCount = 1;
+    Cache->RefCount = 1;
   strcpy (Cache->filename, Image->PicFileName);
 }
 
@@ -275,18 +268,9 @@ static int LookupInPicCache (PictInfo *Image, int frame)
       if (strcasecmp (Cache->filename, filename) == 0 
 	  && frame == Cache->frame)
 #else /* _NOSHARELIST */
-	if (strcasecmp (Cache->filename, filename) == 0)
+      if (strcasecmp (Cache->filename, filename) == 0)
 #endif /* _NOSHARELIST */
 	{
-#ifdef _TRACE_GL_PICTURE
-	  printf ( "LookupInPicCache found :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n", 
-		   filename,
-		   Cache->width,
-		   Cache->height,
-		   Cache->TexCoordW,
-		   Cache->TexCoordH,
-		   Cache->texbind );
-#endif /* _TRACE_GL_PICTURE */
 	  Image->PicWidth = (int) Cache->width;
 	  Image->PicHeight = (int) Cache->height;
 	  Image->TexCoordW = Cache->TexCoordW;
@@ -300,7 +284,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
       Cache = Cache->next; 
     }
 #ifdef _TRACE_GL_PICTURE
-	  printf ( "LookupInPicCache not found :\n\tfilename=%s\n", filename );
+  printf ("LookupInPicCache not found :\n\tfilename=%s\n", filename);
 #endif /* _TRACE_GL_PICTURE */
   FreeGlTexture (Image);
   return 0;  
@@ -310,24 +294,21 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 /*----------------------------------------------------------------------
  FreeGlTextureNoCache : Free video card memory from this texture.
   ----------------------------------------------------------------------*/
-void FreeGlTextureNoCache (void *ImageDesc)
+void FreeGlTextureNoCache (void *imageDesc)
 {
-  PictInfo *Image;
+  PictInfo *img;
   
-  Image = (PictInfo *)ImageDesc;
-
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Image->TextureBind) printf ( "GLBUG - FreeGlTextureNoCache : glIsTexture=%s\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */  
-  if (Image->TextureBind && 
-      glIsTexture (Image->TextureBind))
+  img = (PictInfo *)imageDesc;
+  if (img->TextureBind && glIsTexture (img->TextureBind))
     {      
-      glDeleteTextures (1,  &(Image->TextureBind));
+      glDeleteTextures (1,  &(img->TextureBind));
 #ifdef _PCLDEBUG
-      printf ("\n Image %s Freed", Image->PicFileName);      
+      printf ("\n Image %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
-      Image->TextureBind = 0;
-      Image->RGBA = False;
+      img->TextureBind = 0;
+      img->TexCoordW = 0;
+      img->TexCoordH = 0;
+      img->RGBA = False;
     }
 }
 
@@ -340,17 +321,13 @@ void FreeGlTexture (void *imagedesc)
   PictInfo *img;
   
   img = (PictInfo *)imagedesc;
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (img->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-  if (img->TextureBind
-      /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
-      /* opengl dit que la texture n'en est pas une alors que s'en est bien une */
-      /* il y a peutetre un probleme en amont : peutetre que la texture est desalouee misterieusement par une autre fonction ... sous mandrake opengl dit que la texture est ok et sous debian is dit qu'elle n'est pas valide */
-      /* && glIsTexture (img->TextureBind) */ )
+  if (img->TextureBind /*&& glIsTexture (img->TextureBind)*/)
+    /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
+    /* opengl dit que la texture n'en est pas une alors que s'en est bien une */
+    /* il y a peut etre un probleme en amont : peut etre que la texture est desalouee misterieusement par une autre fonction ... sous mandrake opengl dit que la texture est ok et sous debian il dit qu'elle n'est pas valide */
     {
 #ifdef _TRACE_GL_PICTURE
-      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s\n", 
+      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d theight=%d\n\tTexU=%f TexV=%f TexBind=%d\n\n", 
 	       img->PicFileName,
 	       img->PicWidth,
 	       img->PicHeight,
@@ -368,6 +345,8 @@ void FreeGlTexture (void *imagedesc)
       printf ("\n img %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
       img->TextureBind = 0;
+      img->TexCoordW = 0;
+      img->TexCoordH = 0;
       img->RGBA = False;
     }
 }
@@ -378,10 +357,8 @@ void FreeGlTexture (void *imagedesc)
 /*All these work on UNSIGNED BITS !!! 
  if little-big endianess is involved,
  all those atre wrong !!!*/
-
 #define lowest_bit(x) (x & -x)
 #define is_pow2(x) (x != 0 && x == lowest_bit(x))
-
 static int ceil_pow2_minus_1(unsigned int x)
 {
   unsigned int i;
@@ -420,7 +397,6 @@ static void GL_MakeTextureSize (PictInfo *img, int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
   int                 xdiff, x, y, nbpixel;
-
 
   if (img->PicPixmap != None)
     {
@@ -461,9 +437,6 @@ static void GL_TextureBind (PictInfo *img, ThotBool IsPixmap)
   GLfloat       GL_w, GL_h;   
   GLint		Mode;
   
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (img->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Put texture in 3d card memory */
   if (!glIsTexture (img->TextureBind) &&
       img->PicWidth && img->PicHeight &&
@@ -586,20 +559,18 @@ static void PrintPoscriptImage (PictInfo *img, int x, int y,
 }
 
 /*----------------------------------------------------------------------
- GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ GL_TexturePartialMap : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
 static void GL_TexturePartialMap (PictInfo *desc, int dx, int dy,
 				  int x, int y, int w, int h, int frame)
 {
-  float    texH, texW;
+ float    texH, texW;
     
-  texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
-  texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
+  GL_SetPicForeground ();
   x -= dx;
   y -= dy;
-  GL_SetPicForeground ();
   if (PrintingGL)
     PrintPoscriptImage (desc, x, y, w, h, frame);
   else
@@ -614,19 +585,25 @@ static void GL_TexturePartialMap (PictInfo *desc, int dx, int dy,
 	 (not the faster one, I think) */
       glBegin (GL_QUADS);
       /* Texture coordinates are unrelative 
-	 to the size of the square */ 
+	 to the size of the square */      
       /* lower left */
-      glTexCoord2f (0., texH); 
-      glVertex2i (x, y + h);
+
+      texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
+      texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
+      /* Texture coordinates are unrelative
+         to the size of the square */
+      /* lower left */
+      glTexCoord2f (0.,  texH);
+      glVertex2i   (x, y + h);
       /* upper right*/
-      glTexCoord2f (texW, texH); 
-      glVertex2i (x + w, y + h);
+      glTexCoord2f (texW, texH);
+      glVertex2i   (x + w, y + h);
       /* lower right */
-      glTexCoord2f (texW, (float)desc->TexCoordH); 
-      glVertex2i (x + w, y); 
+      glTexCoord2f (texW, (float)desc->TexCoordH);
+      glVertex2i   (x + w, y);
       /* upper left */
-      glTexCoord2f (0., (float)desc->TexCoordH); 
-      glVertex2i (x, y);     
+      glTexCoord2f (0., (float)desc->TexCoordH);
+      glVertex2i   (x, y);
       glEnd ();
 
       /* State disabling */
@@ -747,12 +724,10 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
 			       int Clipx, int Clipy,
 			       int ClipW, int ClipH)
 {
-  if (*y > (Clipy+ClipH) ||
-      *x > (Clipx+ClipW))
+  if (*y > (Clipy+ClipH) || *x > (Clipx+ClipW))
     return FALSE;  
 
-  if ((*x + *width) < Clipx ||
-      (*y + *height) < Clipy)
+  if ((*x + *width) < Clipx || (*y + *height) < Clipy)
     return FALSE;  
 
   if (*x < Clipx)
@@ -808,7 +783,7 @@ PtrBox              box;
 				   width, height, 
 				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
 				   xmax - xmin, ymax - ymin);
-  return FALSE;    
+  return FALSE;  
 }
 #endif /* _GL */
 
@@ -1480,53 +1455,23 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 			     pAb->AbElement->ElStructSchema))
 	{
 	  dx = dx - box->BxXOrg - l;
-	  dy = dy - box->BxYOrg - t;
+	  dy = dy - box->BxYOrg - t; 
 	}
-      if ((picPresent == FillFrame || picPresent == XRepeat) &&
-	  imageDesc->PicWArea)
-	while (dx >= imageDesc->PicWArea)
-	  dx -= imageDesc->PicWArea;
-      if ((picPresent == FillFrame || picPresent == YRepeat) && 
-	  imageDesc->PicHArea)
-	while (dy >= imageDesc->PicHArea)
-	  dy -= imageDesc->PicHArea;
 
-      /* compute the clipping in the drawing area */
-      x -= pFrame->FrXOrg;
-      y -= pFrame->FrYOrg;
-      if (picPresent == FillFrame || picPresent == YRepeat)
-	{
-	  if (clipHeight > h)
-	    clipHeight = h;
-	}
-      else
-	{
-	  /* clipping height is done by the image height */
-	  delta = imageDesc->PicHArea - dy;
-	  if (delta <= 0)
-	    {
-	      clipHeight = 0;
-	      dy = 0;
-	      h = 0;
-	    }
-	  else
-	    {
-	      if (clipHeight > delta)
-		clipHeight = delta;
-	      if (h > delta)
-		h = delta;
-	    }
-	}
-	  
       if (picPresent == FillFrame || picPresent == XRepeat)
 	{
+	  if (imageDesc->PicWidth)
+	    while (dx >= imageDesc->PicWidth)
+	      dx -= imageDesc->PicWidth;
 	  if (clipWidth > w)
 	    clipWidth = w;
 	}
       else
 	{
 	  /* clipping width is done by the image width */
-	  delta = imageDesc->PicWArea - dx;
+	  if (w > imageDesc->PicWidth)
+	    w = imageDesc->PicWidth;
+	  delta = imageDesc->PicWidth - dx;
 	  if (delta <= 0)
 	    {
 	      clipWidth = 0;
@@ -1541,11 +1486,38 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 		w = delta;
 	    }
 	}
-      /* avoid to repeat a background image by error */
-      if (picPresent != XRepeat && w > imageDesc->PicWidth)
-	w = imageDesc->PicWidth;
-      if (picPresent != YRepeat && h > imageDesc->PicHeight)
-	h = imageDesc->PicHeight;
+
+      if (picPresent == FillFrame || picPresent == YRepeat)
+	{
+	  if (imageDesc->PicHeight)
+	    while (dy >= imageDesc->PicHeight)
+	      dy -= imageDesc->PicHeight;
+	  if (clipHeight > h)
+	    clipHeight = h;
+	}
+      else
+	{
+	  /* clipping height is done by the image height */
+	  if (h > imageDesc->PicHeight)
+	    h = imageDesc->PicHeight;
+	  delta = imageDesc->PicHeight - dy;
+	  if (delta <= 0)
+	    {
+	      clipHeight = 0;
+	      dy = 0;
+	      h = 0;
+	    }
+	  else
+	    {
+	      if (clipHeight > delta)
+		clipHeight = delta;
+	      if (h > delta)
+		h = delta;
+	    }
+	}
+      /* compute the clipping in the drawing area */
+      x -= pFrame->FrXOrg;
+      y -= pFrame->FrYOrg;
 #if defined(_MOTIF)
       ix = -pFrame->FrXOrg;
       jy = -pFrame->FrYOrg;
@@ -1597,14 +1569,14 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	      do
 		{
 		  /* check if the limits of the copied zone */
-		  iw = imageDesc->PicWArea - ix;
+		  iw = imageDesc->PicWidth - ix;
 		  if (i + iw > w)
 		    iw = w - i;
-		  jh = imageDesc->PicHArea - jy;
+		  jh = imageDesc->PicHeight - jy;
 		  if (j + jh > h)
 		    jh = h - j;
 #ifdef _GL
-		  GL_TexturePartialMap (imageDesc, ix, jy, x+i, y+j, iw, jh, frame);
+		  GL_TexturePartialMap (imageDesc, ix, jy, x+i, y+j, iw+ix, jh+jy, frame);
 #else /* _GL */
 #ifdef _GTK
 		  if (imageDesc->PicMask)
@@ -2370,27 +2342,6 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 }
 
 /*----------------------------------------------------------------------
-  UnmapImage unmaps plug-in widgets   
-  ----------------------------------------------------------------------*/
-void UnmapImage (PictInfo *imageDesc)
-{
-  int   typeImage;
-
-  if (imageDesc == NULL)
-    return;
-  typeImage = imageDesc->PicType;
-#if defined(_MOTIF) || defined(_GTK)
-  if (typeImage >= InlineHandlers && imageDesc->mapped &&
-      imageDesc->created)
-    {	
-      XtUnmapWidget ((Widget) (imageDesc->wid));
-      imageDesc->mapped = FALSE;
-    }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-}
-
-
-/*----------------------------------------------------------------------
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
@@ -2908,9 +2859,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
     }
 
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - LoadPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
   if (imageDesc->PicPixmap == None && !glIsTexture (imageDesc->TextureBind))
@@ -2960,7 +2908,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   else
     imageDesc->RGBA = TRUE;
 
-  GL_TextureBind (imageDesc, TRUE);
+  if (strcmp (imageDesc->PicFileName, LostPicturePath))
+    /* avoid to load the lost picture */
+    GL_TextureBind (imageDesc, TRUE);
 #ifdef WITH_CACHE
   /* desactive the cache of images */
   if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||

@@ -1485,10 +1485,10 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			      }
 #ifdef _GL
-			      else if (bb >= y_min  &&
-				       bt <= y_max && 
-				       pBox->BxClipX + pBox->BxClipW >= x_min &&
-				       pBox->BxClipX <= x_max)
+			  else if (bb >= y_min  &&
+				   bt <= y_max && 
+				   pBox->BxClipX + pBox->BxClipW >= x_min &&
+				   pBox->BxClipX <= x_max)
 #else /* _GL */
 			  else if (bb >= ymin  &&
 				   bt <= ymax && 
@@ -1496,23 +1496,6 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				   pBox->BxXOrg <= xmax)
 #endif /* _GL */
 			    DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
-			  else if (pBox->BxType == BoPicture)
-			    {
-			      imageDesc = (PictInfo *)pBox->BxPictInfo;
-#ifdef _GL
-				  if (bb < winTop || bt > winBottom ||
-				      pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc< x_min ||
-				      pBox->BxClipX > x_max)
-#else /* _GL */
-			      if (bb < winTop || bt > winBottom ||
-				  pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc < pFrame->FrXOrg ||
-				  pBox->BxXOrg > pFrame->FrXOrg + l)
-#endif /* _GL */
-				UnmapImage (imageDesc);
-			      else if (imageDesc->PicType >= PLUGIN_FORMAT)
-				/* redisplay plugins */
-				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
-			    }
 			}
 		    }
 		}  	      

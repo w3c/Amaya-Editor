@@ -2703,7 +2703,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPath)
 	    FreePath (pBox);
 	  else if (pAb->AbLeafType == LtPicture)
-	    UnmapImage((PictInfo *)pBox->BxPictInfo);
+	    CleanPictInfo ((PictInfo *)pBox->BxPictInfo);
 	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* libere les boites generees pour la mise en lignes */
