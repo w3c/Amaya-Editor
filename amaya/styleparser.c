@@ -3535,32 +3535,34 @@ ThotBool            isHTML;
 	    {
 	      cssRule++;
 	      cssRule = SkipWCBlanksAndComments (cssRule);
-	    }
-	  /* try to parse the value associated with this property */
-	  if (CSSProperties[i].parsing_function != NULL)
-	    {
-	      done = FALSE;
-              /* if it's the "fill" SVG property applied to a SVG text element,
-		 generate a Foreground P rule */
-              if (!ustrcmp (CSSProperties[i].name, TEXT("fill")))
+	      /* try to parse the value associated with this property */
+	      if (CSSProperties[i].parsing_function != NULL)
 		{
-		  elType = TtaGetElementType (element);
-		  if (elType.ElTypeNum == GraphML_EL_text_ ||
-		      elType.ElTypeNum == GraphML_EL_tspan)
-		    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-				  TEXT("GraphML")))
-		      {
-                      p = ParseCSSForeground (element, tsch, context, cssRule,
-					      css, isHTML);
-		      done = TRUE;
-		      }
+		  done = FALSE;
+		  /* if it's the "fill" SVG property applied to a SVG text element,
+		     generate a Foreground P rule */
+		  if (!ustrcmp (CSSProperties[i].name, TEXT("fill")))
+		    {
+		      elType = TtaGetElementType (element);
+		      if (elType.ElTypeNum == GraphML_EL_text_ ||
+			  elType.ElTypeNum == GraphML_EL_tspan)
+			if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+				      TEXT("GraphML")))
+			  {
+			    p = ParseCSSForeground (element, tsch, context, cssRule,
+						    css, isHTML);
+			    done = TRUE;
+			  }
+		    }
+		  if (!done)
+		    p = CSSProperties[i].parsing_function (element, tsch, context,
+							   cssRule, css, isHTML);
+		  /* update index and skip the ";" separator if present */
+		  cssRule = p;
 		}
-              if (!done)
-	         p = CSSProperties[i].parsing_function (element, tsch, context,
-                                                        cssRule, css, isHTML);
-	      /* update index and skip the ";" separator if present */
-	      cssRule = p;
 	    }
+	  else
+	    cssRule = SkipProperty (cssRule);
 	}
       /* next property */
       cssRule = SkipWCBlanksAndComments (cssRule);
