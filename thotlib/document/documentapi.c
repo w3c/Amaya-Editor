@@ -1639,8 +1639,9 @@ ThotBool TtaHasXmlInLineRule (ElementType elType, Document document)
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      HasXmlInLineRule (elType, pDoc);
+      return HasXmlInLineRule (elType, pDoc);
     }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
