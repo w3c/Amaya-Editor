@@ -700,12 +700,15 @@ ThotBool            force;
 	  }
      }
    else
-      /* l'element est une feuille */
+      /* this element is a leaf */
       if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
-       /* c'est du texte dans une autre langue */
-       if (TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
-	 /* this language uses the same alphabet */
+       /* That's a text leaf in a different language */
+       /* Make the change only if the leaf is empty or if its language uses
+	  the same alphabet as the new language, i.e. don't change the
+	  character set of some existing text. */
     	 /* change the language of the element */
+       if (pEl->ElTextLength == 0 ||
+	   TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
 	{
 	  oldElLang = pEl->ElLanguage;
 	   pEl->ElLanguage = lang;
