@@ -4980,6 +4980,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  else if (!withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
+		   DocumentTypes[doc] != docText &&
 		   ((charRead == '"' && withinString) ||
 		    (charRead == '"' && !withinString &&
 		     LgBuffer > 0 && inputBuffer[LgBuffer-1] == '=') ||
@@ -5014,6 +5015,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  else if (!withinString &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
+		   DocumentTypes[doc] != docText &&
 		   ((charRead == '\'' && withinQuote) ||
 		    (charRead == '\'' && !withinQuote &&
 		     LgBuffer > 0 && inputBuffer[LgBuffer-1] == '=') ||
@@ -5103,6 +5105,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  else if (!withinString &&!withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
+		   DocumentTypes[doc] != docText &&
 		   (charRead == '<' || charRead == '>' ||
 		    (LgBuffer == 0 && withinMarkup)))
 	    {
