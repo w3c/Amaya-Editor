@@ -34,6 +34,7 @@ static ThotBool   CreateNewImage;
 #include "init_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
+#include "XHTMLbuilder_f.h"
 
 #ifdef _WINGUI
 #include "wininclude.h"
@@ -1146,13 +1147,12 @@ void  SRCattrModified (NotifyAttribute *event)
    TtaFreeMemory (imageName);
 }
 
-
 /*----------------------------------------------------------------------
   CreateImage
   ----------------------------------------------------------------------*/
 void CreateImage (Document doc, View view)
 {
-  Element            firstSelEl, lastSelEl;
+  Element            firstSelEl, lastSelEl, parent, leaf;
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
@@ -1239,15 +1239,35 @@ void CreateImage (Document doc, View view)
       else
 	/* the user want to insert a new image */
 	{
-	  if (!strcmp (name, "SVG"))
-	    elType.ElTypeNum = SVG_EL_image;
-	  else
-	    {
-	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-	      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	    }
 	  CreateNewImage = TRUE;
-	  TtaCreateElement (elType, doc);
+	  if (!strcmp (name, "SVG"))
+	    {
+	      elType.ElTypeNum = SVG_EL_image;
+	      TtaCreateElement (elType, doc);
+	    }
+	  else if (!strcmp (name, "HTML"))
+	    {
+	      /* if the selected element is empty and is not supposed to
+		 contain text directly, create a pseudo paragraph as a child
+		 of the selected element and as a parent of the image. */
+	      if (firstSelEl == lastSelEl &&
+		  TtaGetElementVolume (firstSelEl) == 0 &&
+		  (elType.ElTypeNum == HTML_EL_Element ||
+		   XhtmlCannotContainText (elType)))
+		{
+		  TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
+		  if (elType.ElTypeNum == HTML_EL_Element)
+		    TtaRegisterElementDelete (firstSelEl, doc);
+		  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		  parent = TtaNewTree (doc, elType, "");
+		  TtaInsertFirstChild (&parent, firstSelEl, doc);
+		  TtaRegisterElementCreate (parent, doc);
+		  leaf = TtaGetFirstLeaf (parent);
+		  TtaSelectElement (doc, leaf);
+		}
+	      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	      TtaCreateElement (elType, doc);
+	    }
 	}
     }
 }
