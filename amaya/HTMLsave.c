@@ -1094,6 +1094,8 @@ void SetNamespacesAndDTD (Document doc)
        if (mathPI)
 	 {
 	   /* generate the David Carliste's xsl stylesheet for MathML */
+	   /* Check the Thot abstract tree against the structure schema. */
+	   TtaSetStructureChecking (FALSE, doc);
 	   elType.ElTypeNum = HTML_EL_XMLPI;
 	   el = TtaNewTree (doc, elType, "");
 	   TtaInsertFirstChild (&el, docEl, doc);
@@ -1103,10 +1105,13 @@ void SetNamespacesAndDTD (Document doc)
 	   strcat (buffer, MATHML_XSLT_NAME);
 	   strcat (buffer, "\"");
 	   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+	   TtaSetStructureChecking (TRUE, doc);
 	 }
        if (xmlDecl)
 	 {
 	   /* generate the XML declaration */
+	   /* Check the Thot abstract tree against the structure schema. */
+	   TtaSetStructureChecking (FALSE, doc);
 	   elType.ElTypeNum = HTML_EL_XMLPI;
 	   el = TtaNewTree (doc, elType, "");
 	   TtaInsertFirstChild (&el, docEl, doc);
@@ -1116,6 +1121,7 @@ void SetNamespacesAndDTD (Document doc)
 	   strcat (buffer, charsetname);
 	   strcat (buffer, "\"");
 	   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+	   TtaSetStructureChecking (TRUE, doc);
 	 }
      }
 
