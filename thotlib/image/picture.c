@@ -919,6 +919,10 @@ PtrBox       box;
 		}
 	      else
 		XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	      if (w > imageDesc->PicWArea)
+		w = imageDesc->PicWArea;
+	      if (h > imageDesc->PicHArea)
+		h = imageDesc->PicHArea;
 	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame,
 			      w, h);
 	    }
