@@ -3847,6 +3847,8 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 
   pParentBox = pAb->AbBox;
   top = pParentBox->BxTMargin + pParentBox->BxTBorder + pParentBox->BxTPadding;
+  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+			    pAb, ViewFrameTable[frame - 1].FrMagnification);
   if (Propagate != ToSiblings || pParentBox->BxVertFlex)
     {
       pLine = SearchLine (pBox);
@@ -3855,8 +3857,6 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  pNextLine = pLine->LiNext;
 	  ascent = 0;
 	  descent = 0;
-	  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-				    pAb, ViewFrameTable[frame - 1].FrMagnification);
 	  if (!pBox->BxAbstractBox->AbHorizEnclosing)
 	    {
 	      /* The box is out of lines (like page breaks) */
@@ -3969,7 +3969,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	      /* rebuild adjacent lines of that floating box */
 	      RecomputeLines (pAb, pLine, NULL, frame);
 	      pNextLine = NULL;
-	      h = pParentBox->BxH;
+	      h = 0;
 	    }
 
 	  /* move next lines */
@@ -4020,6 +4020,14 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
       else
 	h = pParentBox->BxH;
       UpdateBlockWithFloat (pParentBox, TRUE, TRUE, FALSE, &h);
+      /* compute the line spacing */
+      /* space added at the top and bottom of the paragraph */
+      linespacing = linespacing - BoxFontHeight (pParentBox->BxFont);
+      if (linespacing > 0)
+	linespacing /= 2;
+      else
+	linespacing = 0;
+      h += linespacing;
       /* update the block height */
       if (pParentBox->BxContentHeight)
 	ChangeDefaultHeight (pParentBox, pParentBox, h, frame);
