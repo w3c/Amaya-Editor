@@ -72,6 +72,7 @@ static Pixmap       iconDL;
 
 
 #include "css_f.h"
+#include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "query_f.h"
@@ -79,7 +80,7 @@ static Pixmap       iconDL;
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
-#include "f/EDITstyle_f.h"
+#include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"

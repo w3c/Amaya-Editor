@@ -31,6 +31,121 @@ static char        *last_message = NULL;
 #endif
 
 /*----------------------------------------------------------------------
+   IsLoaded                                                       
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static int          IsLoaded (char *url)
+#else
+static int          IsLoaded (url)
+char               *url;
+
+#endif
+{
+   int                 d;
+
+   if (url == NULL)
+      return (TRUE);
+   for (d = 0; d < DocumentTableLength; d++)
+      if (DocumentURLs[d] != NULL)
+	 if (!strcmp (DocumentURLs[d], url))
+	    return (TRUE);
+   return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+   GotoPreviousHTML                                               
+  ----------------------------------------------------------------------*/
+/*ARGUSED */
+#ifdef __STDC__
+void                GotoPreviousHTML (Document doc, View view)
+#else
+void                GotoPreviousHTML (doc, view)
+Document            document;
+View                view;
+
+#endif
+{
+   int                 i;
+   char               *url = NULL;
+   int                 base = HTMLHistoryIndex;
+
+   if (HTMLHistoryIndex < 0)
+      return;
+   if (HTMLHistoryIndex >= HTML_HISTORY_SIZE)
+      return;
+   if ((doc < 0) || (doc >= DocumentTableLength))
+      return;
+
+   do
+     {
+	if (HTMLHistoryIndex == 0)
+	  {
+	     for (i = HTML_HISTORY_SIZE - 1; i >= 0; i--)
+	       {
+		  if (HTMLHistory[i] != NULL)
+		    {
+		       HTMLHistoryIndex = i;
+		       url = HTMLHistory[i];
+		       break;
+		    }
+	       }
+	  }
+	else
+	  {
+	     HTMLHistoryIndex--;
+	     url = HTMLHistory[HTMLHistoryIndex];
+	  }
+	if (!IsLoaded (url))
+	   break;
+	else
+	   url = NULL;
+     }
+   while (base != HTMLHistoryIndex);
+   if (url != NULL)
+
+      (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
+}
+
+/*----------------------------------------------------------------------
+   GotoNextHTML                                                   
+  ----------------------------------------------------------------------*/
+/*ARGUSED */
+#ifdef __STDC__
+void                GotoNextHTML (Document doc, View view)
+#else
+void                GotoNextHTML (doc, view)
+Document            document;
+View                view;
+
+#endif
+{
+   char               *url = NULL;
+   int                 base = HTMLHistoryIndex;
+
+   if (HTMLHistoryIndex < 0)
+      return;
+   if (HTMLHistoryIndex >= HTML_HISTORY_SIZE)
+      return;
+   if ((doc < 0) || (doc >= DocumentTableLength))
+      return;
+
+   do
+     {
+	url = HTMLHistory[HTMLHistoryIndex];
+	HTMLHistoryIndex++;
+	HTMLHistoryIndex %= HTML_HISTORY_SIZE;
+	if (!IsLoaded (url))
+	   break;
+	else
+	   url = NULL;
+     }
+   while (base != HTMLHistoryIndex);
+   if (url != NULL)
+      (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
+}
+
+/*----------------------------------------------------------------------
    AddCSSHistory                                                      
   ----------------------------------------------------------------------*/
 

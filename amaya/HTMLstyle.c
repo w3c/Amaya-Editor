@@ -129,6 +129,7 @@ Document            doc;
 			      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
 			      index = 0;
 			   }
+			 TtaFreeMemory (buffer);
 			 return (cour);
 		      }
 		    cour = readfunc ();

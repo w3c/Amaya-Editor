@@ -13,10 +13,6 @@ extern int DumpCSSToFile ( Document doc,
                            CSSInfoPtr css,
                            char *filename );
 extern void PrintListCSS ( FILE * output );
-extern void GotoPreviousHTML ( Document doc,
-                               View view );
-extern void GotoNextHTML ( Document doc,
-                           View view );
 extern void AddCSS ( CSSInfoPtr css );
 extern void FreeCSS ( CSSInfoPtr css );
 extern void InitDocumentCSS ( Document doc );
@@ -89,10 +85,6 @@ extern int DumpCSSToFile (/* Document doc,
                              CSSInfoPtr css,
                              char *filename */);
 extern void PrintListCSS (/* FILE * output */);
-extern void GotoPreviousHTML (/* Document doc,
-                                 View view */);
-extern void GotoNextHTML (/* Document doc,
-                             View view */);
 extern void AddCSS (/* CSSInfoPtr css */);
 extern void FreeCSS (/* CSSInfoPtr css */);
 extern void InitDocumentCSS (/* Document doc */);

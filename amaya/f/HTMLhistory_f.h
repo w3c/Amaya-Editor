@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void GotoPreviousHTML ( Document doc,
+                               View view );
+extern void GotoNextHTML ( Document doc,
+                           View view );
 extern void AddCSSHistory ( CSSInfoPtr css );
 extern void AddHTMLHistory ( char *url );
 extern int BuildCSSHistoryList ( Document doc,
@@ -15,6 +19,10 @@ extern int BuildCSSHistoryList ( Document doc,
 
 #else /* __STDC__ */
 
+extern void GotoPreviousHTML (/* Document doc,
+                                 View view */);
+extern void GotoNextHTML (/* Document doc,
+                             View view */);
 extern void AddCSSHistory (/* CSSInfoPtr css */);
 extern void AddHTMLHistory (/* char *url */);
 extern int BuildCSSHistoryList (/* Document doc,
