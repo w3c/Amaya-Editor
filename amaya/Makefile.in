@@ -25,7 +25,7 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
           $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
-	    *-amayadialogue *-amayamsg *-libdialogue *-corrdialogue \
+	    *-amayadialogue *-amayamsg *-libdialogue \
 	    amaya.emacs annot.schemas *.rdf fonts.* gtkrc
 
 LIBCONFIGFILES=*.css *.png *.lhtml *.svg 
@@ -38,7 +38,7 @@ AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
            *.PRS *.TRA AmayaPage.html AmayaPage.html.* *.css Amaya.svg
 
 RESOURCE_XRC_FILES= *.xrc
-RESOURCE_ICONS_FILES= *.gif
+RESOURCE_ICONS_FILES= *.png
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -545,14 +545,6 @@ install : all @NOPRINT@../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/amaya ; \
 	  done ; done)
-	(for i in $(RESOURCE_XRC_FILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/resources/xrc/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/xrc ; \
-	  done ; done)
-	(for i in $(RESOURCE_ICONS_FILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/resources/icons/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons ; \
-	  done ; done)
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/config 2>/dev/null || true ; \
@@ -565,6 +557,14 @@ install : all @NOPRINT@../bin/print
           for i in $(ANNOTFILES) ; do \
 	  for file in `$(ECHO) $$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/annotlib 2>/dev/null || true ; \
+	  done ; done)
+	(for i in $(RESOURCE_XRC_FILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/resources/xrc/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/xrc ; \
+	  done ; done)
+	(for i in $(RESOURCE_ICONS_FILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/resources/icons/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons ; \
 	  done ; done)
 	(for i in $(DICOFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \

@@ -119,9 +119,6 @@ static int IsXLFDPatterneAFont (char *pattern)
 #ifdef _WINGUI
   return IsXLFDName (pattern);  
 #endif /*_WINGUI*/
-#ifdef _WX
-  return 0;
-#endif /* _WX */
 }
 #endif /*_GL*/
 
@@ -357,8 +354,8 @@ static FontScript **FontConfigLoad ()
 {  
   FontScript        **fontsscript_tab;
   FILE               *file;
-  char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
-  char                word[50];
+  char                fname[MAX_TXT_LEN], fname1[MAX_TXT_LEN], name[MAX_TXT_LEN];
+  char                word[50], word1[50];
   char               *appHome;
   int                 script;
   ThotBool            complete;
@@ -398,19 +395,36 @@ static FontScript **FontConfigLoad ()
   /* load the first config file */
   complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
-
+#ifdef _UNIX
   if (!complete)
     {
       /* try a second font file */
-      strcat (word, ".deb");
-      strcat (fname, ".deb");
-      if (!SearchFile (fname, 0, name))
-	SearchFile (word, 2, name);
+      strcpy (word1, word);
+      strcat (word1, ".deb");
+      strcpy (fname1, fname);
+      strcat (fname1, ".deb");
+      if (!SearchFile (fname1, 0, name))
+	SearchFile (word1, 2, name);
       /* open the fonts definition file */
       file = TtaReadOpen (name);
       if (file)
 	complete = FontLoadFile (file, fontsscript_tab);
     }
+  if (!complete)
+    {
+      /* try a third font file */
+      strcpy (word1, word);
+      strcat (word1, ".rd");
+      strcpy (fname1, fname);
+      strcat (fname1, ".rd");
+      if (!SearchFile (fname1, 0, name))
+	SearchFile (word1, 2, name);
+      /* open the fonts definition file */
+      file = TtaReadOpen (name);
+      if (file)
+	complete = FontLoadFile (file, fontsscript_tab);
+    }
+#endif /* _UNIX */
   return fontsscript_tab;
 }
 
