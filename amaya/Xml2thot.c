@@ -2193,7 +2193,7 @@ static void    EndOfAttributeName (CHAR_T *attrName)
    if (currentParserCtxt == NULL)
      {
        usprintf (msgBuffer,
-		 TEXT("Unknown Namepaces for attribute :\"%s\""), attrName);
+		 TEXT("Namespace not supported for attribute :\"%s\""), attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
@@ -2389,7 +2389,7 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
      {
        /* not found */
        usprintf (msgBuffer,
-		 TEXT("Unknown namespace for a XML entity %s"), buffer);
+		 TEXT("Namespace not supported for the XML entity %s"), buffer);
        XmlParseError (errorParsing, msgBuffer, 0);
        return;
      }
@@ -2578,6 +2578,132 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 
 /*--------------------  PI  (start)  ----------------------------------*/
 /*----------------------------------------------------------------------
+   XmlStyleSheetPi
+  ---------------------------------------------------------------------*/
+static void      XmlStyleSheetPi (CHAR_T *PiData)
+
+{
+   int           length, i, j;
+   char         *ptr, *end;
+   STRING        buffer, tmpbuffer;
+   CHAR_T        delimitor;
+   CSSmedia      css_media;
+   CSSInfoPtr    css_info;
+   STRING        css_href = NULL;
+   ThotBool      ok;
+   CHAR_T        msgBuffer[MaxMsgLength];
+
+   length = strlen (PiData);
+   buffer = TtaAllocString (length + 1);
+   i = 0; j = 0;
+   
+   /* get the "type" attribute */
+   ok = FALSE;
+   end = NULL;
+   ustrcpy (buffer, PiData);
+   ptr = ustrstr (buffer, "type");
+   if (ptr)
+     {
+       ptr = strstr (ptr, "=");
+       ptr++;
+       while (ptr[0] != WC_EOS && ptr[0] == ' ')
+	 ptr++;
+       if (ptr[0] != WC_EOS)
+	 {
+	   delimitor = ptr[0];
+	   tmpbuffer = TtaAllocString (length + 1);
+	   end = strchr (&ptr[1], delimitor);
+	   if (end && end[0] != WC_EOS && tmpbuffer != NULL)
+	     {
+	       end[0] = WC_EOS;
+	       ustrcpy (tmpbuffer, &ptr[1]);
+	       if (!ustrcmp (tmpbuffer, TEXT("text/css")))
+		 ok = TRUE;
+	     }
+	   if (tmpbuffer != NULL)
+	     TtaFreeMemory (tmpbuffer);
+	 }
+     }
+
+   if (!ok)
+     {
+       usprintf (msgBuffer,
+		 TEXT("xml-stylesheet : attribute \"type\" not defined or not supported"));
+       XmlParseError (errorParsing, msgBuffer, 0);
+     }
+
+   if (ok)
+     {
+       /* get the "media" attribute */
+       end = NULL;
+       css_media = CSS_ALL;
+       ustrcpy (buffer, PiData);
+       ptr = ustrstr (buffer, "media");
+       if (ptr)
+	 {
+	   ptr = strstr (ptr, "=");
+	   ptr++;
+	   while (ptr[0] != WC_EOS && ptr[0] == ' ')
+	     ptr++;
+	   if (ptr[0] != WC_EOS)
+	     {
+	       delimitor = ptr[0];
+	       end = strchr (&ptr[1], delimitor);
+	       tmpbuffer = TtaAllocString (length + 1);
+	       if (end && end[0] != WC_EOS && tmpbuffer != NULL)
+		 {
+		   end[0] = WC_EOS;
+		   ustrcpy (tmpbuffer, &ptr[1]);
+		   if (!ustrcasecmp (tmpbuffer, TEXT ("screen")))
+		     css_media = CSS_SCREEN;
+		   else if (!ustrcasecmp (tmpbuffer, TEXT ("print")))
+		     css_media = CSS_PRINT;
+		   else if (!ustrcasecmp (tmpbuffer, TEXT ("all")))
+		     css_media = CSS_ALL;
+		   else
+		     css_media = CSS_OTHER;
+		 }
+	       if (tmpbuffer != NULL)
+		 TtaFreeMemory (tmpbuffer);
+	     }
+	 }
+     }
+   
+   if (ok)
+     {
+       /* get the "href" attribute */
+       end = NULL;
+       ustrcpy (buffer, PiData);
+       ptr = strstr (buffer, "href");
+       if (ptr)
+	 {
+	   ptr = strstr (ptr, "=");
+	   ptr++;
+	   while (ptr[0] != WC_EOS && ptr[0] == ' ')
+	     ptr++;
+	   if (ptr[0] != WC_EOS)
+	     {
+	       delimitor = ptr[0];
+	       css_href = TtaAllocString (length + 1);
+	       end = strchr (&ptr[1], delimitor);
+	       if (end && end[0] != WC_EOS && css_href != NULL)
+		 {
+		   end[0] = WC_EOS;
+		   ustrcpy (css_href, &ptr[1]);
+		   css_info = NULL;
+		   LoadStyleSheet (css_href, XMLcontext.doc, NULL,
+				   css_info, css_media);
+		   if (css_href != NULL)
+		     TtaFreeMemory (css_href);
+		 }
+	     }
+	 }
+     }
+
+   TtaFreeMemory (buffer);
+}
+
+/*----------------------------------------------------------------------
    CreateXmlPi
    Create a Processing Instruction element into the Thot tree.
   ---------------------------------------------------------------------*/
@@ -2597,8 +2723,9 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
    int            nbBytesRead = 0;
    Language       lang;
    char           fallback[5];
+   CHAR_T         msgBuffer[MaxMsgLength];
 
-   length = strlen (PiData) + strlen (PiData);
+   length = strlen (PiTarget) + strlen (PiData);
    buffer = TtaAllocString (length + 2);
    i = 0; j = 0;
    buffer[j] = WC_EOS;
@@ -2626,7 +2753,7 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
        XmlSetElemLineNumber (PiLineEl);
        TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
 
-       while (i < length)
+       while (i < length && PiValue[i] != WC_EOS)
 	 {
 	   srcbuf = (unsigned char *) &PiValue[i];
 	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
@@ -2747,7 +2874,15 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
      }
    
    /* Call the treatment that correspond to that PI */
-   /* Not yet supported in Amaya */
+   /* Actually, Amaya supports only the "xml-stylesheet" PI */
+   if (!ustrcmp (PiTarget, TEXT("xml-stylesheet")))
+     XmlStyleSheetPi (PiData);
+   else
+     {
+       usprintf (msgBuffer,
+		 TEXT("Processing Instruction not supported : %s"), PiTarget);
+       XmlParseError (errorParsing, msgBuffer, 0);
+     }
 }
 /*--------------------  PI  (end)  ---------------------------------*/
 
@@ -3000,23 +3135,23 @@ static void       Hndl_ElementStart (void *userData,
 	 }
 
 #ifdef XML_GEN
-       /* We assign generix Thot XML schema if the context is null */ 
-      if (currentParserCtxt == NULL)
-	ChangeXmlParserContextDTD (TEXT("XML"));
+       /* We assign generic Thot XML schema if the context is null */ 
+       if (currentParserCtxt == NULL)
+	 ChangeXmlParserContextDTD (TEXT("XML"));
 #else /* XML_GEN */
        /* We stop parsing if the context is null, ie,
 	  if Thot doesn't know the corresponding namespaces */ 
-      if (currentParserCtxt == NULL)
-	{
-	  usprintf (msgBuffer, 
-		    TEXT("Unknown Namepaces for element :\"%s\""), name);
-	  XmlParseError (errorNotWellFormed, msgBuffer, 0);
-	  DisableExpatParser ();
-	  return;
-	}
+       if (currentParserCtxt == NULL)
+	 {
+	   usprintf (msgBuffer, 
+		     TEXT("Namespace not supported for the element :\"%s\""), name);
+	   XmlParseError (errorNotWellFormed, msgBuffer, 0);
+	   DisableExpatParser ();
+	   return;
+	 }
 #endif /* XML_GEN */
-      else
-	  elementParserCtxt = currentParserCtxt;
+       else
+	 elementParserCtxt = currentParserCtxt;
 
       /* Ignore the virtual root of a XML sub-tree when */
       /* we are parsing the result of a transformation */
