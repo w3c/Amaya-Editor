@@ -846,6 +846,7 @@ static ThotBool  FrameResizedGTKInProgress = FALSE;
   ----------------------------------------------------------------------*/
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
+  ViewFrame          *pFrame;
   int            frame;
   int            width, height;
  
@@ -864,6 +865,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   else
     FrameResizedGTKInProgress = TRUE;
 #ifdef _GL
+  pFrame = &ViewFrameTable[frame - 1];
   if (w)
     if (GL_prepare (frame))
       {
