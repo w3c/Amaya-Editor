@@ -50,7 +50,7 @@ typedef struct _ReadCallbackContext
 static RDFResourceP _ListSearchResource( List* list, char* name)
 {
   List *item = list;
-  RDFResourceP resource;
+  RDFResourceP resource = NULL;
   ThotBool found = FALSE;
 
   while (item)
@@ -168,7 +168,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
   ReadSchema_callback
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void ReadSchema_callback (int doc, int status, 
+static void ReadSchema_callback (Document doc, int status, 
 				 CHAR_T *urlName,
 				 CHAR_T *outputfile, 
 				 AHTHeaders *http_headers,
@@ -177,7 +177,7 @@ static void ReadSchema_callback (int doc, int status,
 static void ReadSchema_callback (doc, status, urlName,
 				 outputfile, http_headers,
 				 context)
-int doc;
+Document doc;
 int status;
 CHAR_T *urlName;
 CHAR_T *outputfile;
@@ -191,6 +191,8 @@ void *context;
 
    if (!ctx)
      return;
+
+   ResetStop (doc);
 
    if (status == HT_OK)
      parse = HTRDF_parseFile (ctx->filename,
@@ -355,6 +357,8 @@ void ANNOT_ReadSchema (doc, namespace_URI)
   /* make some space to store the remote file name */
   ctx = (ReadCallbackContext*)TtaGetMemory (sizeof(ReadCallbackContext));
 
+  ANNOT_UpdateTransfer (doc);
+
   if (IsFilePath(namespace_URI))
     {
       NormalizeFile (namespace_URI, ctx->filename, AM_CONV_ALL);
@@ -381,7 +385,7 @@ void ANNOT_ReadSchema (doc, namespace_URI)
   if (res != HT_OK)
       TtaSetStatus (doc, 1, "Couldn't read schema", NULL); /* @@ */
   else
-      TtaSetStatus (doc, 1, "Reading schema", NULL); /* @@ */
+      TtaSetStatus (doc, 1, "Annotation schema downloaded", NULL); /* @@ */
 }
 
 #ifdef RRS_DEBUG
