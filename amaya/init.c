@@ -4894,6 +4894,7 @@ void                FreeAmayaStructures ()
       TtaFreeMemory (ObjectName);
       TtaFreeMemory (SaveImgsURL);
       TtaFreeMemory (SavingFile);
+      TtaFreeMemory (SavedDocumentURL);
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
       FreeHTMLParser ();
@@ -4914,7 +4915,7 @@ void                FreeAmayaStructures ()
 
 
 /*----------------------------------------------------------------------
-  InitAmaya intializes Amaya variables and opent the first document
+  InitAmaya intializes Amaya variables and open the first document
   window.
   ----------------------------------------------------------------------*/
 void                InitAmaya (NotifyEvent * event)
@@ -5008,6 +5009,7 @@ void                InitAmaya (NotifyEvent * event)
    TargetName = NULL;
    TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
    TtaSetEntityFunction ((Proc) MapEntityByCode);
+   TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
    /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
@@ -5084,6 +5086,7 @@ void                InitAmaya (NotifyEvent * event)
    LastURLName = TtaGetMemory (MAX_LENGTH);
    LastURLName[0] = EOS;
    DirectoryName = TtaGetMemory (MAX_LENGTH);
+   SavedDocumentURL = NULL;
 
    /* set path on current directory */
    ugetcwd (DirectoryName, MAX_LENGTH);

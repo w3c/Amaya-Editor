@@ -29,6 +29,11 @@ extern int          TtaUseOwnXLookupString;
 
 #ifndef __CEXTRACT__
 /*----------------------------------------------------------------------
+  TtaSetCopyAndCutFunction registers the copy & cut function
+  ----------------------------------------------------------------------*/
+extern void TtaSetCopyAndCutFunction (void (*procedure) ());
+
+/*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.
   ----------------------------------------------------------------------*/
 extern void TtaSetAccessKeyFunction (void (*procedure) ());

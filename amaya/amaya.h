@@ -299,6 +299,9 @@ THOT_EXPORT char      *ObjectName;	/* document name                    */
 THOT_EXPORT char      *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char      *TargetName;
 THOT_EXPORT char      *SavingFile;	/* complete path or URL of the document */
+THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained
+					   the elements that are now in the
+					   Cut and Paste buffer */
 THOT_EXPORT int        Lg_password;
 THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
@@ -398,6 +401,7 @@ typedef struct _DocumentMetaDataElement
 				  docid */
 #endif /* ANNOTATIONS */
 } DocumentMetaDataElement;
+
 
 #define DocumentTableLength MAX_DOCUMENTS
 /* URL of each loaded document */

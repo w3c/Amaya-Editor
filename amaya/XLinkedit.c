@@ -77,7 +77,7 @@ void XLinkPasted(event)
 
   /* does the pasted element come from another document? */
   originDocument = (Document) event->position;
-  if (originDocument > 0 && originDocument != event->document)
+  if (originDocument >= 0 && originDocument != event->document)
     /* this element has changed document. Check its links */
     {
     XLinkSchema = TtaGetSSchema ("XLink", event->document);

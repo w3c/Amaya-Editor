@@ -67,6 +67,7 @@
 #include "schemas_f.h"
 #include "schtrad_f.h"
 #include "searchmenu_f.h"
+#include "structcommands_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
@@ -86,6 +87,8 @@ int IdentDocument (PtrDocument pDoc)
 {
    int                 d;
 
+   if (!pDoc)
+     return 0;
    d = 1;
    while (LoadedDocument[d - 1] != pDoc && d < MAX_DOCUMENTS)
       d++;
@@ -396,6 +399,9 @@ void TtaQuit ()
 	LoadedDocument[d] = NULL;
       }
 #ifndef NODISPLAY
+  /* remove the contents of the cut buffer related to the document */
+  if (ThotLocalActions[T_freesavedel])
+    (*ThotLocalActions[T_freesavedel]) ();
   FreeDocColors ();
   FreeAllMessages ();
   Prof_FreeTable ();

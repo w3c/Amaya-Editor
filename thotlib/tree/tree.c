@@ -2947,7 +2947,8 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
        /* removes the element from the tree */
        RemoveElement (*pEl);
        /* frees all the Abstract boxes */
-       FreeAbEl (*pEl, pDoc);
+       if (pDoc)
+	 FreeAbEl (*pEl, pDoc);
        /* frees the memory */
        FreeElement (*pEl);
        *pEl = NULL;

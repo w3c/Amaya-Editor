@@ -97,19 +97,10 @@
    mais ce document n'est pas charge' (cela ne se  	
    produit que si processNotLoaded est TRUE).       	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBool processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
-#else  /* __STDC__ */
-PtrReference        NextReferenceToEl (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            processNotLoaded;
-PtrReference        pPrevRef;
-PtrDocument        *pDocRef;
-PtrExternalDoc     *pExtDoc;
-ThotBool            nextExtDoc;
-
-#endif /* __STDC__ */
+PtrReference  NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
+				 ThotBool processNotLoaded,
+				 PtrReference pPrevRef, PtrDocument * pDocRef,
+				 PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 {
    PtrReference        pRef;
 
@@ -170,18 +161,9 @@ ThotBool            nextExtDoc;
    references dans le document designe' par        
    pExtDoc, mais ce document n'est pas charge'     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
-#else  /* __STDC__ */
-void                FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl, pExtDoc, nextExtDoc)
-PtrReference       *pPrevRef;
-PtrDocument        *pDocPrevRef;
-PtrElement         *pReferredEl;
-PtrDocument        *pDocReferredEl;
-PtrExternalDoc     *pExtDoc;
-ThotBool            nextExtDoc;
-
-#endif /* __STDC__ */
+void FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef,
+		    PtrElement * pReferredEl, PtrDocument * pDocReferredEl,
+		    PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 {
    PtrElement          firstSel;
    PtrElement          lastSel;
@@ -202,7 +184,8 @@ ThotBool            nextExtDoc;
       /* pas de reference courante */
      {
 	/* prend la selection courante */
-	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+				  &lastChar);
 	if (ok)
 	   /* cherche le premier element reference' qui englobe la */
 	   /* selection courante */
@@ -392,15 +375,7 @@ void                FindReferredEl ()
    pRoot dans le document pDoc. Verifie la coherence des elements	
    reference's et des references presents dans ce sous-arbre.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CheckReferences (pRoot, pDoc)
-PtrElement          pRoot;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl, pElRef, pSource;
    PtrReference        pRef, pNextRef;
@@ -422,20 +397,21 @@ PtrDocument         pDoc;
 	ConvertIntToLabel (l, pRoot->ElLabel);
      }
    if (pRoot->ElReferredDescr != NULL)
-      /* l'original de l'element colle' est reference' ou possede un label */
+      /* l'original de l'element colle' est reference' */
      {
 	if (pRoot->ElReferredDescr->ReExternalRef)
 	   pSource = NULL;
 	else
-	   pSource = pRoot->ElReferredDescr->ReReferredElem;	/* l'element original */
+	   /* l'element original */
+	   pSource = pRoot->ElReferredDescr->ReReferredElem;
 
 	pExtDoc = NULL;
 	pRoot->ElReferredDescr = NULL;
-	/* l'element colle' n'est pas reference', il prend le label de son     */
-	/* element original (celui qui est dans le tampon Couper-Copier)       */
-	/* si la commande precedente etait Couper et s'il ne change pas de     */
-	/* document. Dans les autres cas (commande precedente Copier ou        */
-	/* changement de document), il prend un nouveau label.                 */
+	/* l'element colle' n'est pas reference', il prend le label de son
+	   element original (celui qui est dans le tampon Couper-Copier)
+	   si la commande precedente etait Couper et s'il ne change pas de
+	   document. Dans les autres cas (commande precedente Copier ou
+	   changement de document), il prend un nouveau label. */
 
 	/* alloue a l'element un descripteur d'element reference' */
 	pRoot->ElReferredDescr = NewReferredElDescr (pDoc);
@@ -446,33 +422,35 @@ PtrDocument         pDoc;
 	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 	if (!ChangeLabel && pSource != NULL)
 	  {
-	     /* l'element prend les memes descripteurs de documents */
-	     /* externes referencants que l'element original */
-	     pExtDoc = pSource->ElReferredDescr->ReExtDocRef;
-	     while (pExtDoc != NULL)
-	       {
-		  /* on ne considere pas le document lui-meme comme externe... */
-		  if (!SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
-		     AddDocOfExternalRef (pRoot, pExtDoc->EdDocIdent, pDoc);
-		  pExtDoc = pExtDoc->EdNext;
-	       }
+	    /* l'element prend les memes descripteurs de documents */
+	    /* externes referencants que l'element original */
+	    pExtDoc = pSource->ElReferredDescr->ReExtDocRef;
+	    while (pExtDoc != NULL)
+	      {
+		/* on ne considere pas le document lui-meme comme externe... */
+		if (!SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		  AddDocOfExternalRef (pRoot, pExtDoc->EdDocIdent, pDoc);
+		pExtDoc = pExtDoc->EdNext;
+	      }
 	  }
 
 	/* on cherche toutes les references a l'element original et on les */
 	/* fait pointer sur l'element colle'. */
 	/* cherche d'abord la premiere reference */
-	pRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
-	pNextDocRef = pDocRef;	/* a priori la reference suivante sera dans le */
-	/* meme document */
+	pRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, NULL,
+				  &pDocRef, &pExtDoc, TRUE);
+	/* a priori la reference suivante sera dans le meme document */
+	pNextDocRef = pDocRef;
 	while (pRef != NULL)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pNextRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
+	     pNextRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE,
+					   pRef, &pNextDocRef, &pExtDoc, TRUE);
 	     /* traite la reference courante */
-	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
-	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
-	     /* cette boucle */
+	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans
+	        le document ou on colle a deja ete traitee ou sera traitee
+		dans cette boucle */
 	     if (!IsASavedElement (pRef->RdElement))
 		/* on fait pointer la reference sur l'element colle' */
 	       {
@@ -482,7 +460,8 @@ PtrDocument         pDoc;
 		     pElemRef = NULL;
 		  else
 		     pElemRef = pRef->RdElement;
-		  SetReference (pElemRef, pRef->RdAttribute, pRoot, pDocRef, pDoc, FALSE, FALSE);
+		  SetReference (pElemRef, pRef->RdAttribute, pRoot, pDocRef,
+				pDoc, FALSE, FALSE);
 		  /* si c'est une reference par attribut, verifie la */
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */

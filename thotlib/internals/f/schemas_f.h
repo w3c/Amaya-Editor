@@ -9,6 +9,8 @@
 extern void InitNatures ( void );
 extern PtrSSchema GetSSchemaForDoc ( char *name,
                                      PtrDocument pDoc );
+extern void RegisterSSchemaForSavedElements ( PtrSSchema pSSchema );
+extern void ReleaseSSchemasForSavedElements ();
 extern ThotBool LoadPresentationSchema ( Name schemaName,
                                          PtrSSchema pSS,
                                          PtrDocument pDoc );
@@ -65,6 +67,8 @@ extern void SearchNatures ( PtrDocument pDoc,
 extern void InitNatures (/* void */);
 extern PtrSSchema GetSSchemaForDoc (/* char *name,
                                        PtrDocument pDoc */);
+extern void RegisterSSchemaForSavedElements (/* PtrSSchema pSSchema */);
+extern void ReleaseSSchemasForSavedElements ();
 extern ThotBool LoadPresentationSchema (/* Name schemaName,
                                            PtrSSchema pSS,
                                            PtrDocument pDoc */);

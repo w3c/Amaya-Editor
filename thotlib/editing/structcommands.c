@@ -72,6 +72,8 @@ static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 
 /* transformation callback procedure */
 static Func         TransformIntoFunction = NULL;
+/* copy & cut callback procedure */
+static Proc         CopyAndCutFunction = NULL;
 
 #define M_EQUIV 1
 #define M_RESDYN 2
@@ -102,6 +104,7 @@ static Func         TransformIntoFunction = NULL;
 #include "presrules_f.h"
 #include "references_f.h"
 #include "res_f.h"
+#include "schemas_f.h"
 #include "search_f.h"
 #include "selectmenu_f.h"
 #include "structcreation_f.h"
@@ -673,10 +676,12 @@ void FreeSavedElements ()
      {
 	pNextPasteEl = pPasteEl->PeNext;
 	if (pPasteEl->PeElement != NULL)
-	   DeleteElement (&pPasteEl->PeElement, DocOfSavedElements);
-	TtaFreeMemory ( pPasteEl);
+	   DeleteElement (&pPasteEl->PeElement, NULL);
+	TtaFreeMemory (pPasteEl);
 	pPasteEl = pNextPasteEl;
      }
+   if (FirstSavedElement)
+     ReleaseSSchemasForSavedElements ();
    FirstSavedElement = NULL;
    DocOfSavedElements = NULL;
    /* disable Paste command */
@@ -686,72 +691,97 @@ void FreeSavedElements ()
 }
 
 /*----------------------------------------------------------------------
+   RegSSchemaDescent
+   Check all descendants of element pEl and if their structure schema
+   is not the same as their parent, register their schema.
+  ----------------------------------------------------------------------*/
+static void RegSSchemaDescent (PtrElement pEl)
+{
+  PtrElement pChild;
+
+  if (!pEl->ElTerminal)
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild)
+	{
+	  if (pChild->ElStructSchema != pEl->ElStructSchema)
+	     RegisterSSchemaForSavedElements (pChild->ElStructSchema);
+	  RegSSchemaDescent (pChild);
+	  pChild = pChild->ElNext;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    SaveElement     met l'element pointe' par pEl a la fin de la    
    liste des elements a copier.                    
    pParent est le pere de l'element original	
   ----------------------------------------------------------------------*/
 static void SaveElement (PtrElement pEl, PtrElement pParent)
 {
-   PtrPasteElem        pPasteEl, pNewPasteEl;
-   PtrElement          pAncest;
-   int                 level, i;
+  PtrPasteElem        pPasteEl, pNewPasteEl;
+  PtrElement          pAncest;
+  int                 level, i;
 
-   pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
-   if (pNewPasteEl != NULL)
-     {
-	if (FirstSavedElement == NULL)
-	  {
-	    /* enable the Paste command */
-	    if (ClipboardThot.BuLength == 0)
-	      /* switch the Paste entry in all documents */
-	      SwitchPaste (NULL, TRUE);
-
-	     FirstSavedElement = pNewPasteEl;
-	     pPasteEl = NULL;
-	     pNewPasteEl->PePrevious = NULL;
-	     pEl->ElPrevious = NULL;
-	  }
-	else
-	  {
-	     pPasteEl = FirstSavedElement;
-	     while (pPasteEl->PeNext != NULL)
-		pPasteEl = pPasteEl->PeNext;
-	     pNewPasteEl->PePrevious = pPasteEl;
-	     pPasteEl->PeNext = pNewPasteEl;
-	     pEl->ElPrevious = pPasteEl->PeElement;
-	     pPasteEl->PeElement->ElNext = pEl;
-	  }
-	pNewPasteEl->PeNext = NULL;
-	pEl->ElNext = NULL;
-	pNewPasteEl->PeElement = pEl;
-	pAncest = pParent;
-	for (i = 0; i < MAX_PASTE_LEVEL; i++)
-	  {
-	     if (pAncest == NULL)
-	       {
-		  pNewPasteEl->PeAscendTypeNum[i] = 0;
-		  pNewPasteEl->PeAscendSSchema[i] = NULL;
-		  pNewPasteEl->PeAscend[i] = NULL;
-	       }
-	     else
-	       {
-		  pNewPasteEl->PeAscendTypeNum[i] = pAncest->ElTypeNumber;
-		  pNewPasteEl->PeAscendSSchema[i] = pAncest->ElStructSchema;
-		  pNewPasteEl->PeAscend[i] = pAncest;
-		  pAncest = pAncest->ElParent;
-	       }
-	  }
-	level = 0;
-	pAncest = pParent;
-	while (pAncest != NULL)
-	  {
-	     level++;
-	     pAncest = pAncest->ElParent;
-	  }
-	pNewPasteEl->PeElemLevel = level;
-     }
+  pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
+  if (pNewPasteEl != NULL)
+    {
+      if (FirstSavedElement == NULL)
+	{
+	  /* enable the Paste command */
+	  if (ClipboardThot.BuLength == 0)
+	    /* switch the Paste entry in all documents */
+	    SwitchPaste (NULL, TRUE);
+	  FirstSavedElement = pNewPasteEl;
+	  pPasteEl = NULL;
+	  pNewPasteEl->PePrevious = NULL;
+	  pEl->ElPrevious = NULL;
+	}
+      else
+	{
+	  pPasteEl = FirstSavedElement;
+	  while (pPasteEl->PeNext != NULL)
+	    pPasteEl = pPasteEl->PeNext;
+	  pNewPasteEl->PePrevious = pPasteEl;
+	  pPasteEl->PeNext = pNewPasteEl;
+	  pEl->ElPrevious = pPasteEl->PeElement;
+	  pPasteEl->PeElement->ElNext = pEl;
+	}
+      pNewPasteEl->PeNext = NULL;
+      pEl->ElNext = NULL;
+      pNewPasteEl->PeElement = pEl;
+      pAncest = pParent;
+      for (i = 0; i < MAX_PASTE_LEVEL; i++)
+	{
+	  if (pAncest == NULL)
+	    {
+	      pNewPasteEl->PeAscendTypeNum[i] = 0;
+	      pNewPasteEl->PeAscendSSchema[i] = NULL;
+	      pNewPasteEl->PeAscend[i] = NULL;
+	    }
+	  else
+	    {
+	      pNewPasteEl->PeAscendTypeNum[i] = pAncest->ElTypeNumber;
+	      pNewPasteEl->PeAscendSSchema[i] = pAncest->ElStructSchema;
+	      RegisterSSchemaForSavedElements (pAncest->ElStructSchema);
+	      pNewPasteEl->PeAscend[i] = pAncest;
+	      pAncest = pAncest->ElParent;
+	    }
+	}
+      level = 0;
+      pAncest = pParent;
+      while (pAncest != NULL)
+	{
+	  level++;
+	  pAncest = pAncest->ElParent;
+	}
+      pNewPasteEl->PeElemLevel = level;
+      /* register the structure schemas used by this element and its
+	 descendents */
+      RegisterSSchemaForSavedElements (pEl->ElStructSchema);
+      RegSSchemaDescent (pEl);
+    }
 }
-
 
 /*----------------------------------------------------------------------
    CopyCommand traite la commande COPY				
@@ -799,6 +829,10 @@ void                CopyCommand ()
 		     FreeSavedElements ();
 		     /* document d'ou vient la partie sauvee */
 		     DocOfSavedElements = pSelDoc;
+		     /* tell the application what document the saved elements
+			come from */
+		     if (CopyAndCutFunction)
+		       (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
 		     pEl = firstSel;
 		     /* premier element selectionne */
 
@@ -1439,12 +1473,15 @@ void                CutCommand (ThotBool save)
 				  {
 				    if (pS == NULL)
 				      {
-					/* libere l'ancienne
-					   sauvegarde */
+					/* libere l'ancienne sauvegarde */
 					FreeSavedElements ();
 					/* document d'ou vient la
 					   partie sauvee */
 					DocOfSavedElements = pSelDoc;
+					/* tell the application what document
+					   the saved elements come from */
+					if (CopyAndCutFunction)
+					  (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
 				      }
 				    /* il ne faudra pas changer les
 				       labels des elements exportables
@@ -1708,6 +1745,15 @@ void                CutCommand (ThotBool save)
 	  }
 	}
     }
+}
+
+/*----------------------------------------------------------------------
+  TtaSetCopyAndCutFunction registers the function to be called when
+  a Copy or Cut operation is executed.
+  ----------------------------------------------------------------------*/
+void      TtaSetCopyAndCutFunction (Proc procedure)
+{
+  CopyAndCutFunction = procedure;
 }
 
 /*----------------------------------------------------------------------

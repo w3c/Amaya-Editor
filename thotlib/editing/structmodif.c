@@ -241,9 +241,9 @@ ThotBool            IsANewElement (PtrElement pEl)
    ThotBool            ret;
 
    ret = FALSE;
-   for (i = 0; i < NCreatedElements && !ret; i++) ;
-   if (CreatedElement[i] == pEl)
-      ret = TRUE;
+   for (i = 0; i < NCreatedElements && !ret; i++)
+     if (CreatedElement[i] == pEl)
+       ret = TRUE;
    return ret;
 }
 

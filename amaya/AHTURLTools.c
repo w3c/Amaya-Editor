@@ -696,58 +696,65 @@ char  *GetBaseURL (Document doc)
   char               *ptr, *basename;
   int                 length;
 
-  /* @@@ irene */
-  if (!DocumentURLs[doc])
+  if (doc == 0 || !DocumentURLs[doc])
      return NULL;
   basename = TtaGetMemory (MAX_LENGTH);
   strncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
   basename[MAX_LENGTH-1] = EOS;
   length = MAX_LENGTH -1;
-  /* get the document element */
-  el = TtaGetMainRoot (doc);
-  /* search the BASE element */
+  /* is it a HTML document ? */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  elType.ElTypeNum = HTML_EL_HEAD;
-  el = TtaSearchTypedElement (elType, SearchForward, el);
-  if (el)
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* it's a HTML document */
     {
-      elType.ElTypeNum = HTML_EL_BASE;
-      el = TtaSearchTypedElement (elType, SearchInTree, el);
-    }
-  if (el)
-    {
-      /*  The document has a BASE element -> Get the HREF attribute */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
+      /* get the document element */
+      el = TtaGetMainRoot (doc);
+      /* search the BASE element */
+      elType.ElTypeNum = HTML_EL_HEAD;
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      if (el)
+	/* there is a HEAD element */
 	{
-	  /* Use the base path of the document */
-	  TtaGiveTextAttributeValue (attr, basename, &length);
-	  /* base and orgName have to be separated by a DIR_SEP */
-	  length--;
-	  if (basename[0] != EOS && basename[length] != URL_SEP &&
-	      basename[length] != DIR_SEP) 
-	    /* verify if the base has the form "protocol://server:port" */
+	  /* look for a BASE element within the HEAD */
+	  elType.ElTypeNum = HTML_EL_BASE;
+	  el = TtaSearchTypedElement (elType, SearchInTree, el);
+	}
+      if (el)
+	{
+	  /*  The document has a BASE element. Get the HREF attribute of the
+	      BASE element */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
 	    {
-	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
-				                 AMAYA_PARSE_HOST |
-				                 AMAYA_PARSE_PUNCTUATION);
-	      if (ptr && !strcmp (ptr, basename))
+	      /* Use the base path of the document */
+	      TtaGiveTextAttributeValue (attr, basename, &length);
+	      /* base and orgName have to be separated by a DIR_SEP */
+	      length--;
+	      if (basename[0] != EOS && basename[length] != URL_SEP &&
+		  basename[length] != DIR_SEP) 
+		/* verify if the base has the form "protocol://server:port" */
 		{
-		  /* it has this form, we complete it by adding a URL_STR  */
-		  if (strchr (basename, DIR_SEP))
-		    strcat (basename, DIR_STR);
-		  else
-		    strcat (basename, URL_STR);
-		  length++;
+		  ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
+				                     AMAYA_PARSE_HOST |
+				                     AMAYA_PARSE_PUNCTUATION);
+		  if (ptr && !strcmp (ptr, basename))
+		    {
+		      /* it has this form, complete it by adding a URL_STR  */
+		      if (strchr (basename, DIR_SEP))
+			strcat (basename, DIR_STR);
+		      else
+			strcat (basename, URL_STR);
+		      length++;
+		    }
+		  if (ptr)
+		    TtaFreeMemory (ptr);
 		}
-	      if (ptr)
-		TtaFreeMemory (ptr);
 	    }
 	}
-      }
-  
+    }
+
   /* Remove anything after the last DIR_SEP char. If no such char is found,
    * then search for the first ":" char, hoping that what's before that is a
    * protocol. If found, end the string there. If neither char is found,
@@ -968,6 +975,8 @@ static void CleanCopyFileURL (char *dest, char *src,
    NormalizeURL
    normalizes orgName according to a base associated with doc, and
    following the standard URL format rules.
+   if doc is < 0, use as a base the URL of the document that contains
+   (or contained) the elements that are now in the copy/cut buffer.
    if doc is 0 and otherPath not NULL, normalizes orgName according to this
    other path.
    The function returns the new complete and normalized URL 
@@ -992,7 +1001,9 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    if (!newName || !docName)
       return;
 
-   if (doc != 0)
+   if (doc < 0)
+     basename = TtaStrdup (SavedDocumentURL);
+   else if (doc > 0)
      basename = GetBaseURL (doc);
    else if (otherPath != NULL)
      basename = TtaStrdup (otherPath);
@@ -1052,7 +1063,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
        if (ptr)
          TtaFreeMemory (ptr);
      }
-   else if ( basename == NULL)
+   else if (basename == NULL)
      /* the name is complete, go to the Sixth Step */
      strcpy (newName, tempOrgName);
    else
@@ -1112,7 +1123,6 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
                else
 		 check = FALSE;
 	     }
-	   strcpy (docName, "noname.html");	       
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
 	   strcpy (docName, "noname.html");

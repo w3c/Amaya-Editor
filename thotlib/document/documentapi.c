@@ -194,16 +194,15 @@ void                UnloadTree (Document document)
   PtrDocument      pDoc;
 
   pDoc = LoadedDocument[document - 1];
-   if (pDoc != NULL)
+  if (pDoc != NULL)
      {
        /* remove the selection on the document */
        if (ThotLocalActions[T_resetsel])
 	 (*ThotLocalActions[T_resetsel]) (pDoc);
 #ifndef NODISPLAY
-       /* remove the contents of the cut buffer related to the document */
-       if (DocOfSavedElements == pDoc && ThotLocalActions[T_freesavedel])
-	 (*ThotLocalActions[T_freesavedel]) ();
-#endif  /* NODISPLAY */
+       if (DocOfSavedElements == pDoc)
+	 DocOfSavedElements = NULL;
+#endif /* NODISPLAY */
        /* free the document tree */
        DeleteAllTrees (pDoc);
      }

@@ -47,6 +47,9 @@ APresentation;
 #include "appdialogue_tv.h"
 #include "modif_tv.h"
 
+/* list of structure schemas used by saved elements (cut/past commands) */
+PtrDocSchemasDescr FirstSchemaUsedBySavedElements = NULL;
+
 /* table des schemas de presentation charges */
 #define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
 static APresentation LoadedPSchema[MAX_PSCHEMAS];
@@ -81,6 +84,7 @@ void InitNatures ()
       LoadedSSchema[i].StructSchemaName[0] = EOS;
       }
 #ifndef NODISPLAY
+   FirstSchemaUsedBySavedElements = NULL;
    for (i = 0; i < MAX_PSCHEMAS; i++)
       {
       LoadedPSchema[i].pPresSchema = NULL;
@@ -113,13 +117,12 @@ PtrSSchema GetSSchemaForDoc (char *name, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   PresForStructSchema
-   Return the block describing the presentation schemas to be used
-   for structure schema pSS in document pDoc.
+   StructSchemaForDoc
+   Return the block describing structure schema pSS used by a document pDoc
   ----------------------------------------------------------------------*/
-static PtrDocSchemasDescr PresForStructSchema (PtrDocument pDoc,
-					       PtrSSchema pSS,
-					       PtrDocSchemasDescr *pPrevPfS)
+static PtrDocSchemasDescr StructSchemaForDoc (PtrDocument pDoc,
+					      PtrSSchema pSS,
+					      PtrDocSchemasDescr *pPrevPfS)
 {
   PtrDocSchemasDescr pPfS;
 
@@ -137,7 +140,138 @@ static PtrDocSchemasDescr PresForStructSchema (PtrDocument pDoc,
   return pPfS;
 }
 
+/*----------------------------------------------------------------------
+   ResetNatureRules
+   Check all Nature rules in all structure schema that are currently
+   loaded. If a Nature rule points to the oldSS schema, reset that pointer.
+  ----------------------------------------------------------------------*/
+static void ResetNatureRules (PtrSSchema oldSS)
+{
+  PtrSSchema   pSS;
+  int          i, rule;
+  SRule        *pRule;
+
+  /* Look at the table of loaded schemas */
+  for (i = 0; i < MAX_SSCHEMAS; i++)
+    {
+      pSS = LoadedSSchema[i].pStructSchema;
+      if (pSS)
+	/* check all rules of that schema */
+	for (rule = 0; rule < pSS->SsNRules; rule++)
+	  {
+	    pRule = &pSS->SsRule[rule];
+	    if (pRule->SrConstruct == CsNatureSchema)
+	      {
+		/* it's a nature rule */
+		if (pRule->SrSSchemaNat == oldSS)
+		  /* it points to the old schema */
+		  pRule->SrSSchemaNat = NULL;
+	      }
+	  }
+    }
+}
+
 #ifndef NODISPLAY
+
+/*----------------------------------------------------------------------
+   RegisterSSchemaForSavedElements
+   Register schema pSSchema in the list of schemas used by the saved elements
+  ----------------------------------------------------------------------*/
+void RegisterSSchemaForSavedElements (PtrSSchema pSSchema)
+{
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+  int                 i;
+
+  if (!pSSchema)
+    return;
+  /* is this schema already in the list? */
+  pPfS = FirstSchemaUsedBySavedElements;
+  while (pPfS && pPfS->PfSSchema != pSSchema)
+    pPfS = pPfS->PfNext;
+  if (!pPfS)
+    /* this schema is not in the list. Add it */
+    {
+      /* look first for this schema in the list of loaded schemas */
+      for (i = 0; (i < MAX_SSCHEMAS) &&
+                  (LoadedSSchema[i].pStructSchema != pSSchema); i++);
+      if (i >= MAX_SSCHEMAS)
+        /* This schema is not in the table, error */
+	fprintf (stderr, "S schema %s not loaded!?!?\n", pSSchema->SsName);
+      else
+        {
+#ifndef VQ
+  fprintf (stderr, "register S schema %s for saved elements\n", pSSchema->SsName);
+#endif
+	  /* increment the number of users of this schema */
+	  LoadedSSchema[i].UsageCount++;
+	  /* add the schema to the list of schemas used by the saved elements*/
+	  GetDocSchemasDescr (&pPfS);
+	  pPfS->PfNext = NULL;
+	  pPfS->PfSSchema = pSSchema;
+	  pPfS->PfPSchema = NULL;
+	  pPfS->PfFirstPSchemaExtens = NULL;
+	  /* append the new schema descriptor */
+	  if (FirstSchemaUsedBySavedElements == NULL)
+	    FirstSchemaUsedBySavedElements = pPfS;
+	  else
+	    {
+	      pPrevPfS = FirstSchemaUsedBySavedElements;
+	      while (pPrevPfS->PfNext)
+		pPrevPfS = pPrevPfS->PfNext;
+	      pPrevPfS->PfNext = pPfS;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   ReleaseSSchemasForSavedElements
+   Cancel the list of schemas used by the saved elements and unload the
+   schemas that are not used by any document.
+  ----------------------------------------------------------------------*/
+void ReleaseSSchemasForSavedElements ()
+{
+  AStructure          *pStr;
+  PtrDocSchemasDescr  pPfS, pNextPfS;
+  PtrSSchema          pSS;
+  int                 i;
+
+  pPfS = FirstSchemaUsedBySavedElements;
+  while (pPfS)
+    {
+      pSS = pPfS->PfSSchema;
+      /* look for this schema in the table */
+      for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema != pSS;
+	   i++);
+      if (i >= MAX_SSCHEMAS)
+	/* error. This schema is not in the table */
+	fprintf (stderr, "S schema %s released but not loaded!?!?\n",
+		 pSS->SsName);
+      else
+	{
+#ifndef VQ
+  fprintf (stderr, "release S schema %s for saved elements\n", pSS->SsName);
+#endif
+	  pStr = &LoadedSSchema[i];
+	  pStr->UsageCount--;
+	  if (pStr->UsageCount <= 0)
+	    /* This schema is no longer used by any document. Unload it */
+	    {
+#ifndef VQ
+  fprintf (stderr, "   free S schema %s\n", pSS->SsName);
+#endif
+	      pStr->pStructSchema = NULL;
+	      pStr->StructSchemaName[0] = EOS;
+	      ResetNatureRules (pSS);
+	      FreeSchStruc (pSS);
+	    }
+	}
+      pNextPfS = pPfS->PfNext;
+      FreeDocSchemasDescr (pPfS);
+      pPfS = pNextPfS;
+    }
+  FirstSchemaUsedBySavedElements = NULL;
+}
 
 /*----------------------------------------------------------------------
    FreePRuleList
@@ -264,8 +398,15 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
      /* invalid parameter */
      return FALSE;
    if (schemaName == NULL)
-     /* no presentation schema specified, get the default from the structure schema */
+     /* no presentation schema specified, use the default P schema specified
+	in the structure schema */
      schemaName = pSS->SsDefaultPSchema;
+   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
+   if (pPfS && pPfS->PfPSchema &&
+       !ustrcmp (schemaName, pPfS->PfPSchema->PsPresentName))
+     /* this presentation schema is already associated with this structure
+	schema for this document */
+     return TRUE;
    pPSchema = NULL;
    /* Look at the table of loaded schemas */
    for (i = 0; i < MAX_PSCHEMAS &&
@@ -306,7 +447,6 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
      strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
      /* associate the presentation schema with the structure schema
         for this document */
-     pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
      if (!pPfS)
        fprintf (stderr, "*** S schema %s missing ***\n",
 		pPSchema->PsPresentName);
@@ -338,7 +478,7 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   PtrHandlePSchema     pHSP, pNextHSP;
 
   ReleasePresentationSchema (pPSchema, pSS, pDoc);
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     /* check if it's the main presentation schema or an extension */
     if (pPfS->PfPSchema == pPSchema)
@@ -375,7 +515,7 @@ PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc)
 {
   PtrDocSchemasDescr  pPfS, pPrevPfS;
 
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     return (pPfS->PfFirstPSchemaExtens);
   else
@@ -392,7 +532,7 @@ void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pPS)
 
   if (!pDoc || !pSS || !pPS)
     return;
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (!pPfS)
     return;
   pHd = pPfS->PfFirstPSchemaExtens;
@@ -421,7 +561,7 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
   PtrHandlePSchema    oldHd, newHd;
   ThotBool            ok;
 
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (!pPfS)
     return FALSE;
   ok = FALSE;
@@ -475,7 +615,7 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
 #ifndef NODISPLAY
   PtrDocSchemasDescr  pPfS, pPrevPfS;
 
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     return (pPfS->PfPSchema);
   else
@@ -486,7 +626,7 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
 /*----------------------------------------------------------------------
    LoadStructureSchema
    If structure schema called schemaName is already loaded, return a
-   pointer ot it, otherwise load it from its file, register it in the
+   pointer to it, otherwise load it from its file, register it in the
    table of loaded schemas, and return a pointer to it.
    Return NULL if schema can't be loaded.
   ----------------------------------------------------------------------*/
@@ -496,10 +636,19 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
    PtrDocSchemasDescr   pPfS, pPrevPfS;
    int                  i;
 
+   pSSchema = NULL;
    if (schemaName == NULL || schemaName[0] == EOS)
      /* invalid parameter */
      return NULL;
-   pSSchema = NULL;
+
+   /* is this schema already used by the document? */
+   pPfS = pDoc->DocFirstSchDescr;
+   while (pPfS && ustrcmp (schemaName, pPfS->PfSSchema->SsName))
+     pPfS = pPfS->PfNext;
+   if (pPfS)
+     /* this schema is already used by the document */
+     return (pPfS->PfSSchema);
+
    /* Look at the table of loaded schemas */
    for (i = 0; i < MAX_SSCHEMAS &&
 	       ustrcmp (schemaName, LoadedSSchema[i].StructSchemaName); i++);
@@ -550,25 +699,21 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
    if (pSSchema)
      /* add a schema descriptor to the document */
      {
-     pPfS = PresForStructSchema (pDoc, pSSchema, &pPrevPfS);
-     if (!pPfS)
-       {
-	 GetDocSchemasDescr (&pPfS);
-	 pPfS->PfNext = NULL;
-	 pPfS->PfSSchema = pSSchema;
-	 pPfS->PfPSchema = NULL;
-	 pPfS->PfFirstPSchemaExtens = NULL;
-	 /* append the new schema descriptor */
-	 if (pDoc->DocFirstSchDescr == NULL)
-	   pDoc->DocFirstSchDescr = pPfS;
-	 else
-	   {
-	     pPrevPfS = pDoc->DocFirstSchDescr;
-	     while (pPrevPfS->PfNext)
-	       pPrevPfS = pPrevPfS->PfNext;
-	     pPrevPfS->PfNext = pPfS;
-	   }
-       }
+       GetDocSchemasDescr (&pPfS);
+       pPfS->PfNext = NULL;
+       pPfS->PfSSchema = pSSchema;
+       pPfS->PfPSchema = NULL;
+       pPfS->PfFirstPSchemaExtens = NULL;
+       /* append the new schema descriptor */
+       if (pDoc->DocFirstSchDescr == NULL)
+	 pDoc->DocFirstSchDescr = pPfS;
+       else
+	 {
+	   pPrevPfS = pDoc->DocFirstSchDescr;
+	   while (pPrevPfS->PfNext)
+	     pPrevPfS = pPrevPfS->PfNext;
+	   pPrevPfS->PfNext = pPfS;
+	 }
      }
    return pSSchema;
 }
@@ -606,10 +751,11 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 #endif
       pStr->pStructSchema = NULL;
       pStr->StructSchemaName[0] = EOS;
+      ResetNatureRules (pSS);
       FreeSchStruc (pSS);
       result = TRUE;
     }
-  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     {
       pPfS->PfSSchema = NULL;

@@ -1538,6 +1538,20 @@ void ElementDeleted (NotifyElement *event)
         }
 }
 
+
+/*----------------------------------------------------------------------
+   RegisterURLSavedElements
+   Elements from document doc have been saved in the Thot Copy/Cut buffer.
+   Save the URL of this document, to allow relative URIs contained
+   in these elements to be adapted when they are pasted.
+  ----------------------------------------------------------------------*/
+void RegisterURLSavedElements (Document doc)
+{
+  if (SavedDocumentURL)
+    TtaFreeMemory (SavedDocumentURL);
+  SavedDocumentURL = GetBaseURL (doc);
+}
+
 /*----------------------------------------------------------------------
    ChangeURI
    Element el has been pasted in document doc. It comes from document
@@ -1565,7 +1579,13 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
       if (value[0] == '#')
 	  /* the target is in the original document */
 	  /* convert the internal link into an external link */
-	  strcpy (tempURI, DocumentURLs[originDocument]);
+	{
+	  if (originDocument == 0)
+	    /* origin document has been unloaded. Get the saved URL */
+	    strcpy (tempURI, SavedDocumentURL);
+	  else
+	    strcpy (tempURI, DocumentURLs[originDocument]);
+	}
       else
 	{
 	  /* the target element is in another document */
@@ -1592,7 +1612,10 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
 	    path = TtaGetMemory (MAX_LENGTH);
 	    if (path)
 	      {
-	      NormalizeURL (documentURI, originDocument, tempURI, path, NULL);
+	      if (originDocument == 0)
+	        NormalizeURL (documentURI, -1, tempURI, path, NULL);
+	      else
+	        NormalizeURL (documentURI, originDocument, tempURI, path,NULL);
 	      TtaFreeMemory (path);
 	      }
 	    TtaFreeMemory (documentURI);
@@ -1760,7 +1783,7 @@ void ElementPasted (NotifyElement * event)
 	  /* Change attributes HREF if the element comes from another */
 	  /* document */
 	  originDocument = (Document) event->position;
-	  if (originDocument > 0 && originDocument != doc)
+	  if (originDocument >= 0 && originDocument != doc)
 	    {
 	      /* the anchor has moved from one document to another */
 	      /* get the HREF attribute of element Anchor */

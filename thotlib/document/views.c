@@ -1032,12 +1032,7 @@ void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 	       (*ThotLocalActions[T_confirmclose]) (pDoc, document, view, &ok,
 						    &Save);
 	       if (Save)
-		  {
-		  if (DocOfSavedElements == pDoc &&
-		      ThotLocalActions[T_freesavedel])
-		     (*ThotLocalActions[T_freesavedel]) ();
 		  ok = (*(Func)ThotLocalActions[T_writedocument]) (pDoc, 0);
-		  }
 	       }
 	    else
 	       ok = TRUE;
