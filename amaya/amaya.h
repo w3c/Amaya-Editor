@@ -443,6 +443,8 @@ THOT_EXPORT DocumentType             DocumentTypes[DocumentTableLength];
 THOT_EXPORT ThotBool                 ReadOnlyDocument[DocumentTableLength];
 /* Document with section numbering */
 THOT_EXPORT ThotBool                 SNumbering[DocumentTableLength];
+/* Document that shows map areas */
+THOT_EXPORT ThotBool                 MapAreas[DocumentTableLength];
 /* identifier of the document displaying the source code */
 THOT_EXPORT Document                 DocumentSource[DocumentTableLength];
 /* The whole document is loaded when the corresponding entry in FilesLoading is 0 */

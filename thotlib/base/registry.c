@@ -667,9 +667,9 @@ void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
    char *ptr;
 
    if (value)
-      ptr = "yes";
+     ptr = "yes";
    else
-       ptr = "no";
+     ptr = "no";
    AddRegisterEntry (AppRegistryEntryAppli, name, ptr, REGISTRY_USER, overwrite);
 }
 
@@ -681,9 +681,11 @@ void TtaSetEnvString (char *name, char *value, int overwrite)
 {
    char *tmp = value;
   
+   /* make sure that value isn't NULL */
    if (!tmp)
-      tmp = "";
-   AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_USER, overwrite);
+     tmp = "";
+   
+   AddRegisterEntry (AppRegistryEntryAppli, name, tmp, REGISTRY_USER, overwrite);
 }
 
 /*----------------------------------------------------------------------
@@ -692,12 +694,13 @@ void TtaSetEnvString (char *name, char *value, int overwrite)
   ----------------------------------------------------------------------*/
 void TtaSetDefEnvString (char *name, char *value, int overwrite)
 {
-  char *tmp = value; /* ??? */
-                         /* ??? */
-  if (!tmp)              /* ??? */
-    tmp = "";   /* ??? */
+  char *tmp = value;
+             
+  /* make sure that value isn't NULL */
+  if (!tmp)
+    tmp = "";
 
-  AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_SYSTEM, overwrite);
+  AddRegisterEntry (AppRegistryEntryAppli, name, tmp, REGISTRY_SYSTEM, overwrite);
 }
 
 /*----------------------------------------------------------------------

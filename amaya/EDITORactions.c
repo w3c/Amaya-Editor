@@ -46,7 +46,7 @@
 /*----------------------------------------------------------------------
   NewXHTML: Create a new XHTML document
   ----------------------------------------------------------------------*/
-void                NewXHTML (Document document, View view)
+void NewXHTML (Document document, View view)
 {
   OpenNew (document, view, docHTML);
 }
@@ -228,6 +228,9 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       /* Activate the section numbering */
       if (SNumbering[doc])
 	ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
+      /* Activate show areas */
+      if (MapAreas[doc])
+	ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
     }
   else if (docType == docMath)
     {

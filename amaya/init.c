@@ -98,7 +98,6 @@
 #include <direct.h>
 #endif 
 */
-extern int      currentFrame;
 int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
 #endif /* _WINDOWS */
@@ -199,7 +198,6 @@ static ThotIcon       iconPlugin;
 #define iconEditor    23
 #define iconHome      10
 
-extern int       currentFrame;
 extern int       menu_item;
 extern char      LostPicturePath [512];
 static ThotBool  itemChecked = FALSE;
@@ -1779,7 +1777,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
   char         *tmp;
   int           x, y, w, h;
   int           requested_doc;
-  ThotBool      isOpen, reinitialized;
+  ThotBool      isOpen, reinitialized, show;
 #ifdef _WINDOWS
 
   Window_Curs = IDC_WINCURSOR;
@@ -1812,8 +1810,6 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 #endif /* XML_GENERIC */
 	  DocumentTypes[doc] == docMath)
 	{
-	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
-	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
 	  /* close the Alternate view if it is open */
 	  altView = TtaGetViewFromName (doc, "Alternate_view");
 	  if (altView != 0 && TtaIsViewOpen (doc, altView))
@@ -2090,8 +2086,13 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BLatinReading);
 	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
-	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
-	   TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
+	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+	   TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
+	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
+	   if (show)
+	     ShowTargets (doc, 1);
+	   else
+	     TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 	   TtaSetMenuOff (doc, 1, Attributes_);
 
 	   /* if we open the new document in a new view, control */
@@ -2915,6 +2916,9 @@ static Document LoadDocument (Document doc, char *pathname,
       /* Activate the section numbering */
       if (docType == docHTML && SNumbering[newdoc])
 	ChangeAttrOnRoot (newdoc, HTML_ATTR_SectionNumbering);
+      /* Activate the section numbering */
+      if (docType == docHTML && MapAreas[newdoc])
+	ChangeAttrOnRoot (newdoc, HTML_ATTR_ShowAreas);
 
       if (InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
@@ -5323,7 +5327,7 @@ void                InitAmaya (NotifyEvent * event)
    char               *s;
    char               *tempname;
    int                 i;
-   ThotBool            restoredDoc, numbering;
+   ThotBool            restoredDoc, numbering, map;
 
    if (AmayaInitialized)
       return;
@@ -5461,9 +5465,15 @@ void                InitAmaya (NotifyEvent * event)
      /* no User preferences */
      UserCSS = NULL;
 
+   /* Initialize environment variables if they are not defined */
+   TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);
+   TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
+   TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
+   /* get current value */
+   TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
+   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
    /* Create and intialize resources needed for each document */
    /* Style sheets are strored in directory .amaya/0 */
-   TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
    for (i = 0; i < DocumentTableLength; i++)
      {
        /* initialize document table */
@@ -5473,6 +5483,7 @@ void                InitAmaya (NotifyEvent * event)
        DocumentMeta[i] = NULL;
        ReadOnlyDocument[i] = FALSE;
        SNumbering[i] = numbering;
+       MapAreas[i] = map;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and
@@ -5631,26 +5642,30 @@ void         ChangeAttrOnRoot (Document document, int attrNum)
   ShowMapAreas
   Execute the "Show Map Areas" command
   ----------------------------------------------------------------------*/
-void                ShowMapAreas (Document document, View view)
+void ShowMapAreas (Document document, View view)
 {
 #ifdef _WINDOWS
-   int frame = GetWindowNumber (document, view);
+  int frame = GetWindowNumber (document, view);
 
-   if (currentFrame == 0 || currentFrame > 10)
-      TtaError (ERR_invalid_parameter);
-   else {
-        HMENU hmenu = WIN_GetMenu (currentFrame); 
-        if (!itemChecked) {
+  if (frame == 0 || frame > 10)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      HMENU hmenu = WIN_GetMenu (frame); 
+      if (!itemChecked)
+	{
           CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
           itemChecked = TRUE;
-       } else {
-              hmenu = WIN_GetMenu (currentFrame); 
-              CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-              itemChecked = FALSE;
-       }
+	}
+      else
+	{
+	  hmenu = WIN_GetMenu (frame); 
+	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+	  itemChecked = FALSE;
+	}
    }
 #endif /* _WINDOWS */
-   ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
+  ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 
 /*----------------------------------------------------------------------
