@@ -175,7 +175,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   //  Layout();
 
   //  forward the event to parents
-  event.Skip();
+  //event.Skip();
 }
 
 /*
