@@ -5386,17 +5386,18 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 			 Pixel color, int activate)
 {
 #ifdef _WINDOWS
+  HMENU               menu;
   int                 frame;
   int                 i, j;
 
   j = ref - MAX_LocalMenu;
   i = j / MAX_ITEM;
   frame = j - (i * MAX_ITEM);	/* reste de la division */
-  hMenu = WIN_GetMenu (frame);
+  menu = WIN_GetMenu (frame);
   if (activate)
-    EnableMenuItem (hMenu, ref + entry, MF_ENABLED);
+    EnableMenuItem (menu, ref + entry, MF_ENABLED);
   else
-    EnableMenuItem (hMenu, ref + entry, MFS_GRAYED);
+    EnableMenuItem (menu, ref + entry, MFS_GRAYED);
 #else /* _WINDOWS */
   ThotWidget          w;
   struct Cat_Context *catalogue;
