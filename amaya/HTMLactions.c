@@ -1557,7 +1557,8 @@ void UpdateTitle (Element el, Document doc)
       return;
 
    elType = TtaGetElementType (el);
-   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG"))
+   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG") &&
+       elType.ElTypeNum == SVG_EL_title)
      /* it's a SVG title */
      {
        if (TtaGetParent (el) != TtaGetRootElement(doc))

@@ -17,22 +17,23 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "SVG.h"
 #include "HTML.h"
-#include "XLink.h"
 #include "parser.h"
 #include "registry.h"
 #include "style.h"
+#include "SVG.h"
+#include "XLink.h"
 
 #define MaxMsgLength 200
 
+#include "anim_f.h"
+#include "animbuilder_f.h"
 #include "css_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "HTMLactions_f.h"
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
-#include "anim_f.h"
-#include "animbuilder_f.h"
 
 /*----------------------------------------------------------------------
    SVGGetDTDName
@@ -1080,6 +1081,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
        /* case SVG_EL_view: */
 	 TtaSetElCoordinateSystem (el);
 	 break;
+
        case SVG_EL_image:
 	 /* it's an image element */
 	 /* create a PICTURE_UNIT child */
@@ -1090,6 +1092,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 /* if it has a href attribute from the XLink namespace, replace
 	    that attribute by a href attribute from the SVG namespace */
 	 CheckHrefAttr (el, doc);
+	 break;
+
+       case SVG_EL_title:
+	 UpdateTitle (el, doc);
 	 break;
 
        case SVG_EL_use_:

@@ -1027,11 +1027,11 @@ void CheckSVGRoot (Document doc, Element el)
  -----------------------------------------------------------------------*/
 void GraphElemPasted (NotifyElement *event)
 {
-  ElementType    elType, siblingType;
+  ElementType    elType;
   SSchema	 SvgSchema;
   AttributeType  attrType;
   Attribute      attr;
-  Element        parent, sibling;
+  Element        parent;
 
   XLinkPasted (event);
   /* check that the svg element includes that element */
@@ -1069,26 +1069,9 @@ void GraphElemPasted (NotifyElement *event)
     }
   else if (elType.ElTypeNum == SVG_EL_title &&
 	   elType.ElSSchema == SvgSchema)
-    {  
-      /* the pasted element is a title element */
-      if (TtaGetParent (event->element) == TtaGetRootElement (event->document))
-	/* this title element is a child of the root element */
-	{
-	  sibling = event->element;
-	  do
-	    {
-	      TtaPreviousSibling (&sibling);
-	      if (sibling)
-		siblingType = TtaGetElementType (sibling);
-	    }
-	  while (sibling && (siblingType.ElTypeNum != SVG_EL_title ||
-			     siblingType.ElSSchema != SvgSchema));
-	  if (!sibling)
-	    /* this title element is the first title element among its
-	       siblings. Change the title of the window. */
-	    UpdateTitle (event->element, event->document);
-	}
-    }
+    /* the pasted element is a title element. Update the window title */
+    UpdateTitle (event->element, event->document);
+
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (event->element, event->document);
