@@ -1961,7 +1961,6 @@ int                viewsCounter;
   int                 schView, rule, v, assocNum, firstFrame;
   ThotBool            present, found, withPages;
 #  ifdef _WINDOWS
-  static DOCINFO docInfo = {sizeof (DOCINFO), L"Amaya", NULL};
   int    i;
   int    xRes, yRes, xSize, ySize;
   RECT   Rect;
