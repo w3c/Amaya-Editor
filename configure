@@ -6954,7 +6954,7 @@ if test "$build_amaya" = "yes" ; then
 
     if test "$with_redland" = "yes" ; then
        AMAYA_RAPTOR_SRC="amaya_comp_redland"
-       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DLIBRDF_INTERNAL=1 -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
+       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DLIBRDF_INTERNAL=1 -DAM_REDLAND -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
        AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a -lexpat"
        AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
     fi
