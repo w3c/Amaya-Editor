@@ -96,6 +96,12 @@ FILE               *outfile;
 	    case PtHyphenate:
 	       fprintf (outfile, "Hyphenate");
 	       break;
+	    case PtVertOverflow:
+	       fprintf (outfile, "VertOverflow");
+	       break;
+	    case PtHorizOverflow:
+	       fprintf (outfile, "HorizOverflow");
+	       break;
 	    case PtBreak1:
 	       fprintf (outfile, "NoBr1");
 	       break;
@@ -1012,11 +1018,6 @@ FILE               *outfile;
 	wrboolean (pPa1->AbHyphenate, outfile);
 	if (pPa1->AbNotInLine)
 	   fprintf (outfile, " NotInLine");
-
-	if (!pPa1->AbHorizEnclosing)
-	   fprintf (outfile, " Not-Horiz-Enclosed");
-	if (!pPa1->AbVertEnclosing)
-	   fprintf (outfile, " Not-Vert-Enclosed");
 
 	fprintf (outfile, " Linespace:%d", pPa1->AbLineSpacing);
 	wrTypeUnit (pPa1->AbLineSpacingUnit, outfile);

@@ -464,7 +464,10 @@ boolean            *ok;
 		 case PresFunction:
 		    break;
 		 case PresImmediate:
-		    if (pPRule->PrType == PtJustify || pPRule->PrType == PtHyphenate)
+		    if (pPRule->PrType == PtJustify ||
+			pPRule->PrType == PtHyphenate ||
+			pPRule->PrType == PtVertOverflow ||
+			pPRule->PrType == PtHorizOverflow)
 		       val = pPRule->PrJustify;
 		    break;
 	      }
@@ -3522,6 +3525,16 @@ PtrAttribute        pAttr;
 			    pAbb1->AbHyphenate = FALSE;
 			    appl = TRUE;
 			 }
+		       break;
+		    case PtVertOverflow:
+		       pAbb1->AbVertEnclosing = !BoolRule (pPRule,
+							   pAbb1->AbElement,
+						     pAbb1->AbDocView, &appl);
+		       break;
+		    case PtHorizOverflow:
+		       pAbb1->AbHorizEnclosing = !BoolRule (pPRule,
+							   pAbb1->AbElement,
+						     pAbb1->AbDocView, &appl);
 		       break;
 		    case PtStyle:
 		       c = CharRule (pPRule, pAbb1->AbElement, pAbb1->AbDocView, &appl);

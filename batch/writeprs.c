@@ -232,6 +232,12 @@ PRuleType           ruleType;
 	    case PtForeground:
 	       TtaWriteByte (outfile, C_PR_FOREGROUND);
 	       break;
+	    case PtHorizOverflow:
+	       TtaWriteByte (outfile, C_PR_HORIZOVERFLOW);
+	       break;
+	    case PtVertOverflow:
+	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid rule type %X\n", ruleType);
 	       break;
@@ -1051,6 +1057,8 @@ PtrPRule            pPRule;
 				break;
 			     case PtJustify:
 			     case PtHyphenate:
+			     case PtVertOverflow:
+			     case PtHorizOverflow:
 				WriteBoolean (currentRule->PrJustify);
 				break;
 			     case PtPictInfo:

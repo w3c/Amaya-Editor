@@ -39,8 +39,7 @@ typedef struct _PresRule *PtrPRule;
 typedef enum
 {
   RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, 
-RlContainsRef,
-  RlRoot, RlReferred, RlCreator
+  RlContainsRef, RlRoot, RlReferred, RlCreator
 } Level;
 
 /* relative positionning rule for the dimensions or axes of two boxes */
@@ -82,7 +81,7 @@ typedef struct _PosRule
 #define PoTypeRefElem u.s0._PoTypeRefElem_
 #define PoRefPresBox u.s1._PoRefPresBox_
 
-/* Box dimensionning SRule */
+/* Box dimensionning rule */
 typedef struct _DimensionRule
 {
   boolean	 DrPosition;	/* the dimension is defined as a position
@@ -153,44 +152,45 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  Name		 PbName;	/* box name */	
-  PtrPRule PbFirstPRule;	/* first presentation rule defining the box */
-  boolean	 PbAcceptPageBreak;	/* indicates whether the box may be
-					   cut at the bottom of the page */
-  boolean	 PbAcceptLineBreak;	/* indicates wheter the box may be
-					   cut at the end of a line */
-  boolean	 PbBuildAll;	/* indicates if the box image must be built
-				   in one piece or if it can be divided */
-  boolean	 PbNotInLine;	/* box not taken into account in the line layout */
-  boolean	 PbPageFooter;	/* it is a footer box */
-  boolean	 PbPageHeader;	/* it is a header box */
-  boolean	 PbPageBox;	/* it is a page box */
-  int	 PbFooterHeight;        /* if it is a page box, size of the footer
+  Name		PbName;		/* box name */	
+  PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
+  boolean	PbAcceptPageBreak;	/* indicates whether the box may be
+					   broken at the bottom of a page */
+  boolean	PbAcceptLineBreak;	/* indicates whether the box may be
+					   broken at the end of a line */
+  boolean	PbBuildAll;	/* indicates if the box image must be built
+				   in one piece or if it can be partial */
+  boolean	PbNotInLine;	/* box not taken into account in the line
+				   making process */
+  boolean	PbPageFooter;	/* it is a footer box */
+  boolean	PbPageHeader;	/* it is a header box */
+  boolean	PbPageBox;	/* it is a page box */
+  int	 	PbFooterHeight;	/* if it is a page box, size of the footer
 				   in picas */
-  int	 PbHeaderHeight; 	/* if it is a page box, size of the header
+  int		PbHeaderHeight;	/* if it is a page box, size of the header
 				   in picas */
-  int		 PbPageCounter;	/* number of the page counter, only if
+  int		PbPageCounter;	/* number of the page counter, only if
 				   PbPageBox is true */
-  ContentType	 PbContent;     /* compulsory box content */
+  ContentType	PbContent;	/* compulsory box content */
   union
   {
     struct			/* PbContent = ContVariable */
     {
-      int	  _PbContVariable_;	/* number of the variable */
+      int	_PbContVariable_;	/* number of the variable */
     }   s0;
     struct			/* PbContent = ContConst */
     {
-      int	  _PbContConstant_;	/* number of the constant */
+      int	_PbContConstant_;	/* number of the constant */
     } s1;
     struct			/* PbContent = ContElement */
     {
-      int	  _PbContElem_;	/* number of the element type */
-      int	  _PbContRefElem_;	/* number of the type of reference
+      int	_PbContElem_;	/* number of the element type */
+      int	_PbContRefElem_;	/* number of the type of reference
 					   to this element */
     } s2;
     struct			/* PbContent = FreeContent */
     {
-      char  _PbContFree_; /* to make the compiler happy */
+      char	_PbContFree_; /* to make the compiler happy */
     } s3;
   } u;
 } PresentationBox;
@@ -211,11 +211,10 @@ typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
   PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
-PtVertPos, PtHorizPos, PtSize,
-  PtStyle, PtFont, PtUnderline, PtThickness, PtIndent, PtLineSpacing, PtDepth, 
-PtAdjust,
-  PtJustify, PtLineStyle, PtLineWeight, PtFillPattern, PtBackground,
-  PtForeground, PtHyphenate,
+  PtVertPos, PtHorizPos, PtSize, PtStyle, PtFont, PtUnderline, PtThickness,
+  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify, PtLineStyle,
+  PtLineWeight, PtFillPattern, PtBackground, PtForeground, PtHyphenate,
+  PtVertOverflow, PtHorizOverflow,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -229,7 +228,7 @@ typedef enum
 typedef enum
 {
   InheritParent, InheritPrevious, InheritChild, InheritCreator, 
-InheritGrandFather
+  InheritGrandFather
 } InheritMode;
 
 /* the order determines the order of the rules in the presentation schema */
@@ -385,12 +384,12 @@ typedef struct _Condition
 /* a presentation rule */
 typedef struct _PresRule
 {
-  PRuleType       PrType;	/* rule type */	
-  PtrPRule    PrNextPRule;	/* next rule for the same object */
-  PtrCondition    PrCond;	/* application conditions for the rule */	
-  int          PrViewNum;	/* number of the view to which the rule
+  PRuleType     PrType;		/* rule type */	
+  PtrPRule	PrNextPRule;	/* next rule for the same object */
+  PtrCondition  PrCond;		/* application conditions for the rule */
+  int		PrViewNum;	/* number of the view to which the rule
 				   applies */	
-  int  PrSpecifAttr;		/* only for specifical presentation rules
+  int		PrSpecifAttr;	/* only for specifical presentation rules
 				   attached to the abstract tree elements:
 				   number of the attribute to which the
 				   rule corresponds, 0 if the rule is not
@@ -398,26 +397,26 @@ typedef struct _PresRule
   PtrSSchema    PrSpecifAttrSSchema;	/* pointer on the structure
 					   schema defining the attribute
 					   PrSpecifAttr */
-  PresMode	  PrPresMode;	/* computing mode of the value */	
+  PresMode	PrPresMode;	/* computing mode of the value */	
   union
   {
-    struct				/* PrPresMode = PresInherit */
+    struct			/* PrPresMode = PresInherit */
     {
-      InheritMode _PrInheritMode_;
+      InheritMode  _PrInheritMode_;
       boolean      _PrInhAttr_;	/* PrInhDelta is a numerical attribute
 				   number and a value if false */  
-      int      _PrInhDelta_;	/* positive: increment, zero: equality,
+      int	   _PrInhDelta_;	/* positive: increment, zero: equality,
 				   negative: decrement */  
-      boolean      _PrMinMaxAttr_; 	/* PrInhMinOrMax is a numerical
+      boolean	   _PrMinMaxAttr_; /* PrInhMinOrMax is a numerical
 					   attribute number or a value */
-      int      _PrInhMinOrMax_; /* min or max value of the inheritance */
+      int          _PrInhMinOrMax_; /* min or max value of the inheritance */
       TypeUnit     _PrInhUnit_;	/* PrInhDelta and PrInhMinOrMax are
 				   expressed in picas, pixels, relative value,
 				   etc. */
     } s0;
     struct			  /* PrPresMode = PresFunction */
     {
-      FunctionType    _PrPresFunction_;
+      FunctionType _PrPresFunction_;
       boolean      _PrPresBoxRepeat_;	/* presentation box repeated over all
 					   the abstract boxes of the element */
       boolean	   _PrExternal_; /* if PrElement is true, PrExternal indicates
@@ -430,7 +429,7 @@ typedef struct _PresRule
 					   for the column rule only) */
       int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
 					            presentation boxes */
-      Name          _PrPresBoxName_;	/* Name of the first (or only) presentation
+      Name         _PrPresBoxName_;	/* Name of the first (or only) presentation
 					   box to which the function applies */
     } s1;
     struct			 /* PrPresMode = PresImmediate */
@@ -466,7 +465,8 @@ typedef struct _PresRule
 	{
 	  DimensionRule _PrDimRule_;
 	} s4;
-	struct	/* PRuleType = PtJustify */
+	struct	/* PRuleType = PtJustify, PtHyphenate, PtVertOverflow,
+		   PtHorizOverflow */
 	{
 	  boolean _PrJustify_;
 	} s5;
@@ -720,91 +720,89 @@ typedef struct _PresentSchema
 	   box number 1 contains the left-hand column, etc. */
   AttributePres *PsAttrPRule[MAX_ATTR_SSCHEMA];/* pointers on the presentation
 					   rules of the logical attributes,
-					   in the same order than in the table
+					   in the same order as in the table
 					   StructSchema.SsAttribute */
   int		PsNAttrPRule[MAX_ATTR_SSCHEMA]; /* number of presentation rules
 					   packets for each logical attribute,
 					   i.e. size of the strings of
 					   AttributePres in the table PsAttrPRule
-					   in the same order than in the table
+					   in the same order as in the table
 					   StructSchema.SsAttribute */
   PtrPRuleTable	PsElemPRule;    	/* pointers on the beginning of the
 					   string of presentation rules relating
 					   to each type of element, in the same
-					   order than in tha table
+					   order as in tha table
 					   StructSchema.SsRule */
   int    	PsNHeirElems[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
-					  in the same order than in the table
+					  in the same order as in the table
 					  StructSchema.AsAttribute, the number
 					  of elements that can inherit from the
 					  attribute */
   int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* points for each element,
-					  in the same order than in the table
+					  in the same order as in the table
 					  StructSchema.SsRule, on the table
 					  indicating the number of attributes
 					  inherited by the element */
   InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* points for each type
-					  of element, in the same order than in
+					  of element, in the same order as in
 					  the table StructSchema.SsRule, on the
 					  table indicating what are the attributes
 					  inherited by the element */
   int    	PsNComparAttrs[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
-					  in the same order than in the table
+					  in the same order as in the table
 					  StructSchema.SsRule, the number of
 					  attributes comparing themselves to
 					  the attribute in order to deduce the
 					  presentation */
-  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA]; /* points for each 
-attribute,
-					  in the same order than in the table
+  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA]; /* points for each attribute,
+					  in the same order as in the table
 					  StructSchema.SsRule, on the table
 					  indicating which attribute compare
 					  themselves to the attribute in order to
 					  deduce a presentation */
-  boolean     PsAcceptPageBreak[MAX_RULES_SSCHEMA];/* indicates for each 
+  boolean     PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
 element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
-					  element can be cut at the bottom of
-					  a page */
-  boolean     PsAcceptLineBreak[MAX_RULES_SSCHEMA];/* indicates for each 
+					  element can be broken at the bottom
+					  of a page */
+  boolean     PsAcceptLineBreak[MAX_RULES_SSCHEMA];	/* indicates for each 
 element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
-					  element can be cut at the end of a
+					  element can be broken at the end of a
 					  line */
   boolean     PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  image of the box must be built in one
 					  piece or if it can be divided */
   boolean     PsNotInLine[MAX_RULES_SSCHEMA];	/* indicates for each element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, that the
 					  element is not to be taken into
 					  account when making lines */
-  boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each 
-element
-					  type, in the same order than in the
-					  table StructSchema.SsRule, if the
-					  element is displayed in the body of
-					  the pages (if false) or in a footer
-					  or header box (if true) */
+  boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
+					  element type, in the same order as
+					  in the table StructSchema.SsRule, if
+					  the element is displayed in the body
+					  of the pages (false) or in a footer
+					  or header box (true) */
   boolean     PsAssocPaginated[MAX_RULES_SSCHEMA];/* indicates for each element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  element is paginated (meaningful only
 					  for the associated elements lists) */
   int	      PsElemTransmit[MAX_RULES_SSCHEMA];/* for each element
-					  type, in the same order than in the
+					  type, in the same order as in the
 					  table StructSchema.SsRule, index in the
 					  table SPTransmit of the entry giving
 					  the transmission of the element values
 					  to the attributes of the included
 					  documents */
-  int	      PsNTransmElems;	       /* number of entries in the table PsTransmElem */
-  TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table of the transmissions of 
-the
-					  element values to attributes of
+  int	      PsNTransmElems;		  /* number of entries in the table
+					  PsTransmElem */
+  TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table of the transmissions of
+					  the element values to attributes of
 					  included documents */
 } PresentSchema;

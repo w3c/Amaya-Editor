@@ -1226,6 +1226,14 @@ PtrPRule            RP;
 		    printf ("Hyphenate: ");
 		    wrjustif (RP);
 		    break;
+		 case PtVertOverflow:
+		    printf ("VertOverflow: ");
+		    wrjustif (RP);
+		    break;
+		 case PtHorizOverflow:
+		    printf ("HorizOverflow: ");
+		    wrjustif (RP);
+		    break;
 		 case PtDepth:
 		    printf ("Depth: ");
 		    wrnbherit (RP);
@@ -1278,7 +1286,7 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
 
-   i = TtaGetMessageTable ("libdialogue", MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';

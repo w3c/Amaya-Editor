@@ -93,6 +93,8 @@
 #define C_PR_VREF 'v'
 #define C_PR_HREF 'h'
 #define C_PR_DEPTH 'P'
+#define C_PR_VERTOVERFLOW 'O'
+#define C_PR_HORIZOVERFLOW 'o'
 /*    Defined in constpiv.h  */
 /* C_PR_HEIGHT	= 'H'; */
 /* C_PR_WIDTH	= 'L'; */
@@ -102,7 +104,7 @@
 /* C_PR_STYLE	= 'S'; */
 /* C_PR_FONT	= 'F'; */
 /* C_PR_BREAK1	= '1'; */
-/* C_PR_BREAK@	= '2'; */
+/* C_PR_BREAK2	= '2'; */
 /* C_PR_INDENT	= 'R'; */
 /* C_PR_LINESPACING	= 'I'; */
 /* C_PR_JUSTIFY	= 'J'; */

@@ -1448,14 +1448,14 @@ indLine             wi;
 }
 
 /*----------------------------------------------------------------------
-   ChercheTRegle   cherche la regle de type ruleType dans la liste de     
+   GetTypedRule   cherche la regle de type ruleType dans la liste de     
    regles qui commence par la regle firstR.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule     ChercheTRegle (PRuleType ruleType, PtrPRule firstR)
+static PtrPRule     GetTypedRule (PRuleType ruleType, PtrPRule firstR)
 
 #else  /* __STDC__ */
-static PtrPRule     ChercheTRegle (ruleType, firstR)
+static PtrPRule     GetTypedRule (ruleType, firstR)
 PRuleType           ruleType;
 PtrPRule            firstR;
 
@@ -1545,7 +1545,7 @@ indLine             wi;
 {
    if (pPSchema->PsFirstDefaultPRule == NextRule)
       pPSchema->PsFirstDefaultPRule = NULL;
-   if (ChercheTRegle (PtVisibility, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtVisibility, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Visibility par defaut, on en cree une : */
       /* Visibility: Enclosing =; */
      {
@@ -1553,7 +1553,7 @@ indLine             wi;
 	CurRule->PrType = PtVisibility;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtVertRef, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtVertRef, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle VertRef par defaut, on en cree une : */
       /* VertRef: * . Left; */
      {
@@ -1570,7 +1570,7 @@ indLine             wi;
 	CurRule->PrPosRule.PoRefElem = False;
 	CurRule->PrPosRule.PoRefPresBox = 0;
      }
-   if (ChercheTRegle (PtHorizRef, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtHorizRef, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle HorizRef par defaut, on en cree une : */
       /* HorizRef: Enclosed . HRef; */
      {
@@ -1587,7 +1587,7 @@ indLine             wi;
 	CurRule->PrPosRule.PoRefElem = False;
 	CurRule->PrPosRule.PoRefPresBox = 0;
      }
-   if (ChercheTRegle (PtVertPos, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtVertPos, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle VertPos par defaut, on en cree une : */
       /* VertPos: Top = Previous . Bottom; */
      {
@@ -1604,7 +1604,7 @@ indLine             wi;
 	CurRule->PrPosRule.PoRefElem = False;
 	CurRule->PrPosRule.PoRefPresBox = 0;
      }
-   if (ChercheTRegle (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle HorizPos par defaut, on en cree une : */
       /* HorizPos: Left = Enclosing . Left; */
      {
@@ -1621,7 +1621,7 @@ indLine             wi;
 	CurRule->PrPosRule.PoRefElem = False;
 	CurRule->PrPosRule.PoRefPresBox = 0;
      }
-   if (ChercheTRegle (PtHeight, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtHeight, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Height par defaut, on en cree une : */
       /* Height: Enclosed . Height; */
      {
@@ -1640,7 +1640,7 @@ indLine             wi;
 	CurRule->PrDimRule.DrRefElement = True;
 	CurRule->PrDimRule.DrTypeRefElem = 0;
      }
-   if (ChercheTRegle (PtWidth, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtWidth, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Width par defaut, on en cree une : */
       /* Width: Enclosed . Width; */
      {
@@ -1659,7 +1659,7 @@ indLine             wi;
 	CurRule->PrDimRule.DrRefElement = True;
 	CurRule->PrDimRule.DrTypeRefElem = 0;
      }
-   if (ChercheTRegle (PtSize, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtSize, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Size par defaut, on en cree une : */
       /* Size: Enclosing =; */
      {
@@ -1667,7 +1667,7 @@ indLine             wi;
 	CurRule->PrType = PtSize;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtStyle, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Style par defaut, on en cree une : */
       /* Style: Enclosing =; */
      {
@@ -1675,7 +1675,7 @@ indLine             wi;
 	CurRule->PrType = PtStyle;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtFont, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtFont, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Font par defaut, on en cree une : */
       /* Font: Enclosing =; */
      {
@@ -1683,7 +1683,7 @@ indLine             wi;
 	CurRule->PrType = PtFont;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtUnderline, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtUnderline, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Underline par defaut, on en cree une : */
       /* Underline: Enclosing =; */
      {
@@ -1691,7 +1691,7 @@ indLine             wi;
 	CurRule->PrType = PtUnderline;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtThickness, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtThickness, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Thickness par defaut, on en cree une : */
       /* Thickness: Enclosing =; */
      {
@@ -1699,7 +1699,7 @@ indLine             wi;
 	CurRule->PrType = PtThickness;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtIndent, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtIndent, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Indent par defaut, on en cree une : */
       /* Indent: Enclosing =; */
      {
@@ -1707,7 +1707,7 @@ indLine             wi;
 	CurRule->PrType = PtIndent;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtLineSpacing, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtLineSpacing, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle LineSpacing par defaut, on en cree une : */
       /* LineSpacing: Enclosing =; */
      {
@@ -1715,7 +1715,7 @@ indLine             wi;
 	CurRule->PrType = PtLineSpacing;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtDepth, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtDepth, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Depth par defaut, on en cree une : */
       /* Depth: 0; */
      {
@@ -1725,7 +1725,7 @@ indLine             wi;
 	CurRule->PrAttrValue = False;
 	CurRule->PrIntValue = 0;
      }
-   if (ChercheTRegle (PtAdjust, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtAdjust, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Adjust par defaut, on en cree une : */
       /* Adjust: Enclosing =; */
      {
@@ -1733,7 +1733,7 @@ indLine             wi;
 	CurRule->PrType = PtAdjust;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtJustify, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtJustify, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Justify par defaut, on en cree une : */
       /* Justify: Enclosing =; */
      {
@@ -1741,7 +1741,7 @@ indLine             wi;
 	CurRule->PrType = PtJustify;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtLineStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtLineStyle, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle LineStyle par defaut, on en cree une : */
       /* LineStyle: Enclosing =; */
      {
@@ -1749,7 +1749,7 @@ indLine             wi;
 	CurRule->PrType = PtLineStyle;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtLineWeight, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtLineWeight, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle LineWeight par defaut, on en cree une : */
       /* LineWeight: Enclosing =; */
      {
@@ -1757,7 +1757,7 @@ indLine             wi;
 	CurRule->PrType = PtLineWeight;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtFillPattern, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtFillPattern, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle FillPattern par defaut, on en cree une : */
       /* FillPattern: Enclosing =; */
      {
@@ -1765,7 +1765,7 @@ indLine             wi;
 	CurRule->PrType = PtFillPattern;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Background par defaut, on en cree une : */
       /* Background: Enclosing =; */
      {
@@ -1773,7 +1773,7 @@ indLine             wi;
 	CurRule->PrType = PtBackground;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtForeground, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtForeground, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Foreground par defaut, on en cree une : */
       /* Foreground: Enclosing =; */
      {
@@ -1781,13 +1781,31 @@ indLine             wi;
 	CurRule->PrType = PtForeground;
 	InheritRule (InheritParent);
      }
-   if (ChercheTRegle (PtHyphenate, pPSchema->PsFirstDefaultPRule) == NULL)
+   if (GetTypedRule (PtHyphenate, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Hyphenate par defaut, on en cree une : */
       /* Hyphenate: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtHyphenate;
 	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtVertOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle VertOverflow par defaut, on en cree une : */
+      /* VertOverflow: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtVertOverflow;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrJustify = FALSE;
+     }
+   if (GetTypedRule (PtHorizOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle HorizOverflow par defaut, on en cree une : */
+      /* HorizOverflow: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtHorizOverflow;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrJustify = FALSE;
      }
    CurRule->PrNextPRule = NULL;
 }
@@ -1840,10 +1858,9 @@ indLine             wi;
 
 
 /*----------------------------------------------------------------------
-   BooleanValue affecte la valeur bool au parametre de		
-   presentation courant (indique' par InBreakRule,			
-   InLineBreakRule, InPageBreakRule, InGatherRule ou InInLineRule)	
-   de la boite courante ou des regles par defaut.			
+   BooleanValue affecte la valeur bool au parametre de presentation courant
+   (indique' par InBreakRule, InLineBreakRule, InPageBreakRule, InGatherRule
+   ou InInLineRule) de la boite courante ou des regles par defaut.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BooleanValue (boolean bool)
@@ -1946,7 +1963,8 @@ boolean             bool;
       else			/* pour la boite d'un type d'element */
 	 pPSchema->PsNotInLine[CurType - 1] = bool;
    else
-      /* on est dans une regle Justify ou Hyphenate */
+      /* on est dans une regle Justify, Hyphenate, VertOverflow ou
+	 HorizOverflow */
      {
 	CurRule->PrPresMode = PresImmediate;
 	CurRule->PrJustify = bool;
@@ -2573,6 +2591,14 @@ indLine             wi;
 	    case KWD_Hyphenate:
 	       /* Hyphenate */
 	       CreatePRule (PtHyphenate, wi);
+	       break;
+	    case KWD_VertOverflow:
+	       /* VertOverflow */
+	       CreatePRule (PtVertOverflow, wi);
+	       break;
+	    case KWD_HorizOverflow:
+	       /* HorizOverflow */
+	       CreatePRule (PtHorizOverflow, wi);
 	       break;
 	    case KWD_LineSpacing:
 	       /* LineSpacing */

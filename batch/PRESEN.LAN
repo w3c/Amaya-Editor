@@ -94,6 +94,8 @@ Rule1 =	  	  'VertRef' ':' HorizPosition /
 		  'Width' ':' Dimension /
 		  'VertPos' ':' PosH /
 		  'HorizPos' ':' PosV /
+		  'VertOverflow' ':' Boolean /
+		  'HorizOverflow' ':' Boolean /
 		  'Justify' ':' BoolInherit /
 		  'Hyphenate' ':' BoolInherit /
 		  'LineSpacing' ':' DistInherit .

@@ -705,13 +705,14 @@ BOXES
 		END;
 	END;
 
+{ ******
  Image_Frame: BEGIN
 	Content: Graphics 'R';
 	VertPos: Top = Creator . Top - 2 pt;
 	HorizPos: Left = Creator . Left - 2 pt;
 	Width: Creator . Width + 4 pt;
 	Height: Creator . Height + 4 pt;
-	LineWeight: {*****Img_border*****} 2 pt;
+	LineWeight: Img_border pt;
 	Depth: 10;
 	Visibility: Creator =;
 	IN Structure_view
@@ -719,6 +720,7 @@ BOXES
 	IN Alternate_view
 		Visibility: 0;
 	END;
+**** }
 
  FORM_S: BEGIN
 	Content: Text 'FORM';
@@ -5610,6 +5612,7 @@ dans des paragraphes s affichent a cote de leur cadre...
  RowExt:
 	BEGIN
 	Height: Bottom = Referred Table_row . Bottom - TableSimpleVSpace;
+	VertOverflow: Yes;
 	if not last
 	  CreateAfter(ExtCellRightBorder);
 	if last
@@ -5617,6 +5620,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Height : Enclosed . Height;
+		VertOverflow: No;
 		END;	
 	END;
 

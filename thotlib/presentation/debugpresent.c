@@ -1221,6 +1221,14 @@ PtrPRule            RP;
 		    fprintf (output, "Hyphenate: ");
 		    wrjustif (RP);
 		    break;
+		 case PtHorizOverflow:
+		    fprintf (output, "HorizOverflow: ");
+		    wrjustif (RP);
+		    break;
+		 case PtVertOverflow:
+		    fprintf (output, "VertOverflow: ");
+		    wrjustif (RP);
+		    break;
 		 case PtDepth:
 		    fprintf (output, "Depth: ");
 		    wrnbherit (RP);

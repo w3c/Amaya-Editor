@@ -369,8 +369,6 @@ EXCEPT
 	DefaultSelected: Invisible;
 	DefaultChecked:	Invisible;
 
-#include "exc_tableau.h"
-
 	Table:		PageBreak;
 	Column_head:	NoHMove, NoVMove, NoCut, Hidden;
 	Table_head:	NoHMove, NoVMove, NoCut, Hidden, PageBreakRepetition;
@@ -378,15 +376,14 @@ EXCEPT
 	Table_foot:	NoMove, NoResize, NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
 	Table_body:	PageBreakAllowed, Hidden;
-	Table_row:	NoHMove, NoVMove, EXC_ID_Tableau, PageBreakPlace;
-	Table_cell:	NoHMove, NoHResize, EXC_ID_Tableau, EXC_ID_Cellule;
-	Data_cell:	NoHMove, NoHResize, EXC_ID_Tableau, EXC_ID_Cellule;
-	Heading_cell:	NoHMove, NoHResize, EXC_ID_Tableau, EXC_ID_Cellule;
+	Table_row:	NoHMove, NoVMove, PageBreakPlace;
+	Table_cell:	NoHMove, NoHResize;
+	Data_cell:	NoHMove, NoHResize;
+	Heading_cell:	NoHMove, NoHResize;
 	Column_width:	Invisible;
 	ColExt:		Invisible;
-	RowExt:		Invisible, EXC_ID_Extens_Vertic;
+	RowExt:		Invisible;
 	Ref_column:	Invisible;
 	Table_cell_ghost: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
-
 	Ghost_restruct:	Invisible;
 END

@@ -15,7 +15,7 @@
 
 \title{\Huge Les langages de Thot}
 \author{Vincent Quint}
-\date{Version du 28 septembre 1996}
+\date{Version du 14 de'cembre 1996}
 \maketitle
 
 \chapter{Mode`le de document de Thot}
@@ -2360,7 +2360,8 @@ les boi^tes de mise en page.
 {\bf Les boi^tes associe'es aux e'le'ments du document} sont celles qui
 correspondent a` chacun des e'le'ments (de base ou structure's) de la structure
 logique du document. Une telle boi^te contient (de'limite sur le support
-d'affichage) tout le contenu de l'e'le'ment auquel elle est associe'e.
+d'affichage) tout le contenu de l'e'le'ment auquel elle est associe'e (il y a
+une exception, voir les re`gles {\tt VertOverflow} et {\tt HorizOverflow}).
 Toutes ces boi^tes forment une structure arborescente, identique
 a` celle des e'le'ments structuraux auxquels elles correspondent.
 Cet arbre exprime les relations d'inclusion entre les boi^tes~:
@@ -3221,6 +3222,8 @@ re`gles par de'faut~:
    Width: Enclosed . Width;
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
+   VertOverflow: No;
+   HorizOverflow: No;
    Size: Enclosing =;
    Style: Enclosing =;
    Font: Enclosing =;
@@ -3994,7 +3997,7 @@ Les parame`tres sont~:
 \begin{itemize}
 \item la position des axes de re'fe'rence vertical et horizontal de la boi^te,
 \item la position de la boi^te par rapport aux autres boi^tes,
-\item la hauteur et la largeur de la boi^te,
+\item la hauteur et la largeur de la boi^te, avec les exceptions de de'bordement
 \item les caracte'ristiques des lignes contenues dans la boi^te~: interligne,
     renfoncement de la premie`re ligne, justification, coupure des mots en fin
     de ligne,
@@ -4039,6 +4042,8 @@ les re`gles sont termine'es par un point-virgule.
                 'HorizPos' ':' PosH /
                 'Height' ':' Dimension /
                 'Width' ':' Dimension /
+                'VertOverflow' ':' Booleen /
+                'HorizOverflow' ':' Booleen /
                 'LineSpacing' ':' DistanceHerit /
                 'Indent' ':' DistanceHerit /
                 'Adjust' ':' AjusteHerit /
@@ -4534,7 +4539,8 @@ ou
 Width  : Enclosed . Width;
 \end{verbatim}
 qui signifie que la boi^te prend une hauteur (ou une largeur) telle qu'elle
-englobe exactement toutes les boi^tes qu'elle contient.\\
+englobe exactement toutes les boi^tes qu'elle contient, a` l'exception des
+boi^tes qui ont une re`gle {\tt VertOverflow: Yes;} ou {\tt HorizOverflow:Yes;}.
 
 {\bf Note :} les chai^nes de caracte`res (type {\tt TEXT\_UNIT}) doivent
 ge'ne'ralement prendre pour largeur la somme des largeurs des caracte`res qui
@@ -4722,6 +4728,24 @@ Titre_section :
    END;
 \end{verbatim}
 \end{example}
+
+\subsection{De'bordement}
+
+En principe, chaque boi^te d'un e'le'ment de structure englobe comple`tement
+les boi^tes des e'le'ments du sous-arbre correspondant. Il peut e^tre
+ne'cessaire, dans certains cas, de laisser une boi^te de'border de la boi^te
+de son e'le'ment ascendant. Deux re`gles de pre'sentation permettent
+d'obtenir cela, une pour les de'bordements horizontaux, l'autre pour les
+de'bordements verticaux.
+
+Chacune de ces re`gles est simplement constitue'e d'un mot cle' de'finissant
+le type de re`gle, suivi de deux-points et du mot {\tt Yes} ou {\tt No}.
+
+\begin{verbatim}
+               'VertOverflow' ':' Booleen /
+               'HorizOverflow' ':' Booleen .
+     Booleen = 'Yes' / 'No' .
+\end{verbatim}
 
 \subsection{He'ritage}
 
@@ -8262,6 +8286,8 @@ ParamPres     = 'VertRef' ':' PositionHoriz /
                 'HorizPos' ':' PosH /
                 'Height' ':' Dimension /
                 'Width' ':' Dimension /
+                'VertOverflow' ':' Booleen /
+                'HorizOverflow' ':' Booleen /
                 'LineSpacing' ':' DistanceHerit /
                 'Indent' ':' DistanceHerit /
                 'Adjust' ':' AligneHerit /

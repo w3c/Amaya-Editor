@@ -16,7 +16,7 @@
 \title{\Huge The Languages of Thot}
 \author{Vincent Quint\\
 translated by Ethan Munson}
-\date{Version of September 28, 1996}
+\date{Version of December 14, 1996}
 \maketitle
 
 \pagenumbering{roman}
@@ -2306,7 +2306,8 @@ There are three types of boxes:
 {\bf Boxes corresponding to structural elements of the document} are
 those which linked to each of the elements (base or structured) of
 the logical structure of the document.  Such a box contains all the
-contents of the element to which it corresponds.  These boxes form a
+contents of the element to which it corresponds (there is an exception:
+see rules {\tt VertOverflow} and {\tt HorizOverflow}).  These boxes form a
 tree-like structure, identical to that of the structural elements to
 which they correspond.  This tree expresses the inclusion relationships
 between the boxes: a box includes all the boxes of its subtree.  On
@@ -3144,6 +3145,8 @@ the following rules are considered to be the default rules:
    Width: Enclosed . Width;
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
+   VertOverflow: No;
+   HorizOverflow: No;
    Size: Enclosing =;
    Style: Enclosing =;
    Font: Enclosing =;
@@ -3898,7 +3901,7 @@ presentation function.  The parameters are:
 \item the position of the vertical and horizontal reference axes of
 the box,
 \item the position of the box in relation to other boxes,
-\item the height or width of the box,
+\item the height or width of the box, with overflow exceptions,
 \item the characteristics of the lines contained in the box: interline
 spacing, indentation of the first line, justification, hyphenation,
 \item the conditions for breaking the box across pages,
@@ -3940,6 +3943,8 @@ of the rule varies.  All rules are terminated by a semicolon.
                 'HorizPos' ':' HPos /
                 'Height' ':' Dimension /
                 'Width' ':' Dimension /
+                'VertOverflow' ':' Boolean /
+                'HorizOverflow' ':' Boolean /
                 'LineSpacing' ':' DistanceInherit /
                 'Indent' ':' DistanceInherit /
                 'Adjust' ':' AdjustInherit /
@@ -4405,7 +4410,8 @@ or
 Width  : Enclosed . Width;
 \end{verbatim}
 which specifies that the box has a height (or width) such that it
-encloses all the boxes which it contains.
+encloses all the boxes which it contains, excluding boxes having  a rule
+{\tt VertOverflow: Yes;} ou {\tt HorizOverflow:Yes;}.
 
 {\bf Note:} character strings (type {\tt TEXT\_UNIT}) generally must
 use the sum of the widths of the characters which compose them as
@@ -4592,6 +4598,24 @@ SectionTitle :
    END;
 \end{verbatim}
 \end{example}
+
+\subsection{Overflow}
+
+A boxes corresponding to a structural element normally contain all boxes
+corresponding to the elements of its subtree.  However, in some cases,
+it could be necessary to allow a box to jut out from its parent box.
+Two presentation rules indicate that such an overflow is allowed, one
+for horizontal overflow, one for vertical overflow.
+
+Each of these rules is expressed by a keyword followed by a colon
+and the keyword {\tt Yes} or {\tt No}.
+
+\begin{verbatim}
+               'VertOverflow' ':' Boolean /
+               'HorizOverflow' ':' Boolean .
+     Boolean = 'Yes' / 'No' .
+\end{verbatim}
+
 
 \subsection{Inheritance}
 
@@ -8090,6 +8114,8 @@ PresParam       = 'VertRef' ':' HorizPosition /
                   'HorizPos' ':' HPos /
                   'Height' ':' Extent /
                   'Width' ':' Extent /
+                  'VertOverflow' ':' Boolean /
+                  'HorizOverflow' ':' Boolean /
                   'LineSpacing' ':' DistOrInherit /
                   'Indent' ':' DistOrInherit /
                   'Adjust' ':' AlignOrInherit /

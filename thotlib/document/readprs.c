@@ -126,6 +126,12 @@ BinFile             file;
 	    case C_PR_FOREGROUND:
 	       return PtForeground;
 	       break;
+	    case C_PR_VERTOVERFLOW:
+	       return PtVertOverflow;
+	       break;
+	    case C_PR_HORIZOVERFLOW:
+	       return PtHorizOverflow;
+	       break;
 	    default:
 	       error = True;
 	       return PtVisibility;
@@ -1193,6 +1199,8 @@ PtrPRule           *pNextPRule;
 					break;
 				     case PtJustify:
 				     case PtHyphenate:
+				     case PtVertOverflow:
+				     case PtHorizOverflow:
 					TtaReadBool (file, &pPR->PrJustify);
 					break;
 				     default:
