@@ -21,7 +21,7 @@
 21 Le document %s ne peut \352tre ni sauv\351 ni modifi\351
 27 Une erreur de position horizontale : %s
 28 Une erreur de position verticale : %s
-29 Table des regles saturee.
+29 Table des r\350gles satur\351e.
 30 Le sch\351ma de structure %s a \351t\351 modifi\351
 31 Fichier incorrect : %s.STR
 32 Fichier incorrect : %s.PRS
@@ -95,13 +95,13 @@
 100 Nombre maximum de vues atteint.
 101 Il n\'y a rien \340 coller.
 102 Impossible d'ouvrir une nouvelle fen\352tre. Fermer une autre fen\352tre.
-103 *** Thot: erreur irrecuperable ***\n
-104 les documents modifies vont etre sauves sur des fichiers .SAV\n
+103 *** Thot: erreur irr\351cup\351rable ***\n
+104 les documents modifi\351s vont \352tre sauv\351s sur des fichiers .SAV\n
 105 Erreur X11 : %s\n
 106 Pas de selection\n
 107 Impossible de lier le nouvel element\n
 108 procedure SuppRef (refelem.c)\n
-109 Label duplique\' : %s\n
+109 Label dupliqu\351 : %s\n
 110 Fin de fichier pr\351matur\351e
 111 Pas de bounding-box dans le fichier ps %s
 112 Impossible d'ouvrir les motifs de c\351sure : %s
@@ -217,7 +217,7 @@
 223 Graphique
 224 Symbole
 225 Image
-226 Type element
+226 Type d'\351l\351ment
 227 apr\350s
 228 avant
 229 autour
@@ -240,7 +240,7 @@
 246 Lien
 247 R\351f\351rence dans le document\240
 248 Recherche
-249 Element en lecture seule
+249 El\351ment en lecture seule
 250 Plus de remplacements
 251 Ouvrir
 252 Caract\350res standard
@@ -267,7 +267,7 @@
 273 Erreur dans la traduction en PostScript
 274 Refus du spooler sur la destination %s
 275 Creation impossible: %s
-276 Impression t\351rmin\351e: %s
+276 Impression termin\351e: %s
 277 Depuis la page...
 278 ...jusqu'\340 la page
 279 Nombre d'exemplaires
