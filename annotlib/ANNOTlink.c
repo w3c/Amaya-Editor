@@ -591,6 +591,9 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
     /* we didn't read any annotation */
     return;
 
+  /* avoid refreshing the document while adding the annotation links */
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+
   /* Insert the annotations in the body */
   view = TtaGetViewFromName (doc, "Formatted_view");
   body = SearchElementInDoc (doc, HTML_EL_BODY);
@@ -637,6 +640,8 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 	}
        List_delFirst (&list_ptr);
     }
+  /* show the document */
+  TtaSetDisplayMode (doc, DisplayImmediately);  
 }
 
 /*-----------------------------------------------------------------------
