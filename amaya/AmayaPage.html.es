@@ -112,7 +112,7 @@
       </text>
     </g>
     <text id="version" x="360px" y="320"
-          style="font: bold 16px italic; fill: #0192BF;">Versión 8.0
+          style="font: bold 16px italic; fill: #0192BF;">Versión 8.1
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
@@ -153,8 +153,7 @@
                 </msqrt>
               </mfrac>
             </mrow>
-          </math>
-        </foreignObject>
+          </math></foreignObject>
       </switch>
     </g>
   </g>
@@ -162,10 +161,10 @@
 </p>
 
 <div>
-<p>Hola <strong>Amaya</strong> es un cliente Web que actúa como navegador y
-como editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide
-Web Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a>
-con el principal objetivo de demostrar nuevas tecnologías Web en un entorno
+<p><strong>Amaya</strong> es un cliente Web que actúa como navegador y como
+editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide Web
+Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a> con
+el principal objetivo de demostrar nuevas tecnologías Web en un entorno
 <acronym>WYSIWYG</acronym> (What You See Is What You Get = Lo Que Ves Es Lo
 Que Obtienes). La versión actual implementa <acronym>HTML</acronym>
 (Hypertext Markup Language = Lenguaje de Marcas de Hipertexto),
