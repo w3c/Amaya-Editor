@@ -200,21 +200,30 @@ ThotBool            extendSel;
        TtcScrollRight (doc, view);
    else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg)
      {
+       /* try to select up to the top of the current displayed frame */
        do
 	 {
+	   /* scroll as long as the top of the view is not reached */
 	   org = pLastBox->BxYOrg;
 	   TtcLineUp (doc, view);
 	   /* update the new position */
 	   if (org != pLastBox->BxYOrg)
 	     y = y + org - pLastBox->BxYOrg;
 	 }
-       while (pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg &&
-	      (y > 0 || pFrame->FrAbstractBox->AbTruncatedHead));
+       while (y + yDelta < pFrame->FrYOrg &&
+	      /* we don't see the top of the box */
+	      (y < 0 ||
+	       /* the frame is not on the top of the concrete image */
+	       pFrame->FrYOrg > 0 ||
+	       /* we don't see the top of the document */
+	       pFrame->FrAbstractBox->AbTruncatedHead));
      }
    else if (yDelta > 0 && y + yDelta > pFrame->FrYOrg + h)
      {
+       /* try to select down to the bottom of the current displayed frame */
        do
 	 {
+	   /* scroll as long as the bootom of the view is not reached */
 	   org = pLastBox->BxYOrg;
 	   TtcLineDown (doc, view);
 	   /* update the new position */
@@ -222,7 +231,12 @@ ThotBool            extendSel;
 	     y = y + org - pLastBox->BxYOrg;
 	 }
        while (y + yDelta > pFrame->FrYOrg + h &&
-	      (y < pFrame->FrAbstractBox->AbBox->BxHeight || pFrame->FrAbstractBox->AbTruncatedTail));
+	      /* we don't see the bottom of the box */
+	      (org + pLastBox->BxHeight > pFrame->FrYOrg + h ||
+	       /* the frame is not on the top of the concrete image */
+	       pFrame->FrYOrg + h < pFrame->FrAbstractBox->AbBox->BxHeight ||
+	       /* we don't see the top of the document */
+	       pFrame->FrAbstractBox->AbTruncatedTail));
      }
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
