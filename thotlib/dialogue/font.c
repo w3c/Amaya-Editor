@@ -1193,7 +1193,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
 	       c == 0x2062 /* InvisibleTimes */)
 	car =  INVISIBLE_CHAR;
-      else if (c > 0x2000 && c < 0x2300 && c != 0x20AC /* euro */)
+      else if (c > 0x2000 && c < 0x237F && c != 0x20AC /* euro */)
 	{
 	  /* math symbols */
 	  if (fontset->FontSymbol == NULL)
