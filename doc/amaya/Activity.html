@@ -1,22 +1,33 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
    "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
+<!-- X-URL: http://www.w3.org/rnelson/WWW/Privacy/Activity.html -->
 <head>
+<title>Privacy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>Amaya Activity</title>
-<style type="text/css">
-BLOCKQUOTE { color : #003A7F; font-style : italic }
-H2 { color : #00647F }
-H3 { color : #000000 }
-H4 { color : #00647F }
-PRE { color : #007F00; font-family : courier; font-weight : bold }
-B { color : #00647F }
-EM { color : #FFFF00; background-color : #0000FF }
-STRONG { font-weight : bold }
-CAPTION { text-decoration : underline }
-TD { background-color : #FFC1C1 }
-TH { background-color : #9E9E9E }
-P.splash { color : #00647F }
-A:link { color : #0000FF }
+<style>
+  body {
+    margin-left: 10%;
+    margin-right: 10%;
+    font-family: Trebuchet, Arial, sans-serif
+  }
+  h1 { margin-left: -8% }
+  h2,h3,h4,h5,h6 { margin-left: -4% }
+  h2 { color: #006699 }
+  h3 { color: black }
+  h4 { color:#006699 }
+  pre { color:  #003366}
+  em {color:blue; background: yellow}
+  strong { text-transform: uppercase; font-weight: bold }
+  b { color:#006699 }
+  caption { text-decoration: underline; margin-top: 1em }
+  p.splash { color: #006699 }
+  p.banner { margin-left: -4% }
+  blockquote { color: #003366; font-style:italic }
+  pre { font-family: monospace }
+  div.disclaimer {margin-left: -8%}
+.comment { background-color: #FFc0c0}
 </style>
 </head>
 <body bgcolor="#FFFBF0" text="black" link="blue" lang="en">
@@ -24,7 +35,8 @@ A:link { color : #0000FF }
 <a href="http://www.w3.org/"><img alt="W3C" width="72" height="48" border="0"
 src="http://www.w3.org/Icons/w3c_home.gif"></a> <a
 href="http://www.w3.org/UI/"><img src="http://www.w3.org/Icons/ui.gif"
-border="0" width="212" height="48" alt="User Interface Domain"></a></p>
+border="0" width="212" height="48" alt="User Interface Domain"></a> <img
+src="/Icons/ActivityStatement"></p>
 
 <h1>Amaya Activity</h1>
 <p class="splash">
@@ -48,9 +60,6 @@ contain a short tutorial.
 <a href="#role">Amaya at W3C</a>
 </li>
 <li>
-<a href="#accom">Accomplishments</a>
-</li>
-<li>
 <a href="#future">What the future holds</a>
 </li>
 <li>
@@ -60,7 +69,7 @@ contain a short tutorial.
 
 <h2><a name="intro">Introduction</a></h2>
 <p>
-Amaya is W3C's own test-bed browser/editor. With the extremely fast moving
+Amaya is W3C's own versatile editor/browser. With the extremely fast moving
 nature of Web technology, Amaya plays a central role at the Consortium. Easily
 extended to integrate new ideas into its design, Amaya provides developers
 with many specialized features including multiple views, where the internal
@@ -76,7 +85,7 @@ Type Definition (DTD), meaning that it handles the relationships between
 various document components: paragraphs, headings, lists and so on, as laid
 down in the relevant W3C HTML Recommendation. Amaya has been extended to
 demonstrate many features in HTML 4.0, the current recommendation for the
-language.</p>
+language and XHTML, the next generation of HTML.</p>
 
 <h2><a name="role">Amaya at W3C</a></h2>
 <p>
@@ -86,60 +95,101 @@ other groups within the consortium to demonstrate work and to act as an
 experimental platform Amaya has played an important role in the areas of:</p>
 <ul>
 <li>
-<b>Math on the Web:</b> Amaya demonstrates an implementation of <a
-href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
-pages containing mathematical expressions. The screen below shows the way that
-you can display equations on the screen side by side the MathML model used by
-Amaya.
+<b>HTML:</b> As an editor, Amaya is guaranteed to produce HTML 4 compliant
+code. The way it handles documents strictly follows the HTML DTD, the Document
+Type Definition.
 </li>
-</ul>
-<p>
-<img width="350" height="400" src="Icons/amaya-math.gif" alt="Amaya screen
-with equations"></p>
-<ul>
+<li>
+<b>XHTML:</b> Amaya can also handle documents in XHTML, i.e. using the XML
+syntax. Due to namespaces, it can seamlessly integrate and manipulate
+structured objects such as mathematical expressions and vector graphics.
+</li>
 <li>
 <b>HTTP protocol:</b> In its basic version, Amaya implements many web
 protocols and formats: it accesses remote sites by means of HTTP 1.1, as
 implemented in <a href="http://www.w3.org/pub/WWW/Library/">libwww</a>. Amaya
 takes advantage of the most advanced features of HTTP, such as content
-negotiation to retrieve the most appropriate picture format, for instance, or
-keep alive connections to save bandwidth.
+negotiation to retrieve, for instance, the most appropriate picture format,
+keep alive connections to save bandwidth and authentication to allow secure
+remote publishing.
 </li>
-<li>
-<b>Graphics:</b> Amaya displays images in the PNG format, more powerful
-graphics format than GIF and more suited to the needs of the Web. CGM is
-commonly used vector graphics format in computer drawing packages. A CGM
-plug-in developed by Rutherford Appleton Laboratories was first demonstrated
-at EITC'97 in Brussels and in many other events.
+<li><p>
+<b>Math on the Web:</b> Amaya demonstrates an implementation of <a
+href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
+pages containing mathematical expressions. The screen below shows the way that
+you can display equations on the screen side by side the MathML model used by
+Amaya.</p>
 </li>
-<li>
+</ul>
+<p>
+<img width="350" height="400" src="amaya-math.gif" alt="Amaya screen with
+equations"></p>
+<ul>
+<li><p>
+<b>Graphics:</b> Amaya displays images in the PNG format,  which is a more
+powerful graphics format than GIF and more suited to the needs of the Web. A
+CGM plug-in developed by Rutherford Appleton Laboratories was first
+demonstrated at EITC'97 in Brussels and in many other events. An experiment
+with 2D vector graphics was made in Amaya, to prepare the work on Scalable
+Vector Graphics (<a href="http://www.w3.org/Graphics/SVG/">SVG</a>). The
+graphics are written in XML and may be mixed freely with HTML and MathML.</p>
+</li>
+<li><p>
 <b>Style sheets:</b> Amaya has extensive support for the W3C style sheet
 language CSS and offers a simple-to-use interface enabling users to write
 style sheets for Web documents without having to know the details of the
 syntax associated with style sheet rules and properties. You can create
 colored text, change the font, set the background color and control other
-presentational effects.
+presentational effects. CSS style sheets may also be used to alter the look of
+graphics or mathematical expressions.</p>
 </li>
-<li>
-<b>HTML 4:</b> As an editor, Amaya is guaranteed to produce HTML 4 compliant
-code. The way it handles documents is strictly according to the HTML DTD, the
-Document Type Definition.
-</li>
-<li>
+<li><p>
 <b>DOM:</b> Amaya is used to experiment with the Java API developed by the
-Document Object Model (<a href="/DOM/Activity">DOM</a>) activity.
+Document Object Model (<a href="/DOM/Activity">DOM</a>) activity.</p>
 </li>
-<li>
-<b>Amaya in other languages:</b> It is now possible to launch Amaya so that
-the user dialogs are in German or French. The intention is to cover other
-languages in the future.
+<li><p>
+<b>Internationalization:</b> It is now possible to launch Amaya so that the
+user dialogs are in various languages such as English, German or French. Other
+languages may be added by users. Amaya can also handle multilingual documents
+and it takes the current language into account when spell-checking or
+hyphenating.</p>
 </li>
 </ul>
 
 <h2><a name="current">Current Situation</a></h2>
 <p>
 The Amaya software is available for both Windows and Unix platforms and can be
-<a href="Overview.html#L347">downloaded</a> from the W3C site.</p>
+<a href="Overview.html#L347">downloaded</a> from the W3C site. It is available
+both in <a href="User/SourceDist.html">source code</a> and in <a
+href="User/BinDist.html">ready to use</a> forms. The new version 2.0 of Amaya
+is available since the end of April 1999. This new version of Amaya has a
+number of new features including:</p>
+<ul>
+<li><p>
+<em>A secured authentication protocol</em>: This protocol, called message
+digest authentication (see HTTP/1.1 specification), avoids sending a user's
+password in an unencrypted form.</p>
+</li>
+<li><p>
+<em>The lost update checking</em>: Amaya is able to enter into dialog with the
+server (Apache and Jigsaw) to notify the user when pages they want to publish
+have been updated by another user. This can be seen as the first step toward a
+cooperative authoring tool.</p>
+</li>
+<li><p>
+<em>XHTML support</em>: Amaya is able to generate conformant XHTML
+documents.</p>
+</li>
+<li><p>
+<em>New CSS features</em>: With Amaya, users can download, edit and publish
+CSS style sheets as well as HTML pages. Amaya also provides an efficient
+mechanism to test and associate external style sheets with HTML documents.</p>
+</li>
+<li>
+<em>Editing features:</em> a general, multi-level, multi-document undo/redo
+mechanism is available.
+</li>
+</ul>
 <p>
 Documentation is provided at every level, catering for the beginner right
 through to the developer wanting to extend the software for their own
@@ -147,37 +197,45 @@ purposes. There is also an active and very useful mailing list where users can
 discuss Amaya features and how they work, making note of any problems
 experienced using the software.</p>
 <p>
-The current version, Amaya 1.4a, is a public release, available both in <a
-href="User/SourceDist.html">source code</a> and <a
-href="User/BinDist.html">ready to use</a> forms.</p>
-<p>
 The publicly released version is written in C. There is also a version with
-Java support, not publicly available at the moment. If there is enough
-interest for this version it could be released. This version embeds a Java
-virtual machine and uses the HTTP classes from Jigsaw, the object-oriented
-server for HTTP 1.1 written in Java. An API is available from the Java
-language offering an easy customization path for Amaya users.</p>
+Java support, not publicly available at the moment. This experimental version
+embeds a Java virtual machine and uses the HTTP classes from Jigsaw, the
+object-oriented server for HTTP 1.1 written in Java, and provides a DOM Java
+API.</p>
+<p>
+The Amaya CVS base is now publicly available at http://dev.w3.org. It has
+world read-only access. Depending on the response and on the quality of
+contributions, we may open a write access to other developers.</p>
 
 <h2><a name="future">What the Future Holds</a></h2>
 <p>
-Minor releases are expected to fix reported bugs.</p>
+Beyond this, the Amaya team will be working on:</p>
+<ul type="square">
+<li>
+a fuller implementation of CSS2 properties,
+</li>
+<li>
+features to support internationalization and localization for languages using
+non-latin characters,
+</li>
+<li>
+experimentations with XML documents,
+</li>
+<li>
+integration with the GTK toolkit to allow easier experimentations and external
+contributions.
+</li>
+</ul>
 <p>
-We're starting work on opening our Amaya CVS base to the public. In a first
-time, it'll have world read-only access. This should take place in one or two
-months. Depending on the response and on the quality of contributions, we may
-open a write access to other people afterwards.</p>
-<p>
-Beyond this, the Amaya team will be working on a fuller implementation of CSS,
-on Undo and configuration facilies and on features to support
-internationalization. The team will continue to work with other W3C activities
-to help demonstrate and test new developments in a variety of areas.</p>
+The team will continue to work with other W3C activities to help demonstrate
+and test new developments in a variety of areas.</p>
 
 <h2><a name="Contacts">Contacts</a></h2>
 <address>
 <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a>, Amaya Activity
 lead<br>
-<a href="mailto:vincent.quint@w3.org">Vincent Quint</a>,  User Interface
-Domain Leader</address>
+<a href="mailto:vincent.quint@w3.org">Vincent Quint</a>, User Interface Domain
+Leader</address>
 <p>
 <a href="http://validator.w3.org/"><img border="0"
 src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
