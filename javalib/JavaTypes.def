@@ -18,6 +18,8 @@
      0     0   PRule         long       jlong    yes
      0     0   ThotWidget    long       jlong    yes
      0     0   Pixmap        long       jlong    yes
+# the following one is only valid on X, with MS Windows it's an int!!!
+     0     0   ThotIcon      long       jlong    yes
 #  These are true ints
      0     0   Document      int        jint
      0     0   View          int        jint
