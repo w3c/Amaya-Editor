@@ -5477,6 +5477,12 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
+ Embed_type:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
  Link_type:
 	BEGIN
 	CreateBefore(AttrName);

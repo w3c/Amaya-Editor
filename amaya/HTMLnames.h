@@ -321,6 +321,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"text", "", 'A', HTML_ATTR_TextColor, L_BasicValue},
    {"title", "", 'A', HTML_ATTR_Title, L_BasicValue},
    {"type", "button", 'A', HTML_ATTR_Button_type, L_StrictValue},
+   {"type", "embed", 'A', HTML_ATTR_Embed_type, L_TransitionalValue},
    {"type", "li", 'A', HTML_ATTR_ItemStyle, L_BasicValue},
    {"type", "link", 'A', HTML_ATTR_Link_type, L_BasicValue},
    {"type", "a", 'A', HTML_ATTR_Link_type, L_BasicValue},

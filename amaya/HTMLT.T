@@ -1517,6 +1517,12 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ Embed_type: BEGIN
+	Create ' type="';
+	Create Embed_type;
+	Create DoubleQuote;
+	END;
+
  Link_type: BEGIN
 	Create ' type="';
 	Create Link_type;

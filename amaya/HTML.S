@@ -194,10 +194,13 @@ STRUCT
 		{ height   width }
 		  EmbedHidden = Yes_, No_;
 		{ hidden  yes   no }
-		  EmbedName = Text ;
-		{ name }
-		  hspace; vspace) =
+		  EmbedName = Text;
+		{ Embedname }
+		  hspace; vspace;
 		{ hspace  vspace }
+	          Embed_type = Text;
+	        { Embed_type }
+		) =	
 		BEGIN
 		Embed_Content;
 		END;
