@@ -697,8 +697,8 @@ ThotBool            horizRef;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pRefAb;
-  PtrAbstractBox      pAb;
-  PtrBox              pRefBox;
+  PtrAbstractBox      pAb, child;
+  PtrBox              pRefBox, box;
   BoxEdge             refEdge, localEdge;
   OpRelation          op;
   int                 x, y, dist, dim;
@@ -982,9 +982,27 @@ ThotBool            horizRef;
 	    /* memory allocation trouble */
 	    return;
 	}
-      
-      x = pRefBox->BxXOrg;
-      y = pRefBox->BxYOrg;
+      if (pRefBox->BxType == BoSplit && pRefBox->BxNexChild)
+	{
+	  box = pRefBox->BxNexChild;
+	  x = box->BxXOrg;
+	  y = box->BxYOrg;
+	}
+      else if (pRefBox->BxType == BoGhost)
+	{
+	  child = pRefAb;
+	  while (child->AbBox->BxType == BoGhost && child->AbFirstEnclosed &&
+		 child->AbFirstEnclosed->AbBox)
+	    child = child->AbFirstEnclosed;
+	  box = child->AbBox;
+	  x = box->BxXOrg;
+	  y = box->BxYOrg;
+	}
+      else
+	{
+	  x = pRefBox->BxXOrg;
+	  y = pRefBox->BxYOrg;
+	}
       if (pRefAb == pAb->AbEnclosing)
 	{
 	  t = pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
