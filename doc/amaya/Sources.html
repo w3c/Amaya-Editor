@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 <title>
@@ -10,7 +10,8 @@ The Amaya source Tree</title>
 <p>
 <a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
 <a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
-href="Manual.html"><img border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
+alt="Doc"></a></p>
 </div>
 
 <h1>How to install the Amaya Source Release</h1>
@@ -28,11 +29,11 @@ servers, namely and stored in <code>/tmp</code> :</p>
 <li>
 the <strong>Thot</strong> source archive
 <code>thot-src-xxx.tar.gz</code>(where xxx is the <strong>Thot</strong>
-version number). 
+version number).
 <li>
 the <strong>Amaya</strong> source archive
 <code>amaya-src-yyy.tar.gz</code>(where yyy is the <strong>Amaya</strong>
-version number). 
+version number).
 </ul>
 <p>
 Here is a short table of compatibles versions of Thot and Amaya :</p>
@@ -41,66 +42,66 @@ Here is a short table of compatibles versions of Thot and Amaya :</p>
 <tbody>
 <tr>
 <td>
-Thot (xxx) 
+Thot (xxx)
 </td>
 <td>
-Amaya (yyy) 
-</td>
-</tr>
-<tr>
-<td>
-2.0 
-</td>
-<td>
-0.95 
+Amaya (yyy)
 </td>
 </tr>
 <tr>
 <td>
-2.0a 
+2.0
 </td>
 <td>
-0.95a 
-</td>
-</tr>
-<tr>
-<td>
-2.0b 
-</td>
-<td>
-0.95b 
+0.95
 </td>
 </tr>
 <tr>
 <td>
-2.1 
+2.0a
 </td>
 <td>
-1.0 
-</td>
-</tr>
-<tr>
-<td>
-2.1a 
-</td>
-<td>
-1.0a 
+0.95a
 </td>
 </tr>
 <tr>
 <td>
-2.1b 
+2.0b
 </td>
 <td>
-1.0b 
+0.95b
 </td>
 </tr>
 <tr>
 <td>
-2.1c 
+2.1
 </td>
 <td>
-1.1 
+1.0
+</td>
+</tr>
+<tr>
+<td>
+2.1a
+</td>
+<td>
+1.0a
+</td>
+</tr>
+<tr>
+<td>
+2.1b
+</td>
+<td>
+1.0b
+</td>
+</tr>
+<tr>
+<td>
+2.1c
+</td>
+<td>
+1.1
 </td>
 </tr>
 <tr>
@@ -109,6 +110,14 @@ Amaya (yyy)
 </td>
 <td>
 1.1a
+</td>
+</tr>
+<tr>
+<td>
+2.1e
+</td>
+<td>
+1.1b
 </td>
 </tr>
 </tbody>
@@ -133,35 +142,35 @@ The tree is made of (from top to bottom):</p>
 <ul>
 <li>
 <code>amaya</code> directory contains the <strong>amaya</strong> application
-code. 
+code.
 <li>
 <code>thotlib</code> directory contains the Thot library sources. The headers
 defining the interfaces exported by the library are in the
-<code>include</code> sub-directory. 
+<code>include</code> sub-directory.
 <li>
 <code>makes</code> subdirectory, it contains most of the Makefiles and
 dependancies needed to rebuild <strong>amaya</strong> and the Thot compilers
-from the sources. 
+from the sources.
 <li>
-<code>batch</code> directory contains the sources for the schema compilers. 
+<code>batch</code> directory contains the sources for the schema compilers.
 <li>
 <code>font</code> directory contains a few X-Windows specific fonts needed by
-<strong>amaya</strong>. 
+<strong>amaya</strong>.
 <li>
-<code>dicopar</code> directory hold the dictionnaries and hyphenation rules. 
+<code>dicopar</code> directory hold the dictionnaries and hyphenation rules.
 <li>
 <code>config</code> contains all the dialogs messages files both for english
 and french, as well as a few configuration files like the <a
-href="Registry.html">Thot registry</a> (stored in file thot.ini). 
+href="Registry.html">Thot registry</a> (stored in file thot.ini).
 <li>
 <code>doc</code> contains the programming documentation for Thot library and
-languages. 
+languages.
 <li>
 <code>libjpeg</code> and <code>libpng</code> contains the sources of two
-graphic libraries needed by Thot toolkit. 
+graphic libraries needed by Thot toolkit.
 <li>
 <code>w3c-libwww-5.0a</code> is a slightly patched version of the latest
-version of the <a href="../../Library/">WWW Library</a>. 
+version of the <a href="../../Library/">WWW Library</a>.
 </ul>
 <p>
 Amaya now uses autoconf to to set-up the compilation environment and build the
