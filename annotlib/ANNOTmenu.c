@@ -995,11 +995,11 @@ static void BuildAnnotTypesSelector ()
 	  for (; item; item=item->next)
 	    {
 	      RDFClassP subType = (RDFClassP)item->object;
-	      TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
+	      TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
 
 	      t->type = subType;
 	      t->name = ANNOT_GetLabel(&annot_schema_list, subType);
-	      List_add (&typesList, (void*)t);
+	      List_add (&typesList, (void *) t);
 
 	      ustrcpy (&s[i], t->name);
 	      i += ustrlen (&s[i]);
@@ -1014,7 +1014,7 @@ static void BuildAnnotTypesSelector ()
 
 	  t->type = annotClass;
 	  t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
-	  List_add (&typesList, (void*)t);
+	  List_add (&typesList, (void *) t);
 
 	  ustrcpy (s, t->name);
 	  i = ustrlen (s);
@@ -1096,7 +1096,7 @@ Document doc;
 
 	t->type = annotClass;
 	t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
-	List_add (&typesList, (void*)t);
+	List_add (&typesList, (void *) t);
 
 	ustrcpy (s, t->name);
 	i = ustrlen (s);
@@ -1209,7 +1209,7 @@ View                view;
     List *item;
     for (item = typesList; item; item=item->next)
       {
-	TypeSelector *t = (TypeSelector*)item->object;
+	TypeSelector *t = (TypeSelector *) item->object;
 	if (!ustrcmp(t->name, AnnotTypesSelItem))
 	  return t->type;
       }
