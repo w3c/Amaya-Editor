@@ -61,15 +61,16 @@
                         <object class="sizeritem">
                           <object class="wxChoice" name="wxID_CHOICE_LG">
                             <content>
-                              <item>fr</item>
-                              <item>en</item>
                               <item>de</item>
-                              <item>it</item>
-                              <item>tr</item>
+                              <item>en</item>
                               <item>es</item>
-                              <item>pt</item>
                               <item>fi</item>
+                              <item>fr</item>
+                              <item>hu</item>
+                              <item>it</item>
+                              <item>pt</item>
                               <item>ru</item>
+                              <item>tr</item>
                             </content>
                           </object>
                         </object>
