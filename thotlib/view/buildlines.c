@@ -2847,43 +2847,43 @@ int                 frame;
 	     /* Si la selection a encore un sens */
 	     if (pSelBegin->VsBox->BxAbstractBox != NULL)
 		ComputeViewSelMarks (pSelBegin);
-	  }
 
-	pSelEnd = &pFrame->FrSelectionEnd;
-	if (changeSelectEnd && pSelEnd->VsBox != NULL)
-	  {
-	     /* Si la selection a encore un sens */
-	     if (pSelEnd->VsBox->BxAbstractBox != NULL)
+	     pSelEnd = &pFrame->FrSelectionEnd;
+	     if (changeSelectEnd && pSelEnd->VsBox != NULL)
 	       {
-
-		  if (pSelEnd->VsBuffer == pSelBegin->VsBuffer
-		      && pSelEnd->VsIndBuf == pSelBegin->VsIndBuf)
-		    {
-		       pSelEnd->VsIndBox = pSelBegin->VsIndBox;
-		       pSelEnd->VsXPos = pSelBegin->VsXPos;
-		       pSelEnd->VsBox = pSelBegin->VsBox;
-		       pSelEnd->VsNSpaces = pSelBegin->VsNSpaces;
-		       pSelEnd->VsLine = pSelBegin->VsLine;
-		    }
-		  else
-		     ComputeViewSelMarks (pSelEnd);
-
-		  /* Recherche la position limite du caractere */
-		  pSelBox = pSelEnd->VsBox;
-		  if (pSelBox->BxAbstractBox->AbLeafType != LtText)
-		     pSelEnd->VsXPos += pSelBox->BxW;
-		  else if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
-		     pSelEnd->VsXPos += pSelBox->BxW;
-		  else if (pSelEnd->VsIndBox == pSelBox->BxNChars)
-		     pSelEnd->VsXPos += 2;
-		  else
-		    {
-		       charIndex = (unsigned char) (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf - 1]);
-		       if (charIndex == SPACE && pSelBox->BxSpaceWidth != 0)
-			  pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
-		       else
-			  pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
-		    }
+		 /* Si la selection a encore un sens */
+		 if (pSelEnd->VsBox->BxAbstractBox != NULL)
+		   {
+		     
+		     if (pSelEnd->VsBuffer == pSelBegin->VsBuffer
+			 && pSelEnd->VsIndBuf == pSelBegin->VsIndBuf)
+		       {
+			 pSelEnd->VsIndBox = pSelBegin->VsIndBox;
+			 pSelEnd->VsXPos = pSelBegin->VsXPos;
+			 pSelEnd->VsBox = pSelBegin->VsBox;
+			 pSelEnd->VsNSpaces = pSelBegin->VsNSpaces;
+			 pSelEnd->VsLine = pSelBegin->VsLine;
+		       }
+		     else
+		       ComputeViewSelMarks (pSelEnd);
+		     
+		     /* Recherche la position limite du caractere */
+		     pSelBox = pSelEnd->VsBox;
+		     if (pSelBox->BxAbstractBox->AbLeafType != LtText)
+		       pSelEnd->VsXPos += pSelBox->BxW;
+		     else if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
+		       pSelEnd->VsXPos += pSelBox->BxW;
+		     else if (pSelEnd->VsIndBox == pSelBox->BxNChars)
+		       pSelEnd->VsXPos += 2;
+		     else
+		       {
+			 charIndex = (unsigned char) (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf - 1]);
+			 if (charIndex == SPACE && pSelBox->BxSpaceWidth != 0)
+			   pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
+			 else
+			   pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
+		       }
+		   }
 	       }
 	  }
 
