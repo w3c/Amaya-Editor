@@ -26,7 +26,11 @@ STRUCT
 		      linewidth = integer;
 		      linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none, start, end_, both;
-		      depth_ = integer)
+		      depth_ = integer;
+				IntLeftDistance = integer;
+				IntRightDistance = integer;
+				IntUpDistance = integer;
+				IntDownDistance = integer)
                 = GRAPHICS;
             Rectangle
                 (ATTR position = text;
@@ -38,7 +42,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape = yes_, no_;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = BEGIN
                   Label = HTML;
                   GRAPHICS;
@@ -53,7 +61,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
 		= BEGIN
 		  Label;
 		  GRAPHICS;
@@ -66,7 +78,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = BEGIN
                   Label;
 		  GRAPHICS;
@@ -81,7 +97,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = BEGIN
                   Label;
 		  GRAPHICS;
@@ -97,7 +117,11 @@ STRUCT
 		      arrowhead;
 		      linewidth;
 		      linestyle_;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = GRAPHICS;
             Polygon
                 (ATTR position;
@@ -110,7 +134,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = BEGIN
                   Label;
 		  GRAPHICS;
@@ -126,7 +154,11 @@ STRUCT
 		      arrowhead;
 		      linewidth;
 		      linestyle_;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = GRAPHICS;
             ClosedSpline
                 (ATTR position;
@@ -139,7 +171,11 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = BEGIN
                   Label;
 		  GRAPHICS;
@@ -149,12 +185,20 @@ STRUCT
 				IntPosX; IntPosY;
 		      width_;
 				IntWidth;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = HTML;
             Math
                 (ATTR position;
 				IntPosX; IntPosY;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = MathML;
             Group
                 (ATTR position;
@@ -162,13 +206,13 @@ STRUCT
                       direction = left_, right_, up, down;
                       hspace = text;
                       vspace = text;
-				IntLeftDistance = integer;
-				IntRightDistance = integer;
-				IntUpDistance = integer;
-				IntDownDistance = integer;
 		      linewidth;
 		      linestyle_;
-		      depth_)
+		      depth_;
+				IntLeftDistance;
+				IntRightDistance;
+				IntUpDistance;
+				IntDownDistance)
                 = LIST OF (GraphicalElement);
             END;
 

@@ -15,7 +15,7 @@ extern void MapGraphMLAttributeValue ( char *AttrVal, AttributeType attrType, in
 extern void MapGraphMLEntity ( char *entityName, char *entityValue, int valueLength, char *alphabet );
 extern void GraphMLEntityCreated ( unsigned char *entityValue, char *entityName, Document doc );
 extern Element CreateGraphicLeaf ( Element el, Document doc, boolean *closed, int arrowHead );
-extern void ParseDirAndSpaceAttributes ( Element el, Document doc );
+extern void ParseDirAndSpaceAttributes ( Element group, Element el, Document doc );
 extern void GraphMLElementComplete ( Element el, Document doc );
 extern void UpdateInternalAttrForPoly ( Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition );
 extern void CreatePoints ( Attribute attr, Element el, Document doc );
@@ -34,7 +34,7 @@ extern void MapGraphMLAttributeValue (/* char *AttrVal, AttributeType attrType, 
 extern void MapGraphMLEntity (/* char *entityName, char *entityValue, int valueLength, char *alphabet */);
 extern void GraphMLEntityCreated (/* unsigned char *entityValue, char *entityName, Document doc */);
 extern Element CreateGraphicLeaf (/* Element el, Document doc, boolean *closed, int arrowHead */);
-extern void ParseDirAndSpaceAttributes (/* Element el, Document doc */);
+extern void ParseDirAndSpaceAttributes (/* Element group, Element el, Document doc */);
 extern void GraphMLElementComplete (/* Element el, Document doc */);
 extern void UpdateInternalAttrForPoly (/* Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition */);
 extern void CreatePoints (/* Attribute attr, Element el, Document doc */);

@@ -518,7 +518,7 @@ void AttrDirectionModified(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  ParseDirAndSpaceAttributes (event->element, event->document);
+  ParseDirAndSpaceAttributes (event->element, NULL, event->document);
 }
  
 /*----------------------------------------------------------------------
@@ -531,9 +531,30 @@ void AttrSpaceModified(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  ParseDirAndSpaceAttributes (event->element, event->document);
+  ParseDirAndSpaceAttributes (event->element, NULL, event->document);
 }
- 
+
+/*----------------------------------------------------------------------
+ GraphElemPasted
+ An element has been pasted.  If its parent is a Group with an
+ attribute "direction", create the corresponding internal attributes.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void GraphElemPasted (NotifyElement *event)
+#else /* __STDC__*/
+void GraphElemPasted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  Element	parent;
+  ElementType	elType;
+
+  parent = TtaGetParent (event->element);
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == GraphML_EL_Group)
+     ParseDirAndSpaceAttributes (parent, event->element, event->document);
+}
+
 /*----------------------------------------------------------------------
  AttrArrowHeadModified
  -----------------------------------------------------------------------*/
@@ -976,6 +997,13 @@ int                 construct;
 	 TtaInsertFirstChild (&elem, child, doc);
 	 TtaSetStructureChecking (1, doc);
 	 }
+
+      /* if the parent element is a Group, create the internal attribute
+         coreesponding to attribute direction of the parent element */
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == GraphML_EL_Group)
+         ParseDirAndSpaceAttributes (parent, newEl, doc);
+
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
       }
@@ -1034,6 +1062,8 @@ static void         CreateGroup ()
    Attribute	attr;
    AttributeType	attrType;
    int		c1, i, posX, posY, minX, minY;
+   DisplayMode	dispMode;
+   boolean	position;
 
    doc = TtaGetSelectedDocument ();
    if (doc == 0)
@@ -1043,14 +1073,24 @@ static void         CreateGroup ()
    if (el == NULL)
       /* no selection. Return */
       return;
+
+   dispMode = TtaGetDisplayMode (doc);
+   /* ask Thot to stop displaying changes made in the document */
+   if (dispMode == DisplayImmediately)
+      TtaSetDisplayMode (doc, DeferredDisplay);
+
    prevSel = NULL;
    prevChild = NULL;
+   /* Create a Group element */
    elType = TtaGetElementType (el);
    elType.ElTypeNum = GraphML_EL_Group;
    group = TtaNewElement (doc, elType);
+   /* insert the new Group element */
    TtaInsertSibling (group, el, TRUE, doc);
+
    attrType.AttrSSchema = elType.ElSSchema;
    minX = minY = 32000;
+   position = FALSE;
    while (el != NULL)
       {
       attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
@@ -1058,15 +1098,22 @@ static void         CreateGroup ()
       if (attr == NULL)
          posX = 0;
       else
+	 {
          posX = TtaGetAttributeValue (attr);
+	 position = TRUE;
+	 }
       if (posX < minX)
 	 minX = posX;
+
       attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
       attr = TtaGetAttribute (el, attrType);
       if (attr == NULL)
          posY = 0;
       else
+	 {
          posY = TtaGetAttributeValue (attr);
+	 position = TRUE;
+	 }
       if (posY < minY)
 	 minY = posY;
 
@@ -1090,35 +1137,41 @@ static void         CreateGroup ()
       else
          TtaInsertSibling (prevSel, prevChild, FALSE, doc);      
       }
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (group, attr, doc);
-   TtaSetAttributeValue (attr, minX, group, doc);
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (group, attr, doc);
-   TtaSetAttributeValue (attr, minY, group, doc);
-   UpdatePositionAttribute (attr, group, doc);
-   el = TtaGetFirstChild (group);
-   while (el != NULL)
-      {
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	 {
-         posX = TtaGetAttributeValue (attr);
-	 TtaSetAttributeValue (attr, posX - minX, el, doc);
-	 }
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	 {
-         posY = TtaGetAttributeValue (attr);
-	 TtaSetAttributeValue (attr, posY - minY, el, doc);
-	 }
-      UpdatePositionAttribute (attr, el, doc);
-      TtaNextSibling (&el);
-      }
+
+   if (position)
+     {
+     attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+     attr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (group, attr, doc);
+     TtaSetAttributeValue (attr, minX, group, doc);
+     attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+     attr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (group, attr, doc);
+     TtaSetAttributeValue (attr, minY, group, doc);
+     UpdatePositionAttribute (attr, group, doc);
+     el = TtaGetFirstChild (group);
+     while (el != NULL)
+        {
+        attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+        attr = TtaGetAttribute (el, attrType);
+        if (attr != NULL)
+	   {
+           posX = TtaGetAttributeValue (attr);
+	   TtaSetAttributeValue (attr, posX - minX, el, doc);
+	   }
+        attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+        attr = TtaGetAttribute (el, attrType);
+        if (attr != NULL)
+	   {
+           posY = TtaGetAttributeValue (attr);
+	   TtaSetAttributeValue (attr, posY - minY, el, doc);
+	   }
+        UpdatePositionAttribute (attr, el, doc);
+        TtaNextSibling (&el);
+        }
+     }
+   /* ask Thot to display changes made in the document */
+   TtaSetDisplayMode (doc, dispMode);
 }
 
 

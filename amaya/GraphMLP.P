@@ -933,7 +933,7 @@ ATTRIBUTES
    valign = bottom_:
 	BEGIN
 	CreateBefore (ATTR_valign_bottom);
-	VertPos: Bottom = Enclosing . Top;
+	VertPos: Bottom = Enclosing . Bottom;
 	IN Graph_Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
@@ -1012,298 +1012,6 @@ ATTRIBUTES
    direction = down:
 	CreateBefore (ATTR_direction_down);
 
-   IntLeftDistance (Line_):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Rectangle):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (RoundRect):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Circle):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Oval):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Polyline):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Polygon):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Spline):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (ClosedSpline):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Text_):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Math):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntLeftDistance (Group):
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
-   IntRightDistance (Line_):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Rectangle):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (RoundRect):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Circle):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Oval):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Polyline):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Polygon):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Spline):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (ClosedSpline):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Text_):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Math):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-   IntRightDistance (Group):
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
-   IntUpDistance (Line_):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Rectangle):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (RoundRect):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Circle):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Oval):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Polyline):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Polygon):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Spline):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (ClosedSpline):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Text_):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Math):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntUpDistance (Group):
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-
-   IntDownDistance (Line_):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Rectangle):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (RoundRect):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Circle):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Oval):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Polyline):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Polygon):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Spline):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (ClosedSpline):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Text_):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Math):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-   IntDownDistance (Group):
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-
    hspace:
 	BEGIN
 	CreateBefore (ATTR_hspace);
@@ -1314,6 +1022,34 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_vspace);
 	CreateBefore (VALUE_vspace);
+	END;
+
+   IntLeftDistance:
+	BEGIN
+	HorizPos: Right = Previous . Left - IntLeftDistance pt;
+	IN Graph_Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+   IntRightDistance:
+	BEGIN
+	HorizPos: Left = Previous . Right + IntRightDistance pt;
+	IN Graph_Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+   IntUpDistance:
+	BEGIN
+	VertPos: Bottom = Previous . Top - IntUpDistance pt;
+	IN Graph_Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+
+   IntDownDistance:
+	BEGIN
+	VertPos: Top = Previous . Bottom + IntDownDistance pt;
+	IN Graph_Structure_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
 END

@@ -537,98 +537,140 @@ Document	doc;
 
 /*----------------------------------------------------------------------
    ParseDirAndSpaceAttributes
-   Create or update attribute IntLeftDistance, IntRightDistance,
-   IntUpDistance, IntDownDistance of element el, according to the
-   value of its attributes direction, vspace and hspace.
+   Depending on the values of attributes direction, vspace and hspace
+   of element "group", create (or update) attributes IntLeftDistance,
+   IntRightDistance, IntUpDistance, IntDownDistance for all children
+   if el is NULL or for element el if it's not NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      ParseDirAndSpaceAttributes (Element el, Document doc)
+void      ParseDirAndSpaceAttributes (Element group, Element el, Document doc)
 #else
-void      ParseDirAndSpaceAttributes (el, doc)
+void      ParseDirAndSpaceAttributes (group, el, doc)
+Element		group;
 Element		el;
 Document	doc;
 
 #endif
 {
    ElementType		elType;
+   Element		child;
    AttributeType	attrType, spaceAttrType;
    Attribute		dirAttr, spaceAttr, attr, intAttr;
    int			length, val, dir;
    char			*text, *ptr;
    DisplayMode		dispMode;
 
-   dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
-      TtaSetDisplayMode (doc, DeferredDisplay);
-   elType = TtaGetElementType (el);
+   elType = TtaGetElementType (group);
    attrType.AttrSSchema = elType.ElSSchema;
    attrType. AttrTypeNum = GraphML_ATTR_direction;
-   dirAttr = TtaGetAttribute (el, attrType);
+   dirAttr = TtaGetAttribute (group, attrType);
    if (dirAttr)
+      /* Do nothing if attribute "direction" is missing */
+      {
       dir = TtaGetAttributeValue (dirAttr);
-   else
-      /* default direction is left to right */
-      dir = GraphML_ATTR_direction_VAL_right_;
 
-   /* remove existing Int*Distance attributes */
-   attrType. AttrTypeNum = GraphML_ATTR_IntLeftDistance;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr)
-	 TtaRemoveAttribute (el, attr, doc);
-   attrType. AttrTypeNum = GraphML_ATTR_IntRightDistance;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr)
-	 TtaRemoveAttribute (el, attr, doc);
-   attrType. AttrTypeNum = GraphML_ATTR_IntUpDistance;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr)
-	 TtaRemoveAttribute (el, attr, doc);
-   attrType. AttrTypeNum = GraphML_ATTR_IntDownDistance;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr)
-	 TtaRemoveAttribute (el, attr, doc);
-   spaceAttrType.AttrSSchema = elType.ElSSchema;
-   switch (dir)
-	{
-	case GraphML_ATTR_direction_VAL_left_:
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+         TtaSetDisplayMode (doc, DeferredDisplay);
+   
+      /* remove existing attributes Int*Distance, position, IntPosX, IntPosY
+         from all children */
+      if (el)
+         child = el;
+      else
+         child = TtaGetFirstChild (group);
+      while (child != NULL)
+         {
+         attrType. AttrTypeNum = GraphML_ATTR_IntLeftDistance;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_IntRightDistance;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_IntUpDistance;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_IntDownDistance;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_position;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_IntPosX;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         attrType. AttrTypeNum = GraphML_ATTR_IntPosY;
+         attr = TtaGetAttribute (child, attrType);
+         if (attr)
+	    TtaRemoveAttribute (child, attr, doc);
+         if (el)
+            child = NULL;
+         else
+            TtaNextSibling (&child);
+         }
+
+      spaceAttrType.AttrSSchema = elType.ElSSchema;
+      switch (dir)
+	   {
+	   case GraphML_ATTR_direction_VAL_left_:
 		attrType. AttrTypeNum = GraphML_ATTR_IntLeftDistance;
 		spaceAttrType.AttrTypeNum = GraphML_ATTR_hspace;
 		break;
-	case GraphML_ATTR_direction_VAL_right_:
+	   case GraphML_ATTR_direction_VAL_right_:
 		attrType. AttrTypeNum = GraphML_ATTR_IntRightDistance;
 		spaceAttrType.AttrTypeNum = GraphML_ATTR_hspace;
 		break;
-	case GraphML_ATTR_direction_VAL_up:
+	   case GraphML_ATTR_direction_VAL_up:
 		attrType. AttrTypeNum = GraphML_ATTR_IntUpDistance;
 		spaceAttrType.AttrTypeNum = GraphML_ATTR_vspace;
 		break;
-	case GraphML_ATTR_direction_VAL_down:
+	   case GraphML_ATTR_direction_VAL_down:
 		attrType. AttrTypeNum = GraphML_ATTR_IntDownDistance;
 		spaceAttrType.AttrTypeNum = GraphML_ATTR_vspace;
 		break;
-	}
-   val = 0;
-   spaceAttr = TtaGetAttribute (el, spaceAttrType);
-   if (spaceAttr)
-     {
-     length = TtaGetTextAttributeLength (spaceAttr) + 2;
-     text = TtaGetMemory (length);
-     if (text != NULL)
-       {
-       /* get the value of the text attribute */
-       TtaGiveTextAttributeValue (spaceAttr, text, &length); 
-       /* parse the text value and extract the internal value */
-       ptr = text;
-       sscanf (ptr, "%d", &val);
-       ptr = SkipInt (ptr);
-       ptr = SkipSep (ptr);
-       TtaFreeMemory (text);
-       }
-     }
-   intAttr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (el, intAttr, doc);
-   TtaSetAttributeValue (intAttr, val, el, doc);
-   TtaSetDisplayMode (doc, dispMode);
+	   }
+      val = 0;
+      spaceAttr = TtaGetAttribute (group, spaceAttrType);
+      if (spaceAttr)
+        {
+        length = TtaGetTextAttributeLength (spaceAttr) + 2;
+        text = TtaGetMemory (length);
+        if (text != NULL)
+          {
+          /* get the value of the text attribute */
+          TtaGiveTextAttributeValue (spaceAttr, text, &length); 
+          /* parse the text value and extract the internal value */
+          ptr = text;
+          sscanf (ptr, "%d", &val);
+          ptr = SkipInt (ptr);
+          ptr = SkipSep (ptr);
+          TtaFreeMemory (text);
+          }
+        }
+
+      if (el)
+         child = el;
+      else
+         child = TtaGetFirstChild (group);
+      while (child != NULL)
+         {
+         intAttr = TtaNewAttribute (attrType);
+         TtaAttachAttribute (child, intAttr, doc);
+         TtaSetAttributeValue (intAttr, val, child, doc);
+         if (el)
+            child = NULL;
+         else
+            TtaNextSibling (&child);
+         }
+
+      TtaSetDisplayMode (doc, dispMode);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -696,10 +738,10 @@ Document	doc;
 	   CreateEnclosingElement (child, elType, doc);
 	   }
 	}
-     /* if it'a a Group element, process its attributes direction, vspace
+     /* if it's a Group element, process its attributes direction, vspace
         and hspace */
      else if (elType.ElTypeNum == GraphML_EL_Group)
-	ParseDirAndSpaceAttributes (el, doc);
+	ParseDirAndSpaceAttributes (el, NULL, doc);
      else
 	{
         /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
