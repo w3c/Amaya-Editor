@@ -2189,6 +2189,9 @@ static void Image_collapse_on_click(NotifyElement *event)
  	ElementType elType;
 	pmapping_animated mapping;
 	Document basedoc = Get_basedoc_of (event->document);
+	DisplayMode dp = TtaGetDisplayMode (event->document);
+	
+	TtaSetDisplayMode (event->document, DeferredDisplay);
 	
 	lang = TtaGetDefaultLanguage ();
 	parent = TtaGetParent (event->element);
@@ -2250,6 +2253,7 @@ static void Image_collapse_on_click(NotifyElement *event)
 		dt[basedoc].vertical_pos += hg-cte_collapsed_group_height;
 		
 	}
+	TtaSetDisplayMode (event->document, dp);
 }
 #endif /* _SVGANIM */
 
@@ -2370,11 +2374,38 @@ static void Show_selected_element (NotifyElement *event)
 {
 	pmapping_animated mapping;
 	Document basedoc = Get_basedoc_of (event->document);
-	Element title_group = TtaGetParent (TtaGetParent (event->element));
+	Element title_group = TtaGetParent (event->element);
 	mapping = Get_mapping_from_title_group (basedoc, title_group);
 	TtaSelectElement (basedoc, mapping->animated_elem);
 }
 #endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+  TimelineElSelection
+  ----------------------------------------------------------------------*/
+ThotBool TimelineElSelection (NotifyElement *event)
+{
+	ThotBool res = FALSE;
+#ifdef _SVGANIM
+	Element parent;
+	ElementType elType;
+	
+	parent = event->element;
+	elType = TtaGetElementType (parent);
+
+	if (elType.ElTypeNum == Timeline_EL_rect_id) { 
+		res = TRUE;
+		Show_selected_element (event);	
+}
+
+	TtaSetDocumentUnmodified (event->document);
+#endif /* _SVGANIM */
+	return res;
+}
+
+
 
 /*----------------------------------------------------------------------
   TimelineElClicked
@@ -2384,27 +2415,18 @@ ThotBool TimelineElClicked (NotifyElement *event)
 {
 	ThotBool res = FALSE;
 #ifdef _SVGANIM
-	DisplayMode dp = TtaGetDisplayMode (event->document);
 	Element parent;
 	ElementType elType;
 	
 	parent = TtaGetParent (event->element);
 	elType = TtaGetElementType (parent);
 
-	TtaSetDisplayMode (event->document, DeferredDisplay);
-
 	if (elType.ElTypeNum == Timeline_EL_image_collapse) 
 		Image_collapse_on_click(event);
 	else if (elType.ElTypeNum == Timeline_EL_image_keypos) 
 		Define_keytime (event);
-	else if (elType.ElTypeNum == Timeline_EL_rect_id) 
-		Show_selected_element (event);
-	else if (elType.ElTypeNum == Timeline_EL_text_id) 
-		Show_selected_element (event);
-
 
 	TtaSetDocumentUnmodified (event->document);
-	TtaSetDisplayMode (event->document, dp);
 #endif /* _SVGANIM */
 	return res;
 }

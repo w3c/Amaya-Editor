@@ -3,6 +3,7 @@ APPLICATION Timeline;
 DEFAULT
    BEGIN
 	 ElemLClick.Pre -> TimelineElClicked;
+	 ElemSelect.Pre -> TimelineElSelection;
 	 DocClose.Post -> TimelineWindowClose;
 	 ElemTextModify.Post -> TimelineTextPostModify;
    END;
