@@ -1966,7 +1966,14 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
       /* check if it's the default Welcome page */
 #ifndef _WINDOWS
 	  if (WelcomePage)
-	    getcwd (s, MAX_LENGTH);
+	    {
+	      getcwd (s, MAX_LENGTH);
+	      if (name[0] != EOS)
+		{
+		  strcat (s, DIR_STR);
+		  strcat (s, name);
+		}
+	    }
 	  else
 #endif /* _WINDOWS */
       if (name[0] == EOS)
