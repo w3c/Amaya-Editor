@@ -6,6 +6,7 @@
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
+  #include "wxdialog/SearchDlgWX.h"
   #include "AmayaApp.h"
 #endif /* _WX */
 
@@ -144,6 +145,28 @@ void CreateTitleDlgWX ( ThotWindow parent,
       parent,
       wx_title,
       wx_doc_title );
+
+  p_dlg->ShowModal();
+  p_dlg->Destroy();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateSearchDlgWX create the Search dialog
+  params:
+    + doc_title : the current document title
+  returns:
+  ----------------------------------------------------------------------*/
+void CreateSearchDlgWX ( ThotWindow parent,  char* caption)
+{
+#ifdef _WX
+  wxString wx_caption(caption, AmayaApp::conv_ascii);
+
+  wxLogDebug( _T("SearchDlgWX - caption=")+wx_caption );
+
+  SearchDlgWX * p_dlg = new SearchDlgWX(
+      parent,
+      wx_caption );
 
   p_dlg->ShowModal();
   p_dlg->Destroy();

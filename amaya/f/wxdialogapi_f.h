@@ -20,6 +20,8 @@ extern void CreateOpenDocDlgWX ( ThotWindow parent,
                                  DocumentType doc_type );
 extern void CreateTitleDlgWX ( ThotWindow parent,
                                char *doc_title );
+extern void CreateSearchDlgWX ( ThotWindow parent,
+                                char* caption );
 
 #else /* __STDC__ */
 
@@ -37,6 +39,8 @@ extern void CreateOpenDocDlgWX ( ThotWindow parent,
                                    DocumentType doc_type );
 extern void CreateTitleDlgWX ( ThotWindow parent,
                                  char *doc_title );
+extern void CreateSearchDlgWX ( ThotWindow parent,
+                                  char* caption );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

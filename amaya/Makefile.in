@@ -228,6 +228,7 @@ AMAYA_OBJ = \
 	wxdialog/TitleDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
+	wxdialog/SearchDlgWX.o \
 	wxdialogapi.o \
 	AmayaApp.o \
 	wxAmayaTimer.o \

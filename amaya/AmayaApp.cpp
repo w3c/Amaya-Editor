@@ -115,6 +115,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/InitConfirmDlgWX.xrc") );
   wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/OpenDocDlgWX.xrc") );
   wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/TitleDlgWX.xrc") );
+  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/SearchDlgWX.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger
   
   // just call amaya main from EDITORAPP.c

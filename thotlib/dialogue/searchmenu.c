@@ -29,6 +29,10 @@
   #include "wininclude.h"
 #endif /* _WINGUI */
 
+#ifdef _WX
+  #include "wxinclude.h"
+#endif /*# _WX */
+
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "edit_tv.h"
@@ -408,6 +412,9 @@ void TtcSearchText (Document document, View view)
   int                 firstChar;
   int                 lastChar, i;
   ThotBool            ok;
+#ifdef _WX
+static char           wxCaption[200];
+#endif /* _WX */
 
   pDoc = LoadedDocument[document - 1];
   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -428,6 +435,9 @@ void TtcSearchText (Document document, View view)
 #ifdef _WINGUI
   strcpy (msgCaption, bufTitle);
 #endif /* _WINGUI */
+#ifdef _WX
+  strcpy (wxCaption, bufTitle);
+#endif /* _WX */
   /* feuille de dialogue Rechercher texte et structure */
   strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
@@ -510,10 +520,15 @@ void TtcSearchText (Document document, View view)
   if (!ok)
     TtaSetMenuForm (NumMenuOrSearchText, 3);
 #endif /* _GTK */
+
 #ifdef _WINGUI
   searchEnd = FALSE;
   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
+
+#ifdef _WX
+  CreateSearchDlgWX( TtaGetViewFrame (document, view), wxCaption );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
