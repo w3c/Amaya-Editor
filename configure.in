@@ -235,6 +235,7 @@ GTK_OPTIONS=
 AC_ARG_WITH(gtk, [  --with-gtk              use GTK instead of Motif])
 if test "$withval" = "yes" ; then
   for ac_dir in               \
+    /usr/lib/glib/include     \
     /usr/X11R6/include        \
                               \
     /usr/include/X11R6        \
@@ -249,7 +250,6 @@ if test "$withval" = "yes" ; then
     /usr/X386/include         \
     /usr/x386/include         \
     /usr/XFree86/include/X11  \
-    /usr/lib/glib/include     \
     /usr/dt/include           \
     /usr/include              \
     /usr/local/include        \
@@ -262,11 +262,11 @@ if test "$withval" = "yes" ; then
     fi
   done
 
-GTK_INCLUDES="-I$ac_gtk_includes"
+GTK_INCLUDES="`gtk-config --cflags`"
 AC_SUBST(GTK_INCLUDES)
-GTK_LIBRARIES="-lgtk -lgdk_imlib -ljpeg -lpng -ltiff -lz -lgif -lgdk -rdynamic -lgmodule -lglib"
+GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib -ltiff -lgif"
 AC_SUBST(GTK_LIBRARIES)
-GTK_OPTIONS=-DGTK
+GTK_OPTIONS=-D_GTK
   no_motif=yes
 else
 dnl
@@ -425,7 +425,9 @@ else
         *-*sun-solaris* )
          MOTIF_LIBRARIES="${MOTIF_LIBRARIES} -R$motif_libraries"
         ;;
-    esac    
+    esac
+  else
+  MOTIF_LIBRARIES="-lXm"
   fi
 fi
 AC_SUBST(MOTIF_INCLUDES)

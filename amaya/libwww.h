@@ -23,6 +23,12 @@ Things to put in sysdep.h???
 typedef unsigned long ms_t;
 /************/
 
+#ifndef _WINDOWS
+#if !defined(BOOL)
+typedef char BOOL;
+#endif
+#endif
+
 #include "WWWLib.h"
 #include "AHTInit.h"
 #include "WWWApp.h"
