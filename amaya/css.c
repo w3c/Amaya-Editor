@@ -671,7 +671,7 @@ CSSInfoPtr          css;
       if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
-	  res = ufopen (tempfile, _ReadMODE_);
+	  res = fopen (tempfile, "r");
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -773,7 +773,7 @@ Document            doc;
   if (ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
-      res = ufopen (ptr, _ReadMODE_);
+      res = fopen (ptr, "r");
       if (res != NULL)
 	{
 #     ifdef _WINDOWS

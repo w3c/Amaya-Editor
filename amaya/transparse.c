@@ -32,7 +32,7 @@
 #endif
 
 
-extern CHAR_T   SchemaPath[MAX_PATH];
+extern STRING   SchemaPath;
 
 
 /* pattern and rules internal representation */

@@ -85,6 +85,7 @@
 int  Window_Curs;
 
 CHAR_T docToOpen [256];
+CHAR_T DocToOpen [256];
 extern ThotBool viewClosed;
 /* extern bmpID;  */
 #endif /* _WINDOWS */
@@ -1317,8 +1318,7 @@ STRING             title;
       usprintf (s, TEXT("%s"), LastURLName);
    else
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
-
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
+     CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
 #endif /* _WINDOWS */
 }
 
@@ -3651,7 +3651,11 @@ static void	SetFileSuffix ()
 	  ustrcpy (filename,SavePath );
 	  ustrcat (filename, DIR_STR);
 	  ustrcat (filename, SaveName);
+#     ifdef _WINDOWS
+      sprintf (DocToOpen, filename);
+#     else /* _WINDOWS */
 	  TtaSetTextForm (BaseDialog + NameSave, filename);
+#     endif /* _WINDOWS */
 	  TtaFreeMemory (filename);
 	}
     }
@@ -3896,10 +3900,14 @@ STRING              data;
        switch (val)
 	 {
 	 case 0:	/* "Save as HTML" button */
+#      ifdef _WINDOWS
+	   SaveAsHTML = TRUE;
+	   SaveAsXHTML = FALSE;
+	   SaveAsText = FALSE;
+#      else  /* !_WINDOWS */
 	   SaveAsHTML = !SaveAsHTML;
 	   SaveAsXHTML = !SaveAsHTML;
 	   SaveAsText = FALSE;
-#      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 #       endif /* _WINDOWS */
@@ -3907,10 +3915,14 @@ STRING              data;
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
+#      ifdef _WINDOWS
+	   SaveAsHTML = FALSE;
+	   SaveAsXHTML = TRUE;
+	   SaveAsText = FALSE;
+#      else  /* !_WINDOWS */ 
 	   SaveAsXHTML = !SaveAsXHTML;
 	   SaveAsHTML = !SaveAsXHTML;
 	   SaveAsText = FALSE;
-#      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 #      endif /* _WINDOWS */
@@ -3918,10 +3930,14 @@ STRING              data;
 	   SetFileSuffix ();
 	   break;
 	 case 2:	/* "Save as Text" button */
+#      ifdef _WINDOWS
+	   SaveAsText = TRUE;
+	   SaveAsHTML = FALSE;
+	   SaveAsXHTML = FALSE;
+#      else  /* !_WINDOWS */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
 	   SaveAsXHTML = FALSE;
-#      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 #      endif /* _WINDOWS */
@@ -4288,7 +4304,7 @@ static ThotBool       RestoreAmayaDocs ()
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
       if (UserAnswer)
-        f = ufopen (tempname, _ReadMODE_);
+        f = fopen (tempname, "r");
       else
 	f = NULL;
 
@@ -4342,7 +4358,7 @@ static ThotBool       RestoreAmayaDocsAfterRestart ()
   aDoc = FALSE;
   if (TtaFileExist (tempname))
     {   
-      f = ufopen (tempname, _ReadMODE_);
+      f = fopen (tempname, "r");
     
       if (f != NULL)
 	{

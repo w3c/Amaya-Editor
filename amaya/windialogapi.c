@@ -78,6 +78,7 @@ int                WIN_NormalLineSpacing;
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
 extern STRING       AttrHREFvalue;
+extern CHAR_T       DocToOpen [256];
 extern CHAR_T       WIN_buffMenu [MAX_TXT_LEN];
 extern CHAR_T       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern BOOL         TtIsPrinterTrueColor;
@@ -2340,9 +2341,11 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	static CHAR_T txt [500];
+	CHAR_T      txt [500];
 	static HWND transURLWnd;
 	static HWND copyImgWnd;
+
+    txt [0] = 0;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    currentDlg = hwnDlg;
@@ -2374,8 +2377,8 @@ LPARAM lParam;
 		   case WM_COMMAND:
 			    if (HIWORD (wParam) == EN_UPDATE) {
 				   if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
-					  GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
-					  ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
+					        GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
+					        ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
 				   } else if (LOWORD (wParam) == IDC_EDITIMGSAVE) {
 					      GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, urlToOpen, sizeof (urlToOpen) - 1);
 					      ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);
@@ -2386,20 +2389,23 @@ LPARAM lParam;
 							EnableWindow (transURLWnd, TRUE);
 							EnableWindow (copyImgWnd, TRUE);
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 0);
-						    break;
+                            SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+						    return 0;
 
 				       case IDC_XML:
 							EnableWindow (transURLWnd, TRUE);
 							EnableWindow (copyImgWnd, TRUE);
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 1);
-						    break;
+                            SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+						    return 0;
 
 					   case IDC_TEXT:
 							EnableWindow (transURLWnd, FALSE);
 							EnableWindow (copyImgWnd, FALSE);
 
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 2);
-						    break;
+                            SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+						    return 0;
 
 					   case IDC_COPYIMG:
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 4);
@@ -2453,6 +2459,9 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+    HWND EditURLWnd;
+    int iStart, iEnd;
+
     switch (msg) {
 	       case WM_INITDIALOG:
                 SetWindowText (hwnDlg, wndTitle);
@@ -2513,7 +2522,7 @@ LPARAM lParam;
 				}
 				break;
 				default: return FALSE;
-	}
+	} 
 	return TRUE ;
 }
 
