@@ -357,6 +357,7 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
 #else /* IV */
 #   ifdef _WINDOWS
+   {' ', '\'', 0x27},	/* \' */
    {'A', '`',  0xC0},	/* Agrave */
    {'A', '\'', 0xC1},	/* Aacute */
    {'A', '^',  0xC2},	/* Acircumflex */
@@ -1005,14 +1006,16 @@ char*  k;
 
       mk_state = 0;
       for (index = 0; index < NB_MK; index++)
-          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (char) wParam))  
+          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (char) wParam)) {
              /*
               * The corresponding sequence is found. 
               * Generation of the corresponding character
               */
 	         *k = mk_tab[index].r;
+             return 1;
+		  }
 
-          return (1);
+      return (1);
    }
    if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*') {
       /* start of a compose sequence */
@@ -1021,8 +1024,8 @@ char*  k;
        previous_value  = keycode;
        previous_state  = state;
        return (0);
-     }
-     return (1);
+   }
+   return (1);
 }
 #endif /* _WINDOWS */
 
