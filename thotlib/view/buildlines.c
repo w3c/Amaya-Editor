@@ -2962,11 +2962,13 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 				c = ibox1->BxBuffer->BuPrevious->BuContent[ibox1->BxBuffer->BuPrevious->BuLength - 1];
 			      else
 				c = 0;
-			      if (c == SPACE)
+			      if (c == 0xA /* LINEFEED */)
 				{
-				  width += diff * x;
-				  nspace += diff;
+				  diff -= 1;
+				  width += BoxCharacterWidth (c, ibox1->BxFont);
 				}
+			      width = width + (diff * x);
+			      nspace += diff;
 			    }
 			  else if (ibox1->BxType == BoDotted)
 			    /* remove the hyphen width */
