@@ -1049,7 +1049,7 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 	       "<t:root r:resource=\"%s\" />\n",
 	       annot->rootOfThread);
       fprintf (fp,
-	       "<t:inReplyTo r:resource==\"%s\" />\n",
+	       "<t:inReplyTo r:resource=\"%s\" />\n",
 	       annot->inReplyTo);
     }
 #endif /* ANNOT_ON_ANNOT */
