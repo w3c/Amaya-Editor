@@ -911,7 +911,14 @@ static void FreePath (PtrBox box)
 
 /*----------------------------------------------------------------------
   SplitForScript splits a box due to a change of script.
-  Return the last box generated.
+  Parameters:
+  * script of the first box.
+  * lg = number of characters in the first box.
+  * width, height of the first box.
+  * spaces = number of spaces in the first box.
+  * ind = buffer index of the first character of the last box.
+  * pBuffer = buffer that includes the first character of the last box.
+  Return the last generated box.
   ----------------------------------------------------------------------*/
 PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 		       int width, int height, int spaces, int ind,

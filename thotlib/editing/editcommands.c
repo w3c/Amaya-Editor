@@ -2603,7 +2603,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   int                 visib, zoom;
   int                 ind;
   int                 previousChars, previousInd, previousPos;
-  char                script;
+  char                script, oldscript;
   ThotBool            beginOfBox;
   ThotBool            toDelete;
   ThotBool            toSplit, toSplitForScript = FALSE;
@@ -3168,32 +3168,43 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      if  (toSplitForScript)
 			{
 			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
-			  /* split before the new character */
-			  box = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
-						 previousChars,
-						 previousPos, pSelBox->BxH,
-						 pViewSel->VsNSpaces,
-						 previousInd, pBuffer,
-						 frame);
-			  /* split after the new character */
-			  if (pBuffer->BuNext)
-			    pBox = SplitForScript (box, pAb, script,
-						   1,
-						   xDelta,
-						   pSelBox->BxH,
-						   spacesDelta, 
-						   0, pBuffer->BuNext,
-						   frame);
+			  oldscript = pSelBox->BxScript;
+			  if (previousChars == 0)
+			    {
+			      box = pSelBox;
+			      box->BxScript = script;
+			    }
 			  else
-			    pBox = SplitForScript (box, pAb, script,
-						   1,
-						   previousPos,
-						   pSelBox->BxH,
-						   0,
-						   previousInd, pBuffer,
-						   frame);
-
-			  pBox->BxScript = pSelBox->BxScript;
+			    /* split before the new character */
+			    box = SplitForScript (pSelBox, pAb, oldscript,
+						  previousChars, /* char nb */
+						  previousPos, pSelBox->BxH, /* w,h */
+						  pViewSel->VsNSpaces, /* spaces */
+						  previousInd, pBuffer,
+						  frame);
+			  if (box->BxNChars <= 1)
+			    pBox = box;
+			  /* split after the new character */
+			  else
+			    {
+			      if (pBuffer->BuNext)
+				/* new character at the beginning of a buffer */
+				pBox = SplitForScript (box, pAb, script,
+						       1, /* char lg */
+						       xDelta, pSelBox->BxH, /* w,h */
+						       0,  /* spaces */
+						       0, pBuffer->BuNext, /* start */
+						       frame);
+			      else
+				/* new character at the beginning of a buffer */
+				pBox = SplitForScript (box, pAb, script,
+						       1, /* char lg */
+						       xDelta, pSelBox->BxH, /* w,h */
+						       0, /* spaces */
+						       previousInd + 1, pBuffer, /* start */
+						       frame);
+			      pBox->BxScript = oldscript;
+			    }
 			  /* update the selection position */
 			  pViewSel->VsBox = box;
 			  pViewSelEnd->VsBox = box;
