@@ -4,13 +4,29 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>WebDAV Functions in Amaya</title>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 7.2+, see http://www.w3.org/Amaya/">
+  <link xmlns:xlink="http://www.w3.org/1999/xlink" href="style.css"
+  rel="stylesheet" type="text/css">
 </head>
 
 <body>
-<h1>WebDAV Functions in Amaya</h1>
 
-<p></p>
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../images/w3c_home"> <img alt="Amaya"
+        src="../images/amaya.gif"></td>
+      <td><a href="Publishing.html" accesskey="p"><img alt="previous"
+        src="../images/left.gif"></a> <a href="Manual.html"
+        accesskey="t"><img alt="top" src="../images/up.gif"></a> <a
+        href="Printing.html" accesskey="n"><img alt="next"
+        src="../images/right.gif"></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>WebDAV Functions in Amaya</h1>
 
 <h2>About WebDAV</h2>
 
@@ -48,8 +64,6 @@ in the server due to exceptions in the server.</p>
 href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a> and also
 at <a href="http://www.webdav.org/">WebDAV.org</a> website.</p>
 
-<p></p>
-
 <h2>WebDAV Support in Amaya</h2>
 
 <p>Amaya has an optional and limited support for WebDAV. This support include
@@ -57,8 +71,6 @@ the following operations: lock/unlock a WebDAV compilant resource, view the
 WebDAV properties of a resource and lock discovery capabilities. Besides,
 this support includes some awareness functions, that can automatically inform
 user about locked resources.</p>
-
-<p></p>
 
 <h3>How Use It?</h3>
 
@@ -82,12 +94,8 @@ it, and when you've finished your work, you can <strong>unlock</strong> the
 document, allowing you colleague to lock the document and do his/her
 modifications.</p>
 
-<p></p>
-
 <p><a id="L654"><img alt="Cooperation Menu"
 src="../images/CooperationMenu.gif"></a></p>
-
-<p></p>
 
 <p>Therefore, if you want to be aware whether a colleague locked a Web page,
 you can use the <em>View resource properties</em> entry in <a
@@ -101,14 +109,8 @@ Once you did this, when loading a page locked by a colleague under
 <code>http://davserver.mycompany.com/shared/</code> folder, you will be
 notified by Amaya about this.</p>
 
-<p></p>
-
 <p><img alt="Cooperation - Preferences "
 src="../images/CooperationPreferences.gif"></p>
-
-<p></p>
-
-<p></p>
 
 <h3>WebDAV options in Amaya registry</h3>
 
@@ -143,11 +145,6 @@ are marked:</p>
     <dd>A list of resource URLs used by the user as WebDAV resources.</dd>
 </dl>
 
-<p></p>
-<hr>
-
-<p></p>
-
 <h2>How to compile Amaya with WebDAV functions?</h2>
 
 <p>WebDAV supoprt is an optional feature of Amaya. To compile and use it, you
@@ -160,8 +157,6 @@ will need the following:</p>
     href="http://httpd.apache.org/">Apache</a> are examples of web servers
     that supports WebDAV.</li>
 </ul>
-
-<p></p>
 
 <p>Once you made the <em>cvs check-out</em> of <a
 href="http://www.w3.org/Library/">Libwww with WebDAV</a> support and get <a
@@ -177,8 +172,6 @@ href="http://www.w3.org/Library/">Libwww</a> homepage):</p>
   <li>aclocal; autoheader; automake; autoconf</li>
 </ul>
 
-<p></p>
-
 <h4>At Amaya folder:</h4>
 <ul>
   <li>autoconf</li>
@@ -188,8 +181,7 @@ href="http://www.w3.org/Library/">Libwww</a> homepage):</p>
     that you need)</li>
   <li>make</li>
 </ul>
-
-<p></p>
+</div>
 <hr>
 
 <p><em>Created by <a href="mailto:mkirsch@terra.com.br">Manuele Kirsch
