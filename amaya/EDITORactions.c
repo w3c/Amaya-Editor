@@ -75,7 +75,6 @@ void NewCss (Document document, View view)
   OpenNew (document, view, docCSS);
 }
 
-
 /*----------------------------------------------------------------------
   InitializeNewDoc builds the initial contents of a new document
   When the parameter doc is 0 the function creates a new document window.
@@ -189,7 +188,7 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       if (url != NULL && text != NULL)
 	TtaSetTextContent (text, url, language, doc);
 
-      /* create a META element in the HEAD with attributes name="GENERATOR" */
+      /* create a META element in the HEAD with name="generator" */
       /* and content="Amaya" */
       child = TtaGetLastChild (head);
       elType.ElTypeNum = HTML_EL_META;
@@ -197,13 +196,14 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       attrType.AttrTypeNum = HTML_ATTR_meta_name;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
-      TtaSetAttributeText (attr, "GENERATOR", meta, doc);
+      TtaSetAttributeText (attr, "generator", meta, doc);
       attrType.AttrTypeNum = HTML_ATTR_meta_content;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
       strcpy (tempfile, HTAppName);
       strcat (tempfile, " ");
       strcat (tempfile, HTAppVersion);
+      strcat (tempfile, ", see http://www.w3.org/Amaya/");
       TtaSetAttributeText (attr, tempfile, meta, doc);
       TtaInsertSibling (meta, child, FALSE, doc);
 

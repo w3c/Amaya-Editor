@@ -212,7 +212,7 @@ ThotBool CheckGenerator (NotifyElement *event)
     {
       length = MAX_LENGTH - 1;
       TtaGiveTextAttributeValue (attr, buff, &length);
-      if (!strcasecmp (buff, "GENERATOR"))
+      if (!strcasecmp (buff, "generator"))
 	{
 	  /* is it Amaya generator ? */
 	  attrType.AttrTypeNum = HTML_ATTR_meta_content;
@@ -233,6 +233,7 @@ ThotBool CheckGenerator (NotifyElement *event)
 		  strcpy (buff, HTAppName); 
 		  strcat (buff, " ");
 		  strcat (buff, HTAppVersion);
+		  strcat (buff, ", see http://www.w3.org/Amaya/");
 		  TtaSetAttributeText (attr, buff, event->element,
 				       event->document);
 		}
