@@ -74,7 +74,6 @@ static ThotWindow   hwndCurrentWord;
 static ThotWindow   hwndLanguage;
 static CHAR_T       currentWord [MAX_WORD_LEN];
 static ThotWindow   wordButton;
-static CHAR_T       currentRejectedchars [100];
 static UINT         itemIndex;
 #endif /* _WINDOWS */
 
@@ -190,6 +189,7 @@ LPARAM lParam;
 
   static int  iLocation;
   static int  iIgnore;
+  CHAR_T currentRejectedchars [MAX_REJECTED_CHARS];
 
   switch (msg)
     {
@@ -237,7 +237,7 @@ LPARAM lParam;
       CheckDlgButton (hwnDlg, IDC_IGNORE4, BST_CHECKED);
       
       SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
-      SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
+      SetDlgItemText (hwnDlg, IDC_EDITIGNORE, RejectedChar);
       iLocation = 2;
       SetWindowText (hwndCurrentWord, TEXT(""));
       WIN_DisplayWords ();
@@ -535,8 +535,7 @@ view                view;
    /* ne cree pas inutilement le dictionnaire fichier */
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
-#ifdef _WINDOWS 
-  ustrcpy (currentRejectedchars, RejectedChar); 
+#ifdef _WINDOWS  
   /* to have the same behavior as under Unix, we need to destroy the
      dialog if it already existed */
   if (SpellChecker) 
