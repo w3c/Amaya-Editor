@@ -5779,7 +5779,7 @@ void CheckBlocksInCharElem (Document doc)
    CheckAbstractTree
    Check the Thot abstract tree and create the missing elements.
   ----------------------------------------------------------------------*/
-void            CheckAbstractTree (char* pathURL, Document doc)
+void            CheckAbstractTree (Document doc)
 {
   ElementType	elType, newElType, headElType;
   Element	elRoot;
@@ -6928,7 +6928,7 @@ void StartParser (Document doc, char *fileName,
 	      el = TtaGetParent (el);
 	    }
 	  /* check the Thot abstract tree */
-	  CheckAbstractTree (pathURL, HTMLcontext.doc);
+	  CheckAbstractTree (HTMLcontext.doc);
 	}
 
       gzclose (stream);

@@ -122,7 +122,7 @@ Borrar lista de definición: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
 !!!!!!!!!!!!!!!!!!!!!!
 
 Párrafos: 
-(h1|h2|h3|h4|h5|h6|*{(li{(il:*)+})+}),(h1|h2|h3|h4|h5|h6|p|*{(li{(il:*)+})+})+;
+(h1|h2|h3|h4|h5|h6|p|*{(li{(il:*)+})+})+;
 	{ 
 	h1 > :p;
 	h2 > :p;
@@ -132,6 +132,98 @@ Párrafos:
 	h6 > :p;
 	p > :p;
 	il > :p;
+	}
+
+! Encabezados en/desde definiciones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Lista de definición:*,(h1|h2|h3|h4|h5|h6|p)+;
+	{
+	* > dl:dt;
+	h1 > dl:dt;
+	h2 > dl:dt;
+	h2 > dl:dt;
+	h3 > dl:dt;
+	h4 > dl:dt;
+	h5 > dl:dt;
+	h6 > dl:dt;
+	p > dl:dd;
+	}
+
+Lista de definición:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
+	{
+	h1 > dl:dt;
+	level1>dl.dd:*;
+	h2 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h3 > dl.dd.dl.dd:dl.dt ;
+	h4 > dl.dd.dl.dd:dl.dt ;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+Lista de definición:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
+	{
+	h2 > dl:dt;
+	level1 > dl.dd:*;
+	h3 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h4 > dl.dd.dl.dd:dl.dt ;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+Lista de definición:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
+	{
+	h3 > dl:dt;
+	level1 > dl.dd:*;
+	h4 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h5 > dl.dd.dl.dd:dl.dt ;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+Lista de definición multinivel:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
+	{
+	h4 > dl:dt;
+	level1 > dl.dd:*;
+	h5 > dl.dd:dl.dt ;
+	level2 > dl.dd.dl.dd:*;
+	h6 > dl.dd.dl.dd:dl.dt ;
+	level3 > dl.dd.dl.dd.dl.dd:*;
+	}
+
+Encabezados h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+	{
+	dt1 > :h1;
+	dt2 > :h2;
+	dt3 > :h3;
+	content > :*;
+	}
+
+Encabezados h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+	{
+	dt1 > :h2;
+	dt2 > :h3;
+	dt3 > :h4;
+	content > :*;
+	}
+
+Encabezados h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
+	{
+	dt1 > :h3;
+	dt2 > :h4;
+	dt3 > :h5;
+	content > :*;
+	}
+
+Lista de definición: p,*+;
+	{
+	p > dl:dt;
+	* > dl.dd:*;
 	}
 
 ! Preformateado en/desde párrafos
@@ -360,97 +452,6 @@ Celdas de encabezado:?(td|th)+,td,?(td|th)+;
 Celdas de datos:?(td|th)+,th,?(td|th)+;
 	{
 	$ChangeToDataCell;
-	}
-
-! Encabezados en/desde definiciones
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Lista de definición:((h1|h2|h3|h4|h5|h6),*+)+;
-	{
-	h1 > dl:dt;
-	h2 > dl:dt;
-	h2 > dl:dt;
-	h3 > dl:dt;
-	h4 > dl:dt;
-	h5 > dl:dt;
-	h6 > dl:dt;
-	* > dl.dd:*;
-	}
-
-Lista de definición:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
-	{
-	h1 > dl:dt;
-	level1>dl.dd:*;
-	h2 > dl.dd:dl.dt ;
-	level2 > dl.dd.dl.dd:*;
-	h3 > dl.dd.dl.dd:dl.dt ;
-	h4 > dl.dd.dl.dd:dl.dt ;
-	h5 > dl.dd.dl.dd:dl.dt ;
-	h6 > dl.dd.dl.dd:dl.dt ;
-	level3 > dl.dd.dl.dd.dl.dd:*;
-	}
-
-Lista de definición:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
-	{
-	h2 > dl:dt;
-	level1 > dl.dd:*;
-	h3 > dl.dd:dl.dt ;
-	level2 > dl.dd.dl.dd:*;
-	h4 > dl.dd.dl.dd:dl.dt ;
-	h5 > dl.dd.dl.dd:dl.dt ;
-	h6 > dl.dd.dl.dd:dl.dt ;
-	level3 > dl.dd.dl.dd.dl.dd:*;
-	}
-
-Lista de definición:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
-	{
-	h3 > dl:dt;
-	level1 > dl.dd:*;
-	h4 > dl.dd:dl.dt ;
-	level2 > dl.dd.dl.dd:*;
-	h5 > dl.dd.dl.dd:dl.dt ;
-	h6 > dl.dd.dl.dd:dl.dt ;
-	level3 > dl.dd.dl.dd.dl.dd:*;
-	}
-
-Lista de definición multinivel:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
-	{
-	h4 > dl:dt;
-	level1 > dl.dd:*;
-	h5 > dl.dd:dl.dt ;
-	level2 > dl.dd.dl.dd:*;
-	h6 > dl.dd.dl.dd:dl.dt ;
-	level3 > dl.dd.dl.dd.dl.dd:*;
-	}
-
-Encabezados h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
-	{
-	dt1 > :h1;
-	dt2 > :h2;
-	dt3 > :h3;
-	content > :*;
-	}
-
-Encabezados h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
-	{
-	dt1 > :h2;
-	dt2 > :h3;
-	dt3 > :h4;
-	content > :*;
-	}
-
-Encabezados h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
-	{
-	dt1 > :h3;
-	dt2 > :h4;
-	dt3 > :h5;
-	content > :*;
-	}
-
-Lista de definición: p,*+;
-	{
-	p > dl:dt;
-	* > dl.dd:*;
 	}
 
 Eliminar división: (div{*+})+;

@@ -54,8 +54,7 @@ extern void CheckCharsetInMeta ( char *fileName,
                                  CHARSET *charset,
                                  char *charsetname );
 extern void CheckBlocksInCharElem ( Document doc );
-extern void CheckAbstractTree ( char* pathURL,
-                                Document doc );
+extern void CheckAbstractTree ( Document doc );
 extern void ParseIncludedHTML ( Element elem,
                                 char *closingTag );
 extern void ParseSubTree ( char* HTMLbuf,
@@ -124,8 +123,7 @@ extern void CheckCharsetInMeta ( char *fileName,
                                    CHARSET *charset,
                                    char *charsetname );
 extern void CheckBlocksInCharElem ( Document doc );
-extern void CheckAbstractTree ( char* pathURL,
-                                  Document doc );
+extern void CheckAbstractTree ( Document doc );
 extern void ParseIncludedHTML ( Element elem,
                                   char *closingTag );
 extern void ParseSubTree ( char* HTMLbuf,

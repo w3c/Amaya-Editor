@@ -5624,7 +5624,7 @@ void StartXmlParser (Document doc, char *fileName,
       /* Check the Thot abstract tree for XHTML documents */
       if (isXHTML)
 	{
-	  CheckAbstractTree (pathURL, XMLcontext.doc);
+	  CheckAbstractTree (XMLcontext.doc);
 	  if (SNumbering[doc])
 	    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 	  if (MapAreas[doc])

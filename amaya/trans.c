@@ -1721,7 +1721,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
   strGenStack         *stack;
   strMatchChildren    *child;
   int                  length, error;
-  char                 buf [MAX_LENGTH];
+  char                 buf [MAX_LENGTH], *name;
   ThotBool             res;
 
   res = FALSE;
@@ -1799,7 +1799,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 	  /* transformation was succesful */
 	  ResultTrans = TRUE;
 	  sch = TtaGetElementType (myFirstSelect).ElSSchema;
-	  if (strcmp ((char *)TtaGetSSchemaName (sch), "MathML") == 0)
+	  name = (char *)TtaGetSSchemaName (sch);
+	  if (!strcmp (name, "MathML"))
 	    {
 	      /* checking the MathML thot tree */
 	      if (isClosed)
@@ -1818,6 +1819,15 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 		  MathMLElementComplete (&context, elParent, &error);
 		  TtaSetStructureChecking (1, doc);
 		} 
+	    }
+	  else if (!strcmp (name, "HTML"))
+	    {
+	      /* disable the structure checking */
+	      TtaSetStructureChecking (0, doc);
+	      /* check the Thot abstract tree */
+	      CheckAbstractTree (doc);
+	      /* enable the structure checking */
+	      TtaSetStructureChecking (1, doc);
 	    }
 		   
 	  if (myLastSelect == NULL)
