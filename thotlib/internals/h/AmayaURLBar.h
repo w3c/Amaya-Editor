@@ -31,6 +31,8 @@ public:
   void SetValue( const wxString & newurl );
   wxString GetValue();
 
+  void GotoSelectedURL();
+
  protected:
   DECLARE_EVENT_TABLE()
   void OnURLSelected( wxCommandEvent& event );

@@ -78,15 +78,27 @@ void AmayaURLBar::OnURLTextEnter( wxCommandEvent& event )
 	      _T(" IsChecked=")+(event.IsChecked()?_T("yes"):_T("no"))+
 	      _T(" GetSelection=%d"),event.GetSelection() );
 
+  GotoSelectedURL();
+  
+  // do not skip this event because we don't want to propagate this event
+  //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaURLBar
+ *      Method:  GotoSelectedURL
+ * Description:  validate the selection
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaURLBar::GotoSelectedURL()
+{
   AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
   if (p_frame)
     {
       APP_Callback_URLActivate ( p_frame->GetFrameId(),
 				 GetValue().mb_str(*wxConvCurrent) );
     }
-
-  // do not skip this event because we don't want to propagate this event
-  //  event.Skip();
 }
 
 /*
@@ -150,6 +162,11 @@ wxString AmayaURLBar::GetValue()
 void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaURLBar::OnURLSelected") );
+
+  // because of a bug on wxGTK with OnSelected event, the url activation is only avalaible for windows
+#ifdef _WINDOWS
+  GotoSelectedURL();
+#endif /* _WINDOWS */
 }
 
 
