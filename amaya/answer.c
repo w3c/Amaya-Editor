@@ -527,14 +527,15 @@ void AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
 void PrintTerminateStatus (AHTReqContext *me, int status) 
 {
 
-  HTError             *error = (HTError *) NULL;
-  HTError             *next_error;
-  HTErrorElement      errorElement;
-  HTList              *cur;
-  char              msg_status[10];
-  char                *server_status = NULL;
+  HTError           *error = (HTError *) NULL;
+  HTError           *next_error;
+  HTErrorElement     errorElement;
+  HTList            *cur;
+  char               msg_status[10];
+  char               msg_error[200];
+  char              *server_status = NULL;
   char              *wc_tmp;
-  HTResponse          *response;
+  HTResponse        *response;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
@@ -630,6 +631,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
       error = (HTError *) HTList_nextObject (cur);
       /* copy the reference to the server status message if it
          exists and if it has an appropriate length */
+
       if (error)
         {
           /* if there's no error reason (for example a timeout),
@@ -648,13 +650,16 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
       if (error == (HTError *) NULL)
 	/* there's no error context */
 	{
-	  sprintf (msg_status, "%d", status); 
-	  TtaSetStatus (me->docid, 1, 
-			TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
-			msg_status);
-	  sprintf (AmayaLastHTTPErrorMsg, 
-		   TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS),
-		   msg_status);
+	  sprintf (msg_status, "%d", status);
+	  strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
+	  if (status == -905)
+	    strcat (msg_error, " : Connection timeout");
+	  else if (status == -906)
+	    strcat (msg_error, " : Can't locate host");
+	  else if (status == -904)
+	    strcat (msg_error, " : Recover pipe line");
+	  TtaSetStatus (me->docid, 1, msg_error, msg_status);
+	  sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
 	  return;
 	}
       else
@@ -740,10 +745,16 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
       else
 	{
 	  /* we don't have anything else, except for the status code */
-	  sprintf (msg_status, "%d", status); 
-	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	  sprintf (AmayaLastHTTPErrorMsg, 
-		    TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	  sprintf (msg_status, "%d", status);
+	  strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
+	  if (status == -905)
+	    strcat (msg_error, " : Connection timeout");
+	  else if (status == -906)
+	    strcat (msg_error, " : Can't locate host");
+	  else if (status == -904)
+	    strcat (msg_error, " : Recover pipe line");
+	  TtaSetStatus (me->docid, 1, msg_error, msg_status);
+	  sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
 	}
     }
   /* set the reason string */
