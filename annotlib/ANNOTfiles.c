@@ -464,8 +464,14 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
 
   attrType.AttrSSchema = elType.ElSSchema = TtaGetSSchema ("Annot", doc);
 
-  /* initialize the reverse link */
+  /*
+  **  initialize the reverse link 
+  */
   attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  /* remove the previous reverse link if it exists already */
+  attr = TtaGetAttribute (thread_item, attrType);
+  if (attr)
+    TtaRemoveAttribute (thread_item, attr, doc);
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (thread_item, attr, doc);
   tmp = (useSource) ? annot->source_url : annot->body_url,
@@ -587,6 +593,8 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   ANNOT_ThreadItem_init (thread_item, doc,  annot, FALSE);
 
   return (thread_item);
+#else
+  return 0;
 #endif /* ANNOT_ON_ANNOT */
 }
 
@@ -594,7 +602,7 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   ANNOT_SelectThread
   Selects an item in the thread view.
   -----------------------------------------------------------------------*/
-void ANNOT_SelectThread (Document doc)
+void ANNOT_ToggleThread (Document doc, ThotBool on)
 {
   
 }
@@ -603,9 +611,50 @@ void ANNOT_SelectThread (Document doc)
   ANNOT_UpdateThread
   Updates the metadata of a thread item.
   -----------------------------------------------------------------------*/
-void ANNOT_UpdateThread (Document doc)
+void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
 {
-  
+#ifdef ANNOT_ON_ANNOT
+  Document       thread_doc;
+  ElementType    elType;
+  Element        root, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
+
+  if (!annot)
+    return;
+
+  /* find the document where the thread is being shown */
+  thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
+  if (thread_doc == 0)
+    return;
+
+  /* we find the the Thread element and make it our root */
+  root = TtaGetRootElement (thread_doc);
+  elType = TtaGetElementType (root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  while (el)
+    {
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      if (!strcasecmp (url, annot->body_url))
+	{
+	  TtaFreeMemory (url);
+	  break;
+	}
+      TtaFreeMemory (url);
+      root = el;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+    }
+
+  /* update the element if we found it */
+  if (el)
+    ANNOT_ThreadItem_init (el, thread_doc, annot, FALSE);
+#endif
 }
 
 /*-----------------------------------------------------------------------

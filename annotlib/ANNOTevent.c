@@ -1687,8 +1687,9 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
   ANNOT_UpdateTitle
   Updates the title of an annotation
   -----------------------------------------------------------------------*/
-void  Annot_UpdateTitle (NotifyElement *event)
+ThotBool  Annot_UpdateTitle (NotifyElement *event)
 {
+#ifdef ANNOT_ON_ANNOT
   AnnotMeta *annot;
   Document   doc;
   Element    el;
@@ -1703,7 +1704,7 @@ void  Annot_UpdateTitle (NotifyElement *event)
   annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
   
   if (!annot)
-    return;
+    return FALSE; /* let Thot perform normal operation */
 
   /* update the metadata title field */
   if (annot->title)
@@ -1717,7 +1718,10 @@ void  Annot_UpdateTitle (NotifyElement *event)
       annot->title = TtaGetMemory (len);
       TtaGiveTextContent (el, annot->title, &len, &lang);
     }
-  /* update the title of the window ? */
+  /* update the title of the window */
+  ANNOT_UpdateThread (doc, annot);
+#endif /* ANNOT_ON_ANNOT */
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
