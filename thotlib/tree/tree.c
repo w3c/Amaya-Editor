@@ -2940,7 +2940,8 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		     PtrSSchema pSSchema, PtrDocument pDocCopy,
-		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef)
+		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef,
+		     ThotBool keepAccess)
 {
   PtrElement          pEl, pS2, pC1, pC2;
   PtrReference        rf;
@@ -3093,7 +3094,10 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	    pSource->ElCopy = pEl;
 	    pEl->ElCopy = pSource;
 	    pEl->ElIsCopy = pSource->ElIsCopy;
-	    pEl->ElAccess = AccessInherited;
+	    if (keepAccess)
+	      pEl->ElAccess = pSource->ElAccess;
+	    else
+	      pEl->ElAccess = AccessInherited;
 	    pEl->ElHolophrast = pSource->ElHolophrast;
 	    pEl->ElTerminal = pSource->ElTerminal;
 	    if (!pEl->ElTerminal)
@@ -3172,7 +3176,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		  do
 		     {
 		     pC2 = CopyTree (pS2, pDocSource, pSSchema, pDocCopy,
-				     pEl, checkAttr, shareRef);
+				     pEl, checkAttr, shareRef, keepAccess);
 		     if (pC2 != NULL)
 		        {
 			if (pC1 == NULL)
@@ -3353,7 +3357,7 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 				  pSource->ElStructSchema->SsName)))
 		 {
 		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
-				   pDoc, pEl, TRUE, TRUE);
+				   pDoc, pEl, TRUE, TRUE, FALSE);
 		   if (pC1 != NULL)
 		     {
 		       pC1->ElReferredDescr = NULL;
@@ -3369,7 +3373,7 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		   do
 		     {
 		       pC2 = CopyTree (pS2, pDocSource, pEl->ElStructSchema,
-				       pDoc, pEl, TRUE, TRUE);
+				       pDoc, pEl, TRUE, TRUE, FALSE);
 		       if (pC2 != NULL)
 			 {
 			   if (pC1 == NULL)

@@ -1267,7 +1267,7 @@ PtrDocument         pDoc;
 	      pElRow = NULL;
 	   else
 	     {
-		/* on a found' une ligne simple appartenant au meme tableau,
+		/* on a trouve' une ligne simple appartenant au meme tableau,
 		   on passe a la premiere cellule de la ligne */
 		pElParent = pElRow->ElFirstChild->ElNext;
 		pCell = pElParent->ElFirstChild;
@@ -1275,7 +1275,8 @@ PtrDocument         pDoc;
 		  {
 		     /* on cree une copie de la cellule a coller */
 		     pNCell = CopyTree (*pSvCell, DocOfSavedElements,
-			     pCol->ElStructSchema, pDoc, pElParent, TRUE, TRUE);
+					pCol->ElStructSchema, pDoc, pElParent,
+					TRUE, TRUE, FALSE);
 		     nbPastedCells++;
 		     *pSvCell = (*pSvCell)->ElNext;
 		  }
@@ -1502,7 +1503,7 @@ PtrDocument         pDoc;
 		  pSimpleCol = FwdSearchTypedElem (pSimpleCol, colSimpleType, pElPasted->ElStructSchema);
 		  if (ElemIsWithinSubtree (pSimpleCol, pElPasted))
 		     pSimpleCol = NULL;
-		  else		/* on found' une Column simple */
+		  else		/* on trouve' une Column simple */
 		     nbColPrec++;
 	       }
 	     while (pSimpleCol != NULL);
@@ -1795,7 +1796,7 @@ ThotBool             deleteAttr;
 	     while (!stop && pEl != NULL)
 	       {
 		  if (TypeHasException (EXC_ID_Table, pEl->ElTypeNumber, pEl->ElStructSchema))
-		     stop = TRUE;	/* found' */
+		     stop = TRUE;	/* found */
 		  else
 		     pEl = pEl->ElParent;
 	       }

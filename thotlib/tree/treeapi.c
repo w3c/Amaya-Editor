@@ -405,7 +405,7 @@ Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
 			   LoadedDocument[sourceDocument - 1], pSS,
 			   LoadedDocument[destinationDocument - 1],
 			   (PtrElement) parent,
-			   TRUE, TRUE);
+			   TRUE, TRUE, FALSE);
        TransRef (element, element, LoadedDocument[destinationDocument - 1]);
      }
    return ((Element) element);

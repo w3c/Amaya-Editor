@@ -350,15 +350,16 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 			  if (pDoc->DocSSchema != NULL)
 			     /* le document n'a pas ete ferme' entre temps */
 			    {
-			       notifyVal.event = TteElemPaste;
-			       notifyVal.document = doc;
-			       notifyVal.element = (Element) pParent;
-			       notifyVal.target = (Element) pSavedEl;
-			       notifyVal.value = NSiblings;
-			       if (!CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
-				  pCopy = CopyTree (pSavedEl, DocOfSavedElements,
-					      pParent->ElStructSchema, pDoc,
-						    pParent, TRUE, TRUE);
+			      notifyVal.event = TteElemPaste;
+			      notifyVal.document = doc;
+			      notifyVal.element = (Element) pParent;
+			      notifyVal.target = (Element) pSavedEl;
+			      notifyVal.value = NSiblings;
+			      if (!CallEventType ((NotifyEvent *) (&notifyVal),
+						  TRUE))
+				pCopy = CopyTree (pSavedEl, DocOfSavedElements,
+						 pParent->ElStructSchema, pDoc,
+						 pParent, TRUE, TRUE, FALSE);
 			    }
 			  if (creation && pDescRoot != NULL)
 			     /* maintenant que la copie est faite, on supprime
@@ -782,7 +783,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 	notifyVal.value = 0;
 	if (!CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
 	  pCopy = CopyTree (pSavedEl, DocOfSavedElements, pSS, pDoc, pParent,
-			    TRUE, TRUE);
+			    TRUE, TRUE, FALSE);
 	if (pCopy == NULL || (creation && pDescRoot == NULL))
 	  {
 	     if (pDescRoot != NULL)

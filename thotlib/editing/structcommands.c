@@ -851,14 +851,14 @@ void                CopyCommand ()
 			        l'application si elle est d'accord pour copier
 			        l'element */
 			  if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
-			     /* l'application ne veut pas que l'editeur copie
-			        cet element */
-			     pCopy = NULL;
+			    /* l'application ne veut pas que l'editeur copie
+			       cet element */
+			    pCopy = NULL;
 			  else
-			     /* pas d'objection de l'application */
-			     /* cree une copie de l'element */
-			     pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
-					       pSelDoc, NULL, FALSE, TRUE);
+			    /* pas d'objection de l'application */
+			    /* cree une copie de l'element */
+			    pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
+					      pSelDoc, NULL, FALSE, TRUE, FALSE);
 			  if (pCopy != NULL)
 			     /* met la copie de l'element courant dans la 
 			        chaine des elements sauvegardes */
@@ -1111,13 +1111,25 @@ void                CutCommand (ThotBool save)
 	if (!pSelDoc->DocReadOnly)
 	  {
 	    /* cherche si l'un des elements selectionne's est protege' */
-	    pEl = firstSel;
 	    stop = FALSE;
-	    if (firstSel && firstChar > 1 && ElementIsReadOnly (firstSel))
-		stop = TRUE;
-	    if (lastSel && lastChar != 0 && lastChar < lastSel->ElVolume &&
+            if (firstSel->ElTerminal && firstSel->ElLeafType == LtText &&
+	        firstChar > 1 && ElementIsReadOnly (firstSel))
+		/* the selection begins with a substring of a ReadOnly
+		   element. This substring can't be deleted */
+	       stop = TRUE;
+	    else if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
+		     lastChar > 0 && lastChar < lastSel->ElVolume &&
 		ElementIsReadOnly (lastSel))
+		/* the selection ends with a substring of a ReadOnly
+		   element. This substring can't be deleted */
 		stop = TRUE;
+	    pEl = firstSel;
+	    while (!stop && pEl != NULL)
+	      if (ElementIsReadOnly (pEl->ElParent))
+		stop = TRUE;
+	      else
+		pEl = NextInSelection (pEl, lastSel);
+
 	    if (!stop)
 	      /* pas d'element protege', on peut couper */
 	      {

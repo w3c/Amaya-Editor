@@ -119,7 +119,8 @@ extern PtrElement CopyTree ( PtrElement pSource,
                              PtrDocument pDocCopy,
                              PtrElement pParent,
                              ThotBool checkAttr,
-                             ThotBool shareRef );
+                             ThotBool shareRef,
+			     ThotBool keepAccess);
 extern void CopyIncludedElem ( PtrElement pEl,
                                PtrDocument pDoc );
 extern PtrElement ReplicateElement ( PtrElement pEl,
@@ -262,7 +263,8 @@ extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrDocument pDocCopy,
                                PtrElement pParent,
                                ThotBool checkAttr,
-                               ThotBool shareRef */);
+                               ThotBool shareRef,
+			       ThotBool keepAccess */);
 extern void CopyIncludedElem (/* PtrElement pEl,
                                  PtrDocument pDoc */);
 extern PtrElement ReplicateElement (/* PtrElement pEl,
