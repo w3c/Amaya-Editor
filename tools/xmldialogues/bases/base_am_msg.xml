@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Oct 24 17:33:48 CEST 2001" version="37">
+<base last_update="Thu Oct 25 12:58:01 CEST 2001" version="41">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1461,6 +1461,9 @@
 <label define="AM_EXPORT_CRLF">
 	<message xml:lang="en">Export CR/LF</message>
 	<message xml:lang="fr">Exporter CR/LF</message>
+	<message xml:lang="de">CR/LF exportieren</message>
+	<message xml:lang="es">Exportar CR/LF</message>
+	<message xml:lang="pt">Exportar CR/LF</message>
 </label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing Preferences</message>
@@ -1834,18 +1837,34 @@
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Invalid XML - Reload as HTML or show parsing errors?</message>
 	<message xml:lang="fr">XML invalide - Recharger pour corriger ou montrer les erreurs ?</message>
+	<message xml:lang="it">XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?</message>
+	<message xml:lang="de">Ungültiger XML Code - als HTML laden oder Parsefehler anzeigen?</message>
+	<message xml:lang="es">XML inválido - ¿Recargar como HTML o mostrar análisis de errores?</message>
+	<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros sintáticos?</message>
 </label>
 <label define="AM_XML_ERROR">
 	<message xml:lang="en">Invalid XML - Show parsing errors?</message>
 	<message xml:lang="fr">XML invalide - Montrer les erreurs ?</message>
+	<message xml:lang="it">XML non valido - Mostro gli errori di parsificazione?</message>
+	<message xml:lang="de">Ungültiger XML Code - Parsefehler anzeigen?</message>
+	<message xml:lang="es">XML inválido - ¿Mostrar análisis de errores?</message>
+	<message xml:lang="pt">XML inválido - mostrar erros na leitura?</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
 	<message xml:lang="en">Invalid characters - Reload as HTML or show parsing errors?</message>
 	<message xml:lang="fr">Caractères invalides - Recharger en HTML ou montrer les erreurs ?</message>
+	<message xml:lang="it">Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?</message>
+	<message xml:lang="de">Ungültige Zeichen - als HTML laden oder Parsefehler anzeigen?</message>
+	<message xml:lang="es">Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?</message>
+	<message xml:lang="pt">Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>
 	<message xml:lang="fr">Caractères invalides</message>
+	<message xml:lang="it">Caratteri non validi</message>
+	<message xml:lang="de">Ungültige Zeichen</message>
+	<message xml:lang="es">Caracteres inválidos</message>
+	<message xml:lang="pt">Caracteres inválidos</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">With the current Amaya profile:</message>
@@ -1874,6 +1893,10 @@
 <label define="AM_XML_MISMATCH_PROFILE">
 	<message xml:lang="en">Editing and saving this document will change its type</message>
 	<message xml:lang="fr">Editer et sauver ce document changera son type</message>
+	<message xml:lang="it">Editando e salvando questo documento il suo tipo verrà cambiato</message>
+	<message xml:lang="de">Durch das Bearbeiten und Speichern ändert sich der Dokumententyp</message>
+	<message xml:lang="es">Al editar y guardar este documento se cambiará su tipo</message>
+	<message xml:lang="pt">Editar ou salvar este documento vai mudar seu tipo</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
@@ -2022,10 +2045,18 @@
 <label define="AM_NO_SXPOINTER">
 	<message xml:lang="en">Impossible to attach a start XPointer on an internal added element</message>
 	<message xml:lang="fr">Impossible de débuter un XPointer sur un élément ajouté par Amaya</message>
+	<message xml:lang="it">Impossibile attaccare uno start XPointer su un elemento aggiunto internamente</message>
+	<message xml:lang="de">Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich</message>
+	<message xml:lang="es">Imposible adjuntar un XPointer inicial sobre un elemento interno agregado</message>
+	<message xml:lang="pt">Impossível anexar um XPointer inicial a um elemento adicionado internamente</message>
 </label>
 <label define="AM_NO_EXPOINTER">
 	<message xml:lang="en">Impossible to attach an end XPointer on an internal added element</message>
 	<message xml:lang="fr">Impossible de terminer un XPointer sur un élément ajouté par Amaya</message>
+	<message xml:lang="it">Impossibile attaccare uno end XPointer su un elemento aggiunto internamente</message>
+	<message xml:lang="de">Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich</message>
+	<message xml:lang="es">Imposible adjuntar un XPointer final sobre un elemento interno agregado</message>
+	<message xml:lang="pt">Impossível anexar um XPointer final a um elemento adicionado internamente</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE">
 	<message xml:lang="en">Cannot find where to move the annotation</message>
@@ -2046,34 +2077,66 @@
 <label define="AM_NO_ANNOT_MOD_DOC">
 	<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
 	<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
+	<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
+	<message xml:lang="de">Annotieren eines geänderten Dokuments ist nicht möglich. Bitte erst speichern.</message>
+	<message xml:lang="es">No puede comentar un documento modificado. Por favor guárdelo primero.</message>
+	<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
 </label>
 <label define="AM_NO_ANNOT_USER">
 	<message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
 	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
+	<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.</message>
+	<message xml:lang="de">Kein Benutzer für Annotation vereinbart. Bitte das Menü "Annotationen/Konfiguration" öffnen.</message>
+	<message xml:lang="es">No hay comentarios de usuario declarado. Por favor abra el menu de configuración de Comentarios</message>
+	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
 	<message xml:lang="en">Unable to build an XPointer for this annotation</message>
 	<message xml:lang="fr">Impossible de construire un XPointer pour cette annotation</message>
+	<message xml:lang="it">Non posso creare un XPointer per questa annotazione</message>
+	<message xml:lang="de">Für diese Annotation kein kein XPointer erzeugt werden</message>
+	<message xml:lang="es">No puedo construir un XPointer para este comentario</message>
+	<message xml:lang="pt">Incapaz de construir um XPointer para esta anotação</message>
 </label>
 <label define="AM_NEW_ANNOTATION">
 	<message xml:lang="en">Make a new annotation</message>
 	<message xml:lang="fr">Faire une nouvelle annotation</message>
+	<message xml:lang="it">Aggiungi una nuova annotazione</message>
+	<message xml:lang="de">Neue Annotation erzeugen</message>
+	<message xml:lang="es">Crear un nuevo comentario</message>
+	<message xml:lang="pt">Fazer uma nova anotação</message>
 </label>
 <label define="AM_ANNOT_POST_FAILURE">
 	<message xml:lang="en">Failed to post the annotation</message>
 	<message xml:lang="fr">La publication de l'annotation a échoué</message>
+	<message xml:lang="it">Non posso postare l'annotazione</message>
+	<message xml:lang="de">Abschicken der Annotation gescheitert</message>
+	<message xml:lang="es">Fallo al enviar el comentario</message>
+	<message xml:lang="pt">A postagem da anotação falhou</message>
 </label>
 <label define="AM_ANNOT_DELETE_FAILURE">
 	<message xml:lang="en">Failed to delete the annotation</message>
 	<message xml:lang="fr">La destruction de l'annotation a échoué</message>
+	<message xml:lang="it">Non posso cancellare l'annotazione</message>
+	<message xml:lang="de">Löschen der Annotation gescheitert</message>
+	<message xml:lang="es">Fallo al borrar el comentario</message>
+	<message xml:lang="pt">A supressão da anotação falhou</message>
 </label>
 <label define="AM_ANNOT_DELETED">
 	<message xml:lang="en">Annotation deleted!</message>
 	<message xml:lang="fr">Annotation détruite!</message>
+	<message xml:lang="it">Annotazione cancellata!</message>
+	<message xml:lang="de">Annotation gelöscht!</message>
+	<message xml:lang="es">Comentario borrado!</message>
+	<message xml:lang="pt">Anotação suprimida!</message>
 </label>
 <label define="AM_ANNOT_INDEX_FAILURE">
 	<message xml:lang="en">Failed to load the annotation index</message>
 	<message xml:lang="fr">Impossible de charger l'index des annotations</message>
+	<message xml:lang="it">Non posso caricare l'indice delle annotazioni</message>
+	<message xml:lang="de">Laden des Annotationsindex gescheitert</message>
+	<message xml:lang="es">Fallo al cargar el índice de comentarios</message>
+	<message xml:lang="pt">Carregamento do índice de anotação falhou</message>
 </label>
 <label define="AM_ERROR">
 	<message xml:lang="en">Error</message>
@@ -2167,12 +2230,18 @@
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>
 	<message xml:lang="fr">Ce document est déjà affiché dans une autre fenêtre.</message>
-	<message xml:lang="es">Este documento esta abierto en una otra ventana</message>
+	<message xml:lang="es">Este documento ya está cargado en otra ventana</message>
+	<message xml:lang="it">Questo documento è già caricato in un'altra finestra</message>
+	<message xml:lang="de">Dieses Dokument wurde bereits in einem anderen Fenster geladen</message>
+	<message xml:lang="pt">Este documento já está carregado em outra Janela</message>
 </label>
 <label define="AM_UNSAVE">
 	<message xml:lang="en">Saving that instance may cause a lost update problem</message>
 	<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de mise à jour.</message>
-	<message xml:lang="es">Salvar esta instancia puede provar un problema de sincronización</message>
+	<message xml:lang="es">Guardar la copia puede originar un problema de pérdida de actualización</message>
+	<message xml:lang="it">Salvare questa istanza può fare perdere degli aggiornamenti</message>
+	<message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)</message>
+	<message xml:lang="pt">Salvar esta instância pode causar um problema de perda de atualização</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -165,7 +165,7 @@
 163 Ativar multitecla (`+a=à)
 164 Exibir imagens de fundo
 165 Duplo clique ativa enlace
-166 **Export CR/LF
+166 Exportar CR/LF
 167 Preferências de publicação
 168 Usar ETAGS e pré-condições
 169 Verificar cada PUT com um GET
@@ -212,14 +212,14 @@
 210 Vertical
 211 Horizontal
 212 Habilitar FTP (experimental)
-213 **Invalid XML - Reload as HTML or show parsing errors?
-214 **Invalid XML - Show parsing errors?
-215 **Invalid characters - Reload as HTML or show parsing errors?
-216 **Invalid characters
+213 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
+214 XML inválido - mostrar erros na leitura?
+215 Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?
+216 Caracteres inválidos
 217 Com perfil Amaya atual:
 218 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
 219 A codificação deste documento não é suportada por Amaya
-220 **Editing and saving this document will change its type
+220 Editar ou salvar este documento vai mudar seu tipo
 221 Indisponível
 222 Navegar
 223 Navegador de arquivos
@@ -238,18 +238,18 @@
 236 Ignorar
 237 Elemento de estilo
 238 Não é possível criar um XPointer
-239 **Impossible to attach a start XPointer on an internal added element
-240 **Impossible to attach an end XPointer on an internal added element
+239 Impossível anexar um XPointer inicial a um elemento adicionado internamente
+240 Impossível anexar um XPointer final a um elemento adicionado internamente
 241 Não é possível achar para onde mover a anotação
 242 Não é possível mover a anotação para outro documento
-243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the Annotations/Configure menu.
-245 **Unable to build an XPointer for this annotation
-246 **Make a new annotation
-247 **Failed to post the annotation
-248 **Failed to delete the annotation
-249 **Annotation deleted!
-250 **Failed to load the annotation index
+243 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
+244 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
+245 Incapaz de construir um XPointer para esta anotação
+246 Fazer uma nova anotação
+247 A postagem da anotação falhou
+248 A supressão da anotação falhou
+249 Anotação suprimida!
+250 Carregamento do índice de anotação falhou
 251 Erro
 252 Selecionar um conjunto de caracteres (charset)
 253 Selecionar o tipo MIME
@@ -261,5 +261,5 @@
 259 Erro: tipo MIME inválido
 260 Desconhecido
 261 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
-262 **This document is already loaded in another Window
-263 **Saving that instance may cause a lost update problem
+262 Este documento já está carregado em outra Janela
+263 Salvar esta instância pode causar um problema de perda de atualização

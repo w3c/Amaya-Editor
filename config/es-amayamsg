@@ -165,7 +165,7 @@
 163 Activar multi-key (`+a=à)
 164 Mostrar imágenes de fondo
 165 Doble click activa enlaces
-166 **Export CR/LF
+166 Exportar CR/LF
 167 Preferencias de publicación
 168 Usar ETAGS y precondiciones
 169 Verificar cada PUT con un GET
@@ -212,14 +212,14 @@
 210 Vertical
 211 Apaisado
 212 Activar FTP (experimental)
-213 **Invalid XML - Reload as HTML or show parsing errors?
-214 **Invalid XML - Show parsing errors?
-215 **Invalid characters - Reload as HTML or show parsing errors?
-216 **Invalid characters
+213 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
+214 XML inválido - ¿Mostrar análisis de errores?
+215 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
+216 Caracteres inválidos
 217 Con el perfil actual de Amaya:
 218 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 219 La codificación de este documento no está soportada por Amaya
-220 **Editing and saving this document will change its type
+220 Al editar y guardar este documento se cambiará su tipo
 221 No disponible
 222 Navegar
 223 Navegador de ficheros
@@ -238,18 +238,18 @@
 236 Ignorar
 237 Elemento de estilo
 238 No puedo crear un XPointer
-239 **Impossible to attach a start XPointer on an internal added element
-240 **Impossible to attach an end XPointer on an internal added element
+239 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+240 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 241 No se a donde mover la annotación
 242 No puedo mover la annotación a un otro documento
-243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the Annotations/Configure menu.
-245 **Unable to build an XPointer for this annotation
-246 **Make a new annotation
-247 **Failed to post the annotation
-248 **Failed to delete the annotation
-249 **Annotation deleted!
-250 **Failed to load the annotation index
+243 No puede comentar un documento modificado. Por favor guárdelo primero.
+244 No hay comentarios de usuario declarado. Por favor abra el menu de configuración de Comentarios
+245 No puedo construir un XPointer para este comentario
+246 Crear un nuevo comentario
+247 Fallo al enviar el comentario
+248 Fallo al borrar el comentario
+249 Comentario borrado!
+250 Fallo al cargar el índice de comentarios
 251 Error
 252 Seleccionar un Charset
 253 Seleccionar un tipo MIME
@@ -261,5 +261,5 @@
 259 Error: tipo MIME inválido
 260 Desconocido
 261 Se ignoran estili - vea Vistas/Mostrar fichero log
-262 Este documento esta abierto en una otra ventana
-263 Salvar esta instancia puede provar un problema de sincronización
+262 Este documento ya está cargado en otra ventana
+263 Guardar la copia puede originar un problema de pérdida de actualización

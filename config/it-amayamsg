@@ -212,14 +212,14 @@
 210 Ritratto
 211 Paesaggio
 212 Abilita FTP (sperimentale)
-213 **Invalid XML - Reload as HTML or show parsing errors?
-214 **Invalid XML - Show parsing errors?
-215 **Invalid characters - Reload as HTML or show parsing errors?
-216 **Invalid characters
+213 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
+214 XML non valido - Mostro gli errori di parsificazione?
+215 Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?
+216 Caratteri non validi
 217 Con profilo attuale di Amaya:
 218 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
 219 La codifica per questo documento non e` supportata da Amaya
-220 **Editing and saving this document will change its type
+220 Editando e salvando questo documento il suo tipo verrà cambiato
 221 Non disponibile
 222 Scorri
 223 File Browser
@@ -238,18 +238,18 @@
 236 Ignora
 237 Elemento si stile
 238 No posso create un XPointer
-239 **Impossible to attach a start XPointer on an internal added element
-240 **Impossible to attach an end XPointer on an internal added element
+239 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+240 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
 241 Non trovo dove muovere l'annotazione
 242 Non posso muovere l'annotazione su un diverso documento
-243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the Annotations/Configure menu.
-245 **Unable to build an XPointer for this annotation
-246 **Make a new annotation
-247 **Failed to post the annotation
-248 **Failed to delete the annotation
-249 **Annotation deleted!
-250 **Failed to load the annotation index
+243 Non puoi annotare un documento modificato. Prima salvalo.
+244 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+245 Non posso creare un XPointer per questa annotazione
+246 Aggiungi una nuova annotazione
+247 Non posso postare l'annotazione
+248 Non posso cancellare l'annotazione
+249 Annotazione cancellata!
+250 Non posso caricare l'indice delle annotazioni
 251 Errore
 252 Seleziona un charset
 253 Seleziona un tipo MIME
@@ -261,5 +261,5 @@
 259 Errore: MIME type non valido
 260 Sconosciuto
 261 I stili sono ignorati - vedi Viste/Mostra le errore
-262 **This document is already loaded in another Window
-263 **Saving that instance may cause a lost update problem
+262 Questo documento è già caricato in un'altra finestra
+263 Salvare questa istanza può fare perdere degli aggiornamenti
