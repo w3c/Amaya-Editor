@@ -385,7 +385,7 @@ ThotWindow hScroll ;
    thot window.                                                
   ----------------------------------------------------------------------*/
 
-ThotWindow          WIN_curWin = -1;
+ThotWindow          WIN_curWin = (ThotWindow)(-1);
 
 #ifdef __STDC__
 void WIN_GetDeviceContext (int frame)
@@ -394,7 +394,7 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-   int win;
+   HWND win;
 
    if (frame == -1) {
       if (TtDisplay != 0)
@@ -420,10 +420,10 @@ int frame;
       return;
 
    /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != -1))
+   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
       ReleaseDC (WIN_curWin, TtDisplay);
 
-   WIN_curWin = -1;
+   WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 
    /* load the new Context. */
@@ -453,10 +453,10 @@ ThotWindow win;
       return;
 
    /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != -1))
+   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
       ReleaseDC (WIN_curWin, TtDisplay);
 
-   WIN_curWin = -1;
+   WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 
    /* load the new Context. */
@@ -477,10 +477,10 @@ void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
    /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != -1))
+   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
       ReleaseDC (WIN_curWin, TtDisplay);
 
-   WIN_curWin = -1;
+   WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 }
 
@@ -494,6 +494,7 @@ struct Cat_Context* catalogue;
 #endif /* __STDC__ */
 {
    int frame = GetMainFrameNumber (parent);
+
    if (frame == -1) {
       frame = GetMenuParentNumber (parent) ;
    
@@ -549,6 +550,21 @@ struct Cat_Context* catalogue;
    }
 }
 
+/*----------------------------------------------------------------------
+CleanFrameCatList
+  ----------------------------------------------------------------------*/
+#ifdef __SIDC__
+void CleanFrameCatList (int frame) 
+#else  /* __STDC__ */
+void CleanFrameCatList (frame) 
+int frame;
+#endif /* __STDC__ */
+{
+	int catIndex;
+	for (catIndex = 0; catIndex < MAX_FRAMECAT; catIndex++)
+		FrameCatList [frame].Cat_Table[catIndex] = NULL;
+}
+
 
 /*----------------------------------------------------------------------
    WinLookupCatEntry Lookup the Catalogue table for an entry          
@@ -566,7 +582,7 @@ int        ref;
    boolean             found = FALSE;
    int                 frame = GetMainFrameNumber (win) ;
    int                 best = -1;
-   struct Cat_Context* catval;
+   /* struct Cat_Context* catval;*/
    struct Cat_Context* catalogue;
 
    if (frame == -1)
@@ -1513,10 +1529,11 @@ Display           **Dp;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
+#  ifndef _WINDOWS
    int                 n;
+#  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
-   ATOM                res;
 
    RootShell.cbSize        = sizeof (RootShell) ;
    RootShell.lpszClassName = tszAppName;
@@ -1706,17 +1723,17 @@ char               *textmenu;
 {
 #ifndef _WINDOWS
    Arg                 args[10];
+   ThotWidget          frame;
+   int                 index;
+   ThotWidget          row, row1;
+   ThotWidget          w;
+   ThotWidget          Main_Wd;
+   int                 k;
+   ThotWidget          menu_bar;
+   ThotWindow          wind;
 #endif /* !_WINDOWS */
 
-   ThotWidget          Main_Wd;
-   ThotWidget          frame;
-   ThotWidget          w;
-   ThotWidget          menu_bar;
-   ThotWidget          row, row1;
-   ThotWindow          wind;
    int                 n;
-   int                 k;
-   int                 index;
    char               *value;
 
 #  ifndef _WINDOWS
@@ -1960,16 +1977,14 @@ char               *text;
 #  ifndef _WINDOWS
    XmString            title_string, OK_string;
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
-   int                 n;
    ThotWidget          row, w;
    ThotWidget          msgbox;
+   int                 n;
 
    /* get current position */
    TtaSetDialoguePosition ();
 
    /* Create the window message */
-#  ifndef _WINDOWS
    title_string = XmStringCreateSimple (text);
    OK_string = XmStringCreateSimple (Confirm_string);
    n = 0;
@@ -2943,12 +2958,10 @@ char                button;
    register int        index;
    register int        ent;
    register int        i;
-   int                 n;
    int                 eindex;
    boolean             rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   ThotWidget          w;
    char                heading[200];
 
 #  ifdef _WINDOWS
@@ -2957,6 +2970,8 @@ char                button;
    Arg                 args[MAX_ARGS];
    ThotWidget          menu;
    XmString            title_string;
+   ThotWidget          w;
+   int                 n;
 #  endif /* !_WINDOWS */
 
    if (ref == 0)
@@ -3285,12 +3300,12 @@ struct E_List     **adbloc;
 
 #endif /* __STDC__ */
 {
-   int                 n;
    ThotWidget          row;
    ThotWidget          w;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+   int                 n;
 #  endif /* _WINDOWS */
 
    /* Il faut sauter la 1ere entree allouee a un Row-Column */
@@ -3620,16 +3635,13 @@ boolean             react;
 #  ifndef _WINDOWS
    XmString            title_string;
    ThotWidget          menu;
+   char                heading[200];
 #  endif /* !_WINDOWS */
 
-   char                heading[200];
    char                button;
 
 #  ifdef _WINDOWS
-   int                 frame;
-   HMENU               menuParent;
    HMENU               menu;
-   HMENU               menuEntry;
    char               *title_string;
 #  endif
 

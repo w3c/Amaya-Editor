@@ -54,7 +54,9 @@ static XmString     null_string;
 #endif
 
 #ifdef _WINDOWS
-#define ID_TOOLBAR  165
+#define URL_TXTZONE     0
+#define TITLE_TXTZONE   1
+#define ID_TOOLBAR    165
 
 #define MAX_MENUS 5
 #define ToolBar_AutoSize(hwnd) \
@@ -73,6 +75,9 @@ extern BOOL      WIN_UserGeometry;
 static HWND      hwndHead   ;
 static char*     txtZoneLabel;
 static boolean   paletteRealized = FALSE;
+
+static char      URL_txt [500];
+static char      doc_title [500];
 
 int         cyToolBar ;
 HWND        hwndTB ;
@@ -998,7 +1003,8 @@ LPARAM      lParam;
 	         /* Create toolbar  */
 				 AmayaTBBitmap.hInst = hInstance;
 				 AmayaTBBitmap.nID   = ID_TOOLBAR;
-                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
+
+                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
 				 /*
                  ShowWindow (ToolBar, SW_SHOWNORMAL);
@@ -1036,10 +1042,20 @@ LPARAM      lParam;
                  return 0;
 		 
             case WM_COMMAND:
-				 if (LOWORD (wParam) >= TBBUTTONS_BASE)
-					APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-				 else 
-	                 WIN_ThotCallBack (hwnd, wParam, lParam);
+			     if (HIWORD (wParam) == EN_UPDATE) {
+				    if (LOWORD (wParam) == URL_TXTZONE) {
+					   /* GetWindowText (hwnd, URL_TXTZONE, URL_txt, sizeof (URL_txt) - 1);*/
+					   GetWindowText (FrameTable[frame].Text_Zone[LOWORD (wParam)], URL_txt, sizeof (URL_txt) - 1);
+					  /* ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen); */
+				   } else if (LOWORD (wParam) == TITLE_TXTZONE) {
+					      GetWindowText (FrameTable[frame].Text_Zone[LOWORD (wParam)], doc_title, sizeof (doc_title) - 1);
+					      /* GetWindowText (hwnd, TITLE_TXTZONE, doc_title, sizeof (doc_title) - 1);*/
+					      /* ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);*/
+				   }
+				} else if (LOWORD (wParam) >= TBBUTTONS_BASE)
+					   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
+				else 
+	                WIN_ThotCallBack (hwnd, wParam, lParam);
 	         return (0);
 
             case WM_DESTROY:

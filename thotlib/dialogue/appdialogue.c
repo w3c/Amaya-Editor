@@ -1764,7 +1764,7 @@ void                (*procedure) ();
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 #                 else  /* _WINDOWS */
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
                   FrameTable[frame].Text_Zone[i] = w;
 
@@ -2580,6 +2580,10 @@ int                 frame;
    Menu_Ctl           *ptrmenu;
    Item_Ctl           *ptr;
 
+#  ifdef _WINDOWS 
+   int catIndex;
+#  endif /* _WINDOWS */
+
    if (ThotLocalActions[T_stopinsert] != NULL)
      (*ThotLocalActions[T_stopinsert]) ();
    w = FrameTable[frame].WdFrame;
@@ -2632,7 +2636,8 @@ int                 frame;
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
         /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0); */
 #       else  /* _WINDOWS */
-        DestroyWindow (FrMainRef[frame]); 
+        DestroyWindow (FrMainRef[frame]);
+		CleanFrameCatList (frame);
 #       endif /* _WINDOWS */
 	FrRef[frame] = 0;
 #       ifdef _WINDOWS

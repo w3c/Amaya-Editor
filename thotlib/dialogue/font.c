@@ -649,13 +649,17 @@ int                 frame;
    int                 WIN_fdwStrikeOut = FALSE;
    HFONT               hFont;
 
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "WIN_LoadFont('%c','%c',%d,%d,%d,%d)\n",
 	    alphabet, family, highlight, size, unit, frame);
+#  endif /* AMAYA_DEBUG */
 
    switch (alphabet) {
 	  case 'L':
 	       /* Latin alphabet, Ok */
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "Latin, ");
+#          endif /* AMAYA_DEBUG */
 	       break;
 
 	  case 'G':
@@ -663,7 +667,9 @@ int                 frame;
 	       return (hFont);
 
           default:
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "unknown alphabet '%c'\n", alphabet);
+#          endif /* AMAYA_DEBUG */
 	       return (hFont);
    }
 
@@ -684,11 +690,15 @@ int                 frame;
 	       break;
 
 	  default:
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "unknown family '%c'\n", family);
+#          endif /* AMAYA_DEBUG */
 	       return (hFont);
    }
 
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "'%s', ", WIN_lpszFace);
+#  endif /* AMAYA_DEBUG */
    switch (StylesTable[highlight]) {
 	  case 'r':
 	       break;
@@ -696,22 +706,30 @@ int                 frame;
 	  case 'i':
 	  case 'o':
 	       WIN_fdwItalic = TRUE;
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "italic, ");
+#          endif /* AMAYA_DEBUG */
 	       break;
 
 	  case 'b':
 	  case 'g':
 	  case 'q':
 	       WIN_fnWeight = FW_BOLD;
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "bold, ");
+#          endif /* AMAYA_DEBUG */
 	       break;
 
 	  default:
+#          ifdef AMAYA_DEBUG
 	       fprintf (stderr, "unknown highlight %d\n", highlight);
+#          endif /* AMAYA_DEBUG */
 	       return (hFont);
    }
 
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "%d pt, ", size);
+#  endif /* AMAYA_DEBUG */
    WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
 
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
@@ -721,10 +739,11 @@ int                 frame;
 		       WIN_lpszFace);
 
    if (hFont == NULL) {
+#     ifdef AMAYA_DEBUG
       fprintf (stderr, "Not found ...\n");
+#     endif /* AMAYA_DEBUG */
       WinErrorBox (FrRef[frame]);
-   } else
-         fprintf (stderr, "Loaded\n");
+   } 
 
    return (hFont);
 }
@@ -926,11 +945,13 @@ char               *name;
 #endif /* __STDC__ */
 {
    int                 i;
+#  ifndef _WINDOWS
    int                 ndir, ncurrent;
+   char                FONT_PATH[128];
+   char               *fontpath;
+#  endif /* _WINDOWS */
    char              **dirlist = NULL;
    char              **currentlist = NULL;
-   char               *fontpath;
-   char                FONT_PATH[128];
    char               *value;
    int                 f3;
 
