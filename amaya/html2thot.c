@@ -4843,16 +4843,16 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   CheckDocHeader parses the loaded file to detect if it includes:
   - an XML declaration (returns xmlDec = TRUE)
   - a doctype (returns docType = TRUE)
-  - an xml namespace
   Other returns:
   The indicator isXML
   The document type transitional, XHTML 1.1, basic, other (parsingLevel)
   The charset value if the XML declaration gives an encoding or
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
+  A boolean that indicates if an XML DTD is supported by Amaya
   ----------------------------------------------------------------------*/
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
-		     ThotBool *isXML, ThotBool *xmlns, int *parsingLevel,
+		     ThotBool *isXML, ThotBool *isknown, int *parsingLevel,
 		     CHARSET *charset, char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
@@ -4864,7 +4864,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *xmlDec = FALSE;
   *docType = FALSE;
   *isXML = FALSE;
-  *xmlns = FALSE;
+  *isknown = FALSE;
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
@@ -4969,6 +4969,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  if (ptr && ptr < end)
 			    {
 			      *isXML = TRUE;
+			      *isknown = TRUE;
 			      ptr = strstr (&FileBuffer[i], "Basic");
 			      if (!ptr || (ptr && ptr > end))
 				ptr = strstr (&FileBuffer[i], "basic");
@@ -5022,8 +5023,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    ptr = strstr (&FileBuffer[i], "svg");
 			  if (ptr && ptr < end)
 			    {
-			      *isXML = TRUE;
 			      *thotType = docSVG;
+			      *isXML = TRUE;
+			      *isknown = TRUE;
 			    }
 			  else
 			    {
@@ -5034,6 +5036,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			      if (ptr && ptr < end)
 				{
 				  *isXML = TRUE;
+				  *isknown = TRUE;
 				  *thotType = docMath;
 				  *parsingLevel = L_MathML;
 				}
@@ -5103,7 +5106,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				{
 				  /* The xhtml namespace declaration is found */
 				  *isXML = TRUE;
-				  *xmlns = TRUE;
+				  *isknown = TRUE;
 				}
 			    }
 			}
@@ -5126,7 +5129,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				{
 				  /* The svg namespace declaration is found */
 				  *isXML = TRUE;
-				  *xmlns = TRUE;
+				  *isknown = TRUE;
 				}
 			    }
 			}
@@ -5149,7 +5152,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				{
 				  /* The MathML namespace declaration is found */
 				  *isXML = TRUE;
-				  *xmlns = TRUE;
+				  *isknown = TRUE;
 				}
 			    }
 			}

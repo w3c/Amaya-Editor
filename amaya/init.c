@@ -3020,7 +3020,7 @@ static Document LoadDocument (Document doc, char *pathname,
   int                 parsingLevel;
   ThotBool            unknown;
   ThotBool            plainText;
-  ThotBool            xmlDec, withDoctype, isXML, xmlns;
+  ThotBool            xmlDec, withDoctype, isXML, isknown;
   DocumentType        thotType;
   char                local_content_type[MAX_LENGTH];
 
@@ -3038,10 +3038,10 @@ static Document LoadDocument (Document doc, char *pathname,
 
   /* Check informations within the document */
   if (tempfile[0] != EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &xmlns,
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isknown,
 		    &parsingLevel, &charset, charsetname, &thotType);
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &xmlns,
+    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &isknown,
 		    &parsingLevel, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
@@ -3189,11 +3189,9 @@ static Document LoadDocument (Document doc, char *pathname,
 		   /* Served as an XML document */
 		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
 		     {
-		       if (withDoctype || xmlns)
-			 {
-			   /* This type comes from the doctype or a namespace declaration */
-			   docType = thotType;
-			 }
+		       if (isXML && isknown)
+			 /* This type comes from the doctype or a namespace declaration */
+			 docType = thotType;
 		       else
 			 {
 			   /* Ignore the type-specific semantic */
@@ -3284,13 +3282,13 @@ static Document LoadDocument (Document doc, char *pathname,
 			(content_type[i+1+3] == EOS))
 		 {
 		   /* Served as an XML document */
-		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
+		   if ((thotType == docHTML) ||
+		       thotType == docSVG ||
+		       thotType == docMath)
 		     {
-		       if (withDoctype || xmlns)
-			 {
-			   /* This type comes from the doctype or a namespace declaration */
-			   docType = thotType;
-			 }
+		       if (isXML && isknown)
+			 /* This type comes from the doctype or a namespace declaration */
+			 docType = thotType;
 		       else
 			 {
 			   /* Ignore the type-specific semantic */

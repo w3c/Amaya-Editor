@@ -521,7 +521,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
   ElementType         elType;
   int                 modified, i;
   ThotBool            is_svg, is_mml;
-  ThotBool            xmlDec, withDoctype, isXML, xmlns;
+  ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;
   int                 parsingLevel;
   CHARSET             charset;
@@ -563,7 +563,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 		is_mml = TRUE;
 	      else /* try sniffing */
 		{
-		  CheckDocHeader (imageName, &xmlDec, &withDoctype, &isXML, &xmlns,
+		  CheckDocHeader (imageName, &xmlDec, &withDoctype, &isXML, &isKnown,
 				  &parsingLevel, &charset, charsetname, &thotType);
 		  if (isXML && thotType == docSVG)
 		    is_svg = TRUE;

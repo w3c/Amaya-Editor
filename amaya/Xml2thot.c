@@ -4552,7 +4552,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   char          bufferRead[COPY_BUFFER_SIZE];
   int           res, i,  parsingLevel, tmpLineRead = 0;
   ThotBool      endOfFile = FALSE;
-  ThotBool      xmlDec, docType, isXML, xmlns;
+  ThotBool      xmlDec, docType, isXML, isKnown;
   ThotBool      savParsingError;
   ThotBool      use_ref = FALSE;
   DocumentType  thotType;
@@ -4702,7 +4702,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
  
   /* Check if there is an xml declaration with a charset declaration */
   if (docURL[0] != EOS)
-    CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &xmlns,
+    CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &isKnown,
 		    &parsingLevel, &charset, charsetname, &thotType);
   
   /* Parse the input file and complete the Thot document */

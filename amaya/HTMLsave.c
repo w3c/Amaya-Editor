@@ -1053,7 +1053,7 @@ void RestartParser (Document doc, char *localFile,
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
   int           i;
-  ThotBool      xmlDec, withDoctype, isXML, xmlns;
+  ThotBool      xmlDec, withDoctype, isXML, isKnown;
   DocumentType  thotType;
 
   /* Clean up previous Parsing errors file */
@@ -1080,7 +1080,7 @@ void RestartParser (Document doc, char *localFile,
 	}
 
   /* check if there is an XML declaration with a charset declaration */
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &xmlns,
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
 		  &parsingLevel, &charset, charsetname, &thotType);
   if (isXML || IsMathMLName (localFile) || IsSVGName (localFile))
     DocumentMeta[doc]->xmlformat = TRUE;
