@@ -70,7 +70,7 @@ STRUCT
 
   Comment\240 = LIST OF (Comment_line = TEXT);
 
-  XMLPI = LIST OF (PI_line = TEXT);
+  XMLPI (ATTR is_css = Text) = LIST OF (PI_line = TEXT);
 	
   CDATA = LIST OF (CDATA_line = TEXT);
 
@@ -992,5 +992,6 @@ EXCEPT
 	Class:		CssClass;
 	SVG_ImageContent: Hidden;
 	Embed_Content:  Hidden, NoSelect;
+	is_css:	Invisible;
 
 END

@@ -7723,4 +7723,10 @@ ATTRIBUTES
 	if LastAttr
 	   CreateAfter(INVALID_E);
 
+  is_css:
+	BEGIN
+		Visibility: 0;
+	END;
+
+
 END

@@ -1259,6 +1259,10 @@ ATTRIBUTES
 		BEGIN
 		END;
 
+ is_css:
+		BEGIN
+		END;
+
 TextTRANSLATE
 	BEGIN
 	'\240' -> ' '; { &nbsp; }

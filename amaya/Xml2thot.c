@@ -3628,6 +3628,8 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
    CSSInfoPtr    css_info;
    ThotBool      ok;
    ElementType   elType;
+   Attribute     attr_css;
+   AttributeType attrType;
 
    length = strlen (PiData);
    buffer = TtaGetMemory (length + 1);
@@ -3736,8 +3738,24 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 		       XML_CSS_Level++;	       
 		     }
 		   else
-		     LoadStyleSheet (css_href, XMLcontext.doc, piEl,
-				     css_info, css_media, FALSE);
+		     {
+		       LoadStyleSheet (css_href, XMLcontext.doc, piEl,
+				       css_info, css_media, FALSE);
+		       /* Create a specific attribute for XHTML documents */
+		       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+			 {
+			   attrType.AttrSSchema = elType.ElSSchema;
+			   attrType.AttrTypeNum = HTML_ATTR_is_css;
+			   attr_css = TtaGetAttribute (piEl, attrType);
+			   if (!attr_css)
+			     {
+			       attr_css = TtaNewAttribute (attrType);
+			       TtaAttachAttribute (piEl, attr_css, XMLcontext.doc);
+			       TtaSetAttributeText (attr_css, "text/css",
+						    piEl, XMLcontext.doc);
+			     }
+			 }
+		     }
 		 }
 	       TtaFreeMemory (css_href);
 	     }

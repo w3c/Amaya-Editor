@@ -2815,6 +2815,11 @@ ATTRIBUTES
  xml_space = xml_space_preserve:
 	 Create ' xml:space="preserve"';
 
+ is_css:
+	BEGIN
+	NoTranslation;
+	END;
+
 TextTRANSLATE
 	BEGIN
 	'\46' -> '&amp;';	{ ampersand, U+0026 ISOnum }
