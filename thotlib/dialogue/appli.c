@@ -622,7 +622,7 @@ int                 value;
                   if (delta > 0)
                     delta = nbPages * FrameTable[frame].FrWidth + remaining;
                   else 
-                    delta = -nbPages * FrameTable[frame].FrWidth + remaining;
+                    delta = -nbPages * FrameTable[frame].FrWidth - remaining;
 	       } else {
                   delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
                }
