@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Mai 1994 */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -42,38 +38,38 @@
 /* |            l'intitule' de l'entree Split du menu Edit.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ComposeItemSplit (char *BufItemSplit)
+static void         ComposeItemSplit (char *bufItemSplit)
 #else  /* __STDC__ */
-static void         ComposeItemSplit (BufItemSplit)
-char               *BufItemSplit;
+static void         ComposeItemSplit (bufItemSplit)
+char               *bufItemSplit;
 
 #endif /* __STDC__ */
 {
-   PtrElement          premEl, derEl, pListe, pPointDiv, ElemADupliquer,
+   PtrElement          pFirstEl, pLastEl, pList, pPointDiv, pElToDuplicate,
                        pEl;
-   int                 premcar, dercar;
+   int                 firstChar, lastChar;
    PtrDocument         pDoc;
 
-   BufItemSplit[0] = '\0';
+   bufItemSplit[0] = '\0';
    /* verifie si la commande Split est valide pour la selection */
    /* courante */
-   if (GetCurrentSelection (&pDoc, &premEl, &derEl, &premcar, &dercar))
+   if (GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
      {
-	if (!CanSplitElement (premEl, premcar, TRUE, &pListe, &pPointDiv,
-			      &ElemADupliquer))
-	   CanSplitElement (premEl, premcar, FALSE, &pListe, &pPointDiv,
-			    &ElemADupliquer);
-	if (ElemADupliquer != NULL && !ElementIsReadOnly (pListe) &&
-	    !ElementIsReadOnly (ElemADupliquer))
+	if (!CanSplitElement (pFirstEl, firstChar, TRUE, &pList, &pPointDiv,
+			      &pElToDuplicate))
+	   CanSplitElement (pFirstEl, firstChar, FALSE, &pList, &pPointDiv,
+			    &pElToDuplicate);
+	if (pElToDuplicate != NULL && !ElementIsReadOnly (pList) &&
+	    !ElementIsReadOnly (pElToDuplicate))
 	   /* la commande Split est valide, on compose l'item */
 	   /* correspondant du menu Edit */
 	  {
-	     pEl = ElemADupliquer;
+	     pEl = pElToDuplicate;
 	     /* si c'est un choix, on utilise le type du fils */
 	     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
 		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
 		   pEl = pEl->ElFirstChild;
-	     sprintf (BufItemSplit, "%s %s", TtaGetMessage (LIB, SPLIT),
+	     sprintf (bufItemSplit, "%s %s", TtaGetMessage (LIB, SPLIT),
 		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	  }
      }
@@ -91,16 +87,16 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   char                BufItemSplit[MAX_TXT_LEN];
+   char                bufItemSplit[MAX_TXT_LEN];
 
-   BufItemSplit[0] = '\0';
+   bufItemSplit[0] = '\0';
    if (pDoc == NULL || pDoc != SelectedDocument)
       return;
    else if (!pDoc->DocReadOnly)
      {
 	/* construit l'intitule' de la commande Split en fonction de */
 	/* la selection courante */
-	ComposeItemSplit (BufItemSplit);
+	ComposeItemSplit (bufItemSplit);
      }
 }
 
@@ -141,3 +137,11 @@ void                StructEditingLoadResources ()
 	ImageMenuLoadResources ();
      }
 }
+
+
+
+
+
+
+
+

@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    editmenu.c : fonctions d'edition -- menus fichier, vue, import export.
  */
@@ -22,13 +20,13 @@
 #include "picture.h"
 #undef EXPORT
 #define EXPORT extern
-#define MyNumMenuCadrageImage		1
-#define MyNumZoneDirImage		2
-#define MyNumFormImage		        3
-#define MyNumZoneFichierImage		4
-#define MyNumSelImage		        5
-#define MyNumMenuTypeImage		6
-#define IMAGE_MENU_MAX			7
+#define MY_NUM_MENU_IMAGE_FRAME		1
+#define MY_NUM_ZONE_DIR_IMAGE		2
+#define MY_NUM_IMAGE_FORM		3
+#define MY_NUM_ZONE_IMAGE_FILE		4
+#define MY_NUM_IMAGE_SEL		5
+#define MY_NUM_MENU_IMAGE_TYPE		6
+#define MAX_IMAGE_MENU			7
 extern PathBuffer   DocumentPath;
 extern PathBuffer   SchemaPath;
 extern char        *FileExtension[];
@@ -37,8 +35,8 @@ extern char        *FileExtension[];
 #define EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
-static boolean      redisplayPicture;
-static char         NomImage[100] = "";
+static boolean      RedisplayPicture;
+static char         ImageName[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
 #include "picture_f.h"
@@ -75,16 +73,16 @@ int                 indexType;
    if (indexType == 1)
      {
 	/* Le strech est autorise pour les images EPSF */
-	TtaRedrawMenuEntry (BaseDlgImage + MyNumMenuCadrageImage, 1, NULL, -1, 1);
-	TtaRedrawMenuEntry (BaseDlgImage + MyNumMenuCadrageImage, 2, NULL, -1, 1);
+	TtaRedrawMenuEntry (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 1, NULL, -1, 1);
+	TtaRedrawMenuEntry (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 2, NULL, -1, 1);
      }
    else
      {
 	/* Le strech n'est pas autorise pour les autres images */
-	UnsetEntryMenu (BaseDlgImage + MyNumMenuCadrageImage, 1);
-	UnsetEntryMenu (BaseDlgImage + MyNumMenuCadrageImage, 2);
+	UnsetEntryMenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 1);
+	UnsetEntryMenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 2);
 	IndexPresImage = 0;
-	TtaSetMenuForm (BaseDlgImage + MyNumMenuCadrageImage, IndexPresImage);
+	TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, IndexPresImage);
      }
 }
 
@@ -99,7 +97,7 @@ static void         InitPathImage ()
 #endif				/* __STDC__ */
 
 {
-   char                BufDir[MAX_PATH * 2];
+   char                bufDir[MAX_PATH * 2];
    int                 i, j;
    int                 nb;
    int                 max;
@@ -112,40 +110,40 @@ static void         InitPathImage ()
    for (i = 0; i < MAX_PATH && SchemaPath[i] != '\0'; i++)
       if (SchemaPath[i] == PATH_SEP)
 	{
-	   if (BufDir[j - 1] != '\0')
+	   if (bufDir[j - 1] != '\0')
 	     {
-		BufDir[j++] = '\0';
+		bufDir[j++] = '\0';
 		nb++;
 	     }
 	}
       else
-	 BufDir[j++] = SchemaPath[i];
+	 bufDir[j++] = SchemaPath[i];
 
    if (j < max)
-      BufDir[j++] = '\0';
+      bufDir[j++] = '\0';
    else
-      BufDir[j - 1] = '\0';
+      bufDir[j - 1] = '\0';
 
    /* paths des documents */
    nb++;
    for (i = 0; i < MAX_PATH && DocumentPath[i] != '\0'; i++)
       if (DocumentPath[i] == PATH_SEP)
 	{
-	   if (BufDir[j - 1] != '\0')
+	   if (bufDir[j - 1] != '\0')
 	     {
-		BufDir[j++] = '\0';
+		bufDir[j++] = '\0';
 		nb++;
 	     }
 	}
       else
-	 BufDir[j++] = DocumentPath[i];
+	 bufDir[j++] = DocumentPath[i];
 
    if (j < max)
-      BufDir[j] = '\0';
+      bufDir[j] = '\0';
    else
-      BufDir[j - 1] = '\0';
-   TtaNewSelector (BaseDlgImage + MyNumZoneDirImage, BaseDlgImage + MyNumFormImage, "Dossiers documents",
-		   nb, BufDir, 9, NULL, FALSE, TRUE);
+      bufDir[j - 1] = '\0';
+   TtaNewSelector (BaseDlgImage + MY_NUM_ZONE_DIR_IMAGE, BaseDlgImage + MY_NUM_IMAGE_FORM, "Dossiers documents",
+		   nb, bufDir, 9, NULL, FALSE, TRUE);
 }
 
 
@@ -153,37 +151,37 @@ static void         InitPathImage ()
 /* |  CallbackPictureMenu enregistre les retours du formulaire Picture            | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                CallbackPictureMenu (int ref, int typedata, char *txt)
+void                CallbackPictureMenu (int ref, int typeData, char *txt)
 
 #else  /* __STDC__ */
-void                CallbackPictureMenu (ref, typedata, txt)
+void                CallbackPictureMenu (ref, typeData, txt)
 int                 ref;
-int                 typedata;
+int                 typeData;
 char               *txt;
 
 #endif /* __STDC__ */
 {
-   PathBuffer          nomcomplet;
+   PathBuffer          completeName;
    int                 i, val;
 
    val = (int) txt;
 
    switch (ref - BaseDlgImage)
 	 {
-	    case MyNumZoneFichierImage:
+	    case MY_NUM_ZONE_IMAGE_FILE:
 	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != DIR_SEP)
 		 {
 		    strcpy (DirectoryImage, txt);
-		    NomImage[0] = '\0';
+		    ImageName[0] = '\0';
 		 }
 	       else
 		 {
 		    /* conserve le nom du document a ouvrir */
-		    TtaExtractName (txt, DirectoryImage, NomImage);
-		    if (NomImage[0] == '\0' && !TtaCheckDirectory (DirectoryImage))
+		    TtaExtractName (txt, DirectoryImage, ImageName);
+		    if (ImageName[0] == '\0' && !TtaCheckDirectory (DirectoryImage))
 		      {
 			 /* Le texte correspond au nom de l'image sans directory */
-			 strncpy (NomImage, DirectoryImage, 100);
+			 strncpy (ImageName, DirectoryImage, 100);
 			 DirectoryImage[0] = '\0';
 		      }
 		 }
@@ -201,32 +199,32 @@ char               *txt;
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryImage);
 				 InitPathImage ();
-				 TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-						   FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+				 TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
+						   FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
 			      }
 			 }
 		 }
 	       break;
-	    case MyNumSelImage:
+	    case MY_NUM_IMAGE_SEL:
 	       if (DirectoryImage[0] == '\0')
 		 {
 		    /* compose le path complet du fichier pivot */
 		    strncpy (DirectoryImage, DocumentPath, MAX_PATH);
 		    /* recheche indirectement le directory */
-		    MakeCompleteName (txt, "", DirectoryImage, nomcomplet, &i);
+		    MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
 		    /* separe directory et nom */
-		    TtaExtractName (nomcomplet, DirectoryImage, NomImage);
+		    TtaExtractName (completeName, DirectoryImage, ImageName);
 		 }
 	       else
 		 {
-		    strcpy (nomcomplet, DirectoryImage);
-		    strcat (nomcomplet, "/");
-		    strcat (nomcomplet, txt);
-		    strcpy (NomImage, txt);
+		    strcpy (completeName, DirectoryImage);
+		    strcat (completeName, "/");
+		    strcat (completeName, txt);
+		    strcpy (ImageName, txt);
 		 }
-	       TtaSetTextForm (BaseDlgImage + MyNumZoneFichierImage, nomcomplet);
+	       TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, completeName);
 	       break;
-	    case MyNumMenuTypeImage:
+	    case MY_NUM_MENU_IMAGE_TYPE:
 	       if (val != IndexTypeImage)
 		 {
 		    IndexTypeImage = val;
@@ -246,32 +244,32 @@ char               *txt;
 				   }
 			      }
 		      }
-		    TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-				      FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+		    TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
+				      FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
 		    CheckPresImage (val);
 		 }
 	       break;
-	    case MyNumMenuCadrageImage:
+	    case MY_NUM_MENU_IMAGE_FRAME:
 	       if (val != IndexPresImage)
 		 {
 		    IndexPresImage = val;
 		    /* Faut-il mettre a jour la liste des fichiers */
 		    if (DirectoryImage[0] != '\0')
-		       TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-					 FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+		       TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
+					 FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
 		 }
 	       break;
-	    case MyNumZoneDirImage:
+	    case MY_NUM_ZONE_DIR_IMAGE:
 	       strcpy (DirectoryImage, txt);
-	       TtaSetTextForm (BaseDlgImage + MyNumZoneFichierImage, DirectoryImage);
-	       TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-				 FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+	       TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, DirectoryImage);
+	       TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
+				 FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
 	       break;
-	    case MyNumFormImage:
+	    case MY_NUM_IMAGE_FORM:
 	       if (val == 1)
 		  /* Edition realisee */
-		  redisplayPicture = TRUE;
-	       TtaDestroyDialogue (BaseDlgImage + MyNumFormImage);
+		  RedisplayPicture = TRUE;
+	       TtaDestroyDialogue (BaseDlgImage + MY_NUM_IMAGE_FORM);
 	       break;
 	    default:
 	       break;
@@ -283,11 +281,11 @@ char               *txt;
 /* |  Menu appele lors de la modification d'une image                    | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void BuildPictureMenu (char *nom, boolean *result, int *typim, int *pres, PtrBox pBox)
+void BuildPictureMenu (char *name, boolean *result, int *typim, int *pres, PtrBox pBox)
 
 #else  /* __STDC__ */
-void BuildPictureMenu (nom, result, typim, pres, pBox)
-char               *nom;
+void BuildPictureMenu (name, result, typim, pres, pBox)
+char               *name;
 boolean            *result;
 int                *typim;
 int                *pres;
@@ -296,94 +294,94 @@ PtrBox            pBox;
 
 #endif /* __STDC__ */
 {
-   int                 i, Indx;
-   char                BufTypeImage[MAX_TXT_LEN];
-   char               *Source;
-   int                 imageTypeCount, longueur;
-   char                BufMenu[MAX_TXT_LEN];
+   int                 i, indx;
+   char                bufTypeImage[MAX_TXT_LEN];
+   char               *source;
+   int                 imageTypeCount, length;
+   char                bufMenu[MAX_TXT_LEN];
    PictInfo    *image;
 
 
    IndexTypeImage = GetPictTypeIndex (*typim);
    IndexPresImage = GetPictPresIndex (*pres);
-   strcpy (NomImage, nom);
+   strcpy (ImageName, name);
    DirectoryImage[0] = '\0';
-   redisplayPicture = FALSE;
+   RedisplayPicture = FALSE;
 
-   TtaNewForm (BaseDlgImage + MyNumFormImage, 0, 0, 0, "Picture", TRUE, 2, 'L', D_DONE);
+   TtaNewForm (BaseDlgImage + MY_NUM_IMAGE_FORM, 0, 0, 0, "Picture", TRUE, 2, 'L', D_DONE);
    InitPathImage ();
 
    /* liste des fichiers existants */
-   TtaListDirectory ("", BaseDlgImage + MyNumFormImage, NULL, -1, "", "Fichiers", BaseDlgImage + MyNumSelImage);
+   TtaListDirectory ("", BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1, "", "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
 
    /* sous-menu des types d'image du formulaire Picture */
-   Indx = 0;
-   GetPictHandlersList (&imageTypeCount, BufTypeImage);
+   indx = 0;
+   GetPictHandlersList (&imageTypeCount, bufTypeImage);
    /* ajoute un 'B' au debut de chaque entree du menu construit */
-   Source = &BufTypeImage[0];
+   source = &bufTypeImage[0];
    for (i = 1; i <= imageTypeCount; i++)
      {
-	BufMenu[Indx] = 'B';
-	Indx++;
-	longueur = strlen (Source) + 1;
-	if (Indx + longueur < MAX_TXT_LEN)
+	bufMenu[indx] = 'B';
+	indx++;
+	length = strlen (source) + 1;
+	if (indx + length < MAX_TXT_LEN)
 	  {
-	     strcpy ((BufMenu) + Indx, Source);
-	     Indx += longueur;
+	     strcpy ((bufMenu) + indx, source);
+	     indx += length;
 	  }
-	Source += longueur;
+	source += length;
      }
-   TtaNewSubmenu (BaseDlgImage + MyNumMenuTypeImage, BaseDlgImage + MyNumFormImage, 0, "Type image",
+   TtaNewSubmenu (BaseDlgImage + MY_NUM_MENU_IMAGE_TYPE, BaseDlgImage + MY_NUM_IMAGE_FORM, 0, "Type image",
 
 
 
 
-		  imageTypeCount, BufMenu, NULL, TRUE);
+		  imageTypeCount, bufMenu, NULL, TRUE);
 
    /* sous-menu cadrage du formulaire Picture */
-   Indx = 0;
-   sprintf (&BufMenu[Indx], "%s%s", "B", "Sans Modification");
-   Indx += strlen (&BufMenu[Indx]) + 1;
-   sprintf (&BufMenu[Indx], "%s%s", "B", "ReScale");
-   Indx += strlen (&BufMenu[Indx]) + 1;
-   sprintf (&BufMenu[Indx], "%s%s", "B", "Plein Cadre");
-   Indx += strlen (&BufMenu[Indx]) + 1;
+   indx = 0;
+   sprintf (&bufMenu[indx], "%s%s", "B", "Sans Modification");
+   indx += strlen (&bufMenu[indx]) + 1;
+   sprintf (&bufMenu[indx], "%s%s", "B", "ReScale");
+   indx += strlen (&bufMenu[indx]) + 1;
+   sprintf (&bufMenu[indx], "%s%s", "B", "Plein Cadre");
+   indx += strlen (&bufMenu[indx]) + 1;
 
-   TtaNewSubmenu (BaseDlgImage + MyNumMenuCadrageImage, BaseDlgImage + MyNumFormImage, 0,
-		  "Affichage", 3, BufMenu, NULL, FALSE);
+   TtaNewSubmenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, BaseDlgImage + MY_NUM_IMAGE_FORM, 0,
+		  "Affichage", 3, bufMenu, NULL, FALSE);
 
    /* zone de saisie du nom du fichier image */
-   TtaNewTextForm (BaseDlgImage + MyNumZoneFichierImage, BaseDlgImage + MyNumFormImage,
+   TtaNewTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, BaseDlgImage + MY_NUM_IMAGE_FORM,
 		   "Name du fichier", 50, 1, TRUE);
 
-   TtaSetSelector (BaseDlgImage + MyNumZoneDirImage, -1, "");
-   TtaSetTextForm (BaseDlgImage + MyNumZoneFichierImage, nom);
-   TtaSetMenuForm (BaseDlgImage + MyNumMenuTypeImage, IndexTypeImage);
-   TtaSetMenuForm (BaseDlgImage + MyNumMenuCadrageImage, IndexPresImage);
+   TtaSetSelector (BaseDlgImage + MY_NUM_ZONE_DIR_IMAGE, -1, "");
+   TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, name);
+   TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_TYPE, IndexTypeImage);
+   TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, IndexPresImage);
    CheckPresImage (IndexTypeImage);
    /* active le formulaire */
-   TtaShowDialogue (BaseDlgImage + MyNumFormImage, FALSE);
+   TtaShowDialogue (BaseDlgImage + MY_NUM_IMAGE_FORM, FALSE);
    /* attend le retour du formulaire */
    TtaWaitShowDialogue ();
-   if (NomImage[0] == '\0')
-      redisplayPicture = FALSE;
+   if (ImageName[0] == '\0')
+      RedisplayPicture = FALSE;
 
-   if (redisplayPicture)
+   if (RedisplayPicture)
      {
-	strcpy (nom, NomImage);
+	strcpy (name, ImageName);
 	*typim = GetPictureType (IndexTypeImage);
 	*pres = (PictureScaling) (IndexPresImage);
 	image = (PictInfo *) pBox->BxPictInfo;
-	strcpy (image->PicFileName, nom);
+	strcpy (image->PicFileName, name);
 	image->PicPresent = *pres;
 	image->PicType = *typim;
      }
-   *result = redisplayPicture;
+   *result = RedisplayPicture;
 }
 /* ----------------------------------------------------------------------- */
 void                ImageMenuLoadResources ()
 {
-   BaseDlgImage = TtaSetCallback (CallbackPictureMenu, IMAGE_MENU_MAX);
+   BaseDlgImage = TtaSetCallback (CallbackPictureMenu, MAX_IMAGE_MENU);
    if (BaseDlgImage != 0)
       TteConnectAction (T_imagemenu, (Proc) BuildPictureMenu);
 }

@@ -23,8 +23,8 @@
 
 static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
-static int          lastBg;
-static int          lastFg;
+static int          LastBg;
+static int          LastFg;
 static ThotGC       GCkey;
 
 #include "config_f.h"
@@ -66,11 +66,11 @@ int                 fground;
       wcase = CarWidth ('m', FontDialogue) * 4;
 
    hcase = FontHeight (FontDialogue);
-   if (lastBg != -1 && lastBg != bground)
+   if (LastBg != -1 && LastBg != bground)
      {
 	/* eteint le background precedent */
-	x = (lastBg % COLORS_COL) * wcase;
-	y = ((lastBg / COLORS_COL) + 1) * hcase;
+	x = (LastBg % COLORS_COL) * wcase;
+	y = ((LastBg / COLORS_COL) + 1) * hcase;
 #ifndef NEW_WILLOWS
 	x -= 2;
 	y -= 2;
@@ -83,11 +83,11 @@ int                 fground;
 #endif /* NEW_WILLOWS */
      }
 
-   if (lastFg != -1 && lastFg != fground)
+   if (LastFg != -1 && LastFg != fground)
      {
 	/* eteint le foreground precedent */
-	x = (lastFg % COLORS_COL) * wcase;
-	y = ((lastFg / COLORS_COL) + 1) * hcase;
+	x = (LastFg % COLORS_COL) * wcase;
+	y = ((LastFg / COLORS_COL) + 1) * hcase;
 #ifndef NEW_WILLOWS
 	w = wcase - 2;
 	h = hcase - 2;
@@ -99,13 +99,13 @@ int                 fground;
      }
 
    /* nouveau background */
-   if (lastBg != bground)
+   if (LastBg != bground)
      {
-	lastBg = bground;
-	if (lastBg != -1)
+	LastBg = bground;
+	if (LastBg != -1)
 	  {
-	     x = (lastBg % COLORS_COL) * wcase;
-	     y = ((lastBg / COLORS_COL) + 1) * hcase;
+	     x = (LastBg % COLORS_COL) * wcase;
+	     y = ((LastBg / COLORS_COL) + 1) * hcase;
 #ifndef NEW_WILLOWS
 	     x -= 2;
 	     y -= 2;
@@ -120,13 +120,13 @@ int                 fground;
      }
 
    /* nouveau foreground */
-   if (lastFg != fground)
+   if (LastFg != fground)
      {
-	lastFg = fground;
-	if (lastFg != -1)
+	LastFg = fground;
+	if (LastFg != -1)
 	  {
-	     x = (lastFg % COLORS_COL) * wcase;
-	     y = ((lastFg / COLORS_COL) + 1) * hcase;
+	     x = (LastFg % COLORS_COL) * wcase;
+	     y = ((LastFg / COLORS_COL) + 1) * hcase;
 #ifndef NEW_WILLOWS
 	     w = wcase - 2;
 	     h = hcase - 2;
@@ -243,10 +243,10 @@ static void         ColorsExpose ()
 	}
 
    /* show the current selection */
-   fground = lastFg;
-   bground = lastBg;
-   lastFg = -1;
-   lastBg = -1;
+   fground = LastFg;
+   bground = LastBg;
+   LastFg = -1;
+   LastBg = -1;
    ThotSelectPalette (bground, fground);
 #endif /* NEW_WILLOWS */
 }
@@ -286,13 +286,13 @@ int                 y;
 	  {
 	     /* couleur de trace' standard */
 	     ChangeCouleur (-1, FALSE);
-	     ThotSelectPalette (lastBg, -1);
+	     ThotSelectPalette (LastBg, -1);
 	  }
 	else
 	  {
 	     /* couleur de fond standard */
 	     ChangeCouleur (-1, TRUE);
-	     ThotSelectPalette (-1, lastFg);
+	     ThotSelectPalette (-1, LastFg);
 	  }
 	return;
      }
@@ -304,13 +304,13 @@ int                 y;
      {
 	/* selectionne la couleur de trace' */
 	ChangeCouleur (color, FALSE);
-	ThotSelectPalette (lastBg, color);
+	ThotSelectPalette (LastBg, color);
      }
    else
      {
 	/* selectionne la couleur de fond */
 	ChangeCouleur (color, TRUE);
-	ThotSelectPalette (color, lastFg);
+	ThotSelectPalette (color, LastFg);
      }
 
 }
@@ -567,8 +567,8 @@ int                 y;
    XtPopup (Color_Palette, XtGrabNonexclusive);
    Color_Window = XtWindowOfObject (frame);
    /* pas de selection precedente */
-   lastBg = -1;
-   lastFg = -1;
+   LastBg = -1;
+   LastFg = -1;
 #endif /* NEW_WILLOWS */
 }
 
