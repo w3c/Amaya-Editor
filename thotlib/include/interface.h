@@ -396,6 +396,11 @@ extern int TtaAddToolBarButton( int window_id,
 				void (*procedure) (),
 				ThotBool status );
 
+/*----------------------------------------------------------------------
+  TtaShowElementMenu
+  ----------------------------------------------------------------------*/
+extern void TtaShowElementMenu (Document doc, View view);
+
 #endif /* __CEXTRACT__  */
 
 #endif

@@ -1705,7 +1705,9 @@ void TtaAppendXmlElement (char *xmlName, ElementType *elType,
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      AppendXmlElement (xmlName, elType, mappedName, pDoc);
+      AppendXmlElement (xmlName, &(elType->ElTypeNum),
+			(PtrSSchema)(elType->ElSSchema),
+			mappedName, pDoc);
     }
 }
 

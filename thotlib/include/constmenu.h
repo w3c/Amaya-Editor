@@ -55,11 +55,12 @@
 #define NumMenuSearchNature	43
 #define NumSelTypeToSearch	44
 #define NumSelAttributeToSearch	45
-#define NumToggleUpperEqualLower       46
+#define NumToggleUpperEqualLower  46
 
 #define NumFormClose		47
 #define NumLabelSaveBeforeClosing 48
 #define NumMenuPresNature	49
+
 #define NbMaxMenuPresNature	20 /* schema de presentation des natures */
 #define NumMenuAttr    88	/* numero de la feuille de dialogue pour la */
                              	/* saisie des attributs */
@@ -79,6 +80,8 @@
                          	/* valeur d'un attribut textuel obligatoire */
 #define NumMenuAttrEnumNeeded 95 /* numero du menu des valeurs d'un */
 #define NumMenuCharacters	96
+#define NumFormElemToBeCreated  97
+#define NumSelectElemToBeCreated 98
 
 #define NumZoneRecess		100
 #define NumMenuRecessSense	101

@@ -2251,13 +2251,12 @@ void SetXmlInLineRule (ElementType elType, PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
    AppendXmlElement
-   Add a new element to the schema
+   Add a new element type to the schema
   ----------------------------------------------------------------------*/
-void AppendXmlElement (char *xmlName, ElementType *elType,
+void AppendXmlElement (char *xmlName, int *typeNum, PtrSSchema pSS,
 		       char **mappedName, PtrDocument pDoc)
 {
   PtrDocSchemasDescr  pPfS;
-  PtrSSchema          pSS;
   PtrPSchema          pPSch;
   PtrSRule            pRule;
   int                 rule;
@@ -2266,13 +2265,10 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
   ThotBool            found;
 #endif
 
-  pSS = NULL;
-  pPSch = NULL;
-  pPfS = pDoc->DocFirstSchDescr;
-
-  pSS = (PtrSSchema) elType->ElSSchema;
   if (pSS == NULL)
     return;
+  pPSch = NULL;
+  pPfS = pDoc->DocFirstSchDescr;
 
 #ifndef NODISPLAY
   /* Search the associated presentation schema */
@@ -2320,7 +2316,7 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
 #endif
 
       /* Update the type number */
-      elType->ElTypeNum = rule;
+      *typeNum = rule;
     }
 }
 

@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void CallbackElemToBeCreated ( int ref,
+				      int val,
+				      char *txt );
 extern void BuildChoiceMenu ( char *bufMenu,
                               char *menuTitle,
                               int nbEntries,
@@ -22,6 +25,9 @@ extern void BuildPasteMenu ( int RefMenu,
 
 #else /* __STDC__ */
 
+extern void CallbackElemToBeCreated ( int ref,
+				      int val,
+				      char *txt );
 extern void BuildChoiceMenu ( char *bufMenu,
                                 char *menuTitle,
                                 int nbEntries,

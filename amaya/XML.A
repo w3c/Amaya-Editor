@@ -10,6 +10,9 @@ DEFAULT
 
 ELEMENTS
 
+   doctype:
+	ElemMenu.Pre -> XmlElementTypeInMenu;
+
    xmlpi:
 	BEGIN
 	ElemTextModify.Pre -> XmlStyleSheetWillBeModified;

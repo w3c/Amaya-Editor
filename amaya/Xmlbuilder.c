@@ -19,6 +19,7 @@
 #include "XML.h"
 #include "fetchHTMLname.h"
 #include "document.h"
+#include "interface.h"
 
 #include "css_f.h"
 #include "fetchXMLname_f.h"
@@ -333,6 +334,15 @@ static Element IsXmlStyleSheet (Element el)
 }
 
 /*----------------------------------------------------------------------
+  XmlElementTypeInMenu
+ -----------------------------------------------------------------------*/
+ThotBool XmlElementTypeInMenu (NotifyElement *event)
+{
+  return TRUE; /* prevent Thot from putting this element name in the
+		  element creation menu */
+}
+
+/*----------------------------------------------------------------------
    XmlStyleSheetWillBeModified                                             
   ----------------------------------------------------------------------*/
 ThotBool XmlStyleSheetWillBeModified (NotifyOnTarget *event)
@@ -495,84 +505,5 @@ void XmlStyleSheetPasted (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void CreateXMLElementMenu (Document doc, View view)
 {
-#define     MAX_OPTIONS MAX_SUBMENUS
-#define     MAX_SUBOPTIONS 20
-#define     MAX_LABEL_LENGTH 50
-#define     PARAM_INCREMENT 50
-  char     *buffer;
-  int       last_buffer_char;
-  int       nb = 0;
-  char      text[MAX_LABEL_LENGTH + 1];
-  char     *tmp;
-  int       length, nbitems, nbsubmenus;
-#ifdef _WINGUI
-  int       nbOldEntries = 20;
-#endif /* _WINGUI */
-
-  /* create the option menu */
-  nbitems = 0;
-  nbsubmenus = 0;
-  
-  /* use the global allocation buffer to store the entries */
-  buffer = (char *)TtaGetMemory (PARAM_INCREMENT);
-  buffer[0] = EOS;
-  last_buffer_char = 0;
-  
-  while (nb < 5 && nbitems < MAX_OPTIONS)
-    {
-      length = 4;
-      strcpy (&text[1], "toto");
-      text[length + 1] = EOS;
-      /* add an item */
-      /* we have to add the 'B', 'T' or 'M' character */
-      text[0] = 'B';
-      /* convert the UTF-8 string */
-      tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text,
-					 TtaGetDefaultCharset ());
-      strcpy (&buffer[last_buffer_char], tmp);
-      last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
-      TtaFreeMemory (tmp);
-      nbitems++; 
-      nb++;
-    }
-  
-  if (nbitems == 0)
-    TtaFreeMemory (buffer);
-  else
-    {
-      /* create the main menu */
-#if defined (_WINGUI) || defined (_GTK)
-      TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			 NULL, nbitems, buffer, NULL, FALSE, 'L');
-#endif /* WINDOWS || _GTK */
-      TtaFreeMemory (buffer);
-      		     
-      /* activate the menu that has just been created */
-      ReturnOption = -1;
-      ReturnOptionMenu = -1;
-#if defined(_GTK)
-      TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) */
-      
-      TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-      /* wait for an answer from the user */
-      if (nbsubmenus == 0)
-	TtaWaitShowProcDialogue ();
-      else
-	TtaWaitShowDialogue ();
-      /* destroy the dialogue */
-      TtaDestroyDialogue (BaseDialog + OptionMenu);
-
-
-      if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
-	{
-	  /* make the returned option selected */
-	  if (ReturnOptionMenu == 0)
-	    { /* an item in the main (SELECT) menu */
-	      printf ("\nReturnOption = %d \n", ReturnOption);
-	    }
-	  /* clear the selection (which may happen from clicking on the dialogue) */
-	  TtaUnselect (doc);
-	}
-    }
+  TtaShowElementMenu (doc, view);
 }

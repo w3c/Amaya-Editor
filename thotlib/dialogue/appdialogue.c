@@ -62,6 +62,7 @@
 #include "buildboxes_f.h"
 #include "callback_f.h"
 #include "context_f.h"
+#include "creationmenu_f.h"
 #include "dialogapi_f.h"
 #include "dictionary_f.h"
 #include "displayview_f.h"
@@ -4303,7 +4304,13 @@ void ThotCallback (int ref, int typedata, char *data)
 		(void *)ref,
 		(void *)((int) data));
 	break;  
-	
+      case NumFormElemToBeCreated:
+	CallbackElemToBeCreated (ref, (int)data, NULL);
+	break;
+      case NumSelectElemToBeCreated:
+	CallbackElemToBeCreated (ref, 0, data);
+	break;
+
       default:
 	if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
 	  /* retour du menu des attributs */

@@ -82,7 +82,8 @@ extern ThotBool HasXmlInLineRule ( ElementType elType,
 extern void SetXmlInLineRule ( ElementType elType,
                                PtrDocument pDoc );
 extern void AppendXmlElement ( char *xmlName,
-                               ElementType *elType,
+                               int *typeNum,
+			       PtrSSchema pSS,
                                char **mappedName,
                                PtrDocument pDoc );
 extern void GetXmlAttributeType ( char* xmlName,
@@ -183,7 +184,8 @@ extern ThotBool HasXmlInLineRule ( ElementType elType,
 extern void SetXmlInLineRule ( ElementType elType,
                                  PtrDocument pDoc );
 extern void AppendXmlElement ( char *xmlName,
-                                 ElementType *elType,
+                                 int *typeNum,
+			         PtrSSchema pSS,
                                  char **mappedName,
                                  PtrDocument pDoc );
 extern void GetXmlAttributeType ( char* xmlName,
