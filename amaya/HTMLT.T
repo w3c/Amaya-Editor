@@ -17,6 +17,16 @@ RULES
 	Use MathMLT for MathML;
 	Use GraphMLT for GraphML;
 	Create '<?xml version="1.0" ?>\12';
+	if not Namespaces and HtmlDTD = Frameset
+	   BEGIN
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
+	   Create '                      "http://www.w3.org/TR/1999/PR-xhtml1-19991210/DTD/xhtml1-frameset.dtd">\12';
+	   END;
+        if not Namespaces and not HtmlDTD = Frameset
+	   BEGIN
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
+	   Create '                      "http://www.w3.org/TR/1999/PR-xhtml1-19991210/DTD/xhtml1-transitional.dtd">\12';
+	   END;	   
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
 #else
@@ -1056,25 +1066,25 @@ ATTRIBUTES
 	BEGIN
 	IF not HTML
 	    BEGIN
-	    Create ' lang="';
-	    Create Langue;
-	    Create DoubleQuote;
 #ifdef XML
 	    Create ' xml:lang="';
 	    Create Langue;
 	    Create DoubleQuote;
 #endif
+	    Create ' lang="';
+	    Create Langue;
+	    Create DoubleQuote;
 	    END;
 	IF HTML and RealLang
 	    BEGIN
-	    Create ' lang="';
-	    Create Langue;
-	    Create DoubleQuote;
 #ifdef XML
 	    Create ' xml:lang="';
 	    Create Langue;
 	    Create DoubleQuote;
 #endif
+	    Create ' lang="';
+	    Create Langue;
+	    Create DoubleQuote;
 	    END;
 	END;
 
