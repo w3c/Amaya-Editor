@@ -1,21 +1,21 @@
 #!/usr/bin/perl -w
 
 use strict ;
-
+ 
 
 #############################for parmameters###########################################
 # some environement variables for portability  
-my $home = $ENV{"HOME"} ;
-my $config_file = "$home/.amaya/am_dialogues.conf";
-my $rep_amaya = rep_amaya (); # way between $home and the Repertory Amaya and libwww
-my $rep_obj = rep_obj (); #name of the object direcitriy for Amaya
+my $home = $ENV{"HOME"} . "/";
+my $config_file = "$home.amaya/am_dialogues.conf.xml";
+my $rep_amaya = ""; # way between $home and the Repertory Amaya and libwww
+my $rep_obj = ""; #name of the object direcitriy for Amaya
 
 
 #### 	for all the bases
 # directory for bases 
-my $BASE_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/bases/";
+my $BASE_directory = "$home$rep_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
-my $OUT_MSG_directory = "$home/$rep_amaya/Amaya/config/";
+my $OUT_MSG_directory = "$home$rep_amaya/Amaya/config/";
 
 my %base_name ;	# table for the name of the bases 
 	
@@ -36,21 +36,21 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 								corrd MSG_MAX_CHECK);
 
 #### 	for Amaya dialogue => dia or $index {1}
-  $head_dir{'dia'} = "$home/$rep_amaya/Amaya/$rep_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
+  $head_dir{'dia'} = "$home$rep_amaya/Amaya/$rep_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
   $head_name {'dia'}= 'EDITOR.h';
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
   $base_name {'dia'} = 'base_am_dia.xml';
 
 ####	for Amayamsg => msg or $index {2}
- $head_dir {'msg'} = "$home/$rep_amaya/Amaya/amaya/";
+ $head_dir {'msg'} = "$home$rep_amaya/Amaya/amaya/";
  $head_name {'msg'} = 'amayamsg.h' ;
  $lang_dir {'msg'} = $OUT_MSG_directory;
  $lang_sufix {'msg'} = '-amayamsg' ;
  $base_name {'msg'} = 'base_am_msg.xml';
 
 ####	for libdialogue => lib or $index {3}
- $head_dir {'lib'} = "$home/$rep_amaya/Amaya/thotlib/include/" ;
+ $head_dir {'lib'} = "$home$rep_amaya/Amaya/thotlib/include/" ;
  $head_name {'lib'} = 'libmsg.h' ;
  $lang_dir {'lib'} = $OUT_MSG_directory;
  $lang_sufix {'lib'} = '-libdialogue' ;
@@ -58,7 +58,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 
 
 ####	for corrdialogue => corrd or $index {4}
- $head_dir {'corrd'} = "$home/$rep_amaya/Amaya/thotlib/internals/h/" ;
+ $head_dir {'corrd'} = "$home$rep_amaya/Amaya/thotlib/internals/h/" ;
  $head_name {'corrd'} = 'corrmsg.h' ;
  $lang_dir {'corrd'} = $OUT_MSG_directory;
  $lang_sufix {'corrd'} = '-corrdialogue' ;
@@ -89,9 +89,12 @@ use Dial_tool_box qw ( 	&add_label
 								&delete_label );
 use Forcer 			qw ( 	&forcer );
 
+use Configfile qw ( &load_parameters );
+
 #launch		
 
-menu () ;
+	( $rep_amaya,$rep_obj) = load_parameters($home, $config_file);
+	menu () ;
 
 }
 #############################END MAIN###########################################
@@ -137,7 +140,7 @@ sub menu1 {
 	my $last_choice = shift ;
 	my $count;
 	my $choice;
-	my $special; 
+	my $of_what = $index{ $last_choice}; 
 	my @list = ( 
 		"Go to the previous menu", 					#0
 		"Init the XML base" ,							#1
@@ -172,10 +175,10 @@ do { # to continue to treat the same type of dialogue
 	if ($choice == 1) { #Init the XML base
 		$_ = verify ();
 		if ( /^y/i || /^yes/i ) {
-			Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
-													$head_name{ $index{ $last_choice} },
+			Initialisation::create_base ( $head_dir{ $of_what }, 
+													$head_name{ $of_what },
 													$BASE_directory, 
-													$base_name { $index{ $last_choice} });
+													$base_name { $of_what });
 			# to initialise with english
 			#print "\n\tNow,fill the base with english by default\n\n";
 			#$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
@@ -205,42 +208,42 @@ do { # to continue to treat the same type of dialogue
 		$_ = $choice;
 		if (/0/)
 			{	
-		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $BASE_directory  . $base_name { $index{ $last_choice}};
-		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
-		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
+		$Import_am_msg::in_labelfile = $head_dir{ $of_what} . $head_name{ $of_what};
+		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
+		$Import_am_msg::in_textdirectory = $lang_dir { $of_what};
+		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};
 			}
 		else #if (/1/)
 			{
-		$Import_am_msg::in_labelfile = "$home/$rep_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $BASE_directory  . $base_name { $index{ $last_choice}};
-		$Import_am_msg::in_textdirectory = "$home/$rep_amaya/Amaya/tools/xmldialogues/in/";
-		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};				
+		$Import_am_msg::in_labelfile = "$home$rep_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
+		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
+		$Import_am_msg::in_textdirectory = "$home$rep_amaya/Amaya/tools/xmldialogues/in/";
+		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};				
 			}
-		Import_am_msg::import_a_language ($lang, $ending_label{ $index{$last_choice}} ) ;		
+		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what} ) ;		
 		$choice = -1; #to avoid problem		
 	}	
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 3) { # Export all dialogues files
-		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
+		Export_am_msg::export (	$BASE_directory . $base_name{ $of_what},
 										$OUT_MSG_directory,
-										$lang_sufix { $index{ $last_choice}},
-										$head_name{ $index{ $last_choice}},
-										$ending_label { $index{ $last_choice}}
+										$lang_sufix { $of_what},
+										$head_dir{ $of_what} . $head_name{ $of_what},
+										$ending_label { $of_what}
 										);
 		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 4) { # Add a label
 		Dial_tool_box::add_label ( $BASE_directory,
-											$base_name{ $index{ $last_choice}} 
+											$base_name{ $of_what} 
 											);						
 		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 5) { # Delete a label
 		Dial_tool_box::delete_label ( $BASE_directory,
-												$base_name{ $index{ $last_choice}} 
+												$base_name{ $of_what} 
 												);
 		$choice = -1; #to avoid problem		
 	}
@@ -250,9 +253,9 @@ do { # to continue to treat the same type of dialogue
 		$_ = verify ();
 		if ( /^y/i || /^yes/i ) {
 			Forcer::forcer ( 	$BASE_directory,
-									$base_name{ $index{ $last_choice}},
-									$head_dir{ $index{ $last_choice}},
-									$head_name{ $index{ $last_choice}}
+									$base_name{ $of_what},
+									$head_dir{ $of_what},
+									$head_name{ $of_what}
 								);	
 		}
 		$choice = -1; #to avoid problem		
@@ -260,11 +263,11 @@ do { # to continue to treat the same type of dialogue
 } while ( $choice != 0 ); 
 
 #to do the update automaticaly
-		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
+		Export_am_msg::export (	$BASE_directory . $base_name{ $of_what},
 										$OUT_MSG_directory,
-										$lang_sufix { $index{ $last_choice}},
-										$head_name{ $index{ $last_choice}},
-										$ending_label { $index{ $last_choice}}
+										$lang_sufix { $of_what},
+										$head_dir{ $of_what} . $head_name{ $of_what},
+										$ending_label { $of_what}
 										);
 
 }
@@ -292,176 +295,5 @@ sub verify {
 }
 
 #-------------------------------------------------------------------------------
- sub rep_amaya {# to load configuration parameter "amaya_rep"
-	my $name = "notOK";
-	my $line;	
-	my $found  = 0;
-	
- 	if (-r "$config_file") {
-		open ( CONFIG, "<$config_file")|| die "erreur de lecture de $config_file: $!";
-		do {
-			$line = <CONFIG>;
-			if (defined ($line) && $line =~ /^amaya_rep=/ ) {
-				chomp ($line);
-				($line,$name ) = split ( /=/, $line );
-				if (-d "$home/$name"){
-					if ( $found == -1) { $found = 2;}
-					else {$found = 1}
-				}
-				else{
-					$found = -1;
-				}
-			}			
-		}
-		while ( $line && $found <= 0);
-		close (CONFIG);
-		
-		if ( $found == 0 ) {
-			do {
-				print "1Donnez le nom du repertoire ou vous avez place vos repertoire Amaya et libwww. Exemple : opera . $home/ est deja pris en compte\n" ;
-				$name = <STDIN>;
-				chomp ($name) ;
-			}
-			while ($name ne "" && !(-d "$home/$name" ) ) ;
-			open ( CONFIG, ">>$config_file")|| die "erreur de lecture de $config_file: $!";
-			print CONFIG "amaya_rep=$name\n";
-			close (CONFIG);
-		}
-		elsif ($found == 1){ # no pb
-		}
-		else {# a modification is necessary	
-			if (! (-d "$home/$name")) { 	
-				do {
-					print "Donnez le nom du repertoire ou vous avez place vos repertoire Amaya et libwww. Exemple : opera . $home/ est deja pris en compte\n" ;
-					$name = <STDIN>;
-					chomp $name ;
-				}
-				while ($name ne "" && !(-d "$home/$name" ) ) ;
-			}
-				open ( CONFIG, "<$config_file")|| die "erreur de lecture de $config_file: $!";			
-				open ( NEW, ">$config_file.new") || die "erreur de modification de $config_file: $!"; 		
-				while ($line = <CONFIG> ) {
-					if ($line !~ /^amaya_rep=/ ) {
-						print NEW $line;
-					}
-					else { #recopy only one time 
-						if ($found <= 0 || $found == 2) {
-							$found = 1;
-							print NEW  "amaya_rep=$name\n";
-						}	
-					}
-				}
-				if ($found != 1) { #si pb
-					print NEW  "amaya_rep=$name\n";
-				}
-				close (CONFIG);
-				close (NEW);
-				rename ( "$config_file.new", $config_file )  || 	
-			 	die "can't rename $config_file.new to $config_file during modification of
-				the configuration file because of: $! \nthe old file still exist, the
-				new file name is $config_file\n";
-				print "OK\n";
-		}
-	}
-	else  { 
-		print "fichier $config_file introuvable ou inexistant\n";
-		do {
-			print "3Donnez le nom du repertoire ou vous avez place vos repertoire Amaya et libwww. Exemple : opera . $home/ est deja pris en compte\n" ;
-			$name = <STDIN>;
-			chomp $name ;
-		}
-		while ($name ne "" && !(-d "$home/$name" ) ) ;
-		open ( CONFIG, ">$config_file")|| die "erreur de lecture de $config_file: $!";
-		print CONFIG "amaya_rep=$name\n";
-		close (CONFIG);
-	}
-	return $name;
-} 
-#----------------------------------------------------------------------------
-#----------------------------------------------------------------------------
-sub rep_obj { # to load configuration parameter "obj_rep"
-	my $name = "notOK";
-	my $line;	
-	my $found  = 0;
-	
- 	if (-r "$config_file") {
-		open ( CONFIG, "<$config_file")|| die "erreur de lecture de $config_file: $!";
-		do {
-			$line = <CONFIG>;
-			if (defined ($line) && $line =~ /^obj_rep=/ ) {
-				chomp ($line);
-				($line,$name ) = split ( /=/, $line );
-				if (-d "$home/$rep_amaya/Amaya/$name"){
-					if ( $found == -1) { $found = 2;}
-					else {$found = 1}
-				}
-				else{
-					$found = -1;
-				}
-			}			
-		}
-		while ( $line && $found <= 0);
-		close (CONFIG);
-		
-		if ( $found == 0 ) {
-			do {
-				print "Donnez le nom du repertoire objet d'Amaya . Exemple : LINUX_ELF . $home/ est deja pris en compte\n";
-				$name = <STDIN>;
-				chomp ($name) ;
-			}
-			while ($name ne "" && !(-d "$home/$rep_amaya/Amaya/$name" ) ) ;
-			open ( CONFIG, ">>$config_file")|| die "erreur de lecture de $config_file: $!";
-			print CONFIG "obj_rep=$name\n";
-			close (CONFIG);
-		}
-		elsif ($found == 1){ # no pb
-		}
-		else {# a modification is necessary	
-			if (! (-d "$home/$rep_amaya/Amaya/$name")) { 	
-				do {
-					print "Donnez le nom du repertoire objet d'Amaya . Exemple : LINUX_ELF . $home/ est deja pris en compte\n";
-					$name = <STDIN>;
-					chomp $name ;
-				}
-				while ($name ne "" && !(-d "$home/$rep_amaya/Amaya/$name" ) ) ;
-			}
-				open ( CONFIG, "<$config_file")|| die "erreur de lecture de $config_file: $!";			
-				open ( NEW, ">$config_file.new") || die "erreur de modification de $config_file: $!"; 		
-				while ($line = <CONFIG> ) {
-					if ($line !~ /^obj_rep=/ ) {
-						print NEW $line;
-					}
-					else { #recopy only one time 
-						if ($found <= 0 || $found == 2) {
-							$found = 1;
-							print NEW  "obj_rep=$name\n";
-						}	
-					}
-				}
-				if ($found != 1) { #si pb
-					print NEW  "obj_rep=$name\n";
-				}
-				close (CONFIG);
-				close (NEW);
-				rename ( "$config_file.new", $config_file )  || 	
-			 	die "can't rename $config_file.new to $config_file during modification of
-				the configuration file because of: $! \nthe old file still exist, the
-				new file name is $config_file\n";
-				print "OK\n";
-		}
-	}
-	else  { 
-		print "fichier $config_file introuvable ou inexistant\n";
-		do {
-			print "Donnez le nom du repertoire objet d'Amaya . Exemple : LINUX_ELF . $home/ est deja pris en compte\n" ;
-			$name = <STDIN>;
-			chomp $name ;
-		}
-		while ($name ne "" && !(-d "$home/$rep_amaya/Amaya/$name" ) ) ;
-		open ( CONFIG, ">$config_file")|| die "erreur de lecture de $config_file: $!";
-		print CONFIG "obj_rep=$name\n";
-		close (CONFIG);
-	}
-	return $name;
-} 
+ 
 #----------------------------------------------------------------------------

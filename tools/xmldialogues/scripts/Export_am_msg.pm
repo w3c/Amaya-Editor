@@ -39,7 +39,7 @@ BEGIN {
 	my $base = ""; #complete name of the base
 	my $where = ""; # directory where the result files are putting
 	my $sufix = ""; # sufix of the dialogues files = result
-	my $head_name = "";
+	my $head_name = "";#complete name of the ".h" file
 	
 	my @list_of_lang_occur = ();
 	my $current_label;
@@ -71,7 +71,7 @@ sub export {
 	$base = shift ; #complete name of the base
 	$where = shift ; # where out put files ares 
 	$sufix = shift ; # sufix of messages files
-	$head_name = shift; # name of the ".h"
+	$head_name = shift; # location/name of the ".h"
 	$label_ending = shift; #name of the last label
 		
 	$reference_value = 0;# to avoid problem when many calls
@@ -100,7 +100,7 @@ sub export {
 	
 	$parser->parse (*IN); 
 	
-	close ( IN ) || die "can't close $where$head_name because: $! \n";
+	close ( IN ) || die "can't close $head_name because: $! \n";
 	
 	my $number = @list_of_lang_occur;
 	print "\tThis is the $number languages occured : @list_of_lang_occur \n"
@@ -183,8 +183,8 @@ sub start_hndl {
 		#nothing
 	}
 	elsif ($element eq "messages") { #warning: messageS != message
-		open ( HEADFILE, ">$where$head_name") || die "can't create $where$head_name because: $! \n";
-		push (@list_of_dialogues_files ,"$where$head_name");
+		open ( HEADFILE, ">$head_name") || die "can't create $head_name because: $! \n";
+		push (@list_of_dialogues_files ,"$head_name");
 	}
 	elsif ( $element eq "") {
 		print "empty element at line " .  $expat->current_line . "\n";
@@ -286,7 +286,7 @@ sub end_hndl { #	do the modification if necessary
 		init_record_verification ();
 	}
 	elsif ($end_tag eq "messages") {
-		close ( HEADFILE ) || die "can't close $where$head_name because: $! \n";
+		close ( HEADFILE ) || die "can't close $head_name because: $! \n";
  
 		foreach $prefix (@list_of_lang_occur) {
 			# must close as many files as  present languages
