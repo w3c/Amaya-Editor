@@ -861,7 +861,8 @@ void FontIdentifier (char script, int family, int highlight, int size,
     }
   else if (unit == UnPixel)
     size = PixelToPoint (size);
-
+  if (script == '1')
+    script = 'L';
   if (script != 'L' && script != 'G' 
       && script != 'Z' && script != 'E' )
     {
@@ -1548,13 +1549,15 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		{
 		  mask = 1 << (frame - 1);
 		  if (fontset->FontMask & mask)
-		    lfont = LoadNearestFont (code, fontset->FontFamily,
-					     fontset->FontHighlight,
-					     fontset->FontSize, fontset->FontSize,
-					     frame, TRUE, TRUE);
-		  if (code == '7' && GreekFontScript == 'G')
-		    /* use the font Symbol instead of a greek font */
-		    encoding = ISO_SYMBOL;
+		    {
+		      lfont = LoadNearestFont (code, fontset->FontFamily,
+					       fontset->FontHighlight,
+					       fontset->FontSize, fontset->FontSize,
+					       frame, TRUE, TRUE);
+		      if (code == '7' && GreekFontScript == 'G')
+			/* use the font Symbol instead of a greek font */
+			encoding = ISO_SYMBOL;
+		    }
 		}
 	      /* font not found: avoid to retry later */
 	      *pfont = lfont;
