@@ -1,54 +1,107 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<TITLE>Proxy support in Amaya</TITLE>
-<!-- Changed by: Jose Kahan,  8-Jul-1996 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>
+Proxy support in Amaya</title>
+<!-- Changed by: Jose Kahan,  2-Feb-1998 -->
 <!-- Created by Jose Kahan. 4 July 96 -->
-</HEAD>
-<BODY>
-<P><A href="../../"><IMG BORDER="0" ALT="W3C" SRC="../../Icons/WWW/w3c_home"></A> <A
-href="../"><IMG BORDER="0" SRC="../Icons/amaya.gif" ALT="Amaya"></A>
-<A href="Manual.html"><IMG BORDER="0" SRC="../Icons/doc48x.gif" ALT="Doc"></A> </P>
-<H1>Proxy support in Amaya</H1>
-<P>Proxy support is provided in <STRONG>Amaya</STRONG> by the W3C Reference Library. You use
-environment variables to tell <STRONG>Amaya</STRONG> whether you want to use a Proxy on
-a specific domain, server, URL, etc. These variables include:</P>
-<UL>
-<LI><STRONG>http_proxy</STRONG>, which indicates your HTTP proxies, and
-<LI><STRONG>no_proxy</STRONG>, which states when a proxy should not be used.
-</UL>
-<P>These variables take on a list of URL-like data, separated by colons. For
-example, to use the HTTP proxy <STRONG>groucho.marx.edu</STRONG>, running on port 1028,
-you would set up the proxy variable as follows (giving here below for a Unix
-tcsh):</P>
-<P><CODE>setenv http_proxy http://groucho.marx.edu:1028</CODE></P>
-<P>Now, if you don't want to use a proxy while accessing the
-<STRONG>harpo.marx.edu</STRONG> site, type in the following line:</P>
-<P><CODE>setenv no_proxy harpo.marx.edu</CODE></P>
-<H3>To do</H3>
-<UL>
-<LI>Add a menu item which will allow to reload the proxy settings without
-having  to quit and restart Amaya
-</UL>
-<H3>For more information</H3>
-<UL>
-<LI><A
+</head>
+<body>
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
+<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
+href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
+alt="Doc"></a></p>
+
+<h1>Proxy support in Amaya</h1>
+<p>
+Proxy support is provided in <strong>Amaya</strong> by the W3C Reference
+Library. You use two variables to tell <strong>Amaya</strong> whether you want
+to use or not a proxy on a specific domain, server, URL, etc. These variables
+are:</p>
+<ul>
+<li>
+<strong>http_proxy</strong>, which indicates your HTTP proxy, and
+<li>
+<strong>no_proxy</strong>, which describes the servers which must be accessed
+directly, without a proxy.
+</ul>
+
+<h2>Syntax</h2>
+<ul>
+<li>
+http_proxy
+<p>
+You specify an HTTP proxy using a URL-like syntax:</p>
+<pre>http://domain_name:port</pre>
+
+where <code>:port</code> is optional.
+<li>
+http_noproxy
+<p>
+This variable which takes a list of space-separated domains which you want to
+access without a proxy. Each domain can include an optional port. The syntax
+is:</p>
+<pre>domain-name1:port domain-name2:port ...</pre>
+
+where <code>:port</code> is optional.
+</ul>
+
+<h2>Specifying the proxies</h2>
+<p>
+You can set up the proxy variables by using either <code>thot.ini</code>
+configuration file or by using environment variables.</p>
+
+<h3>Using thot.ini</h3>
+<p>
+In the <code>[amaya]</code>, section, specify the proxy variables as in the
+example here below:</p>
+<blockquote>
+<pre>HTTP_PROXY=http://groucho.marx.edu:1028
+NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
+
+<h3>Using environment variables</h3>
+<p>
+Amaya uses the environment variables proxy and no_proxy for setting up the
+proxies. For example, under the UNIX tcsh shell, you can set them up as
+follows:</p>
+<blockquote>
+<pre>setenv http_proxy http://groucho.marx.edu:1028
+setenv no_proxy harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
+<p>
+One way to do this under MS-Windows is to add the following lines to your
+<code>autoexec.bat</code> file:</p>
+<blockquote>
+<pre>set http_proxy=http://groucho.marx.edu:1028
+set no_proxy=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
+<p>
+Please consult your system's documentation for more complete information on
+how to specify environment variables.</p>
+
+<br>
+
+<p>
+N.B. If you were running <strong>Amaya</strong> when you modified the proxy
+variables, you'll have to restart it in order to take into account the value
+of the proxy variables.</p>
+
+<h3>For more information</h3>
+<ul>
+<li>
+<a
 href="http://www.w3.org/pub/WWW/Library/User/Using/Proxy.html">Proxy-support
-inside libwww</A>
-</UL>
-<P><BR></P>
-
-<HR>
-<ADDRESS>
-<A href="mailto:jose.kahan@w3.org">Jos&eacute; Kahan</A> <BR>
-<A HREF="../../Help/Webmaster">Webmaster</A><BR>
-$Date$
-</ADDRESS>
-</BODY>
-</HTML>
-
-
-
-
-
-
+inside libwww</a>
+</ul>
+<p>
+<br>
+</p>
+<hr>
+<address>
+<a href="mailto:jose.kahan@w3.org">Jos&eacute; Kahan</a> <br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$ </address>
+</body>
+</html>
