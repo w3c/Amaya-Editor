@@ -377,13 +377,13 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
  *       Class:  AmayaPage
  *      Method:  OnSplitterDClick
  * Description:  called when a double click is done on the splitbar
- *               TODO
+ *               detach the bottom frame
  *--------------------------------------------------------------------------------------
  */
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
   wxLogDebug( _T("AmayaPage::OnSplitterDClick\n") );
-  
+  DetachFrame(2);
   event.Skip();  
 }
 
