@@ -648,6 +648,7 @@ Element el;
       elType.ElTypeNum == MathML_EL_MSPACE ||
       elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
+      elType.ElTypeNum == MathML_EL_BeveledMFRAC ||
       elType.ElTypeNum == MathML_EL_MSQRT ||
       elType.ElTypeNum == MathML_EL_MROOT ||
       elType.ElTypeNum == MathML_EL_MSTYLE ||
@@ -2124,19 +2125,26 @@ Document	doc;
 	    }
 	  break;
        case MathML_EL_MFRAC:
+       case MathML_EL_BeveledMFRAC:
 	  /* end of a fraction. Create a Numerator and a Denominator */
 	  CheckMathSubExpressions (el, MathML_EL_Numerator,
 				   MathML_EL_Denominator, 0, doc);
 	  break;
        case MathML_EL_MSQRT:
-	  /* end od a Square Root. Create a SqrtBase that contains all
-	     children of the MSQRT element */
+	  /* end of a Square Root */
+	  /* Create placeholders within the element */
+          CreatePlaceholders (TtaGetFirstChild (el), doc);
+	  /* Create a SqrtBase that contains all children of the MSQRT */
 	  CreateWrapper (el, MathML_EL_SqrtBase, doc);
 	  break;
        case MathML_EL_MROOT:
 	  /* end of a Root. Create a RootBase and an Index */
 	  CheckMathSubExpressions (el, MathML_EL_RootBase, MathML_EL_Index,
 				   0, doc);
+	  break;
+       case MathML_EL_MENCLOSE:
+	  /* Create placeholders within the element */
+          CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
        case MathML_EL_MSTYLE:
        case MathML_EL_MERROR:
@@ -2296,12 +2304,24 @@ Document	doc;
 {
    AttributeType     attrType;
    int		     attrKind;
+   ElementType       elType;
 #define buflen 50
    STRING            value;
-   int               length;
+   int               val, length;
  
    TtaGiveAttributeType (attr, &attrType, &attrKind);
-   if (attrType.AttrTypeNum == MathML_ATTR_color ||
+   if (attrType.AttrTypeNum == MathML_ATTR_beveled)
+     {
+       val = TtaGetAttributeValue (attr);
+       if (val == MathML_ATTR_beveled_VAL_true)
+	 /* beveled = true.  Transform MFRAC into BeveledMFRAC */
+	 {
+	 elType = TtaGetElementType (el);
+	 if (elType.ElTypeNum == MathML_EL_MFRAC)
+	    ChangeTypeOfElement (el, doc, MathML_EL_BeveledMFRAC);
+	 }
+     }
+   else if (attrType.AttrTypeNum == MathML_ATTR_color ||
        attrType.AttrTypeNum == MathML_ATTR_background_ ||
        attrType.AttrTypeNum == MathML_ATTR_fontsize ||
        attrType.AttrTypeNum == MathML_ATTR_fontfamily)

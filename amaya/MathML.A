@@ -114,6 +114,13 @@ ATTRIBUTES
 	AttrModify.Post -> AttrNameChanged;
 	END;
 
+   beveled:
+	BEGIN
+	AttrCreate.Post -> AttrBeveledChanged;
+	AttrModify.Post -> AttrBeveledChanged;
+	AttrDelete.Post -> AttrBeveledChanged;		
+	END;
+
    open:
 	BEGIN
 	AttrCreate.Post -> AttrOpenCloseChanged;

@@ -1012,12 +1012,12 @@ STRING buffer;
 }
 
 /*-----------------------------------------------------------------------
- CreateMathEntityDlgWindow
+ CreateMCHARDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateMathEntityDlgWindow (HWND parent, int base_dlg, int math_form, int math_txt, STRING math_entity_name, STRING bm_entity, STRING entity_name) 
+void CreateMCHARDlgWindow (HWND parent, int base_dlg, int math_form, int math_txt, STRING math_entity_name, STRING bm_entity, STRING entity_name) 
 #else  /* __STDC__ */
-void CreateMathEntityDlgWindow (parent, base_dlg, math_form, math_txt, math_entity_name, bm_entity, entity_name) 
+void CreateMCHARDlgWindow (parent, base_dlg, math_form, math_txt, math_entity_name, bm_entity, entity_name) 
 HWND   parent; 
 int    base_dlg; 
 int    math_form; 

@@ -223,8 +223,10 @@ ThotBool            *mrowCreated;
 {
   Element            added, parent, row, leaf, prevLeaf, nextLeaf;
   ElementType        elType;
-  int                oldStructureChecking;
-  ThotBool           withinMrow;
+  AttributeType      attrType;
+  Attribute	     attr;
+  int                oldStructureChecking, len;
+  ThotBool           withinMrow, before;
 
   /* do not check the Thot abstract tree against the structure schema while
      changing the structure */
@@ -234,7 +236,32 @@ ThotBool            *mrowCreated;
   /* get the parent element (MO, MN, MI or MTEXT) */
   parent = TtaGetParent (el);
 
-  /* check whether the parent is a child of a MROW */
+  len = TtaGetTextLength (el);
+  /* if it's a mchar, mglyph or an entity, don't split it */
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == MathML_EL_MCHAR ||
+      elType.ElTypeNum == MathML_EL_MGLYPH)
+     {
+     el = parent;
+     parent = TtaGetParent (el);
+     if (index <= len)
+        index = 0;
+     }
+  else
+     /* is it an entity? */
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_EntityName;
+     attr = TtaGetAttribute (el, attrType);
+     if (attr != NULL)
+        /* it's an entity, don't split it */
+        {
+	if (index <= len)
+           index = 0;
+        }
+     }
+
+  /* check if the parent is a child of a MROW or equivalent */
   row = TtaGetParent (parent);
   elType = TtaGetElementType (row);
   withinMrow = (elType.ElTypeNum == MathML_EL_MROW ||
@@ -244,20 +271,39 @@ ThotBool            *mrowCreated;
 		elType.ElTypeNum == MathML_EL_MPADDED ||
 		elType.ElTypeNum == MathML_EL_MPHANTOM ||
 		elType.ElTypeNum == MathML_EL_CellWrapper ||
+		elType.ElTypeNum == MathML_EL_MENCLOSE ||
                 elType.ElTypeNum == MathML_EL_FencedExpression);
 
-  /* split the text element */
-  if (index <= TtaGetElementVolume (el) && index > 0)
+  /* split the text element if needed */
+  before = TRUE;
+  if (index > len)
+     /* split right after element el */
+     before = FALSE;
+  else
+     if (index > 1)
+       {
+       if (withinMrow)
+	  TtaRegisterElementReplace (parent, doc);
+       TtaSplitText (el, index-1, doc);
+       /* split before the second part of the text */
+       TtaNextSibling (&el);
+       }
+
+  /* should the enclosing element really be split? */
+  if (before)
     {
-      if (withinMrow)
-	TtaRegisterElementReplace (parent, doc);
-      TtaSplitText (el, index-1, doc);
+    prevLeaf = el; TtaPreviousSibling (&prevLeaf);
+    if (!prevLeaf)
+       return (el);
     }
-  if (index > 0)
-     /* take the second part of the split text */
-     TtaNextSibling (&el);
-  if (!el)
-     return (NULL);
+  else
+    {
+    nextLeaf = el; TtaNextSibling (&nextLeaf);
+    if (nextLeaf)
+       el = nextLeaf;
+    else
+       return (el);
+    }
 
   *mrowCreated = FALSE;
   if (!withinMrow)
@@ -536,6 +582,53 @@ static void RegenerateFencedSeparators (el, doc, record)
 }
 
 /*----------------------------------------------------------------------
+   AddParen
+   Create two MF element at the beginning and at the end of the
+   MROW element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AddParen (Element el, Document doc)
+#else
+static void         AddParen (el, doc)
+Element             el;
+Document            doc;
+#endif
+{
+  Element     child, fence, symbol, next;
+  ElementType elType, symbType;
+
+  if (!el)
+     return;
+  child = TtaGetFirstChild (el);
+  if (child)
+    {
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = MathML_EL_MF;
+      fence = TtaNewElement (doc, elType);
+      TtaInsertSibling (fence, child, TRUE, doc);
+      symbType.ElSSchema = elType.ElSSchema;
+      symbType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+      symbol = TtaNewElement (doc, symbType);
+      TtaSetGraphicsShape (symbol, '(', doc);
+      TtaInsertFirstChild (&symbol, fence, doc);
+
+      next = child;
+      do
+	{
+          TtaNextSibling (&next);
+	  if (next)
+	     child = next;
+	}
+      while (next);
+      fence = TtaNewElement (doc, elType);
+      TtaInsertSibling (fence, child, FALSE, doc);
+      symbol = TtaNewElement (doc, symbType);
+      TtaSetGraphicsShape (symbol, ')', doc);
+      TtaInsertFirstChild (&symbol, fence, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
@@ -548,9 +641,9 @@ int                 construct;
 #endif
 {
   Document           doc;
-  Element            sibling, last, el, row, fence, symbol, child, leaf,
-		     placeholderEl, parent, new, next;
-  ElementType        newType, elType, symbType;
+  Element            sibling, last, el, row, child, leaf, placeholderEl,
+                     parent, new, next;
+  ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len, oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
@@ -753,7 +846,8 @@ int                 construct;
 		 {
 #ifdef GRAPHML
 		 elType = TtaGetElementType (sibling);
-		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
+		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+			      TEXT("GraphML")) == 0)
 		    /* selection is within a GraphML element */
 		    {
 		    elType.ElTypeNum = GraphML_EL_Math;
@@ -870,7 +964,7 @@ int                 construct;
 	      TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	      /* wait for an answer */
 	      TtaWaitShowDialogue ();
-	      if (!UserAnswer)
+	      if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
 		/* the user decided to abort the command */
 		{
 		  TtaCloseUndoSequence (doc);
@@ -901,6 +995,10 @@ int                 construct;
 	  newType.ElTypeNum = MathML_EL_MO;
 	  break;
 
+	case 18:
+	  newType.ElTypeNum = MathML_EL_MENCLOSE;
+	  break;
+
 	default:
 	  TtaCloseUndoSequence (doc);
 	  return;
@@ -913,6 +1011,21 @@ int                 construct;
 	if (!TransformIntoType (newType, doc))
 	  /* it failed. Try to insert a new element */
 	   emptySel = TRUE;
+	else
+	  if (ParBlock)
+	    /* the user wants to create a parenthesized block */
+	    /* create two MF elements, as the first and last child of the new
+	       MROW */
+	    {
+	      /* do not check the Thot abstract tree against the structure */
+	      /* schema while changing the structure */
+	      oldStructureChecking = TtaGetStructureChecking (doc);
+	      TtaSetStructureChecking (0, doc);
+	      TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
+	      AddParen (el, doc);
+	      /* check the Thot abstract tree against the structure schema. */
+	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	    }
 	}
 
       if (emptySel)
@@ -975,39 +1088,26 @@ int                 construct;
 	    }
 	  
 	  TtaSetDocumentModified (doc);
+
 	  if (ParBlock)
 	    /* the user wants to create a parenthesized block */
 	    /* create two MF elements, as the first and last child of the new
 	       MROW */
-	    {
-	      child = TtaGetFirstChild (el);
-	      if (child != NULL)
-		{
-		  newType.ElTypeNum = MathML_EL_MF;
-		  fence = TtaNewElement (doc, newType);
-		  TtaInsertSibling (fence, child, TRUE, doc);
-		  symbType.ElSSchema = mathSchema;
-		  symbType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		  symbol = TtaNewElement (doc, symbType);
-		  TtaSetGraphicsShape (symbol, '(', doc);
-		  TtaInsertFirstChild (&symbol, fence, doc);
-
-		  fence = TtaNewElement (doc, newType);
-		  TtaInsertSibling (fence, child, FALSE, doc);
-		  symbol = TtaNewElement (doc, symbType);
-		  TtaSetGraphicsShape (symbol, ')', doc);
-		  TtaInsertFirstChild (&symbol, fence, doc);
-		}
-	    }
+	    AddParen (el, doc);
 	  
 	  CreateParentMROW (el, doc);
 
 	  if (newType.ElTypeNum == MathML_EL_MTABLE &&
-	      (NumberRows > 1 || NumberCols > 1))
+	      (NumberRows > 1 || NumberCols >= 1))
 	    {
 	      /* create the required number of columns and rows in the table */
-	      if (NumberCols > 1)
+	      if (NumberCols >= 1)
 		{
+		  elType.ElTypeNum = MathML_EL_TableRow;
+		  child = TtaSearchTypedElement (elType, SearchInTree, el);
+		  elType.ElTypeNum = MathML_EL_MTR;
+		  new = TtaNewTree (doc, elType, "");
+		  TtaInsertFirstChild (&new, child, doc);
 		  elType.ElTypeNum = MathML_EL_MTD;
 		  child = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberCols > 1)
@@ -1038,7 +1138,7 @@ int                 construct;
 	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
 	    RegenerateFencedSeparators (parent, doc, TRUE);
 
-	 /* insert placeholders before and/or after the new element if
+	  /* insert placeholders before and/or after the new element if
 	    they are needed */
 	  placeholderEl = InsertPlaceholder (el, TRUE, doc, !mrowCreated);
 	  placeholderEl = InsertPlaceholder (el, FALSE, doc, !mrowCreated);
@@ -1223,6 +1323,21 @@ View                view;
 #endif /* __STDC__ */
 {
    CreateMathConstruct (3);
+}
+
+/*----------------------------------------------------------------------
+  CreateMENCLOSE
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMENCLOSE (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMENCLOSE (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (18);
 }
 
 /*----------------------------------------------------------------------
@@ -1517,9 +1632,9 @@ static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
  CreateCharStringElement
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCharStringElement (int typeNum, Document doc)
+static void CreateCharStringElement (int typeNum, Document doc)
 #else /* __STDC__*/
-void CreateCharStringElement (typeNum, doc)
+static void CreateCharStringElement (typeNum, doc)
      int typeNum;
      Document doc;
 #endif /* __STDC__*/
@@ -1602,13 +1717,17 @@ void CreateCharStringElement (typeNum, doc)
 	all selected elements are MI, MN, MO or MTEXT */
      elType = TtaGetElementType (firstSel);
      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
+	 elType.ElTypeNum == MathML_EL_MCHAR ||
+	 elType.ElTypeNum == MathML_EL_MGLYPH)
         first = TtaGetParent (firstSel);
      else
         first = firstSel;
      elType = TtaGetElementType (lastSel);
      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
+	 elType.ElTypeNum == MathML_EL_MCHAR ||
+	 elType.ElTypeNum == MathML_EL_MGLYPH)
         last = TtaGetParent (lastSel);
      else
         last = lastSel;
@@ -1640,11 +1759,26 @@ void CreateCharStringElement (typeNum, doc)
 	 TtaUnselect (doc);
 	 elType = TtaGetElementType (lastSel);
 	 if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	   /* the last selected element is a character string. Split it */
+	   /* the last selected element is a character string.
+	      Split it, as well as its parent (mtext, mi, mo, mn) */
+	   {
+	   if (lastChar == 0 && (firstChar == 0 || firstSel != lastSel))
+	      lastChar = TtaGetTextLength (lastSel);
 	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+	   } 
+	 else if (elType.ElTypeNum == MathML_EL_MCHAR ||
+		  elType.ElTypeNum == MathML_EL_MGLYPH)
+	   {
+	   if (lastChar == 0)
+	      lastChar = TtaGetElementVolume (lastSel);
+	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+	   }
 	 elType = TtaGetElementType (firstSel);
-	 if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	   /* the first selected element is a character string. Split it */
+	 if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	     elType.ElTypeNum == MathML_EL_MCHAR ||
+	     elType.ElTypeNum == MathML_EL_MGLYPH)
+	   /* the first selected element is a character string.
+	      Split it, as well as its parent (mtext, mi, mo, mn) */
 	   {
 	   same = (first == last);
 	   leaf = SplitTextInMathML (doc, firstSel, firstChar, &mrowCreated);
@@ -2262,6 +2396,7 @@ static void ParseMathString (theText, theElem, doc)
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
+  ThotBool      empty;
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -2312,7 +2447,14 @@ static void ParseMathString (theText, theElem, doc)
   i = 0;
   totLen = 0;
   elType = TtaGetElementType (theElem);
-  textEl = theText;
+  elType2 = TtaGetElementType (theText);
+  if (elType2.ElTypeNum == MathML_EL_TEXT_UNIT)
+     textEl = theText;
+  else if (elType2.ElTypeNum == MathML_EL_MCHAR ||
+	   elType2.ElTypeNum == MathML_EL_MGLYPH)
+     textEl = TtaGetFirstChild (theText);
+  else
+     textEl = NULL;
   if (textEl != NULL)
        {
        len = TtaGetTextLength (textEl);
@@ -2360,7 +2502,25 @@ static void ParseMathString (theText, theElem, doc)
   firstEl = NULL;
   start = 0;
   lastEl = NULL;
+
+  /* check if the text element is empty */
+  empty = FALSE;
   if (totLen == 0)
+    /* the character string is empty */
+    /* mchar and mglyph elements are not considered empty, even if the
+       character string they contain is empty */
+    if (elType2.ElTypeNum == MathML_EL_TEXT_UNIT)
+       /* a text leaf is considered empty only if it's not an entity */
+       {
+       attrType.AttrSSchema = MathMLSchema;
+       attrType.AttrTypeNum = MathML_ATTR_EntityName;
+       attr = TtaGetAttribute (theText, attrType);
+       if (!attr)
+	  /* it's not an entity */
+	  empty = TRUE;
+       }
+
+  if (empty)
     /* the character string is empty. Remove the parent element (MI, MN, MO...)
        if the parent does not contain any other element */
     {
@@ -2631,17 +2791,17 @@ static void SetAttrParseMe (el, doc)
 }
 
 /*----------------------------------------------------------------------
- CreateMathEntity
+ CreateMCHAR
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateMathEntity (Document document, View view)
+void CreateMCHAR (Document document, View view)
 #else /* __STDC__*/
-void CreateMathEntity (document, view)
+void CreateMCHAR (document, view)
      Document document;
      View view;
 #endif /* __STDC__*/
 {
-   Element       firstSel, lastSel, el, el1;
+   Element       firstSel, lastSel, el, el1, leaf, parent, sibling;
    ElementType   elType, elType1;
    Attribute     attr;
    AttributeType attrType;
@@ -2650,7 +2810,6 @@ void CreateMathEntity (document, view)
    CHAR_T        value[8];
    CHAR_T        alphabet;
    Language      lang;
-   STRING        buffer;
 
    if (!TtaIsSelectionEmpty ())
       return;
@@ -2663,11 +2822,11 @@ void CreateMathEntity (document, view)
    
    MathMLEntityName[0] = EOS;
 #  ifdef _WINDOWS
-   CreateMathEntityDlgWindow (TtaGetViewFrame (document, view), BaseDialog, MathEntityForm, MathEntityText,
-                              MathMLEntityName, TtaGetMessage (1, BMEntity), TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
+   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), BaseDialog, MathEntityForm, MathEntityText,
+                              MathMLEntityName, TtaGetMessage (1, BMCharacter), TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
 #  else
    TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
+	       TtaGetMessage (1, BMCharacter), TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
 		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
 		   FALSE);
@@ -2689,9 +2848,13 @@ void CreateMathEntity (document, view)
       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
       TtaUnselect (document);
       done = FALSE;
+      /* the new mchar element will be inserted before the first element
+	 selected */
       before = TRUE;
+      sibling = firstSel;
+
       elType1.ElSSchema = elType.ElSSchema;
-      elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
+      elType1.ElTypeNum = MathML_EL_MCHAR;
       el = TtaNewElement (document, elType1);
       if (elType.ElTypeNum == MathML_EL_Construct)
 	 /*this element is an empty expression. Replace it by a mtext element*/
@@ -2703,7 +2866,7 @@ void CreateMathEntity (document, view)
 	 attr = TtaGetAttribute (firstSel, attrType);
 	 if (attr != NULL)
 	    RemoveAttr (firstSel, document, MathML_ATTR_IntPlaceholder);
-	 /* create and insert the mtext element, with a text child */
+	 /* create and insert the mtext element, with a mchar child */
 	 elType1.ElTypeNum = MathML_EL_MTEXT;
 	 el1 = TtaNewElement (document, elType1);
 	 TtaInsertFirstChild (&el1, firstSel, document);
@@ -2713,37 +2876,47 @@ void CreateMathEntity (document, view)
 	 TtaRegisterElementCreate (el1, document);
 	 }
       else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	 {
+	 parent = TtaGetParent (firstSel);
+	 elType1 = TtaGetElementType (parent);
+	 if (elType1.ElTypeNum == MathML_EL_MCHAR ||
+	     elType1.ElTypeNum == MathML_EL_MGLYPH)
+	    /* the first selected element is within a mchar or mglyph. The new
+	       mchar will be inserted as a sibling of this mchar or mglyph */
+	    sibling = parent;
 	 if (firstChar > 1)
-	   {
+	    {
 	     len = TtaGetTextLength (firstSel);
 	     if (firstChar > len)
 	       /* the caret is at the end of that character string */
 	       /* Create the new element after the character string */
 	       before = FALSE;
-	     else
+	     else if (elType1.ElTypeNum == MathML_EL_MTEXT)
 	       {
-		 /* split the text to insert the entity */
+		 /* split the text to insert the mchar */
 		 TtaRegisterElementReplace (firstSel, document);
 		 TtaSplitText (firstSel, firstChar-1, document);
 		 /* take the second part of the split text element */
-		 TtaNextSibling (&firstSel);
-		 TtaRegisterElementCreate (firstSel, document);
+		 sibling = firstSel;
+		 TtaNextSibling (&sibling);
+		 TtaRegisterElementCreate (sibling, document);
 	       }
-	   }
+	    }
+	 }
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_name;
+     attr = TtaGetAttribute (el, attrType);
+     if (!attr)
+       {
+       attr =  TtaNewAttribute (attrType);
+       TtaAttachAttribute (el, attr, document);
+       }
+     TtaSetAttributeText (attr, MathMLEntityName, el, document);
      if (!done)
        {
-	 TtaInsertSibling (el, firstSel, before, document);
+	 TtaInsertSibling (el, sibling, before, document);
          TtaRegisterElementCreate (el, document);
        }
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_EntityName;
-     attr =  TtaNewAttribute (attrType);
-     TtaAttachAttribute (el, attr, document);
-     len = ustrlen (MathMLEntityName);
-     buffer = (STRING) TtaGetMemory (sizeof (CHAR_T) * (len+3));
-     usprintf (buffer, TEXT("&%s;"), MathMLEntityName);
-     TtaSetAttributeText (attr, buffer, el, document);
-     TtaFreeMemory (buffer);
      MapMathMLEntity (MathMLEntityName, value, 8, &alphabet);
      if (alphabet == EOS)
        /* unknown entity */
@@ -2754,10 +2927,13 @@ void CreateMathEntity (document, view)
        }
      else
        lang = TtaGetLanguageIdFromAlphabet(alphabet);
-     TtaSetTextContent (el, value, lang, document);
-     TtaSetAccessRight (el, ReadOnly, document);
-     len = TtaGetTextLength (el);     
-     TtaSelectString (document, el, len+1, len);
+     elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
+     leaf = TtaNewElement (document, elType1);
+     TtaInsertFirstChild (&leaf, el, document);
+     TtaSetTextContent (leaf, value, lang, document);
+     TtaSetAccessRight (leaf, ReadOnly, document);
+     len = TtaGetTextLength (leaf);     
+     TtaSelectString (document, leaf, len+1, len);
      ParseMathString (el, TtaGetParent (el), document);     
      TtaCloseUndoSequence (document);
      }
@@ -2907,7 +3083,6 @@ void SetMathCharFont (doc, attribute)
 	   lastSel = firstSel;
 	}
      }
-
   attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   attrType.AttrTypeNum = attribute;
   attr = TtaGetAttribute (firstSel, attrType);
@@ -3252,7 +3427,7 @@ void MathElementDeleted(event)
 
       case MathML_EL_Numerator:		/* a Numerator has been deleted */
       case MathML_EL_Denominator:	/* a Denominator has been deleted */
-	/* remove the enclosing MFRAC */
+	/* remove the enclosing MFRAC or BeveledMFRAC */
 	newTypeNum = -1;
 	break;
 
@@ -3612,6 +3787,60 @@ void AttrStretchyChanged (event)
     else
        if (attr)
 	  TtaRemoveAttribute (event->element, attr, event->document);
+    }
+}
+
+/*----------------------------------------------------------------------
+ AttrBeveledChanged
+ Attribute beveled in a mfrac element has been modified or deleted
+ by the user.
+ Change the type of the element (MFRAC/BeveledMFRAC) accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrBeveledChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrBeveledChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  int		val;
+  ElementType   elType;
+  Attribute     attr;
+
+  if (event->element)
+    {
+    elType = TtaGetElementType (event->element);
+    if (elType.ElTypeNum != MathML_EL_MFRAC &&
+	elType.ElTypeNum != MathML_EL_BeveledMFRAC)
+        return;
+    if (event->attribute == NULL)
+	/* Attribute beveled has been deleted */
+      {
+	/* type should be MFRAC if it's present */
+	if (elType.ElTypeNum != MathML_EL_MFRAC)
+	   ChangeTypeOfElement (event->element, event->document,
+				MathML_EL_MFRAC);
+      }
+    else
+      /* attribute beveled has been created or modified */
+      {
+	/* get its new value */
+        val = TtaGetAttributeValue (event->attribute);
+        if (val == MathML_ATTR_beveled_VAL_false)
+	  {
+	    /* element type should be MFRAC */
+	    if (elType.ElTypeNum != MathML_EL_MFRAC)
+	      ChangeTypeOfElement (event->element, event->document,
+				   MathML_EL_MFRAC);
+	  }
+	else if (val == MathML_ATTR_beveled_VAL_true)
+	  {
+	    /* element type should be BeveledMFRAC */
+	    if (elType.ElTypeNum != MathML_EL_BeveledMFRAC)
+	      ChangeTypeOfElement (event->element, event->document,
+				   MathML_EL_BeveledMFRAC);
+	  }
+      }
     }
 }
 

@@ -31,6 +31,8 @@ extern void SetIntVertStretchAttr ( Element el,
                                     Element* selEl );
 extern void CheckMTable ( Element elMTABLE,
                           Document doc );
+extern void SetMcharContent ( Element el,
+                              Document doc );
 extern void SetFontstyleAttr ( Element el,
                                Document doc );
 extern void SetIntAddSpaceAttr ( Element el,
@@ -86,6 +88,8 @@ extern void SetIntVertStretchAttr (/* Element el,
                                       Element* selEl */);
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc */);
+extern void SetMcharContent (/* Element el,
+                                Document doc */);
 extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
 extern void SetIntAddSpaceAttr (/* Element el,

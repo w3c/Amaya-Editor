@@ -93,123 +93,124 @@
 92 **Identifier (mi)
 93 **Number (mn)
 94 **Operator (mo)
-95 **Entity (&xxx;)
+95 **Character (mchar)
 96 Radice (mroot)
 97 Radice quadrata (msqrt)
-98 Frazione (mfrac)
-99 Pedice e indice (msubsup)
-100 Pedice (msub)
-101 Indice (msup)
-102 Sotto e sopra (munderover)
-103 Sotto (munder)
-104 Sopra (mover)
-105 Parentesi (mrow)
-106 Multiscripts (mmultiscripts)
-107 Matrice (mtable)
-108 Cancella colonna della matrice
-109 noscript
-110 Oggetto
-111 Oggetto (object)
-112 Parametro (param)
-113 Paragrafo (p)
-114 Preformattato (pre)
-115 Tabella
-116 Tabella (table)
-117 Legenda (caption)
-118 colgroup
-119 col
-120 Intestazione (thead)
-121 Corpo (tbody)
-122 tfoot
-123 Linea (tr)
-124 Cella dati (td)
-125 Cella intestazione (th)
-126 Cancella colonna della tabella
-127 Collega al precedente obiettivo
-128 Crea o cambia collegamento...
-129 Crea obiettivo
-130 Cancella ancora
-131 Mostra barra dei pulsanti
-132 Mostra indirizzo e titolo
-133 Mostra le zone attive
-134 Mostra obiettivi
-135 Ingrandisci
-136 Rimpicciolisci
-137 Mostra struttura
-138 Mostra la vista alternativa
-139 Mostra collegamenti
-140 Mostra sommario
-141 Mostra sorgente
-142 Stile dei caratteri...
-143 Colori...
-144 Formattazione...
-145 Immagine di sfondo...
-146 Crea una regola...
-147 Applica una classe...
-148 Fogli di stile
-149 Collegamento...
-150 Apri...
-151 Disabilita...
-152 Abilita...
-153 Rimuovi...
-154 Tipo di informazione
-155 Enfasi (em)
-156 Forte (strong)
-157 Cita (cite)
-158 Definizione (dfn)
-159 Codice (code)
-160 Variabile (var)
-161 Sample (samp)
-162 Tastiera (kbd)
-163 Abbreviazione (abbr)
-164 Acronimo (acronym)
-165 Inserzione (ins)
-166 Cancellazione (del)
-167 Elementi carattere
-168 Italico (i)
-169 Grassetto (b)
-170 Macchina da scrivere (tt)
-171 Grande (big)
-172 Piccolo (small)
-173 Pedice (sub)
-174 Indice (sup)
-175 Citazione (q)
-176 BiDi (bdo)
-177 Numerazione delle sezioni
-178 Crea libro
-179 Mostra il log file
-180 Preferenze
-181 Generali...
-182 Pubblicazione...
-183 Cache...
-184 Proxy...
-185 Colori...
-186 Dimensioni della finestra...
-187 Negoziazione della lingua...
-188 Profili...
-189 Modelli...
-190 Annota
-191 **Show annotations
-192 Carica annotazioni
-193 **Post annotation
-194 Informazioni su Amaya
-195 Informazioni su Amaya al W3C
-196 Navigazione
-197 Selezione
-198 Ricerca
-199 Viste
-200 Creazione elementi
-201 Collegamenti
-202 Ristrutturazione
-203 Tabelle
-204 Matematica
-205 Zone attive
-206 Fogli di stile
-207 Attributi
-208 Controllo ortografico
-209 Pubblicazione
-210 Stampa
-211 Numerazione
-212 Creare un libro
-213 Configurazione di Amaya
-214 Accessibility in Amaya
+98 **Enclose (menclose)
+99 Frazione (mfrac)
+100 Pedice e indice (msubsup)
+101 Pedice (msub)
+102 Indice (msup)
+103 Sotto e sopra (munderover)
+104 Sotto (munder)
+105 Sopra (mover)
+106 Parentesi (mrow)
+107 Multiscripts (mmultiscripts)
+108 Matrice (mtable)
+109 Cancella colonna della matrice
+110 noscript
+111 Oggetto
+112 Oggetto (object)
+113 Parametro (param)
+114 Paragrafo (p)
+115 Preformattato (pre)
+116 Tabella
+117 Tabella (table)
+118 Legenda (caption)
+119 colgroup
+120 col
+121 Intestazione (thead)
+122 Corpo (tbody)
+123 tfoot
+124 Linea (tr)
+125 Cella dati (td)
+126 Cella intestazione (th)
+127 Cancella colonna della tabella
+128 Collega al precedente obiettivo
+129 Crea o cambia collegamento...
+130 Crea obiettivo
+131 Cancella ancora
+132 Mostra barra dei pulsanti
+133 Mostra indirizzo e titolo
+134 Mostra le zone attive
+135 Mostra obiettivi
+136 Ingrandisci
+137 Rimpicciolisci
+138 Mostra struttura
+139 Mostra la vista alternativa
+140 Mostra collegamenti
+141 Mostra sommario
+142 Mostra sorgente
+143 Stile dei caratteri...
+144 Colori...
+145 Formattazione...
+146 Immagine di sfondo...
+147 Crea una regola...
+148 Applica una classe...
+149 Fogli di stile
+150 Collegamento...
+151 Apri...
+152 Disabilita...
+153 Abilita...
+154 Rimuovi...
+155 Tipo di informazione
+156 Enfasi (em)
+157 Forte (strong)
+158 Cita (cite)
+159 Definizione (dfn)
+160 Codice (code)
+161 Variabile (var)
+162 Sample (samp)
+163 Tastiera (kbd)
+164 Abbreviazione (abbr)
+165 Acronimo (acronym)
+166 Inserzione (ins)
+167 Cancellazione (del)
+168 Elementi carattere
+169 Italico (i)
+170 Grassetto (b)
+171 Macchina da scrivere (tt)
+172 Grande (big)
+173 Piccolo (small)
+174 Pedice (sub)
+175 Indice (sup)
+176 Citazione (q)
+177 BiDi (bdo)
+178 Numerazione delle sezioni
+179 Crea libro
+180 Mostra il log file
+181 Preferenze
+182 Generali...
+183 Pubblicazione...
+184 Cache...
+185 Proxy...
+186 Colori...
+187 Dimensioni della finestra...
+188 Negoziazione della lingua...
+189 Profili...
+190 Modelli...
+191 Annota
+192 **Show annotations
+193 Carica annotazioni
+194 **Post annotation
+195 Informazioni su Amaya
+196 Informazioni su Amaya al W3C
+197 Navigazione
+198 Selezione
+199 Ricerca
+200 Viste
+201 Creazione elementi
+202 Collegamenti
+203 Ristrutturazione
+204 Tabelle
+205 Matematica
+206 Zone attive
+207 Fogli di stile
+208 Attributi
+209 Controllo ortografico
+210 Pubblicazione
+211 Stampa
+212 Numerazione
+213 Creare un libro
+214 Configurazione di Amaya
+215 Accessibility in Amaya

@@ -229,9 +229,10 @@ HelpTables
 &CreateMI
 &CreateMN
 &CreateMO
-&CreateMathEntity
+&CreateMCHAR
 &CreateMROOT
 &CreateMSQRT
+&CreateMENCLOSE
 &CreateMFRAC
 &CreateMSUBSUP
 &CreateMSUB

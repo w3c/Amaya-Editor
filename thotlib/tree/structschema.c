@@ -2719,71 +2719,84 @@ PtrElement         *pSplitEl;
 	        descendante d'une autre liste (sans agregat entre les deux)
 	        ou sinon un atome contenu dans une liste */
 	     if (!ElementIsReadOnly (firstEl))
-		if (firstEl->ElTerminal)
-		   if (firstEl->ElLeafType != LtPageColBreak)
-		      if (firstEl->ElParent != NULL)
-			 if (firstEl->ElPrevious != NULL ||
-			     (firstEl->ElLeafType == LtText && firstChar > 1) ||
-			     (firstEl->ElLeafType == LtPicture && firstChar > 0))
-			   {
-			      /* on cherche d'abord si un element ascendant
-			         possede une exception ParagraphBreak */
-			      pE = firstEl->ElParent;
-			      while (pE != NULL && *pList == NULL)
-				 if (TypeHasException (ExcParagraphBreak,
+	       if (firstEl->ElTerminal)
+		 if (firstEl->ElLeafType != LtPageColBreak)
+		   if (firstEl->ElParent != NULL)
+		     if (firstEl->ElPrevious != NULL ||
+			 (firstEl->ElLeafType == LtText && firstChar > 1) ||
+			 (firstEl->ElLeafType == LtPicture && firstChar > 0))
+		       {
+			 /* on cherche d'abord si un element ascendant
+			    possede une exception ParagraphBreak */
+			 pE = firstEl->ElParent;
+			 while (pE != NULL && *pList == NULL)
+			   if (TypeHasException (ExcParagraphBreak,
 					 pE->ElTypeNumber, pE->ElStructSchema))
-				    *pList = AncestorList (pE);
-				 else
-				    pE = pE->ElParent;
-			      if (*pList == NULL)
-				 if (GetElementConstruct (firstEl->ElParent, &nComp) == CsList)
-				    *pList = AncestorList (firstEl->ElParent);
-				 else
-				   {
-				      pE = firstEl;
-				      if (GetElementConstruct (firstEl->ElParent, &nComp) ==
-								      CsChoice)
-					 if (firstEl->ElParent->ElParent != NULL)
-					    if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
-					       pE = firstEl->ElParent->ElParent;
-				      *pList = AncestorList (pE);
-				   }
-			   }
+			     *pList = AncestorList (pE);
+			   else
+			     pE = pE->ElParent;
+			 if (*pList == NULL)
+			   if (GetElementConstruct (firstEl->ElParent, &nComp)
+			       == CsList)
+			     *pList = AncestorList (firstEl->ElParent);
+			   else
+			     {
+			     pE = firstEl;
+			     if (GetElementConstruct (firstEl->ElParent,&nComp)
+				 == CsChoice)
+			       if (firstEl->ElParent->ElParent != NULL)
+				 if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
+				   pE = firstEl->ElParent->ElParent;
+			     *pList = AncestorList (pE);
+			     }
+		       }
 	     if (*pList != NULL)
-		if (TypeHasException (ExcNoCreate, (*pList)->ElFirstChild->ElTypeNumber,
-				    (*pList)->ElFirstChild->ElStructSchema))
+		if (TypeHasException (ExcNoCreate,
+				      (*pList)->ElFirstChild->ElTypeNumber,
+				      (*pList)->ElFirstChild->ElStructSchema))
 		   *pList = NULL;
 	     if (*pList != NULL)
 		if (!CanChangeNumberOfElem (*pList, 1))
 		   *pList = NULL;
 	  }
 	else
-	   /* on veut diviser un "gros" element en deux */
+	  /* on veut diviser un "gros" element en deux */
 	  {
 	     pE = firstEl;
 	     if (firstChar <= 1)
-		/* la selection est en debut d'element */
+	       /* la selection est en debut d'element */
 	       {
-		  /* tant qu'il n'y a pas de frere precedent, on remonte au pere */
-		  while (pE->ElParent != NULL && pE->ElPrevious == NULL)
-		     pE = pE->ElParent;
-		  if (pE->ElPrevious == NULL)
-		     /* il n'y a pas de frere precedent, on ne peut pas diviser */
-		     pE = NULL;
+		 /* tant qu'il n'y a pas de frere precedent, remonte au pere */
+		 while (pE->ElParent != NULL && pE->ElPrevious == NULL)
+		   pE = pE->ElParent;
+		 if (pE->ElPrevious == NULL)
+		   /* il n'y a pas de frere precedent, on ne peut pas couper */
+		   pE = NULL;
 	       }
-	     if (pE != NULL)
+
+	     /* forbid splitting ReadOnly element, except after the end or
+		before the beginning of	a character string */
+	     if (pE)
+	       if (ElementIsReadOnly (pE))
+		 if (pE->ElTypeNumber != CharString + 1)
+		   pE = NULL;
+		 else
+		   if (firstChar > 1 && firstChar <= pE->ElTextLength)
+		     pE = NULL;
+
+	     if (pE)
 	       {
-		  /* l'element devant (ou sur) lequel on va couper */
-		  *pEl = pE;
-		  /* on cherche le premier element CsList ascendant */
-		  pE = pE->ElParent;
-		  while (pE != NULL && *pList == NULL)
-		    {
-		       pE = pE->ElParent;
-		       if (pE != NULL)
-			  if (GetElementConstruct (pE, &nComp) == CsList)
-			     *pList = pE;
-		    }
+		 /* l'element devant (ou sur) lequel on va couper */
+		 *pEl = pE;
+		 /* on cherche le premier element CsList ascendant */
+		 pE = pE->ElParent;
+		 while (pE != NULL && *pList == NULL)
+		   {
+		     pE = pE->ElParent;
+		     if (pE != NULL)
+		       if (GetElementConstruct (pE, &nComp) == CsList)
+			 *pList = pE;
+		   }
 	       }
 	  }
      }

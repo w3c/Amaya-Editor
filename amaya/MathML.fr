@@ -26,6 +26,7 @@ MS: ms
 MSPACE: mspace
 MROW: mrow
 MFRAC: mfrac
+BeveledMFRAC: mfrac
 MSQRT: msqrt
 MENCLOSE: menclose
 MROOT: mroot

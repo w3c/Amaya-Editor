@@ -93,123 +93,124 @@
 92 Identifier (mi)
 93 Number (mn)
 94 Operator (mo)
-95 Entity (&xxx;)
+95 Character (mchar)
 96 Root (mroot)
 97 Square root (msqrt)
-98 Fraction (mfrac)
-99 Subscript and superscript (msubsup)
-100 Subscript (msub)
-101 Superscript (msup)
-102 Under and over (munderover)
-103 Under (munder)
-104 Over (mover)
-105 Parentheses (mrow)
-106 Multiscripts (mmultiscripts)
-107 Matrix (mtable)
-108 Delete matrix column
-109 noscript
-110 Object
-111 object
-112 Parameter (param)
-113 Paragraph (p)
-114 Preformatted (pre)
-115 Table
-116 table
-117 caption
-118 colgroup
-119 col
-120 thead
-121 tbody
-122 tfoot
-123 Row (tr)
-124 Data cell (td)
-125 Heading cell (th)
-126 Delete table column
-127 Link to previous target
-128 Create or change link...
-129 Create target
-130 Delete anchor
-131 Show buttonbar
-132 Show address & title
-133 Show map areas
-134 Show targets
-135 Zoom in
-136 Zoom out
-137 Show structure
-138 Show alternate
-139 Show links
-140 Show table of contents
-141 Show source
-142 Character style...
-143 Colors...
-144 Format...
-145 Background image...
-146 Create rule...
-147 Apply class...
-148 Style sheets
-149 Link...
-150 Open...
-151 Disable...
-152 Enable...
-153 Remove...
-154 Information type
-155 Emphasis (em)
-156 strong
-157 cite
-158 Definition (dfn)
-159 code
-160 Variable (var)
-161 Sample (samp)
-162 Keyboard (kbd)
-163 Abbreviation (abbr)
-164 acronym
-165 Insertion (ins)
-166 Deletion (del)
-167 Character element
-168 Italic (i)
-169 Bold (b)
-170 Teletype (tt)
-171 big
-172 small
-173 Subscript (sub)
-174 Superscript (sup)
-175 Quotation (q)
-176 BiDi override (bdo)
-177 Section numbering
-178 Make book
-179 Show log file
-180 Preferences
-181 General...
-182 Publishing...
-183 Cache...
-184 Proxy...
-185 Colors...
-186 Window Geometry...
-187 Language Negotiation...
-188 Profiles...
-189 Templates...
-190 Annotate
-191 Show annotations
-192 Load annotations
-193 Post annotation
-194 About Amaya
-195 About Amaya at W3C
-196 Browsing
-197 Selecting
-198 Searching
-199 Views
-200 Creating elements
-201 Links
-202 Restructuring
-203 Tables
-204 Math
-205 Image maps
-206 Style sheets
-207 Attributes
-208 Spell Checking
-209 Publishing
-210 Printing
-211 Numbering
-212 Making books
-213 Configuring Amaya
-214 Accessibility in Amaya
+98 Enclose (menclose)
+99 Fraction (mfrac)
+100 Subscript and superscript (msubsup)
+101 Subscript (msub)
+102 Superscript (msup)
+103 Under and over (munderover)
+104 Under (munder)
+105 Over (mover)
+106 Parentheses (mrow)
+107 Multiscripts (mmultiscripts)
+108 Matrix (mtable)
+109 Delete matrix column
+110 noscript
+111 Object
+112 object
+113 Parameter (param)
+114 Paragraph (p)
+115 Preformatted (pre)
+116 Table
+117 table
+118 caption
+119 colgroup
+120 col
+121 thead
+122 tbody
+123 tfoot
+124 Row (tr)
+125 Data cell (td)
+126 Heading cell (th)
+127 Delete table column
+128 Link to previous target
+129 Create or change link...
+130 Create target
+131 Delete anchor
+132 Show buttonbar
+133 Show address & title
+134 Show map areas
+135 Show targets
+136 Zoom in
+137 Zoom out
+138 Show structure
+139 Show alternate
+140 Show links
+141 Show table of contents
+142 Show source
+143 Character style...
+144 Colors...
+145 Format...
+146 Background image...
+147 Create rule...
+148 Apply class...
+149 Style sheets
+150 Link...
+151 Open...
+152 Disable...
+153 Enable...
+154 Remove...
+155 Information type
+156 Emphasis (em)
+157 strong
+158 cite
+159 Definition (dfn)
+160 code
+161 Variable (var)
+162 Sample (samp)
+163 Keyboard (kbd)
+164 Abbreviation (abbr)
+165 acronym
+166 Insertion (ins)
+167 Deletion (del)
+168 Character element
+169 Italic (i)
+170 Bold (b)
+171 Teletype (tt)
+172 big
+173 small
+174 Subscript (sub)
+175 Superscript (sup)
+176 Quotation (q)
+177 BiDi override (bdo)
+178 Section numbering
+179 Make book
+180 Show log file
+181 Preferences
+182 General...
+183 Publishing...
+184 Cache...
+185 Proxy...
+186 Colors...
+187 Window Geometry...
+188 Language Negotiation...
+189 Profiles...
+190 Templates...
+191 Annotate
+192 Show annotations
+193 Load annotations
+194 Post annotation
+195 About Amaya
+196 About Amaya at W3C
+197 Browsing
+198 Selecting
+199 Searching
+200 Views
+201 Creating elements
+202 Links
+203 Restructuring
+204 Tables
+205 Math
+206 Image maps
+207 Style sheets
+208 Attributes
+209 Spell Checking
+210 Publishing
+211 Printing
+212 Numbering
+213 Making books
+214 Configuring Amaya
+215 Accessibility in Amaya

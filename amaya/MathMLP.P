@@ -2176,6 +2176,21 @@ BOXES
 		Visibility: 0;
 	END;
 
+ BeveledBar:	{ fraction bar, beveled style }
+	BEGIN
+	LineWeight: 1 pt;
+	Height: Enclosing . Height - 0.2;
+        Width: 0.6 ;
+	HorizPos: Left = Numerator . Right - 0.1;
+	VertPos: Top = Enclosing . Top + 0.1;
+	Content: Graphics '/';	{ diagonal bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
  RootSymbol:
 	BEGIN
 	LineWeight: 1 pt;
@@ -2212,7 +2227,7 @@ BOXES
 	BEGIN
 	LineWeight: 1 pt;
 	Height: Creator . Height;
-	Width: Creator . Width + ROOT_OFFSET;
+	Width: Creator . Width;
 	VertPos: Top = Creator . Top;
 	HorizPos: Left = Creator . Left;
 	Content: Symbol 'r';		{ root symbol }
@@ -2366,12 +2381,22 @@ RULES
 	CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
 	VertPos: HRef = Previous . HRef;
+	BorderTopWidth: 1 pt;
+	BorderLeftWidth: 1 pt;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	PaddingLeft: 0.2;
+	MarginLeft: 0.2;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: Helvetica;
+		BorderTopWidth: Enclosing =;
+		BorderLeftWidth: Enclosing =;
+		PaddingLeft: Enclosing =;
+		MarginLeft: Enclosing =;
 		END;
   	END;
 
@@ -2428,13 +2453,26 @@ RULES
 
    MFRAC:
 	BEGIN
-	CreateFirst(Bar);
 	CreateBefore(MFRAC_S);
 	CreateWith(VerticalLine);
-	Width: 0.7 min;
+	CreateFirst (Bar);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	Gather: Yes;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
+   BeveledMFRAC:
+	BEGIN
+	CreateBefore(MFRAC_S);
+	CreateWith(VerticalLine);
+	CreateFirst (BeveledBar);
+	HorizRef: Enclosed Numerator . HRef + 0.2;
+	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2445,9 +2483,18 @@ RULES
 
    Numerator:
 	BEGIN
-	HorizRef: * . Top;
-	VertPos: Bottom = Bar . Top;
-	HorizPos: VMiddle = Bar . VMiddle;
+        if Immediately within BeveledMFRAC
+	   BEGIN
+	   HorizRef: Enclosed . HRef;
+	   VertPos: Top = Enclosing . Top;
+	   HorizPos: Left = Enclosing . Left;
+	   END;
+        if Immediately within MFRAC
+	   BEGIN
+	   HorizRef: * . Top;
+	   VertPos: Bottom = Bar . Top;
+	   HorizPos: VMiddle = Bar . VMiddle;
+	   END;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -2456,9 +2503,18 @@ RULES
 
    Denominator:
         BEGIN
-	HorizRef: * . Top;
-	HorizPos: VMiddle = Bar . VMiddle;
-	VertPos: Top = Bar . Bottom;
+        if immediately within BeveledMFRAC
+	   BEGIN
+	   HorizRef: Enclosed . HRef;
+	   HorizPos: Left = BeveledBar . Right - 0.1;
+	   VertPos: HRef = Numerator . HRef + 0.4;
+	   END;
+        if immediately within MFRAC
+	   BEGIN
+	   HorizRef: * . Top;
+	   HorizPos: VMiddle = Bar . VMiddle;
+	   VertPos: Top = Bar . Bottom;
+	   END;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -3375,6 +3431,15 @@ ATTRIBUTES
 	CreateBefore(VALUE_linethickness);
 	END;
 
+  numalign (Numerator) = left\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: Left = Enclosing . Left;
+  numalign (Numerator) = center\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: VMiddle = Bar . VMiddle;
+  numalign (Numerator) = right\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: Right = Enclosing . Right;
   numalign = left\240:
 	CreateBefore(ATTR_numalign_left);
   numalign = center\240:
@@ -3382,6 +3447,15 @@ ATTRIBUTES
   numalign = right\240:
 	CreateBefore(ATTR_numalign_right);
 
+  denomalign (Denominator) = left\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: Left = Enclosing . Left;
+  denomalign (Denominator) = center\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: VMiddle = Bar . VMiddle;
+  denomalign (Denominator) = right\240:
+	if not immediately within BeveledMFRAC
+	   HorizPos: Right = Enclosing . Right;
   denomalign = left\240:
 	CreateBefore(ATTR_denomalign_left);
   denomalign = center\240:
@@ -3393,6 +3467,7 @@ ATTRIBUTES
 	CreateBefore(ATTR_beveled_true);
   beveled = false:
 	CreateBefore(ATTR_beveled_false);
+
 
   notation = longdiv:
 	BEGIN
@@ -3416,10 +3491,13 @@ ATTRIBUTES
 	CreateBefore(ATTR_notation_actuarial);
 	BorderTopWidth: 1 pt;
 	BorderRightWidth: 1 pt;
+	BorderLeftWidth: 0 pt;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	PaddingRight: 0.2;
 	MarginRight: 0.2;
+	PaddingLeft: 0;
+	MarginLeft: 0;
 	IN Math_Structure_view
 		BEGIN
 		BorderTopWidth: Enclosing =;
@@ -3434,7 +3512,17 @@ ATTRIBUTES
 	CreateBefore(RadicalSymbol);
 	PaddingLeft: ROOT_OFFSET;
 	VertPos: HRef = Previous not RadicalSymbol . HRef;
+	HorizPos: Left = Previous not RadicalSymbol . Right;
 	Gather: Yes;
+	BorderTopWidth: 0;
+	BorderLeftWidth: 0;
+	MarginLeft: 0;
+	IN Math_Structure_view
+		BEGIN
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		PaddingLeft: Enclosing =;
+		END;
 	END;
 
   scriptlevel:

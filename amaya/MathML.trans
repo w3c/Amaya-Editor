@@ -100,6 +100,39 @@ root with index: msqrt{*};
 	* > mroot:none %;
 	}
 
+!transform a square root into a menclose
+menclose: msqrt{*};
+	{
+	* > menclose:*;
+	}
+
+!!! menclose Transformations
+
+!surround an element with a menclose
+surrounding menclose: *;
+        {
+        * > menclose:*;
+        }
+
+
+!surround a sequence of elements with a menclose
+surrounding menclose: *,*+;
+        {
+        * > menclose:*;
+        }
+
+!remove a menclose
+remove menclose: menclose{*};
+        {
+        * > :*;
+        }
+
+!transform a menclose into a square root
+square root: menclose{*};
+	{
+	* > msqrt:*;
+	}
+
 !!! Fraction transformations
 
 !transform 2 elements into a fraction

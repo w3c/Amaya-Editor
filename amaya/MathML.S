@@ -47,17 +47,17 @@ STRUCT
 		fontfamily = TEXT;
 		color = TEXT; 
 		IntParseMe = yes_)                      { for internal use }
-	  = TEXT;
+	  = LIST OF (MathMLCharacters);
 
       MI
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
 		IntFontstyle)
-	  = TEXT;
+	  = LIST OF (MathMLCharacters);
 
       MN
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
 		IntFontstyle)
-	  = TEXT;
+	  = LIST OF (MathMLCharacters);
 
       MO
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
@@ -76,14 +76,14 @@ STRUCT
 		IntFontstyle;				{ for internal use }
 		IntVertStretch = yes_;			{ for internal use }
 		IntAddSpace = nospace, spacebefore, spaceafter, both)
-	  = TEXT;
+	  = LIST OF (MathMLCharacters);
 
       MS
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
 		lquote = TEXT;
 		rquote = TEXT; 
 		IntFontstyle)
-	  = TEXT;
+	  = LIST OF (MathMLCharacters);
 
       { petoken}
       MSPACE
@@ -105,6 +105,13 @@ STRUCT
 	  = BEGIN
 	    Numerator = Construct;
 	    Denominator = Construct;
+	    END	;
+
+      BeveledMFRAC
+	  (ATTR linethickness; numalign; denomalign; beveled)
+	  = BEGIN
+	    Numerator;
+	    Denominator;
 	    END	;
 
       MSQRT
@@ -363,6 +370,13 @@ STRUCT
    { FencedSeparator is for internal use only. It contains a separator
      in a mfenced expression, according to the separator attribute }
    FencedSeparator = TEXT;
+
+   { MathMLCharacters }
+   MathMLCharacters = CASE OF
+	     TEXT;
+	     MCHAR;
+	     MGLYPH;
+	     END;
 
 EXCEPT
 

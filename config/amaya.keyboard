@@ -153,6 +153,7 @@ Ctrl <Key>m , Ctrl <Key>a:         CreateMSUP()
 Ctrl <Key>m , Ctrl <Key>v:         CreateMSUB() 
 Ctrl <Key>m , Ctrl <Key>2:         CreateMSQRT() 
 Ctrl <Key>m , Ctrl <Key>r:         CreateMROOT() 
+Ctrl <Key>m , Ctrl <Key>e:         CreateMENCLOSE() 
 Ctrl <Key>m , Ctrl <Key>c:         CreateMSUBSUP() 
 Ctrl <Key>m , Ctrl <Key>k:         CreateMUNDEROVER() 
 

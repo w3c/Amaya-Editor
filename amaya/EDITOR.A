@@ -121,10 +121,11 @@ MENUS
 	Types.Math button:BMIdentifier -> CreateMI;
 	Types.Math button:BMNumber -> CreateMN;
 	Types.Math button:BMOperator -> CreateMO;
-	Types.Math button:BMEntity -> CreateMathEntity;
+	Types.Math button:BMCharacter -> CreateMCHAR;
 	Types.Math Separator;
         Types.Math button:BNthRoot -> CreateMROOT;
         Types.Math button:BSquareRoot -> CreateMSQRT;
+        Types.Math button:BEnclose -> CreateMENCLOSE;
         Types.Math button:BFraction -> CreateMFRAC;
         Types.Math button:BSubscriptAndSuperscript -> CreateMSUBSUP;
         Types.Math button:BSubscript -> CreateMSUB;

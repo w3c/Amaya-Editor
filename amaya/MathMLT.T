@@ -113,6 +113,17 @@ RULES
 	create SCT after;
 	create 'mfrac>\12' after;
 	end;
+   BeveledMFRAC:
+	begin
+	create SOT;
+	create 'mfrac';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'mfrac>\12' after;
+	end;
    Numerator:
 	if empty
 		begin
