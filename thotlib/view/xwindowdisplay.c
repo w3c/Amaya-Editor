@@ -2419,21 +2419,21 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   register int        Y;
+  int        Y;
 
-   y += FrameTable[frame].FrTopMargin;
-   if (align == 1)
-      Y = y + (h - thick) / 2;
-   else if (align == 2)
-      Y = y + h - thick - 1;
-   else
-      Y = y;
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg);
-	DoDrawOneLine (frame, x, Y, x + l - 1, Y);
-	FinishDrawing (0, RO, active);
-     }
+  y += FrameTable[frame].FrTopMargin;
+  if (align == 1)
+    Y = y + (h - thick) / 2;
+  else if (align == 2)
+    Y = y + h - thick / 2;
+  else
+    Y = y + thick / 2;
+  if (thick > 0)
+    {
+      InitDrawing (0, style, thick, RO, active, fg);
+      DoDrawOneLine (frame, x, Y, x + l, Y);
+      FinishDrawing (0, RO, active);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2463,22 +2463,22 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   register int        X;
+  int        X;
 
-   if (align == 1)
-      X = x + (l - thick) / 2;
-   else if (align == 2)
-      X = x + l - thick;
-   else
-      X = x;
+  if (align == 1)
+    X = x + (l - thick) / 2;
+  else if (align == 2)
+    X = x + l - thick / 2;
+  else
+    X = x + thick / 2;
 
-   y += FrameTable[frame].FrTopMargin;
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg);
-	DoDrawOneLine (frame, X, y, X, y + h);
-	FinishDrawing (0, RO, active);
-     }
+  y += FrameTable[frame].FrTopMargin;
+  if (thick > 0)
+    {
+      InitDrawing (0, style, thick, RO, active, fg);
+      DoDrawOneLine (frame, X, y, X, y + h);
+      FinishDrawing (0, RO, active);
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -1622,7 +1622,7 @@ ThotBool            horizRef;
 		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
 		      /* the rule gives the outside value */
 		      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
-		    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, frame);
+		    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 		  }
 	      }
 	    else
@@ -1644,7 +1644,7 @@ ThotBool            horizRef;
 		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
 		      /* the rule gives the outside value */
 		      val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
-		    ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, frame);
+		    ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 		  }
 	      }
 	  else
@@ -1672,7 +1672,7 @@ ThotBool            horizRef;
 		      else
 			/* explicit value */
 			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, frame);
+		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 		    }
 		else
 		  {
@@ -1765,7 +1765,7 @@ ThotBool            horizRef;
 			      val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			    /* the rule gives the outside value */
 			    val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
-			    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, frame);
+			    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 			    /* Marks out of structure relations */
 			    if (pDimAb->DimAbRef != pParentAb
 				&& pDimAb->DimAbRef->AbEnclosing != pParentAb)
@@ -1800,7 +1800,7 @@ ThotBool            horizRef;
 			  else
 			    /* explicit value */
 			    val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, frame);
+			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 			}
 		    }
 		  else if (inLine && pDimAb->DimAbRef == pParentAb
@@ -1890,7 +1890,7 @@ ThotBool            horizRef;
 				    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 				  /* the rule gives the outside value */
 				  val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
-				  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, frame);
+				  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 				  /* Marks out of structure relations */
 				  if (pDimAb->DimAbRef != pParentAb
 				      && pDimAb->DimAbRef->AbEnclosing != pParentAb)
@@ -3004,7 +3004,7 @@ int                 frame;
 		       pOrginBox->BxHorizFlex = FALSE;
 
 		       /* Annule la largeur de la boite */
-		       ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxW, 0, frame);
+		       ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxW, 0, 0, 0, frame);
 
 		    }
 		  /* La dimension n'est pas elastique en X */
@@ -3043,7 +3043,7 @@ int                 frame;
 		       pOrginBox->BxVertFlex = FALSE;
 
 		       /* Annule la hauteur de la boite */
-		       ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxH, frame);
+		       ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxH, 0, 0, frame);
 		    }
 		  /* La dimension n'est pas elastique en Y */
 		  else
@@ -3097,7 +3097,7 @@ int                 frame;
 	     pOrginBox->BxHorizEdge = pOrginBox->BxAbstractBox->AbHorizPos.PosEdge;
 
 	     /* Annule la largeur de la boite */
-	     ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxW, 0, frame);
+	     ResizeWidth (pOrginBox, NULL, NULL, -pOrginBox->BxW, 0, 0, 0, frame);
 	  }
 
 	/* La dimension est elastique en Y ? */
@@ -3113,7 +3113,7 @@ int                 frame;
 	     pOrginBox->BxVertEdge = pOrginBox->BxAbstractBox->AbVertPos.PosEdge;
 
 	     /* Annule la hauteur de la boite */
-	     ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxH, frame);
+	     ResizeHeight (pOrginBox, NULL, NULL, -pOrginBox->BxH, 0, 0, frame);
 	  }
      }
 

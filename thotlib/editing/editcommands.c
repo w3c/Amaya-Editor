@@ -1326,7 +1326,7 @@ int                 frame;
 
 	BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 	/* aadjuste la largeur de certains symboles */
-	ResizeHeight (pBox, NULL, NULL, 0, frame);
+	ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
 	APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
      }
 }

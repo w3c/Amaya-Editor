@@ -2128,7 +2128,7 @@ int                 frame;
    AbDimension        *pDimAb;
    AbPosition         *pPosAb;
    int                 width, height;
-   int                 nSpaces;
+   int                 nSpaces, j;
    int                 i, charDelta, adjustDelta;
    ThotBool            condition;
    ThotBool            result, isCell;
@@ -2705,8 +2705,6 @@ int                 frame;
 	     AnyWidthUpdate = TRUE;
 	     /* Remove the old value */
 	     ClearDimRelation (pBox, TRUE, frame);
-	     /* New values of margins, paddings and borders */
-	     ComputeMPB (pAb, frame, TRUE);
 	     /* New width */
 	     condition = ComputeDimRelation (pAb, frame, TRUE);
 	     if (condition || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
@@ -2769,8 +2767,6 @@ int                 frame;
 	  {
 	     /* Remove the old value */
 	     ClearDimRelation (pBox, FALSE, frame);
-	     /* New values of margins, paddings and borders */
-	     ComputeMPB (pAb, frame, FALSE);
 	     /* New height */
 	     condition = ComputeDimRelation (pAb, frame, FALSE);
 	     if (condition || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
@@ -2817,11 +2813,59 @@ int                 frame;
 	  }
 	if (pAb->AbMBPChange)
 	  {
-	    /* update margins, borders and paddings */
-	    ComputeMPB (pAb, frame, TRUE);
-	    ResizeWidth (pBox, pBox, NULL, 0, 0, frame);
+	    savpropage = Propagate;
+	    Propagate = ToAll;	/* On passe en mode normal de propagation */
+	    /* update vertical margins, borders and paddings */
+	    i = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
+	    j = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 	    ComputeMPB (pAb, frame, FALSE);
-	    ResizeHeight (pBox, pBox, NULL, 0, frame);
+	    i = - i + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
+	    j = - j + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+	    /* Check if the changes affect the inside or the outside width */
+	    if (i != 0 && j != 0)
+	      if (pAb->AbHeight.DimIsPosition ||
+		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing ||
+		  pAb->AbHeight.DimAbRef == 0)
+		/* the inside height is constrained */
+		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
+	      else
+		/* the outside height is constrained */
+		ResizeHeight (pBox, pBox, NULL, - i - j, 0, 0, frame);
+
+	    /* update horizontal margins, borders and paddings */
+	    i = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
+	    j = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+	    ComputeMPB (pAb, frame, TRUE);
+	    i = - i + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
+	    j = - j + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+	    /* Check if the changes affect the inside or the outside width */
+	    if (i != 0 && j != 0)
+	      {
+		if (pAb->AbWidth.DimIsPosition ||
+		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
+		    pAb->AbWidth.DimAbRef == 0)
+		  /* the inside width is constrained */
+		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
+		else
+		  /* the outside width is constrained */
+		  ResizeWidth (pBox, pBox, NULL, - i - j, 0, 0, 0, frame);
+		
+		/* Check table consistency */
+		if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+		  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+		else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
+		  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+		/* check enclosing cell */
+		pCell = GetParentCell (pCurrentBox);
+		if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+		  {
+		    pBlock = SearchEnclosingType (pAb, BoBlock);
+		    if (pBlock != NULL)
+		      RecomputeLines (pBlock, NULL, NULL, frame);
+		    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		  }
+	      }
+	    Propagate = savpropage;	/* Restaure la regle de propagation */
 	    pAb->AbMBPChange = FALSE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */

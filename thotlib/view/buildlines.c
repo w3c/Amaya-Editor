@@ -2953,7 +2953,7 @@ int                 frame;
 	       {
 		  ShiftLine (pLine, pAb, pBox, xDelta, frame);
 		  pLine->LiXMax = pLine->LiRealLength;
-		  ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, frame);
+		  ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, 0, 0, frame);
 	       }
 	  }
 	/* Si le bloc de lignes deborde de sa dimension minimale */

@@ -654,11 +654,11 @@ int                 frame;
 		  delta = pBox->BxRuleHeigth - pBox->BxH;
 		  pBox->BxRuleHeigth = height;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ResizeHeight (pBox, pSourceBox, NULL, delta, frame);
+		  ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
 	       }
 	     else
 		/* Mise a jour de la hauteur du contenu */
-		ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, frame);
+		ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, 0, 0, frame);
 	  }
 	else if (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum)
 	  {
@@ -668,7 +668,7 @@ int                 frame;
 		  /* Il faut echanger la hauteur reelle avec l'autre hauteur */
 		  pBox->BxRuleHeigth = pBox->BxH;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, frame);
+		  ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, 0, 0, frame);
 	       }
 	     else
 		/* Mise a jour de la hauteur du contenu */
@@ -709,11 +709,11 @@ int                 frame;
 		  delta = pBox->BxRuleWidth - pBox->BxW;
 		  pBox->BxRuleWidth = width;
 		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, frame);
+		  ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, 0, 0, frame);
 	       }
 	     else
 		/* Mise a jour de la largeur du contenu */
-		ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, spaceDelta, frame);
+		ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	  }
 	else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition && pBox->BxAbstractBox->AbWidth.DimMinimum)
 	  {
@@ -723,7 +723,7 @@ int                 frame;
 		  /* Il faut echanger la largeur reelle avec l'autre largeur */
 		  pBox->BxRuleWidth = pBox->BxW;
 		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, spaceDelta, frame);
+		  ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	       }
 	     else
 		/* Mise a jour de la largeur du contenu */
@@ -777,7 +777,7 @@ int                 frame;
 	      /* Il faut echanger la largeur reelle avec l'autre largeur */
 	      pBox->BxRuleWidth = pBox->BxW;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
-	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, spaceDelta, frame);
+	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	    }
 	  else
 	    /* Mise a jour de la largeur minimum */
@@ -793,14 +793,14 @@ int                 frame;
 	      width = pBox->BxRuleWidth;
 	      pBox->BxRuleWidth = pBox->BxW + delta;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
-	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, spaceDelta, frame);
+	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	    }
 	  else
 	    /* Mise a jour de la largeur minimum */
-	    ResizeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame);
+	    ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
 	}
       else
-	ResizeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame);
+	ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
     }
 }
 
@@ -847,7 +847,7 @@ int                 frame;
 	      /* Il faut echanger la hauteur reelle avec l'autre hauteur */
 	      pBox->BxRuleHeigth = pBox->BxH;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
-	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, frame);
+	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
 	    }
 	  else
 	    /* Mise a jour de la hauteur minimum */
@@ -863,13 +863,13 @@ int                 frame;
 	      height = pBox->BxRuleHeigth;
 	      pBox->BxRuleHeigth = pBox->BxH + delta;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
-	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, frame);
+	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
 	    }
 	  else
-	    ResizeHeight (pBox, pSourceBox, pFromBox, delta, frame);
+	    ResizeHeight (pBox, pSourceBox, pFromBox, delta, 0, 0, frame);
 	}
       else
-	ResizeHeight (pBox, pSourceBox, pFromBox, delta, frame);
+	ResizeHeight (pBox, pSourceBox, pFromBox, delta, 0, 0, frame);
     }
 }
 
@@ -948,7 +948,7 @@ ThotBool            horizRef;
 	      XMove (pBox, pSourceBox, translation, frame);
 	    }
 	  /* Resize the box */
-	  ResizeWidth (pBox, pSourceBox, NULL, delta, 0, frame);
+	  ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
 	  /* restore the fixed edge */
 	  pBox->BxHorizEdge = NoEdge;
 	}
@@ -999,7 +999,7 @@ ThotBool            horizRef;
 	      
 	    }
 	  /* Resize the box */
-	  ResizeHeight (pBox, pSourceBox, NULL, delta, frame);
+	  ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
 	  /* restore the fixed edge */
 	  pBox->BxVertEdge = NoEdge;
 	}
@@ -1748,17 +1748,21 @@ int                 frame;
   - any box attached to a box edge is moved
   - update the baseline
   - any other box size which depends on it is updated
+  The parameters delta, l, r gives changes of the width, left, and right 
+  extra (margin, border, padding)
   The parameter spaceDelta gives the number of spaces added (>0) or removed
   only if it's a text box included within a justified line.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
+void                ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int l, int r, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void                ResizeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
+void                ResizeWidth (pBox, pSourceBox, pFromBox, delta, l, r, spaceDelta, frame)
 PtrBox              pBox;
 PtrBox              pSourceBox;
 PtrBox              pFromBox;
 int                 delta;
+int                 l;
+int                 r;
 int                 spaceDelta;
 int                 frame;
 
@@ -1989,7 +1993,10 @@ int                 frame;
 
 	    /* Keep in mind if the box positionning is absolute or not */
 	    absoluteMove = IsXPosComplete (pBox);
-	    
+	    /* internal boxes take into account margins borders and paddings */
+	    orgTrans += l;
+	    middleTrans += (l - r)/2;
+	    endTrans -= r;
 	    /* Moving included boxes or reevalution of the block of lines? */
 	    if (absoluteMove ||
 		pCurrentAb->AbWidth.DimAbRef != NULL ||
@@ -2202,15 +2209,19 @@ int                 frame;
   - any box attached to a box edge is moved
   - update the vertical reference axis
   - any other box size which depends on it is updated
+  The parameters delta, t, b gives changes of the height, top, and bottom
+  extra (margin, border, padding)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
+void                ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int t, int b, int frame)
 #else  /* __STDC__ */
-void                ResizeHeight (pBox, pSourceBox, pFromBox, delta, frame)
+void                ResizeHeight (pBox, pSourceBox, pFromBox, delta, t, b, frame)
 PtrBox              pBox;
 PtrBox              pSourceBox;
 PtrBox              pFromBox;
 int                 delta;
+int                 t;
+int                 b;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -2444,6 +2455,10 @@ int                 frame;
 	     
 	    /* Keep in mind if the box positionning is absolute or not */
 	    absoluteMove = IsYPosComplete (pBox);
+	    /* internal boxes take into account margins borders and paddings */
+	    orgTrans += t;
+	    middleTrans += (t - b)/2;
+	    endTrans -= b;
 	    
 	    /* Moving included boxes? */
 	    if (absoluteMove && pBox->BxType == BoBlock)
@@ -2649,7 +2664,7 @@ int                 frame;
 	    case 'i':	/* integral */
 	    case 'c':	/* circle integral */
 	      i = (int) ((float) CharacterWidth (231, font) * value);
-	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, frame);
+	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    case '(':
 	    case ')':
@@ -2658,7 +2673,7 @@ int                 frame;
 	    case '[':
 	    case ']':
 	      i = (int) ((float) CharacterWidth (230, font) * value);
-	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, frame);
+	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    default:
 	      break;

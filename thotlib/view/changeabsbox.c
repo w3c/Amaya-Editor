@@ -4105,22 +4105,14 @@ PtrDocument         pDoc;
 	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA))
 	      /* le pave est modifie' */
 	     {
-		if (typeRule == PtSize)
-		   pAb->AbSizeChange = TRUE;
-		else if (typeRule == PtDepth || typeRule == PtLineStyle ||
-			 typeRule == PtLineWeight ||
-			 typeRule == PtFillPattern ||
-		       typeRule == PtBackground || typeRule == PtForeground)
-		   pAb->AbAspectChange = TRUE;
-		else
-		   pAb->AbChange = TRUE;
-		/* traite les paves fils */
-		pAbbChild = pAb->AbFirstEnclosed;
-		while (pAbbChild != NULL)
-		  {
-		     ApplyInheritPresRule (pAbbChild, typeRule, pDoc);
-		     pAbbChild = pAbbChild->AbNext;
-		  }
+	       SetChange (pAb, typeRule);
+	       /* traite les paves fils */
+	       pAbbChild = pAb->AbFirstEnclosed;
+	       while (pAbbChild != NULL)
+		 {
+		   ApplyInheritPresRule (pAbbChild, typeRule, pDoc);
+		   pAbbChild = pAbbChild->AbNext;
+		 }
 	     }
      }
 }
