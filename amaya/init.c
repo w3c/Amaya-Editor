@@ -394,7 +394,7 @@ void DocumentInfo (Document document, View view)
    if (DocumentURLs[document] != NULL)
      content = DocumentURLs[document];
    else
-     content = "Unknown";
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoLocation,
 		BaseDialog + DocInfoForm, content);
 
@@ -402,7 +402,7 @@ void DocumentInfo (Document document, View view)
    if (DocumentMeta[document] && DocumentMeta[document]->content_type != NULL)
      content = DocumentMeta[document]->content_type;
    else
-     content = "Unknown";
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoMimeType,
 		BaseDialog + DocInfoForm, content);
 
@@ -410,7 +410,7 @@ void DocumentInfo (Document document, View view)
    if (DocumentMeta[document] && DocumentMeta[document]->charset != NULL)
      content = DocumentMeta[document]->charset;
    else
-     content = "Unknown";
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoCharset,
 		BaseDialog + DocInfoForm, content);
 
@@ -418,7 +418,7 @@ void DocumentInfo (Document document, View view)
    if (DocumentMeta[document] && DocumentMeta[document]->content_length != NULL)
      content = DocumentMeta[document]->content_length;
    else
-     content = "Unknown";
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoContent,
 		BaseDialog + DocInfoForm, content);
 
@@ -1467,7 +1467,7 @@ void InitCharset (Document document, View view, char *url)
     i = 1;
       
   TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
-	      "Charset query", TRUE, 1, 'L', D_CANCEL);
+	      TtaGetMessage (AMAYA, AM_SELECT_CHARSET), TRUE, 1, 'L', D_CANCEL);
   /* radio buttons */
   TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
 		 NULL, 3, s, NULL, FALSE);
@@ -1518,7 +1518,7 @@ void InitMimeType (Document document, View view, char *url)
 
 #ifndef _WINDOWS
    TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
-	       "MIME type query", TRUE, 1, 'L', D_CANCEL);
+	       TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE),  TRUE, 1, 'L', D_CANCEL);
    /* selector */
    TtaNewSelector (BaseDialog + MimeTypeSel, BaseDialog + MimeTypeForm, NULL,
 		   nbmimetypes, mimetypes_list, 4, NULL, TRUE, FALSE);
@@ -3287,6 +3287,11 @@ void ShowSource (Document document, View view)
 	 DocumentMeta[sourceDoc]->put_default_name =
 	                            DocumentMeta[document]->put_default_name;
 	 DocumentMeta[sourceDoc]->xmlformat = FALSE;
+	 /* copy the MIME type and charset */
+	 if (DocumentMeta[document]->content_type)
+	   DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[document]->content_type);
+	 if (DocumentMeta[document]->charset)
+	   DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[document]->charset);
 	 DocumentTypes[sourceDoc] = docSource;
 	 TtaSetDocumentCharset (sourceDoc, TtaGetDocumentCharset (document));
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
@@ -4492,9 +4497,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifndef _WINDOWS
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
-				"This type of document doesn't support charsets");
+				TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #else
-		   SaveAsDlgStatus ("The target must be an HTTP URL to use this option");
+		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #endif /* _WINDOWS */
 		 }
 	     }
@@ -4530,9 +4535,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifndef _WINDOWS
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
-			      "The target must be an HTTP URL to use this option");
+				TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #else
-		   SaveAsDlgStatus ("The target must be an HTTP URL to use this option");
+		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #endif /* _WINDOWS */
 		 }
 	     }
@@ -5000,10 +5005,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 				 SavePath);
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + MimeTypeForm,
-				"Error: invalid MIME type");
+				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #else
 		   /* the Window dialog won't be closed */
- 		   MimeTypeDlgStatus ("Error: invalid MIME type");
+ 		   MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINDOWS */
 		 }
 	       else
