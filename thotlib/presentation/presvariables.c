@@ -1116,8 +1116,8 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    
 	    /* Show the namespace declaration for the root element and */
 	    /* when an element is not in the same namespace than its parent */
-	    if ((pEl->ElStructSchema->SsRootElem == pEl->ElTypeNumber) ||
-		(pEl->ElStructSchema != pEl->ElParent->ElStructSchema))
+	    if (pEl->ElStructSchema->SsRootElem == pEl->ElTypeNumber ||
+		(pEl->ElParent && pEl->ElStructSchema != pEl->ElParent->ElStructSchema))
 	      {
 		uri = GiveCurrentNsUri (pDoc, pEl);
 		if (uri != NULL)
