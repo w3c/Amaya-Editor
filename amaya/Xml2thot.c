@@ -2870,7 +2870,7 @@ static void      EndOfAttributeName (char *xmlName)
 	 EndOfXhtmlAttributeName (attrName,
 				  XMLcontext.lastElement, XMLcontext.doc);
        else
-	 EndOfXmlAttributeName (attrName, ptr,
+	 EndOfXmlAttributeName (attrName, nsURI,
 				XMLcontext.lastElement, XMLcontext.doc);
      }
    
