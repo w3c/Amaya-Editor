@@ -148,7 +148,13 @@ void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
               event.GetSelection() );
 
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  wxPanel * p_new_page = (wxPanel *)p_notebook->GetPage(event.GetSelection());
+  wxPanel *    p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
+
+  if(!p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) || !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
+  {
+    event.Skip();
+    return;
+  }
 
   int page_id_geom = wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY"));
 
@@ -480,10 +486,10 @@ void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
 {
   wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Cache") );
 
-  XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->SetValue( prop.EnableCache );
+  XRCCTRL(*this, "wxID_CHECK_ENABLECACHE",  wxCheckBox)->SetValue( prop.EnableCache );
   XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->SetValue( prop.CacheProtectedDocs );
-  XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->SetValue( prop.CacheDisconnectMode );
-  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->SetValue( prop.CacheExpireIgnore );
+  XRCCTRL(*this, "wxID_CHECK_DISCO",        wxCheckBox)->SetValue( prop.CacheDisconnectMode );
+  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE",    wxCheckBox)->SetValue( prop.CacheExpireIgnore );
 
   XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.CacheDirectory) );
 
@@ -649,6 +655,10 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
 {
   wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Color") );
 
+  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->Append( TtaConvMessageToWX(prop.BgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->Append( TtaConvMessageToWX(prop.FgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(prop.BgColor) );
+  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(prop.FgColor) );
   XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgSelColor) );
   XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgSelColor) );
   XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgColor) );
@@ -747,7 +757,16 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
     else if (event.GetId() == selbackcolor_id)
 	p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);    
     if (p_combo)
+	{
+	  p_combo->Append( TtaConvMessageToWX(color_string) );
       p_combo->SetValue( TtaConvMessageToWX(color_string) );
+#ifdef _WINDOWS
+	  // on windows, the TextChanged event is note generated automaticaly when SetValue is called
+	  // just simulate it.
+	  wxCommandEvent event;
+	  OnColorTextChanged(event);
+#endif /* _WINDOWS */
+	}
   }
 }
 

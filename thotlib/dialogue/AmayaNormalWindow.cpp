@@ -411,7 +411,7 @@ AmayaPage * AmayaNormalWindow::GetActivePage() const
   wxLogDebug( _T("AmayaNormalWindow::GetActivePage") );
   if (!m_pNotebook)
     return NULL;
-  return GetPage(m_pNotebook->GetSelection());
+  return (m_pNotebook->GetSelection() >= 0) ? GetPage(m_pNotebook->GetSelection()) : NULL;
 }
 
 /*

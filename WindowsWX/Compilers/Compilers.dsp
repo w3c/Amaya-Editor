@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=cp ../../../wxWidgets/lib/vc_dll/*.dll ../bin/
+PreLink_Cmds=copy  ..\..\..\wxWidgets\lib\vc_dll\*.dll  ..\bin\ 
 PostBuild_Cmds=echo "Before running Compilers.exe"	..\bin\Compilers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
@@ -89,7 +89,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=cp ../../../wxWidgets/lib/vc_dll/*.dll ../bin/
+PreLink_Cmds=copy  ..\..\..\wxWidgets\lib\vc_dll\*.dll  ..\bin\ 
 PostBuild_Cmds=echo "Before running Compilers.exe"	..\bin\Compilers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
