@@ -741,21 +741,6 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
- GraphElemPasted
- An element has been pasted.
- If the element is an XLink, update the link.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           GraphElemPasted (NotifyElement *event)
-#else /* __STDC__*/
-void           GraphElemPasted(event)
-NotifyElement *event;
-#endif /* __STDC__*/
-{
-  XLinkPasted (event);
-}
-
-/*----------------------------------------------------------------------
  AttrArrowHeadModified
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -846,23 +831,32 @@ Element          el;
 	  val = -x;
 	  while (child)
 	    {
-	      if (elType.ElTypeNum == GraphML_EL_circle ||
-		  elType.ElTypeNum == GraphML_EL_ellipse)
-		attrType.AttrTypeNum = GraphML_ATTR_cx;
-	      else if (elType.ElTypeNum == GraphML_EL_rect ||
-		       elType.ElTypeNum == GraphML_EL_text_ ||
-		       elType.ElTypeNum == GraphML_EL_tspan ||
-		       elType.ElTypeNum == GraphML_EL_image ||
-		       elType.ElTypeNum == GraphML_EL_foreignObject ||
-		       elType.ElTypeNum == GraphML_EL_GraphML)
-		attrType.AttrTypeNum = GraphML_ATTR_x;
-	      else if (elType.ElTypeNum == GraphML_EL_line_)
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == GraphML_EL_Spline ||
+		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+		  elType.ElTypeNum == GraphML_EL_polyline ||
+		  elType.ElTypeNum == GraphML_EL_polygon)
+		TranslatePointsAttribute (el, doc, val, TRUE);
+	      else
 		{
-		  attrType.AttrTypeNum = GraphML_ATTR_x1;
-		  attrType.AttrTypeNum = GraphML_ATTR_x2;
+		  if (elType.ElTypeNum == GraphML_EL_circle ||
+		      elType.ElTypeNum == GraphML_EL_ellipse)
+		    attrType.AttrTypeNum = GraphML_ATTR_cx;
+		  else if (elType.ElTypeNum == GraphML_EL_rect ||
+			   elType.ElTypeNum == GraphML_EL_text_ ||
+			   elType.ElTypeNum == GraphML_EL_tspan ||
+			   elType.ElTypeNum == GraphML_EL_image ||
+			   elType.ElTypeNum == GraphML_EL_foreignObject ||
+			   elType.ElTypeNum == GraphML_EL_GraphML)
+		    attrType.AttrTypeNum = GraphML_ATTR_x;
+		  else if (elType.ElTypeNum == GraphML_EL_line_)
+		    {
+		      attrType.AttrTypeNum = GraphML_ATTR_x1;
+		      UpdateAttrText (child, doc, attrType, val, TRUE);
+		      attrType.AttrTypeNum = GraphML_ATTR_x2;
+		    }
+		  UpdateAttrText (child, doc, attrType, val, TRUE);
 		}
-	      UpdateAttrText (child, doc, attrType, val, TRUE);
-
 	      /* check if the SVG width includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &x, &dummy);
 	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
@@ -904,23 +898,32 @@ Element          el;
 	  val = -y;
 	  while (child)
 	    {
-	      if (elType.ElTypeNum == GraphML_EL_circle ||
-		  elType.ElTypeNum == GraphML_EL_ellipse)
-		attrType.AttrTypeNum = GraphML_ATTR_cy;
-	      else if (elType.ElTypeNum == GraphML_EL_rect ||
-		       elType.ElTypeNum == GraphML_EL_text_ ||
-		       elType.ElTypeNum == GraphML_EL_tspan ||
-		       elType.ElTypeNum == GraphML_EL_image ||
-		       elType.ElTypeNum == GraphML_EL_foreignObject ||
-		       elType.ElTypeNum == GraphML_EL_GraphML)
-		attrType.AttrTypeNum = GraphML_ATTR_y;
-	      else if (elType.ElTypeNum == GraphML_EL_line_)
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == GraphML_EL_Spline ||
+		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+		  elType.ElTypeNum == GraphML_EL_polyline ||
+		  elType.ElTypeNum == GraphML_EL_polygon)
+		TranslatePointsAttribute (el, doc, val, FALSE);
+	      else
 		{
-		  attrType.AttrTypeNum = GraphML_ATTR_y1;
-		  attrType.AttrTypeNum = GraphML_ATTR_y2;
+		  if (elType.ElTypeNum == GraphML_EL_circle ||
+		      elType.ElTypeNum == GraphML_EL_ellipse)
+		    attrType.AttrTypeNum = GraphML_ATTR_cy;
+		  else if (elType.ElTypeNum == GraphML_EL_rect ||
+			   elType.ElTypeNum == GraphML_EL_text_ ||
+			   elType.ElTypeNum == GraphML_EL_tspan ||
+			   elType.ElTypeNum == GraphML_EL_image ||
+			   elType.ElTypeNum == GraphML_EL_foreignObject ||
+			   elType.ElTypeNum == GraphML_EL_GraphML)
+		    attrType.AttrTypeNum = GraphML_ATTR_y;
+		  else if (elType.ElTypeNum == GraphML_EL_line_)
+		    {
+		      attrType.AttrTypeNum = GraphML_ATTR_y1;
+		      UpdateAttrText (child, doc, attrType, val, TRUE);
+		      attrType.AttrTypeNum = GraphML_ATTR_y2;
+		    }
+		  UpdateAttrText (child, doc, attrType, val, TRUE);
 		}
-	      UpdateAttrText (child, doc, attrType, val, TRUE);
-
 	      /* check if the SVG height includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &dummy, &y);
 	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
@@ -955,6 +958,23 @@ Element          el;
       else
 	graphRoot = NULL;
     }
+}
+
+/*----------------------------------------------------------------------
+ GraphElemPasted
+ An element has been pasted.
+ If the element is an XLink, update the link.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void           GraphElemPasted (NotifyElement *event)
+#else /* __STDC__*/
+void           GraphElemPasted (event)
+NotifyElement *event;
+#endif /* __STDC__*/
+{
+  XLinkPasted (event);
+  /* check that the svg element includes that element */
+  CheckGraphMLRoot (event->document, event->element);
 }
 
 /*----------------------------------------------------------------------
@@ -1047,7 +1067,7 @@ NotifyPresentation *event;
 	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon)
-	    TranslatePointsAttribute (el, doc, x, FALSE);
+	    TranslatePointsAttribute (el, doc, x, TRUE);
 	  else
 	    {
 	      /* the new value is the old one plus the difference */
@@ -1084,8 +1104,8 @@ NotifyPresentation *event;
 	  width = TtaGetPRuleValue (presRule);
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
-      /* check that the svg root element includes that element */
-      CheckGraphMLRoot (doc, el);
+      /* check that the svg element includes that element */
+      CheckGraphMLRoot (event->document, event->element);
     }
   return ret; /* let Thot perform normal operation */
 }

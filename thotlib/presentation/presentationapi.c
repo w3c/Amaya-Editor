@@ -180,7 +180,7 @@ ThotBool            display;
    TypeUnit            unit;
    int                 x, y, dx, dy;
    int                 viewSch;
-   int                 value;
+   int                 value, ref;
    ThotBool            attr, doitX, doitY, isPos;
    ThotBool            isNew, reDisp, isLined, histOpen;
 
@@ -317,7 +317,12 @@ ThotBool            display;
 	       else
 		 value = pRuleV->PrPosRule.PoDistance;
 
-	       if (isNew ||(pAb->AbBox->BxYOrg != 0 && value == 0))
+	       /* check if there is a previous value */
+	       if (pAb->AbEnclosing)
+		 ref = pAb->AbEnclosing->AbBox->BxYOrg;
+	       else
+		 ref = 0;
+	       if (isNew ||(pAb->AbBox->BxYOrg != ref && value == 0))
 		 {
 		   /* the rule gives a default position */
 		   if (isPos)
@@ -473,7 +478,13 @@ ThotBool            display;
 		 }
 		 value = pRuleH->PrPosRule.PoDistance;
 
-	       if (isNew ||(pAb->AbBox->BxXOrg != 0 && value == 0))
+
+	       /* check if there is a previous value */
+	       if (pAb->AbEnclosing)
+		 ref = pAb->AbEnclosing->AbBox->BxXOrg;
+	       else
+		 ref = 0;
+	       if (isNew ||(pAb->AbBox->BxXOrg != ref && value == 0))
 		 {
 		   /* the rule gives a default position */
 		   if (isPos)
