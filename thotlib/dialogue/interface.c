@@ -14,7 +14,7 @@
  *
  */
 
-/* #define DEBUG_MULTIKEY */
+/*#define DEBUG_MULTIKEY 1*/
 #define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */
 
 #include "thot_gui.h"
@@ -73,10 +73,8 @@
    dynamically change the event flow to produce event corresponding
    to the extended character set.
   ----------------------------------------------------------------------*/
-
-			  /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
-			    /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
-
+/* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
+/* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
 static KeySym       TtaIsoKeySymTab[256] =
 {
    XK_nobreakspace,		/* First keysyms are mapped directly  */
@@ -107,7 +105,6 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
  *      - a modifier,
  *      - the result.
  */
-
 typedef struct multi_key
   {
      KeySym              c;
@@ -122,7 +119,6 @@ Multi_Key;
  * Sequence lookup is based on the order in this table.
  * So insert more important first.
  */
-
 static Multi_Key    mk_tab[] =
 {
 /* Remaining ISO-latin-1 sequences */
@@ -346,7 +342,6 @@ static Multi_Key    mk_tab[] =
 
 #define NB_MK (sizeof(mk_tab) / sizeof(Multi_Key))
 
-
 static Display     *TtaDisplay = NULL;
 static int          TtaNbIsoKeySym = 0;
 static int          TtaKeyboardMapInstalled = 0;
@@ -364,148 +359,130 @@ static KeySym       TtaKeyboardMap[8 * 256];
  */
 int                 TtaUseOwnXLookupString = 0;
 
-/*
- * TtaXLookupString : This override the standard function provided by the
- *     X11 librarie. This AWFUL glitch is required due to frequent change
- *     of the standard implementation when trying to work with more keysyms
- *     than the usual set and still having Motif functionning properly.
- *  Daniel Veillard 28 March 96 after installing X11R6 rel 1 ...
- */
-/*ARGSUSED */
-int
-                    TtaXLookupString (event, buffer, nbytes, keysym, status)
+/*----------------------------------------------------------------------
+  TtaXLookupString : This override the standard function provided by the
+  X11 librarie. This AWFUL glitch is required due to frequent change
+  of the standard implementation when trying to work with more keysyms
+  than the usual set and still having Motif functionning properly.
+  Daniel Veillard 28 March 96 after installing X11R6 rel 1 ...
+  ----------------------------------------------------------------------*/
+int               TtaXLookupString (event, buffer, nbytes, keysym, status)
 register ThotKeyEvent *event;
 char               *buffer;	/* buffer */
 int                 nbytes;	/* space in buffer for characters */
 KeySym             *keysym;
-ThotComposeStatus     *status;	/* not implemented */
+ThotComposeStatus  *status;	/* not implemented */
 {
-   KeySym              sym = NoSymbol;
-   int                 keycode;
-   int                 state;
-   struct _XDisplay   *dpy = (struct _XDisplay *) event->display;
+  KeySym              sym = NoSymbol;
+  int                 keycode;
+  int                 state;
+  struct _XDisplay   *dpy = (struct _XDisplay *) event->display;
 
-   if (event == NULL)
+  if (event == NULL)
+    return (0);
+  if (event->keycode < TtaMinKeyCode || event->keycode > TtaMaxKeyCode)
+    {
+      if (keysym != NULL)
+	*keysym = 0;
       return (0);
-   if ((event->keycode < TtaMinKeyCode) || (event->keycode > TtaMaxKeyCode))
-      goto not_found;
-   keycode = event->keycode - TtaMinKeyCode;
-   state = event->state;
+    }
 
-   /*
-    * search for the keysym depending on the state flags.
-    */
-   if (state == 0)
-     {
+  keycode = event->keycode - TtaMinKeyCode;
+  state = event->state;
+  /* search for the keysym depending on the state flags */
+  if (state == 0)
+    {
+      sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
+      if ((sym >= XK_A) && (sym <= XK_Z))
+	sym = sym + (XK_a - XK_A);
+    }
+  else if (state == ShiftMask)
+    {
+      sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 1];
+      if (sym == NoSymbol)
 	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-	if ((sym >= XK_A) && (sym <= XK_Z))
-	  {
-	     sym = sym + (XK_a - XK_A);
-	  }
-     }
-   else if (state == ShiftMask)
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 1];
-	if (sym == NoSymbol)
-	   sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-     }
-   else if (state == LockMask)
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-     }
-   else if (state == Mod1Mask)
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-     }
-   else if (state == (ShiftMask | Mod1Mask))
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
-     }
-   else if ((state & (dpy->mode_switch | ShiftMask)) ==
-	    (dpy->mode_switch | ShiftMask))
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
-     }
-   else if ((state & dpy->mode_switch) == (state & dpy->mode_switch))
-     {
-	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-     }
-   if (keysym != NULL)
-      *keysym = sym;
-   if (sym == NoSymbol)
-      goto not_found;
+    }
+  else if (state == LockMask)
+    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
+  else if (state == Mod1Mask)
+    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
+  else if (state == (ShiftMask | Mod1Mask))
+    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
+  else if ((state & (dpy->mode_switch | ShiftMask)) == (dpy->mode_switch | ShiftMask))
+    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
+  else if ((state & dpy->mode_switch) == (state & dpy->mode_switch))
+    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
 
+  if (keysym != NULL)
+    *keysym = sym;
+  if (sym != NoSymbol)
+    {
 #ifdef DEBUG_MULTIKEY
-   fprintf (stderr, "code %X, state %X : sym %s\n", event->keycode, event->state,
-	    XKeysymToString (sym));
+      fprintf (stderr, "code %X, state %X : sym %s\n", event->keycode, event->state, XKeysymToString (sym));
 #endif
 
-   /*
-    * we found the corresponding symbol, convert it to a char string.
-    */
-   if ((buffer == NULL) || (nbytes < 1))
-      return (0);
-   if (IsModifierKey (sym))
-      return (0);
-   if (IsCursorKey (sym))
-      return (0);
-   if (IsPFKey (sym))
-      return (0);
-   if (IsFunctionKey (sym))
-      return (0);
-   if (IsMiscFunctionKey (sym))
-      return (0);
-   if ((sym >= XK_KP_0) && (sym <= XK_KP_9))
-     {
-	buffer[0] = (sym - XK_KP_0) + '0';
-	return (1);
-     }
-   else if ((sym >= XK_space) && (sym <= XK_ydiaeresis))
-     {
-	/* Direct encoding for ISO-Latin 1 */
-	buffer[0] = sym;
-	return (1);
-     }
-   switch (sym)
-	 {
-	    case XK_KP_Space:
-	       buffer[0] = ' ';
-	       return (1);
-	    case XK_KP_Enter:
-	       buffer[0] = '\r';
-	       return (1);
-	    case XK_KP_Equal:
-	       buffer[0] = '=';
-	       return (1);
-	    case XK_KP_Multiply:
-	       buffer[0] = '*';
-	       return (1);
-	    case XK_KP_Add:
-	       buffer[0] = '+';
-	       return (1);
-	    case XK_KP_Separator:
-	       buffer[0] = ',';
-	       return (1);
-	    case XK_KP_Subtract:
-	       buffer[0] = '-';
-	       return (1);
-	    case XK_KP_Decimal:
-	       buffer[0] = '.';
-	       return (1);
-	    case XK_KP_Divide:
-	       buffer[0] = '/';
-	       return (1);
+      /* we found the corresponding symbol, convert it to a char string */
+      if ((buffer == NULL) || (nbytes < 1))
+	return (0);
+      if (IsModifierKey (sym))
+	return (0);
+      if (IsCursorKey (sym))
+	return (0);
+      if (IsPFKey (sym))
+	return (0);
+      if (IsFunctionKey (sym))
+	return (0);
+      if (IsMiscFunctionKey (sym))
+	return (0);
+      if ((sym >= XK_KP_0) && (sym <= XK_KP_9))
+	{
+	  buffer[0] = (sym - XK_KP_0) + '0';
+	  return (1);
+	}
+      else if ((sym >= XK_space) && (sym <= XK_ydiaeresis))
+	{
+	  /* Direct encoding for ISO-Latin 1 */
+	  buffer[0] = sym;
+	  return (1);
+	}
 
-	    case XK_Return:
-	       buffer[0] = '\n';
-	       return (1);
-	 }
-   return (0);
-
- not_found:
-   if (keysym != NULL)
-      *keysym = 0;
-   return (0);
+      switch (sym)
+	{
+	case XK_KP_Space:
+	  buffer[0] = ' ';
+	  return (1);
+	case XK_KP_Enter:
+	  buffer[0] = '\r';
+	  return (1);
+	case XK_KP_Equal:
+	  buffer[0] = '=';
+	  return (1);
+	case XK_KP_Multiply:
+	  buffer[0] = '*';
+	  return (1);
+	case XK_KP_Add:
+	  buffer[0] = '+';
+	  return (1);
+	case XK_KP_Separator:
+	  buffer[0] = ',';
+	  return (1);
+	case XK_KP_Subtract:
+	  buffer[0] = '-';
+	  return (1);
+	case XK_KP_Decimal:
+	  buffer[0] = '.';
+	  return (1);
+	case XK_KP_Divide:
+	  buffer[0] = '/';
+	  return (1);
+	case XK_Return:
+	  buffer[0] = '\n';
+	  return (1);
+	}
+    }
+  else if (keysym != NULL)
+    *keysym = 0;
+  return (0);
 }
 
 /*----------------------------------------------------------------------
@@ -516,26 +493,23 @@ ThotComposeStatus     *status;	/* not implemented */
    (this is due to Sun Xserver behavior probably X11R5) on Keycode
    assigned to Keypad keys :-( .
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          TtaIsKeycodeOK (int keycode)
-
 #else  /* __STDC__ */
 static int          TtaIsKeycodeOK (keycode)
 int                 keycode;
-
 #endif /* __STDC__ */
-
 {
    return (TRUE);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ks_name (KeySym k)
 #else  /* __STDC__ */
 static char        *ks_name (k)
 KeySym              k;
-
 #endif /* __STDC__ */
 {
    char               *res = XKeysymToString (k);
@@ -551,7 +525,6 @@ KeySym              k;
    Install support for Iso-Latin-1 KeySyms in the Keyboard Map managed
    by X-Windows.
   ----------------------------------------------------------------------*/
-
 /*
  * Seems there is no more problems, keep the ability
  * to avoid remapping modifiers on some servers.
@@ -566,134 +539,84 @@ KeySym              k;
  */
 void                TtaInstallMultiKey ()
 {
-   int                 keysymperkeycode;
-   KeySym             *keymap;
-   Display            *dpy = TtaGetCurrentDisplay ();
-   KeyCode             keycode;
-   KeySym              keysym;
-   int                 no;
-   int                 modif;
-   int                 res;
-   char               *do_dump_keymap;
+  KeySym             *keymap;
+  Display            *dpy = TtaGetCurrentDisplay ();
+  KeyCode             keycode;
+  KeySym              keysym;
+  int                 keysymperkeycode;
+  int                 no;
+  int                 modif;
+  int                 res;
+  int                 codeline;
+  int                 index;
 
-#ifdef DEBUG_KEYMAP
-   int                 dump_keymap = 1;
+  TtaDisplay = dpy;
+  /* load the current keyboard mapping */
+  XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
+  keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
+				(TtaMaxKeyCode - TtaMinKeyCode + 1), &keysymperkeycode);
+  if ((int) keymap == BadValue)
+    {
+      fprintf (stderr, "XGetKeyboardMapping failed : BadValue\n");
+      return;
+    }
+  TtaNbKeySymPerKeyCode = keysymperkeycode;
 
-#else
-   int                 dump_keymap = 0;
+  /*
+   * due to problems accessing keysyms on row >= 4 we force installation
+   * of new keysyms on row 3. Row 0 is non modified, row 1 is Shifted
+   * and row 2 is Compose1 + Key . Row 3 is assigned to Shift + Compose +
+   * key .
+   */
+  TtaModifierNumber = 3;
+  if (TtaNbKeySymPerKeyCode < 4)
+    TtaNbKeySymPerKeyCode = 4;
 
-#endif
+  /* first, clean the TtaKeyboardMap. */
+  for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
+    for (modif = 0; modif < TtaNbKeySymPerKeyCode; modif++)
+      TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + modif] = NoSymbol;
+  
+  /*
+   * second, install the current mapping.
+   * We are also looking for the Mode_switch keycode.
+   */
+  for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
+    for (modif = 0; modif < keysymperkeycode; modif++)
+      {
+	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + modif] =
+	  keymap[keycode * keysymperkeycode + modif];
+	if (keymap[keycode * keysymperkeycode + modif] == XK_Mode_switch)
+	  TtaMode_switchKeyCode = keycode + TtaMinKeyCode;
+      }
 
-   TtaDisplay = dpy;
+  XFree (keymap);
 
+  /*
+   * for each element of TtaIsoKeySymTab, look at the current keyboard map
+   * for it and if it's not available, assign it to a free slot in the
+   * TtaModifierNumber's row.
+   *
+   * WARNING, SunOS and Solaris rule :-( :
+   * a keysym placed next to a Keypad key will be ignored , exemple :
+   *    KP_7 Home KP_7 adiaresis
+   * sending an event with this keycode and the <Mod1> + <Shift> state
+   * won't generate the expected adiaresis !
+   * We also need to avoid putting new keysyms on key mapped to a modifier
+   */
+  for (TtaNbIsoKeySym = 0; TtaIsoKeySymTab[TtaNbIsoKeySym] != NoSymbol;
+       TtaNbIsoKeySym++) ;
 
-   do_dump_keymap = TtaGetEnvString ("THOTDEBUGKEYMAP");
-   if (do_dump_keymap != NULL)
-     {
-	if (!strcasecmp (do_dump_keymap, "yes"))
-	   dump_keymap = 1;
-	else
-	   dump_keymap = 0;
-     }
-
-   /*
-    * load the current keyboard mapping.
-    */
-   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
-   if (dump_keymap)
-     {
-	fprintf (stderr, "display keycodes : min %d , max %d\n",
-		 TtaMinKeyCode, TtaMaxKeyCode);
-     }
-
-   keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
-		    (TtaMaxKeyCode - TtaMinKeyCode + 1), &keysymperkeycode);
-   if ((int) keymap == BadValue)
-     {
-	fprintf (stderr, "XGetKeyboardMapping failed : BadValue\n");
-	return;
-     }
-   TtaNbKeySymPerKeyCode = keysymperkeycode;
-
-   if (dump_keymap)
-     {
-	fprintf (stderr, "Max %d KeySym per KeyCode\n", TtaNbKeySymPerKeyCode);
-	for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
-	  {
-	     fprintf (stderr, "keycode %03d = ", keycode);
-	     for (modif = 0; modif < TtaNbKeySymPerKeyCode; modif++)
-		fprintf (stderr, "%s ",
-		      ks_name (keymap[keycode * keysymperkeycode + modif]));
-	     fprintf (stderr, "\n");
-	  }
-     }
-
-   /*
-    * due to problems accessing keysyms on row >= 4 we force installation
-    * of new keysyms on row 3. Row 0 is non modified, row 1 is Shifted
-    * and row 2 is Compose1 + Key . Row 3 is assigned to Shift + Compose +
-    * key .
-    */
-   TtaModifierNumber = 3;
-   if (TtaNbKeySymPerKeyCode < 4)
-      TtaNbKeySymPerKeyCode = 4;
-
-   /*
-    * first, clean the TtaKeyboardMap.
-    */
-   for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
-      for (modif = 0; modif < TtaNbKeySymPerKeyCode; modif++)
-	 TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + modif] = NoSymbol;
-
-   /*
-    * second, install the current mapping.
-    * We are also looking for the Mode_switch keycode.
-    */
-   for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
-      for (modif = 0; modif < keysymperkeycode; modif++)
+  for (no = 0, keycode = 0; no < TtaNbIsoKeySym; no++)
+    {
+      /* look if current keysym is already present */
+      keysym = TtaIsoKeySymTab[no];
+      res = XKeysymToKeycode (TtaDisplay, keysym);
+      if (res != 0)
 	{
-	   TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + modif] =
-	      keymap[keycode * keysymperkeycode + modif];
-	   if (keymap[keycode * keysymperkeycode + modif] == XK_Mode_switch)
-	      TtaMode_switchKeyCode = keycode + TtaMinKeyCode;
-	}
-
-   XFree (keymap);
-
-   /*
-    * for each element of TtaIsoKeySymTab, look at the current keyboard map
-    * for it and if it's not available, assign it to a free slot in the
-    * TtaModifierNumber's row.
-    *
-    * WARNING, SunOS and Solaris rule :-( :
-    * a keysym placed next to a Keypad key will be ignored , exemple :
-    *    KP_7 Home KP_7 adiaresis
-    * sending an event with this keycode and the <Mod1> + <Shift> state
-    * won't generate the expected adiaresis !
-    * We also need to avoid putting new keysyms on key mapped to a modifier
-    */
-   for (TtaNbIsoKeySym = 0; TtaIsoKeySymTab[TtaNbIsoKeySym] != NoSymbol;
-	TtaNbIsoKeySym++) ;
-
-   for (no = 0, keycode = 0; no < TtaNbIsoKeySym; no++)
-     {
-	/*
-	 * look if current keysym is already present.
-	 */
-	keysym = TtaIsoKeySymTab[no];
-	res = XKeysymToKeycode (TtaDisplay, keysym);
-	if (res != 0)
-	  {
-
-	     /*
-	      * the keysym is already installed in the Keyboard map
-	      */
-	     int                 codeline = res - TtaMinKeyCode;
-	     int                 index;
-
-	     /*
-	      * search the row where the keysym is installed.
-	      */
+	  /* the keysym is already installed in the Keyboard map */
+	  codeline = res - TtaMinKeyCode;
+	     /* search the row where the keysym is installed */
 	     for (index = 0; index < TtaNbKeySymPerKeyCode; index++)
 		if (TtaKeyboardMap[codeline * TtaNbKeySymPerKeyCode + index] ==
 		    keysym)
@@ -748,20 +671,6 @@ void                TtaInstallMultiKey ()
 	 */
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
-
-   if (dump_keymap)
-     {
-	fprintf (stderr, "%d KeySym per KeyCode\n", TtaNbKeySymPerKeyCode);
-	for (keycode = 0; keycode < TtaMaxKeyCode - TtaMinKeyCode + 1; keycode++)
-	  {
-	     fprintf (stderr, "keycode %03d = ", keycode);
-	     for (modif = 0; modif < TtaNbKeySymPerKeyCode; modif++)
-		fprintf (stderr, "%s ",
-			 ks_name (TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + modif]));
-	     fprintf (stderr, "\n");
-	  }
-     }
-
    TtaKeyboardMapInstalled = 1;
 
 }
@@ -777,53 +686,58 @@ int                 TtaGetIsoKeysym (ThotEvent * event, KeySym keysym)
 int                 TtaGetIsoKeysym (event, keysym)
 ThotEvent             *event;
 KeySym              keysym;
-
 #endif /* __STDC__ */
 {
-   KeyCode             keycode;
-   int                 codeline;
-   int                 index;
-   ThotKeyEvent          *ev = (ThotKeyEvent *) event;
+  KeyCode             keycode;
+  int                 codeline;
+  int                 index;
+  ThotKeyEvent          *ev = (ThotKeyEvent *) event;
 
-   /*
-    * look for the index in the key corresponding to this keycode
-    */
-   for (codeline = 0; codeline < TtaMaxKeyCode - TtaMinKeyCode; codeline++)
-      for (index = 0; index < TtaNbKeySymPerKeyCode; index++)
-	 if (TtaKeyboardMap[codeline * TtaNbKeySymPerKeyCode + index] == keysym)
-	    goto found;
-
-   /*
-    * not found
-    */
-   return (0);
-
- found:
-   keycode = codeline + TtaMinKeyCode;
-   switch (index)
-	 {
-	    case 0:		/* normal key, no specific state */
-	       ev->keycode = keycode;
-	       ev->state = 0;
-	       break;
-	    case 1:		/* shifted key */
-	       ev->keycode = keycode;
-	       ev->state = ShiftMask;
-	       break;
-	    case 2:		/* Modified key, standard */
-	       ev->keycode = keycode;
-	       ev->state = Mod1Mask;
-	       break;
-	    case 3:		/* Here comes the trouble, Modified key, non-standard */
-	       ev->keycode = keycode;
-	       ev->state = Mod1Mask | ShiftMask;
-	       break;
+  /* look for the index in the key corresponding to this keycode */
+  for (codeline = 0; codeline < TtaMaxKeyCode - TtaMinKeyCode; codeline++)
+    for (index = 0; index < TtaNbKeySymPerKeyCode; index++)
+      if (TtaKeyboardMap[codeline * TtaNbKeySymPerKeyCode + index] == keysym)
+	{
+	  keycode = codeline + TtaMinKeyCode;
+	  switch (index)
+	    {
+	    case 0:
+	      /* normal key, no specific state */
+	      ev->keycode = keycode;
+	      ev->state = 0;
+	      break;
+	    case 1:
+	      /* shifted key */
+	      ev->keycode = keycode;
+	      ev->state = ShiftMask;
+	      break;
+	    case 2:
+	      /* Modified key, standard */
+	      ev->keycode = keycode;
+	      ev->state = Mod1Mask;
+	      break;
+	    case 3:
+	      /* Here comes the trouble, Modified key, non-standard */
+	      ev->keycode = keycode;
+	      ev->state = Mod1Mask | ShiftMask;
+	      break;
 	    default:
-	       fprintf (stderr, "TtaGetIsoKeysym :internal error, index too big\n");
-	       return (0);
-	 }
-   return (0);
+	      fprintf (stderr, "TtaGetIsoKeysym :internal error, index too big\n");
+	      return (0);
+	    }
+	}
+  /* not found */
+  return (0);
 }
+
+/*
+ * static values are part of the automata which interprets
+ * a multiple sequence of event to produce the corresponding
+ * keysym.
+ */
+static int          mk_state = 0;
+static KeySym       previous_keysym;
+static unsigned char previous_value = 0;
 
 /*----------------------------------------------------------------------
    TtaHandleMultiKeyEvent
@@ -832,44 +746,32 @@ KeySym              keysym;
    for the whole application.
    It uses an automata, and KeyPressed events can change its state.
 
-   Initial = 0      ->       1      ->     2       ->      0 
-   Alt or Compose      Key            Key
+   Initial = 0 -> 1      -> 2       -> 0 
+   Compose     Key       Key
 
-   ->     3       ->      5      ->      0
-   Num            Num            Num
+   -> 3       -> 5      -> 0
+   Num        Num       Num
 
    If the whole sequence correspond to a valid MultiKey sequence, the
    event corresponding to a KeyPress for the result character is generated
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaHandleMultiKeyEvent (ThotEvent * event)
 #else  /* __STDC__ */
 int                 TtaHandleMultiKeyEvent (event)
 ThotEvent             *event;
-
 #endif /* __STDC__ */
 {
-   /*
-    * static values are part of the automata which interprets
-    * a multiple sequence of event to produce the corresponding
-    * keysym.
-    */
-   static int          mk_state = 0;
-   static KeySym       previous_keysym;
-   static unsigned char previous_value = 0;
-
+   KeySym              KS;
+   char                buf[2];
+   ThotComposeStatus   status;
+   unsigned int        state2;
    unsigned int        state;
    int                 keycode;
-   KeySym              KS;
+   int                 index;
    int                 ret;
-   char                buf[2];
-   ThotComposeStatus      status;
-   unsigned int        state2;
 
-   /*
-    * save the current values, mouse status bits of the state are ignored.
-    */
+   /* save the current values, mouse status bits of the state are ignored */
    state = event->xkey.state & (ShiftMask | LockMask | ControlMask | Mod1Mask);
    keycode = event->xkey.keycode;
 
@@ -883,17 +785,14 @@ ThotEvent             *event;
      }
 
 #ifdef DEBUG_MULTIKEY
-   fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n",
-	    keycode, ret, state, KS);
+   fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n", keycode, ret, state, KS);
 #endif
 
-   /*
-    * Deal with Keysym definition by typing <Alt>#number_of_iso_char
-    */
-   if (((mk_state == 1) && (KS >= XK_0) && (KS <= XK_9)) ||
-       (mk_state == 3) || (mk_state == 4))
+   /* Deal with Keysym definition by typing <Alt_R>#number_of_iso_char */
+   if ((mk_state == 1 && KS >= XK_0 && KS <= XK_9) ||
+       mk_state == 3 || mk_state == 4)
      {
-	if ((ret != 0) && (KS >= XK_0) && (KS <= XK_9))
+	if (ret != 0 && KS >= XK_0 && KS <= XK_9)
 	  {
 	     if (mk_state == 1)
 		mk_state = 2;
@@ -906,9 +805,7 @@ ThotEvent             *event;
 	     previous_value *= 8;
 	     previous_value += KS - XK_0;
 
-	     /*
-	      * Octal number cannot be encoded on more than 3 char.
-	      */
+	     /* Octal number cannot be encoded on more than 3 char */
 	     if (mk_state == 4)
 	       {
 #ifdef DEBUG_MULTIKEY
@@ -920,9 +817,7 @@ ThotEvent             *event;
 		  return (1);
 	       }
 
-	     /*
-	      * finished with this event.
-	      */
+	     /* finished with this event */
 	     mk_state++;
 	     return (0);
 	  }
@@ -946,11 +841,9 @@ ThotEvent             *event;
    else
       previous_value = 0;
 
-   if ((KS == XK_Multi_key) || (KS == XK_Alt_L) || (KS == XK_Alt_R))
+   if (KS == XK_Multi_key || KS == XK_Alt_R || KS == XK_Mode_switch)
      {
-	/*
-	 * start of a compose sequence using the Compose key.
-	 */
+	/* start of a compose sequence using the Compose key */
 #ifdef DEBUG_MULTIKEY
 	fprintf (stderr, "Start of compose sequence\n");
 #endif
@@ -962,7 +855,6 @@ ThotEvent             *event;
       return (1);
    if (mk_state == 2)
      {
-	int                 index;
 
 	/*
 	 * The have already read the character modified by compose. 
@@ -1009,23 +901,17 @@ ThotEvent             *event;
 
    if (mk_state == 1)
      {
-	/*
-	 * First key of a compose sequence ...
-	 */
+	/* First key of a compose sequence ... */
 #ifdef DEBUG_MULTIKEY
 	fprintf (stderr, "      first of the sequence: '%c'\n", KS);
 #endif
-	/*
-	 * Memorizing the first element and the fact that the state was changed.
-	 */
+	/* Memorize the first element and the fact that the state was changed */
 	previous_keysym = KS;
 	mk_state++;
 	return (0);
      }
-
    return (1);
 }
-
 #endif /* !_WINDOWS */
 
 /*
@@ -1040,11 +926,8 @@ static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
 
 /*----------------------------------------------------------------------
    TtaSetMainLoop
-
    Provide a new main loop for processing all events in an application.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC
 void                TtaSetMainLoop (ExternalInitMainLoop init,
       ExternalMainLoop loop, ExternalFetchEvent fetch,
@@ -1073,16 +956,15 @@ void                TtaFetchOneEvent (ThotEvent *ev)
 #else  /* __STDC__ */
 void                TtaFetchOneEvent (ev)
 ThotEvent             *ev;
-
 #endif /* __STDC__ */
 {
-    if (NewFetchEvent)
-      {
-        NewFetchEvent(ev);
-	return;
-      }
+  if (NewFetchEvent)
+    {
+      NewFetchEvent(ev);
+      return;
+    }
 #ifndef _WINDOWS
-    XtAppNextEvent (app_cont, ev);
+  XtAppNextEvent (app_cont, ev);
 #endif /* ! _WINDOWS */
 }
 
@@ -1097,7 +979,6 @@ boolean             TtaFetchOneAvailableEvent (ThotEvent *ev)
 #else  /* __STDC__ */
 boolean             TtaFetchOneAvailableEvent (ev)
 ThotEvent             *ev;
-
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
@@ -1132,83 +1013,82 @@ void                TtaHandleOneEvent (ThotEvent * ev)
 #else  /* __STDC__ */
 void                TtaHandleOneEvent (ev)
 ThotEvent             *ev;
-
 #endif /* __STDC__ */
 {
-   int                 frame;
-   PtrDocument         pDoc;
-   int                 vue, i;
-   boolean             assoc;
-   ThotWindow          w;
-   char               *s;
+  int                 frame;
+  PtrDocument         pDoc;
+  int                 vue, i;
+  boolean             assoc;
+  ThotWindow          w;
+  char               *s;
 
-   /* Keep client messages */
-   if (ev->type == ClientMessage)
-     {
-	s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
-	if (s == NULL)
-	   return;
-	if (!strcmp (s, "WM_PROTOCOLS"))
-	  {
-	     /* The client message comes from the Window Manager */
-	     w = ev->xany.window;
-	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
-	     if (!strcmp (s, "WM_DELETE_WINDOW"))
-	       {
-                  if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
-                     TtcQuit (0, 0);
-                  else
-                    {
-		      for (frame = 1; frame <= MAX_FRAME; frame++)
-		        {
-		           if (FrRef[frame] != 0 && XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
-			      break;
-		        }
-		      if (frame <= MAX_FRAME)
-		        {
-		           GetDocAndView (frame, &pDoc, &vue, &assoc);
-		           CloseView (pDoc, vue, assoc);
-		        }
-		      return;
-                    }
-	       }
-	  }
-	else if (!strcmp (s, "THOT_MESSAGES"))
-	  {
-	     /* The client message comes from print */
-	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
-	     i = ((XClientMessageEvent *) ev)->data.l[1];
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
-	  }
-     }
-   else if (ev->type == KeyPress)
-     {
-	if (!TtaHandleMultiKeyEvent (ev))
-	   return;
-     }
-   else
-     {
-	/* Manage color events */
-	if (ThotLocalActions[T_colors] != NULL)
-	   (*ThotLocalActions[T_colors]) (ev);
-	/* Manage selection events */
-	SelectionEvents ((XSelectionEvent *) ev);
-     }
-
-   XtDispatchEvent (ev);
-   /* Manage document events */
-   frame = GetWindowFrame (ev->xany.window);
-   /* the event does not concern a document */
-   if ((frame > 0) && (frame <= MAX_FRAME))
-     {
-	if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (ev->type == GraphicsExpose || ev->type == Expose)
-		FrameToRedisplay (0, frame, (XExposeEvent *) ev);
-	     else
-		FrameCallback (frame, ev);
-	  }
-     }
+  /* Keep client messages */
+  if (ev->type == ClientMessage)
+    {
+      s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
+      if (s == NULL)
+	return;
+      if (!strcmp (s, "WM_PROTOCOLS"))
+	{
+	  /* The client message comes from the Window Manager */
+	  w = ev->xany.window;
+	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
+	  if (!strcmp (s, "WM_DELETE_WINDOW"))
+	    {
+	      if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
+		TtcQuit (0, 0);
+	      else
+		{
+		  for (frame = 1; frame <= MAX_FRAME; frame++)
+		    {
+		      if (FrRef[frame] != 0 && XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
+			break;
+		    }
+		  if (frame <= MAX_FRAME)
+		    {
+		      GetDocAndView (frame, &pDoc, &vue, &assoc);
+		      CloseView (pDoc, vue, assoc);
+		    }
+		  return;
+		}
+	    }
+	}
+      else if (!strcmp (s, "THOT_MESSAGES"))
+	{
+	  /* The client message comes from print */
+	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
+	  i = ((XClientMessageEvent *) ev)->data.l[1];
+	  TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
+	}
+    }
+  else if (ev->type == KeyPress)
+    {
+      if (!TtaHandleMultiKeyEvent (ev))
+	return;
+    }
+  else
+    {
+      /* Manage color events */
+      if (ThotLocalActions[T_colors] != NULL)
+	(*ThotLocalActions[T_colors]) (ev);
+      /* Manage selection events */
+      SelectionEvents ((XSelectionEvent *) ev);
+    }
+  
+  XtDispatchEvent (ev);
+  /* Manage document events */
+  frame = GetWindowFrame (ev->xany.window);
+  /* the event does not concern a document */
+  if ((frame > 0) && (frame <= MAX_FRAME))
+    {
+      if (FrameTable[frame].WdFrame != 0)
+	{
+	  if (ev->type == GraphicsExpose || ev->type == Expose)
+	    FrameToRedisplay (0, frame, (XExposeEvent *) ev);
+	  else
+	    FrameCallback (frame, ev);
+	}
+    }
 }
 #endif /* !_WINDOWS */
 
@@ -1223,13 +1103,13 @@ void                TtaHandleOneWindowEvent (MSG * msg)
 #else  /* __STDC__ */
 void                TtaHandleOneWindowEvent (msg)
 MSG                *msg;
-
 #endif /* __STDC__ */
 {
-   if (msg->message != WM_QUIT)	{
-      TranslateMessage (msg);
-      DispatchMessage (msg);
-   }
+   if (msg->message != WM_QUIT)
+     {
+       TranslateMessage (msg);
+       DispatchMessage (msg);
+     }
 }
 #endif
 
@@ -1258,51 +1138,56 @@ void                TtaHandlePendingEvents ()
   ----------------------------------------------------------------------*/
 void                TtaMainLoop ()
 {
-   NotifyEvent         notifyEvt;
-
+  NotifyEvent         notifyEvt;
 #  ifdef _WINDOWS
-   MSG                 msg;
-   int                 frame;
+  MSG                 msg;
+  int                 frame;
 #  else /* ! _WINDOWS */
-   ThotEvent              ev;
+  ThotEvent              ev;
 #  endif /* _WINDOWS */
 
-   if (NewInitMainLoop) NewInitMainLoop(app_cont);
+  if (NewInitMainLoop)
+    NewInitMainLoop(app_cont);
 
 #  ifndef _WINDOWS
-   TtaInstallMultiKey ();
+  TtaInstallMultiKey ();
 #  endif /* !_WINDOWS */
-   UserErrorCode = 0;
-   /* Sends the message Init.Pre */
-   notifyEvt.event = TteInit;
-   if (CallEventType (&notifyEvt, TRUE))
-      /* The application is not able to start the editor => quit */
-      exit (0);
-   /* Sends the message Init.Post */
-   notifyEvt.event = TteInit;
-   CallEventType (&notifyEvt, FALSE);
-
-   /* Loop wainting for the events */
-   while (1) {
-         if (NewMainLoop != NULL) {
-            NewMainLoop();
-            continue;
-         }
-#        ifndef _WINDOWS
-         TtaFetchOneEvent(&ev);
-         TtaHandleOneEvent(&ev);
-#        else  /* !_WINDOWS */
-         if (GetMessage (&msg, NULL, 0, 0)) {			
-            frame = GetFrameNumber (msg.hwnd);
-            if (frame != -1) {
-               if (!hAccel [frame] || !TranslateAccelerator (FrMainRef [frame], hAccel [frame], &msg))
-                  TtaHandleOneWindowEvent (&msg);
-            } else
-                  TtaHandleOneWindowEvent (&msg);
-		 }
-#        endif /* _WINDOWS */
-   }
-}				/*TtaMainLoop */
+  UserErrorCode = 0;
+  /* Sends the message Init.Pre */
+  notifyEvt.event = TteInit;
+  if (CallEventType (&notifyEvt, TRUE))
+    /* The application is not able to start the editor => quit */
+    exit (0);
+  /* Sends the message Init.Post */
+  notifyEvt.event = TteInit;
+  CallEventType (&notifyEvt, FALSE);
+  
+  /* Loop wainting for the events */
+  while (1)
+    {
+      if (NewMainLoop != NULL)
+	{
+	  NewMainLoop ();
+	  continue;
+	}
+#ifndef _WINDOWS
+      TtaFetchOneEvent (&ev);
+      TtaHandleOneEvent (&ev);
+#else  /* !_WINDOWS */
+      if (GetMessage (&msg, NULL, 0, 0))
+	{			
+	  frame = GetFrameNumber (msg.hwnd);
+	  if (frame != -1)
+	    {
+	      if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg))
+		TtaHandleOneWindowEvent (&msg);
+            }
+	  else
+	    TtaHandleOneWindowEvent (&msg);
+	}
+#endif /* _WINDOWS */
+    }
+}
 
 /*----------------------------------------------------------------------
    TtaGetMenuColor

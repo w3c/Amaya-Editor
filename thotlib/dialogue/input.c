@@ -579,7 +579,7 @@ ThotEvent             *event;
       PicMask |= THOT_MOD_SHIFT;
    if (i & ControlMask)
       PicMask |= THOT_MOD_CTRL;
-   if (i & Mod2Mask)
+   if (i & Mod1Mask || i & Mod2Mask || i & Mod4Mask)
       PicMask |= THOT_MOD_ALT;
 
    ThotInput (frame, &string[0], status, PicMask, KS);
@@ -961,12 +961,15 @@ char               *appliname;
 	       {
 		  if (!strcasecmp (ch, "shift"))
 		    {
-		       mod1 = THOT_MOD_SHIFT;
-		       strcpy (equiv, "Shift+");
-		       strcat (line, ch);	/* copie 1er modifieur */
-		       strcat (line, " ");
-		       /* Lecture enventuelle d'un deuxieme modifieur */
-		       fscanf (file, "%80s", ch);
+		      mod1 = THOT_MOD_SHIFT;
+		      /* copie 1er modifieur */
+		      strcpy (equiv, "Shift");
+		      strcat (equiv, "+");
+		      strcat (line, "Shift");
+		      strcat (line, " ");
+		      /* Lecture enventuelle d'un deuxieme modifieur */
+		      ch[0] = EOS;
+		      fscanf (file, "%80s", ch);
 		    }
 		  else
 		    {
@@ -975,19 +978,28 @@ char               *appliname;
 		    }
 
 		  if (!strcasecmp (ch, "ctrl"))
-		     mod1 += THOT_MOD_CTRL;
-		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
-		     mod1 += THOT_MOD_ALT;
-
-		  /* Lecture de la cle */
-		  if (mod1 != THOT_NO_MOD && mod1 != THOT_MOD_SHIFT)
 		    {
-		       strcat (equiv, ch);
-		       strcat (equiv, "+");
-		       strcat (line, ch);	/* copie 2eme modifieur */
-		       strcat (line, " ");
-		       strcpy (ch, "");
-		       fscanf (file, "%80s", ch);
+		      mod1 += THOT_MOD_CTRL;
+		      /* copie 2eme modifieur */
+		      strcat (equiv, "Ctrl");
+		      strcat (equiv, "+");
+		      strcat (line, "Ctrl");
+		      strcat (line, " ");
+		      /* Lecture de la cle */
+		      ch[0] = EOS;
+		      fscanf (file, "%80s", ch);
+		    }
+		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+		    {
+		      mod1 += THOT_MOD_ALT;
+		      /* copie 2eme modifieur */
+		      strcat (equiv, "Alt");
+		      strcat (equiv, "+");
+		      strcat (line, "Alt");
+		      strcat (line, " ");
+		      /* Lecture de la cle */
+		      ch[0] = EOS;
+		      fscanf (file, "%80s", ch);
 		    }
 
 		  /* Extrait la valeur de la cle */
@@ -995,7 +1007,8 @@ char               *appliname;
 		  sscanf (ch, "<Key>%80s", name);
 		  if (name[0] != EOS)
 		    {
-		       strcat (line, "<Key>");	/* copie de la cle */
+		      /* copie de la cle */
+		       strcat (line, "<Key>");
 		       i = strlen (name);
 		       /* Elimine le : a la fin du nom */
 		       if ((name[i - 1] == ':') && i != 1)
@@ -1006,8 +1019,8 @@ char               *appliname;
 			 }
 		       else
 			  i = 0;
-
-		       strcat (line, NameCode (name));	/* copie le nom normalise */
+		       /* copie le nom normalise */
+		       strcat (line, NameCode (name));
 		       if (i == 1)
 			  strcat (line, ": ");
 		       else
@@ -1023,43 +1036,58 @@ char               *appliname;
 		  fscanf (file, "%80s", name);
 		  if (name[0] == ',')
 		    {
-		       strcat (line, ", ");	/* copie du separateur */
-		       strcpy (ch, "");
-		       fscanf (file, "%80s", ch);
+		      /* copie du separateur */
+		      strcat (line, ", ");
+		      strcpy (ch, "");
+		      fscanf (file, "%80s", ch);
+		      
+		      if (!strcasecmp (ch, "shift"))
+			{
+			  mod2 = THOT_MOD_SHIFT;
+			  /* copie du 2eme modifieur */
+			  strcat (equiv, "Shift");
+			  strcat (equiv, "+");
+			  strcat (line, "Shift");
+			  strcat (line, " ");
+			  /* Lecture enventuelle d'un deuxieme modifieur */
+			  ch[0] = EOS;
+			  fscanf (file, "%80s", ch);
+			}
+		      else
+			{
+			  mod2 = THOT_NO_MOD;
+			  strcat (equiv, " ");
+			}
 
-		       if (!strcasecmp (ch, "shift"))
-			 {
-			    mod2 = THOT_MOD_SHIFT;
-			    strcat (line, ch);	/* copie du 1er modifieur */
-			    strcat (line, " ");
-			    strcat (equiv, " Shift+");
-			    /* Lecture enventuelle d'un deuxieme modifieur */
-			    strcpy (ch, "");
-			    fscanf (file, "%80s", ch);
-			 }
-		       else
-			 {
-			    mod2 = THOT_NO_MOD;
-			    strcat (equiv, " ");
-			 }
-
-		       if (!strcasecmp (ch, "ctrl"))
+		      if (!strcasecmp (ch, "ctrl"))
+			{
 			  mod2 += THOT_MOD_CTRL;
-		       else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+			  /* copie 2eme modifieur */
+			  strcat (equiv, "Ctrl");
+			  strcat (equiv, "+");
+			  strcat (line, "Ctrl");
+			  strcat (line, " ");
+			  /* copie de la cle */
+			  ch[0] = EOS;
+			  fscanf (file, "%80s", ch);
+			  strcat (line, ch);
+			  strcat (line, " ");
+			}
+		      else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+			{
 			  mod2 += THOT_MOD_ALT;
+			  /* copie 2eme modifieur */
+			  strcat (equiv, "Alt");
+			  strcat (equiv, "+");
+			  strcat (line, "Alt");
+			  strcat (line, " ");
+			  /* copie de la cle */
+			  ch[0] = EOS;
+			  fscanf (file, "%80s", ch);
+			  strcat (line, ch);
+			  strcat (line, " ");
+			}
 
-		       /* Lecture de la cle */
-		       if (mod2 != THOT_NO_MOD && mod2 != THOT_MOD_SHIFT)
-			 {
-			    strcat (equiv, ch);
-			    strcat (equiv, "+");
-			    strcat (line, ch);	/* copie 2eme modifieur */
-			    strcat (line, " ");
-			    strcpy (ch, "");
-			    fscanf (file, "%80s", ch);
-			    strcat (line, ch);	/* copie de la cle */
-			    strcat (line, " ");
-			 }
 		       /* Extrait la valeur de la cle */
 		       strcpy (name, "");
 		       sscanf (ch, "<Key>%80s", name);
