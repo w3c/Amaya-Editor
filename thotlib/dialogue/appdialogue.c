@@ -2751,6 +2751,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   XtSetArg (args[n], XmNborderWidth, 0);
 	   n++;
+	   XtSetArg (args[n], XmNmarginHeight, 0);
+	   n++;
 #endif /* _GTK  && _WINDOWS*/
 
 	   while (ptrmenu != NULL)
@@ -2781,7 +2783,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 XtManageChild (menu_bar);
 #endif /* _GTK */
 		       }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 		   
 #ifdef _WINDOWS
 		     w = CreateMenu ();
@@ -2802,7 +2804,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 		     XtManageChild (w);
 #endif /* _GTK */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 		     FrameTable[frame].WdMenus[i] = w;
 		     FrameTable[frame].EnabledMenus[i] = TRUE;
 		     /* Evite la construction des menus dynamiques */
@@ -3083,7 +3085,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       n = 0;
 	       XtSetArg (args[n], XmNmarginWidth, 0);
 	       n++;
-	       XtSetArg (args[n], XmNmarginHeight, 0);
+	       XtSetArg (args[n], XmNmarginHeight, 2);
 	       n++;
 	       XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	       n++;
