@@ -41,7 +41,7 @@ Extensions 2.1:
   - The libwww cache entry wasn't being updated when saving a previously 
     cached document.
   - Tagged the libwww CVS base with an "Amaya" tag, showing the reference
-    version used in the latest Amaya release.
+    version currenly being used by the Amaya team.
 
 * New list of Amaya shortcuts for both Windows and Unix platforms.
 
@@ -52,8 +52,9 @@ Extensions 2.1:
     The user may change the location of the temporary directory as well as 
     that of the cache. Users are advised to reselect their preferences, rather
     copying their precedent thot.rc file. You may copy your amaya.css,
-    HTML.conf, and dictionary.DCT files from your old Amaya home directory
-    to its new location. For more information, consult the 
+    HTML.conf, keyboard.kb, and dictionary.DCT files from your old Amaya home
+    directory to its new location (open the Special/Preferences/General
+    Preferences menu to find where it is). For more information, consult the 
     Help/Configuring Amaya document.
 
 Fixed bugs 2.1:

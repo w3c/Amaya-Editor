@@ -109,7 +109,7 @@ architectures:</p>
   <thead>
     <tr>
       <td><strong>architecture</strong></td>
-      <td><strong>AmayaHome directory</strong></td>
+      <td><strong>AmayaTemp directory</strong></td>
     </tr>
   </thead>
   <tbody>
@@ -127,9 +127,9 @@ architectures:</p>
 
 <p></p>
 
-<p>Amaya mainly creates files in this directory while browsing remote
-documents or printing a document. The cache is stored in this directory. The
-user may change both the AmayaTemp and cache directories by means of the
+<p>Amaya creates files in this directory while browsing remote documents or
+printing a document. The cache is stored in this directory. The user may
+change both the AmayaTemp and cache directories by means of the
 <strong>General Preferences</strong> and <strong>Cache</strong> menus.</p>
 
 <p>Amaya always tries to delete all the temporary files it creates. However,
@@ -396,7 +396,7 @@ a proxy by means of this menu.</p>
     <dd>Gives the proxy that should be used for HTTP requests. The syntax is
       similar to that of a URL (note that there's no end '/'):
       <pre>HTTP_PROXY=http://groucho.marx.edu:1028
-                                  proxy FQDN --^      ^---- optional proxy port</pre>
+                                        proxy FQDN --^      ^---- optional proxy port</pre>
     </dd>
 </dl>
 <dl>
@@ -404,7 +404,7 @@ a proxy by means of this menu.</p>
     <dd>Gives a list of space separated domains which you want to access
       directly, without a proxy:
       <pre>NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu
-                                        FQDN --^           ^--- space separated entries</pre>
+                                              FQDN --^           ^--- space separated entries</pre>
     </dd>
 </dl>
 
@@ -448,8 +448,9 @@ to do language negotiation, you can use this menu to enter your language
 preferences (first one has the highest priority). Try browsing this <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">press release</a>,
 which exists in  French,  English, and Japanese versions. By changing the
-language negotiation values, you can  transparently request any of these
-versions.</p>
+language negotiation to the ISO codes for the above languages (<strong>
+</strong>fr,<strong> </strong>en<strong>, </strong>or jp<strong>)</strong>, 
+you can  transparently request any of these versions.</p>
 
 <h2><a name="L2361">Keyboard Shortcuts</a></h2>
 
