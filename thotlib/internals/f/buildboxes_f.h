@@ -8,6 +8,7 @@
 
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
                                          PtrAbstractBox pRoot );
+extern PtrAbstractBox GetParentTable ( PtrBox pBox );
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
 extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
@@ -79,6 +80,7 @@ extern ThotBool ChangeConcreteImage ( int frame,
 
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
                                            PtrAbstractBox pRoot );
+extern PtrAbstractBox GetParentTable ( PtrBox pBox );
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
 extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
