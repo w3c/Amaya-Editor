@@ -326,6 +326,7 @@ Thot/thotlib/internals/h/*.xbm \
 Thot/thotlib/internals/var/*.h \
 Thot/thotlib/presentation/*.c \
 Thot/thotlib/tree/*.c \
+Thot/thotlib/unicode/*.c \
 Thot/thotlib/view/*.c \
 Thot/thotlib/xml/*.c \
 Thot/tools/mkdep/Makefile \
