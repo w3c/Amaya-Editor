@@ -1,89 +1,80 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-The Amaya source Tree</title>
+  <title>The Amaya source Tree</title>
+  <meta http-equiv="Content-Type" content="text/html">
 </head>
+
 <body>
 
 <div id="head">
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
-<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
-href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
-alt="Doc"></a></p>
+<p><a href="../../"><img border="0" alt="W3C"
+src="../../Icons/WWW/w3c_home"></a> <a href="../"><img border="0"
+src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
+border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 </div>
 
 <h1>How to install the Amaya Source Release</h1>
 
 <h3>The Amaya Source Tree</h3>
-<p>
-Below is the picture of the whole tree built from the source archives for Amaya.</p>
-<p>
-We assume that the right archive needed has been fetched from W3C or INRIA
+
+<p>Below is the picture of the whole tree built from the source archives for
+Amaya.</p>
+
+<p>We assume that the right archive needed has been fetched from W3C or INRIA
 servers, namely and stored in <code>/tmp</code> :</p>
 <ul>
-<li>
-the <strong>Amaya</strong> source archive <code>amaya-src-yyy.tar.gz</code>
-(where yyy is the <strong>Amaya</strong> version number).
+  <li>the <strong>Amaya</strong> source archive <code>amaya-src-yyy.tgz</code>
+    (where yyy is the <strong>Amaya</strong> version number).</li>
 </ul>
-<p>
-<img src="../Icons/warning.gif">The archive amaya-src-yyy.tar.gz,  allows you
-only to build the Amaya  without Java support.</p>
-<p>
-Here is a short table of compatibles versions of Thot and Amaya:</p>
-<p>
-<img src="../Icons/warning.gif">The Amaya compilation differs on PC/Windows
+
+<p><img src="../Icons/warning.gif">The Amaya compilation differs on PC/Windows
 platforms. See <a href="Win-Compiling.html">Compiling Amaya On Windows NT</a>
 for more information on how to compile and install Amaya.</p>
-<p>
-On Unix platforms, the tree is created by invoking the following commands in
-the directory of choice (it will create the <code>Amaya</code> sub-directory)
-:</p>
-<p>
-<code>gunzip -c /tmp/amaya-src-yyy.tar.gz | tar xvf -</code></p>
-<p>
-Be sure to have plenty of room available, compiling a <strong>debug</strong>
-version of Amaya can use up to 100 Mbytes of disk space. A non-debug one
-shouldn't use more than 50 Mbytes.</p>
-<p>
-<img src="../Icons/Sources.gif"></p>
-<p>
-The tree is made of (from top to bottom):</p>
+
+<p>On Unix platforms, the tree is created by invoking the following commands
+in the directory of choice (it will create the <code>Amaya</code>
+sub-directory) :</p>
+
+<p><code>gunzip -c /tmp/amaya-src-yyy.tgz | tar xvf -</code></p>
+
+<p>Be sure to have plenty of room available, compiling a
+<strong>debug</strong> version of Amaya can use up to 100 Mbytes of disk
+space. A non-debug one shouldn't use more than 50 Mbytes.</p>
+
+<p><img src="../Icons/Sources.gif"></p>
+
+<p>The tree is made of (from top to bottom):</p>
 <ul>
-<li>
-<code>amaya</code> directory contains the <strong>amaya</strong> application
-code.
-<li>
-<code>thotlib</code> directory contains the Thot library sources. The headers
-defining the interfaces exported by the library are in the
-<code>include</code> sub-directory.
-<li>
-<code>batch</code> directory contains the sources for the schema compilers.
-<li>
-<code>font</code> directory contains a few X-Windows specific fonts needed by
-<strong>amaya</strong>.
-<li>
-<code>dicopar</code> directory hold the dictionnaries and hyphenation rules.
-<li>
-<code>config</code> contains all the dialogs messages files both for english
-and french, as well as a few configuration files like the <a
-href="Registry.html">Thot registry</a> (stored in file thot.ini).
-<li>
-<code>libjpeg</code> and <code>libpng</code> contains the sources of two
-graphic libraries needed by Thot toolkit.
-<li>
-<code>libwww</code> is a slightly patched version of the latest
-version of the <a href="../../Library/">WWW Library</a>.
+  <li><code>amaya</code> directory contains the <strong>amaya</strong>
+    application code.</li>
+  <li><code>thotlib</code> directory contains the Thot library sources. The
+    headers defining the interfaces exported by the library are in the
+    <code>include</code> sub-directory.</li>
+  <li><code>batch</code> directory contains the sources for the schema
+    compilers.</li>
+  <li><code>font</code> directory contains a few X-Windows specific fonts
+    needed by <strong>amaya</strong>.</li>
+  <li><code>dicopar</code> directory hold the dictionnaries and hyphenation
+    rules.</li>
+  <li><code>config</code> contains all the dialogs messages files both for
+    english and french, as well as a few configuration files like the <a
+    href="Registry.html">Thot registry</a> (stored in file thot.ini).</li>
+  <li><code>libjpeg</code> and <code>libpng</code> contains the sources of two
+    graphic libraries needed by Thot toolkit.</li>
+  <li><code>libwww</code> is a slightly patched version of the latest version
+    of the <a href="../../Library/">WWW Library</a>.</li>
 </ul>
-<p>
-Amaya uses autoconf to to set-up the compilation environment and build the
+
+<p>Amaya uses autoconf to to set-up the compilation environment and build the
 binaries on Unix platforms. See next step <a href="Autoconf.html">Compiling
 Amaya with autoconf</a> for more information on how to compile and install
 Amaya on Unix platforms.</p>
 <hr>
 <address>
-<a href="mailto:Irene.Vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-$Date$</address>
+  <a href="mailto:Irene.Vatton@w3.org">Irène Vatton</a><br>
+  $Date$
+</address>
 </body>
 </html>
