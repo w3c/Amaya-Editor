@@ -1220,7 +1220,7 @@ void UpdateEditorMenus (Document doc)
    ChangeToEdotirMode
    Similar to Editor mode except for  the variable ReadOnlyDocument
   ----------------------------------------------------------------------*/
-void    ChangeToEditorMode (Document doc)
+void ChangeToEditorMode (Document doc)
 {
    Document  docSel;
 
@@ -1232,7 +1232,6 @@ void    ChangeToEditorMode (Document doc)
      TtaUnselect (doc);
 
    /* =============> The document is in Read-Write mode now */
-   /* change the document status */
    if (TtaIsDocumentModified (doc))
      DocStatusUpdate (doc, TRUE);
    /* change the document status */
@@ -1245,7 +1244,7 @@ void    ChangeToEditorMode (Document doc)
    ChangeToBrowserMode
    Similar to Browser mode except for the variable ReadOnlyDocument
   ----------------------------------------------------------------------*/
-void    ChangeToBrowserMode (Document doc)
+void ChangeToBrowserMode (Document doc)
 {
    Document  docSel;
 
@@ -2262,135 +2261,75 @@ void GoToHome (Document doc, View view)
 
 /*----------------------------------------------------------------------
   UpdateDoctypeMenu
+  The parameter withDocType is TRUE when the document includes a DocType.
   ----------------------------------------------------------------------*/
-void UpdateDoctypeMenu (Document doc)
+void UpdateDoctypeMenu (Document doc, ThotBool withDocType)
 {
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	  useMathML, useSVG;
+  ThotBool	  useMathML, useSVG, useHTML;
  
   docType = DocumentTypes[doc];
-
-  if (docType == docText || docType == docCSS ||
-      docType == docSource || docType == docLog)
+  if (docType != docText && docType != docCSS &&
+      docType != docSource && docType != docLog)
     {
-      /* Don't change the doctype for a text document */
-      TtaSetItemOff (doc, 1, File, Doctype1);
-      return;
-    }
-
-  TtaSetItemOn  (doc, 1, File, Doctype1);
-  TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
-  TtaSetItemOff (doc, 1, File, BAddDoctype);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
-  TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
-  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
-
-
-  /* look for a MathML or SVG nature within the document */
-  nature = NULL;
-  useMathML = FALSE;
-  useSVG = FALSE;
-  do
-    {
-      TtaNextNature (doc, &nature);
-      if (nature)
+      /* look for a MathML or SVG nature within the document */
+      nature = NULL;
+      useMathML = useSVG =  useHTML = FALSE;
+      do
 	{
-	  ptr = TtaGetSSchemaName (nature);
-	  if (!strcmp (ptr, "MathML"))
-	    useMathML = TRUE;
-	  if (!strcmp (ptr, "SVG"))
-	    useSVG = TRUE;
-	}
-    }
-  while (nature);
-
-  switch (TtaGetDocumentProfile (doc))
-    {
-    case L_Other:
-      if (docType == docHTML)
-	{
-	  TtaSetItemOff (doc, 1, File, BRemoveDoctype);
-	  /* TtaSetItemOn (doc, 1, File, BAddDoctype); */
-	  if (!useMathML && !useSVG)
+	  TtaNextNature (doc, &nature);
+	  if (nature)
 	    {
-	      if (DocumentMeta[doc]->xmlformat)
-		{
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-		}
-	      else
-		{
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-		  TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
-		  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
-		}
+	      ptr = TtaGetSSchemaName (nature);
+	      if (!strcmp (ptr, "MathML"))
+		useMathML = TRUE;
+	      else if (!strcmp (ptr, "SVG"))
+		useSVG = TRUE;
 	    }
 	}
-      else if (docType == docMath)
-	TtaSetItemOn (doc, 1, File, BAddDoctype);
-      else if (docType == docSVG)
-	TtaSetItemOn (doc, 1, File, BAddDoctype);
-      break;
-    case L_Xhtml11:
-      if (!useMathML && !useSVG)
+      while (nature);
+
+      if (withDocType)
 	{
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	}
-      break;
-    case L_Basic:
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-      break;
-    case L_Strict:
-      if (DocumentMeta[doc]->xmlformat)
-	{
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	  /* there is a Doctype */
+	  TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
+	  TtaSetItemOff (doc, 1, File, BAddDoctype);
 	}
       else
 	{
+	  /* there is no Doctype */
+	  TtaSetItemOff  (doc, 1, File, BRemoveDoctype);
+	  if (docType == docHTML ||
+	      (!useMathML && !useSVG && !useHTML))
+	    TtaSetItemOn (doc, 1, File, BAddDoctype);
+	  else
+	    /* no Doctype available */
+	    TtaSetItemOff (doc, 1, File, BAddDoctype);
+	}
+
+      if (docType == docHTML)
+	{
+	  /* allow to change the DocType:
+	     A confirmation will be requested if some attribues
+	     or elements may be lost */
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
 	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
-	}
-      break;
-    case L_Transitional:
-      if (DocumentMeta[doc]->xmlformat)
-	{
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
 	}
       else
 	{
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
 	}
-      break;
-    case L_MathML:
-    case L_SVG:
-      break;
-      /* TtaSetItemOn (doc, 1, File, BAddDoctype); */
-      break;
     }
 }
 
@@ -2427,7 +2366,8 @@ void AddDirAttributeToDocEl (Document doc)
      + ThotBool inNewWindow: true if the new doc should be created in a new window
      + ...
   ----------------------------------------------------------------------*/
-Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
+Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
+			 ThotBool inNewWindow,
                          char *docname, DocumentType docType,
 			 Document sourceOfDoc, ThotBool readOnly, int profile,
 			 ClickEvent method)
@@ -2692,8 +2632,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
        /* store the profile of the new document */
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
-       if (profile != 0)
-	 TtaUpdateMenus (doc, 1, readOnly);
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
 #ifndef BOOKMARKS
@@ -2726,6 +2664,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetItemOff (doc, 1, File, BDocInfo);
 	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
 	   TtaSetItemOff (doc, 1, File, BPrint);
+	   /* invalid the DoctypeMenu */
+	   TtaSetItemOff  (doc, 1, File, BRemoveDoctype);
+	   TtaSetItemOff (doc, 1, File, BAddDoctype);
+	   TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+	   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+	   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
 	   TtaSetItemOff (doc, 1, Edit_, BTransform);
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, XMLTypes);
@@ -3679,7 +3626,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	      /* store the profile of the new document */
 	      /* and update the menus according to it */
 	      TtaSetDocumentProfile (newdoc, docProfile);
-	      TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
+	      /*TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);*/
 	    }
 	}
       else
@@ -3899,7 +3846,7 @@ static Document LoadDocument (Document doc, char *pathname,
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
-      UpdateDoctypeMenu (newdoc);
+      UpdateDoctypeMenu (newdoc, withDoctype);
       if (ReadOnlyDocument[newdoc])
 	{
 	  UpdateBrowserMenus (newdoc);
@@ -4336,9 +4283,6 @@ void ShowSource (Document document, View view)
 
      if (sourceDoc > 0)
        {
-	 /* Update the Doctype menu */
-	 UpdateDoctypeMenu (sourceDoc);
-
 	 DocumentSource[document] = sourceDoc;
 	 s = TtaStrdup (DocumentURLs[document]);
 	 DocumentURLs[sourceDoc] = s;
@@ -6477,8 +6421,6 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       /* unlink this saved file */
       if (iscrash)
 	TtaFileUnlink (tempdoc);
-      /* Update the doctype menu */
-      UpdateDoctypeMenu (newdoc);
     }
   BackupDocument = 0;
   return (newdoc);

@@ -2984,26 +2984,6 @@ void ShowSourceOfTimeline (Document document, View view)
 	 
 	 TtcSwitchButtonBar (sourceDoc, 1); 
 	 TtcSwitchCommands (sourceDoc, 1);
-	 TtaSetItemOff (sourceDoc, 1, File, New1);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlBasic);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlStrict);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtml11);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlTransitional);
-	 TtaSetItemOff (sourceDoc, 1, File, BMathml);
-	 TtaSetItemOff (sourceDoc, 1, File, BSvg);
-	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
-	 TtaSetItemOff (sourceDoc, 1, File, BCss);
-	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
-	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
-	 TtaSetItemOff (sourceDoc, 1, File, BReload);
-	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
-	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
-	 TtaSetItemOff (sourceDoc, 1, Views, TShowButtonbar);
-	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
-	 TtaSetMenuOff (sourceDoc, 1, Special);
-	 TtaSetMenuOff (sourceDoc, 1, Help_);
-	 
-	 UpdateDoctypeMenu (sourceDoc);
 #ifdef ANNOTATIONS
 	 TtaSetMenuOff (sourceDoc, 1, Annotations_);
 #endif

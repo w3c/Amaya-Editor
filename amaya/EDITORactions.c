@@ -553,7 +553,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
     }
 
   /* Update the Doctype menu */
-  UpdateDoctypeMenu (doc);
+  UpdateDoctypeMenu (doc, TRUE);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
   UpdateEditorMenus (doc);
@@ -635,7 +635,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   TtaClearViewSelections ();
 
   /* Update the Doctype menu */
-  UpdateDoctypeMenu (doc);
+  UpdateDoctypeMenu (doc, TRUE);
 
   TtaFreeMemory (tempdocument);
 }
@@ -671,7 +671,7 @@ void RemoveDoctype (Document document, View view)
     {
       TtaDeleteTree (doctype, document);
       TtaSetDocumentProfile (document, L_Other);
-      UpdateDoctypeMenu (document);
+      UpdateDoctypeMenu (document, FALSE);
       TtaSetDocumentModified (document);
     }
 }
