@@ -163,7 +163,16 @@ AnnotMeta *annot;
 
   /* add the annotation attribute */
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_Annotation;
+  attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (anchor, attr, source_doc);  
+
+  /* add the annotation icon */
+  if (ustrcasecmp (annot->author, "tim"))
+    attrType.AttrTypeNum = HTML_ATTR_AnnotationIcon1;
+  else
+    /* @@ aha, it's Tim */
+    attrType.AttrTypeNum = HTML_ATTR_AnnotationIcon2;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);  
 
@@ -171,14 +180,7 @@ AnnotMeta *annot;
   attrType.AttrTypeNum = HTML_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
-  /* @@ there's a confusion between annot_url, and annot_body, and
-     local and remote annotations which breaks here */
-  /* if it's a remote URL, normalize the url_body, by making a real
-     link */
-  if (annot->annot_url && IsW3Path (annot->annot_url))
-      TtaSetAttributeText (attr, annot->annot_url, anchor, source_doc);
-  else
-    TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
+  TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
   
   /* add a NAME attribute so that the annotation doc can point
      back to the source of the annotation link */
@@ -233,7 +235,7 @@ void LINK_RemoveLinkFromSource (source_doc, annot)
   attrTypeAnnot.AttrSSchema = 
   attrTypeName.AttrSSchema  = TtaGetSSchema ("HTML", source_doc);
   elType.ElTypeNum = HTML_EL_Anchor;
-  attrTypeAnnot.AttrTypeNum = HTML_ATTR_Annotation;
+  attrTypeAnnot.AttrTypeNum = HTML_ATTR_IsAnnotation;
   attrTypeName.AttrTypeNum = HTML_ATTR_NAME;
 
   removeAnnot = FALSE;
@@ -352,7 +354,7 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot->mdate = TtaStrdup (annot->cdate);
 
   /* Annotation type */
-  annot->type = TEXT("Proto-Annotation");
+  annot->type = TEXT("comment");
 
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
@@ -467,7 +469,7 @@ void LINK_Remove (document, annotName)
   attrTypeAnnot.AttrSSchema = 
   attrTypeName.AttrSSchema  = TtaGetSSchema ("HTML", document);
   elType.ElTypeNum = HTML_EL_Anchor;
-  attrTypeAnnot.AttrTypeNum = HTML_ATTR_Annotation;
+  attrTypeAnnot.AttrTypeNum = HTML_ATTR_IsAnnotation;
   attrTypeName.AttrTypeNum = HTML_ATTR_NAME;
 
   removeAnnot = FALSE;
@@ -706,12 +708,14 @@ void LINK_ParcoursAnchor (document)
   elCour = TtaSearchTypedElement (elType, SearchForward, body);
   while (elCour != NULL)
   {
-    anchorClass = SearchAttributeInElt (document, elCour, HTML_ATTR_Class);
+    anchorClass = SearchAttributeInEl (document, elCour, HTML_ATTR_Class,
+				       TEXT("HTML"));
     if (anchorClass == NULL)
       printf ("Pas une annotation\n");
     else
     {
-      anchorName = SearchAttributeInElt (document, elCour, HTML_ATTR_NAME);
+      anchorName = SearchAttributeInEl (document, elCour, HTML_ATTR_NAME, 
+					TEXT("HTML"));
       printf ("ANNOTATION : %s\n", anchorName);
     }
     elCour = TtaGetSuccessor (elCour);

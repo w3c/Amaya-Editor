@@ -70,7 +70,7 @@ Document ANNOT_NewDocument (doc)
   fname = urlname + 7;
 
   /* "annot is the title of the window */
-  annotDoc = InitDocView (0, "annot", docAnnot, 0, FALSE);
+  annotDoc = InitDocView (0, "annotation", docAnnot, 0, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -111,7 +111,6 @@ Document doc;
 {
   List *ptr;
   AnnotMeta *annot = NULL;
-  STRING annotFile;
 
   if (DocumentTypes[doc] == docAnnot
       && DocumentTypes[doc] == docAnnotRO)
@@ -198,16 +197,17 @@ void ANNOT_LoadAnnotation (doc, annotDoc)
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot)
+void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, CHAR_T *title)
 #else /* __STDC__*/
-void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
-     Document doc;
-     Document docAnnot;
+void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
+     Document   doc;
+     Document   docAnnot;
      AnnotMeta *annot;
+     CHAR_T    *title;
 #endif /* __STDC__*/
 {
   ElementType elType;
-  Element     root, head, body, el, di, tl, top, child, meta;
+  Element     root, head, el;
   Attribute           attr;
   AttributeType       attrType;
   STRING      user;
@@ -216,13 +216,13 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   CHAR_T     *cdate;
   CHAR_T     *mdate;
   CHAR_T     *type;
-  CHAR_T      tempfile[MAX_LENGTH];
 
   user = annot->author;
   source_url = annot->source_url;
   cdate = annot->cdate;
   mdate = annot->mdate;
-  type = annot->type;
+  /* @@@ if there's no annot->type use the default */
+  type = (annot->type) ? annot->type : TEXT("(comment)");
 
   /* save the docid of the annotated document */
   DocumentMeta[docAnnot]->source_doc = doc;
@@ -260,33 +260,23 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   /* Source doc metadata (add a link to the annoted paragraph itself) */
   elType.ElTypeNum = Annot_EL_SourceDoc;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
-  el = TtaGetFirstChild (el);
-  /* @@ can we reuse this one from the structure? */
-  TtaSetTextContent (el, DocumentURLs[docAnnot], 
-		     TtaGetDefaultLanguage (), docAnnot);
-#if 0
-  /* this code is for adding a back link to the source document */
-  TtaInsertSibling (el, tl, FALSE, docAnnot);
-  elType.ElTypeNum = HTML_EL_Anchor;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  /* add a reverse link to the source document */	
+  attrType.AttrSSchema = TtaGetDocumentSSchema (docAnnot);
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, docAnnot);
-  doc_anchor = TtaGetMemory (strlen (DocumentURLs[document])
-			     + strlen (user)
-			     + strlen (DocumentURLs[docAnnot])
+  doc_anchor = TtaGetMemory (ustrlen (DocumentURLs[doc])
+			     + ustrlen (user)
+			     + ustrlen (DocumentURLs[docAnnot])
 			     + 20);
-  sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[document],
+  sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[doc],
 	   ANNOT_ANAME, user, DocumentURLs[docAnnot]);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-#endif
-  TtaSetTextContent (el, source_url,
+  /* use the title parameter as the value of the source document field */
+  el = TtaGetFirstChild (el);
+  TtaSetTextContent (el, title,
 		     TtaGetDefaultLanguage (), docAnnot);
-
   /* RDF type metadata */
   elType.ElTypeNum = Annot_EL_RDFtype;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
@@ -301,22 +291,20 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  ANNOT_InitDocumentBody (Document docAnnot)
+void  ANNOT_InitDocumentBody (Document docAnnot, CHAR_T *title)
 #else /* __STDC__*/
-void  ANNOT_InitDocumentBody (docAnnot)
-     Document docAnnot;
+void  ANNOT_InitDocumentBody (docAnnot, title)
+Document docAnnot;
+CHAR_T *title;
 #endif /* __STDC__*/
 {
   ElementType elType;
-  Element     root, head, body, el, di, tl, top, child, meta;
-  Attribute           attr;
-  AttributeType       attrType;
-  STRING      doc_anchor;
-  CHAR_T      tempfile[MAX_LENGTH];
+  Element     root, head, body, el, child;
+  CHAR_T     *tmp;
 
   /*
   ** HTML initialization
-   */
+  */
 
   /* we find the the HTML nature */
   root = TtaGetMainRoot (docAnnot);
@@ -340,9 +328,11 @@ void  ANNOT_InitDocumentBody (docAnnot)
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
   /* @@ maybe parse the URL here */
-  TtaSetTextContent (el, DocumentURLs[docAnnot], 
+  tmp = TtaGetMemory (ustrlen (title) + sizeof ("Annotation of ") + 1);
+  sprintf (tmp, "Annotation of %s", title);
+  TtaSetTextContent (el, tmp,
 		     TtaGetDefaultLanguage (), docAnnot);
-
+  TtaFreeMemory (tmp);
   /* add a document URL */
   elType.ElTypeNum = HTML_EL_Document_URL;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -394,16 +384,31 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot)
      Document document;
      Document docAnnot;
      AnnotMeta *annot;
+     CHAR_T    *title;
 
 #endif /* __STDC__*/
 {
+  ThotBool free_title;
+  CHAR_T  *title;
+
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
 
+  title = ANNOT_GetHTMLTitle (doc);
+  if (!title || title[0] == WC_EOS)
+    {
+      title = DocumentURLs[doc];
+      free_title = FALSE;
+    }
+  else
+    free_title = TRUE;
+
   /* initialize the meta data */
-  ANNOT_InitDocumentMeta (doc, docAnnot, annot);
+  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title);
   /* initialize the html body */
-  ANNOT_InitDocumentBody (docAnnot);
+  ANNOT_InitDocumentBody (docAnnot, title);
+  if (free_title)
+    TtaFreeMemory (title);
 
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);

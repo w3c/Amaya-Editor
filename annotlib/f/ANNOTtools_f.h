@@ -41,9 +41,10 @@ extern Element SearchAnnotation ( Document doc,
                                   STRING annotDoc );
 extern Element SearchElementInDoc ( Document doc,
                                     int elTypeNum );
-extern STRING SearchAttributeInElt ( Document doc,
-                                     Element el,
-                                     int attrTypeNum );
+extern STRING SearchAttributeInEl ( Document doc,
+                                    Element el,
+                                    int attrTypeNum,
+                                    CHAR_T *schema );
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
                                      char new );
@@ -52,6 +53,9 @@ extern char *GetTempName ( const char *dir,
 extern long GetFileSize ( CHAR_T *filename );
 extern void GetServerName ( CHAR_T *url,
                             CHAR_T *server );
+extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );
+extern void ANNOT_SetType ( Document doc,
+                            CHAR_T *type );
 extern ThotBool IsAnnotationDocument ( Document document );
 extern ThotBool IsAnnotationLink ( Document document,
                                    Element element );
@@ -95,9 +99,10 @@ extern Element SearchAnnotation (/* Document doc,
                                     STRING annotDoc */);
 extern Element SearchElementInDoc (/* Document doc,
                                       int elTypeNum */);
-extern STRING SearchAttributeInElt (/* Document doc,
-                                       Element el,
-                                       int attrTypeNum */);
+extern STRING SearchAttributeInEl (/* Document doc,
+                                      Element el,
+                                      int attrTypeNum,
+                                      CHAR_T *schema */);
 extern void SubstituteCharInString (/* char *buffer,
                                        char old,
                                        char new */);
@@ -106,6 +111,9 @@ extern char *GetTempName (/* const char *dir,
 extern long GetFileSize (/* CHAR_T *filename */);
 extern void GetServerName (/* CHAR_T *url,
                               CHAR_T *server */);
+extern CHAR_T *ANNOT_GetHTMLTitle (/* Document doc */);
+extern void ANNOT_SetType (/* Document doc,
+                              CHAR_T *type */);
 extern ThotBool IsAnnotationDocument (/* Document document */);
 extern ThotBool IsAnnotationLink (/* Document document,
                                      Element element */);

@@ -14,9 +14,9 @@ STRUCT
 	  END;
 
   Description = AGGREGATE
-		Author = Text;
-		SourceDoc = Text;
-		RDFtype (ATTR Resource=Text) =  CONSTANT  C_Empty;
+		Author = CONSTANT C_Empty;
+		SourceDoc (ATTR HREF_=Text) = CONSTANT C_Empty;
+		RDFtype (ATTR Resource=Text) = CONSTANT C_Empty; 
 		AnnotCDate =  CONSTANT  C_Empty;
 		AnnotMDate = CONSTANT C_Empty;
 	        END;
@@ -26,5 +26,6 @@ EXCEPT
 	Description:	NoCut, NoSelect;
 	Body:		NoCut;
 END
+
 
 

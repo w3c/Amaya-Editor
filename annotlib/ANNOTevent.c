@@ -31,13 +31,20 @@ static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
 static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
 /* the structure used for storing the context of the 
+   Annot_Raisesourcedoc_callback function */
+typedef struct _RAISESOURCEDOC_context {
+  CHAR_T *url;
+  Document annot_doc;
+} RAISESOURCEDOC_context;
+
+/* the structure used for storing the context of the 
    RemoteLoad_callback function */
 typedef struct _REMOTELOAD_context {
   char *remoteAnnotIndex;
 } REMOTELOAD_context;
 
 /* the structure used for storing the context of the 
-   RemoteLoad_callback function */
+   RemoteSave_callback function */
 typedef struct _REMOTESAVE_context {
   char *remoteAnnotIndex;
 } REMOTESAVE_context;
@@ -229,8 +236,9 @@ CHAR_T *url;
   int proto_len;
   int url_len;
   int i;
-  proto_len = ustrlen (proto);
-  url_len = ustrlen (url);
+
+  proto_len = (proto) ? ustrlen (proto) : 0;
+  url_len = (url) ? ustrlen (url) : 0;
 
   /* allocate enough memory in the string */
   /* @@ I'm lazy today, so I'll just count how many times we have
@@ -403,6 +411,9 @@ void *context;
 
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
+   /* clear the status line if there was no error*/
+   if (!status)
+     TtaSetStatus (doc, 1,  TEXT(""), NULL);
 }
 
 /*-----------------------------------------------------------------------
@@ -706,7 +717,149 @@ View view;
     }
 }
 
-/***************************************************
+/*-----------------------------------------------------------------------
+  RaiseSourceDoc_callback
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               Annot_RaiseSourceDoc_callback (int doc, int status, 
+						 CHAR_T *urlName,
+						 CHAR_T *outputfile, 
+						 AHTHeaders *http_headers,
+						 void * context)
+#else  /* __STDC__ */
+void               Annot_RaiseSourceDoc_callback (doc, status, urlName,
+						 outputfile, http_headers,
+						 context)
+int doc;
+int status;
+CHAR_T *urlName;
+CHAR_T *outputfile;
+AHTHeaders *http_headers;
+void *context;
+
+#endif
+{
+   RAISESOURCEDOC_context *ctx;
+
+   /* restore REMOTELOAD contextext's */  
+   ctx = (RAISESOURCEDOC_context *) context;
+
+   if (!ctx)
+     return;
+
+   TtaFreeMemory (ctx->url);
+   /* unselect the selection */
+
+   TtaFreeMemory (ctx);
+}
+
+/*-----------------------------------------------------------------------
+  Annot_Raisesourcedoc
+  The user has double clicked on the annot link to the source document
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
+#else
+ThotBool Annot_RaiseSourceDoc (event)
+NotifyElement *event;
+#endif /* __STDC__ */
+{
+  Element          el;
+  Document         doc_annot;
+  AttributeType    attrType;
+  Attribute	   HrefAttr;
+  ThotBool	   docModified;
+  int              length;
+  Document         targetDocument;
+  CHAR_T          *url;
+  RAISESOURCEDOC_context *ctx;
+
+  /* initialize from the context */
+  el = event->element;
+  doc_annot = event->document;
+  docModified = TtaIsDocumentModified (doc_annot);
+  /* remove the selection */
+  TtaUnselect (doc_annot);
+  /* 
+  ** get the source document URL 
+  */
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc_annot);
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  HrefAttr = TtaGetAttribute (el, attrType);
+  if (HrefAttr != NULL)
+    {
+      length = TtaGetTextAttributeLength (HrefAttr);
+      length++;
+      url = TtaGetMemory (length);
+      TtaGiveTextAttributeValue (HrefAttr, url, &length);
+    }
+  if (!docModified)
+    {
+      TtaSetDocumentUnmodified (doc_annot);
+      DocStatusUpdate (doc_annot, docModified);
+    }
+  /* don't let Thot perform the normal operation */
+  
+  /* @@ and now jump to the annotated document and put it on top,
+     jump to the anchor... and if the document isn't there, download it? */
+  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+  ctx->url = url;
+  ctx->annot_doc = doc_annot;
+  targetDocument = GetHTMLDocument (url, NULL,
+				    doc_annot, 
+				    doc_annot, 
+				    CE_ABSOLUTE, FALSE, 
+				    (void *) Annot_RaiseSourceDoc_callback,
+				    (void *) ctx);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  Annot_ShowTypes
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool     Annot_Types (NotifyElement *event)
+#else
+ThotBool     Annot_Types (event)
+NotifyElement *event;
+#endif /* __STDC__*/
+{
+  Element          el;
+  Document         doc_annot;
+  ThotBool         docModified;
+  CHAR_T          *new_type;
+
+  /* initialize from the context */
+  el = event->element;
+  doc_annot = event->document;
+
+  docModified = TtaIsDocumentModified (doc_annot);
+
+  new_type = AnnotTypes (doc_annot, 1);
+  if (new_type)
+    ANNOT_SetType (doc_annot, new_type);
+
+  /* change the annotation type according to what was returned by
+     AnnotShowTypes, maybe call it AnnotSelectTypes */
+  
+  /* remove the selection */
+  TtaUnselect (doc_annot);
+  if (!docModified)
+    {
+      if (new_type)
+	{
+	  TtaSetDocumentModified (doc_annot);
+	  DocStatusUpdate (doc_annot, TRUE);
+	}
+      else
+	TtaSetDocumentUnmodified (doc_annot);
+    }
+
+  return (TRUE);
+}
+
+/***************************************2************
  I've not yet used/cleaning the following legacy functions 
 ***************************************************/
 
@@ -748,7 +901,9 @@ void ANNOT_Delete (document, view)
     return;
 
   /* Suppression de l'annotation */
-  annotName = SearchAttributeInElt (document, first, HTML_ATTR_NAME);
+  annotName = SearchAttributeInEl (document, first, HTML_ATTR_NAME, 
+				   TEXT("HTML"));
+  /* @@ BUG annotName is not freed */
   TtaRemoveTree (first, document);
   LINK_RemoveLink (document, annotName);
   fileName = TtaGetMemory (100);
@@ -761,7 +916,7 @@ void ANNOT_Delete (document, view)
   ANNOT_NotifyToRemoteSites (document, annotName);
 #endif
 
-  printf ("(ANNOT_Delete) FIN\n");
+  printf ("(ANNOT_Delete) FINn");
 }
 
 /*-----------------------------------------------------------------------

@@ -38,6 +38,14 @@ extern void ANNOT_Post_callback ( int doc,
                                   void * context );
 extern void ANNOT_Post ( Document doc,
                          View view );
+extern void Annot_RaiseSourceDoc_callback ( int doc,
+                                            int status,
+                                            CHAR_T *urlName,
+                                            CHAR_T *outputfile,
+                                            AHTHeaders *http_headers,
+                                            void * context );
+extern ThotBool Annot_RaiseSourceDoc ( NotifyElement *event );
+extern ThotBool Annot_Types ( NotifyElement *event );
 extern void ANNOT_Delete ( Document document,
                            View view );
 extern void ANNOT_Save ( Document docAnnot,
@@ -77,6 +85,14 @@ extern void ANNOT_Post_callback (/* int doc,
                                     void * context */);
 extern void ANNOT_Post (/* Document doc,
                            View view */);
+extern void Annot_RaiseSourceDoc_callback (/* int doc,
+                                              int status,
+                                              CHAR_T *urlName,
+                                              CHAR_T *outputfile,
+                                              AHTHeaders *http_headers,
+                                              void * context */);
+extern ThotBool Annot_RaiseSourceDoc (/* NotifyElement *event */);
+extern ThotBool Annot_Types (/* NotifyElement *event */);
 extern void ANNOT_Delete (/* Document document,
                              View view */);
 extern void ANNOT_Save (/* Document docAnnot,

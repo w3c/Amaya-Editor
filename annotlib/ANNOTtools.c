@@ -21,6 +21,7 @@
 #include "annotlib.h"
 #include "fileaccess.h"
 #include "AHTURLTools_f.h"
+#include "HTML.h"
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
@@ -291,7 +292,8 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url)
   while (item)
     {
       annot = (AnnotMeta *) item->object;
-      if (!ustrcasecmp (annot->annot_url, url))
+      /* @@ this crashes... why? */
+      if (annot->annot_url && !ustrcasecmp (annot->annot_url, url))
 	{
 	  found = TRUE;
 	  break;
@@ -684,14 +686,14 @@ Element SearchAnnotation (doc, annotDoc)
   elType = TtaGetElementType (elCour);
   elType.ElTypeNum = HTML_EL_Anchor;
 
-  /* @@@ need to add a filter to use HTML_ATTR_Annotation */
+  /* @@@ need to add a filter to use HTML_ATTR_IsAnnotation */
   /* Searches the first anchor */
   elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
 
   /* Searchs the anchor that points to the annotDoc */
   while (elCour != NULL) 
   {
-    ancName = SearchAttributeInElt (doc, elCour, HTML_ATTR_NAME);
+    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_NAME, TEXT("HTML"));
     if (ancName) 
       {
 	if (!strcmp (ancName, annotDoc))
@@ -700,7 +702,7 @@ Element SearchAnnotation (doc, annotDoc)
       }
     elCour = TtaGetSuccessor (elCour);
     elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
-    ancName = SearchAttributeInElt (doc, elCour, HTML_ATTR_NAME);
+    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_NAME, TEXT("HTML"));
   }
 
   if (ancName)
@@ -734,40 +736,40 @@ Element SearchElementInDoc (doc, elTypeNum)
 }
 
 /*-----------------------------------------------------------------------
-   SearchAttributeInElt (doc, el, attrTypeNum)
+   SearchAttributeInEl (doc, el, attrTypeNum, schema)
    Returns the value of attribute type attrTypeNum if it exists in the
    document element or NULL otherwise.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING SearchAttributeInElt (Document doc, Element el, int attrTypeNum)
+STRING SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
+			    CHAR_T *schema)
 #else /* __STDC__*/
-STRING SearchAttributeInElt (doc, el, attrTypeNum)
+STRING SearchAttributeInEl (doc, el, attrTypeNum, schema)
      Document doc;
      Element  el;
      int      attrTypeNum;
+     CHAR_T  *schema;
 #endif /* __STDC__*/
 {
-  AttributeType attrType;
-  Attribute     attr;
-  STRING        text = TtaGetMemory (50);
-  int           text_lg;
+  AttributeType  attrType;
+  Attribute      attr;
+  CHAR_T        *text;
+  int            length;
 
   if (!el) 
     return NULL;
 
-  text[0] = EOS;
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (schema, doc);
   attrType.AttrTypeNum = attrTypeNum;
   attr = TtaGetAttribute (el, attrType);
   if (!attr)
     return NULL;
   else
   {
-    /* @@@ bug! */
-    text = TtaGetMemory (50);
-    text_lg = 50;
-    TtaGiveTextAttributeValue (attr, text, &text_lg);
+    length = TtaGetTextAttributeLength (attr);
+    text = TtaGetMemory (length + 1);
+    TtaGiveTextAttributeValue (attr, text, &length);
     return text;
   }
 }
@@ -919,6 +921,128 @@ CHAR_T *server;
     }
 }
 
+/*-----------------------------------------------------------------------
+   ANNOT_GetHTMLTitle
+   Returns the HTML title of the given document or NULL if this
+   element doesn't exist.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T *ANNOT_GetHTMLTitle (Document doc)
+#else
+CHAR_T *ANNOT_GetHTMLTitle (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  Element          el;
+  int              length;
+  Language         lang;
+  CHAR_T          *title;
+  ElementType      elType;
+  
+   /* only HTML documents can be annotated */
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = HTML_EL_TITLE;
+  /* find the title */
+  el = TtaGetMainRoot (doc);
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  /* no title */
+  if (!el)
+    return NULL;
+  /* find the text content */
+  el = TtaGetFirstChild (el);
+  /* no content */
+  if (!el)
+    return NULL;
+  length = TtaGetTextLength (el) + 1;
+  title = TtaAllocString (length);
+  TtaGiveTextContent (el, title, &length, &lang);
+  return (title);
+}
+
+/*-----------------------------------------------------------------------
+   ANNOT_SetType
+   Sets the annotation type of annotation document doc to the value of
+   type, if type is not empty.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ANNOT_SetType (Document doc, CHAR_T *type)
+#else
+CHAR_T *ANNOT_SetType (doc, type)
+Document doc;
+CHAR_T *type;
+#endif /* __STDC__ */
+{
+  Element          el;
+  ElementType      elType;
+  CHAR_T          *url;
+  CHAR_T          *ptr;
+  int              i;
+  AnnotMeta       *annot;
+  
+  if (!type || type[0] == WC_EOS)
+    return;
+
+   /* only HTML documents can be annotated */
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = Annot_EL_RDFtype;
+  /* find the type */
+  el = TtaGetMainRoot (doc);
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  /* no such element */
+  if (!el)
+    return;
+  /* change the text content */
+  el = TtaGetFirstChild (el);
+  TtaSetTextContent (el, type,
+		     TtaGetDefaultLanguage (), doc);
+
+  /* update the metadata */
+  el = TtaGetMainRoot (doc);
+  elType.ElTypeNum = Annot_EL_SourceDoc;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  if (!el)
+    return;
+  url = SearchAttributeInEl (doc, el, Annot_ATTR_HREF_, TEXT("Annot"));
+  if (!url)
+    return;
+  ptr = ustrchr (url, TEXT('#'));
+  if (ptr)
+    *ptr = WC_EOS;
+  for (i = 1; i <=DocumentTableLength; i++)
+    {
+      if (!ustrcmp (url, DocumentURLs[i]))
+	{
+	  /* we found the source document, we now search and update
+	     the annotation meta data */
+	  /* @@ this doesn't work yet... we need to make file:/// here
+	   and I need to remove the document modified thingy, as we have
+	  to tell the user that he needs to save the document */
+	  if (!IsW3Path (DocumentURLs[doc]) 
+	      && !IsFilePath (DocumentURLs[doc]))
+	    {
+	      /* @@ add the file:// (why it wasn't there before? */
+	      ptr = TtaGetMemory (strlen (DocumentURLs[doc])
+				  + sizeof (TEXT("file://"))
+				  + 1);
+	      usprintf (ptr, "file://%s", DocumentURLs[doc]);
+	    }
+	  else
+	    ptr = NULL;
+	  annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
+					 (ptr) ? ptr : DocumentURLs[doc]);
+	  if (ptr)
+	    TtaFreeMemory (ptr);
+	  if (annot)
+	    {
+	      TtaFreeMemory (annot->type);
+	      annot->type = TtaStrdup (type);
+	    }
+	  break;
+	}
+    }
+  TtaFreeMemory (url);
+}
+
 /***************************************************
  I've not yet used/cleaning the following legacy functions 
 ***************************************************/
@@ -965,7 +1089,8 @@ ThotBool IsAnnotationLink (document, element)
 #endif /* __STDC__*/
 {
   /* @@ is this ok? */
-  STRING text = SearchAttributeInElt (document, element, HTML_ATTR_Annotation);
+  STRING text = SearchAttributeInEl (document, element, 
+				     HTML_ATTR_IsAnnotation, TEXT("HTML"));
   return !strcmp (text, "Annotation");
 }
 
@@ -1021,14 +1146,3 @@ Document AnnotationTargetDocument (annotDoc)
 
   return TtaGetDocumentFromName (docName);
 }
-
-
-
-
-
-
-
-
-
-
-

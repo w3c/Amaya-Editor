@@ -15,8 +15,10 @@ extern void ANNOT_LoadAnnotation ( Document doc,
                                    Document docAnnot );
 extern void ANNOT_InitDocumentMeta ( Document doc,
                                      Document docAnnot,
-                                     AnnotMeta *annot );
-extern void ANNOT_InitDocumentBody ( Document docAnnot );
+                                     AnnotMeta *annot,
+                                     CHAR_T *title );
+extern void ANNOT_InitDocumentBody ( Document docAnnot,
+                                     CHAR_T *title );
 extern void ANNOT_InitDocumentStructure ( Document doc,
                                           Document docAnnot,
                                           AnnotMeta *annot );
@@ -35,8 +37,10 @@ extern void ANNOT_LoadAnnotation (/* Document doc,
                                      Document docAnnot */);
 extern void ANNOT_InitDocumentMeta (/* Document doc,
                                        Document docAnnot,
-                                       AnnotMeta *annot */);
-extern void ANNOT_InitDocumentBody (/* Document docAnnot */);
+                                       AnnotMeta *annot,
+                                       CHAR_T *title */);
+extern void ANNOT_InitDocumentBody (/* Document docAnnot,
+                                       CHAR_T *title */);
 extern void ANNOT_InitDocumentStructure (/* Document doc,
                                             Document docAnnot,
                                             AnnotMeta *annot */);

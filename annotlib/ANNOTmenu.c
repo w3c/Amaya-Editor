@@ -53,6 +53,9 @@ static CHAR_T   AnnotSelItem[MAX_LENGTH];
 static int      AnnotSelIndex;
 static SelType  AnnotSelType;
 
+static int      AnnotTypesBase;
+static CHAR_T   AnnotTypesSelItem[MAX_LENGTH];
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
@@ -401,7 +404,7 @@ ThotBool show;
   elType.ElTypeNum = HTML_EL_Anchor;
   while ((el = TtaSearchTypedElement (elType, SearchForward, el)))
     {
-      attrType.AttrTypeNum = HTML_ATTR_Annotation;
+      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
       attr = TtaGetAttribute (el, attrType);
       if (!attr)
 	/* it's not an annotation link */
@@ -548,7 +551,7 @@ ThotBool show;
 
   while ((el = TtaSearchTypedElement (elType, SearchForward, el)))
     {
-      attrType.AttrTypeNum = HTML_ATTR_Annotation;
+      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
       attr = TtaGetAttribute (el, attrType);
       if (!attr)
 	/* it's not an annotation link */
@@ -697,7 +700,7 @@ View                view;
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
-	       TEXT("Annotation filter  "), 4, s, TRUE, 2, 'L', 
+	       TEXT("Annotation Filter  "), 4, s, TRUE, 2, 'L', 
 	       D_DONE);
   
   /* an empty text */
@@ -737,9 +740,165 @@ View                view;
   TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
 }
 
+/***************************************************
+ **  AnnotTypes menu
+ ***************************************************/
 
+/*---------------------------------------------------------------
+  BuildAnnotTypesSelector
+  builds the list showing the different annotation types
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static void BuildAnnotTypesSelector (void)
+#else
+static void BuildAnnotTypesSelector ()
+#endif /* __STDC__ */
+{
+  int                   nb_entries;
+  int                   i;
+  FILE                  *fp;
+  CHAR_T                *annotdir;
+  CHAR_T                type[MAX_LENGTH + 1];
 
+  nb_entries = 0;
+  ustrcpy (s, TEXT(""));
+  i = 0;
 
+  annotdir = TtaGetEnvString ("ANNOT_DIR");
+  usprintf (s, "%s%c%s", annotdir, DIR_SEP, TEXT("annot.types"));
+
+  fp = fopen (s, "r");
+
+  if (fp)
+    {
+      /* read the preferences from the file */
+      fgets (type, MAX_LENGTH, fp);
+      while (!feof (fp))
+	{
+	  ustrcpy (&s[i], type);
+	  /* get the length and "chomp" the \n */
+	  i += ustrlen (&s[i]) - 1;
+	  s[i] = WC_EOS;
+	  i++;
+	  nb_entries++;
+	  fgets (type, MAX_LENGTH, fp);
+	}
+    }
+  else
+    {
+      /* use the default values */
+      ustrcpy (&s[i], TEXT("positive comment"));
+      i += ustrlen (&s[i]) + 1;
+      ustrcpy (&s[i], TEXT("flame"));
+      nb_entries = 2;
+    }
+
+   /* Fill in the form  */
+  TtaNewSelector (AnnotTypesBase + mAnnotTypesSel,
+		  AnnotTypesBase + AnnotTypesMenu,
+		  NULL,
+		  nb_entries,
+		  s,
+		  (nb_entries > 5) ? 5 : nb_entries,
+		  NULL,
+		  TRUE,
+		  TRUE);
+}
+
+/*----------------------------------------------------------------------
+   callback of the AnnotTypes menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AnnotTypesCallbackDialog (int ref, int typedata, CHAR_T * data)
+#else
+static void         AnnotTypesCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+CHAR_T             *data;
+#endif /* __STDC__ */
+{
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the AnnotTypes conf menu */
+      TtaDestroyDialogue (AnnotTypesBase + AnnotTypesMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - AnnotTypesBase)
+	{
+	case AnnotTypesMenu:
+	  switch (val) 
+	    {
+	      /** @@ I need to add a case for cancel */
+	    case 0:
+	      AnnotTypesSelItem[0] = WC_EOS;
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mAnnotTypesSel:
+	  /* copy what was selected */
+	  if (data)
+	    ustrcpy (AnnotTypesSelItem, data);
+	  else
+	    AnnotTypesSelItem[0] = WC_EOS;
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  AnnotTypes
+  Returns a pointer to a static string that represents the selection
+  of the user. It is an empty string if the user doesn't select 
+  anything.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T      *AnnotTypes (Document document, View view)
+#else
+void        *AnnotTypes (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__*/
+{
+  /* initialize the base if it hasn't yet been done */
+  if (AnnotTypesBase == 0)
+    AnnotTypesBase =  TtaSetCallback (AnnotTypesCallbackDialog,
+				      MAX_ANNOTTYPES_DLG);
+
+  /* make a copy of the current document and view, so that we can
+     find this info in the callback */
+  AnnotTypesSelItem[0] = WC_EOS;
+  
+  /* Create the dialogue form */
+  TtaNewForm (AnnotTypesBase + AnnotTypesMenu, 
+	      TtaGetViewFrame (document, view),
+	      TEXT("Annotation Type"), TRUE, 1, 'L', D_CANCEL);
+  
+  /* display the selectors */
+  BuildAnnotTypesSelector ();
+  
+  /* display the menu */
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (AnnotTypesBase + AnnotTypesMenu, FALSE);
+
+  TtaWaitShowDialogue ();
+
+  return (AnnotTypesSelItem);
+}
 
 
 

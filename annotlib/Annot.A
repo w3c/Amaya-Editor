@@ -2,10 +2,21 @@ APPLICATION Annot;
 
 DEFAULT
    BEGIN
-	ElemActivate.Pre -> DoubleClick;
-	ElemClick.Pre -> SimpleClick;
+	{ ElemActivate.Pre -> AnnotDoubleClick; }
+	{ ElemClick.Pre -> SimpleClick; }
 	DocClose.Post -> DocumentClosed;
 	DocSave.Pre -> DocumentToSave;
    END;
 
-END
+ELEMENTS
+
+   SourceDoc: BEGIN
+      ElemActivate.Pre -> Annot_RaiseSourceDoc; 
+   END;
+
+   RDFtype: BEGIN
+     ElemActivate.Pre -> Annot_Types;
+   END;
+
+END 
+
