@@ -3020,8 +3020,8 @@ LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     default: return FALSE;
     }
   return TRUE;
-#endif
 }
+#endif
 
 /*-----------------------------------------------------------------------
  CreateAltDlgWindow
@@ -3437,7 +3437,7 @@ void CreateMakeIDDlgWindow (ThotWindow parent)
   DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), NULL, (DLGPROC) MakeIDDlgProc);
 }
 
-*-----------------------------------------------------------------------
+/*-----------------------------------------------------------------------
  CreateAuthentificationDlgWindow
  ------------------------------------------------------------------------*/
 void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
