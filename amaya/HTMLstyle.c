@@ -2939,135 +2939,115 @@ char               *cssRule;
 PresentationValue  *val;
 #endif
 {
-   char                colname[100];
-   unsigned short      redval = (unsigned short) -1;
-   unsigned short      greenval = 0;	/* composant of each RGB       */
-   unsigned short      blueval = 0;	/* default to red if unknown ! */
-   int                 i;
-   int                 best = 0;	/* best color in list found */
+  char                colname[100];
+  char               *url;
+  unsigned short      redval = (unsigned short) -1;
+  unsigned short      greenval = 0;	/* composant of each RGB       */
+  unsigned short      blueval = 0;	/* default to red if unknown ! */
+  int                 i;
+  int                 best = 0;	/* best color in list found */
+  boolean             failed;
 
-   cssRule = SkipBlanks (cssRule);
-
-   val->typed_data.unit = DRIVERP_UNIT_INVALID;
-   val->typed_data.value = 0;
-
-   /*
-    * first parse the attribute string
-    * NOTE : this can't lookup for color name in
-    *        cause  we try first to lokup color name from digits
-    *        [0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]
-    */
-   if ((*cssRule == '#') ||
-       (isxdigit (cssRule[0]) && isxdigit (cssRule[1]) &&
-	isxdigit (cssRule[2])))
-     {
-
-	if (*cssRule == '#')
-	   cssRule++;
-
-	/*
-	 * we expect an hexa encoding like F00 or FF0000.
-	 */
-	if ((!isxdigit (cssRule[0])) || (!isxdigit (cssRule[1])) ||
-	    (!isxdigit (cssRule[2])))
+  cssRule = SkipBlanks (cssRule);
+  val->typed_data.unit = DRIVERP_UNIT_INVALID;
+  val->typed_data.value = 0;
+  failed = TRUE;
+  /*
+   * first parse the attribute string
+   * NOTE : this can't lookup for color name in
+   *        cause  we try first to lokup color name from digits
+   *        [0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]
+   */
+  if ((*cssRule == '#') ||
+      (isxdigit (cssRule[0]) && isxdigit (cssRule[1]) &&
+       isxdigit (cssRule[2])))
+    {
+      if (*cssRule == '#')
+	cssRule++;
+      failed = FALSE;
+      /* we expect an hexa encoding like F00 or FF0000 */
+      if ((!isxdigit (cssRule[0])) || (!isxdigit (cssRule[1])) ||
+	  (!isxdigit (cssRule[2])))
+	{
+	  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
+	  failed = TRUE;
+	}
+      else if (!isxdigit (cssRule[3]))
+	{
+	  /* encoded as on 3 digits #F0F  */
+	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
+	  greenval = hexa_val (cssRule[1]) * 16 + hexa_val (cssRule[1]);
+	  blueval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[2]);
+	}
+      else if ((!isxdigit (cssRule[4])) || (!isxdigit (cssRule[5])))
+	fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
+      else
+	{
+	  /* encoded as on 3 digits #FF00FF */
+	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[1]);
+	  greenval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[3]);
+	  blueval = hexa_val (cssRule[4]) * 16 + hexa_val (cssRule[5]);
+	}
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
+    {
+      /* we don't currently support URL just parse it to skip it */
+      cssRule = ParseHTMLURL (cssRule, &url);
+      TtaFreeMemory (url);
+      return (cssRule);
+    }
+  else if (isalpha (*cssRule))
+    {
+      /* we expect a color name like "red", store it in colname */
+      for (i = 0; i < sizeof (colname) - 1; i++)
+	{
+	  if (!(isalnum (cssRule[i])))
+	    {
+	      cssRule += i;
+	      break;
+	    }
+	  colname[i] = cssRule[i];
+	}
+      colname[i] = 0;
+      
+      /* Lookup the color name in our own color name database */
+      for (i = 0; i < NBCOLORNAME; i++)
+	if (!strcasecmp (ColornameTable[i].name, colname))
 	  {
-	     fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
-	     goto failed;
+	    redval = ColornameTable[i].red;
+	    greenval = ColornameTable[i].green;
+	    blueval = ColornameTable[i].blue;
+	    failed = FALSE;
+	    i = NBCOLORNAME;
 	  }
-	else if (!isxdigit (cssRule[3]))
-	  {
-	     /*
-	      * encoded as on 3 digits #F0F 
-	      */
-	     redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
-	     greenval = hexa_val (cssRule[1]) * 16 + hexa_val (cssRule[1]);
-	     blueval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[2]);
-	  }
-	else
-	  {
-	     if ((!isxdigit (cssRule[4])) || (!isxdigit (cssRule[5])))
-	       {
-		  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
-	       }
-	     else
-	       {
-		  /*
-		   * encoded as on 3 digits #FF00FF 
-		   */
-		  redval = hexa_val (cssRule[0]) * 16 +
-		     hexa_val (cssRule[1]);
-		  greenval = hexa_val (cssRule[2]) * 16 +
-		     hexa_val (cssRule[3]);
-		  blueval = hexa_val (cssRule[4]) * 16 +
-		     hexa_val (cssRule[5]);
-	       }
-	  }
-	goto found_RGB;
-     }
-   else if (!strncasecmp (cssRule, "url", 3))
-     {
-	char               *url;
-
-	/*
-	 * we don't currently support URL just parse it to skip it.
-	 */
-	cssRule = ParseHTMLURL (cssRule, &url);
-	TtaFreeMemory (url);
-	return (cssRule);
-     }
-   else if (isalpha (*cssRule))
-     {
-
-	/*
-	 * we expect a color name like "red", store it in colname.
-	 */
-	for (i = 0; i < sizeof (colname) - 1; i++)
-	  {
-	     if (!(isalnum (cssRule[i])))
-	       {
-		  cssRule += i;
-		  break;
-	       }
-	     colname[i] = cssRule[i];
-	  }
-	colname[i] = 0;
-
-	/*
-	 * Lookup the color name in our own color name database
-	 */
-	for (i = 0; i < NBCOLORNAME; i++)
-	   if (!strcasecmp (ColornameTable[i].name, colname))
-	     {
-		redval = ColornameTable[i].red;
-		greenval = ColornameTable[i].green;
-		blueval = ColornameTable[i].blue;
-		goto found_RGB;
-	     }
-	/*
-	 * Lookup the color name in Thot color name database
-	 */
-	TtaGiveRGB (colname, &redval, &greenval, &blueval);
-	goto found_RGB;
-     }
-   else if ((isdigit (*cssRule)) || (*cssRule == '.'))
-     {
-	/*
-	 * we expect a color defined by it's three components.
-	 * like "255 0 0" or "1.0 0.0 0.0"
-	 TODO
-	 */
-     }
- failed:
-   val->typed_data.unit = DRIVERP_UNIT_INVALID;
-   val->typed_data.value = 0;
-   return (cssRule);
-
- found_RGB:
-   best = TtaGetThotColor (redval, greenval, blueval);
-   val->typed_data.value = best;
-   val->typed_data.unit = DRIVERP_UNIT_REL;
-
-   return (cssRule);
+      /* Lookup the color name in Thot color name database */
+      if (failed)
+	{
+	  TtaGiveRGB (colname, &redval, &greenval, &blueval);
+	  failed = FALSE;
+	}
+    }
+  else if ((isdigit (*cssRule)) || (*cssRule == '.'))
+    {
+      /*
+       * we expect a color defined by it's three components.
+       * like "255 0 0" or "1.0 0.0 0.0"
+       TODO
+       */
+    }
+  
+  if (failed)
+    {
+      val->typed_data.unit = DRIVERP_UNIT_INVALID;
+      val->typed_data.value = 0;
+    }
+  else
+    {
+      best = TtaGetThotColor (redval, greenval, blueval);
+      val->typed_data.value = best;
+      val->typed_data.unit = DRIVERP_UNIT_REL;
+    }
+ return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3245,11 +3225,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   ElementType	         elType;
    PresentationValue     best;
-   GenericContext        gblock;
-   SpecificContextBlock *sblock;
-   SpecificTarget        elem;
    boolean               setColor;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;

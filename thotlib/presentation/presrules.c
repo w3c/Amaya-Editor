@@ -3851,68 +3851,86 @@ PtrAttribute        pAttr;
 		  /* sinon, elle ne s'applique qu'a la vue pour laquelle */
 		  /* elle est definie */
 		  if (pPRule->PrViewNum == 1 || pPRule->PrViewNum == viewSch)
-		    pAbb1->AbInLine = TRUE;
+		    {
+		      pAbb1->AbInLine = TRUE;		      
+		      appl = TRUE;
+		    }
 		break;
 	      case FnNoLine:
-		if (pAbb1->AbLeafType == LtCompound)
-		  if (pPRule->PrViewNum == viewSch)
+		if (pAbb1->AbLeafType == LtCompound && pPRule->PrViewNum == viewSch)
+		  {
 		    pAbb1->AbInLine = FALSE;
+		    appl = TRUE;
+		  }
 		break;
 	      case FnPage:
 #ifdef __COLPAGE__
 		if (ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction))
-		  *destroyedAb = TRUE;
+		  {
+		    *destroyedAb = TRUE;
+		    appl = TRUE;
+		  }
 #else  /* __COLPAGE__ */
-#endif /* __COLPAGE__ */
 		ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction);
+		appl = TRUE;
+#endif /* __COLPAGE__ */
 		break;
 	      case FnColumn:
 #ifdef __COLPAGE__
 		if (ApplyCol (pDoc, pAb, viewSch, pPRule))
-		  *destroyedAb = TRUE;
+		  {
+		    *destroyedAb = TRUE;
+		    appl = TRUE;
+		  }
 #endif /* __COLPAGE__ */
 		break;
 	      case FnSubColumn:
 		
 		break;
 	      case FnCopy:
-		if (!pAb->AbElement->ElHolophrast)
 		  /* on n'applique pas la regle copie a un element holophraste' */
-		  ApplyCopy (pDoc, pPRule, pAb, TRUE);
+		if (!pAb->AbElement->ElHolophrast)
+		  {
+		    ApplyCopy (pDoc, pPRule, pAb, TRUE);
+		    appl = TRUE;
+		  }
 		break;
 	      case FnContentRef:
 		ConstantCopy (pPRule->PrPresBox[0], pSchP, pAb);
+		appl = TRUE;
 		break;
 	      case FnShowBox:
-		if (pAbb1->AbLeafType == LtCompound)
-		  if (pPRule->PrViewNum == viewSch)
+		if (pAbb1->AbLeafType == LtCompound && pPRule->PrViewNum == viewSch)
+		  {
 		    pAbb1->AbFillBox = TRUE;
+		    appl = TRUE;
+		  }
 		break;
 	      case FnBackgroundPicture:
-		if (pAbb1->AbLeafType == LtCompound)
-		  if (pPRule->PrViewNum == viewSch)
-		    {
-		      if (pSchP == NULL)
-			pSchP = pDoc->DocSSchema->SsPSchema;
-		      pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
-		      if (pConst->PdString[0] != '\0')
-			{
-#                 ifndef _WINDOWS
-				  if (pConst->PdString[0] == DIR_SEP)
-#                 else  /* _WINDOWS */
-				  if (pConst->PdString[0] == DIR_SEP || (pConst->PdString[1] == ':' && pConst->PdString[2] == DIR_SEP))
-#                 endif /* _WINDOWS */
-			    /* absolute file name */
-			    strncpy (fname, pConst->PdString, MAX_PATH - 1);
-			  else
-			    /* relative file name */
-			    {
-			      strncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			      MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
-			    }
-			  NewPictInfo (pAbb1, fname, UNKNOWN_FORMAT);
-			}
-		    }
+		if (pAbb1->AbLeafType == LtCompound && pPRule->PrViewNum == viewSch)
+		  {
+		    if (pSchP == NULL)
+		      pSchP = pDoc->DocSSchema->SsPSchema;
+		    pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
+		    if (pConst->PdString[0] != '\0')
+		      {
+# ifndef _WINDOWS
+			if (pConst->PdString[0] == DIR_SEP)
+# else  /* _WINDOWS */
+			if (pConst->PdString[0] == DIR_SEP || (pConst->PdString[1] == ':' && pConst->PdString[2] == DIR_SEP))
+# endif /* _WINDOWS */
+			  /* absolute file name */
+			  strncpy (fname, pConst->PdString, MAX_PATH - 1);
+			else
+			  /* relative file name */
+			  {
+			    strncpy (directoryName, SchemaPath, MAX_PATH - 1);
+			    MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
+			  }
+			NewPictInfo (pAbb1, fname, UNKNOWN_FORMAT);
+			appl = TRUE;
+		      }
+		  }
 		break;
 	      case FnPictureMode:
 		if (pPRule->PrViewNum == viewSch)
@@ -3922,33 +3940,37 @@ PtrAttribute        pAttr;
 		      if (pAbb1->AbElement->ElPictInfo == NULL)
 			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      appl = TRUE;
 		    }
 		  else if (pAbb1->AbPresentationBox)
 		    {
 		      if (pAbb1->AbPictInfo == NULL)
 			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      appl = TRUE;
 		    }
 		  else if (pAbb1->AbLeafType == LtCompound)
 		    {
 		      if (pAbb1->AbPictBackground == NULL)
 			NewPictInfo (pAbb1, NULL, UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      appl = TRUE;
 		    }
 		break;
 	      case FnNotInLine:
 		if (pPRule->PrViewNum == viewSch)
+		  {
 		    pAbb1->AbNotInLine = TRUE;
+		    appl = TRUE;
+		  }
 		break;
 	      default:
 		break;
-	      }
-	    
+	      }	    
 	    break;
 	  default:
 	    break;
-	  }
-	
+	  }	
       }
   return appl;
 }

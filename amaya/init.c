@@ -2002,26 +2002,29 @@ char               *data;
        
        break;
      case DirSelect:
-       if (!strcmp (data, ".."))
+       if (DirectoryName[0] != EOS)
 	 {
-	   /* suppress last directory */
-	   tempname = TtaGetMemory (MAX_LENGTH);
-	   tempfile = TtaGetMemory (MAX_LENGTH);
-	   strcpy (tempname, DirectoryName);
-	   TtaExtractName (tempname, DirectoryName, tempfile);
-	   TtaFreeMemory (tempfile);
-	   TtaFreeMemory (tempname);
+	   if (!strcmp (data, ".."))
+	     {
+	       /* suppress last directory */
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       tempfile = TtaGetMemory (MAX_LENGTH);
+	       strcpy (tempname, DirectoryName);
+	       TtaExtractName (tempname, DirectoryName, tempfile);
+	       TtaFreeMemory (tempfile);
+	       TtaFreeMemory (tempname);
+	     }
+	   else
+	     {
+	       strcat (DirectoryName, DIR_STR);
+	       strcat (DirectoryName, data);
+	     }
+	   TtaSetTextForm (BaseDialog + URLName, DirectoryName);
+	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+	   DocumentName[0] = EOS;
 	 }
-       else
-	 {
-	   strcat (DirectoryName, DIR_STR);
-	   strcat (DirectoryName, data);
-	 }
-       TtaSetTextForm (BaseDialog + URLName, DirectoryName);
-       TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			 TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
-			 ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
-       DocumentName[0] = EOS;
        break;
      case DocSelect:
        if (DirectoryName[0] == EOS)
@@ -2132,15 +2135,30 @@ char               *data;
 	     DoSaveAs ();
 	   else if (SavingObject != 0)
 	     DoSaveObjectAs ();
+
+	   /* Move the information into LastURLName or DirectoryName */
+	   if (IsW3Path (SavePath))
+	     {
+	       strcpy (LastURLName, SavePath);
+	       strcat (LastURLName, "/");
+	       strcat (LastURLName, SaveName);
+	       DirectoryName[0] = EOS;
+	     }
+	   else
+	     {
+	       LastURLName[0] = EOS;
+	       strcpy (DirectoryName, SavePath);
+	       strcat (DocumentName, SaveName);
+	     }
 	 }
        else if (val == 2)
 	 /* "Clear" button */
 	 {
 	   if (SavingDocument != 0)
 	     {
-	       DirectoryName[0] = EOS;
+	       SavePath[0] = EOS;
 	       SaveImgsURL[0] = EOS;
-	       DocumentName[0] = EOS;
+	       SaveName[0] = EOS;
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
 	     }
@@ -2150,7 +2168,7 @@ char               *data;
 	 {
 	   /* reinitialize directories and document lists */
 	   if (SavingDocument != 0)
-	     TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+	     TtaListDirectory (SavePath, BaseDialog + SaveForm,
 			       TtaGetMessage (LIB, TMSG_DOC_DIR),
 			       BaseDialog + DirSave, ScanFilter,
 			       TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
@@ -2180,16 +2198,16 @@ char               *data;
        
        if (tempfile[strlen (tempfile) - 1] == url_sep)
 	 {
-	   strcpy (DirectoryName, tempfile);
-	   DocumentName[0] = EOS;
+	   strcpy (SavePath, tempfile);
+	   SaveName[0] = EOS;
 	 }
        else
 	 {
 	   /* Extract document name */
-	   if (SavingDocument != (Document) None)
-	     TtaExtractName (tempfile, DirectoryName, DocumentName);
+	   if (SavingDocument != 0)
+	     TtaExtractName (tempfile, SavePath, SaveName);
 	   else
-	     TtaExtractName (tempfile, DirectoryName, ObjectName);
+	     TtaExtractName (tempfile, SavePath, ObjectName);
 	 }
        TtaFreeMemory (tempfile);
        break;
@@ -2198,45 +2216,48 @@ char               *data;
        strcpy (SaveImgsURL, data);
        break;
      case DirSave:
-       /* Document directories */
-       tempfile = TtaGetMemory (MAX_LENGTH);
-       if (!strcmp (data, ".."))
+       if (!IsW3Path (SavePath))
 	 {
-	   /* suppress last directory */
-	   tempname = TtaGetMemory (MAX_LENGTH);
-	   strcpy (tempname, DirectoryName);
-	   TtaExtractName (tempname, DirectoryName, tempfile);
-	   TtaFreeMemory (tempname);
+	   /* Document directories */
+	   tempfile = TtaGetMemory (MAX_LENGTH);
+	   if (!strcmp (data, ".."))
+	     {
+	       /* suppress last directory */
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       strcpy (tempname, SavePath);
+	       TtaExtractName (tempname, SavePath, tempfile);
+	       TtaFreeMemory (tempname);
+	     }
+	   else
+	     {
+	       strcat (SavePath, DIR_STR);
+	       strcat (SavePath, data);
+	     }
+	   strcpy (tempfile, SavePath);
+	   strcat (tempfile, DIR_STR);
+	   if (SavingDocument != 0)
+	     strcat (tempfile, DocumentName);
+	   else
+	     strcat (tempfile, ObjectName);
+	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
+	   TtaListDirectory (SavePath, BaseDialog + SaveForm,
+			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+	   TtaFreeMemory (tempfile);
 	 }
-       else
-	 {
-	   strcat (DirectoryName, DIR_STR);
-	   strcat (DirectoryName, data);
-	 }
-       strcpy (tempfile, DirectoryName);
-       strcat (tempfile, DIR_STR);
-       if (SavingDocument != (Document) None)
-	 strcat (tempfile, DocumentName);
-       else
-	 strcat (tempfile, ObjectName);
-       TtaSetTextForm (BaseDialog + NameSave, DirectoryName);
-       TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
-			 TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
-			 ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
-       TtaFreeMemory (tempfile);
        break;
      case DocSave:
        /* Files */
-       if (DirectoryName[0] == EOS)
+       if (SaveName[0] == EOS)
 	 /* set path on current directory */
-	 getcwd (DirectoryName, MAX_LENGTH);
+	 getcwd (SavePath, MAX_LENGTH);
        
-       strcpy (DocumentName, data);
+       strcpy (SaveName, data);
        /* construct the document full name */
        tempfile = TtaGetMemory (MAX_LENGTH);
-       strcpy (tempfile, DirectoryName);
+       strcpy (tempfile, SavePath);
        strcat (tempfile, DIR_STR);
-       strcat (tempfile, DocumentName);
+       strcat (tempfile, SaveName);
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
        TtaFreeMemory (tempfile);
        break;
@@ -2436,6 +2457,10 @@ NotifyEvent        *event;
    getcwd (DirectoryName, MAX_LENGTH);
    DocumentName = TtaGetMemory (MAX_LENGTH);
    DocumentName[0] = EOS;
+   SavePath = TtaGetMemory (MAX_LENGTH);
+   SavePath[0] = EOS;
+   SaveName = TtaGetMemory (MAX_LENGTH);
+   SaveName[0] = EOS;
    ObjectName = TtaGetMemory (MAX_LENGTH);
    ObjectName[0] = EOS;
    SaveImgsURL = TtaGetMemory (MAX_LENGTH);

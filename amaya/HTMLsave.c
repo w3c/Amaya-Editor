@@ -147,7 +147,7 @@ char               *pathname;
    TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
-   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+   TtaListDirectory (SavePath, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, ScanFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
@@ -167,7 +167,7 @@ char               *pathname;
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #  else /* _WINDOWS */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
-   /* WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, DirectoryName, ScanFilter); */
+   /* WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, SavePath, ScanFilter); */
 #  endif /* _WINDOWS */
 }
 
@@ -212,26 +212,26 @@ View                view;
 	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
 	 }
        
-       /* if it is a Web document use the current DirectoryName */
+       /* if it is a Web document use the current SavePath */
        if (IsW3Path (tempname))
-	 TtaExtractName (tempname, DirectoryName, DocumentName);
+	 TtaExtractName (tempname, SavePath, SaveName);
        else
 	 {
 	   TtaGetDocumentDirectory (SavingDocument, tempname, MAX_LENGTH);
-	   strcpy (DirectoryName, tempname);
-	   strcpy (DocumentName, TtaGetDocumentName (SavingDocument));
+	   strcpy (SavePath, tempname);
+	   strcpy (SaveName, TtaGetDocumentName (SavingDocument));
 	   strcat (tempname, DIR_STR);
-	   if (!IsHTMLName (DocumentName))
-	     strcat (DocumentName, ".html");
-	   strcat (tempname, DocumentName);
+	   if (!IsHTMLName (SaveName))
+	     strcat (SaveName, ".html");
+	   strcat (tempname, SaveName);
 	 }
        TtaSetDialoguePosition ();
      }
    else
      {
-       strcpy (tempname, DirectoryName);
+       strcpy (tempname, SavePath);
        strcat (tempname, DIR_STR);
-       strcat (tempname, DocumentName);
+       strcat (tempname, SaveName);
      }
 
    /* display the dialog box */
@@ -844,7 +844,7 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", buf);)
 			     }
 			   else
 			     {
-			       strcpy (tempfile, DirectoryName);
+			       strcpy (tempfile, SavePath);
 			       strcat (tempfile, DIR_STR);
 			       strcat (tempfile, imgname);
 			     }
@@ -953,14 +953,14 @@ void                DoSaveAs ()
   boolean             dst_is_local, ok;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
-  dst_is_local = !IsW3Path (DirectoryName);
+  dst_is_local = !IsW3Path (SavePath);
   ok = TRUE;
 
-DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], DirectoryName, DocumentName, (int) CopyImages);)
+DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);)
 
   /* New document path */
   documentFile = TtaGetMemory (MAX_LENGTH);
-  strcpy (documentFile, DirectoryName);
+  strcpy (documentFile, SavePath);
   if (dst_is_local)
     {
       strcat (documentFile, DIR_STR);
@@ -971,18 +971,18 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
       strcat (documentFile, "/");
       url_sep = '/';
     }
-  strcat (documentFile, DocumentName);
-  if (DocumentName[0] == EOS)
+  strcat (documentFile, SaveName);
+  if (SaveName[0] == EOS)
     {
       /* there is no document name */
       if (AddNoName (SavingDocument, 1, documentFile, &ok))
 	{
-	  res = strlen(DirectoryName) - 1;
-	  if (DirectoryName[res] == url_sep)
-	    DirectoryName[res] = EOS;
+	  res = strlen(SavePath) - 1;
+	  if (SavePath[res] == url_sep)
+	    SavePath[res] = EOS;
 	  /* need to update the document url */
-	  strcpy (DocumentName, "noname.html");
-DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
+	  strcpy (SaveName, "noname.html");
+DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	}
       else if (!ok)
 	{
@@ -997,10 +997,10 @@ DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
   if (ok && dst_is_local)
     {
       /* verify that the directory exists */
-      if (!TtaCheckDirectory (DirectoryName))
+      if (!TtaCheckDirectory (SavePath))
 	{
 	  doc = SavingDocument;
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DirectoryName);
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
 	  /* the user has to change the name of the images directory */
 	  SaveDocumentAs(SavingDocument, 1);
 	  ok = FALSE;
@@ -1056,7 +1056,7 @@ DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
 	  if (dst_is_local)
 	    {
 	      tempname = TtaGetMemory (MAX_LENGTH);
-	      strcpy (tempname, DirectoryName);
+	      strcpy (tempname, SavePath);
 	      strcat (tempname, DIR_STR);
 	      strcat (tempname, imgbase);
 	      ok = TtaCheckDirectory (tempname);
@@ -1079,7 +1079,7 @@ DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
 	{
 	  if (base)
 	    {
-	      imagePath = MakeRelativeURL (DirectoryName, base);
+	      imagePath = MakeRelativeURL (SavePath, base);
 	      strcpy (imgbase, imagePath);
 	      TtaFreeMemory (imagePath);
 	    }
@@ -1126,7 +1126,7 @@ DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
 DBG(fprintf(stderr, "   Saving document locally : to %s\n", documentFile);)
 
 	    /* save the local document */
-	    SaveDocumentLocally (DirectoryName, DocumentName);
+	    SaveDocumentLocally (SavePath, SaveName);
 	    TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	    SavingDocument = 0;
 	  }
@@ -1187,7 +1187,7 @@ char               *pathname;
    /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
-   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+   TtaListDirectory (SavePath, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
@@ -1225,9 +1225,9 @@ void                DoSaveObjectAs ()
    boolean             dst_is_local;
    int                 res;
 
-   dst_is_local = !IsW3Path (DirectoryName);
+   dst_is_local = !IsW3Path (SavePath);
 
-   strcpy (tempfile, DirectoryName);
+   strcpy (tempfile, SavePath);
    strcat (tempfile, DIR_STR);
    strcat (tempfile, ObjectName);
 

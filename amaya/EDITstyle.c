@@ -516,7 +516,7 @@ Document            doc;
   /* create a string containing the new CSS definition. */
   if (selType.ElTypeNum == 0)
     {
-      if (CurrentClass[0] != '.')
+      if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
 	/* it's an invalid class name */
 	strcat (stylestring, ".");
     }
@@ -537,7 +537,7 @@ Document            doc;
   RemoveStyle (ClassReference, doc, FALSE);
 
   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  if (!IsImplicitClassName (CurrentClass, doc))
+  if (stylestring[0] == '.')
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
