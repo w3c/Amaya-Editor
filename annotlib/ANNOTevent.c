@@ -42,8 +42,7 @@ typedef struct _REMOTESAVE_context {
 } REMOTESAVE_context;
 
 /*-----------------------------------------------------------------------
-   Procedure GetAnnotUser
-  -----------------------------------------------------------------------
+   GetAnnotUser
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
 
@@ -54,6 +53,20 @@ CHAR_T *GetAnnotUser (void)
 #endif /* __STDC__*/
 {
   return annotUser;
+}
+
+/*-----------------------------------------------------------------------
+   GetAnnotServer
+   Returns the URL of the annotation server
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+CHAR_T *GetAnnotServer (void)
+#else /* __STDC__*/
+CHAR_T *GetAnnotServer (void)
+#endif /* __STDC__*/
+{
+  return annotServer;
 }
 
 /*-----------------------------------------------------------------------

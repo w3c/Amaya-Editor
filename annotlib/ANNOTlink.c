@@ -16,6 +16,8 @@
  */
 
 #include "annotlib.h"
+#include "AHTURLTools_f.h"
+#include "ANNOTevent_f.h"
 
 /*-----------------------------------------------------------------------
    LINK_GetAnnotationIndexFile 
@@ -135,6 +137,7 @@ AnnotMeta *annot;
   Attribute     attr;
   CHAR_T       *annotName;
   CHAR_T       *annot_user;
+  CHAR_T       *tmp;
 
   annot_user = GetAnnotUser ();
   
@@ -166,8 +169,27 @@ AnnotMeta *annot;
   attrType.AttrTypeNum = HTML_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
-  TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
-
+  /* @@ there's a confusion between annot_url, and annot_body, and
+     local and remote annotations which breaks here */
+  /* if it's a remote URL, normalize the url_body, by making a real
+     link */
+  if (annot->annot_url && IsW3Path (annot->annot_url))
+    {
+      /* @@ possible memory bug */
+      tmp = TtaGetMemory (ustrlen (GetAnnotServer ()) 
+			  + ustrlen (annot->annot_url) 
+			  + sizeof ("?w3c_annotation=")
+			  + 20);
+      usprintf (tmp,
+		TEXT("%s?w3c_annotation=%s"),
+		GetAnnotServer (),
+		annot->annot_url);
+      TtaSetAttributeText (attr, tmp, anchor, source_doc);
+      TtaFreeMemory (tmp);
+    }
+  else
+    TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
+  
   /* add a NAME attribute so that the annotation doc can point
      back to the source of the annotation link */
   attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -321,17 +343,17 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
   while (list_ptr)
     {
       annot = (AnnotMeta *) list_ptr->object;
-    if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
-      /* @@ perhaps I should erase it from the list? */
-      fprintf (stderr, "This annotation has lost its parent!\n");
-    else 
-      {
-	LINK_AddLinkToSource (doc, annot);
-	AnnotMetaDataList[doc] = annot_list;
-      }
-    /* @@@ */
-    list_ptr = list_ptr->next;
-  }
+      if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
+	/* @@ perhaps I should erase it from the list? */
+	fprintf (stderr, "This annotation has lost its parent!\n");
+      else 
+	{
+	  LINK_AddLinkToSource (doc, annot);
+	  AnnotMetaDataList[doc] = annot_list;
+	}
+      /* @@@ */
+      list_ptr = list_ptr->next;
+    }
 }
 
 /***************************************************
