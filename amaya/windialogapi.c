@@ -1356,6 +1356,7 @@ LPARAM lParam;
 	    else 
 	      {
 		ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
+		ThotCallback (BaseImage + ImageURL, STRING_DATA, urlToOpen);
 		ThotCallback (BaseImage + FormImage, INTEGER_DATA, (CHAR_T*) 1);
 		EndDialog (hwnDlg, ID_CONFIRM);
 	      }
