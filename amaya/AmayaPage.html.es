@@ -113,7 +113,7 @@
       </text>
     </g>
     <text id="version" x="360px" y="320"
-          style="font: bold 16px italic; fill: #0192BF;">Versión 8.3
+          style="font: bold 16px italic; fill: #0192BF;">Versión 8.4
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
@@ -243,4 +243,3 @@ realices.</p>
 </div>
 </body>
 </html>
-

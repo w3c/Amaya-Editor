@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Manual de Usuario de Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.4, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,7 +15,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.3 - Marzo de 2004<br />
+<h4 style="text-align:center">Versión 8.4 - Marzo de 2004<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>
@@ -509,7 +509,6 @@ bienvenida de Amaya.</p>
         href="accessibility_in_amaya/about_producing_accessible_content.html.es#page_body"
         rel="subdocument">Crear contenido accesible</a></li>
     </ul>
-    
   </li>
 </ul>
 <hr />
@@ -538,7 +537,5 @@ and <a
 href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
 privacy statements.</small></p>
 </div>
-
-
 </body>
 </html>
