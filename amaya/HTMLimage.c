@@ -426,7 +426,15 @@ void *context;
 	    else
 	      ustrcat (tempfile, ".html");
 	    TtaFreeMemory (desc->localName);
+	    /* convert the name to smallcase */
+	    ptr = tempfile;
+	    while (*ptr != EOS) 
+	      {
+		*ptr = tolower (*ptr);
+		ptr++;
+	      }
 	    desc->localName = TtaStrdup (tempfile);
+
 	  }
 	else
 	  {
