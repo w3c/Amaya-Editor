@@ -985,8 +985,8 @@ RULES
 	BEGIN
 	CreateBefore(SVG_S);
         CreateWith(VerticalLine);
-        Width: 10 cm UserSpecified;
-        Height: 5 cm UserSpecified;
+        Width: 10 cm;
+        Height: 5 cm;
         if NOT within GraphML
            VertPos: Top = Previous . Bottom;
 	PageBreak: No;

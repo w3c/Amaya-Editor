@@ -482,15 +482,18 @@ ThotBool    horiz;
 /*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
+  The parameter parse is TRUE when the attribute must be parsed
+  after the change.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value)
+static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool parse)
 #else /* __STDC__*/
-static void   UpdateAttrText (el, doc, attrType, value)
+static void   UpdateAttrText (el, doc, attrType, value, parse)
 Element       el;
 Document      doc;
 AttributeType attrType;
 int           value;
+ThotBool      parse;
 #endif /* __STDC__*/
 {
   CHAR_T		buffer[32], unit[32];
@@ -503,6 +506,7 @@ int           value;
       /* it's a new attribute */
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
+
       /* by default generate pixel values */
       usprintf (buffer, TEXT("%dpx"), value);
       TtaSetAttributeText (attr, buffer, el, doc);
@@ -514,11 +518,39 @@ int           value;
       length = 32;
       TtaGiveTextAttributeValue (attr, buffer, &length);
       unit[0] = WC_EOS;
+
       usscanf (buffer, TEXT("%d%s"), &length, unit);
       /* convert the value according to the current unit */
+      if (!ustrcmp (unit, "em") || !ustrcmp (unit, "ex"))
+	value = (value + 9) / 10;
+      else if (!ustrcmp (unit, "pc"))
+	value = (value + 11) / 12;
+      else if (!ustrcmp (unit, "in"))
+	value = (value + 71) / 72;
+      else if (!ustrcmp (unit, "cm"))
+	value = (value + 27) / 28;
+      else if (!ustrcmp (unit, "mm"))
+	value = ((value * 10) + 27) / 28;
       usprintf (buffer, TEXT("%d%s"), value, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
+    }
+  if (parse)
+    {
+      /* generate the specific presentation */
+      if (attrType.AttrTypeNum == GraphML_ATTR_x ||
+	  attrType.AttrTypeNum == GraphML_ATTR_y ||
+	  attrType.AttrTypeNum == GraphML_ATTR_cx ||
+	  attrType.AttrTypeNum == GraphML_ATTR_cy ||
+	  attrType.AttrTypeNum == GraphML_ATTR_x1 ||
+	  attrType.AttrTypeNum == GraphML_ATTR_y1 ||
+	  attrType.AttrTypeNum == GraphML_ATTR_x2 ||
+	  attrType.AttrTypeNum == GraphML_ATTR_y2 ||
+	  attrType.AttrTypeNum == GraphML_ATTR_dx ||
+	  attrType.AttrTypeNum == GraphML_ATTR_dy)
+	ParseCoordAttribute (attr, el, doc);
+      else
+	ParseWidthHeightAttribute (attr, el, doc, FALSE);
     }
 }
 
@@ -575,7 +607,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  UpdateAttrText (el, doc, attrType, org);
+  UpdateAttrText (el, doc, attrType, org, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -667,7 +699,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  UpdateAttrText (el, doc, attrType, dim);
+  UpdateAttrText (el, doc, attrType, dim, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -766,6 +798,68 @@ NotifyAttribute *event;
 }
 
 /*----------------------------------------------------------------------
+  CheckGraphMLRootSize checks that the svg root element includes that
+  new element.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             CheckGraphMLRootSize (Document doc, Element el)
+#else /* __STDC__*/
+void             CheckGraphMLRootSize (doc, el)
+Document         doc;
+Element          el;
+#endif /* __STDC__*/
+{
+  Element          graphRoot;
+  ElementType      elType;
+  AttributeType    attrType;
+  SSchema	   graphSchema;
+  PRule            rule;
+  TypeUnit         unit;
+  int              x, y, w, h;
+  int              wR, hR;
+
+  graphSchema = GetGraphMLSSchema (doc);
+  elType.ElTypeNum = GraphML_EL_GraphML;
+  elType.ElSSchema = graphSchema;
+  attrType.AttrSSchema = graphSchema;
+  graphRoot = TtaGetTypedAncestor (el, elType);
+  if (graphRoot)
+    {
+      /* get the unit used to express the SVG width */
+      rule = TtaGetPRule (graphRoot, PRWidth);
+      if (rule)
+	unit = TtaGetPRuleUnit (rule);
+      else
+	unit = UnPixel;
+      TtaGiveBoxPosition (el, doc, 1, unit, &x, &y);
+      TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+      if (w + x > wR)
+	{
+	  /* increase the width of the root element */
+	  attrType.AttrTypeNum = GraphML_ATTR_width_;
+	  UpdateAttrText (graphRoot, doc, attrType, w + x, TRUE);
+	}
+
+      /* get the unit used to express the SVG width */
+      rule = TtaGetPRule (graphRoot, PRHeight);
+      if (rule)
+	unit = TtaGetPRuleUnit (rule);
+      else
+	unit = UnPixel;
+      TtaGiveBoxPosition (el, doc, 1, unit, &x, &y);
+      TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+      if (h + y > hR)
+	{
+	  /* increase the height of the root element */
+	  attrType.AttrTypeNum = GraphML_ATTR_height_;
+	  UpdateAttrText (graphRoot, doc, attrType, h + y, TRUE);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
@@ -780,8 +874,9 @@ NotifyPresentation *event;
   PRule         presRule;
   Document      doc;
   ElementType   elType;
+  TypeUnit      unit;
   int           presType;
-  int           mainView, unit;
+  int           mainView;
   int           x, y, width, height;
   ThotBool      ret;
  
@@ -828,71 +923,71 @@ NotifyPresentation *event;
       SetStyleAttribute (doc, el);
       TtaSetDocumentModified (doc);
     }
-
   else if (presType == PRVertPos || presType == PRHorizPos ||
            presType == PRHeight ||  presType == PRWidth)
     {
-    unit = TtaGetPRuleUnit (presRule);
-    mainView = TtaGetViewFromName (doc, "Formatted_view");
-    /* TtaGiveBoxPosition (el, doc, mainView, unit, &x, &y);*/
-    TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
-    if (presType == PRVertPos)
-      {
-	if (elType.ElTypeNum == GraphML_EL_Spline ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	    elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon)
-	  TranslatePointsAttribute (el, doc, y, FALSE);
-	else
-	  {
-	  /* the new value is the old one plus the difference */
-	    y = TtaGetPRuleValue (presRule);
-	    UpdatePositionAttribute (el, doc, y, height, FALSE);
-	  }
-      }
-    else if (presType == PRHorizPos)
-      {
-	if (elType.ElTypeNum == GraphML_EL_Spline ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	    elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon)
-	  TranslatePointsAttribute (el, doc, x, FALSE);
-	else
-	  {
-	    /* the new value is the old one plus the difference */
-	    x = TtaGetPRuleValue (presRule);
-	    UpdatePositionAttribute (el, doc, x, width, TRUE);
+      unit = TtaGetPRuleUnit (presRule);
+      mainView = TtaGetViewFromName (doc, "Formatted_view");
+      TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
+      if (presType == PRVertPos)
+	{
+	  if (elType.ElTypeNum == GraphML_EL_Spline ||
+	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	      elType.ElTypeNum == GraphML_EL_polyline ||
+	      elType.ElTypeNum == GraphML_EL_polygon)
+	    TranslatePointsAttribute (el, doc, y, FALSE);
+	  else
+	    {
+	      /* the new value is the old one plus the difference */
+	      y = TtaGetPRuleValue (presRule);
+	      UpdatePositionAttribute (el, doc, y, height, FALSE);
+	    }
 	}
-      }
-    else if (presType == PRHeight &&
-	     (elType.ElTypeNum == GraphML_EL_Spline ||
+      else if (presType == PRHorizPos)
+	{
+	  if (elType.ElTypeNum == GraphML_EL_Spline ||
 	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	      elType.ElTypeNum == GraphML_EL_rect ||
-	      elType.ElTypeNum == GraphML_EL_ellipse ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
-	      elType.ElTypeNum == GraphML_EL_polygon ||
-	      elType.ElTypeNum == GraphML_EL_line_ ||
-	      elType.ElTypeNum == GraphML_EL_image))
-      {
-	/* the new value is the old one plus the delta */
-	height = TtaGetPRuleValue (presRule);
-	UpdateWidthHeightAttribute (el, doc, height, FALSE);
-      }
-    else if (presType == PRWidth &&
-	     (elType.ElTypeNum == GraphML_EL_Spline ||
-	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	      elType.ElTypeNum == GraphML_EL_rect ||
-	      elType.ElTypeNum == GraphML_EL_circle ||
-	      elType.ElTypeNum == GraphML_EL_ellipse ||
-	      elType.ElTypeNum == GraphML_EL_polyline ||
-	      elType.ElTypeNum == GraphML_EL_polygon ||
-	      elType.ElTypeNum == GraphML_EL_line_ ||
-	      elType.ElTypeNum == GraphML_EL_image))
-      {
-	/* the new value is the old one plus the delta */
-	width = TtaGetPRuleValue (presRule);
-	UpdateWidthHeightAttribute (el, doc, width, TRUE);
-      }
+	      elType.ElTypeNum == GraphML_EL_polygon)
+	    TranslatePointsAttribute (el, doc, x, FALSE);
+	  else
+	    {
+	      /* the new value is the old one plus the difference */
+	      x = TtaGetPRuleValue (presRule);
+	      UpdatePositionAttribute (el, doc, x, width, TRUE);
+	    }
+	}
+      else if (presType == PRHeight &&
+	       (elType.ElTypeNum == GraphML_EL_Spline ||
+		elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+		elType.ElTypeNum == GraphML_EL_rect ||
+		elType.ElTypeNum == GraphML_EL_ellipse ||
+		elType.ElTypeNum == GraphML_EL_polyline ||
+		elType.ElTypeNum == GraphML_EL_polygon ||
+		elType.ElTypeNum == GraphML_EL_line_ ||
+		elType.ElTypeNum == GraphML_EL_image))
+	{
+	  /* the new value is the old one plus the delta */
+	  height = TtaGetPRuleValue (presRule);
+	  UpdateWidthHeightAttribute (el, doc, height, FALSE);
+	}
+      else if (presType == PRWidth &&
+	       (elType.ElTypeNum == GraphML_EL_Spline ||
+		elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+		elType.ElTypeNum == GraphML_EL_rect ||
+		elType.ElTypeNum == GraphML_EL_circle ||
+		elType.ElTypeNum == GraphML_EL_ellipse ||
+		elType.ElTypeNum == GraphML_EL_polyline ||
+		elType.ElTypeNum == GraphML_EL_polygon ||
+		elType.ElTypeNum == GraphML_EL_line_ ||
+		elType.ElTypeNum == GraphML_EL_image))
+	{
+	  /* the new value is the old one plus the delta */
+	  width = TtaGetPRuleValue (presRule);
+	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
+	}
+      /* check that the svg root element includes that element */
+      CheckGraphMLRootSize (doc, el);
     }
   return ret; /* let Thot perform normal operation */
 }
@@ -1016,10 +1111,10 @@ ThotBool ExportForeignObject (event)
  element. Delete that attribute.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void NameSpaceGenerated (NotifyAttribute *event)
+void             NameSpaceGenerated (NotifyAttribute *event)
 #else /* __STDC__*/
-void NameSpaceGenerated (event)
-     NotifyAttribute *event;
+void             NameSpaceGenerated (event)
+NotifyAttribute *event;
 #endif /* __STDC__*/
 {
    TtaRemoveAttribute (event->element, event->attribute, event->document);
@@ -1036,251 +1131,259 @@ static void         CreateGraphicElement (int entry)
 #else
 static void         CreateGraphicElement (entry)
 int                 construct;
- 
 #endif
 {
-   Document	    doc;
-   Element	    last, first, graphRoot, newEl, sibling, selEl;
-   Element          child, parent, elem;
-   ElementType      elType, selType, newType, childType;
-   AttributeType    attrType;
-   Attribute        attr;
-   SSchema	    docSchema, graphSchema;
-   DisplayMode      dispMode;
-   char		    shape;
-   STRING           name;
-   int		    c1, c2, i, j, w, h;
-   int	            oldStructureChecking;
-   int              docModified;
-   ThotBool	    found;
+  Document	    doc;
+  Element	    last, first, graphRoot, newEl, sibling, selEl;
+  Element          child, parent, elem;
+  ElementType      elType, selType, newType, childType;
+  AttributeType    attrType;
+  Attribute        attr;
+  SSchema	    docSchema, graphSchema;
+  DisplayMode      dispMode;
+  char		    shape;
+  STRING           name;
+  int		    c1, c2, i, j, w, h;
+  int	            oldStructureChecking;
+  int              docModified;
+  ThotBool	    found;
 
-   doc = TtaGetSelectedDocument ();
-   if (doc == 0)
-      /* there is no selection. Nothing to do */
-      return;
-   TtaGiveLastSelectedElement (doc, &last, &c2, &j);
-   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-   selEl = first;
-   newEl = NULL;
-   child = NULL;
-   docModified = TtaIsDocumentModified (doc);
-   /* Are we in a drawing? */
-   docSchema = TtaGetDocumentSSchema (doc);
-   graphSchema = GetGraphMLSSchema (doc);
-   elType.ElTypeNum = GraphML_EL_GraphML;
-   elType.ElSSchema = graphSchema;
-   attrType.AttrSSchema = graphSchema;
-   graphRoot = TtaGetTypedAncestor (first, elType);
-   if (graphRoot == NULL)
-      /* the current selection is not in a GraphML element, create one */
-      {
-      selType = TtaGetElementType (first);
-      name = TtaGetSSchemaName (selType.ElSSchema);
-      if (ustrcmp (name, TEXT("HTML")))
-	 /* selection is not in an HTML element. */
-         return;
-      graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"), TEXT("GraphMLP"));
-      TtaCreateElement (elType, doc);
-      TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
-      }
+  doc = TtaGetSelectedDocument ();
+  if (doc == 0)
+    /* there is no selection. Nothing to do */
+    return;
+  TtaGiveLastSelectedElement (doc, &last, &c2, &j);
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  TtaOpenUndoSequence (doc, first, last, c1, c2);
 
-   /* look for the element (sibling) in front of which the new element will be
-      created */
-   sibling = first;
-   found = FALSE;
-   do
+  selEl = first;
+  newEl = NULL;
+  child = NULL;
+  docModified = TtaIsDocumentModified (doc);
+  /* Are we in a drawing? */
+  docSchema = TtaGetDocumentSSchema (doc);
+  graphSchema = GetGraphMLSSchema (doc);
+  elType = TtaGetElementType (selEl);
+  if (elType.ElTypeNum == GraphML_EL_GraphML && elType.ElSSchema == graphSchema)
+    graphRoot = selEl;
+  else
+    {
+      elType.ElTypeNum = GraphML_EL_GraphML;
+      elType.ElSSchema = graphSchema;
+      attrType.AttrSSchema = graphSchema;
+      graphRoot = TtaGetTypedAncestor (first, elType);
+      if (graphRoot == NULL)
+	/* the current selection is not in a GraphML element, create one */
 	{
-         parent = TtaGetParent (sibling);
-	 if (parent)
+	  selType = TtaGetElementType (first);
+	  name = TtaGetSSchemaName (selType.ElSSchema);
+	  if (ustrcmp (name, TEXT("HTML")))
 	    {
-	    elType = TtaGetElementType (parent);
-	    if (elType.ElSSchema == graphSchema &&
-		(elType.ElTypeNum == GraphML_EL_g ||
-		 elType.ElTypeNum == GraphML_EL_GraphML))
+	      /* selection is not in an HTML element. */
+	      TtaCancelLastRegisteredSequence (doc);
+	      return;
+	    }
+	  graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"), TEXT("GraphMLP"));
+	  TtaAskFirstCreation ();
+	  TtaCreateElement (elType, doc);
+	  TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
+	}
+    }
+
+  /* look for the element (sibling) in front of which the new element will be
+     created */
+  if (first == graphRoot)
+    parent = NULL;
+  else
+    {
+      sibling = first;
+      found = FALSE;
+      do
+	{
+	  parent = TtaGetParent (sibling);
+	  if (parent)
+	    {
+	      elType = TtaGetElementType (parent);
+	      if (elType.ElSSchema == graphSchema &&
+		  (elType.ElTypeNum == GraphML_EL_g ||
+		   elType.ElTypeNum == GraphML_EL_GraphML))
 		found = TRUE;
-	    else
+	      else
 		sibling = parent;
 	    }
 	}
-   while (parent && !found);
-
-   if (!parent)
-      {
-      parent = graphRoot;
-      sibling = TtaGetFirstChild (graphRoot);
-      }
-
-   TtaOpenUndoSequence (doc, first, last, c1, c2);
-
-   newType.ElSSchema = graphSchema;
-   newType.ElTypeNum = 0;
-   shape = EOS;
-
-   switch (entry)
-    {
-    case 0:	/* line */
-	newType.ElTypeNum = GraphML_EL_line_;
-	shape = 'g';
-	break;
-    case 1:	/* rectangle */
-	newType.ElTypeNum = GraphML_EL_rect;
-	shape = 'C';
-	break;
-    case 2:	/* rectangle with rounded corners */
-	newType.ElTypeNum = GraphML_EL_rect;
-	shape = 'C';
-	break;
-    case 3:	/* circle */
-	newType.ElTypeNum = GraphML_EL_circle;
-	shape = 'a';
-	break;
-    case 4:	/* ellipse */
-	newType.ElTypeNum = GraphML_EL_ellipse;
-	shape = 'c';
-	break;
-    case 5:	/* polyline */
-	newType.ElTypeNum = GraphML_EL_polyline;
-	shape = 'S';
-	break;
-    case 6:	/* polygon */
-	newType.ElTypeNum = GraphML_EL_polygon;
-	shape = 'p';
-	break;
-    case 7:	/* spline */
-	newType.ElTypeNum = GraphML_EL_Spline;
-	shape = 'B';
-	break;
-    case 8:	/* closed spline */
-	newType.ElTypeNum = GraphML_EL_ClosedSpline;
-	shape = 's';
-	break;
-    case 9:	/* foreignObject with some HTML code */
-        newType.ElTypeNum = GraphML_EL_foreignObject;
-	break;
-    case 10:	/* text */
-	newType.ElTypeNum = GraphML_EL_text_;
-	break;
-    case 11:	/* group */
-	newType.ElTypeNum = 0;
-	break;
-    default:
-	break;
+      while (parent && !found);
     }
 
-   if (newType.ElTypeNum > 0)
-     {
-       dispMode = TtaGetDisplayMode (doc);
-       /* ask Thot to stop displaying changes made in the document */
-       if (dispMode == DisplayImmediately)
-         TtaSetDisplayMode (doc, DeferredDisplay);
+  if (!parent)
+    {
+      parent = graphRoot;
+      sibling = TtaGetLastChild (graphRoot);
+    }
 
-       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
-       if (newType.ElTypeNum == GraphML_EL_rect ||
-	   newType.ElTypeNum == GraphML_EL_circle ||
-	   newType.ElTypeNum == GraphML_EL_ellipse ||
-	   newType.ElTypeNum == GraphML_EL_text_ ||
-	   newType.ElTypeNum == GraphML_EL_foreignObject)
-	 TtaAskFirstCreation ();
-       /* create the new element */
-       newEl = TtaNewElement (doc, newType);
-       if (!sibling)
-         TtaInsertFirstChild (&newEl, parent, doc);
-       else
-	 TtaInsertSibling (newEl, sibling, TRUE, doc);
+  newType.ElSSchema = graphSchema;
+  newType.ElTypeNum = 0;
+  shape = EOS;
 
-       /* create a child for the new element */
-       if (shape != EOS)
-         /* create a graphic leaf according to the element's type */
-	 {
-	   childType.ElSSchema = graphSchema;
-	   childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
-	   child = TtaNewElement (doc, childType);
-	   TtaInsertFirstChild (&child, newEl, doc);
-	   TtaSetGraphicsShape (child, shape, doc);
-	   selEl = child;
-	   if (entry == 2)
-	     /* rectangle with rounded corners */
-	     {
-	       /* create a default rx attribute */
-	       attrType.AttrTypeNum = GraphML_ATTR_rx;
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (newEl, attr, doc);
-	       TtaSetAttributeText (attr, TEXT("5px"), newEl, doc);
-	       ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
-	     }
-	 }
-       else if (newType.ElTypeNum == GraphML_EL_text_)
-	 /* create a TEXT leaf */
-	 {
-	   childType.ElSSchema = graphSchema;
-	   childType.ElTypeNum = GraphML_EL_TEXT_UNIT;
-	   child = TtaNewElement (doc, childType);
-	   TtaInsertFirstChild (&child, newEl, doc);
-	   selEl = child;
-	 }
-       else if (newType.ElTypeNum == GraphML_EL_foreignObject)
-	 /* create an HTML DIV element in the new element */
-	 {
-	   /* the document is supposed to be HTML */
-	   childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
-					       TEXT("HTMLP"));
-	   childType.ElTypeNum = HTML_EL_Division;
-	   child = TtaNewTree (doc, childType, "");
-	   /* do not check the Thot abstract tree against the structure */
-	   /* schema when inserting this element */
-	   oldStructureChecking = TtaGetStructureChecking (doc);
-	   TtaSetStructureChecking (0, doc);
-	   TtaInsertFirstChild (&child, newEl, doc);
-	   TtaSetStructureChecking (oldStructureChecking, doc);
-	   /* select the first leaf */
-	   elem = child;
-	   do
-	     {
-	       selEl = elem;
-	       elem = TtaGetFirstChild (elem);
-	     }
-	   while (elem != NULL);
-	 }
-       TtaRegisterElementCreate (newEl, doc);
+  switch (entry)
+    {
+    case 0:	/* line */
+      newType.ElTypeNum = GraphML_EL_line_;
+      shape = 'g';
+      break;
+    case 1:	/* rectangle */
+      newType.ElTypeNum = GraphML_EL_rect;
+      shape = 'C';
+      break;
+    case 2:	/* rectangle with rounded corners */
+      newType.ElTypeNum = GraphML_EL_rect;
+      shape = 'C';
+      break;
+    case 3:	/* circle */
+      newType.ElTypeNum = GraphML_EL_circle;
+      shape = 'a';
+      break;
+    case 4:	/* ellipse */
+      newType.ElTypeNum = GraphML_EL_ellipse;
+      shape = 'c';
+      break;
+    case 5:	/* polyline */
+      newType.ElTypeNum = GraphML_EL_polyline;
+      shape = 'S';
+      break;
+    case 6:	/* polygon */
+      newType.ElTypeNum = GraphML_EL_polygon;
+      shape = 'p';
+      break;
+    case 7:	/* spline */
+      newType.ElTypeNum = GraphML_EL_Spline;
+      shape = 'B';
+      break;
+    case 8:	/* closed spline */
+      newType.ElTypeNum = GraphML_EL_ClosedSpline;
+      shape = 's';
+      break;
+    case 9:	/* foreignObject with some HTML code */
+      newType.ElTypeNum = GraphML_EL_foreignObject;
+      break;
+    case 10:	/* text */
+      newType.ElTypeNum = GraphML_EL_text_;
+      break;
+    case 11:	/* group */
+      newType.ElTypeNum = 0;
+      break;
+    default:
+      break;
+    }
 
-       /* ask Thot to display changes made in the document */
-       TtaSetDisplayMode (doc, dispMode);
-     }
+  if (newType.ElTypeNum > 0)
+    {
+      dispMode = TtaGetDisplayMode (doc);
+      /* ask Thot to stop displaying changes made in the document */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+      
+      /* for rectangles, circle, ellipse, and text, ask for an elastic box */
+      if (newType.ElTypeNum == GraphML_EL_rect ||
+	  newType.ElTypeNum == GraphML_EL_circle ||
+	  newType.ElTypeNum == GraphML_EL_ellipse ||
+	  newType.ElTypeNum == GraphML_EL_text_ ||
+	  newType.ElTypeNum == GraphML_EL_foreignObject)
+	TtaAskFirstCreation ();
+      /* create the new element */
+      newEl = TtaNewElement (doc, newType);
+      if (!sibling)
+	TtaInsertFirstChild (&newEl, parent, doc);
+      else
+	TtaInsertSibling (newEl, sibling, FALSE, doc);
+      
+      /* create a child for the new element */
+      if (shape != EOS)
+	/* create a graphic leaf according to the element's type */
+	{
+	  childType.ElSSchema = graphSchema;
+	  childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
+	  child = TtaNewElement (doc, childType);
+	  TtaInsertFirstChild (&child, newEl, doc);
+	  TtaSetGraphicsShape (child, shape, doc);
+	  selEl = child;
+	  if (entry == 2)
+	    /* rectangle with rounded corners */
+	    {
+	      /* create a default rx attribute */
+	      attrType.AttrTypeNum = GraphML_ATTR_rx;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
+	      TtaSetAttributeText (attr, TEXT("5px"), newEl, doc);
+	      ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+	    }
+	}
+      else if (newType.ElTypeNum == GraphML_EL_text_)
+	/* create a TEXT leaf */
+	{
+	  childType.ElSSchema = graphSchema;
+	  childType.ElTypeNum = GraphML_EL_TEXT_UNIT;
+	  child = TtaNewElement (doc, childType);
+	  TtaInsertFirstChild (&child, newEl, doc);
+	  selEl = child;
+	}
+      else if (newType.ElTypeNum == GraphML_EL_foreignObject)
+	/* create an HTML DIV element in the new element */
+	{
+	  /* the document is supposed to be HTML */
+	  childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
+					      TEXT("HTMLP"));
+	  childType.ElTypeNum = HTML_EL_Division;
+	  child = TtaNewTree (doc, childType, "");
+	  /* do not check the Thot abstract tree against the structure */
+	  /* schema when inserting this element */
+	  oldStructureChecking = TtaGetStructureChecking (doc);
+	  TtaSetStructureChecking (0, doc);
+	  TtaInsertFirstChild (&child, newEl, doc);
+	  TtaSetStructureChecking (oldStructureChecking, doc);
+	  /* select the first leaf */
+	  elem = child;
+	  do
+	    {
+	      selEl = elem;
+	      elem = TtaGetFirstChild (elem);
+	    }
+	  while (elem != NULL);
+	}
+      TtaRegisterElementCreate (newEl, doc);
 
-   if (selEl != NULL)
-     /* select the right element */
-     TtaSelectElement (doc, selEl);
-   
-   if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's' || shape == 'g')
-     /* multipoints element. Let the user enter the points */
-     {
-       if (shape != 'g')
-	 {
-	   TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
-	   TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
-	 }
-       TtcInsertGraph (doc, 1, shape);
-#ifdef IV
-       dispMode = TtaGetDisplayMode (doc);
-       /* ask Thot to stop displaying changes made in the document */
-       if (dispMode == DisplayImmediately)
-         TtaSetDisplayMode (doc, DeferredDisplay);
-       /* ask Thot to display changes made in the document */
-       TtaSetDisplayMode (doc, dispMode);
-#endif
-       if (shape != 'g' && TtaGetVolume (selEl) < 3)
-	 {
-	   /* the polyline doesn't have enough points */
-	   TtaDeleteTree (selEl, doc);
-	   TtaCancelLastRegisteredSequence (doc);
-	   if (!docModified)
-	     TtaSetDocumentUnmodified (doc);
-	   TtaSelectElement (doc, first);
-	   return;
-	 }
-     }
-   TtaCloseUndoSequence (doc);
-   TtaSetDocumentModified (doc);
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (doc, dispMode);
+    }
+  
+  if (selEl != NULL)
+    /* select the right element */
+    TtaSelectElement (doc, selEl);
+  
+  if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's' || shape == 'g')
+    /* multipoints element. Let the user enter the points */
+    {
+      if (shape != 'g')
+	{
+	  TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
+	  TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
+	}
+      TtcInsertGraph (doc, 1, shape);
+      if (shape != 'g' && TtaGetVolume (selEl) < 3)
+	{
+	  /* the polyline doesn't have enough points */
+	  TtaDeleteTree (newEl, doc);
+	  TtaCancelLastRegisteredSequence (doc);
+	  if (!docModified)
+	    TtaSetDocumentUnmodified (doc);
+	  TtaSelectElement (doc, first);
+	  return;
+	}
+    }
+  /* adapt the size of the SVG root element if necessary */
+  CheckGraphMLRootSize (doc, newEl);
+  TtaCloseUndoSequence (doc);
+  TtaSetDocumentModified (doc);
 }
 
 /*----------------------------------------------------------------------

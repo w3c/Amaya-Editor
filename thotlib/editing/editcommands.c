@@ -1450,10 +1450,6 @@ int                 frame;
 	      x = pBox->BxXOrg - pFrame->FrXOrg;
 	      y = pBox->BxYOrg - pFrame->FrYOrg;
 	      LineCreation (frame, pBox, &x, &y, &xDelta, &yDelta);
-	      x += pFrame->FrXOrg;
-	      y += pFrame->FrYOrg;
-	      xDelta += pFrame->FrXOrg;
-	      yDelta += pFrame->FrYOrg;
 	      /* Update the enclosing stretchable box */
 	      pAb = pAb->AbEnclosing;
 	      NewPosition (pAb, x, y, frame, TRUE);
