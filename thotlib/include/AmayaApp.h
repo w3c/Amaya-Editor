@@ -39,8 +39,8 @@ public:
   virtual bool 	OnInit();
   virtual int 	OnExit();
   void OnIdle( wxIdleEvent& event );
-  //  void OnChar( wxKeyEvent& event );
- 
+  void OnChar( wxKeyEvent& event );
+
   bool m_AmayaIsLaunched;
 
   wxAmayaSocketEventLoop * m_SocketEventLoop;

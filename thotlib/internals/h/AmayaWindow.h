@@ -89,7 +89,8 @@ class AmayaWindow : public wxFrame
   int		GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
   int           GetKind() const { return m_Kind; }
-  static int    GetActiveWindowId() { return m_ActiveWindowId; };
+  static int    GetActiveWindowId() { return m_ActiveWindowId; }
+  static AmayaWindow * GetActiveWindow();
 
   virtual void         CleanUp();
   virtual AmayaPage *  GetActivePage() const;

@@ -406,7 +406,6 @@ void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
   m_pAmayaInstance->RegisterOpenURLCallback( callback );  
 }
 
-#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaApp
@@ -418,16 +417,19 @@ void AmayaApp::OnChar(wxKeyEvent& event)
 {
   wxLogDebug( _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
   // forward the key event to active window
-  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
+  AmayaWindow * p_window = AmayaWindow::GetActiveWindow();
   if (p_window)
     p_window->OnChar(event);
+#endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
 }
-#endif /* 0 */
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
-  //  EVT_CHAR( AmayaApp::OnChar )
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  EVT_CHAR( AmayaApp::OnChar )
+#endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

@@ -35,6 +35,7 @@
 #include "callback_f.h"
 #include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
+#include "appdialogue_wx.h"
 #include "input_f.h"
 
 #include "AmayaWindow.h"
@@ -203,6 +204,19 @@ void AmayaWindow::AppendMenuItem (
     wxItemKind 		kind,
     const AmayaCParam & callback )
 {
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetActiveWindow
+ * Description:  return the current selected window
+ *--------------------------------------------------------------------------------------
+ */
+AmayaWindow * AmayaWindow::GetActiveWindow()
+{
+  return TtaGetWindowFromId(m_ActiveWindowId);
 }
 
 /*

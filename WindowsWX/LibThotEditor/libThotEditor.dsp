@@ -191,10 +191,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaSubPanelManager.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\AmayaTextGraber.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\AmayaToolBar.cpp
 # End Source File
 # Begin Source File
