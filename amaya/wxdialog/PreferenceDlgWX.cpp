@@ -397,6 +397,9 @@ void PreferenceDlgWX::SetupLabelDialog_Publish()
   XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_USE_XHTML_MIMETYPE)) );
   XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_USE_ETAGS)) );
   XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_VERIFY_PUT)) );
+#ifdef _WINDOWS
+  XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_EXPORT_CRLF)) );
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -414,7 +417,10 @@ void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
   XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->SetValue( prop.UseXHTMLMimeType );
   XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetValue( prop.LostUpdateCheck );
   XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetValue( prop.VerifyPublish );
-  
+#ifdef _WINDOWS
+  XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->SetValue( prop.ExportCRLF );
+#endif /* _WINDOWS */  
+
   XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.DefaultName) );
   XRCCTRL(*this, "wxID_VALUE_REDIRECT", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.SafePutRedirect) );
 }
@@ -439,6 +445,9 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
   prop.UseXHTMLMimeType = XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->GetValue();
   prop.LostUpdateCheck  = XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->GetValue();
   prop.VerifyPublish    = XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->GetValue();
+#ifdef _WINDOWS
+  prop.ExportCRLF       = XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->GetValue();
+#endif /* _WINDOWS */
 
   value = XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->GetValue();
   strcpy( prop.DefaultName, (const char*)value.mb_str(wxConvUTF8) );

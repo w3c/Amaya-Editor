@@ -351,6 +351,11 @@
                         <label>Verifier chaque PUT avec un GET</label>
                       </object>
                     </object>
+                    <object class="sizeritem" platform="win">
+                      <object class="wxCheckBox" name="wxID_CHECK_CRLF">
+                        <label>Export CR LF</label>
+                      </object>
+                    </object>
                   </object>
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
