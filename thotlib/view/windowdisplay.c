@@ -1419,24 +1419,24 @@ int                 pattern;
    /*eps2 = thick > 1; */
 
    /* Fill in the rectangle */
+#  ifndef _WINDOWS
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-   if (pat != 0)
-     {
-#       ifndef _WINDOWS
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
-			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-	XFreePixmap (TtDisplay, pat);
-#       else /* _WINDOWS */
-	WIN_GetDeviceContext (frame);
-	WinLoadGC (fg, RO);
-	hBrush = CreateSolidBrush (Pix_Color[bg]);
-	hBrush = SelectObject (TtDisplay, hBrush);
-	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	hBrush = SelectObject (TtDisplay, hBrush);
-	DeleteObject (hBrush);
-#       endif /* _WINDOWS */
-     }
+   if (pat != 0) {
+      XSetTile (TtDisplay, TtGreyGC, pat);
+      XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
+                      x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+      XFreePixmap (TtDisplay, pat);
+   }
+#  else /* _WINDOWS */
+   WIN_GetDeviceContext (frame);
+   SelectClipRgn(TtDisplay, clipRgn); 
+   WinLoadGC (fg, RO);
+   hBrush = CreateSolidBrush (Pix_Color[bg]);
+   hBrush = SelectObject (TtDisplay, hBrush);
+   PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+   hBrush = SelectObject (TtDisplay, hBrush);
+   DeleteObject (hBrush);
+#  endif /* _WINDOWS */
 
    /* Draw the border */
    if (thick > 0)
