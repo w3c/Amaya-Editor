@@ -1,4 +1,4 @@
-! file MathML.trans : structure transformation for MathML
+i! file MathML.trans : structure transformation for MathML
 ! see HTML.trans for a description of Trans language
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -260,6 +260,14 @@ subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
 	sub > msubsup:none;
 	}
 
+!change msubsup into munderover
+change into munderover: msubsup{base:*,sub:*,sup:*};
+  {
+  base > munderover:*;
+  sub > munderover:*;
+  sup > munderover:*;
+  }
+
 !!! Under and Over transformations
 
 !surroud an element with a underover
@@ -305,6 +313,14 @@ remove under:munder{base:*,?under:*};
 	base > :*;
 	under /;
 	}
+
+!change munderover into msubsup
+change into msubsup: munderover{base:*,under:*,over:*};
+  {
+  base > msubsup:*;
+  under > msubsup:*;
+  over > msubsup:*;
+  }
  
 !!! Parenthesis Transformations
 
