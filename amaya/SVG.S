@@ -275,6 +275,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      baseline_shift = text;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      writing_mode;
 	      x;
@@ -294,6 +295,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      baseline_shift;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      writing_mode;
 	      x;

@@ -229,9 +229,23 @@ ATTRIBUTES
 	AttrModify.Post -> AttrPointsModified;
 	END;
    dx:
+	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
+	AttrCreate.Post -> AttrCoordChanged;
+	AttrDelete.Pre ->  AttrDxDyDelete;
+	END;	
    dy:
+	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
+	AttrCreate.Post -> AttrCoordChanged;
+	AttrDelete.Pre ->  AttrDxDyDelete;
+	END;	
+   baseline_shift:
+	BEGIN
+	AttrModify.Post -> AttrBaselineShiftChanged;
+	AttrCreate.Post -> AttrBaselineShiftChanged;
+	AttrDelete.Pre ->  AttrBaselineShiftDelete;
+	END;	
    xlink_href:
 	BEGIN
         AttrModify.Pre ->  AttrXlinkHrefWillBeChanged;

@@ -70,6 +70,10 @@ extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
                                             Element el,
                                             Document doc,
                                             ThotBool delete );
+extern void ParseBaselineShiftAttribute ( Attribute attr,
+					  Element el,
+					  Document doc,
+					  ThotBool delete );
 extern void ParsePointsAttribute ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -150,6 +154,10 @@ extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
                                               Element el,
                                               Document doc,
                                               ThotBool delete */);
+extern void ParseBaselineShiftAttribute (/* Attribute attr,
+					    Element el,
+					    Document doc,
+					    ThotBool delete */);
 extern void ParsePointsAttribute (/* Attribute attr,
                                      Element el,
                                      Document doc */);

@@ -60,6 +60,7 @@ width_: width
 height_: height
 xlink_href: xlink:href
 title_: title
+baseline_shift: baseline-shift
 target_: target
 attributeName_: attributeName
 begin_: begin

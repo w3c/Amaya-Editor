@@ -1209,6 +1209,14 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   baseline_shift:
+	BEGIN
+	create SAN;
+	create 'baseline-shift="';
+	create baseline_shift;
+	create DoubleQuote;
+	END;
+
    clipPathUnits = userSpaceOnUse:
 	BEGIN
 	create SAN;

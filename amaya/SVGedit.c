@@ -752,7 +752,6 @@ ThotBool DeleteAttrPoints (NotifyAttribute *event)
   /* prevents Thot from deleting the points attribute */
   return TRUE;
 }
- 
 
 /*----------------------------------------------------------------------
  AttrPointsModified
@@ -761,6 +760,51 @@ void AttrPointsModified (NotifyAttribute *event)
 {
   ParsePointsAttribute (event->attribute, event->element, event->document);
 }
+
+/*----------------------------------------------------------------------
+ AttrDxDyDelete
+ -----------------------------------------------------------------------*/
+ThotBool AttrDxDyDelete (NotifyAttribute *event)
+{
+  int                  ruleType;
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+
+  if (event->attributeType.AttrTypeNum == SVG_ATTR_dx)
+    ruleType = PRHorizPos;
+  else if (event->attributeType.AttrTypeNum == SVG_ATTR_dy)
+    ruleType = PRVertPos;
+  else
+    return (FALSE);
+  ctxt = TtaGetSpecificStyleContext (event->document);
+  ctxt->cssSpecificity = 0;
+  ctxt->destroy = TRUE;
+  pval.typed_data.value = 0;
+  pval.typed_data.unit = STYLE_UNIT_PX;
+  TtaSetStylePresentation (ruleType, event->element, NULL, ctxt, pval);
+  TtaFreeMemory (ctxt);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ AttrBaselineShiftChanged
+ -----------------------------------------------------------------------*/
+void AttrBaselineShiftChanged (NotifyAttribute *event)
+{
+  ParseBaselineShiftAttribute (event->attribute, event->element,
+			       event->document, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ AttrBaselineShiftDelete
+ -----------------------------------------------------------------------*/
+ThotBool AttrBaselineShiftDelete (NotifyAttribute *event)
+{
+  ParseBaselineShiftAttribute (event->attribute, event->element,
+			       event->document, TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
+
 #endif /* _SVG */
 
 /*----------------------------------------------------------------------

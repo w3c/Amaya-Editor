@@ -2307,6 +2307,12 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRHorizOverflow:
       *intRule = PtHorizOverflow;
       break;
+    case PtVertRef:
+      *intRule = PtVertRef;
+      break;
+    case PtHorizRef:
+      *intRule = PtHorizRef;
+      break;
     case PRHeight:
       *intRule = PtHeight;
       *absolute = TRUE;

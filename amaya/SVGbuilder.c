@@ -1799,6 +1799,76 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   ParseBaselineShiftAttribute
+   Process the baseline-shift attribute
+  ----------------------------------------------------------------------*/
+void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
+				  ThotBool delete)
+{
+  int                  length;
+  char                 *text, *ptr;
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+
+  /* allowed values are
+     baseline | sub | super | <percentage> | <length> | inherit */
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the value of the attribute */
+       TtaGiveTextAttributeValue (attr, text, &length);
+       /* parse the attribute value */
+       ptr = text;
+       /* skip space characters */
+       ptr = TtaSkipBlanks (ptr);
+       if (!strncmp (ptr, "baseline", 8))
+	 {
+	   pval.typed_data.value = 0;
+	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.real = FALSE;
+	 }
+       else if (!strncmp (ptr, "sub", 3))
+	 {
+	   pval.typed_data.value = -3;
+	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.real = FALSE;
+	 }
+       else if (!strncmp (ptr, "super", 5))
+	 {
+	   pval.typed_data.value = 4;
+	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.real = FALSE;
+	 }
+       else if (!strncmp (ptr, "inherit", 7))
+	 {
+	   pval.typed_data.value = 0;
+	   pval.typed_data.unit = STYLE_UNIT_REL;
+	   pval.typed_data.real = FALSE;
+	 }
+       else
+	 {
+	   /* parse <percentage> or <length> */
+	   ptr = ParseCSSUnit (ptr, &pval);
+	   if (pval.typed_data.unit == STYLE_UNIT_PERCENT)
+	     /* it's a percentage */
+	     {
+	       /* convert it into a relative size */
+	       pval.typed_data.unit = STYLE_UNIT_REL;
+	       pval.typed_data.value /= 10;
+	     }
+	 }
+       ctxt = TtaGetSpecificStyleContext (doc);
+       /* the specific presentation is not a CSS rule */
+       ctxt->cssSpecificity = 0;
+       ctxt->destroy = delete;
+       TtaSetStylePresentation (PRHorizRef, el, NULL, ctxt, pval);
+       TtaFreeMemory (ctxt);
+       TtaFreeMemory (text);
+     }
+}
+
+/*----------------------------------------------------------------------
    ParsePointsAttribute
    Process the points attribute
   ----------------------------------------------------------------------*/
@@ -2535,6 +2605,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	   leaf = CreateGraphicLeaf (el, doc, &closed);	   
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
+     case SVG_ATTR_baseline_shift:
+        ParseBaselineShiftAttribute (attr, el, doc, FALSE);
+        break;
      case SVG_ATTR_text_anchor:
         SetTextAnchor (attr, el, doc, FALSE);
         break;

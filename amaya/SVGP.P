@@ -1514,6 +1514,12 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  baseline_shift:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   clipPathUnits:
 	CreateBefore(AttrNameAndValue);
 
