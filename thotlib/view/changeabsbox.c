@@ -4060,6 +4060,26 @@ PtrDocument         pDoc;
 
    /* on ne traite que si le type de la regle permet l'heritage */
    if (typeRule == PtVisibility
+       || typeRule == PtMarginTop
+       || typeRule == PtMarginRight
+       || typeRule == PtMarginBottom
+       || typeRule == PtMarginLeft
+       || typeRule == PtPaddingTop
+       || typeRule == PtPaddingRight
+       || typeRule == PtPaddingBottom
+       || typeRule == PtPaddingLeft
+       || typeRule == PtBorderTopWidth
+       || typeRule == PtBorderRightWidth
+       || typeRule == PtBorderBottomWidth
+       || typeRule == PtBorderLeftWidth
+       || typeRule == PtBorderTopColor
+       || typeRule == PtBorderRightColor
+       || typeRule == PtBorderBottomColor
+       || typeRule == PtBorderLeftColor
+       || typeRule == PtBorderTopStyle
+       || typeRule == PtBorderRightStyle
+       || typeRule == PtBorderBottomStyle
+       || typeRule == PtBorderLeftStyle
        || typeRule == PtDepth
        || typeRule == PtSize
        || typeRule == PtStyle
@@ -4369,7 +4389,7 @@ PtrAttribute        pAttrComp;
    PtrPRule            pR, pRuleView1, pRNA, pRSpecif, pRS, firstOfType, pRP;
    PRuleType           typeRule;
    FunctionType        TFonct;
-   PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild;
+   PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild, pAbbSibling;
    PtrPSchema          pSchP, pSPR;
    PtrAttribute        pAttrib;
    PtrHandlePSchema    pHd;
@@ -4537,132 +4557,145 @@ PtrAttribute        pAttrComp;
 			 {
 			    pAbb = pEl->ElAbstractBox[view - 1];
 			    /* saute les paves de presentation de l'element */
-			    while (pAbb->AbNext != NULL && pAbb->AbPresentationBox && pAbb->AbElement == pEl)
+			    while (pAbb->AbNext != NULL &&
+				   pAbb->AbPresentationBox &&
+				   pAbb->AbElement == pEl)
 			       pAbb = pAbb->AbNext;
-				 appl = FALSE;
-				 /* on n'a pas applique' la regle */
-				 /* applique la regle au pave de l'element s'il n'est pas mort */
-				 if (!pAbb->AbDead)
-				    if (pR->PrType == typeRule && pR->PrViewNum == viewSch)
-				       /* regle specifique de la vue traitee */
-				       if (remove)
-					 {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
-					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
-					 }
-				       else
-					  appl = ApplyPresRuleAb (pR, pSchP, pAbb, pDoc, pAttr);
-				    else
-				       /* applique la regle de la vue 1 si elle existe */
-				       if (pRuleView1 != NULL)
-				          if (remove)
+			    appl = FALSE;
+			    /* on n'a pas applique' la regle */
+			    /* applique la regle au pave de l'element s'il n'est pas mort */
+			    if (!pAbb->AbDead)
+			      if (pR->PrType == typeRule && pR->PrViewNum == viewSch)
+				/* regle specifique de la vue traitee */
+				if (remove)
+				  {
+				    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
+				    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
+				  }
+				else
+				  appl = ApplyPresRuleAb (pR, pSchP, pAbb, pDoc, pAttr);
+			      else
+				/* applique la regle de la vue 1 si elle existe */
+				if (pRuleView1 != NULL)
+				  if (remove)
+				    {
+				      pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
+				      appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
+				    }
+				  else
+				    appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
+				else
+				  appl = FALSE;
+			    if (!appl)
+			      if (remove)
+				if (pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
+				  /* on desapplique une regle NotInLine */
+				  {
+				    pAbb->AbNotInLine = FALSE;
+				    appl = TRUE;
+				  }
+			    if (appl)
+			      /* on a change' la presentation du pave */
+			      {
+				if (!remove)
+				  /* ce n'est pas une suppression d'attribut */
+				  /* cherche si l'element possede pour cette vue une */
+				  /* regle de presentation specifique de meme type que */
+				  /* celle qu'on vient d'appliquer */
+				  {
+				    pRSpecif = pEl->ElFirstPRule;
+				    pRP = NULL;
+				    stop = FALSE;
+				    do
+				      {
+					if (pRSpecif == NULL)
+					  stop = TRUE;
+					else if (pRSpecif->PrViewNum == viewSch &&
+						 pRSpecif->PrType == typeRule)
+					  if (typeRule == PtFunction)
 					    {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
-					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
+					      if (pR->PrPresFunction == pRSpecif->PrPresFunction)
+						stop = TRUE; /* trouve'*/
 					    }
-				          else
-					    appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
-				       else
-				          appl = FALSE;
-				 if (!appl)
-				    if (remove)
-				       if (pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
-					  /* on desapplique une regle NotInLine */
-                                          {
-                                          pAbb->AbNotInLine = FALSE;
-                                          appl = TRUE;
-                                          }
-				 if (appl)
-				    /* on a change' la presentation du pave */
-				   {
-				      if (!remove)
-					 /* ce n'est pas une suppression d'attribut */
-					 /* cherche si l'element possede pour cette vue une */
-					 /* regle de presentation specifique de meme type que */
-					 /* celle qu'on vient d'appliquer */
+					  else
+					    stop = TRUE;	/* trouve' */
+					if (!stop)
+					  {
+					    pRP = pRSpecif;
+					    pRSpecif = pRSpecif->PrNextPRule;
+					  }
+				      }
+				    while (!stop);
+				    if (pRSpecif != NULL)
+				      /* l'element possede cette regle specifique, on */
+				      /* la supprime : l'attribut a priorite' sur la */
+				      /* presentation specifique */
+				      {
+					pRS = pRSpecif->PrNextPRule;
+					if (pRP == NULL)
+					  /* c'etait la 1ere */
+					  pEl->ElFirstPRule = pRS;
+					else
+					  pRP->PrNextPRule = pRS;
+					FreePresentRule (pRSpecif);
+					/* libere la regle */
+				      }
+				  }
+				
+				if (pAbb->AbVisibility <= 0)
+				  /* l'attribut rend le pave invisible */
+				  {
+				    pAbb = pEl->ElAbstractBox[view - 1];
+				    /* 1er pave a tuer */
+				    pReaff = pAbb;
+				    /* on reaffichera au moins ce pave */
+				    do
+				      /* on tue tous les paves de l'element */
+				      {
+					SetDeadAbsBox (pAbb);
+					/* tue un pave */
+					/* change les regles des autres paves qui se */
+					/* referent au pave detruit */
+					ApplyRefAbsBoxSupp (pAbb, &pPR, pDoc);
+					pReaff = Enclosing (pReaff, pPR);
+					pAbb = pAbb->AbNext;
+					if (pAbb == NULL)
+					  stop = TRUE;
+					else if (pAbb->AbElement != pEl)
+					  stop = TRUE;
+					else
+					  stop = FALSE;
+				      }
+				    while (!stop);
+				  }
+				
+				else
+				  /* le pave est toujours visible, mais a change' */
+				  {
+				    pReaff = pAbb;
+				    SetChange (pAbb, typeRule);
+				    /* le parametre de presentation qui vient
+				       d'etre change' peut se transmettre par
+				       heritage. */
+				    /* On traite le sous-arbre. */
+				    pAbbChild = pAbb->AbFirstEnclosed;
+				    while (pAbbChild != NULL)
+				      {
+					ApplyInheritPresRule (pAbbChild, typeRule, pDoc);
+					pAbbChild = pAbbChild->AbNext;
+				      }
+				    /* on traite les pavés freres */
+				    if (pAbb->AbEnclosing)
+				      {
+				      pAbbSibling = pAbb->AbEnclosing->AbFirstEnclosed;
+				      while (pAbbSibling != NULL)
 					{
-					   pRSpecif = pEl->ElFirstPRule;
-					   pRP = NULL;
-					   stop = FALSE;
-					   do
-					      {
-					      if (pRSpecif == NULL)
-						 stop = TRUE;
-					      else if (pRSpecif->PrViewNum == viewSch &&
-					       pRSpecif->PrType == typeRule)
-						 if (typeRule == PtFunction)
-						   {
-						   if (pR->PrPresFunction == pRSpecif->PrPresFunction)
-						      stop = TRUE; /* trouve'*/
-						   }
-						 else
-						   stop = TRUE;	/* trouve' */
-					      if (!stop)
-						{
-						   pRP = pRSpecif;
-						   pRSpecif = pRSpecif->PrNextPRule;
-						}
-					      }
-					   while (!stop);
-					   if (pRSpecif != NULL)
-					      /* l'element possede cette regle specifique, on */
-					      /* la supprime : l'attribut a priorite' sur la */
-					      /* presentation specifique */
-					     {
-						pRS = pRSpecif->PrNextPRule;
-						if (pRP == NULL)
-						   /* c'etait la 1ere */
-						   pEl->ElFirstPRule = pRS;
-						else
-						   pRP->PrNextPRule = pRS;
-						FreePresentRule (pRSpecif);
-						/* libere la regle */
-					     }
+					  ApplyInheritPresRule (pAbbSibling, typeRule, pDoc);
+					  pAbbSibling = pAbbSibling->AbNext;
 					}
-
-				      if (pAbb->AbVisibility <= 0)
-					 /* l'attribut rend le pave invisible */
-					{
-					   pAbb = pEl->ElAbstractBox[view - 1];
-					   /* 1er pave a tuer */
-					   pReaff = pAbb;
-					   /* on reaffichera au moins ce pave */
-					   do
-					      /* on tue tous les paves de l'element */
-					     {
-						SetDeadAbsBox (pAbb);
-						/* tue un pave */
-						/* change les regles des autres paves qui se */
-						/* referent au pave detruit */
-						ApplyRefAbsBoxSupp (pAbb, &pPR, pDoc);
-						pReaff = Enclosing (pReaff, pPR);
-						pAbb = pAbb->AbNext;
-						if (pAbb == NULL)
-						   stop = TRUE;
-						else if (pAbb->AbElement != pEl)
-						   stop = TRUE;
-						else
-						   stop = FALSE;
-					     }
-					   while (!stop);
-					}
-
-				      else
-					 /* le pave est toujours visible, mais a change' */
-					{
-					   pReaff = pAbb;
-					   SetChange (pAbb, typeRule);
-					   /* le parametre de presentation qui vient d'etre */
-					   /* change' peut se transmettre au sous-arbre par */
-					   /* heritage. On traite le sous-arbre. */
-					   pAbbChild = pAbb->AbFirstEnclosed;
-					   while (pAbbChild != NULL)
-					     {
-						ApplyInheritPresRule (pAbbChild, typeRule, pDoc);
-						pAbbChild = pAbbChild->AbNext;
-					     }
-					}
-				   }
+				      }
+				  }
+			      }
 			 }
 
 		       if (pEl->ElAbstractBox[view - 1] != NULL
