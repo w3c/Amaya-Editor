@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ClipError ( int frame );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
 extern void DrawChar ( UCHAR_T car,
@@ -389,7 +388,6 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void ClipError (/* int frame */);
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
 extern void DrawChar (/* UCHAR_T car,

@@ -416,6 +416,7 @@ CHAR_T*             name;
 
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
@@ -426,7 +427,6 @@ static void InitGraphicContexts (void)
 static void InitGraphicContexts ()
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
 #ifndef _GTK
   unsigned long       valuemask;
   XGCValues           GCmodel;
@@ -434,9 +434,7 @@ static void InitGraphicContexts ()
   int                 white;
   int                 black;
   Pixmap              pix;
-#endif /* _WINDOWS */
 
-#ifndef _WINDOWS
 #ifdef _GTK
    gdk_rgb_init ();
    white = ColorNumber ("White");
@@ -546,16 +544,8 @@ static void InitGraphicContexts ()
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
 #endif /* _GTK */
-
-#else /* _WINDOWS */
-   TtLineGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_PEN;
-   TtLineGC.foreground = 1;
-
-   if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
-      WinErrorBox (WIN_Main_Wd, TEXT("InitGraphicContexts"));
-   WIN_LastBitmap = 0;
-#endif /* _WINDOWS */
 }
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -579,7 +569,10 @@ int                 dy;
 
    InitDocColors (name);
    InitColors (name);
-   InitGraphicContexts ();
+   
+   if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
+      WinErrorBox (WIN_Main_Wd, TEXT("Init"));
+   WIN_LastBitmap = 0;
    InitCurs ();
    WIN_InitDialogueFonts (TtDisplay, name);
 

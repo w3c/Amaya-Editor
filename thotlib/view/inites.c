@@ -41,37 +41,7 @@ static int             allocation_index[256];
 static int             have_colors = 0;
 
 
-#ifdef _WINDOWS
-
-/*----------------------------------------------------------------------
- *      WinLoadGC has to be called before using an GC X-Windows
- *         emulation under MS-Windows.
- *   Full description of Device Context Attributes : Petzolt p 102
- ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WinLoadGC (HDC hDC, int fg, int RO)
-#else  /* __STDC__ */
-void WinLoadGC (hDC, fg, RO)
-HDC hDC;
-int fg;
-int RO;
-#endif /* __STDC__ */
-{
-  if (TtLineGC.capabilities & THOT_GC_PEN)
-    TtLineGC.foreground = fg;
-  
-  if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
-    SetTextColor (hDC, ColorPixel (fg));
-  
-  if (TtLineGC.capabilities & THOT_GC_BACKGROUND)
-    {
-      SetBkMode (hDC, OPAQUE);
-      SetBkColor (hDC, TtLineGC.background);
-    }
-  else 
-    SetBkMode (hDC, TRANSPARENT);
-}
-#else /* _WINDOWS */
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
@@ -184,8 +154,7 @@ ThotColorStruct  *colr;
 static void InstallColor (int i)
 #else  /* __STDC__ */
 static void InstallColor (i)
-int                 i;
-
+int         i;
 #endif /* __STDC__ */
 {
 
@@ -769,23 +738,10 @@ int         motif;
 #ifdef _GTK
    ThotColorStruct     gdkFgPixel;
    ThotColorStruct     gdkBgPixel;
-
 #endif /* _GTK */
 
-#ifndef _WIN_PRINT
-   if (active)
-     {
-	/* Color for active boxes */
-	FgPixel = Box_Color;
-	BgPixel = ColorPixel (bg);
-     }
-   else
-#endif /* _WIN_PRINT */
-     {
-	FgPixel = ColorPixel (fg);
-	BgPixel = ColorPixel (bg);
-     }
-
+   FgPixel = ColorPixel (fg);
+   BgPixel = ColorPixel (bg);
 #ifdef _GTK
    gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
    gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
