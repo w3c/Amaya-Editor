@@ -1494,7 +1494,7 @@ TextTRANSLATE Grec
 	'''' -> '&SuchThat;';
 	'\74' -> '&lt;';
 	
-	'\100' -> '&Congruent;';
+	'\100' -> '&cong;';
 	'\101' -> '&Agr;';
 	'\102' -> '&Bgr;';
 	'\103' -> '&KHgr;';
