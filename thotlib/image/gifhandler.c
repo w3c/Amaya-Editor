@@ -861,10 +861,11 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
-  The parameter bperpix gives the number of bytes per pixel.
+  The parameter ncolors
   ----------------------------------------------------------------------*/
-XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
-		   int depth, ThotColorStruct *colrs, int bperpix)
+static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
+			  int height, int depth, ThotColorStruct *colrs,
+			  int ncolors)
 {
   XImage             *newimage = NULL;
   unsigned char      *bit_data, *bitp;
@@ -884,8 +885,22 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
     {
     case 6:
     case 8:
+      /* translate palette colors into X colors */
+      for (ind = 0; ind < ncolors; ind++)
+	{
+	  temp = TtaGetThotColor (colrs[ind].red /256,
+    				 colrs[ind].green / 256,
+   				 colrs[ind].blue / 256);
+	  colrs[ind].pixel = ColorPixel (temp);
+	}
       bit_data = (unsigned char *) TtaGetMemory (width * height);
-      bcopy (data, bit_data, (width * height));
+      ind = 0; /* pixel index */
+      for (h = 0; h < height; h++)
+	  for (w = 0; w < width; w++)
+	    {
+	      bit_data[ind] = (unsigned char)colrs[data[ind]].pixel;
+	      ind ++;
+	    }
       bytesperline = width;
       newimage = XCreateImage (dsp,
 			       theVisual,
@@ -895,6 +910,14 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
     case 1:
     case 2:
     case 4:
+      /* translate palette colors into X colors */
+      for (ind = 0; ind < ncolors; ind++)
+	{
+	  temp = TtaGetThotColor (colrs[ind].red /256,
+    				 colrs[ind].green / 256,
+   				 colrs[ind].blue / 256);
+	  colrs[ind].pixel = ColorPixel (temp);
+	}
       if (BitmapBitOrder (dsp) == LSBFirst)
 	{
 	  shiftstart = 0;
@@ -917,7 +940,7 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
 	{
 	  for (w = 0; w < width; w++)
 	    {
-	      temp = data[ind++] << shiftnum;
+	      temp = ((unsigned char)colrs[data[ind++]].pixel) << shiftnum;
 	      *bitp = *bitp | temp;
 	      shiftnum = shiftnum + shiftinc;
 	      if (shiftnum == shiftstop)
@@ -956,7 +979,7 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
       bshift = gshift + nbbits (theVisual->green_mask);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 1)
+	  if (ncolors <= 256)
 	    /* use one byte per pixel */
 	    col = data[ind++];
 	  else
@@ -1003,7 +1026,7 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
       useMSB = (newimage->bits_per_pixel > 24);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 1)
+	  if (ncolors <= 256)
 	    /* use one byte per pixel */
 	    col = data[ind++];
 	  else
@@ -1198,7 +1221,8 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   size = width * height;
   if (size == 0)
     return ((Pixmap)NULL);
-  image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs, bperpix);
+  image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,
+		     ncolors);
   img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
 #ifndef _GTK 
   XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);

@@ -131,7 +131,7 @@ void StructEditingLoadResources ()
 	TteConnectAction (T_rcinsertpaste, (Proc) CreatePasteIncludeMenuCallback);
 	TteConnectAction (T_rchoice, (Proc) ChoiceMenuCallback);
 	EditingLoadResources ();
-    }
+     }
 }
 
 
