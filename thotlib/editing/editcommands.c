@@ -102,9 +102,9 @@ static ThotBool     FromKeyboard;
    CopyString computes the width of the source text and copies it into the
    target buffer if target parameter is not NULL.
   ----------------------------------------------------------------------*/
-static void CopyString (Buffer source, Buffer target, int count, ptrfont font,
-			int *sourceInd, int *targetInd, int *width, int *nSpaces,
-			int *nChars)
+static void CopyString (Buffer source, Buffer target, int count,
+			SpecFont font, int *sourceInd, int *targetInd,
+			int *width, int *nSpaces, int *nChars)
 {
   int                 nb;
   CHAR_T              car;
@@ -127,7 +127,7 @@ static void CopyString (Buffer source, Buffer target, int count, ptrfont font,
 	  (*nChars)++;
 	  if (car == SPACE)
             (*nSpaces)++;
-	  *width += CharacterWidth (car, font);
+	  *width += BoxCharacterWidth (car, font);
 	}
     }
 }
@@ -700,7 +700,7 @@ static PtrTextBuffer GetNewBuffer (PtrTextBuffer pBuffer, int frame)
    - le pointeur sur le dernier buffer destination utilise.        
    - la largeur, le nombre de blancs et de caracteres copies.      
   ----------------------------------------------------------------------*/
-static void CopyBuffers (ptrfont font, int frame, int startInd, int endInd,
+static void CopyBuffers (SpecFont font, int frame, int startInd, int endInd,
 			 int targetInd, PtrTextBuffer pSourceBuffer,
 			 PtrTextBuffer pEndBuffer,
 			 PtrTextBuffer *pTargetBuffer,
@@ -743,7 +743,9 @@ static void CopyBuffers (ptrfont font, int frame, int startInd, int endInd,
 	if (sourceLength <= targetlength)
 	  {
 	    /* end of source buffer */
-	    CopyString (pBuffer->BuContent, target, sourceLength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
+	    CopyString (pBuffer->BuContent, target, sourceLength,
+			font, &sourceInd, &targetInd, width, nSpaces,
+			nChars);
 	    if (pBuffer == pEndBuffer)
 	      pBuffer = NULL;
 	    else
@@ -753,7 +755,9 @@ static void CopyBuffers (ptrfont font, int frame, int startInd, int endInd,
 	else
 	  {
 	    /* end of target buffer */
-	    CopyString (pBuffer->BuContent, target, targetlength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
+	    CopyString (pBuffer->BuContent, target, targetlength,
+			font, &sourceInd, &targetInd, width, nSpaces,
+			nChars);
 	    (*pTargetBuffer)->BuLength = FULL_BUFFER;
 	    (*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = EOS;
 	    *pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
@@ -1390,64 +1394,64 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 			     int ind, PtrTextBuffer pBuffer, PtrAbstractBox pAb,
 			     int frame, PtrTextBuffer clipboard)
 {
-   PtrTextBuffer       pTargetBuffer;
-   ViewFrame          *pFrame;
-   int                 i;
-   PictInfo           *image;
+  PtrTextBuffer       pTargetBuffer;
+  ViewFrame          *pFrame;
+  PictInfo           *image;
+  int                 i;
 
-   /* detruit la sauvegarde precedente */
-   ClearClipboard (clipboard);
-
-   /* sauve la selection courante */
-   if (pAb != NULL)
-     {
-	if (pAb->AbVolume != 0)
-	  {
-	     ClipboardType = pAb->AbLeafType;
-	     ClipboardLanguage = TtaGetDefaultLanguage ();
-	     if (pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtGraphics)
-	       {
-		  clipboard->BuLength = 1;
-		  clipboard->BuContent[0] = pAb->AbShape;
-		  /* caractere trace ou symbole */
-		  clipboard->BuContent[1] = EOS;
-	       }
-	     else if (pAb->AbLeafType == LtPicture)
-	       {
-		  image = (PictInfo *) pAb->AbPictInfo;
-		  i = strlen (image->PicFileName);
-		  /* nom du fichier image */
-		  CopyMBs2Buffer (image->PicFileName, clipboard, 0, i);
-		  CopyPictInfo ((int *) &PictClipboard, (int *) image);
-	       }
-	     else
-	       {
-		  pFrame = &ViewFrameTable[frame - 1];
-		  if (pAb->AbLeafType == LtText && *charsDelta < pAb->AbVolume)
-		    {
-		       /* enable the Paste command */
-		       if (FirstSavedElement == NULL &&
-			   ClipboardThot.BuLength == 0)
-			 /* switch the Paste entry in all documents */
-			 SwitchPaste (NULL, TRUE);
-
-		       ClipboardLanguage = pAb->AbLanguage;
-		       /* sauve le texte selectionne dans la feuille */
-		       i = 1;	/* Indice de debut */
-		       pTargetBuffer = &ClipboardThot;
-		       CopyBuffers (pAb->AbBox->BxFont, frame, ind,
-				    pFrame->FrSelectionEnd.VsIndBuf, i, pBuffer, pFrame->FrSelectionEnd.VsBuffer,
-			   &pTargetBuffer, xDelta, spacesDelta, charsDelta);
-		    }
-		  else
-		    {
-		       *xDelta = 0;
-		       *charsDelta = 0;
-		       *spacesDelta = 0;
-		    }
-	       }
-	  }
-     }
+  /* detruit la sauvegarde precedente */
+  ClearClipboard (clipboard);
+  /* sauve la selection courante */
+  if (pAb != NULL)
+    {
+      if (pAb->AbVolume != 0)
+	{
+	  ClipboardType = pAb->AbLeafType;
+	  ClipboardLanguage = TtaGetDefaultLanguage ();
+	  if (pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtGraphics)
+	    {
+	      clipboard->BuLength = 1;
+	      clipboard->BuContent[0] = pAb->AbShape;
+	      /* caractere trace ou symbole */
+	      clipboard->BuContent[1] = EOS;
+	    }
+	  else if (pAb->AbLeafType == LtPicture)
+	    {
+	      image = (PictInfo *) pAb->AbPictInfo;
+	      i = strlen (image->PicFileName);
+	      /* nom du fichier image */
+	      CopyMBs2Buffer (image->PicFileName, clipboard, 0, i);
+	      CopyPictInfo ((int *) &PictClipboard, (int *) image);
+	    }
+	  else
+	    {
+	      pFrame = &ViewFrameTable[frame - 1];
+	      if (pAb->AbLeafType == LtText && *charsDelta < pAb->AbVolume)
+		{
+		  /* enable the Paste command */
+		  if (FirstSavedElement == NULL &&
+		      ClipboardThot.BuLength == 0)
+		    /* switch the Paste entry in all documents */
+		    SwitchPaste (NULL, TRUE);
+		  
+		  ClipboardLanguage = pAb->AbLanguage;
+		  /* sauve le texte selectionne dans la feuille */
+		  i = 1;	/* Indice de debut */
+		  pTargetBuffer = &ClipboardThot;
+		  CopyBuffers (pAb->AbBox->BxFont, frame, ind,
+			       pFrame->FrSelectionEnd.VsIndBuf, i,
+			       pBuffer, pFrame->FrSelectionEnd.VsBuffer,
+			       &pTargetBuffer, xDelta, spacesDelta, charsDelta);
+		}
+	      else
+		{
+		  *xDelta = 0;
+		  *charsDelta = 0;
+		  *spacesDelta = 0;
+		}
+	    }
+	}
+    }
 }
 
 
@@ -1467,7 +1471,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   PictInfo           *image;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
-  ptrfont             font;
+  SpecFont             font;
   int                 sourceInd, targetInd;
   int                 length;
   int                 i;
@@ -1476,8 +1480,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   int                 width, height;
 
   font = pBox->BxFont;
-  width = CharacterWidth (109, font);
-  height = FontHeight (font);
+  width = BoxCharacterWidth (109, font);
+  height = BoxFontHeight (font);
   if (pAb->AbVolume == 0)
     DefClip (frame, 0, 0, 0, 0);
   else
@@ -1571,7 +1575,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	if (pBox->BxSpaceWidth != 0)
 	  {
 	    /* Si la boite est adjustifiee */
-	    i = CharacterWidth (SPACE, font);
+	    i = BoxCharacterWidth (SPACE, font);
 	    adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
 	  }
 	else
@@ -1695,7 +1699,8 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 	      /* index of the beginning */
 	      i = 1;
 	      pTargetBuffer = NULL;
-	      CopyBuffers (pBox->BxFont, frame, pFrame->FrSelectionBegin.VsIndBuf,
+	      CopyBuffers (pBox->BxFont, frame,
+			   pFrame->FrSelectionBegin.VsIndBuf,
 			   pFrame->FrSelectionEnd.VsIndBuf, i,
 			   pFrame->FrSelectionBegin.VsBuffer,
 			   pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
@@ -1731,14 +1736,14 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
    int                 xDelta, yDelta;
    int                 spacesDelta, charsDelta;
    int                 adjust;
-   ptrfont             font;
+   SpecFont             font;
    int                 height;
    int                 width;
    PictInfo           *image;
 
    font = pBox->BxFont;
    width = 2; /* see GiveTextSize function */
-   height = FontHeight (font);
+   height = BoxFontHeight (font);
 
    switch (pAb->AbLeafType)
 	 {
@@ -1770,7 +1775,9 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 
 	       /* Insertion des caracteres */
 	       pNewBuffer = pBuffer;
-	       CopyBuffers (font, frame, 1, 0, ind, clipboard, NULL, &pNewBuffer, &xDelta, &spacesDelta, &charsDelta);
+	       CopyBuffers (font, frame, 1, 0, ind, clipboard, NULL,
+			    &pNewBuffer, &xDelta, &spacesDelta,
+			    &charsDelta);
 	       /* index fin d'insertion */
 	       endInd = pNewBuffer->BuLength + 1;
 
@@ -1802,7 +1809,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	       if (pBox->BxSpaceWidth != 0)
 		 {
 		    /* Si la boite est adjustifiee */
-		    i = CharacterWidth (SPACE, font);
+		    i = BoxCharacterWidth (SPACE, font);
 		    adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
 		 }
 	       else
@@ -2443,7 +2450,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
   ViewFrame          *pFrame;
-  ptrfont             font;
+  SpecFont            font;
   LeafType            nat;
   Propagation         savePropagate;
   int                 xx, xDelta, adjust;
@@ -2510,7 +2517,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	      /* prend la boite d'alphabet courant ou au besoin */
 	      /* cree un nouveau texte avec le bon alphabet */
 	      if (!toDelete)
-		notification = GiveAbsBoxForLanguage (frame, &pAb, keyboard);
+		notification = GiveAbsBoxForLanguage (frame, &pAb,
+						      keyboard);
 	      if (notification)
 		/* selection could be modified by the application */
 		InsertChar (frame, c, keyboard);
@@ -2519,7 +2527,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		  /* selection could not be modified by the application */
 
 		  /* Recherche le point d'insertion du texte */
-		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &xx,
+		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer,
+				   &ind, &xx,
 				   &previousChars);
 		  
 		  if (pAb != NULL)
@@ -2530,7 +2539,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      
 		      /* initialise l'insertion */
 		      if (!TextInserting)
-			StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind,
+			StartTextInsertion (pAb, frame, pSelBox,
+					    pBuffer, ind,
 					    previousChars);
 		      font = pSelBox->BxFont;
 		      
@@ -2685,7 +2695,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				&& pSelBox->BxNChars == 1)
 			      {
 				/* Mise a jour des marques */
-				xDelta = CharacterWidth (109, font);
+				xDelta = BoxCharacterWidth (109, font);
 				pViewSel->VsXPos = 0;
 				pViewSel->VsIndBox = 0;
 				pViewSel->VsNSpaces = 0;
@@ -2719,7 +2729,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
-				    xDelta = CharacterWidth (109, font);
+				    xDelta = BoxCharacterWidth (109, font);
 				    pFrame->FrClipXBegin = pSelBox->BxXOrg;
 				    /* Mise a jour de la selection */
 				    pSelBox = pAb->AbBox;
@@ -2739,7 +2749,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  }
 				else
 				  {
-				    xDelta = -CharacterWidth (c, font);
+				    xDelta = - BoxCharacterWidth (c, font);
 				    pViewSel->VsBox = pSelBox;
 				    if (pViewSel->VsLine != NULL)
 				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
@@ -2760,7 +2770,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				/* Le bloc de ligne et marques de selection sont reevalues */
 				/* il faut reevaluer la mise en ligne */
 				toSplit = TRUE;
-				xDelta = -CharacterWidth (c, font);
+				xDelta = - BoxCharacterWidth (c, font);
 				if (previousChars == 0)
 				  {
 				    /* Si la selection est en debut de boite  */
@@ -2777,7 +2787,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 					pBox = pAb->AbBox;
 					/* Est-ce que la boite devient vide ? */
 					if (pBox->BxNChars == 1)
-					  xDelta = CharacterWidth (109, font) - pBox->BxWidth;
+					  xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
 				      }
 				    /* Reevaluation du debut de la boite coupee ? */
 				    else if (pBox->BxIndChar == 0)
@@ -2793,8 +2803,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      {
 				if (c == SPACE)
 				  {
-				    xDelta = -CharacterWidth (SPACE, font);
-				    adjust = -pSelBox->BxSpaceWidth;
+				    xDelta = - BoxCharacterWidth (SPACE, font);
+				    adjust = - pSelBox->BxSpaceWidth;
 				    if (adjust < 0)
 				      {
 					if (pSelBox->BxNPixels >= pViewSel->VsNSpaces)
@@ -2805,7 +2815,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  /* Caractere Nul */
 				  xDelta = 0;
 				else
-				  xDelta = -CharacterWidth (c, font);
+				  xDelta = - BoxCharacterWidth (c, font);
 				
 				pFrame->FrClipXBegin += xDelta;
 				/* Mise a jour de la selection dans la boite */
@@ -2861,7 +2871,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
 			    {
 			      /* Mise a jour des marques */
-			      xDelta = CharacterWidth (c, font);
+			      xDelta = BoxCharacterWidth (c, font);
 			      pViewSel->VsXPos = xDelta;
 			      pViewSel->VsIndBox = charsDelta;
 			      pViewSel->VsNSpaces = spacesDelta;
@@ -2894,7 +2904,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    {
 			      /* Prepare la mise a jour de la boite */
 			      toSplit = TRUE;
-			      xDelta = CharacterWidth (c, font);
+			      xDelta = BoxCharacterWidth (c, font);
 			      
 			      if (c == SPACE)
 				adjust = pSelBox->BxSpaceWidth;
@@ -2919,7 +2929,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    {
 			      if (c == SPACE)
 				{
-				  xDelta = CharacterWidth (SPACE, font);
+				  xDelta = BoxCharacterWidth (SPACE, font);
 				  adjust = pSelBox->BxSpaceWidth;
 				  if (adjust > 0)
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
@@ -2930,13 +2940,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
-				  xDelta = CharacterWidth (c, font);
+				  xDelta = BoxCharacterWidth (c, font);
 				}
 			      else if (c == EOS)
 				/* Caractere Nul */
 				xDelta = 0;
 			      else
-				xDelta = CharacterWidth (c, font);
+				xDelta = BoxCharacterWidth (c, font);
 			      
 			      /* Est-ce une insertion en debut de boite ? */
 			      if (previousChars == 0)

@@ -37,8 +37,11 @@ and must be removed at the end of the debug */
   It should be displayed as a & and should be exported as &
   instead of &amp;
 */
-#define START_ENTITY 26
-
+#define START_ENTITY        26
+/*
+  A character Unicode that cannot be displayed
+*/
+#define UNDISPLAYED_UNICODE 27
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
 

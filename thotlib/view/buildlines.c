@@ -182,7 +182,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	{
 	  if (pBox->BxAbstractBox->AbLeafType == LtText)
 	    {
-	      delta = pBox->BxNSpaces * CharacterWidth (SPACE, pBox->BxFont);
+	      delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, pBox->BxFont);
 	      pBox->BxW -= delta;
 	      pBox->BxWidth -= delta;
 	      nSpaces += pBox->BxNSpaces;
@@ -340,7 +340,7 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
   PtrBox              ibox1, ibox2;
   PtrBox              pPreviousBox, pNextBox;
   PtrAbstractBox      pAb;
-  ptrfont             font;
+  SpecFont            font;
   int                 baseline;
   int                 height;
 
@@ -502,8 +502,8 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 			       PtrTextBuffer *pNewBuff, int *wordWidth)
 {
   PtrTextBuffer       pBuffer;
-  ptrfont             font;
-  CHAR_T             character;
+  SpecFont            font;
+  CHAR_T              character;
   int                 i, j, l;
   int                 nChars;
   int                 wWidth;
@@ -538,7 +538,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	{
 	  /* It's a break element */
 	  found = TRUE;
-	  *breakWidth = CharacterWidth (BREAK_LINE, font);
+	  *breakWidth = BoxCharacterWidth (BREAK_LINE, font);
 	  if (i >= pBuffer->BuLength)
 	    {
 	      /* get the next buffer */
@@ -567,7 +567,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	  if (character == SPACE || character == NEW_LINE)
 	    {
 	      (*nSpaces)++;
-	      *boxWidth += CharacterWidth (SPACE, font);
+	      *boxWidth += BoxCharacterWidth (SPACE, font);
 	      /* compare word widths */
 	      if (*wordWidth < wWidth)
 		*wordWidth = wWidth;
@@ -575,7 +575,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	    }
 	  else
 	    {
-	      l = CharacterWidth (character, font);
+	      l = BoxCharacterWidth (character, font);
 	      *boxWidth += l;
 	      wWidth += l;
 	    }
@@ -619,7 +619,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
   - pNewBuff = the buffer that contains the next character after the break.
   - newIndex = the index the next character after the break in that buffer.
   ----------------------------------------------------------------------*/
-static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
+static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 			int *boxLength, int *boxWidth, int *nSpaces,
 			int *newIndex, PtrTextBuffer *pNewBuff)
 {
@@ -655,7 +655,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   wordLength = 0;
   spaceCount = 0;
   still = TRUE;
-  spaceWidth = CharacterWidth (SPACE, font);
+  spaceWidth = BoxCharacterWidth (SPACE, font);
   spaceAdjust = spaceWidth;
   language = pBox->BxAbstractBox->AbLanguage;
 
@@ -683,7 +683,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
       else if (character == SPACE || character == NEW_LINE)
 	carWidth = spaceAdjust;
       else
-	carWidth = CharacterWidth (character, font);
+	carWidth = BoxCharacterWidth (character, font);
 
       if ((newWidth + carWidth > max || i >= count) && i != 0)
 	{
@@ -925,7 +925,8 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 	      width = max;
 	      pBuffer = pBox->BxBuffer;
 	      charIndex = pBox->BxFirstChar;
-	      wordLength = HyphenLastWord (font, language, &pBuffer, &charIndex, &width, &still);
+	      wordLength = HyphenLastWord (font, language, &pBuffer,
+					   &charIndex, &width, &still);
 	      if (wordLength > 0)
 		{
 		  /* we can insert an hyphen, we update the break point */
@@ -939,7 +940,8 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 	    {
 	      /* try to hyphen the last word */
 	      width = max - *boxWidth - dummySpaces * spaceAdjust;
-	      wordLength = HyphenLastWord (font, language, pNewBuff, newIndex, &width, &still);
+	      wordLength = HyphenLastWord (font, language, pNewBuff,
+					   newIndex, &width, &still);
 	    }
 	  
 	  if (wordLength > 0)
@@ -969,7 +971,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
     {
       /* generate an hyphen */
       dummySpaces = -1;
-      *boxWidth += CharacterWidth (173, font);
+      *boxWidth += BoxCharacterWidth (173, font);
       
       /* remove one or more characters corresponding to the hyphen width */
       while (*boxWidth > max && *boxLength > 1)
@@ -986,7 +988,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 	  else
 	    (*newIndex)--;
 	  
-	  *boxWidth -= CharacterWidth (character, font);
+	  *boxWidth -= BoxCharacterWidth (character, font);
 	  (*boxLength)--;
 	}
     }
@@ -1040,7 +1042,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
   PtrBox              pPreviousBox, pNextBox;
   PtrTextBuffer       pNewBuff;
   PtrAbstractBox      pAb;
-  ptrfont             font;
+  SpecFont            font;
   int                 baseline, width;
   int                 newIndex, height;
   int                 spaceWidth, lostPixels;
@@ -1054,14 +1056,15 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
   font = pBox->BxFont;
 
   /* search a break */
-  lostPixels = SearchBreak (pLine, pBox, max, font, &length, &width, &nSpaces, &newIndex, &pNewBuff);
+  lostPixels = SearchBreak (pLine, pBox, max, font, &length,
+			    &width, &nSpaces, &newIndex, &pNewBuff);
 
   if (lostPixels <= 0)
     /* don't break on a space */
     spaceWidth = 0;
   else
     /* break on a space */
-    spaceWidth = CharacterWidth (SPACE, font);
+    spaceWidth = BoxCharacterWidth (SPACE, font);
 
   /*
    * Generate two pieces:
@@ -1123,7 +1126,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
 	{
 	  /* add the hyphen at the end */
 	  ibox1->BxType = BoDotted;
-	  width -= CharacterWidth (173, font);
+	  width -= BoxCharacterWidth (173, font);
 	  lostPixels = 0;
 	}
       else
@@ -1201,7 +1204,7 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   PtrBox              ibox2, pNextBox;
   PtrTextBuffer       pNewBuff;
   PtrAbstractBox      pAb;
-  ptrfont             font;
+  SpecFont            font;
   int                 oldWidth, oldnSpaces;
   int                 oldlg, spaceWidth;
   int                 length;
@@ -1222,13 +1225,14 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   oldnSpaces = pBox->BxNSpaces;
 
   /* search a break */
-  lostPixels = SearchBreak (pLine, pBox, max, font, &length, &width, &nSpaces, &newIndex, &pNewBuff);
+  lostPixels = SearchBreak (pLine, pBox, max, font, &length, &width,
+			    &nSpaces, &newIndex, &pNewBuff);
   if (lostPixels <= 0)
     /* don't break on a space */
     spaceWidth = 0;
   else
     /* break on a space */
-    spaceWidth = CharacterWidth (SPACE, font);
+    spaceWidth = BoxCharacterWidth (SPACE, font);
 
   /*
    * Generate a new piece:
@@ -1265,7 +1269,7 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
 	{
 	  /* add the hyphen at the end */
 	  pBox->BxType = BoDotted;
-	  width -= CharacterWidth (173, font);
+	  width -= BoxCharacterWidth (173, font);
 	  lostPixels = 0;
 	}
       else
@@ -1764,7 +1768,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
       pAb = pBox->BxAbstractBox;
       if (pAb != NULL && pAb->AbLeafType == LtText)
 	{
-	  x = CharacterWidth (SPACE, pBox->BxFont);
+	  x = BoxCharacterWidth (SPACE, pBox->BxFont);
 	  if (pFrame->FrSelectionBegin.VsBox == pBox)
 	    {
 	      /* need to update the current selection */
@@ -1810,7 +1814,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		  if (pBox->BxType == BoDotted)
 		    {
 		      /* remove the hyphen width */
-		      width -= CharacterWidth (173, pBox->BxFont);
+		      width -= BoxCharacterWidth (173, pBox->BxFont);
 		      pBox->BxType = BoPiece;
 		    }
 		  number = pBox->BxNSpaces;
@@ -1834,7 +1838,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			}
 		      else if (ibox1->BxType == BoDotted)
 			/* remove the hyphen width */
-			width -= CharacterWidth (173, ibox1->BxFont);
+			width -= BoxCharacterWidth (173, ibox1->BxFont);
 
 		      /* if the next box is not empty */
 		      if (ibox1->BxNChars > 0)
@@ -1959,7 +1963,8 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 	if (pChildAb == NULL)
 	  still = FALSE;
 	/* Est-ce que le pave est mort ? */
-	else if (pChildAb->AbDead || pChildAb->AbNew || pChildAb->AbNotInLine)
+	else if (pChildAb->AbDead || pChildAb->AbNew ||
+		 pChildAb->AbNotInLine)
 	  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost)
 	  /* descend la hierarchie */
@@ -1973,10 +1978,12 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
     }
 
   width = pBox->BxW;
-  if (width > CharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
+  if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ ||
+      extensibleBox)
     {
       /* Calcul de l'interligne */
-      lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+      lineSpacing = PixelValue (pAb->AbLineSpacing,pAb->AbLineSpacingUnit,
+				pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* Calcul de l'indentation */
       if (extensibleBox)
 	{
@@ -1984,9 +1991,11 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 	  width = 3000;
 	}
       else if (pAb->AbIndentUnit == UnPercent)
-	indentLine = PixelValue (pAb->AbIndent, UnPercent, (PtrAbstractBox) width, 0);
+	indentLine = PixelValue (pAb->AbIndent, UnPercent,
+				 (PtrAbstractBox) width, 0);
       else
-	indentLine = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	indentLine = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
+				 ViewFrameTable[frame - 1].FrMagnification);
       if (pAb->AbIndent < 0)
 	indentLine = -indentLine;
       
@@ -2149,12 +2158,12 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 		  lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
 		  if (lostPixels != 0)
 		    {
-		      lostPixels = lostPixels * CharacterWidth (SPACE, pBoxToBreak->BxFont);
+		      lostPixels = lostPixels * BoxCharacterWidth (SPACE, pBoxToBreak->BxFont);
 		      noWrappedWidth += lostPixels;
 		    }
 		  if (pLine->LiLastPiece->BxType == BoDotted)
 		    /* remove the dash width */
-		    noWrappedWidth -= CharacterWidth (173, pBoxToBreak->BxFont);
+		    noWrappedWidth -= BoxCharacterWidth (173, pBoxToBreak->BxFont);
 		}
 	      if (breakLine || !full)
 		{
@@ -2251,7 +2260,7 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
     }
   else
     {
-      *height = FontHeight (pBox->BxFont);
+      *height = BoxFontHeight (pBox->BxFont);
       if (pNextBox != NULL && !pNextBox->BxAbstractBox->AbHorizEnclosing)
 	do
 	  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
@@ -2751,7 +2760,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 			 if (charIndex == SPACE && pSelBox->BxSpaceWidth != 0)
 			   pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 			 else
-			   pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
+			   pSelEnd->VsXPos += BoxCharacterWidth (charIndex, pSelBox->BxFont);
 		       }
 		   }
 	       }
@@ -2838,7 +2847,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
-		  lostPixels = CharacterWidth (SPACE, pBox->BxFont);
+		  lostPixels = BoxCharacterWidth (SPACE, pBox->BxFont);
 		  realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
 		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
 	       }

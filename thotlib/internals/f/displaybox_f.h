@@ -8,7 +8,6 @@
 
 extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
-                              CHAR_T modele,
                               ThotBool selected );
 extern void DisplayGraph ( PtrBox pBox,
                            int frame,
@@ -36,7 +35,6 @@ extern void DisplayBox ( PtrBox box,
 
 extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
-                                CHAR_T modele,
                                 ThotBool selected */);
 extern void DisplayGraph (/* PtrBox pBox,
                              int frame,

@@ -136,8 +136,8 @@ ThotBool IsSeparatorChar (CHAR_T c)
    - la longueur des se'parateurs qui pre'ce`dent le       
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
-static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
-		     CHAR_T word[THOT_MAX_CHAR], int *width)
+static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
+		     CHAR_T *word, int *width)
 {
    PtrTextBuffer       adbuff;
    int                 i, j;
@@ -180,10 +180,10 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += CharacterWidth (word[j], font);
+		     lg += BoxCharacterWidth (word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += CharacterWidth (word[j - 1], font);
+			lg += BoxCharacterWidth (word[j - 1], font);
 		     nbChars += j + 1;
 		     j = 0;
 		  }
@@ -201,7 +201,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += CharacterWidth (word[j], font);
+		       lg += BoxCharacterWidth (word[j], font);
 		       nbChars++;
 		    }
 	       }
@@ -261,7 +261,7 @@ static int WordHyphen (STRING word, int length, Language language,
    - un indicateur qui vaut VRAI s'il faut engendrer un    
    tiret d'hyphe'nation.                                 
   ----------------------------------------------------------------------*/
-int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
+int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 		    int *rank, int *width, ThotBool *hyphen)
 {
   PtrTextBuffer       adbuff;
@@ -294,7 +294,7 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
       /* Length et largeur des separateurs avant le word */
       nbChars = NextWord (font, &adbuff, &i, word, &w);
       /* Largeur du tiret d'hyphenantion */
-      lghyphen = CharacterWidth (173, font);
+      lghyphen = BoxCharacterWidth (173, font);
       /* Espace restant dans la ligne */
       rest = *width - w - lghyphen;
       /* Nombre de carateres maximum du word pouvant entrer dans la ligne */
@@ -306,12 +306,12 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 	  /* Recherche le nombre de caracteres du word qui rentrent */
 	  /* dans la ligne */
 	  length = 0;
-	  charWidth = CharacterWidth (word[length], font);
+	  charWidth = BoxCharacterWidth (word[length], font);
 	  while (rest >= charWidth && length < wordLength)
 	    {
 	      rest -= charWidth;
 	      length++;
-	      charWidth = CharacterWidth (word[length], font);
+	      charWidth = BoxCharacterWidth (word[length], font);
 	    }
 
 	  if (length > 1)
@@ -339,7 +339,7 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 			{
 			  /* comptabilise le caractere */
 			  length--;
-			  *width += CharacterWidth (adbuff->BuContent[i++], font);
+			  *width += BoxCharacterWidth (adbuff->BuContent[i++], font);
 			}
 		    }
 		  

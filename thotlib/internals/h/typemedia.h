@@ -19,6 +19,29 @@
 #include "typecorr.h"
 #include "typetra.h"
 
+#ifdef _I18N_
+typedef struct _FontSet      *SpecFont;
+typedef struct _FontSet {
+  SpecFont      NextFontSet;
+  char          FontFamily; /* to be changed */
+  int           FontHighlight;
+  int           FontSize;
+  int           FontFrames;
+  int           FontMask;
+  PtrFont       FontIso_1;
+  PtrFont       FontIso_2;
+  PtrFont       FontIso_3;
+  PtrFont       FontIso_4;
+  PtrFont       FontIso_5;
+  PtrFont       FontIso_6;
+  PtrFont       FontIso_7;
+  PtrFont       FontIso_8;
+  PtrFont       FontIso_9;
+} FontSet;
+#else /* _I18N_ */
+typedef PtrFont               SpecFont;
+#endif /* _I18N_ */
+
 typedef unsigned char RuleSet[32];
 
 /* List of pointers used */
@@ -187,7 +210,7 @@ typedef struct _Box
   PtrPosRelations BxPosRelations;	/* Dependencies on positions */
   PtrDimRelations BxWidthRelations;	/* Dependencies in width */
   PtrDimRelations BxHeightRelations;	/* Dependencies in height */
-  ptrfont         BxFont;	        /* Font bound to the box */
+  SpecFont        BxFont;	        /* Font bound to the box */
   PtrBox          BxMoved;	        /* Linking of moved boxes */
   PtrBox          BxHorizInc;	        /* Box linking to the enclosing one */
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */

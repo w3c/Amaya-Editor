@@ -58,6 +58,10 @@ static ptrFC LastUsedFont = (ptrFC)0;
 static HFONT OldFont;
 #endif /* _WINDOWS */
 
+#ifdef _I18N_
+static SpecFont   FirstFontSel = NULL;
+#endif /* _I18N_ */
+
 #include "buildlines_f.h"
 #include "registry_f.h"
 #include "language_f.h"
@@ -162,7 +166,7 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
 /*----------------------------------------------------------------------
   WinLoadFont : Load a Windows font in a Device context.
   ----------------------------------------------------------------------*/
-HFONT WinLoadFont (HDC hdc, ptrfont font)
+HFONT WinLoadFont (HDC hdc, PtrFont font)
 {
   if (LastUsedFont == (ptrFC)0)
     {
@@ -202,6 +206,7 @@ HFONT WinLoadFont (HDC hdc, ptrfont font)
 }
 #endif /* _WINDOWS */
 
+
 /*----------------------------------------------------------------------
   NumberOfFonts returns the number of fonts.
   ----------------------------------------------------------------------*/
@@ -222,7 +227,7 @@ int GetCharsCapacity (int volpixel)
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterWidth (CHAR_T c, ptrfont font)
+int CharacterWidth (unsigned char c, PtrFont font)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf;
@@ -230,12 +235,6 @@ int CharacterWidth (CHAR_T c, ptrfont font)
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int
                  l;
-#ifdef _I18N_
-  /* as long as we don't handle mutifonts */
-  if (c > 255)
-    c = 32;
-#endif /* _I18N_ */
-
   if (font == NULL)
     return (0);
   else
@@ -266,7 +265,7 @@ int CharacterWidth (CHAR_T c, ptrfont font)
       xf = (XFontStruct *) font;
       if (xf->per_char == NULL)
 	l = xf->max_bounds.width;
-      else if (c < (CHAR_T)(xf->min_char_or_byte2))
+      else if (c < xf->min_char_or_byte2)
 	l = 0;
       else
 	{
@@ -302,20 +301,34 @@ int CharacterWidth (CHAR_T c, ptrfont font)
    return (l);
 }
 
+
 /*----------------------------------------------------------------------
-  CharacterHeight returns the height of a char in a given font.
+  BoxCharacterWidth returns the width of a char in a given font
   ----------------------------------------------------------------------*/
-int CharacterHeight (CHAR_T c, ptrfont font)
+int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
+{
+#ifdef _I18N_
+  PtrFont         font;
+  unsigned char   car;
+
+  car = GetFontAndIndexFromSpec (c, specfont, &font);
+  if (font == NULL)
+    return 3;
+  else
+    return CharacterWidth (car, font);
+#else /* _I18N_ */
+  return CharacterWidth (c, specfont);
+#endif /* _I18N_ */
+}
+
+/*----------------------------------------------------------------------
+  CharacterHeight returns the height of a char in a given font
+  ----------------------------------------------------------------------*/
+int CharacterHeight (unsigned char c, PtrFont font)
 {
 #ifdef _GTK
-  int l;
+  int              l;
 #endif /* _GTK */
-
-#ifdef _I18N_
-  /* as long as we don't handle mutifonts */
-  if (c > 255)
-    c = 32;
-#endif /* _I18N_ */
 
   if (font == NULL)
     return (0);
@@ -340,7 +353,7 @@ int CharacterHeight (CHAR_T c, ptrfont font)
 /*----------------------------------------------------------------------
   CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterAscent (CHAR_T c, ptrfont font)
+int CharacterAscent (unsigned char c, PtrFont font)
 {
 #ifdef _GTK
   int               lbearing, rbearing, width, ascent, descent;
@@ -350,12 +363,6 @@ int CharacterAscent (CHAR_T c, ptrfont font)
   int               i;
 #endif /* _WINDOWS */
 #endif /* _GTK */
-
-#ifdef _I18N_
-  /* as long as we don't handle mutifonts */
-  if (c > 255)
-    c = 32;
-#endif /* _I18N_ */
 
   if (font == NULL)
     return (0);
@@ -394,7 +401,7 @@ int CharacterAscent (CHAR_T c, ptrfont font)
 /*----------------------------------------------------------------------
   FontAscent returns a global ascent for a font.
   ----------------------------------------------------------------------*/
-int FontAscent (ptrfont font)
+int FontAscent (PtrFont font)
 {
   if (font == NULL)
     return (0);
@@ -412,11 +419,28 @@ int FontAscent (ptrfont font)
 }
 
 /*----------------------------------------------------------------------
+  XFontAscent returns the x ascent in a font set.
+  ----------------------------------------------------------------------*/
+static int XFontAscent (SpecFont specfont)
+{
+#ifdef _I18N_
+  PtrFont         font;
+  unsigned char   car;
+
+  car = GetFontAndIndexFromSpec (120, specfont, &font);
+  if (font == NULL)
+    font = FontDialogue;
+  return CharacterAscent ('x', font);
+#else /* _I18N_ */
+  return CharacterAscent ('x', specfont);
+#endif /* _I18N_ */
+}
+
+/*----------------------------------------------------------------------
   FontHeight returns the height of a given font.
   ----------------------------------------------------------------------*/
-int                 FontHeight (ptrfont font)
+int FontHeight (PtrFont font)
 {
-
 #ifdef _GTK
   /* int lbearing, rbearing, width, ascent, descent;*/
   char c[]="Xp";
@@ -439,6 +463,22 @@ int                 FontHeight (ptrfont font)
 }
 
 /*----------------------------------------------------------------------
+  BoxFontHeight returns the height of a given font.
+  ----------------------------------------------------------------------*/
+int BoxFontHeight (SpecFont specfont)
+{
+#ifdef _I18N_
+  PtrFont         font;
+  unsigned char   car;
+
+  car = GetFontAndIndexFromSpec (120, specfont, &font);
+  return FontHeight (font);
+#else /* _I18N_ */
+  return FontHeight (specfont);
+#endif /* _I18N_ */
+}
+
+/*----------------------------------------------------------------------
   PixelValue computes the pixel size for a given logical unit.
   pAb is the current abstract box except for UnPercent unit
   where it holds the comparison value.
@@ -454,13 +494,13 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
+	 dist = (val * BoxFontHeight (pAb->AbBox->BxFont) + 5) / 10;
        break;
      case UnXHeight:
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = (val * CharacterAscent ('x', pAb->AbBox->BxFont)) / 10;
+	 dist = (val * XFontAscent (pAb->AbBox->BxFont)) / 10;
        break;
      case UnPoint:
        /* take zoom into account */
@@ -524,13 +564,13 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = val * 10 / FontHeight (pAb->AbBox->BxFont);
+	 dist = val * 10 / BoxFontHeight (pAb->AbBox->BxFont);
        break;
      case UnXHeight:
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = val * 10 / CharacterAscent ('x', pAb->AbBox->BxFont);
+	 dist = val * 10 / XFontAscent (pAb->AbBox->BxFont);
        break;
      case UnPoint:
        /* take zoom into account */
@@ -587,12 +627,28 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 /*----------------------------------------------------------------------
   FontBase returns the shifting of the base line for a given font.
   ----------------------------------------------------------------------*/
-int FontBase (ptrfont font)
+int FontBase (PtrFont font)
 {
    if (font == NULL)
       return (0);
    else
       return (FontAscent (font));
+}
+
+/*----------------------------------------------------------------------
+  BoxFontBase returns the base of a font set.
+  ----------------------------------------------------------------------*/
+int BoxFontBase (SpecFont specfont)
+{
+#ifdef _I18N_
+  PtrFont         font;
+  unsigned char   car;
+
+  car = GetFontAndIndexFromSpec (120, specfont, &font);
+  return FontBase (font);
+#else /* _I18N_ */
+  return FontBase (specfont);
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -627,7 +683,7 @@ int FontPointSize (int size)
 /*----------------------------------------------------------------------
   LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
-ptrfont LoadFont (char *name)
+PtrFont LoadFont (char *name)
 {
 #ifdef _GTK
   GdkFont *result;
@@ -635,7 +691,7 @@ ptrfont LoadFont (char *name)
   result = gdk_font_load ((gchar *)name);
   return (result);
 #else /* _GTK */
-  return ((ptrfont) XLoadQueryFont (TtDisplay, name));
+  return ((PtrFont) XLoadQueryFont (TtDisplay, name));
 #endif /* _GTK */
 }
 #  endif /* !_WINDOWS */
@@ -797,7 +853,7 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
-ptrfont ReadFont (char alphabet, char family, int highlight, int size,
+PtrFont ReadFont (char alphabet, char family, int highlight, int size,
 		  TypeUnit unit)
 {
   char             name[10], nameX[100];
@@ -811,11 +867,10 @@ ptrfont ReadFont (char alphabet, char family, int highlight, int size,
 }
 
 /*----------------------------------------------------------------------
-  LoadNearestFont load the nearest possible font given a set
-  of attributes like alphabet, family, the size and for
-  a given frame.
+  LoadNearestFont load the nearest possible font given a set of attributes
+  like alphabet, family, the size and for a given frame.
   ----------------------------------------------------------------------*/
-static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
+static PtrFont LoadNearestFont (char alphabet, char family, int highlight,
 				int size, TypeUnit unit, int frame,
 				ThotBool increase)
 {
@@ -831,7 +886,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
   int                 c;
   HFONT               hOldFont;
 #endif /* _WINDOWS */
-  ptrfont             ptfont;
+  PtrFont             ptfont;
 
   /* use only standard sizes */
   index = 0;
@@ -873,7 +928,8 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
     {
       /* Check for table font overflow */
       if (i >= MAX_FONT)
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY), textX);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY),
+			   textX);
       else
 	{
 	  strcpy (&TtFontName[deb], text);
@@ -899,7 +955,8 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	  ptfont->family    = family;
 	  ptfont->highlight = highlight;
 	  ptfont->size      = size;
-	  ActiveFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
+	  ActiveFont = WIN_LoadFont (alphabet, family, highlight,
+				     size, unit);
 	  if (TtPrinterDC != 0)
 	    {
 	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
@@ -915,7 +972,8 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		}
 	      for (c = 0; c < 256; c++)
 		{
-		  GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+		  GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c),
+				      1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[c] = wsize.cx;
 		  ptfont->FiHeights[c] = wsize.cy;
 		}
@@ -936,7 +994,8 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		}
 	      for (c = 0; c < 256; c++)
 		{
-		  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+		  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c),
+				      1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[c] = wsize.cx;
 		  ptfont->FiHeights[c] = wsize.cy;
 		}
@@ -964,11 +1023,17 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		index--;
 	       
 	      if (index < MaxNumberOfSizes && index >= 0)
-		ptfont = LoadNearestFont (alphabet, family, highlight, index, FALSE, frame, increase);
+		ptfont = LoadNearestFont (alphabet, family,
+					  highlight, index,
+					  FALSE, frame, increase);
 	      else if (index >= MaxNumberOfSizes)
-		ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
+		ptfont = LoadNearestFont (alphabet, family, highlight,
+					  MaxNumberOfSizes, FALSE,
+					  frame, FALSE);
 	      if (ptfont == NULL)
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_FONT), textX);
+		TtaDisplayMessage (INFO,
+				   TtaGetMessage (LIB, TMSG_MISSING_FONT),
+				   textX);
 	    }
 	}
 
@@ -1005,7 +1070,9 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	  TtFonts[i] = ptfont;
 #if !defined(_WINDOWS) && !defined(_GTK)
 	  size = LogicalPointsSizes[index];
-	  if (alphabet == 'G' && (size == 8 || size == 10 || size == 12 || size == 14 || size == 24))
+	  if (alphabet == 'G' &&
+	      (size == 8 || size == 10 || size == 12 ||
+	       size == 14 || size == 24))
 	    TtPatchedFont[i] = size;
 #endif /* !_WINDOWS && !_GTK */
 	  TtFontFrames[i] = 0;
@@ -1020,11 +1087,180 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 }
 
 /*----------------------------------------------------------------------
+  GetFontAndIndexFromSpec return the glyph index and the font
+  used to display the wide character c;
+  ----------------------------------------------------------------------*/
+unsigned char GetFontAndIndexFromSpec (CHAR_T c,
+				       SpecFont fontset,
+				       PtrFont *font)
+{
+#ifdef _I18N_
+  PtrFont            lfont;
+  unsigned char      car;
+  int                mask, frame;
+
+  lfont = NULL;
+  if (fontset)
+    {
+      if (c < 255)
+	{
+	  lfont = fontset->FontIso_1;
+	  car = c;
+	}
+      else if (c >= 880 && c < 1023)
+	{
+	  if (fontset->FontIso_7 == NULL)
+	    {
+	      /* load that font */
+	      for (frame = 1; frame <= MAX_FRAME; frame++)
+		{
+		  mask = 1 << (frame - 1);
+		  if (fontset->FontMask | mask)
+		    lfont = LoadNearestFont ('G', fontset->FontFamily,
+					     fontset->FontHighlight,
+					     fontset->FontSize, UnPoint,
+					     frame, TRUE);
+		}
+	      fontset->FontIso_7 = lfont;
+	    }
+	  else
+	    lfont = fontset->FontIso_7;
+	  car = TtaGetCharFromWC (c, ISO_8859_7);
+	}
+    }
+  /* when any font is available */
+  if (lfont == NULL)
+    /* generate a square */
+    car = UNDISPLAYED_UNICODE;
+  *font = lfont;
+  return car;
+#else /* _I18N_ */
+  *font = fontset;
+  return c;
+#endif /* _I18N_ */
+}
+
+#ifdef _I18N_
+/*----------------------------------------------------------------------
+  RemoveFontInFontSets removes a font from all font sets.
+  ----------------------------------------------------------------------*/
+static void RemoveFontInFontSets (PtrFont font, int mask)
+{
+  SpecFont            prevset, fontset, nextset;
+  ThotBool            used;
+
+  fontset = FirstFontSel;
+  prevset = NULL;
+  used = FALSE;
+  while (fontset)
+    {
+      if (fontset->FontIso_1 == font)
+	fontset->FontIso_1 = NULL;
+      else
+	used = (used || fontset->FontIso_1);
+      if (fontset->FontIso_2 == font)
+	fontset->FontIso_2 = NULL;
+      else
+	used = (used || fontset->FontIso_2);
+      if (fontset->FontIso_3 == font)
+	fontset->FontIso_3 = NULL;
+      else
+	used = (used || fontset->FontIso_3);
+      if (fontset->FontIso_4 == font)
+	fontset->FontIso_4 = NULL;
+      else
+	used = (used || fontset->FontIso_4);
+      if (fontset->FontIso_5 == font)
+	fontset->FontIso_5 = NULL;
+      else
+	used = (used || fontset->FontIso_5);
+      if (fontset->FontIso_6 == font)
+	fontset->FontIso_6 = NULL;
+      else
+	used = (used || fontset->FontIso_6);
+      if (fontset->FontIso_7 == font)
+	fontset->FontIso_7 = NULL;
+      else
+	used = (used || fontset->FontIso_7);
+      if (fontset->FontIso_8 == font)
+	fontset->FontIso_8 = NULL;
+      else
+	used = (used || fontset->FontIso_8);
+      if (fontset->FontIso_9 == font)
+	fontset->FontIso_9 = NULL;
+      else
+	used = (used || fontset->FontIso_9);
+
+      /* next set */
+      nextset = fontset->NextFontSet;
+      /* is it still in use? */
+      if (used)
+	prevset = fontset;
+      else
+	{
+	  /* free this fontset */
+	  TtaFreeMemory (fontset);
+	  if (prevset)
+	    prevset->NextFontSet = nextset;
+	  else
+	    FirstFontSel = nextset;
+	}
+      fontset = nextset;
+    }
+}
+#endif /* _I18N_ */
+
+/*----------------------------------------------------------------------
+  LoadFontSet allocate a font set and load the ISO-latin-1 font.
+  ----------------------------------------------------------------------*/
+static SpecFont LoadFontSet (char alphabet, char family, int highlight,
+			     int size, TypeUnit unit, int frame,
+			     ThotBool increase)
+{
+#ifdef _I18N_
+  SpecFont            fontset;
+  int                 mask;
+
+  /* look for the fontsel */
+  fontset = FirstFontSel;
+  while (fontset &&
+	 (fontset->FontFamily != family &&
+	  fontset->FontHighlight != highlight &&
+	  fontset->FontSize != size))
+    fontset = fontset->NextFontSet;
+  if (fontset == NULL)
+    {
+      /* create a new set */
+      fontset = TtaGetMemory (sizeof (FontSet));
+      if (fontset)
+	{
+	  memset (fontset, 0, sizeof (FontSet));
+	  fontset->FontFamily = family;
+	  fontset->FontHighlight = highlight;
+	  fontset->FontSize = size;
+	  fontset->FontIso_1 = LoadNearestFont (alphabet, family, highlight,
+						size, unit, frame, increase);
+	}
+      else
+	fontset = FirstFontSel;
+    }
+
+  /* Compute window frame */
+  mask = 1 << (frame - 1);
+  /* store window frame number */
+  fontset->FontFrames = fontset->FontFrames | mask;
+#else /* _I18N_ */
+  return LoadNearestFont (alphabet, family, highlight, size, unit,
+			  frame, increase);
+#endif /* _I18N_ */
+}
+
+/*----------------------------------------------------------------------
   ThotLoadFont try to load a font given a set of attributes like alphabet,
   family, the size and for a given frame.
   ----------------------------------------------------------------------*/
-ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
-		      TypeUnit unit, int frame)
+SpecFont ThotLoadFont (char alphabet, char family, int highlight, int size,
+		       TypeUnit unit, int frame)
 {
   if (unit == UnPixel)
     {
@@ -1058,7 +1294,7 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
    /* the minimum size is 6 points */
    if (size < 6 && unit == UnPoint)
       size = 6;
-   return LoadNearestFont (alphabet, family, highlight, size, unit, frame, TRUE);
+   return LoadFontSet (alphabet, family, highlight, size, unit, frame, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1180,26 +1416,32 @@ void InitDialogueFonts (char *name)
   for (i = 0; i < MAX_FONT; i++)
     TtFonts[i] = NULL;
   /* load first five predefined fonts */
-  FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
+  FontDialogue =  LoadNearestFont (alphabet, 't', 0, MenuSize, UnPoint,
+				   0, TRUE);
   if (FontDialogue == NULL)
     {
-      FontDialogue = ThotLoadFont (alphabet, 'l', 0, MenuSize, UnPoint, 0);
+      FontDialogue = LoadNearestFont (alphabet, 'l', 0, MenuSize, UnPoint,
+				      0, TRUE);
       if (FontDialogue == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
 
-  IFontDialogue = ThotLoadFont (alphabet, 't', 2, MenuSize, UnPoint, 0);
+  IFontDialogue = LoadNearestFont (alphabet, 't', 2, MenuSize, UnPoint,
+				   0, TRUE);
   if (IFontDialogue == NULL)
     {
-      IFontDialogue = ThotLoadFont (alphabet, 'l', 2, MenuSize, UnPoint, 0);
+      IFontDialogue = LoadNearestFont (alphabet, 'l', 2, MenuSize, UnPoint,
+				       0, TRUE);
       if (IFontDialogue == NULL)
 	IFontDialogue = FontDialogue;
     }
 
-  LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
+  LargeFontDialogue = LoadNearestFont (alphabet, 't', 1, f3, UnPoint,
+				       0, TRUE);
   if (LargeFontDialogue == NULL)
     {
-      LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
+      LargeFontDialogue = LoadNearestFont (alphabet, 't', 1, f3, UnPoint,
+					   0, TRUE);
       if (LargeFontDialogue == NULL)
 	LargeFontDialogue = IFontDialogue;
     }
@@ -1242,16 +1484,18 @@ void ThotFreeFont (int frame)
 		}
 
 	      /* Shall we free this family ? */
-	      if (j == MAX_FONT)
 #ifdef _WINDOWS
+	      if (j == MAX_FONT)
 		{
 		  DeleteObject (SelectObject (TtDisplay, ActiveFont));
 		  TtaFreeMemory (TtFonts[i]);
 		}
 #else  /* _WINDOWS */
 #ifdef _GTK
+	      if (j == MAX_FONT)
 	        gdk_font_unref (TtFonts[i]);
 #else /* _GTK */
+	      if (j == MAX_FONT)
 		{
 		  /* remove the indicator */
 		  if (TtPatchedFont[i])
@@ -1260,6 +1504,10 @@ void ThotFreeFont (int frame)
 		}
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#ifdef _I18N_
+	      /* remove this font in fontsets */
+	      RemoveFontInFontSets (TtFonts[i], mask);
+#endif /* _I18N_ */
 	      TtFonts[i] = NULL;
 	      TtFontFrames[i] = 0;
 	    }

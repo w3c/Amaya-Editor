@@ -46,7 +46,7 @@
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
-void FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
+void FontOrig (PtrFont font, char firstchar, int *pX, int *pY)
 {
    if (!font)
       return;
@@ -171,7 +171,7 @@ static void TranslateChars (unsigned char *text)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 {
    ThotWindow          w;
 
@@ -204,12 +204,12 @@ void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
-		ptrfont font, int boxWidth, int bl, int hyphen,
+int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
+		int y, PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   ThotWindow          w;
-  char               *ptcar;
+  char               *ptcar = &buff[i];
   int                 width;
   register int        j;
 
@@ -224,7 +224,6 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
       if (fg >= 0)
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _GTK */
-      ptcar = TtaGetMemory (lg + 1);
       if (shadow)
 	{
 	  /* replace each character by a star */
@@ -238,31 +237,11 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	}
       else
 	{
-	  if (buff[i - 1] == BREAK_LINE || buff[i - 1] == NEW_LINE)
-	    {
-	      /* skip the Control return char */
-	      i++;
-	      lg--;
-	    }
-#ifdef _I18N_
-	  j = 0;
-	  while (j < lg)
-	    {
-	      width += CharacterWidth (buff[i - 1], font);
-	      ptcar[j] = TtaGetCharFromWC (buff[i - 1], ISO_8859_1);
-	      j++;
-	      i++;
-	    }
-	  ptcar[lg] = EOS;
-	  TranslateChars (ptcar);
-#else /* _I18N_ */
-	  strncpy (ptcar, &buff[i - 1], lg);
 	  ptcar[lg] = EOS;
 	  TranslateChars (ptcar);
 	  j = 0;
 	  while (j < lg)
 	    width += CharacterWidth (ptcar[j++], font);
-#endif /* I18N_ */
 	}
 
       if (fg >= 0)
@@ -281,7 +260,6 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
 #endif /* _GTK */
 	}
-      TtaFreeMemory (ptcar);
     }
   return (width);
 }
@@ -308,7 +286,7 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	       |             I                  |
 	      \|/____________I_________________\|/_ bottom
   ----------------------------------------------------------------------*/
-void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
+void DisplayUnderline (int frame, int x, int y, PtrFont font, int type,
 		       int lg, int fg)
 {
    ThotWindow          w;
@@ -370,7 +348,7 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
    ThotWindow          w;
-   ptrfont             font;
+   PtrFont             font;
    char               *ptcar;
    int                 xcour, width, nb;
 
@@ -412,7 +390,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
-		  ptrfont font, int fg)
+		  PtrFont font, int fg)
 {
    int                 xm, xp, fh;
 
@@ -441,7 +419,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, ptrfont font, int fg)
+		   int type, PtrFont font, int fg)
 {
    int                 xm, yf, yend, exnum, delta;
    int                 wd, asc, hd;
@@ -501,7 +479,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
-			  int h, ptrfont font, int fg)
+			  int h, PtrFont font, int fg)
 {
    int                 xm, yf;
 
@@ -516,7 +494,7 @@ static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
   active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    int                 xm, ym, fh;
 
@@ -549,7 +527,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
   DrawPi draw a PI symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    int                 fh;
 
@@ -579,7 +557,7 @@ void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
   DrawIntersection draw an intersection symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font,
+void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 		       int fg)
 {
    int                 arc, fh;
@@ -615,7 +593,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font,
   DrawUnion draw an Union symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    int                 arc, fh;
 
@@ -776,7 +754,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ptrfont font, int fg)
+		  int direction, PtrFont font, int fg)
 {
    int                 xm, yf, yend;
 
@@ -842,7 +820,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			int direction, ptrfont font, int fg)
+			int direction, PtrFont font, int fg)
 {
    int         xm, yf;
 
@@ -893,7 +871,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ptrfont font, int fg)
+		      int direction, PtrFont font, int fg)
 {
    int                 xm, yf, yend, exnum, delta;
 
@@ -978,7 +956,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, ptrfont font, int fg)
+		int direction, PtrFont font, int fg)
 {
    int                 xm, ym, yf, yend, exnum, delta;
 
@@ -2571,7 +2549,7 @@ void Clear (int frame, int width, int height, int x, int y)
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
   ----------------------------------------------------------------------*/
-void WChaine (ThotWindow w, char *string, int x, int y, ptrfont font,
+void WChaine (ThotWindow w, char *string, int x, int y, PtrFont font,
 	      ThotGC GClocal)
 {
 #ifdef _GTK

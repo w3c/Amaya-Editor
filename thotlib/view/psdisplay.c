@@ -59,7 +59,7 @@ static char*       Patterns_PS[] =
 
 
 /* Handling of loaded fonts */
-extern ptrfont      PoscriptFont;
+extern PtrFont      PoscriptFont;
 extern int          ColorPs;
 extern int          LastPageNumber, LastPageWidth, LastPageHeight;
 static char        *Scale = NULL;
@@ -110,7 +110,7 @@ static void CurrentColor (FILE * fout, int num)
    and emit the code to load it, if necessary.
    Returns 0 if it is a Latin font and 1 for a Greek one.
   ----------------------------------------------------------------------*/
-static int CurrentFont (FILE * fout, ptrfont font)
+static int CurrentFont (FILE * fout, PtrFont font)
 {
   int                 i, result;
   CHAR_T              c1, c2;
@@ -157,7 +157,7 @@ static int CurrentFont (FILE * fout, ptrfont font)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (CHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (CHAR_T car, int frame, int x, int y, PtrFont font, int fg)
 {
    FILE               *fout;
    int                 w;
@@ -268,12 +268,12 @@ static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
    parameter fg indicate the drawing color
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
-		ptrfont font, int boxWidth, int bl, int hyphen,
+int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
+		int y, PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   FILE               *fout;
-  char               *ptcar;
+  char               *ptcar = &buff[i];
   int                 j, encoding, width;
   int                 noJustifiedWhiteSp;
 
@@ -304,7 +304,6 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	}
     }
 
-  ptcar = TtaGetMemory (lg + 1);
   if (shadow)
     {
       /* replace each character by a star */
@@ -315,20 +314,7 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
       bl = 0;
     }
   else
-    {
-#ifdef _I18N_
-      j = 0;
-      while (j < lg)
-	{
-	  ptcar[j] = TtaGetCharFromWC (buff[i - 1], ISO_8859_1);
-	  j++;
-	  i++;
-	}
-#else /* _I18N_ */
-      strncpy (ptcar, &buff[i - 1], lg);
-#endif /* I18N_ */
-      ptcar[lg] = EOS;
-    }
+    ptcar[lg] = EOS;
 
   /* Add the justified white space */
   if (bl > 0)
@@ -389,7 +375,6 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	width += CharacterWidth (ptcar[j++], font);
       return (width);
     } 
-  TtaFreeMemory (ptcar);
   return (0);
 }
 
@@ -397,7 +382,7 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 /*----------------------------------------------------------------------
    DisplayUnderline draw the underline, overline or cross line
   ----------------------------------------------------------------------*/
-void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
+void DisplayUnderline (int frame, int x, int y, PtrFont font, int type,
 		       int lg, int fg)
 {
   int                 fheight;	/* font height           */
@@ -461,7 +446,7 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
    DrawRadical Draw a radical symbol.
   ----------------------------------------------------------------------*/
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
-		  ptrfont font, int fg)
+		  PtrFont font, int fg)
 {
    int                 fh;
    int                 ex;
@@ -502,7 +487,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
    - double if type = 2.
   ----------------------------------------------------------------------*/
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, ptrfont font, int fg)
+		   int type, PtrFont font, int fg)
 {
    int                 yf;
    int                 ey, ym;
@@ -573,7 +558,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 /*----------------------------------------------------------------------
    DrawSigma draw a Sigma symbol.
   ----------------------------------------------------------------------*/
-void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    FILE               *fout;
 
@@ -597,7 +582,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawPi draw a PI symbol.
   ----------------------------------------------------------------------*/
-void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    FILE             *fout;
 
@@ -621,7 +606,7 @@ void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawUnion draw an Union symbol.
   ----------------------------------------------------------------------*/
-void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
    FILE               *fout;
 
@@ -645,7 +630,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawIntersection draw an intersection symbol.
   ----------------------------------------------------------------------*/
-void DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font,
+void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 		       int fg)
 {
    FILE               *fout;
@@ -765,7 +750,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
    DrawBracket draw an opening or closing bracket (depending on direction)
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ptrfont font, int fg)
+		  int direction, PtrFont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -816,7 +801,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
    on direction)
   ----------------------------------------------------------------------*/
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			int direction, ptrfont font, int fg)
+			int direction, PtrFont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -873,7 +858,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
    DrawParenthesis draw a closing or opening parenthesis (direction).
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ptrfont font, int fg)
+		      int direction, PtrFont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -927,7 +912,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
    DrawBrace draw an opening of closing brace (depending on direction).
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, ptrfont font, int fg)
+		int direction, PtrFont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;

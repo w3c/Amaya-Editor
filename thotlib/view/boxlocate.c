@@ -2698,8 +2698,9 @@ void                DirectCreation (PtrBox pBox, int frame)
   - an the number of white spaces before.
   The position x is updated too.
   ----------------------------------------------------------------------*/
-void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, int *x,
-			int *index, int *charsNumber, int *spacesNumber)
+void LocateClickedChar (PtrBox pBox, ThotBool extend,
+			PtrTextBuffer *pBuffer, int *x, int *index,
+			int *charsNumber, int *spacesNumber)
 {
   int                 dx;
   int                 length;
@@ -2707,8 +2708,8 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
   int                 spaceWidth;
   int                 charWidth;
   int                 newIndex;
-  ptrfont             font;
-  CHAR_T             c;
+  SpecFont            font;
+  CHAR_T              c;
   ThotBool            notfound;
 
   /* Nombre de caracteres qui precedent */
@@ -2733,7 +2734,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
       /* Calcule la largeur des blancs */
       if (pBox->BxSpaceWidth == 0)
 	{
-	  spaceWidth = CharacterWidth (SPACE, font);
+	  spaceWidth = BoxCharacterWidth (SPACE, font);
 	  extraSpace = 0;
 	}
       else
@@ -2753,7 +2754,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
       else if (c == SPACE)
 	charWidth = spaceWidth;
       else
-	charWidth = CharacterWidth (c, font);
+	charWidth = BoxCharacterWidth (c, font);
       if (extend)
 	notfound = (dx + charWidth < *x);
       else
@@ -2773,7 +2774,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	     else if (c == SPACE)
 		charWidth = spaceWidth;
 	     else
-		charWidth = CharacterWidth (c, font);
+		charWidth = BoxCharacterWidth (c, font);
 #endif
 
 	     if (c == SPACE)
@@ -2808,13 +2809,13 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	     notfound = (dx < *x);
 #else
 	     /* largeur du caractere suivant */
-	     c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (*pBuffer)->BuContent[newIndex - 1];
 	     if (c == 0)
 	       charWidth = 0;
 	     else if (c == SPACE)
 	       charWidth = spaceWidth;
 	     else
-	       charWidth = CharacterWidth (c, font);
+	       charWidth = BoxCharacterWidth (c, font);
 
 	     if (extend)
 	       notfound = (dx + charWidth < *x);

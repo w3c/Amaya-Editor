@@ -370,6 +370,12 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   if (wc < 127)
     /* ASCII character */
     return (unsigned char) wc;
+  else if (wc >= 880 && wc < 1377)
+    {
+      /* not sure it works for Greek */
+      wc -= 848;
+      return (unsigned char) wc;
+    }
   else
     {
       /* look for the right table */
@@ -465,8 +471,13 @@ wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
   unsigned short *table;
 
   if (c < 127)
-    /* ASCII character */
-    return (wchar_t) c;
+    {
+      if (encoding == ISO_8859_7)
+	/* not sure it works for Greek */
+	return (wchar_t)(c + 848);
+      else
+	return (wchar_t) c;
+    }
   else
     {
       val = c - 127;

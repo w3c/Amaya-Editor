@@ -6,16 +6,22 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern unsigned char GetFontAndIndexFromSpec ( CHAR_T c,
+                                               SpecFont fontset,
+                                               PtrFont *font );
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int CharacterWidth ( CHAR_T c,
-                            ptrfont font );
-extern int CharacterHeight ( CHAR_T c,
-                             ptrfont font );
-extern int CharacterAscent ( CHAR_T c,
-                             ptrfont font );
-extern int FontAscent ( ptrfont font );
-extern int FontHeight ( ptrfont font );
+extern int CharacterWidth ( unsigned char c,
+                            PtrFont font );
+extern int BoxCharacterWidth ( CHAR_T c,
+                               SpecFont specfont );
+extern int CharacterHeight ( unsigned char c,
+                             PtrFont font );
+extern int CharacterAscent ( unsigned char c,
+                             PtrFont font );
+extern int FontAscent ( PtrFont font );
+extern int FontHeight ( PtrFont font );
+extern int BoxFontHeight ( SpecFont specfont );
 extern int PixelValue ( int val,
                         TypeUnit unit,
                         PtrAbstractBox pAb,
@@ -24,10 +30,11 @@ extern int LogicalValue ( int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb,
                           int zoom );
-extern int FontBase ( ptrfont font );
+extern int FontBase ( PtrFont font );
+extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
-extern ptrfont LoadFont ( char *name );
+extern PtrFont LoadFont ( char *name );
 extern void FontIdentifier ( char alphabet,
                              char family,
                              int highlight,
@@ -35,17 +42,17 @@ extern void FontIdentifier ( char alphabet,
                              TypeUnit unit,
                              char r_name[10],
                              char r_nameX[100] );
-extern ptrfont ReadFont ( char alphabet,
+extern PtrFont ReadFont ( char alphabet,
                           char family,
                           int highlight,
                           int size,
                           TypeUnit unit );
-extern ptrfont ThotLoadFont ( char alphabet,
-                              char family,
-                              int highlight,
-                              int size,
-                              TypeUnit unit,
-                              int frame );
+extern SpecFont ThotLoadFont ( char alphabet,
+                               char family,
+                               int highlight,
+                               int size,
+                               TypeUnit unit,
+                               int frame );
 extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );
 extern void ThotFreeFont ( int frame );
@@ -53,16 +60,22 @@ extern void ThotFreeAllFonts ( void );
 
 #else /* __STDC__ */
 
+extern unsigned char GetFontAndIndexFromSpec (/* CHAR_T c,
+                                                 SpecFont fontset,
+                                                 PtrFont *font */);
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* CHAR_T c,
-                              ptrfont font */);
-extern int CharacterHeight (/* CHAR_T c,
-                               ptrfont font */);
-extern int CharacterAscent (/* CHAR_T c,
-                               ptrfont font */);
-extern int FontAscent (/* ptrfont font */);
-extern int FontHeight (/* ptrfont font */);
+extern int CharacterWidth (/* unsigned char c,
+                              PtrFont font */);
+extern int BoxCharacterWidth (/* CHAR_T c,
+                                 SpecFont specfont */);
+extern int CharacterHeight (/* unsigned char c,
+                               PtrFont font */);
+extern int CharacterAscent (/* unsigned char c,
+                               PtrFont font */);
+extern int FontAscent (/* PtrFont font */);
+extern int FontHeight (/* PtrFont font */);
+extern int BoxFontHeight (/* SpecFont specfont */);
 extern int PixelValue (/* int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb,
@@ -71,10 +84,11 @@ extern int LogicalValue (/* int val,
                             TypeUnit unit,
                             PtrAbstractBox pAb,
                             int zoom */);
-extern int FontBase (/* ptrfont font */);
+extern int FontBase (/* PtrFont font */);
+extern int BoxFontBase (/* SpecFont specfont */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
-extern ptrfont LoadFont (/* char *name */);
+extern PtrFont LoadFont (/* char *name */);
 extern void FontIdentifier (/* char alphabet,
                                char family,
                                int highlight,
@@ -82,17 +96,17 @@ extern void FontIdentifier (/* char alphabet,
                                TypeUnit unit,
                                char r_name[10],
                                char r_nameX[100] */);
-extern ptrfont ReadFont (/* char alphabet,
+extern PtrFont ReadFont (/* char alphabet,
                             char family,
                             int highlight,
                             int size,
                             TypeUnit unit */);
-extern ptrfont ThotLoadFont (/* char alphabet,
-                                char family,
-                                int highlight,
-                                int size,
-                                TypeUnit unit,
-                                int frame */);
+extern SpecFont ThotLoadFont (/* char alphabet,
+                                 char family,
+                                 int highlight,
+                                 int size,
+                                 TypeUnit unit,
+                                 int frame */);
 extern void TtaSetFontZoom (/* int zoom */);
 extern void InitDialogueFonts (/* char *name */);
 extern void ThotFreeFont (/* int frame */);

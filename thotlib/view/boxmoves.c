@@ -2151,7 +2151,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
-  ptrfont             font;
+  SpecFont            font;
   float               value;
   int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
@@ -2346,7 +2346,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				{
 				  if (pCurrentAb->AbLeafType == LtText &&
 				      pCurrentAb->AbHorizRef.PosAbRef == NULL)
-				    j = FontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
+				    j = BoxFontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 				  else
 				    j = delta;
 				  MoveHorizRef (pBox, NULL, j, frame);
@@ -2619,14 +2619,14 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	{
 	  i = 0;
 	  font = pBox->BxFont;
-	  value = 1 + ((float) (pBox->BxH * 0.6) / (float) FontHeight (font));
+	  value = 1 + ((float) (pBox->BxH * 0.6) / (float) BoxFontHeight (font));
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */
-	      i = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
+	      i = BoxCharacterWidth (231, font) + BoxCharacterWidth (231, font) / 2;
 	    case 'i':	/* integral */
 	    case 'c':	/* circle integral */
-	      i = (int) ((float) CharacterWidth (231, font) * value);
+	      i = (int) ((float) BoxCharacterWidth (231, font) * value);
 	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    case '(':
@@ -2635,7 +2635,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    case '}':
 	    case '[':
 	    case ']':
-	      i = (int) ((float) CharacterWidth (230, font) * value);
+	      i = (int) ((float) BoxCharacterWidth (230, font) * value);
 	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    default:

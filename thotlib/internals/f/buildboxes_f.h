@@ -15,7 +15,7 @@ extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int zoom );
 extern void GiveTextParams ( PtrTextBuffer pBuffer,
                              int nChars,
-                             ptrfont font,
+                             SpecFont font,
                              int *width,
                              int *nSpaces );
 extern void GiveSymbolSize ( PtrAbstractBox pAb,
@@ -71,7 +71,7 @@ extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
                                           int zoom */);
 extern void GiveTextParams (/* PtrTextBuffer pBuffer,
                                int nChars,
-                               ptrfont font,
+                               SpecFont font,
                                int *width,
                                int *nSpaces */);
 extern void GiveSymbolSize (/* PtrAbstractBox pAb,

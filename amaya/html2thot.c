@@ -3337,7 +3337,8 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     /* this character is on the fallback table */
     {
 #ifdef _I18N_
-      TtaWCToMBstring (code, &fallback);
+      i = TtaWCToMBstring (code, &fallback);
+      fallback[i] = EOS;
 #else /* _I18N_ */
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	{
@@ -3390,7 +3391,7 @@ static void PutNonISOlatin1Char (int code, char *prefix)
    Element	 elLeaf;
    AttributeType attrType;
    Attribute	 attr;
-   char	 buffer[MaxEntityLength+10];
+   char	         buffer[MaxEntityLength+10];
 
    /* put the current content of the input buffer into the document */
    TextToDocument ();

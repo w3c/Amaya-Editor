@@ -348,7 +348,7 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
    width contient initialement l'index du premier          
    caractere du texte.                                     
   ----------------------------------------------------------------------*/
-void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
+void GiveTextParams (PtrTextBuffer pBuffer, int nChars, SpecFont font,
 		     int *width, int *nSpaces)
 {
    int                 i, j;
@@ -358,7 +358,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CharacterWidth (SPACE, font);
+      spaceWidth = BoxCharacterWidth (SPACE, font);
    else
       spaceWidth = *nSpaces;
    i = *width;			/* Index dans le buffer */
@@ -376,7 +376,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
 	     charWidth = spaceWidth;
 	  }
 	else
-	   charWidth = CharacterWidth (car, font);
+	   charWidth = BoxCharacterWidth (car, font);
 	*width += charWidth;
 	/* Caractere suivant */
 	if (i >= pBuffer->BuLength)
@@ -423,18 +423,18 @@ static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
   ----------------------------------------------------------------------*/
 void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 {
-  ptrfont             font;
+  SpecFont            font;
   PtrBox              box;
   int                 hfont;
   float               value;
 
   box = pAb->AbBox;
   font = box->BxFont;
-  hfont = FontHeight (font);
+  hfont = BoxFontHeight (font);
   if (pAb->AbVolume == 0)
     {
       /* empty Symbol */
-      *width = CharacterWidth (SPACE, font);
+      *width = BoxCharacterWidth (SPACE, font);
       *height = hfont * 2;
     }
   else
@@ -445,11 +445,11 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	{
 	case 'c':	/*integrale curviligne */
 	case 'i':	/*integrale */
-	  *width = (int) ((float) (CharacterWidth (231, font)) * value);
+	  *width = (int) ((float) (BoxCharacterWidth (231, font)) * value);
 	  *height += hfont;
 	  break;
 	case 'd':	/*integrale double */
-	  *width = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
+	  *width = BoxCharacterWidth (231, font) + BoxCharacterWidth (231, font) / 2;
 	  *height += hfont;
 	  break;
 	case 'r':	/* root */
@@ -459,7 +459,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	case 'P':	/*pi */
 	case 'I':	/*intersection */
 	case 'U':	/*union */
-	  *width = CharacterWidth (229, font);
+	  *width = BoxCharacterWidth (229, font);
 	  *height = hfont;
 	  break;
 	case 'L':       /* left arrow */
@@ -479,33 +479,33 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	case ']':
 	case '{':
 	case '}':
-	  *width = (int) ((float) CharacterWidth (230, font) * value);
+	  *width = (int) ((float) BoxCharacterWidth (230, font) * value);
 	  *height = hfont;
 	  break;
 	case '<':
 	case '>':
-	  *width = 2 * CharacterWidth (230, font);
+	  *width = 2 * BoxCharacterWidth (230, font);
 	  *height = hfont;
 	  break;
 	case '|':       /* vertical bar */
-	  *width = CharacterWidth (124, font);  /* | */
+	  *width = BoxCharacterWidth (124, font);  /* | */
 	  *height = hfont;	  
 	  break;
         case 'D':       /* double vertical bar */
-	  *width = 3 * CharacterWidth (124, font);  /* | */
+	  *width = 3 * BoxCharacterWidth (124, font);  /* | */
 	  *height = hfont;	  
 	  break;
 	case '^':
 	case 'v':
 	case 'V':
-	  *width = CharacterWidth (109, font);	/* 'm' */
+	  *width = BoxCharacterWidth (109, font);	/* 'm' */
 	  break;
 	case '?':
-	  *width = CharacterWidth (63, font);   /* ? */
+	  *width = BoxCharacterWidth (63, font);   /* ? */
 	  *height = hfont;
 	  break;
 	default:
-	  *width = CharacterWidth (SPACE, font);
+	  *width = BoxCharacterWidth (SPACE, font);
 	  *height = hfont;
 	  break;
 	}
@@ -518,14 +518,14 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   ----------------------------------------------------------------------*/
 void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
 {
-  ptrfont             font;
+  SpecFont            font;
   PtrBox              box;
   int                 hfont;
 
   box = pAb->AbBox;
   font = box->BxFont;
-  *width = CharacterWidth (109, font);	/*'m' */
-  hfont = FontHeight (font);
+  *width = BoxCharacterWidth (109, font);	/*'m' */
+  hfont = BoxFontHeight (font);
   *height = hfont * 2;
   switch (pAb->AbShape)
     {
@@ -640,13 +640,13 @@ static void FreePath (PtrBox box)
 void GiveTextSize (PtrAbstractBox pAb, int *width, int *height,
 		   int *nSpaces)
 {
-  ptrfont             font;
+  SpecFont            font;
   PtrBox              box;
   int                 nChars;
 
   box = pAb->AbBox;
   font = box->BxFont;
-  *height = FontHeight (font);
+  *height = BoxFontHeight (font);
   /* Est-ce que le pave est vide ? */
   nChars = pAb->AbVolume;
   if (nChars == 0)
@@ -1208,7 +1208,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   PtrBox              pMainBox;
   PtrBox              pCurrentBox;
   TypeUnit            unit;
-  ptrfont             font;
+  SpecFont            font;
   PictInfo           *picture;
   BoxType             tableType;
   char                alphabet = 'L';
@@ -1742,7 +1742,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 	pPosAb = &pAb->AbHorizRef;
 	if (pPosAb->PosAbRef == NULL)
 	  {
-	     j = FontBase (pMainBox->BxFont) + pMainBox->BxTMargin + pMainBox->BxTBorder + pMainBox->BxTPadding - pMainBox->BxHorizRef;
+	     j = BoxFontBase (pMainBox->BxFont) + pMainBox->BxTMargin + pMainBox->BxTBorder + pMainBox->BxTPadding - pMainBox->BxHorizRef;
 	     MoveHorizRef (pAb->AbBox, NULL, j, frame);
 	  }
 	else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
@@ -2569,7 +2569,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* Si la boite est justifiee */
 		  if (pBox->BxSpaceWidth != 0)
 		    {
-		      i = pBox->BxSpaceWidth - CharacterWidth (SPACE, pBox->BxFont);
+		      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, pBox->BxFont);
 		      /* On prend la largeur justifiee */
 		      width = width + i * nSpaces + pBox->BxNPixels;
 		      /* width shift */

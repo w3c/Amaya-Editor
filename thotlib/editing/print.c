@@ -59,7 +59,7 @@
 #include "units_tv.h"
 
 int          PRINT;	/* Identification des messages */
-ptrfont      PoscriptFont;
+PtrFont      PoscriptFont;
 int          ColorPs;
 int          LastPageNumber, LastPageWidth, LastPageHeight;
 

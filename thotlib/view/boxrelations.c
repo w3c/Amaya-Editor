@@ -2151,7 +2151,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	     if (rule.PosUnit == UnPercent)
 		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxH, 0);
 	     else
-		dist = FontBase (pBox->BxFont) - pBox->BxH;
+		dist = BoxFontBase (pBox->BxFont) - pBox->BxH;
 	  }
      }
    else

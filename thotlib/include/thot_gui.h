@@ -73,28 +73,27 @@ typedef struct _FontInfo {
         /* HFONT FiFont; */
 } FontInfo;
 
-typedef FontInfo *ptrfont;
-
-typedef void*          ThotWidget;
+typedef FontInfo      *PtrFont;
+typedef void          *ThotWidget;
 typedef HWND           ThotWindow;
-typedef TBBUTTON*      ThotButton;
+typedef TBBUTTON      *ThotButton;
 typedef HMENU          ThotMenu;
 typedef HBITMAP        ThotBitmap;
 typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;
-typedef void*          Pixmap;
+typedef void          *Pixmap;
 typedef HCURSOR        ThotCursor;
 typedef HWND           Drawable;
 typedef POINT          ThotPoint;
 typedef MSG            ThotEvent;
 typedef MSG            ThotKeyEvent;
 typedef UINT           ThotComposeStatus;
-typedef void*          ThotAppContext;
-typedef void*          ThotTranslations;
-typedef void*          KeySym;
-typedef void*          XtPointer;
-typedef void*          XtIntervalId;
-typedef void*          XtInputId;
+typedef void          *ThotAppContext;
+typedef void          *ThotTranslations;
+typedef void          *KeySym;
+typedef void          *XtPointer;
+typedef void          *XtIntervalId;
+typedef void          *XtInputId;
 typedef int            ThotIcon;
 #define TBBUTTONS_BASE 50000
 #define ThotColorNone  ((COLORREF)~1) /* anything in high byte is bad COLORREF */
@@ -181,7 +180,7 @@ typedef GdkBitmap     *ThotBitmap;
 typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
-typedef GdkFont       *ptrfont;
+typedef GdkFont       *PtrFont;
 typedef GdkCursor     *ThotCursor;
 typedef GdkPoint       ThotPoint;
 typedef GdkEvent       ThotEvent;
@@ -200,7 +199,7 @@ typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
-typedef int           *ptrfont;
+typedef int           *PtrFont;
 typedef Cursor         ThotCursor;
 typedef XPoint         ThotPoint;
 typedef XEvent         ThotEvent;

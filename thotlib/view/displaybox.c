@@ -30,6 +30,7 @@
 #include "displaybox_f.h"
 #include "displayselect_f.h"
 #include "font_f.h"
+#include "memory_f.h"
 #include "picture_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
@@ -106,9 +107,9 @@ static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
   DisplaySymbol displays a mathematical symbols box enclosed in
   a frame. The glyphs are drawn with the Greek font and lines.
   ----------------------------------------------------------------------*/
-static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
+static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 {
-  ptrfont             font;
+  PtrFont             font;
   ViewFrame          *pFrame;
   ThotBool            withbackground;
   int                 xd, yd, i, w;
@@ -121,7 +122,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
-      font = pBox->BxFont;
+      GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
       if (font != NULL)
 	{
 	  /* Position in the frame */
@@ -270,7 +271,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   DisplayEmptyBox shows an empty box but formatted and placed.
   A specific background is drawn in the box area.
   ----------------------------------------------------------------------*/
-void  DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele, ThotBool selected)
+void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -868,12 +869,17 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ViewFrame          *pFrame;
   PtrBox              nbox;
   PtrAbstractBox      pAb;
-  CHAR_T              car;
+  SpecFont            font;
+  PtrFont             prevfont = NULL;
+  PtrFont             nextfont;
+  CHAR_T              bchar;
+  unsigned char       car;
+  unsigned char      *buffer;
   int                 indbuff;
   int                 restbl;
   int                 newind;
   int                 newbl, lg;
-  int                 charleft, dc;
+  int                 charleft;
   int                 buffleft;
   int                 indmax, bl;
   int                 nbcar, x, y;
@@ -893,7 +899,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   restbl = 0;
   nbcar = 0;
   pAb = pBox->BxAbstractBox;
-  
+  font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
     shadow = 1;
@@ -955,7 +961,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	width = 0;
       lgspace = pBox->BxSpaceWidth;
       if (lgspace == 0)
-	lgspace = CharacterWidth (SPACE, pBox->BxFont);
+	lgspace = BoxCharacterWidth (SPACE, font);
       
       /* Search the first displayable char */
       if (charleft > 0)
@@ -967,7 +973,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      indbuff = newind;
 	      restbl = newbl;
 	      x += lg;
-	      car = adbuff->BuContent[indbuff - 1];
+	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff - 1],
+					     font, &nextfont);
 	      if (car == SPACE)
 		{
 		  lg = lgspace;
@@ -978,7 +985,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    } 
 		}
 	      else
-		lg = CharacterWidth (car, pBox->BxFont);
+		lg = CharacterWidth (car, nextfont);
 	       
 	      charleft--;
 	      /* Skip to next char */
@@ -1016,8 +1023,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    DrawRectangle (frame, 0, 0,
 			   x - pBox->BxLPadding, y - pBox->BxTPadding,
 			   width + pBox->BxLPadding + pBox->BxRPadding,
-			   FontHeight (pBox->BxFont) + pBox->BxTPadding +
-			                               pBox->BxBPadding,
+			   BoxFontHeight (font) + pBox->BxTPadding + pBox->BxBPadding,
 			   0, bg, 2);
 	}
 
@@ -1079,39 +1085,37 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    DisplayBgBoxSelection (frame, pBox);
 	}
 
+      /* allocate a buffer to store converted characters */
+      buffer = TtaGetMemory (THOT_MAX_CHAR);
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
 	  while (indbuff <= indmax)
 	    {
-	      car = adbuff->BuContent[indbuff - 1];
-	      
-	      if (car == SPACE || car == THIN_SPACE ||
-		  car == HALF_EM || car == UNBREAKABLE_SPACE || car == TAB)
+	      bchar = adbuff->BuContent[indbuff - 1];
+	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
+	      if (bchar == SPACE || bchar == THIN_SPACE ||
+		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB)
 		{
-		  /* display the last chars handled */
-		  dc = indbuff - nbcar;
-		  x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
-				   pBox->BxFont, 0, bl, 0, blockbegin, fg, shadow);
+		  /* display previous chars handled */
+		  if (nbcar > 0)
+		    x += DrawString (buffer, 0, nbcar, frame, x, y,
+				     nextfont, 0, bl, 0, blockbegin, fg, shadow);
 		  
-		  if (shadow && (car == SPACE ||
-				 car == THIN_SPACE ||
-				 car == HALF_EM ||
-				 UNBREAKABLE_SPACE ||
-				 car == TAB))
-		    DrawChar ('*', frame, x, y, pBox->BxFont, fg);
+		  if (shadow)
+		    DrawChar ('*', frame, x, y, nextfont, fg);
 		  else if (!ShowSpace)
 		    {
 		      /* Show the space chars */
 		      if (car == SPACE || car == TAB) 
-			DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, fg);
+			DrawChar (SHOWN_SPACE, frame, x, y, nextfont, fg);
 		      else if (car == THIN_SPACE)
-			DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, fg);
+			DrawChar (SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
 		      else if (car == HALF_EM)
-			DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, fg);
+			DrawChar (SHOWN_HALF_EM, frame, x, y, nextfont, fg);
 		      else if (car == UNBREAKABLE_SPACE)
 			DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y,
-				  pBox->BxFont, fg);
+				  nextfont, fg);
 		    }
 		 
 		  nbcar = 0;
@@ -1127,63 +1131,80 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += lgspace;
 		    }
 		  else
-		    x += CharacterWidth (car, pBox->BxFont);
+		    x += CharacterWidth (car, nextfont);
 		  
 		  bl = 1;
 		}
-	      else /* Just add the next char */
-		nbcar++;
-	       
+	      else if (nextfont == NULL && car == UNDISPLAYED_UNICODE)
+		{
+		  /* display previous chars handled */
+		  if (nbcar > 0)
+		    x += DrawString (buffer, 0, nbcar, frame, x, y,
+				     prevfont, 0, bl, 0, blockbegin, fg, shadow);
+		  nbcar = 0;
+		  prevfont = nextfont;
+		  DrawRectangle (frame, 1, 5, x, y, 3, pBox->BxH - 1, fg, 0, 0);
+		  x += 3;
+		}
+	      else
+		{
+		  if (prevfont != nextfont)
+		    {
+		      /* display previous chars handled */
+		      if (nbcar > 0)
+			x += DrawString (buffer, 0, nbcar, frame, x, y,
+					 prevfont, 0, bl, 0, blockbegin, fg, shadow);
+		      nbcar = 0;
+		      prevfont = nextfont;
+		    }
+		  /* add the new char */
+		  buffer[nbcar++] = car;
+		}
 	      indbuff++; /* Skip to next char */
 	    }
-	     
-	     /* Draw the last chars from buffer */
-	     dc = indbuff - nbcar;
-	     charleft -= buffleft;
-	     if (charleft <= 0)
-	       {
-		 /* Finished */
-		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
-				  pBox->BxFont, width, bl, withline,
-				  blockbegin, fg, shadow);
-		 if (pBox->BxUnderline != 0)
-		   DisplayUnderline (frame, x, y, pBox->BxFont,
-				     pBox->BxUnderline, pBox->BxWidth, fg);
-		 /* Next char lookup */
-		 if ((adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
-		      adbuff->BuContent[indbuff - 1] == NEW_LINE) &&
-		     !ShowSpace)
-		   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, fg);
-	       }
-	     else
-	       {
-		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
-				  pBox->BxFont, 0, bl, 0, blockbegin,
-				  fg, shadow);
-		 bl = 0;
-		 /* Skip to next buffer */
-		 if (adbuff->BuNext == NULL)
-		   charleft = 0;
-		 else
-		   {
-		     indbuff = 1;
-		     adbuff = adbuff->BuNext;
-		     buffleft = adbuff->BuLength;
-		     if (charleft < buffleft)
-		       indmax = charleft;
-		     else
-		       indmax = buffleft;
-		   }
-	       }
-	     nbcar = 0;
-	}  
+
+	  /* Draw previous chars in the buffer */
+	  charleft -= buffleft;
+	  if (charleft > 0)
+	    {
+	      bl = 0;
+	      /* Skip to next buffer */
+	      if (adbuff->BuNext == NULL)
+		charleft = 0;
+	      else
+		{
+		  indbuff = 1;
+		  adbuff = adbuff->BuNext;
+		  buffleft = adbuff->BuLength;
+		  if (charleft < buffleft)
+		    indmax = charleft;
+		  else
+		    indmax = buffleft;
+		}
+	    }
+	  if (charleft <= 0)
+	    {
+	      /* Finished */
+	      if (nbcar > 0)
+		x += DrawString (buffer, 0, nbcar, frame, x, y,
+				 nextfont, width, bl, withline,
+				 blockbegin, fg, shadow);
+	      if (pBox->BxUnderline != 0)
+		DisplayUnderline (frame, x, y, nextfont,
+				  pBox->BxUnderline, pBox->BxWidth, fg);
+	      /* Next char lookup */
+	      if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
+		DrawChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);
+	      nbcar = 0;
+	    }
+	} 
       
-      /* Should the end of de line be filled with dots */
+      /* Should the end of the line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
 	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	      pBox->BxLPadding;
+	    pBox->BxLPadding;
 	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y,
 		      pBox->BxEndOfBloc, fg);
@@ -1490,7 +1511,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       selected = (box == pFrame->FrSelectionBegin.VsBox &&
 		  box == pFrame->FrSelectionEnd.VsBox);
       if (pAb->AbLeafType == LtSymbol)
-	DisplayEmptyBox (box, frame, '2', selected);
+	DisplayEmptyBox (box, frame, selected);
       else if (pAb->AbLeafType != LtPolyLine &&
 	       pAb->AbLeafType != LtGraphics &&
 	       pAb->AbLeafType != LtPath)
@@ -1498,7 +1519,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	  if (selected)
 	    DisplayStringSelection (frame, 0, box->BxWidth, box);
 	  else if (ThotLocalActions[T_emptybox] != NULL)
-	    (*ThotLocalActions[T_emptybox]) (box, frame, '2', selected);
+	    (*ThotLocalActions[T_emptybox]) (box, frame, selected);
 	}
     }
   else if (pAb->AbLeafType == LtText)
@@ -1510,13 +1531,13 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, '2', selected);
+      DisplayEmptyBox (box, frame, selected);
     else
       DisplaySymbol (box, frame, selected);
   else if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, '2', selected);
+      DisplayEmptyBox (box, frame, selected);
     else
       DisplayGraph (box, frame, selected);
   else if (pAb->AbLeafType == LtPolyLine)
