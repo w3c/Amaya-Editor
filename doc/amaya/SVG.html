@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Graphics</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -86,10 +86,22 @@ create. The available graphics elements are:</p>
                style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
-  <li>Splines and curves are not implemented yet. <svg
+  <li>An open curve, <code>path</code> in SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <path stroke="blue" fill="none"
+            d="M 0,16 C 0,15 4,6 9,7 C 13,7 12,16 16,16 C 20,15 24,1 22,0"
+            style="stroke: #0071FF" stroke-width="2px"/>
     </svg>
   </li>
+  <li>A closed curve, <code>path</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <path stroke="black" fill="none"
+            d="M 14,4 C 11,4 8,0 6,1 C 3,1 1,4 1,7 C 0,9 2,12 5,14 C 7,15 13,14 16,14 C 17,13 21,12 23,11 C 24,9 29,7 29,4 C 28,1 24,0 22,0 C 19,0 16,3 14,4 Z"
+            style="fill: #FFE9C1; stroke: #B20000"/>
+    </svg>
+  </li>
+</ul>
+<ul>
   <li>An embedded HTML fragment, <code>foreignObject</code> in SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px">
       <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"
@@ -108,8 +120,8 @@ create. The available graphics elements are:</p>
   <li>A SVG text, <code>text</code> in SVG<svg
     xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
       <text y="33px" x="13px"
-      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A simple
-        text in SVG
+      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A
+        character string in SVG
       </text>
     </svg>
   </li>
