@@ -19,6 +19,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "HTMLhistory_f.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
