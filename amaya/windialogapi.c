@@ -158,6 +158,7 @@ static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
 static ThotBool     upper_lower = FALSE;
+static ThotBool     HTMLFormat;
 
 static OPENFILENAME OpenFileName;
 static CHAR_T*      szFilter;
@@ -1281,9 +1282,7 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       
-      if (!TextFormat &&
-	  DocumentTypes[SavingDocument] != docMath &&
-	  DocumentTypes[SavingDocument] != docSVG)
+      if (HTMLFormat)
 	{
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP), TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), TEXT("HTML"));
@@ -3790,7 +3789,11 @@ void   CreateSaveAsDlgWindow (parent, path_name)
 ThotWindow   parent;
 STRING path_name;
 #endif /* __STDC__ */
-{  
+{
+  HTMLFormat = (DocumentTypes[SavingDocument] != docText &&
+		        DocumentTypes[SavingDocument] != docCSS &&
+	            DocumentTypes[SavingDocument] != docMath &&
+	            DocumentTypes[SavingDocument] != docSVG);
   ustrcpy (currentPathName, path_name);
   DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 }
