@@ -165,7 +165,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
-amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema annot_schema
+amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compHTMLA compTextFileA compEDITORA graph_schema math_schema annot_schema
 
 amaya_src :  HTML.h $(AMAYA_SRC)
 
@@ -309,6 +309,8 @@ $(AMAYA)/TextFileT.TRA : $(AMAYA)/TextFileT.T ../bin/tra
 HTMLAPP.o : HTMLAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
+compHTMLA : HTML.h HTMLAPP.c
+
 HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
 	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
 	    $(CP) @srcdir@/HTML.A .  ; \
@@ -320,6 +322,8 @@ HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
 TextFileAPP.o : TextFileAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
 
+compTextFileA : TextFile.h TextFileAPP.c
+
 TextFile.h TextFileAPP.c : @srcdir@/TextFile.STR @srcdir@/TextFile.A
 	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
 	    $(CP) @srcdir@/TextFile.A .  ; \
@@ -330,6 +334,8 @@ TextFile.h TextFileAPP.c : @srcdir@/TextFile.STR @srcdir@/TextFile.A
 
 EDITORAPP.o : EDITORAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
+
+compEDITORA : EDITORAPP.c
 
 EDITORAPP.c : @srcdir@/EDITOR.A
 	(if test "@srcdir@" != "" -a "@srcdir@" != "." -a \
