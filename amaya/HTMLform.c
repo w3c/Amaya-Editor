@@ -1452,10 +1452,10 @@ Element             el;
                  ReturnOptionMenu = -1;
 #                ifndef _WINDOWS
                  TtaSetDialoguePosition ();
+#                endif /* !_WINDOWS */
                  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
                  /* wait for an answer from the user */
                  TtaWaitShowDialogue ();
-#                endif /* !_WINDOWS */
                  if (ReturnOption >= 0 && ReturnOptionMenu >= 0) {
                     /* make the returned option selected */
 					 if (ReturnOptionMenu == 0) { /* an item in the main (SELECT) menu */
