@@ -1299,7 +1299,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
    Return the value of that number in param number and moves ptr
    to the next token to be parsed.
   ----------------------------------------------------------------------*/
-static char *     GetNumber (char *ptr, int* number)
+char *     GetNumber (char *ptr, int* number)
 {
   int      integer, nbdecimal, exponent, i;
   char     *decimal;

@@ -2434,7 +2434,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 	      width = pBox->BxWidth;
 	      height = pBox->BxHeight;
 	      pEl = pBox->BxAbstractBox->AbElement;
-	      if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
+	      if (pointselect == 0 ||
+		  !APPgraphicModify (pEl, pointselect, frame, TRUE))
 		{
 		  if (pointselect != 0 && pBox->BxType != BoPicture)
 		    {
@@ -2530,7 +2531,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 			}
 		      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 		    }
-		  APPgraphicModify (pEl, pointselect, frame, FALSE);
+		  if (pointselect > 0)
+		    APPgraphicModify (pEl, pointselect, frame, FALSE);
 		}
 	    }
 	}

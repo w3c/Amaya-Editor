@@ -19,7 +19,7 @@
 #include "trans.h"
 #include "view.h"
 #include "content.h"
- 
+
 #include "SVG.h"
 #include "HTML.h"
 #ifndef _WINDOWS
@@ -380,18 +380,20 @@ ThotBool AttrPathDataDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
- TranslatePointsAttribute
- update attribute "points" for element el according its content
+ TranslatePolyline
+ update the transform attribute of element el to shift it of diatance
+ delta horizontally (if horiz) or vertically.
  -----------------------------------------------------------------------*/
-static void TranslatePointsAttribute (Element el, Document doc, int delta,
+static void TranslatePolyline (Element el, Document doc, int delta,
 				      TypeUnit unit, ThotBool horiz)
 {
-  Element		child;
-  ElementType		elType;
+  ElementType           elType;
   AttributeType	        attrType;
   Attribute		attr;
-  char		buffer[512], buffer1[8];
-  int			nbPoints, point, x, y, posX, posY;
+  ThotBool              error;
+  char		        buffer[512];
+  char                  *text, *ptr, *newText, *newPtr;
+  int			length;
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_line_)
@@ -474,55 +476,95 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta,
 #endif /* IV */
     }
   else
+    /* update (or create) the transform attribute for the element */
     {
-      child = TtaGetFirstChild (el);
-      if (child != NULL)
-	do
-	  {
-	    elType = TtaGetElementType (child);
-	    if (elType.ElTypeNum != SVG_EL_GRAPHICS_UNIT)
-	      TtaNextSibling (&child);
-	  }
-	while (child != NULL && elType.ElTypeNum != SVG_EL_GRAPHICS_UNIT);
-      
-      if (child != NULL)
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_transform;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
 	{
-	  nbPoints = TtaGetPolylineLength (child);
-	  if (nbPoints <= 0)
-	    /* nothing to do */
-	    return;
-	  
-	  attrType.AttrSSchema = elType.ElSSchema;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
 	  if (horiz)
-	    {
-	      posX = delta;
-	      posY = 0;
-	    }
+	    sprintf (buffer, "translate(%d,0)", delta);
 	  else
-	    {
-	      posX = 0;
-	      posY = delta;
-	    }
-	  buffer[0] = EOS;
-	  for (point = 1; point <= nbPoints; point++)
-	    {
-	      TtaGivePolylinePoint (child, point, unit, &x, &y);
-	      if (point > 1)
-		strcat (buffer, " ");
-	      sprintf (buffer1, "%d", x + posX);
-	      strcat (buffer, buffer1);
-	      strcat (buffer, ",");
-	      sprintf (buffer1, "%d", y + posY);
-	      strcat (buffer, buffer1);
-	    }
-	  attrType.AttrTypeNum = SVG_ATTR_points;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	    }
+	    sprintf (buffer, "translate(0,%d)", delta);
 	  TtaSetAttributeText (attr, buffer, el, doc);
+	  TtaRegisterAttributeCreate (attr, el, doc);
+	}
+      else
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  text = TtaGetMemory (length + 1);
+	  if (text)
+	    {
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      ptr = text;
+	      newText = TtaGetMemory (length + 50);
+	      if (newText)
+		{
+		  newPtr = newText;
+		  error = False;
+		  while (*ptr != EOS && !error)
+		    {
+		      if (!strncmp (ptr, "translate", 9))
+			{
+			  strncpy (newPtr, ptr, 9);
+			  ptr += 9; newPtr += 9;
+			  ptr = TtaSkipBlanks (ptr);
+			  if (*ptr != '(')
+			    error = TRUE;
+			  else
+			    {
+			      *newPtr = '('; newPtr++;
+			      ptr++;
+			      if (horiz)
+				{
+				  sprintf (newPtr, "%d", delta);
+				  while (*newPtr != EOS)
+				    newPtr++;
+				  while (*ptr != ',' && *ptr != ')' &&
+					 *ptr != EOS)
+				    ptr++;
+				}
+			      else
+				{
+				  while (*ptr != ',' && *ptr != ')' &&
+					 *ptr != EOS)
+				    {
+				      *newPtr = *ptr;
+				      ptr++; newPtr++;
+				    }
+				  if (*ptr != EOS)
+				    {
+				      *newPtr = ','; newPtr++;
+				      if (*ptr == ',')
+					{
+					  ptr++;
+					  ptr = TtaSkipBlanks (ptr);
+					}
+				      sprintf (newPtr, "%d", delta);
+				      while (*newPtr != EOS)
+					newPtr++;
+				      while (*ptr != ')' && *ptr != EOS)
+				        ptr++;
+				    }
+				}
+			    }
+			}
+		      else
+			{
+			  *newPtr = *ptr;
+			  ptr++; newPtr++;
+			}
+		    }
+		  *newPtr = EOS;
+		  TtaRegisterAttributeReplace (attr, el, doc);
+		  TtaSetAttributeText (attr, newText, el, doc);
+		  TtaFreeMemory (newText);
+		}
+	      TtaFreeMemory (text);
+	    }
 	}
     }
 }
@@ -531,7 +573,8 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta,
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
   The parameter delta is TRUE when the value is 
-  The parameter update is TRUE when the attribute must be parsed after the change.
+  The parameter update is TRUE when the attribute must be parsed after
+  the change.
  -----------------------------------------------------------------------*/
 static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
 			    int value, ThotBool delta, ThotBool update)
@@ -866,7 +909,7 @@ void CheckSVGRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == SVG_EL_polyline ||
 		  elType.ElTypeNum == SVG_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, UnPixel, TRUE);
+		TranslatePolyline (el, doc, val, UnPixel, TRUE);
 	      else
 		{
 		  if (elType.ElTypeNum == SVG_EL_circle ||
@@ -940,7 +983,7 @@ void CheckSVGRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == SVG_EL_polyline ||
 		  elType.ElTypeNum == SVG_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, UnPixel, FALSE);
+		TranslatePolyline (el, doc, val, UnPixel, FALSE);
 	      else
 		{
 		  if (elType.ElTypeNum == SVG_EL_circle ||
@@ -1117,6 +1160,69 @@ void GraphicsChanged (NotifyOnValue *event)
 }
 
 /*----------------------------------------------------------------------
+ UpdateStyleOrSvgAttr
+ update (or create) the style attribute or the SVG attribute corresponding
+ the presentation rule presRule for element el.
+ -----------------------------------------------------------------------*/
+static void UpdateStyleOrSvgAttr (PRule presRule, int presType, Element el,
+				  Document doc)
+{
+
+  ElementType    elType;
+  AttributeType  attrType;
+  Attribute      attr;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  switch (presType)
+    {
+      case PRSize:
+	attrType.AttrTypeNum = SVG_ATTR_font_size;
+	break;
+      case PRStyle:
+	attrType.AttrTypeNum = SVG_ATTR_font_style;
+	break;
+      case PRWeight:
+	attrType.AttrTypeNum = SVG_ATTR_font_weight;
+	break;
+      case PRFont:
+	attrType.AttrTypeNum = SVG_ATTR_font_family;
+	break;
+      case PRLineWeight:
+	attrType.AttrTypeNum = SVG_ATTR_stroke_width;
+	break;
+      case PRBackground:
+	attrType.AttrTypeNum = SVG_ATTR_fill;
+	break;
+      case PRForeground:
+	attrType.AttrTypeNum = SVG_ATTR_stroke;
+	break;
+      case PRFillPattern:
+	attrType.AttrTypeNum = 0;
+	break;
+      case PRLineStyle:
+	attrType.AttrTypeNum = 0;
+	break;
+      default:
+	attrType.AttrTypeNum = 0;
+	break;
+    }
+  /* is there already an attribute for the same property? */
+  if (attrType.AttrTypeNum == 0)
+    attr = NULL;
+  else
+    attr = TtaGetAttribute (el, attrType);
+  SetStyleAttribute (doc, el);
+  if (attr)
+    /* There is an SVG attribute for the same property. Remove it */
+    {
+      TtaRegisterAttributeDelete (attr, el, doc);
+      TtaRemoveAttribute (el, attr, doc);
+    }
+  TtaSetDocumentModified (doc);
+}
+
+/*----------------------------------------------------------------------
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
@@ -1130,9 +1236,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
   int           presType;
   int           mainView;
   int           x, y, width, height;
-  ThotBool      ret;
  
-  ret = FALSE; /* let Thot perform normal operation */
   el = event->element;
   elType = TtaGetElementType (el);
   doc = event->document;
@@ -1173,17 +1277,10 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	}
     }
 
-  if (presType == PRSize       || presType == PRStyle      ||
-      presType == PRWeight     || presType == PRFont       ||
-      presType == PRLineStyle  || presType == PRLineWeight ||
-      presType == PRBackground || presType == PRForeground ||
-      presType == PRFillPattern)
-    {
-      SetStyleAttribute (doc, el);
-      TtaSetDocumentModified (doc);
-    }
-  else if (presType == PRVertPos || presType == PRHorizPos ||
-           presType == PRHeight  || presType == PRWidth)
+  if (presType != PRVertPos && presType != PRHorizPos &&
+      presType != PRHeight  && presType != PRWidth)
+    UpdateStyleOrSvgAttr (presRule, presType, el, doc);
+  else
     {
       unit = TtaGetPRuleUnit (presRule);
       mainView = TtaGetViewFromName (doc, "Formatted_view");
@@ -1194,7 +1291,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  y = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
-	    TranslatePointsAttribute (el, doc, y, unit, FALSE);
+	    TranslatePolyline (el, doc, y, unit, FALSE);
 	  else
 	    UpdatePositionAttribute (el, doc, y, height, FALSE);
 	}
@@ -1204,7 +1301,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  x = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
-	    TranslatePointsAttribute (el, doc, x, unit, TRUE);
+	    TranslatePolyline (el, doc, x, unit, TRUE);
 	  else
 	    UpdatePositionAttribute (el, doc, x, width, TRUE);
 	}
@@ -1236,12 +1333,13 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
     }
-  return ret; /* let Thot perform normal operation */
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
  GraphicsPRuleDeleted
- A specific presentation rule has been deleted
+ A specific presentation rule has been deleted by the user, update
+ the "style" attribute accordingly.
  -----------------------------------------------------------------------*/
 void GraphicsPRuleDeleted (NotifyPresentation *event)
 {
@@ -1392,10 +1490,32 @@ void NameSpaceGenerated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ InheritPRule
+ Check if any ancestor of element el has a PRule of type property
+ and return the PRule found or NULL if not found.
+ -----------------------------------------------------------------------*/
+static PRule InheritPRule (Element el, int property)
+{
+  Element     asc;
+  PRule       inheritedPRule;
+
+  inheritedPRule = NULL;
+  asc = TtaGetParent (el);
+  while (asc && !inheritedPRule)
+    {
+      inheritedPRule = TtaGetPRule (asc, property);
+      if (!inheritedPRule)
+	asc = TtaGetParent (asc);
+    }
+  return (inheritedPRule);
+}
+
+/*----------------------------------------------------------------------
  InheritAttribute
  Check if any ancestor of element el has an attribute of type attrType
  and return the attribute found or NULL if not found.
- Check only ancestors defined in the same Thot schema (name space) as el.
+ Check only ancestors defined in the same Thot schema (aka namespace) as
+ element el.
  -----------------------------------------------------------------------*/
 static Attribute InheritAttribute (Element el, AttributeType attrType)
 {
@@ -1403,7 +1523,7 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
   SSchema     sch;
   Attribute   inheritedAttr;
 
-  inheritedAttr = FALSE;
+  inheritedAttr = NULL;
   sch = TtaGetElementType(el).ElSSchema;
   asc = TtaGetParent (el);
   while (asc && !inheritedAttr)
@@ -1634,11 +1754,15 @@ void CreateGraphicElement (int entry)
 	  attrType.AttrTypeNum = SVG_ATTR_stroke;
 	  if (!InheritAttribute (newEl, attrType))
 	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (newEl, attr, doc);
-	      TtaSetAttributeText (attr, "black", newEl, doc);
-	      ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
-				      doc, FALSE);
+	      /* is there a CSS stroke property? */
+	      if (!InheritPRule (newEl, PRForeground))
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  TtaSetAttributeText (attr, "black", newEl, doc);
+		  ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
+					  doc, FALSE);
+		}
 	    }
 	  if (newType.ElTypeNum != SVG_EL_line_)
 	    {
@@ -1646,11 +1770,15 @@ void CreateGraphicElement (int entry)
 	      attrType.AttrTypeNum = SVG_ATTR_fill;
 	      if (!InheritAttribute (newEl, attrType))
 		{
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (newEl, attr, doc);
-		  TtaSetAttributeText (attr, "none", newEl, doc);
-		  ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
-					  doc, FALSE);
+		  /* is there a CSS fill property? */
+		  if (!InheritPRule (newEl, PRFillPattern))
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (newEl, attr, doc);
+		      TtaSetAttributeText (attr, "none", newEl, doc);
+		      ParseCSSequivAttribute (attrType.AttrTypeNum, attr,
+					      newEl, doc, FALSE);
+		    }
 		}
 	    }
 	}

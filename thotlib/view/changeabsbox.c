@@ -403,7 +403,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 				pR = NULL;
 			    }
 			}
-		      while (valNum > 0);
+		      while (valNum > 0 && pR);
 		      /* passe a l'attribut suivant de l'element */
 		      pA = pA->AeNext;
 		    }

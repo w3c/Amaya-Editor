@@ -1965,9 +1965,6 @@ void ElementPasted (NotifyElement * event)
   Attribute           attr;
   SSchema             HTMLschema;
   CSSInfoPtr          css;
-#ifndef _I18N_
-  char               *ptr;
-#endif /* _I18N_ */
   char               *value;
   int                 length, oldStructureChecking;
 
