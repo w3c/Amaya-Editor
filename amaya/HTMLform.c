@@ -75,51 +75,6 @@ void RestoreDocumentStatus (event)
  
  
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/ 
-#ifdef __STDC__
-boolean DeleteText (NotifyElement *event)
-#else /* __STDC__*/
-boolean DeleteText (event)
-     NotifyElement *event;
-#endif /* __STDC__*/
-{
-  ElementType         elType;
-  Element             parent;
-  boolean             done;
-
-  parent = TtaGetParent (event->element);
-  /* let Thot perform normal operation */
-  done = FALSE;
-  if (parent != NULL)
-    {
-      elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == HTML_EL_Text_Input
-	  || elType.ElTypeNum == HTML_EL_Text_Area)
-	{
-	  TtaDeleteTree (parent, event->document);
-	  /* don't let Thot perform normal operation */
-	  done = FALSE;
-	}
-      else
-	{
-	  parent = TtaGetParent (parent);
-	  if (parent != NULL)
-	    {
-	      elType = TtaGetElementType (parent);
-	      if (elType.ElTypeNum == HTML_EL_Text_Input
-		  || elType.ElTypeNum == HTML_EL_Text_Area)
-		{
-		  TtaDeleteTree (parent, event->document);
-		  /* don't let Thot perform normal operation */
-		  done = FALSE;
-		}
-	    }
-	}
-    }
-  return (done);
-}
-
-/*----------------------------------------------------------------------
   EscapeChar
   writes the equivalent escape code of a car in a string		
   ----------------------------------------------------------------------*/
@@ -312,7 +267,7 @@ int                 mode;
    Element             elForm;
    Attribute           attr, attrS, def;
    AttributeType       attrType, attrTypeS;
-   int                 length, i;
+   int                 length;
    char                name[MAX_LENGTH], value[MAX_LENGTH];
    boolean             multipleSelects, defaultSelected;
    int                 modified = FALSE;
@@ -554,6 +509,7 @@ int                 mode;
 
 			   case HTML_EL_Text_Area:
 			   case HTML_EL_Text_Input:
+			   case HTML_EL_File_Input:
 			   case HTML_EL_Password_Input:
 			      if (mode == HTML_EL_Submit_Input)
 				{
@@ -581,12 +537,6 @@ int                 mode;
 				     {
 					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (def, value, &length);
-					if (elType.ElTypeNum == HTML_EL_Password_Input)
-					   {
-					   for (i = 0; i < length; i++)
-					      value[i] = '*';
-					   value[length] = '\0';
-					   }
 				     }
 				   else
 				     /* there's no default value */
@@ -770,11 +720,6 @@ Element             element;
 			  }
 		      }
 		    break;
-
-		 case HTML_EL_File_Input:
-		    /* not supported for the moment */
-		    button_type = HTML_EL_File_Input;
-		    return;
 
 	      case HTML_EL_PICTURE_UNIT:
 		button_type = HTML_EL_Submit_Input;
@@ -1036,33 +981,51 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
-  SelectIncludedText
+  SelectInsertedText
+  The user has clicked on a Frame element.
+  if it's within a Button_Input, a Reset_Input or a Submit_Input, select
+  the parent element.
+  If it's within a Text_Area, a Text_Input, a File_Input or a Password_Input,
+  put the caret at the end of the text element within the Inserted_Text
+  element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SelectIncludedText (NotifyElement * event)
+boolean             SelectInsertedText (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             SelectIncludedText (event)
+boolean             SelectInsertedText (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
+   Element             textLeaf, parent;
    int		       length;
+   boolean	       ret;
 
    /* search the first text leaf */
-   elType = TtaGetElementType (event->element);
-   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-   el = TtaSearchTypedElement (elType, SearchForward, event->element);
-   if (el != NULL && TtaIsAncestor(el, event->element))
+   parent = TtaGetParent(event->element);
+   elType = TtaGetElementType (parent);
+   if (elType.ElTypeNum == HTML_EL_Submit_Input ||
+       elType.ElTypeNum == HTML_EL_Reset_Input ||
+       elType.ElTypeNum == HTML_EL_Button_Input)
      {
-	length = TtaGetTextLength (el);
-        TtaSelectString (event->document, el, length+1, length);
-	/* refuse to select the clicked element */
-        return TRUE;
+     TtaSelectElement (event->document, parent);
+     ret = TRUE;	/* prevent Thot from selecting the clicked element */
      }
    else
-	return FALSE;
+     {
+     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+     textLeaf = TtaSearchTypedElement (elType, SearchForward, parent);
+     if (textLeaf != NULL && TtaIsAncestor(textLeaf, parent))
+        {
+	length = TtaGetTextLength (textLeaf);
+        TtaSelectString (event->document, textLeaf, length+1, length);
+        ret = TRUE;	/* prevent Thot from selecting the clicked element */
+        }
+     else
+	ret = FALSE;
+     }
+   return ret;
 }
 
 /*----------------------------------------------------------------------

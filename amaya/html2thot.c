@@ -546,6 +546,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"BLOCKQUOTE", SPACE, HTML_EL_Block_Quote, NULL},
    {"BODY", SPACE, HTML_EL_BODY, NULL},
    {"BR", 'E', HTML_EL_BR, NULL},
+   {"BUTTON", SPACE, HTML_EL_BUTTON, NULL},
    {"C", SPACE, HTML_EL_TEXT_UNIT, NULL},
    {"CAPTION", SPACE, HTML_EL_CAPTION, NULL},
    {"CENTER", SPACE, HTML_EL_Center, NULL},
@@ -577,6 +578,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"INS", SPACE, HTML_EL_INS, NULL},
    {"ISINDEX", 'E', HTML_EL_ISINDEX, NULL},
    {"KBD", SPACE, HTML_EL_Keyboard, NULL},
+   {"LABEL", SPACE, HTML_EL_LABEL, NULL},
    {"LI", SPACE, HTML_EL_List_Item, NULL},
    {"LINK", 'E', HTML_EL_LINK, NULL},
    {"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
@@ -682,8 +684,9 @@ static int          CharLevelElement[] =
 #endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
-   HTML_EL_Text_Input,
+   HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
    HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
+   HTML_EL_LABEL,
    HTML_EL_BR,
    0};
 
@@ -832,6 +835,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 
    {"FACE", "BASEFONT", 'A', HTML_ATTR_BaseFontFace},
    {"FACE", "FONT", 'A', HTML_ATTR_face},
+   {"FOR", "LABEL", 'A', HTML_ATTR_Associated_control},
    {"FOR", "SCRIPT", 'A', HTML_ATTR_for_},
    {"FRAME", "TABLE", 'A', HTML_ATTR_frame},
 
@@ -918,6 +922,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"TARGET", "", 'A', HTML_ATTR_target_},
    {"TEXT", "", 'A', HTML_ATTR_TextColor},
    {"TITLE", "", 'A', HTML_ATTR_Title},
+   {"TYPE", "BUTTON", 'A', HTML_ATTR_Button_type},
    {"TYPE", "LI", 'A', HTML_ATTR_ItemStyle},
    {"TYPE", "LINK", 'A', HTML_ATTR_Link_type},
    {"TYPE", "A", 'A', HTML_ATTR_Link_type},
@@ -1001,6 +1006,10 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_ItemStyle, "SQUARE", HTML_ATTR_ItemStyle_VAL_square},
    {HTML_ATTR_ItemStyle, "CIRCLE", HTML_ATTR_ItemStyle_VAL_circle},
 
+   {HTML_ATTR_Button_type, "BUTTON", HTML_ATTR_Button_type_VAL_button},
+   {HTML_ATTR_Button_type, "SUBMIT", HTML_ATTR_Button_type_VAL_submit},
+   {HTML_ATTR_Button_type, "RESET", HTML_ATTR_Button_type_VAL_reset},
+
 #ifdef MATHML
    {HTML_ATTR_mode, "DISPLAY", HTML_ATTR_mode_VAL_display},
    {HTML_ATTR_mode, "INLINE", HTML_ATTR_mode_VAL_inline_math},
@@ -1061,9 +1070,10 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_valuetype, "OBJECT", HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
+   {DummyAttribute, "BUTTON", HTML_EL_Button_Input},
    {DummyAttribute, "CHECKBOX", HTML_EL_Checkbox_Input},
-   {DummyAttribute, "HIDDEN", HTML_EL_Hidden_Input},
    {DummyAttribute, "FILE", HTML_EL_File_Input},
+   {DummyAttribute, "HIDDEN", HTML_EL_Hidden_Input},
    {DummyAttribute, "IMAGE", HTML_EL_PICTURE_UNIT},
    {DummyAttribute, "PASSWORD", HTML_EL_Password_Input},
    {DummyAttribute, "RADIO", HTML_EL_Radio_Input},
@@ -2666,7 +2676,7 @@ Element             el;
 #else
    char               *name1, *name2;
 #endif
-   int                 length, i;
+   int                 length;
 
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
@@ -2740,7 +2750,7 @@ Element             el;
 		 }
 		break;
 
-	    case HTML_EL_Input:	/*  it's an INPUT without TYPE attribute */
+	    case HTML_EL_Input:	/*  it's an INPUT without any TYPE attribute */
 		/* Create a child of type Text_Input */
 		elType.ElTypeNum = HTML_EL_Text_Input;
 		child = TtaNewTree (theDocument, elType, "");
@@ -2748,6 +2758,7 @@ Element             el;
 
 	    case HTML_EL_Text_Input:
 	    case HTML_EL_Password_Input:
+	    case HTML_EL_File_Input:
 		attrType.AttrSSchema = HTMLSSchema;
 		attrType.AttrTypeNum = HTML_ATTR_Value_;
 		attr = TtaGetAttribute (el, attrType);
@@ -2771,14 +2782,7 @@ Element             el;
 			       {
 			       /* copy attribute value into the text leaf */
 		               text = TtaGetMemory (length + 1);
-			       if (elType.ElTypeNum == HTML_EL_Text_Input)
-		                  TtaGiveTextAttributeValue (attr, text, &length);
-			       else if (elType.ElTypeNum == HTML_EL_Password_Input)
-				  {
-			          for (i = 0; i < length; i++)
-				      text[i] = '*';
-				  text[length] = '\0';
-				  }
+		               TtaGiveTextAttributeValue (attr, text, &length);
 			       TtaSetTextContent (leaf, text, currentLanguage,
 					          theDocument);
 			       TtaFreeMemory (text);
@@ -3856,44 +3860,44 @@ char                c;
    boolean             ok;
 
    CloseBuffer ();
-   /* seach the HTML tag in the mapping table */
-   schema = HTMLSSchema;
-   entry = MapGI (inputBuffer, &schema, theDocument);
-   if (entry < 0)
-     {
-	ok = FALSE;
-	if (HTMLrootClosingTag && HTMLrootClosingTag != EOS)
+
+   /* is it the end of the current HTML fragment ? */
+   ok = FALSE;
+   if (HTMLrootClosingTag != EOS)
+      {
+	/* look for a colon in the element name (namespaces) and ignore the
+	   prefix if there is one */
+	for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
+	if (inputBuffer[i] == ':')
+	   i++;
+	else
+	   i = 0;
+        if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
 	   {
-	   /* look for a colon in the element name (namespaces) and ignore the
-	      prefix if there is one */
-	   for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
-	   if (inputBuffer[i] == ':')
-	      i++;
-	   else
-	      i = 0;
-           if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
-	      {
-	      HTMLrootClosed = TRUE;
-	      ok = TRUE;
-	      }
+	   HTMLrootClosed = TRUE;
+	   ok = TRUE;
 	   }
-	if (!ok)
-	   {
-	   sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
-	   ParseHTMLError (theDocument, msgBuffer);
-	   /* create an Invalid_element */
-	   sprintf (msgBuffer, "</%s", inputBuffer);
-	   InsertInvalidEl (msgBuffer, FALSE);
-	   }
-     }
-   else if (!CloseElement (entry, -1))
-      /* the end tag does not close any current element */
-     {
+      }
+   if (!ok)
+      {
+      /* search the HTML tag in the mapping table */
+      schema = HTMLSSchema;
+      entry = MapGI (inputBuffer, &schema, theDocument);
+      if (entry < 0)
+        {
+	sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
+	ParseHTMLError (theDocument, msgBuffer);
+	/* create an Invalid_element */
+	sprintf (msgBuffer, "</%s", inputBuffer);
+	InsertInvalidEl (msgBuffer, FALSE);
+        }
+      else if (!CloseElement (entry, -1))
+        /* the end tag does not close any current element */
+        {
 	/* print an error message... */
 	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
 	ParseHTMLError (theDocument, msgBuffer);
 	/* ... and try to recover */
-	ok = FALSE;
 	if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
 	    inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
 	    inputBuffer[2] == EOS)
@@ -3935,7 +3939,8 @@ char                c;
 	     sprintf (msgBuffer, "</%s", inputBuffer);
 	     InsertInvalidEl (msgBuffer, TRUE);
 	  }
-     }
+        }
+      }
    InitBuffer ();
 }
 
@@ -4485,7 +4490,9 @@ char                c;
 	  {
 	     elType = TtaGetElementType (lastAttrElement);
 	     if (elType.ElTypeNum == HTML_EL_Text_Input ||
-		 elType.ElTypeNum == HTML_EL_Password_Input)
+		 elType.ElTypeNum == HTML_EL_Password_Input ||
+		 elType.ElTypeNum == HTML_EL_File_Input ||
+		 elType.ElTypeNum == HTML_EL_Input)
 		/* create a Default_Value attribute with the same content */
 		{
 		attrType1.AttrSSchema = attrType.AttrSSchema;
@@ -5528,6 +5535,7 @@ char               *HTMLbuf;
 		      /* new line in a text element */
 		      if ((Within (HTML_EL_Preformatted, HTMLSSchema) &&
 			      !Within (HTML_EL_Option_Menu, HTMLSSchema)) ||
+			   Within (HTML_EL_Text_Area, HTMLSSchema) ||
 			   Within (HTML_EL_SCRIPT, HTMLSSchema) ||
 			   Within (HTML_EL_STYLE_, HTMLSSchema))
 			/* within preformatted text */

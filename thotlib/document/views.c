@@ -570,7 +570,9 @@ char               *newName;
    len = 0;
    strcpy (buffer, newName);
    strncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
+   pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
    strncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
+   pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
    len = strlen (newName);
    if (strcmp (newName + len - 4, ".PIV") == 0)
      {

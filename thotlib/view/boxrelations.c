@@ -1252,7 +1252,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  fprintf (stderr, "Bad Width rule on %s\n", AbsBoxType (pAb));
+		  fprintf (stderr, "Bad Width rule on %s\n", AbsBoxType (pAb, TRUE));
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1301,7 +1301,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  fprintf (stderr, "Bad Height rule on %s\n", AbsBoxType (pAb));
+		  fprintf (stderr, "Bad Height rule on %s\n", AbsBoxType (pAb, TRUE));
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1621,9 +1621,9 @@ boolean             horizRef;
 					   /* Il y a une erreur de dimension */
 					   /* Erreur sur le schema de presentation */
 					   if (horizRef)
-					     fprintf (stderr, "Bad HorizPos rule on %s\n", AbsBoxType (pAb));
+					     fprintf (stderr, "Bad HorizPos rule on %s\n", AbsBoxType (pAb, TRUE));
 					   else
-					     fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb));
+					     fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb, TRUE));
 
 					}
 				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);

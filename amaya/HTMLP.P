@@ -1203,6 +1203,52 @@ BOXES
 		END;
 	END;
 
+ VALUE_ASSOC_CTRL: BEGIN
+	Content: (Associated_control);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ButtonTypeButton: BEGIN
+	Content: Text ' type=button';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+ ButtonTypeSubmit: BEGIN
+	Content: Text ' type=submit';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+ ButtonTypeReset: BEGIN
+	Content: Text ' type=reset';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  ATTR_HTTPEQUIV: BEGIN
 	Content: Text ' http-equiv=';
 	Visibility: 0;
@@ -1666,7 +1712,7 @@ BOXES
 	END;
 
  Text_Mark: BEGIN
-	Content: Graphics 'Z';
+	Content: Graphics 'Z';	{ draw the top and left side of the box }
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left - 1 px;
 	Width: Enclosing . Width + 2 px;
@@ -2203,8 +2249,44 @@ BOXES
 		END;
 	END;
 
+ LABEL_S: BEGIN
+	Content: Text 'LABEL';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ BUTTON_S: BEGIN
+	Content: Text 'BUTTON';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  ATTR_Hidden: BEGIN
 	Content: Text ' type=HIDDEN';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_File: BEGIN
+	Content: Text ' type=FILE';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2241,6 +2323,18 @@ BOXES
 
  ATTR_Submit: BEGIN
 	Content: Text ' type=SUBMIT';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_Button: BEGIN
+	Content: Text ' type=BUTTON';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2556,7 +2650,6 @@ BOXES
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: HMiddle = Enclosing . HMiddle;
 	Height: 1.2;
-	Size: Enclosing + 2;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -2916,10 +3009,10 @@ BOXES
 
  ATTR_NAME: BEGIN
 	Content: Text ' name=';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
 	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
@@ -2927,10 +3020,10 @@ BOXES
 	END;
  VALUE_NAME: BEGIN
 	Content: (NAME);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
 	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
@@ -6390,7 +6483,7 @@ RULES
 		Visibility: 0;
 	END;
 
-   MathML:
+ MathML:
         BEGIN
         PageBreak: No;
         LineBreak: No;
@@ -6731,8 +6824,6 @@ RULES
  Option_Menu: BEGIN
 	CreateEnclosing(Option_Box);
 	CreateBefore(SELECT_S);
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
 	CreateWith(VerticalLine);
 	CreateAfter(Option_Frame);
 	CreateFirst(Option_gif);
@@ -6786,9 +6877,9 @@ RULES
 
  Inserted_Text: BEGIN
 	Line;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	Width: Enclosing . Width;
+	HorizPos: Left = Enclosing . Left + 0.4;
+	VertPos: Top = Enclosing . Top + 0.3;
+	Width: Enclosing . Width - 0.6;
 	{Size: GrandFather =;}
 	IN Structure_view BEGIN
 		Visibility: 0;
@@ -6848,6 +6939,15 @@ RULES
 		END;
 	END;
 
+ File_Input: BEGIN
+	CreateBefore(INPUT_S);
+	CreateBefore(ATTR_File);
+	{******* more ******}
+	IN Structure_view BEGIN
+		Height: DOC_FONTSIZE;
+		END;
+	END;
+
  Hidden_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Hidden);
@@ -6892,7 +6992,7 @@ RULES
 #endif
 	LineBreak: No;
 	IN Structure_view BEGIN
-		Visibility: 1;
+		Visibility: Enclosing =;
 		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		END;
@@ -6913,10 +7013,39 @@ RULES
 #endif
 	LineBreak: No;
 	IN Structure_view BEGIN
-		Visibility: 1;
+		Visibility: Enclosing =;
 		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		END;
+	END;
+
+ Button_Input: BEGIN
+	CreateBefore(INPUT_S);
+	CreateBefore(ATTR_Button);
+	CreateBefore(Text_Space);
+	CreateFirst(Value_Box);
+	CreateLast(Button_Mark);
+	CreateLast(Button_Frame);
+	CreateAfter(Text_Space);
+	Width: 5 Min;
+	Depth: 50;
+#ifndef BLACK_WHITE
+	Background : Grey;
+#endif
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: 1 px;
+		Height: DOC_FONTSIZE;
+		END;
+	END;
+
+ LABEL: BEGIN
+ 	CreateBefore(LABEL_S);
+	END;
+
+ BUTTON: BEGIN
+	CreateBefore(BUTTON_S);
 	END;
 
  Block_Quote: BEGIN
@@ -7667,6 +7796,18 @@ ATTRIBUTES
 	CreateBefore(VALUE_TABINDEX);
 	END;
 
+ Associated_control: BEGIN
+	CreateBefore(ATTR_FOR);
+	CreateBefore(VALUE_ASSOC_CTRL);
+	END;
+
+ Button_type = button:
+	CreateBefore (ButtonTypeButton);
+ Button_type = submit:
+	CreateBefore (ButtonTypeSubmit);
+ Button_type = reset:
+	CreateBefore (ButtonTypeReset);
+
  NAME(Anchor):
 	BEGIN
 	CreateBefore(ATTR_NAME);
@@ -7693,7 +7834,6 @@ ATTRIBUTES
 		Underline: Enclosing =;
 		END;
 	END;
-
  NAME(MAP):
 	BEGIN
 	CreateBefore(ATTR_NAME);
@@ -7716,52 +7856,12 @@ ATTRIBUTES
 		Underline: Enclosing =;
 		END;
 	END;
+ NAME:
+	BEGIN
+	CreateBefore(ATTR_NAME);
+	CreateBefore(VALUE_NAME);
+	END;
 
- NAME(Object):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Text_Area):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Checkbox_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Radio_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Text_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Hidden_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Password_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Reset_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
- NAME(Submit_Input):
-	BEGIN
-	CreateBefore(ATTR_NAME);
-	CreateBefore(VALUE_NAME);
-	END;
  Script_URL:
 	BEGIN
 	CreateBefore(ATTR_ActURL);

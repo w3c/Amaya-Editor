@@ -171,6 +171,7 @@ char               *documentName;
 		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		  /* The document is named */
 		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		  /* one get an identifier to the document */
 		  GetDocIdent (&pDoc->DocIdent, documentName);
 		  /* keep the actual schema path in the document context */
@@ -236,6 +237,7 @@ int                 accessMode;
 	else
 	  {
 	     strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
 		if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
@@ -334,7 +336,9 @@ char               *documentName;
 		  ChangeNomExt (pDoc, documentName, TRUE);
 		  /* Puts the new name into the document descriptor */
 		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		  strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #ifndef NODISPLAY
 		  /* changes the title of frames */
 		  ChangeDocumentName (pDoc, documentName);
@@ -1178,7 +1182,9 @@ char               *documentName;
        ChangeDocumentName (LoadedDocument[document - 1], documentName);
 #else
        strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
+       LoadedDocument[document - 1]->DocDName[MAX_NAME_LENGTH - 1] = EOS;
        strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+       LoadedDocument[document - 1]->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #endif
      }
 }

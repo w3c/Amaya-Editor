@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
-/*
  * Handle callbacks for Thot events
  *
  * Author: I. Vatton (INRIA)
@@ -35,6 +26,42 @@
 
 #include "readstr_f.h"
 #include "callbackinit_f.h"
+
+/*----------------------------------------------------------------------
+   ElementHasAction
+   It returns TRUE if element pEl has an action associated with event event/pre
+   else it returns FALSE.
+   Only Users action are considered.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean   ElementHasAction (PtrElement pEl, APPevent event, boolean pre)
+#else  /* __STDC__ */
+boolean   ElementHasAction (pEl, event, pre)
+PtrElement pEl;
+APPevent event;
+boolean pre;
+
+#endif /* __STDC__ */
+{
+   PtrActionEvent	pActEvent;
+   boolean		hasAction;
+
+   hasAction = FALSE;
+
+   if (pEl->ElStructSchema != NULL)
+     if (pEl->ElStructSchema->SsActionList != NULL)
+	{
+	/* take the concerned actions list */
+	pActEvent = pEl->ElStructSchema->SsActionList->EvSList[event];
+	while (pActEvent != NULL && !hasAction)
+	    if (pActEvent->AEvPre == pre &&
+	        pActEvent->AEvType == pEl->ElTypeNumber)
+		hasAction = TRUE;
+	    else
+		pActEvent = pActEvent->AEvNext;
+	}
+   return hasAction;
+}
 
 /*----------------------------------------------------------------------
    CallAction looks for the concerned action in event list.

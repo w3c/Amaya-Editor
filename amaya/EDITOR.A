@@ -96,7 +96,12 @@ MENUS
 	Types.Form button:BRadio -> CreateRadio;
 	Types.Form button:BOption -> CreateOption;
 	Types.Form button:BTextInput -> CreateTextInput;
+	Types.Form button:BPasswordInput -> CreatePasswordInput;
 	Types.Form button:BTextArea -> CreateTextArea;
+	Types.Form button:BFileInput -> CreateFileInput;
+	Types.Form button:BHiddenInput -> CreateHiddenInput;
+	Types.Form button:BLabel -> CreateLabel;
+	Types.Form button:BPushButton -> CreatePushButton;
 	Types.Form button:BSubmit -> CreateSubmit;
 	Types.Form button:BReset -> CreateReset;
 

@@ -1211,30 +1211,36 @@ int                 elInput;
 	   elType.ElTypeNum = elInput;
 	   TtaInsertElement (elType, doc);
 	   TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
-	   elType = TtaGetElementType (input);
-	   while (elType.ElTypeNum != elInput)
+	   if (input)
 	     {
+	     elType = TtaGetElementType (input);
+	     while (elType.ElTypeNum != elInput)
+	       {
 	       input = TtaGetParent (input);
 	       elType = TtaGetElementType (input);
-	     }
-	   /* add a text before if needed */
-	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	   el = input;
-	   TtaPreviousSibling (&el);
-	   if (el == NULL)
-	     {
+	       }
+	     /* add a text before if needed */
+	     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	     el = input;
+	     TtaPreviousSibling (&el);
+	     if (el == NULL)
+	       {
 	       el = TtaNewElement (doc, elType);
 	       TtaInsertSibling (el, input, TRUE, doc);
+	       }
 	     }
 	 }
        /* Insert a text element after */
-       el = input;
-       TtaNextSibling (&el);
-       if (el == NULL)
+       if (input)
 	 {
+         el = input;
+         TtaNextSibling (&el);
+         if (el == NULL)
+	   {
 	   el = TtaNewElement (doc, elType);
 	   TtaInsertSibling (el, input, FALSE, doc);
 	   TtaSelectElement (doc, el);
+	   }
 	 }
      }
 }
@@ -1356,6 +1362,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  CreateTextInput
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTextInput (Document doc, View view)
@@ -1367,6 +1374,22 @@ View                view;
 #endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Text_Input);
+}
+
+
+/*----------------------------------------------------------------------
+  CreatePasswordInput
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreatePasswordInput (Document doc, View view)
+#else  /* __STDC__ */
+void                CreatePasswordInput (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CreateInputElement (doc, view, HTML_EL_Password_Input);
 }
 
 
@@ -1403,6 +1426,70 @@ View                view;
 	 }
      }
 }
+
+
+/*----------------------------------------------------------------------
+  CreateFileInput
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateFileInput (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateFileInput (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CreateInputElement (doc, view, HTML_EL_File_Input);
+}
+
+
+/*----------------------------------------------------------------------
+  CreateHiddenInput
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateHiddenInput (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateHiddenInput (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CreateInputElement (doc, view, HTML_EL_Hidden_Input);
+}
+
+/*----------------------------------------------------------------------
+  CreateLabel
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateLabel (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateLabel (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CreateInputElement (doc, view, HTML_EL_LABEL);
+}
+
+
+/*----------------------------------------------------------------------
+  CreatePushButton
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreatePushButton (Document doc, View view)
+#else  /* __STDC__ */
+void                CreatePushButton (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CreateInputElement (doc, view, HTML_EL_BUTTON);
+}
+
 
 
 /*----------------------------------------------------------------------

@@ -387,6 +387,14 @@ RULES
 	Remove;
 	END;
 
+ LABEL: BEGIN
+	END;
+
+ BUTTON: BEGIN
+	Create '[' before;
+	Create ']' after;
+	END;
+
  Checkbox_Input: BEGIN
 	If Checked = Yes_
 	   Create '[x] ';
@@ -430,6 +438,15 @@ RULES
 	END;
 
  Submit_Input: BEGIN
+	Create '<<';
+	Create Value_;
+	Create '>>';
+	If Last
+  	   Create '\12';
+	Remove;
+	END;
+
+ Button_Input: BEGIN
 	Create '<<';
 	Create Value_;
 	Create '>>';
@@ -793,6 +810,12 @@ ATTRIBUTES
 
  tabindex: BEGIN
 	Remove;
+	END;
+
+ Associated_control: BEGIN
+	END;
+
+ Button_type: BEGIN
 	END;
 
  Class: BEGIN

@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *AbsBoxType ( PtrAbstractBox pAb );
+extern char *AbsBoxType ( PtrAbstractBox pAb,
+                          boolean origName );
 extern void LibAbbView ( PtrAbstractBox pAb );
 extern void LibAbbEl ( PtrElement pEl );
 extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb );
@@ -38,7 +39,8 @@ extern void JumpIntoView ( int frame,
 
 #else /* __STDC__ */
 
-extern char *AbsBoxType (/* PtrAbstractBox pAb */);
+extern char *AbsBoxType (/* PtrAbstractBox pAb,
+                            boolean origName */);
 extern void LibAbbView (/* PtrAbstractBox pAb */);
 extern void LibAbbEl (/* PtrElement pEl */);
 extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb */);

@@ -65,38 +65,33 @@ extern void         DisplayFrame ();
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *AbsBoxType (PtrAbstractBox pAb)
+char               *AbsBoxType (PtrAbstractBox pAb, boolean origName)
 
 #else  /* __STDC__ */
-char               *AbsBoxType (pAb)
+char               *AbsBoxType (pAb, origName)
 PtrAbstractBox      pAb;
+boolean		    origName;
 
 #endif /* __STDC__ */
 
 {
-   SRule              *pR;
-   PresentationBox    *pBo1;
    PtrElement          pEl;
 
    if (pAb == NULL)
       strcpy (text, " ");
    else
      {
-	if (pAb->AbPresentationBox)
-	  {
-	     pR = &pAb->AbElement->ElStructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
-	     /* copie le nom du type d'element structure qui a cree la boite */
-	     strcpy (text, pR->SrName);
-	     strcat (text, ".");
-	     /* copie a la suite le nom du type de boite de presentation */
-	     pBo1 = &pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1];
-	     strcat (text, pBo1->PbName);
-	  }
+	pEl = pAb->AbElement;
+	/* copie le nom du type d'element structure auquel appartient la boite */
+	if (origName)
+	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
 	else
-	   /* pave d'un element de structure */
+	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	if (pAb->AbPresentationBox)
+	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     pEl = pAb->AbElement;
-	     strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	     strcat (text, ".");
+	     strcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }
    return (text);

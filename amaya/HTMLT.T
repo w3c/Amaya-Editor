@@ -575,8 +575,22 @@ RULES
 	Create '</textarea>';
 	END;
 
+ LABEL: BEGIN
+	Create '<label';
+	Create Attributes;
+	Create '>';
+	Create '</label>';
+	END;
+
+ BUTTON: BEGIN
+	Create '<button';
+	Create Attributes;
+	Create '>';
+	Create '</button>';
+	END;
+
  Checkbox_Input: BEGIN
-	Create '<input type=checkbox';
+	Create '<input type="checkbox"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -587,7 +601,7 @@ RULES
 	END;
 
  Radio_Input: BEGIN
-	Create '<input type=radio';
+	Create '<input type="radio"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -598,7 +612,7 @@ RULES
 	END;
 
  Text_Input: BEGIN
-	Create '<input type=text';
+	Create '<input type="text"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -609,7 +623,7 @@ RULES
 	END;
 
  Hidden_Input: BEGIN
-	Create '<input type=hidden';
+	Create '<input type="hidden"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -620,7 +634,7 @@ RULES
 	END;
 
  Password_Input: BEGIN
-	Create '<input type=password';
+	Create '<input type="password"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -631,7 +645,7 @@ RULES
 	END;
 
  File_Input: BEGIN
-	Create '<input type=file';
+	Create '<input type="file"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -642,7 +656,7 @@ RULES
 	END;
 
  Reset_Input: BEGIN
-	Create '\12<input type=reset';
+	Create '\12<input type="reset"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -653,7 +667,18 @@ RULES
 	END;
 
  Submit_Input: BEGIN
-	Create '\12<input type=submit';
+	Create '\12<input type="submit"';
+	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
+	Create '>';
+#endif
+	Remove;
+	END;
+
+ Button_Input: BEGIN
+	Create '\12<input type="button"';
 	Create Attributes;
 #ifdef XML
 	Create ' />';
@@ -1208,6 +1233,19 @@ ATTRIBUTES
 	Create tabindex;
 	Create DoubleQuote;
 	END;
+
+ Associated_control: BEGIN
+	Create ' for="';
+	Create Associated_control;
+	Create DoubleQuote;
+	END;
+
+ Button_type = button:
+	Create ' type="button"';
+ Button_type = submit:
+	Create ' type="submit"';
+ Button_type = reset:
+	Create ' type="reset"';
 
  Class: BEGIN
 	Create ' class="';

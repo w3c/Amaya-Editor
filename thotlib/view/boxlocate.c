@@ -1687,7 +1687,7 @@ int                 ym;
 		       /* Deplacement d'un point de la polyline */
 		       x = pBox->BxXOrg - pFrame->FrXOrg;
 		       y = pBox->BxYOrg - pFrame->FrYOrg;
-		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
 		       /* Note si le trace est ouvert ou ferme */
 		       still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
 		       /* Reaffiche la selection */
@@ -1760,7 +1760,7 @@ int                 ym;
 			      break;
 			}
 
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
 		  /* On retablit les positions par rapport a la fenetre */
 		  xmin -= pFrame->FrXOrg;
 		  xmax -= pFrame->FrXOrg;
@@ -2026,7 +2026,7 @@ int                 ym;
 			 break;
 		   }
 
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox));
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
 	     /* On retablit les positions par rapport a la fenetre */
 	     xmin -= pFrame->FrXOrg;
 	     if (okH)
@@ -2191,7 +2191,7 @@ int                 frame;
 	/* Determine les limites de deplacement de la boite */
 	GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
 	GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX), AbsBoxType (pAb));
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX), AbsBoxType (pAb, FALSE));
 	/* On retablit les positions par rapport a la fenetre */
 	xmin -= pFrame->FrXOrg;
 	xmax -= pFrame->FrXOrg;

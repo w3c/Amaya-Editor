@@ -1,4 +1,5 @@
 		{ I. Vatton 	 November 1994  }
+
 STRUCTURE HTML;
 
 DEFPRES HTMLP;
@@ -484,7 +485,7 @@ STRUCT
 	   onfocus; onblur; onselect = Text; onchange;
 	 { onfocus  onblur  onselect         onchange }
 	   Default_Value = Text) =
-	Text_With_Frame with Rows ?= 4, Columns ?= 20;
+	Text_With_Frame - (Input) with Rows ?= 4, Columns ?= 20;
 
   Input = CASE OF					{ formctrl }
 	Text_Input					{ INPUT / TEXT }
@@ -497,7 +498,7 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame with Area_Size ?= 20;
+		Text_With_Frame - (Input) with Area_Size ?= 20;
 	Password_Input					{ INPUT / PASSWORD }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
@@ -508,7 +509,18 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame with Area_Size ?= 20;
+		Text_With_Frame  - (Input) with Area_Size ?= 20;
+	File_Input					{ INPUT / FILE }
+	   (ATTR !NAME; Value_; disabled; readonly;
+		{ name  value   disabled  readonly }
+		  Area_Size; MaxLength;
+		{ size       maxlength }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur; accept = Text;
+		{ onfocus  onblur }
+		  Default_Value) =
+		Text_With_Frame - (Input) with Area_Size ?= 20;
 	Checkbox_Input					{ INPUT / CHECKBOX }
 	   (ATTR !NAME; Value_; Checked = Yes_, No_;
 		{ name  value   checked }
@@ -547,19 +559,37 @@ STRUCT
 		{ onfocus  onblur }
 		BEGIN
 		Frame;
-		END with NAME ?= 'Reset',
-			 Value_ ?= 'Reset';
-	File_Input					{ INPUT / FILE }
+		END  - (Input) with NAME ?= 'Reset',
+				    Value_ ?= 'Reset';
+        Button_Input					{ INPUT / BUTTON }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
-		  onfocus; onblur; accept = Text) =
+		  onfocus; onblur) =
 		{ onfocus  onblur }
-		CONSTANT C_Empty;
+		BEGIN
+		Frame;
+		END;
+        BUTTON						{ BUTTON }
+	   (ATTR !NAME; Value_;
+		{ name  value }
+		  Button_type = button, submit, reset;
+		{ type          button  submit  reset }
+		  disabled; tabindex; accesskey;
+		{ disabled  tabindex  accesskey }
+		  onfocus; onblur) =
+		{ onfocus  onblur }
+		LIST OF (Element) - (Anchor, Form, Fieldset, Input);
+        LABEL						{ LABEL }
+	   (ATTR  Associated_control = TEXT;
+		{ for }
+		  accesskey; onfocus; onblur) =
+		{ accesskey  onfocus  onblur }
+		Basic_Set - (Input);
 	Hidden_Input					{ INPUT / HIDDEN }
-	   (ATTR !NAME; Value_; disabled; readonly;
-		{ name  value   disabled  readonly }
+	   (ATTR !NAME; Value_; disabled;
+		{ name  value   disabled }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
@@ -567,10 +597,6 @@ STRUCT
 		CONSTANT C_Empty;
 	Option_Menu;					{ SELECT }
 	Text_Area;					{ TEXTAREA }
-{****
-        LABEL
-        BUTTON
-****}
 	END;
 
   Text_With_Frame = BEGIN
@@ -714,16 +740,16 @@ EXCEPT
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck;
-	C_Empty:	Hidden, NoSelect;
+	C_Empty:	Hidden;
 	C_BR:		NoSelect;
-	Styles:		Hidden, NoSelect;
-	Scripts:	Hidden, NoSelect;
-	Metas:		Hidden, NoSelect;
-	Links:		Hidden, NoSelect;
-	Frame:		Hidden;
-	Inserted_Text:	Hidden, NoSelect;
-	Basic_Set:	Hidden, NoSelect;
-	Term_List:	Hidden, NoSelect;
+	Styles:		Hidden;
+	Scripts:	Hidden;
+	Metas:		Hidden;
+	Links:		Hidden;
+	Frame:		Hidden, NoCut;
+	Inserted_Text:	Hidden, NoCut;
+	Basic_Set:	Hidden;
+	Term_List:	Hidden;
 	Definition_Item:Hidden;
 	Comment_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
@@ -745,8 +771,9 @@ EXCEPT
 	Preformatted:	ReturnCreateNL;
 	STYLE_:		ReturnCreateNL;
 	SCRIPT:		ReturnCreateNL;
+	Text_Area:	ReturnCreateNL;
 #ifdef GRAPHML
-	HTMLfragment:	NoMove, NoResize, Hidden, NoSelect;
+	HTMLfragment:	NoMove, NoResize, Hidden;
 	XMLGraphics:    MoveResize, NoMove;
 #endif
 
@@ -776,11 +803,11 @@ EXCEPT
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;
 	Table:		IsTable, PageBreak;
-	Column_head:	IsColHead, NoCut, Hidden, NoSelect;
-	Table_head:	NoCut, Hidden, NoSelect;
-	C_Head:		Hidden, NoSelect;
+	Column_head:	IsColHead, NoCut, Hidden;
+	Table_head:	NoCut, Hidden;
+	C_Head:		Hidden;
 	Table_foot:	NoCut, Hidden, PageBreakRepBefore;
-	C_Foot:		Hidden, NoSelect;
+	C_Foot:		Hidden;
 	Table_body:	PageBreakAllowed, Hidden;
 	Table_row:	IsRow, PageBreakPlace;
 	ColExt:		Invisible;
@@ -788,7 +815,7 @@ EXCEPT
 	Ref_column:	ColRef, Invisible;
 	colspan_:	ColSpan;
 	rowspan_:	RowSpan;
-	Object_Content: Hidden, NoCreate, NoCut, NoSelect;
+	Object_Content: Hidden, NoCreate, NoCut;
 	Ghost_restruct:	Invisible;
 
 END

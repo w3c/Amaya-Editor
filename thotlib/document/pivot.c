@@ -98,6 +98,7 @@ char               *documentSchemasPath;
 	pDoc->DocLabels = NULL;
 	/* on donne son nom au document */
 	strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	/* on acquiert un identificateur pour le document */
 	GetDocIdent (&pDoc->DocIdent, documentIdentifier);
         /* on stocke le path de schemas du document */

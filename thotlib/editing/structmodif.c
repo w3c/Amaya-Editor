@@ -1241,7 +1241,9 @@ boolean             block;
 			  pSibling = pSibling->ElPrevious;
 			}
 		      notifyEl.position = TTE_TOOLKIT_DELETE;
-		      CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
+		      if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+			/* l'application refuse de continuer */
+			return (ret);
 		    }
 		  if (pE->ElStructSchema != NULL)
 		    {
@@ -1289,7 +1291,9 @@ boolean             block;
 			    pSibling = pSibling->ElPrevious;
 			 }
 		       notifyEl.position = NSiblings;
-		       CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
+		       if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+			  /* l'application refuse de continuer */
+			  return (ret);
 		    }
 		  pEl2 = ReplicateElement (pE, pDoc);
 		  InsertFirstChild (pEl2, pChild);
@@ -1321,7 +1325,10 @@ boolean             block;
 				      pSibling = pSibling->ElPrevious;
 				   }
 				 notifyEl.position = TTE_TOOLKIT_DELETE;
-				 CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
+				 if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+				    /* l'application refuse de continuer */
+				    return (ret);
+
 				 RemoveElement (pClose);
 				 /* signale a l'application qu'on a retire' un element */
 				 notifyEl.element = (Element) (pE->ElParent);

@@ -266,14 +266,17 @@ boolean		    removeExclusions
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
 	     /* On confond identificateur et nom de document */
 	     strncpy (pDoc->DocDName, pDoc->DocIdent, MAX_NAME_LENGTH);
+	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	  }
 	else
 	   /* le document n'a pas d'identificateur, on l'accede par son nom */
 	  {
 	     strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
 	     /* On confond identificateur et nom de document */
 	     strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDoc->DocDName[0] > ' ')
 	   /* nom de document non vide */

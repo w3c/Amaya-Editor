@@ -8,7 +8,6 @@
 
 extern boolean SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
-extern boolean DeleteText ( NotifyElement *event );
 extern void SubmitForm ( Document doc,
                          Element element );
 extern void SelectCheckbox ( Document doc,
@@ -23,7 +22,6 @@ extern void SelectOneOption ( Document doc,
 
 extern boolean SaveDocumentStatus (/* NotifyOnTarget *event */);
 extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
-extern boolean DeleteText (/* NotifyElement *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
 extern void SelectCheckbox (/* Document doc,

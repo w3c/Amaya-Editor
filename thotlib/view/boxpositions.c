@@ -678,7 +678,7 @@ boolean             vertRef;
 			      && !pBox->BxHorizFlex)
 			    {
 			       if (HighlightBoxErrors)
-				  fprintf(stderr, "Box overflow %s/n", AbsBoxType (pChildAb));
+				  fprintf(stderr, "Box overflow %s/n", AbsBoxType (pChildAb, TRUE));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -768,7 +768,7 @@ boolean             vertRef;
 			      && !pBox->BxVertFlex)
 			    {
 			       if (HighlightBoxErrors)
-				  fprintf (stderr, "Box overflow %s\n", AbsBoxType (pChildAb));
+				  fprintf (stderr, "Box overflow %s\n", AbsBoxType (pChildAb, TRUE));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */

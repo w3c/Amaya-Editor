@@ -339,7 +339,7 @@ int                 level;
 	     if (pEl->ElStructSchema != NULL)
 	       {
 		  pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-		  fprintf (fileDescriptor, "%s", pRe1->SrName);
+		  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 		  /* ecrit le nom du schema de structure de l'element */
 		  fprintf (fileDescriptor, "(%s) ", pEl->ElStructSchema->SsName);
 	       }
@@ -479,7 +479,7 @@ boolean             premierfils;
 	else
 	  {
 	     pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
-	     fprintf (fileDescriptor, "%s", pRe1->SrName);
+	     fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	     /* ecrit le nom du schema de structure de l'element */
 	     fprintf (fileDescriptor, "(%s)", pNode->ElStructSchema->SsName);
 	  }
@@ -516,7 +516,7 @@ boolean             premierfils;
 	       {
 		  pAt1 = pAttr;
 		  pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
-		  fprintf (fileDescriptor, "%s=", pAttr1->AttrName);
+		  fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
 		  switch (pAttr1->AttrType)
 			{
 			   case AtNumAttr:
@@ -565,7 +565,7 @@ boolean             premierfils;
 		  WrPRuleType (pRule, fileDescriptor);
 		  if (pRegl1->PrSpecifAttr > 0)
 		     fprintf (fileDescriptor, "[%s]", pRegl1->PrSpecifAttrSSchema->
-			    SsAttribute[pRegl1->PrSpecifAttr - 1].AttrName);
+			    SsAttribute[pRegl1->PrSpecifAttr - 1].AttrOrigName);
 		  fprintf (fileDescriptor, " vue%d", pRegl1->PrViewNum);
 		  pRule = pRegl1->PrNextPRule;
 	       }
@@ -1039,7 +1039,7 @@ FILE               *fileDescriptor;
 	   fprintf (fileDescriptor, " ");
 	pRe1 = &pPa1->AbElement->
 	   ElStructSchema->SsRule[pPa1->AbElement->ElTypeNumber - 1];
-	fprintf (fileDescriptor, "%s", pRe1->SrName);
+	fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	fprintf (fileDescriptor, " ");
 	if (pPa1->AbElement->ElTypeNumber == PageBreak + 1)
 	  {
@@ -1318,7 +1318,7 @@ FILE               *fileDescriptor;
 		    {
 		       pAt1 = pDelPR->DpAttribute;
 		       fprintf (fileDescriptor, "[%s]", pAt1->AeAttrSSchema->
-				SsAttribute[pAt1->AeAttrNum - 1].AttrName);
+				SsAttribute[pAt1->AeAttrNum - 1].AttrOrigName);
 		    }
 		  fprintf (fileDescriptor, "\n");
 		  pDelPR = pDelPR->DpNext;
@@ -1437,7 +1437,7 @@ FILE               *fileDescriptor;
 	pBox = pAb->AbBox;
 	wrnumber (pBox->BxAbstractBox->AbNum, fileDescriptor);
 	fprintf (fileDescriptor, " ");
-	wrtext (AbsBoxType (pAb), fileDescriptor);
+	wrtext (AbsBoxType (pAb, TRUE), fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	if (pBox != NULL)
 	  {

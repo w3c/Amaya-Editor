@@ -188,7 +188,9 @@ char               *fileName;
 		 strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
 	       /* nom de document relatif */
 	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       if ((*pDoc)->DocDirectory[0] == EOS)
 		 strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	     }
@@ -214,7 +216,9 @@ char               *fileName;
 		 }
 	       DefaultDocumentName[i] = EOS;
 	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       /* sauve le path des documents avant de l'ecraser */
 	       strncpy (directoryBuffer, DocumentPath, MAX_PATH);
 	       strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
@@ -386,7 +390,9 @@ PathBuffer          directory;
 		  }
 		FindCompleteName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
 		strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
-		strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_NAME_LENGTH);
+		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
+		(*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		/* le document appartient au directory courant */
 		strncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
 		/* conserve le path actuel des schemas dans le contexte du
@@ -1048,7 +1054,9 @@ boolean             move;
 			      }
 			 }
 		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }

@@ -159,7 +159,6 @@ Element             selectedElement;
 #endif /* __STDC__ */
 {
 
-   Element             el;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
@@ -1461,7 +1460,8 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   AttrNAMEinMenu doen't display NAME in Reset_Input and Submit_Input
+   AttrNAMEinMenu
+   doesn't display NAME in Reset_Input and Submit_Input
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrNAMEinMenu (NotifyAttribute * event)

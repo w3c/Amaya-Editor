@@ -624,7 +624,7 @@ PtrElement          pEl;
      {
 	/* if element is not empty or is a leaf, it is hidden
 	   otherwise, exception Hidden is ignored: the user could not
-	   select that element */
+	   select that element otherwise */
 	if (pEl->ElTerminal || pEl->ElFirstChild != NULL)
 	   ret = TRUE;
      }
@@ -2070,7 +2070,7 @@ boolean             check;
 	     }
 	/* If the new selection is in the same tree, SelectAbsBoxes will */
 	/* switch the previous selection off */
-	/* ignorer l'exception NoSelect */
+	/* ignore exception NoSelect */
 	SelContinue = TRUE;
 	NSelectedElements = 0;
 	LastSelectedElement = FirstSelectedElement;
@@ -2926,8 +2926,9 @@ boolean             drag;
 		     /* If the element to be selected is hidden or cannot be */
 		     /* selected, get the first ancestor that can be selected*/
 		     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
-					   pEl->ElStructSchema)
-			 || HiddenType (pEl))
+					   pEl->ElStructSchema) ||
+			 (HiddenType (pEl) &&
+			  !ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
 		       {
 			  stop = FALSE;
 			  /* select the entire element */
@@ -2938,12 +2939,13 @@ boolean             drag;
 				stop = TRUE;
 			     else
 			       {
-				  pEl = pEl->ElParent;
-				  if (!TypeHasException (ExcNoSelect,
-							 pEl->ElTypeNumber,
-							 pEl->ElStructSchema)
-				      && !HiddenType (pEl))
-				     stop = TRUE;
+			       pEl = pEl->ElParent;
+			       if (!TypeHasException (ExcNoSelect,
+						      pEl->ElTypeNumber,
+						      pEl->ElStructSchema) &&
+				   (!HiddenType (pEl) ||
+				    ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
+				   stop = TRUE;
 			       }
 		       }
 		     /* send event TteElemExtendSelect.Pre to the application*/
@@ -3019,10 +3021,12 @@ boolean             drag;
 	        /* Select it entirely */
 		rank = 0;
 	     /* if the element to be selected has exception NoSelect or */
-	     /* is hidden, select the first ancestor that can be selected */
+	     /* Hidden, select the first ancestor that can be selected */
+	     /* However, if the element is hidden, but has specified a */
+             /* callback for event Select, it is selected */
 	     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
-				   pEl->ElStructSchema)
-		 || HiddenType (pEl))
+				   pEl->ElStructSchema) ||
+		 (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)))
 	       {
 		  /* select element entirely */
 		  rank = 0;
@@ -3035,8 +3039,9 @@ boolean             drag;
 		       {
 			  pEl = pEl->ElParent;
 			  if (!TypeHasException (ExcNoSelect,pEl->ElTypeNumber,
-						 pEl->ElStructSchema)
-			      && !HiddenType (pEl))
+						 pEl->ElStructSchema)  &&
+			      (!HiddenType (pEl) ||
+			       ElementHasAction(pEl, TteElemSelect, TRUE)))
 			     stop = TRUE;
 		       }
 	       }

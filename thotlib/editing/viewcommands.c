@@ -523,7 +523,9 @@ Name                fileName;
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		       strncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
-		       strncpy (pDoc->DocIdent, fileName, MAX_NAME_LENGTH);
+		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		       strncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		       strncpy (pDoc->DocDirectory, directory, MAX_PATH);
 		       /* conserve le path actuel des schemas dans le contexte du doc. */
 		       strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
