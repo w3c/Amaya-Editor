@@ -27,7 +27,8 @@ ATTR
 
    Invalid_attribute = Text;
    Ghost_restruct = Text;
-   Highlight = Yes_;
+   Highlight = Yes_;    { to show the HTML element corresponding to the
+			  current selection in the source view }
    IntEntity = Yes_;	{ do not translate & into &amp; in output file }
    EntityName = Text;   { the content of the element is the name of an entity }
    xml_space = xml_space_default, xml_space_preserve; { xml:space }

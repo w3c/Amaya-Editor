@@ -16,6 +16,8 @@ ATTR
    { global attributes for internal processing }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
+   Highlight = Yes_;        { to show the SVG element corresponding to the
+			      current selection in the source view }
    Namespace = TEXT;        { for children of element foreignObject }
    IntEmptyShape = yes_, no_;
 
@@ -288,6 +290,7 @@ EXCEPT
    id:                  CssId;
    class:               CssClass;
    Invalid_attribute:   Invisible;
+   Highlight:	        Invisible; 
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;

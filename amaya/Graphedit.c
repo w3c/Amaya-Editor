@@ -56,6 +56,7 @@ static ThotBool InCreation = FALSE;
 #include "fetchXMLname_f.h"
 #include "GraphMLbuilder_f.h"
 #include "html2thot_f.h"
+#include "HTMLactions_f.h"
 #include "HTMLpresentation_f.h"
 #include "XLinkedit_f.h"
 
@@ -168,6 +169,20 @@ NotifyElement *event;
 {
   SetEmptyShapeAttrSubTree (event->element, event->document);
   return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+   A new element has been selected. Synchronize selection in source view.      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GraphicsSelectionChanged (NotifyElement * event)
+#else  /* __STDC__ */
+void                GraphicsSelectionChanged (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+   SynchronizeSourceView (event);
 }
 
 /*----------------------------------------------------------------------

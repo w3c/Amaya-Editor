@@ -1975,7 +1975,7 @@ NotifyElement* event;
    Attribute	       attr;
    Document	       doc, otherDoc;
    int		       val, x, y, width, height;
-   ThotBool	       otherDocIsHTML, done;
+   ThotBool	       otherDocIsStruct, done;
 
    if (!event)
        return;
@@ -1984,19 +1984,23 @@ NotifyElement* event;
    /* get the other Thot document to be synchronized with the one where the
       user has just clicked */
    otherDoc = 0;
-   otherDocIsHTML = FALSE;
-   if (DocumentTypes[doc] == docHTML)
-      /* the user clicked on a HTML document, the other doc is the
+   otherDocIsStruct = FALSE;
+   if (DocumentTypes[doc] == docHTML ||
+       DocumentTypes[doc] == docMath ||
+       DocumentTypes[doc] == docSVG )
+      /* the user clicked on a structured document, the other doc is the
          corresponding source document */
       otherDoc = DocumentSource[doc];
    else if (DocumentTypes[doc] == docSource)
       /* the user clicked on a source document, the other doc is the
-         corresponding HTML document */
+         corresponding structured document */
       {
-      otherDocIsHTML = TRUE;
+      otherDocIsStruct = TRUE;
       for (i = 1; i < DocumentTableLength; i++)
          if (DocumentURLs[i] != NULL)
-	    if (DocumentTypes[i] == docHTML)
+	    if (DocumentTypes[i] == docHTML ||
+		DocumentTypes[i] == docMath ||
+		DocumentTypes[i] == docSVG)
 	       if (DocumentSource[i] == doc)
 		  {
 	          otherDoc = i;
@@ -2048,11 +2052,35 @@ NotifyElement* event;
 	       attribute */
 	    ResetHighlightedElement ();
 	    /* Put a Highlight attribute on the element found */
-	    if (otherDocIsHTML)
+	    if (otherDocIsStruct)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), otherDoc);
-	       attrType.AttrTypeNum = HTML_ATTR_Highlight;
-	       val = HTML_ATTR_Highlight_VAL_Yes_;
+	       if (DocumentTypes[otherDoc] == docHTML)
+		 {
+		   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"),
+							 otherDoc);
+		   attrType.AttrTypeNum = HTML_ATTR_Highlight;
+		   val = HTML_ATTR_Highlight_VAL_Yes_;
+		 }
+	       else if (DocumentTypes[otherDoc] == docMath)
+		 {
+		   attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"),
+							 otherDoc);
+		   attrType.AttrTypeNum = MathML_ATTR_Highlight;
+		   val = MathML_ATTR_Highlight_VAL_Yes_;
+		 }
+	       else if (DocumentTypes[otherDoc] == docSVG)
+		 {
+		   attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"),
+							 otherDoc);
+		   attrType.AttrTypeNum = GraphML_ATTR_Highlight;
+		   val = GraphML_ATTR_Highlight_VAL_Yes_;
+		 }
+	       else
+		 {
+		   attrType.AttrSSchema = NULL;
+		   attrType.AttrTypeNum = 0;
+		   val = 0;
+		 }
 	       }
 	    else
 	       {
@@ -2060,22 +2088,27 @@ NotifyElement* event;
 	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
 	       val = TextFile_ATTR_Highlight_VAL_Yes_;
 	       }
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (otherEl, attr, otherDoc);
-	    TtaSetAttributeValue (attr, val, otherEl, otherDoc);
-	    /* record the highlighted element */
-	    HighlightDocument = otherDoc;
-	    HighlightElement = otherEl;
-	    HighLightAttribute = attr;
-	    /* Scroll all views where the element appears to show it */
-	    for (view = 1; view < 6; view++)
-	       if (TtaIsViewOpened (otherDoc, view))
-		  {
-		  TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel, &x, &y);
-		  TtaGiveWindowSize (otherDoc, view, UnPixel, &width, &height);
-		  if (y < 0 || y > height - 15)
-		     TtaShowElement (otherDoc, view, otherEl, 25);
-		  }
+	    if (attrType.AttrSSchema)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (otherEl, attr, otherDoc);
+		TtaSetAttributeValue (attr, val, otherEl, otherDoc);
+		/* record the highlighted element */
+		HighlightDocument = otherDoc;
+		HighlightElement = otherEl;
+		HighLightAttribute = attr;
+		/* Scroll all views where the element appears to show it */
+		for (view = 1; view < 6; view++)
+		  if (TtaIsViewOpened (otherDoc, view))
+		    {
+		      TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel,
+					     &x, &y);
+		      TtaGiveWindowSize (otherDoc, view, UnPixel, &width,
+					 &height);
+		      if (y < 0 || y > height - 15)
+			 TtaShowElement (otherDoc, view, otherEl, 25);
+		    }
+	      }
 	    }
 	 done = TRUE;
 	 }

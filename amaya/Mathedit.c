@@ -59,6 +59,7 @@ static Element	LastDeletedElement = NULL;
 #include "GraphMLbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLtable_f.h"
+#include "HTMLactions_f.h"
 #include "HTMLpresentation_f.h"
 #include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
@@ -3641,6 +3642,20 @@ void MathElementDeleted(event)
 	}
       }
    TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+}
+
+/*----------------------------------------------------------------------
+   A new element has been selected. Synchronize selection in source view.      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                MathSelectionChanged (NotifyElement * event)
+#else  /* __STDC__ */
+void                MathSelectionChanged (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+   SynchronizeSourceView (event);
 }
 
 /*----------------------------------------------------------------------

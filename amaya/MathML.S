@@ -18,6 +18,8 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
 
    { generic attributes for internal use }
+   Highlight = Yes_;             { to show the MathML element corresponding to
+	                           the current selection in the source view }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
    EntityName = TEXT;		{ the content of the Thot element is the name
 				  of an entity }
@@ -423,6 +425,7 @@ EXCEPT
    id:			CssId;
    class:		CssClass;
    { attributes for internal use }
+   Highlight:	        Invisible;
    Invalid_attribute:	Invisible;
    EntityName:	        Invisible; 
    Ghost_restruct:	Invisible;

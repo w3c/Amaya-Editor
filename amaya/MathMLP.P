@@ -2424,6 +2424,20 @@ BOXES
                 END;
         END;
 
+ IndexBox: BEGIN
+	Content: Picture 'index.gif';
+	HorizPos: Left = Root . Left;
+	VertPos: Top = Creator . Top;
+	VertOverflow : Yes;
+	HorizOverflow : Yes;
+	Inline: No;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
 RULES
 
    MathML:
@@ -3361,9 +3375,12 @@ RULES
 
    SYMBOL_UNIT:
 	BEGIN
-	if immediately within UnderOverBase
-	   Height: 1;
-	if not immediately within UnderOverBase
+	if within UnderOverBase
+	   BEGIN
+	   Height: 1;	{ or Enclosed . Height ? ****}
+	   HorizRef: * . HMiddle + 0.2;
+	   END;
+	if not within UnderOverBase
 	   Height: Enclosing . Height;
 	Width: Enclosed . Width;
 	VertPos: Nil;
@@ -3996,6 +4013,14 @@ ATTRIBUTES
 		END;
 	END;
 
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+	if NOT TEXT_UNIT
+	   CreateLast (IndexBox);
+	END;
+
   xml_space = xml_space_default:
 	CreateBefore(ATTR_xml_space_default);
 
@@ -4136,10 +4161,7 @@ ATTRIBUTES
 	END;
   IntVertStretch (SYMBOL_UNIT):
 	BEGIN
-	if immediately within UnderOverBase
-	   Height: 1;
-	if not immediately within UnderOverBase
-	   Height: Enclosing . Height;
+	Height: Enclosing . Height;
 	VertPos: Top = Enclosing . Top;
 	IN Structure_view BEGIN
 		Height: 1;

@@ -1002,6 +1002,20 @@ BOXES
 		END;
 	END;
 
+ IndexBox: BEGIN
+	Content: Picture 'index.gif';
+	HorizPos: Left = Root . Left;
+	VertPos: Top = Creator . Top;
+	VertOverflow : Yes;
+	HorizOverflow : Yes;
+	Inline: No;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
 RULES
 
    GraphML:
@@ -1633,6 +1647,14 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_xlink_href);
 	CreateBefore (VALUE_xlink_href);
+	END;
+
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+	if NOT TEXT_UNIT
+	   CreateLast (IndexBox);
 	END;
 
   xml_space = xml_space_default:
