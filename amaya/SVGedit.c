@@ -686,11 +686,11 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
 
 /*----------------------------------------------------------------------
  UpdatePositionAttribute
- update attribute "position" for element el according its attributes
- "IntPosX" and "IntPosY".
+ update position attributes (x, y, cx, cy, x1, y1) for element el according
+ to parameter pos.
  -----------------------------------------------------------------------*/
-static void UpdatePositionAttribute (Element el, Document doc, int org,
-				     int dim, ThotBool horiz)
+static void UpdatePositionAttribute (Element el, Document doc, int pos,
+				     ThotBool horiz)
 {
   ElementType		elType;
   AttributeType	        attrType;
@@ -729,7 +729,7 @@ static void UpdatePositionAttribute (Element el, Document doc, int org,
     /* no attribute available */
     return;
 
-  UpdateAttrText (el, doc, attrType, org, FALSE, FALSE);
+  UpdateAttrText (el, doc, attrType, pos, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -1283,7 +1283,6 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
     {
       unit = TtaGetPRuleUnit (presRule);
       mainView = TtaGetViewFromName (doc, "Formatted_view");
-      TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
       if (presType == PRVertPos)
 	{
 	  /* the new value is the old one plus the difference */
@@ -1292,7 +1291,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslatePolyline (el, doc, y, unit, FALSE);
 	  else
-	    UpdatePositionAttribute (el, doc, y, height, FALSE);
+	    UpdatePositionAttribute (el, doc, y, FALSE);
 	}
       else if (presType == PRHorizPos)
 	{
@@ -1302,7 +1301,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslatePolyline (el, doc, x, unit, TRUE);
 	  else
-	    UpdatePositionAttribute (el, doc, x, width, TRUE);
+	    UpdatePositionAttribute (el, doc, x, TRUE);
 	}
       else if (presType == PRHeight &&
 	       (elType.ElTypeNum == SVG_EL_rect ||

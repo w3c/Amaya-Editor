@@ -1031,8 +1031,8 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   width and height of the polyline.
   Pbuffer points to the first buffer of the abtract box.
   nbpoints gives the number of points in the polyline.
-  point expricitely indicate the point to be moved.
-  This fonction updates both  list of control points.
+  point is the rank of the point to be moved.
+  This function updates both lists of control points.
   ----------------------------------------------------------------------*/
 void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 			   int nbpoints, int point, ThotBool close)
@@ -1050,7 +1050,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   Bbuffer = pBox->BxBuffer;
   Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
-  /* constraint is done by the polyline element */
+  /* constraint is given by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
   width = PixelValue (width, UnPixel, NULL,
