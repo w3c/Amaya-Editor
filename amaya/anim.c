@@ -1231,26 +1231,31 @@ void ecrit_placement_temporel(Element el, int start, int duration)
    search in tree for the first animation tag
    element is the root of the tree
   ----------------------------------------------------------------------*/
-Element recherche_premier_animate_dans_arbre(Element element) {
+Element recherche_premier_animate_dans_arbre(Document basedoc, Element element) {
 	Element res = NULL;
 #ifdef _SVGANIM
 	ElementType searchedType1, searchedType2,
 		searchedType3, searchedType4, searchedType5;
+	SSchema svg_schema;
 
-	searchedType1 = TtaGetElementType (element);
-	searchedType1.ElTypeNum = SVG_EL_animate;
-	searchedType2.ElSSchema = searchedType1.ElSSchema;
-	searchedType2.ElTypeNum = SVG_EL_animateMotion;
-	searchedType3.ElSSchema = searchedType1.ElSSchema;
-	searchedType3.ElTypeNum = SVG_EL_animateTransform;
-	searchedType4.ElSSchema = searchedType1.ElSSchema;
-	searchedType4.ElTypeNum = SVG_EL_animateColor;
-	searchedType5.ElSSchema = searchedType1.ElSSchema;
-	searchedType5.ElTypeNum = SVG_EL_set_;
+	svg_schema = TtaGetSSchema ("SVG", basedoc);
+
+	if (svg_schema) {
+		searchedType1.ElSSchema = svg_schema;
+		searchedType1.ElTypeNum = SVG_EL_animate;
+		searchedType2.ElSSchema = svg_schema;
+		searchedType2.ElTypeNum = SVG_EL_animateMotion;
+		searchedType3.ElSSchema = svg_schema;
+		searchedType3.ElTypeNum = SVG_EL_animateTransform;
+		searchedType4.ElSSchema = svg_schema;
+		searchedType4.ElTypeNum = SVG_EL_animateColor;
+		searchedType5.ElSSchema = svg_schema;
+		searchedType5.ElTypeNum = SVG_EL_set_;
 	
-	res = SearchElementAmong5Types (searchedType1, searchedType2,
-							        searchedType3, searchedType4,
-							        searchedType5, SearchInTree, element);	
+		res = SearchElementAmong5Types (searchedType1, searchedType2,
+										searchedType3, searchedType4,
+										searchedType5, SearchInTree, element);	
+	}
 #endif /* _SVGANIM */
 	return res;
 }
@@ -1261,26 +1266,32 @@ Element recherche_premier_animate_dans_arbre(Element element) {
    search in tree for the next animation tag 
    element is the previous animation tag
   ----------------------------------------------------------------------*/
-Element recherche_animate_suivant_dans_arbre(Element element) {
+Element recherche_animate_suivant_dans_arbre(Document basedoc, Element element) {
 	Element res = NULL;
 #ifdef _SVGANIM
 	ElementType searchedType1, searchedType2,
 		searchedType3, searchedType4, searchedType5;
+	SSchema svg_schema;
 
-	searchedType1 = TtaGetElementType (element);
-	searchedType1.ElTypeNum = SVG_EL_animate;
-	searchedType2.ElSSchema = searchedType1.ElSSchema;
-	searchedType2.ElTypeNum = SVG_EL_animateMotion;
-	searchedType3.ElSSchema = searchedType1.ElSSchema;
-	searchedType3.ElTypeNum = SVG_EL_animateTransform;
-	searchedType4.ElSSchema = searchedType1.ElSSchema;
-	searchedType4.ElTypeNum = SVG_EL_animateColor;
-	searchedType5.ElSSchema = searchedType1.ElSSchema;
-	searchedType5.ElTypeNum = SVG_EL_set_;
+	svg_schema = TtaGetSSchema ("SVG", basedoc);
 
-	res = SearchElementAmong5Types (searchedType1, searchedType2,
-							        searchedType3, searchedType4,
-							        searchedType5, SearchForward, element);	
+	if (svg_schema) {
+		searchedType1.ElSSchema = svg_schema;
+		searchedType1.ElTypeNum = SVG_EL_animate;
+		searchedType2.ElSSchema = svg_schema;
+		searchedType2.ElTypeNum = SVG_EL_animateMotion;
+		searchedType3.ElSSchema = svg_schema;
+		searchedType3.ElTypeNum = SVG_EL_animateTransform;
+		searchedType4.ElSSchema = svg_schema;
+		searchedType4.ElTypeNum = SVG_EL_animateColor;
+		searchedType5.ElSSchema = svg_schema;
+		searchedType5.ElTypeNum = SVG_EL_set_;
+
+		res = SearchElementAmong5Types (searchedType1, searchedType2,
+							            searchedType3, searchedType4,
+							            searchedType5, SearchForward, element);	
+	}
+
 #endif /* _SVGANIM */
 	return res;
 }
@@ -1386,7 +1397,7 @@ Element create_expanded_group(Document basedoc, Document timelinedoc, int ty, El
 			dt[basedoc].nb_relations_animations++;
 			
 			k++;
-			found = recherche_animate_suivant_dans_arbre (found);
+			found = recherche_animate_suivant_dans_arbre (basedoc, found);
 		}
 	
 
@@ -1432,7 +1443,7 @@ Element create_collapsed_group(Document basedoc, Document timelinedoc, int ty, E
 			}
 
 			k++;
-			found = recherche_animate_suivant_dans_arbre (found);
+			found = recherche_animate_suivant_dans_arbre (basedoc, found);
 		}
 		
 		tmin *= cte_time_sep;
@@ -1518,7 +1529,7 @@ View build_timeline(Document basedoc, char* timelineName)
 
 	h_current = cte_top_bar;
 
-	found = recherche_premier_animate_dans_arbre (baseroot);
+	found = recherche_premier_animate_dans_arbre (basedoc, baseroot);
 
 	while (found) {
 		
@@ -1836,7 +1847,7 @@ void image_collapse_on_click(NotifyElement *event)
 		TtaSetTextContent (event->element, im2, SPACE, event->document);
 							 
 		/* create collapsed group */
-		first_found = recherche_premier_animate_dans_arbre (element_anime);
+		first_found = recherche_premier_animate_dans_arbre (basedoc, element_anime);
 		vpos = get_y_of (TtaGetFirstChild (title_group));
 		create_collapsed_group (basedoc, event->document, vpos, element_anime, first_found);
 		new_fresh_group = dt[basedoc].current_el;
@@ -1857,7 +1868,7 @@ void image_collapse_on_click(NotifyElement *event)
 		TtaSetTextContent (event->element, im1, SPACE, event->document);
 
 		/* create expanded group  */
-		first_found = recherche_premier_animate_dans_arbre (element_anime);
+		first_found = recherche_premier_animate_dans_arbre (basedoc, element_anime);
 		vpos = get_y_of (TtaGetFirstChild (title_group));
 		create_expanded_group (basedoc, event->document, vpos, element_anime, first_found, &hg);
 		new_fresh_group = dt[basedoc].current_el;
