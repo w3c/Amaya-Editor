@@ -3088,15 +3088,15 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 #ifndef _WINDOWS
   ThotEvent           event;
   Drawable            drawable;
+  int                 i;
+#ifdef _GTK   
+  ThotWidget          w;
+#endif /* _GTK */
 #else  /* _WINDOWS */
   MSG                 event;
   HCURSOR             cursor;          
   int                 curFrame;
 #endif /* _WINDOWS */
-  int                 i;
-#ifdef _GTK   
-  ThotWidget          w;
-#endif /* _GTK */
 
   if (ClickIsDone == 1)
     {
@@ -3151,6 +3151,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 #ifndef _GTK
 	XUndefineCursor (TtDisplay, drawable);
 #else /* _GTK */
+
       {
 	w = FrameTable[i].WdFrame;  
 	if (w != NULL)
