@@ -158,7 +158,7 @@ ThotBool GL_Err()
 #else /*_GTK*/
       WinErrorBox (NULL, (char*) gluErrorString (errCode));;
 #endif /*_GTK*/
-#ifdef /*_PCLDEBUG*/
+#endif /*_PCLDEBUG*/
       return TRUE;
     }
   else 
