@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -117,16 +113,50 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D\
- "XML_DTD" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC"\
- /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "_SVG" /D "ANNOTATIONS"\
+ "_SVG" /D "XML_DTD" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D\
+ "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS"\
  /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -291,18 +321,52 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D\
- "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "GRAPHML" /D\
+ "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "GRAPHML" /D "XML_DTD" /D "XML_NS" /D\
  "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D\
- "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /Fp"$(INTDIR)\amaya.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
+ "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "_SVG" /Fp"$(INTDIR)\amaya.pch"\
+ /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -378,36 +442,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
