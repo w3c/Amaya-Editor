@@ -87,7 +87,8 @@ Document            targetDoc;
 {
    AttributeType       attrType;
    Attribute           attr;
-   char               *value, tempURL[MAX_LENGTH];
+   char               *value, *base;
+   char                tempURL[MAX_LENGTH];
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -124,8 +125,10 @@ Document            targetDoc;
 	     strcat (tempURL, TargetName);
 	  }
 	/* set the relative value or URL in attribute HREF */
-	value = MakeRelativeUrl (tempURL, DocumentURLs[document]);
+	base = GetBaseURL (document);
+	value = MakeRelativeURL (tempURL, base);
 	TtaSetAttributeText (attr, value, element, document);
+	TtaFreeMemory (base);
 	TtaFreeMemory (value);
      }
 }
@@ -195,7 +198,7 @@ Element             el;
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
-   Attribute           attrNAME;
+   Attribute           attr;
    ElementType         elType;
    Element             elText;
    Language            lang;
@@ -203,24 +206,31 @@ Element             el;
    int                 length, i, space;
    boolean             found;
 
-   /* set the default NAME attribute value to the element Label */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_NAME;
-   attrNAME = TtaGetAttribute (el, attrType);
-   if (attrNAME == 0)
-     {
-	attrNAME = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attrNAME, doc);
-     }
-   /* get the Label text */
    elType = TtaGetElementType (el);
-   /* build the name value */
+   /* get the NAME or ID attribute */
+   attrType.AttrSSchema = elType.ElSSchema;
+   if (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP)
+     {
+       attrType.AttrTypeNum = HTML_ATTR_NAME;
+       attr = TtaGetAttribute (el, attrType);
+     }
+   else
+     {
+       attrType.AttrTypeNum = HTML_ATTR_ID;
+       attr = TtaGetAttribute (el, attrType);
+     }
+
+   if (attr == 0)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+     }
+
+   /* get the Label text to build the name value */
    if (elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
-       text = TtaGetElementLabel (el);
        strcpy (url, "map");
-       strcat (url, &text[1]);
      }
    else
      {
@@ -269,12 +279,12 @@ Element             el;
 	  }
      }
    /* copie the text into the NAME attribute */
-   TtaSetAttributeText (attrNAME, url, el, doc);
+   TtaSetAttributeText (attr, url, el, doc);
    /* Check attribute NAME in order to make sure that its value unique */
    /* in the document */
    MakeUniqueName (el, doc);
    /* set this new end-anchor as the new target */
-   SetTargetContent (doc, attrNAME);
+   SetTargetContent (doc, attr);
 }
 
 /*----------------------------------------------------------------------
@@ -290,192 +300,200 @@ boolean             createLink;
 
 #endif /* __STDC__ */
 {
-   Element             first, last, el, next;
-   Element             parag, prev, child, anchor;
-   int                 c1, cN, lg, i;
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attr;
-   boolean             error;
-   DisplayMode         dispMode;
+  Element             first, last, el, next;
+  Element             parag, prev, child, anchor;
+  int                 c1, cN, lg, i;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  boolean             noAnchor;
+  DisplayMode         dispMode;
 
-   dispMode = TtaGetDisplayMode (doc);
-   /* get the first and last selected element */
-   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-   TtaGiveLastSelectedElement (doc, &last, &i, &cN);
+  dispMode = TtaGetDisplayMode (doc);
+  /* get the first and last selected element */
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  TtaGiveLastSelectedElement (doc, &last, &i, &cN);
 
-   /* Check whether the selected elements are a valid content for an anchor */
-   elType = TtaGetElementType (first);
-   if (elType.ElTypeNum == HTML_EL_Anchor && first == last)
-      /* add an attribute on the current anchor */
-      anchor = first;
-   else
-     {
-	/* search if the selection is included into an anchor */
-	el = SearchAnchor (doc, first, !createLink);
-	if (el != NULL)
-	   /* add an attribute on this anchor */
-	   anchor = el;
-	else
-	  {
-	     el = first;
-	     error = FALSE;
-
-	     while (!error && el != NULL)
-	       {
-		  elType = TtaGetElementType (el);
-		  if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
-		      elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
-		      elType.ElTypeNum != HTML_EL_Teletype_text &&
-		      elType.ElTypeNum != HTML_EL_Italic_text &&
-		      elType.ElTypeNum != HTML_EL_Bold_text &&
-		      elType.ElTypeNum != HTML_EL_Underlined_text &&
-		      elType.ElTypeNum != HTML_EL_Struck_text &&
-		      elType.ElTypeNum != HTML_EL_Small_text &&
-		      elType.ElTypeNum != HTML_EL_Big_text &&
-		      elType.ElTypeNum != HTML_EL_Subscript &&
-		      elType.ElTypeNum != HTML_EL_Superscript &&
-		      elType.ElTypeNum != HTML_EL_Emphasis &&
-		      elType.ElTypeNum != HTML_EL_Strong &&
-		      elType.ElTypeNum != HTML_EL_Def &&
-		      elType.ElTypeNum != HTML_EL_Code &&
-		      elType.ElTypeNum != HTML_EL_Sample &&
-		      elType.ElTypeNum != HTML_EL_Keyboard &&
-		      elType.ElTypeNum != HTML_EL_Variable &&
-		      elType.ElTypeNum != HTML_EL_Cite &&
-		      elType.ElTypeNum != HTML_EL_Applet &&
-		      elType.ElTypeNum != HTML_EL_Font_ &&
-		      elType.ElTypeNum != HTML_EL_SCRIPT &&
-		      elType.ElTypeNum != HTML_EL_MAP)
-		     error = TRUE;
-		  if (el == last)
-		     el = NULL;
-		  else
-		     TtaGiveNextSelectedElement (doc, &el, &i, &i);
-	       }
-
-	     if (error)
-	       {
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
-		  return;
-	       }
-	     /* check if the anchor to be created is within an anchor element */
-	     else if (SearchAnchor (doc, first, TRUE) != NULL ||
-		      SearchAnchor (doc, last, TRUE) != NULL)
-	       {
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2), NULL);
-		  return;
-	       }
-	     /* ask Thot to stop displaying changes that will be made in the document */
-	     if (dispMode == DisplayImmediately)
-	       TtaSetDisplayMode (doc, DeferredDisplay);
-
-	     /* process the first selected element */
-	     elType = TtaGetElementType (first);
-	     if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	       {
-		  /* split the first selected text element */
-		  el = first;
-		  TtaSplitText (first, c1 - 1, doc);
-		  TtaNextSibling (&first);
-		  if (last == el)
-		    {
-		       /* we have to change last selection because the element was split */
-		       last = first;
-		       cN = cN - c1 + 1;
-		    }
-	       }
-	     /* process the last selected element */
-	     elType = TtaGetElementType (last);
-	     if (cN > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	       {
-		  lg = TtaGetTextLength (last);
-		  if (cN < lg)
-		     /* split the last text */
-		     TtaSplitText (last, cN, doc);
-	       }
-	     /* Create the corresponding anchor */
-	     elType.ElTypeNum = HTML_EL_Anchor;
-	     anchor = TtaNewElement (doc, elType);
-	     if (createLink)
-	       {
-		/* create an attributeHREF for the new anchor */
-		attrType.AttrSSchema = elType.ElSSchema;
-		attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		attr = TtaGetAttribute (anchor, attrType);
-		if (attr == NULL)
-		  {
-		     attr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (anchor, attr, doc);
-		  }
+  /* Check whether the selected elements are a valid content for an anchor */
+  elType = TtaGetElementType (first);
+  if (elType.ElTypeNum == HTML_EL_Anchor && first == last)
+    /* add an attribute on the current anchor */
+    anchor = first;
+  else
+    {
+      /* search if the selection is included into an anchor */
+      el = SearchAnchor (doc, first, !createLink);
+      if (el != NULL)
+	/* add an attribute on this anchor */
+	anchor = el;
+      else
+	{
+	  el = first;
+	  noAnchor = FALSE;
+	  
+	  while (!noAnchor && el != NULL)
+	    {
+	      elType = TtaGetElementType (el);
+	      if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
+		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
+		  elType.ElTypeNum != HTML_EL_Teletype_text &&
+		  elType.ElTypeNum != HTML_EL_Italic_text &&
+		  elType.ElTypeNum != HTML_EL_Bold_text &&
+		  elType.ElTypeNum != HTML_EL_Underlined_text &&
+		  elType.ElTypeNum != HTML_EL_Struck_text &&
+		  elType.ElTypeNum != HTML_EL_Small_text &&
+		  elType.ElTypeNum != HTML_EL_Big_text &&
+		  elType.ElTypeNum != HTML_EL_Subscript &&
+		  elType.ElTypeNum != HTML_EL_Superscript &&
+		  elType.ElTypeNum != HTML_EL_Emphasis &&
+		  elType.ElTypeNum != HTML_EL_Strong &&
+		  elType.ElTypeNum != HTML_EL_Def &&
+		  elType.ElTypeNum != HTML_EL_Code &&
+		  elType.ElTypeNum != HTML_EL_Sample &&
+		  elType.ElTypeNum != HTML_EL_Keyboard &&
+		  elType.ElTypeNum != HTML_EL_Variable &&
+		  elType.ElTypeNum != HTML_EL_Cite &&
+		  elType.ElTypeNum != HTML_EL_Applet &&
+		  elType.ElTypeNum != HTML_EL_Font_ &&
+		  elType.ElTypeNum != HTML_EL_SCRIPT &&
+		  elType.ElTypeNum != HTML_EL_MAP)
+		noAnchor = TRUE;
+	      if (el == last)
+		el = NULL;
+	      else
+		TtaGiveNextSelectedElement (doc, &el, &i, &i);
+	    }
+	  
+	  if (noAnchor)
+	    {
+	      if (createLink || el != NULL)
+		/* create an anchor or more than one structured element */
+		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
+	      else
+		{
+		  /* create an ID for target element */
+		  CreateTargetAnchor (doc, first);
 		}
+	      return;	      
+	    }
+	  /* check if the anchor to be created is within an anchor element */
+	  else if (SearchAnchor (doc, first, TRUE) != NULL ||
+		   SearchAnchor (doc, last, TRUE) != NULL)
+	    {
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2), NULL);
+	      return;
+	    }
 
-	     /* Check if the first element is included within a paragraph */
-	     elType = TtaGetElementType (TtaGetParent (first));
-	     if (elType.ElTypeNum == HTML_EL_BODY ||
-		 elType.ElTypeNum == HTML_EL_Division ||
+	  /* stop displaying changes that will be made in the document */
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  
+	  /* process the first selected element */
+	  elType = TtaGetElementType (first);
+	  if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      /* split the first selected text element */
+	      el = first;
+	      TtaSplitText (first, c1 - 1, doc);
+	      TtaNextSibling (&first);
+	      if (last == el)
+		{
+		  /* we have to change last selection because the element was split */
+		  last = first;
+		  cN = cN - c1 + 1;
+		}
+	    }
+	  /* process the last selected element */
+	  elType = TtaGetElementType (last);
+	  if (cN > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      lg = TtaGetTextLength (last);
+	      if (cN < lg)
+		/* split the last text */
+		TtaSplitText (last, cN, doc);
+	    }
+	  /* Create the corresponding anchor */
+	  elType.ElTypeNum = HTML_EL_Anchor;
+	  anchor = TtaNewElement (doc, elType);
+	  if (createLink)
+	    {
+	      /* create an attributeHREF for the new anchor */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	      attr = TtaGetAttribute (anchor, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (anchor, attr, doc);
+		}
+	    }
+	  
+	  /* Check if the first element is included within a paragraph */
+	  elType = TtaGetElementType (TtaGetParent (first));
+	  if (elType.ElTypeNum == HTML_EL_BODY ||
+	      elType.ElTypeNum == HTML_EL_Division ||
 #ifdef COUGAR
-		 elType.ElTypeNum == HTML_EL_Object_Content ||
+	      elType.ElTypeNum == HTML_EL_Object_Content ||
 #endif /* COUGAR */
-		 elType.ElTypeNum == HTML_EL_Data_cell ||
-		 elType.ElTypeNum == HTML_EL_Heading_cell ||
-		 elType.ElTypeNum == HTML_EL_Block_Quote)
-	       {
-		 elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-		 parag = TtaNewElement (doc, elType);
-		 TtaInsertSibling (parag, first, TRUE, doc);
-		 TtaInsertFirstChild (&anchor, parag, doc);
-	       }
-	     else
-	       TtaInsertSibling (anchor, first, TRUE, doc);
+	      elType.ElTypeNum == HTML_EL_Data_cell ||
+	      elType.ElTypeNum == HTML_EL_Heading_cell ||
+	      elType.ElTypeNum == HTML_EL_Block_Quote)
+	    {
+	      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	      parag = TtaNewElement (doc, elType);
+	      TtaInsertSibling (parag, first, TRUE, doc);
+	      TtaInsertFirstChild (&anchor, parag, doc);
+	    }
+	  else
+	    TtaInsertSibling (anchor, first, TRUE, doc);
+	  
+	  /* move the selected elements within the new Anchor element */
+	  child = first;
+	  prev = NULL;
+	  while (child != NULL)
+	    {
+	      /* prepare the next element in the selection, as the current element */
+	      /* will be moved and its successor will no longer be accessible */
+	      next = child;
+	      TtaNextSibling (&next);
+	      /* remove the current element */
+	      TtaRemoveTree (child, doc);
+	      /* insert it as a child of the new anchor element */
+	      if (prev == NULL)
+		TtaInsertFirstChild (&child, anchor, doc);
+	      else
+		TtaInsertSibling (child, prev, FALSE, doc);
+	      /* get the next element in the selection */
+	      prev = child;
+	      if (child == last)
+		child = NULL;
+	      else
+		child = next;
+	    }
+	}
+    }
 
-	     /* move the selected elements within the new Anchor element */
-	     child = first;
-	     prev = NULL;
-	     while (child != NULL)
-	       {
-		  /* prepare the next element in the selection, as the current element */
-		  /* will be moved and its successor will no longer be accessible */
-		  next = child;
-		  TtaNextSibling (&next);
-		  /* remove the current element */
-		  TtaRemoveTree (child, doc);
-		  /* insert it as a child of the new anchor element */
-		  if (prev == NULL)
-		     TtaInsertFirstChild (&child, anchor, doc);
-		  else
-		     TtaInsertSibling (child, prev, FALSE, doc);
-		  /* get the next element in the selection */
-		  prev = child;
-		  if (child == last)
-		     child = NULL;
-		  else
-		     child = next;
-	       }
-	  }
-     }
-
-   TtaSetDocumentModified (doc);
-   /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (doc, dispMode);
-   TtaSelectElement (doc, anchor);
-   if (createLink)
-     {
-	/* Select the destination. The anchor element must have an HREF attribute */
-	SelectDestination (doc, anchor);
-	/* create an attribute PseudoClass = link */
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-	attr = TtaGetAttribute (anchor, attrType);
-	if (attr == NULL)
-	  {
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (anchor, attr, doc);
-	  }
-	TtaSetAttributeText (attr, "link", anchor, doc);
-     }
-   else
-      CreateTargetAnchor (doc, anchor);
+  TtaSetDocumentModified (doc);
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
+  TtaSelectElement (doc, anchor);
+  if (createLink)
+    {
+      /* Select the destination. The anchor element must have an HREF attribute */
+      SelectDestination (doc, anchor);
+      /* create an attribute PseudoClass = link */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+      attr = TtaGetAttribute (anchor, attrType);
+      if (attr == NULL)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (anchor, attr, doc);
+	}
+      TtaSetAttributeText (attr, "link", anchor, doc);
+    }
+  else
+    CreateTargetAnchor (doc, anchor);
 }
 
 
@@ -672,7 +690,7 @@ NotifyElement      *event;
   Attribute           attr;
   ElementType         elType;
   int                 length, i, iName;
-  char               *value;
+  char               *value, *base;
   char                documentURL[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
   char                path[MAX_LENGTH];
@@ -748,8 +766,10 @@ NotifyElement      *event;
 			}
 		      TtaFreeMemory (value);
 		      /* set the relative value or URL in attribute HREF */
-		      value = MakeRelativeUrl (tempURL, DocumentURLs[doc]);
+		      base = GetBaseURL (doc);
+		      value = MakeRelativeURL (tempURL, base);
 		      TtaSetAttributeText (attr, value, el, doc);
+		      TtaFreeMemory (base);
 		      TtaFreeMemory (value);
 		    }
 		}

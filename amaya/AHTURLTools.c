@@ -405,6 +405,95 @@ char               *url;
       return (FALSE);
 }
 
+
+/*----------------------------------------------------------------------
+   GetBaseURL
+   normalizes orgName according to a base associated with doc, and
+   following the standard URL format rules.
+   The function returns the base used to solve relative URL and SRC:
+      - the base of the document,
+      - or the document path (without document name).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *GetBaseURL (Document doc)
+#else  /* __STDC__ */
+char               *GetBaseURL (doc)
+Document            doc;
+#endif /* __STDC__ */
+{
+  Element             el;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  char               *ptr, *basename;
+  int                 length;
+
+  basename = TtaGetMemory (MAX_LENGTH);
+  strcpy (basename, DocumentURLs[doc]);
+  length = MAX_LENGTH -1;
+  /* get the root element    */
+  el = TtaGetMainRoot (doc);
+  /* search the BASE element */
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = HTML_EL_BASE;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  if (el)
+    {
+      /*  The document has a BASE element -> Get the HREF attribute */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	{
+	  /* Use the base path of the document */
+	  TtaGiveTextAttributeValue (attr, basename, &length);
+	  /* base and orgName have to be separated by a DIR_SEP */
+	  length--;
+	  if (basename[0] != EOS && basename[length] != DIR_SEP) 
+	    /* verify if the base has the form "protocol://server:port" */
+	    {
+	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
+				   AMAYA_PARSE_PUNCTUATION);
+	      if (ptr && !strcmp (ptr, basename))
+		{
+		  /* it has this form, we complete it by adding a DIR_STR  */
+		  strcat (basename, DIR_STR);
+		  length++;
+		}
+	      if (ptr)
+		TtaFreeMemory (ptr);
+	    }
+	}
+    }
+
+  /* Remove anything after the last DIR_SEP char. If no such char is found,
+   * then search for the first ":" char, hoping that what's before that is a
+   * protocol. If found, end the string there. If neither char is found,
+   * then discard the whole base element.
+   */
+  length = strlen (basename) - 1;
+  /* search for the last DIR_SEP char */
+  while (length >= 0  && basename[length] != DIR_SEP)
+    length--;
+  if (length >= 0)
+    /* found the last DIR_SEP char, end the string there */
+    basename[length + 1] = EOS;		   
+  else
+    /* search for the first PATH_STR char */
+    {
+      for (length = 0; basename[length] != PATH_SEP && 
+	     basename[length] != EOS; length ++);
+      if (basename[length] == PATH_SEP)
+	/* found, so end the string there */
+	basename[length + 1] = EOS;
+      else
+	/* not found, discard the base */
+	basename[0] = EOS;
+    }
+  return (basename);
+}
+
+
 /*----------------------------------------------------------------------
    NormalizeURL
    normalizes orgName according to a base associated with doc, and
@@ -424,23 +513,19 @@ char               *newName;
 char               *docName;
 #endif /* __STDC__ */
 {
-   char                basename[MAX_LENGTH];
+   char               *basename;
    char                tempOrgName[MAX_LENGTH];
    char               *ptr;
-   Element             el;
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attrHREF = NULL;
    int                 length;
 
    if (!newName || !docName)
       return;
 
    /*
-   ** First Step: Clean orgName
-   ** Make sure we have a complete orgName, without any leading or trailing
-   ** white spaces, or trailinbg new lines
-   */
+    * Clean orgName
+    * Make sure we have a complete orgName, without any leading or trailing
+    * white spaces, or trailinbg new lines
+    */
 
    ptr = orgName;
    /* skip leading white space and new line characters */
@@ -456,11 +541,10 @@ char               *docName;
       *ptr = EOS;
 
    /*
-   ** Second Step: make orgName a complete URL
-   ** If the URL does not include a protocol, then
-   ** try to calculate one using the doc's base element 
-   ** (if it exists),
-   */
+    * Make orgName a complete URL
+    * If the URL does not include a protocol, then try to calculate
+    * one using the doc's base element (if it exists),
+    */
    if (tempOrgName[0] == EOS)
      {
        newName[0] = EOS;
@@ -486,117 +570,11 @@ char               *docName;
      strcpy (newName, tempOrgName);
    else
      {
-       /* take into account the BASE element. */
-       length = MAX_LENGTH -1;
-       /* get the root element    */
-       el = TtaGetMainRoot (doc);
-	   
-       /* search the BASE element */
-       elType.ElSSchema = TtaGetDocumentSSchema (doc);
-       elType.ElTypeNum = HTML_EL_BASE;
-       el = TtaSearchTypedElement (elType, SearchInTree, el);
-       if (el)
-	 {
-	   /* 
-	   ** The document has a BASE element 
-	   ** Get the HREF attribute of the BASE Element 
-	   */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   attrHREF = TtaGetAttribute (el, attrType);
-	   if (attrHREF)
-	     {
-	       /* Use the base path of the document */
-	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
-	       /* base and orgName have to be separated by a DIR_SEP */
-	       length--;
-	       if (basename[0] != EOS && basename[length] != DIR_SEP) 
-		 /* verify if the base has the form "protocol://server:port" */
-		 {
-		   ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
-				                AMAYA_PARSE_PUNCTUATION);
-		   if (ptr && !strcmp (ptr, basename))
-		     {
-		     /* it has this form, we complete it by adding a DIR_STR  */
-		     strcat (basename, DIR_STR);
-		     length++;
-		     }
-		   if (ptr)
-		     TtaFreeMemory (ptr);
-		 }
-	       /* Third Step: prepare the base
-	       ** Removing anything after the
-	       ** last DIR_SEP char. If no such char is found, then search for
-	       ** the first ":" char, hoping that what's before that is a
-	       ** protocol. If found, end the string there. If neither
-	       ** char is found, then discard the whole base element.
-	       */
-
-	       /* search for the last DIR_SEP char */
-	       while (length >= 0  && basename[length] != DIR_SEP)
-		 length--;
-	       if (length >= 0)
-		 /* found the last DIR_SEP char, end the string there */
-		 basename[length + 1] = EOS;		   
-	       else
-		 /* search for the first PATH_STR char */
-		 {
-		   for (length = 0; basename[length] != PATH_SEP && 
-			  basename[length] != EOS; length++);
-		   if (basename[length] == PATH_SEP)
-		     /* found, so end the string there */
-		     basename[length + 1] = EOS;
-		   else
-		     /* not found, discard the base */
-		     basename[0] = EOS;
-		 }
-	     }
-	   else
-	     basename[0] = EOS;
-	 }
      
-       /*
-       ** Fourth Step: 
-       ** If there's no base element, and if we're following
-       ** a link, use the URL of the current document as a base.
-       */
-
-       if (!attrHREF)
-	 {
-	   if (DocumentURLs[(int) doc])
-	     {
-	       strcpy (basename, DocumentURLs[(int) doc]);
-	       /* base and orgName have to be separated by a DIR_SEP */
-	       length = strlen (basename) - 1;
-	       /* search for the last DIR_SEP char */
-	       while (length >= 0  && basename[length] != DIR_SEP)
-		 length--;
-	       if (length >= 0)
-		 /* found the last DIR_SEP char, end the string there */
-		 basename[length + 1] = EOS;		   
-	       else
-		 /* search for the first PATH_STR char */
-		 {
-		   for (length = 0; basename[length] != PATH_SEP && 
-			  basename[length] != EOS; length ++);
-		   if (basename[length] == PATH_SEP)
-		     /* found, so end the string there */
-		     basename[length + 1] = EOS;
-		   else
-		     /* not found, discard the base */
-		     basename[0] = EOS;
-		 }
-	     }
-	   else
-	       basename[0] = EOS;
-	 }
-     
-       /*
-       ** Fifth Step, calculate the absolute URL, using the base
-       */
-
+       /* Calculate the absolute URL, using the base or document URL */
+       basename = GetBaseURL (doc);
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
-
+       TtaFreeMemory (basename);
        if (ptr)
 	 {
 	   SimplifyUrl (&ptr);
@@ -608,12 +586,10 @@ char               *docName;
      }
 
    /*
-   ** Sixth and last Step:
-   ** Prepare the docname that will refer to this ressource in the
-   ** .amaya directory. If the new URL finishes on DIR_SEP, then use
-   ** noname.html as a default ressource name
+    * Prepare the docname that will refer to this ressource in the
+    * .amaya directory. If the new URL finishes on DIR_SEP, then use
+    * noname.html as a default ressource name
    */
-
    if (newName[0] != EOS)
      {
        length = strlen (newName) - 1;
@@ -1263,7 +1239,7 @@ char               *target;
 
 
 /*----------------------------------------------------------------------
-  MakeRelativeUrl: make relative name
+  MakeRelativeURL: make relative name
   
   This function creates and returns a string which gives an expression of
   one address as related to another. Where there is no relation, an absolute
@@ -1279,9 +1255,9 @@ char               *target;
   	The caller is responsible for freeing the resulting name later.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char            *MakeRelativeUrl (char *aName, char *relatedName)
+char            *MakeRelativeURL (char *aName, char *relatedName)
 #else  /* __STDC__ */
-char            *MakeRelativeUrl (aName, relatedName)
+char            *MakeRelativeURL (aName, relatedName)
 char            *aName;
 char            *relatedName;
 #endif  /* __STDC__ */
@@ -1314,39 +1290,47 @@ char            *relatedName;
 	}
     }
     
-    /* q, p point to the first non-matching character or zero */
-    if ((slashes < 2 && after_access == NULL)
-	|| (slashes < 3 && after_access != NULL))
-      {
-	/* Local files or remote files whitout common path */
-	/* exactly the right length */
-	len = strlen (aName);
-	if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-	  strcpy (return_value, aName);
-      }
-    else
-      {
-	/* Some path in common */
-	if (slashes == 3 && strncmp (aName, "http:", 5) == 0)
-	  /* just the same server */
-	  strcpy (result, last_slash);
-	else
-	  {
-	    levels= 0; 
-	    for (; *q && (*q != '#'); q++)
-	      if (*q == DIR_SEP)
-		levels++;
-	    
-	    result[0] = 0;
-	    for (;levels; levels--)
-	      strcat (result, "../");
-	    strcat (result, last_slash+1);
-	  } 
-
-	/* exactly the right length */
-	len = strlen (result);
-	if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-	  strcpy (return_value, result);
+  /* q, p point to the first non-matching character or zero */
+  if (*q == EOS)
+    {
+      /* New name is a subset of the related name */
+      /* exactly the right length */
+      len = strlen (p);
+      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+	strcpy (return_value, p);
+    }
+  else if ((slashes < 2 && after_access == NULL)
+      || (slashes < 3 && after_access != NULL))
+    {
+      /* Two names whitout common path */
+      /* exactly the right length */
+      len = strlen (aName);
+      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+	strcpy (return_value, aName);
+    }
+  else
+    {
+      /* Some path in common */
+      if (slashes == 3 && strncmp (aName, "http:", 5) == 0)
+	/* just the same server */
+	strcpy (result, last_slash);
+      else
+	{
+	  levels= 0; 
+	  for (; *q && (*q != '#'); q++)
+	    if (*q == DIR_SEP)
+	      levels++;
+	  
+	  result[0] = 0;
+	  for (;levels; levels--)
+	    strcat (result, "../");
+	  strcat (result, last_slash+1);
+	} 
+      
+      /* exactly the right length */
+      len = strlen (result);
+      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+	strcpy (return_value, result);
     }
   return (return_value);
 }

@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.0b Beta"
+#define HTAppVersion "V1.1 Beta"
 
 /* How are Network accesses provided ? */
 #ifdef AMAYA_JAVA
@@ -159,8 +159,8 @@ THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char        *TargetName;
 THOT_EXPORT boolean	 SaveAsHTML;
 THOT_EXPORT boolean	 SaveAsText;
-THOT_EXPORT int          CopyImages;	/* should we copy images in Save As */
-THOT_EXPORT int          UpdateURLs;	/* should we update URLs in Save As */
+THOT_EXPORT boolean      CopyImages;	/* should we copy images in Save As */
+THOT_EXPORT boolean      UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT boolean      UserAnswer;
 THOT_EXPORT int          ReturnOption;
 THOT_EXPORT boolean      InNewWindow;

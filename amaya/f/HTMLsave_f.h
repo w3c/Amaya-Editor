@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SetAbsoluteURLs ( Document document,
-                              View view );
+extern void SetRelativeURLs ( Document document,
+                              char *newpath );
 extern void SaveDocumentAs ( Document document,
                              View view );
 extern void SaveDocument ( Document document,
@@ -22,8 +22,8 @@ extern void DoSaveObjectAs ( void );
 
 #else /* __STDC__ */
 
-extern void SetAbsoluteURLs (/* Document document,
-                                View view */);
+extern void SetRelativeURLs (/* Document document,
+                                char *newpath */);
 extern void SaveDocumentAs (/* Document document,
                                View view */);
 extern void SaveDocument (/* Document document,

@@ -393,8 +393,7 @@ char               *text;
 
 #endif /* __STDC__ */
 {
-  char              *value;
-  char               pathdoc[MAX_LENGTH];
+  char              *value, *base;
   char               pathimage[MAX_LENGTH];
   char               localname[MAX_LENGTH];
   char               imagename[MAX_LENGTH];
@@ -425,8 +424,10 @@ char               *text;
       else
 	{
 	  /* load a remote image into a remote document */
-	  value = MakeRelativeUrl (pathimage, DocumentURLs[doc]);
+	  base = GetBaseURL (doc);
+	  value = MakeRelativeURL (pathimage, base);
 	  TtaSetAttributeText (attr, value, el, doc);
+	  TtaFreeMemory (base);
 	  TtaFreeMemory (value);
 	  /* set stop button */
 	  ActiveTransfer (doc);
@@ -440,8 +441,10 @@ char               *text;
       if (!IsHTTPPath (pathimage))
 	{
 	  /* load a local image into a local document */
-	  value = MakeRelativeUrl (pathimage, DocumentURLs[doc]);
+	  base = GetBaseURL (doc);
+	  value = MakeRelativeURL (pathimage, base);
 	  TtaSetAttributeText (attr, value, el, doc);
+	  TtaFreeMemory (base);
 	  TtaFreeMemory (value);
 	  /* set the element content */
 	  TtaSetTextContent (el, pathimage, SPACE, doc);
@@ -510,7 +513,9 @@ NotifyElement      *event;
 	TtaAttachAttribute (elSRC, attr, doc);
      }
    /* copy image name in ALT attribute */
-   TtaExtractName (text, pathimage, imagename);
+   strcpy (imagename, "image: ");
+   TtaExtractName (text, pathimage, &imagename[7]);
+   strcat (imagename, " ");
    TtaSetAttributeText (attr, imagename, elSRC, doc);
 
 }

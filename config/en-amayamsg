@@ -35,7 +35,7 @@
 34 %s is not available at the moment. Please retry at some other time
 35 %s loaded
 36 Saving %s
-37 Cannot save %s
+37 Cannot save in: %s
 38 english system errors messages
 39 An anchor cannot contain these elements
 40 Cannot create an anchor within an anchor
@@ -65,7 +65,7 @@
 64 BCopy Images
 65 BTransform URLs
 66 Document location
-67 Images location
+67 Images directory
 68 Object location
 69 Document style
 70 User's preferences

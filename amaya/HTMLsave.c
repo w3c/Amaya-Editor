@@ -14,7 +14,7 @@
 
 /* DEBUG_AMAYA_SAVE Print out debug informations when saving */
 
-#ifdef DEBUG_AMAYA_SAVE
+#ifdef AMAYA_DEBUG
 #define DBG(a) a
 #else
 #define DBG(a)
@@ -24,137 +24,87 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
-#include "HTMLbook_f.h"
-
 static char         tempSavedObject[MAX_LENGTH];
-
-/*
- * this structure describes the set of attributes and
- * the corresponding elements containing URLs.
- * This table is Up-to-date as of HTML 3.2
- * It is used when fetching pages from one server to
- * convert relative URLs to absolute ones.
- * Pairs using the same attribute should be groupped
- * to minimize scans along the document.
- */
-
-typedef struct struct_URL_elem
-  {
-     int                 attr_type;
-     int                 elem_type;
-  }
-URL_elem;
-
-URL_elem            URL_elem_tab[] =
-{
-   {HTML_ATTR_HREF_, HTML_EL_Anchor},
-   {HTML_ATTR_HREF_, HTML_EL_AREA},
-   {HTML_ATTR_HREF_, HTML_EL_LINK},
-   {HTML_ATTR_HREF_, HTML_EL_BASE},
-/*** The conversion of SRC on images are handled separately
-{  HTML_ATTR_SRC, HTML_EL_PICTURE_UNIT },
- ***/
-   {HTML_ATTR_SRC, HTML_EL_Input},
-   {HTML_ATTR_USEMAP, HTML_EL_PICTURE_UNIT},
-   {HTML_ATTR_codebase, HTML_EL_Applet},
-   {HTML_ATTR_Script_URL, HTML_EL_Form},
-   {HTML_ATTR_background_, HTML_EL_BODY},
+static int          URL_attr_tab[] = {
+   HTML_ATTR_HREF_,
+   HTML_ATTR_codebase,
+   HTML_ATTR_Script_URL,
+   HTML_ATTR_SRC,
+   HTML_ATTR_background_
 };
 
-#define NB_URL_PAIR ((sizeof(URL_elem_tab)) / (sizeof(URL_elem)))
+static int          SRC_attr_tab[] = {
+   HTML_ATTR_SRC,
+   HTML_ATTR_background_
+};
 
+
+#include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
+#include "HTMLbook_f.h"
+#include "HTMLimage_f.h"
+#include "HTMLsave_f.h"
 #include "init_f.h"
 #ifndef AMAYA_JAVA
 #include "query_f.h"
 #endif
-#include "AHTURLTools_f.h"
-#include "EDITimage_f.h"
-#include "HTMLimage_f.h"
-#include "HTMLsave_f.h"
 
 
 /*----------------------------------------------------------------------
-   SetAbsoluteURLs
-   change relative URLs to absolute ones within an HTML document.
+   SetRelativeURLs: try to make relative URLs within an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetAbsoluteURLs (Document document, View view)
+void                SetRelativeURLs (Document document, char *newpath)
 #else
-void                SetAbsoluteURLs (document, view)
+void                SetRelativeURLs (document, newpath)
 Document            document;
-View                view;
-
+char               *newpath;
 #endif
 {
-   int                 index, i;	/* in URL_elem_tab */
-   int                 attr;	/* value of attr_type */
-   Element             el;
-   ElementType         elType;
-   Attribute           at;
-   AttributeType       atType;
-   char                old_url[MAX_LENGTH + 1];
-   char                new_url[MAX_LENGTH + 50];
-   char                name[MAX_LENGTH];
-   int                 len;
+  Element             el, root;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  char                old_url[MAX_LENGTH];
+  char                oldpath[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char               *new_url;
+  int                 index, max;
+  int                 len;
 
-DBG(fprintf(stderr, "SetAbsoluteURLs\n");)
+DBG(fprintf(stderr, "SetRelativeURLs\n");)
 
-   for (index = 0; index < NB_URL_PAIR;)
-     {
-	/* fetch a new attr */
-	attr = URL_elem_tab[index].attr_type;
-
-	/*
-	 * search all elements having this attribute
-	 */
-	el = TtaGetMainRoot (SavingDocument);
-	atType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-	atType.AttrTypeNum = attr;
-	TtaSearchAttribute (atType, SearchForward, el, &el, &at);
-	while (el != NULL)
-	  {
-
-	     /*
-	      * search for all consecutives pair of (attr,elem)
-	      * if the current elem match.
-	      */
-	     elType = TtaGetElementType (el);
-	     for (i = index;
-		  (i < NB_URL_PAIR) && (URL_elem_tab[i].attr_type == attr);
-		  i++)
-	       {
-
-		  if (elType.ElTypeNum == URL_elem_tab[i].elem_type)
-		    {
-
-		       /*
-		        * get the URL contained in the attribute.
-		        */
-		       len = MAX_LENGTH;
-		       TtaGiveTextAttributeValue (at, old_url, &len);
-		       old_url[MAX_LENGTH] = EOS;
-
-		       /*
-		        * save the new SRC attr
-		        */
-		       NormalizeURL (old_url, document, new_url, name);
-DBG(                   fprintf(stderr, "Changed SRC from %s to %s\n", old_url, new_url);)
-		       TtaSetAttributeText (at, new_url, el, document);
-		       break;
-		    }
-	       }
-	     TtaSearchAttribute (atType, SearchForward, el, &el, &at);
-	  }
-
-	/*
-	 * get next index in the table corresponding
-	 * to a different attribute.
-	 */
-	for (i = index + 1;
-	     (i < NB_URL_PAIR) && (URL_elem_tab[i].attr_type == attr);
-	     i++) ;
-	index = i;
-     }
+  attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+  root = TtaGetMainRoot (document);
+  /* get the base for URLs and SRCs */
+  max = sizeof (URL_attr_tab) / sizeof (int);
+  for (index = 0; index < max; index++)
+    {
+      /* search all elements having this attribute */
+      attrType.AttrTypeNum = URL_attr_tab[index];
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+      while (el != NULL)
+	{
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum != HTML_EL_BASE)
+	    {
+	      /* get the URL contained in the attribute. */
+	      len = MAX_LENGTH - 1;
+	      TtaGiveTextAttributeValue (attr, old_url, &len);
+	      old_url[MAX_LENGTH] = EOS;
+	      /* save the new attribute value */
+	      if (old_url[0] != '#')
+		{
+		  NormalizeURL (old_url, document, oldpath, tempname);
+		  new_url = MakeRelativeURL (oldpath, newpath);
+		  DBG(fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);)
+		    TtaSetAttributeText (attr, new_url, el, document);
+		    TtaFreeMemory (new_url);
+		}
+	    }
+	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -212,7 +162,6 @@ char               *pathname;
    TtaNewTextForm (BaseDialog + FilterText, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
-   TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
@@ -229,44 +178,54 @@ View                view;
 
 #endif
 {
-   char                tempname[MAX_LENGTH];
-   int                 i;
+   char             tempname[MAX_LENGTH];
+   int              i;
 
-   if ((SavingDocument != (Document) None) && (SavingDocument != document))
+   if (SavingDocument != 0 && SavingDocument != document)
       return;
-   if (SavingObject != (Document) None)
+   if (SavingObject != 0)
       return;
 
    /* memorize the current document */
-   SavingDocument = document;
-   strcpy (tempname, DocumentURLs[document]);
-   /* suppress compress suffixes from tempname */
-   i = strlen (tempname) - 1;
-   if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+   if (SavingDocument == 0)
      {
-       tempname[i-2] = EOS;
-       TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+       SavingDocument = document;
+       strcpy (tempname, DocumentURLs[document]);
+       /* suppress compress suffixes from tempname */
+       i = strlen (tempname) - 1;
+       if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+	 {
+	   tempname[i-2] = EOS;
+	   TtaFreeMemory (DocumentURLs[SavingDocument]);
+	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+	 }
+       else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+	 {
+	   tempname[i-1] = EOS;
+	   TtaFreeMemory (DocumentURLs[SavingDocument]);
+	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+	 }
+       
+       /* if it is a W3 document use the current DirectoryName */
+       if (IsW3Path (tempname))
+	 TtaExtractName (tempname, DirectoryName, DocumentName);
+       else
+	 {
+	   TtaGetDocumentDirectory (SavingDocument, tempname, MAX_LENGTH);
+	   strcpy (DirectoryName, tempname);
+	   strcpy (DocumentName, TtaGetDocumentName (SavingDocument));
+	   strcat (tempname, DIR_STR);
+	   if (!IsHTMLName (DocumentName))
+	     strcat (DocumentName, ".html");
+	   strcat (tempname, DocumentName);
+	 }
+       TtaSetDialoguePosition ();
      }
-   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
-     {
-       tempname[i-1] = EOS;
-       TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
-     }
-
-   /* if it is a W3 document use the current DirectoryName */
-   if (IsW3Path (tempname))
-     TtaExtractName (tempname, DirectoryName, DocumentName);
    else
      {
-	TtaGetDocumentDirectory (SavingDocument, tempname, MAX_LENGTH);
-	strcpy (DirectoryName, tempname);
-	strcpy (DocumentName, TtaGetDocumentName (SavingDocument));
-	strcat (tempname, DIR_STR);
-	if (!IsHTMLName (DocumentName))
-	   strcat (DocumentName, ".html");
-	strcat (tempname, DocumentName);
+       strcpy (tempname, DirectoryName);
+       strcat (tempname, DIR_STR);
+       strcat (tempname, DocumentName);
      }
 
    /* display saving form */
@@ -382,83 +341,69 @@ PicType             filetype;
 
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 
-    /*
-     * Save.
-     */
-    res = PutObjectWWW(doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE,
-                       filetype, NULL, NULL);
-    if (res) {
-        /*
-	 * The HTTP PUT method failed !
-	 */
-        return(res);
-    }
+    /* Save. */
+    res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE,
+			filetype, NULL, NULL);
+    if (res)
+      /* The HTTP PUT method failed ! */
+      return (res);
+    if (no_reread_check != NULL)
+      return (0);
 
-    if (no_reread_check != NULL) return(0);
-
-    /*
-     * Refetch
-     */
-
+    /* Refetch */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 
     TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
-    strcpy(tempURL, remotefile);
-    res = GetObjectWWW(doc, tempURL, NULL, &tempfile[0],
-                       AMAYA_SYNC | AMAYA_NOCACHE,
-                       NULL, NULL, NULL, NULL, NO);
-    if (res) {
-        /*
-	 * The HTTP GET method failed !
-	 */
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED),
-		 remotefile);
+    strcpy (tempURL, remotefile);
+    res = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC | AMAYA_NOCACHE,
+			NULL, NULL, NULL, NULL, NO);
+    if (res)
+      {
+        /* The HTTP GET method failed ! */
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED), remotefile);
 	InitConfirm (doc, 1, msg);
-	if (!UserAnswer) {
+	if (!UserAnswer)
 	   /* Trigger the error */
 	   return (res);
-	}
 	/* Ignore the read failure */
-	return(0);
+	return (0);
     }
 
-    /*
-     * Compare URLs In case of redirection.
-     */
-    if (strcmp(remotefile, tempURL)) {
+    /* Compare URLs In case of redirection. */
+    if (strcmp (remotefile, tempURL))
+      {
         /*
 	 * Warning : redirect...
 	 */
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED),
-		 remotefile, tempURL);
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED), remotefile, tempURL);
 	InitConfirm (doc, 1, msg);
-	if (!UserAnswer) {
-	   /* Trigger the error */
-	   TtaFileUnlink(tempfile);
-	   return(-1);
-	}
-    }
+	if (!UserAnswer)
+	  {
+	    /* Trigger the error */
+	    TtaFileUnlink (tempfile);
+	    return (-1);
+	  } 
+      }
 
-    if (no_write_check != NULL) return(0);
+    if (no_write_check != NULL)
+      return (0);
 
-    /*
-     * Compare content.
-     */
-
+    /* Compare content. */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);)
 
-    if (! TtaCompareFiles(tempfile, localfile)) {
-	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED),
-		 remotefile);
+    if (! TtaCompareFiles(tempfile, localfile))
+      {
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED), remotefile);
 	InitConfirm (doc, 1, msg);
-	if (!UserAnswer) {
-	   /* Trigger the error */
-	   TtaFileUnlink(tempfile);
-	   return(-1);
-	}
-    }
+	if (!UserAnswer)
+	  {
+	    /* Trigger the error */
+	    TtaFileUnlink (tempfile);
+	    return (-1);
+	  }
+      }
 
-    TtaFileUnlink(tempfile);
+    TtaFileUnlink (tempfile);
     return(0);
 }
 
@@ -656,7 +601,7 @@ View                view;
    int                 i;
    boolean             ok;
 
-   if (SavingDocument != (Document) None)
+   if (SavingDocument != 0)
       return;
    SavingDocument = document;
    ok = FALSE;
@@ -697,7 +642,7 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
        if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE) == 0)
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-	   SavingDocument = (Document) None;
+	   SavingDocument = 0;
 	   ok = TRUE;
 	 }
        else
@@ -707,7 +652,7 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 	 {
 	   /* cannot save */
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[document]);
-	   SavingDocument = (Document) None;
+	   SavingDocument = 0;
 	   SaveDocumentAs (document, 1);
 	 }
        }
@@ -740,19 +685,28 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
-  UpdateImages
-  changes image SRCs and saves image files if CopyImages is TRUE.
+  UpdateDocAndImages
+  change the document URL and if CopyImage is TRUE change all
+  picture SRC attribute. If pictures are saved locally, make the copy
+  else add them to the list of remote images to be copied.
+  The parameter imgbase gives the relative path of the new image directory.
+  The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            UpdateImages (char *imgbase, boolean src_is_local, boolean dst_is_local, char *newURL)
+static void            UpdateDocAndImages (boolean src_is_local, boolean dst_is_local, char *imgbase, char *newURL)
 #else
-static void            UpdateImages (imgbase, src_is_local, dst_is_local, newURL)
-char                  *imgbase;
+static void            UpdateDocAndImages (src_is_local, dst_is_local, imgbase, newURL)
 boolean                src_is_local;
 boolean                dst_is_local;
+char                  *imgbase;
 char                  *newURL;
 #endif
 {
+   AttributeType       attrType;
+   ElementType         elType;
+   Attribute           attr;
+   Element             el, root;
+   LoadedImageDesc    *pImage;
    char                tempfile[MAX_LENGTH];
    char                localpath[MAX_LENGTH];
    char                oldpath[MAX_LENGTH];
@@ -760,14 +714,7 @@ char                  *newURL;
    char                imgname[MAX_LENGTH];
    char                url[MAX_LENGTH];
    char               *buf;
-   int                 buflen;
-   AttributeType       attrType;
-   ElementType         elType;
-   Attribute           attr;
-   Element             el;
-   LoadedImageDesc    *pImage;
-
-DBG(fprintf(stderr, "UpdateImages : base %s, src_is_local %d, dst_local %d, URL %s\n", imgbase, (int) src_is_local, (int) dst_is_local, newURL);)
+   int                 buflen, max, index;
 
    /* save the old document path to locate images */
    strcpy (tempfile, DocumentURLs[SavingDocument]);
@@ -776,66 +723,15 @@ DBG(fprintf(stderr, "UpdateImages : base %s, src_is_local %d, dst_local %d, URL 
    /* path to search image descriptors */
    sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
 
-   /* update the document url */
+   /* change the document url */
    TtaFreeMemory (DocumentURLs[SavingDocument]);
    DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
-   el = TtaGetMainRoot (SavingDocument);
+
+   root = TtaGetMainRoot (SavingDocument);
+   elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
+   attrType.AttrSSchema = elType.ElSSchema;
    if (CopyImages)
      {
-       /* search the BASE element */
-       elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
-       elType.ElTypeNum = HTML_EL_BASE;
-       el = TtaSearchTypedElement (elType, SearchInTree, el);
-       if (el)
-	 {
-	   /* 
-	   ** The document has a BASE element 
-	   ** Get the HREF attribute of the BASE Element 
-	   */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   attr = TtaGetAttribute (el, attrType);
-	   if (attr)
-	     {
-	       /* change the base */
-	       buflen = MAX_LENGTH;
-	       TtaGiveTextAttributeValue (attr, oldpath, &buflen);
-
-DBG(fprintf(stderr, "     old BASE %s\n", oldpath);)
-
-	       if (imgbase[0] != EOS)
-		 {
-
-DBG(fprintf(stderr, "     changing to new BASE %s\n", imgbase);)
-
-		   TtaSetAttributeText (attr, imgbase, el, SavingDocument);
-		   imgbase[0] = EOS;
-		 }
-	       else
-		 {
-		   buf = AmayaParseUrl (newURL, "", AMAYA_PARSE_ALL);
-		   if (buf)
-		     {
-		       SimplifyUrl (&buf);
-		       TtaExtractName (buf, tempfile, tempname);
-		       strcat (tempfile, DIR_STR);
-
-DBG(fprintf(stderr, "     changing to new BASE %s\n", tempfile);)
-
-		       TtaSetAttributeText (attr, tempfile, el, SavingDocument);
-		       TtaFreeMemory (buf);
-		     }
-		 }
-	     }
-	 }
-       else
-         {
-
-DBG(fprintf(stderr, "     document has no BASE\n");)
-
-	 el = TtaGetMainRoot (SavingDocument);
-	 }
-
        /* Change all Picture SRC and prepare the saving process */
        /* 
 	*                       \   newpath=local |  newpath=remote
@@ -850,152 +746,146 @@ DBG(fprintf(stderr, "     document has no BASE\n");)
 	*        | old img=local  |   xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	* ------------------------|---------------|------------------
 	*/
-       attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-       attrType.AttrTypeNum = HTML_ATTR_SRC;
-       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-       while (el != NULL)
+
+       max = sizeof (SRC_attr_tab) / sizeof (int);
+       for (index = 0; index < max; index++)
 	 {
-	   elType = TtaGetElementType (el);
-	   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	   /* fetch a new attrValue */
+	   attrType.AttrTypeNum = SRC_attr_tab[index];
+	   TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+	   while (el != NULL)
 	     {
+	       elType = TtaGetElementType (el);
+	       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		 {
 #ifdef COUGAR
-	       elType = TtaGetElementType (TtaGetParent(el));
-	       if (elType.ElTypeNum != HTML_EL_Object)
-		 {
+		   elType = TtaGetElementType (TtaGetParent(el));
+		   if (elType.ElTypeNum != HTML_EL_Object)
+		     {
 #endif
-	       buflen = TtaGetTextAttributeLength (attr);
-	       buf = (char *) TtaGetMemory (buflen + 2);
-	       if (buf == NULL)
-		 break;
-	       TtaGiveTextAttributeValue (attr, buf, &buflen);
+		       buflen = TtaGetTextAttributeLength (attr);
+		       buf = (char *) TtaGetMemory (buflen + 2);
+		       if (buf == NULL)
+			 break;
+		       TtaGiveTextAttributeValue (attr, buf, &buflen);
 	       
-	       /* extract the image name */
-	       NormalizeURL (buf, SavingDocument, tempname, imgname);
-	       /* save the new SRC attr */
-	       if (imgbase[0] != EOS)
-		 {
-		   /* absolute name */
-		   strcpy (url, imgbase);
-		   strcat (url, DIR_STR);
-		   strcat (url, imgname);
-		 }
-	       else
-		 /* relative name */
-		 strcpy (url, imgname);
+		       /* extract the image name */
+		       NormalizeURL (buf, SavingDocument, tempname, imgname);
+		       /* save the new SRC attr */
+		       if (imgbase[0] != EOS)
+			 {
+			   /* compose the relative or absolute name */
+			   strcpy (url, imgbase);
+			   strcat (url, DIR_STR);
+			   strcat (url, imgname);
+			 }
+		       else
+			 /* in same directory -> local name */
+			 strcpy (url, imgname);
 
 DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 
-               if ((src_is_local) && (!dst_is_local)) {
+                       if ((src_is_local) && (!dst_is_local))
+			 {
 
 DBG(fprintf(stderr, "     AddLocalImage %s\n", buf);)
 
-		       /* add the localfile to the images list */
-		       AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);
-	       }
+		           /* add the localfile to the images list */
+		           AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);
+			 }
 
-	       TtaSetAttributeText (attr, url, el, SavingDocument);
+		       TtaSetAttributeText (attr, url, el, SavingDocument);
 
-	       /* mark the image descriptor or copy the file */
-	       if (dst_is_local)
-		 {
-		   /* copy the file to the new location */
-		   if (IsW3Path (buf) || IsHTTPPath (oldpath))
-		     {
-		       /* it was a remote image */
-		       /* change tempname to the local temporary name */
-		       strcpy (tempname, localpath);
-		       strcat (tempname, imgname);
-		     }
-		   else
-		     {
-		       /* rebuild the old image path */
-		       if (buf[0] != DIR_SEP)
-			   strcpy (tempname, oldpath);
-		       else
-		           tempname[0] = '\0';
-		       strcat (tempname, buf);
-		     }
-		   if (imgbase[0] != EOS)
-		     {
-		       strcpy (tempfile, imgbase);
-		       strcat (tempfile, DIR_STR);
-		       strcat (tempfile, imgname);
-		     }
-		   else
-		     {
-		       strcpy (tempfile, DirectoryName);
-		       strcat (tempfile, DIR_STR);
-		       strcat (tempfile, imgname);
-		     }
+		       /* mark the image descriptor or copy the file */
+		       if (dst_is_local)
+			 {
+			   /* copy the file to the new location */
+			   if (IsHTTPPath (tempname))
+			     {
+			       /* it was a remote image */
+			       /* change tempname to the local temporary name */
+			       strcpy (tempname, localpath);
+			       strcat (tempname, imgname);
+			     }
+			   if (imgbase[0] != EOS)
+			     {
+			       strcpy (tempfile, imgbase);
+			       strcat (tempfile, DIR_STR);
+			       strcat (tempfile, imgname);
+			     }
+			   else
+			     {
+			       strcpy (tempfile, DirectoryName);
+			       strcat (tempfile, DIR_STR);
+			       strcat (tempfile, imgname);
+			     }
 
 DBG(fprintf(stderr, "     Copying image locally from %s to %s\n", tempname, tempfile);)
 
-		   TtaFileCopy (tempname, tempfile);
-		 }
-	       else
-		 {
-		   /* compute the real new path of the image */
-		   NormalizeURL (url, SavingDocument, tempname, imgname);
-		   /* save on a remote server */
-		   if (IsW3Path (tempname) || IsHTTPPath (oldpath))
-		     {
-		       /* it was already a remote image */
-		       /* change tempname to the local temporary name */
-		       strcpy (tempfile, localpath);
-		       strcat (tempfile, imgname);
-		       pImage = SearchLoadedImage (tempfile, SavingDocument);
-		       /* update the informations on the images list */
-		       if (pImage)
+		          TtaFileCopy (tempname, tempfile);
+			 }
+		       else
 			 {
-
+			   /* compute the real new path of the image */
+			   NormalizeURL (url, SavingDocument, tempname, imgname);
+			   /* save on a remote server */
+			   if (IsW3Path (tempname) || IsHTTPPath (oldpath))
+			     {
+			       /* it was already a remote image */
+			       /* change tempname to the local temporary name */
+			       strcpy (tempfile, localpath);
+			       strcat (tempfile, imgname);
+			       pImage = SearchLoadedImage (tempfile, SavingDocument);
+			       /* update the informations on the images list */
+			       if (pImage)
+				 {
+				   
 DBG(fprintf(stderr, "     Image was loaded from net from %s\n", pImage->originalName);)
 
-			   /* image was already loaded */
-			   if (pImage->originalName != NULL)
-			     TtaFreeMemory (pImage->originalName);
-
+			            /* image was already loaded */
+			            if (pImage->originalName != NULL)
+				      TtaFreeMemory (pImage->originalName);
+				    
 DBG(fprintf(stderr, "     Mark it MODIFIED(%s)\n", tempname);)
 
-			   pImage->originalName = (char *) TtaStrdup (tempname);
-			   pImage->status = IMAGE_MODIFIED;
-			   pImage->elImage = (struct _ElemImage *) el;
-			 }
-		     }
-		   else
-		     {
-		       /* reset the old name */
-		       strcpy (tempfile, oldpath);
-		       strcat (tempfile, imgname);
+			            pImage->originalName = (char *) TtaStrdup (tempname);
+				    pImage->status = IMAGE_MODIFIED;
+				    pImage->elImage = (struct _ElemImage *) el;
+				 }
+			     }
+			   else
+			     {
+			       /* reset the old name */
+			       strcpy (tempfile, oldpath);
+			       strcat (tempfile, imgname);
 
 DBG(fprintf(stderr, "     Image was loaded from disk %s\n", tempfile);)
 DBG(fprintf(stderr, "     AddLocalImage %s\n", tempname);)
 
-		       /* add the localfile to the images list */
-		       AddLocalImage (tempfile, imgname, tempname, SavingDocument, &pImage);
-		     }
-
-		 }
-	       TtaFreeMemory (buf);
+		               /* add the localfile to the images list */
+		               AddLocalImage (tempfile, imgname, tempname, SavingDocument, &pImage);
+			     }
+			 }
+		       TtaFreeMemory (buf);
 #ifdef COUGAR
-		 }
+		     }
 #endif
+		 }
+	       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	     }
-	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	 }
 
        /*****************************************************************
-	*								*
 	*   Mark modified all images loaded for this document		*
-	*								*
 	*****************************************************************/
        pImage = ImageURLs;
-       while (pImage != NULL) {
-          if ((pImage->status == IMAGE_LOADED) &&
-	      (pImage->document == SavingDocument))
-	      pImage->status = IMAGE_MODIFIED;
-	  pImage = pImage->nextImage;
-       }
-
+       while (pImage != NULL)
+	 {
+	   if ((pImage->status == IMAGE_LOADED) &&
+	       (pImage->document == SavingDocument))
+	     pImage->status = IMAGE_MODIFIED;
+	   pImage = pImage->nextImage;
+	 }
      }
    else
      {
@@ -1021,282 +911,187 @@ void                DoSaveAs ()
 #endif
 {
    Document            doc;
-   char                tempfile[MAX_LENGTH];
+   AttributeType       attrType;
+   ElementType         elType;
+   Element             el, root;
+   char                documentFile[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
+   char               *imagePath, *base;
    char                imgbase[MAX_LENGTH];
-   char               *proto;
-   char               *host;
-   char               *dir;
-   char               *file;
    boolean             src_is_local;
    boolean             dst_is_local, ok;
-   boolean             with_images;
    int                 res;
 
    src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
    dst_is_local = !IsW3Path (DirectoryName);
+DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], DirectoryName, DocumentName, (int) CopyImages);)
 
-   if (CopyImages) with_images = TRUE;
-   else with_images = FALSE;
-
-
-DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], DirectoryName, DocumentName, (int) with_images);)
-
-   if (DocumentName[0] == '\0')
+   if (DocumentName[0] == EOS)
      {
-       strcpy (tempfile, DirectoryName);
-       if (AddNoName (SavingDocument, 1, tempfile, &ok))
+       /* there i no document name */
+       strcpy (documentFile, DirectoryName);
+       if (AddNoName (SavingDocument, 1, documentFile, &ok))
 	 {
 	   res = strlen(DirectoryName) - 1;
 	   if (DirectoryName[res] == DIR_SEP)
-	     DirectoryName[res] = '\0';
+	     DirectoryName[res] = EOS;
 	   /* need to update the document url */
 	   strcpy (DocumentName, "noname.html");
-
 DBG(fprintf(stderr, " set DocumentName to noname.html\n");)
-
 	 }
        else if (!ok)
 	 {
 	   /* save into the temporary document file */
 	   doc = SavingDocument;
 	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
-	   SavingDocument = (Document) None;
+	   SavingDocument = 0;
 	   SaveDocumentAs (doc, 1);
 	   return;
 	 }
      }
 
-   /*
-    * create the base directory/url for the images output.
-    */
-   imgbase[0] = 0;
-   if (SaveImgsURL[0] != EOS)
+   /* New document path */
+   strcpy (documentFile, DirectoryName);
+   strcat (documentFile, DIR_STR);
+   strcat (documentFile, DocumentName);
+   if (dst_is_local)
      {
-	if (!dst_is_local)
-	  {
-	     /* saving to a remote server */
-	     if (IsW3Path (SaveImgsURL))
-	       {
-		  /* this indicate possibly a different server */
-		  strcpy (imgbase, SaveImgsURL);
-	       }
-	     else if (SaveImgsURL[0] == DIR_SEP)
-	       {
-		  /* use a separate directory on the remote server */
-		  strcpy (tempfile, DirectoryName);
-		  strcat (tempfile, DIR_STR);
-		  strcat (tempfile, "toto.html");
-		  ExplodeURL (tempfile, &proto, &host, &dir, &file);
-		  if ((proto == NULL) || (host == NULL))
-		    strcpy (imgbase, DirectoryName);
-		  else
-		    sprintf (imgbase, "%s://%s%s", proto, host, SaveImgsURL);
-	       }
-	     else
-	       {
-		  /* this is a subdir of the doc destination on the server */
-		  strcpy (imgbase, DirectoryName);
-		  strcat (imgbase, DIR_STR);
-		  strcat (imgbase, SaveImgsURL);
-	       }
-
-DBG(fprintf(stderr, "   Remote image location : %s\n", imgbase);)
-
-	  }
-	else
-	  {
-	     /* saving locally */
-	     if (IsW3Path (SaveImgsURL))
-	       {
-		  /* not permitted, probably an error */
-		  imgbase[0] = 0;
-	       }
-	     else if (SaveImgsURL[0] == DIR_SEP)
-	       {
-		  /* complete path to directory exists */
-		  strcpy (imgbase, SaveImgsURL);
-	       }
-	     else
-	       {
-		  /* this is a subdir of the doc destination on the server */
-		  strcpy (imgbase, DirectoryName);
-		  strcat (imgbase, DIR_STR);
-		  strcat (imgbase, SaveImgsURL);
-	       }
-
-DBG(fprintf(stderr, "   Local image location : %s\n", imgbase);)
-
-	  }
+       /* verify that the directory exists */
+       if (!TtaCheckDirectory (DirectoryName))
+	 {
+	   doc = SavingDocument;
+	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DirectoryName);
+	   /* the user has to change the name of the images directory */
+	   SaveDocumentAs(SavingDocument, 1);
+	   return;
+	 }
+	/* verify that we don't overwite anything and ask for confirmation */
+       if (TtaFileExist (documentFile))
+	 {
+	   /* ask confirmation */
+	   sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), documentFile);
+	   InitConfirm (SavingDocument, 1, tempname);
+	   if (!UserAnswer)
+	     {
+	       /* the user has to change the name of the saving file */
+	       SaveDocumentAs(SavingDocument, 1);
+	       return;
+	     }
+	 }
      }
 
-   if (src_is_local && dst_is_local)
+  /* search if there is a BASE element within the document */
+  root = TtaGetMainRoot (SavingDocument);
+  elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* search the BASE element */
+  elType.ElTypeNum = HTML_EL_BASE;
+  el = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (el)
+    /* URLs are still relative to the document base */
+    base = GetBaseURL (SavingDocument);
+  else
+    base = NULL;
+
+   /* Create the base directory/url for the images output */
+   if (CopyImages && SaveImgsURL[0] != EOS)
      {
-       /*
-	*           Local to Local                 
-	*						
-	*   Just dump HTML to another directory    
-	*/
-
-	/*
-	 * Moving a document locally : don't change anything on URL or images.
-	 */
-	strcpy (tempfile, DirectoryName);
-	strcat (tempfile, DIR_STR);
-	strcat (tempfile, DocumentName);
-
-DBG(fprintf(stderr, "   Moving document locally : to %s\n", tempfile);)
-
-	if (TtaFileExist (tempfile))
-	  {
-	     /* ask confirmation */
-	     sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
-	     InitConfirm (SavingDocument, 1, tempname);
-	     if (!UserAnswer)
-	       {
-		  /* the user has to change the name of the saving file */
-		  SaveDocumentAs(SavingDocument, 1);
-		  return;
-	       }
-	  }
-
-	/*
-	 * change all Picture SRC to the remote URL.
-	 * and add them to the list of remote images.
-	 */
-	UpdateImages (imgbase, src_is_local, dst_is_local, tempfile);
-
-	/* save the local document */
-	SaveDocumentLocally (DirectoryName, DocumentName);
-        TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-        SavingDocument = (Document) None;
+       if (base)
+	 imagePath = MakeRelativeURL (SaveImgsURL, base);
+       else
+	 imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
+       if (imagePath != NULL)
+	 {
+	   strcpy (imgbase, imagePath);
+	   TtaFreeMemory (imagePath);
+	 }
+       else
+	 imgbase[0] = EOS;
+       /* verify that the directory exists */
+       strcpy (tempname, DirectoryName);
+       strcat (tempname, DIR_STR);
+       strcat (tempname, imgbase);
+       if (!TtaCheckDirectory (tempname))
+	 {
+	   doc = SavingDocument;
+	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
+	   /* the user has to change the name of the images directory */
+	   SaveDocumentAs(SavingDocument, 1);
+	   /* free base before returning*/
+	   if (base)
+	     TtaFreeMemory (base);
+	   return;
+	 }
      }
-   else if ((!src_is_local) && dst_is_local)
+   else if (CopyImages)
      {
-       /*
-	*           Remote to Local                
-	*						
-	*   + copy images				
-	*   + move URLs to absolutes ones.		
-	*/
-
-	/*
-	 * verify that we don't overwite anything and ask for confirmation
-	 */
-	strcpy (tempfile, DirectoryName);
-	strcat (tempfile, DIR_STR);
-	strcat (tempfile, DocumentName);
-
-DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
-
-	if (TtaFileExist (tempfile))
-	  {
-	     /* ask confirmation */
-	     sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
-	     InitConfirm (SavingDocument, 1, tempname);
-	     if (!UserAnswer)
-	       {
-		  /* the user has to change the name of the saving file */
-		  SaveDocumentAs(SavingDocument, 1);
-		  return;
-	       }
-	  }
-
-	/*
-	 * Transform all URLs to absolute ones.
-	 */
-	if (UpdateURLs)
-	   SetAbsoluteURLs (SavingDocument, 1);
-
-	/*
-	 * change all Picture SRC to the remote URL.
-	 * and add them to the list of remote images.
-	 */
-	strcpy (tempfile, DirectoryName);
-	strcat (tempfile, DIR_STR);
-	strcat (tempfile, DocumentName);
-	UpdateImages (imgbase, src_is_local, dst_is_local, tempfile);
-
-	/*
-	 * now save the file as-if
-	 */
-	SaveDocumentLocally (DirectoryName, DocumentName);
-        TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-        SavingDocument = (Document) None;
+       if (base)
+	 {
+	   imagePath = MakeRelativeURL (DirectoryName, base);
+	   strcpy (imgbase, imagePath);
+	   TtaFreeMemory (imagePath);
+	 }
+       else
+	 imgbase[0] = EOS;
      }
-   else if (src_is_local && (!dst_is_local))
+   else
+     imgbase[0] = EOS;
+
+DBG(fprintf(stderr, "   image directory : %s\n", imgbase);)
+
+  /* Transform all URLs to absolute ones */
+  if (UpdateURLs)
+    {
+      if (base)
+	/* URLs are still relative to the document base */
+	SetRelativeURLs (SavingDocument, base);
+      else
+	/* URLs are relative to the new document directory */
+	SetRelativeURLs (SavingDocument, documentFile);
+    }
+  /* now free base */
+  if (base)
+    TtaFreeMemory (base);
+
+  /* Change the document URL and if CopyImage is TRUE change all
+   * picture SRC attribute. If pictures are saved locally, make the copy
+   * else add them to the list of remote images to be copied.
+   */
+  UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
+
+  /* update informations on the document. */
+  TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+
+   if ( dst_is_local)
      {
-       /*
-	*           Local to Remote                
-	*						
-	*   + copy images				
-	*/
+       /* Local to Local or Remote to Local */
 
-	/* change all Picture SRC to the remote URL and add them to the */
-        /* list of remote images */
-	strcpy (tempfile, DirectoryName);
-	strcat (tempfile, DIR_STR);
-	strcat (tempfile, DocumentName);
-
-DBG(fprintf(stderr, "   Uploading document to net %s\n", tempfile);)
-
-	UpdateImages (imgbase, src_is_local, dst_is_local, tempfile);
-
-	/* update informations on the document. */
-	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-
-	/* now save the file as through the normal process of saving */
-	/* to a remote URL. */
-	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
-
-	if (res)
-	  /* restore all urls */
-	  SaveDocumentAs(SavingDocument, 1);
-	else
-	  {
-	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-	     SavingDocument = (Document) None;
-	  }
+DBG(fprintf(stderr, "   Saving document locally : to %s\n", documentFile);)
+       /* save the local document */
+       SaveDocumentLocally (DirectoryName, DocumentName);
+       TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+       SavingDocument = 0;
      }
-   else	/* ! src_is_local && ! dst_is_local */
+   else
      {
-       /*
-	*           Remote to Remote               
-	*						
-	*   + copy images				
-	*   + move URLs to absolutes ones.		
-	*/
+       /* Local to Remote or Remote to Remote */
 
-	/*
-	 * Transform all URLs to absolute ones.
-	 */
-	if (UpdateURLs)
-	   SetAbsoluteURLs (SavingDocument, 1);
+DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
-	/* change all Picture SRC to the new remote URL. */
-	/* and update modifications to the list of remote images. */
-	strcpy (tempfile, DirectoryName);
-	strcat (tempfile, DIR_STR);
-	strcat (tempfile, DocumentName);
+       /* now save the file as through the normal process of saving */
+       /* to a remote URL. */
+       res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
 
-DBG(fprintf(stderr, "   Copying remote document to remote URL %s\n", tempfile);)
-
-	UpdateImages (imgbase, src_is_local, dst_is_local, tempfile);
-
-	/* update informations on the document. */
-	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-	/* now save the file as through the normal process of saving
-	 * to a remote URL. */
-	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
-
-	if (res)
-	  SaveDocumentAs(SavingDocument, 1);
-	else
-	  {
-	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-	     SavingDocument = (Document) None;
-	  }
+       if (res)
+	 /* restore all urls */
+	 SaveDocumentAs(SavingDocument, 1);
+       else
+	 {
+	   TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	   SavingDocument = 0;
+	 }
      }
+
 }
 
 
@@ -1317,9 +1112,9 @@ char               *pathname;
 {
    char                tempdir[MAX_LENGTH];
 
-   if (SavingDocument != (Document) None)
+   if (SavingDocument != 0)
       return;
-   if (SavingObject != (Document) None)
+   if (SavingObject != 0)
       return;
    SavingObject = document;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));

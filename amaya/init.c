@@ -1362,7 +1362,6 @@ DoubleClickEvent    DC_event;
 	     ActiveTransfer (newdoc);
 	     if (IsW3Path (pathname))
 	       {
-		 /* load the document from the Web */
 		  if (DC_event & DC_FORM_POST)
 		    toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
 					    AMAYA_FORM_POST | AMAYA_SYNC,
@@ -1657,11 +1656,9 @@ char               *data;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0,
 			     SaveAsHTML);
 	   CopyImages = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 3,
-			     CopyImages);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
 	   UpdateURLs = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 4,
-			     UpdateURLs);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
 	   break;
 	 case 3:	/* "Copy Images" button */
 	   CopyImages = !CopyImages;
@@ -1965,8 +1962,8 @@ NotifyEvent        *event;
    strcpy (ScanFilter, ".*html*");
    SaveAsHTML = TRUE;
    SaveAsText = FALSE;
-   CopyImages = 1;
-   UpdateURLs = 1;
+   CopyImages = TRUE;
+   UpdateURLs = FALSE;
    SavingFile = TtaGetMemory (MAX_LENGTH);
    AttrHREFvalue = TtaGetMemory (MAX_LENGTH);
    AttrHREFvalue[0] = EOS;

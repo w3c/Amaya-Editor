@@ -31,9 +31,10 @@ extern char * AmayaParseUrl ( char *aName,
                               char *relatedName,
                               int wanted );
 extern void SimplifyUrl ( char ** url );
+extern char *GetBaseURL (Document doc);
 extern boolean NormalizeFile ( char *src,
                                char *target );
-extern char *MakeRelativeUrl ( char *aName,
+extern char *MakeRelativeURL ( char *aName,
                                 char *relatedName );
 
 #else /* __STDC__ */
@@ -50,6 +51,7 @@ extern boolean IsHTTPPath (/* char *path */);
 extern boolean IsWithParameters (/* char *url */);
 extern boolean IsW3Path (/* char *path */);
 extern boolean IsValidProtocol (/* char *url */);
+extern char *GetBaseURL (/* Document doc */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,
@@ -65,7 +67,7 @@ extern char * AmayaParseUrl (/* char *aName,
 extern void SimplifyUrl (/* char ** url */);
 extern boolean NormalizeFile (/* char *src,
                                  char *target */);
-extern char *MakeRelativeUrl (/* char *aName,
+extern char *MakeRelativeURL (/* char *aName,
                                   char *relatedName */);
 
 #endif /* __STDC__ */

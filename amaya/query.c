@@ -1377,7 +1377,6 @@ boolean error_html;
    int                 status;
    HTList             *cur, *pending;
 #  ifdef _WINDOWS
-   DWORD               attribs;
    HTChunk*            WIN_chunk = NULL;
 #  endif /* _WINDOWS */
 
@@ -1387,7 +1386,8 @@ boolean error_html;
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
 	if (error_html)
-	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	  /* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
 	return HT_ERROR;
 
      }
@@ -1399,12 +1399,12 @@ boolean error_html;
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_GET_UNSUPPORTED_PROTOCOL), urlName);
 
 	if (error_html)
-	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	  /* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
 	return HT_ERROR;
      }
 
    /* verify if a docid directory exists */
-
    tmp_dir = TtaGetMemory (strlen (TempFileDirectory) + 5 + 1);
 #  ifndef _WINDOWS
    sprintf (tmp_dir, "%s/%d", TempFileDirectory, docid);
@@ -1412,49 +1412,31 @@ boolean error_html;
    sprintf (tmp_dir, "C:\\TEMP\\AMAYA\\%d", docid);
 #  endif /* _WINDOWS */
 
-#  ifndef _WINDOWS
-   tmp_fp = fopen (tmp_dir, "r");
-   if (tmp_fp == 0)
-#  else /* _WINDOWS */
-   attribs = GetFileAttributes (tmp_dir) ;
-
-   if (attribs == 0xFFFFFFFF)
-#  endif /* _WINDOWS */
+   if (!TtaCheckDirectory (tmp_dir))
      {
-	/*directory did not exist */
-	if (mkdir (tmp_dir, S_IRWXU) == -1) {
+       /*directory did not exist */
+       if (mkdir (tmp_dir, S_IRWXU) == -1)
+	 {
 	   /*error */
 	   outputfile[0] = EOS;
 	   TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CACHE_ERROR), urlName);
 	   
 	   if (error_html)
-	      DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	     /* so we can show the error message */
+	     DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
 	   return HT_ERROR;
-	}
+	 }
      }
-#  ifndef _WINDOWS
-   else
-      fclose (tmp_fp);
-#  endif /* !_WINDOWS */
 
    /*create a tempfilename */
-
-#  ifndef _WINDOWS
-   sprintf (outputfile, "%s/%04dAM", tmp_dir, object_counter);
-#  else  /* _WINDOWS */
-   sprintf (outputfile, "%s\\%04dAM", tmp_dir, object_counter);
-#  endif /* _WINDOWS */
-
+   sprintf (outputfile, "%s%c%04dAM", tmp_dir, DIR_SEP,  object_counter);
    TtaFreeMemory (tmp_dir);
 
    /* update the object_counter */
    object_counter++;
-
    /* normalize the URL */
    ref = AmayaParseUrl (urlName, "", AMAYA_PARSE_ALL);
-
    /* should we abort the request if we could not normalize the url? */
-
    if (ref == (char*) NULL || ref[0] == EOS)
      {
 	/*error */
@@ -1462,7 +1444,8 @@ boolean error_html;
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
 	if (error_html)
-	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	  /* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
 
 	return HT_ERROR;
      }
@@ -1471,7 +1454,6 @@ boolean error_html;
       TtaFileUnlink (outputfile);
 
    /* try to open the outputfile */
-
 #  ifndef _WINDOWS
    if ((tmp_fp = fopen (outputfile, "w")) == NULL)
 #  else  /* _WINDOWS */
@@ -1492,9 +1474,7 @@ boolean error_html;
       requests are now asynchronous */
 
    /* Initialize the request structure */
-
    me = AHTReqContext_new (docid);
-
    if (me == NULL)
      {
 	fclose (tmp_fp);
@@ -1531,7 +1511,6 @@ boolean error_html;
      }
 
    /* Common initialization */
-
    me->mode = mode;
    me->error_html = error_html;
    me->incremental_cbf = incremental_cbf;
@@ -1571,18 +1550,16 @@ boolean error_html;
    /* prepare the URLname that will be displayed in teh status bar */
    ChopURL (me->status_urlName, me->urlName);
 
-/***
-Change for taking into account the stop button:
-The requests will be always asynchronous, however, if mode=AMAYA_SYNC,
-we will loop until the document has been received or a stop signal
-generated
-****/
-
+   /***
+     Change for taking into account the stop button:
+     The requests will be always asynchronous, however, if mode=AMAYA_SYNC,
+     we will loop until the document has been received or a stop signal
+     generated
+     ****/
    HTRequest_setPreemptive (me->request, NO);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_FETCHING), me->status_urlName);
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
-
    TtaFreeMemory (ref);
 
    if (mode & AMAYA_FORM_POST)
@@ -1599,7 +1576,6 @@ generated
    if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
      {
 	/* in case of error, free all allocated memory and exit */
-
 	if (me->output)
 	    fclose (me->output);
 
@@ -1623,11 +1599,9 @@ generated
 
 	AHTReqContext_delete (me);
      }
-
    else
      {
 	/* part of the stop button handler */
-
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
 	     status = LoopForStop (me);
@@ -1635,15 +1609,12 @@ generated
 	  }
 	else
 	  {
-
 	     /* ASYNC MODE */
 	     /* if the request went to the pending events queue, then we close
-	        ** the file. It'll be open by AddEventLoop upon liberation of the
-	        ** queue
-	      */
+	        the file. It'll be open by AddEventLoop upon liberation of the
+	         queue */
 
 	     /* verify if this request went to the pending request queue */
-
 	     if ((cur = (HTList *) me->request->net->host->pending))
 		while ((pending = HTList_nextObject (cur)))
 		  {
@@ -1666,7 +1637,6 @@ generated
 			  break;
 		       }
 		  }
-
 	  }
      }
    TtaHandlePendingEvents ();
@@ -1784,7 +1754,6 @@ void               *context_tcbf;
      {
 	/* could not allocate enough memory */
 	/*errmsg here */
-
 	close (fd);
 	return (HT_ERROR);
      }
@@ -1798,9 +1767,7 @@ void               *context_tcbf;
 
    TtaFreeMemory (mem_ptr);
    TtaHandlePendingEvents ();
-
-#  endif /*!_WINDOWS */
-
+#endif /*!_WINDOWS */
    return (status);
 }
 

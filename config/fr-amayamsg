@@ -35,7 +35,7 @@
 34 Indisponibilit\351 momentaire de %s. Ressayez plus tard
 35 %s  charg\351
 36 Sauvegarde de %s
-37 Impossible de sauvegarder %s
+37 Impossible de sauvegarder dans : %s
 38 french system error messages
 39 Une ancre ne peut pas contenir ces \351l\351ments
 40 Impossible de cr\351er une ancre dans une ancre
@@ -63,10 +63,10 @@
 62 Erreur de sauvegarde de l'URL 
 63 Sauvegarder sur le disque ?
 64 Copier Images
-65 Transformer URLs
-66 Emplacement du document
-67 Emplacement des images
-68 Emplacement de l'objet
+65 Transformer les URLs
+66 Adresse du document
+67 Repertoire des images
+68 Adresse de l'objet
 69 Style du document
 70 Pr\351f\351rences de l'utilisateur
 71 Fichier 1 CSS                                         
