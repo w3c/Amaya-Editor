@@ -825,7 +825,7 @@ int                 selection;
 
 /*----------------------------------------------------------------------
    ShowSelectedBox montre le de'but de la se'lection dans la      
-   frame et rend cette framee^tre active si l'indicateur actif     
+   frame et rend cette frame active si l'indicateur actif     
    est Vrai.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

@@ -158,28 +158,37 @@ Element             selectedElement;
 
 #endif /* __STDC__ */
 {
-
+   Element             el;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
+   SSchema	       HTMLSSchema;
 
    attr = NULL;		/* no NAME attribute yet */
    if (selectedElement != NULL)
      {
-       elType = TtaGetElementType (selectedElement);
-       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
-	   elType.ElTypeNum == HTML_EL_Anchor)
-	 {
-	   /* the target is an anchor element */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   /* get the NAME attribute of element Anchor */
-	   attrType.AttrTypeNum = HTML_ATTR_NAME;
-	   attr = TtaGetAttribute (selectedElement, attrType);
-	 }
+        elType = TtaGetElementType (selectedElement);
+	HTMLSSchema = TtaGetSSchema ("HTML", doc);
+	attrType.AttrSSchema = HTMLSSchema;
+	if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == HTML_EL_Anchor)
+	  el = selectedElement;
+	else
+	  {
+	    elType.ElSSchema = HTMLSSchema;
+	    elType.ElTypeNum = HTML_EL_Anchor;
+	    el = TtaGetTypedAncestor (selectedElement, elType);
+	  }
+
+	if (el != NULL)
+	  {
+	     /* the ascending Anchor element has been found */
+	     /* get the NAME attribute of element Anchor */
+	     attrType.AttrTypeNum = HTML_ATTR_NAME;
+	     attr = TtaGetAttribute (el, attrType);
+	  }
 	else
 	  {
 	    /* no ascending Anchor element */
-	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	    /* get the ID attribute of the selected element */
 	    attrType.AttrTypeNum = HTML_ATTR_ID;
 	    attr = TtaGetAttribute (selectedElement, attrType);

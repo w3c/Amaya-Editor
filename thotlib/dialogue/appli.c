@@ -2181,12 +2181,19 @@ int                 frame;
 #endif /* __STDC__ */
 {
    ThotWidget          w;
+   Document            doc;
 
    if (ActiveFrame != frame)
      {
-	ActiveFrame = frame;
-	if (frame != 0)
+       /* check if a new document is selected */
+       if (ActiveFrame == 0)
+	 doc = 0;
+       else
+	 doc = FrameTable[frame].FrDoc;
+       ActiveFrame = frame;
+       if (frame != 0 && FrameTable[frame].FrDoc != doc)
 	  {
+	    /* raise the new document */
 	     w = FrameTable[frame].WdFrame;
 #ifndef _WINDOWS
 	     if (w != 0)
