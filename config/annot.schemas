@@ -21,10 +21,13 @@
 http://www.w3.org/2000/10/annotation-ns#  $THOTDIR/config/annotschema.rdf
 
 #some Annotation subclasses that we think will be useful
+# use ANNOT_DEFAULT_TYPE in thot.rc to specify a default
 http://www.w3.org/2000/10/annotationType# $THOTDIR/config/annottypes.rdf
 
 #release 5.2 threading
 http://www.w3.org/2001/03/thread# $THOTDIR/config/thread.rdf
+# use REPLY_DEFAULT_TYPE in thot.rc to specify a default
+http://www.w3.org/2001/12/replyType# $THOTDIR/config/replytypes.rdf
 
 #user-defined icons
 #http://www.w3.org/2001/10/typeIcon# $THOTDIR/config/typeIcon.rdf

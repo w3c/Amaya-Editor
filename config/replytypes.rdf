@@ -1,0 +1,40 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description about="http://www.w3.org/2001/12/replyType#">
+ <rdfs:comment>A namespace for describing types of replies</rdfs:comment>
+ <rdfs:comment>$Revision$ $Date$</rdfs:comment>
+ <rdfs:seeAlso rdf:resource="http://www.w3.org/2000/02/Collaboration/Annotation/papers"/>
+ <rdfs:seeAlso rdf:resource="http://www.w3.org/2001/03/thread#" />
+</rdf:Description>
+
+<rdfs:Class rdf:about="http://www.w3.org/2001/12/replyType#SeeAlso">
+  <rdfs:label xml:lang="en">SeeAlso</rdfs:label>
+  <rdfs:comment>A class of replies representing a reference to another resource</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/03/thread#Reply"/>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/12/replyType#"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/2001/12/replyType#Agree">
+  <rdfs:label xml:lang="en">Agree</rdfs:label>
+  <rdfs:comment>A class of replies representing support for the discussion</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/03/thread#Reply"/>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/12/replyType#"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/2001/12/replyType#Disagree">
+  <rdfs:label xml:lang="en">Disagree</rdfs:label>
+  <rdfs:comment>A class of replies representing non-support for the discussion</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/03/thread#Reply"/>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/12/replyType#"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/2001/12/replyType#Comment">
+  <rdfs:label xml:lang="en">Comment</rdfs:label>
+  <rdfs:comment>A class of replies representing general comments</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/03/thread#Reply"/>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/12/replyType#"/>
+</rdfs:Class>
+
+</rdf:RDF>

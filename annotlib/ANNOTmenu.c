@@ -1064,7 +1064,12 @@ Document doc;
   strcpy (s, "");
   i = 0;
 
-  annotClass = ANNOTATION_CLASS;
+#ifdef ANNOT_ON_ANNOT
+  if (Annot_IsReplyTo (doc))
+    annotClass = THREAD_REPLY_CLASS;
+  else
+#endif /* ANNOT_ON_ANNOT */
+    annotClass = ANNOTATION_CLASS;
 
   if (annotClass && annotClass->class)
     {

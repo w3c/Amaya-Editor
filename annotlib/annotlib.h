@@ -29,6 +29,7 @@
 
 #ifdef ANNOT_ON_ANNOT
 #define THREAD_NS "http://www.w3.org/2001/03/thread#"
+#define THREAD_REPLY_LOCAL_NAME "Reply"
 #endif /* ANNOT_ON_ANNOT */
 
 #define ANNOT_LOCAL_NAME "Annotation"
@@ -208,6 +209,11 @@ extern RDFPropertyP PROP_Email;
 extern RDFPropertyP PROP_name;
 extern RDFPropertyP PROP_firstName;
 extern RDFPropertyP PROP_usesIcon;
+
+#ifdef ANNOT_ON_ANNOT
+extern RDFClassP THREAD_REPLY_CLASS;
+extern RDFClassP DEFAULT_REPLY_TYPE;
+#endif /* ANNOT_ON_ANNOT */
 
 typedef struct _RDFStatement
 {

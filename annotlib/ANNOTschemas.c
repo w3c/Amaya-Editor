@@ -64,6 +64,12 @@ RDFPropertyP PROP_usesIcon = NULL;
 RDFClassP ANNOTATION_CLASS;
 RDFClassP DEFAULT_ANNOTATION_TYPE;
 
+#ifdef ANNOT_ON_ANNOT
+RDFClassP THREAD_REPLY_CLASS;
+RDFClassP DEFAULT_REPLY_TYPE;
+#endif /* ANNOT_ON_ANNOT */
+
+
 typedef struct _ReadCallbackContext
 {
   char filename[MAX_LENGTH];
@@ -661,6 +667,44 @@ void SCHEMA_InitSchemas (doc)
 	    }
 	}
     }
+#ifdef ANNOT_ON_ANNOT
+  THREAD_REPLY_CLASS = ANNOT_FindRDFResource (&annot_schema_list,
+					      THREAD_NS THREAD_REPLY_LOCAL_NAME,
+					      TRUE);
+  DEFAULT_REPLY_TYPE = THREAD_REPLY_CLASS;
+  /* @@ RRS: REPLY_DEFAULT_TYPE should be accessible from the config menu */
+  buffer = TtaGetEnvString ("REPLY_DEFAULT_TYPE");
+  if (!buffer)
+    buffer = "Comment";	/* fallback default type */
+
+  /* two options; user can specify a full property URI or just the localname */
+  if (IsW3Path (buffer)) /* full URI */
+    DEFAULT_REPLY_TYPE = ANNOT_FindRDFResource (&annot_schema_list,
+						buffer,
+						TRUE);
+  else /* localname only */
+    { /* Search the subtypes of THREAD_REPLY_CLASS for one whose name matches */
+      RDFClassP annotType = THREAD_REPLY_CLASS;
+      if (annotType && annotType->class)
+	{
+	  int len = strlen (buffer);
+	  List *item = annotType->class->subClasses;
+	  for (; item; item=item->next)
+	    {
+	      RDFClassP annotType = (RDFClassP)item->object;
+	      int p = strlen (annotType->name) - len;
+
+	      /* @@ RRS: should check the entire localname, not just the tail.
+		 Use rdfs:isDefinedBy to split out the namespace name. */
+	      if (!strncmp (buffer, &annotType->name[p], len))
+		{
+		  DEFAULT_REPLY_TYPE = annotType;
+		  break;
+		}
+	    }
+	}
+    }
+#endif /* ANNOT_ON_ANNOT */
 }
 
 
@@ -736,6 +780,10 @@ void SCHEMA_FreeAnnotSchema()
   PROP_usesIcon = NULL;
   ANNOTATION_CLASS = NULL;
   DEFAULT_ANNOTATION_TYPE = NULL;
+#ifdef ANNOT_ON_ANNOT
+  THREAD_REPLY_CLASS = NULL;
+  DEFAULT_REPLY_TYPE = NULL;
+#endif /* ANNOT_ON_ANNOT */
   FreeAnnotNS();
 }
 

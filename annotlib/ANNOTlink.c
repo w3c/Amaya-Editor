@@ -781,7 +781,7 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
   annot->cdate = StrdupDate ();
   annot->mdate = TtaStrdup (annot->cdate);
 
-  /* Annotation type */
+  /* Annotation type -- will be reassigned below for Reply */
   annot->type = DEFAULT_ANNOTATION_TYPE;
 
   /* Annotation XPointer */
@@ -815,6 +815,8 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
   if (mode & ANNOT_isReplyTo)
     {
       char *source_annot_url;
+
+      annot->type = DEFAULT_REPLY_TYPE;
 
       source_annot_url = AnnotMetaData[source_doc].annot_url;
       /* initialize the thread info */
