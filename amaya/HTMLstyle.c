@@ -25,6 +25,8 @@
 #include "UIcss_f.h"
 #include "HTMLimage_f.h"
 
+#define MAX_BUFFER_LENGTH 200
+
 extern boolean      NonPPresentChanged;
 
 /* CSSLEVEL2 adding new features to the standard */
@@ -100,7 +102,8 @@ Document            doc;
   char               *buffer = NULL;
   int                 buffer_size = 2000;
   int                 index = 0;
-  char                cour = readfunc ();
+  boolean	      endOfFile;
+  char                cour = readfunc (&endOfFile);
   
   buffer = TtaGetMemory (buffer_size);
   if (buffer == NULL)
@@ -111,16 +114,16 @@ Document            doc;
       switch (cour)
 	{
 	case '/':
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  if (cour == '*')
 	    {
 	      /* Skip the comments */
 	      do
 		{
-		  cour = readfunc ();
+		  cour = readfunc (&endOfFile);
 		  if (cour == '*')
 		    {
-		      cour = readfunc ();
+		      cour = readfunc (&endOfFile);
 		      if (cour == '/')
 			break;
 		    }
@@ -136,7 +139,7 @@ Document            doc;
 	    }
 	  continue;
 	case '<':
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  if (cour != '!')
 	    {
 	      /* Ok we consider this as a closing tag ! */
@@ -150,17 +153,17 @@ Document            doc;
 	      TtaFreeMemory (buffer);
 	      return (cour);
 	    }
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  continue;
 	case '-':
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  if (cour != '-')
 	    {
 	      CSS_CHECK_BUFFER
 		buffer[index++] = '-';
 	      continue;
 	    }
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  if (cour != '>')
 	    {
 	      CSS_CHECK_BUFFER
@@ -169,12 +172,12 @@ Document            doc;
 		buffer[index++] = '-';
 	      continue;
 	    }
-	  cour = readfunc ();
+	  cour = readfunc (&endOfFile);
 	  continue;
 	}
       CSS_CHECK_BUFFER
 	buffer[index++] = cour;
-      cour = readfunc ();
+      cour = readfunc (&endOfFile);
     }
 
   if (index > 0)
@@ -875,7 +878,7 @@ int                  len
 	  strcpy (buffer, "font-family : times");
 	  break;
 	case DRIVERP_FONT_COURIER:
-	  strcpy (buffer, "font-family : courrier");
+	  strcpy (buffer, "font-family : courier");
 	  break;
 	}
       break;
@@ -2468,6 +2471,7 @@ char               *cssRule;
 #endif
 {
    PresentationValue   font;
+   unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
 
    font.typed_data.value = 0;
    font.typed_data.unit = 1;
@@ -2504,8 +2508,9 @@ char               *cssRule;
      }
    else
      {
-	/* !!!!!! manque cursive et fantasy !!!!!!!! */
-	MSG ("invalid font family\n");
+	/* !!!!!! many font families are missing !!!!!!!! */
+	sprintf (msgBuffer, "unknown font family: %s\n", cssRule);
+	MSG (msgBuffer);
 	cssRule = SkipProperty (cssRule);
 	return (cssRule);
      }
