@@ -877,7 +877,7 @@ EXCEPT
 	Inserted_Text:	Hidden, NoCut;
 	Basic_Set:	Hidden;
 	Definition_Item:Hidden;
-	Term_List:	Hidden;
+	Term_List:	Hidden, CanCut;
 	Definitions:	Hidden;
         XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
 	Comment\240:	ReturnCreateNL, NoReplicate;

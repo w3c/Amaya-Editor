@@ -47,66 +47,67 @@ CONSTANT 1131
 PAIR 1132
 Nothing 1133
 NoCut 1134
-NoCreate 1135
-NoReplicate 1136
-NoHMove 1137
-NoVMove 1138
-NoMove 1139
-NoHResize 1140
-NoVResize 1141
-NoResize 1142
-MoveResize 1143
-NewWidth 1144
-NewHeight 1145
-NewPercentWidth 1146
-NewHPos 1147
-NewVPos 1148
-Invisible 1149
-Hidden 1150
-PageBreak 1151
-PageBreakAllowed 1152
-PageBreakPlace 1153
-PageBreakRepetition 1154
-PageBreakRepBefore 1155
-NoPaginate 1156
-NoSpellCheck 1157
-ActiveRef 1158
-NoSelect 1159
-HighlightChildren 1160
-ExtendedSelection 1161
-SelectParent 1162
-ClickableSurface 1163
-ParagraphBreak 1164
-IsBreak 1165
-ReturnCreateNL 1166
-ReturnCreateWithin 1167
-NoBreakByReturn 1168
-ImportLine 1169
-ImportParagraph 1170
-GraphCreation 1171
-IsDraw 1172
-IsGroup 1173
-EmptyGraphic 1174
-IsTable 1175
-IsRow 1176
-IsColHead 1177
-IsCell 1178
-ColRef 1179
-ColSpan 1180
-RowSpan 1181
-CssBackground 1182
-CssClass 1183
-CssId 1184
-CssPseudoClass 1185
-NoShowBox 1186
-SetWindowBackground 1187
-Shadow 1188
-EventAttr 1189
-SpacePreserve 1190
-IsPlaceholder 1191
-StartCounter 1192
-SetCounter 1193
-Root 1194
+CanCut 1135
+NoCreate 1136
+NoReplicate 1137
+NoHMove 1138
+NoVMove 1139
+NoMove 1140
+NoHResize 1141
+NoVResize 1142
+NoResize 1143
+MoveResize 1144
+NewWidth 1145
+NewHeight 1146
+NewPercentWidth 1147
+NewHPos 1148
+NewVPos 1149
+Invisible 1150
+Hidden 1151
+PageBreak 1152
+PageBreakAllowed 1153
+PageBreakPlace 1154
+PageBreakRepetition 1155
+PageBreakRepBefore 1156
+NoPaginate 1157
+NoSpellCheck 1158
+ActiveRef 1159
+NoSelect 1160
+HighlightChildren 1161
+ExtendedSelection 1162
+SelectParent 1163
+ClickableSurface 1164
+ParagraphBreak 1165
+IsBreak 1166
+ReturnCreateNL 1167
+ReturnCreateWithin 1168
+NoBreakByReturn 1169
+ImportLine 1170
+ImportParagraph 1171
+GraphCreation 1172
+IsDraw 1173
+IsGroup 1174
+EmptyGraphic 1175
+IsTable 1176
+IsRow 1177
+IsColHead 1178
+IsCell 1179
+ColRef 1180
+ColSpan 1181
+RowSpan 1182
+CssBackground 1183
+CssClass 1184
+CssId 1185
+CssPseudoClass 1186
+NoShowBox 1187
+SetWindowBackground 1188
+Shadow 1189
+EventAttr 1190
+SpacePreserve 1191
+IsPlaceholder 1192
+StartCounter 1193
+SetCounter 1194
+Root 1195
 
    1 1101 2001 1102 2002    2 1001 1103    3 1001 2001 1104    4 2002 2001 1105 
    5 2002 2001 1106    6 2002 2001 1107    7 2002 2001 1108    6 2002 2001 1109 
@@ -170,8 +171,8 @@ Root 1194
 2003 1166 2003 1167 2003 1168 2003 1169 2003 1170 2003 1171 2003 1172 2003 1173 
 2003 1174 2003 1175 2003 1176 2003 1177 2003 1178 2003 1179 2003 1180 2003 1181 
 2003 1182 2003 1183 2003 1184 2003 1185 2003 1186 2003 1187 2003 1188 2003 1189 
-2003 1190 2003 1191 2003 1192 2003 1193 2003   52 2000 
+2003 1190 2003 1191 2003 1192 2003 1193 2003 1194 2003   52 2000 
   52 3002 2000 
   53   54 2001   23 2002 2001 1007 1003   27 1004 2002 2001 1008 1003   28 1004 
 2002 2001 1123   29 2002 2000 
-  54 1194 2003    2 2000 
+  54 1195 2003    2 2000 

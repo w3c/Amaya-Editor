@@ -257,6 +257,9 @@ static void         wrNumExcept (int Num)
 	    case ExcNoCut:
 	       printf ("NoCut");
 	       break;
+	    case ExcCanCut:
+	       printf ("CanCut");
+	       break;
 	    case ExcNoCreate:
 	       printf ("NoCreate");
 	       break;

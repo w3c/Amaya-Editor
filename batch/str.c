@@ -1680,6 +1680,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_NoCut:
 	 ExceptionNum (ExcNoCut, True, False, False, wi);
 	 break;
+       case KWD_CanCut:
+	 ExceptionNum (ExcCanCut, True, False, False, wi);
+	 break;
        case KWD_IsTable:
 	 ExceptionNum (ExcIsTable, True, False, False, wi);
 	 break;

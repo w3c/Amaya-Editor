@@ -1299,6 +1299,11 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 			{
 			  /* on ne peut couper que les composants optionnels */
 			  ret = pRule->SrOptComponent[i];
+			  /* a non-optional component can be cut if it has
+			     exception ExcCanCut */
+			  if (!ret)
+			    ret = TypeHasException (ExcCanCut,
+						   pRule->SrComponent[i], pSS);
 			  i = pRule->SrNComponents;
 			}
 		      else

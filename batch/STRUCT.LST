@@ -115,7 +115,7 @@ number
    48	Except =	 ExceptType ':' ExValList .
    49	ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
    50	ExValList =	 ExceptVal < ',' ExceptVal > .
-   51	ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' /
+   51	ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 	                 'NoHMove' / 'NoVMove' / 'NoMove' /
 			 'NoHResize' / 'NoVResize' / 'NoResize' /
 	                 'MoveResize' /
@@ -210,66 +210,67 @@ code  key-word      numbers of rules using the key-word
 1132  PAIR                 32
 1133  Nothing              47
 1134  NoCut                51
-1135  NoCreate             51
-1136  NoReplicate          51
-1137  NoHMove              51
-1138  NoVMove              51
-1139  NoMove               51
-1140  NoHResize            51
-1141  NoVResize            51
-1142  NoResize             51
-1143  MoveResize           51
-1144  NewWidth             51
-1145  NewHeight            51
-1146  NewPercentWidth      51
-1147  NewHPos              51
-1148  NewVPos              51
-1149  Invisible            51
-1150  Hidden               51
-1151  PageBreak            51
-1152  PageBreakAllowed     51
-1153  PageBreakPlace       51
-1154  PageBreakRepetition  51
-1155  PageBreakRepBefore   51
-1156  NoPaginate           51
-1157  NoSpellCheck         51
-1158  ActiveRef            51
-1159  NoSelect             51
-1160  HighlightChildren    51
-1161  ExtendedSelection    51
-1162  SelectParent         51
-1163  ClickableSurface     51
-1164  ParagraphBreak       51
-1165  IsBreak              51
-1166  ReturnCreateNL       51
-1167  ReturnCreateWithin   51
-1168  NoBreakByReturn      51
-1169  ImportLine           51
-1170  ImportParagraph      51
-1171  GraphCreation        51
-1172  IsDraw               51
-1173  IsGroup              51
-1174  EmptyGraphic         51
-1175  IsTable              51
-1176  IsRow                51
-1177  IsColHead            51
-1178  IsCell               51
-1179  ColRef               51
-1180  ColSpan              51
-1181  RowSpan              51
-1182  CssBackground        51
-1183  CssClass             51
-1184  CssId                51
-1185  CssPseudoClass       51
-1186  NoShowBox            51
-1187  SetWindowBackground  51
-1188  Shadow               51
-1189  EventAttr            51
-1190  SpacePreserve        51
-1191  IsPlaceholder        51
-1192  StartCounter         51
-1193  SetCounter           51
-1194  Root                 54
+1135  CanCut               51
+1136  NoCreate             51
+1137  NoReplicate          51
+1138  NoHMove              51
+1139  NoVMove              51
+1140  NoMove               51
+1141  NoHResize            51
+1142  NoVResize            51
+1143  NoResize             51
+1144  MoveResize           51
+1145  NewWidth             51
+1146  NewHeight            51
+1147  NewPercentWidth      51
+1148  NewHPos              51
+1149  NewVPos              51
+1150  Invisible            51
+1151  Hidden               51
+1152  PageBreak            51
+1153  PageBreakAllowed     51
+1154  PageBreakPlace       51
+1155  PageBreakRepetition  51
+1156  PageBreakRepBefore   51
+1157  NoPaginate           51
+1158  NoSpellCheck         51
+1159  ActiveRef            51
+1160  NoSelect             51
+1161  HighlightChildren    51
+1162  ExtendedSelection    51
+1163  SelectParent         51
+1164  ClickableSurface     51
+1165  ParagraphBreak       51
+1166  IsBreak              51
+1167  ReturnCreateNL       51
+1168  ReturnCreateWithin   51
+1169  NoBreakByReturn      51
+1170  ImportLine           51
+1171  ImportParagraph      51
+1172  GraphCreation        51
+1173  IsDraw               51
+1174  IsGroup              51
+1175  EmptyGraphic         51
+1176  IsTable              51
+1177  IsRow                51
+1178  IsColHead            51
+1179  IsCell               51
+1180  ColRef               51
+1181  ColSpan              51
+1182  RowSpan              51
+1183  CssBackground        51
+1184  CssClass             51
+1185  CssId                51
+1186  CssPseudoClass       51
+1187  NoShowBox            51
+1188  SetWindowBackground  51
+1189  Shadow               51
+1190  EventAttr            51
+1191  SpacePreserve        51
+1192  IsPlaceholder        51
+1193  StartCounter         51
+1194  SetCounter           51
+1195  Root                 54
 
 
 

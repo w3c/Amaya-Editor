@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of December 9, 2004</h4>
+<h4>Version of March 24, 2005</h4>
 
 <p>© 1996-2004 INRIA</p>
 <hr />
@@ -1879,7 +1879,7 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
                      ':' ExcValSeq .
      ExcTypeOrAttr = ElemID / AttrID .
      ExcValSeq     = ExcValue &lt; ',' ExcValue &gt; .
-     ExcValue      ='NoCut' / 'NoCreate' / 'NoReplicate' /
+     ExcValue      ='NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
                     'NoHMove' / 'NoVMove' / 'NoMove' /
                     'NoHResize' / 'NoVResize' / 'NoResize' /
                     'MoveResize' /
@@ -1909,8 +1909,12 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
   <dt><tt>NoCut</tt></dt>
     <dd>This exception can only be applied to element types. Elements of a
       type to which this exception is applied cannot be deleted by the
-    editor.</dd>
-  <dt><tt>NoCreate</tt></dt>
+      editor.</dd>
+  <dt><tt>CanCut</tt></dt>
+    <dd>This exception can only be applied to element types. Elements of a
+      type to which this exception is applied can be deleted by the
+      editor, even if they are not marked as optional in an aggregate.</dd>
+   <dt><tt>NoCreate</tt></dt>
     <dd>This exception can only be applied to element types. Elements of a
       type to which this exception is applied cannot be created by ordinary
       commands for creating new elements. These elements are usually created
@@ -8023,7 +8027,7 @@ Except         = [ 'EXTERN' ] [ FirstSec ] ExcTypeOrAttr ':'
                  ExcValSeq .
 ExcTypeOrAttr  = ElemID / AttrID .
 ExcValSeq      = ExcValue &lt; ',' ExcValue &gt; .
-ExcValue       = 'NoCut' / 'NoCreate' / 'NoReplicate' /
+ExcValue       = 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
                  'NoHMove' / 'NoVMove' / 'NoMove' /
                  'NoHResize' / 'NoVResize' / 'NoResize' /
                  'MoveResize' /

@@ -109,7 +109,7 @@ ExceptList =	 Except ';' < Except ';' > .
 Except =	 ExceptType ':' ExValList .
 ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
 ExValList =	 ExceptVal < ',' ExceptVal > .
-ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' /
+ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
                  'NoHMove' / 'NoVMove' / 'NoMove' /
 		 'NoHResize' / 'NoVResize' / 'NoResize' /
                  'MoveResize' /

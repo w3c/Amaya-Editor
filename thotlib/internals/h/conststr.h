@@ -68,6 +68,7 @@
 #define ExcIsPlaceholder 42
 #define ExcStartCounter 43
 #define ExcSetCounter 44
+#define ExcCanCut 45
 
 /* Draw exceptions */
 #define ExcSelectParent 310
