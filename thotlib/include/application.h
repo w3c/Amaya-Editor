@@ -82,6 +82,13 @@
 extern void TtaInitialize (CHAR_T* applicationName);
 
 /*----------------------------------------------------------------------
+   TtaSetApplicationQuit register the procedure that must be called
+   just before the application will be closed.
+   That procedure has no parameters.
+  ----------------------------------------------------------------------*/
+extern void TtaSetApplicationQuit (Proc procedure);
+
+/*----------------------------------------------------------------------
    TtaQuit
    Quits the Thot tool kit. No other function of the tool kit can then
    be called by the application.
@@ -148,6 +155,7 @@ extern CHAR_T*   TtaISO2WCdup (char* str);
 
 #else  /* __STDC__ */
 extern void      TtaInitialize ( /* CHAR_T* applicationName */ );
+extern void      TtaSetApplicationQuit (/* Proc procedure */);
 extern void      TtaQuit ( /* void */ );
 extern void      TtaSetErrorMessages ( /* int on */ );
 extern STRING    TtaGetVersion ( /* void */ );
