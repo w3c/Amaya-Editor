@@ -319,6 +319,8 @@ ThotColorStruct colrs[256];
    int                 imageNumber = 1;
    int                 i;
 
+   *w = 0;
+   *h = 0;
    verbose = FALSE;
    showComment = FALSE;
    data = NULL;
