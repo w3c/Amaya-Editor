@@ -663,11 +663,10 @@ void DoSaveObjectAs (void)
      return;
 
    /* @@ JK Testing to see if this part of the function is used elsewhere */
-#if 0
+   /*
    dst_is_local = !IsW3Path (SavePath);
-#else
-   dst_is_local = FALSE;
-#endif
+   */
+   dst_is_local = TRUE;
 
    strcpy (tempfile, SavePath);
    strcat (tempfile, DIR_STR);
