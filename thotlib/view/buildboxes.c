@@ -1016,15 +1016,15 @@ int                *carIndex;
    PtrBox              pBox;
    PtrBox              pMainBox;
    PtrBox              pCurrentBox;
-   int                 width, i;
-   int                 height;
    TypeUnit            unit;
-   boolean             enclosedWidth;
-   boolean             enclosedHeight;
-   boolean             split;
    ptrfont             font;
    PictInfo           *picture;
    char                alphabet;
+   int                 width, i;
+   int                 height;
+   boolean             enclosedWidth;
+   boolean             enclosedHeight;
+   boolean             split;
 
    if (pAb->AbDead)
       return (NULL);
@@ -1222,9 +1222,17 @@ int                *carIndex;
 	else
 	  {
 	     if (!pAb->AbHorizEnclosing)
+	       /* the inline rule doesn't act on this box */
 		ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	     else
+	       /* the real position of the box depends of its horizontal reference axis */
+	       SetPositionConstraint (VertRef, pCurrentBox, &i);
 	     if (!pAb->AbVertEnclosing)
-		ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	       /* the inline rule doesn't act on this box */
+		ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+	     else
+	       /* the real position of the box depends of its horizontal reference axis */
+	       SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	  }
 	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
      }
