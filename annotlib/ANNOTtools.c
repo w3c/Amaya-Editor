@@ -213,6 +213,9 @@ static void AnnotFilter_update (source_doc, annot)
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
 
+  if (!(annot->is_visible) || annot->is_orphan)
+    return;
+
   AnnotFilter_add (&AnnotMetaData[source_doc], BY_TYPE, annot->type, annot);
   if (annot->annot_url)
     tmp = annot->annot_url;
