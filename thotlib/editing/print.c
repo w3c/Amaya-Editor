@@ -245,6 +245,8 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
 BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 {
   DOCINFO         DocInfo;
+  int    xRes, yRes, xSize, ySize;
+  RECT   rect;
 
   gbAbort    = FALSE;     /* user hasn't aborted */
   pg_counter = 0;         /* number of pages we have printed */
@@ -258,6 +260,18 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   DocInfo.cbSize      = sizeof(DOCINFO);
   DocInfo.lpszDocName = (LPTSTR) msg;
   DocInfo.lpszOutput  = NULL;
+  xSize = GetDeviceCaps (TtPrinterDC, HORZRES);
+  ySize = GetDeviceCaps (TtPrinterDC, VERTRES);
+  xRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
+  yRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+    
+  /* Fix bounding rectangle for the picture .. */
+  rect.top    = 0;
+  rect.left   = 0;
+  rect.bottom = ySize;
+  rect.right  = xSize;
+  /* ... and inform the driver */
+  Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&rect, NULL);    
 
   if (StartDoc (hDC, &DocInfo) <= 0)
       return FALSE;
@@ -1829,10 +1843,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   DocViewNumber       docView;
   int                 schView, v, firstFrame;
   ThotBool            found, withPages;
-#ifdef _WINDOWS
-  int    xRes, yRes, xSize, ySize;
-  RECT   Rect;
-#endif /* _WINDOWS */
 
   TopMargin = 0;
   LeftMargin = 0;
@@ -1845,22 +1855,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 
 #ifdef _WINDOWS
   if (TtPrinterDC)
-    {
-    xSize = GetDeviceCaps (TtPrinterDC, HORZRES);
-    ySize = GetDeviceCaps (TtPrinterDC, VERTRES);
-    xRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
-    yRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-    
-    /* Fix bounding rectangle for the picture .. */
-    Rect.top    = 0;
-    Rect.left   = 0;
-    Rect.bottom = ySize;
-    Rect.right  = xSize;
-
-    /* ... and inform the driver */
-    Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);    
-    InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, NULL);
-    }
+   InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, "Doc");
 #endif /* _WINDOWS */
 
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
