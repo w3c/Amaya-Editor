@@ -956,13 +956,15 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   FreeNatureRules
-   Cherche dans le schema de structure pointe' par pSS les regles de
-   nature qui font reference au schema	pointe par pNatureSS.
-   S'il y en a, retourne Vrai, annule ces regles et traite de meme les
-   autres natures. S'il n'y en a pas, retourne Faux.
+  FreeNatureRules
+  Looks for a rule Nature within the schema pSS that points to the schema
+  pNatureSS. If found, cleans up the rule and returns TRUE.
+  If not found, checks within other referred Natures except if the current
+  Nature points to the initial schema pDocSS.
+  Returns FALSE when no Nature was found.
   ----------------------------------------------------------------------*/
-static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
+static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS,
+				 PtrSSchema pDocSS)
 {
    SRule              *pRule;
    int                 rule;
@@ -984,11 +986,11 @@ static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 	       ret = TRUE;
 	       pRule->SrSSchemaNat = NULL;
 	       }
-	    else
+	    else if (pRule->SrSSchemaNat != pDocSS)
 	       /* elle fait reference a une autre nature, on cherche */
 	       /* dans cette nature les regles qui font reference a la */
 	       /* nature supprimee. */
-	       FreeNatureRules (pRule->SrSSchemaNat, pNatureSS);
+	       FreeNatureRules (pRule->SrSSchemaNat, pNatureSS, pDocSS);
 	   }
 	 }
    return ret;
@@ -1002,8 +1004,7 @@ static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
    pNatureSS et son schema de presentation.            		
    Retourne faux sinon.
   ----------------------------------------------------------------------*/
-ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
-				PtrDocument pDoc)
+ThotBool FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
    PtrPSchema   pPS;
@@ -1012,7 +1013,7 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
-   if (FreeNatureRules (pSS, pNatureSS))
+   if (FreeNatureRules (pSS, pNatureSS, pSS))
       {
       ret = TRUE;
 #ifndef NODISPLAY
@@ -1035,7 +1036,7 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
   ----------------------------------------------------------------------*/
 void             FreeDocumentSchemas (PtrDocument pDoc)
 {
-   PtrSSchema         pSS;
+  PtrSSchema          pSS, pDocSS;
   PtrDocSchemasDescr  pPfS;
    int                i;
 
@@ -1053,8 +1054,11 @@ void             FreeDocumentSchemas (PtrDocument pDoc)
 	     /* remove any reference to that schema from all Nature rules
 		of other S schemas */
 	     for (i = 0; i < MAX_SSCHEMAS; i++)
-	       if (LoadedSSchema[i].pStructSchema)
-		 FreeNatureRules (LoadedSSchema[i].pStructSchema, pSS);
+	       {
+		 pDocSS = LoadedSSchema[i].pStructSchema;
+		 if (pDocSS)
+		   FreeNatureRules (pDocSS, pSS, pDocSS);
+	       }
 	 }
      }
    pDoc->DocSSchema = NULL;
