@@ -2905,7 +2905,11 @@ static void       ParseDoctypeElement (char *data, int length)
 	  buffer[j] = data[i];
 	  j++;
 	}
-      else
+      else if (data[i] == __CR__ && i < length-1 && data[i+1] == EOL)
+	  {
+        /* ignoring CR in a CR/LF sequence */
+	  }
+	  else
 	{
 	  buffer[j] = EOS;
 	  j = 0;
