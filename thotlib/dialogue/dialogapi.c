@@ -2119,7 +2119,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
 #else /* _GTK */
    DefaultFont = gdk_font_load ("fixed");
-   TextTranslations = NULL;
    TtDisplay = GDK_DISPLAY ();
 #endif /* _GTK */
 #endif /* _WINDOWS */

@@ -86,7 +86,7 @@ extern void ThotInput (int frame,
                         int PicMask,
                         int key);
 extern void FreeTranslations (void);
-extern ThotTranslations InitTranslations (char *appliname);
+extern void InitTranslations (char *appliname);
 
 extern gboolean APP_TextCallbackGTK (GtkWidget *w, int frame);
 

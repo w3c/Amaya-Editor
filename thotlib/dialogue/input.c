@@ -1378,10 +1378,8 @@ void InitTranslations (char *appliname)
     SearchFile (name, 2, fullName);
 
   file = fopen (fullName, "r");
-  if (!file)
+  if (file)
     /*Fichier inaccessible */
-    return NULL;
-   else
     {
       /* Lecture du fichier des translations */
       fseek (file, 0L, 2);	/* fin du fichier */
