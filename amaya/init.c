@@ -821,7 +821,7 @@ Document  doc;
 #endif
 {
   View    view;
-  
+
 #ifdef _WINDOWS 
   WIN_TtaSwitchButton (document, 1, iEditor, iconEditor,
 		       TB_INDETERMINATE, FALSE);
@@ -837,6 +837,8 @@ Document  doc;
   TtaSetItemOn (document, 1, Edit_, BPaste);
   TtaSetItemOn (document, 1, Edit_, BClear);
   
+  TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
+  
   if (DocumentTypes[document] == docHTML ||
       DocumentTypes[document] == docSVG ||
       DocumentTypes[document] == docImage)
@@ -848,13 +850,12 @@ Document  doc;
       TtaChangeButton (document, 1, iH1, iconH1, TRUE);
       TtaChangeButton (document, 1, iH2, iconH2, TRUE);
       TtaChangeButton (document, 1, iH3, iconH3, TRUE);
-      TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
-      TtaChangeButton (document, 1,iNum, iconNum, TRUE);
-      TtaChangeButton (document, 1,iDL, iconDL, TRUE);
+      TtaChangeButton (document, 1, iBullet, iconBullet, TRUE);
+      TtaChangeButton (document, 1, iNum, iconNum, TRUE);
+      TtaChangeButton (document, 1, iDL, iconDL, TRUE);
       TtaChangeButton (document, 1, iLink, iconLink, TRUE);
       TtaChangeButton (document, 1, iTable, iconTable, TRUE);
       SwitchIconMath (document, 1, TRUE);
-
 #ifdef GRAPHML
       SwitchIconGraph (document, 1, TRUE);
 #endif /* GRAPHML */
@@ -864,7 +865,17 @@ Document  doc;
       TtaSetMenuOn (document, 1, Types);
       TtaSetMenuOn (document, 1, Links);
       TtaSetMenuOn (document, 1, Style);
+      TtaSetItemOn (document, 1, Special, TSectionNumber);
       TtaSetItemOn (document, 1, Special, BMakeBook);
+      TtaSetMenuOn (document, 1, Attributes_);
+
+      TtaSetItemOn (document, 1, Views, TShowMapAreas);
+      TtaSetItemOn (document, 1, Views, TShowTargets);
+      TtaSetItemOn (document, 1, Views, BShowStructure);
+      TtaSetItemOn (document, 1, Views, BShowAlternate);
+      TtaSetItemOn (document, 1, Views, BShowLinks);
+      TtaSetItemOn (document, 1, Views, BShowToC);
+      TtaSetItemOn (document, 1, Views, BShowSource);
 
 #ifdef ANNOTATIONS
       TtaSetMenuOn (document, 1, Annotations_);
@@ -1644,12 +1655,12 @@ Document     sourceOfDoc;
 ThotBool     readOnly;
 #endif
 {
-  View                mainView, structView, altView, linksView, tocView;
-  Document            old_doc;
-  CHAR_T             *tmp;
-  int                 x, y, w, h;
-  int                 requested_doc;
-  ThotBool            isOpen, reinitialized;
+  View          mainView, structView, altView, linksView, tocView;
+  Document      old_doc;
+  CHAR_T       *tmp;
+  int           x, y, w, h;
+  int           requested_doc;
+  ThotBool      isOpen, reinitialized;
 #ifdef _WINDOWS
 
   Window_Curs = IDC_WINCURSOR;
@@ -1662,6 +1673,7 @@ ThotBool     readOnly;
   
   /* previous document */
   old_doc = doc;
+  reinitialized = FALSE;
 
   if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
@@ -1669,6 +1681,11 @@ ThotBool     readOnly;
       /* keep in memory if the closed document is in read-only mode */
       if (ReadOnlyDocument[doc])
 	readOnly = TRUE;
+      else
+	/* if there is a parsing error/warning for the old document */
+	if (!TtaGetDocumentAccessMode (doc))
+	  reinitialized = TRUE;
+
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
 	  DocumentTypes[doc] == docMath)
@@ -1954,23 +1971,26 @@ ThotBool     readOnly;
      }
 
    /* do we have to redraw buttons and menus? */
-   reinitialized = FALSE;
-   if ((docType == docHTML || docType == docImage || docType == docSVG ) &&
-       DocumentTypes[doc] != docHTML &&
-       DocumentTypes[doc] != docImage &&
-       DocumentTypes[doc] != docSVG)
-     /* we need to update menus and buttons */
-     reinitialized = TRUE;
-   else if ((docType == docCSS || docType == docText) &&
-	    (DocumentTypes[doc] != docCSS || DocumentTypes[doc] != docText))
-     /* we need to update menus and buttons */
-     reinitialized = TRUE;
-   else if (docType == docMath ||
+   if (!reinitialized)
+     {
+       if ((docType == docHTML || docType == docImage || docType == docSVG ) &&
+	   DocumentTypes[doc] != docHTML &&
+	   DocumentTypes[doc] != docImage &&
+	   DocumentTypes[doc] != docSVG)
+	 /* we need to update menus and buttons */
+	 reinitialized = TRUE;
+       else if ((docType == docCSS || docType == docText) &&
+		DocumentTypes[doc] != docCSS &&
+		DocumentTypes[doc] != docText)
+	 /* we need to update menus and buttons */
+	 reinitialized = TRUE;
+       else if (docType == docMath ||
 #ifdef ANNOTATIONS
-	    docType == docAnnot ||
+		docType == docAnnot ||
 #endif /* ANNOTATIONS */
-	    docType == docSource)
-     reinitialized = TRUE;
+		docType == docSource)
+	 reinitialized = TRUE;
+     }
 
    /* store the new document type */
    DocumentTypes[doc] = docType;
@@ -2059,49 +2079,8 @@ ThotBool     readOnly;
 	      DocumentTypes[doc] == docMath)
        {
 	 if (reinitialized)
-	   {
-	     /* the document is in ReadWrite mode */
-#ifdef _WINDOWS 
-	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
-				  TB_INDETERMINATE, FALSE);
-#else  /* _WINDOWS */
-	     TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
-#endif /* _WINDOWS */
-	     TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
-	     TtaChangeButton (doc, 1, iI, iconI, TRUE);
-	     TtaChangeButton (doc, 1, iB, iconB, TRUE);
-	     TtaChangeButton (doc, 1, iT, iconT, TRUE);
-	     TtaChangeButton (doc, 1, iImage, iconImage, TRUE);
-	     TtaChangeButton (doc, 1, iH1, iconH1, TRUE);
-	     TtaChangeButton (doc, 1, iH2, iconH2, TRUE);
-	     TtaChangeButton (doc, 1, iH3, iconH3, TRUE);
-	     TtaChangeButton (doc, 1, iBullet, iconBullet, TRUE);
-	     TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
-	     TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
-	     TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
-	     TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
-	     SwitchIconMath (doc, 1, TRUE);
-#ifdef GRAPHML
-	     SwitchIconGraph (doc, 1, TRUE);
-#endif /* GRAPHML */
-
-	     TtaSetItemOn (doc, 1, Edit_, BTransform);
-	     TtaSetMenuOn (doc, 1, Types);
-	     TtaSetMenuOn (doc, 1, Links);
-	     TtaSetMenuOn (doc, 1, Style);
-	     TtaSetItemOn (doc, 1, Special, TSectionNumber);
-	     TtaSetItemOn (doc, 1, Special, BMakeBook);
-	     TtaSetMenuOn (doc, 1, Attributes_);
-
- 	     TtaSetItemOn (doc, 1, Views, TShowMapAreas);
-	     TtaSetItemOn (doc, 1, Views, TShowTargets);
-	     TtaSetItemOn (doc, 1, Views, BShowStructure);
-	     TtaSetItemOn (doc, 1, Views, BShowAlternate);
-	     TtaSetItemOn (doc, 1, Views, BShowLinks);
-	     TtaSetItemOn (doc, 1, Views, BShowToC);
-	     TtaSetItemOn (doc, 1, Views, BShowSource);
-	   }
-	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+	   /* the document is in ReadWrite mode */
+	   UpdateEditorMenus (doc);
        }
      }
    return (doc);
