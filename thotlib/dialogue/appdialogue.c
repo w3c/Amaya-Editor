@@ -2430,13 +2430,13 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 -------------------------------------------------------------------------*/
 void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
 {   
-    if (Xbuffer != NULL)
-	free(Xbuffer);
-    Xbuffer = NULL;
-    if(sel_data->length<0)
+     if(sel_data->length<0)
 	return;
     if(sel_data->type!=GDK_SELECTION_TYPE_STRING)
 	return;
+    if (Xbuffer != NULL)
+      free(Xbuffer);
+    Xbuffer = NULL;
     Xbuffer = TtaGetMemory ((sel_data->length+1) * sizeof(unsigned char));
     strcpy(Xbuffer,sel_data->data);
     return;

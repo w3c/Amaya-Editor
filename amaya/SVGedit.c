@@ -64,7 +64,10 @@ static  char  oldXlinkHrefValue[oldHrefMaxLen];
 #include "HTMLpresentation_f.h"
 #include "init_f.h"
 #include "XLinkedit_f.h"
-
+#ifdef _GTK
+/* used for teh close palette callback*/
+ThotWidget CatWidget(int ref);
+#endif/*  _GTK */
 #ifdef _SVG
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
@@ -1778,11 +1781,25 @@ static void         CallbackGraph (int ref, int typedata, char *data)
     }
 }
 
+#ifdef _GTK
+gboolean CloseSvgPalette (GtkWidget *widget,
+			 GdkEvent  *event,
+			 gpointer   data )
+{
+  PaletteDisplayed = FALSE;
+  TtaDestroyDialogue ((int) data);
+  return TRUE;
+}
+#endif /* _GTK */
 /*----------------------------------------------------------------------
    ShowGraphicsPalette displays the Graphics palette
   ----------------------------------------------------------------------*/
 static void         ShowGraphicsPalette (Document doc, View view)
 {
+#ifdef _GTK
+  GtkWidget *w;
+#endif /*_GTK*/
+
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
      return;
@@ -1802,6 +1819,18 @@ static void         ShowGraphicsPalette (Document doc, View view)
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
+#ifdef _GTK
+      w =   CatWidget (GraphDialogue + FormGraph);
+      gtk_signal_connect (GTK_OBJECT (w), 
+			"delete_event",
+			GTK_SIGNAL_FUNC (CloseSvgPalette), 
+			(gpointer)(GraphDialogue + FormGraph));
+
+      gtk_signal_connect (GTK_OBJECT (w), 
+			"destroy",
+			GTK_SIGNAL_FUNC (CloseSvgPalette), 
+			(gpointer)(GraphDialogue + FormGraph));
+#endif /*_GTK*/
 # else /* _WINDOWS */
   CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
 # endif /* _WINDOWS */

@@ -698,6 +698,8 @@ static void FreeEList (struct E_List *adbloc)
      }
 }
 
+
+
 /*----------------------------------------------------------------------
    CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   
    existe de'ja` ou une entre'e libre dans la table des catalogues.   
@@ -760,6 +762,16 @@ static struct Cat_Context *CatEntry (int ref)
       return (catval);
 }
 
+/*----------------------------------------------------------------------
+   Catwidget returns the widget that owns the catalog given in ref
+  ----------------------------------------------------------------------*/
+ThotWidget CatWidget(int ref)
+{
+  struct Cat_Context *catalogue;
+  
+  catalogue  = CatEntry (ref);
+  return (catalogue->Cat_Widget);
+}
 #ifndef _WINDOWS
 #ifndef _GTK
 /*----------------------------------------------------------------------

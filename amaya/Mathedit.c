@@ -68,7 +68,10 @@ static Element	LastDeletedElement = NULL;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
-
+#ifdef _GTK
+/* used for teh close palette callback*/
+ThotWidget CatWidget(int ref);
+#endif/*  _GTK */
 /* Function name table */
 typedef char     functName[10];
 static  functName  functionName[] =
@@ -1326,12 +1329,25 @@ static void CallbackMaths (int ref, int typedata, char *data)
       break;
     }
 }
+#ifdef _GTK
+gboolean CloseMathMenu (GtkWidget *widget,
+			 GdkEvent  *event,
+			 gpointer   data )
+{
+  InitMaths = FALSE;
+  TtaDestroyDialogue ((int) data);
+  return TRUE;
+}
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    CreateMathMenu creates the maths menus.           
   ----------------------------------------------------------------------*/
 static void         CreateMathMenu (Document doc, View view)
 {
+#ifdef _GTK
+  GtkWidget *w;
+#endif /*_GTK*/
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
      return;
@@ -1350,6 +1366,18 @@ static void         CreateMathMenu (Document doc, View view)
       /* do not need to initialise the selection into the palette */
       /*TtaSetMenuForm (MathsDialogue + MenuMaths, 0);*/
       TtaSetDialoguePosition ();
+#ifdef _GTK
+      w =   CatWidget (MathsDialogue + FormMaths);
+      gtk_signal_connect (GTK_OBJECT (w), 
+			"delete_event",
+			GTK_SIGNAL_FUNC (CloseMathMenu), 
+			(gpointer)(MathsDialogue + FormMaths));
+
+      gtk_signal_connect (GTK_OBJECT (w), 
+			"destroy",
+			GTK_SIGNAL_FUNC (CloseMathMenu), 
+			(gpointer)(MathsDialogue + FormMaths));
+#endif /*_GTK*/
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
 #else /* _WINDOWS */
