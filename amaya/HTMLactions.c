@@ -1314,6 +1314,7 @@ Document       doc;
 
   TtaSetItemOff (doc, 1, Special, BShowLogFile);
   HTMLErrorsFound = FALSE;
+  XMLErrorsFound = FALSE;
 
   if (DocumentURLs[doc] != NULL)
     {

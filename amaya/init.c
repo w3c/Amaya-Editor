@@ -2583,7 +2583,7 @@ ThotBool            history;
 
       if (!plainText)
 	{
-	if (HTMLErrorsFound)
+	if (HTMLErrorsFound || XMLErrorsFound)
 	  TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
 	else
 	  TtaSetItemOff (newdoc, 1, Special, BShowLogFile);
@@ -4872,6 +4872,7 @@ NotifyEvent        *event;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
    HTMLErrorsFound = FALSE;
+   XMLErrorsFound = FALSE;
    LinkAsCSS = FALSE; /* we're not linking an external CSS */
 
    /* initialize icons */

@@ -505,14 +505,14 @@ int         line;
        }
      else
        {
-	 HTMLErrorsFound = TRUE;
+	 XMLErrorsFound = TRUE;
 	 fprintf (ErrFile, "  line %d, char %d: %s\n", line, 0, mbcsMsg);
 	 fclose (ErrFile);
 	 ErrFile = NULL;
        }
    else
      {
-       HTMLErrorsFound = TRUE;
+       XMLErrorsFound = TRUE;
        if (doc == XMLcontext.doc)
 	 {
 	   /* the error message is related to the document being parsed */
@@ -4337,27 +4337,25 @@ ThotBool    xmlDoctype;
 	 profile = TEXT("");
        InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 		      profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
-       HTMLErrorsFound = TRUE;
+       XMLErrorsFound = TRUE;
      }
    else 
-     if (HTMLErrorsFound)
+     if (XMLErrorsFound)
        {
 	 if (unknownCharset)
 	   SetBrowserEditor (doc);
-	 {
 	   profile = TtaGetEnvString ("Profile");
 	   if (!profile)
 	     profile = TEXT("");
 	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			  profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
-	 }
        }
      else 
        if (CharsetErrorFound)
 	 {
 	   SetBrowserEditor (doc);
 	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_ENCODING_WARNING));
-	   HTMLErrorsFound = TRUE;
+	   XMLErrorsFound = TRUE;
 	 }
 }
 

@@ -913,17 +913,18 @@ CHAR_T*             msg;
 
    if (doc == HTMLcontext.doc)
      {
-      /* the error message is related to the document being parsed */
-      if (docURL != NULL)
-	{
-         fprintf (ErrFile, "*** Errors in %s\n", docURL);
-         TtaFreeMemory (docURL);
-         docURL = NULL;
-	}
-      /* print the line number and character number before the message */
-      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
-	       NumberOfCharRead, mbcsMsg);
-   }
+       /* the error message is related to the document being parsed */
+       if (docURL != NULL)
+	 {
+	   if (!XMLErrorsFound)
+	     fprintf (ErrFile, "*** Errors in %s\n", docURL);
+	   TtaFreeMemory (docURL);
+	   docURL = NULL;
+	 }
+       /* print the line number and character number before the message */
+       fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
+		NumberOfCharRead, mbcsMsg);
+     }
    else
      /* print only the error message */
      fprintf (ErrFile, "%s\n", mbcsMsg);
@@ -2671,9 +2672,10 @@ Document       doc;
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
-  CurrentBufChar = 0;
   SetBrowserEditor (doc);
+  XMLabort = TRUE;
+  CurrentBufChar = 0;
+  /* InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR)); */
 }
 
 /*----------------------------------------------------------------------
@@ -7033,6 +7035,7 @@ ThotBool            plainText;
   int                 length;
   ThotBool            isHTML;
   char                www_file_name[MAX_LENGTH];
+  STRING              profile;
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;
@@ -7175,16 +7178,18 @@ ThotBool            plainText;
 	    el = TtaSearchTypedElement (elType, SearchInTree, rootElement);
 	    rootElement = TtaGetFirstChild (el);
 	  }
+	else
 #endif /* ANNOTATIONS */
-	/* delete all element except the root element */
-	el = TtaGetFirstChild (rootElement);
-	while (el != NULL)
 	  {
-	    oldel = el;
-	    TtaNextSibling (&el);
-	    TtaDeleteTree (oldel, doc);
+	    /* delete all element except the root element */
+	    el = TtaGetFirstChild (rootElement);
+	    while (el != NULL)
+	      {
+		oldel = el;
+		TtaNextSibling (&el);
+		TtaDeleteTree (oldel, doc);
+	      }
 	  }
-
 	/* save the path or URL of the document */
 	TtaExtractName (pathURL, temppath, tempname);
 	TtaSetDocumentDirectory (doc, temppath);
@@ -7222,6 +7227,26 @@ ThotBool            plainText;
       }
     }
    TtaSetDocumentUnmodified (doc);
+
+   if (!plainText)
+     if (XMLabort)
+       {
+	 profile = TtaGetEnvString ("Profile");
+	 if (!profile)
+	   profile = TEXT("");
+	 InitConfirm3L (HTMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+			profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
+	 XMLErrorsFound = TRUE;
+       }
+     else if (XMLErrorsFound)
+       {
+	 profile = TtaGetEnvString ("Profile");
+	 if (!profile)
+	   profile = TEXT("");
+	 InitConfirm3L (HTMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+			profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
+       }
+
    HTMLcontext.doc = 0;
 }
 

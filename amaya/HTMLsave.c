@@ -1031,6 +1031,7 @@ CHAR_T           *documentname;
 		  &charset, &thotType);
   /* clean up previous log file */
   HTMLErrorsFound = FALSE;
+  XMLErrorsFound = FALSE;
   /* remove the log file */
   usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
 	    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
@@ -1058,7 +1059,7 @@ CHAR_T           *documentname;
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
   /* check parsing errors */
-  if (HTMLErrorsFound)
+  if (HTMLErrorsFound || XMLErrorsFound)
     TtaSetItemOn (doc, 1, Special, BShowLogFile);
   else
     TtaSetItemOff (doc, 1, Special, BShowLogFile);
