@@ -164,7 +164,8 @@ BoxType          colrow;
   pAb = table;
   while (pAb != NULL)
     {
-      if (pAb->AbBox->BxType == BoRow || pAb->AbBox->BxType == BoColumn)
+      if (pAb->AbBox != NULL &&
+	  (pAb->AbBox->BxType == BoRow || pAb->AbBox->BxType == BoColumn))
 	/* skip over the element contents */
 	pAb = NextSiblingAbsBox (pAb, table);
       else
