@@ -398,10 +398,6 @@ SOURCE=..\..\thotlib\presentation\pschemaapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\quit.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\readpivot.c
 # End Source File
 # Begin Source File

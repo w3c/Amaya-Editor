@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -116,7 +119,6 @@ CLEAN :
 	-@erase "$(INTDIR)\printmenu.obj"
 	-@erase "$(INTDIR)\Profiles.obj"
 	-@erase "$(INTDIR)\pschemaapi.obj"
-	-@erase "$(INTDIR)\quit.obj"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readprs.obj"
 	-@erase "$(INTDIR)\readstr.obj"
@@ -174,40 +176,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -220,6 +189,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\actions.obj" \
 	"$(INTDIR)\animbox.obj" \
 	"$(INTDIR)\appdialogue.obj" \
+	"$(INTDIR)\appdialogue_wx.obj" \
 	"$(INTDIR)\appli.obj" \
 	"$(INTDIR)\applicationapi.obj" \
 	"$(INTDIR)\attributeapi.obj" \
@@ -241,7 +211,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\changepresent.obj" \
 	"$(INTDIR)\checkaccess.obj" \
 	"$(INTDIR)\checkermenu.obj" \
-	"$(INTDIR)\closedoc.obj" \
 	"$(INTDIR)\colors.obj" \
 	"$(INTDIR)\config.obj" \
 	"$(INTDIR)\content.obj" \
@@ -293,7 +262,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\printmenu.obj" \
 	"$(INTDIR)\Profiles.obj" \
 	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
 	"$(INTDIR)\readstr.obj" \
@@ -342,7 +310,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\appdialogue_wx.obj"
+	"$(INTDIR)\closedoc.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -519,8 +487,6 @@ CLEAN :
 	-@erase "$(INTDIR)\Profiles.sbr"
 	-@erase "$(INTDIR)\pschemaapi.obj"
 	-@erase "$(INTDIR)\pschemaapi.sbr"
-	-@erase "$(INTDIR)\quit.obj"
-	-@erase "$(INTDIR)\quit.sbr"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readpivot.sbr"
 	-@erase "$(INTDIR)\readprs.obj"
@@ -627,40 +593,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "_WINDOWS_DLL" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -669,6 +602,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\actions.sbr" \
 	"$(INTDIR)\animbox.sbr" \
 	"$(INTDIR)\appdialogue.sbr" \
+	"$(INTDIR)\appdialogue_wx.sbr" \
 	"$(INTDIR)\appli.sbr" \
 	"$(INTDIR)\applicationapi.sbr" \
 	"$(INTDIR)\attributeapi.sbr" \
@@ -690,7 +624,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\changepresent.sbr" \
 	"$(INTDIR)\checkaccess.sbr" \
 	"$(INTDIR)\checkermenu.sbr" \
-	"$(INTDIR)\closedoc.sbr" \
 	"$(INTDIR)\colors.sbr" \
 	"$(INTDIR)\config.sbr" \
 	"$(INTDIR)\content.sbr" \
@@ -742,7 +675,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\printmenu.sbr" \
 	"$(INTDIR)\Profiles.sbr" \
 	"$(INTDIR)\pschemaapi.sbr" \
-	"$(INTDIR)\quit.sbr" \
 	"$(INTDIR)\readpivot.sbr" \
 	"$(INTDIR)\readprs.sbr" \
 	"$(INTDIR)\readstr.sbr" \
@@ -791,7 +723,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\writepivot.sbr" \
 	"$(INTDIR)\xbmhandler.sbr" \
 	"$(INTDIR)\xpmhandler.sbr" \
-	"$(INTDIR)\appdialogue_wx.sbr"
+	"$(INTDIR)\closedoc.sbr"
 
 "$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -806,6 +738,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\actions.obj" \
 	"$(INTDIR)\animbox.obj" \
 	"$(INTDIR)\appdialogue.obj" \
+	"$(INTDIR)\appdialogue_wx.obj" \
 	"$(INTDIR)\appli.obj" \
 	"$(INTDIR)\applicationapi.obj" \
 	"$(INTDIR)\attributeapi.obj" \
@@ -827,7 +760,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\changepresent.obj" \
 	"$(INTDIR)\checkaccess.obj" \
 	"$(INTDIR)\checkermenu.obj" \
-	"$(INTDIR)\closedoc.obj" \
 	"$(INTDIR)\colors.obj" \
 	"$(INTDIR)\config.obj" \
 	"$(INTDIR)\content.obj" \
@@ -879,7 +811,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\printmenu.obj" \
 	"$(INTDIR)\Profiles.obj" \
 	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
 	"$(INTDIR)\readstr.obj" \
@@ -928,7 +859,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\appdialogue_wx.obj"
+	"$(INTDIR)\closedoc.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -936,6 +867,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -2365,24 +2326,6 @@ SOURCE=..\..\thotlib\presentation\pschemaapi.c
 
 
 "$(INTDIR)\pschemaapi.obj"	"$(INTDIR)\pschemaapi.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\dialogue\quit.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-
-"$(INTDIR)\quit.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-
-"$(INTDIR)\quit.obj"	"$(INTDIR)\quit.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
