@@ -93,9 +93,10 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
       <strong>Ouvrir dans nouvelle fenêtre</strong>, vous permettent
       respectivement d'ouvrir un nouveau document dans la même fenêtre ou dans
       une nouvelle fenêtre. Ces deux commandes font apparaître une boîte de
-      dialogue dans laquelle vous pouvez entrer soit un nom de fichier local
-      soit un URI. La boîte de dialogue contient également un navigateur de
-      fichier qui vous aide à repérer les fichiers locaux. 
+      dialogue dans laquelle vous pouvez entrer un nom de fichier local ou une
+      URI. Vous pouvez également choisir un fichier à partir de l'option
+      <strong>Butiner</strong> qui vous propose un sélecteur de fichiers
+      locaux. 
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>.</p>
     </dd>
@@ -109,6 +110,21 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
     <dd><a href="#L311">Activer un lien</a> pour obtenir le document
       correspondant.</dd>
 </dl>
+
+<h3><a name="New">Nouveaux documents</a></h3>
+
+<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
+types de documents sont disponibles : <a
+href="/home/domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
+<a href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
+
+<p>Pour créer un document, aller sur l'entrée <strong>Nouveau</strong> du menu
+<strong>Fichier</strong> et sélectionner le type de document désiré. Amaya
+vous demande alors de spécifier l'URI ou le nom local du document à créer (un
+nom par défaut est affecté si aucun nom n'est spécifié). Après confirmation,
+Amaya ouvre une nouvelle fenêtre contenant le document spécifié. Si ce
+document existe déjà, sa version courante est chargée sinon, Amaya créé un
+nouveau document contenant l'élément racine correspondant au type choisi.</p>
 
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
 

@@ -53,6 +53,7 @@ décrits.</p>
           <li><a href="Browsing.html.fr#Activating">Activer un lien</a></li>
           <li><a href="Browsing.html.fr#Opening">Ancres cibles</a></li>
           <li><a href="Browsing.html.fr#Opening">Ouvrir des documents</a></li>
+          <li><a href="Browsing.html.fr#New">Nouveaux documents</a></li>
           <li><a href="Browsing.html.fr#Moving">Reculer et avancer</a></li>
           <li><a href="Browsing.html.fr#Reloading">Recharger une page</a></li>
           <li><a href="Browsing.html.fr#Keyboard">Contrôle clavier</a></li>
