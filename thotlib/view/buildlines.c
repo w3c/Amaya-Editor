@@ -1010,7 +1010,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
       pBuffer = pBuffer->BuPrevious;
       charIndex = pBuffer->BuLength - 1;
     }
-  else
+  else if (*pNewBuff)
     /* the previous character is in the same buffer */
     charIndex--;
   /* Remove extra spaces just before the break */
@@ -1244,8 +1244,8 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
    * - if we want to remove extra spaces at the end of the box.
    */
   if (pNewBuff &&
-      (lostPixels != 0 || nSpaces != 0 || oldnSpaces == 0) &&
-      (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
+      (lostPixels != 0 || nSpaces != oldnSpaces || oldnSpaces == 0) &&
+      (pBox->BxW != width /*|| lostPixels != pBox->BxNSpaces*/))
     ibox2 = GetBox (pAb);
   else
     ibox2 = NULL;
@@ -3951,8 +3951,10 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		RecomputeLines (pAb, pLine, NULL, frame);
 	    }
 	  else if ((xDelta > 0 && xDelta <= lostPixels) ||
-		   (xDelta < 0 && (lostPixels < maxlostPixels
-				   || (pLine->LiPrevious == NULL && pLine->LiNext == NULL))))
+		   (xDelta < 0 &&
+		    (lostPixels < maxlostPixels ||
+		     pLine->LiPrevious == NULL) &&
+		    pLine->LiNext == NULL))
 	    /* compress or complete the current line */
 	    if (pLine->LiSpaceWidth == 0)
 	      ShiftLine (pLine, pAb, pBox, xDelta, frame);
