@@ -2414,12 +2414,12 @@ static void BuildCharsetList (void)
   CurrentCharset = -1;
   /* Get the propositions of the list */ 
   SendMessage (CharsetList, LB_RESETCONTENT, 0, 0);
-  while (i < nbscreens && CharsetTxt[i] != EOS)
+  while (i < nbcharset && CharsetTxt[i] != EOS)
     {
       /* keep in mind the current selected entry */
       if (*CharsetType && !strcmp (CharsetType, CharsetTxt[i]))
 	CurrentCharset = i;
-      if (!strcasecmp (entry, "iso-8859-1"))
+      if (!strcasecmp (CharsetTxt[i], "iso-8859-1"))
 	i_default = i;
       SendMessage (CharsetList, LB_INSERTSTRING, i, (LPARAM) CharsetTxt[i]);
       i++;
