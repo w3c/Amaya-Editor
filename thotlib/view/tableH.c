@@ -619,7 +619,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
     return;
-  if (CheckOneTable && table != CheckedTable)
+  if (CheckOneTable && CheckedTable && table != CheckedTable &&
+      /* accept to reformat enclosed tables */
+      !IsParentBox (CheckedTable->AbBox, table->AbBox))
     return;
 
   /* get the number of columns */
@@ -922,38 +924,49 @@ printf ("Specific Widths ...\n");
     }
 
   pTabRel = pBox->BxRows;
-  if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)
+  /*if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)*/
     {
       /* update rows */
       if (!PackRows)
 	{
 	  /* pack all rows */
 	  PackRows = TRUE;
-	  RecordEnclosing (pTabRel->TaRTable[0]->AbEnclosing->AbBox, FALSE);
+	  width =  table->AbBox->BxW;
+	  box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
+	  delta = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
+	  width -=  delta;
 	  while (pTabRel)
 	    {
 	      for (i = 0; i < MAX_RELAT_DIM &&
 		     pTabRel->TaRTable[i] != NULL &&
 		     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
-		WidthPack (pTabRel->TaRTable[i], pTabRel->TaRTable[i]->AbBox, frame);
+		{
+		  box = pTabRel->TaRTable[i]->AbBox;
+		  mbp = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
+		  ChangeDefaultWidth (box, box, width - mbp, 0, frame);
+		}
 	      pTabRel = pTabRel->TaRNext;
 	    }
-	  
+	  box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
+	  ChangeDefaultWidth (box, box, width, 0, frame);
 	}
     }
+#ifdef IV
   else
     {
       /* pack all rows */
       PackRows = TRUE;
       RecordEnclosing (table->AbBox, FALSE);
     }
+#endif
 
 
   /* recheck auto and % margins */
   CheckMBP (table, table->AbBox, frame, TRUE);
   table->AbBox->BxCycles = 0;
 #ifdef TAB_DEBUG
-printf("End CheckTableWidths (%s) = %d\n", table->AbElement->ElLabel, table->AbBox->BxWidth);
+printf("End CheckTableWidths (%s) = %d [%d]\n", table->AbElement->ElLabel,
+       table->AbBox->BxWidth, table->AbBox->BxW);
 #endif
   TtaFreeMemory (colBox);
   TtaFreeMemory (colWidth);

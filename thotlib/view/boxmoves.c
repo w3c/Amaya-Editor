@@ -1547,6 +1547,8 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			   pAb->AbBox->BxType != BoFloatBlock &&
 			   pAb->AbBox->BxType != BoGhost &&
 			   pAb->AbBox->BxType != BoFloatGhost &&
+			   pAb->AbBox->BxType != BoCell &&
+			   pAb->AbBox->BxType != BoColumn &&
 			   !IsParentBox (pAb->AbBox, pRefBox) &&
 			   !IsParentBox (pAb->AbBox, PackBoxRoot))
 		    /* check the inclusion of the sibling box */
@@ -2406,7 +2408,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
 		    }
 		  /* if the inclusion is not checked at the end */
-		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
+		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
+			   pAb->AbBox != pFromBox)
 		    {
 		      /* Differ the checking of the inclusion */
 		      if (Propagate != ToAll)
@@ -2439,6 +2442,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  Propagate = ToSiblings;
 		}
 	      else if (pCurrentAb->AbFloat == 'N' &&
+		       pBox->BxType != BoRow &&
 		       !IsSiblingBox (pBox, pFromBox) &&
 		       !IsSiblingBox (pBox, pSourceBox))
 		RecordEnclosing (pAb->AbBox, TRUE);
@@ -2944,7 +2948,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		    /* Within a block of line */
 		    EncloseInLine (pBox, frame, pAb);
 		  /* if the inclusion is not checked at the end */
-		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot))
+		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
+			   pAb->AbBox != pFromBox)
 		    {
 		      /* Differ the checking of the inclusion */
 		      if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
@@ -3261,7 +3266,9 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  
 	  /* Do we have to recompute the width of the enclosing box */
 	  pAb = pCurrentAb->AbEnclosing;
-	  if (checkParent && pBox->BxXOutOfStruct && pAb != NULL)
+	  if (checkParent && pBox->BxXOutOfStruct && pAb &&
+	      /* table evaluation is done by a specific algorithm */
+	      pBox->BxType != BoCell && pBox->BxType != BoColumn)
 	    /*
 	     * cannot compute it if this box is not placed
 	     * or if the management is differed.
@@ -3566,10 +3573,12 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   if (pBox == NULL)
     return;
   pDimAb = &pAb->AbWidth;
-  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock || pBox->BxType == BoCell)
+  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
     /* don't pack a block or a cell but transmit to enclosing box */
     WidthPack (pAb->AbEnclosing, pSourceBox, frame);
-  else if (!PackRows && pBox->BxType == BoRow)
+  else if (pBox->BxType == BoCell || pBox->BxType == BoTable ||
+	   pBox->BxType == BoRow)
+    /* width of these elements is computed in tableH.c */
     return;
   else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost ||
 	   pBox->BxType == BoColumn)

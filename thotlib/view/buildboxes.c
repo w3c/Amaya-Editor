@@ -2858,7 +2858,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 
   if (horizRef && (pBox->BxType == BoCell || pBox->BxType == BoTable ||
 		   pBox->BxType == BoRow))
-    /* width of these elements are computed in tableH.c */
+    /* width of these elements is computed in tableH.c */
     return;
   /* Look for an empty entry */
   pPreviousDimRel = NULL;
@@ -2876,14 +2876,6 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 	      if (pBox == pDimRel->DimRTable[i])
 		/* The box is already registered */
 		return;
-#ifdef IV
-	      else if (IsParentBox (pDimRel->DimRTable[i], pBox))
-		{
-		  /* store the child pBox instead of the parent */
-		  pDimRel->DimRTable[i] = pBox;
-		  return;
-		}
-#endif
 	      else
 		i++;
 	    }
@@ -4635,6 +4627,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 			pAb->AbBox->BxType != BoFloatBlock &&
 			pAb->AbBox->BxType != BoGhost &&
 			pAb->AbBox->BxType != BoFloatGhost &&
+			pAb->AbBox->BxType != BoCell &&
 			pAb->AbLeafType == LtCompound)
 		 {
 		   if (Propagate == ToAll)
@@ -4937,7 +4930,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 			      }
 			    pChildAb = pChildAb->AbNext;
 			 }
-
+		       if (pAb->AbBox && pAb->AbBox->BxType != BoRow)
 		       WidthPack (pParentAb, NULL, frame);
 		       HeightPack (pParentAb, NULL, frame);
 		    }
