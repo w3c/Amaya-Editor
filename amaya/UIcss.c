@@ -110,7 +110,7 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
    LoadUserStyleSheet : Load the user Style Sheet found in it's    
    home directory or the default one in THOTDIR.           
   ----------------------------------------------------------------------*/
-void                LoadUserStyleSheet (Document doc)
+void LoadUserStyleSheet (Document doc)
 {
   CSSInfoPtr          css;
   struct stat         buf;
@@ -199,7 +199,7 @@ void                LoadUserStyleSheet (Document doc)
   AttrMediaChanged: the user has created removed or modified a Media
   attribute
   ----------------------------------------------------------------------*/
-void                AttrMediaChanged (NotifyAttribute *event)
+void AttrMediaChanged (NotifyAttribute *event)
 {
    ElementType         elType;
    Element             el;
@@ -426,7 +426,7 @@ char *CssToPrint (Document doc, char *printdir)
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-static void         CallbackCSS (int ref, int typedata, char *data)
+static void CallbackCSS (int ref, int typedata, char *data)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
@@ -531,7 +531,7 @@ static void         CallbackCSS (int ref, int typedata, char *data)
 /*----------------------------------------------------------------------
    InitCSS                                                         
   ----------------------------------------------------------------------*/
-void                InitCSS (void)
+void InitCSS (void)
 {
    /* initialize the dialogs */
    BaseCSS = TtaSetCallback (CallbackCSS, MAX_CSS_REF);
@@ -541,7 +541,7 @@ void                InitCSS (void)
 /*----------------------------------------------------------------------
    InitCSSDialog list downloaded CSS files
   ----------------------------------------------------------------------*/
-static void         InitCSSDialog (Document doc, char *s)
+static void InitCSSDialog (Document doc, char *s)
 {
   CSSInfoPtr          css;
   char                buf[400];
@@ -620,7 +620,7 @@ static void         InitCSSDialog (Document doc, char *s)
       if (nb >= 10)
 	i = 10;
       else
-	i = nb;
+	i = nb + 1;
       TtaNewSizedSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 			   TtaGetMessage (AMAYA, AM_CSS_FILE),
 			   nb, buf, 200, i, NULL, FALSE, TRUE);

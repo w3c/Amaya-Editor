@@ -2850,10 +2850,11 @@ void ParseAsHTML (Document document, View view)
        }
 
    /* parse with the HTML parser */
+   DocumentMeta[document]->xmlformat = FALSE;
    StartParser (document, tempdocument, documentname, tempdir,
 		   tempdocument, FALSE);
-   /* DocumentMeta[document]->xmlformat = FALSE; */
-   
+   /* then request to save as XHTML */
+   DocumentMeta[document]->xmlformat = TRUE;
    /* fetch and display all images referred by the document */
    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
    FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE, NULL);
