@@ -1729,9 +1729,8 @@ STRING      data;
      {
        if (RemoveLeadingSpace)
 	 {
-	   while (data[i] != WC_EOS &&
-		  (data[i] == WC_EOL || data[i] == WC_CR ||
-		   data[i] == WC_TAB || data[i] == WC_SPACE))
+	   while (data[i] == WC_EOL || data[i] == WC_CR ||
+		   data[i] == WC_TAB || data[i] == WC_SPACE)
 	     i++;
 	   if (data[i] != WC_EOS)
 	     ImmediatelyAfterTag = FALSE;
@@ -1771,7 +1770,7 @@ STRING      data;
        uselessSpace = IsLeadingSpaceUseless ();
        if (RemoveLeadingSpace && uselessSpace)
 	 /* suppress leading spaces */
-	   while (bufferws[i] != WC_EOS && bufferws[i] == WC_SPACE)
+	   while (bufferws[i] == WC_SPACE)
 	     i++;
        
        /* Collapse contiguous spaces */ 
@@ -1783,7 +1782,7 @@ STRING      data;
 	     {
 	       for (i1 = i; i1 <= length; i1++)
 		 {
-		   if (bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
+		   if ((unsigned int)bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
 		     i3++;
 		   else
 		     i3 = 0;
