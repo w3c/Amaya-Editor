@@ -122,7 +122,7 @@ static PtrParserCtxt	XmlGenericParserCtxt = NULL;
 #define XLink_URI            "http://www.w3.org/1999/xlink"
 #define NAMESPACE_URI        "http://www.w3.org/XML/1998/namespace"
 
-/* NameSpace Table */
+/* Namespaces table */
 #define MAX_NS_TABLE   50
                      /* NameSpace prefix (if defined) */
 static char         *Ns_Prefix[MAX_NS_TABLE]; 
@@ -130,6 +130,11 @@ static char         *Ns_Prefix[MAX_NS_TABLE];
 static char         *Ns_Uri[MAX_NS_TABLE]; 
                      /* first free element on the table */
 static int           Ns_Level = 0;
+
+/* Current namespaces table */
+static char         *CurNs_Prefix[MAX_NS_TABLE]; 
+static char         *CurNs_Uri[MAX_NS_TABLE]; 
+static int           CurNs_Level = 0;
 
 /* Parser Stack */
 	             /* maximum stack height */
@@ -603,6 +608,78 @@ void  SubWithinTable ()
 
 {
    XMLcontext.withinTable--;
+}
+
+/*----------------------------------------------------------------------
+  NsStartProcessing
+  Treatment called by the namespace declaratatin start handler.
+  Update both namespace tables.
+  ----------------------------------------------------------------------*/
+void  NsStartProcessing (char *ns_prefix, char *ns_uri)
+
+{
+  int i;
+  
+  if (Ns_Level >= MAX_NS_TABLE)
+    {
+      XmlParseError (errorNotWellFormed, "**FATAL** Too many namespaces", 0);
+      DisableExpatParser ();
+      return;
+    }
+  
+  /* Filling up the table of namespaces declared for the current element */
+  CurNs_Level ++;
+  CurNs_Prefix[CurNs_Level] = TtaStrdup (ns_prefix);
+  CurNs_Uri[CurNs_Level] = TtaStrdup (ns_uri);
+
+  /* Filling up the table of namespaces declared in the document */
+  if (ns_uri == NULL)
+    return;
+  for (i = 0; i < Ns_Level; i++)
+    /* Namespace already loaded */
+    if (strcmp (ns_uri, Ns_Uri[i]) == 0)
+      return;
+
+  Ns_Uri[Ns_Level] = TtaStrdup (ns_uri);
+  if (ns_prefix != NULL)
+    Ns_Prefix[Ns_Level] = TtaStrdup (ns_prefix);
+  else
+    Ns_Prefix[Ns_Level] = NULL;
+  Ns_Level ++;
+ 
+}
+
+/*----------------------------------------------------------------------
+  NsDeclaredProcessing
+  Look for (a) namespace declaration(s) for the current element. If there
+  is (are) such (a) declaration(s), update the Document informations.
+  Remove all current namespace declaration(s).
+  ----------------------------------------------------------------------*/
+void  NsDeclaredProcessing ()
+
+{
+  int i;
+
+  if (CurNs_Level == 0)
+    return;
+
+  /* Update the Document informations */
+
+  /* Remove all current namespace declarations */
+  for (i = 0; i < CurNs_Level; i++)
+    {
+      if (CurNs_Prefix[i])
+	{
+	  TtaFreeMemory (CurNs_Prefix[i]);
+	  CurNs_Prefix[i] = NULL;
+	}
+      if (CurNs_Uri[i])
+	{
+	  TtaFreeMemory (CurNs_Uri[i]);
+	  CurNs_Uri[i] = NULL;
+	}
+    }
+  CurNs_Level = 0; 
 }
 
 /*----------------------------------------------------------------------
@@ -1711,7 +1788,9 @@ static void       StartOfXmlStartElement (char *name)
 	      
 	      XmlSetElemLineNumber (newElement);
 	      InsertXmlElement (&newElement);
-	      
+	      /* Is there current namespace declarations for this element ? */
+	      /* NsDeclaredProcessing (); */
+
 	      if (newElement != NULL && elType.ElTypeNum == 1)
 		/* If an empty Text element has been created, the */
 		/* following character data must go to that element */
@@ -3777,41 +3856,14 @@ static int     Hndl_ExternalEntityRef (void *userData,
    Handler for the start of namespace declarations
   ----------------------------------------------------------------------*/
 static void     Hndl_NameSpaceStart (void *userData,
-				     const XML_Char *prefix,
-				     const XML_Char *uri)
+				     const XML_Char *ns_prefix,
+				     const XML_Char *ns_uri)
 
 {
-  int  i;
-
 #ifdef EXPAT_PARSER_DEBUG
-  printf ("Hndl_NameSpaceStart - prefix=\"%s\" uri=\"%s\"\n", prefix, uri);
+  printf ("Hndl_NameSpaceStart - prefix=\"%s\" uri=\"%s\"\n", ns_prefix, ns_uri);
 #endif /* EXPAT_PARSER_DEBUG */
-
-  /* Filling up the NameSpace table */
-
-  if (Ns_Level >= MAX_NS_TABLE)
-    {
-      XmlParseError (errorNotWellFormed, "**FATAL** Too many namespaces", 0);
-      DisableExpatParser ();
-      return;
-    }
-
-  if ((char*) uri == NULL)
-    return;
-
-  for (i = 0; i < Ns_Level; i++)
-    /* Namespace already loaded */
-    if (strcmp ((char*) uri, Ns_Uri[i]) == 0)
-      return;
-
-  Ns_Uri[Ns_Level] = TtaStrdup ((char *) uri);
-  if ((char*) prefix != NULL)
-    Ns_Prefix[Ns_Level] = TtaStrdup ((char *) prefix);
-  else
-    Ns_Prefix[Ns_Level] = NULL;
-
-  Ns_Level ++;
- 
+  NsStartProcessing ((char *) ns_prefix, (char*) ns_uri);
 }
 
 /*----------------------------------------------------------------------
@@ -3819,11 +3871,11 @@ static void     Hndl_NameSpaceStart (void *userData,
    Handler for the end of namespace declarations
   ----------------------------------------------------------------------*/
 static void     Hndl_NameSpaceEnd (void *userData,
-				   const XML_Char *prefix)
+				   const XML_Char *ns_prefix)
 
 {
 #ifdef EXPAT_PARSER_DEBUG
-  printf ("Hndl_NameSpaceEnd - prefix=\"%s\"\n", prefix);
+  printf ("Hndl_NameSpaceEnd - prefix=\"%s\"\n", ns_prefix);
 #endif /* EXPAT_PARSER_DEBUG */
 }
 
@@ -4190,6 +4242,7 @@ static void  InitializeXmlParsingContext (Document doc,
   /* initialize the stack of opened elements */
   stackLevel = 1;
   Ns_Level = 0;
+  CurNs_Level = 0;
   elementStack[0] = RootElement;
 }
 
@@ -4350,7 +4403,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   char         bufferRead[COPY_BUFFER_SIZE];
   int          res, i,  parsingLevel, tmpLineRead = 0;
   ThotBool     endOfFile = FALSE;
-  ThotBool     xmlDec, docType, isXML;
+  ThotBool     xmlDec, docType, isXML, xmlns;
   DocumentType thotType;
   char         charsetname[MAX_LENGTH];
   
@@ -4453,7 +4506,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 
       /* check if there is an XML declaration with a charset declaration */
       if (fileName[0] != EOS)
-	CheckDocHeader (fileName, &xmlDec, &docType, &isXML,
+	CheckDocHeader (fileName, &xmlDec, &docType, &isXML, &xmlns,
 			&parsingLevel, &charset, charsetname, &thotType);
 
       /* Parse the input file and complete the Thot document */

@@ -5078,7 +5078,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   CheckDocHeader parses the loaded file to detect if it includes:
   - an XML declaration (returns xmlDec = TRUE)
   - a doctype (returns docType = TRUE)
-  - an html namespace
+  - an xml namespace
   Other returns:
   The indicator isXML
   The document type transitional, XHTML 1.1, basic, other (parsingLevel)
@@ -5087,11 +5087,11 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   The type of the document (given by the first element name)
   ----------------------------------------------------------------------*/
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
-		     ThotBool *isXML, int *parsingLevel, CHARSET *charset,
-		     char *charsetname, DocumentType *thotType)
+		     ThotBool *isXML, ThotBool *xmlns, int *parsingLevel,
+		     CHARSET *charset, char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
-  char       *ptr, *beg, *end;
+  char       *ptr, *beg, *end, *ptrns;
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
@@ -5099,6 +5099,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *xmlDec = FALSE;
   *docType = FALSE;
   *isXML = FALSE;
+  *xmlns = FALSE;
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docHTML;
@@ -5310,17 +5311,25 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* the html tag is found */
 			  i += 4;
 			  /* it's not necessary to continue */
-			  *thotType = docHTML;
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
+			  *thotType = docHTML;
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
 			  end = strstr (&FileBuffer[i], ">");
-			  ptr = strstr (&FileBuffer[i], "XHTML");
-			  if (!ptr || (ptr && ptr > end))
-			    ptr = strstr (&FileBuffer[i], "xhtml");
-			  if (ptr && ptr < end)
-			    *isXML = TRUE;
+			  ptrns = strstr (&FileBuffer[i], "xmlns");
+			  if (ptrns && ptrns < end)
+			    {
+			      /* There is at least one namespace declaration */
+			      /* It ia an XML document */
+			      *isXML = TRUE;
+			      ptr = strstr (ptrns, "xhtml");
+			      if (ptr && ptr < end)
+				{
+				  /* The xhtml namespace declaration is found */
+				  *xmlns = TRUE;
+				}
+			    }
 			}
 		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
 			{
@@ -5329,8 +5338,23 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
-			  *isXML = TRUE;
 			  *thotType = docSVG;
+			  *parsingLevel = L_Other;
+			  end = strstr (&FileBuffer[i], ">");
+			  ptrns = strstr (&FileBuffer[i], "xmlns");
+			  if (ptrns && ptrns < end)
+			    {
+			      /* There is at least one namespace declaration */
+			      /* It ia an XML document */
+			      *isXML = TRUE;
+			      *xmlns = TRUE;
+			      ptr = strstr (ptrns, "svg");
+			      if (ptr && ptr < end)
+				{
+				  /* The svg namespace declaration is found */
+				  *xmlns = TRUE;
+				}
+			    }
 			}
 		      else if (!strncasecmp (&FileBuffer[i], "math", 4))
 			{
@@ -5339,9 +5363,22 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
-			  *isXML = TRUE;
 			  *thotType = docMath;
 			  *parsingLevel = L_MathML;
+			  end = strstr (&FileBuffer[i], ">");
+			  ptrns = strstr (&FileBuffer[i], "xmlns");
+			  if (ptrns && ptrns < end)
+			    {
+			      /* There is at least one namespace declaration */
+			      /* It ia an XML document */
+			      *isXML = TRUE;
+			      ptr = strstr (ptrns, "MathML");
+			      if (ptr && ptr < end)
+				{
+				  /* The MathML namespace declaration is found */
+				  *xmlns = TRUE;
+				}
+			    }
 			}
 		    }
 		  else

@@ -1146,7 +1146,7 @@ static void RestartParser (Document doc, char *localFile,
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
   int           i;
-  ThotBool      xmlDec, withDoctype, isXML;
+  ThotBool      xmlDec, withDoctype, isXML, xmlns;
   DocumentType  thotType;
 
   /* clean up previous Parsing errors file */
@@ -1170,7 +1170,7 @@ static void RestartParser (Document doc, char *localFile,
 	}
 
   /* check if there is an XML declaration with a charset declaration */
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML,
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &xmlns,
 		  &parsingLevel, &charset, charsetname, &thotType);
   DocumentMeta[doc]->xmlformat = isXML;
 

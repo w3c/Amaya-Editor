@@ -2699,7 +2699,7 @@ static Document LoadDocument (Document doc, char *pathname,
   int                 parsingLevel;
   ThotBool            unknown;
   ThotBool            plainText;
-  ThotBool            xmlDec, withDoctype, isXML;
+  ThotBool            xmlDec, withDoctype, isXML, xmlns;
   DocumentType        thotType;
   char                local_content_type[MAX_LENGTH];
 
@@ -2717,10 +2717,10 @@ static Document LoadDocument (Document doc, char *pathname,
 
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML,
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &xmlns,
 		    &parsingLevel, &charset, charsetname, &thotType);
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML,
+    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &xmlns,
 		    &parsingLevel, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
@@ -2812,9 +2812,19 @@ static Document LoadDocument (Document doc, char *pathname,
 		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
+	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
+		 {
+		   /* it's an xhtml document */
+		   isXML = TRUE;
+		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
+		   unknown = FALSE;
+		 }
 	       else if (!strncasecmp (&content_type[i+1], "xhtml", 5))
 		 {
 		   /* it's an XHTML document */
+		   isXML = TRUE;
 		   docType = docHTML;
 		   if (parsingLevel == L_Other)
 		     parsingLevel = L_Transitional;
@@ -2822,18 +2832,35 @@ static Document LoadDocument (Document doc, char *pathname,
 		 }
 	       else if (!strncasecmp (&content_type[i+1], "xml", 3))
 		 {
-		   /* it's an XML document */
-		   isXML = TRUE;
-		   if (thotType == docSVG ||
+		   /* Served as an XML document */
+		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
+		     {
+		       if (withDoctype || xmlns)
+			 {
+			   /* This type comes from the doctype or a namespace declaration */
+			   docType = thotType;
+			 }
+		       else
+			 {
+			   /* Ignore the type-specific semantic */
 #ifdef XML_GENERIC      
-		       thotType == docXml ||
+			   docType = docXml;
+#else /* XML_GENERIC */
+			   docType = docText;
 #endif /* XML_GENERIC */
-		       thotType == docMath)
-		     docType = thotType;
-		   else if (parsingLevel == L_Other)
-		     docType = docText;
+			   parsingLevel = L_Other;
+			 }
+		     }
 		   else
-		     docType = docHTML;
+		     {
+#ifdef XML_GENERIC      
+		       docType = docXml;
+#else /* XML_GENERIC */
+		       docType = docText;
+#endif /* XML_GENERIC */
+		       parsingLevel = L_Other;
+		     }
+		   isXML = TRUE;
 		   unknown = FALSE;
 		 }
 	       else if (!strncasecmp (&content_type[i+1], "css", 3))
@@ -2845,7 +2872,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
 			!strncasecmp (&content_type[i+1], "x-mathml", 8))
 		 {
-		   /* it's an XML document */
+		   /* it's an MathML document */
 		   isXML = TRUE;
 		   docType = docMath;
 		   parsingLevel = L_MathML;
@@ -2866,19 +2893,84 @@ static Document LoadDocument (Document doc, char *pathname,
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }	     
-	       else if (!strncasecmp (&content_type[i+1], "mathml", 6))
+	       else if (!strncasecmp (&content_type[i+1], "html", 4))
 		 {
-		   /* it's an XML document */
+		   /* it's an HTML document */
+		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
+		 {
+		   /* it's an xhtml document */
+		   isXML = TRUE;
+		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "xhtml", 5))
+		 {
+		   /* it's an XHTML document */
+		   isXML = TRUE;
+		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "xml", 3))
+		 {
+		   /* Served as an XML document */
+		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
+		     {
+		       if (withDoctype || xmlns)
+			 {
+			   /* This type comes from the doctype or a namespace declaration */
+			   docType = thotType;
+			 }
+		       else
+			 {
+			   /* Ignore the type-specific semantic */
+#ifdef XML_GENERIC      
+			   docType = docXml;
+#else /* XML_GENERIC */
+			   docType = docText;
+#endif /* XML_GENERIC */
+			   parsingLevel = L_Other;
+			 }
+		     }
+		   else
+		     {
+#ifdef XML_GENERIC      
+		       docType = docXml;
+#else /* XML_GENERIC */
+		       docType = docText;
+#endif /* XML_GENERIC */
+		       parsingLevel = L_Other;
+		     }
+		   isXML = TRUE;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "css", 3))
+		 {
+		   docType = docCSS;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
+			!strncasecmp (&content_type[i+1], "x-mathml", 8))
+		 {
+		   /* it's an MathML document */
 		   isXML = TRUE;
 		   docType = docMath;
 		   parsingLevel = L_MathML;
 		   unknown = FALSE;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
+	       else
 		 {
-		   /* it's an XML document */
-		   isXML = TRUE;
-		   docType = docHTML;
+		   docType = docText;
+		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
 	     }
