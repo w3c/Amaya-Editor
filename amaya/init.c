@@ -5174,3 +5174,13 @@ View                view;
    CheckAmayaClosed ();
 }
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+void DropFile (Document document, View view, STRING text)
+#else  /* !__STDC__ */
+void DropFile (document, view, text)
+#endif /* !__STDC__ */
+{
+   TextURL (document, view, text);
+}
+#endif /* _WINDOWS */

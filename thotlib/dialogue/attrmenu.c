@@ -359,9 +359,14 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
 			      10, 25, 320, 20, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 
+      if (lpfnTextZoneWndProc == (WNDPROC) 0)
+         lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	  else
+           SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+
       /* Create Confirm button */
       confirmButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
-				    WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+				    WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				    65, 50, 100, 20, hwnd, 
 				    (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
@@ -378,6 +383,21 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
       PostQuitMessage (0);
       break;
       
+    case WM_ENTER:
+	  txtLength = GetWindowTextLength (hwnEdit);
+	  if (txtLength >= LgMaxAttrText)
+		txtLength = LgMaxAttrText - 1;
+	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  i = 0;
+	  while (i < txtLength && Attr_text[i] != __CR__)
+	    i++;
+	  if (i < txtLength)
+	    Attr_text[i] = EOS;
+	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, Attr_text);
+	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
+	  DestroyWindow (hwnd);
+         break;
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
@@ -626,7 +646,7 @@ STRING title	;
                                     DS_MODALFRAME | WS_POPUP | 
                                     WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                     ClickX, ClickY,
-                                    275, 80,
+                                    275, 180,
                                     parent, NULL, hInstance, NULL);
 
    ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
@@ -669,7 +689,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
     
       hwnRange = CreateWindow (TEXT("STATIC"), formRange, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 45, 160, 25, hwnd, (HMENU) 2, 
+			       10, 40, 160, 25, hwnd, (HMENU) 2, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
     
       /* Create Edit Window autoscrolled */
@@ -681,19 +701,19 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_APPLY), 
 				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				  10, 120, 80, 25, hwnd, 
+				  10, 120, 60, 25, hwnd, 
 				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Delete Button */
       deleteButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				   95, 120, 80, 25, hwnd, 
+				   75, 120, 120, 25, hwnd, 
 				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Done Button */
       doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 180, 120, 80, 25, hwnd, 
+				 200, 120, 60, 25, hwnd, 
 				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       break;
       

@@ -257,8 +257,7 @@ void WinErrorBox (hWnd)
 HWND hWnd;
 #endif /* __STDC__ */
 {
-/* @@@@@@@@@@
-#  ifndef _AMAYA_RELEASE_ */
+#  ifndef _AMAYA_RELEASE_
    int                 msg;
    CHAR_T                str[200];
 
@@ -276,7 +275,6 @@ HWND hWnd;
        usprintf (str, TEXT("Error %d : %s\n"), WinLastError, win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
-/* @@@@@@@@@@@
 #  endif /* _AMAYA_RELEASE_ */
 }
 

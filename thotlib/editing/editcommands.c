@@ -3689,10 +3689,59 @@ View                view;
    int    ndx;
    int    frame;
 
+   /* @@@@@ */
+   HWND   activeWnd;
+   /* @@@@@ */
+
    frame = GetWindowNumber (document, view);
 
-   TtcCopyToClipboard (document, view);
+   /* @@@@@ */
+   activeWnd = GetFocus ();
+   /* @@@@@ */
 
+   if (activeWnd != FrRef [frame]) {
+      frame = -1;
+      if (!OpenClipboard (activeWnd))
+         WinErrorBox (FrRef [frame]);
+      else {
+           EmptyClipboard ();
+
+           SendMessage (activeWnd, WM_COPY, 0, 0);
+           /*
+           hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+           lpData = (LPSTR) GlobalLock (hMem);
+           pBuff  = (LPSTR) Xbuffer;
+           for (ndx = 0; ndx < ClipboardLength; ndx++)
+               *lpData++ = *pBuff++;
+
+           GlobalUnlock (hMem);
+
+           SetClipboardData (CF_TEXT, hMem);
+		   */
+           CloseClipboard ();
+           SwitchPaste (NULL, TRUE);
+	  } 
+   } else {
+          TtcCopyToClipboard (document, view);
+
+          if (!OpenClipboard (FrRef[frame]))
+             WinErrorBox (FrRef [frame]);
+          else {
+               EmptyClipboard ();
+
+               hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+               lpData = (LPSTR) GlobalLock (hMem);
+               pBuff  = (LPSTR) Xbuffer;
+               for (ndx = 0; ndx < ClipboardLength; ndx++)
+                   *lpData++ = *pBuff++;
+
+               GlobalUnlock (hMem);
+
+               SetClipboardData (CF_TEXT, hMem);
+               CloseClipboard ();
+		  } 
+   }
+   /* @@@@@ OLD OLD
    if (!OpenClipboard (FrRef[frame]))
       WinErrorBox (FrRef [frame]);
    else {
@@ -3709,6 +3758,7 @@ View                view;
       SetClipboardData (CF_TEXT, hMem);
       CloseClipboard ();
    }
+   @@@@@ OLD OLD */
 #  endif /* _WINDOWS */
    ContentEditing (TEXT_COPY);
 }

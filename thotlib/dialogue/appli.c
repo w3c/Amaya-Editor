@@ -313,16 +313,19 @@ LPARAM     lParam;
       /* Do not redraw if the document is in NoComputedDisplay mode. */
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
          WIN_curWin = w;
-         TtDisplay = BeginPaint (WIN_curWin, &ps);
+         BeginPaint (w, &ps);
+         /* @@@@@ TtDisplay = BeginPaint (WIN_curWin, &ps); @@@@@ */
          GetClientRect (w, &rect);
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-	 if (ThotLocalActions[T_switchsel])
-	   (*ThotLocalActions[T_switchsel]) (frame, FALSE);
+         EndPaint (w, &ps);
+         WIN_GetDeviceContext (frame);
+         if (ThotLocalActions[T_switchsel])
+            (*ThotLocalActions[T_switchsel]) (frame, FALSE);
          /* RedrawFrameBottom (frame, 0); */
          DisplayFrame (frame);
-	 if (ThotLocalActions[T_switchsel])
-	   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
-         EndPaint (w, &ps);
+         if (ThotLocalActions[T_switchsel])
+            (*ThotLocalActions[T_switchsel]) (frame, TRUE);
+         /* @@@@@ EndPaint (WIN_curWin, &ps); @@@@@ */
          WIN_ReleaseDeviceContext ();
       }
    }
@@ -1133,6 +1136,7 @@ PtrDocument         pDoc;
 }
 
 #define MAX_LENGTH 550
+
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
@@ -1280,6 +1284,7 @@ LPARAM      lParam;
     ShowWindow (hwndClient, SW_SHOWNORMAL);
     UpdateWindow (hwndClient);
     SetWindowText (hwnd, wTitle);
+    DragAcceptFiles (hwnd, TRUE);
     return 0;
 
   case WM_PALETTECHANGED: 
@@ -1314,6 +1319,12 @@ LPARAM      lParam;
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0;
 
+  case WM_DROPFILES:
+       if (frame != -1)
+          SetFocus (FrRef [frame]);
+    SendMessage (FrRef [frame], mMsg, wParam, lParam);
+    return 0;
+	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
   case WM_CHAR:
@@ -1349,6 +1360,7 @@ LPARAM      lParam;
     return 0;
 
   case WM_CLOSE:
+       DestroyWindow (hwnd);
   case WM_DESTROY:
     if (!viewClosed) {
       FrameToView (frame, &doc, &view);
@@ -1526,13 +1538,19 @@ LPARAM lParam;
 	 }
 
      switch (mMsg) {
+            case WM_CREATE:
+                 DragAcceptFiles (hwnd, TRUE);
+                 return 0;
+
             case WM_PAINT: 
 	             /* Some part of the Client Area has to be repaint. */
-                 saveHdc = TtDisplay;
-				 saveCurWin = WIN_curWin;
+                 /** @@@@@ saveHdc = TtDisplay;
+				 saveCurWin = WIN_curWin; @@@@@ **/
                  WIN_HandleExpose (hwnd, frame, wParam, lParam);
-                 TtDisplay = saveHdc;
-				 WIN_curWin =saveCurWin;
+                 /** @@@@@ TtDisplay = saveHdc;
+				 WIN_curWin = saveCurWin; @@@@@ **/
+				 if (TtDisplay)
+                    WIN_ReleaseDeviceContext ();
                  return 0;
 
             case WM_SIZE: {
@@ -1543,6 +1561,19 @@ LPARAM lParam;
                  WIN_ChangeViewSize (frame, cx, cy, 0, 0);
                  return 0;
             }
+
+            case WM_DROPFILES: {
+                 char DroppedFileName [MAX_PATH + 1];
+                 UINT nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
+                 int document, view, i;
+                 FrameToView (frame, &document, &view);
+                 for (i = 0; i < nNumFiles; i++) {
+                     DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
+                     DropFile (document, view, DroppedFileName);
+				 }
+				 DragFinish ((HDROP)wParam);
+                 return 0;
+			}
 
             case WM_SYSKEYDOWN:
             case WM_KEYDOWN:
