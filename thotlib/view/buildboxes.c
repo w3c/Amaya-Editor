@@ -1917,8 +1917,7 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
 
 
 /*----------------------------------------------------------------------
-   SearchLine cherche l'adresse de la ligne englobant la boite       
-   designee.                                               
+  SearchLine looks for the line that includes the box pBox.
   ----------------------------------------------------------------------*/
 PtrLine SearchLine (PtrBox pBox)
 {
@@ -1929,19 +1928,18 @@ PtrLine SearchLine (PtrBox pBox)
    PtrAbstractBox      pAb;
    ThotBool            still;
 
-   /* Recherche la ligne englobante */
+   /* check enclosing element */
    pLine = NULL;
    pAb = NULL;
-   if (pBox != NULL)
+   if (pBox)
      {
-	if (pBox->BxAbstractBox != NULL)
-	   pAb = pBox->BxAbstractBox->AbEnclosing;
-	if (pAb != NULL && pAb->AbNotInLine)
-	  pAb = NULL;
+       pAb = pBox->BxAbstractBox->AbEnclosing;
+       if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
+	 pAb = NULL;
      }
 
-   /* On regarde si la boite appartient a un bloc de lignes */
-   if (pAb != NULL)
+   /* look for an enclosing block of lines */
+   if (pAb)
      {
 	if (pAb->AbBox == NULL)
 	   pAb = NULL;
@@ -1969,7 +1967,7 @@ PtrLine SearchLine (PtrBox pBox)
 	   pAb = NULL;
      }
 
-   if (pAb != NULL)
+   if (pAb)
      {
 	pCurrentBox = pAb->AbBox;
 	pLine = pCurrentBox->BxFirstLine;
@@ -2080,8 +2078,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
    savpropage = Propagate;
    pAb = pBox->BxAbstractBox;
    /* update the box itself */
-   if (pAb->AbLeafType == LtText &&
-       (charDelta > 0 || !splitBox))
+   if (pAb->AbLeafType == LtText)
      {
        /* when a character between 2 boxes are removed the box is unchanged */
 	pBox->BxNSpaces += spaceDelta;

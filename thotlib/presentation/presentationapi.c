@@ -1040,10 +1040,6 @@ PRule TtaNewPRule (int presentationType, View view, Document document)
 	       pPres->PrType = PtFunction;
 	       pPres->PrPresFunction = FnCreateEnclosing;
 	       break;
-	     case PRLine:
-	       pPres->PrType = PtFunction;
-	       pPres->PrPresFunction = FnLine;
-	       break;
 	     default:
 	       pPres->PrType = (PRuleType) presentationType;
 	       break;
@@ -1107,10 +1103,6 @@ PRule TtaNewPRuleForView (int presentationType, int view, Document document)
 	 case PRCreateEnclosing:
 	   pPres->PrType = PtFunction;
 	   pPres->PrPresFunction = FnCreateEnclosing;
-	   break;
-	 case PRLine:
-	   pPres->PrType = PtFunction;
-	   pPres->PrPresFunction = FnLine;
 	   break;
 	 default:
 	   pPres->PrType = (PRuleType) presentationType;
@@ -1189,10 +1181,6 @@ PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
 	     case PRCreateEnclosing:
 	       pPres->PrType = PtFunction;
 	       pPres->PrPresFunction = FnCreateEnclosing;
-	       break;
-	     case PRLine:
-	       pPres->PrType = PtFunction;
-	       pPres->PrPresFunction = FnLine;
 	       break;
 	     default:
 	       pPres->PrType = (PRuleType) presentationType;
@@ -2411,7 +2399,7 @@ int                 TtaGetPRuleType (PRule pRule)
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
   ----------------------------------------------------------------------*/
-int                 TtaGetPRuleValue (PRule pRule)
+int TtaGetPRuleValue (PRule pRule)
 {
   int                 value;
 
@@ -2690,7 +2678,7 @@ int                 TtaGetPRuleValue (PRule pRule)
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
    Return UnRelative in other cases.
   ----------------------------------------------------------------------*/
-int                 TtaGetPRuleUnit (PRule pRule)
+int TtaGetPRuleUnit (PRule pRule)
 {
   int                 value;
 

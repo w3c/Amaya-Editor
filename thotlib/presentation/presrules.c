@@ -3384,14 +3384,18 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 				       &appl);
 	    if (appl)
 	      {
-		if (pAb->AbDisplay == 'B')
-		  /* display: block */
-		  pAb->AbNotInLine = TRUE;
-		else if (pAb->AbDisplay == 'I')
+		if (pAb->AbDisplay == 'I')
 		  /* display: inline */
 		  {
 		    if (pAb->AbEnclosing)
 		      pAb->AbEnclosing->AbInLine = TRUE;
+		    pAb->AbAcceptLineBreak = TRUE;
+		  }
+		else if (pAb->AbDisplay != 'U')
+		  {
+		    /* display: block */
+		    pAb->AbNotInLine = TRUE;
+		    pAb->AbAcceptLineBreak = FALSE;
 		  }
 	      }
 	    else if (pAb->AbElement->ElParent == NULL)

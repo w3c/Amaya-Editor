@@ -292,63 +292,60 @@ int CharacterWidth (unsigned char c, PtrFont font)
   else if (c == TAB || c == UNBREAKABLE_SPACE)
     /* we use the SPACE width for the character TAB */
     c = SPACE;
-
-  if (c == NEW_LINE || c == BREAK_LINE)
+  else if (c == NEW_LINE || c == BREAK_LINE)
     /* characters NEW_LINE and BREAK_LINE are equivalent */
-    l = 1;
-  else
-    {
+    c = SPACE;
+
 #ifdef _WINDOWS
-      if (c == THIN_SPACE)
-	l = (font->FiWidths[32] + 3) / 4;
-      else if (c == HALF_EM)
-	l = (font->FiWidths[32] + 3) / 2;
-      else
-	l = font->FiWidths[c];
+  if (c == THIN_SPACE)
+    l = (font->FiWidths[32] + 3) / 4;
+  else if (c == HALF_EM)
+    l = (font->FiWidths[32] + 3) / 2;
+  else
+    l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
 #ifndef _GL
-      if (c == THIN_SPACE)
-	l = gdk_char_width (font, 32) / 4;
-      else if (c == HALF_EM)
-	l = gdk_char_width (font, 32) / 2;
-      else
-	l = gdk_char_width (font, c);
+  if (c == THIN_SPACE)
+    l = gdk_char_width (font, 32) / 4;
+  else if (c == HALF_EM)
+    l = gdk_char_width (font, 32) / 2;
+  else
+    l = gdk_char_width (font, c);
 #else /*  _GL */
-      if (c == THIN_SPACE)
-	l = gl_font_char_width ((void *) font, 32) / 4;
-      else if (c == HALF_EM)
-	l = gl_font_char_width ((void *) font, 32) / 2;
-      else
-	l = gl_font_char_width ((void *) font, c);
+  if (c == THIN_SPACE)
+    l = gl_font_char_width ((void *) font, 32) / 4;
+  else if (c == HALF_EM)
+    l = gl_font_char_width ((void *) font, 32) / 2;
+  else
+    l = gl_font_char_width ((void *) font, c);
 #endif /*  _GL */
 #else /* _GTK */
-      if (c == THIN_SPACE)
-	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
-      else if (c == HALF_EM)
-	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
-      else if (xf->per_char == NULL)
-	return xf->max_bounds.width;
-      else if (c < xf->min_char_or_byte2)
-	return 0;
-      else
-	l = xf->per_char[c - xf->min_char_or_byte2].width;
+  if (c == THIN_SPACE)
+    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
+  else if (c == HALF_EM)
+    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
+  else if (xf->per_char == NULL)
+    return xf->max_bounds.width;
+  else if (c < xf->min_char_or_byte2)
+    return 0;
+  else
+    l = xf->per_char[c - xf->min_char_or_byte2].width;
 #endif  /* _GTK */
-      if (c == 244)
-	{
-	  /* a patch due to errors in standard symbol fonts */
-	  i = 0;
-	  while (i < MAX_FONT && font != TtFonts[i])
-	    i++;
-	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
-	    l = 1;
-	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
-	    l = 2;
-	  else if (TtPatchedFont[i] == 24)
-	    l = 4;
-	}
-#endif /* _WINDOWS */
+  if (c == 244)
+    {
+      /* a patch due to errors in standard symbol fonts */
+      i = 0;
+      while (i < MAX_FONT && font != TtFonts[i])
+	i++;
+      if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
+	l = 1;
+      else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
+	l = 2;
+      else if (TtPatchedFont[i] == 24)
+	l = 4;
     }
+#endif /* _WINDOWS */
   return l;
 }
 

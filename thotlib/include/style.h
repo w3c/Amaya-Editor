@@ -159,7 +159,7 @@ typedef struct _PresentationSetting
 #define STYLE_ADJUSTJUSTIFY		5
 
 #define STYLE_INLINE			1
-#define STYLE_NOTINLINE			2
+#define STYLE_BLOCK			2
 
 #define STYLE_DISPLAYUNDEFINED          1
 #define STYLE_DISPLAYINLINE             2
@@ -237,20 +237,23 @@ extern PresentationContext TtaGetSpecificStyleContext (Document doc);
   TtaSetStylePresentation attachs a style rule to an element or to an
   extended presentation schema.
   ----------------------------------------------------------------------*/
-extern int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v);
+extern int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
+				    PresentationContext c, PresentationValue v);
 
 /*----------------------------------------------------------------------
   TtaGetStylePresentation returns the style rule attached to an element
   or to an extended presentation schema.
   ----------------------------------------------------------------------*/
-extern int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v);
+extern int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
+				    PresentationContext c, PresentationValue *v);
 
 /*----------------------------------------------------------------------
   ApplyAllSpecificSettings browses all the PRules structures,
   associated to the corresponding Specific Context 
   structure, and calls the given handler for each one.
   ----------------------------------------------------------------------*/
-extern void TtaApplyAllSpecificSettings (Element element, Document doc, SettingsApplyHandler handler, void *param);
+extern void TtaApplyAllSpecificSettings (Element element, Document doc,
+					 SettingsApplyHandler handler, void *param);
 
 /*----------------------------------------------------------------------
   TtaCleanElementPresentation

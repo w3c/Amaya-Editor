@@ -65,7 +65,7 @@ PRINT
 #define VSpaceBeforeH5 0.5
 #define VSpaceBeforeH6 0.5
 #define VSpaceInToC 0.2
-#define LIST_INDENT 2
+#define LIST_INDENT 0.2
 #define LIST_NUMBER_WIDTH 0.2
 #define LIST_SHIFT 1
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -53,7 +53,7 @@ static PtrAbstractBox pAbbBegin[MAX_VIEW_DOC];
    IsEnclosing retourne vrai si le pave pAbb1 englobe le pave pAbb2   
    ou si les deux pointeurs pointent le meme pave.         
   ----------------------------------------------------------------------*/
-static ThotBool     IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
+static ThotBool IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
 {
    ThotBool            ret;
    PtrAbstractBox      pAbb;
@@ -78,7 +78,7 @@ static ThotBool     IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
    Enclosing retourne un pointeur sur le pave de plus bas niveau   
    qui englobe a la fois les deux paves pAbb1 et pAbb2.    
   ----------------------------------------------------------------------*/
-PtrAbstractBox      Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
+PtrAbstractBox Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
 {
    PtrAbstractBox      pAbb;
    ThotBool            found;
@@ -107,7 +107,7 @@ PtrAbstractBox      Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
    UpdateAbsBoxVolume
    update the volume of the abstract box of element pEl in view view.
   ----------------------------------------------------------------------*/
-void         UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
+void UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
 {
   int	          dVol;
   PtrAbstractBox  pAb;

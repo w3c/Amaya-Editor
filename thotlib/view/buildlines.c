@@ -194,7 +194,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	pBox = pBoxInLine->BxNexChild;
       else
 	pBox = pBoxInLine;
-      if (!pBox->BxAbstractBox->AbHorizEnclosing)
+      if (!pBox->BxAbstractBox->AbHorizEnclosing ||
+	  (pBox->BxAbstractBox->AbNotInLine &&
+	   pBox->BxAbstractBox->AbDisplay != 'U'))
 	pBox->BxYOrg = baseline - pBox->BxHorizRef;
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
@@ -367,7 +369,9 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 	pBox = pBoxInLine->BxNexChild;
       else
 	pBox = pBoxInLine;
-      if (!pBox->BxAbstractBox->AbHorizEnclosing)
+      if (!pBox->BxAbstractBox->AbHorizEnclosing ||
+	  (pBox->BxAbstractBox->AbNotInLine &&
+	   pBox->BxAbstractBox->AbDisplay != 'U'))
 	pBox->BxYOrg = baseline - pBox->BxHorizRef;
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
@@ -1492,9 +1496,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     *adjust = FALSE;
 	     still = FALSE;
 	     *breakLine = TRUE;
-	     /*if (pBox->BxNChars > 1)*/
-	       ManageBreakLine (pBox, width, breakWidth, boxLength,
-				nSpaces, newIndex, pNewBuff, pRootAb);
+	     ManageBreakLine (pBox, width, breakWidth, boxLength,
+			      nSpaces, newIndex, pNewBuff, pRootAb);
 	  }
 	else if (pBox->BxWidth + xi <= maxX)
 	  {
@@ -1531,11 +1534,14 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    /* look for a box to split */
    while (still)
      {
-       if (!pNextBox->BxAbstractBox->AbHorizEnclosing)
+       if (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
+	   pNextBox->BxAbstractBox->AbNotInLine)
 	 {
-	   /* that box is not concerned */
-	   if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == PageBreak + 1)
+	   /* that box is not inline */
+	   if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == PageBreak + 1 ||
+	       pNextBox->BxAbstractBox->AbDisplay != 'U')
 	     {
+	       /* allow a line to present this box */
 	       *full = TRUE;
 	       still = FALSE;
 	       wordWidth = 0;
@@ -1557,16 +1563,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   *full = FALSE;
 		   still = FALSE;
 		 }
-	     }
-	 }
-       else if (pNextBox->BxAbstractBox->AbNotInLine)
-	 {
-	   /* skip over the box */
-	   pNextBox = GetNextBox (pNextBox->BxAbstractBox);
-	   if (pNextBox == NULL)
-	     {
-	       *full = FALSE;
-	       still = FALSE;
 	     }
 	 }
        else
@@ -1819,7 +1815,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
      {
 	if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
 	   pNextBox = pNextBox->BxNexChild;
-	if (!pNextBox->BxAbstractBox->AbNotInLine)
+	if (!pNextBox->BxAbstractBox->AbNotInLine ||
+	    pNextBox->BxAbstractBox->AbDisplay != 'U')
 	  AddBoxInLine (pNextBox, &descent, &ascent, pLine);
 	if (pNextBox == pBox)
 	   still = FALSE;
@@ -1924,14 +1921,12 @@ static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
 static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			  ThotBool *changeSelectEnd)
 {
-  PtrTextBuffer       pBuffer;
   PtrBox              ibox1;
   PtrBox              ibox2;
   PtrBox              pNextBox;
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
-  CHAR_T              c;
   int                 x, width = 0;
   int                 nspace = 0;
   int                 lost = 0;
@@ -2033,23 +2028,10 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		      diff = ibox1->BxFirstChar - lost;
 		      if (diff > 0)
 			{
-			  c = EOS;
-			  pBuffer = ibox1->BxBuffer;
-			  if (ibox1->BxIndChar > 0 && pBuffer)
-			    c = pBuffer->BuContent[ibox1->BxIndChar - 1];
-			  else if (ibox1->BxIndChar == 0 && pBuffer &&
-				   pBuffer->BuPrevious)
-			    c = pBuffer->BuPrevious->BuContent[pBuffer->BuPrevious->BuLength - 1];
-			  if (c == EOS)
-			    /* characters between two boxes were removed */
-			    diff = 0;
-			  else
-			    {
-			      nchar += diff;
-			      /* add skipped spaces */
-			      width += diff * x;
-			      nspace += diff;
-			    }
+			  nchar += diff;
+			  /* add skipped spaces */
+			  width += diff * x;
+			  nspace += diff;
 			}
 		      else if (ibox1->BxType == BoDotted)
 			/* remove the hyphen width */
@@ -2187,7 +2169,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  still = FALSE;
 	/* Est-ce que le pave est mort ? */
 	else if (pChildAb->AbDead || pChildAb->AbNew ||
-		 pChildAb->AbNotInLine)
+		 (pChildAb->AbNotInLine && pChildAb->AbDisplay == 'U'))
 	  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost)
 	  /* descend la hierarchie */
@@ -2201,8 +2183,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
 
   width = pBox->BxW;
-  if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ ||
-      extensibleBox)
+  if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
     {
       /* Calcul de l'interligne */
       lineSpacing = PixelValue (pAb->AbLineSpacing,pAb->AbLineSpacingUnit,
@@ -2250,40 +2231,26 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  /* hauteur boite bloc de lignes */
 	  *height = pPreviousLine->LiYOrg + pPreviousLine->LiHeight - top;
 	  /* Origine de la future ligne */
-	  if (pChildAb->AbHorizEnclosing && !pChildAb->AbNotInLine)
+	  if (!pChildAb->AbHorizEnclosing ||
+	      (pChildAb->AbNotInLine && pChildAb->AbDisplay != 'U'))
 	    {
-	      /* C'est une boite englobee */
-	      org = pPreviousLine->LiYOrg + pPreviousLine->LiHorizRef + lineSpacing;
-	      /* utilise l'interligne */
-	      toLineSpace = TRUE;
+	      /* the box is presented under the previous line */
+	      org = *height + top;
+	      toLineSpace = FALSE;
 	    }
 	  else
 	    {
-	      /* La boite n'est pas englobee (Page) */
-	      /* colle la nouvelle ligne en dessous de celle-ci */
-	      org = *height + top;
-	      toLineSpace = FALSE;
+	      /* box put in line */
+	      org = pPreviousLine->LiYOrg + pPreviousLine->LiHorizRef + lineSpacing;
+	      /* apply linespacing */
+	      toLineSpace = TRUE;
 	    }
 
 	  if (pBoxToBreak)
 	    {
 	      pBoxToBreak = pBoxToBreak->BxNexChild;
 	      /* special case of the last box */
-		{
-		  pNextBox = pPreviousLine->LiLastBox;
-#ifdef IV
-		  /* is it empty ? */
-		  if (pBoxToBreak->BxNChars == 0)
-		    do
-		      if (pNextBox->BxType == BoScript &&
-			  pNextBox->BxNexChild)
-			/* get the next child */
-			pNextBox = pNextBox->BxNexChild;
-		      else
-			pNextBox = GetNextBox (pNextBox->BxAbstractBox);
-		    while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine);
-#endif /* IV */
-		}
+	      pNextBox = pPreviousLine->LiLastBox;
 	    }
 	  
 	  if (pNextBox == NULL)
@@ -2304,8 +2271,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      GetLine (&pLine);
 	      pPreviousLine->LiNext = pLine;
 	      /* Si la 1ere boite nouvellement mise en lignes n'est pas englobee */
-	      if (!pNextBox->BxAbstractBox->AbHorizEnclosing
-		  && !pNextBox->BxAbstractBox->AbNotInLine)
+	      if (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
+		  (pNextBox->BxAbstractBox->AbNotInLine &&
+		   pNextBox->BxAbstractBox->AbDisplay != 'U'))
 		{
 		  org = *height + top;
 		  /* colle la nouvelle ligne en dessous */
@@ -2321,7 +2289,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  /* Initialize the new line */
 	  pLine->LiPrevious = pPreviousLine;
 	  /* regarde si la boite deborde des lignes */
-	  if (!pNextBox->BxAbstractBox->AbHorizEnclosing)
+	  if (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
+	      (pNextBox->BxAbstractBox->AbNotInLine &&
+	       pNextBox->BxAbstractBox->AbDisplay != 'U'))
 	    {
 	      pLine->LiXOrg = pNextBox->BxXOrg + left;
 	      /* Colle la boite en dessous de la precedente */

@@ -1756,13 +1756,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresFunction;
       switch (funcType)
 	{
-	case FnLine:
-	  if (value == STYLE_NOTINLINE)
-	    rule->PrPresFunction = FnNoLine;
-	  else
-	    rule->PrPresFunction = FnLine;
-	  rule->PrNPresBoxes = 0;
-	  break;
 	case FnCreateBefore:
 	case FnCreateWith:
 	case FnCreateFirst:
@@ -1822,7 +1815,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
   PRuleToPresentationValue : return the PresentationValue corresponding to
   a given rule.
   ----------------------------------------------------------------------*/
-static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
+static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 {
   PresentationValue   val;
   TypeUnit            int_unit = -1;
@@ -2134,12 +2127,6 @@ static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
     case PtFunction:
       switch (rule->PrPresFunction)
 	{
-	case FnLine:
-	  value = STYLE_INLINE;
-	  break;
-	case FnNoLine:
-	  value = STYLE_NOTINLINE;
-	  break;
 	case FnCreateBefore:
 	case FnCreateWith:
 	case FnCreateFirst:
@@ -2398,10 +2385,6 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRCreateEnclosing:
       *intRule = PtFunction;
       *func = FnCreateEnclosing;
-      break;
-    case PRLine:
-      *intRule = PtFunction;
-      *func = FnLine;
       break;
     case PRPageBefore:
       *intRule = PtFunction;
@@ -2682,9 +2665,6 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
     case PtFunction:
       switch (extra)
 	{
-	case FnLine:
-	  setting->type = PRLine;
-	  break;
 	case FnShowBox:
 	  setting->type = PRShowBox;
 	  break;

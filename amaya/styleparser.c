@@ -1150,29 +1150,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
    pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "block", 5))
-     {
-       /* pval.typed_data.value = STYLE_INLINE;
-	if (DoApply)
-	{
-	if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
-	} */
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "inline", 6))
-     {
-       /* pval.typed_data.value = STYLE_INLINE;
-	if (DoApply)
-	{
-	if (tsch)
-	cssRule = CheckImportantRule (cssRule, context);
-	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
-	} */
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "none", 4))
+   if (!strncasecmp (cssRule, "none", 4))
      {
 	pval.typed_data.value = 0;
 	if (DoApply)
@@ -1183,11 +1161,35 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	}
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "list-item", 9))
-     cssRule = SkipValue (cssRule, FALSE);
    else
-     CSSParseError ("Invalid display value", cssRule);
+     {
+       if (!strncasecmp (cssRule, "block", 5))
+	 pval.typed_data.value = STYLE_DISPLAYBLOCK;
+       else if (!strncasecmp (cssRule, "inline", 6))
+	 pval.typed_data.value = STYLE_DISPLAYINLINE;
+       else if (!strncasecmp (cssRule, "list-item", 9))
+       pval.typed_data.value = STYLE_DISPLAYLISTITEM;
+       else if (!strncasecmp (cssRule, "runin", 5))
+	 pval.typed_data.value = STYLE_DISPLAYRUNIN;
+       else if (!strncasecmp (cssRule, "compact", 7))
+	 pval.typed_data.value = STYLE_DISPLAYCOMPACT;
+       else if (!strncasecmp (cssRule, "marker", 6))
+	 pval.typed_data.value = STYLE_DISPLAYMARKER;
+       else
+	 {
+	   CSSParseError ("Invalid display value", cssRule);
+	   cssRule = SkipWord (cssRule);
+	   return (cssRule);
+	 }
 
+       if (DoApply)
+	 {
+	   if (tsch)
+	     cssRule = CheckImportantRule (cssRule, context);
+	   TtaSetStylePresentation (PRDisplay, element, tsch, context, pval);
+	 }
+       cssRule = SkipWord (cssRule);
+     }
    return (cssRule);
 }
 
@@ -3768,6 +3770,31 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       break;
     case PRLineStyle:
       break;
+    case PRDisplay:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_DISPLAYINLINE:
+	  strcpy (buffer, "display: inline");
+	  break;
+	case STYLE_DISPLAYBLOCK:
+	  strcpy (buffer, "display: block");
+	  break;
+	case STYLE_DISPLAYLISTITEM:
+	  strcpy (buffer, "display: list-item");
+	  break;
+	case STYLE_DISPLAYRUNIN:
+	  strcpy (buffer, "display: runin");
+	  break;
+	case STYLE_DISPLAYCOMPACT:
+	  strcpy (buffer, "display: compact");
+	  break;
+	case STYLE_DISPLAYMARKER:
+	  strcpy (buffer, "display: marker");
+	  break;
+	default:
+	  break;
+	}
+      break;
     case PRLineWeight:
       elType = TtaGetElementType(el);
 #ifdef _SVG
@@ -3810,12 +3837,6 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
     case PRVertOverflow:
       break;
     case PRHorizOverflow:
-      break;
-    case PRLine:
-      if (settings->value.typed_data.value == STYLE_INLINE)
-	strcpy (buffer, "display: inline");
-      else if (settings->value.typed_data.value == STYLE_NOTINLINE)
-	strcpy (buffer, "display: block");
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)

@@ -68,8 +68,7 @@ typedef int        *PRule;
 #define PRDisplay 53
 #define PRNoBreak1 54
 #define PRNoBreak2 55
-/* PtPictInfo */
-#define PRLine 57
+/* PtPictInfo, PRLine */
 #define PRCreateEnclosing 58
 #define PRShowBox 59
 #define PRBackgroundPicture 60
@@ -223,7 +222,8 @@ extern PRule TtaNewPRuleForView (int presentationType, int view, Document docume
    Return value:
    new presentation rule.
   ----------------------------------------------------------------------*/
-extern PRule TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document);
+extern PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
+				      Document document);
 
 /*----------------------------------------------------------------------
    TtaCopyPRule
@@ -298,7 +298,7 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
    PRDirection: LeftToRight, RightToLeft.
    PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
-      PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
    PRSize: an integer between 6 and 72 (body size in points).
@@ -314,7 +314,8 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
   ----------------------------------------------------------------------*/
-extern void TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
+extern void TtaSetPRuleValue (Element element, PRule pRule, int value,
+			      Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleValueWithUnit
@@ -341,7 +342,8 @@ extern void TtaSetPRuleValue (Element element, PRule pRule, int value, Document 
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
   ----------------------------------------------------------------------*/
-extern void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document);
+extern void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
+				      TypeUnit unit, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleView
