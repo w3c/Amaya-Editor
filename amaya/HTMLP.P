@@ -4102,7 +4102,6 @@ RULES
 	END;
 
 #ifdef COUGAR
-
  Object: BEGIN
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
@@ -4656,20 +4655,28 @@ RULES
 	IN Structure_view BEGIN
 		Height: 1 px;
 		Width: 1 px;
+#ifdef COUGAR
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
+#else
+		Visibility: 1;
+#endif
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Alternate_view BEGIN
 		Height: 1 pt;
 		Width: 1 pt;
+#ifdef COUGAR
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
+#else
+		Visibility: 1;
+#endif
 		END;
 	IN Anchors_view BEGIN
 		Visibility: 0;
@@ -5301,13 +5308,17 @@ ATTRIBUTES
 		Width: Enclosing . Width;
 	   If PICTURE_UNIT
 		Width: Enclosing . Width;
+#ifdef COUGAR
 	   If Object
 		Width: Enclosing . Width;
+#endif
 	   END;
 	IN Alternate_view
 	   BEGIN
+#ifdef COUGAR
 	   If Object
 		Width: Enclosing . Width;
+#endif
 	   END;
 	END;
 
@@ -5325,13 +5336,17 @@ ATTRIBUTES
 		Height: Enclosed . Height;
 	   If PICTURE_UNIT
 		Height: Enclosed . Height;
+#ifdef COUGAR
 	   If Object
 		Height: Enclosed . Height;
+#endif
 	   END;
 	IN Alternate_view
 	   BEGIN
+#ifdef COUGAR
 	   If Object
 		Height: Enclosed . Height;
+#endif
 	   END;
 	END;
 

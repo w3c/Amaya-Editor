@@ -2851,9 +2851,6 @@ char               *GIname;
 {
   ElementType         elType;
   Element             el;
-#ifdef COUGAR
-  Element             child;
-#endif
   int                 entry;
   char                msgBuffer[MaxBufferLength];
   PtrClosedElement    pClose;
