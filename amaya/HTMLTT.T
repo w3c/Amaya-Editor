@@ -4,14 +4,14 @@ LINELENGTH 78;
 
 COUNTERS
   ItemCounter : Rank of List_Item;
-  AnchorCounter : Set 1 on BODY Add 1 on Anchor;
+  AnchorCounter;
 
 CONST
   TmpFileName = '/tmp/amaya.tmp';
   DoubleQuote  = '"';
   DashLine = '--------------------------------------------------------------';
 VAR
-  OUT_AnchorCounter : Value(AnchorCounter);
+  OUT_AnchorCounter : '[' Value(AnchorCounter) ']';
   TmpFile : TmpFileName;
 
 RULES
@@ -68,6 +68,7 @@ RULES
 
 
  BODY:	BEGIN
+	Set AnchorCounter 0;
 	Indent +4;
 	Indent -4 After;
 	{ --- print the List of References ---}
@@ -388,21 +389,16 @@ RULES
  Anchor: BEGIN
 	If HREF_ AND NOT InternalLink
 	  BEGIN
-  	    Create In TmpFile '[';
+	    Add AnchorCounter 1;
 	    Create In TmpFile  OUT_AnchorCounter;
-	    Create In TmpFile  '] ';
  	    Create Attributes;
 	    Create IN TmpFile '\12' After;
 #ifdef ANCHOR_PREFIX
-	    Create '[' ;
 	    Create OUT_AnchorCounter;
-	    Create ']';
 	    Create Content;
 	    Remove;
 #else
-	    Create '[' After;
 	    Create OUT_AnchorCounter After;
-	    Create ']' After;
 #endif
           END;
 	END;
