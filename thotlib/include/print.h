@@ -33,7 +33,7 @@ typedef int PrintParameter;
 #define PP_PRINTER 0
 #define PP_PS 1
 
-#include "app.h"
+#include "appstruct.h"
 #include "document.h"
 
 #ifndef __CEXTRACT__

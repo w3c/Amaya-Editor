@@ -11,7 +11,7 @@
 /* Thot interface */
 #include "thot_gui.h"
 #include "thot_sys.h"
-#include "app.h"
+#include "appstruct.h"
 #include "application.h"
 #include "attribute.h"
 #include "browser.h"

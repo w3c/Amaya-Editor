@@ -30,7 +30,7 @@
 #include "language.h"
 #include "modif.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 #include "fileaccess.h"
 #include "libmsg.h"
 #include "message.h"

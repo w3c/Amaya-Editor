@@ -28,7 +28,7 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 #include "typecorr.h"
-#include "app.h"
+#include "appstruct.h"
 
 
 #undef THOT_EXPORT

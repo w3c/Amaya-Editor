@@ -34,7 +34,7 @@ typedef struct _APresentation
   }
 APresentation;
 
-#include "app.h"
+#include "appstruct.h"
 #include "appdialogue.h"
 
 #define THOT_EXPORT extern

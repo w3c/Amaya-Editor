@@ -25,7 +25,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "app.h"
+#include "appstruct.h"
 #include "typecorr.h"
 
 #include "applicationapi_f.h"

@@ -13,7 +13,7 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 includedir = @includedir@
 
-INCLUDES= app.h appaction.h application.h attribute.h browser.h content.h \
+INCLUDES= appstruct.h appaction.h application.h attribute.h browser.h content.h \
 dialog.h document.h fileaccess.h genericdriver.h interface.h labelAllocator.h \
 language.h libmsg.h message.h pivot.h plugin.h presentation.h presentdriver.h \
 print.h pschema.h reference.h registry.h selection.h simx.h specificdriver.h \

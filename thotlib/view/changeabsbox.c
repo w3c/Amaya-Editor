@@ -288,7 +288,7 @@ PtrAttribute       *pAttr;
    pRule = NULL;
    *pAttr = NULL;
    *pSPR = NULL;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema->SsPSchema != NULL)
      {
 	/* cherche d'abord parmi les regles de presentation specifique */
 	/* associees a l'element, sauf s'il s'agit d'un pave de presentation */

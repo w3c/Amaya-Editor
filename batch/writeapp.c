@@ -24,7 +24,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "app.h"
+#include "appstruct.h"
 #include "menuaction.h"
 #include "logo.xpm"
 #include "logo.xbm"
@@ -72,7 +72,7 @@ FILE               *file;
    fprintf (file, "#include \"thot_gui.h\"\n");
    fprintf (file, "#include \"thot_sys.h\"\n");
    fprintf (file, "#include \"application.h\"\n");
-   fprintf (file, "#include \"app.h\"\n");
+   fprintf (file, "#include \"appstruct.h\"\n");
    fprintf (file, "#include \"interface.h\"\n");
    fprintf (file, "#include \"%s.h\"\n", fname);
    /* regarde s'il y a des actions de menus non standard */

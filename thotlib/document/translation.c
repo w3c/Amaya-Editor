@@ -32,7 +32,7 @@
 #include "fileaccess.h"
 #include "libmsg.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

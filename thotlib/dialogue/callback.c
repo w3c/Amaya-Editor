@@ -16,7 +16,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "modif.h"
-#include "app.h"
+#include "appstruct.h"
 #include "document.h"
 
 #undef THOT_EXPORT

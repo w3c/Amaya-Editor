@@ -30,7 +30,7 @@
 #include "constpiv.h"
 #include "fileaccess.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 #include "typecorr.h"
 #include "thotdir.h"
 #include "fileaccess.h"

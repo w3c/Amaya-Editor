@@ -21,7 +21,7 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
-#include "app.h"
+#include "appstruct.h"
 #include "constmedia.h"
 #include "appdialogue.h"
 #undef THOT_EXPORT

@@ -25,7 +25,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "modif.h"
-#include "app.h"
+#include "appstruct.h"
 
 #include "memory_f.h"
 #include "readstr_f.h"

@@ -28,7 +28,7 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 #include "message.h"
 #include "typecorr.h"
 #include "appdialogue.h"

@@ -25,7 +25,7 @@
 #include "constmenu.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "app.h"
+#include "appstruct.h"
 #include "appdialogue.h"
 #include "tree.h"
 #include "message.h"

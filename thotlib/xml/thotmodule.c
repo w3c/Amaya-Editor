@@ -8,7 +8,7 @@
 #include "attribute.h"
 #include "document.h"
 #include "application.h"
-#include "app.h"
+#include "appstruct.h"
 #include "appdialogue.h"
 
 

@@ -1,5 +1,5 @@
 #include "application.h"
-#include "app.h"
+#include "appstruct.h"
 
 /*-------------------------------------------------------------------------
   Namespace prefix: strucutres used for storing namespace 

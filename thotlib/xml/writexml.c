@@ -36,7 +36,7 @@
 #include "constpiv.h"
 #include "fileaccess.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 #include "appdialogue.h"
 #include "constxml.h"
 #include "typexml.h"

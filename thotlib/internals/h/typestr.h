@@ -29,7 +29,7 @@
  
      */
  
-#include "app.h"
+#include "appstruct.h"
  
 typedef char    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
 

@@ -27,7 +27,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "language.h"
-#include "app.h"
+#include "appstruct.h"
 #include "appdialogue.h"
 #include "typecorr.h"
 

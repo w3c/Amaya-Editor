@@ -24,7 +24,7 @@
 #include "consttra.h"
 #include "typetra.h"
 #include "appaction.h"
-#include "app.h"
+#include "appstruct.h"
 #include "dialog.h"
 
 #include "thotpattern.h"
