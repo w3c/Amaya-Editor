@@ -1137,16 +1137,15 @@ static int          lastElemEntry = 0;	  /* index in the GIMappingTable of the
 static Attribute    lastAttribute = NULL; /* last attribute created */
 static Attribute    lastAttrElement = NULL;/* element with which the last
 					     attribute has been associated */
-static AttributeMapping* lastAttrEntry = NULL;  /* entry in the AttributeMappingTable
+static AttributeMapping* lastAttrEntry = NULL; /* entry in the AttributeMappingTable
 					     of the attribute being created */
 static ThotBool     UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
+static ThotBool     ReadingAnAttrValue = FALSE;
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
 					     invalid */
-static ThotBool     ReadingHREF = FALSE;  /* reading the value of a HREF
-					     attribute */
 static ThotBool     MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
 static ThotBool     HTMLrootClosed = FALSE;
@@ -4163,8 +4162,7 @@ CHAR_T                c;
 		    attrType.AttrTypeNum = tableEntry->ThotAttribute;
 		    CreateAttr (lastElement, attrType, inputBuffer,
 				(ThotBool)(tableEntry == &pHTMLAttributeMapping[0]));
-		    ReadingHREF = (attrType.AttrTypeNum == HTML_ATTR_HREF_);
-		    if (ReadingHREF)
+		    if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
 		      {
 			 elType = TtaGetElementType (lastElement);
 			 if (elType.ElTypeNum == HTML_EL_Anchor)
@@ -4228,22 +4226,39 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
-   StartOfAttrValue        A quote (or double quote) starting an
-   attribute value has been read.
+   StartOfQuotedAttrValue
+   A quote (or double quote) starting an attribute value has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfAttrValue (CHAR_T c)
+static void         StartOfQuotedAttrValue (CHAR_T c)
 #else
-static void         StartOfAttrValue (c)
+static void         StartOfQuotedAttrValue (c)
 CHAR_T                c;
 
 #endif
 {
+   ReadingAnAttrValue = TRUE;
    if (UnknownAttr)
       /* this is the value of an unknown attribute. keep the quote */
       /* in the input buffer for copying it in the current */
       /* Invalid_attribute */
       PutInBuffer (c);
+}
+
+/*----------------------------------------------------------------------
+   StartOfUnquotedAttrValue
+   The first character of an unquoted attribute value has been read.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         StartOfUnquotedAttrValue (CHAR_T c)
+#else
+static void         StartOfUnquotedAttrValue (c)
+CHAR_T                c;
+
+#endif
+{
+   ReadingAnAttrValue = TRUE;
+   PutInBuffer (c);
 }
 
 /*----------------------------------------------------------------------
@@ -4443,6 +4458,7 @@ CHAR_T                c;
    ThotBool            done;
    UCHAR_T             msgBuffer[MaxMsgLength];
 
+   ReadingAnAttrValue = FALSE;
    if (UnknownAttr)
       /* this is the end of value of an invalid attribute. Keep the */
       /* quote character that ends the value for copying it into the */
@@ -4794,7 +4810,7 @@ int                 code;
 #ifdef __STDC__
 static void         PutAmpersandInDoc ()
 #else
-static void         EndOfEntity ()
+static void         PutAmpersandInDoc ()
 #endif
 {
    ElementType         elType;
@@ -4844,7 +4860,10 @@ CHAR_T                c;
    else
       /* entity not in the table. Print an error message */
      {
-       PutAmpersandInDoc ();
+       if (ReadingAnAttrValue)
+	  PutInBuffer ('&');
+       else
+          PutAmpersandInDoc ();
        for (i = 0; i < LgEntityName; i++)
 	  PutInBuffer (EntityName[i]);
        PutInBuffer (';');
@@ -4939,7 +4958,10 @@ UCHAR_T       c;
 	     /* the entity name read so far is not in the table */
 	     /* invalid entity */
 	     /* put the entity name in the buffer */
-	     PutAmpersandInDoc ();
+	     if (ReadingAnAttrValue)
+	        PutInBuffer ('&');
+	     else
+	        PutAmpersandInDoc ();
 	     for (i = 0; i < LgEntityName; i++)
 		PutInBuffer (EntityName[i]);
 	     /* print an error message only if it's not the first character
@@ -5461,12 +5483,12 @@ static sourceTransition sourceAutomaton[] =
    {4, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {4, '>', (Proc) EndOfAttrNameAndTag, 0},
    {4, '*', (Proc) PutInBuffer, 4},
-/* state 5: begin of attribute value */
-   {5, '\"', (Proc) StartOfAttrValue, 6},
-   {5, '\'', (Proc) StartOfAttrValue, 9},
+/* state 5: expecting an attribute value */
+   {5, '\"', (Proc) StartOfQuotedAttrValue, 6},
+   {5, '\'', (Proc) StartOfQuotedAttrValue, 9},
    {5, 'S', (Proc) Do_nothing, 5},
    {5, '>', (Proc) EndOfStartTag, 0},
-   {5, '*', (Proc) PutInBuffer, 7},
+   {5, '*', (Proc) StartOfUnquotedAttrValue, 7},
 /* state 6: reading an attribute value between double quotes */
    {6, '\"', (Proc) EndOfAttrValue, 8},
    {6, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30... */
@@ -7273,6 +7295,7 @@ Document            doc;
    lastAttrElement = NULL;
    lastAttrEntry = NULL;
    UnknownAttr = FALSE;
+   ReadingAnAttrValue = FALSE;
    LgEntityName = 0;
    EntityTableEntry = 0;
    CharRank = 0;
@@ -7472,9 +7495,9 @@ ThotBool	    plainText;
   lastAttrElement = NULL;
   lastAttrEntry = NULL;
   UnknownAttr = FALSE;
+  ReadingAnAttrValue = FALSE;
   CommentText = NULL;
   UnknownTag = FALSE;
-  ReadingHREF = FALSE;
   MergeText = FALSE;
   LgEntityName = 0;
   EntityTableEntry = 0;
