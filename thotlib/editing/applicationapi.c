@@ -104,10 +104,11 @@ void                CloseInsertion ()
   ----------------------------------------------------------------------*/
 static void         ErrorHandler ()
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    signal (SIGBUS, SIG_DFL);
-   signal (SIGSEGV, SIG_DFL);
    signal (SIGPIPE, SIG_IGN);
+#  endif /* _WINDOWS */
+   signal (SIGSEGV, SIG_DFL);
 #ifdef SIGABRT
    signal (SIGABRT, SIG_DFL);
 #else
@@ -120,7 +121,6 @@ static void         ErrorHandler ()
        perror (TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
        (*ThotLocalActions [T_backuponfatal]) ();
      }
-#endif /* _WINDOWS */
    exit (1);
 }
 
@@ -130,13 +130,13 @@ static void         ErrorHandler ()
   ----------------------------------------------------------------------*/
 static void         QuitHandler ()
 {
-#  ifndef _WINDOWS
    signal (SIGINT, ErrorHandler);
+#  ifndef _WINDOWS 
    signal (SIGQUIT, SIG_DFL);
+#  endif /* _WINDOWS */
    signal (SIGTERM, ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
-#  endif /* _WINDOWS */
    exit (1);
 #  ifndef _WINDOWS
    signal (SIGINT, QuitHandler);
@@ -152,6 +152,10 @@ void                InitErrorHandler ()
 {
 #  ifndef _WINDOWS
    signal (SIGBUS, ErrorHandler);
+   signal (SIGHUP, ErrorHandler);
+   signal (SIGQUIT, QuitHandler);
+#  endif /* _WINDOWS */
+
    signal (SIGSEGV, ErrorHandler);
 #  ifdef SIGABRT
    signal (SIGABRT, ErrorHandler);
@@ -159,11 +163,9 @@ void                InitErrorHandler ()
    signal (SIGIOT, ErrorHandler);
 #  endif
 
-   signal (SIGHUP, ErrorHandler);
    signal (SIGINT, QuitHandler);
-   signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#  endif /* _WINDOWS */
+/* #  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -233,10 +235,10 @@ char               *applicationName;
 	       exit (1);
 	 }
 
-#ifndef _WINDOWS
+/* #ifndef _WINDOWS */
    /* init the system error signal handler */
    InitErrorHandler ();
-#endif /* _WINDOWS */
+/* #endif /* _WINDOWS */
 
 #ifndef NODISPLAY
    /* no external action declared at that time */
