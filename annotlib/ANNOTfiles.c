@@ -31,7 +31,7 @@ void ANNOT_SetPath (document)
      Document document;
 #endif /* __STDC__*/
 {
-  STRING dirList = TtaGetMemory (2000);
+  CHAR_T  *dirList = TtaGetMemory (2000);
 
   TtaGetDocumentPath (dirList, 2000);
   strcat (dirList, ":");
@@ -70,6 +70,7 @@ Document ANNOT_NewDocument (doc)
   fname = urlname + 5;
 
   /* @@ 10 should be docAnnot, but I have a problem to set it up */
+  /* "annot is the title of the window */
   annotDoc = InitDocView (0, "annot", 10, 0, FALSE);
 
   if (annotDoc == 0) 
@@ -80,9 +81,11 @@ Document ANNOT_NewDocument (doc)
   else
     {
 #if 0
-      TtaSetDocumentName (annotDoc, "Annotation");
+      TtaSetDocumentName (annotDoc, TEXT("Annotation");
       TtaSetDocumentDirectory (annotDoc, annot_dir);
 #endif
+
+      /* intialize the (amaya) metadata related to a document */
       if (DocumentURLs[annotDoc])
 	TtaFreeMemory (DocumentURLs[annotDoc]);
       DocumentURLs[annotDoc] = urlname;
@@ -97,16 +100,16 @@ Document ANNOT_NewDocument (doc)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_InitDocumentMeta (docAnnot, document)
+   Procedure GetMetaData
   -----------------------------------------------------------------------
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-AnnotMetaDataElement *GetMetaData (Document doc, Document annotDoc)
+AnnotMeta *GetMetaData (Document doc, Document annotDoc)
 #endif
 {
-  AnnotMetaDataElement *me;
+  AnnotMeta *me;
   STRING annotFile;
 
   /* @@@ why I can't use docAnnot??? what is interfering? */
@@ -153,7 +156,7 @@ void  ANNOT_InitDocumentMeta (docAnnot, document)
   STRING      annot_type;
   STRING      annot_source;
   CHAR_T      tempfile[MAX_LENGTH];
-  AnnotMetaDataElement *annot_metadata;
+  AnnotMeta   *annot_metadata;
 
   /* if it's a new annotation, we compute the stuff, otherwise,
      we copy it from the existing metadata */
@@ -605,7 +608,7 @@ void ANNOT_PrepareAnnotView (document)
 }
 
 /***************************************************
- I've not yet used/cleaning the following legacy functions 
+ I've not yet used/cleaned the following legacy functions 
 ***************************************************/
 
 /*-----------------------------------------------------------------------

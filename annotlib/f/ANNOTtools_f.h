@@ -6,27 +6,55 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void List_add ( List **me,
+                       char *object );
+extern void List_del ( List **me );
+extern AnnotMeta *AnnotMeta_new ( void );
+extern void AnnotList_free ( List *annot_list );
+extern void AnnotList_print ( List *annot_list );
+extern Element SearchAnnotation ( Document doc,
+                                  STRING annotDoc );
+extern Element SearchElementInDoc ( Document doc,
+                                    int elTypeNum );
+extern STRING SearchAttributeInElt ( Document doc,
+                                     Element el,
+                                     int attrTypeNum );
+extern void SubstituteCharInString ( char *buffer,
+                                     char old,
+                                     char new );
+extern char *GetTempName ( const char *dir,
+                           const char *prefix );
 extern ThotBool IsAnnotationDocument ( Document document );
-extern ThotBool IsAnnotationLink ( Document document, Element element );
+extern ThotBool IsAnnotationLink ( Document document,
+                                   Element element );
 extern ThotBool IsInTable ( STRING docName );
-extern Document AnnotationTargetDocument ( Document docAnnot );
-extern Element SearchAnnotation ( Document document, STRING annotName );
-extern Element SearchElementInDoc ( Document document, int elTypeNum );
-extern STRING SearchAttributeInElt ( Document document, Element element, int attrTypeNum );
-extern void SubstituteCharInString (char *buffer, char old, char new);
-extern char *GetTempName (const char *dir, const char *prefix);
+extern Document AnnotationTargetDocument ( Document annotDoc );
+
 #else /* __STDC__ */
 
+extern void List_add (/* List **me,
+                         char *object */);
+extern void List_del (/* List **me */);
+extern AnnotMeta *AnnotMeta_new (/* void */);
+extern void AnnotList_free (/* List *annot_list */);
+extern void AnnotList_print (/* List *annot_list */);
+extern Element SearchAnnotation (/* Document doc,
+                                    STRING annotDoc */);
+extern Element SearchElementInDoc (/* Document doc,
+                                      int elTypeNum */);
+extern STRING SearchAttributeInElt (/* Document doc,
+                                       Element el,
+                                       int attrTypeNum */);
+extern void SubstituteCharInString (/* char *buffer,
+                                       char old,
+                                       char new */);
+extern char *GetTempName (/* const char *dir,
+                             const char *prefix */);
 extern ThotBool IsAnnotationDocument (/* Document document */);
-extern ThotBool IsAnnotationLink (/* Document document, Element element */);
+extern ThotBool IsAnnotationLink (/* Document document,
+                                     Element element */);
 extern ThotBool IsInTable (/* STRING docName */);
-extern Document AnnotationTargetDocument (/* Document docAnnot */);
-extern Element SearchAnnotation (/* Document document, STRING annotName */);
-extern Element SearchElementInDoc (/* Document document, int elTypeNum */);
-extern STRING SearchAttributeInElt (/* Document document, Element element, int attrTypeNum */);
-extern void SubstituteCharInString (/* char *buffer, char old, char new */);
-extern char *GetTempName (/* const char *dir, const char *prefix */);
+extern Document AnnotationTargetDocument (/* Document annotDoc */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-
-

@@ -7,35 +7,19 @@
  */
 
 /*
- * rdfparse.c : parses an annotation RDF structure and intializes
+ * rdfparse.c : parses an annotation RDF schema and intializes
                 the corresponding memory elements 
  *
  * Author: J. Kahan (W3C/INRIA)
  *
  */
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "xmlparse.h"
-
-/* the info we're interested in in an annotation */
-typedef struct _AnnotMeta {
-  char *about;
-  char *source_url;
-  char *date;
-  char *creator;
-  char *content_type;
-  char *content_length;
-  char *body_url;
-  char *body;
-} AnnotMeta;
-
-/* basic linked list structure */
-typedef struct _List {
-  void *object;
-  struct _List *next;
-} List;
+#include "annotlib.h"
 
 /********************** static variables ***********************/
 
@@ -54,16 +38,16 @@ AnnotMeta *annot; /* the current annotation */
 List *element_list;
 
 /* a list of annotations */
-List *annot_list; 
+List *annot_list;
 
 /********************** common functions ***********************/
 
 /* ------------------------------------------------------------
-   StrAllocCat
+   RDFStrAllocCat
    dynamically concatenate a string into the buffer to which
    cdata_buff is pointing to.
    ------------------------------------------------------------*/
-static void StrAllocCat (const char *txt, int txtlen)
+static void RDF_StrAllocCat (const char *txt, int txtlen)
 {
   char *ptr;
   
@@ -76,83 +60,35 @@ static void StrAllocCat (const char *txt, int txtlen)
 }
 
 /* ------------------------------------------------------------
-   list_add
-   Adds a new element to the beginning of a linked
-   list.
+   ParseIdFragment
+   Extracts the id (or in this case the thotlib labels)
+   from a URL and reoves this info from the URL.
    ------------------------------------------------------------*/
-void list_add (List **me, char *object)
+static void ParseIdFragment (AnnotMeta *annot)
 {
-  List *new;
-
-  new = (List *) malloc (sizeof (List));
-  new->object = object;
-  if (!*me)
-      new->next = NULL;
-  else
-      new->next = *me;
-  *me = new;
-}
-
-/* ------------------------------------------------------------
-   list_del
-   Deletes the first element of a linked list.
-   ------------------------------------------------------------*/
-void list_del (List **me)
-{
-  List *ptr;
-
-  if (*me)
+  CHAR_T *c, *d;
+  
+  c = ustrrchr (annot->source_url, TEXT('#'));
+  if (c)
     {
-      ptr = (List *) (*me)->next;
-      free (*me);
-      *me = ptr;
-    }
-}
-
-/* ------------------------------------------------------------
-   new_annotMeta
-   Creates a new annotation metadata element
-   ------------------------------------------------------------*/
-AnnotMeta *new_annotMeta (void)
-{
-  AnnotMeta *new;
-
-  new = (AnnotMeta *) malloc (sizeof (AnnotMeta));
-  if (new)
-    memset (new, 0, sizeof (AnnotMeta));
-  return new;
-}
-
-/* ------------------------------------------------------------
-   free_annot_list
-   Frees a linked list of annotations.
-   ------------------------------------------------------------*/
-void free_annot_list (List *annot_list)
-{
-  AnnotMeta *annot;
-  List *list_ptr, *next;
-
-  list_ptr = annot_list;
-  while (list_ptr)
-    {
-      annot = (AnnotMeta *) list_ptr->object;
-      if (annot->about) 
-	free (annot->about);
-      if (annot->source_url) 
-	free (annot->source_url);
-      if (annot->creator) 
-	free (annot->creator);
-      if (annot->content_type) 
-	free (annot->content_type);
-      if (annot->content_length) 
-	free (annot->content_length);
-      if (annot->body_url) 
-	free (annot->body_url);
-      if (annot->body) 
-	free (annot->body);
-      next = list_ptr->next;
-      free (list_ptr);
-      list_ptr = next;
+      *c = WC_EOS;
+      c += 4;
+      d = c;
+      while (*d)
+	{
+	  switch (*d) 
+	    {
+	    case TEXT('|'):
+	      *d = ' ';
+	      break;
+	    case TEXT(')'):
+	      *d = WC_EOS;
+	      break;
+	    }
+	  d++;
+	}
+      usscanf (c, TEXT("%s %d %s %d"), annot->labf, (&annot->c1),
+	      annot->labl, &(annot->cl));
     }
 }
 
@@ -164,7 +100,7 @@ void free_annot_list (List *annot_list)
    ------------------------------------------------------------*/
 static void default_hndl(void *data, const char *s, int len)
 {
-  StrAllocCat (s, len);
+  RDF_StrAllocCat (s, len);
 }  /* End default_hndl */
 
 /* ------------------------------------------------------------
@@ -190,18 +126,22 @@ static void start_hndl(void *data, const char *el, const char **attr)
   if (!strcmp (el, "a:Annotation"))
     /* the start of a new annotation, we add it to the list */
     {
-      annot =  new_annotMeta ();
-      list_add (&annot_list, (void *) annot);
+      annot =  AnnotMeta_new ();
+      List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
 	  annot->about = strdup ((char *) attr[1]);
     }
   else if (!strcmp (el, "xlink:href")) 
     {
       if (attr[0] && !strcmp (attr[0], "r:resource"))
+	{
 	  annot->source_url = strdup ((char *) attr[1]);
-    } 
+	  /* extract the "id" fragment from the URL */
+	  ParseIdFragment (annot);
+	} 
+    }
   else if (!strcmp (el, "d:creator")) 
-    cdata_buff = &(annot->creator);
+    cdata_buff = &(annot->author);
   else if (!strcmp (el, "d:date"))
     cdata_buff = &(annot->date);
   else if (!strcmp (el, "http:ContentType"))
@@ -228,7 +168,7 @@ static void start_hndl(void *data, const char *el, const char **attr)
       *cdata_buff = NULL;
       cdata_buff_len = 0;
       char_p = strdup (el);
-      list_add (&element_list, (void *) char_p);
+      List_add (&element_list, (void *) char_p);
     }
   else if (literal)
     {
@@ -247,7 +187,7 @@ static void start_hndl(void *data, const char *el, const char **attr)
    ------------------------------------------------------------*/
 static void end_hndl(void *data, const char *el) 
 {
-  list_del (&element_list);
+  List_del (&element_list);
 
   if (! strcmp (el, "http:Body"))
     /* turn off the literal mode */
@@ -273,7 +213,7 @@ static void end_hndl(void *data, const char *el)
 static void  char_hndl (void *data, const char *txt, int txtlen) 
 {
    if (cdata_buff)
-      StrAllocCat (txt, txtlen);
+      RDF_StrAllocCat (txt, txtlen);
 
 }  /* End char_hndl */
 
@@ -292,109 +232,99 @@ static void handler_init (XML_Parser p)
   literal = 0;
 }
 
+/********************** API entry point ********************/
+
 /* ------------------------------------------------------------
-   print_annot_list
-   Prints the contents For each element of a linked list of 
-   annotations metadata.
+   ParseRDFFile
+   Initializes the expat handlers.
    ------------------------------------------------------------*/
-static void print_annot_list (List *annot_list)
-{
-  AnnotMeta *annot;
-  List *annot_ptr;
-
-  annot_ptr = annot_list;
-  while (annot_ptr)
-    {
-      annot = (AnnotMeta *) annot_ptr->object;
-      printf("\n=====annotation meta data =========\n");  
-      if (annot->about)
-	printf ("annot about URL = %s\n", annot->about);
-      if (annot->source_url)
-	printf ("annot source URL = %s\n", annot->source_url);
-      if (annot->creator) 
-	printf ("creator is = %s\n", annot->creator);
-      if (annot->content_type)
-	printf ("content_type is = %s\n", annot->content_type);
-      if (annot->content_length) 
-	printf ("content_length is = %s\n", annot->content_length);
-      if (annot->body_url)
-	printf ("body url is = %s\n", annot->body_url);
-      if (annot->body)
-	  printf ("======= body =============\n%s", annot->body);
-      printf ("=========================\n");
-      annot_ptr = annot_ptr->next;
-    }
-  printf ("\n");
-}
-
-int main (int argc, char *argv[])
+List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
   /* the file input buffer */
-  char Buff[512];
-
+  char buff[512];
+  FILE *fp;
   XML_Parser p;
+  ThotBool error;
 
-  if (argc <2 || (strcmp (argv[1], "-single")
-      && strcmp (argv[1], "-list")))
-    {
-      fprintf (stderr, "Usage: %s [-single || -list]\n", argv[0]);
-      exit (-1);
-    }
-  else if (!strcmp (argv[1], "-single"))
+  annot_list = NULL;
+  error = FALSE;
+
+  fp = fopen (file_name, "r");
+  if (!fp)  /* annotation index file doesn't exist */
+      return NULL;
+
+  if (type == ANNOT_SINGLE)
     {
       /* we're parsing a single annotation. We create the element
 	 where we'll store it (in a list on annotations, the elements
 	 are created automatically) */
-      annot =  new_annotMeta ();
-      list_add (&annot_list, (void *) annot);
-    } 
+      annot =  AnnotMeta_new ();
+      List_add (&annot_list, (void *) annot);
+    }
+  else if (type != ANNOT_LIST)
+    {
+      fclose (fp);
+      return NULL;
+    }
 
-  /*
-    p = XML_ParserCreateNS (NULL, ':');
-  */
-
+#ifdef USE_NS
+  p = XML_ParserCreateNS (NULL, ':');
+#else
   p = XML_ParserCreate (NULL);
+#endif /* USE_NS */
+
   if (!p)
     {
       fprintf(stderr, "Couldn't allocate memory for parser\n");
-      exit(-1);
+      fclose (fp);
+      AnnotList_free (annot_list);
+      return NULL;
     }
 
   handler_init (p);
 
   /* start parsing */
-
  for (;;) {
     int done;
     int len;
-    fgets(Buff, sizeof(Buff), stdin);
-    len = strlen(Buff);
-    if (ferror(stdin)) {
-      fprintf(stderr, "Read error\n");
-      exit(-1);
+    fgets(buff, sizeof(buff), fp);
+    if (ferror(fp)) {
+      fprintf (stderr, "Read error\n");
+      error = TRUE;
+      break;
     }
-    done = feof(stdin);
+    done = feof(fp);
     if (done)
 	len = 0;
-    if (! XML_Parse(p, Buff, len, done)) {
-      fprintf(stderr, "Parse error at line %d:\n%s\n",
-              XML_GetCurrentLineNumber(p),
-              XML_ErrorString(XML_GetErrorCode(p)));
-      exit(-1);
-    }
-
+    else
+      len = strlen (buff);
+    if (! XML_Parse(p, buff, len, done)) 
+      {
+ 	fprintf (stderr, "Parse error at line %d:\n%s\n",
+		XML_GetCurrentLineNumber(p),
+		XML_ErrorString(XML_GetErrorCode(p)));
+	error = TRUE;
+	break;
+      }
     if (done)
       break;
-  }
+ }
 
+ fclose (fp);
+
+ if (error)
+   {
+     /* clear data structure */
+     AnnotList_free (annot_list);
+     annot_list = NULL;
+   }
+ 
  /* output whatever we parsed */
- print_annot_list (annot_list);
+ AnnotList_print (annot_list);
 
- /* free allocated memory */
- free_annot_list (annot_list);
-
- exit (0);
+ return (annot_list);
 }
+
 
 
 

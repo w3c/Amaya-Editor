@@ -6,13 +6,37 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *LINK_GetAnnotationIndexFile (char *source_url);
-extern void LINK_New ( Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN ); 
-extern void LINK_RemoveImage ( Document document, CHAR_T *annotName );
-extern void LINK_AddLinkToSource ( Document source_doc, CHAR_T *annot_file, CHAR_T *labf, int c1, CHAR_T *labl, int cN );
-extern void LINK_SaveLink (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN );
-extern void LINK_RemoveLink ( Document document, CHAR_T *annotName );
-extern void LINK_LoadAnnotations ( Document document, CHAR_T *annotIndex );
+extern char *LINK_GetAnnotationIndexFile ( char *source_url );
+extern void LINK_New ( Document source_doc,
+                       Document annot_doc,
+                       CHAR_T *labf,
+                       int c1,
+                       CHAR_T *labl,
+                       int cN );
+extern void LINK_AddLinkToSource ( Document source_doc,
+                                   CHAR_T *annot_file,
+                                   CHAR_T *labf,
+                                   int c1,
+                                   CHAR_T *labl,
+                                   int cN );
+extern void LINK_SaveLink ( Document source_doc,
+                            Document annot_doc,
+                            CHAR_T *labf,
+                            int c1,
+                            CHAR_T *labl,
+                            int cN );
+extern void LINK_DelMetaFromMemory ( Document doc );
+extern void LINK_AddMetaToMemory ( Document doc,
+                                   CHAR_T *annotUser,
+                                   CHAR_T *annotDate,
+                                   CHAR_T *annotType,
+                                   CHAR_T *annotFile );
+extern void LINK_LoadAnnotations ( Document doc,
+                                   CHAR_T *annotIndex );
+extern void LINK_Remove ( Document document,
+                          CHAR_T *annotName );
+extern void LINK_RemoveLink ( Document document,
+                              CHAR_T *annotName );
 extern void LINK_HideAnnotations ( Document document );
 extern void LINK_ParcoursAnchor ( Document document );
 extern void LINK_UpdateAnnotations ( Document document );
@@ -20,20 +44,39 @@ extern void LINK_UpdateAnnotations ( Document document );
 #else /* __STDC__ */
 
 extern char *LINK_GetAnnotationIndexFile (/* char *source_url */);
-extern void LINK_New (/* Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN */);
-extern void LINK_RemoveImage (/* Document document, CHAR_T *annotName */);
-extern void LINK_AddLinkToSource (/* Document source_doc, CHAR_T *annot_file, CHAR_T *labf, int c1, CHAR_T *labl, int cN */);
-extern void LINK_SaveLink (/* Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN */);
-extern void LINK_RemoveLink (/* Document document, CHAR_T *annotName */);
-extern void LINK_LoadAnnotations (/* Document document, CHAR_T *annotIndex */);
+extern void LINK_New (/* Document source_doc,
+                         Document annot_doc,
+                         CHAR_T *labf,
+                         int c1,
+                         CHAR_T *labl,
+                         int cN */);
+extern void LINK_AddLinkToSource (/* Document source_doc,
+                                     CHAR_T *annot_file,
+                                     CHAR_T *labf,
+                                     int c1,
+                                     CHAR_T *labl,
+                                     int cN */);
+extern void LINK_SaveLink (/* Document source_doc,
+                              Document annot_doc,
+                              CHAR_T *labf,
+                              int c1,
+                              CHAR_T *labl,
+                              int cN */);
+extern void LINK_DelMetaFromMemory (/* Document doc */);
+extern void LINK_AddMetaToMemory (/* Document doc,
+                                     CHAR_T *annotUser,
+                                     CHAR_T *annotDate,
+                                     CHAR_T *annotType,
+                                     CHAR_T *annotFile */);
+extern void LINK_LoadAnnotations (/* Document doc,
+                                     CHAR_T *annotIndex */);
+extern void LINK_Remove (/* Document document,
+                            CHAR_T *annotName */);
+extern void LINK_RemoveLink (/* Document document,
+                                CHAR_T *annotName */);
 extern void LINK_HideAnnotations (/* Document document */);
 extern void LINK_ParcoursAnchor (/* Document document */);
 extern void LINK_UpdateAnnotations (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-
-
-
-
-

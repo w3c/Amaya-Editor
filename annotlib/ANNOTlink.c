@@ -146,7 +146,8 @@ int cN;
   view      = TtaGetViewFromName (document, "Formatted_view");
   element   = TtaSearchElementByLabel(tabRefAnnot[docAnnot].labf, TtaGetMainRoot (source_doc));
 
-  /* Si le lien d'annotation n'existe, on le rajoute dans le document et dans le fichier de liens */
+  /* Si le lien d'annotation n'existe, on le rajoute dans le document et 
+     dans le fichier de liens */
   if (!SearchAnnotation (source_doc, annotName))
     {
       LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
@@ -275,13 +276,13 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_DelMetaToMemory
+  Procedure LINK_DelMetaToMemory
   -----------------------------------------------------------------------
-  Copies the parsed metadata to memory
+  Frees the memory used by the parsed metadata
   -----------------------------------------------------------------------*/
 void LINK_DelMetaFromMemory (Document doc)
 {
-  AnnotMetaDataElement *me, *next;
+  AnnotMeta *me, *next;
   
   if (!AnnotMetaDataList[doc])
     return;
@@ -306,10 +307,10 @@ void LINK_DelMetaFromMemory (Document doc)
   -----------------------------------------------------------------------*/
 void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, CHAR_T *annotType, CHAR_T *annotFile)
 {
-  AnnotMetaDataElement *me;
+  AnnotMeta *me;
 
   /* create a new element */
-  me = TtaGetMemory (sizeof (AnnotMetaDataElement));
+  me = TtaGetMemory (sizeof (AnnotMeta));
   me->author = TtaStrdup (annotUser);
   me->date = TtaStrdup (annotDate);
   me->type = TtaStrdup (annotType);
@@ -347,53 +348,42 @@ void LINK_LoadAnnotations (doc, annotIndex)
 {
   View    view;
   Element el, body;
-  CHAR_T  *annotFile, *labf, *labl, *annotUser;
-  FILE    *fp;
-  int     c1, cN;
-  char    buffer[MAX_LENGTH];
+  List *annot_list;
+  AnnotMeta *annot;
 
-  if (!annotIndex)  /* there are no annotations */
+  if (!annotIndex || !(TtaFileExist (annotIndex)))
+    /* there are no annotations */
+    return;
+  
+  annot_list = RDF_parseFile ("/tmp/rdf.tmp", ANNOT_SINGLE);
+
+  if (!annot_list)
+    /* we didn't read any annotation */
     return;
 
-  fp = fopen (annotIndex, "r");
-
-  if (!fp)  /* annotation index file doesn't exist */
-      return;
-
-  /* Parcours et affichage de la liste de liens */
+  /* Insert the annotations in the body */
   /* @@@ possible memory bug */
-  annotFile = TtaGetMemory (MAX_LENGTH);
-  annotUser = TtaGetMemory (MAX_LENGTH);
-  labf    = TtaGetMemory (10);
-  labl    = TtaGetMemory (10);
   view = TtaGetViewFromName (doc, "Formatted_view");
   body = SearchElementInDoc (doc, HTML_EL_BODY);
-  while (ufgets (buffer, MAX_LENGTH, fp))
-  {
-    SubstituteCharInString (buffer, '|', ' ');
-    usscanf (buffer, 
-	     "%s %s %s %d %s %d\n", 
-	     annotUser, 
-	     annotFile, 
-	     labf, 
-	     &c1, 
-	     labl, 
-	     &cN);
-    if ((el = TtaSearchElementByLabel (labf, body)) == NULL)
+  
+  annot = (AnnotMeta *) annot_list->object;
+
+  while (annot)
+    {
+    if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
       fprintf (stderr, "This annotations has lost its parent!\n");
     else 
       {
-	LINK_AddLinkToSource (doc, annotFile, labf, c1, labl, cN);
+	LINK_AddLinkToSource (doc, annot->body_url, annot->labf, annot->c1,
+			      annot->labl, annot->cl);
+	LINK_AddMetaToMemory (doc, annot->author, TEXT("date"), TEXT("Something"),
+			      annot->body_url);
+#if 0
 	LINK_AddMetaToMemory (doc, annotUser, TEXT("date"), TEXT("Something"),
 			      annotFile);
+#endif
       }
   }
-  
-  TtaFreeMemory (annotFile);
-  TtaFreeMemory (annotUser);
-  TtaFreeMemory (labf);
-  TtaFreeMemory (labl);
-  fclose (fp);
 }
 
 /***************************************************
@@ -734,6 +724,10 @@ void LINK_UpdateAnnotations (document)
   fileClose (linkFile, fileName);
 #endif
 }
+
+
+
+
 
 
 

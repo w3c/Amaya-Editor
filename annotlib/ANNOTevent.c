@@ -144,7 +144,7 @@ void ANNOT_Quit ()
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_AutoLoad
+   ANNOT_AutoLoad
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 
@@ -163,7 +163,7 @@ View view;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure RemoteLoad_callback
+  RemoteLoad_callback
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -219,7 +219,9 @@ View view;
   char *annotUrl;
   REMOTELOAD_context *ctx;
   int res;
+  List *annot_list;
 
+  /* only HTML documents can be annotated */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
     return;
@@ -227,15 +229,21 @@ View view;
   /*
    * Parsing test!
   */
-#if 0
-  RDFParseFile ("/tmp/rdf.tmp");
-#endif
+  
+  annot_list = RDF_parseFile ("/tmp/rdf.tmp", ANNOT_SINGLE);
+  AnnotList_print (annot_list);
+  AnnotList_free (annot_list);
+  return;
 
   /*
    * load the local annotations 
    */
   annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
+#if 0
   LINK_LoadAnnotations (doc, annotIndex);
+#else
+  LINK_LoadAnnotations (doc, "/tmp/rdfquery.xml");
+#endif
   TtaFreeMemory (annotIndex);
 
   /* 
@@ -275,7 +283,7 @@ View view;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Create (document, view)
+  ANNOT_Create
   -----------------------------------------------------------------------
    Creates an annotation on the selected text. If there's no selected
    text, it doesn't do anything.
@@ -349,7 +357,7 @@ int doc;
 
   /* @@@ should be long */
   int length = 0;
-  AnnotMetaDataElement *annot_metadata;
+  AnnotMeta *annot_metadata;
 
   /* @@ grr, how can I find the orig doc? I need to store this info */
   annot_metadata = GetMetaData (1, doc);
@@ -483,9 +491,7 @@ View view;
 #endif /* __STDC__*/
 {
   ElementType elType;
-  char *annotIndex;
   char *annotUrl;
-  char *tmpfile;
   /*  char *annotServer = "http://tuvalu.inrialpes.fr:7990"; */
   char *annotServer = "http://quake.w3.org"; 
 
@@ -598,19 +604,6 @@ void ANNOT_Delete (document, view)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_SaveProcedure ()
-  -----------------------------------------------------------------------
-  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ANNOT_SaveProcedure ()
-#else /* __STDC__*/
-static void ANNOT_SaveProcedure ()
-#endif /* __STDC__*/
-{
-  printf ("MEUH\n");
-}
-
-/*-----------------------------------------------------------------------
    Procedure ANNOT_Save (docAnnot, viewAnnot)
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -640,10 +633,6 @@ void ANNOT_Save (docAnnot, viewAnnot)
     /* Creation d'un nouveau lien d'annotation */
 #if 0
     LINK_New (docAnnot);
-#endif
-#if 0
-    printf ("%s\n", TtaGetMessage (AllianceMsgTabId, ALL_AnnotNotif));
-    printf ("%s\n", TtaGetMessage (AllianceMsgTabId, ALL_AnnotNotifLabel));
 #endif
     printf ("1\n");
     /* Gestion du cas ou une annotation a ete creee sur un document non sauvegarde */
@@ -687,12 +676,15 @@ printf ("6\n");
 printf ("7\n");
     }
 printf ("8\n");
-
-#if 0
-    /* Notification aux autres utilisateurs */
-    ANNOT_NotifyLocalUsers (document, annotName);
-    ANNOT_NotifyToRemoteSites (document, annotName);
-#endif
   }
 }
+
+
+
+
+
+
+
+
+
 

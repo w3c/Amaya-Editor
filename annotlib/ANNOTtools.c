@@ -15,6 +15,9 @@
  *                  for the byzance collaborative work application
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "annotlib.h"
 
 #ifdef _WINDOWS
@@ -23,9 +26,137 @@
 #define TMPDIR "TMPDIR"
 #endif /* _WINDOWS */
 
+/****************************************************************
+ ** 
+ ** List Handling functions
+ **
+ ****************************************************************/
+/* ------------------------------------------------------------
+   list_add
+   Adds a new element to the beginning of a linked
+   list.
+   ------------------------------------------------------------*/
+void List_add (List **me, char *object)
+{
+  List *new;
+
+  new = (List *) malloc (sizeof (List));
+  new->object = object;
+  if (!*me)
+      new->next = NULL;
+  else
+      new->next = *me;
+  *me = new;
+}
+
+/* ------------------------------------------------------------
+   list_del
+   Deletes the first element of a linked list.
+   ------------------------------------------------------------*/
+void List_del (List **me)
+{
+  List *ptr;
+
+  if (*me)
+    {
+      ptr = (List *) (*me)->next;
+      free (*me);
+      *me = ptr;
+    }
+}
+
+/* ------------------------------------------------------------
+   AnnotMeta_new
+   Creates a new annotation metadata element
+   ------------------------------------------------------------*/
+AnnotMeta *AnnotMeta_new (void)
+{
+  AnnotMeta *new;
+
+  new = (AnnotMeta *) malloc (sizeof (AnnotMeta));
+  if (new)
+    memset (new, 0, sizeof (AnnotMeta));
+  return new;
+}
+
+/* ------------------------------------------------------------
+   AnnotList_free
+   Frees a linked list of annotations.
+   ------------------------------------------------------------*/
+void AnnotList_free (List *annot_list)
+{
+  AnnotMeta *annot;
+  List *list_ptr, *next;
+
+  list_ptr = annot_list;
+  while (list_ptr)
+    {
+      annot = (AnnotMeta *) list_ptr->object;
+      if (annot->about) 
+	free (annot->about);
+      if (annot->source_url) 
+	free (annot->source_url);
+      if (annot->author) 
+	free (annot->author);
+      if (annot->content_type) 
+	free (annot->content_type);
+      if (annot->content_length) 
+	free (annot->content_length);
+      if (annot->body_url) 
+	free (annot->body_url);
+      if (annot->body) 
+	free (annot->body);
+      next = list_ptr->next;
+      free (list_ptr);
+      list_ptr = next;
+    }
+}
+ 
+/* ------------------------------------------------------------
+   AnnotList_print
+   Prints the contents For each element of a linked list of 
+   annotations metadata.
+   ------------------------------------------------------------*/
+void AnnotList_print (List *annot_list)
+{
+  AnnotMeta *annot;
+  List *annot_ptr;
+
+  annot_ptr = annot_list;
+  while (annot_ptr)
+    {
+      annot = (AnnotMeta *) annot_ptr->object;
+      printf("\n=====annotation meta data =========\n");  
+      if (annot->about)
+	printf ("annot about URL = %s\n", annot->about);
+      if (annot->source_url)
+	printf ("annot source URL = %s\n", annot->source_url);
+      if (annot->labf)
+	printf ("annot labf = %s, c1 = %d\n", annot->labf, annot->c1);
+      if (annot->labl)
+	printf ("annot labl = %s, cl = %d\n", annot->labl, annot->cl);
+      if (annot->author) 
+	printf ("author is = %s\n", annot->author);
+      if (annot->content_type)
+	printf ("content_type is = %s\n", annot->content_type);
+      if (annot->content_length) 
+	printf ("content_length is = %s\n", annot->content_length);
+      if (annot->body_url)
+	printf ("body url is = %s\n", annot->body_url);
+      if (annot->body)
+	  printf ("======= body =============\n%s", annot->body);
+      printf ("=========================\n");
+      annot_ptr = annot_ptr->next;
+    }
+  printf ("\n");
+}
+
+/***************************************************
+ **
+ **************************************************/
+
 /*-----------------------------------------------------------------------
-   Procedure SearchAnnotation (doc, annotDoc)
-  -----------------------------------------------------------------------
+   SearchAnnotation
    Searches doc and returns the link element that points to annotDoc, or
    NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
@@ -72,8 +203,7 @@ Element SearchAnnotation (doc, annotDoc)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure SearchElementInDoc (doc, elTypeNum)
-  -----------------------------------------------------------------------
+   SearchElementInDoc
    Returns the first element of type elTypeNum found in the document
    or NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
@@ -97,8 +227,7 @@ Element SearchElementInDoc (doc, elTypeNum)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure SearchAttributeInElt (doc, el, attrTypeNum)
-  -----------------------------------------------------------------------
+   SearchAttributeInElt (doc, el, attrTypeNum)
    Returns the value of attribute type attrTypeNum if it exists in the
    document element or NULL otherwise.
   -----------------------------------------------------------------------*/
@@ -328,6 +457,14 @@ Document AnnotationTargetDocument (annotDoc)
 
   return TtaGetDocumentFromName (docName);
 }
+
+
+
+
+
+
+
+
 
 
 

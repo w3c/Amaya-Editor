@@ -6,10 +6,28 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void start_hndl ( void *data,
+                         const char *el,
+                         const char **attr_list );
+extern void end_hndl ( void *data,
+                       const char *el );
+extern Document thotlib_init ( char *tmpfile );
+extern void xmlparser_init ( XML_Parser p );
+extern void ParseFile ( XML_Parser p,
+                        char *filename );
 extern void RDFParseFile ( char *filename );
 
 #else /* __STDC__ */
 
+extern void start_hndl (/* void *data,
+                           const char *el,
+                           const char **attr_list */);
+extern void end_hndl (/* void *data,
+                         const char *el */);
+extern Document thotlib_init (/* char *tmpfile */);
+extern void xmlparser_init (/* XML_Parser p */);
+extern void ParseFile (/* XML_Parser p,
+                          char *filename */);
 extern void RDFParseFile (/* char *filename */);
 
 #endif /* __STDC__ */

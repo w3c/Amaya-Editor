@@ -116,7 +116,7 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTfiles.o \
 	ANNOTlink.o \
 	ANNOTtools.o \
-	rdfparser.o
+	rdf2annot.o
 
 # special case for generation Annot.h and AnnotAPP.c
 Annot.h : Annot.A

@@ -34,30 +34,52 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLtable_f.h"
-
+#
 /* Structures and global variables */
 
-/* an annot metadata element */ 
-typedef struct _AnnotMetaDataElement {
-  int annotNum;
+/* the info we're interested in in an annotation */
+typedef struct _AnnotMeta {
+  int     annotNum;
   CHAR_T *about;
   CHAR_T *source_url;
+  CHAR_T labf[10];
+  int     c1;
+  CHAR_T labl[10];
+  int     cl;
   CHAR_T *date;
   CHAR_T *author;
   CHAR_T *annotFile;
-  STRING type;
-  struct _AnnotMetaDataElement *next;
-} AnnotMetaDataElement;
+  CHAR_T *type;
+  CHAR_T *content_type;
+  CHAR_T *content_length;
+  CHAR_T *body;
+  CHAR_T *body_url;
+  struct _AnnotMeta *next;
+} AnnotMeta;
+
+/* basic linked list structure */
+typedef struct _List {
+  void *object;
+  struct _List *next;
+} List;
+
+/* the type of character convertion we want to make on local URLs */
+typedef enum _AnnotFileType
+{
+  ANNOT_SINGLE = 0, /* the file contains a single annotation */
+  ANNOT_LIST = 1    /* the file contains a list of annotations */
+}
+AnnotFileType;
 
 /* Annotation modules */
 #include "ANNOTtools_f.h"
 #include "ANNOTlink_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"
-
+#include "rdf2annot_f.h"
 
 /* linked list of all annotations related to a document */
-AnnotMetaDataElement *AnnotMetaDataList[DocumentTableLength];
+AnnotMeta *AnnotMetaDataList[DocumentTableLength];
 
 /* Definition de constantes pour les annotations */
 

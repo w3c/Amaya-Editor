@@ -6,30 +6,69 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern CHAR_T *GetAnnotUser ( void );
+extern CHAR_T *GetAnnotMainIndex ( void );
+extern CHAR_T *GetAnnotDir ( void );
 extern void ANNOT_Init ( void );
 extern void ANNOT_Quit ( void );
-extern void ANNOT_Create ( Document document, View view );
-extern void ANNOT_Delete ( Document document, View view );
-extern void ANNOT_Save ( Document docAnnot, View viewAnnot );
-extern void ANNOT_AutoLoad ( Document docAnnot, View viewAnnot );
-extern void ANNOT_Load ( Document docAnnot, View viewAnnot );
-extern void ANNOT_Post ( Document docAnnot, View viewAnnot );
-extern STRING GetAnnotDir (void);
-extern STRING GetAnnotMainIndex (void);
-extern STRING GetAnnotUser (void);
+extern void ANNOT_AutoLoad ( Document doc,
+                             View view );
+extern void RemoteLoad_callback ( int doc,
+                                  int status,
+                                  CHAR_T *urlName,
+                                  CHAR_T *outputfile,
+                                  AHTHeaders *http_headers,
+                                  void * context );
+extern void ANNOT_Load ( Document doc,
+                         View view );
+extern void ANNOT_Create ( Document doc,
+                           View view );
+extern void CreateRDF ( int doc );
+extern void ANNOT_Post_callback ( int doc,
+                                  int status,
+                                  CHAR_T *urlName,
+                                  CHAR_T *outputfile,
+                                  AHTHeaders *http_headers,
+                                  void * context );
+extern void ANNOT_Post ( Document doc,
+                         View view );
+extern void ANNOT_Delete ( Document document,
+                           View view );
+extern void ANNOT_Save ( Document docAnnot,
+                         View viewAnnot );
 
 #else /* __STDC__ */
 
+extern CHAR_T *GetAnnotUser (/* void */);
+extern CHAR_T *GetAnnotMainIndex (/* void */);
+extern CHAR_T *GetAnnotDir (/* void */);
 extern void ANNOT_Init (/* void */);
 extern void ANNOT_Quit (/* void */);
-extern void ANNOT_Create (/* Document document, View view */);
-extern void ANNOT_Delete (/* Document document, View view */);
-extern void ANNOT_Save (/* Document docAnnot, View viewAnnot */);
-extern void ANNOT_AutoLoad (/* Document docAnnot, View viewAnnot */);
-extern void ANNOT_Load (/* Document docAnnot, View viewAnnot */);
-extern void ANNOT_Post (/* Document docAnnot, View viewAnnot */);
-extern STRING GetAnnotDir (/* void */);
-extern STRING GetAnnotMainIndex (/* void */);
-extern STRING GetAnnotUser (/* void */);
+extern void ANNOT_AutoLoad (/* Document doc,
+                               View view */);
+extern void RemoteLoad_callback (/* int doc,
+                                    int status,
+                                    CHAR_T *urlName,
+                                    CHAR_T *outputfile,
+                                    AHTHeaders *http_headers,
+                                    void * context */);
+extern void ANNOT_Load (/* Document doc,
+                           View view */);
+extern void ANNOT_Create (/* Document doc,
+                             View view */);
+extern void CreateRDF (/* int doc */);
+extern void ANNOT_Post_callback (/* int doc,
+                                    int status,
+                                    CHAR_T *urlName,
+                                    CHAR_T *outputfile,
+                                    AHTHeaders *http_headers,
+                                    void * context */);
+extern void ANNOT_Post (/* Document doc,
+                           View view */);
+extern void ANNOT_Delete (/* Document document,
+                             View view */);
+extern void ANNOT_Save (/* Document docAnnot,
+                           View viewAnnot */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
