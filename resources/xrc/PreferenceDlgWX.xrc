@@ -846,7 +846,7 @@
                           <item>0</item>
                           <item>Infinie</item>
                         </content>
-                        <style></style>
+                        <style>wxRA_SPECIFY_ROWS</style>
                       </object>
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>

@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.17  2004-09-22 11:55:05  cvs
+ ** Revision 1.18  2004-09-22 16:07:08  cvs
+ ** Win32 WebAV preferences.
+ ** Irene
+ **
+ ** Revision 1.17  2004/09/22 11:55:05  cvs
  ** Amaya didn't compile when the DAV option is set.
  ** Irene
  **
@@ -891,23 +895,29 @@ void DAVGetPreferences (void)
    SetWindowText (GetDlgItem (DAVDlg, IDC_DAVUSER), GProp_DAV.textUserReference);
    SetWindowText (GetDlgItem (DAVDlg, IDC_DAVRESOURCES), GProp_DAV.textUserResources);
    if (!strcmp (GProp_DAV.radioDepth, "0"))
-     CheckRadioButton (DAVDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH, IDC_ZERO_DAVDEPTH);
+     CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH, IDC_ZERO_DAVDEPTH);
    else
-     CheckRadioButton (DAVDlg, IDC_DAVDEPTH, IDC_ZERO_DAVDEPTH,
+     CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
 		       IDC_INFINITE_DAVDEPTH);
    if (!strcmp (GProp_DAV.radioLockScope, "exclusive"))
-     CheckRadioButton (DAVDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
+     CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
 		       IDC_EXCLUSIVE_DAVSCOPE);
    else
-     CheckRadioButton (DAVDlg, IDC_DAVSCOPE, IDC_EXCLUSIVE_DAVSCOPE,
+     CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
 		       IDC_SHARED_DAVSCOPE);
    if (!strcmp (GProp_DAV.radioTimeout, "Infinite"))
-     CheckRadioButton (DAVDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
+     CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
 		       IDC_INFINITE_DAVTIMEOUT);
    else
-     CheckRadioButton (DAVDlg, IDC_DAVTIMEOUT, IDC_INFINITE_DAVTIMEOUT,
+     CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
 		       IDC_OTHER_DAVTIMEOUT);
+
    SetDlgItemInt (DAVDlg, IDC_TIMEOUT_VALUE, GProp_DAV.numberTimeout, FALSE);
+
+   CheckDlgButton (DAVDlg, IDC_GENERAL_DAVAWARENESS, (GProp_DAV.toggleAwareness1) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+   CheckDlgButton (DAVDlg, IDC_EXIT_DAVAWARENESS, (GProp_DAV.toggleAwareness2) 
+		  ? BST_CHECKED : BST_UNCHECKED);
 #endif /* _WINGUI */
 #ifdef _WX
 #endif /* _WX */
@@ -1025,27 +1035,38 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* toggle buttons */
 	case IDC_ZERO_DAVDEPTH:
 	  strcpy (GProp_DAV.radioDepth, "0");
+      CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH, IDC_ZERO_DAVDEPTH);
 	  break;
 	case IDC_INFINITE_DAVDEPTH:
 	  strcpy (GProp_DAV.radioDepth, "infinity");
-	  break;
-	case IDC_INFINITE_DAVTIMEOUT:
-	  strcpy (GProp_DAV.radioTimeout, "Infinite");
-	  break;
-	case IDC_OTHER_DAVTIMEOUT:
-	  strcpy (GProp_DAV.radioTimeout, "Second-");
+      CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
+		       IDC_INFINITE_DAVDEPTH);
 	  break;
 	case IDC_EXCLUSIVE_DAVSCOPE:
 	  strcpy (GProp_DAV.radioLockScope, "exclusive");
+      CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
+		       IDC_EXCLUSIVE_DAVSCOPE);
 	  break;
 	case IDC_SHARED_DAVSCOPE:
 	  strcpy (GProp_DAV.radioLockScope, "shared");
+      CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
+		       IDC_SHARED_DAVSCOPE);
+	  break;
+	case IDC_INFINITE_DAVTIMEOUT:
+	  strcpy (GProp_DAV.radioTimeout, "Infinite");
+      CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
+		       IDC_INFINITE_DAVTIMEOUT);
+	  break;
+	case IDC_OTHER_DAVTIMEOUT:
+	  strcpy (GProp_DAV.radioTimeout, "Second-");
+      CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
+		       IDC_OTHER_DAVTIMEOUT);
 	  break;
 	case IDC_GENERAL_DAVAWARENESS:
-	  GProp_DAV.toggleAwareness1 = !GProp_DAV.toggleAwareness1;
+	  GProp_DAV.toggleAwareness1 = !(GProp_DAV.toggleAwareness1);
 	  break;
 	case IDC_EXIT_DAVAWARENESS:
-	  GProp_DAV.toggleAwareness2 = !GProp_DAV.toggleAwareness2;
+	  GProp_DAV.toggleAwareness2 = !(GProp_DAV.toggleAwareness2);
 	  break;
 
 	  /* action buttons */
