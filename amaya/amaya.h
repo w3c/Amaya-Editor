@@ -616,7 +616,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define DOCTYPE2_XHTML10_BASIC        "      \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">"
 #define DOCTYPE2_XHTML10_STRICT       "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
 #define DOCTYPE2_XHTML11              "      \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
-#define DOCTYPE2_XHTML11_PLUS_MATHML  "      \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\">"
+#define DOCTYPE2_XHTML11_PLUS_MATHML  "      \"http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd\">"
 #define DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG  "      \"http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd\">"
 #define DOCTYPE2_XHTML10_TRANSITIONAL "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
 #define DOCTYPE2_MATHML20             "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\">"

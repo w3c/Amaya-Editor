@@ -173,14 +173,29 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML10_STRICT, language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_HTML_STRICT, language, doc);
-      else if (profile == L_Xhtml11 && (useMathML || useSVG))
+      else if (profile == L_Xhtml11 && useMathML && !useSVG)
 	{
-	   /* generate the David Carliste's xsl stylesheet for MathML */
+	   /* generate David Carlisle's xsl stylesheet for MathML */
 	   strcpy (buffer, MATHML_XSLT_URI);
 	   strcat (buffer, MATHML_XSLT_NAME);
 	   strcat (buffer, "\"?>\n");
-	   strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
+	   strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML);
 	   TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
+	}
+      else if (profile == L_Xhtml11 && useSVG)
+	{
+	  if (useMathML)
+	    {
+	      /* generate David Carlisle's xsl stylesheet for MathML */
+	      strcpy (buffer, MATHML_XSLT_URI);
+	      strcat (buffer, MATHML_XSLT_NAME);
+	      strcat (buffer, "\"?>\n");
+	      strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
+	      TtaSetTextContent (text, (unsigned char*)buffer, language, doc);
+	    }
+	  else
+	    TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG,
+			       language, doc);
 	}
       else if (profile == L_Xhtml11)
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE1_XHTML11, language, doc);
@@ -210,8 +225,11 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML10_STRICT, language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_HTML_STRICT, language, doc);
-      else if (profile == L_Xhtml11 && (useMathML || useSVG))
-	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language, doc);
+      else if (profile == L_Xhtml11 && useMathML && !useSVG)
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML, language, doc);
+      else if (profile == L_Xhtml11 && useSVG)
+	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language,
+			   doc);
       else if (profile == L_Xhtml11)
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
