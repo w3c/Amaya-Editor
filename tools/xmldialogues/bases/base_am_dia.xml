@@ -400,7 +400,7 @@
 	<message xml:lang="en">Change Title...</message>
 	<message xml:lang="fr">Changer le titre...</message>
 	<message xml:lang="de">Titel ändern...</message>
-	<message xml:lang="it">Change Title...</message>
+	<message xml:lang="it">Cambia Titolo...</message>
 	<message xml:lang="es">Cambiar Título...</message>
 </label>
 <label define="BAddress">
@@ -516,7 +516,7 @@
 	<message xml:lang="en">Image (input)...</message>
 	<message xml:lang="fr">Image (input)...</message>
 	<message xml:lang="de">Grafik (image)...</message>
-	<message xml:lang="it">Image (input)...</message>
+	<message xml:lang="it">Immagine (input)...</message>
 	<message xml:lang="tr">Görüntü (input)...</message>
 	<message xml:lang="es">Imagen (input)...</message>
 </label>
@@ -881,7 +881,7 @@
 	<message xml:lang="en">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="fr">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="de">Term mit Indices links/rechts oben/unten (mmultiscripts)</message>
-	<message xml:lang="it">Multiscripts (mmultiscripts)</message>
+	<message xml:lang="it">Multiscript (mmultiscripts)</message>
 	<message xml:lang="tr">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="es">Multiscripts (mmultiscripts)</message>
 </label>
@@ -1008,7 +1008,7 @@
 	<message xml:lang="en">tfoot</message>
 	<message xml:lang="fr">Pied (tfoot)</message>
 	<message xml:lang="de">Fußzeile (tfoot)</message>
-	<message xml:lang="it">tfoot</message>
+	<message xml:lang="it">Piede (tfoot)</message>
 	<message xml:lang="tr">tfoot</message>
 	<message xml:lang="es">tfoot</message>
 </label>

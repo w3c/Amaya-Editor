@@ -49,7 +49,7 @@
 47 script
 48 style
 49 Commento
-50 Change Title...
+50 Cambia Titolo...
 51 Indirizzo (address)
 52 Zona attiva (area)
 53 Cerchio
@@ -64,7 +64,7 @@
 62 Checkbox (input)
 63 Selettore di file (input)
 64 Controllo nascosto (input)
-65 Image (input)...
+65 Immagine (input)...
 66 Password (input)
 67 Pulsante radio (input)
 68 Reset (input)
@@ -111,7 +111,7 @@
 109 Sotto (munder)
 110 Sopra (mover)
 111 Parentesi (mrow)
-112 Multiscripts (mmultiscripts)
+112 Multiscript (mmultiscripts)
 113 Matrice (mtable)
 114 Cancella colonna della matrice
 115 noscript
@@ -127,7 +127,7 @@
 125 col
 126 Intestazione (thead)
 127 Corpo (tbody)
-128 tfoot
+128 Piede (tfoot)
 129 Linea (tr)
 130 Cella dati (td)
 131 Cella intestazione (th)

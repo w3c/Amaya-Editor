@@ -92,7 +92,7 @@
 90 Cerca
 91 Enfasi
 92 Forte
-93 Fixed font
+93 Font non proporzionale
 94 no-repeat
 95 Inserisci immagine
 96 Intestazione di livello 1
@@ -103,8 +103,8 @@
 101 Lista di definizioni
 102 Collegamento
 103 Tabella
-104 Il documento non ha un nome. Salva in:
-105 Plugins
+104 Il documento non ha nome. Salva come:
+105 Plugin
 106 Errore sconosciuto durante il salvataggio dell'URL %s
 107 Impossibile connettersi al server
 108 L'accesso a %s è proibito dal server
@@ -117,8 +117,8 @@
 115 Questo metodo non è consentito
 116 Identificazione richiesta per accedere a %s
 117 Verifica in corso ...
-118 Il salvataggio su %s è fallito, salvo su disco ?
-119 Il salvataggio su %s sembra non funzionare, ignora ?
+118 Il salvataggio su %s è fallito, salvo su disco?
+119 Il salvataggio su %s sembra non funzionare, ignora?
 120 L'URL %s è rediretto su %s, ignora ?
 121 Ricaricamento di %s fallito, ignora ?
 122 Il server riporta un errore 501: %s
@@ -132,7 +132,7 @@
 130 Repeat Mode
 131 repeat
 132 repeat-x
-133 La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?
+133 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
 134 Autenticazione fallita. Vuoi riprovare?
 135 L'operazione sarà rediretta. Vuoi continuare?
 136 Numero di righe
@@ -209,23 +209,23 @@
 207 Ritratto
 208 Paesaggio
 209 Abilita FTP (sperimentale)
-210 **This document is incomplete, don't save it - See Views/Show parsing errors
+210 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
 211 Nel profilo attuale di Amaya:
 212 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
 213 La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni
-214 **This document has no encoding declaration
-215 **There is no encoding, set it to ISO_8859_1 ?
+214 Questo documento non ha una dichiarazione di codifica
+215 Non è indicata codifica: usare ISO_8859_1?
 216 Non disponibile
 217 Scorri
 218 File Browser
 219 Selezione
-220 **Annotation Local Filter Menu
-221 **Show
-222 **Hide
-223 **Show all
-224 **Hide all
-225 *** means hidden, - means partially hidden
-226 **Filter options
-227 **By author
-228 **By type
-229 **By server
+220 Menu per i filtri locali - annotazioni
+221 Mostra
+222 Nascondi
+223 Mostra tutto
+224 Nascondi tutto
+225 * significa nascosto, - significa parzialmente nascosto
+226 Opzioni per i filtri
+227 Per autore
+228 Per tipo
+229 Per server

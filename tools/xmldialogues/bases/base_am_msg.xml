@@ -745,7 +745,7 @@
 	<message xml:lang="en">Fixed font</message>
 	<message xml:lang="fr">Fonte fixe</message>
 	<message xml:lang="de">Feste Schriftbreite</message>
-	<message xml:lang="it">Fixed font</message>
+	<message xml:lang="it">Font non proporzionale</message>
 	<message xml:lang="tr">Sabit geniþlikli yazýtipi</message>
 	<message xml:lang="es">Fuente fija</message>
 </label>
@@ -833,7 +833,7 @@
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
 	<message xml:lang="fr">Le document n'a pas de nom. Sauvé en :</message>
 	<message xml:lang="de">Das Dokument ist unbenannt. Speichere unter:</message>
-	<message xml:lang="it">Il documento non ha un nome. Salva in:</message>
+	<message xml:lang="it">Il documento non ha nome. Salva come:</message>
 	<message xml:lang="tr">Belgenin bir ismi yok. Þu isimle kaydediyorum:</message>
 	<message xml:lang="es">El documento no tiene nombre. Guardar en:</message>
 </label>
@@ -841,7 +841,7 @@
 	<message xml:lang="en">Plugins</message>
 	<message xml:lang="fr">Plugins</message>
 	<message xml:lang="de">Plugins</message>
-	<message xml:lang="it">Plugins</message>
+	<message xml:lang="it">Plugin</message>
 	<message xml:lang="tr">Plugin\'ler</message>
 	<message xml:lang="es">Plugins</message>
 </label>
@@ -945,7 +945,7 @@
 	<message xml:lang="en">Saving to %s failed, Save to disk ?</message>
 	<message xml:lang="fr">La sauvegarde distante de %s a échouée, sauvegarder sur disque ?</message>
 	<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
-	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco ?</message>
+	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco?</message>
 	<message xml:lang="tr">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
 	<message xml:lang="es">El guardado en %s ha fallado, ¿guardar en disco?</message>
 </label>
@@ -953,7 +953,7 @@
 	<message xml:lang="en">Saving to %s seems corrupted, ignore ?</message>
 	<message xml:lang="fr">La sauvegarde distante de %s semble corrompue, ignorer ?</message>
 	<message xml:lang="de">Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?</message>
-	<message xml:lang="it">Il salvataggio su %s sembra non funzionare, ignora ?</message>
+	<message xml:lang="it">Il salvataggio su %s sembra non funzionare, ignora?</message>
 	<message xml:lang="tr">%s bozuk görünüyor, devam edeyim mi?</message>
 	<message xml:lang="es">Guardar en %s parece corrompido, ¿ignorar?</message>
 </label>
@@ -1064,7 +1064,7 @@
 	<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
 	<message xml:lang="fr">La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?</message>
 	<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
-	<message xml:lang="it">La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?</message>
+	<message xml:lang="it">La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?</message>
 	<message xml:lang="es">Su sesión previa de amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
@@ -1605,6 +1605,7 @@
 	<message xml:lang="fr">Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="de">Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen</message>
 	<message xml:lang="es">El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log</message>
+	<message xml:lang="it">Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
@@ -1632,12 +1633,14 @@
 	<message xml:lang="fr">Aucun codage n'est déclaré pour ce document</message>
 	<message xml:lang="de">Dieses Dokument enthält keine Kodierungsdeklaration</message>
 	<message xml:lang="es">El documento no tiene una declaracion de codage</message>
+	<message xml:lang="it">Questo documento non ha una dichiarazione di codifica</message>
 </label>
 <label define="AM_UNDEFINED_ENCODING_CONFIRM">
 	<message xml:lang="en">There is no encoding, set it to ISO_8859_1 ?</message>
 	<message xml:lang="fr">Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?</message>
 	<message xml:lang="de">Keine Kodierung vorhanden, ISO_8859_1 verwenden?</message>
 	<message xml:lang="es">Ningun codage declarado. Utilisar ISO_8859_1 ?</message>
+	<message xml:lang="it">Non è indicata codifica: usare ISO_8859_1?</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
@@ -1672,60 +1675,70 @@
 	<message xml:lang="de">Menü für lokale Kommentierungsfilter</message>
 	<message xml:lang="fr">Filtre local des annotations</message>
 	<message xml:lang="es">Filtro local de annotaciones</message>
+	<message xml:lang="it">Menu per i filtri locali - annotazioni</message>
 </label>
 <label define="AM_AFILTER_SHOW">
 	<message xml:lang="en">Show</message>
 	<message xml:lang="de">Anzeigen</message>
 	<message xml:lang="fr">Montrer</message>
 	<message xml:lang="es">Mostrar</message>
+	<message xml:lang="it">Mostra</message>
 </label>
 <label define="AM_AFILTER_HIDE">
 	<message xml:lang="en">Hide</message>
 	<message xml:lang="de">Nicht anzeigen</message>
 	<message xml:lang="fr">Cacher</message>
 	<message xml:lang="es">Esconder</message>
+	<message xml:lang="it">Nascondi</message>
 </label>
 <label define="AM_AFILTER_SHOW_ALL">
 	<message xml:lang="en">Show all</message>
 	<message xml:lang="de">Alles anzeigen</message>
 	<message xml:lang="fr">Montrer tout</message>
 	<message xml:lang="es">Mostrar todo</message>
+	<message xml:lang="it">Mostra tutto</message>
 </label>
 <label define="AM_AFILTER_HIDE_ALL">
 	<message xml:lang="en">Hide all</message>
 	<message xml:lang="de">Nichts anzeigen</message>
 	<message xml:lang="fr">Cacher tout</message>
 	<message xml:lang="es">Esconder todo</message>
+	<message xml:lang="it">Nascondi tutto</message>
 </label>
 <label define="AM_AFILTER_HELP">
 	<message xml:lang="en">* means hidden, - means partially hidden</message>
 	<message xml:lang="de">* bedeutet verborgen, - bedeutet teilweise verborgen</message>
 	<message xml:lang="fr">* signifie caché, - signifie partiellement caché</message>
 	<message xml:lang="es">* significa escondido, - significa parcialmente escondido</message>
+	<message xml:lang="it">* significa nascosto, - significa parzialmente nascosto</message>
 </label>
 <label define="AM_AFILTER_OPTIONS">
 	<message xml:lang="en">Filter options</message>
 	<message xml:lang="de">Filteroptionen</message>
 	<message xml:lang="fr">Options de filtrage</message>
 	<message xml:lang="es">Opciones de filtrado</message>
+	<message xml:lang="it">Opzioni per i filtri</message>
 </label>
 <label define="AM_AFILTER_BYAUTHOR">
 	<message xml:lang="en">By author</message>
 	<message xml:lang="de">Vom Autor</message>
 	<message xml:lang="fr">Par auteur</message>
 	<message xml:lang="es">Por autor</message>
+	<message xml:lang="it">Per autore</message>
 </label>
 <label define="AM_AFILTER_BYTYPE">
 	<message xml:lang="en">By type</message>
 	<message xml:lang="de">Vom Typ</message>
 	<message xml:lang="fr">Par type</message>
 	<message xml:lang="es">Por typo</message>
+	<message xml:lang="it">Per tipo</message>
 </label>
 <label define="AM_AFILTER_BYSERVER">
 	<message xml:lang="en">By server</message>
 	<message xml:lang="de">Vom Server</message>
 	<message xml:lang="fr">Par serveur</message>
 	<message xml:lang="es">Por servidor</message>
+	<message xml:lang="it">Per server</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
