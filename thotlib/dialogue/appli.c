@@ -2397,7 +2397,7 @@ void RemoveClipping (int frame)
 }
 
 /*----------------------------------------------------------------------
-   UpdateScrollbars met a jour les bandes de defilement de la fenetretre    
+   UpdateScrollbars met a jour les bandes de defilement de la fenetre    
   ----------------------------------------------------------------------*/
 void UpdateScrollbars (int frame)
 {
@@ -2473,3 +2473,20 @@ void UpdateScrollbars (int frame)
 #endif /* _WINDOWS */
 #endif /* _GTK */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

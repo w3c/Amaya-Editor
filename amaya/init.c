@@ -22,7 +22,7 @@
 #include "zlib.h"
 #include "profiles.h"
 #ifdef _GTK
-#include "gtkdialogue_box.h"
+#include "gtkdialogapi.h"
 #endif /* _GTK */
 
 #ifdef _WINDOWS
@@ -1383,9 +1383,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
   char              s[MAX_LENGTH];
   ThotBool          remote;
 #ifndef _WINDOWS
-#ifdef _GTK
-  ThotWidget        dialog_new;
-#endif /* _GTK */
+
   int               i;
 
   /* Dialogue form for open URL or local */
@@ -1397,8 +1395,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
 #ifdef _GTK
-  dialog_new = create_dialog_new (title);
-  gtk_widget_show (dialog_new);
+
 #else /* _GTK */
   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (doc, view),
 	       title, 3, s, TRUE, 2, 'L', D_CANCEL);
@@ -1441,6 +1438,12 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
 #ifdef  _WINDOWS
   CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
 #else /* WINDOWS */
+
+#ifdef _GTK
+  CreateOpenDocDlgGTK (title);
+
+#endif /* _GTK */
+
 #ifndef _GTK
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();

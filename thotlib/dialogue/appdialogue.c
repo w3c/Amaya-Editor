@@ -2317,6 +2317,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          entry1;
    ThotWidget          entry2;
    ThotWidget          label1;
+
+   ThotWidget          label3;
+
    ThotWidget          statusbar;
    ThotWidget          toolbar;
    GdkPixmap          *amaya_pixmap;
@@ -2663,6 +2666,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 0);
 	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.15, 0.5);
 	   
+
+	   /* test: try to insert a label in the hbox1 after the logo */
+	   label3 = gtk_label_new ("LABEl DE TEST");
+	   gtk_widget_show (label3);
+	   gtk_box_pack_start (GTK_BOX (hbox1), label3, FALSE, FALSE, 0);
+	   /**********************************************************/
+
+
 	   /* Creation des  tables contenant les labels et zones de saisie d'URL */
 	   table1 = gtk_table_new (2, 2, FALSE);
 	   gtk_widget_show (table1);

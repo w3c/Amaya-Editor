@@ -1,12 +1,8 @@
-
-
 #ifndef __MY_FILESEL_H__
 #define __MY_FILESEL_H__
 
-
 #include <gdk/gdk.h>
 #include <gtk/gtkframe.h>
-
 
 #define GTK_TYPE_MY_FILE_SELECTION            (gtk_my_file_selection_get_type ())
 #define GTK_MY_FILE_SELECTION(obj)            (GTK_CHECK_CAST ((obj), GTK_TYPE_MY_FILE_SELECTION, GtkMyFileSelection))
@@ -66,16 +62,12 @@ struct _GtkMyFileSelection
   GtkWidget *repeat_x_radiobutton;
   GtkWidget *repeat_y_radiobutton;
   GtkWidget *no_repeat_radiobutton;
-
-  
-  
 };
 
 struct _GtkMyFileSelectionClass
 {
   GtkFrameClass parent_class;
 };
-
 
 GtkType    gtk_my_file_selection_get_type            (void);
 GtkWidget* gtk_my_file_selection_new                 (const gchar      *title);
@@ -93,9 +85,6 @@ int dialog_type;
 gpointer dialog_box;
 
 #endif /* __MY_FILESEL_H__ */
-
-
-
 
 
 
