@@ -1,286 +1,199 @@
 # encoding= latin1
 0 X11 Error : %s\n
-1 View not found.
-2 Error while loading the dictionary: %s\n
-3 Missing file: %s\n
-4 Cannot write: %s
-5 Cannot find schema: %s
-6 Confirm
-7 No alphabet file
-8 Cannot open document %s
-9 Pivot format error: %s
-10 New view cannot replace the old one
-11 Incompatible schemas. Recompile %s
-12 Incorrect window number
-13 Fatal Error: Thot fonts not found
-14 Document with columns. Paginate again.
-15 Memory exhausted
-16 Fatal Error: Unable to connect to X
-17 View is modified before creation
-18 Select before
-19 No more place for the font %s
-20 Structure of document %s invalid
-21 Document %s cannot be edited nor saved
-22 Rules table full.
-23 Structure schema %s has been changed
-24 Incorrect file: %s.STR
-25 Incorrect file: %s.PRS
-26 Directory not found: %s
-27 Cannot print
-28 Cannot change presentation
-29 Cannot save in PostScript
-30 Cannot import file
-31 View is empty
-32 Not allowed, read only element
-33 Cannot copy paired components
-34 Creating the dictionary for document: %s
-35 Image Type
-36 Image Presentation
-37 Image File
-38 Document %s printed
-39 From page ...
-40 ... to page
-41 Number of copies
-42 Disposition
-43 1 page/sheet
-44 2 pages/sheet
-45 4 pages/sheet
-46 Pages per sheet
-47 Pagination
-48 Views to print
-49 Printing with %s presentation
-50 This is a copy
-51 Loading of "%s" failed
-52 Environment variable %s undefined
-53 An element cannot refer to itself
-54 Attribute required, not deleted
-55 Nature forbidden here
-56 %s : mandatory component
-57 Select only one component
-58 The element %s cannot be pasted here
-59 You cannot modify a box here
-60 %s
-61 No view to print
-62 Enter the presentation for %s
-63 Reading the document...
-64 Select an element
-65 File thot.keyboard not found
-66 X clipboard unchanged
-67 Cannot copy different components. Group.
-68 Not allowed, read only document
-69 A document cannot include itself
-70 Changing the box %s
-71 Moving the box %s
-72 Document written: %s
-73 Writing ...
-74 Empty reference.
-75 Don\'t copy page breaks!
-76 You have selected a %s element. You had to select a %s element.
-77 Changing directory list
-78 Printing
-79 Exporting document %s ...
-80 Loading dictionary %s
-81 Writing PostScript file ...
-82 Importing file ...
-83 Which form of the document do you want to load?
-84 At least two points in a polyline
-85 Enter a value for attribute %s
-86 Old pivot format. Save the document.
-87 Creating the box %s
-88 Not enough memory
-89 Select an element %s
-90 This element cannot be holophrasted
-91 Designate the element to be referred
-92 Too many documents.
-93 Empty document, not written.
-94 Impossible to insert here
-95 Nothing to delete
-96 Mandatory attribute.
-97 All views already created.
-98 Empty document.
-99 Don\'t change document !
-100 Too many views.
-101 Nothing to be pasted.
-102 Cannot open a new window. Close a window.
-103 *** Thot: Irrecoverable error ***
-104 modified documents, if any, will be saved
-105 As it is
-106 Scaled
-107 Repeated
-108 X Repeated
-109 Y Repeated
-110 Premature EOF
-111 No bounding box in ps file %s
-112 Cannot open hyphen patterns file: %s
-113 Reading hyphen patterns file: %s
-114 Word too long for hyphenation: %s. Are you sure it's correct?
-115 Pixmap : Color error
-116 Pixmap : Open failed
-117 Pixmap : File invalid
-118 Pixmap : No memory
-119 Pixmap : Color failed
-120 Cannot include file %s
-121 Cannot create file %s
-122 No translation schema for %s
-123 Incorrect .TRA file: %s
-124 Too many output files
-125 No window size for view %s
-126 %s is not a valid sibling for %s (%s)
-127 %s is not a valid child for %s (%s)
-128 Attribute required %s for element %s
-129 %s, page %d
-130 %s : unknown type.
-131 Language
-132 Attributes
-133 Search reference
-134 Standard presentation
-135 Apply
-136 Characters
-137 Underline
-138 Graphics
-139 Format
-140 Default
-141 Align
-142 Indent
-143 Print
-144 Manual feed
-145 Options
-146 A4
-147 US
-148 Paper format
-149 Done
-150 Directories
-151 Document name
-152 The document %s already exists. Do you want to overwrite it?
-153 Left button sets the text color
-154 Middle or Right button sets the background color
-155 Font family
-156 Normal
-157 Bold
-158 Italic
-159 Oblique
-160 Normal
-161 Boldness
-162 Normal
-163 Underline
-164 Cross out
-165 Body size (pt)
-166 Indent (pt)
-167 Line spacing (pt)
-168 Line spacing
-169 Justification
-170 Yes
-171 No
-172 Save document
-173 Close, don't save
-174 Character style
-175 Colors
-176 Delete
-177 Output
-178 PostScript file
-179 Printer
-180 Search for
-181 UPPERCASE = lowercase
-182 Replace by
-183 Replace
-184 No replace
-185 Replace on request
-186 Automatic replace
-187 Search where
-188 Before selection
-189 Within selection
-190 After selection
-191 In the whole document
-192 Do not replace
-193 Default colors
-194 before closing it
-195 Close a document
-196 No_name
-197 Create a document
-198 Document type
-199 Rename
-200 Math symbols
-201 Graphics
-202 Latin alphabet
-203 Greek alphabet
-204 Presentation
-205 Files
-206 Open a document
-207 Document type
-208 Views
-209 Change filter
-210 Value not changed
-211 Increase
-212 Decrease
-213 Visibility
-214 Character size difference
-215 Zoom
-216 Save as
-217 Save
-218 Thot
-219 Format
-220 Copy
-221 Text
-222 Graphic
-223 Symbol
-224 Image
-225 Element type
-226 after
-227 before
-228 around
-229 Include
-230 Paste
-231 to create
-232 Insert
-233 Page break
-234 (Read only)
-235 Surround
-236 Change type
-237 Language of element
-238 Inherited language:
-239 Do not change document!
-240 Not found
-241 Search in
-242 Search empty elements
-243 Search empty references
-244 Search references to this element
-245 Link
-246 Reference in document
-247 Search
-248 Read only element
-249 Nothing to replace
-250 Open
-251 Standard characters
-252 Standard graphics
-253 Standard format
-254 Standard geometry
-255 pt
-256 Line style
-257 Line weight
-258 Fill pattern
-259 Split
-260 Object type
-261 Goto page number:
-262 Any
-263 Attribute to search
-264 Type to search
-265 Natures
-266 Attribute value:
-267 Unknown attribute
-268 Create referenced element
-269 Show referenced element
-270 Insertion mode
-271 Cancel
-272 Error in PostScript translation
-273 Command refused by the spooler "%s"
-274 Cannot create "%s"
-275 Global Layout
-276 Unable to link the new element
-277 Character encoding
-278 No language
-279 Overline
-280 Document format
-281 Events
-282 Remove attribute
-283 Left button sets the selection color
-284 Middle or Right button sets the caret color
+1 Confirm
+2 No alphabet file
+3 New view cannot replace the old one
+4 Incompatible schemas. Recompile %s
+5 Incorrect window number
+6 Fatal Error: Thot fonts not found
+7 Memory exhausted
+8 Fatal Error: Unable to connect to X
+9 View is modified before creation
+10 Rules table full.
+11 Incorrect file: %s.STR
+12 Incorrect file: %s.PRS
+13 Directory not found: %s
+14 Cannot print
+15 Image Type
+16 Image Presentation
+17 Image File
+18 Document %s printed
+19 From page ...
+20 ... to page
+21 Number of copies
+22 Disposition
+23 1 page/sheet
+24 2 pages/sheet
+25 4 pages/sheet
+26 Pages per sheet
+27 Pagination
+28 Views to print
+29 %s
+30 Not enough memory
+31 This element cannot be holophrasted
+32 Designate the element to be referred
+33 *** Thot: Irrecoverable error ***
+34 modified documents, if any, will be saved
+35 As it is
+36 Scaled
+37 Repeated
+38 X Repeated
+39 Y Repeated
+40 Premature EOF
+41 Pixmap : Color error
+42 Incorrect .TRA file: %s
+43 %s is not a valid sibling for %s (%s)
+44 %s is not a valid child for %s (%s)
+45 %s, page %d
+46 Language
+47 Attributes
+48 Search reference
+49 Standard presentation
+50 Apply
+51 Characters
+52 Underline
+53 Graphics
+54 Format
+55 Default
+56 Align
+57 Indent
+58 Print
+59 Manual feed
+60 Options
+61 A4
+62 US
+63 Paper format
+64 Done
+65 Directories
+66 Document name
+67 The document %s already exists. Do you want to overwrite it?
+68 Left button sets the text color
+69 Middle or Right button sets the background color
+70 Font family
+71 Normal
+72 Bold
+73 Italic
+74 Oblique
+75 Normal
+76 Boldness
+77 Normal
+78 Underline
+79 Cross out
+80 Body size (pt)
+81 Indent (pt)
+82 Line spacing (pt)
+83 Line spacing
+84 Justification
+85 Yes
+86 No
+87 Save document
+88 Close, don't save
+89 Character style
+90 Colors
+91 Delete
+92 Output
+93 PostScript file
+94 Printer
+95 Search for
+96 UPPERCASE = lowercase
+97 Replace by
+98 Replace
+99 No replace
+100 Replace on request
+101 Automatic replace
+102 Search where
+103 Before selection
+104 Within selection
+105 After selection
+106 In the whole document
+107 Do not replace
+108 Default colors
+109 before closing it
+110 Close a document
+111 No_name
+112 Create a document
+113 Document type
+114 Rename
+115 Math symbols
+116 Graphics
+117 Latin alphabet
+118 Greek alphabet
+119 Presentation
+120 Files
+121 Open a document
+122 Views
+123 Change filter
+124 Value not changed
+125 Increase
+126 Decrease
+127 Visibility
+128 Character size difference
+129 Zoom
+130 Save as
+131 Save
+132 Thot
+133 Format
+134 Copy
+135 Text
+136 Graphic
+137 Symbol
+138 Image
+139 Element type
+140 after
+141 before
+142 around
+143 Include
+144 Paste
+145 to create
+146 Insert
+147 Page break
+148 (Read only)
+149 Surround
+150 Change type
+151 Language of element
+152 Inherited language:
+153 Not found
+154 Search in
+155 Search empty elements
+156 Search empty references
+157 Search references to this element
+158 Link
+159 Reference in document
+160 Search
+161 Read only element
+162 Nothing to replace
+163 Open
+164 Standard characters
+165 Standard graphics
+166 Standard format
+167 Standard geometry
+168 pt
+169 Line style
+170 Line weight
+171 Fill pattern
+172 Split
+173 Object type
+174 Goto page number:
+175 Any
+176 Attribute to search
+177 Type to search
+178 Natures
+179 Attribute value:
+180 Unknown attribute
+181 Create referenced element
+182 Show referenced element
+183 Insertion mode
+184 Cancel
+185 Error in PostScript translation
+186 Command refused by the spooler "%s"
+187 Cannot create "%s"
+188 Global Layout
+189 Unable to link the new element
+190 Character encoding
+191 No language
+192 Overline
+193 Document format
+194 Events
+195 Remove attribute
+196 Left button sets the selection color
+197 Middle or Right button sets the caret color

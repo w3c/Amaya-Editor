@@ -61,7 +61,7 @@
 /*----------------------------------------------------------------------
    Ecrit dans le fichier le numero de version pivot courant           
   ----------------------------------------------------------------------*/
-void                WriteVersionNumber (BinFile pivFile)
+void WriteVersionNumber (BinFile pivFile)
 {
    int                 version;
 
@@ -75,7 +75,7 @@ void                WriteVersionNumber (BinFile pivFile)
 /*----------------------------------------------------------------------
    PutShort   ecrit un entier court dans le fichier sur deux octets   
   ----------------------------------------------------------------------*/
-static void         PutShort (BinFile pivFile, int n)
+static void PutShort (BinFile pivFile, int n)
 {
    TtaWriteByte (pivFile, (char) (n / 256));
    TtaWriteByte (pivFile, (char) (n % 256));
@@ -84,7 +84,7 @@ static void         PutShort (BinFile pivFile, int n)
 /*----------------------------------------------------------------------
    PutInteger ecrit un entier long dans le fichier, sur 4 octets      
   ----------------------------------------------------------------------*/
-static void         PutInteger (BinFile pivFile, int n)
+static void PutInteger (BinFile pivFile, int n)
 {
    PutShort (pivFile, n / 65536);
    PutShort (pivFile, n % 65536);
@@ -94,7 +94,7 @@ static void         PutInteger (BinFile pivFile, int n)
    PutDimensionType ecrit dans le fichier un type de dimension sur	
    1 octet.								
   ----------------------------------------------------------------------*/
-static void         PutDimensionType (BinFile pivFile, ThotBool b)
+static void PutDimensionType (BinFile pivFile, ThotBool b)
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_ABSOLUTE);
@@ -105,7 +105,7 @@ static void         PutDimensionType (BinFile pivFile, ThotBool b)
 /*----------------------------------------------------------------------
    PutUnit ecrit dans le fichier l'unite                              
   ----------------------------------------------------------------------*/
-static void         PutUnit (BinFile pivFile, TypeUnit unit)
+static void PutUnit (BinFile pivFile, TypeUnit unit)
 {
    if (unit == UnPoint)
       TtaWriteByte (pivFile, C_PIV_PT);
@@ -118,7 +118,7 @@ static void         PutUnit (BinFile pivFile, TypeUnit unit)
 /*----------------------------------------------------------------------
    PutSign   ecrit un signe dans le fichier sur un octet             
   ----------------------------------------------------------------------*/
-static void         PutSign (BinFile pivFile, ThotBool b)
+static void PutSign (BinFile pivFile, ThotBool b)
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_PLUS);
@@ -130,7 +130,7 @@ static void         PutSign (BinFile pivFile, ThotBool b)
    PutDimension ecrit dans le fichier le contenu de la regle de       
    dimension pointee par pRegle                            
   ----------------------------------------------------------------------*/
-static void         PutDimension (BinFile pivFile, PtrPRule pPRule)
+static void PutDimension (BinFile pivFile, PtrPRule pPRule)
 {
 
    PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
@@ -145,7 +145,7 @@ static void         PutDimension (BinFile pivFile, PtrPRule pPRule)
 /*----------------------------------------------------------------------
    PutBoolean ecrit un booleen dans le fichier sur un octet           
   ----------------------------------------------------------------------*/
-static void         PutBoolean (BinFile pivFile, ThotBool b)
+static void PutBoolean (BinFile pivFile, ThotBool b)
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_TRUE);
@@ -1119,11 +1119,11 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 /*----------------------------------------------------------------------
    	PutName								
   ----------------------------------------------------------------------*/
-static void         PutName (BinFile pivFile, Name N)
+static void PutName (BinFile pivFile, Name N)
 {
    int                 j;
 
-   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != WC_EOS; j++)
+   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
       TtaWriteWideChar (pivFile, N[j], ISO_8859_1);
    TtaWriteByte (pivFile, EOS);
 }

@@ -511,7 +511,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    PasteCommand
    traite la commande PASTE en mode non structure'
   ----------------------------------------------------------------------*/
-void                PasteCommand ()
+void PasteCommand ()
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
@@ -524,14 +524,11 @@ void                PasteCommand ()
   
   before = FALSE;
   if (FirstSavedElement == NULL)
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
-  else if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
-				&lastChar))
+    return;
+  else if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
     /* on ne peut coller dans un document en lecture seule */
-    if (pDoc->DocReadOnly)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-    else
+    if (!pDoc->DocReadOnly)
       {
 	/* calcule le volume que pourront prendre les paves des elements
 	   colles */
@@ -662,8 +659,6 @@ void                PasteCommand ()
 	if (!ok)
 	  /* echec */
 	  {
-	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PASTING_EL_IMP),
-			       FirstSavedElement->PeElement->ElStructSchema->SsRule[FirstSavedElement->PeElement->ElTypeNumber - 1].SrName);
 	    if (pSplitText != NULL)
 	      /* On avait coupe' en deux un element de texte. */
 	      /* On recolle les deux morceaux */
@@ -1027,18 +1022,12 @@ void     TtcCreateElement (Document doc, View view)
   ThotBool            lock = TRUE;
 
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-    /* there is no selection */
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-  else if (!ElementIsReadOnly (firstSel) &&
-	   AscentReturnCreateNL (firstSel) != NULL)
+    return;
+  if (!ElementIsReadOnly (firstSel) && AscentReturnCreateNL (firstSel))
     /* one of the ancestors of the first selected element says that the
        Return key should generate a "new line" character */
     InsertChar (GetWindowNumber (doc, view), '\n', -1);
-  else if (firstSel->ElParent == NULL ||
-	   ElementIsReadOnly (firstSel->ElParent))
-    /* Read-only document */
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-  else
+  else if (firstSel->ElParent && !ElementIsReadOnly (firstSel->ElParent))
     {
       /* lock the table formatting */
       if (ThotLocalActions[T_islock])

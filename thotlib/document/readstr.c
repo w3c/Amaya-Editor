@@ -377,7 +377,7 @@ ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
      {
 	ustrncpy (buf, fileName, MAX_PATH);
 	ustrcat (buf, ".STR");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE),
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
 			   buf);
 	return FALSE;
      }

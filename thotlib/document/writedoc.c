@@ -74,13 +74,11 @@ static PtrDocument  DocumentToSave;
 extern char         DefaultFileSuffix[5];        
 
 
-
 /*----------------------------------------------------------------------
    TtaSaveDocument
 
    Saves a document into a file in Thot format. The document is not closed
    by the function and can still be accessed by the application program.
-
    Parameters:
    document: the document to be saved.
    documentName: name of the file in which the document must be saved
@@ -91,19 +89,12 @@ extern char         DefaultFileSuffix[5];
    a new file is created and the file with the old name is unchanged,
    i. e. a new version is created. If necessary, the old file can be
    removed by the function TtaRemoveDocument.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSaveDocument (Document document, STRING documentName)
-#else  /* __STDC__ */
-void                TtaSaveDocument (document, documentName)
-Document            document;
-STRING              documentName;
-#endif /* __STDC__ */
+void TtaSaveDocument (Document document, char *documentName)
 {
   PtrDocument         pDoc;
   BinFile             pivotFile;
-  CHAR_T              path[250];
+  char                path[250];
   int                 i;
 
   UserErrorCode = 0;
@@ -130,14 +121,14 @@ STRING              documentName;
 	      /* writing the document in the file in the pivot format */
 	      SauveDoc (pivotFile, pDoc);
 	      TtaWriteClose (pivotFile);
-	      if (ustrcmp (documentName, pDoc->DocDName) != 0)
+	      if (strcmp (documentName, pDoc->DocDName) != 0)
 		/* The document is saved under a new name */
 		{
 		  /* The application wants to create a copy of the document */
 		  /* Puts the new name into the document descriptor */
-		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		  ustrncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+		  strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #ifndef NODISPLAY
 		  /* changes the title of frames */
@@ -154,14 +145,7 @@ STRING              documentName;
    dont le nom est donne par name, et ne fait rien d'autre.
    Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     simpleSave (PtrDocument pDoc, STRING name, ThotBool withEvent)
-#else  /* __STDC__ */
-static ThotBool     simpleSave (pDoc, name, withEvent)
-PtrDocument         pDoc;
-STRING              name;
-ThotBool            withEvent;
-#endif /* __STDC__ */
+static ThotBool simpleSave (PtrDocument pDoc, char *name, ThotBool withEvent)
 {
    BinFile             pivotFile;
    NotifyDialog        notifyDoc;
@@ -212,16 +196,9 @@ ThotBool            withEvent;
    Envoie un message et rend false si l'ecriture n'a pu se 
    faire.                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     saveWithExtension (PtrDocument pDoc, STRING extension)
-#else  /* __STDC__ */
-static ThotBool     saveWithExtension (pDoc, extension)
-PtrDocument         pDoc;
-STRING              extension;
-
-#endif /* __STDC__ */
+static ThotBool     saveWithExtension (PtrDocument pDoc, char *extension)
 {
-   CHAR_T                buf[MAX_TXT_LEN];
+   char                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -233,30 +210,18 @@ STRING              extension;
 	return TRUE;
      }
    else
-     {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
-	return FALSE;
-     }
+     return FALSE;
 }
 
 /*----------------------------------------------------------------------
    StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            StoreDocument (PtrDocument pDoc, PathBuffer docName, PathBuffer dirName, ThotBool copy, ThotBool move)
-#else  /* __STDC__ */
-ThotBool            StoreDocument (pDoc, docName, dirName, copy, move)
-PtrDocument         pDoc;
-PathBuffer          docName;
-PathBuffer          dirName;
-ThotBool            copy;
-ThotBool            move;
-
-#endif /* __STDC__ */
+ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
+			PathBuffer dirName, ThotBool copy, ThotBool move)
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
-   CHAR_T                buf[MAX_TXT_LEN];
+   char                buf[MAX_TXT_LEN];
    int                 i;
    ThotBool            sameFile, status, ok;
 
@@ -271,14 +236,14 @@ ThotBool            move;
      {
 	status = TRUE;
 	sameFile = TRUE;
-	if (ustrcmp (docName, pDoc->DocDName) != 0)
+	if (strcmp (docName, pDoc->DocDName) != 0)
 	   sameFile = FALSE;
-	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
+	if (strcmp (dirName, pDoc->DocDirectory) != 0)
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
 	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
-	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
+	strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
@@ -292,18 +257,14 @@ ThotBool            move;
 	     /* on teste le droit d'ecriture sur le .Tmp */
 	     ok = FileWriteAccess (tempName) == 0;
 	     if (ok)
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_WRITING);
-		  ok = simpleSave (pDoc, tempName, FALSE);
-	       }
+	       ok = simpleSave (pDoc, tempName, FALSE);
 	     if (ok)
-		UpdateAllInclusions (pDoc);
+	       UpdateAllInclusions (pDoc);
 	  }
 	if (!ok)
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     FindCompleteName (docName, "PIV", dirName, buf, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
 	     status = FALSE;
 	  }
 	else
@@ -326,15 +287,13 @@ ThotBool            move;
 		/* detruit l'ancienne sauvegarde */
 	       {
 		  TtaFileUnlink (bakName);
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN),
-				     pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
 		  SetDocumentModified (pDoc, FALSE, 0);
 
 		  if (!sameFile)
 		    {
-		       if (ustrcmp (dirName, oldDir) != 0 && ustrcmp (docName, pDoc->DocDName) == 0)
+		       if (strcmp (dirName, oldDir) != 0 && strcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
@@ -343,7 +302,7 @@ ThotBool            move;
 			       TtaFileUnlink (buf);
 			    }
 
-		       if (ustrcmp (docName, pDoc->DocDName) != 0)
+		       if (strcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
 			    if (move)
@@ -354,9 +313,9 @@ ThotBool            move;
 				 TtaFileUnlink (buf);
 			      }
 			 }
-		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }
@@ -374,50 +333,30 @@ ThotBool            move;
    info utilisateur
    Rend false si l'ecriture n'a pu se faire.                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     interactiveSave (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static ThotBool     interactiveSave (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
-   ThotBool            status;
-
-   status = FALSE;
-   if (pDoc->DocReadOnly)
-      /* on ne sauve pas les documents qui sont en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (pDoc->DocSSchema == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_DOC_NOT_WRITTEN);
-   else
-     status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,SaveDocWithCopy, SaveDocWithMove);
-    
-   if (status)
-     SetDocumentModified (pDoc, FALSE, 0);
-   return status;
+  ThotBool            status;
+  
+  status = FALSE;
+  if (!pDoc->DocReadOnly && pDoc->DocSSchema)
+    status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,SaveDocWithCopy, SaveDocWithMove);
+  
+  if (status)
+    SetDocumentModified (pDoc, FALSE, 0);
+  return status;
 }
 
 /*----------------------------------------------------------------------
   SetWriteDirectory sets the directory, filename, if the next write 
   is with copy and with move
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void              SetWriteDirectory (PtrDocument pDoc, PathBuffer fileName, PathBuffer directoryName, ThotBool withCopy, ThotBool withMove)
-#else  /* __STDC__ */
-void              SetWriteDirectory (pDoc, fileName, directoryName, withCopy, withMove)
-PtrDocument    pDoc;
-PathBuffer     fileName;
-PathBuffer     directoryName;
-ThotBool       withCopy;
-ThotBool       withMove;
-#endif /* __STDC__ */
+void SetWriteDirectory (PtrDocument pDoc, PathBuffer fileName,
+			PathBuffer directoryName, ThotBool withCopy,
+			ThotBool withMove)
 {
-  ustrcpy (SaveFileName, fileName);
-  ustrcat (SaveFileName, ".PIV");
-  ustrcpy (SaveDirectoryName, directoryName);
+  strcpy (SaveFileName, fileName);
+  strcat (SaveFileName, ".PIV");
+  strcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;
   DocumentToSave = pDoc;
@@ -434,16 +373,7 @@ ThotBool       withMove;
    - mode = 4 : sauve sans demander de nom.                
    - mode = 5 : sauve sans demander de nom et sans message.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            WriteDocument (PtrDocument pDoc, int mode)
-
-#else  /* __STDC__ */
-ThotBool            WriteDocument (pDoc, mode)
-PtrDocument         pDoc;
-int                 mode;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ok;
 
@@ -458,8 +388,6 @@ int                 mode;
 	   break;
 	 case 1:
 	   ok = saveWithExtension (pDoc, "BAK");
-	   if (ok)
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 	   break;
 	 case 2:
 	   ok = saveWithExtension (pDoc, "BAK");

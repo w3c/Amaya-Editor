@@ -375,7 +375,6 @@ void                ImportDocument (Name SSchemaName, PathBuffer directory,
 	ustrncpy (directory, DocumentPath, MAX_PATH);
       /* construit le nom complet du fichier a importer */
       MakeCompleteName (fileName, "", directory, fullName, &i);
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
       /* ouvre le fichier a importer */
       file = ufopen (fullName, "r");
       if (file != NULL)
@@ -436,9 +435,6 @@ void                ImportDocument (Name SSchemaName, PathBuffer directory,
 		 /* lit le fichier a importer et met son contenu dans le
 		    document */
 		 ok = ReadImportFile (file, pDoc);
-		 if (!ok)
-		   /* echec */
-		   TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
 		 /* indique a l'application interessee qu'un document a ete
 		    cree' */
 		 notifyDoc.event = TteDocCreate;
@@ -595,10 +591,7 @@ static void ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName,
    ustrncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
    /* charge le nouveau schema de presentation */
    pPSchema = LoadPresentationSchema (newPSchemaName, pDoc->DocSSchema);
-   if (pPSchema == NULL)
-      /* on n'a pas pu charger le nouveau schema de presentation */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGE_PRES_IMP);
-   else
+   if (pPSchema)
      {
       /* ferme toutes les vues du document */
       CloseAllViewsDoc (pDoc);
@@ -789,10 +782,7 @@ static void  ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema,
    ustrncpy (SchemaPath, pDoc->DocSchemasPath, MAX_PATH);
    /* charge le nouveau schema de presentation */
    pPSchema = LoadPresentationSchema (newPSchemaName, pNatSSchema);
-   if (pPSchema == NULL)
-      /* on n'a pas pu charger le nouveau schema de presentation */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGE_PRES_IMP);
-   else
+   if (pPSchema)
      {
 	/* libere l'ancien schema de presentation */
 	FreePresentationSchema (pNatSSchema->SsPSchema, pNatSSchema);

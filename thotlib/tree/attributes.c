@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -62,13 +62,7 @@
    Retourne Vrai si les deux elements pointes par pEl1 et pEl2     
    possedent les memes attributs avec les memes valeurs            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SameAttributes (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            SameAttributes (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-#endif /* __STDC__ */
+ThotBool SameAttributes (PtrElement pEl1, PtrElement pEl2)
 {
    PtrAttribute        pAttr1, pAttr2;
    int                 nAttr1, nAttr2;
@@ -146,13 +140,7 @@ PtrElement          pEl2;
    l'element pEl.							
    UNIQUEMENT pour une reference *INTERNE*                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
-#else  /* __STDC__ */
-static void         SetAttrReference (pAttr, pEl)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
+static void SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
 {
    PtrReference        pPR1;
 
@@ -183,15 +171,8 @@ PtrAttribute        pAttr;
    Ce lien peut ensuite etre etabli par la procedure SetReference, 
    en particulier pour un lien externe.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAttribute        AttachAttrByExceptNum (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-PtrAttribute        AttachAttrByExceptNum (ExceptNum, pEl, pReferredEl, pDoc)
-int                 ExceptNum;
-PtrElement          pEl;
-PtrElement          pReferredEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+PtrAttribute AttachAttrByExceptNum (int ExceptNum, PtrElement pEl,
+				    PtrElement pReferredEl, PtrDocument pDoc)
 {
    PtrAttribute        pAttr;
    PtrReference        pRef;
@@ -229,7 +210,7 @@ PtrDocument         pDoc;
       if (pAttr->AeAttrNum == attrNum &&
       /* attrNum = 1: Langue, quel que soit le schema de structure */
 	  (attrNum == 1 ||
-	   !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+	   !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
 	 found = TRUE;
       else
 	 pAttr = pAttr->AeNext;
@@ -303,18 +284,9 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    On reaffiche un pave modifie                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int frame, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
-#else  /* __STDC__ */
-static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, frame, pEl, pDoc, pAttr)
-PtrAbstractBox      pAbsBox;
-int                 boxNum;
-PtrPSchema          pPSchema;
-int                 frame;
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
+static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
+			     PtrPSchema pPSchema, int frame, PtrElement pEl,
+			     PtrDocument pDoc, PtrAttribute pAttr)
 {
   int                 height;
   PtrAbstractBox      pAbChild;
@@ -355,14 +327,7 @@ PtrAttribute        pAttr;
    Reafficher toutes les boites de presentation qui utilisent      
    la valeur de cet attribut.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RedisplayAttribute (pAttr, pEl, pDoc)
-PtrAttribute        pAttr;
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
 {
    PtrPSchema          pPSchema;
    ThotBool            found;
@@ -433,17 +398,9 @@ PtrDocument         pDoc;
    regles de presentation correspondant a l'attribut decrit dans   
    le bloc pointe' par pAttr.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
-		      PtrAttribute pAttr, PtrElement pElAttr, ThotBool inherit)
-#else  /* __STDC__ */
-void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, inherit)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-ThotBool            inherit;
-#endif /* __STDC__ */
+void ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
+			    PtrAttribute pAttr, PtrElement pElAttr,
+			    ThotBool inherit)
 {
    PtrAttribute        pOldAttr;
    ThotBool            doIt;
@@ -511,16 +468,8 @@ ThotBool            inherit;
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
-				       PtrAttribute pAttr, PtrElement pElAttr)
-#else  /* __STDC__ */
-void                ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pElAttr)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-#endif /* __STDC__ */
+void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
+			       PtrAttribute pAttr, PtrElement pElAttr)
 {
    PtrElement          pChild;
    PtrAttribute        pOldAttr;
@@ -565,14 +514,7 @@ PtrElement          pElAttr;
    regles de presentation des attributs dont les valeurs se	
    	comparent a pAttr.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
-#else  /* __STDC__ */
-void                ApplyAttrPRules (pEl, pDoc, pAttr)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
+void ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 {
    PtrElement          pChild;
    ComparAttrTable    *attrValComp;
@@ -617,13 +559,7 @@ PtrAttribute        pAttr;
 /*----------------------------------------------------------------------
    Chaine les elements liberes par les fusions de texte.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                KeepFreeElements (PtrElement pEl, PtrElement * pFirstFree)
-#else  /* __STDC__ */
-void                KeepFreeElements (pEl, pFirstFree)
-PtrElement          pEl;
-PtrElement         *pFirstFree;
-#endif /* __STDC__ */
+void KeepFreeElements (PtrElement pEl, PtrElement *pFirstFree)
 {
    pEl->ElNext = *pFirstFree;
    *pFirstFree = pEl;
@@ -637,15 +573,8 @@ PtrElement         *pFirstFree;
    Le parametre force est vrai quand on veut forcer le changement  
    de langue.                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, ThotBool force)
-#else  /* __STDC__ */
-void                ChangeLanguage (pDoc, pEl, lang, force)
-PtrDocument         pDoc;
-PtrElement          pEl;
-Language            lang;
-ThotBool            force;
-#endif /* __STDC__ */
+void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
+		     ThotBool force)
 {
    int                 view;
    PtrElement          pChild;
@@ -719,15 +648,7 @@ ThotBool            force;
    contient un attribut qui initialise un (des) compteur(s).	
    	Si oui, met a jour les valeurs de ce(s) compteur(s).		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                UpdateCountersByAttr (pEl, pAttr, pDoc)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+void UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 {
    int                 counter;
    PtrPSchema          pPS;
@@ -774,22 +695,9 @@ PtrDocument         pDoc;
    comparaison et ne pas en chercher d'autre dans les ascendants	
    de pEl.                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc,
-		                     PtrAttribute pAttr, PtrElement pElAttr,
-				     ThotBool inherit, PtrAttribute pCompAttr)
-#else  /* __STDC__ */
-void                RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, inherit,
-					    pCompAttr)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-ThotBool            inherit;
-PtrAttribute        pCompAttr;
-
-#endif /* __STDC__ */
-
+void RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc,
+			     PtrAttribute pAttr, PtrElement pElAttr,
+			     ThotBool inherit, PtrAttribute pCompAttr)
 {
    /* on ne traite pas les marques page */
    if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
@@ -810,16 +718,8 @@ PtrAttribute        pCompAttr;
    	presentation heritees de l'attribut pAttr.			
    Si pEl porte lui-meme un attribut de type pAttr, on arrete.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, PtrElement pElAttr)
-#else  /* __STDC__ */
-void                RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pElAttr)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-#endif /* __STDC__ */
-
+void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
+				 PtrAttribute pAttr, PtrElement pElAttr)
 {
    PtrElement          pChild;
    InheritAttrTable   *inheritedAttr;
@@ -862,16 +762,7 @@ PtrElement          pElAttr;
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
-
-#else  /* __STDC__ */
-void                RemoveComparAttrPresent (pEl, pDoc, pAttr)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
-
+void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 {
    PtrElement          pChild;
    ComparAttrTable    *attrValComp;
@@ -916,14 +807,8 @@ PtrAttribute        pAttr;
 /*----------------------------------------------------------------------
    Ajoute un attribut pNewAttr a l'element pEl avant l'attribut pAttrNext
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAttribute        AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr, PtrAttribute pAttrNext)
-#else  /* __STDC__ */
-PtrAttribute        AddAttrToElem (pEl, pNewAttr, pAttrNext)
-PtrElement          pEl;
-PtrAttribute        pNewAttr;
-PtrAttribute        pAttrNext;
-#endif /* __STDC__ */
+PtrAttribute AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr,
+			    PtrAttribute pAttrNext)
 {
   PtrAttribute        pAttr, pA;
   PtrReference        pRef;
@@ -1001,15 +886,7 @@ PtrAttribute        pAttrNext;
    Egalement utilise' pour supprimer un attribut et desappliquer les
    regles de presentation correspondantes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
-#else  /* __STDC__ */
-void                AttachAttrWithValue (pEl, pDoc, pNewAttr)
-PtrElement          pEl;
-PtrdocumentA        pDoc;
-PtrAttribute        pNewAttr;
-
-#endif /* __STDC__ */
+void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
 {
    PtrAttribute        pAttr, pAttrAsc, pAttrNext;
    PtrElement          pChild, pElAttr;
@@ -1070,11 +947,8 @@ PtrAttribute        pNewAttr;
 	      if (pNewAttr->AeAttrNum == 1)
 		 mandatory = TRUE;
 	if (mandatory)
-	   /* suppression d'un attribut obligatoire. Interdit */
-	  {
-	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_ATTR_REQUIRED_NOT_DELETED);
-	     return;
-	  }
+	  /* suppression d'un attribut obligatoire. Interdit */
+	  return;
      }
 
    /* faut-il traiter des heritages et comparaisons d'attributs */
@@ -1246,13 +1120,7 @@ PtrAttribute        pNewAttr;
    ExceptNum et porte' par l'element pEl.				
    	On retourne NULL si l'element n'a pas cet attribut.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAttribute        GetAttrByExceptNum (PtrElement pEl, int ExceptNum)
-#else  /* __STDC__ */
-PtrAttribute        GetAttrByExceptNum (pEl, ExceptNum)
-PtrElement          pEl;
-int                 ExceptNum;
-#endif /* __STDC__ */
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -1268,7 +1136,7 @@ int                 ExceptNum;
       pAttr = pEl->ElFirstAttr;
       found = FALSE;
       while (pAttr != NULL && !found)
-	if (!ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName) &&
+	if (!strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName) &&
 	    pAttr->AeAttrNum == attrNum)
 	  found = TRUE;
 	else
@@ -1297,14 +1165,7 @@ int                 ExceptNum;
    the attribute found, or NULL if the element  does not have this
    type of attribute.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Attribute           TtaGetAttribute (Element element, AttributeType attributeType)
-#else  /* __STDC__ */
-Attribute           TtaGetAttribute (element, attributeType)
-Element             element;
-AttributeType       attributeType;
-
-#endif /* __STDC__ */
+Attribute TtaGetAttribute (Element element, AttributeType attributeType)
 {
    PtrAttribute        pAttr;
    PtrAttribute        attribute;
@@ -1339,8 +1200,8 @@ AttributeType       attributeType;
 		    if (attributeType.AttrSSchema == NULL)
 		      /* The structure schema does not interest us */
 		      found = TRUE;
-		    else if (!ustrcmp (pAttr->AeAttrSSchema->SsName,
-				       ((PtrSSchema) (attributeType.AttrSSchema))->SsName))
+		    else if (!strcmp (pAttr->AeAttrSSchema->SsName,
+				      ((PtrSSchema) (attributeType.AttrSSchema))->SsName))
 		      /* Same schema of structure */
 		      found = TRUE;
 		  }
@@ -1360,16 +1221,10 @@ AttributeType       attributeType;
 
    Parameter:
    attribute: the attribute of interest.
-
    Return values:
    length of the character string contained in the attribute.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-int                 TtaGetTextAttributeLength (Attribute attribute)
-#else  /* __STDC__ */
-int                 TtaGetTextAttributeLength (attribute)
-Attribute           attribute;
-#endif /* __STDC__ */
+int TtaGetTextAttributeLength (Attribute attribute)
 {
    int                 length;
    PtrTextBuffer       pBT;
@@ -1400,20 +1255,11 @@ Attribute           attribute;
    attribute: the attribute of interest.
    buffer: address of the buffer that will contain the value of the attribute.
    length: size of the buffer (in bytes).
-
    Return values:
    buffer: character string representing the value of the attribute.
    length: actual length of the character string.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaGiveTextAttributeValue (Attribute attribute, CHAR_T* buffer, int *length)
-#else  /* __STDC__ */
-void                TtaGiveTextAttributeValue (attribute, buffer, length)
-Attribute           attribute;
-CHAR_T*             buffer;
-int                *length;
-#endif /* __STDC__ */
-
+void TtaGiveTextAttributeValue (Attribute attribute, char *buffer, int *length)
 {
   UserErrorCode = 0;
   *buffer = EOS;

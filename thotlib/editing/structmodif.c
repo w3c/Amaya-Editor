@@ -89,14 +89,7 @@ void                InitSave ()
    IsASavedElement   retourne vrai si l'element pointe par pEl se  
    trouve dans le buffer de Couper-Copier-Coller.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsASavedElement (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            IsASavedElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pE;
    PtrPasteElem        pPasteD;
@@ -124,15 +117,7 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    CopyLeaf                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CopyLeaf (PtrCopyDescr pCopyD, ThotBool redisplay)
-#else  /* __STDC__ */
-static void         CopyLeaf (pCopyD, redisplay)
-PtrCopyDescr        pCopyD;
-ThotBool            redisplay;
-
-#endif /* __STDC__ */
-
+static void CopyLeaf (PtrCopyDescr pCopyD, ThotBool redisplay)
 {
    PtrTextBuffer       pBuf, pBufS;
    PtrDocument         pDocPav;
@@ -189,16 +174,7 @@ ThotBool            redisplay;
    l'element. pDoc designe le document auquel appartient		
    l'element pointe' par pEl.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
-#else  /* __STDC__ */
-void                RedisplayCopies (pEl, pDoc, redisplay)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            redisplay;
-
-#endif /* __STDC__ */
-
+void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 {
    PtrReference        pRef;
    PtrPSchema          pSchP;
@@ -262,13 +238,7 @@ ThotBool            redisplay;
    IsANewElement   retourne vrai si l'element pointe' par pEl est  
    l'un des nouveaux elements crees                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsANewElement (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            IsANewElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            ret;
@@ -284,13 +254,7 @@ PtrElement          pEl;
    IsWithinANewElement    retourne vrai si l'element pEl est   	
    dans l'un des sous-arbres qu'on vient de creer                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsWithinANewElement (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            IsWithinANewElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
 {
    ThotBool            ret;
 
@@ -310,16 +274,7 @@ PtrElement          pEl;
    element qui est reference', fait recalculer la presentation     
    des attributs-reference qui pointent sur lui.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateRefAttributes (PtrElement pRoot, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                UpdateRefAttributes (pRoot, pDoc)
-PtrElement          pRoot;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void UpdateRefAttributes (PtrElement pRoot, PtrDocument pDoc)
 {
    PtrReference        pRef;
    PtrElement          pChild;
@@ -362,15 +317,7 @@ PtrDocument         pDoc;
    Parcourt tout le sous-arbre de racine pRoot et, pour chaque     
    element de paire recalcule l'identificateur unique de la paire. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AssignPairIdentifiers (PtrElement pRoot, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                AssignPairIdentifiers (pRoot, pDoc)
-PtrElement          pRoot;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void AssignPairIdentifiers (PtrElement pRoot, PtrDocument pDoc)
 {
    PtrElement          pPairEl, pChild;
 
@@ -410,16 +357,8 @@ PtrDocument         pDoc;
    	references qui pointent sur cet element ou un element de son	
    	sous-arbre.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayEmptyReferences (PtrElement pEl, PtrDocument * pDoc, ThotBool redisplay)
-#else  /* __STDC__ */
-void                RedisplayEmptyReferences (pEl, pDoc, redisplay)
-PtrElement          pEl;
-PtrDocument        *pDoc;
-ThotBool            redisplay;
-
-#endif /* __STDC__ */
-
+void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
+			       ThotBool redisplay)
 {
    PtrReference        pRef;
    PtrElement          pElRef, pChild;
@@ -546,14 +485,7 @@ ThotBool            redisplay;
 /*----------------------------------------------------------------------
    TtcHolophrast   holophraste les elements selectionnes           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcHolophrast (Document document, View view)
-#else  /* __STDC__ */
-void                TtcHolophrast (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcHolophrast (Document document, View view)
 {
    PtrElement          firstSel, lastSel, pEl;
    PtrDocument         pDoc;
@@ -562,7 +494,7 @@ View                view;
 
    /* y-a-t'il une selection courante ? */
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+      return;
    else
      {
 	/* eteint la selection */
@@ -621,24 +553,13 @@ View                view;
 	   (*ThotLocalActions[T_chselect]) (pDoc);
 	if (ThotLocalActions[T_chattr] != NULL)
 	   (*ThotLocalActions[T_chattr]) (pDoc);
-	if (!done)
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_HOLOPHRAST_IMP);
      }
 }
 
 /*----------------------------------------------------------------------
    DeHolophrast   deholophraste l'element pEl du document pDoc.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeHolophrast (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                DeHolophrast (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void DeHolophrast (PtrElement pEl, PtrDocument pDoc)
 {
    /* detruit les paves de l'element */
    DestroyAbsBoxes (pEl, pDoc, TRUE);
@@ -659,18 +580,8 @@ PtrDocument         pDoc;
    position indiquee (qui doit etre un atome texte), cree l'attribut
    langue sur cet atome si setLangAttr est vrai.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang, ThotBool setLangAttr)
-
-#else  /* __STDC__ */
-void                NewTextLanguage (pAb, charIndex, lang, setLangAttr)
-PtrAbstractBox      pAb;
-int                 charIndex;
-Language            lang;
-ThotBool		    setLangAttr;
-#endif /* __STDC__ */
-
+void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang,
+		      ThotBool setLangAttr)
 {
    PtrElement          pEl, pNextEl, pSecond, pNext;
    PtrDocument         pDoc;
@@ -732,14 +643,7 @@ ThotBool		    setLangAttr;
    Retourne TRUE si au moins un element a ete cree', FALSE 
    si rien n'a ete cree'.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            CompleteElement (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-ThotBool            CompleteElement (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pComponent, pNewEl, pLastEl, pPrev, pClose;
    PtrElement          pSibling, pPage;
@@ -1062,17 +966,8 @@ PtrDocument         pDoc;
    Retourne TRUE en cas de succes.
    select: select the new element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, ThotBool block, ThotBool select)
-#else  /* __STDC__ */
-ThotBool            BreakElement (pElReplicate, pSplitEl, splitIndex, block, select)
-PtrElement          pElReplicate;
-PtrElement          pSplitEl;
-int                 splitIndex;
-ThotBool            block;
-ThotBool		    select;
-#endif /* __STDC__ */
-
+ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
+		       int splitIndex, ThotBool block, ThotBool select)
 {
   PtrElement      firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl, pPrev,
                   pNext, pChild, pEl2, pEl, pCompleteElem, pSibling, pClose;
@@ -1088,7 +983,7 @@ ThotBool		    select;
   CloseInsertion ();
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+    return ret;
   else if (!pDoc->DocReadOnly)
     {
       if (pSplitEl != NULL)
@@ -1419,16 +1314,8 @@ ThotBool		    select;
    sous-arbre de racine pEl avec leurs voisins, s'ils ont les      
    memes attributs et les memes regles de presentation specifique. 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         MergeTextLeaves (PtrElement * pEl, PtrElement * pFirstFree, PtrDocument * pDoc)
-#else  /* __STDC__ */
-static void         MergeTextLeaves (pEl, pFirstFree, pDoc)
-PtrElement         *pEl;
-PtrElement         *pFirstFree;
-PtrDocument        *pDoc;
-#endif /* __STDC__ */
-
+static void MergeTextLeaves (PtrElement *pEl, PtrElement *pFirstFree,
+			     PtrDocument *pDoc)
 {
    PtrElement          pPrev, pFree, pChild;
 
@@ -1467,19 +1354,8 @@ PtrDocument        *pDoc;
    Select all elements between firstSel and lastSel in document pDoc
    Redisplay all views.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar)
-
-#else  /* __STDC__ */
-void                SelectRange (pDoc, firstSel, lastSel, firstChar, lastChar)
-PtrDocument         pDoc;
-PtrElement          firstSel;
-PtrElement          lastSel;
-int                 firstChar;
-int                 lastChar;
-#endif /* __STDC__ */
-
+void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
+		  int firstChar, int lastChar)
 {
    PtrElement          pEl, SelectedEl[MAX_SEL_ELEM];
    /* pointeurs sur les elements selectionnes si SelContinue est faux */

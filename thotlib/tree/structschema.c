@@ -41,7 +41,7 @@
    Au retour, pDoc contient un pointeur sur le contexte de 
    document.                                               
   ----------------------------------------------------------------------*/
-void          CreateDocument (PtrDocument *pDoc, Document *document)
+void CreateDocument (PtrDocument *pDoc, Document *document)
 {
   Document        doc;
 
@@ -53,7 +53,6 @@ void          CreateDocument (PtrDocument *pDoc, Document *document)
 	doc++;
       if (doc >= MAX_DOCUMENTS)
 	{
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_DOCS);
 	  *pDoc = NULL;
 	  *document = 0;
 	  return;
@@ -2350,9 +2349,9 @@ PtrAttribute        AttributeValue (PtrElement pEl, PtrAttribute pAttr)
    	type de pNewAttr a l'element pEl qui porte eventuellement un	
    	attribut pAttr de meme type que pNewAttr.			
   ----------------------------------------------------------------------*/
-ThotBool            CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
-				      PtrAttribute pNewAttr,
-				      ThotBool * mandatory)
+ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
+			   PtrAttribute pNewAttr,
+			   ThotBool *mandatory)
 {
    ThotBool            requested, allowed;
    SRule              *pRe1;
@@ -2368,10 +2367,7 @@ ThotBool            CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
       if (pAttr->AeDefAttr)
 	 /* on peut modifier un attribut reference, meme impose' */
 	 if (pAttr->AeAttrType != AtReferenceAttr)
-	   {
-	      requested = TRUE;
-	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_MANDATORY_ATTR);
-	   }
+	   requested = TRUE;
 
    /* si c'est un attribut local, il ne s'applique que s'il correspond au */
    /* type de l'element */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -52,11 +52,7 @@ static ATranslation LoadedTSchema[MAX_TSCHEMAS];
    InitTranslationSchemasTable initialise la table des schemas de	
    traduction charges.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitTranslationSchemasTable ()
-#else  /* __STDC__ */
-void                InitTranslationSchemasTable ()
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -73,11 +69,7 @@ void                InitTranslationSchemasTable ()
    ClearTranslationSchemasTable libere tous les schemas de         
    traduction pointe's par la table des schemas de traduction      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearTranslationSchemasTable ()
-#else  /* __STDC__ */
-void                ClearTranslationSchemasTable ()
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -98,13 +90,7 @@ void                ClearTranslationSchemasTable ()
 /*----------------------------------------------------------------------
    LoadTranslationSchema charge un schema de traduction.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrTSchema          LoadTranslationSchema (schName, pSS)
-Name                schName;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
 {
    PtrTSchema          pTSch;
    int                 i;
@@ -156,13 +142,7 @@ PtrSSchema          pSS;
    schName est trouvee dans ce bloc, on met dans schName	
    le nom du schema de traduction a` utiliser.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     GetUSErule (PtrTRuleBlock pBlock, Name schName)
-#else  /* __STDC__ */
-static ThotBool     GetUSErule (pBlock, schName)
-PtrTRuleBlock       pBlock;
-Name                schName;
-#endif /* __STDC__ */
 {
    PtrTRule            pTRule;
    ThotBool            found;
@@ -198,12 +178,7 @@ Name                schName;
    Au retour, rend dans schName le nom du schema de        
    traduction.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GetTransSchName (Name schName)
-#else  /* __STDC__ */
-static void         GetTransSchName (schName)
-Name                schName;
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            found, natureOK;
@@ -238,11 +213,7 @@ Name                schName;
 		TsElemTRule[LoadedTSchema[0].pStructSchema->SsRootElem - 1], schName);
      }
    if (!found)
-     {
-	/* on n'a pas trouve' de regle USE pour cette nature */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EL_NOT_TRANSLATED), schName);
-	schName[0] = EOS;
-     }
+     schName[0] = EOS;
 }
 
 
@@ -250,12 +221,7 @@ Name                schName;
    GetTranslationSchema retourne le schema de traduction a`	
    	appliquer aux elements appartenant au schema de structure pSS.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrTSchema          GetTranslationSchema (pSS)
-PtrSSchema          pSS;
-#endif /* __STDC__ */
 {
    PtrTSchema          pTSchema;
    Name                schemaName;

@@ -1,286 +1,199 @@
 # encoding= latin1
 0 X11 Hatasý : %s\n
-1 Görünüm bulunamadý.
-2 Sözlük yüklerken hata: %s\n
-3 eksik dosya: %s\n
-4 Yazýlamýyor: %s
-5 Þema bulunamýyor: %s
-6 Onayla
-7 Alfabe dosyasý yok
-8 %s belgesi açýlamýyor
-9 Pivot biçim hatasý: %s
-10 Yeni görünüm eskisinin yerini alamaz
-11 Uyumsuz þemalar. %s yeniden derlenmeli
-12 Yanlýþ pencere numarasý
-13 Ölümcül hata: Thot yazýtipleri bulunamadý
-14 Sütun içeren belge. Yeniden sayfala.
-15 Bellek tükendi
-16 Ölümcül Hata: X sistemine baðlanýlamýyor
-17 Görünüm dosya yaratmadan önce deðiþtirildi
-18 Önce seçim
-19 %s yazýtipi için yer kalmadý
-20 %s belgesinin yapýsý geçersiz
-21 %s belgesi deðiþtirilemiyor veya kaydedilemiyor.
-22 Kural tablosu dolu.
-23 Yapý þemasý %s deðiþti.
-24 Yanlýþ dosya: %s.STR
-25 Yanlýþ dosya: %s.PRS
-26 %s dizini bulunamadý
-27 Yazdýrýlamýyor
-28 Sunum deðiþtirilemiyor
-29 PostScript yazdýrýlamýyor
-30 dosya yüklenemiyor
-31 Görünüm boþ
-32 Geçersiz, salt oku birim.
-33 Çiftli bileþenler kopyalanamaz
-34 %s belgesi için sözlük yaratýlýyor
-35 Görüntü türü
-36 Görüntü sunumu
-37 Görüntü dosyasý
-38 %s belgesi yazdýrýldý
-39 Sayfa ...
-40 ... ya kadar
-41 Kopya sayýsý
-42 Ölçek (%)
-43 1 sayfa/kaðýt
-44 2 sayfa/kaðýt
-45 4 sayfa/kaðýt
-46 Kaðýt baþýna sayfa
-47 Sayfalandýrma
-48 Yazdýrýlacak görünümler
-49 %s sunumu ile yazdýrýlýyor
-50 Bu bir kopya
-51 "%s" yüklenemedi
-52 %s ortam deðiþkeni tanýmsýz
-53 Bir birim kendisini belirtemez
-54 Özellik gerekli, silinmedi
-55 Nature forbidden here
-56 %s: zorunlu parça
-57 Yalnýzca bir parça seçin
-58 %s birimi buraya yapýþtýrýlamaz
-59 Burada kutu deðiþtiremezsiniz.
-60 %s
-61 Yazdýrma için görünüm seçilmedi
-62 %s için sunum girin
-63 Belge okunuyor...
-64 Birim seçin
-65 thot.keyboard dosyasý bulunamadý
-66 X clipboard deðiþmedi
-67 Deðiþik parçalar kopyalanamaz, gruplayýn
-68 salt-oku belge, yapýlamaz
-69 Bir belgeye kendisini ekleyemezsiniz
-70 %s için kutu deðiþtiriliyor
-71 %s kutusu yer deðiþtiriyor
-72 %s belgesi kaydedildi
-73 Kaydediliyor...
-74 Boþ baþvuru.
-75 Sayfa kesmelerini kopyalamayýn
-76 %s birimi seçtiniz, oysa %s birimi seçmeniz gerekirdi
-77 Dizin dökümünü deðiþtiriyorum
-78 Yazdýrýlýyor
-79 %s belgesi kaydediliyor...
-80 %s sözlüðü yükleniyor
-81 PostScript dosyasý yazdýrýlýyor...
-82 Dosya ekleniyor...
-83 Belgenin hangi biçimini yðklemek istersiniz?
-84 polyline için en az iki nokta
-85 %s için bir özellik girin
-86 Eski pivot biçimi. Belgeyi kaydedin.
-87 %s kutusu yaratýlýyor
-88 Bellek yetersiz
-89 %s bir birim seçin
-90 Bu birim "holophrast" edilemez
-91 Designate the element to be referred
-92 Çok fazla belge
-93 Boþ belge, yazýlmadý
-94 Buraya eklemek mümkün deðil.
-95 Silecek bir þey yok.
-96 Gerekli özellik.
-97 Tüm görünümler yaratýldý.
-98 Boþ belge.
-99 Belgeyi deðiþtirmeyin!
-100 Çok fazla görünüm.
-101 Yapýþtýracak bir þey yok.
-102 Yeni pencere açýlamýyor. Pencere kapatýn
-103 *** Thot: Dönüþü olmayan HATA ***
-104 deðiþtirilen belgeler varsa kaydedilecek
-105 Olduðu gibi
-106 Oranlý
-107 Tekrarlý
-108 X Tekrarlý
-109 Y Tekrarlý
-110 Beklenmeyen EOF
-111 PS dosyasý %s içinde kenar kutusu yok
-112 Bölme özellikleri dosyasý %s açýlamýyor
-113 Bölme özellikleri dosyasý %s okunuyor
-114 %s kelimesi bölünemeyecek kadar uzun, doðru olduðundan emin misiniz?
-115 Pixmap : Renk hatasý
-116 Pixmap : Okuma hatasý
-117 Pixmap : Dosya geçersiz
-118 Pixmap : Bellek yok
-119 Pixmap : Renk baþarýsýz
-120 %s dosyasý eklenemiyor
-121 %s dosyasý yaratýlamýyor
-122 %s için dönüþüm þemasý yok
-123 Geçersiz.TRA dosyasý: %s
-124 Çok fazla çýktý dosyasý
-125 %s görünümü için pencere boyutu yok
-126 %s is not a valid sibling for %s (%s)
-127 %s is not a valid child for %s (%s)
-128 %s özelliði %s birimi için gereklidir
-129 %s, sayfa %d
-130 %s : bilinmeyen tip
-131 Dil
-132 Özellik
-133 Kaynak ara
-134 Standart sunum
-135 Uygula
-136 Karakterler
-137 Altçizgi
-138 Grafikler
-139 Biçim
-140 Öntanýmlý
-141 Hizala
-142 Ýçeriden
-143 Yazdýr
-144 Elle besleme
-145 Seçenekler
-146 A4
-147 US
-148 Sayfa biçimi
-149 Tamam
-150 Dizinleri
-151 Belge ismi
-152 %s belgesi zaten var, üzerine yazmak ister misiniz?
-153 1. tuþ yazý rengini ayarlar
-154 2. tuþ arkaplan rengini ayarlar
-155 Yazýtipi ailesi
-156 Normal
-157 Kalýn
-158 Ýtalik
-159 Oblik
-160 Normal
-161 Kalýn
-162 Normal
-163 Altçizgi
-164 Cross out
-165 Body boyu (pt)
-166 Ýçeriden (pt)
-167 Satýr aralýðý (pt)
-168 Satýr aralýðý
-169 Justification
-170 Evet
-171 Hayýr
-172 Belge kaydet
-173 Kapat, kaydetme
-174 Karakter tarzý
-175 Renkler
-176 Sil
-177 Çýktý
-178 PostScript dosya
-179 Yazýcý
-180 Arama
-181 BÜYÜK HARF = küçük harf
-182 ile deðiþtir
-183 Deðiþtir
-184 Deðiþtirme
-185 Ýstek üzerine deðiþtir
-186 Otomatik olarak deðiþtir
-187 Arama nerede
-188 Seçimden önce
-189 Seçim içi
-190 Seçimden sonra
-191 Tüm belgede
-192 Deðiþtirme
-193 Öntanýmlý renkler
-194 kapamadan önce
-195 Belgeyi kapa
-196 Ýsimsiz
-197 Belge yarat
-198 Belge tarzý
-199 Ýsmini deðiþtir
-200 Matematik sembolleri
-201 Grafik
-202 Latin alfabesi
-203 Yunan alfabesi
-204 Sunum
-205 Dosyalar
-206 Belge aç
-207 Belge türü
-208 Görünümler
-209 Süzgeç deðiþtir
-210 Deðer deðiþtirilmedi
-211 Arttýr
-212 Azalt
-213 Görüþ mesafesi
-214 Karakter boyu farký
-215 Yaklaþ
-216 Ýsimle kaydet
-217 Kaydet
-218 Thot
-219 Biçim
-220 Kopyala
-221 Metin
-222 Grafik
-223 Simge
-224 Görüntü
-225 Birim tipi
-226 önce
-227 sonra
-228 civarýnda
-229 Ekle
-230 Yapýþtýr
-231 to create
-232 Ekle
-233 Sayfa kesmesi
-234 (Salt-Oku)
-235 Çevrele
-236 Tip deðiþtir
-237 Birimin dili
-238 Alýnan dil
-239 Belgeyi deðiþtirmeyin!
-240 Bulunamadý
-241 Ara
-242 Boþ birimleri ara
-243 Boþ kaynaklarý ara
-244 Bu birime kaynaklarý ara
-245 Baðlantý
-246 Belge içi kaynak
-247 Ara
-248 Salt-oku birim
-249 Deðiþtirilecek bir þey yok
-250 Aç
-251 Standart karakterler
-252 Standart grafikler
-253 Standart biçim
-254 Standart geometri
-255 pt
-256 Çizgi tarzý
-257 Çizgi aðýrlýðý
-258 Doldurma þekli
-259 Ayýr
-260 Nesne türü
-261 Numaralý sayfaya git
-262 Herhangi
-263 Aranacak olan özellik
-264 Aranacak olan tip
-265 Natures
-266 Özellik deðeri
-267 Bilinmeyen özellik
-268 Kaynaklý birim yarat
-269 Kaynaklý birim göster
-270 Ekleme kipi
-271 Vazgeç
-272 PostScript dönüþümünde hata
-273 Komut "%s" tarafýndan reddedildi.
-274 "%s" yaratýlamadý
-275 Genel biçim
-276 Yeni birime baðlantý yapýlamadý
-277 Karakter kodlamasý
-278 Dil yok
-279 Üstçizgi
-280 Üstçizgi
-281 **Events
-282 **Remove attribute
-283 **Left button sets the selection color
-284 **Middle or Right button sets the caret color
+1 Onayla
+2 Alfabe dosyasý yok
+3 Yeni görünüm eskisinin yerini alamaz
+4 Uyumsuz þemalar. %s yeniden derlenmeli
+5 Yanlýþ pencere numarasý
+6 Ölümcül hata: Thot yazýtipleri bulunamadý
+7 Bellek tükendi
+8 Ölümcül Hata: X sistemine baðlanýlamýyor
+9 Görünüm dosya yaratmadan önce deðiþtirildi
+10 Kural tablosu dolu.
+11 Yanlýþ dosya: %s.STR
+12 Yanlýþ dosya: %s.PRS
+13 %s dizini bulunamadý
+14 Yazdýrýlamýyor
+15 Görüntü türü
+16 Görüntü sunumu
+17 Görüntü dosyasý
+18 %s belgesi yazdýrýldý
+19 Sayfa ...
+20 ... ya kadar
+21 Kopya sayýsý
+22 Ölçek (%)
+23 1 sayfa/kaðýt
+24 2 sayfa/kaðýt
+25 4 sayfa/kaðýt
+26 Kaðýt baþýna sayfa
+27 Sayfalandýrma
+28 Yazdýrýlacak görünümler
+29 %s
+30 Bellek yetersiz
+31 Bu birim "holophrast" edilemez
+32 Designate the element to be referred
+33 *** Thot: Dönüþü olmayan HATA ***
+34 deðiþtirilen belgeler varsa kaydedilecek
+35 Olduðu gibi
+36 Oranlý
+37 Tekrarlý
+38 X Tekrarlý
+39 Y Tekrarlý
+40 Beklenmeyen EOF
+41 Pixmap : Renk hatasý
+42 Geçersiz.TRA dosyasý: %s
+43 %s is not a valid sibling for %s (%s)
+44 %s is not a valid child for %s (%s)
+45 %s, sayfa %d
+46 Dil
+47 Özellik
+48 Kaynak ara
+49 Standart sunum
+50 Uygula
+51 Karakterler
+52 Altçizgi
+53 Grafikler
+54 Biçim
+55 Öntanýmlý
+56 Hizala
+57 Ýçeriden
+58 Yazdýr
+59 Elle besleme
+60 Seçenekler
+61 A4
+62 US
+63 Sayfa biçimi
+64 Tamam
+65 Dizinleri
+66 Belge ismi
+67 %s belgesi zaten var, üzerine yazmak ister misiniz?
+68 1. tuþ yazý rengini ayarlar
+69 2. tuþ arkaplan rengini ayarlar
+70 Yazýtipi ailesi
+71 Normal
+72 Kalýn
+73 Ýtalik
+74 Oblik
+75 Normal
+76 Kalýn
+77 Normal
+78 Altçizgi
+79 Cross out
+80 Body boyu (pt)
+81 Ýçeriden (pt)
+82 Satýr aralýðý (pt)
+83 Satýr aralýðý
+84 Justification
+85 Evet
+86 Hayýr
+87 Belge kaydet
+88 Kapat, kaydetme
+89 Karakter tarzý
+90 Renkler
+91 Sil
+92 Çýktý
+93 PostScript dosya
+94 Yazýcý
+95 Arama
+96 BÜYÜK HARF = küçük harf
+97 ile deðiþtir
+98 Deðiþtir
+99 Deðiþtirme
+100 Ýstek üzerine deðiþtir
+101 Otomatik olarak deðiþtir
+102 Arama nerede
+103 Seçimden önce
+104 Seçim içi
+105 Seçimden sonra
+106 Tüm belgede
+107 Deðiþtirme
+108 Öntanýmlý renkler
+109 kapamadan önce
+110 Belgeyi kapa
+111 Ýsimsiz
+112 Belge yarat
+113 Belge tarzý
+114 Ýsmini deðiþtir
+115 Matematik sembolleri
+116 Grafik
+117 Latin alfabesi
+118 Yunan alfabesi
+119 Sunum
+120 Dosyalar
+121 Belge aç
+122 Görünümler
+123 Süzgeç deðiþtir
+124 Deðer deðiþtirilmedi
+125 Arttýr
+126 Azalt
+127 Görüþ mesafesi
+128 Karakter boyu farký
+129 Yaklaþ
+130 Ýsimle kaydet
+131 Kaydet
+132 Thot
+133 Biçim
+134 Kopyala
+135 Metin
+136 Grafik
+137 Simge
+138 Görüntü
+139 Birim tipi
+140 önce
+141 sonra
+142 civarýnda
+143 Ekle
+144 Yapýþtýr
+145 to create
+146 Ekle
+147 Sayfa kesmesi
+148 (Salt-Oku)
+149 Çevrele
+150 Tip deðiþtir
+151 Birimin dili
+152 Alýnan dil
+153 Bulunamadý
+154 Ara
+155 Boþ birimleri ara
+156 Boþ kaynaklarý ara
+157 Bu birime kaynaklarý ara
+158 Baðlantý
+159 Belge içi kaynak
+160 Ara
+161 Salt-oku birim
+162 Deðiþtirilecek bir þey yok
+163 Aç
+164 Standart karakterler
+165 Standart grafikler
+166 Standart biçim
+167 Standart geometri
+168 pt
+169 Çizgi tarzý
+170 Çizgi aðýrlýðý
+171 Doldurma þekli
+172 Ayýr
+173 Nesne türü
+174 Numaralý sayfaya git
+175 Herhangi
+176 Aranacak olan özellik
+177 Aranacak olan tip
+178 Natures
+179 Özellik deðeri
+180 Bilinmeyen özellik
+181 Kaynaklý birim yarat
+182 Kaynaklý birim göster
+183 Ekleme kipi
+184 Vazgeç
+185 PostScript dönüþümünde hata
+186 Komut "%s" tarafýndan reddedildi.
+187 "%s" yaratýlamadý
+188 Genel biçim
+189 Yeni birime baðlantý yapýlamadý
+190 Karakter kodlamasý
+191 Dil yok
+192 Üstçizgi
+193 Üstçizgi
+194 **Events
+195 **Remove attribute
+196 **Left button sets the selection color
+197 **Middle or Right button sets the caret color

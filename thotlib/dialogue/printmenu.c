@@ -851,12 +851,9 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
      ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
      
    if (newPres[0] != EOS)
-      strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
-   if (ThotLocalActions[T_rextprint]!=NULL && 
-      strcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
-     {
-       TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_CHANGE_PSCH), newPres);
-     }
+     strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
+   if (ThotLocalActions[T_rextprint]) 
+     strcmp (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 
    /* initialise temporary directory and temporary file names */
    TtaGetPrintNames (&tmpDocName, &tmpDirName);

@@ -1906,23 +1906,22 @@ void FrameCallback (int frame, void *evnt)
 	       /* On modifie les dimensions d'une boite */
 	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
-	   else if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
-	     /* non, message 'Selectionnez' */
-	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-	   else if (docsel->DocReadOnly)
-	     /* on ne peut inserer ou coller dans un document en lecture seule */
-	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-	   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
+	   else if (GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar) &&
+		    !docsel->DocReadOnly)
 	     {
-	       /* selection a l'interieur d'une polyline */
-	       if (ThotLocalActions[T_editfunc] != NULL)
-		 (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-	     }
-	   else
-	     {
-	       TtaSetDialoguePosition ();
-	       if (ThotLocalActions[T_insertpaste] != NULL)
-		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+	       if (firstCar != 0 && firstSel->ElTerminal &&
+		   firstSel->ElLeafType == LtPolyLine)
+		 {
+		   /* selection a l'interieur d'une polyline */
+		   if (ThotLocalActions[T_editfunc] != NULL)
+		     (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+		 }
+	       else
+		 {
+		   TtaSetDialoguePosition ();
+		   if (ThotLocalActions[T_insertpaste] != NULL)
+		     (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+		 }
 	     }
 	   
 	 default:

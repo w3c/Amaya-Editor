@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void TtaSaveDocument ( Document document,
-                              STRING documentName );
+                              char *documentName );
 extern ThotBool StoreDocument ( PtrDocument pDoc,
                                 PathBuffer docName,
                                 PathBuffer dirName,
@@ -25,7 +25,7 @@ extern void PivotLoadResources ( void );
 #else /* __STDC__ */
 
 extern void TtaSaveDocument (/* Document document,
-                                STRING documentName */);
+                                char *documentName */);
 extern ThotBool StoreDocument (/* PtrDocument pDoc,
                                   PathBuffer docName,
                                   PathBuffer dirName,

@@ -698,8 +698,8 @@ void                CallbackStructSearchMenu (int ref, int val, STRING txt,
 /*----------------------------------------------------------------------
    BuildGoToPageMenu traite la commande Aller page numero              
   ----------------------------------------------------------------------*/
-void                BuildSearchOptions (ThotBool * erreur,
-					PtrSearchContext DomaineCherche)
+void BuildSearchOptions (ThotBool *erreur,
+			 PtrSearchContext DomaineCherche)
 {
    ThotBool            trouve;
    int                 i;
@@ -719,10 +719,6 @@ void                BuildSearchOptions (ThotBool * erreur,
 	GetSRuleFromName (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher, USER_NAME);
 	if (NumTypeCherche == 0)
 	  {
-	     /* message 'Type inconnu' dans la feuille de saisie */
-	     TtaNewLabel (NumLabelAttributeValue,
-			  NumFormSearchText,
-			  TtaGetMessage (LIB, TMSG_LIB_UNKNOWN_TYPE));
 	     NomTypeAChercher[0] = EOS;
 	     *erreur = TRUE;
 	  }

@@ -287,7 +287,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
         height = ymax - yd + 1; 
       if (yd + height >= ymin && yd <= ymax &&
 	  (pAb == pFrame->FrAbstractBox ||
-	   xd + width >= xmin && xd <= xmax))
+	   (xd + width >= xmin && xd <= xmax)))
 	{
 	  DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
 	  /* draw over the padding */

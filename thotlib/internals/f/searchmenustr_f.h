@@ -11,7 +11,7 @@ extern void CallbackStructSearchMenu ( int ref,
                                        int val,
                                        STRING txt,
                                        PtrSearchContext DomaineCherche );
-extern void BuildSearchOptions ( ThotBool * erreur,
+extern void BuildSearchOptions ( ThotBool *erreur,
                                  PtrSearchContext DomaineCherche );
 extern void StructSearch ( PtrElement elCour,
                            PtrSearchContext DomaineCherche,
@@ -28,7 +28,7 @@ extern void CallbackStructSearchMenu (/* int ref,
                                          int val,
                                          STRING txt,
                                          PtrSearchContext DomaineCherche */);
-extern void BuildSearchOptions (/* ThotBool * erreur,
+extern void BuildSearchOptions (/* ThotBool *erreur,
                                    PtrSearchContext DomaineCherche */);
 extern void StructSearch (/* PtrElement elCour,
                              PtrSearchContext DomaineCherche,

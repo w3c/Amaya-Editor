@@ -106,7 +106,7 @@ extern PtrAttribute AttributeValue ( PtrElement pEl,
 extern ThotBool CanAssociateAttr ( PtrElement pEl,
                                    PtrAttribute pAttr,
                                    PtrAttribute pNewAttr,
-                                   ThotBool * mandatory );
+                                   ThotBool *mandatory );
 extern ThotBool CanSplitElement ( PtrElement firstEl,
                                   int firstChar,
                                   ThotBool lineBlock,
@@ -216,7 +216,7 @@ extern PtrAttribute AttributeValue (/* PtrElement pEl,
 extern ThotBool CanAssociateAttr (/* PtrElement pEl,
                                      PtrAttribute pAttr,
                                      PtrAttribute pNewAttr,
-                                     ThotBool * mandatory */);
+                                     ThotBool *mandatory */);
 extern ThotBool CanSplitElement (/* PtrElement firstEl,
                                     int firstChar,
                                     ThotBool lineBlock,

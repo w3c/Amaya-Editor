@@ -127,19 +127,9 @@ static int          NElSurround;	/* number of entries in the table */
    elements partiellement selectionnes, ces elements sont coupes   
    en deux et leurs paves egalement.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, ThotBool createEmpty)
-#else  /* __STDC__ */
-void                IsolateSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar, createEmpty)
-PtrDocument         pDoc;
-PtrElement         *pFirstSel;
-PtrElement         *pLastSel;
-int                *firstChar;
-int                *lastChar;
-ThotBool		    createEmpty;
-#endif /* __STDC__ */
-
+void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
+		       PtrElement *pLastSel, int *firstChar, int *lastChar,
+		       ThotBool createEmpty)
 {
    PtrElement	       pEl;
    int                 view;
@@ -201,15 +191,8 @@ ThotBool		    createEmpty;
    paire dont l'homologue ne serait pas dans la partie             
    selectionnee determinee par firstSel et lastSel.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsolatedPairedElem (PtrElement pEl, PtrElement firstSel, PtrElement lastSel)
-#else  /* __STDC__ */
-static ThotBool     IsolatedPairedElem (pEl, firstSel, lastSel)
-PtrElement          pEl;
-PtrElement          firstSel;
-PtrElement          lastSel;
-
-#endif /* __STDC__ */
+static ThotBool IsolatedPairedElem (PtrElement pEl, PtrElement firstSel,
+				    PtrElement lastSel)
 {
    PtrElement          pEl2, pAncest, pSel;
    ThotBool            alone;
@@ -255,16 +238,8 @@ PtrElement          lastSel;
    IsomorphicTypes indique si les types (pSS1, typeNum1) et	
    	(pSS2, typeNum2) sont isomorphes on non.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
-				     PtrSSchema pSS2, int typeNum2)
-#else
-static ThotBool     IsomorphicTypes (pSS1, typeNum1, pSS2, typeNum2)
-PtrSSchema          pSS1;
-int                 typeNum1;
-PtrSSchema          pSS2;
-int                 typeNum2;
-#endif /* __STDC__ */
+static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
+				 PtrSSchema pSS2, int typeNum2)
 {
    SRule              *pSRule1, *pSRule2;
    PtrIsomorphDesc     pIsoD;
@@ -335,16 +310,7 @@ int                 typeNum2;
    Si ce type est un choix, on fait de meme avec toutes    
    ses options.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS,
-					  int typeNum)
-#else
-static void         RegisterIfIsomorphic (pEl, pSS, typeNum)
-PtrElement          pEl;
-PtrSSchema          pSS;
-int                 typeNum;
-
-#endif /* __STDC__ */
+static void RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS, int typeNum)
 {
    SRule              *pSRule;
    int                 choice;
@@ -410,17 +376,8 @@ int                 typeNum;
    racine est pointee par pEl en un sous-arbre             
    isomorphe, dont la racine prend le type (pSS, typeNum). 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
-					 int typeNum, PtrDocument pDoc)
-#else
-static void         IsomorphicTransform (pEl, pSS, typeNum, pDoc)
-PtrElement          pEl;
-PtrSSchema          pSS;
-int                 typeNum;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
+				 int typeNum, PtrDocument pDoc)
 {
    PtrElement          pChild;
    PtrSSchema          pNewSS;
@@ -526,16 +483,8 @@ PtrDocument         pDoc;
    appliquer la commande a` l'element pEl ou a` un de ses          
    descendants.                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl, int end)
-#else  /* __STDC__ */
-ThotBool            SendEventSubTree (AppEvent, pDoc, pEl, end)
-APPevent            AppEvent;
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 end;
-
-#endif /* __STDC__ */
+ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
+			   int end)
 {
    NotifyElement       notifyEl;
    PtrElement          pChild;
@@ -574,17 +523,8 @@ int                 end;
 /*----------------------------------------------------------------------
    	DoChangeType							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
-				  PtrSSchema newSSchema)
-#else
-static ThotBool     DoChangeType (pEl, pDoc, newTypeNum, newSSchema)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 newTypeNum;
-PtrSSchema          newSSchema;
-
-#endif /* __STDC__ */
+static ThotBool DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
+			      PtrSSchema newSSchema)
 {
    NotifyElement       notifyEl;
    PtrElement	       pDummyEl, nextEl;
@@ -661,15 +601,7 @@ PtrSSchema          newSSchema;
    les elements reference's et transfert sur eux les references qui
    sont dans le tampon Copier-Couper-Coller                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeReferences (PtrElement pElem, PtrDocument * docsel)
-#else  /* __STDC__ */
-static void         ChangeReferences (pElem, docsel)
-PtrElement          pElem;
-PtrDocument        *docsel;
-
-#endif /* __STDC__ */
-
+static void ChangeReferences (PtrElement pElem, PtrDocument * docsel)
 {
    PtrElement          pChild;
    PtrReferredDescr    pRefD;
@@ -745,7 +677,7 @@ PtrDocument        *docsel;
    FreeSavedElements libere la suite des elements sauve's par les	
    	commandes Copy et Cut.						
   ----------------------------------------------------------------------*/
-void                FreeSavedElements ()
+void FreeSavedElements ()
 {
    PtrPasteElem        pPasteEl, pNextPasteEl;
 
@@ -771,15 +703,7 @@ void                FreeSavedElements ()
    liste des elements a copier.                    
    pParent est le pere de l'element original	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SaveElement (PtrElement pEl, PtrElement pParent)
-#else
-static void         SaveElement (pEl, pParent)
-PtrElement          pEl;
-PtrElement          pParent;
-
-#endif /* __STDC__ */
-
+static void SaveElement (PtrElement pEl, PtrElement pParent)
 {
    PtrPasteElem        pPasteEl, pNewPasteEl;
    PtrElement          pAncest;
@@ -858,7 +782,7 @@ void                CopyCommand ()
    /* y-a-t'il une selection courante ? */
    if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			     &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+      return;
    else
      {
 	if (ThotLocalActions[T_cancopyorcut] != NULL)
@@ -998,17 +922,8 @@ void                CopyCommand ()
 /*----------------------------------------------------------------------
    	NextElemToBeCut							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
-				     PtrDocument pSelDoc, PtrElement pSave)
-#else  /* __STDC__ */
-static PtrElement   NextElemToBeCut (pEl, lastSel, pSelDoc, pSave)
-PtrElement          pEl;
-PtrElement          lastSel;
-PtrDocument         pSelDoc;
-PtrElement          pSave;
-
-#endif /* __STDC__ */
+static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
+				   PtrDocument pSelDoc, PtrElement pSave)
 {
    ThotBool            stop;
    PtrElement          pNext;
@@ -1027,12 +942,7 @@ PtrElement          pSave;
       if (!CanCutElement (pNext, pSelDoc, pSave))
 	 /* c'est un element indestructible, */
 	 /* on le saute */
-	{
-	   /* message a l'utilisateur */
-	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MANDATORY_COMPONENT),
-	     pNext->ElStructSchema->SsRule[pNext->ElTypeNumber - 1].SrName);
-	   pNext = NextInSelection (pNext, lastSel);
-	}
+	pNext = NextInSelection (pNext, lastSel);
       else
 	 /* on peut detruire cet element */
 	 stop = TRUE;
@@ -1045,14 +955,7 @@ PtrElement          pSave;
    NextNotPage retourne l'element suivant pEl qui n'est pas un     
    saut de page.                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrElement          NextNotPage (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          NextNotPage (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pNext;
    ThotBool            stop;
@@ -1074,14 +977,7 @@ PtrElement          pEl;
    PreviousNotPage retourne l'element precedent pEl qui n'est pas  
    un saut de page.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          PreviousNotPage (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          PreviousNotPage (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
+PtrElement PreviousNotPage (PtrElement pEl)
 {
    PtrElement          pPrev;
    ThotBool            stop;
@@ -1106,16 +1002,7 @@ PtrElement          pEl;
    Fait reevaluer les regles de presentation "IF First" et 
    "If Last" de ces elements si nececessaire.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                ProcessFirstLast (pPrev, pNext, pDoc)
-PtrElement          pPrev;
-PtrElement          pNext;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
 {
    PtrElement          pSibling;
    ThotBool            stop;
@@ -1164,13 +1051,7 @@ PtrDocument         pDoc;
    Si save est vrai, on sauvegarde la partie selectionnee pour     
    pouvoir la coller ensuite (voir PasteCommand).                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CutCommand (ThotBool save)
-#else  /* __STDC__ */
-void                CutCommand (save)
-ThotBool            save;
-
-#endif /* __STDC__ */
 {
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                       pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
@@ -1193,7 +1074,7 @@ ThotBool            save;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			    &lastChar))
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+    return;
   else
     {
       canCut = TRUE;
@@ -1204,9 +1085,7 @@ ThotBool            save;
       /* lecture seule. */
       if (canCut)
 	{
-	if (pSelDoc->DocReadOnly)
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-	else
+	if (!pSelDoc->DocReadOnly)
 	  {
 	    /* cherche si l'un des elements selectionne's est protege' */
 	    pEl = firstSel;
@@ -1216,9 +1095,7 @@ ThotBool            save;
 		stop = TRUE;
 	      else
 		pEl = NextInSelection (pEl, lastSel);
-	    if (stop)
-	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_EL_FORBIDDEN);
-	    else
+	    if (!stop)
 	      /* pas d'element protege', on peut couper */
 	      {
 		/* conserve la selection initiale pour pouvoir la
@@ -1849,14 +1726,7 @@ ThotBool            save;
 /*----------------------------------------------------------------------
    EmptyElement    retourne vrai si l'element pEl est vide.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            EmptyElement (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            EmptyElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            empty;
    PtrElement          pChild;
@@ -1887,18 +1757,8 @@ PtrElement          pEl;
    le pere des elements freres compris entre l'element     
    firstEl et l'elemnt lastEl, dans le document pDoc.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
-				 PtrElement lastEl, PtrDocument pDoc)
-#else
-static ThotBool     CanSurround (typeNum, pSS, firstEl, lastEl, pDoc)
-int                 typeNum;
-PtrSSchema          pSS;
-PtrElement          firstEl;
-PtrElement          lastEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static ThotBool CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
+			     PtrElement lastEl, PtrDocument pDoc)
 {
    PtrElement          pEl, pElSurround;
    ThotBool            ok;
@@ -1962,21 +1822,9 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
   DoSurround
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     DoSurround (PtrElement firstEl, PtrElement lastEl, int firstChar,
-		int lastChar, PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-#else
-static ThotBool     DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc, typeNum, pSS)
-PtrElement          firstEl;
-PtrElement          lastEl;
-int                 firstChar;
-int                 lastChar;
-PtrDocument         pDoc;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
+			    int firstChar, int lastChar, PtrDocument pDoc,
+			    int typeNum, PtrSSchema pSS)
 {
    PtrElement          pSibling, pEl, pRoot, pElSurround, pNext, pPrev,
                        pEl1;
@@ -2204,17 +2052,8 @@ PtrSSchema          pSS;
    SearchChoiceRules cherche les regles CsChoice qui derivent de la   
    regle (pSS, typeNum) et qui menent au type de l'element pEl.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     SearchChoiceRules (PtrSSchema pSS, int typeNum,
-				       PtrElement pEl, int *param)
-#else
-static ThotBool     SearchChoiceRules (pSS, typeNum, pEl, param)
-PtrSSchema          pSS;
-int                 typeNum;
-PtrElement          pEl;
-int                *param;
-
-#endif /* __STDC__ */
+static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
+				   PtrElement pEl, int *param)
 {
    SRule              *pSRule;
    PtrChoiceOptionDescr pChoiceD, *Anchor;
@@ -2311,13 +2150,7 @@ int                *param;
 /*----------------------------------------------------------------------
    	BuildChangeTypeTable						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BuildChangeTypeTable (PtrElement pEl)
-#else
-static void         BuildChangeTypeTable (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+static void BuildChangeTypeTable (PtrElement pEl)
 {
    PtrIsomorphDesc     pIsoD, pNextIsoD;
    PtrChoiceOptionDescr pChoicesFound, pChoiceD, pOldChoiceD;
@@ -2428,18 +2261,9 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    	ChangeTypeOfElements						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
-		    PtrDocument pDoc, int newTypeNum, PtrSSchema newSSchema)
-#else  /* __STDC__ */
-static ThotBool     ChangeTypeOfElements (firstEl, lastEl, pDoc, newTypeNum, newSSchema)
-PtrElement          firstEl;
-PtrElement          lastEl;
-PtrDocument         pDoc;
-int                 newTypeNum;
-PtrSSchema          newSSchema;
-
-#endif /* __STDC__ */
+static ThotBool ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
+				      PtrDocument pDoc, int newTypeNum,
+				      PtrSSchema newSSchema)
 {
    PtrElement          pEl;
    Element             El;
@@ -2563,27 +2387,10 @@ PtrSSchema          newSSchema;
 /*----------------------------------------------------------------------
   CanInsertBySplitting
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool	    CanInsertBySplitting (PtrElement *pEl, int charSplit,
-			ThotBool *splitElem, PtrElement *pSplitEl,
-			PtrElement *pElSplit, ThotBool createAfter,
-			int typeNum, PtrSSchema pSS, PtrDocument pDoc)
-#else  /* __STDC__ */
-static ThotBool	    CanInsertBySplitting (pEl, charSplit, splitElem, pSplitEl,
-			pElSplit, createAfter, typeNum, pSS, pDoc)
-
-PtrElement	 *pEl;
-int		  charSplit;
-ThotBool		 *splitElem;
-PtrElement	 *pSplitEl;
-PtrElement	 *pElSplit;
-ThotBool		 createAfter;
-int		 typeNum;
-PtrSSchema	 pSS;
-PtrDocument	 pDoc;
-
-#endif /* __STDC__ */
-
+static ThotBool CanInsertBySplitting (PtrElement *pEl, int charSplit,
+				      ThotBool *splitElem, PtrElement *pSplitEl,
+				      PtrElement *pElSplit, ThotBool createAfter,
+				      int typeNum, PtrSSchema pSS, PtrDocument pDoc)
 {
    PtrElement	pElem, Sibling, pList, pF, pSplit;
    ThotBool	ok;
@@ -2669,16 +2476,8 @@ PtrDocument	 pDoc;
    selection courante (TRUE) ou a la place de la selection         
    courante (FALSE).                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc, ThotBool Before)
-#else  /* __STDC__ */
-void                CreateNewElement (typeNum, pSS, pDoc, Before)
-int                 typeNum;
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-ThotBool            Before;
-#endif /* __STDC__ */
-
+void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
+		       ThotBool Before)
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
   PtrElement          pElem, pElSplit, pSplitEl, pNextEl;
@@ -2693,14 +2492,12 @@ ThotBool            Before;
 
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+    return;
   else if (pSelDoc != pDoc)
     /* the document asking for the creation of a new element is NOT the */
     /* document containing the current selection */
     return;
-  else if (pSelDoc->DocReadOnly)
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-  else
+  else if (!pSelDoc->DocReadOnly)
     /* there is a selection and the document can be modified */
     {
       elConst = FALSE;
@@ -3155,20 +2952,11 @@ ThotBool            Before;
    elements are selected, the new element is created at that position and the
    selected characters/elements become the content of the new element, provided
    the  structure schema allows it.
-
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
-
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaCreateElement (ElementType elementType, Document document)
-#else  /* __STDC__ */
-void                TtaCreateElement (elementType, document)
-ElementType         elementType;
-Document            document;
-
-#endif /* __STDC__ */
+void TtaCreateElement (ElementType elementType, Document document)
 {
    UserErrorCode = 0;
    if (elementType.ElSSchema == NULL)
@@ -3193,12 +2981,7 @@ Document            document;
    TtaSetTransformCallback permet de connecter une fonction de l'application
    au changement de type d'element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  TtaSetTransformCallback (Func callbackFunc)
-#else
-void  TtaSetTransformCallback ()
-Func callbackFunc;
-#endif /* __STDC__ */
 {
    TransformIntoFunction = callbackFunc;
 }
@@ -3208,13 +2991,7 @@ Func callbackFunc;
    dans le menu Surround, le type d'element (typeNum, pSS),  
    s'il n'y est pas deja.                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddEntrySurround (PtrSSchema pSS, int typeNum)
-#else
-static void         AddEntrySurround (pSS, typeNum)
-PtrSSchema          pSS;
-int                 typeNum;
-#endif /* __STDC__ */
+static void AddEntrySurround (PtrSSchema pSS, int typeNum)
 {
    int                 i;
    ThotBool            found;
@@ -3250,18 +3027,8 @@ int                 typeNum;
    type qu'on met dans la table, mais on essaie de mettre  
    toutes ses options.                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SurroundChoice (int typeNum, PtrSSchema pSS, PtrElement firstEl,
-				    PtrElement lastEl, PtrDocument pDoc)
-#else
-static void         SurroundChoice (typeNum, pSS, firstEl, lastEl, pDoc)
-int                 typeNum;
-PtrSSchema          pSS;
-PtrElement          firstEl;
-PtrElement          lastEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void SurroundChoice (int typeNum, PtrSSchema pSS, PtrElement firstEl,
+			    PtrElement lastEl, PtrDocument pDoc)
 {
    Name                menuTitle;
    CHAR_T                choiceMenuBuf[MAX_TXT_LEN];
@@ -3318,13 +3085,7 @@ PtrDocument         pDoc;
    entree est le numero de l'entree que l'utilisateur a    
    choisie dans ce menu.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SurroundMenuInput (int item)
-#else
-void                SurroundMenuInput (item)
-int                 item;
-
-#endif /* __STDC__ */
+void SurroundMenuInput (int item)
 {
    PtrElement          firstEl, lastEl;
    PtrDocument         pDoc;
@@ -3348,14 +3109,7 @@ int                 item;
    NItems le nombre d'entrees de ce menu (0 si la		
    commande Surround est inapplicable).                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BuildSurroundMenu (STRING menuBuffer, int *NItems)
-#else
-static void         BuildSurroundMenu (menuBuffer, NItems)
-STRING              menuBuffer;
-int                *NItems;
-
-#endif /* __STDC__ */
+static void BuildSurroundMenu (STRING menuBuffer, int *NItems)
 {
    PtrElement          firstSel, lastSel, pEl, pList, pAncest;
    PtrDocument         pDoc;
@@ -3500,14 +3254,7 @@ int                *NItems;
 /*----------------------------------------------------------------------
    TtcSurround : traite la commande Surround de l'editeur.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcSurround (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSurround (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
@@ -3521,12 +3268,8 @@ View                view;
    /* y-a-t'il une selection ? */
    if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			     &lastChar))
-      /* non, message 'Selectionnez' */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pSelDoc->DocReadOnly)
-      /* document en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
+      return;
+   else if (!pSelDoc->DocReadOnly)
      {
 	protected = FALSE;
 	if (firstSel->ElTypeNumber == (CharString + 1) && firstChar > 1)
@@ -3568,13 +3311,7 @@ View                view;
    entree est le numero de l'entree qui a ete choisie par  
    l'utilisateur dans ce menu.                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ChangeTypeMenuInput (int entree)
-#else
-void                ChangeTypeMenuInput (entree)
-int                 entree;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl, lastEl;
    PtrDocument         pDoc;
@@ -3613,15 +3350,7 @@ int                 entree;
    qui constituent ce menu (eventuellemenmt 0, si l'element
    ne peut pas changer de type).                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void  BuildChangeTypeMenu (STRING menuBuffer, int *NItems, PtrElement pEl)
-#else
-static void  BuildChangeTypeMenu (menuBuffer, NItems, pEl)
-STRING       menuBuffer;
-int         *NItems;
-PtrElement   pEl;
-
-#endif /* __STDC__ */
+static void BuildChangeTypeMenu (STRING menuBuffer, int *NItems, PtrElement pEl)
 {
    int                 i, menuInd, len;
    Name                typeName;
@@ -3649,14 +3378,7 @@ PtrElement   pEl;
 /*----------------------------------------------------------------------
    TtcChangeType : traite la commande "Changer en".                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChangeType (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangeType (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
@@ -3671,32 +3393,30 @@ View                view;
    /* y-a-t'il une selection ? */
    if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			     &lastChar))
-      /* non, message 'Selectionnez' */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pSelDoc->DocReadOnly)
-      /* document en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (!ElementIsReadOnly (firstSel->ElParent))
-      /* on ne peut rien faire si le pere est protege' */
-      if (firstSel == lastSel)
-	 /* on ne change qu'un element a la fois */
-	 if (firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrConstruct != CsBasicElement)
+      return;
+   else if (!pSelDoc->DocReadOnly &&
+	    !ElementIsReadOnly (firstSel->ElParent) &&
+	    /* on ne peut rien faire si le pere est protege' */
+	    firstSel == lastSel)
+     /* on ne change qu'un element a la fois */
+     if (firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrConstruct != CsBasicElement)
 	    /* on ne change pas les types de base */
+       {
+	 /* construit le menu pour le choix du nouveau type de l'element */
+	 BuildChangeTypeMenu (menuBuffer, &NItems, firstSel);
+	 if (NItems > 0)
+	   /* le menu n'est pas vide */
 	   {
-	      /* construit le menu pour le choix du nouveau type de l'element */
-	      BuildChangeTypeMenu (menuBuffer, &NItems, firstSel);
-	      if (NItems > 0)
-		 /* le menu n'est pas vide */
-		{
-		   ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE), MAX_NAME_LENGTH);
-		   /* cree le pop-up menu Change Type */
-		   TtaNewPopup (NumMenuChangeType, 0, title, NItems, menuBuffer, NULL, 'L');
-		   /* affiche le pop-up menu */
-#          ifndef _WINDOWS
-		   TtaShowDialogue (NumMenuChangeType, FALSE);
-		   /* attend la reponse de l'utilisateur */
-		   TtaWaitShowDialogue ();
-#          endif /* !_WINDOWS */
-		}
+	     ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE), MAX_NAME_LENGTH);
+	     /* cree le pop-up menu Change Type */
+	     TtaNewPopup (NumMenuChangeType, 0, title, NItems, menuBuffer, NULL, 'L');
+	     /* affiche le pop-up menu */
+#ifndef _WINDOWS
+	     TtaShowDialogue (NumMenuChangeType, FALSE);
+	     /* attend la reponse de l'utilisateur */
+	     TtaWaitShowDialogue ();
+#endif /* _WINDOWS */
 	   }
+       }
 }
+

@@ -781,7 +781,7 @@ void                KeyboardMap (int kb)
   GraphicsLoadResource
   Initializes the keyboards.
   ----------------------------------------------------------------------*/
-void                GraphicsLoadResources ()
+void GraphicsLoadResources ()
 {
 #ifndef _GTK
    int                 i;
@@ -805,11 +805,7 @@ void                GraphicsLoadResources ()
    GraphicsIcons = LoadFont ("ivgraf");
 #endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
-     {
-       /*Fonte 'ivgraf' inaccessible */
-       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
-       GraphicsIcons = FontDialogue;
-     }
+     GraphicsIcons = FontDialogue;
 #endif /* _GTK */
 }
 
@@ -839,11 +835,8 @@ void                KeyboardsLoadResources ()
 #ifndef _WINDOWS
   SymbolIcons = LoadFont ("ivsymb");
   if (SymbolIcons == NULL)
-    {
-      /*Fonte 'ivsymb' inaccessible */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
-      SymbolIcons = FontDialogue;
-    } 
+    /* Fonte 'ivsymb' inaccessible */
+    SymbolIcons = FontDialogue;
 #endif /* _WINDOWS */
 #endif /* _GTK */
 }
@@ -853,7 +846,7 @@ void                KeyboardsLoadResources ()
    TtcDisplayMathKeyboard
    displays the math keyboard
   ----------------------------------------------------------------------*/
-void                TtcDisplayMathKeyboard (Document document, View view)
+void TtcDisplayMathKeyboard (Document document, View view)
 {
 #ifndef _GTK
    KeyboardsLoadResources ();
@@ -870,7 +863,7 @@ void                TtcDisplayMathKeyboard (Document document, View view)
    TtcDisplayGraphicsKeyboard
    displays the graphics keyboard
   ----------------------------------------------------------------------*/
-void                TtcDisplayGraphicsKeyboard (Document document, View view)
+void TtcDisplayGraphicsKeyboard (Document document, View view)
 {
 #ifndef _GTK
    KeyboardsLoadResources ();

@@ -2401,8 +2401,6 @@ void                ApplyDirectResize (int frame, int xm, int ym)
 	  y = pBox->BxYOrg - pFrame->FrYOrg;
 	  width = pBox->BxWidth;
 	  height = pBox->BxHeight;
-	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX),
-			     AbsBoxType (pBox->BxAbstractBox, FALSE));
 	  /* On retablit les positions par rapport a la fenetre */
 	  xmin -= pFrame->FrXOrg;
 	  if (okH)
@@ -2449,9 +2447,6 @@ void                ApplyDirectResize (int frame, int xm, int ym)
 	  else
 	    NewDimension (pAb, width, height, frame, TRUE);
 	}
-      else
-	/* On n'a pas trouve de boite modifiable */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
     }
 }
 
@@ -2516,8 +2511,6 @@ void                DirectCreation (PtrBox pBox, int frame)
       /* Determine les limites de deplacement de la boite */
       GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
       GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX),
-			 AbsBoxType (pAb, FALSE));
       /* On retablit les positions par rapport a la fenetre */
       xmin -= pFrame->FrXOrg;
       xmax -= pFrame->FrXOrg;

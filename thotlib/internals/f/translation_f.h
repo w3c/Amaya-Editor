@@ -8,8 +8,8 @@
 
 extern void TtaSetEntityFunction ( Proc procedure );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
-                                 STRING fName,
-                                 STRING TSchemaName,
+                                 char *fName,
+                                 char *TSchemaName,
                                  ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
@@ -26,8 +26,8 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 
 extern void TtaSetEntityFunction (/* Proc procedure */);
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
-                                   STRING fName,
-                                   STRING TSchemaName,
+                                   char *fName,
+                                   char *TSchemaName,
                                    ThotBool recordLineNb */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,

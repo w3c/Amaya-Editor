@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Traitements specifiques a la structure Draw             
  *
@@ -43,15 +34,7 @@ typedef int         Ensemble[4];
  le schema de structure pointe par pSS. Initialise cet attribut avec
  la valeur Val.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddAttribute (PtrElement pEl, int NumExcept, PtrSSchema pSS, int Val)
-#else  /* __STDC__ */
-static void         AddAttribute (pEl, NumExcept, pSS, Val)
-PtrElement          pEl;
-int                 NumExcept;
-PtrSSchema          pSS;
-int                 Val;
-#endif /* __STDC__ */
+static void AddAttribute (PtrElement pEl, int NumExcept, PtrSSchema pSS, int Val)
 {
    PtrAttribute        pAttr;
    int                 attr;
@@ -97,13 +80,7 @@ int                 Val;
  objet dans un dessin et, dans ce cas, ajoute cet objet a la
  selection courante et retourne vrai.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            DrawEtendSelection (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-ThotBool            DrawEtendSelection (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+ThotBool DrawEtendSelection (PtrElement pEl, PtrDocument pDoc)
 {
    ThotBool            ret;
 
@@ -121,14 +98,7 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CheckAttributes (Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
-#else  /* __STDC__ */
-static ThotBool     CheckAttributes (Except, pEl, pAttr)
-Ensemble            Except;
-PtrElement         *pEl;
-PtrAttribute       *pAttr;
-#endif /* __STDC__ */
+static ThotBool CheckAttributes (Ensemble Except, PtrElement *pEl, PtrAttribute *pAttr)
 {
    ThotBool            trouve;
    int                 e, e1;
@@ -211,13 +181,7 @@ PtrAttribute       *pAttr;
  des attributs porte's par l'element et retourne pAttr=NULL si
  l'attribut etait incorrect.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DrawAddAttr (PtrAttribute * pAttr, PtrElement pEl)
-#else  /* __STDC__ */
-void                DrawAddAttr (pAttr, pEl)
-PtrAttribute       *pAttr;
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    ThotBool            ok;
    Ensemble            Ens;
@@ -263,16 +227,13 @@ PtrElement          pEl;
 		     {
 			ok = TRUE;
 			pAt1 = *pAttr;
-			if (pAt1->AeAttrType == AtReferenceAttr)
-			   if (pAt1->AeAttrReference != NULL)
-			      if (pAt1->AeAttrReference->RdReferred != NULL)
-				 if (!pAt1->AeAttrReference->RdReferred->ReExternalRef)
-				    if (pAt1->AeAttrReference->RdReferred->ReReferredElem != NULL)
-				       if (pAt1->AeAttrReference->RdReferred->ReReferredElem == pEl)
-					 {
-					    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SELF_REF_IMP);
-					    ok = FALSE;
-					 }
+			if (pAt1->AeAttrType == AtReferenceAttr &&
+			   pAt1->AeAttrReference &&
+			   pAt1->AeAttrReference->RdReferred &&
+			   !pAt1->AeAttrReference->RdReferred->ReExternalRef &&
+			   pAt1->AeAttrReference->RdReferred->ReReferredElem &&
+			   pAt1->AeAttrReference->RdReferred->ReReferredElem == pEl)
+			  ok = FALSE;
 			/* message 'CsReference a soi-meme' */
 			if (!ok)
 			   /* l'attribut est incorrect, on le supprime */
@@ -326,16 +287,8 @@ PtrElement          pEl;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CheckRemovedAttribute (int Def, Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
-
-#else  /* __STDC__ */
-static ThotBool     CheckRemovedAttribute (Def, Except, pEl, pAttr)
-int                 Def;
-Ensemble            Except;
-PtrElement         *pEl;
-PtrAttribute       *pAttr;
-#endif /* __STDC__ */
+static ThotBool CheckRemovedAttribute (int Def, Ensemble Except, PtrElement *pEl,
+				       PtrAttribute *pAttr)
 {
    ThotBool            trouve;
    int                 e, e1;
@@ -412,13 +365,7 @@ PtrAttribute       *pAttr;
  l'element pointe' par pEl. Dans le cas d'un objet Draw, verifie la
  coherence des attributs porte's par l'element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
-#else  /* __STDC__ */
-void                DrawSupprAttr (pAttr, pEl)
-PtrAttribute        pAttr;
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    ThotBool            ok;
    Ensemble            Ens;

@@ -18,7 +18,7 @@ extern void UpdateRefAttributes ( PtrElement pRoot,
 extern void AssignPairIdentifiers ( PtrElement pRoot,
                                     PtrDocument pDoc );
 extern void RedisplayEmptyReferences ( PtrElement pEl,
-                                       PtrDocument * pDoc,
+                                       PtrDocument *pDoc,
                                        ThotBool redisplay );
 extern void TtcHolophrast ( Document document,
                             View view );
@@ -55,7 +55,7 @@ extern void UpdateRefAttributes (/* PtrElement pRoot,
 extern void AssignPairIdentifiers (/* PtrElement pRoot,
                                       PtrDocument pDoc */);
 extern void RedisplayEmptyReferences (/* PtrElement pEl,
-                                         PtrDocument * pDoc,
+                                         PtrDocument *pDoc,
                                          ThotBool redisplay */);
 extern void TtcHolophrast (/* Document document,
                               View view */);

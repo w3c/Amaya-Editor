@@ -33,13 +33,7 @@ static ThotBool     error;
    	ReadrdTypeRegle  lit un type de regle de presentation et	
    	retourne sa valeur.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PRuleType    ReadrdTypeRegle (BinFile file)
-#else  /* __STDC__ */
-static PRuleType    ReadrdTypeRegle (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -210,13 +204,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadPresMode lit un mode de presentation et retourne sa valeur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PresMode     ReadPresMode (BinFile file)
-#else  /* __STDC__ */
-static PresMode     ReadPresMode (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -247,13 +235,7 @@ BinFile             file;
    rdTypeUnite lit un type d'unite dans le fichier                    
    et retourne sa valeur.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeUnit     rdUnit (BinFile file)
-#else  /* __STDC__ */
-static TypeUnit     rdUnit (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -292,13 +274,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadInheritMode lit un mode d'heritage et retourne sa valeur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static InheritMode  ReadInheritMode (BinFile file)
-#else  /* __STDC__ */
-static InheritMode  ReadInheritMode (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -336,14 +312,7 @@ BinFile             file;
    	ReadFunctionType  lit un type de fonction de presentation et	
    	retourne sa valeur.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static FunctionType ReadFunctionType (BinFile file, ThotBool * repeat)
-#else  /* __STDC__ */
-static FunctionType ReadFunctionType (file, repeat)
-BinFile             file;
-ThotBool           *repeat;
-
-#endif /* __STDC__ */
 {
    char         c;
    FunctionType functType;
@@ -440,13 +409,7 @@ ThotBool           *repeat;
    	ReadAlignment   lit un mode d'alignement des lignes et retourne	
    	sa valeur.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static BAlignment   ReadAlignment (BinFile file)
-#else  /* __STDC__ */
-static BAlignment   ReadAlignment (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    BAlignment          align;
@@ -487,13 +450,7 @@ BinFile             file;
    	ReadPresCondition      lit un type de condition et retourne	
    	sa valeur.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PresCondition ReadPresCondition (BinFile file)
-#else  /* __STDC__ */
-static PresCondition ReadPresCondition (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    PresCondition       condtype;
@@ -592,13 +549,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadArithRel     lit la relation d'une condition Within		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ArithRel     ReadArithRel (BinFile file)
-#else  /* __STDC__ */
-static ArithRel     ReadArithRel (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    ArithRel            rel;
@@ -626,13 +577,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static BoxEdge      ReadBoxEdge (BinFile file)
-#else  /* __STDC__ */
-static BoxEdge      ReadBoxEdge (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    BoxEdge             edge;
@@ -684,14 +629,7 @@ BinFile             file;
    	ReadLevel     lit un niveau relatif de boite et retourn		
    	sa valeur.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Level        ReadLevel (BinFile file)
-
-#else  /* __STDC__ */
-static Level        ReadLevel (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    Level               level;
@@ -745,13 +683,7 @@ BinFile             file;
    	ReadCounterOp  lit un type d'operation sur compteur et retourne	
    	sa valeur.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static CounterOp    ReadCounterOp (BinFile file)
-#else  /* __STDC__ */
-static CounterOp    ReadCounterOp (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    CounterOp           optype;
@@ -788,13 +720,7 @@ BinFile             file;
    	ReadBasicType lit un type de base dans le fichier et retourne	
    	sa valeur.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static BasicType    ReadBasicType (BinFile file)
-#else  /* __STDC__ */
-static BasicType    ReadBasicType (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    BasicType           basictyp;
@@ -836,14 +762,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadVariableType  lit un type de variable et retourne sa valeur	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static VariableType ReadVariableType (BinFile file)
-
-#else  /* __STDC__ */
-static VariableType ReadVariableType (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    VariableType        vartyp;
@@ -898,13 +817,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadCounterStyle lit un style de compteur et retourne sa valeur	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static CounterStyle ReadCounterStyle (BinFile file)
-#else  /* __STDC__ */
-static CounterStyle ReadCounterStyle (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    CounterStyle        countstyle;
@@ -944,13 +857,7 @@ BinFile             file;
    	ReadCounterValue    lit la nature du compteur inclus dans une	
    	variable et retourne sa valeur.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static CounterValue ReadCounterValue (BinFile file)
-#else  /* __STDC__ */
-static CounterValue ReadCounterValue (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    CounterValue        value;
@@ -983,14 +890,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadContentType	lit un type de contenu retourne sa valeur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ContentType         ReadContentType (BinFile file)
-
-#else  /* __STDC__ */
-ContentType         ReadContentType (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char                c;
    ContentType         conttype;
@@ -1027,15 +927,7 @@ BinFile             file;
    	ReadPRulePtr	retourne un pointeur sur la regle suivante ou	
    	s'il n'y a pas de regle suivante.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
-
-#else  /* __STDC__ */
-PtrPRule            ReadPRulePtr (file, pNextPRule)
-BinFile             file;
-PtrPRule           *pNextPRule;
-
-#endif /* __STDC__ */
+PtrPRule ReadPRulePtr (BinFile file, PtrPRule *pNextPRule)
 {
    char                c;
 
@@ -1051,13 +943,7 @@ PtrPRule           *pNextPRule;
 /*----------------------------------------------------------------------
    	ReadRefKind
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static RefKind      ReadRefKind (BinFile file)
-#else  /* __STDC__ */
-static RefKind      ReadRefKind (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -1085,14 +971,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    	ReadPosRule   lit un positionnement relatif			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadPosRule (BinFile file, PosRule * pPosRule)
-#else  /* __STDC__ */
-void                ReadPosRule (file, pPosRule)
-BinFile             file;
-PosRule            *pPosRule;
-
-#endif /* __STDC__ */
+void ReadPosRule (BinFile file, PosRule *pPosRule)
 {
    pPosRule->PoPosDef = ReadBoxEdge (file);
    pPosRule->PoPosRef = ReadBoxEdge (file);
@@ -1111,13 +990,7 @@ PosRule            *pPosRule;
    	ReadAttrCompar lit un type de comparaison pour les valeurs	
    	d'attributs retourne sa valeur.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 AttrComparType      ReadAttrCompar (BinFile file)
-#else  /* __STDC__ */
-AttrComparType      ReadAttrCompar (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
@@ -1143,15 +1016,7 @@ BinFile             file;
    	ReadPRules    lit une suite de regles chainees et fait pointer	
    	le pointeur pPRule sur la premiere regle de la suite de regles lues	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadPRules (BinFile file, PtrPRule * pPRule, PtrPRule * pNextPRule)
-#else  /* __STDC__ */
-void                ReadPRules (file, pPRule, pNextPRule)
-BinFile             file;
-PtrPRule           *pPRule;
-PtrPRule           *pNextPRule;
-
-#endif /* __STDC__ */
+void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 {
    PtrPRule            pPR;
    PtrCondition        pCond;
@@ -1372,14 +1237,7 @@ PtrPRule           *pNextPRule;
    	Retourne un pointeur sur le schema de presentation en memoire	
    	chargement reussi, NULL si echec.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPSchema          ReadPresentationSchema (Name fileName, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrPSchema          ReadPresentationSchema (fileName, pSS)
-Name                fileName;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
+PtrPSchema ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 {
    PtrPRule            pNextPRule;
    PtrPSchema          pPSch;
@@ -1411,7 +1269,7 @@ PtrSSchema          pSS;
 	/* message 'Fichier inaccessible' */
 	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
 	ustrcat (buf, ".PRS");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_INCORRECT_PRS_FILE ), buf);
      }
    else
      {
@@ -1483,8 +1341,6 @@ PtrSSchema          pSS;
 	     FreePresentRule (pNextPRule);
 	     pNextPRule = NULL;
 	     pPSch = NULL;
-	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OLD_SCH_TO_RECOMP), buf);
 	  }
 	else
 	  {

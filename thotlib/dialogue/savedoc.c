@@ -330,14 +330,10 @@ void BuildSaveDocMenu ()
 	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	   /* l'application accepte que Thot exporte le document */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING),
-				DocumentToSave->DocDName);
 	     FindCompleteName (SaveFileName, "", SaveDirectoryName,
 			       outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName,
 			     TraductionSchemaName, FALSE);
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_LIB_DOC_WRITTEN),
-				outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
 	     notifyDoc.event = TteDocExport;
 	     notifyDoc.document = (Document) IdentDocument (DocumentToSave);

@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void IsolateSelection ( PtrDocument pDoc,
-                               PtrElement * pFirstSel,
-                               PtrElement * pLastSel,
+                               PtrElement *pFirstSel,
+                               PtrElement *pLastSel,
                                int *firstChar,
                                int *lastChar,
                                ThotBool createEmpty );
@@ -42,8 +42,8 @@ extern void TtcChangeType ( Document document,
 #else /* __STDC__ */
 
 extern void IsolateSelection (/* PtrDocument pDoc,
-                                 PtrElement * pFirstSel,
-                                 PtrElement * pLastSel,
+                                 PtrElement *pFirstSel,
+                                 PtrElement *pLastSel,
                                  int *firstChar,
                                  int *lastChar,
                                  ThotBool createEmpty */);

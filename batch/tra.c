@@ -655,9 +655,7 @@ static void         NewTransRule ()
   ----------------------------------------------------------------------*/
 static void         ProcessTypeName (PtrSSchema pSS)
 {
-   int                 i, j;
-   ThotBool             found;
-   SRule              *pSRule;
+   int                 i;
 
 
    if (TypeInGetRule[0] != '\0')

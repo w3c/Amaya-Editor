@@ -121,21 +121,14 @@ static int GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
      return 0;
    else if (NOutputFiles >= MAX_OUTPUT_FILES)
      /* table saturee */
-     {
-     TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_OUTPUT_FILES);
      return -1;
-     }
    else
      {
      OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, "w");
      if (OutputFile[NOutputFiles].OfFileDesc == NULL)
        {
        if (!OutputFile[NOutputFiles].OfCannotOpen)
-	 {
-	 TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
-			    fName);
 	 OutputFile[NOutputFiles].OfCannotOpen = TRUE;
-	 }
        }
      else
        /* fichier ouvert */
@@ -190,7 +183,7 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
 	  else
 	    {
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], "%d", c);
+	      sprintf (&mbc[2], "%d", (int)c);
 	    }
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
@@ -207,7 +200,7 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
 	  else
 	    {
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], "%d", c);
+	      sprintf (&mbc[2], "%d", (int)c);
 	    }
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
@@ -2899,11 +2892,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		   currentFileName, 0, pDoc, *lineBreak);
       if (currentFileName[0] != WC_EOS)
 	{
-	  newFile = ufopen (currentFileName, "w");
-	  if (newFile == NULL)
-	    TtaDisplayMessage (CONFIRM,TtaGetMessage (LIB,TMSG_CREATE_FILE_IMP),
-			       currentFileName);
-	  else
+	  newFile = fopen (currentFileName, "w");
+	  if (newFile)
 	    /* on a reussi a ouvrir le nouveau fichier */
 	    {
 	      /* on vide le buffer en cours dans l'ancien fichier */
@@ -3138,10 +3128,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	fflush (OutputFile[i].OfFileDesc);
       /* ouvre le fichier a inclure */
       includedFile = TtaReadOpen (fullName);
-      if (includedFile == 0)
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCLUDE_FILE_IMP),
-			   fname);
-      else
+      if (includedFile != 0)
 	/* le fichier a inclure est ouvert */
 	{
 	  /* while (TtaReadByte (includedFile, &c)) */
@@ -3464,8 +3451,8 @@ static void         FlushOutputFiles (PtrDocument pDoc)
    dans le fichier de nom fName.
    Retourne TRUE si export reussi.
   ----------------------------------------------------------------------*/
-ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
-			      STRING TSchemaName, ThotBool recordLineNb)
+ThotBool ExportDocument (PtrDocument pDoc, char *fName,
+			 char *TSchemaName, ThotBool recordLineNb)
 {
    FILE               *outputFile; /* fichier de sortie principal */
    int                 i;
@@ -3537,9 +3524,6 @@ ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
    ClearTranslationSchemasTable ();
    fflush (stdout);
    fflush (stderr);
-   if (!ok)
-     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
-			fName);
    return (ok);
 }
 
@@ -3560,10 +3544,7 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
   /* cree le fichier de sortie principal */
   outputFile = ufopen (fName, "w");
   
-  if (outputFile == NULL)
-    TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
-		       fName);
-  else
+  if (outputFile)
     /* le fichier de sortie principal a ete cree' */
     {
     /* separe nom de directory et nom de fichier */

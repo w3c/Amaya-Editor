@@ -86,9 +86,7 @@ void TtcOpenView (Document document, View view)
      {
 	/* builds a menu of views which we can open */
 	BuildViewList (pDoc, buf, &nbItems);
-	if (nbItems == 0)
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_ALL_VIEWS_ALREADY_CREATED);
-	else
+	if (nbItems)
 	  {
 	     ViewToOpenNumber = -1;
 	     /* adds a 'B' at the beginning of each menu entry */
@@ -149,11 +147,3 @@ void SwitchSynchronize (Document document, View view)
 	pDoc->DocView[view - 1].DvSync = !pDoc->DocView[view - 1].DvSync;
      }
 }
-
-
-
-
-
-
-
-

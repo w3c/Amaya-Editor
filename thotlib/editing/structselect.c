@@ -2430,10 +2430,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	  if (pDoc != SelectedDocument ||
 	      (assoc && numassoc != FirstSelectedElement->ElAssocNum))
 	    /* extension to a different tree is not allowed */
-	    {
-	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
-	      error = TRUE;
-	    }
+	    error = TRUE;
 	  else
 	    {
 	      /* same document, but is it the same tree? */

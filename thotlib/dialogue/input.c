@@ -1245,12 +1245,9 @@ ThotTranslations      InitTranslations (char *appliname)
 
   file = ufopen (fullName, "r");
   if (!file)
-    {
-      /*Fichier inaccessible */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KBD);
-      return NULL;
-    }
-  else
+    /*Fichier inaccessible */
+    return NULL;
+   else
     {
       /* Lecture du fichier des translations */
       fseek (file, 0L, 2);	/* fin du fichier */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -108,18 +108,8 @@ static ThotBool     createPasteMenuOK;
    provient l'element pEl (utilise' uniquement dans le cas de      
    Paste).                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
-				   int origDoc)
-#else  /* __STDC__ */
-void                NotifySubTree (appEvent, pDoc, pEl, origDoc)
-APPevent            appEvent;
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 origDoc;
-
-#endif /* __STDC__ */
-
+void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
+		    int origDoc)
 {
    NotifyElement       notifyEl;
    PtrElement          pChild;
@@ -169,18 +159,7 @@ int                 origDoc;
    Dans ce cas, le nouvel element est chaine' comme premier fils de   
    l'element pEl.							
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                InsertOption (PtrElement pEl, PtrElement * pOption, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                InsertOption (pEl, pOption, pDoc)
-PtrElement          pEl;
-PtrElement         *pOption;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void InsertOption (PtrElement pEl, PtrElement *pOption, PtrDocument pDoc)
 {
    ThotBool            absBoxExist;
    int                 view;
@@ -208,14 +187,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    CreationExceptions						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreationExceptions (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CreationExceptions (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
 {
    ThotBool            bool;
 
@@ -235,34 +207,25 @@ PtrDocument         pDoc;
    le numero de type typeNum dans le schema de structure   
    pSS.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetExternalTypeName (PtrSSchema pSS, int typeNum, Name typeName)
-#else  /* __STDC__ */
-void                GetExternalTypeName (pSS, typeNum, typeName)
-PtrSSchema          pSS;
-int                 typeNum;
-Name                typeName;
-
-#endif /* __STDC__ */
-
+void GetExternalTypeName (PtrSSchema pSS, int typeNum, Name typeName)
 {
    if (!TypeHasException (ExcHidden, typeNum, pSS))
       /* ce type d'element ne porte pas l'exception Hidden, on retourne
          le nom de la regle qui le definit */
-      ustrncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
    else
       /* ce type d'element porte l'exception Hidden */
    if (pSS->SsRule[typeNum - 1].SrConstruct == CsList)
       /* c'est une liste, on retourne le nom de ses elements */
-      ustrncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrListItem - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrListItem - 1].SrName, MAX_NAME_LENGTH);
    else if (pSS->SsRule[typeNum - 1].SrConstruct == CsAggregate ||
 	    pSS->SsRule[typeNum - 1].SrConstruct == CsUnorderedAggregate)
       /* c'est un agregat, on retourne le nom de son 1er element */
-      ustrncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrComponent[0] - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrComponent[0] - 1].SrName, MAX_NAME_LENGTH);
    else
       /* ce n'est ni une liste ni un agregat, on ignore */
       /* l'exception Hidden */
-      ustrncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
 }
 
 
@@ -273,17 +236,8 @@ Name                typeName;
    pNextEl pointe sur le frere suivant de pEl avant la     
    coupure.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildAbsBoxSpliText (PtrElement pEl, PtrElement pNewEl,
-				       PtrElement pNextEl, PtrDocument pDoc)
-#else
-void                BuildAbsBoxSpliText (pEl, pNewEl, pNextEl, pDoc)
-PtrElement          pEl;
-PtrElement          pNewEl;
-PtrElement          pNextEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void BuildAbsBoxSpliText (PtrElement pEl, PtrElement pNewEl,
+			  PtrElement pNextEl, PtrDocument pDoc)
 {
    int                 view;
 
@@ -306,18 +260,9 @@ PtrDocument         pDoc;
    consequence les variables lastSel et lastChar si elles	
    representent un caractere dans la feuille coupee.       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SplitBeforeSelection (PtrElement * firstSel, int *firstChar, PtrElement * lastSel,
-					  int *lastChar, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                SplitBeforeSelection (firstSel, firstChar, lastSel, lastChar, pDoc)
-PtrElement         *firstSel;
-int                *firstChar;
-PtrElement         *lastSel;
-int                *lastChar;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void SplitBeforeSelection (PtrElement *firstSel, int *firstChar,
+			   PtrElement *lastSel,
+			   int *lastChar, PtrDocument pDoc)
 {
    PtrElement          pSecond, pNext;
 
@@ -351,15 +296,7 @@ PtrDocument         pDoc;
    Coupe en deux l'element de texte lastSel.
    lastChar est le rang dans cet element du caractere ou on coupe.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SplitAfterSelection (PtrElement lastSel, int lastChar, PtrDocument pDoc)
-#else
-void                SplitAfterSelection (lastSel, lastChar, pDoc)
-PtrElement          lastSel;
-int                 lastChar;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void SplitAfterSelection (PtrElement lastSel, int lastChar, PtrDocument pDoc)
 {
    PtrElement          pNextEl, pSecond;
 
@@ -381,14 +318,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    SameLeafType							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     SameLeafType (LeafType type1, LeafType type2)
-#else  /* __STDC__ */
-static ThotBool     SameLeafType (type1, type2)
-LeafType            type1;
-LeafType            type2;
-
-#endif /* __STDC__ */
 {
    if (type1 == type2)
       return TRUE;
@@ -411,15 +341,8 @@ LeafType            type2;
    Retourne un pointeur sur le pave correspondant a cette feuille  
    ou NULL si la creation n'a pas pu se faire.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType, ThotBool before)
-#else  /* __STDC__ */
-PtrAbstractBox      CreateALeaf (pAB, frame, leafType, before)
-PtrAbstractBox      pAB;
-int                *frame;
-LeafType            leafType;
-ThotBool            before;
-#endif /* __STDC__ */
+PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
+			    ThotBool before)
 {
   PtrElement        pEl, lastSel, pLeaf, pE, pC, pChild, pNextEl, pSibling;
   PtrAbstractBox    pCreatedAB;
@@ -438,16 +361,12 @@ ThotBool            before;
   /* regarde s'il y a une selection pour l'editeur */
   if (!GetCurrentSelection (&pDoc, &pEl, &lastSel, &firstChar, &lastChar))
     /* il n'y en a pas, message d'erreur et fin */
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+    return pCreatedAB;
   else
     /* il y a bien une selection, on travaille sur le premier element */
     /* de la selection */
     /* on ne peut inserer ou coller dans un document en lecture seule */
-    if (pDoc->DocReadOnly)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-    else if (ElementIsReadOnly (pEl->ElParent))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_EL_FORBIDDEN);
-    else
+    if (!pDoc->DocReadOnly && !ElementIsReadOnly (pEl->ElParent))
       {
 	doc = IdentDocument (pDoc);
 	pE = NULL;
@@ -873,17 +792,8 @@ ThotBool            before;
    RedisplayNewContent	redisplays element pEl in all views, except in	
    	view skipView.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol, int skipView, PtrAbstractBox pAbEl)
-#else  /* __STDC__ */
-void                RedisplayNewContent (pEl, pDoc, dVol, skipView, pAbEl)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 dVol;
-int                 skipView;
-PtrAbstractBox      pAbEl;
-#endif /* __STDC__ */
-
+void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
+			  int skipView, PtrAbstractBox pAbEl)
 {
    PtrAbstractBox      pAb;
    PictInfo           *picture1, *picture2;
@@ -1013,13 +923,7 @@ PtrAbstractBox      pAbEl;
    Ce pave contient deja les nouvelles valeurs du volume et du     
    pointeur sur le 1er buffer texte.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                NewContent (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                NewContent (pAb)
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
-
 {
    int                 dVol, len;
    PtrDocument         pDoc;
@@ -1079,7 +983,7 @@ PtrAbstractBox      pAb;
 		    pEl->ElTextLength = pAb->AbVolume;
 		    pEl->ElVolume = 100;
 		    dVol = pAb->AbVolume - pEl->ElVolume;
-		    pEl->ElText->BuLength = ustrlen (pEl->ElText->BuContent);
+		    pEl->ElText->BuLength = strlen (pEl->ElText->BuContent);
 		    break;
 		 case LtText:
 		    dVol = pAb->AbVolume - pEl->ElTextLength;
@@ -1161,16 +1065,8 @@ PtrAbstractBox      pAb;
    	Check if a reference is the first one to refer to the same	
    	element in the main tree.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckFirstReference (PtrElement pEl, PtrAttribute pAttr, ThotBool * stop, PtrReference * pRef)
-#else  /* __STDC__ */
-static void         CheckFirstReference (pEl, pAttr, stop, pRef)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-ThotBool           *stop;
-PtrReference       *pRef;
-#endif /* __STDC__ */
-
+static void CheckFirstReference (PtrElement pEl, PtrAttribute pAttr,
+				 ThotBool *stop, PtrReference *pRef)
 {
    PtrAttribute        pAttrEl;
    ThotBool            first;
@@ -1193,7 +1089,7 @@ PtrReference       *pRef;
 	   if (pAttrEl != NULL)
 	     do
 	       if (pAttrEl->AeAttrNum == pAttr->AeAttrNum &&
-		   !ustrcmp (pAttrEl->AeAttrSSchema->SsName,
+		   !strcmp (pAttrEl->AeAttrSSchema->SsName,
 			     pAttr->AeAttrSSchema->SsName))
 		 found = TRUE;
 	       else
@@ -1236,16 +1132,9 @@ PtrReference       *pRef;
    	Ces elements associes sont crees dans le meme ordre que la	
    	premiere reference qui les pointe.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   CreateReferredAssocElem (PtrDocument pDoc, PtrElement pEl, PtrAttribute pAttr, int TypeEl, PtrSSchema StructEl)
-#else  /* __STDC__ */
-static PtrElement   CreateReferredAssocElem (pDoc, pEl, pAttr, TypeEl, StructEl)
-PtrDocument         pDoc;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-int                 TypeEl;
-PtrSSchema          StructEl;
-#endif /* __STDC__ */
+static PtrElement CreateReferredAssocElem (PtrDocument pDoc, PtrElement pEl,
+					   PtrAttribute pAttr, int TypeEl,
+					   PtrSSchema StructEl)
 {
    PtrElement          pF, pNewEl;
    int                 referredType;
@@ -1351,14 +1240,7 @@ PtrSSchema          StructEl;
    	(pSS, typeNum) pour le document pDoc et retourne un pointeur	
    	sur l'element cree.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          CreateFirstAssocElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrElement          CreateFirstAssocElement (pDoc, typeNum, pSS)
-PtrDocument         pDoc;
-int                 typeNum;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+PtrElement CreateFirstAssocElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
 {
    PtrElement          pEl, pChild;
    PtrSSchema          pSSassoc;
@@ -1386,7 +1268,7 @@ PtrSSchema          pSS;
 	else
 	  {
 	     pSSassoc = pDoc->DocAssocRoot[nAssoc]->ElStructSchema;
-	     if (!ustrcmp (pSSassoc->SsName, pSS->SsName))
+	     if (!strcmp (pSSassoc->SsName, pSS->SsName))
 	       {
 		  r = pDoc->DocAssocRoot[nAssoc]->ElTypeNumber;
 		  if (pDoc->DocAssocRoot[nAssoc]->ElFirstChild == NULL)
@@ -1517,17 +1399,8 @@ PtrSSchema          pSS;
    	pDoc: pointeur sur le document auquel appartient cet element	
    ou cet attribut.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, PtrElement * pSelEl)
-
-#else  /* __STDC__ */
-ThotBool            LinkReference (pEl, pAttr, pDoc, pSelEl)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-PtrElement         *pSelEl;
-
-#endif /* __STDC__ */
+ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
+		       PtrElement *pSelEl)
 {
    PtrElement          pModifiedElem, pCreatedElem;
    PtrDocument         pSelDoc;
@@ -1554,7 +1427,7 @@ PtrElement         *pSelEl;
       typeName[0] = EOS;
    else
      {
-	ustrncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
+	strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
 	assoc = pSS->SsRule[referredTypeNum - 1].SrAssocElem;
      }
    if (assoc && FirstAssociatedElement (pDoc, referredTypeNum, pSS) == NULL)
@@ -1566,9 +1439,7 @@ PtrElement         *pSelEl;
 	*pSelEl = CreateFirstAssocElement (pDoc, referredTypeNum, pSS);
 	if (*pSelEl != NULL)
 	  {
-	  if (!SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
-	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNABLE_LINK_NEW_ELEM);
-	  else
+	  if (SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
             /* une reference modifiee vaut 10 caracteres saisis */
             SetDocumentModified (pDoc, TRUE, 10);
 	  }
@@ -1589,12 +1460,6 @@ PtrElement         *pSelEl;
 	  {
 	     if (pAttr != NULL)
 		pEl = NULL;
-	     if (referredTypeNum == 0)
-		/* type quelconque pour l'element reference' */
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_REFERRED_EL);
-	     else
-		/* affiche un message avec le type de l'element a selectionner */
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SEL_EL_TYPE), typeName);
 	     /* Pour designer la cible, l'utilisateur peut faire defiler le */
 	     /* document et ainsi faire afficher des graphiques "UserSpecified" */
 	     /* qui ne doivent pas etre traite's comme tels (ils ont ete cree's */
@@ -1682,22 +1547,14 @@ PtrElement         *pSelEl;
    AddChoiceMenuItem ajoute le nom item comme nouvelle entree dans le	
    menu contenu dans le buffer menuBuf.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddChoiceMenuItem (Name item, int *menuInd, STRING menuBuf)
-#else  /* __STDC__ */
-static void         AddChoiceMenuItem (item, menuInd, menuBuf)
-Name                item;
-int                *menuInd;
-STRING              menuBuf;
-
-#endif /* __STDC__ */
+static void AddChoiceMenuItem (Name item, int *menuInd, char *menuBuf)
 {
    int                 len;
 
-   len = ustrlen (item) + 1; 
+   len = strlen (item) + 1; 
    if (len + *menuInd < MAX_TXT_LEN)
      {
-	ustrcpy (menuBuf + *menuInd, item);
+	strcpy (menuBuf + *menuInd, item);
 	(*menuInd) += len;
      }
 }
@@ -1709,15 +1566,7 @@ STRING              menuBuf;
    begin indique si on s'interesse plutot au debut de l'element ou 
    la fin de l'element.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         UserElementName (PtrElement pEl, ThotBool begin, Name ret)
-#else  /* __STDC__ */
-static void         UserElementName (pEl, begin, ret)
-PtrElement          pEl;
-ThotBool            begin;
-Name                ret;
-
-#endif /* __STDC__ */
+static void UserElementName (PtrElement pEl, ThotBool begin, Name ret)
 {
    SRule              *pSRule;
    PtrElement          pChild;
@@ -1726,7 +1575,7 @@ Name                ret;
       /* ce type d'element ne porte pas l'exception Hidden */
      {
 	/* par defaut on retourne le type de l'element lui-meme */
-	ustrncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	/* la regle qui definit le type de l'element */
 	pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
@@ -1734,14 +1583,14 @@ Name                ret;
 	      /* c'est un choix avec un fils */
 	      if (pEl->ElSource == NULL)
 		 /* ce n'est pas une inclusion, on prend le nom du fils */
-		 ustrncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule[pEl->ElFirstChild->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+		 strncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule[pEl->ElFirstChild->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
      }
    else
       /* ce type d'element porte l'exception Hidden */
    if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
       /* l'element n'a pas de fils, on retourne quand meme */
       /* le type de l'element lui-meme */
-      ustrncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
    else
      {
 	/* on retourne le type du premier ou dernier fils de */
@@ -1763,18 +1612,8 @@ Name                ret;
    (si action == InsertBefore) de l'element pEl et retourne	
    la reponse de l'application.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl, PtrDocument pDoc, MenuItemAction action)
-#else  /* __STDC__ */
-static ThotBool     TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action)
-PtrSSchema          pSS;
-int                 typeNum;
-PtrElement          pEl;
-PtrDocument         pDoc;
-MenuItemAction      action;
-
-#endif /* __STDC__ */
-
+static ThotBool TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl,
+				   PtrDocument pDoc, MenuItemAction action)
 {
    NotifyElement       notifyEl;
    PtrElement          pSibling;
@@ -1816,18 +1655,8 @@ MenuItemAction      action;
    Si succes, au retour menuTitle contient le titre a donner au    
    menu.                                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, STRING menuBuf, Name menuTitle, PtrDocument pDoc)
-#else  /* __STDC__ */
-int                 MenuChoixElem (pSS, rule, pEl, menuBuf, menuTitle, pDoc)
-PtrSSchema          pSS;
-int                 rule;
-PtrElement          pEl;
-STRING              menuBuf;
-Name                menuTitle;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
+		   Name menuTitle, PtrDocument pDoc)
 {
    PtrElement          pAncest, pPrevEl;
    int                 i, menuInd, nItems, typeNum;
@@ -1949,7 +1778,7 @@ PtrDocument         pDoc;
 		       pAncest = pAncest->ElParent;
 		       /* passe a l'element englobant */
 		    }
-		  ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE), MAX_NAME_LENGTH);
+		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE), MAX_NAME_LENGTH);
 	       }
 	     else
 		/* c'est un choix avec indication des types possibles */
@@ -1977,7 +1806,7 @@ PtrDocument         pDoc;
 			       }
 		       typeNum++;
 		    }
-		  ustrncpy (menuTitle, pSRule->SrName, MAX_NAME_LENGTH);
+		  strncpy (menuTitle, pSRule->SrName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
@@ -1992,14 +1821,7 @@ PtrDocument         pDoc;
    natureName: pointeur sur le nom de la nature choisie, si une	
    nature a ete saisie.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChoiceMenuCallback (int item, STRING natureName)
-#else  /* __STDC__ */
-void                ChoiceMenuCallback (item, natureName)
-int                 item;
-STRING              natureName;
-
-#endif /* __STDC__ */
+void ChoiceMenuCallback (int item, char *natureName)
 {
    Name             SSchemaName;
 
@@ -2015,7 +1837,7 @@ STRING              natureName;
 	     if (SSchemaName[0] == EOS)
 		/* ce nom n'est pas dans le fichier langue, on le */
 		/* prend tel quel */
-		ustrncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
+		strncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
 	     /* cree une nouvelle nature */
 	     ChosenTypeNum = CreateNature (SSchemaName, NULL,
 					   ChoiceMenuSSchema[0]);
@@ -2044,21 +1866,12 @@ STRING              natureName;
    par LinkReference de maniere a pouvoir le faire reafficher par	
    CreateSibling								
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CreeChoix (PtrDocument pDoc, PtrElement * pEl, PtrElement * pLeaf, PtrElement * assocCreated, ThotBool desc)
-#else  /* __STDC__ */
-static ThotBool     CreeChoix (pDoc, pEl, pLeaf, assocCreated, desc)
-PtrDocument         pDoc;
-PtrElement         *pEl;
-PtrElement         *pLeaf;
-PtrElement         *assocCreated;
-ThotBool            desc;
-
-#endif /* __STDC__ */
+static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
+			   PtrElement *assocCreated, ThotBool desc)
 {
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
-   CHAR_T              menuBuf[MAX_TXT_LEN];
+   char                menuBuf[MAX_TXT_LEN];
    Name                menuTitle;
    int                 nItems;
    ThotBool            ret, ok, stop;
@@ -2111,10 +1924,7 @@ ThotBool            desc;
 	     if (ChosenTypeNum > 0)
 		/* verifie que cette nature n'est pas exclue */
 		if (ExcludedType (*pEl, ChosenTypeNum, (*pEl)->ElStructSchema))
-		  {
-		     TtaDisplaySimpleMessage (INFO, LIB, TMSG_NATURE_FORBIDDEN);
-		     ChosenTypeNum = 0;
-		  }
+		  ChosenTypeNum = 0;
 	     if (ChosenTypeNum != 0)
 		/* le type de l'element est maintenant connu, on cree l'element */
 	       {
@@ -2211,19 +2021,9 @@ ThotBool            desc;
    Retourne un pointeur sur le premier element feuille cree, ou NULL  
    si rien n'a ete creee.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
-#else  /* __STDC__ */
-PtrElement          CreateSibling (pDoc, pEl, before, createAbsBox, typeNum, pSS, inclusion)
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            before;
-ThotBool            createAbsBox;
-int                 typeNum;
-PtrSSchema          pSS;
-ThotBool            inclusion;
-
-#endif /* __STDC__ */
+PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
+			  ThotBool createAbsBox, int typeNum, PtrSSchema pSS,
+			  ThotBool inclusion)
 {
    PtrElement          pLeaf, pNew, pElem, pNextEl, pSibling, pRet, pFake,
                        assocCreated, notifiedElem;
@@ -2471,19 +2271,8 @@ ThotBool            inclusion;
    Retourne un pointeur sur le premier element feuille cree, ou NULL  
    si rien n'a ete cree.                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrElement          CreateWithinElement (PtrDocument pDoc, PtrElement pEl, ThotBool createAbsBox, ThotBool inclusion)
-
-#else  /* __STDC__ */
-PtrElement          CreateWithinElement (pDoc, pEl, createAbsBox, inclusion)
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            createAbsBox;
-ThotBool            inclusion;
-
-#endif /* __STDC__ */
-
+PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
+				ThotBool createAbsBox, ThotBool inclusion)
 {
    PtrElement          p, p1, pLeaf, pPrevEl, pNextEl, pSibling, pL, pFake,
                        assocCreated;
@@ -2968,17 +2757,7 @@ ThotBool            inclusion;
    creerait effectivement des elements a l'interieur de    
    l'element pEl.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     CanCreateWithinElement (PtrElement pEl, ThotBool inclusion)
-
-#else  /* __STDC__ */
-static ThotBool     CanCreateWithinElement (pEl, inclusion)
-PtrElement          pEl;
-ThotBool            inclusion;
-
-#endif /* __STDC__ */
-
+static ThotBool CanCreateWithinElement (PtrElement pEl, ThotBool inclusion)
 {
    PtrElement          p;
    int                 i, j, minNum;
@@ -3108,19 +2887,8 @@ ThotBool            inclusion;
    Retourne un pointeur sur l'element cree' (ou colle'), et dans pFree
    un pointeur sur la chaine des elements a liberer apres affichage.  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrElement          CreateOrPasteInText (ThotBool create, ThotBool paste, ThotBool page, PtrElement * pFree)
-
-#else  /* __STDC__ */
-PtrElement          CreateOrPasteInText (create, paste, page, pFree)
-ThotBool            create;
-ThotBool            paste;
-ThotBool            page;
-PtrElement         *pFree;
-
-#endif /* __STDC__ */
-
+PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
+				ThotBool page, PtrElement *pFree)
 {
    ThotBool            isList, optional;
    PtrElement          firstSel, lastSel, pNew, pNextEl, pFollow;
@@ -3185,22 +2953,9 @@ PtrElement         *pFree;
    Retourne Faux si le menu est sature' et que la nouvelle entree  
    n'a pas pu etre ajoutee.                                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     AddInsertMenuItem (Name word1, Name word2, Name word3, int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
-
-#else  /* __STDC__ */
-static ThotBool     AddInsertMenuItem (word1, word2, word3, prevMenuInd, nItems, menuInd, menuBuf)
-Name                word1;
-Name                word2;
-Name                word3;
-int                *prevMenuInd;
-int                *nItems;
-int                *menuInd;
-STRING              menuBuf;
-
-#endif /* __STDC__ */
-
+static ThotBool AddInsertMenuItem (Name word1, Name word2, Name word3,
+				   int *prevMenuInd, int *nItems,
+				   int *menuInd, char *menuBuf)
 {
    int                 j;
    ThotBool            ret;
@@ -3215,21 +2970,21 @@ STRING              menuBuf;
 	*prevMenuInd = *menuInd;
 	/* pour le cas ou l'on supprime l'item... */
 	/* copie le premier mot */
-	j = ustrlen (word1) + 1;
+	j = strlen (word1) + 1;
 	if (j >= MAX_TXT_LEN - *menuInd)
 	   j = MAX_TXT_LEN - *menuInd;
-	ustrncpy (&menuBuf[*menuInd], word1, j);
+	strncpy (&menuBuf[*menuInd], word1, j);
 	*menuInd += j;
 	menuBuf[*menuInd - 1] = EOS;
 
 	/* copie le deuxieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word2[0] != EOS)
 	  {
-	     ustrcat (&menuBuf[*menuInd - 1], " ");
-	     j = ustrlen (word2) + 1;
+	     strcat (&menuBuf[*menuInd - 1], " ");
+	     j = strlen (word2) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
-	     ustrncpy (&menuBuf[*menuInd], word2, j);
+	     strncpy (&menuBuf[*menuInd], word2, j);
 	     *menuInd += j;
 	     menuBuf[*menuInd - 1] = EOS;
 	  }
@@ -3237,11 +2992,11 @@ STRING              menuBuf;
 	/* copie le troisieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word3[0] != EOS)
 	  {
-	     ustrcat (&menuBuf[*menuInd - 1], " ");
-	     j = ustrlen (word3) + 1;
+	     strcat (&menuBuf[*menuInd - 1], " ");
+	     j = strlen (word3) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
-	     ustrncpy (&menuBuf[*menuInd], word3, j);
+	     strncpy (&menuBuf[*menuInd], word3, j);
 	     *menuInd += j;
 	     menuBuf[*menuInd - 1] = EOS;
 	  }
@@ -3255,17 +3010,7 @@ STRING              menuBuf;
    CheckAction       detecte les insertions Avant/Apres dupliquees    
    et les supprime.                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckAction (int *prevMenuInd, int *menuInd, int *nItems)
-
-#else  /* __STDC__ */
-static void         CheckAction (prevMenuInd, menuInd, nItems)
-int                *prevMenuInd;
-int                *menuInd;
-int                *nItems;
-
-#endif /* __STDC__ */
-
+static void CheckAction (int *prevMenuInd, int *menuInd, int *nItems)
 {
    int                 i;
    ThotBool            found;
@@ -3285,7 +3030,7 @@ int                *nItems;
 	       {
 		  UserElementName (ElemAction[i], (ThotBool)(Action[i] == InsertBefore), typeName1);
 		  UserElementName (ElemAction[*nItems - 1], (ThotBool)(Action[i] == InsertBefore), typeName2);
-		  if (ustrcmp (typeName1, typeName2) == 0)
+		  if (strcmp (typeName1, typeName2) == 0)
 		     found = TRUE;
 	       }
 	  }
@@ -3301,18 +3046,8 @@ int                *nItems;
 /*----------------------------------------------------------------------
    AddSeparatorInMenu                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddSeparatorInMenu (int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
-
-#else  /* __STDC__ */
-static void         AddSeparatorInMenu (prevMenuInd, nItems, menuInd, menuBuf)
-int                *prevMenuInd;
-int                *nItems;
-int                *menuInd;
-STRING              menuBuf;
-
-#endif /* __STDC__ */
-
+static void AddSeparatorInMenu (int *prevMenuInd, int *nItems, int *menuInd,
+				char * menuBuf)
 {
    int                 nItemsAvant;
 
@@ -3332,25 +3067,11 @@ STRING              menuBuf;
    de l'element pEl (si before est 'vrai'), en fin de	
    l'element pEl (si before est 'faux').			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
-		   int *nItems, int *prevMenuInd, ThotBool * separatorBefore,
-		  ThotBool * separatorAfter, STRING menuBuf, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         AddItemWithinSiblimg (pEl, before, menuInd, nItems, prevMenuInd, separatorBefore, separatorAfter, menuBuf, pDoc)
-PtrElement          pEl;
-ThotBool            before;
-int                *menuInd;
-int                *nItems;
-int                *prevMenuInd;
-ThotBool           *separatorBefore;
-ThotBool           *separatorAfter;
-STRING              menuBuf;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
+				  int *nItems, int *prevMenuInd,
+				  ThotBool *separatorBefore,
+				  ThotBool *separatorAfter, char *menuBuf,
+				  PtrDocument pDoc)
 
 {
    int                 distance, typeNum;
@@ -3394,9 +3115,9 @@ PtrDocument         pDoc;
 	    /* on cree une nouvelle entree dans le menu */
 	   {
 	      if (before)
-		 ustrncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
+		 strncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
 	      else
-		 ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+		 strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 	      GetExternalTypeName (pSS, typeNum, typeName);
 	      if (*separatorBefore)
 		{
@@ -3435,9 +3156,9 @@ PtrDocument         pDoc;
 			{
 			   distance = 1;
 			   if (before)
-			      ustrncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
+			      strncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
 			   else
-			      ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+			      strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 			   do
 			      /* boucle sur les voisins suivants */
 			     {
@@ -3495,17 +3216,7 @@ PtrDocument         pDoc;
    saut de page comme frere de l'element pEl appartenant au	
    	document pDoc.							
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static ThotBool     PageBreakSiblingAllowed (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 {
    ThotBool            allowed, withPages;
    PtrElement          pE;
@@ -3561,7 +3272,7 @@ void                CreateInsertPageMenu ()
    PtrDocument         pDoc;
    int                 firstChar, lastChar, nItems, prevMenuInd, menuInd;
    Name                titre;
-   CHAR_T                menuBuf[MAX_TXT_LEN];
+   char                menuBuf[MAX_TXT_LEN];
    Name                typeName;
 
    menuInd = 0;
@@ -3570,11 +3281,8 @@ void                CreateInsertPageMenu ()
    /* y-a-t'il une selection courante ? */
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       /* non, message 'Selectionnez' */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pDoc->DocReadOnly)
-      /* on ne peut inserer ou coller dans un document en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
+      return;
+   else if (!pDoc->DocReadOnly)
       /* construit le menu d'insertion ou de collage */
      {
 	/* entree suivante : 'Page avant premier selectionne' sauf si */
@@ -3617,7 +3325,7 @@ void                CreateInsertPageMenu ()
 		  }
 	     }
 
-	ustrncpy (titre, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
+	strncpy (titre, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
 	if (nItems > 0)
 	   BuildPasteMenu (NumMenuInsert, menuBuf, titre, nItems, 'L');
      }
@@ -3633,23 +3341,15 @@ void                CreateInsertPageMenu ()
    copie d'element si 'paste' est faux.                            
    Au retour, ret= vrai si le travail a ete fait, faux sinon.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button, ThotBool * ret)
-#else  /* __STDC__ */
-void                CreatePasteIncludeCmd (create, paste, button, ret)
-ThotBool            create;
-ThotBool            paste;
-char                button;
-ThotBool           *ret;
-
-#endif /* __STDC__ */
+void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
+			    ThotBool *ret)
 {
    PtrElement          firstSel, lastSel, pEl, pSibling, pAncest;
    PtrDocument         pDoc;
    int                 firstChar, lastChar, menuRef, nItems, prevMenuInd,
                        menuInd, i, distance, typeNum, refTypeNum;
    Name                menuTitle;
-   CHAR_T                menuBuf[MAX_TXT_LEN];
+   char                menuBuf[MAX_TXT_LEN];
    ThotBool            isList, emptyRef, optional, ok;
    SRule              *pSRule, *pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
@@ -3659,12 +3359,9 @@ ThotBool           *ret;
    createPasteMenuOK = FALSE;
    /* y-a-t'il une selection ? */
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pDoc->DocReadOnly)
-      /* on ne peut inserer ou coller dans un document en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
-      /* construit le menu d'insertion ou de collage */
+      return;
+   else if (!pDoc->DocReadOnly)
+       /* construit le menu d'insertion ou de collage */
      {
 	if (create)
 	   menuRef = NumMenuInsert;
@@ -3833,12 +3530,12 @@ ThotBool           *ret;
 					      SrConstruct == CsPairedElement)
 					     /* une paire de marques autour de la selection */
 					    {
-					       ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
+					       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
 					       typeName2[0] = EOS;
 					       ok = TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i] + 1, lastSel, pDoc, InsertAfter);
 					    }
 					  else
-					     ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+					     strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 					  if (ok)
 					     /* envoie l'evenement item a creer */
 					     if (TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i],
@@ -3927,12 +3624,12 @@ ThotBool           *ret;
 				if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
 				  /* une paire de marques autour de la selection */
 				  {
-				    ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
+				    strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
 				    typeName2[0] = EOS;
 				    ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
 				  }
 				else
-				  ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+				  strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
 				if (ok &&
 				  /* envoie l'evenement item a creer */
 				    TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
@@ -4261,16 +3958,16 @@ ThotBool           *ret;
 	  {
 	     createPasteMenuOK = FALSE;
 	     if (create)
-		ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
+		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
 	     else if (paste)
 	       {
-		  ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
+		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
 		  if (FirstSavedElement != NULL)
 		     if (ThotLocalActions[T_indexverif] != NULL)
 			(*ThotLocalActions[T_indexverif]) (&FirstSavedElement->PeElement, pDoc);
 	       }
 	     else
-		ustrncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
+		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
 
 	     BuildPasteMenu (menuRef, menuBuf, menuTitle, nItems, button);
 	  }
@@ -4286,16 +3983,8 @@ ThotBool           *ret;
    le document pDoc - on ajoute la marque de fin correspondante apres 
    pElem (apres le caractere de rang rank si rank != 0).		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc, PtrElement pElem, int rank)
-#else  /* __STDC__ */
-static void         InsertSecondPairedElem (pEl, pDoc, pElem, rank)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrElement          pElem;
-int                 rank;
-
-#endif /* __STDC__ */
+static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
+				    PtrElement pElem, int rank)
 {
    PtrElement          pSecondEl, pSibling;
    PtrSSchema          pSS;
@@ -4388,17 +4077,7 @@ int                 rank;
    item est le numero de l'entree choisie dans le menu.             
   ----------------------------------------------------------------------*/
 
-#ifdef __STDC__
-void                CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
-
-#else  /* __STDC__ */
-void                CreatePasteIncludeMenuCallback (create, paste, item)
-ThotBool            create;
-ThotBool            paste;
-int                 item;
-
-#endif /* __STDC__ */
-
+void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 {
    PtrElement          firstSel, lastSel, newsel, pEl, pLeaf, pFollow,
                        pFree, pNext, pNextEl;

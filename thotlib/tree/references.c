@@ -850,10 +850,7 @@ ThotBool            withAppEvent;
 	   /* c'est une inclusion d'un document externe */
 	   if (pDoc == pTargetDoc)
 	      /* reference et element reference' sont dans le meme document */
-	     {
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_SELF_DOC_INCLUSION_IMP);
-		pTargetEl = NULL;	/* sort de la procedure sans rien faire d'autre */
-	     }
+	     pTargetEl = NULL;	/* sort de la procedure sans rien faire d'autre */
      }
    if (pTargetEl != NULL && (pRefEl != NULL || pRefAttr != NULL))
      {
@@ -885,8 +882,6 @@ ThotBool            withAppEvent;
 		       {
 			  pAsc = NULL;	/* stop */
 			  pEl = NULL;	/* abandon */
-			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_A_COPY);
-			  /* message 'Designez l'original' */
 		       }
 		     else
 			/* examine l'ascendant suivant */
@@ -1132,10 +1127,7 @@ ThotBool      removeExclusions;
 						  docIdent);
 				    if (!ok)
 				      {
-					/* echec a l'ouverture du */
-					/* document. */
-					TtaDisplayMessage (INFO,
-							   TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), docIdent);
+					/* echec a l'ouverture du document */
 					FreeDocument (pExternalDoc[extDocNum]);
 					pExternalDoc[extDocNum] = NULL;
 				      }

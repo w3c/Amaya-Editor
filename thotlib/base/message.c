@@ -271,12 +271,6 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
 
    if (fmt)
      {
-#ifdef _WINDOWS
-       lg = ustrlen (fmt);
-       for (i = 0; i < lg; i++)
-	 if (fmt [i] == '\n')
-	   fmt [i] = SPACE;
-#endif /* _WINDOWS */
        /* construct the final message */
 #ifdef STDC_HEADERS
        va_start (pa, fmt);
@@ -346,6 +340,7 @@ void TtaDisplaySimpleMessage (int msgType, int origin, int number)
 
   ptr = TtaGetMessage (origin, number);
 #ifdef _WINDOWS
+  if (msgType == FATAL)
     MessageBox (NULL, ptr, "Fatal error", MB_ICONERROR);
 #else  /* _WINDOWS */
    TtaDisplayMessage (msgType, ptr);

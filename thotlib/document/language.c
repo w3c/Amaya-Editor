@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,6 @@
    Application Program Interface                     
    Language management                                          
   ----------------------------------------------------------------------*/
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -24,13 +23,13 @@
 struct Langue_Ctl   LangTable[MAX_LANGUAGES];
 int                 FreeEntry;
 int                 FirstUserLang;
-static CHAR_T       Langbuffer[2 * MAX_NAME_LENGTH];
+static char         Langbuffer[2 * MAX_NAME_LENGTH];
 static char         CodeBuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
-static CHAR_T       StandardLANG[3];
+static char         StandardLANG[3];
+static char        *dictPath;	/* Environment variable DICOPAR */
 
 #include "thotmsg_f.h"
-#include "ustring_f.h"
 
 /*	ISO 639 CODES ALPHABETIC BY LANGUAGE NAME (ENGLISH SPELLING) */
 
@@ -209,12 +208,7 @@ static ISO639entry	OldLangTable[] =
    TtaGetLanguageNameFromCode
    Returns the full name of a language whose RFC-1766 code is known
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T        *TtaGetLanguageNameFromCode (char *code)
-#else  /* __STDC__ */
-CHAR_T        *TtaGetLanguageNameFromCode (code)
-char          *code;
-#endif /* __STDC__ */
+char *TtaGetLanguageNameFromCode (char *code)
 {
   int                 i;
 
@@ -238,12 +232,7 @@ char          *code;
    TtaGetLanguageCodeFromName
    Returns the RFC-1766 code for a language whose name is known
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char          *TtaGetLanguageCodeFromName (CHAR_T* name)
-#else  /* __STDC__ */
-char          *TtaGetLanguageCodeFromName (name)
-CHAR_T*        name;
-#endif /* __STDC__ */
+char *TtaGetLanguageCodeFromName (char *name)
 {
    int                 i;
 char                langName[MAX_LENGTH];
@@ -267,11 +256,7 @@ char                langName[MAX_LENGTH];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitLanguage ()
-#else  /* __STDC__ */
-void                InitLanguage ()
-#endif /* __STDC__ */
+void InitLanguage ()
 {
    int                 i, j;
 
@@ -288,28 +273,28 @@ void                InitLanguage ()
      }
    /* Loading the default system languages */
    i = 0;
-   ustrcpy (LangTable[i].LangName, "ISO_latin_1");
+   strcpy (LangTable[i].LangName, "ISO_latin_1");
    strcpy (LangTable[i].LangCode, "x-Latin1");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Usigle");
-   ustrcpy (LangTable[i].LangSecondary, "Uname");
+   strcpy (LangTable[i].LangPrincipal, "Usigle");
+   strcpy (LangTable[i].LangSecondary, "Uname");
 
    i = 1;
-   ustrcpy (LangTable[i].LangName, "ISO_latin_2");
+   strcpy (LangTable[i].LangName, "ISO_latin_2");
    strcpy (LangTable[i].LangCode, "x-Latin2");
    LangTable[i].LangAlphabet = '2';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 2;
-   ustrcpy (LangTable[i].LangName, "ISO_latin_9");
+   strcpy (LangTable[i].LangName, "ISO_latin_9");
    strcpy (LangTable[i].LangCode, "x-Latin9");
    LangTable[i].LangAlphabet = '9';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 3;
-   ustrcpy (LangTable[i].LangName, "Symbol");
+   strcpy (LangTable[i].LangName, "Symbol");
    strcpy (LangTable[i].LangCode, "x-Symbol");
    LangTable[i].LangAlphabet = 'G';
    LangTable[i].LangPrincipal[0] = EOS;
@@ -318,108 +303,108 @@ void                InitLanguage ()
    /* Loading the default user languages */
    FirstUserLang = 4;
    i = 4;
-   ustrcpy (LangTable[i].LangName, "French");
+   strcpy (LangTable[i].LangName, "French");
    strcpy (LangTable[i].LangCode, "fr");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Fprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Fperso");
-   ustrcpy (LangTable[i].LangPattern, "francais.ptn");
+   strcpy (LangTable[i].LangPrincipal, "Fprinc");
+   strcpy (LangTable[i].LangSecondary, "Fperso");
+   strcpy (LangTable[i].LangPattern, "francais.ptn");
 
    i = 5;
-   ustrcpy (LangTable[i].LangName, "English");
+   strcpy (LangTable[i].LangName, "English");
    strcpy (LangTable[i].LangCode, "en");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Eprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Eperso");
-   ustrcpy (LangTable[i].LangPattern, "english.ptn");
+   strcpy (LangTable[i].LangPrincipal, "Eprinc");
+   strcpy (LangTable[i].LangSecondary, "Eperso");
+   strcpy (LangTable[i].LangPattern, "english.ptn");
 
    i = 6;
-   ustrcpy (LangTable[i].LangName, "American");
+   strcpy (LangTable[i].LangName, "American");
    strcpy (LangTable[i].LangCode, "en-US");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Eprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Eperso");
-   ustrcpy (LangTable[i].LangPattern, "american.ptn");
+   strcpy (LangTable[i].LangPrincipal, "Eprinc");
+   strcpy (LangTable[i].LangSecondary, "Eperso");
+   strcpy (LangTable[i].LangPattern, "american.ptn");
 
    i = 7;
-   ustrcpy (LangTable[i].LangName, "German");
+   strcpy (LangTable[i].LangName, "German");
    strcpy (LangTable[i].LangCode, "de");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Gprinc");
+   strcpy (LangTable[i].LangPrincipal, "Gprinc");
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "deutsch.ptn");
+   strcpy (LangTable[i].LangPattern, "deutsch.ptn");
 
    i = 8;
-   ustrcpy (LangTable[i].LangName, "Italian");
+   strcpy (LangTable[i].LangName, "Italian");
    strcpy (LangTable[i].LangCode, "it");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Iprinc");
+   strcpy (LangTable[i].LangPrincipal, "Iprinc");
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "italiano.ptn");
+   strcpy (LangTable[i].LangPattern, "italiano.ptn");
 
    i = 9;
-   ustrcpy (LangTable[i].LangName, "Spanish");
+   strcpy (LangTable[i].LangName, "Spanish");
    strcpy (LangTable[i].LangCode, "es");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Sprinc");
+   strcpy (LangTable[i].LangPrincipal, "Sprinc");
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "espanol.ptn");
+   strcpy (LangTable[i].LangPattern, "espanol.ptn");
 
    i = 10;
-   ustrcpy (LangTable[i].LangName, "Portuguese");
+   strcpy (LangTable[i].LangName, "Portuguese");
    strcpy (LangTable[i].LangCode, "pt");
    LangTable[i].LangAlphabet = 'L';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "portug.ptn");
+   strcpy (LangTable[i].LangPattern, "portug.ptn");
 
    i = 11;
-   ustrcpy (LangTable[i].LangName, "Dutch");
+   strcpy (LangTable[i].LangName, "Dutch");
    strcpy (LangTable[i].LangCode, "nl");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Nprinc");
+   strcpy (LangTable[i].LangPrincipal, "Nprinc");
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "nederl.ptn");
+   strcpy (LangTable[i].LangPattern, "nederl.ptn");
 
    i = 12;
-   ustrcpy (LangTable[i].LangName, "Swedish");
+   strcpy (LangTable[i].LangName, "Swedish");
    strcpy (LangTable[i].LangCode, "sv");
    LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Wprinc");
+   strcpy (LangTable[i].LangPrincipal, "Wprinc");
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "swedish.ptn");
+   strcpy (LangTable[i].LangPattern, "swedish.ptn");
 
    i = 13;
-   ustrcpy (LangTable[i].LangName, "Finnish");
+   strcpy (LangTable[i].LangName, "Finnish");
    strcpy (LangTable[i].LangCode, "fi");
    LangTable[i].LangAlphabet = 'L';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "finish.ptn");
+   strcpy (LangTable[i].LangPattern, "finish.ptn");
 
    i = 14;
-   ustrcpy (LangTable[i].LangName, "Greek");
+   strcpy (LangTable[i].LangName, "Greek");
    strcpy (LangTable[i].LangCode, "el");
    LangTable[i].LangAlphabet = 'G';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 15;
-   ustrcpy (LangTable[i].LangName, "Czech");
+   strcpy (LangTable[i].LangName, "Czech");
    strcpy (LangTable[i].LangCode, "cs");
    LangTable[i].LangAlphabet = '2';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 17;
-   ustrcpy (LangTable[i].LangName, "Polish");
+   strcpy (LangTable[i].LangName, "Polish");
    strcpy (LangTable[i].LangCode, "pl");
    LangTable[i].LangAlphabet = '2';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 18;
-   ustrcpy (LangTable[i].LangName, "Turkish");
+   strcpy (LangTable[i].LangName, "Turkish");
    strcpy (LangTable[i].LangCode, "tr");
    LangTable[i].LangAlphabet = '9';
    LangTable[i].LangPrincipal[0] = EOS;
@@ -427,7 +412,7 @@ void                InitLanguage ()
    FreeEntry = 19;
 
    i = 19;
-   ustrcpy (LangTable[i].LangName, "Icelandic");
+   strcpy (LangTable[i].LangName, "Icelandic");
    strcpy (LangTable[i].LangCode, "is");
    LangTable[i].LangAlphabet = 'L';
    LangTable[i].LangPrincipal[0] = EOS;
@@ -440,7 +425,6 @@ void                InitLanguage ()
    TtaNewLanguage
 
    Not available for TYPO languages.
-
    Declares a new language, its alphabet and optionally the names of the
    principal ans secondary dictionaries. All languages used in a Thot
    document must be explicitely declared, except for predefined languages.
@@ -452,28 +436,17 @@ void                InitLanguage ()
    $DICOPAR/principalDictionary and/or $DICOPAR/secondDictionary.
    If an application redeclares an existing language, this new declaration
    has no effect.
-
    Parameters:
    languageName: name of the language according RFC 1766.
    languageAlphabet: alphabet to be used for writing that language:
    `L' for ISO-Latin-1, `G' for Symbol (Greek).
    principalDictionary: name of the principal dictionary or NULL.
    secondDictionary: name of the secondary dictionary or NULL.
-
    Return value:
    identifier of the new language or 0 if the language cannot be added.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-Language            TtaNewLanguage (CHAR_T* languageName, char languageAlphabet, STRING principalDictionary, STRING secondDictionary)
-#else  /* __STDC__ */
-Language            TtaNewLanguage (languageName, languageAlphabet, principalDictionary, secondDictionary)
-CHAR_T*             languageName;
-char                languageAlphabet;
-STRING              principalDictionary;
-STRING              secondDictionary;
-#endif /* __STDC__ */
-
+Language TtaNewLanguage (char *languageName, char languageAlphabet,
+			 char *principalDictionary, char *secondDictionary)
 {
    int                 i;
 
@@ -483,13 +456,13 @@ STRING              secondDictionary;
       TtaError (ERR_invalid_parameter);
    else if (languageName[0] == WC_EOS)
       TtaError (ERR_invalid_parameter);
-   else if (ustrlen (languageName) >= MAX_NAME_LENGTH)
+   else if (strlen (languageName) >= MAX_NAME_LENGTH)
       TtaError (ERR_string_too_long);
    else if (FreeEntry == MAX_LANGUAGES)
       TtaError (ERR_too_many_languages);
    else
      {
-        if (ustrlen (languageName) == 2 ||
+        if (strlen (languageName) == 2 ||
 	   languageName[1] == '-' || languageName[2] == '-')
 	   /* it's an ISO-639 code */
 	  {
@@ -497,17 +470,17 @@ STRING              secondDictionary;
 	    if (!wc2iso_strcasecmp (languageName, LangTable[i].LangCode))
 	      /* The language is already defined */
 	      return i;
-	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
+	  strcpy (LangTable[FreeEntry].LangName, languageName);
 	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
 	  }
 	else
 	  {
 	  /* Consults the languages table to see if the language exists. */
 	  for (i = 0; i < FreeEntry; i++)
-	    if (!ustrcasecmp (languageName, LangTable[i].LangName))
+	    if (!strcasecmp (languageName, LangTable[i].LangName))
 	      /* The language is already defined */
 	      return i;
-	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
+	  strcpy (LangTable[FreeEntry].LangName, languageName);
 	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
 	  }
 
@@ -516,14 +489,14 @@ STRING              secondDictionary;
 	LangTable[i].LangAlphabet = languageAlphabet;
 	if (principalDictionary != NULL)
 	  {
-	     ustrncpy (LangTable[i].LangPrincipal, principalDictionary, MAX_NAME_LENGTH);
+	     strncpy (LangTable[i].LangPrincipal, principalDictionary, MAX_NAME_LENGTH);
 	     LangTable[i].LangPrincipal[MAX_NAME_LENGTH - 1] = EOS;
 	  }
 	else
 	   LangTable[i].LangPrincipal[0] = EOS;
 	if (secondDictionary != NULL)
 	  {
-	     ustrncpy (LangTable[i].LangSecondary, secondDictionary, MAX_NAME_LENGTH);
+	     strncpy (LangTable[i].LangSecondary, secondDictionary, MAX_NAME_LENGTH);
 	     LangTable[i].LangSecondary[MAX_NAME_LENGTH - 1] = EOS;
 	  }
 	else
@@ -538,17 +511,10 @@ STRING              secondDictionary;
    TtaRemoveLanguage
 
    Remove a language from the Thot language table.
-
    Parameters:
        language: the language to be removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaRemoveLanguage (Language language)
-#else  /* __STDC__ */
-void                TtaRemoveLanguage (language)
-   Language language;
-#endif /* __STDC__ */
-
+void TtaRemoveLanguage (Language language)
 {
    int                 i;
 
@@ -579,13 +545,7 @@ void                TtaRemoveLanguage (language)
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Language            TtaGetLanguageIdFromName (CHAR_T *languageName)
-#else  /* __STDC__ */
-Language            TtaGetLanguageIdFromName (languageName)
-CHAR_T             *languageName;
-#endif /* __STDC__ */
-
+Language TtaGetLanguageIdFromName (char *languageName)
 { 
   char                lang[MAX_LENGTH];
   char                code[MAX_LENGTH];
@@ -598,7 +558,7 @@ CHAR_T             *languageName;
     TtaError (ERR_invalid_parameter);
   else if (languageName[0] == WC_EOS)
     TtaError (ERR_invalid_parameter);
-  else if (ustrlen (languageName) >= MAX_NAME_LENGTH)
+  else if (strlen (languageName) >= MAX_NAME_LENGTH)
     TtaError (ERR_string_too_long);
   else
     {
@@ -644,22 +604,21 @@ CHAR_T             *languageName;
    TtaGetVarLANG
 
    Returns the 2 first chars of environment variable LANG or 'fr'.
-
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-CHAR_T* TtaGetVarLANG ()
+char *TtaGetVarLANG ()
 { 
-   CHAR_T   *langEVar = TtaGetEnvString ("LANG");
+   char   *langEVar = TtaGetEnvString ("LANG");
 
    if (langEVar == NULL)
-     ustrcpy (StandardLANG, "en");
-   else if (!ustrcmp (langEVar, "C") ||
-	    !ustrcasecmp (langEVar, "iso_8859_1"))
-     ustrcpy (StandardLANG, "fr");
+     strcpy (StandardLANG, "en");
+   else if (!strcmp (langEVar, "C") ||
+	    !strcasecmp (langEVar, "iso_8859_1"))
+     strcpy (StandardLANG, "fr");
    else
      {
-       ustrncpy (StandardLANG, langEVar, 2);
+       strncpy (StandardLANG, langEVar, 2);
        StandardLANG[2] = WC_EOS;
      }
    return (StandardLANG);
@@ -672,7 +631,7 @@ CHAR_T* TtaGetVarLANG ()
    Return value:
    identifier of the default language.
   ----------------------------------------------------------------------*/
-Language            TtaGetDefaultLanguage ()
+Language TtaGetDefaultLanguage ()
 {
    return TtaGetLanguageIdFromName (TtaGetVarLANG ());
 }
@@ -681,21 +640,13 @@ Language            TtaGetDefaultLanguage ()
    TtaGetLanguageIdFromAlphabet
 
    Not available for TYPO languages.
-
    Returns the identifier of the first language that uses a given alphabet.
-
    Parameters:
    languageAlphabet: the alphabet of interest (`L' = latin, `G' = greek).
-
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Language            TtaGetLanguageIdFromAlphabet (CHAR_T languageAlphabet)
-#else  /* __STDC__ */
-Language            TtaGetLanguageIdFromAlphabet (languageAlphabet)
-CHAR_T              languageAlphabet;
-#endif /* __STDC__ */
+Language TtaGetLanguageIdFromAlphabet (char languageAlphabet)
 {
    int                 i;
    ThotBool            again;
@@ -726,19 +677,12 @@ CHAR_T              languageAlphabet;
    TtaGetAlphabet
 
    Not available for TYPO languages. Returns the alphabet of a language.
-
    Parameters:
    languageId: name of the language.
-
    Return value:
    a character that identifies the alphabet ('L' = latin, 'G' = greek).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char              TtaGetAlphabet (Language languageId)
-#else  /* __STDC__ */
-char              TtaGetAlphabet (languageId)
-Language          languageId;
-#endif /* __STDC__ */
+char TtaGetAlphabet (Language languageId)
 {
    int                 i;
 
@@ -764,12 +708,7 @@ Language          languageId;
    Return value:
    the name of the language.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*            TtaGetLanguageName (Language languageId)
-#else  /* __STDC__ */
-CHAR_T*            TtaGetLanguageName (languageId)
-Language           languageId;
-#endif /* __STDC__ */
+char *TtaGetLanguageName (Language languageId)
 {
    int                 i;
 
@@ -780,7 +719,7 @@ Language           languageId;
 	Langbuffer[0] = WC_EOS;
      }
    else
-      ustrcpy (Langbuffer, LangTable[i].LangName);
+      strcpy (Langbuffer, LangTable[i].LangName);
    return Langbuffer;
 }
 
@@ -789,22 +728,13 @@ Language           languageId;
    TtaGetLanguageCode
 
    Not available for TYPO languages.
-
    Returns the RFC-1766 code of a given language.
-
    Parameters:
    languageId: identifier of the language.
-
    Return value:
    the code of the language.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*            TtaGetLanguageCode (Language languageId)
-#else  /* __STDC__ */
-CHAR_T*            TtaGetLanguageCode (languageId)
-Language           languageId;
-#endif /* __STDC__ */
-
+char *TtaGetLanguageCode (Language languageId)
 {
    int                 i;
 
@@ -830,11 +760,7 @@ Language           languageId;
    Return value:
    the current number of languages.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetNumberOfLanguages ()
-#else  /* __STDC__ */
-int                 TtaGetNumberOfLanguages ()
-#endif				/* __STDC__ */
+int TtaGetNumberOfLanguages ()
 {
    return FreeEntry;
 }
@@ -850,11 +776,7 @@ int                 TtaGetNumberOfLanguages ()
    Return value:
    the first user language number.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetFirstUserLanguage ()
-#else  /* __STDC__ */
-int                 TtaGetFirstUserLanguage ()
-#endif				/* __STDC__ */
+int TtaGetFirstUserLanguage ()
 {
    return FirstUserLang;
 }
@@ -865,60 +787,46 @@ int                 TtaGetFirstUserLanguage ()
   appropriate structure.
   Return 0 if problem else returns 1 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            GetPatternList (Language langageId)
-#else  /* __STDC__ */
-ThotBool            GetPatternList (langageId)
-Language            langageId;
-
-#endif /* __STDC__ */
+ThotBool GetPatternList (Language langageId)
 {
+   FILE               *in;
+   unsigned char       patternGot[MAX_LET_PATTERN];
+   char                weightGot[MAX_LET_PATTERN + 1];
+   char                patternFileName[THOT_MAX_CHAR];
+   char               *ptPattern;
    int                 lang;
    int                 currentIndex;
    int                 previousLength;
    int                 i, lg;
-   UCHAR_T             patternGot[MAX_LET_PATTERN];
-   CHAR_T              weightGot[MAX_LET_PATTERN + 1];
-   CHAR_T              patternFileName[THOT_MAX_CHAR];
-   static CHAR_T*      dictPath;	/* Environment variable DICOPAR */
-   CHAR_T*             ptPattern;
-   FILE               *in;
 
    dictPath = TtaGetEnvString ("DICOPAR");
    if (dictPath == NULL)
-     {
-	/* The environment variable DICOPAR does not exist */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
-	return (FALSE);
-     }
+     /* The environment variable DICOPAR does not exist */
+     return (FALSE);
 
-   ustrcpy (patternFileName, dictPath);
-   ustrcat (patternFileName, WC_DIR_STR);
+   strcpy (patternFileName, dictPath);
+   strcat (patternFileName, WC_DIR_STR);
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
-   ustrcat (patternFileName, ptPattern);
-   if ((in = ufopen (patternFileName, "r")) == NULL)
-     {
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
-	return (FALSE);
-     }
-   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_OPEN), ptPattern);
+   strcat (patternFileName, ptPattern);
+   if ((in = fopen (patternFileName, "r")) == NULL)
+     return (FALSE);
+
    currentIndex = 0;
    previousLength = 0;
    i = 0;
-
    while ((fscanf (in, "%s %s", patternGot, weightGot)) != EOF)
      {
 	i++;
-	lg = ustrlen (patternGot);
+	lg = strlen (patternGot);
 	if (lg != previousLength)
 	  {
 	     previousLength = lg;
 	     currentIndex++;
 	     LangTable[lang].LangTabPattern.ind_pattern[previousLength] = i;
 	  }
-	ustrcpy (LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, patternGot);
-	ustrcpy (LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, weightGot);
+	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].CarPattern, patternGot);
+	strcpy (LangTable[lang].LangTabPattern.liste_pattern[i].PoidsPattern, weightGot);
      }
    LangTable[lang].LangTabPattern.NbPatt = i;
    LangTable[lang].LangTabPattern.Charge = 1;
@@ -931,14 +839,8 @@ Language            langageId;
   FoundPatternInList verifies if a string belongs to the pattern list.
   if true, it returns 1 else 0 
   ----------------------------------------------------------------------*/
-#ifdef __STDC
-static STRING       FoundPatternInList (Language langageId, UCHAR_T substring[MAX_LET_PATTERN])
-#else  /* __STDC__ */
-static STRING       FoundPatternInList (langageId, substring)
-Language            langageId;
-UCHAR_T             substring[MAX_LET_PATTERN];
-
-#endif /* __STDC__ */
+static char *FoundPatternInList (Language langageId,
+				 unsigned char substring[MAX_LET_PATTERN])
 {
    int                 language;
    int                 lgstring;
@@ -946,7 +848,7 @@ UCHAR_T             substring[MAX_LET_PATTERN];
    struct PatternList *ptrTabPattern;
 
    language = (int) langageId;
-   lgstring = ustrlen (substring);
+   lgstring = strlen (substring);
    if (lgstring >= MAX_LET_PATTERN)
      return (NULL);
    else
@@ -969,7 +871,7 @@ UCHAR_T             substring[MAX_LET_PATTERN];
 	     }
 	   while (i < max)
 	     {
-	       if (!ustrcmp (ptrTabPattern->liste_pattern[i].CarPattern, substring))
+	       if (!strcmp (ptrTabPattern->liste_pattern[i].CarPattern, substring))
 		 return (ptrTabPattern->liste_pattern[i].PoidsPattern);
 	       i++;
 	     }
@@ -983,37 +885,28 @@ UCHAR_T             substring[MAX_LET_PATTERN];
    * FoundHyphenPoints: apply Liang algo. on a word and returns the 
    * hypen points.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         FoundHyphenPoints (Language langageId, CHAR_T wordToCut[THOT_MAX_CHAR])
-#else  /* __STDC__ */
-static void         FoundHyphenPoints (langageId, wordToCut)
-Language            langageId;
-CHAR_T              wordToCut[THOT_MAX_CHAR];
-
-#endif /* __STDC__ */
+static void FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR])
 {
    int                 lang;
-   UCHAR_T             wordToTreat[THOT_MAX_CHAR];	/* "." + wordToCut + "." */
-   UCHAR_T             subword[THOT_MAX_CHAR];
+   unsigned char       wordToTreat[THOT_MAX_CHAR];	/* "." + wordToCut + "." */
+   unsigned char       subword[THOT_MAX_CHAR];
+   char               *weight_subword;
    int                 tab_weight[THOT_MAX_CHAR];
-   STRING              weight_subword;
    int                 wordLength;
    int                 size_subword;
    int                 currentPosition;
    int                 i, j;
 
    lang = (int) langageId;
-   wordLength = ustrlen (wordToCut) + 2;
+   wordLength = strlen (wordToCut) + 2;
    if (wordLength > THOT_MAX_CHAR)
-     {
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_WORD_TOO_LONG), wordToCut);
-	return;
-     }
+     return;
+
    for (i = 0; i < THOT_MAX_CHAR; i++)
       tab_weight[i] = 0;
-   ustrcpy (wordToTreat, ".");
-   ustrcat (wordToTreat, wordToCut);
-   ustrcat (wordToTreat, ".");
+   strcpy (wordToTreat, ".");
+   strcat (wordToTreat, wordToCut);
+   strcat (wordToTreat, ".");
    size_subword = 1;
    while ((size_subword <= wordLength) && (size_subword <= MAX_LET_PATTERN))
      {
@@ -1047,14 +940,7 @@ CHAR_T              wordToCut[THOT_MAX_CHAR];
    returns a pointer on the list of values representing the hyphen points
    or NULL 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                *TtaGetPatternHyphenList (CHAR_T word[THOT_MAX_CHAR], Language languageId)
-#else  /* __STDC__ */
-int                *TtaGetPatternHyphenList (word, languageId)
-CHAR_T              word[THOT_MAX_CHAR];
-Language            languageId;
-
-#endif /* __STDC__ */
+int *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
 {
    int                 language;
    int                 i;
@@ -1062,7 +948,7 @@ Language            languageId;
    language = (int) languageId;
    if (word[0] == EOS)
       return (NULL);
-   if (ustrlen (word) < 2)
+   if (strlen (word) < 2)
       return (NULL);
    if (LangTable[language].LangPattern[0] == EOS)
       /* Language without a pattern */
@@ -1085,13 +971,7 @@ Language            languageId;
  * TtaExistPatternList verifies if a list of patterns is defined
  * for a given language
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaExistPatternList (Language languageId)
-#else  /* __STDC__ */
-ThotBool            TtaExistPatternList (languageId)
-Language            languageId;
-
-#endif /* __STDC__ */
 {
    int                 language;
 

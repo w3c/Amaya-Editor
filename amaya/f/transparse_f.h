@@ -11,7 +11,7 @@ extern int MapThotAttr ( char* attrName,
                          char *elementName );
 extern void ppInitAutomaton ( void );
 extern void FreeTransform ( void );
-extern int ppStartParser ( STRING name,
+extern int ppStartParser ( char *name,
                            SSchema tStrSchema,
                            strTransSet **resTrSet );
 
@@ -22,7 +22,7 @@ extern int MapThotAttr (/* char* attrName,
                            char *elementName */);
 extern void ppInitAutomaton (/* void */);
 extern void FreeTransform (/* void */);
-extern int ppStartParser (/* STRING name,
+extern int ppStartParser (/* char *name,
                              SSchema tStrSchema,
                              strTransSet **resTrSet */);
 

@@ -1413,10 +1413,7 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
 		       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 		     }
 		   else
-		     {
-		       ptr = buffer;
-		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_UNKNOWN_TYPE), &ptr);
-		     }
+		     ptr = buffer;
 		 }
 	       NewContent (pAb);
 	       APPtextModify (pAb->AbElement, frame, FALSE);
@@ -1424,8 +1421,6 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
 	   pAb = NULL;	/* rien a faire de plus pour les images */
 	 }
      }
-   else
-     TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
 }
 
 
@@ -1558,10 +1553,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   width = CharacterWidth ('m', font);
   height = FontHeight (font);
   if (pAb->AbVolume == 0)
-    {
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
-      DefClip (frame, 0, 0, 0, 0);
-    }
+    DefClip (frame, 0, 0, 0, 0);
   else
     switch (pAb->AbLeafType)
       {
@@ -1976,10 +1968,7 @@ static void         ContentEditing (int editType)
       frame = ActiveFrame;
       /*-- recherche le pave concerne --*/
       if (frame <= 0)
-	{
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_BEFORE);
-	  return;
-	}
+	return;
       else
 	{
 	  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
@@ -2180,13 +2169,11 @@ static void         ContentEditing (int editType)
 	    {
 	      if (pViewSel->VsIndBox != 0)
 		{
-		  if (pBox->BxNChars <= 3)
-		    TtaDisplaySimpleMessage (INFO, LIB,
-					   TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-		  else if (pAb->AbPolyLineShape != 'w' &&
-			   pAb->AbPolyLineShape != 'x' &&
-			   pAb->AbPolyLineShape != 'y' &&
-			   pAb->AbPolyLineShape != 'z')
+		  if (pBox->BxNChars > 3 &&
+		      pAb->AbPolyLineShape != 'w' &&
+		      pAb->AbPolyLineShape != 'x' &&
+		      pAb->AbPolyLineShape != 'y' &&
+		      pAb->AbPolyLineShape != 'z')
 		    {
 		      charsDelta = pViewSel->VsIndBox;
 		      if (!APPgraphicModify (pAb->AbElement,
@@ -2306,12 +2293,8 @@ static void         ContentEditing (int editType)
 			(*ThotLocalActions[T_deletenextchar]) (frame,
 							pAb->AbElement, FALSE);
 		      else
-			{
-			  TtaDisplaySimpleMessage (INFO, LIB,
-						   TMSG_NOTHING_TO_DEL);
-			  /* Pas de reaffichage */
-			  DefClip (frame, 0, 0, 0, 0);
-			}
+			/* Pas de reaffichage */
+			DefClip (frame, 0, 0, 0, 0);
 		      /* Inutile de mettre a jour la selection */
 		      pAb = NULL;
 		    }
@@ -2330,12 +2313,8 @@ static void         ContentEditing (int editType)
 		      (*ThotLocalActions[T_deletenextchar]) (frame,
 						       pAb->AbElement, FALSE);
 		    else
-		      {
-			TtaDisplaySimpleMessage (INFO, LIB,
-						 TMSG_NOTHING_TO_DEL);
-			/* Pas de reaffichage */
-			DefClip (frame, 0, 0, 0, 0);
-		      }
+		      /* Pas de reaffichage */
+		      DefClip (frame, 0, 0, 0, 0);
 		    /* Il n'est pas necessaire de mettre a jour la selection */
 		    pFrame->FrReady = TRUE;
 		    pAb = NULL;
@@ -3138,10 +3117,6 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 	      }
 	    break;
 	    default:
-	      if (toDelete)
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
-	      else
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
 	      break;
 	    }
 	  SetDocumentModified (LoadedDocument[FrameTable[frame].FrDoc - 1], TRUE, 1); 
@@ -3171,19 +3146,13 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 
   /* check the current selection */
   if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
-    {
-      /* cannot insert */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
-      return;
-    }
+    /* cannot insert */
+    return;
   frame = ActiveFrame;
   SetInsert (&pAb, &frame, LtText, FALSE);
   if (pAb == NULL)
-    {
-      /* invalid selection */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
-      return;
-    }
+    /* invalid selection */
+    return;
 
   /* Calcule la position du debut de la selection courante */
   /* l'index dans le buffer, le decalage x ne sont pas utilises */

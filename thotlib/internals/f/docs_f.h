@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document TtaInitDocument ( CHAR_T *structureSchema,
-                                  CHAR_T *documentName,
+extern Document TtaInitDocument ( char *structureSchema,
+                                  char *documentName,
                                   Document document );
-extern Document TtaNewDocument ( CHAR_T* structureSchema,
-                                 CHAR_T* documentName );
-extern void LoadDocument ( PtrDocument * pDoc,
-                           STRING fileName );
-extern void NewDocument ( PtrDocument * pDoc,
-                          CHAR_T* SSchemaName,
-                          CHAR_T *docName,
+extern Document TtaNewDocument ( char *structureSchema,
+                                 char *documentName );
+extern void LoadDocument ( PtrDocument *pDoc,
+                           char *fileName );
+extern void NewDocument ( PtrDocument *pDoc,
+                          char *SSchemaName,
+                          char *docName,
                           PathBuffer directory );
 extern void PaginateDocument ( PtrDocument pDoc );
 extern void UpdateIncludedElement ( PtrElement pEl,
@@ -30,16 +30,16 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern Document TtaInitDocument (/* CHAR_T *structureSchema,
-                                    CHAR_T *documentName,
+extern Document TtaInitDocument (/* char *structureSchema,
+                                    char *documentName,
                                     Document document */);
-extern Document TtaNewDocument (/* CHAR_T* structureSchema,
-                                   CHAR_T* documentName */);
-extern void LoadDocument (/* PtrDocument * pDoc,
-                             STRING fileName */);
-extern void NewDocument (/* PtrDocument * pDoc,
-                            CHAR_T* SSchemaName,
-                            CHAR_T *docName,
+extern Document TtaNewDocument (/* char *structureSchema,
+                                   char *documentName */);
+extern void LoadDocument (/* PtrDocument *pDoc,
+                             char *fileName */);
+extern void NewDocument (/* PtrDocument *pDoc,
+                            char *SSchemaName,
+                            char *docName,
                             PathBuffer directory */);
 extern void PaginateDocument (/* PtrDocument pDoc */);
 extern void UpdateIncludedElement (/* PtrElement pEl,

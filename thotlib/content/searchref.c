@@ -204,10 +204,7 @@ ThotBool            nextExtDoc;
      {
 	/* prend la selection courante */
 	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-	if (!ok)
-	   /* pas de selection, message 'Selectionnez' */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-	else
+	if (ok)
 	   /* cherche le premier element reference' qui englobe la */
 	   /* selection courante */
 	  {
@@ -297,9 +294,7 @@ void                FindReferredEl ()
    int                 chosenItem;
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
-   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else
+   if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
      {
 	pEl = NULL;
 	pRef = NULL;
@@ -355,36 +350,29 @@ void                FindReferredEl ()
 	  {
 	     /* l'element reference' est pointe' par pEl */
 	     pEl = ReferredElement (pRef, &docIdent, &pDoc);
-	     if (pEl == NULL)
+	     if (pEl == NULL &&
 		/* il n'y a pas d'element reference' */
-		if (DocIdentIsNull (docIdent) || pDoc != NULL)
-		   /* ce n'est pas une reference externe ou c'est une reference vide */
-		   TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
-		else
-		   /* l'element reference' est dans un autre document qui */
-		   /* n'est pas charge' */
-		   /* on proposera ce nom comme nom par defaut lorsque */
-		   /* l'utilisateur demandera a ouvrir un document */
-		  {
-		    LoadDocument (&pDoc, docIdent);
-		    if (pDoc != NULL)
-		      {
-			/* annule la selection */
-			TtaClearViewSelections ();
-			/* le chargement du document a reussi */
-			pEl = ReferredElement (pRef, &docIdent, &pDoc);
-			/* s'il s'agit d'une inclusion de */
-			/* document, applique les regles Transmit */
-			ApplyTransmitRules (pRef->RdElement, pSelDoc);
-		      }
-		  }
-	     else if (IsASavedElement (pEl))
+		 !DocIdentIsNull (docIdent) && pDoc == NULL)
+	       /* l'element reference' est dans un autre document qui */
+	       /* n'est pas charge' */
+	       /* on proposera ce nom comme nom par defaut lorsque */
+	       /* l'utilisateur demandera a ouvrir un document */
 	       {
-		 /* l'element reference est-il dans le buffer de sauvegarde ? */
-		 pEl = NULL;
-		 /* message 'CsReference vide' */
-		 TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
+		 LoadDocument (&pDoc, docIdent);
+		 if (pDoc != NULL)
+		   {
+		     /* annule la selection */
+		     TtaClearViewSelections ();
+		     /* le chargement du document a reussi */
+		     pEl = ReferredElement (pRef, &docIdent, &pDoc);
+		     /* s'il s'agit d'une inclusion de */
+		     /* document, applique les regles Transmit */
+		     ApplyTransmitRules (pRef->RdElement, pSelDoc);
+		   }
 	       }
+	     else if (IsASavedElement (pEl))
+	       /* l'element reference est-il dans le buffer de sauvegarde ? */
+	       pEl = NULL;
 	  }
 
 	if (pEl != NULL)

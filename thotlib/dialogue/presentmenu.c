@@ -386,12 +386,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
    CloseInsertion ();
    /* demande quelle est la selection courante */
    selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
-   if (!selok)
-      /* rien n'est selectionne' */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (SelDoc->DocReadOnly)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (SelDoc != NULL && SelDoc->DocSSchema != NULL)
+   if (selok && SelDoc && SelDoc->DocReadOnly && SelDoc->DocSSchema != NULL)
      /* le document selectionne' n'a pas ete ferme' */
      {
 	/* eteint la selection courante */

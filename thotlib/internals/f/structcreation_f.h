@@ -11,7 +11,7 @@ extern void NotifySubTree ( APPevent appEvent,
                             PtrElement pEl,
                             int origDoc );
 extern void InsertOption ( PtrElement pEl,
-                           PtrElement * pOption,
+                           PtrElement *pOption,
                            PtrDocument pDoc );
 extern void CreationExceptions ( PtrElement pEl,
                                  PtrDocument pDoc );
@@ -22,9 +22,9 @@ extern void BuildAbsBoxSpliText ( PtrElement pEl,
                                   PtrElement pNewEl,
                                   PtrElement pNextEl,
                                   PtrDocument pDoc );
-extern void SplitBeforeSelection ( PtrElement * firstSel,
+extern void SplitBeforeSelection ( PtrElement *firstSel,
                                    int *firstChar,
-                                   PtrElement * lastSel,
+                                   PtrElement *lastSel,
                                    int *lastChar,
                                    PtrDocument pDoc );
 extern void SplitAfterSelection ( PtrElement lastSel,
@@ -46,15 +46,15 @@ extern PtrElement CreateFirstAssocElement ( PtrDocument pDoc,
 extern ThotBool LinkReference ( PtrElement pEl,
                                 PtrAttribute pAttr,
                                 PtrDocument pDoc,
-                                PtrElement * pSelEl );
+                                PtrElement *pSelEl );
 extern int MenuChoixElem ( PtrSSchema pSS,
                            int rule,
                            PtrElement pEl,
-                           STRING menuBuf,
+                           char *menuBuf,
                            Name menuTitle,
                            PtrDocument pDoc );
 extern void ChoiceMenuCallback ( int item,
-                                 STRING natureName );
+                                 char *natureName );
 extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   PtrElement pEl,
                                   ThotBool before,
@@ -69,12 +69,12 @@ extern PtrElement CreateWithinElement ( PtrDocument pDoc,
 extern PtrElement CreateOrPasteInText ( ThotBool create,
                                         ThotBool paste,
                                         ThotBool page,
-                                        PtrElement * pFree );
+                                        PtrElement *pFree );
 extern void CreateInsertPageMenu ( void );
 extern void CreatePasteIncludeCmd ( ThotBool create,
                                     ThotBool paste,
                                     char button,
-                                    ThotBool * ret );
+                                    ThotBool *ret );
 extern void CreatePasteIncludeMenuCallback ( ThotBool create,
                                              ThotBool paste,
                                              int item );
@@ -86,7 +86,7 @@ extern void NotifySubTree (/* APPevent appEvent,
                               PtrElement pEl,
                               int origDoc */);
 extern void InsertOption (/* PtrElement pEl,
-                             PtrElement * pOption,
+                             PtrElement *pOption,
                              PtrDocument pDoc */);
 extern void CreationExceptions (/* PtrElement pEl,
                                    PtrDocument pDoc */);
@@ -97,9 +97,9 @@ extern void BuildAbsBoxSpliText (/* PtrElement pEl,
                                     PtrElement pNewEl,
                                     PtrElement pNextEl,
                                     PtrDocument pDoc */);
-extern void SplitBeforeSelection (/* PtrElement * firstSel,
+extern void SplitBeforeSelection (/* PtrElement *firstSel,
                                      int *firstChar,
-                                     PtrElement * lastSel,
+                                     PtrElement *lastSel,
                                      int *lastChar,
                                      PtrDocument pDoc */);
 extern void SplitAfterSelection (/* PtrElement lastSel,
@@ -121,15 +121,15 @@ extern PtrElement CreateFirstAssocElement (/* PtrDocument pDoc,
 extern ThotBool LinkReference (/* PtrElement pEl,
                                   PtrAttribute pAttr,
                                   PtrDocument pDoc,
-                                  PtrElement * pSelEl */);
+                                  PtrElement *pSelEl */);
 extern int MenuChoixElem (/* PtrSSchema pSS,
                              int rule,
                              PtrElement pEl,
-                             STRING menuBuf,
+                             char *menuBuf,
                              Name menuTitle,
                              PtrDocument pDoc */);
 extern void ChoiceMenuCallback (/* int item,
-                                   STRING natureName */);
+                                   char *natureName */);
 extern PtrElement CreateSibling (/* PtrDocument pDoc,
                                     PtrElement pEl,
                                     ThotBool before,
@@ -144,12 +144,12 @@ extern PtrElement CreateWithinElement (/* PtrDocument pDoc,
 extern PtrElement CreateOrPasteInText (/* ThotBool create,
                                           ThotBool paste,
                                           ThotBool page,
-                                          PtrElement * pFree */);
+                                          PtrElement *pFree */);
 extern void CreateInsertPageMenu (/* void */);
 extern void CreatePasteIncludeCmd (/* ThotBool create,
                                       ThotBool paste,
                                       char button,
-                                      ThotBool * ret */);
+                                      ThotBool *ret */);
 extern void CreatePasteIncludeMenuCallback (/* ThotBool create,
                                                ThotBool paste,
                                                int item */);

@@ -1994,10 +1994,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       return (0); /** The .ps file was generated **/
       }
     else
-      {
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_MISSING_VIEW));
       return (-1); /** The .ps file was not generated for any raison **/
-      }
     }
 #else  /* _WINDOWS */
   if (firstFrame != 0)
@@ -2006,10 +2003,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       return (0); /** The .ps file was generated **/
     }
   else
-    {
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_MISSING_VIEW));
       return (-1); /** The .ps file was not generated for any raison **/
-    }
 #endif /* _WINDOWS */
 }
 
@@ -2594,11 +2588,6 @@ int                 main (int argc, char **argv)
 	      TtaExtractName (argv[argCounter], tempDir, name);
 	      argCounter++;
 	    }
-	  else
-	    /* The file does not exist */
-	    TtaDisplayMessage (FATAL,
-			       TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE),
-			       argv[argCounter]);
         }
     }
   

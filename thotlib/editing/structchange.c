@@ -943,9 +943,7 @@ void CanCopyOrCut (ThotBool *result, PtrDocument pDoc, PtrElement firstSel,
 		      elemTypeId == CharString + 1);
 	}
      }
-   if (!*result)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_COPYING_DIFFERENT_COMPONENTS_IMP);
-   else
+   if (*result)
      {
 	/* verifie que les elements selectionnes contiennent autre chose */
 	/* que des elements de paires ou des pages */
@@ -968,13 +966,6 @@ void CanCopyOrCut (ThotBool *result, PtrDocument pDoc, PtrElement firstSel,
 	     /* passe a l'element selectionne' suivant */
 	     pEl = NextInSelection (pEl, lastSel);
 	  }
-	if (!*result)
-	  {
-	     if (pageBreak)
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_COPYING_PAGE_BRK_IMP);
-	     if (pairedElem)
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_DON_T_COPY_PAIRED_EL);
-	  }
      }
 }
 
@@ -982,25 +973,20 @@ void CanCopyOrCut (ThotBool *result, PtrDocument pDoc, PtrElement firstSel,
    StructPasteCommand
    traite la commande PASTE en mode structure'
   ----------------------------------------------------------------------*/
-void                StructPasteCommand ()
+void StructPasteCommand ()
 {
-   ThotBool            ok;
+  ThotBool            ok;
 
-   if (FirstSavedElement == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
-   else
-     {
-	if (ThotLocalActions[T_insertpaste] != NULL)
-	   (*ThotLocalActions[T_insertpaste]) (FALSE, TRUE, 'L', &ok);
-	else
-	   ok = FALSE;
-	if (ok)
-	   /* on a effectivement colle' le contenu du buffer, il faudra */
-	   /* changer les labels lors du prochain Coller */
-	   ChangeLabel = TRUE;
-	else if (FirstSavedElement->PeElement != NULL)
-	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PASTING_EL_IMP),
-			      FirstSavedElement->PeElement->ElStructSchema->SsRule[FirstSavedElement->PeElement->ElTypeNumber - 1].SrName);
+  if (FirstSavedElement)
+    {
+      if (ThotLocalActions[T_insertpaste] != NULL)
+	(*ThotLocalActions[T_insertpaste]) (FALSE, TRUE, 'L', &ok);
+      else
+	ok = FALSE;
+      if (ok)
+	/* on a effectivement colle' le contenu du buffer, il faudra */
+	/* changer les labels lors du prochain Coller */
+	ChangeLabel = TRUE;
      }
 }
 
@@ -1009,7 +995,7 @@ void                StructPasteCommand ()
    StructReturnKey
    L'utilisateur a frappe' la touche "Return". Traitement en mode structure'
   ----------------------------------------------------------------------*/
-void                StructReturnKey ()
+void StructReturnKey ()
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pElReplicate, pSibling, pListEl,
@@ -1022,9 +1008,9 @@ void                StructReturnKey ()
   ok = FALSE;
   histSeq = FALSE;
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+    return;
   else if (pDoc->DocReadOnly)
-    TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+    return;
   else
     {
       /* on essaie d'abord de diviser un element */

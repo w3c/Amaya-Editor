@@ -555,7 +555,6 @@ void OpenDefaultViews (PtrDocument pDoc)
      {
      UnloadTree (document);
      UnloadDocument (&pDoc);
-     TtaDisplaySimpleMessage (INFO, LIB, TMSG_OPENING_NEW_FRAME_IMP);
      }
   else
      {
@@ -882,7 +881,6 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
   if (frame == 0)
     {
       /* on n'a pas pu creer la fenetre, echec */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_TOO_MANY_VIEWS);
       if (!assoc)
 	pDoc->DocView[view - 1].DvPSchemaView = 0;
     }

@@ -120,14 +120,11 @@ static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
 /*----------------------------------------------------------------------
    	PivotError							
   ----------------------------------------------------------------------*/
-static void         PivotError (BinFile file, STRING code)
+static void PivotError (BinFile file, char *code)
 {
   int                 i, j;
   char                c;
   char                buffer[400];
-#ifdef _WIN_PRINT
-  CHAR_T              ibuffer[400];
-#endif /* _WIN_PRINT*/
   ThotBool            stop;
 
   stop = FALSE;
@@ -152,7 +149,6 @@ static void         PivotError (BinFile file, STRING code)
   buffer[j++] = '\n';
   buffer[j++] = EOS;
 #ifdef _WIN_PRINT
-  iso2wc_strcpy (ibuffer, buffer);
   WinErrorBox (WIN_Main_Wd, code);
 #else /* _WIN_PRINT */
   printf (buffer);
@@ -167,7 +163,7 @@ static void         PivotError (BinFile file, STRING code)
    Retourne un pointeur sur son contexte, ou NULL s'il	
    n'est pas charge'.                                      
   ----------------------------------------------------------------------*/
-PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
+PtrDocument GetPtrDocument (DocumentIdentifier docIdent)
 {
    int                 doc;
    PtrDocument         pDoc;
@@ -183,7 +179,7 @@ PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
 /*----------------------------------------------------------------------
    	FreeUnusedReferredElemDesc					
   ----------------------------------------------------------------------*/
-static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
+static void FreeUnusedReferredElemDesc (PtrDocument pDoc)
 {
    PtrReferredDescr    pRefD, pPrevRefD;
 
@@ -225,11 +221,11 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 		       ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent,
 		       ThotBool removeExclusions)
 {  
-   ThotBool            ret;
-   int                 i;
-   PathBuffer          directoryName;
    FILE               *pivotFile;
-   CHAR_T              text[MAX_TXT_LEN];
+   PathBuffer          directoryName;
+   char                text[MAX_TXT_LEN];
+   int                 i;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pDoc != NULL)
@@ -241,18 +237,18 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF
 		UNIX */
 	     /* On confond identificateur et nom de document */
-	     ustrncpy (pDoc->DocDName, pDoc->DocIdent, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocDName, pDoc->DocIdent, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	  }
 	else
 	   /* le document n'a pas d'identificateur, on l'accede par son nom */
 	  {
-	     ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF
 		UNIX */
 	     /* On confond identificateur et nom de document */
-	     ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+	     strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDoc->DocDName[0] > SPACE)
@@ -261,9 +257,9 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 	     /* compose le nom du fichier a ouvrir avec le nom du directory */
 	     /* des documents... */
 	     if (pDoc->DocDirectory[0] == EOS)
-		ustrncpy (directoryName, DocumentPath, MAX_PATH);
+		strncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
-		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
+		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
 	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName,
 			       text, &i);
 	     /* ouvre le fichier 'PIV' */
@@ -274,7 +270,7 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 		/* externes qui contiennent des elements inclus. */
 	       {
 		  /* le document appartient au directory courant */
-		  ustrncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
+		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
 		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton,
 				   pSS, withAppEvent, removeExclusions);
 		  TtaReadClose (pivotFile);
@@ -514,19 +510,15 @@ static PageType     ReadPageType (BinFile file)
        /* repagine s'il le desire */
      case C_PIV_COMPUTED_COL:
        typ = PgComputed;
-       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
        break;
      case C_PIV_START_COL:
        typ = PgComputed;
-       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
        break;
      case C_PIV_USER_COL:
        typ = PgComputed;
-       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
        break;
      case C_PIV_COL_GROUP:
        typ = PgComputed;
-       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
        break;
      case C_PIV_REPEAT_PAGE:
        /* les tags page rappel sont transformees en tags page calculees,
@@ -584,12 +576,12 @@ static PictureScaling ReadPicturePresentation (BinFile pivFile)
    LabelStringToInt convertit le label strn en un entier           
    retourne 0 si label mal construit.                      
   ----------------------------------------------------------------------*/
-void                LabelStringToInt (LabelString string, int *number)
+void LabelStringToInt (LabelString string, int *number)
 {
    int                 i;
    int                 val;
    ThotBool            ok;
-   CHAR_T                c;
+   char                c;
 
    ok = FALSE;
    *number = 0;
@@ -647,8 +639,6 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	if (msgOldFormat)
 	  {
 	     PivotError (file, "PivotError: Reference 1");
-	     TtaDisplaySimpleMessage (INFO, LIB,
-				      TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
 	     msgOldFormat = FALSE;	/* c'est fait */
 	  }
 	if (c == MOldRefInterne || c == MOldRefExterne ||
@@ -933,7 +923,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
    if (*contentType != 0 && *pContSS != NULL)
      {
        ok = FALSE;
-       if (!ustrcmp ((*pContSS)->SsName, (*pSS)->SsName))
+       if (!strcmp ((*pContSS)->SsName, (*pSS)->SsName))
 	 {
 	   if (*elType == *contentType)
 	     /* meme numero de type */
@@ -966,7 +956,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 	     {
 	       /* le contenu cherche' est justement une racine de nature */
 	       if (pSRule->SrSSchemaNat != NULL)
-		 ok = !ustrcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
+		 ok = !strcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
 	     }
 	   else if (pSRule->SrConstruct == CsChoice &&
 		    pSRule->SrNChoices > 0)
@@ -984,7 +974,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 		       /* l'option i est un changement de nature */
 		       (*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].
 		                              SrSSchemaNat != NULL)
-		     ok = (!ustrcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
+		     ok = (!strcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
 		 }
 	       while (!ok && i < pSRule->SrNChoices);
 	     }
@@ -1020,16 +1010,10 @@ static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 	 found = FALSE;
 	 while (pAttr != NULL && !found)
 	   if (pAttr->AeAttrNum == att &&
-	       !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+	       !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 	     found = TRUE;
 	   else
 	     pAttr = pAttr->AeNext;
-	 if (!found)
-	   /* l'element ne possede pas cet attribut requis */
-	   TtaDisplayMessage (INFO,
-			      TtaGetMessage (LIB, TMSG_ATTR_REQUIRED_FOR_EL),
-			      pSS->SsAttribute[att - 1].AttrName,
-			      pSRule->SrName);
        }
 }
 
@@ -1187,14 +1171,14 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 		 /* convert old language names into RFC-1766 codes */
 		 if (attr == 1)
 		   /* language attribute */
-		   if (ustrlen(pPremBuff->BuContent) != 2 &&
+		   if (strlen(pPremBuff->BuContent) != 2 &&
 		       pPremBuff->BuContent[1] != '-' &&
 		       pPremBuff->BuContent[2] != '-')
 		     /* it's not a valid language code. Convert it */
 		     {
 		       iso2wc_strcpy (pPremBuff->BuContent,
 			    TtaGetLanguageCodeFromName (pPremBuff->BuContent));
-		       pBT->BuLength = ustrlen (pPremBuff->BuContent);
+		       pBT->BuLength = strlen (pPremBuff->BuContent);
 		     }
 	       }
 	 break;
@@ -1208,9 +1192,9 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	 /* ExtCorr et ExtMot */
 	 if (pSchAttr->SsExtension)
 	   {
-	   if (ustrcmp (pSchAttr->SsName, "ExtCorr") == 0)
+	   if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
 	     create = FALSE;
-	   else if (ustrcmp (pSchAttr->SsName, "ExtMot") == 0)
+	   else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
 	     create = FALSE;
 	   }
        if (!create)
@@ -1982,7 +1966,7 @@ static  LabelString         label;
   NotifyElement       notifyEl;
   PictInfo           *image;
   int                 i, j, n, view, pictureType, elType, rule, n1, n2, n3, n4;
-  CHAR_T              alphabet;
+  char                alphabet;
   char                c, ch;
   ThotBool            create, inclusion, modif, b1, b2;
   ThotBool            findtype, refExt, found, withReferences, sign,
@@ -2472,7 +2456,7 @@ static  LabelString         label;
 
 			      /* on suppose que le nom tient en entier dans un
 				 buffer. On normalise le nom */
-			      ustrcpy (pBuf->BuContent,
+			      strcpy (pBuf->BuContent,
 				       NormalizeFileName (pBuf->BuContent,
 							  &pictureType,
 							  &pres, &findtype));
@@ -2986,7 +2970,7 @@ static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
    i = 1;
    found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
-      if (ustrncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
+      if (strncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -2999,16 +2983,16 @@ static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 	   /* y est */
 	  {
 	     pSS = pDoc->DocNatureSSchema[rank - 1];
-	     ustrncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     ustrncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[rank - 1] = pDoc->DocNatureSSchema[i - 1];
-	     ustrncpy (pDoc->DocNatureName[rank - 1],
+	     strncpy (pDoc->DocNatureName[rank - 1],
 		       pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[rank - 1],
+	     strncpy (pDoc->DocNaturePresName[rank - 1],
 		       pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[i - 1] = pSS;
-	     ustrncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
 	  }
      }
    else
@@ -3022,14 +3006,14 @@ static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 	  {
 	     pDoc->DocNatureSSchema[pDoc->DocNNatures] =
 	                                    pDoc->DocNatureSSchema[rank - 1];
-	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
+	     strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
 		       pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+	     strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
 		       pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNNatures++;
 	  }
 	pDoc->DocNatureSSchema[rank - 1] = NULL;
-	ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+	strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
      }
 }
 
@@ -3057,8 +3041,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
    do
      if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
        PivotError (file, "PivotError: Schema");
-   while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
-   if (SSName[i - 1] != WC_EOS)
+   while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+   if (SSName[i - 1] != EOS)
      PivotError (file, "PivotError: Schema 1");
    else
      {
@@ -3072,7 +3056,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        do
 	 if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
 	   PivotError (file, "PivotError: Schema 3");
-       while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH);
+       while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
        if (!TtaReadByte (file, tag))
 	 PivotError (file, "PivotError: Schema 4");
@@ -3090,34 +3074,29 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	  /* on verifie que la version du schema charge' est la meme */
 	  /* que celle du document */
 	  if (pDoc->DocSSchema->SsCode != versionSchema)
-	    {
-              pDoc->DocCheckingMode |= PIV_CHECK_MASK;
-              TtaDisplayMessage (INFO,
-				 TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED),
-				 pDoc->DocSSchema->SsName);
-	    }
+	    pDoc->DocCheckingMode |= PIV_CHECK_MASK;
      }
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
      {
        pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
-       ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
-       ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
+       strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+       strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
 		 MAX_NAME_LENGTH);
        if (pDoc->DocSSchema != NULL)
 	 if (pDoc->DocSSchema->SsPSchema == NULL)
 	   /* le schema de presentation n'a pas ete charge' (librairie  */
 	   /* Kernel, par exemple). On memorise dans le schema de */
 	   /* structure charge' le nom du schema P associe' */
-	   ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName,
+	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName,
 		     MAX_NAME_LENGTH);
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
    /* les elements exportables. */
-   while ((*tag == (CHAR_T) C_PIV_NATURE || *tag == (CHAR_T) C_PIV_SSCHEMA_EXT)
+   while ((*tag == (char) C_PIV_NATURE || *tag == (char) C_PIV_SSCHEMA_EXT)
 	  && !error)
      {
-       ExtensionSch = (*tag == (CHAR_T) C_PIV_SSCHEMA_EXT);
+       ExtensionSch = (*tag == (char) C_PIV_SSCHEMA_EXT);
        i = 0;
        rank++;
        do
@@ -3178,20 +3157,15 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	     /* on verifie que la version du schema charge' est la meme */
 	     /* que celle du document */
 	     if (pSS->SsCode != versionSchema)
-	       {
-		 pDoc->DocCheckingMode |= PIV_CHECK_MASK;
-		 TtaDisplayMessage (INFO,
-				    TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED),
-				    pSS->SsName);
-	       }
+	       pDoc->DocCheckingMode |= PIV_CHECK_MASK;
 	   pDoc->DocNatureSSchema[rank - 1] = pSS;
-	   ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
+	   strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
 		     MAX_NAME_LENGTH);
 	   if (pSS->SsPSchema == NULL)
 	     /* le schema de presentation n'a pas ete charge' (librairie
 		Kernel, par exemple). On memorise dans le schema de structure
 		charge' le nom du schema P associe' */
-	     ustrncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+	     strncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
 	 }
      }
 }
@@ -3209,19 +3183,19 @@ void ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
    if (pDoc->DocPivotVersion >= 4)
-     while (*tag == (CHAR_T) C_PIV_LANG && !error)
+     while (*tag == (char) C_PIV_LANG && !error)
        {
 	 i = 0;
 	 do
 	   if (!TtaReadWideChar (file, &languageName[i++], ISO_8859_1))
 	     PivotError (file, "PivotError: Language 2");
-	 while (!error && languageName[i - 1] != WC_EOS &&
+	 while (!error && languageName[i - 1] != EOS &&
 		i != MAX_NAME_LENGTH) ;
-	 if (languageName[i - 1] != WC_EOS)
+	 if (languageName[i - 1] != EOS)
 	   PivotError (file, "PivotError: Language 3");
 	 else
 	   {
-	     if (languageName[0] != WC_EOS)
+	     if (languageName[0] != EOS)
 	       if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 		 pDoc->DocLanguages[pDoc->DocNLanguages++] =
 		                       TtaGetLanguageIdFromName (languageName);
@@ -3271,7 +3245,7 @@ void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
    /* lit le numero de version s'il est present */
    if (!TtaReadByte (file, tag))
       PivotError (file, "PivotError: Header");
-   if (*tag == (CHAR_T) C_PIV_VERSION)
+   if (*tag == (char) C_PIV_VERSION)
      {
 	if (!TtaReadByte (file, tag))
 	   PivotError (file, "PivotError: Header 1");
@@ -3288,9 +3262,9 @@ void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
       pDoc->DocPivotVersion = 1;
 
    /* lit le label max. du document s'il est present */
-   if (!error && (*tag == (CHAR_T) C_PIV_SHORT_LABEL ||
-		  *tag == (CHAR_T) C_PIV_LONG_LABEL ||
-		  *tag == (CHAR_T) C_PIV_LABEL))
+   if (!error && (*tag == (char) C_PIV_SHORT_LABEL ||
+		  *tag == (char) C_PIV_LONG_LABEL ||
+		  *tag == (char) C_PIV_LABEL))
      {
 	ReadLabel (*tag, label, file);
 	LabelStringToInt (label, &i);
@@ -3342,7 +3316,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
    /* lit l'entete du fichier pivot */
    ReadPivotHeader (file, pDoc, &tag);
    /* Lit le nom du schema de structure qui est en tete du fichier pivot */
-   if (!error && tag != (CHAR_T) C_PIV_NATURE)
+   if (!error && tag != (char) C_PIV_NATURE)
      /* tag classe absent */
      PivotError (file, "PivotError: Class");
    if (!error)
@@ -3390,7 +3364,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
        for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	 pDoc->DocAssocRoot[assoc] = NULL;
        assoc = 0;
-       while (tag == (CHAR_T) C_PIV_ASSOC && !error)
+       while (tag == (char) C_PIV_ASSOC && !error)
 	 /* debut d'un nouveau type d'element associe */
 	 {
 	   assoc++;
@@ -3497,8 +3471,8 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		     }
 		 }
 	       /* lit les elements associes suivants de meme type */
-	       while (!error && (tag == (CHAR_T) C_PIV_TYPE ||
-				 tag == (CHAR_T) C_PIV_NATURE))
+	       while (!error && (tag == (char) C_PIV_TYPE ||
+				 tag == (char) C_PIV_NATURE))
 		 {
 		   rule = 0;
 		   pNat = NULL;
@@ -3534,15 +3508,15 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 
        /* lit le corps du document */
        if (!error &&
-	   tag != (CHAR_T) C_PIV_DOC_END)
+	   tag != (char) C_PIV_DOC_END)
 	 {
-	   if (tag != (CHAR_T) C_PIV_STRUCTURE)
+	   if (tag != (char) C_PIV_STRUCTURE)
 	     PivotError (file, "Open");
 	   else
 	     {
 	       if (!TtaReadByte (file, &tag))
 		 PivotError (file, "Open 1");
-	       if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
+	       if (tag != (char) C_PIV_TYPE && tag != (char) C_PIV_NATURE)
 		 PivotError (file, "Open 2");
 	       else
 		 {
@@ -3603,25 +3577,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		 }
 	     }
 	 }
-       if (!structureOK)
-	 /* Le document n'est pas correct */
-	 {
-	   /* on previent l'utilisateur */
-	   TtaDisplayMessage (INFO,
-			     TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE),
-			      pDoc->DocDName);
-#ifdef IV
-	   debugstr = TtaGetEnvString ("DEBUG");
-	   if(debugstr == NULL || ustrcasecmp(debugstr,"YES"))
-	     {
-	       /* on met le document en Read-Only */
-	       pDoc->DocReadOnly = TRUE;
-	       TtaDisplayMessage (INFO,
-				  TtaGetMessage (LIB, TMSG_LOCKED_DOC),
-				  pDoc->DocDName);
-	     }
-#endif
-	 }
        /* libere les labels des elements reference's par d'autres */
        /* documents */
        pRefD = pDoc->DocLabels;
@@ -3642,8 +3597,8 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   previousSSchema = pDoc->DocSSchema;
 	   curExtension = previousSSchema->SsNextExtens;
 	   while (curExtension != NULL)
-	     if (ustrcmp (curExtension->SsName, "ExtCorr") == 0 ||
-		 ustrcmp (curExtension->SsName, "ExtMot") == 0)
+	     if (strcmp (curExtension->SsName, "ExtCorr") == 0 ||
+		 strcmp (curExtension->SsName, "ExtMot") == 0)
 	       {
 		 previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		 if (curExtension->SsNextExtens != NULL)

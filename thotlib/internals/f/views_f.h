@@ -14,15 +14,15 @@ extern void GetViewFromFrame ( int nframe,
                                int *viewNum,
                                ThotBool * assoc );
 extern void GetDocAndView ( int frame,
-                            PtrDocument * pDoc,
+                            PtrDocument *pDoc,
                             int *viewNum,
-                            ThotBool * assoc );
+                            ThotBool *assoc );
 extern int BuildDocumentViewList ( PtrDocument pDoc,
                                    AvailableView viewList );
 extern void ChangeDocumentName ( PtrDocument pDoc,
-                                 STRING newName );
+                                 char *newName );
 extern void TtaSetDocumentName ( Document document,
-                                 STRING documentName );
+                                 char *documentName );
 extern void ViewClosed ( int nFrame );
 extern void OpenDefaultViews ( PtrDocument pDoc );
 extern int CreateAbstractImage ( PtrDocument pDoc,
@@ -50,7 +50,7 @@ extern void OpenViewByMenu ( PtrDocument pDoc,
                              PtrElement subTree,
                              DocViewNumber selectedView );
 extern void BuildViewList ( PtrDocument pDoc,
-                            STRING buffer,
+                            char *buffer,
                             int *nItems );
 extern void CloseView ( PtrDocument pDoc,
                         int viewNb,
@@ -66,15 +66,15 @@ extern void GetViewFromFrame (/* int nframe,
                                  int *viewNum,
                                  ThotBool * assoc */);
 extern void GetDocAndView (/* int frame,
-                              PtrDocument * pDoc,
+                              PtrDocument *pDoc,
                               int *viewNum,
-                              ThotBool * assoc */);
+                              ThotBool *assoc */);
 extern int BuildDocumentViewList (/* PtrDocument pDoc,
                                      AvailableView viewList */);
 extern void ChangeDocumentName (/* PtrDocument pDoc,
-                                   STRING newName */);
+                                   char *newName */);
 extern void TtaSetDocumentName (/* Document document,
-                                   STRING documentName */);
+                                   char *documentName */);
 extern void ViewClosed (/* int nFrame */);
 extern void OpenDefaultViews (/* PtrDocument pDoc */);
 extern int CreateAbstractImage (/* PtrDocument pDoc,
@@ -102,7 +102,7 @@ extern void OpenViewByMenu (/* PtrDocument pDoc,
                                PtrElement subTree,
                                DocViewNumber selectedView */);
 extern void BuildViewList (/* PtrDocument pDoc,
-                              STRING buffer,
+                              char *buffer,
                               int *nItems */);
 extern void CloseView (/* PtrDocument pDoc,
                           int viewNb,

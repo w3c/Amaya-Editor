@@ -860,7 +860,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
     {
       /* Check for table font overflow */
       if (i >= MAX_FONT)
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_PLACE_FOR_FONT), textX);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY), textX);
       else
 	{
 	  strcpy (&TtFontName[i * MAX_FONTNAME], text);
@@ -955,7 +955,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	      else if (index >= MaxNumberOfSizes)
 		ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
 	      if (ptfont == NULL)
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), textX);
+		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_FONT), textX);
 	    }
 	}
 

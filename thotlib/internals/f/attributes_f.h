@@ -28,7 +28,7 @@ extern void ApplyAttrPRules ( PtrElement pEl,
                               PtrDocument pDoc,
                               PtrAttribute pAttr );
 extern void KeepFreeElements ( PtrElement pEl,
-                               PtrElement * pFirstFree );
+                               PtrElement *pFirstFree );
 extern void ChangeLanguage ( PtrDocument pDoc,
                              PtrElement pEl,
                              Language lang,
@@ -61,7 +61,7 @@ extern Attribute TtaGetAttribute ( Element element,
                                    AttributeType attributeType );
 extern int TtaGetTextAttributeLength ( Attribute attribute );
 extern void TtaGiveTextAttributeValue ( Attribute attribute,
-                                        CHAR_T* buffer,
+                                        char *buffer,
                                         int *length );
 
 #else /* __STDC__ */
@@ -88,7 +88,7 @@ extern void ApplyAttrPRules (/* PtrElement pEl,
                                 PtrDocument pDoc,
                                 PtrAttribute pAttr */);
 extern void KeepFreeElements (/* PtrElement pEl,
-                                 PtrElement * pFirstFree */);
+                                 PtrElement *pFirstFree */);
 extern void ChangeLanguage (/* PtrDocument pDoc,
                                PtrElement pEl,
                                Language lang,
@@ -121,7 +121,7 @@ extern Attribute TtaGetAttribute (/* Element element,
                                      AttributeType attributeType */);
 extern int TtaGetTextAttributeLength (/* Attribute attribute */);
 extern void TtaGiveTextAttributeValue (/* Attribute attribute,
-                                          CHAR_T* buffer,
+                                          char *buffer,
                                           int *length */);
 
 #endif /* __STDC__ */

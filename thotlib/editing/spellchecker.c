@@ -917,11 +917,7 @@ int                 ParametrizeChecker ()
 	/* remplir corrpath pour acces aux fichiers param et clavier */
 	corrpath = TtaGetEnvString ("DICOPAR");
 	if (corrpath == NULL)
-	  {
-	     /* pas de variable d'environnement DICOPAR */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
-	     ret = 0;
-	  }
+	  ret = 0;
 	else
 	  {
 	     /* Lecture du fichier parametres */

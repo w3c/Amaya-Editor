@@ -1068,8 +1068,6 @@ void TtcCopyToClipboard (Document doc, View view)
      {
 	XSetSelectionOwner (TtDisplay, XA_PRIMARY, wind, CurrentTime);
 	w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-	if (w != wind)
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_X_BUF_UNMODIFIED);
      }
 
 #endif /* _WINDOWS */

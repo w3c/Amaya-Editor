@@ -1,24 +1,14 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * xpmhandler.c  Pixmap V3.4.c
  *
  * Author: I. Vatton, N. Layaida (INRIA)
- *         R. Guetari (W3C/INRIA) - Unicode and Windows version.
  */
 
 #include "thot_gui.h"
@@ -47,24 +37,11 @@
    XpmCreate reads and produces the bitmap read from the file      
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Drawable            XpmCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height, int zoom)
-#else  /* __STDC__ */
-Drawable            XpmCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-STRING              fn;
-PictInfo           *imageDesc;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-unsigned long       BackGroundPixel;
-Drawable           *mask1;
-int                *width;
-int                *height;
-int                 zoom;
-#endif /* __STDC__ */
+Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+		    int *wif, int *hif, unsigned long BackGroundPixel,
+		    Drawable *mask1, int *width, int *height, int zoom)
 {
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   *width = 0;
   *height = 0;
   *wif = 0;
@@ -72,7 +49,7 @@ int                 zoom;
   *xif = 0;
   *yif = 0;
   return (NULL);
-# else /* !_WINDOWS */
+#else /* !_WINDOWS */
   int                 status;
   Pixmap              pixmap;
   XpmAttributes       att;
@@ -96,27 +73,7 @@ int                 zoom;
   *height = att.height;
   
   if (status != XpmSuccess)
-    {
-      switch (status)
-	{   
-	case XpmColorError:
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLOR_INCORRECT);
-	  break;
-	case XpmOpenFailed:
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_OPEN_ERR);
-	  break;
-	case XpmFileInvalid:
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_FILE_INCORRECT);
-	  break;
-	case XpmNoMemory:
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_NO_MEM);
-	  break;
-	case XpmColorFailed:
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_COLOR_ERR);
-	  break;
-	}
-      return ((Drawable) None);
-    }
+    return ((Drawable) None);
   else
     {
       *wif = att.width;
@@ -129,30 +86,16 @@ int                 zoom;
       att.valuemask = valuemask;/* reinitialises the value mask */
       return (Drawable) pixmap;
     }
-#     endif  /* _WINDOWS */
+#endif  /* _WINDOWS */
 }
 
 
 /*----------------------------------------------------------------------
    XpmPrint converts an xpm file to PostScript.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XpmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
-#else  /* __STDC__ */
-void                XpmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-STRING              fn;
-PictureScaling           pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 PicXArea;
-int                 PicYArea;
-int                 PicWArea;
-int                 PicHArea;
-FILE               *fd;
-unsigned long       BackGroundPixel;
-#endif /* __STDC__ */
+void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+	       int hif, int PicXArea, int PicYArea, int PicWArea,
+	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
 #ifndef _WINDOWS 
    int                 delta;
@@ -160,7 +103,7 @@ unsigned long       BackGroundPixel;
    float               Scx, Scy;
    register int        i;
    unsigned int       *pt;
-   UCHAR_T             pt1;
+   unsigned char       pt1;
    int                 x, y;
    int                 wim ;
    XpmAttributes       att;
@@ -284,7 +227,7 @@ unsigned long       BackGroundPixel;
 	  {
 
 	     /* RGB components generation */
-	     pt1 = (UCHAR_T) (*pt);
+	     pt1 = (unsigned char) (*pt);
 	     fprintf (fd, "%02x%02x%02x",
 		      (colorTab[pt1].red) & 0xff,
 		      (colorTab[pt1].green) & 0xff,
@@ -307,35 +250,28 @@ unsigned long       BackGroundPixel;
 /*----------------------------------------------------------------------
    IsXpmFormat check if the file header is of a pixmap                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool                IsXpmFormat (CHAR_T* fn)
-#else  /* __STDC__ */
-ThotBool                IsXpmFormat (fn)
-CHAR_T*                 fn;
-#endif /* __STDC__ */
+ThotBool                IsXpmFormat (char *fn)
 {
-   FILE               *f;
-   char                c;
-   ThotBool            res;
+  FILE               *f;
+  char                c;
+  ThotBool            res;
 
-   res = FALSE;
-   f = ufopen (fn, "r");
-   if (f != NULL)
-     {
-	c = getc (f);
-	if ((c != EOF) && (c == '/'))
-	  {
-	     c = getc (f);
-	     if ((c != EOF) && (c == '*'))
-	       {
-		  c = getc (f);
-		  if ((c != EOF) && (c == ' '))
-		     res = TRUE;
-	       }
-	  }
-     }
-   fclose (f);
-   return res;
-
-
+  res = FALSE;
+  f = ufopen (fn, "r");
+  if (f != NULL)
+    {
+      c = getc (f);
+      if ((c != EOF) && (c == '/'))
+	{
+	  c = getc (f);
+	  if ((c != EOF) && (c == '*'))
+	    {
+	      c = getc (f);
+	      if ((c != EOF) && (c == ' '))
+		res = TRUE;
+	    }
+	}
+    }
+  fclose (f);
+  return res;
 }			

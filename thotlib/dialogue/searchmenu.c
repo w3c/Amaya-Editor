@@ -662,9 +662,6 @@ void                CallbackSearchEmptyEl (int ref, int val)
 	      if (!ok || pDocSel != SearchingD->SDocument)
 		/* la selection a change' de document, on refuse */
 		{
-#ifndef _WINDOWS
-		  TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
-#endif /* !_WINDOWS */
 		  StartSearch = TRUE;
 		  return;
 		}
@@ -796,11 +793,6 @@ void                CallbackSearchEmptyref (int ref, int val)
 		     if (!ok || pDocSel != SearchingD->SDocument)
 			/* la selection a change' de document, on refuse */
 		       {
-#ifndef _WINDOWS
-			  TtaNewLabel (NumLabelEmptyRefereneceNotFound,
-				  NumFormSearchEmptyReference,
-				  TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
-#endif /* !_WINDOWS */
 			  StartSearch = TRUE;
 			  return;
 		       }

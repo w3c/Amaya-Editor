@@ -33,8 +33,8 @@
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR_T       tabDocSuffix [10][10] = {".PIV", "", "", "", "", "", "", "", "", ""};
-static CHAR_T       docSuffix [5];
+static char         tabDocSuffix [10][10] = {".PIV", "", "", "", "", "", "", "", "", ""};
+static char         docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -125,16 +125,6 @@ void BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
    /* zone de saisie du nom du schema de presentation */
    TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema, TtaGetMessage (LIB, TMSG_PRES), 30, 1, FALSE);
 #  endif /* !_WINDOWS */
-   /* presentation par defaut */
-   if (pSchStr->SsExtension)
-      /* c'est une extension de schema, il n'y a pas de regle racine */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ENTER_PRS_SCH),
-			 pSchStr->SsName);
-   else
-      /* on prend le nom de la regle racine, qui est traduit dans la */
-      /* langue de l'utilisateur, plutot que le nom du schema, qui n'est */
-      /* pas traduit */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ENTER_PRS_SCH), pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
    TtaSetTextForm (NumZonePresentationSchema, name);
    TtaShowDialogue (NumFormPresentationSchema, FALSE);
@@ -172,34 +162,6 @@ BuildImportForm : cree Le formulaire d'importation de documents.
   ----------------------------------------------------------------------*/
 static void BuildImportForm()
 {
-   int nbItems,length;
-   CHAR_T bufMenu[MAX_TXT_LEN];
- 
-#  ifndef _WINDOWS
-   /* Formulaire Classe du document a importer */
-   TtaNewForm (NumFormImportClass, 0, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), TRUE, 1, 'L', D_DONE);
-   /* selecteur ou zone de saisie Classe du document a importer */
-#  endif /* !_WINDOWS */
-   nbItems = ConfigMakeImportMenu (bufMenu);
-   if (nbItems == 0)
-      /* pas d'import defini dans le fichier de langue, */
-      /* on cree une simple zone de saisie de texte */
-#     ifndef _WINDOWS
-      TtaNewTextForm (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE)
-#     endif /* !_WINDOWS */
-	  ;
-   else {
-        /* on cree un selecteur */
-        if (nbItems >= 6)
-           length = 6;
-        else
-             length = nbItems;
-#       ifndef _WINDOWS
-	    TtaNewSelector (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
-	    /* initialise le selecteur sur sa premiere entree */
-	    TtaSetSelector (NumSelectImportClass, 0, "");
-#       endif /* !_WINDOWS */
-   } 
 }
 
 /*----------------------------------------------------------------------
@@ -376,10 +338,7 @@ void CallbackOpenDocMenu (int ref, int typedata, STRING data)
 	  /* cherche s'il existe un fichier de ce nom, sans extension */
 	  ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
 	  MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
-	  if (TtaFileExist (docName) == 0)
-	    /* le fichier n'existe pas */
-	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), DefaultDocumentName);
-	  else
+	  if (TtaFileExist (docName))
 	    /* le fichier existe ; c'est sans doute une importation */
 	    /* demande le schema de structure d'importation */
 	    {
