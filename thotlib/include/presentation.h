@@ -62,6 +62,7 @@ typedef int        *PRule;
 #define PRHorizOverflow 38
 #define PRVertOverflow 39
 #define PRLine 40
+#define PRNone 41
 
 /* values for rule PRStyle */
 #define StyleRoman 1

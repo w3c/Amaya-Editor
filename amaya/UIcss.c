@@ -51,7 +51,7 @@ View                view;
   size = 400;
   while (css != NULL)
     {
-      if (css->category != CSS_DOCUMENT_STYLE)
+      if (css->category != CSS_DOCUMENT_STYLE && css->documents[doc])
 	{
 #  ifndef _WINDOWS
 	  if (nb == 0)
@@ -84,7 +84,7 @@ View                view;
 #  else  /* !_WINDOWS */
       TtaNewSelector (BaseDialog + CSSSelect, BaseDialog + CSSForm,
 		      TtaGetMessage (AMAYA, AM_CSS_FILE),
-		      nb, buf, 5, NULL, TRUE, FALSE);
+		      nb, buf, 5, NULL, FALSE, FALSE);
       TtaShowDialogue (BaseDialog + CSSForm, TRUE);
 #  endif /* !_WINDOWS */
     }

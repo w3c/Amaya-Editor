@@ -28,7 +28,6 @@
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
-#include "HTMLstyle_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLform_f.h"
 #include "HTMLhistory_f.h"
@@ -37,6 +36,7 @@
 #include "XMLparser_f.h"
 #include "trans_f.h"
 #include "selection.h"
+#include "styleparser_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"

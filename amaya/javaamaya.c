@@ -10,10 +10,10 @@
 #include "javaamaya.h"
 
 #include "EDITstyle_f.h"
-#include "HTMLstyle_f.h"
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
+#include "styleparser_f.h"
 
 /*----------------------------------------------------------------------
    GetUserAgentName returns the User Agent ID string

@@ -17,7 +17,6 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "presentdriver.h"
 
 static STRING       TargetDocumentURL = NULL;
 static int          OldWidth;
@@ -34,7 +33,6 @@ static int          OldHeight;
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
-#include "HTMLstyle_f.h"
 #include "HTMLimage_f.h"
 #ifdef MATHML
 #include "MathMLbuilder_f.h"
@@ -42,6 +40,7 @@ static int          OldHeight;
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
+#include "styleparser_f.h"
 #include "tree.h"
 
 /*----------------------------------------------------------------------
@@ -223,13 +222,17 @@ Element             el;
    else
      isHTML = FALSE;
 
-   if (isHTML && targetDoc != (Document) None && targetEl != (Element) NULL &&
-       DocumentURLs[targetDoc] != NULL)
+   if (targetDoc != 0 && targetEl != NULL && DocumentURLs[targetDoc] != NULL)
      {
-	/* get attrName of the enclosing end anchor */
-	attr = GetNameAttr (targetDoc, targetEl);
-	/* the document becomes the target doc */
-	SetTargetContent (targetDoc, attr);
+       if (isHTML)
+	 {
+	   /* get attrName of the enclosing end anchor */
+	   attr = GetNameAttr (targetDoc, targetEl);
+	   /* the document becomes the target doc */
+	   SetTargetContent (targetDoc, attr);
+	 }
+       else
+	 TargetName = NULL;
      }
    else
      {
@@ -1535,8 +1538,8 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   STRING               value = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
-   int                 length;
+   STRING           value = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
+   int              length;
 
    value[0] = EOS;
    length = TtaGetTextAttributeLength (event->attribute);
@@ -1548,7 +1551,7 @@ NotifyAttribute    *event;
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLSetBackgroundColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
-      HTMLSetBackgroundImage (event->document, event->element, DRIVERP_REPEAT, value);
+      HTMLSetBackgroundImage (event->document, event->element, STYLE_REPEAT, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLSetForegroundColor (event->document, event->element, value);

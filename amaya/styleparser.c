@@ -10,7 +10,6 @@
  * be contained in this module.
  *
  * Author: I. Vatton
- *         Previous version by D. Veillard
  *
  */
 
@@ -34,11 +33,11 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 
 #include "AHTURLTools_f.h"
 #include "HTMLpresentation_f.h"
-#include "HTMLstyle_f.h"
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "html2thot_f.h"
+#include "styleparser_f.h"
 
 #define MAX_BUFFER_LENGTH 200
 /*
@@ -58,7 +57,6 @@ typedef char    *(*PropertyParser) (Element element,
 typedef char    *(*PropertyParser) ();
 #endif
 
-
 /* Description of the set of CSS properties supported */
 typedef struct CSSProperty
   {
@@ -70,12 +68,29 @@ CSSProperty;
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
+struct unit_def
+{
+   STRING              sign;
+   unsigned int        unit;
+};
 
-/************************************************************************
- *									*  
- * 			 UNITS CONVERSION FUNCTIONS			*
- *									*  
- ************************************************************************/
+static struct unit_def CSSUnitNames[] =
+{
+   {"pt", STYLE_UNIT_PT},
+   {"pc", STYLE_UNIT_PC},
+   {"in", STYLE_UNIT_IN},
+   {"cm", STYLE_UNIT_CM},
+   {"mm", STYLE_UNIT_MM},
+   {"em", STYLE_UNIT_EM},
+   {"px", STYLE_UNIT_PX},
+   {"ex", STYLE_UNIT_XHEIGHT},
+   {"%", STYLE_UNIT_PERCENT}
+};
+
+#define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static unsigned int hexa_val (CHAR c)
 #else
@@ -91,31 +106,6 @@ CHAR                c;
       return (c - 'A' + 10);
    return (0);
 }
-
-#define UNIT_INVALID	0
-#define UNIT_POINT	1
-#define UNIT_EM		2
-#define UNIT_PIXEL	3
-struct unit_def
-{
-   STRING              sign;
-   unsigned int        unit;
-};
-
-static struct unit_def CSSUnitNames[] =
-{
-   {"pt", DRIVERP_UNIT_PT},
-   {"pc", DRIVERP_UNIT_PC},
-   {"in", DRIVERP_UNIT_IN},
-   {"cm", DRIVERP_UNIT_CM},
-   {"mm", DRIVERP_UNIT_MM},
-   {"em", DRIVERP_UNIT_EM},
-   {"px", DRIVERP_UNIT_PX},
-   {"ex", DRIVERP_UNIT_XHEIGHT},
-   {"%", DRIVERP_UNIT_PERCENT}
-};
-
-#define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
 
 /*----------------------------------------------------------------------
    SkipWord:                                                  
@@ -211,7 +201,7 @@ PresentationValue  *pval;
   unsigned int        uni;
   boolean             real = FALSE;
 
-  pval->typed_data.unit = DRIVERP_UNIT_REL;
+  pval->typed_data.unit = STYLE_UNIT_REL;
   pval->typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '-')
@@ -266,7 +256,7 @@ PresentationValue  *pval;
   if (!valid)
     {
       cssRule = SkipWord (cssRule);
-      pval->typed_data.unit = DRIVERP_UNIT_INVALID;
+      pval->typed_data.unit = STYLE_UNIT_INVALID;
       pval->typed_data.value = 0;
     }
   else
@@ -298,7 +288,7 @@ PresentationValue  *pval;
 	}
 
       /* not in the list of predefined units */
-      pval->typed_data.unit = DRIVERP_UNIT_REL;
+      pval->typed_data.unit = STYLE_UNIT_REL;
       pval->typed_data.real = real;
       if (real)
 	{
@@ -385,25 +375,19 @@ int             max;
    return (deep);
 }
 
-/************************************************************************
- *									*  
- *	TRANSLATING FROM PRESENTATION DRIVER VALUES TO CSS STRING	*
- *									*  
- ************************************************************************/
-
 /*----------------------------------------------------------------------
- PresentationSettingsToCSS :  translate a PresentationSetting to the
+ PToCss :  translate a PresentationSetting to the
      equivalent CSS string, and add it to the buffer given as the
       argument. It is used when extracting the CSS string from actual
       presentation.
  
   All the possible values returned by the presentation drivers are
-  described in thotlib/include/presentdriver.h (PresentationType enum).
+  described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void   PresentationSettingsToCSS (PresentationSetting settings, STRING buffer, int len)
+static void          PToCss (PresentationSetting settings, STRING buffer, int len)
 #else
-void   PresentationSettingsToCSS (settings, buffer, len)
+static void          PToCss (settings, buffer, len)
 PresentationSetting  settings;
 STRING               param;
 int                  len
@@ -429,18 +413,47 @@ int                  len
 
   switch (settings->type)
     {
-    case DRIVERP_NONE:
+    case PRVisibility:
       break;
-    case DRIVERP_FOREGROUND_COLOR:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+    case PRFont:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_HELVETICA:
+	  ustrcpy (buffer, "font-family: helvetica");
+	  break;
+	case STYLE_FONT_TIMES:
+	  ustrcpy (buffer, "font-family: times");
+	  break;
+	case STYLE_FONT_COURIER:
+	  ustrcpy (buffer, "font-family: courier");
+	  break;
+	}
       break;
-    case DRIVERP_BACKGROUND_COLOR:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "background-color: #%02X%02X%02X", red, green, blue);
+    case PRStyle:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_BOLD:
+	  ustrcpy (buffer, "font-weight: bold");
+	  break;
+	case STYLE_FONT_ROMAN:
+	  ustrcpy (buffer, "font-style: normal");
+	  break;
+	case STYLE_FONT_ITALICS:
+	  ustrcpy (buffer, "font-style: italic");
+	  break;
+	case STYLE_FONT_BOLDITALICS:
+	  ustrcpy (buffer, "font-weight: bold; font-style: italic");
+	  break;
+	case STYLE_FONT_OBLIQUE:
+	  ustrcpy (buffer, "font-style: oblique");
+	  break;
+	case STYLE_FONT_BOLDOBLIQUE:
+	  ustrcpy (buffer, "font-weight: bold; font-style: oblique");
+	  break;
+	}
       break;
-    case DRIVERP_FONT_SIZE:
-      if (unit == DRIVERP_UNIT_REL)
+    case PRSize:
+      if (unit == STYLE_UNIT_REL)
 	{
 	  if (real)
 	    {
@@ -487,162 +500,125 @@ int                  len
 	  add_unit = 1;
 	}
       break;
-    case DRIVERP_FONT_STYLE:
+    case PRUnderline:
       switch (settings->value.typed_data.value)
 	{
-	case DRIVERP_FONT_BOLD:
-	  ustrcpy (buffer, "font-weight: bold");
-	  break;
-	case DRIVERP_FONT_ROMAN:
-	  ustrcpy (buffer, "font-style: normal");
-	  break;
-	case DRIVERP_FONT_ITALICS:
-	  ustrcpy (buffer, "font-style: italic");
-	  break;
-	case DRIVERP_FONT_BOLDITALICS:
-	  ustrcpy (buffer, "font-weight: bold; font-style: italic");
-	  break;
-	case DRIVERP_FONT_OBLIQUE:
-	  ustrcpy (buffer, "font-style: oblique");
-	  break;
-	case DRIVERP_FONT_BOLDOBLIQUE:
-	  ustrcpy (buffer, "font-weight: bold; font-style: oblique");
-	  break;
-	}
-      break;
-    case DRIVERP_FONT_FAMILY:
-      switch (settings->value.typed_data.value)
-	{
-	case DRIVERP_FONT_HELVETICA:
-	  ustrcpy (buffer, "font-family: helvetica");
-	  break;
-	case DRIVERP_FONT_TIMES:
-	  ustrcpy (buffer, "font-family: times");
-	  break;
-	case DRIVERP_FONT_COURIER:
-	  ustrcpy (buffer, "font-family: courier");
-	  break;
-	}
-      break;
-    case DRIVERP_TEXT_UNDERLINING:
-      switch (settings->value.typed_data.value)
-	{
-	case DRIVERP_UNDERLINE:
+	case STYLE_UNDERLINE:
 	  ustrcpy (buffer, "text-decoration: underline");
 	  break;
-	case DRIVERP_OVERLINE:
+	case STYLE_OVERLINE:
 	  ustrcpy (buffer, "text-decoration: overline");
 	  break;
-	case DRIVERP_CROSSOUT:
+	case STYLE_CROSSOUT:
 	  ustrcpy (buffer, "text-decoration: line-through");
 	  break;
 	}
       break;
-    case DRIVERP_ALIGNMENT:
-      switch (settings->value.typed_data.value)
-	{
-	case DRIVERP_ADJUSTLEFT:
-	  ustrcpy (buffer, "text-align: left");
-	  break;
-	case DRIVERP_ADJUSTRIGHT:
-	  ustrcpy (buffer, "text-align: right");
-	  break;
-	case DRIVERP_ADJUSTCENTERED:
-	  ustrcpy (buffer, "text-align: center");
-	  break;
-	case DRIVERP_ADJUSTLEFTWITHDOTS:
-	  ustrcpy (buffer, "text-align: left");
-	  break;
-	}
-      break;
-    case DRIVERP_LINE_SPACING:
-      if (real)
-	sprintf (buffer, "line-height: %g", fval);
-      else
-	sprintf (buffer, "line-height: %d", settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case DRIVERP_INDENT:
+    case PRIndent:
       if (real)
 	sprintf (buffer, "text-indent: %g", fval);
       else
 	sprintf (buffer, "text-indent: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case DRIVERP_JUSTIFICATION:
-      if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
+    case PRLineSpacing:
+      if (real)
+	sprintf (buffer, "line-height: %g", fval);
+      else
+	sprintf (buffer, "line-height: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRJustify:
+      if (settings->value.typed_data.value == STYLE_JUSTIFIED)
 	sprintf (buffer, "text-align: justify");
       break;
-    case DRIVERP_HYPHENATION:
+    case PRAdjust:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_ADJUSTLEFT:
+	  ustrcpy (buffer, "text-align: left");
+	  break;
+	case STYLE_ADJUSTRIGHT:
+	  ustrcpy (buffer, "text-align: right");
+	  break;
+	case STYLE_ADJUSTCENTERED:
+	  ustrcpy (buffer, "text-align: center");
+	  break;
+	case STYLE_ADJUSTLEFTWITHDOTS:
+	  ustrcpy (buffer, "text-align: left");
+	  break;
+	}
       break;
-    case DRIVERP_FILL_PATTERN:
+    case PRHyphenate:
       break;
-    case DRIVERP_VERTICAL_POSITION:
+    case PRFillPattern:
+      break;
+    case PRBackground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "background-color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRForeground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRTMargin:
       if (real)
 	sprintf (buffer, "marging-top: %g", fval);
       else
 	sprintf (buffer, "marging-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case DRIVERP_HORIZONTAL_POSITION:
+    case PRLMargin:
       if (real)
 	sprintf (buffer, "margin-left: %g", fval);
       else
 	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case DRIVERP_HEIGHT:
+    case PRHeight:
       if (real)
 	sprintf (buffer, "height: %g", fval);
       else
 	sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case DRIVERP_RELATIVE_HEIGHT:
-      break;
-    case DRIVERP_WIDTH:
+    case PRWidth:
       if (real)
 	sprintf (buffer, "width: %g", fval);
       else
 	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case DRIVERP_RELATIVE_WIDTH:
-      break;
-    case DRIVERP_IN_LINE:
-      if (settings->value.typed_data.value == DRIVERP_INLINE)
+    case PRLine:
+      if (settings->value.typed_data.value == STYLE_INLINE)
 	ustrcpy (buffer, "display: inline");
-      else if (settings->value.typed_data.value == DRIVERP_NOTINLINE)
+      else if (settings->value.typed_data.value == STYLE_NOTINLINE)
 	ustrcpy (buffer, "display: block");
       break;
-    case DRIVERP_SHOW:
-      break;
-    case DRIVERP_BOX:
-      break;
-    case DRIVERP_SHOWBOX:
-      break;
-    case DRIVERP_BGIMAGE:
+    case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
 	sprintf (buffer, "background-image: url(%s)", (STRING)settings->value.pointer);
       else
 	sprintf (buffer, "background-image: none");
       break;
-    case DRIVERP_PICTUREMODE:
+    case PRPictureMode:
       switch (settings->value.typed_data.value)
 	{
-	case DRIVERP_REALSIZE:
+	case STYLE_REALSIZE:
 	  sprintf (buffer, "background-repeat: no-repeat");
 	  break;
-	case DRIVERP_REPEAT:
+	case STYLE_REPEAT:
 	  sprintf (buffer, "background-repeat: repeat");
 	  break;
-	case DRIVERP_VREPEAT:
+	case STYLE_VREPEAT:
 	  sprintf (buffer, "background-repeat: repeat-y");
 	  break;
-	case DRIVERP_HREPEAT:
+	case STYLE_HREPEAT:
 	  sprintf (buffer, "background-repeat: repeat-x");
 	  break;
 	}
+      break;
+    default:
       break;
     }
 
@@ -687,7 +663,7 @@ void                *param;
   STRING              ptr;
 
   string[0] = EOS;
-  if (settings->type == DRIVERP_BGIMAGE)
+  if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
       imgInfo = SearchLoadedImage((STRING)settings->value.pointer, 0);
@@ -696,13 +672,13 @@ void                *param;
       else
 	ptr = MakeRelativeURL ((STRING)settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
-      PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+      PToCss (settings, string, sizeof(string));
       TtaFreeMemory (ptr);
     }
   else
-    PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+    PToCss (settings, string, sizeof(string));
 
-  if ((string[0] != EOS) && (*css_rules != EOS))
+  if (string[0] != EOS && *css_rules != EOS)
     ustrcat (css_rules, "; ");
   if (string[0] != EOS)
     ustrcat (css_rules, string);
@@ -1067,24 +1043,24 @@ boolean             isHTML;
 {
    PresentationValue   pval;
 
-   pval.typed_data.unit = DRIVERP_UNIT_REL;
+   pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "block", 5))
      {
-	pval.typed_data.value = DRIVERP_NOTINLINE;
+	pval.typed_data.value = STYLE_NOTINLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "inline", 6))
      {
-	pval.typed_data.value = DRIVERP_INLINE;
+	pval.typed_data.value = STYLE_INLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "none", 4))
      {
-	pval.typed_data.value = DRIVERP_HIDE;
+	pval.typed_data.value = STYLE_HIDE;
 	TtaSetStylePresentation (PRVisibility, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
@@ -1241,10 +1217,10 @@ boolean             isHTML;
    PresentationValue   justify;
 
    align.typed_data.value = 0;
-   align.typed_data.unit = DRIVERP_UNIT_REL;
+   align.typed_data.unit = STYLE_UNIT_REL;
    align.typed_data.real = FALSE;
    justify.typed_data.value = 0;
-   justify.typed_data.unit = DRIVERP_UNIT_REL;
+   justify.typed_data.unit = STYLE_UNIT_REL;
    justify.typed_data.real = FALSE;
 
    cssRule = TtaSkipBlanks (cssRule);
@@ -1310,7 +1286,7 @@ boolean             isHTML;
 
    cssRule = TtaSkipBlanks (cssRule);
    cssRule = ParseCSSUnit (cssRule, &pval);
-   if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
+   if (pval.typed_data.unit == STYLE_UNIT_INVALID)
      return (cssRule);
    /* install the attribute */
    TtaSetStylePresentation (PRIndent, element, tsch, context, pval);
@@ -1433,71 +1409,71 @@ boolean             isHTML;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "larger", 6))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 130;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "smaller", 7))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 80;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "xx-small", 8))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 1;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "x-small", 7))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 2;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "small", 5))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 3;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "medium", 6))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 4;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "large", 5))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 5;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "x-large", 7))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 6;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "xx-large", 8))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
+	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 7;
 	cssRule = SkipWord (cssRule);
      }
    else
      {
        cssRule = ParseCSSUnit (cssRule, &pval);
-       if (pval.typed_data.unit == DRIVERP_UNIT_INVALID ||
+       if (pval.typed_data.unit == STYLE_UNIT_INVALID ||
            pval.typed_data.value < 0)
 	 return (cssRule);
-       if (pval.typed_data.unit == DRIVERP_UNIT_REL && pval.typed_data.value > 0)
+       if (pval.typed_data.unit == STYLE_UNIT_REL && pval.typed_data.value > 0)
 	 /* CSS relative sizes have to be higher than Thot ones */
 	 pval.typed_data.value += 1;
        else 
 	 {
 	   real = pval.typed_data.real;
-	   if (pval.typed_data.unit == DRIVERP_UNIT_EM)
+	   if (pval.typed_data.unit == STYLE_UNIT_EM)
 	     {
 	       if (real)
 		 {
@@ -1506,7 +1482,7 @@ boolean             isHTML;
 		 }
 	       else
 		 pval.typed_data.value *= 100;
-	       pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	       pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     }
 	 }
      }
@@ -1538,7 +1514,7 @@ boolean             isHTML;
   CHAR		      quoteChar;
 
   font.typed_data.value = 0;
-  font.typed_data.unit = DRIVERP_UNIT_REL;
+  font.typed_data.unit = STYLE_UNIT_REL;
   font.typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '"' || *cssRule == '\'')
@@ -1550,18 +1526,18 @@ boolean             isHTML;
      quoteChar = '\0';
 
   if (!ustrncasecmp (cssRule, "times", 5))
-      font.typed_data.value = DRIVERP_FONT_TIMES;
+      font.typed_data.value = STYLE_FONT_TIMES;
   else if (!ustrncasecmp (cssRule, "serif", 5))
-      font.typed_data.value = DRIVERP_FONT_TIMES;
+      font.typed_data.value = STYLE_FONT_TIMES;
   else if (!ustrncasecmp (cssRule, "helvetica", 9) ||
 	   !ustrncasecmp (cssRule, "verdana", 7))
-      font.typed_data.value = DRIVERP_FONT_HELVETICA;
+      font.typed_data.value = STYLE_FONT_HELVETICA;
   else if (!ustrncasecmp (cssRule, "sans-serif", 10))
-      font.typed_data.value = DRIVERP_FONT_HELVETICA;
+      font.typed_data.value = STYLE_FONT_HELVETICA;
   else if (!ustrncasecmp (cssRule, "courier", 7))
-      font.typed_data.value = DRIVERP_FONT_COURIER;
+      font.typed_data.value = STYLE_FONT_COURIER;
   else if (!ustrncasecmp (cssRule, "monospace", 9))
-      font.typed_data.value = DRIVERP_FONT_COURIER;
+      font.typed_data.value = STYLE_FONT_COURIER;
   else
     /* unknown font name.  Skip it */
     {
@@ -1609,7 +1585,7 @@ boolean             isHTML;
    PresentationValue   weight, previous_style;
 
    weight.typed_data.value = 0;
-   weight.typed_data.unit = DRIVERP_UNIT_REL;
+   weight.typed_data.unit = STYLE_UNIT_REL;
    weight.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
@@ -1676,30 +1652,30 @@ boolean             isHTML;
     */
     if (!TtaGetStylePresentation (PRStyle, element, tsch, context, &previous_style))
        {
-       if (previous_style.typed_data.value == DRIVERP_FONT_ITALICS ||
-	   previous_style.typed_data.value == DRIVERP_FONT_BOLDITALICS)
+       if (previous_style.typed_data.value == STYLE_FONT_ITALICS ||
+	   previous_style.typed_data.value == STYLE_FONT_BOLDITALICS)
 	  if (weight.typed_data.value > 0)
-	     weight.typed_data.value = DRIVERP_FONT_BOLDITALICS;
+	     weight.typed_data.value = STYLE_FONT_BOLDITALICS;
 	  else
-	     weight.typed_data.value = DRIVERP_FONT_ITALICS;
-       else if (previous_style.typed_data.value == DRIVERP_FONT_OBLIQUE ||
-	        previous_style.typed_data.value == DRIVERP_FONT_BOLDOBLIQUE)
+	     weight.typed_data.value = STYLE_FONT_ITALICS;
+       else if (previous_style.typed_data.value == STYLE_FONT_OBLIQUE ||
+	        previous_style.typed_data.value == STYLE_FONT_BOLDOBLIQUE)
 	  if (weight.typed_data.value > 0)
-	    weight.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
+	    weight.typed_data.value = STYLE_FONT_BOLDOBLIQUE;
 	  else
-	    weight.typed_data.value = DRIVERP_FONT_OBLIQUE;
-       else if (previous_style.typed_data.value == DRIVERP_FONT_ROMAN ||
-	        previous_style.typed_data.value == DRIVERP_FONT_BOLD)
+	    weight.typed_data.value = STYLE_FONT_OBLIQUE;
+       else if (previous_style.typed_data.value == STYLE_FONT_ROMAN ||
+	        previous_style.typed_data.value == STYLE_FONT_BOLD)
 	  if (weight.typed_data.value > 0)
-	    weight.typed_data.value = DRIVERP_FONT_BOLD;
+	    weight.typed_data.value = STYLE_FONT_BOLD;
 	  else
-	    weight.typed_data.value = DRIVERP_FONT_ROMAN;
+	    weight.typed_data.value = STYLE_FONT_ROMAN;
        }
    else
        if (weight.typed_data.value > 0)
-         weight.typed_data.value = DRIVERP_FONT_BOLD;
+         weight.typed_data.value = STYLE_FONT_BOLD;
        else
-         weight.typed_data.value = DRIVERP_FONT_ROMAN;
+         weight.typed_data.value = STYLE_FONT_ROMAN;
 
    /* install the new presentation */
     TtaSetStylePresentation (PRStyle, element, tsch, context, weight);
@@ -1727,7 +1703,7 @@ boolean             isHTML;
    PresentationValue   style;
 
    style.typed_data.value = 0;
-   style.typed_data.unit = DRIVERP_UNIT_REL;
+   style.typed_data.unit = STYLE_UNIT_REL;
    style.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "small-caps", 10))
@@ -1774,25 +1750,25 @@ boolean             isHTML;
    PresentationValue   size;
 
    style.typed_data.value = 0;
-   style.typed_data.unit = DRIVERP_UNIT_REL;
+   style.typed_data.unit = STYLE_UNIT_REL;
    style.typed_data.real = FALSE;
    size.typed_data.value = 0;
-   size.typed_data.unit = DRIVERP_UNIT_REL;
+   size.typed_data.unit = STYLE_UNIT_REL;
    size.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "italic", 6))
      {
-	style.typed_data.value = DRIVERP_FONT_ITALICS;
+	style.typed_data.value = STYLE_FONT_ITALICS;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "oblique", 7))
      {
-	style.typed_data.value = DRIVERP_FONT_OBLIQUE;
+	style.typed_data.value = STYLE_FONT_OBLIQUE;
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "normal", 6))
      {
-	style.typed_data.value = DRIVERP_FONT_ROMAN;
+	style.typed_data.value = STYLE_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
      }
    else
@@ -1810,12 +1786,12 @@ boolean             isHTML;
 
 	if (!TtaGetStylePresentation (PRStyle, element, tsch, context, &previous_style))
 	  {
-	     if (previous_style.typed_data.value == DRIVERP_FONT_BOLD)
+	     if (previous_style.typed_data.value == STYLE_FONT_BOLD)
 	       {
-		  if (style.typed_data.value == DRIVERP_FONT_ITALICS)
-		     style.typed_data.value = DRIVERP_FONT_BOLDITALICS;
-		  if (style.typed_data.value == DRIVERP_FONT_OBLIQUE)
-		     style.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
+		  if (style.typed_data.value == STYLE_FONT_ITALICS)
+		     style.typed_data.value = STYLE_FONT_BOLDITALICS;
+		  if (style.typed_data.value == STYLE_FONT_OBLIQUE)
+		     style.typed_data.value = STYLE_FONT_BOLDOBLIQUE;
 	       }
 	     TtaSetStylePresentation (PRStyle, element, tsch, context, style);
 	  }
@@ -1923,7 +1899,7 @@ boolean             isHTML;
    PresentationValue   lead;
 
    cssRule = ParseCSSUnit (cssRule, &lead);
-   if (lead.typed_data.unit == DRIVERP_UNIT_INVALID)
+   if (lead.typed_data.unit == STYLE_UNIT_INVALID)
      {
        /* invalid line spacing */
 	return (cssRule);
@@ -1957,7 +1933,7 @@ boolean             isHTML;
    PresentationValue   decor;
 
    decor.typed_data.value = 0;
-   decor.typed_data.unit = DRIVERP_UNIT_REL;
+   decor.typed_data.unit = STYLE_UNIT_REL;
    decor.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "underline", ustrlen ("underline")))
@@ -2046,7 +2022,7 @@ PresentationValue  *val;
   boolean             failed;
 
   cssRule = TtaSkipBlanks (cssRule);
-  val->typed_data.unit = DRIVERP_UNIT_INVALID;
+  val->typed_data.unit = STYLE_UNIT_INVALID;
   val->typed_data.real = FALSE;
   val->typed_data.value = 0;
   failed = TRUE;
@@ -2176,7 +2152,7 @@ PresentationValue  *val;
       best = TtaGetThotColor (redval, greenval, blueval);
       val->typed_data.value = best;
     }
-  val->typed_data.unit = DRIVERP_UNIT_REL;
+  val->typed_data.unit = STYLE_UNIT_REL;
   val->typed_data.real = FALSE;
  return (cssRule);
 }
@@ -2261,7 +2237,7 @@ boolean             isHTML;
   cssRule = TtaSkipBlanks (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID)
+  if (margin.typed_data.unit != STYLE_UNIT_INVALID)
     {
       TtaSetStylePresentation (PRTMargin, element, tsch, context, margin);
       if (margin.typed_data.value < 0)
@@ -2293,7 +2269,7 @@ boolean             isHTML;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   margin.typed_data.value = - margin.typed_data.value;
-  /*if (margin.typed_data.unit != DRIVERP_UNIT_INVALID)
+  /*if (margin.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRBMargin, element, tsch, context, margin)*/;
   return (cssRule);
 }
@@ -2320,7 +2296,7 @@ boolean             isHTML;
   cssRule = TtaSkipBlanks (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID)
+  if (margin.typed_data.unit != STYLE_UNIT_INVALID)
     {
       TtaSetStylePresentation (PRLMargin, element, tsch, context, margin);
       if (margin.typed_data.value < 0)
@@ -2352,7 +2328,7 @@ boolean             isHTML;
   cssRule = TtaSkipBlanks (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  /*if (margin.typed_data.unit != DRIVERP_UNIT_INVALID)
+  /*if (margin.typed_data.unit != STYLE_UNIT_INVALID)
       TtaSetStylePresentation (PRRMargin, element, tsch, context, margin)*/;
   return (cssRule);
 }
@@ -2373,26 +2349,49 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  STRING            ptr;
+  STRING            ptrT, ptrR, ptrB, ptrL;
 
-  cssRule = TtaSkipBlanks (cssRule);
+  ptrT = TtaSkipBlanks (cssRule);
   /* First parse Margin-Top */
-  ptr = ParseCSSMarginTop (element, tsch, context, cssRule, css, isHTML);
-  ptr = TtaSkipBlanks (ptr);
-  if (*ptr != ';' && *ptr != EOS && *ptr != ',')
+  ptrR = ParseCSSMarginTop (element, tsch, context, ptrT, css, isHTML);
+  ptrR = TtaSkipBlanks (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
-      cssRule = ptr;
-      cssRule = ParseCSSMarginRight (element, tsch, context, cssRule, css, isHTML);
-      cssRule = ParseCSSMarginBottom (element, tsch, context, cssRule, css, isHTML);
-      cssRule = ParseCSSMarginLeft (element, tsch, context, cssRule, css, isHTML);
+      cssRule = ptrR;
+      /* apply the Margin-Top to all */
+      ptrR = ParseCSSMarginRight (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSMarginLeft (element, tsch, context, ptrT, css, isHTML);
     }
   else
     {
-      /* apply the same margin to all other sides */
-      ptr = ParseCSSMarginRight (element, tsch, context, cssRule, css, isHTML);
-      ptr = ParseCSSMarginBottom (element, tsch, context, cssRule, css, isHTML);
-      ptr = ParseCSSMarginLeft (element, tsch, context, cssRule, css, isHTML);
-      cssRule = ptr;
+      /* parse Margin-Right */
+      ptrB = ParseCSSMarginRight (element, tsch, context, ptrR, css, isHTML);
+      ptrB = TtaSkipBlanks (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+	{
+	  cssRule = ptrB;
+	  /* apply the Margin-Top to Margin-Bottom */
+	  ptrB = ParseCSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
+	  /* apply the Margin-Right to Margin-Left */
+	  ptrB = ParseCSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
+	}
+      else
+	{
+	  /* parse Margin-Bottom */
+	  ptrL = ParseCSSMarginBottom (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = TtaSkipBlanks (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	    {
+	      cssRule = ptrL;
+	      /* apply the Margin-Right to Margin-Left */
+	      ptrL = ParseCSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
+	    }
+	  else
+	    /* parse Margin-Left */
+	    cssRule = ParseCSSMarginLeft (element, tsch, context, ptrL, css, isHTML);
+	  cssRule = TtaSkipBlanks (cssRule);
+	}
     }
   return (cssRule);
 }
@@ -2522,7 +2521,7 @@ boolean             isHTML;
 
    cssRule = ParseCSSColor (cssRule, &best);
 
-   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
+   if (best.typed_data.unit == STYLE_UNIT_INVALID)
      {
 	return (cssRule);
      }
@@ -2566,27 +2565,27 @@ boolean             isHTML;
 	}
     }
 
-  best.typed_data.unit = DRIVERP_UNIT_INVALID;
+  best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
   if (!ustrncasecmp (cssRule, "transparent", ustrlen ("transparent")))
     {
-      best.typed_data.value = DRIVERP_PATTERN_NONE;
-      best.typed_data.unit = DRIVERP_UNIT_REL;
+      best.typed_data.value = STYLE_PATTERN_NONE;
+      best.typed_data.unit = STYLE_UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
     }
   else
     {
       cssRule = ParseCSSColor (cssRule, &best);
-      if (best.typed_data.unit != DRIVERP_UNIT_INVALID)
+      if (best.typed_data.unit != STYLE_UNIT_INVALID)
 	{
 	  /* install the new presentation. */
 	  TtaSetStylePresentation (PRBackground, element, tsch, context, best);
 	  /* thot specificity : need to set fill pattern for background color */
-	  best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
-	  best.typed_data.unit = DRIVERP_UNIT_REL;
+	  best.typed_data.value = STYLE_PATTERN_BACKGROUND;
+	  best.typed_data.unit = STYLE_UNIT_REL;
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
 	  best.typed_data.value = 1;
-	  best.typed_data.unit = DRIVERP_UNIT_REL;
+	  best.typed_data.unit = STYLE_UNIT_REL;
 	  TtaSetStylePresentation (PRShowBox, element, tsch, context, best);
 	}
     }
@@ -2634,15 +2633,15 @@ void    *extra;
    /* If there is no default repeat mode, enforce a V-Repeat */
    if (TtaGetStylePresentation (PRPictureMode, el, tsch, context, &repeat) < 0)
      {
-       repeat.typed_data.value = DRIVERP_REPEAT;
-       repeat.typed_data.unit = DRIVERP_UNIT_REL;
+       repeat.typed_data.value = STYLE_REPEAT;
+       repeat.typed_data.unit = STYLE_UNIT_REL;
        repeat.typed_data.real = FALSE;
        TtaSetStylePresentation (PRPictureMode, el, tsch, context, repeat);
      }
 
    /* If there is no default repeat mode, enforce a V-Repeat */
    value.typed_data.value = 1;
-   value.typed_data.unit = DRIVERP_UNIT_REL;
+   value.typed_data.unit = STYLE_UNIT_REL;
    value.typed_data.real = FALSE;
    TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
 
@@ -2912,7 +2911,7 @@ boolean             isHTML;
 	    {
 	      /* there is no FillPattern rule -> remove ShowBox rule */
 	      value.typed_data.value = 1;
-	      value.typed_data.unit = DRIVERP_UNIT_REL;
+	      value.typed_data.unit = STYLE_UNIT_REL;
 	      value.typed_data.real = FALSE;
 	      TtaSetStylePresentation (PRShowBox, element, tsch, context, value);
 	    }
@@ -2999,18 +2998,18 @@ boolean             isHTML;
 	}
     }
 
-  repeat.typed_data.value = DRIVERP_REALSIZE;
-  repeat.typed_data.unit = DRIVERP_UNIT_REL;
+  repeat.typed_data.value = STYLE_REALSIZE;
+  repeat.typed_data.unit = STYLE_UNIT_REL;
   repeat.typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (!ustrncasecmp (cssRule, "no-repeat", 9))
-    repeat.typed_data.value = DRIVERP_REALSIZE;
+    repeat.typed_data.value = STYLE_REALSIZE;
   else if (!ustrncasecmp (cssRule, "repeat-y", 8))
-    repeat.typed_data.value = DRIVERP_VREPEAT;
+    repeat.typed_data.value = STYLE_VREPEAT;
   else if (!ustrncasecmp (cssRule, "repeat-x", 8))
-    repeat.typed_data.value = DRIVERP_HREPEAT;
+    repeat.typed_data.value = STYLE_HREPEAT;
   else if (!ustrncasecmp (cssRule, "repeat", 6))
-    repeat.typed_data.value = DRIVERP_REPEAT;
+    repeat.typed_data.value = STYLE_REPEAT;
   else
     return (cssRule);
 
@@ -3124,8 +3123,8 @@ boolean             isHTML;
    if (ok)
      {
        /* force realsize for the background image */
-       repeat.typed_data.value = DRIVERP_REALSIZE;
-       repeat.typed_data.unit = DRIVERP_UNIT_REL;
+       repeat.typed_data.value = STYLE_REALSIZE;
+       repeat.typed_data.unit = STYLE_UNIT_REL;
        repeat.typed_data.real = FALSE;
        TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
      }
@@ -3729,7 +3728,7 @@ Document            doc;
   int                 result = 0;
 
   elHtmlName = GetCSSName (el, doc);
-  GetCSSNames (el, doc, &names[0], MAX_DEEP);
+  GetCSSNames (el, doc, names, MAX_DEEP);
 
   /*
    * look for a selector (ELEM)
@@ -3898,11 +3897,11 @@ STRING              image;
 
    /******* check buffer overflow ********/
    sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
-   if (repeat == DRIVERP_REPEAT)
+   if (repeat == STYLE_REPEAT)
      ustrcat (css_command, "repeat");
-   else if (repeat == DRIVERP_HREPEAT)
+   else if (repeat == STYLE_HREPEAT)
      ustrcat (css_command, "repeat-x");
-   else if (repeat == DRIVERP_VREPEAT)
+   else if (repeat == STYLE_VREPEAT)
      ustrcat (css_command, "repeat-y");
    else
      ustrcat (css_command, "no-repeat");

@@ -18,7 +18,6 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "presentdriver.h"
 
 #define ImageURL	1
 #define ImageLabel	2
@@ -49,9 +48,9 @@ static CHAR         ImgAlt[NAME_LENGTH];
 #include "EDITimage_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
-#include "HTMLstyle_f.h"
 #include "init_f.h"
 #include "html2thot_f.h"
+#include "styleparser_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -243,13 +242,13 @@ STRING              data;
 	      else
 		{
 		if (RepeatValue == 0)
-		  i = DRIVERP_REPEAT;
+		  i = STYLE_REPEAT;
 		else if (RepeatValue == 1)
-		  i = DRIVERP_HREPEAT;
+		  i = STYLE_HREPEAT;
 		else if (RepeatValue == 2)
-		  i = DRIVERP_VREPEAT;
+		  i = STYLE_VREPEAT;
 		else
-		  i = DRIVERP_SCALE;
+		  i = STYLE_SCALE;
 		if (IsHTTPPath (DocumentURLs[document]) &&
 		    !IsHTTPPath (LastURLImage))
 		  {

@@ -59,11 +59,11 @@ static STRING       QuotedText;
 #include "HTMLbook_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
-#include "HTMLstyle_f.h"
 #include "init_f.h"
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif
+#include "styleparser_f.h"
 
 
 #ifdef _WINDOWS

@@ -197,7 +197,7 @@ AMAYA_OBJ = \
 	HTMLedit.o \
 	HTMLsave.o \
 	html2thot.o \
-	HTMLstyle.o \
+	styleparser.o \
 	EDITstyle.o \
 	HTMLimage.o \
 	EDITimage.o \

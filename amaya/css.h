@@ -8,7 +8,7 @@
 #ifndef CSS_INC_H
 #define CSS_INC_H
 #include "pschema.h"
-#include "presentdriver.h"
+#include "style.h"
  
 #define MAX_CSS_LENGTH 4000
 

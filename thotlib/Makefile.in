@@ -171,12 +171,12 @@ EDITOR_OBJ = \
 	editing/spellchecker.o \
 	image/abspictures.o \
 	image/pictureapi.o \
+	presentation/attrpresent.o \
 	presentation/changepresent.o \
 	presentation/presentationapi.o \
-	presentation/presentdriver.o \
 	presentation/presvariables.o \
 	presentation/pschemaapi.o \
-	presentation/attrpresent.o \
+	presentation/style.o \
 	tree/attributeapi.o \
 	tree/pagecommands.o \
 	tree/paginate.o \

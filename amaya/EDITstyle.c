@@ -21,8 +21,8 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLpresentation_f.h"
-#include "HTMLstyle_f.h"
 #include "UIcss_f.h"
+#include "styleparser_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"

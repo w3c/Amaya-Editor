@@ -26,8 +26,8 @@
 #include "query_f.h"
 #endif
 #include "AHTURLTools_f.h"
-#include "HTMLstyle_f.h"
 #include "UIcss_f.h"
+#include "styleparser_f.h"
 
 #ifdef _WINDOWS
 extern STRING WIN_Home;

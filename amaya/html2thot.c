@@ -40,10 +40,10 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
-#include "HTMLstyle_f.h"
 #include "HTMLtable_f.h"
 #include "XMLparser_f.h"
 #include "HTMLimage_f.h"
+#include "styleparser_f.h"
 #endif /* STANDALONE */
 
 #include "parser.h"

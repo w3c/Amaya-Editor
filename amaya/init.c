@@ -226,8 +226,8 @@ int            iString;
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
-#include "HTMLstyle_f.h"
 #include "UIcss_f.h"
+#include "styleparser_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -2009,8 +2009,21 @@ boolean		    history;
 			       DocumentMeta[doc]->method);
 	    }
 
-	  /* free the previous document and prepare the window for the new one */
-	  newdoc = InitDocView (doc, documentname, docType, FALSE);
+	  /*
+	   * free the previous document and prepare the window
+	   * for the new one
+	   */
+	  if (method == CE_RELATIVE && docType == docCSS)
+	    {
+	      /* display the CSS in a new window */
+	      newdoc = InitDocView (0, documentname, docType, FALSE);
+	      ResetStop (doc);
+	      /* clear the status line of previous document */
+	      TtaSetStatus (doc, 1, " ", NULL);
+	      ActiveTransfer (newdoc);
+	    }
+	  else
+	    newdoc = InitDocView (doc, documentname, docType, FALSE);
 	}
       else
 	newdoc = doc;

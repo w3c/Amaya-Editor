@@ -817,7 +817,7 @@ static void	UndoOperation (boolean undo, Document doc, boolean reverse)
 static void	UndoOperation (undo, doc, reverse)
 boolean undo;
 Document doc;
-boolean reverse
+boolean reverse;
 
 #endif /* __STDC__ */
 {
@@ -977,6 +977,8 @@ boolean reverse
          notifyAttr.attribute = (Attribute) (SavedAttribute);
          CallEventAttribute (&notifyAttr, FALSE);	    
          }
+      /* mark the document as modified */
+      TtaSetDocumentModified (doc);
       }
 
    if (editOp->EoType == EtElement)
@@ -1047,6 +1049,8 @@ boolean reverse
          editOp->EoCreatedElement = newCreatedElement;
          editOp->EoSavedElement = newSavedElement;
 	 }
+      /* mark the document as modified */
+      TtaSetDocumentModified (doc);
       }
 }
 
