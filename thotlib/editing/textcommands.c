@@ -493,6 +493,7 @@ View                view;
 
 	/* On saute les firstChar premiers caracteres */
 	k = 0;
+	j = clipboard->BuLength;
 	while (clipboard != NULL && lg < firstChar)
 	  {
 	     j = clipboard->BuLength;
