@@ -24,7 +24,10 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
 	    *-amayadialogue *-amayamsg *-libdialogue *-corrdialogue \
-	    amaya.emacs annot.schemas *.rdf
+	    amaya.emacs annot.schemas *.rdf fonts.*
+
+LIBCONFIGFILES=*.css *.png *.lhtml *.svg 
+
 
 ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
 
@@ -491,6 +494,7 @@ install : all ../bin/print
 	@(if test ! -d $(prefix)/Amaya/applis ; then $(MKDIR) $(prefix)/Amaya/applis ; fi)
 	@(if test ! -d $(prefix)/Amaya/applis/bin ; then $(MKDIR) $(prefix)/Amaya/applis/bin ; fi)
 	@(if test ! -d $(prefix)/Amaya/davlib ; then $(MKDIR) $(prefix)/Amaya/davlib ; fi)
+	@(if test ! -d $(prefix)/Amaya/config/libconfig ; then $(MKDIR) $(prefix)/Amaya/config/libconfig ; fi)
 	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(prefix)/Amaya/applis/bin
 	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/applis/bin
@@ -503,6 +507,10 @@ install : all ../bin/print
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/config 2>/dev/null || true ; \
+	  done ; done)
+	(for i in $(LIBCONFIGFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/config/libconfig/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/config/libconfig 2>/dev/null || true ; \
 	  done ; done)
 	(for i in $(ANNOTFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/annotlib/$$i` ; do \
