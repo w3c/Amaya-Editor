@@ -1456,7 +1456,7 @@ PtrPSchema          pSP;
 	{
 	  /* free all allocated blocks */
 	  pNextAP = pAP->ApNextAttrPres;
-	  FreeAttributePres ( pSP->PsAttrPRule[i]);
+	  FreeAttributePres (pAP);
 	  pAP = pNextAP;
 	}
       pSP->PsAttrPRule[i] = NULL;
