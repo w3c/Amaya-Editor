@@ -92,7 +92,7 @@ extern void MapMathMLAttributeValue (/* char *AttrVal,
 extern void MapMathMLEntity (/* char *entityName,
                                 char *entityValue,
                                 char *alphabet */);
-extern void MathMLEntityCreated (/* Uchar *entityValue,
+extern void MathMLEntityCreated (/* unsigned char *entityValue,
                                     Language lang,
                                     char *entityName,
                                     Document doc */);

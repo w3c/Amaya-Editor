@@ -2307,19 +2307,20 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          hbox1, hbox2;
    ThotWidget          vbox1;
 #ifdef _GTK
+
+   ThotWidget handlebox1;
+   ThotWidget handlebox2;
+   ThotWidget handlebox3;
+   ThotWidget scrolledwindow1;
+   ThotWidget viewport1;
    ThotWidget          vbox2;
    ThotWidget          vbox3;
    ThotWidget          menu_item;
    ThotWidget          logo_pixmap;
-   ThotWidget          table3;
-   ThotWidget          table4;
-   ThotWidget          table5;
+   ThotWidget          table2;
    ThotWidget          entry1;
-   ThotWidget          entry2;
    ThotWidget          label1;
-
    ThotWidget          label3;
-
    ThotWidget          statusbar;
    ThotWidget          toolbar;
    GdkPixmap          *amaya_pixmap;
@@ -2452,22 +2453,41 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), "Amaya");
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
+	   gtk_window_set_position (GTK_WINDOW (Main_Wd), GTK_WIN_POS_MOUSE);
+	   gtk_window_set_default_size (GTK_WINDOW (Main_Wd), dx, dy);
 	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "destroy",
-		      GTK_SIGNAL_FUNC (FrameKilled),(gpointer) frame);
-	  
-	   /* Création de la table contenant les differents elements de l'interface */
+			       GTK_SIGNAL_FUNC (FrameKilled),(gpointer) frame);
+	   gtk_widget_show(Main_Wd);
+
+	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
-	   /* Creation de la table contenant la bar de menu */
-	   vbox2 = gtk_vbox_new (FALSE, 0);
-	   gtk_widget_show (vbox2);
-	   gtk_box_pack_start (GTK_BOX (vbox1), vbox2, FALSE, TRUE, 0);
+	   /* Pour le menu */
+	   handlebox1 = gtk_handle_box_new ();
+	   gtk_widget_ref (handlebox1);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (handlebox1);
+	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox1, FALSE, TRUE, 0);
 
-	   /*if (wind_pixmap != 0) */
-	     /* Creation de la fenetre icone associee */
-	     /*XtSetArg (args[n], XmNiconPixmap, wind_pixmap)*/;
+	   /* Pour la toolbar */
+	   handlebox2 = gtk_handle_box_new ();
+	   gtk_widget_ref (handlebox2);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox2", handlebox2,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (handlebox2);
+	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox2, FALSE, TRUE, 0);
+	   
+	   /* Pour l'URL */
+	   handlebox3 = gtk_handle_box_new ();
+	   gtk_widget_ref (handlebox3);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (handlebox3);
+	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox3, FALSE, TRUE, 0);
+
 #else /* _GTK */
 	   /*** Building the document window ***/
 	   n = 0;
@@ -2567,8 +2587,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifndef _WINDOWS
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
+			 gtk_widget_ref (menu_bar);
+			 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
+						   (GtkDestroyNotify) gtk_widget_unref);
 			 gtk_widget_show (menu_bar);
-			 gtk_box_pack_start (GTK_BOX (vbox2), menu_bar, FALSE, TRUE, 0);
+			 gtk_container_add (GTK_CONTAINER (handlebox1), menu_bar);
 #else /* _GTK */
 			 XtSetArg (argument[0], XmNbackground, BgMenu_Color);
 			 XtSetArg (argument[1], XmNspacing, 0);
@@ -2603,8 +2626,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
 		     gtk_widget_show (menu_item);
-		     if (ptrmenu->MenuHelp == TRUE)
-		       gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
 		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
 #else /* _GTK */
@@ -2634,28 +2656,28 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 #ifndef _WINDOWS
 #ifdef _GTK
-	   /* Building the top window */
-	   vbox3 = gtk_vbox_new (FALSE, 0);
-	   gtk_widget_show (vbox3);
-	   gtk_box_pack_start (GTK_BOX (vbox1), vbox3, FALSE, TRUE, 0);
-
-
-	   /* creation of the toolbar */
+	   /* Creation of the toolbar */
 	   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+	   gtk_widget_ref (toolbar);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "toolbar", toolbar,
+				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
 	   gtk_widget_show (toolbar);
-	   gtk_box_pack_start (GTK_BOX(vbox3), toolbar, FALSE, TRUE, 0);
-	 
+	   gtk_container_add (GTK_CONTAINER (handlebox2), toolbar);
+
 	   for (i=1; i<MAX_BUTTON ; i++)
 	     FrameTable[frame].Button[i] = NULL;
 	   FrameTable[frame].Button[0] = toolbar;
 
-	   /* The table which includes the logo, labels and text zones */
+	   /* The hbox which includes the logo, labels and text zone */
 	   hbox1 = gtk_hbox_new (FALSE, 0);
+	   gtk_widget_ref (hbox1);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hbox1", hbox1,
+				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (hbox1);
-	   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, TRUE, 0);
-  
-	   /* logo */
+	   gtk_container_add (GTK_CONTAINER (handlebox3), hbox1);
+
+	   /* Put the logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
 						      logo_xpm);
@@ -2663,107 +2685,146 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
 	   gtk_widget_show (logo_pixmap);
-	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 0);
+	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, TRUE, 0);
 	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.15, 0.5);
 	   
 
-	   /* test: try to insert a label in the hbox1 after the logo */
-	   label3 = gtk_label_new ("LABEl DE TEST");
-	   gtk_widget_show (label3);
-	   gtk_box_pack_start (GTK_BOX (hbox1), label3, FALSE, FALSE, 0);
-	   /**********************************************************/
-
-
-	   /* Creation des  tables contenant les labels et zones de saisie d'URL */
-	   table1 = gtk_table_new (2, 2, FALSE);
-	   gtk_widget_show (table1);
-	   gtk_box_pack_start (GTK_BOX (hbox1), table1, TRUE, TRUE, 0);
-	   label1 = gtk_label_new ("URL");
+	   /* Put the label */
+	   label1 = gtk_label_new ("label1");
+	   gtk_widget_ref (label1);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "label1", label1,
+				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (label1);
-	   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
-	   gtk_misc_set_padding (GTK_MISC (label1), 10, 5);
+	   gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, TRUE, 10);
 
-	   table3 = gtk_table_new (1, 1, FALSE);
-	   gtk_widget_show (table3);
-	   gtk_table_attach (GTK_TABLE (table1), table3, 0, 1, 1, 2,
-			     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) GTK_FILL, 0,0);
-	   table4 = gtk_table_new (1, 1, FALSE);
-	   gtk_widget_show (table4);
-	   gtk_table_attach (GTK_TABLE (table1), table4, 1, 2, 0, 1,
-			     (GtkAttachOptions)GTK_EXPAND |GTK_FILL, 
-			     (GtkAttachOptions)GTK_EXPAND | GTK_FILL, 0,0);
- 
-
+	   /* Put the edit zone */
 	   entry1 = gtk_entry_new ();
-	   gtk_widget_show (entry1);
-	   gtk_table_attach (GTK_TABLE (table4), entry1, 0, 1, 0, 1,
-		    (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
-		    (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
+	   gtk_widget_ref (entry1);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "entry1", entry1,
+				     (GtkDestroyNotify) gtk_widget_unref);
+           gtk_widget_show (entry1);
+	   gtk_box_pack_start (GTK_BOX (hbox1), entry1, TRUE, TRUE, 5);
 
-	   table5 = gtk_table_new (1, 1, FALSE);
-	   gtk_widget_show (table5);
-	   gtk_table_attach (GTK_TABLE (table1), table5, 1, 2, 1, 2,
-			     (GtkAttachOptions)GTK_EXPAND |GTK_FILL, 
-			     (GtkAttachOptions)GTK_EXPAND | GTK_FILL, 0,0);
 
-	   entry2 = gtk_entry_new ();
-	   gtk_widget_show (entry2);
-	   gtk_table_attach (GTK_TABLE (table5), entry2, 0, 1, 0, 1,
-			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
-			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
- 
-	   hbox2 = gtk_hbox_new (FALSE, 0);
-	   gtk_widget_show (hbox2);
-	   gtk_box_pack_start (GTK_BOX (vbox1), hbox2, TRUE, TRUE, 0);
+	   /* Creation of the table which includes drawingarea and scrollbars */
+      	   table2 = gtk_table_new (2, 2, FALSE);
+	   gtk_widget_ref (table2);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "table2", table2,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (table2);
+	   gtk_box_pack_start (GTK_BOX (vbox1), table2, TRUE, TRUE, 0);
+	   
+	   /*
+  scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_ref (scrolledwindow1);
+  gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "scrolledwindow1", scrolledwindow1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (scrolledwindow1);
+  gtk_box_pack_start (GTK_BOX (vbox1), scrolledwindow1, TRUE, TRUE, 0);
 
-	   /*Creation d'une frame pour placer la drawing area */
+  viewport1 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_ref (viewport1);
+  gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "viewport1", viewport1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (viewport1);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
+	   */
+
+	   /* Put the drawing frame */
 	   drawing_frame = gtk_frame_new (NULL);
-	   gtk_frame_set_shadow_type (GTK_FRAME (drawing_frame),GTK_SHADOW_IN);
-	   gtk_widget_show (drawing_frame);
-	   gtk_box_pack_start (GTK_BOX (hbox2), drawing_frame, TRUE, TRUE, 0);
+	   gtk_widget_ref (drawing_frame);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "drawingframe", drawing_frame,
+				     (GtkDestroyNotify) gtk_widget_unref);    
+	   gtk_widget_show(drawing_frame);	   
+	   gtk_table_attach (GTK_TABLE (table2), drawing_frame, 0, 1, 0, 1,
+			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+	   /*
+	   gtk_container_add (GTK_CONTAINER (viewport1), drawing_frame);
+	   */
 
-	   /* Creation de la drawing area */
-	   drawing_area = gtk_drawing_area_new ();
-
-	   gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
-	   gtk_drawing_area_size(GTK_DRAWING_AREA(drawing_area), dx, dy);
+	   /* Put the drawing area */
+	   drawing_area = gtk_drawing_area_new ();	
+	   gtk_widget_ref (drawing_area);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "drawingarea", drawing_area,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (drawing_area);
+           gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
            GTK_WIDGET_SET_FLAGS(drawing_area, GTK_CAN_FOCUS);
            gtk_widget_grab_focus(drawing_area);
+	   
 
-           gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
+	   /* Put the scrollbars */
+      	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
+	   gtk_widget_ref (vscrl);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "vscrol", vscrl,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (vscrl);
+	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+
+	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
+	   gtk_widget_ref (hscrl);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hscrol", hscrl,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (hscrl);
+	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+
+	   /* Put the statusbar */
+	   statusbar = gtk_statusbar_new ();
+	   gtk_widget_ref (statusbar);
+	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "statusbar", statusbar,
+				     (GtkDestroyNotify) gtk_widget_unref);
+	   gtk_widget_show (statusbar);
+	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
+
+
+           /* Connect callbacks */
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
                            (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
            gtk_signal_connect (GTK_OBJECT (drawing_area), "selection_notify_event",
                            (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
                            (GtkSignalFunc) ExposeCB, (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT(drawing_area),"configure_event",
+	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
                            (GtkSignalFunc)FrameResized, (gpointer) frame);
-           gtk_widget_set_events (drawing_area, GDK_BUTTON_PRESS_MASK
+	   
+	   gtk_widget_set_events (drawing_area, GDK_BUTTON_PRESS_MASK
                                   | GDK_KEY_PRESS_MASK
                                   | GDK_EXPOSURE_MASK
-                                  /* | GDK_KEY_RELEASE_MASK */
+				  | GDK_KEY_RELEASE_MASK 
                                   | GDK_FOCUS_CHANGE_MASK
                                   ); 
-	   gtk_widget_show(drawing_area);
+	   
 
-	   /*** Creation of scrollbars ***/
-	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
-	   gtk_widget_show (vscrl);
-	   gtk_box_pack_start (GTK_BOX (hbox2), vscrl, FALSE, TRUE, 0);
+	   gtk_signal_connect (GTK_OBJECT (handlebox1), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+	   gtk_signal_connect (GTK_OBJECT (handlebox2), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+	   gtk_signal_connect (GTK_OBJECT (handlebox3), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+	   gtk_signal_connect (GTK_OBJECT (hbox1), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+	   gtk_signal_connect (GTK_OBJECT (label1), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+	   gtk_signal_connect (GTK_OBJECT (entry1), "destroy",
+			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
+			       NULL);
+
 	   /* gtk_signal_connect (GTK_OBJECT (vscrl), "value_changed",
 	      GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
-	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
-	   gtk_widget_show (hscrl);
-	   gtk_box_pack_start (GTK_BOX (vbox1), hscrl, FALSE, TRUE, 0);
+
 	   /* gtk_signal_connect (GTK_OBJECT (hscrl), "value_changed",
 	      GTK_SIGNAL_FUNC (FrameHScrolled), NULL); */
-	   /* status bar */
-	   statusbar = gtk_statusbar_new ();
-	   gtk_widget_show (statusbar);
-	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
 
-	   gtk_widget_show (Main_Wd);
-	   
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
            FrRef[frame] = drawing_area->window;

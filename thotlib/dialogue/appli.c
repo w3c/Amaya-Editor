@@ -466,6 +466,7 @@ void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   height = w->allocation.height;
   FrameRedraw (frame, width, height);
 }
+
 #else /* _GTK */
 void    FrameResized (int *w, int frame, int *info)
 {

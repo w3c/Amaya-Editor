@@ -3123,7 +3123,7 @@ void                ComputeEnclosing (int frame)
    in the frame (size, zoom).
    Redisplay within the frame supposed clean.
   ----------------------------------------------------------------------*/
-void                RebuildConcreteImage (int frame)
+void RebuildConcreteImage (int frame)
 {
    ViewFrame          *pFrame;
    PtrAbstractBox      pAb, pVisibleAb;
@@ -3235,7 +3235,7 @@ void                RebuildConcreteImage (int frame)
    dimension sont a` reevaluer. Traite recusivement        
    les paves fils.                                         
   ----------------------------------------------------------------------*/
-static void         ClearFlexibility (PtrAbstractBox pAb, int frame)
+static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 {
    PtrAbstractBox      pChildAb;
    PtrBox              pBox;
