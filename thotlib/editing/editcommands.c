@@ -2140,13 +2140,17 @@ static void         ContentEditing (int editType)
 	  
 	  if (pAb != NULL)
 	    {
-	      if (FirstSelectedElement != LastSelectedElement || pAb != pLastAb)
+	      if (FirstSelectedElement != LastSelectedElement ||
+		  pAb != pLastAb)
 		/* more than one element or one abstract box */
 		pAb = NULL;
-	      else if ((pAb->AbElement != FirstSelectedElement && editType == TEXT_COPY) ||
-		       (pAb->AbLeafType == LtText && editType == TEXT_INSERT) ||
-		       pAb->AbLeafType == LtCompound  ||  /* le pave est compose */
-		       pAb->AbLeafType == LtPageColBreak) /* c'est une marque de page */
+	      else if (pAb->AbElement != FirstSelectedElement &&
+			(editType == TEXT_CUT || editType == TEXT_DEL ||
+			 editType == TEXT_SUP || editType == TEXT_COPY))
+		pAb = NULL;
+	      else if ((pAb->AbLeafType == LtText && editType == TEXT_INSERT)||
+		       pAb->AbLeafType == LtCompound || /*le pave est compose*/
+		       pAb->AbLeafType == LtPageColBreak) /* marque de page */
 		pAb = NULL;
 	      else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
 			editType == TEXT_SUP || editType == TEXT_COPY) &&
