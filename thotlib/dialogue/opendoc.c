@@ -18,7 +18,7 @@
  *
  * Author: I. Vatton (INRIA)
  *
-/*
+ */
  
 #include "thot_sys.h"
 #include "constmenu.h"
