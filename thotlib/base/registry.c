@@ -600,7 +600,6 @@ static int         IsThotDir (const char *path)
 
 {
    char                filename[MAX_PATH];
-   struct stat         buf;
 
    if (path == NULL) return(0);
    strcpy(filename, path);
