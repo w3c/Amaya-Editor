@@ -22,6 +22,7 @@ AMAYA_LIBWWW_LIBS= \
 		-L../$(LIBWWW)/Library/src/.libs \
 			-lwwwapp \
 			-lwwwhttp \
+			-lwwwxml \
 			-lwwwhtml \
 			-lwwwmime \
 			-lwwwcache \
@@ -33,7 +34,6 @@ AMAYA_LIBWWW_LIBS= \
 			-lwwwutils \
 			-lwwwzip \
 			-lwwwftp \
-			-lwwwxml \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5 \
 		-L../$(LIBWWW)/modules/expat/xmlparse/.libs \
