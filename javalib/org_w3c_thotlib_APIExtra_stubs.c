@@ -1,5 +1,5 @@
 /*
- * Kaffe stubs generated for class w3c_thotlib_Extra.
+ * Kaffe stubs generated for class org_w3c_thotlib_Extra.
  * This class encapsulate call to the Thot lib api which could not
  * be built automatically by javastub program.
  */
@@ -14,10 +14,10 @@
 #include "memory.h"
 #include "application.h"
 #include "JavaTypes.h"
-#include "w3c_thotlib_Action.h"
-#include "w3c_thotlib_Extra.h"
-#include "w3c_thotlib_ButtonCallback.h"
-#include "w3c_amaya_HTTPRequest.h"
+#include "org_w3c_thotlib_Action.h"
+#include "org_w3c_thotlib_Extra.h"
+#include "org_w3c_thotlib_ButtonCallback.h"
+#include "org_w3c_amaya_HTTPRequest.h"
 
 #include "JavaTypes_f.h"
 #include "JavaVMaccesses.h"
@@ -26,14 +26,14 @@
  * Callback for amaya/HTTPRequest
  */
 extern void
-w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* req,
+org_w3c_amaya_HTTPRequest_Callback(struct Horg_w3c_amaya_HTTPRequest* req,
                            jlong callback_f, jlong callback_arg);
 
 /*
  * The C Callback interface.
  */
 void
-w3c_thotlib_Extra_Java2CCallback( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_Java2CCallback( /* struct Horg_w3c_thotlib_Extra* none, */
                              struct Hjava_lang_Object* arg, jlong callback)
 {
     Java2CCallback callback_func = (Java2CCallback)
@@ -48,7 +48,7 @@ w3c_thotlib_Extra_Java2CCallback( /* struct Hw3c_thotlib_Extra* none, */
  * Call the poll loop.
  */
 void
-w3c_thotlib_Extra_JavaPollLoop( /* struct Hw3c_thotlib_Extra* none */)
+org_w3c_thotlib_Extra_JavaPollLoop( /* struct Horg_w3c_thotlib_Extra* none */)
 {
     JavaThotlibLock();
     JavaPollLoop();
@@ -59,7 +59,7 @@ w3c_thotlib_Extra_JavaPollLoop( /* struct Hw3c_thotlib_Extra* none */)
  * Stop a poll loop.
  */
 void
-w3c_thotlib_Extra_JavaStopPoll( /* struct Hw3c_thotlib_Extra* none */)
+org_w3c_thotlib_Extra_JavaStopPoll( /* struct Horg_w3c_thotlib_Extra* none */)
 {
     JavaStopPoll();
 }
@@ -68,7 +68,7 @@ w3c_thotlib_Extra_JavaStopPoll( /* struct Hw3c_thotlib_Extra* none */)
  * Call a Java Applet entry point.
  */
 jint
-w3c_thotlib_Extra_JavaStartApplet( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_JavaStartApplet( /* struct Horg_w3c_thotlib_Extra* none, */
                               struct Hjava_lang_String* class, 
 			      struct Hjava_lang_String* signature,
 			      jint doc,
@@ -96,7 +96,7 @@ w3c_thotlib_Extra_JavaStartApplet( /* struct Hw3c_thotlib_Extra* none, */
  * Flush the X-Windows stream.
  */
 void
-w3c_thotlib_Extra_JavaXFlush( /* struct Hw3c_thotlib_Extra* none */)
+org_w3c_thotlib_Extra_JavaXFlush( /* struct Horg_w3c_thotlib_Extra* none */)
 {
 #ifndef _WINDOWS
     XFlush(TtaGetCurrentDisplay());
@@ -111,7 +111,7 @@ w3c_thotlib_Extra_JavaXFlush( /* struct Hw3c_thotlib_Extra* none */)
  */
 
 static int
-w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
+org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 {
     jword res = 0;
 
@@ -247,7 +247,7 @@ w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 }
 
 static int
-w3c_thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
+org_w3c_thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
 {
     jword res;
 
@@ -263,8 +263,8 @@ w3c_thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
  */
 
 void
-w3c_thotlib_Extra_JavaRegisterAction( /* struct Hw3c_thotlib_Extra* none, */
-                                 struct Hw3c_thotlib_Action* handler,
+org_w3c_thotlib_Extra_JavaRegisterAction( /* struct Horg_w3c_thotlib_Extra* none, */
+                                 struct Horg_w3c_thotlib_Action* handler,
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -274,14 +274,14 @@ w3c_thotlib_Extra_JavaRegisterAction( /* struct Hw3c_thotlib_Extra* none, */
 
     JavaThotlibLock();
     TteAddUserAction (TtaStrdup(actionname),
-                      w3c_thotlib_Extra_JavaActionEventCallback,
+                      org_w3c_thotlib_Extra_JavaActionEventCallback,
 		      (void *) handler);
     JavaThotlibRelease();
 }
 
 void
-w3c_thotlib_Extra_JavaRegisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
-                                 struct Hw3c_thotlib_Action* handler,
+org_w3c_thotlib_Extra_JavaRegisterMenuAction( /* struct Horg_w3c_thotlib_Extra* none, */
+                                 struct Horg_w3c_thotlib_Action* handler,
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -291,7 +291,7 @@ w3c_thotlib_Extra_JavaRegisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
 
     JavaThotlibLock();
     TteAddUserMenuAction (TtaStrdup(actionname),
-                          w3c_thotlib_Extra_JavaActionMenuCallback,
+                          org_w3c_thotlib_Extra_JavaActionMenuCallback,
                           (void *) handler);
     JavaThotlibRelease();
 }
@@ -301,7 +301,7 @@ w3c_thotlib_Extra_JavaRegisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
  */
 
 void
-w3c_thotlib_Extra_JavaUnregisterAction( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_JavaUnregisterAction( /* struct Horg_w3c_thotlib_Extra* none, */
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -315,7 +315,7 @@ w3c_thotlib_Extra_JavaUnregisterAction( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 void
-w3c_thotlib_Extra_JavaUnregisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_JavaUnregisterMenuAction( /* struct Horg_w3c_thotlib_Extra* none, */
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -334,7 +334,7 @@ w3c_thotlib_Extra_JavaUnregisterMenuAction( /* struct Hw3c_thotlib_Extra* none, 
  */
 
 void
-w3c_thotlib_Extra_AddEditorActionEvent( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_AddEditorActionEvent( /* struct Horg_w3c_thotlib_Extra* none, */
        struct Hjava_lang_String* actionName, jint eventType,
        jint typeId, jbool pre) {
     char actionname[300];
@@ -357,7 +357,7 @@ w3c_thotlib_Extra_AddEditorActionEvent( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 void
-w3c_thotlib_Extra_AddSSchemaActionEvent( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_AddSSchemaActionEvent( /* struct Horg_w3c_thotlib_Extra* none, */
        struct Hjava_lang_String* DTDName,
        struct Hjava_lang_String* actionName, jint eventType,
        jint typeId, jbool pre) {
@@ -384,8 +384,8 @@ w3c_thotlib_Extra_AddSSchemaActionEvent( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 void
-w3c_thotlib_Extra_TtaGetElementType( /* struct Hw3c_thotlib_Extra* none, */
-		struct Hw3c_thotlib_ElementType* elType, jlong el) {
+org_w3c_thotlib_Extra_TtaGetElementType( /* struct Horg_w3c_thotlib_Extra* none, */
+		struct Horg_w3c_thotlib_ElementType* elType, jlong el) {
     ElementType et;
 
     JavaThotlibLock();
@@ -395,7 +395,7 @@ w3c_thotlib_Extra_TtaGetElementType( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 struct Hjava_lang_String*
-w3c_thotlib_Extra_TtaGetElementTypeName( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_TtaGetElementTypeName( /* struct Horg_w3c_thotlib_Extra* none, */
 		jlong sschema, jint type) {
     char *res;
     ElementType et;
@@ -412,8 +412,8 @@ w3c_thotlib_Extra_TtaGetElementTypeName( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewAttribute( /* struct Hw3c_thotlib_Extra* none, */
-		struct Hw3c_thotlib_AttributeType* atType) {
+org_w3c_thotlib_Extra_TtaNewAttribute( /* struct Horg_w3c_thotlib_Extra* none, */
+		struct Horg_w3c_thotlib_AttributeType* atType) {
     AttributeType att;
     Attribute at;
 
@@ -426,8 +426,8 @@ w3c_thotlib_Extra_TtaNewAttribute( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaGetAttribute( /* struct Hw3c_thotlib_Extra* none, */
-		jlong element, struct Hw3c_thotlib_AttributeType* atType) {
+org_w3c_thotlib_Extra_TtaGetAttribute( /* struct Horg_w3c_thotlib_Extra* none, */
+		jlong element, struct Horg_w3c_thotlib_AttributeType* atType) {
     AttributeType att;
     Attribute at;
     Element el = JavaLong2CPtr(element);
@@ -440,11 +440,28 @@ w3c_thotlib_Extra_TtaGetAttribute( /* struct Hw3c_thotlib_Extra* none, */
     return(CPtr2JavaLong(at));
 }
 
+struct Hjava_lang_String*
+org_w3c_thotlib_Extra_TtaGetAttributeName( /* struct Horg_w3c_thotlib_Extra* none, */
+		struct Horg_w3c_thotlib_AttributeType* atType) {
+    char *res;
+    AttributeType att;
+
+    att.AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(atType);
+    att.AttrTypeNum = Get_AttributeType_Int_type(atType);
+    JavaThotlibLock();
+    res = TtaGetAttributeName(att);
+    JavaThotlibRelease();
+    if (res == NULL)
+        return(NULL);
+    else
+        return(makeJavaString(res, strlen(res)));
+}
+
 void
-w3c_thotlib_Extra_TtaSearchAttribute( /* struct Hw3c_thotlib_Extra* none, */
-		struct Hw3c_thotlib_AttributeType* atType, jint scope,
-		jlong element, struct Hw3c_thotlib_Element* el,
-		struct Hw3c_thotlib_Attribute* at) {
+org_w3c_thotlib_Extra_TtaSearchAttribute( /* struct Horg_w3c_thotlib_Extra* none, */
+		struct Horg_w3c_thotlib_AttributeType* atType, jint scope,
+		jlong element, struct Horg_w3c_thotlib_Element* el,
+		struct Horg_w3c_thotlib_Attribute* at) {
     AttributeType att;
     Attribute lat;
     Element lel;
@@ -461,9 +478,9 @@ w3c_thotlib_Extra_TtaSearchAttribute( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaSearchTypedElement( /* struct Hw3c_thotlib_Extra* none, */
-		struct Hw3c_thotlib_ElementType* elType, jint scope,
-		struct Hw3c_thotlib_Element* el) {
+org_w3c_thotlib_Extra_TtaSearchTypedElement( /* struct Horg_w3c_thotlib_Extra* none, */
+		struct Horg_w3c_thotlib_ElementType* elType, jint scope,
+		struct Horg_w3c_thotlib_Element* el) {
     ElementType lelt;
     Element lel;
 
@@ -477,8 +494,8 @@ w3c_thotlib_Extra_TtaSearchTypedElement( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewElement( /* struct Hw3c_thotlib_Extra* none, */
-		jint document, struct Hw3c_thotlib_ElementType* elType) {
+org_w3c_thotlib_Extra_TtaNewElement( /* struct Horg_w3c_thotlib_Extra* none, */
+		jint document, struct Horg_w3c_thotlib_ElementType* elType) {
     ElementType elt;
     Element el;
 
@@ -491,8 +508,8 @@ w3c_thotlib_Extra_TtaNewElement( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewTree( /* struct Hw3c_thotlib_Extra* none, */
-		jint document, struct Hw3c_thotlib_ElementType* elType,
+org_w3c_thotlib_Extra_TtaNewTree( /* struct Horg_w3c_thotlib_Extra* none, */
+		jint document, struct Horg_w3c_thotlib_ElementType* elType,
 		struct Hjava_lang_String* jlabel) {
     ElementType elt;
     Element el;
@@ -513,9 +530,9 @@ w3c_thotlib_Extra_TtaNewTree( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaCreateDescent( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_TtaCreateDescent( /* struct Horg_w3c_thotlib_Extra* none, */
 		jint document, jlong element,
-		struct Hw3c_thotlib_ElementType* elType) {
+		struct Horg_w3c_thotlib_ElementType* elType) {
     ElementType elt;
     Element el = (Element) JavaLong2CPtr(element);
 
@@ -528,9 +545,9 @@ w3c_thotlib_Extra_TtaCreateDescent( /* struct Hw3c_thotlib_Extra* none, */
 }
 
 jlong
-w3c_thotlib_Extra_TtaCreateDescentWithContent( /* struct Hw3c_thotlib_Extra* none, */
+org_w3c_thotlib_Extra_TtaCreateDescentWithContent( /* struct Horg_w3c_thotlib_Extra* none, */
 		jint document, jlong element,
-		struct Hw3c_thotlib_ElementType* elType) {
+		struct Horg_w3c_thotlib_ElementType* elType) {
     ElementType elt;
     Element el = (Element) JavaLong2CPtr(element);
 
@@ -540,6 +557,12 @@ w3c_thotlib_Extra_TtaCreateDescentWithContent( /* struct Hw3c_thotlib_Extra* non
     el = TtaCreateDescentWithContent((Document) document, el, elt);
     JavaThotlibRelease();
     return(CPtr2JavaLong(el));
+}
+
+void
+org_w3c_thotlib_Extra_TtaListAbstractTree(jlong element) {
+    Element el = JavaLong2CPtr(element);
+    TtaListAbstractTree(el, stderr);
 }
 
 /****************************************************************
@@ -554,7 +577,7 @@ typedef void (*ButtonCCallback)(Document document, View view);
 
 static int JavaButtonsInitialized = 0;
 static int nbJavaButtons = 0;
-static struct Hw3c_thotlib_ButtonCallback 
+static struct Horg_w3c_thotlib_ButtonCallback 
                        *ButtonJavaCallbacks[MAX_JAVA_BUTTONS];
 static ButtonCCallback *ButtonCCallbacks[MAX_JAVA_BUTTONS];
 static char            *ButtonImageName[MAX_JAVA_BUTTONS];
@@ -563,7 +586,7 @@ static char            *ButtonImageName[MAX_JAVA_BUTTONS];
  * This register a Java ButtonCallback object.
  */
 
-int registerJavaButtonCallback(Hw3c_thotlib_ButtonCallback *callback) {
+int registerJavaButtonCallback(Horg_w3c_thotlib_ButtonCallback *callback) {
     int i;
 
     /* first find whether the Java callback is registered */
@@ -582,7 +605,7 @@ int registerJavaButtonCallback(Hw3c_thotlib_ButtonCallback *callback) {
      */
     i = nbJavaButtons++;
     ButtonJavaCallbacks[i] = callback;
-    do_execute_java_class_method("w3c.thotlib.Application",
+    do_execute_java_class_method("org.w3c.thotlib.Application",
 	    "makePersistant", "(Ljava/lang/Object;)V", callback);
     return(i);
 }
@@ -646,8 +669,8 @@ void initializeJavaButtons(void) {
  * This method install a new button asked by Java code.
  */
 jint
-w3c_thotlib_Extra_TtaNewButton(jint document,
-                 struct Hw3c_thotlib_ButtonCallback *jcallback,
+org_w3c_thotlib_Extra_TtaNewButton(jint document,
+                 struct Horg_w3c_thotlib_ButtonCallback *jcallback,
 		 struct Hjava_lang_String* jimgname,
 		 struct Hjava_lang_String* jinfos)
 {
@@ -677,9 +700,12 @@ w3c_thotlib_Extra_TtaNewButton(jint document,
     /* Search the pixmap */
     pixmap = TtaGetImage(imgname);
     if (pixmap == NULL) {
-        fprintf(stderr, "TtaNewButton : unregistered image name %s\n",
-	        imgname);
-	return(-1);
+	pixmap = TtaLoadImage(imgname, imgname);
+	if (pixmap == NULL) {
+	    fprintf(stderr, "TtaNewButton : can't get image name %s\n",
+		    imgname);
+	    return(-1);
+	}
     }
 
     /* Register the callback and add the button */
@@ -697,66 +723,70 @@ w3c_thotlib_Extra_TtaNewButton(jint document,
 /*
  * Java to C function Ttaxxx stub.
 xxx
-w3c_thotlib_Extra_Ttaxxx(struct Hw3c_thotlib_Extra* none, xxx)
+org_w3c_thotlib_Extra_Ttaxxx(struct Horg_w3c_thotlib_Extra* none, xxx)
 {
 }
  */
 
 /*
- * Function to register all w3c_thotlib_Selection stubs.
+ * Function to register all org_w3c_thotlib_Selection stubs.
  */
-void register_w3c_thotlib_Extra_stubs(void)
+void register_org_w3c_thotlib_Extra_stubs(void)
 {
-	addNativeMethod("w3c_thotlib_Extra_Java2CCallback",
-	                w3c_thotlib_Extra_Java2CCallback);
-	addNativeMethod("w3c_thotlib_Extra_JavaPollLoop",
-	                w3c_thotlib_Extra_JavaPollLoop);
-	addNativeMethod("w3c_thotlib_Extra_JavaStopPoll",
-	                w3c_thotlib_Extra_JavaStopPoll);
-	addNativeMethod("w3c_thotlib_Extra_JavaXFlush",
-	                w3c_thotlib_Extra_JavaXFlush);
-	addNativeMethod("w3c_thotlib_Extra_JavaStartApplet",
-	                w3c_thotlib_Extra_JavaStartApplet);
-	addNativeMethod("w3c_thotlib_Extra_JavaRegisterAction",
-	                w3c_thotlib_Extra_JavaRegisterAction);
-	addNativeMethod("w3c_thotlib_Extra_JavaRegisterMenuAction",
-	                w3c_thotlib_Extra_JavaRegisterMenuAction);
-	addNativeMethod("w3c_thotlib_Extra_JavaUnregisterAction",
-	                w3c_thotlib_Extra_JavaUnregisterAction);
-	addNativeMethod("w3c_thotlib_Extra_JavaUnregisterMenuAction",
-	                w3c_thotlib_Extra_JavaUnregisterMenuAction);
-	addNativeMethod("w3c_thotlib_Extra_AddEditorActionEvent",
-	                w3c_thotlib_Extra_AddEditorActionEvent);
-	addNativeMethod("w3c_thotlib_Extra_AddSSchemaActionEvent",
-	                w3c_thotlib_Extra_AddSSchemaActionEvent);
-        addNativeMethod("w3c_thotlib_Extra_TtaGetElementType",
-	                w3c_thotlib_Extra_TtaGetElementType);
-        addNativeMethod("w3c_thotlib_Extra_TtaGetElementTypeName",
-	                w3c_thotlib_Extra_TtaGetElementTypeName);
-        addNativeMethod("w3c_thotlib_Extra_TtaNewAttribute",
-	                w3c_thotlib_Extra_TtaNewAttribute);
-        addNativeMethod("w3c_thotlib_Extra_TtaSearchTypedElement",
-	                w3c_thotlib_Extra_TtaSearchTypedElement);
-        addNativeMethod("w3c_thotlib_Extra_TtaGetAttribute",
-	                w3c_thotlib_Extra_TtaGetAttribute);
-        addNativeMethod("w3c_thotlib_Extra_TtaSearchAttribute",
-	                w3c_thotlib_Extra_TtaSearchAttribute);
-        addNativeMethod("w3c_thotlib_Extra_TtaNewElement",
-	                w3c_thotlib_Extra_TtaNewElement);
-        addNativeMethod("w3c_thotlib_Extra_TtaNewTree",
-	                w3c_thotlib_Extra_TtaNewTree);
-        addNativeMethod("w3c_thotlib_Extra_TtaCreateDescent",
-	                w3c_thotlib_Extra_TtaCreateDescent);
-        addNativeMethod("w3c_thotlib_Extra_TtaCreateDescentWithContent",
-	                w3c_thotlib_Extra_TtaCreateDescentWithContent);
-        addNativeMethod("w3c_thotlib_Extra_TtaNewButton",
-	                w3c_thotlib_Extra_TtaNewButton);
+	addNativeMethod("org_w3c_thotlib_Extra_Java2CCallback",
+	                org_w3c_thotlib_Extra_Java2CCallback);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaPollLoop",
+	                org_w3c_thotlib_Extra_JavaPollLoop);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaStopPoll",
+	                org_w3c_thotlib_Extra_JavaStopPoll);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaXFlush",
+	                org_w3c_thotlib_Extra_JavaXFlush);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaStartApplet",
+	                org_w3c_thotlib_Extra_JavaStartApplet);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaRegisterAction",
+	                org_w3c_thotlib_Extra_JavaRegisterAction);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaRegisterMenuAction",
+	                org_w3c_thotlib_Extra_JavaRegisterMenuAction);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaUnregisterAction",
+	                org_w3c_thotlib_Extra_JavaUnregisterAction);
+	addNativeMethod("org_w3c_thotlib_Extra_JavaUnregisterMenuAction",
+	                org_w3c_thotlib_Extra_JavaUnregisterMenuAction);
+	addNativeMethod("org_w3c_thotlib_Extra_AddEditorActionEvent",
+	                org_w3c_thotlib_Extra_AddEditorActionEvent);
+	addNativeMethod("org_w3c_thotlib_Extra_AddSSchemaActionEvent",
+	                org_w3c_thotlib_Extra_AddSSchemaActionEvent);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGetElementType",
+	                org_w3c_thotlib_Extra_TtaGetElementType);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGetElementTypeName",
+	                org_w3c_thotlib_Extra_TtaGetElementTypeName);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaNewAttribute",
+	                org_w3c_thotlib_Extra_TtaNewAttribute);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaSearchTypedElement",
+	                org_w3c_thotlib_Extra_TtaSearchTypedElement);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGetAttribute",
+	                org_w3c_thotlib_Extra_TtaGetAttribute);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGetAttributeName",
+	                org_w3c_thotlib_Extra_TtaGetAttributeName);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaSearchAttribute",
+	                org_w3c_thotlib_Extra_TtaSearchAttribute);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaNewElement",
+	                org_w3c_thotlib_Extra_TtaNewElement);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaNewTree",
+	                org_w3c_thotlib_Extra_TtaNewTree);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaCreateDescent",
+	                org_w3c_thotlib_Extra_TtaCreateDescent);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaCreateDescentWithContent",
+	                org_w3c_thotlib_Extra_TtaCreateDescentWithContent);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaListAbstractTree",
+	                org_w3c_thotlib_Extra_TtaListAbstractTree);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaNewButton",
+	                org_w3c_thotlib_Extra_TtaNewButton);
 
-        addNativeMethod("w3c_amaya_HTTPRequest_Callback",
-	                w3c_amaya_HTTPRequest_Callback);
+        addNativeMethod("org_w3c_amaya_HTTPRequest_Callback",
+	                org_w3c_amaya_HTTPRequest_Callback);
 
 /*
-	addNativeMethod("w3c_thotlib_Extra_Ttaxxx", w3c_thotlib_Extra_Ttaxxx);
+	addNativeMethod("org_w3c_thotlib_Extra_Ttaxxx", org_w3c_thotlib_Extra_Ttaxxx);
  */
 }
 

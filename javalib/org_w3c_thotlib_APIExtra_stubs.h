@@ -5,11 +5,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void register_w3c_thotlib_Extra_stubs ( void );
+extern void register_org_w3c_thotlib_Extra_stubs ( void );
 
 #else /* __STDC__ */
 
-extern void register_w3c_thotlib_Extra_stubs (/* void */);
+extern void register_org_w3c_thotlib_Extra_stubs (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
