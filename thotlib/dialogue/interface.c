@@ -1383,7 +1383,7 @@ void TtaHandlePendingEvents ()
 
   if (crit_section)
     return;
-  crit_section = TRUE;
+  /*crit_section = TRUE;*/
 #ifndef _GTK
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);

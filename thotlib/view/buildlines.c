@@ -394,7 +394,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
   /* take into account the writing direction */
   rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
   if (rtl)
-    /* right-to-left wirting */
+    /* right-to-left writing */
     x += pLine->LiRealLength;
   /* Now handle included boxes */
   for (i = 0; i < max; i++)

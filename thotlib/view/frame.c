@@ -808,6 +808,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   xmax = pFrame->FrClipXEnd;
   ymin = pFrame->FrClipYBegin;
   ymax = pFrame->FrClipYEnd;
+  if (pFrame->FrAbstractBox && pFrame->FrAbstractBox->AbElement == NULL)
+    pFrame->FrAbstractBox = NULL;
   if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
     return toadd;
   else if (xmin < xmax &&
