@@ -1247,6 +1247,8 @@ ATTRIBUTES
 
 #include "Text_SGML.inc"
 
+#include "greek.sgml"
+
 GraphTRANSLATE
 	BEGIN
 	'c' -> 'circle';

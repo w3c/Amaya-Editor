@@ -760,9 +760,11 @@ int                 keyboard;
 	   CloseTextInsertion ();
 	   cut = TRUE;
 	   pBox = pViewSel->VsBox;
-	   index = pBox->BxIndChar + pViewSel->VsIndBox + 1;
-	   if (index <= 1)
+	   if (pBox != NULL)
 	     {
+	      index = pBox->BxIndChar + pViewSel->VsIndBox + 1;
+	      if (index <= 1)
+	        {
 		pSelAb = (*pAb)->AbPrevious;
 		if (pSelAb != NULL)
 		   if (pSelAb->AbLeafType == LtText && pSelAb->AbLanguage == language && pSelAb->AbCanBeModified)
@@ -770,17 +772,18 @@ int                 keyboard;
 			cut = FALSE;
 			ChangeSelection (frame, pSelAb, pSelAb->AbVolume + 1, FALSE, TRUE, FALSE, FALSE);
 		     }
-	     }
+	        }
 
-	   /* S'il faut couper, on appelle l'editeur */
-	   if (cut)
-	      NewTextLanguage (*pAb, index, language);
-	   /* la boite peut avoir change */
-	   pBox = pViewSel->VsBox;
-	   if (pBox != NULL)
-	      *pAb = pBox->BxAbstractBox;
-	   else
-	      *pAb = NULL;
+	      /* S'il faut couper, on appelle l'editeur */
+	      if (cut)
+	         NewTextLanguage (*pAb, index, language);
+	      /* la boite peut avoir change */
+	      pBox = pViewSel->VsBox;
+	      if (pBox != NULL)
+	         *pAb = pBox->BxAbstractBox;
+	      else
+	         *pAb = NULL;
+	     }
 	}
 }
 

@@ -47,7 +47,7 @@ static boolean      InitMaths;
 /*----------------------------------------------------------------------
    SplitTextInMathML
    Split element el and the enclosing element (MO, MI, MN or MTEXT).
-   Parameter index gindicats the position where the text has to be split.
+   Parameter index indicates the position where the text has to be split.
    Return the next created text within the next enclosing element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -671,7 +671,7 @@ void ParseMathString (event)
      curLen = 0;
      newSelEl = NULL;
      TtaSetDisplayMode (doc, DeferredDisplay);
-    TtaSetStructureChecking (0, doc);
+     TtaSetStructureChecking (0, doc);
      while (textEl != NULL)
 	{
         len = TtaGetTextLength (textEl);

@@ -218,24 +218,149 @@ MathEntity;
 MathEntity        MathEntityTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {"ApplyFunction", 32, 'L'},	/* render as white space */
+   /* This table contains characters from the Symbol font plus some
+      specific MathML entities */
+   {"Agr", 65, 'G'},
+   {"ApplyFunction", 32, 'L'},  /* render as white space */
+   {"Bgr", 66, 'G'},
+   {"Delta", 68, 'G'},
+   {"EEgr", 72, 'G'},
+   {"Egr", 69, 'G'},
+   {"Gamma", 71, 'G'},
+   {"Igr", 73, 'G'},
    {"InvisibleTimes", 0, ' '},
+   {"Kgr", 75, 'G'},
+   {"KHgr", 67, 'G'},
+   {"Lambda", 76, 'G'},
+   {"Mgr", 77, 'G'},
+   {"Ngr", 78, 'G'},
+   {"Ogr", 79, 'G'},
+   {"Omega", 87, 'G'},
+   {"Phi", 70, 'G'},
+   {"PI", 213, 'G'},
+   {"Pi", 80, 'G'},
    {"PlusMinus", 177, 'G'},
+   {"Psi", 89, 'G'},
+   {"Rgr", 82, 'G'},
    {"RightArrow", 174, 'G'},
+   {"Sigma", 83, 'G'},
+   {"Sol", 164, 'G'},
    {"Sum", 229, 'G'},
-   {"af", 32, 'L'},		/* render as white space */
+   {"Tgr", 84, 'G'},
+   {"Theta", 81, 'G'},
+   {"Upsi", 85, 'G'},
+   {"Upsi1", 161, 'G'},
+   {"Verbar", 189, 'G'},
+   {"Xi", 88, 'G'},
+   {"Zgr", 90, 'G'},
+   {"af", 32, 'L'},             /* render as white space */
+   {"aleph", 192, 'G'},
+   {"alpha", 97, 'G'},
+   {"and", 217, 'G'},
+   {"angle", 208, 'G'},
+   {"ap", 187, 'G'},
+   {"beta", 98, 'G'},
+   {"bottom", 94, 'G'},
+   {"bull", 183, 'G'},
+   {"cap", 199, 'G'},
+   {"chi", 99, 'G'},
+   {"clubs", 167, 'G'},
+   {"cong", 64, 'G'},
+   {"copysf", 211, 'G'},
+   {"copyssf", 227, 'G'},
+   {"cr", 191, 'G'},
+   {"cup", 200, 'G'},
+   {"darr", 175, 'G'},
+   {"dArr", 223, 'G'},
    {"dd", 100, 'L'},
+   {"deg", 176, 'G'},
    {"delta", 100, 'G'},
+   {"diams", 168, 'G'},
+   {"divide", 184, 'G'},
+   {"dtri", 209, 'G'},
    {"ee", 101, 'L'},
+   {"empty", 198, 'G'},
+   {"emsp", 32, 'G'},
+   {"epsiv", 101, 'G'},
+   {"equiv", 186, 'G'},
+   {"eta", 104, 'G'},
+   {"exist", 36, 'G'},
+   {"florin", 166, 'G'},
+   {"forall", 34, 'G'},
+   {"gamma", 103, 'G'},
+   {"ge", 179, 'G'},
    {"gt", 62, 'L'},
-   {"infin", 165, 'G'},		/* infinity */
+   {"hearts", 169, 'G'},
+   {"horbar", 190, 'G'},
+   {"ifraktur", 225, 'G'},
+   {"infin", 165, 'G'},
    {"int", 242, 'G'},
+   {"iota", 105, 'G'},
+   {"isin", 206, 'G'},
    {"it", 242, 'G'},
+   {"kappa", 107, 'G'},
+   {"lambda", 108, 'G'},
+   {"lang", 225, 'G'},
+   {"larr", 173, 'G'},
+   {"lArr", 220, 'G'},
+   {"le", 163, 'G'},
+   {"lowbar", 95, 'G'},
+   {"loz", 224, 'G'},
+   {"lrarr", 171, 'G'},
+   {"lrArr", 219, 'G'},
+   {"lsqb", 91, 'G'},
    {"lt", 62, 'L'},
+   {"middot", 215, 'G'},
+   {"mldr", 188, 'G'},
+   {"mu", 109, 'G'},
+   {"ne", 185, 'G'},
+   {"not", 216, 'G'},
+   {"notin", 207, 'G'},
+   {"nu", 107, 'G'},
+   {"ogr", 111, 'G'},
+   {"omega", 119, 'G'},
+   {"oplus", 197, 'G'},
+   {"or", 218, 'G'},
+   {"otimes", 196, 'G'},
+   {"part", 182, 'G'},
+   {"phi", 102, 'G'},
+   {"phiv", 106, 'G'},
    {"pi", 112, 'G'},
+   {"piv", 118, 'G'},
+   {"prop", 181, 'G'},
+   {"psi", 121, 'G'},
+   {"radic", 214, 'G'},
    {"rarr", 174, 'G'},
+   {"rArr", 222, 'G'},
+   {"rdquo", 178, 'G'},
+   {"regsf", 210, 'G'},
+   {"regssf", 226, 'G'},
+   {"rfraktur", 194, 'G'},
+   {"rho", 114, 'G'},
+   {"rsqb", 93, 'G'},
+   {"sigma", 115, 'G'},
+   {"sigmav", 86, 'G'},
+   {"spades", 170, 'G'},
+   {"sub", 204, 'G'},
+   {"sube", 205, 'G'},
+   {"subne", 203, 'G'},
    {"sum", 229, 'G'},
+   {"sup", 201, 'G'},
+   {"supe", 202, 'G'},
+   {"tau", 116, 'G'},
+   {"there4", 92, 'G'},
+   {"theta", 113, 'G'},
+   {"thetav", 74, 'G'},
    {"thickspace", 32, 'L'},
+   {"times", 180, 'G'},
+   {"tradesf", 212, 'G'},
+   {"tradessf", 228, 'G'},
+   {"uarr", 172, 'G'},
+   {"uArr", 221, 'G'},
+   {"upsi", 117, 'G'},
+   {"weierp", 195, 'G'},
+   {"xi", 120, 'G'},
+   {"zeta", 122, 'G'},
    {"zzzz", -1, ' '}		/* this last entry is required */
 };
 
@@ -2882,6 +3007,7 @@ static void BuildMultiscript (elMMULTISCRIPT)
    base = NULL;
    group = NULL;
    prevPair = NULL;
+   prevScript = NULL;
 
    elTypeGroup.ElSSchema = MathMLSSchema;
    elTypePair.ElSSchema = MathMLSSchema;
@@ -4341,14 +4467,12 @@ char                c;
 
    CloseBuffer ();
 #ifdef MATHML
-#ifdef IV
    if (WithinMathML)
       {
       /* provisional implementation: attributes are ignored */
       InitBuffer ();
       return;
       }
-#endif /* IV */
 #endif /* MATHML */
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
@@ -4514,26 +4638,30 @@ Document            doc;
 #endif
 {
    AttributeType       attrType;
-   int                 val, ind, coeff;
+   int                 val, ind, factor, delta;
    Attribute           attr;
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
-   coeff = 1;
+   factor = 1;
+   delta = 0;
    if (buffer[0] == '+')
      {
 	attrType.AttrTypeNum = HTML_ATTR_IntSizeIncr;
 	ind++;
-	coeff = 2;
+	factor = 2;
      }
    else if (buffer[0] == '-')
      {
 	attrType.AttrTypeNum = HTML_ATTR_IntSizeDecr;
 	ind++;
-	coeff = 2;
+	factor = 2;
      }
    else
-      attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
+     {
+        attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
+	delta = 1;
+     }
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attr = TtaGetAttribute (el, attrType);
    if (attr == NULL)
@@ -4543,7 +4671,7 @@ Document            doc;
        TtaAttachAttribute (el, attr, doc);
      }
    sscanf (&buffer[ind], "%d", &val);
-   val = val * coeff;
+   val = val * factor + delta;
    TtaSetAttributeValue (attr, val, el, doc);
 }
 
@@ -4574,14 +4702,12 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
 #ifdef MATHML
-#ifdef IV
    if (WithinMathML)
       {
       /* provisional implementation: attributes are ignored */
       InitBuffer ();
       return;
       }
-#endif /* IV */
 #endif /* MATHML */
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */

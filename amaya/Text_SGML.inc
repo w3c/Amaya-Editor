@@ -1,13 +1,11 @@
-	{ Inclusion de la traduction du texte latin en SGML
+	{ Translation of ISO-Latin 1 characters into SGML entities
 
-	  I. Vatton	juillet 1995 }
+	  I. Vatton	July 1995 }
 
 TextTRANSLATE Latin
 	BEGIN
 	'<'    -> '&lt;';
 	'&'    -> '&amp;';
-	'\32'  -> '&ApplyFunction;';
-	'\129' -> '&InvisibleTimes;';
 	'\212' -> '\12'; { '&CTLrc;' }
 	'\230' -> 'oe'; { '&oelig;'}
 	'\231' -> 'OE'; {'&OElig;'}
