@@ -37,9 +37,10 @@
 
 #define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 #define MAX_BUFF 4096
-#define IDC_WORDBUTTON 20000
-#define IDC_EDITRULE   20001
-#define IDC_LANGEDIT   20002
+#define IDC_WORDBUTTON    20000
+#define IDC_EDITRULE      20001
+#define IDC_LANGEDIT      20002
+#define ICD_SPELLWORDEDIT 20003
 
 #define MenuMaths          1
 
@@ -63,6 +64,9 @@ static int          SpellingBase;
 static int          ChkrSelectProp; 
 static int          ChkrMenuOR; 
 static int          ChkrFormCorrect;
+static int          ChkrMenuIgnore;
+static int          ChkrCaptureNC;
+static int          ChkrSpecial;
 static int          nbClass;
 static int          nbItem;
 static int          classForm;
@@ -73,8 +77,10 @@ static int          dirSave;
 static int          nameSave;
 static int          imgSave;
 static int          toggleSave;
+static int          confirmSave;
 static char*        classList;
 static char*        langList;
+static char*        saveList;
 static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
@@ -85,10 +91,14 @@ static OPENFILENAME OpenFileName;
 static TCHAR        szFilter[] = APPFILENAMEFILTER;
 static TCHAR        szFileName[256];
 static HWND         currentFrame;
+static HWND         currentDlg;
 
 
 HWND wordButton;
 HWND hwnListWords;
+HWND hwndCurrentWord;
+HWND hwndLanguage;
+char currentWord [MAX_WORD_LEN];
 
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -100,6 +110,7 @@ LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SaveListDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK LanguageDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -120,6 +131,7 @@ LRESULT CALLBACK Align2DlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
+LRESULT CALLBACK SaveListDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
 LRESULT CALLBACK LanguageDlgProc ();
 LRESULT CALLBACK CharacterDlgProc ();
@@ -269,15 +281,36 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOPenDocDlgWindow (HWND parent, char* doc_to_open)
+void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open)
 #else  /* !__STDC__ */
-void CreateOPenDocDlgWindow (parent, doc_to_open)
+void CreateOpenDocDlgWindow (parent, doc_to_open)
 HWND  parent;
 char* doc_to_open;
 #endif /* __STDC__ */
 {  
 	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 	strcpy (doc_to_open, urlToOpen);
+}
+
+/*-----------------------------------------------------------------------
+ CreateSaveListDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateSaveListDlgWindow (HWND parent, int nb_item, char* save_list, int base_dialog, int confirm_save)
+#else  /* !__STDC__ */
+void CreateSaveListDlgWindow (parent, nb_item, doc_to_open, base_dialog, confirm_save)
+HWND  parent;
+int   nb_item;
+char* save_list;
+int   base_dialog; 
+int   confirm_save;
+#endif /* __STDC__ */
+{  
+    nbItem      = nb_item;
+    saveList    = save_list;
+	baseDlg     = base_dialog;
+	confirmSave = confirm_save;
+	DialogBox (hInstance, MAKEINTRESOURCE (SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -387,10 +420,10 @@ char* class_list;
 #ifdef __STDC__
 void CreateSpellCheckDlgWindow (HWND parent, char* label, char* rejectedChars,
 								int spellingBase, int chkrSelectProp, int chkrMenuOR, 
-							    int chkrFormCorrect)
+							    int chkrFormCorrect, int chkrMenuIgnore, int chkrCaptureNC, int chkrSpecial)
 #else  /* !__STDC__ */
 void CreateSpellCheckDlgWindow (parent, label, rejectedChars, spellingBase, 
-								chkrSelectProp, chkrMenuOR, chkrFormCorrect)
+								chkrSelectProp, chkrMenuOR, chkrFormCorrect, chkrMenuIgnore, chkrCaptureNC, chkrSpecial)
 HWND  parent;
 char* label;
 char* rejectedChars;
@@ -398,12 +431,17 @@ int   spellingBase;
 int   chkrSelectProp; 
 int   chkrMenuOR; 
 int   chkrFormCorrect;
+int   chkrMenuIgnore;
+int   chkrCaptureNC;
+int   chkrSpecial;
 #endif /* __STDC__ */
 {  
 	SpellingBase    = spellingBase; 
 	ChkrSelectProp  = chkrSelectProp;
 	ChkrMenuOR      = chkrMenuOR ;
 	ChkrFormCorrect = chkrFormCorrect;
+	ChkrMenuIgnore  = chkrMenuIgnore;
+	ChkrCaptureNC   = chkrCaptureNC;
 
 	sprintf (currentLabel, label);
 	sprintf (currentRejectedchars, rejectedChars);
@@ -912,6 +950,7 @@ LPARAM lParam;
 	static char txt [500];
     switch (msg) {
 	       case WM_INITDIALOG:
+			    currentDlg = hwnDlg;
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
 				if (SaveAsHTML)
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
@@ -924,6 +963,10 @@ LPARAM lParam;
 
 				if (UpdateURLs)
 				   CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+				break;
+           case WM_DESTROY:
+                currentDlg = (HWND) 0;
+                EndDialog (hwnDlg, IDCANCEL);
 				break;
 
 		   case WM_COMMAND:
@@ -967,11 +1010,13 @@ LPARAM lParam;
 
 					   case IDCANCEL:
 						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 0);
-					        EndDialog (hwnDlg, IDCANCEL);
+                            currentDlg = (HWND) 0;
+ 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 
 				       case ID_CONFIRM:
 						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 1);
+                            currentDlg = (HWND) 0;
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 				}
@@ -1040,6 +1085,65 @@ LPARAM lParam;
 				default: return FALSE;
 	}
 	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ CloseDocDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK SaveListDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK SaveListDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    HWND  wndSaveList;
+	int   index = 0;
+	UINT  i = 0;
+
+	static int itemIndex; 
+	static char szBuffer [MAX_BUFF];
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+				wndSaveList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         10, 30, 260, 180, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+	            SendMessage (wndSaveList, LB_RESETCONTENT, 0, 0);
+
+	            while (i < nbItem && saveList[index] != '\0') {
+	                  SendMessage (wndSaveList, LB_INSERTSTRING, i, (LPARAM) &saveList[index]);  
+	                  index += strlen (&saveList[index]) + 1;	/* Longueur de l'intitule */
+					  i++;
+				}
+                break;
+		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (wndSaveList, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (wndSaveList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+				}
+                switch (LOWORD (wParam)) {
+                       case ID_CONFIRM:
+                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (char*)1);
+                            EndDialog (hwnDlg, ID_CONFIRM);
+						    SendMessage (currentDlg, WM_DESTROY, 0, 0);
+							break;
+                            
+				       case IDCANCEL:
+                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (char*)0);
+					        EndDialog (hwnDlg, IDCANCEL);
+							break;
+                }
+				break;     
+				default: return FALSE;
+	}
+	return TRUE ;
+
 }
 
 /*-----------------------------------------------------------------------
@@ -1464,32 +1568,63 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	HWND wndLabel;
+	BOOL ok;	  
+	int  val;
 
 	static int iLocation;
 	static int iIgnore;
+	static int itemIndex; 
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                hwndLanguage = CreateWindow ("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                             90, 15, 160, 20, hwnDlg, (HMENU) 2,  
+                                             (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
 			    wndLabel = CreateWindow ("STATIC", currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                     90, 20, 160, 20, hwnDlg, (HMENU) 99, 
+					                     90, 40, 160, 20, hwnDlg, (HMENU) 99, 
 										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            90, 45, 160, 30, hwnDlg, IDC_WORDBUTTON, 
+			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
+                                            90, 65, 160, 30, hwnDlg, IDC_WORDBUTTON, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         90, 80, 160, 110, hwnDlg, (HMENU) 1, 
+					                         90, 100, 160, 110, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+				hwndCurrentWord = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+					                            90, 205, 160, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+ 
 
 				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
 				SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars); 
-				iLocation = 3;
+				iLocation = 2;
+                SetWindowText (hwndCurrentWord, "");
 				WIN_DisplayWords ();
 			    break;
 
 		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+				}
+
+                if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_EDITPROPOSALS) {
+					  val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
+                      if (ok)
+                         ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (char*) val);
+				   } else if (LOWORD (wParam) == IDC_EDITIGNORE) {
+                          GetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars, sizeof (currentRejectedchars) + 1);
+                          ThotCallback (SpellingBase + ChkrSpecial, STRING_DATA, currentRejectedchars);
+                   } else if (LOWORD (wParam) == IDC_LANGEDIT) 
+                          GetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord, sizeof (currentWord) + 1);
+                }
+
 			    switch (LOWORD (wParam)) {
 				       case IDC_BEFORE:
 						    iLocation = 0;
@@ -1504,28 +1639,62 @@ LPARAM lParam;
 						    iLocation = 3;
 						    break;
 					   case IDC_IGNORE1:
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 0);
 						    break;
 					   case IDC_IGNORE2:
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 1);
 						    break;
 					   case IDC_IGNORE3: 
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 2);
 						    break;
 					   case IDC_IGNORE4:
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 3);
 						    break;
 					   case ID_SKIPNEXT:
+                            /*
 						    if (strcmp (ChkrCorrection[1], "$") != 0)
 						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, ChkrCorrection[1]);
 							else 
 						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, "");
+                            */
+                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
 							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 1);
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 						    break;
 					   case ID_SKIPDIC:
+                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 2);
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 						    break;
 					   case ID_REPLACENEXT:
+                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 3);
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 						    break;
 					   case ID_REPLACEDIC:
+                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 4);
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 						    break;
 					   case IDC_WORDBUTTON:
+                            GetWindowText (wordButton, currentWord, MAX_WORD_LEN) ;
+                            SetWindowText (hwndCurrentWord, currentWord);
 						    break;
 					   case ID_DONE:
 						    EndDialog (hwnDlg, ID_DONE);

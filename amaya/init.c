@@ -65,9 +65,11 @@
 */
 char docToOpen [256];
 extern boolean viewClosed;
+#define AMAYA_PAGE "\\amaya\\AmayaPage.html"
+#else  /* _WINDOWS */
+#define AMAYA_PAGE "/amaya/AmayaPage.html"
 #endif /* _WINDOWS */
 
-#define AMAYA_PAGE "/amaya/AmayaPage.html"
 #define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
 
 static int          AmayaInitialized = 0;
@@ -789,7 +791,7 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
       GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, FALSE);
    else 
@@ -2408,7 +2410,10 @@ NotifyEvent        *event;
    else
 
 #  ifdef _WINDOWS
-     strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
+   if (!TtaFileExist ("C:\\TEMP"))
+      mkdir ("C:\\TEMP");
+
+   strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 #  else  /* !_WINDOWS */
      strcpy (TempFileDirectory, "/tmp");
 
@@ -2424,6 +2429,7 @@ NotifyEvent        *event;
        if (i != 0 && errno != EEXIST)
 #  endif /* !_WINDOWS */
 	 {
+ 
 	   fprintf (stderr, "cannot create %s\n", TempFileDirectory);
 	   exit (1);
 	 }

@@ -247,8 +247,7 @@ BEGIN
     PUSHBUTTON      "Replace and next",ID_REPLACENEXT,155,234,81,14
     PUSHBUTTON      "Replace (+dic)",ID_REPLACEDIC,244,234,74,14
     PUSHBUTTON      "Done",ID_DONE,329,234,45,14
-    EDITTEXT        IDC_EDITWORD,61,115,104,18,ES_AUTOHSCROLL
-    GROUPBOX        "Checking",-1,61,143,104,80,WS_GROUP
+    GROUPBOX        "Checking",-1,61,148,104,75,WS_GROUP
     CONTROL         "Before selection",IDC_BEFORE,"Button",
                     BS_AUTORADIOBUTTON,67,156,93,16
     CONTROL         "Within selection",IDC_WITHIN,"Button",
@@ -1144,6 +1143,17 @@ BEGIN
     PUSHBUTTON      "Browse",IDC_BROWSE,129,53,57,14
 END
 
+SAVELISTDIALOG DIALOG DISCARDABLE  0, 0, 186, 162
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirm"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,35,141,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,94,141,50,14
+    LTEXT           "Saving will overwrite the following URLs:",IDC_MSG,28,7,
+                    127,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1176,6 +1186,14 @@ BEGIN
         RIGHTMARGIN, 319
         TOPMARGIN, 7
         BOTTOMMARGIN, 67
+    END
+
+    SAVELISTDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
     END
 END
 #endif    // APSTUDIO_INVOKED

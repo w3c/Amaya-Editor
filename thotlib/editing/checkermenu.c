@@ -72,6 +72,9 @@ static char         SpecialChars[] =
 #ifdef _WINDOWS 
 extern HWND wordButton;
 extern HWND hwnListWords;
+extern HWND hwndCurrentWord;
+extern HWND hwndLanguage;
+extern char currentWord [30];
 #endif /* _WINDOWS */
 
 
@@ -144,11 +147,15 @@ void WIN_DisplayWords ()
 
 	SetWindowText (wordButton, ChkrCorrection[0]);
 	SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
-    if ((strcmp (ChkrCorrection[1], "$")) == 0)
+    if ((strcmp (ChkrCorrection[1], "$")) == 0)	{
+       currentWord [0] = '\0';
+       SetWindowText (hwndCurrentWord, "");
 	   SendMessage (hwnListWords, LB_ADDSTRING, 0, "");  
-    else {
-	   for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++) {
-	       SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, ChkrCorrection[i]);  
+    } else {
+         sprintf (currentWord, "%s", ChkrCorrection[1]);
+         SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
+	     for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++) {
+	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, ChkrCorrection[i]);  
 	   }
 	}
     OldNC = NC;
@@ -306,11 +313,11 @@ view                view;
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
 #  ifdef _WINDOWS 
-   /* CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (CORR, Correct), 
+   CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (CORR, Correct), 
 	                          RejectedChar, SpellingBase, ChkrSelectProp, ChkrMenuOR, 
-							  ChkrFormCorrect); */
+							  ChkrFormCorrect, ChkrMenuIgnore, ChkrCaptureNC, ChkrSpecial);
 
-   MessageBox (TtaGetViewFrame (doc, view), "Not implemented yet", "Spell checking", MB_OK);
+   /* MessageBox (TtaGetViewFrame (doc, view), "Not implemented yet", "Spell checking", MB_OK); */
 #  endif /* _WINDOWS */
 }
 
@@ -343,7 +350,11 @@ Language            language;
 
    /* afficher la langue de correction courante */
    sprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
+#  ifdef _WINDOWS
+   SetWindowText (hwndLanguage, Lab);
+#  else  /* !_WINDOWS */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage, SpellingBase + ChkrFormCorrect, Lab);
+#  endif /* _WINDOWS */
 }
 
 

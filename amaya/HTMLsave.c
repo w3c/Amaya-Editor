@@ -533,9 +533,11 @@ boolean             with_images;
    res = 0;
    if (confirm && with_images)
      {
+#      ifndef _WINDOWS
        TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
 		   TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
        TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+#      endif /* _WINDOWS */
        
        strcpy (&msg[index], DocumentURLs[document]);
        len = strlen (DocumentURLs[document]);
@@ -572,6 +574,7 @@ boolean             with_images;
 	   pImage = pImage->nextImage;
 	 }
 
+#      ifndef _WINDOWS 
        TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 		       NULL, nb, msg, 6, NULL, FALSE, TRUE);
        
@@ -579,6 +582,9 @@ boolean             with_images;
        TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
        /* wait for an answer */
        TtaWaitShowDialogue ();
+#      else  /* _WINDOWS */
+	   CreateSaveListDlgWindow (TtaGetViewFrame (document, view), nb, msg, BaseDialog, ConfirmSave);
+#      endif /* _WINDOWS */
        if (!UserAnswer)
 	 res = -1;
      }
