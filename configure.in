@@ -459,7 +459,8 @@ if test "$with_wx" = "yes" ; then
     # MACOSX
     # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
     # --with-mac              use Mac OS X
-    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode"
+      with_mac="yes"
+    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng --with-libjpeg"
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
