@@ -56,7 +56,9 @@ PtrBox              GetNextBox (PtrAbstractBox pAb)
 	while (loop)
 	   if (pNextAb == NULL)
 	      /* Est-ce la derniere boite fille d'une boite eclatee */
-	      if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
+	      if (pAb->AbEnclosing &&
+		  pAb->AbEnclosing->AbBox &&
+		  pAb->AbEnclosing->AbBox->BxType == BoGhost)
 		{
 		   /* remonte la hierarchie */
 		   pAb = pAb->AbEnclosing;
