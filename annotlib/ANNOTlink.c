@@ -421,6 +421,11 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
     return (!(annot->is_orphan));
 #endif /* ANNOT_ON_ANNOT */
 
+  /* Verify that the annotates property really does point to this document
+     and discard if not (or if there is no annotates property). */
+  if (!Annot_isSameURL (annot->source_url, DocumentURLs[source_doc]))
+    return 1;			/* treat this as not orphanned */
+
   /* create the anotation element */
   XLinkSchema = GetXLinkSSchema (source_doc);
   elType.ElSSchema = XLinkSchema;
@@ -1203,9 +1208,15 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	      else
 		Annot_free (annot);
 	    }
-	  else
+	  else /* not a reply */
 #endif /* ANNOT_ON_ANNOT */
-	    List_add (&AnnotMetaData[doc].annotations, (void *) annot);
+	    /* Verify that the annotates property really does point
+	       to this document and discard if not or if there is
+	       no annotates property. */
+	    if (Annot_isSameURL (annot->source_url, DocumentURLs[doc]))
+	      List_add (&AnnotMetaData[doc].annotations, (void *) annot);
+	    else
+	      Annot_free (annot);
 	}
       else
 	Annot_free (annot);
