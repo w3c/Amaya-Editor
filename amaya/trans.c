@@ -823,25 +823,32 @@ Element            *elem;
    change
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void ExportSubTree (Element subTree, Document doc)
+static boolean ExportSubTree (Element subTree, Document doc)
 #else 
-static void ExportSubTree (subTree, doc)
+static boolean ExportSubTree (subTree, doc)
 Element subTree;
 Document doc;
 #endif
 {
   char		      tmpfilename[25];
   char		      charRead;
-  FILE		     *inputFile;
+  FILE		     *inputFile = NULL;
   Language	      lang;
   int                 len;
-  
+  boolean	      result = FALSE;
+  struct stat        *StatBuffer;
+  int		      status;
+
+  len = BUFFER_LEN - szHTML;
   if (TtaGetElementType (subTree).ElTypeNum == HTML_EL_TEXT_UNIT)
     {
-      len = BUFFER_LEN - szHTML;
-      lang = TtaGetDefaultLanguage ();
-      TtaGiveTextContent (subTree, &(bufHTML[szHTML]), &len , &lang);
-      szHTML += len;
+      if (len > TtaGetTextLength (subTree))
+	{
+	  lang = TtaGetDefaultLanguage ();
+	  TtaGiveTextContent (subTree, &(bufHTML[szHTML]), &len , &lang);
+	  szHTML += len;
+	  result = TRUE;
+	}
     }
   else
     {
@@ -850,20 +857,27 @@ Document doc;
 # else  /* _WINDOWS */
       strcpy (tmpfilename, "C:\\TEMP\\amayatrans.tmp");
 # endif /* _WINDOWS */
-      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
-      inputFile = TtaReadOpen (tmpfilename);
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
+      StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
+      status = stat (tmpfilename, StatBuffer);
+      if (status != -1)
+	if (StatBuffer->st_size < len)
+	  inputFile = TtaReadOpen (tmpfilename);
       if (inputFile != NULL)
 	{
 	  charRead = getc (inputFile);  
-	  while (charRead != EOF)
+	  while (charRead != EOF && szHTML < BUFFER_LEN - 1)
 	    {
 	      bufHTML[szHTML++] = charRead;
 	      charRead = getc (inputFile);
 	    }
 	  TtaReadClose (inputFile);  
+	  if (charRead == EOF)
+	    result = TRUE;
 	}
     }
   bufHTML[szHTML] = EOS;
+  return result;
 }
       
 #if 0
@@ -1395,24 +1409,28 @@ char               *s;
 
 #endif
 {
-   if ((szHTML += strlen (s)) > BUFFER_LEN )
-     {
-	fprintf (stderr, "increase BUFFER_LEN");
-	return FALSE;
-     }
-   else
-     {
-	strcat (bufHTML, s);
-	return TRUE;
-     }
+  int len;
+  
+  len = strlen (s);
+  if ((szHTML + len) >= BUFFER_LEN )
+    {
+      fprintf (stderr, "increase BUFFER_LEN");
+      return FALSE;
+    }
+  else
+    {
+      szHTML += len;
+      strcat (bufHTML, s);
+      return TRUE;
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutBeginTag (strNodeDesc * ND, strNode * TN)
+static boolean         PutBeginTag (strNodeDesc * ND, strNode * TN)
 #else
-static void         PutBeginTag (ND, TN)
+static boolean         PutBeginTag (ND, TN)
 strNodeDesc           *ND;
 strNode            *TN;
 
@@ -1427,7 +1445,8 @@ strNode            *TN;
   AttributeType       attrType;
   Attribute           attr;
   int                 l, attrKind;
-
+  boolean	      res = TRUE;
+  
   attrType.AttrSSchema = TtaGetDocumentSSchema (TransDoc);
   attrValue = TtaGetMemory (NAME_LENGTH);
   tag = TtaGetMemory (NAME_LENGTH);
@@ -1449,10 +1468,8 @@ strNode            *TN;
 
   NS->Idf = idfCounter++;
   NS->Nbc = 0;
-  if (FALSE)
-    /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
+  if (TransferMode == ByAttribute)
     {
-      TransferMode = ByAttribute;
       /* create a ghost attribute with the identifier of the node */     
       NS->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
       NS->Attributes->NameAttr = TtaGetMemory (NAME_LENGTH);
@@ -1464,14 +1481,13 @@ strNode            *TN;
     }
   else
     {
-      TransferMode = InBuffer ;
       NS->Attributes = ND->Attributes;
     }
   generationStack[++topGenerStack] = NS;
 
   /* writing the tag name */
-  PutInHtmlBuffer ("<");
-  PutInHtmlBuffer (NS->Tag);
+  res = res && PutInHtmlBuffer ("<");
+  res = res && PutInHtmlBuffer (NS->Tag);
 
   AD = NS->Attributes;
   /* wrting the attributes */
@@ -1515,21 +1531,21 @@ strNode            *TN;
 		}
 	      if (found)
 		{		/* the attribute has been found, writing the attribute name */
-		  PutInHtmlBuffer (" ");
-		  PutInHtmlBuffer (AD->AttrAttr);
-		  PutInHtmlBuffer ("=");
+		  res = res && PutInHtmlBuffer (" ");
+		  res = res && PutInHtmlBuffer (AD->AttrAttr);
+		  res = res && PutInHtmlBuffer ("=");
 		  /* writing the attribute value */
 		  TtaGiveAttributeType (attr, &attrType, &attrKind);
 		  if (attrKind == 2)
 		    {	/* text attribute */
 		      l = TtaGetTextAttributeLength (attr);
 		      TtaGiveTextAttributeValue (attr, attrValue, &l);
-		      PutInHtmlBuffer (attrValue);
+		      res = res && PutInHtmlBuffer (attrValue);
 		    }
 		  else
 		    {	/* int attribute */
 		      sprintf (attrValue, "%d", TtaGetAttributeValue (attr));
-		      PutInHtmlBuffer (attrValue);
+		      res = res && PutInHtmlBuffer (attrValue);
 		    }
 		}
 	    }
@@ -1540,31 +1556,33 @@ strNode            *TN;
 	}
       else
 	{			/* creation of an attribute */
-	  PutInHtmlBuffer (" ");
-	  PutInHtmlBuffer (AD->NameAttr);
-	  PutInHtmlBuffer ("=");
+	  res = res && PutInHtmlBuffer (" ");
+	  res = res && PutInHtmlBuffer (AD->NameAttr);
+	  res = res && PutInHtmlBuffer ("=");
 	  if (AD->IsInt)
 	    {		/* int attribute */
 	      sprintf (attrValue, "%d", AD->IntVal);
-	      PutInHtmlBuffer (attrValue);
+	      res = res && PutInHtmlBuffer (attrValue);
 	    }
 	  else
 	    {		/* text attribute */
-	      l = strlen (bufHTML);
-	      bufHTML[l] = '"';
-	      bufHTML[l + 1] = EOS;
-	      szHTML++;
-	      PutInHtmlBuffer (AD->TextVal);
-	      l = strlen (bufHTML);
-	      bufHTML[l] = '"';
-	      bufHTML[l + 1] = EOS;
-	      szHTML++;
+	      /* l = strlen (bufHTML);
+		 bufHTML[l] = '"';
+		 bufHTML[l + 1] = EOS;
+		 szHTML++;*/
+	      res = res && PutInHtmlBuffer ("\"");
+	      res = res && PutInHtmlBuffer (AD->TextVal);
+	      res = res && PutInHtmlBuffer ("\"");
+	      /*l = strlen (bufHTML);
+		bufHTML[l] = '"';
+		bufHTML[l + 1] = EOS;
+		szHTML++;*/
 	    }
 	}
       AD = AD->Next;
     }
   /* closing the tag */
-  PutInHtmlBuffer (">");
+  res = res && PutInHtmlBuffer (">");
   if (TransferMode == ByAttribute)
     {
       /*free the ZZGHOST attribute */
@@ -1574,26 +1592,30 @@ strNode            *TN;
   NS->Attributes = NULL;
   TtaFreeMemory (attrValue);
   TtaFreeMemory (tag);
+  return res;
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void PutEndTag (strGenStack * ND)
+static boolean PutEndTag (strGenStack * ND)
 #else
-static void PutEndTag (ND)
+static boolean PutEndTag (ND)
 strGenStack *ND;
 #endif
 {
-   if (strcmp (ND->Tag, "HR") && 
-       strcmp (ND->Tag, "BR") &&
-       strcmp (ND->Tag, "IMG"))
-     {
-	PutInHtmlBuffer ("</");
-	PutInHtmlBuffer (ND->Tag);
-	PutInHtmlBuffer (">");
-     }
+  boolean res = TRUE;
+
+  if (strcmp (ND->Tag, "HR") && 
+      strcmp (ND->Tag, "BR") &&
+      strcmp (ND->Tag, "IMG"))
+    {
+      res = res && PutInHtmlBuffer ("</");
+      res = res && PutInHtmlBuffer (ND->Tag);
+      res = res && PutInHtmlBuffer (">");
+    }
+  return res;
 }
 
 /*----------------------------------------------------------------------
@@ -1601,16 +1623,17 @@ strGenStack *ND;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TransfertChildren (strNode * node)
+static boolean         TransfertChildren (strNode * node)
 #else
-static void         TransfertChildren (strNode * node)
+static boolean         TransfertChildren (strNode * node)
 strNode            *node;
 
 #endif
 {
    strNode            *child;
    ElementType	       elType; 
-
+   boolean	       res = TRUE;
+ 
    child = node->Child;
    while (child != NULL)
      {
@@ -1618,17 +1641,17 @@ strNode            *node;
 	  {/* if the element is empty: no transfert */
 	     generationStack[topGenerStack]->Nbc++;
 	     elType = TtaGetElementType (child->Elem);
-	     if (FALSE)
 		 /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
-	       /*if (TransferMode == ByAttribute)*/
+	     if (TransferMode == ByAttribute)
 	       AddListSubTree (child->Elem,
 			       generationStack[topGenerStack]->Idf,
 			       generationStack[topGenerStack]->Nbc);
 	     else
-	       ExportSubTree (child->Elem, TransDoc);
+	       res = res && ExportSubTree (child->Elem, TransDoc);
 	  }
 	child = child->Next;
      }
+   return res;
 }
 
 /*----------------------------------------------------------------------
@@ -1636,15 +1659,16 @@ strNode            *node;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TransfertNode (strNode * node, boolean inplace)
+static boolean         TransfertNode (strNode * node, boolean inplace)
 #else
-static void         TransfertNode (node, inplace)
+static boolean         TransfertNode (node, inplace)
 strNode            *node;
 boolean             inplace;
 
 #endif
 {
   ElementType elType; 
+  boolean res = TRUE;
 
   if (TtaGetElementVolume (node->Elem) != 0)
     {	/* if the element is empty: no transfert */
@@ -1652,23 +1676,22 @@ boolean             inplace;
 	/* closing previously generated elements */
 	while (topGenerStack >= lastRulePlace)
 	  {
-	    PutEndTag (generationStack[topGenerStack]);
+	    res = res && PutEndTag (generationStack[topGenerStack]);
 	    TtaFreeMemory (generationStack[topGenerStack]->Tag);
 	    TtaFreeMemory ((char *) generationStack[topGenerStack]);
 	    topGenerStack--;
 	  }
       elType = TtaGetElementType (node->Elem); 
       generationStack[topGenerStack]->Nbc++;
-      if (FALSE)
 /* 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)  */
-	/* if (TransferMode == ByAttribute) */
+      if (TransferMode == ByAttribute)
 	AddListSubTree (node->Elem,
-			generationStack[topGenerStack]->Idf,
-			generationStack[topGenerStack]->Nbc);
+				     generationStack[topGenerStack]->Idf,
+				     generationStack[topGenerStack]->Nbc);
       else
-	ExportSubTree (node->Elem, TransDoc);
-
+	res = res && ExportSubTree (node->Elem, TransDoc);
     }
+  return res;
 }
 
 
@@ -1677,16 +1700,16 @@ boolean             inplace;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TransformNode (strMatchChildren * sm);
+static boolean         TransformNode (strMatchChildren * sm);
 #else
-static void         TransformNode (sm);
+static boolean         TransformNode (sm);
 #endif
 
 
 #ifdef __STDC__
-static void         ApplyTransChild (strMatchChildren * smc)
+static boolean         ApplyTransChild (strMatchChildren * smc)
 #else
-static void         ApplyTransChild (smc)
+static boolean         ApplyTransChild (smc)
 strMatchChildren   *smc;
 
 #endif
@@ -1694,6 +1717,7 @@ strMatchChildren   *smc;
    strMatchChildren   *smc2;
    strMatch           *sm;
    boolean             found;
+   boolean             result = TRUE;
 
    smc2 = smc;
    while (smc2 != NULL)
@@ -1714,20 +1738,21 @@ strMatchChildren   *smc;
 	       {
 		 /* at least one child has been matched, applying the transformation */
 		 /* to the children */
-		  ApplyTransChild (sm->MatchChildren);
+		  result = result && ApplyTransChild (sm->MatchChildren);
 	       }
 	     else
 	       { /* there is no matching: transferring the node to destination instance */
-		  TransfertNode (sm->MatchNode, FALSE);
+		  result = result && TransfertNode (sm->MatchNode, FALSE);
 	       }
 	  }
 	else
 	  {  /* there is a transformation rule relative to the matched symbol */
 	    /* applying the rule */
-	     TransformNode (smc2);
+	     result = result && TransformNode (smc2);
 	  }
 	smc2 = smc2->Next;
      }
+return result;
 }
 
 
@@ -1736,9 +1761,9 @@ strMatchChildren   *smc;
   matched symbol
   ---------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TransformNode (strMatchChildren * sm)
+static boolean         TransformNode (strMatchChildren * sm)
 #else
-static void         TransformNode (sm)
+static boolean         TransformNode (sm)
 strMatchChildren   *sm;
 
 #endif
@@ -1748,6 +1773,7 @@ strMatchChildren   *sm;
    strNodeDesc        *RNodeCour;
    strRuleDesc	      *currentRule;
    boolean             stop, sonsMatch;
+   boolean	       result = TRUE;
    boolean             transChildDone = FALSE;
 
    sm2 = sm->MatchNode->Matches;
@@ -1785,7 +1811,7 @@ strMatchChildren   *sm;
 
        while (topGenerStack >= courNode)
 	 { /* closes the opened tags (on generation stack) */
-	   PutEndTag (generationStack[topGenerStack]);
+	   result = result && PutEndTag (generationStack[topGenerStack]);
 	   TtaFreeMemory (generationStack[topGenerStack]->Tag);
 	   TtaFreeMemory ((char *) generationStack[topGenerStack]);
 	   topGenerStack--;
@@ -1793,7 +1819,7 @@ strMatchChildren   *sm;
 
        while (RNodeCour != NULL)
 	 {/* generates optional nodes not already present */
-	   PutBeginTag (RNodeCour, sm->MatchNode);
+	   result = result && PutBeginTag (RNodeCour, sm->MatchNode);
 	   courNode++;
 	   RNodeCour = RNodeCour->Next;
 	 }
@@ -1806,7 +1832,7 @@ strMatchChildren   *sm;
 	      strcmp (RNodeCour->Tag, "*") != 0 &&
 	      strcmp (RNodeCour->Tag, "#") != 0)
 	 { /* generates the new nodes */
-	   PutBeginTag (RNodeCour, sm->MatchNode);
+	   result = result && PutBeginTag (RNodeCour, sm->MatchNode);
 	   courNode++;
 	   RNodeCour = RNodeCour->Next;
 	 }
@@ -1820,7 +1846,7 @@ strMatchChildren   *sm;
 	 }
        if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
 	 { /* copie du noeud source */
-	   TransfertNode (sm->MatchNode, TRUE);
+	   result = result && TransfertNode (sm->MatchNode, TRUE);
 	   transChildDone = TRUE;
 	 }
        if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
@@ -1833,17 +1859,18 @@ strMatchChildren   *sm;
 	     {
 	       if (sonsMatch)
 		 {
-		   ApplyTransChild (sm2->MatchChildren);
+		   result = result && ApplyTransChild (sm2->MatchChildren);
 		 }
 	       else
 		 {			
-		   TransfertChildren (sm->MatchNode);
+		   result = result && TransfertChildren (sm->MatchNode);
 		 }
 	       transChildDone = TRUE;
 	     }
 	 }
        currentRule = currentRule->NextRule;
      }
+   return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1884,16 +1911,17 @@ Document            doc;
 	
 	TransferMode = InBuffer;
 	/* applying the transformation */
-	ApplyTransChild (sm->MatchChildren);
+	res = ApplyTransChild (sm->MatchChildren);
 	while (topGenerStack > 0)
 	  {
-	     PutEndTag (generationStack[topGenerStack]);
+	     res = res && PutEndTag (generationStack[topGenerStack]);
 	     TtaFreeMemory (generationStack[topGenerStack]->Tag);
 	     TtaFreeMemory ((char *) generationStack[topGenerStack]);
 	     topGenerStack--;
 	  }
+	
 	/* parsing the produced structure */
-	res = StartHtmlParser (sm->MatchChildren, doc);
+	res = res && StartHtmlParser (sm->MatchChildren, doc);
 
 	TtaFreeMemory (bufHTML);
      }
