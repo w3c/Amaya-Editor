@@ -53,20 +53,6 @@ static ThotBool     UseLucidaFamily;
 static ThotBool     UseAdobeFamily;
 #ifdef _WINDOWS
 
-typedef struct _FontInfo {
-  int   FiHeight;
-  int   FiAscent;
-  int   FiFirstChar;
-  int   FiLastChar;
-  int  *FiHeights;
-  int  *FiWidths;
-  int   FiHighlight; 
-  int   FiSize;
-  char  FiScript; 
-  char  FiFamily; 
-} FontInfo;
-typedef FontInfo      *PtrFont;
-
 static PtrFont    LastUsedFont = NULL;
 static HFONT      OldFont;
 #endif /* _WINDOWS */
@@ -235,7 +221,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
   ----------------------------------------------------------------------*/
 HFONT WinLoadFont (HDC hdc, PtrFont font)
 {
-  if (font && LastUsedFont != font)
+  /*if (font && LastUsedFont != font)*/
     {
       LastUsedFont = font; 
       if (ActiveFont)
@@ -326,16 +312,18 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if (32 >= font->FiFirstChar && 32 <= font->FiLastChar &&
-	  (c == THIN_SPACE || c == HALF_EM))
+	  if(c == THIN_SPACE || c == HALF_EM)
 	{
+	  if (font->FiFirstChar <= 32 && font->FiLastChar >= 32)
+	  {
 	  l = font->FiWidths[32 - font->FiFirstChar] + 3;
 	  if (c == HALF_EM)
 	    l = l / 2;
 	  else
 	    l = l / 4;
+	  }
 	}
-      else if (c >= font->FiFirstChar && c <= font->FiLastChar)
+      else if (font->FiFirstChar <= c && font->FiLastChar >= c)
 	l = font->FiWidths[c - font->FiFirstChar];
 #else  /* _WINDOWS */
 #ifdef _GTK
@@ -1025,10 +1013,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   unsigned int        mask;
   char                text[10], PsName[10], textX[100];
 #if defined (_WINDOWS) && !defined (_GL)
-
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  int                 c;
+  int                 c, ind;
   HFONT               hOldFont;
   HDC                 display;
 #endif /* _WINDOWS */
@@ -1102,14 +1089,16 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ptfont->FiFirstChar = textMetric.tmFirstChar;
 	      ptfont->FiLastChar = textMetric.tmLastChar;
 	      val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
-	      ptfont->FiWidths = (int[]) TtaGetMemory (val * sizeof (int));
-	      ptfont->FiHeights = (int[]) TtaGetMemory (val * sizeof (int));
-	      for (c = 0; c < val; c++)
+	      ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+	      ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+		  c = textMetric.tmFirstChar;
+	      for (ind = 0; ind < val; ind ++)
 		{
 		  GetTextExtentPoint (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
-		  ptfont->FiWidths[c] = wsize.cx;
-		  ptfont->FiHeights[c] = wsize.cy;
+		  ptfont->FiWidths[ind] = wsize.cx;
+		  ptfont->FiHeights[ind] = wsize.cy;
+          c++;
 		}
 	      DeleteObject (ActiveFont);
 	      ActiveFont = 0;

@@ -123,6 +123,9 @@ PtrDict             PtFree_Dict;
 #include "memory_f.h"
 #include "fileaccess_f.h"
 
+
+
+#ifndef _DEBUG
 /*----------------------------------------------------------------------
    TtaGetMemory
 
@@ -162,6 +165,25 @@ void TtaFreeMemory (void *ptr)
    if (ptr)	
       free (ptr);
 }
+
+/*----------------------------------------------------------------------
+   TtaReAlloc increases the size of the memory block.                        
+  ----------------------------------------------------------------------*/
+void *TtaRealloc (void *ptr, unsigned int n)
+{
+   void               *res;
+
+   if (n == 0)
+      n++;
+   res = realloc (ptr, (size_t) n);
+#ifndef _WINDOWS 
+   if (!res)
+     TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+#endif /* _WINDOWS */
+   return res;
+}
+
+#endif /*_DEBUG*/
 
 /*----------------------------------------------------------------------
    FreeAll frees all allocated memory
@@ -384,23 +406,6 @@ char *TtaStrdup (char* str)
       return (res);
    strcpy (res, str);
    return (res);
-}
-
-/*----------------------------------------------------------------------
-   TtaReAlloc increases the size of the memory block.                        
-  ----------------------------------------------------------------------*/
-void *TtaRealloc (void *ptr, unsigned int n)
-{
-   void               *res;
-
-   if (n == 0)
-      n++;
-   res = realloc (ptr, (size_t) n);
-#ifndef _WINDOWS 
-   if (!res)
-     TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-#endif /* _WINDOWS */
-   return res;
 }
 
 /*----------------------------------------------------------------------

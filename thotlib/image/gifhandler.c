@@ -10,7 +10,6 @@
  * Authors: I. Vatton, N. Layaida (INRIA)
  *          R. Guetari (W3C/INRIA) - Previous Windows version
  */
- 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -18,12 +17,11 @@
 #include "frame.h"
 #include "libmsg.h"
 #include "message.h"
-#include "application.h"
-#include "xpm.h"
-#include "thotcolor.h"
 #ifdef _WINDOWS
 #include "winsys.h"
 #endif /* _WINDOWS */
+#include "xpm.h"
+#include "thotcolor.h"
 
 #define THOT_EXPORT extern
 #include "picture_tv.h"
@@ -39,6 +37,7 @@
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
+#include "application.h"
 
 #define	MAXCOLORMAPSIZE		256
 #define scale 65536 / MAXCOLORMAPSIZE;
