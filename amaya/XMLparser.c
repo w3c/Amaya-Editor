@@ -255,7 +255,7 @@ Document doc;
       if (error == 1)
 	 {
          ParseHTMLError (doc, TEXT("Invalid number of children"));
-	 XMLabort = TRUE;
+	 /* XMLabort = TRUE;  should we abort??? */
 	 }
       }
 }
