@@ -406,7 +406,7 @@ static void         LocateBuffer (PtrTextBuffer * pBuffer, int *index)
    le precedant VsNSpaces, la position dans la boite VsXPos
    et la ligne contenant la boite VsLine.                  
   ----------------------------------------------------------------------*/
-void                ComputeViewSelMarks (ViewSelection * selMark)
+void                ComputeViewSelMarks (ViewSelection *selMark)
 {
   PtrTextBuffer       pBuffer;
   PtrTextBuffer       pSelBuffer;
@@ -544,7 +544,9 @@ void                ComputeViewSelMarks (ViewSelection * selMark)
   the last selected character.
   The parameter alone is set to TRUE when only one abstract box is selected.
   ----------------------------------------------------------------------*/
-void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
+void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
+			 int lastChar, ThotBool startSelection,
+			 ThotBool endSelection, ThotBool alone)
 {
   PtrLine             adline;
   PtrTextBuffer       pBuffer;
@@ -793,10 +795,14 @@ void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int las
 		    }
 		  else
 		    {
+		      if (pFrame->FrSelectionBegin.VsXPos == pViewSel->VsXPos)
+			w = 2;
+		      else
+			w = 0;
 		      /* a substring or a point of the box is selected */
 		      DefClip (frame,
 			       pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos,
-			       pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos,
+			       pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos + w,
 			       pBox->BxYOrg + pBox->BxHeight);
 		    }
 		}

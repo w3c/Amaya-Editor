@@ -2944,6 +2944,7 @@ BOXES
 	BorderRightStyle: Solid;
 	Background: Creator =;
 	FillPattern: backgroundcolor;
+	Depth: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5478,37 +5479,37 @@ BOXES
  AREA_S: BEGIN
 	Content: Text 'area';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		Depth: Creator =;
 		END;
 	END;
 
  ATTR_SHAPE_RECT: BEGIN
 	Content: Text ' shape=rect';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Depth: 0;
 		END;
 	END;
 
  ATTR_SHAPE_CIRCLE: BEGIN
 	Content: Text ' shape=circle';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Depth: 0;
 		END;
 	END;
 
@@ -5521,32 +5522,33 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Depth: 0;
 		END;
 	END;
 
  ATTR_COORDS: BEGIN
 	Content: Text ' coords=';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Depth: 0;
 		END;
 	END;
 
  VALUE_COORDS: BEGIN
 	Content: (coords);
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		Depth: 0;
 		END;
 	END;
 
@@ -7296,7 +7298,7 @@ RULES
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
-	Depth: Enclosing + 1;
+	Depth: Enclosing - 1;
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
@@ -7741,7 +7743,7 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	if within Inserted_Text
-		Depth: 0;
+		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
 		if NOT within Comment_line AND NOT within PI_line
 		   BEGIN
@@ -7804,7 +7806,7 @@ RULES
  	VertPos: Top = Enclosing . Top UserSpecified;
 	Width: 5 pt UserSpecified;
 	Height: 5 pt UserSpecified;
-	Depth: 0;
+	Depth: Enclosing - 9;
 	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Font: Enclosing =;
