@@ -370,7 +370,7 @@ int                 status;
   HTAtom *tmp_atom;
   char *tmp_char;
   CHAR_T tmp_wchar[MAX_LENGTH];
-  HTParentAnchor *anchor = HTRequest_anchor (request);
+  /* HTParentAnchor *anchor = HTResponse_anchor (request); */
 
   /* @@@ later I'll add a function here to specify which headers we
      want to copy */
@@ -379,8 +379,9 @@ int                 status;
   if (me->http_headers.content_type)
     return;
 
-   /* copy the content_type */
-  tmp_atom = HTAnchor_format (anchor);
+  /* copy the content_type */
+  /* tmp_atom = HTAnchor_format (anchor); */
+  tmp_atom =  HTResponse_format (response);
   if (tmp_atom)
     tmp_char = HTAtom_name (tmp_atom);
   else
@@ -409,7 +410,8 @@ int                 status;
     }
   
   /* copy the charset */
-  tmp_atom = HTAnchor_charset (anchor);
+  /* tmp_atom = HTAnchor_charset (anchor); */
+  tmp_atom = HTResponse_charset (response);
   if (tmp_atom)
     {
       iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
@@ -1434,7 +1436,6 @@ HTList             *c;
    /* Register additional bindings */
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
    HTBind_add("mml", "text/xml",  NULL, "8bit", NULL, 1.0);
-   HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
    HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);
