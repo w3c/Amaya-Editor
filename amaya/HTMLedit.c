@@ -719,6 +719,7 @@ Document	doc;
 #endif /* __STDC__ */
 {
   Element		prev, next, parent;
+  Attribute             attr;
   ElementType		elType;
   
   elType = TtaGetElementType (el);
@@ -731,9 +732,11 @@ Document	doc;
     {
       prev = el;
       TtaPreviousSibling (&prev);
-      if (prev != NULL)
+      attr = NULL;
+      TtaNextAttribute (el, &attr);
+      if (prev || attr)
         /* the Pseudo-paragraph is not the first element among its sibling */
-        /* turn it into an ordinary paragraph */
+        /* or it has attributes: turn it into an ordinary paragraph */
         ChangeElementType (el, HTML_EL_Paragraph);
     }
   else if (elType.ElTypeNum == HTML_EL_Paragraph)
@@ -741,8 +744,11 @@ Document	doc;
     {
       prev = el;
       TtaPreviousSibling (&prev);
-      if (prev == NULL)
-        /* the Paragraph is the first element among its sibling */
+      attr = NULL;
+      TtaNextAttribute (el, &attr);
+      if (prev == NULL && attr == NULL)
+        /* the Paragraph is the first element among its sibling and it has
+	   no attribute */
         /* turn it into an Pseudo-paragraph if it's in a List_item or a
 	   table cell. */
          {
