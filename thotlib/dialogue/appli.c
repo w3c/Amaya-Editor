@@ -2541,7 +2541,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  gtk_timeout_remove (timer);
 	  timer = None;
 	} 
-      if (event->button == 1)
+      else if (event->button == 1)
 	{
 	  ClickFrame = frame;
 	  ClickX = event->x;
