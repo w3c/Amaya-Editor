@@ -498,10 +498,10 @@ dnl
 dnl annotations is disabled by default
 dnl
 if test "$with_annot" = "" ; then
-    if test "$enable_annot" = "no" ; then
-	with_annot="no"
-    else
+    if test "$enable_annot" = "yes" ; then
 	with_annot="yes"
+    else
+	with_annot="no"
     fi
 fi
 

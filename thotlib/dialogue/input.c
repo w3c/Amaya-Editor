@@ -700,14 +700,14 @@ int                 key;
   int                 modtype;
   int                 command;
   ThotBool            found;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   ThotBool            endOfSearch = FALSE;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
   
   if (frame > MAX_FRAME)
     frame = 0;
   
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   if (key == 0xD && nb == 1)
     specialKey = TRUE;
   else if ((key >= 0x1 && key <= 0x1A) && nb == 1)
@@ -716,110 +716,126 @@ int                 key;
     specialKey = TRUE;
     escChar = FALSE;
   }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
   
   value = string[0];
   found = FALSE;
-  if (nb == 2) {
-    /* It's a Thot action call */
-    command = (int) string[1];
-    found = TRUE;
-  } else {
-    command = 0;	   
-    /* Set the right indicator */
-    if (PicMask & THOT_MOD_CTRL)
-      if (PicMask & THOT_MOD_SHIFT)
-	modtype = THOT_MOD_S_CTRL;
+  if (nb == 2)
+    {
+      /* It's a Thot action call */
+      command = (int) string[1];
+      found = TRUE;
+    }
+  else
+    {
+      command = 0;	   
+      /* Set the right indicator */
+      if (PicMask & THOT_MOD_CTRL)
+	if (PicMask & THOT_MOD_SHIFT)
+	  modtype = THOT_MOD_S_CTRL;
+	else
+	  modtype = THOT_MOD_CTRL;
+      else if (PicMask & THOT_MOD_ALT)
+	if (PicMask & THOT_MOD_SHIFT)
+	  modtype = THOT_MOD_S_ALT;
+	else
+	  modtype = THOT_MOD_ALT;
+      else if (PicMask & THOT_MOD_SHIFT)
+	modtype = THOT_MOD_SHIFT;
       else
-	modtype = THOT_MOD_CTRL;
-    else if (PicMask & THOT_MOD_ALT)
-      if (PicMask & THOT_MOD_SHIFT)
-	modtype = THOT_MOD_S_ALT;
-      else
-	modtype = THOT_MOD_ALT;
-    else if (PicMask & THOT_MOD_SHIFT)
-      modtype = THOT_MOD_SHIFT;
-    else
-      modtype = THOT_NO_MOD;
+	modtype = THOT_NO_MOD;
     
-    /* Is it a second level of the current automata? */
-    if (Automata_current != NULL) {
-      /* search a second level entry */
-      ptr = Automata_current;
-      Automata_current = NULL;
-      while (!found && ptr != NULL) {
-	if (ptr != NULL) {
-	  if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
-	    found = TRUE;
-	  else
-	    ptr = ptr->K_Other;
-	}
-      }
-      
-      if (found) {
-	value = (UCHAR_T) ptr->K_Value;
-	command = ptr->K_Command;
-      }
-    } else {
-      /* Search a first level entry? */
-      if (modtype == THOT_MOD_S_CTRL)
-	ptr = Automata_CTRL;
-      else if (modtype == THOT_MOD_CTRL) {
-	ptr = Automata_ctrl;
-#          ifdef _WINDOWS
-           if (key == 0x0A)
-              key = 0x0D;
-#          endif /* _WINDOWS */
-	  }
-      else if (modtype == THOT_MOD_S_ALT)
-	ptr = Automata_ALT;
-      else if (modtype == THOT_MOD_ALT)
-	ptr = Automata_alt;
-      else
-	ptr = Automata_normal;
-      
-#               ifdef _WINDOWS
-      endOfSearch = FALSE;
-      while (!endOfSearch && ptr != NULL)
-#               else  /* !_WINDOWS */
-	while (!found && ptr != NULL)
-#               endif /* _WINDOWS */
-	  {
-	    if (ptr != NULL) {
-	      if (ptr->K_EntryCode == key) {
-#ifdef _WINDOWS
-		endOfSearch = TRUE;
-		if (specialKey) {
-#endif /* _WINDOWS */
-		  /* On entre dans un automate */
-		  found = TRUE;
-		  Automata_current = ptr->K_Next;
-		  if (Automata_current == NULL) {
-		    /* il s'agit d'une valeur definie a premier niveau */
-		    value = (UCHAR_T) ptr->K_Value;
-		    command = ptr->K_Command;
-		  }
-#ifdef _WINDOWS
+      /* Is it a second level of the current automata? */
+      if (Automata_current != NULL)
+	{
+	  /* search a second level entry */
+	  ptr = Automata_current;
+	  Automata_current = NULL;
+	  while (!found && ptr != NULL)
+	    {
+	      if (ptr != NULL)
+		{
+		  if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
+		    found = TRUE;
+		  else
+		    ptr = ptr->K_Other;
 		}
+	    }
+      
+	  if (found)
+	    {
+	      value = (UCHAR_T) ptr->K_Value;
+	      command = ptr->K_Command;
+	    }
+	}
+      else
+	{
+	  /* Search a first level entry? */
+	  if (modtype == THOT_MOD_S_CTRL)
+	    ptr = Automata_CTRL;
+	  else if (modtype == THOT_MOD_CTRL)
+	    {
+	      ptr = Automata_ctrl;
+#ifdef _WINDOWS
+	      if (key == 0x0A)
+		key = 0x0D;
 #endif /* _WINDOWS */
-	      } else
-		ptr = ptr->K_Other;
-	    } 
-	  } 
-    } 
-  } 
+	    }
+	  else if (modtype == THOT_MOD_S_ALT)
+	    ptr = Automata_ALT;
+	  else if (modtype == THOT_MOD_ALT)
+	    ptr = Automata_alt;
+	  else
+	    ptr = Automata_normal;
+      
+#ifdef _WINDOWS
+	  endOfSearch = FALSE;
+	  while (!endOfSearch && ptr != NULL)
+#else  /* !_WINDOWS */
+	    while (!found && ptr != NULL)
+#endif /* _WINDOWS */
+	      {
+		if (ptr != NULL)
+		  {
+		    if (ptr->K_EntryCode == key)
+		      {
+#ifdef _WINDOWS
+			endOfSearch = TRUE;
+			if (specialKey)
+			  {
+#endif /* _WINDOWS */
+			    /* On entre dans un automate */
+			    found = TRUE;
+			    Automata_current = ptr->K_Next;
+			    if (Automata_current == NULL)
+			      {
+				/* il s'agit d'une valeur definie a premier niveau */
+				value = (UCHAR_T) ptr->K_Value;
+				command = ptr->K_Command;
+			      }
+#ifdef _WINDOWS
+			  }
+#endif /* _WINDOWS */
+		      }
+		    else
+		      ptr = ptr->K_Other;
+		  }
+	      }
+	}
+    }
   
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   if (specialKey && !found)
-#  else /* !_WINDOWS */
-    if (!found)
-#  endif /* _WINDOWS */
-      /* Mangement of special keys */
-      switch (key) {
+#else /* !_WINDOWS */
+  if (!found)
+#endif /* _WINDOWS */
+    /* Mangement of special keys */
+    switch (key)
+      {
       case THOT_KEY_Up:
-#            ifdef THOT_KEY_R8
+#ifdef THOT_KEY_R8
       case THOT_KEY_R8:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Up];
 	else if (modtype == THOT_MOD_CTRL)
@@ -830,9 +846,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Left:
-#            ifdef THOT_KEY_R10
+#ifdef THOT_KEY_R10
       case THOT_KEY_R10:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Left];
 	else if (modtype == THOT_MOD_CTRL)
@@ -843,9 +859,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Right:
-#            ifdef THOT_KEY_R12
+#ifdef THOT_KEY_R12
       case THOT_KEY_R12:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Right];
 	else if (modtype == THOT_MOD_CTRL)
@@ -856,9 +872,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Down:
-#            ifdef THOT_KEY_R14
+#ifdef THOT_KEY_R14
       case THOT_KEY_R14:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Down];
 	else if (modtype == THOT_MOD_CTRL)
@@ -869,9 +885,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Prior:
-#            ifdef THOT_KEY_R9
+#ifdef THOT_KEY_R9
       case THOT_KEY_R9:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Prior];
 	else if (modtype == THOT_MOD_CTRL)
@@ -882,9 +898,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Next:
-#            ifdef THOT_KEY_R15
+#ifdef THOT_KEY_R15
       case THOT_KEY_R15:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Next];
 	else if (modtype == THOT_MOD_CTRL)
@@ -895,9 +911,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_Home:
-#            ifdef THOT_KEY_R7
+#ifdef THOT_KEY_R7
       case THOT_KEY_R7:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_Home];
 	else if (modtype == THOT_MOD_CTRL)
@@ -908,9 +924,9 @@ int                 key;
 	break;
 	
       case THOT_KEY_End:
-#            ifdef THOT_KEY_R13
+#ifdef THOT_KEY_R13
       case THOT_KEY_R13:
-#            endif
+#endif
 	if (modtype == THOT_MOD_SHIFT)
 	  command = SpecialShiftKeys[MY_KEY_End];
 	else if (modtype == THOT_MOD_CTRL)
@@ -943,72 +959,78 @@ int                 key;
       default: break;
       } 
   
-  if (Automata_current == NULL) {
-    /* Appel d'une action Thot */
-    FrameToView (frame, &document, &view);
-    if (command > 0) {
-      /* Termine l'insertion eventuellement en cours */
-      if (command != CMD_DeletePrevChar)
-	/* Ce n'est pas un delete, il faut terminer l'insertion courante */
-	CloseInsertion ();
-      
-      /* Call action if it's active */
-      if (MenuActionList[command].ActionActive[frame])
+  if (Automata_current == NULL)
+    {
+      /* Appel d'une action Thot */
+      FrameToView (frame, &document, &view);
+      if (command > 0)
 	{
-	  /* l'action est active pour la fenetre courante */
-	  /* prepare les parametres */
-	  if (MenuActionList[command].User_Action != NULL) {
-	    if (((*MenuActionList[command].User_Action) (MenuActionList[command].User_Arg, document, view)) &&
-		(MenuActionList[command].Call_Action != NULL))
-	      (*MenuActionList[command].Call_Action) (document, view);
-	  }
-	  else if (MenuActionList[command].Call_Action != NULL)
-	    (*MenuActionList[command].Call_Action) (document, view);
+	  /* Termine l'insertion eventuellement en cours */
+	  if (command != CMD_DeletePrevChar)
+	    /* Ce n'est pas un delete, il faut terminer l'insertion courante */
+	    CloseInsertion ();
+      
+	  /* Call action if it's active */
+	  if (MenuActionList[command].ActionActive[frame])
+	    {
+	      /* l'action est active pour la fenetre courante */
+	      /* prepare les parametres */
+	      if (MenuActionList[command].Call_Action)
+		(*MenuActionList[command].Call_Action) (document, view);
+	    }
+	}
+      else if (nb == 0) /* Rien a inserer */      
+	return;
+      /* Traitement des caracteres au cas par cas */
+      else
+	{
+	  if (value == 8 || value == 127)
+	    {
+	      /* Par defaut BackSpace detruit le caractere precedent */
+	      /* sans se soucier de la langue courante */
+	      if (MenuActionList[CMD_DeletePrevChar].Call_Action)
+		(*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+	      return;
+	    }
+      
+	  /*** Sequence de traitement des espaces ***/
+	  if (value == BREAK_LINE || (InputSpace && value == SHOWN_BREAK_LINE))
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
+	    }
+	  else if (value == THIN_SPACE || (InputSpace && value == SHOWN_THIN_SPACE))
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
+	    }
+	  else if (value == HALF_EM || (InputSpace && value == SHOWN_HALF_EM))
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, HALF_EM);
+	    }
+	  else if (value == UNBREAKABLE_SPACE || (InputSpace && value == SHOWN_UNBREAKABLE_SPACE))
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
+	    }
+	  else if ((InputSpace && value == SHOWN_SPACE))
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, SPACE);
+	    }
+	  else if ((value >= 32 && value < 128) || (value >= 144 && value < 256))
+	    {
+#ifdef _WINDOWS
+	      if (!specialKey)
+#endif /* _WINDOWS */
+		/* on insere un caractere valide quelque soit la langue */
+		if (MenuActionList[0].Call_Action)
+		  (*MenuActionList[0].Call_Action) (document, view, value);
+	    }
 	}
     }
-    else if (nb == 0) /* Rien a inserer */      
-      return;
-    /* Traitement des caracteres au cas par cas */
-    else {
-      if (value == 8 || value == 127) {
-	/* Par defaut BackSpace detruit le caractere precedent */
-	/* sans se soucier de la langue courante */
-	if (MenuActionList[CMD_DeletePrevChar].User_Action != NULL) {
-	  if (((*MenuActionList[CMD_DeletePrevChar].User_Action) (MenuActionList[CMD_DeletePrevChar].User_Arg, document, view)) &&
-	      (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL))
-	    (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
-	} else if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
-	  (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
-	return;
-      }
-      
-      /*** Sequence de traitement des espaces ***/
-      if (value == BREAK_LINE || (InputSpace && value == SHOWN_BREAK_LINE)) {
-	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
-      } else if (value == THIN_SPACE || (InputSpace && value == SHOWN_THIN_SPACE)) {
-	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
-      } else if (value == HALF_EM || (InputSpace && value == SHOWN_HALF_EM)) {
-	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, HALF_EM);
-      } else if (value == UNBREAKABLE_SPACE || (InputSpace && value == SHOWN_UNBREAKABLE_SPACE)) {
-	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
-      } else if ((InputSpace && value == SHOWN_SPACE)) {
-	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, SPACE);
-      } else if ((value >= 32 && value < 128) || (value >= 144 && value < 256)) {
-#                    ifdef _WINDOWS
-	if (!specialKey)
-#                    endif /* _WINDOWS */
-	  /* on insere un caractere valide quelque soit la langue */
-	  if (MenuActionList[0].Call_Action)
-	    (*MenuActionList[0].Call_Action) (document, view, value);
-      }
-    } 
-  }  
-} 
+}
 
 
 
