@@ -2271,7 +2271,7 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		  if (rank == 1)
 		    {
 		      pElP = pEl;
-		      while (rank == 1)
+		      while (rank == 1 && pEl)
 			{
 			  /* move the end of the selection to the end of the 
 			     previous element */
