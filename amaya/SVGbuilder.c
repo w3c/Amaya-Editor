@@ -113,17 +113,6 @@ void    SVGEntityCreated (unsigned char *entityValue, Language lang,
 }
 
 /*----------------------------------------------------------------------
-   SVGEntityCreatedWithExpat
-   A SVG entity has been created by the XML parser.
-  ----------------------------------------------------------------------*/
-void  SVGEntityCreatedWithExpat (int         entityValue,
-				     char *     entityName,
-				     ThotBool    entityFound,
-				     ParserData *XmlContext)
-{
-}
-
-/*----------------------------------------------------------------------
    ParseFillStrokeAttributes
    Create or update a specific presentation rule for element el that reflects
    the value of attribute attr, which is fill, stroke or stroke-width

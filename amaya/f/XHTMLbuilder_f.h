@@ -8,10 +8,6 @@
 
 extern void ParseCharset ( Element el,
                            Document doc );
-extern void XhtmlEntityCreated ( int entityValue,
-                                 char *entityName,
-                                 ThotBool entityFound,
-                                 ParserData *context );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
@@ -57,10 +53,6 @@ extern void MapHTMLAttributeValue ( char *AttrVal,
 
 extern void ParseCharset (/* Element el,
                              Document doc */);
-extern void XhtmlEntityCreated (/* int entityValue,
-                                   char *entityName,
-                                   ThotBool entityFound,
-                                   ParserData *context */);
 extern ThotBool XhtmlCannotContainText (/* ElementType elType */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,

@@ -21,10 +21,6 @@ extern void MathMLEntityCreated ( unsigned char *entityValue,
                                   Language lang,
                                   char *entityName,
                                   Document doc );
-extern void MathMLEntityCreatedWithExpat ( int entityValue,
-                                           char *entityName,
-                                           ThotBool entityFound,
-                                           ParserData *XmlContext );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
 extern void SetSingleIntHorizStretchAttr ( Element el,
                                            Document doc,
@@ -95,10 +91,6 @@ extern void MathMLEntityCreated (/* unsigned char *entityValue,
                                     Language lang,
                                     char *entityName,
                                     Document doc */);
-extern void MathMLEntityCreatedWithExpat (/* int entityValue,
-                                             char *entityName,
-                                             ThotBool entityFound,
-                                             ParserData *XmlContext */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
 extern void SetSingleIntHorizStretchAttr (/* Element el,
                                              Document doc,

@@ -77,8 +77,6 @@ typedef struct _XMLparserContext
 					   to an XML attribute name */
     Proc	   MapAttributeValue;	/* returns the Thot value corresp. to
 					   the name of an XML attribute value */    
-    Proc	   EntityCreated;	/* action to be called when an entity
-					   has been parsed  */
     Proc	   CheckContext;        /* action to be called to verify if an
 					   element is allowed in the current
 					   structural context */
@@ -297,7 +295,6 @@ static void    InitXmlParserContexts (void)
    ctxt->XMLtype = XHTML_TYPE;
    ctxt->MapAttribute = (Proc) MapHTMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
-   ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
    ctxt->CheckContext = (Proc) XhtmlCheckContext;
    ctxt->CheckInsert = (Proc) XhtmlCheckInsert;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
@@ -330,7 +327,6 @@ static void    InitXmlParserContexts (void)
    ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
-   ctxt->EntityCreated = (Proc) MathMLEntityCreatedWithExpat;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
@@ -362,7 +358,6 @@ static void    InitXmlParserContexts (void)
    ctxt->XMLtype = SVG_TYPE;
    ctxt->MapAttribute = (Proc) MapSVGAttribute;
    ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
-   ctxt->EntityCreated = (Proc) SVGEntityCreatedWithExpat;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = (Proc) SVGElementComplete;
@@ -394,7 +389,6 @@ static void    InitXmlParserContexts (void)
    ctxt->XMLtype = XLINK_TYPE;
    ctxt->MapAttribute = (Proc) MapXLinkAttribute;
    ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
-   ctxt->EntityCreated = NULL;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = NULL;
@@ -427,7 +421,6 @@ static void    InitXmlParserContexts (void)
    ctxt->XMLtype = XML_TYPE;
    ctxt->MapAttribute = NULL;
    ctxt->MapAttributeValue = (Proc) MapXmlAttributeValue;
-   ctxt->EntityCreated = NULL;
    ctxt->CheckContext =  (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = (Proc) XmlElementComplete;
@@ -850,11 +843,11 @@ static void  XmlCheckInsert (Element *el, Element parent,
 	 {
 	   elType = TtaGetElementType (ancestor);
 	   if (XhtmlCannotContainText (elType) &&
-	       !XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
+	       !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
 	     {
 	       /* Element ancestor cannot contain math directly. Create a */
 	       /* Pseudo_paragraph element as the parent of the math element */
-	       newElType.ElSSchema = DocumentSSchema;
+	       newElType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	       newEl = TtaNewElement (doc, newElType);
 	       XmlSetElemLineNumber (newEl);
@@ -935,11 +928,11 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 	 {
 	   elType = TtaGetElementType (ancestor);
 	   if (XhtmlCannotContainText (elType) &&
-	       !XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
+	       !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
 	     {
 	       /* Element ancestor cannot contain text directly. Create a */
 	       /* Pseudo_paragraph element as the parent of the text element */
-	       newElType.ElSSchema = DocumentSSchema;
+	       newElType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	       newEl = TtaNewElement (doc, newElType);
 	       XmlSetElemLineNumber (newEl);
@@ -1001,7 +994,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 	   {
 	     /* A basic element cannot be a child of a Text_Area */
 	     /* create a Inserted_Text element as a child of Text_Area */
-	     newElType.ElSSchema = DocumentSSchema;
+	     newElType.ElSSchema = currentParserCtxt->XMLSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (doc, newElType);
 	     XmlSetElemLineNumber (newEl);
@@ -1410,20 +1403,20 @@ static void   XhtmlCheckContext (char *elName,
        
        if (*isAllowed &&
 	   strcmp (elName, "body") == 0 &&
-	   XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
+	   XmlWithinStack (HTML_EL_BODY, XhtmlParserCtxt->XMLSSchema))
 	 /* refuse BODY within BODY */
 	 *isAllowed = FALSE;
        
        if (*isAllowed)
 	 /* refuse HEAD within HEAD */
 	 if (strcmp (elName, "head") == 0)
-	   if (XmlWithinStack (HTML_EL_HEAD, DocumentSSchema))
+	   if (XmlWithinStack (HTML_EL_HEAD, XhtmlParserCtxt->XMLSSchema))
 	     *isAllowed = FALSE;
 
        if (*isAllowed)
 	 /* refuse STYLE within STYLE */
 	 if (strcmp (elName, "style") == 0)
-	   if (XmlWithinStack (HTML_EL_STYLE_, DocumentSSchema))
+	   if (XmlWithinStack (HTML_EL_STYLE_, XhtmlParserCtxt->XMLSSchema))
 	     *isAllowed = FALSE;
        
        return;
@@ -2571,8 +2564,8 @@ static void      EndOfAttributeName (char *xmlName)
 	       currentParserCtxt = XmlGenericParserCtxt;
 #else /* XML_GENERIC */
 	       currentParserCtxt = savParserCtxt;
+#endif /* XML_GENERIC */  
 	     }
-#endif /* XML_GENERIC */
 	   if (UnknownNS)
 	     {
 	       currentParserCtxt = savParserCtxt;
@@ -3615,6 +3608,7 @@ static void  InitializeExpatParser (CHARSET charset)
       XmlParseError (undefinedEncoding, msgBuffer, 0);
       /* Enable "Read as Iso-Latin1 entry" */
       TtaSetItemOn (XMLcontext.doc, 1, File, BLatinReading);
+      /* TtaSetDocumentCharset (XMLcontext.doc, UTF_8); */
     }
   else if (charset == UTF_8 || charset == UTF_16)
     /* These encoding are automatically recognized by Expat */
