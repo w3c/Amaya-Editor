@@ -32,17 +32,16 @@ follows:</p>
     removes the HTML mark-up and replaces it by spaces, newlines, and so on.
     <p></p>
   </li>
-  <li>The <strong>Document location</strong> field indicates the location
-    where the file is to be written. This can be a file in the local file
-    system (for example,  <code>/pub/html/welcome.html</code>) or the name of
-    a remote URI (for example,
-    <code>http://www.w3.org/pub/WWW/Welcome.html</code>).
+  <li>The <strong>Document location</strong> field indicates where the file
+    is to be written. This can be a file in the local file system (for
+    example,  <code>/pub/html/welcome.html</code>) or the name of a remote
+    URI (for example, <code>http://www.w3.org/pub/WWW/Welcome.html</code>).
     <p></p>
     <p class="Note"><strong>Note:    </strong><span lang="EN"
     style="font-weight:normal">Use</span><strong><span> </span></strong>a
     complete path for the URL. You should also make sure that you have the
-    <strong>rights to do a PUT</strong> method if it is a remote location.
-    Refer to the page on <a
+    rights to do a <code>PUT </code>method if it is a remote location. Refer
+    to the page on <a
     href="http://www.w3.org/Amaya/User/Put.html">configuring your server to
     accept the PUT method</a> or ask your Web administrator.</p>
     <p></p>
@@ -53,9 +52,9 @@ follows:</p>
     embedded in the current document must be copied along with the document
     to the new location. It's generally better to keep this switch on as
     otherwise you will not be sure that the corresponding images will be
-    found when opening the document later. However,switching it off is useful
-    when you have only changed the text of the document and the document is
-    stored on the same server. When images are copied, Amaya will
+    found when opening the document later. However, switching it off is
+    useful when you have only changed the text of the document and the
+    document is stored on the same server. When images are copied, Amaya will
     automatically update all <strong>SRC</strong> attributes to point new
     image locations. New locations will be relative URIs.
     <p></p>
@@ -79,7 +78,7 @@ follows:</p>
         to the document directory. For example, if the document location
         is<code> <a
         href="http://www.w3.org/pub/WWW/Welcome.html">http://www.w3.org/pub/WWW/Welcome.html</a><a
-        href="http://www.w3.org/pub/WWW/Welcome.html"></a></code>and the
+        href="http://www.w3.org/pub/WWW/Welcome.html"></a></code> and the
         images location is "Images", an image "W3C.png" contained in the
         document is stored at the URI <code><a
         href="http://www.w3.org/pub/WWW/Images/W3C.png">http://www.w3.org/pub/WWW/Images/W3C.png</a></code>
@@ -104,18 +103,18 @@ follows:</p>
   </li>
 </ul>
 
-<p>There are several buttons at the bottom:</p>
+<p>Several buttons are at the bottom:</p>
 <ul>
   <li>Clicking <strong>Confirm</strong> starts the process of transforming
     the document. A dialog asks for confirmation in both of the following
     cases:
-    <ol>
+    <ul>
       <li>The document has to be saved on a remote server. Amaya displays the
         complete URI to be written to for verification.</li>
       <li>The document has to be saved locally and the file already exists.
         <p></p>
       </li>
-    </ol>
+    </ul>
   </li>
   <li>When saving to a remote location, check that the http_proxy is not set,
     or that the proxy server and the <a
@@ -140,26 +139,26 @@ follows:</p>
       </li>
     </ul>
   </li>
-  <li>Clicking <strong>Clear</strong> removes current contents of both the
-    <strong>Document location</strong> field and the <strong>Images
+  <li>Clicking <strong>Clear</strong> removes the current contents of both
+    the <strong>Document location</strong> field and the <strong>Images
     location</strong> field.
     <p></p>
   </li>
-  <li>Clicking <strong>Change Charset</strong> will open a pop-up window that
-    will enable you to change the charset of the document. This option will
-    only work with documents that support the notion of charset, such as HTML
-    and XML ones. This option is available when saving both remote and local
+  <li>Clicking <strong>Change Charset</strong> opens a pop-up window that
+    enables you to change the charset of the document. This option only works
+    with documents that support the notion of charset, such as HTML and XML
+    ones. This option is available when saving both remote and local
     documents.
     <p></p>
   </li>
-  <li>Clicking <strong>Change Mime Type</strong> will open a pop-up window
-    where you can select the MIME type of the document. If the MIME type
-    you're looking for is not listed, you can type it in yourself. This
-    button is only active when saving a document to a server (local file
-    systems don't store the MIME metadata information.).
+  <li>Clicking <strong>Change Mime Type</strong> opens a pop-up window where
+    you can select the MIME type of the document. If the MIME type you're
+    looking for is not listed, you can type it in yourself. This button is
+    only active when saving a document to a server (local file systems don't
+    store the MIME metadata information.).
     <p></p>
   </li>
-  <li>Clicking <strong>Cancel</strong> aborts the command.</li>
+  <li>Clicking <strong>Cancel</strong> terminates the command.</li>
 </ul>
 
 <h2>See also:</h2>
