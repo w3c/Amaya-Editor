@@ -553,6 +553,10 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 #ifdef _WX
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
+  
+  if (!p_window)
+	return;
+
   wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
   wxMenuItem *  p_menu_item = NULL;
   Item_Ctl *    ptritem = NULL;

@@ -61,6 +61,18 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SEARCH)));
   XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
 
+#ifdef _WINDOWS
+  XRCCTRL(*this, "wxID_TOOL_BACK", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_FORWARD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_RELOAD", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_STOP", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_HOME", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+#endif /* _WINDOWS */
+  
   SetAutoLayout(TRUE);
 }
 
