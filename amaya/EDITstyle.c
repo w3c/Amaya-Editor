@@ -1675,7 +1675,7 @@ void ApplyClass (Document doc, View view)
 {
   Attribute           attr;
   AttributeType       attrType;
-  Element             firstSelectedEl;
+  Element             firstSelectedEl, ancestor;
   ElementType	      elType;
 #ifdef _WX
   char                a_class_with_dot[51];
@@ -1734,7 +1734,15 @@ void ApplyClass (Document doc, View view)
       attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Class;
     }
-  attr = TtaGetAttribute (firstSelectedEl, attrType);
+  ancestor = firstSelectedEl;
+  do
+    {
+      attr = TtaGetAttribute (ancestor, attrType);
+      if (!attr)
+	ancestor = TtaGetParent (ancestor);
+    }
+  while (!attr && ancestor);
+
   if (attr)
     {
       len = 50;
