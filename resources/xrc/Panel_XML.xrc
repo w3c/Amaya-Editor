@@ -63,7 +63,6 @@
                                       <object class="wxListBox" name="wxID_LIST_XML">
                                         <content/>
                                         <size>-1,100</size>
-                                        <tooltip>*Select*</tooltip>
                                       </object>
                                       <option>1</option>
                                       <flag>wxEXPAND</flag>
