@@ -257,6 +257,9 @@
 	<message xml:lang="tr">Güvenlik istemi</message>
 	<message xml:lang="es">Diálogo de Autenticación</message>
 </label>
+<label define="AM_GET_AUTHENTICATION_MSG">
+	<message xml:lang="en">Please authenticate for</message>
+</label>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
 	<message xml:lang="fr">Manque d'autorisation pour accéder à %s</message>
