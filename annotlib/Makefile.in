@@ -14,7 +14,8 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
-	  -I@top_srcdir@/../libwww/Library/src @THOTINCLUDES@ $(X_FLAGS)
+	  -I@top_srcdir@/../libwww/Library/src \
+	  -I@top_srcdir@/../expat/xmlparse @THOTINCLUDES@ $(X_FLAGS)
 
 OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ 
 
@@ -89,9 +90,9 @@ include .depends
 	$$PRS $(ALL_AMAYA_OPTIONS) `basename $<`)
 
 #
-# Structure schema compilation
+# Structure schema compilation 
 #
-#.A.c : ../bin/app
+# We can't do it using this technique because it produces .c and .h files
 
 
 #########################################################################
@@ -104,7 +105,10 @@ AMAYA_ANNOT_SCHEMA= \
 	Annot.STR \
 	Annot.h \
 	AnnotP.PRS \
-	AnnotT.TRA
+	AnnotT.TRA \
+	XmlStr.STR \
+	XmlStrT.TRA \
+	XmlStr.h
 
 AMAYA_ANNOT_OBJ= \
 	AnnotAPP.o \
@@ -112,6 +116,7 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTfiles.o \
 	ANNOTlink.o \
 	ANNOTtools.o \
+	rdfparser.o
 
 # special case for generation Annot.h and AnnotAPP.c
 Annot.h : Annot.A
@@ -120,6 +125,12 @@ Annot.h : Annot.A
 	cd `dirname $<`; \
 	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
 
+XmlStr.h : XmlStr.S
+	@(PRINTSTR=`pwd`/../bin/app;\
+	THOTDIR=`pwd`/../.. ; export THOTDIR; \
+	cd `dirname $<`; \
+	$$PRINTSTR -h XmlStr > XmlStr.h)
+
 #
 # dependencies
 #
@@ -127,7 +138,7 @@ Annot.h : Annot.A
 # recompile all the schemas if Annot.S or HTML.S have changed
 $(AMAYA_ANNOT_SCHEMA) : Annot.S $(THOTDIR)/amaya/HTML.S
 
-# recompile all the objects if the h files (generated or not) change
+# recompile all the objects if the h files (generated or not) have changed
 $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h $(THOTDIR)/amaya/EDITOR.h
 
 libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a

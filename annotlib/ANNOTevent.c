@@ -225,6 +225,11 @@ View view;
     return;
 
   /*
+   * Parsing test!
+  RDFParseFile ("/tmp/rdf.tmp");
+  */
+
+  /*
    * load the local annotations 
    */
   annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
