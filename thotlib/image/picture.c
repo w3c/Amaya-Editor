@@ -655,7 +655,7 @@ PictInfo           *imageDesc;
           DeleteObject (hOrigDC);
           DeleteObject (TtCmap); 
           peInitialized = FALSE;
-	        WIN_LayoutTransparentPicture (hBkgBmp, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+          WIN_LayoutTransparentPicture (hBkgBmp, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
 		 
 		  
