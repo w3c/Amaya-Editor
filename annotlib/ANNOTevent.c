@@ -770,6 +770,8 @@ void ANNOT_Create (doc, view)
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
+  CHAR_T     *xptr;
+
 #if 0
   /* not used for the moment... select the annotation doc
      right away */
@@ -789,10 +791,26 @@ void ANNOT_Create (doc, view)
 
   if (!useDocRoot && TtaGetSelectedDocument () != doc)
     return; /* Error: nothing selected in this document */
+
+ /* Annotation XPointer */
+  xptr = XPointer_build (doc, 1, useDocRoot);
+  /* if we can't compute the XPointer, we return (we could make a
+     popup message box stating what happened) */
+  if (!xptr)
+    {
+      TtaSetStatus (doc, 1,
+		    /*		    TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE), */
+		    TEXT("Unable to build an XPointer for this annotation"),
+		    NULL);
+      return;
+    }
   
   /* create the document that will store the annotation */
   if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
-    return;
+    {
+      TtaFreeMemory (xptr);
+      return;
+    }
 
   /* @@ JK another hack, to solve an immediate problem */
   if (!schema_init)
@@ -806,6 +824,8 @@ void ANNOT_Create (doc, view)
     }
 
   annot = LINK_CreateMeta (doc, doc_annot, useDocRoot);
+  /* update the XPointer */
+  annot->xptr = xptr;
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, TRUE);
 

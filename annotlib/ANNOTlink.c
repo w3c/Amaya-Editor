@@ -577,7 +577,7 @@ ThotBool useDocRoot;
   annot->type = DEFAULT_ANNOTATION_TYPE;
 
   /* Annotation XPointer */
-  annot->xptr = XPointer_build (source_doc, 1, useDocRoot);
+  /* annot->xptr = XPointer_build (source_doc, 1, useDocRoot);*/
 
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
