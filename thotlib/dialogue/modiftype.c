@@ -41,7 +41,6 @@
 #include "exceptions_f.h"
 #include "input_f.h"
 #include "keyboards_f.h"
-#include "picturemenu_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
