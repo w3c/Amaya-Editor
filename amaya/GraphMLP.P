@@ -36,6 +36,8 @@ VIEWS
 DEFAULT
 
    BEGIN
+   HorizRef: * . Top;
+   VertRef: * . Left;
    HorizPos: Left = Enclosing . Left;
    VertPos:  Top = Enclosing . Top;
    Visibility: Enclosing =;

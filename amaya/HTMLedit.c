@@ -260,6 +260,8 @@ STRING              targetName;
 					      TEXT("XLink"), TEXT("XLinkP"));
        attrType.AttrTypeNum = XLink_ATTR_href_;
        /* create a xlink:type attribute with value "simple" */
+       if (TtaIsLeaf (elType))
+	 element = TtaGetParent (element);
        SetXLinkTypeSimple (element, doc, AttrHREFundoable);
      }
    attr = TtaGetAttribute (element, attrType);
