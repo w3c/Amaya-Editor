@@ -20,4 +20,10 @@ If its your first used,
 - and 'install XML::Parser'
 - and 'install Unicode::String'
 
+# diff /tmp/op.t op.t 
+46c46
+< print "not " if $x->as_bool;
+---
+> #print "not " if $x->as_bool;
+
 it will be OK
