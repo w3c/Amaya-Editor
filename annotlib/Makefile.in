@@ -52,7 +52,7 @@ uninstall :
 include .depends
 
 ../tools/mkdep/mkdep : 
-	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)")
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
@@ -67,7 +67,7 @@ include .depends
 # C files
 #
 .c.o :  
-	$(CC) $(CXXFLAGS) $(AMAYA_ANNOT_OPTIONS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(AMAYA_ANNOT_OPTIONS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
 #
 # Structure schema compilation
@@ -107,7 +107,7 @@ include .depends
 	THOTDIR=`pwd`/../.. ;export THOTDIR; \
 	cd `dirname $<`; \
 	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
-	$(CC) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) \
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) \
 		-c `dirname $<`/`basename $< .A`APP.c;
 
 #########################################################################

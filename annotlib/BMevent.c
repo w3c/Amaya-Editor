@@ -116,11 +116,11 @@ void BM_Init (void)
   ptr =  TtaGetEnvString ("APP_HOME");
   if (ptr != NULL)
     {
-      LocalBookmarksFile = TtaGetMemory (strlen (ptr) + strlen (LOCAL_BOOKMARKS_FILE) + 2);
+      LocalBookmarksFile = (char *)TtaGetMemory (strlen (ptr) + strlen (LOCAL_BOOKMARKS_FILE) + 2);
       sprintf (LocalBookmarksFile, "%s%c%s", ptr, DIR_SEP, LOCAL_BOOKMARKS_FILE);
     }
-  LocalBookmarksBaseURI = ANNOT_MakeFileURL ((const char *) LocalBookmarksFile);
-  HomeTopicURI = TtaGetMemory (strlen (LocalBookmarksBaseURI) + sizeof (HOME_TOPIC_ANCHOR) + 2);
+  LocalBookmarksBaseURI = ANNOT_MakeFileURL ((char *) LocalBookmarksFile);
+  HomeTopicURI = (char *)TtaGetMemory (strlen (LocalBookmarksBaseURI) + sizeof (HOME_TOPIC_ANCHOR) + 2);
   sprintf (HomeTopicURI, "%s%s", LocalBookmarksBaseURI, HOME_TOPIC_ANCHOR);
 
   if (TtaFileExist (LocalBookmarksFile))
@@ -136,7 +136,7 @@ void BM_Init (void)
 
       me = Bookmark_new_init (NULL, TRUE);
       strcpy (me->title, HOME_TOPIC_TITLE);
-      tmp = TtaConvertMbsToByte (GetAnnotUser (), ISO_8859_1);
+      tmp = (char *)TtaConvertMbsToByte ((unsigned char *)GetAnnotUser (), ISO_8859_1);
       strcpy (me->author, tmp);
       TtaFreeMemory (tmp);
       strcpy (me->self_url, HomeTopicURI);
@@ -336,7 +336,7 @@ static Element GetItemElement (Element input)
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 static void FollowBookmark_callback (Document doc, int status, char *urlName, 
-				     char *outputfile, AHTHeaders *http_headers,
+				     char *outputfile, const AHTHeaders *http_headers,
 				     void *ctx)
 {
   TtaFreeMemory ((char *) ctx);
@@ -383,12 +383,12 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 	}
       
       i++;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       
       GetAmayaDoc (url, NULL, 0, doc, 
 		   CE_RELATIVE, FALSE, 
-		   (void *) FollowBookmark_callback, 
+		   FollowBookmark_callback, 
 		   (void *) url, UTF_8);
       
       /* don't let Thot perform the normal operation */
@@ -435,7 +435,7 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 	      if (i > 0)
 		{
 		  /* allocate some memory: length of name + 6 cars for noname */
-		  url = TtaGetMemory (i + 1);
+		  url = (char *)TtaGetMemory (i + 1);
 		  TtaGiveTextAttributeValue (attr, url, &i);
 		  Model_dumpTopicAsList (&dump, url, TRUE);
 		  TtaFreeMemory (url);
@@ -497,7 +497,7 @@ ThotBool BM_ShowProperties (NotifyElement *event)
 	}
       
       i++;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       if (elType.ElTypeNum == Topics_EL_Bookmark_item)
 	bookmark = BM_getItem (url, FALSE);
@@ -576,7 +576,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
     }
       
   i++;
-  url = TtaGetMemory (i);
+  url = (char *)TtaGetMemory (i);
   TtaGiveTextAttributeValue (attr, url, &i);
   
   /* check if the user selected the home topic */
@@ -622,7 +622,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
 	  return TRUE;
 	}
       i++;
-      topic_url = TtaGetMemory (i);
+      topic_url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, topic_url, &i);
       BM_deleteBookmarkItem (topic_url, url);
       TtaFreeMemory (topic_url);

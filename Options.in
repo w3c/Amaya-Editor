@@ -8,7 +8,7 @@
 
 SHELL	= /bin/sh
 
-CC	= @CXX@
+CC	= @CC@
 CFLAGS	= @CFLAGS@
 CXX	= @CXX@
 CXXFLAGS= @CXXFLAGS@

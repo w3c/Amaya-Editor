@@ -67,25 +67,25 @@ include .depends
 force :
 
 ../bin/str :
-	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" app str prs tra)
 
 ../bin/tra :
-	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" app str prs tra)
 
 ../bin/prs :
-	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" app str prs tra)
 
 ../bin/app :
-	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" app str prs tra)
 
 ../bin/printstr: 
-	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" printstr)
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" printstr)
 
 ../thotlib/libThotEditor.a : force
-	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotEditor)
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotEditor)
 
 ../tablelib/libThotTable.a : force
-	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
+	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotTable)
 
 ../libjpeg.a : @MAKEJPEG@ force
 	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
@@ -106,7 +106,7 @@ amaya_comp_libraptor: @MAKERAPTOR@ force
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \
 amaya_comp_redland: @MAKEREDLAND@ force
-	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2 -x c")
+	@(cd .. ; $(MAKE) redland CC="$(CC)" CFLAGS="-O2")
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
@@ -192,7 +192,7 @@ amaya_src :  HTML.h $(AMAYA_SRC) $(MATH_SCHEMAS) $(SVG_SCHEMAS)
 # Rule to build objects
 #
 .c.o :
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
 #
 # Rule to build c++ objects
 #
@@ -419,7 +419,7 @@ $(AMAYA)/XMLT.TRA : $(AMAYA)/XMLT.T ../bin/tra
 # Interface schemas compilation
 #
 HTMLAPP.o : HTMLAPP.c
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
 compHTMLA : HTML.h HTMLAPP.c
 
@@ -432,7 +432,7 @@ HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
 	../bin/app $(ALL_AMAYA_OPTIONS) HTML.A
 
 TextFileAPP.o : TextFileAPP.c
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
 
 compTextFileA : TextFile.h TextFileAPP.c
 
@@ -445,7 +445,7 @@ TextFile.h TextFileAPP.c : @srcdir@/TextFile.STR @srcdir@/TextFile.A
 	../bin/app $(ALL_AMAYA_OPTIONS) TextFile.A
 
 XLinkAPP.o : XLinkAPP.c
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XLinkAPP.c -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XLinkAPP.c -o $@
 
 compXLinkA : XLink.h XLinkAPP.c
 
@@ -458,7 +458,7 @@ XLink.h XLinkAPP.c : @srcdir@/XLink.STR @srcdir@/XLink.A
 	../bin/app $(ALL_AMAYA_OPTIONS) XLink.A
 
 XMLAPP.o : XMLAPP.c
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XMLAPP.c -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c XMLAPP.c -o $@
 
 compXMLA : XML.h XMLAPP.c
 
@@ -471,7 +471,7 @@ XML.h XMLAPP.c : @srcdir@/XML.STR @srcdir@/XML.A
 	../bin/app $(ALL_AMAYA_OPTIONS) XML.A
 
 EDITORAPP.o : EDITORAPP.c
-	$(CC) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
 
 compEDITORA : EDITORAPP.c
 
@@ -491,7 +491,7 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	@$(ECHO) "====>" amaya is done
 
 @NOPRINT@../bin/print :
-@NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" print)
+@NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
 install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)

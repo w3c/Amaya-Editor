@@ -42,39 +42,39 @@ force :
 
 batch: rebuild force
 	@(if test -d batch ; then cd batch ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" ; fi)
 
 tools: rebuild force
 	@(if test -d tools ; then cd tools ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="-O -x c" all ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="-O -x c" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; fi)
 
 thotlib: rebuild force
 	@(if test -d thotlib ; then cd thotlib ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; fi)
 
 amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" amaya ; fi)
 
 @NOPRINT@print_prog: rebuild force bin/str
 @NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \
-@NOPRINT@	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" print ; fi)
+@NOPRINT@	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print ; fi)
 
 misc: rebuild force
 	@(if test -d misc ; then cd misc ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; fi)
 
 all : rebuild
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; \
 	  cd .. ; fi ;done )
 
 clean : rebuild
 	$(RM) libpng.a libz.a libjpeg.a
 	@(for dir in $(SUBDIRS) $(EXTRA_SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" clean ; \
 	  cd .. ; fi ;done )
 
 reallyclean : clean
@@ -88,13 +88,13 @@ tempclean :
 install : rebuild
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" install ; \
 	  cd .. ; fi ;done )
 
 uninstall : 
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" uninstall ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" uninstall ; \
 	  cd .. ; fi ;done )
 
 update :
@@ -126,21 +126,21 @@ zips: force
 # 	  cd $(THOTDIR)/classes ; $(MAKE) zips)
 
 tools/mkdep/mkdep :
-	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c" mkdep)
+	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" mkdep)
 
 depend depends : rebuild tools/mkdep/mkdep
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" depend ; \
 	  cd .. ; fi ;done )
 
 bin/cextract :
-	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" cextract)
+	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" cextract)
 
 proto : rebuild bin/cextract
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" proto ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" proto ; \
 	  cd .. ; fi ;done )
 
 mkid : 
@@ -152,11 +152,11 @@ mkid :
 #
 
 bin/str : force
-	@(cd batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" str prs tra printstr)
+	@(cd batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" str prs tra printstr)
 
 schemas : rebuild bin/str
 	@(bindir=`pwd`/bin ; cd $(THOTDIR)/schemas ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" THOTDIR=".." THOTSCH="../schemas:../schemasOPERA" \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" THOTDIR=".." THOTSCH="../schemas:../schemasOPERA" \
 	  COMPSCH="."  COMPSTR="$$bindir/str" COMPPRS="$$bindir/prs" \
 	  COMPTRA="$$bindir/tra" PRINTSTR="$$bindir/printstr" all)
 
@@ -282,7 +282,7 @@ libraptor_config: @MAKERAPTOR@ force
 	 @(localdir=`pwd` ; raptordir="$$localdir/../$(LIBRAPTOR)" ; \
 	  cd $(LIBRAPTOR) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f config.h ] ; then \
-	  	CFLAGS="-x c -I$$raptordir/expat/lib" \
+	  	CFLAGS="-I$$raptordir/expat/lib" \
 			$$raptordir/configure \
 			--without-shared \
 			--with-expat ; \
@@ -295,7 +295,7 @@ libraptor_make: @MAKERAPTOR@ force
 	  if [ ! -e .libs/libraptor.a -a -e libraptor.la ] ; then \
              $(RM) libraptor.la ; \
           fi ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -x c -I$$localdir/../$(LIBRAPTOR)/expat/lib " \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -I$$localdir/../$(LIBRAPTOR)/expat/lib " \
 		  CPPFLAGS="$(CPPFLAGS)" \
 	)
 

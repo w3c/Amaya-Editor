@@ -372,7 +372,7 @@ static void do_depend(void)
 	mmap_mapsize = st.st_size + 2*sizeof(unsigned long);
 	mmap_mapsize = (mmap_mapsize+pagesizem1) & ~pagesizem1;
 #ifdef linux
-	mmap_map = mmap(NULL, (size_t) mmap_mapsize, PROT_READ,
+	mmap_map = (char *)mmap(NULL, (size_t) mmap_mapsize, PROT_READ,
                         MAP_PRIVATE, fd, (off_t) 0);
 	if (-1 == (long)mmap_map) {
 		fprintf(stderr,"mkdep : mmap file %s : ", filename);

@@ -67,9 +67,9 @@ void BM_topicSetTitle (Document doc, Element topic_item, char *title)
   el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
   el = TtaGetFirstChild (el);
   if (title)
-    TtaSetTextContent (el, title, TtaGetDefaultLanguage (), doc); 
+    TtaSetTextContent (el, (unsigned char *)title, TtaGetDefaultLanguage (), doc); 
   else
-    TtaSetTextContent (el, "", TtaGetDefaultLanguage (), doc); 
+    TtaSetTextContent (el, (unsigned char *)"", TtaGetDefaultLanguage (), doc); 
 }
 
 /*-----------------------------------------------------------------------
@@ -93,8 +93,8 @@ static char * BM_topicGetTitle (Element topic_item)
   if (el)
     {
       length = TtaGetTextLength (el) + 1;
-      buffer = TtaGetMemory (length);
-      TtaGiveTextContent (el, buffer, &length, &lang);
+      buffer = (char *)TtaGetMemory (length);
+      TtaGiveTextContent (el, (unsigned char *)buffer, &length, &lang);
     }
   return buffer;
 }
@@ -119,7 +119,7 @@ char * BM_topicGetModelHref (Element topic_item)
   if (attr)
     {
        length = TtaGetTextAttributeLength (attr) + 1;
-       buffer = TtaGetMemory (length);
+       buffer = (char *)TtaGetMemory (length);
        TtaGiveTextAttributeValue (attr, buffer, &length);
     }
   return buffer;
@@ -199,9 +199,9 @@ void BM_bookmarkSetTitle (Document doc, Element bookmark_item, char *title)
   el = TtaSearchTypedElement (elType, SearchInTree, bookmark_item);
   el = TtaGetFirstChild (el);
   if (title)
-    TtaSetTextContent (el, title, TtaGetDefaultLanguage (), doc); 
+    TtaSetTextContent (el, (unsigned char *)title, TtaGetDefaultLanguage (), doc); 
   else
-    TtaSetTextContent (el, "", TtaGetDefaultLanguage (), doc); 
+    TtaSetTextContent (el, (unsigned char *)"", TtaGetDefaultLanguage (), doc); 
 }
 
 /*-----------------------------------------------------------------------
@@ -335,7 +335,7 @@ Element BM_AddItem (Document doc, BookmarkP me)
 	  while (el)
 	    {
 	      i = TtaGetTextAttributeLength (attr) + 1;
-	      url = TtaGetMemory (i);
+	      url = (char *)TtaGetMemory (i);
 	      TtaGiveTextAttributeValue (attr, url, &i);
 	      if (!strcasecmp (url, me->parent_url))
 		{
@@ -560,7 +560,7 @@ void BM_topicsPrune (Document doc, BookmarkP me)
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       if (!strcasecmp (url, me->self_url))
 	{
@@ -758,7 +758,7 @@ void BM_topicSelectToggle (Document doc, char *topic_url, ThotBool select)
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
-      url = TtaGetMemory (i);
+      url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
       if (!strcasecmp (url, topic_url))
 	{
@@ -849,7 +849,7 @@ void BM_topicsPreSelect (Document TopicTree, BookmarkP bookmark)
 	      list_item = list_item->next;
 	    }
 	}
-      List_delAll (&topics, (void *) TtaFreeMemory);
+      List_delAll (&topics, (ThotBool (*)(void*)) TtaFreeMemory);
     }
 }
 

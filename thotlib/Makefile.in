@@ -32,7 +32,7 @@ OBJDIRS = base content dialogue document editing image presentation tree unicode
 # Rule to build standard objects
 #
 .c.o :
-	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
 
 #
 # Rule to build c++ files
@@ -44,7 +44,7 @@ OBJDIRS = base content dialogue document editing image presentation tree unicode
 # Rule to build specific objects for libThotKernel.a
 #
 .cND.o :
-	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DNODISPLAY -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DNODISPLAY -c $< -o $@
 
 all : directories libThotKernel.a libThotEditor.a
 
@@ -63,15 +63,15 @@ directories :
 force :
 
 ../tablelib/libThotTable.a : force
-	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
+	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotTable)
 
 ../amaya/libCSS.a : force
-	@(cd ../amaya ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libCSS)
+	@(cd ../amaya ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)"  CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libCSS)
 
 include .depends
 
 ../tools/mkdep/mkdep : 
-	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" )
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*/*.c  > .depends
@@ -260,7 +260,7 @@ EDITOR_OBJ = \
 	view/glbox.o
 
 base/registry.o : @srcdir@/base/registry.c
-	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
 	   -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
 	   -DCOMPILED_IN_THOTDIR2=\"@prefix@/thot\" \
 	   -DNODISPLAY \
@@ -293,7 +293,7 @@ PRINT_OBJ= \
 	editing/print.o
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
-	$(CC) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
+	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
 
 print : ../bin ../bin/print
 
@@ -302,7 +302,7 @@ print : ../bin ../bin/print
 
 ../bin/print : $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../tablelib/libThotTable.a \
         ../amaya/libCSS.a
-	$(CC) $(LDFLAGS) -o $@ $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../amaya/libCSS.a -lThotTable $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../amaya/libCSS.a -lThotTable $(LIBS)
 	@$(ECHO) "====>" print is done
 
 CEXTRACT= ../bin/cextract

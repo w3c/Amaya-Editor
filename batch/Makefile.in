@@ -25,7 +25,7 @@ GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
-	$(CC) '-DCPP="'"$(CPP)"'"' $(CXXFLAGS) $(THOT_OPTIONS) -DNODISPLAY $(INCLUDES) -c $< -o $@
+	$(CXX) '-DCPP="'"$(CPP)"'"' $(CXXFLAGS) $(THOT_OPTIONS) -DNODISPLAY $(INCLUDES) -c $< -o $@
 
 all : ../bin $(GRMS) $(COMPILERS) \
           ../bin/printstr ../bin/rescandialogue
@@ -53,7 +53,7 @@ TYP.GRM : TYP.LAN ../bin/grm
 force :
 
 ../thotlib/libThotKernel.a : force
-	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotKernel)
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotKernel)
 
 ../bin :
 	$(MKDIR) ../bin
@@ -203,7 +203,7 @@ uninstall :
 include .depends
 
 ../tools/mkdep/mkdep : 
-	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)")
 
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends

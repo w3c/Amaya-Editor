@@ -51,7 +51,7 @@ void Bookmark_free (BookmarkP me)
   if (me->parent_url_list)
     {
       List *list = me->parent_url_list;
-      List_delAll (&list, (void *) TtaFreeMemory);
+      List_delAll (&list, (ThotBool (*)(void*)) TtaFreeMemory);
     }
   if (me->self_url)
     TtaFreeMemory (me->self_url);
@@ -133,7 +133,7 @@ ThotBool BMList_containsURL (List *list, char *url)
   cur = list;
   while (cur)
     {
-      me = cur->object;
+      me = (BookmarkP)cur->object;
       if (me && me->self_url && !strcasecmp (me->self_url, url))
 	{
 	  result = TRUE;
@@ -178,7 +178,7 @@ List *BM_expandBookmarks (List **list)
 	{
 	  item->parent_url = (char *) parent_url_list->object;
 	  parent_url_list->object = NULL;
-	  List_delAll (&parent_url_list, NULL);
+	  List_delAll (&parent_url_list, (ThotBool (*)(void*))NULL);
 	  List_add (&new_list, (void *) item);
 	}
       else
@@ -194,11 +194,11 @@ List *BM_expandBookmarks (List **list)
 	      cur2 = cur2->next;
 	    }
 	  Bookmark_free (item);
-	  List_delAll (&parent_url_list, NULL);
+	  List_delAll (&parent_url_list, (ThotBool (*)(void*))NULL);
 	}
       cur = cur->next;
     }
-  List_delAll (list, NULL);
+  List_delAll (list, (ThotBool (*)(void*))NULL);
   return new_list;
 }
 
@@ -212,10 +212,10 @@ BM_dyn_buffer * BM_bufferNew (void)
 {
   BM_dyn_buffer *me;
 
-  me = TtaGetMemory (sizeof (BM_dyn_buffer));
+  me = (BM_dyn_buffer *)TtaGetMemory (sizeof (BM_dyn_buffer));
   if (me)
     {
-      me->buffer = TtaGetMemory (PARAM_INCREMENT);
+      me->buffer = (char *)TtaGetMemory (PARAM_INCREMENT);
       me->buffer[0] = EOS;
       me->lgbuffer = PARAM_INCREMENT;
     }
@@ -278,7 +278,7 @@ void BM_bufferCat (BM_dyn_buffer *me, char *src)
       status = TtaRealloc (me->buffer, sizeof (char) * (me->lgbuffer + lg));      
       if (status != NULL)
 	{
-	  me->buffer = status;
+	  me->buffer = (char *)status;
 	  me->lgbuffer += lg;
 	  strcat (me->buffer, src);
 	}
@@ -307,7 +307,7 @@ void BM_bufferCopy (BM_dyn_buffer *me, char *src)
       status = TtaRealloc (me->buffer, sizeof (char) * (lg));
       if (status != NULL)
 	{
-	  me->buffer = status;
+	  me->buffer = (char *)status;
 	  me->lgbuffer = lg;
 	  strcpy (me->buffer, src);
 	}

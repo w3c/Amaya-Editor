@@ -14,31 +14,31 @@ SUBDIRS = mkdep dns_daemon javastub cextract-1.7
 all : 
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; \
 	  cd .. ; fi ;done )
 
 clean :
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" clean ; \
 	  cd .. ; fi ;done )
 
 install :
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" install ; \
 	  cd .. ; fi ;done )
 
 uninstall :
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" uninstall ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" uninstall ; \
 	  cd .. ; fi ;done )
 
 depend : 
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" depend ; \
 	  cd .. ; fi ;done )
 
 proto : 

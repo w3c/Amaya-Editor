@@ -25,10 +25,10 @@ all cextract : ../../bin ../../bin/cextract
 	@($(MKDIR) ../../bin)
 
 ../../bin/cextract : $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
 .c.o :
-	$(CC) -x c '-DCPP="'"$(CPP)"'"' -O -c $< -o $@
+	$(CXX) -x c '-DCPP="'"$(CPP)"'"' -O -c $< -o $@
 
 clean :
 	$(RM) -f *.o ../../bin/cextract
@@ -40,7 +40,7 @@ uninstall :
 include .depends
 
 ../../tools/mkdep/mkdep : 
-	@(cd ../../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd ../../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)")
 
 .depends depend : ../../tools/mkdep/mkdep
 	../../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends

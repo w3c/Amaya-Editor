@@ -207,7 +207,7 @@ static void serialize (librdf_model *model, char *name, char *filename, char *mi
   Returns a unique blank node ID that doesn't yet exist in the model.
   ----------------------------------------------------------------------*/
 static int Model_queryID (librdf_world *world, librdf_model *model, char * base_url, 
-			   char  *template, int start_id)
+			   char  *template_, int start_id)
 {
 #define BM_MAXID 1000
   librdf_stream *stream = NULL;
@@ -229,7 +229,7 @@ static int Model_queryID (librdf_world *world, librdf_model *model, char * base_
   sprintf (genid, "%s", base_url);
   while (count < BM_MAXID)
     {
-      snprintf (genid + base_url_len, sizeof (genid) - base_url_len, template, igenid);
+      snprintf (genid + base_url_len, sizeof (genid) - base_url_len, template_, igenid);
 
       subject = librdf_new_node_from_uri_string (world, genid);
 
@@ -478,7 +478,7 @@ ThotBool BM_addBookmark (BookmarkP me)
   librdf_node* object;
 
   char bookmarkid[MAX_LENGTH];
-  char *template = "#ambookmark%d";
+  char *template_ = "#ambookmark%d";
   char *base_uri = GetLocalBookmarksBaseURI ();
   char *tmp;
 
@@ -498,7 +498,7 @@ ThotBool BM_addBookmark (BookmarkP me)
 	return FALSE;
     }
   
-  genid_counter = Model_queryID (world, model, base_uri, template, 
+  genid_counter = Model_queryID (world, model, base_uri, template_, 
 				 genid_counter);
   if (genid_counter == 0) 
     {
@@ -506,7 +506,7 @@ ThotBool BM_addBookmark (BookmarkP me)
       return FALSE;
     }
   sprintf (bookmarkid, "%s", base_uri);
-  sprintf (bookmarkid + strlen (base_uri), template, genid_counter++);
+  sprintf (bookmarkid + strlen (base_uri), template_, genid_counter++);
 
   /* bookmark type */
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
@@ -530,7 +530,7 @@ ThotBool BM_addBookmark (BookmarkP me)
 #endif
 
   /* creator */
-  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1);
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
@@ -561,7 +561,7 @@ ThotBool BM_addBookmark (BookmarkP me)
 
 
   /* title */
-  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
@@ -572,7 +572,7 @@ ThotBool BM_addBookmark (BookmarkP me)
   TtaFreeMemory (tmp);
 
  /* description */
-  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
@@ -616,7 +616,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 
   char topicid[MAX_LENGTH];
   char *base_uri = GetLocalBookmarksBaseURI ();
-  char *template = "#amtopic%d";
+  char *template_ = "#amtopic%d";
   static int genid_counter = 1;
   char *tmp;
 
@@ -630,7 +630,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 	}
       
       genid_counter = Model_queryID (world, model, base_uri,
-				     template, genid_counter);
+				     template_, genid_counter);
       if (genid_counter == 0) 
 	{
 	  /* couldn't create a genid */
@@ -638,7 +638,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 	}
       
       sprintf (topicid, "%s", base_uri);
-      sprintf (topicid + strlen (base_uri), template, genid_counter++);
+      sprintf (topicid + strlen (base_uri), template_, genid_counter++);
     }
   else
     strcpy (topicid, me->self_url);
@@ -682,7 +682,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
     }
 
   /* creator */
-  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
@@ -713,7 +713,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 
 
   /* title */
-  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
@@ -724,7 +724,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
   TtaFreeMemory (tmp);
 
  /* description */
-  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
@@ -1053,7 +1053,7 @@ ThotBool Model_dumpTopicBookmarks (List *topic_list, List **dump)
 
   while (cur)
     {
-      topic = cur->object;
+      topic = (BookmarkP)cur->object;
       /* get all the bookmarks that are a stored in the topic */
       subject = NULL;
       predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
@@ -1425,7 +1425,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 
   /* add the new info */
   /* creator */
-  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1);
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
@@ -1446,7 +1446,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 
 
   /* title */
-  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
@@ -1457,7 +1457,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
   TtaFreeMemory (tmp);
 
  /* description */
-  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
