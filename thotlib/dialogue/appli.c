@@ -50,7 +50,9 @@
 static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
+#ifdef _GL
 #include <gtkgl/gtkglarea.h>
+#endif /*_GL*/
 static gchar *null_string;
 #endif /*_GTK*/
 #endif /* _WINDOWS */

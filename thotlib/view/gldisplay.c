@@ -189,10 +189,9 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
    w = FrRef[frame];
    if (w == None)
       return;
-
-   LoadColor (fg);
+   
    y = y + FrameTable[frame].FrTopMargin;
-   GL_DrawChar(car, x, y, font, fg);
+   GL_DrawUnicodeChar(car, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -231,26 +230,10 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	      buff[j++] = '*';
 	      width += CharacterWidth (42, font);
 	    }
-	  buff[lg] = EOS;
-	}
-      else
-	{
-	  buff[lg] = EOS;
-	  TranslateChars (buff);
-
-	  j = 0;
-	  while (j < lg)
-	    width += CharacterWidth (buff[j++], font);
-
+	  
 	}
       if (fg >= 0)
-	{ 
-	  LoadColor (fg);
-	 GL_DrawString (buff, x, y, font, fg);
-	  if (hyphen)
-	    /* draw the hyphen */
-	   GL_DrawString ("\255", x + width, y, font, fg);
-	}
+	  width = GL_UnicodeDrawString (fg, buff, x, y, hyphen, font, lg);
     }
   return (width);
 }
@@ -349,24 +332,20 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
    if (boxWidth > 0)
      {
 	w = FrRef[frame];
-	ptcar = " .";
+	ptcar = " . ";
 
 	/* compute lenght of the string " ." */
-	width = CharacterWidth (SPACE, font) + CharacterWidth (46, font);
-
+	width = UnicodeCharacterWidth (SPACE, font) + UnicodeCharacterWidth (46, font);
 	/* compute the number of string to write */
 	nb = boxWidth / width;
 	xcour = x + (boxWidth % width);
 	y = y + FrameTable[frame].FrTopMargin;
-	LoadColor (fg);
-
 	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-	  GL_DrawString( ptcar, xcour, y, font, fg);
-	   xcour += width;
-	   nb--;
+	    xcour += GL_UnicodeDrawString (fg, ptcar, xcour, y, 0, font, 2);
+	    nb--;
 	  }
      }
 }

@@ -3,6 +3,7 @@
 #ifdef _GTK
 
 /* Font Server */
+#include <string.h>
 #include <gdk/gdkx.h>
 #include "X11/Xft/Xft.h"
 #include "X11/Xft/XftFreetype.h"
@@ -25,15 +26,19 @@ int GetFontFilename (char script, int family,
   XftResult     result;  
   char	*s;
   int ok = 0;
-  int render, core;
+  int render, core, aa;
 
   pat = XftPatternCreate ();
-  render = False;
-  core = True;
-  (void) XftPatternGetBool (pat, XFT_RENDER, 0, &render);
-  (void) XftPatternGetBool (pat, XFT_CORE, 0, &core);
   if (!pat)
     return ok;    
+  /*
+    render = True;
+  core = True;
+  aa = True;
+  (void) XftPatternGetBool (pat, XFT_RENDER, 0, &render);
+  (void) XftPatternGetBool (pat, XFT_CORE, 0, &core);
+  (void) XftPatternGetBool (pat, XFT_ANTIALIAS, 0, &core);
+  */
   if (script != 'L' && script != 'G')
     {      
       switch (script)
@@ -63,7 +68,9 @@ int GetFontFilename (char script, int family,
 	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-8");
 	  break;
 	}
-      if (highlight == 0 || highlight == 2 || highlight == 3)
+      if (highlight == 0)
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+      else if (highlight == 2 || highlight == 3)
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
       else
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
@@ -82,6 +89,7 @@ int GetFontFilename (char script, int family,
     }
   else
     {
+      XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");
       if (UseLucidaFamily)
 	{
 	  switch (family)
@@ -119,7 +127,7 @@ int GetFontFilename (char script, int family,
       switch (highlight)
 	{
 	case 0:
-	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 1:
@@ -131,7 +139,7 @@ int GetFontFilename (char script, int family,
 	  break;
 	case 2:
 	case 3:
-	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
 	  if (family == 2 || family == 3)
 	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
 	  else

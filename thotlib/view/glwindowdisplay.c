@@ -769,7 +769,6 @@ void GL_Point (int fg, float width, float x, float y)
   glVertex2f (x, y);
   glEnd ();
 }
-#ifdef MESA
 /*----------------------
   ResetPixelTransferBias
 ------------------------*/
@@ -804,31 +803,6 @@ static void SetPixelTransferBias (int fg)
   glPixelTransferf (GL_GREEN_BIAS, BIT8DIVIDE(green));
   glPixelTransferf (GL_BLUE_BIAS,  BIT8DIVIDE(blue));
 }
-#endif /* MESA */
-/*----------------------------------------------------------------------
- GL_DrawString : Draw a string in a texture or a bitmap 
-  ----------------------------------------------------------------------*/
-int GL_DrawString (char const *str, float x, float y, 
-			  void *GL_font, int fg)
-{ 
-  int width;
-
-#ifdef MESA
-  SetPixelTransferBias (fg); 
-  glRasterPos2f (x, y);
-  width = gl_draw_text (GL_font, str);
-  ResetPixelTransferBias();
-#else /* MESA */
-  GL_SetForeground (fg);
-  glPushMatrix ();
-  glTranslatef (x, y, 0.0);
-  glEnable (GL_TEXTURE_2D);
-  width = gl_draw_text (GL_font, str);
-  glDisable (GL_TEXTURE_2D);  
-  glPopMatrix ();
-#endif /* MESA */
-  return width;
-}
 /*----------------------------------------------------------------------
  GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
@@ -850,20 +824,10 @@ int GL_UnicodeDrawString (int fg,
   else
     str[end] = EOS;
   /*TranslateUnicodeChars (str); */
-#ifdef MESA
   SetPixelTransferBias (fg);
   glRasterPos2f (x, y);
   width = UnicodeFontRender (GL_font, str, x, y, end);
   ResetPixelTransferBias();
-#else /* MESA */
-  GL_SetForeground (fg);
-  glPushMatrix ();
-  glTranslatef (x, y, 0.0);
-  glEnable (GL_TEXTURE_2D);
-  width = UnicodeFontRender (GL_font, str, x, y, end);
-  glDisable (GL_TEXTURE_2D);  
-  glPopMatrix ();
-#endif /* MESA */ 
   return width;
 }
 /*----------------------------------------------------------------------
@@ -877,17 +841,7 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
   str[1] = '\0';
   GL_UnicodeDrawString (fg, str, x, y, 0, GL_font, 1);
 }
-/*----------------------------------------------------------------------
-  GL_DrawChar : draw a character in a texture or a bitmap 
-  ----------------------------------------------------------------------*/
-void GL_DrawChar (char const c, float x, float y, void *GL_font, int fg)
-{
-  char str[2];
 
-  str[0] = c;
-  str[1] = '\0';
-  GL_DrawString (str, x, y, GL_font, fg);
-}
 
 #define REALY(A) (A + FrameTable[frame].FrTopMargin)
 /*----------------------------------------------------------------------

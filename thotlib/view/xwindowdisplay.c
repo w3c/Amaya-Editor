@@ -2491,6 +2491,9 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
   if (FrRef[frame] != None)
     {
 #ifdef _GTK 
+      DefRegion (frame, 
+		 xd, yd+FrameTable[frame].FrTopMargin, 
+		 width+xd, yd+height+FrameTable[frame].FrTopMargin);
       gdk_window_copy_area (FrRef[frame], TtWhiteGC,
 			    xf,
 			    yf + FrameTable[frame].FrTopMargin,
