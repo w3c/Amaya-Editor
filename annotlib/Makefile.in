@@ -18,10 +18,11 @@ INCLUDES= -DHAVE_CONFIG_H -DANNOTATIONS \
 	  -I@top_srcdir@/../libwww/Library/src \
 	  -I@top_srcdir@/../libwww/modules/expat/xmlparse \
 	  -I@top_srcdir@/../libwww/modules/expat/xmltok \
+	   $(RAPTOR_INCLUDES) \
 	   @THOTINCLUDES@ $(X_FLAGS)
 
 
-OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ 
+OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ $(RAPTOR_OPTIONS)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -151,7 +152,7 @@ libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/XLink.h \
 libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
 
 libAnnot.a : Annot.STR  $(AMAYA_ANNOT_OBJ)
-	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)
+	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ) $(RAPTOR_LIBRARIES)
 	$(RANLIB) libAnnot.a
 
 
