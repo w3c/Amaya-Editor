@@ -863,8 +863,7 @@ AC_SUBST(NOPRINT)
 
 AC_ARG_ENABLE(svg,           [  --disable-svg           remove SVG support ])
 AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations support ])
-AC_ARG_ENABLE(raptor,        [  --disable-raptor        disable the raptor RDF parser ])
-AC_ARG_ENABLE(redland,       [  --enable-redland        enable the redland RDF library ])
+AC_ARG_ENABLE(redland,       [  --disable-redland       disable the redland RDF library ])
 AC_ARG_ENABLE(system-redland,       [  --enable-system-redland try the redland RDF system library ])
 AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental bookmark support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
@@ -907,29 +906,16 @@ fi
 
 
 dnl
-dnl The raptor RDF parser is enabled by default
-dnl
-if test "$with_raptor" = "" ; then
-    if test "$enable_raptor" = "no" ; then
-	with_raptor="no"
-    else
-	with_raptor="yes"
-    fi
-else
-    with_raptor="yes"
-fi
-
-dnl
-dnl The redland library is disabled by default
+dnl The redland library is enabled by default
 dnl
 if test "$with_redland" = "" ; then
-    if test "$enable_redland" = "yes" ; then
-	with_redland="yes"
-    else
+    if test "$enable_redland" = "no" ; then
 	with_redland="no"
+    else
+	with_redland="yes"
     fi
 else
-    with_redland="no"
+    with_redland="yes"
 fi
 
 dnl
@@ -1034,36 +1020,10 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test "$with_raptor" = "yes" -a "$with_redland" = "yes" ; then
-       AC_MSG_WARN(Disabling raptor build as redland is enabled !)
+    if test "$with_redland" = "yes" -a "$with_annot" = "no" -a "$with_bookmarks" = "no"; then
+       AC_MSG_WARN(Disabling redland as neither annotations nor bookmarks are enabled !)
        MAKERAPTOR=['#']
        with_raptor="no"
-    fi
-
-    if test "$with_raptor" = "yes" -a "$with_annot" = "no" ; then
-       AC_MSG_WARN(Disabling raptor build as annotations are disabled !)
-       MAKERAPTOR=['#']
-       with_raptor="no"
-    fi
-
-    if test "$with_raptor" = "yes" -a ! -d "$srcdir/libraptor" ; then
-       AC_MSG_WARN(Raptor source dir not found !!)
-       AC_MSG_WARN(Disabling raptor build !)
-       MAKERAPTOR=['#']
-       with_raptor="no"
-    fi
-
-    if test "$with_raptor" = "yes" ; then
-       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/libraptor"
-       AMAYA_RAPTOR_LIBS="../libraptor/.libs/libraptor.a"
-       AMAYA_RAPTOR_SRC="amaya_comp_libraptor"
-       AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/libraptor"
-    fi
-
-    if test "$with_redland" = "yes" -a "$with_annot" = "no" ; then
-       AC_MSG_WARN(Disabling redland build as annotations are disabled !)
-       MAKEREDLAND=['#']
-       with_redland="no"
     fi
 
     redland_compile_source=yes
@@ -1128,6 +1088,10 @@ if test "$build_amaya" = "yes" ; then
 
 
     dnl control whether we should build the bookmarks support
+    if test "$with_annot" = "yes" -a "$with_redland" = "no" ; then
+       AC_MSG_WARN(Disabling annotations build as redland is disabled !)
+       with_bookmarks="no"
+    fi
     if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
        AC_MSG_WARN(Disabling bookmarks build as annotations are disabled !)
        with_bookmarks="no"
@@ -1141,17 +1105,6 @@ if test "$build_amaya" = "yes" ; then
 	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DBOOKMARKS"
     else
 	ANNOTLIB_COMPILE_BM=['#']
-    fi
-
-    dnl control whether we should use libwww's rdf parser
-    if test "$with_raptor" = "yes" -o "$with_redland" = "yes"; then
-       dnl not all the function calls have been cleared as of today, 
-       dnl we still need libwww's rdf parser 
-       MAKE_LIBWWW_RDF_PARSER=
-       LIBWWW_RDF_PARSER=
-    else
-       MAKE_LIBWWW_RDF_PARSER="libwwwxml"
-       LIBWWW_RDF_PARSER="-lwwwxml"
     fi
 
     if test "$with_plugin" = "yes" ; then
