@@ -1860,10 +1860,10 @@ void               *param;
 	 * fill in the PresentationSetting and call the handler.
 	 */
 	if (rule->PrPresMode == PresFunction)
-	    PRuleToPresentationSetting (rule, &setting, 
+	    PRuleToPresentationSetting ((PRule) rule, &setting, 
 	                                rule->PrPresFunction);
 	else
-	    PRuleToPresentationSetting (rule, &setting, 0);
+	    PRuleToPresentationSetting ((PRule) rule, &setting, 0);
 
 	/*
 	 * need to do some tweaking in the case of BackgroudPicture
