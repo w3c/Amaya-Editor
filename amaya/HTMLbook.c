@@ -1449,7 +1449,7 @@ void MakeToc (Document doc, View view)
 
   attrType.AttrSSchema = elType.ElSSchema;
   ulType.ElSSchema = elType.ElSSchema;
-  ulType.ElTypeNum = HTML_EL_Numbered_List;
+  ulType.ElTypeNum = HTML_EL_Unnumbered_List;
   searchedType1.ElSSchema = elType.ElSSchema;
   searchedType1.ElTypeNum = HTML_EL_H2;
   searchedType2.ElSSchema = elType.ElSSchema;
@@ -1460,7 +1460,7 @@ void MakeToc (Document doc, View view)
   searchedType4.ElTypeNum = HTML_EL_H5;
   searchedType5.ElSSchema = elType.ElSSchema;
   searchedType5.ElTypeNum = HTML_EL_H6;
-  toc = lH2 = lH3 = lH4 = lH5 = lH6 = NULL;
+  toc = lH2 = lH3 = lH4 = lH5 = lH6 = prev = NULL;
   list = NULL;
   while (el)
     {
@@ -1571,15 +1571,15 @@ void MakeToc (Document doc, View view)
 		    TtaInsertSibling (*list, child, FALSE, doc);
 		  else
 		    TtaInsertFirstChild (list, parent, doc);
-		  attrType.AttrTypeNum = HTML_ATTR_NumberStyle;
+		  /*attrType.AttrTypeNum = HTML_ATTR_BulletStyle;
 		  attr = TtaGetAttribute (el, attrType);
 		  if (!attr)
 		    {
 		      attr = TtaNewAttribute (attrType);
 		      TtaAttachAttribute (*list, attr, doc);
 		    }
-		  TtaSetAttributeValue (attr, HTML_ATTR_NumberStyle_VAL_Arabic_,
-					*list, doc);
+		  TtaSetAttributeValue (attr, HTML_ATTR_BulletStyle_VAL_disc,
+		  *list, doc);*/
 		  TtaRegisterElementCreate (*list, doc);
 		}
 	      /* generate the list item */
@@ -1652,4 +1652,23 @@ void MakeToc (Document doc, View view)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+  /* select the end of the toc */
+  if (prev)
+    {
+      child = prev;
+      while (child)
+	{
+	  child = TtaGetLastChild (prev);
+	  if (child)
+	    prev = child;
+	}
+      elType = TtaGetElementType (prev);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	{
+	  i = TtaGetElementVolume (prev);
+	  TtaSelectString (doc, prev, i+1, i);
+	}
+      else
+	TtaSelectElement (doc, prev);
+    }
 }

@@ -2417,7 +2417,8 @@ void ElementPasted (NotifyElement * event)
 
   elType = TtaGetElementType (el);
   anchor = NULL;
-  if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
+  if (event->info == 0 &&
+      elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
       anchor = el;
   else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_LINK)
     {
