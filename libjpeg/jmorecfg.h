@@ -203,6 +203,24 @@ typedef unsigned int JDIMENSION;
 #endif
 
 
+/*
+ * On a few systems, type boolean and/or its values FALSE, TRUE may appear
+ * in standard header files.  Or you may have conflicts with application-
+ * specific header files that you want to include together with these files.
+ * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
+ */
+#ifdef _WINDOWS
+#include <windows.h>
+#else /* _WINDOWS */
+typedef int boolean;
+#endif /* _WINDOWS */
+#ifndef FALSE			/* in case these macros already exist */
+#define FALSE	0		/* values of boolean */
+#endif
+#ifndef TRUE
+#define TRUE	1
+#endif
+
 /* Here is the pseudo-keyword for declaring pointers that must be "far"
  * on 80x86 machines.  Most of the specialized coding for 80x86 is handled
  * by just saying "FAR *" where such a pointer is needed.  In a few places
@@ -217,22 +235,6 @@ typedef unsigned int JDIMENSION;
 #endif
 #endif
 
-
-/*
- * On a few systems, type boolean and/or its values FALSE, TRUE may appear
- * in standard header files.  Or you may have conflicts with application-
- * specific header files that you want to include together with these files.
- * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
- */
-#ifndef _WINDOWS
-typedef int boolean;
-#endif /* _WINDOWS */
-#ifndef FALSE			/* in case these macros already exist */
-#define FALSE	0		/* values of boolean */
-#endif
-#ifndef TRUE
-#define TRUE	1
-#endif
 
 
 /*
