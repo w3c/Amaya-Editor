@@ -48,8 +48,8 @@ extern void RemoveBoxes ( PtrAbstractBox pAb,
                           int frame );
 extern void RecordEnclosing ( PtrBox pBox,
                               boolean horizRef );
-extern boolean ComputeUpdates (PtrAbstractBox pAb,
-			       int frame);
+extern boolean ComputeUpdates ( PtrAbstractBox pAb,
+                                int frame );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern void ClearConcreteImage ( int frame );
@@ -102,7 +102,7 @@ extern void RemoveBoxes (/* PtrAbstractBox pAb,
 extern void RecordEnclosing (/* PtrBox pBox,
                                 boolean horizRef */);
 extern boolean ComputeUpdates (/* PtrAbstractBox pAb,
-				  int frame */);
+                                  int frame */);
 extern void ComputeEnclosing (/* int frame */);
 extern void RebuildConcreteImage (/* int frame */);
 extern void ClearConcreteImage (/* int frame */);

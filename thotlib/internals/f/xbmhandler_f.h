@@ -16,7 +16,7 @@ extern Drawable XbmCreate ( char* fn,
                             ThotBitmap *mask1,
                             int *width,
                             int *height,
-			    int zoom );
+                            int zoom );
 extern void XbmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -43,7 +43,7 @@ extern Drawable XbmCreate (/* char* fn,
                               ThotBitmap *mask1,
                               int *width,
                               int *height,
-			      int zoom */);
+                              int zoom */);
 extern void XbmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

@@ -16,7 +16,7 @@ extern Drawable XpmCreate ( char *fn,
                             Drawable *mask1,
                             int *width,
                             int *height,
-			    int zoom );
+                            int zoom );
 extern void XpmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -43,7 +43,7 @@ extern Drawable XpmCreate (/* char *fn,
                               Drawable *mask1,
                               int *width,
                               int *height,
-			      int zoom */);
+                              int zoom */);
 extern void XpmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

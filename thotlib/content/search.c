@@ -241,8 +241,8 @@ boolean             select;
    if (visible)
      {
        /* Update Abstract views */
-       if (ThotLocalActions[T_redisplay] != NULL)
-	 (*ThotLocalActions[T_redisplay]) (pDoc);
+       if (ThotLocalActions[T_AIupdate] != NULL)
+	 (*ThotLocalActions[T_AIupdate]) (pDoc);
        /* Redisplay views */
        if (ThotLocalActions[T_redisplay] != NULL)
 	 (*ThotLocalActions[T_redisplay]) (pDoc);

@@ -491,8 +491,8 @@ int                 accessMode;
 	   pDoc->DocAssocModifiedAb[assoc] = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
 	}
    /* Update Abstract views */
-   if (ThotLocalActions[T_redisplay] != NULL)
-     (*ThotLocalActions[T_redisplay]) (pDoc);
+   if (ThotLocalActions[T_AIupdate] != NULL)
+     (*ThotLocalActions[T_AIupdate]) (pDoc);
    /* Redisplay views */
    if (ThotLocalActions[T_redisplay] != NULL)
      (*ThotLocalActions[T_redisplay]) (pDoc);
@@ -649,8 +649,8 @@ PtrDocument         pDoc;
    /* detruit les paves de l'element */
    DestroyAbsBoxes (pEl, pDoc, FALSE);
    /* Update Abstract views */
-   if (ThotLocalActions[T_redisplay] != NULL)
-     (*ThotLocalActions[T_redisplay]) (pDoc);
+   if (ThotLocalActions[T_AIupdate] != NULL)
+     (*ThotLocalActions[T_AIupdate]) (pDoc);
    if (pEl->ElTerminal)
       switch (pEl->ElLeafType)
 	    {
@@ -720,8 +720,8 @@ PtrDocument         pDoc;
    ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
    /* Update Abstract views */
-   if (ThotLocalActions[T_redisplay] != NULL)
-     (*ThotLocalActions[T_redisplay]) (pDoc);
+   if (ThotLocalActions[T_AIupdate] != NULL)
+     (*ThotLocalActions[T_AIupdate]) (pDoc);
    /* Redisplay views */
    if (ThotLocalActions[T_redisplay] != NULL)
      (*ThotLocalActions[T_redisplay]) (pDoc);

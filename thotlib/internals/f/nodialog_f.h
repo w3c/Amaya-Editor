@@ -44,7 +44,6 @@ extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
-extern int CopyXClipboard ( unsigned char **buffer );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
                                char *texte );
@@ -135,7 +134,6 @@ extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
-extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
                                  char *texte */);

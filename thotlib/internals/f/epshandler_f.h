@@ -16,7 +16,7 @@ extern ThotBitmap EpsCreate ( char *fn,
                               ThotBitmap *PicMask,
                               int *width,
                               int *height,
-			      int zoom );
+                              int zoom );
 extern void EpsPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -43,7 +43,7 @@ extern ThotBitmap EpsCreate (/* char *fn,
                                 ThotBitmap *PicMask,
                                 int *width,
                                 int *height,
-				int zoom */);
+                                int zoom */);
 extern void EpsPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

@@ -69,8 +69,6 @@ SSchema             nature;
 	     else
 	       pHd = pHd->HdNextPSchema;
 	 }
-       if (result == NULL)
-	 TtaError (ERR_invalid_parameter);
      }
    return result;
 }

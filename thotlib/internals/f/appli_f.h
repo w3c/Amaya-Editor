@@ -24,6 +24,10 @@ extern void FrameHScrolled ( int *w,
 extern void FrameVScrolled ( int *w,
                              int frame,
                              int *param );
+extern void TtcLineUp ( Document document,
+                        View view );
+extern void TtcLineDown ( Document document,
+                          View view );
 extern void TtcPageUp ( Document document,
                         View view );
 extern void TtcPageDown ( Document document,
@@ -97,6 +101,10 @@ extern void FrameHScrolled (/* int *w,
 extern void FrameVScrolled (/* int *w,
                                int frame,
                                int *param */);
+extern void TtcLineUp (/* Document document,
+                          View view */);
+extern void TtcLineDown (/* Document document,
+                            View view */);
 extern void TtcPageUp (/* Document document,
                           View view */);
 extern void TtcPageDown (/* Document document,

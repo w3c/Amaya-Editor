@@ -2531,10 +2531,12 @@ boolean             completeCreator;
 		   pAb->AbPrevious = pAbb1->AbPrevious;
 		   pAbb1->AbPrevious = pAb;
 		   if (pAb->AbPrevious != NULL)
-		     pAb->AbPrevious->AbNext = pAb;
-		   if (pAb->AbPrevious == NULL)
-		     pEl->ElAbstractBox[viewIndex] = pAb;
-		   else if (pAb->AbPrevious->AbElement != pEl)
+		     {
+		       pAb->AbPrevious->AbNext = pAb;
+		       if (pAb->AbPrevious->AbElement != pEl)
+			 pEl->ElAbstractBox[viewIndex] = pAb;
+		     }
+		   else
 		     pEl->ElAbstractBox[viewIndex] = pAb;
 		 }
 	       break;

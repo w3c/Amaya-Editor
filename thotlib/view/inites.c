@@ -398,7 +398,7 @@ char               *name;
    if (Color_Table[i] == NULL)
       return -1;		/* the table is empty */
    do
-      if (strcmp (Color_Table[i], name) == 0)
+      if (strcasecmp (Color_Table[i], name) == 0)
 	 found = TRUE;
       else
 	 i++;
