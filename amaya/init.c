@@ -1524,7 +1524,7 @@ void InitMimeType (Document document, View view, char *url)
    TtaNewLabel (BaseDialog + MimeFormStatus,
 		BaseDialog + MimeTypeForm,
 		"     ");
-   TtaSetSelector (BaseDialog + MimeTypeSel, -1, UserMimeType);
+   TtaSetSelector (BaseDialog + MimeTypeSel, -1,  SaveFormTmp);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
@@ -4485,9 +4485,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #else
  		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
+		   SaveFormTmp[0] = EOS;
 		   InitCharset (SavingDocument, 1, SavePath);
-		   if (UserCharset[0] != EOS)
+		   if (SaveFormTmp[0] != EOS)
 		     {
+		       strcpy (UserCharset, SaveFormTmp);
 #ifndef _WINDOWS
 		       TtaNewLabel (BaseDialog + CharsetSave,  
 				    BaseDialog + SaveForm, UserCharset);
@@ -4521,9 +4523,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #else
 		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
+		   strcpy (SaveFormTmp, UserMimeType);
 		   InitMimeType (SavingDocument, 1, SavePath);
-		   if (UserMimeType[0] != EOS)
+		   if (SaveFormTmp[0] != EOS)
 		     {
+		       strcpy (UserMimeType, SaveFormTmp);
+
 #ifndef _WINDOWS
 		     TtaNewLabel (BaseDialog + MimeTypeSave,  
 				  BaseDialog + SaveForm, UserMimeType);
@@ -4951,7 +4956,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 switch (val)
 	   {
 	   case 0:
-	     UserCharset[0] = EOS;
+	     SaveFormTmp[0] = EOS;
 	     TtaDestroyDialogue (ref);
 	     break;
 	   case 1:
@@ -4964,16 +4969,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
        switch (val)
 	 {
 	 case 0:
-	   strcpy (UserCharset, "us-ascii");
+	   strcpy (SaveFormTmp, "us-ascii");
 	   break;
 	 case 1:
-	   strcpy (UserCharset, "UTF-8");
+	   strcpy (SaveFormTmp, "UTF-8");
 	   break;
 	 case 2:
-	   strcpy (UserCharset, "iso-8859-1");
+	   strcpy (SaveFormTmp, "iso-8859-1");
 	   break;
 	 case 3:
-	   strcpy (UserCharset, "iso-8859-2");
+	   strcpy (SaveFormTmp, "iso-8859-2");
 	   break;
 	 }
        break;
@@ -4984,14 +4989,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 switch (val)
 	   {
 	   case 0:
-	     UserMimeType[0] = EOS;
+	     SaveFormTmp[0] = EOS;
 	     TtaDestroyDialogue (ref);
 	     break;
 	   case 1:
 	     {
 	       char *src, *dst;
 	       /* filter the UserMimeType */
-	       src = dst = UserMimeType;
+	       src = dst = SaveFormTmp;
 	       while (*src)
 		 {
 		   if (!isascii (*src) 
@@ -5013,9 +5018,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		 }
 	       *dst = EOS;
 	       /* validate the mime type */
-	       if (UserMimeType[0] == EOS ||!strchr (UserMimeType, '/'))
+	       if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
 		 {
-		   UserMimeType[0] = EOS;
+		   SaveFormTmp[0] = EOS;
 #ifndef _WINDOWS
 		   InitMimeType (SavingDocument, 1, 
 				 SavePath);
@@ -5036,9 +5041,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
        break;
      case MimeTypeSel:
        if (data)
-	 strcpy (UserMimeType, data);
+	 strcpy (SaveFormTmp, data);
        else
-	 UserMimeType[0] = EOS;
+	 SaveFormTmp[0] = EOS;
        break;
      }
 }

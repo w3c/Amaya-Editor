@@ -325,6 +325,10 @@ THOT_EXPORT char      UserCharset[MAX_LENGTH];
                                         /* Used to pass the user's charset
 					   choice when doing a Save As of a
 					   local object to a server */
+THOT_EXPORT char      SaveFormTmp[MAX_LENGTH];
+                                        /* Used for storing the temporary
+					   changes in the ChangeCharset and
+					   ChangeMimetype forms */
 THOT_EXPORT int        Lg_password;
 THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
