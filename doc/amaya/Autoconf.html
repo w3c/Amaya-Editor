@@ -68,12 +68,29 @@ compilers) from the distributed <a href="Sources.html">source tree</a>.</p>
     <p>It also gives some hints on how the source tree is configured.</p>
     <p></p>
     <p><span style="color: #FF0000; font-weight: bold">GTK version:</span>
-    there is no specific option for building a GTK version because that
-    version is too embryonic. Nevertheless people who want to contribute can
-    generate it by processing this way:</p>
+    there is no specific option in Configure for building a GTK version
+    because that version is too embryonic. Nevertheless people who want to
+    contribute can generate it by processing this way:</p>
     <ol>
-      <li>Lauching <code>../configure</code> </li>
-      <li></li>
+      <li>Launching <code>../configure</code></li>
+      <li>Editing the file Option.orig to replace MOTIF options by GTK options
+        like in the following example:
+        <pre>THOT_OPTIONS= -D_GTK
+AMAYA_OPTIONS= -D_GTK
+PLUGIN_OPTIONS=-DPLUGIN_TRACE -DXP_UNIX
+JAVA_OPTIONS=
+AMAYA_ANNOT_OPTIONS=
+
+IMGLIBS=-ljpeg -lpng -lz
+EXTRA_LIBS=
+
+MOTIF_INCLUDES=
+MOTIF_LIBRARIES=
+
+GTK_INCLUDES=-I/usr/local/lib/glib/include
+GTK_LIBRARIES=-lgtk -lgdk -rdynamic -lgmodule -lglib
+        </pre>
+      </li>
     </ol>
     <p></p>
   </li>
@@ -125,9 +142,9 @@ targets:</p>
     Amaya/libjpeg tree.</li>
   <li>make <strong>libpng</strong> : rebuild the libpng.a and libz.a libraries
     from Amaya/libpng tree.</li>
-  <li>make without argument rebuild everything.</li>
-  <li>make <strong>amaya</strong> rebuild <strong>Print</strong> and
-    <strong>Amaya</strong> binaries.</li>
+  <li>make without argument rebuild <strong>amaya</strong> and
+    <strong>print</strong>.</li>
+  <li>make <strong>amaya</strong> rebuild only <strong>amaya</strong>.</li>
 </ul>
 
 <p>One can also go to a specific sub-directory in the object tree and launch
@@ -202,10 +219,7 @@ small checklist:</p>
     <ol>
       <li>Check that the current directory contains all the precompiled
         libraries, namely <code>libjpeg.a</code>, <code>libpng.a</code> and
-        <code>libz.a</code> for the <strong>obj </strong>. If these files are
-        lacking, fetch the appropriate
-        <code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code>
-        <a href="SourceDist.html">distribution</a> file and install it.</li>
+        <code>libz.a</code> for the <strong>obj </strong>.</li>
       <li>Check that the precompiled libraries are not corrupted e.g.:
         <p><code>file libwww.a</code></p>
         <p><code>nm libwww.a</code></p>
@@ -225,9 +239,9 @@ small checklist:</p>
         <strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries
         files in <code>Amaya/</code><strong>obj
         </strong><code>/Makefile</code>.</li>
-      <li>Check whether <strong>-lSM</strong> and <strong>-lICE</strong> 
-        X11R6 libraries are needed. These were not needed (available) when
-        working on an X11R5 environment.</li>
+      <li>Check whether <strong>-lSM</strong> and <strong>-lICE</strong> X11R6
+        libraries are needed. These were not needed (available) when working
+        on an X11R5 environment.</li>
       <li>If amaya linking complains about <strong>XLookupString</strong>,
         check in <code>Amaya/amaya/EDITOR.A</code> that the section USES does
         not refer to <strong>Lookup</strong>. If needed, remove it, and
@@ -285,7 +299,7 @@ release.</p>
 <address>
   <a href="mailto:irene.vatton@w3.org">Irène Vatton</a><br>
   <br>
-  $Date$
+  $Date$ 
 </address>
 </body>
 </html>

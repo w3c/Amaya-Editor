@@ -1958,10 +1958,9 @@ BOXES
 
  Text_Space: BEGIN
 	Content: Graphics ' ';
+	VertPos: HRef = Previous . HRef;
 	If Immediately within Form
 	   VertPos: Top = Previous . Bottom + 0.4;
-	otherwise
-	   VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
 	Width: 3 px;
 	Height: 1 px;
@@ -7114,10 +7113,9 @@ RULES
 #endif
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
 	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-        otherwise
-	    VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7143,10 +7141,9 @@ RULES
 #endif
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
 	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	otherwise
-	    VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		NoLine;
@@ -7224,10 +7221,9 @@ RULES
 	   Justify: Yes;
 #endif
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
 	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	otherwise
-	   VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7250,10 +7246,9 @@ RULES
 	   Justify: Yes;
 #endif
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
 	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	otherwise
-	   VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7904,10 +7899,7 @@ RULES
 	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	if within Center
-		BEGIN
 		HorizPos: VMiddle = Enclosing . VMiddle;
-		Adjust: Left;
-		END;
 	Width: Enclosing . Width;
 	Adjust: Left;
 	CreateBefore(TABLE_S);

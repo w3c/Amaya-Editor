@@ -448,7 +448,7 @@ indLine             wi;
 	   if (pPRuleV->PrType == t)
 	      if (t != PtFunction)
 		 /* seules les fonctions peuvent etre en plusieurs exemplaires */
-		 if (pPRuleV->PrCond == NULL)
+		 if (CurRule->PrCond == NULL)
 		    /* les regles sans condition ne peuvent pas figurer en
 		       plusieurs exemplaires */
 		    CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);

@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Amaya New Features History</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body lang="en">
@@ -17,6 +18,134 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <p>This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 2.3</h1>
+
+<p>15 December, 1999</p>
+
+<h2>Compatibility changes</h2>
+If you had defined your own profiles in your amaya user directory, the
+function TtcCloseDocument must be replaced by CloseDocument.
+
+<h2>New features</h2>
+<ul>
+  <li>HTML:
+    <ul>
+      <li>As many search engines generate invalid forms, such forms are now
+        supported.</li>
+      <li>HTML and XHTML files are saved in ISO-Latin-1 (a single character is
+        generated instead of é for instance). When saving a document, a META
+        element is added in the document HEAD to specify Content-Type and
+        Charset.</li>
+    </ul>
+  </li>
+  <li>MathML:
+    <ul>
+      <li>When saving entities Amaya keeps the names that were read at
+        downloading. As an example, &it; is no longer replaced by
+        &InvisibleTimes;</li>
+      <li>You can enter large symbols (parentheses, integrals, arrows, etc.)
+        directly from the keyboard or from the Greek palette.</li>
+    </ul>
+  </li>
+  <li>CSS:
+    <ul>
+      <li>More complex CSS selectors are supported, including several ancestor
+        elements as well as an attribute from an ancestor.</li>
+    </ul>
+  </li>
+  <li>User Interface:
+    <ul>
+      <li>The content of the TITLE element is displayed as the window title
+        instead of the filename.</li>
+      <li>Amaya provides now an horizontal scroll bar when the document
+        includes images or tables larger then the current window size.</li>
+      <li>Shortcuts Control Up, Control Down, Control Left, Control Right
+        smoothly scroll the document in the four directions.</li>
+      <li>When a document has been read as XHTML, it is saved by default as
+        XHTML.</li>
+      <li>When some text is pasted from another application line breaks are
+        kept in the HTML document.</li>
+    </ul>
+  </li>
+  <li>libwww:
+    <ul>
+      <li>It's now possible to say that the proxy should ONLY be used with a
+        given list of domains.</li>
+      <li>You can now declare the proxy using just the server's name and it's
+        optional port (no need to prefix it with the http:// string as
+      before)</li>
+      <li>Improved the Accept: string for doing image and css content
+        negotiation.</li>
+    </ul>
+  </li>
+  <li>Internationalization:
+    <ul>
+      <li>There is now an Italian version of Amaya. Many thanks to Roberto
+        Bagnara.</li>
+      <li>Dutch, German, Italian, Spanish, and Swedish dictionaries are now
+        available for the Amaya spell-checker. We are not able to evaluate the
+        quality of these dictionaries, but we hope they can help. Comments
+        welcome.</li>
+    </ul>
+  </li>
+  <li>Building Amaya:
+    <ul>
+      <li>There are new make files for the Windows platforms.</li>
+    </ul>
+  </li>
+  <li>GTK:
+    <ul>
+      <li>You can now build a GTK version of Amaya. In this version GTK
+        replaces Motif. Implementation is not complete yet and contributions
+        are welcome. This version is currently only able to display document
+        views and many user actions are disabled. See Autoconf.html to learn
+        how to build this version.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Fixed bugs</h2>
+<ul>
+  <li>Many memory leaks and resource leaks are fixed in the Windows
+  version.</li>
+  <li>User Interface:
+    <ul>
+      <li>when Backspace deleted a string, the final position of the cursor
+        was wrong.</li>
+      <li>the Delete command on an empty paragraph didn't do anything. So it
+        was impossible to merge two paragraphs with the Delete command.</li>
+      <li>when the selection was moved down with the arrow key, it was shifted
+        one position to the right and the cursor was stuck on HR
+      elements.</li>
+      <li>on Windows platforms each Return inserted two empty paragraphs
+        instead of one.</li>
+      <li>the Windows kill command ([X]) closed the document window before
+        proposing to save a modified document. So Cancel was ineffective.</li>
+      <li>some Amaya crashes are fixed now.</li>
+      <li>the history associated to the Forward and Back buttons sometimes was
+        corrupted.</li>
+      <li>added more explicit messages related to the failure of PUT
+        operation.</li>
+      <li>the authentication dialogue now displays the authentication and
+        server realm (both data were previously displayed in the status
+        field).</li>
+      <li>After a Synchronization or a Save from the Source view images were
+        lost in the formatted view.</li>
+    </ul>
+  </li>
+  <li>HTML:
+    <ul>
+      <li>Element <input type=image>
+         was not well supported.</li>
+    </ul>
+  </li>
+  <li>Cache:
+    <ul>
+      <li>Spaces in the cache directory path were being ignored.</li>
+    </ul>
+  </li>
+</ul>
+
 <h1>Amaya 2.2</h1>
 
 <p>26 October, 1999</p>
@@ -28,17 +157,17 @@ Amaya.</p>
       <li>Amaya is now able to print with CSS. By default Amaya takes into
         account style sheets when printing. The entry "Ignore style sheets"
         allows one to print documents like in previous Amaya version.</li>
-      <li>For a better mapping with CSS, language P has been extended.  Style
-        and Weight are now two separate properties.  This allows Amaya to
+      <li>For a better mapping with CSS, language P has been extended. Style
+        and Weight are now two separate properties. This allows Amaya to
         handle the corresponding CSS properties (font-style, font-weight)
         independently and to display text both italic and bold.</li>
     </ul>
   </li>
   <li>A Source view is now available from the Views menu. When you select in
     the main view, an index points at the corresponding markup in the source
-    view and conversely. You can edit the source code.  Every time you save
-    the source code or you activate the Synchronize entry of the Files menu,
-    the other views are updated to reflect the latest changes.</li>
+    view and conversely. You can edit the source code. Every time you save the
+    source code or you activate the Synchronize entry of the Files menu, the
+    other views are updated to reflect the latest changes.</li>
   <li>Four different Amaya profiles are proposed: editor, mini-editor,
     browser, mini-browser. Amaya menus and buttons are displayed according to
     the current profile.</li>
@@ -481,7 +610,7 @@ Amaya.</p>
     were not renumbered correctly.</li>
   <li>The Windows version couldn't print the help page of Math.</li>
   <li>When MULTI_KEY is active the input method has been modified to support
-    the &oacute; character.</li>
+    the ó character.</li>
 </ul>
 
 <h1>Amaya 1.3a</h1>
@@ -606,8 +735,8 @@ Amaya.</p>
     the Shift + Left button of the mouse.</li>
   <li>The drag now generates an auto-scroll (not available on Windows).</li>
   <li>There is a new input method for Iso-Latin-1 characters. According to the
-    following table one can obtain a '&atilde;' by first pressing '~' then
-    typing 'a'. To obtain a simple '~' you have to press '~' twice.
+    following table one can obtain a 'ã' by first pressing '~' then typing
+    'a'. To obtain a simple '~' you have to press '~' twice.
 
     <table border="1">
       <tbody>
@@ -622,17 +751,17 @@ Amaya.</p>
         </tr>
         <tr>
           <td>a A</td>
-          <td>&atilde; &Atilde;</td>
-          <td>&agrave; &Agrave;</td>
-          <td>&aacute; &Aacute;</td>
-          <td>&auml; &Auml;</td>
-          <td>&aring; &Aring;</td>
-          <td>&acirc; &Acirc;</td>
+          <td>ã Ã</td>
+          <td>à À</td>
+          <td>á Á</td>
+          <td>ä Ä</td>
+          <td>å Å</td>
+          <td>â Â</td>
         </tr>
         <tr>
           <td>c C</td>
           <td></td>
-          <td>&ccedil; &Ccedil;</td>
+          <td>ç Ç</td>
           <td></td>
           <td></td>
           <td></td>
@@ -641,24 +770,24 @@ Amaya.</p>
         <tr>
           <td>e E</td>
           <td></td>
-          <td>&egrave; &Egrave;</td>
-          <td>&eacute; &Eacute;</td>
-          <td>&euml; &Euml;</td>
+          <td>è È</td>
+          <td>é É</td>
+          <td>ë Ë</td>
           <td></td>
-          <td>&ecirc; &Ecirc;</td>
+          <td>ê Ê</td>
         </tr>
         <tr>
           <td>i I</td>
           <td></td>
-          <td>&igrave; &Igrave;</td>
-          <td>&iacute; &Iacute;</td>
-          <td>&iuml; &Iuml;</td>
+          <td>ì Ì</td>
+          <td>í Í</td>
+          <td>ï Ï</td>
           <td></td>
-          <td>&icirc; &Icirc;</td>
+          <td>î Î</td>
         </tr>
         <tr>
           <td>n N</td>
-          <td>&ntilde; &Ntilde;</td>
+          <td>ñ Ñ</td>
           <td></td>
           <td></td>
           <td></td>
@@ -667,27 +796,27 @@ Amaya.</p>
         </tr>
         <tr>
           <td>o O</td>
-          <td>&otilde; &Otilde;</td>
-          <td>&ograve; &Ograve;</td>
-          <td>&oslash; &Oslash;</td>
-          <td>&ouml; &Ouml;</td>
+          <td>õ Õ</td>
+          <td>ò Ò</td>
+          <td>ø Ø</td>
+          <td>ö Ö</td>
           <td></td>
-          <td>&ocirc; &Ocirc;</td>
+          <td>ô Ô</td>
         </tr>
         <tr>
           <td>u U</td>
           <td></td>
-          <td>&ugrave; &Ugrave;</td>
-          <td>&uacute; &Uacute;</td>
-          <td>&uuml; &Uuml;</td>
+          <td>ù Ù</td>
+          <td>ú Ú</td>
+          <td>ü Ü</td>
           <td></td>
-          <td>&ucirc; &Ucirc;</td>
+          <td>û Û</td>
         </tr>
         <tr>
           <td>y Y</td>
           <td></td>
-          <td>&Yacute;</td>
-          <td>&yacute; &Yacute;</td>
+          <td>Ý</td>
+          <td>ý Ý</td>
           <td></td>
           <td></td>
           <td></td>
@@ -1264,7 +1393,7 @@ and its installation is now automatic.</p>
 <hr>
 
 <address>
-  <a href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  <a href="mailto:vatton@w3.org">Irène Vatton</a><br>
   $Date: 1997/07/10 
 </address>
 </body>

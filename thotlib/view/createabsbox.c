@@ -219,17 +219,16 @@ PtrSSchema          pSS;
 		   stop = FALSE;
 		   /* on traite toutes les regles specifiques successives de ce
 		      type et qui concernent la vue 1, et on retient la
-		      premiere dont les conditions d'application sont OKs */
+		      derniere dont les conditions d'application sont OKs */
 		   do
 		     {
-			if (pPR == NULL)
-			   /* on n'a pas encore trouve' la bonne regle */
-			   if ((*pRSpecif)->PrCond == NULL ||
-			       CondPresentation ((*pRSpecif)->PrCond, pEl,
-						 pAttr, pEl, 1, pSS))
-			      /* les conditions d'application sont satisfaites,
-				 on prend cette regle */
-			      pPR = *pRSpecif;
+		        /* on n'a pas encore trouve' la bonne regle */
+		        if ((*pRSpecif)->PrCond == NULL ||
+			    CondPresentation ((*pRSpecif)->PrCond, pEl,
+					      pAttr, pEl, 1, pSS))
+			   /* les conditions d'application sont satisfaites,
+			      on prend cette regle */
+			   pPR = *pRSpecif;
 			if ((*pRSpecif)->PrNextPRule == NULL)
 			   stop = TRUE;
 			else if ((*pRSpecif)->PrNextPRule->PrType ==
@@ -297,14 +296,13 @@ PtrSSchema          pSS;
 	  /* concernent la meme vue */
 	  do
 	    {
-	    if (pPR == NULL)
-	       /* on n'a pas encore trouve' la regle qui s'applique */
-	       if ((*pRSpecif)->PrCond == NULL ||
-		   CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
-				     Vue, pSS))
-		  /* les conditions d'application de la regle sont satisfaites,
-		     on prend cette regle */
-		  pPR = *pRSpecif;
+	    /* on n'a pas encore trouve' la regle qui s'applique */
+	    if ((*pRSpecif)->PrCond == NULL ||
+		CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
+				  Vue, pSS))
+	       /* les conditions d'application de la regle sont satisfaites,
+		  on prend cette regle */
+	       pPR = *pRSpecif;
 	    if ((*pRSpecif)->PrNextPRule == NULL)
 	       stop = TRUE;
 	    else if ((*pRSpecif)->PrNextPRule->PrViewNum == Vue &&
