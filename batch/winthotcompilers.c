@@ -113,7 +113,7 @@ int   msgType;
       cxChar = textMetric.tmAveCharWidth;
       cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
 
-      if (Y >= 1000) {
+      if (Y >= 550) {
          ScrollWindow (hwnd, 0, -cyChar, NULL, NULL);
          UpdateWindow (hwnd);
       } else
@@ -898,7 +898,7 @@ int       iCmdShow;
                             DS_MODALFRAME | WS_POPUP | WS_VSCROLL |
                             WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                             0, 0,
-                            600, 700,
+                            600, 650,
                             NULL, NULL, hInstance, NULL) ;
 
     ShowWindow (hwnd, SW_SHOWNORMAL) ;
