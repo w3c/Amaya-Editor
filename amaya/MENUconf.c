@@ -2741,17 +2741,17 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* action buttons */
 	case ID_APPLY:
 	  if (strcmp (ScreenType, NewScreen))
-	  {
-		  strcpy (ScreenType, NewScreen);
-	  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
 	    {
-	      if (DocumentTypes[doc] == docHTML ||
-		  DocumentTypes[doc] == docSVG ||
-		  DocumentTypes[doc] == docMath)
-		Synchronize (doc, 1);
+	      strcpy (ScreenType, NewScreen);
+	      SetBrowseConf ();
+	      for (doc = 1; doc < MAX_DOCUMENTS; doc++)
+		{
+		  if (DocumentTypes[doc] == docHTML ||
+		      DocumentTypes[doc] == docSVG ||
+		      DocumentTypes[doc] == docMath)
+		    Synchronize (doc, 1);
+		}
 	    }
-	  }
-	  SetBrowseConf ();	  
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
@@ -2848,18 +2848,18 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	  if (strcmp (NewScreen, ScreenType))
-	  {
+	      if (strcmp (NewScreen, ScreenType))
+		{
 		  strcpy (ScreenType, NewScreen);
-	  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
-	    {
-	      if (DocumentTypes[doc] == docHTML ||
-		  DocumentTypes[doc] == docSVG ||
-		  DocumentTypes[doc] == docMath)
-		Synchronize (doc, 1);
-	    }
-	  }
-	      SetBrowseConf ();
+		  SetBrowseConf ();
+		  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
+		    {
+		      if (DocumentTypes[doc] == docHTML ||
+			  DocumentTypes[doc] == docSVG ||
+			  DocumentTypes[doc] == docMath)
+			Synchronize (doc, 1);
+		    }
+		}
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:

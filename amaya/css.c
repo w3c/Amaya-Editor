@@ -184,33 +184,32 @@ void AttrMediaChanged (NotifyAttribute *event)
       TtaFreeMemory (name2);
       /* get the right CSS context */ 
       css = SearchCSS (doc, completeURL, el, &pInfo);
-      if (css && pInfo)
+    }
+  else
+    /* get the right CSS context */ 
+    css = SearchCSS (doc, NULL, el, &pInfo);
+  if (css && pInfo)
+    {
+      /* avoid too many redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+      /* something changed and we are not printing */
+      if ((media == CSS_ALL || media == CSS_SCREEN) &&
+	  (pInfo->PiMedia == CSS_PRINT || pInfo->PiMedia == CSS_OTHER))
+	LoadStyleSheet (completeURL, doc, el, NULL, media,
+			pInfo->PiCategory == CSS_USER_STYLE);
+      else
 	{
-	  /* avoid too many redisplay */
-	  dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, DeferredDisplay);
-	  /* something changed and we are not printing */
-	  if ((media == CSS_ALL || media == CSS_SCREEN) &&
-	      (pInfo->PiMedia == CSS_PRINT || pInfo->PiMedia == CSS_OTHER))
-	    LoadStyleSheet (completeURL, doc, el, NULL, media,
-			    pInfo->PiCategory == CSS_USER_STYLE);
-	  else
-	    {
-	      if ((media == CSS_PRINT || media == CSS_OTHER) &&
-		  (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_SCREEN))
-		{
-		  if (elType.ElTypeNum != HTML_EL_STYLE_)
-		    el = NULL;
-		  RemoveStyle (completeURL, doc, FALSE, FALSE, el, pInfo->PiCategory);
-		}
-	      /* only update the CSS media info */
-	      pInfo->PiMedia = media;
-	    }
-	  /* restore the display mode */
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, dispMode);
+	  if ((media == CSS_PRINT || media == CSS_OTHER) &&
+	      (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_SCREEN))
+	    UnlinkCSS (css, doc, el, TRUE, FALSE);
+	  /* only update the CSS media info */
+	  pInfo->PiMedia = media;
 	}
+      /* restore the display mode */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
     }
 }
 
