@@ -94,6 +94,10 @@ THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* font names */
 THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];/* PS font names       */
 THOT_EXPORT int        TtFontFrames[MAX_FONT];
 THOT_EXPORT PtrFont    TtFonts[MAX_FONT];/* loaded fonts                 */
+
+#ifdef _GTK
+THOT_EXPORT ThotCursor ArrowCurs;	/* The base   Cursor             */
+#endif /* _GTK */
 THOT_EXPORT ThotCursor WindowCurs;	/* The window Cursor             */
 THOT_EXPORT ThotCursor WaitCurs;	/* Waiting cursor                */
 THOT_EXPORT ThotCursor VCurs;	/* vertical resizing cursor              */

@@ -137,11 +137,12 @@ static void         InitCurs ()
    HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
 #else /* !_GTK */
-   WindowCurs = gdk_cursor_new (GDK_UMBRELLA);
-   VCurs = gdk_cursor_new (GDK_UMBRELLA);
-   HCurs = gdk_cursor_new (GDK_UMBRELLA);
-   HVCurs = gdk_cursor_new (GDK_UMBRELLA);
-   WaitCurs = gdk_cursor_new (GDK_WATCH);
+   ArrowCurs = gdk_cursor_new (GDK_LEFT_PTR);
+   WindowCurs = gdk_cursor_new (GDK_HAND2);
+   VCurs = gdk_cursor_new (GDK_SB_V_DOUBLE_ARROW);
+   HCurs = gdk_cursor_new (GDK_SB_H_DOUBLE_ARROW);
+   HVCurs = gdk_cursor_new (GDK_PLUS);
+   WaitCurs = gdk_cursor_new (GDK_CLOCK);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
