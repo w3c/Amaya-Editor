@@ -1560,15 +1560,14 @@
 </label>
 <label define="AM_ANNOT_RAUTOLOAD">
 	<message xml:lang="en">Autoload remote annotations</message>
-	<message xml:lang="fr">Charger automatiquement les annotations remotes</message>
+	<message xml:lang="fr">Charger automatiquement les annotations distantes</message>
 	<message xml:lang="de">Remote Anmerkungen automatisch laden</message>
 	<message xml:lang="it">Caricamento automatico delle annotazioni remote</message>
 	<message xml:lang="es">Autocargar anotaciones remotas</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
-	<message xml:lang="fr">Desactiver le chargement automatique des
-	annotations remotes au demarrage</message>
+	<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
 	<message xml:lang="es">Desactivar la autocargada de las anotaciones
 	remotas al lancamiento</message>
 </label>

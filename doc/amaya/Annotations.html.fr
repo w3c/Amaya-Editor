@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
@@ -168,10 +170,10 @@ alt="configuration dialog box" /></p>
   distantes</strong></dt>
     <dd>Lorsque cette option est activée, Amaya réinitialise l'option
       <code>Chargement automatique des annotations distantes</code> au
-      lancement. Cela est très utile si vous travaillez en mode déconnecté de
+      démarrage. Cela est très utile si vous travaillez en mode déconnecté de
       temps en temps et que vous voulez continuer à charger automatiquement
       les annotations locales tout en rechargeant les annotations distantes
-      lorsque vous êtes connectés. </dd>
+      lorsque vous êtes connectés.</dd>
   <dt><strong>Serveur de publication des annotations (Annotation Post
   Server)</strong></dt>
     <dd>Ce champ définit le serveur sur lequel les annotations sont

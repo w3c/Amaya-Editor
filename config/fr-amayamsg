@@ -203,8 +203,8 @@
 201 Serveur de publication
 202 Serveur d'annotations
 203 Charger automatiquement les annotations locales
-204 Charger automatiquement les annotations remotes
-205 Desactiver le chargement automatique des	annotations remotes au demarrage
+204 Charger automatiquement les annotations distantes
+205 Désactiver le chargement automatique des annotations distantes au démarrage
 206 Couleur de sélection
 207 Couleur du curseur d'insertion
 208 Orientation
