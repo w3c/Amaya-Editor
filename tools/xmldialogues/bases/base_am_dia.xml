@@ -516,8 +516,8 @@
 	<message xml:lang="fi">Sulje Amaya</message>
 </label>
 <label define="BCloseView">
-	<message xml:lang="en">Close &amp;view</message>
-	<message xml:lang="fr">Fermer la vue</message>
+	<message xml:lang="en">&amp;Close view</message>
+	<message xml:lang="fr">&amp;Fermer la vue</message>
 	<message xml:lang="de">Ansicht schließen</message>
 	<message xml:lang="it">Chiudi vista</message>
 	<message xml:lang="tr">Görünümü kapat</message>
