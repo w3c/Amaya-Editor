@@ -89,6 +89,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTFWrite.obj"
 	-@erase "$(INTDIR)\HTGopher.obj"
 	-@erase "$(INTDIR)\HTGuess.obj"
+	-@erase "$(INTDIR)\HTHash.obj"
 	-@erase "$(INTDIR)\HTHeader.obj"
 	-@erase "$(INTDIR)\HTHInit.obj"
 	-@erase "$(INTDIR)\HTHist.obj"
@@ -230,6 +231,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTFWrite.obj" \
 	"$(INTDIR)\HTGopher.obj" \
 	"$(INTDIR)\HTGuess.obj" \
+	"$(INTDIR)\HTHash.obj" \
 	"$(INTDIR)\HTHeader.obj" \
 	"$(INTDIR)\HTHInit.obj" \
 	"$(INTDIR)\HTHist.obj" \
@@ -376,6 +378,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTFWrite.obj"
 	-@erase "$(INTDIR)\HTGopher.obj"
 	-@erase "$(INTDIR)\HTGuess.obj"
+	-@erase "$(INTDIR)\HTHash.obj"
 	-@erase "$(INTDIR)\HTHeader.obj"
 	-@erase "$(INTDIR)\HTHInit.obj"
 	-@erase "$(INTDIR)\HTHist.obj"
@@ -517,6 +520,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTFWrite.obj" \
 	"$(INTDIR)\HTGopher.obj" \
 	"$(INTDIR)\HTGuess.obj" \
+	"$(INTDIR)\HTHash.obj" \
 	"$(INTDIR)\HTHeader.obj" \
 	"$(INTDIR)\HTHInit.obj" \
 	"$(INTDIR)\HTHist.obj" \
@@ -4726,6 +4730,49 @@ DEP_CPP_HTGUE=\
 
 !ENDIF 
 
+SOURCE=..\..\..\Libwww\Library\Src\HTHash.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_HTHAS=\
+	"..\..\..\libwww\Library\src\HTArray.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
+	"..\..\..\libwww\Library\src\HTList.h"\
+	"..\..\..\libwww\Library\src\HTMemory.h"\
+	"..\..\..\libwww\Library\src\HTString.h"\
+	"..\..\..\libwww\Library\src\HTUtils.h"\
+	"..\..\..\libwww\Library\src\windows\config.h"\
+	"..\..\..\libwww\Library\src\wwwsys.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_HTHAS=\
+	"..\..\..\libwww\Library\src\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\HTHash.obj" : $(SOURCE) $(DEP_CPP_HTHAS) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_HTHAS=\
+	"..\..\..\libwww\Library\src\HTArray.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
+	"..\..\..\libwww\Library\src\HTList.h"\
+	"..\..\..\libwww\Library\src\HTMemory.h"\
+	"..\..\..\libwww\Library\src\HTString.h"\
+	"..\..\..\libwww\Library\src\HTUtils.h"\
+	"..\..\..\libwww\Library\src\windows\config.h"\
+	"..\..\..\libwww\Library\src\wwwsys.h"\
+	
+
+"$(INTDIR)\HTHash.obj" : $(SOURCE) $(DEP_CPP_HTHAS) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\..\libwww\Library\src\HTHeader.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
@@ -5510,7 +5557,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -5670,7 +5717,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -8644,7 +8691,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -8794,7 +8841,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -9189,7 +9236,7 @@ DEP_CPP_HTRDF=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -9339,7 +9386,7 @@ DEP_CPP_HTRDF=\
 	"..\..\..\libwww\Library\src\HTFWrite.h"\
 	"..\..\..\libwww\Library\src\HTGopher.h"\
 	"..\..\..\libwww\Library\src\HTGuess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
+	"..\..\..\Libwww\Library\Src\HTHash.h"\
 	"..\..\..\libwww\Library\src\HTHeader.h"\
 	"..\..\..\libwww\Library\src\HTHInit.h"\
 	"..\..\..\libwww\Library\src\HTHist.h"\
@@ -12289,7 +12336,6 @@ DEP_CPP_HTXML=\
 	"..\..\..\libwww\Library\src\HTUU.h"\
 	"..\..\..\libwww\Library\src\HTWWWStr.h"\
 	"..\..\..\libwww\Library\src\HTXML.h"\
-	"..\..\..\libwww\Library\src\SGML.h"\
 	"..\..\..\libwww\Library\src\windows\config.h"\
 	"..\..\..\libwww\Library\src\WWWCore.h"\
 	"..\..\..\libwww\Library\src\wwwsys.h"\
