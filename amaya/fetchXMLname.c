@@ -39,7 +39,6 @@ static int        MathSup = 0;
    GetXHTMLSSchema returns the XHTML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema            GetXHTMLSSchema (Document doc)
-
 {
   SSchema	XHTMLSSchema;
 
@@ -54,7 +53,6 @@ SSchema            GetXHTMLSSchema (Document doc)
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema            GetMathMLSSchema (Document doc)
-
 {
   SSchema	MathMLSSchema;
 
@@ -100,7 +98,7 @@ SSchema            GetXLinkSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetXMLSSchema returns the XML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema            GetXMLSSchema (int XMLtype, Document doc)
+SSchema GetXMLSSchema (int XMLtype, Document doc)
 
 {
   if (XMLtype == XHTML_TYPE)
@@ -125,13 +123,10 @@ SSchema            GetXMLSSchema (int XMLtype, Document doc)
     - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
     - content 
   ----------------------------------------------------------------------*/
-void         MapXMLElementType (int XMLtype,
-				STRING XMLname,
-				ElementType *elType,
-				STRING *mappedName,
-				char *content,
-				ThotBool *highEnoughLevel,
-				Document doc)
+void MapXMLElementType (int XMLtype, char *XMLname,
+			ElementType *elType, char **mappedName,
+			char *content, ThotBool *highEnoughLevel,
+			Document doc)
 {
    int                 i;
    ElemMapping        *ptr;
@@ -209,7 +204,7 @@ void         MapXMLElementType (int XMLtype,
 char*           GetXMLElementName (ElementType elType, Document doc)
 {
   ElemMapping        *ptr;
-  STRING              name;
+  char               *name;
   int                 i;
   ThotBool            invalid = FALSE;
 
@@ -255,11 +250,10 @@ char*           GetXMLElementName (ElementType elType, Document doc)
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/
 ThotBool         IsXMLElementInline (ElementType elType)
-
 {
   int            i;
   ThotBool       ret = FALSE;
-  STRING         name;
+  char          *name;
   ElemMapping   *ptr;
 
   if (elType.ElTypeNum > 0)
@@ -355,7 +349,7 @@ char*           GetXMLAttributeName (AttributeType attrType,
 				       Document doc)
 {
   AttributeMapping   *ptr;
-  STRING              name, tag;
+  char               *name, *tag;
   int                 i;
   ThotBool            invalid = FALSE;
 
@@ -407,8 +401,7 @@ char*           GetXMLAttributeName (AttributeType attrType,
    the entry entityName and give the corresponding decimal value.
    Returns FALSE if entityName is not found.
   ----------------------------------------------------------------------*/
-ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
-
+ThotBool   MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
 {
   XmlEntity  *ptr;
   ThotBool    found;
