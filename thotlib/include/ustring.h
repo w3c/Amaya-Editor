@@ -64,6 +64,11 @@ typedef wchar_t *STRING;
 extern CHARSET TtaGetCharset (char *charsetname);
 
 /*----------------------------------------------------------------------
+  TtaGetLocaleCharset returns the user system charset
+  ----------------------------------------------------------------------*/
+extern CHARSET TtaGetLocaleCharset ();
+
+/*----------------------------------------------------------------------
   TtaGetDefaultCharset gives the default charset 
   ----------------------------------------------------------------------*/
 extern CHARSET TtaGetDefaultCharset ();

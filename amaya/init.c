@@ -7778,9 +7778,11 @@ void AmayaClose (Document document, View view)
   ----------------------------------------------------------------------*/
 void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 {
-  char     *urlstring, *app_home, *ptr, *url;
-  int       i, j, len, nb, end;
-  FILE     *file = NULL;
+  char          *urlstring, *app_home, *ptr, *url;
+  int            i, j, len, nb, end;
+  FILE          *file = NULL;
+  unsigned char *localname;
+  CHARSET        encoding = TtaGetLocaleCharset ();
 
   if (pathname == NULL || pathname[0] == EOS)
     return;
@@ -7812,7 +7814,14 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
       /* put the new url */
       strcpy (URL_list, url);
       if (keep)
-	fprintf (file, "\"%s\"\n", url);
+        if (encoding != UTF_8)
+		{
+          localname = TtaConvertMbsToByte ((unsigned char *)url, encoding);
+          fprintf (file, "\"%s\"\n", localname);
+          TtaFreeMemory (localname);
+		}
+		else
+          fprintf (file, "\"%s\"\n", url);
       if (ptr && *ptr != EOS)
 	{
 	  /* now write other urls */
@@ -7825,7 +7834,14 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 		  /* add the newline between two urls */
 		  strcpy (&URL_list[j], &ptr[i]);
 		  if (keep)
-		    fprintf (file, "\"%s\"\n", &ptr[i]);
+            if (encoding != UTF_8)
+			{
+              localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
+              fprintf (file, "\"%s\"\n", localname);
+              TtaFreeMemory (localname);
+			}
+		    else
+		      fprintf (file, "\"%s\"\n", &ptr[i]);
 		  j += end;
 		  nb++;
 		}
@@ -7849,10 +7865,12 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   ----------------------------------------------------------------------*/
 void InitStringForCombobox ()
 {
-  unsigned char     *urlstring, c;
+  unsigned char     *urlstring, c, *ptr;
   char              *app_home;
+  CHAR_T             wc;
   FILE              *file;
-  int                i, nb, len;
+  int                i, nb, len, l;
+  CHARSET            encoding = TtaGetLocaleCharset ();
 
   /* remove the previous list */
   TtaFreeMemory (URL_list);
@@ -7867,7 +7885,7 @@ void InitStringForCombobox ()
     {
       /* get the size of the file */
       fseek (file, 0L, 2);	/* end of the file */
-      URL_list_len = ftell (file) + MAX_URL_list + 4;
+      URL_list_len = (ftell (file) * 4) + MAX_URL_list + 4;
       URL_list = (char *)TtaGetMemory (URL_list_len);
       URL_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
@@ -7886,6 +7904,17 @@ void InitStringForCombobox ()
 		    urlstring[len] = EOS;
 		  else if (c == 13)
 		    urlstring[len] = EOS;
+#ifdef _WX
+		  else if (c > 127 && encoding != UTF_8)
+		  {
+			/* URL list uses the locale encoding */
+            ptr = &c;
+            TtaGetNextWCFromString (&wc, &ptr, encoding);
+			ptr = &urlstring[len];
+            l = TtaWCToMBstring (wc, &ptr);
+			len += l;
+		  }
+#endif /* _WX */
 		  else
 		    urlstring[len++] = (char)c;
 		}
