@@ -171,7 +171,6 @@ int                 i;
 {
 
 #  ifdef _WINDOWS
-   /* Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue); */
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #  else  /* _WINDOWS */
    ThotColorStruct     col;

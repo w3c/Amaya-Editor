@@ -55,11 +55,6 @@ static int          stack_deep;
 #include "inites_f.h"
 #include "buildlines_f.h"
 
-#ifdef _WINDOWS
-/* int fgColor; */
-#endif /* _WINDOWS */
-
-
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
@@ -100,14 +95,11 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   /* DeleteObject (TtLineGC.pen); */
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
-   /* TtLineGC.foreground = Pix_Color[fg]; */
    if (RO && ShowReadOnly () && fg == 1)
       TtLineGC.foreground = RO_Color;
    else
        TtLineGC.foreground = fg;
-   /* TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); */
 #  else  /* _WINDOWS */
    if (active && ShowReference ())
      {
@@ -179,8 +171,6 @@ int                 active;
 #  ifndef _WINDOWS
    if (TtWDepth == 1 && (active || RO))
       XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
-#  else /* _WINDOWS */
-   /* DeleteObject (TtLineGC.pen); */
 #  endif /* _WINDOWS */
 }
 
@@ -486,10 +476,6 @@ int                 fg;
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
    int                 shift;	/* shifting of drawing   */
-
-#  ifdef _WINDOWS
-   /* fgColor = fg; */
-#  endif /* _WINDOWS */
 
    if (lg > 0)
      {
@@ -909,8 +895,8 @@ int                 fg;
 	/* Lower part */
 #       ifndef _WINDOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
-#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
+#       endif /* _WINDOWS */
      }
 }
 

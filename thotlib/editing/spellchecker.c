@@ -108,7 +108,7 @@ boolean             ToCreate;
 		 path [0] = '\0';
 #     else /* !_WINDOWS */
       strcpy (path, TtaGetEnvString ("HOME"));
-	  #     endif /* !_WINDOWS */
+#     endif /* !_WINDOWS */
       LoadTreatedDict ((PtrDict *) pDictionary, 0, document, ".thot",
 		       path, FALSE, ToCreate);
     }

@@ -18,6 +18,7 @@
  * User interface for checker commands
  *
  * Author: H. Richy (INRISA)
+ *         R. Guetari (W3C/INRIA) - Windows routines.
  *
  */
 
@@ -317,7 +318,6 @@ view                view;
 	                          RejectedChar, SpellingBase, ChkrSelectProp, ChkrMenuOR, 
 							  ChkrFormCorrect, ChkrMenuIgnore, ChkrCaptureNC, ChkrSpecial);
 
-   /* MessageBox (TtaGetViewFrame (doc, view), "Not implemented yet", "Spell checking", MB_OK); */
 #  endif /* _WINDOWS */
 }
 
