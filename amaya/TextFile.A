@@ -1,0 +1,11 @@
+APPLICATION TextFile;
+
+DEFAULT
+   BEGIN
+	DocClose.Post -> DocumentClosed;
+	DocSave.Pre -> DocumentToSave;
+	PRuleCreate.Pre -> ChangePRule;
+	PRuleModify.Pre -> ChangePRule;
+   END;
+
+END
