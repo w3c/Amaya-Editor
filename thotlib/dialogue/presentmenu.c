@@ -1231,6 +1231,7 @@ View                view;
 	     /* annule les etats memorises */
 	     ResetMenus ();
 
+#        ifndef _WINDOWS 
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_CHAR),
@@ -1347,6 +1348,10 @@ View                view;
 	     else
 		i = pAb->AbSize;
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
+
+#       else  /* _WINDOWS _WINDOWS _WINDOWS _WINDOWS */
+		CreateCharacterDlgWindow (TtaGetViewFrame (document, view));
+#       endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;
 	TtaShowDialogue (NumFormPresChar, TRUE);

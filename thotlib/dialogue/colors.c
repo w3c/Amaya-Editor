@@ -18,6 +18,7 @@
  * Colors Keyboard routines
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA) - Windows NT/95 routines
  *
  */
 
@@ -40,6 +41,24 @@
 
 #define COLORS_COL 8
 #define MAX_ARGS 20
+
+#ifdef _WINDOWS
+#      define HORIZ_DIV  8
+#      define VERT_DIV  19
+#      define Button1 1		
+#      ifdef _IDDONE_
+#            undef _IDDONE_
+#      endif /* _IDDONE_ */
+#      define _IDDONE_ 100
+
+static BOOL   wndRegistered = FALSE ;
+
+#ifdef __STDC__
+LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
+#else  /* __STDC__ */
+LRESULT CALLBACK ThotColorPaletteWndProc ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 
 static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
@@ -287,6 +306,7 @@ int                 y;
    int                 color, li, co;
    int                 wcase, hcase;
 
+#  ifndef _WINDOWS
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
       wcase = CharacterWidth ('m', FontDialogue) * 12;
@@ -298,9 +318,6 @@ int                 y;
    /* Regarde si on n'a pas clique dans le titre */
    if (y < hcase)
      {
-#ifdef _WINDOWS
-#define Button1 1		/* MSWindows will probably use same model */
-#endif
 	if (button == Button1)
 	  {
 	     /* couleur de trace' standard */
@@ -319,6 +336,25 @@ int                 y;
    li = x / wcase;
    co = (y - hcase) / hcase;
    color = co * COLORS_COL + li;
+
+#  else  /* _WINDOWS _WINDOWS _WINDOWS _WINDOWS _WINDOWS */
+
+   if (y < 45 || y > 330) {
+	  if (button == Button1) {
+	     /* couleur de trace' standard */
+	     ModifyColor (-1, FALSE);
+	     ThotSelectPalette (LastBg, -1);
+	  } else {
+	       /* couleur de fond standard */
+	       ModifyColor (-1, TRUE);
+	       ThotSelectPalette (-1, LastFg);
+	  }
+	  return;
+   } 
+   li = (y - 45) / 15;
+   co = x / 35;
+   color = co + li * COLORS_COL;
+#  endif /* _WINDOWS */
    if (button == Button1)
      {
 	/* selectionne la couleur de trace' */
@@ -372,7 +408,7 @@ int                 y;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 n;
    int                 width, height;
    ThotWidget          w;
@@ -590,8 +626,141 @@ int                 y;
    /* pas de selection precedente */
    LastBg = -1;
    LastFg = -1;
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   WNDCLASSEX  wndThotPaletteClass ;
+   static char szAppName[] = "ThotColorPalette" ;
+   HWND        hwnColorPal;
+   MSG         msg;
+   if (!wndRegistered) {
+	  wndRegistered = TRUE;
+      wndThotPaletteClass.cbSize        = sizeof (wndThotPaletteClass) ;
+      wndThotPaletteClass.style         = CS_HREDRAW | CS_VREDRAW ;
+      wndThotPaletteClass.lpfnWndProc   = ThotColorPaletteWndProc ;
+      wndThotPaletteClass.cbClsExtra    = 0 ;
+      wndThotPaletteClass.cbWndExtra    = 0 ;
+      wndThotPaletteClass.hInstance     = hInstance ;
+      wndThotPaletteClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+      wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+      wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH) ;
+      wndThotPaletteClass.lpszMenuName  = NULL ;
+      wndThotPaletteClass.lpszClassName = szAppName ;
+      wndThotPaletteClass.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
+
+      RegisterClassEx (&wndThotPaletteClass) ;
+   }
+
+   hwnColorPal = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_COLORS),
+                               DS_MODALFRAME | WS_POPUP | 
+                               WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+                               CW_USEDEFAULT, CW_USEDEFAULT,
+                               280, 385,
+                               NULL, NULL, hInstance, NULL) ;
+
+   ShowWindow (hwnColorPal, SW_SHOWNORMAL) ;
+   UpdateWindow (hwnColorPal) ;
+
+   while (GetMessage (&msg, NULL, 0, 0)) {
+         TranslateMessage (&msg) ;
+         DispatchMessage (&msg) ;
+   }
+#  endif /* _WINDOWS */
 }
+
+#ifdef _WINDOWS
+#ifdef __STDC__
+LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+#endif /* __STDC__ */
+{
+     static BOOL fState[HORIZ_DIV][VERT_DIV] ;
+     static int  cxBlock, cyBlock;
+     HDC         hdc ;
+     PAINTSTRUCT ps ;
+     RECT        rect ;
+	 HBRUSH      hBrush;
+     int         x, y ;
+	 HWND        hwnLButton;
+	 HWND        hwnRButton;
+	 HWND        hwnDefaultColors;
+	 HWND        doneButton;
+
+     switch (iMsg) {
+	      case WM_CREATE:
+			   cxBlock = 35 ;
+			   cyBlock = 15 ;
+
+			   hwnLButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_1), 
+				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 274, 15,
+										  hwnd, (HMENU) 99, hInstance, NULL) ;
+               ShowWindow (hwnLButton, SW_SHOWNORMAL);
+               UpdateWindow (hwnLButton);
+
+			   hwnRButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_2), 
+				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 15, 274, 15,
+										  hwnd, (HMENU) 101, hInstance, NULL) ;
+               ShowWindow (hwnRButton, SW_SHOWNORMAL);
+               UpdateWindow (hwnRButton);
+
+			   hwnDefaultColors = CreateWindow ("STATIC", "                   Default Colors", 
+				                                WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 30, 274, 15,
+										        hwnd, (HMENU) 103, hInstance, NULL) ;
+               ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
+               UpdateWindow (hwnDefaultColors);
+
+			   doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+                                          WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                          115, 340, 50, 20, hwnd, 
+                                          (HMENU) _IDDONE_, hInstance, NULL) ;
+               ShowWindow (doneButton, SW_SHOWNORMAL);
+               UpdateWindow (doneButton);
+
+			   return 0;
+
+          case WM_LBUTTONDOWN:
+			   ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
+			   return 0;
+
+          case WM_MBUTTONDOWN:
+			   ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
+			   return 0;
+
+          case WM_RBUTTONDOWN:
+			   ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
+			   return 0;
+
+          case WM_PAINT:
+               hdc = BeginPaint (hwnd, &ps) ;
+			   SelectPalette (hdc, TtCmap, FALSE);
+			   RealizePalette (hdc);
+
+               for (y = 0 ; y < VERT_DIV ; y++)
+                   for (x = 0 ; x < HORIZ_DIV ; x++) {
+                       /*Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 85) ;*/
+					   hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV)) ;
+					   SelectObject (hdc, hBrush);
+                       Rectangle (hdc, x * cxBlock, (y * cyBlock) + 45,(x + 1) * cxBlock, (y + 1) * cyBlock + 45) ;
+					   /*Rectangle (hdc, x * cxBlock + 1, y * cyBlock + 86, (x + 1) * cxBlock - 1, (y + 1) * cyBlock + 84);	*/
+					   SelectObject (hdc, GetStockObject (WHITE_BRUSH));
+					   DeleteObject (hBrush);
+			       }
+			   
+               EndPaint (hwnd, &ps) ;
+               return 0 ;
+
+		  case WM_COMMAND:
+			   switch (LOWORD (wParam)) {
+			          case _IDDONE_: DestroyWindow (hwnd);
+						             return 0;
+			   }
+
+          case WM_DESTROY :
+               PostQuitMessage (0) ;
+               return 0 ;
+          }
+     return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+     }
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

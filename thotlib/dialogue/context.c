@@ -133,7 +133,6 @@ void WinInitColors ()
       TtIsTrueColor = FALSE ;
 
 
-   if (!TtIsTrueColor) { /* NOT a true color device */
       /* Create a color palette for the Thot set of colors. */
       ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
                              sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
@@ -159,7 +158,6 @@ void WinInitColors ()
 #        endif /* _WIN_DEBUG */
 	 WinErrorBox (WIN_Main_Wd);
       }
-   }
    /* HeapFree (GetProcessHeap (), 0, ptrLogPal); */
    /* free (ptrLogPal); */
 
