@@ -484,7 +484,6 @@ Document doc;
 View view;
 #endif /* __STDC__*/
 {
-  ElementType elType;
   char *annotIndex;
   char *annotURL;
   char *proto;
@@ -501,9 +500,9 @@ View view;
       init = TRUE;
     }
 
-  /* only HTML documents can be annotated */
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+  /* don't annotate other annotations, text only documents, or
+     graphic documents */
+  if (!ANNOT_CanAnnotate(doc))
     return;
 
   /*
@@ -594,15 +593,12 @@ void ANNOT_Create (doc, view)
      View view;
 #endif /* __STDC__*/
 {
-  ElementType elType;
   Element     first, last;
   int         c1, cl, i;
   Document    doc_annot;
   AnnotMeta  *annot;
 
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
-    /* only HTML documents can be annotated */
+  if (!ANNOT_CanAnnotate (doc))
     return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);

@@ -1266,10 +1266,10 @@ RDFResourceP type;
    It's up to the caller to free the returned string.
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T * ANNOT_MakeFileURL (CHAR_T *path)
+CHAR_T * ANNOT_MakeFileURL (const CHAR_T *path)
 #else
 CHAR_T *ANNOT_MakeFileURL (path)
-CHAR_T *path;
+CONST CHAR_T *path;
 #endif /* __STDC__ */
 {
   CHAR_T *url;
@@ -1280,4 +1280,40 @@ CHAR_T *path;
   if (url)
     usprintf (url, "file://%s", path);
   return url;
+}
+
+ /*-----------------------------------------------------------------------
+   ANNOT_CanAnnotate
+   Returns TRUE if it's possible to annotate a given document, FALSE
+   otherwise.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool ANNOT_CanAnnotate (Document doc)
+#else
+ThotBool ANNOT_CanAnnotate (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+ DocumentType docType;
+ ThotBool result;
+
+ docType = DocumentTypes[doc];
+
+ switch (docType) 
+   {
+   case docText:
+   case docImage:
+   case docSource:
+   case docCSS:
+   case docLog:
+   case docAnnot:
+     result = FALSE;
+     break;
+
+   default:
+     result = TRUE;
+     break;
+   }
+
+ return result;
 }

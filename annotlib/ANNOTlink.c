@@ -176,6 +176,7 @@ AnnotMeta *annot;
   CHAR_T       *annot_user;
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
+  CHAR_T       *docSchemaName;
   int          c1, cN;
   SSchema      XLinkSchema;
 
@@ -211,6 +212,7 @@ AnnotMeta *annot;
   */
 
   firstElType = TtaGetElementType (first);
+  docSchemaName = TtaGetSSchemaName (firstElType.ElSSchema);
 
   /* is the user trying to annotate an annotation? */
   el = TtaGetTypedAncestor (first, elType);
@@ -220,12 +222,11 @@ AnnotMeta *annot;
 	in the struct tree */
       TtaInsertSibling (anchor, el, TRUE, source_doc);
     }
-  else if (!ustrcmp (TtaGetSSchemaName (firstElType.ElSSchema), 
-		     TEXT("MathML")))
+  else if (!ustrcmp (docSchemaName, TEXT("MathML")))
     {
       /* An annotation on a MathMl structure. We backtrace the tree
-	 until we find the Math root element and add the annotation after
-	 it */
+	 until we find the Math root element and then add the annotation as 
+	 its first child. */
       el = first;
       while (el)
 	{
@@ -234,14 +235,13 @@ AnnotMeta *annot;
 	    break;
 	  el = TtaGetParent (el);
 	}
-      TtaInsertSibling (anchor, el, FALSE, source_doc);
+      TtaInsertFirstChild (&anchor, el, source_doc);
     }
-  else if (!ustrcmp (TtaGetSSchemaName (firstElType.ElSSchema), 
-		     TEXT("GraphML")))
+  else if (!ustrcmp (docSchemaName, TEXT("GraphML")))
     {
-      /* An annotation on a MathMl structure. We backtrace the tree
-	 until we find the Math root element and add the annotation after
-	 it */
+      /* An annotation on a GraphMl structure. We backtrace the tree
+	 until we find the Math root element and then add the annotation as
+	 its first child. */
       el = first;
       while (el)
 	{
@@ -250,7 +250,7 @@ AnnotMeta *annot;
 	    break;
 	  el = TtaGetParent (el);
 	}
-      TtaInsertSibling (anchor, el, FALSE, source_doc);
+      TtaInsertFirstChild (&anchor, el, source_doc);
     }
     else
     {
@@ -645,7 +645,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SelectSourceDoc (Document doc, CHAR_T *annot_url)
+void LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url)
 #else /* __STDC__*/
 void LINK_SelectSourceDoc (doc, annotIndex)
      Document doc;
@@ -654,7 +654,7 @@ void LINK_SelectSourceDoc (doc, annotIndex)
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;
-  CHAR_T *url;
+  CONST CHAR_T *url;
 
   if (IsW3Path (annot_url) || IsFilePath (annot_url))
     url = annot_url;

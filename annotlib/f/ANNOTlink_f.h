@@ -20,7 +20,7 @@ extern void LINK_LoadAnnotationIndex ( Document doc,
                                        CHAR_T *annotIndex,
                                        ThotBool mark_visible );
 extern void LINK_SelectSourceDoc ( Document doc,
-                                   CHAR_T *annot_url );
+                                   CONST CHAR_T *annot_url );
 
 #else /* __STDC__ */
 
@@ -38,7 +38,7 @@ extern void LINK_LoadAnnotationIndex (/* Document doc,
                                          CHAR_T *annotIndex,
                                          ThotBool mark_visible */);
 extern void LINK_SelectSourceDoc (/* Document doc,
-                                     CHAR_T *annot_url */);
+                                     CONST CHAR_T *annot_url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
