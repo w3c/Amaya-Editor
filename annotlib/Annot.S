@@ -33,7 +33,7 @@ STRUCT
 		CreatorGivenName = CONSTANT C_Empty;
 		CreatorFamilyName = CONSTANT C_Empty;
 		SourceDoc (ATTR HREF_=Text) = CONSTANT C_Empty;
-		RDFtype (ATTR Resource=Text) = CONSTANT C_Empty; 
+		RDFtype (ATTR isReply=YES_,NO_) = CONSTANT C_Empty with isReply ? =  NO_; 
 		AnnotCDate = CONSTANT C_Empty;
 		AnnotMDate = CONSTANT C_Empty;
 	        END;
@@ -72,6 +72,7 @@ EXCEPT
         CreatorGivenName: NoCut;
 	SourceDoc:      NoCut;
 	RDFtype:        NoCut;
+	isReply:	Invisible;
         AnnotCDate:     NoCut;
         AnnotMDate:     NoCut;
 

@@ -93,9 +93,22 @@ BOXES
 
 	END;
 
- RDFtype_Box:
+ RDFAtype_Box:
 	BEGIN
 	Content: (Text 'Annotation type: ');
+	Visibility: Creator =;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
+	END;
+
+ RDFRtype_Box:
+	BEGIN
+	Content: (Text 'Reply type: ');
 	Visibility: Creator =;
 	VertPos: Top = Previous . Bottom + 0.2;
 	Font: Creator =;
@@ -129,12 +142,6 @@ BOXES
 	Size: RDF_FONTSIZE;
         Foreground: RDF_FgColor;
         Background: RDF_BgColor;
-	END;
-
- ValueType: BEGIN
-	Content: (Resource);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	END;
 
  Thread_box: BEGIN
@@ -325,7 +332,6 @@ RULES
 
  RDFtype:
 	BEGIN
-	CreateBefore (RDFtype_Box);
 	VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
 	Width: 1 px;
@@ -423,9 +429,14 @@ RULES
 
 ATTRIBUTES
 
- Resource:
+ isReply = NO_:
 	BEGIN
- 	CreateBefore(ValueType);
+ 	CreateBefore (RDFAtype_Box);
+        END;
+
+ isReply = YES_:
+	BEGIN
+ 	CreateBefore (RDFRtype_Box);
         END;
 
  Selected_:
