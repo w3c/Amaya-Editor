@@ -1717,17 +1717,13 @@ static void    XmlEndElement (CHAR_T *GIname)
 /*----------------------------------------------------------------------
    IsLeadingSpaceUseless
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool  IsLeadingSpaceUseless ()
-#else  /* __STDC__ */
-static ThotBool  IsLeadingSpaceUseless ()
-#endif  /* __STDC__ */
 
 {
-   ElementType     elType, lastElType, ancestorType;
-   STRING          elSchemaName;
-   Element         parent, ancestor, prev;
-   ThotBool        removeLeadingSpaces;
+   ElementType   elType, lastElType, ancestorType;
+   STRING        elSchemaName;
+   Element       parent, ancestor, prev;
+   ThotBool      removeLeadingSpaces;
 
    if (InsertSibling ())
      /* There is a previous sibling (XMLcontext.lastElement) 
@@ -1790,12 +1786,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 /*----------------------------------------------------------------------
    PutInXmlElement
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void     PutInXmlElement (STRING data)
-#else  /* __STDC__ */
-void     PutInXmlElement (data)
-STRING      data;
-#endif  /* __STDC__ */
+void            PutInXmlElement (STRING data)
 
 {
    ElementType  elType;
@@ -1932,22 +1923,12 @@ STRING      data;
 /*----------------------------------------------------------------------
    XhtmlCreateAttr 
    Create an attribute of type attrType for the element el.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
+  ---------------------------------------------------------------------*/
 static void     XhtmlCreateAttr (Element       el,
 				 AttributeType attrType,
 				 CHAR_T*       text,
 				 ThotBool      invalid,
 				 Document      doc)
-#else
-static void     XhtmlCreateAttr (el, attrType, text, invalid, doc)
-Element         el;
-AttributeType   attrType;
-CHAR_T*         text;
-ThotBool        invalid;
-Document        doc;
-
-#endif
 {
   int           attrKind;
   int           length;
@@ -1999,15 +1980,8 @@ Document        doc;
    XhtmlEndOfAttrName   
    End of a XML attribute that belongs to the HTML DTD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   XhtmlEndOfAttrName (CHAR_T *attrName, Element el, Document doc)
-#else
-static void   XhtmlEndOfAttrName (attrName, el, doc)
-CHAR_T       *attrName;
-Element       el;
-Document      doc;
 
-#endif
 {
  AttributeMapping*   mapAttr;
  AttributeType       attrType;
@@ -2119,17 +2093,10 @@ Document      doc;
    XmlEndOfAttrName
    End of a XML attribute that doesn't belongs to the XHTML DTD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     XmlEndOfAttrName (CHAR_T  *attrName,
-				  Element  el,
-				  Document doc)
-#else
-static void     XmlEndOfAttrName (attrName, el, doc)
-CHAR_T         *attrName;
-Element         el;
-Document        doc;
+static void       XmlEndOfAttrName (CHAR_T  *attrName,
+				    Element  el,
+				    Document doc)
 
-#endif
 {
  AttributeType    attrType;
  Attribute        attr;
@@ -2173,13 +2140,8 @@ Document        doc;
    A XML attribute has been read. 
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void    EndOfAttributeName (CHAR_T *attrName)
-#else
-static void    EndOfAttributeName (attrName)
-CHAR_T        *attrName;
 
-#endif
 {
    CHAR_T     *buffer;
    CHAR_T     *bufName;
@@ -2257,13 +2219,8 @@ CHAR_T        *attrName;
    XhtmlPutInContent    
    Put the string ChrString in the leaf of current element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element    XhtmlPutInContent (STRING ChrString)
-#else
-static Element    XhtmlPutInContent (ChrString)
-STRING            ChrString;
 
-#endif
 {
    Element        el, child;
    ElementType    elType;
@@ -2298,21 +2255,16 @@ STRING            ChrString;
    Value val has been read for the HTML attribute TYPE.
    Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         XhtmlTypeAttrValue (CHAR_T* val)
-#else
-static void         XhtmlTypeAttrValue (val)
-CHAR_T*             val;
+static void       XhtmlTypeAttrValue (CHAR_T* val)
 
-#endif
 {
-  ElementType         elType;
-  Element             newChild;
-  AttributeType       attrType;
-  Attribute           attr;
-  CHAR_T              msgBuffer[MaxMsgLength];
-  int                 value;
-  ThotBool            level;
+  ElementType     elType;
+  Element         newChild;
+  AttributeType   attrType;
+  Attribute       attr;
+  CHAR_T          msgBuffer[MaxMsgLength];
+  int             value;
+  ThotBool        level;
 
   attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
   attrType.AttrTypeNum = DummyAttribute;
@@ -2360,17 +2312,12 @@ CHAR_T*             val;
    An attribute value has been read for a element that
    doesn't belongs to XHTML DTD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         XmlEndOfAttrValue (CHAR_T *attrValue)
-#else
-static void         XmlEndOfAttrValue (attrValue)
-CHAR_T     *attrValue;
 
-#endif
 {
-   AttributeType     attrType;
-   int		     attrKind, val;
-   UCHAR_T           msgBuffer[MaxMsgLength];
+   AttributeType    attrType;
+   int		    attrKind, val;
+   UCHAR_T          msgBuffer[MaxMsgLength];
 
    TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
    switch (attrKind)
@@ -2412,29 +2359,24 @@ CHAR_T     *attrValue;
    XhtmlEndOfAttrValue
    An attribute value has been read for a element that belongs to XHTML DTD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         XhtmlEndOfAttrValue (CHAR_T *attrValue)
-#else
-static void         XhtmlEndOfAttrValue (attrValue)
-CHAR_T     *attrValue;
+static void        XhtmlEndOfAttrValue (CHAR_T *attrValue)
 
-#endif
 {
-   AttributeType       attrType, attrType1;
-   Attribute	       attr;
-   ElementType	       elType;
-   Element             child;
-   Language            lang;
-   CHAR_T              translation;
-   char                shape;
-   STRING              buffer;
-   STRING              attrName;
-   int                 val;
-   int                 length;
-   int                 attrKind;
-   ThotBool            done = FALSE;
-   ThotBool            level;
-   CHAR_T              msgBuffer[MaxMsgLength];
+   AttributeType   attrType, attrType1;
+   Attribute       attr;
+   ElementType	   elType;
+   Element         child;
+   Language        lang;
+   CHAR_T          translation;
+   char            shape;
+   STRING          buffer;
+   STRING          attrName;
+   int             val;
+   int             length;
+   int             attrKind;
+   ThotBool        done = FALSE;
+   ThotBool        level;
+   CHAR_T          msgBuffer[MaxMsgLength];
 
    /* treatments of some particular HTML attributes */
    if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("style")))
@@ -2828,8 +2770,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 
    length = strlen (commentValue);
    buffer = TtaAllocString (length + 1);
-   j = 0;
-   i = 0;
+   i = 0; j = 0;
    buffer[j] = WC_EOS;
 
    /* Create a Thot element for the comment */
@@ -2940,7 +2881,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 		 }
 	       else
 		 {
-		   /* The character is not found in the fallback table */
+		   /* The character is found in the fallback table */
 		   /* Create a new text leaf */
 		   elTypeLeaf.ElSSchema = elType.ElSSchema;
 		   elTypeLeaf.ElTypeNum = 1;
@@ -2974,10 +2915,9 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 			      XMLcontext.language, XMLcontext.doc);
 	 }
        
-       (*(currentParserCtxt->ElementComplete)) (commentEl,
-						XMLcontext.doc, &error);
+       (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc,
+						&error);
        XMLcontext.lastElementClosed = TRUE;
-       
        TtaFreeMemory (buffer);
      }
 }
@@ -2989,17 +2929,32 @@ static void       CreateXmlComment (CHAR_T *commentValue)
    CreateXmlPi
    Create a Processing Instruction element into the Thot tree.
   ---------------------------------------------------------------------*/
-static void      CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
+static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 
 {
-   ElementType   elType, elTypeTxt;
-   Element  	 PiEl, PiLineEl, PiText;
-   STRING        mappedName;
-   CHAR_T        cont;
-   int           i, start, len, error;
-   CHAR_T       *PiValue = NULL;
-   ThotBool      level = TRUE;
+   ElementType    elType, elTypeLeaf;
+   Element  	  PiEl, PiLineEl, PiLeaf, lastChild;
+   STRING         mappedName;
+   CHAR_T         cont;
+   CHAR_T        *PiValue = NULL;
+   int            length, i, j,error;
+   ThotBool       level = TRUE;
+   unsigned char *buffer;
+   unsigned char *srcbuf;
+   wchar_t        wcharRead;
+   int            nbBytesRead = 0;
+   Language       lang;
+   char           fallback[5];
 
+   length = strlen (PiData) + strlen (PiData);
+   buffer = TtaAllocString (length + 2);
+   i = 0; j = 0;
+   buffer[j] = WC_EOS;
+   PiValue = TtaAllocString (length + 2);
+   strcpy (PiValue, PiTarget);
+   strcat (PiValue, TEXT(" "));
+   strcat (PiValue, PiData);
+ 
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
@@ -3010,7 +2965,6 @@ static void      CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
        PiEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (PiEl);
        InsertXmlElement (&PiEl);
-
        /* Create a XMLPI_line element as the first child of element XMLPI */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
@@ -3020,58 +2974,128 @@ static void      CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
        XmlSetElemLineNumber (PiLineEl);
        TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
 
-       /* Create a TEXT element as the first child of element XMLPI_line*/
-       elTypeTxt.ElSSchema = elType.ElSSchema;
-       elTypeTxt.ElTypeNum = 1;
-       PiText = TtaNewElement (XMLcontext.doc, elTypeTxt);
-       XmlSetElemLineNumber (PiText);
-       TtaInsertFirstChild (&PiText, PiLineEl, XMLcontext.doc);
-       TtaSetTextContent (PiText, TEXT(""), XMLcontext.language, XMLcontext.doc);
-       /* Look for line break in the PI and create as many */
-       /* XMLPI_line elements as needed */
-       i = 0; start = 0;
-       len = strlen (PiTarget);
-       len = len + strlen (PiData);
-       PiValue = TtaGetMemory (len + 2);
-       strcpy (PiValue, PiTarget);
-       strcat (PiValue, TEXT(" "));
-       strcat (PiValue, PiData);
-      do
+       while (i < length)
 	 {
-	   if ((int)PiValue[i] == EOL || (int)PiValue[i] == __CR__)
-	     /* New line */
+	   srcbuf = (unsigned char *) &PiValue[i];
+	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+								&srcbuf, UTF_8);
+	   i += nbBytesRead;
+	   
+	   if (wcharRead < 0x100)
 	     {
-	       PiValue[i] = EOS;
-	       TtaAppendTextContent (PiText, &PiValue[start], XMLcontext.doc);
-	       /* Create a new XMLPI_line element */
-	       PiLineEl = TtaNewElement (XMLcontext.doc, elType);
-	       XmlSetElemLineNumber (PiLineEl);
-	       /* Inserts the new XMLcomment_line after the previous one */
-	       TtaInsertSibling (PiLineEl, TtaGetParent (PiText),
-				 FALSE, XMLcontext.doc);
-	       /* Create a TEXT element as the first child of */
-	       /* the new XMLPI_line element */
-	       PiText = TtaNewElement (XMLcontext.doc, elTypeTxt);
-	       XmlSetElemLineNumber (PiText);
-	       TtaInsertFirstChild (&PiText, PiLineEl, XMLcontext.doc);
-	       TtaSetTextContent (PiText, TEXT(""), XMLcontext.language,
-				  XMLcontext.doc);
-	       i++;
-	       start = i;   /* Start of next comment line */
+	       /* Look for line break in the PI and create as many */
+	       /* XMLPI_line elements as needed */
+	       if ((int)wcharRead == EOL || (int)wcharRead == __CR__)
+		 /* New line */
+		 {
+		   /* Put the current content into a text PI line */
+		   buffer[j] = WC_EOS;
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (PiLeaf);
+		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
+		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
+		   else
+		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
+		   TtaSetTextContent (PiLeaf, &buffer[0],
+				      XMLcontext.language, XMLcontext.doc);
+		   j = 0;
+		   buffer[j] = WC_EOS;
+		   /* Create a new XMLPI_line element */
+		   PiLineEl = TtaNewElement (XMLcontext.doc, elType);
+		   XmlSetElemLineNumber (PiLineEl);
+		   /* Inserts the new XMLPI_line after the previous one */
+		   TtaInsertSibling (PiLineEl, TtaGetParent (PiLeaf),
+				     FALSE, XMLcontext.doc);
+		 }
+	       else
+		   buffer[j++] = (char) wcharRead;
 	     }
-	   else if (PiValue[i] != EOS)
-	     i++;
+	   else
+	     {
+	       /* It's not an 8bits character */
+	       if (buffer[0] != WC_EOS)
+		 {
+		   /* Put the current content into a text PI line */
+		   buffer[j] = WC_EOS;
+		   /* Create a text element as child of element XMLPI_line */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (PiLeaf);
+		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
+		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
+		   else
+		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
+		   TtaSetTextContent (PiLeaf, &buffer[0],
+				      XMLcontext.language, XMLcontext.doc);
+		   j = 0;
+		   buffer[j] = WC_EOS;
+		 }
+	       /* Try to find a fallback character */
+	       GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+	       if (fallback[0] == '?')
+		 {
+		   /* The character is not found in the fallback table */
+		   /* Create a symbol leaf */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 3;
+		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (PiLeaf);
+		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
+		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
+		   else
+		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
+		   /* Put the symbol '?' into the new symbol leaf */
+		   TtaSetGraphicsShape (PiLeaf, fallback[0], XMLcontext.doc);
+		   /* Changes the wide char code associated with that symbol */
+		   TtaSetSymbolCode (PiLeaf, wcharRead, XMLcontext.doc);
+		   /* Make that leaf read-only */
+		   TtaSetAccessRight (PiLeaf, ReadOnly, XMLcontext.doc);
+		 }
+	       else
+		 {
+		   /* The character is found in the fallback table */
+		   /* Create a new text leaf */
+		   elTypeLeaf.ElSSchema = elType.ElSSchema;
+		   elTypeLeaf.ElTypeNum = 1;
+		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		   XmlSetElemLineNumber (PiLeaf);
+		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
+		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
+		   else
+		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
+		   /* Put the fallback character into the new text leaf */
+		   TtaSetTextContent (PiLeaf, fallback, lang, XMLcontext.doc);
+		 }
+	     }
 	 }
-       while (PiValue[i] != EOS);
+
        /* Process last line */
-       if (i > start + 1)
-	 TtaAppendTextContent (PiText, &PiValue[start], XMLcontext.doc);
+       if (buffer[0] != WC_EOS)
+	 {
+	   buffer[j] = WC_EOS;
+	   elTypeLeaf.ElSSchema = elType.ElSSchema;
+	   elTypeLeaf.ElTypeNum = 1;
+	   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+	   XmlSetElemLineNumber (PiLeaf);
+	   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
+	     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
+	   else
+	     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
+	   TtaSetTextContent (PiLeaf, &buffer[0], XMLcontext.language,
+			      XMLcontext.doc);
+	 }
+       
        (*(currentParserCtxt->ElementComplete)) (PiEl, XMLcontext.doc, &error);
        XMLcontext.lastElementClosed = TRUE;
+       TtaFreeMemory (PiValue);
+       TtaFreeMemory (buffer);
      }
    
-   /* Call the corresponding treatment */
-   /* TODO */
+   /* Call the treatment that correspond to that PI */
+   /* Not yet supported in Amaya */
 }
 /*--------------------  PI  (end)  ---------------------------------*/
 
@@ -3082,12 +3106,7 @@ static void      CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
    Hndl_CdataStart
    Handlers that get called at the beginning of a CDATA section
   ------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_CdataStart (void *userData)
-#else  /* __STDC__ */
-static void     Hndl_CdataStart (userData)
-void            *userData; 
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3099,12 +3118,7 @@ void            *userData;
    Hndl_CdataEnd
    Handlers that get called at the end of a CDATA section
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_CdataEnd (void *userData)
-#else  /* __STDC__ */
-static void     Hndl_CdataEnd (userData)
-void            *userData; 
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3118,16 +3132,9 @@ void            *userData;
    The string the handler receives is NOT zero terminated.
    We have to use the length argument to deal with the end of the string.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     Hndl_CharacterData (void *userData,
-				    const XML_Char *data,
-				    int   length)
-#else  /* __STDC__ */
-static void     Hndl_CharacterData (userData, data, length)
-void            *userData; 
-const XML_Char  *data;
-int              length;
-#endif  /* __STDC__ */
+static void       Hndl_CharacterData (void *userData,
+				      const XML_Char *data,
+				      int   length)
 
 {
    unsigned char *buffer;
@@ -3190,13 +3197,7 @@ int              length;
    Handler for comments
    The data is all text inside the comment delimiters
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_Comment (void *userData, const XML_Char *data)
-#else  /* __STDC__ */
-static void     Hndl_Comment (userData, data)
-void            *userData; 
-const XML_Char  *data;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3215,16 +3216,10 @@ const XML_Char  *data;
    (like some kinds of DTD declarations) and data which could be
    reported but which currently has no handler set.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_Default (void *userData,
 			      const XML_Char *data,
 			      int   length)
-#else  /* __STDC__ */
-static void     Hndl_Default (userData, data, length)
-void            *userData; 
-const XML_Char  *data;
-int              length;
-#endif  /* __STDC__ */
+
 {
 #ifdef EXPAT_PARSER_DEBUG
   int  i;
@@ -3243,16 +3238,9 @@ int              length;
    Hndl_DefaultExpand
    Default handler with expansion of internal entity references
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_DefaultExpand (void *userData,
 				    const XML_Char *data,
 				    int   length)
-#else  /* __STDC__ */
-static void     Hndl_DefaultExpand (userData, data, length)
-void            *userData; 
-const XML_Char  *data;
-int              length;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3272,14 +3260,8 @@ int              length;
    Handler for the start of the DOCTYPE declaration.
    It is called when the name of the DOCTYPE is encountered.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_DoctypeStart (void *userData,
 				   const XML_Char *doctypeName)
-#else  /* __STDC__ */
-static void     Hndl_DoctypeStart (userData, doctypeName)
-void            *userData; 
-const XML_Char  *doctypeName;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3293,12 +3275,7 @@ const XML_Char  *doctypeName;
    It is called when the closing > is encountered,
    but after processing any external subset.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_DoctypeEnd (void *userData)
-#else  /* __STDC__ */
-static void     Hndl_DoctypeEnd (userData)
-void            *userData; 
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3454,14 +3431,8 @@ static void       Hndl_ElementStart (void *userData,
    Hndl_ElementEnd
    Handler for end tags
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_ElementEnd (void *userData,
 				 const XML_Char *name)
-#else  /* __STDC__ */
-static void     Hndl_ElementEnd (userData, name)
-void            *userData; 
-const XML_Char  *name
-#endif  /* __STDC__ */
 
 {
    CHAR_T       *bufName;
@@ -3514,24 +3485,11 @@ const XML_Char  *name
    Handler for external entity references.
    his handler is also called for processing an external DTD subset.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int     Hndl_ExternalEntityRef (void *userData,
 				       const XML_Char *context,
 				       const XML_Char *base,
 				       const XML_Char *systemId,
 				       const XML_Char *publicId)
-#else  /* __STDC__ */
-static int     Hndl_ExternalEntityRef (userData,
-				       context,
-				       base,
-				       systemId,
-				       publicId)
-void            *userData; 
-const XML_Char  *context;
-const XML_Char  *base;
-const XML_Char  *systemId;
-const XML_Char  *publicId;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3548,19 +3506,11 @@ const XML_Char  *publicId;
    Hndl_NameSpaceStart
    Handler for the start of namespace declarations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_NameSpaceStart (void *userData,
 				     const XML_Char *prefix,
 				     const XML_Char *uri)
-#else  /* __STDC__ */
-static void     Hndl_NameSpaceStart (userData, prefix, uri)
-void            *userData; 
-const XML_Char  *prefix;
-const XML_Char  *uri;
-#endif  /* __STDC__ */
 
 {   
-
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
@@ -3571,14 +3521,8 @@ const XML_Char  *uri;
    Hndl_NameSpaceEnd
    Handler for the end of namespace declarations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_NameSpaceEnd (void *userData,
 				   const XML_Char *prefix)
-#else  /* __STDC__ */
-static void     Hndl_NameSpaceEnd (userData, prefix)
-void            *userData; 
-const XML_Char  *prefix;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3591,24 +3535,11 @@ const XML_Char  *prefix;
    Hndl_Notation
    Handler that receives notation declarations.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_Notation (void *userData,
 			       const XML_Char *notationName,
 			       const XML_Char *base,
 			       const XML_Char *systemId,
 			       const XML_Char *publicId)
-#else  /* __STDC__ */
-static void     Hndl_Notation (userData,
-			       notationName,
-			       base,
-			       systemId,
-			       publicId)
-void            *userData; 
-const XML_Char  *notationName;
-const XML_Char  *base;
-const XML_Char  *systemId;
-const XML_Char  *publicId;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3629,12 +3560,7 @@ const XML_Char  *publicId;
    If this handler returns 0, then the parser will throw an
    XML_ERROR_NOT_STANDALONE error.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int     Hndl_NotStandalone (void *userData)
-#else  /* __STDC__ */
-static int     Hndl_NotStandalone (userData)
-void            *userData; 
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3650,16 +3576,9 @@ void            *userData;
    The pidata is the rest of the characters in it after skipping
    all whitespace after the initial word.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_PI (void *userData,
 			 const XML_Char *target,
 			 const XML_Char *pidata)
-#else  /* __STDC__ */
-static void     Hndl_PI (userData, target, pidata)
-void            *userData; 
-const XML_Char  *target;
-const XML_Char  *pidata;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3674,16 +3593,9 @@ const XML_Char  *pidata;
    Hndl_UnknownEncoding
    Handler to deal with encodings other than the built in
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int     Hndl_UnknownEncoding (void           *encodingData,
 				     const XML_Char *name,
 				     XML_Encoding   *info)
-#else  /* __STDC__ */
-static int     Hndl_UnknownEncoding (userData, data, length)
-void            *encodingData; 
-const XML_Char  *name;
-XML_Encoding    *info
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -3701,27 +3613,12 @@ XML_Encoding    *info
    Handler that receives declarations of unparsed entities.
    These are entity declarations that have a notation (NDATA) field:
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     Hndl_UnparsedEntity (void *userData,
 				     const XML_Char *entityName,
 				     const XML_Char *base,
 				     const XML_Char *systemId,
 				     const XML_Char *publicId,
 				     const XML_Char *notationName)
-#else  /* __STDC__ */
-static void     Hndl_UnparsedEntity (userData,
-				     entityName,
-				     base,
-				     systemId,
-				     publicId,
-				     notationName)
-void            *userData; 
-const XML_Char  *entityName;
-const XML_Char  *base;
-const XML_Char  *systemId;
-const XML_Char  *publicId;
-const XML_Char  *notationName;
-#endif  /* __STDC__ */
 
 {
 #ifdef EXPAT_PARSER_DEBUG
