@@ -1114,6 +1114,7 @@ void CreateScript (Document doc, View view)
   Element             el, child, parent = NULL;
   char               *s;
   int                 i, j;
+  ThotBool            generateCDATA;
 
   /* test if we have to insert a script in the document head */
   TtaGiveFirstSelectedElement (doc, &el, &i, &j);
@@ -1135,7 +1136,7 @@ void CreateScript (Document doc, View view)
 	  else
 	    {
 	      /* within a head 
-		 /* get the structure schema of the parent element */
+		 get the structure schema of the parent element */
 	      parent = TtaGetParent (el);
 	      if (parent)
 		el = parent;
@@ -1172,7 +1173,9 @@ void CreateScript (Document doc, View view)
 
   if (el)
     {
-      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+      TtaGetEnvBoolean ("GENERATE_CDATA", &generateCDATA);
+      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
+	  generateCDATA)
 	/* insert a cdata within */
 	elType.ElTypeNum = HTML_EL_CDATA;
       else
