@@ -29,7 +29,6 @@
 #define EOL     '\n'
 #define TAB     '\t'
 #define SPACE    ' '
-typedef unsigned char   ThotBool;
 
 #include <setjmp.h>
 #include <signal.h>
@@ -113,6 +112,8 @@ int                 _getpid (void);
 
 /* type mappings */
 typedef BOOL        Boolean;	/* X11/Intrinsic.h */
+#define HAVE_BOOLEAN
+typedef BOOL        ThotBool;
 #define Bool	    int	/* X11/Xlib.h */
 #define None	    0L	/* X11/X.h */
 #define Bool	    int	/* X11/Xlib.h */
@@ -142,6 +143,7 @@ typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 
 #else /* _WINDOWS *//***********************************WINDOWS**/
 /* Unix definitions */
+typedef unsigned char   ThotBool;
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t
 
@@ -154,5 +156,4 @@ typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
 
-#define HAVE_BOOLEAN
 #endif /* THOT_SYS_H */

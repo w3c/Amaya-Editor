@@ -56,6 +56,7 @@
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "units_f.h"
 #include "views_f.h"
 

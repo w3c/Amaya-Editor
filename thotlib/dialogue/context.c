@@ -439,7 +439,9 @@ STRING              name;
  ----------------------------------------------------------------------*/
 ThotBool            ShowReference ()
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+	return (FALSE);
+#else /* _WINDOWS */
    if (Box_Color == cwhite.pixel)
       return (FALSE);
    else
@@ -453,7 +455,9 @@ ThotBool            ShowReference ()
  ----------------------------------------------------------------------*/
 ThotBool            ShowReadOnly ()
 {
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+	return (FALSE);
+#else /* _WINDOWS */
    if (RO_Color == cwhite.pixel)
       return (FALSE);
    else

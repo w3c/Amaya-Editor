@@ -870,7 +870,7 @@ ThotBool            close;
   PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
   int                 width, height;
-  int                 ret, f;
+  int                 ret;
   int                 newx, newy, lastx, lasty;
   int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, x3, y3;
@@ -881,7 +881,7 @@ ThotBool            close;
   POINT               cursorPos;
   POINT               ptBegin, ptEnd;
 # else  /* !_WINDOWS */
-  int                 e;
+  int                 e, f;
 # endif /* _WINDOWS */
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)
@@ -1211,25 +1211,23 @@ ThotBool            close;
 #endif /* __STDC__ */
 
 {
-  ThotWindow          w, wdum;
-  ThotEvent           event;
+  ThotWindow          w;
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
   int                 width, height;
   int                 dx, dy;
-  int                 ret, f;
-  int                 newx, newy, lastx, lasty;
   int                 xMin, yMin, xMax, yMax;
-  int                 x1, y1, x3, y3;
   int                 x, y;
-  ThotBool            wrap;
-# ifdef _WINDOWS
-  RECT                rect;
-  POINT               cursorPos;
-  POINT               ptBegin, ptEnd;
-# else  /* !_WINDOWS */
+# ifndef _WINDOWS
+  ThotWindow          wdum;
+  ThotEvent           event;
   int                 e;
+  int                 ret, f;
+  int                 newx, newy;
+  int                 lastx, lasty;
+  int                 x1, y1, x3, y3;
+  ThotBool            wrap;
   ThotBool            start = TRUE;
 # endif /* _WINDOWS */
 
