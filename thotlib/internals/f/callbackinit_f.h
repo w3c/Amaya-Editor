@@ -10,9 +10,6 @@ extern void InitApplicationSchema ( PtrSSchema pSS );
 extern PtrAction FetchAction ( char* actionName );
 extern void TteAddAction ( char* actionName,
                            Proc doIt );
-extern int TteAddUserAction ( char* actionName,
-                              UserProc procedure,
-                              void *arg );
 extern PtrEventsSet TteGetEventsSet ( CHAR_T* name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
                                       CHAR_T* name );
@@ -29,9 +26,6 @@ extern void InitApplicationSchema (/* PtrSSchema pSS */);
 extern PtrAction FetchAction (/* char* actionName */);
 extern void TteAddAction (/* char* actionName,
                              Proc doIt */);
-extern int TteAddUserAction (/* char* actionName,
-                                UserProc procedure,
-                                void *arg */);
 extern PtrEventsSet TteGetEventsSet (/* CHAR_T* name */);
 extern PtrEventsSet TteNewEventsSet (/* int structureId,
                                         CHAR_T* name */);

@@ -23,11 +23,9 @@
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char*     ActionName;    /* External name of the action           */
-  UserProc 	User_Action;   /* Address of the User procedure (Java)  */
-  void 		*User_Arg;     /* Arguments of the User procedure       */
+  char*         ActionName;    /* External name of the action           */
   Proc 		Call_Action;   /* Address C procedure                   */
-  char*     ActionEquiv;   /* Displayed text for shortcuts          */
+  char*         ActionEquiv;   /* Displayed text for shortcuts          */
   ThotBool	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
@@ -35,7 +33,7 @@ typedef struct _Action_Ctl
 typedef struct _Item_Ctl
 {
   int		ItemID;		/* ID of the menu item			*/
-  char      ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
+  char          ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
   				/* 'S'=Separator, 'M'=Menu		*/
   union
   {

@@ -1019,7 +1019,8 @@ int                 key;
 	      if (MenuActionList[0].Call_Action)
 		(*MenuActionList[0].Call_Action) (document, view, SPACE);
 	    }
-	  else if ((value >= 32 && value < 128) || (value >= 144 && value < 256))
+	  else if (value == 9 ||
+		   ( value >= 32 && value < 128) || (value >= 144 && value < 256))
 	    {
 #ifdef _WINDOWS
 	      if (!specialKey)

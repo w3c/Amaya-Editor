@@ -7,42 +7,42 @@
 #ifdef __STDC__
 
 extern void XhtmlGetDTDName ( STRING DTDname,
-			      STRING elementName );
-extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* Attr,
-					    AttributeType* attrType,
-					    CHAR_T* elementName,
-					    Document doc );
+                              STRING elementName );
+extern AttributeMapping *XhtmlMapAttribute ( CHAR_T* attrName,
+                                             AttributeType* attrType,
+                                             CHAR_T* elementName,
+                                             Document doc );
 extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
-				     AttributeType attrType,
-				     int* value );
+                                     AttributeType attrType,
+                                     int* value );
 extern void XhtmlMapEntity ( STRING entityName,
-			     int *entityValue,
-			     int valueLength,
-			     STRING alphabet );
+                             int *entityValue,
+                             int valueLength,
+                             STRING alphabet );
 extern void XhtmlEntityCreated ( USTRING entityValue,
-				 Language lang,
-				 STRING entityName,
-				 Document doc );
+                                 Language lang,
+                                 STRING entityName,
+                                 Document doc );
 
 #else /* __STDC__ */
 
 extern void XhtmlGetDTDName (/* STRING DTDname,
-			      STRING elementName */);
-extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* Attr,
-					       AttributeType* attrType,
-					       CHAR_T* elementName,
-					       Document doc */);
+                                STRING elementName */);
+extern AttributeMapping *XhtmlMapAttribute (/* CHAR_T* attrName,
+                                               AttributeType* attrType,
+                                               CHAR_T* elementName,
+                                               Document doc */);
 extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
-				     AttributeType attrType,
-				     int* value */);
+                                       AttributeType attrType,
+                                       int* value */);
 extern void XhtmlMapEntity (/* STRING entityName,
-			       int *entityValue,
-			       int valueLength,
-			       STRING alphabet */);
+                               int *entityValue,
+                               int valueLength,
+                               STRING alphabet */);
 extern void XhtmlEntityCreated (/* USTRING entityValue,
-				   Language lang,
-				   STRING entityName,
-				   Document doc */);
+                                   Language lang,
+                                   STRING entityName,
+                                   Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

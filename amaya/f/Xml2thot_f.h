@@ -7,24 +7,24 @@
 #ifdef __STDC__
 
 extern void PutInXmlElement ( STRING data );
+extern void FreeXmlParserContexts ( void );
 extern void StartXmlParser ( Document doc,
-			     CHAR_T* htmlFileName,
-			     CHAR_T* documentName,
-			     CHAR_T* documentDirectory,
-			     CHAR_T* pathURL,
-			     ThotBool plainText );
-extern void FreeXmlParserContexts (void);
+                             CHAR_T* htmlFileName,
+                             CHAR_T* documentName,
+                             CHAR_T* documentDirectory,
+                             CHAR_T* pathURL,
+                             ThotBool plainText );
 
 #else /* __STDC__ */
 
 extern void PutInXmlElement (/* STRING data */);
-extern void StartXmlParser (/* Document doc,
-			       CHAR_T* htmlFileName,
-			       CHAR_T* documentName,
-			       CHAR_T* documentDirectory,
-			       CHAR_T* pathURL,
-			       ThotBool plainText */);
 extern void FreeXmlParserContexts (/* void */);
+extern void StartXmlParser (/* Document doc,
+                               CHAR_T* htmlFileName,
+                               CHAR_T* documentName,
+                               CHAR_T* documentDirectory,
+                               CHAR_T* pathURL,
+                               ThotBool plainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -4038,14 +4038,10 @@ void                EditingLoadResources ()
 	TteConnectAction (T_closehistory, (Proc) CloseHistorySequence);
 
 	MenuActionList[0].Call_Action = (Proc) TtcInsertChar;
-	MenuActionList[0].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) TtcDeletePreviousChar;
-	MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) TtcDeleteSelection;
-	MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
 
 	MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) TtcPasteFromClipboard;
-	MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 	LastInsertCell = NULL;
 	LastInsertParagraph = NULL;
 	LastInsertElText = NULL;

@@ -317,132 +317,103 @@ int                 number;
      {
 	MenuActionList[i].ActionName = "";
 	MenuActionList[i].Call_Action = NULL;
-	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
      }
 
    /* Initialisation des actions internes obligatoires */
    MenuActionList[0].ActionName = "TtcInsertChar";	/* action InsertChar() */
    MenuActionList[0].Call_Action = (Proc) NULL;
-   MenuActionList[0].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
    MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
    MenuActionList[CMD_DeletePrevChar].ActionEquiv = TtaStrdup ("BackSpace");
 
    MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
    MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
    MenuActionList[CMD_DeleteSelection].ActionEquiv = TtaStrdup ("Delete");
 
    MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
    MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
-   MenuActionList[CMD_PreviousChar].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_NextChar].ActionName = "TtcNextChar";
    MenuActionList[CMD_NextChar].Call_Action = (Proc) TtcNextChar;
-   MenuActionList[CMD_NextChar].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PreviousLine].ActionName = "TtcPreviousLine";
    MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
-   MenuActionList[CMD_PreviousLine].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_NextLine].ActionName = "TtcNextLine";
    MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
-   MenuActionList[CMD_NextLine].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
    MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
-   MenuActionList[CMD_BeginningOfLine].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_EndOfLine].ActionName = "TtcEndOfLine";
    MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
-   MenuActionList[CMD_EndOfLine].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_ParentElement].ActionName = "TtcParentElement";
    MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
-   MenuActionList[CMD_ParentElement].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PreviousElement].ActionName = "TtcPreviousElement";
    MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
-   MenuActionList[CMD_PreviousElement].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_NextElement].ActionName = "TtcNextElement";
    MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
-   MenuActionList[CMD_NextElement].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_ChildElement].ActionName = "TtcChildElement";
    MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
-   MenuActionList[CMD_ChildElement].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
    MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
-   MenuActionList[CMD_PageUp].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageUp].ActionEquiv = TtaStrdup ("Prior");
 
    MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
    MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
-   MenuActionList[CMD_PageDown].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageDown].ActionEquiv = TtaStrdup ("Next");
 
    MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
    MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
-   MenuActionList[CMD_PageTop].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageTop].ActionEquiv = TtaStrdup ("Home");
 
    MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
    MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
-   MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageEnd].ActionEquiv = TtaStrdup ("End");
 
    MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
    MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
-   MenuActionList[CMD_LineUp].User_Action = (UserProc) NULL;
    MenuActionList[CMD_LineUp].ActionEquiv = TtaStrdup ("C Left");
 
    MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
    MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
-   MenuActionList[CMD_LineDown].User_Action = (UserProc) NULL;
    MenuActionList[CMD_LineDown].ActionEquiv = TtaStrdup ("C Down");
 
    MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
    MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
-   MenuActionList[CMD_ScrollRight].User_Action = (UserProc) NULL;
    MenuActionList[CMD_ScrollRight].ActionEquiv = TtaStrdup ("C Right");
 
    MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
    MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
-   MenuActionList[CMD_ScrollLeft].User_Action = (UserProc) NULL;
    MenuActionList[CMD_ScrollLeft].ActionEquiv = TtaStrdup ("C Left");
 
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_CopyToClipboard].ActionName = "TtcCopyToClipboard";
    MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
-   MenuActionList[CMD_CopyToClipboard].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PasteFromClipboard].ActionName = "TtcPasteFromClipboard";
    MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PreviousSelChar].ActionName = "TtcPreviousSelChar";
    MenuActionList[CMD_PreviousSelChar].Call_Action = (Proc) TtcPreviousSelChar;
-   MenuActionList[CMD_PreviousSelChar].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_NextSelChar].ActionName = "TtcNextSelChar";
    MenuActionList[CMD_NextSelChar].Call_Action = (Proc) TtcNextSelChar;
-   MenuActionList[CMD_NextSelChar].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PreviousSelLine].ActionName = "TtcPreviousSelLine";
    MenuActionList[CMD_PreviousSelLine].Call_Action = (Proc) TtcPreviousSelLine;
-   MenuActionList[CMD_PreviousSelLine].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
    MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
-   MenuActionList[CMD_NextSelLine].User_Action = (UserProc) NULL;
 }
 
 
@@ -589,77 +560,12 @@ ThotBool            state;
 	strcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = procedure;
-	MenuActionList[FreeMenuAction].User_Action = (UserProc) NULL;
 	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
 	/* Cette nouvelle action n'est active pour aucune frame */
 	for (i = 0; i < MAX_FRAME; i++)
 	   MenuActionList[FreeMenuAction].ActionActive[i] = state;
 	FreeMenuAction++;
      }
-}
-
-/*----------------------------------------------------------------------
-   TteAddUserMenuAction add dynamically an user action in the table of the
-   user interface actions. This may override or complete an existing
-   built-in action, or override a previously defined user action.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                TteAddUserMenuAction (char* actionName, UserProc procedure, void *arg)
-
-#else  /* __STDC__ */
-int                TteAddUserMenuAction (actionName, procedure, arg)
-char*              actionName;
-UserProc           procedure;
-void               *arg;
-
-#endif /* __STDC__ */
-{
-   char*               ptr;
-   int                 lg;
-   int                 i;
-
-   /*
-    * We need a name !
-    */
-   if (actionName == NULL || procedure == NULL)
-      return(-1);
-   lg = strlen (actionName);
-   if (lg == 0) return(-1);
-
-   /*
-    * Search in the menu actions table for a predefined action with this name
-    */
-   for (i = 0;i < FreeMenuAction;i++) {
-       if (!strcmp(MenuActionList[i].ActionName, actionName)) {
-           /*
-	    * This action already exists, register the user procedure.
-	    */
-           MenuActionList[i].User_Action = procedure;
-           MenuActionList[i].User_Arg = arg;
-	   return(0);
-       }
-   }
-
-   /*
-    * This action is not registered, try to allocate a new one.
-    */
-   if (FreeMenuAction < MaxMenuAction && lg != 0)
-     {
-	/* Dup' the action name string */
-	ptr = TtaGetMemory (lg + 1);
-	strcpy (ptr, actionName);
-	MenuActionList[FreeMenuAction].ActionName = ptr;
-	MenuActionList[FreeMenuAction].Call_Action = (Proc) NULL;
-	MenuActionList[FreeMenuAction].User_Action = procedure;
-	MenuActionList[FreeMenuAction].User_Arg = arg;
-	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
-	/* desactivate this action for all frames */
-	for (i = 0; i < MAX_FRAME; i++)
-	   MenuActionList[FreeMenuAction].ActionActive[i] = FALSE;
-	FreeMenuAction++;
-	return(1);
-     }
-   return(-1);
 }
 
 
@@ -4431,318 +4337,315 @@ STRING              data;
 #endif /* __STDC__ */
 
 {
-   int                 frame, item;
-   int                 menu, base;
-   int                 menuThot;
-   Menu_Ctl           *ptrmenu;
-   int                 action, i, j;
-   Document            document;
-   View                view;
-   PtrCallbackCTX      ctxCallback;
+  int                 frame, item;
+  int                 menu, base;
+  int                 menuThot;
+  Menu_Ctl           *ptrmenu;
+  int                 action, i, j;
+  Document            document;
+  View                view;
+  PtrCallbackCTX      ctxCallback;
 
-   /* Termine l'insertion courante s'il y en a une */
-#  ifdef _WINDOWS
-   menu_item = ref + (int) data;
-#  endif /* _WINDOWS */
-   CloseInsertion ();
+  /* Termine l'insertion courante s'il y en a une */
+#ifdef _WINDOWS
+  menu_item = ref + (int) data;
+#endif /* _WINDOWS */
+  CloseInsertion ();
 
-   if (ref >= MAX_ThotMenu)
-     {
-	if (FirstCallbackAPI == NULL)
-	   return;		/* pas de callback definis */
-	else
-	  {
-	     /* recherc he le bon callback */
-	     ctxCallback = FirstCallbackAPI;
-	     base = MAX_ThotMenu;
-	     while (ref >= base + ctxCallback->callbackSet)
-	       {
-		  if (ctxCallback->callbackNext == NULL)
-		     return;
-		  else
-		    {
-		       base = base + ctxCallback->callbackSet;
-		       ctxCallback = ctxCallback->callbackNext;
-		    }
-	       }
-	     (*ctxCallback->callbackProc) (ref, typedata, data);
-	  }
-     }
-   else if (ref < MAX_LocalMenu)
-     /*** Action interne et optionnelle de l''eur ***/
-      switch (ref)
+  if (ref >= MAX_ThotMenu)
+    {
+      if (FirstCallbackAPI == NULL)
+	return;		/* pas de callback definis */
+      else
+	{
+	  /* recherc he le bon callback */
+	  ctxCallback = FirstCallbackAPI;
+	  base = MAX_ThotMenu;
+	  while (ref >= base + ctxCallback->callbackSet)
 	    {
-	       case NumMenuInsert:
-		  (*ThotLocalActions[T_rcinsertpaste]) (TRUE, FALSE, (int) data + 1);
-		  break;
-	       case NumMenuPaste:
-		  (*ThotLocalActions[T_rcinsertpaste]) (FALSE, TRUE, (int) data + 1);
-		  break;
-	       case NumMenuInclude:
-		  (*ThotLocalActions[T_rcinsertpaste]) (FALSE, FALSE, (int) data + 1);
-		  break;
-	       case NumMenuElChoice:
-		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
-		  break;
-	       case NumSelectNatureName:
-		  (*ThotLocalActions[T_rchoice]) (0, data);
-		  break;
-	       case NumMenuCreateReferenceElem:
-		  /* Pop-up menu 'Creation element reference'' */
-		  (*ThotLocalActions[T_raskfornew]) ((int) data);
-		  break;
-               case NumMenuChangeType:
-                  /* Pop-up menu 'ChangeType' */
-                  (*ThotLocalActions[T_rchangetype]) ((int)data);
-                  break;
-               case NumMenuSurround:
-                  /* Pop-up menu 'Surround' */
-                  (*ThotLocalActions[T_rsurround]) ((int)data);
-                  break;
-
-	       case NumMenuAttrRequired:
-	       case NumMenuAttrNumNeeded:
-	       case NumMenuAttrTextNeeded:
-	       case NumMenuAttrEnumNeeded:
-		  (*ThotLocalActions[T_rattrreq]) (ref, (int) data, data);
-		  break;
-	       case NumMenuAttr:
-	       case NumMenuAttrNumber:
-	       case NumMenuAttrText:
-	       case NumMenuAttrEnum:
-		  (*ThotLocalActions[T_rattrval]) (ref, (int) data, data);
-		  break;
-
-	       case NumSelectLanguage:
-		 (*ThotLocalActions[T_rattrlang]) (ref, 0, data);
-		  break;
-	       case NumFormLanguage:
-	       case NumMenuAlphaLanguage:
-		 (*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
-		  break;
-
-	       case NumFormCreateDoc:
-	       case NumZoneDocNameToCreate:
-	       case NumZoneDocDirToCreate:
-	       case NumSelDocClassToCreate:
-		  (*ThotLocalActions[T_createdoc]) (ref, typedata, data);
-		  break;
-	       case NumFormConfirm:
-		  (*ThotLocalActions[T_confirmcreate]) (ref, typedata, data);
-		  break;
-	       case NumFormOpenDoc:
-	       case NumZoneDirOpenDoc:
-	       case NumSelDoc:
-	       case NumZoneDocNameToOpen:
-               case NumToggleDocTypeToOpen:
-		  (*ThotLocalActions[T_opendoc]) (ref, typedata, data);
-		  break;
-	       case NumSelectImportClass:
-	       case NumFormImportClass:
-		  (*ThotLocalActions[T_import]) (ref, typedata, data);
-		  break;
-	       case NumFormPresentationSchema:
-	       case NumZonePresentationSchema:
-		  (*ThotLocalActions[T_presentation]) (ref, typedata, data);
-		  break;
-	       case NumFormClose:
-		  (*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
-		  break;
-
-	       case NumMenuZoom:
-		  (*ThotLocalActions[T_chzoom]) (ref, typedata, data);
-		  break;
-	       case NumMenuVisibility:
-		  (*ThotLocalActions[T_chvisibility]) (ref, typedata, data);
-		  break;
-	       case NumMenuViewsToOpen:
-		  (*ThotLocalActions[T_openview]) (ref, typedata, data);
-		  break;
-
-	       case NumZoneFirstPage:
-	       case NumZoneLastPage:
-               case NumZoneNbOfCopies:
-               case NumZoneReduction:
-               case NumMenuNbPagesPerSheet:
-	       case NumMenuViewsToPrint:
-		   (*ThotLocalActions[T_rextprint]) (ref, (int) data, NULL);
-                   break;
-               case NumFormPrint:
-	       case NumMenuOptions:
-	       case NumMenuSupport:
-	       case NumMenuPaperFormat:
-		  (*ThotLocalActions[T_rprint]) (ref, (int) data, NULL);
-		  break;
-	       case NumZonePrinterName:
-		  (*ThotLocalActions[T_rprint]) (ref, 0, data);
-		  break;
-
-	       case NumZoneDocNameTooSave:
-	       case NumZoneDirDocToSave:
-	       case NumMenuFormatDocToSave:
-	       case NumMenuCopyOrRename:
-	       case NumFormSaveAs:
-		  (*ThotLocalActions[T_rsavedoc]) (ref, typedata, data);
-		  break;
-	       case NumFormPresChar:
-	       case NumFormPresFormat:
-	       case NumFormPresGraphics:
-	       case NumFormColors:
-	       case NumMenuCharFamily:
-	       case NumMenuCharFontStyle:
-	       case NumMenuCharFontWeight:
-	       case NumMenuCharFontSize:
-	       case NumMenuUnderlineType:
-	       case NumMenuUnderlineWeight:
-	       case NumMenuAlignment:
-	       case NumMenuJustification:
-	       case NumMenuWordBreak:
-	       case NumZoneRecess:
-	       case NumMenuRecessSense:
-	       case NumZoneLineSpacing:
-	       case NumMenuLineSpacing:
-	       case NumMenuStrokeStyle:
-	       case NumZoneStrokeWeight:
-	       case NumToggleWidthUnchanged:
-	       case NumTogglePatternUnchanged:
-	       case NumToggleForegroundUnchanged:
-	       case NumToggleBackgroundUnchanged:
-		  (*ThotLocalActions[T_present]) (ref, (int) data, NULL);
-		  break;
-	       case NumSelectPattern:
-	       case NumSelectForegroundColor:
-	       case NumSelectBackgroundColor:
-		  (*ThotLocalActions[T_present]) (ref, 0, data);
-		  break;
-	       case NumFormPresentStandard:
-	       case NumMenuPresentStandard:
-		  (*ThotLocalActions[T_presentstd]) (ref, (int) data);
-		  break;
-	       case NumZoneSearchPage:
-	       case NumFormSearchPage:
-		  (*ThotLocalActions[T_searchpage]) (ref, (int) data);
-		  break;
-               case NumFormSearchEmptyElement:
-                  (*ThotLocalActions[T_searchemptyelt]) (ref, (int) data);
-                  break;
-               case NumFormSearchReference:
-                  (*ThotLocalActions[T_searchrefto]) (ref, (int) data);
-                  break;
-               case NumFormSearchEmptyReference:
-                  (*ThotLocalActions[T_searchemptyref]) (ref, (int) data);
-                  break;
-	       case NumFormSearchText:
-	       case NumMenuReplaceMode:
-	       case NumToggleUpperEqualLower:
-	       case NumMenuSearchNature:
-		  /* sous-menu mode de remplacement */
-		  (*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);
-		  break;
-	       case NumZoneTextSearch:
-	       case NumZoneTextReplace:
-	       case NumSelTypeToSearch:
-	   
-	       case NumSelAttributeToSearch:
-		  /* zone de saisie du texte de remplacement */
-		  (*ThotLocalActions[T_searchtext]) (ref, 0, data);
-		  break;
-	       case NumMenuOrSearchText:
-		  (*ThotLocalActions[T_locatesearch]) (ref, (int) data);
-		  break;  
-
-	       default:
-		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
-		     /* retour du menu des attributs */
-		    {
-#              ifndef _WINDOWS
-		       TtaSetDialoguePosition ();
-#              endif /* !_WINDOWS */
-		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
-		    }
-                  if (ref >= NumMenuPresNature && ref <= NumMenuPresNature + NbMaxMenuPresNature)
-                     /* retour des menus de changement de schema de presentation */
-                       if (ThotLocalActions[T_rchangepres] != NULL)
-                         (*ThotLocalActions[T_rchangepres]) (ref, (int)data);
-		  break;
-	    }
-   else
-     {
-       /*** Action attachee au retour du dialoque de l'application ***/
-       /* Calcule les indices menu, item et frame */
-       /* ref = (((item+1) * MAX_MENU + menu) * MAX_ITEM) + frame + MAX_LocalMenu */
-	j = ref - MAX_LocalMenu;
-	i = j / MAX_ITEM;
-	frame = j - (i * MAX_ITEM);	/* reste de la division */
-#   ifdef _WINDOWS
-    if (frame != -1) {
-       if (frame != currentFrame)
-          frame = currentFrame;
-       currentWindow = FrRef [frame];
-	}
-#   endif /* _WINDOWS */
-	item = i / MAX_MENU;
-	menu = i - (item * MAX_MENU);	/* reste de la division */
-	if (frame == 0)
-	  {
-	     document = 0;
-	     view = 0;
-	  }
-	else
-	  {
-	     FrameToView (frame, &document, &view);
-	     if (document == 0)
+	      if (ctxCallback->callbackNext == NULL)
 		return;
-	     menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
-	     if (menu == menuThot)
-	       {
-		  /* traitement du menu attribut */
-#         ifndef _WINDOWS
-		  TtaSetDialoguePosition ();
-#         endif /* !_WINDOWS */
-		  (*ThotLocalActions[T_rattr]) (ref, (int) data, frame);
-		  return;
-	       }
-	     menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
+	      else
+		{
+		  base = base + ctxCallback->callbackSet;
+		  ctxCallback = ctxCallback->callbackNext;
+		}
+	    }
+	  (*ctxCallback->callbackProc) (ref, typedata, data);
+	}
+    }
+  else if (ref < MAX_LocalMenu)
+    /*** Action interne et optionnelle de l''eur ***/
+    switch (ref)
+      {
+      case NumMenuInsert:
+	(*ThotLocalActions[T_rcinsertpaste]) (TRUE, FALSE, (int) data + 1);
+	break;
+      case NumMenuPaste:
+	(*ThotLocalActions[T_rcinsertpaste]) (FALSE, TRUE, (int) data + 1);
+	break;
+      case NumMenuInclude:
+	(*ThotLocalActions[T_rcinsertpaste]) (FALSE, FALSE, (int) data + 1);
+	break;
+      case NumMenuElChoice:
+	(*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
+	break;
+      case NumSelectNatureName:
+	(*ThotLocalActions[T_rchoice]) (0, data);
+	break;
+      case NumMenuCreateReferenceElem:
+	/* Pop-up menu 'Creation element reference'' */
+	(*ThotLocalActions[T_raskfornew]) ((int) data);
+	break;
+      case NumMenuChangeType:
+	/* Pop-up menu 'ChangeType' */
+	(*ThotLocalActions[T_rchangetype]) ((int)data);
+	break;
+      case NumMenuSurround:
+	/* Pop-up menu 'Surround' */
+	(*ThotLocalActions[T_rsurround]) ((int)data);
+	break;
+	
+      case NumMenuAttrRequired:
+      case NumMenuAttrNumNeeded:
+      case NumMenuAttrTextNeeded:
+      case NumMenuAttrEnumNeeded:
+	(*ThotLocalActions[T_rattrreq]) (ref, (int) data, data);
+	break;
+      case NumMenuAttr:
+      case NumMenuAttrNumber:
+      case NumMenuAttrText:
+      case NumMenuAttrEnum:
+	(*ThotLocalActions[T_rattrval]) (ref, (int) data, data);
+	break;
+	
+      case NumSelectLanguage:
+	(*ThotLocalActions[T_rattrlang]) (ref, 0, data);
+	break;
+      case NumFormLanguage:
+      case NumMenuAlphaLanguage:
+	(*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
+	break;
+	
+      case NumFormCreateDoc:
+      case NumZoneDocNameToCreate:
+      case NumZoneDocDirToCreate:
+      case NumSelDocClassToCreate:
+	(*ThotLocalActions[T_createdoc]) (ref, typedata, data);
+	break;
+      case NumFormConfirm:
+	(*ThotLocalActions[T_confirmcreate]) (ref, typedata, data);
+	break;
+      case NumFormOpenDoc:
+      case NumZoneDirOpenDoc:
+      case NumSelDoc:
+      case NumZoneDocNameToOpen:
+      case NumToggleDocTypeToOpen:
+	(*ThotLocalActions[T_opendoc]) (ref, typedata, data);
+	break;
+      case NumSelectImportClass:
+      case NumFormImportClass:
+	(*ThotLocalActions[T_import]) (ref, typedata, data);
+	break;
+      case NumFormPresentationSchema:
+      case NumZonePresentationSchema:
+	(*ThotLocalActions[T_presentation]) (ref, typedata, data);
+	break;
+      case NumFormClose:
+	(*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
+	break;
+	
+      case NumMenuZoom:
+	(*ThotLocalActions[T_chzoom]) (ref, typedata, data);
+	break;
+      case NumMenuVisibility:
+	(*ThotLocalActions[T_chvisibility]) (ref, typedata, data);
+	break;
+      case NumMenuViewsToOpen:
+	(*ThotLocalActions[T_openview]) (ref, typedata, data);
+	break;
+	
+      case NumZoneFirstPage:
+      case NumZoneLastPage:
+      case NumZoneNbOfCopies:
+      case NumZoneReduction:
+      case NumMenuNbPagesPerSheet:
+      case NumMenuViewsToPrint:
+	(*ThotLocalActions[T_rextprint]) (ref, (int) data, NULL);
+	break;
+      case NumFormPrint:
+      case NumMenuOptions:
+      case NumMenuSupport:
+      case NumMenuPaperFormat:
+	(*ThotLocalActions[T_rprint]) (ref, (int) data, NULL);
+	break;
+      case NumZonePrinterName:
+	(*ThotLocalActions[T_rprint]) (ref, 0, data);
+	break;
+	
+      case NumZoneDocNameTooSave:
+      case NumZoneDirDocToSave:
+      case NumMenuFormatDocToSave:
+      case NumMenuCopyOrRename:
+      case NumFormSaveAs:
+	(*ThotLocalActions[T_rsavedoc]) (ref, typedata, data);
+	break;
+      case NumFormPresChar:
+      case NumFormPresFormat:
+      case NumFormPresGraphics:
+      case NumFormColors:
+      case NumMenuCharFamily:
+      case NumMenuCharFontStyle:
+      case NumMenuCharFontWeight:
+      case NumMenuCharFontSize:
+      case NumMenuUnderlineType:
+      case NumMenuUnderlineWeight:
+      case NumMenuAlignment:
+      case NumMenuJustification:
+      case NumMenuWordBreak:
+      case NumZoneRecess:
+      case NumMenuRecessSense:
+      case NumZoneLineSpacing:
+      case NumMenuLineSpacing:
+      case NumMenuStrokeStyle:
+      case NumZoneStrokeWeight:
+      case NumToggleWidthUnchanged:
+      case NumTogglePatternUnchanged:
+      case NumToggleForegroundUnchanged:
+      case NumToggleBackgroundUnchanged:
+	(*ThotLocalActions[T_present]) (ref, (int) data, NULL);
+	break;
+      case NumSelectPattern:
+      case NumSelectForegroundColor:
+      case NumSelectBackgroundColor:
+	(*ThotLocalActions[T_present]) (ref, 0, data);
+	break;
+      case NumFormPresentStandard:
+      case NumMenuPresentStandard:
+	(*ThotLocalActions[T_presentstd]) (ref, (int) data);
+	break;
+      case NumZoneSearchPage:
+      case NumFormSearchPage:
+	(*ThotLocalActions[T_searchpage]) (ref, (int) data);
+	break;
+      case NumFormSearchEmptyElement:
+	(*ThotLocalActions[T_searchemptyelt]) (ref, (int) data);
+	break;
+      case NumFormSearchReference:
+	(*ThotLocalActions[T_searchrefto]) (ref, (int) data);
+	break;
+      case NumFormSearchEmptyReference:
+	(*ThotLocalActions[T_searchemptyref]) (ref, (int) data);
+	break;
+      case NumFormSearchText:
+      case NumMenuReplaceMode:
+      case NumToggleUpperEqualLower:
+      case NumMenuSearchNature:
+	/* sous-menu mode de remplacement */
+	(*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);
+	break;
+      case NumZoneTextSearch:
+      case NumZoneTextReplace:
+      case NumSelTypeToSearch:
+	
+      case NumSelAttributeToSearch:
+	/* zone de saisie du texte de remplacement */
+	(*ThotLocalActions[T_searchtext]) (ref, 0, data);
+	break;
+      case NumMenuOrSearchText:
+	(*ThotLocalActions[T_locatesearch]) (ref, (int) data);
+	break;  
+	
+      default:
+	if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
+	  /* retour du menu des attributs */
+	  {
+#ifndef _WINDOWS
+	    TtaSetDialoguePosition ();
+#endif /* !_WINDOWS */
+	    (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
+	  }
+	if (ref >= NumMenuPresNature && ref <= NumMenuPresNature + NbMaxMenuPresNature)
+	  /* retour des menus de changement de schema de presentation */
+	  if (ThotLocalActions[T_rchangepres] != NULL)
+	    (*ThotLocalActions[T_rchangepres]) (ref, (int)data);
+	break;
+      }
+  else
+    {
+      /*** Action attachee au retour du dialoque de l'application ***/
+      /* Calcule les indices menu, item et frame */
+      /* ref = (((item+1) * MAX_MENU + menu) * MAX_ITEM) + frame + MAX_LocalMenu */
+      j = ref - MAX_LocalMenu;
+      i = j / MAX_ITEM;
+      frame = j - (i * MAX_ITEM);	/* reste de la division */
+#ifdef _WINDOWS
+      if (frame != -1)
+	{
+	  if (frame != currentFrame)
+	    frame = currentFrame;
+	  currentWindow = FrRef [frame];
+	}
+#endif /* _WINDOWS */
+      item = i / MAX_MENU;
+      menu = i - (item * MAX_MENU);	/* reste de la division */
+      if (frame == 0)
+	{
+	  document = 0;
+	  view = 0;
+	}
+      else
+	{
+	  FrameToView (frame, &document, &view);
+	  if (document == 0)
+	    return;
+	  menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
+	  if (menu == menuThot)
+	    {
+	      /* traitement du menu attribut */
+#ifndef _WINDOWS
+	      TtaSetDialoguePosition ();
+#endif /* !_WINDOWS */
+	      (*ThotLocalActions[T_rattr]) (ref, (int) data, frame);
+	      return;
+	    }
+	  menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
 	     if (menu == menuThot)
 	       {
 		  /* traitement du menu selection */
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 		  TtaSetDialoguePosition ();
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 		  (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
 		  return;
 	       }
-	  }
+	}
 
-	/* Appel de l'action */
-	ptrmenu = GetMenu_Ctl (frame, menu);
-	action = 0;
-	if (ptrmenu != NULL)
-	  {
-	     if (item != 0)
-	       {
-		  item--;
-		  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
-		     ptrmenu = ptrmenu->ItemsList[item].SubMenu;
-	       }
-	  }
-	if (ptrmenu != NULL)
-	  {
-	     if ((int) data < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
-		action = ptrmenu->ItemsList[(int) data].ItemAction;
-	     /*action = GetActionItem(frame, menu, (int)data); */
-	     if (action > 0)
-		/* l'action existe et le menu est actif */
-		if (MenuActionList[action].ActionActive[frame]) {
-		   if (MenuActionList[action].User_Action != NULL) {
-		       if (((*MenuActionList[action].User_Action) (
-		              MenuActionList[action].User_Arg, document, view)) &&
-                           (MenuActionList[action].Call_Action != NULL))
-		           (*MenuActionList[action].Call_Action) (document, view);
-		   } else
-		       (*MenuActionList[action].Call_Action) (document, view);
-		}
-	  }
-     }
-}				/*ThotCallback */
+      /* Appel de l'action */
+      ptrmenu = GetMenu_Ctl (frame, menu);
+      action = 0;
+      if (ptrmenu != NULL)
+	{
+	  if (item != 0)
+	    {
+	      item--;
+	      if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+		ptrmenu = ptrmenu->ItemsList[item].SubMenu;
+	    }
+	}
+      if (ptrmenu != NULL)
+	{
+	  if ((int) data < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+	    action = ptrmenu->ItemsList[(int) data].ItemAction;
+	  /*action = GetActionItem(frame, menu, (int)data); */
+	  if (action > 0)
+	    /* l'action existe et le menu est actif */
+	    if (MenuActionList[action].ActionActive[frame])
+	      {
+		if (MenuActionList[action].Call_Action)
+		  (*MenuActionList[action].Call_Action) (document, view);
+	      }
+	}
+    }
+}
 /* End Of Module Thot */

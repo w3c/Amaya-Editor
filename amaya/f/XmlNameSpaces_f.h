@@ -10,15 +10,15 @@ extern SSchema GetXHTML_DTD ( Document doc );
 extern SSchema GetMathML_DTD ( Document doc );
 extern SSchema GetGraphML_DTD ( Document doc );
 extern SSchema GetXmlDTD ( int XMLtype,
-			   Document doc );
+                           Document doc );
 extern void MapXmlElType ( int XMLtype,
-			   STRING XMLname,
-			   ElementType *elType,
-			   STRING *mappedName,
-			   CHAR_T *content,
-			   Document doc );
+                           STRING XMLname,
+                           ElementType *elType,
+                           STRING *mappedName,
+                           CHAR_T *content,
+                           Document doc );
 extern void GetXmlElName ( ElementType elType,
-			   CHAR_T** buffer );
+                           CHAR_T** buffer );
 
 #else /* __STDC__ */
 
@@ -26,15 +26,15 @@ extern SSchema GetXHTML_DTD (/* Document doc */);
 extern SSchema GetMathML_DTD (/* Document doc */);
 extern SSchema GetGraphML_DTD (/* Document doc */);
 extern SSchema GetXmlDTD (/* int XMLtype,
-			     Document doc */);
+                             Document doc */);
 extern void MapXmlElType (/* int XMLtype,
-			     STRING XMLname,
-			     ElementType *elType,
-			     STRING *mappedName,
-			     CHAR_T *content,
-			     Document doc */);
+                             STRING XMLname,
+                             ElementType *elType,
+                             STRING *mappedName,
+                             CHAR_T *content,
+                             Document doc */);
 extern void GetXmlElName (/* ElementType elType,
-			     CHAR_T** buffer */);
+                             CHAR_T** buffer */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

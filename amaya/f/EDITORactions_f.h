@@ -155,6 +155,8 @@ extern void ConfigTemplates ( Document doc,
                               View view );
 extern void SaveOptions ( Document doc,
                           View view );
+extern void ConfigAnnot ( Document doc,
+                          View view );
 extern void AnnotateDocument ( Document doc,
                                View view );
 extern void LoadAnnotations ( Document doc,
@@ -316,6 +318,8 @@ extern void ConfigProfile (/* Document doc,
 extern void ConfigTemplates (/* Document doc,
                                 View view */);
 extern void SaveOptions (/* Document doc,
+                            View view */);
+extern void ConfigAnnot (/* Document doc,
                             View view */);
 extern void AnnotateDocument (/* Document doc,
                                  View view */);

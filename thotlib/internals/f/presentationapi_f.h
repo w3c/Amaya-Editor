@@ -41,6 +41,11 @@ extern void TtaSetPRuleValue ( Element element,
                                PRule pRule,
                                int value,
                                Document document );
+extern void TtaSetPRuleValueWithUnit ( Element element,
+                                       PRule pRule,
+                                       int value,
+                                       TypeUnit unit,
+                                       Document document );
 extern void TtaSetPRuleView ( PRule pRule,
                               int view );
 extern void TtaChangeBoxSize ( Element element,
@@ -124,6 +129,11 @@ extern void TtaSetPRuleValue (/* Element element,
                                  PRule pRule,
                                  int value,
                                  Document document */);
+extern void TtaSetPRuleValueWithUnit (/* Element element,
+                                         PRule pRule,
+                                         int value,
+                                         TypeUnit unit,
+                                         Document document */);
 extern void TtaSetPRuleView (/* PRule pRule,
                                 int view */);
 extern void TtaChangeBoxSize (/* Element element,

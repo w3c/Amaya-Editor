@@ -124,8 +124,6 @@ Proc                doIt;
 	newAction = (PtrAction) TtaGetMemory (sizeof (APP_action));
 	newAction->ActName = actionName;
 	newAction->ActAction = doIt;
-	newAction->ActUser = NULL;
-	newAction->ActArg = NULL;
 	newAction->ActPre = FALSE;
 	newAction->ActEvent = TteNull;
 	newAction->ActNext = NULL;
@@ -136,76 +134,6 @@ Proc                doIt;
 	   ActionList = newAction;
      }
 }
-
-/*----------------------------------------------------------------------
-   TteAddUserAction add dynamically an user action in the list of the
-   built-ins actions. This may override or complete an existing
-   built-in action, or override a previously defined user action.
-   We don't support adding a new action currently !!!
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                TteAddUserAction (char* actionName, UserProc procedure,
-                                      void *arg)
-
-#else  /* __STDC__ */
-int                TteAddUserAction (actionName, procedure, arg)
-char*              actionName;
-UserProc           procedure;
-void               *arg;
-
-#endif /* __STDC__ */
-{
-   PtrAction           pAction;
-   PtrAction           newAction;
-
-   int                 lg;
-
-   /*
-    * We need a name !
-    */
-   if (actionName == NULL)
-      return(-1);
-   lg = strlen (actionName);
-   if (lg == 0) return(-1);
-
-   pAction = ActionList;
-   if (pAction != NULL)
-     {
-	/* following actions are treated */
-	newAction = pAction->ActNext;
-	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
-	  {
-	     pAction = pAction->ActNext;
-	     newAction = newAction->ActNext;
-	  }
-	if (strcmp (actionName, pAction->ActName) == 0)
-	   newAction = pAction;
-     }
-   else
-      newAction = NULL;		/* First action inserted here */
-
-   if (newAction == NULL)
-     {
-	newAction = (PtrAction) TtaGetMemory (sizeof (APP_action));
-	newAction->ActName = actionName;
-	newAction->ActAction = NULL;
-	newAction->ActUser = NULL;
-	newAction->ActArg = NULL;
-	newAction->ActPre = FALSE;
-	newAction->ActEvent = TteNull;
-	newAction->ActNext = NULL;
-	if (pAction != NULL)
-	   pAction->ActNext = newAction;
-	else
-	   /* First message inserted here */
-	   ActionList = newAction;
-     }
-
-   newAction->ActUser = procedure;
-   newAction->ActArg = arg;
-   return(0);
-}
-
 
 /*----------------------------------------------------------------------
    TteGetEventsSet returns a pointer to an existing events set.		

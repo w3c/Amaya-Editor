@@ -1279,7 +1279,6 @@ void                StructSelectLoadResources ()
 	TteConnectAction (T_cmdpaste, (Proc) StructPasteCommand);
 	TteConnectAction (T_enter, (Proc) StructReturnKey);
 	MenuActionList[CMD_CreateElement].Call_Action = (Proc) StructReturnKey;
-	MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 	InitSelection ();
      }
 }

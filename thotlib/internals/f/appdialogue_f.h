@@ -12,9 +12,6 @@ extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char* actionName,
                                Proc procedure,
                                ThotBool state );
-extern int TteAddUserMenuAction ( char* actionName,
-                                  UserProc procedure,
-                                  void *arg );
 extern void TteZeroMenu ( WindowType windowtype,
                           CHAR_T* schemaName );
 extern void TteAddMenu ( WindowType windowtype,
@@ -129,9 +126,6 @@ extern void FreeMenus (/* void */);
 extern void TteAddMenuAction (/* char* actionName,
                                  Proc procedure,
                                  ThotBool state */);
-extern int TteAddUserMenuAction (/* char* actionName,
-                                    UserProc procedure,
-                                    void *arg */);
 extern void TteZeroMenu (/* WindowType windowtype,
                             CHAR_T* schemaName */);
 extern void TteAddMenu (/* WindowType windowtype,
