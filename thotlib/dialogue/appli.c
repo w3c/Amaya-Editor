@@ -151,6 +151,7 @@ int                *info;
 void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
    PAINTSTRUCT         ps;
+   RECT                rect;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
@@ -159,7 +160,8 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	 */
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
-	    /* WIN_curHdc = BeginPaint (w, &ps); */
+	     WIN_curHdc = BeginPaint (w, &ps);
+             GetClientRect (w, &rect);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
 			ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
@@ -958,20 +960,17 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    /* fprintf(stderr,"WndProc\n"); */
    switch (msg)
 	 {
-#ifdef RAMZI
 	    case WM_PAINT:
 		/* WinInitColors (); */	/* has to go to some better place !!!! */
 	       /*
 	        * Some part of the Client Area has to be repaint.
 	        */
 	       saveHdc = WIN_curHdc;
-	       WIN_curHdc = BeginPaint (hWnd, &ps);
-               GetClientRect (hWnd, &rect);
 	       WIN_HandleExpose (hWnd, frame, wParam, lParam);
 	       WIN_ReleaseDeviceContext ();
 	       WIN_curHdc = saveHdc;
 	       return 0;
-#endif /* RAMZI */
+
 	    case WM_KEYDOWN:
 	    case WM_CHAR:
 	       TtaAbortShowDialogue ();

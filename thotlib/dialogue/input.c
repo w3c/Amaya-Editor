@@ -460,7 +460,6 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
    if (frame < 0)
      {
 	fprintf (stderr, "unable to get frame of window %X\n", hWnd);
-	DebugBreak ();
 	return;
      }
    if (GetKeyState (VK_SHIFT))

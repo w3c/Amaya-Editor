@@ -240,7 +240,6 @@ int                 GetFen (ThotWindow win)
 	 return (frame);
 
    fprintf (stderr, "Could not get X-Window number for %X\n", win);
-/*    DebugBreak(); */
    return (-1);
 }
 
@@ -257,7 +256,6 @@ int                 WIN_GetFen (ThotWindow win)
 	 return (frame);
 
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
-/*    DebugBreak(); */
    return (1);
 }
 
@@ -291,7 +289,6 @@ void                WIN_GetDeviceContext (int frame)
    if (win == 0)
      {
 	fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
-	DebugBreak ();
 	return;
      }
 
@@ -315,7 +312,6 @@ void                WIN_GetDeviceContext (int frame)
    if (WIN_curHdc == 0)
      {
 	fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-	DebugBreak ();
      }
    else
      WIN_curWin = win;
@@ -351,7 +347,6 @@ void                WIN_GetWinDeviceContext (ThotWindow win)
    if (WIN_curHdc == 0)
      {
 	fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-	DebugBreak ();
      }
    else
      WIN_curWin = win;

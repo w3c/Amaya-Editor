@@ -1912,11 +1912,15 @@ int                 doc;
 		  /*
 		   * and show it up.
 		   */
+                  
+                  menu_bar = CreateMenu ();
+                  if (menu_bar)
+                     SetMenu (Main_Wd, menu_bar);
+		  WinMenus[frame] = menu_bar;
+
 		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
 		  UpdateWindow (Main_Wd);
-                  /*****  BEGIN RAMZI  BEGIN *****/
                   InitCommonControls ();
-                  /******  END  RAMZI   END  *****/
 	       }
 #endif /* _WINDOWS */
 
@@ -1985,7 +1989,7 @@ int                 doc;
 	     /* Initialise les menus dynamiques */
 	     FrameTable[frame].MenuAttr = -1;
 	     FrameTable[frame].MenuSelect = -1;
-	     menu_bar = 0;
+	     /* menu_bar = 0; */
 	     /*** Parametres de creation des boutons menus ***/
 	     n = 0;
 #ifndef _WINDOWS
@@ -2013,6 +2017,7 @@ int                 doc;
 			    /*
 			     * Start with a fresh new Menu.
 			     */
+			     /*
 			    menu_bar = GetMenu (Main_Wd);
 			    if (menu_bar)
 			       DestroyMenu (menu_bar);
@@ -2021,6 +2026,7 @@ int                 doc;
 			    if (menu_bar)
 			       SetMenu (Main_Wd, menu_bar);
 			    WinMenus[frame] = menu_bar;
+			    */
 #else  /* _WINDOWS */
 			    XtSetArg (argument[0], XmNbackground, BgMenu_Color);
 			    XtSetArg (argument[1], XmNspacing, 0);
@@ -2048,8 +2054,10 @@ int                 doc;
 		       else
 			  BuildPopdown (ptrmenu, ref, w, frame);
 #ifdef _WINDOWS
+		       /*
 		       ShowWindow (menu_bar, SW_SHOWNORMAL);
 		       UpdateWindow (menu_bar);
+		       */
 #else  /* _WINDOWS */
 		       XtManageChild (w);
 #endif /* !_WINDOWS */
@@ -2121,21 +2129,6 @@ int                 doc;
 
 	     /*** Creation de la zone boutons  ***/
 #ifdef _WINDOWS
-#if 0
-	     WinToolBar[frame] = CreateWindow (TOOLBARCLASSNAME,	/* window class name */
-					       NULL,	/* window caption */
-					       WS_CHILD | WS_VISIBLE |
-					       WS_CLIPSIBLINGS | CCS_TOP |
-					       TBSTYLE_TOOLTIPS,	/* window style */
-					       0,	/* initial x pos */
-					       0,	/* initial y pos */
-					       0,	/* initial x size */
-					       0,	/* initial y size */
-					       Main_Wd,	/* parent window handle */
-					       0,	/* window menu handle */
-					       hInstance,	/* program instance handle */
-					       0);	/* creation parameters */
-#endif
 	     WinToolBar[frame] = CreateToolbarEx (Main_Wd,	/* parent window handle */
 						  WS_CHILD | WS_VISIBLE |
 						  WS_CLIPSIBLINGS | CCS_TOP |

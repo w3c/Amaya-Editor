@@ -1099,7 +1099,6 @@ int                 frame;
 		  if (j == MAX_FONT)
 		    {
 		       DeleteObject (TtFonts[i]);
-		       DebugBreak ();
 		    }
 #else  /* _WINDOWS */
 		  if (j == MAX_FONT)
