@@ -10,7 +10,7 @@
  * - Nabil LAYAIDA
  * - Loay  SABRY-ISMAIL
  *
- * Last modification: March 26 1997
+ * Last modification: Jan 30 1998
  */
 
 /*----------------------------------------------------------------------
@@ -310,19 +310,24 @@ const char* url;
 /*----------------------------------------------------------------------
   Ap_GetURLNotifyProgressCallback
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-static void Ap_GetURLNotifyProgressCallback (void *ctxt, char *pbuffer, int buffer_length, int status)
+static void   Ap_GetURLNotifyProgressCallback (int doc, int status, char *urlName, char *outputfile, char *content_type, char *pbuffer, int buffer_length,  void * context)
 #else  /* __STDC__ */
-static void Ap_GetURLNotifyProgressCallback (ctxt, pbuffer, buffer_length, status)
-void* ctxt;
+static void  Ap_GetURLNotifyProgressCallback (doc, status, urlName, outpufile, content_type, pbuffer, buffer_length, context)
+
+int doc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
 char* pbuffer;
 int   buffer_length;
-int   status;
-int   status;
+void *context;
+
 #endif /* __STDC__ */
 {
 #   ifndef AMAYA_JAVA
-    AHTReqContext* context = (AHTReqContext*) ctxt;
     struct stat    sbuf;
     static FILE*   fptr = NULL;
     static char*   file;
@@ -337,10 +342,10 @@ int   status;
     /* manage status: checking errors */
     /* Test buffer_length             */
 
-    instance = (NPP) context->context_tcbf;
+    instance = (NPP) context;
 
     if (!streamOpened) {    
-       file                       = strdup (context->outputfile);
+       file                       = strdup (outputfile);
        fptr                       = fopen (file, "rb");
        progressStream             = (NPStream*) malloc (sizeof (NPStream));
        progressStream->url        = strdup (file);
@@ -385,16 +390,21 @@ int   status;
 /*----------------------------------------------------------------------
   Ap_GetURLNotifyCallback
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-static void Ap_GetURLNotifyCallback (void *ctxt, int status)
+static void   Ap_GetURLNotifyCallback (int doc, int status, char *urlName, char *outputfile, char *content_type, void * context)
 #else  /* __STDC__ */
-static void Ap_GetURLNotifyCallback (ctxt, status)
-void        *ctxt;
-int          status;
+static void  Ap_GetURLNotifyCallback (doc, status, urlName, outpufile, content_type, context)
+
+int doc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
 #endif /* __STDC__ */
 {
 #   ifndef AMAYA_JAVA
-    AHTReqContext      *context = (AHTReqContext *) ctxt;
     char*               file;
     struct stat         sbuf;
     NPStream*           stream;
@@ -402,9 +412,9 @@ int          status;
     uint16              stype;
     int                 ret;
 
-    if (status == HT_LOADED) {
-       file = strdup (context->outputfile);
-       instance = (NPP) context->context_tcbf;
+    if (status != HT_LOADED) {
+       file = strdup (outputfile);
+       instance = (NPP) context;
 
        stat (file, &sbuf);
 
