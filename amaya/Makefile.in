@@ -30,8 +30,7 @@ CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
 
 LIBCONFIGFILES=*.css *.png *.lhtml *.svg 
 
-
-ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
+ANNOTFILES= *.STR *.PRS *.TRA *.en *.gif *.png 
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
