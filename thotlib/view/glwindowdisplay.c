@@ -832,8 +832,8 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 }
 
 
-#define SLICES 1440
-#define SLICES_SIZE 1441
+#define SLICES 360
+#define SLICES_SIZE 361
 
 
 void GL_DrawArc (int x, int y, 
@@ -1795,26 +1795,18 @@ int glMatroxBUG (int frame, int x, int y,
 --------------------------------*/
 void saveBuffer (char *filename, int width, int height)
 {
-  static int z = 0;
   unsigned char *Data;
 
-  z++;
-  if (z != 20)
-   return;
-  width = 100;
-  height = 200;
+  glFlush ();
+  glFinish ();
   Data = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
   glReadPixels (0, 0, width, height, 
 		GL_RGBA, 
 		GL_UNSIGNED_BYTE, Data);
-  SavePng ("screenshot.png", 
+  SavePng (filename, 
 	   Data,
 	   (unsigned int) width,
 	   (unsigned int) height);
-    /* savetga ("screenshot.tga", 
-	   Data,
-	   width,
-	   height);*/
   free (Data);
 }
 
