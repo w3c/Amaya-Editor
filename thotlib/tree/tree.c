@@ -2492,11 +2492,14 @@ PtrElement          pNew;
 		     first ancestor element */
 		  LeavesInheritLanguage (pE);
 		  /* updates the volume of the ancestor elements */
-		  pAsc = pE->ElParent;
-		  while (pAsc != NULL)
+		  if (pE->ElVolume != 0)
 		    {
-		       pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
-		       pAsc = pAsc->ElParent;
+		      pAsc = pE->ElParent;
+		      while (pAsc != NULL)
+		        {
+		           pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
+		           pAsc = pAsc->ElParent;
+		        }
 		    }
 		  pE = pE->ElNext;
 	       }

@@ -463,7 +463,7 @@ boolean             horizRef;
    /* Verifie que la position ne depend pas d'un pave mort */
    if (pAb != NULL && pAb->AbDead)
      {
-	printf ("Position relative to a dead box");
+	fprintf (stderr, "Position relative to a dead box");
 	pAb = NULL;
      }
 
@@ -1198,7 +1198,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbHorizPos.PosAbRef->AbDead)
 	       {
-		  printf ("Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension relative to a dead box");
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1236,7 +1236,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbVertPos.PosAbRef->AbDead)
 	       {
-		  printf ("Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension relative to a dead box");
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1258,7 +1258,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
 	       {
-		  printf ("Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension relative to a dead box");
 		  pDimAb->DimAbRef = NULL;
 		  pDimAb->DimValue = 0;
 	       }
@@ -1800,7 +1800,7 @@ boolean             horizRef;
    /* Verifie que la position ne depend pas d'un pave mort */
    if (pAb != NULL && pAb->AbDead)
      {
-	printf ("Axe relative to a dead box");
+	fprintf (stderr, "Position relative to a dead box");
 	pAb = NULL;
      }
 
