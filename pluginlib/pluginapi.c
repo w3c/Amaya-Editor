@@ -580,7 +580,7 @@ int   indexHandler;
 
     printf ("GUI_Name : %s\n", GUI_Name);
     
-    strncpy (PictureHandlerTable[indexHandler].GUI_Name, GUI_Name, MAX_FORMAT_NAMELENGHT);
+    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GUI_Name, MAX_FORMAT_NAMELENGHT);
     /* Initializing the pointers to the netscape functions */
     Ap_InitializePluginTable (indexHandler);
 
