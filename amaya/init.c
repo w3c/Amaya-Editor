@@ -1892,7 +1892,7 @@ Document     sourceOfDoc;
 	   DocumentTypes[doc] = docHTML;
 	 }
      }
-
+   
    if ((reinitialized || !opened))
      /* now update menus and buttons according to the document status */
      if (DocumentTypes[doc] == docHTMLRO ||
@@ -2450,7 +2450,11 @@ ThotBool            history;
       s = TtaWCSdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
 	TtaFreeMemory (DocumentURLs[newdoc]);
+      /* if the document was already loaded, warn the user */
+      if (IsDocumentLoaded (s, form_data))
+	InitConfirm3L (newdoc, 1, TEXT("Warning: this document is already loaded in another Window"), TEXT("Saving that instance may cause a lost update problem"), NULL, FALSE);
       DocumentURLs[newdoc] = s;
+
       /* save the document's formdata into the document table */
       if (DocumentMeta[newdoc] != NULL)
 	  DocumentMetaClear (DocumentMeta[newdoc]);
