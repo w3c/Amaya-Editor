@@ -122,115 +122,116 @@
 120 Parametro (param)
 121 Paragrafo (p)
 122 Preformattato (pre)
-123 Tabella
-124 Tabella (table)
-125 Legenda (caption)
-126 colgroup
-127 col
-128 Intestazione (thead)
-129 Corpo (tbody)
-130 Piede (tfoot)
-131 Linea (tr)
-132 Cella dati (td)
-133 Cella intestazione (th)
-134 Cancella colonna della tabella
-135 Collega al precedente obiettivo
-136 Crea o cambia collegamento...
-137 Crea obiettivo
-138 Cancella ancora
-139 **Store selection as XPointer
-140 Mostra barra dei pulsanti
-141 Mostra indirizzo
-142 Mostra le zone attive
-143 Mostra obiettivi
-144 Ingrandisci
-145 Rimpicciolisci
-146 Mostra le errore
-147 Mostra struttura
-148 Mostra la vista alternativa
-149 Mostra collegamenti
-150 Mostra sommario
-151 Mostra sorgente
-152 Stile dei caratteri...
-153 Colori...
-154 Formattazione...
-155 Immagine di sfondo...
-156 Crea una regola...
-157 Applica una classe...
-158 Fogli di stile
-159 Collegamento...
-160 Apri...
-161 Disabilita...
-162 Abilita...
-163 Rimuovi...
-164 Tipo di informazione
-165 Enfasi (em)
-166 Forte (strong)
-167 Cita (cite)
-168 Definizione (dfn)
-169 Codice (code)
-170 Variabile (var)
-171 Sample (samp)
-172 Tastiera (kbd)
-173 Abbreviazione (abbr)
-174 Acronimo (acronym)
-175 Inserzione (ins)
-176 Cancellazione (del)
-177 Elementi carattere
-178 Italico (i)
-179 Grassetto (b)
-180 Macchina da scrivere (tt)
-181 Grande (big)
-182 Piccolo (small)
-183 Pedice (sub)
-184 Indice (sup)
-185 Citazione (q)
-186 BiDi (bdo)
-187 Numerazione delle sezioni
-188 Crea libro
-189 Aggiungi/Togli ID...
-190 Preferenze
-191 Generali...
-192 Pubblicazione...
-193 Cache...
-194 Proxy...
-195 Colori...
-196 Dimensioni della finestra...
-197 Negoziazione della lingua...
-198 Profili...
-199 Modelli...
-200 Annota la selezione
-201 Annota il documento
-202 **Reply to annotation
-203 **Move to selection
-204 **Move to stored XPointer
-205 Registra annotazione
-206 Elimina l'annotazione
-207 Carica annotazioni
-208 Personalizza la richiesta
-209 Filtro locale...
-210 Configurazione...
-211 Informazioni su Amaya
-212 Informazioni su Amaya al W3C
-213 Navigazione
-214 Selezione
-215 Ricerca
-216 Viste
-217 Creazione elementi
-218 Collegamenti
-219 Ristrutturazione
-220 Tabelle
-221 Matematica
-222 Graphics
-223 Zone attive
-224 Fogli di stile
-225 Attributi
-226 Controllo ortografico
-227 Pubblicazione
-228 Stampa
-229 Numerazione
-230 Creare un libro
-231 Annotazioni
-232 Configurazione di Amaya
-233 Scelte rapide
-234 Accessibility in Amaya
+123 ruby
+124 Tabella
+125 Tabella (table)
+126 Legenda (caption)
+127 colgroup
+128 col
+129 Intestazione (thead)
+130 Corpo (tbody)
+131 Piede (tfoot)
+132 Linea (tr)
+133 Cella dati (td)
+134 Cella intestazione (th)
+135 Cancella colonna della tabella
+136 Collega al precedente obiettivo
+137 Crea o cambia collegamento...
+138 Crea obiettivo
+139 Cancella ancora
+140 **Store selection as XPointer
+141 Mostra barra dei pulsanti
+142 Mostra indirizzo
+143 Mostra le zone attive
+144 Mostra obiettivi
+145 Ingrandisci
+146 Rimpicciolisci
+147 Mostra le errore
+148 Mostra struttura
+149 Mostra la vista alternativa
+150 Mostra collegamenti
+151 Mostra sommario
+152 Mostra sorgente
+153 Stile dei caratteri...
+154 Colori...
+155 Formattazione...
+156 Immagine di sfondo...
+157 Crea una regola...
+158 Applica una classe...
+159 Fogli di stile
+160 Collegamento...
+161 Apri...
+162 Disabilita...
+163 Abilita...
+164 Rimuovi...
+165 Tipo di informazione
+166 Enfasi (em)
+167 Forte (strong)
+168 Cita (cite)
+169 Definizione (dfn)
+170 Codice (code)
+171 Variabile (var)
+172 Sample (samp)
+173 Tastiera (kbd)
+174 Abbreviazione (abbr)
+175 Acronimo (acronym)
+176 Inserzione (ins)
+177 Cancellazione (del)
+178 Elementi carattere
+179 Italico (i)
+180 Grassetto (b)
+181 Macchina da scrivere (tt)
+182 Grande (big)
+183 Piccolo (small)
+184 Pedice (sub)
+185 Indice (sup)
+186 Citazione (q)
+187 BiDi (bdo)
+188 Numerazione delle sezioni
+189 Crea libro
+190 Aggiungi/Togli ID...
+191 Preferenze
+192 Generali...
+193 Pubblicazione...
+194 Cache...
+195 Proxy...
+196 Colori...
+197 Dimensioni della finestra...
+198 Negoziazione della lingua...
+199 Profili...
+200 Modelli...
+201 Annota la selezione
+202 Annota il documento
+203 **Reply to annotation
+204 **Move to selection
+205 **Move to stored XPointer
+206 Registra annotazione
+207 Elimina l'annotazione
+208 Carica annotazioni
+209 Personalizza la richiesta
+210 Filtro locale...
+211 Configurazione...
+212 Informazioni su Amaya
+213 Informazioni su Amaya al W3C
+214 Navigazione
+215 Selezione
+216 Ricerca
+217 Viste
+218 Creazione elementi
+219 Collegamenti
+220 Ristrutturazione
+221 Tabelle
+222 Matematica
+223 Graphics
+224 Zone attive
+225 Fogli di stile
+226 Attributi
+227 Controllo ortografico
+228 Pubblicazione
+229 Stampa
+230 Numerazione
+231 Creare un libro
+232 Annotazioni
+233 Configurazione di Amaya
+234 Scelte rapide
+235 Accessibility in Amaya

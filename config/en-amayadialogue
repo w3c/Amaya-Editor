@@ -122,115 +122,116 @@
 120 Parameter (param)
 121 Paragraph (p)
 122 Preformatted (pre)
-123 Table
-124 table
-125 caption
-126 colgroup
-127 col
-128 thead
-129 tbody
-130 tfoot
-131 Row (tr)
-132 Data cell (td)
-133 Heading cell (th)
-134 Delete table column
-135 Link to previous target
-136 Create or change link...
-137 Create target
-138 Delete anchor
-139 Store selection as XPointer
-140 Show buttonbar
-141 Show address
-142 Show map areas
-143 Show targets
-144 Zoom in
-145 Zoom out
-146 Show parsing errors
-147 Show structure
-148 Show alternate
-149 Show links
-150 Show table of contents
-151 Show source
-152 Character style...
-153 Colors...
-154 Format...
-155 Background image...
-156 Create rule...
-157 Apply class...
-158 Style sheets
-159 Link...
-160 Open...
-161 Disable...
-162 Enable...
-163 Remove...
-164 Information type
-165 Emphasis (em)
-166 strong
-167 cite
-168 Definition (dfn)
-169 code
-170 Variable (var)
-171 Sample (samp)
-172 Keyboard (kbd)
-173 Abbreviation (abbr)
-174 acronym
-175 Insertion (ins)
-176 Deletion (del)
-177 Character element
-178 Italic (i)
-179 Bold (b)
-180 Teletype (tt)
-181 big
-182 small
-183 Subscript (sub)
-184 Superscript (sup)
-185 Quotation (q)
-186 BiDi override (bdo)
-187 Section numbering
-188 Make book
-189 Add/Remove IDs...
-190 Preferences
-191 General...
-192 Publishing...
-193 Cache...
-194 Proxy...
-195 Colors...
-196 Window Geometry...
-197 Language Negotiation...
-198 Profiles...
-199 Templates...
-200 Annotate selection
-201 Annotate document
-202 Reply to annotation
-203 Move to selection
-204 Move to stored XPointer
-205 Post annotation
-206 Delete annotation
-207 Load annotations
-208 Customize query...
-209 Local filter...
-210 Configure...
-211 About Amaya
-212 About Amaya at W3C
-213 Browsing
-214 Selecting
-215 Searching
-216 Views
-217 Creating elements
-218 Links
-219 Restructuring
-220 Tables
-221 Math
-222 Graphics
-223 Image maps
-224 Style sheets
-225 Attributes
-226 Spell Checking
-227 Publishing
-228 Printing
-229 Numbering
-230 Making books
-231 Annotations
-232 Configuring Amaya
-233 ShortCuts
-234 Accessibility in Amaya
+123 ruby
+124 Table
+125 table
+126 caption
+127 colgroup
+128 col
+129 thead
+130 tbody
+131 tfoot
+132 Row (tr)
+133 Data cell (td)
+134 Heading cell (th)
+135 Delete table column
+136 Link to previous target
+137 Create or change link...
+138 Create target
+139 Delete anchor
+140 Store selection as XPointer
+141 Show buttonbar
+142 Show address
+143 Show map areas
+144 Show targets
+145 Zoom in
+146 Zoom out
+147 Show parsing errors
+148 Show structure
+149 Show alternate
+150 Show links
+151 Show table of contents
+152 Show source
+153 Character style...
+154 Colors...
+155 Format...
+156 Background image...
+157 Create rule...
+158 Apply class...
+159 Style sheets
+160 Link...
+161 Open...
+162 Disable...
+163 Enable...
+164 Remove...
+165 Information type
+166 Emphasis (em)
+167 strong
+168 cite
+169 Definition (dfn)
+170 code
+171 Variable (var)
+172 Sample (samp)
+173 Keyboard (kbd)
+174 Abbreviation (abbr)
+175 acronym
+176 Insertion (ins)
+177 Deletion (del)
+178 Character element
+179 Italic (i)
+180 Bold (b)
+181 Teletype (tt)
+182 big
+183 small
+184 Subscript (sub)
+185 Superscript (sup)
+186 Quotation (q)
+187 BiDi override (bdo)
+188 Section numbering
+189 Make book
+190 Add/Remove IDs...
+191 Preferences
+192 General...
+193 Publishing...
+194 Cache...
+195 Proxy...
+196 Colors...
+197 Window Geometry...
+198 Language Negotiation...
+199 Profiles...
+200 Templates...
+201 Annotate selection
+202 Annotate document
+203 Reply to annotation
+204 Move to selection
+205 Move to stored XPointer
+206 Post annotation
+207 Delete annotation
+208 Load annotations
+209 Customize query...
+210 Local filter...
+211 Configure...
+212 About Amaya
+213 About Amaya at W3C
+214 Browsing
+215 Selecting
+216 Searching
+217 Views
+218 Creating elements
+219 Links
+220 Restructuring
+221 Tables
+222 Math
+223 Graphics
+224 Image maps
+225 Style sheets
+226 Attributes
+227 Spell Checking
+228 Publishing
+229 Printing
+230 Numbering
+231 Making books
+232 Annotations
+233 Configuring Amaya
+234 ShortCuts
+235 Accessibility in Amaya

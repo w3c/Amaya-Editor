@@ -122,115 +122,116 @@
 120 Objekt-Parameter (param)
 121 Absatz (p)
 122 Vorformatierter Text (pre)
-123 Tabelle
-124 Tabelle (table)
-125 Überschrift (caption)
-126 colgroup
-127 Tabellenspalte (col)
-128 Tabellenkopf (thead)
-129 Tabellenkörper (tbody)
-130 Fußzeile (tfoot)
-131 Zeile (tr)
-132 Zelle (td)
-133 Kopfzelle (th)
-134 Tabellenspalte löschen
-135 Verknüpfen mit Ziel
-136 Markierung als Verknüfung definieren...
-137 Markierung als Verknüpfungsziel definieren
-138 Verknüpfungsziel löschen
-139 Auswahl als XPointer speichern
-140 Symbolleiste
-141 Dokumentadresse
-142 Aktive Grafikbereiche markieren
-143 Verknüpfungsziele anzeigen
-144 Schrift vergrößern
-145 Schrift verkleinern
-146 Parsefehler anzeigen
-147 Strukturfenster
-148 Textbrowserfenster
-149 Verknüpfungsfenster
-150 Inhaltsverzeichnisfenster
-151 Quelltext-Fenster
-152 Zeichen...
-153 Farben...
-154 Ausrichtung...
-155 Hintergrundbild...
-156 Format in Stylesheet übernehmen...
-157 Klasse anwenden...
-158 Stylesheets bearbeiten
-159 Mit Neuem verknüpfen...
-160 Öffnen...
-161 Deaktivieren...
-162 Aktivieren...
-163 Entfernen...
-164 Logische Formate
-165 Betont (em)
-166 Hervorgehoben (strong)
-167 Zitat (cite)
-168 Definition (dfn)
-169 Programmtext (code)
-170 Variablenwert (var)
-171 Beispiel (samp)
-172 Tastatureingabe (kbd)
-173 Abkürzung (abbr)
-174 Akronym (acronym)
-175 Eingefügte Version (ins)
-176 Veraltete Version (del)
-177 Direkte Formate
-178 Kursiv (i)
-179 Fett (b)
-180 Schreibmaschinenschrift (tt)
-181 Größer (big)
-182 Kleiner (small)
-183 Tiefgestellt (sub)
-184 Hochgestellt (sup)
-185 Zitat im Fließtext (q)
-186 Textrichtung LTR/RTL (bdo)
-187 Abschnittsnummern
-188 Buch zusammenfügen
-189 IDs hinzufügen/entfernen...
-190 Einstellungen
-191 Allgemein...
-192 Veröffentlichen...
-193 Cache...
-194 Proxy...
-195 Farben...
-196 Fenstergeometrie...
-197 Akzeptierte Sprachen...
-198 Profile...
-199 Seitenvorlagen...
-200 Auswahl kommentieren
-201 Dokument kommentieren
-202 **Reply to annotation
-203 Anmerkung in die auswahl verschieben
-204 Anmerkung in gespeicherten XPointer verschieben
-205 Anmerkung veröffentlichen
-206 Kommentierung entfernen
-207 Anmerkungen laden
-208 Abfrage anpassen...
-209 Lokaler Filter...
-210 Konfigurieren...
-211 Info
-212 Über Amaya beim W3C
-213 Verknüpfungen folgen/Dokumente öffnen
-214 Auswählen
-215 Suchen
-216 Ansichten
-217 Einfügen von Elementen
-218 Verknüpfungen bearbeiten
-219 Umformatieren
-220 Tabellen
-221 Formeln
-222 Graphics
-223 Aktive Grafikbereiche
-224 Formate/Stylesheets
-225 Attribute
-226 Rechtschreibung
-227 Speichern/Publizieren
-228 Drucken
-229 Abschnittsnummern
-230 Buch zusammenfügen
-231 Kommentierungen
-232 Konfiguration
-233 Tastenkürzel
-234 Benutzerfreundlichkeit
+123 ruby
+124 Tabelle
+125 Tabelle (table)
+126 Überschrift (caption)
+127 colgroup
+128 Tabellenspalte (col)
+129 Tabellenkopf (thead)
+130 Tabellenkörper (tbody)
+131 Fußzeile (tfoot)
+132 Zeile (tr)
+133 Zelle (td)
+134 Kopfzelle (th)
+135 Tabellenspalte löschen
+136 Verknüpfen mit Ziel
+137 Markierung als Verknüfung definieren...
+138 Markierung als Verknüpfungsziel definieren
+139 Verknüpfungsziel löschen
+140 Auswahl als XPointer speichern
+141 Symbolleiste
+142 Dokumentadresse
+143 Aktive Grafikbereiche markieren
+144 Verknüpfungsziele anzeigen
+145 Schrift vergrößern
+146 Schrift verkleinern
+147 Parsefehler anzeigen
+148 Strukturfenster
+149 Textbrowserfenster
+150 Verknüpfungsfenster
+151 Inhaltsverzeichnisfenster
+152 Quelltext-Fenster
+153 Zeichen...
+154 Farben...
+155 Ausrichtung...
+156 Hintergrundbild...
+157 Format in Stylesheet übernehmen...
+158 Klasse anwenden...
+159 Stylesheets bearbeiten
+160 Mit Neuem verknüpfen...
+161 Öffnen...
+162 Deaktivieren...
+163 Aktivieren...
+164 Entfernen...
+165 Logische Formate
+166 Betont (em)
+167 Hervorgehoben (strong)
+168 Zitat (cite)
+169 Definition (dfn)
+170 Programmtext (code)
+171 Variablenwert (var)
+172 Beispiel (samp)
+173 Tastatureingabe (kbd)
+174 Abkürzung (abbr)
+175 Akronym (acronym)
+176 Eingefügte Version (ins)
+177 Veraltete Version (del)
+178 Direkte Formate
+179 Kursiv (i)
+180 Fett (b)
+181 Schreibmaschinenschrift (tt)
+182 Größer (big)
+183 Kleiner (small)
+184 Tiefgestellt (sub)
+185 Hochgestellt (sup)
+186 Zitat im Fließtext (q)
+187 Textrichtung LTR/RTL (bdo)
+188 Abschnittsnummern
+189 Buch zusammenfügen
+190 IDs hinzufügen/entfernen...
+191 Einstellungen
+192 Allgemein...
+193 Veröffentlichen...
+194 Cache...
+195 Proxy...
+196 Farben...
+197 Fenstergeometrie...
+198 Akzeptierte Sprachen...
+199 Profile...
+200 Seitenvorlagen...
+201 Auswahl kommentieren
+202 Dokument kommentieren
+203 **Reply to annotation
+204 Anmerkung in die auswahl verschieben
+205 Anmerkung in gespeicherten XPointer verschieben
+206 Anmerkung veröffentlichen
+207 Kommentierung entfernen
+208 Anmerkungen laden
+209 Abfrage anpassen...
+210 Lokaler Filter...
+211 Konfigurieren...
+212 Info
+213 Über Amaya beim W3C
+214 Verknüpfungen folgen/Dokumente öffnen
+215 Auswählen
+216 Suchen
+217 Ansichten
+218 Einfügen von Elementen
+219 Verknüpfungen bearbeiten
+220 Umformatieren
+221 Tabellen
+222 Formeln
+223 Graphics
+224 Aktive Grafikbereiche
+225 Formate/Stylesheets
+226 Attribute
+227 Rechtschreibung
+228 Speichern/Publizieren
+229 Drucken
+230 Abschnittsnummern
+231 Buch zusammenfügen
+232 Kommentierungen
+233 Konfiguration
+234 Tastenkürzel
+235 Benutzerfreundlichkeit

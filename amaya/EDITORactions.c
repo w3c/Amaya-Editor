@@ -831,6 +831,196 @@ void                CreatePreformatted (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  CreateRuby
+  Create a ruby element.
+  If the current selection is simply a caret, create an empty simple ruby at
+  that position.
+  If some text/elements are selected, create a simple ruby element at that
+  position and move the selected elements within the rb element.
+  ----------------------------------------------------------------------*/
+void                CreateRuby (Document document, View view)
+{
+  ElementType   elType;
+  Element       el, selEl, rbEl, rubyEl, firstEl, lastEl, nextEl, prevEl;
+  int           i, j, lg, firstSelectedChar, lastSelectedChar,
+                oldStructureChecking;
+  ThotBool      error;
+  DisplayMode   dispMode;
+
+  if (HTMLelementAllowed (document))
+    {
+      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      elType.ElTypeNum = HTML_EL_complex_ruby;
+      /* if we are already within a ruby element, return immediately */
+      TtaGiveFirstSelectedElement (document, &firstEl, &firstSelectedChar, &j);
+      if (TtaGetTypedAncestor (firstEl, elType))
+	return;
+      elType.ElTypeNum = HTML_EL_simple_ruby;
+      if (TtaGetTypedAncestor (firstEl, elType))
+	return;
+      selEl = NULL;
+      rbEl = NULL;
+      if (TtaIsSelectionEmpty())
+	/* selection is simply a caret */
+	{
+	  /* create a simple_ruby element at the current position */
+	  TtaCreateElement (elType, document);
+	  /* get the rb element that has just been created within the ruby */
+	  TtaGiveFirstSelectedElement (document, &el, &i, &j);
+	  if (el)
+	    {
+	      selEl = el; /* empty leaf within the rb element */
+	      rbEl = TtaGetParent (el);
+	      /* get the CHOICE element that follows the rb element and
+		 delete it */
+	      el = rbEl;
+	      TtaNextSibling (&el);
+	      if (el)
+		TtaDeleteTree (el, document);
+	    }
+	}
+      else if (IsCharacterLevelElement (firstEl))
+	/* there are some elements/text selected. Make it the content
+	   of the rb element */
+	{
+	  TtaGiveLastSelectedElement(document, &lastEl, &i, &lastSelectedChar);
+	  if (TtaGetParent (firstEl) == TtaGetParent (lastEl))
+	    /* all selected elements are siblings */
+	    {
+	      /* check if there are some ruby elements within the selected
+		 elements */
+	      error = FALSE;
+	      el = firstEl;
+	      while (el && !error)
+		{
+		  elType = TtaGetElementType (el);
+		  if ((elType.ElTypeNum == HTML_EL_simple_ruby ||
+		       elType.ElTypeNum == HTML_EL_complex_ruby) &&
+		      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		    /* it's a ruby element. Error */
+		    error = TRUE;
+		  else
+		    {
+		    elType.ElSSchema = TtaGetSSchema ("HTML", document);
+		    elType.ElTypeNum = HTML_EL_simple_ruby;
+		    if (TtaSearchTypedElement (elType, SearchInTree, el))
+		      error = TRUE;
+		    else
+		      {
+			elType.ElTypeNum = HTML_EL_complex_ruby;
+			if (TtaSearchTypedElement (elType, SearchInTree, el))
+			  error = TRUE;
+		      }
+		    }
+		  TtaGiveNextElement (document, &el, lastEl);
+		}
+	      if (!error)
+		{
+		  TtaUnselect (document);
+		  /* stop displaying changes that will be made */
+		  dispMode = TtaGetDisplayMode (document);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (document, DeferredDisplay);
+		  /* split the last element if it's a character string */
+		  elType = TtaGetElementType (lastEl);
+		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		    /* it's a text element */
+		    {
+		      lg = TtaGetTextLength (lastEl);
+		      if (lastSelectedChar < lg && lastSelectedChar != 0)
+			/* the last selected element is only partly selected.
+			   Split it */
+			TtaSplitText (lastEl, lastSelectedChar, document);
+		    }
+		  /* process the first selected element */
+		  elType = TtaGetElementType (firstEl);
+		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		    /* it's a text element */
+		    if (firstSelectedChar > 1)
+		      /* that element is only partly selected. Split it */
+		      {
+			el = firstEl;
+			TtaSplitText (firstEl, firstSelectedChar-1, document);
+			TtaNextSibling (&firstEl);
+			if (lastEl == el)
+			  /* we have to change the end of selection because the
+			     last selected element was split */
+			  lastEl = firstEl;
+		      }
+		  /* create a ruby element with a rb element and moves all
+		     selected elements within the new rb element */
+		  TtaOpenUndoSequence (document, firstEl, lastEl, 0, 0);
+		  elType.ElTypeNum = HTML_EL_simple_ruby;
+		  rubyEl = TtaNewElement (document, elType);
+		  TtaInsertSibling (rubyEl, firstEl, TRUE, document);
+		  elType.ElTypeNum = HTML_EL_rb;
+		  rbEl = TtaNewElement (document, elType);
+		  TtaInsertFirstChild (&rbEl, rubyEl, document);
+		  TtaRegisterElementCreate (rubyEl, document);
+		  el = firstEl;
+		  prevEl = NULL;
+		  while (el)
+		    {
+		      if (el == lastEl)
+			nextEl = NULL;
+		      else
+			{
+			  nextEl = el;
+			  TtaGiveNextElement (document, &nextEl, lastEl);
+			}
+		      TtaRegisterElementDelete (el, document);
+		      TtaRemoveTree (el, document);
+		      if (!prevEl)
+			TtaInsertFirstChild  (&el, rbEl, document);
+		      else
+			TtaInsertSibling (el, prevEl, FALSE, document);
+		      prevEl = el;
+		      TtaRegisterElementCreate (el, document);
+		      el = nextEl;
+		    }
+		  TtaCloseUndoSequence (document);
+		  /* ask Thot to display changes made in the document */
+		  TtaSetDisplayMode (document, dispMode);
+		}
+	    }
+	}
+      if (rbEl)
+	/* a rb element has been created. create the other elements within
+	   the new ruby element */
+	{
+	  /* create a first rp element after the rb element */
+	  oldStructureChecking = TtaGetStructureChecking (document);
+	  TtaSetStructureChecking (0, document);
+	  elType.ElTypeNum = HTML_EL_rp;
+	  el = TtaNewTree (document, elType, "");
+	  TtaInsertSibling (el, rbEl, FALSE, document);
+	  prevEl = el;
+	  el = TtaGetFirstChild (el);
+	  TtaSetTextContent (el, "(", TtaGetDefaultLanguage (), document);
+	  /* create a rt element after the first rp element */
+	  elType.ElTypeNum = HTML_EL_rt;
+	  el = TtaNewTree (document, elType, "");
+	  TtaInsertSibling (el, prevEl, FALSE, document);
+	  if (!selEl)
+	    /* nothing to be selected. Select the first leaf within the
+	       new rt element */
+	    selEl = TtaGetFirstChild (el);
+	  prevEl = el;
+	  /* create a second rp element after the rt element */
+	  elType.ElTypeNum = HTML_EL_rp;
+	  el = TtaNewTree (document, elType, "");
+	  TtaInsertSibling (el, prevEl, FALSE, document);
+	  el = TtaGetFirstChild (el);
+	  TtaSetTextContent (el, ")", TtaGetDefaultLanguage (), document);
+	  TtaSetStructureChecking (oldStructureChecking, document);
+	}
+      /* update the selection */
+      if (selEl)
+	TtaSelectElement (document, selEl);
+    }
+}
+
+/*----------------------------------------------------------------------
   CreateAddress
   ----------------------------------------------------------------------*/
 void                CreateAddress (Document document, View view)
@@ -1199,6 +1389,7 @@ void                CreateDataCell (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  CreateHeadingCell
   ----------------------------------------------------------------------*/
 void                CreateHeadingCell (Document document, View view)
 {

@@ -153,6 +153,7 @@ MENUS
 
 	Types button:BParagraph -> CreateParagraph;
 	Types button:BPreformatted -> CreatePreformatted;
+	Types button:BRuby -> CreateRuby;
 
 	Types.Table button:BTable -> CreateTable;
 	Types.Table Separator;

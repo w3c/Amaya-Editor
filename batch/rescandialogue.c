@@ -9,16 +9,10 @@
 #include <string.h>
 
 /* ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int main(int argc, char **argv)
-#else /* __STDC__ */
-int main(argc, argv)
-	int argc;
-	char **argv;
-#endif /* __STDC__ */
 {
   FILE *file1, *file2;
-  int  i, val, len;
+  int  i, val, len, comment;
   char s[1000], name[200], *ptr;
 
   if (argc < 2)
@@ -42,27 +36,45 @@ int main(argc, argv)
 	}
       else
 	{
+          comment = 0;
 	  i = 0;
 	  len = 0;
 	  ptr = NULL;
 	  val = fread(&s[len], 1, 1, file1);
 	  while (val != 0)
 	    {
-	      if (ptr == NULL && (s[len] == ' ' || s[len] == '\t'))
+	      if (ptr == NULL && len == 0 && s[len] == '#')
 		{
-		  /* the first space after the number */
+		  /* a line starting with '#' is considered as comment.
+		     it is not numbered */
+		  ptr = &s[len];
+		  len++;
+		  comment = 1;
+		}
+	      else if (ptr == NULL && (s[len] == ' ' || s[len] == '\t'))
+		{
+		  /* first space after the number */
 		  ptr = &s[len];
 		  len++;
 		}
 	      else if (s[len] == '\n')
 		{
-		  /* the end of new line */
+		  /* end of input line */
 		  s[len] = '\0';
 		  if (ptr != NULL)
-		    fprintf(file2, "%d%s\n", i, ptr);
+		    {
+		      if (comment)
+			/* It's a comment linr. Output it as is */
+			fprintf(file2, "%s\n", ptr);
+		      else
+			{
+			  fprintf(file2, "%d%s\n", i, ptr);
+			  i++;
+			}
+		    }
+		  comment = 0;
 		  len = 0;
 		  ptr = NULL;
-		  i++;
 		}
 	      else
 		len++;
@@ -70,7 +82,7 @@ int main(argc, argv)
 	    }
 	  fclose(file1);
 	  fclose(file2);
-	  
 	}
     }
+  return 0;
 }

@@ -111,6 +111,7 @@ Ctrl <Key>t , Ctrl <Key>-:         CreateHorizontalRule()
 Ctrl <Key>t , Ctrl <Key>a:         CreateAddress() 
 Ctrl <Key>t , Ctrl <Key>q:         CreateBlockQuote() 
 Ctrl <Key>t , Ctrl <Key>v:         CreateDivision() 
+Ctrl <Key>t , Ctrl <Key>r:	   CreateRuby()
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
 Ctrl <Key>Space:                   TtcInsertChar("\240")

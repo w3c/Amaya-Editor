@@ -781,9 +781,10 @@ STRUCT
 
   simple_ruby =
 	BEGIN
-	rb = Basic_Set - (ruby);
+	rb = Basic_Set - (simple_ruby, complex_ruby);
 	CASE OF
-	      rt (ATTR rbspan = Integer) = Basic_Set - (ruby);
+	      rt (ATTR rbspan = Integer) = Basic_Set
+	                                   - (simple_ruby, complex_ruby);
 	      BEGIN
 		  rp = TEXT;
 		  rt;
