@@ -34,6 +34,7 @@
 #include "glwindowdisplay.h"
 #include "openglfont.h"
 #include "openglfonts.h"
+#include "registry_f.h"
 
 #include "units_tv.h"
 
@@ -60,6 +61,38 @@
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
 static int init_done = 0;
+
+/* How to render glyphs ? : 
+ * 
+ FT_LOAD flags : (cf. http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_LOAD_XXX)
+ #define FT_LOAD_DEFAULT                      0x0
+ #define FT_LOAD_NO_SCALE                     0x1
+ #define FT_LOAD_NO_HINTING                   0x2
+ #define FT_LOAD_RENDER                       0x4
+ #define FT_LOAD_NO_BITMAP                    0x8
+ #define FT_LOAD_VERTICAL_LAYOUT              0x10
+ #define FT_LOAD_FORCE_AUTOHINT               0x20
+ #define FT_LOAD_CROP_BITMAP                  0x40
+ #define FT_LOAD_PEDANTIC                     0x80
+ #define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  0x200
+ #define FT_LOAD_NO_RECURSE                   0x400
+ #define FT_LOAD_IGNORE_TRANSFORM             0x800
+ #define FT_LOAD_MONOCHROME                   0x1000
+ #define FT_LOAD_LINEAR_DESIGN                0x2000
+
+ FT_RENDER_MODE flags : (cf. http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_Render_Mode)
+ FT_RENDER_MODE_NORMAL = 0,
+ FT_RENDER_MODE_LIGHT,
+ FT_RENDER_MODE_MONO,
+ FT_RENDER_MODE_LCD,
+ FT_RENDER_MODE_LCD_V,
+ *
+ * By default:
+ * -> FT_RENDER_MODE_NORMAL : it corresponds to 8-bit anti-aliased bitmaps, using 256 levels of opacity.
+ * -> FT_LOAD_FORCE_AUTOHINT : force the use of the FreeType auto-hinter when a glyph outline is loaded.
+ * */
+static FT_Render_Mode thot_ft_render_mode = FT_RENDER_MODE_NORMAL;
+static int            thot_ft_load_mode   = FT_LOAD_FORCE_AUTOHINT;
 
 /*--------------Font Caching---------------------------*/
 
@@ -260,6 +293,17 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
  return (cache);  
 }
 
+/* Load for thotrc the wanted fonts render mode */
+void InitFreetype_Modes()
+{
+  /* store a default value if it does't exists*/
+  TtaSetEnvInt ("FT_RENDER_MODE", thot_ft_render_mode, FALSE);
+  TtaSetEnvInt ("FT_LOAD_MODE", thot_ft_load_mode, FALSE);
+  /* get the stored values */
+  TtaGetEnvInt ("FT_RENDER_MODE", (int *)&thot_ft_render_mode);
+  TtaGetEnvInt ("FT_LOAD_MODE", (int *)&thot_ft_load_mode);
+}
+
 /*----------------------------------------------------------------------
  Freetype library Handling
   ----------------------------------------------------------------------*/
@@ -276,6 +320,7 @@ static int FTLibraryInit ()
       return FALSE;
     }
   memset(FontTab, 0, sizeof(Font_Slot)*1024);
+  InitFreetype_Modes();
   return TRUE;
 }
 
@@ -675,7 +720,6 @@ static float FaceKernAdvance (FT_Face face, unsigned int index1,
  return (0x0);
 }
 
-
 /********OPENGL BITMAP CONSTRUCTION SET********/
 /*----------------------------------------------------------------------
   MakeBitmapGlyph : Make bitmap and struct to handle the glyph
@@ -695,20 +739,20 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   if (g != 0)
     /*use of FT_LOAD_DEFAULT when quality will be ok*/
   {
-    if (!FT_Load_Glyph (font->face, g, FT_LOAD_DEFAULT/*FT_LOAD_NO_HINTING*/))
+    if (!FT_Load_Glyph (font->face, g, thot_ft_load_mode))
      {
         if (!FT_Get_Glyph (font->face->glyph, &Glyph))
 	{
 	  /*Last parameter tells that we destroy font's bitmap
 	    So we MUST cache it    */
 	  if (Glyph->format != ft_glyph_format_bitmap)
-	    err = FT_Glyph_To_Bitmap (&Glyph, ft_render_mode_normal, 0, 1);
+	    err = FT_Glyph_To_Bitmap (&Glyph, thot_ft_render_mode, 0, 1);
 	  if (err)
 	    FT_Done_Glyph (Glyph);
 	  else
 	    {
 	      bitmap = (FT_BitmapGlyph) Glyph;
-	      source = &bitmap->bitmap;	 
+	      source = &bitmap->bitmap;
 	      w = (unsigned int) source->width;     
 	      h = (unsigned int) source->rows;
 	      if (w && h)
@@ -1095,4 +1139,5 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
      allocated glyphs   */
   return (SUPERSAMPLING(pen_x));  
 }
+
 #endif /* _GL */
