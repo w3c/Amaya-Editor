@@ -40,9 +40,9 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
 				    const wxString & label3 ) :
   AmayaDialog( parent, ref )
 {
-  wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
-  wxString cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
+wxString cancelbutton;
 
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( label );
@@ -65,9 +65,15 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   else
     XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
   if (confirmbutton.IsEmpty())
+    {
     p_sizer->Show(XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton), false);
+    cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
+    }
   else
+    {
     XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( confirmbutton );
+    cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
+    }
   if (cancelbutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton), false);
   else
