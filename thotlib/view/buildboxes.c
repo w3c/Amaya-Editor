@@ -79,7 +79,7 @@ static int             BiwIndex = 0;
   When pRoot is not Null, the returned abstract box has to be included
   within the pRoot.
   ----------------------------------------------------------------------*/
-PtrAbstractBox      SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
+PtrAbstractBox SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
 {
   if (pAb == NULL)
     return (NULL);
@@ -138,7 +138,7 @@ PtrAbstractBox      GetParentCell (PtrBox pBox)
 /*----------------------------------------------------------------------
   GetParentDraw returns the enlcosing Draw or NULL.                
   ----------------------------------------------------------------------*/
-PtrAbstractBox      GetParentDraw (PtrBox pBox)
+PtrAbstractBox GetParentDraw (PtrBox pBox)
 {
    PtrAbstractBox      pAb;
    ThotBool            found;
@@ -167,7 +167,8 @@ PtrAbstractBox      GetParentDraw (PtrBox pBox)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         SetControlPoints (float x, float y, float l1, float l2, float theta1, float theta2, C_points * cp)
+static void SetControlPoints (float x, float y, float l1, float l2,
+			      float theta1, float theta2, C_points * cp)
 {
    float               s, theta, r;
 
@@ -205,7 +206,7 @@ static void         SetControlPoints (float x, float y, float l1, float l2, floa
    Le parametre nb contient le nombre de points + 1        
    definis dans la polyline.                               
   ----------------------------------------------------------------------*/
-C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
+C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 {
    C_points           *controls;
    PtrTextBuffer       pBuffer;
@@ -349,7 +350,8 @@ C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom
    width contient initialement l'index du premier          
    caractere du texte.                                     
   ----------------------------------------------------------------------*/
-void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
+void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
+		     int *width, int *nSpaces)
 {
    int                 i, j;
    int                 charWidth;
@@ -395,15 +397,16 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width
 
 
 /*----------------------------------------------------------------------
-  GivePictureSize gives the size of a picture box.
+  GivePictureSize gives the internal size of a picture box.
   ----------------------------------------------------------------------*/
-static void         GivePictureSize (PtrAbstractBox pAb, int zoom, int *width, int *height)
+static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
+			     int *height)
 {
-  PtrBox              pBox;
   PictInfo           *picture;
+  PtrBox              box;
 
-  pBox = pAb->AbBox;
-  picture = (PictInfo *) pBox->BxPictInfo;
+  box = pAb->AbBox;
+  picture = (PictInfo *) box->BxPictInfo;
   if (pAb->AbVolume == 0 || picture == NULL)
     {
       *width = 0;
@@ -418,15 +421,17 @@ static void         GivePictureSize (PtrAbstractBox pAb, int zoom, int *width, i
 
 
 /*----------------------------------------------------------------------
-   GiveSymbolSize gives the size of a symbol box.
+   GiveSymbolSize gives the internal size of a symbol box.
   ----------------------------------------------------------------------*/
-void                GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
+void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 {
   ptrfont             font;
+  PtrBox              box;
   int                 hfont;
   float               value;
 
-  font = pAb->AbBox->BxFont;
+  box = pAb->AbBox;
+  font = box->BxFont;
   hfont = FontHeight (font);
   if (pAb->AbVolume == 0)
     {
@@ -437,7 +442,7 @@ void                GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   else
     {
       *height = hfont * 2;
-      value = 1 + ((float) (pAb->AbBox->BxH * 0.3) / (float) hfont);
+      value = 1 + ((float) (box->BxH * 0.3) / (float) hfont);
       switch (pAb->AbShape)
 	{
 	case 'c':	/*integrale curviligne */
@@ -511,14 +516,16 @@ void                GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 
 
 /*----------------------------------------------------------------------
-  GiveGraphicSize gives the size of a graphics box.
+  GiveGraphicSize gives the internal size of a graphics box.
   ----------------------------------------------------------------------*/
-void                GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
+void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
 {
   ptrfont             font;
+  PtrBox              box;
   int                 hfont;
 
-  font = pAb->AbBox->BxFont;
+  box = pAb->AbBox;
+  font = box->BxFont;
   *width = CharacterWidth (109, font);	/*'m' */
   hfont = FontHeight (font);
   *height = hfont * 2;
@@ -552,12 +559,13 @@ void                GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height
 
 
 /*----------------------------------------------------------------------
-  GivePolylineSize gives the size of a polyline.  
+  GivePolylineSize gives the internal size of a polyline.  
   ----------------------------------------------------------------------*/
-static void    GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width, int *height)
+static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
+			      int *height)
 {
-  int                 max;
   PtrTextBuffer       pBuffer;
+  int                 max;
 
   /* Si le pave est vide on prend une dimension par defaut */
   pBuffer = pAb->AbPolyLineBuffer;
@@ -581,7 +589,7 @@ static void    GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width, int *
 /*----------------------------------------------------------------------
   FreePolyline frees buffers attached to the polyline box.
   ----------------------------------------------------------------------*/
-static void         FreePolyline (PtrBox pBox)
+static void FreePolyline (PtrBox pBox)
 {
   PtrTextBuffer       pBuffer;
 
@@ -612,16 +620,16 @@ static void         FreePolyline (PtrBox pBox)
 /*----------------------------------------------------------------------
   FreePath frees all path segment descriptors attached to the path box.
   ----------------------------------------------------------------------*/
-static void         FreePath (PtrBox pBox)
+static void FreePath (PtrBox box)
 {
   PtrPathSeg pPa, pPaNext;
 
-  if (pBox->BxFirstPathSeg)
+  if (box->BxFirstPathSeg)
     {
-      pBox->BxNChars = pBox->BxAbstractBox->AbVolume;
-      pBox->BxXRatio = 1;
-      pBox->BxYRatio = 1;
-      pPa = pBox->BxFirstPathSeg;
+      box->BxNChars = box->BxAbstractBox->AbVolume;
+      box->BxXRatio = 1;
+      box->BxYRatio = 1;
+      pPa = box->BxFirstPathSeg;
       while (pPa)
 	{
 	  pPaNext = pPa->PaNext;
@@ -633,16 +641,18 @@ static void         FreePath (PtrBox pBox)
 
 
 /*----------------------------------------------------------------------
-  GiveTextSize gives the size of a text box.      
+  GiveTextSize gives the internal size of a text box.      
   ----------------------------------------------------------------------*/
-void                GiveTextSize (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
+void GiveTextSize (PtrAbstractBox pAb, int *width, int *height,
+		   int *nSpaces)
 {
   ptrfont             font;
+  PtrBox              box;
   int                 nChars;
 
-  font = pAb->AbBox->BxFont;
+  box = pAb->AbBox;
+  font = box->BxFont;
   *height = FontHeight (font);
-  
   /* Est-ce que le pave est vide ? */
   nChars = pAb->AbVolume;
   if (nChars == 0)
@@ -656,6 +666,7 @@ void                GiveTextSize (PtrAbstractBox pAb, int *width, int *height, i
       *width = 1;		/* Index du premier caractere a traiter */
       *nSpaces = 0;		/* On prend la largeur reelle du blanc */
       GiveTextParams (pAb->AbText, nChars, font, width, nSpaces);
+      *width = *width;
     }
 }
 
@@ -663,7 +674,8 @@ void                GiveTextSize (PtrAbstractBox pAb, int *width, int *height, i
 /*----------------------------------------------------------------------
   GiveEnclosureSize gives the size of a compound box.
   ----------------------------------------------------------------------*/
-void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
+void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
+			int *height)
 {
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pFirstAb;
@@ -1023,7 +1035,7 @@ static PtrAbstractBox PreviousLeafAbstractBox (PtrAbstractBox pAb)
    returns the Highlight value for abstract box pAb, according to its
    FontStyle and FontWeight.
   ----------------------------------------------------------------------*/
-static int          FontStyleAndWeight (PtrAbstractBox pAb)
+static int FontStyleAndWeight (PtrAbstractBox pAb)
 {
    int	i;
 
@@ -1085,7 +1097,7 @@ static void  TransmitFill (PtrBox pBox, ThotBool state)
   i = the added pixels at the beginning
   j =the added pixels at the end
   ----------------------------------------------------------------------*/
-static void  TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
+static void TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
 {
   PtrAbstractBox  pAb, pCurrentAb;
 
@@ -1574,7 +1586,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 /*----------------------------------------------------------------------
   SearchEnclosingType look for the enclosing table or row box
   ----------------------------------------------------------------------*/
-PtrAbstractBox   SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
+PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
 {
   ThotBool       still;
 
@@ -1603,7 +1615,7 @@ PtrAbstractBox   SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
    SearchLine cherche l'adresse de la ligne englobant la boite       
    designee.                                               
   ----------------------------------------------------------------------*/
-PtrLine             SearchLine (PtrBox pBox)
+PtrLine SearchLine (PtrBox pBox)
 {
    PtrLine             pLine;
    PtrBox              pBoxPiece;
@@ -1926,7 +1938,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
    suivants si le pave cree ou detruit est positionne par 
    une regle par defaut.                                  
   ----------------------------------------------------------------------*/
-static void         CheckDefaultPositions (PtrAbstractBox pAb, int frame)
+static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 {
    PtrAbstractBox      pNextAb;
 
@@ -2689,7 +2701,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		width = 0;
 	      else
-		width -= pBox->BxWidth;	/* ecart de largeur */
+		width -= pBox->BxW;	/* ecart de largeur */
 	      pDimAb = &pAb->AbHeight;
 	      if (pDimAb->DimIsPosition)
 		height = 0;

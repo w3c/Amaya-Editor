@@ -130,15 +130,10 @@ extern ThotBool peInitialized;
 
 
 #ifdef _WIN_PRINT
-/*----------------------------------------------------------------------*
- *                                                                      *
- * FUNCTION: DibNumColors(VOID FAR * pv)                                *
- *                                                                      *
- * PURPOSE : Determines the number of colors in the DIB by looking at   *
- *           the BitCount filed in the info block.                      *
- *                                                                      *
- * RETURNS : The number of colors in the DIB.                           *
- *                                                                      *
+/*----------------------------------------------------------------------
+  DibNumColors deetermines the number of colors in the DIB by looking
+  at the BitCount filed in the info block.
+  Returns the number of colors in the DIB.
   ----------------------------------------------------------------------*/
 WORD DibNumColors (VOID FAR* pv)
 {
@@ -169,18 +164,13 @@ WORD DibNumColors (VOID FAR* pv)
 	}
 }
 
-/*----------------------------------------------------------------------*
- *                                                                      *
- * FUNCTION:  PaletteSize(VOID FAR * pv)                                *
- *                                                                      *
- * PURPOSE :  Calculates the palette size in bytes. If the info. block  *
- *            is of the BITMAPCOREHEADER type, the number of colors is  *
- *            multiplied by 3 to give the palette size, otherwise the   *
- *            number of colors is multiplied by 4.                      *                                                       *
- *                                                                      *
- * RETURNS :  Palette size in number of bytes.                          *
- *                                                                      *
- *----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+  PaletteSize
+  Calculates the palette size in bytes. If the info. block is of the
+  BITMAPCOREHEADER type, the number of colors is multiplied by 3 to give
+  the palette size, otherwise the number of colors is multiplied by 4.
+  Returns the palette size in number of bytes.
+ ----------------------------------------------------------------------*/
 WORD PaletteSize (VOID FAR * pv)
 {
     LPBITMAPINFOHEADER lpbi;
@@ -195,15 +185,10 @@ WORD PaletteSize (VOID FAR * pv)
         return (WORD)(NumColors * sizeof(RGBQUAD));
 }
 /*----------------------------------------------------------------------
- *                                                                      *
- *  FUNCTION   : DibInfo (LPBITMAPINFOHEADER lpbi)                      *
- *                                                                      *
- *  PURPOSE    : Retrieves the DIB info associated with a CF_DIB        *
- *               format memory block.                                   *
- *                                                                      *
- *  RETURNS    : TRUE  - if successful.                                 *
- *               FALSE - otherwise                                      *
-  ----------------------------------------------------------------------*/
+  DibInfo retrieves the DIB info associated with a CF_DIB format memory
+  block.
+  Returns TRUE if successful, FALSE otherwise
+ ----------------------------------------------------------------------*/
 BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
 {
     if (lpbi){
@@ -385,10 +370,10 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, i
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   Match_Format returns TRUE if the considered header file matches   
-   the image file description, FALSE in the the other cases        
+  Match_Format returns TRUE if the considered header file matches   
+  the image file description, FALSE in the the other cases        
   ----------------------------------------------------------------------*/
-static ThotBool     Match_Format (int typeImage, STRING fileName)
+static ThotBool Match_Format (int typeImage, STRING fileName)
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
       return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
@@ -397,10 +382,10 @@ static ThotBool     Match_Format (int typeImage, STRING fileName)
 
 
 /*----------------------------------------------------------------------
-   FreePixmap frees the pixmap allocated in the X server if it is not
-   empty and if it is not one of the internal images        
+  FreePixmap frees the pixmap allocated in the X server if it is not
+  empty and if it is not one of the internal images        
   ----------------------------------------------------------------------*/
-void                FreePixmap (Pixmap pixmap)
+void FreePixmap (Pixmap pixmap)
 {
   if (pixmap != None && pixmap != PictureLogo && pixmap != EpsfPictureLogo)
 #ifndef _WINDOWS
@@ -413,18 +398,21 @@ void                FreePixmap (Pixmap pixmap)
 
 
 /*----------------------------------------------------------------------
-   Picture_Center updates the parameters xTranslate, yTranslate,     
-   picXOrg, picYOrg depending on the values of PicWArea,     
-   PicHArea, wFrame, hFrame and pres.                            
-   - If we use ReScale, the tranlation is performed        
-   in one direction.                                       
-   - If we use FillFrame, there's no translation           
-   - if we use RealSize we translate to achieve            
-   the centering               .                           
-   if the picture size is greater than the frame then      
-   picXOrg or picYOrg are positive.                            
+  Picture_Center updates the parameters xTranslate, yTranslate,     
+  picXOrg, picYOrg depending on the values of PicWArea,     
+  PicHArea, wFrame, hFrame and pres.                            
+  - If we use ReScale, the tranlation is performed        
+  in one direction.                                       
+  - If we use FillFrame, there's no translation           
+  - if we use RealSize we translate to achieve            
+  the centering               .                           
+  if the picture size is greater than the frame then      
+  picXOrg or picYOrg are positive.                            
   ----------------------------------------------------------------------*/
-static void Picture_Center (int picWArea, int picHArea, int wFrame, int hFrame, PictureScaling pres, int *xTranslate, int *yTranslate, int *picXOrg, int *picYOrg)
+static void Picture_Center (int picWArea, int picHArea, int wFrame,
+			    int hFrame, PictureScaling pres,
+			    int *xTranslate, int *yTranslate,
+			    int *picXOrg, int *picYOrg)
 {
   float               Rapw, Raph;
 
@@ -469,7 +457,8 @@ static void Picture_Center (int picWArea, int picHArea, int wFrame, int hFrame, 
 /*----------------------------------------------------------------------
    SetPictureClipping clips the picture into boundaries.              
   ----------------------------------------------------------------------*/
-static void         SetPictureClipping (int *picWArea, int *picHArea, int wFrame, int hFrame, PictInfo *imageDesc)
+static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
+				int hFrame, PictInfo *imageDesc)
 {
    if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
        (imageDesc->PicWArea > MAX_PICT_SIZE ||
@@ -486,13 +475,14 @@ static void         SetPictureClipping (int *picWArea, int *picHArea, int wFrame
 }
 
 /*----------------------------------------------------------------------
-  LayoutPicture performs the layout of pixmap on the screen described 
-  by the drawable.                                                          
-  if picXOrg or picYOrg are postive, the copy operation is shifted      
+  LayoutPicture performs the layout of pixmap on the screen described
+  by the drawable.
+  if picXOrg or picYOrg are postive, the copy operation is shifted
   ----------------------------------------------------------------------*/
 static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
-						   int picYOrg, int w, int h, int xFrame, int yFrame,
-						   int frame, PictInfo *imageDesc, PtrBox box)
+			   int picYOrg, int w, int h, int xFrame,
+			   int yFrame, int frame, PictInfo *imageDesc,
+			   PtrBox box)
 {
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
@@ -1043,7 +1033,7 @@ static void SimpleName (STRING filename, STRING simplename)
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
 static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
-						 int wlogo, int hlogo)
+			 int wlogo, int hlogo)
 {
 #ifndef _GTK
    Pixmap              pixmap;
@@ -1220,7 +1210,8 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
   DrawPicture draws the picture in the frame window.
   Parameters x, y, w, h give the displayed area of the box.
   ----------------------------------------------------------------------*/
-void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int w, int h)
+void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
+		  int y, int w, int h)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
@@ -1349,10 +1340,11 @@ void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int
 #endif /* _WIN_PRINT */
 	}
 #else /* _WINDOWS */
-  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres, x, y, w, h,
-	                                                      picXArea, picYArea,
-														  picWArea, picHArea,
-		                                                  (FILE *) drawable, BackGroundPixel);
+  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres,
+							  x, y, w, h,
+							  picXArea, picYArea,
+							  picWArea, picHArea,
+							  (FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS*/
 }
 
@@ -1367,7 +1359,8 @@ void UnmapImage (PictInfo* imageDesc)
     return;
   typeImage = imageDesc->PicType;
 #ifndef _WINDOWS
-  if (typeImage >= InlineHandlers && imageDesc->mapped && imageDesc->created)
+  if (typeImage >= InlineHandlers && imageDesc->mapped &&
+      imageDesc->created)
     {	
       XtUnmapWidget ((Widget) (imageDesc->wid));
       imageDesc->mapped = FALSE;
@@ -1380,7 +1373,7 @@ void UnmapImage (PictInfo* imageDesc)
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
-							int eWIDE, int eHIGH, int bperpix)
+			    int eWIDE, int eHIGH, int bperpix)
 {
   int           cy, ex, ey,*cxarr, *cxarrp;
   unsigned char *clptr,*elptr,*epptr, *epic;
@@ -1449,7 +1442,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   PathBuffer          fileName;
   PictureScaling      pres;
   Drawable            picMask = None;
-  Drawable            myDrawable = None;
+  Drawable            drw = None;
   PtrAbstractBox      pAb;
   Picture_Report      status;
   unsigned long       Bgcolor;
@@ -1458,9 +1451,15 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 yFrame = 0;
   int                 wFrame, hFrame, w, h;
   int                 width, height;
+  int                 left, right, top, bottom;
 #ifdef _WINDOWS
   ThotBool            releaseDC = FALSE;
 #endif
+
+  left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+  right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
+  top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
+  bottom = box->BxBMargin + box->BxBBorder + box->BxBPadding;
   pAb = box->BxAbstractBox;
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
     /* the picture is not visible */
@@ -1489,12 +1488,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicType = 3;
 	  pres = RealSize;
 	  imageDesc->PicPresent = pres;
-	  myDrawable = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
-	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor,
-		&picMask, &width, &height);
+	  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
+	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame,
+	     &hFrame, Bgcolor, &picMask, &width, &height);
 #endif /* _WIN_PRINT */
 #else  /* !_WINDOWS */
-      myDrawable = PictureLogo;
+      drw = PictureLogo;
 #endif /* _WINDOWS */
 
       imageDesc->PicType = -1;
@@ -1519,12 +1518,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
-      if (box == NULL)
-	{
-	  w = 20;
-	  h = 20;
-	}
-      else if (pAb->AbLeafType == LtCompound)
+      if (pAb->AbLeafType == LtCompound)
 	{
 	  /* a background image, draw over the whole box */
 	  w = box->BxWidth;
@@ -1540,34 +1534,31 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (!Printing)
 	{
 #ifndef _WINDOWS
-	  if (box != NULL)
+	  /* set the colors of the  graphic context GC */
+	  if (TtWDepth == 1)
 	    {
-	    /* set the colors of the  graphic context GC */
-	    if (TtWDepth == 1)
-	      {
-		/* Black and white screen */
-		XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
-		XSetBackground (TtDisplay, TtGraphicGC,
-				ColorPixel (BackgroundColor[frame]));
-	      }
-	    else if (pAb->AbSensitive && !pAb->AbPresentationBox)
-	      {
-		/* Set active Box Color */
-		XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
-		XSetForeground (TtDisplay, GCpicture, Box_Color);
-		XSetBackground (TtDisplay, TtGraphicGC,
-				ColorPixel (pAb->AbBackground));
-	      }
-	    else
-	      {
-		/* Set Box Color */
-		XSetForeground (TtDisplay, TtGraphicGC,
-				ColorPixel (pAb->AbForeground));
-		XSetForeground (TtDisplay, GCpicture,
-				ColorPixel (pAb->AbForeground));
-		XSetBackground (TtDisplay, TtGraphicGC,
-				ColorPixel (pAb->AbBackground));
-	      }
+	      /* Black and white screen */
+	      XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
+	      XSetBackground (TtDisplay, TtGraphicGC,
+			      ColorPixel (BackgroundColor[frame]));
+	    }
+	  else if (pAb->AbSensitive && !pAb->AbPresentationBox)
+	    {
+	      /* Set active Box Color */
+	      XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
+	      XSetForeground (TtDisplay, GCpicture, Box_Color);
+	      XSetBackground (TtDisplay, TtGraphicGC,
+			      ColorPixel (pAb->AbBackground));
+	    }
+	  else
+	    {
+	      /* Set Box Color */
+	      XSetForeground (TtDisplay, TtGraphicGC,
+			      ColorPixel (pAb->AbForeground));
+	      XSetForeground (TtDisplay, GCpicture,
+			      ColorPixel (pAb->AbForeground));
+	      XSetBackground (TtDisplay, TtGraphicGC,
+			      ColorPixel (pAb->AbBackground));
 	    }
 #endif /* _WINDOWS */
 	}
@@ -1579,7 +1570,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicPresent = RealSize;
 	      imageDesc->PicWArea = wFrame = w;
 	      imageDesc->PicHArea = hFrame = h;
-	      myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
+	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
 	      xFrame = imageDesc->PicXArea;
 	      yFrame = imageDesc->PicYArea;
 	    }
@@ -1600,8 +1591,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    yFrame = h;
 		}
 
-	      myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
-		(fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
+	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
+		(fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame,
+		 Bgcolor, &picMask, &width, &height,
+		 ViewFrameTable[frame - 1].FrMagnification);
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
@@ -1613,15 +1606,15 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    }
 	}
        
-      if (myDrawable == None)
+      if (drw == None)
 	{
-	  myDrawable = PictureLogo;
+	  drw = PictureLogo;
 	  imageDesc->PicType = -1;
 	  wFrame = w = 40;
 	  hFrame = h = 40;
 	  picMask = None;
 	}
-      else if (box != NULL && (w == 0 || h == 0))
+      else if (w == 0 || h == 0)
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
@@ -1630,31 +1623,39 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    h = hFrame;
 	  /* Do you have to extend the clipping */
 	  if (pAb->AbLeafType == LtCompound)
-	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
+	    DefClip (frame, box->BxXOrg, box->BxYOrg,
+		     box->BxXOrg + w, box->BxYOrg + h);
 	  else
-	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxRMargin + box->BxRBorder + box->BxRPadding + w, box->BxYOrg + box->BxBMargin + box->BxBBorder + box->BxBPadding + h);
+	    DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
+		     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
 	  if (pAb->AbLeafType == LtPicture)
 	    {
 	      /* transmit picture dimensions */
-	      if (!pAb->AbWidth.DimIsPosition)
+	      if (!(pAb->AbWidth.DimIsPosition))
 		{
 		  if (pAb->AbWidth.DimMinimum)
 		    /* the rule min is applied to this box */
 		    ChangeDefaultWidth (box, box, w, 0, frame);
-		  else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		  else if (pAb->AbEnclosing &&
+			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
 			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
 		    /* the parent box should inherit the picture width */
-		    ChangeWidth (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, w, 0, frame);
+		    ChangeWidth (pAb->AbEnclosing->AbBox,
+				 pAb->AbEnclosing->AbBox, NULL,
+				 w + left + right, 0, frame);
 		}
-	      if (!pAb->AbHeight.DimIsPosition)
+	      if (!(pAb->AbHeight.DimIsPosition))
 		{
 		  if (pAb->AbHeight.DimMinimum)
 		    /* the rule min is applied to this box */
 		    ChangeDefaultHeight (box, box, h, frame);
-		  else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		  else if (pAb->AbEnclosing &&
+			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
 			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
 		    /* the parent box should inherit the picture height */
-		    ChangeHeight (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, h, frame);
+		    ChangeHeight (pAb->AbEnclosing->AbBox,
+				  pAb->AbEnclosing->AbBox, NULL,
+				  h + top + bottom + top + bottom, frame);
 		}
 	    }
 	}
@@ -1675,7 +1676,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicHArea = h;
     }
   FreePixmap (imageDesc->PicPixmap);
-  imageDesc->PicPixmap = myDrawable;
+  imageDesc->PicPixmap = drw;
 #ifdef _WIN_PRINT
   if (releaseDC)
 	  /* release the device context into TtDisplay */
