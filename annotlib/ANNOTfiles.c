@@ -68,7 +68,7 @@ Document ANNOT_NewDocument (doc)
   TtaFreeMemory (tmpname);
 
   /* "annot is the title of the window */
-  annotDoc = InitDocView (0, "annotation", docAnnot, 0);
+  annotDoc = InitDocView (0, "annotation", docAnnot, 0, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -111,8 +111,7 @@ Document doc;
   List *ptr;
   AnnotMeta *annot = NULL;
 
-  if (DocumentTypes[doc] == docAnnot
-      && DocumentTypes[doc] == docAnnotRO)
+  if (DocumentTypes[doc] == docAnnot)
     return (NULL);
 
   /* get a pointer to the annot list */
