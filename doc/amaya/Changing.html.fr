@@ -45,8 +45,8 @@ sélectionné ( voir plus loin).</p>
 où à l'intérieur et appuyez sur  <a href="Selecting.html#Selecting1">la touche
 Esc (F2 sur Windows).</a></p>
 
-<p>Il est également possible d'effectuer des <a href="#L631"> transformations
-de structure  </a>plus complexes.</p>
+<p>Il est également possible d'effectuer des <a href="#L631">transformations
+de structure </a>plus complexes.</p>
 
 <h3><a name="L631">Changer la structure du document</a></h3>
 
@@ -67,14 +67,14 @@ en différentes structures.</p>
 toutes les transformations qui peuvent être appliquées à la sélection
 courante. Il suffit de choisir la transformation que vous désirez.</p>
 
-<p>Les transformations disponibles sont définies dans le fichier 
+<p>Les transformations disponibles sont définies dans le fichier
 <code>Amaya/amaya/HTML.trans</code>.  Référez-vous au document  <a
 href="Transform.html">Utilisation du fichier  HTML.trans</a> pour une
 description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
 <p>Des transformations supplémentaires peuvent être spécifiées dans le fichier
- HTML.trans. Certaines  sont  fournies en tant qu'exemples. Ainsi, il est
+HTML.trans. Certaines  sont  fournies en tant qu'exemples. Ainsi, il est
 possible de transformer des listes emboîtées en table et inversement.</p>
 
 <h3><a name="Inserting">Insérer une division</a></h3>
