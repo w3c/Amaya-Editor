@@ -7435,7 +7435,7 @@ void InitStringForCombobox ()
 	      i += len;
 	      nb++;
 	    }
-	  else
+	  else if (i > 0)
 	    i--;
 	}
       URL_list[i + 1] = EOS;
