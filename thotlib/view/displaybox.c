@@ -1263,11 +1263,6 @@ int                 ymax;
       if (yd + height > ymax)
 	height = ymax - yd;
     }
-  if (yd + height >= ymin
-      && yd <= ymax
-      && xd + width >= xmin
-      && xd <= xmax)
-    DisplayBorders (box, frame, xd - x, yd - y, width, height);
 
   if (box->BxAbstractBox->AbVolume == 0 ||
       (box->BxAbstractBox->AbLeafType == LtPolyLine && box->BxNChars == 1))
@@ -1299,4 +1294,11 @@ int                 ymax;
   else if (box->BxAbstractBox->AbLeafType == LtPolyLine)
     /* Polyline */
     DrawPolyLine (box, frame);
+
+  /* then display borders */
+  if (yd + height >= ymin
+      && yd <= ymax
+      && xd + width >= xmin
+      && xd <= xmax)
+    DisplayBorders (box, frame, xd - x, yd - y, width, height);
 }

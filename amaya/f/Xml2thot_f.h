@@ -6,7 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XmlSetElemLineNumber ( Element el );
 extern void PutInXmlElement ( STRING data );
+extern void PutMathMLEntity ( USTRING entityValue,
+                              Language lang,
+                              STRING entityName,
+                              Document doc );
 extern void FreeXmlParserContexts ( void );
 extern void StartXmlParser ( Document doc,
                              CHAR_T* htmlFileName,
@@ -17,7 +22,12 @@ extern void StartXmlParser ( Document doc,
 
 #else /* __STDC__ */
 
+extern void XmlSetElemLineNumber (/* Element el */);
 extern void PutInXmlElement (/* STRING data */);
+extern void PutMathMLEntity (/* USTRING entityValue,
+                                Language lang,
+                                STRING entityName,
+                                Document doc */);
 extern void FreeXmlParserContexts (/* void */);
 extern void StartXmlParser (/* Document doc,
                                CHAR_T* htmlFileName,

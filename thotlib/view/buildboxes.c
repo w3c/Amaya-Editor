@@ -17,9 +17,7 @@
 /* 
  * This module computes Concrete Images.
  *
- * Authors: I. Vatton (INRIA)
- *          C. Roisin (INRIA) - Columns and pages
- *
+ * Author: I. Vatton (INRIA)
  */
 
 #include "math.h"
@@ -1260,6 +1258,114 @@ PtrAbstractBox      pAb;
    return i;
 }
 
+
+/*----------------------------------------------------------------------
+  TransmitMBP transmits margins, borders, and paddings to children boxes.
+  i = the added pixels at the beginning
+  j =the added pixels at the end
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
+#else  /* __STDC__ */
+static void     TransmitMBP (pBox, frame, left, right, horizontal)
+PtrBox          pBox;
+int             frame;
+int             i;
+int             j;
+ThotBool        horizontal;
+#endif /* __STDC__ */
+{
+  PtrAbstractBox  pAb, pCurrentAb;
+
+  /* when it's a dummy box report changes to the children */
+  pCurrentAb = pBox->BxAbstractBox;
+  pAb = pCurrentAb;
+  if (horizontal)
+    {
+      while (pAb && pAb->AbBox && pAb->AbBox->BxType == BoGhost)
+	pAb = pAb->AbFirstEnclosed;
+      if (pAb && pAb->AbBox)
+	{
+	  /* the first child */
+	  pAb->AbBox->BxLMargin = pBox->BxLMargin;
+	  pAb->AbBox->BxLBorder = pBox->BxLBorder;
+	  pAb->AbBox->BxLPadding = pBox->BxLPadding;
+	  pAb->AbLeftStyle = pCurrentAb->AbLeftStyle;
+	  pAb->AbLeftBColor = pCurrentAb->AbLeftBColor;
+	  if (i != 0)
+	    {
+	      if (pAb->AbWidth.DimIsPosition ||
+		  pAb->AbWidth.DimAbRef != 0 ||
+		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+		/* the outside width is constrained */
+		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, - i, i, 0, 0, frame);
+	      else
+		/* the inside width is constrained */
+		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, 0, i, 0, 0, frame);
+	    }
+	}
+      pAb = pCurrentAb;
+      while (pAb && pAb->AbBox && pAb->AbBox->BxType == BoGhost)
+	{
+	  pAb = pAb->AbFirstEnclosed;
+	  while (pAb && pAb->AbNext)
+	    pAb = pAb->AbNext;
+	}
+      if (pAb && pAb->AbBox)
+	{
+	  /* the last child */
+	  pAb->AbBox->BxRMargin = pBox->BxRMargin;
+	  pAb->AbBox->BxRBorder = pBox->BxRBorder;
+	  pAb->AbBox->BxRPadding = pBox->BxRPadding;
+	  pAb->AbRightStyle = pCurrentAb->AbRightStyle;
+	  pAb->AbRightBColor = pCurrentAb->AbRightBColor;
+	  if (j != 0)
+	    {
+	      if (pAb->AbWidth.DimIsPosition ||
+		  pAb->AbWidth.DimAbRef != 0 ||
+		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+		/* the outside width is constrained */
+		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, - j, 0, j, 0, frame);
+	      else
+		/* the inside width is constrained */
+		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, 0, 0, j, 0, frame);
+	    }
+	}
+    }
+  else
+    {
+      while (pAb && pAb->AbBox && pAb->AbBox->BxType == BoGhost)
+	pAb = pAb->AbFirstEnclosed;
+      while (pAb && pAb->AbBox)
+	{
+	  /* all children */
+	  pAb->AbBox->BxTMargin = pBox->BxTMargin;
+	  pAb->AbBox->BxTBorder = pBox->BxTBorder;
+	  pAb->AbBox->BxTPadding = pBox->BxTPadding;
+	  pAb->AbTopStyle = pCurrentAb->AbTopStyle;
+	  pAb->AbTopBColor = pCurrentAb->AbTopBColor;
+
+	  pAb->AbBox->BxBMargin = pBox->BxBMargin;
+	  pAb->AbBox->BxBBorder = pBox->BxBBorder;
+	  pAb->AbBox->BxBPadding = pBox->BxBPadding;
+	  pAb->AbBottomStyle = pCurrentAb->AbBottomStyle;
+	  pAb->AbBottomBColor = pCurrentAb->AbBottomBColor;
+	  if (i || j)
+	    {
+	      if (pAb->AbHeight.DimIsPosition ||
+		  pAb->AbHeight.DimAbRef != 0 ||
+		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+		/* the outside height is constrained */
+		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, - i - j, i, j, frame);
+	      else
+		/* the inside height is constrained */
+		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, 0, i, j, frame);
+	    }
+	  pAb = pAb->AbNext;
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
   CreateBox creates the box associated to the abstract box pAb.
   - compute its constrainted dimensions.
@@ -1295,7 +1401,7 @@ int                *carIndex;
    PictInfo           *picture;
    BoxType             tableType;
    char                alphabet = 'L';
-   int                 width, i;
+   int                 width, i, j;
    int                 height;
    ThotBool            enclosedWidth;
    ThotBool            enclosedHeight;
@@ -1355,8 +1461,8 @@ int                *carIndex;
 	  }
 	/* New values of margins, paddings and borders */
 	pAb->AbMBPChange = FALSE;
-	ComputeMPB (pAb, frame, TRUE);
-	ComputeMPB (pAb, frame, FALSE);
+	ComputeMBP (pAb, frame, TRUE);
+	ComputeMBP (pAb, frame, FALSE);
 	pCurrentBox->BxXToCompute = FALSE;
 	pCurrentBox->BxYToCompute = FALSE;
 	enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
@@ -1413,138 +1519,147 @@ int                *carIndex;
 	/* Evaluation du contenu de la boite */
 	switch (pAb->AbLeafType)
 	      {
-		 case LtPageColBreak:
-		    pCurrentBox->BxBuffer = NULL;
-		    pCurrentBox->BxNChars = pAb->AbVolume;
-		    width = 0;
-		    height = 0;
-		    break;
-		 case LtText:
-		    pCurrentBox->BxBuffer = pAb->AbText;
-		    pCurrentBox->BxNChars = pAb->AbVolume;
-		    pCurrentBox->BxFirstChar = 1;
-		    pCurrentBox->BxSpaceWidth = 0;
-		    GiveTextSize (pAb, &width, &height, &i);
-		    pCurrentBox->BxNSpaces = i;
-		    break;
-		 case LtPicture:
-		    pCurrentBox->BxType = BoPicture;
-		    picture = (PictInfo *) pAb->AbPictInfo;
-		    pCurrentBox->BxPictInfo = pAb->AbPictInfo;
-		    if (!pAb->AbPresentationBox && pAb->AbVolume != 0 && pCurrentBox->BxPictInfo != NULL)
-		      {
+	      case LtPageColBreak:
+		pCurrentBox->BxBuffer = NULL;
+		pCurrentBox->BxNChars = pAb->AbVolume;
+		width = 0;
+		height = 0;
+		break;
+	      case LtText:
+		pCurrentBox->BxBuffer = pAb->AbText;
+		pCurrentBox->BxNChars = pAb->AbVolume;
+		pCurrentBox->BxFirstChar = 1;
+		pCurrentBox->BxSpaceWidth = 0;
+		GiveTextSize (pAb, &width, &height, &i);
+		pCurrentBox->BxNSpaces = i;
+		break;
+	      case LtPicture:
+		pCurrentBox->BxType = BoPicture;
+		picture = (PictInfo *) pAb->AbPictInfo;
+		pCurrentBox->BxPictInfo = pAb->AbPictInfo;
+		if (!pAb->AbPresentationBox && pAb->AbVolume != 0 && pCurrentBox->BxPictInfo != NULL)
+		  {
+		    /* box size has to be positive */
+		    if (pCurrentBox->BxW < 0)
+		      ChangeWidth (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxW, 0, frame);
+		    if (pCurrentBox->BxH < 0)
+		      ChangeHeight (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxH, frame);
+		  }
 
-			 /* box size has to be positive */
-			 if (pCurrentBox->BxW < 0)
-			    ChangeWidth (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxW, 0, frame);
-			 if (pCurrentBox->BxH < 0)
-			    ChangeHeight (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxH, frame);
-		      }
+		if (picture->PicPixmap == None)
+		  LoadPicture (frame, pCurrentBox, picture);
+		GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+		break;
+	      case LtSymbol:
+		pCurrentBox->BxBuffer = NULL;
+		pCurrentBox->BxNChars = pAb->AbVolume;
+		/* Les reperes de la boite (elastique) ne sont pas inverses */
+		pCurrentBox->BxHorizInverted = FALSE;
+		pCurrentBox->BxVertInverted = FALSE;
+		GiveSymbolSize (pAb, &width, &height);
+		break;
+	      case LtGraphics:
+		pCurrentBox->BxBuffer = NULL;
+		pCurrentBox->BxNChars = pAb->AbVolume;
+		GiveGraphicSize (pAb, &width, &height);
+		break;
+	      case LtPolyLine:
+		/* Prend une copie des points de controle */
+		pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+		pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
+		pCurrentBox->BxPictInfo = NULL;
+		pCurrentBox->BxXRatio = 1;
+		pCurrentBox->BxYRatio = 1;
+		GivePolylineSize (pAb, &width, &height);
+		break;
+	      case LtCompound:
+		if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
+		  {
+		    tableType = BoTable;
+		    pCurrentBox->BxType = tableType;
+		    pCurrentBox->BxColumns = NULL;
+		    pCurrentBox->BxRows = NULL;
+		    pCurrentBox->BxMaxWidth = 0;
+		    pCurrentBox->BxMinWidth = 0;
+		  }
+		else if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS) &&
+			 !pAb->AbWidth.DimIsPosition &&
+			 pAb->AbWidth.DimAbRef != pAb->AbEnclosing)
+		  {
+		    tableType = BoColumn;
+		    pCurrentBox->BxType = tableType;
+		    pCurrentBox->BxTable = NULL;
+		    pCurrentBox->BxRows = NULL;
+		    pCurrentBox->BxMaxWidth = 0;
+		    pCurrentBox->BxMinWidth = 0;
+		  }
+		else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
+		  {
+		    tableType = BoRow;
+		    pCurrentBox->BxType = tableType;
+		    pCurrentBox->BxTable = NULL;
+		    pCurrentBox->BxRows = NULL;
+		    pCurrentBox->BxMaxWidth = 0;
+		    pCurrentBox->BxMinWidth = 0;
+		  }
+		else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+		  {
+		    tableType = BoCell;
+		    pCurrentBox->BxType = tableType;
+		    pCurrentBox->BxTable = NULL;
+		    pCurrentBox->BxRows = NULL;
+		    pCurrentBox->BxMaxWidth = 0;
+		    pCurrentBox->BxMinWidth = 0;
+		  }
 
-		    if (picture->PicPixmap == None)
-		       LoadPicture (frame, pCurrentBox, picture);
-		    GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
-		    break;
-		 case LtSymbol:
-		    pCurrentBox->BxBuffer = NULL;
-		    pCurrentBox->BxNChars = pAb->AbVolume;
-		    /* Les reperes de la boite (elastique) ne sont pas inverses */
-		    pCurrentBox->BxHorizInverted = FALSE;
-		    pCurrentBox->BxVertInverted = FALSE;
-		    GiveSymbolSize (pAb, &width, &height);
-		    break;
-		 case LtGraphics:
-		    pCurrentBox->BxBuffer = NULL;
-		    pCurrentBox->BxNChars = pAb->AbVolume;
-		    GiveGraphicSize (pAb, &width, &height);
-		    break;
-		 case LtPolyLine:
-		    /* Prend une copie des points de controle */
-		    pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-		    pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
-		    pCurrentBox->BxPictInfo = NULL;
-		    pCurrentBox->BxXRatio = 1;
-		    pCurrentBox->BxYRatio = 1;
-		    GivePolylineSize (pAb, &width, &height);
-		    break;
-		 case LtCompound:
-		   if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
-		     {
-		       tableType = BoTable;
-		       pCurrentBox->BxType = tableType;
-		       pCurrentBox->BxColumns = NULL;
-		       pCurrentBox->BxRows = NULL;
-		       pCurrentBox->BxMaxWidth = 0;
-		       pCurrentBox->BxMinWidth = 0;
-		     }
-		   else if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS) &&
-			    !pAb->AbWidth.DimIsPosition &&
-			    pAb->AbWidth.DimAbRef != pAb->AbEnclosing)
-		     {
-		       tableType = BoColumn;
-		       pCurrentBox->BxType = tableType;
-		       pCurrentBox->BxTable = NULL;
-		       pCurrentBox->BxRows = NULL;
-		       pCurrentBox->BxMaxWidth = 0;
-		       pCurrentBox->BxMinWidth = 0;
-		     }
-		   else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
-		     {
-		       tableType = BoRow;
-		       pCurrentBox->BxType = tableType;
-		       pCurrentBox->BxTable = NULL;
-		       pCurrentBox->BxRows = NULL;
-		       pCurrentBox->BxMaxWidth = 0;
-		       pCurrentBox->BxMinWidth = 0;
-		     }
-		   else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
-		     {
-		       tableType = BoCell;
-		       pCurrentBox->BxType = tableType;
-		       pCurrentBox->BxTable = NULL;
-		       pCurrentBox->BxRows = NULL;
-		       pCurrentBox->BxMaxWidth = 0;
-		       pCurrentBox->BxMinWidth = 0;
-		     }
-
-		    /* Si le pave est mis en ligne et secable -> la boite est eclatee */
-		    if (inLines && pAb->AbAcceptLineBreak)
+		/* Si le pave est mis en ligne et secable -> la boite est eclatee */
+		if (inLines && pAb->AbAcceptLineBreak)
+		  {
+		    if (pAb->AbFirstEnclosed != NULL)
 		      {
-			if (pAb->AbFirstEnclosed != NULL)
-			  {
-			    split = TRUE;
-			    pCurrentBox->BxType = BoGhost;
-			  }
+			split = TRUE;
+			pCurrentBox->BxType = BoGhost;
 		      }
-		    /* Is there a background image ? */
-		    if (pAb->AbPictBackground != NULL)
-		      {
-			/* force filling */
-			pAb->AbFillBox = TRUE;
-			/* load the picture */
-			LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
-		      }
-		    /* Is it a filled box ? */
-		    if (pAb->AbFillBox ||
-			(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
-			(pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
-			(pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-		      if (pCurrentBox->BxType != BoCell)
-			/* register the box */
-			AddFilledBox (pCurrentBox, pMainBox, frame);
-
-		    /* Il faut creer les boites des paves inclus */
-		    pChildAb = pAb->AbFirstEnclosed;
-		    while (pChildAb != NULL)
-		      {
-			 pBox = CreateBox (pChildAb, frame, (ThotBool) (split || pAb->AbInLine), carIndex);
-			 pChildAb = pChildAb->AbNext;
-		      }
-		    GiveEnclosureSize (pAb, frame, &width, &height);
-		    break;
-		 default:
-		    break;
+		  }
+		/* Is there a background image ? */
+		if (pAb->AbPictBackground != NULL)
+		  {
+		    /* force filling */
+		    pAb->AbFillBox = TRUE;
+		    /* load the picture */
+		    LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
+		  }
+		/* Is it a filled box ? */
+		if (pAb->AbFillBox ||
+		    (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
+		    (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
+		    (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
+		    (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+		  if (pCurrentBox->BxType != BoCell)
+		    /* register the box */
+		    AddFilledBox (pCurrentBox, pMainBox, frame);
+		
+		/* Il faut creer les boites des paves inclus */
+		pChildAb = pAb->AbFirstEnclosed;
+		while (pChildAb != NULL)
+		  {
+		    pBox = CreateBox (pChildAb, frame, (ThotBool) (split || pAb->AbInLine), carIndex);
+		    pChildAb = pChildAb->AbNext;
+		  }
+		if (pCurrentBox->BxType == BoGhost)
+		  {
+		    /* transmit margins, borders and paddings */
+		    i = pCurrentBox->BxLMargin + pCurrentBox->BxLPadding + pCurrentBox->BxLBorder;
+		    j = pCurrentBox->BxRMargin + pCurrentBox->BxRPadding + pCurrentBox->BxRBorder;
+		    TransmitMBP (pCurrentBox, frame, i, j, TRUE);
+		    i = pCurrentBox->BxTMargin + pCurrentBox->BxTPadding + pCurrentBox->BxTBorder;
+		    j = pCurrentBox->BxBMargin + pCurrentBox->BxBPadding + pCurrentBox->BxBBorder;
+		    TransmitMBP (pCurrentBox, frame, i, j, FALSE);
+		  }
+		GiveEnclosureSize (pAb, frame, &width, &height);
+		break;
+	      default:
+		break;
 	      }
 
 	/* Dimensionnement de la boite par le contenu ? */
@@ -1793,7 +1908,7 @@ ThotBool            splitBox;
 	pPosAb = &pAb->AbHorizRef;
 	if (pPosAb->PosAbRef == NULL)
 	  {
-	     j = FontBase (pMainBox->BxFont) - pMainBox->BxHorizRef;
+	     j = FontBase (pMainBox->BxFont) + pMainBox->BxTMargin + pMainBox->BxTBorder + pMainBox->BxTPadding - pMainBox->BxHorizRef;
 	     MoveHorizRef (pAb->AbBox, NULL, j, frame);
 	  }
 	else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
@@ -2125,17 +2240,15 @@ ThotBool            horizRef;
 
 
 /*----------------------------------------------------------------------
-   ComputeUpdates traite les modifications d'un pave correspondant 
-   a` la fenetre frame. Rend la valeur vrai s'il y a       
-   modification sur la boite du pave.                      
+  ComputeUpdates checks what is changing in the current Abstract Box.
+  Return TRUE if there is almost one change.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool     ComputeUpdates (PtrAbstractBox pAb, int frame)
+ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-ThotBool     ComputeUpdates (pAb, frame)
+ThotBool            ComputeUpdates (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
-
 #endif /* __STDC__ */
 {
    PtrLine             pLine;
@@ -2341,6 +2454,12 @@ int                 frame;
 	       }
 	     Propagate = savpropage;	/* Restaure la regle de propagation */
 	     result = TRUE;
+	     pAb->AbWidthChange = FALSE;
+	     pAb->AbHeightChange = FALSE;
+	     pAb->AbAspectChange = FALSE;
+	     pAb->AbSizeChange = FALSE;
+	     pAb->AbChange = FALSE;
+	     pAb->AbMBPChange = FALSE;
 	  }
      }
    /* AbstractBox MORT */
@@ -2836,6 +2955,7 @@ int                 frame;
 	     else
 		result = TRUE;
 	  }
+	/* MARGIN PADDING BORDER */
 	if (pAb->AbMBPChange)
 	  {
 	    pAb->AbMBPChange = FALSE;
@@ -2844,29 +2964,37 @@ int                 frame;
 	    /* update vertical margins, borders and paddings */
 	    i = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
 	    j = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-	    ComputeMPB (pAb, frame, FALSE);
+	    ComputeMBP (pAb, frame, FALSE);
 	    i = - i + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
 	    j = - j + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 	    /* Check if the changes affect the inside or the outside width */
-	    if (i != 0 || j != 0)
-	      if (pAb->AbHeight.DimIsPosition ||
-		  pAb->AbHeight.DimAbRef != 0 ||
-		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
-		/* the outside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, - i - j, i, j, frame);
-	      else
-		/* the inside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
+	    pAb->AbBox->BxHorizRef += i;
+	    if (pAb->AbBox->BxType == BoGhost)
+	      TransmitMBP (pBox, frame, i, j, FALSE);
+	    else if (i != 0 || j != 0)
+	      {
+		if (pAb->AbHeight.DimIsPosition ||
+		    pAb->AbHeight.DimAbRef != 0 ||
+		    pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+		  /* the outside height is constrained */
+		  ResizeHeight (pBox, pBox, NULL, - i - j, i, j, frame);
+		else
+		  /* the inside height is constrained */
+		  ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
+	      }
 
 	    /* update horizontal margins, borders and paddings */
 	    i = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
 	    j = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-	    ComputeMPB (pAb, frame, TRUE);
+	    ComputeMBP (pAb, frame, TRUE);
 	    i = - i + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
 	    j = - j + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
 	    /* Check if the changes affect the inside or the outside width */
-	    if (i != 0 || j != 0)
+	    if (pAb->AbBox->BxType == BoGhost)
+	      TransmitMBP (pBox, frame, i, j, TRUE);
+	    else if (i != 0 || j != 0)
 	      {
+		pAb->AbBox->BxVertRef += i;
 		if (pAb->AbWidth.DimIsPosition ||
 		    pAb->AbWidth.DimAbRef != 0 ||
 		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
@@ -2875,7 +3003,7 @@ int                 frame;
 		else
 		  /* the inside width is constrained */
 		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
-		
+		    
 		/* Check table consistency */
 		if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
 		  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);

@@ -699,12 +699,6 @@ int                 frame;
 
    if (pBox != NULL)
      {
-#ifdef TAB_DEBUG
-if (pBox->BxType == BoTable)
-printf ("ChangeDefaultWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
-else if (pBox->BxType == BoColumn)
-printf ("ChangeDefaultWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
-#endif
 	/* Regarde si la largeur reelle actuelle depend du contenu */
 	if (pBox->BxContentWidth)
 	  {
@@ -2463,7 +2457,7 @@ int                 frame;
 				{
 				  if (pCurrentAb->AbLeafType == LtText
 				      && pCurrentAb->AbHorizRef.PosAbRef == NULL)
-				    j = FontBase (pBox->BxFont) - pBox->BxHorizRef;
+				    j = FontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 				  else
 				    j = delta;
 				  MoveHorizRef (pBox, NULL, j, frame);

@@ -8,7 +8,7 @@
 
 extern void XhtmlGetDTDName ( STRING DTDname,
                               STRING elementName );
-extern AttributeMapping *XhtmlMapAttribute ( CHAR_T* attrName,
+extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* attrName,
                                              AttributeType* attrType,
                                              CHAR_T* elementName,
                                              Document doc );
@@ -28,7 +28,7 @@ extern void XhtmlEntityCreated ( USTRING entityValue,
 
 extern void XhtmlGetDTDName (/* STRING DTDname,
                                 STRING elementName */);
-extern AttributeMapping *XhtmlMapAttribute (/* CHAR_T* attrName,
+extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* attrName,
                                                AttributeType* attrType,
                                                CHAR_T* elementName,
                                                Document doc */);

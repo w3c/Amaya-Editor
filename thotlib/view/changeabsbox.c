@@ -3987,16 +3987,24 @@ PRuleType           typeRule;
       break;
     case PtMarginTop:
     case PtMarginBottom:
-    case PtPaddingTop:
-    case PtPaddingBottom:
-    case PtBorderTopWidth:
-    case PtBorderBottomWidth:
     case PtMarginRight:
     case PtMarginLeft:
-    case PtPaddingRight:
-    case PtPaddingLeft:
+    case PtBorderTopColor:
+    case PtBorderRightColor:
+    case PtBorderBottomColor:
+    case PtBorderLeftColor:
+    case PtBorderTopStyle:
+    case PtBorderRightStyle:
+    case PtBorderBottomStyle:
+    case PtBorderLeftStyle:
+    case PtBorderTopWidth:
+    case PtBorderBottomWidth:
     case PtBorderRightWidth:
     case PtBorderLeftWidth:
+    case PtPaddingTop:
+    case PtPaddingBottom:
+    case PtPaddingRight:
+    case PtPaddingLeft:
       pAb->AbMBPChange = TRUE;
       break;
     case PtHorizPos:
@@ -4020,14 +4028,6 @@ PRuleType           typeRule;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
-    case PtBorderTopColor:
-    case PtBorderRightColor:
-    case PtBorderBottomColor:
-    case PtBorderLeftColor:
-    case PtBorderTopStyle:
-    case PtBorderRightStyle:
-    case PtBorderBottomStyle:
-    case PtBorderLeftStyle:
       pAb->AbAspectChange = TRUE;
       break;
     default:

@@ -531,15 +531,15 @@ int                *val;
 }
 
 /*----------------------------------------------------------------------
-  ComputeMarginPaddinAndBorder applies margin, padding, and border rules.
+  ComputeMBP applies margin, padding, and border rules.
   Relation between values:
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ComputeMPB (PtrAbstractBox pAb, int frame, ThotBool horizRef)
+void                ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 #else  /* __STDC__ */
-void                ComputeMPB (pAb, frame, horizRef)
+void                ComputeMBP (pAb, frame, horizRef)
 PrtAbstractBox      pAb;
 int                 frame;
 ThotBool            horizRef;
@@ -671,7 +671,7 @@ ThotBool            horizRef;
 	  pBox = pAb->AbBox;
 	  pAb->AbBox->BxBMargin = dim - pBox->BxTMargin - pBox->BxTPadding - pBox->BxBPadding - pBox->BxTBorder - pBox->BxBBorder;
 	}
-    }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2181,9 +2181,9 @@ ThotBool            horizRef;
 	pRefAb = NULL;
      }
 
-   /* SRule par defaut */
    if (pRefAb == NULL)
      {
+       /* default rule */
 	pRefBox = pBox;
 	if (horizRef)
 	  {
@@ -2201,12 +2201,12 @@ ThotBool            horizRef;
 	     if (rule.PosUnit == UnPercent)
 		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxH, 0);
 	     else
-		dist = FontBase (pBox->BxFont) - pBox->BxHeight;
+		dist = FontBase (pBox->BxFont) - pBox->BxH;
 	  }
      }
-   /* SRule explicite */
    else
      {
+       /* explicit rule */
 	refEdge = rule.PosRefEdge;
 	localEdge = rule.PosEdge;
 	/* Convert the distance value */
@@ -2290,7 +2290,7 @@ ThotBool            horizRef;
    /* Met a jour l'axe de la boite */
    if (horizRef)
      {
-	x = x + dist - pBox->BxVertRef;
+	x = x + dist + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pBox->BxVertRef;
 	MoveVertRef (pBox, NULL, x, frame);
 	/* la regle axe de reference est interpretee */
 	pAb->AbVertRefChange = FALSE;
@@ -2299,7 +2299,7 @@ ThotBool            horizRef;
      }
    else
      {
-	y = y + dist - pBox->BxHorizRef;
+	y = y + dist + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 	MoveHorizRef (pBox, NULL, y, frame);
 	/* la regle axe de reference est interpretee */
 	pAb->AbHorizRefChange = FALSE;
@@ -2372,9 +2372,12 @@ ThotBool            horizRef;
 		     while (j < MAX_RELAT_POS)
 		       {
 			  k = j + 1;
-			  pPosRel->PosRTable[j - 1].ReBox = pPosRel->PosRTable[k - 1].ReBox;
-			  pPosRel->PosRTable[j - 1].ReRefEdge = pPosRel->PosRTable[k - 1].ReRefEdge;
-			  pPosRel->PosRTable[j - 1].ReOp = pPosRel->PosRTable[k - 1].ReOp;
+			  /* a patch that doesn't confuse gcc
+			     pPosRel->PosRTable[j - 1].ReBox = pPosRel->PosRTable[k - 1].ReBox;
+			     pPosRel->PosRTable[j - 1].ReRefEdge = pPosRel->PosRTable[k - 1].ReRefEdge;
+			     pPosRel->PosRTable[j - 1].ReOp = pPosRel->PosRTable[k - 1].ReOp;
+			  */
+			  pPosRel->PosRTable[j - 1] = pPosRel->PosRTable[k - 1];
 			  if (pPosRel->PosRTable[k - 1].ReBox == NULL)
 			     j = MAX_RELAT_POS;
 			  else
