@@ -45,7 +45,7 @@ void                RedisplayCopies ()
 {
 }
 
-void                DrawAjAttr ()
+void                DrawAddAttr ()
 {
 }
 #ifdef __STDC__

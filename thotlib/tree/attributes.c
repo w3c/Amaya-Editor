@@ -1150,7 +1150,7 @@ PtrAttribute        pNewAttr;
 	     pDoc->DocNTypedChars += 10;
 	     /* traitement special a l'ajout d'un attribut a un element d'un
 	        objet Draw */
-	     DrawAjAttr (&pAttr, pEl);
+	     DrawAddAttr (&pAttr, pEl);
 	  }
 
 	else

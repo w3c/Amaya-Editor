@@ -82,6 +82,8 @@ int                 indexType;
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame, NULL, -1, 1);
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat, NULL, -1, 1);
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat, NULL, -1, 1);
+      if (IndexPresImage == (int) ReScale)
+	IndexPresImage = (int) RealSize;
     }
   else if (indexType == EPS_FORMAT)
     {
@@ -90,6 +92,10 @@ int                 indexType;
       UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame);
       UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat);
       UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat);
+      if (IndexPresImage == (int) FillFrame ||
+	  IndexPresImage == (int) XRepeat ||
+	  IndexPresImage == (int) YRepeat)
+	IndexPresImage = (int) ReScale;
     }
   else
     {
@@ -98,9 +104,9 @@ int                 indexType;
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame, NULL, -1, 1);
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat, NULL, -1, 1);
       TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat, NULL, -1, 1);
-      IndexPresImage = 0;
-      TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);
     }
+  /* set the selected presentation of default one */
+  TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);
 }
 
 /*----------------------------------------------------------------------

@@ -337,6 +337,7 @@ STRUCT
 	with x_coord ?= 0, y_coord ?= 0, width\240 ?= 25, height\240 ?= 10;
 
 EXCEPT
+	HTML:           NoMove, NoResize;
 	BODY:		NoCut;
 	HEAD:		NoCut;
 	TITLE:		NoCut;
@@ -353,7 +354,7 @@ EXCEPT
 	Definition_Item: Hidden;
 	Comment_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
-	PICTURE:	NoMove;
+	PICTURE:	NoMove, Resize;
 	Invalid_element: NoCreate;
 	Pseudo_paragraph:	ParagraphBreak, Hidden;
 	Paragraph:	ParagraphBreak;
@@ -398,29 +399,26 @@ EXCEPT
 	ShowAreas:	Invisible;
 
 	Table:		PageBreak;
-	Column_head:	NoHMove, NoVMove, NoCut, Hidden, NoSelect;
-	Table_head:	NoHMove, NoVMove, NoCut, Hidden, NoSelect,
+	Column_head:	NoCut, Hidden, NoSelect;
+	Table_head:	NoCut, Hidden, NoSelect,
 			PageBreakRepetition;
 	C_Head:		Hidden, NoSelect;
-	Table_foot:	NoMove, NoResize, NoCut, Hidden, PageBreakRepBefore;
+	Table_foot:	NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
 	Table_body:	PageBreakAllowed, Hidden;
-	Table_row:	NoHMove, NoVMove, PageBreakPlace;
-	Table_cell:	NoHMove, NoHResize;
-	Data_cell:	NoHMove, NoHResize;
-	Heading_cell:	NoHMove, NoHResize;
+	Table_row:	PageBreakPlace;
 	Col_width_percent:	Invisible;
 	Col_width_pxl:	Invisible;
 	Col_width_delta:	Invisible;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	Invisible;
-	Table_cell_ghost: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+	Table_cell_ghost: Hidden, NoCreate, NoCut, NoSelect;
 #ifdef COUGAR
-	Object_Content: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+	Object_Content: Hidden, NoCreate, NoCut, NoSelect;
 #endif
 #ifdef R_HTML
-	Entity: Hidden, NoCreate, NoCut, NoMove, NoResize;
+	Entity: Hidden, NoCreate, NoCut;
 #endif
 	Ghost_restruct:	Invisible;
 END

@@ -1327,7 +1327,7 @@ int                *max;
    PtrBox              pBox;
    PtrElement          pEl;
    PtrDocument         pDoc;
-   boolean             ok;
+   boolean             ok, found;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
@@ -1339,58 +1339,70 @@ int                *max;
       *min = pBox->BxXOrg;
    else
       *min = pBox->BxYOrg;
-   *max = *min;
 
+   *max = *min;
+   ok = TRUE;
    if (pDoc->DocReadOnly)
-      ok = FALSE;
-   else if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
-      /* For Amaya only !!!!!!!!!!!! */
       ok = FALSE;
    else if (pEl->ElIsCopy)
       ok = FALSE;
    else if (ElementIsReadOnly (pEl))
       ok = FALSE;
-   else if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   else if (!horizRef && TypeHasException (ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   /* Box de presentation */
    else if (pAb->AbPresentationBox)
+      /* presentation box */
       ok = FALSE;
-   /* Box elastique */
    else if (horizRef && pAb->AbWidth.DimIsPosition)
+      /* stretchable box */
       ok = FALSE;
    else if (!horizRef && pAb->AbHeight.DimIsPosition)
+      /* stretchable box */
       ok = FALSE;
-   /* Box flottante */
    else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
+      /* no position rule */
       ok = FALSE;
    else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
+      /* no position rule */
       ok = FALSE;
-   /* Box racine */
-   else if (pParentAb == NULL)
-      ok = TRUE;
-   /* Box mise en lignes */
    else if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
-      ok = FALSE;
-   else if (horizRef
-      /* et le pParentAb ne depend pas de son contenu */
-	    && (pParentAb->AbBox->BxContentWidth
-		|| (!pParentAb->AbWidth.DimIsPosition && pParentAb->AbWidth.DimMinimum))
-	    && pAb->AbHorizPos.PosAbRef == pParentAb
-	    && pAb->AbHorizPos.PosRefEdge != Left)
-      ok = FALSE;
-   else if (!horizRef
-      /* et le pParentAb ne depend pas de son contenu */
-	    && (pParentAb->AbBox->BxContentHeight
-		|| (!pParentAb->AbHeight.DimIsPosition && pParentAb->AbHeight.DimMinimum))
-	    && pAb->AbVertPos.PosAbRef == pParentAb
-	    && pAb->AbVertPos.PosRefEdge != Top)
+     /* box displayed in block of lines */
       ok = FALSE;
    else
-      ok = TRUE;
+     {
+       /* search the first rule Move or NoMove */
+       found = FALSE;
+       while (!found && ok && pEl != NULL)
+	 {
+	   if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	       found = TRUE;
+	   else if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   else if (!horizRef && TypeHasException (ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   /* if no directive is done, see the parent */
+	   pEl = pEl->ElParent;
+	 }
+
+       if (!found && ok && pParentAb != NULL)
+	 {
+	   /* it's not the root box */
+	   if (horizRef
+	       /* et le pParentAb ne depend pas de son contenu */
+	       && (pParentAb->AbBox->BxContentWidth
+		   || (!pParentAb->AbWidth.DimIsPosition && pParentAb->AbWidth.DimMinimum))
+	       && pAb->AbHorizPos.PosAbRef == pParentAb
+	       && pAb->AbHorizPos.PosRefEdge != Left)
+	     ok = FALSE;
+	   else if (!horizRef
+		    /* et le pParentAb ne depend pas de son contenu */
+		    && (pParentAb->AbBox->BxContentHeight
+			|| (!pParentAb->AbHeight.DimIsPosition && pParentAb->AbHeight.DimMinimum))
+		    && pAb->AbVertPos.PosAbRef == pParentAb
+		    && pAb->AbVertPos.PosRefEdge != Top)
+	     ok = FALSE;
+	 }
+     }
 
    if (horizRef)
       if (ok)
@@ -1660,11 +1672,11 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
    PtrBox              pBox;
    PtrAbstractBox      pParentAb;
    PtrElement          pEl;
    PtrDocument         pDoc;
+   boolean             ok, found;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
@@ -1675,55 +1687,65 @@ int                *max;
       *min = pBox->BxXOrg;
    else
       *min = pBox->BxYOrg;
-   *max = *min;
 
+   *max = *min;
+   ok = TRUE;
    if (pDoc->DocReadOnly)
-      ok = FALSE;
-   else if (!TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-      /* For Amaya only !!!!!!!!!!!! */
       ok = FALSE;
    else if (pEl->ElIsCopy)
       ok = FALSE;
    else if (ElementIsReadOnly (pEl))
       ok = FALSE;
-   else if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   else if (horizRef && TypeHasException (ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   else if (!horizRef && TypeHasException (ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-      ok = FALSE;
-   /* Box de presentation */
    else if (pAb->AbPresentationBox)
+      /* presentation box */
       ok = FALSE;
-   /* Box elastique */
    else if (horizRef && pAb->AbWidth.DimIsPosition)
+      /* stretchable box */
       ok = FALSE;
    else if (!horizRef && pAb->AbHeight.DimIsPosition)
+      /* stretchable box */
       ok = FALSE;
-   /* Box racine */
-   else if (pParentAb == NULL)
-     {
-	if ((horizRef && pAb->AbWidth.DimValue == 0)
-	    || (!horizRef && pAb->AbHeight.DimValue == 0))
-	   ok = FALSE;
-	else
-	   ok = TRUE;
-     }
-   /* Texte mise en lignes */
    else if (pAb->AbLeafType == LtText
 	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
+     /* text box displayed in block of lines */
       ok = FALSE;
    /* Il est impossible de modifier si la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
    else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
-      if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
+      if (horizRef
+	  && (pBox->BxContentWidth
+	      || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
 	 ok = FALSE;
-      else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
+      else if (!horizRef
+	       && (pBox->BxContentHeight
+		   || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
 	 ok = FALSE;
-      else
-	 ok = TRUE;
    else
-      ok = TRUE;
+     {
+       /* search the first rule Move or NoMove */
+       found = FALSE;
+       while (!found && ok && pEl != NULL)
+	 {
+	   if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     found = TRUE;
+	   else if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   else if (horizRef && TypeHasException (ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   else if (!horizRef && TypeHasException (ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     ok = FALSE;
+	   /* if no directive is done, see the parent */
+	   pEl = pEl->ElParent;
+	 }
+
+       if (!found && ok && pParentAb != NULL)
+	 {
+	   /* it's not the root box */
+	   if ((horizRef && pAb->AbWidth.DimValue == 0)
+	       || (!horizRef && pAb->AbHeight.DimValue == 0))
+	     ok = FALSE;
+	 }
+     }
 
    if (horizRef)
       if (ok)

@@ -37,22 +37,21 @@ typedef int         Ensemble[4];
 /* procedures definies dans le module */
 #include "draw_f.h"
 
-/* AjouteAttr   ajoute a l'element pointe' par pEl l'attribut */
-/* numerique auquel est associe' le numero d'exception NumExcept dans */
-/* le schema de structure pointe par pSS. Initialise cet attribut avec */
-/* la valeur Val. */
-
+/*----------------------------------------------------------------------
+ AddAttribute   ajoute a l'element pointe' par pEl l'attribut
+ numerique auquel est associe' le numero d'exception NumExcept dans
+ le schema de structure pointe par pSS. Initialise cet attribut avec
+ la valeur Val.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AjouteAttr (PtrElement pEl, int NumExcept, PtrSSchema pSS, int Val)
+static void         AddAttribute (PtrElement pEl, int NumExcept, PtrSSchema pSS, int Val)
 #else  /* __STDC__ */
-static void         AjouteAttr (pEl, NumExcept, pSS, Val)
+static void         AddAttribute (pEl, NumExcept, pSS, Val)
 PtrElement          pEl;
 int                 NumExcept;
 PtrSSchema          pSS;
 int                 Val;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr;
    int                 attr;
@@ -91,20 +90,18 @@ int                 Val;
 }
 
 
-/* DrawEtendSelection   verifie si l'element pointe' par pEl est un */
-/* objet dans un dessin et, dans ce cas, ajoute cet objet a la */
-/* selection courante et retourne vrai. */
-
+/*----------------------------------------------------------------------
+ DrawEtendSelection   verifie si l'element pointe' par pEl est un
+ objet dans un dessin et, dans ce cas, ajoute cet objet a la
+ selection courante et retourne vrai.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DrawEtendSelection (PtrElement pEl, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 boolean             DrawEtendSelection (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    boolean             ret;
 
@@ -120,17 +117,16 @@ PtrDocument         pDoc;
    return ret;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      TraiteAjAttr_DrawAjAttr (Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
-
+static boolean      CheckAttributes (Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-static boolean      TraiteAjAttr_DrawAjAttr (Except, pEl, pAttr)
+static boolean      CheckAttributes (Except, pEl, pAttr)
 Ensemble            Except;
 PtrElement         *pEl;
 PtrAttribute       *pAttr;
-
 #endif /* __STDC__ */
-
 {
    boolean             trouve;
    int                 e, e1;
@@ -205,21 +201,19 @@ PtrAttribute       *pAttr;
 }
 
 
-/* DrawAjAttr   on a ajoute' l'attribut pointe' par pAttr a l'element */
-/* pointe' par pEl. Dans le cas d'un objet Draw, verifie la coherence */
-/* des attributs porte's par l'element et retourne pAttr=NULL si */
-/* l'attribut etait incorrect. */
-
+/*----------------------------------------------------------------------
+ DrawAddAttr   on a ajoute' l'attribut pointe' par pAttr a l'element
+ pointe' par pEl. Dans le cas d'un objet Draw, verifie la coherence
+ des attributs porte's par l'element et retourne pAttr=NULL si
+ l'attribut etait incorrect.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawAjAttr (PtrAttribute * pAttr, PtrElement pEl)
-
+void                DrawAddAttr (PtrAttribute * pAttr, PtrElement pEl)
 #else  /* __STDC__ */
-void                DrawAjAttr (pAttr, pEl)
+void                DrawAddAttr (pAttr, pEl)
 PtrAttribute       *pAttr;
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
    boolean             ok;
    Ensemble            Ens;
@@ -243,7 +237,7 @@ PtrElement          pEl;
 	   Ens[1] = 355;
 	   Ens[2] = 356;
 	   Ens[3] = 357;
-	   ok = TraiteAjAttr_DrawAjAttr (Ens, &pEl, pAttr);
+	   ok = CheckAttributes (Ens, &pEl, pAttr);
 	   if (!ok)
 	      /* Le nouvel attribut n'est pas un attribut de position verticale. */
 	      /* Verifie si c'est un attribut de position horizontale et dans ce */
@@ -254,7 +248,7 @@ PtrElement          pEl;
 		Ens[1] = 358;
 		Ens[2] = 359;
 		Ens[3] = 360;
-		ok = TraiteAjAttr_DrawAjAttr (Ens, &pEl, pAttr);
+		ok = CheckAttributes (Ens, &pEl, pAttr);
 		if (!ok)
 		   /* Le nouvel attribut est-il un attribut de boite elastique ? */
 		   if (AttrHasException (361, (*pAttr)->AeAttrNum, (*pAttr)->AeAttrSSchema) ||
@@ -324,18 +318,18 @@ PtrElement          pEl;
 	}
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      TraiteSupprAttr_DrawSupprAttr (int Def, Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
+static boolean      CheckRemovedAttribute (int Def, Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-static boolean      TraiteSupprAttr_DrawSupprAttr (Def, Except, pEl, pAttr)
+static boolean      CheckRemovedAttribute (Def, Except, pEl, pAttr)
 int                 Def;
 Ensemble            Except;
 PtrElement         *pEl;
 PtrAttribute       *pAttr;
-
 #endif /* __STDC__ */
-
 {
    boolean             trouve;
    int                 e, e1;
@@ -344,7 +338,6 @@ PtrAttribute       *pAttr;
    PtrAttribute        pAt1;
    TtAttribute        *pAttr1;
    boolean             ret;
-
 
    /* L'attribut supprime' est-il associe' a une des exceptions de */
    /* l'ensemble Except ? */
@@ -399,7 +392,7 @@ PtrAttribute       *pAttr;
 	if (!trouve)
 	   /* aucun des attributs cherches n'est porte' par l'element. */
 	   /* On met l'attribut par defaut avec la valeur nulle. */
-	   AjouteAttr (*pEl, Def, (*pAttr)->AeAttrSSchema, 0);
+	   AddAttribute (*pEl, Def, (*pAttr)->AeAttrSSchema, 0);
 	ret = TRUE;
      }
    else
@@ -409,20 +402,18 @@ PtrAttribute       *pAttr;
 }
 
 
-/* DrawSupprAttr        on a supprime' l'attribut pointe' par pAttr a */
-/* l'element pointe' par pEl. Dans le cas d'un objet Draw, verifie la */
-/* coherence des attributs porte's par l'element */
-
+/*----------------------------------------------------------------------
+ DrawSupprAttr        on a supprime' l'attribut pointe' par pAttr a
+ l'element pointe' par pEl. Dans le cas d'un objet Draw, verifie la
+ coherence des attributs porte's par l'element
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
-
 #else  /* __STDC__ */
 void                DrawSupprAttr (pAttr, pEl)
 PtrAttribute        pAttr;
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
    boolean             ok;
    Ensemble            Ens;
@@ -442,7 +433,7 @@ PtrElement          pEl;
 	      Ens[1] = 355;
 	      Ens[2] = 356;
 	      Ens[3] = 357;
-	      ok = TraiteSupprAttr_DrawSupprAttr (351, Ens, &pEl, &pAttr);
+	      ok = CheckRemovedAttribute (351, Ens, &pEl, &pAttr);
 	      if (!ok)
 		 /* Ce n'est pas un attribut de position verticale qui a ete */
 		 /* supprime'. Verifie si c'est un attribut de position horizontale, */
@@ -452,8 +443,7 @@ PtrElement          pEl;
 		   Ens[1] = 358;
 		   Ens[2] = 359;
 		   Ens[3] = 360;
-		   ok = TraiteSupprAttr_DrawSupprAttr (352, Ens, &pEl, &pAttr);
+		   ok = CheckRemovedAttribute (352, Ens, &pEl, &pAttr);
 		}
 	   }
 }
-/* End Of Module draw */

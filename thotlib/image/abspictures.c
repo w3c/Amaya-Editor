@@ -93,8 +93,8 @@ PtrElement          pEl;
 	pRegle->PrPictInfo.PicYArea = 0;
 	pRegle->PrPictInfo.PicWArea = 0;
 	pRegle->PrPictInfo.PicHArea = 0;
-	pRegle->PrPictInfo.PicPresent = RealSize;
-	pRegle->PrPictInfo.PicType = XBM_FORMAT;
+	pRegle->PrPictInfo.PicPresent = ReScale;
+	pRegle->PrPictInfo.PicType = GIF_FORMAT;
      }
    return pRegle;
 
@@ -184,8 +184,11 @@ int                 imagetype;
       image->PicFileName = filename;
       image->PicPixmap = 0;
       image->PicMask = 0;
-      image->PicPresent = RealSize;
       image->PicType = imagetype;
+      if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
+	image->PicPresent = RealSize;
+      else
+	image->PicPresent = ReScale;
       image->PicXArea = 0;
       image->PicYArea = 0;
       image->PicWArea = 0;

@@ -73,6 +73,7 @@ Pixmap          EpsfPictureLogo;
 
 static char    *PictureMenu;
 static Pixmap   PictureLogo;
+static ThotGC   tiledGC;
 
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
@@ -295,10 +296,9 @@ PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-  XGCValues         values;
-  GC                backgroundGC;
-  unsigned int      valuemask;
   XRectangle        rect;
+  XGCValues         values;
+  unsigned int      valuemask;
 #endif /* _WINDOWS */
 
   if (picXOrg < 0)
@@ -325,11 +325,12 @@ PictInfo           *imageDesc;
      case XRepeat:
      case YRepeat:
        {
-	 backgroundGC = XCreateGC (TtDisplay, drawable, 0, NULL);
-	 XCopyGC (TtDisplay, GCpicture, 0xFFFF, backgroundGC);
-	 valuemask = GCTile|GCFillStyle|GCTileStipXOrigin|GCTileStipYOrigin;
+	 valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	 values.fill_style = FillTiled;
 	 values.tile = pixmap;
+	 values.ts_x_origin = 0;
+	 values.ts_y_origin = 0;
+	 XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	 if (imageDesc->PicPresent != XRepeat)
 	     {
 	       /* picture repeated on Y axis */
@@ -356,9 +357,14 @@ PictInfo           *imageDesc;
 	       rect.width = imageDesc->PicWArea - picXOrg;
 	     }
 
-	   XSetClipRectangles (TtDisplay, backgroundGC, 0, 0,&rect, 1, Unsorted);
-	   XFillRectangle (TtDisplay, drawable, backgroundGC, xFrame, yFrame, w, h);
-	   XFreeGC (TtDisplay, backgroundGC);
+	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0,&rect, 1, Unsorted);
+	   XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+	   /* remove clipping */
+	   rect.x = 0;
+	   rect.y = 0;
+	   rect.width = MAX_SIZE;
+	   rect.height = MAX_SIZE;
+	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 	 }
       }
 #endif /* _WINDOWS */
@@ -528,6 +534,14 @@ boolean             printing;
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
    XSetBackground (TtDisplay, TtGraphicGC, White_Color);
    XSetGraphicsExposures (TtDisplay, TtGraphicGC, FALSE);
+
+   /* initialize Graphic context to display tiled pictures */
+   tiledGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
+   XSetForeground (TtDisplay, tiledGC, Black_Color);
+   XSetBackground (TtDisplay, tiledGC, White_Color);
+   XSetGraphicsExposures (TtDisplay, tiledGC, FALSE);
+
+   /* special Graphic context to display bitmaps */
    GCpicture = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, GCpicture, Black_Color);
    XSetBackground (TtDisplay, GCpicture, White_Color);
@@ -1062,6 +1076,9 @@ PictInfo           *imageDesc;
        /* Supported format */
        imageDesc->PicType = typeImage;
        pres = imageDesc->PicPresent;
+       if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT)
+	   && pres == ReScale)
+	 pres = imageDesc->PicPresent = RealSize;
        if (box == NULL)
 	 {
 	   w = 20;

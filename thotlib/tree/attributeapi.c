@@ -178,7 +178,7 @@ Document            document;
 	   if (pAttr->AeAttrReference != NULL)
 	      pAttr->AeAttrReference->RdElement = (PtrElement) element;
 	/* Special processing when adding an attribute to an element of a Draw object */
-	DrawAjAttr (&pAttr, (PtrElement) element);
+	DrawAddAttr (&pAttr, (PtrElement) element);
 #ifndef NODISPLAY
 	DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif

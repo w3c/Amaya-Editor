@@ -1423,75 +1423,76 @@ int                 frame;
    char               *ptr;
    int                 i;
    int                 xDelta, yDelta;
-   int                 type = UNKNOWN_FORMAT;
-   int                 pres = (int) RealSize;
+   int                 type;
+   int                 pres;
    PictInfo           *pictInfo;
    boolean             ok;
 
-   switch (pAb->AbLeafType)
+   if (pAb->AbLeafType == LtPicture)
+     {
+       pictInfo = (PictInfo *) pAb->AbPictInfo;
+       if ((pictInfo != NULL) && (pictInfo->PicFileName != NULL))
 	 {
-	    case LtPicture:
-	       pictInfo = (PictInfo *) pAb->AbPictInfo;
-	       if ((pictInfo != NULL) && (pictInfo->PicFileName != NULL))
-		 {
-		    strcpy (buffer, pictInfo->PicFileName);
-		    type = pictInfo->PicType;
-		    pres = pictInfo->PicPresent;
-		 }
-	       /* dans quel document est-on ? */
-	       /* saisit le nom du fichier image */
-
-	       if (!APPtextModify (pAb->AbElement, frame, TRUE))
-		 {
-		    if (ThotLocalActions[T_imagemenu] != NULL)
-		      (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
-		    else
-		      ok = FALSE;
-		    if (ok)
-		      {
-			 i = strlen (buffer);
-			 /* longueur de la chaine a copier */
-			 if (i != 0)
-			   {
-			      pictInfo = (PictInfo *) pBox->BxPictInfo;
-			      strcpy (pictInfo->PicFileName, buffer);
-			      pictInfo->PicPresent = (PictureScaling) pres;
-			      pictInfo->PicType = type;
-			      SetCursorWatch (frame);
-			      LoadPicture (frame, pBox, pictInfo);
-			      ResetCursorWatch (frame);
-			      if (pictInfo->PicPixmap != 0)
-				{
-				   pAb->AbVolume = strlen (buffer);
-				   /* met a jour la boite */
-				   if (!defaultWidth)
-				      xDelta = 0;
-				   else
-				      /* difference de largeur */
-				      xDelta = pictInfo->PicWArea - pBox->BxWidth;
-				   if (!defaultHeight)
-				      yDelta = 0;
-				   else
-				      /* difference de largeur */
-				      yDelta = pictInfo->PicHArea - pBox->BxHeight;
-				   BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-				}
-			      else
-				{
-				   ptr = buffer;
-				   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_UNKNOWN_TYPE), &ptr);
-				}
-			   }
-			 NewContent (pAb);
-			 APPtextModify (pAb->AbElement, frame, FALSE);
-		      }		/*if BuildPictureMenu */
-		    pAb = NULL;	/* rien a faire de plus pour les images */
-		 }
-	       break;
-	    default:
-	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
-	       break;
+	   strcpy (buffer, pictInfo->PicFileName);
+	   type = pictInfo->PicType;
+	   pres = pictInfo->PicPresent;
 	 }
+       else
+	 {
+	   type = GIF_FORMAT;
+	   pres = (int) ReScale;
+	 }
+       /* dans quel document est-on ? */
+       /* saisit le nom du fichier image */
+       if (!APPtextModify (pAb->AbElement, frame, TRUE))
+	 {
+	   if (ThotLocalActions[T_imagemenu] != NULL)
+	     (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
+	   else
+	     ok = FALSE;
+	   if (ok)
+	     {
+	       i = strlen (buffer);
+	       /* longueur de la chaine a copier */
+	       if (i != 0)
+		 {
+		   pictInfo = (PictInfo *) pBox->BxPictInfo;
+		   strcpy (pictInfo->PicFileName, buffer);
+		   pictInfo->PicPresent = (PictureScaling) pres;
+		   pictInfo->PicType = type;
+		   SetCursorWatch (frame);
+		   LoadPicture (frame, pBox, pictInfo);
+		   ResetCursorWatch (frame);
+		   if (pictInfo->PicPixmap != 0)
+		     {
+		       pAb->AbVolume = strlen (buffer);
+		       /* met a jour la boite */
+		       if (!defaultWidth)
+			 xDelta = 0;
+		       else
+			 /* difference de largeur */
+			 xDelta = pictInfo->PicWArea - pBox->BxWidth;
+		       if (!defaultHeight)
+			 yDelta = 0;
+		       else
+			 /* difference de largeur */
+			 yDelta = pictInfo->PicHArea - pBox->BxHeight;
+		       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
+		     }
+		   else
+		     {
+		       ptr = buffer;
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_UNKNOWN_TYPE), &ptr);
+		     }
+		 }
+	       NewContent (pAb);
+	       APPtextModify (pAb->AbElement, frame, FALSE);
+	     }		/*if BuildPictureMenu */
+	   pAb = NULL;	/* rien a faire de plus pour les images */
+	 }
+     }
+   else
+     TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
 }
 
 
