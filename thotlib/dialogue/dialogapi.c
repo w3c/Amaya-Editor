@@ -991,26 +991,37 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
 	int    width;
 	int    height;
 
+	/* get the rectangle size according to the font metrics (hack) */
+	newFont = GetStockObject (DEFAULT_GUI_FONT); 
+	if (newFont)
+	  SendMessage (hwnDlg, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+
+	GetWindowRect (hwnDlg, &rect);
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+
+	display = GetDC (hwnDlg);
+	if (GetTextMetrics (display, &textMetric))
+	  {
+	    height = height * textMetric.tmHeight;
+	    width = width * (textMetric.tmAveCharWidth);
+	  }
+	else 
+	  {
+	    /* try to give it some value */
+	    height = height * 14;
+	    width = width * 14;
+	  }
+	ReleaseDC (hwnDlg, display);
+	/* we change the settings of the current window too */
+	SetWindowPos (hwnDlg, NULL, rect.left, rect.top, width, height, SWP_NOZORDER);
+
 	/* create a list box inside the container window */
 	scrPopupWin = hwnDlg;
 	dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL 
 	  | LBS_HASSTRINGS | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
 	/* give it the same size as that of the container */
-	GetWindowRect (hwnDlg, &rect);
-	width = rect.right - rect.left;
-	height = rect.bottom - rect.top;
-	display = GetDC(hwnDlg);
-	if (GetTextMetrics (display, &textMetric))
-	  {
-	    height = height * textMetric.tmHeight;
-	    width = width * textMetric.tmMaxCharWidth + textMetric.tmOverhang;
-	  }
-	else 
-	  {
-	    /* try to give it some value */
-	    height = height * 10;
-	    width = width * 10;
-	  }
+
 	listBox = CreateWindowEx (WS_EX_CLIENTEDGE, "LISTBOX", NULL, dwStyle, 0, 0,
 				  width, height,
 				  hwnDlg, (HMENU) 1, hInstance, NULL);
@@ -1025,7 +1036,7 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
       /* destroy the widget */
     case WM_CLOSE:
     case WM_DESTROY:
-      RemoveProp (hwnDlg, "cat");
+      RemoveProp (hwnDlg, "ref");
       scrPopupWin = NULL;
       if (msg == WM_DESTROY)
 	PostQuitMessage (0);
@@ -1097,7 +1108,6 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
   static ATOM   wndScrPopupRegistered;
   HWND          menu;
   POINT         curPoint;
-  HFONT         newFont;
 
   szAppName = (LPCSTR) "MYSCRPOPUP";
   /* register the popup scroll widget class if it doesn't exists */
@@ -1110,7 +1120,7 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
       wndSheetClass.hInstance     = hInstance;
       wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
       wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (NULL_BRUSH);
       wndSheetClass.lpszMenuName  = NULL;
       wndSheetClass.lpszClassName = szAppName;
       wndScrPopupRegistered = RegisterClass (&wndSheetClass);
@@ -1131,13 +1141,10 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
 		       parent, NULL, hInstance, NULL);
   if (!menu)
     return NULL;
-  /* we try to add a font to this window so that we can size the listbox correctly */
-  newFont = GetStockObject (DEFAULT_GUI_FONT); 
-  if (newFont)
-    SendMessage (menu, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-  
+
   /* store the catalogue reference inside the window */
   SetProp (menu, "ref", (HANDLE) ref);
+
   return menu;
 }
 
