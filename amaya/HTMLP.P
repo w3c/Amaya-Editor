@@ -7212,6 +7212,10 @@ RULES
 	Background : White;
 	Foreground : Black;
 	FillPattern: backgroundcolor;
+	BorderTopWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderLeftWidth: 1 px;
 	HorizPos: Left = Enclosing . Left + 2 px;	
 	VertPos: Top = Enclosing . Top + 2 px;
 	LineBreak: No;
