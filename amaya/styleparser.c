@@ -3384,10 +3384,11 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule < 0x41 || *cssRule > 0x7A ||
+      while (*cssRule < 0x41 || *cssRule > 0x7A ||
 	  (*cssRule > 0x5A && *cssRule < 0x60))
 	{
-	  CSSParseError ("Invalid character", cssRule);
+	  if (*cssRule != ';')
+	    CSSParseError ("Invalid character", cssRule);
 	  cssRule++;
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
