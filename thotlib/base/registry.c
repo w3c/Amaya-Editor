@@ -93,8 +93,6 @@ static STRING        Thot_Dir;
 
 #ifdef _I18N_
 static CHAR_T        EnvString[MAX_TXT_LEN];
-#else  /* !_I18N_ */
-static char          EnvString[MAX_TXT_LEN];
 #endif /* !_I18N_ */
 
 #ifndef _WINDOWS
@@ -983,8 +981,8 @@ char*   name;
 {
   RegistryEntry cour;
   CHAR_T*       value;
-  char*         EnvVarVal;
 # ifdef _I18N_
+  char*         EnvVarVal;
   CHAR_T        tmp[MAX_TXT_LEN];
 # endif /* _I18N_ */
 
