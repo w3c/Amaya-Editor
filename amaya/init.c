@@ -3106,6 +3106,15 @@ static Document LoadDocument (Document doc, char *pathname,
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
+#ifdef XML_GENERIC
+      else if (IsXMLName (pathname))
+	{
+	  docType = docXml;
+	  parsingLevel = L_Other;
+	  isXML = TRUE;
+	  unknown = FALSE;
+	}
+#endif /* XML_GENERIC */
 #ifdef _SVGLIB
       else if (IsLibraryName (pathname))
 	{

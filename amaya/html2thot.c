@@ -4975,32 +4975,51 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
 			    {
+			      /* XHTML has been found */
+			      /* Does Amaya support this doctype */
 			      *isXML = TRUE;
-			      *isknown = TRUE;
-			      ptr = strstr (&FileBuffer[i], "Basic");
+			      *thotType = docText;
+			      ptr = strstr (&FileBuffer[i], "Basic 1.0");
 			      if (!ptr || (ptr && ptr > end))
-				ptr = strstr (&FileBuffer[i], "basic");
+				ptr = strstr (&FileBuffer[i], "basic 1.0");
 			      if (ptr && ptr < end)
-				*parsingLevel = L_Basic;
+				{
+				  *thotType = docHTML;
+				  *isknown = TRUE;
+				  *parsingLevel = L_Basic;
+				}
 			      else
 				{
-				  ptr = strstr (&FileBuffer[i], "Strict");
+				  ptr = strstr (&FileBuffer[i], "XHTML 1.0");
 				  if (!ptr || (ptr && ptr > end))
-				    ptr = strstr (&FileBuffer[i], "strict");
+				    ptr = strstr (&FileBuffer[i], "xhtml 1.0");
+				  if (!ptr || (ptr && ptr > end))
+				    ptr = strstr (&FileBuffer[i], "XHTML 1.1");
+				  if (!ptr || (ptr && ptr > end))
+				    ptr = strstr (&FileBuffer[i], "xhtml 1.1");
 				  if (ptr && ptr < end)
-				    *parsingLevel = L_Strict;
-				  else
 				    {
-				      ptr = strstr (&FileBuffer[i], "Transitional");
+				      /* A supported XHTML doctype has been found */
+				      *thotType = docHTML;
+				      *isknown = TRUE;
+				      ptr = strstr (&FileBuffer[i], "Strict");
 				      if (!ptr || (ptr && ptr > end))
-					ptr = strstr (&FileBuffer[i], "transitional");
+					ptr = strstr (&FileBuffer[i], "strict");
 				      if (ptr && ptr < end)
-					*parsingLevel = L_Transitional;
+					*parsingLevel = L_Strict;
 				      else
 					{
-					  ptr = strstr (&FileBuffer[i], "1.1");
+					  ptr = strstr (&FileBuffer[i], "Transitional");
+					  if (!ptr || (ptr && ptr > end))
+					    ptr = strstr (&FileBuffer[i], "transitional");
 					  if (ptr && ptr < end)
-					    *parsingLevel = L_Xhtml11;
+					    *parsingLevel = L_Transitional;
+					  else
+					    {
+					      ptr = strstr (&FileBuffer[i], "1.1");
+					      if (ptr && ptr < end)
+						*parsingLevel = L_Xhtml11;
+					    }
 					}
 				    }
 				}
