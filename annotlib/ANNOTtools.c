@@ -760,6 +760,8 @@ void AnnotList_free (List *annot_list)
    ------------------------------------------------------------*/
 void Annot_free (AnnotMeta *annot)
 {
+  if (annot->title)
+    free (annot->title);
   if (annot->annot_url)
     free (annot->annot_url);
   if (annot->source_url) 
@@ -827,6 +829,71 @@ void AnnotList_print (List *annot_list)
 }
 
 /* ------------------------------------------------------------
+   AnnotList_dumpCommonMeta
+   Dumps the common metatada for both local and remote annotations
+   to the file pointed by fp.
+   ------------------------------------------------------------*/
+static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
+{
+  fprintf (fp, 
+	   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
+  
+  if (annot->type && annot->type != ANNOTATION_CLASS)
+    fprintf (fp, 
+	     "<r:type resource=\"%s\" />\n",
+	     annot->type->name);
+  
+  fprintf (fp, 
+	   "<a:annotates r:resource=\"%s\" />\n",
+	   annot->source_url);
+  
+  /* @@ JK: Removed because we're now using xptr */
+#if 0
+  fprintf (fp,
+	   "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
+	   annot->labf,
+	   annot->c1,
+	   annot->labl,
+	   annot->cl);
+#endif
+  
+  fprintf (fp,
+	   "<a:context>%s#%s</a:context>\n",
+	   annot->source_url,
+	   annot->xptr);
+  
+  if (annot->title)
+    fprintf (fp,
+	     "<d:title>%s</d:title>\n",
+	     annot->title);
+  
+  if (annot->author)
+    fprintf (fp,
+	     "<d:creator>%s</d:creator>\n",
+	     annot->author);
+  
+  fprintf (fp,
+	   "<a:created>%s</a:created>\n",
+	   annot->cdate);
+  
+  fprintf (fp,
+	   "<d:date>%s</d:date>\n",
+	   annot->mdate);
+  
+#ifdef ANNOT_ON_ANNOT
+  if (annot->inReplyTo)
+    {
+      fprintf (fp,
+	       "<t:root>%s</t:root>\n",
+	       annot->rootOfThread);
+      fprintf (fp,
+	       "<t:inReplyTo>%s</t:inReplyTo>\n",
+	       annot->inReplyTo);
+    }
+#endif /* ANNOT_ON_ANNOT */
+}
+
+/* ------------------------------------------------------------
    AnnotList_dumpList
    Dumps a list of annotations to the file pointed to by
    fp. fp must be opened and closed outside of this function.
@@ -848,59 +915,7 @@ static void  Annot_dumpList (List *annot_list, FILE *fp)
 	{
 	  fprintf (fp, 
 		   "<r:Description>\n");
-
-	  fprintf (fp, 
-		   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
-
-	  if (annot->type && annot->type != ANNOTATION_CLASS)
-	    fprintf (fp, 
-		     "<r:type resource=\"%s\" />\n",
-		     annot->type->name);
-
-	  fprintf (fp, 
-		   "<a:annotates r:resource=\"%s\" />\n",
-		   annot->source_url);
-
-	  /* @@ JK: Removed because we're now using xptr */
-#if 0
-	  fprintf (fp,
-	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
-		   annot->labf,
-		   annot->c1,
-		   annot->labl,
-		   annot->cl);
-#endif
-
-	  fprintf (fp,
-	      "<a:context>%s#%s</a:context>\n",
-		   annot->source_url,
-		   annot->xptr);
-
-	  if (annot->author)
-	    fprintf (fp,
-		     "<d:creator>%s</d:creator>\n",
-		     annot->author);
-	  
-	  fprintf (fp,
-		   "<a:created>%s</a:created>\n",
-		   annot->cdate);
-
-	  fprintf (fp,
-		   "<d:date>%s</d:date>\n",
-		   annot->mdate);
-
-#ifdef ANNOT_ON_ANNOT
-	  if (annot->inReplyTo)
-	    {
-	      fprintf (fp,
-		       "<t:root>%s</t:root>\n",
-		       annot->rootOfThread);
-	      fprintf (fp,
-		       "<t:inReplyTo>%s</t:inReplyTo>\n",
-		       annot->inReplyTo);
-	    }
-#endif /* ANNOT_ON_ANNOT */
-
+	  Annot_dumpCommonMeta (annot, fp);
 	  fprintf (fp,
 		   "<a:body r:resource=\"%s\" />\n",
 		   annot->body_url);
@@ -1003,53 +1018,15 @@ char * ANNOT_PreparePostBody (Document doc)
 	   "xmlns:d=\"" DC_NS "\">\n",
 	   ANNOT_NS);
 
+  Annot_dumpCommonMeta (annot, fp);
+
   /* beginning of the annotation's  metadata  */
-  fprintf (fp,
-	   "<r:Description>\n");
+  fprintf (fp, "<r:Description>\n");
 
-	  fprintf (fp, 
-		   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
+  /* dump the common metadata */
+  Annot_dumpCommonMeta (annot, fp);
 
-	  if (annot->type && annot->type != ANNOTATION_CLASS)
-	    fprintf (fp, 
-		     "<r:type resource=\"%s\" />\n",
-		     annot->type->name);
-
-	  fprintf (fp, 
-		   "<a:annotates r:resource=\"%s\" />\n",
-		   annot->source_url);
-
-	  fprintf (fp,
-	      "<a:context>%s#%s</a:context>\n",
-		   annot->source_url,
-		   annot->xptr);
-	  
-	  if (annot->author)
-	    fprintf (fp,
-		     "<d:creator>%s</d:creator>\n",
-		     annot->author);
-	  
-	  fprintf (fp,
-		   "<a:created>%s</a:created>\n",
-		   annot->cdate);
-
-	  fprintf (fp,
-		   "<d:date>%s</d:date>\n",
-		   annot->mdate);
-
-#ifdef ANNOT_ON_ANNOT
-	  if (annot->inReplyTo)
-	    {
-	      fprintf (fp,
-		       "<t:root>%s</t:root>\n",
-		       annot->rootOfThread);
-	      fprintf (fp,
-		       "<t:inReplyTo>%s</t:inReplyTo>\n",
-		       annot->inReplyTo);
-	    }
-#endif /* ANNOT_ON_ANNOT */
-
-  /* the rest of the metadata */
+  /* the body of the annotation prologue */
   fprintf (fp,
 	   "<a:body>\n"
 	   "<r:Description>\n"
@@ -1060,7 +1037,7 @@ char * ANNOT_PreparePostBody (Document doc)
 	   content_length);
 
  /* 
- ** insert the HTML body 
+ ** insert the HTML body itself
  */
 
   fp2 = fopen (html_tmpfile, "r");
