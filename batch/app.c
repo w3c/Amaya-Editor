@@ -1422,7 +1422,7 @@ static void         WriteDefineFile (char *fname)
    Main pour le compilateur A.                                     
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-int       APPmain (HWND hwnd, HWND statusBar, int argc, char** argv, int* Y)
+int       APPmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
 #else  /* !_WINDOWS */
 int       main (int argc, char **argv)
 #endif /* _WINDOWS */
@@ -1691,6 +1691,7 @@ int       main (int argc, char **argv)
 #ifdef _WINDOWS 
    *Y = _CY_;
    ReleaseDC (hwnd, compilersDC);
+   return 0;
 #else  /* !_WINDOWS */
    exit (0);
 #endif /* _WINDOWS */
