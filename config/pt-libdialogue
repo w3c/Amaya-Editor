@@ -1,0 +1,138 @@
+# encoding= latin1
+0 Erro X11: %s\n
+1 Confirme
+2 Não há arquivo de alfabeto
+3 A nova vista não pode substituir a vista precedente
+4 Esquemas incompatíveis. Recompile %s
+5 Erro fatal: Tipos (fonts) Thot não encontrados
+6 Memória esgotada
+7 Erro fatal: Incapaz de conectar a X
+8 A vista está modificada antes de ser criada
+9 Tabela de regras cheia.
+10 Arquivo incorreto: %s.STR
+11 Arquivo incorreto: %s.PRS
+12 O documento %s impresso
+13 Disposição
+14 1 página/folha
+15 2 páginas/folha
+16 4 páginas/folha
+17 %s
+18 Não há memória suficiente
+19 *** Thot: Erro irrecuperável ***
+20 Quaisquer documentos modificados serão salvos
+21 Arquivo .TRA incorreto: %s
+22 %s não é um irmão válido para %s (%s)
+23 %s não é um filho válido para %s (%s)
+24 %s, página %d
+25 Idioma
+26 Atributos
+27 Apresentação padrão
+28 Aplicar
+29 Caracteres
+30 Sublinhado
+31 Gráficos
+32 Formato
+33 Padrão
+34 Alinhamento
+35 Indentação
+36 Imprimir
+37 Alimentação manual
+38 Opções
+39 A4
+40 US
+41 Formato de papel
+42 Feito
+43 Diretórios
+44 O documento %s já exist. Quer gravar por cima dele?
+45 O botão esquerdo fixa a cor do texto
+46 O botão do meio ou da direita fixa a cor de fundo
+47 Família de tipos (fonts)
+48 Normal
+49 Negrito
+50 Itálico
+51 Oblíquo
+52 Normal
+53 Negritude (boldness)
+54 Normal
+55 Sublinhado
+56 Cortado (cross out)
+57 Tamanho do corpo (pt)
+58 Indentação (pt)
+59 Espaçamento entre linhas (pt)
+60 Espaçamento entre linhas
+61 Salvar documento
+62 Fechar sem salvar
+63 Estilo de carácter
+64 Cores
+65 Suprimir
+66 Destino (Output)
+67 Arquivo PostScript
+68 Impressora
+69 Buscar
+70 MAIÚSCULAS = minúsculas
+71 Substituir por
+72 Substituir
+73 Não substituir
+74 Substituir sob demanda
+75 Substituição Automática
+76 Onde buscar
+77 Antes da seleção
+78 Dentro da seleção
+79 Depois da seleção
+80 No documento todo
+81 Não substituir
+82 Cores padrão
+83 antes de fechá-lo
+84 Fechar um documento
+85 Símbolos matemáticos
+86 Gráficos
+87 Alfabeto Latino
+88 Alfabeto Grego
+89 Salvar
+90 Texto
+91 Gráfico
+92 Símbolo
+93 Imagem
+94 Tipo de elemento
+95 depois
+96 antes
+97 em torno de
+98 Incluir
+99 Colar
+100 criar
+101 Inserir
+102 Quebra de página
+103 Idioma do elemento
+104 Idioma herdado:
+105 Não encontrado
+106 Buscar em
+107 Buscar
+108 elemento somente de leitura
+109 Nada a substituir
+110 Caracteres padrão
+111 Gráficos padrão
+112 Formato padrão
+113 Geometria padrão
+114 pt
+115 Estilo de linha
+116 espessura da linha
+117 Padrão de preenchimento
+118 Dividir
+119 Tipo de objeto
+120 Ir à página número:
+121 Qualquer
+122 Atributo a buscar
+123 Tipo a buscar
+124 Naturezas
+125 Valor do atributo:
+126 Atributo desconhecido
+127 Cancelar
+128 Erro em tradução PostScript
+129 Comando recusado pelo spooler "%s"
+130 Não é possível criar "%s"
+131 Sobrelinhado (Overline)
+132 Formato de documento
+133 Eventos
+134 Remover atributo
+135 Botão esquerdo fixa a cor da seleção
+136 Botão do meio ou da direita fixa a cor do cursor
