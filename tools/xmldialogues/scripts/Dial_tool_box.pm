@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-package Forcer;
+package Dial_tool_box;
 
 use strict;
 use XML::Parser;
@@ -15,10 +15,11 @@ BEGIN {
 # Items to export into callers namespace by default. Note: do not export
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
-	@EXPORT = 	qw(&delete_label
+	@EXPORT = 	qw(
+						&delete_label
 						&add_label
-						
 						);
+
 }
 ##############################################################################
 									#global variables
@@ -63,9 +64,11 @@ my $base = $base_repertory . $name_of_base ;
 #######################END SUB EXPORTED###########################################
 
 sub ask1 {
+my $textunicode = Unicode::String->new ();
 my $text;
 	print "Quelle etiquette voulez vous ajouter?\n";
 	$THE_label = <STDIN>;
+	chomp $THE_label;
 	if ($labels{$THE_label}) {
 		print "L'etiquette que vous voulez ajouter existe deja\n";
 		return 0;
@@ -74,17 +77,20 @@ my $text;
 		$labels{$THE_label} = "<label define=\"$THE_label\">";
 		do {
 			print "Quel est le texte anglais de cette nouvelle etiquette?\n";
-			$text = <STDIN>;chomp;
+			$text = <STDIN>;chomp $text;
 			print "Are you OK for: $text ?(y or n)\n";
-			<STDIN>;
+			$_ = <STDIN>;
 		}
-		while ($_ !~ /^y/i )	;
+		while ( $_ eq "" || $_ !~ /^y/ );
+		$text =~ s/&/&amp;/g; # to avoid problem with message in HTML
+		$text	=~ s/</&lt;/g;
+		$textunicode = latin1($text); #because english is typed from the terminal in latin1
 		$_ = `date`;
 		chomp;
 		$labels{$THE_label} .= "\n\t<message xml::lang=\"en\" last_update=\"$_\">";
 		$labels{$THE_label} .= $text ;
-		$labels{$THE_label} .= "</mesage>\n</label>";
-		push (@labels , $THE_label);
+		$labels{$THE_label} .= "</message>\n</label>";
+		# no more need to : push (@labels , $THE_label);
 		return 1;
 	}
 }
@@ -92,7 +98,8 @@ my $text;
 sub ask2 {
 	print "Quelle etiquette voulez vous supprimmer?\n";
 	$THE_label = <STDIN>;
-	if ($labels{$THE_label}) {
+	chomp $THE_label;
+	if (defined ($labels{$THE_label}) ){
 		#erase this value ?
 		return 1;
 	}
@@ -110,9 +117,12 @@ sub modify {
 		 	die "can't rename $base to $base.old because of: $! \n",
 				"the old base still exist, you can redo the action";							
 	open (OUT, ">$base");
-	print OUT $head_line,"\n";
-	print OUT $base_message,"\n"; 
-	print OUT $control,"\n"; 
+	
+	chomp ($head_line);
+	print OUT $head_line;
+	print OUT $base_message; 
+	print OUT $control;
+	print OUT "\n<messages>";
 	if ($erase && $erase =~ /remove/) {
 		foreach (@labels) {
 			if ( $_ ne $THE_label) {
@@ -122,9 +132,15 @@ sub modify {
 	}
 	else {
 		foreach (@labels) {
+			if ($_ eq "MAX_EDITOR_LABEL" || $_ =~ /MSG_MAX/) { #to add the new
+																#label before the last one 
+				print OUT $labels{$THE_label},"\n";
+			}
 			print OUT $labels{$_},"\n";
 		}
-	}							
+	}
+	
+	print OUT "\n</messages>\n</base_message>";							
 
 	close (OUT);
 }
@@ -164,15 +180,17 @@ sub read_the_base {
 }
 #-----------------------------------------------------------------------------
 sub start_  {
+#	my %argument = ();
 	my ($p, $tag,%argument) = @_ ;
 	my $num = 0;
 	
-	
+	#foreach (keys (%argument)) { #used for control and debugging
+	#print $_,$argument{$_}, "\n";}
 	
 	if ($tag eq "message") {	
 #		print "message line " .$p->current_line() ." not into the block <messages>\n" unless ($current_block eq "messages" );
 		if (defined ($current_label)) {
-			$labels {$current_label} .= "<$tag";
+			$labels {$current_label} .= "\n\t<$tag";
 			foreach ( keys (%argument)) {
 				$labels {$current_label} .= " $_=\"" . $argument{ $_ } . "\"";
 			}
@@ -183,34 +201,37 @@ sub start_  {
 		}	
 	}
 	elsif ($tag eq "label") {
+	   unless (defined ($argument{"define"}) ) {
+			print "label at line ",$p->current_line ()," don't have name\n";
+		}
 		$current_label = $argument{"define"};
 		push (@labels, $current_label);
-		$labels {$current_label} = "<$tag";
+		$labels {$current_label} = "\n<$tag";
 		foreach ( keys (%argument)) {
 			$labels {$current_label} .= " $_=\"" . $argument{ $_ } . "\"";
 		}
 		$labels {$current_label} .= ">" ; 			
 	}	
 	elsif ($tag eq "control") {
-		$control = "<$tag>\n";
+		$control = "\n<$tag>";
 		$current_block= $tag;
 	}
 	elsif ($tag eq "language") { #into $control
-		$control .= "<$tag";
+		$control .= "\n\t<$tag";
 		foreach ( keys (%argument)) {
 			$control .= " $_=\"" . $argument{ $_ } . "\"";
 		}
 		$control .= ">" ; 
 	}
 	elsif ($tag eq "base_message") { #into $head_line
-		$head_line = "<$tag";
+		$base_message = "\n<$tag";
 		$argument{ "version" } += 1;
 		$_ = `date`;chomp;
 		$argument{ "last_update" } = $_;
 		foreach ( keys (%argument)) {
-			$head_line .= " $_=\"" . $argument{ $_ } . "\"";
+			$base_message .= " $_=\"" . $argument{ $_ } . "\"";
 		}
-		$head_line .= ">" ;
+		$base_message .= ">" ;
 	}
 	elsif ($tag eq "messages") {
 		$current_block = "messages";		
@@ -222,14 +243,14 @@ sub end_ {
 	my ($p, $tag) = @_ ;
 	
 	if ($tag eq "message") {
-		$labels{$current_label} .= "<$tag/>";
+		$labels{$current_label} .= "</$tag>";
 	}
 	elsif ($tag eq "label") {
-		$labels{$current_label} .= "<$tag/>\n";
+		$labels{$current_label} .= "\n</$tag>";
 		$current_label = undef; 		
 	}
 	elsif ($tag eq "control") {
-		$control .= "</$tag>\n";
+		$control .= "\n</$tag>";
 		$current_block =undef;
 	}
 	elsif ($tag eq "language") {
@@ -254,12 +275,14 @@ sub default_ {
 	}
 	elsif ($current_block) {
 		if ($current_block eq "messages") {
-			if ($current_label) {
+			if ($current_label && $data !~ /\n/ && $data !~ /\t/) {
 				$labels{$current_label} .= $data;
 			}
 		}
 		else { # eq "control"
-			$control .= $data;
+			if ( $data !~ /\n/ && $data !~ /\t/) {
+				$control .= $data;
+			}
 		}
 	}	
 } #End default_hndl

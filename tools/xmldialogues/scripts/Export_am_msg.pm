@@ -95,11 +95,10 @@ sub export {
 	
 	$parser->parse (*IN); 
 	
-	close ( IN ) || die "can't close $where/$head_name because: $! \n";
-	print "the new file names are:\n";
+	close ( IN ) || die "can't close $where$head_name because: $! \n";
 	
 	my $number = @list_of_lang_occur;
-	print "voici les $number langues @list_of_lang_occur \n"
+	print "voici les $number langues presentes @list_of_lang_occur \n"
 			,"\tEt le nom des fichiers generes\n";
 	foreach  (@list_of_dialogues_files) {
 		print $_ , "\n";
@@ -179,7 +178,8 @@ sub start_hndl {
 		#nothing
 	}
 	elsif ($element eq "messages") { #warning: messageS != message
-		open ( HEADFILE, ">$where/amayamsg.h") || die "can't create $where/amayamsg.h because: $! \n";
+		open ( HEADFILE, ">$where$head_name") || die "can't create $where$head_name because: $! \n";
+		push (@list_of_dialogues_files ,"$where$head_name");
 	}
 	elsif ( $element eq "") {
 		print "empty element at line " .  $expat->current_line . "\n";
@@ -249,7 +249,7 @@ sub end_hndl { #	do the modification if necessary
 	elsif ( $end_tag eq "control" ) { 	#one time only
 # must create as many files as  present languages (and erase the olds) 
 		foreach $prefix (@list_of_lang_occur) {
-			$file_name = $where . '/' . $prefix . $sufix ;
+			$file_name = $where . $prefix . $sufix ;
 			push (@list_of_dialogues_files ,$file_name);
 
 			$handle_names_ref {$prefix} = $handle_count++ ;
@@ -279,7 +279,7 @@ sub end_hndl { #	do the modification if necessary
 		init_record_verification ();
 	}
 	elsif ($end_tag eq "messages") {
-		close ( HEADFILE ) || die "can't close $where/amayamsg.h because: $! \n";
+		close ( HEADFILE ) || die "can't close $where$head_name because: $! \n";
  
 		foreach $prefix (@list_of_lang_occur) {
 			# must close as many files as  present languages

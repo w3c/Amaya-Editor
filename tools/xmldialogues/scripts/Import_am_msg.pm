@@ -77,8 +77,10 @@ sub import_a_language {
 	$in_textfile = $in_textdirectory . $language_code . $in_textsufix;
 	$newbasefile = $basefile . ".new";
 
+	#to avoid problems
 	@list_of_lang_occur = () ;
-
+	%labels = ();
+	%texts = ();
 
 
 
@@ -142,11 +144,12 @@ sub addlabel {
 	my $label_ref;
 	my @else; 
 
-	if ( $_[0] ne "" && $_[0] =~ /^#define/i ) {
+	if ( $_[0] ne "" && $_[0] !~ /^\/\*/ && $_[0] =~ /^#define/i ) {
 		chomp ($_[0]);
 		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
 		$labels{$label} = $label_ref;
 	}
+	elsif ( $_[0] eq "" || $_[0] =~ /^\/\*/) {} # it's normal
 	else {
 	   print "label file $in_labelfile not well-formed at line $_[1]\n";
    }
@@ -409,10 +412,10 @@ sub start_hndl {
 		print OUT "\n";#	small things necessary for presentation 
 	}
 	elsif ( $element eq "") {
-		print "empty element at line " .  $expat->current_line . "\n";
+		print "empty element at line " .  $expat->current_line () . "\n";
 	} 
 	else {  #treat all the tag mismatched
-		print "tag  $element unknown at line " . $expat->current_line . "\n";
+		print "tag  $element unknown at line " . $expat->current_line () . "\n";
 	}	
 
 
@@ -508,7 +511,7 @@ my $test;
 
 sub comment_hndl { # it's just the comment that is automaticaly copied
 	my ($p, $data) = @_;
-	my $line = $p->current_line;
+	my $line = $p->current_line ();
 	
 #	debug ("Comment line $line:\t$data");
 	print OUT "<!--$data-->";
@@ -518,7 +521,7 @@ sub comment_hndl { # it's just the comment that is automaticaly copied
 
 sub default_hndl {	#for all the cases of an invalid xml document
 	my ( $p, $data ) = @_;
-   my $line = $p->current_line;
+   my $line = $p->current_line ();
 
 	if ( $data =~ /^<\?xml/ ) { 	# it' the head
 		debug ("Head-line $line:\t$data");
