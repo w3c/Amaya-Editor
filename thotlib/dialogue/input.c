@@ -64,6 +64,7 @@ KEY;
 #include "applicationapi_f.h"
 #include "callback_f.h"
 #include "context_f.h"
+#include "displayview_f.h"
 #include "editcommands_f.h"
 #include "memory_f.h"
 #include "message_f.h"

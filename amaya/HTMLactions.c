@@ -41,6 +41,7 @@
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "transparse_f.h"
+#include "UIcss_f.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"

@@ -46,6 +46,7 @@ static char       *DisplayCategory[]={
 #include "css_f.h"
 #include "dialog.h"
 #include "fetchXMLname_f.h"
+#include "html2thot_f.h"
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
@@ -778,7 +779,7 @@ void ShowAppliedStyle (Document doc, View view)
 void SynchronizeAppliedStyle (NotifyElement *event)
 {
   ElementType         elType;
-  Document            doc, newdoc;
+  Document            doc;
   FILE               *list;
   char                fileName[100], dirName[100];
   int                 i, n;

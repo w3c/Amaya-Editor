@@ -60,7 +60,7 @@
 #include <unistd.h>
 #include <sys/timeb.h>
 #else /*WINDOWS*/
-#include <windows.h>
+#include <wininclude.h>
 /* Win32 opengl context based on frame number*/
 static HDC   GL_Windows[MAX_FRAME];	
 static HGLRC GL_Context[MAX_FRAME];

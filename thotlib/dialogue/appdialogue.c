@@ -57,6 +57,7 @@
 #include "context_f.h"
 #include "dialogapi_f.h"
 #include "dictionary_f.h"
+#include "displayview_f.h"
 #include "font_f.h"
 #include "inites_f.h"
 #ifdef _GTK
@@ -134,7 +135,6 @@ int            menu_item;
   ----------------------------------------------------------------------*/
 void WinErrorBox (HWND hWnd, char *source)
 {
-#ifndef _AMAYA_RELEASE_
   DWORD              WinLastError;
   char               str[200];
 
@@ -143,7 +143,6 @@ void WinErrorBox (HWND hWnd, char *source)
     return;
   sprintf (str, "(source: %s Error %d\n)", source, WinLastError);
   MessageBox (hWnd, str, "Amaya", MB_OK);
-#endif /* _AMAYA_RELEASE_ */
 }
 
 /*-----------------------------------------------------------------------

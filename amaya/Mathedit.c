@@ -67,6 +67,7 @@ static Element	LastDeletedElement = NULL;
 #include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
+#include "UIcss_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */

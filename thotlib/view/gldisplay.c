@@ -1436,21 +1436,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 
 
 
-void PolySplit2 (float a1, float b1, float a2, float b2,
-		 float a3, float b3, float a4, float b4,
-		 void *mesh);
-
-void  EllipticSplit2 (int frame, int x, int y,
-		      double x1, double y1, 
-		      double x2, double y2, 
-		      double xradius, double yradius, 
-		      int Phi, int large, int sweep, 
-		      void *mesh);
-
-void QuadraticSplit2 (float a1, float b1, float a2, float b2,
-		      float a3, float b3,
-		      void *mesh);
-
 /*----------------------------------------------------------------------
   DoDrawMesh : Draw Path as lines or polygons
   ----------------------------------------------------------------------*/

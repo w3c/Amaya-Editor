@@ -27,6 +27,7 @@
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLactions_f.h"
 #include "AHTURLTools_f.h"
 
 #define MaxMsgLength 200
