@@ -1704,10 +1704,7 @@ static void ValidateGeneralConf ()
 	  exit (1);
 	} 
       else
-	{
-	  TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
-	  change++;
-	}
+	change++;
     }
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
@@ -1724,7 +1721,7 @@ static void ValidateGeneralConf ()
 	 the cache */
       usprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
       ptr = TtaGetEnvString ("CACHE_DIR");
-      if (!ustrcasecmp (s, ptr) && ustrcasecmp (AppTmpDir, old_AppTmpDir))
+      if (ptr && !ustrcasecmp (s, ptr))
 	{
 	  usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
 	  TtaSetEnvString ("CACHE_DIR", s, TRUE);
