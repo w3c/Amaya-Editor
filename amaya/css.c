@@ -125,12 +125,14 @@ boolean         removeFile;
 	TtaFileUnlink (css->localName);
       TtaFreeMemory (css->localName);
       TtaFreeMemory (css->url);
-      /* free presentation schemas */
+      /* remove presentation schemas and P descriptors in the css */
       pInfo = css->pschemas;
       while (pInfo != NULL)
 	{
+	  /* remove presentation schemas */
 	  nextInfo = pInfo->PiNext;
 	  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+	  /* remove P descriptors in the css structure */
 	  TtaFreeMemory (pInfo);
 	  pInfo = nextInfo;
 	}
@@ -151,7 +153,7 @@ boolean         removeFile;
 }
 
 /*----------------------------------------------------------------------
-   RemoveDocCSSs                                
+   RemoveDocCSSs remove all CSS information linked with the document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveDocCSSs (Document doc, boolean removeFile)
@@ -162,6 +164,7 @@ boolean             removeFile;
 #endif
 {
   CSSInfoPtr          css, next;
+  PInfoPtr            pInfo, prevInfo;
   int                 i;
   boolean             used;
 
@@ -191,6 +194,29 @@ boolean             removeFile;
 	      next = css->NextCSS;
 	      RemoveCSS (css, removeFile);
 	      css = next;
+	    }
+	  else
+	    {
+	      /* look for the specific P descriptors in the css */
+	      pInfo = css->pschemas;
+	      prevInfo = NULL;
+	      while (pInfo != NULL && pInfo->PiDoc != doc)
+		{
+		  prevInfo = pInfo;
+		  pInfo = pInfo->PiNext;
+		}
+	      if (pInfo != NULL)
+		{
+		  /* update the the list of  P descriptors in the css */
+		  if (prevInfo == NULL)
+		    css->pschemas = pInfo->PiNext;
+		  else
+		    prevInfo->PiNext = pInfo->PiNext;
+		  /* remove presentation schemas */
+		  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+		  /* remove P descriptors in the css structure */
+		  TtaFreeMemory (pInfo);
+		}
 	    }
 	}	
       else

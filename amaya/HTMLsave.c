@@ -1574,7 +1574,7 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
 	    
 	SavingDocument = 0;
-	TtaSetTextZone (doc, 1, 1, DocumentURLs[SavingDocument]);
+	TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	if (ok)
 	  {
 	/* update informations on the document. */

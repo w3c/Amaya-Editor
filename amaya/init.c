@@ -3002,6 +3002,7 @@ char     *docname;
       TtaSetDocumentModified (newdoc);
       /* almost one file is restored */
       aDoc = TRUE;
+      TtaSetStatus (newdoc, 1, " ", NULL);
       /* unlink this saved file */
       TtaFileUnlink (tempdoc);
     }
