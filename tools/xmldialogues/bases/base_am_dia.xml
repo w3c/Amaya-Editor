@@ -82,24 +82,24 @@
 	<message xml:lang="fi">Rakenne</message>
 </label>
 <label define="Types">
-	<message xml:lang="en">Xhtml</message>
-	<message xml:lang="fr">Xhtml</message>
-	<message xml:lang="de">Xhtml</message>
-	<message xml:lang="it">Xhtml</message>
-	<message xml:lang="tr">Xhtml</message>
-	<message xml:lang="es">Xhtml</message>
-	<message xml:lang="pt">Xhtml</message>
-	<message xml:lang="fi">Xhtml</message>
+	<message xml:lang="en">XHTML</message>
+	<message xml:lang="fr">XHTML</message>
+	<message xml:lang="de">XHTML</message>
+	<message xml:lang="it">XHTML</message>
+	<message xml:lang="tr">XHTML</message>
+	<message xml:lang="es">XHTML</message>
+	<message xml:lang="pt">XHTML</message>
+	<message xml:lang="fi">XHTML</message>
 </label>
 <label define="XMLTypes">
-	<message xml:lang="en">Xml</message>
-	<message xml:lang="fr">Xml</message>
-	<message xml:lang="de">Xml</message>
-	<message xml:lang="it">Xml</message>
-	<message xml:lang="tr">Xml</message>
-	<message xml:lang="es">Xml</message>
-	<message xml:lang="pt">Xml</message>
-	<message xml:lang="fi">Xml</message>
+	<message xml:lang="en">XML</message>
+	<message xml:lang="fr">XML</message>
+	<message xml:lang="de">XML</message>
+	<message xml:lang="it">XML</message>
+	<message xml:lang="tr">XML</message>
+	<message xml:lang="es">XML</message>
+	<message xml:lang="pt">XML</message>
+	<message xml:lang="fi">XML</message>
 </label>
 <label define="Links">
 	<message xml:lang="en">Links</message>
@@ -2418,13 +2418,13 @@
 	<message xml:lang="fi">Grafiikka</message>
 </label>
 <label define="BHelpXml">
-	<message xml:lang="en">Xml support</message>
-	<message xml:lang="fr">Support Xml</message>
+	<message xml:lang="en">XML support</message>
+	<message xml:lang="fr">Support XML</message>
 	<message xml:lang="de">XML</message>
 	<message xml:lang="it">Supporto XML</message>
-	<message xml:lang="es">Soporte Xml</message>
+	<message xml:lang="es">Soporte XML</message>
 	<message xml:lang="pt">Suporte à XML</message>
-	<message xml:lang="fi">Xml-tuki</message>
+	<message xml:lang="fi">XML-tuki</message>
 </label>
 <label define="BHelpStyleSheets">
 	<message xml:lang="en">Style sheets</message>
