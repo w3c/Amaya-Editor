@@ -149,6 +149,8 @@ static int AdvanceNextWord (unsigned char *line, int indline)
 	  /* skip to the end of the current line */
 	  while (line[indline] != EOS && line[indline] != EOL)
 	    indline++;
+      if (line[indline] == EOL)
+		indline++;
 	}
 	  else
 	indline++;
@@ -177,7 +179,7 @@ static int getWord (int indline, unsigned char *line, char *word)
       line[0] = EOS;
       return 0;
     }
-  if (line[indline] == ';')
+  if (line[indline] != EOS)
     indline++;
   /*place ourself next to a word*/
   indline = AdvanceNextWord (line, indline);
@@ -206,7 +208,8 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 	   while (line[indline] != EOS &&
 		  line[indline] >= SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
-	   indline++;
+	   if (line[indline] != EOS)
+		indline++;
 	   /* mark the end of the word */
 	   word[indword] = EOS;
 	   return indline;
@@ -222,25 +225,33 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 static int getFontFamily (int indline, unsigned char *line, char *word)
 {
   int             indword;
+  int             count;
 
   /* copy the word from the line*/
   indword = 0;
   word[0] = EOS;
-     while (line[indline] != EOS &&
-	    (line[indline] != EOL || line[indline-1] != EOL))
-     {
-       if (isnum (line[indline]))
+  count = 0;
+  /* skip 2 lines */
+  while (line[indline] != EOS && count < 2)
+    if (line[indline++] == EOL)
+      count++;
+  while (line[indline] != EOS && line[indline] != EOL)
+  {
+    if (isnum (line[indline]))
 	 {
 	   while (line[indline] != EOS &&
 		  line[indline] > SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
-	   /* marque la fin du mot trouve' */
+	   if (line[indline] != EOS)
+		indline++;
+	   /* word found */
 	   word[indword] = EOS;
 	   return indline;
 	 }
+	else
        indline++;     
-     }
-   return (indline);
+  }
+  return (indline);
 }
 
 

@@ -267,7 +267,8 @@ static void Win_Get_Highlight (int highlight, int *fdwItalic, int *fnWeight)
 /*----------------------------------------------------------------------
   GetWinFontConfig Get font description from configuration file (config/fonts.win)
   ----------------------------------------------------------------------*/
-static HFONT GetWinFontConfig (char script, int family, int highlight, int size){
+static HFONT GetWinFontConfig (char script, int family, int highlight, int size)
+{
   char Result_string[MAX_LENGTH];
   char *parsed, *result;
   char font_family[32];
@@ -383,7 +384,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
    int        fdwStrikeOut;
  
    nHeight = 0;
-   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
+   nHeight = -size/*MulDiv(size, DOT_PER_INCH, 80)*/;
   hFont = GetWinFontConfig (script, family, highlight, nHeight);
  
    if (hFont)
@@ -485,8 +486,7 @@ int SizetoLogical (int real_world_size)
 {
   int i=0;
 
-  while (real_world_size > LogicalPointsSizes[i] && 
-	 i < 11)
+  while (real_world_size > LogicalPointsSizes[i] && i < 11)
     i++;
   return i;
 }
@@ -1202,11 +1202,8 @@ void GeneratePostcriptFont (char r_name[10], char script, int family,
     {
       if (family > (int) strlen (cfamily))
       	family = 1;
-      sprintf (r_name, "%c%c%c%d", 
-	       TOLOWER (script), 
-	       cfamily[family],
-	       StylesTable[highlight], 
-	       size);
+      sprintf (r_name, "%c%c%c%d", TOLOWER (script), 
+	       cfamily[family], StylesTable[highlight], size);
     }  
   else
   {
@@ -1215,11 +1212,8 @@ void GeneratePostcriptFont (char r_name[10], char script, int family,
       /* generate the Postscript name */
       if (family > (int) strlen (efamily))
 	family = 1;
-      sprintf (r_name, "%c%c%c%i", 
-	       TOLOWER (script), 
-	       efamily[family],
-	       StylesTable[highlight], 
-	       size);
+      sprintf (r_name, "%c%c%c%i", TOLOWER (script), efamily[family],
+	       StylesTable[highlight], size);
   }  
 }
 /*----------------------------------------------------------------------
@@ -1778,8 +1772,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  if (ptfont == NULL && script == '7')
 	    {
 	      /* look for a font Symbol */
-	      ptfont = LoadNearestFont ('G', family, 0,
-					-1, requestedsize,
+	      ptfont = LoadNearestFont ('G', family, 0, -1, requestedsize,
 					frame, FALSE, FALSE);
 	      if (ptfont)
 		/* now we'll work 
@@ -2331,7 +2324,7 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
       size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
       else
-	size = LogicalValue (size, UnPoint, NULL, 0);
+	/*size = LogicalValue (size, UnPoint, NULL, 0)*/;
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
@@ -2535,7 +2528,7 @@ void InitDialogueFonts (char *name)
   i = 1;
   while (DefaultGLFont == NULL && i < 3)
     {
-      DefaultGLFont = GL_LoadFont ('L', i, 1, 0);
+      DefaultGLFont = GL_LoadFont ('L', i, 1, 3);
       i++;
     }
   if (DefaultGLFont == NULL)

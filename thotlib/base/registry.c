@@ -1663,9 +1663,9 @@ void                TtaFreeAppRegistry (void)
    0 otherwise.                                   
    Depending on dir value, the file is looked for in:
    - 0 : /                                                 
-   - 1 : ThotDir                                           
-   - 2 : ThotDir/bin                                       
-   - 3 : ThotDir/compil                                    
+   - 1 : ThotDir/document paths
+   - 2 : ThotDir/config     
+   - 3 : ThotDir/batch
   ----------------------------------------------------------------------*/
 int SearchFile (char *fileName, int dir, char *fullName)
 {
@@ -1716,7 +1716,6 @@ int SearchFile (char *fileName, int dir, char *fullName)
 		    ret = TtaFileExist (fullName);
 		 }
 	       break;
-
 	    case 2:
 	       /* lookup in config */
 	       strcat (fullName, DIR_STR);
@@ -1724,7 +1723,6 @@ int SearchFile (char *fileName, int dir, char *fullName)
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, fileName);
 	       break;
-
 	    case 3:
 	       /* lookup in batch */
 	       strcat (fullName, DIR_STR);
@@ -1732,7 +1730,6 @@ int SearchFile (char *fileName, int dir, char *fullName)
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, fileName);
 	       break;
-
 	    default:
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, fileName);

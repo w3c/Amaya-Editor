@@ -368,7 +368,7 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
 #endif /* #ifdef _GTK */
 
 #ifdef _WINDOWS
-  err = FT_Set_Char_Size (font->face, 0, size * 64, 96, 96);
+  err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
 #endif /*_WINDOWS*/
 
   /*res x_resolution, res, y_resolution*/
