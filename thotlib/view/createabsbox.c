@@ -1636,8 +1636,9 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
 	  pRule->PrMinAttr = FALSE;
 	  pRule->PrMinValue = 0;
 	  pAb = ListItemAbsBox (pEl, pDoc);
-	  if (ruleType == PtMarginRight && pAb->AbDirection == 'L' ||
-	      ruleType == PtMarginLeft && pAb->AbDirection == 'R')
+	  if (pAb &&
+	      (ruleType == PtMarginRight && pAb->AbDirection == 'L' ||
+	       ruleType == PtMarginLeft && pAb->AbDirection == 'R'))
 	    pRule->PrMinValue = 6;
 	  break;
         case PtVisibility:
