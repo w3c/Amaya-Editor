@@ -4979,8 +4979,13 @@ void StartXmlParser (Document doc, char *fileName,
 
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
-  DocumentSSchema = TtaGetDocumentSSchema (doc);
-
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc] == docAnnot)
+    DocumentSSchema = ANNOT_GetBodySSchema (doc);
+  else
+#endif /* ANNOTATIONS */
+    DocumentSSchema = TtaGetDocumentSSchema (doc);
+  
   /* Reading of the file */
   stream = gzopen (fileName, "r");
 
@@ -5048,10 +5053,6 @@ void StartXmlParser (Document doc, char *fileName,
 	ChangeXmlParserContextDTD ("SVG");
       else if (strcmp (s, "MathML") == 0)
 	ChangeXmlParserContextDTD ("MathML");
-#ifdef ANNOTATIONS
-      else if (strcmp (s, "Annot") == 0)
-	ChangeXmlParserContextDTD ("HTML");
-#endif /* ANNOTATIONS */
       else
 #ifdef XML_GENERIC
 	{

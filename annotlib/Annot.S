@@ -1,3 +1,5 @@
+		{ Author: J. Kahan 	 1999-2002  }
+
 STRUCTURE Annot;
 
 DEFPRES AnnotP;
@@ -12,12 +14,15 @@ STRUCT
     a thread }
 	
   Annot
-     (ATTR Charset = Text) = 
+     (ATTR  XmlBody = Yes_; Charset = Text) = 
           BEGIN
 	  Description;
-	  Body = BEGIN 
-                 ? HTML;
-                 END;
+	  Body = CASE OF      { the annotation body can be of any type }
+                     HTML;
+		     MathML;
+		     SVG;
+		     TextFile;
+                   END;
 	  ? Thread;
 	  END;
 

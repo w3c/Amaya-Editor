@@ -1,4 +1,4 @@
-		{ Author: J. Kahan, I. Vatton 	 1999-2001  }
+		{ Author: J. Kahan, I. Vatton 	 1999-2002  }
 
 TRANSLATION Annot;
 
@@ -10,22 +10,26 @@ CONST
 RULES
 
    Document: BEGIN
-    Create '<?xml version="1.0"';
-    if Charset 
-       BEGIN
-       Create ' encoding="';
-       Create Charset; 
-       Create '"';
-       END;
-    Create '?>\12';
+     { Add the XML and encoding info }
+     if XmlBody BEGIN
+        Create '<?xml version="1.0"';
+     END;
+     if XmlBody AND Charset BEGIN
+        Create ' encoding="';
+        Create Charset; 
+        Create '"';
+     END;
+     if XmlBody BEGIN
+        Create '?>\12';
+     END;
    END;
-
 
    Annot : BEGIN
      Use HTMLTX for HTML;
      Use MathMLT for MathML;
      Use SVGT for SVG;
      Use XLinkT for XLink;
+     Use TextFileT for TextFile;
    END;
 
    Description : BEGIN

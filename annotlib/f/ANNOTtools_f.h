@@ -52,6 +52,7 @@ extern char *AnnotList_searchAnnotBodyURL ( Document source_doc,
                                             char *annot_url );
 extern char *AnnotList_searchAnnotURL ( Document source_doc,
                                         char *body_url );
+extern AnnotMeta *AnnotList_searchBody ( Document annot_doc );
 extern ThotBool AnnotList_delAnnot ( List **list,
                                      char *url,
                                      ThotBool useAnnotUrl );
@@ -105,7 +106,10 @@ extern char * ANNOT_MakeFileURL ( const char *path );
 extern ThotBool ANNOT_CanAnnotate ( Document doc );
 extern Element ANNOT_GetHTMLRoot ( Document doc,
                                    ThotBool getFirstChild );
-extern void ANNOT_CreateHTMLTree ( Document doc );
+extern SSchema ANNOT_GetBodySSchema ( Document doc );
+extern char * ANNOT_GetBodySSchemaName ( Document doc );
+extern void ANNOT_CreateBodyTree ( Document doc,
+                                   DocumentType bodyType );
 extern void WWWToLocal ( char *url );
 extern char * LocalToWWW ( char *url );
 extern char * TestLocalToWWW ( char *url );
@@ -114,6 +118,10 @@ extern ThotBool Annot_IsReplyTo ( Document doc_annot );
 extern Document Annot_IsDocumentLoaded ( Document annot_doc,
                                          char *source_annot_url,
                                          char *form_data );
+extern DocumentType ANNOT_bodyType ( Document annot_doc );
+extern void ANNOT_bodyType_set ( Document annot_doc,
+                                 DocumentType bodyType );
+extern void Annot_SetXMLBody ( Document doc );
 
 #else /* __STDC__ */
 
@@ -163,6 +171,7 @@ extern char *AnnotList_searchAnnotBodyURL (/* Document source_doc,
                                               char *annot_url */);
 extern char *AnnotList_searchAnnotURL (/* Document source_doc,
                                           char *body_url */);
+extern AnnotMeta *AnnotList_searchBody (/* Document annot_doc */);
 extern ThotBool AnnotList_delAnnot (/* List **list,
                                        char *url,
                                        ThotBool useAnnotUrl */);
@@ -216,7 +225,10 @@ extern char * ANNOT_MakeFileURL (/* const char *path */);
 extern ThotBool ANNOT_CanAnnotate (/* Document doc */);
 extern Element ANNOT_GetHTMLRoot (/* Document doc,
                                      ThotBool getFirstChild */);
-extern void ANNOT_CreateHTMLTree (/* Document doc */);
+extern SSchema ANNOT_GetBodySSchema (/* Document doc */);
+extern char * ANNOT_GetBodySSchemaName (/* Document doc */);
+extern void ANNOT_CreateBodyTree (/* Document doc,
+                                     DocumentType bodyType */);
 extern void WWWToLocal (/* char *url */);
 extern char * LocalToWWW (/* char *url */);
 extern char * TestLocalToWWW (/* char *url */);
@@ -225,6 +237,10 @@ extern ThotBool Annot_IsReplyTo (/* Document doc_annot */);
 extern Document Annot_IsDocumentLoaded (/* Document annot_doc,
                                            char *source_annot_url,
                                            char *form_data */);
+extern DocumentType ANNOT_bodyType (/* Document annot_doc */);
+extern void ANNOT_bodyType_set (/* Document annot_doc,
+                                   DocumentType bodyType */);
+extern void Annot_SetXMLBody (/* Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

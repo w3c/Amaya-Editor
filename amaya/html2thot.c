@@ -4644,7 +4644,14 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
 
-  parent = TtaGetRootElement (doc);    /* the root element */
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc] == docAnnot)
+    /* we search the start of HTML document in the annotation struct */
+    parent = ANNOT_GetHTMLRoot (doc, TRUE);
+  else
+#endif /* ANNOTATIONS */
+    parent = TtaGetRootElement (doc);    /* the root element */
+
   elType = TtaGetElementType (parent);
   el = TtaGetFirstChild (parent);    /* first child of the root element */
   if (el == NULL)
@@ -5227,7 +5234,12 @@ static void CheckHeadElements (Element el, Element *elHead,
 	  /* create the HEAD element if it does not exist */
 	  if (*elHead == NULL)
 	    {
-	      rootEl = TtaGetRootElement (doc);
+#ifdef ANNOTATIONS
+	      if (DocumentTypes[doc] == docAnnot)
+		rootElement = ANNOT_GetHTMLRoot (doc, TRUE); 
+	      else
+#endif /* ANNOTATIONS */
+		rootEl = TtaGetRootElement (doc);
 	      elType.ElTypeNum = HTML_EL_HEAD;
 	      *elHead = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (elHead, rootEl, doc);
@@ -5632,38 +5644,36 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot)
     /* we search the start of HTML document in the annotation struct */
-    elRoot = ANNOT_GetHTMLRoot (doc, TRUE);
+    elRoot = ANNOT_GetHTMLRoot (doc, FALSE);
   else
 #endif /* ANNOTATIONS */
+    elRoot = TtaGetRootElement (doc);
+  if (!elRoot)
+    /* there is no <html> element! Create one */
     {
-      elRoot = TtaGetRootElement (doc);
-      if (!elRoot)
-	/* there is no <html> element! Create one */
+      /* create a <html> element */
+      elType.ElSSchema = htmlSSchema;
+      elType.ElTypeNum = HTML_EL_HTML;
+      elRoot = TtaNewElement (doc, elType);
+      /* insert it as the first child of the Document node */
+      el = TtaGetMainRoot (doc);
+      TtaInsertFirstChild (&elRoot, el, doc);
+      /* move all other children of the Document node within this
+	 new <html> element */
+      el = elRoot;
+      TtaNextSibling (&el);
+      lastChild = NULL;
+      while (el)
 	{
-	  /* create a <html> element */
-	  elType.ElSSchema = htmlSSchema;
-	  elType.ElTypeNum = HTML_EL_HTML;
-	  elRoot = TtaNewElement (doc, elType);
-	  /* insert it as the first child of the Document node */
-	  el = TtaGetMainRoot (doc);
-	  TtaInsertFirstChild (&elRoot, el, doc);
-	  /* move all other children of the Document node within this
-	     new <html> element */
-	  el = elRoot;
-	  TtaNextSibling (&el);
-	  lastChild = NULL;
-	  while (el)
-	    {
-	      nextEl = el;
-	      TtaNextSibling (&nextEl);
-	      TtaRemoveTree (el, doc);
-	      if (!lastChild)
-		TtaInsertFirstChild (&el, elRoot, doc);
-	      else
-		TtaInsertSibling (el, lastChild, FALSE, doc);
-	      lastChild = el;
-	      el = nextEl;
-	    }
+	  nextEl = el;
+	  TtaNextSibling (&nextEl);
+	  TtaRemoveTree (el, doc);
+	  if (!lastChild)
+	    TtaInsertFirstChild (&el, elRoot, doc);
+	  else
+	    TtaInsertSibling (el, lastChild, FALSE, doc);
+	  lastChild = el;
+	  el = nextEl;
 	}
     }
   el = TtaGetFirstChild (elRoot);
@@ -6317,7 +6327,12 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 	/* initialize the stack with ancestors of lastelem */
 	HTMLcontext.doc = doc;
 	DocumentSSchema = TtaGetDocumentSSchema (HTMLcontext.doc);
-	rootElement = TtaGetMainRoot (HTMLcontext.doc);
+#ifdef ANNOTATIONS
+	  if (DocumentTypes[doc] == docAnnot)
+	    rootElement = ANNOT_GetHTMLRoot (doc, TRUE); 
+	  else
+#endif /* ANNOTATIONS */
+	    rootElement = TtaGetMainRoot (HTMLcontext.doc);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
 	else
@@ -6501,24 +6516,28 @@ void StartParser (Document doc, char *fileName,
       /* set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
       HTMLcontext.language = TtaGetDefaultLanguage ();
-      DocumentSSchema = TtaGetDocumentSSchema (doc);
-      /* is the current document a HTML document */
 #ifdef ANNOTATIONS
       if (DocumentTypes[doc] == docAnnot)
 	{
-	  /* @@@ we know this is true, but we should try to protect */
-	  isHTML = 1;
-	  /* if the HTML nature doesn't exists, add it. Otherwise,
-	     just get the SSschema reference */
-	  DocumentSSchema = GetXHTMLSSchema (doc);
+	  /* get the schema associated to the annotation body */
+	  DocumentSSchema = ANNOT_GetBodySSchema (doc);
 	  attrType.AttrSSchema = DocumentSSchema;
 	}
       else
 #endif /* ANNOTATIONS */
-	isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
+	DocumentSSchema = TtaGetDocumentSSchema (doc);
+
+      /* is the current document a HTML document */
+      isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
       if (plainText)
 	{
-	  rootElement = TtaGetRootElement (doc);
+#ifdef ANNOTATIONS
+	  if (DocumentTypes[doc] == docAnnot)
+	    rootElement = ANNOT_GetHTMLRoot (doc, TRUE); 
+	  else
+#endif /* ANNOTATIONS */
+	    rootElement = TtaGetRootElement (doc);
+
 	  if (DocumentTypes[doc] == docSource)
 	    {
 	      /* add the attribute Source */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -734,6 +734,45 @@ char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
     return annot->annot_url;
   else
     return NULL;
+}
+
+/*------------------------------------------------------------
+   AnnotList_searchBody
+   Returns the annot meta corresponding to the body URL
+   or NULL if it doesn't exist
+   ------------------------------------------------------------*/
+AnnotMeta *AnnotList_searchBody (Document annot_doc)
+{
+  AnnotMeta *annot;
+  char *body_url;
+  char *ptr;
+  Document source_doc;
+  
+  if (DocumentTypes[annot_doc] != docAnnot)
+    return NULL;
+
+  source_doc = DocumentMeta[annot_doc]->source_doc;
+  body_url = DocumentURLs[annot_doc];
+
+  if (!IsW3Path (body_url) && !IsFilePath (body_url))
+    ptr = ANNOT_MakeFileURL (body_url);
+  else
+    ptr = body_url;
+
+  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				 ptr,
+				 AM_BODY_URL);
+#ifdef ANNOT_ON_ANNOT
+  if (!annot && AnnotThread[source_doc].annotations)
+    annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
+				   ptr,
+				   AM_BODY_URL);
+#endif /* ANNOT_ON_ANNOT */
+
+  if (ptr != body_url)
+    TtaFreeMemory (ptr);
+
+  return (annot);
 }
 
 /*------------------------------------------------------------
@@ -1753,6 +1792,7 @@ char * ANNOT_PreparePostBody (Document doc)
   char tmp_str[80];
   char *rdf_tmpfile, *ptr;
   char *html_tmpfile;
+  char *content_type;
 
   AnnotMeta *annot;
   unsigned long content_length;
@@ -1798,13 +1838,15 @@ char * ANNOT_PreparePostBody (Document doc)
   Annot_dumpCommonMeta (annot, fp);
 
   /* the body of the annotation prologue */
+  content_type = (DocumentMeta[doc]->content_type) 
+    ? DocumentMeta[doc]->content_type : "text/html";
   fprintf (fp,
 	   "<a:body>\n"
 	   "<r:Description>\n"
 	   "<http:ContentType>%s</http:ContentType>\n"
 	   "<http:ContentLength>%ld</http:ContentLength>\n"
 	   "<http:Body r:parseType=\"Literal\">\n",
-	   "text/html",
+	   content_type,
 	   content_length);
 
  /* 
@@ -2389,15 +2431,60 @@ Element ANNOT_GetHTMLRoot (Document doc, ThotBool getFirstChild)
     }
   else 
     el = NULL;
-
+  
   return (el);
 }
 
 /*-----------------------------------------------------------------------
-  ANNOT_CreateHTMLRoot
+  ANNOT_GetBodySSchema
+  Returns the S Schema associated with the body.
+  -----------------------------------------------------------------------*/
+SSchema ANNOT_GetBodySSchema (Document doc)
+{
+  ElementType elType;
+  Element     el;
+  SSchema     result = NULL;
+
+  el = ANNOT_GetHTMLRoot (doc, TRUE);
+
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      result = elType.ElSSchema;
+    }
+
+  return result;
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_GetBodySSchemaName
+  Returns the S Schema name associated with the body.
+  -----------------------------------------------------------------------*/
+char * ANNOT_GetBodySSchemaName (Document doc)
+{
+  ElementType elType;
+  Element     el;
+  char       *result = NULL;
+
+  el = ANNOT_GetHTMLRoot (doc, TRUE);
+
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      result = TtaGetSSchemaName (elType.ElSSchema);
+    }
+
+  if (!result)
+    result = "";
+
+  return result;
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_CreateBodyTree
   Adds the first HTML element to the annotation body.
   -----------------------------------------------------------------------*/
-void ANNOT_CreateHTMLTree (Document doc)
+void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
 {
   ElementType elType;
   Element body, el;
@@ -2410,9 +2497,27 @@ void ANNOT_CreateHTMLTree (Document doc)
       elType = TtaGetElementType (el);
       elType.ElTypeNum = Annot_EL_Body;
       body = TtaSearchTypedElement (elType, SearchInTree, el);
-      body = TtaGetLastChild (el);
-      elType.ElSSchema = GetXHTMLSSchema (doc);
-      elType.ElTypeNum = HTML_EL_HTML;
+      /* body = TtaGetLastChild (el); */
+      if (bodyType == docSVG)
+	{
+	  elType.ElSSchema = GetSVGSSchema (doc);
+	  elType.ElTypeNum = SVG_EL_SVG;
+	}
+      else if (bodyType == docMath)
+	{
+	  elType.ElSSchema = GetMathMLSSchema (doc);
+	  elType.ElTypeNum = MathML_EL_MathML;
+	}
+      else if (bodyType == docText)
+	{
+	  elType.ElSSchema =  GetTextSSchema (doc);
+	  elType.ElTypeNum = TextFile_EL_TextFile;
+	}
+      else /* consider the default case to be HTML */
+	{
+	  elType.ElSSchema = GetXHTMLSSchema (doc);
+	  elType.ElTypeNum = HTML_EL_HTML;
+	}
       el = TtaNewTree (doc, elType, "");
       result = TtaCanInsertFirstChild (elType, body, doc);
       oldStructureChecking = TtaGetStructureChecking (doc);
@@ -2605,4 +2710,86 @@ Document Annot_IsDocumentLoaded (Document annot_doc, char *source_annot_url, cha
     doc = (Document) None;
 
   return doc;
+}
+
+/*-----------------------------------------------------------------------
+  Annot_bodyType
+  Returns the document type of the body of an annotation
+  -----------------------------------------------------------------------*/
+DocumentType ANNOT_bodyType (Document annot_doc)
+{
+  Document source_doc;
+  AnnotMeta *annot;
+
+  source_doc = DocumentMeta[annot_doc]->source_doc;
+  annot =  GetMetaData (source_doc, annot_doc);
+  if (annot)
+    return (annot->bodyType);
+  else
+    return docHTML;
+}
+
+/*-----------------------------------------------------------------------
+  Annot_bodyType_set
+  Sets the document type of the body of an annotation
+  -----------------------------------------------------------------------*/
+void ANNOT_bodyType_set (Document annot_doc, DocumentType bodyType)
+{
+  Document source_doc;
+  AnnotMeta *annot = NULL;
+  int i;
+
+  if (DocumentMeta[annot_doc] && DocumentMeta[annot_doc]->source_doc != 0)
+    {
+      source_doc = DocumentMeta[annot_doc]->source_doc;
+      annot =  GetMetaData (source_doc, annot_doc);
+    }
+  else /* we don't know the source document, we scan everywhere to find it */
+    {
+      for (i=1; i< MAX_DOCUMENTS; i++)
+	{
+	  if (i == annot_doc)
+	    continue;
+	  if (!DocumentMeta[i])
+	    continue;
+	  annot = GetMetaData (i, annot_doc);
+	  if (annot)
+	    break;
+	}
+    }
+
+  if (annot)
+    annot->bodyType = bodyType;
+}
+
+/*-----------------------------------------------------------------------
+  Annot_SetXMLBody
+  Changes the setting of the document to say that the body of the
+  annotation is a document of type XML.
+  -----------------------------------------------------------------------*/
+void Annot_SetXMLBody (Document doc)
+{
+  Element el;
+  Attribute      attr;
+  AttributeType  attrType;
+  int            oldStructureChecking;
+
+  if (DocumentTypes[doc] != docAnnot)
+    return;
+
+  el = TtaGetMainRoot (doc);
+
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum =  Annot_ATTR_XmlBody;
+
+  attr = TtaGetAttribute (el, attrType); 
+
+  if (!attr)  /* attach a new attribute */
+    {
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (0, doc);
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetStructureChecking ((ThotBool) oldStructureChecking, doc);
+    }
 }

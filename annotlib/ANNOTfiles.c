@@ -301,6 +301,11 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   root = TtaGetRootElement (docAnnot);
   elType = TtaGetElementType (root);
 
+  /* specify if the annotation body is an XML document. We systematically
+   convert HTML into XHTML when saving */
+  if (DocumentMeta[docAnnot]->xmlformat || annot->bodyType == docHTML)
+    Annot_SetXMLBody (docAnnot);
+
   /* point to the metadata structure */
   elType.ElTypeNum = Annot_EL_Description;
   head = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -433,7 +438,7 @@ void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
   ** HTML initialization
   */
   /* we first add the HTML tree */
-  ANNOT_CreateHTMLTree (docAnnot);
+  ANNOT_CreateBodyTree (docAnnot, docHTML);
 
   /* we find the the HTML nature */
   root = TtaGetRootElement (docAnnot);
@@ -1293,7 +1298,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
 
   /* set up the charset and namespaces */
   SetNamespacesAndDTD (doc_annot);
-  result =TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
+  result = TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
 					       "AnnotT");
 
   /* update the annotation icon to the new type */

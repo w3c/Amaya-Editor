@@ -1077,7 +1077,11 @@ void SetNamespacesAndDTD (Document doc)
    	 }
      }
    
-   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)
+   if (
+#ifdef ANNOTATIONS
+       (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
+#endif /* ANNOTATIONS */
+       DocumentTypes[doc] == docHTML)
      {
        if (useMathML && DocumentMeta[doc]->xmlformat)
 	 {
@@ -1151,7 +1155,11 @@ void SetNamespacesAndDTD (Document doc)
 	 }
      }
 
-   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)
+   if (
+#ifdef ANNOTATIONS
+       (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
+#endif /* ANNOTATIONS */
+       DocumentTypes[doc] == docHTML)
      {
        /* Create (or update) a META element to specify Content-type 
 	  and Charset*/

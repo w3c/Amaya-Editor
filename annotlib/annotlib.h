@@ -101,6 +101,7 @@ typedef struct _AnnotMeta {
   char *author; /* author of the annotation */
   RDFResourceP creator; /* creator of the annotation */
   RDFResourceP type; /* type of annotation */
+  DocumentType bodyType;  /* the documen type (as Amaya understands it) of the body */
   char *content_type; /*content type of the body of the annotation,
 			  only used while posting */
   char *content_length; /* content length of the body, only used while
@@ -125,8 +126,10 @@ typedef struct _AnnotMeta {
 typedef enum _AnnotMetaDataSearch {
   AM_ANNOT_URL = 1, /* compare with the annot_url field */
   AM_BODY_URL = 2,  /* compare with the body_url field */
+#if 0  /* JK: not used anymore */
   AM_BODY_FILE = 4, /* cmopare with the body_url field, but skipping
 		       the file:// prefix */
+#endif
   AM_ANAME = 8      /* compare with the name field */
 } AnnotMetaDataSearch;
 

@@ -2799,6 +2799,9 @@ static Document LoadDocument (Document doc, char *pathname,
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
+#ifdef ANNOTATIONS
+  DocumentType        annotBodyType;
+#endif /* ANNOTATIONS */
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
   char                charsetname[MAX_LENGTH];
@@ -3158,8 +3161,12 @@ static Document LoadDocument (Document doc, char *pathname,
 	    /* replace the current document by a new one */
 	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
 #ifdef ANNOTATIONS
-	  else if (method == CE_ANNOT && docType == docHTML)
+	  else if (method == CE_ANNOT) /*  && docType == docHTML) */
 	    {
+	      /* create the body */
+	      ANNOT_CreateBodyTree (doc, docType);
+	      /* and remember its type of the body */
+	      annotBodyType = docType;
 	      docType = docAnnot;
 	      newdoc = doc;
 	    }
@@ -3363,7 +3370,7 @@ static Document LoadDocument (Document doc, char *pathname,
       if (docType == docHTML ||
 	  docType == docSVG ||
 #ifdef ANNOTATIONS
-	  docType == docAnnot ||
+	  (docType == docAnnot && annotBodyType != docText) ||
 #endif /* ANNOTATIONS */
 #ifdef XML_GENERIC
 	  docType == docXml ||
@@ -3400,9 +3407,10 @@ static Document LoadDocument (Document doc, char *pathname,
       if (TtaGetEnvString ("TEMPLATE_URL") == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
-      /* auto-load the annotations associated with the document */
-      /* if (!plainText && ANNOT_CanAnnotate(doc))
-	 ANNOT_AutoLoad (newdoc, 1); */
+      /* store the annotation body type (we have to wait until now as
+	 the metadata didn't exist before) */
+      if (docType == docAnnot)
+	ANNOT_bodyType_set (newdoc, annotBodyType);
 #endif /* ANNOTATIONS */
     }
   TtaFreeMemory (content_type);
