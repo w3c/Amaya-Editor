@@ -3819,7 +3819,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		 pAb->AbEnclosing->AbBox->BxType == BoFloatBlock)
 	  {
 	    /* Il faut remonter au pave de mise en lignes */
-	    while (pAb->AbEnclosing->AbBox->BxType == BoGhost |
+	    while (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
 		   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
 	      pAb = pAb->AbEnclosing;
 	    EncloseInLine (pBox, frame, pAb->AbEnclosing);
