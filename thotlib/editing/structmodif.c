@@ -686,12 +686,12 @@ ThotBool		    setLangAttr;
 	if (pEl->ElTextLength > 0)
 	  {
 	     pNext = pEl->ElNext;
-	     SplitTextElement (pEl, charIndex, pDoc, TRUE, &pNextEl);
+	     SplitTextElement (pEl, charIndex, pDoc, FALSE, &pNextEl);
 	     BuildAbsBoxSpliText (pEl, pNextEl, pNext, pDoc);
 	     if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
 	       {
 	          pNext = pNextEl->ElNext;
-		  SplitTextElement (pNextEl, 1, pDoc, TRUE, &pSecond);
+		  SplitTextElement (pNextEl, 1, pDoc, FALSE, &pSecond);
 		  BuildAbsBoxSpliText (pNextEl, pSecond, pNext, pDoc);
 		  pEl = pNextEl;
 	       }
