@@ -506,10 +506,7 @@ static PtrElement BackSearch2AttrInSubtree (PtrElement pEl, int val,
   PtrElement          pRet, pChild;
 
   pRet = NULL;
-  if (AttrFound (pEl, val, textVal, attNum, pSS) ||
-      (attNum2 && AttrFound (pEl, 0, "", attNum2, pSS2)))
-    pRet = pEl;
-  if (pRet == NULL && !pEl->ElTerminal)
+  if (!pEl->ElTerminal)
     {
       /* searches the last child */
       pChild = pEl->ElFirstChild;
@@ -523,6 +520,12 @@ static PtrElement BackSearch2AttrInSubtree (PtrElement pEl, int val,
 					   attNum, attNum2, pSS, pSS2);
 	  pChild = pChild->ElPrevious;
 	}
+    }
+  if (!pRet)
+    {
+      if (AttrFound (pEl, val, textVal, attNum, pSS) ||
+	  (attNum2 && AttrFound (pEl, 0, "", attNum2, pSS2)))
+	pRet = pEl;
     }
   return pRet;
 }
@@ -1615,8 +1618,14 @@ PtrElement BackSearch2Attributes (PtrElement pEl, int val, char *textVal,
 	}
       /* if failure, searches in the subtrees of the uncles of the element */
       if (pRet == NULL && pEl->ElParent != NULL)
-	pRet = BackSearch2Attributes (pEl->ElParent, val, textVal,
-				      attNum, attNum2, pSS, pSS2);
+	{
+	  if (AttrFound (pEl->ElParent, val, textVal, attNum, pSS) ||
+	      (attNum2 && AttrFound (pEl->ElParent, 0, "", attNum2, pSS2)))
+	    pRet = pEl->ElParent;
+	  else
+	    pRet = BackSearch2Attributes (pEl->ElParent, val, textVal,
+					  attNum, attNum2, pSS, pSS2);
+	}
     }
   return pRet;
 }
