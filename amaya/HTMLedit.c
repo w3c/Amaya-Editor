@@ -1382,15 +1382,13 @@ Document doc;
     tempURI = TtaAllocString (MAX_LENGTH);
     if (tempURI)
       {
+      iName = 0;
       /* get the URI itself */
       TtaGiveTextAttributeValue (attr, value, &length);
       if (value[0] == '#')
-	{
 	  /* the target is in the original document */
 	  /* convert the internal link into an external link */
 	  ustrcpy (tempURI, DocumentURLs[originDocument]);
-	  iName = 0;
-	}
       else
 	{
 	  /* the target element is in another document */
@@ -1403,11 +1401,8 @@ Document doc;
 	    while (value[i] != '#' && i > 0)
 	      i--;
 	    if (i == 0)
-	      {
 		/* there is no '#' in the URI */
 		value[0] = EOS;
-		iName = 0;
-	      }
 	    else
 	      {
 		/* there is a '#' character in the URI */

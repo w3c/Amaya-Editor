@@ -1471,6 +1471,7 @@ View                view;
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
      return;
+   otherDoc = 0;
    if (!TtaIsDocumentUpdated (document))
      /* nothing new to be saved in this view of the document. Let see if
         the other view has been modified */

@@ -2143,6 +2143,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 
   el = *firstEl;
   firstElChanged = FALSE;
+  prevText = NULL;
   /* process all sibling elements from firstEl to lastEl */
   while (el)
     {
@@ -3082,6 +3083,7 @@ void SetMathCharFont (doc, attribute)
   attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   attrType.AttrTypeNum = attribute;
   attr = TtaGetAttribute (firstSel, attrType);
+  val = 1;
   if (attr)
     val = TtaGetAttributeValue (attr);
   if (attribute == MathML_ATTR_fontweight)

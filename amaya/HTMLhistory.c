@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -301,7 +301,8 @@ View                view;
    STRING              form_data = NULL;
    int                 prev, i;
    int                 method;
-   ThotBool	       last, hist;
+   ThotBool	       last = FALSE;
+   ThotBool            hist = FALSE;
    ThotBool            same_form_data;
    ThotBool            next_doc_loaded = FALSE;
 
@@ -352,9 +353,8 @@ View                view;
 
    if (!next_doc_loaded)
      {
-       /* the current document must be put in the history if it's the last one */
-       hist = FALSE;
-       last = FALSE;
+       /* the current document must be put in the history if it's the last
+	  one */
        if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
 	 {
 	   last = TRUE;

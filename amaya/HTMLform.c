@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -279,6 +279,7 @@ Document	    doc;
   attr = TtaGetAttribute (option, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
       {
+      value = NULL;
       attrType.AttrTypeNum = HTML_ATTR_Value_;
       attr = TtaGetAttribute (option, attrType);
       if (attr != NULL)
@@ -292,16 +293,20 @@ Document	    doc;
         {
 	/* use the attached text as an implicit value */
 	elText = TtaGetFirstChild(option);
-	length = TtaGetTextLength (elText) + 1;
-	value = TtaAllocString (length);
-	TtaGiveTextContent (elText, value, &length, &lang);
+	if (elText)
+	   {
+	   length = TtaGetTextLength (elText) + 1;
+	   value = TtaAllocString (length);
+	   TtaGiveTextContent (elText, value, &length, &lang);
+	   }
         }
       /* remove extra spaces */
       TrimSpaces (name);
       TrimSpaces (value);
       /* save the name/value pair of the element */
       AddNameValue (name, value);
-      TtaFreeMemory (value);
+      if (value)
+         TtaFreeMemory (value);
       }
 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -234,7 +234,9 @@ int                 depth;
    ustrcpy (tag, GITagNameByType (elemType));
    attr = NULL;
    TtaNextAttribute (elem, &attr);
-   if (ustrcmp (tag, TEXT("???")) && ustrcmp (tag, TEXT("none")) && (TtaGetFirstChild (elem) != NULL || attr != NULL || TtaIsLeaf (elemType)))
+   if (ustrcmp (tag, TEXT("???")) && ustrcmp (tag, TEXT("none")) &&
+       (TtaGetFirstChild (elem) != NULL || attr != NULL ||
+	TtaIsLeaf (elemType)))
      {
 	added = NewNode (tag);
 	added->Elem = elem;
@@ -487,8 +489,8 @@ strSymbDesc *p;
 	else
 	   return FALSE;
      }
-   /* looking for a matching of each child of symbol p (candidate) with the children */
-   /* of the source node n */ 
+   /* looking for a matching of each child of symbol p (candidate) with the
+      children of the source node n */ 
    child = n->Child;
    IntersectMatch (&(child->Candidates), p->Children, child->Matches);
    candidate = child->Candidates;
@@ -505,10 +507,11 @@ strSymbDesc *p;
 	     ConstListMatch (n, p);
 	     matchFound = TRUE;
 	  }
-	else if (child == NULL || candidate == NULL || candidate->Symbol == NULL)
+	else if (child == NULL || candidate == NULL ||
+		 candidate->Symbol == NULL)
 	  {  
-	    /* the children are not all matched, pop the matching stack to see if an other */
-	    /* symbol can be matched with a node already explored */
+	    /* the children are not all matched, pop the matching stack to see
+	       if an other symbol can be matched with a node already explored*/
 	     PopMatchStack (&child, &ms);
 	     while (child != NULL &&
 		    ms->Next == NULL)
@@ -525,14 +528,15 @@ strSymbDesc *p;
 	  }
 	else
 	  {			/* here:  child!=NULL && candidate != -1 */
-	    /* searches if the next siblings of child can be matched with successors */
-	    /* of candidate */
+	    /* searches if the next siblings of child can be matched with
+	       successors of candidate */
 
 	     /* push child and candidate */
 	     PushMatchStack (child, candidate);
 	     if (child->Next != NULL)
 	       {
-		  /* build the candidate list for matching of the next sibling */
+		  /* build the candidate list for matching of the next
+		     sibling */
 		  IntersectMatch (&(child->Next->Candidates),
 				  candidate->Symbol->Followings,
 				  child->Next->Matches);
@@ -633,15 +637,18 @@ strNode            *n;
 	if (td->IsActiveTrans)
 	  {
 	     sd = td->Symbols;
-	     /* for each symbol having the same tag than the node n, seaches if */
-	     /* the children of the node can be matched with those of the pattern symbol */
+	     /* for each symbol having the same tag than the node n, seaches */
+	     /* if the children of the node can be matched with those of the */
+	     /* pattern symbol */
 	     while (sd != NULL)
 	       {
 		  if (sd->IsActiveSymb)
 		     if ((n->NodeDepth - sd->Depth <= maxSelDepth)
 			 && (n->NodeDepth - sd->Depth >= 0))
-			if (!ustrcmp (sd->Tag, TEXT("*")) || !ustrcmp (sd->Tag, n->Tag))
-			   if (sd->Attributes == NULL || MatchAttributes (sd, n->Elem))
+			if (!ustrcmp (sd->Tag, TEXT("*")) ||
+			    !ustrcmp (sd->Tag, n->Tag))
+			   if (sd->Attributes == NULL ||
+			       MatchAttributes (sd, n->Elem))
 			      ChildrenMatch (n, sd);
 		  sd = sd->Next;
 	       }
@@ -724,7 +731,8 @@ int                 rank;
 
    pcour = strMatchEnv.ListSubTrees;
    pprec = NULL;
-   while (pcour != NULL && (pcour->Id < idf || (pcour->Id == idf && pcour->Rank < rank)))
+   while (pcour != NULL && (pcour->Id < idf ||
+			    (pcour->Id == idf && pcour->Rank < rank)))
      {
 	pprec = pcour;
 	pcour = pcour->Next;
@@ -938,7 +946,7 @@ Document            doc;
    ThotBool            res;
    SSchema             selSch, courSch;
  
- res = TRUE;
+   res = TRUE;
    prevMatch = NULL;
    DMatch = sMatch;
    myFirstSelect = DMatch->MatchNode->Elem;
@@ -1035,23 +1043,24 @@ Document            doc;
 	  }
 	else
 	  {
-	     invEl = TtaSearchTypedElement (typeEl, SearchInTree, myFirstSelect);
-	     if (invEl != NULL)
-	       {
-		  if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
-		    {		/* if the transformation failed */
-		       res = FALSE;
-		       TtaUndoNoRedo (doc);
-		    }
-	       }
+	   invEl = TtaSearchTypedElement (typeEl, SearchInTree, myFirstSelect);
+	   if (invEl != NULL)
+	     {
+	      if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
+		{
+		  /* if the transformation failed */
+		  res = FALSE;
+		  TtaUndoNoRedo (doc);
+		}
+	     }
 	  }
      }
    return res;
 }
 
 /*----------------------------------------------------------------------
-  functions for transfert of non-matched descendants of matched nodes for source structure
-  tree to the result HTML instance.
+  functions for transfer of non-matched descendants of matched nodes for
+  source structure tree to the result HTML instance.
   ----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------
   FlattenAndInsertElement: tries to fllaten the structure sub-tree rooted elSource in order to 
@@ -1079,9 +1088,9 @@ int                *nbCreated;
    *nbCreated = 0;
    if (TtaIsLeaf (TtaGetElementType (elSource)))
      {			
-	/* if the source element is a leaf, it is impossible to flatten it more */
-	lastCreated = NULL;
-	return FALSE;
+      /* if the source element is a leaf, it is impossible to flatten it more*/
+      lastCreated = NULL;
+      return FALSE;
      }
    res = TRUE;
    elCour = TtaGetFirstChild (elSource);
@@ -1108,9 +1117,11 @@ int                *nbCreated;
 	else
 	  {
 	     if (elPreced != NULL)
-		res =  FlattenAndInsertElement(elCour, elPreced, TRUE, doc, lastCreated, &nbc);
+		res =  FlattenAndInsertElement(elCour, elPreced, TRUE, doc,
+					       lastCreated, &nbc);
 	     else
-		res =  FlattenAndInsertElement(elCour, elDest, FALSE, doc, lastCreated, &nbc);
+		res =  FlattenAndInsertElement(elCour, elDest, FALSE, doc,
+					       lastCreated, &nbc);
 	     elPreced = *lastCreated;
 	     (*nbCreated) += nbc;
 	  }
@@ -1126,8 +1137,8 @@ int                *nbCreated;
    RankedInsertion
 
 
-   Inserts an element as a given child or sibling of an element, creating a descendance 
-   between the two elements if necesary. 
+   Inserts an element as a given child or sibling of an element, creating a
+   descendance between the two elements if necesary. 
 
    Parameters:
    newEl: the element to be inserted
@@ -1243,9 +1254,11 @@ Document            doc;
       /* trying to flatten the element to be transferred */
       /* this is the worst case */
       if (elCour == NULL)
-	 result = FlattenAndInsertElement (newEl, parent, FALSE, doc, &elem, rank);
+	 result = FlattenAndInsertElement (newEl, parent, FALSE, doc,
+					   &elem, rank);
       else
-	 result = FlattenAndInsertElement (newEl, elCour, TRUE, doc, &elem, rank);
+	 result = FlattenAndInsertElement (newEl, elCour, TRUE, doc,
+					   &elem, rank);
    return result;
 }
 
@@ -1396,13 +1409,14 @@ STRING              s;
 }
 
 /*----------------------------------------------------------------------
+  PutBeginTag
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
 #else
 static ThotBool        PutBeginTag (ND, TN)
 strNodeDesc           *ND;
-strNode            *TN;
+strNode               *TN;
 
 #endif
 {
@@ -1413,7 +1427,7 @@ strNode            *TN;
   strNode            *ancestor;
   ThotBool            found;
   AttributeType       attrType;
-  Attribute           attr;
+  Attribute           attr = NULL;
   int                 l, attrKind;
   ThotBool	      res = TRUE;
   
@@ -1472,7 +1486,8 @@ strNode            *TN;
 	    }
 	  if (found)
 	    {
-	      /* searching for an ancestor of the source element which have the wanted attribute  */
+	      /* searching for an ancestor of the source element which have
+		 the wanted attribute  */
 	      found = FALSE;
 	      while (!found && ancestor != NULL)
 		{
@@ -1493,7 +1508,7 @@ strNode            *TN;
 		}
 	      if (found)
 		{
-		  /* the attribute has been found, writing the attribute name */
+		  /* the attribute has been found, writing the attribute name*/
 		  res = res && PutInHtmlBuffer (TEXT(" "));
 		  res = res && PutInHtmlBuffer (AD->AttrAttr);
 		  res = res && PutInHtmlBuffer (TEXT("="));
@@ -1611,7 +1626,7 @@ strNode            *node;
 	  {/* if the element is empty: no transfert */
 	     generationStack[topGenerStack]->Nbc++;
 	     elType = TtaGetElementType (child->Elem);
-		 /*ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
+	     /*ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
 	     if (TransferMode == ByAttribute)
 	       AddListSubTree (child->Elem,
 			       generationStack[topGenerStack]->Idf,
@@ -1655,9 +1670,8 @@ ThotBool            inplace;
       generationStack[topGenerStack]->Nbc++;
 /* 	ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)  */
       if (TransferMode == ByAttribute)
-	AddListSubTree (node->Elem,
-				     generationStack[topGenerStack]->Idf,
-				     generationStack[topGenerStack]->Nbc);
+	AddListSubTree (node->Elem, generationStack[topGenerStack]->Idf,
+			generationStack[topGenerStack]->Nbc);
       else
 	res = res && ExportSubTree (node->Elem, TransDoc);
     }
@@ -1695,12 +1709,14 @@ strMatchChildren   *smc;
 	smc2->MatchNode->IsTrans = TRUE;
 	if (smc2->MatchSymb->Rule == NULL)
 	  {
-	    /* no transformation rule for the node, searches if a child has been matched */
+	    /* no transformation rule for the node, searches if a child has
+	       been matched */
 	     sm = smc2->MatchNode->Matches;
 	     found = FALSE;
 	     while (!found && sm != NULL)
 	       {
-		  found = (sm->MatchSymb == smc2->MatchSymb && sm->MatchChildren != NULL);
+		  found = (sm->MatchSymb == smc2->MatchSymb &&
+			   sm->MatchChildren != NULL);
 		  if (!found)
 		     sm = sm->Next;
 	       }
@@ -1711,12 +1727,13 @@ strMatchChildren   *smc;
 		  result = result && ApplyTransChild (sm->MatchChildren);
 	       }
 	     else
-	       { /* there is no matching: transferring the node to destination instance */
+	       { /* there is no matching: transferring the node to
+		    destination instance */
 		  result = result && TransfertNode (smc2->MatchNode, FALSE);
 	       }
 	  }
 	else
-	  {  /* there is a transformation rule relative to the matched symbol */
+	  { /* there is a transformation rule relative to the matched symbol */
 	    /* applying the rule */
 	     result = result && TransformNode (smc2);
 	  }
@@ -1751,11 +1768,13 @@ strMatchChildren   *sm;
    sonsMatch = FALSE;
    while (sm2 != NULL && !sonsMatch)
      {
-	sonsMatch = (sm2->MatchSymb == sm->MatchSymb && sm2->MatchChildren != NULL);
+	sonsMatch = (sm2->MatchSymb == sm->MatchSymb &&
+		     sm2->MatchChildren != NULL);
 	if (!sonsMatch)
 	   sm2 = sm2->Next;
      }
-   /* sonsMatch is true if there is at least one matched node in the children of source node */
+   /* sonsMatch is true if there is at least one matched node in the children
+      of source node */
    sm->MatchNode->MatchSymb = sm->MatchSymb;
    currentRule = sm->MatchSymb->Rule;
    while (currentRule != NULL)
@@ -1770,7 +1789,8 @@ strMatchChildren   *sm;
 	   while (!stop)
 	     { /* for each optional tag in the rule */
 	       if (!ustrcmp (generationStack[courNode]->Tag, RNodeCour->Tag))
-		 {  /* does nothing if the tag is already present in the destination instance */
+		 { /* does nothing if the tag is already present in the
+		      destination instance */
 		   RNodeCour = RNodeCour->Next;
 		   courNode++;
 		   stop = (RNodeCour == NULL || courNode > topGenerStack);
@@ -1969,7 +1989,8 @@ Document            doc;
 		  parentFirst = TtaGetParent (myFirstSelect);
 	       }
 	  }
-	if (myLastSelect != NULL && (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
+	if (myLastSelect != NULL &&
+	    (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
 	  {
 	    /* searching for the last selected element */
 	     nextLast = myLastSelect;
@@ -2067,7 +2088,7 @@ Element            *elSelect;
    int                 fc, lc;
 
    if (*elSelect == NULL || *elSelect == mySelect || *elSelect == myLastSelect)
-     {				/* if the selection is an unique element, or elSelect is the last */
+     {  /* if the selection is an unique element, or elSelect is the last */
 	*elSelect = NULL;
      }
    else
@@ -2078,7 +2099,8 @@ Element            *elSelect;
 	     if (elFirst == myFirstSelect)
 		TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
 	     else
-		while (elFirst != NULL && TtaIsAncestor (elFirst, myFirstSelect))
+		while (elFirst != NULL &&
+		       TtaIsAncestor (elFirst, myFirstSelect))
 		   TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
 	  }
 	else
@@ -2321,7 +2343,7 @@ STRING              prevTag;
 	  sm2 = smc->MatchNode->Matches;
 	  sonsMatch = FALSE;
 	  while (sm2 != NULL && !sonsMatch)
-	    {		/* checks if the children of the node have been matched */
+	    { /* checks if the children of the node have been matched */
 	      sonsMatch = (sm2->MatchSymb == smc->MatchSymb && sm2->MatchChildren != NULL);
 	      if (!sonsMatch)
 		sm2 = sm2->Next;
@@ -2330,7 +2352,7 @@ STRING              prevTag;
 	    {		/* if the children of the node have not been matched */
 	      /* checks if the node can be transferred in the destination */
 	      if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
-		{		/* if the element is empty, it is ignored in transformation */
+		{ /* if the element is empty, it is ignored in transformation*/
 		  if (ustrcmp (prevTag, smc->MatchNode->Tag))
 		    result = IsValidHtmlChild (elemTypeRoot,
 					       smc->MatchNode->Tag,
@@ -2339,7 +2361,9 @@ STRING              prevTag;
 		}
 	    }
 	  else
-	    {		/* if they have been, checks the elements generated by these children */
+	    {
+	      /* if they have been, checks the elements generated by these
+		 children */
 	      result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
 	    }
 	}
@@ -2432,7 +2456,8 @@ CHAR_T*             data;
 	    TtaSelectString (TransDoc, origFirstSelect, ffc, flc);
 	  TtaExtendSelection (TransDoc, origLastSelect, llc);
 	  /* display an error message */
-	  TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_FAILED), NULL);
+	  TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_FAILED),
+			NULL);
 #endif
 	}
       else
@@ -2476,9 +2501,11 @@ CHAR_T*             data;
 	      attrType.AttrTypeNum = HTML_ATTR_SRC;
 	      elFound = NULL;
 	      attr = NULL;
-	      TtaSearchAttribute (attrType, SearchInTree, myFirstSelect, &elFound, &attr);
+	      TtaSearchAttribute (attrType, SearchInTree, myFirstSelect,
+				  &elFound, &attr);
 	      if (elFound == NULL)
-		TtaSearchAttribute (attrType, SearchForward, myFirstSelect, &elFound, &attr);
+		TtaSearchAttribute (attrType, SearchForward, myFirstSelect,
+				    &elFound, &attr);
 	      while (elFound != NULL && 
 		     (myLastSelect == NULL || 
 		      TtaIsBefore (elFound, myLastSelect) ||
@@ -2488,7 +2515,8 @@ CHAR_T*             data;
 		  printf ("Fetching Image...\n");
 #endif
 		  FetchImage (TransDoc, elFound, NULL, 0, NULL, NULL);
-		  TtaSearchAttribute (attrType, SearchForward, elFound, &elFound, &attr);
+		  TtaSearchAttribute (attrType, SearchForward, elFound,
+				      &elFound, &attr);
 		}
 	    }
 	  /* selecting the new elements */
@@ -2574,7 +2602,8 @@ View                view;
 	    {
 	      elType = TtaGetElementType (elemSelect);
 	      ustrcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	      ok =  ppStartParser (nameSet, elType.ElSSchema, &CourTransSet) || ok;
+	      ok =  ppStartParser (nameSet, elType.ElSSchema, &CourTransSet) ||
+		    ok;
 	      if (i < 4 && ok && (i == 0 || CourTransSet != transSets[i-1]))
 		{
 		  transSets [i++] = CourTransSet;
@@ -2621,7 +2650,8 @@ View                view;
       if (mySelect != NULL)
 	{
 	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
+			      maxMatchDepth, 0);
 	}
       else
 	{
@@ -2629,7 +2659,8 @@ View                view;
 	  elemSelect = myFirstSelect;
 	  while (elemSelect != NULL)
 	    {
-	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
+				  maxMatchDepth, 0);
 	      MyNextSelectedElement (TransDoc, &elemSelect);
 	    }
 	}
@@ -2662,7 +2693,9 @@ View                view;
 		  TtaPreviousSibling (&elemSelect);
 		  if (elemSelect != NULL)
 		    ustrcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
-		  while (elemSelect != NULL && (!ustrcmp (tag, TEXT("???")) || !ustrcmp (tag, TEXT("none"))))
+		  while (elemSelect != NULL &&
+			 (!ustrcmp (tag, TEXT("???")) ||
+			  !ustrcmp (tag, TEXT("none"))))
 		    {
 		      TtaPreviousSibling (&elemSelect);
 		      if (elemSelect != NULL)
@@ -2671,8 +2704,7 @@ View                view;
 		  if (elemSelect == NULL)
 		    ustrcpy (tag, TEXT(""));
 		  if (CheckValidTransRoot (sm,
-					   TtaGetElementType (sm->MatchNode->Elem),
-					   tag))
+				TtaGetElementType (sm->MatchNode->Elem), tag))
 		    {
 #ifdef AMAYA_DEBUG
 		      printf ("   %s\n",sm->MatchSymb->SymbolName);
@@ -2684,7 +2716,8 @@ View                view;
 			   k++);
 		      if (k == i)
 			{
-			   usprintf (&menuBuf[j], TEXT("%s%s"), "B", sm->MatchSymb->SymbolName);
+			   usprintf (&menuBuf[j], TEXT("%s%s"), "B",
+				     sm->MatchSymb->SymbolName);
 			   j += ustrlen (&menuBuf[j]) + 1;
 			   menuTrans[i++] = (strMatch *) sm;
 			}
@@ -2702,9 +2735,9 @@ View                view;
 	  TtaNewPopup (TransBaseDialog + TransMenu, 0, 
 		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
 		       NULL, 'L');
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
 	  TtaSetDialoguePosition ();
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
 	}
       else
@@ -2761,7 +2794,7 @@ Document            doc;
       ok = FALSE;
       maxMatchDepth = 0;
       if (mySelect != NULL)
-	{ /* parse les transformations correspondant aux schemas des elements */
+	{ /* parse les transformations correspondant aux schemas des elements*/
 	  /* entre myFirstSelect et mySelect */
 	  i = 0;
 	  elemSelect = myFirstSelect;
@@ -2771,7 +2804,7 @@ Document            doc;
 	      if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
 		{
 		  ustrcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-		  ok =  ppStartParser (nameSet, elType.ElSSchema, &CourTransSet);
+		  ok = ppStartParser (nameSet, elType.ElSSchema, &CourTransSet);
 		}
 	      if (CourTransSet == NULL)
 		elemSelect = TtaGetParent (elemSelect);
@@ -2809,9 +2842,11 @@ Document            doc;
       CourTransSet->MaxDepth = 0;
       while (td != NULL)
 	{
-	  if (td->DestinationTag == NULL || ustrcmp (td->DestinationTag, DestTag))
+	  if (td->DestinationTag == NULL ||
+	      ustrcmp (td->DestinationTag, DestTag))
 	    {		
-	      /* the transformation does not produce the given type, it is desactived */
+	      /* the transformation does not produce the given type, it is
+		 desactived */
 	      td->IsActiveTrans = FALSE;
 	      sd = td->Symbols;
 	      while (sd != NULL)
@@ -2836,7 +2871,8 @@ Document            doc;
       if (mySelect != NULL)
 	{
 	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
+			      maxMatchDepth, 0);
 	}
       else
 	{
@@ -2844,7 +2880,8 @@ Document            doc;
 	  elemSelect = myFirstSelect;
 	  while (elemSelect != NULL)
 	    {
-	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
+				  maxMatchDepth, 0);
 	      MyNextSelectedElement (TransDoc, &elemSelect);
 	    }
 	}
@@ -2872,13 +2909,12 @@ Document            doc;
 	  while (sm != NULL)
 	    {		/* for each matching of the node */
 	      if (!ustrcmp (sm->MatchSymb->Tag, TEXT("pattern_root")))
-		{	/* if it is matching a pattern root : insert the transformation */
-		  /* in the matched transformations list */
+		{ /* if it is matching a pattern root : insert the
+		     transformation in the matched transformations list */
 		  
 		  ustrcpy (tag, TEXT(""));
 		  if (CheckValidTransRoot (sm,
-					   TtaGetElementType (sm->MatchNode->Elem),
-					   tag))
+				 TtaGetElementType (sm->MatchNode->Elem), tag))
 		    {
 		      if (chglev)
 			{
@@ -2898,7 +2934,8 @@ Document            doc;
       while (node && node != strMatchEnv.SourceTree);
       TtaFreeMemory (tag);
       if (i > 0)
-	/* if at least one transformation have been matched, apply the best  one */
+	/* if at least one transformation have been matched, apply the best
+	   one */
 	{
 	  if (best == -1)
 	    /* no transformation for the actual selection : take another one */
