@@ -749,6 +749,8 @@ Document            doc;
        /* update windows menus */
        view = 1;
        TtaSetItemOff (document, 1, File, BSave);
+       TtaSetItemOff (document, 1, Edit_, BUndo);
+       TtaSetItemOff (document, 1, Edit_, BRedo);
        TtaSetItemOff (document, 1, Edit_, BCut);
        TtaSetItemOff (document, 1, Edit_, BPaste);
        TtaSetItemOff (document, 1, Edit_, BClear);
@@ -859,6 +861,8 @@ Document            doc;
        /* update windows menus */
        view = 1;
        TtaSetItemOn (document, 1, File, BSave);
+       TtaSetItemOn (document, 1, Edit_, BUndo);
+       TtaSetItemOn (document, 1, Edit_, BRedo);
        TtaSetItemOn (document, 1, Edit_, BCut);
        TtaSetItemOn (document, 1, Edit_, BPaste);
        TtaSetItemOn (document, 1, Edit_, BClear);
@@ -1686,6 +1690,8 @@ boolean             logFile;
 	   {
 	     /* the document is in ReadOnly mode */
 	     TtaSetItemOff (doc, 1, File, BSave);
+	     TtaSetItemOff (doc, 1, Edit_, BUndo);
+	     TtaSetItemOff (doc, 1, Edit_, BRedo);
 	     TtaSetItemOff (doc, 1, Edit_, BCut);
 	     TtaSetItemOff (doc, 1, Edit_, BPaste);
 	     TtaSetItemOff (doc, 1, Edit_, BClear);

@@ -641,7 +641,7 @@ View                view;
 	   ustrcat (tempname, DIR_STR);
 	   /* add the suffix .html for HTML documents */
 	   if (!TextFormat &&
-	       (!IsHTMLName (SaveName) || !IsXMLName (SaveName)))
+	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
 	     ustrcat (SaveName, ".html");
 	   ustrcat (tempname, SaveName);
 	 }

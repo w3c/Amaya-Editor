@@ -1233,7 +1233,13 @@ CHAR                c;
 	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
 	  /* nothing to do */
 	  return;
-
+	/* Check if we are changing the active frame */
+	if (frame != ActiveFrame)
+	  {
+	    /* yes close the previous insertion */
+	    CloseInsertion ();
+	    ActiveFrame = frame;
+	  }
 	/* avoid to redisplay step by step */
 	dispMode = TtaGetDisplayMode (document);
 	if (dispMode == DisplayImmediately)
