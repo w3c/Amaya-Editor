@@ -226,7 +226,7 @@ NotifyAttribute    *event;
       QuotedText[length+1] = '\'';
     }
   TtaSetAttributeText (event->attribute, QuotedText, event->element, event->document);
-  TtaFreeMemory (QuotedText);
+  /* do NOT free the QuotedText string because it's used by GenerateQuoteAfter */
   return FALSE;  /* let Thot perform normal operation */
 }
 

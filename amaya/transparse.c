@@ -2217,7 +2217,7 @@ BinFile               infile;
    currentState = 0;
    ppInitAutomaton ();
    charRead = EOS;
-
+   readOk = FALSE;
    /* read the file sequentially */
    do
      {
