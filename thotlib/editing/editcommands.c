@@ -590,7 +590,8 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
 	  else if (!pSelAb->AbCanBeModified || pSelAb->AbReadOnly ||
 		   pSelAb->AbLeafType == LtCompound ||
 		   (pSelAb->AbLeafType != nat && nat != LtReference &&
-		    !(pSelAb->AbLeafType == LtSymbol && nat == LtText)))
+		    !(pSelAb->AbLeafType == LtSymbol && nat == LtText) &&
+		    !(pSelAb->AbLeafType == LtPolyLine && nat == LtGraphics)))
 	    {
 	      moveSelection = TRUE;
 	      if (pViewSel->VsXPos > 0)
