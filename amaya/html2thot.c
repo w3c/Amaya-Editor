@@ -4659,7 +4659,7 @@ CHAR_T                c;
       if (CharEntityTable[EntityTableEntry].charCode > 255)
 	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode, TEXT(""));
       else
-	 PutInBuffer (CharEntityTable[EntityTableEntry].charCode); 
+	 PutInBuffer ((CHAR_T)CharEntityTable[EntityTableEntry].charCode); 
    else
       /* entity not in the table. Print an error message */
      {

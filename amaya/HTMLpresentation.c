@@ -713,7 +713,7 @@ static void MoveAttrLang (oldAttr, el, doc)
      the parent element, unless the parent element has exception Hidden */
   parent = TtaGetParent (*el);
   if (parent)
-     if (HiddenType (parent))
+     if (TtaIsHidden (parent))
         parent = NULL;
   if (parent != NULL)
      {
