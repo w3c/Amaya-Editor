@@ -10,8 +10,8 @@
  * html2thot parses a HTML file and builds the corresponding abstract tree
  * for a Thot document of type HTML.
  *
- * Author: V. Quint
- *         L. Carcone 
+ * Authors: L. Carcone
+ *          V. Quint 
  */
 
 #define THOT_EXPORT extern
@@ -539,7 +539,7 @@ Document doc;
 
 /*----------------------------------------------------------------------
   XhtmlElementComplete
-  Complete XHTML elements.
+  Complete Xhtml elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -551,7 +551,6 @@ Document   doc;
 int       *error;
 #endif
 {
-#ifdef EXPAT_PARSER
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf, prev, next, last,
 		       elFrames, lastFrame, lastChild;
@@ -908,38 +907,7 @@ int       *error;
      default:
        break;
      }
-#endif /* EXPAT_PARSER */
 }
-
-/*----------------------------------------------------------------------
-   XhtmlGetDTDName
-   Return in DTDname the name of the DTD to be used for parsing the
-   content of element named elementName.
-   This element type appear with an 'X' in the ElemMappingTable.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      XhtmlGetDTDName (STRING DTDname,
-			   STRING elementName)
-#else
-void      XhtmlGetDTDName (DTDname,
-			   elementName)
-STRING     DTDname;
-STRING     elementName;
- 
-#endif
-{
-#ifdef EXPAT_PARSER
-   if (ustrcmp (elementName, TEXT("math")) == 0)
-       ustrcpy (DTDname, TEXT("MathML"));
-   else
-       if (ustrcmp (elementName, TEXT("label")) == 0 ||
-	   ustrcmp (elementName, TEXT("text")) == 0)
-	   ustrcpy (DTDname, TEXT("HTML"));
-       else
-	 ustrcpy (DTDname, TEXT(""));
-#endif /* EXPAT_PARSER */
-}
-
 
 /*----------------------------------------------------------------------
    MapHTMLAttributeValue
@@ -948,18 +916,17 @@ STRING     elementName;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void            MapHTMLAttributeValue (CHAR_T* AttrVal,
-					AttributeType attrType,
-					int* value)
+				       AttributeType attrType,
+				       int* value)
 #else
 void            MapHTMLAttributeValue (AttrVal,
-					attrType,
-					value)
+				       attrType,
+				       value)
 CHAR_T*         AttrVal;
 AttributeType   attrType;
 int*            value;
 #endif
 {
-#ifdef EXPAT_PARSER
    int       i;
 
    *value = 0;
@@ -979,7 +946,6 @@ int*            value;
        while (*value <= 0 &&
 	      XhtmlAttrValueMappingTable[i].ThotAttr != 0);
      }
-#endif /* EXPAT_PARSER */
 }
 
 /*---------------------------------------------------------------------------
@@ -995,7 +961,6 @@ int    *entityValue;
 STRING  alphabet;
 #endif
 {
-#ifdef EXPAT_PARSER
   int            i;
   ThotBool       found;
 
@@ -1012,10 +977,8 @@ STRING  alphabet;
     }
   else
     *alphabet = EOS;
-#endif /* EXPAT_PARSER */
 }
 
-#ifdef EXPAT_PARSER
 /*----------------------------------------------------------------------
   PutNonISOlatin1Char     
   Put a Unicode character in the input buffer.
@@ -1079,7 +1042,6 @@ ParserData    *context;
        context->mergeText = FALSE;
      }
 }
-#endif /* EXPAT_PARSER */
 
 /*----------------------------------------------------------------------
    XhtmlEntityCreated
@@ -1095,7 +1057,6 @@ STRING      entityName;
 ParserData *context;
 #endif
 { 
-#ifdef EXPAT_PARSER
   CHAR_T	 buffer[2];
 
   if (lang < 0)
@@ -1114,7 +1075,4 @@ ParserData *context;
       else
 	PutNonISOlatin1Char (entityVal, TEXT(""), entityName, context);
     }
-#endif /* EXPAT_PARSER */
 }
-
-/*--------------------  Entities  (end)  ---------------------*/
