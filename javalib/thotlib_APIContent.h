@@ -11,6 +11,13 @@ extern "C" {
 /* Header for class thotlib_APIContent */
 
 typedef struct Classthotlib_APIContent {
+#define thotlib_APIContent_xbm_type 0
+#define thotlib_APIContent_eps_type 1
+#define thotlib_APIContent_xpm_type 2
+#define thotlib_APIContent_gif_type 3
+#define thotlib_APIContent_jpeg_type 4
+#define thotlib_APIContent_png_type 5
+#define thotlib_APIContent_unknown_type 6
 	int __DUMMY__;
 } Classthotlib_APIContent;
 HandleTo(thotlib_APIContent);

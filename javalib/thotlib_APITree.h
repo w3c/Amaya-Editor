@@ -11,6 +11,24 @@ extern "C" {
 /* Header for class thotlib_APITree */
 
 typedef struct Classthotlib_APITree {
+#define thotlib_APITree_SearchForward 0
+#define thotlib_APITree_SearchInTree 1
+#define thotlib_APITree_SearchBackward 2
+#define thotlib_APITree_ReadWrite 0
+#define thotlib_APITree_ReadOnly 1
+#define thotlib_APITree_Hidden 2
+#define thotlib_APITree_Inherited 3
+#define thotlib_APITree_ConstructIdentity 0
+#define thotlib_APITree_ConstructList 1
+#define thotlib_APITree_ConstructChoice 2
+#define thotlib_APITree_ConstructOrderedAggregate 3
+#define thotlib_APITree_ConstructUnorderedAggregate 4
+#define thotlib_APITree_ConstructConstant 5
+#define thotlib_APITree_ConstructReference 6
+#define thotlib_APITree_ConstructBasicType 7
+#define thotlib_APITree_ConstructNature 8
+#define thotlib_APITree_ConstructPair 9
+#define thotlib_APITree_ConstructError 10
 	int __DUMMY__;
 } Classthotlib_APITree;
 HandleTo(thotlib_APITree);

@@ -13,6 +13,8 @@ extern "C" {
 typedef struct Classthotlib_APIDialog {
 #define thotlib_APIDialog_INTEGER_DATA 1
 #define thotlib_APIDialog_STRING_DATA 2
+#define thotlib_APIDialog_D_CANCEL 0
+#define thotlib_APIDialog_D_DONE 1
 	int __DUMMY__;
 } Classthotlib_APIDialog;
 HandleTo(thotlib_APIDialog);

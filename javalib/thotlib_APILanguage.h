@@ -16,6 +16,7 @@ typedef struct Classthotlib_APILanguage {
 HandleTo(thotlib_APILanguage);
 
 extern jint /* char */ thotlib_APILanguage_TtaNewLanguage(struct Hthotlib_APILanguage*, struct Hjava_lang_String*, jint /* char */, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APILanguage_TtaRemoveLanguage(struct Hthotlib_APILanguage*, jint /* char */);
 extern jint /* char */ thotlib_APILanguage_TtaGetLanguageIdFromName(struct Hthotlib_APILanguage*, struct Hjava_lang_String*);
 extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetVarLANG(struct Hthotlib_APILanguage*);
 extern jint /* char */ thotlib_APILanguage_TtaGetDefaultLanguage(struct Hthotlib_APILanguage*);

@@ -28,6 +28,7 @@
 #include "thotlib_APIInterface_stubs.h"
 #include "thotlib_APIRegistry_stubs.h"
 #include "thotlib_APIDialog_stubs.h"
+/* #include "thotlib_APIExtra_stubs.h" */
 #include "amaya_APIAmayaMsg_stubs.h"
 #include "amaya_APIJavaAmaya_stubs.h"
 
@@ -137,13 +138,6 @@ static char *GetJavaTimer(void)
 
 typedef void (* SelectCallback) (int fd, int event);
 
-static int max_extra_fd = 0;
-static fd_set extra_readfds;
-static fd_set extra_writefds;
-static fd_set extra_exceptfds;
-
-static SelectCallback JavaSelectCallback = NULL;
-
 static int JavaEventLoopInitialized =0;
 static int x_window_socket;
 
@@ -203,13 +197,6 @@ struct timeval *timeout;
 ThotEvent *ev;
 #endif
 {
-    int fd;
-    fd_set full_readfds;
-    fd_set full_writefds;
-    fd_set full_exceptfds;
-    fd_set lextra_readfds;
-    fd_set lextra_writefds;
-    fd_set lextra_exceptfds;
     struct timeval tm;
     int res;
     static int InJavaSelect = 0;
@@ -252,7 +239,6 @@ ThotEvent *ev;
     fprintf(stderr,"<");
 #endif
 
-restart_select:
     /*
      * Do not block if there is a Poll Break requested.
      */
@@ -947,6 +933,7 @@ int                 JavaStopPoll ()
 {
    if (DoJavaSelectPoll)
        BreakJavaSelectPoll++;
+   return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -964,7 +951,6 @@ int                 JavaPollLoop ()
    int status;
 #ifndef _WINDOWS
    ThotEvent           ev;
-   int res;
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
    MSG                 msg;
@@ -1079,7 +1065,7 @@ void                JavaEventLoop ()
     * initialize the whole context if needed.
     */
    if (!JavaEventLoopInitialized) 
-      return(-1);
+      return;
 
    /*
     * We don't want to jump off the loop if transfers did occurs

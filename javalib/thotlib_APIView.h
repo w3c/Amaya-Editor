@@ -11,6 +11,9 @@ extern "C" {
 /* Header for class thotlib_APIView */
 
 typedef struct Classthotlib_APIView {
+#define thotlib_APIView_DisplayImmediately 0
+#define thotlib_APIView_DeferredDisplay 1
+#define thotlib_APIView_NoComputedDisplay 2
 	int __DUMMY__;
 } Classthotlib_APIView;
 HandleTo(thotlib_APIView);
