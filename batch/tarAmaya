@@ -32,6 +32,7 @@ echo "Plarform ------->" $MACH
    Amaya/config/*-corrdialogue \
    Amaya/config/annot*rdf \
    Amaya/config/annot.schemas \
+   Amaya/config/thread.rdf \
    Amaya/dicopar/*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
