@@ -5509,16 +5509,24 @@ PtrAttribute        pAttrComp;
 					   pRP = NULL;
 					   stop = FALSE;
 					   do
+					      {
 					      if (pRSpecif == NULL)
 						 stop = TRUE;
 					      else if (pRSpecif->PrViewNum == viewSch &&
 					       pRSpecif->PrType == typeRule)
-						 stop = TRUE;	/* trouve' */
-					      else
+						 if (typeRule == PtFunction)
+						   {
+						   if (pR->PrPresFunction == pRSpecif->PrPresFunction)
+						      stop = TRUE; /* trouve'*/
+						   }
+						 else
+						   stop = TRUE;	/* trouve' */
+					      if (!stop)
 						{
 						   pRP = pRSpecif;
 						   pRSpecif = pRSpecif->PrNextPRule;
 						}
+					      }
 					   while (!stop);
 					   if (pRSpecif != NULL)
 					      /* l'element possede cette regle specifique, on */

@@ -854,7 +854,7 @@ ATTRIBUTES
  Cell_height: BEGIN
 	END;
 
- Word_wrap = No_wrap:
+ No_wrap = no_wrap:
 		BEGIN
 		END;
 

@@ -1175,8 +1175,6 @@ int                *len;
 {
    SpecificContext      ctxt;
    ElementType          elType;
-   char                *elemname;
-   int                  size = *len;
 
    if ((buf == NULL) || (len == NULL) || (*len <= 0))
       return;

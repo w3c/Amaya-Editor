@@ -474,7 +474,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"NAME", "", 'A', HTML_ATTR_NAME},
    {"NOHREF", "", 'A', HTML_ATTR_nohref},
    {"NOSHADE", "", 'A', HTML_ATTR_NoShade},
-   {"NOWRAP", "", 'A', HTML_ATTR_Word_wrap},
+   {"NOWRAP", "", 'A', HTML_ATTR_No_wrap},
    {"PROMPT", "", 'A', HTML_ATTR_Prompt},
    {"REL", "", 'A', HTML_ATTR_REL},
    {"REV", "", 'A', HTML_ATTR_REV},
@@ -619,7 +619,7 @@ static AttrValueMapping AttrValueMappingTable[] =
    {HTML_ATTR_Multiple, "MULTIPLE", HTML_ATTR_Multiple_VAL_Yes_},
    {HTML_ATTR_Selected, "SELECTED", HTML_ATTR_Selected_VAL_Yes_},
    {HTML_ATTR_Checked, "CHECKED", HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_Word_wrap, "NOWRAP", HTML_ATTR_Word_wrap_VAL_No_wrap},
+   {HTML_ATTR_No_wrap, "NOWRAP", HTML_ATTR_No_wrap_VAL_no_wrap},
    {HTML_ATTR_NoShade, "NOSHADE", HTML_ATTR_NoShade_VAL_NoShade_},
    {0, "", 0}			/* Last entry. Mandatory */
 };

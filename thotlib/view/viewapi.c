@@ -2690,6 +2690,10 @@ int                 view;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
+   /* if it's a function rule, nothing to do: there is no default presentation
+      for functions */
+   if (typeRuleP == PtFunction)
+      return;
    ApplyStandardRule (pEl, LoadedDocument[document - 1], typeRuleP, view);
    AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);

@@ -65,7 +65,60 @@ FILE               *fileDescriptor;
 	       fprintf (fileDescriptor, "Visib");
 	       break;
 	    case PtFunction:
-	       fprintf (fileDescriptor, "Line");
+	       switch (pRule->PrPresFunction)
+		  {
+		  case FnLine:
+		     fprintf (fileDescriptor, "Line");
+		     break;
+		  case FnPage:
+		     fprintf (fileDescriptor, "Page");
+		     break;
+		  case FnCreateBefore:
+		     fprintf (fileDescriptor, "CreateBefore");
+		     break;
+		  case FnCreateWith:
+		     fprintf (fileDescriptor, "CreateWith");
+		     break;
+		  case FnCreateFirst:
+		     fprintf (fileDescriptor, "CreateFirst");
+		     break;
+		  case FnCreateLast:
+		     fprintf (fileDescriptor, "CreateLast");
+		     break;
+		  case FnCreateAfter:
+		     fprintf (fileDescriptor, "CreateAfter");
+		     break;
+		  case FnColumn:
+		     fprintf (fileDescriptor, "Column");
+		     break;
+		  case FnCopy:
+		     fprintf (fileDescriptor, "Copy");
+		     break;
+		  case FnContentRef:
+		     fprintf (fileDescriptor, "ContentRef");
+		     break;
+		  case FnSubColumn:
+		     fprintf (fileDescriptor, "SubColumn");
+		     break;
+		  case FnNoLine:
+		     fprintf (fileDescriptor, "NoLine");
+		     break;
+		  case FnCreateEnclosing:
+		     fprintf (fileDescriptor, "CreateEnclosing");
+		     break;
+		  case FnShowBox:
+		     fprintf (fileDescriptor, "ShowBox");
+		     break;
+		  case FnBackgroundPicture:
+		     fprintf (fileDescriptor, "BackgroundPicture");
+		     break;
+		  case FnPictureMode:
+		     fprintf (fileDescriptor, "PictureMode");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "PrPresFunction ????");
+		     break;
+		  }
 	       break;
 	    case PtVertRef:
 	       fprintf (fileDescriptor, "VRef");

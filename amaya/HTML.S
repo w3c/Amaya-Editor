@@ -322,9 +322,9 @@ STRUCT
                  Cell_valign = Cell_top, Cell_middle, Cell_bottom;
 		 Cell_width = Text;
 		 Cell_height = Integer;
-                 Word_wrap = Wrap, No_wrap) = LIST OF (Element);
+                 No_wrap = no_wrap) = LIST OF (Element);
 	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan; rowspan;
-		 Cell_align; Cell_valign; Cell_width; Cell_height; Word_wrap) =
+		 Cell_align; Cell_valign; Cell_width; Cell_height; No_wrap) =
 		 LIST OF (Element);
 	END;
   Table_cell_ghost = CONSTANT C_Empty;

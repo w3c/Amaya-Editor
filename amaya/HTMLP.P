@@ -3283,6 +3283,18 @@ BOXES
 		END;
 	END;
 
+ ATTR_NOWRAP: BEGIN
+	Content: Text ' nowrap';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  TR_S: BEGIN
 	Content: Text 'TR';
 	Visibility: 0;
@@ -5331,7 +5343,7 @@ RULES
  C_Head:
 	BEGIN
 	VertPos : Top = Enclosing . Top;
-	Height: TableSimpleVSpace;
+	Height: 1 pt;
 	FillPattern: nopattern;
 	END;
 
@@ -5454,14 +5466,14 @@ RULES
  Table_foot:
 	BEGIN
 	Width: Previous . Width;
-	VertPos: Top = Previous . Bottom;
+	VertPos: Bottom = Previous . Bottom;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
  C_Foot:
 	BEGIN
-	Height : TableSimpleHSpace;
+	Height: 1 pt;
 	FillPattern: nopattern;
 	END;
 
@@ -6610,16 +6622,10 @@ dans des paragraphes s affichent a cote de leur cadre...
 		Height: Enclosed . Height;
 	END;
 
- Word_wrap = No_wrap :
+ No_wrap = no_wrap :
 	BEGIN
+	CreateBefore(ATTR_NOWRAP);
 	Hyphenate: No;
-	END;
-
- Word_wrap = Wrap :
-	BEGIN
-	Hyphenate: Yes;
-	IN Structure_view
-		Hyphenate: No;
 	END;
 
  Ref_IMG:

@@ -1213,7 +1213,7 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Word_wrap = No_wrap:
+ No_wrap = no_wrap:
 	Create ' nowrap';
 
  Invalid_attribute:

@@ -186,7 +186,7 @@ Cell_align: align
 Cell_valign: valign
 Cell_width: width
 Cell_height: height
-Word_wrap: nowrap
+No_wrap: nowrap
 shape: shape
 coords: coords
 nohref: nohref
@@ -234,8 +234,7 @@ Cell_right: rigth
 Cell_top: top
 Cell_middle: middle
 Cell_bottom: bottom
-Wrap: wrap
-No_wrap: nowrap
+no_wrap: nowrap
 rectangle: rect
 circle: circle
 polygon: poly

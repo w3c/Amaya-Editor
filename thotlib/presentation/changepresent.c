@@ -1708,20 +1708,24 @@ int                 LineColor;
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 
-	     /* create a ShowBox rule for the element if there is none */
-	     pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
-					  pDoc, viewToApply);
-	     if (isNew)
-	       if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
-		{
-		pFunctRule->PrType = PtFunction;
-		pFunctRule->PrViewNum = viewSch;
-		pFunctRule->PrPresMode = PresFunction;
-		pFunctRule->PrPresFunction = FnShowBox;
-		pFunctRule->PrPresBoxRepeat = FALSE;
-		pFunctRule->PrNPresBoxes = 0;
-		ApplyNewRule (pDoc, pFunctRule, pEl);
-		PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+	     /* It the element is not a leaf in the abstract tree, create a
+		ShowBox rule for the element if there is none */
+	     if (!pEl->ElTerminal)
+	       {
+	       pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					    pDoc, viewToApply);
+	       if (isNew)
+	         if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		   {
+		   pFunctRule->PrType = PtFunction;
+		   pFunctRule->PrViewNum = viewSch;
+		   pFunctRule->PrPresMode = PresFunction;
+		   pFunctRule->PrPresFunction = FnShowBox;
+		   pFunctRule->PrPresBoxRepeat = FALSE;
+		   pFunctRule->PrNPresBoxes = 0;
+		   ApplyNewRule (pDoc, pFunctRule, pEl);
+		   PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		   }
 		}
 	  }
      }
@@ -1743,20 +1747,25 @@ int                 LineColor;
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	     /* create a ShowBox rule for the element if there is none */
-	     pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
-					  pDoc, viewToApply);
-	     if (isNew)
-	      if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
-		{
-		pFunctRule->PrType = PtFunction;
-		pFunctRule->PrViewNum = viewSch;
-		pFunctRule->PrPresMode = PresFunction;
-		pFunctRule->PrPresFunction = FnShowBox;
-		pFunctRule->PrPresBoxRepeat = FALSE;
-		pFunctRule->PrNPresBoxes = 0;
-		ApplyNewRule (pDoc, pFunctRule, pEl);
-		PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+
+	     /* It the element is not a leaf in the abstract tree, create a
+		ShowBox rule for the element if there is none */
+	     if (!pEl->ElTerminal)
+	       {
+	       pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					    pDoc, viewToApply);
+	       if (isNew)
+	         if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		   {
+		   pFunctRule->PrType = PtFunction;
+		   pFunctRule->PrViewNum = viewSch;
+		   pFunctRule->PrPresMode = PresFunction;
+		   pFunctRule->PrPresFunction = FnShowBox;
+		   pFunctRule->PrPresBoxRepeat = FALSE;
+		   pFunctRule->PrNPresBoxes = 0;
+		   ApplyNewRule (pDoc, pFunctRule, pEl);
+		   PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		   }
 		}
 	  }
      }
@@ -2277,6 +2286,8 @@ PtrPSchema          pSPR;
 #ifdef __COLPAGE__
   boolean           bool;
 
+  if (pRP == NULL)
+     return;
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
@@ -2383,7 +2394,8 @@ int                 viewSch;
 		/* cherche la regle standard si on ne l'a pas encore */
 		if (pRP == NULL)
 		  pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
-		ApplyPRuleAndRedisplay(pAb, pDoc, pAttr, pRP, pSPR);
+		if (pRP != NULL)
+		  ApplyPRuleAndRedisplay(pAb, pDoc, pAttr, pRP, pSPR);
 	      }
 	  }
 }

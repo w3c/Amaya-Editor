@@ -832,9 +832,8 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   ResetFontOrPhraseOnText: The text element elem should   
-   not be any longer within an element of type     
-   notType.                                        
+   ResetFontOrPhraseOnText: The text element elem should
+   not be any longer within an element of type notType.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ResetFontOrPhraseOnText (Document document, Element elem, int notType)
@@ -904,6 +903,7 @@ int                 notType;
 	TtaRemoveTree (child, document);
 	TtaInsertSibling (child, elem, TRUE, document);
 	TtaDeleteTree (elem, document);
+	TtaSetDocumentModified (document);
      }
 }
 
@@ -952,6 +952,7 @@ int                 newtype;
 				 TtaMergeText (child, document);
 				 *elem = child;
 			      }
+			    TtaSetDocumentModified (document);
 			 }
 		    }
 		  else
@@ -960,6 +961,7 @@ int                 newtype;
 			 {
 			    TtaRemoveTree (*elem, document);
 			    TtaInsertFirstChild (elem, prev, document);
+			    TtaSetDocumentModified (document);
 			 }
 		    }
 	       }
@@ -971,6 +973,7 @@ int                 newtype;
 		       TtaRemoveTree (*elem, document);
 		       TtaInsertSibling (new, prev, FALSE, document);
 		       TtaInsertFirstChild (elem, new, document);
+		       TtaSetDocumentModified (document);
 		    }
 	       }
 	  }
@@ -990,6 +993,7 @@ int                 newtype;
 			      {
 				 TtaRemoveTree (*elem, document);
 				 TtaInsertSibling (*elem, child, TRUE, document);
+				 TtaSetDocumentModified (document);
 			      }
 			 }
 		       else
@@ -998,6 +1002,7 @@ int                 newtype;
 			      {
 				 TtaRemoveTree (*elem, document);
 				 TtaInsertFirstChild (elem, next, document);
+				 TtaSetDocumentModified (document);
 			      }
 			 }
 		    }
@@ -1009,6 +1014,7 @@ int                 newtype;
 			    new = TtaNewElement (document, elType);
 			    TtaInsertSibling (new, next, TRUE, document);
 			    TtaInsertFirstChild (elem, new, document);
+			    TtaSetDocumentModified (document);
 			 }
 		    }
 	       }
@@ -1021,6 +1027,7 @@ int                 newtype;
 		       new = TtaNewElement (document, elType);
 		       TtaInsertFirstChild (&new, parent, document);
 		       TtaInsertFirstChild (elem, new, document);
+		       TtaSetDocumentModified (document);
 		    }
 	       }
 	  }
