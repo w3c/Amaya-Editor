@@ -1585,9 +1585,8 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 #ifdef _GTK
 	  ptfont = LoadFont (textX);
 #endif /* _GTK */
-#endif/*  _GL */
-    
-	  /* Loading failed try to find a neighbour */
+
+	  /* Loading failed try to find another size */
 	  if (ptfont == NULL)
 	    {
 	      /* Change size */
@@ -1616,6 +1615,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		    }
 		}
 	    }
+#endif/*  _GL */
 	}
 
       if (ptfont == NULL && script != 'E')
@@ -1632,14 +1632,14 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		{
 		  if (TtFonts[j] && TtFontName[j * MAX_FONTNAME] == script)
 		    {
-		      ptfont = TtFonts[j];
 		      i = j;
+		      ptfont = TtFonts[i];
 		      j = FirstFreeFont;
 		    }
 		}
 	    }
 
-	  if (FirstFreeFont < MAX_FONT && ptfont == NULL && script == '7')
+	  if (ptfont == NULL && script == '7' && FirstFreeFont < MAX_FONT)
 	    {
 	      /* look for a font Symbol */
 	      ptfont = LoadNearestFont ('G', family, 0, -1, requestedsize,
@@ -2522,7 +2522,6 @@ static void FreeAFont (int i)
 	gl_font_delete (TtFonts[i]);
 #endif /*_GL*/	
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
 #ifdef _GTK
 #ifndef _GL 
 	if (TtFonts[i] != DefaultFont)
@@ -2533,13 +2532,10 @@ static void FreeAFont (int i)
 #endif /*_GL*/
 #endif /* _GTK */
 #ifdef _WX
-#ifndef _GL
-	/* TODO : a faire si on desir porter la version non opengl sous wxwindows */
-#else /*_GL */
 	if (TtFonts[i] != (ThotFont) DefaultGLFont)
 	  gl_font_delete (TtFonts[i]);
-#endif /*_GL*/
 #endif /* _WX */
+#if defined(_GTK) || defined(_WX)
       /* unmask patched fonts */
       if (TtPatchedFont[i])
 	TtPatchedFont[i] = 0;
@@ -2614,6 +2610,51 @@ void ThotFreeFont (int frame)
 	  if (TtFontMask[i] == mask)
 	    {
 	      /* free the entry */
+	      //@@@@@@@@@@@@@@@@@@@@
+#ifdef _GL
+	      fontset = FirstFontSel;
+	      while (fontset)
+		{
+		  if (fontset->Font_1 == TtFonts[i])
+		    fontset->Font_1 = NULL;
+		  else if (fontset->SFont_1 == TtFonts[i])
+		    fontset->SFont_1 = NULL;
+		  else if (fontset->SFont_2 == TtFonts[i])
+		    fontset->SFont_2 = NULL;
+		  else if (fontset->SFont_3 == TtFonts[i])
+		    fontset->SFont_3 = NULL;
+		  else if (fontset->SFont_4 == TtFonts[i])
+		    fontset->SFont_4 = NULL;
+		  else if (fontset->SFont_5 == TtFonts[i])
+		    fontset->SFont_5 = NULL;
+		  else if (fontset->SFont_6 == TtFonts[i])
+		    fontset->SFont_6 = NULL;
+		  else if (fontset->SFont_7 == TtFonts[i])
+		    fontset->SFont_7 = NULL;
+		  else if (fontset->SFont_8 == TtFonts[i])
+		    fontset->SFont_8 = NULL;
+		  else if (fontset->SFont_9 == TtFonts[i])
+		    fontset->SFont_9 = NULL;
+		  else if (fontset->SFont_10 == TtFonts[i])
+		    fontset->SFont_10 = NULL;
+		  else if (fontset->SFont_11 == TtFonts[i])
+		    fontset->SFont_11 = NULL;
+		  else if (fontset->SFont_12 == TtFonts[i])
+		    fontset->SFont_12 = NULL;
+		  else if (fontset->SFont_13 == TtFonts[i])
+		    fontset->SFont_13 = NULL;
+		  else if (fontset->SFont_14 == TtFonts[i])
+		    fontset->SFont_14 = NULL;
+		  else if (fontset->SFont_15 == TtFonts[i])
+		    fontset->SFont_15 = NULL;
+		  else if (fontset->SFont_16 == TtFonts[i])
+		    fontset->SFont_16 = NULL;
+		  else if (fontset->SFont_17 == TtFonts[i])
+		    fontset->SFont_17 = NULL;
+		  fontset = fontset->NextFontSet;
+		}
+#endif /* _GL */
+	      //@@@@@@@@@@@@@@@
 	      FreeAFont (i);
 	      TtFontMask[i] = 0;
 	    }
