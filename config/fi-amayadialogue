@@ -42,9 +42,9 @@
 40 Aseta tyypiksi XHTML 1.0 Basic
 41 **Set doctype to &HTML 4.01 Transitional
 42 Aseta tyypiksi HTML 4.01 Strict
-43 Aseta tyypiksi XHTML 1.1 + MathML 2.0
+43 Aseta tyypiksi XHTML 1.1 + MathML 2.0 + SVG 1.1
 44 Aseta tyypiksi MathML 2.0
-45 Aseta tyypiksi SVG 1.0
+45 Aseta tyypiksi SVG 1.1
 46 Tietoja dokumentista
 47 Tulostusasetukset...
 48 Tulosta

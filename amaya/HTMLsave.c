@@ -1747,8 +1747,8 @@ Document GetDocFromSource (Document sourceDoc)
 
 /*----------------------------------------------------------------------
    Synchronize
-   save the current view (source/structure) in a temporary file and update
-   the other view (structure/source).      
+   save the current view (source/structure) in a temporary file 
+   and update the other view (structure/source).      
   ----------------------------------------------------------------------*/
 void Synchronize (Document doc, View view)
 {

@@ -42,9 +42,9 @@
 40 XHTML 1.0 Basic doctype\'bı değiştir/yarat
 41 **Set doctype to &HTML 4.01 Transitional
 42 HTML 4.01 Strict doctype\'bı değiştir/yarat
-43 XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat
+43 XHTML 1.1 + MathML 2.0 + SVG 1.1 doctype\'bı değiştir/yarat
 44 MathML 2.0 doctype\'bı değiştir/yarat
-45 SVG 1.0 doctype'bı değiştir/yarat
+45 SVG 1.1 doctype'bı değiştir/yarat
 46 Doküman bilgisi
 47 Kur ve yazdır
 48 Yapılandır ve yazdır

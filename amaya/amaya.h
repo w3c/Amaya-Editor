@@ -591,7 +591,6 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #endif  /* MAX_TXT_LEN */
 
 /* a collection of the XML MIME types that keep changing and that we use in Amaya */
-
 #define AM_XHTML_MIME_TYPE        "application/xhtml+xml"
 #define AM_SVG_MIME_TYPE          "image/svg+xml"
 #define AM_MATHML_MIME_TYPE       "application/mathml+xml"
@@ -599,6 +598,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 
 /* Doctype declarations used in Amaya */
+/* first line of doctype declarations */
 #define DOCTYPE1_HTML_STRICT          "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
 #define DOCTYPE1_HTML_TRANSITIONAL    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\""
 #define DOCTYPE1_XHTML10_BASIC        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\""
@@ -610,6 +610,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define DOCTYPE1_MATHML20             "<!DOCTYPE math PUBLIC \"-//W3C//DTD MathML 2.0//EN\""
 #define DOCTYPE1_SVG10                "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\""
 
+/* second line of doctype declarations */
 #define DOCTYPE2_HTML_STRICT          "      \"http://www.w3.org/TR/html4/strict.dtd\">"
 #define DOCTYPE2_HTML_TRANSITIONAL    "      \"http://www.w3.org/TR/html4/loose.dtd\">"
 #define DOCTYPE2_XHTML10_BASIC        "      \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">"

@@ -2265,7 +2265,7 @@ void UpdateDoctypeMenu (Document doc)
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	  useMathML;
+  ThotBool	  useMathML, useSVG;
  
   docType = DocumentTypes[doc];
 
@@ -2294,14 +2294,17 @@ void UpdateDoctypeMenu (Document doc)
   /* look for the MathML nature used in the document */
   nature = NULL;
   useMathML = FALSE;
+  useSVG = FALSE;
   do
     {
       TtaNextNature (doc, &nature);
-      if (nature && !useMathML)
+      if (nature)
 	{
 	  ptr = TtaGetSSchemaName (nature);
 	  if (!strcmp (ptr, "MathML"))
 	    useMathML = TRUE;
+	  if (!strcmp (ptr, "SVG"))
+	    useSVG = TRUE;
 	}
     }
   while (nature);
@@ -2311,7 +2314,7 @@ void UpdateDoctypeMenu (Document doc)
     case L_Other:
       if (docType == docHTML)
 	{
-	  if (useMathML)
+	  if (useMathML || useSVG)
 	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
 	  else if (DocumentMeta[doc]->xmlformat)
 	    {

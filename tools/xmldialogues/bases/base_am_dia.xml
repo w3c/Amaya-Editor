@@ -436,14 +436,14 @@
 	<message xml:lang="tr">HTML 4.01 Strict doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeXhtmlPlusMath">
-	<message xml:lang="en">Set doctype to XHTML 1.1 + &amp;MathML 2.0</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + &amp;MathML 2.0</message>
-	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="en">Set doctype to XHTML 1.1 + &amp;MathML 2.0 + SVG 1.1</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + &amp;MathML 2.0 + SVG 1.1</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0 + SVG 1.1</message>
 	<message xml:lang="de">XHTML 1.1 + MathML</message>
-	<message xml:lang="es">Combiar doctype a XHTML 1.1 + M&amp;athML 2.0</message>
-	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="tr">XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat</message>
+	<message xml:lang="es">Combiar doctype a XHTML 1.1 + M&amp;athML 2.0 + SVG 1.1</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0 + SVG 1.1</message>
+	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1 + MathML 2.0 + SVG 1.1</message>
+	<message xml:lang="tr">XHTML 1.1 + MathML 2.0 + SVG 1.1 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeMathML">
 	<message xml:lang="en">Set doctype to M&amp;athML 2.0</message>
@@ -456,14 +456,14 @@
 	<message xml:lang="tr">MathML 2.0 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeSVG">
-	<message xml:lang="en">Set doctype to SV&amp;G 1.0</message>
-	<message xml:lang="fr">Changer/Créer doctype SV&amp;G 1.0</message>
-	<message xml:lang="it">Cambia/Crea doctype SVG 1.0</message>
+	<message xml:lang="en">Set doctype to SV&amp;G 1.1</message>
+	<message xml:lang="fr">Changer/Créer doctype SV&amp;G 1.1</message>
+	<message xml:lang="it">Cambia/Crea doctype SVG 1.1</message>
 	<message xml:lang="de">SVG</message>
-	<message xml:lang="es">Cambiar doctype a SV&amp;G 1.0</message>
+	<message xml:lang="es">Cambiar doctype a SV&amp;G 1.1</message>
 	<message xml:lang="pt">Alterar doctype para SVG</message>
-	<message xml:lang="fi">Aseta tyypiksi SVG 1.0</message>
-	<message xml:lang="tr">SVG 1.0 doctype'bı değiştir/yarat</message>
+	<message xml:lang="fi">Aseta tyypiksi SVG 1.1</message>
+	<message xml:lang="tr">SVG 1.1 doctype'bı değiştir/yarat</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document &amp;Information</message>
