@@ -2636,13 +2636,13 @@ int                 doc;
 	     FrameTable[frame].WdScrollV = vscrl;
 
 #            ifndef _WINDOWS
-	     n = 0;
+/*****	     n = 0;
 	     XtSetArg (args[n], XmNwidth, &dx);
 	     n++;
 	     XtSetArg (args[n], XmNheight, &dy);
 	     n++;
 	     XtGetValues ((Widget) w, args, n);
-	     FrameTable[frame].FrWidth  = (int) dx;
+*****/	     FrameTable[frame].FrWidth  = (int) dx;
 	     FrameTable[frame].FrHeight = (int) dy;
 #            else /* _WINDOWS */
 	     FrameTable[frame].FrWidth  = (int) large;

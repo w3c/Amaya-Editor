@@ -57,7 +57,7 @@ SSchema             nature;
       /* parameter doc is OK */
      {
        if (nature == NULL || 
-	   nature == LoadedDocument[doc - 1]->DocSSchema)
+	   nature == (SSchema)(LoadedDocument[doc - 1]->DocSSchema))
 	 pSS = LoadedDocument[doc - 1]->DocSSchema;
        else
 	 {

@@ -37,6 +37,7 @@
 #include "references_f.h"
 #include "externalref_f.h"
 #include "structschema_f.h"
+#include "translation_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
 #include "documentapi_f.h"
@@ -977,6 +978,44 @@ Document            document;
 }
 
 
+/*----------------------------------------------------------------------
+   TtaExportTree
+ 
+   Saves an abstract tree into a file in a particular format. The output
+   format is specified by a translation schema.
+ 
+   Parameters:
+   element: the root of the tree to be exported.
+   document: the document containing the tree to be exported.
+   fileName: name of the file in which the tree must be saved,
+   including the directory name.
+   TSchemaName: name of the translation schema to be used. The directory
+   name must not be specified in parameter TSchemaName. See
+   function TtaSetSchemaPath.
+ 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaExportTree (Element element, Document document, char *fileName, char *TSchemaName)
+#else  /* __STDC__ */
+void                TtaExportTree (element, document, fileName, TSchemaName)
+Element             element;
+Document            document;
+char               *fileName;
+char               *TSchemaName;
+#endif /* __STDC__ */
+{
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+    /* parameter document is correct */
+    ExportTree ((PtrElement)element, LoadedDocument[document - 1], fileName, TSchemaName);
+}
+ 
 /* ----------------------------------------------------------------------
    TtaInsertSibling
 

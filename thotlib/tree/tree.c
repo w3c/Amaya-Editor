@@ -3420,6 +3420,7 @@ PtrAttribute        pAttr;
 		  FreeTextBuffer (buf);
 		  buf = nextbuf;
 	       }
+	     pAttr->AeAttrText = NULL;
 	  }
 	/* specific processing for deleting the attributes of a Draw */
 	DrawSupprAttr (pAttr, pEl);

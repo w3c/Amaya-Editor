@@ -890,7 +890,7 @@ static int          LgBuffer = 0;	  /* actual length of text in input
 
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
-static Language     documentLanguage;	  /* language used in the document */
+static Language     currentLanguage;	  /* language used in the document */
 static SSchema      HTMLSSchema = NULL;	  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
@@ -2078,7 +2078,7 @@ static void         TextToDocument ()
 		  MergeText = TRUE;
 		  /* put the content of the input buffer into the TEXT element */
 		  if (elText != NULL)
-		     TtaSetTextContent (elText, &(inputBuffer[i]), documentLanguage,
+		     TtaSetTextContent (elText, &(inputBuffer[i]), currentLanguage,
 					theDocument);
 	       }
 	  }
@@ -2716,7 +2716,7 @@ Element             el;
 			  {
 			  childType = TtaGetElementType (leaf);
 			  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			    TtaSetTextContent (leaf, text, documentLanguage,
+			    TtaSetTextContent (leaf, text, currentLanguage,
 					       theDocument);
 			  }
 		     }
@@ -2826,7 +2826,7 @@ Element             el;
 		       /* full names ends with ''/ */
 		       TtaExtractName (name2, name1, imageName);
 		    if (strlen (imageName) != 0)
-		       TtaSetTextContent (el, imageName, documentLanguage, theDocument);
+		       TtaSetTextContent (el, imageName, currentLanguage, theDocument);
 		    TtaFreeMemory (name1);
 		    TtaFreeMemory (name2);
 		    TtaFreeMemory (imageName);
@@ -4135,7 +4135,7 @@ boolean		    position;
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	elText = TtaNewElement (theDocument, elType);
 	TtaInsertFirstChild (&elText, elInv, theDocument);
-	TtaSetTextContent (elText, content, documentLanguage, theDocument);
+	TtaSetTextContent (elText, content, currentLanguage, theDocument);
 	TtaSetAccessRight (elText, ReadOnly, theDocument);
 	attrType.AttrSSchema = HTMLSSchema;
 	attrType.AttrTypeNum = HTML_ATTR_Error_type;
@@ -4557,7 +4557,7 @@ char               *ChrString;
 	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
-	   TtaSetTextContent (el, ChrString, documentLanguage,
+	   TtaSetTextContent (el, ChrString, currentLanguage,
 			      theDocument);
 	else
 	   TtaAppendTextContent (el, ChrString, theDocument);
@@ -4820,6 +4820,8 @@ char                c;
    char                translation;
    char                shape;
    char                msgBuffer[MaxBufferLength];
+#define LANGLEN 50
+   char		       langName[LANGLEN];
 
 #ifdef MATHML
    if (WithinMathML)
@@ -4915,8 +4917,25 @@ char                c;
 				     break;
 				  case 2:	/* text */
 				     if (!IgnoreAttr)
+					{
 					TtaSetAttributeText (lastAttribute, inputBuffer,
 					      lastAttrElement, theDocument);
+					if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+					   /* it's a LANG attribute value */
+					   {
+					   strncpy (langName, TtaGetLanguageNameFromCode(inputBuffer), LANGLEN-1);
+					   if (langName[0] == '\0')
+					      {
+					      sprintf (msgBuffer, "Unknown language: %s", inputBuffer);
+					      ParseHTMLError (theDocument, msgBuffer);
+					      }
+					   else
+					      {
+					      /* change current language */
+					      currentLanguage = TtaGetLanguageIdFromName (langName);
+					      }
+					   }
+					}
 				     else
 					/* this is the content of an invalid attribute */
 					/* append it to the current Invalid_attribute */
@@ -5532,7 +5551,7 @@ char                c;
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	CommentText = TtaNewElement (theDocument, elType);
 	TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
-	TtaSetTextContent (CommentText, "", documentLanguage, theDocument);
+	TtaSetTextContent (CommentText, "", currentLanguage, theDocument);
      }
    InitBuffer ();
 }
@@ -5573,7 +5592,7 @@ unsigned char       c;
 	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	   CommentText = TtaNewElement (theDocument, elType);
 	   TtaInsertFirstChild (&CommentText, elCommentLine, theDocument);
-	   TtaSetTextContent (CommentText, "", documentLanguage, theDocument);
+	   TtaSetTextContent (CommentText, "", currentLanguage, theDocument);
 	}
       else
 	{
@@ -6628,7 +6647,7 @@ char               *pathURL;
 		  TtaInsertFirstChild (&elText, el, theDocument);
 	       }
 	     if (pathURL != NULL && elText != NULL)
-		TtaSetTextContent (elText, pathURL, documentLanguage, theDocument);
+		TtaSetTextContent (elText, pathURL, currentLanguage, theDocument);
 	     /* check all chidren of the HEAD Element, except the first one */
 	     /* which is Document_URL */
 	     /* move all Link elements as children of a Links element, */
@@ -7134,7 +7153,7 @@ Document            doc;
      {
 	/* initialize the stack with ancestors of lastelem */
 	theDocument = doc;
-	documentLanguage = TtaGetDefaultLanguage ();
+	currentLanguage = TtaGetDefaultLanguage ();
 	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	elType = TtaGetElementType (lastelem);
 	if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
@@ -7417,7 +7436,7 @@ char               *pathURL;
 	   TtaSetStructureChecking (0, theDocument);
 	   /* set the notification mode for the new document */
 	   TtaSetNotificationMode (theDocument, 1);
-	   documentLanguage = TtaGetDefaultLanguage ();
+	   currentLanguage = TtaGetDefaultLanguage ();
 	   HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	   rootElement = TtaGetMainRoot (theDocument);
 #ifndef STANDALONE

@@ -5,15 +5,6 @@
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _TREE_H_
 #define _TREE_H_
 
@@ -197,6 +188,24 @@ extern void         TtaDeleteTree (Element element, Document document);
    ---------------------------------------------------------------------- */
 extern void         TtaAttachNewTree (Element tree, Document document);
 
+/*----------------------------------------------------------------------
+   TtaExportTree
+ 
+   Saves an abstract tree into a file in a particular format. The output
+   format is specified by a translation schema.
+ 
+   Parameters:
+   element: the root of the tree to be exported.
+   document: the document containing the tree to be exported.
+   fileName: name of the file in which the tree must be saved,
+   including the directory name.
+   TSchemaName: name of the translation schema to be used. The directory
+   name must not be specified in parameter TSchemaName. See
+   function TtaSetSchemaPath.
+ 
+  ----------------------------------------------------------------------*/
+extern void         TtaExportTree (Element element, Document document, char *fileName, char *TSchemaName);
+ 
 /* ----------------------------------------------------------------------
    TtaInsertSibling
 
@@ -1070,6 +1079,7 @@ extern Element      TtaCreateDescent ( /* Document document, Element element, El
 extern Element      TtaCreateDescentWithContent ( /* Document document, Element element, ElementType elementType */ );
 extern void         TtaDeleteTree ( /* Element element, Document document */ );
 extern void         TtaAttachNewTree ( /* Element tree, Document document */ );
+extern void         TtaExportTree ( /* Element element, Document document, char *fileName, char *TSchemaName */ );
 extern void         TtaInsertSibling ( /* Element newElement, Element sibling, boolean before, Document document */ );
 extern void         TtaInsertFirstChild ( /* Element *newElement, Element parent, Document document */ );
 extern void         TtaCreateElement ( /* ElementType elementType, Document document */ );
