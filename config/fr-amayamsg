@@ -188,4 +188,10 @@
 187 Sans feuilles de style
 188 Transformer en
 189 (séparer chaque entrée avec un espace)
-190 Nom du caractère
+190 Ne pas utiliser le proxy dans ces domaines
+191 Utiliser le proxy uniquement dans ces domaines
+192 Repertoire utilisateur
+193 Repertoire témporaire
+194 Nom du caractère
+195 Par palette
+196 Négotiation de langues

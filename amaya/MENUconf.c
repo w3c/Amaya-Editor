@@ -112,8 +112,8 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 	{IDC_THTTPPROXY, AM_HTTP_PROXY},
 	{IDC_TPROXYDOMAIN, AM_PROXY_DOMAIN},
 	{IDC_TSEPENTRIESSPACE, AM_PROXY_DOMAIN_INFO},
-	/* {IDC_NOPROXY, AM_NO_PROXY},
-	{IDC_ONLYPROXY, }, */
+	{IDC_NOPROXY, AM_DONT_PROXY_DOMAIN},
+	{IDC_ONLYPROXY, AM_ONLY_PROXY_DOMAIN},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -131,8 +131,8 @@ static HWND     GeneralHwnd = NULL;
 static AM_WIN_MenuText WIN_GeneralMenuText[] = 
 {
 	{AM_INIT_ALL, AM_GENERAL_MENU},
-	/* {IDC_TAPPHOME, Amaya user dir}, */
-	/* {IDC_TTMPDIR, AM_TMP_DIR},*/
+	{IDC_TAPPHOME, AM_USER_DIR},
+	{IDC_TTMPDIR, AM_TMP_DIR},
 	{IDC_THOMEPAGE, AM_HOME_PAGE},
 	{IDC_TZOOM , AM_ZOOM},
 	{IDC_TDIALOGUELANG,AM_DIALOGUE_LANGUAGE},
@@ -179,7 +179,7 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 	{AM_INIT_ALL, AM_COLOR_MENU},
 	{IDC_TFGCOLOR, AM_DOC_FG_COLOR},
 	{IDC_TBGCOLOR, AM_DOC_BG_COLOR},
-/* 	{IDC_CHANGCOLOR, AM_COLOR_PALETTE}, */
+ 	{IDC_CHANGCOLOR, AM_COLOR_PALETTE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -206,14 +206,14 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 };
 #endif /* _WINDOWS */
 /* common local variables */
-CHAR_T          s[MAX_LENGTH]; /* general purpose buffer */
+CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
 #ifdef _WINDOWS
 static HWND     LanNegHwnd = NULL;
 static AM_WIN_MenuText WIN_LanNegMenuText[] = 
 {
-	{AM_INIT_ALL, BConfigLanNeg},
+	{AM_INIT_ALL, AM_LANNEG_MENU},
 	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
 	{0, 0}
 };
@@ -604,7 +604,7 @@ CHAR_T* name;
   WIN_SetCommonText
   Writes the local text that corresponds to buttons common to all the
   menus
-    ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static WIN_SetCommonText (HWND hwnDlg, int flags)
 #else
@@ -615,20 +615,20 @@ int flags;
 {
   if (flags & AM_INIT_APPLY_BUTTON)
     SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
-	 	  TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+		   TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
   if (flags & AM_INIT_DEFAULT_BUTTON)
-     SetWindowText (GetDlgItem (hwnDlg, ID_DEFAULTS),
-		  TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));	    
+    SetWindowText (GetDlgItem (hwnDlg, ID_DEFAULTS),
+		   TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));	    
   if (flags & AM_INIT_DONE_BUTTON)
-     SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
-		  TtaGetMessage (LIB, TMSG_DONE));
+    SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		   TtaGetMessage (LIB, TMSG_DONE));
 }
 
 /*----------------------------------------------------------------------
   WIN_SetMenuText
   Writes the local text message from a given message table to the idc
   dialogue identifier.
-    ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
 #else
@@ -637,30 +637,30 @@ HWND hwnDlg;
 AM_WIN_MenuText menu[];
 #endif /* __STDC__ */
 {
-    AM_WIN_MenuText *field;
-    int i;
-
-	if (!hwnDlg || !menu)
-		return;
-	/* intialize the window title */
-	field = &menu[0];
-	/* for the moment, we consider all messages come from the AMAYA table */
-    SetWindowText (hwnDlg, TtaGetMessage (AMAYA, field->message));
- 
-	/* initialize the common buttons, 
-		the idc field says which buttons we want to intialize */
-	WIN_SetCommonText (hwnDlg, field->idc);
-
-	/* intialize the menu fields */
-	i = 1;
-	field = &menu[i];
-	while (field->idc != 0 && field->message != 0)
-	{
-	  SetWindowText (GetDlgItem (hwnDlg, field->idc),
-		  TtaGetMessage (AMAYA, field->message));
-	  i++;
-	  field = &menu[i];
-	}
+  AM_WIN_MenuText *field;
+  int i;
+  
+  if (!hwnDlg || !menu)
+    return;
+  /* intialize the window title */
+  field = &menu[0];
+  /* for the moment, we consider all messages come from the AMAYA table */
+  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, field->message));
+  
+  /* initialize the common buttons, 
+     the idc field says which buttons we want to intialize */
+  WIN_SetCommonText (hwnDlg, field->idc);
+  
+  /* intialize the menu fields */
+  i = 1;
+  field = &menu[i];
+  while (field->idc != 0 && field->message != 0)
+    {
+      SetWindowText (GetDlgItem (hwnDlg, field->idc),
+		     TtaGetMessage (AMAYA, field->message));
+      i++;
+      field = &menu[i];
+    }
 }
 
 #endif /* _WINDOWS */
@@ -865,9 +865,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       CacheHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_CacheMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshCacheMenu (hwnDlg);
       break;
       
@@ -1240,9 +1240,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ProxyHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_ProxyMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshProxyMenu (hwnDlg);
       break;
       
@@ -1438,8 +1438,8 @@ View                view;
    TtaNewLabel (GeneralBase + mProxyDomainInfo, ProxyBase + ProxyMenu,
 		TtaGetMessage (AMAYA, AM_PROXY_DOMAIN_INFO));
    usprintf (s, "T%s%cT%s", 
-	     "No proxy on these domains", EOS,
-	     "Only proxy these domains");
+	     TtaGetMessage (AMAYA, AM_DONT_PROXY_DOMAIN), EOS,
+	     TtaGetMessage (AMAYA, AM_ONLY_PROXY_DOMAIN));
    TtaNewSubmenu (ProxyBase + mToggleProxy,
 		  ProxyBase + ProxyMenu,
 		  0,
@@ -1781,9 +1781,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       GeneralHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
    
@@ -2157,9 +2157,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       PublishHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_PublishMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshPublishMenu (hwnDlg);
       break;
 
@@ -2493,9 +2493,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ColorHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_ColorMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshColorMenu (hwnDlg);
       break;
 
@@ -2858,9 +2858,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       GeometryHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeometryMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       break;
 
     case WM_CLOSE:
@@ -3085,9 +3085,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       LanNegHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_LanNegMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshLanNegMenu (hwnDlg);
       break;
 
@@ -3227,7 +3227,8 @@ STRING              pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (LanNegBase + LanNegMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage (1, BConfigLanNeg), 2, s, TRUE, 1, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_LANNEG_MENU), 2, s, TRUE, 1, 
+		'L', D_DONE);
    /* first line */
    TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
 		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
@@ -3366,12 +3367,14 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ProfileHwnd = hwnDlg;
-	       wndProfilesList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+	       wndProfilesList = CreateWindow (TEXT("listbox"), NULL, 
+				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 90, 200, 90, hwnDlg, (HMENU) 1, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				  (HINSTANCE) GetWindowLong (hwnDlg, 
+				  GWL_HINSTANCE), NULL);
       WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
-	  SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
-	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+      SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
+      SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
       break;
 
     case WM_CLOSE:
@@ -3719,9 +3722,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       TemplatesHwnd = hwnDlg;
-	  /* initialize the menu text */
+      /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_TemplatesMenuText);
-	  /* write the current values in the dialog entries */
+      /* write the current values in the dialog entries */
       WIN_RefreshTemplatesMenu (hwnDlg);
       break;
 

@@ -188,4 +188,10 @@
 187 **Ignore style sheets
 188 Umformatieren
 189 **(separate each entry with a space)
-190 **Character name
+190 **No proxy on these domains
+191 **Only proxy these domains
+192 **Amaya user directory
+193 **Temporary directory
+194 **Character name
+195 **Use palette
+196 **Language Negotiation

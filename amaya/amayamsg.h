@@ -199,5 +199,11 @@ int                 AMAYA;
 #define AM_WITH_CSS                   187
 #define AM_TRANS		      188
 #define AM_PROXY_DOMAIN_INFO          189
-#define AM_MATH_ENTITY_NAME           190
-#define AMAYA_MSG_MAX                 191
+#define AM_DONT_PROXY_DOMAIN	      190
+#define AM_ONLY_PROXY_DOMAIN	      191
+#define AM_MATH_ENTITY_NAME           192
+#define AM_USER_DIR		      193
+#define AM_TMP_DIR		      194 
+#define AM_COLOR_PALETTE	      195
+#define AM_LANNEG_MENU		      196
+#define AMAYA_MSG_MAX                 197
