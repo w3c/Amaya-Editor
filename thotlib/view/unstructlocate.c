@@ -45,6 +45,74 @@
 #define MAX_DISTANCE 2000
 
 /*----------------------------------------------------------------------
+  GetDistance returns 0 if value is between -delta and +delta.
+  In other cases returns the absolute value of value - delta
+  ----------------------------------------------------------------------*/
+int GetDistance (int value, int delta)
+{
+   if (value > delta)
+      return (value - delta);
+   else if (value < -delta)
+      return (-value - delta);
+   else
+      return (0);
+}
+
+/*----------------------------------------------------------------------
+  GetBoxDistance computes the distance of a point xRef, yRef to a box
+  We apply a ratio to vertical distances to give a preference to the
+  horizontal proximity.
+  ----------------------------------------------------------------------*/
+int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio)
+{
+  PtrAbstractBox      pCell;
+  int                 value, x, y, width, height;
+  int                 xcell, ycell, wcell, hcell;
+
+  /* check limits given by an enclosing cell */
+  pCell = GetParentCell (pBox);
+  xcell = ycell = 0;
+  wcell = hcell = MAX_DISTANCE;
+#ifdef _GL
+  x = pBox->BxClipX;
+  y = pBox->BxClipY;
+  width = pBox->BxClipW;
+  height = pBox->BxClipH;
+  if (pCell && pCell->AbBox)
+    {
+      /* get cell limits */
+      xcell = pCell->AbBox->BxClipX;
+      ycell = pCell->AbBox->BxClipY;
+      wcell = pCell->AbBox->BxClipW;
+      hcell = pCell->AbBox->BxClipH;
+    }
+#else /*_GL */
+  x = pBox->BxXOrg;
+  y = pBox->BxYOrg;
+  width = pBox->BxWidth;
+  height = pBox->BxHeight;
+  if (pCell && pCell->AbBox)
+    {
+      /* get cell limits */
+      xcell = pCell->AbBox->BxXOrg;
+      ycell = pCell->AbBox->BxYOrg;
+      wcell = pCell->AbBox->BxWidth;
+      hcell = pCell->AbBox->BxHeight;
+    }
+#endif /*_GL */
+  /* get the middle of the current box */
+  width /= 2;
+  x += width;
+  height /= 2;
+  y += height;
+  if (xRef < xcell || xRef > xcell + wcell ||
+      yRef < ycell || yRef > ycell + hcell)
+    return MAX_DISTANCE;
+  value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
+  return (value);
+}
+
+/*----------------------------------------------------------------------
    GetClickedBox look for the abstract box that overlaps the point x,y
    or the nearest abstract box.
    The function checks all boxes in the tree and returns the best choice.
@@ -54,121 +122,106 @@
 void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		      int x, int y, int ratio, int *pointselect)
 {
-   PtrAbstractBox      pAb;
-   PtrBox              pSelBox, pBox;
-   PtrBox              graphicBox;
-   int                 dist;
-   int                 pointIndex;
-   ViewFrame          *pFrame;
-   int                 d;
+  PtrAbstractBox      pAb;
+  PtrBox              pSelBox, pBox;
+  PtrBox              graphicBox;
+  int                 dist;
+  int                 pointIndex;
+  ViewFrame          *pFrame;
+  int                 d;
 
-   pBox = NULL;
-   pSelBox = NULL;
-   /* dist gives the previous distance of the selected box
-      MAX_DISTANCE when no box is selected */
-   dist = MAX_DISTANCE;
-   pFrame = &ViewFrameTable[frame - 1];
-
-   if (pFrame->FrAbstractBox != NULL)
-     pBox = pFrame->FrAbstractBox->AbBox;
-
-   if (pBox != NULL)
-     {
-       pBox = pBox->BxNext;
-       while (pBox)
-	 {
+  pBox = NULL;
+  pSelBox = NULL;
+  /* dist gives the previous distance of the selected box
+     MAX_DISTANCE when no box is selected */
+  dist = MAX_DISTANCE;
+  pFrame = &ViewFrameTable[frame - 1];
+  
+  if (pFrame->FrAbstractBox != NULL)
+    pBox = pFrame->FrAbstractBox->AbBox;
+  
+  if (pBox != NULL)
+    {
+      pBox = pBox->BxNext;
+      while (pBox)
+	{
 #ifdef _GL
-	   if (pBox->BxBoundinBoxComputed || 
+	  if (pBox->BxBoundinBoxComputed || 
 	      pBox->BxType == BoBlock || pBox->BxNChars == 0)
-	     {
+	    {
 #endif /* _GL */
-	   pAb = pBox->BxAbstractBox;
-	   if (pAb->AbVisibility >= pFrame->FrVisibility)
-	     {
-	       pointIndex = 0;
-	       graphicBox = NULL;
-	       if ((pAb->AbPresentationBox && !pAb->AbCanBeModified) ||
-		   pAb->AbLeafType == LtGraphics ||
-		   pAb->AbLeafType == LtPolyLine ||
-		   pAb->AbLeafType == LtPath)
-		 {
+	      pAb = pBox->BxAbstractBox;
+	      if (pAb->AbVisibility >= pFrame->FrVisibility)
+		{
+		  pointIndex = 0;
+		  graphicBox = NULL;
+		  if ((pAb->AbPresentationBox && !pAb->AbCanBeModified) ||
+		      pAb->AbLeafType == LtGraphics ||
+		      pAb->AbLeafType == LtPolyLine ||
+		      pAb->AbLeafType == LtPath)
+		    {
 #ifdef _GL  
-		   if (pBox->BxClipX <= x &&
-		       pBox->BxClipX + pBox->BxClipW >= x &&
-		       pBox->BxClipY <= y &&
-		       pBox->BxClipY + pBox->BxClipH >= y)
+		      if (pBox->BxClipX <= x &&
+			  pBox->BxClipX + pBox->BxClipW >= x &&
+			  pBox->BxClipY <= y &&
+			  pBox->BxClipY + pBox->BxClipH >= y)
 #endif  /* _GL */
-		     graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-							  &pointIndex);
-		   if (graphicBox == NULL)
-		     /* eliminate this box */
-		     d = dist + 1;
-		   else
-		     d = 0;
-		 }
-	       else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
-		 /* glitch for the root symbol */
-		 d = GetShapeDistance (x, y, pBox, 1);
-	       else if (pAb->AbLeafType == LtText ||
-			pAb->AbLeafType == LtSymbol ||
-			pAb->AbLeafType == LtPicture ||
-			/* or an empty compound box */
-			(pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
-		 {
-#ifndef _GL
-		   if (pAb->AbLeafType == LtPicture)
-		     {
-		       /* check if the right side of the picture is selected */
-		       d = pBox->BxXOrg + (pBox->BxWidth / 2);
-		       if (x > d)
-			 pointIndex = 1;
-		       d = GetBoxDistance (x, y, ratio, pBox->BxXOrg, pBox->BxYOrg,
-					   pBox->BxWidth, pBox->BxHeight);
-		     }
-		   else
-		     d = GetBoxDistance (x, y, ratio, pBox->BxXOrg, pBox->BxYOrg,
-					 pBox->BxWidth, pBox->BxHeight);
-#else /*_GL */
-		   if (pAb->AbLeafType == LtPicture)
-		     {
-		       /* check if the right side of the picture is selected */
-		       d = pBox->BxClipX + (pBox->BxClipW / 2);
-		       if (x > d)
-			 pointIndex = 1;
-		       d = GetBoxDistance (x, y, ratio, pBox->BxClipX, pBox->BxClipY,
-					   pBox->BxClipW, pBox->BxClipH);
-		     }
-		   else
-		     d = GetBoxDistance (x, y, ratio, pBox->BxClipX, pBox->BxClipY,
-					 pBox->BxClipW, pBox->BxClipH);
-#endif /*_GL */
-		   if (d > dist && dist == MAX_DISTANCE)
-		     /* it's the first box selected */
-		     dist = d;
-		 }
-	       else
-		 d = dist + 1;
-	       
-	       /* select the nearest box */
-	       if (d < dist ||
-		   (d == dist &&
-		    (pSelBox == NULL ||
-		     pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)))
-		 {
-		   dist = d;
-		   pSelBox = pBox;
-		   /* the selected reference point */
-		   *pointselect = pointIndex;
-		 }
-	     }
+			graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+							     &pointIndex);
+		      if (graphicBox == NULL)
+			/* eliminate this box */
+			d = dist + 1;
+		      else
+			d = 0;
+		    }
+		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+		    /* glitch for the root symbol */
+		    d = GetShapeDistance (x, y, pBox, 1);
+		  else if (pAb->AbLeafType == LtText ||
+			   pAb->AbLeafType == LtSymbol ||
+			   pAb->AbLeafType == LtPicture ||
+			   /* or an empty compound box */
+			   (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
+		    {
+		      if (pAb->AbLeafType == LtPicture)
+			{
+			  /* check if the right side of the picture is selected */
 #ifdef _GL
-  }
+			  d = pBox->BxClipX + (pBox->BxClipW / 2);
+#else /*_GL */
+			  d = pBox->BxXOrg + (pBox->BxWidth / 2);
+#endif /*_GL */
+			  if (x > d)
+			    pointIndex = 1;
+			}
+		      d = GetBoxDistance (pBox, x, y, ratio);
+		      if (d > dist && dist == MAX_DISTANCE)
+			/* it's the first box selected */
+			dist = d;
+		    }
+		  else
+		    d = dist + 1;
+		  
+		  /* select the nearest box */
+		  if (d < dist ||
+		      (d == dist &&
+		       (pSelBox == NULL ||
+			pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)))
+		    {
+		      dist = d;
+		      pSelBox = pBox;
+		      /* the selected reference point */
+		      *pointselect = pointIndex;
+		    }
+		}
+#ifdef _GL
+	    }
 #endif /* _GL */
-	   pBox = pBox->BxNext;
-	 }
-       /* return the root box if there is no box selected */
-       if (pSelBox == NULL)
-	 pSelBox = pBox = pFrame->FrAbstractBox->AbBox;
-     }
-   *result = pSelBox;
+	  pBox = pBox->BxNext;
+	}
+      /* return the root box if there is no box selected */
+      if (pSelBox == NULL)
+	pSelBox = pBox = pFrame->FrAbstractBox->AbBox;
+    }
+  *result = pSelBox;
 }

@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int GetDistance ( int value,
+                         int delta );
+extern int GetBoxDistance ( PtrBox pBox,
+                            int xRef,
+                            int yRef,
+                            int ratio );
 extern void GetClickedBox ( PtrBox *result,
                             PtrAbstractBox pRootAb,
                             int frame,
@@ -16,6 +22,12 @@ extern void GetClickedBox ( PtrBox *result,
 
 #else /* __STDC__ */
 
+extern int GetDistance (/* int value,
+                           int delta */);
+extern int GetBoxDistance (/* PtrBox pBox,
+                              int xRef,
+                              int yRef,
+                              int ratio */);
 extern void GetClickedBox (/* PtrBox *result,
                               PtrAbstractBox pRootAb,
                               int frame,

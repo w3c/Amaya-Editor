@@ -408,38 +408,6 @@ void LocateSelectionInView (int frame, int x, int y, int button)
     }
 }
 
-/*----------------------------------------------------------------------
-  GetDistance returns 0 if value is between -delta and +delta.
-  In other cases returns the absolute value of value - delta
-  ----------------------------------------------------------------------*/
-static int GetDistance (int value, int delta)
-{
-   if (value > delta)
-      return (value - delta);
-   else if (value < -delta)
-      return (-value - delta);
-   else
-      return (0);
-}
-
-/*----------------------------------------------------------------------
-  GetBoxDistance computes the distance of a point xRef, yRef to a box
-  We apply a ratio to vertical distances to give a preference to the
-  horizontal proximity.
-  ----------------------------------------------------------------------*/
-int GetBoxDistance (int xRef, int yRef, int ratio, int x, int y,
-		    int width, int height)
-{
-  int                 value;
-
-  /* get the middle of the box */
-  width /= 2;
-  x += width;
-  height /= 2;
-  y += height;
-  value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
-  return (value);
-}
 
 /*----------------------------------------------------------------------
   IsOnSegment checks if the point x, y is on the segment x1, y1 to
@@ -1312,7 +1280,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   Returns the most elementary box (structural level) that includes the
   reference point.
   ----------------------------------------------------------------------*/
-PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
+PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
 {
   ViewFrame          *pFrame;
   PtrBox              pBox;
@@ -1851,20 +1819,13 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		       pAb->AbLeafType == LtSymbol ||
 		       pAb->AbLeafType == LtPicture ||
 		       /* empty or compound box */
-		       (pAb->AbLeafType == LtCompound &&
-			pAb->AbVolume == 0)) 
+		       (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0)) 
 #ifdef _GL
 		       && (pBox->BxBoundinBoxComputed || 
 			   pBox->BxType == BoBlock || pBox->BxNChars == 0)
 #endif /* _GL */
 		       )
-#ifndef _GL
-		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxXOrg, pBox->BxYOrg,
-				    pBox->BxWidth, pBox->BxHeight);
-#else /*_GL */
-		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxClipX, pBox->BxClipY,
-				    pBox->BxClipW, pBox->BxClipH);
-#endif /*_GL */
+		d = GetBoxDistance (pBox, xRef, yRef, Y_RATIO);
 	      else
 		d = max + 1;
 
