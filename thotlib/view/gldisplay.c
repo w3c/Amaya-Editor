@@ -1478,8 +1478,8 @@ float PixelValueDble (int nb, int real_nb, int frame)
 void DrawPath (int frame, int thick, int style, int x, int y,
 	       PtrPathSeg path, int fg, int bg, int pattern)
 {
-  PtrPathSeg  pPa;
-  float       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  PtrPathSeg   pPa;
+  double       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
   void        *mesh;  
 
   if (thick > 0 || fg >= 0)

@@ -247,28 +247,24 @@ void PolySplit2 (float a1, float b1, float a2, float b2,
      }
 #endif/*  _GL */
 }
+
 /*----------------------------------------------------------------------
   EllipticSplit2 : creates points on the given elliptic arc 
   (using endpoint parameterization)
   see http://www.w3.org/TR/SVG/implnote.html for implementations notes
   ----------------------------------------------------------------------*/
 void  EllipticSplit2 (int frame, int x, int y,
-		     double x1, double y1, 
+		      double x1, double y1, 
 		     double x2, double y2, 
 		     double xradius, double yradius, 
-		     int Phi, int large, int sweep, 
-		     void *mesh)
+		     int Phi, int large, int sweep, void *mesh)
 {
 #ifdef _GL
-  double xmid, ymid, 
-    Phicos, Phisin, 
-    rx_p2, ry_p2, 
-    translate, xprim, yprim,
-    cprim, cxprim, cyprim,
-    Rxcos, Rysin, cX, cY,
-    xtheta, ytheta, xthetaprim, ythetaprim,
-    x3, y3, theta, deltatheta, inveangle,
-    thetabegin;
+  double   xmid, ymid, Phicos, Phisin; 
+  double   rx_p2, ry_p2, translate, xprim, yprim;
+  double   cprim, cxprim, cyprim, Rxcos, Rysin, cX, cY;
+  double   xtheta, ytheta, xthetaprim, ythetaprim;
+  double   x3, y3, theta, deltatheta, inveangle, thetabegin;
 
   if (xradius == 0 || yradius == 0)
       return;
@@ -276,7 +272,6 @@ void  EllipticSplit2 (int frame, int x, int y,
   yradius = (yradius<0)? fabs (yradius):yradius;
   
   /*local var init*/
- 
   Phicos = cos (DEG_TO_RAD(Phi));
   Phisin = sin (DEG_TO_RAD(Phi));
   
