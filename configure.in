@@ -419,6 +419,7 @@ dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
 
 AC_ARG_ENABLE(java, [  --enable-java           Add Kaffe Java virtual machine])
+AC_ARG_ENABLE(javaawt, [  --enable-java-awt       Add Kaffe Java Biss AWT])
 AC_ARG_ENABLE(intr, [  --enable-intr           Use Kaffe Java Interpreter])
 AC_ARG_ENABLE(jit, [  --enable-jit             Use Kaffe Java JIT Compiler])
 AC_ARG_ENABLE(plugin, [  --enable-plugin       Add Netscape Plug-Ins support])
@@ -457,6 +458,16 @@ if test "$enable_java" = "yes" ; then
 fi
 
 dnl
+dnl if java, java-awt is enabled by default
+dnl
+
+if test "$enable_javaawt" = "no" ; then
+    java_awt_option="-DJAVA_NO_AWT"
+else
+    java_awt_option=""
+fi
+
+dnl
 dnl plugins support is disabled by default
 dnl
 
@@ -490,6 +501,36 @@ if test "$with_ilu" = "" ; then
     fi
 fi
 
+dnl
+dnl Checking for ilu
+dnl
+
+ILUHOME=""
+if test "$with_ilu" = "yes" ; then
+    dnl
+    dnl try to get first the path for the c-stubber
+    dnl
+    AC_PATH_PROG(CSTUBBER, c-stubber, c-stubber, $PATH:$ILUHOME/bin:/bin:/usr/bin:/usr/ucb/bin:/usr/ilu/bin:/usr/local/bin:/usr/local/ilu/bin:/opt/ilu/bin:$HOME/ilu/bin)
+    case "$CSTUBBER" in
+        /*/bin/c-stubber) 
+	    ILU_BINARIES=`dirname $CSTUBBER`
+	    ILUHOME=`dirname $ILU_BINARIES`
+	    ILU_LIBRARIES=$ILUHOME/lib
+	    ILU_INCLUDES=$ILUHOME/include
+	    ;;
+        /*/c-stubber) 
+	    ILU_BINARIES=`dirname $CSTUBBER`
+	    ILUHOME=`dirname $ILU_BINARIES`
+	    ILU_LIBRARIES=$ILUHOME/lib
+	    ILU_INCLUDES=$ILUHOME/include
+	    ;;
+    esac
+    if test "$CSTUBBER" = "" -o "$CSTUBBER" = "c-stubber" ; then
+	AC_MSG_WARN(ILU c-stubber binary not found, ILU disabled !)
+	with_ilu="no"
+    fi
+fi
+
 if test "$build_amaya" = "yes" ; then
 
     if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in ; then
@@ -511,6 +552,14 @@ if test "$build_amaya" = "yes" ; then
 	    with_java_sources="yes"
 	else
 	    with_java_sources="no"
+	fi 
+	#
+	# Verify that BISS AWT implemetation is available.
+	#
+	if test -f $srcdir/kaffe-$KAFFE_VER/packages/biss-net.com/APIawt/classes/biss.zip ; then
+	    java_awt_option="$java_awt_option"
+	else
+	    java_awt_option="$java_awt_option -DJAVA_NO_AWT"
 	fi 
 	#
 	# Then check for precompiled classes packages.
@@ -564,7 +613,7 @@ THOT_OPTIONS=
 AMAYA_OPTIONS="-DCOUGAR" $MATH_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 dnl JAVA_OPTIONS="-DDEBUG_KAFFE -DDEBUG_LOCK -DDEBUG_SELECT -DDEBUG_SELECT_CHANNELS -DDEBUG_TIMING -DSYNC_DNS"
-JAVA_OPTIONS="$java_ilu_option"
+JAVA_OPTIONS="$java_ilu_option $java_awt_option"
 ANNOTATIONS_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -621,6 +670,7 @@ AC_SUBST(ANNOTATIONS_OPTIONS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_LIBS)
 
+AC_SUBST(ILUHOME)
 AC_SUBST(ILU_OPTIONS)
 AC_SUBST(ILU_INCLUDES)
 AC_SUBST(ILU_LIBRARIES)
