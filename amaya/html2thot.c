@@ -1623,8 +1623,9 @@ int                 elemEntry;
 	       entry = i;
 	       *schema = HTMLSSchema;
 	       }
-	 else if (!ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
-			       HTMLGIMappingTable[elemEntry].htmlGI))
+	 else if (elemEntry >= 0 &&
+		  !ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
+				HTMLGIMappingTable[elemEntry].htmlGI))
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;
@@ -1703,9 +1704,11 @@ STRING              tag;
    AttributeMapping*   tableEntry;
 
    thotAttr = -1;
+   lastElemEntry = -1;
    schema = HTMLSSchema;
+   if (tag[0] != EOS)
    lastElemEntry = MapGI (tag, &schema, theDocument);
-   if (lastElemEntry >= 0)
+   if (lastElemEntry >= 0 || tag[0] == EOS)
      {
 	tableEntry = MapAttr (Attr, &schema, lastElemEntry);
 	if (tableEntry != NULL)
@@ -7172,6 +7175,7 @@ Document	doc;
    ElementType	elType;
    STRING	schemaName;
 
+   docURL = NULL;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
    if (ustrcmp (schemaName, "HTML") == 0)

@@ -93,6 +93,7 @@ extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcStandardGeometry (Document document, View view);
 extern void         TtcChangeType (Document document, View view);
+extern void         TtaSetTransformCallback (Func function);
 
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters (Document document, View view);
@@ -181,6 +182,7 @@ extern void         TteAddAction ( /*char *actionName, Proc doIt */ );
 extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, boolean pre, char *actionName */ );
 extern PtrEventsSet TteGetEventsSet ( /*char *name*/ );
 extern PtrEventsSet TteNewEventsSet ( /*int structureId, char *name */ );
+extern void         TtaSetTransformCallback ( /*Func function*/ );
 
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters ( /*Document document, View view */ );

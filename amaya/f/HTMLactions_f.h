@@ -22,7 +22,6 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
-extern boolean ElemToTransform ( NotifyOnElementType * event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
 extern void SelectDestination ( Document doc,
@@ -46,7 +45,6 @@ extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
-extern boolean ElemToTransform (/* NotifyOnElementType * event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
 extern void SelectDestination (/* Document doc,

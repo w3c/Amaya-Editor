@@ -1435,7 +1435,7 @@ NotifyElement      *event;
    UpdateContextSensitiveMenus (event->document);
    TtaSelectView (SelectionDoc, 1);
 }
-
+#ifdef IV
 /*----------------------------------------------------------------------
    A element type conversion has not been achieved by the editor.
    Trying with language-driven restructuration.
@@ -1450,6 +1450,7 @@ NotifyOnElementType * event;
    return (!TransformIntoType(event->targetElementType, event->document));
 }
 
+#endif /*IV*/
 
 /*----------------------------------------------------------------------
    SetCharFontOrPhrase                                     

@@ -3739,6 +3739,10 @@ NotifyEvent        *event;
    InitGraphML ();
 # endif /* GRAPHML */
 
+/* init transformation callback */
+
+   TtaSetTransformCallback ((Func) TransformIntoType);
+
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
 

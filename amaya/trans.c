@@ -1049,7 +1049,10 @@ Document            doc;
 	TtaSetStructureChecking (0, doc);
 	ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
 	courEl = myFirstSelect;
-	TtaNextSibling (&courEl);
+	if (isClosed)
+	  TtaNextSibling (&courEl);
+	else
+	  courEl = TtaGetFirstChild (courEl);
 	while (courEl != NULL && courEl != myLastSelect)
 	  {	    
 	    TtaRegisterElementCreate (courEl, doc);
@@ -2412,6 +2415,7 @@ STRING              data;
       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
       if (!resultTrans)
 	{
+#ifdef IV
 	  TtaSetDisplayMode (TransDoc, DisplayImmediately);
 	  /* transformation has failed, restoring the old selection */
 	  if (ffc == 0 && flc == 0)
@@ -2421,6 +2425,7 @@ STRING              data;
 	  TtaExtendSelection (TransDoc, origLastSelect, llc);
 	  /* display an error message */
 	  TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_FAILED), NULL);
+#endif
 	}
       else
 	{

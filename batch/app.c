@@ -137,7 +137,6 @@ char               *RegisteredAppEvents[] =
    "ElemMove",
    "ElemTextModify",
    "ElemGraphModify",
-   "ElemTransform",
    "ElemMouseOver",
    "ElemMouseOut",
    "PRuleCreate",

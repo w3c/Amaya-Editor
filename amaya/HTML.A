@@ -14,7 +14,6 @@ DEFAULT
 	ViewClose.Pre -> ViewToClose;
 	ElemSelect.Post -> SelectionChanged;
 	ElemExtendSelect.Post -> SelectionChanged;
-	ElemTransform.Pre -> ElemToTransform;
    END;
 
 ELEMENTS

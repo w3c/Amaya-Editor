@@ -72,9 +72,9 @@ Address:(P{*+})+;
 !between lists
 !!!!!!!!!!!!!!
 
-Definition list:*{(LI{(P|list:*{(li2:LI)+})+})+};
+Definition list:*{(LI{(list:*{(li2:LI)+}|other:*)+})+};
 	{
-	P > DL:DT;
+	other > DL:DT;
 	list > DL:DD;
 	li2 > DL.DD:;
 	}
@@ -91,10 +91,10 @@ Numbered list:(DL{(DT|DD{(*)+})+})+;
 	* > OL.LI.OL:LI.*;
 	}
 
-Remove DL: (DL{(DT|DD{*+})+})+;
+Remove DL: (DL{(DT{(dtc:*)+}|DD{(ddc:*)+})+})+;
 	{
-	 DT > :P;
-	 * > :*;
+	 dtc > :<* style="font-weight:bold">;
+	 ddc > :*;
 	}
 
 !flattering headings 
@@ -116,15 +116,15 @@ Paragraphs:
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Preformatted: P+;
-	{
-	P>:PRE;
-	}
+!Preformatted: P+;
+!	{
+!	P>:PRE;
+!	}
 
-Paragraph: PRE+;
-	{
-	PRE>:P;
-	}
+!Paragraph: PRE+;
+!	{
+!	PRE>:P;
+!	}
 
 
 
@@ -166,6 +166,15 @@ Bulleted List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
 	TD2 >UL.LI.UL:LI;
 	TH2 >UL.LI.UL:LI;
 	}
+Definition List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
+        {
+        CAPTION > :DL.DT;
+        block   > :DL;
+        TD      > DL:DT;
+        TH      > DL:DT;
+        TD2     > DL:DD;
+        TH2     > DL:DD;
+        }
 
 ! List transformations
 !!!!!!!!!!!!!!!!!!!!!!
@@ -404,6 +413,11 @@ Remove Center: (CENTER{*+})+;
 Remove P level: P{IMG};
 	{
         IMG > :*;
+	}
+
+Remove P level: P{*+};
+	{
+        * > :*;
 	}
 
 Remove BlockQuote: BLOCKQUOTE{*+};

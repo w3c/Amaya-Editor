@@ -69,6 +69,10 @@ static int          NChangeTypeItems;
 static int          ChangeTypeTypeNum[MAX_ITEMS_CHANGE_TYPE];
 static PtrSSchema   ChangeTypeSSchema[MAX_ITEMS_CHANGE_TYPE];
 static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
+
+/* transformation callback procedure */
+static Func         TransformIntoFunction = NULL;
+
 #define M_EQUIV 1
 #define M_RESDYN 2
 
@@ -1144,7 +1148,7 @@ boolean             save;
 		   detruit l'element englobant la selection, sauf s'il
 		   est indestructible. */
 		if (ThotLocalActions[T_selectsiblings] != NULL)
-		  ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel, &firstChar, &lastChar);
+		  (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel, &firstChar, &lastChar);
 		if (firstChar <= 1 &&
 		    (lastChar == 0 || lastChar > lastSel->ElTextLength))
 		  /* le premier et le dernier element de la selection
@@ -2433,7 +2437,7 @@ PtrSSchema          newSSchema;
      }
    return done;
 }
-#endif /* _WIN_PRINT
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   CanInsertBySplitting
@@ -2554,10 +2558,9 @@ boolean             Before;
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
   PtrElement          pElem, pElSplit, pSplitEl, pNextEl;
-  ElementType	      elType, selType;
+  ElementType	      elType;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
-  NotifyOnElementType notifyElType;
   int                 firstChar, lastChar, origFirstChar, origLastChar,
 		      NSiblings, ancestorRule,
 		      rule, prevrule, prevprevrule, nComp;
@@ -2641,7 +2644,7 @@ boolean             Before;
 		firstChar = 0;
 		lastChar = 0;
 		if (ThotLocalActions[T_selectsiblings] != NULL)
-		   ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel,
+		   (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
 						       &firstChar, &lastChar);
 	        }
 	      if (firstSel->ElParent != lastSel->ElParent)
@@ -2657,6 +2660,13 @@ boolean             Before;
 		/* ca n'a pas marche'. essaie les transformations de */
 		/* type par patterns */
 		{
+		  elType.ElTypeNum = typeNum;
+                  elType.ElSSchema = (SSchema) pSS;
+
+                  if (TransformIntoFunction != NULL)
+                     ok = TransformIntoFunction (elType,  (Document) IdentDocument (pSelDoc));
+		}
+#ifdef IV
 		  GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
 		  pEl = firstSel;
 		  selType.ElTypeNum = firstSel->ElTypeNumber;
@@ -2684,6 +2694,7 @@ boolean             Before;
 		  /***** TransformIntoType should record the operation in
 			 the history ****/
 		}
+#endif /*IV*/
 	      /* si ca n'a pas marche' et si plusieurs elements sont
 		 selectionne's, on essaie de transformer chaque element
 		 selectionne' en un element du type demande' */
@@ -3032,6 +3043,20 @@ boolean             Before;
 }
 #endif /* _WIN_PRINT */
 
+/*----------------------------------------------------------------------
+   TtaSetTransformCallback permet de connecter une fonction de l'application
+   au changement de type d'element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  TtaSetTransformCallback (Func callbackFunc)
+#else
+void  TtaSetTransformCallback ()
+Func callbackFunc;
+#endif /* __STDC__ */
+{
+   TransformIntoFunction = callbackFunc;
+}
+ 
 /*----------------------------------------------------------------------
    AddEntrySurround ajoute, dans la table des elements a mettre    
    dans le menu Surround, le type d'element (typeNum, pSS),  

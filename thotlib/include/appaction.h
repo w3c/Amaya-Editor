@@ -58,7 +58,6 @@ typedef enum
      TteElemMove,
      TteElemTextModify,
      TteElemGraphModify,
-     TteElemTransform,
      TteElemMouseOver,
      TteElemMouseOut,
      TtePRuleCreate,
@@ -140,16 +139,6 @@ typedef struct
      APPevent            event;
      Document            document;
      Element             element;
-     ElementType         elementType;
-     ElementType         targetElementType;
-  }
-NotifyOnElementType;
-
-typedef struct
-  {
-     APPevent            event;
-     Document            document;
-     Element             element;
      Element             target;
      Document            targetdocument;
   }
@@ -190,7 +179,6 @@ typedef union
      NotifyWindow        notifywindow;
      NotifyAttribute     notifyattribute;
      NotifyElement       notifyelement;
-     NotifyOnElementType notifyonelementtype;
      NotifyOnTarget      notifyontarget;
      NotifyOnValue       notifyonvalue;
      NotifyPresentation  notifypresentation;

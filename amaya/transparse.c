@@ -1250,7 +1250,10 @@ UCHAR       c;
    if (ppLgBuffer != 0)
      {
 #ifndef PPSTANDALONE
-	ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
+       if (ustrcmp (ppNode->Tag, "*") == 0)
+	 ThotAttrNum = MapThotAttr (inputBuffer, "");
+       else
+	 ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
 	if (ThotAttrNum != -1)
 	  {
 #endif
