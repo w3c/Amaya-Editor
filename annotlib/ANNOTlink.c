@@ -193,11 +193,13 @@ AnnotMeta *annot;
   TtaUnselect (source_doc);
 
   /* add the annotation to the filter list */
-  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), annot->author);
   AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
   GetServerName (annot->annot_url, server);
   AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
-
+  tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
+  usprintf (tmp, "%s@%s", annot->author, server);
+  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp);
+  TtaFreeMemory (tmp);
 }
 
 /*-----------------------------------------------------------------------

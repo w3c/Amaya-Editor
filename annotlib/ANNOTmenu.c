@@ -278,6 +278,7 @@ ThotBool show;
   CHAR_T *annot_url;
   AnnotMeta *annot;
   int length;
+  ThotBool annot_show;
 
   ElementType elType;
   Element     el;
@@ -356,16 +357,26 @@ ThotBool show;
       if (!annot)
 	continue;
       
-      if (( !AnnotFilter_show (AnnotMetaData[doc].authors, annot->author)
-	    || !AnnotFilter_show (AnnotMetaData[doc].types, annot->type)
-	    || !AnnotFilter_showServer (AnnotMetaData[doc].servers, annot->annot_url)))
-	show = FALSE;
-      else
-	show = TRUE;
+      switch (selector) 
+	{
+	case BY_AUTHOR:
+	  annot_show = AnnotFilter_showAuthor (AnnotMetaData[doc].authors, 
+					       annot->author, 
+					       annot->annot_url);
+	  break;
+	case BY_TYPE:
+	  annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
+					    annot->type);
+	  break;
+	case BY_SERVER:
+	  annot_show = AnnotFilter_showServer (AnnotMetaData[doc].servers, 
+					       annot->annot_url);
+	  break;
+	}
 
       attrType.AttrTypeNum = HTML_ATTR_AnnotationHide;
       attr = TtaGetAttribute (el, attrType);
-      if (show)
+      if (annot_show)
 	{
 	  /* erase the attribute */
 	  if (attr)
@@ -630,7 +641,7 @@ View                view;
   /* the * = filter message */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
 	       AnnotFilterBase + AnnotFilterMenu,
-	       TEXT("     a '*' prefix means hidden"));
+	       TEXT("     a * prefix means hidden"));
 	       
   /* create the radio buttons for choosing a selector */
   i = 0;

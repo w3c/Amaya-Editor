@@ -224,6 +224,45 @@ ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
 }
 
 /*------------------------------------------------------------
+   AnnotFilter_showAuthor
+   Returns a boolean saying if a filter element containing
+   a given object should be shown. If no filter element is
+   found, it returns TRUE.
+   ------------------------------------------------------------*/
+ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
+{
+  List *list_item = list;
+  AnnotFilterData *filter;
+  CHAR_T server[MAX_LENGTH];
+  CHAR_T *tmp;
+  ThotBool result;
+
+  if (!author || !url)
+    return TRUE;
+
+  /* we first normalize the url name to get the server */
+  GetServerName (url, server);
+
+  tmp = TtaGetMemory (ustrlen (author) + ustrlen (server) + 4);
+  usprintf (tmp, "%s@%s", author, server);
+
+  list_item = AnnotFilter_search (list, tmp);
+  if (!list_item)
+    result = TRUE;
+  else 
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter)
+	result = filter->show;
+      else
+	result = TRUE;
+    }
+  TtaFreeMemory (tmp);
+
+  return result;
+}
+
+/*------------------------------------------------------------
    AnnotList_search
    Returns list item that contains the object
    ------------------------------------------------------------*/
