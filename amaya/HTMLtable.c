@@ -19,6 +19,7 @@
 #include "MathMLbuilder_f.h"
 
 static Element      CurrentRow = NULL;
+static Element      CurrentDeletedRow = NULL;
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentColumn = NULL;
 static Element      CurrentCell;
@@ -1198,8 +1199,12 @@ NotifyElement      *event;
 
 #endif
 {
-   PreDeleteRow (event->element, event->document);
-   CheckTableAfterCellUpdate = FALSE;
+  if (CurrentDeletedRow == NULL)
+    {
+      CurrentDeletedRow = event->element;
+      PreDeleteRow (event->element, event->document);
+      CheckTableAfterCellUpdate = FALSE;
+    }
    return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1220,15 +1225,17 @@ NotifyElement      *event;
   Document            doc;
   ThotBool            inMath;
 
+   CurrentDeletedRow = NULL;
    rowgroup = event->element;
    if (rowgroup == NULL)
+     /* the row doesn't exist */
      return;
    elType = TtaGetElementType (rowgroup);
    inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
-      if (inMath)
-	elType.ElTypeNum = MathML_EL_MTABLE;
-      else
-	elType.ElTypeNum = HTML_EL_Table;
+   if (inMath)
+     elType.ElTypeNum = MathML_EL_MTABLE;
+   else
+     elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (rowgroup, elType);
    doc = event->document;
    CheckAllRows (table, doc);
@@ -1258,6 +1265,12 @@ NotifyElement      *event;
     /* manage only one row at the same time */
     return FALSE;
   cell = event->element;
+  CurrentRow = TtaGetParent (cell);
+  if (CurrentRow == CurrentDeletedRow)
+    {
+      CurrentRow = NULL;
+      return FALSE;
+    }
   /* seach the maximum value of attribute rowspan for the deleted cell and */
   /* all its following cells */
   elType = TtaGetElementType (cell);
@@ -1290,7 +1303,6 @@ NotifyElement      *event;
     }
   else
     CurrentSpan = 1;
-  CurrentRow = TtaGetParent (cell);
   return FALSE;
 }
 

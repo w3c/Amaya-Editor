@@ -1104,10 +1104,8 @@ Document            document;
 {
    ThotBool            inheritance, comparaison;
    PtrElement          pElChild;
-   int                 v;
-   ThotBool            displayed;
 
-   if (LoadedDocument[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL || DocumentOfElement (pEl) == NULL)
      return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
    if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
@@ -1118,16 +1116,6 @@ Document            document;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pAttr->AeAttrSSchema->SsPSchema->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pAttr->AeAttrSSchema->SsPSchema->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
-   /* check if the element is already displayed */
-   displayed = FALSE;
-   v = 0;
-   while (v < MAX_VIEW_DOC && !displayed)
-     {
-       displayed = pEl->ElAbstractBox[v] != NULL;
-       v++;
-     }
-   if (!displayed)
-     return;
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
    ApplyAttrPRulesToElem (pEl, LoadedDocument[document - 1], pAttr, pEl, FALSE);

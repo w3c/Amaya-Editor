@@ -438,111 +438,106 @@ ThotBool            redisplay;
    ThotBool            stop;
 
    if (pEl->ElReferredDescr != NULL)
-      /* cet element est reference' */
+     /* cet element est reference' */
      {
-	pRef = NULL;
-	pExtDoc = NULL;
-	pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc,
-				  TRUE);
-	/* parcourt la chaine des elements qui le referencent */
-	while (pRef != NULL)
-	  {
-	     pElRef = pRef->RdElement;
-	     /* un element qui reference */
-	     if (pElRef != NULL &&
-		 /* avoid to update the attribute reference of a removed element */
-		 (pElRef->ElPrevious != NULL || pElRef->ElNext != NULL || pElRef->ElParent != NULL))
-		if (pRef->RdAttribute != NULL)
-		   /* reference par attribut */
-		   /* retire la presentation de cet attribut et reaffiche */
-		  {
-		     /* cherche d'abord cet attribut parmi ceux de l'element */
-		     pPrevAttr = NULL;
-		     pAttr = pElRef->ElFirstAttr;
-		     stop = FALSE;
-		     do
+       pRef = NULL;
+       pExtDoc = NULL;
+       pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+       /* parcourt la chaine des elements qui le referencent */
+       while (pRef != NULL)
+	 {
+	   pElRef = pRef->RdElement;
+	   /* un element qui reference */
+	   if (pElRef != NULL && pRefDoc == DocumentOfElement (pElRef))
+	     if (pRef->RdAttribute != NULL)
+	       /* reference par attribut */
+	       /* retire la presentation de cet attribut et reaffiche */
+	       {
+		 /* cherche d'abord cet attribut parmi ceux de l'element */
+		 pPrevAttr = NULL;
+		 pAttr = pElRef->ElFirstAttr;
+		 stop = FALSE;
+		 do
+		   {
+		     if (pAttr == NULL)
+		       stop = TRUE;
+		     else if (pAttr == pRef->RdAttribute)
+		       stop = TRUE;	/* c'est l'attribut cherche' */
+		     else
 		       {
-			  if (pAttr == NULL)
-			     stop = TRUE;
-			  else if (pAttr == pRef->RdAttribute)
-			     stop = TRUE;	/* c'est l'attribut cherche' */
-			  else
-			    {
-			       /* passe a l'attribut suivant de l'element */
-			       pPrevAttr = pAttr;
-			       pAttr = pAttr->AeNext;
-			    }
+			 /* passe a l'attribut suivant de l'element */
+			 pPrevAttr = pAttr;
+			 pAttr = pAttr->AeNext;
 		       }
-		     while (!stop);
-		     /* retire provisoirement l'attribut de l'element */
-		     if (pAttr != NULL)
-			if (pPrevAttr == NULL)
-			   pElRef->ElFirstAttr = pAttr->AeNext;
-			else
-			   pPrevAttr->AeNext = pAttr->AeNext;
-		     /* recalcule la presentation de l'element sans l'attribut */
-		     UpdatePresAttr (pElRef, pRef->RdAttribute, pElRef, *pDoc,
-				     TRUE, FALSE, NULL);
-		     AbstractImageUpdated (*pDoc);
-		     if (redisplay)
-			RedisplayDocViews (*pDoc);
-		     /* remet l'attribut a l'element */
-		     if (pAttr != NULL)
-			if (pPrevAttr == NULL)
-			   pElRef->ElFirstAttr = pAttr;
-			else
-			   pPrevAttr->AeNext = pAttr;
-		  }
-		else
-		   /* si c'est une inclusion, on ne fait rien */
-		if (pElRef->ElTerminal && pElRef->ElLeafType == LtReference)
-		   /* reference par element reference */
-		  {
-		     /* parcourt toutes les vues */
-		     for (view = 0; view < MAX_VIEW_DOC; view++)
-			if (pElRef->ElAbstractBox[view] != NULL)
-			   /* l'element qui reference a un pave dans cette vue */
-			  {
-			     pAb = pElRef->ElAbstractBox[view];
-			     if (pAb->AbLeafType == LtText)
+		   }
+		 while (!stop);
+		 /* retire provisoirement l'attribut de l'element */
+		 if (pAttr != NULL)
+		   if (pPrevAttr == NULL)
+		     pElRef->ElFirstAttr = pAttr->AeNext;
+		   else
+		     pPrevAttr->AeNext = pAttr->AeNext;
+		 /* recalcule la presentation de l'element sans l'attribut */
+		 UpdatePresAttr (pElRef, pRef->RdAttribute, pElRef, *pDoc,
+				 TRUE, FALSE, NULL);
+		 AbstractImageUpdated (*pDoc);
+		 if (redisplay)
+		   RedisplayDocViews (*pDoc);
+		 /* remet l'attribut a l'element */
+		 if (pAttr != NULL)
+		   if (pPrevAttr == NULL)
+		     pElRef->ElFirstAttr = pAttr;
+		   else
+		     pPrevAttr->AeNext = pAttr;
+	       }
+	     else if (pElRef->ElTerminal && pElRef->ElLeafType == LtReference)
+	       /* si c'est une inclusion, on ne fait rien */
+	       /* reference par element reference */
+	       {
+		 /* parcourt toutes les vues */
+		 for (view = 0; view < MAX_VIEW_DOC; view++)
+		   if (pElRef->ElAbstractBox[view] != NULL)
+		     /* l'element qui reference a un pave dans cette vue */
+		     {
+		       pAb = pElRef->ElAbstractBox[view];
+		       if (pAb->AbLeafType == LtText)
 				/* change le contenu du pave reference */
-			       {
-				  pAb->AbText->BuContent[0] = TEXT('[');
-				  pAb->AbText->BuContent[1] = TEXT('?');
-				  pAb->AbText->BuContent[2] = TEXT(']');
-				  pAb->AbText->BuContent[3] = EOS;
-				  pAb->AbText->BuLength = 3;
-				  pAb->AbVolume = 3;
-				  /* reaffiche le pave */
-				  pAb->AbChange = TRUE;
-				  if (AssocView (pElRef))
-				     frame =
-					pRefDoc->DocAssocFrame[pElRef->ElAssocNum - 1];
-				  else
-				     frame = pRefDoc->DocViewFrame[view];
-				  h = 0;
-				  /* on ignore la hauteur de page */
-				  ChangeConcreteImage (frame, &h, pElRef->ElAbstractBox[view]);
-				  if (redisplay)
-				     DisplayFrame (frame);
-			       }
-			  }
-		     RedisplayCopies (pElRef, pRefDoc, redisplay);
-		  }
-	     /* reference suivante */
-	     pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc,
-				       &pExtDoc, TRUE);
-	  }
+			 {
+			   pAb->AbText->BuContent[0] = TEXT('[');
+			   pAb->AbText->BuContent[1] = TEXT('?');
+			   pAb->AbText->BuContent[2] = TEXT(']');
+			   pAb->AbText->BuContent[3] = EOS;
+			   pAb->AbText->BuLength = 3;
+			   pAb->AbVolume = 3;
+			   /* reaffiche le pave */
+			   pAb->AbChange = TRUE;
+			   if (AssocView (pElRef))
+			     frame =
+			       pRefDoc->DocAssocFrame[pElRef->ElAssocNum - 1];
+			   else
+			     frame = pRefDoc->DocViewFrame[view];
+			   h = 0;
+			   /* on ignore la hauteur de page */
+			   ChangeConcreteImage (frame, &h, pElRef->ElAbstractBox[view]);
+			   if (redisplay)
+			     DisplayFrame (frame);
+			 }
+		     }
+		 RedisplayCopies (pElRef, pRefDoc, redisplay);
+	       }
+	   /* reference suivante */
+	   pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+	 }
      }
    /* traite les fils de l'element */
    if (!pEl->ElTerminal)
      {
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL)
-	  {
-	     RedisplayEmptyReferences (pChild, pDoc, redisplay);
-	     pChild = pChild->ElNext;
-	  }
+       pChild = pEl->ElFirstChild;
+       while (pChild != NULL)
+	 {
+	   RedisplayEmptyReferences (pChild, pDoc, redisplay);
+	   pChild = pChild->ElNext;
+	 }
      }
 }
 

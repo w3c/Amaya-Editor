@@ -12,6 +12,8 @@ extern void TtaFreeMemory ( void* ptr );
 extern void FreeAll ( void );
 extern char* TtaStrdup ( char* str );
 extern CHAR_T* TtaWCSdup ( CHAR_T* str );
+extern char* TtaWC2ISOdup ( CHAR_T* str );
+extern CHAR_T* TtaISO2WCdup ( char* str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
 extern void InitEditorMemory ( void );
@@ -86,6 +88,8 @@ extern void TtaFreeMemory (/* void* ptr */);
 extern void FreeAll (/* void */);
 extern char* TtaStrdup (/* char* str */);
 extern CHAR_T* TtaWCSdup (/* CHAR_T* str */);
+extern char* TtaWC2ISOdup (/* CHAR_T* str */);
+extern CHAR_T* TtaISO2WCdup (/* char* str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
 extern void InitEditorMemory (/* void */);

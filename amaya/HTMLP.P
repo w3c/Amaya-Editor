@@ -7759,7 +7759,7 @@ RULES
 #endif
 	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom;
-	MarginTop: 0.5;
+	{MarginTop: 0.5;}
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	Width: Enclosing . Width;

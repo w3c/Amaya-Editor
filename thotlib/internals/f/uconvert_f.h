@@ -10,11 +10,18 @@ extern int uctoi ( const STRING string );
 extern long uctol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern int wctoi ( const CHAR_T* string );
-extern int TtaMBS2WCS (unsigned char**, CHAR_T**, CHARSET);
 extern unsigned char TtaGetISOLatin2CodeFromUnicode ( const CHAR_T wc );
 extern CHAR_T TtaGetUnicodeValueFromISOLatin2Code ( const unsigned char c );
 extern unsigned char TtaGetISOLatin6CodeFromUnicode ( const CHAR_T wc );
 extern CHAR_T TtaGetUnicodeValueFromISOLatin6Code ( const unsigned char c );
+extern unsigned char TtaGetWindows1256CPCodeFromUnicode ( const CHAR_T wc );
+extern CHAR_T TtaGetUnicodeValueFromWindows1256CP ( const unsigned char c );
+extern int TtaWC2MB ( CHAR_T wchar,
+                      char* mbchar,
+                      CHARSET encoding );
+extern int TtaMB2WC ( char* mbchar,
+                      CHAR_T* wchar,
+                      CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -22,11 +29,18 @@ extern int uctoi (/* const STRING string */);
 extern long uctol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern int wctoi (/* const CHAR_T* string */);
-extern int TtaMBS2WCS (/* unsigned char**, CHAR_T**, CHARSET */);
 extern unsigned char TtaGetISOLatin2CodeFromUnicode (/* const CHAR_T wc */);
 extern CHAR_T TtaGetUnicodeValueFromISOLatin2Code (/* const unsigned char c */);
 extern unsigned char TtaGetISOLatin6CodeFromUnicode (/* const CHAR_T wc */);
 extern CHAR_T TtaGetUnicodeValueFromISOLatin6Code (/* const unsigned char c */);
+extern unsigned char TtaGetWindows1256CPCodeFromUnicode (/* const CHAR_T wc */);
+extern CHAR_T TtaGetUnicodeValueFromWindows1256CP (/* const unsigned char c */);
+extern int TtaWC2MB (/* CHAR_T wchar,
+                        char* mbchar,
+                        CHARSET encoding */);
+extern int TtaMB2WC (/* char* mbchar,
+                        CHAR_T* wchar,
+                        CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

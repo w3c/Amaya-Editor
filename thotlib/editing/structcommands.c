@@ -1170,15 +1170,18 @@ ThotBool            save;
 		      pAncestor[MAX_ANCESTOR],
 		      pAncestorPrev[MAX_ANCESTOR],
 		      pAncestorNext[MAX_ANCESTOR];
+  DisplayMode         dispMode;
+  Document            doc;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
                       firstCharInit, lastCharInit;
-  ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll,
-                      canCut, recorded;
+  ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
+  ThotBool            canCut, recorded, lock;
 
   pPrevPage = NULL;
   last = 0;
+  lock = TRUE;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
@@ -1284,6 +1287,20 @@ ThotBool            save;
 		      }
 		  }
 
+		doc = IdentDocument (pSelDoc);
+		/* lock tables formatting */
+		if (ThotLocalActions[T_islock])
+		  {
+		    (*ThotLocalActions[T_islock]) (&lock);
+		    if (!lock)
+		      {
+			dispMode = TtaGetDisplayMode (doc);
+			if (dispMode == DisplayImmediately)
+			  TtaSetDisplayMode (doc, DeferredDisplay);
+			/* table formatting is not loked, lock it now */
+			(*ThotLocalActions[T_lock]) ();
+		      }
+		  }
 		/* on ne supprime pas l'element racine mais son contenu */
 		stop = FALSE;
 		do
@@ -1460,7 +1477,7 @@ ThotBool            save;
 				/* conserve un pointeur sur le pere */
 				pParentEl = pE->ElParent;
 				notifyEl.event = TteElemDelete;
-				notifyEl.document = (Document) IdentDocument (pSelDoc);
+				notifyEl.document = doc;
 				notifyEl.element = (Element) pParentEl;
 				notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 				notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
@@ -1652,9 +1669,15 @@ ThotBool            save;
 		      }
 
 		    if (!oneAtLeast)
-		      /* on n'a rien detruit. Retablit la slection
-			 initiale */
 		      {
+			/* nothing was destroyed: reset the selection */
+			if (!lock)
+			  {
+			    /* unlock table formatting */
+			    (*ThotLocalActions[T_unlock]) ();
+			    if (dispMode == DisplayImmediately)
+			      TtaSetDisplayMode (doc, DisplayImmediately);
+			  }
 			if (lastCharInit > 0)
 			  lastCharInit--;
 			if (firstCharInit > 1)
@@ -1674,12 +1697,10 @@ ThotBool            save;
 			  ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
 		      }
 		    else
-		      /* on a effectivement detruit quelque chose, on
-			 termine le traitement */
 		      {
-			/* verifie si les elements voisins deviennent
-			   premier ou */
-			/* dernier parmi leurs freres */
+			/* some element were destroyed, finish the work:
+			 * check if sibling elements become first or last
+			 */
 			ProcessFirstLast (pPrev, pNext, pSelDoc);
 			if (pPrev != NULL)
 			  /* traitement particulier aux tableaux */
@@ -1734,6 +1755,14 @@ ThotBool            save;
 			    /* element detruit suivant */
 			  }
 
+			if (!lock)
+			  {
+			    /* unlock table formatting */
+			    (*ThotLocalActions[T_unlock]) ();
+			    if (dispMode == DisplayImmediately)
+			      TtaSetDisplayMode (doc, DisplayImmediately);
+			  }
+
 			/* did the selection change? */
 			GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 			if (firstSel == pSave || ElemIsWithinSubtree(firstSel, pSave))
@@ -1766,6 +1795,7 @@ ThotBool            save;
 				/* s'il n'y a ni suivant ni precedent, selectionne l'englobant */
 				SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
 			  }
+
 			if (!save)
 			  {
 			    /* libere les elements coupe's */

@@ -64,9 +64,9 @@ static void UpdateColumnWidth (/*cell, col, frame*/);
    DifferFormatting  registers differed table formatting.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              DifferFormatting (PtrAbstractBox table, int frame)
+static void       DifferFormatting (PtrAbstractBox table, int frame)
 #else  /* __STDC__ */
-void              DifferFormatting (table, frame)
+static void       DifferFormatting (table, frame)
 PtrAbstractBox    table;
 int               frame;
 #endif /* __STDC__ */
@@ -129,6 +129,44 @@ int               frame;
 
   pLockRel->LockRTable[i] = table;
   pLockRel->LockRFrame[i] = frame;
+}
+
+
+/*----------------------------------------------------------------------
+   IsDifferredTable
+   Return TRUE if this table is already registered.        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool   IsDifferredTable(PtrAbstractBox table)
+#else  /* __STDC__ */
+static ThotBool   IsDifferredTable (table)
+PtrAbstractBox    table;
+#endif /* __STDC__ */
+{
+  PtrLockRelations    pLockRel;
+  int                 i;
+
+  if (table == NULL)
+    return FALSE;
+
+  /* Look for an empty entry */
+  pLockRel = DifferedChecks;
+  i = 0;
+  while (pLockRel != NULL)
+    {
+      i = 0;
+      while (i < MAX_RELAT_DIM && pLockRel->LockRTable[i] != NULL)
+	{
+	  if (pLockRel->LockRTable[i] == table)
+	    /* The table is already registered */
+	    return TRUE;
+	  else
+	    i++;
+	}
+	/* next block */
+	pLockRel = pLockRel->LockRNext;
+    }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1886,6 +1924,8 @@ int              frame;
 	      DifferFormatting (table, frame);
 	      table = NULL;
 	    }
+	  else if (IsDifferredTable (table))
+	    table = NULL;
 	  else
 	    {
 	      pEl = cell->AbElement;
@@ -2007,6 +2047,9 @@ int              frame;
       if (Lock)
 	/* the table formatting is locked */
 	  DifferFormatting (table, frame);
+      else if (IsDifferredTable (table))
+	/* the table will be managed later */
+	return;
       else if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately || table != NULL)
 	/* compute widths of each column within the table */
 	ComputeColWidth (col, pAb, frame);
@@ -2099,6 +2142,7 @@ void    TtaLockTableFormatting ()
 static void    UnlockTableFormatting ()
 {
   PtrLockRelations    pLockRel;
+  PtrAbstractBox      table;
   Propagation         savpropage;
   int                 i;
 
@@ -2115,11 +2159,13 @@ static void    UnlockTableFormatting ()
 	  i = 0;
 	  while (i < MAX_RELAT_DIM)
 	    {
-	      if (pLockRel->LockRTable[i] == NULL)
-		i = MAX_RELAT_DIM;
-	      else if (pLockRel->LockRTable[i]->AbElement != NULL)
+	      table = pLockRel->LockRTable[i];
+              if (table == NULL)
+                i = MAX_RELAT_DIM;
+	      else if (table && table->AbElement)
 		{
-		  ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
+		  pLockRel->LockRTable[i] = NULL;
+		  ComputeColWidth (NULL, table, pLockRel->LockRFrame[i]);
 		  /* need to propagate to enclosing boxes */
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
 		  DisplayFrame (pLockRel->LockRFrame[i]);

@@ -525,8 +525,10 @@ void                PasteCommand ()
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel;
   PtrPasteElem        pPasteD;
+  DisplayMode         dispMode;
+  Document            doc;
   int                 firstChar, lastChar, numAssoc, view, i;
-  ThotBool            ok, before, within;
+  ThotBool            ok, before, within, lock;
   
   before = FALSE;
   if (FirstSavedElement == NULL)
@@ -552,6 +554,20 @@ void                PasteCommand ()
 	
 	pSplitText = NULL;
 	pNextEl = NULL;
+	doc = IdentDocument (pDoc);
+	/* lock tables formatting */
+	if (ThotLocalActions[T_islock])
+	  {
+	    (*ThotLocalActions[T_islock]) (&lock);
+	    if (!lock)
+	      {
+		dispMode = TtaGetDisplayMode (doc);
+		if (dispMode == DisplayImmediately)
+		  TtaSetDisplayMode (doc, DeferredDisplay);
+		/* table formatting is not loked, lock it now */
+		(*ThotLocalActions[T_lock]) ();
+	      }
+	  }
 
 	if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
 	    firstSel->ElVolume == 0 && !firstSel->ElTerminal)
@@ -659,6 +675,13 @@ void                PasteCommand ()
 		DeleteElement (&pFree, pDoc);
 		pFree = NULL;
 	      }
+	    if (!lock)
+	      {
+		/* unlock table formatting */
+		(*ThotLocalActions[T_unlock]) ();
+		if (dispMode == DisplayImmediately)
+		  TtaSetDisplayMode (doc, DisplayImmediately);
+	      }
 	  }
 	else
 	  /* on a effectivement colle' le contenu du buffer */
@@ -735,6 +758,15 @@ void                PasteCommand ()
 		  /*  pointent les elements colle's */
 		  UpdateRefAttributes (CreatedElement[i], pDoc);
 		}
+
+	    if (!lock)
+	      {
+		/* unlock table formatting */
+		(*ThotLocalActions[T_unlock]) ();
+		if (dispMode == DisplayImmediately)
+		  TtaSetDisplayMode (doc, DisplayImmediately);
+	      }
+
 	    /* set the selection at the end of the pasted elements */
 	    if (NCreatedElements > 0)
 	      {

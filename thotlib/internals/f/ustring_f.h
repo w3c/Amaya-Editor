@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int uputchar (int);
+extern int uputchar ( int c );
 extern int ustrcasecmp ( const CHAR_T* str1,
                          const CHAR_T* str2 );
 extern CHAR_T* ustrcat ( CHAR_T* dest,
@@ -52,14 +52,10 @@ extern char* wc2iso_strncpy ( char* dest,
                               int count );
 extern int wc2iso_strcmp ( CHAR_T* str1,
                            const char* str2 );
-extern int TtaGetNextWideCharFromMultibyteString ( CHAR_T* car,
-                                                   unsigned char** txt,
-                                                   CHARSET encoding );
 
 #else /* __STDC__ */
 
-extern int uputchar (/* int */);
-
+extern int uputchar (/* int c */);
 extern int ustrcasecmp (/* const CHAR_T* str1,
                            const CHAR_T* str2 */);
 extern CHAR_T* ustrcat (/* CHAR_T* dest,
@@ -105,9 +101,6 @@ extern char* wc2iso_strncpy (/* char* dest,
                                 int count */);
 extern int wc2iso_strcmp (/* CHAR_T* str1,
                              const char* str2 */);
-extern int TtaGetNextWideCharFromMultibyteString (/* CHAR_T* car,
-                                                     unsigned char** txt,
-                                                     CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
