@@ -13598,7 +13598,7 @@ echo "$as_me: error: Mesa library sources not found (opengl). Please download Me
   # this is the flags used to build amaya with OpenGL
   GL_OPTIONS="-D_GL"
   GL_INCLUDES="-I../../Mesa/include"
-  GL_LIBRARIES="-L../../Mesa/lib -lGL -lGLU"
+  GL_LIBRARIES="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib -lGL -lGLU"
 
 
 fi
