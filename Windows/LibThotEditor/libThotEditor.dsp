@@ -211,10 +211,6 @@ SOURCE=..\..\thotlib\view\createabsbox.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\createdoc.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\view\createpages.c
 # End Source File
 # Begin Source File
@@ -347,10 +343,6 @@ SOURCE=..\..\thotlib\dialogue\modiftype.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\opendoc.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\openview.c
 # End Source File
 # Begin Source File
@@ -368,10 +360,6 @@ SOURCE=..\..\thotlib\image\picture.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\image\pictureapi.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\picturemenu.c
 # End Source File
 # Begin Source File
 
@@ -456,10 +444,6 @@ SOURCE=..\..\thotlib\tree\resgen.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\tree\resmatch.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\savedoc.c
 # End Source File
 # Begin Source File
 
@@ -591,15 +575,7 @@ SOURCE=..\..\thotlib\view\viewapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\editing\viewcommands.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\views.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\visibility.c
 # End Source File
 # Begin Source File
 
@@ -624,10 +600,6 @@ SOURCE=..\..\thotlib\image\xbmhandler.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\image\xpmhandler.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\zoom.c
 # End Source File
 # End Target
 # End Project
