@@ -503,6 +503,7 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 		    pBoxFirst != pBoxLast)
 		pBoxFirst = pBoxFirst->BxNext;
 	     while (pBoxLast->BxAbstractBox->AbPresentationBox &&
+		    pBoxLast->BxPrevious->BxAbstractBox &&
 		    pBoxFirst != pBoxLast)
 		pBoxLast = pBoxLast->BxPrevious;
 

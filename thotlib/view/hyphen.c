@@ -288,7 +288,10 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
       /* get the next word */
       nbChars = NextWord (font, &adbuff, &i, word, &w);
       /* hyphen width */
-      lghyphen = BoxCharacterWidth (173, font);
+      if (language < TtaGetFirstUserLanguage ())
+	lghyphen = 0;
+      else
+	lghyphen = BoxCharacterWidth (173, font);
       /* width available for the first part of the word */
       rest = *width - w - lghyphen;
       if (word)
@@ -358,7 +361,8 @@ ThotBool CanHyphen (PtrBox pBox)
   Language            language;
 
   if (!TextInserting &&
-      pBox->BxScript == 'L' &&
+      pBox->BxScript != 'H' && pBox->BxScript != 'A' &&
+      pBox->BxScript != 'G' &&
       pBox->BxAbstractBox->AbLeafType == LtText &&
       pBox->BxAbstractBox->AbHyphenate)
     {

@@ -509,21 +509,12 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pBox;
-  int                 dim, i;
+  int                 dim;
 
   if (horizRef)
     {
-      /* reference for computing percent rules */
-#ifdef IV
-      if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
-	{
-	  pBox = pAb->AbEnclosing->AbBox;
-	  dim = pBox->BxW;
-	}
-      else
-	GetSizesFrame (frame, &dim, &i);
-#endif
       pBox = pAb->AbBox;
+      /* reference for percent rules */
       dim = pBox->BxW;
       /* left margin */
       if (pAb->AbLeftMarginUnit == UnPercent)
@@ -571,16 +562,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     }
   else
     {
-      /* reference for computing percent rules */
-      if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
-	{
-	  pBox = pAb->AbEnclosing->AbBox;
-	  dim = pBox->BxH;
-	}
-      else
-	GetSizesFrame (frame, &i, &dim);
-
       pBox = pAb->AbBox;
+      /* reference for percent rules */
+      dim = pBox->BxH;
       /* top margin */
       if (pAb->AbTopMarginUnit == UnPercent)
 	pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent, (PtrAbstractBox) dim, 0);
@@ -1256,7 +1240,7 @@ PtrBox GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
    - Else get the sibling box which gives the position.     
    Return a box or NULL.                        
   ----------------------------------------------------------------------*/
-PtrBox              GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
 {
   PtrBox              pRelativeBox;
   PtrPosRelations     pPosRel;
@@ -1400,6 +1384,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, delta, i;
+  int                 dx, dy;
   ThotBool            inLine;
   ThotBool            defaultDim;
 
@@ -1555,6 +1540,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		pDimAb->DimUnit = UnPixel;
 	    }
 
+	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	  dy = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
 	  if (pParentAb == NULL)
 	    /* It's the root box */
 	    if (horizRef)
@@ -1574,7 +1561,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
 		      /* the rule gives the outside value */
-		      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
+		      val = val - dx;
 		    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 		  }
 	      }
@@ -1596,7 +1583,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
 		      /* the rule gives the outside value */
-		      val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
+		      val = val - dy;
 		    ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 		  }
 	      }
@@ -1631,7 +1618,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				/* inherited from the parent */
 			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
 				/* the rule gives the outside value */
-			      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
+			      val = val - dx;
 			      InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 			    }
 			  else
@@ -1730,7 +1717,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      else
 				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			      /* the rule gives the outside value */
-			      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
+			      val = val - dx;
 			      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 			      /* Marks out of structure relations */
 			      if (pDimAb->DimAbRef != pParentAb
@@ -1771,7 +1758,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      /* inherited from the parent */
 			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxH, 0);
 			      /* the rule gives the outside value */
-			      val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
+			      val = val - dy;
 			      InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 			    }
 			  else
@@ -1794,7 +1781,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  /* inherited from the parent */
 			  val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) i, 0);
 			  /* the rule gives the outside value */
-			  val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
+			  val = val - dy;
 			  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 			}
 		      else
@@ -1883,7 +1870,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				  else
 				    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 				  /* the rule gives the outside value */
-				  val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
+				  val = val - dy;
 				  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 				  /* Marks out of structure relations */
 				  if (pDimAb->DimAbRef != pParentAb

@@ -778,8 +778,10 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   still = TRUE;
   spaceWidth = BoxCharacterWidth (SPACE, font);
   spaceAdjust = spaceWidth;
-  language = pBox->BxAbstractBox->AbLang;
-
+  if (pBox->BxScript == 'L')
+    language = pBox->BxAbstractBox->AbLang;
+  else
+    language = TtaGetLanguageIdFromScript (pBox->BxScript);
   if (max < pBox->BxWidth)
     {
       /* we are not just removing extra spaces at the end of the line */
@@ -988,8 +990,9 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
     {
       /* Avoid more than MAX_SIBLING_HYPHENS consecutive hyphens */
       still = TRUE;
-      if (pLine)
+      if (pLine && pBox->BxScript != 'Z')
 	{
+	  /* don't really generate an hyphen in asian scripts */
 	  pPreviousLine = pLine->LiPrevious;
 	  count = 0;
 	  while (count < MAX_SIBLING_HYPHENS && pPreviousLine)
@@ -2008,7 +2011,8 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		{
 		  /* get the first child */
 		  ibox1 = pBox->BxNexChild;
-		  pBox->BxNexChild = NULL;
+		  if (ibox1 && ibox1->BxType != BoScript)
+		    pBox->BxNexChild = NULL;
 		  /* merge one or more pieces */
 		  RemoveAdjustement (pBox, x);
 		  width = pBox->BxW;
@@ -2143,7 +2147,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 x, lineSpacing, indentLine;
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
-  int                 top, left;
+  int                 top, left, rigth;
   ThotBool            toAdjust;
   ThotBool            breakLine;
   ThotBool            orgXComplete;
@@ -2162,6 +2166,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   full = TRUE;
   top = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   left = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+  rigth = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   x = 0;
   pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
   /* evalue si le positionnement en X et en Y doit etre absolu */
@@ -2212,9 +2217,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       else
 	indentLine = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
 				 ViewFrameTable[frame - 1].FrMagnification);
-      if (pAb->AbIndent < 0)
-	indentLine = -indentLine;
-      
       if (pBox->BxFirstLine == NULL)
 	{
 	  if (pNextBox == NULL)
@@ -2352,25 +2354,15 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    }
 	  else if (!pNextBox->BxAbstractBox->AbNotInLine)
 	    {
-	      /* put boxes in line */
 	      /* line indent */
 	      pLine->LiXOrg = left;
-	      if (pPreviousLine || pAb->AbTruncatedHead)
-		{
-		  if (pAb->AbIndent < 0)
-		    pLine->LiXOrg += indentLine;
-		}
-	      else if (pAb->AbIndent > 0)
-		pLine->LiXOrg += indentLine;
-	      if (pLine->LiXOrg >= width)
-		pLine->LiXOrg = left;
-
-	      pLine->LiXMax = width + left - pLine->LiXOrg;
+	      if (pPreviousLine || pAb->AbTruncatedHead || indentLine >= width)
+		indentLine = 0;
+	      pLine->LiXOrg += indentLine;
+	      pLine->LiXMax = width - pLine->LiXOrg;
 	      pLine->LiFirstBox = pNextBox;
-	      /* ou  NULL si la boite est entiere */
 	      pLine->LiFirstPiece = pBoxToBreak;
-
-	      /* Remplissage de la ligne au maximum */
+	      /* Fill the line */
 	      minWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame);
 	      if (pBox->BxMinWidth < minWidth)
@@ -2564,10 +2556,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	}
     }
   /* now add margins, borders and paddings to min and max widths */
-  x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin
-      + pBox->BxRBorder + pBox->BxRPadding;
-  pBox->BxMinWidth += x;
-  pBox->BxMaxWidth += x;
+  pBox->BxMinWidth += left + rigth;
+  pBox->BxMaxWidth += left + rigth;
 }
 
 

@@ -592,7 +592,8 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   TtaConvertJisToWC convert a jis 2 byte character to a unicode
   wide character.
   -------------------------------------------------------------*/
-wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2, CHARSET charset)
+wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2,
+			   CHARSET charset)
 {
   wchar_t wc;
 
@@ -600,11 +601,11 @@ wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2, CHARSET charset)
   switch (charset)
     {
     case JIS_X_0201_ROMAN:
-      if (b1 < sizeof(JIS_X_0201_ROMAN_Map)/sizeof(unsigned short))
+      if (b1 < sizeof (JIS_X_0201_ROMAN_Map) / sizeof (wchar_t))
 	wc = JIS_X_0201_ROMAN_Map[b1];
       break;
     case JIS_X_0201_KANA:
-      if (b1 < sizeof(JIS_X_0201_KANA_Map)/sizeof(unsigned short))
+      if (b1 < sizeof (JIS_X_0201_KANA_Map) / sizeof (wchar_t))
 	wc = JIS_X_0201_KANA_Map[b1];
       break;
     case JIS_X_0208:

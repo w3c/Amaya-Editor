@@ -319,7 +319,8 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
 	      /* display the value */
 	      mbc[0] = '&';
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], "%d",
+	      mbc[1] = 'x';
+	      sprintf (&mbc[2], "%x",
 		       (int)b->BuContent[i]);
 	      n = 0;
 	      while (mbc[n] != EOS)
@@ -1829,14 +1830,19 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 				 wrnumber (box1->BxXOrg, fileDescriptor);
 				 fprintf (fileDescriptor, " Y:");
 				 wrnumber (box1->BxYOrg, fileDescriptor);
-				 fprintf (fileDescriptor, " base:");
+				 fprintf (fileDescriptor, " Base:");
 				 wrnumber (box1->BxHorizRef, fileDescriptor);
+				 fprintf (fileDescriptor, "\n");
+				 for (j = 1; j <= Indent + 6; j++)
+				   fprintf (fileDescriptor, " ");
+				 fprintf (fileDescriptor, "Width:");
+				 wrnumber (box1->BxWidth, fileDescriptor);
 				 fprintf (fileDescriptor, " Index:");
 				 wrnumber (box1->BxIndChar, fileDescriptor);
 				 fprintf (fileDescriptor, " \'");
 				 i = box1->BxNChars;
-				 if (i > 12)
-				   i = 12;
+				 if (i > 20)
+				   i = 20;
 				 WrText (box1->BxBuffer, box1->BxIndChar + 1, i,
 					 fileDescriptor);
 				 fprintf (fileDescriptor, "\'");

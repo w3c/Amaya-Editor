@@ -1230,13 +1230,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
   int                frame;
   unsigned int       mask;
 
-  lfont = NULL;
+  *font = NULL;
   if (fontset)
     {
       if (c <= 0xFF)
 	{
 	  /* 0 -> FF */
-	  lfont = fontset->FontIso_1;
+	  *font = fontset->FontIso_1;
 	  car = (int) c;
 	}
       else if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ || 
@@ -1447,6 +1447,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	  if (pfont)
 	    {
 	      /* attach that font to the current frame */
+	      lfont = *pfont;
 	      for (frame = 1; frame <= MAX_FRAME; frame++)
 		{
 		  mask = 1 << (frame - 1);
@@ -1459,34 +1460,29 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		    /* use the font Symbol instead of a greek font */
 		    encoding = ISO_SYMBOL;
 		}
-	      if (lfont == NULL)
-		/* font not found: avoid to retry later */
-		lfont = (void *) -1;
+	      /* font not found: avoid to retry later */
 	      *pfont = lfont;
+	      *font = lfont;
 	    }
 	  else
-	    lfont = (void *) -1;
-	  if (code == 'Z')
+	    *font = NULL;
+	  if (*font == NULL || (*font == FontDialogue && code != '1'))
+	    {
+	      car = UNDISPLAYED_UNICODE;
+	      *font = NULL;
+	    }
+	  else if (code == 'Z')
 	    car = c;
 	  else
 	    car = (int)TtaGetCharFromWC (c, encoding);
 	}
     }
-  /* when any font is available */
-  if (lfont == (void *) -1)
+  if (car == EOS)
     {
       /* generate a square */
       car = UNDISPLAYED_UNICODE;
       *font = NULL;
     }
-  else if (car == EOS)
-    {
-      /* generate a square */
-      car = UNDISPLAYED_UNICODE;
-      *font = NULL;
-    }
-  else
-    *font = lfont;  
 #ifndef _GL  
   return car;
 #else /*_GL*/
