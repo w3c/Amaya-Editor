@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PSchema TtaNewPSchema ( SSchema nature );
+extern PSchema TtaNewPSchema ( SSchema nature,
+                               ThotBool userStyleSheet );
 extern void TtaUnlinkPSchema ( PSchema schema,
                                Document document,
                                SSchema nature );
@@ -26,7 +27,8 @@ extern void TtaNextPSchema ( PSchema * schema,
 
 #else /* __STDC__ */
 
-extern PSchema TtaNewPSchema (/* SSchema nature */);
+extern PSchema TtaNewPSchema (/* SSchema nature,
+                                 ThotBool userStyleSheet */);
 extern void TtaUnlinkPSchema (/* PSchema schema,
                                  Document document,
                                  SSchema nature */);

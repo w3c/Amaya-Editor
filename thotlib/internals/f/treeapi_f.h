@@ -85,6 +85,7 @@ extern int TtaSameTypes ( ElementType type1,
                           ElementType type2 );
 extern char *TtaGetElementLabel ( Element element );
 extern int TtaGetElementLineNumber ( Element element );
+extern int TtaGetElementLevel ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern int TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
@@ -207,6 +208,7 @@ extern int TtaSameTypes (/* ElementType type1,
                             ElementType type2 */);
 extern char *TtaGetElementLabel (/* Element element */);
 extern int TtaGetElementLineNumber (/* Element element */);
+extern int TtaGetElementLevel (/* Element element */);
 extern int TtaIsConstant (/* ElementType elementType */);
 extern int TtaIsLeaf (/* ElementType elementType */);
 extern Construct TtaGetConstructOfType (/* ElementType elementType */);
