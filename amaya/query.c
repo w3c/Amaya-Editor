@@ -1595,37 +1595,42 @@ char 	     *content_type;
 
 #else  /* !_WINDOWS */
 
-   if (status == HT_ERROR) {
+   if (status == HT_ERROR ||
+	   me->reqStatus == HT_ERROR)
+     {
+	   status = HT_ERROR;
 
-      /* in case of error, close any open files, free all allocated
-	 memory and exit */
-     if (me->output && me->output != stdout) {
+       /* in case of error, close any open files, free all allocated
+ 	      memory and exit */
+       if (me->output && me->output != stdout)
+	     {
 #ifdef DEBUG_LIBWWW      
-       fprintf (stderr, "GetObjectWWW: URL is  %s, closing "
-		"FILE %p\n", me->urlName, me->output); 
+           fprintf (stderr, "GetObjectWWW: URL is  %s, closing "
+	 	    "FILE %p\n", me->urlName, me->output); 
 #endif
-       fclose (me->output);
-       me->output = NULL;
-     }
+           fclose (me->output);
+           me->output = NULL;
+         }
      
-      if (me->reqStatus == HT_ERR) {
-	status = HT_ERROR;
-	/* show an error message on the status bar */
-	DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
-	TtaSetStatus (me->docid, 1, 
-		      TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		      me->status_urlName);
-      } else
-	status = HT_OK;
+       if (me->reqStatus == HT_ERR) 
+	     {
+	      /* show an error message on the status bar */
+	      DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+	      TtaSetStatus (me->docid, 1, 
+		  TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+		  me->status_urlName);
+         }
+     } 
+       else 
+	  {
+	    status = HT_OK;
+      }
 
-      AHTReqContext_delete (me);
-   } else {
      /* part of the stop button handler */
      if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC)) {
-       AHTReqContext_delete (me);
+		 AHTReqContext_delete (me);
 	 }
-   }
-  /*TtaHandlePendingEvents (); */
+ 
 
 #endif /* !_WINDOWS */
 
@@ -1859,9 +1864,6 @@ char               *outputfile;
        me->reqStatus == HT_END || 
        me->reqStatus == HT_ERR || 
        HTError_hasSeverity (HTRequest_error (me->request), ERR_INFO))
-#else
-     if (status == HT_ERROR)
-#endif /* !_WINDOWS */
      {
        status = HT_ERROR;
      }     
@@ -1871,12 +1873,18 @@ char               *outputfile;
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
-#        ifndef _WINDOWS
 	     status = LoopForStop (me);
-#        endif /* !_WINDOWS */
 	  }
      }
-   AHTReqContext_delete (me);
+#else /* _WINDOWS */
+  if (status == HT_ERROR || 
+	  me->reqStatus == HT_ERR) /* || Error_hasSeverity (HTRequest_error (me->request), ERR_INFO)) */
+	  status = HT_ERROR;
+  else
+	  status = HT_OK;
+#endif /* _WINDOWS */
+
+    AHTReqContext_delete (me);
    return (status);
 }
 
