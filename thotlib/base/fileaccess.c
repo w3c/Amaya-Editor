@@ -104,10 +104,7 @@ int                *sval;
  
   *sval = 0; 
   if (!TtaReadByte (file, &car))
-    {
-      *sval = 0;
-      return (FALSE);
-    }
+    return (FALSE);
   else
     {
       *sval |= ((((int) car) & LMASK) << DECAL_1);
@@ -141,13 +138,10 @@ int                *sval;
  
   *sval = 0;
   if (!TtaReadByte (file, &car))
-    {
-      *sval = 0;
-      return (FALSE);
-    }
+    return (FALSE);
   else
     {
-      if ((int)car < 0)
+      if (((int) car) < 0 || ((int) car) > 127 )
 	*sval = SIGNED_SHORT_MASK;
       *sval |= ((((int) car) & LMASK) << DECAL_1);
       if (!TtaReadByte (file, &car))
@@ -180,17 +174,14 @@ int                *sval;
  
   *sval = 0;
    if (!TtaReadByte (file, &car))
-     {
-       *sval = 0;
-       return FALSE;
-     }
+       return (FALSE);
    else
      {
        *sval |= ((((int) car) & LMASK) << DECAL_3);
        if (!TtaReadByte (file, &car))
 	 {
 	   *sval = 0;
-	   return FALSE;
+	   return (FALSE);
 	 }
        else
 	 {
@@ -198,7 +189,7 @@ int                *sval;
 	   if (!TtaReadByte (file, &car))
 	     {
 	       *sval = 0;
-	       return FALSE;
+	       return (FALSE);
 	     }
 	   else
 	     {
@@ -206,11 +197,14 @@ int                *sval;
 	       if (!TtaReadByte (file, &car))
 		 {
 		   *sval = 0;
-		   return FALSE;
+		   return (FALSE);
+		 }
+	       else
+		 {
+		   *sval |= (((int) car) & LMASK);
+		   return (TRUE);
 		 }
 	     }
-	   *sval |= (((int) car) & LMASK);
-	   return TRUE;
 	 }
      }
 }
