@@ -219,35 +219,36 @@
 217 Nel profilo attuale di Amaya:
 218 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
 219 La codifica per questo documento non e` supportata da Amaya
-220 Non disponibile
-221 Scorri
-222 File Browser
-223 Selezione
-224 Menu per i filtri locali - annotazioni
-225 Mostra
-226 Nascondi
-227 Mostra tutto
-228 Nascondi tutto
-229 * significa nascosto, - significa parzialmente nascosto
-230 Opzioni per i filtri
-231 Per autore
-232 Per tipo
-233 Per server
-234 Chiavi di accesso
-235 Ignora
-236 Elemento si stile
-237 No posso create un XPointer
-238 Non trovo dove muovere l'annotazione
-239 Non posso muovere l'annotazione su un diverso documento
-240 Seleziona un charset
-241 Seleziona un tipo MIME
-242 Cambia charset
-243 Cambia tipo MIME
-244 Cambia
-245 Questo tipo di documento non supporta i charset
-246 Per usare questa opzione, il target deve essere un'URL HTTP
-247 Errore: MIME type non valido
-248 Sconosciuto
-249 I stili sono ignorati - vedi Viste/Mostra le errore
-250 **This document is already loaded in another Window
-251 **Saving that instance may cause a lost update problem
+220 **Warning: the user's profile will replace the document one
+221 Non disponibile
+222 Scorri
+223 File Browser
+224 Selezione
+225 Menu per i filtri locali - annotazioni
+226 Mostra
+227 Nascondi
+228 Mostra tutto
+229 Nascondi tutto
+230 * significa nascosto, - significa parzialmente nascosto
+231 Opzioni per i filtri
+232 Per autore
+233 Per tipo
+234 Per server
+235 Chiavi di accesso
+236 Ignora
+237 Elemento si stile
+238 No posso create un XPointer
+239 Non trovo dove muovere l'annotazione
+240 Non posso muovere l'annotazione su un diverso documento
+241 Seleziona un charset
+242 Seleziona un tipo MIME
+243 Cambia charset
+244 Cambia tipo MIME
+245 Cambia
+246 Questo tipo di documento non supporta i charset
+247 Per usare questa opzione, il target deve essere un'URL HTTP
+248 Errore: MIME type non valido
+249 Sconosciuto
+250 I stili sono ignorati - vedi Viste/Mostra le errore
+251 **This document is already loaded in another Window
+252 **Saving that instance may cause a lost update problem

@@ -2948,12 +2948,15 @@ static void      XmlStyleSheetPi (char *PiData)
 	 }
      }
 
+   /* Warnings about PI are no longer reported */
+   /*
    if (!ok)
      {
        sprintf (msgBuffer,
 		 "xml-stylesheet : attribute \"type\" not defined or not supported");
        XmlParseError (errorParsing, msgBuffer, 0);
      }
+   */
 
    if (ok)
      {
@@ -3125,12 +3128,15 @@ static void CreateXmlPi (char *piTarget, char *piData)
    /* Actually, Amaya supports only the "xml-stylesheet" PI */
    if (!strcmp (piTarget, "xml-stylesheet"))
      XmlStyleSheetPi (piData);
+   /* Warnings about PI are no longer reported */
+   /*
    else
      {
        sprintf (msgBuffer,
 		"Processing Instruction not supported : %s", piTarget);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
+   */
 }
 /*--------------------  PI  (end)  ---------------------------------*/
 
@@ -3792,17 +3798,17 @@ static void  InitializeXmlParsingContext (Document doc,
 }
 
 /*----------------------------------------------------------------------
-  ChangeSVGImageType
+  ChangeExternElemType
   ----------------------------------------------------------------------*/
-Element         ChangeSvgImageType (Element el, Document doc)
+static Element  ChangeExternElemType (Element el, Document doc)
 {
   ElementType   elType, parentType;
-  Element       parent, svgImageElement, svgImageContent;
+  Element       parent, elemElement, elemContent;
   Attribute     attr, nextattr;
   int           oldStructureChecking;
  
-  svgImageElement = NULL;
-  svgImageContent = NULL;
+  elemElement = NULL;
+  elemContent = NULL;
   elType = TtaGetElementType (el);
 
   /* Disable the structure checking */
@@ -3818,10 +3824,10 @@ Element         ChangeSvgImageType (Element el, Document doc)
 	{
 	  /* create a SVG_ImageContent element */
 	  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
-	  svgImageContent = TtaNewElement (doc, elType);
-	  if (svgImageContent != NULL)
+	  elemContent = TtaNewElement (doc, elType);
+	  if (elemContent != NULL)
 	    {
-	      TtaInsertSibling (svgImageContent, el, FALSE, doc);
+	      TtaInsertSibling (elemContent, el, FALSE, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
 	      TtaRemoveTree (el, doc);
 	    }
@@ -3830,10 +3836,10 @@ Element         ChangeSvgImageType (Element el, Document doc)
 	{
 	  /* create a SVG_Image element instead of the PICTURE element */
 	  elType.ElTypeNum = HTML_EL_SVG_Image;
-	  svgImageElement = TtaNewElement (doc, elType);
-	  if (svgImageElement != NULL)
+	  elemElement = TtaNewElement (doc, elType);
+	  if (elemElement != NULL)
 	    {
-	      TtaInsertSibling (svgImageElement, el, FALSE, doc);
+	      TtaInsertSibling (elemElement, el, FALSE, doc);
 	      /* Attach the attributes to that new element */
 	      nextattr = NULL;
 	      TtaNextAttribute (el, &nextattr);
@@ -3841,13 +3847,13 @@ Element         ChangeSvgImageType (Element el, Document doc)
 		{
 		  attr = nextattr;
 		  TtaNextAttribute (el, &nextattr);
-		  TtaAttachAttribute (svgImageElement, attr, doc);
+		  TtaAttachAttribute (elemElement, attr, doc);
 		}
 	      /* create a SVG_ImageContent element */
 	      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
-	      svgImageContent = TtaNewElement (doc, elType);
-	      if (svgImageContent != NULL)
-		TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
+	      elemContent = TtaNewElement (doc, elType);
+	      if (elemContent != NULL)
+		TtaInsertFirstChild (&elemContent, elemElement, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
 	      TtaRemoveTree (el, doc);
 	    }
@@ -3858,10 +3864,10 @@ Element         ChangeSvgImageType (Element el, Document doc)
     {
       /* create a SVG_Image element within a SVG element*/
       elType.ElTypeNum = SVG_EL_SVG_Image;
-      svgImageContent = TtaNewElement (doc, elType);
-      if (svgImageContent != NULL)
+      elemContent = TtaNewElement (doc, elType);
+      if (elemContent != NULL)
 	{
-	  TtaInsertSibling (svgImageContent, el, FALSE, doc);
+	  TtaInsertSibling (elemContent, el, FALSE, doc);
 	  /* Attach the attributes to that new element */
 	  nextattr = NULL;
 	  TtaNextAttribute (el, &nextattr);
@@ -3869,17 +3875,26 @@ Element         ChangeSvgImageType (Element el, Document doc)
 	    {
 	      attr = nextattr;
 	      TtaNextAttribute (el, &nextattr);
-	      TtaAttachAttribute (svgImageContent, attr, doc);
+	      TtaAttachAttribute (elemContent, attr, doc);
 	    }
 	  /* Remove the PICTURE_UNIT element form the tree */
 	  TtaRemoveTree (el, doc);
 	}
     }
+  else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+	   elType.ElTypeNum == HTML_EL_Embed)
+    {
+	  /* create a Embed_Content element */
+	  elType.ElTypeNum = HTML_EL_Embed_Content;
+	  elemContent = TtaNewElement (doc, elType);
+	  if (elemContent != NULL)
+	      TtaInsertFirstChild (&elemContent, el, doc);
+    }
 
   /* Restore the structure checking */
   TtaSetStructureChecking (oldStructureChecking, doc);
 
-  return svgImageContent;
+  return elemContent;
 }
 
 /*----------------------------------------------------------------------
@@ -3904,7 +3919,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   ElementType  elType;
   Element      parent;
   CHARSET      charset;
-  Element      svgEl = NULL;
+  Element      extEl = NULL;
   DisplayMode  dispMode;
 #define	 COPY_BUFFER_SIZE	1024
   gzFile       infile;
@@ -3936,11 +3951,11 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   if (fileName != NULL && DTDname!= NULL &&
       ((strcmp (DTDname, "SVG") == 0) || (strcmp (DTDname, "MathML") == 0)))
     {
-      /* We are parsing an external image */
-      svgEl = ChangeSvgImageType (el, doc);
-      if (svgEl == NULL)
+      /* We are parsing an external xml file */
+      extEl = ChangeExternElemType (el, doc);
+      if (extEl == NULL)
 	return FALSE;
-      InitializeXmlParsingContext (doc, svgEl, isclosed, TRUE);
+      InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
       ChangeXmlParserContextDTD (DTDname);
       /* When we parse an external xml file, we don't consider comments and PI */
       IgnoreCommentAndPi = TRUE;
@@ -4076,12 +4091,12 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   FreeXmlParserContexts ();
   FreeExpatParser ();
 
-  if (svgEl != NULL)
+  if (extEl != NULL)
     {
       /* Fetch and display the recursive images */
-      FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, svgEl);
+      FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
       /* Make not editable the external SVG image */
-      TtaSetAccessRight (svgEl, ReadOnly, doc);
+      TtaSetAccessRight (extEl, ReadOnly, doc);
     }
 
   if (docURL != NULL)

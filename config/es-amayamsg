@@ -219,35 +219,36 @@
 217 En el perfil actual de Amaya:
 218 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 219 La codificación de este documento no está soportada por Amaya
-220 No disponible
-221 Navegar
-222 Navegador de ficheros
-223 Selección
-224 Filtro local de annotaciones
-225 Mostrar
-226 Esconder
-227 Mostrar todo
-228 Esconder todo
-229 * significa escondido, - significa parcialmente escondido
-230 Opciones de filtrado
-231 Por autor
-232 Por typo
-233 Por servidor
-234 Access keys
-235 Ignorar
-236 Elemento de estilo
-237 No puedo crear un XPointer
-238 No se a donde mover la annotación
-239 No puedo mover la annotación a un otro documento
-240 Seleccionar un Charset
-241 Seleccionar un tipo MIME
-242 Cambiar Charset
-243 Cambiar tipo MIME
-244 Cambiar
-245 Este tipo de documento no soporta charsets
-246 Para usar esta opción el destino tiene que ser una URL HTTP
-247 Error: tipo MIME inválido
-248 Desconocido
-249 Se ignoran estili - vea Vistas/Mostrar fichero log
-250 Este documento esta abierto en una otra ventana
-251 Salvar esta instancia puede provar un problema de sincronización
+220 **Warning: the user's profile will replace the document one
+221 No disponible
+222 Navegar
+223 Navegador de ficheros
+224 Selección
+225 Filtro local de annotaciones
+226 Mostrar
+227 Esconder
+228 Mostrar todo
+229 Esconder todo
+230 * significa escondido, - significa parcialmente escondido
+231 Opciones de filtrado
+232 Por autor
+233 Por typo
+234 Por servidor
+235 Access keys
+236 Ignorar
+237 Elemento de estilo
+238 No puedo crear un XPointer
+239 No se a donde mover la annotación
+240 No puedo mover la annotación a un otro documento
+241 Seleccionar un Charset
+242 Seleccionar un tipo MIME
+243 Cambiar Charset
+244 Cambiar tipo MIME
+245 Cambiar
+246 Este tipo de documento no soporta charsets
+247 Para usar esta opción el destino tiene que ser una URL HTTP
+248 Error: tipo MIME inválido
+249 Desconocido
+250 Se ignoran estili - vea Vistas/Mostrar fichero log
+251 Este documento esta abierto en una otra ventana
+252 Salvar esta instancia puede provar un problema de sincronización

@@ -1872,6 +1872,10 @@
 	<message xml:lang="es">La codificación de este documento no está soportada por Amaya</message>
 	<message xml:lang="pt">A codificação deste documento não é suportada por Amaya</message>
 </label>
+<label define="AM_XML_MISMATCH_PROFILE">
+	<message xml:lang="en">Warning: the user's profile will replace the document one</message>
+	<message xml:lang="fr">Le profil utilisateur remplacera celui défini dans le document</message>
+</label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
 	<message xml:lang="fr">Non disponible</message>

@@ -811,6 +811,21 @@ RULES
 	Remove;
 	END;
 
+ Embed: BEGIN
+	if NOT Immediately within Object AND NOT IsInput BEGIN
+		Create '<embed';
+		Create Attributes;
+		Create ' />';
+		END;
+	if NOT within Paragraph AND NOT Immediately within Object
+           AND NOT within Pseudo_paragraph
+		Create '\12' After;
+	END;
+
+ Embed_Content: BEGIN
+	Remove;
+	END;
+
  Anchor: BEGIN
 	 Create '<a';
 	 Create Attributes;
@@ -2147,6 +2162,18 @@ ATTRIBUTES
  rbspan: BEGIN
 	Create ' rbspan="';
 	Create rbspan;
+	Create DoubleQuote;
+	END;
+
+ EmbedHidden: BEGIN
+	Create ' hidden="';
+	Create EmbedHidden;
+	Create DoubleQuote;
+	END;
+
+ EmbedName: BEGIN
+	Create ' name="';
+	Create EmbedName;
 	Create DoubleQuote;
 	END;
 

@@ -181,6 +181,20 @@ STRUCT
 		{ hspace  vspace }
 		 SVG_ImageContent;
 	SVG_ImageContent  = SVG;
+	Embed						{ EMBED }
+	    (ATTR SRC;
+		  Alignment;
+		{ align   top   bottom   left   right }
+		  Height_; Width__;
+		{ height   width }
+		  EmbedHidden = Yes_, No_;
+		{ hidden  yes   no }
+		  EmbedName = Text ;
+		{ name }
+		  hspace; vspace) =
+		{ hspace  vspace }
+		 EmbedContent;
+	Embed_Content  = MathML;
 	END;
 
 	HTMLfragment = LIST OF (Element);
@@ -266,6 +280,7 @@ STRUCT
 	Span = Basic_Set;					{ SPAN }
 	BDO = Basic_Set;					{ BDO }
 	Object;							{ OBJECT }
+	Embed;							{ EMBED }
 	IFRAME;							{ IFRAME }
 	ruby;                                                   { ruby }
 	MathML;							{ MATH }
@@ -943,5 +958,6 @@ EXCEPT
 	ID :		CssId;
 	Class:		CssClass;
 	SVG_ImageContent: Hidden;
+	Embed_Content:  Hidden;
 
 END

@@ -530,8 +530,9 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
   if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
-      ((elType.ElTypeNum == HTML_EL_Object) &&
-      (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0)))
+      ((elType.ElTypeNum == HTML_EL_Object ||
+	elType.ElTypeNum == HTML_EL_Embed) &&
+       (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0)))
     {
       /** for the moment, the above function won't identify SVG images.
 	  So, we do the job here.
@@ -580,7 +581,6 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	}
       else if (is_mml)
 	{
-	  TtaSetPictureType (el, "image/mathml");
 	  /* parse the MathML file and include the parsed tree at the
 	     position of the image element */
 	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
@@ -1000,7 +1000,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    if (attrType.AttrSSchema)
      /* there are some HTML elements in this documents. 
-	Get all 'img' or 'object' elements */
+	Get all 'img' or 'object' or 'embed' elements */
      {
        /* search all elements having an attribute SRC */
        attrType.AttrTypeNum = HTML_ATTR_SRC;

@@ -165,6 +165,9 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_valuetype, "ref", HTML_ATTR_valuetype_VAL_ref},
    {HTML_ATTR_valuetype, "object", HTML_ATTR_valuetype_VAL_object_},
 
+   {HTML_ATTR_EmbedHidden, "yes", HTML_ATTR_EmbedHidden_VAL_Yes_},
+   {HTML_ATTR_EmbedHidden, "no", HTML_ATTR_EmbedHidden_VAL_No_},
+
 /* HTML attribute TYPE generates a Thot element */
    {DummyAttribute, "button", HTML_EL_Button_Input},
    {DummyAttribute, "checkbox", HTML_EL_Checkbox_Input},

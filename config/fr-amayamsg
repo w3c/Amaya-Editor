@@ -219,35 +219,36 @@
 217 Dans le profil Amaya courant :
 218 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
 219 Le codage de ce document n'est pas supporté par Amaya
-220 Non disponible
-221 Butiner
-222 Sélecteur de fichiers
-223 Sélection
-224 Filtre local des annotations
-225 Montrer
-226 Cacher
-227 Montrer tout
-228 Cacher tout
-229 * signifie caché, - signifie partiellement caché
-230 Options de filtrage
-231 Par auteur
-232 Par type
-233 Par serveur
-234 Accés rapides
-235 Ignorer
-236 Elément Style
-237 Impossible de créer un XPointer
-238 Je ne peux pas deplacer l'annotation là
-239 Je ne peux pas bouger l'annotation vers un autre document
-240 Sélectionner un Charset
-241 Sélectionner un type MIME
-242 Changer Charset
-243 Changer le type MIME
-244 Changer
-245 Ce type de document n'a pas de charset
-246 L'URL doit être de type HTTP pour utiliser
-247 Erreur: type MIME incorrect
-248 Inconnu
-249 Styles ignorés - voir Vues/Montrer les erreurs
-250 Ce document est déjà affiché dans une autre fenêtre.
-251 Sauver cette instance peut provoquer des problèmes de mise à jour.
+220 Le profil utilisateur remplacera celui défini dans le document
+221 Non disponible
+222 Butiner
+223 Sélecteur de fichiers
+224 Sélection
+225 Filtre local des annotations
+226 Montrer
+227 Cacher
+228 Montrer tout
+229 Cacher tout
+230 * signifie caché, - signifie partiellement caché
+231 Options de filtrage
+232 Par auteur
+233 Par type
+234 Par serveur
+235 Accés rapides
+236 Ignorer
+237 Elément Style
+238 Impossible de créer un XPointer
+239 Je ne peux pas deplacer l'annotation là
+240 Je ne peux pas bouger l'annotation vers un autre document
+241 Sélectionner un Charset
+242 Sélectionner un type MIME
+243 Changer Charset
+244 Changer le type MIME
+245 Changer
+246 Ce type de document n'a pas de charset
+247 L'URL doit être de type HTTP pour utiliser
+248 Erreur: type MIME incorrect
+249 Inconnu
+250 Styles ignorés - voir Vues/Montrer les erreurs
+251 Ce document est déjà affiché dans une autre fenêtre.
+252 Sauver cette instance peut provoquer des problèmes de mise à jour.

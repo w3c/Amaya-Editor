@@ -285,6 +285,9 @@ typedef enum
 
 TypeBrowserFile WidgetParent;
 
+/* original document parsing level */
+int CurrentParsingLevel;
+
 
 /*----------------------------------------------------------------------
    DocumentMetaDataAlloc
@@ -1199,7 +1202,21 @@ void CheckParsingErrors (Document doc)
       CleanUpParsingErrors ();
     }
   else
-    TtaSetItemOff (doc, 1, Views, BShowLogFile);
+    {
+      TtaSetItemOff (doc, 1, Views, BShowLogFile);
+      /* Check the current parsing level */
+      if (CurrentParsingLevel != L_Other) 
+	if ((CurrentParsingLevel == L_Basic &&
+	     (ParsingLevel[doc] == L_Strict ||
+	      ParsingLevel[doc] == L_Xhtml11 ||
+	      ParsingLevel[doc] == L_Transitional)) ||
+	    (CurrentParsingLevel == L_Strict &&
+	     (ParsingLevel[doc] == L_Xhtml11 ||
+	      ParsingLevel[doc] == L_Transitional)) ||
+	    (CurrentParsingLevel == L_Xhtml11 &&
+	     ParsingLevel[doc] == L_Transitional))
+	  InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_MISMATCH_PROFILE));
+    }
 }
 
 
@@ -2494,6 +2511,7 @@ static Document LoadDocument (Document doc, char *pathname,
   else
     content_type = NULL;
 
+  CurrentParsingLevel = L_Other;
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML,
@@ -2943,6 +2961,8 @@ static Document LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
+      /* save the current document parsing level */
+      CurrentParsingLevel = parsingLevel;
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
       if (parsingLevel == L_Other)

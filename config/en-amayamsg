@@ -219,35 +219,36 @@
 217 In the current Amaya profile:
 218 Some tags/attributes are ignored - see Views/Show parsing errors
 219 The encoding of this document is not supported by Amaya
-220 Not available
-221 Browse
-222 File Browser
-223 Selection
-224 Annotation Local Filter Menu
-225 Show
-226 Hide
-227 Show all
-228 Hide all
-229 * means hidden, - means partially hidden
-230 Filter options
-231 By author
-232 By type
-233 By server
-234 Access keys
-235 Ignore
-236 Style element
-237 Cannot create an XPointer
-238 Cannot find where to move the annotation
-239 Cannot move the annotation to a different document
-240 Select a Charset
-241 Select a MIME type
-242 Change Charset
-243 Change MIME type
-244 Change
-245 This type of document doesn't support charsets
-246 The target must be an HTTP URL to use this option
-247 Error: invalid MIME type
-248 Unknown
-249 Styles are ignored - see Views/Show parsing errors
-250 This document is already loaded in another Window
-251 Saving that instance may cause a lost update problem
+220 Warning: the user's profile will replace the document one
+221 Not available
+222 Browse
+223 File Browser
+224 Selection
+225 Annotation Local Filter Menu
+226 Show
+227 Hide
+228 Show all
+229 Hide all
+230 * means hidden, - means partially hidden
+231 Filter options
+232 By author
+233 By type
+234 By server
+235 Access keys
+236 Ignore
+237 Style element
+238 Cannot create an XPointer
+239 Cannot find where to move the annotation
+240 Cannot move the annotation to a different document
+241 Select a Charset
+242 Select a MIME type
+243 Change Charset
+244 Change MIME type
+245 Change
+246 This type of document doesn't support charsets
+247 The target must be an HTTP URL to use this option
+248 Error: invalid MIME type
+249 Unknown
+250 Styles are ignored - see Views/Show parsing errors
+251 This document is already loaded in another Window
+252 Saving that instance may cause a lost update problem

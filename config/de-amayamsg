@@ -219,35 +219,36 @@
 217 Im gegenwärtigen Amaya Profil:
 218 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 219 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-220 Nicht verfügbar
-221 Browsen
-222 Datei-Browser
-223 Auswahl
-224 Menü für lokale Kommentierungsfilter
-225 Anzeigen
-226 Nicht anzeigen
-227 Alles anzeigen
-228 Nichts anzeigen
-229 * bedeutet verborgen, - bedeutet teilweise verborgen
-230 Filteroptionen
-231 Vom Autor
-232 Vom Typ
-233 Vom Server
-234 Zugriffstasten
-235 Ignorieren
-236 Stilelement
-237 Kann keinen XPointer erzeugen
-238 Kein Ziel zum Verschieben der Anmerkung [gefunden]
-239 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-240 Charset auswählen
-241 MIME type auswählen
-242 Anderen Charset auswählen
-243 Anderen MIME type auswählen
-244 Wechseln
-245 Dieser Dokumenttyp unterstützt keine Charsets
-246 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
-247 Fehler: ungültiger MIME type
-248 Unbekannt
-249 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-250 **This document is already loaded in another Window
-251 **Saving that instance may cause a lost update problem
+220 **Warning: the user's profile will replace the document one
+221 Nicht verfügbar
+222 Browsen
+223 Datei-Browser
+224 Auswahl
+225 Menü für lokale Kommentierungsfilter
+226 Anzeigen
+227 Nicht anzeigen
+228 Alles anzeigen
+229 Nichts anzeigen
+230 * bedeutet verborgen, - bedeutet teilweise verborgen
+231 Filteroptionen
+232 Vom Autor
+233 Vom Typ
+234 Vom Server
+235 Zugriffstasten
+236 Ignorieren
+237 Stilelement
+238 Kann keinen XPointer erzeugen
+239 Kein Ziel zum Verschieben der Anmerkung [gefunden]
+240 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+241 Charset auswählen
+242 MIME type auswählen
+243 Anderen Charset auswählen
+244 Anderen MIME type auswählen
+245 Wechseln
+246 Dieser Dokumenttyp unterstützt keine Charsets
+247 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
+248 Fehler: ungültiger MIME type
+249 Unbekannt
+250 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+251 **This document is already loaded in another Window
+252 **Saving that instance may cause a lost update problem
