@@ -1180,7 +1180,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	  editOp->EoCreatedElement = NULL;
 	}
       /* insert the saved element in the abstract tree */
-      else if (editOp->EoSavedElement)
+      if (editOp->EoSavedElement)
 	{
 	  pEl = editOp->EoSavedElement;
 	  if (editOp->EoPreviousSibling)
