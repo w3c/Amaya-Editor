@@ -349,9 +349,8 @@ int                 shadow;
    ThotWindow          w;
    char               *ptcar;
    int                 width;
-#  ifndef _WINDOWS
    register int        j;
-#  else /* _WINDOWS */
+#  ifdef _WINDOWS
    SIZE                size;
    RECT                rect;
    HFONT               hOldFont;
@@ -366,7 +365,6 @@ int                 shadow;
       WIN_GetDeviceContext (frame);
       SetMapperFlags (TtDisplay, 1);
       hOldFont = WinLoadFont (TtDisplay, font);
-      /* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
       GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
       width = size.cx;
 #     else  /* _WINDOWS */
@@ -409,17 +407,13 @@ int                 shadow;
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #        endif /* _WINDOWS */
          TtaFreeMemory (ptcar);
-	}
-      else
-	{
-           if (ptcar[0] == '\212')
-	     {
-	       /* skip the Control return char */
-	       ptcar++;
-	       lg--;
-	     }
-           if (lg != 0)
-	     {
+      } else {
+           if (ptcar[0] == '\212' || ptcar[0] == '\12') {
+              /* skip the Control return char */
+              ptcar++;
+             lg--;
+           }
+           if (lg != 0) {
 #             ifdef _WINDOWS
               TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
 #             else  /* _WINDOWS */
@@ -3019,14 +3013,12 @@ int yf;
       WIN_GetDeviceContext (frame);
 
 	  GetClientRect (FrRef [frame], &cltRect);
-	  /*
-      BitBlt (TtDisplay, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
-	      TtDisplay, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
-	  */
-	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL); */
-	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE);
+
+	  ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
+	  /* UpdateWindow (FrRef [frame]); */
+	  /* ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); */
+	  /* ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect); */
       WIN_ReleaseDeviceContext ();
-      /*InvalidateRect (FrRef[frame], NULL, TRUE);*/
 #     endif /* _WINDOWS */
    }
 }

@@ -2811,21 +2811,16 @@ int                 fg;
 
    if (lgboite > 0) {
 #     ifdef _WINDOWS 
-      xcour = PixelToPoint (x);
-      xcour = (x * 72 + PrinterDPI / 2) / PrinterDPI;
 	  xcour = x;
-      ycour = PixelToPoint (y);
-      ycour = (y * 72 + PrinterDPI / 2) / PrinterDPI;
 	  ycour = y;
       if (TtPrinterDC) {
          TtaGiveThotRGB (fg, &r, &g, &b);
-         hPen = CreatePen (PS_DOT, 1, RGB (r, g, b));
+         /* hPen = CreatePen (PS_DOT, 1, RGB (r, g, b)); */
+         hPen = CreatePen (PS_DOT, 0, RGB (r, g, b)); 
 		 hOldPen = SelectObject (TtPrinterDC, hPen);
          ptArray [0].x = xcour;
          ptArray [0].y = ycour;
          ptArray [1].x = xcour + lgboite;
-         /* ptArray [1].x = xcour + PixelToPoint (lgboite); */
-         ptArray [1].x = xcour + (lgboite * 72 + PrinterDPI / 2) / PrinterDPI;
          ptArray [1].y = ycour;
 		 Polyline (TtPrinterDC, &ptArray, 2);
 		 SelectObject (TtPrinterDC, hOldPen);
@@ -2843,7 +2838,7 @@ int                 fg;
       ycour = PixelToPoint (y);
 
       fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
-#     endif /* WINDIWS */
+#     endif /* WINDOWS */
    }
 }
 
