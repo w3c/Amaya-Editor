@@ -77,7 +77,7 @@ Pixmap          EpsfPictureLogo;
 static char    *PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
-
+static boolean  paletteRealized = FALSE ;
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
 Visual*         theVisual;
@@ -308,7 +308,6 @@ PictInfo           *imageDesc;
 # endif /* _WINDOWS */
 # ifdef _WINDOWS
   HDC     hMemDC;
-  int     result;
 # endif /* _WINDOWS */
   int               delta;
 
@@ -332,13 +331,6 @@ PictInfo           *imageDesc;
 #            ifndef _WINDOWS
 	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #            else /* _WINDOWS */
-             if (!TtIsTrueColor) {
-		if ((result = SelectPalette (TtDisplay, TtCmap, TRUE))) {
-                   printf ("SelectPalette (TtDisplay, TtCmap, FALSE) result: %d\n", result);
-		   if (!RealizePalette (TtDisplay))
-		      printf ("RealizePalette (TtDisplay) result: %d\n", result);
-		}
-	     }
 
 	     hMemDC = CreateCompatibleDC (TtDisplay);
 	     SelectObject (hMemDC, pixmap);
@@ -884,8 +876,6 @@ int                 hlogo;
    /* Drawing In the Picture Box */
 #  ifndef _WINDOWS
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
-#  else  /* _WINDOWS */
-   BitBlt (hDc, picXOrg, picYOrg, w, h, hMemDc, 0, 0, SRCCOPY);
 #  endif /* _WINDOWS */
    GetXYOrg (frame, &XOrg, &YOrg);
    xFrame = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
@@ -899,8 +889,8 @@ int                 hlogo;
       h = hFrame;
    x += xFrame;
    y += yFrame;
-#  ifndef _WINDOWS
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
+#  ifndef _WINDOWS
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
@@ -951,6 +941,7 @@ int                 frame;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
+   
    if (imageDesc->PicFileName == NULL)
      return;
    else if (imageDesc->PicFileName[0] == '\0')

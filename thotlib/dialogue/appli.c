@@ -188,22 +188,18 @@ LPARAM     lParam;
    PAINTSTRUCT         ps;
    RECT                rect;
 
-   if (frame > 0 && frame <= MAX_FRAME)
-     {
-	/*
-	 * Do not redraw if the document is in NoComputedDisplay mode.
-	 */
-	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-	  {
-	     TtDisplay = BeginPaint (w, &ps);
-             GetClientRect (w, &rect);
-	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-	     SwitchSelection (frame, FALSE);
-	     RedrawFrameBottom (frame, 0);
-	     SwitchSelection (frame, TRUE);
-	     EndPaint (w, &ps);
-	  }
-     }
+   if (frame > 0 && frame <= MAX_FRAME) {
+      /* Do not redraw if the document is in NoComputedDisplay mode. */
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
+	 TtDisplay = BeginPaint (w, &ps);
+	 GetClientRect (w, &rect);
+	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
+	 SwitchSelection (frame, FALSE);
+	 RedrawFrameBottom (frame, 0);
+	 SwitchSelection (frame, TRUE);
+	 EndPaint (w, &ps);
+      }
+   }
 }
 #endif /* _WINDOWS */
 
@@ -253,9 +249,9 @@ void               *ev;
    MS-Windows.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_ChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
+void WIN_ChangeViewSize (int frame, int width, int height, int top_delta, int bottom_delta)
 #else  /* !__STDC__ */
-void WIN_ChangeTaille (frame, width, height, top_delta, bottom_delta)
+void WIN_ChangeViewSize (frame, width, height, top_delta, bottom_delta)
 int frame; 
 int width; 
 int height; 
@@ -287,7 +283,6 @@ int bottom_delta;
    UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
-
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -387,13 +382,7 @@ int                 value;
 #endif /* __STDC__ */
 {
    int      delta;
-   /*
-   int      n;
-   int      h, y;
-   int      start, end, total;
-   float    charperpix;
-   Document doc;
-   */
+
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
@@ -919,11 +908,10 @@ char               *name;
    int                 frame;
    char                s[1024];
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
-
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    if (document == 0)
       return;
    else
@@ -939,76 +927,33 @@ char               *name;
 	       {
 		  /* text est un format */
 		  sprintf (s, text, name);
-#ifndef _WINDOWS
+#                 ifndef _WINDOWS
 		  title_string = XmStringCreateSimple (s);
-#endif /* !_WINDOWS */
+#                 endif /* !_WINDOWS */
 	       }
 	     else
-#ifdef _WINDOWS
+#               ifdef _WINDOWS
 		strncpy (&s[0], text, sizeof (s));
-#else  /* !_WINDOWS */
+#               else  /* !_WINDOWS */
 		title_string = XmStringCreateSimple (text);
-#endif /* !_WINDOWS */
+#               endif /* !_WINDOWS */
 
-#ifdef _WINDOWS
-	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT,
-			  (WPARAM) 0, (LPARAM) & s[0]);
-#else  /* !_WINDOWS */
+#            ifdef _WINDOWS
+	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
+#            else  /* !_WINDOWS */
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	    }
      }
 }
 
 
 #ifdef _WINDOWS
-/* -------------------------------------------------------------------
-   DisplayNotificationDetails
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-void DisplayNotificationDetails (WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-void DisplayNotificationDetails (wParam, lParam)
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-#ifdef RAMZI
-     LPNMHDR pnmh ;
-     LPSTR   pName ;
-
-     if (hwndNotify == NULL)
-        return ;
-
-     pnmh = (LPNMHDR) lParam ;
-     QueryNotifyText (pnmh->code, &pName) ;
-     DisplayText (pName) ;
-#endif /* RAMZI */
-}
-
-/* -------------------------------------------------------------------
-   MenuCheckMark
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-void MenuCheckMark (HMENU hmenu, int id, BOOL bCheck)
-#else  /* !__STDC__ */
-void MenuCheckMark (hmenu, id, bCheck)
-HMENU hmenu; 
-int   id; 
-BOOL  bCheck;
-#endif /* __STDC__ */
-{
-     int iState ;
-     iState = (bCheck) ? MF_CHECKED : MF_UNCHECKED ;
-     CheckMenuItem (hmenu, id, iState) ;
-}
-
 /*----------------------------------------------------------------------
-   WndProc :  The main MS-Windows event handler for the Thot         
-   Library.                                                    
+   WndProc :  The main MS-Windows event handler for the Thot Library.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam) 
@@ -1026,7 +971,7 @@ LPARAM      lParam;
             case WM_CREATE: {
 	         /* Create toolbar (source resides in toolbar.c). */
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
-                            0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
+                                         0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
                  ShowWindow (ToolBar, SW_SHOWNORMAL);
                  UpdateWindow (ToolBar);
 
@@ -1151,81 +1096,6 @@ LPARAM      lParam;
      }
 }
 
-
-/* -------------------------------------------------------------------
-   HeadDlgProc
-   ------------------------------------------------------------------- */
-#ifdef RAMZI
-#ifdef __STDC__
-LRESULT CALLBACK HeadDlgProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK HeadDlgProc (hwnd, mMsg, wParam, lParam)
-HWND   hwnd; 
-UINT   mMsg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-    TEXTMETRIC tm;
-    HWND       URLLabel   ;
-    HWND       URLEdit    ;
-    HWND       TitleLabel ;
-    HWND       TitleEdit  ;
-    HDC        hdc;
-    int        cx ;
-    int        cy ;
-    int        charWidth ;
-
-    switch (mMsg) {
-           case WM_CREATE: {
-                cx = LOWORD (lParam) ;
-                cy = HIWORD (lParam) ;
-
-	        /* Create a bitmap as a logo (temporary) */
-                hdc     = GetDC (hwnd) ;
-
-                GetTextMetrics (hdc, &tm);
-                charWidth = tm.tmAveCharWidth * 6 + 10 ;
-
-                /* Create The URL zone */
-                URLLabel = CreateWindow ("STATIC", "Adress", WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                         84, 10, charWidth, 20, hwnd, (HMENU) 101, hInstance, NULL) ;
-                ShowWindow (URLLabel, SW_SHOWNORMAL);
-                UpdateWindow (URLLabel);
-                URLEdit  = CreateWindow ("EDIT", "http://www.w3.org/pub/WWW/Amaya/",
-                                         WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                                         100 + charWidth, 10, cx, 20, hwnd, (HMENU) 102, hInstance, NULL) ;
-                ShowWindow (URLEdit, SW_SHOWNORMAL);
-                UpdateWindow (URLEdit);
-
-                /* Create the document Title zobe */
-                TitleLabel = CreateWindow ("STATIC", "Title", WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                           84, 40, charWidth, 20, hwnd, (HMENU) 103, hInstance, NULL) ;
-                ShowWindow (TitleLabel, SW_SHOWNORMAL);
-                UpdateWindow (TitleLabel);
-                TitleEdit  = CreateWindow ("EDIT", "Amaya Overview",
-                                           WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                                           100 + charWidth, 40, cx, 20, hwnd, (HMENU) 104, hInstance, NULL) ;
-                ShowWindow (TitleEdit, SW_SHOWNORMAL);
-                UpdateWindow (TitleEdit);
-                
-                ReleaseDC (hwnd, hdc);
-                return 0;
-           }
-
-           case WM_SIZE:
-                cx = LOWORD (lParam) ;
-                cy = HIWORD (lParam) ;
-                MoveWindow (URLLabel, 100 + charWidth, 10, cx - 10, 20, TRUE);
-                MoveWindow (TitleLabel, 100 + charWidth, 40, cx - 10, 20, TRUE);
-
-                return 0;
-
-           default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
-    }
-}
-#endif /* RAMZI */
-
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
@@ -1267,6 +1137,16 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
+          case WM_CREATE:
+	       if (!TtIsTrueColor) {
+		  saveHdc = GetDC (hwnd);
+		  if (!SelectPalette (saveHdc, TtCmap, TRUE))
+		     WinErrorBox (hwnd);
+		  else if (!RealizePalette (saveHdc))
+		      WinErrorBox (hwnd);
+	       }
+	       break;
+               
           case WM_PAINT: /* Some part of the Client Area has to be repaint. */
 	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
@@ -1279,18 +1159,13 @@ LPARAM lParam;
                int  cx         = LOWORD (lParam) ;
                int  cy         = HIWORD (lParam) ;
 
-               WIN_ChangeTaille (frame, cx, cy, 0, 0) ;
+               WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
 
 	       WIN_ReleaseDeviceContext ();
 
                return 0 ;
 	  }
-	  /*
-	  case WM_VSCROLL:
-	       WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-	       WIN_ReleaseDeviceContext ();
-	       return (0);
-	  */
+
 	  case WM_KEYDOWN:
 	  case WM_CHAR:
 	       TtaAbortShowDialogue ();
@@ -1358,7 +1233,6 @@ LPARAM lParam;
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
-
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -1900,18 +1774,16 @@ ThotWindow          w;
 int GetWindowWinMainFrame (ThotWindow w)
 #else  /* __STDC__ */
 int GetWindowWinMainFrame (w)
-ThotWindow          w;
-
+ThotWindow w;
 #endif /* __STDC__ */
 {
    int                 f;
 
    /* On recherche l'indice de la fenetre */
-   for (f = 0; f <= MAX_FRAME; f++)
-     {
-	if (FrMainRef[f] != 0 && FrMainRef[f] == w)
-	   break;
-     }
+   for (f = 0; f <= MAX_FRAME; f++) {
+       if (FrMainRef[f] != 0 && FrMainRef[f] == w)
+	  break;
+   }
    return (f);
 }
 #endif /* _WINDOWS */

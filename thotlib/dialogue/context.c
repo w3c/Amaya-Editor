@@ -65,12 +65,11 @@ ThotGC              WinCreateGC (void)
  *   Full description of Device Context Attributes : Petzolt p 102
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WinLoadGC (HDC hdc, ThotGC gc)
+void WinLoadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
-void                WinLoadGC (hdc, gc)
+void WinLoadGC (hdc, gc)
 HDC                 hdc;
 ThotGC              gc;
-
 #endif /* __STDC__ */
 {
    if (gc->capabilities & THOT_GC_PEN)
@@ -94,12 +93,11 @@ ThotGC              gc;
  *         emulation under MS-Windows.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WinUnloadGC (HDC hdc, ThotGC gc)
+void WinUnloadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
-void                WinUnloadGC (gc)
+void WinUnloadGC (gc)
 HDC                 hdc;
 ThotGC              gc;
-
 #endif /* __STDC__ */
 {
 }
@@ -122,7 +120,9 @@ void WinInitColors ()
    if (initialized)
       return;
 
+#  ifdef _WIN_DEBUG
    fprintf (stderr, "WinInitColors\n");
+#  endif /* _WIN_DEBUG */
 
    WIN_GetDeviceContext (-1);
 
@@ -132,16 +132,18 @@ void WinInitColors ()
    else
       TtIsTrueColor = FALSE ;
 
-   /*
-    * Create initialize and install a color palette for
-    * the Thot set of colors.
-    */
 
-   if (!TtIsTrueColor) {
-      ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+   if (!TtIsTrueColor) { /* NOT a true color device */
+      /* Create a color palette for the Thot set of colors. */
+      /*
+      ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
+                             sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+      */
 
-      ptrLogPal->palVersion             = 0x300;
-      ptrLogPal->palNumEntries          = MAX_COLOR;
+       ptrLogPal = (LPLOGPALETTE) malloc (sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+
+      ptrLogPal->palVersion    = 0x300;
+      ptrLogPal->palNumEntries = MAX_COLOR;
       
       for (i = 0; i < MAX_COLOR; i++) {
 	  ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
@@ -150,14 +152,17 @@ void WinInitColors ()
 	  ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
       }
 
-      TtCmap    = CreatePalette (ptrLogPal);
+      TtCmap = CreatePalette (ptrLogPal);
       
       if (TtCmap == NULL) {
-	  fprintf (stderr, "couldn't CreatePalette\n");
-	  WinErrorBox (WIN_Main_Wd);
-      } 
+#        ifdef _WIN_DEBUG
+	 fprintf (stderr, "couldn't CreatePalette\n");
+#        endif /* _WIN_DEBUG */
+	 WinErrorBox (WIN_Main_Wd);
+      }
    }
-   /* TtaFreeMemory (ptrLogPal); */
+   /* HeapFree (GetProcessHeap (), 0, ptrLogPal); */
+   free (ptrLogPal);
 
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
@@ -248,6 +253,7 @@ unsigned short      blue;
     * The lookup is based on a closest in cube algorithm hence
     * we try to get the closest color available for the display.
     */
+
    maxcolor = NumberOfColors ();
    best = 0;			/* best color in list not found */
    for (i = 0; i < maxcolor; i++)
@@ -441,7 +447,7 @@ char               *name;
       }
    /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (!found)
       Box_Color = cwhite.pixel;
    else if (TtWDepth == 1)
@@ -453,10 +459,10 @@ char               *name;
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    TtDisplay = GetDC (WIN_Main_Wd) ;
    WinInitColors ();
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -492,21 +498,22 @@ boolean             ShowReadOnly ()
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
-static void         InitGraphicContexts ()
+#ifdef __STDC__
+static void InitGraphicContexts (void)
+#else /* __STDC__ */
+static void InitGraphicContexts ()
+#endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    unsigned long       valuemask;
    unsigned long       white;
    unsigned long       black;
    XGCValues           GCmodel;
    Pixmap              pix;
+#  endif /* _WINDOWS */
 
-#endif /* _WINDOWS */
-
-   /*
-    * Create a Graphic Context to write white on black.
-    */
-#ifndef _WINDOWS
+   /* Create a Graphic Context to write white on black. */
+#  ifndef _WINDOWS
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
@@ -516,40 +523,38 @@ static void         InitGraphicContexts ()
    GCmodel.foreground = White_Color;
    GCmodel.background = Black_Color;
    TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtWhiteGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    TtWhiteGC.pen = GetStockObject (WHITE_PEN);
    TtWhiteGC.background = Black_Color;
    TtWhiteGC.foreground = White_Color;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
-   /*
-    * Create a Graphic Context to write black on white.
-    */
-#ifndef _WINDOWS
+   /* Create a Graphic Context to write black on white. */
+#  ifndef _WINDOWS
    GCmodel.foreground = Button_Color;
    GCmodel.background = White_Color;
    TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtBlackGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    TtBlackGC.pen = GetStockObject (BLACK_PEN);
    TtBlackGC.background = White_Color;
    TtBlackGC.foreground = Black_Color;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /*
     * Create a Graphic Context to write black on white,
     * but with a specific 10101010 pattern.
     */
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtLineGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetTile (TtDisplay, TtLineGC, pix);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtLineGC.capabilities = THOT_GC_FOREGROUND |
    /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ THOT_GC_PEN;
    TtLineGC.pen = GetStockObject (BLACK_PEN);
@@ -557,27 +562,25 @@ static void         InitGraphicContexts ()
    TtLineGC.foreground = Black_Color;
    /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
    /* TtLineGC.brush = CreatePatternBrush(WIN_LastBitmap); */
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
-   /*
-    * Another Graphic Context to write black on white, for dialogs.
-    */
-#ifndef _WINDOWS
+   /* Another Graphic Context to write black on white, for dialogs. */
+#  ifndef _WINDOWS
    TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
    TtDialogueGC.pen = GetStockObject (BLACK_PEN);
    TtDialogueGC.background = White_Color;
    TtDialogueGC.foreground = Black_Color;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /*
     * A Graphic Context to show selected objects. On X-Windows,
     * the colormap indexes are XORed to show the object without
     * destroying the colors : XOR.XOR = I ...
     */
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    GCmodel.function = GXinvert;
    GCmodel.plane_mask = Select_Color;
    if (TtWDepth > 1)
@@ -586,8 +589,8 @@ static void         InitGraphicContexts ()
       GCmodel.foreground = Select_Color;
    GCmodel.background = White_Color;
    TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
       THOT_GC_FUNCTION;
    TtDialogueGC.mode = R2_XORPEN;
@@ -596,19 +599,19 @@ static void         InitGraphicContexts ()
    else
       TtDialogueGC.foreground = Select_Color;
    TtDialogueGC.background = White_Color;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /*
     * A Graphic Context for trame objects.
     */
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
    TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#  endif /* _WINDOWS */
+#  ifdef _WINDOWS
    TtGreyGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
    /* THOT_GC_BRUSH | */ THOT_GC_PEN |
       THOT_GC_FUNCTION;
@@ -619,7 +622,7 @@ static void         InitGraphicContexts ()
    /* TtBlackGC.brush = CreatePatternBrush(WIN_LastBitmap); */
    DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
-#endif
+#  endif
 }
 
 
@@ -669,7 +672,7 @@ int                 dy;
 /*----------------------------------------------------------------------
  *      InitDocContexts initialize the frames' contexts
  ----------------------------------------------------------------------*/
-void                InitDocContexts ()
+void InitDocContexts ()
 {
    int                 i;
 

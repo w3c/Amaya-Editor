@@ -84,6 +84,92 @@ static int          clear_code, end_code;
 static int          table[2][(1 << MAX_LWZ_BITS)];
 static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
+#ifdef _WINDOWS
+#define MAXNUMBER 256
+static PALETTEENTRY palEntries[MAXNUMBER];
+static boolean      nbSysColors   = FALSE;
+static boolean      peInitialized = FALSE;
+
+/* ----------------------------------------------------------------------
+  WIN_InitSysColors						
+  ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int WIN_InitSystemColors (void)
+#else /* __STDC__ */ 
+int WIN_InitSystemColors () 
+#endif /* __STDC __ */
+{
+    HWND hwnd = NULL;
+    HDC  hdc;
+    
+    if (peInitialized)
+       return 1;
+    
+    hdc = GetDC(hwnd);
+    
+    if (!(GetDeviceCaps (hdc, RASTERCAPS) & RC_PALETTE)) {
+       ReleaseDC (hwnd, hdc);
+       return 1;
+    }
+    
+    nbSysColors = GetSystemPaletteEntries (hdc, 0, GetDeviceCaps (hdc, SIZEPALETTE), palEntries);
+    ReleaseDC (hwnd, hdc);
+    peInitialized = TRUE;
+    return 0;
+}
+
+/* ---------------------------------------------------------------------- 
+   WIN_GetColorIndex
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+unsigned int WIN_GetColorIndex (int r, int g, int b)
+#else /* __STDC__ */
+unsigned int WIN_GetColorIndex (red, green, blue)
+int r; 
+int g; 
+int b;
+#endif /* __STDC__ */
+{
+    int i, ri, gi, bi, dMin, iMin, d, db, dr, dg;
+    
+    WIN_InitSystemColors ();
+    iMin = 0;
+    dMin = INT_MAX;
+
+    r = r>>8;
+    g = g>>8;
+    b = b>>8;
+
+    for (i = 0; i < nbSysColors; i++) {
+	ri = palEntries[i].peRed;
+	dr = r - ri;
+	d  = dr * dr;
+	if (d >= dMin)
+	   continue;
+	
+	bi = palEntries[i].peBlue;
+	db = b - bi;
+	d += db * db;
+	if (d >= dMin)
+	   continue;
+	    
+	gi = palEntries[i].peGreen;
+	dg = g - gi;
+	d += dg * dg;
+	if (d >= dMin)
+	   continue;
+	    
+	dMin = d;
+	iMin = i;
+	    
+	if (dMin == 0)
+	    break;
+    }
+    
+    return iMin;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   ReadGifImage
   ----------------------------------------------------------------------*/
@@ -1225,16 +1311,18 @@ ThotColorStruct     colrs[256];
    /* static int     cbPlanes, cbBits; */
    int            i, j, ret = 0, imageIndex, mapIndex;
    int            Mapping [MAX_COLOR];
+   int            cbBits, cbPlanes;
    char*          bmBits;
    HDC            origMemDC, destMemDC, memDC;  
    HBITMAP        bmpLine, bmp = 0;
    
    /*
-   hdcMem   = CreateCompatibleDC (NULL);
-   cbBits   = GetDeviceCaps (hdcMem, BITSPIXEL);
-   cbPlanes = GetDeviceCaps (hdcMem, PLANES);
-   DeleteDC (hdcMem);
+   memDC    = CreateCompatibleDC (NULL);
+   cbBits   = GetDeviceCaps (memDC, BITSPIXEL);
+   cbPlanes = GetDeviceCaps (memDC, PLANES);
+   DeleteDC (memDC);
    */
+   
    if (TtIsTrueColor) 
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
@@ -1245,17 +1333,12 @@ ThotColorStruct     colrs[256];
 	 for (i = 0; i < MAX_COLOR; i++)
 	     Mapping [i] = -1;
 
-	 if (SelectPalette (TtDisplay, TtCmap, TRUE))
-	    if (!RealizePalette (TtDisplay))
-	       printf ("Cannot realize palette\n");
-	 
 	 /*
-	   bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
-	   bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
-	   */
+	 bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
+	 bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
+	 */
 	 bmp     = CreateCompatibleBitmap (TtDisplay, width, height);
 	 bmpLine = CreateCompatibleBitmap (TtDisplay, width, 1);
-	 
 	 
 	 if ((bmp == NULL) || (bmpLine == NULL)) {
 	    free (bmBits);
@@ -1264,7 +1347,7 @@ ThotColorStruct     colrs[256];
     
 	 origMemDC = CreateCompatibleDC (NULL);
 	 destMemDC = CreateCompatibleDC (NULL);
-   
+
 	 SelectObject (destMemDC, bmp);
 	 SelectObject (origMemDC, bmpLine);
 	 
@@ -1275,6 +1358,9 @@ ThotColorStruct     colrs[256];
 		    mapIndex = Mapping [imageIndex];
 		 else {
 		      mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+		     /*
+		      mapIndex = WIN_GetColorIndex (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+		      */
 		      Mapping [imageIndex] = mapIndex;  
 		 }    
 		 bmBits[i] = mapIndex;
