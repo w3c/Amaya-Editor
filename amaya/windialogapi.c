@@ -2996,7 +2996,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	  doc = TmpDoc;
       DocInfo[doc] = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)TEXT);
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
 
