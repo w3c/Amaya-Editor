@@ -993,7 +993,6 @@ char              **argv;
    pSchStr = (PtrSSchema) malloc (sizeof (StructSchema));
    pSchStrExt = (PtrSSchema) malloc (sizeof (StructSchema));
 
-   ReadEnv ();
    /* on utilise le directory courant */
    if (!ReadStructureSchema (fn, pSchStr))
       TtaDisplaySimpleMessage (FATAL, STR, STR_CANNOT_READ_STRUCT_SCHEM);
