@@ -51,6 +51,8 @@ extern void TtaSetAccessRight ( Element element,
 extern void TtaHolophrastElement ( Element element,
                                    boolean holophrast,
                                    Document document );
+extern void TtaSetMandatoryInsertion ( boolean on,
+                                       Document document );
 extern void TtaSetStructureChecking ( boolean on,
                                       Document document );
 extern int TtaGetStructureChecking ( Document document );
@@ -171,6 +173,8 @@ extern void TtaSetAccessRight (/* Element element,
 extern void TtaHolophrastElement (/* Element element,
                                      boolean holophrast,
                                      Document document */);
+extern void TtaSetMandatoryInsertion (/* boolean on,
+                                         Document document */);
 extern void TtaSetStructureChecking (/* boolean on,
                                         Document document */);
 extern int TtaGetStructureChecking (/* Document document */);

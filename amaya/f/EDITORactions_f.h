@@ -19,9 +19,9 @@ extern void CreateMeta ( Document document,
 extern void CreateLinkInHead ( Document document,
                                View view );
 extern void CreateScript ( Document document,
-                               View view );
+                           View view );
 extern void CreateStyle ( Document document,
-                               View view );
+                          View view );
 extern void CreateComment ( Document document,
                             View view );
 extern void CreateParagraph ( Document document,
@@ -87,8 +87,18 @@ extern void CreateOption ( Document doc,
                            View view );
 extern void CreateTextInput ( Document doc,
                               View view );
+extern void CreatePasswordInput ( Document doc,
+                                  View view );
 extern void CreateTextArea ( Document doc,
                              View view );
+extern void CreateFileInput ( Document doc,
+                              View view );
+extern void CreateHiddenInput ( Document doc,
+                                View view );
+extern void CreateLabel ( Document doc,
+                          View view );
+extern void CreatePushButton ( Document doc,
+                               View view );
 extern void CreateSubmit ( Document doc,
                            View view );
 extern void CreateReset ( Document doc,
@@ -118,8 +128,9 @@ extern void CreateOrChangeLink ( Document doc,
                                  View view );
 extern void DeleteAnchor ( Document doc,
                            View view );
-extern void CleanCache ( Document doc, 
+extern void CleanCache ( Document doc,
                          View view );
+
 #else /* __STDC__ */
 
 extern void New (/* Document document,
@@ -135,9 +146,9 @@ extern void CreateMeta (/* Document document,
 extern void CreateLinkInHead (/* Document document,
                                  View view */);
 extern void CreateScript (/* Document document,
-                                 View view */);
+                             View view */);
 extern void CreateStyle (/* Document document,
-                                 View view */);
+                            View view */);
 extern void CreateComment (/* Document document,
                               View view */);
 extern void CreateParagraph (/* Document document,
@@ -203,8 +214,18 @@ extern void CreateOption (/* Document doc,
                              View view */);
 extern void CreateTextInput (/* Document doc,
                                 View view */);
+extern void CreatePasswordInput (/* Document doc,
+                                    View view */);
 extern void CreateTextArea (/* Document doc,
                                View view */);
+extern void CreateFileInput (/* Document doc,
+                                View view */);
+extern void CreateHiddenInput (/* Document doc,
+                                  View view */);
+extern void CreateLabel (/* Document doc,
+                            View view */);
+extern void CreatePushButton (/* Document doc,
+                                 View view */);
 extern void CreateSubmit (/* Document doc,
                              View view */);
 extern void CreateReset (/* Document doc,
@@ -217,6 +238,8 @@ extern void CreateAreaRect (/* Document doc,
 extern void CreateAreaCircle (/* Document doc,
                                  View view */);
 extern void CreateAreaPoly (/* Document doc,
+                               View view */);
+extern void CreateDivision (/* Document document,
                                View view */);
 extern void CreateNOSCRIPT (/* Document document,
                                View view */);
@@ -232,7 +255,7 @@ extern void CreateOrChangeLink (/* Document doc,
                                    View view */);
 extern void DeleteAnchor (/* Document doc,
                              View view */);
-extern void CleanCache (/* Document doc, 
+extern void CleanCache (/* Document doc,
                            View view */);
 
 #endif /* __STDC__ */

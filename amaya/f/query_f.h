@@ -10,6 +10,11 @@ extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
 extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
+extern int AHTLoadTerminate_handler ( HTRequest * request,
+                                      HTResponse * response,
+                                      void *param,
+                                      int status );
+extern void libwww_CleanCache ( void );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern void InvokeGetObjectWWW_callback ( int docid,
@@ -20,7 +25,7 @@ extern void InvokeGetObjectWWW_callback ( int docid,
                                           int status );
 extern int GetObjectWWW ( int docid,
                           char* urlName,
-                          char* postString,
+                          char* formdata,
                           char* outputfile,
                           int mode,
                           TIcbf* incremental_cbf,
@@ -38,17 +43,18 @@ extern int PutObjectWWW ( int docid,
                           void *context_tcbf );
 extern void StopRequest ( int docid );
 extern boolean AmayaIsAlive ( void );
-extern int AHTLoadTerminate_handler ( HTRequest * request, 
-				      HTResponse * response,
-				      void *param, 
-				      int status );
-extern void libwww_CleanCache ( void );
+
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
 extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
+extern int AHTLoadTerminate_handler (/* HTRequest * request,
+                                        HTResponse * response,
+                                        void *param,
+                                        int status */);
+extern void libwww_CleanCache (/* void */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern void InvokeGetObjectWWW_callback (/* int docid,
@@ -59,7 +65,7 @@ extern void InvokeGetObjectWWW_callback (/* int docid,
                                             int status */);
 extern int GetObjectWWW (/* int docid,
                             char* urlName,
-                            char* postString,
+                            char* formdata,
                             char* outputfile,
                             int mode,
                             TIcbf* incremental_cbf,
@@ -77,11 +83,6 @@ extern int PutObjectWWW (/* int docid,
                             void *context_tcbf */);
 extern void StopRequest (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
-extern int AHTLoadTerminate_handler (/* HTRequest * request, 
-					HTResponse * response,
-					void *param, 
-					int status */);
-extern void libwww_CleanCache (/* void */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-

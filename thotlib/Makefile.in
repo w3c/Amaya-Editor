@@ -22,7 +22,7 @@ bindir = @bindir@
 MACHINE= @target@
 
 SUBDIRS = include
-OBJDIRS = base content dialogue document editing image presentation tree view
+OBJDIRS = base content dialogue document editing image presentation tree view xml
 
 @SET_MAKE@
 
@@ -106,7 +106,13 @@ THOTK_OBJ = \
 	tree/structschema.o \
 	tree/tree.o \
 	tree/checkaccess.o \
-	tree/labelalloc.o
+	tree/labelalloc.o \
+	xml/writexml.o \
+	xml/savexml.o \
+	xml/translatexml.o \
+	xml/parsexml.o \
+	xml/xmlmodule.o \
+	xml/thotmodule.o
 
 KERNEL_OBJ = \
 	base/batchmessage.o \
@@ -121,7 +127,7 @@ KERNEL_OBJ = \
 	presentation/presentationapiND.o \
 	tree/attributeapiND.o \
 	tree/referenceapiND.o \
-	tree/treeapiND.o
+	tree/treeapiND.o 
 
 EDITOR_OBJ = \
 	image/xbmhandler.o \
@@ -226,6 +232,7 @@ DIALOGUE_OBJ = \
 	document/schemas.o \
 	document/views.o \
 	document/docs.o \
+	document/writedoc.o \
 	document/writepivot.o \
 	editing/applicationapi.o \
 	editing/checkermenu.o \
@@ -247,7 +254,7 @@ DIALOGUE_OBJ = \
 	view/displayselect.o \
 	view/structlocate.o\
 	view/unstructlocate.o\
-	view/viewapi.o 
+	view/viewapi.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \

@@ -1033,7 +1033,7 @@ PtrAbstractBox      pAbEl;
       /* DocBackUpInterval =0   signifie pas de sauvegarde automatique */
       if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
 	{
-	   WriteDocument (pDoc, 1);
+	   (*ThotLocalActions[T_writedocument]) (pDoc, 1);
 	   pDoc->DocNTypedChars = 0;
 	}
 }

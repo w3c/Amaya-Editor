@@ -3604,6 +3604,7 @@ char               *data;
 	       case NumZoneDirOpenDoc:
 	       case NumSelDoc:
 	       case NumZoneDocNameToOpen:
+               case NumToggleDocTypeToOpen:
 		  (*ThotLocalActions[T_opendoc]) (ref, typedata, data);
 		  break;
 	       case NumSelectImportClass:

@@ -3154,7 +3154,7 @@ void (*withThisPSchema) ();
 	   /* que celle du document */
 	   if (pDoc->DocSSchema->SsCode != versionSchema)
 	     {
-		pDoc->DocToBeChecked = TRUE;
+		pDoc->DocCheckingMode |= PIV_CHECK_MASK;
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
 	     }
      }
@@ -3236,8 +3236,8 @@ void (*withThisPSchema) ();
 		/* que celle du document */
 		if (pSS->SsCode != versionSchema)
 		  {
-		     pDoc->DocToBeChecked = TRUE;
-		     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
+		    pDoc->DocCheckingMode |= PIV_CHECK_MASK;
+		    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rank - 1] = pSS;
 	     strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
@@ -3424,7 +3424,8 @@ boolean		    removeExclusions
    char                tag;
    boolean             structureOK, createPages, found, ok;
 
-   pDoc->DocToBeChecked = FALSE;
+/*    pDoc->DocToBeChecked = FALSE; */
+   pDoc->DocCheckingMode &= ~PIV_CHECK_MASK;
    structureOK = TRUE;
    ok = FALSE;
    error = FALSE;
@@ -3531,7 +3532,7 @@ boolean		    removeExclusions
 		     /* accouple les paires */
 		     AssociatePairs (p);
 		     pDoc->DocParameters[i - 1] = p;
-		     if (pDoc->DocToBeChecked)
+		     if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
 			/* verifie que cet arbre est correct */
 		       {
 			  ok = AbstractTreeOK (p, pDoc);
@@ -3677,7 +3678,7 @@ boolean		    removeExclusions
 			 }
 		    }
 	       }
-	     if (!error && pDoc->DocToBeChecked)
+	     if (!error && (pDoc->DocCheckingMode & PIV_CHECK_MASK))
 		/* verifie que cet arbre est correct */
 	       {
 		  ok = AbstractTreeOK (pDoc->DocAssocRoot[assoc - 1], pDoc);
@@ -3731,7 +3732,7 @@ boolean		    removeExclusions
 			/* accouple les paires */
 			AssociatePairs (p);
 			pDoc->DocRootElement = p;
-			if (pDoc->DocToBeChecked)
+			if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
 			   /* verifie que cet arbre est correct */
 			  {
 			     ok = AbstractTreeOK (p, pDoc);

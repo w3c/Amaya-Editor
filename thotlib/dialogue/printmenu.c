@@ -59,6 +59,7 @@
 #include "memory_f.h"
 #include "registry_f.h"
 #include "docs_f.h"
+#include "writedoc_f.h"
 #include "print_tv.h"
 
 #ifdef _WINDOWS

@@ -48,6 +48,14 @@
 #define MAX_DOC_NAME_LEN 32	/* max. length of a document name */
 #define MAX_DOC_IDENT_LEN 32	/* max. length of a document identifier */
 
+/* document structure checking modes */
+#define DEFAULT_CHECK_MASK '\xE0'   /* default : check struct, mandatory el and attr */
+#define COMPLETE_CHECK_MASK '\xE0'  /* complete: idem, for compatibility */
+#define STR_CHECK_MASK '\x80'       /* check structural relations */
+#define EL_MANDATORY_MASK '\x40'    /* check mandatory elements */
+#define ATTR_MANDATORY_MASK '\x20'  /* check mandatory attributes */
+#define PIV_CHECK_MASK '\x01'       /* check document against SSchema (pivot reading) */
+
 #include "conststr.h"
 #include "constprs.h"
 

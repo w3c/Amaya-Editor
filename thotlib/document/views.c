@@ -1437,7 +1437,7 @@ boolean             assoc;
 			 {
 			   if (DocOfSavedElements == pDoc)
 			     FreeSavedElements ();
-			   ok = WriteDocument (pDoc, 0);
+			   ok = (*(Func)ThotLocalActions[T_writedocument]) (pDoc, 0);
 			 }
 		    }
 		  else

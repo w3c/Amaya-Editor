@@ -206,7 +206,7 @@ View                viewform;
 		    {
 		       if (save)
 			  /* l'utilisateur demande a sauver le document */
-			  ok = WriteDocument (pDoc, 4);
+			  ok = (* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4);
 		       if (ok)
 			  /* tout va bien, on ferme ce document */
 			  CloseDocument (pDoc);

@@ -39,7 +39,7 @@
 #include "viewapi_f.h"
 
 extern int          UserErrorCode;
-extern int          AvecControleStruct;
+/* extern int          AvecControleStruct; */
 
 static Name         bufferName;
 
@@ -138,7 +138,9 @@ Document            document;
      /* has the element an attribute of the same type ? */
      /* yes, error */ 
      TtaError (ERR_duplicate_attribute);
-   else if (AvecControleStruct && !CanAssociateAttr ((PtrElement) element, NULL, (PtrAttribute) attribute, &obligatory))
+   else if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK
+	    && !CanAssociateAttr ((PtrElement) element, NULL, 
+				  (PtrAttribute) attribute, &obligatory))
      /* can wa apply the attribute to the element ? */
      /* no, error */
      TtaError (ERR_attribute_element_mismatch);

@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *SkipBlanks ( char *ptr );
-extern boolean IsBlank ( char *ptr );
 extern char *SkipProperty ( char *ptr );
 extern char *GetCSSName ( Element el,
                           Document doc );
@@ -80,8 +78,6 @@ extern char ReadCSSRules ( Document doc,
 
 #else /* __STDC__ */
 
-extern char *SkipBlanks (/* char *ptr */);
-extern boolean IsBlank (/* char *ptr */);
 extern char *SkipProperty (/* char *ptr */);
 extern char *GetCSSName (/* Element el,
                             Document doc */);

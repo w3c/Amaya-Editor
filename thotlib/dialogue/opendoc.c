@@ -76,7 +76,9 @@ char               *s1, *s2;
 
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
-
+static int          NbDocSuffix = 1;
+static char         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+static char         docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -345,6 +347,15 @@ char               *data;
    val = (int) data;
    switch (ref)
 	 {
+	    case NumToggleDocTypeToOpen:
+               {
+                  strcpy (docSuffix, tabDocSuffix[(int)data]);
+		  if (TtaCheckDirectory (DirectoryName))
+                     TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
+                                       docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
+                }
+		break;
+
 	    case NumZoneDocNameToOpen:
 	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
@@ -368,7 +379,7 @@ char               *data;
 		 {
 		    /* Est-ce un nouveau directory qui contient des documents */
 		    if (!TtaIsInDocumentPath (DirectoryName))
-		       if (TtaIsSuffixFileIn (DirectoryName, ".PIV"))
+		       if (TtaIsSuffixFileIn (DirectoryName, docSuffix))
 			 {
 			    /* il faut ajouter le directory au path */
 			    i = strlen (DocumentPath);
@@ -381,7 +392,7 @@ char               *data;
 						 TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
 
 				 TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
-						   ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
+						   docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 			      }
 			 }
 		 }
@@ -390,14 +401,14 @@ char               *data;
 	       strcpy (DirectoryName, data);
 	       TtaSetTextForm (NumZoneDocNameToOpen, DirectoryName);
 	       TtaListDirectory (data, NumFormOpenDoc, NULL, -1,
-			".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
+			docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 	       break;
 	    case NumSelDoc:
 	       if (DirectoryName[0] == EOS)
 		 {
 		    /* compose le path complet du fichier pivot */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
-		    MakeCompleteName (docName, "PIV", DirectoryName, data, &i);
+		    MakeCompleteName (docName, &docSuffix[1], DirectoryName, data, &i);
 		    TtaExtractName (docName, DirectoryName, DefaultDocumentName);
 		 }
 	       else
@@ -407,8 +418,8 @@ char               *data;
 		    i = strlen (data);
 		    if (i >= MAX_NAME_LENGTH)
 		      {
-			 /* RemoveElement le suffixe .PIV du nom de fichier */
-			 if (!strcmp (&data[i - 4], ".PIV"))
+			 /* RemoveElement le suffixe du nom de fichier */
+			 if (!strcmp (&data[i - 4], docSuffix))
 			    data[i - 4] = EOS;
 		      }
 		    strncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
@@ -440,18 +451,22 @@ char               *data;
 			 }
 		    }
 
-	       MakeCompleteName (DefaultDocumentName, "PIV", DirectoryName, docName, &i);
-	       /* teste si le fichier 'PIV' existe */
+	       MakeCompleteName (DefaultDocumentName, &docSuffix[1], DirectoryName, docName, &i);
+	       /* teste si le fichier 'suffix' existe */
 	       if (TtaFileExist (docName) != 0)
-		  /* le fichier PIV existe, on ouvre le document */
+		  /* le fichier existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   LoadDocument (&pDoc, docName);
+		   if ((!strcmp (docSuffix, ".xml")) && 
+		       ThotLocalActions[T_xmlparsedoc] != NULL)
+                      LoadXmlDocument (&pDoc, docName);
+                   else
+		      LoadDocument (&pDoc, docName);
 		   if (pDoc != NULL)
 		     strcpy (pDoc->DocDirectory, DirectoryName);
 		 }
 	       else
-		  /* Le fichier PIV n'existe pas */
+		  /* Le fichier n'existe pas */
 		 {
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
@@ -504,6 +519,10 @@ View                view;
 	TteConnectAction (T_presentchoice, (Proc) BuildSchPresNameMenu);
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
+   if (ThotLocalActions[T_xmlparsedoc] != NULL && NbDocSuffix <= 1)
+    {
+      strcpy (tabDocSuffix[NbDocSuffix++], ".xml");
+    }
 
    /* Creation du Formulaire Ouvrir */
    parentWidget = TtaGetViewFrame (document, view);
@@ -537,13 +556,32 @@ View                view;
        strcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */
-   TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
+   strcpy (docSuffix, tabDocSuffix[0]);
+   TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, docSuffix,
+                     TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
+
    /* zone de saisie du nom du document a ouvrir */
+   if (NbDocSuffix > 1)
+      length = 30;
+   else
+      length = 50;
    TtaNewTextForm (NumZoneDocNameToOpen, NumFormOpenDoc,
-		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), length, 1, TRUE);
    TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
-  
+   if (NbDocSuffix > 1)
+     {
+   	/* select menu du type de fichier a ouvrir */
+   	length = 0;
+   	for (entry=0; entry<NbDocSuffix; entry++)
+     	  {
+            sprintf (&bufDir[length], "T%s", (char *)(tabDocSuffix[entry]+1) );
+            length += strlen (&bufDir[length])+1;
+          }
+        TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),
+                          NbDocSuffix, bufDir, NULL, TRUE);
+        TtaSetMenuForm (NumToggleDocTypeToOpen, 0);
+      }
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumFormOpenDoc, TRUE);
 }

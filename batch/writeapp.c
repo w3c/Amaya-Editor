@@ -393,6 +393,7 @@ char               *fname;
    int                 nbActions;
    boolean             editingResource;
    boolean             structSelectResource;
+   boolean	       documentWriteMode;
 
    strcpy (actionFname, fname);
    strcat (actionFname, "actions.proto");
@@ -667,7 +668,8 @@ char               *fname;
      {
 	/* c'est bien EDITOR.A qu'on compile, on ajoute le main avec les
 	   initialisation qu'il faut */
-	structSelectResource = FALSE;	/* no structselectResource */
+	structSelectResource = FALSE;	/* resource unspecified */
+	documentWriteMode = FALSE;      /* use default values */
 	fprintf (AppFile, "\nvoid TteLoadApplications ()\n");
 	fprintf (AppFile, "{\n");
 	fprintf (AppFile, "  %sActionListInit ();\n", fname);
@@ -678,6 +680,10 @@ char               *fname;
 	    SchUsed = SchemasUsed;
 	    while (SchUsed != NULL)
 	      {
+		if (!strcmp (SchUsed->AppNameValue, "Xml")
+		    || !strcmp (SchUsed->AppNameValue, "Pivot"))
+		  /* an explicit choice between struct and no struct */
+		  documentWriteMode = TRUE;
 		if (!strcmp (SchUsed->AppNameValue, "StructSelect")
 		    || !strcmp (SchUsed->AppNameValue, "NoStructSelect"))
 		  /* an explicit choice between struct and no struct */
@@ -686,8 +692,10 @@ char               *fname;
 		SchUsed = SchUsed->AppNextName;
 	      }
 	  }
+        /* set default actions */
+        if (!documentWriteMode)
+          fprintf (AppFile, " PivotLoadResources ();\n");
 	if (!structSelectResource)
-	  /* an implicit choice */
 	  fprintf (AppFile, "  NoStructSelectLoadResources ();\n");
 	fprintf (AppFile, "}\n\n");
 

@@ -46,7 +46,7 @@
 
 extern int          UserErrorCode;
 static Name         nameBuffer;
-int                 AvecControleStruct = 1;
+/* int                 AvecControleStruct = 1; */
 
 #ifdef __STDC__
 extern void         CreateNewElement (int, PtrSSchema, PtrDocument, boolean);
@@ -1074,11 +1074,12 @@ Document            document;
      }
    else
       /* Parameter document is ok */
-      if (AvecControleStruct && !AllowedSibling ((PtrElement) sibling,
-					       LoadedDocument[document - 1],
-				    ((PtrElement) newElement)->ElTypeNumber,
-				  ((PtrElement) newElement)->ElStructSchema,
-						 before, FALSE, FALSE))
+      if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
+	  && !AllowedSibling ((PtrElement) sibling,
+			      LoadedDocument[document - 1],
+			      ((PtrElement) newElement)->ElTypeNumber,
+			      ((PtrElement) newElement)->ElStructSchema,
+			      before, FALSE, FALSE))
      {
 	TtaError (ERR_element_does_not_match_DTD);
      }
@@ -1105,7 +1106,7 @@ Document            document;
 			((PtrElement) sibling)->ElAssocNum);
 	/* treats the exclusions of the created element */
 	pEl = (PtrElement) newElement;
-	if (AvecControleStruct)
+	if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
 	   RemoveExcludedElem (&pEl);
 	if (pEl != NULL)
 	  {
@@ -1117,7 +1118,7 @@ Document            document;
 		GetOtherPairedElement ((PtrElement) newElement);
 #ifndef NODISPLAY
 	     /* treats the required attributs of created elements */
-	     if (AvecControleStruct)
+	     if ((LoadedDocument[document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
 		AttachMandatoryAttributes (pEl, LoadedDocument[document - 1]);
 	     if (pNeighbour != NULL)
 		/* The inserted element is not the first nor the last between its brothers */
@@ -1203,9 +1204,12 @@ Document            document;
 #endif
 	     ok = TRUE;
 	  }
-	else if (AvecControleStruct
-		 && !AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
-					((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElStructSchema, FALSE, FALSE))
+	else if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
+		 && !AllowedFirstChild ((PtrElement) parent, 
+					LoadedDocument[document - 1],
+					((PtrElement) (*newElement))->ElTypeNumber, 
+					((PtrElement) (*newElement))->ElStructSchema, 
+					FALSE, FALSE))
 	   TtaError (ERR_element_does_not_match_DTD);
 	else
 	  {
@@ -1235,7 +1239,7 @@ Document            document;
 	     SetAssocNumber ((PtrElement) (*newElement),
 			     ((PtrElement) parent)->ElAssocNum);
 	     /* Treats the exclusions in the created element */
-	     if (AvecControleStruct)
+	     if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK)
 		RemoveExcludedElem ((PtrElement *) newElement);
 	     if ((PtrElement) (*newElement) != NULL)
 	       {
@@ -1244,7 +1248,7 @@ Document            document;
 				       LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 		  /* treats the required attibutes of the created elements */
-		  if (AvecControleStruct)
+		  if ((LoadedDocument [document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
 		     AttachMandatoryAttributes ((PtrElement) (*newElement), LoadedDocument[document - 1]);
 		  RedisplayNewElement (document, (PtrElement) (*newElement),
 				    pNeighbour, TRUE, TRUE);
@@ -1574,6 +1578,47 @@ Document            document;
 }
 
 /* ----------------------------------------------------------------------
+   TtaSetMandatoryInsertion
+
+   Activate or disable element and attributes insertion. When a
+   modification of the abstract tree is performed, mandatory elements
+   and attributes are not inserted. 
+   
+
+   By default, insertion is activated.
+
+   Parameter:
+   on: 0 disables the insertion. All other values activates it.
+   document: the document for which insertion is changed.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetMandatoryInsertion (boolean on, Document document)
+#else  /* __STDC__ */
+void                TtaSetMandatoryInsertion (on, document)
+boolean             on;
+Document            document;
+
+#endif /* __STDC__ */
+{
+   if (document < 1 || document > MAX_DOCUMENTS)
+     {
+       TtaError (ERR_invalid_document_parameter);
+     }
+   else if (LoadedDocument[document - 1] == NULL)
+     {
+       TtaError (ERR_invalid_document_parameter);
+     }
+   else
+     {
+       if (on == 0)
+	 (LoadedDocument [document - 1])->DocCheckingMode &= ~(ATTR_MANDATORY_MASK | EL_MANDATORY_MASK);
+       else
+	 (LoadedDocument [document - 1])->DocCheckingMode |= (ATTR_MANDATORY_MASK | EL_MANDATORY_MASK);
+     }
+}
+
+/* ----------------------------------------------------------------------
    TtaSetStructureChecking
 
    Activate or disable structure checking. When structure checking is
@@ -1596,10 +1641,21 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-   if (on == 0)
-      AvecControleStruct = 0;
+   if (document < 1 || document > MAX_DOCUMENTS)
+     {
+       TtaError (ERR_invalid_document_parameter);
+     }
+   else if (LoadedDocument[document - 1] == NULL)
+     {
+       TtaError (ERR_invalid_document_parameter);
+     }
    else
-      AvecControleStruct = 1;
+     {
+       if (on == 0)
+	 (LoadedDocument [document - 1])->DocCheckingMode &= ~COMPLETE_CHECK_MASK;
+       else
+	 (LoadedDocument [document - 1])->DocCheckingMode |= COMPLETE_CHECK_MASK;
+     }
 }
 
 
@@ -1625,8 +1681,17 @@ Document            document;
 
 #endif /* __STDC__ */
 
-{
-   return AvecControleStruct;
+{ 
+  if (document < 1 || document > MAX_DOCUMENTS)
+    {
+      TtaError (ERR_invalid_document_parameter);
+    }
+  else if (LoadedDocument[document - 1] == NULL)
+    {
+      TtaError (ERR_invalid_document_parameter);
+    }
+  else
+    return !(boolean)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
 }
 
 

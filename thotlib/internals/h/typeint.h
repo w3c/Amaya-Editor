@@ -578,9 +578,9 @@ typedef struct _DocumentDescr
 					   of these natures */
 	/* information used while reading the pivot file */
 	int		DocPivotVersion;/* pivot version number */
-	PtrReferredDescr DocLabels;	/* external labels */
-	boolean		DocToBeChecked; /* check document structure against
-					   the structure schemas */
+        PtrReferredDescr DocLabels;	/* external labels */
+	unsigned char	DocCheckingMode; /* check document structure against
+					    the structure schemas */
 	boolean		DocPivotError;  /* an format error has been detected */
 } DocumentDescr;
 

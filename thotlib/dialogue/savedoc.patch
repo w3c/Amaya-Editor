@@ -1,0 +1,80 @@
+*** savedoc.c	Thu Sep 17 08:21:52 1998
+--- savedoc.orig	Thu Sep 17 08:20:22 1998
+*************** static PathBuffer   TraductionSchemaName
+*** 64,70 ****
+  static boolean      SaveDocWithCopy;
+  static boolean      SaveDocWithMove;
+  static PtrDocument  DocumentToSave;
+! static int          PivotEntryNum;
+  
+  /*----------------------------------------------------------------------
+     UnsetEntryMenu
+--- 64,70 ----
+  static boolean      SaveDocWithCopy;
+  static boolean      SaveDocWithMove;
+  static PtrDocument  DocumentToSave;
+! 
+  
+  /*----------------------------------------------------------------------
+     UnsetEntryMenu
+*************** void                BuildSaveDocMenu ()
+*** 120,132 ****
+  						      SaveDocWithMove);
+  	   (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
+  	 }
+!      }
+!    else if (!strcmp (TraductionSchemaName, "PIV"))
+!      {
+!        strcat (outputFileName, ".PIV"); 
+!        (void) StoreDocument (DocumentToSave,
+! 			     SaveFileName, SaveDirectoryName,
+! 			     SaveDocWithCopy, SaveDocWithMove);
+       }
+     else
+        /* exporter le document */
+--- 120,130 ----
+  						      SaveDocWithMove);
+  	   (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
+  	 }
+! 
+! /* 	strcat (outputFileName, ".PIV"); */
+! /* 	(void) StoreDocument (DocumentToSave, */
+! /* 			      SaveFileName, SaveDirectoryName, */
+! /* 			      SaveDocWithCopy, SaveDocWithMove); */
+       }
+     else
+        /* exporter le document */
+*************** char               *txt;
+*** 258,269 ****
+  		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
+  		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
+  		 }
+- 	       else if (val == PivotEntryNum)
+- 		 {
+- 		   strcpy (TraductionSchemaName, "PIV");
+- 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
+- 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
+- 		 }
+  	       else
+  		 {
+  		    ConfigGetExportSchemaName (val, TraductionSchemaName);
+--- 256,261 ----
+*************** PtrDocument         pDoc;
+*** 402,417 ****
+  		   src += l + 1;
+  		}
+  	      nbitem++;
+- 	      if (strcmp (DefaultFileSuffix, ".xml") == 0)
+- 		{
+- 		  strcpy (dest, "B");
+- 		  dest++;
+- 		  strcpy (dest, "Pivot");
+- 		  PivotEntryNum = nbitem;
+- 		  nbitem++;
+- 		}
+- 	      else 
+- 		PivotEntryNum = -1;
+  	      TtaNewSubmenu (NumMenuFormatDocToSave, NumFormSaveAs, 0,
+  			     TtaGetMessage (LIB, TMSG_DOC_FORMAT), nbitem, BufMenuB, NULL, TRUE);
+  	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
+--- 394,399 ----

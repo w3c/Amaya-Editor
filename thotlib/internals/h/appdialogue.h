@@ -182,7 +182,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_backuponfatal			102
 #define T_AIupdate			103
 #define T_redisplay			104
-#define MAX_LOCAL_ACTIONS               105
+#define T_writedocument                 105
+#define T_setwritedirectory             106
+#define T_xmlparsedoc			107
+#define MAX_LOCAL_ACTIONS               108
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */

@@ -8,6 +8,8 @@
 
 extern void LoadDocument ( PtrDocument * pDoc,
                            char *fileName );
+extern void LoadXmlDocument ( PtrDocument * pDoc,
+                              char *fileName );
 extern void NewDocument ( PtrDocument * pDoc,
                           PtrBuffer SSchemaName,
                           Name docName,
@@ -21,13 +23,7 @@ extern void DocumentModified ( PtrDocument pDoc,
                                PtrElement pEl );
 extern void UpdateIncludedElement ( PtrElement pEl,
                                     PtrDocument pDoc );
-extern boolean StoreDocument ( PtrDocument pDoc,
-                               Name docName,
-                               PathBuffer dirName,
-                               boolean copy,
-                               boolean move );
-extern boolean WriteDocument ( PtrDocument pDoc,
-                               int mode );
+extern void UpdateAllInclusions ( PtrDocument pDoc );
 extern void BackupAll ( void );
 extern void BackupOnFatalErrorLoadResources ( void );
 
@@ -35,6 +31,8 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 extern void LoadDocument (/* PtrDocument * pDoc,
                              char *fileName */);
+extern void LoadXmlDocument (/* PtrDocument * pDoc,
+                                char *fileName */);
 extern void NewDocument (/* PtrDocument * pDoc,
                             PtrBuffer SSchemaName,
                             Name docName,
@@ -48,13 +46,7 @@ extern void DocumentModified (/* PtrDocument pDoc,
                                  PtrElement pEl */);
 extern void UpdateIncludedElement (/* PtrElement pEl,
                                       PtrDocument pDoc */);
-extern boolean StoreDocument (/* PtrDocument pDoc,
-                                 Name docName,
-                                 PathBuffer dirName,
-                                 boolean copy,
-                                 boolean move */);
-extern boolean WriteDocument (/* PtrDocument pDoc,
-                                 int mode */);
+extern void UpdateAllInclusions (/* PtrDocument pDoc */);
 extern void BackupAll (/* void */);
 extern void BackupOnFatalErrorLoadResources (/* void */);
 

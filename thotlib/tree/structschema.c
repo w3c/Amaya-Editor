@@ -76,6 +76,7 @@ PtrDocument        *pDoc;
 	/* initialise le mode d'affichage */
 	documentDisplayMode[doc] = DisplayImmediately;
 	(*pDoc)->DocBackUpInterval = CurSaveInterval;
+	(*pDoc)->DocCheckingMode = DEFAULT_CHECK_MASK;
      }
 }
 

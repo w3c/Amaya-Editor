@@ -4,7 +4,6 @@
  */
 
 #ifndef __CEXTRACT__
-
 #ifdef __STDC__
 
 extern void *AHTCallback_bridge ( caddr_t cd,
@@ -14,45 +13,38 @@ extern void ProcessTerminateRequest ( HTRequest * request,
                                       HTResponse * response,
                                       void *param,
                                       int status );
-extern int Add_NewSocket_to_Loop ( HTRequest * request,
-                                   HTAlertOpcode op,
-                                   int msgnum,
-                                   const char *dfault,
-                                   void *input,
-                                   HTAlertPar * reply );
-extern int AHTEvent_register ( SOCKET sock, 
-			       HTEventType type,
-			       HTEvent *event );
+extern int AHTEvent_register ( SOCKET sock,
+                               HTEventType type,
+                               HTEvent *event );
 extern int AHTEvent_unregister ( SOCKET sock,
-				 HTEventType type);
+                                 HTEventType type );
 extern void RequestKillAllXtevents ( AHTReqContext * me );
-void AMAYA_SetTimer ( HTTimer *libwww_timer );
-void AMAYA_DeleteTimer ( HTTimer *timer );
+extern void *TimerCallback ( XtPointer cdata,
+                             XtIntervalId *id );
+extern void KillAllTimers ( void );
+extern void AMAYA_SetTimer ( HTTimer *libwww_timer );
+extern void AMAYA_DeleteTimer ( HTTimer *libwww_timer );
+
 #else /* __STDC__ */
 
 extern void *AHTCallback_bridge (/* caddr_t cd,
                                     int *s,
                                     XtInputId * id */);
 extern void ProcessTerminateRequest (/* HTRequest * request,
-                                      HTResponse * response,
-                                      void *param,
-                                      int status */);
-extern int Add_NewSocket_to_Loop (/* HTRequest * request,
-                                     HTAlertOpcode op,
-                                     int msgnum,
-                                     const char *dfault,
-                                     void *input,
-                                     HTAlertPar * reply */);
+                                        HTResponse * response,
+                                        void *param,
+                                        int status */);
 extern int AHTEvent_register (/* SOCKET sock,
-				 HTEventType type,
-				 HTEvent *event */);
+                                 HTEventType type,
+                                 HTEvent *event */);
 extern int AHTEvent_unregister (/* SOCKET sock,
-				   HTEventType type */);
+                                   HTEventType type */);
 extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-void AMAYA_SetTimer (/* HTTimer *libwww_timer */);
-void AMAYA_DeleteTimer (/* HTTimer *timer */);
+extern void *TimerCallback (/* XtPointer cdata,
+                               XtIntervalId *id */);
+extern void KillAllTimers (/* void */);
+extern void AMAYA_SetTimer (/* HTTimer *libwww_timer */);
+extern void AMAYA_DeleteTimer (/* HTTimer *libwww_timer */);
+
 #endif /* __STDC__ */
-
-extern boolean libDoStop;
-
 #endif /* __CEXTRACT__ */

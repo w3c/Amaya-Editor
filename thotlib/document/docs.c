@@ -253,6 +253,43 @@ char               *fileName;
 }
 
 /*----------------------------------------------------------------------
+   LoadXmlDocument charge le document que contient le fichier nomme'
+   fileName dans le descripteur pointe par pDoc. Au
+   retour pDoc est NIL si le document n'a pas pu etre
+   charge.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LoadXmlDocument (PtrDocument * pDoc, char *fileName)
+#else  /* __STDC__ */
+void                LoadXmlDocument (pDoc, fileName)
+PtrDocument        *pDoc;
+char               *fileName;
+
+#endif  /* __STDC__ */
+{
+  *pDoc = NULL;
+  if (ThotLocalActions[T_xmlparsedoc] != NULL)
+    *pDoc = LoadedDocument[(int)((*(Func)ThotLocalActions [T_xmlparsedoc]) (fileName)) - 1];
+  if (*pDoc != NULL)
+     {
+       /* conserve le path actuel des schemas dans le contexte du document */
+       strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+       /* ouvre les vues a ouvrir */
+       OpenDefaultViews (*pDoc);
+       XmlSetPresentation((Document) IdentDocument (*pDoc)); 
+       XmlSetRef((Document) IdentDocument (*pDoc)); 
+       if ((*pDoc)->DocRootElement != NULL)
+         /* Pour tous les elements du document que l'on vient de */
+         /* charger qui sont designe's par des references, cherche */
+         /* toutes les references appartenant a d'autres documents */
+         /* charges et fait reafficher ces references si elles sont */
+         /* deja affichees */
+         RedisplayExternalRefs (*pDoc);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    NewDocument cree un document vide, conforme au schema de nom    
    SSchemaName, dans le descripteur pointe' par pDoc.      
    docName est le nom a donner au document                 
@@ -723,9 +760,9 @@ PtrDocument         pDoc;
    		document.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         UpdateAllInclusions (PtrDocument pDoc)
+void         UpdateAllInclusions (PtrDocument pDoc)
 #else  /* __STDC__ */
-static void         UpdateAllInclusions (pDoc)
+void         UpdateAllInclusions (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -789,7 +826,7 @@ PtrDocument         pDoc;
       HighlightSelection (FALSE);
 }
 
-
+#if 0 /* A supprimer -> writedoc.c */
 /********** TODO revoir tout ce qui suit ***********/
 
 /*----------------------------------------------------------------------
@@ -1153,6 +1190,7 @@ int                 mode;
 }
 
 
+#endif /* A supprimer */
 /*----------------------------------------------------------------------
   BackupAll sauvegarde les fichiers modifies en cas de CRASH majeur
   ----------------------------------------------------------------------*/
@@ -1166,7 +1204,8 @@ void BackupAll()
     if (LoadedDocument[doc] != NULL)
       /* il y a un document pour cette entree de la table */
       if (LoadedDocument[doc]->DocModified)
-	  WriteDocument(LoadedDocument[doc], 3);
+	if (ThotLocalActions[T_writedocument] != NULL)
+	   (* ThotLocalActions[T_writedocument]) (LoadedDocument[doc], 3);
 }
 
 /*----------------------------------------------------------------------

@@ -20,7 +20,7 @@ extern int DrawString ( char *buff,
                         int RO,
                         int active,
                         int fg,
-			int shadow );
+                        int shadow );
 extern void DisplayUnderline ( int frame,
                                int x,
                                int y,
@@ -339,7 +339,7 @@ extern int DrawString (/* char *buff,
                           int RO,
                           int active,
                           int fg,
-			  int shadow */);
+                          int shadow */);
 extern void DisplayUnderline (/* int frame,
                                  int x,
                                  int y,

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern Document IsDocumentLoaded ( char *documentURL,
-				   char *form_data );
+                                   char *form_data );
 extern boolean CanReplaceCurrentDocument ( Document document,
                                            View view );
 extern void ExtractParameters ( char *aName,
@@ -47,6 +47,8 @@ extern void Reload_callback ( int doc,
                               void * context );
 extern void Reload ( Document document,
                      View view );
+extern void ShowTargets ( Document document,
+                          View view );
 extern void ZoomIn ( Document document,
                      View view );
 extern void ZoomOut ( Document document,
@@ -109,10 +111,14 @@ extern void HelpStyleSheets ( Document document,
                               View view );
 extern void HelpAttributes ( Document document,
                              View view );
+extern void HelpSpellChecking ( Document document,
+                                View view );
 extern void HelpPublishing ( Document document,
                              View view );
 extern void HelpPrinting ( Document document,
                            View view );
+extern void HelpNumbering ( Document document,
+                            View view );
 extern void HelpMakeBook ( Document document,
                            View view );
 extern void HelpConfigure ( Document document,
@@ -123,7 +129,7 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern Document IsDocumentLoaded (/* char *documentURL,
-				     char *form_data */);
+                                     char *form_data */);
 extern boolean CanReplaceCurrentDocument (/* Document document,
                                              View view */);
 extern void ExtractParameters (/* char *aName,
@@ -163,6 +169,8 @@ extern void Reload_callback (/* int doc,
                                 void * context */);
 extern void Reload (/* Document document,
                        View view */);
+extern void ShowTargets (/* Document document,
+                            View view */);
 extern void ZoomIn (/* Document document,
                        View view */);
 extern void ZoomOut (/* Document document,
@@ -225,10 +233,14 @@ extern void HelpStyleSheets (/* Document document,
                                 View view */);
 extern void HelpAttributes (/* Document document,
                                View view */);
+extern void HelpSpellChecking (/* Document document,
+                                  View view */);
 extern void HelpPublishing (/* Document document,
                                View view */);
 extern void HelpPrinting (/* Document document,
                              View view */);
+extern void HelpNumbering (/* Document document,
+                              View view */);
 extern void HelpMakeBook (/* Document document,
                              View view */);
 extern void HelpConfigure (/* Document document,

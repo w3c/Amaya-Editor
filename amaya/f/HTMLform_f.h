@@ -16,7 +16,7 @@ extern void SelectCheckbox ( Document doc,
                              Element el );
 extern void SelectOneRadio ( Document doc,
                              Element el );
-extern boolean SelectIncludedText ( NotifyElement * event );
+extern boolean SelectInsertedText ( NotifyElement * event );
 extern void SelectOneOption ( Document doc,
                               Element el );
 
@@ -27,12 +27,12 @@ extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
 extern void ActivateFileInput (/* Document doc,
-                                Element el */);
+                                  Element el */);
 extern void SelectCheckbox (/* Document doc,
                                Element el */);
 extern void SelectOneRadio (/* Document doc,
                                Element el */);
-extern boolean SelectIncludedText (/* NotifyElement * event */);
+extern boolean SelectInsertedText (/* NotifyElement * event */);
 extern void SelectOneOption (/* Document doc,
                                 Element el */);
 

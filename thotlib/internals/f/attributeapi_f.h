@@ -41,6 +41,10 @@ extern char *TtaGetAttributeOriginalName ( AttributeType attributeType );
 extern int TtaSameAttributeTypes ( AttributeType type1,
                                    AttributeType type2 );
 extern int TtaGetAttributeValue ( Attribute attribute );
+extern char *TtaGetAttributeValueName ( AttributeType attributeType,
+                                        int value );
+extern int TtaGetAttributeValueFromName ( char *name,
+                                          AttributeType attributeType );
 extern int TtaGetTextAttributeLength ( Attribute attribute );
 extern void TtaGiveTextAttributeValue ( Attribute attribute,
                                         char *buffer,
@@ -88,6 +92,10 @@ extern char *TtaGetAttributeOriginalName (/* AttributeType attributeType */);
 extern int TtaSameAttributeTypes (/* AttributeType type1,
                                      AttributeType type2 */);
 extern int TtaGetAttributeValue (/* Attribute attribute */);
+extern char *TtaGetAttributeValueName (/* AttributeType attributeType,
+                                          int value */);
+extern int TtaGetAttributeValueFromName (/* char *name,
+                                            AttributeType attributeType */);
 extern int TtaGetTextAttributeLength (/* Attribute attribute */);
 extern void TtaGiveTextAttributeValue (/* Attribute attribute,
                                           char *buffer,

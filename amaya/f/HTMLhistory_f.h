@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void InitDocHistory ( Document doc );
-extern void FreeDocHistory ();
+extern void FreeDocHistory ( void );
 extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
                                         char *urlName,
@@ -26,13 +26,13 @@ extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
                             char *url,
-			    char *form_data,
-			    ClickEvent method );
+                            char *form_data,
+                            ClickEvent method );
 
 #else /* __STDC__ */
 
 extern void InitDocHistory (/* Document doc */);
-extern void FreeDocHistory ();
+extern void FreeDocHistory (/* void */);
 extern void GotoPreviousHTML_callback (/* int newdoc,
                                           int status,
                                           char *urlName,
@@ -51,13 +51,8 @@ extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,
                               char *url,
-			      char *form_data,
-			      ClickEvent method */);
+                              char *form_data,
+                              ClickEvent method */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-
-
-
-
-
