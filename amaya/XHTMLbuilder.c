@@ -1087,13 +1087,17 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
     /* the height attribute is attached to an Object element */
     {
       child = TtaGetFirstChild (el);
-      if (child)
+      if (!child)
+	return;
+      else
 	{
 	  childType = TtaGetElementType (child);
 	  if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	    /* the Object element is of type image. apply the width
 	       attribute to the actual image element */
 	    el = child;
+	  else
+	    return;
 	}
     }
   /* remove trailing spaces */

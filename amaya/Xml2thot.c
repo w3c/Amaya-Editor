@@ -4470,6 +4470,8 @@ static Element  SetExternalElementType (Element el, Document doc,
 {
   ElementType   elType, parentType;
   Element       parent, elemElement, elemContent;
+  AttributeType attrType;
+  Attribute     attr;
   int           oldStructureChecking;
  
   elemElement = NULL;
@@ -4495,6 +4497,20 @@ static Element  SetExternalElementType (Element el, Document doc,
 	  if (elemContent != NULL)
 	    {
 	      TtaInsertSibling (elemContent, el, FALSE, doc);
+	      /* Remove the IntHeightPercent and IntHeightPxl Thot attributes */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr != NULL)
+		TtaRemoveAttribute (el, attr, doc);
+	      else
+		{
+		  attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr != NULL)
+		    TtaRemoveAttribute (el, attr, doc);
+		}
+	      
 	      /* Attach the attributes to that new element */
 	       MoveExternalAttribute (el, elemContent, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
@@ -4839,6 +4855,10 @@ void        ParseExternalDocument (char     *fileName,
 	      TtaRemoveTree (idEl, externalDoc);
 	      TtaInsertFirstChild (&idEl, extEl, doc);
 	    }
+	  /* Move presentation-schema extensions of the external document */
+	  /* to the sub-tree of which 'extEl' is the root */
+	  /* This allow to enable the style sheets attached to the external doc */
+	  TtaMoveDocumentExtensionsToElement (externalDoc, extEl);
 	}
       
       /* Remove the ParsingErrors file */
@@ -4851,7 +4871,6 @@ void        ParseExternalDocument (char     *fileName,
   /* Delete the external document */
   if (externalDoc != 0)
     {
-      DocumentMetaClear (DocumentMeta[externalDoc]);
       FreeDocumentResource (externalDoc);
       TtaCloseDocument (externalDoc);
     }

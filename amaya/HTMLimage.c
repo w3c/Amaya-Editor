@@ -519,10 +519,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		   char *localfile, char *mime_type)
 {
-  Element             parent;
-  ElementType         elType, parentType;
-  AttributeType       attrType;
-  Attribute           attr;
+  ElementType         elType;
   int                 modified, i;
   ThotBool            is_svg, is_mml, is_html;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
@@ -600,32 +597,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		}
 	    }
 	}
-
-      if ((is_html || is_svg || is_mml) &&
-	  (elType.ElTypeNum == HTML_EL_PICTURE_UNIT) &&
-	  (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")))
-	{
-	  parent = TtaGetParent (el);
-	  parentType = TtaGetElementType (parent);
-	  if (parentType.ElTypeNum == HTML_EL_Object)
-	    {
-	      /* Remove the IntHeightPercent and IntHeightPxl Thot attribute */
-	      /* Thot attributes for an HTML 'object' element */
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr != NULL)
-		TtaRemoveAttribute (el, attr, doc);
-	      else
-		{
-		  attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr != NULL)
-		    TtaRemoveAttribute (el, attr, doc);
-		}
-	    }	
-	}
-      
+   
       if (is_svg)
 	{
 	  TtaSetPictureType (el, AM_SVG_MIME_TYPE);
