@@ -39,12 +39,15 @@
 #     endif /* _WINDOWS */
 #endif /*  */
 
+/* libwww default parameters */
 #define DEFAULT_CACHE_SIZE 10
 #define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
 #define DEFAULT_MAX_SOCKET 32
 #define DEFAULT_DNS_TIMEOUT 1800L
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
+/* defines the priority for image content negotiation */
+#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png"
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
@@ -2008,7 +2011,20 @@ static void ProxyInit ()
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("HTTP_PROXY");
   if (strptr && *strptr)
-    HTProxy_add ("http", WideChar2ISO (strptr));
+    {
+      /* does the proxy env string has an "http://" prefix? */
+      if ( !ustrncasecmp( strptr, "http://", 7))
+	HTProxy_add ("http", WideChar2ISO (strptr));
+      else
+	{
+	  strptrA = (char *) TtaGetMemory (ustrlen (strptr) + 9);
+	  strcpy (strptrA, "http://");
+	  strcat (strptrA, WideChar2ISO (strptr));
+	  HTProxy_add ("http", strptrA);
+	  TtaFreeMemory (strptrA);
+	}
+    }
+
   /* get the no_proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("PROXYDOMAIN");
   if (strptr && *strptr) 
@@ -2561,6 +2577,21 @@ STRING string;
   return formdata;
 }
 
+#ifdef __STDC__
+void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
+#else
+void AHTRequest_setCustomAcceptHeader (request, value)
+HTRequest *request;
+char *value;
+#endif /* __STDC__ */
+{				
+  HTRqHd rqhd = HTRequest_rqHd (request);
+  rqhd = rqhd & (~HT_C_ACCEPT_TYPE);
+  HTRequest_setRqHd (request, rqhd);
+  HTRequest_addExtraHeader (request, "Accept:", value);
+}
+
+	       
 
 /*----------------------------------------------------------------------
   InvokeGetObjectWWW_callback
@@ -2778,8 +2809,17 @@ STRING        content_type;
      {
        me->method = METHOD_GET;
        if (!HasKnownFileSuffix (ref))
-	 HTRequest_setConversion(me->request, acceptTypes, TRUE);
-       HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
+	 {
+	   /* try to adjust the Accept header in an netwise economical way */
+	   if (mode & AMAYA_LOAD_IMAGE)
+	     AHTRequest_setCustomAcceptHeader (me->request, IMAGE_ACCEPT_NEGOTIATION);
+	   else if (mode & AMAYA_LOAD_CSS)
+	     AHTRequest_setCustomAcceptHeader (me->request, "*/*;q=0.1,css/*");
+	   /*
+	   HTRequest_setConversion(me->request, acceptTypes, TRUE);
+	   */
+	 }
+	   HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
      }
 
    /* Common initialization for all HTML methods */
