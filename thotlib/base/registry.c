@@ -836,17 +836,22 @@ char               *appArgv0;
    char               *my_path;
    char               *dir_end = NULL;
    char               *appName;
-#ifdef _WINDOWS
-#ifndef __CYGWIN32__
-  extern int _fmode;
-  _fmode = _O_BINARY;
-#endif
-#else /* ! _WINDOWS */
-  struct stat         stat_buf;
-#endif /* _WINDOWS */
-  int                 execname_len;
-  int                 len, round;
-  boolean             found, ok;
+#  ifdef _WINDOWS
+#  ifndef __CYGWIN32__
+   extern int _fmode;
+#  endif
+#  else /* ! _WINDOWS */
+   struct stat         stat_buf;
+#  endif /* _WINDOWS */
+   int                 execname_len;
+   int                 len, round;
+   boolean             found, ok;			  
+
+#  ifdef _WINDOWS
+#  ifndef __CYGWIN32__
+   _fmode = _O_BINARY;
+#  endif  /* __CYGWIN32__ */
+#  endif  /* _WINDOWS */
 
   if (AppRegistryInitialized != 0)
     return;
@@ -870,8 +875,14 @@ char               *appArgv0;
    * First case, the argv[0] indicate that it's an absolute path name.
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
+
+# ifdef _WINDOWS
+  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
+    strncpy (&execname[0], appArgv0, sizeof (execname));
+# else  /* 1_WINDOWS */
   if (appArgv0[0] == DIR_SEP)
     strncpy (&execname[0], appArgv0, sizeof (execname));
+# endif /* _WINDOWS */
 
   /*
    * second case, the argv[0] indicate a relative path name.
