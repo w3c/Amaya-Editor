@@ -117,6 +117,91 @@ typedef struct stack_point
 StackPoint;
 static StackPoint   stack[MAX_STACK];
 static int          stack_deep;
+static ThotBool     SkipClickEvent = FALSE;
+
+/*----------------------------------------------------------------------
+  APPgraphicModify sends a message TteElemGraphModif to parent elements
+  of a graphic.
+  ----------------------------------------------------------------------*/
+ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
+{
+  PtrElement          pAsc;
+  ThotBool            result;
+  NotifyOnValue       notifyEl;
+  PtrDocument         pDoc;
+  int                 view;
+  ThotBool            ok = FALSE;
+
+  GetDocAndView (frame, &pDoc, &view);
+  result = FALSE;
+  pAsc = pEl;
+  notifyEl.event = TteElemGraphModify;
+  notifyEl.document = (Document) IdentDocument (pDoc);
+  notifyEl.target = (Element) pEl;
+  notifyEl.value = value;
+  while (pAsc)
+    {
+      notifyEl.element = (Element) pAsc;
+      ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
+      result = result || ok;
+      pAsc = pAsc->ElParent;
+    }
+  /* if it's before the actual change is made and if the application accepts
+     the change, register the operation in the Undo queue (only if it's
+     not a creation). */
+  if (pre && !ok)
+    {
+      if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
+	   pEl->ElGraph != '\0') ||
+	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0') ||
+	  (pEl->ElLeafType == LtPath))
+	{
+	  if (ThotLocalActions[T_openhistory] != NULL)
+	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
+	  if (ThotLocalActions[T_addhistory] != NULL)
+	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
+	}
+    }
+  if (!pre)
+      if (pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol ||
+	  pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath)
+	if (ThotLocalActions[T_closehistory] != NULL)
+	  (*ThotLocalActions[T_closehistory]) (pDoc);
+  return result;
+}
+
+/*----------------------------------------------------------------------
+  NotifyClick sends a message event to parent elements
+  of a graphic.
+  ----------------------------------------------------------------------*/
+static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
+{
+  PtrElement          pAsc;
+  ThotBool            result;
+  NotifyElement       notifyEl;
+  ThotBool            ok, isGraph;
+
+  result = FALSE;
+  ok = FALSE;
+  pAsc = pEl;
+  isGraph = (pEl && pEl->ElTerminal && pEl->ElLeafType == LtGraphics);
+  notifyEl.event = event;
+  notifyEl.document = doc;
+  notifyEl.position = 0;
+  while (pAsc)
+    {
+      notifyEl.element = (Element) pAsc;
+      notifyEl.elementType.ElTypeNum = pAsc->ElTypeNumber;
+      notifyEl.elementType.ElSSchema = (SSchema)(pAsc->ElStructSchema);
+      ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
+      result = result || ok;
+      if (isGraph)
+	pAsc = pAsc->ElParent;
+      else
+	pAsc = NULL;
+    }
+  return result;
+}
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
@@ -137,7 +222,6 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   PtrElement          pEl = NULL, firstEl;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb;
-  NotifyElement       notifyEl;
   PtrElement          el;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
@@ -228,25 +312,27 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		{
 		case 0:
 		  /* Extension of selection */
+		  if (SkipClickEvent)
+		    /* the application asks Thot to do nothing */
+		    return;
 		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, FALSE);
 		  break;
 		case 1:
 		  /* Extension of selection */
+		  if (SkipClickEvent)
+		    /* the application asks Thot to do nothing */
+		    return;
 		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, TRUE);
 		  break;
 		case 2:
-		  /* send event TteElemActivate.Pre to the application */
+		  /* send event TteElemLClick.Pre to the application */
 		  el = pAb->AbElement;
-		  notifyEl.event = TteElemLClick;
-		  notifyEl.document = doc;
-		  notifyEl.element = (Element) el;
-		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		  SkipClickEvent = NotifyClick (TteElemLClick, TRUE, el, doc);
+		  if (SkipClickEvent)
 		    /* the application asks Thot to do nothing */
 		    return;
 		  ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+		  NotifyClick (TteElemLClick, FALSE, el, doc);
 		  break;
 		case 3:
 		  if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
@@ -264,19 +350,13 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
-		      /* send event TteElemActivate.Pre to the application */
+		      /* send event TteElemClick.Pre to the application */
 		      el = pAb->AbElement;
-		      notifyEl.event = TteElemClick;
-		      notifyEl.document = doc;
-		      notifyEl.element = (Element) el;
-		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		      notifyEl.position = 0;
-		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      if (NotifyClick (TteElemClick, TRUE, el, doc))
 			/* the application asks Thot to do nothing */
 			return;
-		      /* send event TteElemActivate.Post to the application */
-		      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		      /* send event TteElemClick.Post to the application */
+		      NotifyClick (TteElemClick, FALSE, el, doc);
 		    }
 		  break;
 		case 5:
@@ -288,15 +368,9 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
-		      /* send event TteElemActivate.Pre to the application */
+		      /* send event TteElemMClick.Pre to the application */
 		      el = pAb->AbElement;
-		      notifyEl.event = TteElemMClick;
-		      notifyEl.document = doc;
-		      notifyEl.element = (Element) el;
-		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		      notifyEl.position = 0;
-		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      if (NotifyClick (TteElemMClick, TRUE, el, doc))
 			/* the application asks Thot to do nothing */
 			return;
 		    }
@@ -304,8 +378,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
-		    /* send event TteElemActivate.Post to the application */
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		    /* send event TteElemMClick.Post to the application */
+		    NotifyClick (TteElemMClick, FALSE, el, doc);
 		  break;
 		case 6:
 		  /* check if the curseur is within the box */
@@ -316,15 +390,9 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
-		      /* send event TteElemActivate.Pre to the application */
+		      /* send event TteElemRClick.Pre to the application */
 		      el = pAb->AbElement;
-		      notifyEl.event = TteElemRClick;
-		      notifyEl.document = doc;
-		      notifyEl.element = (Element) el;
-		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		      notifyEl.position = 0;
-		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      if (NotifyClick (TteElemRClick, TRUE, el, doc))
 			/* the application asks Thot to do nothing */
 			return;
 		    }
@@ -333,8 +401,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
-		    /* send event TteElemActivate.Post to the application */
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		    /* send event TteElemRClick.Post to the application */
+		    NotifyClick (TteElemRClick, FALSE, el, doc);
 		  break;
 		default: break;
 		}
@@ -2316,57 +2384,6 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
     }
 
   return ok;
-}
-
-/*----------------------------------------------------------------------
-   APPgraphicModify envoie un message qui notifie qu'un trace' est 
-   modifie'.                                               
-  ----------------------------------------------------------------------*/
-ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
-{
-  PtrElement          pAsc;
-  ThotBool            result;
-  NotifyOnValue       notifyEl;
-  PtrDocument         pDoc;
-  int                 view;
-  ThotBool            ok = FALSE;
-
-  GetDocAndView (frame, &pDoc, &view);
-  result = FALSE;
-  pAsc = pEl;
-  while (pAsc != NULL)
-    {
-      notifyEl.event = TteElemGraphModify;
-      notifyEl.document = (Document) IdentDocument (pDoc);
-      notifyEl.element = (Element) pAsc;
-      notifyEl.target = (Element) pEl;
-      notifyEl.value = value;
-      ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
-      result = result || ok;
-      pAsc = pAsc->ElParent;
-    }
-  /* if it's before the actual change is made and if the application accepts
-     the change, register the operation in the Undo queue (only if it's
-     not a creation). */
-  if (pre && !ok)
-    {
-      if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
-	   pEl->ElGraph != '\0') ||
-	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0') ||
-	  (pEl->ElLeafType == LtPath))
-	{
-	  if (ThotLocalActions[T_openhistory] != NULL)
-	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
-	  if (ThotLocalActions[T_addhistory] != NULL)
-	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
-	}
-    }
-  if (!pre)
-      if (pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol ||
-	  pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath)
-	if (ThotLocalActions[T_closehistory] != NULL)
-	  (*ThotLocalActions[T_closehistory]) (pDoc);
-  return result;
 }
 
 /*----------------------------------------------------------------------
