@@ -110,6 +110,8 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	  len = strlen (filename) + 1;
 	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
 	    {
+	      if (imageDesc && imageDesc->PicFileName == ptr)
+		imageDesc->PicFileName = NULL;
 	      TtaFreeMemory (ptr);
 	      ptr = TtaGetMemory (len);
 	    }
