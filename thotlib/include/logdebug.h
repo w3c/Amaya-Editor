@@ -15,16 +15,16 @@ enum {
 };
 
 #if !defined(__WXDEBUG__)
-#define TTALOGDEBUG_0( filter, message )
-#define TTALOGDEBUG_1( filter, message, p1 )
-#define TTALOGDEBUG_2( filter, message, p1, p2 )
-#define TTALOGDEBUG_3( filter, message, p1, p2, p3 )
-#define TTALOGDEBUG_4( filter, message, p1, p2, p3, p4 )
-#define TTALOGDEBUG_5( filter, message, p1, p2, p3, p4, p5 )
-#define TTALOGDEBUG_6( filter, message, p1, p2, p3, p4, p5, p6 )
-#define TTALOGDEBUG_7( filter, message, p1, p2, p3, p4, p5, p6, p7 )
-#define TTALOGDEBUG_8( filter, message, p1, p2, p3, p4, p5, p6, p7, p8 )
-#define TTALOGDEBUG_9( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+#define TTALOGDEBUG_0( filter, message ) ;
+#define TTALOGDEBUG_1( filter, message, p1 ) ;
+#define TTALOGDEBUG_2( filter, message, p1, p2 ) ;
+#define TTALOGDEBUG_3( filter, message, p1, p2, p3 ) ;
+#define TTALOGDEBUG_4( filter, message, p1, p2, p3, p4 ) ;
+#define TTALOGDEBUG_5( filter, message, p1, p2, p3, p4, p5 ) ;
+#define TTALOGDEBUG_6( filter, message, p1, p2, p3, p4, p5, p6 ) ;
+#define TTALOGDEBUG_7( filter, message, p1, p2, p3, p4, p5, p6, p7 ) ;
+#define TTALOGDEBUG_8( filter, message, p1, p2, p3, p4, p5, p6, p7, p8 ) ;
+#define TTALOGDEBUG_9( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9 ) ;
 #endif /* __WXDEBUG__ */
 
 #ifdef _WX
