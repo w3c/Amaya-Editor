@@ -1,18 +1,26 @@
 #ifndef __LOGDEBUG_H__
 #define __LOGDEBUG_H__
 
+typedef struct tta_logdebug_filter_names_
+{
+  const char * gui_name;
+  const char * registry_name;
+} tta_logdebug_filter_names;
+
 extern int g_logdebug_filter;
+extern tta_logdebug_filter_names g_logdebug_filter_names[];
 
 enum {
-  TTA_LOG_MISC      = 1,
-  TTA_LOG_PANELS    = 2,
-  TTA_LOG_DIALOG    = 4,
-  TTA_LOG_INIT      = 8,
-  TTA_LOG_KEYINPUT  = 16,
-  TTA_LOG_FOCUS     = 32,
-  TTA_LOG_DRAW      = 64,
-  TTA_LOG_SOCKET    = 128,
-  TTA_LOG_CLIPBOARD = 256,
+  TTA_LOG_MISC      = 1 << 0,
+  TTA_LOG_PANELS    = 1 << 1,
+  TTA_LOG_DIALOG    = 1 << 2,
+  TTA_LOG_INIT      = 1 << 3,
+  TTA_LOG_KEYINPUT  = 1 << 4,
+  TTA_LOG_FOCUS     = 1 << 5,
+  TTA_LOG_DRAW      = 1 << 6,
+  TTA_LOG_SOCKET    = 1 << 7,
+  TTA_LOG_CLIPBOARD = 1 << 8,
+  TTA_LOG_MAX       = 1 << 9,
 };
 
 #if !defined(__WXDEBUG__)

@@ -50,6 +50,7 @@
 #include "AmayaToolBar.h"
 #include "AmayaPanel.h"
 #include "AmayaApp.h"
+#include "AmayaLogDebug.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
@@ -81,6 +82,14 @@ AmayaWindow::AmayaWindow (  int            window_id
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
+
+#ifdef __WXDEBUG__
+  AmayaLogDebug * p_logdebug = AmayaApp::GetAmayaLogDebug( wxDynamicCast(this,wxWindow) );
+  wxPoint win_position = GetPosition();
+  wxSize  win_size = GetSize();
+  p_logdebug->SetPosition(wxPoint(win_position.x+win_size.GetWidth()+10,win_position.y));
+  p_logdebug->Show();
+#endif /* __WXDEBUG__ */
 }
 
 /*
@@ -95,6 +104,10 @@ AmayaWindow::~AmayaWindow()
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
   // empty the current window entry
   memset(&WindowTable[m_WindowId], 0, sizeof(Window_Ctl));
+
+#ifdef __WXDEBUG__
+  AmayaApp::DestroyAmayaLogDebug();
+#endif /* __WXDEBUG__ */
 }
 
 /*

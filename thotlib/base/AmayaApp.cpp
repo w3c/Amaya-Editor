@@ -33,6 +33,7 @@
 #include "registry_wx.h"
 #include "message_wx.h"
 
+#include "AmayaLogDebug.h"
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
 #include "AmayaAppInstance.h"
@@ -82,6 +83,9 @@ int AmayaApp::AttrList[] =
 
 wxImageList * AmayaApp::m_pDocImageList = NULL;
 wxIcon AmayaApp::m_AppIcon = wxIcon();
+#ifdef __WXDEBUG__
+AmayaLogDebug * AmayaApp::m_pAmayaLogDebug = NULL;
+#endif /* #ifdef __WXDEBUG__ */
 
 /*
  *--------------------------------------------------------------------------------------
@@ -164,6 +168,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "InitConfirmDlgWX.xrc" ) );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "ListDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "ListEditDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "LogDebug.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "NumDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "ObjectDlgWX.xrc") ); 
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "OpenDocDlgWX.xrc" ) );
@@ -253,6 +258,8 @@ bool AmayaApp::OnInit()
  */
 int AmayaApp::OnExit()
 {
+  TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp::OnExit"));
+
   delete m_pAmayaInstance;
 
   // flush the clipboard in order to keep current text for further use in other applications
@@ -478,6 +485,37 @@ void AmayaApp::OnKeyDown(wxKeyEvent& event)
   else
     event.Skip();
 }
+
+#ifdef __WXDEBUG__
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  GetAmayaLogDebug
+ * Description:  return an instance on the logdebug window
+ *--------------------------------------------------------------------------------------
+ */
+AmayaLogDebug * AmayaApp::GetAmayaLogDebug(wxWindow * p_parent)
+{
+  if (!m_pAmayaLogDebug)
+    m_pAmayaLogDebug = new AmayaLogDebug(p_parent);
+  return m_pAmayaLogDebug;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  DestroyAmayaLogDebug
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaApp::DestroyAmayaLogDebug()
+{
+  if (m_pAmayaLogDebug)
+    m_pAmayaLogDebug->Destroy();
+  m_pAmayaLogDebug = NULL;
+}
+
+#endif /* #ifdef __WXDEBUG__ */
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  

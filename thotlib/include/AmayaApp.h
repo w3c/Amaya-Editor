@@ -17,6 +17,7 @@ typedef void (*OpenURLCallback) (void * );
 class wxAmayaSocketEventLoop;
 class wxSingleInstanceChecker;
 class AmayaAppInstance;
+class AmayaLogDebug;
 
 #ifdef _GL
 class AmayaApp : public wxGLApp
@@ -34,6 +35,11 @@ public:
 
   static wxImageList * GetDocumentIconList();
   static wxIcon GetAppIcon();
+
+#ifdef __WXDEBUG__
+  static AmayaLogDebug * GetAmayaLogDebug( wxWindow * p_parent );
+  static void DestroyAmayaLogDebug();
+#endif /* #ifdef __WXDEBUG__ */
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -62,6 +68,10 @@ public:
   AmayaAppInstance * m_pAmayaInstance;
 
   bool m_AmayaIsInit;
+
+#ifdef __WXDEBUG__
+  static AmayaLogDebug * m_pAmayaLogDebug;
+#endif /* #ifdef __WXDEBUG__ */
 };
 
 DECLARE_APP(AmayaApp)
