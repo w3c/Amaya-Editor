@@ -1149,9 +1149,7 @@ static void InitCSSDialog (Document doc, char *s)
 				     s, nb, buf);
   TtaFreeMemory (buf);
   if (created)
-    {
-      TtaShowDialogue (BaseCSS + CSSForm, TRUE);
-    }
+    TtaShowDialogue (BaseCSS + CSSForm, TRUE);
 #endif /* _WX */
 
 #ifdef _WINGUI

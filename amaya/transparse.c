@@ -526,7 +526,12 @@ static void EndNameTrans (unsigned char c)
      {	/* allocates the descriptor    */
 	patDepth = 0;
 	ParsedTrans = (strTransDesc *) TtaGetMemory (sizeof (strTransDesc));
+#ifdef _WX
+	/* store UTF-8 names */
+	ParsedTrans->NameTrans = TtaConvertByteToMbs (inputBuffer, ISO_8859_1);
+#else /* _WX */
 	ParsedTrans->NameTrans = (unsigned char *)TtaStrdup ((char *)inputBuffer);
+#endif /* _WX */
 	ParsedTrans->NbPatSymb = 0;
 	ParsedTrans->NbRules = 0;
 	ParsedTrans->PatDepth = 0;

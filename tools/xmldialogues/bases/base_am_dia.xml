@@ -885,28 +885,6 @@
 	<message xml:lang="fi">Tarkista oikeinkirjoitus...</message>
 	<message xml:lang="ru">Проверка правописания...</message>
 </label>
-<label define="TranformMenu">
-	<message xml:lang="en">Transfor&amp;m...</message>
-	<message xml:lang="fr">Transfor&amp;mer...</message>
-	<message xml:lang="de">Transformieren...</message>
-	<message xml:lang="it">Trasforma...</message>
-	<message xml:lang="tr">Dönüştür</message>
-	<message xml:lang="es">&amp;Transformar...</message>
-	<message xml:lang="pt">Transformar...</message>
-	<message xml:lang="fi">Muunna...</message>
-	<message xml:lang="ru">Преобразоват&amp;ь...</message>
-</label>
-<label define="BEmptyTransformMenu">
-	<message xml:lang="en">No transformation applicable to the selection</message>
-	<message xml:lang="fr">Aucune transformation possible</message>
-	<message xml:lang="de">Für die Markierung ist keine Transformation anwendbar</message>
-	<message xml:lang="it">Alla selezione non è applicabile alcuna trasformazione</message>
-	<message xml:lang="tr">Seçili bölge için hiç bir dönüşüm kullanılamaz</message>
-	<message xml:lang="es">No hay transformación aplicable a la selección</message>
-	<message xml:lang="pt">Não há transformação aplicável à seleção</message>
-	<message xml:lang="fi">Valintaa ei voi muuntaa</message>
-	<message xml:lang="ru">К выбранному не применимо никакое преобразование</message>
-</label>
 <label define="BTransform">
 	<message xml:lang="en">Transfor&amp;m...</message>
 	<message xml:lang="fr">Transfor&amp;mer...</message>

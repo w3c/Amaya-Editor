@@ -206,8 +206,11 @@ THOT_EXPORT Document            TransDoc;
 /* dialog and messages */
 THOT_EXPORT int                 TransBaseDialog;
 
-#define TransMenu 1
-#define MAX_TRANS_DLG 2
+#define TransMenu        0
+#define TransForm        1
+#define TransSelect      2
+#define TransEntry       3
+#define MAX_TRANS_DLG    4
 
 #endif /* PPSTANDALONE */
 #endif /* _TRANS_H__ */

@@ -41,6 +41,10 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
+#ifdef _WX
+static int FormVal = 0;
+#include "wxdialogapi_f.h"
+#endif /* _WX */
 /*
  * pattern matching stack associates a node of source structure tree to a 
  * list of pat.
@@ -2363,6 +2367,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
   return result;
 }
 
+
 /*----------------------------------------------------------------------
    callback of the transformation selection menu 
   ----------------------------------------------------------------------*/
@@ -2384,6 +2389,25 @@ void TransCallbackDialog (int ref, int typedata, char* data)
 	ApplyTransformation (menuTrans[val], TransDoc);
       FreeMatchEnv ();
       break;
+    case TransForm:
+      if (val == 1 && FormVal > 0)
+	{
+	  if (menuTrans[FormVal] && menuTrans[FormVal]->MatchSymb)
+	    trans = (strTransDesc *)(menuTrans[FormVal]->MatchSymb->Rule);
+	  if (trans && trans->IsAction)
+	    /* call the defined action */
+	    TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1);
+	  else
+	    ApplyTransformation (menuTrans[FormVal], TransDoc);
+	}
+      TtaDestroyDialogue (ref);
+      FreeMatchEnv ();
+      break;
+    case TransSelect:
+      break;
+    case TransEntry:
+      FormVal = val;
+      break;
     }
 }
 
@@ -2396,12 +2420,6 @@ void InitTransform ()
   DoInitAutomaton ();
 }
 
-/*----------------------------------------------------------------------
-   EmptyTransformMenu
-  ----------------------------------------------------------------------*/
-void EmptyTransformMenu (Document doc, View view)
-{
-}
 
 /*----------------------------------------------------------------------
    callback of  the transform entry of Edit menu 
@@ -2554,8 +2572,12 @@ void TransformType (Document doc, View view)
 			   k++);
 		      if (k == i)
 			{
+#ifdef _WX
+			   strcpy (&menuBuf[j], (char *)sm->MatchSymb->SymbolName);
+#else /* _WX */
 			   sprintf (&menuBuf[j], "%s%s", "B",
 				     sm->MatchSymb->SymbolName);
+#endif /* _WX */
 			   j += strlen ((char *)&menuBuf[j]) + 1;
 			   menuTrans[i++] = (strMatch *) sm;
 			}
@@ -2569,15 +2591,25 @@ void TransformType (Document doc, View view)
 	     (!TtaIsAncestor (node->Elem, myFirstSelect)));
       TtaFreeMemory (tag);
       if (i > 0)
-	{    
+	{
+#ifdef _WX
+	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransForm,
+					      TtaGetViewFrame (doc, 1),
+					      TtaGetMessage (AMAYA, AM_TRANS),
+					      i, menuBuf);
+	  FormVal = 1;
+	  if (created)
+	    TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
+#else /* _WX */
 	  /* if some transformations have been matched, shows the menu */
 	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
 		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
 		       NULL, 'L');
 #ifndef _WINGUI
 	  TtaSetDialoguePosition ();
-#endif /* !_WINGUI */
+#endif /* _WINGUI */
 	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+#endif /* _WX */
 	}
       else
 	/* display a popup message */

@@ -591,7 +591,10 @@ static void SetProposals (Language language)
   ----------------------------------------------------------------------*/
 void TtaGetProposal (char **proposal, int i)
 {
-  *proposal = ChkrCorrection[i];
+   if (strcmp (ChkrCorrection[i], "$"))
+     *proposal = ChkrCorrection[i];
+   else
+     *proposal = "";
 }
 
 /*----------------------------------------------------------------------

@@ -74,10 +74,11 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
       char buffer[512];
       wxASSERT( selected_item.Len() < 512 );
       strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
-
       ThotCallback (MyRef + 1, STRING_DATA, buffer);
+      // entry
+      int i = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetSelection();
+      ThotCallback (MyRef + 2, INTEGER_DATA, (char*) i);
     }
-
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 

@@ -59,7 +59,7 @@ FullScreen
 SplitUnsplitPage
 ZoomIn
 ZoomOut
-&EmptyTransformMenu
+&TransformType
 
 ################# AMAYA BROWSER
 <Browser>
