@@ -2439,14 +2439,15 @@ static ThotBool ShowError (Element el, Document doc)
       buffer = TtaGetMemory (len + 1);
       TtaGiveTextContent (otherEl, buffer, &len, &lang);
       ptr = strstr (buffer, " in ");
-      if (ptr)
+      if (ptr && DocumentURLs[otherDoc])
 	{
 	  ptr += 4;
 	  if (strcmp (ptr, DocumentURLs[otherDoc]))
 	    {
 	      /* it doesn't concern the source document itself */
 	      for (otherDoc = 1; otherDoc < MAX_DOCUMENTS; otherDoc++)
-		if (!strcmp (ptr, DocumentURLs[otherDoc]))
+		if (DocumentURLs[otherDoc] &&
+		    !strcmp (ptr, DocumentURLs[otherDoc]))
 		  break;
 	    }
 	}

@@ -6752,8 +6752,17 @@ void StartParser (Document doc, char *fileName,
 	}
       TtaAppendDocumentPath (documentDirectory);
 
-      docURL = TtaGetMemory (strlen (pathURL) + 1);
-      strcpy (docURL, pathURL);
+      /* Set document URL */
+      if (DocumentURLs[doc])
+	{
+	  docURL = TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
+	  strcpy (docURL, DocumentURLs[doc]);
+	}
+      else
+	{
+	  docURL = TtaGetMemory (strlen (pathURL) + 1);
+	  strcpy (docURL, pathURL);
+	}
 
       /* do not check the Thot abstract tree against the structure */
       /* schema while building the Thot document. */
