@@ -2364,7 +2364,6 @@ int                 editType;
 	     else
 		pAb = pBox->BxAbstractBox;
 	  }
-
         /*-- La commande coller concerne le mediateur --*/
 	if (editType == TEXT_PASTE && !FromKeyboard)
 	   /* Il faut peut-etre deplacer la selection courante */
@@ -2372,6 +2371,14 @@ int                 editType;
 
 	pFrame = &ViewFrameTable[frame - 1];
 	pViewSel = &pFrame->FrSelectionBegin;
+	if (pBox && editType == TEXT_DEL)
+	  {
+	    /* don't remove the selection if it is at the end of the text */
+	    if (pAb->AbLeafType == LtText &&
+		pBox == ViewFrameTable[frame - 1].FrSelectionEnd.VsBox &&
+		pViewSel->VsIndBox >= pBox->BxNChars)
+	      return;
+	  }
 
 	if (editType == TEXT_INSERT && !FromKeyboard)
 	   if (pBox != NULL && pViewSel->VsIndBox != 0)
