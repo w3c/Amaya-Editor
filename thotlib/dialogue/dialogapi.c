@@ -75,6 +75,7 @@ struct Cat_Context
     int                 Cat_Ref;	/* CsReference appli du catalogue    */
     unsigned char       Cat_Type;	/* Type du catalogue                 */
     unsigned char       Cat_Button;	/* Le bouton qui active              */
+    unsigned char       Cat_Default;    /* Defaulft return                   */
     union
     {
       int                Catu_Data;        /* Valeur de retour                  */
@@ -87,7 +88,7 @@ struct Cat_Context
     } Cat_Union2;
     ThotWidget          Cat_Widget;	/* Le widget associe au catalogue    */
     ThotWidget          Cat_Title;	/* Le widget du titre                */
-	ThotWidget          Cat_ParentWidget; /* pointer to the widget parent */
+    ThotWidget          Cat_ParentWidget; /* pointer to the widget parent */
     struct Cat_Context *Cat_PtParent;	/* Adresse du catalogue pere         */
     int                 Cat_EntryParent; /* Entree du menu parent            */
     ThotBool            Cat_React;	/* Indicateur reaction immediate     */
@@ -691,6 +692,7 @@ static struct Cat_Context *CatEntry (int ref)
   if (catval == NULL && catlib != NULL)
     {
       catlib->Cat_PtParent = NULL;
+      catlib->Cat_Default = 1;
       return (catlib);
     }
   else
@@ -797,7 +799,7 @@ static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 /*----------------------------------------------------------------------
   Callback pour un bouton du toggle-menu
   ----------------------------------------------------------------------*/
-static void  CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   register int        i;
   int                 entry;
@@ -1763,6 +1765,7 @@ gboolean DeletePopShell (ThotWidget w, GdkEventButton *bu, gpointer data)
 gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
 {  
   struct Cat_Context *catalogue;
+  int                 i;
   
   catalogue = (struct Cat_Context *) data;
   if (bu->button == 1) 
@@ -1771,7 +1774,8 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
 	{ 
 	  while (catalogue->Cat_PtParent != NULL)
 	    catalogue = catalogue->Cat_PtParent;
-	    (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, (char *)1);
+	  i = catalogue->Cat_Default;
+	  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, (char *)i);
 	  return TRUE;
 	}
     }
@@ -6101,6 +6105,22 @@ void TtaChangeFormTitle (int ref, char *title)
        /* Set the window title with GTK */
        gdk_window_set_title(GTK_WIDGET(catalogue->Cat_Widget)->window, title);
 #endif /* _GTK */
+     }
+}
+
+/*----------------------------------------------------------------------
+  TtaSetDefaultButton
+  Defines the default result for the GTK event Double-click.
+  ----------------------------------------------------------------------*/
+void TtaSetDefaultButton (int ref, int button)
+{
+   struct Cat_Context *catalogue;
+
+   if (ref != 0)
+     {
+       catalogue = CatEntry (ref);
+       if (catalogue)
+	 catalogue->Cat_Default = (unsigned char) button;
      }
 }
 

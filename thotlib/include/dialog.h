@@ -218,8 +218,13 @@ extern void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number,
-			char *text, ThotBool horizontal, int packet, char button);
+extern void TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number,
+			       char *text, ThotBool horizontal, int packet, char button);
+/*----------------------------------------------------------------------
+  TtaSetDefaultButton
+  Defines the default result for the GTK event Double-click.
+  ----------------------------------------------------------------------*/
+extern void TtaSetDefaultButton (int ref, int button);
 
 /*----------------------------------------------------------------------
    TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        

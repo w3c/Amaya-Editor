@@ -182,7 +182,7 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
       SpellChecker = hwnDlg;
       hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
       wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
-	  SetWindowText (hwnDlg, TtaGetMessage (CORR, Correct));
+      SetWindowText (hwnDlg, TtaGetMessage (CORR, Correct));
       SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), TtaGetMessage (CORR, Correct));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
@@ -426,7 +426,7 @@ void TtcSpellCheck (Document doc, View view)
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, 'L',
 		D_DONE);
-
+   TtaSetDefaultButton (SpellingBase + ChkrFormCorrect, 3);
    /* initialise le champ langue de correction courante */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, " ");
@@ -551,7 +551,7 @@ void TtcSpellCheck (Document doc, View view)
   ResetCheckInDocument
   cleans up the checker domain if it refers a closed document.
   ----------------------------------------------------------------------*/
-void         ResetCheckInDocument (PtrDocument pDoc)
+void ResetCheckInDocument (PtrDocument pDoc)
 {
   if (ChkrRange && pDoc == ChkrRange->SDocument)
     RemoveSpellForm ();
@@ -561,7 +561,7 @@ void         ResetCheckInDocument (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    SetProposals                                                 
   ----------------------------------------------------------------------*/
-static void         SetProposals (Language language)
+static void SetProposals (Language language)
 {
    char             Lab[200];
 
@@ -590,7 +590,7 @@ static void         SetProposals (Language language)
 /*----------------------------------------------------------------------
    StartSpellChecker retourne 0 si c'est OK et -1 en cas d'erreur          
   ----------------------------------------------------------------------*/
-static ThotBool     StartSpellChecker ()
+static ThotBool StartSpellChecker ()
 {
    ThotBool            ok;
 
@@ -631,7 +631,7 @@ static ThotBool     StartSpellChecker ()
 /*----------------------------------------------------------------------
    ApplyCommand traite l'action de correction demandee.             
   ----------------------------------------------------------------------*/
-static void         ApplyCommand (int val)
+static void ApplyCommand (int val)
 {
    ThotBool            change;
    PtrDocument         document;
@@ -831,7 +831,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 /*----------------------------------------------------------------------
   SpellCheckLoadResources loads resouces of the spellchecker
   ----------------------------------------------------------------------*/
-void                SpellCheckLoadResources ()
+void SpellCheckLoadResources ()
 {
    if (SpellingBase == 0)
      {

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int TtaDirExists ( CONST char *dirpath );
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotFileHandle TtaFileOpen ( CONST char *name,
@@ -29,6 +30,7 @@ extern ThotBool TtaCompareFiles ( CONST char *file1,
 
 #else /* __STDC__ */
 
+extern int TtaDirExists (/* CONST char *dirpath */);
 extern int TtaFileExist (/* CONST char *filename */);
 extern int TtaFileUnlink (/* CONST char *filename */);
 extern ThotFileHandle TtaFileOpen (/* CONST char *name,

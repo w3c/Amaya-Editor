@@ -87,6 +87,8 @@ extern void TtaUnmapDialogue ( int ref );
 extern void TtaDestroyDialogue ( int ref );
 extern void TtaChangeFormTitle ( int ref,
                                  char *title );
+extern void TtaSetDefaultButton ( int ref,
+                                  int button );
 extern void TtaNewForm ( int ref,
                          ThotWidget parent,
                          char *title,
@@ -257,6 +259,8 @@ extern void TtaUnmapDialogue (/* int ref */);
 extern void TtaDestroyDialogue (/* int ref */);
 extern void TtaChangeFormTitle (/* int ref,
                                    char *title */);
+extern void TtaSetDefaultButton (/* int ref,
+                                    int button */);
 extern void TtaNewForm (/* int ref,
                            ThotWidget parent,
                            char *title,
