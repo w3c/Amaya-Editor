@@ -338,6 +338,20 @@ Thot/libpng/zlib/zconf.h \
 Thot/libpng/zlib/zlib.h \
 Thot/libpng/zlib/zutil.c \
 Thot/libpng/zlib/zutil.h \
+Thot/pluginlib/*.h \
+Thot/pluginlib/pluginapi.c \
+Thot/pluginlib/editplugin.c \
+Thot/pluginlib/pluginbrowse.c \
+Thot/pluginlib/pluginhandler.c \
+Thot/pluginlib/f/editplugin_f.h \
+Thot/pluginlib/f/pluginapi_f.h \
+Thot/pluginlib/f/pluginbrowse_f.h \
+Thot/pluginlib/f/pluginhandler_f.h \
+Thot/tablelib/table.c \
+Thot/tablelib/table2c \
+Thot/tablelib/f/table2_f.h \
+Thot/tablelib/f/table_f.h \
+Thot/thotlib/base/actions.c \
 Thot/thotlib/base/alloca.c \
 Thot/thotlib/base/batchmessage.c \
 Thot/thotlib/base/compilmsg.c \
@@ -349,6 +363,7 @@ Thot/thotlib/base/platform.c \
 Thot/thotlib/base/registry.c \
 Thot/thotlib/base/structlist.c \
 Thot/thotlib/base/thotmsg.c \
+Thot/thotlib/base/unit.c \
 Thot/thotlib/content/content.c \
 Thot/thotlib/content/contentapi.c \
 Thot/thotlib/content/dictionary.c \
@@ -714,6 +729,7 @@ Thot/thotlib/internals/var/select_tv.h \
 Thot/thotlib/internals/var/spell_tv.h \
 Thot/thotlib/internals/var/thotcolor_tv.h \
 Thot/thotlib/internals/var/thotpalette_tv.h \
+Thot/thotlib/internals/var/units_tv.h \
 Thot/thotlib/internals/var/word_tv.h \
 Thot/thotlib/presentation/attrpresent.c \
 Thot/thotlib/presentation/changepresent.c \
