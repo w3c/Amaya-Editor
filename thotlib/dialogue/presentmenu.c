@@ -664,6 +664,68 @@ int                 applyDomain;
       }
 }
 
+/*----------------------------------------------------------------------
+   TtcStandardGeometry
+   handles the return of the Standard Geometry entry of the Present
+   menu.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcStandardGeometry (Document document, View view)
+#else  /* __STDC__ */
+void                TtcStandardGeometry (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+  PtrElement          pEl, pFirstSel, pLastSel;
+  PtrDocument         pSelDoc;
+  int		      firstChar, lastChar;
+  boolean             selectionOK;
+
+  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  if (selectionOK && pSelDoc != NULL)
+    if (pSelDoc->DocSSchema != NULL)
+      /* il y a bien une selection et le document selectionne' n'a pas */
+      /* ete ferme' */
+      {
+	/* eteint la selection courante */
+	TtaClearViewSelections ();
+	/* set selection to the highest level elements having the same
+	   content */
+	if (ThotLocalActions[T_selectsiblings] != NULL)
+	  (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel, &firstChar, &lastChar);
+	if (firstChar == 0 && lastChar == 0)
+	  if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
+	    if (pFirstSel->ElParent != NULL &&
+		pFirstSel->ElParent == pLastSel->ElParent)
+	      {
+		pFirstSel = pFirstSel->ElParent;
+		while (pFirstSel->ElPrevious == NULL &&
+		       pFirstSel->ElNext == NULL &&
+		       pFirstSel->ElParent != NULL)
+		  pFirstSel = pFirstSel->ElParent;
+		pLastSel = pFirstSel;
+	      }
+	pEl = pFirstSel;
+	while (pEl != NULL)
+	  /* Traite l'element courant */
+	  {
+	    RuleSetPut (GeomRules, PtVertPos);
+	    RuleSetPut (GeomRules, PtHorizPos);
+	    RuleSetPut (GeomRules, PtHeight);
+	    RuleSetPut (GeomRules, PtWidth);
+	    RemoveSpecPresTree (pEl, pSelDoc, GeomRules, SelectedView);
+	    RuleSetClr (GeomRules);
+	    
+	    /* si on est dans un element copie' par inclusion,   */
+	    /* on met a jour les copies de cet element.          */
+	    RedisplayCopies (pEl, pSelDoc, TRUE);
+	    /* cherche l'element a traiter ensuite */
+	    pEl = NextInSelection (pEl, pLastSel);
+	  }
+	MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
+      }
+}
 
 /*----------------------------------------------------------------------
    TtcStandardPresentation

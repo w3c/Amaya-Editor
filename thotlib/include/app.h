@@ -92,6 +92,7 @@ extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPe
 extern PtrEventsSet TteGetEventsSet (char *name);
 extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
+extern void         TtcStandardGeometry (Document document, View view);
 extern void         TtcChangeType (Document document, View view);
 
 /* List of editor dialogue actions */

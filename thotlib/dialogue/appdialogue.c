@@ -1983,6 +1983,8 @@ int                 doc;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
    boolean             found;
+   int		       visiVal, zoomVal;
+   char		      *visiStr, *zoomStr;
 
 #define MIN_HAUT 100
 #define MIN_LARG 200
@@ -2502,7 +2504,28 @@ int                 doc;
 	*volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);
 	FrameTable[frame].FrDoc = doc;
 	FrameTable[frame].FrView = view;
-	InitializeFrameParams (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */
+
+	/* get registry default values for zoom and visibility */
+	zoomStr = TtaGetEnvString ("ZOOM");
+	if (zoomStr == NULL)
+	  zoomVal = 0;
+	else
+	  {
+	    zoomVal = atoi (zoomStr);
+	    if (zoomVal > 10 || zoomVal < -10)
+	      zoomVal = 0;
+	  }
+	visiStr = TtaGetEnvString ("VISIBILITY");
+	if (visiStr == NULL)
+	  visiVal = 0;
+	else
+	  {
+	    visiVal = atoi (visiStr);
+	    if (visiVal < 0 || visiVal > 10)
+	      visiVal = 5;
+	  }
+	/* Initialise la visibilite et le zoom de la fenetre */
+	InitializeFrameParams (frame, visiVal, zoomVal);	
 #       ifdef _WINDOWS
         SetMenu (Main_Wd, menu_bar);
 	ShowWindow (Main_Wd, SW_SHOWNORMAL);
