@@ -838,7 +838,7 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
       if (pPfS->PfPSchema == NULL)
 	{
 	  if (pPrevPfS)
-	    pPrevPfS = pPfS->PfNext;
+	    pPrevPfS->PfNext = pPfS->PfNext;
 	  else
 	    pDoc->DocFirstSchDescr = pPfS->PfNext;
 	  FreeDocSchemasDescr (pPfS);
@@ -1419,7 +1419,8 @@ void             FreeDocumentSchemas (PtrDocument pDoc)
        if (pSS)
 	 {
 #ifndef NODISPLAY
-	   FreePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
+	   if (pPfS->PfPSchema)
+	     FreePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
 #endif
 	   if (ReleaseStructureSchema (pSS, pDoc))
 	     /* this structure schema has been unloaded */
@@ -1543,22 +1544,25 @@ void                BuildDocNatureTable (PtrDocument pDoc)
       while (pPfS && pDoc->DocNNatures < MAX_NATURES_DOC)
 	{
 	  pSS = pPfS->PfSSchema;
-	  pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
-	  strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
-		   MAX_NAME_LENGTH);
-	  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-		   pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
-	  pDoc->DocNNatures++;
-	  /* met les extensions du schema dans la table */
-	  while (pSS->SsNextExtens && pDoc->DocNNatures < MAX_NATURES_DOC)
+	  if (pSS)
 	    {
-	      pSS = pSS->SsNextExtens;
 	      pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
 	      strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
 		       MAX_NAME_LENGTH);
 	      strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
 		       pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
 	      pDoc->DocNNatures++;
+	      /* met les extensions du schema dans la table */
+	      while (pSS->SsNextExtens && pDoc->DocNNatures < MAX_NATURES_DOC)
+		{
+		  pSS = pSS->SsNextExtens;
+		  pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
+		  strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
+			   MAX_NAME_LENGTH);
+		  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+			   pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+		  pDoc->DocNNatures++;
+		}
 	    }
 	  pPfS = pPfS->PfNext;
 	}

@@ -4072,7 +4072,6 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	  /* cherche le schema de presentation a appliquer */
 	  {
 	    SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
-	    /*********/
 	    if (pSchS != NULL && pSchS != pEl->ElStructSchema)
 	      {
 	      /* il s'agit de l'element racine d'une nature qui utilise le
@@ -4093,7 +4092,11 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		  index = pEl->ElTypeNumber;
 		}
 	      }
-	    /*********/
+
+	    if (!pSchP)
+	      /* no presentation schema. Can't create a box for this element */
+	      return NULL;
+
 	    /* pRSpec: premiere regle de presentation associee au type de
 	       l'element */
 	    pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];

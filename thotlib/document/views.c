@@ -166,6 +166,8 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
       if (!pSRule->SrRefImportedDoc || pSS->SsExtension)
 	 {
 	 pPSchema = PresentationSchema (pSS, pDoc);
+	 if (!pPSchema)
+	   return;
 	 if (nature || pSS->SsExtension)
 	    view = 1;
 	 else
