@@ -6456,10 +6456,10 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
   AddURLInCombobox (docname, NULL, TRUE);
   newdoc = InitDocAndView (doc,
-                           TRUE /* replaceOldDoc */,
-                           FALSE /* inNewWindow */,
-                           DocumentName, (DocumentType)docType, 0, FALSE, L_Other,
-			   (ClickEvent)CE_ABSOLUTE);
+                           FALSE /* replaceOldDoc */,
+                           TRUE /* inNewWindow */,
+                           DocumentName, (DocumentType)docType, 0, FALSE,
+			   L_Other, (ClickEvent)CE_ABSOLUTE);
    if (newdoc != 0)
     {
       /* load the saved file */
