@@ -5,6 +5,27 @@
 ! WARNING : transformations does NOT work with Multiscript elements
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+!!! mrow transformation
+
+!surround an element with a mrow
+surrounding row: *;
+        {
+        * > MROW:*;
+        }
+
+
+!surround a sequence of elements with a mrow
+surrounding row: *,*+;
+        {
+        * > MROW:*;
+        }
+
+! remove a mrow level
+remove row: MROW{*+};
+        {
+        * > :*;
+        }
+
 !!! Root Transformations
 
 !surround an element with a root
@@ -238,30 +259,24 @@ remove under:MUNDER{base:*,?under:*};
 !surround an element with parentheses
 parenthesize:*;
         {
-        * > MROW:MF."(";
+        * > MROW:MO."(";
         * > MROW:*;
-        * > MROW:MF.")";
+        * > MROW:MO.")";
         }
 
 !surround a sequence of elements with parentheses
 parenthesize: first:*,?*+, last:* ;
         {
-        first > MROW:MF."(";
+        first > MROW:MO."(";
         first > MROW:*;
         * > MROW:*;
         last > MROW:*;
-        last > MROW:MF.")";
+        last > MROW:MO.")";
         }
 
 !remove parenthesis
-remove parenthesis: MROW{MF,?*+,MF};
+remove parenthesis: MROW{MO,?*+,MO};
 	{
-	MF /;
+	MO /;
 	* > :*;
 	}
-
-! remove a Row level
-remove row: MROW{*+};
-        {
-        * > :*;
-        }

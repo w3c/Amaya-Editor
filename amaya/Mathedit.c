@@ -83,9 +83,10 @@ int                 index;
   /* check whether the parent is a child of a MROW */
   row = TtaGetParent (parent);
   elType = TtaGetElementType (row);
-  if (elType.ElTypeNum != MathML_EL_MROW)
+  if (elType.ElTypeNum != MathML_EL_MROW &&
+      elType.ElTypeNum != MathML_EL_FencedExpression)
     {
-      /* generates a new row element */
+      /* generates a new MROW element */
       elType.ElTypeNum = MathML_EL_MROW;
       row = TtaNewElement (doc, elType);
       TtaInsertSibling (row, parent, TRUE, doc);
@@ -216,7 +217,8 @@ boolean		createConstruct;
 /*----------------------------------------------------------------------
   CreateParentMROW
   If element el is not a child of a MROW and if it has at least one
-  sibling that is not a Construct, create an enclosing MROW.
+  sibling that is not a Construct, create an enclosing MROW,
+  except if el is a child of a MFENCED element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void	   CreateParentMROW (Element el, Document doc)
@@ -236,7 +238,8 @@ Document doc;
   if (parent == NULL)
      return;
   elType = TtaGetElementType (parent);
-  if (elType.ElTypeNum != MathML_EL_MROW)
+  if (elType.ElTypeNum != MathML_EL_MROW &&
+      elType.ElTypeNum != MathML_EL_FencedExpression)
 	 {
 	 sibling = TtaGetFirstChild (parent);
 	 nChildren = 0;
@@ -301,6 +304,39 @@ static void RemoveAttr (el, doc, attrTypeNum)
 
 
 /*----------------------------------------------------------------------
+   RegenerateFencedSeparators
+   el must be a FencedExpression element.
+   Delete all existing FencedSeparator elements in el and create new
+   ones according to the value of attribute separators of parent MFENCED.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RegenerateFencedSeparators (Element el, Document doc)
+#else /* __STDC__*/
+static void RegenerateFencedSeparators (el, doc)
+     Element el;
+     Document doc;
+#endif /* __STDC__*/
+{
+  Element	child, next;
+  ElementType	elType;
+
+  /* Delete all existing FencedSeparator elements that are children of the
+     FencedExpression element */
+  child = TtaGetFirstChild (el);
+  while (child != NULL)
+     {
+     next = child;
+     TtaNextSibling (&next);
+     elType = TtaGetElementType (child);
+     if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+	TtaDeleteTree (child, doc);
+     child = next;
+     }
+   /* Create all FencedSeparator elements, according to attribute separators */
+   CreateFencedSeparators (el, doc);
+}
+
+/*----------------------------------------------------------------------
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
@@ -314,7 +350,7 @@ int                 construct;
 {
   Document           doc;
   Element            sibling, last, el, row, fence, symbol, child, leaf,
-		     placeholderEl;
+		     placeholderEl, parent;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len;
@@ -330,16 +366,16 @@ int                 construct;
       docSchema = TtaGetDocumentSSchema (doc);
 
       if (construct == 0 || construct == 1)
-	/* button Math or MathDisp */
+	/* button Math or Display Math */
 	{
-	/* cannot create a Math or MathDisp element within a MathML element */
+	/* cannot create a Math element within a MathML element */
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
 	   /* not within a MathML element */
 	   {
-	   if (construct == 0)
+           if (construct == 0)
               newType.ElTypeNum = HTML_EL_Math;
-	   else
-	      newType.ElTypeNum = HTML_EL_MathDisp;
+           else
+              newType.ElTypeNum = HTML_EL_MathDisp;
            newType.ElSSchema = docSchema;
            TtaCreateElement (newType, doc);
 	   }
@@ -469,36 +505,36 @@ int                 construct;
 		 /* create a new Math element as a child */
 	         insertSibling = FALSE;
 	      else
-	         /* cannot insert a Math element here. Try to create a MathDisp
-		    element */
-		 {
-		 elType.ElTypeNum = HTML_EL_MathDisp;
-	         if (TtaCanInsertSibling (elType, sibling, before, doc))
-		    /* insert the new Math element as a sibling element */
-	            insertSibling = TRUE;
-	         else if (TtaCanInsertFirstChild (elType, sibling, doc))
-		    /* insert the new Math element as a child element */
-	            insertSibling = FALSE;
-	         else
-		    /* cannot insert any element here */
-		    sibling = NULL;
-		 }
-	      if (sibling == NULL)
-		 {
-		 TtaSetDisplayMode (doc, DisplayImmediately);
-		 return;
-		 }
-	      else
-		 {
-	         el = TtaNewTree (doc, elType, "");
-	         if (insertSibling)
-		    /* insert the new Math element as a sibling element */
-	            TtaInsertSibling (el, sibling, before, doc);
-	         else
-		    /* insert the new Math element as a child element */
-	            TtaInsertFirstChild (&el, sibling, doc);
-	         sibling = TtaGetFirstChild (el);
-		 }
+                 /* cannot insert a Math element here. Try to create a MathDisp
+                    element */
+                 {
+                 elType.ElTypeNum = HTML_EL_MathDisp;
+                 if (TtaCanInsertSibling (elType, sibling, before, doc))
+                    /* insert the new Math element as a sibling element */
+                    insertSibling = TRUE;
+                 else if (TtaCanInsertFirstChild (elType, sibling, doc))
+                    /* insert the new Math element as a child element */
+                    insertSibling = FALSE;
+                 else
+                    /* cannot insert any element here */
+                    sibling = NULL;
+                 }
+              if (sibling == NULL)
+                 {
+                 TtaSetDisplayMode (doc, DisplayImmediately);
+                 return;
+                 }
+              else
+                 {
+                 el = TtaNewTree (doc, elType, "");
+                 if (insertSibling)
+                    /* insert the new Math element as a sibling element */
+                    TtaInsertSibling (el, sibling, before, doc);
+                 else
+                    /* insert the new Math element as a child element */
+                    TtaInsertFirstChild (&el, sibling, doc);
+                 sibling = TtaGetFirstChild (el);
+                 }
 	    }
 	}
 
@@ -635,7 +671,16 @@ int                 construct;
 	    }
 	  
 	  CreateParentMROW (el, doc);
-	  
+
+	  /* if the new element is a child of a FencedExpression element,
+	     create the associated FencedSeparator elements */
+	  parent = TtaGetParent (el);
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
+	     RegenerateFencedSeparators (parent, doc);
+
+	 /* insert placeholders before and/or after the new element if
+	    they are needed */
 	  placeholderEl = InsertPlaceholder (el, TRUE, doc);
 	  placeholderEl = InsertPlaceholder (el, FALSE, doc);
 
@@ -1103,7 +1148,7 @@ static void MathSetAttributes (el, doc, selEl)
      /* is it really an identifier? */
      {
      /* try to separate function names, identifiers and plain text */
-     /* TO DO ******/
+     /****** TO DO ******/
      }
   if (elType.ElTypeNum == MathML_EL_MO)
      {
@@ -1128,7 +1173,7 @@ static void MathSetAttributes (el, doc, selEl)
   if (elType.ElTypeNum == MathML_EL_MI)
      SetFontslantAttr (el, doc);
   else
-     RemoveAttr (el, doc, MathML_ATTR_fontslant);		
+     RemoveAttr (el, doc, MathML_ATTR_IntFontslant);		
 }
 
 /*----------------------------------------------------------------------
@@ -1258,42 +1303,6 @@ static Element ClosestLeaf (el, pos)
       }
    return elem;
 }
-
-/*----------------------------------------------------------------------
-   ChangeTypeOfElement
-   Change the type of element elem into newTypeNum
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
-#else /* __STDC__*/
-static void ChangeTypeOfElement (elem, doc, newTypeNum)
-     Element elem;
-     Document doc;
-     int newTypeNum;
-#endif /* __STDC__*/
-
-{
-     Element	prev, next, parent;
-
-     prev = elem;
-     TtaPreviousSibling (&prev);
-     if (prev == NULL)
-	{
-	next = elem;
-	TtaNextSibling (&next);
-	if (next == NULL)
-	   parent = TtaGetParent (elem);
-	}
-     TtaRemoveTree (elem, doc);
-     ChangeElementType (elem, newTypeNum);
-     if (prev != NULL)
-        TtaInsertSibling (elem, prev, FALSE, doc);
-     else if (next != NULL)
-        TtaInsertSibling (elem, next, TRUE, doc);
-     else
-        TtaInsertFirstChild (&elem, parent, doc);
-}
-
 
 /*----------------------------------------------------------------------
    ParseMathString
@@ -1680,11 +1689,22 @@ void MathElementPasted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-   Element	placeholderEl;
+   Element	placeholderEl, parent;
+   ElementType	elType;
 
    TtaSetStructureChecking (0, event->document);
+
+   /* if the new element is a child of a FencedExpression element,
+      create the associated FencedSeparator elements */
+   parent = TtaGetParent (event->element);
+   elType = TtaGetElementType (parent);
+   if (elType.ElTypeNum == MathML_EL_FencedExpression)
+      RegenerateFencedSeparators (parent, event->document);
+
+   /* create placeholders before and/or after the new element */
    placeholderEl = InsertPlaceholder (event->element, TRUE, event->document);
    placeholderEl = InsertPlaceholder (event->element, FALSE, event->document);
+
    TtaSetStructureChecking (1, event->document);
 }
 
@@ -1738,10 +1758,16 @@ void MathElementDeleted(event)
 #endif /* __STDC__*/
 {
    Element	sibling, placeholderEl, parent, child, grandChild;
-   ElementType	elType;
+   ElementType	parentType;
    int		i, newTypeNum;
 
    parent = event->element; /* parent of the deleted element */
+   parentType = TtaGetElementType (parent);
+
+   if (parentType.ElTypeNum == MathML_EL_FencedExpression)
+      /* a child of a FencedExpression element has been deleted,
+         re-generate all FencedSeparator elements in that FencedExpression */
+      RegenerateFencedSeparators (parent, event->document);
 
    /* If there are several successive placeholders at the place where the
       element has been deleted, remove all unneeded placeholders.
@@ -1754,7 +1780,7 @@ void MathElementDeleted(event)
       /* the first child of parent has been deleted.
 	 Create a placeholder before the new first child */
       if (sibling != NULL)
-         placeholderEl = InsertPlaceholder (sibling, TRUE, event->document);
+        placeholderEl = InsertPlaceholder (sibling, TRUE, event->document);
       }
    else if (IsLastDeletedElement)
       {
@@ -1770,9 +1796,8 @@ void MathElementDeleted(event)
       that MROW */
    CheckMROW (&parent, event->document);
 
-   /* The deletion of this component may lead to a structure change of its
+   /* The deletion of this component may lead to a structure change for its
       siblings and its parent */
-   elType = TtaGetElementType (parent);
    newTypeNum = 0;
    switch (event->elementType.ElTypeNum)
       {
@@ -1788,40 +1813,40 @@ void MathElementDeleted(event)
 	break;
 
       case MathML_EL_Subscript:		/* a Subscript has been deleted */
-	if (elType.ElTypeNum == MathML_EL_MSUBSUP)
+	if (parentType.ElTypeNum == MathML_EL_MSUBSUP)
 	   /* a Subscript in a MSUBSUP. Transform the MSUBSUP into a MSUP */
 	   newTypeNum = MathML_EL_MSUP;
-	else if (elType.ElTypeNum == MathML_EL_MSUB)
+	else if (parentType.ElTypeNum == MathML_EL_MSUB)
 	   /* a Subscript in a MSUB. Remove the MSUB and the Base */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Superscript:	/* a Superscript has been deleted */
-	if (elType.ElTypeNum == MathML_EL_MSUBSUP)
+	if (parentType.ElTypeNum == MathML_EL_MSUBSUP)
 	   /* a Superscript in a MSUBSUP. Transform the MSUBSUP into a MSUB */
 	   newTypeNum = MathML_EL_MSUB;
-	else if (elType.ElTypeNum == MathML_EL_MSUP)
+	else if (parentType.ElTypeNum == MathML_EL_MSUP)
 	   /* a Superscript in a MSUP. Remove the MSUP and the Base */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Underscript:	/* an Underscript has been deleted */
-	if (elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER)
 	   /* an Underscript in a MUNDEROVER. Transform the MUNDEROVER into
 	      a MOVER */
 	   newTypeNum = MathML_EL_MOVER;
-	else if (elType.ElTypeNum == MathML_EL_MUNDER)
+	else if (parentType.ElTypeNum == MathML_EL_MUNDER)
 	   /* an Underscript in a MUNDER. Remove the MUNDER and the
 	      UnderOverBase */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Overscript:	/* an Overscript has been deleted */
-	if (elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER)
 	   /* an Overscript in a MUNDEROVER. Transform the MUNDEROVER into
 	      a MUNDER */
 	   newTypeNum = MathML_EL_MUNDER;
-	else if (elType.ElTypeNum == MathML_EL_MOVER)
+	else if (parentType.ElTypeNum == MathML_EL_MOVER)
 	   /* an Overscript in a MOVER. Remove the MOVER and the
 	      UnderOverBase */
 	   newTypeNum = -1;
@@ -1854,6 +1879,185 @@ void MathElementDeleted(event)
 	}
       }
    TtaSetStructureChecking (1, event->document);
+}
+
+/*----------------------------------------------------------------------
+ FenceModified
+ The opening or closing fence element in a MFENCED element has been modified
+ by the user. Update the corresponding open or close attribute.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void FenceModified (NotifyOnValue *event)
+#else /* __STDC__*/
+void FenceModified(event)
+     NotifyOnValue *event;
+#endif /* __STDC__*/
+{
+  Element	mfencedEl;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  unsigned char	text[2];
+
+  mfencedEl = TtaGetParent (event->element);
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == MathML_EL_OpeningFence)
+     attrType.AttrTypeNum = MathML_ATTR_open;
+  else
+     attrType.AttrTypeNum = MathML_ATTR_close;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attr = TtaGetAttribute (mfencedEl, attrType);
+  if (attr == NULL)
+     /* no attribute open on this MFENCED element. Create one */
+     {
+     attr =  TtaNewAttribute (attrType);
+     TtaAttachAttribute (mfencedEl, attr, event->document);
+     }
+  text[0] = (unsigned char) event->value;
+  text[1] = '\0';
+  TtaSetAttributeText (attr, text, mfencedEl, event->document);
+}
+
+ 
+/*----------------------------------------------------------------------
+ AttrOpenCloseChanged
+ Attribute open or close in a MFENCED element has been modified or deleted
+ by the user. Update the corresponding fence element.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrOpenCloseChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrOpenCloseChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  Element	fence, content;
+  int		length;
+  unsigned char	text[8];
+
+  if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
+     fence = TtaGetFirstChild (event->element);
+  else
+     fence = TtaGetLastChild (event->element);
+  if (fence != NULL)
+    {
+    content = TtaGetFirstChild (fence);
+    if (content != NULL)
+      {
+      if (event->attribute == NULL)
+	/* Attribute has been deleted */
+	if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
+	   text[0] = '(';	/* default value for open */
+	else
+	   text[0] = ')';	/* default value for close */
+      else
+	/* attribute has been modified, get its new value */
+	{
+        length = 7;
+        TtaGiveTextAttributeValue (event->attribute, text, &length);
+	}
+      /* set the content of the fence element */
+      TtaSetGraphicsShape (content, text[0], event->document);
+      }
+    }
+}
+
+/*----------------------------------------------------------------------
+ FencedSeparatorModified
+ The content of a FenceSeparator element has been modified by the user
+ in a MFENCED element.  Update the corresponding separators attribute.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void FencedSeparatorModified (NotifyOnTarget *event)
+#else /* __STDC__*/
+void FencedSeparatorModified(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  Element	mfencedEl, fencedExpEl, child, content;
+  Attribute	attr;
+  ElementType	elType;
+  AttributeType	attrType;
+  int		i, len;
+  Language	lang;
+  unsigned char	text[32];
+
+  fencedExpEl = TtaGetParent (event->element);
+  if (fencedExpEl == NULL)
+     return;
+  mfencedEl = TtaGetParent (fencedExpEl);
+  if (mfencedEl == NULL)
+     return;
+  i = 0;
+  child = TtaGetFirstChild (fencedExpEl);
+  while (child != NULL)
+     {
+     elType = TtaGetElementType (child);
+     if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+	{
+	content = TtaGetFirstChild (child);
+        len = 31 - i;
+        TtaGiveTextContent (content, &text[i], &len, &lang);
+	i++;
+	}
+     TtaNextSibling (&child);
+     }
+  text[i] = '\0';
+  /* if the last character is repeated, delete the repeated characters */
+  if (i > 1)
+     {
+     i--;
+     while (text[i-1] == text[i] && i > 0)
+	i--;
+     text[i+1] = '\0';
+     }
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_separators;
+  attr = TtaGetAttribute (mfencedEl, attrType);
+  if (attr == NULL)
+     /* no attribute separators on this MFENCED element. Create one */
+     {
+     attr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (mfencedEl, attr, event->document);
+     }
+  /* set the value of the separators attribute */
+  TtaSetAttributeText (attr, text, mfencedEl, event->document);
+}
+
+
+/*----------------------------------------------------------------------
+ AttrSeparatorsChanged
+ An attribute separators has been created, modified or deleted by the user
+ for a MFENCED element. Update the corresponding FenceSeparator elements.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrSeparatorsChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrSeparatorsChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  Element	child, fencedExpression;
+  ElementType	elType;
+
+  /* get the first child of the MFENCED element */
+  child = TtaGetFirstChild (event->element);
+  if (child == NULL)
+     return;
+  /* search the FencedExpression element among the children of MFENCED */
+  fencedExpression = NULL;
+  do
+    {
+    elType = TtaGetElementType (child);
+    if (elType.ElTypeNum == MathML_EL_FencedExpression)
+       fencedExpression = child;
+    else
+       TtaNextSibling (&child);
+    }
+  while (fencedExpression == NULL && child != NULL);
+  if (fencedExpression != NULL)
+     RegenerateFencedSeparators (fencedExpression, event->document);
 }
 
 #endif /* MATHML */

@@ -265,8 +265,8 @@ RULES
 	END;
  MathDisp: BEGIN
         Create '\12[math]\12';
-	Remove;
-	END;
+        Remove;
+        END;
 #endif
  Paragraph:
 	BEGIN
@@ -836,6 +836,15 @@ ATTRIBUTES
 
  coords: BEGIN
 	END;
+
+#ifdef MATHML
+ mode = inline_math:
+	BEGIN
+	END;
+ mode = display:
+	BEGIN
+	END;
+#endif
 
  Border: BEGIN
 	END;

@@ -755,15 +755,6 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
- MathDisp_S: BEGIN
-	Content: Text 'MATHDISP';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
 #endif
  P_S: BEGIN
 	Content: Text 'P';
@@ -3537,6 +3528,32 @@ BOXES
 		END;
 	END;
 
+#ifdef MATHML
+  ATTR_MODE_DISPLAY: BEGIN
+	Content: Text ' mode=display';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+  ATTR_MODE_INLINE: BEGIN
+	Content: Text ' mode=inline';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+#endif
+
 { ---- Pages ---- }
 
 #ifdef PAGE
@@ -4669,19 +4686,19 @@ RULES
 	END;
 
  MathDisp: BEGIN
-	CreateBefore(MathDisp_S);
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	LineBreak: No;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		Visibility: 5;
-		END;	
-	IN Alternate_view
-		Visibility: 0;
-	END;
+        CreateBefore(Math_S);
+        VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+        LineBreak: No;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                VertPos: Top = Previous . Bottom;
+                Visibility: 5;
+                END;
+        IN Alternate_view
+                Visibility: 0;
+        END;
 #endif
 
  Paragraph: BEGIN
@@ -5428,7 +5445,10 @@ RULES
 	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	if within Center
+		BEGIN
 		HorizPos: VMiddle = Enclosing . VMiddle;
+		Adjust: Left;
+		END;
 	Width: Enclosing . Width;
 	Adjust: Left;
 	CreateBefore(TABLE_S);
@@ -6912,6 +6932,17 @@ ATTRIBUTES
 	CreateFirst(ATTR_SELECTOR_BEGIN);
 	CreateLast(ATTR_SELECTOR_END);
 	END;
+
+#ifdef MATHML
+  mode = display:
+	BEGIN
+	CreateBefore(ATTR_MODE_DISPLAY);
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	LineBreak: No;
+	END;
+  mode = inline_math:
+	CreateBefore(ATTR_MODE_INLINE);
+#endif
 
   Class:
 	BEGIN

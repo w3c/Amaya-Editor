@@ -18,143 +18,161 @@ RULES
 
    MROW:
 	begin
-	create '<MROW';
+	create '<mrow';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MROW>\12' after;
+	create '</mrow>\12' after;
 	end;
 
    MROOT :
         begin
-	create '<MROOT';
+	create '<mroot';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MROOT>\12' after;
+	create '</mroot>\12' after;
   	end;
    RootBase:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    Index:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
 
    MSQRT :
         begin
-	create '<MSQRT';
+	create '<msqrt';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MSQRT>\12' after;
+	create '</msqrt>\12' after;
   	end;
 
    MFRAC :
 	begin
-	create '<MFRAC';
+	create '<mfrac';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MFRAC>\12' after;
+	create '</mfrac>\12' after;
 	end;
    Numerator:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    Denominator:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
 
+   MFENCED :
+        begin
+	create '<mfenced';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mfenced>\12' after;
+  	end;
+   FencedExpression:
+	begin
+	end;
+   FencedSeparator:
+	Remove;
+   OpeningFence:
+	Remove;
+   ClosingFence:
+	Remove;
 
    MSUBSUP :
 	begin
-	create '<MSUBSUP';
+	create '<msubsup';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MSUBSUP>\12' after;
+	create '</msubsup>\12' after;
 	end;
    Base:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    Subscript:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    Superscript:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
 
    MSUB :
 	begin
-	create '<MSUB';
+	create '<msub';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MSUB>\12' after;
+	create '</msub>\12' after;
 	end;
 
    MSUP :
 	begin
-	create '<MSUP';
+	create '<msup';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MSUP>\12' after;
+	create '</msup>\12' after;
 	end;
 
    MUNDER :
 	begin
-	create '<MUNDER';
+	create '<munder';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MUNDER>\12' after;
+	create '</munder>\12' after;
 	end;
    UnderOverBase:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    Underscript:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
 
    MOVER :
 	begin
-	create '<MOVER';
+	create '<mover';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MOVER>\12' after;
+	create '</mover>\12' after;
 	end;
    Overscript:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
 
    MUNDEROVER :
 	begin
-	create '<MUNDEROVER';
+	create '<munderover';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MUNDEROVER>\12' after;
+	create '</munderover>\12' after;
 	end;
 
    MMULTISCRIPTS :
 	begin
-	create '<MMULTISCRIPTS';
+	create '<mmultiscripts';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MMULTISCRIPTS>\12' after;
+	create '</mmultiscripts>\12' after;
 	end;
    MultiscriptBase:
-	if empty create '<NONE/>\12';
+	if empty create '<none/>\12';
    
    Construct :
 	begin
 	if immediately within MSubscript
-	   create '<NONE/>\12';
+	   create '<none/>\12';
 	if immediately within MSuperscript
-	   create '<NONE/>\12';
+	   create '<none/>\12';
 	end;
    PostscriptPair :
 	if empty Remove;
@@ -162,93 +180,103 @@ RULES
 	if empty Remove;
    PrescriptPairs :
 	if not empty
-	   create '<MPRESCRIPTS/>\12' before;
+	   create '<mprescripts/>\12' before;
 
    MF :
 	begin
-	create '<MF';
+	create '<mo fence="true"';
 	create Attributes;
 	create '>';
-	create '</MF>\12' after;
+	create '</mo>\12' after;
 	end;
 
    MN :
 	begin
-	create '<MN';
+	create '<mn';
 	create Attributes;
 	create '>';
-	create '</MN>\12' after;
+	create '</mn>\12' after;
 	end;
 
    MI :
 	begin
-	create '<MI';
+	create '<mi';
 	create Attributes;
 	create '>';
-	create '</MI>\12' after;
+	create '</mi>\12' after;
 	end;
 
    MO :
 	begin
-	create '<MO';
+	create '<mo';
 	create Attributes;
 	create '>';
-	create '</MO>\12' after;
+	create '</mo>\12' after;
 	end;
 
    MS :
 	begin
-	create '<MS';
+	create '<ms';
 	create Attributes;
 	create '>';
-	create '</MS>\12' after;
+	create '</ms>\12' after;
 	end;
 
    MTEXT :
 	begin
-	create '<MTEXT';
+	create '<mtext';
 	create Attributes;
 	create '>';
-	create '</MTEXT>\12' after;
+	create '</mtext>\12' after;
 	end;
 
    C_Empty:
 	remove;
 
    SEP:
-	create '<SEP/>\12';
+	create '<sep/>\12';
 
    MSPACE:
-	create '<MSPACE/>\12';
+	create '<mspace/>\12';
 
    MSTYLE:
 	begin
-	create '<MSTYLE';
+	create '<mstyle';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MSTYLE>\12' after;
+	create '</mstyle>\12' after;
 	end;
 
    MERROR:
 	begin
-	create '<MERROR';
+	create '<merror';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MERROR>\12' after;
+	create '</merror>\12' after;
+	end;
+
+   MPADDED:
+	begin
+	create '<mpadded';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mpadded>\12' after;
 	end;
 
    MPHANTOM:
 	begin
-	create '<MPHANTOM';
+	create '<mphantom';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</MPHANTOM>\12' after;
+	create '</mphantom>\12' after;
 	end;
 
    TEXT_UNIT :
@@ -265,6 +293,32 @@ ATTRIBUTES
 	begin
 	notranslation;	{ do not translate & into &amp; }
 	end;
+   open:
+	begin
+	create ' open="';
+	create open;
+	create '"';
+	end;
+   close:
+	begin
+	create ' close="';
+	create close;
+	create '"';
+	end;
+   separators:
+	begin
+	create ' separators="';
+	create separators;
+	create '"';
+	end;
+   fontslant = plain:
+	create ' fontslant="plain"';
+   fontslant = italic:
+	create ' fontslant="italic"';
+   fence = true:
+	create ' fence="true"';
+   fence = false:
+	create ' fence="false"';
 
 #include "Text_SGML.inc"
 #include "greek.sgml"

@@ -70,7 +70,7 @@ STRUCT
 	Object;
 #endif
 #ifdef MATHML
-	MathDisp = MathML;
+	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
 	Form;
 	Table;
@@ -128,7 +128,7 @@ STRUCT
 	Object;
 #endif
 #ifdef MATHML
-	Math = MathML;
+	Math (ATTR mode) = MathML;
 #endif
 	SCRIPT;
 	MAP;

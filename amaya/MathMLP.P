@@ -15,14 +15,21 @@ VIEWS
 #define DOC_FONTSIZE 12 pt
 #define TAG_Style Bold
 #define TAG_Visibility 7
+#define ATTR_Style Bold
+#define ATTR_Visibility 7
 
 #ifdef BLACK_WHITE
 #define TAG_Color Black
+#define ATTR_Color Black
+#define ATTRVALUE_Color Black
 #else
 #define TAG_Color Blue
+#define ATTR_Color Blue
+#define ATTRVALUE_Color Black
 #endif
 
 #define TAG_Font Helvetica
+#define ATTR_Font Helvetica
 
 DEFAULT
 
@@ -93,6 +100,17 @@ BOXES
 
  MFRAC_S: BEGIN
 	Content: Text 'MFRAC';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MFENCED_S: BEGIN
+	Content: Text 'MFENCED';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -253,19 +271,6 @@ BOXES
 		END;
 	END;
 
- MF_S: BEGIN
-	Content: Text 'MF';
-	Visibility: 0;
-	IN Math_Structure_view BEGIN
-		VertPos: Top = Enclosing . Top;
-		Width: 1.5;
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
  MTEXT_S: BEGIN
 	Content: Text 'MTEXT';
 	Visibility: 0;
@@ -326,6 +331,17 @@ BOXES
 		END;
 	END;
 
+ MPADDED_S: BEGIN
+	Content: Text 'MPADDED';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MPHANTOM_S: BEGIN
 	Content: Text 'MPHANTOM';
 	Visibility: 0;
@@ -336,6 +352,124 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
+
+ ATTR_fontslant_plain: BEGIN
+        Content: Text ' fontslant=plain';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_fontslant_italic: BEGIN
+        Content: Text ' fontslant=italic';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_open: BEGIN
+        Content: Text ' open=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ 
+ VALUE_open: BEGIN
+        Content: (open);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_close: BEGIN
+        Content: Text ' close=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ 
+ VALUE_close: BEGIN
+        Content: (close);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_separators: BEGIN
+        Content: Text ' separators=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ 
+ VALUE_separators: BEGIN
+        Content: (separators);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_fence_true: BEGIN
+        Content: Text ' fence=true';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_fence_false: BEGIN
+        Content: Text ' fence=false';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
 
  VerticalLine: BEGIN
 	Content: Graphics 'W';
@@ -530,8 +664,8 @@ RULES
 	CreateWith(VerticalLine);
 	Width: 0.7 min;
 	HorizRef: Enclosed Bar . Bottom + 0.1;
-	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Gather: Yes;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -560,6 +694,61 @@ RULES
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
+	END;
+
+   MFENCED:
+        BEGIN
+	CreateBefore(MFENCED_S);
+	CreateWith(VerticalLine);
+	HorizRef: Enclosed FencedExpression . HRef ;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
+	Gather: Yes;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+  	END;
+
+   FencedExpression:
+        BEGIN
+	HorizRef: Enclosed . HRef ;
+	VertPos: Nil;
+	Gather: Yes;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		END;
+  	END;
+
+   FencedSeparator:
+	BEGIN
+	HorizPos: Left = Previous . Right;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+   OpeningFence:
+        BEGIN
+	HorizRef: Enclosed . HRef ;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	HorizPos: Left = Enclosing . Left;
+	Gather: Yes;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+   ClosingFence:
+        BEGIN
+	HorizRef: Enclosed . HRef ;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	HorizPos: Left = Previous . Right;
+	Gather: Yes;
+	IN Math_Structure_view
+		Visibility: 0;
 	END;
 
    MSUBSUP:
@@ -820,7 +1009,7 @@ RULES
 
    MF:
 	BEGIN
-	CreateFirst(MF_S);
+	CreateFirst(MO_S);
 	Height: Enclosing . Height;
 	HorizPos: Left = Previous . Right;
 	VertPos: Top =  Enclosing . Top;
@@ -946,6 +1135,21 @@ RULES
 		END;
   	END;
 
+   MPADDED:
+	BEGIN
+	CreateBefore(MPADDED_S);
+	CreateWith(VerticalLine);
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Foreground: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
+
    MPHANTOM:
 	BEGIN
 	CreateBefore(MPHANTOM_S);
@@ -993,8 +1197,37 @@ RULES
 ATTRIBUTES
 
   fontslant = plain:
+	BEGIN
 	Style: roman;
+	CreateFirst(ATTR_fontslant_plain);
+	END;
   fontslant = italic:
+	BEGIN
+	Style: Italics;
+	CreateFirst(ATTR_fontslant_italic);
+	END;
+  open:
+	BEGIN
+	CreateBefore(ATTR_open);
+	CreateBefore(VALUE_open);
+	END;
+  close:
+	BEGIN
+	CreateBefore(ATTR_close);
+	CreateBefore(VALUE_close);
+	END;
+  separators:
+	BEGIN
+	CreateBefore(ATTR_separators);
+	CreateBefore(VALUE_separators);
+	END;
+  fence = true:
+	CreateFirst(ATTR_fence_true);
+  fence = false:
+	CreateFirst(ATTR_fence_false);
+  IntFontslant = IntPlain:
+	Style: roman;
+  IntFontslant = IntItalic:
 	Style: Italics;
 
   addspace = nospace:

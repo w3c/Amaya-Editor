@@ -7,6 +7,10 @@ STRUCTURE MathML;
 
 DEFPRES MathMLP;
 
+ATTR
+   Invalid_attribute = TEXT;
+   Ghost_restruct = TEXT;
+
 CONST
    C_Empty = ' ';
 
@@ -30,7 +34,16 @@ STRUCT
 			Numerator = Construct;
 			Denominator = Construct;
 			END;
-		  MSUBSUP (ATTR vertstretch = yes_) = BEGIN
+		  FencedSeparator = TEXT;
+		  MFENCED (ATTR open = TEXT; close = TEXT; separators = TEXT;
+				vertstretch = yes_) =
+			BEGIN
+			OpeningFence = SYMBOL with vertstretch = yes_;
+			FencedExpression = LIST OF (Construct)
+					         + (FencedSeparator);
+			ClosingFence = SYMBOL with vertstretch = yes_;
+			END;
+		  MSUBSUP (ATTR vertstretch) = BEGIN
 			Base = Construct;
 		  	Subscript = Construct;
 		  	Superscript = Construct;
@@ -69,17 +82,20 @@ STRUCT
 						MSuperscript;
 						END);
 			END;
+		  MI (ATTR fontslant = plain, italic;
+			   IntFontslant = IntPlain, IntItalic) = TEXT;
 		  MN = TEXT;
-		  MI (ATTR fontslant = plain, italic) = TEXT;
-		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both;
-			   vertstretch) =
+		  MO (ATTR fence = true, false;
+			   vertstretch;
+			   addspace = nospace, spacebefore, spaceafter, both) =
 			TEXT;
-		  MS = TEXT;
-		  MF = TEXT with vertstretch = yes_;
-		  SEP = CONSTANT C_Empty;
+		  MF (ATTR fence; vertstretch) = TEXT with vertstretch = yes_;
 		  MSPACE = CONSTANT C_Empty;
+		  MS = TEXT;
+		  SEP = CONSTANT C_Empty;
 		  MSTYLE = LIST OF (Construct);
 		  MERROR = LIST OF (Construct);
+		  MPADDED = LIST OF (Construct);
 		  MPHANTOM = LIST OF (Construct);
 		  END;
 
@@ -91,6 +107,10 @@ EXCEPT
    RootBase:		Hidden, NoCut;
    Numerator:		Hidden;
    Denominator:	 	Hidden;
+   FencedExpression:	Hidden, NoCut;
+   FencedSeparator:	Hidden, NoCut;
+   OpeningFence:	Hidden, NoCut;
+   ClosingFence:	Hidden, NoCut;
    Base:	 	Hidden, NoCut;
    Subscript:	 	Hidden;
    Superscript:	 	Hidden;
@@ -106,9 +126,12 @@ EXCEPT
    PrescriptPair:	Hidden;
    C_Empty:		Hidden, NoSelect;
 
-   placeholder:   Invisible;
-   addspace:	  Invisible;
-   entity:	  Invisible;
-   horizstretch:  Invisible;
-   vertstretch:	  Invisible;
+   Invalid_attribute:	Invisible;
+   Ghost_restruct:	Invisible;
+   placeholder:   	Invisible;
+   IntFontslant:	Invisible;
+   addspace:	  	Invisible;
+   entity:	  	Invisible;
+   horizstretch:  	Invisible;
+   vertstretch:	  	Invisible;
 END

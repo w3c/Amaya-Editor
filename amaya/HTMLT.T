@@ -345,12 +345,12 @@ RULES
 	Create '</math>\12' After;	
 	END;
  MathDisp: BEGIN
-	Create '<mathdisp';
+	Create '<math';
 	Create Attributes;
 	Create '>\12';
         indent +2;
         indent -2 after;
-	Create '</mathdisp>\12' After;	
+	Create '</math>\12' After;	
 	END;
  MathML:
         begin
@@ -1162,6 +1162,13 @@ ATTRIBUTES
 	Create coords;
 	Create DoubleQuote;
 	END;
+
+#ifdef MATHML
+ mode = inline_math:
+	Create ' mode=inline';
+ mode = display:
+	Create ' mode=display';
+#endif
 
  Border: BEGIN
 	Create ' border="';
