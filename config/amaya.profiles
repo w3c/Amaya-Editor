@@ -50,6 +50,7 @@
 +makebook
 +makeid
 +maths
+&CreateMath
 +object-module
 +print
 +script-module
