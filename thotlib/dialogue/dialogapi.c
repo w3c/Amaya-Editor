@@ -180,22 +180,22 @@ struct struct_winerror win_errtab[] = {
 #define MAX_FRAMECAT 50
 
 typedef struct FrCatalogue {
-        struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
-} FrCatalogue ;
+        struct Cat_Context*  Cat_Table[MAX_FRAMECAT];
+} FrCatalogue;
 
 
-FrCatalogue FrameCatList [MAX_FRAME + 1] ;
+FrCatalogue FrameCatList [MAX_FRAME + 1];
 
 #ifdef __STDC__
-LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
-LRESULT CALLBACK WndProc        () ;
-LRESULT CALLBACK ClientWndProc  () ;
-LRESULT CALLBACK ThotDlgProc    () ;
-LRESULT CALLBACK TxtZoneWndProc () ;
+LRESULT CALLBACK WndProc        ();
+LRESULT CALLBACK ClientWndProc  ();
+LRESULT CALLBACK ThotDlgProc    ();
+LRESULT CALLBACK TxtZoneWndProc ();
 #endif /* __STDC__ */
 
 /* following variables are declared as extern in frame_tv.h */
@@ -233,11 +233,11 @@ typedef struct WIN_Form {
         HWND Buttons [10]; /* Dialog Button      */
         int  x  [10];      /* Initial x position */
         int  cx [10];      /* Button width       */
-} WIN_Form ;
+} WIN_Form;
 
 static int      bIndex   = 0;
-static int      bAbsBase = 60 ;
-static WIN_Form formulary ;
+static int      bAbsBase = 60;
+static WIN_Form formulary;
 static BYTE     fVirt;
 static CHAR_T     key;
 
@@ -309,7 +309,7 @@ CONST STRING text;
 int GetMainFrameNumber  (ThotWindow win)
 #else  /* !__STDC__ */
 int GetMainFrameNumber (win)
-ThotWindow win ;
+ThotWindow win;
 #endif /* __STDC__ */
 {
    int frame;
@@ -388,7 +388,7 @@ void WIN_ReleaseDeviceContext ()
 BOOL RegisterWin95 (CONST WNDCLASS* lpwc)
 #else  /* !__STDC__ */
 BOOL RegisterWin95 (lpwc)
-CONST WNDCLASS lpwc ;
+CONST WNDCLASS lpwc;
 #endif /* __STDC__ */
 {
    WNDCLASSEX wcex;
@@ -406,7 +406,7 @@ CONST WNDCLASS lpwc ;
 
    /* Added elements for Windows 95. */
    wcex.cbSize = sizeof(WNDCLASSEX);
-   wcex.hIconSm  = LoadIcon (hInstance, IDI_APPLICATION) ;
+   wcex.hIconSm  = LoadIcon (hInstance, IDI_APPLICATION);
    return RegisterClassEx( &wcex );
 }
 
@@ -418,7 +418,7 @@ CONST WNDCLASS lpwc ;
 int GetMenuParentNumber (ThotMenu menu)
 #else  /* !__STDC__ */
 int GetMenuParentNumber (menu)
-ThotMenu menu ;
+ThotMenu menu;
 #endif /* __STDC__ */
 {
    int      menuIndex;
@@ -430,14 +430,14 @@ ThotMenu menu ;
          menuIndex = 0;
          while (menuIndex < MAX_MENU && !found) 
 	     if (FrameTable[frameIndex].WdMenus[menuIndex] == menu) {
-                frame = frameIndex ;
-                found = TRUE ;
+                frame = frameIndex;
+                found = TRUE;
              } else 
-                  menuIndex++ ;
+                  menuIndex++;
          if (!found)
-            frameIndex++ ;
+            frameIndex++;
    }
-   return frame ;
+   return frame;
 }
 
 /*----------------------------------------------------------------------
@@ -448,15 +448,15 @@ ThotMenu menu ;
 int GetVScrollParentNumber (ThotWidget vScroll)
 #else  /* !__STDC__ */
 int GetVScrollParentNumber (vScroll)
-ThotWindow vScroll ;
+ThotWindow vScroll;
 #endif /* __STDC__ */
 {
    int     frame = 0;
   
    while (frame < MAX_FRAME) {
          if (FrameTable[frame].WdScrollV == vScroll)
-            return frame ;
-         frame++ ;
+            return frame;
+         frame++;
    }
    return -1;
 }
@@ -469,15 +469,15 @@ ThotWindow vScroll ;
 int GetHScrollParentNumber (ThotWidget hScroll)
 #else  /* !__STDC__ */
 int GetHScrollParentNumber (hScroll)
-ThotWindow hScroll ;
+ThotWindow hScroll;
 #endif /* __STDC__ */
 {
    int     frame = 0;
   
    while (frame < MAX_FRAME) {
          if (FrameTable[frame].WdScrollH == hScroll)
-            return frame ;
-         frame++ ;
+            return frame;
+         frame++;
    }
    return -1;
 }
@@ -511,14 +511,14 @@ struct Cat_Context* catalogue;
    struct Cat_Context* tmpCat;
 
    if (frame == -1) {
-      frame = GetMenuParentNumber ((ThotMenu) parent) ;
+      frame = GetMenuParentNumber ((ThotMenu) parent);
    
       if (frame == - 1) {
-         frameIndex = 0 ;
-         found      = FALSE ;
+         frameIndex = 0;
+         found      = FALSE;
 
          while (frameIndex <= MAX_FRAME && !found) {
-               catIndex = 0 ;
+               catIndex = 0;
             
                while (catIndex < MAX_FRAMECAT && !found) {
                      twIndex = 0;
@@ -527,43 +527,43 @@ struct Cat_Context* catalogue;
                            if (FrameCatList[frameIndex].Cat_Table[catIndex] && FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries &&
                                FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
 			      
-                              found = TRUE ;
-                              frame = frameIndex ;
+                              found = TRUE;
+                              frame = frameIndex;
                            } else
-                                 twIndex++ ;
+                                 twIndex++;
  
                            if (!found)
-                              catIndex++ ;
+                              catIndex++;
                }
 
                if (!found)
-                  frameIndex++ ;
+                  frameIndex++;
          }
       }
    }
    
    if (frame != -1) {
-      found = FALSE ;
+      found = FALSE;
       i = 0;
       while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) && !found)
             if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref) {
-               found = TRUE ;
-               FrameCatList[frame].Cat_Table[i] = catalogue ;
+               found = TRUE;
+               FrameCatList[frame].Cat_Table[i] = catalogue;
             } else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref) {
-                   tmpCat = FrameCatList[frame].Cat_Table[i] ;
+                   tmpCat = FrameCatList[frame].Cat_Table[i];
                    do {
-                       FrameCatList[frame].Cat_Table[i] = catalogue ;
-                       catalogue = tmpCat ;
-                       i++ ;
+                       FrameCatList[frame].Cat_Table[i] = catalogue;
+                       catalogue = tmpCat;
+                       i++;
                        tmpCat = FrameCatList[frame].Cat_Table[i];
-                   } while (tmpCat) ;
+                   } while (tmpCat);
                    FrameCatList[frame].Cat_Table[i] = catalogue;
-                   found = TRUE ;
+                   found = TRUE;
             } else
-                  i++ ;
+                  i++;
 
       if (i < MAX_FRAMECAT && !found) 
-         FrameCatList[frame].Cat_Table[i] = catalogue ;
+         FrameCatList[frame].Cat_Table[i] = catalogue;
    }
 }
 
@@ -597,7 +597,7 @@ int        ref;
 {
    register int        icat = 1;
    ThotBool            found = FALSE;
-   int                 frame = GetMainFrameNumber (win) ;
+   int                 frame = GetMainFrameNumber (win);
    int                 best = -1;
    /* struct Cat_Context* catval;*/
    struct Cat_Context* catalogue;
@@ -610,10 +610,10 @@ int        ref;
    while (icat < MAX_FRAMECAT) {
          if (catalogue) {
             if (catalogue->Cat_Ref == ref)
-               return catalogue ;
+               return catalogue;
 
             /* if (FrameCatList[frame].Cat_Table [icat] && (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
-               return catalogue ; */
+               return catalogue; */
 
             if ((abs (catalogue->Cat_Ref - ref) < abs (Nearestcatalogue->Cat_Ref - ref)) && ref >= catalogue->Cat_Ref)
                Nearestcatalogue = catalogue;
@@ -622,13 +622,13 @@ int        ref;
                catalogue = FrameCatList[frame].Cat_Table [icat];
 		 }
 
-         icat++ ;
+         icat++;
    }
    if (Nearestcatalogue->Cat_Ref <= ref)
-	  /* return catalogue ;*/
+	  /* return catalogue;*/
       return Nearestcatalogue;
 
-   return NULL ;
+   return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -706,7 +706,7 @@ STRING    lpCommand;
 int       nShow;
 #endif /* __STDC__ */
 { 
-   int     argc ;
+   int     argc;
    char**  argv;
 
    currentFrame = -1;
@@ -1601,49 +1601,49 @@ Display           **Dp;
    iconID = TEXT("IDI_APPICON");
 
    RootShell.style         = 0;
-   RootShell.lpfnWndProc   = WndProc ;
-   RootShell.cbClsExtra    = 0 ;
-   RootShell.cbWndExtra    = 0 ;
-   RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
+   RootShell.lpfnWndProc   = WndProc;
+   RootShell.cbClsExtra    = 0;
+   RootShell.cbWndExtra    = 0;
+   RootShell.hInstance     = hInstance;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID);
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
    RootShell.lpszMenuName  = TEXT("AmayaMain");
    RootShell.lpszClassName = TEXT("Amaya");
    RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
 
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
 
-   RootShell.style         = CS_DBLCLKS ;
-   RootShell.lpfnWndProc   = ClientWndProc ;
-   RootShell.cbClsExtra    = 0 ;
-   RootShell.cbWndExtra    = 0 ;
-   RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
-   RootShell.lpszClassName = TEXT("ClientWndProc") ;
-   RootShell.lpszMenuName  = NULL ;
+   RootShell.style         = CS_DBLCLKS;
+   RootShell.lpfnWndProc   = ClientWndProc;
+   RootShell.cbClsExtra    = 0;
+   RootShell.cbWndExtra    = 0;
+   RootShell.hInstance     = hInstance;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID);
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+   RootShell.lpszClassName = TEXT("ClientWndProc");
+   RootShell.lpszMenuName  = NULL;
    RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
 
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
 
-   RootShell.style         = 0 ;
-   RootShell.lpfnWndProc   = ThotDlgProc ;
-   RootShell.cbClsExtra    = 0 ;
-   RootShell.cbWndExtra    = 0 ;
-   RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-   RootShell.lpszClassName = _WNDIALOGBOXCST_ ;
-   RootShell.lpszMenuName  = NULL ;
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
+   RootShell.style         = 0;
+   RootShell.lpfnWndProc   = ThotDlgProc;
+   RootShell.cbClsExtra    = 0;
+   RootShell.cbWndExtra    = 0;
+   RootShell.hInstance     = hInstance;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID);
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.lpszClassName = TEXT("WNDIALOGBOX");
+   RootShell.lpszMenuName  = NULL;
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
    RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
    
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
@@ -2408,7 +2408,7 @@ STRING fileName;
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parent; 
-    OpenFileName.hInstance         = hInstance ; 
+    OpenFileName.hInstance         = hInstance; 
     OpenFileName.lpstrFilter       = szFilter; 
     OpenFileName.lpstrCustomFilter = NULL; 
     OpenFileName.nMaxCustFilter    = 0L; 
@@ -2433,11 +2433,12 @@ STRING fileName;
   WIN_ListSaveDirectory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_ListSaveDirectory (int parentRef, STRING fileName)
+void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
 #else  /* __STDC__ */
-void WIN_ListSaveDirectory (parentRef, fileName)
-int   parentRef; 
-STRING fileName; 
+void    WIN_ListSaveDirectory (parentRef, title, fileName)
+int     parentRef;
+STRING  title;
+STRING  fileName; 
 #endif /* __STDC__ */
 {
 
@@ -2455,14 +2456,13 @@ STRING fileName;
     OpenFileName.lpstrFile         = szFileName; 
     OpenFileName.nMaxFile          = sizeof (szFileName); 
     OpenFileName.lpstrFileTitle    = szFileTitle; 
-	OpenFileName.lpstrTitle        = _SaveFileAsCST_; 
+    OpenFileName.lpstrTitle        = title; 
     OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
     OpenFileName.lpstrInitialDir   = NULL; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
 
-    if (GetSaveFileName (&OpenFileName)) { 
-	   ustrcpy (fileName, OpenFileName.lpstrFile);
-    } 
+    if (GetSaveFileName (&OpenFileName))
+      ustrcpy (fileName, OpenFileName.lpstrFile);
 }
 #endif /* _WINDOWS */
 
@@ -2709,15 +2709,15 @@ STRING              equiv;
 		  XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
 #endif /*_GTK */
 #                 else  /* _WINDOWS */
-                  copyCat = catalogue ;
-                  WIN_AddFrameCatalogue (parent, copyCat) ;
-                  /* WIN_AddFrameCatalogue (parent, catalogue) ; */
+                  copyCat = catalogue;
+                  WIN_AddFrameCatalogue (parent, copyCat);
+                  /* WIN_AddFrameCatalogue (parent, catalogue); */
 #                 endif /* _WINDOWS */
 	       }
 #          ifdef _WINDOWS
            else	if (currentParent != 0)
 			   copyCat = catalogue;
-               WIN_AddFrameCatalogue (currentParent, copyCat) ;
+               WIN_AddFrameCatalogue (currentParent, copyCat);
 #          endif /* _WINDOWS */
 	     return;
 	  }
@@ -2864,7 +2864,7 @@ STRING              equiv;
                    /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]); */
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
-                          WIN_AddFrameCatalogue (parent, copyCat) ;
+                          WIN_AddFrameCatalogue (parent, copyCat);
 #                         else  /* _WINDOWS */
 #ifdef _GTK
                          w = gtk_menu_item_new_with_label ( &text[index + 1]);
@@ -2898,7 +2898,7 @@ STRING              equiv;
 
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
-                          WIN_AddFrameCatalogue (parent, copyCat) ;
+                          WIN_AddFrameCatalogue (parent, copyCat);
 #                         else  /* _WINDOWS */
 #ifdef _GTK
                           w = gtk_check_menu_item_new_with_label (&text[index + 1]);
@@ -2940,7 +2940,7 @@ STRING              equiv;
                           adbloc->E_ThotWidget[ent] = w;
 						  /* *** T O    V E R I F Y *** */
                           copyCat = catalogue;
-                          WIN_AddFrameCatalogue (parent, copyCat) ;
+                          WIN_AddFrameCatalogue (parent, copyCat);
 						  /* *** T O    V E R I F Y  *** */
 #                         else  /* _WINDOWS */
 #ifdef _GTK
@@ -3317,7 +3317,7 @@ CHAR_T                button;
 #   ifdef _WINDOWS
     if (currentParent != 0) {
        copyCat = catalogue;
-       WIN_AddFrameCatalogue (currentParent, copyCat) ;
+       WIN_AddFrameCatalogue (currentParent, copyCat);
     }
 #   endif /* _WINDOWS */
 
@@ -3385,7 +3385,7 @@ CHAR_T                button;
     for (ndx = 0; ndx < nbOldItems; ndx ++)
         if (!DeleteMenu (menu, ref + ndx, MF_BYCOMMAND))
            DeleteMenu (menu, ndx, MF_BYPOSITION);
-        /* RemoveMenu (menu, ref + ndx, MF_BYCOMMAND) ; */
+        /* RemoveMenu (menu, ref + ndx, MF_BYCOMMAND); */
 #   endif /* _WINDOWS */
 
 	i = 0;
@@ -3931,7 +3931,7 @@ ThotBool            react;
                if (!rebuilded) {
                   w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 #                 ifdef _WINDOWS
-                  menu = w ;
+                  menu = w;
 #                 else  /* _WINDOWS */
                   /*** Cree un sous-menu d'un formulaire ***/
                   n = 0;
@@ -4071,7 +4071,7 @@ ThotBool            react;
 						 } 
 #                        ifdef _WINDOWS
                          copyCat = catalogue;
-                         WIN_AddFrameCatalogue (w, copyCat) ;
+                         WIN_AddFrameCatalogue (w, copyCat);
 #                        else  /* _WINDOWS */
                          w = XmCreateToggleButton (row, &text[index + 1], args, n);
                          XtManageChild (w);
@@ -4317,8 +4317,8 @@ ThotBool            react;
                                       AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
                                adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                                copyCat = catalogue;
-                               /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
-                               WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
+                               /* WIN_AddFrameCatalogue (currentMenu, copyCat); */
+                               WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat);
 #                              else  /* _WINDOWS */
 #ifdef _GTK
                                w  = gtk_menu_item_new_with_label (&text[index + 1]);
@@ -4349,8 +4349,8 @@ ThotBool            react;
                                    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                                    adbloc->E_ThotWidget[ent + 1] = (ThotWidget) -1;
                                    copyCat = catalogue;
-                                   /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
-                                   WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
+                                   /* WIN_AddFrameCatalogue (currentMenu, copyCat); */
+                                   WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat);
 #                                  else  /* _WINDOWS */
 #ifdef _GTK
 				   w = gtk_check_menu_item_new_with_label (&text[index + 1]);
@@ -5895,7 +5895,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    int        ndx ;
+    int        ndx;
     
     switch (msg) {
            case WM_CREATE: {
@@ -5912,7 +5912,7 @@ LPARAM lParam;
 		       default:       WIN_ThotCallBack (GetParent (hwnDlg), wParam , lParam);
                                       return 0;
 		}
-           default: return (DefWindowProc (hwnDlg, msg, wParam, lParam)) ;
+           default: return (DefWindowProc (hwnDlg, msg, wParam, lParam));
     }
 }
 #endif /* _WINDOWS */

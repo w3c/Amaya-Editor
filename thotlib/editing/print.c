@@ -693,7 +693,7 @@ STRING server;
 #  endif /* ! _WINDOWS */
    DefaultBColor = 0;
    DefaultFColor = 1;
-   InitDocColors (_THOTElement_);
+   InitDocColors (TEXT("thot"));
    /* Initialisation des polices de caracteres */
 #  ifdef _WINDOWS 
    WIN_InitDialogueFonts (TtPrinterDC, _THOTElement_);

@@ -161,7 +161,7 @@ int                 zoom;
    XbmPrint produces postscript frome an xbm file                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XbmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
+void                XbmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned int BackGroundPixel)
 #else  /* __STDC__ */
 void                XbmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 STRING              fn;
@@ -174,7 +174,7 @@ int                 PicXArea;
 int                 PicYArea;
 int                 PicWArea;
 int                 PicHArea;
-int                 fd;
+FILE               *fd;
 unsigned int        BackGroundPixel;
 
 #endif /* __STDC__ */
@@ -252,8 +252,8 @@ unsigned int        BackGroundPixel;
 
 	wim = pict->width;
 	him = pict->height;
-	fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-	fprintf ((FILE *) fd, "%d %d %d %d DumpImage\n", pict->width, pict->height, PixelToPoint (wif), PixelToPoint (hif));
+	fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+	fprintf (fd, "%d %d %d %d DumpImage\n", pict->width, pict->height, PixelToPoint (wif), PixelToPoint (hif));
 
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (TtDisplay) == LSBFirst)
@@ -261,10 +261,10 @@ unsigned int        BackGroundPixel;
 	for (j = 0, pt1 = pict->data; j < him; j++, pt1 += pict->bytes_per_line)
 	  {
 	     for (i = 0, pt = pt1; i < nbb; i++)
-		fprintf ((FILE *) fd, "%02x", ((*pt++) & 0xff) ^ 0xff);
-	     fprintf ((FILE *) fd, "\n");
+		fprintf (fd, "%02x", ((*pt++) & 0xff) ^ 0xff);
+	     fprintf (fd, "\n");
 	  }
-	fprintf ((FILE *) fd, "grestore\n");
+	fprintf (fd, "grestore\n");
 
 	/* frees the allocated space for the bitmap in memory */
 	XDestroyImage (pict);

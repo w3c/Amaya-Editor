@@ -698,7 +698,7 @@ ThotBool            alone;
 		       else
 			 {
 			    charIndex = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
-			    if (charIndex == _SPACE_ && pBox->BxSpaceWidth != 0)
+			    if (charIndex == SPACE && pBox->BxSpaceWidth != 0)
 			       pViewSel->VsXPos += pBox->BxSpaceWidth;
 			    else
 			       pViewSel->VsXPos += CharacterWidth ((unsigned char) charIndex, pBox->BxFont);

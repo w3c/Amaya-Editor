@@ -13,17 +13,17 @@ extern ThotBool TtaGetEnvInt ( char* name,
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
 extern char* TtaGetEnvString ( char* name );
-extern void TtaClearEnvString ( STRING name );
-extern void TtaSetEnvInt ( STRING name,
+extern void TtaClearEnvString ( char *name );
+extern void TtaSetEnvInt ( char *name,
                            int value,
                            int overwrite );
-extern void TtaSetEnvBoolean ( STRING name,
+extern void TtaSetEnvBoolean ( char *name,
                                ThotBool value,
                                int overwrite );
-extern void TtaSetEnvString ( STRING name,
+extern void TtaSetEnvString ( char *name,
                               STRING value,
                               int overwrite );
-extern void TtaSetDefEnvString ( STRING name,
+extern void TtaSetDefEnvString ( char *name,
                                  STRING value,
                                  int overwrite );
 extern ThotBool TtaGetDefEnvInt ( STRING name,
@@ -47,17 +47,17 @@ extern ThotBool TtaGetEnvInt (/* char* name,
 extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
 extern char* TtaGetEnvString (/* char* name */);
-extern void TtaClearEnvString (/* STRING name */);
-extern void TtaSetEnvInt (/* STRING name,
+extern void TtaClearEnvString (/* char *name */);
+extern void TtaSetEnvInt (/* char *name,
                              int value,
                              int overwrite */);
-extern void TtaSetEnvBoolean (/* STRING name,
+extern void TtaSetEnvBoolean (/* char *name,
                                  ThotBool value,
                                  int overwrite */);
-extern void TtaSetEnvString (/* STRING name,
+extern void TtaSetEnvString (/* char *name,
                                 STRING value,
                                 int overwrite */);
-extern void TtaSetDefEnvString (/* STRING name,
+extern void TtaSetDefEnvString (/* char *name,
                                    STRING value,
                                    int overwrite */);
 extern ThotBool TtaGetDefEnvInt (/* STRING name,

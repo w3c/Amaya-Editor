@@ -1604,12 +1604,12 @@ int                 zoom;
 
 
 /*----------------------------------------------------------------------
-   GifPrint  : reads a gif file and produces PostScirpt            
+   GifPrint  : reads a gif file and produces PostScirpt      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int filedesc, unsigned long BackGroundPixel)
+void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
-void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, filedesc, BackGroundPixel)
+void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
 PictureScaling      pres;
 int                 xif;
@@ -1620,7 +1620,7 @@ int                 PicXArea;
 int                 PicYArea;
 int                 PicWArea;
 int                 PicHArea;
-int                 filedesc;
+FILE               *fd;
 unsigned long       BackGroundPixel;
 
 #endif /* __STDC__ */
@@ -1631,7 +1631,6 @@ unsigned long       BackGroundPixel;
    int                 x, y, w, h;
    int                 wim;
    unsigned int        NbCharPerLine;
-   FILE               *fd;
    ThotColorStruct     colrs[256];
    unsigned char      *buffer;
    int                 ncolors, cpp, i;
@@ -1642,7 +1641,6 @@ unsigned long       BackGroundPixel;
    Gif89.disposal = 0;
 
    buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-   fd = (FILE *)filedesc;
    if (Gif89.transparent != -1)
      {
 	if (Gif89.transparent < 0)

@@ -156,6 +156,7 @@ Amaya/batch/STRUCT.GRM \
 Amaya/batch/TRANS.GRM \
 Amaya/batch/MachineType \
 Amaya/batch/*.rc \
+Amaya/batch/resource.h \
 Amaya/batch/comp_ico.ico \
 Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/app.c \

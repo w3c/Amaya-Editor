@@ -765,11 +765,11 @@ STRING              menuName;
    newmenu->MenuAttr = FALSE;
    newmenu->MenuSelect = FALSE;
    newmenu->MenuHelp = FALSE;
-   if (!ustrcmp (menuName, _MenuAttributeCST_))
+   if (!ustrcmp (menuName, TEXT("MenuAttribute")))
       newmenu->MenuAttr = TRUE;
-   else if (!ustrcmp (menuName, _MenuSelectionCST_))
+   else if (!ustrcmp (menuName, TEXT("MenuSelection")))
       newmenu->MenuSelect = TRUE;
-   else if (!ustrcmp (menuName, _MenuHelpCST_))
+   else if (!ustrcmp (menuName, TEXT("MenuHelp")))
       newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
@@ -3438,12 +3438,12 @@ int                 doc;
            FrameTable[frame].WdFrame =  drawing_area;
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
-	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
+	   hscrl = CreateWindow (TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
 				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 
-	   vscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
+	   vscrl = CreateWindow (TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
 				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);

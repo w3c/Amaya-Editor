@@ -174,15 +174,15 @@ STRING              name;
 	 return (TEXT("0x2c"));
       else
 	 return (name);
-   else if (!ustrcasecmp (name, _ReturnKEY_))
+   else if (!ustrcasecmp (name, TEXT("Return")))
       return (TEXT("0x0d"));
-   else if (!ustrcasecmp (name, _BackspaceKEY_))
+   else if (!ustrcasecmp (name, TEXT("Backspace")))
       return (TEXT("0x08"));
-   else if (!ustrcasecmp (name, _SpaceKEY_))
+   else if (!ustrcasecmp (name, TEXT("Space")))
       return (TEXT("0x20"));
-   else if (!ustrcasecmp (name, _EscapeKEY_))
+   else if (!ustrcasecmp (name, TEXT("Escape")))
       return (TEXT("0x18"));
-   else if (!ustrcasecmp (name, _DeleteKEY_))
+   else if (!ustrcasecmp (name, TEXT("Delete")))
       return (TEXT("0x7f"));
    else
       return (name);
@@ -203,15 +203,15 @@ STRING              name;
 #endif /* __STDC__ */
 {
    /* is it the name of a special character? */
-   if (!ustrcasecmp (name, _ReturnKEY_))
+   if (!ustrcasecmp (name, TEXT("Return")))
       return (unsigned int) THOT_KEY_Return;
-   else if (!ustrcasecmp (name, _BackspaceKEY_))
+   else if (!ustrcasecmp (name, TEXT("Backspace")))
       return (unsigned int) THOT_KEY_BackSpace;
-   else if (!ustrcasecmp (name, _SpaceKEY_))
+   else if (!ustrcasecmp (name, TEXT("Space")))
       return 32;
-   else if (!ustrcasecmp (name, _EscapeKEY_))
+   else if (!ustrcasecmp (name, TEXT("Escape")))
       return (unsigned int) THOT_KEY_Escape;
-   else if (!ustrcasecmp (name, _DeleteKEY_))
+   else if (!ustrcasecmp (name, TEXT("Delete")))
       return (unsigned int) THOT_KEY_Delete;
    else if (!ustrcasecmp (name, TEXT("F1")))
       return (unsigned int) THOT_KEY_F1;
@@ -285,17 +285,17 @@ STRING              name;
    else if (!ustrcasecmp (name, TEXT("F35")) || !ustrcasecmp (name, "r15"))
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
-   else if (!ustrcasecmp (name, _UpKEY_))
+   else if (!ustrcasecmp (name, TEXT("Up")))
       return (unsigned int) THOT_KEY_Up;
-   else if (!ustrcasecmp (name, _DownKEY_))
+   else if (!ustrcasecmp (name, TEXT("Down")))
       return (unsigned int) THOT_KEY_Down;
-   else if (!ustrcasecmp (name, _LeftKEY_))
+   else if (!ustrcasecmp (name, TEXT("Left")))
       return (unsigned int) THOT_KEY_Left;
-   else if (!ustrcasecmp (name, _RightKEY_))
+   else if (!ustrcasecmp (name, TEXT("Right")))
       return (unsigned int) THOT_KEY_Right;
-   else if (!ustrcasecmp (name, _HomeKEY_))
+   else if (!ustrcasecmp (name, TEXT("Home")))
       return (unsigned int) THOT_KEY_Home;
-   else if (!ustrcasecmp (name, _EndKEY_))
+   else if (!ustrcasecmp (name, TEXT("End")))
       return (unsigned int) THOT_KEY_End;
    else
       return (unsigned int) name[0];
@@ -1004,7 +1004,7 @@ int                 key;
 	  (*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
       } else if ((InputSpace && value == SHOWN_SPACE)) {
 	if (MenuActionList[0].Call_Action)
-	  (*MenuActionList[0].Call_Action) (document, view, _SPACE_);
+	  (*MenuActionList[0].Call_Action) (document, view, SPACE);
       } else if ((value >= 32 && value < 128) || (value >= 144 && value < 256)) {
 #                    ifdef _WINDOWS
 	if (!specialKey)

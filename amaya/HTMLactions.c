@@ -1004,7 +1004,7 @@ NotifyElement      *event;
 {
   ThotBool usedouble;
 
-  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &usedouble);  
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     /* don't let Thot perform normal operation */
     return (ActivateElement (event->element, event->document));
@@ -1026,7 +1026,7 @@ NotifyElement      *event;
 {
   ThotBool usedouble;
 
-  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &usedouble);  
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     return TRUE;
   else

@@ -93,7 +93,7 @@ LPARAM lParam;
       switch (LOWORD (wParam))
 	{
 	case IDC_BROWSE:
-	  WIN_ListSaveDirectory (BaseDialog + SaveForm, currentDocToSave);
+	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), currentDocToSave);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
 	  break;
 

@@ -17,7 +17,6 @@
 #define SHOWN_HALF_EM 166 /* HALF-EM display value */
 #define UNBREAKABLE_SPACE 160
 #define SHOWN_UNBREAKABLE_SPACE 185 /* UNBREAKABLE-SPACE display value */
-#define _SPACE_ 32
 #define SHOWN_SPACE 183 /* SPACE display value */
 
 #endif

@@ -1837,7 +1837,7 @@ int                 frame;
 		  if (pBox->BxSpaceWidth != 0)
 		    {
 		       /* Si la boite est adjustifiee */
-		       i = CharacterWidth (_SPACE_, font);
+		       i = CharacterWidth (SPACE, font);
 		       adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
 		    }
 		  else
@@ -2087,7 +2087,7 @@ PtrTextBuffer       clipboard;
 	       if (pBox->BxSpaceWidth != 0)
 		 {
 		    /* Si la boite est adjustifiee */
-		    i = CharacterWidth (_SPACE_, font);
+		    i = CharacterWidth (SPACE, font);
 		    adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
 		 }
 	       else
@@ -3010,7 +3010,7 @@ int                 keyboard;
 			      {
 				if (c == SPACE)
 				  {
-				    xDelta = -CharacterWidth (_SPACE_, font);
+				    xDelta = -CharacterWidth (SPACE, font);
 				    adjust = -pSelBox->BxSpaceWidth;
 				    if (adjust < 0)
 				      {
@@ -3140,7 +3140,7 @@ int                 keyboard;
 			    {
 			      if (c == SPACE)
 				{
-				  xDelta = CharacterWidth (_SPACE_, font);
+				  xDelta = CharacterWidth (SPACE, font);
 				  adjust = pSelBox->BxSpaceWidth;
 				  if (adjust > 0)
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)

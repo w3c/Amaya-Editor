@@ -40,7 +40,7 @@ typedef struct _GetIncludedDocuments_context
 {
   Element		link, next;
   Attribute		RelAttr, HrefAttr;
-  STRING		url, ptr, text;
+  STRING		url, ptr;
   Document		document;
 } GetIncludedDocuments_context;
 
@@ -397,7 +397,7 @@ Document            document;
        if (ptr != NULL && TtaCheckDirectory (ptr))
 	     ustrcpy(PSdir, ptr);
        else
-	     ustrcpy (PSdir, TtaGetDefEnvString (TEXT("APP_TMPDIR")));
+	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
 	   lg = ustrlen(PSdir);
 	   if (PSdir[lg - 1] == DIR_SEP)
 	     PSdir[--lg] = EOS;
@@ -556,7 +556,7 @@ STRING              data;
 	  TtaSetPsFile (PSdir);
 	  /* update the environment variable */
 	  TtaSetEnvString ("THOTPRINT", PPrinter, TRUE);
-	  TtaSetEnvInt (_PAPERSIZE_EVAR_, PageSize, TRUE);
+	  TtaSetEnvInt ("PAPERSIZE", PageSize, TRUE);
 	  PrintDocument (DocPrint, 1);
 	  break;
 	case 0:
@@ -662,10 +662,10 @@ void                InitPrint ()
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     ustrcpy (PPrinter, _EMPTYSTR_);
+     ustrcpy (PPrinter, TEXT(""));
    else
      ustrcpy (PPrinter, ptr);
-   TtaGetEnvInt (_PAPERSIZE_EVAR_, &PageSize);
+   TtaGetEnvInt ("PAPERSIZE", &PageSize);
    PaperPrint = PP_PRINTER;
    PrintURL = TRUE;
    IgnoreCSS = FALSE;
@@ -979,7 +979,7 @@ void *context;
 {
   Element		link, next;
   Attribute		RelAttr, HrefAttr;
-  STRING		url, ptr, text;
+  STRING		url, ptr;
   Document		document;
   GetIncludedDocuments_context  *ctx;
 
@@ -996,33 +996,27 @@ void *context;
   ptr = ctx->ptr;
   document = ctx->document;
   next = ctx->next;
-  text = ctx->text;
-
   TtaFreeMemory (ctx);
 
-  if (RelAttr != NULL && link != NULL)
+  if (RelAttr && link && HrefAttr)
     {
-      if (HrefAttr != NULL)
+      if (url)
 	{
-	  if (url != NULL)
+	  if (newdoc != 0 && newdoc != document)
 	    {
-	      if (newdoc != 0 && newdoc != document)
-		{
-		  /* it's not the document itself */
-		  /* copy the target document at the position of the link */
-		  MoveDocumentBody (&next, document, newdoc, ptr, url,
-				    (ThotBool)(newdoc == IncludedDocument));
-		}
-	      /* global variables */
-	      FreeDocumentResource (IncludedDocument);
-	      TtaCloseDocument (IncludedDocument);
-	      IncludedDocument = 0;
+	      /* it's not the document itself */
+	      /* copy the target document at the position of the link */
+	      MoveDocumentBody (&next, document, newdoc, ptr, url,
+				(ThotBool)(newdoc == IncludedDocument));
 	    }
-	  TtaFreeMemory (text);
+	  /* global variables */
+	  FreeDocumentResource (IncludedDocument);
+	  TtaCloseDocument (IncludedDocument);
+	  IncludedDocument = 0;
 	}
     }
-  
-  if (next != NULL && DocBook == document)
+  TtaFreeMemory (url);
+  if (next && DocBook == document)
     {
       SetStopButton (document);
       GetIncludedDocuments (next, document);
@@ -1112,7 +1106,6 @@ Document            document;
 	   
 	   ctx->url = url;
 	   ctx->ptr = ptr;
-	   ctx->text = text;
 	   ctx->HrefAttr = HrefAttr;
 
 	   if (url != NULL)

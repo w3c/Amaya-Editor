@@ -444,7 +444,7 @@ STRING title	;
    MSG           msg;
    int           frame;
 
-   szAppName = _SheetClassCST_;
+   szAppName = TEXT("SheetClass");
    if (!wndSheetRegistered) {
 	  wndSheetRegistered = TRUE;
       wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
@@ -622,7 +622,7 @@ STRING title	;
    MSG           msg;
    int           frame;
 
-   szAppName = _NumAttrClassCST_;
+   szAppName = TEXT("NumAttrClass");
    if (!wndNumAttrRegistered) {
 	  wndNumAttrRegistered = TRUE;
       wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;

@@ -2413,7 +2413,7 @@ LPARAM lParam;
       break;
       
     case IDC_BROWSE:
-      WIN_ListSaveDirectory (currentParentRef, urlToOpen);
+      WIN_ListSaveDirectory (currentParentRef, TtaGetMessage (AMAYA, AM_SAVE_AS), urlToOpen);
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
       ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
       break;

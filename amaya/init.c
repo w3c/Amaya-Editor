@@ -2194,7 +2194,7 @@ ThotBool	    history;
 		   XHTMLdoc = TRUE;
 		   otherFile = FALSE;
 		 }
-	       else if (!ustrncasecmp (&content_type[i+1], _XMLElement_, 3))
+	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xml"), 3))
 		 {
 		   /* it's an XML document: check its content */
 		   if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
@@ -4582,10 +4582,10 @@ NotifyEvent        *event;
    if (!CheckMakeDirectory (s, TRUE))
      /* try to use the default value */
      {
-       s = TtaGetDefEnvString (TEXT("APP_TMPDIR"));
+       s = TtaGetDefEnvString ("APP_TMPDIR");
        if (CheckMakeDirectory (s, TRUE))
 	 /* make it the current user one */
-	 TtaSetEnvString (TEXT("APP_TMPDIR"), s, TRUE);
+	 TtaSetEnvString ("APP_TMPDIR", s, TRUE);
        else
 	 /* didn't work, so we exit */
 	 {

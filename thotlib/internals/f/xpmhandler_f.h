@@ -27,7 +27,7 @@ extern void XpmPrint ( STRING fn,
                        int PicYArea,
                        int PicWArea,
                        int PicHArea,
-                       int fd,
+                       FILE *fd,
                        unsigned long BackGroundPixel );
 extern ThotBool IsXpmFormat ( char* fn );
 
@@ -54,7 +54,7 @@ extern void XpmPrint (/* STRING fn,
                          int PicYArea,
                          int PicWArea,
                          int PicHArea,
-                         int fd,
+                         FILE *fd,
                          unsigned long BackGroundPixel */);
 extern ThotBool IsXpmFormat (/* char* fn */);
 

@@ -32,6 +32,10 @@ Fixed bugs 2.5:
   - Amaya failed to create new style rules when existing style rules were
     emmbedded in a comment within the style element.
 
+*  When more than 2 links were needed to get the actual executable amaya
+   reported something like: System wide unix-thot.rc not found.
+   Thanks to Ovidiu Toader who solved that problem.
+
 =============================================================
 2.4
 =============================================================

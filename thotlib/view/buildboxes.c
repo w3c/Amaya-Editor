@@ -398,7 +398,7 @@ int                *nSpaces;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CharacterWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (SPACE, font);
    else
       spaceWidth = *nSpaces;
    i = *width;			/* Index dans le buffer */
@@ -410,7 +410,7 @@ int                *nSpaces;
      {
 	/* On traite les differents caracteres */
 	car = (UCHAR_T) (pBuffer->BuContent[i - 1]);
-	if (car == _SPACE_)
+	if (car == SPACE)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */
 	     charWidth = spaceWidth;
@@ -488,7 +488,7 @@ int                *height;
    if (pAb->AbVolume == 0)
      {
 	/* Symbol vide */
-	*width = CharacterWidth (_SPACE_, font);
+	*width = CharacterWidth (SPACE, font);
 	*height = hfont * 2;
      }
    else
@@ -539,7 +539,7 @@ int                *height;
 		    *width = CharacterWidth (109, font);	/*'m' */
 		    break;
 		 default:
-		    *width = CharacterWidth (_SPACE_, font);
+		    *width = CharacterWidth (SPACE, font);
 		    *height = hfont;
 		    break;
 	      }
@@ -2520,7 +2520,7 @@ int                 frame;
 			      /* Si la boite est justifiee */
 			      if (pBox->BxSpaceWidth != 0)
 				{
-				   i = pBox->BxSpaceWidth - CharacterWidth (_SPACE_, pBox->BxFont);
+				   i = pBox->BxSpaceWidth - CharacterWidth (SPACE, pBox->BxFont);
 				   /* On prend la largeur justifiee */
 				   width = width + i * nSpaces + pBox->BxNPixels;
 				   /* Ecart de largeur */

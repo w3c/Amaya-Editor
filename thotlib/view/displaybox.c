@@ -940,7 +940,7 @@ int                 frame;
 
 	   lgspace = pBox->BxSpaceWidth;
 	   if (lgspace == 0)
-	     lgspace = CharacterWidth (_SPACE_, pBox->BxFont);
+	     lgspace = CharacterWidth (SPACE, pBox->BxFont);
 
 	   /* Search the first displayable char */
 	   /* --------------------------------- */
@@ -951,7 +951,7 @@ int                 frame;
 	       restbl = newbl;
 	       x += lg;
 	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-	       if (car == _SPACE_) {
+	       if (car == SPACE) {
 		 lg = lgspace;
 		 if (newbl > 0) {
 		   newbl--;
@@ -996,16 +996,16 @@ int                 frame;
 	     while (indbuff <= indmax) {
 	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
 	       
-	       if (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || car == UNBREAKABLE_SPACE || car == _TABULATION_) {
+	       if (car == SPACE || car == THIN_SPACE || car == HALF_EM || car == UNBREAKABLE_SPACE || car == TAB) {
 		 /* display the last chars handled */
 		 dc = indbuff - nbcar;
 		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
 		 
-		 if (shadow && (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == _TABULATION_))
+		 if (shadow && (car == SPACE || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == TAB))
 		   DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
 		 else if (!ShowSpace) {
 		   /* Show the space chars */
-		   if (car == _SPACE_ || car == _TABULATION_) 
+		   if (car == SPACE || car == TAB) 
 		     DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
 		   else if (car == THIN_SPACE)
 		     DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
@@ -1016,7 +1016,7 @@ int                 frame;
 		 }    
 		 
 		 nbcar = 0;
-		 if (car == _SPACE_)
+		 if (car == SPACE)
 		   if (restbl > 0) {
 		     /* Pixel space splitting */
 		     x = x + lgspace + 1;

@@ -339,7 +339,7 @@ int                 zoom;
    JpegPrint produces postscript from a jpeg picture file          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                JpegPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
@@ -352,7 +352,7 @@ int                 PicXArea;
 int                 PicYArea;
 int                 PicWArea;
 int                 PicHArea;
-int                 fd;
+FILE               *fd;
 unsigned long       BackGroundPixel;
 
 #endif /* __STDC__ */
@@ -412,12 +412,12 @@ unsigned long       BackGroundPixel;
 	   ytmp = -delta;
 	   PicHArea = hif;
 	 }
-       fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf ((FILE *)fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
        break;
      case ReScale:
-       fprintf ((FILE *)fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf ((FILE *)fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
        wif = PicWArea;
        hif = PicHArea;
        break;
@@ -426,7 +426,7 @@ unsigned long       BackGroundPixel;
      }
 
    wim = w;
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "\n");
    NbCharPerLine = wim;
 
    for (y = 0; y < hif; y++)
@@ -437,18 +437,18 @@ unsigned long       BackGroundPixel;
 	  {
 
 
-	     fprintf ((FILE *) fd, "%02x%02x%02x",
+	     fprintf (fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
 	     pt++;
 	  }
-	fprintf ((FILE *) fd, "\n");
+	fprintf (fd, "\n");
      }
 
-   fprintf ((FILE *) fd, "\n");
-   fprintf ((FILE *) fd, "grestore\n");
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "\n");
+   fprintf (fd, "grestore\n");
+   fprintf (fd, "\n");
    free (buffer);
 
 }

@@ -359,7 +359,7 @@ STRING              applicationName;
    Patterns = Name_patterns;
 #endif /* NODISPLAY */
    /* load the message table of the Thot Library */
-   i = TtaGetMessageTable (_LibdialogueCST_, TMSG_LIB_MSG_MAX);
+   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
    switch (i)
 	 {
 	    case 0:

@@ -265,7 +265,7 @@ USTRING             text;
 		 case UNBREAKABLE_SPACE:
 		    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
 		    break;
-		 case _SPACE_:
+		 case SPACE:
 		    text[i] = (UCHAR_T) SHOWN_SPACE;
 		    break;
 	      }

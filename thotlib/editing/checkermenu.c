@@ -284,12 +284,12 @@ view                view;
 
    /* liste des caracteres speciaux dans le formulaire OPTIONS */
    TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect, NULL, 20, 1, TRUE);
-   TtaSetTextForm (SpellingBase + ChkrSpecial, _SpecialCharsCST_);
+   TtaSetTextForm (SpellingBase + ChkrSpecial, TEXT("@#$&+~"));
 #  endif /* _WINDOWS */
 
 /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
-   ustrncpy (RejectedChar, _SpecialCharsCST_, MAX_REJECTED_CHARS);	/* liste par defaut */
+   ustrncpy (RejectedChar, TEXT("@#$&+~"), MAX_REJECTED_CHARS);	/* liste par defaut */
 
    IgnoreUppercase = FALSE;
    IgnoreArabic = FALSE;

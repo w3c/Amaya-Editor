@@ -129,7 +129,7 @@ int                 zoom;
    XpmPrint converts an xpm file to PostScript.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XpmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void                XpmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                XpmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 STRING              fn;
@@ -142,7 +142,7 @@ int                 PicXArea;
 int                 PicYArea;
 int                 PicWArea;
 int                 PicHArea;
-int                 fd;
+FILE               *fd;
 unsigned long       BackGroundPixel;
 #endif /* __STDC__ */
 {
@@ -272,9 +272,9 @@ unsigned long       BackGroundPixel;
    wim = image.width;
    /* generation of the poscript , header Dumpimage2 + dimensions  */
    /* + picture location. Each pixel = RRGGBB in  hexa    */
-   fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-   fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+   fprintf (fd, "\n");
 
    NbCharPerLine = wim;
 
@@ -286,19 +286,19 @@ unsigned long       BackGroundPixel;
 
 	     /* RGB components generation */
 	     pt1 = (UCHAR_T) (*pt);
-	     fprintf ((FILE *) fd, "%02x%02x%02x",
+	     fprintf (fd, "%02x%02x%02x",
 		      (colorTab[pt1].red) & 0xff,
 		      (colorTab[pt1].green) & 0xff,
 		      (colorTab[pt1].blue) & 0xff);
 
 	     pt++;
 	  }
-	fprintf ((FILE *) fd, "\n");
+	fprintf (fd, "\n");
      }
 
-   fprintf ((FILE *) fd, "\n");
-   fprintf ((FILE *) fd, "grestore\n");
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "\n");
+   fprintf (fd, "grestore\n");
+   fprintf (fd, "\n");
 #  ifndef _WINDOWS
    XpmFreeXpmInfo (&info);
    XpmFreeXpmImage (&image);

@@ -839,7 +839,7 @@ Document            doc;
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   /* create a string containing the new CSS definition. */
-  ustrcpy (stylestring, _EMPTYSTR_);
+  ustrcpy (stylestring, TEXT(""));
   if (selType.ElTypeNum == 0)
     /* it's not an element type */
     {
@@ -940,7 +940,7 @@ Document            doc;
   if (!found && head)
     {
       /* the STYLE element doesn't exist we create it now */
-      el = TtaNewTree (doc, elType, _EMPTYSTR_);
+      el = TtaNewTree (doc, elType, TEXT(""));
       /* insert the new style element after the title if it exists */
       elType.ElTypeNum = HTML_EL_TITLE;
       title = TtaSearchTypedElementInTree (elType, SearchForward, head, head);
@@ -958,7 +958,7 @@ Document            doc;
     {
       /* there is no TEXT element within the STYLE element. We create it now */
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      child = TtaNewTree (doc, elType, _EMPTYSTR_);
+      child = TtaNewTree (doc, elType, TEXT(""));
       TtaInsertFirstChild (&child, el, doc);
       /* remember the element to be registered in the Undo queue */
       el = child;
@@ -1025,7 +1025,7 @@ Document            doc;
 	   /* create a Comment_line within the Comment */
 	   {
 	   elType.ElTypeNum = HTML_EL_Comment_line;
-           line = TtaNewTree (doc, elType, _EMPTYSTR_);
+           line = TtaNewTree (doc, elType, TEXT(""));
            TtaInsertFirstChild (&line, child, doc);
 	   child = TtaGetLastChild (line);
 	   insertNewLine = FALSE;
@@ -1045,8 +1045,8 @@ Document            doc;
     len = TtaGetTextLength (child);
     if (insertNewLine)
       {
-       TtaInsertTextContent (child, len, _NEWLINE_, doc);
-       len += ustrlen (_NEWLINE_);
+       TtaInsertTextContent (child, len, TEXT("\n"), doc);
+       len++;
       }
     TtaInsertTextContent (child, len, stylestring, doc);
     /* parse and apply this new CSS to the current document */

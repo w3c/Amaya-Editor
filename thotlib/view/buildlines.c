@@ -211,7 +211,7 @@ ThotBool            orgYComplete;
 	  {
 	    if (pBox->BxAbstractBox->AbLeafType == LtText)
 	      {
-		pBox->BxWidth -= pBox->BxNSpaces * CharacterWidth (_SPACE_, pBox->BxFont);
+		pBox->BxWidth -= pBox->BxNSpaces * CharacterWidth (SPACE, pBox->BxFont);
 		nSpaces += pBox->BxNSpaces;
 	      }
 
@@ -439,7 +439,7 @@ PtrTextBuffer      *pNewBuff;
    wordWidth = 0;
    spaceCount = 0;
    still = TRUE;
-   spaceWidth = CharacterWidth (_SPACE_, font);
+   spaceWidth = CharacterWidth (SPACE, font);
    spaceAdjust = spaceWidth;
    language = pBox->BxAbstractBox->AbLanguage;
 
@@ -465,7 +465,7 @@ PtrTextBuffer      *pNewBuff;
 	character = (UCHAR_T) (pBuffer->BuContent[charIndex - 1]);
 	if (character == NUL)
 	   carWidth = 0;
-	else if (character == _SPACE_)
+	else if (character == SPACE)
 	   carWidth = spaceAdjust;
 	else
 	   carWidth = CharacterWidth (character, font);
@@ -497,7 +497,7 @@ PtrTextBuffer      *pNewBuff;
 		     charIndex--;
 	       }
 	     /* Si le caractere courant est un blanc */
-	     else if (character == _SPACE_)
+	     else if (character == SPACE)
 	       {
 		  /* coupe sur le dernier blanc rencontre' */
 		  dummySpaces = 1;
@@ -607,7 +607,7 @@ PtrTextBuffer      *pNewBuff;
 		charIndex = 1;
 	     }
 	/* Si c'est un caractere blanc */
-	else if (character == _SPACE_)
+	else if (character == SPACE)
 	  {
 	     /* Cela peut etre un point de coupure */
 	     *pNewBuff = pBuffer;
@@ -649,7 +649,7 @@ PtrTextBuffer      *pNewBuff;
    while (still && *nChars > 0)
      {
 	character = (unsigned char) (pBuffer->BuContent[charIndex - 1]);
-	if (character == _SPACE_)
+	if (character == SPACE)
 	  {
 	     /* Est-ce que la coupure a lieu en fin de boite ? */
 	     if (*pNewBuff == NULL)
@@ -792,7 +792,7 @@ PtrTextBuffer      *pNewBuff;
    while (still)
      {
 	character = (unsigned char) ((*pNewBuff)->BuContent[*newIndex - 1]);
-	if (character == _SPACE_)
+	if (character == SPACE)
 	  {
 
 	     /* passe au caractere suivant */
@@ -1012,7 +1012,7 @@ ThotBool            force;
    if (lostPixels <= 0)
       spaceWidth = 0;
    else
-      spaceWidth = CharacterWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (SPACE, font);
 
    /* Creation de deux boites de coupure :                           */
    /* - dans le cas general si SearchBreak a trouve' un point de coupure */
@@ -1202,10 +1202,10 @@ int                *wordWidth;
 	else
 	  {
 	    /* Sinon on continue la recherche */
-	     if (character == _SPACE_)
+	     if (character == SPACE)
 	       {
 		 (*nSpaces)++;
-		 *boxWidth += CharacterWidth (_SPACE_, font);
+		 *boxWidth += CharacterWidth (SPACE, font);
 		 /* compare word widths */
 		 if (*wordWidth < wWidth)
 		   *wordWidth = wWidth;
@@ -1310,7 +1310,7 @@ PtrAbstractBox      pRootAb;
    if (lostPixels <= 0)
       spaceWidth = 0;
    else
-      spaceWidth = CharacterWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (SPACE, font);
 
    /* Creation de la boite suivante qui contient la fin de la chaine */
    /* - dans le cas general si SearchBreak a trouve' un point de coupure */
@@ -1835,7 +1835,7 @@ ThotBool           *changeSelectEnd;
 	pAb = pBox->BxAbstractBox;
 	if (pAb != NULL && pAb->AbLeafType == LtText)
 	  {
-	     x = CharacterWidth (_SPACE_, pBox->BxFont);
+	     x = CharacterWidth (SPACE, pBox->BxFont);
 	     /* met a jour les marques de selection */
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
 	       {
@@ -2223,7 +2223,7 @@ int                *height;
 		  lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
 		  if (lostPixels != 0)
 		    {
-		      lostPixels = lostPixels * CharacterWidth (_SPACE_, pBoxToBreak->BxFont);
+		      lostPixels = lostPixels * CharacterWidth (SPACE, pBoxToBreak->BxFont);
 		      noWrappedWidth += lostPixels;
 		    }
 		  if (pLine->LiLastPiece->BxType == BoDotted)
@@ -2835,7 +2835,7 @@ int                 frame;
 		  else
 		    {
 		       charIndex = (unsigned char) (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf - 1]);
-		       if (charIndex == _SPACE_ && pSelBox->BxSpaceWidth != 0)
+		       if (charIndex == SPACE && pSelBox->BxSpaceWidth != 0)
 			  pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 		       else
 			  pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
@@ -2933,7 +2933,7 @@ int                 frame;
 	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
-		  lostPixels = CharacterWidth (_SPACE_, pBox->BxFont);
+		  lostPixels = CharacterWidth (SPACE, pBox->BxFont);
 		  realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
 		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
 	       }

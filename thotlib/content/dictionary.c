@@ -269,7 +269,7 @@ char*               dictDirectory;
       if (TtaFileExist (tempbuffer) == 0)
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
-	  FindCompleteName (dictName, _LEXCST_, dictDirectory, tempbuffer, &i);
+	  FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
 	  if (TtaFileExist (tempbuffer) == 0)
 	    /* unknown file */
 	    ret = -1;
@@ -442,7 +442,7 @@ ThotBool            toTreat;
       if (toTreat)
 	FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       else
-	FindCompleteName (dictName, _LEXCST_, dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
     }
   if (readonly == FALSE)
     {

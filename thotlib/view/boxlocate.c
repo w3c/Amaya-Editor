@@ -2374,7 +2374,7 @@ int                *spacesNumber;
 	/* Calcule la largeur des blancs */
 	if (pBox->BxSpaceWidth == 0)
 	  {
-	     spaceWidth = CharacterWidth (_SPACE_, font);
+	     spaceWidth = CharacterWidth (SPACE, font);
 	     extraSpace = 0;
 	  }
 	else
@@ -2391,7 +2391,7 @@ int                *spacesNumber;
 	c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	if (c == 0)
 	   charWidth = 0;
-	else if (c == _SPACE_)
+	else if (c == SPACE)
 	   charWidth = spaceWidth;
 	else
 	   charWidth = CharacterWidth (c, font);
@@ -2404,13 +2404,13 @@ int                *spacesNumber;
 	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
-	     else if (c == _SPACE_)
+	     else if (c == SPACE)
 		charWidth = spaceWidth;
 	     else
 		charWidth = CharacterWidth (c, font);
 #endif
 
-	     if (c == _SPACE_)
+	     if (c == SPACE)
 	       {
 		  (*spacesNumber)++;
 		  if (extraSpace > 0)
@@ -2445,7 +2445,7 @@ int                *spacesNumber;
 	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
-	     else if (c == _SPACE_)
+	     else if (c == SPACE)
 		charWidth = spaceWidth;
 	     else
 		charWidth = CharacterWidth (c, font);
@@ -2462,7 +2462,7 @@ int                *spacesNumber;
 #ifdef STRUCT_EDIT
 	     /* BAlignment sur le caractere */
 	     *x = dx - charWidth;
-	     if (c == _SPACE_)
+	     if (c == SPACE)
 	       {
 		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
 		     (*x)--;

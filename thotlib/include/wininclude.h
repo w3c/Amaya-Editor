@@ -31,7 +31,7 @@ extern int        GetFrameNumber (ThotWindow);
 extern void       TtaHandleOneWindowEvent (MSG*);
 extern void       CreateOpenImgDlgWindow (HWND, STRING, int, int, int, int, int, int);
 extern void       CreateTableDlgWindow (int, int, int, int, int, int, int, int);
-extern void       WIN_ListSaveDirectory (int, STRING);
+extern void       WIN_ListSaveDirectory (int, STRING, STRING);
 extern void       ThotCallback (int, int, STRING data);
 extern void       WIN_TtaSwitchButton (Document, View, int, int, int, BOOL);
 extern void       SwitchIconMath (Document, View, ThotBool);

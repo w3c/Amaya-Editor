@@ -665,10 +665,8 @@ int                 y;
 #else  /* _WINDOWS */
    WNDCLASSEX  wndThotPaletteClass;
    int   frame;
-   /* static STRING szAppName; */
    MSG         msg;
 
-   /* szAppName = "ThotColorPalette"; */
    WIN_LastBg = -1;
    WIN_LastFg = -1;
 
@@ -683,7 +681,7 @@ int                 y;
       wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
       wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
       wndThotPaletteClass.lpszMenuName  = NULL;
-      wndThotPaletteClass.lpszClassName = _ThotColorPaletteCST_;
+      wndThotPaletteClass.lpszClassName = TEXT("ThotColorPalette");
       wndThotPaletteClass.cbSize        = sizeof(WNDCLASSEX);
       wndThotPaletteClass.hIconSm       = LoadIcon (hInstance, iconID);
 
@@ -691,7 +689,7 @@ int                 y;
          return FALSE;
    }
 
-   HwndColorPal = CreateWindow (_ThotColorPaletteCST_, TtaGetMessage (LIB, TMSG_COLORS),
+   HwndColorPal = CreateWindow (TEXT("ThotColorPalette"), TtaGetMessage (LIB, TMSG_COLORS),
                                DS_MODALFRAME | WS_POPUP | 
                                WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                ClickX, ClickY,

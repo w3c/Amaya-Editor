@@ -180,7 +180,7 @@ PtrDocument         pDoc;
 		   ok = XmlSimpleSave ((Document)IdentDocument (pDoc), buf, TRUE);
 		   /* if ok, should update all inclusions */
 		 }
-	       FindCompleteName (SaveFileName, _XMLElement_, SaveDirectoryName,
+	       FindCompleteName (SaveFileName, TEXT("xml"), SaveDirectoryName,
 				 docname, &i);
 	       if (!ok)
 		 {
@@ -214,7 +214,7 @@ PtrDocument         pDoc;
 			    ustrcmp (SaveDirectoryName, pDoc->DocDirectory) != 0) &&
 			   SaveDocWithMove)
 			 {
-			   FindCompleteName (pDoc->DocDName, _XMLElement_, 
+			   FindCompleteName (pDoc->DocDName, TEXT("xml"), 
 					     pDoc->DocDirectory, buf, &i);
 			   TtaFileUnlink (buf);
 			 }
@@ -292,7 +292,7 @@ int                 mode;
 	ok = interactiveSave (pDoc);
 	break;
       case 5:
-	ok = saveWithExtension (pDoc, _XMLElement_);
+	ok = saveWithExtension (pDoc, TEXT("xml"));
 	break;
       }
   return ok;

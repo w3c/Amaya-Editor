@@ -436,7 +436,7 @@ Document        doc;
   TtaNextSchemaExtension (doc, &tempSchema);
   while (tempSchema != NULL)
     {
-      ok = ok && XmlWriteString(xmlFile, _NEWLINE_);
+      ok = ok && XmlWriteString(xmlFile, TEXT("\n"));
       ok = ok && XmlWriteString(xmlFile, XML_NAMESPACE_ATTR);
       ok = ok && XmlWriteString(xmlFile, TEXT(":"));
       /* make and write the extension's prefix */
@@ -456,7 +456,7 @@ Document        doc;
   TtaNextNature (doc, &tempSchema);
   while (tempSchema != NULL)
     {
-      ok = ok && XmlWriteString(xmlFile, _NEWLINE_);
+      ok = ok && XmlWriteString(xmlFile, TEXT("\n"));
       ok = ok && XmlWriteString(xmlFile, XML_NAMESPACE_ATTR);
       ok = ok && XmlWriteString(xmlFile, TEXT(":"));
       /* make and write the extension's prefix */
@@ -869,7 +869,7 @@ ThotBool        taggedText;
 	    ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
 #endif
 	  ok = ok && XmlWriteCharData (xmlFile, tempChar);
-	  ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
+	  ok = ok && XmlWriteString (xmlFile, TEXT("\n"));
 	  TtaFreeMemory(tempChar);
 	  writeBeginTextTag = FALSE;
 	  /* Warning: No API for associating Text sheets */
@@ -1483,11 +1483,11 @@ ThotBool        withEvent;
       ok = ok && XmlWriteAttributes (xmlFile, el, doc, withEvent);
       ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
       
-      ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
+      ok = ok && XmlWriteString (xmlFile, TEXT("\n"));
       /* Write the schema presentations */
 
       ok = ok && XmlWriteSchemaPres (xmlFile, doc);
-      ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
+      ok = ok && XmlWriteString (xmlFile, TEXT("\n"));
 	
       if (ok)
 	/* We write root element's child */
