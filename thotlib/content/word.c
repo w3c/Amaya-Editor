@@ -280,15 +280,9 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
     {
       if (pEl->ElTypeNumber != CharString + 1 || iChar >= pEl->ElTextLength)
 	{
-	  if (AbsBoxSelectedAttr)
-	    /* selection within an attribute */
-	    pBuf = AbsBoxSelectedAttr->AbText;
-	  else
-	    {
-	      /* there is no buffer */
-	      pBuf = NULL;
-	      iChar = 1;
-	    }
+	  /* there is no buffer */
+	  pBuf = NULL;
+	  iChar = 1;
 	}
       else
 	/* first buffer of element */
@@ -438,15 +432,9 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
     {
       if (pEl->ElTypeNumber != CharString + 1 || iChar < 1)
 	{
-	  if (AbsBoxSelectedAttr)
-	    /* selection within an attribute */
-	    pBuf = AbsBoxSelectedAttr->AbText;
-	  else
-	    {
-	      /* there is no buffer */
-	      pBuf = NULL;
-	      iChar = 1;
-	    }
+	  /* there is no buffer */
+	  pBuf = NULL;
+	  iChar = 1;
 	}
       else
 	/* first buffer of element */
