@@ -3215,7 +3215,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 16);
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
@@ -3228,7 +3228,27 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-
+#ifdef o
+	   {
+	     
+	     ThotWidget button;
+	     
+	     /* create rulers button */
+	   button = gtk_button_new_with_label ("/");
+	   
+	   /* when the button is clicked, we call the "callback" function
+	    * with a pointer to "button 1" as its argument */
+	   /*
+	     (	   gtk_signal_connect (GTK_OBJECT (button), "clicked",
+	     GTK_SIGNAL_FUNC (callback), (gpointer) "button 1");
+	   */
+	   /* insert button into the upper left quadrant of the table */
+	   gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 1, 2,
+			     (GtkAttachOptions) (GTK_SHRINK),
+			     (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+	   gtk_widget_show (button);
+	   }
+#endif
 	   /* Put the statusbar */
 	   statusbar = gtk_statusbar_new ();
 	   gtk_widget_ref (statusbar);

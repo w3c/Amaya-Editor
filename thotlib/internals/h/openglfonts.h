@@ -78,10 +78,17 @@ static float          FaceKernAdvance (FT_Face face,
 				       unsigned int index2);
 static GL_glyph      *MakeBitmapGlyph (GL_font *font, unsigned int g);
 
-
+#ifndef PADDING
 #define PADDING 1
+#endif 
+
+#ifndef TRUE
 #define TRUE 1
+#endif 
+
+#ifndef FALSE
 #define FALSE 0
+#endif 
 
 
 

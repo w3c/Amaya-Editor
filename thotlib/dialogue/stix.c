@@ -1,5 +1,6 @@
 #ifdef _GL
 
+
 #include "openglfonts.h"
 #include "openglfont.h"
 
@@ -2104,7 +2105,7 @@ static void *MathBigEnclo = NULL;
 #define ESSTIXFONTDIR "\\ESSTIX\\ESSTIX"
 #else /*_WINDOWS*/
 #define FONTDIRDEFINE "/fonts"
-#define ESSTIXFONTDIR "/ESSTIX/ESSTIX"
+#define ESSTIXFONTDIR "/esstix/esstix"
 #endif /*_WINDOWS*/
 
 void GetStixFontDir (char *final)
@@ -2134,14 +2135,14 @@ void GetMathFontFromChar (char typesymb, void **font)
 	  GetStixFontDir(filename);
 	  strcat (filename, ESSTIXFONTDIR);
 	  strcat (filename, "10.ttf"); 
-      Greekfont = gl_font_init (filename, 'M', 12);
+	  Greekfont = gl_font_init (filename, 'M', 12);
 	}
     if (MathBigsymb == NULL)
 	{
-      GetStixFontDir(filename);
+	  GetStixFontDir(filename);
 	  strcat (filename, ESSTIXFONTDIR);
 	  strcat (filename, "6_.ttf"); 
-      MathBigsymb = gl_font_init (filename, 'M', 12);	
+	  MathBigsymb = gl_font_init (filename, 'M', 12);	
 	}
 	if (MathBigEnclo == NULL)
 	{
@@ -2246,3 +2247,17 @@ void FreeMathFonts()
 }
 
 #endif /*_GL*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+

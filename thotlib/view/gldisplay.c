@@ -52,6 +52,7 @@
 #include "xwindowdisplay_f.h"
 
 #include "glwindowdisplay.h"
+#include "stix.h"
 /*
  * Math Macros conversion from
  * degrees to radians and so on...
@@ -348,9 +349,6 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
-   int                 yf;
-   int                 yend, delta;
-   int                 wd, asc, hd;
 
   /* Integrals using esstix6 charmap
      52 - => 3x text 3 line eq
@@ -359,6 +357,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 
    if (h < 37)
      /* display a single glyph */
+
      {
 	   GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
      }
@@ -370,7 +369,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
    else
     /* display a single glyph */
      {
-	   GL_DrawStixChar (font, 52, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
+	GL_DrawStixChar (font, 52, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
      }
 }
 
@@ -381,12 +380,12 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 static int DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
 			  int h, PtrFont font, int fg)
 {
-	int xm, yf;
+  int xm, yf;
 
-	xm = x + ((l - CharacterWidth (symb, font)) / 2);
-    yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
-
-	DrawChar ((char) (symb), frame, xm, yf, font, fg);
+  xm = x + ((l - CharacterWidth (symb, font)) / 2);
+  yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
+  DrawChar ((char) (symb), frame, xm, yf, font, fg);
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -430,9 +429,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (0 && h < fh * 2 && l <= CharacterWidth (229, font))
      {
 	/* Only one glyph needed */
-	//DrawMonoSymb ('\345', frame, x, y, l, h, font, fg);
 	GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
-     
      }
    else
      {

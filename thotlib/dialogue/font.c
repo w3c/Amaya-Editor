@@ -421,8 +421,8 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #ifndef _GL
     return CharacterWidth (car, font);
 #else
-	return CharacterWidth (c, font);
-#endif _GL
+  return CharacterWidth (c, font);
+#endif /*_GL*/
 #else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */
@@ -1945,6 +1945,6 @@ void ThotFreeAllFonts (void)
 #ifdef _GL
   FreeMathFonts();
   FTLibraryFree ();
-#endif _GL
+#endif /*_GL*/
 }
 

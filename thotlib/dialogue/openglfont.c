@@ -20,9 +20,12 @@
 #define THOT_EXPORT extern
 #include "constmedia.h"
 #include "typemedia.h"
+/*For ttagetmemory and free*/
 #include "memory_f.h"
-
+/*for ttafileexists*/
+#include "fileaccess.h"
 #include "openglfonts.h"
+#include "font_f.h"
 
 
 
@@ -218,7 +221,9 @@ static GL_font *FontOpen (const char* fontname)
 	  FTLibraryInit ();
 	  init_done = TRUE;
   }
-	
+
+  if (TtaFileExist (fontname) == 0)
+    return NULL;
   font = (GL_font *) TtaGetMemory (sizeof (GL_font));
   font->face = (FT_Face *) TtaGetMemory (sizeof (FT_Face *));
   font->glyphList = NULL;
@@ -783,6 +788,7 @@ glfont = (GL_font*) font;
 int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size,
 		       int TotalHeight)
 {
+
   GL_font*			font;
   GL_glyph			*glyph;
   float				Xpos, Xpostest, XWidth,	maxy, miny;
@@ -849,8 +855,9 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 
 	  if ((i-1) == 0)
 	    {
-	      if (bitmaps[0]->pos.x > 0)
-		Xpostest += bitmaps[0]->pos.x;
+	      if (bitmaps[0])
+		if (bitmaps[0]->pos.x > 0)
+		  Xpostest += bitmaps[0]->pos.x;
 	    }
 	  else
 	    Xpostest += bitmaps[i-1]->pos.x;
@@ -872,8 +879,11 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
   while (i < size)
     {
       if (i == 0)
-	if (bitmaps[0]->pos.x > 0)
-	  left = bitmaps[0]->pos.x;
+	if (bitmaps[0])
+	  if (bitmaps[0]->pos.x > 0)
+	    left = bitmaps[0]->pos.x;
+	  else
+	    left = 0;
 	else
 	  left = 0;
       else
@@ -886,8 +896,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 		    Width);
       i++;
     }
-
-  x = x  + (float) (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0); 
+  if (bitmaps[0])
+    x = x  + (float) (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0); 
   y -= (float) miny;
 
   /* If y > height or x < 0 

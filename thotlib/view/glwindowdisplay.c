@@ -977,11 +977,6 @@ void TranslateChars (CHAR_T *text)
 }
 
 
-void DrawStyxSymb (CHAR_T symb, int frame, 
-				   int x, int y, int l,
-					int h, PtrFont font, 
-					int size, int fg, int TotalHeight);
-
 /*----------------------------------------------------------------------
   GL_DrawStixChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
@@ -1054,7 +1049,7 @@ int GL_UnicodeDrawString (int fg,
   ----------------------------------------------------------------------*/
 int CharacterWidth (int c, PtrFont font)
 {
-  int                 i, l;
+  int                 l;
   
   if (font == NULL)
     return 0;
@@ -1086,7 +1081,7 @@ int CharacterWidth (int c, PtrFont font)
 	  if (l == 0)
 		  l = gl_font_char_width ((void *) font, 'M');
 
-#ifndef _STYX
+#ifndef _GL
 #ifndef _WINDOWS
       if (c == 244)
 	{
@@ -1102,7 +1097,7 @@ int CharacterWidth (int c, PtrFont font)
 	    l = 4;
 	}
 #endif /*_WINDOWS*/
-#endif _STYX
+#endif /*_GL*/
     }
   return l;
 }
@@ -2051,6 +2046,7 @@ int  savetga (const char *filename,
   fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
   fwrite(Data, sizeof(unsigned char), length, screenFile);
   fclose(screenFile);
+  return 0;
 }
 #endif /*_PCLDEBUG*/
 

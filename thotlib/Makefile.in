@@ -123,6 +123,7 @@ DISPLAY_OBJ = \
 	dialogue/openglfont.o \
 	dialogue/fontserver.o \
 	dialogue/font.o \
+	dialogue/stix.o \
 	document/documentapi.o \
 	document/readpivot.o \
 	document/schemas.o \

@@ -233,7 +233,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
        {
 	 strcpy (filename, s);  
-#ifdef _PCLDEBUG
+#ifdef _PCLDEBUGFONT
 	 g_print ("\tXFT selection : %s", filename);
 #endif /*_PCLDEBUG*/
 	 ok = 1;
