@@ -155,12 +155,10 @@ extern HINSTANCE hInstance;
 
 BOOL             bError;
 BOOL             gbAbort;
-FARPROC          lpfnAbortProc = NULL;
 HWND             hDlgPrint     = NULL;
-HWND             hWndParent    = NULL;
+HWND             ghwndMain     = NULL;
 HWND             currentWindow;
 HWND             ghwndAbort;
-HWND             ghwndMain;
 static HWND      thotWindow    = (HWND) 0;
 static HINSTANCE hCurrentInstance ;
 
@@ -176,23 +174,54 @@ PVOID     pvReserved;
     return TRUE;
 }
 
-/* ----------------------------------------------------------------------*
- *                                                                       *
- * FUNCTION:AbortProc (HDC hPrnDC, short nCode)                          *
- *                                                                       *
- * PURPOSE :Checks message queue for messages from the "Cancel Printing" *
- *          dialog. If it sees a message, (this will be from a print     *
- *          cancel command), it terminates.                              *
- *                                                                       *
- * RETURNS :Inverse of Abort flag                                        *
- *                                                                       *
- * ----------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------- *
+ *                                                                        *
+ *  FUNCTION:    AbortDlgProc (standard dialog procedure INPUTS/RETURNS)  *
+ *                                                                        *
+ *  COMMENTS:    Handles "Abort" dialog messages                          *
+ *                                                                        *
+ * ---------------------------------------------------------------------- */
 #ifdef __STDC__
-BOOL CALLBACK AbortProc (HDC hPrnDC, int nCode)
+LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
-BOOL CALLBACK AbortProc (hPrnDC, nCode)
-HDC hPrnDC; 
-int nCode;
+LRESULT CALLBACK AbortDlgProc (hwnd, msg, wParam, lParam)
+HWND   hwnd; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC __ */
+{
+   switch (msg) {
+          case WM_INITDIALOG: ghwndAbort = hwnd;
+                              EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
+                              break;
+
+          case WM_COMMAND:
+               switch (LOWORD (wParam)) {
+                       case IDCANCEL: gbAbort = TRUE;
+                                      AbortDoc (TtPrinterDC);
+                                      EnableWindow  (ghwndMain, TRUE);
+                                      DestroyWindow (hwnd);
+                                      return TRUE;
+			   }
+               break;
+   }
+   return 0;
+}
+
+/* ---------------------------------------------------------------------- *
+ *                                                                        *
+ *  FUNCTION:    AbortProc                                                *
+ *                                                                        *
+ *  COMMENTS:    Standard printing abort proc                             *
+ *                                                                        *
+ * ---------------------------------------------------------------------- */
+#ifdef __STDC__
+BOOL CALLBACK AbortProc (HDC hdc, int error)
+#else  /* __STDC__ */
+BOOL CALLBACK AbortProc (hdc, error)
+HDC hdc; 
+int error;
 #endif /* __STDC__ */
 {
    MSG msg;
@@ -231,26 +260,10 @@ LPSTR  msg;
     bError     = FALSE;     /* no errors yet */
     gbAbort    = FALSE;     /* user hasn't aborted */
 
-    hWndParent = hWnd;      /* save for Enable at Term time */
-    ghwndMain  = hWnd;
-    lpfnAbortProc    = (WNDPROC) MakeProcInstance (AbortProc, hInst);
-
-    /* ghwndAbort = DialogBox (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), hWnd, (DLGPROC) AbortDlgProc); */
-    /* hDlgPrint = CreatePrintInProgressDlgWindow (hWndParent);
-
-    if (!hDlgPrint)
-        return FALSE; */
-
-    /* SetWindowText (hDlgPrint, msg);
-    EnableWindow (hWndParent, FALSE);*/        /* disable parent */
-
-    /*
-     * Use new printing APIs...Petrus Wong 12-May-1993
-     */
-    if (SetAbortProc (hDC, (ABORTPROC)lpfnAbortProc) <= 0) {
-       bError = TRUE;
-       return FALSE;
-    }
+    if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+       WinErrorBox (ghwndMain);
+    EnableWindow (ghwndMain, FALSE);
+    SetAbortProc (TtPrinterDC, AbortProc);
 
     memset(&DocInfo, 0, sizeof(DOCINFO));
     DocInfo.cbSize      = sizeof(DOCINFO);
@@ -261,7 +274,6 @@ LPSTR  msg;
         bError = TRUE;
         return FALSE;
     }
-    bError = FALSE;
 
     /* might want to call the abort proc here to allow the user to
      * abort just before printing begins */
@@ -282,8 +294,7 @@ FILE               *fout;
   NumberOfPages++;
 # ifdef _WINDOWS 
 	if (TtPrinterDC) {
-       if ((EndPage (TtPrinterDC)) <= 0)
-          WinErrorBox (NULL);
+    EndPage (TtPrinterDC);
 	} else {
          fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
          fflush (fout);
@@ -2321,7 +2332,7 @@ PtrDocument         pDoc;
       /* ... and inform the driver */
       Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
 
-      if (!InitPrinting (TtPrinterDC, thotWindow, hCurrentInstance, NULL))
+      if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))
          WinErrorBox (NULL);
    }
    
@@ -2486,9 +2497,15 @@ PtrDocument         pDoc;
 #  ifdef _WINDOWS
 	 if (TtPrinterDC) {
         if ((EndDoc (TtPrinterDC)) <= 0)
-           WinErrorBox (NULL);;
+           WinErrorBox (NULL);
+
         DeleteDC (TtPrinterDC);
 		TtPrinterDC = NULL;
+
+        if (!gbAbort) {
+           EnableWindow  (ghwndMain, TRUE);
+           DestroyWindow (ghwndAbort);
+		}
         return 0;
 	 } else {
           if (firstFrame != 0) {
@@ -2548,6 +2565,8 @@ boolean             assoc;
 #endif
 
 # ifdef _WINDOWS
+  if (gbAbort)
+     return;
   if (TtPrinterDC) {
      if ((StartPage (TtPrinterDC)) <= 0)
         WinErrorBox (NULL);
@@ -2949,9 +2968,9 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void PrintDoc (HWND hWnd, int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst, BOOL userAbort)
+void PrintDoc (HWND hWnd, int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst)
 #else  /* !__STDC__ */
-void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, userAbort)
+void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance)
 HWND      hWnd;
 int       argc;
 char**    argv;
@@ -2961,7 +2980,6 @@ int       depth;
 char*     tmpDocName; 
 char*     tmpDir;
 HINSTANCE hInst;
-BOOL      userAbort;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -3004,7 +3022,7 @@ char              **argv;
   DOT_PER_INCHE    = ScreenDPI;
   WIN_ReleaseDeviceContext ();
   PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-  ghwndAbort       = hWnd;
+  ghwndMain        = hWnd;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;
