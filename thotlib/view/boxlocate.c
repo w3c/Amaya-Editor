@@ -1719,18 +1719,14 @@ int               ym;
   PtrAbstractBox      pAb;
   PtrElement	      pEl;
   ViewFrame          *pFrame;
-  PtrDocument         pDoc;
-  int                 view;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 xref, yref;
   int                 pointselect;
-  ThotBool            assoc, histOpen;
   ThotBool            still, okH, okV;
 
-  GetDocAndView (frame, &pDoc, &view, &assoc);
   pFrame = &ViewFrameTable[frame - 1];
   /* by default no selected point */
   pointselect = 0;
@@ -1794,17 +1790,15 @@ int               ym;
 	  y = pBox->BxYOrg - pFrame->FrYOrg;
 	  width = pBox->BxWidth;
 	  height = pBox->BxHeight;
-	  histOpen = !pDoc->DocEditSequence;
-	  if (histOpen)
-	    OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
-	  if (pointselect != 0 && pBox->BxType != BoPicture)
+	  pEl = pBox->BxAbstractBox->AbElement;
+	  if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
 	    {
-	      pEl = pBox->BxAbstractBox->AbElement;
-	      if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
+	      if (pointselect != 0 && pBox->BxType != BoPicture)
 		{
 		  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'g')
 		    {
 		      LineModification (frame, pBox, pointselect, &x, &y);
+		      
 		      /* get back current changes */
 		      if (!pAb->AbWidth.DimIsPosition && pAb->AbEnclosing)
 			/* this rule is applied to the parent */
@@ -1845,57 +1839,55 @@ int               ym;
 			   pBox->BxXOrg + width + EXTRA_GRAPH,
 			   pBox->BxYOrg + height + EXTRA_GRAPH);
 		  RedrawFrameBottom (frame, 0, NULL);
-		  APPgraphicModify (pEl, pointselect, frame, FALSE);
 		}
-	    }
-	  else
-	    {
-	      /* set positions related to the window */
-	      xmin -= pFrame->FrXOrg;
-	      xmax -= pFrame->FrXOrg;
-	      ymin -= pFrame->FrYOrg;
-	      ymax -= pFrame->FrYOrg;
-	      /* execute the interaction */
-	      GeometryMove (frame, &x, &y, width, height, pBox, xmin, xmax, ymin, ymax, xm, ym);
-	      /* get back changes */
-	      x += pFrame->FrXOrg;
-	      y += pFrame->FrYOrg;
-	      /* get the position of reference point */
-	      switch (pBox->BxHorizEdge)
+	      else
 		{
-		case Right:
-		  xref = width;
-		  break;
-		case VertMiddle:
-		  xref = width / 2;
-		  break;
-		case VertRef:
-		  xref = pBox->BxVertRef;
-		  break;
-		default:
-		  xref = 0;
-		  break;
+		  /* set positions related to the window */
+		  xmin -= pFrame->FrXOrg;
+		  xmax -= pFrame->FrXOrg;
+		  ymin -= pFrame->FrYOrg;
+		  ymax -= pFrame->FrYOrg;
+		  /* execute the interaction */
+		  GeometryMove (frame, &x, &y, width, height, pBox, xmin, xmax, ymin, ymax, xm, ym);
+		  /* get back changes */
+		  x += pFrame->FrXOrg;
+		  y += pFrame->FrYOrg;
+		  /* get the position of reference point */
+		  switch (pBox->BxHorizEdge)
+		    {
+		    case Right:
+		      xref = width;
+		      break;
+		    case VertMiddle:
+		      xref = width / 2;
+		      break;
+		    case VertRef:
+		      xref = pBox->BxVertRef;
+		      break;
+		    default:
+		      xref = 0;
+		      break;
+		    }
+		  switch (pBox->BxVertEdge)
+		    {
+		    case Bottom:
+		      yref = height;
+		      break;
+		    case HorizMiddle:
+		      yref = height / 2;
+		      break;
+		    case HorizRef:
+		      yref = pBox->BxHorizRef;
+		      break;
+		    default:
+		      yref = 0;
+		      break;
+		    }
+		  NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 		}
-	      switch (pBox->BxVertEdge)
-		{
-		case Bottom:
-		  yref = height;
-		  break;
-		case HorizMiddle:
-		  yref = height / 2;
-		  break;
-		case HorizRef:
-		  yref = pBox->BxHorizRef;
-		  break;
-		default:
-		  yref = 0;
-		  break;
-		}
-	      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
+	      APPgraphicModify (pEl, pointselect, frame, FALSE);
 	    }
 	}
-      if (histOpen)
-	CloseHistorySequence (pDoc);
     }
 }
 

@@ -324,7 +324,8 @@ ThotBool            display;
 		}
 	      else
 		value = pRuleV->PrPosRule.PoDistance;
-	      dy += value;
+	      if (isPos)
+		dy += value;
 	      
 	      /* modify the distance in the specific rule */
 	      pRuleV->PrPosRule.PoDistance = dy;
@@ -472,7 +473,8 @@ ThotBool            display;
 		}
 	      else
 		value = pRuleH->PrPosRule.PoDistance;
-	      dx += value;
+	      if (isPos)
+		dx += value;
 
 	      /* modify the distance in the specific rule */
 	      pRuleH->PrPosRule.PoDistance = dx;
