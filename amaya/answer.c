@@ -21,6 +21,7 @@
 
 #include "init_f.h"
 #include "query_f.h"
+#include "AHTURLTools_f.h"
 
 /* Local definitions */
 
@@ -298,18 +299,31 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   
+   char const *realm = HTRequest_realm (request);
+   char *label;
+   char *host;
+
    if (reply && msgnum >= 0)
      {
-       /* Update the status bar */
-       TtaSetStatus (me->docid, 1,
-		     TtaGetMessage (AMAYA, AM_PLEASE_AUTHENTICATE), me->urlName);
-	
        /* initialise */
        Answer_name[0] = EOS;
        Lg_password = 0;
        Answer_password[0] = EOS;
-	
+
+       /* Update the status bar */
+       host = AmayaParseUrl (me->urlName, "", AMAYA_PARSE_HOST);
+       label = (char *) TtaGetMemory (((host) ? strlen (host) : 0)
+				     + strlen (TtaGetMessage (AMAYA, 
+						   AM_AUTHENTICATION_REALM))
+				     + strlen (realm)
+				     + 20); /*a bit more than enough memory */
+       sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
+		realm, 	((host) ? host : ""));
+       TtaSetStatus (me->docid, 1, label, NULL);
+       if (host)
+	 TtaFreeMemory (host);
+       TtaFreeMemory (label);
+
        InitFormAnswer (me->docid, 1);
        /* handle the user's answers back to the library */
        if (Answer_name[0] != EOS)

@@ -149,4 +149,5 @@ int                 AMAYA;
 #define AM_ALT                	      137
 #define AM_ALT_MISSING                138
 #define AM_PRINT_URL                  139
-#define AMAYA_MSG_MAX                 140
+#define AM_AUTHENTICATION_REALM	      140
+#define AMAYA_MSG_MAX                 141

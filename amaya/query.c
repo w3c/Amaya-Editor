@@ -25,7 +25,7 @@
 
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 5
-#define DEFAULT_MAX_SOCKET 8
+#define DEFAULT_MAX_SOCKET 64 
 #define DEFAULT_DNS_TIMEOUT 60
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 20000
@@ -1710,6 +1710,8 @@ char               *AppName;
 char               *AppVersion;
 #endif /* __STDC__ */
 {
+   char * strptr;
+
    /* If the Library is not already initialized then do it */
    if (!HTLib_isInitialized ())
       HTLibInit (AppName, AppVersion);
@@ -1745,9 +1747,11 @@ char               *AppVersion;
 
    /* Set up the default set of Authentication schemes */
    HTAAInit ();
-   HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
-		   HTDigest_delete);
-
+   /* activate MDA by defaul */
+   strptr = (char *) TtaGetEnvString ("ENABLE_MDA");
+   if (!strptr || (strptr && *strptr && strcasecmp (strptr, "no" )))
+     HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
+		     HTDigest_delete);
 
    /* Get any proxy settings */
    ProxyInit ();
