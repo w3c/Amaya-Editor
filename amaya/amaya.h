@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.1d"
+#define HTAppVersion "V1.2"
 
 #define URL_SEP '/'
 #define URL_STR "/"

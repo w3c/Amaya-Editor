@@ -1286,7 +1286,7 @@ int              frame;
   PtrAttribute        pAttr;
   PtrElement          pEl, pRefEl;
   PtrSSchema          pSS;
-  int                 attrNum;
+  int                 attrNum, span;
   boolean             found;
 
   /* look for the table */
@@ -1305,9 +1305,10 @@ int              frame;
 	{
 	  pEl = cell->AbElement;
 	  pSS = pEl->ElStructSchema;
-	  /* search the refered column */
 	  col = NULL;
-	  attrNum = GetAttrWithException (ExcColRef, pSS);
+	  span = 1;
+	  /* check if there is a colspan attribute */
+	  attrNum = GetAttrWithException (ExcColSpan, pSS);
 	  if (attrNum != 0)
 	    {
 	      /* search this attribute attached to the cell element */
@@ -1316,16 +1317,37 @@ int              frame;
 	      while (!found && pAttr != NULL)
 		if (pAttr->AeAttrNum == attrNum &&
 		    pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		  found = TRUE;
+		  {
+		    found = TRUE;
+		    if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
+		      span = pAttr->AeAttrValue;
+		  }
 		else
 		  pAttr = pAttr->AeNext;
-
-	      if (found && pAttr->AeAttrType == AtReferenceAttr &&
-		  pAttr->AeAttrReference != NULL &&
-		  pAttr->AeAttrReference->RdReferred != NULL)
+	    }
+	  if (span == 1)
+	    {
+	      /* search the refered column */
+	      attrNum = GetAttrWithException (ExcColRef, pSS);
+	      if (attrNum != 0)
 		{
-		  pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-		  col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
+		  /* search this attribute attached to the cell element */
+		  pAttr = pEl->ElFirstAttr;
+		  found = FALSE;
+		  while (!found && pAttr != NULL)
+		    if (pAttr->AeAttrNum == attrNum &&
+			pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		      found = TRUE;
+		    else
+		      pAttr = pAttr->AeNext;
+		  
+		  if (found && pAttr->AeAttrType == AtReferenceAttr &&
+		      pAttr->AeAttrReference != NULL &&
+		      pAttr->AeAttrReference->RdReferred != NULL)
+		    {
+		      pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+		      col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
+		    }
 		}
 	    }
 	}
