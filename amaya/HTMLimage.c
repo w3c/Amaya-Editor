@@ -49,7 +49,7 @@ LoadedImageDesc   **desc;
 #endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
-   char                localname[MAX_LENGTH];
+   char*               localname;
 
    *desc = NULL;
    sameImage = NULL;
@@ -57,6 +57,7 @@ LoadedImageDesc   **desc;
       return (FALSE);
    else if (IsHTTPPath (pathname))
      {
+	   localname = (char*) malloc (sizeof (char) * MAX_LENGTH);
 	/* It is an image loaded from the Web */
 	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
 	strcat (localname, name);
@@ -108,6 +109,7 @@ LoadedImageDesc   **desc;
    pImage->document = doc;
    pImage->elImage = NULL;
    *desc = pImage;
+   TtaFreeMemory (localname);
    if (sameImage != NULL)
      {
 	/* the image file exist for a different document */
@@ -210,7 +212,7 @@ void *context;
 #endif /* __STDC__ */
 {
    char               *pathname;
-   char                tempfile[MAX_LENGTH];
+   char*               tempfile; /* [MAX_LENGTH]; */
    LoadedImageDesc    *desc = (LoadedImageDesc *) context;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
@@ -223,7 +225,7 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-
+    tempfile = (char*) malloc (sizeof (char) * MAX_LENGTH);
 	/* rename the local file of the image */
 	strcpy (tempfile, desc->localName);
 	TtaFileUnlink (tempfile);
@@ -250,6 +252,7 @@ void *context;
 	     TtaFreeMemory ((char *) ctxPrev);
 	  }
      }
+   TtaFreeMemory (tempfile);
 }
 
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -311,8 +314,8 @@ void               *extra;
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char                pathname[MAX_LENGTH];
-  char                tempfile[MAX_LENGTH];
+  char*               pathname = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*               tempfile = (char*) malloc (sizeof (char) * MAX_LENGTH);
   boolean             update;
   boolean             newImage;
   ElemImage          *ctxEl;
@@ -433,6 +436,8 @@ void               *extra;
       if (attr != NULL && imageName)
 	TtaFreeMemory (imageName);
     }
+  TtaFreeMemory (pathname);
+  TtaFreeMemory (tempfile);
   TtaHandlePendingEvents ();
 }
 

@@ -88,7 +88,7 @@ Document            targetDoc;
    AttributeType       attrType;
    Attribute           attr;
    char               *value, *base;
-   char                tempURL[MAX_LENGTH];
+   char*               tempURL = (char*) malloc (sizeof (char) * MAX_LENGTH);
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -130,6 +130,7 @@ Document            targetDoc;
 	TtaSetAttributeText (attr, value, element, document);
 	TtaFreeMemory (base);
 	TtaFreeMemory (value);
+	TtaFreeMemory (tempURL);
      }
 }
 
@@ -202,7 +203,8 @@ Element             el;
    ElementType         elType;
    Element             elText;
    Language            lang;
-   char               *text, url[MAX_LENGTH];
+   char               *text;
+   char*               url = (char*) malloc (sizeof (char) * MAX_LENGTH);
    int                 length, i, space;
    boolean             found;
    boolean             withinHTML;
@@ -290,6 +292,7 @@ Element             el;
    MakeUniqueName (el, doc);
    /* set this new end-anchor as the new target */
    SetTargetContent (doc, attr);
+   TtaFreeMemory (url);
 }
 
 /*----------------------------------------------------------------------
@@ -530,7 +533,7 @@ Document     doc;
   AttributeType     attrType;
   Attribute         attr;
   char             *value;
-  char              url[MAX_LENGTH];
+  char*             url = (char*) malloc (sizeof (char) * MAX_LENGTH);
   int               length, i;
   boolean           change;
 
@@ -589,6 +592,7 @@ Document     doc;
 	 }
        TtaFreeMemory (value);
      }
+   TtaFreeMemory (url);
 }
 
 
@@ -700,9 +704,9 @@ NotifyElement      *event;
   SSchema             docSchema;
   int                 length, i, iName;
   char               *value, *base;
-  char                documentURL[MAX_LENGTH];
-  char                tempURL[MAX_LENGTH];
-  char                path[MAX_LENGTH];
+  char*               documentURL = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*               tempURL     = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*               path        = (char*) malloc (sizeof (char) * MAX_LENGTH);
 
   el = event->element;
   doc = event->document;
@@ -828,6 +832,9 @@ NotifyElement      *event;
     /* Check attribute NAME or ID in order to make sure that its value */
     /* unique in the document */
     MakeUniqueName (el, doc);
+  TtaFreeMemory (documentURL);
+  TtaFreeMemory (tempURL);
+  TtaFreeMemory (path);
 }
 
 
@@ -930,12 +937,13 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char                buffer[buflen];
+   char*               buffer = (char*) malloc (sizeof (char) * buflen);
    int                 length;
 
    length = buflen - 1;
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
    CreateAttrWidthPercentPxl (buffer, event->element, event->document);
+   TtaFreeMemory (buffer);
 }
 
 /*----------------------------------------------------------------------
@@ -996,7 +1004,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char                buffer[buflen];
+   char*               buffer = (char*) malloc (sizeof (char) * buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -1008,6 +1016,7 @@ NotifyAttribute    *event;
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
    CreateAttrIntSize (buffer, event->element, event->document);
    TtaSetDisplayMode (event->document, dispMode);
+   TtaFreeMemory (buffer);
 }
 
 /*----------------------------------------------------------------------
@@ -1055,7 +1064,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char                value[buflen];
+   char*               value = (char*) malloc (sizeof (char) * buflen);
    int                 length;
 
    value[0] = EOS;
@@ -1078,6 +1087,7 @@ NotifyAttribute    *event;
       HTMLSetAvisitedColor (event->document, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
       HTMLSetAactiveColor (event->document, value);
+   TtaFreeMemory (value);
 }
 
 

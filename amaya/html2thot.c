@@ -4202,7 +4202,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char                msgBuffer[MaxBufferLength];
+  char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
   boolean             sameLevel;
 
   /* search the MathML element name in the mapping table */
@@ -4214,6 +4214,7 @@ char               *GIname;
       sprintf (msgBuffer, "Unknown tag <%s>", GIname);
       ParseHTMLError (theDocument, msgBuffer);
       UnknownTag = TRUE;
+	  TtaFreeMemory (msgBuffer);
     }
   else
     {
@@ -4273,7 +4274,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char                msgBuffer[MaxBufferLength];
+  char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
   PtrClosedElement    pClose;
   boolean             sameLevel;
   SSchema	      schema;
@@ -4363,6 +4364,7 @@ char               *GIname;
 	      }
 	  }
      }
+  TtaFreeMemory (msgBuffer);
 }
 
 
@@ -4420,7 +4422,7 @@ static void         EndOfEndMathTag ()
 #endif
 {
    int                 entry;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
 
    /* seach the HTML tag in the mapping table */
    entry = MapMathGI (inputBuffer);
@@ -4437,6 +4439,7 @@ static void         EndOfEndMathTag ()
 	ParseHTMLError (theDocument, msgBuffer);
      }
    InitBuffer ();
+   TtaFreeMemory (msgBuffer);
 }
 #endif /* MATHML */
 
@@ -4455,7 +4458,7 @@ char                c;
    int                 entry;
    int                 i;
    boolean             ok;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
    SSchema	       schema;
 
    CloseBuffer ();
@@ -4531,6 +4534,7 @@ char                c;
 	  }
      }
    InitBuffer ();
+   TtaFreeMemory (msgBuffer);
 }
 
 
@@ -4592,7 +4596,7 @@ char                c;
    Element             child;
    Attribute           attr;
    char                translation;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
 
    CloseBuffer ();
 #ifdef MATHML
@@ -4680,6 +4684,7 @@ char                c;
 	      }
      }
    InitBuffer ();
+   TtaFreeMemory (msgBuffer);
 }
 
 
@@ -4828,7 +4833,7 @@ char                c;
    Element             child;
    char                translation;
    char                shape;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
    Language	       lang;
 
 #ifdef MATHML
@@ -5026,6 +5031,7 @@ char                c;
 #endif /* !STANDALONE */
      }
    InitBuffer ();
+   TtaFreeMemory (msgBuffer);
 }
 
 /*----------------------------------------------------------------------
@@ -5120,7 +5126,7 @@ char                c;
 #endif
 {
    int                 i;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
 
    EntityName[LgEntityName] = EOS;
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -5137,6 +5143,7 @@ char                c;
 	/* print an error message */
 	sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
 	ParseHTMLError (theDocument, msgBuffer);
+	TtaFreeMemory (msgBuffer);
      }
    LgEntityName = 0;
    ReadingHTMLentity = FALSE;
@@ -5155,7 +5162,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
    boolean	       OK;
 
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -5245,6 +5252,7 @@ unsigned char       c;
 	        EntityName[LgEntityName++] = EOS;
 	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
+			TtaFreeMemory (msgBuffer);
 		}
 	     /* next state is the return state from the entity subautomaton,
 		not the state computed by the automaton.
@@ -5291,7 +5299,7 @@ char                c;
 #endif
 {
    int                 i;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
 
 #ifdef MATHML
    if (WithinMathML && !ReadingHTMLentity)
@@ -5314,6 +5322,7 @@ char                c;
 	/* print an error message */
 	sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
 	ParseHTMLError (theDocument, msgBuffer);
+	TtaFreeMemory (msgBuffer);
      }
    LgEntityName = 0;
 }
@@ -5331,7 +5340,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   char                msgBuffer[MaxBufferLength];
+   char*               msgBuffer; /* [MaxBufferLength];*/
    boolean	       OK;
 
 #ifdef MATHML
@@ -5393,8 +5402,10 @@ unsigned char       c;
 	        /* print an error message */
 	        EntityName[LgEntityName++] = c;
 	        EntityName[LgEntityName++] = EOS;
+			msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
 	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
+			TtaFreeMemory (msgBuffer);
 		}
 	     /* next state is the return state from the entity subautomaton,
 		not the state computed by the automaton.
@@ -7165,6 +7176,7 @@ Document            doc;
 	theDocument = doc;
 	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	elType = TtaGetElementType (lastelem);
+#   ifdef MATHML
 	if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  {
 	    MathMLSSchema = elType.ElSSchema;
@@ -7172,6 +7184,7 @@ Document            doc;
 	  }
 	else 
 	  WithinMathML = FALSE;
+#endif /* MATHML */
 	rootElement = TtaGetMainRoot (theDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
@@ -7519,7 +7532,9 @@ char               *pathURL;
 	   TtaSetStructureChecking (1, theDocument);
 	   /* allow the user to edit the document */
 	   /***** TtaSetDocumentAccessMode(theDocument, 1); ****/
+#      ifdef MATHML 
 	   MathMLSSchema = NULL;
+#      endif /* MATHML */
 	   HTMLSSchema = NULL;
 	}
 	/* close the HTML file */

@@ -314,7 +314,7 @@ NotifyElement      *event;
   Document            doc;
   Language            lang;
   int                 len, base;
-  char                stylestring[1000];
+  char*               stylestring = (char*) malloc (1000 * sizeof (char));
 
   elClass = event->element;
   doc = event->document;
@@ -335,6 +335,7 @@ NotifyElement      *event;
       
       /* parse and apply this new CSS to the current document */
       ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+	  TtaFreeMemory (stylestring);
     }
 }
 
@@ -387,7 +388,7 @@ NotifyAttribute    *event;
 	/*
 	 * parse and apply the new style content.
 	 */
-	style = (char *) TtaGetMemory (len + 2);
+	style = (char*) TtaGetMemory (len + 2);
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
@@ -499,7 +500,7 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  char                stylestring[1000];
+  char*               stylestring = (char*) malloc (1000 * sizeof (char));
   char               *a_class;
   int                 len, base;
 
@@ -548,6 +549,7 @@ Document            doc;
     }
   /* parse and apply this new CSS to the current document */
   ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+  TtaFreeMemory (stylestring);
 }
 
 /*----------------------------------------------------------------------
@@ -569,7 +571,7 @@ char               *first;
   Attribute           attr;
   AttributeType       attrType;
   char                selector[100];
-  int                 free = size;
+  int                 Free = size;
   int                 len;
   int                 nb = 0;
   int                 index = 0;
@@ -582,7 +584,7 @@ char               *first;
       strcpy (&buf[index], first);
       len = strlen (first);
       len++;
-      free -= len;
+      Free -= len;
       index += len;
       nb++;
     }
@@ -609,7 +611,7 @@ char               *first;
 	      strcpy (&buf[index], selector);
 	      len = strlen (selector);
 	      len++;
-	      free -= len;
+	      Free -= len;
 	      index += len;
 	      nb++;
 	    }

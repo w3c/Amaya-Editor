@@ -131,11 +131,12 @@ boolean AHTEventInit (void)
     }
     if (!(HTSocketWin = CreateWindow(className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
                                      CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
- 	char space[50];
-       	HTTrace("HTLibInit.. Can't CreateWindow \"WWW_WIN_ASYNC\" - error:");
-	sprintf(space, "%ld\n", GetLastError());
-	HTTrace(space);
-    	return NO;
+       char* space = (char*) malloc (50 * sizeof (char));
+       HTTrace("HTLibInit.. Can't CreateWindow \"WWW_WIN_ASYNC\" - error:");
+       sprintf(space, "%ld\n", GetLastError());
+       HTTrace(space);
+	   TtaFreeMemory (space);
+       return NO;
     }
     HTwinMsg = WM_USER;  /* use first available message since app uses none */
     HTEventrg_setWinHandle  (HTSocketWin, HTwinMsg);

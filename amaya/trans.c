@@ -2335,7 +2335,9 @@ char               *data;
 		       if (elParent != NULL)
 			 {
 			   TtaSetStructureChecking (0, TransDoc);
+#              ifdef MATHML
 			   CheckMathElement (elParent);
+#              endif /* MATHML */
 			   TtaSetStructureChecking (1, TransDoc);
 			 } 
 		     }

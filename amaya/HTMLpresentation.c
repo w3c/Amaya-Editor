@@ -145,7 +145,7 @@ static void  AttrToSpan (elem, attr, doc)
   ElementType   elType;
   int		kind, len;
 #define ATTRLEN 64
-  char		oldValue[ATTRLEN];
+  char*	oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -162,6 +162,7 @@ static void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
+		  oldValue = (char*) malloc (sizeof (char) * ATTRLEN);
 	  TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (span, newAttr, doc);
@@ -169,6 +170,7 @@ static void  AttrToSpan (elem, attr, doc)
 	  TtaGiveTextAttributeValue (attr, oldValue, &len);
 	  TtaRemoveAttribute (elem, attr, doc);
 	  TtaSetAttributeText (newAttr, oldValue, span, doc);
+	  TtaFreeMemory (oldValue);
         }
     }
 }
@@ -277,7 +279,7 @@ Element             elem;
    AttributeType       attrType;
    Attribute           styleAttr;
 #define STYLELEN 1000
-   char                style[STYLELEN];
+   char*               style; /* [STYLELEN]; */
    int                 len;
 
    /* does the element have a Style_ attribute ? */
@@ -286,6 +288,7 @@ Element             elem;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
+   style = (char*) malloc (sizeof (char) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -306,6 +309,7 @@ Element             elem;
 	/* copy the style string into the style attribute */
 	TtaSetAttributeText (styleAttr, style, elem, doc);
      }
+   TtaFreeMemory (style);
 }
 
 
@@ -472,7 +476,8 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  char		value[ATTRLEN], oldValue[ATTRLEN];
+  char*	value    = (char*) malloc (sizeof (char) * ATTRLEN); 
+  char* oldValue = (char*) malloc (sizeof (char) * ATTRLEN);
   boolean	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -527,6 +532,8 @@ static void MoveAttrLang (oldAttr, el, doc)
         MoveAttrLang (newAttr, el, doc);
 	}
      }
+  TtaFreeMemory (value);
+  TtaFreeMemory (oldValue);
 }
 
 

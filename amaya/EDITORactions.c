@@ -36,8 +36,8 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   char                tempfile[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char*               tempfile = (char*) malloc (MAX_LENGTH * sizeof (char));
+   char*               suffix = (char*) malloc (MAX_LENGTH * sizeof (char));
    int                 val, i, j;
    Document            doc;
    boolean             exist;
@@ -118,7 +118,8 @@ View                view;
        UpdateContextSensitiveMenus (SelectionDoc);
    SelectionDoc = doc;
    UpdateContextSensitiveMenus (doc);
-
+   TtaFreeMemory (tempfile);
+   TtaFreeMemory (suffix);
 }
 
 /*----------------------------------------------------------------------
@@ -1258,11 +1259,12 @@ int                 attrNum;
    AttributeType       attrType;
    Attribute           attrCoords, attrX, attrY;
    Attribute           attrW, attrH, attrShape;
-   char               *text, buffer[100];
+   char               *text, *buffer;
    int                 x1, y1, x2, y2;
    int                 w, h;
    int                 length, shape, i;
 
+   buffer = (char*) malloc (100 * sizeof (char));
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
    if (elType.ElTypeNum != HTML_EL_AREA)
@@ -1383,6 +1385,7 @@ int                 attrNum;
 	  }
      }
    TtaSetAttributeText (attrCoords, text, element, document);
+   TtaFreeMemory (buffer);
    TtaFreeMemory (text);
 }
 
@@ -1402,7 +1405,7 @@ char               *shape;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape;
-   char                url[MAX_LENGTH];
+   char*                url = (char*) malloc (MAX_LENGTH * sizeof (char));
    int                 length, w, h;
    int                 firstchar, lastchar;
    DisplayMode         dispMode;
@@ -1414,14 +1417,18 @@ char               *shape;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-   if (el == NULL)
+   if (el == NULL) {
+	  TtaFreeMemory (url);
       /* no selection */
       return;
+   }
 
    elType = TtaGetElementType (el);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0) {
+	  TtaFreeMemory (url);
      /* not within HTML element */
      return;
+   }
    else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
 	/* The selection is on a IMG */
@@ -1487,9 +1494,11 @@ char               *shape;
 	   map = TtaGetParent (el);
 	else if (elType.ElTypeNum == HTML_EL_MAP)
 	   map = el;
-	else
+	else {
 	   /* cannot create the AREA */
+		TtaFreeMemory (url);
 	   return;
+	}
 
 	/* Search the Ref_IMG attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -1558,6 +1567,7 @@ char               *shape;
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el);
      }
+   TtaFreeMemory (url);
 }
 
 /*----------------------------------------------------------------------

@@ -425,8 +425,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    AttributeType attrType;
-    Attribute     attrHREF;
     switch (msg) {
            case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_URLEDIT, "");
@@ -722,7 +720,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND chkButton;
 	static char txt [500];
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -874,7 +871,8 @@ LPARAM lParam;
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
 				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, 
+										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -917,7 +915,7 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	int  index = 0;
-	int  i = 0;
+	UINT  i = 0;
 
 	HWND wndLangEdit;
 	HWND wndMessage1;
@@ -931,23 +929,27 @@ LPARAM lParam;
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
 				wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        10, 10, 200, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                        10, 10, 200, 20, hwnDlg, (HMENU) 99, 
+											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				wndLangList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         10, 40, 240, 200, hwnDlg, (HMENU) 1, hInstance, NULL);
+					                         10, 40, 240, 200, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 	            SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
 	            while (i < nbItem && langList[index] != '\0') {
-	                  SendMessage (wndLangList, LB_INSERTSTRING, i, &langList[index]);  
+	                  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &langList[index]);  
 	                  index += strlen (&langList[index]) + 1;	/* Longueur de l'intitule */
 					  i++;
 				}
 
 				wndLangEdit	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                         10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, hInstance, NULL);
+					                         10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				wndMessage2 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        10, 280, 200, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                        10, 280, 200, 20, hwnDlg, (HMENU) 99, 
+											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
 
 		   case WM_COMMAND:
@@ -1157,13 +1159,14 @@ LPARAM lParam;
 
 	            SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
 	            while (i < nbClass && classList[index] != '\0') {
-	                  SendMessage (wndListRule, LB_INSERTSTRING, i, &classList[index]);  
+	                  SendMessage (wndListRule, LB_INSERTSTRING, i, (LPARAM) &classList[index]);  
 	                  index += strlen (&classList[index]) + 1;	/* Longueur de l'intitule */
 					  i++;
 				}
 
 				wndEditRule	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                        10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, hInstance, NULL);
+					                        10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
+											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 			    SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
 				break;
@@ -1212,7 +1215,7 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	int  index = 0;
-	int  i = 0;
+	UINT  i = 0;
 
 	static HWND wndListRule;
 	static int  itemIndex;
@@ -1226,7 +1229,7 @@ LPARAM lParam;
 
 	            SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
 	            while (i < nbClass && classList[index] != '\0') {
-	                  SendMessage (wndListRule, LB_INSERTSTRING, i, &classList[index]);  
+	                  SendMessage (wndListRule, LB_INSERTSTRING, i, (LPARAM) &classList[index]);  
 	                  index += strlen (&classList[index]) + 1;	/* Longueur de l'intitule */
 					  i++;
 				}
@@ -1279,13 +1282,16 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    wndLabel = CreateWindow ("STATIC", currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                     90, 20, 160, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                     90, 20, 160, 20, hwnDlg, (HMENU) 99, 
+										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            90, 45, 160, 30, hwnDlg, IDC_WORDBUTTON, hInstance, NULL);
+                                            90, 45, 160, 30, hwnDlg, IDC_WORDBUTTON, 
+											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         90, 80, 160, 110, hwnDlg, (HMENU) 1, hInstance, NULL);
+					                         90, 80, 160, 110, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
@@ -1360,7 +1366,8 @@ LPARAM lParam;
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
 				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
+										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
 
 		   case WM_COMMAND:
@@ -1489,7 +1496,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND messageWnd;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");

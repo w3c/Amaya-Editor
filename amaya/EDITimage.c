@@ -64,8 +64,8 @@ char               *data;
   ElementType	     elType;
   Element            el, elStyle;
   Element            first, last;
-  char               tempfile[MAX_LENGTH];
-  char               tempname[MAX_LENGTH];
+  char*              tempfile = (char*) TtaGetMemory (MAX_LENGTH); /* tempfile[MAX_LENGTH]; */
+  char*              tempname = (char*) TtaGetMemory (MAX_LENGTH); /* tempname[MAX_LENGTH]; */
   int                i, c1;
   int                val;
   boolean            change;
@@ -239,6 +239,8 @@ char               *data;
     default:
       break;
     }
+	TtaFreeMemory (tempfile);
+	TtaFreeMemory (tempname);
 }
 
 /*----------------------------------------------------------------------
@@ -327,7 +329,7 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char                s[MAX_LENGTH];
+   char*               s = (char*) malloc (MAX_LENGTH * sizeof (char)); /* s[MAX_LENGTH]; */
    int                 i;
 
    /* there is a selection */
@@ -377,6 +379,7 @@ void ChangeBackgroundImage (document, view)
    BgDocument = document;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
+   TtaFreeMemory (s);
 }
 
 
@@ -399,9 +402,9 @@ char               *text;
 #endif /* __STDC__ */
 {
   char              *value, *base;
-  char               pathimage[MAX_LENGTH];
-  char               localname[MAX_LENGTH];
-  char               imagename[MAX_LENGTH];
+  char*              pathimage = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* pathimage[MAX_LENGTH]; */
+  char*              localname = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* localname[MAX_LENGTH]; */
+  char*              imagename = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* imagename[MAX_LENGTH]; */
   LoadedImageDesc   *desc;
 
   /* get the absolute URL of the image */
@@ -464,6 +467,9 @@ char               *text;
 	  ResetStop (doc);
 	}
     }
+  TtaFreeMemory (pathimage);
+  TtaFreeMemory (localname);
+  TtaFreeMemory (imagename);
 }
 
 /*----------------------------------------------------------------------
@@ -483,8 +489,8 @@ NotifyElement      *event;
   Element            elSRC, el;
   Document           doc;
   char              *text;
-  char               pathimage[MAX_LENGTH];
-  char               imagename[MAX_LENGTH];
+  char*              pathimage = (char*) malloc (MAX_LENGTH * sizeof (char)) ; /* pathimage[MAX_LENGTH]; */
+  char*              imagename = (char*) malloc (MAX_LENGTH * sizeof (char)) ; /* imagename[MAX_LENGTH]; */
 
    /* Select an image name */
    el = event->element;
@@ -522,7 +528,8 @@ NotifyElement      *event;
    TtaExtractName (text, pathimage, &imagename[7]);
    strcat (imagename, " ");
    TtaSetAttributeText (attr, imagename, elSRC, doc);
-
+   TtaFreeMemory (pathimage);
+   TtaFreeMemory (imagename);
 }
 
 
@@ -606,7 +613,7 @@ LoadedImageDesc   **desc;
 #endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous;
-   char                localname[MAX_LENGTH];
+   char*                localname = (char*) malloc (MAX_LENGTH * sizeof (char));
 
    if (!TtaFileExist (fullname))
       return (FALSE);
@@ -670,6 +677,7 @@ LoadedImageDesc   **desc;
      }
    pImage->status = IMAGE_MODIFIED;
    *desc = pImage;
+   TtaFreeMemory (localname);
    return (TRUE);
 }
 
@@ -713,7 +721,7 @@ Document            doc;
 		ImageURLs = next;
 	     if (next != NULL)
 		next->prevImage = previous;
-	     TtaFreeMemory ((char *) pImage);
+	     TtaFreeMemory ((char*) pImage);
 	     pImage = previous;
 	  }
 	/* next descriptor */

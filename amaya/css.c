@@ -490,7 +490,7 @@ CSSInfoPtr          css;
 	       }
 	     TtaFreeMemory (css->tempfile);
 	  }
-	TtaFreeMemory ((char *) css);
+	TtaFreeMemory (css);
      }
 }
 
@@ -1251,7 +1251,7 @@ int                 merge;
 	fclose (res);
 	return;
      }
-   buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+   buffer = (char*) TtaGetMemory (buf.st_size + 1000);
    if (buffer == NULL)
      {
 	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : out of mem\n", URL);
@@ -1372,7 +1372,7 @@ Document            doc;
 	    fclose (res);
 	  else
 	    {
-	      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	      buffer = (char*) TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else
@@ -1405,7 +1405,7 @@ Document            doc;
 	    fclose (res);
 	  else
 	    {
-	      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	      buffer = (char*) TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else

@@ -190,7 +190,7 @@ const char         *path;
    int                 i;
 
    if (!path)
-     return (FALSE);
+      return (FALSE);
 
    strcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
