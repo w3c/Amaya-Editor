@@ -13,10 +13,6 @@ extern void FrameToView (int frame,
 extern void FrameToRedisplay (ThotWindow w,
                                int frame,
                                void *ev);
-extern void FrameRedraw (int frame,
-                          Dimension width,
-                          Dimension height);
-
 extern gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data);
 
 extern void FrameHScrolledGTK (GtkAdjustment *w,
