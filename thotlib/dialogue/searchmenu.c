@@ -146,7 +146,6 @@ int                 ref;
    TtaNewSubmenu (NumMenuOrSearchText, ref, 0, TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
    TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   ActivateMenuWhereToSearch
@@ -158,7 +157,7 @@ static void         ActivateMenuWhereToSearch ()
    TtaRedrawMenuEntry (NumMenuOrSearchText, 1, NULL, -1, 1);
    TtaRedrawMenuEntry (NumMenuOrSearchText, 2, NULL, -1, 1);
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   CallbackWhereToSearch
@@ -483,10 +482,10 @@ int                 val;
 	    {
 	      /* on a trouve' et selectionne' */
 	      StartSearch = FALSE;
+#         ifndef _WINDOWS
 	      /* on reactive les entrees du sous-menu "Ou chercher" */
 	      ActivateMenuWhereToSearch ();
 	      /* efface le message "Pas trouve'" dans le formulaire */
-#         ifndef _WINDOWS
 	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
 #         endif /* !_WINDOWS */
 	    }
@@ -627,10 +626,10 @@ int                 val;
 		     StartSearch = FALSE;
 		     /* on a trouve' et selectionne'. On reactive les */
 		     /* entrees du sous-menu "Ou chercher" */
+#            ifndef _WINDOWS
 		     ActivateMenuWhereToSearch ();
 		     /* efface le message 'Pas trouve' dans la feuille de */
 		     /* saisie */
-#            ifndef _WINDOWS
 		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TEXT(" "));
 #            endif /* !_WINDOWS */
 		  }

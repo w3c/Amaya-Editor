@@ -3587,7 +3587,7 @@ void               *ctx_cbf;
    /*TtaHandlePendingEvents ();*/
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    UpdateSaveAsButtons
    Maintain consistency between buttons in the Save As dialog box
@@ -3608,6 +3608,7 @@ static void	UpdateSaveAsButtons ()
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, active);
 
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    SetFileSuffix
@@ -3933,8 +3934,8 @@ STRING              data;
 	   SaveAsText = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
-#       endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
+#       endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
@@ -3948,8 +3949,8 @@ STRING              data;
 	   SaveAsText = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
-#      endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
+#      endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 2:	/* "Save as Text" button */
@@ -3963,8 +3964,8 @@ STRING              data;
 	   SaveAsXHTML = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-#      endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
+#      endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 4:	/* "Copy Images" button */

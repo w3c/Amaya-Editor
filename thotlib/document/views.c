@@ -84,6 +84,10 @@
 #include "viewcommands_f.h"
 #include "writepivot_f.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 static AvailableView AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
 

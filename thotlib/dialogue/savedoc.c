@@ -69,6 +69,7 @@ static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 static int          PivotEntryNum;
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    UnsetEntryMenu
    displays as non active the "ent" entry of the menu referenced by
@@ -94,6 +95,7 @@ int                 ent;
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }				/*UnsetEntryMenu */
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    BuildSaveDocMenu

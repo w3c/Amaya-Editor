@@ -60,6 +60,7 @@ static PathBuffer     DirectoryDocToCreate;
 #include "structschema_f.h"
 #include "views_f.h"
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    CallbackConfirmMenu
    updates the confirmation menu.
@@ -71,9 +72,7 @@ void                CallbackConfirmMenu (ref, typeData, data)
 int                 ref;
 int                 typeData;
 STRING              data;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
 
@@ -103,7 +102,6 @@ STRING              data;
      }
 }
 
-
 /*----------------------------------------------------------------------
    CallbackNewDocMenu
    updates the createdoc menu
@@ -115,9 +113,7 @@ void                CallbackNewDocMenu (ref, typeData, data)
 int                 ref;
 int                 typeData;
 char*               data;
-
 #endif /* __STDC__ */
-
 {
    PathBuffer          docName;
    int                 i;
@@ -157,10 +153,8 @@ char*               data;
 			   {
 			      /* demande confirmation */
 			      usprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
-#                 ifndef _WINDOWS
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 			      TtaSetDialoguePosition ();
-#                 endif /* !_WINDOWS */
 			      TtaShowDialogue (NumFormConfirm, FALSE);
 			   }
 			 else
@@ -205,9 +199,7 @@ char*               data;
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryDocToCreate);
 				 BuildPathDocBuffer (BufDir, EOS, &i);
-#                ifndef _WINDOWS
 				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
-#                endif /* !_WINDOWS */
 			      }
 			 }
 		 }
@@ -220,9 +212,7 @@ char*               data;
 	       strcat (docName, NameDocToCreate);
            /* docName has to be encoded in Wide Character */
            /* We have to use Multbyte to Wide Character String conversion */
-		   /* @@@@@@@@@@@@@@@@@@@@ */
 	       TtaSetTextForm (NumZoneDocNameToCreate, ISO2WideChar (docName));
-		   /* @@@@@@@@@@@@@@@@@@@@ */
 	       break;
 	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */
@@ -230,7 +220,6 @@ char*               data;
 	       break;
 	 }
 }
-
 
 /*----------------------------------------------------------------------
    TtcCreateDocument
@@ -243,7 +232,6 @@ void                TtcCreateDocument (Document document, View view)
 void                TtcCreateDocument (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    PathBuffer          docName;
@@ -264,18 +252,14 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    parentWidget = TtaGetViewFrame (document, view);
-#  ifndef _WINDOWS
    TtaNewForm (NumFormCreateDoc, parentWidget, TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
-#  endif /* !_WINDOWS */
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, EOS, &nbitem);
    if (DirectoryDocToCreate[0]!=EOS)
      entry = SearchStringInBuffer (BufDir, DirectoryDocToCreate, nbitem);
-#  ifndef _WINDOWS
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1 && entry!= -1)
       TtaSetSelector (NumZoneDocDirToCreate, entry, NULL);
-#  endif /* !_WINDOWS */
    /* nom du document a creer */
    if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == EOS || entry == -1))
      {
@@ -309,30 +293,22 @@ View                view;
 	else
 	   length = 5;
 	/* cree le selecteur */
-#   ifndef _WINDOWS
 	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
-#   endif /* !_WINDOWS */
 	entry = 0;
 	if(ClassDocToCreate[0]!=EOS)
 	  entry = SearchStringInBuffer (BufMenu, ClassDocToCreate, nbitem);
 	/* initialise le selecteur sur sa premiere entree */
-#   ifndef _WINDOWS
 	TtaSetSelector (NumSelDocClassToCreate, entry, ClassDocToCreate);
-#   endif /* _WINDOWS */
      }
    else
       /* on n'a pas cree' de selecteur, on cree une zone de saisie */
      {
-#      ifndef _WINDOWS
        TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_TYPE), 30, 1, FALSE);
-#      endif /* !_WINDOWS */
        if(ClassDocToCreate[0]!=EOS)
 	 TtaSetTextForm (NumSelDocClassToCreate,ClassDocToCreate);
      }
    /* zone de saisie du nom du document a creer */
-#  ifndef _WINDOWS
    TtaNewTextForm (NumZoneDocNameToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
-#  endif /* !_WINDOWS */
    TtaSetTextForm (NumZoneDocNameToCreate, docName);
 
    /* Formulaire Confirmation creation */
@@ -340,15 +316,13 @@ View                view;
    ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = ustrlen (BufMenu) + 1;
    ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-#  ifndef _WINDOWS
    TtaNewDialogSheet (NumFormConfirm, parentWidget, NULL, 2, BufMenu, FALSE, 1, 'L');
 
-/* affichage du formulaire Creer document */
+   /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();
-#  endif /* !_WINDOWS */
    TtaShowDialogue (NumFormCreateDoc, FALSE);
 }
-
+#endif /* !_WINDOWS */
 
 
 

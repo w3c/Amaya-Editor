@@ -437,9 +437,6 @@ STRING              pathname;
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
 
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#  else /* _WINDOWS */
-   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
-#  endif /* _WINDOWS */
    if (TextFormat)
      {
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
@@ -447,6 +444,9 @@ STRING              pathname;
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, FALSE);
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, FALSE);
      }
+#  else /* _WINDOWS */
+   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
+#  endif /* _WINDOWS */
 }
 
 

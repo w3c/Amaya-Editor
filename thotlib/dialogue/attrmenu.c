@@ -725,30 +725,28 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-  int                 i, lgmenu, val;
-  int                 form, subform;
-  CHAR_T                bufMenu[MAX_TXT_LEN];
-  Document            doc;
-# ifndef _WINDOWS
-  CHAR_T                title[MAX_NAME_LENGTH + 2];
-# else  /* _WINDOWS */
-  WIN_pAttr1 = pAttr1;
-  WIN_currAttr	= currAttr;
-# endif /* _WINDOWS */
+   int                 i, lgmenu, val;
+   int                 form, subform;
+   CHAR_T                bufMenu[MAX_TXT_LEN];
+   Document            doc;
+#  ifndef _WINDOWS
+   CHAR_T                title[MAX_NAME_LENGTH + 2];
+#  else  /* _WINDOWS */
+   WIN_pAttr1 = pAttr1;
+   WIN_currAttr	= currAttr;
+#  endif /* _WINDOWS */
 
-  doc = (Document) IdentDocument (pDoc);
-  /* detruit la feuille de dialogue et la recree */
-  ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-  i = ustrlen (bufMenu) + 1;
-  ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
-  if (required)
-    {
+   doc = (Document) IdentDocument (pDoc);
+   /* detruit la feuille de dialogue et la recree */
+   ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   i = ustrlen (bufMenu) + 1;
+   ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
+   if (required) {
       form = NumMenuAttrRequired;
-      if (MandatoryAttrFormExists)
-	{
-	  TtaUnmapDialogue (NumMenuAttrRequired);
-	  TtaDestroyDialogue (NumMenuAttrRequired);
-	}
+      if (MandatoryAttrFormExists) {
+         TtaUnmapDialogue (NumMenuAttrRequired);
+         TtaDestroyDialogue (NumMenuAttrRequired);
+	  } 
 #     ifndef _WINDOWS 
       TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 #     else  /* _WINDOWS */
@@ -756,124 +754,113 @@ int                 view;
       WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
 #     endif /* _WINDOWS */
       MandatoryAttrFormExists = TRUE;
-    }
-  else
-    {
-      form = NumMenuAttr;
-      if (AttrFormExists)
-	{
-	  TtaUnmapDialogue (NumMenuAttr);
-	  TtaDestroyDialogue (NumMenuAttr);
-	}
-#     ifndef _WINDOWS
-      TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
-#     else  /* _WINDOWS */
-      isForm = FALSE;
-#     endif /* _WINDOWS */
-      AttrFormExists = TRUE;
-    }
+   } else {
+          form = NumMenuAttr;
+          if (AttrFormExists) {
+             TtaUnmapDialogue (NumMenuAttr);
+             TtaDestroyDialogue (NumMenuAttr);
+		  } 
+#         ifndef _WINDOWS
+          TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
+#         else  /* _WINDOWS */
+          isForm = FALSE;
+#         endif /* _WINDOWS */
+          AttrFormExists = TRUE;
+   }  
 
 #  ifdef _WINDOWS
    ustrncpy (WIN_title, pAttr1->AttrName, MAX_NAME_LENGTH);
 #  else  /* !_WINDOWS */
    ustrncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
 #  endif /* _WINDOWS */
-   switch (pAttr1->AttrType)
-     {
-     case AtNumAttr:
-       /* attribut a valeur numerique */
-       subform = form + 1;
-#      ifndef _WINDOWS
-       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, TRUE);
-       TtaAttachForm (subform);
-#      endif /* !_WINDOWS */
-       if (currAttr == NULL)
-          i = 0;
-       else
-            i = currAttr->AeAttrValue;
+   switch (pAttr1->AttrType) {
+          case AtNumAttr: /* attribut a valeur numerique */
+               subform = form + 1;
+#              ifndef _WINDOWS
+               TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, TRUE);
+               TtaAttachForm (subform);
+#              endif /* !_WINDOWS */
+               if (currAttr == NULL)
+                  i = 0;
+               else
+                    i = currAttr->AeAttrValue;
 
-#      ifndef _WINDOWS
-       TtaSetNumberForm (subform, i);
-#      else /* !_WINDOWS */
-       WIN_AtNumAttr  = TRUE;
-       WIN_AtTextAttr = FALSE;
-       WIN_AtEnumAttr = FALSE;
-       usprintf (formRange, TEXT("%d .. %d"), -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
-       formValue = i;
-#      endif /* _WINDOWS */
-       break;
+#              ifndef _WINDOWS
+               TtaSetNumberForm (subform, i);
+#              else /* !_WINDOWS */
+               WIN_AtNumAttr  = TRUE;
+               WIN_AtTextAttr = FALSE;
+               WIN_AtEnumAttr = FALSE;
+               usprintf (formRange, TEXT("%d .. %d"), -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
+               formValue = i;
+#              endif /* _WINDOWS */
+               break;
 
-     case AtTextAttr:
-       /* attribut a valeur textuelle */
-       subform = form + 2;
-#      ifndef _WINDOWS
-       TtaNewTextForm (subform, form, title, 40, 1, FALSE);
-       TtaAttachForm (subform);
-       if (currAttr == NULL)
-          TtaSetTextForm (subform, "");
-       else if (currAttr->AeAttrText == NULL)
-            TtaSetTextForm (subform, "");
-       else
-            TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
-#      else  /* _WINDOWS */
-       WIN_AtNumAttr  = FALSE;
-       WIN_AtTextAttr = TRUE;
-       WIN_AtEnumAttr = FALSE;
-#      endif /* _WINDOWS */
-       break;
+          case AtTextAttr: /* attribut a valeur textuelle */
+               subform = form + 2;
+#              ifndef _WINDOWS
+               TtaNewTextForm (subform, form, title, 40, 1, FALSE);
+               TtaAttachForm (subform);
+               if (currAttr == NULL)
+                  TtaSetTextForm (subform, "");
+               else if (currAttr->AeAttrText == NULL)
+                    TtaSetTextForm (subform, "");
+               else
+                    TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
+#              else  /* _WINDOWS */
+               WIN_AtNumAttr  = FALSE;
+               WIN_AtTextAttr = TRUE;
+               WIN_AtEnumAttr = FALSE;
+#              endif /* _WINDOWS */
+               break;
 
-     case AtEnumAttr:
-       /* attribut a valeurs enumerees */
-       subform = form + 3;
-       /* cree un menu de toutes les valeurs possibles de l'attribut */
-       lgmenu = 0;
-       val = 0;
-       /* boucle sur les valeurs possibles de l'attribut */
-       while (val < pAttr1->AttrNEnumValues)
-	 {
-#      ifdef _WINDOWS
-	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
-#      else  /* !_WINDOWS */
-	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
-#      endif /* _WINDOWS */
-	   if (lgmenu + i < MAX_TXT_LEN)
-	     {
-#          ifndef _WINDOWS
-	       bufMenu[lgmenu] = 'B';
-	       ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
-#          else  /* _WINDOWS */
-	       ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
-#          endif /* _WINDOWS */
-	       val++;
-	     }
-	   lgmenu += i;
-	 }
+          case AtEnumAttr: /* attribut a valeurs enumerees */
+               subform = form + 3;
+               /* cree un menu de toutes les valeurs possibles de l'attribut */
+               lgmenu = 0;
+               val = 0;
+               /* boucle sur les valeurs possibles de l'attribut */
+               while (val < pAttr1->AttrNEnumValues) {
+#                    ifdef _WINDOWS 
+                     i = ustrlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
+#                    else  /* !_WINDOWS */
+                     i = ustrlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
+#                    endif /* _WINDOWS */
+                     if (lgmenu + i < MAX_TXT_LEN) {
+#                       ifndef _WINDOWS
+                        bufMenu[lgmenu] = 'B';
+                        ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+#                       else  /* _WINDOWS */
+                        ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+#                       endif /* _WINDOWS */
+                        val++;
+					 } 
+                     lgmenu += i;
+			   }
 
-#      ifndef _WINDOWS
-       /* cree le menu des valeurs de l'attribut */
-       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, TRUE);
-       TtaAttachForm (subform);
-       /* initialise le menu avec la valeur courante */
-       val = -1;
-       if (currAttr != NULL)
-          val = currAttr->AeAttrValue - 1;
-       TtaSetMenuForm (subform, val);
-#      else  /* _WINDOWS */
-       nbDlgItems = val;
-       WIN_AtNumAttr  = FALSE;
-       WIN_AtTextAttr = FALSE;
-       WIN_AtEnumAttr = TRUE;
-#      endif /* _WINDOWS */
-       break;
+#              ifndef _WINDOWS
+               /* cree le menu des valeurs de l'attribut */
+               TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, TRUE);
+               TtaAttachForm (subform);
+               /* initialise le menu avec la valeur courante */
+               val = -1;
+               if (currAttr != NULL)
+                  val = currAttr->AeAttrValue - 1;
+               TtaSetMenuForm (subform, val);
+#              else  /* _WINDOWS */
+               nbDlgItems = val;
+               WIN_AtNumAttr  = FALSE;
+               WIN_AtTextAttr = FALSE;
+               WIN_AtEnumAttr = TRUE;
+#              endif /* _WINDOWS */
+               break;
 
-     case AtReferenceAttr:
-       /* attribut reference, on ne fait rien */
-       break;
+          case AtReferenceAttr: /* attribut reference, on ne fait rien */
+               break;
 
-     default:
-       break;
-     }
-}
+          default: break;
+   } 
+} 
 
 
 /*----------------------------------------------------------------------

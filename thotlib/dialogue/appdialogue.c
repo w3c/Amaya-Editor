@@ -1151,13 +1151,6 @@ int                 doc;
        item++;
      }
    
-#  ifdef _WINDOWS
-   /* <<<<<<<<<<<<<<<<<<
-   currentMenu = button; 
-   =====================
-   >>>>>>>>>>>>>>>>>>>>*/
-#  endif /* _WINDOWS */
-
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep,
@@ -1165,13 +1158,6 @@ int                 doc;
    else
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep, 
 		      string, NULL);
-
-#  ifdef _WINDOWS
-   /* <<<<<<<<<<<<<<<<<<
-   currentMenu = button; 
-   =====================
-   >>>>>>>>>>>>>>>>>>>>*/
-#  endif /* _WINDOWS */
 
    /* traite les sous-menus de l'item de menu */
    item = 0;
@@ -2459,9 +2445,6 @@ int                 doc;
 	   if (Main_Wd == 0)
 	     WinErrorBox (WIN_Main_Wd);
 	   else {
-#ifdef AMAYA_DEBUG
-	     fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
-#endif /* AMAYA_DEBUG */
 	     /* store everything. */
 	     FrMainRef[frame]            = Main_Wd;
 	     FrRef[frame]                = hwndClient;
@@ -3389,75 +3372,68 @@ PtrDocument  pDoc;
 ThotBool     on;
 #endif /* __STDC__ */
 {
-#ifndef _GTK
-#ifndef _WINDOWS 
-  CHAR_T                fontname[100];
-  CHAR_T                text[20];
-#else /* _WINDOWS */
-  HMENU               hMenu;
-#endif /* _WINDOWS */
-  int                 view, assoc, frame;
-  int                 ref, item;
+#  ifndef _GTK
+#  ifndef _WINDOWS 
+   CHAR_T              fontname[100];
+   CHAR_T              text[20];
+#  else /* _WINDOWS */
+   HMENU               hMenu;
+#  endif /* _WINDOWS */
+   int                 view, assoc, frame;
+   int                 ref, item;
 
-  if (pDoc == NULL)
-    return;
-  for (view = 0; view < MAX_VIEW_DOC; view++)
-    {
-      if (pDoc->DocView[view].DvPSchemaView > 0)
-	{
-	  frame = pDoc->DocViewFrame[view];
-	  if (frame != 0 && FrameTable[frame].MenuUndo != -1)
-	    {
-	      ref = FrameTable[frame].MenuUndo;
-	      item = FrameTable[frame].EntryUndo;
-#ifdef _WINDOWS
-	      hMenu = WIN_GetMenu (frame);
-	      if (on)
-		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-	      else
-		EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* !_WINDOWS */
-	      if (on)
-		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-	      else if (TtWDepth > 1)
-		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	      else
-		{
-		  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
-		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-		}
-#endif /* _WINDOWS */
-	    }
-	}
-    }
-  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-    {
-      frame = pDoc->DocAssocFrame[assoc];
-      if (frame != 0 && FrameTable[frame].MenuUndo != -1)
-	{
-	  ref = FrameTable[frame].MenuUndo;
-	  item = FrameTable[frame].EntryUndo;
-#ifdef _WINDOWS
-	  hMenu = WIN_GetMenu (frame);
-	  if (on)
-	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-	  else
-	    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* !_WINDOWS */
-	  if (on)
-	    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-	  else if (TtWDepth > 1)
-	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	  else
-	    {
-	      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
-	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-	    }
-#endif /* _WINDOWS */
-	}
-    }
-#endif /* _GTK */
-}
+   if (pDoc == NULL)
+      return;
+   for (view = 0; view < MAX_VIEW_DOC; view++) {
+       if (pDoc->DocView[view].DvPSchemaView > 0) {
+          frame = pDoc->DocViewFrame[view];
+          if (frame != 0 && FrameTable[frame].MenuUndo != -1) {
+             ref = FrameTable[frame].MenuUndo;
+             item = FrameTable[frame].EntryUndo;
+#            ifdef _WINDOWS
+             hMenu = WIN_GetMenu (frame);
+             if (on)
+                EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+             else
+                 EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#            else  /* !_WINDOWS */
+             if (on)
+                TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+             else if (TtWDepth > 1)
+                  TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	         else {
+                  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+                  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+			 }  
+#            endif /* _WINDOWS */
+		  }  
+	   }  
+   } 
+   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++) {
+       frame = pDoc->DocAssocFrame[assoc];
+       if (frame != 0 && FrameTable[frame].MenuUndo != -1) {
+          ref = FrameTable[frame].MenuUndo;
+          item = FrameTable[frame].EntryUndo;
+#         ifdef _WINDOWS
+          hMenu = WIN_GetMenu (frame);
+          if (on)
+             EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+          else
+              EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#         else  /* !_WINDOWS */
+          if (on)
+             TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+          else if (TtWDepth > 1)
+               TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+          else {
+               FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+               TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+		  }
+#         endif /* _WINDOWS */
+	   } 
+   } 
+#  endif /* _GTK */
+} 
 
 /*----------------------------------------------------------------------
   SwitchRedo enables (on=TRUE) or disables (on=FALSE) the Redo

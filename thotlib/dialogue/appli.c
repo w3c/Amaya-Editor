@@ -1307,13 +1307,19 @@ LPARAM      lParam;
     SetFocus (FrRef [frame]);
     return 0;
 
+  case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
-    SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
+       if (frame != -1)
+          SetFocus (FrRef [frame]);
+    SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0;
 
   case WM_IME_CHAR:
+  case WM_SYSCHAR:
   case WM_CHAR:
-    SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
+       if (frame != -1)
+          SetFocus (FrRef [frame]);
+    SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0;
 
   case WM_NOTIFY: {
@@ -2191,12 +2197,7 @@ PtrAbstractBox     *pave;
 #        else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
          curFrame = GetFrameNumber (event.hwnd);
-		 /*@@@@@@@@@@@@@@@@@@@@*/
-         /* if (curFrame != -1) {
-            if (!hAccel[curFrame] || !TranslateAccelerator (FrMainRef[curFrame], hAccel[curFrame], &event))
-               TtaHandleOneWindowEvent (&event);
-		 } else */
-               TtaHandleOneWindowEvent (&event);
+         TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
 #        endif /* !_WINDOWS */
      }

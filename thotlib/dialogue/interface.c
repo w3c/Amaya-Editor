@@ -1390,8 +1390,8 @@ void TtaMainLoop () {
       TtaHandleOneEvent (&ev);
 #else  /* !_WINDOWS */
       if (GetMessage (&msg, NULL, 0, 0)) {
-         if (currentFrame >= 1)
-            SetFocus (FrRef[currentFrame]);
+         /* if (currentFrame >= 1)
+            SetFocus (FrRef[currentFrame]); */
          TtaHandleOneWindowEvent (&msg);
 	  }
 #endif /* _WINDOWS */

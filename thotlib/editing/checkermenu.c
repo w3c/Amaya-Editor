@@ -597,13 +597,14 @@ STRING              data;
 	    {
 	      /* Est-ce encore vrai */
 	      GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
-	      if (pDocSel == ChkrRange->SDocument)
-		{
-		  /* Il faut reactiver les entree */
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
-		}
+#         ifndef _WINDOWS
+	      if (pDocSel == ChkrRange->SDocument) {
+             /* Il faut reactiver les entree */
+             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
+             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
+             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
+		  } 
+#         endif /* !_WINDOWS */
 	    }
 	break;
       case ChkrSelectProp:

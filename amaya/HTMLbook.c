@@ -765,14 +765,14 @@ View                view;
 
    /* activates the Print form */
     TtaShowDialogue (BasePrint+NumFormPrint, FALSE);
+    if (textFile) {
+       /* invalid dialogue entries */
+       TtaRedrawMenuEntry (BasePrint+NumMenuOptions, 1, NULL, -1, FALSE);
+       TtaRedrawMenuEntry (BasePrint+NumMenuOptions, 2, NULL, -1, FALSE);	      
+	}
 #   else  /* _WINDOWS */
     CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir, BasePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint); 
 #   endif /* _WINDOWS */
-    if (textFile)
-      {
-	/* invalid dialogue entries */
-	TtaRedrawMenuEntry (BasePrint+NumMenuOptions, 1, NULL, -1, FALSE);
-	TtaRedrawMenuEntry (BasePrint+NumMenuOptions, 2, NULL, -1, FALSE);	      }
 }
 
 /*----------------------------------------------------------------------

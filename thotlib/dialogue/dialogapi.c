@@ -218,11 +218,7 @@ extern CHAR_T         docToOpen [256];
 #undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
 
-#ifdef _I18N_
-#define APPFILENAMEFILTER   L"HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#else  /* !_I18N_ */
-#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#endif /* !_I18N_ */
+#define APPFILENAMEFILTER   TEXT("HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0")
 
 
 void terminate__Fv (void) {
@@ -261,7 +257,8 @@ void WinErrorBox (hWnd)
 HWND hWnd;
 #endif /* __STDC__ */
 {
-#  ifndef _AMAYA_RELEASE_
+/* @@@@@@@@@@
+#  ifndef _AMAYA_RELEASE_ */
    int                 msg;
    CHAR_T                str[200];
 
@@ -279,6 +276,7 @@ HWND hWnd;
        usprintf (str, TEXT("Error %d : %s\n"), WinLastError, win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
+/* @@@@@@@@@@@
 #  endif /* _AMAYA_RELEASE_ */
 }
 
@@ -375,243 +373,6 @@ void WIN_ReleaseDeviceContext ()
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 }
-
-#if 0 /* @@@@@@@@@@@@@@@@@@@@ */
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static BOOL GetKey (STRING word, BYTE *fVirt, CHAR_T *key)
-#else  /* !__STDC */
-static BOOL GetKey (word, fVirt, key)
-STRING      word;
-BYTE       *fVirt;
-CHAR_T     *key;
-#endif /* __STDC__ */
-{
-  if (!ustrcmp (word, TEXT("F1")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F1;
-    }
-  else if (!ustrcmp (word, TEXT("F2")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F2;
-    }
-  else if (!ustrcmp (word, TEXT("F3")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F3;
-    }
-  else if (!ustrcmp (word, TEXT("F4")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F4;
-    }
-  else if (!ustrcmp (word, TEXT("F5")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F5;
-    }
-  else if (!ustrcmp (word, TEXT("F6")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F6;
-    }
-  else if (!ustrcmp (word, TEXT("F7")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F7;
-    }
-  else if (!ustrcmp (word, TEXT("F8")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F8;
-    }
-  else if (!ustrcmp (word, TEXT("F9")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F9;
-    }
-  else if (!ustrcmp (word, TEXT("F10")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F10;
-    }
-  else if (!ustrcmp (word, TEXT("F11")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F11;
-    }
-  else if (!ustrcmp (word, TEXT("F12")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F12;
-    }
-  else if (!ustrcmp (word, TEXT("F13")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F13;
-    }
-  else if (!ustrcmp (word, TEXT("F14")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F14;
-    }
-  else if (!ustrcmp (word, TEXT("F15")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F15;
-    }
-  else if (!ustrcmp (word, TEXT("F16")))
-    {
-      *fVirt |= FVIRTKEY;
-      *key = VK_F16;
-    }
-  else if (ustrlen (word) == 1)
-    {
-      *key = word [0];
-      /* we must ignore the shift here */
-      *fVirt &= ~FSHIFT;
-    }
-  else
-    return FALSE;
-  return TRUE;
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static BOOL parseAccelerator (STRING accelerator, BYTE *fVirt, CHAR_T *key)
-#else  /* !__STDC */
-static BOOL parseAccelerator (accelrator, fVirt, key)
-STRING      accelerator;
-BYTE       *fVirt;
-CHAR_T     *key;
-#endif /* __STDC__ */
-{
-   STRING   pc;
-   STRING   pw;
-   CHAR_T   word [1024];
-   BOOL     getEquivChar = FALSE;
-
-   *fVirt = FNOINVERT;
-   if (!accelerator || accelerator [0] == EOS)
-      return FALSE;
-
-   pw = &word [0];
-   pc = accelerator;
-   while (*pc) {
-         while (*pc == SPACE || *pc == TAB)
-               pc++;
-         while (*pc != SPACE && *pc != TAB)
-               *pw++ = *pc++;
-         *pw = EOS;
-       
-         if (!ustrcmp (word, TEXT("Ctrl"))) 
-            return FALSE;
-         else if (!ustrcmp (word, TEXT("Alt")))
-              *fVirt |= FALT;
-         else if (!ustrcmp (word, TEXT("Shift")))
-              *fVirt |= FSHIFT;
-	 
-         while (*pc == SPACE || *pc == TAB)			  
-               pc++;
-	 
-         pw = &word [0];
-         while (*pc && *pc != SPACE && *pc != TAB)
-               *pw++ = *pc++;
-         *pw = EOS;
-	 
-         if (!ustrcmp (word, TEXT("Ctrl"))) 
-            return FALSE;
-         else if (!ustrcmp (word, TEXT("Alt"))) {
-              *fVirt |= FALT;
-              getEquivChar = TRUE;
-		 } else if (!ustrcmp (word, TEXT("Shift"))) {
-                *fVirt |= FSHIFT;
-                getEquivChar = TRUE;
-		 } else if (!GetKey (word, fVirt, key)) 
-                return FALSE;
-	 
-         if (getEquivChar) {
-            while (*pc && *pc == SPACE || *pc == TAB)			  
-                  pc++;
-	     
-            pw = &word [0];
-            /* accept specifics characters + = - etc., but without shift */
-            while (*pc >= '!' && *pc <= '~')
-                  *pw++ = *pc++;
-            *pw = EOS;
-            if (!GetKey (word, fVirt, key))	
-               return FALSE;
-		 } 
-
-         while (*pc) 
-               pc++;
-   } 
-   return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void addAccelerator (int frame, BYTE fVirt, CHAR_T key, int cmd)
-#else  /* __STDC__ */
-void addAccelerator (fVirt, key, cmd)
-BYTE fVirt; 
-CHAR_T key;
-int  cmd;
-#endif /* __STDC__ */
-{
-   ACCEL* pAccelData = NULL;
-   ACCEL* pCurAccel  = NULL;
-   HANDLE hAccelData = NULL;
-   int    nNumAccel  = 1;
-
-   int  i     = 0;
-   BOOL found = FALSE;
-
-   /* If accelerator table exists, get the number of items. */
-   if (hAccel [frame])
-      nNumAccel = CopyAcceleratorTable (hAccel [frame], NULL, 0) + 1;
-
-   /* Allocate an array of ACCEL structures. */
-   hAccelData = GlobalAlloc (GHND, sizeof (ACCEL) * nNumAccel);
-   if (hAccelData)
-      pAccelData = (ACCEL*) GlobalLock (hAccelData);
-
-   /* If an accelerator table exists, copy the items into the newly allocated array. */
-
-   if (hAccel [frame] && pAccelData) {
-      CopyAcceleratorTable (hAccel [frame], pAccelData, nNumAccel - 1);
-
-      DestroyAcceleratorTable (hAccel [frame]);
-      hAccel [frame] = NULL;
-   }
-
-   /* Add the new menu option and accelerator key */
-   if (pAccelData) {
-      /* Get a pointer to the new accelerator key in the array. */
-      pCurAccel = (ACCEL*) (pAccelData + nNumAccel - 1);
-
-      /* Set up a new accelerator for the the new menu option. */
-      pCurAccel->fVirt = fVirt;
-      pCurAccel->cmd   = cmd;
-      pCurAccel->key   = (WORD) key;
-
-      /* Create the new accelerator table. */
-      hAccel [frame] = CreateAcceleratorTable (pAccelData, nNumAccel);
-
-      GlobalUnlock (hAccelData);
-
-   if (hAccelData)
-      GlobalFree (hAccelData);
-
-   }
-}
-#endif /* @@@@@@@@@@@@@@@@@@@@ */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -713,15 +474,12 @@ ThotWindow hScroll ;
    return -1;
 }
 
-/*----------------------------------------------------------------------
-   WIN_GetDeviceContext :  select a Device Context for a given       
-   thot window.                                                
-  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 HMENU WIN_GetMenu (int frame)
 #else  /* !__STDC__ */
-HMENU WIN_GetMenu (int frame)
-#endif /* __STDC__ */
+HMENU WIN_GetMenu (frame)
+int frame;
+#endif /* !__STDC__ */
 {
     return (GetMenu (FrMainRef [frame]));
 }
@@ -1301,7 +1059,6 @@ struct Cat_Context *catalogue;
 	  }
      }
 }
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire.                         
@@ -1320,9 +1077,7 @@ caddr_t             call_d;
    register int        n;
    int                 ent;
    struct E_List      *adbloc;
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
    struct Cat_Context *catalogue;
 
    /* Affiche le formulaire */
@@ -1340,13 +1095,8 @@ caddr_t             call_d;
 	     if (adbloc->E_Free[ent] == TEXT('N'))
 	       {
 		  catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
-#                 ifndef _WINDOWS
 		  if (catalogue->Cat_Widget != 0)
 		     XtManageChild (catalogue->Cat_Widget);
-#                 else  /* _WINDOWS */
-                  ShowWindow (catalogue->Cat_Widget, SW_SHOWNORMAL);
-		  UpdateWindow (catalogue->Cat_Widget);
-#                 endif /* _WINDOWS */
 	       }
 
 	     /* Faut-il passer au bloc suivant ? */
@@ -1365,7 +1115,6 @@ caddr_t             call_d;
 	n = 0;
 	w = parentCatalogue->Cat_Widget;
 	n = 0;
-#       ifndef _WINDOWS
 	XtSetArg (args[n], XmNx, (Position) ShowX);
 	n++;
 	XtSetArg (args[n], XmNy, (Position) ShowY);
@@ -1379,16 +1128,9 @@ caddr_t             call_d;
 	    XtSetValues (PopShell, args, n);
 	    XtPopup (PopShell, XtGrabNonexclusive);
 	  }
-#       else  /* _WINDOWS */
-        ShowWindow (w, SW_SHOWNORMAL);
-        UpdateWindow (w);
-        ShowWindow (GetParent (w), SW_SHOWNORMAL);
-        UpdateWindow (GetParent (w));
-#       endif /* _WINDOWS */
      }
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire avec positionnement.     
   ----------------------------------------------------------------------*/
@@ -3007,12 +2749,9 @@ STRING              equiv;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
-                          if (&equiv[eindex] != EOS) {
-							  /*@@@@@@@@@@@@@@@@@@@@*/
-                             /* if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                addAccelerator (currentFrame, fVirt, key, ref + i); */
+                          if (&equiv[eindex] != EOS) 
                              usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); 
-                          }
+                          
                           eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
@@ -3326,13 +3065,7 @@ CHAR_T                button;
 	return;
      }
    catalogue = CatEntry (ref);
-#  ifdef _WINDOWS
-#  ifdef AMAYA_DEBUG
-   fprintf (stderr, "TtaNewPopup(ref %d, parent %X, title %s, number %d,\n text %s, equiv %s, button %d)\n",
-	    ref, parent, title, number, text, equiv, button);
-   fprintf (stderr, "catalogue : %X\n", catalogue);
-#  endif AMAYA_DEBUG
-#  else  /* _WINDOWS */
+#  ifndef _WINDOWS
    title_string = 0;
 #  endif /* !_WINDOWS */
    menu = 0;
@@ -3538,12 +3271,6 @@ CHAR_T                button;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
-				          /*
-                          if (&equiv[eindex] != EOS) {
-                             if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                addAccelerator (1, fVirt, key, ref + i);
-                          }
-						  */
                           eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
@@ -4171,12 +3898,6 @@ ThotBool            react;
                          /* Note l'accelerateur */
                          if (equiv != NULL) {
 #                           ifdef _WINDOWS
-							 /*
-                            if (&equiv[eindex] != EOS) {
-                               if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                  addAccelerator (1, fVirt, key, ref);
-							}
-							*/
                             eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* _WINDOWS */
                             title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
@@ -4371,8 +4092,6 @@ ThotBool            react;
                             if (equiv != NULL) {
 #                              ifdef _WINDOWS
                                if (&equiv[eindex] != EOS) {
-                                  /*if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                     addAccelerator (currentFrame, fVirt, key, ref + i);*/
                                   usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
 							   } 
                                eindex += ustrlen (&equiv[eindex]) + 1;
@@ -5079,7 +4798,7 @@ STRING              text;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
@@ -5202,7 +4921,7 @@ int                 activate;
 	  }
      }
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    DestForm de'truit un formulaire ou une feuille de saisie:          
@@ -5513,7 +5232,7 @@ int                 ref;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
    de dialogue :                                                   
@@ -5531,11 +5250,9 @@ STRING              title;
 {
    struct Cat_Context *catalogue;
 
-#  ifndef _WINDOWS
    int                 n;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
-#  endif /* _WINDOWS */
 
    if (ref == 0)
      {
@@ -5551,17 +5268,14 @@ STRING              title;
       TtaError (ERR_invalid_reference);
    else
      {
-#       ifndef _WINDOWS
 	title_string = XmStringCreateSimple (title);
 	n = 0;
 	XtSetArg (args[n], XmNdialogTitle, title_string);
 	n++;
 	XtSetValues (catalogue->Cat_Widget, args, n);
-#       endif /* _WINDOWS */
      }
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
@@ -6032,7 +5746,6 @@ CHAR_T                button;
 {
    NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, D_DONE, CAT_DIALOG);
 }
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
@@ -6101,14 +5814,11 @@ int                 ref;
 	     /* marque que le sous-menu est attache */
 	     adbloc->E_Free[entry] = TEXT('N');
 	     /* affiche le widget sur l'ecran */
-#            ifndef _WINDOWS
 	     if (XtIsManaged (parentCatalogue->Cat_Widget))
 		XtManageChild (catalogue->Cat_Widget);
-#            endif /* _WINDOWS */
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaDetachForm detache le catalogue au formulaire ou au feuillet    
@@ -6177,16 +5887,13 @@ int                 ref;
 	     /* marque que le sous-menu est detache */
 	     adbloc->E_Free[entry] = TEXT('Y');
 	     /* retire le widget de l'ecran */
-#            ifndef _WINDOWS
 	     if (XtIsManaged (catalogue->Cat_Widget))
 		XtUnmanageChild (catalogue->Cat_Widget);
-#            endif /* _WINDOWS */
 	  }
 
      }
 }
 
-#ifndef _WINDOWS 
 /*----------------------------------------------------------------------
    TtaNewSelector cre'e un se'lecteur dans un formulaire :            
    Le parame`tre ref donne la re'fe'rence pour l'application.         
@@ -6530,9 +6237,7 @@ ThotBool            react;
      }
    TtaFreeMemory ( item);
 }
-#endif /* !_WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaActiveSelector rend actif le  se'lecteur.                       
   ----------------------------------------------------------------------*/
@@ -6546,10 +6251,7 @@ int                 ref;
 {
    ThotWidget          w;
    struct Cat_Context *catalogue;
-
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -6562,11 +6264,9 @@ int                 ref;
      {
 	/* Recupere le widget du selecteur */
 	w = (ThotWidget) catalogue->Cat_Entries;
-#       ifndef _WINDOWS
 	XtSetArg (args[0], XmNsensitive, TRUE);
 	XtSetValues (w, args, 1);
 	XtManageChild (w);
-#       endif /* _WINDOWS */
      }
 }
 
@@ -6583,11 +6283,7 @@ int                 ref;
 {
    ThotWidget          w;
    struct Cat_Context *catalogue;
-
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
-
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -6600,16 +6296,12 @@ int                 ref;
      {
 	/* Recupere le widget du selecteur */
 	w = (ThotWidget) catalogue->Cat_Entries;
-#       ifndef _WINDOWS
 	XtSetArg (args[0], XmNsensitive, FALSE);
 	XtSetValues (w, args, 1);
 	XtManageChild (w);
-#       endif /* _WINDOWS */
      }
 }
-#endif /* !_WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
    Le parame`tre ref donne la re'fe'rence du catalogue.               
@@ -6984,9 +6676,7 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    int                 lg;
-#  endif  /* !_WINDOWS */
    struct Cat_Context *catalogue;
    ThotWidget          w;
 
@@ -7003,7 +6693,6 @@ STRING              text;
      {
         w = (ThotWidget) catalogue->Cat_Entries;
         /* Si la feuille de saisie est reactive */
-#       ifndef _WINDOWS
         if (catalogue->Cat_React)
            XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 
@@ -7014,9 +6703,6 @@ STRING              text;
         /* Si la feuille de saisie est reactive */
         if (catalogue->Cat_React)
         XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#       else  /* _WINDOWS */
-        SetWindowText (w, text) ;
-#       endif /* _WINDOWS */
      }
 }
 
@@ -7236,10 +6922,8 @@ int                 val;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS 
    CHAR_T              text[10];
    int                 lg;
-#  endif /* !_WINDOWS */
    ThotWidget          wtext;
    struct Cat_Context *catalogue;
 
@@ -7267,7 +6951,6 @@ int                 val;
 	wtext = catalogue->Cat_Entries->E_ThotWidget[1];
 
 	/* Desactive la procedure de Callback */
-#       ifndef _WINDOWS
 	if (catalogue->Cat_React)
 	  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
@@ -7279,7 +6962,6 @@ int                 val;
 	/* Reactive la procedure de Callback */
 	if (catalogue->Cat_React)
 	  XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-#       endif /* _WINDOWS */
      }
 }
 
@@ -7311,11 +6993,7 @@ ThotBool            remanent;
 #endif /* __STDC__ */
 {
    int                 n;
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  else  /* _WINDOWS */
-   POINT               curPoint;
-#  endif /* _WINDOWS */
 
    ThotWidget          w;
    struct Cat_Context *catalogue;
@@ -7340,10 +7018,8 @@ ThotBool            remanent;
 	TtaError (ERR_invalid_reference);
 	return;
      }
-#  ifndef _WINDOWS
    else if (XtIsManaged (w))
       XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
-#  endif /* _WINDOWS */
    /*===========> Active un pop-up menu */
    else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL)
      {
@@ -7360,23 +7036,12 @@ ThotBool            remanent;
 
 	/*** Positionne le pop-up a la position courante du show ***/
 	n = 0;
-#       ifndef _WINDOWS
 	XtSetArg (args[n], XmNx, (Position) ShowX);
 	n++;
 	XtSetArg (args[n], XmNy, (Position) ShowY);
 	n++;
 	XtSetValues (w, args, n);
 	XtManageChild (w);
-#       else  /* _WINDOWS */
-	if (catalogue->Cat_Type == CAT_POPUP) {
-       GetCursorPos (&curPoint);
-	   if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-		   WinErrorBox (WIN_Main_Wd);
-	} else {
-          ShowWindow (w, SW_SHOWNORMAL);
-          UpdateWindow (w);
-    }
-#       endif /* _WINDOWS */
      }
    /*===========> Active un formulaire */
    else if (((catalogue->Cat_Type == CAT_FORM)
@@ -7400,10 +7065,8 @@ ThotBool            remanent;
 	    || catalogue->Cat_Type == CAT_DIALOG
 	    || catalogue->Cat_Type == CAT_FORM)
 	  {
-#            ifndef _WINDOWS
 	     XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
 	     XtSetValues (w, args, 1);
-#            endif /* _WINDOWS */
 	  }
 	INITform (w, catalogue, NULL);
      }
@@ -7418,25 +7081,10 @@ ThotBool            remanent;
 void                TtaWaitShowDialogue ()
 {
    ThotEvent              event;
-#  ifdef _WINDOWS
-   int frame;
-#  endif /* _WINDOWS */
 
    /* Un TtaWaitShowDialogue en cours */
    CurrentWait = 1;
 
-#  ifdef _WINDOWS
-   while (ShowReturn == 1) {
-         if (GetMessage (&event, NULL, 0, 0)) {			
-            frame = GetFrameNumber (event.hwnd);
-            if (frame != -1) {
-               if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &event))
-                  TtaHandleOneWindowEvent (&event);
-			} else
-                   TtaHandleOneWindowEvent (&event);
-	}
-   }
-#  else  /* !_WINDOWS */
    TtaLockMainLoop();
    while (ShowReturn == 1)
      {
@@ -7444,7 +7092,6 @@ void                TtaWaitShowDialogue ()
 	TtaHandleOneEvent (&event);
      }
    TtaUnlockMainLoop();
-#  endif /* _WINDOWS */
 
    /* Fin de l'attente */
    CurrentWait = 0;
@@ -7477,7 +7124,6 @@ void                TtaAbortShowDialogue ()
 	  {
 	     if (ShowCat->Cat_Widget != 0)
 	       {
-#                 ifndef _WINDOWS
 		  if (XtIsManaged (ShowCat->Cat_Widget))
 		    {
 		       /* Traitement particulier des formulaires */
@@ -7491,7 +7137,6 @@ void                TtaAbortShowDialogue ()
 		       else
 			  XtUnmanageChild (ShowCat->Cat_Widget);
 		    }
-#                 endif /* _WINDOWS */
 	       }
 
 	  }

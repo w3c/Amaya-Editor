@@ -33,15 +33,10 @@
 #       define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#if defined(_I18N_) || defined(__JIS__)
-#   define APPFILENAMEFILTER    L"HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
-#   define APPIMAGENAMEFILTER   L"Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#   define APPALLFILESFILTER    L"All files (*.*)\0*.*\0"
-#else /* defined(_I18N_) || defined(__JIS__) */
-#     define APPFILENAMEFILTER    "HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
-#     define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#     define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
-#endif /* defined(_I18N_) || defined(__JIS__) */
+#define APPFILENAMEFILTER    TEXT("HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0")
+#define APPIMAGENAMEFILTER   TEXT("Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0")
+#define APPALLFILESFILTER    TEXT("All files (*.*)\0*.*\0")
+
 #define MAX_BUFF 4096
 #define IDC_WORDBUTTON    20000
 #define IDC_EDITRULE      20001
@@ -1316,8 +1311,8 @@ LPARAM lParam;
 				}
 				break;
 				default: return FALSE;
-	return TRUE;
 	}
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2701,9 +2696,9 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    HWND  wndSaveList;
-	int   index = 0;
-	UINT  i = 0;
+    static HWND  wndSaveList;
+	int          index = 0;
+	UINT         i = 0;
 
 	static UINT itemIndex;
 	static CHAR_T szBuffer [MAX_BUFF];

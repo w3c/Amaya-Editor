@@ -2293,8 +2293,10 @@ View                view;
 	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
+#        ifndef _WINDOWS
 	     for (i = 0; i < 3; i++)
-		TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
+             TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
+#        endif /* !_WINDOWS */
 	     /* initialise le sous-menu style des traits */
 	     ChngLineStyle = TRUE;
 	     StdLineStyle = FALSE;

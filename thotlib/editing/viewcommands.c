@@ -1194,9 +1194,10 @@ View                view;
                      TableNaturesSchPresent[NumSousMenu - 1] = TableNatures[nat];
                      /* desactive l'entree de ce sous-menu qui correspond a la */
                      /* presentation actuelle */
+#                    ifndef _WINDOWS
                      if (entreeDesact[nat] > 0)
-                        UnsetEntryMenu (NumMenuPresNature + NumSousMenu,
-                                         entreeDesact[nat] - 1);
+                        UnsetEntryMenu (NumMenuPresNature + NumSousMenu, entreeDesact[nat] - 1);
+#                    endif /* !_WINDOWS */
                   }
              }
         /* active le pop-up menu */

@@ -352,11 +352,14 @@ int                 shadow;
    RECT                rect;
    HFONT               hOldFont;
    int                 result;
+   UINT                outOpt; 
+#  ifdef _I18N_
    GCP_RESULTS         results;
    USHORT              auGlyphs [2000];
    CHAR_T              szNewText [2000];
-   UINT                outOpt, infoFlag;
+   UINT                infoFlag;
    int                 anDX [2000];
+#  endif /* _I18N_ */
 
    w = FrRef[frame];
    if (lg > 0 && w != None) {

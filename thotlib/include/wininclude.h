@@ -5,6 +5,7 @@
 #include "fileaccess.h"
 
 #ifdef __STDC__
+extern HMENU      WIN_GetMenu (int);
 extern void       WinErrorBox (HWND);
 extern void       WinLoadGC (HDC, int, int);
 extern HFONT      WinLoadFont (HDC, ptrfont);
@@ -25,7 +26,6 @@ extern int        GetMainFrameNumber (ThotWindow);
 extern LRESULT    ToolBarNotify (int, HWND, WPARAM, LPARAM);
 extern int        GetFrameNumber (ThotWindow);
 extern void       TtaHandleOneWindowEvent (MSG*);
-extern HMENU      WIN_GetMenu (int);
 extern void       CreateOpenImgDlgWindow (HWND, STRING, int, int, int, int, int, int);
 extern void       CreateTableDlgWindow (int, int, int, int, int, int, int, int);
 extern void       WIN_ListSaveDirectory (int, STRING);
@@ -74,6 +74,7 @@ extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
 extern void       CheckTtCmap ();
 
 #else  /* __STDC__ */
+extern HMENU      WIN_GetMenu ();
 extern void       WinErrorBox ();
 extern void       WinLoadGC ();
 extern HFONT      WinLoadFont ();
@@ -94,7 +95,6 @@ extern int        GetMainFrameNumber ();
 extern LRESULT    ToolBarNotify ();
 extern int        GetFrameNumber ();
 extern void       TtaHandleOneWindowEvent ();
-extern HMENU      WIN_GetMenu ();
 extern void       CreateOpenImgDlgWindow ();
 extern void       CreateTableDlgWindow ();
 extern void       WIN_ListSaveDirectory ();
