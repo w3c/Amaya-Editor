@@ -222,10 +222,11 @@ Attribute           attr;
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseForm (Document doc, Element el, int mode)
+static void         ParseForm (Document doc, Element ancestor, Element el, int mode)
 #else
-static void         ParseForm (doc, el, mode)
+static void         ParseForm (doc, ancestor el, mode)
 Document            doc;
+Element             ancestor;
 Element             el;
 int                 mode;
 
@@ -249,10 +250,13 @@ int                 mode;
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_NAME;
 	attrTypeS.AttrSSchema = attrType.AttrSSchema;
-	do
+	TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	while (el != NULL)
 	  {
-	     TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-	     if (attr != NULL && el != NULL)
+	    if(mode == HTML_EL_Submit_Input && !TtaIsAncestor(el, ancestor))
+	      break;
+
+	     if (attr != NULL)
 	       {
 		  elType = TtaGetElementType (el);
 		  switch (elType.ElTypeNum)
@@ -444,8 +448,8 @@ int                 mode;
 			      break;
 			}
 	       }
+	     TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	  }
-	while (el != NULL);
 
 	if (mode == HTML_EL_Reset_Input)
 	   /* restore status of the document */
@@ -538,7 +542,7 @@ Element             element;
 
 #endif
 {
-   Element             elForm;
+   Element             ancestor, elForm;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
@@ -610,6 +614,8 @@ Element             element;
 	/* could not find a form ancestor */
 	return;
      }
+   else
+     ancestor = elForm;
 
 #ifdef DEBUG
    fclose (fp2);
@@ -632,8 +638,8 @@ Element             element;
      }
 
    /* search the subtree for the form elements */
-   elForm = TtaGetFirstChild (elForm);
-   ParseForm (doc, elForm, button_type);
+   elForm  = TtaGetFirstChild(elForm);
+   ParseForm (doc, ancestor, elForm, button_type);
 
    if (button_type == HTML_EL_Submit_Input)
      {
