@@ -33,7 +33,7 @@
 #include "memory_f.h"
 #include "readpivot_f.h"
 #include "references_f.h"
-#include "schemastr_f.h"
+#include "schemas_f.h"
 #include "search_f.h"
 #include "structmodif_f.h"
 #include "structschema_f.h"
