@@ -37,7 +37,8 @@ DICOFILES= *.ptn *.dic alphabet clavier
 AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
            *.PRS *.TRA AmayaPage.html AmayaPage.html.* Amaya.svg
 
-RESOURCEFILES= *.xrc
+RESOURCE_XRC_FILES= *.xrc
+RESOURCE_ICONS_FILES= *.gif
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -515,6 +516,7 @@ install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix)/Amaya/amaya ; then $(MKDIR) $(prefix)/Amaya/amaya ; fi)
 	@(if test ! -d $(prefix)/Amaya/resources ; then $(MKDIR) $(prefix)/Amaya/resources ; fi)
 	@(if test ! -d $(prefix)/Amaya/resources/xrc ; then $(MKDIR) $(prefix)/Amaya/resources/xrc ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources/icons ; then $(MKDIR) $(prefix)/Amaya/resources/icons ; fi)
 	@(if test ! -d $(prefix)/Amaya/config ; then $(MKDIR) $(prefix)/Amaya/config ; fi)
 	@(if test ! -d $(prefix)/Amaya/annotlib ; then $(MKDIR) $(prefix)/Amaya/annotlib ; fi)
 	@(if test ! -d $(prefix)/Amaya/fonts ; then $(MKDIR) $(prefix)/Amaya/fonts ; fi)
@@ -533,9 +535,13 @@ install : all @NOPRINT@../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/amaya ; \
 	  done ; done)
-	(for i in $(RESOURCEFILES) ; do \
+	(for i in $(RESOURCE_XRC_FILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/resources/xrc/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/xrc ; \
+	  done ; done)
+	(for i in $(RESOURCE_ICONS_FILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/resources/icons/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons ; \
 	  done ; done)
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
