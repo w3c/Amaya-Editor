@@ -219,6 +219,10 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       x += pFrame->FrXOrg;
       y += pFrame->FrYOrg;
 #endif /*_GL*/
+      if (x < 0)
+	x = 0;
+      if (y < 0)
+	y = 0;
       pAb = pFrame->FrAbstractBox;
       nChars = 0;
       if (button == 6 && SelectedPointInPolyline != 0 &&
@@ -279,7 +283,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			left = TRUE;
 		      else if (ElemIsBefore (pEl, firstEl))
 			left = TRUE;
-		      else if (nChars == pBox->BxFirstChar && pEl == firstEl)
+		      else if (nChars == pBox->BxFirstChar &&
+			       pBox->BxFirstChar > 1 && pEl == firstEl)
 			/* extension until the beginning of this box
 			   select the end of the previous box */
 			nChars--;
@@ -2843,11 +2848,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		charWidth = BoxCharacterWidth (c, font);
 	    }
 	  if (extend)
-	    {
 	    notfound = (dx + (charWidth / 2) < *x);
-if (!notfound)
-  printf ("x=%d dx=%d\n", *x, dx);
-	    }
 	  else
 	    {
 	      notfound = (dx + (charWidth / 2) < *x);
