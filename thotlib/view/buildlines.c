@@ -200,41 +200,42 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   else
     pBoxInLine = pLine->LiFirstBox;
   max = 0;
-  do
-    {
-      if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
-	pBox = pBoxInLine->BxNexChild;
-      else
-	pBox = pBoxInLine;
-      if (pBox->BxAbstractBox->AbFloat != 'N')
-	/*YMove (pBox, NULL, pLine->LiYOrg - pBox->BxYOrg, frame)*/;
-      else if (!pBox->BxAbstractBox->AbHorizEnclosing ||
-	       (pBox->BxAbstractBox->AbNotInLine &&
-		pBox->BxAbstractBox->AbDisplay != 'U'))
-	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-      else if (!pBox->BxAbstractBox->AbNotInLine)
-	{
-	  boxes[max++] = pBox;
-	  pBox->BxSpaceWidth = 0;
-	  /* Compute the line width without spaces */
-	  if (pBox->BxAbstractBox->AbLeafType == LtText)
-	    {
-	      delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, pBox->BxFont);
-	      pBox->BxW -= delta;
-	      pBox->BxWidth -= delta;
-	      nSpaces += pBox->BxNSpaces;
-	    }
-	  width += pBox->BxWidth;
-	}
-
-      if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
-	/* get the next child */
-	pBoxInLine = pBox->BxNexChild;
-      else
-	pBoxInLine = GetNextBox (pBox->BxAbstractBox);
-    }
-  while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
-	 pBox != pLine->LiLastPiece);
+  if (pBoxInLine)
+    do
+      {
+	if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
+	  pBox = pBoxInLine->BxNexChild;
+	else
+	  pBox = pBoxInLine;
+	if (pBox->BxAbstractBox->AbFloat != 'N')
+	  /*YMove (pBox, NULL, pLine->LiYOrg - pBox->BxYOrg, frame)*/;
+	else if (!pBox->BxAbstractBox->AbHorizEnclosing ||
+		 (pBox->BxAbstractBox->AbNotInLine &&
+		  pBox->BxAbstractBox->AbDisplay != 'U'))
+	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	else if (!pBox->BxAbstractBox->AbNotInLine)
+	  {
+	    boxes[max++] = pBox;
+	    pBox->BxSpaceWidth = 0;
+	    /* Compute the line width without spaces */
+	    if (pBox->BxAbstractBox->AbLeafType == LtText)
+	      {
+		delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, pBox->BxFont);
+		pBox->BxW -= delta;
+		pBox->BxWidth -= delta;
+		nSpaces += pBox->BxNSpaces;
+	      }
+	    width += pBox->BxWidth;
+	  }
+	
+	if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
+	  /* get the next child */
+	  pBoxInLine = pBox->BxNexChild;
+	else
+	  pBoxInLine = GetNextBox (pBox->BxAbstractBox);
+      }
+    while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
+	   pBox != pLine->LiLastPiece);
 
   /* Compute the space value in pixels */
   if (pLine->LiXMax > width)
@@ -260,7 +261,6 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 
   /* Update the position and the width of each included box */
   nSpaces = pLine->LiNPixels;
-
   for (i = 0; i < max; i++)
     {
       pBox = boxes[i];
@@ -382,32 +382,33 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
   else
     pBoxInLine = pLine->LiFirstBox;
   max = 0;
-  do
-    {
-      if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
-	pBox = pBoxInLine->BxNexChild;
-      else
-	pBox = pBoxInLine;
-      if (pBox->BxAbstractBox->AbFloat != 'N')
-	/*YMove (pBox, NULL, pLine->LiYOrg - pBox->BxYOrg, frame)*/;
-      else if (!pBox->BxAbstractBox->AbHorizEnclosing ||
-	       (pBox->BxAbstractBox->AbNotInLine &&
-		pBox->BxAbstractBox->AbDisplay != 'U'))
-	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-      else if (!pBox->BxAbstractBox->AbNotInLine)
-	{
-	  boxes[max++] = pBox;
-	  pBox->BxSpaceWidth = 0;
-	}
-
-      if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
-	/* get the next child */
-	pBoxInLine = pBox->BxNexChild;
-      else
-	pBoxInLine = GetNextBox (pBox->BxAbstractBox);
-    }
-  while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
-	 pBox != pLine->LiLastPiece);
+  if (pBoxInLine)
+    do
+      {
+	if (pBoxInLine->BxType == BoSplit || pBoxInLine->BxType == BoMulScript)
+	  pBox = pBoxInLine->BxNexChild;
+	else
+	  pBox = pBoxInLine;
+	if (pBox->BxAbstractBox->AbFloat != 'N')
+	  /*YMove (pBox, NULL, pLine->LiYOrg - pBox->BxYOrg, frame)*/;
+	else if (!pBox->BxAbstractBox->AbHorizEnclosing ||
+		 (pBox->BxAbstractBox->AbNotInLine &&
+		  pBox->BxAbstractBox->AbDisplay != 'U'))
+	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	else if (!pBox->BxAbstractBox->AbNotInLine)
+	  {
+	    boxes[max++] = pBox;
+	    pBox->BxSpaceWidth = 0;
+	  }
+	
+	if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
+	  /* get the next child */
+	  pBoxInLine = pBox->BxNexChild;
+	else
+	  pBoxInLine = GetNextBox (pBox->BxAbstractBox);
+      }
+    while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
+	   pBox != pLine->LiLastPiece);
 
   /* take into account the writing direction */
   rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
@@ -1682,7 +1683,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* look for a box to split */
   while (still)
     {
-      if (pNextBox->BxType == BoBlock || pNextBox->BxType == BoFloatBlock)
+      if (pNextBox->BxAbstractBox->AbLeafType == LtCompound)
 	{
 	  pAbRef = pNextBox->BxAbstractBox->AbWidth.DimAbRef;
 	  if (pAbRef == pBlock->BxAbstractBox ||
@@ -2164,6 +2165,9 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (boxPrev)
 	    /* the box is set at the bottom of the previous box */
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
+	  else if (pLine && pLine->LiPrevious)
+	    /* the box is set at the top of the parent box */
+	    y = pLine->LiPrevious->LiYOrg;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
@@ -2192,6 +2196,9 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (boxPrev)
 	    /* the box is set at the bottom of the previous box */
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
+	  else if (pLine && pLine->LiPrevious)
+	    /* the box is set at the top of the parent box */
+	    y = pLine->LiPrevious->LiYOrg;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
@@ -2920,7 +2927,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	   pLastBox = pLine->LiLastBox;
 	else
 	   pLastBox = pLine->LiLastPiece;
-	if (pLastBox != pBox)
+	if (pLastBox && pLastBox != pBox)
 	  {
 #ifndef _GLTRANSFORMATION
 	     xf = pLastBox->BxXOrg + pLastBox->BxWidth;
