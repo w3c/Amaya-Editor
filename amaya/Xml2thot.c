@@ -1117,7 +1117,6 @@ Element        XmlLastLeafInElement (Element el)
 /*----------------------------------------------------------------------
   RemoveTrailingSpaces
   Removes all trailing spaces at the end of the element.
-  If the parameter all is TRUE, removes only the last space i
   ----------------------------------------------------------------------*/
 static void      RemoveTrailingSpaces (Element el)
 {
@@ -5257,10 +5256,13 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 
        if (beginning)
 	 {
-	   /* Don't interpret the characters before the first open tag */
-	   while ((bufferRead[i] != '<') && i < res)
+	   /* Don't interpret the UTF8 BOM character */
+	   if (((unsigned char) bufferRead[0] == 0xEF) &&
+	       ((unsigned char) bufferRead[1] == 0xBB) &&
+	       ((unsigned char) bufferRead[2] == 0xBF))
 	     {
-	       i++; res--;	       
+	       i = 3;
+	       res = res - 3;
 	     }
 	   beginning = FALSE;
 	 }
