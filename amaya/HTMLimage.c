@@ -145,7 +145,8 @@ Document            doc;
       pImage = ImageURLs;
       while (pImage != NULL)
 	{
-	  if (strcmp (localpath, pImage->localName) == 0 && pImage->document == doc)
+	  if (strcmp (localpath, pImage->localName) == 0 && 
+	      ((doc == 0) || (pImage->document == doc)))
 	    /* image found */
 	    return (pImage);
 	  else
@@ -356,8 +357,6 @@ void               *extra;
 	      desc->elImage = ctxEl;
 	      ctxEl->currentElement = el;
 	      ctxEl->nextElement = NULL;
-	      ctxEl->callback = callback;
-	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
 #ifdef AMAYA_JAVA
 	      FilesLoading[doc]++;
@@ -408,6 +407,8 @@ void               *extra;
 		      ctxEl = ctxEl->nextElement;
 		      ctxEl->currentElement = el;
 		      ctxEl->nextElement = NULL;
+		      ctxEl->callback = callback;
+		      ctxEl->extra = extra;
 		    }
 		}
 	    }
