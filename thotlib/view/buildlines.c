@@ -25,317 +25,243 @@ static int          MaxSiblingBreaks = 2;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Suivante rend l'adresse de la boite associee au pave vivant qui | */
-/* |            suit pAb.                                            | */
+/* | GetNextBox rend l'adresse de la boite associee au pave vivant qui  | */
+/* |            suit pAb.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 PtrBox            Suivante (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 PtrBox            Suivante (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox     pAb;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             nextpave;
-   boolean             boucle;
-   PtrBox            result;
+   PtrAbstractBox  pNextAb;
+   boolean         loop;
+   PtrBox          result;
 
-   /* On verifie que le pave existe toujours */
+   /* verifie que le pave existe toujours */
    if (pAb == NULL)
       result = NULL;
    else
      {
-	nextpave = pAb->AbNext;
-	boucle = TRUE;
-	while (boucle)
-	   if (nextpave == NULL)
+	pNextAb = pAb->AbNext;
+	loop = TRUE;
+	while (loop)
+	   if (pNextAb == NULL)
 	      /* Est-ce la derniere boite fille d'une boite eclatee */
 	      if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
 		{
-		   /* On remonte la hierarchie */
+		   /* remonte la hierarchie */
 		   pAb = pAb->AbEnclosing;
-		   nextpave = pAb->AbNext;
+		   pNextAb = pAb->AbNext;
 		}
 	      else
-		 boucle = FALSE;
-	   else if (nextpave->AbDead)
-	      nextpave = nextpave->AbNext;
-	   else if (nextpave->AbBox == NULL)
-	      nextpave = nextpave->AbNext;
+		 loop = FALSE;
+	   else if (pNextAb->AbDead)
+	      pNextAb = pNextAb->AbNext;
+	   else if (pNextAb->AbBox == NULL)
+	      pNextAb = pNextAb->AbNext;
 	/* Est-ce un pave compose eclate ? */
-	   else if (nextpave->AbBox->BxType == BoGhost)
+	   else if (pNextAb->AbBox->BxType == BoGhost)
 	     {
-		/* On descend la hierarchie */
-		while (boucle)
-		   if (nextpave->AbBox == NULL)
-		      nextpave = nextpave->AbNext;
-		   else if (nextpave->AbBox->BxType == BoGhost)
-		      nextpave = nextpave->AbFirstEnclosed;
+		/* descend la hierarchie */
+		while (loop)
+		   if (pNextAb->AbBox == NULL)
+		      pNextAb = pNextAb->AbNext;
+		   else if (pNextAb->AbBox->BxType == BoGhost)
+		      pNextAb = pNextAb->AbFirstEnclosed;
 		   else
-		      boucle = FALSE;
-		boucle = TRUE;
-		pAb = nextpave;
+		      loop = FALSE;
+		loop = TRUE;
+		pAb = pNextAb;
 	     }
 	   else
-	      boucle = FALSE;
-	if (nextpave == NULL)
+	      loop = FALSE;
+	if (pNextAb == NULL)
 	   result = NULL;
 	else
-	   result = nextpave->AbBox;
+	   result = pNextAb->AbBox;
      }
    return result;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Precedente rend l'adresse de la boite associee au pave vivant   | */
-/* |            qui precede pAb.                                     | */
+/* |  GetPreviousBox rend l'adresse de la boite associee au pave vivant | */
+/* |            qui precede pAb.                                        | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static PtrBox     Precedente (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 static PtrBox     Precedente (pAb)
-PtrAbstractBox             pAb;
-
+PtrAbstractBox    pAb;
 #endif /* __STDC__ */
-
 {
-   PtrAbstractBox             nextpave;
-   boolean             boucle;
-   PtrBox            result;
+   PtrAbstractBox pNextAb;
+   boolean        loop;
+   PtrBox         result;
 
-   nextpave = pAb->AbPrevious;
-   boucle = TRUE;
-   while (boucle)
-      if (nextpave == NULL)
+   pNextAb = pAb->AbPrevious;
+   loop = TRUE;
+   while (loop)
+      if (pNextAb == NULL)
 	 /* Est-ce la derniere boite fille d'une boite eclatee */
 	 if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
 	   {
-	      /* On remonte la hierarchie */
+	      /* remonte la hierarchie */
 	      pAb = pAb->AbEnclosing;
-	      nextpave = pAb->AbPrevious;
+	      pNextAb = pAb->AbPrevious;
 	   }
 	 else
-	    boucle = FALSE;
-      else if (nextpave->AbDead)
-	 nextpave = nextpave->AbPrevious;
-      else if (nextpave->AbBox == NULL)
-	 nextpave = nextpave->AbPrevious;
+	    loop = FALSE;
+      else if (pNextAb->AbDead)
+	 pNextAb = pNextAb->AbPrevious;
+      else if (pNextAb->AbBox == NULL)
+	 pNextAb = pNextAb->AbPrevious;
    /* Est-ce un pave compose eclate ? */
-      else if (nextpave->AbBox->BxType == BoGhost)
+      else if (pNextAb->AbBox->BxType == BoGhost)
 	{
-	   /* On descend la hierarchie */
-	   while (nextpave->AbBox->BxType == BoGhost)
+	   /* descend la hierarchie */
+	   while (pNextAb->AbBox->BxType == BoGhost)
 	     {
-		nextpave = nextpave->AbFirstEnclosed;
-		/* On recherche le dernier pave fils */
-		while (nextpave->AbNext != NULL)
-		   nextpave = nextpave->AbNext;
+		pNextAb = pNextAb->AbFirstEnclosed;
+		/* recherche le dernier pave fils */
+		while (pNextAb->AbNext != NULL)
+		   pNextAb = pNextAb->AbNext;
 	     }
-	   pAb = nextpave;
+	   pAb = pNextAb;
 	}
       else
-	 boucle = FALSE;
+	 loop = FALSE;
 
-   if (nextpave == NULL)
+   if (pNextAb == NULL)
       result = NULL;
    else
-      result = nextpave->AbBox;
+      result = pNextAb->AbBox;
    return result;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Ajuster calcule la largeur des blancs a` afficher dans la ligne | */
+/* |    Adjust calcule la largeur des blancs a` afficher dans la ligne  | */
 /* |            pour l'ajuster. La procedure met a` jour les positions  | */
 /* |            en x et la largeur des boites incluses.                 | */
 /* ---------------------------------------------------------------------- */
-
-
 #ifdef __STDC__
-static void         Ajuster (PtrBox boxmere, PtrLine adligne, int frame, boolean absoluEnX, boolean absoluEnY)
-
+static void    Adjust (PtrBox pParentBox, PtrLine pLine, int frame, boolean orgXComplete, boolean orgYComplete)
 #else  /* __STDC__ */
-static void         Ajuster (boxmere, adligne, frame, absoluEnX, absoluEnY)
-PtrBox            boxmere;
-PtrLine            adligne;
-int                 frame;
-boolean             absoluEnX;
-boolean             absoluEnY;
-
+static void    Adjust (pParentBox, pLine, frame, orgXComplete, orgYComplete)
+PtrBox            pParentBox;
+PtrLine           pLine;
+int               frame;
+boolean           orgXComplete;
+boolean           orgYComplete;
 #endif /* __STDC__ */
-
 {
-   PtrBox            box1, box2;
-   int                 ilg, base;
-   int                 nbblanc;
+   PtrBox         pBox, pBoxInLine;
+   int            length, baseline;
+   int            nSpaces;
 
-
-   nbblanc = 0;			/* nombre de blancs */
-   ilg = 0;			/* taille des chaines de caracteres sans blanc */
-   base = adligne->LiYOrg + adligne->LiHorizRef;
+   nSpaces = 0;	   /* nombre de blancs */
+   length = 0;	   /* taille des chaines de caracteres sans blanc */
+   baseline = pLine->LiYOrg + pLine->LiHorizRef;
 
    /* Calcul de la longueur de la ligne en supprimant les blancs */
-   if (adligne->LiFirstPiece != NULL)
-      box2 = adligne->LiFirstPiece;
+   if (pLine->LiFirstPiece != NULL)
+      pBoxInLine = pLine->LiFirstPiece;
    else
-      box2 = adligne->LiFirstBox;
+      pBoxInLine = pLine->LiFirstBox;
    do				/* Boucle sur les boites de la ligne */
      {
-	if (box2->BxType == BoSplit)
-	   box1 = box2->BxNexChild;
+	if (pBoxInLine->BxType == BoSplit)
+	   pBox = pBoxInLine->BxNexChild;
 	else
-	   box1 = box2;
-	if (box1->BxAbstractBox->AbLeafType == LtText)
+	   pBox = pBoxInLine;
+	if (pBox->BxAbstractBox->AbLeafType == LtText)
 	  {
-	     box1->BxWidth -= box1->BxNSpaces * CarWidth (BLANC, box1->BxFont);
-	     nbblanc += box1->BxNSpaces;
+	     pBox->BxWidth -= pBox->BxNSpaces * CarWidth (BLANC, pBox->BxFont);
+	     nSpaces += pBox->BxNSpaces;
 	  }
 
-	ilg += box1->BxWidth;
-	/* On passe a la boite suivante */
-	box2 = Suivante (box1->BxAbstractBox);
+	length += pBox->BxWidth;
+	/* passe a la boite suivante */
+	pBoxInLine = Suivante (pBox->BxAbstractBox);
      }
 
    /* Calcul de la taille des blancs en pixels */
-   while (!(box1 == adligne->LiLastBox || box1 == adligne->LiLastPiece));
-   if (adligne->LiXMax > ilg)
+   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
+   if (pLine->LiXMax > length)
      {
-	adligne->LiNPixels = adligne->LiXMax - ilg;
-	if (nbblanc == 0)
-	   adligne->LiSpaceWidth = 0;
+	pLine->LiNPixels = pLine->LiXMax - length;
+	if (nSpaces == 0)
+	   pLine->LiSpaceWidth = 0;
 	else
-	   adligne->LiSpaceWidth = adligne->LiNPixels / nbblanc;
-	adligne->LiNSpaces = nbblanc;
+	   pLine->LiSpaceWidth = pLine->LiNPixels / nSpaces;
+	pLine->LiNSpaces = nSpaces;
 	/* Largeur minimum de ligne */
-	adligne->LiMinLength = ilg + nbblanc * MIN_BLANC;
-	adligne->LiNPixels -= adligne->LiSpaceWidth * nbblanc;	/* Pixels restants a repartir */
+	pLine->LiMinLength = length + nSpaces * MIN_BLANC;
+	pLine->LiNPixels -= pLine->LiSpaceWidth * nSpaces;	/* Pixels restants a repartir */
      }
    else
      {
-	adligne->LiNPixels = 0;
-	adligne->LiSpaceWidth = 0;
-	adligne->LiNSpaces = 0;
-	adligne->LiMinLength = ilg;
+	pLine->LiNPixels = 0;
+	pLine->LiSpaceWidth = 0;
+	pLine->LiNSpaces = 0;
+	pLine->LiMinLength = length;
      }
 
    /* Met a jour l'origine, la base et la largeur de chaque boite */
-   ilg = adligne->LiXOrg;
-   if (absoluEnX)
-      ilg += boxmere->BxXOrg;
-   if (absoluEnY)
-      base += boxmere->BxYOrg;
+   length = pLine->LiXOrg;
+   if (orgXComplete)
+      length += pParentBox->BxXOrg;
+   if (orgYComplete)
+      baseline += pParentBox->BxYOrg;
 
-   nbblanc = adligne->LiNPixels;
-   if (adligne->LiFirstPiece != NULL)
-      box2 = adligne->LiFirstPiece;
+   nSpaces = pLine->LiNPixels;
+   if (pLine->LiFirstPiece != NULL)
+      pBoxInLine = pLine->LiFirstPiece;
    else
-      box2 = adligne->LiFirstBox;
+      pBoxInLine = pLine->LiFirstBox;
 
    /* Boucle sur les boites de la ligne */
    do
      {
-	if (box2->BxType == BoSplit)
-	   box1 = box2->BxNexChild;
+	if (pBoxInLine->BxType == BoSplit)
+	   pBox = pBoxInLine->BxNexChild;
 	else
-	   box1 = box2;
-	DepOrgX (box1, NULL, ilg - box1->BxXOrg, frame);
-	DepOrgY (box1, NULL, base - box1->BxHorizRef - box1->BxYOrg, frame);
+	   pBox = pBoxInLine;
+	DepOrgX (pBox, NULL, length - pBox->BxXOrg, frame);
+	DepOrgY (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
 	/* Repartition des pixels */
-	if (box1->BxAbstractBox->AbLeafType == LtText)
+	if (pBox->BxAbstractBox->AbLeafType == LtText)
 	  {
-	     if (nbblanc > box1->BxNSpaces)
-		box1->BxNPixels = box1->BxNSpaces;
+	     if (nSpaces > pBox->BxNSpaces)
+		pBox->BxNPixels = pBox->BxNSpaces;
 	     else
-		box1->BxNPixels = nbblanc;
+		pBox->BxNPixels = nSpaces;
 
-	     nbblanc -= box1->BxNPixels;
-	     box1->BxSpaceWidth = adligne->LiSpaceWidth;
-	     box1->BxWidth = box1->BxWidth + box1->BxNSpaces * adligne->LiSpaceWidth + box1->BxNPixels;
+	     nSpaces -= pBox->BxNPixels;
+	     pBox->BxSpaceWidth = pLine->LiSpaceWidth;
+	     pBox->BxWidth = pBox->BxWidth + pBox->BxNSpaces * pLine->LiSpaceWidth + pBox->BxNPixels;
 	  }
 
-	ilg += box1->BxWidth;
-	/* On passe a la boite suivante */
-	box2 = Suivante (box1->BxAbstractBox);
+	length += pBox->BxWidth;
+	/* passe a la boite suivante */
+	pBoxInLine = Suivante (pBox->BxAbstractBox);
      }
-   while (!(box1 == adligne->LiLastBox || box1 == adligne->LiLastPiece));
+   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Aligner aligne les bases des boites contenues dans la ligne     | */
-/* |            designee. Decale de delta l'origine de chaque boite     | */
-/* |            dans la ligne et indique que les boites ne sont pas     | */
-/* |            justifiees.                                             | */
-/* ---------------------------------------------------------------------- */
-
-
-#ifdef __STDC__
-void                Aligner (PtrBox boxmere, PtrLine adligne, int delta, int frame, boolean absoluEnX, boolean absoluEnY)
-
-#else  /* __STDC__ */
-void                Aligner (boxmere, adligne, delta, frame, absoluEnX, absoluEnY)
-PtrBox            boxmere;
-PtrLine            adligne;
-int                 delta;
-int                 frame;
-boolean             absoluEnX;
-boolean             absoluEnY;
-
-#endif /* __STDC__ */
-
-{
-   PtrBox            box1, box2;
-   int                 base, x;
-
-
-   /* Base de la ligne */
-   base = adligne->LiYOrg + adligne->LiHorizRef;
-   x = delta;
-   if (absoluEnX)
-      x += boxmere->BxXOrg;
-   if (absoluEnY)
-      base += boxmere->BxYOrg;
-
-   /* Premiere boite */
-   if (adligne->LiFirstPiece != NULL)
-      box2 = adligne->LiFirstPiece;
-   else
-      box2 = adligne->LiFirstBox;
-
-   /* Boucle sur les boites de la ligne */
-   do
-     {
-	if (box2->BxType == BoSplit)
-	   box1 = box2->BxNexChild;
-	else
-	   box1 = box2;
-	DepOrgX (box1, NULL, x - box1->BxXOrg, frame);
-	DepOrgY (box1, NULL, base - box1->BxHorizRef - box1->BxYOrg, frame);
-	x += box1->BxWidth;
-	box2->BxSpaceWidth = 0;
-	/* On passe a la boite suivante */
-	box2 = Suivante (box1->BxAbstractBox);
-     }
-   while (!(box1 == adligne->LiLastBox || box1 == adligne->LiLastPiece));
-}
-
-
-/*debut */
 /* ---------------------------------------------------------------------- */
 /* |    round fait un arrondi float -> int.                             | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-int                 round (float e)
-
+int           round (float e)
 #else  /* __STDC__ */
-int                 round (e)
+int           round (e)
 float               e;
-
 #endif /* __STDC__ */
-
 {
    register int        res;
 
@@ -345,12 +271,65 @@ float               e;
       res = e + 0.5;
    return res;
 }
-/*fin */
-/*debut */
+
+
 /* ---------------------------------------------------------------------- */
-/* |    CarCoup calcule le nombre de caracte`res nbcar a` placer dans   | */
+/* |    Aligner aligne les bases des boites contenues dans la ligne     | */
+/* |            designee. Decale de delta l'origine de chaque boite     | */
+/* |            dans la ligne et indique que les boites ne sont pas     | */
+/* |            justifiees.                                             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                Aligner (PtrBox pParentBox, PtrLine pLine, int delta, int frame, boolean orgXComplete, boolean orgYComplete)
+#else  /* __STDC__ */
+void                Aligner (pParentBox, pLine, delta, frame, orgXComplete, orgYComplete)
+PtrBox            pParentBox;
+PtrLine           pLine;
+int               delta;
+int               frame;
+boolean           orgXComplete;
+boolean           orgYComplete;
+#endif /* __STDC__ */
+{
+   PtrBox         pBox, pBoxInLine;
+   int            baseline, x;
+
+   /* Base de la ligne */
+   baseline = pLine->LiYOrg + pLine->LiHorizRef;
+   x = delta;
+   if (orgXComplete)
+      x += pParentBox->BxXOrg;
+   if (orgYComplete)
+      baseline += pParentBox->BxYOrg;
+
+   /* Premiere boite */
+   if (pLine->LiFirstPiece != NULL)
+      pBoxInLine = pLine->LiFirstPiece;
+   else
+      pBoxInLine = pLine->LiFirstBox;
+
+   /* Boucle sur les boites de la ligne */
+   do
+     {
+	if (pBoxInLine->BxType == BoSplit)
+	   pBox = pBoxInLine->BxNexChild;
+	else
+	   pBox = pBoxInLine;
+	DepOrgX (pBox, NULL, x - pBox->BxXOrg, frame);
+	DepOrgY (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	x += pBox->BxWidth;
+	pBoxInLine->BxSpaceWidth = 0;
+	/* passe a la boite suivante */
+	pBoxInLine = Suivante (pBox->BxAbstractBox);
+     }
+   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | SearchBreak calcule le nombre de caracte`res nChars a` placer dans  | */
 /* |            la premie`re boi^te coupe'e pour la limiter a` une      | */
-/* |            longueur de ilg en pixels.                              | */
+/* |            longueur de length en pixels.                           | */
 /* |            Retourne le nombre de caracte`res a` sauter, soit 1 ou  | */
 /* |            plus si la coupure tombe sur un blanc, -1 si le dernier | */
 /* |            mot est coupe' et un tiret doit e^tre engendre', -2 si  | */
@@ -358,655 +337,494 @@ float               e;
 /* |            coupure ne correspond pas a` un point de coupure.       | */
 /* |            Rend la position a` laquelle le point de coupure peut   | */
 /* |            e^tre inse're' :                                        | */
-/* |            - le nombre de caracteres : nbcar (blancs compris sauf  | */
+/* |            - le nombre de caracteres : nChars (blancs compris sauf | */
 /* |            les derniers).                                          | */
-/* |            - la longueur de cette nouvelle sous-chaine : lgcoup    | */
-/* |            (avec les blancs).                                      | */
-/* |            - le nombre de blancs qu'elle contient : nbblanc        | */
+/* |            - la longueur de cette nouvelle sous-chaine :           | */
+/* |              breakLength (avec les blancs).                        | */
+/* |            - le nombre de blancs qu'elle contient : nSpaces        | */
 /* |            (sauf les derniers).                                    | */
 /* |            - l'adresse du buffer du 1er caractere apres coupure.   | */
 /* |            - l'index dans ce buffer du 1er caractere apres coupure.| */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static int          CarCoup (PtrLine adligne, PtrBox pBox, int ilg, ptrfont font, int *nbcar, int *lgcoup, int *nbblanc, int *newicar, PtrTextBuffer * newbuff)
-
+static int   SearchBreak (PtrLine pLine, PtrBox pBox, int length, ptrfont font, int *nChars, int *breakLength, int *nSpaces, int *newIndex, PtrTextBuffer *pNewBuff)
 #else  /* __STDC__ */
-static int          CarCoup (adligne, pBox, ilg, font, nbcar, lgcoup, nbblanc, newicar, newbuff)
-PtrLine            adligne;
-PtrBox            pBox;
-int                 ilg;
-ptrfont             font;
-int                *nbcar;
-int                *lgcoup;
-int                *nbblanc;
-int                *newicar;
-PtrTextBuffer     *newbuff;
-
+static int   SearchBreak (pLine, pBox, length, font, nChars, breakLength, nSpaces, newIndex, pNewBuff)
+PtrLine            pLine;
+PtrBox             pBox;
+int                length;
+ptrfont            font;
+int               *nChars;
+int               *breakLength;
+int               *nSpaces;
+int               *newIndex;
+PtrTextBuffer     *pNewBuff;
 #endif /* __STDC__ */
-
 {
-   PtrLine            pLi1;
-
-/*fin */
-   int                 i, cpt;
-   int                 lgcar, lgnew;
-   int                 largeur;
-   int                 lgmot, icar;
-   int                 saut, lgblanc;
-   unsigned char       car;
-   PtrTextBuffer      adbuff;
-   PtrBox            boxmere;
-   int                 bcomp;
-   int                 cptblanc;
-   boolean             nonfini;
-   Language            langue;
+   PtrLine            pPreviousLine;
+   int                i, count;
+   int                carWidth, newWidth;
+   int                width;
+   int                wordWidth, charIndex;
+   int                dummySpaces, spaceWidth;
+   int                spaceAdjust;
+   int                spaceCount;
+   unsigned char      character;
+   PtrTextBuffer      pBuffer;
+   PtrBox             pParentBox;
+   boolean            still;
+   Language           language;
 
    /* Initialisations */
-   saut = 0;
-   car = 0;
-   *newbuff = NULL;
-   *newicar = 1;
-   *nbcar = pBox->BxNChars;
-   *lgcoup = pBox->BxWidth;
-   *nbblanc = pBox->BxNSpaces;
+   dummySpaces = 0;
+   character = 0;
+   *pNewBuff = NULL;
+   *newIndex = 1;
+   *nChars = pBox->BxNChars;
+   *breakLength = pBox->BxWidth;
+   *nSpaces = pBox->BxNSpaces;
 
-   icar = pBox->BxFirstChar;		/* index dans le buffer */
-   adbuff = pBox->BxBuffer;
-   /* lgnew est la largeur utilisee pour calculer la mise en ligne */
+   charIndex = pBox->BxFirstChar;  /* index dans le buffer */
+   pBuffer = pBox->BxBuffer;
+   /* newWidth est la largeur utilisee pour calculer la mise en ligne */
    /* largeur est la largeur reelle du texte                       */
-   lgnew = 0;
-   largeur = 0;
-   lgcar = 0;
-   lgmot = 0;
-   cptblanc = 0;
-   nonfini = TRUE;
-   lgblanc = CarWidth (BLANC, font);
-   bcomp = lgblanc;
-   langue = pBox->BxAbstractBox->AbLanguage;
+   newWidth = 0;
+   width = 0;
+   carWidth = 0;
+   wordWidth = 0;
+   spaceCount = 0;
+   still = TRUE;
+   spaceWidth = CarWidth (BLANC, font);
+   spaceAdjust = spaceWidth;
+   language = pBox->BxAbstractBox->AbLanguage;
 
-   if (ilg != pBox->BxWidth - 1)
+   if (length != pBox->BxWidth - 1)
      {
-	/* L'appel de CarCoup ne concerne pas les blancs en fin de paragraphe */
-	boxmere = pBox->BxAbstractBox->AbEnclosing->AbBox;
-	/* On remonte jusqu'a la boite bloc de lignes */
-	while (boxmere->BxType == BoGhost)
-	   boxmere = boxmere->BxAbstractBox->AbEnclosing->AbBox;
+	/* L'appel de SearchBreak ne concerne pas les blancs en fin de paragraphe */
+	pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+	/* remonte jusqu'a la boite bloc de lignes */
+	while (pParentBox->BxType == BoGhost)
+	   pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
 	/* Si la ligne est justifiee on prend des blancs compresses */
-	if (boxmere->BxAbstractBox->AbJustify)
-	   bcomp = round ((float) (bcomp * 7) / (float) (10));
+	if (pParentBox->BxAbstractBox->AbJustify)
+	   spaceAdjust = round ((float) (spaceAdjust * 7) / (float) (10));
      }
 
    i = 0;
-   cpt = pBox->BxNChars;
+   count = pBox->BxNChars;
 
    /* Recherche un point de coupure */
-   while (nonfini)
+   while (still)
      {
 	/* Largeur du caractere suivant */
-	car = (unsigned char) (adbuff->BuContent[icar - 1]);
-	if (car == NUL)
-	   lgcar = 0;
-	else if (car == BLANC)
-	   lgcar = bcomp;
+	character = (unsigned char) (pBuffer->BuContent[charIndex - 1]);
+	if (character == NUL)
+	   carWidth = 0;
+	else if (character == BLANC)
+	   carWidth = spaceAdjust;
 	else
-	   lgcar = CarWidth (car, font);
+	   carWidth = CarWidth (character, font);
 
 	/* Si le caractere ne rentre pas dans la ligne */
 	/* ou si on arrive a la fin de la boite        */
-	if ((lgnew + lgcar > ilg || i >= cpt) && (i != 0))
+	if ((newWidth + carWidth > length || i >= count) && (i != 0))
 	  {
-	     nonfini = FALSE;
+	     still = FALSE;
 /*-- Si on veut simplement supprimer les blancs de fin de ligne */
-	     if (ilg >= pBox->BxWidth)
+	     if (length >= pBox->BxWidth)
 	       {
 		  /* Pointe le caractere apres la fin de boite */
-		  *newicar = 1;
-		  *newbuff = NULL;
-		  *lgcoup = pBox->BxWidth;
-		  *nbcar = pBox->BxNChars;
-		  *nbblanc = pBox->BxNSpaces;
+		  *newIndex = 1;
+		  *pNewBuff = NULL;
+		  *breakLength = pBox->BxWidth;
+		  *nChars = pBox->BxNChars;
+		  *nSpaces = pBox->BxNSpaces;
 
 		  /* Pointe le dernier caractere de la boite */
-		  if (icar == 1 && adbuff->BuPrevious != NULL)
+		  if (charIndex == 1 && pBuffer->BuPrevious != NULL)
 		    {
 		       /* Le caractere precedent se trouve dans un autre buffer */
-		       adbuff = adbuff->BuPrevious;
-		       icar = adbuff->BuLength;
+		       pBuffer = pBuffer->BuPrevious;
+		       charIndex = pBuffer->BuLength;
 		    }
 		  else
 		     /* Le caractere precedent se trouve dans le meme buffer */
-		     icar--;
+		     charIndex--;
 	       }
 	     /* Si le caractere courant est un blanc */
-	     else if (car == BLANC)
+	     else if (character == BLANC)
 	       {
-		  /* On coupe sur le dernier blanc rencontre' */
-		  saut = 1;
-		  if (cptblanc == 0)
-		     *nbcar = lgmot;	/* dernier blanc non compris */
+		  /* coupe sur le dernier blanc rencontre' */
+		  dummySpaces = 1;
+		  if (spaceCount == 0)
+		     *nChars = wordWidth;	/* dernier blanc non compris */
 		  else
-		     (*nbcar) += lgmot;		/* dernier blanc non compris */
-		  *lgcoup = largeur;
-		  *nbblanc = cptblanc;
+		     (*nChars) += wordWidth;		/* dernier blanc non compris */
+		  *breakLength = width;
+		  *nSpaces = spaceCount;
 
 		  /* Pointe le premier caractere apres la coupure */
-		  if (icar >= adbuff->BuLength && adbuff->BuNext != NULL)
+		  if (charIndex >= pBuffer->BuLength && pBuffer->BuNext != NULL)
 		    {
 		       /* Le caractere suivant se trouve dans un autre buffer */
-		       *newbuff = adbuff->BuNext;
-		       *newicar = 1;
+		       *pNewBuff = pBuffer->BuNext;
+		       *newIndex = 1;
 		    }
 		  else
 		    {
 		       /* Le caractere suivant se trouve dans le meme buffer */
-		       *newbuff = adbuff;
-		       *newicar = icar + 1;
+		       *pNewBuff = pBuffer;
+		       *newIndex = charIndex + 1;
 		    }		/*else */
 
 		  /* Pointe le dernier caractere avant la coupure */
-		  if (icar == 1 && adbuff->BuPrevious != NULL)
+		  if (charIndex == 1 && pBuffer->BuPrevious != NULL)
 		    {
 		       /* Le caractere precedent se trouve dans un autre buffer */
-		       adbuff = adbuff->BuPrevious;
-		       icar = adbuff->BuLength;
+		       pBuffer = pBuffer->BuPrevious;
+		       charIndex = pBuffer->BuLength;
 		    }
 		  else
 		     /* Le caractere precedent se trouve dans le meme buffer */
-		     icar--;
+		     charIndex--;
 	       }
 	     /* Si on n'a pas trouve de caractere blanc */
-	     else if (cptblanc == 0)
+	     else if (spaceCount == 0)
 	       {
-		  (*nbcar) = lgmot;
-		  *lgcoup = largeur;
-		  *nbblanc = 0;
+		  (*nChars) = wordWidth;
+		  *breakLength = width;
+		  *nSpaces = 0;
 
 		  /* Pointe le premier caractere apres la coupure */
-		  *newbuff = adbuff;
-		  *newicar = icar;
+		  *pNewBuff = pBuffer;
+		  *newIndex = charIndex;
 
 		  /* Pointe le dernier caractere avant la coupure */
-		  if (icar == 1 && adbuff->BuPrevious != NULL)
+		  if (charIndex == 1 && pBuffer->BuPrevious != NULL)
 		    {
 		       /* Le caractere precedent se trouve dans un autre buffer */
-		       adbuff = adbuff->BuPrevious;
-		       icar = adbuff->BuLength;
+		       pBuffer = pBuffer->BuPrevious;
+		       charIndex = pBuffer->BuLength;
 		    }
 		  else
 		     /* Le caractere precedent se trouve dans le meme buffer */
-		     icar--;
+		     charIndex--;
 	       }
 	     /* Coupure sur un blanc precedent */
 	     else
 	       {
-		  saut = 1;
-		  *nbblanc = cptblanc - 1;
+		  dummySpaces = 1;
+		  *nSpaces = spaceCount - 1;
 
-		  adbuff = *newbuff;
-		  icar = *newicar;
+		  pBuffer = *pNewBuff;
+		  charIndex = *newIndex;
 		  /* Pointe le premier caractere apres la coupure */
-		  if (icar >= adbuff->BuLength && adbuff->BuNext != NULL)
+		  if (charIndex >= pBuffer->BuLength && pBuffer->BuNext != NULL)
 		    {
 		       /* Le caractere suivant se trouve dans un autre buffer */
-		       *newbuff = adbuff->BuNext;
-		       *newicar = 1;
+		       *pNewBuff = pBuffer->BuNext;
+		       *newIndex = 1;
 		    }
 		  else
 		     /* Le caractere suivant se trouve dans le meme buffer */
-		     (*newicar)++;
+		     (*newIndex)++;
 
 		  /* Pointe le dernier caractere avant la coupure */
-		  if (icar == 1 && adbuff->BuPrevious != NULL)
+		  if (charIndex == 1 && pBuffer->BuPrevious != NULL)
 		    {
 		       /* Le caractere precedent se trouve dans un autre buffer */
-		       adbuff = adbuff->BuPrevious;
-		       icar = adbuff->BuLength;
+		       pBuffer = pBuffer->BuPrevious;
+		       charIndex = pBuffer->BuLength;
 		    }
 		  else
 		     /* Le caractere precedent se trouve dans le meme buffer */
-		     icar--;
+		     charIndex--;
 	       }
 	  }
 	/* Si c'est une fin de buffer */
-	else if (car == NUL)
+	else if (character == NUL)
 	   /* Si c'est la fin de la boite */
-	   if (adbuff->BuNext == NULL)
+	   if (pBuffer->BuNext == NULL)
 	     {
-		nonfini = FALSE;
+		still = FALSE;
 		/* Pointe le premier caractere apres la coupure */
-		*newbuff = adbuff;
-		*newicar = icar;
-		*lgcoup = pBox->BxWidth;
-		*nbcar = pBox->BxNChars;
-		*nbblanc = pBox->BxNSpaces;
-		icar--;
+		*pNewBuff = pBuffer;
+		*newIndex = charIndex;
+		*breakLength = pBox->BxWidth;
+		*nChars = pBox->BxNChars;
+		*nSpaces = pBox->BxNSpaces;
+		charIndex--;
 	     }
-	/* On change de buffer */
+	/* change de buffer */
 	   else
 	     {
-		adbuff = adbuff->BuNext;
-		icar = 1;
+		pBuffer = pBuffer->BuNext;
+		charIndex = 1;
 	     }
 	/* Si c'est un caractere blanc */
-	else if (car == BLANC)
+	else if (character == BLANC)
 	  {
 	     /* Cela peut etre un point de coupure */
-	     *newbuff = adbuff;
-	     *newicar = icar;
+	     *pNewBuff = pBuffer;
+	     *newIndex = charIndex;
 	     /* Longueur de la chaine dernier blanc non compris */
-	     if (cptblanc == 0)
-		*nbcar = lgmot;
+	     if (spaceCount == 0)
+		*nChars = wordWidth;
 	     else
-		(*nbcar) += lgmot;
-	     cptblanc++;
-	     *lgcoup = largeur;
-	     lgmot = 1;		/* prepare un nouveau mot */
+		(*nChars) += wordWidth;
+	     spaceCount++;
+	     *breakLength = width;
+	     wordWidth = 1;		/* prepare un nouveau mot */
 	     i++;		/* nombre de caracteres traites */
-	     icar++;		/* indice du prochain caractere */
-	     lgnew += lgcar;
-	     largeur += lgblanc;
+	     charIndex++;		/* indice du prochain caractere */
+	     newWidth += carWidth;
+	     width += spaceWidth;
 	  }
 	/*  Si c'est un autre caractere */
 	else
 	  {
-	     lgmot++;
+	     wordWidth++;
 	     i++;		/* nombre de caracteres traites */
-	     icar++;		/* indice du prochain caractere */
-	     lgnew += lgcar;
-	     largeur += lgcar;
+	     charIndex++;		/* indice du prochain caractere */
+	     newWidth += carWidth;
+	     width += carWidth;
 	  }
      }
 
-   /* On supprime eventuellement les blancs en fin de ligne avant la coupure */
-   if (adbuff != NULL && saut != 0)
+   /* supprime eventuellement les blancs en fin de ligne avant la coupure */
+   if (pBuffer != NULL && dummySpaces != 0)
       /* Il a peut-etre des blancs a supprimer */
-      nonfini = TRUE;
-   else if (ilg >= pBox->BxWidth)
+      still = TRUE;
+   else if (length >= pBox->BxWidth)
       /* Il a peut-etre des blancs a supprimer */
-      nonfini = TRUE;
+      still = TRUE;
    else
-      nonfini = FALSE;
+      still = FALSE;
 
-   while (nonfini && *nbcar > 0)
+   while (still && *nChars > 0)
      {
-	car = (unsigned char) (adbuff->BuContent[icar - 1]);
-	if (car == BLANC)
+	character = (unsigned char) (pBuffer->BuContent[charIndex - 1]);
+	if (character == BLANC)
 	  {
 	     /* Est-ce que la coupure a lieu en fin de boite ? */
-	     if (*newbuff == NULL)
+	     if (*pNewBuff == NULL)
 	       {
-		  *newbuff = adbuff;
-		  *newicar = icar + 1;
+		  *pNewBuff = pBuffer;
+		  *newIndex = charIndex + 1;
 	       }
 
-	     /* On passe au caractere precedent */
-	     if (icar == 1)
-		if (adbuff->BuPrevious != NULL)
+	     /* passe au caractere precedent */
+	     if (charIndex == 1)
+		if (pBuffer->BuPrevious != NULL)
 		  {
-		     adbuff = adbuff->BuPrevious;
-		     icar = adbuff->BuLength;
+		     pBuffer = pBuffer->BuPrevious;
+		     charIndex = pBuffer->BuLength;
 		  }
 		else
-		   nonfini = FALSE;
+		   still = FALSE;
 	     else
-		icar--;
+		charIndex--;
 
-	     *lgcoup -= lgblanc;
-	     saut++;
-	     (*nbcar)--;
-	     (*nbblanc)--;
+	     *breakLength -= spaceWidth;
+	     dummySpaces++;
+	     (*nChars)--;
+	     (*nSpaces)--;
 	  }
 	else
-	   nonfini = FALSE;
+	   still = FALSE;
      }
 
-   if (ilg < pBox->BxWidth && Hyphenable (pBox) && lgmot > 1 && !Insert)
+   if (length < pBox->BxWidth && Hyphenable (pBox) && wordWidth > 1 && !Insert)
      {
 	/* Il faut verifier les coupures en fin de lignes precedentes */
-	nonfini = TRUE;
-	if (adligne != NULL)
+	still = TRUE;
+	if (pLine != NULL)
 	  {
-	     pLi1 = adligne->LiPrevious;
-	     cpt = 0;
-	     while (cpt < MaxSiblingBreaks && pLi1 != NULL)
-		if (pLi1->LiLastPiece != NULL)
-		   if (pLi1->LiLastPiece->BxType == BoDotted)
+	     pPreviousLine = pLine->LiPrevious;
+	     count = 0;
+	     while (count < MaxSiblingBreaks && pPreviousLine != NULL)
+		if (pPreviousLine->LiLastPiece != NULL)
+		   if (pPreviousLine->LiLastPiece->BxType == BoDotted)
 		     {
 			/* Il y a une coupure en fin de ligne */
 			/* on regarde encore la precedente */
-			pLi1 = pLi1->LiPrevious;
-			cpt++;
+			pPreviousLine = pPreviousLine->LiPrevious;
+			count++;
 		     }
 		   else
-		      pLi1 = NULL;
+		      pPreviousLine = NULL;
 		else
-		   pLi1 = NULL;
+		   pPreviousLine = NULL;
 
-	     if (cpt == MaxSiblingBreaks)
-		/* On refuse de couper le dernier mot */
-		nonfini = FALSE;
-	  }			/*if adligne != NULL */
+	     if (count == MaxSiblingBreaks)
+		/* refuse de couper le dernier mot */
+		still = FALSE;
+	  }			/*if pLine != NULL */
 
-	if (nonfini)
+	if (still)
 	  {
-	     /* On cherche reellement a couper le dernier mot de la boite */
-	     if (saut == 0)
+	     /* cherche reellement a couper le dernier mot de la boite */
+	     if (dummySpaces == 0)
 	       {
-		  /* On essaie de couper le mot unique de la boite */
-		  largeur = ilg;
-		  adbuff = pBox->BxBuffer;
-		  icar = pBox->BxFirstChar;
-		  lgmot = CutLastWord (font, langue, &adbuff, &icar, &largeur, &nonfini);
+		  /* essaie de couper le mot unique de la boite */
+		  width = length;
+		  pBuffer = pBox->BxBuffer;
+		  charIndex = pBox->BxFirstChar;
+		  wordWidth = CutLastWord (font, language, &pBuffer, &charIndex, &width, &still);
 		  /* Si la coupure a reussi */
-		  if (lgmot > 0)
+		  if (wordWidth > 0)
 		    {
-		       /* On met a jour le point de coupure */
-		       *newbuff = adbuff;
-		       *newicar = icar;
-		       *lgcoup = 0;
-		       *nbcar = 0;
+		       /* met a jour le point de coupure */
+		       *pNewBuff = pBuffer;
+		       *newIndex = charIndex;
+		       *breakLength = 0;
+		       *nChars = 0;
 		    }
 	       }
 	     else
 	       {
-		  /* On essaie de couper le mot qui suit le dernier blanc */
-		  largeur = ilg - *lgcoup - saut * bcomp;
-		  lgmot = CutLastWord (font, langue, newbuff, newicar, &largeur, &nonfini);
+		  /* essaie de couper le mot qui suit le dernier blanc */
+		  width = length - *breakLength - dummySpaces * spaceAdjust;
+		  wordWidth = CutLastWord (font, language, pNewBuff, newIndex, &width, &still);
 	       }
 
-	     if (lgmot > 0)
+	     if (wordWidth > 0)
 	       {
 		  /* Il faut mettre a jour le nombre de caracteres et */
 		  /* la longueur de la premiere partie du texte coupe */
-		  *nbcar += saut + lgmot;
-		  *nbblanc += saut;
-		  *lgcoup += largeur + saut * lgblanc;
-		  if (nonfini)
+		  *nChars += dummySpaces + wordWidth;
+		  *nSpaces += dummySpaces;
+		  *breakLength += width + dummySpaces * spaceWidth;
+		  if (still)
 		     /* Il faut engendrer un tiret d'hyphenation en fin de boite */
-		     saut = -1;
+		     dummySpaces = -1;
 		  else
 		     /* Pas de tiret a engendrer */
-		     saut = -2;
+		     dummySpaces = -2;
 	       }
-	  }			/*if nonfini */
+	  }
      }
 
    /* Si on n'a pas trouve de coupure et que le mot ne peut pas */
    /* etre rejete a la ligne suivante (1er mot de la ligne */
    /* -> on force la coupure apres au moins 1 caractere */
    /* */
-   if (saut == 0
-       && (pBox == adligne->LiFirstBox || pBox == adligne->LiFirstPiece)
-       && *newbuff != NULL)
+   if (dummySpaces == 0
+       && (pBox == pLine->LiFirstBox || pBox == pLine->LiFirstPiece)
+       && *pNewBuff != NULL)
      {
 	/* Engendre un hyphen */
-	saut = -1;
-	*lgcoup += CarWidth (173, font);
+	dummySpaces = -1;
+	*breakLength += CarWidth (173, font);
 
 	/* RemoveElement un ou plusieurs caracteres pour loger l'hyphen */
-	while (*lgcoup > ilg && *nbcar > 1)
+	while (*breakLength > length && *nChars > 1)
 	  {
-	     /* On passe au caractere precedent */
-	     if (*newicar == 1)
-		if ((*newbuff)->BuPrevious != NULL)
+	     /* passe au caractere precedent */
+	     if (*newIndex == 1)
+		if ((*pNewBuff)->BuPrevious != NULL)
 		  {
-		     *newbuff = (*newbuff)->BuPrevious;
-		     *newicar = (*newbuff)->BuLength;
+		     *pNewBuff = (*pNewBuff)->BuPrevious;
+		     *newIndex = (*pNewBuff)->BuLength;
 		  }
 		else
-		   return saut;
+		   return dummySpaces;
 	     else
-		(*newicar)--;
+		(*newIndex)--;
 
-	     *lgcoup -= CarWidth (car, font);
-	     (*nbcar)--;
+	     *breakLength -= CarWidth (character, font);
+	     (*nChars)--;
 	  }
-
      }
 
-   /* On supprime eventuellement les blancs en debut de ligne apres la coupure */
-   if (*newbuff != NULL && saut > 0)
+   /* supprime eventuellement les blancs en debut de ligne apres la coupure */
+   if (*pNewBuff != NULL && dummySpaces > 0)
       /* Il a peut-etre des blancs a supprimer */
-      nonfini = TRUE;
+      still = TRUE;
    else
-      nonfini = FALSE;
+      still = FALSE;
 
-   while (nonfini)
+   while (still)
      {
-	car = (unsigned char) ((*newbuff)->BuContent[*newicar - 1]);
-	if (car == BLANC)
+	character = (unsigned char) ((*pNewBuff)->BuContent[*newIndex - 1]);
+	if (character == BLANC)
 	  {
 
-	     /* On passe au caractere suivant */
-	     if (*newicar >= (*newbuff)->BuLength)
-		if ((*newbuff)->BuNext != NULL)
+	     /* passe au caractere suivant */
+	     if (*newIndex >= (*pNewBuff)->BuLength)
+		if ((*pNewBuff)->BuNext != NULL)
 		  {
-		     *newbuff = (*newbuff)->BuNext;
-		     *newicar = 1;
+		     *pNewBuff = (*pNewBuff)->BuNext;
+		     *newIndex = 1;
 		  }
 		else
 		  {
-		     nonfini = FALSE;
-		     (*newicar)++;
+		     still = FALSE;
+		     (*newIndex)++;
 		  }
 	     else
-		(*newicar)++;
+		(*newIndex)++;
 
-	     saut++;
+	     dummySpaces++;
 	  }
 	else
-	   nonfini = FALSE;
-     }				/*while */
-   return saut;
+	   still = FALSE;
+     }
+   return dummySpaces;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CouperBoite coupe la boi^te entiere d'indice pBox correspondant | */
-/* |            a` l'image abstraite Pv en deux boi^tes. Si force est   | */
-/* |            Vrai coupe meme sur un caracte`re, sinon on ne coupe que| */
-/* |            sur un blanc. La premie`re boi^te issue de la coupure   | */
-/* |            contiendra nbcar caracte`res. Sa longueur sera          | */
-/* |            infe'rieure a` lgmax. Le blanc sera perdu. Le reste est | */
-/* |            mis dans la boi^te de coupure suivante. Les chai^nages  | */
-/* |            sont mis a` jour.                                       | */
+/* | Coupe la boite pBox sur un caractere de rupture de ligne.          | */
+/* | width = la largeur du de'but de la boite jusqu'au point de coupure | */
+/* | brWidth = largeur du caracte`re qui force la coupure            | */
+/* | nCharssl = nombre de caracte`res avant la coupure                  | */
+/* | nSpaces = nombre d'espaces avant le point de coupure               | */
+/* | newIndex = indice du debut de texte apres le point de coupure      | */
+/* | pNewBuff = buffer du debut de texte apres le point de coupure      | */
+/* | pRootAb = pave racine de la vue (pour mise a jour des chainages)   | */
 /* ---------------------------------------------------------------------- */
-
-
 #ifdef __STDC__
-static void         CouperBoite (PtrLine adligne, PtrBox pBox, int lgmax, PtrAbstractBox Pv, boolean force)
-
+static void    ManageBreakLine (PtrBox pBox, int width, int brWidth, int nCharssl, int nSpaces, int newIndex, PtrTextBuffer pNewBuff, PtrAbstractBox pRootAb)
 #else  /* __STDC__ */
-static void         CouperBoite (adligne, pBox, lgmax, Pv, force)
-PtrLine            adligne;
+static void    ManageBreakLine (pBox, width, brWidth, nCharssl, nSpaces, newIndex, pNewBuff, pRootAb)
 PtrBox            pBox;
-int                 lgmax;
-PtrAbstractBox             Pv;
-boolean             force;
-
+int               width;
+int               brWidth;
+int               nCharssl;
+int               nSpaces;
+int               newIndex;
+PtrTextBuffer     pNewBuff;
+PtrAbstractBox    pRootAb;
 #endif /* __STDC__ */
-
 {
    PtrBox            ibox1, ibox2;
-   int                 base, larg;
-   int                 newicar, haut;
-   int                 lgbl, reste;
-   int                 nbblanc, nbcar;
-   PtrBox            avant, apres;
-   PtrTextBuffer      newbuff;
-   PtrAbstractBox             pAb;
-   ptrfont             font;
-
-   /* Initialisations */
-   pAb = pBox->BxAbstractBox;
-   haut = pBox->BxHeight;
-   base = pBox->BxHorizRef;
-   avant = pBox->BxPrevious;
-   apres = pBox->BxNext;
-   font = pBox->BxFont;
-
-   /* Si coupure sur un blanc le blanc de coupure est perdu */
-   reste = CarCoup (adligne, pBox, lgmax, font, &nbcar, &larg, &nbblanc, &newicar, &newbuff);
-
-   /* Creation de la 1ere boite qui contient le debut de la chaine */
-   if (reste <= 0)
-      lgbl = 0;
-   else
-      lgbl = CarWidth (BLANC, font);
-
-   /* Creation de deux boites de coupure :                           */
-   /* - dans le cas general si Carcoup a trouve' un point de coupure */
-   /*   soit un blanc (reste>0), soit un point d'hyphe'nation  avec  */
-   /*   ge'ne'ration d'un tiret (reste=-1) ou sans (reste=-2)        */
-   /* - si la coupure est force'e, sur n'importe quel caractere      */
-   /* - pour sauter les derniers blancs de fin de texte a` condition */
-   /*   qu'il reste au moins un blanc pour justifier le texte restant */
-   if (newbuff != NULL
-       && (reste != 0 || nbblanc != 0 || force)
-       && (pBox->BxWidth != lgmax || reste != pBox->BxNSpaces))
-     {
-	ibox1 = GetBox (pAb);
-	ibox2 = GetBox (pAb);
-     }
-   else
-     {
-	ibox1 = NULL;
-	ibox2 = NULL;
-     }
-
-   /* Traitement particulier des coupures de mots sans genenration du tiret */
-   if (reste == -2)
-      reste = 0;
-
-   if (ibox1 != NULL && ibox2 != NULL)
-     {
-	/* Initialise le contenu de cette nouvelle boite */
-	ibox1->BxIndChar = 0;
-	ibox1->BxContentWidth = TRUE;
-	ibox1->BxContentHeight = TRUE;
-	ibox1->BxFont = font;
-	ibox1->BxUnderline = pBox->BxUnderline;
-	ibox1->BxThickness = pBox->BxThickness;
-	ibox1->BxHeight = haut;
-	ibox1->BxWidth = larg;
-	ibox1->BxHorizRef = base;
-	if (reste == -1)
-	  {
-	     /* La boite doit etre completee par un tiret d'hyphenation */
-	     ibox1->BxType = BoDotted;
-	     larg -= CarWidth (173, font);
-	     reste = 0;		/* il n'y a pas de blanc saute */
-	  }
-	else
-	   ibox1->BxType = BoPiece;
-	ibox1->BxBuffer = pBox->BxBuffer;
-	ibox1->BxNChars = nbcar;
-	ibox1->BxNSpaces = nbblanc;
-	ibox1->BxFirstChar = pBox->BxFirstChar;
-
-	/* Initialise le contenu de la deuxieme boite */
-	ibox2->BxContentWidth = TRUE;
-	ibox2->BxContentHeight = TRUE;
-	ibox2->BxHeight = haut;
-	ibox2->BxFont = font;
-	ibox2->BxUnderline = pBox->BxUnderline;
-	ibox2->BxThickness = pBox->BxThickness;
-	ibox2->BxHorizRef = base;
-	ibox2->BxType = BoPiece;
-	ibox2->BxBuffer = newbuff;
-	ibox2->BxIndChar = nbcar + reste;
-	ibox2->BxFirstChar = newicar;
-	ibox2->BxNChars = pBox->BxNChars - reste - nbcar;
-	ibox2->BxNSpaces = pBox->BxNSpaces - reste - nbblanc;
-	ibox2->BxWidth = pBox->BxWidth - larg - reste * lgbl;
-
-	/* Si la boite est vide on annule les autres valeurs */
-	if (ibox2->BxNChars == 0)
-	  {
-	     ibox2->BxWidth = 0;
-	     ibox2->BxNSpaces = 0;
-	  }
-
-	/* Modifie le chainage des boites terminales */
-	ibox1->BxPrevious = avant;
-	if (avant != NULL)
-	   avant->BxNext = ibox1;
-	else
-	   Pv->AbBox->BxNext = ibox1;
-	ibox1->BxNext = ibox2;
-	ibox2->BxPrevious = ibox1;
-	ibox1->BxNexChild = ibox2;
-	ibox2->BxNexChild = NULL;
-	ibox2->BxNext = apres;
-	if (apres != NULL)
-	   apres->BxPrevious = ibox2;
-	else
-	   Pv->AbBox->BxPrevious = ibox2;
-
-	/* Mise a jour de la boite englobante */
-	pBox->BxType = BoSplit;
-	pBox->BxNexChild = ibox1;
-     }
-
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* | Coupe la boite pBox sur un caracte`re de coupure force'e.          | */
-/* | large = la largeur du de'but de la boite jusqu'au point de coupure | */
-/* | lgcarsp = largeur du caracte`re qui force la coupure               | */
-/* | nbcarsl = nombre de caracte`res avant la coupure                   | */
-/* | nbblanc = nombre d'espaces avant le point de coupure               | */
-/* | newicar = indice du debut de texte apres le point de coupure       | */
-/* | newbuff = buffer du debut de texte apres le point de coupure       | */
-/* | Pv = AbstractBox' racine de la vue (pour mise a jour des chainages)       | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static void         cutbox (PtrBox pBox, int large, int lgcarsp, int nbcarsl, int nbblanc, int newicar, PtrTextBuffer newbuff, PtrAbstractBox Pv)
-
-#else  /* __STDC__ */
-static void         cutbox (pBox, large, lgcarsp, nbcarsl, nbblanc, newicar, newbuff, Pv)
-PtrBox            pBox;
-int                 large;
-int                 lgcarsp;
-int                 nbcarsl;
-int                 nbblanc;
-int                 newicar;
-PtrTextBuffer      newbuff;
-PtrAbstractBox             Pv;
-
-#endif /* __STDC__ */
-
-{
-   PtrBox            ibox1, ibox2;
-   int                 base;
-   int                 haut;
-   PtrBox            avant, apres;
-   PtrAbstractBox             pAb;
-   ptrfont             font;
-
+   int               baseline;
+   int               height;
+   PtrBox            pPreviousBox, pNextBox;
+   PtrAbstractBox    pAb;
+   ptrfont           font;
 
    /* Initialisation */
    ibox1 = NULL;
    pAb = pBox->BxAbstractBox;
-   haut = pBox->BxHeight;
-   base = pBox->BxHorizRef;
-   avant = pBox->BxPrevious;
-   apres = pBox->BxNext;
+   height = pBox->BxHeight;
+   baseline = pBox->BxHorizRef;
+   pPreviousBox = pBox->BxPrevious;
+   pNextBox = pBox->BxNext;
    font = pBox->BxFont;
 
    /* Creation de la boite de coupure pour le texte apres la coupure */
-   if (newbuff != NULL)
+   if (pNewBuff != NULL)
      {
 	/* Si la boite est entiere, il faut une boite de coupure */
-	/* pour contenir le texte avant le point de coupure      */
+	/* pour contenir le texte pPreviousBox le point de coupure      */
 	if (pBox->BxType == BoComplete)
 	  {
 	     ibox1 = GetBox (pAb);
 	     if (ibox1 == NULL)
-		goto Label_10;	/* plus de boite */
+	       /* plus de boite */
+	       return;
 	  }
 	ibox2 = GetBox (pAb);
      }
@@ -1018,19 +836,19 @@ PtrAbstractBox             Pv;
      {
 	ibox2->BxContentWidth = TRUE;
 	ibox2->BxContentHeight = TRUE;
-	ibox2->BxHeight = haut;
+	ibox2->BxHeight = height;
 	ibox2->BxFont = font;
 	ibox2->BxUnderline = pBox->BxUnderline;
 	ibox2->BxThickness = pBox->BxThickness;
-	ibox2->BxHorizRef = base;
+	ibox2->BxHorizRef = baseline;
 	ibox2->BxType = BoPiece;
-	ibox2->BxBuffer = newbuff;
+	ibox2->BxBuffer = pNewBuff;
 	ibox2->BxNexChild = NULL;
-	ibox2->BxIndChar = pBox->BxIndChar + nbcarsl + 1;
-	ibox2->BxFirstChar = newicar;
-	ibox2->BxNChars = pBox->BxNChars - nbcarsl - 1;
-	ibox2->BxNSpaces = pBox->BxNSpaces - nbblanc;
-	ibox2->BxWidth = pBox->BxWidth - large - lgcarsp;
+	ibox2->BxIndChar = pBox->BxIndChar + nCharssl + 1;
+	ibox2->BxFirstChar = newIndex;
+	ibox2->BxNChars = pBox->BxNChars - nCharssl - 1;
+	ibox2->BxNSpaces = pBox->BxNSpaces - nSpaces;
+	ibox2->BxWidth = pBox->BxWidth - width - brWidth;
 
 	/* Si la boite est entiere, il faut une boite de coupure */
 	/* pour contenir le texte avant le point de coupure      */
@@ -1043,29 +861,29 @@ PtrAbstractBox             Pv;
 	     ibox1->BxUnderline = pBox->BxUnderline;
 	     ibox1->BxThickness = pBox->BxThickness;
 	     ibox1->BxFont = font;
-	     ibox1->BxHeight = haut;
-	     ibox1->BxHorizRef = base;
+	     ibox1->BxHeight = height;
+	     ibox1->BxHorizRef = baseline;
 	     ibox1->BxType = BoPiece;
 	     ibox1->BxBuffer = pBox->BxBuffer;
 	     ibox1->BxFirstChar = pBox->BxFirstChar;
-	     ibox1->BxWidth = large;
-	     ibox1->BxNSpaces = nbblanc;
-	     ibox1->BxNChars = nbcarsl;
+	     ibox1->BxWidth = width;
+	     ibox1->BxNSpaces = nSpaces;
+	     ibox1->BxNChars = nCharssl;
 
 	     /* Modifie le chainage des boites terminales */
 	     ibox1->BxNexChild = ibox2;
-	     ibox1->BxPrevious = avant;
-	     if (avant != NULL)
-		avant->BxNext = ibox1;
+	     ibox1->BxPrevious = pPreviousBox;
+	     if (pPreviousBox != NULL)
+		pPreviousBox->BxNext = ibox1;
 	     else
-		Pv->AbBox->BxNext = ibox1;
+		pRootAb->AbBox->BxNext = ibox1;
 	     ibox1->BxNext = ibox2;
 	     ibox2->BxPrevious = ibox1;
-	     ibox2->BxNext = apres;
-	     if (apres != NULL)
-		apres->BxPrevious = ibox2;
+	     ibox2->BxNext = pNextBox;
+	     if (pNextBox != NULL)
+		pNextBox->BxPrevious = ibox2;
 	     else
-		Pv->AbBox->BxPrevious = ibox2;
+		pRootAb->AbBox->BxPrevious = ibox2;
 
 	     /* Mise a jour de la boite englobante */
 	     pBox->BxType = BoSplit;
@@ -1074,114 +892,257 @@ PtrAbstractBox             Pv;
 	/* Si la boite est deja une boite de coupure, il faut la mettre a jour */
 	else
 	  {
-	     pBox->BxWidth = large;
-	     pBox->BxNSpaces = nbblanc;
-	     pBox->BxNChars = nbcarsl;
+	     pBox->BxWidth = width;
+	     pBox->BxNSpaces = nSpaces;
+	     pBox->BxNChars = nCharssl;
 
 	     /* Modifie les boites terminales */
 	     pBox->BxNexChild = ibox2;
 	     pBox->BxNext = ibox2;
 	     ibox2->BxPrevious = pBox;
-	     ibox2->BxNext = apres;
-	     if (apres != NULL)
-		apres->BxPrevious = ibox2;
+	     ibox2->BxNext = pNextBox;
+	     if (pNextBox != NULL)
+		pNextBox->BxPrevious = ibox2;
 	     else
-		Pv->AbBox->BxPrevious = ibox2;
+		pRootAb->AbBox->BxPrevious = ibox2;
 	  }
 
      }
-
- Label_10:;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | Teste s'il y a un caracte`re de coupure force'e dans la boite pBox | */
+/* |    BreakBox coupe la boi^te entiere d'indice pBox correspondant    | */
+/* |            a` l'image abstraite pAb en deux boi^tes. Si force est  | */
+/* |            Vrai coupe meme sur un caracte`re, sinon on ne coupe que| */
+/* |            sur un blanc. La premie`re boi^te issue de la coupure   | */
+/* |            contiendra nChars caracte`res. Sa longueur sera         | */
+/* |            infe'rieure a` maxLength. Le blanc est perdu et le reste| */
+/* |            mis dans la boi^te de coupure suivante. Les chai^nages  | */
+/* |            sont mis a` jour.                                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         BreakBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb, boolean force)
+#else  /* __STDC__ */
+static void         BreakBox (pLine, pBox, maxLength, pRootAb, force)
+PtrLine             pLine;
+PtrBox              pBox;
+int                 maxLength;
+PtrAbstractBox      pRootAb;
+boolean             force;
+#endif /* __STDC__ */
+{
+   PtrBox           ibox1, ibox2;
+   int              baseline, larg;
+   int              newIndex, height;
+   int              spaceWidth, lostPixels;
+   int              nSpaces, nChars;
+   PtrBox           pPreviousBox, pNextBox;
+   PtrTextBuffer    pNewBuff;
+   PtrAbstractBox   pAb;
+   ptrfont          font;
+
+   /* Initialisations */
+   pAb = pBox->BxAbstractBox;
+   height = pBox->BxHeight;
+   baseline = pBox->BxHorizRef;
+   pPreviousBox = pBox->BxPrevious;
+   pNextBox = pBox->BxNext;
+   font = pBox->BxFont;
+
+   /* Si coupure sur un blanc le blanc de coupure est perdu */
+   lostPixels = SearchBreak (pLine, pBox, maxLength, font, &nChars, &larg, &nSpaces, &newIndex, &pNewBuff);
+
+   /* Creation de la 1ere boite qui contient le debut de la chaine */
+   if (lostPixels <= 0)
+      spaceWidth = 0;
+   else
+      spaceWidth = CarWidth (BLANC, font);
+
+   /* Creation de deux boites de coupure :                           */
+   /* - dans le cas general si SearchBreak a trouve' un point de coupure */
+   /*   soit un blanc (lostPixels>0), soit un point d'hyphe'nation  avec  */
+   /*   ge'ne'ration d'un tiret (lostPixels=-1) ou sans (lostPixels=-2)        */
+   /* - si la coupure est force'e, sur n'importe quel caractere      */
+   /* - pour dummySpaceser les derniers blancs de fin de texte a` condition */
+   /*   qu'il lostPixels au moins un blanc pour justifier le texte restant */
+   if (pNewBuff != NULL
+       && (lostPixels != 0 || nSpaces != 0 || force)
+       && (pBox->BxWidth != maxLength || lostPixels != pBox->BxNSpaces))
+     {
+	ibox1 = GetBox (pAb);
+	ibox2 = GetBox (pAb);
+     }
+   else
+     {
+	ibox1 = NULL;
+	ibox2 = NULL;
+     }
+
+   /* Traitement particulier des coupures de mots sans genenration du tiret */
+   if (lostPixels == -2)
+      lostPixels = 0;
+
+   if (ibox1 != NULL && ibox2 != NULL)
+     {
+	/* Initialise le contenu de cette nouvelle boite */
+	ibox1->BxIndChar = 0;
+	ibox1->BxContentWidth = TRUE;
+	ibox1->BxContentHeight = TRUE;
+	ibox1->BxFont = font;
+	ibox1->BxUnderline = pBox->BxUnderline;
+	ibox1->BxThickness = pBox->BxThickness;
+	ibox1->BxHeight = height;
+	ibox1->BxWidth = larg;
+	ibox1->BxHorizRef = baseline;
+	if (lostPixels == -1)
+	  {
+	     /* La boite doit etre completee par un tiret d'hyphenation */
+	     ibox1->BxType = BoDotted;
+	     larg -= CarWidth (173, font);
+	     lostPixels = 0;		/* il n'y a pas de blanc dummySpacese */
+	  }
+	else
+	   ibox1->BxType = BoPiece;
+	ibox1->BxBuffer = pBox->BxBuffer;
+	ibox1->BxNChars = nChars;
+	ibox1->BxNSpaces = nSpaces;
+	ibox1->BxFirstChar = pBox->BxFirstChar;
+
+	/* Initialise le contenu de la deuxieme boite */
+	ibox2->BxContentWidth = TRUE;
+	ibox2->BxContentHeight = TRUE;
+	ibox2->BxHeight = height;
+	ibox2->BxFont = font;
+	ibox2->BxUnderline = pBox->BxUnderline;
+	ibox2->BxThickness = pBox->BxThickness;
+	ibox2->BxHorizRef = baseline;
+	ibox2->BxType = BoPiece;
+	ibox2->BxBuffer = pNewBuff;
+	ibox2->BxIndChar = nChars + lostPixels;
+	ibox2->BxFirstChar = newIndex;
+	ibox2->BxNChars = pBox->BxNChars - lostPixels - nChars;
+	ibox2->BxNSpaces = pBox->BxNSpaces - lostPixels - nSpaces;
+	ibox2->BxWidth = pBox->BxWidth - larg - lostPixels * spaceWidth;
+
+	/* Si la boite est vide on annule les autres valeurs */
+	if (ibox2->BxNChars == 0)
+	  {
+	     ibox2->BxWidth = 0;
+	     ibox2->BxNSpaces = 0;
+	  }
+
+	/* Modifie le chainage des boites terminales */
+	ibox1->BxPrevious = pPreviousBox;
+	if (pPreviousBox != NULL)
+	   pPreviousBox->BxNext = ibox1;
+	else
+	   pRootAb->AbBox->BxNext = ibox1;
+	ibox1->BxNext = ibox2;
+	ibox2->BxPrevious = ibox1;
+	ibox1->BxNexChild = ibox2;
+	ibox2->BxNexChild = NULL;
+	ibox2->BxNext = pNextBox;
+	if (pNextBox != NULL)
+	   pNextBox->BxPrevious = ibox2;
+	else
+	   pRootAb->AbBox->BxPrevious = ibox2;
+
+	/* Mise a jour de la boite englobante */
+	pBox->BxType = BoSplit;
+	pBox->BxNexChild = ibox1;
+     }
+
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | Teste s'il y a un caractere de rupture de ligne dans la boite pBox | */
 /* | Si oui retourne la valeur Vrai, sinon la valeur FALSE.             | */
 /* | Au retour :                                                        | */
-/* | large = la largeur du de'but de la boite jusqu'au point de coupure | */
-/* | lgcarsp = largeur du caracte`re qui force la coupure               | */
-/* | nbcarsl = nombre de caracte`res avant la coupure                   | */
-/* | nbblanc = nombre d'espaces avant le point de coupure               | */
-/* | newicar = indice du debut de texte apres le point de coupure       | */
-/* | newbuff = buffer du debut de texte apres le point de coupure       | */
-/* | Pv = AbstractBox' racine de la vue (pour mise a jour des chainages)       | */
+/* | width = la largeur du de'but de la boite jusqu'au point de coupure | */
+/* | brWidth = largeur du caracte`re qui force la coupure            | */
+/* | nCharssl = nombre de caracte`res avant la coupure                  | */
+/* | nSpaces = nombre d'espaces avant le point de coupure               | */
+/* | newIndex = indice du debut de texte apres le point de coupure      | */
+/* | pNewBuff = buffer du debut de texte apres le point de coupure      | */
+/* | pRootAb = pave racine de la vue (pour mise a jour des chainages)   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             testcsl (PtrBox pBox, int *large, int *lgcarspec, int *nbcarsl, int *nbblanc, int *newicar, PtrTextBuffer * newbuff)
+boolean             SearchBreakLine (PtrBox pBox, int *width, int *brWidthec, int *nCharssl, int *nSpaces, int *newIndex, PtrTextBuffer * pNewBuff)
 
 #else  /* __STDC__ */
-boolean             testcsl (pBox, large, lgcarspec, nbcarsl, nbblanc, newicar, newbuff)
+boolean             SearchBreakLine (pBox, width, brWidthec, nCharssl, nSpaces, newIndex, pNewBuff)
 PtrBox            pBox;
-int                *large;
-int                *lgcarspec;
-int                *nbcarsl;
-int                *nbblanc;
-int                *newicar;
-PtrTextBuffer     *newbuff;
+int                *width;
+int                *brWidthec;
+int                *nCharssl;
+int                *nSpaces;
+int                *newIndex;
+PtrTextBuffer     *pNewBuff;
 
 #endif /* __STDC__ */
 
 {
    int                 i, j;
    unsigned char       car;
-   int                 nbcar;
+   int                 nChars;
    boolean             csexist;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer      pBuffer;
    ptrfont             font;
 
 
    csexist = FALSE;
-   *large = 0;
-   *nbcarsl = 0;
-   *nbblanc = 0;
+   *width = 0;
+   *nCharssl = 0;
+   *nSpaces = 0;
    j = 1;
-   adbuff = pBox->BxBuffer;
-   nbcar = pBox->BxNChars;
+   pBuffer = pBox->BxBuffer;
+   nChars = pBox->BxNChars;
    font = pBox->BxFont;
    i = pBox->BxFirstChar;
-   *newbuff = adbuff;
-   *newicar = 1;
+   *pNewBuff = pBuffer;
+   *newIndex = 1;
 
    /* Si la boite debute en fin de buffer -> on passe au buffer suivant */
-   if (adbuff != NULL)
-      if (i > adbuff->BuLength)
+   if (pBuffer != NULL)
+      if (i > pBuffer->BuLength)
 	{
-	   adbuff = adbuff->BuNext;
+	   pBuffer = pBuffer->BuNext;
 	   i = 1;
 	}			/*if */
 
-   while (j <= nbcar && !(csexist) && adbuff != NULL)
+   while (j <= nChars && !(csexist) && pBuffer != NULL)
      {
-	car = (unsigned char) (adbuff->BuContent[i - 1]);
+	car = (unsigned char) (pBuffer->BuContent[i - 1]);
 	if (car == SAUT_DE_LIGNE)	/* Est-ce un caractere de coupure forcee ? */
 	  {
 	     csexist = TRUE;
-	     *lgcarspec = CarWidth (car, font);
+	     *brWidthec = CarWidth (car, font);
 	     /* Faut-il changer de buffer ? */
-	     if (i >= adbuff->BuLength)
+	     if (i >= pBuffer->BuLength)
 	       {
 		  /* La caractere de coupure force' est en fin de texte */
-		  if (adbuff->BuNext == NULL)
+		  if (pBuffer->BuNext == NULL)
 		    {
-		       /* On reste en fin de buffer */
-		       j = nbcar;
+		       /* lostPixels en fin de buffer */
+		       j = nChars;
 		       i++;
 		    }
 		  /* Sinon on passe au debut du buffer suivant */
 		  else
 		    {
-		       adbuff = adbuff->BuNext;
+		       pBuffer = pBuffer->BuNext;
 		       i = 1;
 		    }
 	       }
 	     else
 		i++;
 
-	     *newbuff = adbuff;
-	     *newicar = i;
-	     *nbcarsl = j - 1;
+	     *pNewBuff = pBuffer;
+	     *newIndex = i;
+	     *nCharssl = j - 1;
 	     return csexist;
 	  }
 	else
@@ -1189,17 +1150,17 @@ PtrTextBuffer     *newbuff;
 	  {
 	     if (car == BLANC)
 	       {
-		  (*nbblanc)++;
-		  *large += CarWidth (BLANC, font);
+		  (*nSpaces)++;
+		  *width += CarWidth (BLANC, font);
 	       }
 	     else
-		*large += CarWidth (car, font);
+		*width += CarWidth (car, font);
 	  }
-	if (i >= adbuff->BuLength)	/* Faut-il changer de buffer ? */
+	if (i >= pBuffer->BuLength)	/* Faut-il changer de buffer ? */
 	  {
-	     adbuff = adbuff->BuNext;
-	     if (adbuff == NULL)
-		j = nbcar;
+	     pBuffer = pBuffer->BuNext;
+	     if (pBuffer == NULL)
+		j = nChars;
 	     i = 1;
 	  }
 	else
@@ -1211,71 +1172,71 @@ PtrTextBuffer     *newbuff;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReCouperBoite recoupe la boite pBox deja coupee pour l'image    | */
-/* |            abstraite Pv. La coupure a lieu meme s'il n'y a pas de  | */
-/* |            blanc (coupure forcee). La boite pBox contiendra nbcar  | */
+/* |    ReBreakBox recoupe la boite pBox deja coupee pour l'image    | */
+/* |            abstraite pAb. La coupure a lieu meme s'il n'y a pas de  | */
+/* |            blanc (coupure forcee). La boite pBox contiendra nChars  | */
 /* |            caracteres.                                             | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-static void         ReCouperBoite (PtrLine adligne, PtrBox pBox, int lgmax, PtrAbstractBox Pv)
+static void        ReBreakBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb)
 
 #else  /* __STDC__ */
-static void         ReCouperBoite (adligne, pBox, lgmax, Pv)
-PtrLine            adligne;
-PtrBox            pBox;
-int                 lgmax;
-PtrAbstractBox             Pv;
+static void        ReBreakBox (pLine, pBox, maxLength, pRootAb)
+PtrLine            pLine;
+PtrBox             pBox;
+int                maxLength;
+PtrAbstractBox     pRootAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrBox            box2, apres;
-   int                 oldlg, lgbl;
-   int                 nbcar;
-   int                 larg, reste, pl;
-   int                 newicar, nbblanc;
-   int                 haut, base;
-   PtrTextBuffer      newbuff;
-   PtrAbstractBox             pAb;
-   ptrfont             font;
-   int                 oldlarge, oldnbbl;
+   PtrBox           box2, pNextBox;
+   int              oldlg, spaceWidth;
+   int              nChars;
+   int              larg, lostPixels, pl;
+   int              newIndex, nSpaces;
+   int              height, baseline;
+   PtrTextBuffer    pNewBuff;
+   PtrAbstractBox   pAb;
+   ptrfont          font;
+   int              oldwidth, oldnbbl;
 
    pAb = pBox->BxAbstractBox;
-   haut = pBox->BxHeight;
-   base = pBox->BxHorizRef;
-   apres = pBox->BxNext;
+   height = pBox->BxHeight;
+   baseline = pBox->BxHorizRef;
+   pNextBox = pBox->BxNext;
    pl = pBox->BxIndChar;
    oldlg = pBox->BxNChars;
    font = pBox->BxFont;
-   oldlarge = pBox->BxWidth;
+   oldwidth = pBox->BxWidth;
    oldnbbl = pBox->BxNSpaces;
 
    /* Si coupure sur un blanc le blanc de coupure est perdu */
-   reste = CarCoup (adligne, pBox, lgmax, font, &nbcar, &larg, &nbblanc, &newicar, &newbuff);
-   if (reste <= 0)
-      lgbl = 0;
+   lostPixels = SearchBreak (pLine, pBox, maxLength, font, &nChars, &larg, &nSpaces, &newIndex, &pNewBuff);
+   if (lostPixels <= 0)
+      spaceWidth = 0;
    else
-      lgbl = CarWidth (BLANC, font);
+      spaceWidth = CarWidth (BLANC, font);
 
    /* Creation de la boite suivante qui contient la fin de la chaine */
-   /* - dans le cas general si Carcoup a trouve' un point de coupure */
-   /*   soit un blanc (reste>0), soit un point d'hyphe'nation  avec  */
-   /*   ge'ne'ration d'un tiret (reste=-1) ou sans (reste=-2)        */
-   /* - pour sauter les derniers blancs de fin de texte a` condition */
-   /*   qu'il reste au moins un blanc pour justifier le texte restant */
-   if (newbuff != NULL
-/**528*/  && (reste != 0 || nbblanc != 0 || oldnbbl == 0)
-       && (pBox->BxWidth != lgmax || reste != pBox->BxNSpaces))
+   /* - dans le cas general si SearchBreak a trouve' un point de coupure */
+   /*   soit un blanc (lostPixels>0), soit un point d'hyphe'nation  avec  */
+   /*   ge'ne'ration d'un tiret (lostPixels=-1) ou sans (lostPixels=-2)        */
+   /* - pour dummySpaceser les derniers blancs de fin de texte a` condition */
+   /*   qu'il lostPixels au moins un blanc pour justifier le texte restant */
+   if (pNewBuff != NULL
+/**528*/  && (lostPixels != 0 || nSpaces != 0 || oldnbbl == 0)
+       && (pBox->BxWidth != maxLength || lostPixels != pBox->BxNSpaces))
       box2 = GetBox (pAb);
    else
       box2 = NULL;
 
 
    /* Coupure du mot sans generation du tiret */
-   if (reste == -2)
-      reste = 0;
+   if (lostPixels == -2)
+      lostPixels = 0;
 
    /* Initialise le contenu de cette nouvelle boite */
    if (box2 != NULL)
@@ -1285,44 +1246,44 @@ PtrAbstractBox             Pv;
 	pBox->BxNext = box2;
 
 	/* Mise a jour de la  boite recoupee */
-	pBox->BxNChars = nbcar;
+	pBox->BxNChars = nChars;
 	pBox->BxWidth = larg;
-	pBox->BxNSpaces = nbblanc;
-	if (reste == -1)
+	pBox->BxNSpaces = nSpaces;
+	if (lostPixels == -1)
 	  {
 	     /* La boite doit etre completee par un tiret d'hyphenation */
 	     pBox->BxType = BoDotted;
 	     larg -= CarWidth (173, font);
-	     reste = 0;		/* il n'y a pas de blanc saute */
+	     lostPixels = 0;		/* il n'y a pas de blanc dummySpacese */
 	  }
 	else
 	   pBox->BxType = BoPiece;
 
 	box2->BxContentWidth = TRUE;
 	box2->BxContentHeight = TRUE;
-	box2->BxHeight = haut;
+	box2->BxHeight = height;
 	box2->BxFont = font;
 	box2->BxUnderline = pBox->BxUnderline;
 	box2->BxThickness = pBox->BxThickness;
-	box2->BxHorizRef = base;
+	box2->BxHorizRef = baseline;
 	box2->BxType = BoPiece;
-	box2->BxBuffer = newbuff;
+	box2->BxBuffer = pNewBuff;
 	box2->BxNexChild = NULL;
 
 	/* Modifie le chainage des boites terminales */
 	box2->BxPrevious = pBox;
-	box2->BxNext = apres;
-	if (apres != NULL)
-	   apres->BxPrevious = box2;
+	box2->BxNext = pNextBox;
+	if (pNextBox != NULL)
+	   pNextBox->BxPrevious = box2;
 	else
-	   Pv->AbBox->BxPrevious = box2;
+	   pRootAb->AbBox->BxPrevious = box2;
 
-	/* Si reste > 0 -> Il faut retirer les caracteres blanc de la boite */
-	box2->BxIndChar = pl + reste + nbcar;
-	box2->BxFirstChar = newicar;
-	box2->BxNChars = oldlg - reste - nbcar;
-	box2->BxNSpaces = oldnbbl - reste - nbblanc;
-	box2->BxWidth = oldlarge - larg - reste * lgbl;
+	/* Si lostPixels > 0 -> Il faut retirer les caracteres blanc de la boite */
+	box2->BxIndChar = pl + lostPixels + nChars;
+	box2->BxFirstChar = newIndex;
+	box2->BxNChars = oldlg - lostPixels - nChars;
+	box2->BxNSpaces = oldnbbl - lostPixels - nSpaces;
+	box2->BxWidth = oldwidth - larg - lostPixels * spaceWidth;
 
 	/* Si la boite est vide on annule les autres valeurs */
 	if (box2->BxNChars == 0)
@@ -1339,19 +1300,19 @@ PtrAbstractBox             Pv;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AjoutBoite (PtrBox pBox, int *sousbase, int *surbase, PtrLine adligne)
+void                AjoutBoite (PtrBox pBox, int *sousbase, int *surbase, PtrLine pLine)
 
 #else  /* __STDC__ */
-void                AjoutBoite (pBox, sousbase, surbase, adligne)
+void                AjoutBoite (pBox, sousbase, surbase, pLine)
 PtrBox            pBox;
 int                *sousbase;
 int                *surbase;
-PtrLine            adligne;
+PtrLine            pLine;
 
 #endif /* __STDC__ */
 
 {
-   adligne->LiRealLength += pBox->BxWidth;
+   pLine->LiRealLength += pBox->BxWidth;
    /* Calcule la hauteur courante de la ligne */
    if (*surbase < pBox->BxHorizRef)
       *surbase = pBox->BxHorizRef;
@@ -1362,11 +1323,11 @@ PtrLine            adligne;
 
 /* ---------------------------------------------------------------------- */
 /* |    RemplirLigne remplit la ligne dont l'adresse est passee en      | */
-/* |            parametre pour l'image abstraite Pv.                    | */
+/* |            parametre pour l'image abstraite pRootAb.                    | */
 /*CP |          Le parametre uneSuite determine si la paragraphe a ou   | */
 /*CP |          n'a pas de suite dans une page suivante.                | */
-/* |            On suppose LiFirstBox et LiFirstPiece pre'alablement remplis.     | */
-/* |            On calcule l'indice de la derniere boite qui peut       | */
+/* |            suppose LiFirstBox et LiFirstPiece pre'alablement remplis.     | */
+/* |            calcule l'indice de la derniere boite qui peut       | */
 /* |            entrer dans la ligne et on met a` jour le descripteur   | */
 /* |            de ligne : LiLastBox et LiLastPiece (si coupee).                | */
 /* |            Les positions des boites mises en lignes sont calculees | */
@@ -1375,12 +1336,12 @@ PtrLine            adligne;
 /* ---------------------------------------------------------------------- */
 #ifdef __COLPAGE__
 #ifdef __STDC__
-void                RemplirLigne (PtrLine adligne, PtrAbstractBox Pv, boolean uneSuite, boolean * plein, boolean * ajust)
+void                RemplirLigne (PtrLine pLine, PtrAbstractBox pRootAb, boolean uneSuite, boolean * plein, boolean * ajust)
 
 #else  /* __STDC__ */
-void                RemplirLigne (adligne, Pv, uneSuite, plein, ajust)
-PtrLine            adligne;
-PtrAbstractBox             Pv;
+void                RemplirLigne (pLine, pRootAb, uneSuite, plein, ajust)
+PtrLine            pLine;
+PtrAbstractBox             pRootAb;
 boolean             uneSuite;
 boolean            *plein;
 boolean            *ajust;
@@ -1389,12 +1350,12 @@ boolean            *ajust;
 
 #else  /* __COLPAGE__ */
 #ifdef __STDC__
-void                RemplirLigne (PtrLine adligne, PtrAbstractBox Pv, boolean * plein, boolean * ajust)
+void                RemplirLigne (PtrLine pLine, PtrAbstractBox pRootAb, boolean * plein, boolean * ajust)
 
 #else  /* __STDC__ */
-void                RemplirLigne (adligne, Pv, plein, ajust)
-PtrLine            adligne;
-PtrAbstractBox             Pv;
+void                RemplirLigne (pLine, pRootAb, plein, ajust)
+PtrLine            pLine;
+PtrAbstractBox             pRootAb;
 boolean            *plein;
 boolean            *ajust;
 
@@ -1404,50 +1365,50 @@ boolean            *ajust;
 {
    int                 xi, xmax;
    int                 lmax;
-   boolean             nonfini;
+   boolean             still;
    boolean             coup;
    PtrBox            pBox;
    PtrBox            nbox;
    int                 surbase;
    int                 sousbase;
    PtrBox            lastbox;
-   int                 large;
-   int                 lgcarspec;
-   int                 nbcarsl;
-   int                 nbblanc;
-   int                 newicar;
-   PtrTextBuffer      newbuff;
+   int                 width;
+   int                 brWidthec;
+   int                 nCharssl;
+   int                 nSpaces;
+   int                 newIndex;
+   PtrTextBuffer      pNewBuff;
    boolean             csexist;
 
    *plein = TRUE;
    *ajust = TRUE;
    coup = FALSE;
-   nonfini = TRUE;
-   xmax = adligne->LiXMax;
+   still = TRUE;
+   xmax = pLine->LiXMax;
    xi = 0;
    surbase = 0;
    sousbase = 0;
-   nbox = adligne->LiFirstBox;	/* la boite que l'on traite */
-   adligne->LiLastPiece = NULL;
+   nbox = pLine->LiFirstBox;	/* la boite que l'on traite */
+   pLine->LiLastPiece = NULL;
    csexist = FALSE;
 
    /* nbox est la boite courante que l'on traite    */
    /* pBox est la derniere boite mise dans la ligne */
 
    /* La premiere boite est la suite d'une boite deja coupee ? */
-   if (adligne->LiFirstPiece != NULL)
+   if (pLine->LiFirstPiece != NULL)
      {
 	/* La boite de coupure entre obligatoirement dans la ligne */
-	pBox = adligne->LiFirstPiece;
+	pBox = pLine->LiFirstPiece;
 
 	/* Est-ce que l'on rencontre une coupure force dans la boite ? */
-	csexist = testcsl (pBox, &large, &lgcarspec, &nbcarsl, &nbblanc, &newicar, &newbuff);
+	csexist = SearchBreakLine (pBox, &width, &brWidthec, &nCharssl, &nSpaces, &newIndex, &pNewBuff);
 	/* La coupure forcee arrive avant la fin de ligne */
-	if (csexist && large + xi <= xmax)
+	if (csexist && width + xi <= xmax)
 	  {
-	     cutbox (pBox, large, lgcarspec, nbcarsl, nbblanc, newicar, newbuff, Pv);
+	     ManageBreakLine (pBox, width, brWidthec, nCharssl, nSpaces, newIndex, pNewBuff, pRootAb);
 	     *ajust = FALSE;
-	     nonfini = FALSE;
+	     still = FALSE;
 	  }
 	/* La boite entre dans toute entiere dans la ligne */
 	else if (pBox->BxWidth + xi <= xmax)
@@ -1456,59 +1417,59 @@ boolean            *ajust;
 	     if (nbox == NULL)
 	       {
 		  *plein = FALSE;
-		  nonfini = FALSE;
+		  still = FALSE;
 	       }
 	  }
 	/* Il faut couper une autre fois la boite */
 	else
 	  {
-	     nonfini = FALSE;
-	     ReCouperBoite (adligne, pBox, xmax - xi, Pv);
+	     still = FALSE;
+	     ReBreakBox (pLine, pBox, xmax - xi, pRootAb);
 	  }
 
-	pBox = adligne->LiFirstPiece;
+	pBox = pLine->LiFirstPiece;
 	xi += pBox->BxWidth;
      }
    else
       /* Il n'y a pas encore de boite dans la ligne */
       pBox = NULL;
 
-   /* On recherche la boite qu'il faut couper */
-   while (nonfini)
+   /* recherche la boite qu'il faut couper */
+   while (still)
 
-      /* On refuse de mettre en ligne une boite non englobee */
+      /* refuse de mettre en ligne une boite non englobee */
       if (!nbox->BxAbstractBox->AbHorizEnclosing)
 	{
 	   *plein = TRUE;
-	   nonfini = FALSE;
+	   still = FALSE;
 
 	   /* Est-ce la premiere boite de la ligne ? */
 	   if (pBox == NULL)
-	      adligne->LiLastPiece = adligne->LiFirstPiece;
+	      pLine->LiLastPiece = pLine->LiFirstPiece;
 	   /* Est-ce que la boite precedente est coupee ? */
 	   else if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
-	      adligne->LiLastPiece = adligne->LiFirstPiece;
+	      pLine->LiLastPiece = pLine->LiFirstPiece;
 	}
       else
 	{
 	   /* Recherche si on doit forcer un return dans la boite */
 	   if (nbox->BxAbstractBox->AbAcceptLineBreak)
-	      csexist = testcsl (nbox, &large, &lgcarspec, &nbcarsl, &nbblanc, &newicar, &newbuff);
+	      csexist = SearchBreakLine (nbox, &width, &brWidthec, &nCharssl, &nSpaces, &newIndex, &pNewBuff);
 	   else
 	      csexist = FALSE;
 
 	   /* La boite produite par le return force' tient dans la ligne ? */
-	   if (csexist && large + xi <= xmax)
+	   if (csexist && width + xi <= xmax)
 	     {
-		nonfini = FALSE;
-		cutbox (nbox, large, lgcarspec, nbcarsl, nbblanc, newicar, newbuff, Pv);
+		still = FALSE;
+		ManageBreakLine (nbox, width, brWidthec, nCharssl, nSpaces, newIndex, pNewBuff, pRootAb);
 		*ajust = FALSE;
 		if (nbox->BxNexChild != NULL)
 		  {
 		     pBox = nbox->BxNexChild;
 		     /* Est-ce la boite unique de la ligne ? */
-		     if (nbox == adligne->LiFirstBox)
-			adligne->LiFirstPiece = pBox;
+		     if (nbox == pLine->LiFirstBox)
+			pLine->LiFirstPiece = pBox;
 		  }
 	     }
 	   /* La boite tient dans la ligne ? */
@@ -1520,25 +1481,25 @@ boolean            *ajust;
 		if (nbox == NULL)
 		  {
 		     *plein = FALSE;
-		     nonfini = FALSE;
+		     still = FALSE;
 		  }
 	     }
 	   /* Il faut couper la boite ou une boite precedente */
 	   else
 	     {
 		coup = TRUE;
-		nonfini = FALSE;
+		still = FALSE;
 	     }
 	}
 
    /* Traitement des coupures de boites */
    if (coup)
      {
-	/* On va essayer de couper la boite nbox ou une boite precedente */
+	/* va essayer de couper la boite nbox ou une boite precedente */
 	lmax = xmax - xi;
 
 	/* Est-ce la boite unique de la ligne ? */
-	if (nbox == adligne->LiFirstBox)
+	if (nbox == pLine->LiFirstBox)
 	   /* Si elle n'est pas secable -> on laisse deborder */
 	   if (!nbox->BxAbstractBox->AbAcceptLineBreak
 	       || nbox->BxAbstractBox->AbLeafType != LtText)
@@ -1546,26 +1507,26 @@ boolean            *ajust;
 	/* Sinon on coupe la boite texte en un point quelconque */
 	   else
 	     {
-		CouperBoite (adligne, nbox, lmax, Pv, TRUE);	/* coupure forcee */
+		BreakBox (pLine, nbox, lmax, pRootAb, TRUE);	/* coupure forcee */
 		if (nbox->BxNexChild != NULL)
 		  {
 		     pBox = nbox->BxNexChild;
-		     adligne->LiFirstPiece = pBox;
+		     pLine->LiFirstPiece = pBox;
 		  }
 	     }
 	/* Il y a au moins une autre boite dans la ligne */
 	else
 	  {
-	     /* On essaie de couper la boite texte secable */
+	     /* essaie de couper la boite texte secable */
 	     if (nbox->BxAbstractBox->AbLeafType == LtText
 		 && nbox->BxAbstractBox->AbAcceptLineBreak
 	     /* avec au moins un blanc ou avec coupure de mot */
 		 && (Hyphenable (nbox) || nbox->BxNSpaces != 0))
 	       {
-		  CouperBoite (adligne, nbox, lmax, Pv, FALSE);		/* coupure sur blanc */
+		  BreakBox (pLine, nbox, lmax, pRootAb, FALSE);		/* coupure sur blanc */
 		  if (nbox->BxNexChild != NULL)
 		    {
-		       /* On a trouve le point de coupure */
+		       /* a trouve le point de coupure */
 		       pBox = nbox->BxNexChild;
 		       coup = FALSE;
 		    }
@@ -1575,18 +1536,18 @@ boolean            *ajust;
 	     /* Si la coupure a echoue' on recherche en arriere un point de coupure */
 	     while (coup)
 	       {
-		  /* On essaye de couper la boite precedente */
+		  /* essaye de couper la boite precedente */
 		  if (nbox != NULL)
 		     nbox = Precedente (nbox->BxAbstractBox);
 
 		  /* Est-ce que l'on bute sur la premiere boite de la ligne ? */
-		  if (nbox == adligne->LiFirstPiece)
+		  if (nbox == pLine->LiFirstPiece)
 		     coup = FALSE;
-		  else if (nbox == adligne->LiFirstBox)
+		  else if (nbox == pLine->LiFirstBox)
 		    {
 		       coup = FALSE;
-		       if (adligne->LiFirstPiece != NULL)
-			  nbox = adligne->LiFirstPiece;
+		       if (pLine->LiFirstPiece != NULL)
+			  nbox = pLine->LiFirstPiece;
 		    }
 
 		  /* Si c'est une boite de texte secable */
@@ -1596,19 +1557,19 @@ boolean            *ajust;
 		  /* avec au moins un blanc si on est en insertion */
 		      && nbox->BxNSpaces != 0)
 
-		     /* On coupe sur le dernier blanc de la boite */
+		     /* coupe sur le dernier blanc de la boite */
 		     if (nbox->BxType == BoPiece)
 		       {
-			  ReCouperBoite (adligne, nbox, nbox->BxWidth - 1, Pv);
+			  ReBreakBox (pLine, nbox, nbox->BxWidth - 1, pRootAb);
 			  pBox = nbox;
 		       }
 		     else
 		       {
-			  CouperBoite (adligne, nbox, nbox->BxWidth - 1, Pv, FALSE);
+			  BreakBox (pLine, nbox, nbox->BxWidth - 1, pRootAb, FALSE);
 			  pBox = nbox->BxNexChild;
 			  /* Est-ce que l'on a coupe la premiere boite de la ligne ? */
-			  if (nbox == adligne->LiFirstBox && adligne->LiFirstPiece == NULL)
-			     adligne->LiFirstPiece = pBox;
+			  if (nbox == pLine->LiFirstBox && pLine->LiFirstPiece == NULL)
+			     pLine->LiFirstPiece = pBox;
 			  coup = FALSE;
 		       }
 		  /* Si la coupure sur un blanc echoue on coupe la derniere boite de la ligne */
@@ -1618,19 +1579,19 @@ boolean            *ajust;
 		       if (lastbox->BxAbstractBox->AbAcceptLineBreak
 			   && lastbox->BxAbstractBox->AbLeafType == LtText)
 			 {
-			    CouperBoite (adligne, lastbox, lmax, Pv, TRUE);	/* coupure forcee */
+			    BreakBox (pLine, lastbox, lmax, pRootAb, TRUE);	/* coupure forcee */
 			    pBox = lastbox->BxNexChild;
 			 }
 		       /* Si la boite est seule dans la ligne -> laisse deborder */
-		       else if (lastbox == adligne->LiFirstBox)
+		       else if (lastbox == pLine->LiFirstBox)
 			  pBox = lastbox;
 		       /* sinon on coupe avant la derniere boite */
 		       else
 			 {
 			    pBox = Precedente (lastbox->BxAbstractBox);
 			    /* Si c'est la premiere boite de la ligne et que celle-ci ets coupee */
-			    if (pBox == adligne->LiFirstBox && adligne->LiFirstPiece != NULL)
-			       pBox = adligne->LiFirstPiece;
+			    if (pBox == pLine->LiFirstBox && pLine->LiFirstPiece != NULL)
+			       pBox = pLine->LiFirstPiece;
 			 }
 		    }
 		  /* Sinon on continue la recherche en arriere */
@@ -1640,67 +1601,96 @@ boolean            *ajust;
 	  }
      }
 
-   /* On ajoute toutes les boites de la ligne */
-   if (adligne->LiFirstPiece != NULL)
-      nbox = adligne->LiFirstPiece;
+   /* ajoute toutes les boites de la ligne */
+   if (pLine->LiFirstPiece != NULL)
+      nbox = pLine->LiFirstPiece;
    else
-      nbox = adligne->LiFirstBox;
+      nbox = pLine->LiFirstBox;
 
-   nonfini = TRUE;
-   while (nonfini)
+   still = TRUE;
+   while (still)
      {
 	if (nbox->BxType == BoSplit)
 	   nbox = nbox->BxNexChild;
-	AjoutBoite (nbox, &sousbase, &surbase, adligne);
+	AjoutBoite (nbox, &sousbase, &surbase, pLine);
 	if (nbox == pBox)
-	   nonfini = FALSE;
+	   still = FALSE;
 	else
 	   nbox = Suivante (nbox->BxAbstractBox);
      }
 
-   /* On termine le chainage */
+   /* termine le chainage */
    if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
      {
-	adligne->LiLastPiece = pBox;
-	adligne->LiLastBox = pBox->BxAbstractBox->AbBox;
+	pLine->LiLastPiece = pBox;
+	pLine->LiLastBox = pBox->BxAbstractBox->AbBox;
      }
    else
-      adligne->LiLastBox = pBox;
+      pLine->LiLastBox = pBox;
 
-   /* On teste s'il reste des boites a mettre en ligne */
+   /* teste s'il lostPixels des boites a mettre en ligne */
    if (pBox->BxNexChild == NULL && Suivante (pBox->BxAbstractBox) == NULL)
       *plein = FALSE;
 
-   /* On coupe les blancs en fin de ligne pleine */
+   /* coupe les blancs en fin de ligne pleine */
 #ifdef __COLPAGE
    if ((uneSuite || *plein) && pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNSpaces != 0)
 #else  /* __COLPAGE__ */
    if (*plein && pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNSpaces != 0)
 #endif /* __COLPAGE__ */
-      if (adligne->LiLastPiece == NULL)
+      if (pLine->LiLastPiece == NULL)
 	{
 	   lmax = pBox->BxWidth;
-	   CouperBoite (adligne, pBox, lmax, Pv, FALSE);	/*coupure sur un caractere refusee */
+	   BreakBox (pLine, pBox, lmax, pRootAb, FALSE);	/*coupure sur un caractere refusee */
 	   if (pBox->BxNexChild != NULL)
 	     {
-		/* On remplace la boite entiere par la boite de coupure */
-		adligne->LiRealLength = adligne->LiRealLength - lmax + pBox->BxNexChild->BxWidth;
-		adligne->LiLastPiece = pBox->BxNexChild;
+		/* remplace la boite entiere par la boite de coupure */
+		pLine->LiRealLength = pLine->LiRealLength - lmax + pBox->BxNexChild->BxWidth;
+		pLine->LiLastPiece = pBox->BxNexChild;
 	     }
 	}
-      else if (adligne->LiLastPiece->BxNexChild == NULL)
+      else if (pLine->LiLastPiece->BxNexChild == NULL)
 	{
-	   pBox = adligne->LiLastPiece;
+	   pBox = pLine->LiLastPiece;
 	   lmax = pBox->BxWidth;
-	   ReCouperBoite (adligne, pBox, lmax, Pv);
-	   /* On met a jour la largeur de la ligne */
-	   adligne->LiRealLength = adligne->LiRealLength - lmax + pBox->BxWidth;
+	   ReBreakBox (pLine, pBox, lmax, pRootAb);
+	   /* met a jour la largeur de la ligne */
+	   pLine->LiRealLength = pLine->LiRealLength - lmax + pBox->BxWidth;
 	}
 
    /* Calcule la hauteur et la base de la ligne */
-   adligne->LiHeight = sousbase + surbase;
-   adligne->LiHorizRef = surbase;
+   pLine->LiHeight = sousbase + surbase;
+   pLine->LiHorizRef = surbase;
    /* les boites ne sont pas positionnees dans la ligne */
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    RazJustif recalcule la largueur d'une boite apres suppression de| */
+/* |            la justification. Met a jour les marques de selection   | */
+/* |            que la boite soit justifiee ou non.                     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         RazJustif (PtrBox pBox, int spaceWidth)
+#else  /* __STDC__ */
+static void         RazJustif (pBox, spaceWidth)
+PtrBox            pBox;
+int                 spaceWidth;
+#endif /* __STDC__ */
+{
+   int                 x;
+   int                 l;
+
+   /* Box justifiee -> met a jour sa largeur et les marques */
+   if (pBox->BxSpaceWidth != 0)
+     {
+	/* blanc justifie - blanc de la police */
+	x = pBox->BxSpaceWidth - spaceWidth;
+	l = pBox->BxWidth - x * pBox->BxNSpaces - pBox->BxNPixels;
+	pBox->BxWidth = l;
+	pBox->BxSpaceWidth = 0;
+	pBox->BxNPixels = 0;
+     }
 }
 
 
@@ -1716,20 +1706,20 @@ boolean            *ajust;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                BlocDeLigne (PtrBox pBox, int frame, int *haut)
+void                BlocDeLigne (PtrBox pBox, int frame, int *height)
 
 #else  /* __STDC__ */
-void                BlocDeLigne (pBox, frame, haut)
+void                BlocDeLigne (pBox, frame, height)
 PtrBox            pBox;
 int                 frame;
-int                *haut;
+int                *height;
 
 #endif /* __STDC__ */
 
 {
-   PtrLine            adligne1;
-   PtrLine            adligne2;
-   PtrLine            adligne3;
+   PtrLine            pLine1;
+   PtrLine            pLine2;
+   PtrLine            pLine3;
    PtrAbstractBox             pavefils;
    boolean             complet;
    boolean             encore;
@@ -1743,15 +1733,15 @@ int                *haut;
    PtrLine            pLi2;
    AbPosition        *pPosAb;
    boolean             ajustif;
-   boolean             absoluEnX;
-   boolean             absoluEnY;
+   boolean             orgXComplete;
+   boolean             orgYComplete;
 
    /* Remplissage de la boite bloc de ligne */
    x = 0;
    pAbbox1 = pBox->BxAbstractBox;
 
    /* evalue si le positionnement en X et en Y doit etre absolu */
-   XYEnAbsolu (pBox, &absoluEnX, &absoluEnY);
+   XYEnAbsolu (pBox, &orgXComplete, &orgYComplete);
 
    if (pBox->BxWidth > CarWidth (119, pBox->BxFont))	/*'w' */
      {
@@ -1771,7 +1761,7 @@ int                *haut;
 	/* Construction complete du bloc de ligne */
 	if (pBox->BxFirstLine == NULL)
 	  {
-	     /* On recherche la premiere boite mise en ligne */
+	     /* recherche la premiere boite mise en ligne */
 	     pavefils = pAbbox1->AbFirstEnclosed;
 	     encore = pavefils != NULL;
 	     while (encore)
@@ -1784,7 +1774,7 @@ int                *haut;
 	     /* Est-ce que le pave est eclate ? */
 		else if (pavefils->AbBox->BxType == BoGhost)
 		  {
-		     /* On descend la hierarchie */
+		     /* descend la hierarchie */
 		     pavefils = pavefils->AbFirstEnclosed;
 		     encore = pavefils != NULL;
 		  }
@@ -1799,35 +1789,35 @@ int                *haut;
 		complet = FALSE;	/* Rien a mettre en ligne */
 	     else
 	       {
-		  GetLine (&adligne2);
-		  pBox->BxFirstLine = adligne2;
+		  GetLine (&pLine2);
+		  pBox->BxFirstLine = pLine2;
 	       }
 
 	     boxcoup = NULL;
-	     adligne1 = NULL;
-	     *haut = 0;		/* hauteur de la boite bloc de lignes */
+	     pLine1 = NULL;
+	     *height = 0;		/* hauteur de la boite bloc de lignes */
 	     org = 0;		/* origine de la nouvelle ligne */
 	     interlignage = FALSE;
 	  }
 	/* Reconstruction partielle du bloc de ligne */
 	else
 	  {
-	     adligne1 = pBox->BxLastLine;
-	     pavefils = adligne1->LiLastBox->BxAbstractBox;
-	     boxcoup = adligne1->LiLastPiece;
-	     *haut = adligne1->LiYOrg + adligne1->LiHeight;	/* hauteur boite bloc de lignes */
+	     pLine1 = pBox->BxLastLine;
+	     pavefils = pLine1->LiLastBox->BxAbstractBox;
+	     boxcoup = pLine1->LiLastPiece;
+	     *height = pLine1->LiYOrg + pLine1->LiHeight;	/* hauteur boite bloc de lignes */
 	     /* Origine de la future ligne */
 	     if (pavefils->AbHorizEnclosing)
 	       {
 		  /* C'est une boite englobee */
-		  org = adligne1->LiYOrg + adligne1->LiHorizRef + itl;
-		  /* On utilise l'interligne */
+		  org = pLine1->LiYOrg + pLine1->LiHorizRef + itl;
+		  /* utilise l'interligne */
 		  interlignage = TRUE;
 	       }
 	     else
 	       {
 		  /* La boite n'est pas englobee (Page) */
-		  org = *haut;	/* On colle la nouvelle ligne en dessous de celle-ci */
+		  org = *height;	/* colle la nouvelle ligne en dessous de celle-ci */
 		  interlignage = FALSE;
 	       }
 
@@ -1836,7 +1826,7 @@ int                *haut;
 		  boxcoup = boxcoup->BxNexChild;
 		  /* Cas particulier de la derniere boite coupee */
 		  if (boxcoup != NULL)
-		     box1 = adligne1->LiLastBox;
+		     box1 = pLine1->LiLastBox;
 	       }
 
 	     if (box1 == NULL)
@@ -1844,84 +1834,84 @@ int                *haut;
 
 	     if (box1 == NULL)
 		complet = FALSE;	/* Rien a mettre en ligne */
-	     /* On prepare la nouvelle ligne */
+	     /* prepare la nouvelle ligne */
 	     else
 	       {
-		  GetLine (&adligne2);
-		  adligne1->LiNext = adligne2;
+		  GetLine (&pLine2);
+		  pLine1->LiNext = pLine2;
 		  /* Si la 1ere boite nouvellement mise en lignes n'est pas englobee */
 		  if (!box1->BxAbstractBox->AbHorizEnclosing)
 		    {
-		       org = *haut;
-		       /* On colle la nouvelle ligne en dessous */
+		       org = *height;
+		       /* colle la nouvelle ligne en dessous */
 		       interlignage = FALSE;
 		    }
 	       }
 	  }
 
-	/* On cree des lignes tant qu'elles sont pleines */
+	/* cree des lignes tant qu'elles sont pleines */
 	while (complet)
 	  {
 	     /* Initialise la ligne */
-	     adligne2->LiPrevious = adligne1;
-	     /* On regarde si la boite deborde des lignes */
+	     pLine2->LiPrevious = pLine1;
+	     /* regarde si la boite deborde des lignes */
 	     if (!box1->BxAbstractBox->AbHorizEnclosing)
 	       {
 		  pBo2 = box1;
-		  adligne2->LiXOrg = pBo2->BxXOrg;
-		  adligne2->LiYOrg = *haut;	/* Colle la boite en dessous de la precedente */
-		  adligne2->LiXMax = pBo2->BxWidth;
-		  adligne2->LiHeight = pBo2->BxHeight;
-		  adligne2->LiFirstBox = box1;
-		  adligne2->LiLastBox = box1;
-		  adligne2->LiFirstPiece = NULL;
-		  adligne2->LiLastPiece = NULL;
+		  pLine2->LiXOrg = pBo2->BxXOrg;
+		  pLine2->LiYOrg = *height;	/* Colle la boite en dessous de la precedente */
+		  pLine2->LiXMax = pBo2->BxWidth;
+		  pLine2->LiHeight = pBo2->BxHeight;
+		  pLine2->LiFirstBox = box1;
+		  pLine2->LiLastBox = box1;
+		  pLine2->LiFirstPiece = NULL;
+		  pLine2->LiLastPiece = NULL;
 		  if (Propage != ToSiblings || pBox->BxVertFlex)
-		     org = pBox->BxYOrg + *haut;
+		     org = pBox->BxYOrg + *height;
 		  else
-		     org = *haut;
+		     org = *height;
 		  DepOrgY (box1, NULL, org - pBo2->BxYOrg, frame);
-		  *haut += adligne2->LiHeight;
-		  org = *haut;
+		  *height += pLine2->LiHeight;
+		  org = *height;
 		  interlignage = FALSE;
 	       }
 	     else
 	       {
 		  /* Indentation des lignes */
 #ifdef __COLPAGE__
-		  if (adligne1 != NULL || pAbbox1->AbTruncatedHead)
+		  if (pLine1 != NULL || pAbbox1->AbTruncatedHead)
 #else  /* __COLPAGE__ */
-		  if (adligne1 != NULL)
+		  if (pLine1 != NULL)
 #endif /* __COLPAGE__ */
 		    {
 		       if (pAbbox1->AbIndent < 0)
-			  adligne2->LiXOrg = idl;
+			  pLine2->LiXOrg = idl;
 		    }
 		  else if (pAbbox1->AbIndent > 0)
-		     adligne2->LiXOrg = idl;
-		  if (adligne2->LiXOrg >= pBox->BxWidth)
-		     adligne2->LiXOrg = 0;
-		  adligne2->LiXMax = pBox->BxWidth - adligne2->LiXOrg;
-		  adligne2->LiFirstBox = box1;
-		  adligne2->LiFirstPiece = boxcoup;	/* ou  NULL si la boite est entiere */
+		     pLine2->LiXOrg = idl;
+		  if (pLine2->LiXOrg >= pBox->BxWidth)
+		     pLine2->LiXOrg = 0;
+		  pLine2->LiXMax = pBox->BxWidth - pLine2->LiXOrg;
+		  pLine2->LiFirstBox = box1;
+		  pLine2->LiFirstPiece = boxcoup;	/* ou  NULL si la boite est entiere */
 
 		  /* Remplissage de la ligne au maximum */
 #ifdef __COLPAGE__
-		  RemplirLigne (adligne2, FntrTable[frame - 1].FrAbstractBox, pAbbox1->AbTruncatedTail, &complet, &ajustif);
+		  RemplirLigne (pLine2, FntrTable[frame - 1].FrAbstractBox, pAbbox1->AbTruncatedTail, &complet, &ajustif);
 #else  /* __COLPAGE__ */
-		  RemplirLigne (adligne2, FntrTable[frame - 1].FrAbstractBox, &complet, &ajustif);
+		  RemplirLigne (pLine2, FntrTable[frame - 1].FrAbstractBox, &complet, &ajustif);
 #endif /* __COLPAGE__ */
 
 		  /* Positionnement de la ligne en respectant l'interligne */
 		  if (interlignage)
-		     org -= adligne2->LiHorizRef;
-		  /* On verifie que les lignes ne se chevauchent pas */
-		  if (org < *haut)
-		     org = *haut;
+		     org -= pLine2->LiHorizRef;
+		  /* verifie que les lignes ne se chevauchent pas */
+		  if (org < *height)
+		     org = *height;
 
-		  adligne2->LiYOrg = org;
-		  *haut = org + adligne2->LiHeight;
-		  org = org + adligne2->LiHorizRef + itl;
+		  pLine2->LiYOrg = org;
+		  *height = org + pLine2->LiHeight;
+		  org = org + pLine2->LiHorizRef + itl;
 		  interlignage = TRUE;
 		  /* Teste le cadrage des lignes */
 #ifdef __COLPAGE__
@@ -1929,35 +1919,35 @@ int                *haut;
 #else  /* __COLPAGE__ */
 		  if (ajustif && complet && pAbbox1->AbJustify)
 #endif /* __COLPAGE__ */
-		     Ajuster (pBox, adligne2, frame, absoluEnX, absoluEnY);
+		     Adjust (pBox, pLine2, frame, orgXComplete, orgYComplete);
 		  else
 		    {
-		       x = adligne2->LiXOrg;
+		       x = pLine2->LiXOrg;
 		       if (pAbbox1->AbAdjust == AlignCenter)
-			  x += (adligne2->LiXMax - adligne2->LiRealLength) / 2;
+			  x += (pLine2->LiXMax - pLine2->LiRealLength) / 2;
 		       else if (pAbbox1->AbAdjust == AlignRight)
-			  x = x + adligne2->LiXMax - adligne2->LiRealLength;
+			  x = x + pLine2->LiXMax - pLine2->LiRealLength;
 		       /* Decale toutes les boites de la ligne */
-		       Aligner (pBox, adligne2, x, frame, absoluEnX, absoluEnY);
+		       Aligner (pBox, pLine2, x, frame, orgXComplete, orgYComplete);
 		    }
 	       }
 
 	     /* Est-ce la derniere ligne du bloc de ligne ? */
 	     if (complet)
 	       {
-		  box1 = Suivante (adligne2->LiLastBox->BxAbstractBox);
-		  if (adligne2->LiLastPiece == NULL)
+		  box1 = Suivante (pLine2->LiLastBox->BxAbstractBox);
+		  if (pLine2->LiLastPiece == NULL)
 		     boxcoup = NULL;
 		  else
 		    {
-		       boxcoup = adligne2->LiLastPiece->BxNexChild;
+		       boxcoup = pLine2->LiLastPiece->BxNexChild;
 		       /* Est-ce qu'il y a une boite coupee ? */
 		       if (boxcoup != NULL)
 			  /* Est-ce une boite vide ? */
 			  if (boxcoup->BxNChars > 0)
-			     box1 = adligne2->LiLastBox;
+			     box1 = pLine2->LiLastBox;
 			  else if (box1 == NULL)
-			     box1 = adligne2->LiLastBox;
+			     box1 = pLine2->LiLastBox;
 			  else
 			     boxcoup = NULL;
 		    }
@@ -1966,24 +1956,24 @@ int                *haut;
 		    {
 		       /* Il n'y a plus de boite a traiter */
 		       complet = FALSE;
-		       pBox->BxLastLine = adligne2;
+		       pBox->BxLastLine = pLine2;
 		    }
 		  else
 		    {
-		       /* On prepare la ligne suivante */
-		       adligne1 = adligne2;
-		       adligne3 = adligne2;
-		       GetLine (&adligne2);
-		       adligne3->LiNext = adligne2;
+		       /* prepare la ligne suivante */
+		       pLine1 = pLine2;
+		       pLine3 = pLine2;
+		       GetLine (&pLine2);
+		       pLine3->LiNext = pLine2;
 		    }
 	       }
 	     else
 	       {
-		  pBox->BxLastLine = adligne2;
+		  pBox->BxLastLine = pLine2;
 		  /* Note la largeur de la fin de bloc si le remplissage est demande */
 		  if (pAbbox1->AbAdjust == AlignLeftDots)
 		    {
-		       pLi2 = adligne2;
+		       pLi2 = pLine2;
 		       if (pLi2->LiLastPiece != NULL)
 			  box1 = pLi2->LiLastPiece;
 		       else
@@ -1998,7 +1988,7 @@ int                *haut;
 	       }
 	  }
 
-	/* On met a jour la base du bloc de lignes   */
+	/* met a jour la base du bloc de lignes   */
 	/* s'il depend de la premiere boite englobee */
 	if (pAbbox1->AbHorizRef.PosAbRef == pAbbox1->AbFirstEnclosed && pBox->BxFirstLine != NULL)
 	  {
@@ -2008,22 +1998,22 @@ int                *haut;
 	  }
      }
    else
-      *haut = FontHeight (pBox->BxFont);
+      *height = FontHeight (pBox->BxFont);
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    DecalLigne decale de x les boites de la ligne de pBox incluse   | */
-/* |            dans le boc de ligne Pv et la ligne adligne.            | */
+/* |            dans le boc de ligne pAb et la ligne pLine.            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         DecalLigne (PtrLine adligne, PtrAbstractBox Pv, PtrBox pBox, int x, int frame)
+static void         DecalLigne (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox, int x, int frame)
 
 #else  /* __STDC__ */
-static void         DecalLigne (adligne, Pv, pBox, x, frame)
-PtrLine            adligne;
-PtrAbstractBox             Pv;
+static void         DecalLigne (pLine, pAb, pBox, x, frame)
+PtrLine            pLine;
+PtrAbstractBox             pAb;
 PtrBox            pBox;
 int                 x;
 int                 frame;
@@ -2040,27 +2030,27 @@ int                 frame;
 
    boxN = NULL;
    iboxSave = pBox;
-   adligne->LiRealLength += x;
-   /* On prepare le reaffichage de la ligne */
+   pLine->LiRealLength += x;
+   /* prepare le reaffichage de la ligne */
    EvalAffich = FALSE;
    /* Bornes de reaffichage a priori */
    pFrame = &FntrTable[frame - 1];
    xd = pFrame->FrClipXBegin;
    xf = pFrame->FrClipXEnd;
-   yd = iboxSave->BxYOrg + iboxSave->BxHorizRef - adligne->LiHorizRef;
-   yf = yd + adligne->LiHeight;
+   yd = iboxSave->BxYOrg + iboxSave->BxHorizRef - pLine->LiHorizRef;
+   yf = yd + pLine->LiHeight;
 
-   /* On reaffiche la fin de la ligne */
-   if (Pv->AbAdjust == AlignLeft
-       || Pv->AbAdjust == AlignLeftDots
+   /* reaffiche la fin de la ligne */
+   if (pAb->AbAdjust == AlignLeft
+       || pAb->AbAdjust == AlignLeftDots
    /* on force le cadrage a gauche si le bloc de lignes prend la largeur */
    /* du contenu */
-       || Pv->AbBox->BxContentWidth)
+       || pAb->AbBox->BxContentWidth)
      {
-	if (adligne->LiLastPiece == NULL)
-	   boxN = adligne->LiLastBox;
+	if (pLine->LiLastPiece == NULL)
+	   boxN = pLine->LiLastBox;
 	else
-	   boxN = adligne->LiLastPiece;
+	   boxN = pLine->LiLastPiece;
 	if (boxN != pBox)
 	  {
 	     xf = boxN->BxXOrg + boxN->BxWidth;
@@ -2070,31 +2060,31 @@ int                 frame;
 
 	/* Note la largeur de la fin de bloc si le remplissage est demande! */
 
-	if (Pv->AbAdjust == AlignLeftDots && adligne->LiNext == NULL)
+	if (pAb->AbAdjust == AlignLeftDots && pLine->LiNext == NULL)
 	   boxN->BxEndOfBloc -= x;
      }
-   /* On reaffiche toute la ligne */
-   else if (Pv->AbAdjust == AlignCenter)
+   /* reaffiche toute la ligne */
+   else if (pAb->AbAdjust == AlignCenter)
      {
 	i = x;
-	x = (adligne->LiXMax - adligne->LiRealLength) / 2 - (adligne->LiXMax + i - adligne->LiRealLength) / 2;
-	if (adligne->LiFirstPiece == NULL)
-	   box1 = adligne->LiFirstBox;
+	x = (pLine->LiXMax - pLine->LiRealLength) / 2 - (pLine->LiXMax + i - pLine->LiRealLength) / 2;
+	if (pLine->LiFirstPiece == NULL)
+	   box1 = pLine->LiFirstBox;
 	else
-	   box1 = adligne->LiFirstPiece;
+	   box1 = pLine->LiFirstPiece;
 	xd = box1->BxXOrg;
 	if (x < 0)
 	   xd += x;
-	if (adligne->LiLastPiece == NULL)
-	   boxN = adligne->LiLastBox;
+	if (pLine->LiLastPiece == NULL)
+	   boxN = pLine->LiLastBox;
 	else
-	   boxN = adligne->LiLastPiece;
+	   boxN = pLine->LiLastPiece;
 	if (boxN != pBox)
 	   xf = boxN->BxXOrg + boxN->BxWidth;
 	if (x < 0)
 	   xf -= x;
 
-	/* On decale les boites precedentes */
+	/* decale les boites precedentes */
 	DepOrgX (box1, NULL, x, frame);
 	while (box1 != pBox)
 	  {
@@ -2103,25 +2093,25 @@ int                 frame;
 		box1 = box1->BxNexChild;
 	     DepOrgX (box1, NULL, x, frame);
 	  }
-	/* On decale les boites suivantes */
+	/* decale les boites suivantes */
 	x = -x;
      }
-   /* On reaffiche le debut de la ligne */
-   else if (Pv->AbAdjust == AlignRight)
+   /* reaffiche le debut de la ligne */
+   else if (pAb->AbAdjust == AlignRight)
      {
 	x = -x;
 	boxN = pBox;
-	if (adligne->LiFirstPiece == NULL)
-	   pBox = adligne->LiFirstBox;
+	if (pLine->LiFirstPiece == NULL)
+	   pBox = pLine->LiFirstBox;
 	else
-	   pBox = adligne->LiFirstPiece;
+	   pBox = pLine->LiFirstPiece;
 	xd = iboxSave->BxXOrg;
 	if (x < 0)
 	   xd += x;
 	DepOrgX (pBox, NULL, x, frame);
      }
 
-   /* On decale les boites suivantes */
+   /* decale les boites suivantes */
    while (pBox != boxN && pBox != NULL)
      {
 	pBox = Suivante (pBox->BxAbstractBox);
@@ -2140,11 +2130,11 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         CompresLigne (PtrLine adligne, int dx, int frame, int dblanc)
+static void         CompresLigne (PtrLine pLine, int dx, int frame, int dblanc)
 
 #else  /* __STDC__ */
-static void         CompresLigne (adligne, dx, frame, dblanc)
-PtrLine            adligne;
+static void         CompresLigne (pLine, dx, frame, dblanc)
+PtrLine            pLine;
 int                 dx;
 int                 frame;
 int                 dblanc;
@@ -2152,49 +2142,49 @@ int                 dblanc;
 #endif /* __STDC__ */
 
 {
-   int                 nbblanc;
-   int                 ilg, opixel;
+   int                 nSpaces;
+   int                 length, opixel;
    int                 bl, rest;
    PtrBox            box1, box2;
    ViewSelection            *pMa1;
 
-   rest = adligne->LiNPixels - dx;
+   rest = pLine->LiNPixels - dx;
    bl = 0;
-   nbblanc = adligne->LiNSpaces;
+   nSpaces = pLine->LiNSpaces;
    EvalAffich = FALSE;
 
    /* Faut-il changer la largeur des blancs ? */
    if (dx > 0)
       while (rest < 0)
 	{
-	   rest += nbblanc;
+	   rest += nSpaces;
 	   bl++;
 	}
    else
-      while (rest >= nbblanc)
+      while (rest >= nSpaces)
 	{
-	   rest -= nbblanc;
+	   rest -= nSpaces;
 	   bl--;
 	}
 
-   /* On met a jour la ligne */
-   adligne->LiNPixels = rest;
+   /* met a jour la ligne */
+   pLine->LiNPixels = rest;
    /* Pour chaque blanc insere ou retire on compte la largeur minimale */
-   dx -= dblanc * (adligne->LiSpaceWidth - MIN_BLANC);
-   adligne->LiMinLength += dx;
-   adligne->LiSpaceWidth -= bl;
+   dx -= dblanc * (pLine->LiSpaceWidth - MIN_BLANC);
+   pLine->LiMinLength += dx;
+   pLine->LiSpaceWidth -= bl;
 
-   /* On prepare le reaffichage de toute la ligne */
-   if (adligne->LiFirstPiece != NULL)
-      box2 = adligne->LiFirstPiece;
+   /* prepare le reaffichage de toute la ligne */
+   if (pLine->LiFirstPiece != NULL)
+      box2 = pLine->LiFirstPiece;
    else
-      box2 = adligne->LiFirstBox;
-   ilg = box2->BxXOrg;
-   DefClip (frame, ilg, box2->BxYOrg + box2->BxHorizRef - adligne->LiHorizRef,
-	    ilg + adligne->LiXMax,
-	    box2->BxYOrg + box2->BxHorizRef - adligne->LiHorizRef + adligne->LiHeight);
+      box2 = pLine->LiFirstBox;
+   length = box2->BxXOrg;
+   DefClip (frame, length, box2->BxYOrg + box2->BxHorizRef - pLine->LiHorizRef,
+	    length + pLine->LiXMax,
+	    box2->BxYOrg + box2->BxHorizRef - pLine->LiHorizRef + pLine->LiHeight);
 
-   /* On met a jour chaque boite */
+   /* met a jour chaque boite */
    do
      {
 	if (box2->BxType == BoSplit)
@@ -2202,11 +2192,11 @@ int                 dblanc;
 	else
 	   box1 = box2;
 
-	DepOrgX (box1, NULL, ilg - box1->BxXOrg, frame);
+	DepOrgX (box1, NULL, length - box1->BxXOrg, frame);
 	if (box1->BxAbstractBox->AbLeafType == LtText && box1->BxNChars != 0)
 	  {
 	     box1->BxWidth -= box1->BxNSpaces * bl;
-	     box1->BxSpaceWidth = adligne->LiSpaceWidth;
+	     box1->BxSpaceWidth = pLine->LiSpaceWidth;
 
 	     /* Repartition des pixels */
 	     opixel = box1->BxNPixels;
@@ -2248,43 +2238,11 @@ int                 dblanc;
 		     pMa1->VsXPos -= bl;
 	       }
 	  }
-	ilg += box1->BxWidth;
+	length += box1->BxWidth;
 	box2 = Suivante (box1->BxAbstractBox);
      }
-   while (!(box1 == adligne->LiLastBox || box1 == adligne->LiLastPiece));
+   while (!(box1 == pLine->LiLastBox || box1 == pLine->LiLastPiece));
    EvalAffich = TRUE;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    RazJustif recalcule la largueur d'une boite apres suppression de| */
-/* |            la justification. Met a jour les marques de selection   | */
-/* |            que la boite soit justifiee ou non.                     | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static void         RazJustif (PtrBox pBox, int lgblanc)
-
-#else  /* __STDC__ */
-static void         RazJustif (pBox, lgblanc)
-PtrBox            pBox;
-int                 lgblanc;
-
-#endif /* __STDC__ */
-
-{
-   int                 x;
-   int                 l;
-
-   /* Box justifiee -> On met a jour sa largeur et les marques */
-   if (pBox->BxSpaceWidth != 0)
-     {
-	x = pBox->BxSpaceWidth - lgblanc;	/* blanc justifie - blanc de la police */
-	l = pBox->BxWidth - x * pBox->BxNSpaces - pBox->BxNPixels;
-	pBox->BxWidth = l;
-	pBox->BxSpaceWidth = 0;
-	pBox->BxNPixels = 0;
-     }
 }
 
 
@@ -2295,26 +2253,22 @@ int                 lgblanc;
 /* |            referencee par la marque Debut ou Fin de Selection est  | */
 /* |            liberee.                                                | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         DispCoup (PtrBox pBox, int frame, boolean * chgDS, boolean * chgFS)
-
 #else  /* __STDC__ */
 static void         DispCoup (pBox, frame, chgDS, chgFS)
 PtrBox            pBox;
 int                 frame;
 boolean            *chgDS;
 boolean            *chgFS;
-
 #endif /* __STDC__ */
-
 {
    PtrBox            ibox1;
    PtrBox            ibox2;
    PtrBox            bsuiv;
    int                 x, larg;
    int                 nombre;
-   int                 reste;
+   int                 lostPixels;
    int                 diff;
    PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
@@ -2326,7 +2280,7 @@ boolean            *chgFS;
 	if (pAbbox1->AbLeafType == LtText)
 	  {
 	     x = CarWidth (BLANC, pBox->BxFont);
-	     /* On met a jour les marques de selection */
+	     /* met a jour les marques de selection */
 	     pFrame = &FntrTable[frame - 1];
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
 	       {
@@ -2339,7 +2293,7 @@ boolean            *chgFS;
 		  *chgFS = TRUE;
 	       }
 
-	     /* On va liberer des boites coupure */
+	     /* va liberer des boites coupure */
 	     if (pBox->BxType == BoComplete)
 		RazJustif (pBox, x);
 	     else
@@ -2348,10 +2302,10 @@ boolean            *chgFS;
 		  pBox->BxNexChild = NULL;
 		  if (pBox->BxType == BoSplit)
 		    {
-		       /* On met a jour la boite coupee */
+		       /* met a jour la boite coupee */
 		       pBox->BxType = BoComplete;
 		       pBox->BxPrevious = ibox2->BxPrevious;
-		       /* On transmet la position courante de la boite */
+		       /* transmet la position courante de la boite */
 		       pBox->BxXOrg = ibox2->BxXOrg;
 		       pBox->BxYOrg = ibox2->BxYOrg;
 		       if (pBox->BxPrevious != NULL)
@@ -2361,11 +2315,11 @@ boolean            *chgFS;
 
 		       larg = 0;
 		       nombre = 0;
-		       reste = 0;
+		       lostPixels = 0;
 		    }
 		  else
 		    {
-		       /* On met a jour la derniere boite de coupure conservee */
+		       /* met a jour la derniere boite de coupure conservee */
 		       RazJustif (pBox, x);
 		       larg = pBox->BxWidth;
 		       /* Il faut retirer l'espace reserve au tiret d'hyphenation */
@@ -2375,7 +2329,7 @@ boolean            *chgFS;
 			    pBox->BxType = BoPiece;
 			 }
 		       nombre = pBox->BxNSpaces;
-		       reste = pBox->BxIndChar + pBox->BxNChars;
+		       lostPixels = pBox->BxIndChar + pBox->BxNChars;
 		    }
 
 		  /* Libere les boites de coupure */
@@ -2386,14 +2340,15 @@ boolean            *chgFS;
 			    ibox1 = ibox2;
 			    RazJustif (ibox1, x);
 			    /* Nombre de blancs sautes */
-			    diff = ibox1->BxIndChar - reste;
+			    diff = ibox1->BxIndChar - lostPixels;
 			    if (diff > 0)
 			      {
-				 larg += diff * x;	/* On ajoute les blancs saute */
+				/* ajoute les blancs sautes */
+				 larg += diff * x;
 				 nombre += diff;
 			      }
 			    else if (ibox1->BxType == BoDotted)
-			       /* Il faut retirer la largeur du tiret d'hyphenation */
+			       /* retire la largeur du tiret d'hyphenation */
 			       larg -= CarWidth (173, ibox1->BxFont);
 
 			    /* Si la boite suivante n'est pas vide */
@@ -2402,7 +2357,7 @@ boolean            *chgFS;
 				 nombre += ibox1->BxNSpaces;
 				 larg += ibox1->BxWidth;
 			      }
-			    reste = ibox1->BxIndChar + ibox1->BxNChars;
+			    lostPixels = ibox1->BxIndChar + ibox1->BxNChars;
 			    bsuiv = ibox1->BxNext;
 			    ibox2 = FreeBox (ibox1);
 
@@ -2428,11 +2383,11 @@ boolean            *chgFS;
 			 {
 			    pBox->BxNChars = pBox->BxAbstractBox->AbBox->BxNChars - pBox->BxIndChar;
 			    /* Il faut comptabiliser les blancs ignores de fin de boite */
-			    reste = reste - pBox->BxIndChar - pBox->BxNChars;
-			    if (reste > 0)
+			    lostPixels = lostPixels - pBox->BxIndChar - pBox->BxNChars;
+			    if (lostPixels > 0)
 			      {
-				 larg += reste * x;
-				 nombre += reste;
+				 larg += lostPixels * x;
+				 nombre += lostPixels;
 			      }
 			    pBox->BxWidth = larg;
 			    pBox->BxNSpaces = nombre;
@@ -2482,28 +2437,28 @@ boolean            *changeSelectEnd;
 {
    PtrBox            box1;
    PtrLine            lignesuiv;
-   PtrLine            adligne;
+   PtrLine            pLine;
    PtrAbstractBox             pAb;
 
    *changeSelectBegin = FALSE;
    *changeSelectEnd = FALSE;
-   adligne = premligne;
-   if (adligne != NULL)
+   pLine = premligne;
+   if (pLine != NULL)
      {
 	if (pBox->BxType == BoBlock)
 	  {
 	     /* Mise a jour du chainage des lignes */
 	     box1 = NULL;
-	     if (adligne->LiPrevious != NULL)
+	     if (pLine->LiPrevious != NULL)
 	       {
-		  adligne->LiPrevious->LiNext = NULL;
-		  box1 = adligne->LiFirstBox;
+		  pLine->LiPrevious->LiNext = NULL;
+		  box1 = pLine->LiFirstBox;
 		  /* Est-ce que la premiere boite est une boite suite ? */
-		  if (adligne->LiPrevious->LiLastBox == box1)
-		     DispCoup (adligne->LiFirstPiece, frame, changeSelectBegin, changeSelectEnd);
+		  if (pLine->LiPrevious->LiLastBox == box1)
+		     DispCoup (pLine->LiFirstPiece, frame, changeSelectBegin, changeSelectEnd);
 		  else
 		     DispCoup (box1, frame, changeSelectBegin, changeSelectEnd);
-		  pBox->BxLastLine = adligne->LiPrevious;
+		  pBox->BxLastLine = pLine->LiPrevious;
 	       }
 	     else
 	       {
@@ -2512,11 +2467,11 @@ boolean            *changeSelectEnd;
 	       }
 
 	     /* Liberation des lignes */
-	     while (adligne != NULL)
+	     while (pLine != NULL)
 	       {
-		  lignesuiv = adligne->LiNext;
-		  FreeLine (adligne);
-		  adligne = lignesuiv;
+		  lignesuiv = pLine->LiNext;
+		  FreeLine (pLine);
+		  pLine = lignesuiv;
 	       }
 
 	     /* Liberation des boites de coupure */
@@ -2524,7 +2479,7 @@ boolean            *changeSelectEnd;
 		box1 = Suivante (box1->BxAbstractBox);
 	     else
 	       {
-		  /* On recherche la premiere boite mise en ligne */
+		  /* recherche la premiere boite mise en ligne */
 		  pAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  while (box1 == NULL && pAb != NULL)
 		     /* Est-ce que le pave est mort ? */
@@ -2538,7 +2493,7 @@ boolean            *changeSelectEnd;
 		       }
 		  /* Est-ce que le pave est eclate ? */
 		     else if (pAb->AbBox->BxType == BoGhost)
-			pAb = pAb->AbFirstEnclosed;	/* On descend la hierarchie */
+			pAb = pAb->AbFirstEnclosed;	/* descend la hierarchie */
 		  /* Sinon c'est la boite du pave */
 		     else
 			box1 = pAb->AbBox;
@@ -2573,13 +2528,13 @@ int                 frame;
 #endif /* __STDC__ */
 
 {
-   int                 l, h, haut;
-   int                 large;
+   int                 l, h, height;
+   int                 width;
    boolean             changeSelectBegin;
    boolean             changeSelectEnd;
    boolean             SvAff;
-   unsigned char       icar;
-   PtrLine            adligne;
+   unsigned char       charIndex;
+   PtrLine            pLine;
    Propagation      SvPrpg;
    PtrBox            pBox;
    ViewFrame            *pFrame;
@@ -2594,21 +2549,21 @@ int                 frame;
    pBox = pAb->AbBox;
    if (pBox != NULL)
      {
-	adligne = lig;
+	pLine = lig;
 
-	if (adligne == NULL)
-	   adligne = pBox->BxFirstLine;
+	if (pLine == NULL)
+	   pLine = pBox->BxFirstLine;
 
 	/* Zone affichee avant modification */
-	if (adligne == NULL)
+	if (pLine == NULL)
 	  {
 	     l = 0;
 	     h = pBox->BxYOrg;
 	  }
 	else
 	  {
-	     l = adligne->LiXOrg + adligne->LiXMax;
-	     h = pBox->BxYOrg + adligne->LiYOrg;
+	     l = pLine->LiXOrg + pLine->LiXMax;
+	     h = pBox->BxYOrg + pLine->LiYOrg;
 	  }
 
 	/* Si l'origne de la reevaluation du bloc de ligne vient d'une boite */
@@ -2620,17 +2575,17 @@ int                 frame;
 
 	SvAff = EvalAffich;
 	EvalAffich = FALSE;
-	DispBloc (pBox, frame, adligne, &changeSelectBegin, &changeSelectEnd);
+	DispBloc (pBox, frame, pLine, &changeSelectBegin, &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
-	     /* On fait reevaluer la mise en lignes et on recupere */
-	     /* la hauteur et la largeur du contenu de la boite */
-	     EvalComp (pAb, frame, &large, &haut);
+	     /* fait reevaluer la mise en lignes et on recupere */
+	     /* la hautteur et la largeur du contenu de la boite */
+	     EvalComp (pAb, frame, &width, &height);
 	  }
 	else
 	  {
-	     BlocDeLigne (pBox, frame, &haut);
-	     large = 0;
+	     BlocDeLigne (pBox, frame, &height);
+	     width = 0;
 	  }
 	EvalAffich = SvAff;
 
@@ -2642,8 +2597,8 @@ int                 frame;
 	     if (pBox->BxWidth > l)
 		l = pBox->BxWidth;
 	     l += pBox->BxXOrg;
-	     if (haut > pBox->BxHeight)
-		DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + haut);
+	     if (height > pBox->BxHeight)
+		DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + height);
 	     else
 		DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + pBox->BxHeight);
 	  }
@@ -2687,24 +2642,24 @@ int                 frame;
 		     pMa1->VsXPos += 2;
 		  else
 		    {
-		       icar = (unsigned char) (pMa1->VsBuffer->BuContent[pMa1->VsIndBuf - 1]);
-		       if (icar == BLANC && pBo2->BxSpaceWidth != 0)
+		       charIndex = (unsigned char) (pMa1->VsBuffer->BuContent[pMa1->VsIndBuf - 1]);
+		       if (charIndex == BLANC && pBo2->BxSpaceWidth != 0)
 			  pMa1->VsXPos += pBo2->BxSpaceWidth;
 		       else
-			  pMa1->VsXPos += CarWidth (icar, pBo2->BxFont);
+			  pMa1->VsXPos += CarWidth (charIndex, pBo2->BxFont);
 		    }
 	       }
 	  }
 
-	if (large != 0 && large != pBox->BxWidth)
-	   ChangeLgContenu (pBox, org, large, 0, frame);
+	if (width != 0 && width != pBox->BxWidth)
+	   ChangeLgContenu (pBox, org, width, 0, frame);
 	/* Faut-il conserver la hauteur ? */
-	if (haut != 0)
+	if (height != 0)
 	  {
 	     /* Il faut propager la modification de hauteur */
 	     SvPrpg = Propage;
 	     /*if (SvPrpg == ToChildren) Propage = ToAll; */
-	     ChangeHtContenu (pBox, org, haut, frame);
+	     ChangeHtContenu (pBox, org, height, frame);
 	     Propage = SvPrpg;
 	  }
      }
@@ -2717,12 +2672,12 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MajBloc (PtrAbstractBox pave, PtrLine adligne, PtrBox pBox, int dx, int dbl, int frame)
+void                MajBloc (PtrAbstractBox pave, PtrLine pLine, PtrBox pBox, int dx, int dbl, int frame)
 
 #else  /* __STDC__ */
-void                MajBloc (pave, adligne, pBox, dx, dbl, frame)
+void                MajBloc (pave, pLine, pBox, dx, dbl, frame)
 PtrAbstractBox             pave;
-PtrLine            adligne;
+PtrLine            pLine;
 PtrBox            pBox;
 int                 dx;
 int                 dbl;
@@ -2731,15 +2686,15 @@ int                 frame;
 #endif /* __STDC__ */
 
 {
-   int                 reste;
-   int                 maxreste;
+   int                 lostPixels;
+   int                 maxlostPixels;
    PtrBox            box1;
-   int                 nbcar;
+   int                 nChars;
    int                 nlcour = 0;
    int                 larg, lmax;
-   int                 newicar;
-   int                 nbblanc;
-   PtrTextBuffer      newbuff;
+   int                 newIndex;
+   int                 nSpaces;
+   PtrTextBuffer      pNewBuff;
    PtrBox            pBo1;
    AbDimension       *pDimAb;
    PtrLine            pLi2;
@@ -2749,7 +2704,7 @@ int                 frame;
       pave = pave->AbEnclosing;
    pBo1 = pave->AbBox;
 
-   if (adligne != NULL)
+   if (pLine != NULL)
      {
 	pDimAb = &pave->AbWidth;
 	/* C'est une ligne extensible --> on l'etend */
@@ -2765,14 +2720,14 @@ int                 frame;
 	       }
 	     else
 	       {
-		  DecalLigne (adligne, pave, pBox, dx, frame);
-		  adligne->LiXMax = adligne->LiRealLength;
+		  DecalLigne (pLine, pave, pBox, dx, frame);
+		  pLine->LiXMax = pLine->LiRealLength;
 		  ModLarg (pBo1, pBo1, NULL, dx, 0, frame);
 	       }
 	  }
 	/* Si le bloc de lignes deborde de sa dimension minimale */
 	else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-		 && adligne->LiRealLength + dx > pBo1->BxWidth)
+		 && pLine->LiRealLength + dx > pBo1->BxWidth)
 	  {
 	     /* Il faut prendre la largeur du contenu */
 	     pBo1->BxContentWidth = TRUE;
@@ -2781,66 +2736,66 @@ int                 frame;
 	/* C'est une ligne non extensible */
 	else
 	  {
-	     /* On calcule la place qu'il reste dans la ligne courante */
-	     adligne->LiNSpaces += dbl;
-	     maxreste = adligne->LiNSpaces * MAX_BLANC + dx;
-	     if (adligne->LiSpaceWidth > 0)
+	     /* calcule la place qu'il lostPixels dans la ligne courante */
+	     pLine->LiNSpaces += dbl;
+	     maxlostPixels = pLine->LiNSpaces * MAX_BLANC + dx;
+	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
-		  reste = CarWidth (BLANC, pBox->BxFont);
-		  nlcour = adligne->LiRealLength + dx - dbl * (adligne->LiSpaceWidth - reste);
-		  reste = adligne->LiXMax - adligne->LiMinLength;
+		  lostPixels = CarWidth (BLANC, pBox->BxFont);
+		  nlcour = pLine->LiRealLength + dx - dbl * (pLine->LiSpaceWidth - lostPixels);
+		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
 	       }
 	     else
-		reste = adligne->LiXMax - adligne->LiRealLength;
+		lostPixels = pLine->LiXMax - pLine->LiRealLength;
 
 	     /* Est-ce que la boite debordait de la ligne ? */
-	     if (pBox->BxWidth - dx > adligne->LiXMax)
+	     if (pBox->BxWidth - dx > pLine->LiXMax)
 	       {
-		  reste = adligne->LiXMax - pBox->BxWidth;	/* Pixels liberes dans la ligne */
-		  if (reste > 0)
-		     ReevalBloc (pave, adligne, NULL, frame);
+		  lostPixels = pLine->LiXMax - pBox->BxWidth;	/* Pixels liberes dans la ligne */
+		  if (lostPixels > 0)
+		     ReevalBloc (pave, pLine, NULL, frame);
 	       }
 	     /* Peut-on compresser ou completer la ligne ? */
-	     else if ((dx > 0 && dx <= reste)
-		      || (dx < 0 && (reste < maxreste
-		  || (adligne->LiPrevious == NULL && adligne->LiNext == NULL))))
-		if (adligne->LiSpaceWidth == 0)
-		   DecalLigne (adligne, pave, pBox, dx, frame);
+	     else if ((dx > 0 && dx <= lostPixels)
+		      || (dx < 0 && (lostPixels < maxlostPixels
+		  || (pLine->LiPrevious == NULL && pLine->LiNext == NULL))))
+		if (pLine->LiSpaceWidth == 0)
+		   DecalLigne (pLine, pave, pBox, dx, frame);
 		else
 		  {
-		     CompresLigne (adligne, dx, frame, dbl);
-		     adligne->LiRealLength = nlcour;
+		     CompresLigne (pLine, dx, frame, dbl);
+		     pLine->LiRealLength = nlcour;
 		  }
 	     /* Peut-on eviter la reevaluation du bloc de lignes ? */
 	     else if (dx < 0)
 	       {
 
 		  /* Peut-on remonter le premier mot de la ligne courante ? */
-		  if (adligne->LiPrevious != NULL)
+		  if (pLine->LiPrevious != NULL)
 		    {
 		       /* Largeur restante */
-		       lmax = adligne->LiPrevious->LiXMax - adligne->LiPrevious->LiRealLength - MAX_BLANC;
-		       if (adligne->LiFirstPiece != NULL)
-			  box1 = adligne->LiFirstPiece;
+		       lmax = pLine->LiPrevious->LiXMax - pLine->LiPrevious->LiRealLength - MAX_BLANC;
+		       if (pLine->LiFirstPiece != NULL)
+			  box1 = pLine->LiFirstPiece;
 		       else
-			  box1 = adligne->LiFirstBox;
+			  box1 = pLine->LiFirstBox;
 		       if (box1->BxWidth > lmax)
 			  if (box1->BxAbstractBox->AbLeafType == LtText && lmax > 0)
 			    {
 			       /* Elimine le cas des lignes sans blanc */
-			       if (adligne->LiNSpaces == 0)
+			       if (pLine->LiNSpaces == 0)
 				  lmax = 1;	/* force la reevaluation */
 			       else
 				 {
-				    nbcar = box1->BxNChars;
-				    /* On regarde si on peut trouver une coupure */
-/**HYP*/ lmax = CarCoup (adligne, box1, lmax, box1->BxFont, &nbcar, &larg,
-			 &nbblanc, &newicar, &newbuff);
+				    nChars = box1->BxNChars;
+				    /* regarde si on peut trouver une coupure */
+ lmax = SearchBreak (pLine, box1, lmax, box1->BxFont, &nChars, &larg,
+			 &nSpaces, &newIndex, &pNewBuff);
 				 }
 
 			       if (lmax > 0)
-				  ReevalBloc (pave, adligne->LiPrevious, NULL, frame);
+				  ReevalBloc (pave, pLine->LiPrevious, NULL, frame);
 			    }
 			  else
 			     lmax = 0;
@@ -2851,10 +2806,10 @@ int                 frame;
 		  /* Peut-on remonter le premier mot de la ligne suivante ? */
 		  if (lmax == 0)
 		    {
-		       if (adligne->LiNext != NULL)
+		       if (pLine->LiNext != NULL)
 			 {
-			    lmax = adligne->LiXMax - adligne->LiRealLength - dx;
-			    pLi2 = adligne->LiNext;
+			    lmax = pLine->LiXMax - pLine->LiRealLength - dx;
+			    pLi2 = pLine->LiNext;
 			    if (pLi2->LiFirstPiece != NULL)
 			       box1 = pLi2->LiFirstPiece;
 			    else
@@ -2868,10 +2823,10 @@ int                 frame;
 				       lmax = 1;	/* force la reevaluation */
 				    else
 				      {
-					 nbcar = box1->BxNChars;
-					 /* On regarde si on peut trouver une coupure */
-/**HYP*/ lmax = CarCoup (pLi2, box1, lmax, box1->BxFont,
-			 &nbcar, &larg, &nbblanc, &newicar, &newbuff);
+					 nChars = box1->BxNChars;
+					 /* regarde si on peut trouver une coupure */
+					 lmax = SearchBreak (pLi2, box1, lmax, box1->BxFont,
+			 &nChars, &larg, &nSpaces, &newIndex, &pNewBuff);
 				      }
 				 }
 			       else
@@ -2879,51 +2834,47 @@ int                 frame;
 			 }
 
 		       if (lmax > 0)
-			  ReevalBloc (pave, adligne, NULL, frame);
-		       else if (adligne->LiSpaceWidth == 0)
-			  DecalLigne (adligne, pave, pBox, dx, frame);
+			  ReevalBloc (pave, pLine, NULL, frame);
+		       else if (pLine->LiSpaceWidth == 0)
+			  DecalLigne (pLine, pave, pBox, dx, frame);
 		       else
 			 {
-			    CompresLigne (adligne, dx, frame, dbl);
-			    adligne->LiRealLength = nlcour;
+			    CompresLigne (pLine, dx, frame, dbl);
+			    pLine->LiRealLength = nlcour;
 			 }
 		    }
 		  else
-		     ReevalBloc (pave, adligne, NULL, frame);
+		     ReevalBloc (pave, pLine, NULL, frame);
 	       }
 	     else
-		ReevalBloc (pave, adligne, NULL, frame);
+		ReevalBloc (pave, pLine, NULL, frame);
 	  }
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    EnglLigne assure l'englobement de la boite de frame dans la ligne       | */
-/* |            du pave pAb et propage les modifications necessaires.| */
+/* |  EnglLigne assure l'englobement de la boite de frame dans la     | */
+/* |         ligne du pave pAb et propage les modifications necessaires.| */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                EnglLigne (PtrBox pBox, int frame, PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 void                EnglLigne (pBox, frame, pAb)
 PtrBox            pBox;
-int                 frame;
-PtrAbstractBox             pAb;
-
+int               frame;
+PtrAbstractBox    pAb;
 #endif /* __STDC__ */
-
 {
-   PtrBox            box1;
-   PtrBox            box2;
-   int                 sur, h;
-   int                 i, sous;
-   int                 pos;
-   int                 sousdiff;
-   PtrLine            pLi1;
-   PtrLine            pLi2;
-   PtrBox            pBo1;
+   PtrBox         box1;
+   PtrBox         box2;
+   int            sur, h;
+   int            i, sous;
+   int            pos;
+   int            sousdiff;
+   PtrLine        pLi1;
+   PtrLine        pLi2;
+   PtrBox         pBo1;
 
    /* AbDimension   *pDimAb; */
 
@@ -2946,11 +2897,11 @@ PtrAbstractBox             pAb;
 		  sous = pBox->BxHeight - pLi1->LiHeight;	/* Decalage des lignes suivantes */
 		  pLi1->LiHorizRef = sur;
 		  pLi1->LiHeight = pBox->BxHeight;
-		  /* On deplace la boite */
+		  /* deplace la boite */
 		  i = pBo1->BxYOrg + pLi1->LiYOrg - pBox->BxYOrg;
 		  DepOrgY (pBox, NULL, i, frame);
 
-		  /* On decale les lignes suivantes */
+		  /* decale les lignes suivantes */
 		  if (sous != 0)
 		    {
 		       pLi2 = pLi1->LiNext;
@@ -2978,14 +2929,14 @@ PtrAbstractBox             pAb;
 			    pLi2 = pLi2->LiNext;
 			 }
 
-		       /* On met a jour la hauteur du bloc de lignes */
+		       /* met a jour la hauteur du bloc de lignes */
 		       if (pBo1->BxContentHeight)
 			  ChangeHtContenu (pBo1, pBo1, pBo1->BxHeight + sous, frame);
 		    }
 	       }
 	     else
 	       {
-		  /* On calcule la base et la hauteur sous-base de la ligne */
+		  /* calcule la base et la hauteur sous-base de la ligne */
 		  if (pLi1->LiFirstPiece != NULL)
 		     box2 = pLi1->LiFirstPiece;
 		  else
@@ -3004,7 +2955,7 @@ PtrAbstractBox             pAb;
 		       i = box1->BxHeight - box1->BxHorizRef;
 		       if (sous < i)
 			  sous = i;
-		       /* On passe a la boite suivante */
+		       /* passe a la boite suivante */
 		       box2 = Suivante (box1->BxAbstractBox);
 		    }
 		  while (!(box2 == NULL || box1 == pLi1->LiLastBox || box1 == pLi1->LiLastPiece));
@@ -3022,7 +2973,7 @@ PtrAbstractBox             pAb;
 		       pos = 0;
 		    }
 
-		  /* On place la boite pBox dans la ligne */
+		  /* place la boite pBox dans la ligne */
 
 		  i = pLi1->LiYOrg + pLi1->LiHorizRef - pBox->BxHorizRef;
 		  /* Si la boite chevauche la ligne precedente ? */
@@ -3045,7 +2996,7 @@ PtrAbstractBox             pAb;
 		  i = i + pBo1->BxYOrg - pBox->BxYOrg;
 		  DepOrgY (pBox, NULL, i, frame);
 
-		  /* On met a jour le bloc de ligne */
+		  /* met a jour le bloc de ligne */
 		  i = sur - pLi1->LiHorizRef;	/* ecart de ligne de base */
 		  sousdiff = sous - pLi1->LiHeight + pLi1->LiHorizRef;	/*ecart en dessous */
 		  pLi1->LiHorizRef = sur;
@@ -3059,12 +3010,12 @@ PtrAbstractBox             pAb;
 		       if (i != 0)
 			 {
 
-			    /* On met a jour la base du bloc de lignes   */
+			    /* met a jour la base du bloc de lignes   */
 			    /* s'il depend de la premiere boite englobee */
 			    if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed)
 			       DepBase (pBo1, NULL, i, frame);
 
-			    /* On aligne les boites dans la ligne */
+			    /* aligne les boites dans la ligne */
 			    if (pLi1->LiFirstPiece != NULL)
 			       box2 = pLi1->LiFirstPiece;
 			    else
@@ -3091,10 +3042,10 @@ PtrAbstractBox             pAb;
 		  else
 		     /* Origine+base constante (mise a jour de l'origine) */
 
-		     pLi1->LiYOrg -= i;		/* On deplace la ligne */
+		     pLi1->LiYOrg -= i;		/* deplace la ligne */
 
 
-		  /* On decale les lignes suivantes */
+		  /* decale les lignes suivantes */
 		  if (pLi1->LiNext != NULL)
 		    {
 
@@ -3143,7 +3094,7 @@ PtrAbstractBox             pAb;
 		     /* modification de la hauteur du bloc de ligne */
 		     h = i + sousdiff;
 
-		  /* On termine la mise a jour du bloc de lignes */
+		  /* termine la mise a jour du bloc de lignes */
 		  if (h != 0 && pBo1->BxContentHeight)
 		     ChangeHtContenu (pBo1, pBo1, pBo1->BxHeight + h, frame);
 	       }
