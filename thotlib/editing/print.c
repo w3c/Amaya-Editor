@@ -522,6 +522,7 @@ STRING processName;
 {
        fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
        fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
+       fprintf (stderr, "       -sch <schema directories> -doc <doc directories>\n");
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
@@ -2244,7 +2245,7 @@ FILE     *list;
 CHAR_T      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "/home/stephane/.amaya/printpave%d.debug", n);
+   sprintf (localname, "/local_home/vatton/.amaya/printpave%d.debug", n);
    n++;
    list = fopen (localname, "w");
    NumberAbsBoxes (rootAbsBox);

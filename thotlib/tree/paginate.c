@@ -1260,7 +1260,7 @@ FILE     *list;
 CHAR_T      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "/home/vatton/.amaya/printpage%d.debug", n);
+   sprintf (localname, "/local_home/vatton/.amaya/printpage%d.debug", n);
    n++;
    list = fopen (localname, "w");
    TtaListBoxes (1, 1, list);
@@ -1333,7 +1333,7 @@ int                 schView;
   CHAR_T      localname[50];
 static int       n = 1;
    
-  sprintf (localname, "/home/vatton/.amaya/print%d.debug", n);
+  sprintf (localname, "/local_home/vatton/.amaya/print%d.debug", n);
   n++;
   list = fopen (localname, "w");
   TtaListBoxes (1, 1, list);
@@ -1805,223 +1805,140 @@ ThotBool            Assoc;
   do
     /* traite une page apres l'autre */
     {
-      if (previousPageAbBox != NULL)
+      if (previousPageAbBox)
 	pP = previousPageAbBox;
       else
 	pP = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
 
       if (pP)
-	do
-	  /* cherche les marques de page correspondant au debut d'un element */
-	  /* portant une regle Page ou les marques mises par l'utilisateur */
-	  {
-	    if (pP->AbElement->ElTypeNumber == PageBreak + 1)
-	      /* c'est une marque de page */
-	      /* affiche un message avec le numero de page */
-	      {
-		previousPageAbBox = pP;	/* pave de la page a imprimer */
-#ifndef PAGINEETIMPRIME
-		DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage);
-#endif /* PAGINEETIMPRIME */
-	       
-		/* On prend la hauteur de ce type de page */
-		PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
-		if (firstPage == NULL)
-		  firstPage = pP->AbElement;
-		/* cherche la derniere feuille dans la marque de page */
-		while (pP->AbFirstEnclosed != NULL)
-		  {
-		    pP = pP->AbFirstEnclosed;
-		    while (pP->AbNext != NULL)
-		      pP = pP->AbNext;
-		  }
-	      }
-	    /* cherche la marque de la page suivante */
-	    pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
-	    if (pP != NULL)
-	      {
-		/* on a trouve' une marque de page. C'est une page */
-		/* de debut d'element ou une page creee par l'utilisateur. */
-		if (pP->AbAfterPageBreak)
-		  /* cette marque de page est trop loin, il faut inserer */
-		  /* une marque de page avant */
-		  pP = NULL;	/* pour sortir de la boucle */
-		else
-		  {
-		    /* on renumerote cette marque de page */
-		    pEl1 = pP->AbElement;
-		    /* cherche le compteur de page a appliquer a cette page */
-		    cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
-		    if (cpt == 0)
-		      /* page non numerotee */
-		      {
-			pagesCounter++;
-			pEl1->ElPageNumber = pagesCounter;
-		      }
-		    else
-		      {
-			/* calcule le numero de page */
-			pEl1->ElPageNumber = CounterVal (cpt,
-							 pEl1->ElStructSchema,
-							 pSchP, pP->AbElement,
-							 schView);
-			/* on met a jour les boites de presentation des compteurs des */
-			/* pages suivantes dans le cas de la pagination depuis l'impression */
-			/* cet appel est fait tout a la fin dans le cas d'une pagination */
-			/* normale */
-			
-#ifdef PAGINEETIMPRIME
-			UpdateNumbers (NextElement (pEl1), pEl1, pDoc, TRUE);
-			/* serait-ce plus rapide si on faisait durectement l'appel : */
-			/* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
-#endif /* PAGINEETIMPRIME */
-		   }
-#ifndef PAGINEETIMPRIME
-		    /* affiche un message avec le numero de page */
-		    DisplayPageMsg (pDoc, pRootEl, pEl1, schView, Assoc, &isFirstPage);
-#endif /* PAGINEETIMPRIME */
-		    /* On prend la hauteur de ce type de page */
-		    PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
-		    /* la marque de page est avant la limite de page calculee, */
-		    /* on detruit tous les paves qui precedent la marque de page */
-		    volprec = rootAbsBox->AbVolume;
-		    /* avant de detruire la page precedente, on l'imprime */
-		    /* si la demande a ete faite */
-		    /* previousPageAbBox contient le pave de la page precedente */
-		    /* (sauf cas de la premiere page) */
-#ifdef PAGINEETIMPRIME
-		    if (previousPageAbBox != pP)
-		      PrintOnePage (pDoc, previousPageAbBox, pP, rootAbsBox, clipOrg);
-#endif /* PAGINEETIMPRIME */
-		    /* on met a jour previousPageAbBox pour le tour suivant (au cas ou */
-		    /* on soit a la fin du document) */
-		    previousPageAbBox = pP;
-		    shorter = KillAbsBoxBeforePage (pP, frame, pDoc, view, &clipOrg);
-		    /* calcule le volume de ce qui a ete detruit */
-		    /* pour en regenerer autant ensuite */
-		    if (rootAbsBox->AbVolume < 0)
-		      rootAbsBox->AbVolume = 0;
-		    volume += volprec - rootAbsBox->AbVolume;
-		  }
-	      }
-	  }
-	while (pP != NULL);
-
-      if (!shorter)
-	/* l'image fait plus d'une hauteur de page */
 	{
-	  volprec = rootAbsBox->AbVolume;
-	  /* Insere un element marque de page a la frontiere de page et */
-	  /* detruit tous les paves qui precedent cette frontiere. */
-	  pPage = PutMark (pRootEl, view, pDoc, frame, schView);
-	  /* une nouvelle page vient d'etre calculee, on l'imprime */
-	  if (pPage != NULL && pPage->ElAbstractBox[iview] != NULL)
+	  if (pP->AbElement->ElTypeNumber == PageBreak + 1)
 	    {
-	      /* avant de detruire la page precedente, on l'imprime */
-	      /* si la demande a ete faite */
+	      /* memorize the previous page break */
+	      previousPageAbBox = pP;
+	      
+	      /* get the height pf the page element */
+	      PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+	      if (firstPage == NULL)
+		firstPage = pP->AbElement;
+	      /* go to the end of the page element */
+	      while (pP->AbFirstEnclosed != NULL)
+		{
+		  pP = pP->AbFirstEnclosed;
+		  while (pP->AbNext != NULL)
+		    pP = pP->AbNext;
+		}
+	    }
+	  /* look for a next page break generated by an element */
+	  pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
+	  if (!pP)
+	    pPage = NULL;
+	  else if (!shorter && pP->AbAfterPageBreak)
+	    /* a page break found but it's too far away */
+	    pPage = NULL;
+	  else
+	    pPage = pP->AbElement;
+
+	  if (pPage == NULL && !shorter)
+	    {
+	      volprec = rootAbsBox->AbVolume;
+	      /* generate a new page break */
+	      pPage = PutMark (pRootEl, view, pDoc, frame, schView);
+	    }
+
+	  if (pPage && pPage->ElAbstractBox[iview])
+	    {
 	      /* previousPageAbBox contient le pave de la page precedente */
 #ifdef PAGINEETIMPRIME
-	      /* si la marque de page existait auparavant, on la renumerote */
+	      /* generate the page number */
 	      if (pPage->ElPageType != PgComputed)
 		{
-		  /* cherche le compteur de page a appliquer a cette page */
+		  /* get the current page counter */
 		  cpt = GetPageCounter (pPage, schView, &pSchP);
 		  if (cpt == 0)
-		    /* page non numerotee */
 		    {
 		      pagesCounter++;
 		      pPage->ElPageNumber = pagesCounter;
 		    }
 		  else
 		    {
-		      /* calcule le numero de page */
 		      pPage->ElPageNumber = CounterVal (cpt, 
 							pPage->ElStructSchema, 
 							pSchP, 
 							pPage, 
 							schView);
-		      /* on met a jour les boites de presentation des compteurs des */
-		      /* pages suivantes dans le cas de la pagination depuis l'impression */
-		      /* cet appel est fait tout a la fin dans le cas d'une pagination */
-		      /* normale */		      
+		      /* update the presentation box for next pages */
+		      /* this update is done at the end when the pagination */
+		      /* is not associated with print */		      
 		      UpdateNumbers (pPage, pPage, pDoc, TRUE);
 		    }
 		  PageHeaderFooter (pPage, schView, &b, &pSchPage);
 		 }
+	      /* print the new page */
 	       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],
 			     rootAbsBox, clipOrg);
 #endif /* PAGINEETIMPRIME */
-	       /* detruit tous les paves qui precedent la nouvelle frontiere */
+	       /* kill previous abstract boxes before the page break */
 	       shorter = KillAbsBoxBeforePage (pPage->ElAbstractBox[iview],
 						frame, pDoc, view, &clipOrg);
-	       /* previousPageAbBox devient la nouvelle page cree */
+	       /* previousPageAbBox points to the current page */
 	       previousPageAbBox = pPage->ElAbstractBox[iview];
-	       /* calcule le volume de ce qui a ete detruit pour en regenerer */
-	       /* autant ensuite */
+	       /* get the removed volume for the new generation */
 	       if (rootAbsBox->AbVolume < 0)
 		 rootAbsBox->AbVolume = 0;
 	       volume = volume + volprec - rootAbsBox->AbVolume;
 	     }
 	  else
+	    /* no page found */
 	    shorter = TRUE;
-	 }
-       /* complete l'image abstraite de cette vue jusqu'a ce qu'elle */
-       /* contienne une boite traversee par une frontiere de page ou qu'on */
-       /* soit arrive' a la fin de la vue. */
-       somthingAdded = FALSE;	/* on n'a encore rien ajoute' a l'image */
-       while (shorter && rootAbsBox->AbTruncatedTail)
-	 /* on ajoute au moins 100 caracteres a l'image */
-	 {
-	   if (volume < 100)
-	     /* indique le volume qui peut etre cree */
-	     volume = 100;
-	   do
-	     {
-	       if (Assoc)
-		 pDoc->DocAssocFreeVolume[iview] = volume;
-	       else
-		 pDoc->DocViewFreeVolume[iview] = volume;
-	       volprec = rootAbsBox->AbVolume;
-	       /* volume de la vue avant */
-	       /* demande la creation de paves supplementaires */
-	       AddAbsBoxes (rootAbsBox, pDoc, FALSE);
-	       if (rootAbsBox->AbVolume <= volprec)
-		 /* rien n'a ete cree, augmente le
-		    volume de ce qui peut etre cree' */
-		 volume = 2 * volume;
-	       else	/* on a ajoute' de nouveaux paves */
-		 somthingAdded = TRUE;
-	     }
-	   while (rootAbsBox->AbVolume < volprec &&
-		  rootAbsBox->AbTruncatedTail);
-	   volume = 0;	/* plus rien a generer */
-	   /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
-	   /* traversee par une frontiere de page apres l'ajout des
-	      paves supplementaires */
-	   RealPageHeight = PageHeight;
-	   if (Assoc)
-	     {
-	       if (pDoc->DocAssocModifiedAb[iview] != NULL)
-		 {
-		   shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocAssocModifiedAb[iview]);
-		   pDoc->DocAssocModifiedAb[iview] = NULL;
-		 }
-	     }
-	   else if (pDoc->DocViewModifiedAb[iview] != NULL)
-	     {
-	       shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[iview]);
-	       pDoc->DocViewModifiedAb[iview] = NULL;
-	       /* si de nouveaux paves ont ete crees, on refait un tour pour */
-	       /* traiter les marques de pages qu'ils contiennent */
-	     }
-	 }
-     }
-   while (!shorter || somthingAdded || rootAbsBox->AbTruncatedTail);
-   /* quand on sort de la boucle, previousPageAbBox pointe sur le pave de la */
-   /* derniere page (avant que l'editeur n'ait insere la marque de fin) */
-   
-   /* fin de la vue */
-   rootAbsBox->AbTruncatedTail = FALSE;
+	}
+      /* complete the image still a new page could be generated */
+      /* or the end of the document is reached */
+      somthingAdded = FALSE;
+      while (shorter && rootAbsBox->AbTruncatedTail)
+	{
+	  if (volume < 100)
+	    /* minimum added */
+	    volume = 100;
+	  do
+	    {
+	      if (Assoc)
+		pDoc->DocAssocFreeVolume[iview] = volume;
+	      else
+		pDoc->DocViewFreeVolume[iview] = volume;
+	      /* volume before the generation*/
+	      volprec = rootAbsBox->AbVolume;
+	      /* generation */
+	      AddAbsBoxes (rootAbsBox, pDoc, FALSE);
+	      if (rootAbsBox->AbVolume <= volprec)
+		/* nothing added */
+		volume = 2 * volume;
+	      else
+		/* new abstract boxes generated */
+		somthingAdded = TRUE;
+	    }
+	  while (rootAbsBox->AbVolume < volprec && rootAbsBox->AbTruncatedTail);
+	  
+	  /* nothing to add */
+	  volume = 0;
+	  /* call ChangeConcreteImage to know if we have enough volume */
+	  RealPageHeight = PageHeight;
+	  if (Assoc)
+	    {
+	      if (pDoc->DocAssocModifiedAb[iview] != NULL)
+		{
+		  shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocAssocModifiedAb[iview]);
+		  pDoc->DocAssocModifiedAb[iview] = NULL;
+		}
+	    }
+	  else if (pDoc->DocViewModifiedAb[iview] != NULL)
+	    {
+	      shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[iview]);
+	      pDoc->DocViewModifiedAb[iview] = NULL;
+	    }
+	}
+    }
+  while (!shorter || somthingAdded || rootAbsBox->AbTruncatedTail);
 
    /* Ajoute le saut de page qui manque eventuellement a la fin */
    AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
