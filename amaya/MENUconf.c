@@ -3540,7 +3540,7 @@ STRING              pathname;
 
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
-		   40, 1, TRUE);
+		   40, 1, FALSE);
 
    TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu,
 		TtaGetMessage (AMAYA, AM_PROFILE_SELECT));     
