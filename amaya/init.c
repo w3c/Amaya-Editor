@@ -1112,6 +1112,7 @@ STRING              text;
 	       TtaInsertFirstChild  (&child, el, document);
 	     }
 	   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
+       TtaChangeWindowTitle (document, 1, text);
 	   TtaCloseUndoSequence (document);
 	   TtaSetDocumentModified (document);
 	 }
