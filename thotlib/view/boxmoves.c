@@ -1930,18 +1930,24 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
-	    toMove = (pCurrentAb->AbFloat != 'N' &&
-		      pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
-		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
-		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
-		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
+	    {
+	      if (pCurrentAb->AbFloat == 'R' || pBox->BxType != BoFloatGhost)
+		{
+		  toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost;
+		  /* toMove should set to false if floating left */
+		}
+	      else
+		toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+			  pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
+			  pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
+	    }
 	  
 	  /* check positionning constraints */
 	  if (!toMove ||
 	      pCurrentAb->AbFloat == 'L' ||
 	      (pCurrentAb->AbFloat != 'R' &&
-	       !toMove || pBox->BxHorizEdge == Left ||
-	       pBox->BxHorizEdge == VertRef))
+	       (pBox->BxHorizEdge == Left ||
+		pBox->BxHorizEdge == VertRef)))
 	    {
 	      /*====> The left is fixed */
 	      /* Move the middle and the right */

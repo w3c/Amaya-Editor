@@ -2042,6 +2042,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pBox->BxContentWidth = FALSE;
 			    }
 			  else if (pAb->AbFloat != 'N'||
+				   pBox->BxType == BoFloatGhost ||
 				   pAb->AbNotInLine ||
 				   pAb->AbDisplay == 'I' ||
 				   /* if the parent inherits from contents */
@@ -2055,13 +2056,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
 			    }
-			  else if (pAb->AbFloat != 'N'||
-				   pAb->AbNotInLine ||
-				   pAb->AbDisplay == 'I' ||
-				   /* when the parent rule changes check upper levels */
-				   (pParentAb->AbWidthChange &&
-				    pParentAb->AbWidth.DimUnit == UnAuto))
+			  else if (pParentAb->AbWidthChange &&
+				   pParentAb->AbWidth.DimUnit == UnAuto)
 			    {
+/* when the parent rule changes check upper levels */
 			      PtrAbstractBox parent;
 			      parent = pParentAb->AbEnclosing;
 			      while (parent && parent->AbWidthChange &&
