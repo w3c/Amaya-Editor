@@ -1968,8 +1968,7 @@ Element             el;
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
 	 {
-	    case HTML_EL_Input:	/*  it's an INPUT */
-		/* special case of INPUT elements */
+	    case HTML_EL_Input:	/*  it's an INPUT without TYPE attribute */
 		/* Create a child of type Text_Input */
 		elType.ElTypeNum = HTML_EL_Text_Input;
 		child = TtaNewTree (theDocument, elType, "");
@@ -1985,26 +1984,26 @@ Element             el;
 			   /* copy attribute value into the first
 			      text leaf of element */
 			   {
-				   length = TtaGetTextAttributeLength (attr);
-				   text = TtaGetMemory (length + 1);
-				   TtaGiveTextAttributeValue (attr, text, &length);
-				     {
-				        desc = child;
-					do
-					   {
-					   leaf = desc;
-					   desc = TtaGetFirstChild (leaf);
-					   }
-					while (desc != NULL);
-					if (leaf != NULL)
-					  {
-					  childType = TtaGetElementType (leaf);
-					  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-					    TtaSetTextContent (leaf, text,
-						documentLanguage, theDocument);
-					  }
-				     }
-				   TtaFreeMemory (text);
+			   length = TtaGetTextAttributeLength (attr);
+			   text = TtaGetMemory (length + 1);
+			   TtaGiveTextAttributeValue (attr, text, &length);
+			     {
+			        desc = child;
+				do
+				   {
+				   leaf = desc;
+				   desc = TtaGetFirstChild (leaf);
+				   }
+				while (desc != NULL);
+				if (leaf != NULL)
+				  {
+				  childType = TtaGetElementType (leaf);
+				  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+				    TtaSetTextContent (leaf, text,
+					documentLanguage, theDocument);
+				  }
+			     }
+			   TtaFreeMemory (text);
 			   }
 			 TtaNextAttribute (el, &attr);
 		      }
@@ -2806,7 +2805,7 @@ char               *GIname;
 
    /* ignore tag <P> within PRE */
    if (Within (HTML_EL_Preformatted))
-      if (strcmp (GIname, "P") == 0)
+      if (strcasecmp (GIname, "P") == 0)
 	 return;
    /* search the HTML element name in the mapping table */
    entry = MapGI (GIname);
