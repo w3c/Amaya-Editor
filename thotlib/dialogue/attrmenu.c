@@ -1500,17 +1500,12 @@ int                 frame;
 		     NumCurrentAttr = 1;
 		     /* restaure l'etat courant du toggle */
 #            ifdef _WINDOWS
-             /* DeleteAttribute (NULL, pAttrNew); */
              CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), 
-				                      TtaGetMessage (LIB, TMSG_LANGUAGE),
-	                                  TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
-									  WIN_nbItem, 
-									  WIN_buffMenu, 
-									  WIN_Lab, 
-									  NumMenuAlphaLanguage,
-									  (int)WIN_MenuAlphabet,
-									  (int)WIN_Language,
-									  TtaGetLanguageName (WIN_Language));
+				      TtaGetMessage (LIB, TMSG_LANGUAGE),
+	                              TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
+				      WIN_nbItem, WIN_buffMenu, WIN_Lab, 
+				      NumMenuAlphaLanguage, (int)WIN_MenuAlphabet,
+				      (int)WIN_Language, TtaGetLanguageName (WIN_Language));
 #            else /* _WINDOWS */
 		     if (ActiveAttr[att] == 0)
 			TtaSetToggleMenu (refmenu, att, FALSE);

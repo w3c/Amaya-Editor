@@ -335,7 +335,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild;
    PtrSSchema          pNewSS;
-   PtrAttribute        pAttr, pAttrSuiv, pAttrDouble, pAttrDoubleSuiv;
+   PtrAttribute        pAttr, pNextAttr, pAttrDouble, pNextDoubleAttr;
    PtrIsomorphDesc     pIsoD;
    SRule              *pSRule;
    int                 att, newType;
@@ -351,7 +351,7 @@ PtrDocument         pDoc;
    pAttr = pEl->ElFirstAttr;
    while (pAttr != NULL)	/* examine tous les attributs de l'element */
      {
-	pAttrSuiv = pAttr->AeNext;
+	pNextAttr = pAttr->AeNext;
 	if (!pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrGlobal)
 	   /* c'est un attribut local, il faut verifier */
 	  {
@@ -363,10 +363,13 @@ PtrDocument         pDoc;
 	     if (!found)
 		/* l'attribut ne figure pas parmi les attributs locaux du */
 		/* type de l'element, on le supprime */
+		{
+		RemoveAttribute (pEl, pAttr);
 		DeleteAttribute (pEl, pAttr);
+		}
 	  }
 	/* passe a l'attribut suivant de l'element */
-	pAttr = pAttrSuiv;
+	pAttr = pNextAttr;
      }
    /* change le type de l'element */
    pEl->ElTypeNumber = typeNum;
@@ -377,21 +380,22 @@ PtrDocument         pDoc;
    pAttr = pEl->ElFirstAttr;
    while (pAttr != NULL)
      {
-	pAttrSuiv = pAttr->AeNext;
-	pAttrDouble = pAttrSuiv;
+	pNextAttr = pAttr->AeNext;
+	pAttrDouble = pNextAttr;
 	while (pAttrDouble != NULL)
 	  {
-	     pAttrDoubleSuiv = pAttrDouble->AeNext;
+	     pNextDoubleAttr = pAttrDouble->AeNext;
 	     if (pAttrDouble->AeAttrNum == pAttr->AeAttrNum &&
 		 pAttrDouble->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
 	       {
-		  if (pAttrSuiv == pAttrDouble)
-		     pAttrSuiv = pAttrDoubleSuiv;
+		  if (pNextAttr == pAttrDouble)
+		     pNextAttr = pNextDoubleAttr;
+		  RemoveAttribute (pEl, pAttrDouble);
 		  DeleteAttribute (pEl, pAttrDouble);
 	       }
-	     pAttrDouble = pAttrDoubleSuiv;
+	     pAttrDouble = pNextDoubleAttr;
 	  }
-	pAttr = pAttrSuiv;
+	pAttr = pNextAttr;
      }
    if (!pEl->ElTerminal)
       /* on transforme les fils de l'element */

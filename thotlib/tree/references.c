@@ -437,7 +437,10 @@ PtrElement          pEl;
 		  pNextRef = pRef->RdNext;
 		  if (pRef->RdAttribute != NULL)
 		     /* c'est un attribut-reference, on supprime l'attribut */
+		     {
+		     RemoveAttribute (pRef->RdElement, pRef->RdAttribute);
 		     DeleteAttribute (pRef->RdElement, pRef->RdAttribute);
+		     }
 		  else
 		    {
 		       pRef->RdReferred = NULL;

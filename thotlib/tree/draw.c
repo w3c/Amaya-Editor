@@ -189,7 +189,10 @@ PtrAttribute       *pAttr;
 		  if (trouve)
 		     /* l'attribut courant est exclusif du nouvel attribut, on */
 		     /* le supprime */
+		     {
+		     RemoveAttribute (*pEl, pA);
 		     DeleteAttribute (*pEl, pA);
+		     }
 	       }
 	     pA = pASuiv;
 	     /* passe a l'attribut suivant de l'element */
@@ -275,6 +278,7 @@ PtrElement          pEl;
 			if (!ok)
 			   /* l'attribut est incorrect, on le supprime */
 			  {
+			     RemoveAttribute (pEl, *pAttr);
 			     DeleteAttribute (pEl, *pAttr);
 			     *pAttr = NULL;
 			  }
@@ -304,6 +308,7 @@ PtrElement          pEl;
 						  /* l'attribut a une des exception  identifiant un */
 						  /* attribut a supprimer, on supprime l'attribut */
 						 {
+						    RemoveAttribute (pEl, pA);
 						    DeleteAttribute (pEl, pA);
 						    pA = NULL;
 						 }

@@ -275,7 +275,7 @@ Document            document;
 	       }
 	     else
 	       {
-		  DeleteAttribute ((PtrElement) element, pAttr);
+		  RemoveAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
 		  UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, TRUE);
 #endif
@@ -284,6 +284,7 @@ Document            document;
 #ifndef NODISPLAY
 		  UndisplayAttribute ((PtrElement) element, (PtrAttribute) attribute, document);
 #endif
+		  DeleteAttribute ((PtrElement) element, pAttr);
 	       }
 	  }
      }

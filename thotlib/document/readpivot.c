@@ -2040,7 +2040,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute        pAttr;
+   PtrAttribute        pAttr, pNextAttr;
    NotifyAttribute     notifyAttr;
 
    pAttr = pEl->ElFirstAttr;
@@ -2053,10 +2053,14 @@ PtrDocument         pDoc;
 	notifyAttr.attribute = NULL;
 	notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+	pNextAttr = pAttr->AeNext;
 	if (CallEventAttribute (&notifyAttr, TRUE))
 	   /* l'application ne veut pas lire l'attribut */
 	   /* on l'avait deja lu, on le retire */
+	   {
+	   RemoveAttribute (pEl, pAttr);
 	   DeleteAttribute (pEl, pAttr);
+	   }
 	else
 	  {
 	     /* prepare et envoie l'evenement AttrRead.Post s'il est demande' */
@@ -2069,7 +2073,7 @@ PtrDocument         pDoc;
 	     CallEventAttribute (&notifyAttr, FALSE);
 	  }
 	/* passe a l'attribut suivant de l'element */
-	pAttr = pAttr->AeNext;
+	pAttr = pNextAttr;
      }
 }
 

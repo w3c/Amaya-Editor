@@ -3405,9 +3405,7 @@ PtrAttribute        pAttr;
 		  pPR = pPRnext;
 	       }
 	  }
-	/* if the attribute has not yet been freed then remove it
-	   from the element's chain of attributes */
-	RemoveAttribute (pEl, pAttr);
+
 	/* frees the memory allocated to the attribute */
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	   /* frees the reference */
@@ -3558,6 +3556,7 @@ PtrElement         *pEl;
 	while (pAttr != NULL)
 	  {
 	     pNextAttr = pAttr->AeNext;
+	     RemoveAttribute (*pEl, pAttr);
 	     DeleteAttribute (*pEl, pAttr);
 	     pAttr = pNextAttr;
 	  }

@@ -420,7 +420,10 @@ PtrDocument         pDoc;
 			  if (TextsEqual (pInheritLang->AeAttrText,
 					  pLangAttr->AeAttrText))
 			     /* attributs egaux, on supprime celui de pPasted */
+			     {
+			     RemoveAttribute (pPasted, pLangAttr);
 			     DeleteAttribute (pPasted, pLangAttr);
+			     }
 		    }
 		  /* garde le pointeur sur le sous-arbre colle' */
 		  CreatedElement[NCreatedElements] = newElement;

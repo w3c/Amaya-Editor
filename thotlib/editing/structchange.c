@@ -496,7 +496,10 @@ PtrSSchema          pSS;
 				       if (TextsEqual (pInheritLang->AeAttrText, pLangAttr->AeAttrText))
 					  /* attributs egaux, on supprime celui
 					     de pCopy */
+					  {
+					  RemoveAttribute (pCopy, pLangAttr);
 					  DeleteAttribute (pCopy, pLangAttr);
+					  }
 				 }
 			       pEl = pCopy;
 			       /* garde le pointeur sur le sous arbre colle' */
@@ -884,7 +887,10 @@ PtrElement         *pFirstFree;
 		     if (TextsEqual (pInheritLang->AeAttrText,
 				     pLangAttr->AeAttrText))
 			/* attributs egaux, on supprime celui de pCopy */
+			{
+			RemoveAttribute (pCopy, pLangAttr);
 			DeleteAttribute (pCopy, pLangAttr);
+			}
 	       }
 	     /* DeleteElement les elements exclus dans le sous-arbre copie' */
 	     RemoveExcludedElem (&pPastedEl);

@@ -1127,7 +1127,7 @@ PtrAttribute        pNewAttr;
 	       l'attribut sur l'element lui-meme */
 	    RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
 	    /* supprime l'attribut */
-	    DeleteAttribute (pEl, pAttr);
+	    RemoveAttribute (pEl, pAttr);
 	    /* indique que le document a ete modifie' */
 	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
@@ -1143,6 +1143,7 @@ PtrAttribute        pNewAttr;
 	    if (!pEl->ElTerminal && compare)
 	      for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
 		RemoveComparAttrPresent (pChild, pDoc, pAttr);
+	    DeleteAttribute (pEl, pAttr);
 	  }
 
 	else if (pAttrAsc)

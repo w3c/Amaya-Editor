@@ -555,9 +555,9 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl, pElRef, pSource;
    PtrReference        pRef, pNextRef;
-   PtrAttribute        pAttr;
+   PtrAttribute        pAttr, pNextAttr;
    PtrDocument         pDocRef, pNextDocRef;
-   boolean             attrRef;
+   boolean             attrRef, delAttr;
    PtrExternalDoc      pExtDoc;
    PtrElement          pElemRef;
    int                 l;
@@ -655,11 +655,13 @@ PtrDocument         pDoc;
    while (pAttr != NULL)
       /* examine tous les attributs de l'element */
      {
+     	pNextAttr = pAttr->AeNext;
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	   /* c'est un attribut de type reference */
 	   /* cherche l'element reference', pElRef */
 	  {
 	     pElRef = NULL;
+	     delAttr = FALSE;
 	     if (pAttr->AeAttrReference != NULL)
 		 if (pAttr->AeAttrReference->RdReferred != NULL)
 		   {
@@ -687,14 +689,20 @@ PtrDocument         pDoc;
 				   (*ThotLocalActions[T_refattr])
 				     (pAttr, &attrRef);
 				 if (!attrRef)
-				   DeleteAttribute (pRoot, pAttr);
+				   {
+				   RemoveAttribute (pEl, pAttr);
+				   delAttr = TRUE;
+				   }
 			       }
 			   }
-		     /* on traite le cas des references qui pointent sur de nouveaux elements */
+		     /* on traite le cas des references qui pointent sur de
+			nouveaux elements */
 		     UpdateReferences (pRoot, pDoc, pAttr->AeAttrReference);
+		     if (delAttr)
+			DeleteAttribute (pRoot, pAttr);
 		   }  
 	  }
-	pAttr = pAttr->AeNext;
+	pAttr = pNextAttr;
      }
    /* Lorsqu'on fait un copier/coller d'un element LtReference, */
    /* il faut chainer les references entre element ancien et */
