@@ -887,7 +887,10 @@ printf ("Specific Widths ...\n");
 	  else if (colWidth[cRef] > 0)
 	    i = colWidth[cRef];
 	  else if (useMax)
-	    i = box->BxMaxWidth;
+	    {
+	      var = delta * box->BxMaxWidth / max;
+	      i = box->BxMaxWidth + var;
+	    }
 	  else
 	    {
 	      var = delta * box->BxMaxWidth / max;
