@@ -55,7 +55,7 @@ ELEMENTS
 
 ATTRIBUTES
 
-  Language:
+   Language:
 	BEGIN
 	AttrCreate.Post -> AttrLangCreated;
 	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
@@ -63,7 +63,7 @@ ATTRIBUTES
 	AttrModify.Post -> AttrLangModified;
 	END;
 
-  class:
+   class:
         BEGIN
         AttrCreate.Post -> AttrClassChanged;
         AttrModify.Post -> AttrClassChanged;
@@ -90,7 +90,14 @@ ATTRIBUTES
 
    EntityName:
         AttrModify.Post -> MathEntityModified;
-	
+
+   display:
+	BEGIN
+	AttrCreate.Post -> MathDisplayAttrCreated;
+	AttrModify.Post -> MathDisplayAttrCreated;
+	AttrDelete.Pre ->  MathDisplayAttrDelete;
+	END;
+
    fontsize:
         BEGIN
         AttrCreate.Post -> MathPresentAttrCreated;

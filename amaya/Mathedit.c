@@ -4059,16 +4059,6 @@ void MathAttrOtherCreated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-   MathStyleAttrInMenu
-   Called by Thot when building the Attribute menu.
-   Prevent Thot from including a deprecated attribute in the menu.
-  ----------------------------------------------------------------------*/
-ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
-{
-  return TRUE;	/* don't put a deprecated attribute in the menu */
-}
-
-/*----------------------------------------------------------------------
  MathEntityModified
  An attribute EntityName has been modified by the user.
  -----------------------------------------------------------------------*/
@@ -4120,6 +4110,27 @@ void MathEntityModified (NotifyAttribute *event)
   if (changed)
     TtaSetAttributeText (event->attribute, value, event->element,
 			 event->document);
+}
+
+/*----------------------------------------------------------------------
+ MathDisplayAttrCreated
+ An attribute display has been created by the user.
+ -----------------------------------------------------------------------*/
+void MathDisplayAttrCreated (NotifyAttribute *event)
+{
+  MathMLSetDisplayAttr (event->element, event->attribute, event->document,
+			FALSE);
+}
+
+/*----------------------------------------------------------------------
+ MathDisplayAttrDelete
+ The user is deleting an attribute display
+ -----------------------------------------------------------------------*/
+ThotBool MathDisplayAttrDelete (NotifyAttribute *event)
+{
+  ParseHTMLSpecificStyle (event->element, "display:inline", event->document,
+			  0, TRUE);
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -4192,6 +4203,16 @@ ThotBool MathAttrFontsizeDelete (NotifyAttribute *event)
     ParseHTMLSpecificStyle (event->element, "font-size: 10pt",
 			    event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+   MathStyleAttrInMenu
+   Called by Thot when building the Attribute menu.
+   Prevent Thot from including a deprecated attribute in the menu.
+  ----------------------------------------------------------------------*/
+ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
+{
+  return TRUE;	/* don't put a deprecated attribute in the menu */
 }
 
 /*----------------------------------------------------------------------

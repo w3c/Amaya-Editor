@@ -1565,24 +1565,11 @@ ATTRIBUTES
 	BEGIN
 	IF MathML and RealLang
 	    BEGIN
-            CreateBefore(AttrName);
+	    CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
 	END;
 
-  Unknown_attribute:
-	BEGIN
-	if TEXT_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if PICTURE_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if Unknown_namespace
-	   CreateAfter(UnknownAttrValue);
-	if Unknown_namespace and LastAttr
-	   CreateAfter(Unknown_End);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
-  	   CreateBefore(UnknownAttrValue);
-	END;
   class:
 	BEGIN
 	CreateBefore(AttrName);
@@ -1613,14 +1600,62 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
+  xml_space = xml_space_default:
+	CreateBefore(ATTR_xml_space_default);
+  xml_space = xml_space_preserve:
+	CreateBefore(ATTR_xml_space_preserve);
+
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+        if SYMBOL_UNIT
+	   CreateAfter (IndexBox);
+        if PICTURE_UNIT
+	   CreateAfter (IndexBox);
+	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+	   CreateLast (IndexBox);
+	END;
+
+  Unknown_attribute:
+	BEGIN
+	if TEXT_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if PICTURE_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if Unknown_namespace
+	   CreateAfter(UnknownAttrValue);
+	if Unknown_namespace and LastAttr
+	   CreateAfter(Unknown_End);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+  	   CreateBefore(UnknownAttrValue);
+	END;
+
+  EntityName:
+	BEGIN
+	CreateBefore(VALUE_EntityName);
+	IN Structure_view
+		BEGIN
+		Visibility: 1;
+		VertPos: Top = Previous VALUE_EntityName . Bottom;
+		END;
+	END;
+
   macros:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;
 
-  display:
+  display = inline_:
 	CreateBefore(AttrNameAndValue);
+
+  display = block:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	END;
+
   display(MFRAC) = block:
 	BEGIN
         if within MFRAC
@@ -2421,33 +2456,6 @@ ATTRIBUTES
 
   edge:
 	CreateBefore(AttrNameAndValue);
-
-  EntityName:
-	BEGIN
-	CreateBefore(VALUE_EntityName);
-	IN Structure_view
-		BEGIN
-		Visibility: 1;
-		VertPos: Top = Previous VALUE_EntityName . Bottom;
-		END;
-	END;
-
-  Highlight:
-	BEGIN
-        if TEXT_UNIT
-	   CreateAfter (IndexBox);
-        if SYMBOL_UNIT
-	   CreateAfter (IndexBox);
-        if PICTURE_UNIT
-	   CreateAfter (IndexBox);
-	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
-	   CreateLast (IndexBox);
-	END;
-
-  xml_space = xml_space_default:
-	CreateBefore(ATTR_xml_space_default);
-  xml_space = xml_space_preserve:
-	CreateBefore(ATTR_xml_space_preserve);
 
   IntPlaceholder:
 	BEGIN

@@ -585,7 +585,10 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		       c = 'L';  /* arrow left */
 		     else if (text[0] == 0x2192)
 		       c = 'R';  /* arrow right */
-		     else if (text[0] == 45)    /* - (minus) */
+		     else if (text[0] == 45)        /* - (minus) */
+		       /* a horizontal line in the middle of the box */
+		       c = 'h'; 
+		     else if (text[0] == 0x2212)    /* - (minus) */
 		       /* a horizontal line in the middle of the box */
 		       c = 'h'; 
 		     else if (text[0] == 0x0332)    /* UnderBar */
@@ -1453,7 +1456,11 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	      /* ISO-Latin 1 character */
 	      {
 #endif
-		if (text[0] == '-')
+		if (text[0] == '-'
+#ifdef _I18N_
+		    || text[0] == 0x2212   /* minus */
+#endif
+		    )
 		  /* prefix or infix operator? */
 		  {
 		    previous = el;
@@ -2509,6 +2516,24 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
 }
 
 /*----------------------------------------------------------------------
+   MathMLSetDisplayAttr
+   The MathML attribute display is associated  with element el.
+   Generate the corresponding Thot presentation rule for
+   the element.
+  ----------------------------------------------------------------------*/
+void MathMLSetDisplayAttr (Element el, Attribute attr, Document doc,
+			   ThotBool delete)
+{
+  int val;
+
+  val = TtaGetAttributeValue (attr);
+  if (val == MathML_ATTR_display_VAL_block)
+    ParseHTMLSpecificStyle (el, "display: block", doc, 0, delete);
+  else if (val == MathML_ATTR_display_VAL_inline_)
+    ParseHTMLSpecificStyle (el, "display: inline", doc, 0, delete);
+}
+
+/*----------------------------------------------------------------------
    MathMLAttributeComplete
    The XML parser has completed parsing attribute attr (as well as its value)
    that is associated with element el in document doc.
@@ -2518,13 +2543,13 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
    AttributeType     attrType, depAttrType;
    int		     attrKind;
    ElementType       elType;
-#define buflen 50
    char             *value;
    int               val, length;
    Attribute         intAttr;
  
    /* first get the type of that attribute */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
+
    if (attrType.AttrTypeNum == MathML_ATTR_bevelled)
      /* it's a bevelled attribute */
      {
@@ -2579,6 +2604,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
       complete yet. Handle it when the element is complete.
    else if (attrType.AttrTypeNum == MathML_ATTR_columnalign)
    */
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_display)
+     /* it's a display attribute */
+     MathMLSetDisplayAttr (el, attr, doc, FALSE);
 
    else if (attrType.AttrTypeNum == MathML_ATTR_Language)
      {
