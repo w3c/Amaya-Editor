@@ -81,18 +81,13 @@ FILE        *fout;
 int          num;
 #endif /* __STDC__ */
 {
-  unsigned short      red;
-  unsigned short      green;
-  unsigned short      blue;
 
   /* Compare the color asked with the current one */
   if (num != ColorPs)
     {
-      /* Ask for the RedGreenBlue values */
-      TtaGiveThotRGB (num, &red, &green, &blue);
-      /* Emit the Poscript command */
+     /* Emit the Poscript command */
       if (TtPrinterDC)
-	SetTextColor (TtPrinterDC, RGB (red, green, blue));
+        SetTextColor (TtPrinterDC, ColorPixel (num));
       ColorPs = num;
     }
 }
@@ -120,7 +115,7 @@ int                 style;
 
    t = PixelToPoint (thick);
    logBrush.lbStyle = BS_SOLID;
-   logBrush.lbColor = RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue);
+   logBrush.lbColor = ColorPixel (color);
    switch (style)
 	 {
 	 case 3:
@@ -197,7 +192,7 @@ int                 fg;
 
    pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0) {
-      hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+      hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
 
       hOldPen = SelectObject (TtPrinterDC, hPen);
       Polyline (TtPrinterDC, point, 4);
@@ -260,9 +255,9 @@ int                 fg;
 {
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
    if (RO && fg == 1)
-      TtLineGC.foreground = RO_Color;
+      TtLineGC.foreground = ColorPixel (RO_Color);
    else
-       TtLineGC.foreground = fg;
+       TtLineGC.foreground = ColorPixel (fg);
 }
 
 /*----------------------------------------------------------------------
@@ -350,7 +345,7 @@ int                 y2;
 
   WIN_GetDeviceContext (frame);
       logBrush.lbStyle = BS_SOLID;
-      logBrush.lbColor = RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue);
+      logBrush.lbColor = TtLineGC.foreground;
       
       switch (TtLineGC.style)
 	{
@@ -552,7 +547,6 @@ int                 shadow;
 #ifdef _WIN_PRINT
    int                 encoding, NonJustifiedWhiteSp;
    FILE               *fout;
-   unsigned short      red, green, blue;
 #else  /* _WIN_PRINT */
    ThotWindow          w;
    RECT                rect;
@@ -589,10 +583,7 @@ int                 shadow;
 
       /* Do we need to change the current color ? */
       if (TtPrinterDC)
-	{
-	  TtaGiveThotRGB (fg, &red, &green, &blue);
-	  SetTextColor (TtPrinterDC, RGB (red, green, blue));
-	}
+	  SetTextColor (TtPrinterDC, ColorPixel (fg));
 
       /* Do we need to change the current font ? */
       if (TtPrinterDC)
@@ -976,7 +967,6 @@ int                 fg;
    FILE              *fout = NULL;
    HPEN               hPen, hOldPen;
    POINT              ptArray [2];
-   unsigned short     r, g, b;
    int                 ycour;
 #else /* _WIN_PRINT */
   ThotWindow          w;
@@ -996,9 +986,7 @@ int                 fg;
 	  xcour = x;
 	  ycour = y;
       if (TtPrinterDC) {
-         TtaGiveThotRGB (fg, &r, &g, &b);
-         /* hPen = CreatePen (PS_DOT, 1, RGB (r, g, b)); */
-         hPen = CreatePen (PS_DOT, 0, RGB ((BYTE) r, (BYTE) g, (BYTE) b)); 
+          hPen = CreatePen (PS_DOT, 0, ColorPixel (fg)); 
 		 hOldPen = SelectObject (TtPrinterDC, hPen);
          ptArray [0].x = xcour;
          ptArray [0].y = ycour;
@@ -1405,15 +1393,15 @@ int                 active;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 arc, fh;
-   HPEN                pen;
-   HPEN                hOldPen;
-
 #ifdef _WIN_PRINT
    if (TtPrinterDC) {
       /* **** A FAIRE **** */
    }
 #else  /* _WIN_PRINT */
+   int                 arc, fh;
+   HPEN                pen;
+   HPEN                hOldPen;
+
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\307', font))
      {
@@ -1431,7 +1419,7 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
-        pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+        pen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
         hOldPen = SelectObject (TtPrinterDC, pen);
         Arc (TtPrinterDC, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
         SelectObject (TtPrinterDC, hOldPen);
@@ -1483,7 +1471,7 @@ int                 fg;
              DoPrintOneLine (fg, x + 1, y, x + 1, y + h - arc, 1, 5);
              DoPrintOneLine (fg, x + l - 2, y, x + l - 2, y + h - arc, 1, 5);
              /* Lower part */
-             pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+             pen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
              hOldPen = SelectObject (TtPrinterDC, pen);
              Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
              SelectObject (TtPrinterDC, hOldPen);
@@ -1510,7 +1498,7 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-        pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+        pen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
         hOldPen = SelectObject (TtPrinterDC, pen);
 	y += h;
         Arc (TtPrinterDC, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
@@ -2160,20 +2148,20 @@ int                 pattern;
 	   switch (style)
 	     {
 	     case 3:
-	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
 	       break;
 	     case 4:
-	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	       hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
 	       break;
 	     default:
-	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	       hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
 	       break;
 	     } 
 	 }
        else
 	 {
 	   logBrush.lbStyle = BS_SOLID;
-	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	   logBrush.lbColor = ColorPixel (fg);
 
 	   switch (style)
 	     {
@@ -2400,12 +2388,12 @@ int                 pattern;
    PtrTextBuffer       adbuff;
    HPEN                hPen;
    HPEN                hOldPen;
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
 #  ifdef _WIN_PRINT
    LOGBRUSH            logBrush;
    int                 t;
 #  else /* _WIN_PRINT */
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
    Pixmap              pat = (Pixmap) 0;
    int                 result;
 #  endif /* _WIN_PRINT */
@@ -2443,20 +2431,20 @@ int                 pattern;
 	 switch (style)
 	   {
 	   case 3:
-	     hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	     hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
 	     break;
 	   case 4:
-	     hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	     hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
 	     break;
 	   default:
-	     hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	     hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
 	     break;
 	   }
        }
      else
        {
 	 logBrush.lbStyle = BS_SOLID;
-	 logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	 logBrush.lbColor = ColorPixel (fg);
 
 	 switch (style)
 	   {
@@ -3042,20 +3030,20 @@ int                 pattern;
        switch (style)
 	 {
 	 case 3:
-	   hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	   hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
 	   break;
 	 case 4:
-	   hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	   hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
 	   break;
 	 default:
-	   hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	   hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
 	   break;
 	 }
      }
    else if (thick > 0)
      {
        logBrush.lbStyle = BS_SOLID;
-       logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+       logBrush.lbColor = ColorPixel (fg);
 	   
        switch (style)
 	 {
@@ -3159,20 +3147,20 @@ int                 pattern;
        switch (style)
 	 {
 	 case 3:
-	   hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	   hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
 	   break;
 	 case 4:
-	   hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	   hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
 	   break;
 	 default:
-	   hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	   hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
 	   break;
 	 }  
      }
    else if (thick > 0)
      {
        logBrush.lbStyle = BS_SOLID;
-       logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+       logBrush.lbColor = ColorPixel (fg);
        
        switch (style)
 	 {
@@ -3553,20 +3541,20 @@ int                 fg;
 	      switch (style)
 		{
 		case 3:
-		  hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+		  hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
 		  break;
 		case 4:
-		  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+		  hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
 		  break;
 		default:
-		  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+		  hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
 		  break;
 		} 
 	    }
 	  else
 	    {
 	      logBrush.lbStyle = BS_SOLID;
-	      logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	      logBrush.lbColor = ColorPixel (fg);
 	      
 	      switch (style)
 		{
@@ -3632,7 +3620,7 @@ int                 fg;
 	 }
    WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
-   hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   hPen = CreatePen (PS_SOLID, thick, TtLineGC.foreground);
    hOldPen = SelectObject (TtDisplay, hPen);
    Polyline (TtDisplay, point, 3);
    SelectObject (TtDisplay, hOldPen);
