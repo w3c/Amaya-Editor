@@ -740,7 +740,11 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
 	{
 	  TtaDestroyDialogue (NumMenuAttrRequired);
 	  MandatoryAttrFormExists = FALSE;
-	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *)1);
+	  if (AttrFormExists)
+	  {
+	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char *)1);
+		AttrFormExists = FALSE;
+	  }
 	}
       if (val != 0)
 	{
@@ -1606,6 +1610,10 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/* l'attribut */
 		PtrReqAttr = NULL;
 		PtrDocOfReqAttr = NULL;
+		if (mandatory)
+			/* the callback of required attribute should call
+			the standard callback attribute */
+			AttrFormExists = TRUE;
 		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];

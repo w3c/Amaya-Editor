@@ -1032,12 +1032,8 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
     case WM_DESTROY:
       AttrForm = NULL;
       if (RequiredAttr)
-	{
-	  iLocation = 0;
-	  ThotCallback (NumMenuAttrEnumNeeded, INTEGER_DATA, (char*) iLocation);
-	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
-	}
-      else
+	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 0);
+     else
 	ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
       EndDialog (hwnDlg, IDCANCEL);
       break;
@@ -1087,7 +1083,10 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	  break;
 	case ID_APPLY:
 	  if (RequiredAttr)
+	  {
 	    ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
+        EndDialog (hwnDlg, IDCANCEL);
+	  }
 	  else
 	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
 	  break;
@@ -1100,11 +1099,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	case ID_DONE:
 	  AttrForm = NULL;
 	  if (RequiredAttr)
-	    {
-	      iLocation = 0;
-	      ThotCallback (i, INTEGER_DATA, (char*) iLocation);
-	      ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
-	    }
+	      ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 0);
 	  else
 	    ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
       EndDialog (hwnDlg, IDCANCEL);
