@@ -71,6 +71,28 @@ ShowMapAreas
 +print
 +source-view
 
+################# AMAYA EXPERIMENTS
+<experimental>
++amayabase
++areas
++browsing
++config
++css-style
++edit
++forms
++head
++html-style
++makebook
++maths
++objects
++print
++source-view
++spell
++tables
++templates
++views
++svg
+
 ################# AMAYA FUNCTIONS
 [amayabase]
 AmayaClose
@@ -326,4 +348,5 @@ HelpNumbering
 AnnotateDocument
 LoadAnnotations
 PostAnnotation
+ShowAnnotations
 CustomQuery
