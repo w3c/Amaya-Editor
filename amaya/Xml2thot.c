@@ -4259,7 +4259,15 @@ ThotBool    xmlDoctype;
 
       /* Get the document charset */
       charset = TtaGetDocumentCharset (doc);
-      if (charset != UNDEFINED_CHARSET && charset != ISO_8859_1)
+      if (charset != UNDEFINED_CHARSET && charset != US_ASCII &&
+	  charset != ISO_8859_1   && charset !=  ISO_8859_2   &&
+	  charset != ISO_8859_3   && charset !=  ISO_8859_4   &&
+	  charset != ISO_8859_5   && charset !=  ISO_8859_6   &&
+	  charset != ISO_8859_6_E && charset !=  ISO_8859_6_I &&
+	  charset != ISO_8859_7   && charset !=  ISO_8859_8   &&
+	  charset != ISO_8859_8_E && charset !=  ISO_8859_8_I &&
+	  charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
+	  charset != ISO_8859_15  && charset !=  ISO_8859_supp)
 	{
 	  unknownCharset = TRUE;
 	  XmlParseError (XMLcontext.doc,
