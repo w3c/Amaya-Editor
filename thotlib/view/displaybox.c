@@ -1301,7 +1301,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   adbuff = NULL;
   indbuff = 0;
   restbl = 0;
-  if (pBox->BxNChars < 1)
+  if (pBox->BxNChars < 0)
     return;
   pAb = pBox->BxAbstractBox;
   if (pAb->AbElement && pAb->AbElement->ElStructSchema &&

@@ -566,7 +566,7 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
   int                 baseline;
   int                 height;
 
-  if (boxLength <= 1)
+  if (boxLength < 0)
     return;
   /* Initialisation */
   ibox1 = NULL;
@@ -3521,7 +3521,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  if (pBoxToBreak)
 	    {
 	    /* is it empty ? */
-	    if (pBoxToBreak->BxNChars > 0)
+	    if (pBoxToBreak->BxNChars > 0 || breakLine)
 	      pNextBox = pLine->LiLastBox;
 	    else if (pNextBox == NULL)
 	      pNextBox = pLine->LiLastBox;
