@@ -842,7 +842,15 @@ RULES
 	HorizPos: Left = Enclosing . Left + 0.5;
 	VertPos: HMiddle = Enclosing . HMiddle;
 	Depth: Enclosing =;
+	MarginTop: 2 px;
+	MarginLeft: 2 px;
+	MarginBottom: 2 px;
+	MarginRight: 2 px;
 	IN Graph_Structure_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -927,10 +935,10 @@ RULES
 	CreateBefore (SPLINE_S);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	MarginTop: 5 em;
-	MarginLeft: 5 em;
-	MarginBottom: 5 em;
-	MarginRight: 5 em;
+	MarginTop: 5 px;
+	MarginLeft: 5 px;
+	MarginBottom: 5 px;
+	MarginRight: 5 px;
 	FillPattern: nopattern;
 	IN Graph_Structure_view BEGIN
 		MarginTop: 0;
@@ -949,10 +957,10 @@ RULES
 	CreateWith (VerticalLine);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	MarginTop: 5 em;
-	MarginLeft: 5 em;
-	MarginBottom: 5 em;
-	MarginRight: 5 em;
+	MarginTop: 5 px;
+	MarginLeft: 5 px;
+	MarginBottom: 5 px;
+	MarginRight: 5 px;
 	FillPattern: nopattern;
 	IN Graph_Structure_view BEGIN
 		MarginTop: 0;

@@ -155,7 +155,8 @@ int                 frame;
 		      DrawBoxSelection (frame, pBox1);
 		    else
 		      {
-			if (pFrame->FrSelectionBegin.VsIndBox == 0)
+			if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
+			    pAb1->AbLeafType == LtPolyLine)
 			  {
 			    /* the whole box is selected */
 			    x1 = pBox1->BxXOrg;
@@ -799,7 +800,8 @@ ThotBool            alone;
 		    DrawBoxSelection (frame, pBox);
 		  else
 		    {
-		      if (pViewSel->VsIndBox == 0)
+		      if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
+			  pAb->AbLeafType == LtPolyLine)
 			{
 			  /* the whole box is selected */
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);

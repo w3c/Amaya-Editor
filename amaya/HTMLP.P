@@ -6055,7 +6055,8 @@ RULES
 	END;
 
  LINK:	BEGIN
-	CreateBefore(LINK_S);
+	if NOT within XMLGraphics
+	   CreateBefore(LINK_S);
 #ifndef BLACK_WHITE
 	Foreground: Blue;
 #endif
@@ -6100,8 +6101,10 @@ RULES
 	Size: Enclosing + 6;
 	Weight: Bold;
 	Hyphenate: No;
-	CreateBefore(H1_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H1_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		MarginTop: 0;
@@ -6149,8 +6152,10 @@ RULES
 	Width: Enclosing . Width;
 	Size: Enclosing + 4;
 	Weight: Bold;
-	CreateBefore(H2_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H2_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6194,8 +6199,10 @@ RULES
 	Width: Enclosing . Width;
 	Size: Enclosing + 2;
 	Weight: Bold;
-	CreateBefore(H3_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H3_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -6240,8 +6247,10 @@ RULES
 	Width: Enclosing . Width;
 	Size: Enclosing =;
 	Weight: Bold;
-	CreateBefore(H4_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H4_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -6285,8 +6294,10 @@ RULES
 	MarginTop: VSpaceBeforeH5;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2;
-	CreateBefore(H5_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H5_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -6325,8 +6336,10 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: VSpaceBeforeH6;
 	Size: Enclosing - 4;
-	CreateBefore(H6_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(H6_S);
+	   CreateWith(VerticalLine);
+	   END;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -6824,8 +6837,10 @@ RULES
 	END;
 
  Span:	BEGIN
-	CreateBefore(SPAN_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(SPAN_S);
+	   CreateWith(VerticalLine);
+	   END;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6836,8 +6851,10 @@ RULES
 	END;
 
  BDO:	BEGIN
-	CreateBefore(BDO_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(BDO_S);
+	   CreateWith(VerticalLine);
+	   END;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6848,7 +6865,8 @@ RULES
 	END;
 
  Math: BEGIN
-	CreateBefore(Math_S);
+	if NOT within XMLGraphics
+	   CreateBefore(Math_S);
 	VertPos: Top = Previous NOT MAP . Bottom;
 	IF Immediately within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
@@ -6908,8 +6926,10 @@ RULES
 	END;
 
  Paragraph: BEGIN
-	CreateBefore(P_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(P_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Line;
 	LineBreak: Yes;
 #ifdef PAGE
@@ -6963,8 +6983,10 @@ RULES
 	END;
 
  Definition_List: BEGIN
-	CreateBefore(DL_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(DL_S);
+	   CreateWith(VerticalLine);
+	   END;
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
@@ -6987,8 +7009,10 @@ RULES
 	END;
 
  Term:	BEGIN
-	CreateBefore(DT_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(DT_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Line;
 #ifdef PAGE
 	NoBreak1 : 2;
@@ -7003,8 +7027,10 @@ RULES
 	END;
 
  Definition: BEGIN
-	CreateBefore(DD_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(DD_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Width: Enclosing . Width - LIST_INDENT;
 	HorizPos: Left = Enclosing . Left + LIST_INDENT;
 #ifdef PAGE
@@ -7021,8 +7047,10 @@ RULES
 	END;
 
  Unnumbered_List: BEGIN
-	CreateBefore(UL_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(UL_S);
+	   CreateWith(VerticalLine);
+	   END;
 	LineBreak: No;
 #ifdef PAGE
 	if NOT within Table
@@ -7046,8 +7074,10 @@ RULES
 	END;
 
  Numbered_List:	BEGIN
-	CreateBefore(OL_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(OL_S);
+	   CreateWith(VerticalLine);
+	   END;
 	LineBreak: No;
 #ifdef PAGE
 	if NOT within Table
@@ -7070,8 +7100,10 @@ RULES
 	END;
 
  Address: BEGIN
-	CreateBefore(ADDRESS_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(ADDRESS_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Line;
 	Style: Italics;
 	Width: Enclosing . Width;
@@ -7122,8 +7154,10 @@ RULES
 	END;
 
  List_Item: BEGIN
-	CreateBefore(LI_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(LI_S);
+	   CreateWith(VerticalLine);
+	   END;
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + LIST_INDENT;
 	Width: Enclosing . Width - LIST_INDENT;
@@ -7142,8 +7176,10 @@ RULES
 	If within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	Adjust: Left;
-	CreateBefore(PRE_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(PRE_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Font: Courier;
 	Line;
 #ifdef PAGE
@@ -7189,8 +7225,10 @@ RULES
 	END;
 
  Form:	BEGIN
-	CreateBefore(FORM_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(FORM_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	Gather: Yes;
@@ -7205,8 +7243,10 @@ RULES
 
  Option_Menu: BEGIN
 	CreateEnclosing(Option_Box);
-	CreateBefore(SELECT_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(SELECT_S);
+	   CreateWith(VerticalLine);
+	   END;
 	CreateFirst(Option_gif);
 	CreateLast(Option_space);
 	Background : White;
@@ -7232,7 +7272,8 @@ RULES
 	END;
 	
  Option: BEGIN
-	CreateBefore(OPTION_S);
+	if NOT within XMLGraphics
+	   CreateBefore(OPTION_S);
 	Visibility: 0;
 	HorizPos: Left = Option_gif . Right + 0.2;	
 	VertPos: Top = Previous Option . Bottom;
@@ -7249,8 +7290,10 @@ RULES
 	END;
 
  OptGroup: BEGIN
-	CreateBefore(OPTGROUP_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(OPTGROUP_S);
+	   CreateWith(VerticalLine);
+	   END;
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -7263,7 +7306,8 @@ RULES
 	END;
 
  Text_Area: BEGIN
-	CreateBefore(TEXTAREA_S);
+	if NOT within XMLGraphics
+	   CreateBefore(TEXTAREA_S);
 	Width: 20 ex;
 	Height: 2 Min;
 	LineBreak: No;

@@ -2225,46 +2225,32 @@ int                 editType;
 		if (pAb->AbLeafType == LtPolyLine)
 		  {
 		    if (pAb->AbPolyLineShape != 'w' &&
-                pAb->AbPolyLineShape != 'x' &&
-                pAb->AbPolyLineShape != 'y' &&
-                pAb->AbPolyLineShape != 'z')
+			pAb->AbPolyLineShape != 'x' &&
+			pAb->AbPolyLineShape != 'y' &&
+			pAb->AbPolyLineShape != 'z')
 		      {
 			/* Ajout de points dans une polyline */
 			still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-			x = pBox->BxXOrg - pFrame->FrXOrg;
-			y = pBox->BxYOrg - pFrame->FrYOrg;
-			i = pViewSel->VsIndBox;
-			draw = GetParentDraw (pBox);
-			pBox->BxNChars = PolyLineExtension (frame,
-							    &x, &y,
-							    pBox, draw,
-							    pBox->BxNChars,
-							    i, still);
-			pAb->AbVolume = pBox->BxNChars;
-#ifdef IV
-			if (draw)
+			if (!APPgraphicModify (pAb->AbElement, pAb->AbPolyLineShape, frame, TRUE))
 			  {
-			    /* on force le reaffichage de la boite (+ les points de selection) */
-			    width = pBox->BxWidth;
-			    height = pBox->BxHeight;
-			    x += pFrame->FrXOrg;
-			    y += pFrame->FrYOrg;
-			    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-			    if (x != pBox->BxXOrg || y != pBox->BxYOrg)
-			      NewPosition (pAb, x, y, frame, TRUE);
-			    width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
-			    height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
-			    if (width != pBox->BxWidth || height != pBox->BxHeight)
-			      NewDimension (pAb, width, height, frame, TRUE);
+			    x = pBox->BxXOrg - pFrame->FrXOrg;
+			    y = pBox->BxYOrg - pFrame->FrYOrg;
+			    i = pViewSel->VsIndBox;
+			    draw = GetParentDraw (pBox);
+			    pBox->BxNChars = PolyLineExtension (frame,
+								&x, &y,
+								pBox, draw,
+								pBox->BxNChars,
+								i, still);
+			    graphEdit = TRUE;
+			    pAb->AbVolume = pBox->BxNChars;
+			    if (pBox->BxPictInfo != NULL)
+			      {
+				/* reevalue les points de controle */
+				free ((STRING) pBox->BxPictInfo);
+				pBox->BxPictInfo = NULL;
+			      }
 			  }
-#else
-			if (pBox->BxPictInfo != NULL)
-			  {
-			    /* reevalue les points de controle */
-			    free ((STRING) pBox->BxPictInfo);
-			    pBox->BxPictInfo = NULL;
-			  }
-#endif
 		      }
 		    else
 		      /* la commande est realisee par l'application */
@@ -3212,8 +3198,9 @@ int                 keyboard;
 				  xDelta = -xDelta;
 				if (pFrame->FrClipYBegin == topY && pFrame->FrClipYEnd == bottomY
 				    && xDelta >= charsDelta && (pFrame->FrClipXBegin == xx || pFrame->FrClipXEnd == xx))
-				  DefClip (frame, pFrame->FrClipXEnd + 2, topY, pFrame->FrClipXEnd + 2, bottomY);
+				  ;
 			      }
+				  DefClip (frame, pFrame->FrClipXBegin, topY, pFrame->FrClipXEnd + 2, bottomY);
 			    RedrawFrameBottom (frame, 0, NULL);
 			  }
 		      

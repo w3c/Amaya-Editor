@@ -779,7 +779,7 @@ int                 frame;
       selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
 		  pFrame->FrSelectionEnd.VsBox == pBox);
       if (selected)
-	if (!pFrame->FrSelectOnePosition)
+	if (pFrame->FrSelectionBegin.VsBox == pBox)
 	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
