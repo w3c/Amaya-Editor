@@ -26,12 +26,12 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-
 #include "libmsg.h"
 #include "message.h"
 #include "dialog.h"
 #include "language.h"
 #include "message.h"
+#include "appdialogue.h"
 
 /* Description d'une table de messages */
 typedef struct _TabMsg *PtrTabMsg;
@@ -230,124 +230,90 @@ int                 msgNumber;
 
 #endif /* __STDC__ */
 {
-   CHAR_T*             s;
-   FILE*               file;
-   int                 origineid;
-   int                 num;
-   PtrTabMsg           currenttable;
-   PtrTabMsg           previoustable;
-   CHAR_T              pBuffer[MAX_TXT_LEN];
-   /* CHAR_T              string[MAX_TXT_LEN]; */
-   CHAR_T*             string;
-   CHAR_T              fileName[MAX_TXT_LEN];
-   unsigned char       pBuff[MAX_TXT_LEN];
-#  ifdef _I18N_ 
-   unsigned char*      ptrBuff;
-   unsigned char       txt[MAX_TXT_LEN];
-   CHARSET             encoding;
-#  endif /* _I18N_ */
+  FILE*               file;
+  int                 origineid;
+  int                 num;
+  PtrTabMsg           currenttable;
+  PtrTabMsg           previoustable;
+  CHAR_T*             s;
+  CHAR_T*             string;
+  CHAR_T              pBuffer[MAX_TXT_LEN];
+  CHAR_T              fileName[MAX_TXT_LEN];
+  CHARSET             encoding;
+  unsigned char       pBuff[MAX_TXT_LEN];
+  unsigned char*      ptrBuff;
+  unsigned char       txt[MAX_TXT_LEN];
 
-   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-   ustrcpy (fileName, TtaGetVarLANG ());
-   fileName[2] = TEXT('-');
-   ustrcpy (&fileName[3], msgName);
-   SearchFile (fileName, 2, pBuffer);
-   file = ufopen (pBuffer, TEXT("r")); 
-   if (file == NULL)
-     {
-	printf ("WARNING: cannot open file %s\n", pBuffer);
-	return (-1);
-     }
-   else
-     {
-	/* Alloue une nouvelle table */
-	currenttable = (PtrTabMsg) TtaGetMemory (sizeof (struct _TabMsg));
-
-	currenttable->TabMessages = (STRING*) TtaGetMemory (sizeof (STRING) * msgNumber);
-
-	currenttable->TabNext = NULL;
-	currenttable->TabLength = msgNumber;
-	for (num = 0; num < msgNumber; num++)
-	   currenttable->TabMessages[num] = NULL;
-	origineid = 0;
-
-	/* Chaine la table */
-	if (FirstTableMsg == NULL)
-	   FirstTableMsg = currenttable;
-	else
-	  {
-	     previoustable = FirstTableMsg;
-	     origineid++;
-	     while (previoustable->TabNext != NULL)
-	       {
-		  previoustable = previoustable->TabNext;
-		  origineid++;
-	       }
-	     previoustable->TabNext = currenttable;
-	  }
-
-#   ifdef _I18N_ 
-    fscanf (file, "%[^=]=%[^#\r\n]", pBuff, txt);
-    if (!strcasecmp (pBuff, "charset")) {
-       if (!strcasecmp (txt, "iso-8859-1"))
-          encoding = ISO_8859_1;
-       else if (!strcasecmp (txt, "iso-8859-2"))
-            encoding = ISO_8859_2;
-       else if (!strcasecmp (txt, "iso-8859-3"))
-            encoding = ISO_8859_3;
-       else if (!strcasecmp (txt, "iso-8859-4"))
-            encoding = ISO_8859_4;
-       else if (!strcasecmp (txt, "iso-8859-5"))
-            encoding = ISO_8859_5;
-       else if (!strcasecmp (txt, "iso-8859-6"))
-            encoding = ISO_8859_6;
-       else if (!strcasecmp (txt, "iso-8859-7"))
-            encoding = ISO_8859_7;
-       else if (!strcasecmp (txt, "iso-8859-8"))
-            encoding = ISO_8859_8;
-       else if (!strcasecmp (txt, "iso-8859-9"))
-            encoding = ISO_8859_9;
-       else if (!strcasecmp (txt, "windows-1250"))
-            encoding = WINDOWS_1250;
-       else if (!strcasecmp (txt, "windows-1251"))
-            encoding = WINDOWS_1251;
-       else if (!strcasecmp (txt, "windows-1252"))
-            encoding = WINDOWS_1252;
-       else if (!strcasecmp (txt, "windows-1253"))
-            encoding = WINDOWS_1253;
-       else if (!strcasecmp (txt, "windows-1254"))
-            encoding = WINDOWS_1254;
-       else if (!strcasecmp (txt, "windows-1255"))
-            encoding = WINDOWS_1255;
-       else if (!strcasecmp (txt, "windows-1256"))
-            encoding = WINDOWS_1256;
-       else if (!strcasecmp (txt, "windows-1257"))
-            encoding = WINDOWS_1257;
-       else if (!strcasecmp (txt, "utf-8"))
-            encoding = UTF_8;
-	} else {
-           rewind (file);
-           encoding = ISO_8859_1;
+  /* contruction du nom $THOTDIR/bin/$LANG-msgName */
+  ustrcpy (fileName, TtaGetVarLANG ());
+  fileName[2] = TEXT('-');
+  ustrcpy (&fileName[3], msgName);
+  SearchFile (fileName, 2, pBuffer);
+  file = ufopen (pBuffer, TEXT("r")); 
+  if (file == NULL)
+    {
+      printf ("WARNING: cannot open file %s\n", pBuffer);
+      return (-1);
+    }
+  else
+    {
+      /* Alloue une nouvelle table */
+      currenttable = (PtrTabMsg) TtaGetMemory (sizeof (struct _TabMsg));
+      currenttable->TabMessages = (STRING*) TtaGetMemory (sizeof (STRING) * msgNumber);
+      currenttable->TabNext = NULL;
+      currenttable->TabLength = msgNumber;
+      for (num = 0; num < msgNumber; num++)
+	currenttable->TabMessages[num] = NULL;
+      origineid = 0;
+      
+      /* Chaine la table */
+      if (FirstTableMsg == NULL)
+	FirstTableMsg = currenttable;
+      else
+	{
+	  previoustable = FirstTableMsg;
+	  origineid++;
+	  while (previoustable->TabNext != NULL)
+	    {
+	      previoustable = previoustable->TabNext;
+	      origineid++;
+	    }
+	  previoustable->TabNext = currenttable;
 	}
-#   endif /* _I18N_ */
+      
+      fscanf (file, "# %500s\n]", pBuff);
+      if (!strcasecmp (pBuff, "encoding="))
+	{
+	  fscanf (file, "%500s\n]", pBuff);
+	  if (!strcasecmp (pBuff, "utf8"))
+	    encoding = UTF_8;
+	  else
+	    encoding = ISO_8859_1;
+	}
+      else
+	{
+	  fseek (file, 0L, 0);
+	  encoding = ISO_8859_1;
+	}
 
-	/* Charge les messages */
-	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF) && (num < msgNumber))
-	  {
-#        ifdef _I18N_
-         string = TtaAllocString (MAX_TXT_LEN);
-         ptrBuff = pBuff;
-         TtaMBS2WCS (&ptrBuff, &string, encoding);
-#        else /* !_I18N_ */
-         string = pBuff;
-#        endif /* !_I18N_ */
-	     s = TtaAllocString (ustrlen (string) + 1);
-	     ustrcpy (s, AsciiTranslate (string));
-	     currenttable->TabMessages[num] = s;
-	  }
-	fclose (file);
-     }
-   return (origineid);
+      /* Charge les messages */
+      while ((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF &&
+	     num < msgNumber)
+	{
+#ifdef _I18N_
+	  string = TtaAllocString (MAX_TXT_LEN);
+	  ptrBuff = pBuff;
+	  TtaMBS2WCS (&ptrBuff, &string, encoding);
+#else /* !_I18N_ */
+	  string = pBuff;
+#endif /* !_I18N_ */
+	  s = TtaAllocString (ustrlen (string) + 1);
+	  ustrcpy (s, AsciiTranslate (string));
+	  currenttable->TabMessages[num] = s;
+	}
+      fclose (file);
+    }
+  return (origineid);
 }
 
 

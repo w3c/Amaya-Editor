@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<base_message version="11" last_update="Wed Jun  7 17:14:30 CEST 2000">
+<control>
+	<language encoding="latin1">en</language>
+	<language encoding="latin1">fr</language>
+	<language encoding="latin1">de</language>
+	<language encoding="latin1">it</language>
+	<language encoding="latin1">tr</language>
+</control>
+<messages>
+<label define="AM_FILES">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:11 CEST 2000">Files</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:08 CEST 2000">Fichiers</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:16 CEST 2000">Dateien</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:13:56 CEST 2000">File</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:30 CEST 2000">Dosyalar</message>
+</label>
+<label define="AM_OPEN_URL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:11 CEST 2000">Open</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:08 CEST 2000">Ouvrir</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:16 CEST 2000">Datei</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:13:56 CEST 2000">Apri</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:30 CEST 2000">Git</message>
+</label>
+<label define="AM_CLEAR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Clear</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">RAZ</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Löschen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Cancella</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Temizle</message>
+</label>
+<label define="AM_SAVED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Document saved: %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Document sauvé : %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Dokument gespeichert: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Documento salvato: %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s belgesi kaydedildi</message>
+</label>
+<label define="AM_ATTRIBUTE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Attribute</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Attribut</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Attribute</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Attributo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Özellik</message>
+</label>
+<label define="AM_HREF_VALUE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">URL</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">URL</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">URL</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">URL</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">URL</message>
+</label>
+<label define="AM_TEXT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Text</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Texte</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Text</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Testo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Metin</message>
+</label>
+<label define="AM_NAME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Name</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Nom</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Name</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Nome</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Ýsim</message>
+</label>
+<label define="AM_PASSWORD">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Password</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Mot de passe</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Paßwort</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Password</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Parola</message>
+</label>
+<label define="AM_DEF_CLASS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Use as class</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Utiliser comme classe</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Als Klasse verwenden</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Usa come classe</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Sýnýf olarak kullan</message>
+</label>
+<label define="AM_APPLY_CLASS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Apply class</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Appliquer classe</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Klasse anwenden</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Applica la classe</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Sýnýf uygula</message>
+</label>
+<label define="AM_SEL_CLASS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Select a class or a pseudo-class</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Sélectionner une classe ou une pseudo-classe</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Wähle Klasse</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Seleziona una classe o una pseudoclasse</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Sýnýf seçimi</message>
+</label>
+<label define="AM_FETCHING">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Fetching %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Recherche de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Lade: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto caricando %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s alýnýyor</message>
+</label>
+<label define="AM_CANNOT_LOAD">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Cannot load %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Impossible de charger %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Die Datei konnte nicht gefunden werden: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Impossibile caricare %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s yüklenemiyor</message>
+</label>
+<label define="AM_DOCUMENT_LOADED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Finished!</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">C'est fini !</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Laden beendet!</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Finito!</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Bitti!</message>
+</label>
+<label define="AM_SEL_TARGET">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Select the target</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Sélectionner la destination</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Wähle Ziel</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Seleziona l'obiettivo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Hedefi seçin</message>
+</label>
+<label define="AM_INVALID_TARGET">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Invalid target</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Destination invalide</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Ungültiges Ziel</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Obiettivo non valido</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Geçersiz hedef</message>
+</label>
+<label define="AM_LOCATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:22 CEST 2000">Insert the URI or browse</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:25 CEST 2000">Inserer l'URI ou butiner</message>
+	<message xml::lang="de" last_update="Fri May 26 10:33:39 CEST 2000">Adresse</message>
+	<message xml::lang="it" last_update="Fri May 26 10:33:47 CEST 2000">Indirizzo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Adres</message>
+</label>
+<label define="AM_TITLE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Title</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Titre</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Titel</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Titolo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Baþlýk</message>
+</label>
+<label define="AM_DOC_MODIFIED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Document modified. All changes will be lost. Do you want to continue ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Document modifié. Voulez-vous continuer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Alle Änderungen gehen verloren - Möchten Sie fortfahren ?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?</message>
+</label>
+<label define="AM_RED_FETCHING">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Redirection fetching of %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Recherche de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Lade Weiterleitung: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Redirezione durante il caricamento di %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Redirection fetching of %s</message>
+</label>
+<label define="AM_REDIRECTIONS_LIMIT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Too many redirections detected</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Dépassement de la limite de redirections</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Zu viele Weiterleitungen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Ho rilevato troppe redirezioni</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Too many redirections detected</message>
+</label>
+<label define="AM_CANNOT_CREATE_FILE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Cannot create local file %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Création impossible du document %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Kann lokale Datei nicht anlegen: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Non posso creare il file locale %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Yerel dosya %s yaratýlamýyor</message>
+</label>
+<label define="AM_WAITING_FOR_SOCKET">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Waiting for a free socket</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">En attente d'un socket</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Warte auf freien Netz-Socket</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sono in attesa di un socket libero</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Boþ bir soket bekleniyor</message>
+</label>
+<label define="AM_PROG_READ">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Reading %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Lecture %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Lade: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto leggendo %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s okunuyor</message>
+</label>
+<label define="AM_PROG_WRITE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Writing %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Écriture %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Schreibe: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto scrivendo %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s yazýlýyor</message>
+</label>
+<label define="AM_WAITING_FOR_CONNECTION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Waiting for connection</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">En attente d'une connexion</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Warte auf Verbindung</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">In attesa della connessione</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Baðlantý bekleniyor</message>
+</label>
+<label define="AM_CONTACTING_HOST">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Contacting %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Connexion vers %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Kontakt zu: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto contattando %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s: baðlanýlýyor</message>
+</label>
+<label define="AM_LOOKING_HOST">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Looking up %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Recherche de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Suche: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Sto cercando %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s: aranýyor</message>
+</label>
+<label define="AM_UNKNOWN_STATUS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Unknown Status</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Statut inconnu</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Unbekannter Status</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Stato sconosciuto</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Belirsiz durum</message>
+</label>
+<label define="AM_GET_AUTHENTICATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Authentication Dialogue</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Dialogue d'authentification</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Anmeldung</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Dialogo di autenticazione</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Güvenlik istemi</message>
+</label>
+<label define="AM_AUTHENTICATION_FAILURE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Authorization failure for %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Manque d'autorisation pour accéder à %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Anmeldungsfehler für %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Autorizzazione fallita per %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s için yetkilendirme baþarýsýz</message>
+</label>
+<label define="AM_LOADED_NO_DATA">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">%s loaded but no data is available</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">%s chargé mais ne comporte pas de données</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">%s geladen, aber leer</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">%s caricato, ma non è disponibile alcun dato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s yüklendi, ancak veri içermiyor</message>
+</label>
+<label define="AM_LOAD_ABORT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Transfer interrupted!</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Interruption du transfert !</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Übertragung unterbrochen!</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Trasferimento interrotto!</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Aktarým kesildi!</message>
+</label>
+<label define="AM_NOT_AVAILABLE_RETRY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">%s is not available at the moment. Please retry at some other time</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Indisponibilité momentanée de %s. Réessayez plus tard</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">%s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">%s è indisponibile al momento. Riprova piú tardi</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s: þu anda eriþilemiyor, baþka bir zaman deneyin</message>
+</label>
+<label define="AM_ELEMENT_LOADED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">%s loaded</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">%s chargé</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">%s geladen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">%s caricato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s yüklendi</message>
+</label>
+<label define="AM_REMOTE_SAVING">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Saving %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Sauvegarde de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Speichere: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Salvataggio di %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s kaydediliyor</message>
+</label>
+<label define="AM_CANNOT_SAVE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Cannot save in: %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Impossible de sauvegarder dans : %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Kann nicht speichern unter: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Non posso salvare su %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">%s kaydedilemedi</message>
+</label>
+<label define="AM_SYSTEM_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">English system errors messages</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">French system error messages</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">German system errors messages</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">italian system errors messages</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">Türkçe sistem hata mesajlarý</message>
+</label>
+<label define="AM_INVALID_ANCHOR1">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">An anchor cannot contain these elements</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Une ancre ne peut pas contenir ces éléments</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Ein Verknüpfungsziel kann dieses Element nicht enthalten</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Un ancora non può contenere questi elementi</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:36 CEST 2000">&lt;A> tanýmlamasý bu unsurlarý içeremez</message>
+</label>
+<label define="AM_INVALID_ANCHOR2">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Cannot create an anchor within an anchor</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Impossible de créer une ancre dans une ancre</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Innerhalb eines Verknüpfungszieles kann kein Verknüpfungsziel erstellt werden</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Non posso creare un'ancora all'interno di un'ancora</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:40 CEST 2000">&lt;A> tanýmlamasý içinde bir baþka &lt;A> tanýmý yer alamaz.</message>
+</label>
+<label define="AM_GET_UNSUPPORTED_PROTOCOL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Sorry, no GET support yet for URLs of this type: %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Pas de support GET pour cette URL : %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">GET-Unterstützung noch nicht implementiert für URL-Type: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il GET di URL di tipo %s non è ancora supportato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:51 CEST 2000">%s tipi URL\'ler için GET desteði henüz yok, üzgünüm</message>
+</label>
+<label define="AM_PUT_UNSUPPORTED_PROTOCOL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Sorry, no PUT support yet for URLs of this type: %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Pas de support PUT pour cette URL : %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">PUT-Unterstützung noch nicht implementiert für URL-Type: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il PUT di URL di tipo %s non è ancora supportato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">%s tipi URL\'ler için PUT desteði henüz yok, üzgünüm</message>
+</label>
+<label define="AM_UNSUPPORTED_FEATURE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">This version of Amaya does not support this feature</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Cette version d'Amaya ne supporte pas cette option</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Diese Funktion wird von Amaya nicht unterstützt</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">La presente versione di Amaya non supporta questa funzionalità</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Amaya\'nýn bu sürümü, bu özelliði desteklemiyor</message>
+</label>
+<label define="AM_WROTE_OBJECT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Finished writing %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Fin d'écriture de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Schreiben beendet %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Scrittura di %s terminata</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">%s\'in yazýmý tamamlandý</message>
+</label>
+<label define="AM_BAD_URL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Could not normalize %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Impossible de normaliser %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Normalisierung nicht erfolgreich für: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Impossibile normalizzare %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">%s normale dönüþtürülemedi</message>
+</label>
+<label define="AM_CACHE_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Could not create temporary file directory %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Impossible de créer le répertoire temporaire %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Temporäres Dateiverzeichnis konnte nicht angelegt werden: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Impossibile creare la directory dei file temporanei %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">%s geçici dosya dizini yaratýlamadý</message>
+</label>
+<label define="AM_NO_TRANS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">No transformation applicable to the selection</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Aucune transformation possible</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Für die Markierung ist keine Umwandlung anwendbar</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Alla selezione non è applicabile alcuna trasformazione</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Seçili bölge için hiç bir dönüþüm kullanýlamaz</message>
+</label>
+<label define="AM_TRANS_FAILED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Transformation failed</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">La transformation a echoué</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Umwandlung fehlerhaft</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Trasformazione fallita</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Dönüþüm baþarýsýz</message>
+</label>
+<label define="AM_TRANS_PARSE_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">syntax error in file HTML.trans line %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">HTML.trans erreur de syntaxe ligne %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Syntaxfehler in der HTML-Datei, Zeile %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">errore di sintassi nel file HTML.trans alla linea %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">HTML.trans dosyasý, %s satýrýnda yazým hatasý</message>
+</label>
+<label define="AM_BUTTON_MATH">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Maths</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Maths</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Formel</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Formule matematiche</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Matematik</message>
+</label>
+<label define="AM_BUTTON_GRAPHICS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Graphics</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Graphique</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Grafiken</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Grafica</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Grafik</message>
+</label>
+<label define="AM_SAVE_AS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Save as</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Sauvegarder sous</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Speichern unter</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Salva con nome</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Ýsimle kaydet</message>
+</label>
+<label define="AM_AUTHENTICATION_REALM">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Please authenticate for realm \'%s\' at server \'%s\'</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
+</label>
+<label define="AM_BUTTON_BrowseEdit">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Editor/Browser</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Éditeur/Navigateur</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Editor/Browser</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Editor/Browser</message>
+</label>
+<label define="AM_REQUEST_TIMEOUT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Request timeout - server did not respond</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Délai expiré - le serveur n'a pas répondu</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Timeout - server antwortet nicht</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Richiesta scaduta - il server non ha risposto</message>
+</label>
+<label define="AM_OVERWRITE_CHECK">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">%s already exists. Overwrite it?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">%s existe déjà. Forcer l'écriture ?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">%s esiste già. Vuoi sovrascriverlo?</message>
+</label>
+<label define="AM_ETAG_CHANGED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">%s has changed. Overwrite it?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">%s a changé. Forcer l'écriture ?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">%s è cambiato. Vuoi sovrascriverlo?</message>
+</label>
+<label define="AM_BACKGROUND_IMAGE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Background image</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Image de fond</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Immagine di sfondo</message>
+</label>
+<label define="AM_BG_IMAGE_NOT_ALLOWED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Background image not allowed here</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Image de fond interdite ici</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">L'immagine di background non è consentita qui</message>
+</label>
+<label define="AM_CSS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">CSS</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">CSS</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">CSS</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">CSS</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">CSS</message>
+</label>
+<label define="AM_WARNING_SAVE_OVERWRITE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Saving will overwrite the following URLs:</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">La sauvegarde entraînera d'écraser les URLs suivantes :</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Speichern überschreibt die folgenden URL:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il salvataggio sovrascriverà i seguenti URL:</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Kaydetmek þu URL\'lerin üzerine yazacaktýr:</message>
+</label>
+<label define="AM_URL_SAVE_FAILED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Failed to save to URL</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Erreur de sauvegarde de l'URL</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Speichern der URL fehlerhaft</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Il salvataggio sull'URL è fallito</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">URL kaydedilemedi</message>
+</label>
+<label define="AM_SAVE_DISK">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Save to disk ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Sauvegarder sur le disque ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Speichern auf Festplatte?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Salvo su disco ?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Diske kayýt?</message>
+</label>
+<label define="AM_BCOPY_IMAGES">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Copy Images</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Copier images</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Grafiken speichern</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Copia immagini</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Görüntüleri kopyala</message>
+</label>
+<label define="AM_BTRANSFORM_URL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Transform URLs</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Transformer les URL</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Absolute Verknüpfungszieladressen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Trasforma URL</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">URL\'leri dönüþtür</message>
+</label>
+<label define="AM_DOC_LOCATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Document location</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Adresse du document</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Dokumentenadresse</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Collocazione del documento</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Belgenin adresi</message>
+</label>
+<label define="AM_IMAGES_LOCATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Images directory</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Répertoire des images</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Grafik(unter)verzeichnis</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Directory delle immagini</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Görüntü dizini</message>
+</label>
+<label define="AM_OBJECT_LOCATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Object location</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Adresse de l'objet</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Objektadresse</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Collocazione dell'oggetto</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Nesne konumu</message>
+</label>
+<label define="AM_CSS_FILE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">CSS files</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Fichier CSS</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Stylesheetdatei wählen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">CSS file</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">CSS dosyasý 1</message>
+</label>
+<label define="AM_ABOUT1">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">the W3C editor/browser for the Web</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">le navigateur/éditeur du W3C</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">der W3C Web-Browser und -Editor</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">il editor/browser del W3C</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">WWW için tarayýcý ve belge düzenleyici</message>
+</label>
+<label define="AM_ABOUT2">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">(mail issues to www-amaya@w3.org)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">(envoyez vos questions à www-amaya@w3.org)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">(scrivere a www-amaya@w3.org per informazioni)</message>
+</label>
+<label define="AM_TOO_LONG_URL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Can't handle URLs having more than %s chars</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Erreur interne : URL de longueur supérieure à %s caractères</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">URL länger als %s Zeichen werden zur Zeit nicht unterstützt</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Impossibile gestire URL composti da piú di %s caratteri</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">%s karakterden uzun URL\'ler þimdilik iþlenemiyor</message>
+</label>
+<label define="AM_INVALID_TYPE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Only default type is allowed</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Seul le type par défaut est autorisé</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Nur Standardtyp erlaubt</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">È consentito il solo tipo di default</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Sadece öntanýmlý tip kullanýlabilir</message>
+</label>
+<label define="AM_UPDATED_LINK">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Links update: %s%% has been done</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Mise à jour des liens : %s%% a été traité</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Aktualisierung der Verknüpfung : %s%% erfolgreich</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Aggiornamento dei collegamenti: %s%% è stato fatto</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Baðlantý güncellemesi: %s%% tamamlandý</message>
+</label>
+<label define="AM_NOTHING_TO_SAVE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">Nothing new to be saved</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">Rien à sauver</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Nichts zu speichern</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">Niente di nuovo da salvare</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">Kaydedilecek bir þey yok</message>
+</label>
+<label define="AM_REPEAT_Y">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">repeat-y</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">repeat-y</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">Wiederholung y</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">repeat-y</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">y\'de tekrar</message>
+</label>
+<label define="AM_SYS_ERROR_TMPL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:33 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Cannot access a URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>The requested URL could not be retrieved&lt;/H1>&lt;HR>&lt;P>While trying to retrieve the URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>The following error was encountered:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connection Failed&lt;/STRONG>&lt;/UL>&lt;P>The system returned:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>This means that:&lt;/P>&lt;PRE>The remote site or server may be down or non-existent.&lt;/PRE>&lt;PRE>Please try again soon.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:33 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERREUR : URL inaccessible&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>ERREUR : l'URL recherchée n'est pas accessible&lt;/H1>&lt;HR>&lt;P>Lors de la recherche de l'URL &lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>l'erreur suivante s'est produite :&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Échec connexion&lt;/STRONG>&lt;/UL>&lt;P>Le système indique:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ce qui veut dire :&lt;/P>&lt;PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.&lt;/PRE>&lt;PRE>Essayer plus tard.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:21 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Kann nicht zugreifen auf URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Die angeforderte URL konnte nicht geladen werden &lt;/H1>&lt;HR>&lt;P>Beim Laden der URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P> ist folgender Fehler aufgetreten:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Verbindung nicht möglich&lt;/STRONG>&lt;/UL>&lt;P>Das System meldete:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Dies bedeutet, daß:&lt;/P>&lt;PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.&lt;/PRE>&lt;PRE>Bitte später noch einmal versuchen.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:03 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>ERRORE: Impossibile accedere ad un URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>L'URL richiesto non può essere recuperato&lt;/H1>&lt;HR>&lt;P>Tentando di recuperare l'URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>si è verificato il seguente errore:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connessione fallita&lt;/STRONG>&lt;/UL>&lt;P>Il sistema ha restituito:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ciò significa che:&lt;/P>&lt;PRE>Il sito o il server remoti possono essere inattivi o inesistenti.&lt;/PRE>&lt;PRE>Prova ancora piú tardi.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:52 CEST 2000">&lt;HTML>&lt;HEAD>&lt;TITLE>HATA: URL eriþilemiyor&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Belirtilen URL alýnamadý&lt;/H1>&lt;HR>&lt;P>Belirtilen URL alýnýrken:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>Aþaðýdaki hata ile karþýlaþýldý:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Baðlantý baþarýsýz&lt;/STRONG>&lt;/UL>&lt;P>Sistem hata olarak:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>mesajýný verdi&lt;P>Bunun anlamý:&lt;/P>&lt;PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.&lt;/PRE>&lt;PRE>Lütfen bir süre sonra tekrar deneyin.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+</label>
+<label define="AM_GET_USER_NAME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Please enter username:</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Entrer le nom utilisateur :</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Bitte Usernamen eingeben:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Digita lo username:</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Kullanýcý ismini girin:</message>
+</label>
+<label define="AM_WAITING_REQUESTS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">%d outstanding requests</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Il y a %d requêtes en cours</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">%d offene Anfrage(n)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">%d richieste inevase</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%d istek sýrada</message>
+</label>
+<label define="AM_NO_CCS_FILE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">No CSS file available</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Pas de fichier CSS possible</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Non è disponibile nessun file CSS</message>
+</label>
+<label define="AM_BUTTON_INTERRUPT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Interrupt transfer</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Interrompre le chargement</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Übertragung unterbrechen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Interrompi trasferimento</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Aktarýmý kes</message>
+</label>
+<label define="AM_BUTTON_PREVIOUS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Previous document</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Document précédent</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Vorheriges Dokument</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Documento precedente</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Önceki belge</message>
+</label>
+<label define="AM_BUTTON_NEXT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Next document</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Document suivant</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Nachfolgendes Dokument</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Documento successivo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Sonraki belge</message>
+</label>
+<label define="AM_BUTTON_RELOAD">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Reload</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Recharger</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Neu laden</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Ricarica</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Yeniden yükle</message>
+</label>
+<label define="AM_BUTTON_SAVE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Save</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Sauver</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Speichern</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Salva</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Kaydet</message>
+</label>
+<label define="AM_BUTTON_PRINT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Print</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Imprimer</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Drucken</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Stampa</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Yazdýr</message>
+</label>
+<label define="AM_BUTTON_SEARCH">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Search</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Chercher</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Suchen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Cerca</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Ara</message>
+</label>
+<label define="AM_BUTTON_ITALICS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Emphasis</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Mise en évidence</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Betont</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Enfasi</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Vurgu</message>
+</label>
+<label define="AM_BUTTON_BOLD">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Strong</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Important</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Fett</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Forte</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Kuvvetli</message>
+</label>
+<label define="AM_BUTTON_CODE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Fixed font</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Fonte fixe</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Feste Schriftbreite</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Fixed font</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Sabit geniþlikli yazýtipi</message>
+</label>
+<label define="AM_NO_REPEAT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">no-repeat</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">no-repeat</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">keine Wiederholung</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">no-repeat</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">tekrar yok</message>
+</label>
+<label define="AM_BUTTON_IMG">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Insert image</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Ajout d'une image</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Grafik einfügen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Inserisci immagine</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Görüntü ekle</message>
+</label>
+<label define="AM_BUTTON_H1">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Heading level 1</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Titre niveau 1</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Überschrift Ebene 1</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Intestazione di livello 1</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Baþlýk 1</message>
+</label>
+<label define="AM_BUTTON_H2">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:48 CEST 2000">Heading level 2</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Titre niveau 2</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Überschrift Ebene 2</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Intestazione di livello 2</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Baþlýk 2</message>
+</label>
+<label define="AM_BUTTON_H3">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Heading level 3</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Titre niveau 3</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Überschrift Ebene 3</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Intestazione di livello 3</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Baþlýk 3</message>
+</label>
+<label define="AM_BUTTON_UL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Bulleted list</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Liste</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Liste mit Punkten</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Lista puntata</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Noktalý liste</message>
+</label>
+<label define="AM_BUTTON_OL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Numbered list</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Liste numérotée</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Numerierte Liste</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Lista numerata</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Numaralý liste</message>
+</label>
+<label define="AM_BUTTON_DL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Definition list</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Liste de définitions</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Definitionsliste</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Lista di definizioni</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Taným listesi</message>
+</label>
+<label define="AM_BUTTON_LINK">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Link</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Lien</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Verknüpfung</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Collegamento</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Baðlantý</message>
+</label>
+<label define="AM_BUTTON_TABLE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Table</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Table</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Tabelle</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Tabella</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Tablo</message>
+</label>
+<label define="AM_NO_NAME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Document doesn't have a name. Saving to:</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le document n'a pas de nom. Sauvé en :</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Das Dokument ist unbenannt. Speichere unter:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il documento non ha un nome. Salva in:</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Belgenin bir ismi yok. Þu isimle kaydediyorum:</message>
+</label>
+<label define="AM_BUTTON_PLUGIN">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Plugins</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Plugins</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Plugins</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Plugins</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Plugin\'ler</message>
+</label>
+<label define="AM_UNKNOWN_SAVE_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Unknown error while saving URL %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Erreur inconnue lors de la sauvegarde de %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Unbekannter Fehler beim Speichern URL %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Errore sconosciuto durante il salvataggio dell'URL %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s URL\'ini kaydederken, belirsiz hata</message>
+</label>
+<label define="AM_CANT_CONNECT_TO_HOST">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Cannot make a connection to the server</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Impossible d'ouvrir une connexion vers le serveur</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Keine Verbindung zum Server</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Impossibile connettersi al server</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Sunucuya baðlantý yapýlamýyor</message>
+</label>
+<label define="AM_FORBIDDEN_ACCESS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Access to %s is forbidden by the server</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Accès interdit à %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Zugriff auf %s verboten</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">L'accesso a %s è proibito dal server</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s eriþimi kural gereði engellenmiþ</message>
+</label>
+<label define="AM_REQUEST_SUCCEEDED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Operation succeeded for %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Opération réussie pour %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Operation erfolgreich für: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">L'operazione ha avuto successo per %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s için iþlem baþarýlý</message>
+</label>
+<label define="AM_CREATED_NEW_REMOTE_RESSOURCE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">%s has been created</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">La ressource %s a été créée</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">%s wurde erzeugt</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">%s è stato creato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s yaratýldý</message>
+</label>
+<label define="AM_UPDATED_REMOTE_RESSOURCE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">%s has been updated</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">La ressource %s a été mise à jour</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">%s wurde aktualisiert</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">%s è stato aggiornato</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s güncellendi</message>
+</label>
+<label define="AM_UNKNOWN_XXX_STATUS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Operation completed with a %s status code</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">L'opération a fini avec un code %s</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Operation wurde beendet mit Code %s .</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Operazione completata con codice %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Ýþlem %s durum kodu ile tamamlandý</message>
+</label>
+<label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Server did not understand the request syntax</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le serveur n'a pas compris la syntaxe de la requête</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Der Server konnte die Anfragesyntax nicht verstehen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il server non ha compreso la sintassi della richiesta</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Sunucu istem yazýmýný anlamadý</message>
+</label>
+<label define="AM_NO_DATA">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Server has no new information to send back</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">La réponse du serveur n'a pas de corps</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Der Server hat keine neue Informationen zurückzusenden</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il server non ha nuove informazioni da inviare</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Sunucunun gönderecek yeni bilgisi</message>
+</label>
+<label define="AM_METHOD_NOT_ALLOWED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">This method is not allowed</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Cette opération n'est pas permise</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Diese Methode ist nicht erlaubt</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Questo metodo non è consentito</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">Bu yöntem %s için kullanýlamaz</message>
+</label>
+<label define="AM_PLEASE_AUTHENTICATE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Please authenticate to access %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">L'accès à %s requiert votre authentification</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Bitte einloggen für den Zugriff auf: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Identificazione richiesta per accedere a %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:14:54 CEST 2000">%s eriþimi için lütfen kendinizi tanýtýn</message>
+</label>
+<label define="AM_VERIFYING">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Verifying ...</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Vérification ...</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Überprüfe ...</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Verifica in corso ...</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Doðrulanýyor...</message>
+</label>
+<label define="AM_SAVING_FAILED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Saving to %s failed, Save to disk ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">La sauvegarde distante de %s a échouée, sauvegarder sur disque ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il salvataggio su %s è fallito, salvo su disco ?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
+</label>
+<label define="AM_SAVE_COMPARE_FAILED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Saving to %s seems corrupted, ignore ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">La sauvegarde distante de %s semble corrompue, ignorer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il salvataggio su %s sembra non funzionare, ignora ?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">%s bozuk görünüyor, devam edeyim mi?</message>
+</label>
+<label define="AM_SAVE_REDIRECTED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">URL %s redirected to %s, ignore ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">URL %s redirigée sur %s, ignorer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">URL %s weitergeleitet nach %s, Ignorieren?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">L'URL %s è rediretto su %s, ignora ?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">URL %s %s e yönlendirilmiþ, devam edeyim mi?</message>
+</label>
+<label define="AM_SAVE_RELOAD_FAILED">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Reload of %s failed, ignore ?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le relecture de %s a échouée, ignorer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Neuladen von %s fehlerhaft, Ignorieren?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Ricaricamento di %s fallito, ignora ?</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">%s yeniden yüklenemedi, devam edeyim mi?</message>
+</label>
+<label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Server reports a 501 error: %s</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le serveur rapporte une erreur 501:</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Der Server meldet einen 501-Fehler: %s</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il server riporta un errore 501: %s</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Sunucu 501 hatasý veriyor: %s</message>
+</label>
+<label define="AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Server reports a 501 error</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le serveur rapporte une erreur 501</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Der Server meldet einen 501-Fehler</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il server riporta un errore 501</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Sunucu 501 hatasý veriyor</message>
+</label>
+<label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Server does not support this request method</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Le serveur ne supporte pas cette méthode d'accès</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Der Server unterstützt diese Anforderungsmethode nicht</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il server non supporta questo metodo di richiesta</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Sunucu bu istem yöntemini kabul etmiyor</message>
+</label>
+<label define="AM_PARSE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Filter</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Filtrer</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Filter</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Filtro</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Süzgeç</message>
+</label>
+<label define="AM_ACTIVE_TRANSFERS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">active transfers</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">transferts actifs</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Aktive Übertragungen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">trasferimenti attivi</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">etkin aktarýmlar</message>
+</label>
+<label define="AM_WAITING_TRANSFERS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">queued transfers</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">transferts en attente</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Wartende Übertragungen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">trasferimenti in coda</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">kuyruktaki aktarýmlar</message>
+</label>
+<label define="AM_PRINT_TOC">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Table of contents</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Table des matières</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">mit Inhaltsverzeichnis</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Sommario</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Ýçindekiler</message>
+</label>
+<label define="AM_NUMBERED_LINKS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Table of links</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Table des liens</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">mit Verknüpfungen</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Sommario dei collegamenti</message>
+</label>
+<label define="AM_REPEAT_MODE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Repeat Mode</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Mode de répétition</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Wiederholungsmodus</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Repeat Mode</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">Tekrar Kipi</message>
+</label>
+<label define="AM_REPEAT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">repeat</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">repeat</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Wiederholung</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">repeat</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">tekrar</message>
+</label>
+<label define="AM_REPEAT_X">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">repeat-x</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">repeat-x</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Wiederholung x</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">repeat-x</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:17 CEST 2000">x\'te tekrar</message>
+</label>
+<label define="AM_RELOAD_FILES">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Your previous Amaya session failed. Do you want to reload backup documents?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?</message>
+</label>
+<label define="AM_AUTHENTICATION_CONFIRM">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Authentication failed. Retry?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Échec de l'authentification. Voulez-vous réessayer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Login gescheitert. Wiederholen?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Autenticazione fallita. Vuoi riprovare?</message>
+</label>
+<label define="AM_REDIRECTION_CONFIRM">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Operation will be redirected. Continue?</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">L'opération sera redirigée. Voulez-vous continuer ?</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Umleitung folgen?</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">L'operazione sarà rediretta. Vuoi continuare?</message>
+</label>
+<label define="AM_ROWS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Number of Rows</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Nombre de lignes</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Zeilen:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Numero di righe</message>
+</label>
+<label define="AM_COLS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Number of Columns</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Nombre de colonnes</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Spalten:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Numero di colonne</message>
+</label>
+<label define="AM_BORDER">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Border</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Épaisseur des traits</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Rahmen:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Bordo</message>
+</label>
+<label define="AM_ALT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">Alternate text</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:38 CEST 2000">Texte de remplacement</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Alternativer Text</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Testo alternativo</message>
+</label>
+<label define="AM_ALT_MISSING">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:49 CEST 2000">The Alternate text is mandatory</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:41 CEST 2000">Le texte remplacement est obligatoire</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">Alternativer Text ist erforderlich!</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:06 CEST 2000">Il testo alternativo è obbligatorio</message>
+</label>
+<label define="AM_PRINT_URL">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Print URL</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Imprimer l'URL</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:23 CEST 2000">mit URLpply</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Stampa URL</message>
+</label>
+<label define="AM_APPLY_BUTTON">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Apply</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Appliquer</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Applica</message>
+</label>
+<label define="AM_DEFAULT_BUTTON">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Defaults</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Défauts</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Predefinite</message>
+</label>
+<label define="AM_FLUSH_CACHE_BUTTON">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Flush cache</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Vider le cache</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Svuota la cache</message>
+</label>
+<label define="AM_CACHE_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Cache Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration du cache</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze sulla cache</message>
+</label>
+<label define="AM_ENABLE_CACHE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Enable cache</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Activer le cache</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Abilita la cache</message>
+</label>
+<label define="AM_CACHE_PROT_DOCS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Cache protected documents</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Stocker dans le cache les documents protégés</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Proteggi i documenti nella cache</message>
+</label>
+<label define="AM_DISCONNECTED_MODE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Disconnected mode</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Mode déconnecté</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Modo non in linea</message>
+</label>
+<label define="AM_IGNORE_EXPIRES">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Ignore Expires: header</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Ignorer l'en-tête Expires:</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ignora le scadenze: header</message>
+</label>
+<label define="AM_CACHE_DIR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Cache directory</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Répertoire du cache</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Directory della cache</message>
+</label>
+<label define="AM_CACHE_SIZE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Cache size (Mb)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Taille du cache (Mo)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Dimensione della cache (Mb)</message>
+</label>
+<label define="AM_CACHE_ENTRY_SIZE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Cache entry size limit (Mb)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Taille maximale des entrées du cache (Mo)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Dimensione dell'indice della cache (Mb)</message>
+</label>
+<label define="AM_PROXY_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Proxy Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration du proxy</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze sull'uso dei proxy</message>
+</label>
+<label define="AM_HTTP_PROXY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">HTTP proxy (e.g., www.w3.org:1234)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Proxy HTTP</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">HTTP proxy (es., http://groucho.marx.edu)</message>
+</label>
+<label define="AM_PROXY_DOMAIN">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Proxy domain list (e.g., lists.w3.org)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Ne pas utiliser un proxy avec ces domaines</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Non usare il proxy su questi domini (es., www.w3.org)</message>
+</label>
+<label define="AM_GENERAL_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">General Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration générale</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze generali</message>
+</label>
+<label define="AM_HOME_PAGE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Home Page</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Page de démarrage</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Home Page</message>
+</label>
+<label define="AM_TOOLTIP_DELAY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">ToolTip delay (ms)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Délai des infobulles (ms)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ritardo del ToolTip (ms)</message>
+</label>
+<label define="AM_DOUBLECLICK_DELAY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Double click delay (ms)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Délai de double-clic (ms)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ritardo del doppio click (ms)</message>
+</label>
+<label define="AM_MENU_FONT_SIZE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Menu font size</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Taille de la police dialogue</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Dimensione dei caratteri dei menu</message>
+</label>
+<label define="AM_ZOOM">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Font zoom</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Zoom caractères</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ingrandimento della fonte</message>
+</label>
+<label define="AM_DIALOGUE_LANGUAGE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Dialogue language</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Langue des dialogues</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Lingua delle finestre di dialogo</message>
+</label>
+<label define="AM_ENABLE_MULTIKEY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Enable multi-key (`+a=à)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Activer multi-key (`+a=à)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Abilita le sequenze multitasto</message>
+</label>
+<label define="AM_SHOW_BG_IMAGES">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Show background images</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Montrer les images de fond</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Mostra le immagini di sfondo</message>
+</label>
+<label define="AM_ENABLE_DOUBLECLICK">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Double click activates link</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Cliquer deux fois pour suivre un lien</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Il doppio click attiva il collegamento</message>
+</label>
+<label define="AM_PUBLISH_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Publishing Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration de la publication</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze per la pubblicazione</message>
+</label>
+<label define="AM_USE_ETAGS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Use ETAGS and preconditions</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Utiliser les ETAGS et les pré-conditions</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Usa gli ETAGS e le precondizioni</message>
+</label>
+<label define="AM_VERIFY_PUT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Verify each PUT with a GET</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Vérifier chaque PUT avec un GET</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Verifica ogni PUT con un GET</message>
+</label>
+<label define="AM_DEFAULT_NAME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Default name for URLs finishing in '/'</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Nom par défaut pour les URLs finissant par un '/'</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Nome di default per gli URL che terminano con '/'</message>
+</label>
+<label define="AM_GEOMETRY_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Geometry Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration de la géométrie</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze della geometria</message>
+</label>
+<label define="AM_SAVE_GEOMETRY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Save current geometry</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Sauver la géométrie courante</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Salva la geometria corrente</message>
+</label>
+<label define="AM_RESTORE_GEOMETRY">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Restore default geometry</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Restaurer la géométrie défaut</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ripristina la geometria di default</message>
+</label>
+<label define="AM_GEOMETRY_CHANGE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">The change will be effective when you open a new window.</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Ces changements seront effectifs lors de l'ouverture d'une fenêtre</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">La modifica sarà effettiva quando aprirai una nuova finestra.</message>
+</label>
+<label define="AM_COLOR_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Color Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration des couleurs</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze dei colori</message>
+</label>
+<label define="AM_DOC_FG_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Document foreground color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur d'avant-plan des documents</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Colore in primo piano nei documenti</message>
+</label>
+<label define="AM_DOC_BG_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Document background color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur d'arrière-plan des documents</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Colore dello sfondo nei documenti</message>
+</label>
+<label define="AM_MENU_FG_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Menu foreground color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur d'avant-plan des menus</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Colore in primo piano nei menu</message>
+</label>
+<label define="AM_MENU_BG_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Menu background color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur d'arrière-plan des menus</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Colore dello sfondo nei menu</message>
+</label>
+<label define="AM_CANT_CREATE_CACHE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.</message>
+</label>
+<label define="AM_BUTTON_HOME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Home</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Page personelle</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Home</message>
+</label>
+<label define="AM_LANG_NEGOTIATION">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">List of preferred languages like "en, fr":</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Liste des langues préférées comme "fr, en" :</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Lista delle lingue preferite, come "it, en, fr":</message>
+</label>
+<label define="AM_PROFILES_FILE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Location of profiles definition file</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Emplacement du fichier de définition de profils</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">File di definizione dei profili</message>
+</label>
+<label define="AM_PROFILE_SELECT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Profile Selection</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Sélection du profil</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Selezione dei profili</message>
+</label>
+<label define="AM_PROFILE_CHANGE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">These changes won't be effective until Amaya is restarted</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Ces changements seront effectifs lors du prochain démarrage.</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Queste modifiche saranno effettive alla prossima esecuzione</message>
+</label>
+<label define="AM_PROFILE_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Profiles Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration du profil</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze dei profili</message>
+</label>
+<label define="AM_TEMPLATES_SERVER">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Enter the URL of the templates server</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Entrez l'URL du serveur de modèles</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Digita l'URL del server dei modelli</message>
+</label>
+<label define="AM_TEMPLATES_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Templates Preferences</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configuration des modèles de pages</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Preferenze sui modelli</message>
+</label>
+<label define="AM_SAFE_PUT_REDIRECT">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Allow automatic PUT redirections on these domains</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Autoriser la redirection automatique du PUT dans ces domaines</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Consenti la redirezione automatica dei PUT su questi domini</message>
+</label>
+<label define="AM_WITH_CSS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Ignore style sheets</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Sans feuilles de style</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Ignora gli stili CSS</message>
+</label>
+<label define="AM_TRANS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Transform type</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Transformer en</message>
+	<message xml::lang="de" last_update="Wed Jun  7 17:14:24 CEST 2000">Umformatieren</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Trasforma tipo</message>
+	<message xml::lang="tr" last_update="Wed Jun  7 17:15:18 CEST 2000">Dönüþüm türü</message>
+</label>
+<label define="AM_PROXY_DOMAIN_INFO">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">(separate each entry with a space)</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">(séparer chaque entrée avec un espace)</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">(separa ogni campo con uno spazio)</message>
+</label>
+<label define="AM_DONT_PROXY_DOMAIN">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">No proxy on these domains</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Ne pas utiliser le proxy dans ces domaines</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Escludi l'utilizzo del proxy su questi domini</message>
+</label>
+<label define="AM_ONLY_PROXY_DOMAIN">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Only proxy these domains</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Utiliser le proxy uniquement dans ces domaines</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Utilizza il proxy solo su questi domini</message>
+</label>
+<label define="AM_MATH_ENTITY_NAME">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Character name</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Nom du caractère</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Nome del carattere</message>
+</label>
+<label define="AM_USER_DIR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Amaya user directory</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Repertoire utilisateur</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Directory dell'utente</message>
+</label>
+<label define="AM_TMP_DIR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Temporary directory</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Repertoire témporaire</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Directory temporanea</message>
+</label>
+<label define="AM_COLOR_PALETTE">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Use palette</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Par palette</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Usa la palette</message>
+</label>
+<label define="AM_LANNEG_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Language Negotiation</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Négotiation de langues</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Negoziazione della lingua</message>
+</label>
+<label define="AM_XML_ERROR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">The XML parsing failed - please check your document</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Une erreur XML a été detectée - vérifiez votre document</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Errore XML - si consiglia di verificare il documento</message>
+</label>
+<label define="AM_ANNOT_CONF_MENU">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Configuration for annotations</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Configurer les annotations</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Configurazione delle annotazioni</message>
+</label>
+<label define="AM_ANNOT_USER">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Annotation user</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Nom de l'utilisateur</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Nome utente</message>
+</label>
+<label define="AM_ANNOT_POST_SERVER">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Annotation post server</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Serveur de publication</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Server per la pubblicazione</message>
+</label>
+<label define="AM_ANNOT_SERVERS">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Annotation servers</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Serveur d'annotations</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Server per le annotazioni</message>
+</label>
+<label define="AM_ANNOT_AUTOLOAD">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Autoload annotations</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Charger automatiquement les annoations</message>
+	<message xml::lang="it" last_update="Wed Jun  7 17:14:09 CEST 2000">Caricamento automatico delle annotazioni</message>
+</label>
+<label define="AM_DOC_SEL_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Selection color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur de sélection</message>
+</label>
+<label define="AM_DOC_INS_COLOR">
+	<message xml::lang="en" last_update="Wed Jun  7 17:12:54 CEST 2000">Caret color</message>
+	<message xml::lang="fr" last_update="Wed Jun  7 17:13:44 CEST 2000">Couleur du curseur d'insertion</message>
+</label>
+<label define="AMAYA_MSG_MAX">
+<!--this label must still empty end the latest because itshows the end of labels that are used for Amaya --></label>
+</messages>
+<!--end of base --></base_message>

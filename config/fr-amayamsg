@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Fichiers
 1 Ouvrir
 2 RAZ
@@ -60,17 +61,17 @@
 59 Image de fond interdite ici
 60 CSS
 61 La sauvegarde entraînera d'écraser les URLs suivantes :
-62 Erreur de sauvegarde de l'URL 
+62 Erreur de sauvegarde de l'URL
 63 Sauvegarder sur le disque ?
 64 Copier images
 65 Transformer les URL
 66 Adresse du document
 67 Répertoire des images
 68 Adresse de l'objet
-69 Fichier CSS                                         
+69 Fichier CSS
 70 le navigateur/éditeur du W3C
 71 (envoyez vos questions à www-amaya@w3.org)
-72 Erreur interne : URL de longueur supérieure à  %s caractères
+72 Erreur interne : URL de longueur supérieure à %s caractères
 73 Seul le type par défaut est autorisé
 74 Mise à jour des liens : %s%% a été traité
 75 Rien à sauver
@@ -125,82 +126,80 @@
 124 transferts en attente
 125 Table des matières
 126 Table des liens
-127 Applets Java
-128 Mode de répétition
-129 repeat
-130 repeat-x
-131 Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?
-132 Échec de l'authentification. Voulez-vous réessayer ?
-133 L'opération sera redirigée. Voulez-vous continuer ?
-134 Nombre de lignes
-135 Nombre de colonnes
-136 Épaisseur des traits
-137 Texte de remplacement
-138 Le texte remplacement est obligatoire
-139 Imprimer l'URL
-140 Appliquer
-141 Défauts
-142 Vider le cache
-143 Configuration du cache
-144 Activer le cache
-145 Stocker dans le cache les documents protégés
-146 Mode déconnecté
-147 Ignorer l'en-tête Expires:
-148 Répertoire du cache
-149 Taille du cache (Mo)
-150 Taille maximale des entrées du cache (Mo)
-151 Configuration du proxy
-152 Proxy HTTP
-153 Ne pas utiliser un proxy avec ces domaines
-154 Configuration générale
-155 Page de démarrage
-156 Délai des infobulles (ms)
-157 Délai de double-clic (ms)
-158 Taille de la police dialogue 
-159 Zoom caractères
-160 Langue des dialogues
-161 Activer multi-key (`+a=à)
-162 Montrer les images de fond
-163 Cliquer deux fois pour suivre un lien
-164 Configuration de la publication
-165 Utiliser les ETAGS et les pré-conditions
-166 Vérifier chaque PUT avec un GET
-167 Nom par défaut pour les URLs finissant par un  '/'
-168 Configuration de la géométrie
-169 Sauver la géométrie courante
-170 Restaurer la géométrie défaut
-171 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
-172 Configuration des couleurs
-173 Couleur d'avant-plan des documents
-174 Couleur d'arrière-plan des documents
-175 Couleur d'avant-plan des menus
-176 Couleur d'arrière-plan des menus
-177 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
-178 Page personelle
-179 Liste des langues préférées comme "fr, en" :
-180 Emplacement du fichier de définition de profils
-181 Sélection du profil
-182 Ces changements seront effectifs lors du prochain démarrage.
-183 Configuration du profil
-184 Entrez l'URL du serveur de modèles
-185 Configuration des modèles de pages
-186 Autoriser la redirection automatique du PUT dans ces domaines
-187 Sans feuilles de style
-188 Transformer en
-189 (séparer chaque entrée avec un espace)
-190 Ne pas utiliser le proxy dans ces domaines
-191 Utiliser le proxy uniquement dans ces domaines
-192 Nom du caractère
-193 Repertoire utilisateur
-194 Repertoire témporaire
-195 Par palette
-196 Négotiation de langues
-197 Une erreur XML a été detectée - vérifiez votre document
-198 Configurer les annotations
-199 Nom de l'utilisateur
-200 Serveur de publication
-201 Serveur d'annotations
-202 Charger automatiquement les annoations
-203 Couleur de sélection
-204 Couleur du point d'insertion
-
+127 Mode de répétition
+128 repeat
+129 repeat-x
+130 Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?
+131 Échec de l'authentification. Voulez-vous réessayer ?
+132 L'opération sera redirigée. Voulez-vous continuer ?
+133 Nombre de lignes
+134 Nombre de colonnes
+135 Épaisseur des traits
+136 Texte de remplacement
+137 Le texte remplacement est obligatoire
+138 Imprimer l'URL
+139 Appliquer
+140 Défauts
+141 Vider le cache
+142 Configuration du cache
+143 Activer le cache
+144 Stocker dans le cache les documents protégés
+145 Mode déconnecté
+146 Ignorer l'en-tête Expires:
+147 Répertoire du cache
+148 Taille du cache (Mo)
+149 Taille maximale des entrées du cache (Mo)
+150 Configuration du proxy
+151 Proxy HTTP
+152 Ne pas utiliser un proxy avec ces domaines
+153 Configuration générale
+154 Page de démarrage
+155 Délai des infobulles (ms)
+156 Délai de double-clic (ms)
+157 Taille de la police dialogue
+158 Zoom caractères
+159 Langue des dialogues
+160 Activer multi-key (`+a=à)
+161 Montrer les images de fond
+162 Cliquer deux fois pour suivre un lien
+163 Configuration de la publication
+164 Utiliser les ETAGS et les pré-conditions
+165 Vérifier chaque PUT avec un GET
+166 Nom par défaut pour les URLs finissant par un '/'
+167 Configuration de la géométrie
+168 Sauver la géométrie courante
+169 Restaurer la géométrie défaut
+170 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
+171 Configuration des couleurs
+172 Couleur d'avant-plan des documents
+173 Couleur d'arrière-plan des documents
+174 Couleur d'avant-plan des menus
+175 Couleur d'arrière-plan des menus
+176 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
+177 Page personelle
+178 Liste des langues préférées comme "fr, en" :
+179 Emplacement du fichier de définition de profils
+180 Sélection du profil
+181 Ces changements seront effectifs lors du prochain démarrage.
+182 Configuration du profil
+183 Entrez l'URL du serveur de modèles
+184 Configuration des modèles de pages
+185 Autoriser la redirection automatique du PUT dans ces domaines
+186 Sans feuilles de style
+187 Transformer en
+188 (séparer chaque entrée avec un espace)
+189 Ne pas utiliser le proxy dans ces domaines
+190 Utiliser le proxy uniquement dans ces domaines
+191 Nom du caractère
+192 Repertoire utilisateur
+193 Repertoire témporaire
+194 Par palette
+195 Négotiation de langues
+196 Une erreur XML a été detectée - vérifiez votre document
+197 Configurer les annotations
+198 Nom de l'utilisateur
+199 Serveur de publication
+200 Serveur d'annotations
+201 Charger automatiquement les annoations
+202 Couleur de sélection
+203 Couleur du curseur d'insertion

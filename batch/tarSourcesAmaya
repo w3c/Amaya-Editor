@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=3.1
+AMAYAVERSION=3.1a
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 
@@ -72,6 +72,10 @@ Amaya/amaya/TextFile.A \
 Amaya/amaya/TextFile.S \
 Amaya/amaya/TextFileP.P \
 Amaya/amaya/TextFileT.T \
+Amaya/amaya/XLink.A \
+Amaya/amaya/XLink.S \
+Amaya/amaya/XLinkP.P \
+Amaya/amaya/XLinkT.T \
 Amaya/amaya/Text_SGML.inc \
 Amaya/amaya/greek.sgml \
 Amaya/amaya/*.bmp \

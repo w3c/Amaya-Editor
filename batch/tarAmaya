@@ -80,6 +80,9 @@ echo "Plarform ------->" $MACH
    Amaya/amaya/*.en \
    Amaya/amaya/*.fr \
    Amaya/amaya/*.gif \
+   Amaya/amaya/XLink.STR \
+   Amaya/amaya/XLink*.PRS \
+   Amaya/amaya/XLink*.TRA \
    Amaya/amaya/MathML.STR \
    Amaya/amaya/MathML*.PRS \
    Amaya/amaya/MathML*.TRA \
@@ -94,3 +97,6 @@ echo "Plarform ------->" $MACH
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
 done
+
+
+

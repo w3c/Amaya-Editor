@@ -238,6 +238,7 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_PUNCTUATION 1   /* Include delimiters, e.g, "/" and ":" */
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
+THOT_EXPORT int          AMAYA;     /* Index of amaya message table */
 THOT_EXPORT int          appArgc;
 THOT_EXPORT CHAR_T**     appArgv;
 THOT_EXPORT CHAR_T       TempFileDirectory[MAX_LENGTH];

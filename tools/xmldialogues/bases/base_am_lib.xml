@@ -1,0 +1,1989 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<base_message version="8" last_update="Fri May 26 10:38:00 CEST 2000">
+<control>
+	<language encoding="latin1">en</language>
+	<language encoding="latin1">fr</language>
+	<language encoding="latin1">de</language>
+	<language encoding="latin1">it</language>
+	<language encoding="latin1">tr</language>
+</control>
+<messages>
+<label define="TMSG_LIB_X11_ERR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">X11 Error : %s\n</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:12 CEST 2000">Erreur X11 : %s\n</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">X11 Fehler: %s\n</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Errore X11: %s\n</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">X11 Hatasý : %s\n</message>
+</label>
+<label define="TMSG_MISSING_VIEW">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">View not found.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:12 CEST 2000">Vue non trouvée.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ansicht nicht gefunden.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Vista non trovata.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görünüm bulunamadý.</message>
+</label>
+<label define="TMSG_ERR_LOADING_DICO">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Error while loading the dictionary: %s\n</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:12 CEST 2000">Erreur au cours du chargement du dictionnaire: %s\n</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehler beim Einlesen des Wörterbuchs: %s\n</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Errore durante il caricamento del dizionario: %s\n</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Sözlük yüklerken hata: %s\n</message>
+</label>
+<label define="TMSG_LIB_MISSING_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Missing file: %s\n</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:12 CEST 2000">Fichier inaccessible : %s\n</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehlende Datei: %s\n</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">File mancante: %s\n</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">eksik dosya: %s\n</message>
+</label>
+<label define="TMSG_WRITING_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot write: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:12 CEST 2000">Écriture impossible : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann nicht schreiben unter: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Impossibile scrivere: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yazýlamýyor: %s</message>
+</label>
+<label define="TMSG_SCHEMA_NOT_FIND">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot find schema: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Schéma inaccessible : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann das Schema nicht finden: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Schema non trovato: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Þema bulunamýyor: %s</message>
+</label>
+<label define="TMSG_LIB_CONFIRM">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Confirm</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Confirmer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">OK</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Conferma</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Onayla</message>
+</label>
+<label define="TMSG_MISSING_ALPHABET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No alphabet file</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Absence de fichier alphabet</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Keine Alphabetdatei</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Il file dell'alfabeto è inesistente</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Alfabe dosyasý yok</message>
+</label>
+<label define="TMSG_OPEN_DOC_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot open document %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible d\'ouvrir le document %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann das Dokument nicht laden: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Impossibile aprire il documento %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s belgesi açýlamýyor</message>
+</label>
+<label define="TMSG_ERR_PIV">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pivot format error: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Erreur de format pivot : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Pivot Formatfehler: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Errore nel formato pivot: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Pivot biçim hatasý: %s</message>
+</label>
+<label define="TMSG_OLD_VIEW_NOT_REPLACED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">New view cannot replace the old one</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">La nouvelle vue ne peut remplacer l\'ancienne.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Neues Ansichtsfenster kann das bisherige nicht ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">La nuova vista non può rimpiazzare la vecchia</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yeni görünüm eskisinin yerini alamaz</message>
+</label>
+<label define="TMSG_OLD_SCH_TO_RECOMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Incompatible schemas. Recompile %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Schémas incompatibles. Recompiler %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Inkompatible Schemen. Compiliere %s neu</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Schemi incompatibili. Ricompila %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Uyumsuz þemalar. %s yeniden derlenmeli</message>
+</label>
+<label define="TMSG_BAD_FRAME_NB">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Incorrect window number</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Le numéro de fenêtre est incorrect.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehlerhafte Fensternummer</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Numero di finestra non corretto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yanlýþ pencere numarasý</message>
+</label>
+<label define="TMSG_MISSING_FONT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Fatal Error: Thot fonts not found</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Erreur fatale : fontes Thot inaccessibles</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Gravierender Fehler: Thot-Schriften nicht gefunden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Errore fatale: fonti di Thot non trovate</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Ölümcül hata: Thot yazýtipleri bulunamadý</message>
+</label>
+<label define="TMSG_COLUMNS_PAGINATE_AGAIN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document with columns. Paginate again.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Document avec des colonnes. Repaginer.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Dokument enthält Spalten. Bitte neu umbrechen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Documento con colonne. Riimpagina.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Sütun içeren belge. Yeniden sayfala.</message>
+</label>
+<label define="TMSG_NO_MEMORY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Memory exhausted</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Manque de mémoire</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Arbeitsspeicher erschöpft</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Memoria esaurita</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Bellek tükendi</message>
+</label>
+<label define="TMSG_UNABLE_TO_CONNECT_TO_X">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Fatal Error: Unable to connect to X</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Erreur fatale : connexion au serveur X impossible</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Gravierender Fehler: kein Zugriff zum X-Server</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Errore fatale: impossibile connettersi a X</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Ölümcül Hata: X sistemine baðlanýlamýyor</message>
+</label>
+<label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">View is modified before creation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">La vue est modifiée avant création.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ansichtsfenster muß vor möglicher Änderung erzeugt werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Vista modificata prima della creazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görünüm dosya yaratmadan önce deðiþtirildi</message>
+</label>
+<label define="TMSG_SEL_BEFORE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Select before</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sélectionner avant.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte zuerst auswählen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Seleziona prima</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Önce seçim</message>
+</label>
+<label define="TMSG_NO_PLACE_FOR_FONT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No more place for the font %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Il n\'y a plus de place pour la police %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kein Platz mehr für die Schrift: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:54 CEST 2000">Non c\'è posto per la fonte %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s yazýtipi için yer kalmadý</message>
+</label>
+<label define="TMSG_INCORRECT_DOC_STRUCTURE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Structure of document %s invalid</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">La structure du document %s est invalide</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Struktur des Dokuments %s ist fehlerhaft</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">La struttura del documento %s non è valida</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s belgesinin yapýsý geçersiz</message>
+</label>
+<label define="TMSG_LOCKED_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document %s cannot be edited nor saved</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Le document %s ne peut être ni sauvé ni modifié</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Das Dokument %s kann weder geändert noch gespeichert werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Il documento %s non può essere editato nè salvato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s belgesi deðiþtirilemiyor veya kaydedilemiyor.</message>
+</label>
+<label define="TMSG_LIB_RULES_TABLE_FULL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Rules table full.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Table des règles saturée.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Regeltabelle voll.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tabella delle regole piena.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Kural tablosu dolu.</message>
+</label>
+<label define="TMSG_STR_SCH_CHANGED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Structure schema %s has been changed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Le schéma de structure %s a été modifié</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Strukturschema %s wurde verändert</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Lo schema di struttura %s è stato modificato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yapý þemasý %s deðiþti.</message>
+</label>
+<label define="TMSG_INCORRECT_STR_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Incorrect file: %s.STR</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier incorrect : %s.STR</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehlerhafte Datei: %s.STR</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File non corretto: %s.STR</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yanlýþ dosya: %s.STR</message>
+</label>
+<label define="TMSG_INCORRECT_PRS_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Incorrect file: %s.PRS</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier incorrect : %s.PRS</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehlerhafte Datei: %s.PRS</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File non corretto: %s.PRS</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yanlýþ dosya: %s.PRS</message>
+</label>
+<label define="TMSG_MISSING_DIR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Directory not found: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Répertoire inaccessible : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Verzeichnis nicht gefunden: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Directory non trovata: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s dizini bulunamadý</message>
+</label>
+<label define="TMSG_PRINT_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot print</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impression impossible</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann nicht drucken</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile stampare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yazdýrýlamýyor</message>
+</label>
+<label define="TMSG_CHANGE_PRES_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot change presentation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Changement de présentation impossible</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann diese Ansicht nicht ändern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile cambiare presentazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Sunum deðiþtirilemiyor</message>
+</label>
+<label define="TMSG_SAVE_IN_PS_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot save in PostScript</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauvegarde du PostScript impossible</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann nicht als PostScript speichern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile salvare in PostScript</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">PostScript yazdýrýlamýyor</message>
+</label>
+<label define="TMSG_IMPORT_FILE_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot import file</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Importation du fichier impossible</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann die Datei nicht importieren</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile importare il file</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">dosya yüklenemiyor</message>
+</label>
+<label define="TMSG_EMPTY_VIEW">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">View is empty</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">La vue est vide</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ansichtsfenster ist leer</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">La vista è vuota</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görünüm boþ</message>
+</label>
+<label define="TMSG_RO_EL_FORBIDDEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Not allowed, read only element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Commande interdite, élément en lecture seule.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Unmöglich, lese nur ein Element</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non consentito, elemento a sola lettura</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Geçersiz, salt oku birim.</message>
+</label>
+<label define="TMSG_DON_T_COPY_PAIRED_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot copy paired components</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ne copiez pas des marques seules</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann keine gepaarten Komponenten kopieren</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile copiare componenti accoppiati</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Çiftli bileþenler kopyalanamaz</message>
+</label>
+<label define="TMSG_NEW_DICO">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Creating the dictionary for document: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Création du dictionnaire du document : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Erzeuge Wörterbuch für das Dokument: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Creo il dizionario per il documento %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s belgesi için sözlük yaratýlýyor</message>
+</label>
+<label define="TMSG_PICT_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Image Type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Type d'image</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Grafikformat</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tipo di immagine</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görüntü türü</message>
+</label>
+<label define="TMSG_PICT_PRES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Image Presentation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Présentation</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Grafikpräsentation</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Presentazione dell\'immagine</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görüntü sunumu</message>
+</label>
+<label define="TMSG_PICT_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Image File</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier image</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Grafikdatei</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File dell'immagine</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Görüntü dosyasý</message>
+</label>
+<label define="TMSG_DOC_PRINTED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document %s printed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impression terminée: %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Dokument %s wurde gedruckt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Il documento %s è stato stampato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s belgesi yazdýrýldý</message>
+</label>
+<label define="TMSG_FIRST_PAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">From page ...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Depuis la page...</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">von Seite ...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Da pagina ...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Sayfa ...</message>
+</label>
+<label define="TMSG_LAST_PAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">... to page</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">...jusqu'à la page</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">... bis Seite</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">... a pagina</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">... ya kadar</message>
+</label>
+<label define="TMSG_NB_COPIES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Number of copies</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Nombre d'exemplaires</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Zahl der Kopien</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Numero di copie</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Kopya sayýsý</message>
+</label>
+<label define="TMSG_REDUCTION">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Scale (%)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Taux de reproduction (%)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Größe (%)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Scala (%)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Ölçek (%)</message>
+</label>
+<label define="TMSG_1_PAGE_SHEET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">1 page/sheet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">1 page/feuille</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">1 Seite/Blatt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">1 pagina per foglio</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">1 sayfa/kaðýt</message>
+</label>
+<label define="TMSG_2_PAGE_SHEET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">2 pages/sheet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">2 pages/feuille</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">2 Seiten/Blatt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">2 pagine per foglio</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">2 sayfa/kaðýt</message>
+</label>
+<label define="TMSG_4_PAGE_SHEET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">4 pages/sheet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">4 pages/feuille</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">4 Seiten/Blatt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">4 pagine per foglio</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">4 sayfa/kaðýt</message>
+</label>
+<label define="TMSG_NB_PAGE_SHEET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pages per sheet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pages par feuille</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Seiten pro Blatt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pagine per foglio</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Kaðýt baþýna sayfa</message>
+</label>
+<label define="TMSG_PAGINATE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pagination</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Repaginer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Seitenzahlen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impaginazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Sayfalandýrma</message>
+</label>
+<label define="TMSG_VIEWS_TO_PRINT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Views to print</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Vues à imprimer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ansichtsfenster zum drucken</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Viste da stampare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yazdýrýlacak görünümler</message>
+</label>
+<label define="TMSG_CHANGE_PSCH">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Printing with %s presentation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impression avec la présentation %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Drucke die %s - Ansicht</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Stampa con presentazione %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s sunumu ile yazdýrýlýyor</message>
+</label>
+<label define="TMSG_A_COPY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">This is a copy</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Désigner l\'original, pas une copie.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Dies ist eine Kopie</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Questa è una copia</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Bu bir kopya</message>
+</label>
+<label define="TMSG_LIB_NO_LOAD">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Loading of "%s" failed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Chargement impossible de "%s"</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Fehler beim Laden von "%s"</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Caricamento di "%s" fallito</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">"%s" yüklenemedi</message>
+</label>
+<label define="TMSG_MISSING_DICOPAR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Environment variable %s undefined</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Variable d\'environnement %s non définie</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Umgebungsvariable %s nicht definiert</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">La variabile d\'ambiente %s è indefinita</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s ortam deðiþkeni tanýmsýz</message>
+</label>
+<label define="TMSG_SELF_REF_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">An element cannot refer to itself</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">L\'élément ne peut pas être lié à lui-même</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ein Element kann sich nicht auf sich selbst beziehen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Un elemento non può riferirsi a sè stesso</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Bir birim kendisini belirtemez</message>
+</label>
+<label define="TMSG_LIB_ATTR_REQUIRED_NOT_DELETED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Attribute required, not deleted</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Attribut obligatoire, non supprimé</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Attribut erforderlich, nicht gelöscht</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Attributo richiesto, non cancellato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Özellik gerekli, silinmedi</message>
+</label>
+<label define="TMSG_NATURE_FORBIDDEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Nature forbidden here</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Nature interdite ici</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Wert hier nicht zulässig</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Natura non consentita qui</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Nature forbidden here</message>
+</label>
+<label define="TMSG_LIB_MANDATORY_COMPONENT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s : mandatory component</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s : élément obligatoire</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">%s : erforderliche Komponente</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s : componente obbligatorio</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s: zorunlu parça</message>
+</label>
+<label define="TMSG_SEL_ONE_COMPONENT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Select only one component</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ne sélectionnez qu\'un composant</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte nur eine einzige Komponente auswählen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Seleziona solo un componente</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yalnýzca bir parça seçin</message>
+</label>
+<label define="TMSG_PASTING_EL_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">The element %s cannot be pasted here</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">L\'élément %s ne peut être collé ici</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Das Element %s kann kann an dieser Stelle nicht eingefügt werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">L\'elemento %s non può essere incollato qui</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s birimi buraya yapýþtýrýlamaz</message>
+</label>
+<label define="TMSG_MODIFYING_BOX_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">You cannot modify a box here</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Il n\'y a pas de boîte modifiable ici</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Rahmen kann hier nicht geändert werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non puoi modificare una scatola qui</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Burada kutu deðiþtiremezsiniz.</message>
+</label>
+<label define="TMSG_LIB_STRING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">%s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s</message>
+</label>
+<label define="TMSG_NO_VIEW_SEL_FOR_PRINTING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No view to print</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Aucune vue n\'est choisie pour l\'impression.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Es wurde kein Ansichtsfenster zum Drucken ausgewählt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Nessuna vista da stampare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Yazdýrma için görünüm seçilmedi</message>
+</label>
+<label define="TMSG_ENTER_PRS_SCH">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Enter the presentation for %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Entrer la présentation de %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte die Ansicht wählen zu %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Digita la presentazione per %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">%s için sunum girin</message>
+</label>
+<label define="TMSG_READING_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Reading the document...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Lecture du document...</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">lade Dokument...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Lettura del documento...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Belge okunuyor...</message>
+</label>
+<label define="TMSG_SEL_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Select an element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sélectionner un élément</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte ein Element auswählen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Seleziona un elemento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Birim seçin</message>
+</label>
+<label define="TMSG_NO_KBD">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">File thot.keyboard not found</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier thot.keyboard non trouvé.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Datei thot.keyboard nicht gefunden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File thot.keyboard non trovato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">thot.keyboard dosyasý bulunamadý</message>
+</label>
+<label define="TMSG_X_BUF_UNMODIFIED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">X clipboard unchanged</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Presse-papiers X inchangé</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">X-Window Zwischenablage unverändert</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">X clipboard non modificata</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">X clipboard deðiþmedi</message>
+</label>
+<label define="TMSG_COPYING_DIFFERENT_COMPONENTS_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot copy different components. Group.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible de copier plusieurs composants. Englober.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kann verschiedenartige Komponenten nicht kopieren. Bitte gruppieren.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile copiare componenti differenti. Raggruppa.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">Deðiþik parçalar kopyalanamaz, gruplayýn</message>
+</label>
+<label define="TMSG_RO_DOC_FORBIDDEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Not allowed, read only document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Commande interdite, document en lecture seule.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Nicht erlaubt, lade nur Dokumente</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non consentito, documento a sola lettura</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:00 CEST 2000">salt-oku belge, yapýlamaz</message>
+</label>
+<label define="TMSG_SELF_DOC_INCLUSION_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">A document cannot include itself</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Le document ne peut pas s\'inclure lui-même</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ein Dokument kann nicht in sich selbst eingebunden werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Un documento non può includere sè stesso</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Bir belgeye kendisini ekleyemezsiniz</message>
+</label>
+<label define="TMSG_MODIFYING_BOX">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Changing the box %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Modification de la boîte %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ändere den Rahmen %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Modifica della scatola %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s için kutu deðiþtiriliyor</message>
+</label>
+<label define="TMSG_MOVING_BOX">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Moving the box %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Déplacement de la boîte %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Verschiebe den Rahmen %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Spostamento della scatola %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s kutusu yer deðiþtiriyor</message>
+</label>
+<label define="TMSG_LIB_DOC_WRITTEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document written: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Document sauvé dans %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Dokument gespeichert: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Documento scritto: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s belgesi kaydedildi</message>
+</label>
+<label define="TMSG_WRITING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Writing ...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauvegarde en cours...</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Speichere ...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Scrittura in corso ...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Kaydediliyor...</message>
+</label>
+<label define="TMSG_EMPTY_REF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Empty reference.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Référence vide.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Leere Verknüpfung.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Riferimento vuoto.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Boþ baþvuru.</message>
+</label>
+<label define="TMSG_COPYING_PAGE_BRK_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Don\'t copy page breaks!</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ne copiez pas de saut de page.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Kopiere keine Seitenumbrüche!</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non copiare i salti pagina!</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Sayfa kesmelerini kopyalamayýn</message>
+</label>
+<label define="TMSG_SEL_EL_MANDATORY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">You have selected a %s element. You had to select a %s element.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Il fallait sélectionner un élément %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Es ist ein %s - Element ausgewählt. Bitte ein %s - Element wählen!</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Hai selezionato un elemento %s. Dovevi selezionare un elemento %s.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s birimi seçtiniz, oysa %s birimi seçmeniz gerekirdi</message>
+</label>
+<label define="TMSG_MODIFYING_DIR_LIST">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Changing directory list</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Modification de la liste des répertoires</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ändere Verzeichnisliste</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Modifica della lista delle directory</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Dizin dökümünü deðiþtiriyorum</message>
+</label>
+<label define="TMSG_PRINTING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Printing</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impression</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Drucke</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Stampa</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Yazdýrýlýyor</message>
+</label>
+<label define="TMSG_EXPORTING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Exporting document %s ...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Exportation du document %s en cours...</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Exportiere Dokument %s ...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Esportazione del documento %s in corso...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s belgesi kaydediliyor...</message>
+</label>
+<label define="TMSG_DICO">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Loading dictionary %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Chargement du dictionnaire : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Lade Wörterbuch %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Caricamento del dizionario %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s sözlüðü yükleniyor</message>
+</label>
+<label define="TMSG_SAVE_IN_PS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Writing PostScript file ...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauvegarde du PostScript en cours</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Schreibe PostScript - Datei ...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Scrittura del file PostScript in corso...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">PostScript dosyasý yazdýrýlýyor...</message>
+</label>
+<label define="TMSG_IMPORTING_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Importing file ...</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Importation du fichier en cours</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Importiere Datei ...</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Importazione del file in corso...</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Dosya ekleniyor...</message>
+</label>
+<label define="TMSG_CHOOSE_DOC_FORM_FOR_LOADING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Which form of the document do you want to load?</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Quelle forme du document voulez-vous charger ?</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">In welcher Form soll das Dokument geladen werden?</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Quale forma del documento vuoi caricare?</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Belgenin hangi biçimini yðklemek istersiniz?</message>
+</label>
+<label define="TMSG_TWO_POINTS_IN_POLYLINE_NEEDED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">At least two points in a polyline</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Une polyline doit contenir au moins deux points</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Ein Polygon erfordert mindestens zwei Punkte</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Una polyline deve contenere almeno due punti</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">polyline için en az iki nokta</message>
+</label>
+<label define="TMSG_VAL_FOR_ATTR_REQUESTED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Enter a value for attribute %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Donner une valeur à l\'attribut %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte einen Wert eingeben für %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Digita un valore per l'attributo %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s için bir özellik girin</message>
+</label>
+<label define="TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Old pivot format. Save the document.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Format pivot obsolète. Sauver le document avec Thot.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Altes Pivot - Format. Bitte das Dokument speichern.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Vecchio formato pivot. Salvare il documento con Thot.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Eski pivot biçimi. Belgeyi kaydedin.</message>
+</label>
+<label define="TMSG_CREATING_BOX">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Creating the box %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Création de la boîte %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Erzeuge den Rahmen %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Crea la scatola %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s kutusu yaratýlýyor</message>
+</label>
+<label define="TMSG_NOT_ENOUGH_MEMORY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Not enough memory</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pas assez de mémoire</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Nicht genügend Arbeitsspeicher</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Memoria insufficiente</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Bellek yetersiz</message>
+</label>
+<label define="TMSG_SEL_EL_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Select an element %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sélectionner un élément %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte ein Element auswählen %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Seleziona un elemento %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">%s bir birim seçin</message>
+</label>
+<label define="TMSG_HOLOPHRAST_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">This element cannot be holophrasted</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Cet élément ne peut être contracté</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Dieses Element kann nicht in Gliederungsansicht dargestellt werden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Questo elemento non può essere incorporato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Bu birim "holophrast" edilemez</message>
+</label>
+<label define="TMSG_SEL_REFERRED_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Designate the element to be referred</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Désigner l\'élément à référencer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Bitte das Bezugselement bestimmen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Designa l\'elemento da riferire</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Designate the element to be referred</message>
+</label>
+<label define="TMSG_TOO_MANY_DOCS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Too many documents.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Nombre maximum de documents atteint.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Zu viele Dokumente geöffnet</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Troppi documenti.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Çok fazla belge</message>
+</label>
+<label define="TMSG_EMPTY_DOC_NOT_WRITTEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Empty document, not written.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Document vide, non sauvé.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Leeres Dokument, nicht gespeichert.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Documento vuoto, non scritto.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Boþ belge, yazýlmadý</message>
+</label>
+<label define="TMSG_INSERTING_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Impossible to insert here</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible d\'insérer ici</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Einfügen hier nicht möglich</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile inserire qui</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Buraya eklemek mümkün deðil.</message>
+</label>
+<label define="TMSG_NOTHING_TO_DEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Nothing to delete</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Rien à détruire</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Nichts zu löschen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non c\'è nulla da cancellare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Silecek bir þey yok.</message>
+</label>
+<label define="TMSG_MANDATORY_ATTR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Mandatory attribute.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Attribut imposé par le schéma.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:47 CEST 2000">Notwendiges Attribut.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Attributo obbligatorio.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Gerekli özellik.</message>
+</label>
+<label define="TMSG_ALL_VIEWS_ALREADY_CREATED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">All views already created.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Toutes les vues sont déjà créées.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Alle Ansichten sind bereits erzeugt.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tutte le viste sono già state create.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Tüm görünümler yaratýldý.</message>
+</label>
+<label define="TMSG_EMPTY_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Empty document.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Document vide.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Leeres Dokument.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Documento vuoto.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Boþ belge.</message>
+</label>
+<label define="TMSG_CHANGING_DOC_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Don\'t change document !</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ne changez pas de document !</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokument nicht ändern!</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non cambiare il documento!</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Belgeyi deðiþtirmeyin!</message>
+</label>
+<label define="TMSG_LIB_TOO_MANY_VIEWS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Too many views.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Nombre maximum de vues atteint.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zu viele Ansichten.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Troppe viste.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Çok fazla görünüm.</message>
+</label>
+<label define="TMSG_NOTHING_TO_PASTE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Nothing to be pasted.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Il n\'y a rien à coller.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nichts zum Einfügen vorhanden.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non c\'è nulla da incollare.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Yapýþtýracak bir þey yok.</message>
+</label>
+<label define="TMSG_OPENING_NEW_FRAME_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot open a new window. Close a window.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible d'ouvrir une nouvelle fenêtre. Fermer une autre fenêtre.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann kein neues Fenster öffnen. Bitte zunächst ein Fenster schließen.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile aprire una nuova finestra. Chiudi una finestra.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Yeni pencere açýlamýyor. Pencere kapatýn</message>
+</label>
+<label define="TMSG_DEBUG_ERROR">
+</label>
+<label define="TMSG_DEBUG_SAV_FILES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">modified documents, if any, will be saved</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">les documents modifiés vont être sauvés \n</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Geänderte Dokumente werden evtl. in \n</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">i documenti modificati, se ve ne sono, saranno salvati</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">deðiþtirilen belgeler varsa kaydedilecek</message>
+</label>
+<label define="TMSG_REALSIZE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">As it is</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sans modification</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">wie momentan</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Cosí com'è</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Olduðu gibi</message>
+</label>
+<label define="TMSG_RESCALE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Scaled</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Zoomée</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Skaliert</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">In scala</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Oranlý</message>
+</label>
+<label define="TMSG_FILLFRAME">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Repeated</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Répétée</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Mehrfach</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Ripetuta</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Tekrarlý</message>
+</label>
+<label define="TMSG_XREPEAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">X Repeated</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Répétée en X</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">X - Faktor</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Ripetuta in X</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">X Tekrarlý</message>
+</label>
+<label define="TMSG_YREPEAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Y Repeated</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Répétée en Y</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Y - Faktor</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Ripetuta in Y</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Y Tekrarlý</message>
+</label>
+<label define="TMSG_PREMAT_EOF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Premature EOF</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fin de fichier prématurée</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Datei abgeschnitten</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Fine del file prematura</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Beklenmeyen EOF</message>
+</label>
+<label define="TMSG_NO_BOUNDING_BOX_IN_PS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No bounding box in ps file %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pas de bounding-box dans le fichier ps %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">bounding box in .ps - Datei %s fehlt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Manca la bounding box nel file PostScript %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">PS dosyasý %s içinde kenar kutusu yok</message>
+</label>
+<label define="TMSG_HYPHEN_FILE_NOT_OPEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot open hyphen patterns file: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible d'ouvrir les motifs de césure : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann die Worttrennungsregeldatei nicht öffnen: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile aprire il file delle divisioni sillabiche: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:01 CEST 2000">Bölme özellikleri dosyasý %s açýlamýyor</message>
+</label>
+<label define="TMSG_HYPHEN_FILE_OPEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Reading hyphen patterns file: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Lecture des motifs de césure : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Lese Worttrennungsregeldatei: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Lettura del file delle divisioni sillabiche in corso: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:12 CEST 2000">Bölme özellikleri dosyasý %s okunuyor</message>
+</label>
+<label define="TMSG_HYPHEN_WORD_TOO_LONG">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Word too long for hyphenation: %s. Are you sure it's correct?</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Mot trop long pour la césure : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Wort zu lang zum Trennen: %s. OK?</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Parola troppo lunga per la divisione: %s. Sei sicuro che sia corretta?</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:12 CEST 2000">%s kelimesi bölünemeyecek kadar uzun, doðru olduðundan emin misiniz?</message>
+</label>
+<label define="TMSG_COLOR_INCORRECT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pixmap : Color error</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pixmap : erreur d'allocation de couleur</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Pixmap : Fehler in Farben</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pixmap : Errore di allocazione dei colori</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Pixmap : Renk hatasý</message>
+</label>
+<label define="TMSG_XPM_OPEN_ERR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pixmap : Open failed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pixmap : erreur d'ouverture de fichier</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Pixmap : Fehler beim Laden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pixmap : Apertura del file fallita</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Pixmap : Okuma hatasý</message>
+</label>
+<label define="TMSG_XPM_FILE_INCORRECT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pixmap : File invalid</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pixmap : erreur fichier invalide</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Pixmap : Ungültige Datei</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pixmap : File non valido</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Pixmap : Dosya geçersiz</message>
+</label>
+<label define="TMSG_XPM_NO_MEM">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pixmap : No memory</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pixmap : mémoire insuffisante</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Pixmap : nicht genügend Arbeitsspeicher</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pixmap : Memoria insufficiente</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Pixmap : Bellek yok</message>
+</label>
+<label define="TMSG_XPM_COLOR_ERR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Pixmap : Color failed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pixmap : erreur d'allocation couleur</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Pixmap : Farbe nicht darstellbar</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Pixmap : Errore di allocazione dei colori</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Pixmap : Renk baþarýsýz</message>
+</label>
+<label define="TMSG_INCLUDE_FILE_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot include file %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier à inclure inaccessible : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann Datei nicht einfügen: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile includere il file %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s dosyasý eklenemiyor</message>
+</label>
+<label define="TMSG_CREATE_FILE_IMP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cannot create file %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Impossible de créer le fichier %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann Datei nicht erzeugen: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Impossibile creare il file %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s dosyasý yaratýlamýyor</message>
+</label>
+<label define="TMSG_EL_NOT_TRANSLATED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No translation schema for %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pas de schéma de traduction pour %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kein Übersetzungsschema bekannt für %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Manca lo schema di traduzione per %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s için dönüþüm þemasý yok</message>
+</label>
+<label define="TMSG_TRA_FILE_INCORRECT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Incorrect .TRA file: %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier .TRA incorrect : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Fehlerhafte .TRA - Datei: %s</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File .TRA incorretto: %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Geçersiz.TRA dosyasý: %s</message>
+</label>
+<label define="TMSG_TOO_MANY_OUTPUT_FILES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Too many output files</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Trop de fichiers de sortie</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zu viele Ausgabedateien</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Troppi file di output</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Çok fazla çýktý dosyasý</message>
+</label>
+<label define="TMSG_CREATE_FRAME_FOR_VIEW">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No window size for view %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pas de dimensions pour la vue %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Keine Fenstergröße bekannt für die %s - Ansicht</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Manca la dimensione della finestra per la vista %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s görünümü için pencere boyutu yok</message>
+</label>
+<label define="TMSG_INVALID_SIBLING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s is not a valid sibling for %s (%s)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s est un frère invalide pour %s (%s)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">%s entspricht nicht %s (%s)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s non è un fratello valido per %s (%s)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s is not a valid sibling for %s (%s)</message>
+</label>
+<label define="TMSG_INVALID_CHILD">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s is not a valid child for %s (%s)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s est un fils invalide pour %s (%s%)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">%s ist kein gültiges Kind von %s (%s)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s non è un figlio valido per %s (%s)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s is not a valid child for %s (%s)</message>
+</label>
+<label define="TMSG_ATTR_REQUIRED_FOR_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Attribute required %s for element %s</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Attribut requis %s pour l\'élément %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Bitte das Attribut %s für das Element %s bestimmen!</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">L'attributo richiede %s per l\'elemento %s</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s özelliði %s birimi için gereklidir</message>
+</label>
+<label define="TMSG_PAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s, page %d</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s, page %d</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">%s, Seite %d</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s, pagina %d</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s, sayfa %d</message>
+</label>
+<label define="TMSG_LIB_UNKNOWN_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">%s : unknown type.</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">%s : type inconnu.</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">%s : unbekannter Typ.</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">%s : tipo sconosciuto.</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s : bilinmeyen tip</message>
+</label>
+<label define="TMSG_LANGUAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Language</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Langue</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Sprache</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Lingua</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Dil</message>
+</label>
+<label define="TMSG_ATTR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Attributes</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Attributs</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Attribut</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Attributi</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Özellik</message>
+</label>
+<label define="TMSG_SEARCH_REF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Search reference</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Recherche référence</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche Bezugsziel</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Cerca riferimento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kaynak ara</message>
+</label>
+<label define="TMSG_STD_PRES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Standard presentation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Présentation standard</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standarddarstellung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Presentazione standard</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Standart sunum</message>
+</label>
+<label define="TMSG_APPLY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Apply</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Appliquer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Anwenden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Applica</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Uygula</message>
+</label>
+<label define="TMSG_CHAR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Characters</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Caractères</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeichen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Caratteri</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Karakterler</message>
+</label>
+<label define="TMSG_LINE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Underline</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Souligné</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Unterstreichen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Sottolineatura</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Altçizgi</message>
+</label>
+<label define="TMSG_GRAPHICS_PRES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Graphics</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Graphiques</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Grafik</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Grafica</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Grafikler</message>
+</label>
+<label define="TMSG_FORMAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Format</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Format</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Format</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Formattazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Biçim</message>
+</label>
+<label define="TMSG_UNCHANGED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Default</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Défaut</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standard</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Predefinito</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Öntanýmlý</message>
+</label>
+<label define="TMSG_ALIGN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Align</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Alignement</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ausrichten</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Allineamento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Hizala</message>
+</label>
+<label define="TMSG_INDENT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Indent</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Renfoncement</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einrücken</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Indentazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýçeriden</message>
+</label>
+<label define="TMSG_LIB_PRINT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Print</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Imprimer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Drucken</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Stampa</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yazdýr</message>
+</label>
+<label define="TMSG_MANUAL_FEED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Manual feed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Alimentation manuelle</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">manueller Papiereinzug</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Alimentazione manuale</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Elle besleme</message>
+</label>
+<label define="TMSG_OPTIONS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Options</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Options</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Optionen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Opzioni</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Seçenekler</message>
+</label>
+<label define="TMSG_A4">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">A4</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">A4</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">A4</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">A4</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">A4</message>
+</label>
+<label define="TMSG_US">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">US</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">US</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">US</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">US</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">US</message>
+</label>
+<label define="TMSG_PAPER_SIZE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Paper format</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Format du papier</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Papierformat</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Formato della carta</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Sayfa biçimi</message>
+</label>
+<label define="TMSG_DONE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Done</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Terminer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Abbrechen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Fatto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Tamam</message>
+</label>
+<label define="TMSG_DOC_DIR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Directories</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Répertoires</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Verzeichnisse</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Directory</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Dizinleri</message>
+</label>
+<label define="TMSG_DOCUMENT_NAME">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document name</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Nom du document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokumentenname</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Nome del documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge ismi</message>
+</label>
+<label define="TMSG_FILE_EXIST">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">The document %s already exists. Do you want to overwrite it?</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Le document %s existe déjà. Voulez-vous l'écraser ?</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Das Dokument %s existiert bereits. Überschreiben ?</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Il documento %s esiste già. Vuoi sovrascriverlo?</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">%s belgesi zaten var, üzerine yazmak ister misiniz?</message>
+</label>
+<label define="TMSG_BUTTON_1">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Left button sets the text color</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Bouton gauche change la couleur du texte</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Maustaste 1 setzt die Textfarbe</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Il pulsante sinistro cambia il colore del testo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">1. tuþ yazý rengini ayarlar</message>
+</label>
+<label define="TMSG_BUTTON_2">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Middle or Right button sets the background color</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Bouton milieu ou droit change la couleur du fond</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Maustaste 2 setzt die Hintergrundfarbe</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Il pulsante centrale e quello destro cambiano il colore dello sfondo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">2. tuþ arkaplan rengini ayarlar</message>
+</label>
+<label define="TMSG_FONT_FAMILY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Font family</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Police</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Schriftart</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Famiglia</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yazýtipi ailesi</message>
+</label>
+<label define="TMSG_ROMAN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Normal</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Normal</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Normal</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Normale</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Normal</message>
+</label>
+<label define="TMSG_BOLD">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Bold</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Gras</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Fett</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Grassetto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kalýn</message>
+</label>
+<label define="TMSG_ITALIC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Italic</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Italique</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kursiv</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Italico</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýtalik</message>
+</label>
+<label define="TMSG_OBLIQUE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Oblique</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Oblique</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Geneigt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Obliquo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Oblik</message>
+</label>
+<label define="TMSG_NOT_BOLD">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Normal</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Normal</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Normal</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Normale</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Normal</message>
+</label>
+<label define="TMSG_BOLDNESS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Boldness</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Graisse</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Fett</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Grassetto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kalýn</message>
+</label>
+<label define="TMSG_NORMAL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Normal</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Non souligné</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Normal</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Normale</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Normal</message>
+</label>
+<label define="TMSG_UNDERLINE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Underline</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Souligné</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Unterstrichen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Sottolineato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Altçizgi</message>
+</label>
+<label define="TMSG_CROSS_OUT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Cross out</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Biffé</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Durchgestrichen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Sbarrato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Cross out</message>
+</label>
+<label define="TMSG_BODY_SIZE_PTS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Body size (pt)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Corps (pt)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Schriftgröße (pt)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Dimensione (pt)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Body boyu (pt)</message>
+</label>
+<label define="TMSG_INDENT_PTS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Indent (pt)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Renfoncement (pt)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einrückung (pt)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Indentazione (pt)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýçeriden (pt)</message>
+</label>
+<label define="TMSG_LINE_SPACING_PTS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Line spacing (pt)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Interligne (pt)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeilenabstand (pt)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Interlinea (pt)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Satýr aralýðý (pt)</message>
+</label>
+<label define="TMSG_LINE_SPACING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Line spacing</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Interligne</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeilenabstand</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Interlinea</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Satýr aralýðý</message>
+</label>
+<label define="TMSG_JUSTIFY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Justification</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Justification</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ausrichtung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Giustificazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Justification</message>
+</label>
+<label define="TMSG_LIB_YES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Yes</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Oui</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ja</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Sí</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Evet</message>
+</label>
+<label define="TMSG_LIB_NO">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Non</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nein</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">No</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Hayýr</message>
+</label>
+<label define="TMSG_SAVE_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Save document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauver le document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokument speichern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Salva il documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge kaydet</message>
+</label>
+<label define="TMSG_CLOSE_DON_T_SAVE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Close, don't save</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fermer sans sauver</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nicht Speichern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Chiudi, non salvare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kapat, kaydetme</message>
+</label>
+<label define="TMSG_STYLE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Character style</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Style des caractères</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Auszeichnung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Stile dei caratteri</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Karakter tarzý</message>
+</label>
+<label define="TMSG_COLORS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Colors</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Couleurs</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Farben</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Colori</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Renkler</message>
+</label>
+<label define="TMSG_DEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Delete</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Supprimer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Löschen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Cancella</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Sil</message>
+</label>
+<label define="TMSG_OUTPUT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Output</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Destination</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ausgabe</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Destinazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Çýktý</message>
+</label>
+<label define="TMSG_PS_FILE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">PostScript file</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichier PostScript</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">PostScript-Datei</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File PostScript</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">PostScript dosya</message>
+</label>
+<label define="TMSG_PRINTER">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Printer</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Imprimante</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Drucker</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Stampante</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yazýcý</message>
+</label>
+<label define="TMSG_SEARCH_FOR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Search for</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Texte à chercher</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche nach</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Cerca</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Arama</message>
+</label>
+<label define="TMSG_UPPERCASE_EQ_LOWERCASE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">UPPERCASE = lowercase</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">MAJUSCULES = minuscules</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Groß-/Kleinschreibung ignorieren</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">MAIUSCOLE = minuscole</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">BÜYÜK HARF = küçük harf</message>
+</label>
+<label define="TMSG_REPLACE_BY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Replace by</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Texte de remplacement</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ersetzen durch</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Rimpiazza con</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">ile deðiþtir</message>
+</label>
+<label define="TMSG_REPLACE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Replace</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Remplacement</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Rimpiazza</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Deðiþtir</message>
+</label>
+<label define="TMSG_NO_REPLACE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No replace</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sans remplacement</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nicht ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non rimpiazzare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Deðiþtirme</message>
+</label>
+<label define="TMSG_REPLACE_ON_REQU">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Replace on request</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Remplacement à la demande</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einzeln ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Rimpiazza su richiesta</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýstek üzerine deðiþtir</message>
+</label>
+<label define="TMSG_AUTO_REPLACE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Automatic replace</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Remplacement automatique</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Alle ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Rimpiazzamento automatico</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Otomatik olarak deðiþtir</message>
+</label>
+<label define="TMSG_SEARCH_WHERE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Search where</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Où rechercher</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche im Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Dove cercare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Arama nerede</message>
+</label>
+<label define="TMSG_BEFORE_SEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Before selection</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Avant la sélection</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Oberhalb der Markierung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Prima della selezione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Seçimden önce</message>
+</label>
+<label define="TMSG_WITHIN_SEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Within selection</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Dans la sélection</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Innerhalb der Markierung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Nella selezione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Seçim içi</message>
+</label>
+<label define="TMSG_AFTER_SEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">After selection</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Après la sélection</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Unterhalb der Markierung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Dopo la selezione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Seçimden sonra</message>
+</label>
+<label define="TMSG_IN_WHOLE_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">In the whole document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Dans tout le document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Im gesamten Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">L\'intero documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Tüm belgede</message>
+</label>
+<label define="TMSG_DO_NOT_REPLACE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Do not replace</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauter</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nicht ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Non rimpiazzare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Deðiþtirme</message>
+</label>
+<label define="TMSG_STD_COLORS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Default colors</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Couleurs par défaut</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standardfarbe</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Colori di default</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Öntanýmlý renkler</message>
+</label>
+<label define="TMSG_BEFORE_CLOSING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">before closing it</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">avant de le fermer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">vorher?</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">prima di chiuderlo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">kapamadan önce</message>
+</label>
+<label define="TMSG_CLOSE_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Close a document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fermer un document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Schließe ein Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Chiudi un documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belgeyi kapa</message>
+</label>
+<label define="TMSG_NO_NAME">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">No_name</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sans_nom</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">unbenannt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Senza_nome</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýsimsiz</message>
+</label>
+<label define="TMSG_CREATE_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Create a document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Créer un document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Neues Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Crea un documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge yarat</message>
+</label>
+<label define="TMSG_DOC_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Type de document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokumententyp</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tipo di documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge tarzý</message>
+</label>
+<label define="TMSG_RENAME">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Rename</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Renommer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Umbenennen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Rinomina</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýsmini deðiþtir</message>
+</label>
+<label define="TMSG_MATH_SYMBOLS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Math symbols</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Symboles mathématiques</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Formelsatz</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Simboli matematici</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Matematik sembolleri</message>
+</label>
+<label define="TMSG_GRAPHICS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Graphics</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Graphiques</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Grafik</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Grafica</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Grafik</message>
+</label>
+<label define="TMSG_LATIN_ALPHABET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Latin alphabet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Alphabet latin</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Lateinisches Alphabet</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Alfabeto latino</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Latin alfabesi</message>
+</label>
+<label define="TMSG_GREEK_ALPHABET">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Greek alphabet</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Alphabet grec</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Griechiches Alphabet</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Alfabeto greco</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yunan alfabesi</message>
+</label>
+<label define="TMSG_PRES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Presentation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Présentation</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ansicht</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Presentazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Sunum</message>
+</label>
+<label define="TMSG_FILES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Files</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Fichiers</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dateien</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">File</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Dosyalar</message>
+</label>
+<label define="TMSG_OPEN_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Open a document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ouvrir un document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Lade Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Aprire un documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge aç</message>
+</label>
+<label define="TMSG_IMPORT_DOC_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Document type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Type du document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokumententyp</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tipo di documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge türü</message>
+</label>
+<label define="TMSG_VIEWS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Views</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Vues</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ansichten</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Viste</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Görünümler</message>
+</label>
+<label define="TMSG_CHANGE_FILTER">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Change filter</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Changer le filtre sur la vue</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ändere Filter</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Cambia filtro</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Süzgeç deðiþtir</message>
+</label>
+<label define="TMSG_VALUE_NOT_CHANGED">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Value not changed</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Valeur inchangée</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Wert nicht geändert</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Valore non modificato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Deðer deðiþtirilmedi</message>
+</label>
+<label define="TMSG_INCREASE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Increase</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Augmenter</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Erhöhe</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Incrementa</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Arttýr</message>
+</label>
+<label define="TMSG_DECREASE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Decrease</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Diminuer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Verringere</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Decrementa</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Azalt</message>
+</label>
+<label define="TMSG_VISIB">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Visibility</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Visibilité</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Sichtbarkeit</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Visibilità</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Görüþ mesafesi</message>
+</label>
+<label define="TMSG_CHANGE_ZOOM">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Character size difference</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Écart sur la taille des caractères</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Schiftgrößenunterschied</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Scarto sulla dimensione dei caratteri</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Karakter boyu farký</message>
+</label>
+<label define="TMSG_LIB_ZOOM">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Zoom</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Zoom</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Vergrößern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Zoom</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yaklaþ</message>
+</label>
+<label define="TMSG_SAVE_AS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Save as</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauver comme</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Speichern unter</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Salva con nome</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ýsimle kaydet</message>
+</label>
+<label define="TMSG_SAVE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Save</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Sauver</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Speichern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Salva</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kaydet</message>
+</label>
+<label define="TMSG_THOT_APP">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Thot</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Thot</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Thot</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Thot</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Thot</message>
+</label>
+<label define="TMSG_DOC_FORMAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Format</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Format</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Format</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Formattazione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Biçim</message>
+</label>
+<label define="TMSG_COPY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Copy</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Copier</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kopiere</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Copia</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kopyala</message>
+</label>
+<label define="TMSG_TEXT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Text</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Texte</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Text</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Testo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Metin</message>
+</label>
+<label define="TMSG_GRAPHIC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Graphic</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Graphique</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeichnung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Grafica</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Grafik</message>
+</label>
+<label define="TMSG_SYMBOL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Symbol</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Symbole</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Symbol</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Simbolo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Simge</message>
+</label>
+<label define="TMSG_PICTURE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Image</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Image</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Grafik</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Immagine</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Görüntü</message>
+</label>
+<label define="TMSG_EL_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:25 CEST 2000">Element type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Type d'élément</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Art des Elements</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">Tipo di elemento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Birim tipi</message>
+</label>
+<label define="TMSG_AFTER">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">after</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">après</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">nach</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:55 CEST 2000">dopo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">önce</message>
+</label>
+<label define="TMSG_BEFORE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">before</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">avant</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">vor</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">prima</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">sonra</message>
+</label>
+<label define="TMSG_AROUND">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">around</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">autour</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">um</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">intorno</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">civarýnda</message>
+</label>
+<label define="TMSG_INCLUDE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Include</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Inclure</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einfügen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Includi</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ekle</message>
+</label>
+<label define="TMSG_PASTE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Paste</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Coller</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einfügen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Incolla</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yapýþtýr</message>
+</label>
+<label define="TMSG_TO_CREATE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">to create</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">à créer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">erzeugen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">da creare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">to create</message>
+</label>
+<label define="TMSG_INSERT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Insert</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Insérer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einfügen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Inserisci</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ekle</message>
+</label>
+<label define="TMSG_PAGE_BRK">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Page break</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Saut de page</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Seitenumbruch</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Salto pagina</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Sayfa kesmesi</message>
+</label>
+<label define="TMSG_READ_ONLY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">(Read only)</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">(Lecture seule)</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">(schreibgeschützt)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">(Sola lettura)</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">(Salt-Oku)</message>
+</label>
+<label define="TMSG_SURROUND">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Surround</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Englober dans</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Umgebung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Ingloba</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Çevrele</message>
+</label>
+<label define="TMSG_CHANGE_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Change type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Changer en</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Typ ändern</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cambia tipo</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Tip deðiþtir</message>
+</label>
+<label define="TMSG_LANG_OF_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Language of element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Langue de l'élément</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Sprache des Elements</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Lingua dell'elemento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Birimin dili</message>
+</label>
+<label define="TMSG_INHERITED_LANG">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Inherited language:</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Langue héritée :</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Sprachvoreinstellung:</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Lingua ereditata:</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Alýnan dil</message>
+</label>
+<label define="TMSG_DO_NOT_CHANGE_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Do not change document!</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Ne changez pas de document !</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Bitte das Dokument nicht ändern!</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Non modificate il documento!</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belgeyi deðiþtirmeyin!</message>
+</label>
+<label define="TMSG_NOT_FOUND">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Not found</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Pas trouvé</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nicht gefunden</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Non trovato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Bulunamadý</message>
+</label>
+<label define="TMSG_SEARCH_IN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Search in</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Recherche dans</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche in</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cerca in</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ara</message>
+</label>
+<label define="TMSG_SEARCH_EMPTY_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Search empty elements</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Recherche élément vide</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche nach leeren Elementen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cerca gli elementi vuoti</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Boþ birimleri ara</message>
+</label>
+<label define="TMSG_SEARCH_EMPTY_REF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Search empty references</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Recherche référence vide</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche nach leeren Verknüpfungen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cerca i riferimenti vuoti</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Boþ kaynaklarý ara</message>
+</label>
+<label define="TMSG_SEARCH_REF_TO_EL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Search references to this element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:13 CEST 2000">Recherche les références à l'élément</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche nach Verknüpfungen zu diesem Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cerca i riferimenti a questo elemento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Bu birime kaynaklarý ara</message>
+</label>
+<label define="TMSG_LINK">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Link</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Lien</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Verknüpfung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Collegamento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Baðlantý</message>
+</label>
+<label define="TMSG_REF_IN_DOC">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Reference in document</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Référence dans le document\240</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Verknüpfungsziel im Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Riferimento nel documento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Belge içi kaynak</message>
+</label>
+<label define="TMSG_SEARCH">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Search</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Recherche</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Cerca</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ara</message>
+</label>
+<label define="TMSG_EL_RO">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Read only element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Elément en lecture seule</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Schreibgeschütztes Dokument</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Elemento a sola lettura</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Salt-oku birim</message>
+</label>
+<label define="TMSG_NOTHING_TO_REPLACE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Nothing to replace</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Plus de remplacements</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Nichts zu ersetzen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Nulla da rimpiazzare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Deðiþtirilecek bir þey yok</message>
+</label>
+<label define="TMSG_OPEN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Open</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Ouvrir</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Öffne</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Apri</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Aç</message>
+</label>
+<label define="TMSG_STD_CHAR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Standard characters</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Caractères standard</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standard Zeichensatz</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Caratteri standard</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Standart karakterler</message>
+</label>
+<label define="TMSG_STD_GRAPHICS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Standard graphics</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Graphiques standard</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standard Grafik</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Grafica standard</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Standart grafikler</message>
+</label>
+<label define="TMSG_STD_FORMAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Standard format</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Format standard</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standard Format</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Formato standard</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Standart biçim</message>
+</label>
+<label define="TMSG_STD_GEOMETRY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Standard geometry</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Géométrie standard</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Standard Geometrie</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Geometria standard</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Standart geometri</message>
+</label>
+<label define="TMSG_TYPOGRAPHIC_POINTS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">pt</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">pt</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">pt</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">pt</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">pt</message>
+</label>
+<label define="TMSG_LINE_STYLE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Line style</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Style des traits</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Linienart</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Stile delle linee</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Çizgi tarzý</message>
+</label>
+<label define="TMSG_LINE_WEIGHT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Line weight</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Epaisseur des traits</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Linienstärke</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Spessore delle linee</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Çizgi aðýrlýðý</message>
+</label>
+<label define="TMSG_FILL_PATTERN">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Fill pattern</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Motif de remplissage</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Füllmuster</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Motivo di riempimento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Doldurma þekli</message>
+</label>
+<label define="TMSG_SPLIT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Split</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Diviser</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Teilen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Dividi</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ayýr</message>
+</label>
+<label define="TMSG_OBJECT_TYPE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Object type</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Type d'objet</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Objekttyp</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Tipo di oggetto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Nesne türü</message>
+</label>
+<label define="TMSG_GOTO_PAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Goto page number:</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Aller page numéro :</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Gehe zu Seite Nr.:</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Vai a pagina numero:</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Numaralý sayfaya git</message>
+</label>
+<label define="TMSG_ANY">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Any</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">any</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">egal</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Any</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Herhangi</message>
+</label>
+<label define="TMSG_ATTR_TO_SEARCH">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Attribute to search</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Attribut à chercher</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Attribut suchen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Attributo da cercare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Aranacak olan özellik</message>
+</label>
+<label define="TMSG_TYPE_TO_SEARCH">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Type to search</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Type à chercher</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Suche nach Typ</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Tipo da cercare</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Aranacak olan tip</message>
+</label>
+<label define="TMSG_NATURES">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Natures</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Natures</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokumententyp</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Nature</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Natures</message>
+</label>
+<label define="TMSG_VALUE_OF_ATTR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Attribute value:</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Valeur de l'attribut :</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Wert des Attributs:</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Valore dell\'attributo:</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Özellik deðeri</message>
+</label>
+<label define="TMSG_UNKNOWN_ATTR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Unknown attribute</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Attribut inconnu</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Unbekanntes Attribut</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Attributo sconosciuto</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Bilinmeyen özellik</message>
+</label>
+<label define="TMSG_CREATE_EL_REF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Create referenced element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Créer l\'élément à référencer</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Erzeuge Verknüpfungsziel</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Crea l\'elemento riferito</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kaynaklý birim yarat</message>
+</label>
+<label define="TMSG_SHOW_EL_REF">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Show referenced element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Le désigner</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeige Verknüpfungsziel</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Mostra l\'elemento riferito</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Kaynaklý birim göster</message>
+</label>
+<label define="TMSG_MODE_INSERT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Insertion mode</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Mode d\'insertion</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Einfügemodus</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Modo di inserzione</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Ekleme kipi</message>
+</label>
+<label define="TMSG_CANCEL">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Cancel</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Annuler</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Abbrechen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Annulla</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Vazgeç</message>
+</label>
+<label define="TMSG_ERROR_PS_TRANSLATION">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Error in PostScript translation</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Erreur dans la traduction en PostScript</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Fehler in der PostScript-Erkennung</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Errore nella traduzione in PostScript</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">PostScript dönüþümünde hata</message>
+</label>
+<label define="TMSG_UNKNOWN_PRINTER">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Command refused by the spooler "%s"</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Commande refusée par le spooler : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Auftrag vom Druckspooler "%s" zurückgeweisen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Comando rifiutato dallo spooler "%s"</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Komut "%s" tarafýndan reddedildi.</message>
+</label>
+<label define="TMSG_CANNOT_CREATE_PS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Cannot create "%s"</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Création impossible : %s</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann "%s" nicht erzeugen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Impossibile creare "%s"</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">"%s" yaratýlamadý</message>
+</label>
+<label define="TMSG_GLOBAL_LAYOUT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Global Layout</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Présentation générale</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Seitenformat</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Presentazione generale</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Genel biçim</message>
+</label>
+<label define="TMSG_UNABLE_LINK_NEW_ELEM">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Unable to link the new element</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Impossible de lier le nouvel élément</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Kann des erzeugte Element nicht verweisen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Impossibile collegare il nuovo elemento</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Yeni birime baðlantý yapýlamadý</message>
+</label>
+<label define="TMSG_CHAR_ENCODING">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Character encoding</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Alphabet</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Zeichensatz</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Codifica dei caratteri</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Karakter kodlamasý</message>
+</label>
+<label define="TMSG_NO_LANGUAGE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">No language</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Aucun</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Keine Sprache</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Nessuna lingua</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Dil yok</message>
+</label>
+<label define="TMSG_OVERLINE">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Overline</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Surligné</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Überstrichen</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Soprassegnato</message>
+	<message xml::lang="tr" last_update="Fri May 26 10:38:13 CEST 2000">Üstçizgi</message>
+</label>
+<label define="TMSG_DOCUMENT_FORMAT">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Document format</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Format de document</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Dokumentenformat</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Formato del documento</message>
+</label>
+<label define="TMSG_EVENTS">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Events</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Événements</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Ereignisse (Events)</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Eventi</message>
+</label>
+<label define="TMSG_DEL_ATTR">
+	<message xml::lang="en" last_update="Fri May 26 10:14:26 CEST 2000">Remove attribute</message>
+	<message xml::lang="fr" last_update="Fri May 26 10:36:14 CEST 2000">Retire l'attribut</message>
+	<message xml::lang="de" last_update="Fri May 26 10:37:48 CEST 2000">Lösche Attribut</message>
+	<message xml::lang="it" last_update="Fri May 26 10:37:56 CEST 2000">Rimuovi l\'attributo</message>
+</label>
+<label define="TMSG_PROFILE">
+</label>
+<label define="TMSG_LIB_MSG_MAX">
+<!--this label must still empty end the latest because itshows the end of labels that are used for Amaya --></label>
+</messages>
+<!--end of base --></base_message>

@@ -1,3 +1,4 @@
+# encoding= latin1
 0 File
 1 Apri
 2 Cancella
@@ -15,7 +16,7 @@
 14 Finito!
 15 Seleziona l'obiettivo
 16 Obiettivo non valido
-17 **Indirizzo
+17 Indirizzo
 18 Titolo
 19 Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?
 20 Redirezione durante il caricamento di %s
@@ -125,82 +126,80 @@
 124 trasferimenti in coda
 125 Sommario
 126 Sommario dei collegamenti
-127 Java Applet
-128 Repeat Mode
-129 repeat
-130 repeat-x
-131 La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?
-132 Autenticazione fallita. Vuoi riprovare?
-133 L'operazione sarà rediretta. Vuoi continuare?
-134 Numero di righe
-135 Numero di colonne
-136 Bordo
-137 Testo alternativo
-138 Il testo alternativo è obbligatorio
-139 Stampa URL
-140 Applica
-141 Predefinite
-142 Svuota la cache
-143 Preferenze sulla cache
-144 Abilita la cache
-145 Proteggi i documenti nella cache
-146 Modo non in linea
-147 Ignora le scadenze: header
-148 Directory della cache
-149 Dimensione della cache (Mb)
-150 Dimensione dell'indice della cache (Mb)
-151 Preferenze sull'uso dei proxy
-152 HTTP proxy (es., http://groucho.marx.edu)
-153 Non usare il proxy su questi domini (es., www.w3.org)
-154 Preferenze generali
-155 Home Page
-156 Ritardo del ToolTip (ms)
-157 Ritardo del doppio click (ms)
-158 Dimensione dei caratteri dei menu
-159 Ingrandimento della fonte
-160 Lingua delle finestre di dialogo
-161 Abilita le sequenze multitasto
-162 Mostra le immagini di sfondo
-163 Il doppio click attiva il collegamento
-164 Preferenze per la pubblicazione
-165 Usa gli ETAGS e le precondizioni
-166 Verifica ogni PUT con un GET
-167 Nome di default per gli URL che terminano con '/'
-168 Preferenze della geometria
-169 Salva la geometria corrente
-170 Ripristina la geometria di default
-171 La modifica sarà effettiva quando aprirai una nuova finestra.
-172 Preferenze dei colori
-173 Colore in primo piano nei documenti
-174 Colore dello sfondo nei documenti
-175 Colore in primo piano nei menu
-176 Colore dello sfondo nei menu
-177 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-178 Home
-179 Lista delle lingue preferite, come "it, en, fr":
-180 File di definizione dei profili
-181 Selezione dei profili
-182 Queste modifiche saranno effettive alla prossima esecuzione
-183 Preferenze dei profili
-184 Digita l'URL del server dei modelli
-185 Preferenze sui modelli
-186 Consenti la redirezione automatica dei PUT su questi domini
-187 Ignora gli stili CSS
-188 Trasforma tipo
-189 (separa ogni campo con uno spazio)
-190 Escludi l'utilizzo del proxy su questi domini
-191 Utilizza il proxy solo su questi domini
-192 Nome del carattere
-193 Directory dell'utente
-194 Directory temporanea
-195 Usa la palette
-196 Negoziazione della lingua
-197 Errore XML - si consiglia di verificare il documento
-198 Configurazione delle annotazioni
-199 Nome utente
-200 Server per la pubblicazione
-201 Server per le annotazioni
-202 Caricamento automatico delle annotazioni
-203 **Selection color
-204 **Insert point color
-
+127 Repeat Mode
+128 repeat
+129 repeat-x
+130 La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?
+131 Autenticazione fallita. Vuoi riprovare?
+132 L'operazione sarà rediretta. Vuoi continuare?
+133 Numero di righe
+134 Numero di colonne
+135 Bordo
+136 Testo alternativo
+137 Il testo alternativo è obbligatorio
+138 Stampa URL
+139 Applica
+140 Predefinite
+141 Svuota la cache
+142 Preferenze sulla cache
+143 Abilita la cache
+144 Proteggi i documenti nella cache
+145 Modo non in linea
+146 Ignora le scadenze: header
+147 Directory della cache
+148 Dimensione della cache (Mb)
+149 Dimensione dell'indice della cache (Mb)
+150 Preferenze sull'uso dei proxy
+151 HTTP proxy (es., http://groucho.marx.edu)
+152 Non usare il proxy su questi domini (es., www.w3.org)
+153 Preferenze generali
+154 Home Page
+155 Ritardo del ToolTip (ms)
+156 Ritardo del doppio click (ms)
+157 Dimensione dei caratteri dei menu
+158 Ingrandimento della fonte
+159 Lingua delle finestre di dialogo
+160 Abilita le sequenze multitasto
+161 Mostra le immagini di sfondo
+162 Il doppio click attiva il collegamento
+163 Preferenze per la pubblicazione
+164 Usa gli ETAGS e le precondizioni
+165 Verifica ogni PUT con un GET
+166 Nome di default per gli URL che terminano con '/'
+167 Preferenze della geometria
+168 Salva la geometria corrente
+169 Ripristina la geometria di default
+170 La modifica sarà effettiva quando aprirai una nuova finestra.
+171 Preferenze dei colori
+172 Colore in primo piano nei documenti
+173 Colore dello sfondo nei documenti
+174 Colore in primo piano nei menu
+175 Colore dello sfondo nei menu
+176 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+177 Home
+178 Lista delle lingue preferite, come "it, en, fr":
+179 File di definizione dei profili
+180 Selezione dei profili
+181 Queste modifiche saranno effettive alla prossima esecuzione
+182 Preferenze dei profili
+183 Digita l'URL del server dei modelli
+184 Preferenze sui modelli
+185 Consenti la redirezione automatica dei PUT su questi domini
+186 Ignora gli stili CSS
+187 Trasforma tipo
+188 (separa ogni campo con uno spazio)
+189 Escludi l'utilizzo del proxy su questi domini
+190 Utilizza il proxy solo su questi domini
+191 Nome del carattere
+192 Directory dell'utente
+193 Directory temporanea
+194 Usa la palette
+195 Negoziazione della lingua
+196 Errore XML - si consiglia di verificare il documento
+197 Configurazione delle annotazioni
+198 Nome utente
+199 Server per la pubblicazione
+200 Server per le annotazioni
+201 Caricamento automatico delle annotazioni
+202 **Selection color
+203 **Caret color

@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Dateien
 1 Datei
 2 Löschen
@@ -15,9 +16,9 @@
 14 Laden beendet!
 15 Wähle Ziel
 16 Ungültiges Ziel
-17 **Adresse
+17 Adresse
 18 Titel
-19 Alle Änderungen gehen verloren - Möchten Sie fortfahren ? 
+19 Alle Änderungen gehen verloren - Möchten Sie fortfahren ?
 20 Lade Weiterleitung: %s
 21 Zu viele Weiterleitungen
 22 Kann lokale Datei nicht anlegen: %s
@@ -68,8 +69,8 @@
 67 Grafik(unter)verzeichnis
 68 Objektadresse
 69 Stylesheetdatei wählen
-70 der W3C Web-Browser und -Editor 
-71 ** (mail issues to www-amaya@w3.org))
+70 der W3C Web-Browser und -Editor
+71 **(mail issues to www-amaya@w3.org)
 72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
 73 Nur Standardtyp erlaubt
 74 Aktualisierung der Verknüpfung : %s%% erfolgreich
@@ -125,82 +126,80 @@
 124 Wartende Übertragungen
 125 mit Inhaltsverzeichnis
 126 mit Verknüpfungen
-127 Java Applets
-128 Wiederholungsmodus
-129 Wiederholung
-130 Wiederholung x
-131 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
-132 Login gescheitert. Wiederholen?
-133 Umleitung folgen?
-134 Zeilen: 
-135 Spalten: 
-136 Rahmen: 
-137 Alternativer Text
-138 Alternativer Text ist erforderlich!
-139 mit URLpply
-140 **Apply
-141 **Defaults
-142 **Flush cache
-143 **Cache Preferences
-144 **Enable cache
-145 **Cache protected documents
-146 **Disconnected mode
-147 **Ignore Expires: header
-148 **Cache directory
-149 **Cache size (Mb)
-150 **Cache entry size limit (Mb)
-151 **Proxy Preferences
-152 **HTTP proxy
-153 **No proxy on these domains
-154 **General Preferences
-155 **Home Page
-156 **ToolTip delay (ms)
-157 **Double click delay (ms)
-158 **Menu font size
-159 **Font zoom
-160 **Dialogue language
-161 **Enable multi-key (`+a=à)
-162 **Show background images
-163 **Double click activates link
-164 **Publishing Preferences
-165 **Use ETAGS and preconditions
-166 **Verify each PUT with a GET
-167 **Default name for URLs finishing in '/'
-168 **Geometry Preferences
-169 **Save current geometry
-170 **Restore default geometry
-171 **The change will be effective when you open a new window.
-172 **Color Preferences
-173 **Document foreground color
-174 **Document background color
-175 **Menu foreground color
-176 **Menu background color
-177 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-178 **Home
-179 **List of preferred languages like "en, fr":
-180 **Location of profiles definition file 
-181 **Profile Selection
-182 **These changes won't be effective until Amaya is retarted
-183 **Profiles Preferences
-184 **Enter the URL of the templates server
-185 **Templates Preferences
-186 **Allow automatic PUT redirections on these domains
-187 **Ignore style sheets
-188 Umformatieren
-189 **(separate each entry with a space)
-190 **No proxy on these domains
-191 **Only proxy these domains
-192 **Character name
-193 **Amaya user directory
-194 **Temporary directory
-195 **Use palette
-196 **Language Negotiation
-197 **The XML parsing failed - please check your document
-198 **Configuration for annotations
-199 **Annotation user
-200 **Annotation post server
-201 **Annotation servers
-202 **Autoload annotations
-203 **Selection color
-204 **Insert point color
-
+127 Wiederholungsmodus
+128 Wiederholung
+129 Wiederholung x
+130 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+131 Login gescheitert. Wiederholen?
+132 Umleitung folgen?
+133 Zeilen:
+134 Spalten:
+135 Rahmen:
+136 Alternativer Text
+137 Alternativer Text ist erforderlich!
+138 mit URLpply
+139 **Apply
+140 **Defaults
+141 **Flush cache
+142 **Cache Preferences
+143 **Enable cache
+144 **Cache protected documents
+145 **Disconnected mode
+146 **Ignore Expires: header
+147 **Cache directory
+148 **Cache size (Mb)
+149 **Cache entry size limit (Mb)
+150 **Proxy Preferences
+151 **HTTP proxy (e.g., www.w3.org:1234)
+152 **Proxy domain list (e.g., lists.w3.org)
+153 **General Preferences
+154 **Home Page
+155 **ToolTip delay (ms)
+156 **Double click delay (ms)
+157 **Menu font size
+158 **Font zoom
+159 **Dialogue language
+160 **Enable multi-key (`+a=à)
+161 **Show background images
+162 **Double click activates link
+163 **Publishing Preferences
+164 **Use ETAGS and preconditions
+165 **Verify each PUT with a GET
+166 **Default name for URLs finishing in '/'
+167 **Geometry Preferences
+168 **Save current geometry
+169 **Restore default geometry
+170 **The change will be effective when you open a new window.
+171 **Color Preferences
+172 **Document foreground color
+173 **Document background color
+174 **Menu foreground color
+175 **Menu background color
+176 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
+177 **Home
+178 **List of preferred languages like "en, fr":
+179 **Location of profiles definition file
+180 **Profile Selection
+181 **These changes won't be effective until Amaya is restarted
+182 **Profiles Preferences
+183 **Enter the URL of the templates server
+184 **Templates Preferences
+185 **Allow automatic PUT redirections on these domains
+186 **Ignore style sheets
+187 Umformatieren
+188 **(separate each entry with a space)
+189 **No proxy on these domains
+190 **Only proxy these domains
+191 **Character name
+192 **Amaya user directory
+193 **Temporary directory
+194 **Use palette
+195 **Language Negotiation
+196 **The XML parsing failed - please check your document
+197 **Configuration for annotations
+198 **Annotation user
+199 **Annotation post server
+200 **Annotation servers
+201 **Autoload annotations
+202 **Selection color
+203 **Caret color
