@@ -1605,6 +1605,7 @@ raptor_xml_start_element_handler(void *user_data,
               attr->value=NULL;
               raptor_free_ns_name(attr);
               attr=NULL;
+	      break;
             }
         } /* end if RDF M&S namespaced-prefixed attributes */
 
