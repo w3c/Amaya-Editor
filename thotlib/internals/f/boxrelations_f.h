@@ -30,13 +30,14 @@ extern void ComputeAxisRelation ( AbPosition rule,
                                   PtrBox pBox,
                                   int frame,
                                   ThotBool horizRef );
-extern void ClearXOutOfStructRelation ( PtrBox pTargetBox );
-extern void ClearPosRelation ( PtrBox pOrginBox,
+extern void ClearOutOfStructRelation ( PtrBox pBox );
+extern void ClearPosRelation ( PtrBox pBox,
                                ThotBool horizRef );
-extern void ClearAxisRelation ( PtrBox pOrginBox,
+extern void ClearAxisRelation ( PtrBox pBox,
                                 ThotBool horizRef );
-extern void ClearAllRelations ( PtrBox pTargetBox );
-extern void ClearDimRelation ( PtrBox pOrginBox,
+extern void ClearAllRelations ( PtrBox pBox,
+                                int frame );
+extern void ClearDimRelation ( PtrBox pBox,
                                ThotBool horizRef,
                                int frame );
 
@@ -66,13 +67,14 @@ extern void ComputeAxisRelation (/* AbPosition rule,
                                     PtrBox pBox,
                                     int frame,
                                     ThotBool horizRef */);
-extern void ClearXOutOfStructRelation (/* PtrBox pTargetBox */);
-extern void ClearPosRelation (/* PtrBox pOrginBox,
+extern void ClearOutOfStructRelation (/* PtrBox pBox */);
+extern void ClearPosRelation (/* PtrBox pBox,
                                  ThotBool horizRef */);
-extern void ClearAxisRelation (/* PtrBox pOrginBox,
+extern void ClearAxisRelation (/* PtrBox pBox,
                                   ThotBool horizRef */);
-extern void ClearAllRelations (/* PtrBox pTargetBox */);
-extern void ClearDimRelation (/* PtrBox pOrginBox,
+extern void ClearAllRelations (/* PtrBox pBox,
+                                  int frame */);
+extern void ClearDimRelation (/* PtrBox pBox,
                                  ThotBool horizRef,
                                  int frame */);
 

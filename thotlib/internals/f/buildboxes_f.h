@@ -45,7 +45,7 @@ extern void BoxUpdate ( PtrBox pBox,
                         int frame,
                         ThotBool splitBox );
 extern void RemoveBoxes ( PtrAbstractBox pAb,
-                          ThotBool toRemake,
+                          ThotBool rebuild,
                           int frame );
 extern void RecordEnclosing ( PtrBox pBox,
                               ThotBool horizRef );
@@ -100,7 +100,7 @@ extern void BoxUpdate (/* PtrBox pBox,
                           int frame,
                           ThotBool splitBox */);
 extern void RemoveBoxes (/* PtrAbstractBox pAb,
-                            ThotBool toRemake,
+                            ThotBool rebuild,
                             int frame */);
 extern void RecordEnclosing (/* PtrBox pBox,
                                 ThotBool horizRef */);

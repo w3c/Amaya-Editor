@@ -1830,15 +1830,14 @@ void   BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int
 
 
 /*----------------------------------------------------------------------
-   RemoveBoxes libere toutes les boites correpondant aux paves inclus
-   dans pAb y compris celle du pave passe' en parametre    
-   toRemake est vrai si la boite doit etre recree          
-   immediatement apres.                                    
+   RemoveBoxes removes the cureent box and all included boxes.
+   The parameter toRemake is TRUE when the box will be recreated
+   immediatly.
   ----------------------------------------------------------------------*/
-void                RemoveBoxes (PtrAbstractBox pAb, ThotBool toRemake, int frame)
+void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 {
   PtrAbstractBox      pChildAb;
-  PtrBox              pCurrentBox, pPieceBox;
+  PtrBox              pBox, pPieceBox;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
 
@@ -1847,70 +1846,70 @@ void                RemoveBoxes (PtrAbstractBox pAb, ThotBool toRemake, int fram
       if (pAb->AbBox != NULL)
 	{
 	  /* Liberation des lignes et boites coupees */
-	  pCurrentBox = pAb->AbBox;
+	  pBox = pAb->AbBox;
+	  /* Remove out of structure relations */
+	  ClearOutOfStructRelation (pBox);
 	  if (pAb->AbLeafType == LtCompound)
 	    {
 	      /* unregister the box */
-	      pCurrentBox->BxDisplay = FALSE;
-	      pCurrentBox->BxFill = FALSE;
+	      pBox->BxDisplay = FALSE;
+	      pBox->BxFill = FALSE;
 	    }
-	  if (pCurrentBox->BxType == BoBlock)
-	    RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
-	  else if (pCurrentBox->BxType == BoTable && ThotLocalActions[T_cleartable])
+	  if (pBox->BxType == BoBlock)
+	    RemoveLines (pBox, frame, pBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
+	  else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
 	    {
 	      (*ThotLocalActions[T_cleartable]) (pAb);
 	      pAb->AbDead = TRUE;
 	    }
-	  else if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+	  else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
 	    (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
-	  else if (pCurrentBox->BxType == BoRow && ThotLocalActions[T_checktable])
+	  else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
 	    (*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
 	  else if (pAb->AbLeafType == LtPolyLine)
-	    FreePolyline (pCurrentBox);
+	    FreePolyline (pBox);
 	  else if (pAb->AbLeafType == LtPath)
-	    FreePath (pCurrentBox);
+	    FreePath (pBox);
 	  else if (pAb->AbLeafType == LtPicture)
 	    {
-	      UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
+	      UnmapImage((PictInfo *)pBox->BxPictInfo);
 	      FreePictInfo ((PictInfo *)pAb->AbPictInfo);
 	    }
-	  else if (pCurrentBox->BxType == BoSplit)
+	  else if (pBox->BxType == BoSplit)
 	    {
 	      /* libere les boites generees pour la mise en lignes */
-	      pPieceBox = pCurrentBox->BxNexChild;
-	      pCurrentBox->BxNexChild = NULL;
+	      pPieceBox = pBox->BxNexChild;
+	      pBox->BxNexChild = NULL;
 	      while (pPieceBox != NULL)
 		pPieceBox = FreeBox (pPieceBox);
 	    }
 
 	  pChildAb = pAb->AbFirstEnclosed;
-	  pAb->AbNew = toRemake;
-	  if (toRemake)
+	  pAb->AbNew = rebuild;
+	  if (rebuild)
 	    {
 	      /* Faut-il restaurer les regles d'une boite elastique */
-	      if (pCurrentBox->BxHorizFlex && pCurrentBox->BxHorizInverted)
-		XEdgesExchange (pCurrentBox, OpHorizDep);
+	      if (pBox->BxHorizFlex && pBox->BxHorizInverted)
+		XEdgesExchange (pBox, OpHorizDep);
 	      
-	      if (pCurrentBox->BxVertFlex && pCurrentBox->BxVertInverted)
-		YEdgesExchange (pCurrentBox, OpVertDep);
+	      if (pBox->BxVertFlex && pBox->BxVertInverted)
+		YEdgesExchange (pBox, OpVertDep);
 	      pAb->AbDead = FALSE;
 	    }
 
 	  /* Liberation des boites des paves inclus */
 	  while (pChildAb != NULL)
 	    {
-	      RemoveBoxes (pChildAb, toRemake, frame);
+	      RemoveBoxes (pChildAb, rebuild, frame);
 	      pChildAb = pChildAb->AbNext;	/* while */
 	    }
 
-	  /* Suppression des references a pCurrentBox dans la selection */
-	  if (ViewFrameTable[frame - 1].FrSelectionBegin.VsBox == pCurrentBox)
+	  /* Suppression des references a pBox dans la selection */
+	  if (ViewFrameTable[frame - 1].FrSelectionBegin.VsBox == pBox)
 	    ViewFrameTable[frame - 1].FrSelectionBegin.VsBox = NULL;
-	  if (ViewFrameTable[frame - 1].FrSelectionEnd.VsBox == pCurrentBox)
+	  if (ViewFrameTable[frame - 1].FrSelectionEnd.VsBox == pBox)
 	    ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
-	  /* Liberation des liens eventuels hors hierarchie */
-	  ClearXOutOfStructRelation (pCurrentBox);
 	  /* Liberation de la boite */
 	  pAb->AbBox = FreeBox (pAb->AbBox);
 	  pAb->AbBox = NULL;
@@ -2347,11 +2346,9 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 	pNextBox = pNextBox->BxNexChild;
 
       /* Destruction */
-      ClearAllRelations (pBox);
-      ClearDimRelation (pBox, TRUE, frame);
-      ClearDimRelation (pBox, FALSE, frame);
       pCell = GetParentCell (pCurrentBox);
       isCell = pAb->AbBox->BxType == BoCell;
+      ClearAllRelations (pBox, frame);
       RemoveBoxes (pAb, FALSE, frame);
       
       /* update the list of leaf boxes */

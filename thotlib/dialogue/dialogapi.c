@@ -1346,13 +1346,14 @@ void             ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg, Thot
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-ThotBool   WIN_TtaInitDialogue (CHAR_T* server)
+ThotBool   WIN_TtaInitDialogue (char *server)
 #else  /* _WINDOWS */
-void       TtaInitDialogue (CHAR_T* server, ThotAppContext * app_context, Display ** Dp)
+void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display **Dp)
 #endif /* _WINDOWS */
 {
 #ifndef _WINDOWS
    int                 n;
+   char               *arg;
 #endif /* !_WINDOWS */
 #ifdef _GTK
    gtk_init(&appArgc,&appArgv);
@@ -1415,8 +1416,9 @@ void       TtaInitDialogue (CHAR_T* server, ThotAppContext * app_context, Displa
    RootShell = 0;
    XtToolkitInitialize ();
    n = 0;
+   arg = NULL;
    Def_AppCont = XtCreateApplicationContext ();
-   GDp = XtOpenDisplay (Def_AppCont, server, "appli", "Dialogue", NULL, 0, &n, NULL);
+   GDp = XtOpenDisplay (Def_AppCont, server, "appli", "Dialogue", NULL, 0, &n, &arg);
    if (!GDp)
       /* Connexion au serveur X impossible */
       return;
