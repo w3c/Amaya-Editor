@@ -789,7 +789,7 @@ char                  *newURL;
 			 break;
 		       TtaGiveTextAttributeValue (attr, buf, &buflen);
 	       
-		       /* extract the image name */
+		       /* extract the new image name and new location */
 		       NormalizeURL (buf, SavingDocument, tempname, imgname);
 		       /* save the new SRC attr */
 		       if (imgbase[0] != EOS)
@@ -803,6 +803,8 @@ char                  *newURL;
 			 /* in same directory -> local name */
 			 strcpy (url, imgname);
 
+		       TtaSetAttributeText (attr, url, el, SavingDocument);
+
 DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 
                        if ((src_is_local) && (!dst_is_local))
@@ -814,13 +816,11 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", buf);)
 		           AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);
 			 }
 
-		       TtaSetAttributeText (attr, url, el, SavingDocument);
-
 		       /* mark the image descriptor or copy the file */
 		       if (dst_is_local)
 			 {
 			   /* copy the file to the new location */
-			   if (IsHTTPPath (tempname))
+			   if (IsW3Path (tempname) || IsHTTPPath (oldpath))
 			     {
 			       /* it was a remote image */
 			       /* change tempname to the local temporary name */
@@ -851,7 +851,7 @@ DBG(fprintf(stderr, "     Copying image locally from %s to %s\n", tempname, temp
 			   /* save on a remote server */
 			   if (IsW3Path (tempname) || IsHTTPPath (oldpath))
 			     {
-			       /* it was already a remote image */
+			       /* it was a remote image */
 			       /* change tempname to the local temporary name */
 			       strcpy (tempfile, localpath);
 			       strcat (tempfile, imgname);

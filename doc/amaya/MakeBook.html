@@ -6,8 +6,8 @@ Making Book</title>
 <meta name="GENERATOR" content="amaya V1.0a Beta">
 </head>
 <body>
-<h2><a name="L1065">Assembling large document collections</a></h2>
 
+<h2><a name="L1065">Assembling large document collections</a></h2>
 <p>
 Amaya allows you to handle document collections. Such a collection may, for
 instance, represent a technical documentation constituted by several web
@@ -23,15 +23,24 @@ addresses this problem with the "make book" function. You just have to use
 typed links for linking chapters: associate a <code>rel=chapter</code> or
 <code>rel=subdocument</code> attribute with the anchor that refers to a
 chapter (select the <code>A</code> element and use the <strong><a
-href="Attributes.html#L1073">Attributes</a></strong>
-menu). Then, when activating the "make book" function, all blocks
-(<code>LI</code> elements in the above example) containing a typed link to a
-chapter will be replaced by the corresponding actual web pages, and you will
-get a unique document containing the whole collection. This large document can
-then be <a
+href="Attributes.html#L1073">Attributes</a></strong> menu).</p>
+<p>
+A chapter or a sub-document can be:</p>
+<ul>
+<li>
+either a whole external document,
+<li>
+or just a part of an external document. In this case we suggest to define
+normally a DIV element.
+</ul>
+<p>
+Then, when activating the "make book" function, all blocks (<code>LI</code>
+elements in the above example) containing a typed link to a chapter will be
+replaced by the corresponding actual web pages, and you will get a unique
+document containing the whole collection. This large document can then be <a
 href="Numbering.html#L1064">numbered</a> and <a
-href="Printing.html#L1062">printed</a> with a
-complete table of contents and a list of all links.</p>
+href="Printing.html#L1062">printed</a> with a complete table of contents and a
+list of all links.</p>
 <p>
 To activate this tool, choose the <strong>Make Book</strong> item from the
 <strong>Special</strong> menu.</p>

@@ -436,9 +436,9 @@ int                 fg;
    int                 middle;	/* cross-over position   */
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
-
    int                 l_start;	/* start of the line     */
    int                 l_end;	/* end of the line       */
+   int                 shift;	/* shifting of drawing   */
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
@@ -449,9 +449,10 @@ int                 fg;
 	fheight = FontHeight (font);
 	ascent = FontAscent (font);
 	thickness = ((fheight / 20) + 1) * (thick + 1);
-	height = y + (2 - thick) * thickness;
-	bottom = y + ascent + (2 - thick) * thickness;
-	middle = y + height / 2;
+	shift = thick * thickness;
+	height = y + shift;
+	bottom = y + ascent + 2 + shift;
+	middle = y + fheight / 2 - shift;
 	l_start = X;		/* get current X value (cf DrawString) */
 	l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
 

@@ -426,16 +426,16 @@ int                 fg;
   - 3 = cross-over
   
                   (x,y)
-          __________________+_______________________________\_/__
-          /|\    I    I          /|\       /|\   /|\         |
-           |     I\  /I           |         |     |       ___|height
-           |  ___I_\/_I_______    |ascent   |     |middle   / \
+          __________________+_______________________________\_/__ height
+          /|\    I    I          /|\       /|\   /|\        
+           |     I\  /I           |         |     |       
+           |  ___I_\/_I_______    |ascent   |     |  
    fheight |     I    I  I  \     |         |     |
-           |     I    I  I  |     |         |  __\|/
-           |  ___I____I__I__/____\|/        | bottom
-           |             I             ____\|/
-	   |             I
-	  \|/____________I_
+           |     I    I  I  |     |         |  __\|/ middle
+           |  ___I____I__I__/____\|/        | 
+           |             I                  |
+	   |             I                  |
+	  \|/____________I_________________\|/_ bottom
 	      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -473,10 +473,10 @@ int                 fg;
 	fheight = FontHeight (font);
 	ascent = FontAscent (font);
 	thickness = ((fheight / 20) + 1) * (thick + 1);
-	shift = (2 - thick) * thickness;
+	shift = thick * thickness;
 	height = y + shift;
-	bottom = y + ascent + shift;
-	middle = y + height / 2 + shift;
+	bottom = y + ascent + 2 + shift;
+	middle = y + fheight / 2 - shift;
 
 	/*
 	 * for an underline independant of the font add

@@ -19,8 +19,8 @@ exec_prefix = @exec_prefix@
 bindir = @bindir@
 datadir = @datadir@
 
-COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/typ ../bin/tra ../bin/app \
-          ../bin/printstr ../bin/printprs ../bin/printtyp
+COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/tra ../bin/app \
+          ../bin/printstr
 
 GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 
