@@ -230,8 +230,8 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_funct
       filter = (AnnotFilterData *) list_item->object;
       if (filter->annot == annot)
 	  break;
-      list_item = list_item->next;
       prev = list_item;
+      list_item = list_item->next;
     }
 
   if (list_item)
