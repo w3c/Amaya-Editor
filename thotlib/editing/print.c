@@ -180,7 +180,8 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
      {
      case WM_INITDIALOG:
        GHwnAbort = hwnd;
-       /* EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED); */
+	   /* show the little icon on the top left corner of the window */
+       EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
 	   ShowWindow (hwnd, SW_NORMAL);
 	   SetFocus (hwnd);
 	   UpdateWindow (hwnd);
@@ -1673,8 +1674,9 @@ static void PrintView (PtrDocument pDoc)
        /* Document sans marques de pages */
        /* probablement un graphique: il ne faut pas clipper */
 #ifdef _WINDOWS
+	   /* control the Abort printing button */
        if (gbAbort)
-	 return;
+  	      return;
        if (TtPrinterDC)
 	 {
 	   if ((StartPage (TtPrinterDC)) <= 0)
@@ -1691,6 +1693,13 @@ static void PrintView (PtrDocument pDoc)
        /* traite une page apres l'autre */
        do
 	 {
+#ifdef _WINDOWS
+		 /* control the Abort printing button */
+		 AbortProc (TtPrinterDC, 0);
+		 if (gbAbort)
+			 return;
+#endif /* _WINDOWS */
+
 	   /* cherche la premiere marque de la page suivante, en ignorant */
 	   /* les rappels de page. */
 	   pNextPageAb = NextPage (pPageAb);
@@ -2037,12 +2046,17 @@ static int       n = 1;
 #endif
 
 #ifdef _WINDOWS
+  /* control the Abort printing button */
   if (gbAbort)
     return;
   if (TtPrinterDC)
     {
       if ((StartPage (TtPrinterDC)) <= 0)
         WinErrorBox (NULL, "PrintOnePage (1)");
+      /* control the Abort printing button */
+	  AbortProc (TtPrinterDC, 0);
+      if (gbAbort)
+        return;
     }
   else
 #endif /* _WINDOWS */
