@@ -1383,7 +1383,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 				       "warning - unsupported language: %s",
 				       attrValue);
 			      if (isXML)
-				XmlParseError (errorParsing, msgBuffer, 0);
+				XmlParseError (warningMessage, msgBuffer, 0);
 			      else
 				HTMLParseError (context->doc, msgBuffer);
 			    }

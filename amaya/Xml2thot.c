@@ -3043,7 +3043,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
 		 {
 		   sprintf (msgBuffer,
 			    "warning - unsupported language: %s", attrValue);
-		   XmlParseError (errorParsing, msgBuffer, 0);
+		   XmlParseError (warningMessage, msgBuffer, 0);
 		 }
 	       else
 		 {

@@ -4488,6 +4488,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
       {
 	/* point to the following word in sel[] */
 	deb = cur;
+	if (*selector == '*' &&
+	    (selector[1] == '.' || selector[1] == ':' ||
+	     selector[1] == '#' || selector[1] == '['))
+	  selector++;
 	if (*selector == '.')
 	  {
 	    selector++;
