@@ -153,13 +153,14 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definition
 
 					   de compteur */
-#include "parser_f.h"
 #include "compilmsg_f.h"
-#include "platform_f.h"
-#include "message_f.h"
-#include "prs_f.h"
-#include "readstr_f.h"
 #include "fileaccess_f.h"
+#include "parser_f.h"
+#include "platform_f.h"
+#include "prs_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "readstr_f.h"
 #include "registry_f.h"
 #include "writeprs_f.h"
 
@@ -175,110 +176,79 @@ static void         Initialize ()
    int                 i;
 
    /* acquiert un schema de presentation */
-   GetSchStruct (&pPSchema);
+   GetSchPres (&pPSchema);
    if (pPSchema == NULL)
-      /* memoire insuffisante */
-      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
-
-   /* acquiert un schema de structure pour les structures externes */
-   GetSchStruct (&pExternalSS);
-   if (pExternalSS == NULL)
-      TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
-
-   /* initialise ce schema */
-   pPSchema->PsStructName[0] = '\0';
-   pPSchema->PsNViews = 0;
-   pPSchema->PsNPrintedViews = 0;
-   pPSchema->PsNCounters = 0;
-   pPSchema->PsNConstants = 0;
-   pPSchema->PsNVariables = 0;
-   CurMinMax = CntCurVal;
-   pPSchema->PsNPresentBoxes = 0;
-   pPSchema->PsFirstDefaultPRule = NULL;
-   for (i = 0; i < MAX_VIEW; i++)
+     /* memoire insuffisante */
+     CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+   else
      {
-	pPSchema->PsPaginatedView[i] = False;
-	pPSchema->PsColumnView[i] = False;
-	pPSchema->PsExportView[i] = False;
-     }
-   /* initialise les regles de presentation des attributs */
-   for (i = 0; i < pSSchema->SsNAttributes; i++)
-     {
-	pPSchema->PsNAttrPRule[i] = 0;
-	pPSchema->PsAttrPRule[i] = NULL;
-	pPSchema->PsNHeirElems[i] = 0;
-	pPSchema->PsNComparAttrs[i] = 0;
-     }
+       /* acquiert un schema de structure pour les structures externes */
+       GetSchStruct (&pExternalSS);
+       if (pExternalSS == NULL)
+	 TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
+       else
+	 {
+	   CurMinMax = CntCurVal;
+	   /* initialise les regles de presentation des elements */
+	   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+	     {
+	       pPSchema->PsAcceptPageBreak[i] = True;
+	       pPSchema->PsAcceptLineBreak[i] = True;
+	     }
 
-   /* initialise les regles de presentation des elements */
-   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-     {
-	pPSchema->PsElemPRule[i] = NULL;
-	pPSchema->PsNInheritedAttrs[i] = 0;
-	pPSchema->PsInPageHeaderOrFooter[i] = False;
-	pPSchema->PsAcceptPageBreak[i] = True;
-	pPSchema->PsAcceptLineBreak[i] = True;
-	pPSchema->PsBuildAll[i] = False;
-	pPSchema->PsNotInLine[i] = False;
-	pPSchema->PsAssocPaginated[i] = False;
-	/*     pPSchema->SPVueAssocAvecCol[i] = False; */
-	pPSchema->PsElemTransmit[i] = 0;
+	   /* initialise les boites de presentation */
+	   for (i = 0; i < MAX_PRES_BOX; i++)
+	     {
+	       pPSchema->PsPresentBox[i].PbAcceptPageBreak = True;
+	       pPSchema->PsPresentBox[i].PbAcceptLineBreak = True;
+	     }
+	   
+	   /* initialise les indicateurs du compilateur */
+	   ViewDef = False;
+	   CounterDef = False;
+	   ConstantDef = False;
+	   VariableDef = False;
+	   PresBoxDef = False;
+	   DefaultRuleDef = False;
+	   RuleDef = False;
+	   AttributeDef = False;
+	   NewAttributeDef = False;
+	   InBreakRule = False;
+	   InPageBreakRule = False;
+	   InLineBreakRule = False;
+	   InGatherRule = False;
+	   InInLineRule = False;
+	   IncludedColumn = False;
+	   InRule = False;
+	   InWithinCond = False;
+	   AxisDef = False;
+	   Forward = False;
+	   CondBlock = False;
+	   ViewBlock = False;
+	   RuleBlock = False;
+	   RulesForView = False;
+	   NewVariableDef = False;
+	   LatestNumber = 0;
+	   LatestNumberAttr = False;
+	   PrevSign = 1;
+	   CurUnit = FontHeight;
+	   AttrValSign = 1;
+	   CurView = 1;
+	   CurRule = NULL;
+	   FirstRule = NULL;
+	   CurType = 1;
+	   GetPresentRule (&NextRule);
+	   if (NextRule == NULL)
+	     /* memoire insuffisante */
+	     CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+	   Conditions = NULL;
+	   InclusionRefName = False;
+	   CopyType[0] = '\0';
+	   BeginCopyType = 0;
+	   FirstInPair = False;
+	   SecondInPair = False;
+	 }
      }
-   pPSchema->PsNTransmElems = 0;
-
-   /* initialise les boites de presentation */
-   for (i = 0; i < MAX_PRES_BOX; i++)
-     {
-	pPSchema->PsPresentBox[i].PbBuildAll = False;
-	pPSchema->PsPresentBox[i].PbAcceptPageBreak = True;
-	pPSchema->PsPresentBox[i].PbAcceptLineBreak = True;
-	pPSchema->PsPresentBox[i].PbNotInLine = False;
-     }
-
-   /* initialise les indicateurs du compilateur */
-   ViewDef = False;
-   CounterDef = False;
-   ConstantDef = False;
-   VariableDef = False;
-   PresBoxDef = False;
-   DefaultRuleDef = False;
-   RuleDef = False;
-   AttributeDef = False;
-   NewAttributeDef = False;
-   InBreakRule = False;
-   InPageBreakRule = False;
-   InLineBreakRule = False;
-   InGatherRule = False;
-   InInLineRule = False;
-   IncludedColumn = False;
-   InRule = False;
-   InWithinCond = False;
-   AxisDef = False;
-   Forward = False;
-   CondBlock = False;
-   ViewBlock = False;
-   RuleBlock = False;
-   RulesForView = False;
-   NewVariableDef = False;
-   LatestNumber = 0;
-   LatestNumberAttr = False;
-   PrevSign = 1;
-   CurUnit = FontHeight;
-   AttrValSign = 1;
-   CurView = 1;
-   CurRule = NULL;
-   FirstRule = NULL;
-   CurType = 1;
-   GetPresentRule (&NextRule);
-   if (NextRule == NULL)
-      /* memoire insuffisante */
-      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
-   Conditions = NULL;
-   InclusionRefName = False;
-   CopyType[0] = '\0';
-   BeginCopyType = 0;
-   FirstInPair = False;
-   SecondInPair = False;
 }
 
 /*----------------------------------------------------------------------
@@ -874,10 +844,9 @@ int                 att;
    NumAttrCase        *pAttrCase;
    int                 j;
 
-   GetAttributePres (&pPRuleA);
+   GetAttributePres (&pPRuleA, 1);
    if (pPRuleA)
      {
-        memset (pPRuleA, 0, sizeof (AttributePres));
 	/* selon le type de l'attribut */
 	switch (pSSchema->SsAttribute[att - 1].AttrType)
 	      {
