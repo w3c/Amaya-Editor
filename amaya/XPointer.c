@@ -50,7 +50,9 @@ struct _XPathItem {
 typedef XPathItem * XPathList;
 
 /* the thotlib element type used to identify a text node */
-#define THOT_TEXT_UNIT  1
+#define THOT_TEXT_UNIT   1
+#define THOT_GRAPH_UNIT  2
+#define THOT_SYMBOL_UNIT 3
 
 typedef enum _selMode {
   SEL_START_POINT=1,
@@ -131,6 +133,9 @@ static int CountInlineChars (Element *mark)
   Element el;
   Element parent;
   int count = 0;
+
+  if (*mark == NULL)
+    return 0;
 
   elType = TtaGetElementType (*mark);
 
@@ -564,10 +569,11 @@ ThotBool firstF;
   firstCh += CountInlineChars (&start);
 
   el = start;
-  /* if we chose a hidden element, climb up */
-  if (ElIsHidden (el))
-    el = AGetParent (el);
-  
+  elType = TtaGetElementType (el);
+  /* if we chose a hidden element or a GRAPH UNIT (SVG), climb up */
+  if (ElIsHidden (el) || elType.ElTypeNum == THOT_GRAPH_UNIT)
+      el = AGetParent (el);
+
   /* browse the tree */
   while (el)
     {
@@ -714,6 +720,18 @@ View view;
 	}
     }
 
+  /* @@ JK: W e don't know yet how to handle annotations on symbols, so we just
+     forbid making XPointers on them, for the moment @@ */
+  elType = TtaGetElementType (firstEl);
+  if (elType.ElTypeNum == THOT_SYMBOL_UNIT)
+    return NULL;
+  if (lastEl)
+    {
+      elType = TtaGetElementType (lastEl);
+      if (elType.ElTypeNum == THOT_SYMBOL_UNIT)
+	return NULL;
+    }
+  
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, mode, TRUE);
 #ifdef DEBUG_XPOINTER
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
