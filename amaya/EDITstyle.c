@@ -1151,41 +1151,59 @@ static void         UpdateClass (Document doc)
 
 /*----------------------------------------------------------------------
    PutClassName
-   Put the value of attribute attr at the end of the buff buffer if
-   it's not there already.
+   Put the class names contained in attribute attr at the end of the buff
+   buffer if it's not there already.
   ----------------------------------------------------------------------*/
 static void PutClassName (Attribute attr, char *buf, int* index, int* free,
 			  int* nb)
 {
   int		len, cur, i;
-  char          selector[100];
+  unsigned char selector[200];
+  unsigned char *ptr, *name;
   ThotBool      found;
 
-  len = 99;
+  len = 198;
   TtaGiveTextAttributeValue (attr, selector, &len);
-  /* compare with all already known class names */
-  cur = 0;
-  found = FALSE;
-  for (i = 0; i < *nb && !found; i++)
+  selector[len+1] = EOS;
+  /* get the first name contained in the attribute */
+  ptr = selector;
+  ptr = TtaSkipBlanks (ptr);
+  while (*ptr != EOS)
     {
-      if (buf[cur] == '.')
-	cur++;
-      len = strlen (&buf[cur]) + 1;
-      found = !strcmp (selector, &buf[cur]);
-      cur += len;
-    }
-  if (!found)
-    {
-      len = strlen (selector);
-      if (len > *free)
-	return;
-      /* add this new class name and the dot */
-      buf[(*index)++] = '.';
-      strcpy (&buf[*index], selector);
-      len++; /* add the \0 */
-      *free -= len;
-      *index += len;
-      (*nb)++;
+      name = ptr;
+      /* look for the end of the current name */
+      while (*ptr > ' ')
+	ptr++;
+      *ptr = EOS;
+      ptr++;
+      /* compare that name with all class names already known */
+      cur = 0;
+      found = FALSE;
+      for (i = 0; i < *nb && !found; i++)
+	{
+	  if (buf[cur] == '.')
+	    cur++;
+	  len = strlen (&buf[cur]) + 1;
+	  found = !strcmp (name, &buf[cur]);
+	  cur += len;
+	}
+      if (!found)
+	/* this class name is not known, append it */
+	{
+	  len = strlen (name);
+	  if (len > *free)
+	    return;
+	  /* add this new class name with a dot */
+	  buf[(*index)++] = '.';
+	  strcpy (&buf[*index], name);
+	  len++; /* add the \0 */
+	  *free -= len;
+	  *index += len;
+	  (*nb)++;
+	}
+      /* skip spaces after the name that has just been processed */
+      ptr = TtaSkipBlanks (ptr);
+      /* and process the next name, if any */
     }
 }
 
@@ -1221,14 +1239,18 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   /* list all class values */
   /* looks first for the Class attribute defined in the HTML DTD */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-  attrType.AttrTypeNum = HTML_ATTR_Class;
-  el = TtaGetMainRoot (doc);
-  while (el != NULL)
-     {
-     TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-     if (attr != NULL)
-	PutClassName (attr, buf, &index, &free, &nb);
-     }
+  if (attrType.AttrSSchema)
+    /* this document contains HTML elements */
+    {
+      attrType.AttrTypeNum = HTML_ATTR_Class;
+      el = TtaGetMainRoot (doc);
+      while (el != NULL)
+	{
+	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	  if (attr != NULL)
+	    PutClassName (attr, buf, &index, &free, &nb);
+	}
+    }
   /* looks for the class attribute defined in the MathML DTD */
   attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
   if (attrType.AttrSSchema)
