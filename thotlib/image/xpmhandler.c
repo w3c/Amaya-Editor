@@ -18,6 +18,7 @@
  * xpmhandler.c  Pixmap V3.4.c
  *
  * Author: N. Layaida (INRIA)
+ *         R. Guetari (W3C/INRIA) - Adaptation to Windows platforms.
  */
 
 #include "thot_gui.h"

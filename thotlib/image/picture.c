@@ -659,7 +659,6 @@ PictInfo           *imageDesc;
 	  }
 		 
 		  
-		  /* BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY); */
 #         endif /* _WINDOWS */
 	  break;
 	}
