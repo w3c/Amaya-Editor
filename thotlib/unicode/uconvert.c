@@ -926,9 +926,9 @@ CHARSET         encoding;
 int            TtaGetNextWideCharFromMultibyteString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 #else  /* !__STDC__ */
 int            TtaGetNextWideCharFromMultibyteString (car, txt, encoding)
-wchar_t       *car;
-unsigned char *txt;
-CHARSET        encoding;
+wchar_t        *car;
+unsigned char **txt;
+CHARSET         encoding;
 #endif /* !__STDC__ */
 {
   int            nbBytesToRead;
@@ -982,5 +982,39 @@ CHARSET        encoding;
       *car = TtaGetUnicodeFromChar (*start, encoding);
       start++;
     }
+  return nbBytesToRead;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetNumberOfBytesToRead: 
+  Returns the number of bytes to read
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int            TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
+#else  /* !__STDC__ */
+int            TtaGetNumberOfBytesToRead (txt, encoding)
+unsigned char  **txt;
+CHARSET          encoding;
+#endif /* !__STDC__ */
+{
+  int            nbBytesToRead = 1;
+  unsigned char *start = *txt;
+
+  if (encoding ==  UTF_8)
+    {
+      if (*start < 0xC0)
+	nbBytesToRead = 1;
+      else if (*start < 0xE0)
+	nbBytesToRead = 2;
+      else if (*start < 0xF0)
+	nbBytesToRead = 3;
+      else if (*start < 0xF8)
+	nbBytesToRead = 4;
+      else if (*start < 0xFC)
+	nbBytesToRead = 5;
+      else if (*start <= 0xFF)
+	nbBytesToRead = 6;
+    }
+
   return nbBytesToRead;
 }

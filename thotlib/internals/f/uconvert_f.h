@@ -25,6 +25,8 @@ extern int TtaWCS2MBS ( wchar_t** src,
 extern int TtaGetNextWideCharFromMultibyteString ( wchar_t *car,
                                                    unsigned char **txt,
                                                    CHARSET encoding );
+extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
+                                       CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -47,6 +49,8 @@ extern int TtaWCS2MBS (/* wchar_t** src,
 extern int TtaGetNextWideCharFromMultibyteString (/* wchar_t *car,
                                                      unsigned char **txt,
                                                      CHARSET encoding */);
+extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
+                                         CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
