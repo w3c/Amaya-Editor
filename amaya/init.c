@@ -922,6 +922,7 @@ static void  UpdateBrowserMenus (Document doc)
       TtaSetMenuOff (doc, 1, Links);
       TtaSetMenuOff (doc, 1, Style);
       TtaSetItemOff (doc, 1, Special, BMakeBook);
+      TtaSetItemOff (doc, 1, Special, BMakeID);
 
       view = TtaGetViewFromName (doc, "Structure_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1013,6 +1014,7 @@ static void  UpdateEditorMenus (Document doc)
 	{
 	  TtaSetItemOn (doc, 1, Special, TSectionNumber);
 	  TtaSetItemOn (doc, 1, Special, BMakeBook);
+	  TtaSetItemOn (doc, 1, Special, BMakeID);
 
 	  TtaChangeButton (doc, 1, iI, iconI, TRUE);
 	  TtaChangeButton (doc, 1, iB, iconB, TRUE);
@@ -2397,6 +2399,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+
 #ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
 #endif /* _SVG */
@@ -2425,6 +2428,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
+	     TtaSetItemOff (doc, 1, Special, BMakeID);
 	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
 	   }
 	 else
