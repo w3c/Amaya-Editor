@@ -1299,13 +1299,8 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 #endif /* _GTK */
 	    }
 
-	  /* on force le reaffichage de la boite (+ les points de selection) */
-#ifndef _GL
-	  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-#else/* _GL */  
-	  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, pBox->BxClipX + width + EXTRA_GRAPH, pBox->BxClipY + height + EXTRA_GRAPH);
-#endif /* _GL */
-
+	  /* redisplay the whole box */
+	  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  break;
 
 	default:	/* un graphique simple */
@@ -2297,15 +2292,8 @@ void ContentEditing (int editType)
 				charsDelta = 1;
 			    }
 			  pViewSel->VsIndBox = charsDelta;
-			  /* on force le reaffichage de la boite
-			     (+ les points de selection) */
-#ifndef _GL
-			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, 
-				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
-#else/* _GL */  
-			  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, 
-				   pBox->BxClipX + pBox->BxClipW + EXTRA_GRAPH, pBox->BxClipY + pBox->BxClipH + EXTRA_GRAPH);			  
-#endif /* _GL */
+			  /* redisplay the whole box */
+			  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 			}
 		    }
 		}
@@ -2338,36 +2326,15 @@ void ContentEditing (int editType)
 		}
 	      
 	      pLine = pFrame->FrSelectionBegin.VsLine;
-	      
-	      /* Initialisation du rectangle d'affichage */
-
-	      /*DefClip (frame, 0, 0, 0, 0);*/
-
 	      if (pBox->BxType == BoSplit)
 		{
 		  pSelBox = pBox->BxNexChild;
-#ifndef _GL
-		  DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
-			   pSelBox->BxXOrg + pSelBox->BxWidth,
-			   pSelBox->BxYOrg + pSelBox->BxHeight);
-#else /* _GL */
-		  DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
-			   pSelBox->BxClipX + pSelBox->BxClipW,
-			   pSelBox->BxClipY + pSelBox->BxClipH);
-#endif /* _GL */
+		  /* redisplay the whole box */
+		  DefBoxRegion (frame, pSelBox, -1, -1, -1, -1);
 		}
 	      else
-		{
-#ifndef _GL
-		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			   pBox->BxXOrg + pBox->BxWidth,
-			   pBox->BxYOrg + pBox->BxHeight);
-#else /* _GL */
-		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW,
-			   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
-		}
+		/* redisplay the whole box */
+		DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	      
 	      /* Est-ce que les dimensions de la boite dependent du contenu */
 	      pPavD1 = &pAb->AbWidth;
@@ -2442,17 +2409,10 @@ void ContentEditing (int editType)
 		      NewTextLanguage (pAb, charsDelta + pBox->BxFirstChar + 1,
 				       ClipboardLanguage);
 		      pBox = pViewSel->VsBox;
-		      if (pBox != NULL)
+		      if (pBox)
 			{
-#ifndef _GL
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-				   pBox->BxXOrg + pBox->BxWidth,
-				   pBox->BxYOrg + pBox->BxHeight);
-#else /* _GL */
-			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-				   pBox->BxClipX + pBox->BxClipW,
-				   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
+			  /* redisplay the whole box */
+			  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 			  pAb = pBox->BxAbstractBox;
 			}
 		      else
@@ -2609,11 +2569,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   int                 ind;
   int                 previousChars, previousInd, previousPos;
   char                script, oldscript;
-  ThotBool            beginOfBox;
-  ThotBool            toDelete;
+  ThotBool            beginOfBox, toDelete;
   ThotBool            toSplit, toSplitForScript = FALSE;
   ThotBool            saveinsert, rtl;
   ThotBool            notification = FALSE;
+  ThotBool            status;
 
   toDelete = (c == 127);
   script  = ' ';
@@ -2709,25 +2669,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  ind = pBuffer->BuLength;
 			  previousInd = ind;
 			}
-#ifndef _GL
-		      /* initial clipping */
-		      xx += pSelBox->BxXOrg;
-		      /* point d'insertion superieur en y */
-		      topY = pSelBox->BxYOrg;
-		      /* point d'insertion inferieur en y */
-		      bottomY = topY + pSelBox->BxHeight;
-		      DefClip (frame, xx, topY, xx, bottomY);
-#else /* _GL */
-		      /* prepare le reaffichage */
-		      /* point d'insertion en x */
-		      xx += pSelBox->BxClipX;
-		      /* point d'insertion superieur en y */
-		      topY = pSelBox->BxClipY;
-		      /* point d'insertion inferieur en y */
-		      bottomY = topY + pSelBox->BxClipH;
-		      DefRegion (frame, xx, topY, xx, bottomY);
 
-#endif /*  _GL */
+		      /* prepare the clipping area */
+		      DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
+
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
 		      if ((pBox == NULL || pSelBox == pBox) &&
@@ -2888,7 +2833,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  pViewSelEnd->VsNSpaces = 0;
 				  /* prepare the box update */
 				  xDelta -= pSelBox->BxWidth;
-				  pFrame->FrClipXBegin = pSelBox->BxXOrg;
+				  xx = 0;
+#ifdef CLIP_TRACE
+printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
+#endif /* CLIP_TRACE */
 				}
 			      else if (previousChars == 0 && c != SPACE)
 				{
@@ -2897,19 +2845,18 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  toSplit = TRUE;
 				  /* move the selection mark to the previous box */
 				  pSelBox = pSelBox->BxPrevious;
-				  /* update the redisplayed area */
+
 				  topY = pSelBox->BxYOrg;
-				  DefClip (frame, xx, topY, xx, bottomY);
 				  if ((c == BREAK_LINE || c == NEW_LINE) &&
 				      pAb->AbBox->BxNChars == 1)
 				    {
 				      /* the box becomes empty */
 				      xDelta = BoxCharacterWidth (109, font);
-#ifndef _GL
-				      pFrame->FrClipXBegin = pSelBox->BxXOrg;
-#else /* _GL */
-				      pFrame->FrClipXBegin = pSelBox->BxClipX;
-#endif  /* _GL */
+				      xx = 0;
+#ifdef CLIP_TRACE
+printf ("Change FrClipXBegin %d->%d\n", pFrame->FrClipXBegin, pSelBox->BxXOrg);
+#endif /* CLIP_TRACE */
+
 				      /* update selection marks */
 				      pSelBox = pAb->AbBox;
 				      pViewSel->VsXPos = 0;
@@ -2932,8 +2879,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      pViewSelEnd->VsBox = pSelBox;
 				      pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
 				      pViewSelEnd->VsLine = pViewSel->VsLine;
-				      pFrame->FrClipXBegin += xDelta;
+				      xx += xDelta;
+#ifdef CLIP_TRACE
+printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
+#endif /* CLIP_TRACE */
 				    }
+				  /* update the redisplayed area */
+				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 				}
 			      else if ((previousChars > pSelBox->BxNChars ||
 					previousChars == 0) &&
@@ -2982,7 +2934,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      pViewSelEnd->VsIndBox--;
 				    }
 				  /* update the displayed area */
-				  pFrame->FrClipXBegin += xDelta;
+				  xx += xDelta;
+#ifdef CLIP_TRACE
+printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
+#endif /* CLIP_TRACE */
+				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 				}
 			      else
 				{
@@ -3003,7 +2959,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  else
 				    xDelta = - BoxCharacterWidth (c, font);
 				  /* update the displayed area */
-				  pFrame->FrClipXBegin += xDelta;
+				  xx += xDelta;
+#ifdef CLIP_TRACE
+printf ("%d FrClipXBegin %d->%d\n", xDelta, pFrame->FrClipXBegin, pSelBox->BxXOrg+xx);
+#endif /* CLIP_TRACE */
+				  DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 				  /* update selection marks */
 				  if (adjust)
 				    UpdateViewSelMarks (frame, adjust + pix, spacesDelta,
@@ -3077,15 +3037,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  toSplit = TRUE;
 				  xDelta = 0;
 				}
-#ifndef _GL
-			      DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
-				       pSelBox->BxXOrg + pSelBox->BxWidth,
-				       pSelBox->BxYOrg + pSelBox->BxHeight);
-#else /* _GL */
-			      DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
-				       pSelBox->BxClipX + pSelBox->BxClipW,
-				       pSelBox->BxClipY + pSelBox->BxClipH);
-#endif /* _GL */
+
+			      /* redisplay the whole box */
+			      DefBoxRegion (frame, pSelBox, -1, -1, -1, -1);
 			      
 			      /* Prepare la mise a jour de la boite */
 			      xDelta -= pSelBox->BxWidth;
@@ -3146,7 +3100,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				xDelta = 0;
 			      else
 				xDelta = BoxCharacterWidth (c, font);
-			      
+
 			      if (/*beginOfBox && */previousChars == 0)
 				{
 				  /* insert at the beginning of a box */
@@ -3165,14 +3119,20 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				UpdateViewSelMarks (frame, xDelta, spacesDelta,
 						    charsDelta, rtl);
 			    }
+			  xx += xDelta;
 			}
 		      
 		      /* Mise a jour de la boite */
 		      if (IsLineBreakInside (pSelBox->BxBuffer, pSelBox->BxIndChar,
 					     pSelBox->BxNChars))
 			toSplit = TRUE;
+		      /* avoid to redisplay the whole block of lines */
+		      status = ReadyToDisplay;
+		      /*ReadyToDisplay = FALSE;*/
+		      DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
 		      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
 				 spacesDelta, xDelta, adjust, 0, frame, toSplit);
+		      ReadyToDisplay = status;
 		      /* Mise a jour du volume du pave */
 		      pAb->AbVolume += charsDelta;
 		      /* check now if the script changes */
@@ -3265,14 +3225,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				/* largeur du caractere ajoute/detruit */
 				if (xDelta < 0)
 				  xDelta = -xDelta;
-				/* This test was used with the old selection
-				if (pFrame->FrClipYBegin == topY &&
-				    pFrame->FrClipYEnd == bottomY &&
-				    xDelta >= charsDelta &&
-				    (pFrame->FrClipXBegin == xx ||
-				     pFrame->FrClipXEnd == xx))
-				  ;
-				end of old text */
 			      }
 			    DefClip (frame, pFrame->FrClipXBegin, topY,
 				     pFrame->FrClipXEnd + 2, bottomY);

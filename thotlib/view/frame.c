@@ -152,7 +152,7 @@ void DefClip (int frame, int xstart, int ytop, int xstop, int ybottom)
 }
 
 /*----------------------------------------------------------------------
-  DefRegion store the area of frame which need to be redrawn.
+  DefRegion stores the area of frame which need to be redrawn.
   ----------------------------------------------------------------------*/
 void DefRegion (int frame, int xstart, int ytop, int xstop, int ybottom)
 {
@@ -164,17 +164,44 @@ void DefRegion (int frame, int xstart, int ytop, int xstop, int ybottom)
 }
 
 /*----------------------------------------------------------------------
-  DefBoxRegion store the area of a box which needs to be redrawn.
-  When parameters xstart and xstop are equal to -1 the whole box is clipped
-  else only the xstart to xstop region is clipped.
+  DefBoxRegion stores the area of a box which needs to be redrawn.
+  When parameters xstart and xstop are equal to -1 the whole width box
+  is clipped else only the xstart to xstop region is clipped.
+  When parameters ystart and ystop are equal to -1 the whole height box
+  is clipped else only the ystart to ystop region is clipped.
   ----------------------------------------------------------------------*/
-void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop)
+void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
+		   int ystart, int ystop)
 {
   ViewFrame          *pFrame;
   int                 x1, x2, y1, y2, k;
 
   if (pBox)
     {
+#ifdef _GL
+      PtrAbstractBox      pAb, pClipAb;
+
+      if (FrameTable[frame].FrView == 1)
+	{
+	  /* clip on the enclosing box that changes the System origin */
+	  pAb = pBox->BxAbstractBox;
+	  pClipAb = pAb;
+	  while (pAb)
+	    {
+	      if (pAb->AbElement &&
+		  pAb->AbBox &&
+		  pAb->AbElement->ElSystemOrigin)
+		pClipAb = pAb;
+	      pAb = pAb->AbEnclosing;
+	    }
+	  if (pBox != pClipAb->AbBox)
+	    {
+	      /* clip the enclosing limits */
+	      xstart = xstop = ystart = ystop = -1;
+	      pBox = pClipAb->AbBox;
+	    }
+	}
+#endif /* _GL */
       pFrame = &ViewFrameTable[frame - 1];
       if (pBox->BxAbstractBox &&
 	  (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
@@ -183,7 +210,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop)
 	k = EXTRA_GRAPH;
       else
 	k = 0;
-#ifdef _GL
+#ifdef IV
       x1 = pBox->BxClipX + pFrame->FrXOrg;
       x2 = x1;
       if (xstart == -1 && xstop == -1)
@@ -194,7 +221,14 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop)
 	  x2 += xstop;
 	}
       y1 = pBox->BxClipY + pFrame->FrYOrg;
-      y2 = y1 + pBox->BxClipH;
+      y2 = y1;
+      if (ystart == -1 && ystop == -1)
+	y2 += pBox->BxClipH;
+      else
+	{
+	  y1 += ystart;
+	  y2 += ystop;
+	}
 #else /*  _GL */      
       x1 = pBox->BxXOrg;
       x2 = x1;
@@ -210,9 +244,109 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop)
 	  x2 += xstop;
 	}
       y1 = pBox->BxYOrg;
+      y2 = y1;
+      if (ystart == -1 && ystop == -1)
+	{
+	  if (pBox->BxTMargin < 0)
+	    y1 += pBox->BxTMargin;
+	  y2 += pBox->BxHeight;
+	}
+      else
+	{
+	  y1 += ystart;
+	  y2 += ystop;
+	}
+#endif /* _GL */
+#ifdef CLIP_TRACE
+printf ("ClipBoxRegion x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
+#endif /* CLIP_TRACE */
+      DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateBoxRegion stores the area of a box which needs to be redrawn
+  before and after the change.
+  The parameters dx gives the horizontal shift (before the change is done).
+  The parameters dy gives the vertical shift (before the change is done).
+  The parameters dw gives the width delta (before the change is done).
+  The parameters dh gives the height delta (before the change is done).
+  ----------------------------------------------------------------------*/
+void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
+{
+  ViewFrame          *pFrame;
+  int                 x1, x2, y1, y2, cpoints, caret;
+
+  if (pBox)
+    {
+#ifdef _GL
+      PtrAbstractBox      pAb, pClipAb;
+
+      /* clip on the enclosing box that changes the System origin */
+      pAb = pBox->BxAbstractBox;
+      if (FrameTable[frame].FrView == 1)
+	{
+	  pClipAb = pAb;
+	  while (pAb)
+	    {
+	      if (pAb->AbElement &&
+		  pAb->AbBox &&
+		  pAb->AbElement->ElSystemOrigin)
+		pClipAb = pAb;
+	      pAb = pAb->AbEnclosing;
+	    }
+	  if (pBox != pClipAb->AbBox)
+	    {
+	      /* clip the enclosing limits */
+	      dx = dy = dw = dh = 0;
+	      pBox = pClipAb->AbBox;
+	    }
+	}
+#endif /* _GL */
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pBox->BxAbstractBox &&
+	  (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
+	   pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
+	   pBox->BxAbstractBox->AbLeafType == LtPath))
+	/* increase the redisplay area due to control points */
+	cpoints = EXTRA_GRAPH;
+      else
+	cpoints = 0;
+      if (pBox->BxAbstractBox && dw < 0 &&
+	  (pBox->BxAbstractBox->AbLeafType == LtText ||
+	   pBox->BxAbstractBox->AbLeafType == LtSymbol))
+	caret = 2;
+      else
+	caret = 0;
+#ifdef IV
+      x1 = pBox->BxClipX + pFrame->FrXOrg;
+      x2 = x1 + pBox->BxClipW;
+      y1 = pBox->BxClipY + pFrame->FrYOrg;
+      y2 = y1 + pBox->BxClipH;
+#else /*  _GL */      
+      x1 = pBox->BxXOrg;
+      x2 = x1 + pBox->BxWidth;
+      y1 = pBox->BxYOrg;
       y2 = y1 + pBox->BxHeight;
 #endif /* _GL */
-      DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
+      if (dx >= 0)
+	x2 += dx; /* the box will be moved to the right */
+      else
+	x1 -= dx; /* the box will be moved to the left */
+      if (dy >= 0)
+	y2 += dy; /* the box will be moved to the bottom */
+      else
+	y1 -= dy; /* the box will be moved to the top */
+      if (dw > 0)
+	x2 += dw;
+      if (dy > 0)
+	y2 += dh;
+#ifdef CLIP_TRACE
+printf ("UpdateBoxRegion dx=%d dy=%d dw=%d dh=%d\n", dx, dy, dw, dh);
+printf ("                x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
+#endif /* CLIP_TRACE */
+      DefClip (frame, x1 - cpoints, y1 - cpoints,
+	       x2 + cpoints + caret, y2 + cpoints);
     }
 }
 

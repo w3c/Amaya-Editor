@@ -22,7 +22,15 @@ extern void DefRegion ( int frame,
 extern void DefBoxRegion ( int frame,
                            PtrBox pBox,
                            int xstart,
-                           int xstop );
+                           int xstop,
+                           int ystart,
+                           int ystop );
+extern void UpdateBoxRegion ( int frame,
+                              PtrBox pBox,
+                              int dx,
+                              int dy,
+                              int dw,
+                              int dh );
 extern void TtaRefresh ( void );
 extern void DrawFilledBox ( PtrBox pBox,
                             PtrAbstractBox pFrom,
@@ -76,7 +84,15 @@ extern void DefRegion ( int frame,
 extern void DefBoxRegion ( int frame,
                              PtrBox pBox,
                              int xstart,
-                             int xstop );
+                             int xstop,
+                             int ystart,
+                             int ystop );
+extern void UpdateBoxRegion ( int frame,
+                                PtrBox pBox,
+                                int dx,
+                                int dy,
+                                int dw,
+                                int dh );
 extern void TtaRefresh ( void );
 extern void DrawFilledBox ( PtrBox pBox,
                               PtrAbstractBox pFrom,

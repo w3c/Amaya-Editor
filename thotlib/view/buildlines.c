@@ -193,7 +193,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 width, baseline;
   int                 nSpaces, delta;
-  int                 x;
+  int                 x, dx, dy;
   int                 i, j, k, max;
   ThotBool            rtl;
 
@@ -233,7 +233,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
 	      {
-		YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+		dx = 0;
+		dy = baseline - pBox->BxHorizRef - pBox->BxYOrg;
+		YMove (pBox, NULL, dy, frame);
 	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
@@ -317,8 +319,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      dx = x - boxes[k]->BxXOrg;
+	      dy = baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg;
+	      XMove (boxes[k], NULL, dx, frame);
+	      YMove (boxes[k], NULL, dy, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -333,8 +337,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right wirting */
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      dx = x - boxes[k]->BxXOrg;
+	      dy = baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg;
+	      XMove (boxes[k], NULL, dx, frame);
+	      YMove (boxes[k], NULL, dy, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -344,8 +350,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  dx = x - boxes[i]->BxXOrg;
+	  dy = baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg;
+	  XMove (boxes[i], NULL, dx, frame);
+	  YMove (boxes[i], NULL, dy, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;
@@ -380,7 +388,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
   int                 baseline, x, delta = 0;
-  int                 i, j, k, max;
+  int                 i, j, k, max, dx, dy;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
@@ -443,7 +451,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
 	      {
-		YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+		dx = 0;
+		dy = baseline - pBox->BxHorizRef - pBox->BxYOrg;
+		YMove (pBox, NULL, dy, frame);
 	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
@@ -476,8 +486,10 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      dx = x - boxes[k]->BxXOrg;
+	      dy = baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg;
+	      XMove (boxes[k], NULL, dx, frame);
+	      YMove (boxes[k], NULL, dy, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -492,8 +504,10 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right writing */
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      dx = x - boxes[k]->BxXOrg;
+	      dy = baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg;
+	      XMove (boxes[k], NULL, dx, frame);
+	      YMove (boxes[k], NULL, dy, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -503,8 +517,10 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  dx = x - boxes[i]->BxXOrg;
+	  dy = baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg;
+	  XMove (boxes[i], NULL, dx, frame);
+	  YMove (boxes[i], NULL, dy, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;
@@ -3492,46 +3508,39 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 		       int x, int frame)
 {
-   PtrBox              box, pSaveBox;
-   PtrBox              pLastBox;
+   PtrBox              box;
+   PtrBox              pLastBox, pBlock;
    ViewFrame          *pFrame;
-   int                 xd, xf;
-   int                 yd, yf;
    int                 i;
    ThotBool            status;
 
    pLastBox = NULL;
-   pSaveBox = pBox;
    pLine->LiRealLength += x;
    /* prepare the redisplay of the line */
    status = ReadyToDisplay;
    ReadyToDisplay = FALSE;
    /* displayed area */
    pFrame = &ViewFrameTable[frame - 1];
-   xd = pFrame->FrClipXBegin;
-   xf = pFrame->FrClipXEnd;
-   yd = pSaveBox->BxYOrg + pSaveBox->BxHorizRef - pLine->LiHorizRef;
-   yf = yd + pLine->LiHeight;
+   pBlock = pAb->AbBox;
+   /* default clipping on the whole box */
+   DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 
    if (pAb->AbAdjust == AlignLeft || pAb->AbAdjust == AlignJustify ||
        pAb->AbAdjust == AlignLeftDots ||
        /* extended blocks are left aligned */
-       pAb->AbBox->BxContentWidth)
+       pBlock->BxContentWidth)
      {
        /* Redisplay the end of the line*/
 	if (pLine->LiLastPiece == NULL)
 	   pLastBox = pLine->LiLastBox;
 	else
 	   pLastBox = pLine->LiLastPiece;
-	if (pLastBox && pLastBox != pBox)
-	  {
-	     xf = pLastBox->BxXOrg + pLastBox->BxWidth;
-	     if (x > 0)
-		xf += x;
-	  }
 	if (pAb->AbAdjust == AlignLeftDots && pLine->LiNext == NULL)
 	  /* dotted area */
 	   pLastBox->BxEndOfBloc -= x;
+
+	/* extend the clipping to the last box */
+	UpdateBoxRegion (frame, pLastBox, x, 0, 0, 0);
      }
    else if (pAb->AbAdjust == AlignCenter)
      {
@@ -3542,17 +3551,14 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	   box = pLine->LiFirstBox;
 	else
 	   box = pLine->LiFirstPiece;
-	xd = box->BxXOrg;
-	if (x < 0)
-	   xd += x;
 	if (pLine->LiLastPiece == NULL)
 	   pLastBox = pLine->LiLastBox;
 	else
 	   pLastBox = pLine->LiLastPiece;
-	if (pLastBox != pBox)
-	     xf = pLastBox->BxXOrg + pLastBox->BxWidth;
-	if (x < 0)
-	   xf -= x;
+
+	/* extend the clipping to the whole line */
+	DefBoxRegion (frame, pBlock, -1, -1,
+		      pLine->LiYOrg, pLine->LiYOrg + pLine->LiHeight);
 	/* move previous boxes */
 	XMove (box, NULL, x, frame);
 	while (box != pBox)
@@ -3583,9 +3589,9 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	   pBox = pLine->LiFirstBox;
 	else
 	   pBox = pLine->LiFirstPiece;
-	xd = pBox->BxXOrg;
-	if (x < 0)
-	   xd += x;
+
+	/* extend the clipping to the last box */
+	UpdateBoxRegion (frame, pBox, x, 0, 0, 0);
 	XMove (pBox, NULL, x, frame);
      }
 
@@ -3607,7 +3613,6 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	    pBox->BxAbstractBox->AbHorizEnclosing)
 	  XMove (pBox, NULL, x, frame);
      }
-   DefClip (frame, xd, yd, xf, yf);
    ReadyToDisplay = status;
 }
 
@@ -3616,9 +3621,10 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
    CompressLine compresse ou e'tend la ligne justifiee suite a`    
    l'ajout d'espaces et un ecart de xDelta pixels.         
   ----------------------------------------------------------------------*/
-static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
+static void CompressLine (PtrLine pLine, PtrAbstractBox pAb, int xDelta,
+			  int frame, int spaceDelta)
 {
-   PtrBox              box, pBox;
+   PtrBox              box, pBox, pBlock;
    ViewSelection      *pViewSel;
    int                 nSpaces, diff;
    int                 limit, opixel;
@@ -3630,6 +3636,7 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
    nSpaces = pLine->LiNSpaces;
    status = ReadyToDisplay;
    ReadyToDisplay = FALSE;
+   pBlock = pAb->AbBox;
 
    /* Faut-il changer la largeur des blancs ? */
    if (xDelta > 0)
@@ -3657,11 +3664,11 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
       pBox = pLine->LiFirstPiece;
    else
       pBox = pLine->LiFirstBox;
+   
    limit = pBox->BxXOrg;
-   DefClip (frame, limit, pBox->BxYOrg + pBox->BxHorizRef - pLine->LiHorizRef,
-	    limit + pLine->LiXMax,
-     pBox->BxYOrg + pBox->BxHorizRef - pLine->LiHorizRef + pLine->LiHeight);
-
+   /* extend the clipping to the whole line */
+   DefBoxRegion (frame, pBlock, -1, -1,
+		 pLine->LiYOrg, pLine->LiYOrg + pLine->LiHeight);
    /* met a jour chaque boite */
    do
      {
@@ -3859,12 +3866,12 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	if (pLine == NULL)
 	  {
 	     w = 0;
-	     h = pBox->BxYOrg;
+	     h = 0;
 	  }
 	else
 	  {
 	     w = pLine->LiXOrg + pLine->LiXMax;
-	     h = pBox->BxYOrg + pLine->LiYOrg;
+	     h = pLine->LiYOrg;
 	  }
 
 	/* Si l'origne de la reevaluation du bloc de ligne vient d'une boite */
@@ -3877,6 +3884,12 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 
 	status = ReadyToDisplay;
 	ReadyToDisplay = FALSE;
+	/* update the clipping region */
+	if (pLine)
+	  DefBoxRegion (frame, pBox, -1, -1, pLine->LiYOrg, pBox->BxHeight);
+	else
+	  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+	
 	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin,
 		     &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
@@ -3892,7 +3905,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	      {
 		/* it's an extensible block of lines */
 		width = pBox->BxMaxWidth;
-		h = pBox->BxYOrg;
+		h = 0;
 		pBox->BxW = pBox->BxMaxWidth;
 		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 		l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
@@ -3910,11 +3923,10 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	  {
 	     if (pBox->BxWidth > w)
 		w = pBox->BxWidth;
-	     w += pBox->BxXOrg;
 	     if (height > pBox->BxHeight)
-	       DefClip (frame, pBox->BxXOrg, h, w, pBox->BxYOrg + height);
+	       DefBoxRegion (frame, pBox, 0, w, h, height);
 	     else
-	       DefClip (frame, pBox->BxXOrg, h, w, pBox->BxYOrg + pBox->BxHeight);
+	       DefBoxRegion (frame, pBox, 0, w, h, pBox->BxHeight);
 	  }
 
 	/* Faut-il reevaluer les marques de selection ? */
@@ -4078,7 +4090,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		ShiftLine (pLine, pAb, pBox, xDelta, frame);
 	      else
 		{
-		  CompressLine (pLine, xDelta, frame, spaceDelta);
+		  CompressLine (pLine, pAb, xDelta, frame, spaceDelta);
 		  pLine->LiRealLength = realLength;
 		}
 	    }
@@ -4167,7 +4179,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		    ShiftLine (pLine, pAb, pBox, xDelta, frame);
 		  else
 		    {
-		      CompressLine (pLine, xDelta, frame, spaceDelta);
+		      CompressLine (pLine, pAb, xDelta, frame, spaceDelta);
 		      pLine->LiRealLength = realLength;
 		    }
 		}

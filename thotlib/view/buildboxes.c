@@ -1224,6 +1224,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	    {
 	    /* it's an extensible line */
 	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
+	    /* make sure this update is taken into account */
+	    DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 	    GetExtraMargins (pCurrentBox, NULL, &t, &b, &l, &r);
 	    l += pCurrentBox->BxLMargin + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
 	    r += pCurrentBox->BxRMargin + pCurrentBox->BxRBorder + pCurrentBox->BxRPadding;
@@ -2652,7 +2654,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
    else if (pBox->BxW > 0 && pBox->BxH > 0)
      /* if the box width doesn't depend on the contents
 	redisplay the whole box */
-     DefBoxRegion (frame, pBox, -1, -1);
+     DefBoxRegion (frame, pBox, -1, -1, -1, -1);
    Propagate = savpropage;
 #ifdef _GL
    pBox->VisibleModification = TRUE;
@@ -3205,7 +3207,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* Compute Bounding Box*/
 		  ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
 		  /* the whole box */
-		  DefBoxRegion (frame, pCurrentBox, -1, -1);
+		  DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 		}
 	    }
 	}
@@ -3352,7 +3354,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 
 	  /* On prepare le reaffichage */
 	  if (!inLine && !inLineFloat)
-	    DefBoxRegion (frame, pBox, -1, -1);
+	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  
 	  pAb->AbChange = FALSE;
 	  pAb->AbFloatChange = FALSE;
@@ -3808,7 +3810,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  if (pAb->AbLeafType == LtPicture)
 		    {
 		      ComputeABoundingBox (pAb, frame);
-		      DefBoxRegion (frame, pBox, -1, -1);
+		      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 		      if (pBlock)
 			{
 			  RecomputeLines (pBlock, NULL, NULL, frame);
@@ -4348,7 +4350,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
       if (pBox->BxHorizFlex && pAb->AbWidthChange)
 	{
 	  /* redisplay the whole box */
-	  DefBoxRegion (frame, pBox, -1, -1);
+	  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  /* clear previous position */
 	  if (pAb->AbHorizPosChange)
 	    {
@@ -4366,7 +4368,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	{
 	  if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
 	    /* redisplay the whole box */
-	    DefBoxRegion (frame, pBox, -1, -1);
+	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  /* clear previous position */
 	  if (pAb->AbVertPosChange)
 	    {

@@ -1063,41 +1063,11 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	    MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
 	  else
 	    {
+	      if (!pBox->BxAbstractBox->AbHorizEnclosing && ReadyToDisplay)
+		/* update the clipping region */
+		UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
 	      /* simple translation */
 	      pBox->BxXOrg += delta;
-	      if (!pBox->BxAbstractBox->AbHorizEnclosing && ReadyToDisplay)
-		{
-		  /* Update the clipping zone */
-		  if (pBox->BxLMargin < 0)
-		    i = - pBox->BxLMargin;
-		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		    i = EXTRA_GRAPH;
-		  else
-		    i = 0;		  
-#ifndef _GL
-		  if (delta > 0)
-		    DefClip (frame, pBox->BxXOrg - delta - i,
-			     pBox->BxYOrg - i,
-			     pBox->BxXOrg + pBox->BxWidth + i,
-			     pBox->BxYOrg + pBox->BxHeight + i);
-		  else
-		    DefClip (frame, pBox->BxXOrg - i,
-			     pBox->BxYOrg - i,
-			     pBox->BxXOrg + pBox->BxWidth - delta + i,
-			     pBox->BxYOrg + pBox->BxHeight + i);
-#else /* _GL */
-		  if (delta > 0)
-		    DefRegion (frame, pBox->BxClipX - delta - i,
-			     pBox->BxClipY - i,
-			     pBox->BxClipX + pBox->BxClipW + i,
-			     pBox->BxClipY + pBox->BxClipH + i);
-		  else
-		    DefRegion (frame, pBox->BxClipX - i,
-			     pBox->BxClipY - i,
-			     pBox->BxClipX + pBox->BxClipW - delta + i,
-			     pBox->BxClipY + pBox->BxClipH + i);
-#endif /* _GL */
-		}
 	      
 	      /* Move boxes which are out of structure relations with it
 		 and update streched dimensions that depends on it
@@ -1237,43 +1207,11 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	    MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
 	  else
 	    {
+	      if (!pBox->BxAbstractBox->AbVertEnclosing && ReadyToDisplay)
+		/* update the clipping region */
+		UpdateBoxRegion (frame, pBox, 0, delta, 0, 0);
 	      /* simple translation */
 	      pBox->BxYOrg += delta;
-	      if (!pBox->BxAbstractBox->AbVertEnclosing && ReadyToDisplay)
-		{
-		  /* Update the clipping zone */
-		  if (pBox->BxLMargin < 0)
-		    i = - pBox->BxLMargin;
-		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		    i = EXTRA_GRAPH;
-		  else
-		    i = 0;
-
-#ifndef _GL
-		 if (delta > 0)
-		    DefClip (frame, pBox->BxXOrg - i,
-			     pBox->BxYOrg - delta - i,
-			     pBox->BxXOrg + pBox->BxWidth + i,
-			     pBox->BxYOrg + pBox->BxHeight + i);
-		  else
-		    DefClip (frame, pBox->BxXOrg - i,
-			     pBox->BxYOrg - i,
-			     pBox->BxXOrg + pBox->BxWidth + i,
-			     pBox->BxYOrg + pBox->BxHeight - delta + i);
-#else /* _GL */
-		  if (delta > 0)
-		    DefRegion (frame, pBox->BxClipX - i,
-			     pBox->BxClipY - delta - i,
-			     pBox->BxClipX + pBox->BxClipW + i,
-			     pBox->BxClipY + pBox->BxClipH + i);
-		  else
-		    DefRegion (frame, pBox->BxClipX - i,
-			     pBox->BxClipY - i,
-			     pBox->BxClipX + pBox->BxClipW + i,
-			     pBox->BxClipY + pBox->BxClipH - delta + i);
-#endif /* _GL */
-		  
-		}
 
 	      /* Move boxes which are out of structure relations with it
 		 and update streched dimensions that depends on it
@@ -1375,7 +1313,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
   ----------------------------------------------------------------------*/
 void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
-  int                 i, j, k;
+  int                 i;
   PtrAbstractBox      pAb;
   PtrAbstractBox      pCurrentAb;
   PtrBox              pNextBox;
@@ -1430,41 +1368,8 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      if (ReadyToDisplay &&
 			  pBox->BxType != BoSplit &&
 			  pBox->BxType != BoMulScript)
-			{
-#ifndef _GL
-			  i = pBox->BxXOrg;
-			  j = pBox->BxXOrg + pBox->BxWidth;
-			  /* add margins for graphics */
-			  if (pBox->BxLMargin < 0)
-			    k = - pBox->BxLMargin;
-			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-			    k = EXTRA_GRAPH;
-			  else
-			    k = 0;
-			  if (delta > 0)
-			    j += delta;
-			  else
-			    i += delta;
-			  DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
-				   pBox->BxYOrg + pBox->BxHeight + k);
-#else/*  _GL */
-			  i = pBox->BxClipX;
-			  j = pBox->BxClipX + pBox->BxClipW;
-			  /* add margins for graphics */
-			  if (pBox->BxLMargin < 0)
-			    k = - pBox->BxLMargin;
-			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-			    k = EXTRA_GRAPH;
-			  else
-			    k = 0;
-			  if (delta > 0)
-			    j += delta;
-			  else
-			    i += delta;
-			  DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
-				   pBox->BxClipY + pBox->BxClipH + k);
-#endif /*  _GL */
-			}
+			/* update the clipping region */
+			UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
 		       
 		      if (IsXPosComplete (pBox))
 			{
@@ -1614,7 +1519,7 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ----------------------------------------------------------------------*/
 void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
-  int                 i, j, k;
+  int                 i;
   PtrAbstractBox      pAb;
   PtrAbstractBox      pCurrentAb;
   PtrBox              pNextBox;
@@ -1668,41 +1573,8 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      if (ReadyToDisplay &&
 			  pBox->BxType != BoSplit &&
 			  pBox->BxType != BoMulScript)
-			{
-#ifndef _GL
-			  i = pBox->BxYOrg;
-			  j = pBox->BxYOrg + pBox->BxHeight;
-			  /* add margins for graphics */
-			  if (pBox->BxLMargin < 0)
-			    k = - pBox->BxLMargin;
-			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-			    k = EXTRA_GRAPH;
-			  else
-			    k = 0;
-			  if (delta > 0)
-			    j += delta;
-			  else
-			    i += delta;
-			  DefClip (frame, pBox->BxXOrg - k, i - k,
-				   pBox->BxXOrg + pBox->BxWidth + k, j + k);
-#else /* _GL */
-			  i = pBox->BxClipY;
-			  j = pBox->BxClipY + pBox->BxClipH;
-			  /* add margins for graphics */
-			  if (pBox->BxLMargin < 0)
-			    k = - pBox->BxLMargin;
-			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-			    k = EXTRA_GRAPH;
-			  else
-			    k = 0;
-			  if (delta > 0)
-			    j += delta;
-			  else
-			    i += delta;
-			  DefClip (frame, pBox->BxClipX - k, i - k,
-				   pBox->BxClipX + pBox->BxClipW + k, j + k);
-#endif /*  _GL */
-			}
+			/* update the clipping region */
+			UpdateBoxRegion (frame, pBox, 0, delta, 0, 0);
 		      
 		      if (IsYPosComplete (pBox))
 			{
@@ -1997,7 +1869,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   ViewSelection      *pViewSel;
-  int                 i, j, k, diff, val;
+  int                 i, j, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraL, extraR;
   int                 addL = 0, addR = 0;
@@ -2039,15 +1911,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       
       if (!IsDead (pCurrentAb))
 	{
-	  /* Area zone before moving */
-#ifndef _GL
-	  i = pBox->BxXOrg;
-	  j = i + pBox->BxWidth;
-#else /* _GL */
-	  i = pBox->BxClipX;
-	  j = (pBox->BxClipW > pBox->BxWidth)?pBox->BxClipW:pBox->BxWidth;
-	  j += i;	  
-#endif /* _GL */
 	  /* It's not a stretchable box: clean up the history */
 	  if (!pBox->BxHorizFlex)
 	    pBox->BxMoved = NULL;
@@ -2097,16 +1960,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      endTrans = 0;
 	    }
 	  
-	  /* inside width */
-	  pBox->BxW += delta;
-#ifdef _GL
-	  pBox->BxClipW += delta;
-#endif /* _GL */
-	  /* outside width */
-	  pBox->BxWidth = pBox->BxWidth + delta + diff;
-	  pBox->BxXOrg += orgTrans;
-
-	  /* register the window area to be redisplayed */
 	  if (ReadyToDisplay &&
 	      pBox->BxType != BoSplit &&
 	      pBox->BxType != BoMulScript &&
@@ -2119,47 +1972,18 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       /* redisplay filled boxes */
 	       pCurrentAb->AbFillBox ||
 	       pCurrentAb->AbPictBackground))
-	    {
-	      if (pCurrentAb->AbLeafType == LtText)
-		{
-		  k = 0;
-		  if (orgTrans == 0)
-		    i = j;
-		  else if (orgTrans < 0)
-		    i += orgTrans;
-		  
-		  if (endTrans == 0)
-		    j = i;
-		  else if (endTrans > 0)
-		    j += endTrans;
-		}
-	      else
-		{
-		  /* add an extra margin for graphics */
-		  if (pBox->BxLMargin < 0)
-		    {
-		      i -= pBox->BxLMargin;
-		      k = 0;
-		    }
-		  else if (pCurrentAb->AbLeafType == LtGraphics ||
-			   pCurrentAb->AbLeafType == LtPicture)
-		    k = EXTRA_GRAPH;
-		  else
-		    k = 0;
-		  if (orgTrans < 0)
-		    i += orgTrans;
-		  if (endTrans > 0)
-		    j += endTrans;
-		}
-#ifndef _GL
-	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
-		       pBox->BxYOrg + pBox->BxHeight + k);
-#else /* _GL */
-	      DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
-		       pBox->BxClipY + pBox->BxClipH + k);
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, orgTrans, 0, delta, 0);
+
+	  /* inside width */
+	  pBox->BxW += delta;
+#ifdef _GL
+	  /*pBox->BxClipW += delta;*/
 #endif /* _GL */
-	    }
-	  
+	  /* outside width */
+	  pBox->BxWidth = pBox->BxWidth + delta + diff;
+	  pBox->BxXOrg += orgTrans;
+
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
 	  while (pPosRel)
@@ -2546,7 +2370,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   SpecFont            font;
-  int                 i, j, k, diff, val;
+  int                 i, j, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraT, extraB;
   int                 addT = 0, addB = 0;
@@ -2637,13 +2461,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
 	      endTrans = 0;
 	    }
-	  /* inside height */
-	  pBox->BxH += delta;
-	  /* outside height */
-	  pBox->BxHeight = pBox->BxHeight + delta + diff;
-	  pBox->BxYOrg += orgTrans;
-	  
-	  /* register the window area to be redisplayed */
+
 	  if (ReadyToDisplay &&
 	      pBox->BxType != BoSplit &&
 	      pBox->BxType != BoMulScript &&
@@ -2656,41 +2474,17 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       /* redisplay filled boxes */
 	       pCurrentAb->AbFillBox ||
 	       pCurrentAb->AbPictBackground))
-	    {
-	      if (pCurrentAb->AbLeafType == LtText)
-		{
-		  k = 0;
-		  if (orgTrans == 0)
-		    i = j;
-		  else if (orgTrans < 0)
-		    i += orgTrans;
-		  if (endTrans == 0)
-		    j = i;
-		  else if (endTrans > 0)
-		    j += endTrans;
-		}
-	      else
-		{
-		  /* add an extra margin for graphics */
-		  if (pBox->BxLMargin < 0)
-		    k = - pBox->BxLMargin;
-		  else if (pCurrentAb->AbLeafType == LtGraphics)
-		    k = EXTRA_GRAPH;
-		  else
-		    k = 0;
-		  if (orgTrans < 0)
-		    i += orgTrans;
-		  if (endTrans > 0)
-		    j += endTrans;
-		}
-#ifndef _GL
-	      DefClip (frame, pBox->BxXOrg - k, i - k,
-		       pBox->BxXOrg + pBox->BxWidth + k, j + k);
-#else /* _GL */
-	      DefRegion (frame, pBox->BxClipX - k, i - k,
-		       pBox->BxClipX + pBox->BxClipW + k, j + k);
-#endif/*  _GL */
-	    }
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, 0, orgTrans, 0, delta);
+
+	  /* inside height */
+	  pBox->BxH += delta;
+#ifdef _GL
+	  /*pBox->BxClipH += delta;*/
+#endif /* _GL */
+	  /* outside height */
+	  pBox->BxHeight = pBox->BxHeight + delta + diff;
+	  pBox->BxYOrg += orgTrans;
 	  
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
@@ -3098,7 +2892,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
-  int                 i, j, k;
+  int                 i;
   ThotBool            toComplete;
   ThotBool            notEmpty;
   ThotBool            checkParent;
@@ -3130,78 +2924,14 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       /* register the window area to be redisplayed */
       if (ReadyToDisplay)
 	{
-	  if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
-	    {
-#ifndef _GL
-	      i = pBox->BxXOrg;
-	      j = pBox->BxXOrg + pBox->BxWidth;
-	      /* add margins for graphics */
-	      if (pBox->BxLMargin < 0)
-		{
-		  i -= pBox->BxLMargin;
-		  k = 0;
-		}
-	      else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		k = EXTRA_GRAPH;
-	      else
-		k = 0;
-	      if (delta > 0)
-		j += delta;
-	      else
-		i += delta;
-	      if (pBox->BxHeight > 0)
-		DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
-			 pBox->BxYOrg + pBox->BxHeight + k);
-#else /* _GL */
-	      i = pBox->BxClipX;
-	      j = pBox->BxClipX + pBox->BxClipW;
-	      /* add margins for graphics */
-	      if (pBox->BxLMargin < 0)
-		{
-		  i -= pBox->BxLMargin;
-		  k = 0;
-		}
-	      else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		k = EXTRA_GRAPH;
-	      else
-		k = 0;
-	      if (delta > 0)
-		j += delta;
-	      else
-		i += delta;
-	      if (pBox->BxHeight > 0)
-		DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
-			   pBox->BxClipY + pBox->BxClipH + k);
-#endif /* _GL */
-	    }
+	  if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript &&
+	      pBox->BxHeight > 0)
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
 	  /* Is the box not included? */
 	  else if (!pCurrentAb->AbVertEnclosing)
-	    {
-	      if (pBox->BxLMargin < 0)
-		i = pBox->BxLMargin;
-	      else
-		i = 0;
-	      
-#ifndef _GL
-	      if (delta > 0)
-		DefClip (frame, pBox->BxXOrg + i - delta, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth + i,
-			 pBox->BxYOrg + pBox->BxHeight);
-	      else
-		DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth - delta + i,
-			 pBox->BxYOrg + pBox->BxHeight);
-#else /* _GL */
-	      if (delta > 0)
-		DefRegion (frame, pBox->BxClipX + i - delta, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW + i,
-			   pBox->BxClipY + pBox->BxClipH);
-	      else
-		DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW - delta + i,
-			   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
-	    }
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
 	}
       
       /* Keep in mind if the box positionning is absolute or not */
@@ -3372,7 +3102,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
-  int                 i, j, k;
+  int                 i;
   ThotBool            toComplete;
   ThotBool            notEmpty;
   ThotBool            checkParent;
@@ -3404,62 +3134,14 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       /* register the window area to be redisplayed */
       if (ReadyToDisplay)
 	{
-	  if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
-	    {
-#ifndef _GL
-	      i = pBox->BxYOrg;
-	      j = pBox->BxYOrg + pBox->BxHeight;
-#else/*  _GL */
-	      i = pBox->BxClipY;
-	      j = pBox->BxClipY + pBox->BxClipH;
-#endif /* _GL */
-	      /* add margins for graphics */
-	      if (pBox->BxLMargin < 0)
-		k = - pBox->BxLMargin;
-	      else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		k = EXTRA_GRAPH;
-	      else
-		k = 0;
-	      if (delta > 0)
-		j += delta;
-	      else
-		i += delta;
-	      if (pBox->BxWidth > 0 || k > 0)
-#ifndef _GL
-		DefClip (frame, pBox->BxXOrg - k, i - k,
-			 pBox->BxXOrg + pBox->BxWidth + k, j + k);
-#else /* _GL */
-	      DefRegion (frame, pBox->BxClipX - k, i - k,
-			 pBox->BxClipX + pBox->BxClipW + k, j + k);
-#endif /* _GL */
-	    }
+	  if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript &&
+	      pBox->BxWidth > 0)
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, 0, delta, 0, 0);
 	  /* Is the box not included? */
 	  else if (!pCurrentAb->AbHorizEnclosing)
-	    {
-	      if (pBox->BxLMargin < 0)
-		i = pBox->BxLMargin;
-	      else
-		i = 0;
-#ifndef _GL
-	      if (delta > 0)
-		DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg - delta,
-			 pBox->BxXOrg + pBox->BxWidth + i,
-			 pBox->BxYOrg + pBox->BxHeight);
-	      else
-		DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth + i, 
-			 pBox->BxYOrg + pBox->BxHeight - delta);
-#else /* _GL */
-	      if (delta > 0)
-		DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY - delta,
-			   pBox->BxClipX + pBox->BxClipW + i,
-			   pBox->BxClipY + pBox->BxClipH);
-	      else
-		DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW + i, 
-			   pBox->BxClipY + pBox->BxClipH - delta);
-#endif /* _GL */
-	    }
+	    /* update the clipping region */
+	    UpdateBoxRegion (frame, pBox, 0, delta, 0, 0);
 	}
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsYPosComplete (pBox);
@@ -3633,7 +3315,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   AbPosition         *pPosAb;
   int                 val, width;
   int                 left;
-  int                 x, i, j, k;
+  int                 x, i, j;
   ThotBool            movingChild;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -3770,29 +3452,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		  {
 		    /* update the clipping area for the future */
 		    if (ReadyToDisplay)
-		      {
-			/* Add extra margins for graphics */
-			if (pBox->BxLMargin < 0)
-			  k = - pBox->BxLMargin;
-			else if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
-			  k = EXTRA_GRAPH;
-			else
-			  k = 0;
-			i = pChildBox->BxXOrg;
-			j = pChildBox->BxXOrg + pChildBox->BxWidth;
-			if (val > 0)
-			  j += val;
-			else
-			  i += val;
-#ifndef _GL
-			DefClip (frame, i - k, pChildBox->BxYOrg - k, j + k,
-				 pChildBox->BxYOrg + pChildBox->BxHeight + k);
-#else /* _GL */
-			DefRegion (frame, i - k, pChildBox->BxClipY - k, j + k,
-				 pChildBox->BxClipY + pChildBox->BxClipH + k);
-#endif /* _GL */
-		      }
-		    
+		      /* update the clipping region */
+		      UpdateBoxRegion (frame, pChildBox, val, 0, 0, 0);
+    
 		    if (IsXPosComplete (pChildBox))
 		      /* move all included boxes */
 		      XMoveAllEnclosed (pChildBox, val, frame);
@@ -3891,7 +3553,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, height;
-  int                 y, i, j, k, top;
+  int                 y, i, j, top;
   ThotBool            movingChild;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -4022,29 +3684,9 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		  {
 		    /* update the clipping area for the redisplay */
 		    if (ReadyToDisplay)
-		      {
-			i = pChildBox->BxYOrg;
-			j = pChildBox->BxYOrg + pChildBox->BxHeight;
-			/* Add extra margins for graphics */
-			if (pBox->BxLMargin < 0)
-			  k = - pBox->BxLMargin;
-			else if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
-			  k = EXTRA_GRAPH;
-			else
-			  k = 0;
-			if (val > 0)
-			  j += val;
-			else
-			  i += val;			
-#ifndef _GL
-			DefClip (frame, pChildBox->BxXOrg - k, i - k,
-				 pChildBox->BxXOrg + pChildBox->BxWidth + k, j + k);
-#else /* _GL */
-			DefRegion (frame, pChildBox->BxClipX - k, i - k,
-				 pChildBox->BxClipX + pChildBox->BxClipW + k, j + k);
-#endif /* _GL */
-		      }
-		    
+		      /* update the clipping region */
+		      UpdateBoxRegion (frame, pChildBox, 0, val, 0, 0);
+
 		    if (IsYPosComplete (pChildBox))
 		      /* move all included boxes */
 		      YMoveAllEnclosed (pChildBox, val, frame);

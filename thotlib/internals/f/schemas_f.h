@@ -69,7 +69,7 @@ extern void CreateGuestViewList ( PtrDocument pDoc,
                                   int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
-                            PtrSSchema natureTable[10],
+                            PtrSSchema natureTable[10 ],
                             int *natureTableLen );
 extern void AppendXmlAttribute ( char *xmlName,
                                  AttributeType *attrType,
@@ -174,7 +174,7 @@ extern void CreateGuestViewList ( PtrDocument pDoc,
                                     int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
-                              PtrSSchema natureTable[10],
+                              PtrSSchema natureTable[10 ],
                               int *natureTableLen );
 extern void AppendXmlAttribute ( char *xmlName,
                                    AttributeType *attrType,

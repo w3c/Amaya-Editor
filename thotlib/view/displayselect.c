@@ -472,15 +472,7 @@ void DrawBoxSelection (int frame, PtrBox pBox)
 	}
       else
 	/* display other elements */
-#ifndef _GL
-	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		 pBox->BxXOrg + pBox->BxWidth,
-		 pBox->BxYOrg + pBox->BxHeight);
-#else/*  _GL */
-	DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-		 pBox->BxClipX + pBox->BxClipW,
-		 pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
+	DefBoxRegion (frame, pBox, -1, -1, -1, -1);
     }
 }
 
