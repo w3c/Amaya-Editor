@@ -10,7 +10,7 @@
 
 <H3>Vincent Quint</H3>
 
-<H4>translated by Ethan Munson</H4>
+<H4>translated from French by Ethan Munson</H4>
 
 <H4>Version of December 14, 1996</H4>
 
@@ -39,13 +39,12 @@ and cross-references which give a document its logical structure.</P>
 <P>
 Because of this model, the author can divide his document into chapters,
 giving each one a title.  The content of these chapters can be further divided
-into sections, subsections, etc..  The text is organized into successive
-paragraphs, as a function of the content. In the writing phase, the lines,
-pages, margins, spacing, fonts, and character styles are not very important.
-In fact, if the system requires documents to be written in these terms, it
-gets in the way. So, Thot's model is primarily based on the logical aspect of
-documents.  The creation of a model of this type essentially requires the
-definition :</P>
+into sections, subsections, etc.  The text is organized into successive
+paragraphs, according to the content. In the writing phase, the lines, pages,
+margins, spacing, fonts, and character styles are not very important. In fact,
+if the system requires documents to be written in these terms, it gets in the
+way. So, Thot's model is primarily based on the logical aspect of documents.
+The creation of a model of this type essentially requires the definition :</P>
 <UL>
 <LI>of the entities which can appear in the documents,
 <LI>and the relations between these entities.
@@ -92,11 +91,11 @@ of widely used entities.</P>
 
 <P>
 Thus, it is apparently impossible to construct an exhaustive inventory of all
-those entities which are necessary and sufficient to describe any document. It
-also seems impossible to specify all possible arrangements of these entities
-in a document.  This is why Thot uses a <EM>meta-model</EM> instead, which
-permits the description of numerous <EM>models</EM>, each one describing a
-<EM>class</EM> of documents.</P>
+those entities which are necessary and sufficient to precisely describe any
+document. It also seems impossible to specify all possible arrangements of
+these entities in a document.  This is why Thot uses a <EM>meta-model</EM>
+instead, which permits the description of numerous <EM>models</EM>, each one
+describing a <EM>class</EM> of documents.</P>
 <P>
 A <EM>class</EM> is a set of documents having very similar structure. Thus,
 the collection of research reports published by a laboratory constitutes a
@@ -214,7 +213,7 @@ first.  Since every document in a class corresponds to the same generic
 logical structure, a homogenous presentation for different documents of the
 same class can be assured by applying the same generic presentation to all
 documents of the class.  Homogeneity of presentation can also be found among
-the entities of a single document: every section title will be presented  in
+the entities of a single document: every section heading will be presented  in
 the same way, the first line of every paragraph of the same type will have the
 same indentation, etc.</P>
 <P>
@@ -283,17 +282,16 @@ concentrate on the logical aspect of the document and the objects.</P>
 It is clear that the documents in a class do not necessarily use the same
 classes of objects: one technical report will contain tables while another
 report will have no tables but will use mathematical formulas. The usable
-object classes are not mentioned in a limiting way in the generic logical
-structure of documents.  Rather, they can be chosen freely from a large set,
-independent of the document class.</P>
+object classes are not always mentioned in a limiting way in the generic
+logical structure of documents.  Rather, they can be chosen freely from a
+large set, independent of the document class.</P>
 <P>
 Thus, the object classes will be made commonplace and usable in every
 document. The notion of ``object'' can be enlarged to include not only
 non-textual elements, but also certain types of textual elements which can
 appear in practically every document, whatever their class.  Among these
-textual elements, one can mention certain elements defined by LaTeX as
-<EM>environments</EM>: enumerations, descriptions, examples, quotations, even
-paragraphs.</P>
+textual elements, one can mention enumerations, descriptions, examples,
+quotations, even paragraphs.</P>
 <P>
 Thus, the document model is not a single, general model describing every type
 of document in one place.  Rather, it is a meta-model which can be used to
@@ -341,7 +339,7 @@ If, instead, a very fine-grained representation for the structure of a
 document is sought, character strings could be defined to contain only a
 single word, or even just a single character.  This is the case, for example,
 in programs,  for which one wants to retain a structure very close to the
-syntax of the programming language.  In this case, a assignment statement
+syntax of the programming language.  In this case, an assignment statement
 initializing a simple variable to zero would be composed of two structural
 elements, the identifier of the variable (a short character string) and the
 assigned value (a string of a single character, `0').</P>
@@ -355,16 +353,17 @@ number of types of atoms that are necessary.</P>
 Primitive <EM>graphical elements</EM> are used for tables and figures of
 different types.  These elements are simple geometric shapes like horizontal
 or vertical lines, which are sufficient for tables, or even oblique lines,
-arrows, rectangles, and circles for use in figures. From these elements and
-character strings, graphical objects and tables can be constructed.</P>
+arrows, rectangles, circles, polygons, and curves for use in figures. From
+these elements and character strings, graphical objects and tables can be
+constructed.</P>
 <P>
 Photographs, though having very little structure, must still appear in
-documents.  They are supported by <EM>image</EM> elements, which are
-represented as matrices of points.</P>
+documents.  They are supported by <EM>picture</EM> elements, which are
+represented as matrices of pixels.</P>
 <P>
 Finally, mathematical notations require certain elements which are
 simultaneously characters and graphical elements, the <EM>symbols</EM>. By way
-of example, Radicals, integration signs, or even large parentheses are
+of example, radicals, integration signs, or even large parentheses are
 examples of this type of atom.  The size of each of these symbols is
 determined by its environment, that is to say, by the expression to which it
 is attached.</P>
@@ -374,7 +373,7 @@ documents and structured objects are:</P>
 <UL>
 <LI>character strings,
 <LI>graphical elements,
-<LI>images,
+<LI>pictures,
 <LI>and mathematical symbols.
 </UL>
 </DIV>
@@ -406,13 +405,6 @@ constructed elements.  A constructed element of type chapter (or more simply,
 paragraph, a constructed element, can be made up of character strings, which
 are primitive elements, and of equations, which are constructed elements.</P>
 <P>
-A parallel can be made between the element types and the data types of
-programming languages, such as C.  The four primitive types of Thot are
-comparable to the standard primitive types of C: integer, character, and real,
-for instance.  The types of constructed elements are comparable to the
-structured types of C which each programmer defines from the primitive
-types.</P>
-<P>
 A document is also a constructed element.  This is an important point. In
 particular, it allows a document to be treated as part of another document,
 and conversely, permits a part of a document to be treated as a complete
@@ -439,9 +431,7 @@ structures.  For this, we rely on the notion of the <EM>constructor</EM>.  A
 constructor defines a way of assembling certain elements in a structure.  It
 resides at the level of the meta-structure: it does not describe the existing
 relations in a given structure, but rather defines  how elements are assembled
-to build a structure that conforms to a model.  In comparison with C, the
-constructors correspond to the methods for building structured data types:
-arrays and structures.</P>
+to build a structure that conforms to a model.</P>
 <P>
 In defining the overall organization of documents, the first two constructors
 considered are the aggregate and the list.</P>
@@ -466,11 +456,10 @@ in the list constructor or the number of elements can be left unconstrained.
 The body of a report is a list of chapters and is typically required to
 contain a minimum of two chapters (is a chapter useful if it is the only one
 in the report?) The chapter itself can contain a list of sections, each
-section containing a list of paragraphs.  The list constructor corresponds to
-a one-dimensional array in C.  In the same way as the aggregate, the list is a
-very frequently used constructor in every type of document.  However, these
-two constructors are not sufficient to describe every document structure; thus
-other constructors supplement them.</P>
+section containing a list of paragraphs.  In the same way as the aggregate,
+the list is a very frequently used constructor in every type of document. 
+However, these two constructors are not sufficient to describe every document
+structure; thus other constructors supplement them.</P>
 </DIV>
 
 <DIV class="subsubsection">
@@ -480,8 +469,7 @@ other constructors supplement them.</P>
 The <EM>choice</EM> constructor is used to define the structure of an element
 type for which one alternative is chosen from several possibilities. Thus, a
 paragraph can be either a simple text paragraph, or an enumeration, or a
-citation.  The choice constructor can be compared to the variant parts of
-structures in C.</P>
+citation.</P>
 <P>
 The choice constructor indicates the complete list of possible options, which
 can be too restrictive in certain cases, the paragraph being one such case.
@@ -491,7 +479,7 @@ a paragraph is defined by a schema constructor, it is possible to put in the
 place of a paragraph a table, an equation, a drawing or any other object
 defined by another generic logical structure.  It is also possible to define a
 paragraph as a sequence of units, which could be character strings, symbols,
-or images.  The choice constructor alone defines a generic logical structure
+or pictures.  The choice constructor alone defines a generic logical structure
 that is relatively constrained; in contrast, using units and schemas, a very
 open structure can be defined.</P>
 <P>
@@ -522,9 +510,8 @@ environment into which they are inserted.</P>
 <P>
 The <EM>reference</EM> is the last constructor.  It is used to define document
 elements that are cross-references to other elements, such as a section, a
-chapter, a bibliographic citation, or a figure.  The reference can be compared
-to the pointer in C, but in contrast to the pointer, the reference is
-bi-directional.  The reference can be used to access both the element being
+chapter, a bibliographic citation, or a figure.  The reference is
+bi-directional.  It can be used to access both the element being
 cross-referenced and each of the elements which make use of the
 cross-reference.</P>
 <P>
@@ -539,8 +526,7 @@ inclusion of the designated element; it accesses the most recent version of
 that element and not a ``dead'' copy, fixed in the state in which it was found
 at the moment the copy was made.  As soon as an element is modified, all of
 its inclusions are automatically brought up to date.  It must be noted that,
-in addition to inclusion, the Thot editor permits the creation of ``dead''
-copies.</P>
+in addition to inclusion, Thot permits the creation of ``dead'' copies.</P>
 <P>
 There are three types of inclusions: inclusions with full expansion,
 inclusions with partial expansion, and inclusions without expansion. During
@@ -582,7 +568,7 @@ given position in a document.</P>
 <P>
 It is often useful to delimit certain parts of a document independently from
 the logical structure.  For example, one might wish to attach some information
-(in the form of an <A href="#attributes">attribute,</A>) or a particular
+(in the form of an <A href="#attributes">attribute</A>) or a particular
 treatment to a group of words or a set of consecutive paragraphs. <EM>Mark
 pairs</EM> are used to do this.</P>
 <P>
@@ -602,7 +588,7 @@ definition of the logical structure of documents and objects in a rigorous
 way.  But this definition can be very cumbersome in certain cases, notably
 when trying to constrain or extend the authorized element types in a
 particular context.  <EM>Restrictions</EM> and <EM>extensions</EM> are used to
-simplify these cases.</P>
+cope with these cases.</P>
 <P>
 A restriction associates with a particular element type <EM>A</EM>, a list of
 those element types which elements of type <EM>A</EM> may not contain, even if
@@ -622,10 +608,10 @@ of its components do not authorize them otherwise.</P>
 <P>
 Thus, four constructors are used to construct a document:</P>
 <UL>
-<LI>the aggregate constructor,
+<LI>the aggregate constructor (ordered or not),
 <LI>the list constructor,
-<LI>the choice constructor and its extensions, the unit and
-schemaconstructors,
+<LI>the choice constructor and its extensions, the unit and schema
+constructors,
 <LI>the reference constructor and its variant, the inclusion.
 </UL>
 <P>
@@ -730,12 +716,12 @@ object.</P>
 Many types of attributes are offered: numeric, textual, references, and
 enumerations:</P>
 <UL>
-<LI><EM>Numeric attributes</EM> can take integer values (negative,positive, or
-null).
+<LI><EM>Numeric attributes</EM> can take integer values (negative, positive,
+or null).
 <LI><EM>Textual attributes</EM> have as their values character strings.
-<LI><EM>Reference attributes</EM> designate an element of the
-logicalstructure.
-<LI><EM>Enumeration attributes</EM> can take one value from a limitedlist of
+<LI><EM>Reference attributes</EM> designate an element of the logical
+structure.
+<LI><EM>Enumeration attributes</EM> can take one value from a limited list of
 possible values, each value being a name.
 </UL>
 <P>
@@ -757,9 +743,9 @@ generic structure; in particular, local attributes can only be assigned to
 those element types for which they are defined.</P>
 <P>
 In the generic structure, certain local attributes can be made mandatory for
-certain element types.  In this case, the Thot editor automatically associates
-the attribute with the elements of this type and it requires the user to
-provide a value for this attribute.</P>
+certain element types.  In this case, Thot automatically associates the
+attribute with the elements of this type and it requires the user to provide a
+value for this attribute.</P>
 <P>
 Attributes can also be automatically assigned, with a given value, by every
 application processing the document in order to systematically add a piece of
@@ -817,10 +803,10 @@ life of the document.  When a generic structure specifies that a report must
 contain a title, an abstract, an introduction, at least two chapters, and a
 conclusion, this means only that a report, <EM>upon completion</EM>, will have
 to contain all of these elements.  When the author begins writing, none of
-these elements is present.  The Thot editor uses this model.  Therefore, it
-tolerates documents which do not conform strictly to the generic structure of
-their class;  it also considers the generic logical structure to be a way of
-helping the user in the construction of a complex document.</P>
+these elements is present.  Thot uses this model.  Therefore, it tolerates
+documents which do not conform strictly to the generic structure of their
+class;  it also considers the generic logical structure to be a way of helping
+the user in the construction of a complex document.</P>
 <P>
 In contrast, other applications may reject a document which does not conform
 strictly to its generic structure.  This is, for example, what is done by
@@ -865,10 +851,9 @@ specified using a special language.  This definition language, called S, is
 described in this section.</P>
 <P>
 Each generic structure, which defines a class of documents or objects, is
-specified by a kind of program, written in the S language, which is called a
+specified by a file, written in the S language, which is called a
 <EM>structure schema</EM>.  Structure schemas are compiled into tables, called
-structure tables, which are used by the Thot editor and which determine its
-behavior.</P>
+structure tables, which are used by Thot and which determine its behavior.</P>
 
 <DIV class="subsection">
 <H3><A name="metalang">Writing Conventions</A></H3>
@@ -887,20 +872,20 @@ the right part defines the symbol of the left part.  In the right part,</P>
 <DD>is shown by the juxtaposition of symbols;
 </DD>
 <DT>character strings</DT>
-<DD>between apostrophes ' represent terminalsymbols, that is, keywords in the
-language defined.  Keywords arewritten here in upper-case letters, but can be
-written in anycombination of upper and lower-case letters.  For example, the
-keyword<TT>DEFPRES</TT>of S can also be written as
-<TT>defpres</TT>or<TT>DefPres</TT>.
+<DD>between apostrophes ' represent terminal symbols, that is, keywords in the
+language defined.  Keywords are written here in upper-case letters, but can be
+written in any combination of upper and lower-case letters.  For example, the
+keyword <TT>DEFPRES</TT> of S can also be written as <TT>defpres</TT> or
+<TT>DefPres</TT>.
 </DD>
 <DT>material between brackets</DT>
 <DD>(`[' and `]') is optional;
 </DD>
 <DT>material between angle brackets</DT>
-<DD>(`&lt;' and `>') can be repeatedmany times or omitted;
+<DD>(`&lt;' and `>') can be repeated many times or omitted;
 </DD>
 <DT>the slash</DT>
-<DD>(`/') indicates an alternative, a choice between theoptions separated by
+<DD>(`/') indicates an alternative, a choice between the options separated by
 the slash character;
 </DD>
 <DT>the period</DT>
@@ -915,26 +900,26 @@ The M meta-language also uses the concepts of identifiers, strings, and
 integers:</P>
 <DL>
 <DT><TT>NAME</TT></DT>
-<DD>represents an identifier, a sequence of letters(upper or lower-case),
-digits, and underline characters (`_'),beginning with a letter.  Also
-considered a letter is the sequence ofcharacters `<TT>\nnn</TT>' where the
-letter <TT>n</TT>represents the ISOLatin 1 code of the letter in octal.  It is
-thus possible to useaccented letters in identifiers.  The maximum length of
-identifiersis fixed by the compiler.  It is normally 19 characters.
+<DD>represents an identifier, a sequence of letters (upper or lower-case),
+digits, and underline characters (`_'), beginning with a letter.  Also
+considered a letter is the sequence of characters `<TT>\nnn</TT>' where the
+letter <TT>n</TT> represents the ISOLatin 1 code of the letter in octal.  It
+is thus possible to use accented letters in identifiers.  The maximum length
+of identifiers is fixed by the compiler.  It is normally 31 characters.
 <P>
 Unlike keywords, upper and lower-case letters are distinct in identifiers.
 Thus, <TT>Title</TT>, <TT>TITLE</TT>, and <TT>title</TT> are considered
 different identifiers.</P>
 </DD>
 <DT><TT>STRING</TT></DT>
-<DD>represents (amazingly enough) a string.  This is astring of characters
-delimited by apostrophes.  If an apostrophe mustappear in a string, it is
-doubled.  As with identifiers, strings cancontain characters represented by
-their octal code (after abackslash).  As with apostrophes, if a backslash must
-appear in astring, it is doubled.
+<DD>represents a string.  This is a string of characters delimited by
+apostrophes.  If an apostrophe must appear in a string, it is doubled.  As
+with identifiers, strings can contain characters represented by their octal
+code (after a backslash).  As with apostrophes, if a backslash must appear in
+a string, it is doubled.
 </DD>
 <DT><TT>NUMBER</TT></DT>
-<DD>represents a positive integer or zero (without asign), or said another
+<DD>represents a positive integer or zero (without a sign), or said another
 way, a sequence of decimal digits.
 </DD>
 </DL>
@@ -980,8 +965,8 @@ document the parts which belong to one version or another.  An indexing system
 will add highly-structured index tables as well as the links between these
 tables and the rest of the document.</P>
 <P>
-Thus, each application needs to extend the generic structure of the documents
-on which it operates to introduce new attributes, associated elements or
+Thus, many applications need to extend the generic structure of the documents
+on which they operate to introduce new attributes, associated elements or
 element types.  These additions are specific to each application and must be
 able to be applied to any generic structure: users will want to manage
 versions or construct indices for many types of documents.  Extension schemas
@@ -1060,9 +1045,9 @@ presentation</EM>.  Like generic structures, presentations are described by
 programs, called <EM>presentation schemas</EM>, which are written in a
 specific language, P, presented <A href="#langp">later</A> in this document.
 The name appearing after the keyword <TT>DEFPRES</TT> is the name of the
-default presentation schema.  When a new document is created, the Thot editor
-will suggest using this presentation schema, but the user remains free to
-choose another if he wishes.</P>
+default presentation schema.  When a new document is created, Thot will use
+this presentation schema by default, but the user remains free to choose
+another if he wishes.</P>
 <PRE>
      PresID = NAME .
 </PRE>
@@ -1091,7 +1076,7 @@ another structure schema.  When the type is defined in another schema, the
 element type is followed by the name of the structure schema (within
 parentheses) in which it is defined.  The name of the designated element type
 can be preceded by the keyword <TT>First</TT> or <TT>Second</TT>, but only in
-the case where the type is defined as <A href="#pairs">a pair</A>.  The
+the case where the type is defined as <A href="#pairs">a pair</A>.  These
 keywords indicate whether the attribute must designate the first mark of the
 pair or the second.  If the reference refers to a pair and neither of these
 two keywords is present, then the first mark is used.</P>
@@ -1116,10 +1101,10 @@ compiler for the S language.</P>
 </PRE>
 <P>
 There is a predefined global text attribute, the <EM>language</EM>, which is
-automatically added to every Thot structure schema.  This attribute allows the
-editor to perform certain actions, such as hyphenation and spell-checking,
-which cannot be performed without knowing the language in which each part of
-the document is written.  This attribute can be used just like any explicitly
+automatically added to every Thot structure schema.  This attribute allows
+Thot to perform certain actions, such as hyphenation and spell-checking, which
+cannot be performed without knowing the language in which each part of the
+document is written.  This attribute can be used just like any explicitly
 declared attribute: the system acts as if every structure schema contains</P>
 <PRE>
 ATTR
@@ -1129,8 +1114,8 @@ ATTR
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following specification defines the global enumeration
-attributeWordType.</P>
+The following specification defines the global enumeration attribute
+WordType.</P>
 <PRE>
 ATTR
    WordType    = Definition, IndexWord, DocumentTitle;
@@ -1157,9 +1142,9 @@ element declaration</A>.</P>
 During editing, Thot permits the insertion of parameters wherever the
 structure schema allows; it also permits the removal of parameters which are
 already in the document but does not allow the modification of the parameter's
-content in any way.  The content is generated automatically by the editor
-during the creation of the parameter, based on the value of the parameter in
-the document.</P>
+content in any way.  The content is generated automatically by Thot during the
+creation of the parameter, based on the value of the parameter in the
+document.</P>
 </DIV>
 
 <DIV class="subsection">
@@ -1185,18 +1170,18 @@ Each rule is composed of a name (the name of the element type whose structure
 is being defined) followed by an equals sign and a structure definition.</P>
 <P>
 If any local attributes are associated with the element type defined by the
-rule, they appear between parentheses after the type name.  The parentheses
-contain, first, the keyword <TT>ATTR</TT>, then the list of local attributes,
-separated by commas.  Each local attribute is composed of the name of the
-attribute followed by an equals sign and the definition of the attribute's
-type, just as in the definition of <A href="#globalattr">global
-attributes</A>.  The name of the attribute can be preceded by an exclamation
-point to indicate that the attribute must always be present for this element
-type.  The same attribute, identified by its name, can be defined  as a local
-attribute for multiple element types.  In this case, the equals sign and
-definition of the attribute type need only appear in the first occurrence of
-the attribute.  It should be noted that global attributes cannot also be
-defined as local attributes.</P>
+rule, they appear between parentheses after the type name and before the
+equals sign.  The parentheses contain, first, the keyword <TT>ATTR</TT>, then
+the list of local attributes, separated by commas.  Each local attribute is
+composed of the name of the attribute followed by an equals sign and the
+definition of the attribute's type, just as in the definition of <A
+href="#globalattr">global attributes</A>.  The name of the attribute can be
+preceded by an exclamation point to indicate that the attribute must always be
+present for this element type.  The same attribute, identified by its name,
+can be defined  as a local attribute for multiple element types.  In this
+case, the equals sign and definition of the attribute type need only appear in
+the first occurrence of the attribute.  It should be noted that global
+attributes cannot also be defined as local attributes.</P>
 <P>
 If any <A href="#restrictionextensions">extensions</A> are defined for this
 element type, a plus sign follows the structure definition and the names of
@@ -1242,7 +1227,7 @@ is only an initial value that may be modified later rather than a value fixed
 for all time.  Reference attributes are an exception to this norm.  They
 cannot be assigned a fixed value, but when the name of such an attribute
 appears this indicates that this element type must have a valid value for the
-attribute.  For the other attribute types, the fixed value is indicated by an
+attribute.  For the other attribute types, the fixed value is indicated by a
 signed integer (numeric attributes), a character string between apostrophes
 (textual attributes) or the name of a value (enumeration attributes).</P>
 <P>
@@ -1288,21 +1273,21 @@ type, the keyword of the base type is followed by the declaration of the local
 attributes using the syntax <A href="#structelem">presented above.</A></P>
 <P>
 In the case of an open choice, the type is indicated by the keyword
-<TT>UNIT</TT> for units or the keyword <TT>NATURE</TT> for objects having
-arbitrary structure.</P>
+<TT>UNIT</TT> for units or the keyword <TT>NATURE</TT> for objects having a
+structure defined by any other schema.</P>
 <P>
 A unit represents one of the two following categories:</P>
 <UL>
-<LI>a base type: text, graphical element, symbol, image,
-<LI>an element whose type is chosen from among the types definedas units in
-the <TT>UNITS</TT>section of the document's structure schema.It can also be
-chosen from among the types defined as<A href="#schemasandunits">units</A>in
-the <A href="#units"><TT>UNITS</TT> section</A>of the structure schemas that
-defines the ancestors of theelement to which the rule is applied.
+<LI>a base type: text, graphical element, symbol, picture,
+<LI>an element whose type is chosen from among the types defined as units in
+the <TT>UNITS</TT>section of the document's structure schema.  It can also be
+chosen from among the types defined as <A href="#schemasandunits">units</A> in
+the <A href="#units"><TT>UNITS</TT> section</A> of the structure schemas that
+defines the ancestors of the element to which the rule is applied.
 </UL>
 <P>
-Before the creation of an element defined as a unit, the Thot editor asks the
-user to choose between the categories of elements.</P>
+Before the creation of an element defined as a unit, Thot asks the user to
+choose between the categories of elements.</P>
 <P>
 Thus, the contents of a paragraph can be specified as a sequence of units,
 which will permit the inclusion in the paragraphs of character strings,
@@ -1361,10 +1346,10 @@ to specify any bound.</P>
      Integer = NUMBER .
 </PRE>
 <P>
-Before the document is edited, the Thot editor creates the minimum number of
-elements for the list.  If no minimum was given, it creates a single element.
-If a maximum number of elements is given and that number is attained, the
-editor refuses to create new elements for the list.</P>
+Before the document is edited, Thot creates the minimum number of elements for
+the list.  If no minimum was given, it creates a single element. If a maximum
+number of elements is given and that number is attained, the editor refuses to
+create new elements for the list.</P>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
@@ -1797,121 +1782,121 @@ exceptions are indicated by a name.  They are separated by semicolons.</P>
 The following are the available exceptions:</P>
 <DL>
 <DT><TT>NoCut</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe destroyed by the editor.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be destroyed by the editor.
 </DD>
 <DT><TT>NoCreate</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe created by ordinary commands for
-creating new elements.  Theseelements are usually created by special actions
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be created by ordinary commands for
+creating new elements.  These elements are usually created by special actions
 associated with otherexceptions.
 </DD>
 <DT><TT>NoHMove</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe moved horizontally with the mouse.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be moved horizontally with the mouse.
 </DD>
 <DT><TT>NoVMove</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe moved vertically with the mouse.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied canno tbe moved vertically with the mouse.
 </DD>
 <DT><TT>NoMove</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe moved in any direction with the
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be moved in any direction with the
 mouse.
 </DD>
 <DT><TT>NoHResize</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe resized horizontally with the mouse.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be resized horizontally with the mouse.
 </DD>
 <DT><TT>NoVResize</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe resized vertically with the mouse.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be resized vertically with the mouse.
 </DD>
 <DT><TT>NoResize</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe resized in any direction with the
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be resized in any direction with the
 mouse.
 </DD>
 <DT><TT>NoSelect</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied cannotbe selected directly with the mouse, but
-they can be selected by othermethods provided by the editor.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot be selected directly with the mouse, but
+they can be selected by other methods provided by the editor.
 </DD>
 <DT><TT>NewWidth</TT></DT>
-<DD>This exception can only be applied to numericattributes.  If the width of
-an element which has this attribute ismodified with the mouse, the value of
-the new width will be assignedto the attribute.
+<DD>This exception can only be applied to numeric attributes.  If the width of
+an element which has this attribute is modified with the mouse, the value of
+the new width will be assigned to the attribute.
 </DD>
 <DT><TT>NewHeight</TT></DT>
-<DD>This exception can only be applied to numericattributes.  If the height of
-an element which has this attribute ismodified with the mouse, the value of
-the new height will be assignedto the attribute.
+<DD>This exception can only be applied to numeric attributes.  If the height of
+an element which has this attribute is modified with the mouse, the value of
+the new height will be assigned to the attribute.
 </DD>
 <DT><TT>NewHPos</TT></DT>
-<DD>This exception can only be applied to numericattributes.  If the
-horizontal position of an element which has thisattribute is modified with the
-mouse, the value of the new horizontalposition will be assigned to the
+<DD>This exception can only be applied to numeric attributes.  If the
+horizontal position of an element which has this attribute is modified with the
+mouse, the value of the new horizontal position will be assigned to the
 attribute.
 </DD>
 <DT><TT>NewVPos</TT></DT>
-<DD>This exception can only be applied to numericattributes.  If the vertical
-position of an element which has thisattribute is modified with the mouse, the
-value of the new verticalposition will be assigned to the attribute.
+<DD>This exception can only be applied to numeric attributes.  If the vertical
+position of an element which has this attribute is modified with the mouse, the
+value of the new vertical position will be assigned to the attribute.
 </DD>
 <DT><TT>Invisible</TT></DT>
-<DD>This exception can only be applied toattributes, but can be applied to all
-attribute types.  It indicatesthat the attribute must not be seen by the user
-and that its valuemust not be changed directly.  This exception is usually
+<DD>This exception can only be applied to attributes, but can be applied to all
+attribute types.  It indicates that the attribute must not be seen by the user
+and that its value must not be changed directly.  This exception is usually
 used whenanother exception manipulates the value of an attribute.
 </DD>
 <DT><TT>Hidden</TT></DT>
-<DD>This exception can only be applied to elementtypes.  It indicates that
-elements of this type, although present inthe document's structure, must not
-be shown to the user of the editor.In particular, the creation menus must not
-propose this type and theselection message must not pick it.
+<DD>This exception can only be applied to element types.  It indicates that
+elements of this type, although present in the document's structure, must not
+be shown to the user of the editor.  In particular, the creation menus must not
+propose this type and the selection message must not pick it.
 </DD>
 <DT><TT>ActiveRef</TT></DT>
-<DD>This exception can only be applied toattributes of the reference type.  It
-indicates that when the user ofthe editor makes a double click on an element
-which possesses areference attribute having this exception, the element
-designated bythe reference attribute will be selected.
+<DD>This exception can only be applied to attributes of the reference type.  It
+indicates that when the user of the editor makes a double click on an element
+which possesses a reference attribute having this exception, the element
+designated by the reference attribute will be selected.
 </DD>
 <DT><TT>ImportLine</TT></DT>
-<DD>This exception can only be applied to elementtypes.  It indicates that
-elements of this type should receive thecontent of imported text files.  An
-element is created for each lineof the imported file.  A structure schema
-cannot contain severalexceptions <TT>ImportLine</TT>and, if it contains one,
-it should notcontain any exception <TT>ImportParagraph</TT>.
+<DD>This exception can only be applied to element types.  It indicates that
+elements of this type should receive the content of imported text files.  An
+element is created for each line of the imported file.  A structure schema
+cannot contain several exceptions <TT>ImportLine</TT> and, if it contains one,
+it should not contain any exception <TT>ImportParagraph</TT>.
 </DD>
 <DT><TT>ImportParagraph</TT></DT>
-<DD>This exception can only be applied to elementtypes.  It indicates that
-elements of this type should receive thecontent of imported text files.  An
-element is created for each paragraphof the imported file.  A paragraph is a
-sequence of lines without anyempty line.  A structure schema cannot contain
-several exceptions<TT>ImportParagraph</TT>and, if it contains one, it should
-not contain anyexception <TT>ImportLine</TT>.
+<DD>This exception can only be applied to element types.  It indicates that
+elements of this type should receive the content of imported text files.  An
+element is created for each paragraph of the imported file.  A paragraph is a
+sequence of lines without any empty line.  A structure schema cannot contain
+several exceptions <TT>ImportParagraph</TT> and, if it contains one, it should
+not contain any exception <TT>ImportLine</TT>.
 </DD>
 <DT><TT>NoPaginate</TT></DT>
-<DD>This exception can only be applied to the rootelement, i.e. the name that
-appear after the keyword <TT>STRUCTURE</TT>at thebeginning of the structure
-schema.  It indicates that the editor should notallow the user to paginate
+<DD>This exception can only be applied to the root element, i.e. the name that
+appear after the keyword <TT>STRUCTURE</TT> at the beginning of the structure
+schema.  It indicates that the editor should not allow the user to paginate
 documents of that type.
 </DD>
 <DT><TT>ParagraphBreak</TT></DT>
-<DD>This exception can only be applied to elementtypes.  When the caret is
-within an element of a type to which this exceptionis applied, it is that
-element that will be split when the user hits theReturn key.
+<DD>This exception can only be applied to element types.  When the caret is
+within an element of a type to which this exception is applied, it is that
+element that will be split when the user hits the Return key.
 </DD>
 <DT><TT>HighlightChildren</TT></DT>
-<DD>This exception can only be applied to elementtypes.  Elements of a type to
-which this exception is applied are nothighlighted themselves when they are
-selected, but all their children arehighlighted instead.
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied are not highlighted themselves when they are
+selected, but all their children are highlighted instead.
 </DD>
 <DT><TT>ExtendedSelection</TT></DT>
-<DD>This exception can only be applied to elementtypes.  The selection
-extension command (middle button of the mouse) only addthe clicked element (if
-it has that exception) to the current selection,without selecting other
-elements between the current selection and theclicked element.
+<DD>This exception can only be applied to element types.  The selection
+extension command (middle button of the mouse) only add the clicked element (if
+it has that exception) to the current selection, without selecting other
+elements between the current selection and the clicked element.
 </DD>
 </DL>
 <BLOCKQUOTE class="example">
@@ -1923,9 +1908,9 @@ Graphic_object element type with the associated Height and Weight
 numericattributes.  Suppose that we want documents of this class to have
 thefollowing qualities:</P>
 <UL>
-<LI>Whenever the width or height of an object is changed using themouse, the
-new values are stored in the object's Width andHeight attributes.
-<LI>The user should not be able to change the values of theWidth and Height
+<LI>Whenever the width or height of an object is changed using the mouse, the
+new values are stored in the object's Width and Height attributes.
+<LI>The user should not be able to change the values of the Width and Height
 attributes via the Attributes menu ofthe Thot editor.
 </UL>
 <P>
@@ -2270,10 +2255,10 @@ axes, which we designate as follows (<A href="#boxes">see figure</A>):</P>
 <DD>the right side,
 </DD>
 <DT><TT> VMiddle</TT></DT>
-<DD>the vertical axis passing through the centerof the box,
+<DD>the vertical axis passing through the center of the box,
 </DD>
 <DT><TT> HMiddle</TT></DT>
-<DD>the horizontal axis passing through the centerof the box,
+<DD>the horizontal axis passing through the center of the box,
 </DD>
 <DT><TT> VRef</TT></DT>
 <DD>the vertical reference axis,
@@ -2939,7 +2924,7 @@ Presentation constants are used in the definition of the content of
 presentation boxes.  This content is used in <A href="#variables">variable
 definitions</A> and in the <A href="#content"><TT>Content</TT> rule</A>.  The
 only presentation constants which can be used are character strings,
-mathematical symbols, graphical elements, and images, that is to say, base
+mathematical symbols, graphical elements, and pictures, that is to say, base
 elements.</P>
 <P>
 Constants can be defined directly in the variables or presentation boxes
@@ -3260,10 +3245,8 @@ are defined implicitly in the structure schemas.  In the English version of
 the presentation schema compiler, the base type names are the same as in the S
 language, but they are terminated by the <TT>_UNIT</TT> suffix:
 <TT>TEXT_UNIT</TT>, <TT>PICTURE_UNIT</TT>, <TT>SYMBOL_UNIT</TT>,
-<TT>GRAPHICS_UNIT</TT>.  In the French version of the compiler, the base types
-are: <TT>TEXTE</TT>, <TT>IMAGE</TT>, <TT>SYMBOLE</TT>, <TT>GRAPHIQUE</TT>.
-Whatever version of the compiler is used, the base type names are written in
-upper-case letters.</P>
+<TT>GRAPHICS_UNIT</TT>.  The base type names are written in upper-case
+letters.</P>
 </DIV>
 
 <DIV class="subsection">
@@ -3310,15 +3293,15 @@ The specification of values for which the presentation rules will be applied
 varies according to the type of the attribute:</P>
 <DL>
 <DT>numeric attribute</DT>
-<DD>If the rules are to apply for one value ofthe attribute, then the
-attribute name is followed by an equals signand this value.  If the rules are
-to apply for all values less than(or greater than) a threshold value,
-non-inclusive, the attribute namefollowed by a '&lt;' sign (or a '>' sign,
-respectively) andthe threshold value.  If the rules must apply to a range of
-values,the attribute name is followed by the word '<TT>IN</TT>' and the
-twobounds of the range, enclosed in brackets and separated by two
-periods('<TT>..</TT>').  In the case of ranges, the values of the bounds
-areincluded in the range.
+<DD>If the rules are to apply for one value of the attribute, then the
+attribute name is followed by an equals sign and this value.  If the rules are
+to apply for all values less than (or greater than) a threshold value,
+non-inclusive, the attribute name followed by a '&lt;' sign (or a '>' sign,
+respectively) and the threshold value.  If the rules must apply to a range of
+values, the attribute name is followed by the word '<TT>IN</TT>' and the
+two bounds of the range, enclosed in brackets and separated by two
+periods ('<TT>..</TT>').  In the case of ranges, the values of the bounds
+are included in the range.
 <P>
 The threshold value in the comparisons can be the value of an attribute
 attached to an ancestor element.  In this case, the attribute name is given
@@ -3332,16 +3315,16 @@ equality), <TT>LESS</TT> (non-inclusive less than), and <TT>GREATER</TT>
 (non-inclusive greater than).</P>
 </DD>
 <DT>text attribute</DT>
-<DD>If the rules are to apply for one value ofthe attribute, then the
-attribute name is followed by an equals signand this value.
+<DD>If the rules are to apply for one value of the attribute, then the
+attribute name is followed by an equals sign and this value.
 </DD>
 <DT>reference attribute</DT>
-<DD>There is never a value specification; therules apply no matter what
+<DD>There is never a value specification; the rules apply no matter what
 element is designated by the attribute.
 </DD>
 <DT>enumerated attribute</DT>
-<DD>If the rules are to apply for one value ofthe attribute, then the
-attribute name is followed by an equals signand this value.
+<DD>If the rules are to apply for one value of the attribute, then the
+attribute name is followed by an equals sign and this value.
 </DD>
 </DL>
 <P>
@@ -3448,7 +3431,7 @@ ATTRIBUTES
 Thus, the character size corresponds to the value of the Importanceattribute;
 its value is</P>
 <UL>
-<LI>the value of the Importance attribute when the value isbetween 2 and 4
+<LI>the value of the Importance attribute when the value is between 2 and 4
 (inclusive),
 <LI>1, when the value of the Importance attribute is less than 2,
 <LI>4, when the value of the Importance attribute is greater than4,
@@ -3881,13 +3864,13 @@ value and are followed by the counter name between parentheses.</P>
 The list of possible conditions on counters is:</P>
 <DL>
 <DT><TT>Even (Counter)</TT></DT>
-<DD>the box is created only if the counterhas an even value.
+<DD>the box is created only if the counter has an even value.
 </DD>
 <DT><TT>Odd (Counter)</TT></DT>
-<DD>the box is created only if the counterhas an odd value.
+<DD>the box is created only if the counter has an odd value.
 </DD>
 <DT><TT>One (Counter)</TT></DT>
-<DD>the box is created only the counter'svalue is 1.
+<DD>the box is created only the counter's value is 1.
 </DD>
 <DT><TT>NOT One (Counter)</TT></DT>
 <DD>the box is created, unless thecounter's value is 1.
@@ -3927,19 +3910,20 @@ are syntactically correct but can be expressed more simply by <TT>Odd</TT> and
 A presentation rule defines either a presentation parameter or presentation
 function.  The parameters are:</P>
 <UL>
-<LI>the position of the vertical and horizontal reference axes ofthe box,
+<LI>the position of the vertical and horizontal reference axes of the box,
 <LI>the position of the box in relation to other boxes,
 <LI>the height or width of the box, with overflow exceptions,
-<LI>the characteristics of the lines contained in the box: interlinespacing,
+<LI>the characteristics of the lines contained in the box: linespacing,
 indentation of the first line, justification, hyphenation,
 <LI>the conditions for breaking the box across pages,
-<LI>the characteristics of the characters contained in the box:size, font,
+<LI>the characteristics of the characters contained in the box: size, font,
 style, underlining,
-<LI>the depth of the box among overlapping boxes (often calledstacking order),
-<LI>the characteristics of graphic elements contained in the box:style and
+<LI>the depth of the box among overlapping boxes (often called stacking
+order),
+<LI>the characteristics of graphic elements contained in the box: style and
 thickness of lines, fill pattern for closed objects,
-<LI>the colors in text, graphics, images, and symbols contained inthe box are
-displayed or printed,
+<LI>the colors in text, graphics, pictures, and symbols contained in the box
+are displayed or printed,
 <LI>for presentation boxes only, the contents of the box.
 </UL>
 <P>
@@ -4080,9 +4064,9 @@ and in rules specifying the thickness of strokes (<TT>LineWeight</TT>).</P>
 <P>
 In all these rules, the distance or extent can be expressed</P>
 <UL>
-<LI>either in relative units, which depend on the size of thecharacters in the
-current font: height of the element's font orheight of the letter 'x',
-<LI>or in absolute units: centimeter, millimeter, inch, typographer'spoint,
+<LI>either in relative units, which depend on the size of the characters in
+the current font: height of the element's font or height of the letter 'x',
+<LI>or in absolute units: centimeter, millimeter, inch, typographer's point,
 pica or pixel.
 </UL>
 <P>
@@ -4799,7 +4783,7 @@ inherited.  A constant value is specified by a keyword:</P>
 <LI><TT>Left</TT>: at the left edge,
 <LI><TT>Right</TT>: at the right edge,
 <LI><TT>VMiddle</TT>: centered
-<LI><TT>LeftWithDots</TT>: at the left edge with a dotted linefilling out the
+<LI><TT>LeftWithDots</TT>: at the left edge with a dotted line filling out the
 last line up to the right edge of the line breaking box.
 </UL>
 <P>
@@ -5094,7 +5078,7 @@ Visibility takes non-negative integer values (positive or zero).  If values
 greater than 1 are used, they allow the user to choose a degree of visibility
 and, thus, to see only those boxes whose visibility parameter exceeds a
 certain threshold.  This gives the user control over the granularity of the
-displayed images.</P>
+displayed pictures.</P>
 <P>
 The visibility parameter can be defined as a constant or by inheritance. If
 defined by inheritance, it cannot be based on the value of the next or
@@ -5440,8 +5424,8 @@ transmitted by inheritance to the graphic elements.  As with the other rules
 specific to graphics, only identical inheritance is allowed.</P>
 <P>
 The <TT>FillPattern</TT> rule can also be used to determine whether or not
-text characters, symbols and bitmaps should be colored.  For these element
-types (test, symbols, and images), the only valid values are nopattern,
+text characters, symbols and graphics should be colored.  For these element
+types (text, symbols, and graphics), the only valid values are nopattern,
 foregroundcolor, and backgroundcolor.  When <TT>FillPattern</TT> has the value
 <TT>backgroundcolor</TT>, text characters, symbols, and bitmaps are given the
 color specified by the <A href="#colors"><TT>Background</TT> rule</A> which
@@ -5482,8 +5466,8 @@ constants specify one of the available colors in Thot.  The available color
 names can be found in the file <TT>thot.color</TT>.</P>
 <P>
 In contrast to the preceding rules, the color rules affect all base elements
-the same way, no matter what their type (text, graphics, images, symbols), but
-they only affect base elements.  The color rules can nevertheless be
+the same way, no matter what their type (text, graphics, pictures, symbols),
+but they only affect base elements.  The color rules can nevertheless be
 associated with any box and can be transmitted to the base elements by
 inheritance.  Like the preceding rules, only inheritance of the same value is
 allowed.</P>
@@ -5622,29 +5606,29 @@ A keyword specifies the position, relative to the creating box, at which the
 created box will be placed in the structure:</P>
 <DL>
 <DT><TT>CreateFirst</TT></DT>
-<DD>specifies that the box should be created asthe first box of the next lower
-level, before any already existingboxes, and only if the beginning of the
+<DD>specifies that the box should be created as the first box of the next lower
+level, before any already existing boxes, and only if the beginning of the
 creating element is visible;
 </DD>
 <DT><TT>CreateLast</TT></DT>
-<DD>specifies that the box should be created asthe last box of the next lower
-level, after any existing boxes, andonly if the end of the creating element is
+<DD>specifies that the box should be created as the last box of the next lower
+level, after any existing boxes, and only if the end of the creating element is
 visible;
 </DD>
 <DT><TT>CreateBefore</TT></DT>
-<DD>specifies that the box should be createdbefore the creating box, on the
-same level as the creating box, andonly if the beginning of the creating
+<DD>specifies that the box should be created before the creating box, on the
+same level as the creating box, and only if the beginning of the creating
 element is visible;
 </DD>
 <DT><TT>CreateAfter</TT></DT>
-<DD>specifies that the box should be createdafter the creating box, on the
-same level as the creating box, andonly if the beginning of the creating
+<DD>specifies that the box should be created after the creating box, on the
+same level as the creating box, and only if the beginning of the creating
 element is visible;
 </DD>
 <DT><TT>CreateEnclosing</TT></DT>
-<DD>specifies that the box should be createdat the upper level relatively to
-the creating box, and that it mustcontain that creating box and all
-presentation boxes created by thesame creating box.
+<DD>specifies that the box should be created at the upper level relatively to
+the creating box, and that it must contain that creating box and all
+presentation boxes created by the same creating box.
 </DD>
 </DL>
 <P>
@@ -6001,7 +5985,7 @@ associated:</P>
 <LI>with element types defined in the structure schema,
 <LI>with global or local attributes defined in the structure schema,
 <LI>with specific presentation rules,
-<LI>with the content of the leaves of  the structure (characters,symbols and
+<LI>with the content of the leaves of  the structure (characters, symbols and
 graphical elements)
 </UL>
 <P>
@@ -6017,9 +6001,9 @@ graphical elements.  All other rules, whether associated with element types,
 with specific presentation rules or with attributes, are treated similarly.
 These rules primarily allow:</P>
 <UL>
-<LI>generation of a text constant or variable before or afterthe contents of
+<LI>generation of a text constant or variable before or after the contents of
 an element,
-<LI>modification of the order in which elements appear aftertranslation,
+<LI>modification of the order in which elements appear after translation,
 <LI>removal of an element in the translated document,
 <LI>and writing messages on the user's terminal during translation.
 </UL>
@@ -6138,22 +6122,22 @@ LineLength 80;
 <P>
 A buffer is a  unit of memory managed by the translator, which can either
 contain text read from the terminal during the translation (see the <A
-href="#readrule"><TT>Read</TT> rule</A>), or the name of the last image
+href="#readrule"><TT>Read</TT> rule</A>), or the name of the last picture
 (bit-map) encountered by the translator in its traversal of the document.
-Remember the images are stored in files that are separate for the document
+Remember the pictures are stored in files that are separate for the document
 files and that the canonical form contains only the names of the files in
-which the images are found.</P>
+which the pictures are found.</P>
 <P>
 Thus, there are two types of buffers:  buffers for reading from the terminal
-(filled by the <TT>Read</TT> rule) and the buffer of image names (containing
-the name of the last image encountered).  A translation schema can use either
-type, one or several read buffers and one (and only one) image name
+(filled by the <TT>Read</TT> rule) and the buffer of picture names (containing
+the name of the last picture encountered).  A translation schema can use
+either type, one or several read buffers and one (and only one) picture name
 buffer.</P>
 <P>
 If any buffers are used, the <TT>BUFFERS</TT> keyword must be present,
 followed by declarations of every buffer used in the translation schema.  Each
 buffer declaration  is composed only of the name of the buffer, chosen freely
-by the programmer.  The image name buffer is identified by the
+by the programmer.  The picture name buffer is identified by the
 <TT>Picture</TT> keyword, between parentheses, following the buffer name.  The
 <TT>Picture</TT> keyword may only appear once.  Each buffer declaration is
 terminated by a semicolon.</P>
@@ -6166,12 +6150,12 @@ terminated by a semicolon.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following buffer declarations create an image name buffer
-named<TT>ImageName</TT>and a read buffer named<A
+The following buffer declarations create an picture name buffer named
+<TT>pictureName</TT> and a read buffer named <A
 name="destname"><TT>DestName</TT></A>:</P>
 <PRE>
 BUFFERS
-     ImageName (Picture); DestName;
+     pictureName (Picture); DestName;
 </PRE>
 </BLOCKQUOTE>
 </DIV>
@@ -6207,14 +6191,14 @@ The counting function indicates how the counter's value will be computed.
 Three functions are available: <TT>Rank</TT>, <TT>Rlevel</TT>, and
 <TT>Set</TT>.</P>
 <UL>
-<LI><TT>Rank of ElemID</TT>indicates that the counter's value is the rank
-ofthe element of type <TT>ElemID</TT>which encloses the element for whichthe
-counter is being evaluated.  For the purposes of this function, anelement of
-type <TT>ElemID</TT>is considered to enclose itself.  Thisfunction is
-primarily used  when the element of type <TT>ElemID</TT>ispart of an aggregate
-or list, in which case the counter's value is theelement's rank in its list or
-aggregate.  Note that, unlike the<TT>Rank</TT>function for presentation
-schemas, the <TT>Page</TT>keyword cannotbe used in place of the
+<LI><TT>Rank of ElemID</TT>indicates that the counter's value is the rank of
+the element of type <TT>ElemID</TT>which encloses the element for which the
+counter is being evaluated.  For the purposes of this function, an element of
+type <TT>ElemID</TT>is considered to enclose itself.  This function is
+primarily used  when the element of type <TT>ElemID</TT>is part of an
+aggregate or list, in which case the counter's value is the element's rank in
+its list or aggregate.  Note that, unlike the<TT>Rank</TT>function for
+presentation schemas, the <TT>Page</TT>keyword cannot be used in place of the
 <TT>ElemID</TT>.
 <P>
 The type name <TT>ElemID</TT> can be followed by an integer.  That number
@@ -6225,17 +6209,17 @@ travelling the logical structure from the root to the concerned element is
 taken into account.  If the relative level is negative, the logical structure
 is travelled in the other direction, from the concerned element to the
 root.</P>
-<LI><TT>Rlevel of ElemID</TT>indicates that the counter's values is
-therelative level in the tree of the element for which the counter isbeing
-evaluated.  The counter counts the number of elements of
-type<TT>ElemID</TT>which are found on the path between the root of
-thedocument's logical structure tree and the element (inclusive).
-<LI><TT>Set n on Type1 Add m on Type2</TT>indicates that the counter's valueis
-calculated as follows:  in traversing the document from thebeginning to the
-element for which the counter is being evaluated, thecounter is set to the
-value <TT>n</TT>each time a <TT>Type1</TT>element isencountered and is
+<LI><TT>Rlevel of ElemID</TT>indicates that the counter's values is the
+relative level in the tree of the element for which the counter is being
+evaluated.  The counter counts the number of elements of type <TT>ElemID</TT>
+which are found on the path between the root of the document's logical
+structure tree and the element (inclusive).
+<LI><TT>Set n on Type1 Add m on Type2</TT>indicates that the counter's value
+is calculated as follows:  in traversing the document from the beginning to
+the element for which the counter is being evaluated, the counter is set to
+the value <TT>n</TT>each time a <TT>Type1</TT>element is encountered and is
 incremented by the amount <TT>m</TT>each time a<TT>Type2</TT>element is
-encountered.  The initial value <TT>n</TT>and theincrement <TT>m</TT>are
+encountered.  The initial value <TT>n</TT>and the increment <TT>m</TT>are
 integers.
 </UL>
 <P>
@@ -6359,14 +6343,14 @@ obtained by concatenating the strings produced by each of the functions. Seven
 types of functions are available.  Each variable definition may use any number
 of functions of each type.</P>
 <UL>
-<LI>The function <TT>Value(Counter)</TT>returns a string representing thevalue
-taken by the counter when it is evaluated for the element inwhose rule the
-variable is used.  The counter must have been declaredin the
+<LI>The function <TT>Value(Counter)</TT>returns a string representing the
+value taken by the counter when it is evaluated for the element in whose rule
+the variable is used.  The counter must have been declared in the
 <TT>COUNTERS</TT>section of the translation schema.  When thecounter is
-expressed in arabic numerals, the countername can be followed by a colon and
-an integer indicating a minimumlength (number of characters) for the string;
-if the counter's valueis normally expressed with fewer characters than the
-required minimum,zeroes are added to the front of the string to achieve the
+expressed in arabic numerals, the counter name can be followed by a colon and
+an integer indicating a minimum length (number of characters) for the string;
+if the counter's value is normally expressed with fewer characters than the
+required minimum, zeroes are added to the front of the string to achieve the
 minimumlength.
 <P>
 By default, the counter value is written in arabic digits. If another
@@ -6379,37 +6363,37 @@ comma and one of the following keywords:</P>
 <LI><TT>Uppercase</TT>: upper-case letter,
 <LI><TT>Lowercase</TT>: lower-case letter.
 </UL>
-<LI>The function <TT>FileDir</TT>, without parameter, returns a
-stringrepresenting the name of the directory of the output file that has
-beengiven as a parameter to the translation program. The string includesa
-character '/' at the end.
-<LI>The function <TT>FileName</TT>, without parameter, returns a
-stringrepresenting the name of the output file that has been given as
-aparameter to the translation program. The file extension (the characterstring
-that terminate the file name, after a dot) is not part ofthat string.
-<LI>The function <TT>Extension</TT>, without parameter, returns a
-stringrepresenting the extension of the file name. That string is emptyif the
-file name that has been given as a parameter to the translationprogram has no
-extension. If there is an extension, its firstcharacter is a dot.
-<LI>The function <TT>DocumentName</TT>, without parameter, returns a
-stringrepresenting the name of the document being translated.
-<LI>The function <TT>DocumentDir</TT>, without parameter, returns a
-stringrepresenting the directory containing the document being translated.
-<LI>The function formed by the name of a constant returns thatconstant's
+<LI>The function <TT>FileDir</TT>, without parameter, returns a string
+representing the name of the directory of the output file that has been given
+as a parameter to the translation program. The string includes a character '/'
+at the end.
+<LI>The function <TT>FileName</TT>, without parameter, returns a string
+representing the name of the output file that has been given as a parameter to
+the translation program. The file extension (the character string that
+terminate the file name, after a dot) is not part of that string.
+<LI>The function <TT>Extension</TT>, without parameter, returns a string
+representing the extension of the file name. That string is empty if the file
+name that has been given as a parameter to the translation program has no
+extension. If there is an extension, its first character is a dot.
+<LI>The function <TT>DocumentName</TT>, without parameter, returns a string
+representing the name of the document being translated.
+<LI>The function <TT>DocumentDir</TT>, without parameter, returns a string
+representing the directory containing the document being translated.
+<LI>The function formed by the name of a constant returns that constant's
 value.
-<LI>The function formed by a character string between apostrophes returnsthat
+<LI>The function formed by a character string between apostrophes returns that
 string.
-<LI>The function formed by the name of a buffer returns the contents ofthat
-buffer.  If the named buffer is the image buffer, then the nameof the last
-image encountered is returned.  Otherwise, the buffer is a read bufferand the
-value returned is text previously read from the terminal.  Ifthe buffer is
-empty (no image has been encountered or the <TT>Read</TT>rule has not been
-executed for the buffer), then the empty string isreturned.
-<LI>The function formed by an attribute name takes the value of theindicated
-attribute for the element to which the variable applies.  Ifthe element does
-not have that attribute, then the element's ancestorare searched toward the
-root of the tree.  If one of the ancestorsdoes have the attribute then its
-value is used.  If no ancestors havethe attribute, then the value of the
+<LI>The function formed by the name of a buffer returns the contents of that
+buffer.  If the named buffer is the picture buffer, then the name of the last
+picture encountered is returned.  Otherwise, the buffer is a read buffer and
+the value returned is text previously read from the terminal.  If the buffer
+is empty (no picture has been encountered or the <TT>Read</TT> rule has not
+been executed for the buffer), then the empty string is returned.
+<LI>The function formed by an attribute name takes the value of the indicated
+attribute for the element to which the variable applies.  If the element does
+not have that attribute, then the element's ancestor are searched toward the
+root of the tree.  If one of the ancestors does have the attribute then its
+value is used.  If no ancestors have the attribute, then the value of the
 function is the empty string.
 </UL>
 <PRE>
@@ -6474,10 +6458,8 @@ applied to the various structured element types.  Translation rules can be
 specified for each element type defined in the structure schema, including the
 base types defined implicitly, whose names are <TT>TEXT_UNIT</TT>,
 <TT>PICTURE_UNIT</TT>, <TT>SYMBOL_UNIT</TT>, <TT>GRAPHIC_UNIT</TT> and
-<TT>PAGE_UNIT</TT> in the English version of Thot or <TT>TEXTE</TT>,
-<TT>IMAGE</TT>, <TT>SYMBOLE</TT>, <TT>GRAPHIQUE</TT> and <TT>PAGE</TT> in the
-French version.  But it is not necessary to specify rules for every defined
-type.</P>
+<TT>PAGE_UNIT</TT>.  But it is not necessary to specify rules for every
+defined type.</P>
 <P>
 If there are no translation rules for an element type, the elements that it
 contains (and which may have rules themselves) will still be translated, but
@@ -6540,14 +6522,14 @@ Depending on their type, some conditions may apply either to the element with
 which they are associated, or to one of its ancestor.  In the case od an
 ancestor, the key word <TT>Ancestor</TT> must be used, followed by</P>
 <UL>
-<LI>either an integer which represents the number of levels in thetree between
-the element and the ancestor of interest,
-<LI>or the type name of the ancestor of interest.  If that type isdefined in a
-separate structure schema, the name of that schema mustfollow between
+<LI>either an integer which represents the number of levels in the tree
+between the element and the ancestor of interest,
+<LI>or the type name of the ancestor of interest.  If that type is defined in
+a separate structure schema, the name of that schema must follow between
 parentheses.
 </UL>
 <P>
-There is a special case for the parent element, which can be simplywritten
+There is a special case for the parent element, which can be simply written
 <TT>Parent</TT>instead of <TT>Ancestor 1</TT>.</P>
 <P>
 Only conditions <TT>First</TT>, <TT>Last</TT>, <TT>Referred</TT>,
@@ -6724,16 +6706,16 @@ the condition can be based on a single value or on a range of values.  In the
 case of a unique value, this value (an integer) is simply preceded by an
 equals sign.  Conditions based on ranges of values have several forms:</P>
 <UL>
-<LI>all values less than a given value (the value is preceded by a``less
+<LI>all values less than a given value (the value is preceded by a ``less
 than'' sign).
-<LI>all values greater than a given value (the value is preceded by a``greater
-than'' sign).
-<LI>all values falling in an interval, bounds included.  The rangeof values is
-then specified <TT>IN [</TT>Minimum <TT>..</TT>Maximum<TT>]</TT>,where Minimum
-and Maximum are integers.
+<LI>all values greater than a given value (the value is preceded by a
+``greater than'' sign).
+<LI>all values falling in an interval, bounds included.  The range of values
+is then specified <TT>IN [</TT>Minimum <TT>..</TT>Maximum<TT>]</TT>, where
+Minimum and Maximum are integers.
 </UL>
 <P>
-All numeric values may be negative.  The integer is simply preceded bya minus
+All numeric values may be negative.  The integer is simply preceded by a minus
 sign.</P>
 <P>
 Both local and global attributes can be used in conditions.</P>
@@ -6772,18 +6754,18 @@ unique value or a range of values.  In the case of a unique value, this value
 (an integer) is simply preceded by an equals sign. Conditions based on ranges
 of values have several forms:</P>
 <UL>
-<LI>all values less than a given value (the value is preceded by a``less
+<LI>all values less than a given value (the value is preceded by a ``less
 than'' sign).
-<LI>all values greater than a given value (the value is preceded by a``greater
-than'' sign).
-<LI>all values falling in an interval, bounds included.  The rangeof values is
-then specified <TT>IN [</TT>Minimum <TT>..</TT>Maximum<TT>]</TT>,where Minimum
-and Maximum are integers.
+<LI>all values greater than a given value (the value is preceded by a
+``greater than'' sign).
+<LI>all values falling in an interval, bounds included.  The range of values
+is then specified <TT>IN [</TT>Minimum <TT>..</TT>Maximum<TT>]</TT>, where
+Minimum and Maximum are integers.
 </UL>
 <P>
-Values for the <TT>Indent</TT>rule may be negative.  The integer is thensimply
-preceded by a minus sign and represents how far the first linestarts to the
-left of the other lines.</P>
+Values for the <TT>Indent</TT>rule may be negative.  The integer is then
+simply preceded by a minus sign and represents how far the first line starts
+to the left of the other lines.</P>
 <P>
 For presentation rules whose values are taken from predefined lists, the value
 which satisfies the condition is indicated by an equals sign followed by the
@@ -6982,51 +6964,53 @@ file. These files are closed when the translation is finished.</P>
 <P>
 The object to be generated can be:</P>
 <UL>
-<LI>a constant string, specified by its name if it is declared inthe schema's
-<TT>CONST</TT>section, or given directly as a value betweenapostrophes;
+<LI>a constant string, specified by its name if it is declared in the schema's
+<TT>CONST</TT>section, or given directly as a value between apostrophes;
 <LI>the contents of a buffer, designated by the name of the buffer;
-<LI>a variable, designated by its name if it is declared in thetranslation
-schema's <TT>VAR</TT>section, or given directly betweenparentheses.  The text
-generated is the value of that variableevaluated for the element to which the
+<LI>a variable, designated by its name if it is declared in the translation
+schema's <TT>VAR</TT>section, or given directly between parentheses.  The text
+generated is the value of that variable evaluated for the element to which the
 rule applies.
-<LI>the value of an attribute, if the element being translated has
-thisattribute.  The attribute is specified by its name;
-<LI>the value of a specific presentation rule.  This object can onlybe
+<LI>the value of an attribute, if the element being translated has this
+attribute.  The attribute is specified by its name;
+<LI>the value of a specific presentation rule.  This object can only be
 generated if the translation rule is for a <A href="#prestransl">specific
-presentation rule</A>.  It is specified by the <TT>Value</TT>keyword;
-<LI>the element's content.  That is, the content of the leaves ofthe subtree
-of the translated element.  This is specified by the<TT>Content</TT>keyword;
-<LI>the comment attached to the element.  When the element doesn'thave a
-comment, nothing is generated.  This is indicated by
-the<TT>Comment</TT>keyword;
-<LI>the translation of all attributes of the element (which isprimarily used
-to apply the attribute translation rules<A href="#order">before</A>those of
-the element type).  This isspecified by the <TT>Attributes</TT>keyword.
-<LI>the translation of all of the element's specific presentationrules (which
-is primarily used to apply the translation rules for thespecific presentation
-rules <A href="#order">before</A>those of theelement or its attributes).  This
-option is specifiedby the <TT>Presentation</TT>keyword;
-<LI>The value of the reference's identifier.<BR>Thot associates a
-uniqueidentifier with eachelement in a document.  Thisidentifier (called
-<EM>reference's identifier</EM>or <EM>label</EM>) is acharacter string
-containing the letter `L' followed by digits.  Thot uses itin references for
-identifying the referred element.<BR>The <TT>RefId</TT>keyword produces the
-reference's identifierof the element to which the translation rule is applied,
-or the reference'sidentifier of its first ancestor that is referred by a
-referenceor that can be referred by a reference.
-<LI>the value of a mark pair's unique identifier.  This may only be usedfor <A
-href="#pairs">mark pairs</A>and is indicated by the<TT>PairId</TT>keyword.
-<LI>the directory containing the file being generated (this stringincludes an
-ending '/', if it is not empty).  This is indicated by
-the<TT>FileDir</TT>keyword.
-<LI>the name of the file being generated (only the name, without thedirectory
-and without the extension). This is indicated by the <TT>FileName</TT>keyword.
-<LI>the extension of the file being generated (this string starts with adot,
-if it is not empty).  This is indicated by the <TT>Extension</TT>keyword.
-<LI>the name of the document being translated.  This is indicated bythe
-<TT>DocumentName</TT>keyword.
-<LI>the directory containing the document being translated.  This isindicated
-by the <TT>DocumentDir</TT>keyword.
+presentation rule</A>.  It is specified by the <TT>Value</TT> keyword;
+<LI>the element's content.  That is, the content of the leaves of the subtree
+of the translated element.  This is specified by the <TT>Content</TT> keyword;
+<LI>the comment attached to the element.  When the element doesn't have a
+comment, nothing is generated.  This is indicated by the <TT>Comment</TT>
+keyword;
+<LI>the translation of all attributes of the element (which is primarily used
+to apply the attribute translation rules <A href="#order">before</A> those of
+the element type).  This is specified by the <TT>Attributes</TT> keyword.
+<LI>the translation of all of the element's specific presentation rules (which
+is primarily used to apply the translation rules for the specific presentation
+rules <A href="#order">before</A> those of the element or its attributes). 
+This option is specified by the <TT>Presentation</TT> keyword;
+<LI>The value of the reference's identifier.<BR>Thot associatesa unique
+identifier with each element in a document.  This identifier (called
+<EM>reference's identifier</EM> or <EM>label</EM>) is a character string
+containing the letter `L' followed by digits.  Thot uses it in references for
+identifying the referred element.<BR>The <TT>RefId</TT> keyword produces the
+reference's identifier of the element to which the translation rule is
+applied, or the reference's identifier of its first ancestor that is referred
+by a reference or that can be referred by a reference.
+<LI>the value of a mark pair's unique identifier.  This may only be used for
+<A href="#pairs">mark pairs</A> and is indicated by the <TT>PairId</TT>
+keyword.
+<LI>the directory containing the file being generated (this string includes an
+ending '/', if it is not empty).  This is indicated by the <TT>FileDir</TT>
+keyword.
+<LI>the name of the file being generated (only the name, without the directory
+and without the extension). This is indicated by the <TT>FileName</TT>
+keyword.
+<LI>the extension of the file being generated (this string starts with a dot,
+if it is not empty).  This is indicated by the <TT>Extension</TT> keyword.
+<LI>the name of the document being translated.  This is indicated by the
+<TT>DocumentName</TT> keyword.
+<LI>the directory containing the document being translated.  This is indicated
+by the <TT>DocumentDir</TT> keyword.
 </UL>
 <P>
 When the rule applies to a reference (an element or an attribute defined as a
@@ -7035,18 +7019,18 @@ element referred by that reference.  The rule name is then followed the
 <TT>Referred</TT> keyword and a specification of the object to be generated
 for the referred element.  This specification can be:</P>
 <UL>
-<LI>the name of a variable.  The rule generates the value of thatvariable,
+<LI>the name of a variable.  The rule generates the value of that variable,
 computed for the referred element.
-<LI>an element type.  The rule generates the translation of the elementof that
-type, which is in the subtree of the referred element.  If thiselement is not
-defined in the structure schema which corresponds to thetranslation schema
-(that is, an object defined in another schema), theelement's type name must be
-followed by the name of its structureschema between parentheses.
-<LI>the <TT>RefId</TT>keyword.  The rule generates the reference'sidentifier
+<LI>an element type.  The rule generates the translation of the element of
+that type, which is in the subtree of the referred element.  If this element
+is not defined in the structure schema which corresponds to the translation
+schema (that is, an object defined in another schema), the element's type name
+must be followed by the name of its structure schema between parentheses.
+<LI>the <TT>RefId</TT> keyword.  The rule generates the reference's identifier
 of the referred element.
-<LI>the <TT>DocumentName</TT>keyword.  The rule generates the name ofthe
+<LI>the <TT>DocumentName</TT> keyword.  The rule generates the name of the
 document to which the referred element belongs.
-<LI>the <TT>DocumentDir</TT>keyword.  The rule generates the name ofthe
+<LI>the <TT>DocumentDir</TT> keyword.  The rule generates the name of the
 directory that contains the document of the referred element.
 </UL>
 </DIV>
@@ -7199,21 +7183,21 @@ after the <TT>Get</TT> keyword, optionally preceded by a keyword indicating
 where the element will be found in the logical structure of the document:</P>
 <DL>
 <DT><TT>Included</TT></DT>
-<DD>The element to be moved is the first element of the indicated typewhich is
+<DD>The element to be moved is the first element of the indicated type which is
 found inside the element to which the rule applies.
 </DD>
 <DT><TT>Referred</TT></DT>
-<DD>This keyword can only be used if the rule applies to a referenceelement.
-The element to be moved is either the element designated bythe reference (if
-that element is of the specified type), or the firstelement of the desired
-type contained within the element designated bythe reference.
+<DD>This keyword can only be used if the rule applies to a reference element.
+The element to be moved is either the element designated by the reference (if
+that element is of the specified type), or the first element of the desired
+type contained within the element designated by the reference.
 </DD>
 <DT>no keyword</DT>
-<DD>If the element to be moved is an associated element, defined in the<A
-href="#assocelem"><TT>ASSOC</TT> section</A>of the structure schema,all
-associated elements of this type whichhave not been translated yet are then
-translated.  Certain elementsmay in fact have already been translated by a
-<TT>Get Referred</TT>rule.
+<DD>If the element to be moved is an associated element, defined in the <A
+href="#assocelem"><TT>ASSOC</TT> section</A> of the structure schema, all
+associated elements of this type which have not been translated yet are then
+translated.  Certain elements may in fact have already been translated by a
+<TT>Get Referred</TT> rule.
 <P>
 If the element to be moved is not an associated element, the translator takes
 the first element of the indicated type from among the siblings of the rule's
@@ -7617,14 +7601,14 @@ translation rule block should be applied.</P>
 <P>
 There are three categories of the presentation rules:</P>
 <UL>
-<LI>rules taking numeric values: <TT>Size</TT>,
-<TT>Indent</TT>,<TT>LineSpacing</TT>, <TT>LineWeight</TT>,
-<LI>rules whose values are taken from a predefined list (i.e. whose typeis an
+<LI>rules taking numeric values: <TT>Size</TT>, <TT>Indent</TT>,
+<TT>LineSpacing</TT>, <TT>LineWeight</TT>,
+<LI>rules whose values are taken from a predefined list (i.e. whose type is an
 enumeration): <TT>Adjust</TT>, <TT>Justify</TT>, <TT>Hyphenate,/TT>,
 <TT>Style</TT>, <TT>Font</TT>, <TT>UnderLine</TT>, <TT>Thickness</TT>,
 <TT>LineStyle</TT>,</TT>
-<LI>rules whose value is a name: <TT>FillPattern</TT>,
-<TT>Background</TT>,<TT>Foreground</TT>.
+<LI>rules whose value is a name: <TT>FillPattern</TT>, <TT>Background</TT>,
+<TT>Foreground</TT>.
 </UL>
 <P>
 For presentation rules of the first category, the values which provoke
@@ -7634,17 +7618,17 @@ or range of values.  For a unique value, the value (an integer) is simply
 preceded by an equals sign.  Value ranges can be specified in one of three
 ways:</P>
 <UL>
-<LI>all values less than a given value (this value is preceded by a``less
+<LI>all values less than a given value (this value is preceded by a ``less
 than'' sign (<TT>&lt;</TT>),
-<LI>all values greater than a given value (this value is preceded by
-a``greater than'' sign (<TT>></TT>),
-<LI>all values falling in an interval, bounds included.  The rangeof values is
-then specified <TT>IN [</TT>Minimum <TT>..</TT>Maximum<TT>]</TT>,where Minimum
-and Maximum are integers.
+<LI>all values greater than a given value (this value is preceded by a`
+`greater than'' sign (<TT>></TT>),
+<LI>all values falling in an interval, bounds included.  The range of values
+is then specified <TT>IN [</TT>Minimum<TT>..</TT>Maximum<TT>]</TT>, where
+Minimum and Maximum are integers.
 </UL>
 <P>
-All numeric values can be negative, in which case the integer ispreceded by a
-minus sign.  All values must be given in typographerspoints.</P>
+All numeric values can be negative, in which case the integer is preceded by a
+minus sign.  All values must be given in typographers points.</P>
 <P>
 For presentation rules whose values are taken from a predefined list, the
 value which provokes application of the translation rules is simply indicated
@@ -8506,9 +8490,9 @@ Characters whose octal code is greater than 0200 are written in the form of
 their octal code preceded by a backslash character (``\'').  For example, the
 French word R&eacute;sum&eacute; is written <TT>R\351sum\351</TT>.</P>
 <P>
-To the ISO 8859-1 encoding six characters with the following codes have been
+To the ISO 8859-1 encoding four characters with the following codes have been
 added:<BR><TT>212</TT>: line break<BR><TT>240</TT>: sticky
-space<BR><TT>201</TT>: thin space<BR><TT>202</TT>: en space<BR></P>
+space<BR><TT>201</TT>: thin space<BR><TT>202</TT>: en space</P>
 <P>
 The <TT>212</TT> character is a ``line break'' character which forces a line
 break.  The <TT>240</TT> character is a ``sticky space'', which cannot be
@@ -8569,16 +8553,16 @@ single character.</P>
 <LI><TT>V</TT>: a down arrow as tall as the box and in its middle
 <LI><TT>/</TT>: The southwest/northeast diagonal of the box
 <LI><TT>\</TT>: the northwest/southeast diagonal of the box
-<LI><TT>O</TT>: The northwest/southeast diagonal of the box with anarrowhead
+<LI><TT>O</TT>: The northwest/southeast diagonal of the box with an arrowhead
 at the top
-<LI><TT>e</TT>: The northwest/southeast diagonal of the box with anarrowhead
+<LI><TT>e</TT>: The northwest/southeast diagonal of the box with an arrowhead
 at the bottom
-<LI><TT>E</TT>: The southwest/northeast diagonal of the box with anarrowhead
+<LI><TT>E</TT>: The southwest/northeast diagonal of the box with an arrowhead
 at the top
-<LI><TT>o</TT>: The southwest/northeast diagonal of the box with anarrowhead
+<LI><TT>o</TT>: The southwest/northeast diagonal of the box with an arrowhead
 at the bottom
 <LI><TT>space</TT>: a transparent element
-<LI><TT>P</TT>: a rectangle with round corners and a horizontal barat the top
+<LI><TT>P</TT>: a rectangle with round corners and a horizontal bar at the top
 <LI><TT>Q</TT>: an ellipse with a horizontal bar at the top
 <LI><TT>L</TT>: a lozenge
 <LI><TT>W</TT>: the upper right corner

@@ -2193,7 +2193,6 @@ int                 start;
 	       if (StackLevel > 0)
 		 {
 		    el = lastElement;
-/**** el = ElementStack[StackLevel - 1]; ****/
 		    i = StackLevel - 1;
 		    if (start < 0)
 		       /* Explicit close */
@@ -2288,7 +2287,7 @@ int                 start;
 		      {
 			 /* remove closed elements from the stack */
 			 while (i > 0)
-			    if (lastElement == ElementStack[i])
+			    if (ElementStack[i] == lastElement)
 			      {
 				 StackLevel = i;
 				 i = 0;

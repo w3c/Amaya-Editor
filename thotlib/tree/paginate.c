@@ -662,17 +662,17 @@ int                 LastSelectedChar;
 
 /*----------------------------------------------------------------------
    	Cut coupe l'element de texte pointe par pEl apres le		
-   		caractere de rang cuttedChar et met a jour les paves	
+   		caractere de rang cutChar et met a jour les paves	
    		correspondant.						
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         Cut (PtrElement pEl, int cuttedChar, PtrDocument pDoc, int nbView)
+static void         Cut (PtrElement pEl, int cutChar, PtrDocument pDoc, int nbView)
 
 #else  /* __STDC__ */
-static void         Cut (pEl, cuttedChar, pDoc, nbView)
+static void         Cut (pEl, cutChar, pDoc, nbView)
 PtrElement          pEl;
-int                 cuttedChar;
+int                 cutChar;
 PtrDocument         pDoc;
 int                 nbView;
 
@@ -683,7 +683,7 @@ int                 nbView;
    int                 dvol;
    PtrAbstractBox      pAb1;
 
-   SplitTextElement (pEl, cuttedChar + 1, pDoc, TRUE);
+   SplitTextElement (pEl, cutChar + 1, pDoc, TRUE);
    /* reduit le volume du pave de l'element precedant le point de */
    /* coupure et de ses paves englobants, si ces paves existent dans la */
    /* vue traitee. */
@@ -876,7 +876,7 @@ PtrElement          rootEl;
 
 {
    PtrElement          pElPage, pEl;
-   boolean             stop, inTop, ElemIsBefore, cutted;
+   boolean             stop, inTop, ElemIsBefore, cut;
    PtrAbstractBox      pP1, pP;
    int                 cpt, h;
    PtrPSchema          pSchP;
@@ -1023,18 +1023,15 @@ PtrElement          rootEl;
 	 /* Il y a un pave insecable plus haut qu'une page, on inserera */
 	 /* la marque de page apres l'element de ce pave */
 	 pEl1 = (*origCutAbsBox)->AbElement;
-/*653 */ if (pEl1->ElParent == NULL)
-      /*653 *//* si pEl1 est la racine il faut descendre d'un niveau */
-/*653 */ if (ElemIsBefore)
-/*653 */ pEl1 = pEl1->ElFirstChild;
-/*653 */ 
-      else
-/*653 */ 
+   if (pEl1->ElParent == NULL)
+      /* si pEl1 est la racine il faut descendre d'un niveau */
+     if (ElemIsBefore)
+	pEl1 = pEl1->ElFirstChild;
+     else
 	{
-/*653 */ pEl1 = pEl1->ElFirstChild;
-/*653 */ while (pEl1->ElNext != NULL)
-/*653 */ pEl1 = pEl1->ElNext;
-/*653 */ 
+	pEl1 = pEl1->ElFirstChild;
+	while (pEl1->ElNext != NULL)
+	   pEl1 = pEl1->ElNext;
 	}
    if (ElemIsBefore && pEl1->ElTypeNumber == PageBreak + 1)
       return pEl1;
@@ -1359,10 +1356,10 @@ PtrElement          rootEl;
    /* page et la suivante. */
    pElPage->ElAssocHeader = FALSE;
    /* traitement de l'insertion des pages dans les structures avec coupures speciales */
-   cutted = FALSE;		/* a priori pas de coupure effectuee par l'exception */
+   cut = FALSE;		/* a priori pas de coupure effectuee par l'exception */
    if (ThotLocalActions[T_insertpage] != NULL)
-      (*ThotLocalActions[T_insertpage]) (pElPage, pDoc, nbView, &cutted);
-   if (!cutted)
+      (*ThotLocalActions[T_insertpage]) (pElPage, pDoc, nbView, &cut);
+   if (!cut)
       CreateNewAbsBoxes (pElPage, pDoc, nbView);
    if (!AssocView (pEl))
       modifAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
@@ -1416,10 +1413,10 @@ int                 schView;
 #endif /* __STDC__ */
 
 {
-   int                 ret, High, PosV, cuttedChar, Min, i;
+   int                 ret, High, PosV, cutChar, Min, i;
    PtrPRule            pRNoBr1, pRNoBr2;
    PtrAttribute        pA1, pA2;
-   boolean             cuttedAbsBox;
+   boolean             cutAbsBox;
    PtrPRule            pRe1;
 
    ret = 0;
@@ -1429,7 +1426,7 @@ int                 schView;
       if (!Divisible (pAb, &pRNoBr1, &pA1, &pRNoBr2, &pA2, schView))
 	 /* le pave est insecable, on coupe avant ce pave */
 	{
-	   SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
+	   SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
 	   ret = PosV;
 	}
       else
@@ -1441,20 +1438,20 @@ int                 schView;
 	      /* on ne l'applique que si le pave est complet */
 	     {
 		if (pAb->AbLeafType != LtCompound)
-		   cuttedAbsBox = FALSE;
+		   cutAbsBox = FALSE;
 		else if (pAb->AbInLine)
-		   cuttedAbsBox = FALSE;
+		   cutAbsBox = FALSE;
 		else
-		   cuttedAbsBox = pAb->AbTruncatedHead;
+		   cutAbsBox = pAb->AbTruncatedHead;
 		/* si la boite est eclatee, on ignore la regle NoBreak1 */
 		if (pAb->AbBox != NULL)
 		   if (pAb->AbBox->BxType == BoGhost)
-		      cuttedAbsBox = TRUE;
-		if (!cuttedAbsBox)
+		      cutAbsBox = TRUE;
+		if (!cutAbsBox)
 		  {
 		     pRe1 = pRNoBr1;
 		     /* demande au Mediateur la position du haut du pave dans la page */
-		     SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
+		     SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
 		     /* calcule la hauteur minimum avant coupure, en points typographiques */
 		     if (pRe1->PrMinAttr)
 			i = AttrValue (pA1);
@@ -1474,25 +1471,25 @@ int                 schView;
 	 /* on ne l'applique que si le pave est complet */
 	{
 	   if (pAb->AbLeafType != LtCompound)
-	      cuttedAbsBox = FALSE;
+	      cutAbsBox = FALSE;
 #ifdef __COLPAGE__
 	   /* si un pave est mis en ligne, il peut etre coupe. */
 	   /* ce cas est retire */
 #else  /* __COLPAGE__ */
 	   else if (pAb->AbInLine)
-	      cuttedAbsBox = FALSE;
+	      cutAbsBox = FALSE;
 #endif /* __COLPAGE__ */
 	   else
-	      cuttedAbsBox = pAb->AbTruncatedTail;
+	      cutAbsBox = pAb->AbTruncatedTail;
 	   /* si la boite est eclatee, on ignore la regle NoBreak2 */
 	   if (pAb->AbBox != NULL)
 	      if (pAb->AbBox->BxType == BoGhost)
-		 cuttedAbsBox = TRUE;
-	   if (!cuttedAbsBox)
+		 cutAbsBox = TRUE;
+	   if (!cutAbsBox)
 	     {
 		pRe1 = pRNoBr2;
 		/* demande au Mediateur ou se place le pave dans la page */
-		SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
+		SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
 		/* calcule la hauteur minimum apres coupure, en points typographiques */
 		if (pRe1->PrMinAttr)
 		   i = AttrValue (pA2);
@@ -1560,7 +1557,7 @@ PtrElement         *pPage;
 #endif /* __STDC__ */
 
 {
-   int                 High, PosV, cuttedChar;
+   int                 High, PosV, cutChar;
    boolean             done;
    PtrAbstractBox      pPa1;
 
@@ -1575,13 +1572,13 @@ PtrElement         *pPage;
 		/* demande au mediateur sur quel caractere a lieu la coupure */
 		/* (si ce n'est pas une feuille de texte, on placera la marque */
 		/* de page avant le pave) */
-		SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
-		if (cuttedChar <= 0)
+		SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
+		if (cutChar <= 0)
 		   /* place la marque de page avant le pave */
 		   *pPage = InsertMark (pAb, frame, nbView,
 					origCutAbsBox, absBoxTooHigh,
 					schView, pDoc, rootEl);
-		else if (cuttedChar >= pPa1->AbElement->ElTextLength)
+		else if (cutChar >= pPa1->AbElement->ElTextLength)
 		   /* la coupure tombe a la fin du pave */
 		  {
 		     *pPage = NULL;
@@ -1590,7 +1587,7 @@ PtrElement         *pPage;
 		else
 		   /* coupe l'element de texte */
 		  {
-		     Cut (pPa1->AbElement, cuttedChar, pDoc, nbView);
+		     Cut (pPa1->AbElement, cutChar, pDoc, nbView);
 		     pPa1->AbOnPageBreak = FALSE;
 		     pAb = pPa1->AbNext;
 		     pAb->AbAfterPageBreak = TRUE;
@@ -1683,7 +1680,7 @@ PtrElement         *pPage;
 #endif /* __STDC__ */
 
 {
-   int                 High, PosV, cuttedChar;
+   int                 High, PosV, cutChar;
    boolean             done;
    PtrAbstractBox      pPa1;
    boolean             toCut;
@@ -1717,13 +1714,13 @@ PtrElement         *pPage;
 		     /* demande au mediateur sur quel caractere a lieu la coupure */
 		     /* (si ce n'est pas une feuille de texte, on placera la marque */
 		     /* de page avant le pave) */
-		     SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
-		     if (cuttedChar <= 0)
+		     SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
+		     if (cutChar <= 0)
 			/* place la marque de page avant le pave */
 			*pPage = InsertMark (pAb, frame, nbView,
 					     origCutAbsBox, absBoxTooHigh,
 					     schView, pDoc, rootEl);
-		     else if (cuttedChar >= pPa1->AbElement->ElTextLength)
+		     else if (cutChar >= pPa1->AbElement->ElTextLength)
 			/* la coupure tombe a la fin du pave */
 		       {
 			  pPa1->AbOnPageBreak = FALSE;
@@ -1731,7 +1728,7 @@ PtrElement         *pPage;
 		     else
 			/* coupe l'element de texte */
 		       {
-			  Cut (pPa1->AbElement, cuttedChar, pDoc, nbView);
+			  Cut (pPa1->AbElement, cutChar, pDoc, nbView);
 			  pPa1->AbOnPageBreak = FALSE;
 			  pAb = pPa1->AbNext;
 			  pAb->AbAfterPageBreak = TRUE;
@@ -1894,7 +1891,7 @@ int                 frame;
    PtrElement          pElLib;
    boolean             stop;
    PtrAbstractBox      previousAbsBox, RedispAbsBox;
-   int                 High, PosV, putVThread, cuttedChar, h, dh, normalPageHeight;
+   int                 High, PosV, putVThread, cutChar, h, dh, normalPageHeight;
 
 #endif /* __COLPAGE__ */
 
@@ -2000,7 +1997,7 @@ int                 frame;
 	      putVThread = 0;
 	   else
 	      /* demande au mediateur la position verticale de cette boite filet */
-	      SetPageHeight (pAb, TRUE, &High, &putVThread, &cuttedChar);
+	      SetPageHeight (pAb, TRUE, &High, &putVThread, &cutChar);
 	   /* verifie la hauteur de la page */
 	   if (putVThread > PageHeight + PageFooterHeight)
 	      /* la page est trop haute */
@@ -2034,7 +2031,7 @@ int                 frame;
 			   /* premier element associe' du haut de page. */
 			  {
 			     SetPageHeight (PageHeaderRefAssoc->ElAbstractBox[nbView - 1], TRUE,
-					    &High, &PosV, &cuttedChar);
+					    &High, &PosV, &cutChar);
 			     if (normalPageHeight < PosV)
 				PageHeight = PosV;
 			     else
@@ -2126,7 +2123,7 @@ PtrDocument         pDoc;
    boolean             stop;
    PtrPSchema          pSc1;
    PtrAbstractBox      pP, pAb, pCorps;
-   int                 High, PosV, cuttedChar;	/* pour calcul page */
+   int                 High, PosV, cutChar;	/* pour calcul page */
    int                 h;
    boolean             bool, New;
    PtrPSchema          pSPR;
@@ -2226,7 +2223,7 @@ PtrDocument         pDoc;
 		  /* on appelle Modifvue a partir du pave haut de page */
 		  bool = ChangeConcreteImage (frame, &h, pAb);
 		  /* calcul de la hauteur du pave haut ou bas de page */
-		  SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
+		  SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
 		  topPageHeightRef = High;
 	       }
 	     /* on saute le corps de page pour voir s'il y a un bas de page */
@@ -2245,7 +2242,7 @@ PtrDocument         pDoc;
 		  /* on appelle Modifvue a partir du pave haut de page */
 		  bool = ChangeConcreteImage (frame, &h, pAb);
 		  /* calcul de la hauteur du pave haut ou bas de page */
-		  SetPageHeight (pAb, TRUE, &High, &PosV, &cuttedChar);
+		  SetPageHeight (pAb, TRUE, &High, &PosV, &cutChar);
 		  bottomPageHeightRef = High;
 	       }
 	     /* mise a jour de la hauteur de reference de la page */
@@ -2527,7 +2524,7 @@ int                 schView;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pP;
-   int                 High, PosV, cuttedChar, h;
+   int                 High, PosV, cutChar, h;
    PtrElement          pPage, rootEl;
    boolean             bool;
    boolean             absBoxTooHigh;
@@ -2554,7 +2551,7 @@ int                 schView;
 	bool = ChangeConcreteImage (frame, &h, rootAbsBox);
 	pP = pP->AbFirstEnclosed;	/* pP pave de colonne gauche */
 	/* calcul de la hauteur du pave colonne gauche */
-	SetPageHeight (pP, TRUE, &High, &PosV, &cuttedChar);
+	SetPageHeight (pP, TRUE, &High, &PosV, &cutChar);
 	/* Hauteur = dimension verticale du pave colonne simple */
 	/* on fait evaluer la coupure de colonne avec h = Hauteur / 2 */
 	/* on appelle Modifvue a partir du pave colonne simple */
@@ -2622,7 +2619,7 @@ boolean             Assoc;
    /*nothingAdded retire */
    PtrElement          pElPage1;
    PtrAbstractBox      pBody, pTreatedPage, pPageToTreat, PavR;
-   int                 High, PosV, cuttedChar, h;	/* pour calcul page */
+   int                 High, PosV, cutChar, h;	/* pour calcul page */
    boolean             New;
    PtrPRule            pRuleDimV;
    FILE               *list;
@@ -2955,7 +2952,7 @@ boolean             Assoc;
 				 while (pP->AbElement != pBody->AbElement)
 				    pP = pP->AbEnclosing;
 				 /* calcul de la hauteur du pave haut ou bas de page */
-				 SetPageHeight (pP, TRUE, &High, &PosV, &cuttedChar);
+				 SetPageHeight (pP, TRUE, &High, &PosV, &cutChar);
 				 /* Hauteur = dim verticale du haut (ou bas) de page */
 				 if (pP->AbPrevious == pBody)
 				    /* des paves ont ete ajoutes en bas de page */
@@ -2975,7 +2972,7 @@ boolean             Assoc;
 			      }
 			    /* on fait evaluer la position du pave reference */
 			    SetPageHeight (HFPageRefAssoc->ElAbstractBox[nbView - 1], TRUE,
-					   &High, &PosV, &cuttedChar);
+					   &High, &PosV, &cutChar);
 			    /* on force la coupure a cette hauteur */
 			    h = PosV;
 			    tooShort = ChangeConcreteImage (frame, &h, rootAbsBox);
