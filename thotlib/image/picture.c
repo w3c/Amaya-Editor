@@ -1228,11 +1228,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      jy = 0;
 	    }
 	  while (j < h);
-	  if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)
+	  /*if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)*/
 	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-	  else
+	  /*else
 	    TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
-				imageDesc->PicBgMask);
+				imageDesc->PicBgMask);*/
 	}
       SelectObject (hOrigDC, bitmap);
       SelectObject (hMemDC, pBitmapTiled);
@@ -2641,9 +2641,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
 	{
+	  if (pres == ReScale)
+	  {
 	  /* a background image, draw over the whole box */
 	  w = box->BxWidth;
 	  h = box->BxHeight;
+	  }
 	}
       else
 	{
