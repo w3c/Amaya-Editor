@@ -1004,8 +1004,8 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
    of an attribute of type (pSS, att) for the pEl element. It 
    returns the answer from the application.
   ----------------------------------------------------------------------*/
-static ThotBool     TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
-				     PtrDocument pDoc)
+static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
+				 PtrDocument pDoc)
 {
    NotifyAttribute     notifyAttr;
    ThotBool            OK;

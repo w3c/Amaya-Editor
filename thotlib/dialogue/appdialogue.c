@@ -608,7 +608,8 @@ void TteZeroMenu (WindowType windowtype, char *schemaName)
    TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
    nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
-void TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName)
+void TteAddMenu (WindowType windowtype, char *schemaName, int view, 
+		 int menuID, int itemsNumber, char *menuName)
 {
    Menu_Ctl           *ptrmenu = NULL;
    Menu_Ctl           *newmenu;
@@ -2813,7 +2814,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   
 	   gtk_signal_connect(
 	       GTK_OBJECT(wrap_text), 
-	       "expose_event", 
+	       "show", 
 	       GTK_SIGNAL_FUNC(text_wrapper_hide), 
 	       (gpointer*)frame);
 	   
