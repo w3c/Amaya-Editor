@@ -5203,6 +5203,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				{
 				  *isXML = TRUE;
 				  *thotType = docMath;
+				  *parsingLevel = L_MathML;
 				}
 			    }
 			}
@@ -5307,6 +5308,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  endOfSniffedFile = TRUE;
 			  *isXML = TRUE;
 			  *thotType = docMath;
+			  *parsingLevel = L_MathML;
 			}
 		    }
 		  else

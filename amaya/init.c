@@ -2704,7 +2704,7 @@ static Document LoadDocument (Document doc, char *pathname,
 		   /* it's an XML document */
 		   isXML = TRUE;
 		   docType = docMath;
-		   parsingLevel = L_Other;
+		   parsingLevel = L_MathML;
 		   unknown = FALSE;
 		 }
 	       else
@@ -2727,7 +2727,7 @@ static Document LoadDocument (Document doc, char *pathname,
 		   /* it's an XML document */
 		   isXML = TRUE;
 		   docType = docMath;
-		   parsingLevel = L_Other;
+		   parsingLevel = L_MathML;
 		   unknown = FALSE;
 		 }
 	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
@@ -2847,12 +2847,14 @@ static Document LoadDocument (Document doc, char *pathname,
       else
 	newdoc = doc;
 
-      /* store the document profile */
-      docprofile = TtaGetDocumentProfile (newdoc);
-      TtaSetDocumentProfile (newdoc, parsingLevel);
+      /* store the document profile and */
       /* update the menus according to the profile of the new document */
+      docprofile = TtaGetDocumentProfile (newdoc);
       if (docprofile != parsingLevel)
-	TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
+	{
+	  TtaSetDocumentProfile (newdoc, parsingLevel);
+	  TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
+	}
      	
       if (docType == docImage)
       /* create an HTML container */
