@@ -2206,7 +2206,8 @@ ThotBool	    history;
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
 	      ActiveTransfer (newdoc);
 	    }
-	  else if (method != CE_INIT)
+	  else if (method != CE_INIT 
+		   || (docType != docHTML && docType != docReadOnly))
 	    newdoc = InitDocView (doc, documentname, docType, FALSE);
 	  else
 	    newdoc = doc;
