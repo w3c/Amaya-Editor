@@ -748,11 +748,11 @@ int                 value;
   frame = GetWindowNumber (document, view);
   if (frame != 0)
     {
+      GetFrameParams (frame, &valvisib, &valzoom);
       if (valzoom < 0 || valzoom > 10)
 	TtaError (ERR_invalid_parameter);
       else
 	{
-	  GetFrameParams (frame, &valvisib, &valzoom);
 	  /* Translation of the sensibility into threshold */
 	  valzoom = value;
 	  SetFrameParams (frame, valvisib, valzoom);
