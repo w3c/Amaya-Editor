@@ -3285,6 +3285,10 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	       {
 		 /* Get it's type */
 		 mathType[j] = (char)GetCharType (text[j], script);
+		 if (mathType[j] == (char)MathML_EL_MO && text[j] == '-')
+		   /* transform character '-' into the minus sign */
+		   text[j] = 0x2212;
+
 		 if (leadingSpace)
 		   /* this is the first significant character */
 		   {
