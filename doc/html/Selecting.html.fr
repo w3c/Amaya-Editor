@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -46,12 +46,12 @@ sélection :</p>
 <code>p</code> (qui est dans un body etc.)</p>
 
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
-cliquez sur le mot structure, puis pressez <kbd>esc</kbd>/<kbd>f2</kbd>)
-donne :</p>
+cliquez sur le mot structure, puis pressez <code>Esc</code> ou
+<code>F2</code>) donne :</p>
 
 <p><samp style="color: #B20000">strong \ p \ body \ html \ Document</samp></p>
 <ul>
-  <li>Sélectionner avec la souris 
+  <li>Sélectionner avec la souris
     <ul>
       <li>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
         souris pour déplacer le point d'insertion.</li>
@@ -73,9 +73,9 @@ donne :</p>
     </ul>
     <p></p>
   </li>
-  <li>Sélectionner depuis le clavier 
+  <li>Sélectionner depuis le clavier
     <ul>
-      <li>Pour sélectionner un élément de structure avec le clavier 
+      <li>Pour sélectionner un élément de structure avec le clavier
         <ul>
           <li>Pressez la touche <code>Esc</code> sur Unix/Mac ou la touche
             <code>F2</code> sur Windows pour sélectionner l'élément parent

@@ -130,11 +130,13 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
 /*----------------------------------------------------------------------
    PasteAnElement  Paste element decribed by pSavedEl within (if
    within is TRUE), before (if before is TRUE) or after (if before is FALSE)
-   element pEl in document pDoc.                           
+   element pEl in document pDoc.
+   cellChild is not NULL when pasting a child of a cell.
   ----------------------------------------------------------------------*/
 static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				  ThotBool within, ThotBool before,
-				  ThotBool *cancelled, PtrDocument pDoc)
+				  ThotBool *cancelled, PtrDocument pDoc,
+				  PtrElement *cellChild)
 {
    PtrElement          pElem, pChild, pPasted, pOrig, pParent, pSibling,
                        pAncest, pE, pElAttr, newElement;
@@ -150,6 +152,16 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    pAncest = NULL;
    *cancelled = FALSE;
    pOrig = pSavedEl->PeElement;
+   if (cellChild == NULL && TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
+			 pOrig->ElStructSchema))
+     {
+       /* paste children of the cell instead of the cell itself */
+       if (pOrig = pOrig->ElFirstChild)
+	 {
+	   pOrig = pOrig->ElFirstChild;
+	   *cellChild = pOrig;
+	 }
+     }      
    ok = FALSE;
    if (within)
      {
@@ -179,7 +191,11 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	     (!before && pElem->ElNext == NULL))
 	   {
 	     pElem = pElem->ElParent;
-	     if (pElem != NULL)
+	     if (pElem &&
+		 TypeHasException (ExcIsCell, pElem->ElTypeNumber,
+				   pElem->ElStructSchema))
+		 pElem = NULL;
+	     if (pElem)
 	       ok = AllowedSibling (pElem, pDoc, pOrig->ElTypeNumber,
 				    pOrig->ElStructSchema, before,
 				    TRUE, FALSE);
@@ -511,8 +527,9 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	   while (pChild != NULL && pElem != NULL)
 	     {
 	       pPasteD->PeElement = pChild;
+	       /* don't check enclosed cells */
 	       pElem = PasteAnElement (pElem, pPasteD, within, before,
-				       cancelled, pDoc);
+				       cancelled, pDoc, &pChild);
 	       if (pElem)
 		 {
 		   /* pointer to the first element in the inserted list */
@@ -540,7 +557,7 @@ void PasteCommand ()
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
-                      pNextEl, pFree, pSplitText, pSel;
+                      pNextEl, pFree, pSplitText, pSel, cellChild;
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
@@ -650,18 +667,19 @@ void PasteCommand ()
 	  while (pPasteD->PeNext != NULL)
 	    pPasteD = pPasteD->PeNext;
 	ok = FALSE;
+	cellChild = NULL;
 	do
 	  {
 	    pPasted = PasteAnElement (pEl, pPasteD, within, before, &cancelled,
-				      pDoc);
-	    if (pPasted == NULL && !cancelled)
-	      /* echec, mais l'application n'a pas refusé */
-	      if (!within && !before && pNextEl != NULL)
-		/* on essayait de coller apres le dernier colle' */
-		/* on va essayer de coller le meme element avant l'element */
-		/* qui doit suivre la partie collee */
-		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
-					  &cancelled, pDoc);
+				      pDoc, &cellChild);
+	    if (pPasted == NULL && !cancelled &&
+		/* echec, mais l'application n'a pas refusé */
+		!within && !before && pNextEl != NULL)
+	      /* on essayait de coller apres le dernier colle' */
+	      /* on va essayer de coller le meme element avant l'element */
+	      /* qui doit suivre la partie collee */
+	      pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
+					&cancelled, pDoc, &cellChild);
 	    if (pPasted != NULL)
 	      /* a copy of element pPasteD has been sucessfully pasted */
 	      {
@@ -675,9 +693,27 @@ void PasteCommand ()
 		  }
 	      }
 	    if (!within && before)
-	      pPasteD = pPasteD->PePrevious;
+	      {
+		if (cellChild)
+		  {
+		    cellChild = cellChild->ElPrevious;
+		    if (cellChild == NULL)
+		      pPasteD = pPasteD->PePrevious;
+		  }
+		else
+		  pPasteD = pPasteD->PePrevious;
+	      }
 	    else
-	      pPasteD = pPasteD->PeNext;
+	      {
+		if (cellChild)
+		  {
+		    cellChild = cellChild->ElNext;
+		    if (cellChild == NULL)
+		      pPasteD = pPasteD->PeNext;
+		  }
+		else
+		  pPasteD = pPasteD->PeNext;
+	      }
 	  }
 	while (pPasteD != NULL);
 

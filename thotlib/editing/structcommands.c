@@ -1246,8 +1246,9 @@ void CutCommand (ThotBool save)
 		  {
 		    if (firstSel->ElTerminal || firstSel->ElFirstChild == NULL)
 		      {
-			firstSel = NULL;
 			/* empty element */
+			firstSel = NULL;
+			pSave = NULL;
 			stop = TRUE;
 		      }
 		    else
@@ -1282,6 +1283,7 @@ void CutCommand (ThotBool save)
 		      pPrev = firstSel;
 		    }
 		}
+
 	      if (firstSel != NULL)
 		{
 		  /* open the sequence of editing operations for the history */
@@ -1604,59 +1606,28 @@ void CutCommand (ThotBool save)
 			  /* element detruit suivant */
 			  pS = pS->ElNext;
 			}
-		    }
-		  /* renumerote la suite */
-		  pE = pSave;
-		  pS = pNext;
-		  if (pS == NULL)
-		    pS = NextElement (pPrev);
-		  if (pS != NULL)
-		    while (pE != NULL)
-		      {
-			UpdateNumbers (pS, pE, pSelDoc, TRUE);
-			pE = pE->ElNext;
-		      }
-		  pNext = pS;
-		  /* annule les pointeurs vers le pere */
-		  pS = pSave;
-		  while (pS != NULL)
-		    /* parcourt la chaine des elements detruits */
-		    {
-		      pS->ElParent = NULL;
-		      pS = pS->ElNext;
-		      /* element detruit suivant */
-		    }
-		  
-		  if (!oneAtLeast)
-		    {
-		      /* nothing was destroyed: reset the selection */
-		      if (!lock)
+		      /* renumerote la suite */
+		      pE = pSave;
+		      pS = pNext;
+		      if (pS == NULL)
+			pS = NextElement (pPrev);
+		      if (pS != NULL)
+			while (pE != NULL)
+			  {
+			    UpdateNumbers (pS, pE, pSelDoc, TRUE);
+			    pE = pE->ElNext;
+			  }
+		      pNext = pS;
+		      /* annule les pointeurs vers le pere */
+		      pS = pSave;
+		      while (pS != NULL)
+			/* parcourt la chaine des elements detruits */
 			{
-			  /* unlock table formatting */
-			  (*ThotLocalActions[T_unlock]) ();
-			  if (dispMode == DisplayImmediately)
-			    TtaSetDisplayMode (doc, DisplayImmediately);
+			  pS->ElParent = NULL;
+			  pS = pS->ElNext;
+			  /* element detruit suivant */
 			}
-		      if (lastCharInit > 0)
-			lastCharInit--;
-		      if (firstCharInit > 1)
-			{
-			  if (firstSelInit == lastSelInit)
-			    i = lastCharInit;
-			  else
-			    i = 0;
-			  SelectString (pSelDoc, firstSelInit, firstCharInit, i);
-			}
-		      else if ((lastCharInit == 0 && firstCharInit != 1) ||
-			       lastSelInit != firstSelInit)
-			SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
-		      else
-			SelectString (pSelDoc, firstSelInit, 1, lastCharInit);
-		      if (lastSelInit != firstSelInit)
-			ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
-		    }
-		  else
-		    {
+
 		      /* some element were destroyed, finish the work:
 		       * check if sibling elements become first or last
 		       */
@@ -1707,81 +1678,108 @@ void CutCommand (ThotBool save)
 			  pS = pS->ElNext;
 			  /* element detruit suivant */
 			}
+		    }
+		}
+
+	      /* close the command */
+	      if (!lock)
+		{
+		  /* unlock table formatting */
+		  (*ThotLocalActions[T_unlock]) ();
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DisplayImmediately);
+		}
 		      
-		      if (!lock)
+	      /* did the selection change? */
+	      GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
+				   &firstChar, &lastChar);
+	      if (oneAtLeast &
+		  (firstSel == pSave ||
+		   ElemIsWithinSubtree (firstSel, pSave) ||
+		   lastSel == pLastSave ||
+		   ElemIsWithinSubtree (lastSel, pLastSave)))
+		{
+		  /* the selection points to deleted elements. Set
+		     a new selection */
+		  /* first, get the depth of the previous and
+		     next elements */
+		  prevDepth = 0;
+		  pE = pPrev;
+		  while (pE)
+		    {
+		      prevDepth++;
+		      pE = pE->ElParent;
+		    }
+		  nextDepth = 0;
+		  pE = pNext;
+		  while (pE)
+		    {
+		      nextDepth++;
+		      pE = pE->ElParent;
+		    }
+		  if (pNext != NULL && nextDepth >= prevDepth)
+		    {
+		      /* there is a next element and it's deeper in
+			 the abstract tree. Select its beginning */
+		      if (nextChar == 0)
 			{
-			  /* unlock table formatting */
-			  (*ThotLocalActions[T_unlock]) ();
-			  if (dispMode == DisplayImmediately)
-			    TtaSetDisplayMode (doc, DisplayImmediately);
-			}
-		      
-		      /* did the selection change? */
-		      GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
-					   &firstChar, &lastChar);
-		      if (firstSel == pSave ||
-			  ElemIsWithinSubtree(firstSel, pSave) ||
-			  lastSel == pLastSave ||
-			  ElemIsWithinSubtree(lastSel, pLastSave))
-			{
-			  /* the selection points to deleted elements. Set
-			     a new selection */
-			  /* first, get the depth of the previous and
-			     next elements */
-			  prevDepth = 0;
-			  pE = pPrev;
-			  while (pE)
-			    {
-			      prevDepth++;
-			      pE = pE->ElParent;
-			    }
-			  nextDepth = 0;
-			  pE = pNext;
-			  while (pE)
-			    {
-			      nextDepth++;
-			      pE = pE->ElParent;
-			    }
-			  if (pNext != NULL && nextDepth >= prevDepth)
-			    /* there is a next element and it's deeper in
-			       the abstract tree. Select its beginning */
-			    if (nextChar == 0)
-			      {
-				/* select the following element */
-				pSel = FirstLeaf (pNext);
-				/* Selectionne le premier caractere, si de type texte, l'elt sinon */
-				if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-				  SelectPositionWithEvent (pSelDoc, pSel, 1);
-				else
-				  SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
-			      }
-			    else
-			      SelectPositionWithEvent (pSelDoc, pNext, nextChar);
-			  else if (pPrev != NULL)
-			    /* s'il n'y a pas de suivant, selectionne le precedent */
-			    {
-			      pSel = LastLeaf (pPrev);
-			      if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-				SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
-			      else
-				SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
-			    }
+			  /* select the following element */
+			  pSel = FirstLeaf (pNext);
+			  /* Select the first character or the whole element */
+			  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+			    SelectPositionWithEvent (pSelDoc, pSel, 1);
 			  else
-				/* s'il n'y a ni suivant ni precedent, selectionne l'englobant */
-			    SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
+			    SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
 			}
-		      
-		      if (!save)
-			{
-			  /* libere les elements coupe's */
-			  pE = pSave;
-			  while (pE != NULL)
-			    {
-			      pS = pE->ElNext;
-			      DeleteElement (&pE, pSelDoc);
-			      pE = pS;
-			    }
-			}
+		      else
+			SelectPositionWithEvent (pSelDoc, pNext, nextChar);
+		    }
+		  else if (pPrev != NULL)
+		    /* no following element, select the previous */
+		    {
+		      pSel = LastLeaf (pPrev);
+		      if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+			SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
+		      else
+			SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
+		    }
+		  else
+		    /* no previous, select the parent */
+		    SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
+		}
+	      else
+		/* reset the selection */
+		HighlightSelection (FALSE, FALSE);
+#ifdef IV
+	      {
+		if (lastCharInit > 0)
+		  lastCharInit--;
+		if (firstCharInit > 1)
+		  {
+		    if (firstSelInit == lastSelInit)
+		      i = lastCharInit;
+		    else
+		      i = 0;
+		    SelectString (pSelDoc, firstSelInit, firstCharInit, i);
+		  }
+		else if ((lastCharInit == 0 && firstCharInit != 1) ||
+			 lastSelInit != firstSelInit)
+		  SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
+		else
+		  SelectString (pSelDoc, firstSelInit, 1, lastCharInit);
+		if (lastSelInit != firstSelInit)
+		  ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
+	      }
+#endif
+	      if (!save)
+		{
+		  /* libere les elements coupe's */
+		  pE = pSave;
+		  while (pE != NULL)
+		    {
+		      pS = pE->ElNext;
+		      DeleteElement (&pE, pSelDoc);
+		      pE = pS;
 		    }
 		}
 	    }

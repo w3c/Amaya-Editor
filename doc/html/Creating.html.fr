@@ -277,33 +277,21 @@ Concernant la DTD XHTML, l'élément <code>PRE</code> induit le même
 comportement que l'attribut xml:space avec la valeur "preserve".</p>
 
 <p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
-document mais ne s'applique pas lors de l'édition de celui-ci. Ainsi, si vous
-saisissez des blancs non significatifs, ils seront visibles à l'écran et
-sauvegardés tels que mais ils seront supprimés lors du prochain chargement.
-Par exemple, le code source suivant:</p>
-
-<p><code>&lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs
-&lt;/strong&gt;au chargement&lt;/p&gt;</code></p>
+document et lors de l'édition de celui-ci.. Par exemple, le code source
+suivant:</p>
+<pre><code>    &lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</code></pre>
 
 <p>donnera à l'édition:</p>
-<pre><code>Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
+<pre><code>    Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
 
 <p>et sera sauvegardé sous cette forme. Lors du prochain chargement de ce
 document, cette partie sera transformée en:</p>
-
-<p><code>Amaya supprime les</code><code><strong>blancs non
-significatif</strong></code><code><strong>s</strong>au chargement</code></p>
+<pre><code>    Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
 
 <p>car les blancs de début et de fin de l'élément <code>strong</code> sont
 considérés comme non significatifs et sont donc supprimés. La forme correcte
 aurait été:</p>
-
-<p><code>&lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non
-significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></p>
-
-<p>Nous vous conseillons de recharger votre document lorsque vous avez fini
-de le saisir afin de visualiser le résultat lors d'un prochain chargement
-avec Amaya.</p>
+<pre><code>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></pre>
 </div>
 
 <p><a href="Document.html.fr#Changing"><img alt="previous"

@@ -82,15 +82,17 @@ est possible de transformer des listes emboîtées en table et inversement.</p>
 
 <p>Il est possible de grouper une série de paragraphes, en-têtes, listes,
 tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner
-les éléments à grouper ainsi que l'entrée DIV dans le menu Eléments.</p>
+les éléments à grouper puis on active l'entrée Division dans du menu
+<strong>XHTML</strong>.</p>
 
-<h3><a name="Back">Les touches Back Space et Delete fusionnées</a></h3>
+<h3><a name="Back">Les touches Back Space et Delete</a></h3>
 
-<p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas
-au même niveau dans la structure du document. La fusion s'effectue à l'aide
-des touches Back Space et Delete. Quand le point d'insertion est à la fin
-d'un élément, utilisez la touche Delete. Quand il est au début, utilisez la
-touche Back Space. Dans les deux cas, ces touches n'effacent aucun caractère.
+<p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
+même niveau dans la structure du document. La fusion s'effectue à l'aide des
+touches <code>Back Space</code> et <code>Delete</code>. Quand le point
+d'insertion est à la fin d'un élément, utilisez la touche
+<code>Delete</code>. Quand il est au début, utilisez la touche <code>Back
+Space</code>. Dans les deux cas, ces touches n'effacent aucun caractère.
 Elles fusionnent des éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux

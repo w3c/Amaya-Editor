@@ -9,7 +9,7 @@
 </head>
 
 <body xml:lang="fr">
-<h1>Amaya - Guide utilisateur</h1>
+<h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <div>
 <h2>Plan</h2>
@@ -19,7 +19,7 @@
       <li>Pourquoi un éditeur structuré pour HTML ?</li>
       <li>Pourquoi des familles HTML ?</li>
       <li>Les familles HTML</li>
-      <li>Quelques règles à suivre</li>
+      <li>Quelques règles d'accessibilité à suivre</li>
     </ul>
   </li>
   <li>Présentation générale d'Amaya</li>
@@ -28,53 +28,56 @@
   <li>Création du contenu (paragraphes, en-têtes de sections, divisions)</li>
   <li>Le listes</li>
   <li>Les liens</li>
+  <li>Mises en évidence du texte</li>
   <li>Les tables</li>
   <li>Recherche/Remplacement - Correction orthographique</li>
+  <li>Attributs</li>
   <li>Création de feuilles de style CSS</li>
-  <li>Traiter des documents erronés</li>
+  <li>Documents erronés</li>
 </ol>
 </div>
 
 <div>
-<h1>1. Introduction</h1>
+<h1 id="L85">1. Introduction</h1>
 
 <p>L'objectif du Web est de permettre l'échange d'informations quelque soit
 le support.</p>
 <ul>
-  <li>Eviter l'approche de Word :
-    <p>Quand on transmet un document Word à quelqu'un on n'est pas sûr que la
-    personne va disposer des mêmes fontes.</p>
-    <p>Si tout repose sur la présentation le document peut devenir non
-    modifiable voire illisible.</p>
+  <li>A opposer à l'approche Word :
+    <p>En général la description d'un document Word se limite à la
+    présentation, essentiellement l'usage de fontes. Si le destinataire ne
+    dispose pas des mêmes fontes, le document peut être illisible.</p>
   </li>
-  <li>La solution :
-    <p>Utiliser un modèle de représentation clairement défini et ouvert.</p>
-    <p>C'est ce que permet de faire HTML en définissant un modèle de document
-    Web standard.</p>
-    <p>Séparer contenu et présentation.</p>
+  <li>La solution préconisée est d'utiliser un modèle de description
+    clairement défini et ouvert. C'est ce que permet de faire HTML en
+    définissant un modèle de document Web standard.
+    <p>Avec les CSS (Cascading Style Sheets) il y a même séparation entre la
+    structure + contenu et la présentation.</p>
     <p></p>
   </li>
 </ul>
 
-<p>L'auteur d'un document Web doit bien réfléchir à ce qui est du ressort de
-la structure et ce qui n'est que de la présentation</p>
+<p>L'auteur d'un document Web doit distinguer ce qui est du ressort de la
+structure (titres, paragraphes, listes, etc.) de ce qui n'est que de la
+présentation (taille de caractères, couleurs, etc.)</p>
 
-<p>Un bon exercice : la description d'un document HTML en lisant les balises
-HTML.</p>
+<p>Un bon exercice : comprendre un document en lisant ses balises HTML et le
+texte.</p>
 
 <h3>Pourquoi un éditeur structuré pour HTML ?</h3>
 
 <p>HTML définit une structure (organisation) de document.</p>
 <ul>
-  <li><strong>Elements</strong> : Définition de sémantique même si cette
-    sémantique est du niveau de la présentation
+  <li><strong>Elements</strong> : Découpage sémantique du document même si ce
+    découpage a un effet sur la présentation
     <p>Par exemple un H2 a un effet de présentation mais donne aussi une
-    information sémantique</p>
+    information sémantique. C'est un en-tête moins important qu'un H1 et plus
+    important qu'un H3.</p>
     <p>De même un lien (ancre + href) définit plus qu'un simple texte
-    coloré/souligné</p>
+    coloré/souligné.</p>
   </li>
   <li><strong>Attributs</strong> : Caractérisation sémantique
-    <p>Division avec un attribut class="section", la cible d'un lien
+    <p>L'attribut class="section" sur une division, la cible d'un lien
     href="http://www.w3.org/"</p>
   </li>
 </ul>
@@ -85,17 +88,18 @@ HTML.</p>
 <h3>Pourquoi des familles HTML ?</h3>
 
 <p>Avant que le langage CSS ne soit finalisé, HTML avait introduit des
-éléments et des attributs qui fixaient la présentation des documents. Par
-exemple &lt;font&gt;...&lt;/font&gt; pour choisir une police de caractères
-pour l'affichage d'une portion de texte. Avec le langage CSS, ces éléments et
-attributs n'ont plus de raison d'être. La sous-famille de HTML 4.0 Strict a
-pour but d'identifier les éléments et attributs qui doivent être remplacé par
-des propriétés CSS (center, font, color, background).</p>
+éléments et des attributs qui n'avaient pas de valeur sémantique, mais
+servaient à modifier la présentation des documents. Par exemple
+&lt;font&gt;...&lt;/font&gt; pour choisir une police de caractères
+particulière. Avec le langage CSS, ces éléments et attributs n'ont plus de
+raison d'être. La sous-famille de HTML 4.0 Strict élimine les éléments et
+attributs HTML qui doivent être remplacé par des propriétés CSS (center,
+font, color, background).</p>
 
 <p>La sous-famille de HTML 4.0 Frameset isole les éléments et attributs qui
 décrivent le découpage en fenêtres (frames). Le W3C décommande l'utilisation
 des "frames" pour faire que les sites Web soient accessibles aux handicapés
-(non-voyants).</p>
+(problèmes de navigation et de contexte).</p>
 
 <p>D'autres familles XHTML ont été introduites par&nbsp;:</p>
 <ul>
@@ -116,39 +120,45 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
   <caption></caption>
   <tbody>
     <tr>
-      <td>HTML 4.0 Transitional</td>
+      <th>Famille</th>
+      <th>Eléments + attributs</th>
+      <th>Strucutre</th>
+    </tr>
+    <tr>
+      <td><p>HTML 4.0 Transitional </p>
+      </td>
       <td>Tout sauf les frames</td>
-      <td>Structure non explicite</td>
+      <td>Structure implicite</td>
     </tr>
     <tr>
       <td>HTML 4.0 Strict</td>
       <td>Sans éléments de présentation</td>
-      <td>Structure non explicite</td>
+      <td>Structure implicite</td>
     </tr>
     <tr>
       <td>HTML 4.0 Frameset</td>
       <td>Les frames</td>
-      <td>Structure non explicite</td>
+      <td>Structure implicite</td>
     </tr>
     <tr>
       <td>XHTML 1.0 Transitional</td>
       <td>Tout sauf les frames</td>
-      <td>Structure explicite</td>
+      <td>Structure bien formée</td>
     </tr>
     <tr>
       <td>XHTML 1.0 Strict</td>
       <td>Sans éléments de présentation</td>
-      <td>Structure explicite</td>
+      <td>Structure bien formée</td>
     </tr>
     <tr>
       <td>XHTML 1.0 Basic</td>
       <td>Adapté aux téléphones</td>
-      <td>Structure explicite</td>
+      <td>Structure bien formée</td>
     </tr>
     <tr>
       <td>XHTML 1.1</td>
-      <td>+ annotations Ruby</td>
-      <td>Structure explicite</td>
+      <td>XHTML 1.0 Strict + annotations Ruby</td>
+      <td>Structure bien formée</td>
     </tr>
   </tbody>
 </table>
@@ -168,7 +178,7 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
 </div>
 
 <div>
-<h1>2. Présentation générale d'Amaya</h1>
+<h1 id="L271">2. Présentation générale d'Amaya</h1>
 
 <p>Amaya est à la fois navigateur et un éditeur&nbsp;:</p>
 
@@ -275,7 +285,7 @@ final du document tel qu'il est vu par un navigateur Web</p>
 </div>
 
 <div>
-<h1>3. Paramétrage de l'application</h1>
+<h1 id="L483">3. Paramétrage de l'application</h1>
 
 <p>Avant d'éditer des documents Web avec Amaya, il est important de fixer un
 certain nombre de paramètres. Pour cela il faut ouvrir au moins deux des dix
@@ -357,10 +367,12 @@ summary="action button chart">
     option.<br />
   </li>
 </ul>
+
+<p><a href="Configure.html.fr">A voir pour plus de détail</a></p>
 </div>
 
 <div>
-<h1>4. Création/Edition d'une page Web</h1>
+<h1 id="L608">4. Création/Edition d'une page Web</h1>
 
 <p>L'entrée <strong>Fichier/Nouveau</strong> permet de créer un nouveau
 document d'un type donné. Amaya demande de spécifier l'URI ou le nom local du
@@ -368,7 +380,7 @@ document à créer (un nom par défaut est généré). Après confirmation, Amaya
 ouvre un nouveau document vide.</p>
 
 <p>L'entrée <strong>Fichier/Ouvrir</strong> remplace le document affichér la
-nouvelle page sélectionnée. Amaya utilise la même entrée de menu  par le
+nouvelle page sélectionnée. Amaya utilise la même entrée de menu par le
 nouveau document sélectionné. Amaya utilise la même entrée de menu pour
 ouvrir un document local ou un document d'un serveur Web.</p>
 
@@ -421,7 +433,8 @@ le formulaire de choix de la langue.</p>
 </div>
 
 <div>
-<h1>5. Création du contenu (paragraphes, en-têtes de sections, divisions)</h1>
+<h1 id="L662">5. Création du contenu (paragraphes, en-têtes de sections,
+divisions)</h1>
 
 <p>Par défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active
 la touche <code>Enter</code>. Une fois le paragraphe et son contenu créé, on
@@ -452,18 +465,109 @@ sélection courante.</p>
 
 <h3>Préformaté</h3>
 
-<p></p>
+<p>L'élément préformaté est un paragraphe particulier qui permet de préserver
+tous les caractères&nbsp;: espace, fin de ligne. Quand la sélection se trouve
+à la fin d'un &lt;pre&gt;, la touche Enter crée une nouvelle ligne du
+&lt;pre&gt;.</p>
 
-<p>Numérotation</p>
+<p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
+en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
+<code>Ctrl t Ctrl w</code>).</p>
 
-<p>Les en-têtes de section H1, ..., H6</p>
+<p>Pour transformer un préformaté en paragraphe, on sélectionne le préformaté
+en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
 
-<p>Division englobant titre + contenu</p>
+<h3>Division</h3>
 
-<p><em>Exercice1&nbsp;:</em> Créer un document contenant des paragraphes et
-des en-têtes.</p>
+<p>Il est possible de grouper une série de paragraphes, en-têtes, etc.
+dansune division. Pour cela, on sélectionne les éléments à grouper ainsi que
+l'entrée DIV dans le menu Eléments.</p>
 
-<h1>6. Les listes</h1>
+<h3>La touche Enter</h3>
+
+<p>La touche <code>Enter</code> (ou Return) joue un rôle particulier. En
+général elle clot l'élément courant est clos et créée un paragraphe juste
+après. Si un élément complet est séelctionné, la touche <code>Enter</code>
+crée une autre instance de cet élément. Par exemple si on sélectionne un
+en-tête, la touche <code>Enter</code> va créer un en-tête vide après.</p>
+
+<p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche
+<code>Enter</code> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
+paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
+utilisant la touche <code>Esc</code> (Unix) ou <code>F2</code> (Windows) puis
+<code>Enter</code>.</p>
+
+<h3><a id="Back">Les touches Back Space et Delete</a></h3>
+
+<p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas
+au même niveau dans la structure du document. La fusion s'effectue à l'aide
+des touches Back Space et Delete. Quand le point d'insertion est à la fin
+d'un élément, utilisez la touche Delete. Quand il est au début, utilisez la
+touche Back Space. Dans les deux cas, ces touches n'effacent aucun caractère.
+Elles fusionnent des éléments séparés par une limite de structure.</p>
+
+<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
+touches effacent comme d'habitude le caractère suivant ou le caractère
+précédent.</p>
+
+<h3>Caractères spéciaux</h3>
+
+<p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
+depuis le clavier, Amaya utilise le support standard fournit par le
+système.</p>
+
+<p>Amaya fournit des raccourcis clavier pour certains caractères non
+disponibles au clavier comme&nbsp;:</p>
+<ul>
+  <li>Pour obtenir un espace non sécable, vous devez taper <code>Ctrl -
+    espace</code>. Ce caractère sera sauvé comme une entité
+    (<code>&amp;nbsp;</code>).</li>
+  <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt e</code>.</li>
+  <li>Pour obtenir un &#x153; (oelig), vous devez taper <code>Ctrl o</code>
+    puis <code>Ctrl e</code>.</li>
+  <li>Pour obtenir un &#x152; (OElig), vous devez taper <code>Shift Ctrl
+    O</code> puis <code>Shift Ctrl E</code>.</li>
+  <li>Pour obtenir un «, vous devez taper <code>Ctrl &lt;</code> (ou
+    <code>Shift</code> <code>Ctrl &lt;</code> selon le clavier).</li>
+  <li>Pour obtenir un », vous devez taper <code>Shift Ctrl &gt;</code>.</li>
+</ul>
+
+<h3>Insérer une image</h3>
+
+<p>Pour insérer une image, on choisit l'entrée <strong>Image</strong> dans le
+menu <strong>Xhtml</strong> (raccourci <code>Ctrl t Ctrl i</code>) ou on
+clique sur le bouton <img alt="Image " src="../images/Image.gif"
+longdesc="longdesc.htm" />. Une boîte de dialogue s'affiche qui permet de
+rentrer le nom du fichier et le <a href="ImageMaps.html.fr#Alternative">texte
+de remplacement</a> ('ALT' texte) de l'image. L'insertion n'est prise en
+compte que lorsque le texte de remplacement est fourni.</p>
+
+<p style="text-align: center"><img alt="(Insertion image)"
+src="../images/create_image-fr.png" /></p>
+
+<h3>Remplacer une image</h3>
+
+<p>Pour remplacer une image il faut sélectionner cette image en draguant sur
+l'image avec la souris. Procédez alors comme pour l'ajout d'une image (voir
+ci-dessus). Lorsqu'une image (et seulement une image) est entièrement
+sélectionnée, la boîte de dialogue des images effectue le remplacement de
+l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
+
+<h3 style="clear: both">Copier/Coller, Défaire/Refaire</h3>
+
+<p>Amaya permet copier/coller non seulement du texte et des images, mais
+aussi une structure complexe comme une division ou une suite de paragraphes
+et d'en-têtes.</p>
+
+<p>Il est toujours possible de défaire et de refaire les dernières
+modifications opérées dans le document.</p>
+
+<p><a href="Creating.html.fr">A voir pour plus de détail</a></p>
+
+<p><em>Exercice1&nbsp;:</em> Créer un document contenant des paragraphes, des
+en-têtes, des divisions.</p>
+
+<h1 id="L831">6. Les listes</h1>
 
 <h3>Editer les listes à puces ou les listes numérotées</h3>
 
@@ -544,31 +648,245 @@ Terme 1, mettez le point d'insertion au début du terme 1 et appuyez sur
 <code>Enter</code>. Tapez le nouveau terme (<code>dt</code>), puis pressez
 <code>Enter</code> deux fois : une nouvelle définition (<code>dd</code>) est
 créée directement après le nouveau terme.</p>
-
-<p><em>Exercice2&nbsp;:</em> Créer et ransformer des listes.</p>
 </div>
 
-<h1>7. Les liens</h1>
+<p>De façon générale on utilise la touche <code>Enter</code> pour insérer des
+éléments de structure avant ou après des listes ou des items de liste, et les
+touches <code>Back Space</code> et <code>Delete</code> pour fusionner des
+listes ou des items de listes.</p>
 
-<p>Création de cibles</p>
+<div>
+<p><em>Exercice2&nbsp;:</em> Créer et transformer des listes.</p>
+</div>
 
-<p>Création de liens</p>
+<h1 id="L1002">7. Les liens</h1>
 
-<p>Génération automatique d'IDs</p>
+<p>Les liens hypertexte permettent de relier des parties de document
+entre-elles ou des documents entre-eux.</p>
 
-<p>Construire un livre</p>
+<h3>Création de cibles</h3>
 
-<h1>8. Les tables</h1>
+<p>La cible d'un lien hypertexte peut être</p>
+<ul>
+  <li>un document entier,</li>
+  <li>ou un passage du document englobé par une ancre cible,</li>
+  <li>ou un élément HTML qui possède un identificateur (attribut ID)</li>
+</ul>
+
+<p>Pour créer une cibe dans un document, il suffit de sélectionner le passage
+désiré et d'activer l'entrée de menu <strong>Créer cible</strong> (Shift Ctrl
+T)dans le menu <strong>Liens</strong>. Si la sélection porte sur un élément
+HTML entier, Amaya va lui associer un identificateur unique. Sinon, Amaya va
+englober le contenu de la sélection dans une ancre cible.</p>
+
+<p>On peut demander à Amaya d'associer un identificateur à tous les éléments
+d'un certain type dans le document. Pour cela on active l'entrée
+<strong>Ajouter/Retirer des attributs ID</strong> dans le menu
+<strong>Spécial</strong>. Par exemple, on peut demander d'associer un
+identificateur à tous les éléments H1.</p>
+
+<h3>Création de liens</h3>
+
+<p>L'origine d'un lien est une ancre qui possède un attribut href. On procède
+de la même façon pour un lien vers un document local, une cible</p>
+
+<h4>Lien vers un autre document édité par Amaya</h4>
+<ol>
+  <li>On sélectionne le passage choisi.</li>
+  <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
+  /></li>
+  <li>On clique sur le document cible affiché.</li>
+</ol>
+
+<p>Autre méthode&nbsp;:</p>
+<ol>
+  <li>On sélectionne le passage choisi.</li>
+  <li>On choisit <strong>Créer/changer lien</strong> du <a
+    href="Browsing.html.fr"></a>menu <strong>Liens</strong> (raccourci
+    <code>Shift Ctrl L</code>) pour afficher le formulaire de création de
+    lien.
+    <p><img alt="(Création de lien)" src="../images/create_link-fr.png" /></p>
+  </li>
+  <li>Soit on saisit l'URI du document cible et on confirme. Soit on décide
+    de désigner la cible avec la souris (bouton Clic puis clic sur le
+    document cible affiché).</li>
+</ol>
+
+<p>Dans tous les cas, une fois la cible choisie, Amaya va calculer l'URL
+relative qui permet d'aller du document source au document cible.</p>
+
+<h4>Lien vers une ancre cible d'un document édité par Amaya</h4>
+
+<p>Pour créer un lien vers une ancre cible particulière ou vers un élément
+cible particulier d'un document édité par Amaya, il faut d'abord demander la
+visualisation des cibles <a id="target"><img src="../images/target.gif"
+alt=" target " /></a> dans le document concerné en activant l'entrée
+<strong>Montrer les cibles</strong> du menu <strong>Vues</strong> ou ouvrant
+la vue des liens (entrée <strong>Montrer les liens</strong> du menu
+<strong>Vues</strong>). Ensuite&nbsp;:</p>
+<ol>
+  <li>On sélectionne le passage choisi.</li>
+  <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
+  /></li>
+  <li>On clique sur la cible choisie.</li>
+</ol>
+
+<h4>Lien vers un autre document non affiché</h4>
+
+<p>Pour créer un lien vers un autre document local ou distant édité par
+Amaya:</p>
+<ol>
+  <li>On sélectionne le passage choisi.</li>
+  <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
+  /></li>
+  <li>On clique sur une zone du document qui ne peut pas être une cible pour
+    faire afficher le formulaire de saisie de l'URL. Si le document est
+    local, on peut utiliser le browser de fichier pour s</li>
+</ol>
+
+<p>Autre méthode&nbsp;:</p>
+<ol>
+  <li>On sélectionne le passage choisi.</li>
+  <li>On choisit <strong>Créer/changer lien</strong> du menu
+    <strong>Liens</strong> (raccourci <code>Shift Ctrl L</code>)</li>
+  <li>Soit on saisit l'URL du document cible et on confirme. Soit on décide
+    de choisir la cible avec la souris (bouton Clic).</li>
+</ol>
+
+<h4><a id="Changing">Mettre à jour un lien</a></h4>
+
+<p>Pour garder une ancre mais changer la cible du lien correspondant, on
+place la sélection dans l'ancre et on procède comme pour la création de lien
+(bouton <img alt="Link " src="../images/Link.gif" /> ou l'entrée
+<strong>Créer/changer Lien</strong> du menu <strong>Liens</strong>). On peut
+alors désigner la nouvelle cible ou éditer l'URI. Pour changer la cible d'un
+lien, on peut également éditer l'attribut <code>href</code> dans la vue
+structure.</p>
+
+<h4><a id="Removing">Supprimer un lien ou une ancre cible</a></h4>
+
+<p>Le menu <strong>Liens</strong> contient une entrée <strong>Détruire
+ancre</strong> qui permet de détruire l'ancre cible ou le lien sélectionné.
+Il suffit que la sélection soit à l'intérieur de l'ancre à détruire. L'ancre
+est détruite, mais son contenu reste.</p>
+
+<h1 id="L1163">8. Mises en évidence du texte</h1>
+
+<p>Il est possible de marquer des parties de texte mises en ligne soit en
+utilsant les CSS (voir plus loin), soit en utilsant les éléments mise en
+évidence, important, code, citation, abréviation, etc. de HTML</p>
+
+<h3>Traitement des blancs</h3>
+
+<p>L'auteur d'un tel document peut vouloir spécifier son intention de
+préserver tous les caractères pour certains éléments. Pour cela, il peut
+utiliser l'attribut xml:space (pour des documents XHTML) ou l'élément
+&lt;pre&gt; .</p>
+
+<p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
+document et lors de l'édition de celui-ci.. Par exemple, le code source
+suivant:</p>
+<pre><code>    &lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</code></pre>
+
+<p>donnera à l'édition:</p>
+<pre><code>    Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
+
+<p>et sera sauvegardé sous cette forme. Lors du prochain chargement de ce
+document, cette partie sera transformée en:</p>
+<pre><code>    Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
+
+<p>car les blancs de début et de fin de l'élément <code>strong</code> sont
+considérés comme non significatifs et sont donc supprimés. La forme correcte
+aurait été:</p>
+<pre>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</pre>
+
+<h1 id="L1206">9. Les tables</h1>
 
 <p>Création d'une table</p>
 
+<p>*************</p>
+
 <p>Ajout de cellules</p>
 
-<p>Création d'un paragraphe après une table</p>
+<h3>Création d'un paragraphe après une table</h3>
 
-<h1>9. Recherche/Remplacement - Correction orthographique</h1>
+<p>Quand la sélection se trouve dans une table, la touche <code>Enter</code>
+crée un nouveau paragraphe dans la table. Pour créer un paragraphe après la
+table, il faut sélectionner la table entière en utilisant la touche
+<code>Esc</code> (Unix) ou <code>F2</code> (Windows) puis
+<code>Enter</code>.</p>
 
-<h1>10. Création de feuilles de style CSS</h1>
+<h1 id="L1228">10. Recherche/Remplacement - Correction orthographique</h1>
+
+<h3>Recherche et remplacement de texte</h3>
+
+<p>La recherche/remplacement se lance, soit en cliquant sur le bouton <img
+src="../images/find.gif" alt="find " />, soit par l'entrée de
+menu<strong>Edition/Rechercher</strong>. Un boite de dialogue apparait. vous
+avez deux zones de saisie la première sera pour le texte à rechercher la
+deuxième zone de saisie sera pour le texte à remplacer. Pour chacune des
+actions vous avez des choix d'options.<code>Ctrl f</code> en Windows,
+<code>Shift Ctrl %</code> sur Unix) . Un boite de dialogue apparait pour
+saisir le texte à rechercher, et éventuellement le texte de remplacement.</p>
+
+<p><img alt="(Rechercher/Remplacer)"
+src="../images/search_and_replace-fr.png"
+style="float:left; margin-right: 5px" />Pour chacune des actions vous avez
+des choix d'options.</p>
+<ul>
+  <li>les options de recherche :
+    <ul>
+      <li>la casse : pour la recherche permet de spécifier s'il y a lieu de
+        différencier ou non les majuscules des minuscules.</li>
+      <li>case à cocher pour sélectioner la zone sur laquelle réaliser la
+        recherche avant la sélection, après la sélection, dans la sélection
+        ou sur la totalité du document.</li>
+    </ul>
+  </li>
+  <li>Les options de remplacement :
+    <ul>
+      <li>le type de remplacement : pas de remplacement (juste une
+        recherche), remplacement avec un fenetre de confirmation,
+        remplacement automatique.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Correction orthographique</h3>
+
+<p>La correction ortographique se réalise à l'aide d'une boite de dialogue
+activé par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
+
+<p>les options de la boite de dialogue :</p>
+<ul>
+  <li>Le dictionnaire utilisé se fait en fonction de la langue définie au
+    niveau de la division si vous n'avez pas de division ce sera la langue
+    définie au niveau du document lui même.</li>
+  <li>A droite vous pouvez spécifier le nombre de proposition qui vous serez
+    faites lorsqu'Amaya ne reconnaitra pas un mot (par déafut 3).</li>
+  <li>A droite vous avez la possibilité d'exclure des éléments lors de
+    recherche de correspondance de mots avec le dictionnaire (par défaut
+    toutes les options sont activé)</li>
+  <li>Options de zone de recherche vous avez la possibilité de spécifier la
+    zone sur laquelle cette correction orthographique se fera avant la
+    sélection, après la sélection, dans la sélection ou sur la totalité du
+    document.</li>
+  <li>les boutons d'activation de recherche.
+    <ul>
+      <li>recherche du suivant (sans action) : considère que le mot est
+        correcte et passe à l'erruer suivante.</li>
+      <li>rajoute au dictionnaire personel : rajoute le mot au dictionnaire
+        personnel.</li>
+      <li>remplace le mots et passe à l'occurence suivante.</li>
+      <li>remplace le mots et le rajoute dans le dictionnaire personnel.</li>
+      <li>confirmer permet de fermer la boite de dialogue.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="L1230">11. Attributs</h1>
+
+<h1 id="L1232">12. Création de feuilles de style CSS</h1>
 
 <p>Elément style</p>
 
@@ -578,7 +896,7 @@ créée directement après le nouveau terme.</p>
 
 <p>Tester - Voir le style appliqué</p>
 
-<h1>11. Traiter des documents erronés</h1>
+<h1 id="L1242">13. Documents erronés</h1>
 
 <p>Au chargement d'un document existantéditée manuellement ou avec un éditeur
 qui ne traite pas correc (édité manuellement ou avec un éditeur qui ne traite
@@ -590,5 +908,11 @@ affiché. On peut voir le détail des erreurs détectées dans l'entrée
 erreurs est de suivre le lien vers la vue source du document</p>
 
 <p>Erreur d'encodage</p>
+<address>
+  <p>Irène Vatton $date: Monday 15 December 2003 - 12:56:20$</p>
+
+</address>
+
+<p></p>
 </body>
 </html>
