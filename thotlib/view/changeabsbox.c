@@ -3342,8 +3342,8 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
 
 /*----------------------------------------------------------------------
    ElemWithinImage  checks if abstract boxes of the element pEl 
-   Corresponding to view may be displayed within the abstract image
-   part already builded.
+   corresponding to view may be displayed within the abstract image
+   part already built.
   ----------------------------------------------------------------------*/
 ThotBool ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot,
 			  PtrDocument pDoc)
@@ -3351,6 +3351,9 @@ ThotBool ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot,
    ThotBool            result, finished, found;
    PtrElement          pAsc;
    PtrAbstractBox      pAb;
+
+   if (pEl->ElAbstractBox[view - 1])
+     return (TRUE);
 
    result = TRUE;
    finished = FALSE;
