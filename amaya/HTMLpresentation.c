@@ -23,9 +23,6 @@
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "presentation.h"
-#ifdef GRAPHML
-#include "Graphedit_f.h"
-#endif
 
 /*----------------------------------------------------------------------
  MakeASpan

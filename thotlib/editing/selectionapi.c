@@ -241,6 +241,62 @@ int                 lastCharacter;
 }
 
 /*----------------------------------------------------------------------
+   TtaAddElementToSelection
+
+   Add a new element to the current selection.  The new selection
+   may then contain separate elements.
+
+   Parameters:
+   document: the document to which the element belongs.  This element must
+	belong to the same document as the elements selected by previous calls
+	to TtaAddElementToSelection and by the last call to TtaSelectElement.
+   element: the element to be added to the current selection
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaAddElementToSelection (Document document, Element element)
+#else  /* __STDC__ */
+void                TtaAddElementToSelection (document, element)
+Document            document;
+Element             element;
+
+#endif /* __STDC__ */
+{
+   PtrDocument         pDoc;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
+   boolean             ok;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   /* Checks the parameter document */
+   else if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      /* Parameter document is correct */
+     {
+	/* is there a current selection */
+	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				  &firstChar, &lastChar);
+	if (ok)
+	  if (TtaGetDisplayMode (document) != DisplayImmediately)
+	     /* accept only if immediate display mode */
+	     ok = FALSE;
+	  else
+	     /* is the current selection is in the same document? */
+	     ok = (pDoc == LoadedDocument[document - 1]);
+	if (!ok)
+	   /* Error: no selection */
+	   TtaError (ERR_no_selection_in_document);
+	else
+	   AddInSelection ((PtrElement) element, FALSE);
+     }
+}
+
+/*----------------------------------------------------------------------
    TtaSelectInterval
 
    If a pair of paired elements is selected, select also all elements

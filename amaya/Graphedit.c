@@ -118,6 +118,92 @@ Document doc;
 }
 
 /*----------------------------------------------------------------------
+ SelectGraphMLElement
+ The user wants to select a new element in a GraphML drawing.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean SelectGraphMLElement (NotifyElement *event)
+#else /* __STDC__*/
+boolean SelectGraphMLElement(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+/******* a revoir ****
+   ElementType	elType;
+   Element	el;
+   boolean	found;
+
+   el = event->element;
+   found = FALSE;
+   while (el && !found)
+      {
+      elType = TtaGetElementType (el);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	el = NULL;
+      else
+        if (elType.ElTypeNum == GraphML_EL_Line_ ||
+	    elType.ElTypeNum == GraphML_EL_Rectangle ||
+	    elType.ElTypeNum == GraphML_EL_RoundRect ||
+	    elType.ElTypeNum == GraphML_EL_Circle ||
+	    elType.ElTypeNum == GraphML_EL_Oval ||
+	    elType.ElTypeNum == GraphML_EL_Polyline ||
+	    elType.ElTypeNum == GraphML_EL_Polygon ||
+	    elType.ElTypeNum == GraphML_EL_Spline ||
+	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	    elType.ElTypeNum == GraphML_EL_Text_ ||
+	    elType.ElTypeNum == GraphML_EL_Math)
+	   found = TRUE;
+        else
+	   if (elType.ElTypeNum == GraphML_EL_GraphML)
+	     el = NULL;
+	   else
+             el = TtaGetParent (el);
+      }
+   if (found)
+      {
+      TtaSelectElement (event->document, el);
+      return TRUE;
+      }
+******/
+   return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ ExtendSelectGraphMLElement
+ The user wants to add a new element in the current selection.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean ExtendSelectGraphMLElement (NotifyElement *event)
+#else /* __STDC__*/
+boolean ExtendSelectGraphMLElement(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+   Element	el, ancestor;
+   ElementType	elType;
+   int		c1, i;
+
+   elType = TtaGetElementType (event->element);
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+      /* the element is not a GraphML element */
+      return FALSE;	/* let Thot perform normal operation */
+   TtaGiveFirstSelectedElement (event->document, &el, &c1, &i);
+   if (el == NULL)
+      return TRUE;	/* Don't let Thot perform normal operation */
+   ancestor = TtaGetCommonAncestor (el, event->element);
+   if (ancestor == NULL)
+      return TRUE;	/* Don't let Thot perform normal operation */
+   elType = TtaGetElementType (ancestor);
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+      /* common ancestor is not a GraphML element */
+      return TRUE;
+   
+   /******** code to be written */
+   TtaAddElementToSelection (event->document, event->element);
+   return TRUE; /* Don't let Thot perform normal operation */
+}
+ 
+/*----------------------------------------------------------------------
  SetEmptyShapeAttribute
  A GraphML drawing is about to be saved. Set the EmptyShape attribute
  on all closed geometric shapes that do not contain any Label element.
@@ -458,6 +544,7 @@ void AttrPointsModified (event)
   CreatePoints (event->attribute, event->element, event->document);
 }
 
+/***** A quoi sert cette procedure GraphicsPRuleChanged ?  *****/
 /*----------------------------------------------------------------------
  GraphicsPRuleChanged
  A presentation rule has been changed by Thot.
@@ -622,15 +709,16 @@ int                 construct;
 #endif
 {
    Document	doc;
-   Element	last, first, graphRoot, wrapperEl, newEl, sibling, child,
-		parent, elem;
+   Element	last, first, graphRoot, newEl, sibling, child, parent, elem;
    ElementType	elType, wrapperType, newType, childType;
    AttributeType	attrType;
+   Attribute	attr;
    int		c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    SSchema	docSchema;
    char		shape;
    DisplayMode	dispMode;
    boolean	found, automaticPlacement;
+
 
    doc = TtaGetSelectedDocument ();
    newEl = NULL;
@@ -658,9 +746,7 @@ int                 construct;
          return;
       wrapperType.ElTypeNum = HTML_EL_XMLGraphics;
       TtaCreateElement (wrapperType, doc);
-      TtaGiveFirstSelectedElement (doc, &wrapperEl, &c1, &i);
-      graphRoot = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&graphRoot, wrapperEl, doc);
+      TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
       }
 
    /* looks for the element (sibling) in front of which the new element will be
@@ -841,14 +927,31 @@ int                 construct;
    if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' || shape == 's')
       /* multipoints element. Let the user enter the points */
       {
-      TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
+      if (automaticPlacement)
+	 {
+	 w = 80;
+	 attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (newEl, attr, doc);
+	 TtaSetAttributeValue (attr, w, newEl, doc);
+	 UpdateWidthHeightAttribute (attr, newEl, doc);
+	 h = 60;
+	 attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (newEl, attr, doc);
+	 TtaSetAttributeValue (attr, h, newEl, doc);
+	 UpdateWidthHeightAttribute (attr, newEl, doc);
+	 }
+      else
+         TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
+
       TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
       TtcInsertGraph (doc, 1, shape);
       /* ask Thot to stop displaying changes made in the document */
       if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
       UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
-      UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY);
+      UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY, !automaticPlacement);
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
       }

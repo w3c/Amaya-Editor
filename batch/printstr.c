@@ -422,6 +422,52 @@ int                 Num;
 	    case ExcActiveRef:
 	       printf ("ActiveRef");
 	       break;
+	    case ExcNoPaginate:
+	       printf ("NoPaginate");
+	       break;
+	    case ExcImportLine:
+	       printf ("ImportLine");
+	       break;
+	    case ExcImportParagraph:
+	       printf ("ImportParagraph");
+	       break;
+	    case ExcParagraphBreak:
+	       printf ("ParagraphBreak");
+	       break;
+	    case ExcHighlightChildren:
+	       printf ("HighlightChildren");
+	       break;
+	    case ExcExtendedSelection:
+	       printf ("ExtendedSelection");
+	       break;
+	    case ExcReturnCreateNL:
+	       printf ("ReturnCreateNL");
+	       break;
+	    case ExcIsTable:
+	       printf ("IsTable");
+	       break;
+	    case ExcIsRow:
+	       printf ("IsRow");
+	       break;
+	    case ExcIsColHead:
+	       printf ("IsColHead");
+	       break;
+	    case ExcIsCell:
+	       printf ("IsCell");
+	       break;
+	    case ExcNewPercentWidth:
+	       printf ("NewPercentWidth");
+	       break;
+	    case ExcColRef:
+	       printf ("ColRef");
+	       break;
+	    case ExcColSpan:
+	       printf ("ColSpan");
+	       break;
+	    case ExcRowSpan:
+	       printf ("RowSpan");
+	       break;
+
 	    default:
 	       printf ("%2d", Num);
 	       break;

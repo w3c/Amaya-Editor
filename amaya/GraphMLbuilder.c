@@ -726,9 +726,9 @@ Document	doc;
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdateInternalAttrForPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY)
+void UpdateInternalAttrForPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition)
 #else /* __STDC__*/
-void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY)
+void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPosition)
      Element el;
      Element leaf;
      Document doc;
@@ -736,6 +736,7 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY)
      int minY;
      int maxX;
      int maxY;
+     boolean setIntPosition;
 
 #endif /* __STDC__*/
 {
@@ -756,23 +757,32 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY)
    TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
 
    attrType.AttrSSchema = GraphMLSSchema;
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
+   if (setIntPosition)
       {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
+      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+         x = TtaGetAttributeValue (attr);
+      else
+         {
+         attr = TtaNewAttribute (attrType);
+         TtaAttachAttribute (el, attr, doc);
+         x = 0;
+         }
+      TtaSetAttributeValue (attr, x+minX, el, doc);
+   
+      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+         y = TtaGetAttributeValue (attr);
+      else
+         {
+         attr = TtaNewAttribute (attrType);
+         TtaAttachAttribute (el, attr, doc);
+         y = 0;
+         }
+      TtaSetAttributeValue (attr, y+minY, el, doc);
       }
-   TtaSetAttributeValue (attr, minX, el, doc);
-
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      }
-   TtaSetAttributeValue (attr, minY, el, doc);
 
    attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
    attr = TtaGetAttribute (el, attrType);
@@ -855,7 +865,7 @@ Document	doc;
          nbPoints++;
          TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
          }
-      UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY);
+      UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, TRUE);
       TtaFreeMemory (text);
       }
 }

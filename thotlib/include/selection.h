@@ -87,6 +87,21 @@ extern void         TtaSelectString (Document document, Element textElement, int
 extern void         TtaExtendSelection (Document document, Element element, int lastCharacter);
 
 /*----------------------------------------------------------------------
+   TtaAddElementToSelection
+ 
+   Add a new element to the current selection.  The new selection
+   may then contain separate elements.
+ 
+   Parameters:
+   document: the document to which the element belongs.  This element must
+        belong to the same document as the elements selected by previous calls
+        to TtaAddElementToSelection and by the last call to TtaSelectElement.
+   element: the element to be added to the current selection
+ 
+  ----------------------------------------------------------------------*/
+extern void         TtaAddElementToSelection (Document document, Element element);
+
+/*----------------------------------------------------------------------
    TtaSelectInterval
 
    If a pair of paired elements is selected, select also all elements
@@ -202,6 +217,7 @@ extern void         TtaSelectElement ( /* Document document, Element selectedEle
 extern void         TtaSelectView (/*Document document, View view*/);
 extern void         TtaSelectString ( /* Document document, Element textElement, int firstCharacter, int lastCharacter */ );
 extern void         TtaExtendSelection ( /* Document document, Element element, int lastCharacter */ );
+extern void         TtaAddElementToSelection (/* Document document, Element element */ );
 extern void         TtaSelectInterval ();
 extern void         TtaUnselect ( /* Document document */ );
 extern void         TtaSetSelectionMode ( /* boolean withMenu */ );

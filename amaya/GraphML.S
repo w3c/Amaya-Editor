@@ -176,6 +176,15 @@ EXCEPT
 
    GraphML:		MoveResize, Hidden;
    Label:		NoMove, Noresize;
+   Line_:		HighlightChildren;
+   Rectangle:		HighlightChildren;
+   RoundRect:		HighlightChildren;
+   Circle:		HighlightChildren;
+   Oval:		HighlightChildren;
+   Polyline:		HighlightChildren;
+   Polygon:		HighlightChildren;
+   Spline:		HighlightChildren;
+   ClosedSpline:	HighlightChildren;
 
    Invalid_attribute:	Invisible;
    Ghost_restruct:	Invisible;

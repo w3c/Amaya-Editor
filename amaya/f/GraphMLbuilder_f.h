@@ -17,7 +17,7 @@ extern void GraphMLEntityCreated ( unsigned char *entityValue, char *entityName,
 extern Element CreateGraphicLeaf ( Element el, Document doc, boolean *closed, int arrowHead );
 extern void ParseDirAndSpaceAttributes ( Element el, Document doc );
 extern void GraphMLElementComplete ( Element el, Document doc );
-extern void UpdateInternalAttrForPoly ( Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY );
+extern void UpdateInternalAttrForPoly ( Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition );
 extern void CreatePoints ( Attribute attr, Element el, Document doc );
 extern void ParsePositionAttribute ( Attribute attr, Element el, Document doc );
 extern void ParseWidthHeightAttribute ( Attribute attr, Element el, Document doc );
@@ -36,7 +36,7 @@ extern void GraphMLEntityCreated (/* unsigned char *entityValue, char *entityNam
 extern Element CreateGraphicLeaf (/* Element el, Document doc, boolean *closed, int arrowHead */);
 extern void ParseDirAndSpaceAttributes (/* Element el, Document doc */);
 extern void GraphMLElementComplete (/* Element el, Document doc */);
-extern void UpdateInternalAttrForPoly (/* Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY */);
+extern void UpdateInternalAttrForPoly (/* Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition */);
 extern void CreatePoints (/* Attribute attr, Element el, Document doc */);
 extern void ParsePositionAttribute (/* Attribute attr, Element el, Document doc */);
 extern void ParseWidthHeightAttribute (/* Attribute attr, Element el, Document doc */);
