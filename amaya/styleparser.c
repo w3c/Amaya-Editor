@@ -4510,6 +4510,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_Class;
 #endif /* XML_GENERIC */
+	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	  /* update attrLevel */
@@ -4531,6 +4532,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 #endif /* XML_GENERIC */
+	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	  /* update attrLevel */
@@ -4552,6 +4554,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 #endif /* XML_GENERIC */
+	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	  /* update attrLevel */

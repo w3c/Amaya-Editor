@@ -147,9 +147,9 @@ int isnum (char c)
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
   
-  while (!isnum (line[indline]) &&
-	 line[indline] != '\0' &&
-	 indline < MAX_TXT_LEN)
+  while (indline < MAX_TXT_LEN &&
+	 !isnum (line[indline]) &&
+	 line[indline] != EOS)
     {
       if (line[indline] == '#')
 	while (line[indline] != EOL &&
@@ -174,9 +174,9 @@ static int getWord (int indline, unsigned char *line, char *word)
    /* copy the word from the line*/
    indword = 0;
    word[0] = EOS;
-   while (line[indline] != ';' &&
-	  line[indline] != EOS &&
-	  indline < MAX_TXT_LEN)
+   while (indline < MAX_TXT_LEN &&
+	  line[indline] != ';' &&
+	  line[indline] != EOS)
      word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
    word[indword] = EOS;
