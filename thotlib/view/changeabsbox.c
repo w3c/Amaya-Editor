@@ -268,10 +268,6 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	  /* Note that schema extensions (pHd != NULL), aka CSS stylesheets,
 	     apply only to the main view (view = 1) */
 	  if (view == 1 || pHd == NULL)
-	    /* consider this P schema only if it applies to the whole tree or
-	    if the element is within the subtree to which the schema applies */
-	    if (!pSP->PsSubtree ||
-		ElemIsWithinSubtree (pEl, pSP->PsSubtree))
 	    {
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
@@ -422,7 +418,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	    pHd = pHd->HdNextPSchema;
 	  else
 	    /* it was the main P schema, get the first schema extension */
-	    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
+	    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
 	  if (pHd)
 	    pSP = pHd->HdPSchema;
 	  else
@@ -3446,11 +3442,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
     /* process all values of the attribute, in case of a text attribute
        with multiple values */
     valNum = 1;
-    /* consider this P schema only if it applies to the whole tree or
-       if the element is within the subtree to which the schema applies */
-    if (!pSchP->PsSubtree ||
-	ElemIsWithinSubtree (pEl, pSchP->PsSubtree))
-     do
+    do
       {
       /* pR: premiere regle correspondant a cette valeur de l'attribut */
       pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum);
@@ -3816,14 +3808,14 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
       /* on cherchait dans le schema de presentation principal */
       /* on prend le premier schema de presentation additionnel */
       {
-	pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+	pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
 	/* mais si c'est ID ou CLASS, on prend les extensions du schema
 	   de presentation associe' au schema de structure du document */
 	if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
 			      pAttr->AeAttrSSchema) ||
 	    AttrHasException (ExcCssId, pAttr->AeAttrNum,
 			      pAttr->AeAttrSSchema))
-	  pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc);
+	  pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, NULL);
       }
     if (pHd)
       pSchP = pHd->HdPSchema;

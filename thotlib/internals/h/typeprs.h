@@ -782,8 +782,6 @@ typedef struct _PresentSchema
   int	 	PsStructCode;    	/* code identifying the version of this
 					   structure schema */
   StyleSheetOrigin PsOrigin;            /* origin of this structure schema */
-  void*         PsSubtree;              /* parent of the subtree to which the
-					   presentation rules apply */
   int		PsNViews;	    	/* number of views */
   ViewTable     PsView;    		/* definition of the views */
   PtrHostView   PsHostViewList[MAX_VIEW]; /* for each view defined in ViewTable

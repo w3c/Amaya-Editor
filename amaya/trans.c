@@ -2222,7 +2222,7 @@ void                TransCallbackDialog (int ref, int typedata, char* data)
   ThotBool	       found;
   char		       buf [MAX_LENGTH];
   SearchDomain	       domain;
-  ParserData           context = {0, 0, NULL, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+  ParserData           context = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
   val = (int) data;
   switch (ref - TransBaseDialog)
@@ -2273,8 +2273,6 @@ void                TransCallbackDialog (int ref, int typedata, char* data)
 		  /* set the document context */
 		  context.encoding = TtaGetDocumentCharset (TransDoc);
 		  context.doc = TransDoc;
-		  context.docRef = TransDoc;
-		  context.elementRef = NULL;
 		  MathMLElementComplete (&context, elParent, &error);
 		  TtaSetStructureChecking (1, TransDoc);
 		} 

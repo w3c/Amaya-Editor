@@ -949,12 +949,6 @@ BOXES
  SHOW_ALT: BEGIN
 	Visibility: Enclosing =;
 	Content: (ALT);
-	Foreground: TAG_Color;
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 3 px;
-	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
@@ -5019,9 +5013,9 @@ ATTRIBUTES
  NoImages(PICTURE_UNIT):
 	BEGIN
 	if ALT
-          CreateBefore(SHOW_ALT);
+            CreateBefore(SHOW_ALT);
 	if Not ALT
-	  CreateBefore(SHOW_IMG);
+	    CreateBefore(SHOW_IMG);
 	END;
 #endif
 

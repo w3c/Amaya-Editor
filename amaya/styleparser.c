@@ -5098,12 +5098,10 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
    read in the file.
    Parameter withUndo indicates whether the changes made in the document
    structure and content have to be registered in the Undo queue or not.
-   refElement is the element (image or use, for instance) that references
-   the document containing the style element to be parsed.
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		   int numberOfLinesRead, ThotBool withUndo,
-		   Element styleElement, Element refElement)
+		   Element styleElement)
 {
   DisplayMode         dispMode;
   char                c;
@@ -5147,8 +5145,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
 		  styleElement);
-  if (css)
-    css->refEl = refElement;
 
   /* register parsed CSS file and the document to which CSS are to be applied*/
   ParsedDoc = docRef;

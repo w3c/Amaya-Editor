@@ -637,6 +637,8 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
       /* ecrit le volume de l'element */
       fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
       fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
+      if (pNode->ElFirstSchDescr)
+	fprintf (fileDescriptor, " PschExt");
       if (pNode->ElIsCopy)
 	fprintf (fileDescriptor, " Copy");
       switch (pNode->ElAccess)
@@ -1219,6 +1221,10 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, "Pattern:%d", pAb->AbFillPattern);
 	fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
 	fprintf (fileDescriptor, " Foreground:%d", pAb->AbForeground);
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, " Opacity:%d", pAb->AbOpacity);
 	fprintf (fileDescriptor, " fill-opacity:%d", pAb->AbFillOpacity);
 	fprintf (fileDescriptor, " stroke-opacity:%d", pAb->AbStrokeOpacity);
@@ -1625,10 +1631,10 @@ static void wrtext (char *Text, FILE *fileDescriptor)
    fprintf (fileDescriptor, "%s", Text);
 }
 
-static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
-{
 #ifdef _GLTRANSFORMATION
 
+static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
+{
 
   while (Trans)
     {
@@ -1684,11 +1690,9 @@ static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
 	  break;
 	}
       Trans = Trans->Next;
-    }
- 
-#endif /* _GLTRANSFORMATION */
-    }
- 
+    }  
+}
+#endif /* _GLTRANSFORMATION */ 
 
 /*----------------------------------------------------------------------
    ListBoxTree
@@ -3454,7 +3458,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
      {
 	pDoc = LoadedDocument[document - 1];
 	pSchemaStr = pDoc->DocSSchema;
-	pHd = FirstPSchemaExtension (pSchemaStr, pDoc);
+	pHd = FirstPSchemaExtension (pSchemaStr, pDoc, NULL);
 	while (pHd != NULL)
 	  {
 	     pSc1 = pHd->HdPSchema;
@@ -3470,8 +3474,6 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		   case Author: fprintf (fileDescriptor, "Author");
 		     break;
 		   }
-		 if (pSc1->PsSubtree)
-		   fprintf (fileDescriptor, " - subtree");
 		 fprintf (fileDescriptor, " -----------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
 		 wrtext (pSchemaStr->SsName, fileDescriptor);

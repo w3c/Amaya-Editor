@@ -53,7 +53,7 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
 	 pSS = (PtrSSchema) nature;
        if (pSS != NULL)
 	 {
-	   pHd = FirstPSchemaExtension (pSS, LoadedDocument[doc - 1]);
+	   pHd = FirstPSchemaExtension (pSS, LoadedDocument[doc - 1], NULL);
 	   while (result == NULL && pHd != NULL)
 	     if (pHd->HdPSchema == (PtrPSchema) schema)
 	       result = pHd;
@@ -74,15 +74,11 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
    userStyleSheet: indicates whether the presentation schema is created
                    for a user stylesheet (TRUE) of for an author stylesheet
                    (FALSE).
-   refElement: if NULL, the presentation schema applies to the whole
-               document, otherwise it applies to the subtree of that
-	       element.
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet,
-				   Element refElement)
+PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 {
    PtrPSchema          pSchPres;
    PtrSSchema          pSS;
@@ -98,7 +94,6 @@ PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet,
 	     pSchPres->PsOrigin = User;
 	   else
 	     pSchPres->PsOrigin = Author;
-	   pSchPres->PsSubtree = refElement;
 	   pSS = (PtrSSchema) nature;
 	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);
@@ -152,11 +147,13 @@ PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet,
 /*----------------------------------------------------------------------
   TtaMoveDocumentExtensionsToElement moves schema extensions of a
   document to a hierarchy of elements.
-  This is useful to manage CSS style sheets attached to an object.
+  This is useful to manage CSS style sheets attached to an external object.
   ----------------------------------------------------------------------*/
 void TtaMoveDocumentExtensionsToElement (Document document, Element element)
 {
   PtrDocSchemasDescr  pPfS;
+  Element             child;
+
   if (!LoadedDocument[document - 1] || element == NULL)
     return;
   else
@@ -164,7 +161,12 @@ void TtaMoveDocumentExtensionsToElement (Document document, Element element)
       /* link document descriptors to the hierarchy */
       pPfS = LoadedDocument[document - 1]->DocFirstSchDescr;
       LoadedDocument[document - 1]->DocFirstSchDescr = NULL;
-      SetElSchemasExtens ((PtrElement) element, pPfS);
+      child = TtaGetFirstChild (element);
+      while (child)
+	{
+	  SetElSchemasExtens ((PtrElement) child, pPfS);
+	  TtaNextSibling (&child);
+	}
     }
 
 }
@@ -299,7 +301,8 @@ PSchema TtaGetFirstPSchema (Document document, SSchema nature)
 	 pSchS = LoadedDocument[document - 1]->DocSSchema;
        else
 	 pSchS = (PtrSSchema) nature;
-       pHPSch = FirstPSchemaExtension (pSchS, LoadedDocument[document - 1]);
+       pHPSch = FirstPSchemaExtension (pSchS, LoadedDocument[document - 1],
+				       NULL);
        if (pHPSch)
          pSchPres = pHPSch->HdPSchema;
      }

@@ -194,7 +194,7 @@ ThotBool SetEmptyShapeAttribute (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void StylePasted (NotifyElement *event)
 {
-  CreateCSSRules (event->element, event->document, NULL);
+  CreateCSSRules (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------

@@ -186,7 +186,7 @@ void LoadUserStyleSheet (Document doc)
       /* parse the whole thing and free the buffer */
       if (buffer != NULL)
 	{
-	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL, NULL);
+	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL);
 	  TtaFreeMemory (buffer);
 	}
     }

@@ -59,7 +59,7 @@
 static XML_Parser  Parser = NULL;
 
 /* global data used by the HTML parser */
-static ParserData  XMLcontext = {0, 0, NULL, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 /* a parser context. It describes the specific actions to be executed
 when parsing an XML document fragment according to a given DTD */
@@ -4384,8 +4384,6 @@ static void  InitializeXmlParsingContext (Document doc,
 
 {
   XMLcontext.doc = doc;
-  XMLcontext.docRef = doc;
-  XMLcontext.elementRef = NULL;
   XMLcontext.lastElement = lastElem;
   XMLcontext.lastElementClosed = isClosed;
   ParsingSubTree = isSubTree;
@@ -4585,7 +4583,7 @@ static Element  SetExternalElementType (Element el, Document doc,
 
 /*---------------------------------------------------------------------------
   ParseExternalDocument
-  Parse an document called from an other document.
+  Parse a document called from an other document.
   The new file is parsed in an external document and then pasted 
   into the main document
   Return TRUE if the parsing of the external document doesn't detect errors.
@@ -4652,8 +4650,6 @@ void        ParseExternalDocument (char     *fileName,
 	  RootElement = TtaGetMainRoot (externalDoc);
 	  InitializeXmlParsingContext (externalDoc, RootElement, FALSE, FALSE);
 	  /* Set the document reference  (used for local CSS)*/
-	  XMLcontext.docRef = doc;
-	  XMLcontext.elementRef = el;
 	  /* Disable structure checking for the external document*/
 	  TtaSetStructureChecking (0, externalDoc);
 	  /* Delete all element except the root element */
@@ -4812,8 +4808,6 @@ void        ParseExternalDocument (char     *fileName,
 		  TtaInsertFirstChild (&idEl, extEl, doc);
 		}
 	    }
-	  /* Copy the style sheets related to the external document */
-	  /* MoveExtDocCSSs (externalDoc, doc);*/
 	}
       else
 	{
@@ -4861,12 +4855,12 @@ void        ParseExternalDocument (char     *fileName,
 	      TtaRemoveTree (idEl, externalDoc);
 	      TtaInsertFirstChild (&idEl, extEl, doc);
 	    }
-	  /* Move presentation-schema extensions of the external document */
-	  /* to the sub-tree of which 'extEl' is the root */
-	  /* This allow to enable the style sheets attached to the external doc */
-	  TtaMoveDocumentExtensionsToElement (externalDoc, extEl);
 	}
-      
+      /* Move presentation-schema extensions of the external document */
+      /* to the sub-tree of which 'extEl' is the root */
+      /* This allow to enable the style sheets attached to the external doc */
+      TtaMoveDocumentExtensionsToElement (externalDoc, extEl);
+
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);
     }

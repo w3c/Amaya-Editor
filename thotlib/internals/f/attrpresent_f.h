@@ -9,7 +9,8 @@
 extern void CreateInheritedAttrTable ( PtrElement pEl,
                                        PtrDocument pDoc );
 extern void CreateComparAttrTable ( PtrAttribute pAttr,
-                                    PtrDocument pDoc );
+                                    PtrDocument pDoc,
+				    PtrElement pEl );
 extern void TransmitElementContent ( PtrElement pEl,
                                      PtrDocument pDoc,
                                      char *attrName,
@@ -26,7 +27,8 @@ extern void RepApplyTransmitRules ( PtrElement pTransmEl,
 extern void CreateInheritedAttrTable (/* PtrElement pEl,
                                          PtrDocument pDoc */);
 extern void CreateComparAttrTable (/* PtrAttribute pAttr,
-                                      PtrDocument pDoc */);
+                                      PtrDocument pDoc,
+				      PtrElement pEl */);
 extern void TransmitElementContent (/* PtrElement pEl,
                                        PtrDocument pDoc,
                                        char *attrName,

@@ -613,31 +613,34 @@ void GetElement (PtrElement * pEl)
    if (pNewEl)
      {
        memset (pNewEl, 0, sizeof (ElementDescr));
-       pNewEl->ElStructSchema = NULL;
-       pNewEl->ElTypeNumber = 0;
-       pNewEl->ElFirstAttr = NULL;
-       pNewEl->ElVolume = 0;
-       pNewEl->ElCopyDescr = NULL;
-       pNewEl->ElFirstPRule = NULL;
-       for (i = 1; i <= MAX_VIEW_DOC; i++)
-	 pNewEl->ElAbstractBox[i - 1] = NULL;
        pNewEl->ElParent = NULL;
        pNewEl->ElPrevious = NULL;
        pNewEl->ElNext = NULL;
        pNewEl->ElReferredDescr = NULL;
+       pNewEl->ElFirstSchDescr = NULL;
+       pNewEl->ElFirstAttr = NULL;
+       pNewEl->ElFirstPRule = NULL;
+       for (i = 1; i <= MAX_VIEW_DOC; i++)
+	 pNewEl->ElAbstractBox[i - 1] = NULL;
+       pNewEl->ElStructSchema = NULL;
+       pNewEl->ElTypeNumber = 0;
+       pNewEl->ElVolume = 0;
+       pNewEl->ElCopyDescr = NULL;
        pNewEl->ElIsCopy = FALSE;
        pNewEl->ElSource = NULL;
-       pNewEl->ElHolophrast = FALSE;
+       pNewEl->ElLineNb = 0;
+       pNewEl->ElCopy = NULL;
        pNewEl->ElAccess = AccessInherited;
+       pNewEl->ElHolophrast = FALSE;
        pNewEl->ElTransContent = FALSE;
        pNewEl->ElTransAttr = FALSE;
        pNewEl->ElTransPres = FALSE;
        pNewEl->ElTerminal = FALSE;
-       pNewEl->ElFirstChild = NULL;
-       pNewEl->ElLineNb = 0;
-       pNewEl->ElTransform = NULL;
        pNewEl->ElSystemOrigin = FALSE;
+       pNewEl->ElTransform = NULL;
        pNewEl->animation = NULL;       
+       pNewEl->ElFirstChild = NULL;
+
        NbUsed_Element++;
      }
 }

@@ -65,26 +65,20 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
 	  pHd = NULL;
 	  while (pSchP)
 	    {
-	      /* consider this schema only if it applies to the whole tree orif
-	      the element is within the subtree to which the schema applies */
-	      if (!pSchP->PsSubtree ||
-		  ElemIsWithinSubtree (pEl, pSchP->PsSubtree))
-		{
-		  pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
-		  if (pAttrPR != NULL)
-		    /* check all presentation rules associated with that attr*/
-		    for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
-		      {
-			if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-			  (*table)[attr] = TRUE;
-			pAttrPR = pAttrPR->ApNextAttrPres;
-		      }
-		}
+	      pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
+	      if (pAttrPR != NULL)
+		/* check all presentation rules associated with that attr*/
+		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
+		  {
+		    if (pAttrPR->ApElemType == pEl->ElTypeNumber)
+		      (*table)[attr] = TRUE;
+		    pAttrPR = pAttrPR->ApNextAttrPres;
+		  }
 	      /* next P schema */
 	      if (pHd == NULL)
 		/* extension schemas have not been checked yet */
 		/* get the first extension schema */
-		pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
+		pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
 	      else
 		/* get the next extension schema */
 		pHd = pHd->HdNextPSchema;
@@ -114,7 +108,8 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
   AttrName is the name of attribute attr (rank of attribute definition
   in structure schema).
   ----------------------------------------------------------------------*/
-void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
+void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc,
+			    PtrElement pEl)
 {
   AttributePres      *pAttrPR;
   int                 attNum;
@@ -175,7 +170,7 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
 	    if (pHd == NULL)
 	      /* extension schemas have not been checked yet */
 	      /* get the first extension schema */
-	      pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+	      pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
 	    else
 	      /* get the next extension schema */
 	      pHd = pHd->HdNextPSchema;

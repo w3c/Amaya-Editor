@@ -511,7 +511,7 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 }
 
 /*----------------------------------------------------------------------
-   Applique au sous arbre pointe' par pEl du document pDoc les     
+   Applique au sous-arbre pointe' par pEl du document pDoc les     
    regles de presentation des attributs dont les valeurs se	
    	comparent a pAttr.						
   ----------------------------------------------------------------------*/
@@ -541,7 +541,7 @@ void ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 	if ((attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
-	     CreateComparAttrTable (pAttr, pDoc);
+	     CreateComparAttrTable (pAttr, pDoc, pEl);
 	     attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
@@ -745,7 +745,7 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
 
 
 /*----------------------------------------------------------------------
-   Retire du sous arbre pointe' par pEl du document pDoc les     
+   Retire du sous-arbre pointe' par pEl du document pDoc les     
    regles de presentation provenant de la comparaison avec		
    l'attribut pAttr.						
    On arrete la recursion quand on rencontre un fils portant       
@@ -754,7 +754,7 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
 void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 {
    PtrElement          pChild;
-   PtrPSchema            pPS;
+   PtrPSchema          pPS;
    ComparAttrTable    *attrValComp;
    int                 i;
    PtrAttribute        pCompAttr;
@@ -777,7 +777,7 @@ void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAt
 	if ((attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
-	     CreateComparAttrTable (pAttr, pDoc);
+	     CreateComparAttrTable (pAttr, pDoc, pEl);
 	     attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)

@@ -1269,7 +1269,8 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
 	      if (pHd == NULL)
 		/* on n'a pas encore traite' les schemas de presentation
 		   additionnels. On prend le premier schema additionnel. */
-		pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+		pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc,
+					     pAb->AbElement);
 	      else
 		/* passe au schema additionnel suivant */
 		pHd = pHd->HdNextPSchema;
@@ -1861,29 +1862,23 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
 	  /* additionnels */
 	  while (pSchP != NULL && !ok)
 	    {
-	      /* consider this schema only if it applies to the whole tree orif
-	      the element is within the subtree to which the schema applies */
-	      if (!pSchP->PsSubtree ||
-		  ElemIsWithinSubtree (pAbbCreator->AbElement, pSchP->PsSubtree))
+	      /* cherche la premiere regle de presentation pour cet */
+	      /* attribut dans ce schema de presentation */
+	      /* process all values of the attribute, in case of a text
+		 attribute with multiple values */
+	      valNum = 1;
+	      do
 		{
-		  /* cherche la premiere regle de presentation pour cet */
-		  /* attribut dans ce schema de presentation */
-		  /* process all values of the attribute, in case of a text
-		     attribute with multiple values */
-		  valNum = 1;
-		  do
-		    {
-		      pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement,
-						FALSE, NULL, pSchP, &valNum);
-		      ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated,
-					   &result);
-		    }
-		  while (valNum > 0);
+		  pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement, FALSE,
+					    NULL, pSchP, &valNum);
+		  ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated, &result);
 		}
+	      while (valNum > 0);
 	      if (pHd == NULL)
 		/* on n'a pas encore traite' les schemas de presentation
 		   additionnels. On prend le premier schema additionnel. */
-		pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc);
+		pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc,
+					     pAbbCreator->AbElement);
 	      else
 		/* passe au schema additionnel suivant */
 		pHd = pHd->HdNextPSchema;

@@ -1241,7 +1241,7 @@ static void UpdateClass (Document doc)
     TtaInsertTextContent (child, len, stylestring, doc);
     /* parse and apply this new CSS to the current document */
     ReadCSSRules (doc, NULL, stylestring, NULL,
-		  TtaGetElementLineNumber (child), TRUE, styleEl, NULL);
+		  TtaGetElementLineNumber (child), TRUE, styleEl);
     }
   /* free the stylestring now */
   TtaFreeMemory (stylestring);

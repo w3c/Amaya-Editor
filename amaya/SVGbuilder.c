@@ -937,9 +937,8 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
    CreateCSSRules
    The style element el is created within the SVG document doc. Parse its
    content to create the equivalent style sheet.
-   elRef is the image or use element that references document doc.
   ----------------------------------------------------------------------*/
-void CreateCSSRules (Element el, Document doc, Element elRef)
+void CreateCSSRules (Element el, Document doc)
 {
   ElementType     elType;
   AttributeType   attrType;
@@ -974,7 +973,7 @@ void CreateCSSRules (Element el, Document doc, Element elRef)
       if (text)
 	{
 	  ReadCSSRules (doc, NULL, text, NULL, TtaGetElementLineNumber (el),
-			FALSE, el, elRef); 
+			FALSE, el); 
 	  TtaFreeMemory (text);
 	}
     }
@@ -1133,7 +1132,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
        case SVG_EL_style__:
 	 /* it's a style element, parse its contents as a style sheet */
-	 CreateCSSRules (el, context->docRef, context->elementRef);
+	 CreateCSSRules (el, doc);
 	 break;
 
        default:

@@ -141,7 +141,7 @@ PtrSSchema GetSSchemaByUriForDoc (char *uriName, PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
    StructSchemaForDoc
-   Return the block describing structure schema pSS used by a document pDoc
+   Return the block describing structure schema pSS used by document pDoc
   ----------------------------------------------------------------------*/
 static PtrDocSchemasDescr StructSchemaForDoc (PtrDocument pDoc,
 					      PtrSSchema pSS,
@@ -514,13 +514,21 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 /*----------------------------------------------------------------------
   FirstPSchemaExtension
   Returns the first extension to the presentation schema associated with
-  structure schema pSS in document pDoc.
+  structure schema pSS in document pDoc for element pEl.
   ----------------------------------------------------------------------*/
-PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc)
+PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc,
+					PtrElement pEl)
 {
   PtrDocSchemasDescr  pPfS, pPrevPfS;
 
-  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
+  if (pEl && pEl->ElFirstSchDescr)
+    {
+      pPfS = pEl->ElFirstSchDescr;
+      while (pPfS && pPfS->PfSSchema != pSS)
+	  pPfS = pPfS->PfNext;
+    }
+  else
+    pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     return (pPfS->PfFirstPSchemaExtens);
   else
@@ -563,7 +571,7 @@ void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pPS)
 
 /*----------------------------------------------------------------------
   SetElSchemasExtens associates or clears (NULL) the list of extension
-  schemas to the current element and all its children.
+  schemas used by the current element and all its children.
   ----------------------------------------------------------------------*/
 void SetElSchemasExtens (PtrElement pEl, PtrDocSchemasDescr pPfS)
 {
@@ -646,8 +654,8 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 #endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
-  UnlinkAllSchemasExtens unlinks a presentation schema pPs from the
-  list of extensions associated to the document pDoc not NULL.
+  UnlinkAllSchemasExtens unlinks the presentation schema used by
+  element pEl.
   ----------------------------------------------------------------------*/
 void UnlinkAllSchemasExtens (PtrElement pEl)
 {

@@ -441,8 +441,8 @@ typedef struct _ElementDescr
   PtrReferredDescr	ElReferredDescr;/* Pointer on the referenced element
 					   descriptor if there are references
 					   to this element */
-  PtrDocSchemasDescr    ElFirstSchDescr;/* first descriptor of all schemas
-					   associated with  this element */
+  PtrDocSchemasDescr    ElFirstSchDescr;/* first descriptor of all P schema
+					   extensions associated with this el*/
   PtrAttribute     	ElFirstAttr;	/* pointer on the element first
 					   attribute, NULL if no attribute */
   PtrPRule    	        ElFirstPRule;	/* pointer on the first rule of the

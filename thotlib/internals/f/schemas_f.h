@@ -20,7 +20,8 @@ extern void FreePresentationSchema ( PtrPSchema pPSchema,
                                      PtrSSchema pSS,
                                      PtrDocument pDoc );
 extern PtrHandlePSchema FirstPSchemaExtension ( PtrSSchema pSS,
-                                                PtrDocument pDoc );
+                                                PtrDocument pDoc,
+						PtrElement pEl );
 extern void UnlinkPSchemaExtension ( PtrDocument pDoc,
                                      PtrSSchema pSS,
                                      PtrPSchema pPS );
@@ -121,7 +122,8 @@ extern void FreePresentationSchema (/* PtrPSchema pPSchema,
                                        PtrSSchema pSS,
                                        PtrDocument pDoc */);
 extern PtrHandlePSchema FirstPSchemaExtension (/* PtrSSchema pSS,
-                                                  PtrDocument pDoc */);
+                                                  PtrDocument pDoc,
+					          PtrElement pEl */);
 extern void UnlinkPSchemaExtension (/* PtrDocument pDoc,
                                        PtrSSchema pSS,
                                        PtrPSchema pPS */);
