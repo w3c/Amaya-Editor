@@ -27,10 +27,8 @@
    your main control loop, etc. to force garbage collection.
  */
  
-#include "ustring.h"
-
+#include "string.h"
 #ifdef SYSV
-
 #ifdef emacs
 #include "config.h"
 #ifdef static
@@ -46,16 +44,9 @@ lose
 #endif /* static */
 #endif /* emacs */
 
-#ifdef __STDC__
 typedef void       *pointer;	/* generic pointer type */
 
-#else
-typedef char       *pointer;	/* generic pointer type */
-
-#endif
-
 #define	NULL	0		/* null pointer constant */
-
 extern void         free ();
 extern pointer      malloc ();
 
@@ -68,32 +59,20 @@ extern pointer      malloc ();
    STACK_DIRECTION < 0 => grows toward lower addresses
    STACK_DIRECTION = 0 => direction of growth unknown
  */
-
 #ifndef STACK_DIRECTION
 #define	STACK_DIRECTION	0	/* direction unknown */
 #endif
 
 #if STACK_DIRECTION != 0
-
 #define	STACK_DIR	STACK_DIRECTION		/* known at compile-time */
-
 #else  /* STACK_DIRECTION == 0; need run-time code */
-
 static int          stack_dir;	/* 1 or -1 once known */
-
 #define	STACK_DIR	stack_dir
-
-#ifdef __STDC__
 static void         find_stack_direction ()
-#else  /* __STDC__ */
-static void         find_stack_direction ()
-#endif				/* __STDC__ */
-
 {
-   static STRING       addr = NULL;	/* address of first
-
+  static char       *addr = NULL;	/* address of first
 					   `dummy', once known */
-   auto CHAR_T           dummy;	/* to get stack address */
+  auto char           dummy;	/* to get stack address */
 
    if (addr == NULL)
      {				/* initial entry */
@@ -107,7 +86,6 @@ static void         find_stack_direction ()
    else
       stack_dir = -1;		/* stack grew downward */
 }
-
 #endif /* STACK_DIRECTION == 0 */
 
 /*
@@ -118,18 +96,17 @@ static void         find_stack_direction ()
    It is very important that sizeof(header) agree with malloc()
    alignment chunk size.  The following default should work okay.
  */
-
 #ifndef	ALIGN_SIZE
 #define	ALIGN_SIZE	sizeof(double)
 #endif
 
 typedef union hdr
 {
-   CHAR_T                align[ALIGN_SIZE];	/* to force sizeof(header) */
+   char                align[ALIGN_SIZE];	/* to force sizeof(header) */
    struct
      {
 	union hdr          *next;	/* for chaining headers */
-	STRING              deep;	/* for stack depth measure */
+	char               *deep;	/* for stack depth measure */
      }
    h;
 }
@@ -145,17 +122,10 @@ header;
  */
 static header      *last_alloca_header = NULL;	/* -> last alloca header */
 
-#ifdef __STDC__
 pointer             alloca (unsigned size)
-#else  /* __STDC__ */
-pointer             alloca (size)
-unsigned            size;
-
-#endif /* __STDC__ */
-
 {
-   auto CHAR_T           probe;	/* probes stack depth: */
-   register CHAR_T*      depth = &probe;
+   auto char           probe;	/* probes stack depth: */
+   register char*      depth = &probe;
 
 #if STACK_DIRECTION == 0
    if (STACK_DIR == 0)		/* unknown growth direction */

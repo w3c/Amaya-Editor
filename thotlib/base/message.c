@@ -140,7 +140,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
   strcpy (fileName, TtaGetVarLANG ());
   fileName[2] = '-';
-  ustrcpy (&fileName[3], msgName);
+  strcpy (&fileName[3], msgName);
   SearchFile (fileName, 2, pBuffer);
   file = fopen (pBuffer, "r"); 
   if (file == NULL)
@@ -194,8 +194,8 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
 	     num < msgNumber)
 	{
-    	  s = TtaAllocString (ustrlen (pBuff) + 1);
-     	  ustrcpy (s, AsciiTranslate (pBuff));
+    	  s = TtaGetMemory (strlen (pBuff) + 1);
+     	  strcpy (s, AsciiTranslate (pBuff));
      	  currenttable->TabMessages[num] = s;
 	}
       fclose (file);
@@ -292,8 +292,8 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
 		   vald = va_arg (pa, int);
 		   if (i + 10 < MAX_PATH)
 		     {
-		       usprintf (&pBuffer[i], "%d", vald);
-		       i += ustrlen (&pBuffer[i]);
+		       sprintf (&pBuffer[i], "%d", vald);
+		       i += strlen (&pBuffer[i]);
 		     }
 		   else
 		     i = MAX_PATH;
@@ -304,10 +304,10 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
 		   vals = va_arg (pa, char *);
 		   if (vals)
 		     {
-		       lg = ustrlen (vals);
+		       lg = strlen (vals);
 		       if (i + lg < MAX_PATH)
 			 {
-			   ustrcpy (&pBuffer[i], vals);
+			   strcpy (&pBuffer[i], vals);
 			   i += lg;
 			 }
 		       else

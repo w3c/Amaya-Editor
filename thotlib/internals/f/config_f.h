@@ -8,33 +8,33 @@
 
 extern void ConfigInit ( void );
 extern void ConfigFree ( void );
-extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
-extern int ConfigMakeDocTypeMenu ( CHAR_T* BufMenu,
+extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
+extern int ConfigMakeDocTypeMenu ( char *BufMenu,
                                    int *lgmenu,
                                    ThotBool doc );
-extern void TtaConfigSSchemaExternalName ( CHAR_T* nameUser,
-                                           CHAR_T* nameSchema,
+extern void TtaConfigSSchemaExternalName ( char *nameUser,
+                                           char *nameSchema,
                                            int Typ );
-extern void ConfigSSchemaInternalName ( CHAR_T* nameUser,
-                                        CHAR_T* nameSchema,
+extern void ConfigSSchemaInternalName ( char *nameUser,
+                                        char *nameSchema,
                                         ThotBool Doc );
-extern int ConfigMakeMenuPres ( CHAR_T* schema,
-                                CHAR_T* BufMenu );
+extern int ConfigMakeMenuPres ( char *schema,
+                                char *BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
-                                   CHAR_T* schpres );
-extern int ConfigMakeImportMenu ( CHAR_T* BufMenu );
-extern int ConfigMakeMenuExport ( CHAR_T* schema,
-                                  CHAR_T* BufMenu );
+                                   char *schpres );
+extern int ConfigMakeImportMenu ( char *BufMenu );
+extern int ConfigMakeMenuExport ( char *schema,
+                                  char *BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
-                                        CHAR_T* schtrad );
+                                        char *schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern ThotBool ConfigDefaultPSchema ( CHAR_T* schstr,
-                                       CHAR_T* schpres );
+extern ThotBool ConfigDefaultPSchema ( char *schstr,
+                                       char *schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
 extern void ConfigOpenFirstViews ( PtrDocument pDoc );
 extern void ConfigGetViewGeometry ( PtrDocument pDoc,
-                                    CHAR_T* view,
+                                    char *view,
                                     int *x,
                                     int *y,
                                     int *width,
@@ -46,65 +46,65 @@ extern void TtaGetViewXYWH ( Document doc,
                              int *width,
                              int *height );
 extern void TtaGetViewGeometry ( Document document,
-                                 char* name,
+                                 char *name,
                                  int *x,
                                  int *y,
                                  int *width,
                                  int *height );
 extern void TtaGetViewGeometryMM ( Document document,
-                                   CHAR_T* name,
+                                   char *name,
                                    int *x,
                                    int *y,
                                    int *width,
                                    int *height );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                         CHAR_T* nameNature,
-                                         CHAR_T* presNature );
+                                         char *nameNature,
+                                         char *presNature );
 extern void ConfigGetPresentationOption ( PtrSSchema pSS,
-                                          CHAR_T* optionName,
-                                          CHAR_T* optionValue );
+                                          char *optionName,
+                                          char *optionValue );
 extern void ConfigGetPSchemaForPageSize ( PtrSSchema pSS,
-                                          CHAR_T* pageSize,
-                                          CHAR_T* schemaName );
-extern int MakeMenuPattern ( STRING BufMenu,
+                                          char *pageSize,
+                                          char *schemaName );
+extern int MakeMenuPattern ( char *BufMenu,
                              int LgMax );
-extern int MakeMenuColor ( STRING BufMenu,
+extern int MakeMenuColor ( char *BufMenu,
                            int LgMax );
 extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
-                                          CHAR_T* nameNature,
-                                          CHAR_T* schtypo );
+                                          char *nameNature,
+                                          char *schtypo );
 
 #else /* __STDC__ */
 
 extern void ConfigInit (/* void */);
 extern void ConfigFree (/* void */);
-extern void TtaConfigReadConfigFiles (/* CHAR_T* aSchemaPath */);
-extern int ConfigMakeDocTypeMenu (/* CHAR_T* BufMenu,
+extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
+extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
                                      int *lgmenu,
                                      ThotBool doc */);
-extern void TtaConfigSSchemaExternalName (/* CHAR_T* nameUser,
-                                             CHAR_T* nameSchema,
+extern void TtaConfigSSchemaExternalName (/* char *nameUser,
+                                             char *nameSchema,
                                              int Typ */);
-extern void ConfigSSchemaInternalName (/* CHAR_T* nameUser,
-                                          CHAR_T* nameSchema,
+extern void ConfigSSchemaInternalName (/* char *nameUser,
+                                          char *nameSchema,
                                           ThotBool Doc */);
-extern int ConfigMakeMenuPres (/* CHAR_T* schema,
-                                  CHAR_T* BufMenu */);
+extern int ConfigMakeMenuPres (/* char *schema,
+                                  char *BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,
-                                     CHAR_T* schpres */);
-extern int ConfigMakeImportMenu (/* CHAR_T* BufMenu */);
-extern int ConfigMakeMenuExport (/* CHAR_T* schema,
-                                    CHAR_T* BufMenu */);
+                                     char *schpres */);
+extern int ConfigMakeImportMenu (/* char *BufMenu */);
+extern int ConfigMakeMenuExport (/* char *schema,
+                                    char *BufMenu */);
 extern void ConfigGetExportSchemaName (/* int choix,
-                                          CHAR_T* schtrad */);
+                                          char *schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern ThotBool ConfigDefaultPSchema (/* CHAR_T* schstr,
-                                         CHAR_T* schpres */);
+extern ThotBool ConfigDefaultPSchema (/* char *schstr,
+                                         char *schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);
 extern void ConfigOpenFirstViews (/* PtrDocument pDoc */);
 extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
-                                      CHAR_T* view,
+                                      char *view,
                                       int *x,
                                       int *y,
                                       int *width,
@@ -116,33 +116,33 @@ extern void TtaGetViewXYWH (/* Document doc,
                                int *width,
                                int *height */);
 extern void TtaGetViewGeometry (/* Document document,
-                                   char* name,
+                                   char *name,
                                    int *x,
                                    int *y,
                                    int *width,
                                    int *height */);
 extern void TtaGetViewGeometryMM (/* Document document,
-                                     CHAR_T* name,
+                                     char *name,
                                      int *x,
                                      int *y,
                                      int *width,
                                      int *height */);
 extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                           CHAR_T* nameNature,
-                                           CHAR_T* presNature */);
+                                           char *nameNature,
+                                           char *presNature */);
 extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
-                                            CHAR_T* optionName,
-                                            CHAR_T* optionValue */);
+                                            char *optionName,
+                                            char *optionValue */);
 extern void ConfigGetPSchemaForPageSize (/* PtrSSchema pSS,
-                                            CHAR_T* pageSize,
-                                            CHAR_T* schemaName */);
-extern int MakeMenuPattern (/* STRING BufMenu,
+                                            char *pageSize,
+                                            char *schemaName */);
+extern int MakeMenuPattern (/* char *BufMenu,
                                int LgMax */);
-extern int MakeMenuColor (/* STRING BufMenu,
+extern int MakeMenuColor (/* char *BufMenu,
                              int LgMax */);
 extern ThotBool ConfigDefaultTypoSchema (/* PtrSSchema pSS,
-                                            CHAR_T* nameNature,
-                                            CHAR_T* schtypo */);
+                                            char *nameNature,
+                                            char *schtypo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

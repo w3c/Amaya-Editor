@@ -70,28 +70,28 @@ typedef struct _AnnotMeta {
 			 doesn't resolve anymore */
   ThotBool show;      /* this annotation is visible in the formatted view */
 
-  CHAR_T *annot_url; /* url of the annotation node */
-  CHAR_T *source_url; /* document that was annotated */
+  char *annot_url; /* url of the annotation node */
+  char *source_url; /* document that was annotated */
   /* the internal Amaya Xpath */
-  CHAR_T labf[10]; 
+  char labf[10]; 
   int     c1;
-  CHAR_T labl[10];
+  char labl[10];
   int     cl;
-  CHAR_T *xptr;
-  CHAR_T *cdate; /* creation date of the annotation */
-  CHAR_T *mdate; /* last modified date of the annotation */
-  CHAR_T *author; /* author of the annotation */
+  char *xptr;
+  char *cdate; /* creation date of the annotation */
+  char *mdate; /* last modified date of the annotation */
+  char *author; /* author of the annotation */
   RDFResourceP creator; /* creator of the annotation */
   RDFResourceP type; /* type of annotation */
-  CHAR_T *content_type; /*content type of the body of the annotation,
+  char *content_type; /*content type of the body of the annotation,
 			  only used while posting */
-  CHAR_T *content_length; /* content length of the body, only used while
+  char *content_length; /* content length of the body, only used while
 			     posting */
-  CHAR_T *body; /* when reading an annotation with an embedded body,
+  char *body; /* when reading an annotation with an embedded body,
 		   the body is stored in this variable */
-  CHAR_T *body_url; /* if the body isn't embedded, this has the URL
+  char *body_url; /* if the body isn't embedded, this has the URL
 		       to the body (only used for local files for the moment */
-  CHAR_T *name;  /* the value of the name tag added to the source document 
+  char *name;  /* the value of the name tag added to the source document 
 		  for making a reverse link */
   ThotBool in_reply_to;     /* if the annotation is a reply, this field gets
 			       the URL of the annotation we're replying to */
@@ -146,7 +146,7 @@ typedef struct _AnnotMetaDataList {
  ** Annot Filter menu
  *************/
 typedef struct _AnnotFilter {
-  CHAR_T *object;
+  char *object;
   ThotBool show;
 } AnnotFilterData;
 
@@ -164,8 +164,8 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 /* RDF Schema entry */
 
 extern List *annot_schema_list;  /* a list of schemas */
-extern CHAR_T *ANNOT_NS;
-extern CHAR_T *ANNOTATION_CLASSNAME;
+extern char *ANNOT_NS;
+extern char *ANNOTATION_CLASSNAME;
 extern RDFClassP ANNOTATION_CLASS;
 extern RDFClassP DEFAULT_ANNOTATION_TYPE;
 extern RDFPropertyP PROP_Email;

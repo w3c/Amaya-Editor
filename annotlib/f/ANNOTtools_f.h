@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void List_add ( List **me,
-                       CHAR_T *object );
+                       char *object );
 extern void List_delFirst ( List **me );
 extern ThotBool List_delCharObj ( void *obj );
 extern void List_delAll ( List **me,
@@ -35,19 +35,19 @@ extern int AnnotFilter_status ( Document doc,
 extern ThotBool AnnotFilter_show ( List *list,
                                    void *object );
 extern ThotBool AnnotFilter_showServer ( List *list,
-                                         CHAR_T *url );
+                                         char *url );
 extern ThotBool AnnotFilter_showAuthor ( List *list,
-                                         CHAR_T *author,
-                                         CHAR_T *url );
+                                         char *author,
+                                         char *url );
 extern void AnnotFilter_deleteAll ( Document doc );
 extern void AnnotFilter_build ( Document doc );
 extern List *AnnotList_search ( List *list,
-                                CHAR_T *object );
+                                char *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
-                                          CHAR_T *url,
+                                          char *url,
                                           AnnotMetaDataSearch searchType );
 extern ThotBool AnnotList_delAnnot ( List **list,
-                                     CHAR_T *url,
+                                     char *url,
                                      ThotBool useAnnotUrl );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotFilter_free ( List *annot_list,
@@ -55,10 +55,10 @@ extern void AnnotFilter_free ( List *annot_list,
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
-extern void AnnotList_writeIndex ( CHAR_T *indexFile,
+extern void AnnotList_writeIndex ( char *indexFile,
                                    List *annot_list );
-extern CHAR_T * ANNOT_PreparePostBody ( Document doc );
-extern CHAR_T *StrdupDate ( void );
+extern char * ANNOT_PreparePostBody ( Document doc );
+extern char *StrdupDate ( void );
 extern Element SearchAnnotation ( Document doc,
                                   STRING annotDoc );
 extern ThotBool ReplaceLinkToAnnotation ( Document doc,
@@ -69,18 +69,18 @@ extern Element SearchElementInDoc ( Document doc,
 extern STRING SearchAttributeInEl ( Document doc,
                                     Element el,
                                     int attrTypeNum,
-                                    CHAR_T *schema );
+                                    char *schema );
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
                                      char new );
 extern char *GetTempName ( const char *dir,
                            const char *prefix );
-extern void GetServerName ( CHAR_T *url,
-                            CHAR_T *server );
-extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );
+extern void GetServerName ( char *url,
+                            char *server );
+extern char *ANNOT_GetHTMLTitle ( Document doc );
 extern void ANNOT_SetType ( Document doc,
                             RDFResourceP type );
-extern CHAR_T * ANNOT_MakeFileURL ( const CHAR_T *path );
+extern char * ANNOT_MakeFileURL ( const char *path );
 extern ThotBool ANNOT_CanAnnotate ( Document doc );
 extern Element ANNOT_GetHTMLRoot ( Document doc );
 extern void WWWToLocal ( char *url );
@@ -89,7 +89,7 @@ extern char *LocalToWWW ( char *url );
 #else /* __STDC__ */
 
 extern void List_add (/* List **me,
-                         CHAR_T *object */);
+                         char *object */);
 extern void List_delFirst (/* List **me */);
 extern ThotBool List_delCharObj (/* void *obj */);
 extern void List_delAll (/* List **me,
@@ -117,19 +117,19 @@ extern int AnnotFilter_status (/* Document doc,
 extern ThotBool AnnotFilter_show (/* List *list,
                                      void *object */);
 extern ThotBool AnnotFilter_showServer (/* List *list,
-                                           CHAR_T *url */);
+                                           char *url */);
 extern ThotBool AnnotFilter_showAuthor (/* List *list,
-                                           CHAR_T *author,
-                                           CHAR_T *url */);
+                                           char *author,
+                                           char *url */);
 extern void AnnotFilter_deleteAll (/* Document doc */);
 extern void AnnotFilter_build (/* Document doc */);
 extern List *AnnotList_search (/* List *list,
-                                  CHAR_T *object */);
+                                  char *object */);
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
-                                            CHAR_T *url,
+                                            char *url,
                                             AnnotMetaDataSearch searchType */);
 extern ThotBool AnnotList_delAnnot (/* List **list,
-                                       CHAR_T *url,
+                                       char *url,
                                        ThotBool useAnnotUrl */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotFilter_free (/* List *annot_list,
@@ -137,10 +137,10 @@ extern void AnnotFilter_free (/* List *annot_list,
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);
-extern void AnnotList_writeIndex (/* CHAR_T *indexFile,
+extern void AnnotList_writeIndex (/* char *indexFile,
                                      List *annot_list */);
-extern CHAR_T * ANNOT_PreparePostBody (/* Document doc */);
-extern CHAR_T *StrdupDate (/* void */);
+extern char * ANNOT_PreparePostBody (/* Document doc */);
+extern char *StrdupDate (/* void */);
 extern Element SearchAnnotation (/* Document doc,
                                     STRING annotDoc */);
 extern ThotBool ReplaceLinkToAnnotation (/* Document doc,
@@ -151,18 +151,18 @@ extern Element SearchElementInDoc (/* Document doc,
 extern STRING SearchAttributeInEl (/* Document doc,
                                       Element el,
                                       int attrTypeNum,
-                                      CHAR_T *schema */);
+                                      char *schema */);
 extern void SubstituteCharInString (/* char *buffer,
                                        char old,
                                        char new */);
 extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
-extern void GetServerName (/* CHAR_T *url,
-                              CHAR_T *server */);
-extern CHAR_T *ANNOT_GetHTMLTitle (/* Document doc */);
+extern void GetServerName (/* char *url,
+                              char *server */);
+extern char *ANNOT_GetHTMLTitle (/* Document doc */);
 extern void ANNOT_SetType (/* Document doc,
                               RDFResourceP type */);
-extern CHAR_T * ANNOT_MakeFileURL (/* const CHAR_T *path */);
+extern char * ANNOT_MakeFileURL (/* const char *path */);
 extern ThotBool ANNOT_CanAnnotate (/* Document doc */);
 extern Element ANNOT_GetHTMLRoot (/* Document doc */);
 extern void WWWToLocal (/* char *url */);

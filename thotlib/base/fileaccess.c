@@ -10,7 +10,6 @@
  *
  * Authors: V. Quint (INRIA)
  *          D. Veillard (INRIA) - new functions for MS-Windows
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -28,7 +27,6 @@
 #include "fileaccess_f.h"
 #include "platform_f.h"
 #include "registry_f.h"
-#include "ustring_f.h"
 #ifdef _WINDOWS
 #include "winsys.h"
 #endif /* _WINDOWS */
@@ -69,23 +67,23 @@ ThotBool TtaReadByte (BinFile file, char* bval)
 /*----------------------------------------------------------------------
    TtaReadWideChar reads a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
+ThotBool TtaReadWideChar (BinFile file, char* bval, CHARSET encoding)
 {
 #ifdef _I18N_
   int           nbBytesToRead;
   unsigned char car;
-  CHAR_T        res;
+  char        res;
 
   if (TtaReadByte (file, &car) == 0)
     {
-      *bval = (CHAR_T) 0;
+      *bval = (char) 0;
       return (FALSE);
     } 
 
   switch (encoding)
     {
     case ISO_8859_1: 
-      *bval = (CHAR_T)car;
+      *bval = (char)car;
       break;
 
     case ISO_8859_2:
@@ -338,11 +336,11 @@ ThotBool TtaReadInteger (BinFile file, int *sval)
    TtaReadName reads a Wide Character string value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadName (BinFile file, CHAR_T* name)
+ThotBool            TtaReadName (BinFile file, char* name)
 #else  /* __STDC__ */
 ThotBool            TtaReadName (file, name)
 BinFile             file;
-CHAR_T*             name;
+char*             name;
 
 #endif /* __STDC__ */
 {
@@ -352,15 +350,15 @@ CHAR_T*             name;
      {
         if (!TtaReadWideChar (file, &name[i], ISO_8859_1))
            {
-              name[i] = WC_EOS;
+              name[i] = EOS;
               return FALSE;
            }
-        if (name[i] == WC_EOS)
+        if (name[i] == EOS)
            break;
      }
    if (i >= MAX_NAME_LENGTH)
       {
-         name[0] = WC_EOS;
+         name[0] = EOS;
          return FALSE;
       }
    return TRUE;
@@ -399,7 +397,7 @@ void TtaReadClose (BinFile file)
 /*----------------------------------------------------------------------
    TtaWriteOpen opens a file for writing.
   ----------------------------------------------------------------------*/
-BinFile TtaWriteOpen (CONST STRING filename)
+BinFile TtaWriteOpen (CONST char *filename)
 {
 #ifdef _WINDOWS
   return fopen (filename, "wb+");
@@ -432,7 +430,7 @@ ThotBool TtaWriteByte (BinFile file, char bval)
 /*----------------------------------------------------------------------
    TtaWriteWideChar writes a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
+ThotBool TtaWriteWideChar (BinFile file, char val, CHARSET encoding)
 {
 #ifdef _I18N_
    unsigned char mbc[MAX_BYTES + 1] = "\0";
@@ -496,7 +494,7 @@ void TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
 #ifdef _I18N_
    char                mbcstr[3] = "\0";
    int                 nbBytes;
-   CHAR_T              WCcar;
+   char              WCcar;
 #endif /* _I18N_ */
 
    j = 1;
@@ -532,12 +530,12 @@ void TtaReadDocIdent (BinFile file, DocumentIdentifier * Ident)
    do
 #ifdef _I18N_
      if (!TtaReadWideChar (file, &((*Ident)[j++]), ISO_8859_1))
-       (*Ident)[j - 1] = WC_EOS;
+       (*Ident)[j - 1] = EOS;
 #else /* !_I18N_ */
    if (!TtaReadByte (file, &((*Ident)[j++])))
      (*Ident)[j - 1] = EOS;
 #endif /* !_I18N_ */
-   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == WC_EOS)) ;
+   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
 }
 
 /*----------------------------------------------------------------------
@@ -545,7 +543,7 @@ void TtaReadDocIdent (BinFile file, DocumentIdentifier * Ident)
   ----------------------------------------------------------------------*/
 void CopyDocIdent (DocumentIdentifier * Dest, DocumentIdentifier Source)
 {
-   ustrncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
+   strncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
 }
 
 /*----------------------------------------------------------------------
@@ -555,7 +553,7 @@ ThotBool SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
 {
    ThotBool            ret;
 
-   ret = (ustrcmp (Ident1, Ident2) == 0);
+   ret = (strcmp (Ident1, Ident2) == 0);
    return ret;
 }
 
@@ -585,52 +583,52 @@ ThotBool DocIdentIsNull (DocumentIdentifier Ident)
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-void TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
+void TtaExtractName (char* text, char* aDirectory, char* aName)
 {
    int                 lg, i, j;
-   CHAR_T*             ptr;
-   CHAR_T*             oldptr;
-   CHAR_T              URL_DIR_SEP;
+   char*             ptr;
+   char*             oldptr;
+   char              URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && ustrchr (text, '/'))
+   if (text && strchr (text, '/'))
      URL_DIR_SEP = '/';
    else 
-     URL_DIR_SEP = WC_DIR_SEP;
+     URL_DIR_SEP = DIR_SEP;
    
-   aDirectory[0] = WC_EOS;
-   aName[0] = WC_EOS;
-   lg = ustrlen (text);
+   aDirectory[0] = EOS;
+   aName[0] = EOS;
+   lg = strlen (text);
    if (lg)
      {
        /* the text is not empty */
        ptr = oldptr = &text[0];
        do
 	 {
-	   ptr = ustrrchr (oldptr, URL_DIR_SEP);
+	   ptr = strrchr (oldptr, URL_DIR_SEP);
 	   if (ptr != NULL)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
        
-       i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
+       i = ((int) (oldptr) - (int) (text)) / sizeof (char);	/* the length of the directory part */
        if (i > 1)
 	 {
-	   ustrncpy (aDirectory, text, i);
+	   strncpy (aDirectory, text, i);
 	   j = i - 1;
 	   /* Suppresses the / characters at the end of the path */
 	   while (aDirectory[j] == URL_DIR_SEP)
-	     aDirectory[j--] = WC_EOS;
+	     aDirectory[j--] = EOS;
 	 }
        if (i != lg)
-          ustrcpy (aName, oldptr);
+          strcpy (aName, oldptr);
      }
 #    ifdef _WINDOWS
-     lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], ".exe"))
-        aName[lg - 4] = WC_EOS;
+     lg = strlen (aName);
+     if (!strcasecmp (&aName[lg - 4], ".exe"))
+        aName[lg - 4] = EOS;
 #    endif /* _WINDOWS */
 }
 
@@ -649,8 +647,8 @@ void TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
    dans directory_list le 1er nom du path fourni a` l'appel
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
-void MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list,
-		       CHAR_T* completeName, int *length)
+void MakeCompleteName (char* fname, char* fext, char* directory_list,
+		       char* completeName, int *length)
 {
    int                 i, j;
    PathBuffer          single_directory;
@@ -659,12 +657,12 @@ void MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list,
 
    found = FALSE;
    i = 1;
-   first_directory[0] = WC_EOS;
-   while (directory_list[i - 1] != WC_EOS && (!found))
+   first_directory[0] = EOS;
+   while (directory_list[i - 1] != EOS && (!found))
      {
 	j = 1;
-	while (directory_list[i - 1] != WC_PATH_SEP && 
-           directory_list[i - 1] != WC_EOS      && 
+	while (directory_list[i - 1] != PATH_SEP && 
+           directory_list[i - 1] != EOS      && 
            j < MAX_PATH                         && 
            i < MAX_PATH)
 	  {
@@ -674,27 +672,27 @@ void MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list,
 	     j++;
 	  }
 	/* on ajoute une fin de chaine */
-	single_directory[j - 1] = WC_EOS;
+	single_directory[j - 1] = EOS;
 	/* on sauve ce nom de directory si c'est le 1er */
-	if (first_directory[0] == WC_EOS)
-	   ustrncpy (first_directory, single_directory, MAX_PATH);
+	if (first_directory[0] == EOS)
+	   strncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
 	if (TtaFileExist (completeName))
 	  {
 	     found = TRUE;
-	     ustrncpy (directory_list, single_directory, MAX_PATH);
+	     strncpy (directory_list, single_directory, MAX_PATH);
 	  }
 	else
 	   /* on essaie avec un autre directory en sautant le PATH_SEP */
-	if (directory_list[i - 1] == WC_PATH_SEP)
+	if (directory_list[i - 1] == PATH_SEP)
 	   i++;
      }
    if (!found)
      {
-	completeName[0] = WC_EOS;
-	if (first_directory[0] != WC_EOS)
-	   ustrncpy (directory_list, first_directory, MAX_PATH);
+	completeName[0] = EOS;
+	if (first_directory[0] != EOS)
+	   strncpy (directory_list, first_directory, MAX_PATH);
      }
 }
 
@@ -704,28 +702,28 @@ void MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list,
    des repertoires de documents ou de sche'mas.            
    Si le fichier n'existe pas retourne name.               
   ----------------------------------------------------------------------*/
-void GetPictureFileName (STRING name, STRING fileName)
+void GetPictureFileName (char *name, char *fileName)
 {
    int                 length;
    PathBuffer          directory;
-   CHAR_T                URL_DIR_SEP;
+   char                URL_DIR_SEP;
 
-   if (name && ustrchr (name, '/'))
+   if (name && strchr (name, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
    if (name[0] == URL_DIR_SEP || name [1] == ':')
-     ustrcpy (fileName, name);
+     strcpy (fileName, name);
    else
      {
-       ustrcpy (directory, DocumentPath);
+       strcpy (directory, DocumentPath);
        MakeCompleteName (name, "", directory, fileName, &length);
        if (!TtaFileExist (fileName))
 	 {
 	   /* Recherche le fichier dans les repertoires de schemas */
-	   ustrcpy (directory, SchemaPath);
+	   strcpy (directory, SchemaPath);
 	   MakeCompleteName (name, "", directory, fileName, &length);
 	 }
      }
@@ -735,7 +733,7 @@ void GetPictureFileName (STRING name, STRING fileName)
    IsExtended compare la fin de fileName avec extension. Si la fin 
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
-static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
+static ThotBool     IsExtended (char* fileName, char* extension)
 {
    int                 i, j;
    int                 nameLength, extLength;
@@ -745,9 +743,9 @@ static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
    extLength = 0;
 
    /* on mesure extension */
-   extLength = ustrlen (extension);
+   extLength = strlen (extension);
    /* on mesure fileName */
-   nameLength = ustrlen (fileName);
+   nameLength = strlen (fileName);
    if (nameLength >= THOT_MAX_CHAR)
       ok = FALSE;
    else if (extLength > 0 && nameLength > extLength)
@@ -776,16 +774,16 @@ static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
    Si fileName se termine deja par extension, alors copie  
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
-void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
+void FindCompleteName (char* fileName, char* extension,
 		       PathBuffer directory, PathBuffer completeName,
 		       int *length)
 {
    int              i, j, k, h = 0;
-   CHAR_T*          home_dir = NULL;
+   char*          home_dir = NULL;
 
    /* on recopie le repertoire */
-   i = ustrlen (directory);
-   j = ustrlen (fileName);
+   i = strlen (directory);
+   j = strlen (fileName);
 
    /* check for tilde indicating the HOME directory */
    if (directory[0] == '~')
@@ -800,7 +798,7 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
 	  {
 	    /* tilde will not be copied */
 	    i--;
-	    h = ustrlen (home_dir);
+	    h = strlen (home_dir);
 	  }
      }
    if (i > 1)
@@ -809,7 +807,7 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (ustrcmp (extension, "PIV") == 0)
+   if (strcmp (extension, "PIV") == 0)
      {
 	if (j > 4)
 	   if (fileName[j - 4] == '.')
@@ -822,33 +820,33 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
 			 fileName[j - 1] = 'V';
 		      }
      }
-   if (!IsExtended (fileName, extension) && extension[0] != WC_EOS)
-      k = ustrlen (extension) + 1;	/* dont forget the '.' */
+   if (!IsExtended (fileName, extension) && extension[0] != EOS)
+      k = strlen (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
       return;
 
-   completeName[0] = WC_EOS;
+   completeName[0] = EOS;
    if (home_dir)
      {
-       ustrcat (completeName, home_dir);
-       ustrcat (completeName, &directory[1]);
+       strcat (completeName, home_dir);
+       strcat (completeName, &directory[1]);
      }
    else
-     ustrcat (completeName, directory);
+     strcat (completeName, directory);
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
-     ustrcat (completeName, WC_DIR_STR);
+     strcat (completeName, DIR_STR);
 
    /* on recopie le nom */
-   ustrcat (completeName, fileName);
+   strcat (completeName, fileName);
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	ustrcat (completeName, ".");
-	ustrcat (completeName, extension);
+	strcat (completeName, ".");
+	strcat (completeName, extension);
      }
    /* on termine la chaine */
    *length = i + j + k + h;
@@ -858,39 +856,39 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
 /*----------------------------------------------------------------------
    GetDocIdent  
   ----------------------------------------------------------------------*/
-void GetDocIdent (DocumentIdentifier* Ident, CHAR_T* docName)
+void GetDocIdent (DocumentIdentifier* Ident, char* docName)
 {
-   ustrncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
-   *Ident[MAX_DOC_IDENT_LEN - 1] = WC_EOS;
+   strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
+   *Ident[MAX_DOC_IDENT_LEN - 1] = EOS;
 }
 
 /*----------------------------------------------------------------------
    GetDocName                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocName (DocumentIdentifier Ident, CHAR_T* docName)
+void                GetDocName (DocumentIdentifier Ident, char* docName)
 #else  /* __STDC__ */
 void                GetDocName (Ident, docName)
 DocumentIdentifier  Ident;
-CHAR_T*             docName;
+char*             docName;
 
 #endif /* __STDC__ */
 {
-   ustrncpy (docName, Ident, MAX_NAME_LENGTH);
-   docName[MAX_NAME_LENGTH - 1] = WC_EOS;
+   strncpy (docName, Ident, MAX_NAME_LENGTH);
+   docName[MAX_NAME_LENGTH - 1] = EOS;
 }
 
 
 /*----------------------------------------------------------------------
    FileWriteAccess	returns the write access right for a file	
   ----------------------------------------------------------------------*/
-int FileWriteAccess (STRING fileName)
+int FileWriteAccess (char *fileName)
 {
    int                 ret, i;
-   CHAR_T                c;
-   CHAR_T                URL_DIR_SEP;
+   char                c;
+   char                URL_DIR_SEP;
 
-   if (fileName && ustrchr (fileName, '/'))
+   if (fileName && strchr (fileName, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
@@ -904,7 +902,7 @@ int FileWriteAccess (STRING fileName)
       /* file does not exist */
      {
 	/* check its directory */
-	i = ustrlen (fileName);
+	i = strlen (fileName);
 	while ((i >= 0) && (fileName[i] != URL_DIR_SEP))
 	   i--;
 	if (i < 0)
@@ -930,7 +928,7 @@ int FileWriteAccess (STRING fileName)
    	GetCounterValue	converts the value number into a character	
    	string according to a given style (arabic, roman, letter).	
   ----------------------------------------------------------------------*/
-void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
+void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 {
    int                 c, i, begin;
 
@@ -963,7 +961,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 	       i = *len;
 	       do
 		 {
-		    string[i - 1] = (CHAR_T) ((int) ('0') + number % 10);
+		    string[i - 1] = (char) ((int) ('0') + number % 10);
 		    i--;
 		    number = number / 10;
 		 }
@@ -1052,7 +1050,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 		       /* UPPERCASE --> lowercase */
 		       for (i = begin; i <= *len; i++)
 			  if (string[i - 1] != '?')
-			     string[i - 1] = (CHAR_T) ((int) (string[i - 1]) + 32);
+			     string[i - 1] = (char) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
 
@@ -1077,9 +1075,9 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 		 {
 	          number --;
 	          if (style == CntUppercase)
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('A'));
+		     string[i - 1] = (char) ((number % 26) + (int) ('A'));
 	          else
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('a'));
+		     string[i - 1] = (char) ((number % 26) + (int) ('a'));
 		  i --;
 		  c --;
 		  number = number / 26;
@@ -1103,7 +1101,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
    TRUE if the directory could be created or if it existed already,
    FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool TtaMakeDirectory (CHAR_T* directory)
+ThotBool TtaMakeDirectory (char* directory)
 {
   int i;
 
@@ -1131,7 +1129,7 @@ ThotBool TtaMakeDirectory (CHAR_T* directory)
    TRUE if the directory is OK, FALSE if not.
 	
   ----------------------------------------------------------------------*/
-ThotBool TtaCheckDirectory (CHAR_T* directory)
+ThotBool TtaCheckDirectory (char* directory)
 {
 #ifdef _WINDOWS
    DWORD               attribs;
@@ -1167,7 +1165,7 @@ ThotBool TtaCheckDirectory (CHAR_T* directory)
    struct stat         fileStat;
 
    /* does the directory exist ? */
-   if (ustrlen (directory) < 1)
+   if (strlen (directory) < 1)
       return (FALSE);
    else if (stat (directory, &fileStat) != 0)
       return (FALSE);

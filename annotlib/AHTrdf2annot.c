@@ -76,12 +76,12 @@ typedef struct _ParseContext
    ------------------------------------------------------------*/
 static void ParseIdFragment (AnnotMeta *annot, char *buff)
 {
-  CHAR_T *c, *d;
+  char *c, *d;
   
   c = strchr (buff, '#');
   if (c)
     {
-      *c = WC_EOS;
+      *c = EOS;
       c += 4;
       d = c;
       while (*d)
@@ -92,7 +92,7 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
 	      *d = ' ';
 	      break;
 	    case ')':
-	      *d = WC_EOS;
+	      *d = EOS;
 	      break;
 	    }
 	  d++;
@@ -109,7 +109,7 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
    ------------------------------------------------------------*/
 static void ParseXptrFragment (AnnotMeta *annot, char *buff)
 {
-  CHAR_T *c;
+  char *c;
   
   c = strchr (buff, '#');
   if (c)
@@ -174,14 +174,14 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	annot->annot_url = TtaStrdup (annot_url);
 	List_add (listP, (void*) annot);
       }
-    url_length = ustrlen(annot_url) + 1;
+    url_length = strlen(annot_url) + 1;
     if (find_last_length < url_length)
       {
 	if (find_last_annotURL)
 	  TtaFreeMemory (find_last_annotURL);
 
 	find_last_length = 2*url_length;
-	find_last_annotURL = TtaAllocString (find_last_length);
+	find_last_annotURL = TtaGetMemory (find_last_length);
       }
     strcpy(find_last_annotURL, annot_url);
     find_last_annot = annot;

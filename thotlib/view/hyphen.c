@@ -48,7 +48,7 @@ static CHAR_T sepcar[] =
 static int PatternHyphen (STRING word, int length, Language language,
 			  ThotBool *addHyphen)
 {
-  char                iso;     
+  char               *iso;     
   int                 i, k;
   int                 status;
   int                *pHyphen;

@@ -18,10 +18,10 @@ extern AnnotMeta* LINK_CreateMeta ( Document source_doc,
                                     ThotBool useDocRoot );
 extern void LINK_DelMetaFromMemory ( Document doc );
 extern void LINK_LoadAnnotationIndex ( Document doc,
-                                       CHAR_T *annotIndex,
+                                       char *annotIndex,
                                        ThotBool mark_visible );
 extern Element LINK_SelectSourceDoc ( Document doc,
-                                      CONST CHAR_T *annot_url,
+                                      CONST char *annot_url,
                                       ThotBool return_el );
 
 #else /* __STDC__ */
@@ -38,10 +38,10 @@ extern AnnotMeta* LINK_CreateMeta (/* Document source_doc,
                                       ThotBool useDocRoot */);
 extern void LINK_DelMetaFromMemory (/* Document doc */);
 extern void LINK_LoadAnnotationIndex (/* Document doc,
-                                         CHAR_T *annotIndex,
+                                         char *annotIndex,
                                          ThotBool mark_visible */);
 extern Element LINK_SelectSourceDoc (/* Document doc,
-                                        CONST CHAR_T *annot_url,
+                                        CONST char *annot_url,
                                         ThotBool return_el */);
 
 #endif /* __STDC__ */

@@ -56,7 +56,7 @@
    Adds a new element to the beginning of a linked
    list.
    ------------------------------------------------------------*/
-void List_add (List **me, CHAR_T *object)
+void List_add (List **me, char *object)
 {
   List *new;
 
@@ -94,7 +94,7 @@ ThotBool List_delCharObj (void *obj)
   if (!obj)
     return FALSE;
 
-  TtaFreeMemory ((CHAR_T *) obj);
+  TtaFreeMemory ((char *) obj);
   return TRUE;
 }
 
@@ -217,8 +217,8 @@ void AnnotFilter_toggleAll (Document doc, SelType selector, ThotBool show)
   -----------------------------------------------------------------------*/
 static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
 {
-  CHAR_T       *tmp;
-  CHAR_T       server[MAX_LENGTH];
+  char       *tmp;
+  char       server[MAX_LENGTH];
 
   if (!(annot->is_visible) || annot->is_orphan)
     return;
@@ -236,12 +236,12 @@ static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
       AnnotFilter_add (&AnnotMetaData[source_doc], BY_SERVER, server, annot);
     }
   else
-    server[0] = WC_EOS;
+    server[0] = EOS;
 
   if (annot->author)
     {
-      tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
-      usprintf (tmp, "%s@%s", annot->author, server);
+      tmp = TtaGetMemory (strlen (annot->author) + strlen (server) + 4);
+      sprintf (tmp, "%s@%s", annot->author, server);
       AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
       TtaFreeMemory (tmp);
     }
@@ -291,7 +291,7 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
 
   /* initialize the filter */
   filter = TtaGetMemory (sizeof (AnnotFilterData));
-  filter->object = isString ? TtaStrdup ((CHAR_T*)object) : object;
+  filter->object = isString ? TtaStrdup ((char*)object) : object;
   filter->show = TRUE;
 
   /* and now add it to the list */
@@ -367,7 +367,7 @@ List *AnnotFilter_search (List *list, void *object, ThotBool isString)
       filter = (AnnotFilterData *) list_item->object;
       if (isString)
 	{
-	  if (!ustrcasecmp (filter->object, (CHAR_T*)object))
+	  if (!strcasecmp (filter->object, (char*)object))
 	    break;
 	}
       else
@@ -397,8 +397,8 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
   int show;
   ThotBool compare;
   AnnotMeta *annot;
-  CHAR_T server[MAX_LENGTH];
-  CHAR_T *tmp;
+  char server[MAX_LENGTH];
+  char *tmp;
 
   if (!object)
     return 0;
@@ -419,8 +419,8 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
 	  compare = (annot->type == object);
 	  break;
 	case BY_AUTHOR:
-	  compare = (ustrncmp (annot->author, (char *) object,
-			       ustrlen (annot->author)) == 0);
+	  compare = (strncmp (annot->author, (char *) object,
+			       strlen (annot->author)) == 0);
 	  break;
 	case BY_SERVER:
 	  if (annot->annot_url)
@@ -428,7 +428,7 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
 	  else
 	    tmp = annot->body_url;
 	  GetServerName (tmp, server);
-	  compare = !ustrcmp (server, (char *) object);
+	  compare = !strcmp (server, (char *) object);
 	  break;
 
 	default:
@@ -482,11 +482,11 @@ ThotBool AnnotFilter_show (List *list, void *object)
    a given object should be shown. If no filter element is
    found, it returns TRUE.
    ------------------------------------------------------------*/
-ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
+ThotBool AnnotFilter_showServer (List *list, char *url)
 {
   List *list_item = list;
   AnnotFilterData *filter;
-  CHAR_T server[MAX_LENGTH];
+  char server[MAX_LENGTH];
 
   /* we first normalize the url name to get the server */
   GetServerName (url, server);
@@ -507,12 +507,12 @@ ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
    a given object should be shown. If no filter element is
    found, it returns TRUE.
    ------------------------------------------------------------*/
-ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
+ThotBool AnnotFilter_showAuthor (List *list, char *author, char *url)
 {
   List *list_item = list;
   AnnotFilterData *filter;
-  CHAR_T server[MAX_LENGTH];
-  CHAR_T *tmp;
+  char server[MAX_LENGTH];
+  char *tmp;
   ThotBool result;
 
   if (!author)
@@ -521,8 +521,8 @@ ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
   /* we first normalize the url name to get the server */
   GetServerName (url, server);
 
-  tmp = TtaGetMemory (ustrlen (author) + ustrlen (server) + 4);
-  usprintf (tmp, "%s@%s", author, server);
+  tmp = TtaGetMemory (strlen (author) + strlen (server) + 4);
+  sprintf (tmp, "%s@%s", author, server);
 
   list_item = AnnotFilter_search (list, tmp, TRUE);
   if (!list_item)
@@ -584,11 +584,11 @@ void AnnotFilter_build (Document doc)
    AnnotList_search
    Returns list item that contains the object
    ------------------------------------------------------------*/
-List *AnnotList_search (List *list, CHAR_T *object)
+List *AnnotList_search (List *list, char *object)
 {
   List *item = list;
 
-  while (item && (ustrcasecmp ((CHAR_T *) item->object, (CHAR_T *) object)))
+  while (item && (strcasecmp ((char *) item->object, (char *) object)))
     {
       item = item->next;
     }
@@ -600,12 +600,12 @@ List *AnnotList_search (List *list, CHAR_T *object)
    AnnotList_searchAnnot
    Returns the annot item that points to the same url
    ------------------------------------------------------------*/
-AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch searchType)
+AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch searchType)
 {
   List *item = list;
   AnnotMeta *annot = NULL;
   ThotBool found = FALSE;
-  CHAR_T *ptr = NULL;
+  char *ptr = NULL;
 
   while (item)
     {
@@ -633,7 +633,7 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
 	  break;
 	}
 
-      if (ptr && !ustrcasecmp (ptr, url))
+      if (ptr && !strcasecmp (ptr, url))
 	{
 	  found = TRUE;
 	  break;
@@ -649,12 +649,12 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
    Searches for annotation with URL url and, if found, deletes it
    and returns TRUE. Returns FALSE otherwise.
    ------------------------------------------------------------*/
-ThotBool AnnotList_delAnnot (List **list, CHAR_T *url, ThotBool useAnnotUrl)
+ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
 {
   List *item, *prev;
   AnnotMeta *annot = NULL;
   ThotBool found = FALSE;
-  CHAR_T *ptr;
+  char *ptr;
 
   prev = NULL;
   item = *list;
@@ -667,7 +667,7 @@ ThotBool AnnotList_delAnnot (List **list, CHAR_T *url, ThotBool useAnnotUrl)
       else
 	ptr = annot->body_url;
 
-      if (ptr && !ustrcasecmp (ptr, url))
+      if (ptr && !strcasecmp (ptr, url))
 	{
 	  found = TRUE;
 	  break;
@@ -686,7 +686,7 @@ ThotBool AnnotList_delAnnot (List **list, CHAR_T *url, ThotBool useAnnotUrl)
       /* erase the annotation body */
       if (IsFilePath (annot->body_url))
 	{
-	  ptr = TtaGetMemory (ustrlen (annot->body_url) + 1);
+	  ptr = TtaGetMemory (strlen (annot->body_url) + 1);
 	  NormalizeFile (annot->body_url, ptr, AM_CONV_NONE);
 	  TtaFileUnlink (ptr);
 	  TtaFreeMemory (ptr);
@@ -831,13 +831,13 @@ void AnnotList_print (List *annot_list)
    Writes an RDF annotation index file from the contents
    of annot_list.
    ------------------------------------------------------------*/
-void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
+void AnnotList_writeIndex (char *indexFile, List *annot_list)
 {
   AnnotMeta *annot;
   List *annot_ptr;
   FILE *fp;
 
-  if (!annot_list || !indexFile || indexFile[0] == WC_EOS)
+  if (!annot_list || !indexFile || indexFile[0] == EOS)
     return;
 
   fp = fopen (indexFile, "w");
@@ -925,13 +925,13 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
    and the annotations HTML body. 
    It returns the name of the RDF file ($APP_TMPDIR/rdf.tmp)
    ------------------------------------------------------------*/
-CHAR_T * ANNOT_PreparePostBody (Document doc)
+char * ANNOT_PreparePostBody (Document doc)
 {
   FILE *fp;
   FILE *fp2;
   char tmp_str[80];
-  CHAR_T *rdf_tmpfile, *ptr;
-  CHAR_T *html_tmpfile;
+  char *rdf_tmpfile, *ptr;
+  char *html_tmpfile;
 
   AnnotMeta *annot;
   unsigned long content_length;
@@ -945,9 +945,9 @@ CHAR_T * ANNOT_PreparePostBody (Document doc)
   /* compute the temporary file names */
   ptr = TtaGetEnvString ("APP_TMPDIR");
   rdf_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
-  usprintf (rdf_tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
+  sprintf (rdf_tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
   html_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("html.tmp") + 2);
-  usprintf (html_tmpfile, "%s%c%s", ptr, DIR_SEP, "html.tmp");
+  sprintf (html_tmpfile, "%s%c%s", ptr, DIR_SEP, "html.tmp");
 
   /* output the HTML body */
   ANNOT_LocalSave (doc, html_tmpfile);
@@ -1051,11 +1051,11 @@ CHAR_T * ANNOT_PreparePostBody (Document doc)
    Returns a pointer to a memalloc'd string containing the current date.
    It's up to the caller to free this memory.
    ------------------------------------------------------------*/
-CHAR_T *StrdupDate (void)
+char *StrdupDate (void)
 {
   time_t      curDate;
   struct tm   *localDate;
-  CHAR_T      *strDate;
+  char      *strDate;
   
   curDate = time (&curDate);
   localDate = localtime (&curDate);
@@ -1101,7 +1101,7 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
     ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, "XLink");
     if (ancName) 
       {
-	if (!ustrcmp (ancName, annotDoc))
+	if (!strcmp (ancName, annotDoc))
 	  break;
 	TtaFreeMemory (ancName);
 	ancName = NULL;
@@ -1172,11 +1172,11 @@ Element SearchElementInDoc (Document doc, int elTypeNum)
    document element or NULL otherwise.
   -----------------------------------------------------------------------*/
 STRING SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
-			    CHAR_T *schema)
+			    char *schema)
 {
   AttributeType  attrType;
   Attribute      attr;
-  CHAR_T        *text;
+  char        *text;
   int            length;
 
   if (!el) 
@@ -1255,8 +1255,8 @@ char *GetTempName (const char *dir, const char *prefix)
   {
     char *altprefix;
     name = tmpnam (NULL);	/* get a possibly unique string */
-    altprefix = TtaGetMemory(ustrlen (prefix) + ustrlen(name) + 1);
-    sprintf (altprefix, "%s%s", prefix, name + ustrlen(_P_tmpdir));
+    altprefix = TtaGetMemory(strlen (prefix) + strlen(name) + 1);
+    sprintf (altprefix, "%s%s", prefix, name + strlen(_P_tmpdir));
     name = _tempnam (dir, altprefix); /* get a name that isn't yet in use */
     TtaFreeMemory (altprefix);
   }
@@ -1280,31 +1280,31 @@ char *GetTempName (const char *dir, const char *prefix)
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-void GetServerName (CHAR_T *url, CHAR_T *server)
+void GetServerName (char *url, char *server)
 {
-  CHAR_T      *scratch_url;
-  CHAR_T      *protocol;
-  CHAR_T      *host;
-  CHAR_T      *dir;
-  CHAR_T      *file;
+  char      *scratch_url;
+  char      *protocol;
+  char      *host;
+  char      *dir;
+  char      *file;
 
   if (!url || IsFilePath (url))
-      ustrcpy (server, "localhost");
+      strcpy (server, "localhost");
   else
     {
       scratch_url = TtaStrdup (url);
       ExplodeURL (scratch_url, &protocol, &host, &dir, &file);
-      ustrcpy (server, host ? host : "?");
+      strcpy (server, host ? host : "?");
       if (dir && dir[0])
 	{
-	  ustrcat (server, "/");
-	  ustrcat (server, dir);
+	  strcat (server, "/");
+	  strcat (server, dir);
 	}
       TtaFreeMemory (scratch_url);
       /* remove the query string */
-      scratch_url = ustrrchr (server, '?');
+      scratch_url = strrchr (server, '?');
       if (scratch_url)
-	*scratch_url = WC_EOS;
+	*scratch_url = EOS;
     }
 }
 
@@ -1313,12 +1313,12 @@ void GetServerName (CHAR_T *url, CHAR_T *server)
    Returns the HTML title of the given document or NULL if this
    element doesn't exist.
   -----------------------------------------------------------------------*/
-CHAR_T *ANNOT_GetHTMLTitle (Document doc)
+char *ANNOT_GetHTMLTitle (Document doc)
 {
   Element          el;
   int              length;
   Language         lang;
-  CHAR_T          *title;
+  char          *title;
   ElementType      elType;
   
    /* only HTML documents can be annotated */
@@ -1336,7 +1336,7 @@ CHAR_T *ANNOT_GetHTMLTitle (Document doc)
   if (!el)
     return NULL;
   length = TtaGetTextLength (el) + 1;
-  title = TtaAllocString (length);
+  title = TtaGetMemory (length);
   TtaGiveTextContent (el, title, &length, &lang);
   return (title);
 }
@@ -1350,11 +1350,11 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 {
   Element          el;
   ElementType      elType;
-  CHAR_T          *url;
-  CHAR_T          *ptr;
+  char          *url;
+  char          *ptr;
   int              i;
   AnnotMeta       *annot;
-  CHAR_T          *type_name;
+  char          *type_name;
   
   if (!type)
     return;
@@ -1383,12 +1383,12 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   url = SearchAttributeInEl (doc, el, Annot_ATTR_HREF_, "Annot");
   if (!url)
     return;
-  ptr = ustrchr (url, '#');
+  ptr = strchr (url, '#');
   if (ptr)
-    *ptr = WC_EOS;
+    *ptr = EOS;
   for (i = 1; i <=DocumentTableLength; i++)
     {
-      if (!ustrcmp (url, DocumentURLs[i]))
+      if (!strcmp (url, DocumentURLs[i]))
 	{
 	  /* we found the source document, we now search and update
 	     the annotation meta data */
@@ -1422,15 +1422,15 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
    given in input, prefixed by the "file://" URL convention.
    It's up to the caller to free the returned string.
   -----------------------------------------------------------------------*/
-CHAR_T * ANNOT_MakeFileURL (const CHAR_T *path)
+char * ANNOT_MakeFileURL (const char *path)
 {
-  CHAR_T *url;
+  char *url;
   /* @@ add the file:// (why it wasn't there before? */
-  url = TtaGetMemory (ustrlen (path)
+  url = TtaGetMemory (strlen (path)
 		      + sizeof ("file://")
 		      + 1);
   if (url)
-    usprintf (url, "file://%s", path);
+    sprintf (url, "file://%s", path);
   return url;
 }
 
@@ -1505,7 +1505,7 @@ void WWWToLocal (char *url)
     return;
 
   tmp = HTWWWToLocal (url, "file:", NULL);
-  ustrcpy (url, tmp);
+  strcpy (url, tmp);
   HT_FREE (tmp);
 }
 

@@ -352,7 +352,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	    }
 	  else 
 	    {
-	      iso2wc_strcpy (tmp_wchar, tmp_char);
+	      strcpy (tmp_wchar, tmp_char);
 	      me->http_headers.content_type = TtaStrdup (tmp_wchar);
 	    }
 	  
@@ -378,7 +378,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   
   if (tmp_atom)
     {
-      iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
+      strcpy (tmp_wchar, HTAtom_name (tmp_atom));
       me->http_headers.charset = TtaStrdup (tmp_wchar);
     }
 
@@ -394,7 +394,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   tmp_char = HTResponse_reason (response);
   if (tmp_char)
     {
-      iso2wc_strcpy (tmp_wchar, tmp_char);
+      strcpy (tmp_wchar, tmp_char);
       me->http_headers.reason = TtaStrdup (tmp_wchar);
     }
 }
@@ -800,7 +800,7 @@ static ThotBool SafePut_query (char *url)
 
   while ((me = (char *) HTList_nextObject (cur)))
     {
-      iso2wc_strcpy (tmp, me);
+      strcpy (tmp, me);
       if (strstr (url, tmp))
 	{
 	  found = TRUE;
@@ -884,7 +884,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        ** Start request with new credentials 
        */
        /* only do a redirect using a network protocol understood by Amaya */
-       iso2wc_strcpy (urlAdr, new_anchor->parent->address);
+       strcpy (urlAdr, new_anchor->parent->address);
        if (IsValidProtocol (urlAdr))
 	 {
 	   /* if it's a valid URL, we try to normalize it */
@@ -1841,7 +1841,7 @@ void libwww_CleanCache (void)
   /* get something we can work on :) */
   tmp = HTWWWToLocal (cache_dir, "file:", NULL);
   real_dir = TtaGetMemory (strlen (tmp) + 20);
-  iso2wc_strcpy (real_dir, tmp);
+  strcpy (real_dir, tmp);
   HT_FREE (tmp);
 
   /* safeguard... abort the operation if cache_dir doesn't end with
@@ -2119,30 +2119,10 @@ static void ProxyInit (void)
 static void AHTProfile_newAmaya (char *AppName, char *AppVersion)
 {
    char *strptr;
-#ifdef _I18N_
-   unsigned char mbAppName[MAX_LENGTH], mbAppVersion[MAX_LENGTH];
-#else  /* !_I18N_ */
-   char* mbAppName    = AppName;
-   char* mbAppVersion = AppVersion;
-#endif /* !_I18N_ */
 
    /* If the Library is not already initialized then do it */
    if (!HTLib_isInitialized ()) 
-     {
-#ifdef _I18N_
-       /* Here we suppose that libwww works with multibyte character string 
-	  (MBCS) AppName and AppVersion are wide character strings (WCS). 
-	  The following  code transforms each of AppName and 
-	  AppVersion (WCSs) int mbAppName and mbAppName (MBCSs).
-	  If the libwww will support WCSs, than you have to remove the code 
-	  related  to _I18N_ (rounded by #ifdef _I18N_ #endif) and pass
-	  to HTLibInit AppName instead of mbAppName and AppVersion instead 
-	  of mbAppVersion */
-       wcstombs (mbAppName, AppName, MAX_LENGTH);
-       wcstombs (mbAppVersion, AppVersion, MAX_LENGTH);
-#endif /* _I18N_ */
-       HTLibInit (mbAppName, mbAppVersion);
-     } 
+       HTLibInit (AppName, AppVersion);
 
    if (!converters)
       converters = HTList_new ();
@@ -2589,7 +2569,7 @@ static   HTAssocList * PrepareFormdata (char *string)
   
   tmp_string_ptr = TtaGetMemory (strlen (string) + 1);
   tmp_string = tmp_string_ptr;
-  wc2iso_strcpy (tmp_string_ptr, string);
+  strcpy (tmp_string_ptr, string);
   formdata = HTAssocList_new();
   
   while (*tmp_string)
@@ -3139,7 +3119,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
 	   ptr2 = strstr (urlName, ptr1);
 	   if (ptr2) 
 	     {
-	       wc2iso_strcpy (url_name, urlName);
+	       strcpy (url_name, urlName);
 	       me->default_put_name = TtaStrdup (url_name);
 	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
 	     }
@@ -3172,14 +3152,14 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
 
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
-   wc2iso_strcpy (file_name, fileName);
+   strcpy (file_name, fileName);
    StrAllocCat (fileURL, file_name);
 #else
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
 #endif /* _WINDOWS */
    me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
-   wc2iso_strcpy (url_name, me->urlName);
+   strcpy (url_name, me->urlName);
    me->dest = HTAnchor_findAddress (url_name);
    /* we memorize the anchor's parent @ as we use it a number of times
       in the following lines */
@@ -3222,7 +3202,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
        tmp =  TtaGetCharsetName (charset);
        if (tmp && *tmp != EOS)
 	 {
-	   tmp2 = TtaWC2ISOdup (tmp);
+	   tmp2 = TtaStrdup (tmp);
 	   HTAnchor_setCharset (dest_anc_parent, HTAtom_for (tmp2));
 	   TtaFreeMemory (tmp2);
 	   tmp2 = HTAtom_name (HTAnchor_charset (dest_anc_parent));

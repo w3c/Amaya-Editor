@@ -53,14 +53,7 @@ char                mbsTmpStr[MAX_TXT_LEN];
    WrPRuleType ecrit le type de la regle de presentation       
    pointee par pRule, dans le fichier fileDescriptor.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         WrPRuleType (pRule, fileDescriptor)
-PtrPRule            pRule;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
 {
   switch (pRule->PrType)
     {
@@ -284,15 +277,7 @@ FILE               *fileDescriptor;
    buffers de texte commencant au buffer pointe' par pBT.  
    length: longueur maximum a` ecrire.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WrText (PtrTextBuffer pBT, int length, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         WrText (pBT, length, fileDescriptor)
-PtrTextBuffer       pBT;
-int                 length;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void WrText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
 {
    PtrTextBuffer       b;
    int                 i, l;
@@ -325,15 +310,7 @@ FILE               *fileDescriptor;
    segments de path commencant au segment pointe' par pPE.  
    length: longueur maximum a` ecrire.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WrPath (PtrPathSeg pPE, int length, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         WrPath (pPE, length, fileDescriptor)
-PtrPathSeg          pPE;
-int                 length;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void WrPath (PtrPathSeg pPE, int length, FILE *fileDescriptor)
 {
    PtrPathSeg          b;
    int                 l;
@@ -398,15 +375,7 @@ FILE               *fileDescriptor;
    CountNodes ecrit dans le fichier fileDescriptor les statistiques       
    sur le sous-arbre de racine pNode.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CountNodes (PtrElement pNode, FILE * fileDescriptor, int level)
-#else  /* __STDC__ */
-void                CountNodes (pNode, fileDescriptor, level)
-PtrElement          pNode;
-FILE               *fileDescriptor;
-int                 level;
-#endif /* __STDC__ */
-
+void CountNodes (PtrElement pNode, FILE *fileDescriptor, int level)
 {
    int                 i;
    int                 nbf;
@@ -525,14 +494,7 @@ int                 level;
 /*----------------------------------------------------------------------
    wrRef ecrit une reference.                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrRef (PtrReference pRef, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrRef (pRef, fileDescriptor)
-PtrReference        pRef;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrRef (PtrReference pRef, FILE *fileDescriptor)
 {
    PtrReferredDescr pDe1;
    Name             N;
@@ -580,16 +542,8 @@ FILE               *fileDescriptor;
    Si premierfils = true alors on ne traduit recursivement 
    que le premier fils de chaque element.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WrTree (PtrElement pNode, int Indent, FILE * fileDescriptor, ThotBool premierfils)
-#else  /* __STDC__ */
-static void         WrTree (pNode, Indent, fileDescriptor, premierfils)
-PtrElement          pNode;
-int                 Indent;
-FILE               *fileDescriptor;
-ThotBool            premierfils;
-
-#endif /* __STDC__ */
+static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
+		    ThotBool premierfils)
 {
    int                 i;
    PtrElement          f;
@@ -842,21 +796,12 @@ ThotBool            premierfils;
    TtaListAbstractTree
 
    Produces in a file a human-readable form of an abstract tree.
-
    Parameters:
    root: the root element of the tree to be listed.
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaListAbstractTree (Element root, FILE * fileDescriptor)
-#else  /* __STDC__ */
-void                TtaListAbstractTree (root, fileDescriptor)
-Element             root;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+void TtaListAbstractTree (Element root, FILE *fileDescriptor)
 {
    UserErrorCode = 0;
    if (root == NULL)
@@ -871,23 +816,13 @@ FILE               *fileDescriptor;
    TtaListView
 
    Produces in a file a human-readable form of an abstract view.
-
    Parameters:
    document: the document.
    view: the view.
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaListView (Document document, View view, FILE * fileDescriptor)
-#else  /* __STDC__ */
-void                TtaListView (document, view, fileDescriptor)
-Document            document;
-View                view;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+void TtaListView (Document document, View view, FILE *fileDescriptor)
 {
    PtrAbstractBox      PavRacine;
    PtrDocument         pDoc;
@@ -935,14 +870,7 @@ FILE               *fileDescriptor;
    NumberOneAbsBox numerote recursivement des paves a partir de pAb.   
    cptpave est le compte des paves.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         NumberOneAbsBox (PtrAbstractBox pAb, int *cptpave)
-#else  /* __STDC__ */
-static void         NumberOneAbsBox (pAb, cptpave)
-PtrAbstractBox      pAb;
-int                *cptpave;
-
-#endif /* __STDC__ */
+static void NumberOneAbsBox (PtrAbstractBox pAb, int *cptpave)
 {
    PtrAbstractBox      pP;
 
@@ -960,15 +888,9 @@ int                *cptpave;
    NumberAbsBoxes numerote tous les paves du sous-arbre dont la racine est 
    pointee par pP. Appelle NumberOneAbsBox.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NumberAbsBoxes (PtrAbstractBox pP)
-#else  /* __STDC__ */
-void                NumberAbsBoxes (pP)
-PtrAbstractBox      pP;
-
-#endif /* __STDC__ */
+void NumberAbsBoxes (PtrAbstractBox pP)
 {
-   int                 cptpave;	/* compteur pour numerotation des paves */
+   int      cptpave;	/* compteur pour numerotation des paves */
 
    cptpave = 0;
    if (pP != NULL)
@@ -978,14 +900,7 @@ PtrAbstractBox      pP;
 /*----------------------------------------------------------------------
    wrThotBool ecrit la valeur d'un booleen.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrThotBool (ThotBool b, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrThotBool (b, fileDescriptor)
-ThotBool            b;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrThotBool (ThotBool b, FILE *fileDescriptor)
 {
    if (b)
       fprintf (fileDescriptor, "Y");
@@ -996,14 +911,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrrepere ecrit la valeur du point de reference.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrrepere (BoxEdge r, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrrepere (r, fileDescriptor)
-BoxEdge             r;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrrepere (BoxEdge r, FILE *fileDescriptor)
 {
    switch (r)
 	 {
@@ -1044,14 +952,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrTypeUnit write a distance unit.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrTypeUnit (TypeUnit unit, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrTypeUnit (unit, fileDescriptor)
-TypeUnit            unit;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrTypeUnit (TypeUnit unit, FILE *fileDescriptor)
 {
    switch (unit)
 	 {
@@ -1081,15 +982,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrpos ecrit la valeur d'une position.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrpos (AbPosition * pPos, ThotBool racine, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrpos (pPos, racine, fileDescriptor)
-AbPosition         *pPos;
-ThotBool            racine;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrpos (AbPosition *pPos, ThotBool racine, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, " ");
    if (pPos->PosAbRef == NULL && !racine)
@@ -1119,16 +1012,8 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrdim ecrit la valeur d'une dimension.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrdim (AbDimension * pDim, ThotBool racine, ThotBool larg, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrdim (pDim, racine, larg, fileDescriptor)
-AbDimension        *pDim;
-ThotBool            racine;
-ThotBool            larg;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+static void wrdim (AbDimension *pDim, ThotBool racine, ThotBool larg,
+		   FILE *fileDescriptor)
 {
 
    fprintf (fileDescriptor, " ");
@@ -1172,15 +1057,7 @@ FILE               *fileDescriptor;
    commencant au pave pointe' par pAb, et avec            
    l'indentation Indent.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE * fileDescriptor)
-#else  /* __STDC__ */
-void                ListAbsBoxes (pAb, Indent, fileDescriptor)
-PtrAbstractBox      pAb;
-int                 Indent;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 {
    int                 i, j;
    PtrAbstractBox      f;
@@ -1666,14 +1543,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrnumber ecrit un entier
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrnumber (int i, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrnumber (i, fileDescriptor)
-int                 i;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
-
+static void         wrnumber (int i, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, "%d", i);
 }
@@ -1681,14 +1551,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrtext ecrit du texte
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrtext (STRING Text, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrtext (Text, fileDescriptor)
-STRING              Text;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
-
+static void         wrtext (char *Text, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, "%s", Text);
 }
@@ -1700,15 +1563,7 @@ FILE               *fileDescriptor;
    concretes de la boite abstraite pAb et de toutes les boites
    englobees.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ListBoxTree (PtrAbstractBox pAb, int Indent, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         ListBoxTree (pAb, Indent, fileDescriptor)
-PtrAbstractBox      pAb;
-int                 Indent;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
-
+static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 {
    int                 i, j;
    PtrAbstractBox      pAbEnclosed;
@@ -2173,14 +2028,7 @@ FILE               *fileDescriptor;
    ListBoxes cree un fichier fname qui contient la liste des     
    relations entre boites dans la fenetre frame.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ListBoxes (int frame, FILE *fileDescriptor)
-#else  /* __STDC__ */
-void                ListBoxes (frame, fileDescriptor)
-int                 frame;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+void ListBoxes (int frame, FILE *fileDescriptor)
 {
    ViewFrame          *pFrame;
 
@@ -2199,23 +2047,13 @@ FILE               *fileDescriptor;
    TtaListBoxes
 
    Produces in a file a human-readable form of the boxes.
-
    Parameters:
    document: the document.
    view: the view.
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaListBoxes (Document document, View view, FILE *fileDescriptor)
-#else  /* __STDC__ */
-void                TtaListBoxes (document, view, fileDescriptor)
-Document            document;
-View                view;
-FILE               *fileDescriptor;
-
-#endif /* __STDC__ */
+void TtaListBoxes (Document document, View view, FILE *fileDescriptor)
 {
    PtrDocument         pDoc;
    int                 numAssoc;
@@ -2252,13 +2090,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrlevel ecrit au terminal le niveau relatif n.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrlevel (Level n, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrlevel (n, fileDescriptor)
-Level               n;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrlevel (Level n, FILE *fileDescriptor)
 {
    switch (n)
 	 {
@@ -2298,14 +2130,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrdistunit ecrit le nom d'une unite' de distance.               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         wrdistunit (TypeUnit u, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrdistunit (u, fileDescriptor)
-FILE               *fileDescriptor;
-TypeUnit            u;
-#endif /* __STDC__ */
+static void         wrdistunit (TypeUnit u, FILE *fileDescriptor)
 {
    switch (u)
 	 {
@@ -2334,46 +2159,20 @@ TypeUnit            u;
 /*----------------------------------------------------------------------
    wrnomregle ecrit au terminal le nom de la regle de numero r.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrnomregle (int r, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrnomregle (r, fileDescriptor)
-int                 r;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrnomregle (int r, FILE *fileDescriptor)
 {
-	if (r > 0) {
-#     ifdef _I18N_
-      char mbStr [MAX_TXT_LEN];
-      wcstombs (mbStr, pSchemaStr->SsRule[r - 1].SrName, MAX_TXT_LEN);
-      fprintf (fileDescriptor, mbStr);
-#     else  /* !_I18N_ */
-      fprintf (fileDescriptor, pSchemaStr->SsRule[r - 1].SrName);
-#     endif /* !_I18N_ */
-	} 
+  if (r > 0)
+    fprintf (fileDescriptor, pSchemaStr->SsRule[r - 1].SrName);
 }
 
 
 /*----------------------------------------------------------------------
    wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrnomattr (int a, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrnomattr (a, fileDescriptor)
-int                 a;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrnomattr (int a, FILE *fileDescriptor)
 {
-	if (a != 0) {
-#     ifdef _I18N_
-      char mbStr [MAX_TXT_LEN];
-      wcstombs (mbStr, pSchemaStr->SsAttribute[abs (a) - 1].AttrName, MAX_TXT_LEN);
-      fprintf (fileDescriptor, mbStr);
-#     else  /* !_I18N_ */
-      fprintf (fileDescriptor, pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
-#     endif /* !_I18N_ */
-	} 
+  if (a != 0)
+    fprintf (fileDescriptor, pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
 }
 
 
@@ -2381,36 +2180,17 @@ FILE               *fileDescriptor;
    wrnomboite ecrit au terminal le nom de la boite de presentation 
    de numero b.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrnomboite (int b, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrnomboite (b, fileDescriptor)
-int                 b;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrnomboite (int b, FILE *fileDescriptor)
 {
-	if (b > 0) {
-#     ifdef _I18N_
-      char mbStr [MAX_TXT_LEN];
-      wcstombs (mbStr, pSc1->PsPresentBox[b - 1].PbName, MAX_TXT_LEN);
-      fprintf (fileDescriptor, mbStr);
-#     else  /* !_I18N_ */
-      fprintf (fileDescriptor, pSc1->PsPresentBox[b - 1].PbName);
-#     endif /* !_I18N_ */
-	} 
+  if (b > 0)
+    fprintf (fileDescriptor, pSc1->PsPresentBox[b - 1].PbName);
 }
 
 
 /*----------------------------------------------------------------------
    wrModeHerit ecrit au terminal un mode d'heritage.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrModeHerit (InheritMode M, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrModeHerit (M, fileDescriptor)
-InheritMode         M;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrModeHerit (InheritMode M, FILE *fileDescriptor)
 {
    switch (M)
 	 {
@@ -2436,13 +2216,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrsize ecrit au terminal la regle de taille pointee par pR.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrsize (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrsize (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrsize (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -2499,13 +2273,7 @@ FILE               *fileDescriptor;
    wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrfontstyle (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrfontstyle (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -2654,13 +2422,7 @@ FILE               *fileDescriptor;
    wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrnbherit (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrnbherit (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrnbherit (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      if (pR->PrInhPercent)
@@ -2706,14 +2468,7 @@ FILE               *fileDescriptor;
    wrminind ecrit au terminal la regle 'NoBreak1, NoBreak2 ou      
    Indent pointee par pR.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrminind (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrminind (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
-
+static void wrminind (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
@@ -2742,14 +2497,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    WrPos ecrit au terminal la position pos.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WrPos (PosRule pos, ThotBool Def, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         WrPos (pos, Def, fileDescriptor)
-PosRule             pos;
-ThotBool             Def;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 {
    if (Def)
      {
@@ -2797,14 +2545,8 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrdimens ecrit au terminal la dimension Dim.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrdimens (DimensionRule Dim, ThotBool Hauteur, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrdimens (Dim, Hauteur, fileDescriptor)
-DimensionRule       Dim;
-ThotBool             Hauteur;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
+		      FILE *fileDescriptor)
 {
    if (Dim.DrPosition)
       WrPos (Dim.DrPosRule, True, fileDescriptor);
@@ -2877,13 +2619,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrCondition                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrCondition (PtrCondition pCond, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrCondition (pCond, fileDescriptor)
-PtrCondition        pCond;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 {
    if (!pCond->CoNotNegative)
       fprintf (fileDescriptor, "NOT ");
@@ -2963,19 +2699,10 @@ FILE               *fileDescriptor;
 		 }
 	       if (pCond->CoTypeAncestor == 0)
 		 {
-#           ifdef _I18N_
-            wcstombs (mbsTmpStr, pCond->CoAncestorName, MAX_TXT_LEN);
-		    fprintf (fileDescriptor, mbsTmpStr);
-		    fprintf (fileDescriptor, "(");
-            wcstombs (mbsTmpStr, pCond->CoSSchemaName, MAX_TXT_LEN);
-		    fprintf (fileDescriptor, mbsTmpStr);
-		    fprintf (fileDescriptor, ")");
-#           else  /* !_I18N_ */
 		    fprintf (fileDescriptor, pCond->CoAncestorName);
 		    fprintf (fileDescriptor, "(");
 		    fprintf (fileDescriptor, pCond->CoSSchemaName);
 		    fprintf (fileDescriptor, ")");
-#           endif /* !_I18N_ */
 		 }
 	       else
 		  wrnomregle (pCond->CoTypeAncestor, fileDescriptor);
@@ -3019,13 +2746,7 @@ FILE               *fileDescriptor;
    wrFonctPres ecrit au terminal la fonction de presentation       
    contenue dans la regle pointee par pR.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrFonctPres (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrFonctPres (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 {
    int                 i;
 
@@ -3119,12 +2840,7 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "(");
 	if (pR->PrNPresBoxes == 0)
 	  {
-#        ifdef _I18N_
-         wcstombs (mbsTmpStr, pR->PrPresBoxName, MAX_TXT_LEN);
-	     fprintf (fileDescriptor, mbsTmpStr);
-#        else  /* !_I18N_ */
 	     fprintf (fileDescriptor, pR->PrPresBoxName);
-#        endif /* !_I18N_ */
 	     if (pR->PrExternal || !pR->PrElement)
 		fprintf (fileDescriptor, "(****)");
 	  }
@@ -3147,13 +2863,7 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrajust ecrit au terminal la regle d'ajustement des lignes.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrajust (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrajust (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrajust (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
@@ -3183,13 +2893,7 @@ FILE               *fileDescriptor;
    wrjustif ecrit la regle de justification ou hyphenation pointee 
    par pR.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrjustif (PtrPRule pR, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrjustif (pR, fileDescriptor)
-PtrPRule            pR;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrjustif (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
@@ -3207,13 +2911,7 @@ FILE               *fileDescriptor;
    wrsuiteregles ecrit au terminal la suite de regles chainees dont 
    RP pointe sur la regle de tete.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         wrsuiteregles (PtrPRule RP, FILE * fileDescriptor)
-#else  /* __STDC__ */
-static void         wrsuiteregles (RP, fileDescriptor)
-PtrPRule            RP;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 {
    PtrCondition        pCond;
 
@@ -3224,12 +2922,7 @@ FILE               *fileDescriptor;
 	if (RP->PrViewNum > 1)
 	  {
 	     fprintf (fileDescriptor, "IN ");
-#        ifdef _I18N_
-         wcstombs (mbsTmpStr,  pSc1->PsView[RP->PrViewNum - 1], MAX_TXT_LEN);
-	     fprintf (fileDescriptor, mbsTmpStr);
-#        else  /* !_I18N_ */
 	     fprintf (fileDescriptor, pSc1->PsView[RP->PrViewNum - 1]);
-#        endif /* !_I18N_ */
 	     fprintf (fileDescriptor, " ");
 	  }
 	if (RP->PrCond != NULL)
@@ -3480,20 +3173,12 @@ FILE               *fileDescriptor;
 
    Produces in a file a human-readable form of style schemas applied to 
    the current document.
-
    Parameters:
    document: the document.
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaListStyleSchemas (Document document, FILE * fileDescriptor)
-#else  /* __STDC__ */
-void                TtaListStyleSchemas (document, fileDescriptor)
-Document            document;
-FILE               *fileDescriptor;
-#endif /* __STDC__ */
+void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 {
    PtrDocument         pDoc;
    PtrHandlePSchema    pHd;

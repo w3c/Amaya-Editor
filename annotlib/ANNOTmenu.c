@@ -43,7 +43,7 @@ extern HINSTANCE hInstance;
 #include "XLink.h"
 
 /* common local variables */
-static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
+static char  s[MAX_LENGTH]; /* general purpose buffer */
 
 /************************************************************
  ** Local custom query variables
@@ -51,7 +51,7 @@ static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
 static int     CustomQueryBase;
 static ThotBool CustomQueryFlag;
-static CHAR_T  *AlgaeText;
+static char  *AlgaeText;
 
 /************************************************************
  ** Local annotation filter variables
@@ -61,7 +61,7 @@ static int      AnnotFilterBase;
 /* copies of the doc and view from which the menu was invoked */
 static Document AnnotFilterDoc;
 static View     AnnotFilterView;
-static CHAR_T   AnnotSelItem[MAX_LENGTH];
+static char   AnnotSelItem[MAX_LENGTH];
 static int      AnnotSelIndex;
 static SelType  AnnotSelType;
 
@@ -73,7 +73,7 @@ static HWND       FilterHwnd = NULL;
 
 typedef struct _typeSelector
 {
-  CHAR_T *name;
+  char *name;
   RDFResourceP type;
 } TypeSelector;
 
@@ -83,12 +83,12 @@ typedef struct _typeSelector
   callback of the annot custom query menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CustomQueryCallbackDialog (int ref, int typedata, CHAR_T *data)
+static void         CustomQueryCallbackDialog (int ref, int typedata, char *data)
 #else
 static void         CustomQueryCallbackDialog (ref, typedata, data)
 int                 ref;
 int                 typedata;
-CHAR_T              *data;
+char              *data;
 
 #endif /* __STDC__ */
 {
@@ -182,7 +182,7 @@ View         view;
 {
 #ifndef _WINDOWS
    int              i;
-   CHAR_T          *ptr;
+   char          *ptr;
 
    /* initialize the base if it hasn't yet been done */
    if (!CustomQueryBase)
@@ -192,7 +192,7 @@ View         view;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (CustomQueryBase + CustomQueryMenu,
@@ -246,7 +246,7 @@ View         view;
   /* create the radio buttons for choosing a selector */
   i = 0;
   strcpy (&s[i], "BUse standard query");
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   strcpy (&s[i], "BUse free algae query with the following text");
 
   TtaNewSubmenu (CustomQueryBase + mExpertMode,
@@ -298,7 +298,7 @@ View         view;
   Filter.
   ------------------------------------------------------------------*/
 #ifdef _WINDOWS
-static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_entries)
+static void WIN_AnnotFilterNewSelector (Document doc, char *entries, int nb_entries)
 {
   int index = 0;
   int i = 0;
@@ -311,7 +311,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_en
       SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_INSERTSTRING,
 		  i, (LPARAM) &entries[index]); 
       /* @@ JK: what does this mean? Longueur de l'intitule ?? */
-      index += ustrlen (&entries[index]) + 1;
+      index += strlen (&entries[index]) + 1;
       i++;
     }
 }
@@ -332,8 +332,8 @@ SelType  selector;
   int                   i;
   List                  *list_item;
   AnnotFilterData       *filter;
-  CHAR_T                *name;
-  CHAR_T                 status_char;
+  char                *name;
+  char                 status_char;
   int                    status;
 	   
 
@@ -355,7 +355,7 @@ SelType  selector;
     }
 
   nb_entries = 0;
-  ustrcpy (s, "");
+  strcpy (s, "");
   i = 0;
   while (list_item)
      {
@@ -386,9 +386,9 @@ SelType  selector;
 	     name = ANNOT_GetLabel (&annot_schema_list,
 				    (RDFResourceP) filter->object);
 	   else
-	     name = (CHAR_T *) filter->object;
-	   usprintf (&s[i], "%c%s", status_char, name);
-	   i += ustrlen (&s[i]) + 1;
+	     name = (char *) filter->object;
+	   sprintf (&s[i], "%c%s", status_char, name);
+	   i += strlen (&s[i]) + 1;
 	   nb_entries++;
 	 }
        list_item = list_item->next;
@@ -414,20 +414,20 @@ SelType  selector;
   ChangeAnnotVisibility
 ------------------------------------------------------------------*/
 #ifdef __STDC__
-static void ChangeAnnotVisibility (Document doc, SelType selector, CHAR_T *object, ThotBool show)
+static void ChangeAnnotVisibility (Document doc, SelType selector, char *object, ThotBool show)
 #else
 static void ChangeAnnotVisibility (doc, selector, object, show)
 Document doc;
 SelType selector;
-CHAR_T *object;
+char *object;
 ThotBool show;
 
 #endif /* __STDC__ */
 {
   List               *list_item;
   AnnotFilterData    *filter;
-  CHAR_T             *annot_url;
-  CHAR_T             *name;
+  char             *annot_url;
+  char             *name;
   AnnotMeta          *annot;
   int                 length;
   ThotBool            annot_show = TRUE;
@@ -443,7 +443,7 @@ ThotBool show;
   int		      position;
   int		      distance;
 
-  if (AnnotSelItem[0] == WC_EOS)
+  if (AnnotSelItem[0] == EOS)
     return;
 
   XLinkSchema = TtaGetSSchema ("XLink", doc);
@@ -479,9 +479,9 @@ ThotBool show;
 	name = ANNOT_GetLabel (&annot_schema_list,
 			       (RDFResourceP) filter->object);
       else
-	name = (CHAR_T *) filter->object;
+	name = (char *) filter->object;
 
-      if (filter && !ustrcasecmp (name, object + 1))
+      if (filter && !strcasecmp (name, object + 1))
 	{
 	  filter->show = show;
 	  break;
@@ -517,7 +517,7 @@ ThotBool show;
 	/* this looks like an error! */
 	continue;
       length = TtaGetTextAttributeLength (attr) + 1;
-      annot_url = TtaAllocString (length);
+      annot_url = TtaGetMemory (length);
       TtaGiveTextAttributeValue (attr, annot_url, &length);
       
       /* now look in the filters to see if we need to hide it or not */
@@ -687,7 +687,7 @@ ThotBool show;
   /* redisplay the current selector */
   BuildAnnotFilterSelector (document, AnnotSelType);
   /* and clear the selector text */
-  AnnotSelItem[0] = WC_EOS;
+  AnnotSelItem[0] = EOS;
 #ifndef _WINDOWS
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
 #endif /* !_WINDOWS */
@@ -849,12 +849,12 @@ LPARAM lParam;
    callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AnnotFilterCallbackDialog (int ref, int typedata, CHAR_T * data)
+static void         AnnotFilterCallbackDialog (int ref, int typedata, char * data)
 #else
 static void         AnnotFilterCallbackDialog (ref, typedata, data)
 int                 ref;
 int                 typedata;
-CHAR_T             *data;
+char             *data;
 #endif /* __STDC__ */
 {
   int val;
@@ -902,9 +902,9 @@ CHAR_T             *data;
 	case mFilterSelector:
 	  /* copy what was selected */
 	  if (data)
-	    ustrcpy (AnnotSelItem, data);
+	    strcpy (AnnotSelItem, data);
 	  else
-	    AnnotSelItem[0] = WC_EOS;
+	    AnnotSelItem[0] = EOS;
 	  break;
 	  
 	case mSelectFilter:
@@ -915,7 +915,7 @@ CHAR_T             *data;
 	  if (AnnotSelType != (SelType) val)
 	    {
 	      AnnotSelType = (SelType) val;
-	      AnnotSelItem[0] = WC_EOS;
+	      AnnotSelItem[0] = EOS;
 	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
 	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
 	    }
@@ -960,7 +960,7 @@ View                view;
      find this info in the callback */
   AnnotFilterDoc = document;
   AnnotFilterView = view;
-  AnnotSelItem[0] = WC_EOS;
+  AnnotSelItem[0] = EOS;
   AnnotSelIndex = -1;
   AnnotSelType = 0;
 
@@ -968,11 +968,11 @@ View                view;
 #ifndef _WINDOWS
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
@@ -994,11 +994,11 @@ View                view;
   s[0] = 'B';
   i = 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   s[i] = 'B';
   i++;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   s[i] = 'B';
   i++;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
@@ -1055,7 +1055,7 @@ Document doc;
   nb_entries = 0;
   if (typesList)
     List_delAll (&typesList, List_delCharObj);
-  ustrcpy (s, "");
+  strcpy (s, "");
   i = 0;
 
   annotClass = ANNOTATION_CLASS;
@@ -1073,9 +1073,9 @@ Document doc;
 	  t->name = ANNOT_GetLabel(&annot_schema_list, subType);
 	  List_add (&typesList, (void *) t);
 
-	  usprintf (&s[i], "B%s", t->name);
-	  i += ustrlen (&s[i]);
-	  s[i] = WC_EOS;
+	  sprintf (&s[i], "B%s", t->name);
+	  i += strlen (&s[i]);
+	  s[i] = EOS;
 	  i++;
 	  nb_entries++;
 	}
@@ -1089,9 +1089,9 @@ Document doc;
 	t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
 	List_add (&typesList, (void *) t);
 
-	ustrcpy (s, t->name);
-	i = ustrlen (s);
-	s[i] = WC_EOS;
+	strcpy (s, t->name);
+	i = strlen (s);
+	s[i] = EOS;
 	nb_entries = 1;
       }
 

@@ -1910,7 +1910,7 @@ void MathMLScriptShift (Document doc, Element el, STRING value, int attr)
        {
        ctxt->destroy = FALSE;
        /* parse the attribute value (a number followed by a unit) */
-       value = TtaSkipWCBlanks (value);
+       value = TtaSkipBlanks (value);
        value = ParseCSSUnit (value, &pval);
        if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	  {
@@ -2249,7 +2249,7 @@ void MathMLSetScriptLevel (Document doc, Element el, STRING value)
      {
      ctxt->destroy = FALSE;
      /* parse the attribute value (an optional sign and an integer) */
-     value = TtaSkipWCBlanks (value);
+     value = TtaSkipBlanks (value);
      relative = (value[0] == '-' || value[0] == '+');
      value = ParseCSSUnit (value, &pval);
      if (pval.typed_data.unit != STYLE_UNIT_REL &&
@@ -2345,7 +2345,7 @@ void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
     {
       ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
-      value = TtaSkipWCBlanks (value);
+      value = TtaSkipBlanks (value);
       value = ParseCSSUnit (value, &pval);
       /***** we should accept namedspace for width *****/
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)

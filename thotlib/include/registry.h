@@ -18,15 +18,12 @@
  */
 extern char*      TtaSkipBlanks (char* ptr);
 
-extern CHAR_T*    TtaSkipWCBlanks (CHAR_T* ptr);
-
 
 /*
  * TtaIsBlank returns True if the first character is a space, a tab, a
  * linefeed or a newline.
  */
 extern ThotBool    TtaIsBlank (char* ptr);
-extern ThotBool    TtaIsWCBlank ( CHAR_T* ptr );
 
 /*
  * TtaInitializeAppRegistry : initialize the Registry, the only argument

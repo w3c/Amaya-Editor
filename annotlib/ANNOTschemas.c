@@ -55,8 +55,8 @@ static RDFPropertyP labelP = NULL;
 /********************** global variables ***********************/
 
 List *annot_schema_list = NULL;  /* a list of schemas */
-CHAR_T *ANNOT_NS = NULL;	/* the Annotation namespace name to use */
-CHAR_T *ANNOTATION_CLASSNAME = NULL;
+char *ANNOT_NS = NULL;	/* the Annotation namespace name to use */
+char *ANNOTATION_CLASSNAME = NULL;
 RDFPropertyP PROP_name = NULL;
 RDFPropertyP PROP_firstName = NULL;
 RDFPropertyP PROP_Email = NULL;
@@ -81,7 +81,7 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
     {
       resource = (RDFResourceP) item->object;
       if (resource && resource->name 
-	  && !ustrcmp (resource->name, name))
+	  && !strcmp (resource->name, name))
 	{
 	  found = TRUE;
 	  break;
@@ -199,8 +199,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ReadSchema_callback (Document doc, int status, 
-				 CHAR_T *urlName,
-				 CHAR_T *outputfile, 
+				 char *urlName,
+				 char *outputfile, 
 				 AHTHeaders *http_headers,
 				 void * context)
 #else  /* __STDC__ */
@@ -209,8 +209,8 @@ static void ReadSchema_callback (doc, status, urlName,
 				 context)
 Document doc;
 int status;
-CHAR_T *urlName;
-CHAR_T *outputfile;
+char *urlName;
+char *outputfile;
 AHTHeaders *http_headers;
 void *context;
 
@@ -447,8 +447,8 @@ static void SetAnnotNS ()
   ANNOTATION_CLASSNAME = TtaGetMemory (strlen(ns_name)
 				       + strlen(ANNOT_LOCAL_NAME)
 				       + 1);
-  ustrcpy (ANNOTATION_CLASSNAME, ns_name);
-  ustrcat (ANNOTATION_CLASSNAME, ANNOT_LOCAL_NAME);
+  strcpy (ANNOTATION_CLASSNAME, ns_name);
+  strcat (ANNOTATION_CLASSNAME, ANNOT_LOCAL_NAME);
 
   ANNOTATION_CLASS = ANNOT_FindRDFResource (&annot_schema_list,
 					    ANNOTATION_CLASSNAME,
@@ -476,11 +476,11 @@ void SCHEMA_InitSchemas (doc)
      Document doc;
 #endif /* __STDC__ */
 {
-  CHAR_T* thotdir;
-  CHAR_T *app_home;
+  char* thotdir;
+  char *app_home;
   FILE *fp;
   int len;
-  CHAR_T *buffer;
+  char *buffer;
 
   thotdir = TtaGetEnvString ("THOTDIR");
   app_home = TtaGetEnvString ("APP_HOME");
@@ -502,11 +502,11 @@ void SCHEMA_InitSchemas (doc)
   len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
 
   buffer = TtaGetMemory(len);
-  usprintf (buffer, "%s%cannot.schemas", app_home, DIR_SEP);
+  sprintf (buffer, "%s%cannot.schemas", app_home, DIR_SEP);
 
   if (!TtaFileExist (buffer))
     {
-      usprintf (buffer, "%s%cconfig%cannot.schemas",
+      sprintf (buffer, "%s%cconfig%cannot.schemas",
 		thotdir, DIR_SEP, DIR_SEP);
 
       if (!TtaFileExist (buffer))
@@ -706,7 +706,7 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
     {
       List_delAll (&r->class->instances, NULL);
       List_delAll (&r->class->subClasses, NULL);
-      TtaFreeMemory ((CHAR_T *)r->class);
+      TtaFreeMemory ((char *)r->class);
     }
   return TRUE;
 }

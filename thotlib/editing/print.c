@@ -68,7 +68,7 @@ int          LastPageNumber, LastPageWidth, LastPageHeight;
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
 static int          NumberOfPages;
-static CHAR_T       tempDir [MAX_PATH];
+static char       tempDir [MAX_PATH];
 static ThotBool     removeDirectory;
 
 /* table des vues a imprimer */
@@ -83,7 +83,7 @@ static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
 static int           CurAssocNum;	/* No d'element associe de la vue traitee */
 static int           CurrentFrame;	/* No frame contenant la vue traitee */
-static STRING        printer;
+static char         *printer;
 static ThotWindow    thotWindow;
 
 #include "absboxes_f.h"
@@ -126,12 +126,12 @@ static ThotWindow    thotWindow;
 #endif /* _WINDOWS */
 
 static int          manualFeed;
-static CHAR_T       pageSize [3];
+static char       pageSize [3];
 static int          BlackAndWhite;
 static int          HorizShift;
 static int          VertShift;
 static int          Zoom;
-static STRING       Orientation;
+static char        *Orientation;
 static int          NPagesPerSheet;
 static int          NoEmpyBox;
 static int          Repaginate;
@@ -152,11 +152,11 @@ static int       pg_counter;
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-void WinErrorBox (HWND hWnd, STRING source)
+void WinErrorBox (HWND hWnd, char *source)
 {
-   CHAR_T                str[200];
+   char                str[200];
 
-   usprintf (str, "Error - Source: %s", source);
+   sprintf (str, "Error - Source: %s", source);
    MessageBox (hWnd, str, "Amaya", MB_OK);
 
 }
@@ -447,7 +447,7 @@ static int XWindowFatalError (Display *dpy)
 
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
-static void usage (STRING processName) 
+static void usage (char *processName) 
 {
        fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
        fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
@@ -526,7 +526,7 @@ void DestroyFrame (int frame)
 /*----------------------------------------------------------------------
    FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
-static void FirstFrame (STRING server)
+static void FirstFrame (char *server)
 {
    int                 i;
 
@@ -630,8 +630,8 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
   ViewFrame          *pFrame;
 #ifndef _WINDOWS
   FILE               *PSfile;
-  CHAR_T              tmp[MAX_PATH];
-  CHAR_T              fileName[256];
+  char              tmp[MAX_PATH];
+  char              fileName[256];
   int                 len;
 #endif /* _WINDOWS */
   int                 i;
@@ -645,12 +645,12 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
   if (i == 1)
     {
       /* On construit le nom du fichier PostScript */
-      ustrcpy (tmp, DocumentPath);
+      strcpy (tmp, DocumentPath);
       /* On cherche le directory ou existe le .PIV */
       MakeCompleteName (pDoc->DocDName, "PIV", tmp, fileName, &len);
       /* On construit le nom complet avec ce directory */
       FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);	/* ps au lieu de PIV */
-      if ((PSfile = ufopen (fileName, "w")) == NULL)
+      if ((PSfile = fopen (fileName, "w")) == NULL)
 	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
 	{
@@ -1344,7 +1344,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 
 	  if (manualFeed == 0)
 	    {
-	      if (!ustrcmp (pageSize, "A3"))
+	      if (!strcmp (pageSize, "A3"))
 		fprintf (PSfile, "a3tray\n");
 	    }
 	  else
@@ -1613,7 +1613,7 @@ static void PrintView (PtrDocument pDoc)
      /* on traite une vue d'elements associes */
      {
        pEl = pDoc->DocAssocRoot[CurAssocNum - 1];
-       ustrncpy (viewName,
+       strncpy (viewName,
 		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 		 MAX_NAME_LENGTH);
        rootAbsBox = pDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
@@ -1628,7 +1628,7 @@ static void PrintView (PtrDocument pDoc)
        pEl = pDoc->DocDocElement;
        pViewD = &pDoc->DocView[CurrentView - 1];
        pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
-       ustrncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
+       strncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
 		 MAX_NAME_LENGTH);
        pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
 			 CurrentView, TRUE, TRUE, &full);
@@ -1830,7 +1830,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 	{
 	  pPSchema = PresentationSchema (pSS, pDoc);
 	  for (schView = 0; schView < pPSchema->PsNViews && !found;)
-	    if (!ustrcmp (PrintViewName[v], pPSchema->PsView[schView]))
+	    if (!strcmp (PrintViewName[v], pPSchema->PsView[schView]))
 	      found = TRUE;
 	    else schView++ ;
 	  if (!found)
@@ -1875,7 +1875,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 		rule = pSS->SsFirstDynNature - 1;
 	      /* boucle sur les regles a la recherche de ce nom */
 	      do
-		if (ustrcmp (pSS->SsRule[rule - 1].SrName, PrintViewName[v]) == 0)
+		if (strcmp (pSS->SsRule[rule - 1].SrName, PrintViewName[v]) == 0)
 		  found = TRUE;
 		else
 		  rule--;
@@ -2034,7 +2034,7 @@ void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
 
 #ifdef PRINT_DEBUG
 FILE     *list;
-CHAR_T      localname[50];
+char      localname[50];
 static int       n = 1;
 
    sprintf (localname, "/local_home/vatton/.amaya/printpave%d.debug", n);
@@ -2210,7 +2210,7 @@ static int       n = 1;
    ClientSend
    Send a message to the editor.
   ----------------------------------------------------------------------*/
-static void  ClientSend (ThotWindow clientWindow, STRING name, int messageID)
+static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
 {
 #ifndef _WINDOWS
    Atom                atom;
@@ -2240,7 +2240,7 @@ static void  ClientSend (ThotWindow clientWindow, STRING name, int messageID)
    DisplayConfirmMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-void DisplayConfirmMessage (STRING text)
+void DisplayConfirmMessage (char *text)
 {
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
 }
@@ -2249,10 +2249,10 @@ void DisplayConfirmMessage (STRING text)
    DisplayMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-void DisplayMessage (STRING text, int msgType)
+void DisplayMessage (char *text, int msgType)
 {
 #ifndef _WINDOWS
-  CHAR_T              cmd[800];
+  char              cmd[800];
 #endif /* _WINDOWS */
 
   if (msgType == FATAL)
@@ -2328,31 +2328,31 @@ static void LoadReferedDocuments (PtrDocument pDoc)
    Main program                                                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING *argv, HDC PrinterDC,
-			 ThotBool isTrueColors, int depth, STRING tmpDocName,
-			 STRING tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
+			 ThotBool isTrueColors, int depth, char *tmpDocName,
+			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
 #else  /* _WINDOWS */
-int                 main (int argc, char **argv)
+int main (int argc, char **argv)
 #endif /* _WINDOWS */
 {
-  STRING              realName = (STRING) NULL;
-  STRING              server = (STRING) NULL;
-  STRING              pChar = (STRING) NULL;
-  STRING              destination = (STRING) NULL;
-  CHAR_T              option [100];
-  CHAR_T              name [MAX_PATH];             
-  CHAR_T              cmd[800];
-  CHAR_T              tempFile [MAX_PATH];
-  int                 i, l;
-  int                 argCounter;
-  int                 viewsCounter = 0;
-  int                 cssCounter = 0;
-  int                 index;
-  int                 length;
-  int                 NCopies = 1;
-  ThotBool            realNameFound = FALSE;
-  ThotBool            viewFound = FALSE;
-  ThotBool            done;
+  char             *realName = NULL;
+  char             *server = NULL;
+  char             *pChar = NULL;
+  char             *destination = NULL;
+  char              option [100];
+  char              name [MAX_PATH];             
+  char              cmd[800];
+  char              tempFile [MAX_PATH];
+  int               i, l;
+  int               argCounter;
+  int               viewsCounter = 0;
+  int               cssCounter = 0;
+  int               index;
+  int               length;
+  int               NCopies = 1;
+  ThotBool          realNameFound = FALSE;
+  ThotBool          viewFound = FALSE;
+  ThotBool          done;
 
 #ifdef _WINDOWS 
   TtPrinterDC = PrinterDC;
@@ -2387,7 +2387,7 @@ int                 main (int argc, char **argv)
   HorizShift     = 0;
   VertShift      = 0;
   Zoom           = 100;
-  ustrcpy (pageSize, "A4");
+  strcpy (pageSize, "A4");
   Orientation    = "Portrait";
   PoscriptFont = NULL;
   ColorPs = -1;
@@ -2407,7 +2407,7 @@ int                 main (int argc, char **argv)
   argCounter = 1;
 
   /* if present the argument -lang should be the first */
-  if (!ustrcmp (argv[argCounter], "-lang"))
+  if (!strcmp (argv[argCounter], "-lang"))
     {
       argCounter++;
       TtaSetEnvString ("LANG", argv[argCounter++], TRUE);
@@ -2421,34 +2421,34 @@ int                 main (int argc, char **argv)
       if (argv[argCounter][0] == '-')
 	{
 	  /* the argument is a parameter */
-	  if (!ustrcmp (argv[argCounter], "-display"))
+	  if (!strcmp (argv[argCounter], "-display"))
 	    {
 	      /* The display is distant */
 	      argCounter++;
-	      server = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-	      ustrcpy (server, argv[argCounter++]);
+	      server = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      strcpy (server, argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-name"))
+	  else if (!strcmp (argv[argCounter], "-name"))
 	    {
 	      realNameFound = TRUE;
 	      argCounter++;
-	      realName = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-	      ustrcpy (realName, argv[argCounter++]);
+	      realName = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      strcpy (realName, argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-ps"))
+	  else if (!strcmp (argv[argCounter], "-ps"))
 	    {
 	      /* The destination is postscript file */
 	      destination = "PSFILE";
 	      argCounter++;
-	      printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-	      ustrcpy (printer, argv[argCounter++]);
+	      printer = TtaGetMemory (strlen (argv[argCounter]) + 1);
+	      strcpy (printer, argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-out"))
+	  else if (!strcmp (argv[argCounter], "-out"))
 	    {
 	      /* The destination is a printer */
 	      destination = "PRINTER";
 	      argCounter++;
-	      l = ustrlen (argv[argCounter]);
+	      l = strlen (argv[argCounter]);
 	      if (argv[argCounter][0] == '"' &&
 		  argv[argCounter][l - 1] != '"')
 		{
@@ -2460,88 +2460,88 @@ int                 main (int argc, char **argv)
 		    {
 		      i++;
 		      length = length + l + 1; /* +1 for the space */
-		      l = ustrlen (argv[argCounter+1]);
+		      l = strlen (argv[argCounter+1]);
 		    }
 		  /* store the printer name */
 		  length += l;
-		  printer = TtaAllocString (length + 1);
-		  ustrcpy (printer, &argv[argCounter++][1]);
+		  printer = TtaGetMemory (length + 1);
+		  strcpy (printer, &argv[argCounter++][1]);
 		  for (l = 1; l <= i; l++)
 		    {
-		      ustrcat (printer, " ");
-		      ustrcat (printer, argv[argCounter++]);
+		      strcat (printer, " ");
+		      strcat (printer, argv[argCounter++]);
 		    }
 		  /* remove the last '"' */
 		  printer[length-1] = EOS;
 		}
 	      else
 		{
-		  printer = TtaAllocString (l + 1);
-		  ustrcpy (printer, argv[argCounter++]);
+		  printer = TtaGetMemory (l + 1);
+		  strcpy (printer, argv[argCounter++]);
 		}
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-v"))
+	  else if (!strcmp (argv[argCounter], "-v"))
 	    {
 	      /* At least one view must be given in the command line */
 	      viewFound = TRUE;
 	      argCounter++;
-	      ustrcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
+	      strcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-css"))
+	  else if (!strcmp (argv[argCounter], "-css"))
 	    {
                   /* CSS files given in the command line */
                   argCounter++;
-                  ustrcpy (CSSName [cssCounter++], argv[argCounter++]);
+                  strcpy (CSSName [cssCounter++], argv[argCounter++]);
            }
-	  else if (!ustrcmp (argv[argCounter], "-npps"))
+	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
 	      argCounter++;
 	      NPagesPerSheet = uatoi (argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-bw"))
+	  else if (!strcmp (argv[argCounter], "-bw"))
 	    {
 	      argCounter++;
 	      BlackAndWhite = 1;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-manualfeed"))
+	  else if (!strcmp (argv[argCounter], "-manualfeed"))
 	    {
 	      argCounter++;
 	      manualFeed = 1;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-emptybox"))
+	  else if (!strcmp (argv[argCounter], "-emptybox"))
 	    {
 	      argCounter++;
 	      NoEmpyBox = 0;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-paginate"))
+	  else if (!strcmp (argv[argCounter], "-paginate"))
 	    {
 	      argCounter++;
 	      Repaginate = 1;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-landscape"))
+	  else if (!strcmp (argv[argCounter], "-landscape"))
 	    {
 	      Orientation = "Landscape";
 	      argCounter++;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-removedir"))
+	  else if (!strcmp (argv[argCounter], "-removedir"))
 	    {
 	      removeDirectory = TRUE;
 	      argCounter++;
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-portrait"))
+	  else if (!strcmp (argv[argCounter], "-portrait"))
 	    /* Orientation is already set to Portrait value */ 
 	    argCounter++;
-	  else if (!ustrcmp (argv[argCounter], "-sch"))
+	  else if (!strcmp (argv[argCounter], "-sch"))
 	    {
 	      /* flag for schema directories */
 	      argCounter++;
-	      ustrcpy (SchemaPath, argv[argCounter++]);
+	      strcpy (SchemaPath, argv[argCounter++]);
 	    }
-	  else if (!ustrcmp (argv[argCounter], "-doc"))
+	  else if (!strcmp (argv[argCounter], "-doc"))
 	    {
 	      /* flag for document directories */
 	      argCounter++;
-	      ustrcpy (DocumentDir, argv[argCounter++]);
+	      strcpy (DocumentDir, argv[argCounter++]);
 	    }
 	  else
 	    {
@@ -2557,7 +2557,7 @@ int                 main (int argc, char **argv)
 		case 'L': LastPrinted = uatoi (option);
 		  argCounter++;
 		  break;
-		case 'P': ustrcpy (pageSize, option);
+		case 'P': strcpy (pageSize, option);
 		  argCounter++;
 		  break;
 		case '#': NCopies = uatoi (option);
@@ -2598,11 +2598,11 @@ int                 main (int argc, char **argv)
     usage (argv[0]);
 #endif /* _WINDOWS */
   
-  length = ustrlen (name);
+  length = strlen (name);
   if (!realNameFound)
     {
-      realName = TtaAllocString (length + 1);
-      ustrcpy (realName, name);
+      realName = TtaGetMemory (length + 1);
+      strcpy (realName, name);
     }
 
   done   = FALSE;
@@ -2649,11 +2649,11 @@ int                 main (int argc, char **argv)
    if (TheDoc != NULL)
      {
        /* add its directory into the DocumentPath */
-       l = ustrlen (DocumentDir);
+       l = strlen (DocumentDir);
        if (l == 0)
-         ustrcpy (DocumentPath, tempDir);
+         strcpy (DocumentPath, tempDir);
        else
-         usprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+         sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
 
        if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
          TheDoc = NULL;
@@ -2676,10 +2676,10 @@ int                 main (int argc, char **argv)
        /* Start the printing process */
        if (PrintDocument (TheDoc, viewsCounter) == 0)
 	 {
-	   if (!ustrcmp (destination, "PSFILE"))
+	   if (!strcmp (destination, "PSFILE"))
 	     {
 #ifdef _WINDOWS 
-	       usprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+	       sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
 	       CopyFile (cmd, printer, FALSE);
 #else  /* !_WINDOWS */
 	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
@@ -2706,7 +2706,7 @@ int                 main (int argc, char **argv)
 	 }
        else
 	 {
-           usprintf(tempFile, "%s/%s.ps", tempDir, name);
+           sprintf(tempFile, "%s/%s.ps", tempDir, name);
 	   ClientSend (thotWindow, tempFile, TMSG_CANNOT_CREATE_PS);
 	 }
      }
@@ -2715,19 +2715,20 @@ int                 main (int argc, char **argv)
    if (removeDirectory)
     {
 #ifdef _WINDOWS
-      if (!ustrcmp (destination, "PSFILE"))
+      if (!strcmp (destination, "PSFILE"))
 		  DeleteFile (cmd);
-      else {
-           int cssNDX;
-           STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
-           usprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
-           DeleteFile (pivDoc);
-           for (cssNDX = 0; cssNDX < MAX_CSS; cssNDX++)
-               if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS &&
-				   TtaFileExist (CSSName[cssNDX]))
-                  DeleteFile (CSSName[cssNDX]); 
-           if (urmdir (tempDir))
-              WinErrorBox (NULL, "PrintDoc (4)");
+      else
+	{
+	  int cssNDX;
+	  char *pivDoc = TtaGetMemory (strlen (tmpDocName) + strlen (tmpDir) + 6);
+	  sprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
+	  DeleteFile (pivDoc);
+	  for (cssNDX = 0; cssNDX < MAX_CSS; cssNDX++)
+	    if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS &&
+		TtaFileExist (CSSName[cssNDX]))
+	      DeleteFile (CSSName[cssNDX]); 
+	  if (urmdir (tempDir))
+	    WinErrorBox (NULL, "PrintDoc (4)");
       }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);

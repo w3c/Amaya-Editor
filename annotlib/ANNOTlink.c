@@ -73,20 +73,20 @@ static void LINK_CreateAName (AnnotMeta *annot)
 char  *LINK_GetAnnotationIndexFile (char *source_url)
 {
   int found;
-  CHAR_T *annot_dir;
-  CHAR_T *annot_main_index;
-  CHAR_T *annot_main_index_file;
-  CHAR_T url[MAX_LENGTH];
-  CHAR_T buffer[MAX_LENGTH];
-  CHAR_T *index_file;
+  char *annot_dir;
+  char *annot_main_index;
+  char *annot_main_index_file;
+  char url[MAX_LENGTH];
+  char buffer[MAX_LENGTH];
+  char *index_file;
   FILE *fp;
   
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
-					+ ustrlen (annot_main_index) 
+  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+					+ strlen (annot_main_index) 
 					+ 10);
-  usprintf (annot_main_index_file, "%s%c%s", 
+  sprintf (annot_main_index_file, "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP,  
 	    annot_main_index);
@@ -103,7 +103,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 	      /* convert local URLs into local file system */
 	      WWWToLocal (url);
 	      WWWToLocal (index_file);
-	      if (!ustrcasecmp (source_url, url))
+	      if (!strcasecmp (source_url, url))
 		{
 		  found = 1;
 		  break;
@@ -131,22 +131,22 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
   -----------------------------------------------------------------------*/
 static void AddAnnotationIndexFile (char *source_url, char *index_file)
 {
-  CHAR_T *annot_dir;
-  CHAR_T *annot_main_index;
-  CHAR_T *annot_main_index_file;
-  CHAR_T *www_source_url;
-  CHAR_T *www_index_file;
+  char *annot_dir;
+  char *annot_main_index;
+  char *annot_main_index_file;
+  char *www_source_url;
+  char *www_index_file;
 
   FILE *fp;
   
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
-					+ ustrlen (annot_main_index)
+  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+					+ strlen (annot_main_index)
 					+ 10);
   www_source_url = LocalToWWW (source_url);
   www_index_file = LocalToWWW (index_file);
-  usprintf (annot_main_index_file, 
+  sprintf (annot_main_index_file, 
 	    "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP, 
@@ -178,8 +178,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
-  CHAR_T       *annot_user;
-  CHAR_T       *docSchemaName;
+  char       *annot_user;
+  char       *docSchemaName;
   int          c1, cN;
   SSchema      XLinkSchema;
 
@@ -236,7 +236,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	in the struct tree */
       TtaInsertSibling (anchor, el, TRUE, source_doc);
     }
-  else if (!ustrcmp (docSchemaName, "MathML"))
+  else if (!strcmp (docSchemaName, "MathML"))
     {
       /* An annotation on a MathMl structure. We backtrace the tree
 	 until we find the Math root element and then add the annotation as 
@@ -251,7 +251,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	}
       TtaInsertFirstChild (&anchor, el, source_doc);
     }
-  else if (!ustrcmp (docSchemaName, "GraphML"))
+  else if (!strcmp (docSchemaName, "GraphML"))
     {
       /* An annotation on a GraphMl structure. We backtrace the tree
 	 until we find the Math root element and then add the annotation as
@@ -456,11 +456,11 @@ void LINK_SaveLink (Document source_doc)
 void LINK_DeleteLink (Document source_doc)
 {
   char   *doc_index;
-  CHAR_T buffer[255];
-  CHAR_T *annot_dir;
-  CHAR_T *main_index;
-  CHAR_T *main_index_file_old;
-  CHAR_T *main_index_file_new;
+  char buffer[255];
+  char *annot_dir;
+  char *main_index;
+  char *main_index_file_old;
+  char *main_index_file_new;
   int len;
   int error;
   FILE *fp_old;
@@ -475,20 +475,20 @@ void LINK_DeleteLink (Document source_doc)
   error = 0;
   annot_dir = GetAnnotDir ();
   main_index = GetAnnotMainIndex ();
-  main_index_file_old = TtaGetMemory (ustrlen (annot_dir) 
-					+ ustrlen (main_index)
+  main_index_file_old = TtaGetMemory (strlen (annot_dir) 
+					+ strlen (main_index)
 					+ 10);
 
-  main_index_file_new = TtaGetMemory (ustrlen (annot_dir) 
-				      + ustrlen (main_index)
+  main_index_file_new = TtaGetMemory (strlen (annot_dir) 
+				      + strlen (main_index)
 				      + 14);
-  usprintf (main_index_file_old, 
+  sprintf (main_index_file_old, 
 	    "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP, 
 	    main_index);
 
-  usprintf (main_index_file_new, 
+  sprintf (main_index_file_new, 
 	    "%s%c%s.tmp", 
 	    annot_dir, 
 	    DIR_SEP, 
@@ -506,10 +506,10 @@ void LINK_DeleteLink (Document source_doc)
   if (!error)
     {
       /* search and remove the index entry */
-      len = ustrlen (DocumentURLs[source_doc]);
+      len = strlen (DocumentURLs[source_doc]);
       while (fgets (buffer, sizeof (buffer), fp_old))
 	{
-	  if (ustrncmp (DocumentURLs[source_doc], buffer, len))
+	  if (strncmp (DocumentURLs[source_doc], buffer, len))
 	    fputs (buffer, fp_new);
 	}
       fclose (fp_new);
@@ -533,7 +533,7 @@ void LINK_DeleteLink (Document source_doc)
 AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, ThotBool useDocRoot)
 {
   AnnotMeta   *annot;
-  CHAR_T      *annot_user;
+  char      *annot_user;
   
   /*
   **  Make a new annotation entry, add it to annotlist, and initialize it.
@@ -543,7 +543,7 @@ AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, ThotBool us
       (!AnnotMetaData[source_doc].annotations 
        && !AnnotMetaData[source_doc].local_annot_loaded))
     {
-      CHAR_T *annotIndex;
+      char *annotIndex;
 
       /* download the local annotations, if they do exist, but mark them
 	 invisible */
@@ -622,7 +622,7 @@ void LINK_DelMetaFromMemory (Document doc)
    it parses it and then, if the variable mark_visible is set true, adds
    links to them from the source document.
   -----------------------------------------------------------------------*/
-void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex, ThotBool mark_visible)
+void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_visible)
 {
   View    view;
   Element body;
@@ -706,17 +706,17 @@ void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex, ThotBool mark_v
    Returns the element corresponding to the annotation anchor in the
    source document if the return_el flag is set to TRUE.
   -----------------------------------------------------------------------*/
-Element LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url, 
+Element LINK_SelectSourceDoc (Document doc, CONST char *annot_url, 
 			      ThotBool return_el)
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;
-  CHAR_T *url;
+  char *url;
   Element el = NULL;
   ThotBool selected = FALSE;
 
   if (IsW3Path (annot_url) || IsFilePath (annot_url))
-    url = (CHAR_T *) annot_url;
+    url = (char *) annot_url;
   else
     url = ANNOT_MakeFileURL (annot_url);
 

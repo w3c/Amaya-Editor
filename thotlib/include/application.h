@@ -143,12 +143,8 @@ extern ThotBool TtaIsPrinting ();
 
 extern void*     TtaGetMemory (unsigned int size);
 extern void      TtaFreeMemory (void *buffer);
-extern STRING    TtaAllocString ( unsigned int n );
 extern void*     TtaRealloc (void *ptr, unsigned int n);
 extern char*     TtaStrdup (char* str);
-extern CHAR_T*   TtaWCSdup (CHAR_T* str);
-extern char*     TtaWC2ISOdup (CHAR_T* str);
-extern CHAR_T*   TtaISO2WCdup (char* str);
 
 #endif /* __CEXTRACT__ */
 

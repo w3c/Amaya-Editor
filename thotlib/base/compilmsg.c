@@ -37,7 +37,7 @@ void DisplayConfirmMessage (char *text)
 
   if ( COMPWnd)
     {		
-      LPTSTR pText = (LPTSTR) malloc (ustrlen(text) + 3);
+      LPTSTR pText = (LPTSTR) malloc (strlen(text) + 3);
       if ( pText)
 	{
 	  /* Set caret to end of current text */
@@ -45,7 +45,7 @@ void DisplayConfirmMessage (char *text)
 	  SetFocus (COMPWnd);   
 	  SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
 	  /* Append text */
-	  usprintf (pText, "%s\r\n", text);
+	  sprintf (pText, "%s\r\n", text);
 	  SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 	  free( pText );
 	}
@@ -73,7 +73,7 @@ void DisplayMessage (char *text, int msgType)
       SetFocus (COMPWnd);   
       SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
       /* Append text */
-      usprintf (pText, "%s\r\n", text);
+      sprintf (pText, "%s\r\n", text);
       SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
     }
 #else  /* _WINDOWS */

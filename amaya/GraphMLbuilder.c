@@ -743,7 +743,7 @@ void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipWCBlanks (ptr);
+      ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
@@ -860,7 +860,7 @@ ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, 
       TtaGiveTextAttributeValue (attr, text, &length); 
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      ptr = TtaSkipWCBlanks (ptr);
+      ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	 {
@@ -979,24 +979,24 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
 	   pval.typed_data.unit = STYLE_UNIT_PX;
 	   pval.typed_data.real = FALSE;
 	   ptr += 9;
-	   ptr = TtaSkipWCBlanks (ptr);
+	   ptr = TtaSkipBlanks (ptr);
 	   if (*ptr == '(')
 	     {
 	       ptr++;
 	       ctxt = TtaGetSpecificStyleContext (doc);
-	       ptr = TtaSkipWCBlanks (ptr);
+	       ptr = TtaSkipBlanks (ptr);
 	       ptr = GetNumber (ptr, &x);
 	       pval.typed_data.value = x;
 	       /* the specific presentation is not a CSS rule */
 	       ctxt->cssLevel = 0;
 	       ctxt->destroy = delete;
 	       TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
-	       ptr = TtaSkipWCBlanks (ptr);
+	       ptr = TtaSkipBlanks (ptr);
 	       if (*ptr == ')')
 		 pval.typed_data.value = 0;
 	       else
 		 {
-		   ptr = TtaSkipWCBlanks (ptr);
+		   ptr = TtaSkipBlanks (ptr);
 		   ptr = GetNumber (ptr, &y);
 		   pval.typed_data.value = y;
 		 }
@@ -1038,7 +1038,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute content */
       ptr = text;
-      ptr = TtaSkipWCBlanks (ptr);
+      ptr = TtaSkipBlanks (ptr);
       command = *ptr;
       ptr++;
       prevCommand = EOS;
@@ -1054,7 +1054,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'm':
 	     /* moveto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
 	     if (relative)
 	       {
 	       x = xcur;
@@ -1088,7 +1088,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'l':
 	     /* lineto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
 	     if (relative)
@@ -1108,7 +1108,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'h':
 	     /* horizontal lineto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &x);
 	     if (relative)
 	       x += xcur;
@@ -1123,7 +1123,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'v':
 	     /* vertical lineto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &y);
 	     if (relative)
 	       y += ycur;
@@ -1138,7 +1138,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'c':
 	     /* curveto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &x1);
              ptr = GetNumber (ptr, &y1);
              ptr = GetNumber (ptr, &x2);
@@ -1171,7 +1171,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 's':
 	     /* smooth curveto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &x2);
              ptr = GetNumber (ptr, &y2);
 	     ptr = GetNumber (ptr, &x);
@@ -1212,7 +1212,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'q':
 	     /* quadratic Bezier curveto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &x1);
              ptr = GetNumber (ptr, &y1);
 	     ptr = GetNumber (ptr, &x);
@@ -1239,7 +1239,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 't':
 	     /* smooth quadratic Bezier curveto */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
 	     if (relative)
@@ -1274,7 +1274,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'a':
 	     /* elliptical arc */
-             ptr = TtaSkipWCBlanks (ptr);
+             ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &rx);            /* must be non-negative */
              ptr = GetNumber (ptr, &ry);            /* must be non-negative */
              ptr = GetNumber (ptr, &xAxisRotation);
@@ -1309,7 +1309,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* don't expect coordinates after a close path command, only
 		a new command or end of the string */
 	     {
-             ptr = TtaSkipWCBlanks (ptr);	     
+             ptr = TtaSkipBlanks (ptr);	     
 	     command = *ptr;
 	     ptr++;
 	     }

@@ -399,7 +399,7 @@ typedef struct _DocumentMetaDataElement
 #endif /* ANNOTATIONS */
 } DocumentMetaDataElement;
 
-#define DocumentTableLength 10
+#define DocumentTableLength MAX_DOCUMENTS
 /* URL of each loaded document */
 THOT_EXPORT char                    *DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */

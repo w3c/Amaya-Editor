@@ -19,7 +19,6 @@
 #define MAX_ASSOC_DOC 1  	/* max. number of associated element types for
 				   a document */
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
-#define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
 #define MAX_SEL_ELEM 150	/* max. number of elements that can be selected
 				   simultaneously */
@@ -28,7 +27,6 @@
 #define MAX_ASSOC_DOC 1  	/* max. number of associated element types for
 				   a document */
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
-#define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
 #define MAX_SEL_ELEM 150	/* max. number of elements that can be selected
 				   simultaneously */

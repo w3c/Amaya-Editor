@@ -41,8 +41,8 @@ extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pNextPageAb,
                            PtrAbstractBox rootAbsBox,
                            int clipOrg );
-extern void DisplayConfirmMessage ( STRING text );
-extern void DisplayMessage ( STRING text,
+extern void DisplayConfirmMessage ( char *text );
+extern void DisplayMessage ( char *text,
                              int msgType );
 extern void TtaError ( int errorCode );
 extern int main ( int argc,
@@ -85,8 +85,8 @@ extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pNextPageAb,
                              PtrAbstractBox rootAbsBox,
                              int clipOrg */);
-extern void DisplayConfirmMessage (/* STRING text */);
-extern void DisplayMessage (/* STRING text,
+extern void DisplayConfirmMessage (/* char *text */);
+extern void DisplayMessage (/* char *text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
 extern int main (/* int argc,

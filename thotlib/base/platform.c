@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * platform.c : basic system functions
  *
@@ -27,74 +18,55 @@
 #include "thotdir.h"
 #include "fileaccess.h"
 
-#include "ustring_f.h"
-
 /*----------------------------------------------------------------------
    TtaFileExist teste l'existence d'un fichier.                       
    Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaFileExist (CONST CHAR_T* filename)
-#else  /* __STDC__ */
-int                 TtaFileExist (filename)
-CONST CHAR_T*       filename;
-#endif /* __STDC__ */
+int TtaFileExist (CONST char *filename)
 {
-   int         status = 0;
+  int         status = 0;
 #ifdef _WINDOWS
-   DWORD       attribs;
+  DWORD       attribs;
 
-   attribs = GetFileAttributes ((LPCTSTR)filename);
-
-   if (attribs == 0xFFFFFFFF)
-      status = 0;
-   else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
-        status = 0;
-   else
-       status = 1;
-
+  attribs = GetFileAttributes ((LPCTSTR)filename);
+  if (attribs == 0xFFFFFFFF)
+    status = 0;
+  else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
+    status = 0;
+  else
+    status = 1;
 #else /* _WINDOWS */
 
-   int         filedes;
-   struct stat statinfo;
-#ifdef _I18N_
-   char        mbs_filename[2 * MAX_TXT_LEN];
+  int         filedes;
+  struct stat statinfo;
 
-   wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
-#else  /* !_I18N_ */
-   CONST char*       mbs_filename = filename;
-#endif /* !_I18N_ */
-
-   filedes = open (mbs_filename, O_RDONLY);
-   if (filedes < 0)
-      status = 0;
-   else {
-        /* on ne veut pas de directory */
-        if (fstat (filedes, &statinfo) != -1) {
-           if (statinfo.st_mode & S_IFDIR)
-              status = 0;
-           else
-              status = 1;
+  filedes = open (filename, O_RDONLY);
+  if (filedes < 0)
+    status = 0;
+  else
+    {
+      /* on ne veut pas de directory */
+      if (fstat (filedes, &statinfo) != -1)
+	{
+	  if (statinfo.st_mode & S_IFDIR)
+	    status = 0;
+	  else
+	    status = 1;
         }
-        close (filedes);
-   }
+      close (filedes);
+    }
 #endif /* _WINDOWS */
-   return status;
+  return status;
 }
 
 /*----------------------------------------------------------------------
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaFileUnlink (CONST CHAR_T* filename)
-#else  /* __STDC__ */
-int                 TtaFileUnlink (filename)
-CONST CHAR_T*       filename;
-#endif /* __STDC__ */
+int TtaFileUnlink (CONST char *filename)
 {
   if (filename)
-    return (uunlink (filename));
+    return (unlink (filename));
   else
     return 0;
 }
@@ -103,20 +75,14 @@ CONST CHAR_T*       filename;
    static ThotDirBrowseCopyFile - copy the filename from the          
    platform's directory structure     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          ThotDirBrowse_copyFile (ThotDirBrowse * me)
-#else  /* __STDC__ */
-static int          ThotDirBrowse_copyFile (me)
-ThotDirBrowse      *me;
-
-#endif /* __STDC__ */
+static int ThotDirBrowse_copyFile (ThotDirBrowse * me)
 {
 #ifdef _WINDOWS
    DWORD               attr;
 
-   if (ustrlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
+   if (strlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
       return -2;
-   ustrcpy (me->buf + me->dirLen, me->data.cFileName);
+   strcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
    if (attr & FILE_ATTRIBUTE_DIRECTORY &&
@@ -136,19 +102,19 @@ ThotDirBrowse      *me;
      {
 	ls_car = fgetc (me->ls_stream);
 	/* saute les caracteres de separation */
-	while (((CHAR_T) ls_car == SPACE) || ((CHAR_T) ls_car == TAB) ||
-	       ((CHAR_T) ls_car == EOL))
+	while (((char) ls_car == SPACE) || ((char) ls_car == TAB) ||
+	       ((char) ls_car == EOL))
 	   ls_car = fgetc (me->ls_stream);
 	notEof = TRUE;
 	i = 0;
-	while (((CHAR_T) ls_car != SPACE) && ((CHAR_T) ls_car != TAB) &&
-	       ((CHAR_T) ls_car != EOL) && (notEof))
+	while (((char) ls_car != SPACE) && ((char) ls_car != TAB) &&
+	       ((char) ls_car != EOL) && (notEof))
 	  {
 	     if (ls_car == EOF)
 		notEof = FALSE;
 	     else
 	       {
-		  me->buf[i] = (CHAR_T) ls_car;
+		  me->buf[i] = (char) ls_car;
 		  i++;
 		  if (i == me->bufLen)
 		    {
@@ -180,29 +146,16 @@ ThotDirBrowse      *me;
    ThotDirBrowse_first - get first dir/name.ext and setup            
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ThotDirBrowse_first (ThotDirBrowse * me, CHAR_T* dir, CHAR_T* name, CHAR_T* ext)
-#else  /* __STDC__ */
-int                 ThotDirBrowse_first (me, dir, name, ext)
-ThotDirBrowse      *me;
-CHAR_T*             dir;
-CHAR_T*             name;
-CHAR_T*             ext;
-
-#endif /* __STDC__ */
+int ThotDirBrowse_first (ThotDirBrowse *me, char *dir, char *name, char *ext)
 {
-#ifdef _WINDOWS
-   CHAR_T           space[MAX_PATH];
-#else  /* !_WINDOWS */
-   char             space[MAX_PATH];
-#endif /* !_WINDOWS */
-   int              ret;
+   char           space[MAX_PATH];
+   int            ret;
 
-   me->dirLen = ustrlen (dir);
-   ustrcpy (me->buf, dir);
-   ustrcpy (me->buf + (me->dirLen++), WC_DIR_STR);
+   me->dirLen = strlen (dir);
+   strcpy (me->buf, dir);
+   strcpy (me->buf + (me->dirLen++), DIR_STR);
 #if defined(_WINDOWS) && !defined(__GNUC__)
-   usprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "", ext ? ext : "");
+   sprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "", ext ? ext : "");
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) == INVALID_HANDLE_VALUE)
       return -1;
@@ -220,7 +173,7 @@ CHAR_T*             ext;
       avoid having the shell interpret them, for example, when the
       dir name contains ( chars. As a first attempt, we enclose the
       arguments between quotes */
-   usprintf (space, "/bin/ls -d \"%s\"/%s%s 2>/dev/null", dir ? dir : "", name ? name : "", ext ? ext : "");
+   sprintf (space, "/bin/ls -d \"%s\"/%s%s 2>/dev/null", dir ? dir : "", name ? name : "", ext ? ext : "");
    me->ls_stream = NULL;
    if ((me->ls_stream = popen (space, "r")) == NULL)
       return -1;
@@ -235,13 +188,7 @@ CHAR_T*             ext;
 /*----------------------------------------------------------------------
    ThotDirBrowse_next - get next file                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ThotDirBrowse_next (ThotDirBrowse * me)
-#else  /* __STDC__ */
-int                 ThotDirBrowse_next (me)
-ThotDirBrowse      *me;
-
-#endif /* __STDC__ */
+int ThotDirBrowse_next (ThotDirBrowse * me)
 {
 #if defined(_WINDOWS) && !defined(__GNUC__)
    int                 ret;
@@ -261,13 +208,7 @@ ThotDirBrowse      *me;
 /*----------------------------------------------------------------------
    ThotDirBrowse_close - recover system resources                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ThotDirBrowse_close (ThotDirBrowse * me)
-#else  /* __STDC__ */
-int                 ThotDirBrowse_close (me)
-ThotDirBrowse      *me;
-
-#endif /* __STDC__ */
+int ThotDirBrowse_close (ThotDirBrowse * me)
 {
    int                 ret;
 
@@ -292,14 +233,14 @@ ThotDirBrowse      *me;
 #ifdef INCLUDE_TESTING_CODE
 /* ThotFile_test - use to test ThotFile on any platform
  */
-void                ThotFile_test (STRING name)
+void                ThotFile_test (char *name)
 {
    ThotFileHandle      handle = ThotFile_BADHANDLE;
    ThotFileOffset      offset;
    ThotFileInfo        info;
    int                 i;
-   CHAR_T              space[16];
-   CONST STRING        format = "%15d\0";
+   char              space[16];
+   CONST char *       format = "%15d\0";
 
    space[sizeof (space) - 1] = 0;
    printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
@@ -388,14 +329,7 @@ void                ThotFile_test (STRING name)
 /*----------------------------------------------------------------------
    TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotFileHandle      TtaFileOpen (CONST STRING name, ThotFileMode mode)
-#else  /* __STDC__ */
-ThotFileHandle      TtaFileOpen (name, mode)
-CONST STRING        name;
-ThotFileMode        mode;
-
-#endif /* __STDC__ */
+ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 {
    ThotFileHandle      ret;
 
@@ -424,19 +358,10 @@ ThotFileMode        mode;
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* _WINDOWS && !__GNUC__ */
-#ifdef _I18N_
-   char fName [MAX_TXT_LEN];
-#else  /* !_I18N_ */
-   char* fName = name;
-#endif /* !_I18N_ */
-
-#ifdef _I18N_
-   wcstombs (fName, name, MAX_TXT_LEN);
-#endif /* _I18N_ */
 #ifdef _WINDOWS_
-   ret = open (fName, mode | _O_BINARY, 0777);
+   ret = open (name, mode | _O_BINARY, 0777);
 #else
-   ret = open (fName, mode, 0777);
+   ret = open (name, mode, 0777);
 #endif
 #endif /* _WINDOWS && !__GNUC__ */
    return ret;
@@ -445,13 +370,7 @@ ThotFileMode        mode;
 /*----------------------------------------------------------------------
    TtaFileClose returns, 0: error, 1: OK.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaFileClose (ThotFileHandle handle)
-#else  /* __STDC__ */
-int                 TtaFileClose (handle)
-ThotFileHandle      handle;
-
-#endif /* __STDC__ */
 {
    int                 ret;
 
@@ -466,15 +385,7 @@ ThotFileHandle      handle;
 /*----------------------------------------------------------------------
    TtaFileRead returns +n: number of bytes read, 0: at EOF, -1: error 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaFileRead (ThotFileHandle handle, void *buffer, unsigned int count)
-#else  /* __STDC__ */
-int                 TtaFileRead (handle, buffer, count)
-ThotFileHandle      handle;
-void               *buffer;
-unsigned int        count;
-
-#endif /* __STDC__ */
+int TtaFileRead (ThotFileHandle handle, void *buffer, unsigned int count)
 {
    int                 ret;
 
@@ -496,15 +407,7 @@ unsigned int        count;
 /*----------------------------------------------------------------------
    TtaFileWrite returns:  n: number of bytes written, -1: error	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaFileWrite (ThotFileHandle handle, void *buffer, unsigned int count)
-#else  /* __STDC__ */
-int                 TtaFileWrite (handle, buffer, count)
-ThotFileHandle      handle;
-void               *buffer;
-unsigned int        count;
-
-#endif /* __STDC__ */
+int TtaFileWrite (ThotFileHandle handle, void *buffer, unsigned int count)
 {
    int                 ret;
 
@@ -526,15 +429,8 @@ unsigned int        count;
 /*----------------------------------------------------------------------
    TtaFileSeek returns: ThotFile_BADOFFSET: error, ThotFileOffset	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotFileOffset      TtaFileSeek (ThotFileHandle handle, ThotFileOffset offset, ThotFileOrigin origin)
-#else  /* __STDC__ */
-ThotFileOffset      TtaFileSeek (handle, offset, origin)
-ThotFileHandle      handle;
-ThotFileOffset      offset;
-ThotFileOrigin      origin;
-
-#endif /* __STDC__ */
+ThotFileOffset TtaFileSeek (ThotFileHandle handle, ThotFileOffset offset,
+			    ThotFileOrigin origin)
 {
    ThotFileOffset      ret;
 
@@ -549,14 +445,7 @@ ThotFileOrigin      origin;
 /*----------------------------------------------------------------------
    TtaFileSeek returns: 1: your data is all there, sir, 0: error	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaFileStat (ThotFileHandle handle, ThotFileInfo * pInfo)
-#else  /* __STDC__ */
-int                 TtaFileStat (handle, pInfo)
-ThotFileHandle      handle;
-ThotFileInfo       *pInfo;
-
-#endif /* __STDC__ */
+int TtaFileStat (ThotFileHandle handle, ThotFileInfo *pInfo)
 {
    ThotFileOffset      ret;
 
@@ -585,35 +474,28 @@ ThotFileInfo       *pInfo;
 /*----------------------------------------------------------------------
    TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaFileCopy (CONST CHAR_T* sourceFileName, CONST CHAR_T* targetFileName)
-#else
-void                TtaFileCopy (sourceFileName, targetFileName)
-CONST CHAR_T*       sourceFileName;
-CONST CHAR_T*       targetFileName;
-
-#endif
+void TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 {
    FILE               *targetf;
    FILE               *sourcef;
    int                 size;
    char                buffer[8192];
 
-   if (ustrcmp (sourceFileName, targetFileName) != 0)
+   if (strcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = ufopen (targetFileName, "wb")) == NULL)
+	if ((targetf = fopen (targetFileName, "wb")) == NULL)
 #else
-	if ((targetf = ufopen (targetFileName, "w")) == NULL)
+	if ((targetf = fopen (targetFileName, "w")) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = ufopen (sourceFileName, "rb")) == NULL)
+	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
 #else
-	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
+	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */
@@ -640,63 +522,63 @@ CONST CHAR_T*       targetFileName;
   Returns FALSE if one of the files is not available for reading or
   if their content differs, TRUE if they are identical.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaCompareFiles(CONST STRING file1, CONST STRING file2)
-#else
-ThotBool            TtaCompareFiles(file1, file2)
-CONST STRING        file1;
-CONST STRING        file2;
-
-#endif
+ThotBool TtaCompareFiles(CONST char *file1, CONST char *file2)
 {
-    FILE *f1;
-    FILE *f2;
-    CHAR_T buffer1[512];
-    CHAR_T buffer2[512];
-    size_t res1;
-    size_t res2;
+  FILE   *f1;
+  FILE   *f2;
+  char    buffer1[512];
+  char    buffer2[512];
+  size_t  res1;
+  size_t  res2;
 
-    if (file1 == NULL) return(FALSE);
-    if (file2 == NULL) return(FALSE);
+  if (file1 == NULL)
+    return(FALSE);
+  if (file2 == NULL)
+    return(FALSE);
 #ifdef _WINDOWS
-    f1 = ufopen(file1,"rb");
+  f1 = fopen(file1,"rb");
 #else
-    f1 = ufopen(file1, "r");
+  f1 = fopen(file1, "r");
 #endif
-    if (f1 == NULL) return(FALSE);
+  if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f2 = ufopen(file2, "rb");
+  f2 = fopen(file2, "rb");
 #else
-    f2 = ufopen(file2, "r");
+  f2 = fopen(file2, "r");
 #endif
-    if (f2 == NULL) {
-	fclose(f1);
-        return(FALSE);
+  if (f2 == NULL)
+    {
+      fclose(f1);
+      return(FALSE);
     }
-    while (1) {
-        res1 = fread(&buffer1[0], 1, sizeof(buffer1), f1);
-        res2 = fread(&buffer2[0], 1, sizeof(buffer2), f2);
-	if (res1 != res2) {
-	    fclose(f1);
-	    fclose(f2);
-	    return(FALSE);
+  while (1)
+    {
+      res1 = fread(&buffer1[0], 1, sizeof(buffer1), f1);
+      res2 = fread(&buffer2[0], 1, sizeof(buffer2), f2);
+      if (res1 != res2)
+	{
+	  fclose(f1);
+	  fclose(f2);
+	  return(FALSE);
 	}
-        if (memcmp(&buffer1[0], &buffer2[0], res2)) {
-	    fclose(f1);
-	    fclose(f2);
-	    return(FALSE);
+      if (memcmp(&buffer1[0], &buffer2[0], res2))
+	{
+	  fclose(f1);
+	  fclose(f2);
+	  return(FALSE);
 	}
-	res1 = feof(f1);
-	res2 = feof(f2);
-	if (res1 != res2) {
-	    fclose(f1);
-	    fclose(f2);
-	    return(FALSE);
+      res1 = feof(f1);
+      res2 = feof(f2);
+      if (res1 != res2)
+	{
+	  fclose(f1);
+	  fclose(f2);
+	  return(FALSE);
 	}
-	if (res1) break;
+      if (res1) break;
     }
-    fclose(f1);
-    fclose(f2);
-    return(TRUE);
+  fclose(f1);
+  fclose(f2);
+  return(TRUE);
 }
 

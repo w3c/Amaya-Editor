@@ -43,18 +43,18 @@
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
-static CHAR_T *annotUser; /* user id for saving the annotation */
-static CHAR_T *annotDir;   /* directory where we're storing the annotations */
+static char *annotUser; /* user id for saving the annotation */
+static char *annotDir;   /* directory where we're storing the annotations */
 static List   *annotServers;   /* URL pointing to the annot server script */
-static CHAR_T *annotPostServer; /* URL pointing to the annot server script */
-static CHAR_T *annotMainIndex; /* index file where we give the correspondance
+static char *annotPostServer; /* URL pointing to the annot server script */
+static char *annotMainIndex; /* index file where we give the correspondance
 				between URLs and annotations */
 static ThotBool annotLAutoLoad; /* should local annotations be downloaded
 				   automatically? */
 static ThotBool annotRAutoLoad; /* should remote annotations be downloaded
 				   automatically? */
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
-static CHAR_T *annotAlgaeText;    /* the custom algae query text */
+static char *annotAlgaeText;    /* the custom algae query text */
 
 /* last selected annotation */
 static Element last_selected_annotation[DocumentTableLength];
@@ -64,19 +64,19 @@ static ThotBool schema_init = FALSE;
 /* the structure used for storing the context of the 
    Annot_Raisesourcedoc_callback function */
 typedef struct _RAISESOURCEDOC_context {
-  CHAR_T *url;
+  char *url;
   Document doc_annot;
 } RAISESOURCEDOC_context;
 
 /* the structure used for storing the context of the 
    RemoteLoad_callback function */
 typedef struct _REMOTELOAD_context {
-  CHAR_T *rdf_file;
+  char *rdf_file;
   char *remoteAnnotIndex;
   char *localfile;
   Document source_doc;
-  CHAR_T *source_doc_url;
-  CHAR_T *annot_url;
+  char *source_doc_url;
+  char *annot_url;
 } REMOTELOAD_context;
 
 /* the structure used for storing the context of the 
@@ -84,8 +84,8 @@ typedef struct _REMOTELOAD_context {
 typedef struct _DELETE_context {
   Document source_doc;
   Document annot_doc;
-  CHAR_T *annot_url;
-  CHAR_T *output_file;
+  char *annot_url;
+  char *output_file;
   Element annotEl;
   ThotBool annot_is_remote;
   AnnotMeta *annot;
@@ -117,7 +117,7 @@ void SetAnnotCustomQuery (ThotBool value)
 /*-----------------------------------------------------------------------
    GetAnnotAlgaeText
   -----------------------------------------------------------------------*/
-CHAR_T *GetAnnotAlgaeText (void)
+char *GetAnnotAlgaeText (void)
 {
   return annotAlgaeText;
 }
@@ -125,9 +125,9 @@ CHAR_T *GetAnnotAlgaeText (void)
 /*-----------------------------------------------------------------------
    SetAnnotAlgaeText
   -----------------------------------------------------------------------*/
-void SetAnnotAlgaeText (CHAR_T *value)
+void SetAnnotAlgaeText (char *value)
 {
-  if (!value && *value == WC_EOS)
+  if (!value && *value == EOS)
     annotAlgaeText = NULL;
   else
     annotAlgaeText = TtaStrdup (value);
@@ -137,7 +137,7 @@ void SetAnnotAlgaeText (CHAR_T *value)
    GetAnnotUser
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-CHAR_T *GetAnnotUser (void)
+char *GetAnnotUser (void)
 {
   return annotUser;
 }
@@ -155,7 +155,7 @@ List *GetAnnotServers (void)
    GetAnnotPostServer
    Returns the URLs of the annotation Post server
   -----------------------------------------------------------------------*/
-CHAR_T *GetAnnotPostServer (void)
+char *GetAnnotPostServer (void)
 {
   return annotPostServer;
 }
@@ -165,7 +165,7 @@ CHAR_T *GetAnnotPostServer (void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-CHAR_T *GetAnnotMainIndex (void)
+char *GetAnnotMainIndex (void)
 {
   return annotMainIndex;
 }
@@ -175,7 +175,7 @@ CHAR_T *GetAnnotMainIndex (void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-CHAR_T *GetAnnotDir (void)
+char *GetAnnotDir (void)
 {
   return annotDir;
 }
@@ -185,31 +185,31 @@ CHAR_T *GetAnnotDir (void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-List *CopyAnnotServers (CHAR_T *server_list)
+List *CopyAnnotServers (char *server_list)
 {
   List *me = NULL;
-  CHAR_T *server;
-  CHAR_T *ptr;
-  CHAR_T *scratch;
+  char *server;
+  char *ptr;
+  char *scratch;
 
 
-  if (!server_list || *server_list == WC_EOS)
+  if (!server_list || *server_list == EOS)
     return NULL;
 
   /* make a copy we can modify */
-  scratch = TtaWCSdup (server_list);
+  scratch = TtaStrdup (server_list);
   ptr = scratch;
-  while (*ptr != WC_EOS)
+  while (*ptr != EOS)
     {
       server = ptr;
-      while (*ptr != ' ' && *ptr != WC_EOS)
+      while (*ptr != ' ' && *ptr != EOS)
 	ptr++;
       if (*ptr == ' ')
 	{
-	  *ptr = WC_EOS;
+	  *ptr = EOS;
 	  ptr++;
 	}
-      List_add (&me, TtaWCSdup (server));
+      List_add (&me, TtaStrdup (server));
     }
   TtaFreeMemory (scratch);
   return me;
@@ -219,24 +219,24 @@ List *CopyAnnotServers (CHAR_T *server_list)
    Prepares a query URL using the algae text template. Any %u will be
    substituted with the url given in the parameter.
   -----------------------------------------------------------------------*/
-static void CopyAlgaeTemplateURL (CHAR_T **dest, CHAR_T *proto, CHAR_T *url)
+static void CopyAlgaeTemplateURL (char **dest, char *proto, char *url)
 {
-  CHAR_T *in;
-  CHAR_T *out;
-  CHAR_T *tmp;
+  char *in;
+  char *out;
+  char *tmp;
   int proto_len;
   int url_len;
   int i;
 
-  proto_len = (proto) ? ustrlen (proto) : 0;
-  url_len = (url) ? ustrlen (url) : 0;
+  proto_len = (proto) ? strlen (proto) : 0;
+  url_len = (url) ? strlen (url) : 0;
 
   /* allocate enough memory in the string */
   i = 0;
   in = annotAlgaeText;
   while (in)
     {
-      tmp = ustrstr (in, "%u");
+      tmp = strstr (in, "%u");
       if (tmp)
 	{
 	  i++;
@@ -245,17 +245,17 @@ static void CopyAlgaeTemplateURL (CHAR_T **dest, CHAR_T *proto, CHAR_T *url)
       else
 	break;
     }
-  *dest = TtaGetMemory (i * (ustrlen (proto) + ustrlen (url))
-			+ ustrlen (annotAlgaeText)
+  *dest = TtaGetMemory (i * (strlen (proto) + strlen (url))
+			+ strlen (annotAlgaeText)
 			+ 30);
   in = annotAlgaeText;
   out = *dest;
-  while (*in != WC_EOS)
+  while (*in != EOS)
     {
       if (*in == '%' && *(in + 1) == 'u')
 	{
 	  /* copy the proto and the URL */
-	  usprintf (out, "%s%s", proto, url);
+	  sprintf (out, "%s%s", proto, url);
 	  /* and update the pointers */
 	  out = out + proto_len + url_len;
 	  in = in + 2;
@@ -267,7 +267,7 @@ static void CopyAlgaeTemplateURL (CHAR_T **dest, CHAR_T *proto, CHAR_T *url)
 	  out++;
 	}
     }
-  *out = WC_EOS;
+  *out = EOS;
 }
 
 /*-----------------------------------------------------------------------
@@ -289,17 +289,17 @@ void ANNOT_UpdateTransfer (Document doc)
   -----------------------------------------------------------------------*/
 void ANNOT_Init ()
 {
-  CHAR_T *tmp;
+  char *tmp;
 
   /* initialize the annot global variables */
-  annotDir = TtaWCSdup (TtaGetEnvString ("ANNOT_DIR"));
-  annotMainIndex = TtaWCSdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
+  annotDir = TtaStrdup (TtaGetEnvString ("ANNOT_DIR"));
+  annotMainIndex = TtaStrdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
   TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &annotLAutoLoad);
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annotRAutoLoad);
 
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
-    annotUser = TtaWCSdup (tmp);
+    annotUser = TtaStrdup (tmp);
   else
     annotUser = NULL;
   tmp = TtaGetEnvString ("ANNOT_SERVERS");
@@ -309,9 +309,9 @@ void ANNOT_Init ()
     annotServers = NULL;
   tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
   if (tmp)
-    annotPostServer = TtaWCSdup (tmp);
+    annotPostServer = TtaStrdup (tmp);
   else
-    annotPostServer = TtaWCSdup ("localhost");
+    annotPostServer = TtaStrdup ("localhost");
 
   /* @@@ temporary custom query, as we could use the configuration menu  ***/
   annotCustomQuery = FALSE;
@@ -449,14 +449,14 @@ void ANNOT_FreeDocumentResource (Document doc)
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 void RemoteLoad_callback (int doc, int status, 
-			  CHAR_T *urlName,
-			  CHAR_T *outputfile, 
+			  char *urlName,
+			  char *outputfile, 
 			  AHTHeaders *http_headers,
 			  void * context)
 {
    REMOTELOAD_context *ctx;
    Document source_doc;
-   CHAR_T *source_doc_url;
+   char *source_doc_url;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
@@ -473,7 +473,7 @@ void RemoteLoad_callback (int doc, int status,
       the source document hasn't disappeared in the meantime */
    if (status == HT_OK
        && DocumentURLs[source_doc] 
-       && !ustrcmp (DocumentURLs[source_doc], source_doc_url))
+       && !strcmp (DocumentURLs[source_doc], source_doc_url))
      {
        LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
        /* clear the status line if there was no error*/
@@ -481,7 +481,7 @@ void RemoteLoad_callback (int doc, int status,
      }
    else
      {
-       CHAR_T *ptr;
+       char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
 	 TtaSetStatus (doc, 1, "Failed to load the annotation index: %s", ptr);
@@ -507,7 +507,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
-  CHAR_T *server;
+  char *server;
   ThotBool is_active = FALSE;
 
   if (mode == AM_LOAD_NONE)
@@ -556,7 +556,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	{
 	  server = ptr->object;
 	  ptr = ptr->next;
-	  if (!server || !ustrcasecmp (server, "localhost")
+	  if (!server || !strcasecmp (server, "localhost")
 	      || server[0] == '-')
 	    continue;
 	  /* create the context for the callback */
@@ -573,10 +573,10 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  else
 	    proto = "";
 	  if (!annotCustomQuery || !annotAlgaeText || 
-	      annotAlgaeText[0] == WC_EOS)
+	      annotAlgaeText[0] == EOS)
 	    {
-	      annotURL = TtaGetMemory (ustrlen (DocumentURLs[doc])
-				       + ustrlen (proto)
+	      annotURL = TtaGetMemory (strlen (DocumentURLs[doc])
+				       + strlen (proto)
 				       + sizeof ("w3c_annotates=")
 				       + 50);
 	      sprintf (annotURL, "w3c_annotates=%s%s", proto, 
@@ -658,7 +658,7 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isRepl
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
-  CHAR_T     *xptr;
+  char     *xptr;
 
 #if 0
   /* not used for the moment... select the annotation doc
@@ -776,8 +776,8 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isRepl
    ANNOT_Post_callback
   -----------------------------------------------------------------------*/
 void ANNOT_Post_callback (int doc, int status, 
-			  CHAR_T *urlName,
-			  CHAR_T *outputfile, 
+			  char *urlName,
+			  char *outputfile, 
 			  AHTHeaders *http_headers,
 			  void * context)
 {
@@ -804,9 +804,9 @@ void ANNOT_Post_callback (int doc, int status,
       the source and annot documents haven't disappeared in the meantime */
    if (status == HT_OK
        && DocumentURLs[source_doc] 
-       && !ustrcmp (DocumentURLs[source_doc], ctx->source_doc_url)
+       && !strcmp (DocumentURLs[source_doc], ctx->source_doc_url)
        && DocumentURLs[doc]
-       && !ustrcmp (DocumentURLs[doc], ctx->annot_url))
+       && !strcmp (DocumentURLs[doc], ctx->annot_url))
      {
        AnnotMeta *annot = GetMetaData (source_doc, doc);
 
@@ -837,7 +837,7 @@ void ANNOT_Post_callback (int doc, int status,
 	       /* replace the body only if it changed */
 	       if (returned_annot->body_url
 		   && (!annot->body_url 
-		       || ustrcmp (annot->body_url, returned_annot->body_url)))
+		       || strcmp (annot->body_url, returned_annot->body_url)))
 		 {
 		   /* update the anchor in the source doc */
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
@@ -882,7 +882,7 @@ void ANNOT_Post_callback (int doc, int status,
      }
    else /* there was error */
      {
-       CHAR_T *ptr;
+       char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
 	 TtaSetStatus (doc, 1, "Failed to post the annotation: %s", ptr);
@@ -908,15 +908,15 @@ void ANNOT_Post (Document doc, View view)
 {
   REMOTELOAD_context *ctx;
   int res;
-  CHAR_T *rdf_file;
-  CHAR_T *url;
+  char *rdf_file;
+  char *url;
   ThotBool free_url;
   AnnotMeta *annot;
   Document source_doc;
 
   /* @@ JK: while the post item isn't desactivated on the main window,
      forbid annotations from elsewhere */
-  if (ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), "Annot"))
+  if (strcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), "Annot"))
     return;
 
   if (!annotPostServer || *annotPostServer == EOS)
@@ -956,13 +956,13 @@ void ANNOT_Post (Document doc, View view)
 	return;
 
       /* we're saving a modification to an existing annotation */
-      url = TtaGetMemory (ustrlen (annotPostServer)
+      url = TtaGetMemory (strlen (annotPostServer)
 			  + sizeof ("?replace_source=")
-			  + ustrlen (annot->annot_url)
+			  + strlen (annot->annot_url)
 			  + sizeof ("&rdftype=")
 			  + strlen (ANNOTATION_CLASSNAME)
 			  + 1);
-      usprintf (url,"%s?replace_source=%s&rdftype=%s",
+      sprintf (url,"%s?replace_source=%s&rdftype=%s",
 		annotPostServer,
 		annot->annot_url,
 		ANNOTATION_CLASSNAME);
@@ -1004,7 +1004,7 @@ void ANNOT_Post (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ANNOT_SaveDocument (Document doc_annot, View view)
 {
-  CHAR_T *filename;
+  char *filename;
 
   if (!TtaIsDocumentModified (doc_annot))
       return; /* prevent Thot from performing normal save operation */
@@ -1015,7 +1015,7 @@ void ANNOT_SaveDocument (Document doc_annot, View view)
     {
       /* save the file */
       /* we skip the file: prefix if it's present */
-      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot]) + 1);
+      filename = TtaGetMemory (strlen (DocumentURLs[doc_annot]) + 1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
 	{
@@ -1037,14 +1037,14 @@ void ANNOT_SelectSourceDoc (int doc, Element el)
   AttributeType    attrType;
   Attribute	   attr;
   int              length;
-  CHAR_T          *annot_url;
+  char          *annot_url;
 
   /* reset the last selected annotation ptr */
   last_selected_annotation[doc] = NULL;
 
   /* is it an annotation link? */
   elType = TtaGetElementType (el);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
       || (elType.ElTypeNum != XLink_EL_XLink))
     return;
 
@@ -1071,8 +1071,8 @@ void ANNOT_SelectSourceDoc (int doc, Element el)
   RaiseSourceDoc_callback
   -----------------------------------------------------------------------*/
 void Annot_RaiseSourceDoc_callback (int doc, int status, 
-				    CHAR_T *urlName,
-				    CHAR_T *outputfile, 
+				    char *urlName,
+				    char *outputfile, 
 				    AHTHeaders *http_headers,
 				    void * context)
 {
@@ -1113,7 +1113,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ThotBool	   docModified;
   int              length;
   Document         targetDocument;
-  CHAR_T          *url = NULL;
+  char          *url = NULL;
   RAISESOURCEDOC_context *ctx;
 
   /* initialize from the context */
@@ -1202,16 +1202,16 @@ ThotBool Annot_Types (NotifyElement *event)
   it's really doing.
   -----------------------------------------------------------------------*/
 void ANNOT_Delete_callback (int doc, int status, 
-			    CHAR_T *urlName,
-			    CHAR_T *outputfile, 
+			    char *urlName,
+			    char *outputfile, 
 			    AHTHeaders *http_headers,
 			    void * context)
 {
   DELETE_context *ctx;
   Document source_doc;
   Document annot_doc;
-  CHAR_T  *annot_url;
-  CHAR_T  *output_file;
+  char  *annot_url;
+  char  *output_file;
   Element  annotEl;
   AnnotMeta *annot;
   ThotBool annot_is_remote;
@@ -1271,7 +1271,7 @@ void ANNOT_Delete_callback (int doc, int status,
     }
   else 
     {
-      CHAR_T *ptr;
+      char *ptr;
       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
       if (ptr)
 	TtaSetStatus (doc, 1, "Failed to delete the annotation: %s", ptr);
@@ -1304,9 +1304,9 @@ void ANNOT_Delete (Document doc, View view)
   AnnotMeta       *annot;
   AttributeType    attrType;
   Attribute	   attr;
-  CHAR_T          *annot_url;
-  CHAR_T          *annot_server;
-  CHAR_T          *char_ptr;
+  char          *annot_url;
+  char          *annot_server;
+  char          *char_ptr;
   List            *list_ptr;
   int              i;
   int              res;
@@ -1335,11 +1335,11 @@ void ANNOT_Delete (Document doc, View view)
 	  annot_is_remote = TRUE;
 	  if (DocumentMeta[doc]->form_data)
 	    {
-	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
-				       + ustrlen (DocumentMeta[doc]->form_data)
+	      annot_url = TtaGetMemory (strlen (DocumentURLs[doc])
+				       + strlen (DocumentMeta[doc]->form_data)
 					+ sizeof ("?")
 					+ 1);
-	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
+	      sprintf (annot_url, "%s?%s", DocumentURLs[doc], 
 			DocumentMeta[doc]->form_data);
 	    }
 	  else
@@ -1379,7 +1379,7 @@ void ANNOT_Delete (Document doc, View view)
 
       /* is it an annotation link? */
       elType = TtaGetElementType (annotEl);
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
 	  || (elType.ElTypeNum != XLink_EL_XLink))
 	return;
       
@@ -1406,7 +1406,7 @@ void ANNOT_Delete (Document doc, View view)
       if (IsFilePath (annot_url))
 	{
 	  annot_is_remote = FALSE;
-	  char_ptr = TtaGetMemory (ustrlen (annot_url));
+	  char_ptr = TtaGetMemory (strlen (annot_url));
 	  NormalizeFile (annot_url, char_ptr, AM_CONV_NONE);
 	  annot_doc = IsDocumentLoaded (char_ptr, NULL);
 	  TtaFreeMemory (char_ptr);
@@ -1457,9 +1457,9 @@ void ANNOT_Delete (Document doc, View view)
       while (list_ptr)
 	{
 	  annot_server = list_ptr->object;
-	  if (ustrcasecmp (annot_server, "localhost")
-	      && !ustrncasecmp (annot_server, annot->annot_url, 
-				ustrlen (annot_server)))
+	  if (strcasecmp (annot_server, "localhost")
+	      && !strncasecmp (annot_server, annot->annot_url, 
+				strlen (annot_server)))
 	    break;
 	  list_ptr = list_ptr->next;
 	}
@@ -1506,7 +1506,7 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
   Document         source_doc, annot_doc;
   Element          annotEl;
   AnnotMeta       *annot;
-  CHAR_T          *annot_url;
+  char          *annot_url;
   int              i;
   DisplayMode      dispMode;
   char            *xptr;
@@ -1569,11 +1569,11 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	  /* it's a remote annotation */
 	  if (DocumentMeta[doc]->form_data)
 	    {
-	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
-				       + ustrlen (DocumentMeta[doc]->form_data)
+	      annot_url = TtaGetMemory (strlen (DocumentURLs[doc])
+				       + strlen (DocumentMeta[doc]->form_data)
 					+ sizeof ("?")
 					+ 1);
-	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
+	      sprintf (annot_url, "%s?%s", DocumentURLs[doc], 
 			DocumentMeta[doc]->form_data);
 	    }
 	  else

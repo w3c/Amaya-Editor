@@ -35,7 +35,7 @@ typedef enum
      UnAuto
   }
 TypeUnit;
-
+#define MAX_DOCUMENTS 50  /* max. number of simultaneous documents */
 #ifdef MAXINT
 #undef MAXINT
 #endif
@@ -44,3 +44,9 @@ TypeUnit;
 #define ord(c) (int)((unsigned char)(c))
 
 #endif
+
+
+
+
+
+

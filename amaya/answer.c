@@ -44,20 +44,9 @@ struct _HTError
   AHTProgress 
   displays in the status bar the current state of a request   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- BOOL         AHTProgress (HTRequest *request, HTAlertOpcode op, 
-			   int msgnum, const char *dfault,
-			   void *input, HTAlertPar *reply)
-#else  /* __STDC__ */
- BOOL         AHTProgress (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif
+BOOL AHTProgress (HTRequest *request, HTAlertOpcode op, 
+		  int msgnum, const char *dfault,
+		  void *input, HTAlertPar *reply)
 {
    AHTReqContext      *me = HTRequest_context (request);
    char              tempbuf[MAX_LENGTH];
@@ -198,23 +187,12 @@ HTAlertPar         *reply;
   AHTConfirm 
   opens a form to request user confirmation on an action.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- BOOL         AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
-			  const char * dfault,
-			  void *input, HTAlertPar * reply)
-#else  /* __STDC__ */
- BOOL         AHTConfirm (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC__ */
+BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
+		 const char * dfault,
+		 void *input, HTAlertPar * reply)
 {
   ThotBool         answer;
-  STRING          tmp_buf;
+  char            *tmp_buf;
   AHTReqContext   *me = HTRequest_context (request);
   AHTReqStatus     old_reqStatus;
 
@@ -267,19 +245,8 @@ HTAlertPar         *reply;
   AHTPrompt
   prompts for a text answer and returns this answer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- BOOL         AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
-			       void *input, HTAlertPar * reply)
-#else  /* __STDC__ */
- BOOL         AHTPrompt (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif
+BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
+		void *input, HTAlertPar * reply)
 {
   /* JK: removed temporarily this prompt as it should be rewritten for
      use by the FTP module to save a file */
@@ -336,30 +303,14 @@ HTAlertPar         *reply;
   default value.						
   Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- BOOL         AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msgnum,
+BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msgnum,
 					    const char *dfault, 
 					    void *input, HTAlertPar * reply)
-#else
-BOOL         AHTPromptUsernameAndPassword (request, op, msgnum, dfault, input reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   const char*               realm = HTRequest_realm (request);
-   char*             server;
+   const char         *realm = HTRequest_realm (request);
+   char               *server;
    AHTReqStatus        old_reqStatus;
-#  ifdef _I18N_
-   char              RealM[MAX_LENGTH];
-#  else  /* !_I18N_ */
-   const char*             RealM = realm;
-#  endif /* !_I18N_ */
 
    if (reply && msgnum >= 0) 
      {
@@ -368,16 +319,13 @@ HTAlertPar         *reply;
        Lg_password = 0;
        Answer_password[0] = EOS;
 
-#      ifdef _I18N_ 
-       iso2wc_strcpy (RealM, realm);
-#      endif /* _I18N_ */
        /* prepare the authentication realm message */
        server = AmayaParseUrl (me->urlName, "", AMAYA_PARSE_HOST);
        /* protection against having a stop kill this thread */
        old_reqStatus = me->reqStatus;
        me->reqStatus = HT_BUSY;
        /* show the popup */
-       InitFormAnswer (me->docid, 1, RealM, server);
+       InitFormAnswer (me->docid, 1, realm, server);
        if (me->reqStatus != HT_ABORT)
 	 me->reqStatus = old_reqStatus;
        /* free allocated memory */
@@ -407,12 +355,7 @@ HTAlertPar         *reply;
    Returns TRUE if libwww forced a downgrade to 0.9 while fulfilling
    the request. FALSE, otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool IsHTTP09Error (HTRequest * request)
-#else
-ThotBool IsHTTP09Error (request)
-HTRequest * request;
-#endif
 {
    HTList             *cur;
    HTError            *pres;
@@ -449,18 +392,7 @@ HTRequest * request;
    help file that might be put up as a link. This file can then be
    multi-linguistic.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-BOOL                AHTError_print (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
-#else  /* __STDC__ */
-BOOL                AHTError_print (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC__ */
+BOOL AHTError_print (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
 {
    HTList             *cur = (HTList *) input;
    HTError            *pres;
@@ -486,12 +418,12 @@ HTAlertPar         *reply;
 	   break;
 	 case HTERR_SYSTEM:
 	   if (!strcmp ("connect",  HTError_location (pres)))
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (STRING) NULL);
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
 	   else
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
 	   break;
 	 case HTERR_NO_REMOTE_HOST:
-	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (STRING) NULL);
+	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
 	     break;
 	 default:
 	   break;
@@ -507,13 +439,7 @@ HTAlertPar         *reply;
    then uses it as the actual server response (useful for displaying
    errors as HTML code). 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AHTError_MemPrint (HTRequest * request)
-#else  /* __STDC__ */
-void                AHTERROR_MemPrint (request)
-HTRequest          *request;
-
-#endif /* __STDC__ */
 {
    HTError            *pres;
    HTList             *cur = request->error_stack;
@@ -587,15 +513,7 @@ HTRequest          *request;
   displays a message on the status bar that states the number of
   pending requests.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
-#else
-void                AHTPrintPendingRequestStatus (doc, last_seconds_of_life)
-Document            doc;
-BOOL             last_seconds_of_life;
-
-#endif
-
+void AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
 {
    int                 waiting_count = 0;
    AHTDocId_Status    *docid_status;
@@ -624,15 +542,7 @@ BOOL             last_seconds_of_life;
   displays a message on the status bar indicating the result of the
   request.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void PrintTerminateStatus (AHTReqContext *me, int status) 
-#else
-void PrintTerminateStatus (me, status)
-AHTReqContext *me;
-int status;
-#endif
-
 {
 
   HTError             *error = (HTError *) NULL;
@@ -659,13 +569,13 @@ int status;
   else if (status == 204 && me->method == METHOD_PUT)
     TtaSetStatus (me->docid, 1, 
 		  TtaGetMessage (AMAYA, AM_NO_DATA), 
-		  (STRING) NULL);
+		  NULL);
   else if (status == -400 || status == 505)
     {
       TtaSetStatus (me->docid, 1, 
 		    TtaGetMessage (AMAYA, 
 				   AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
-		    (STRING) NULL);
+		    NULL);
       sprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA,
 			      AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
@@ -693,7 +603,7 @@ int status;
     {
       TtaSetStatus (me->docid, 1, 
 		    TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
-		    (STRING) NULL);
+		    NULL);
       sprintf(AmayaLastHTTPErrorMsg, 
 	      TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
     }
@@ -748,20 +658,20 @@ int status;
       if (errorElement == HTERR_INTERRUPTED)
 	{
 	  TtaSetStatus (me->docid, 1,
-			"Transfer interrupted by user", (STRING) NULL);
+			"Transfer interrupted by user", NULL);
 	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
 	}
       else if (errorElement == HTERR_PRECON_FAILED) 
 	{
 	  TtaSetStatus (me->docid, 1,
-			"Document has changed (412)", (STRING) NULL);
+			"Document has changed (412)", NULL);
 	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
 	  status = -412;
 	}
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
 	{
 	  TtaSetStatus (me->docid, 1,
-			"Connection Timeout", (STRING) NULL);
+			"Connection Timeout", NULL);
 	  sprintf (AmayaLastHTTPErrorMsg,
 		    "Connection Timeout");
 	}
@@ -769,7 +679,7 @@ int status;
 	{
 	  TtaSetStatus (me->docid, 1,
 			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
-			(STRING) NULL);
+			NULL);
 	  sprintf (AmayaLastHTTPErrorMsg, 
 		    TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	  status = -501;
@@ -797,7 +707,7 @@ int status;
 	    {
 	      TtaSetStatus (me->docid, 1, 
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
-			    (STRING) NULL);
+			    NULL);
 	      sprintf (AmayaLastHTTPErrorMsg, 
 			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
 	    }
@@ -809,16 +719,16 @@ int status;
 	{
 	  TtaSetStatus (me->docid, 1,
 			"Server or network forced libwww to downgrade to HTTP/0.9.",
-			(STRING) NULL);
+			NULL);
 	  sprintf (AmayaLastHTTPErrorMsg,
 		    "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
 	}
 #endif
       else if (server_status)
 	{
-	  wc_tmp = TtaISO2WCdup (server_status);
+	  wc_tmp = TtaStrdup (server_status);
 	  /* let's output whatever the server or libwww reports as an error */
-	  TtaSetStatus (me->docid, 1, wc_tmp, (STRING) NULL);
+	  TtaSetStatus (me->docid, 1, wc_tmp, NULL);
 	  strcpy (AmayaLastHTTPErrorMsg, wc_tmp);
 	  TtaFreeMemory (wc_tmp);
 	}
@@ -840,7 +750,7 @@ int status;
 	  server_status = HTResponse_reason (response);
 	  if (server_status && *server_status)
 	    {
-	      wc_tmp = TtaISO2WCdup (server_status);
+	      wc_tmp = TtaStrdup (server_status);
 	      sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
 			wc_tmp);
 	      TtaFreeMemory (wc_tmp);

@@ -9,7 +9,7 @@
 extern ThotBool TtaReadByte ( BinFile file,
                               char* bval );
 extern ThotBool TtaReadWideChar ( BinFile file,
-                                  CHAR_T* bval,
+                                  char* bval,
                                   CHARSET encoding );
 extern ThotBool TtaReadBool ( BinFile file,
                               ThotBool * bval );
@@ -20,15 +20,15 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
 extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                              CHAR_T* name );
+                              char* name );
 extern BinFile TtaReadOpen ( CONST char *filename );
 extern void TtaReadClose ( BinFile file );
-extern BinFile TtaWriteOpen ( CONST STRING filename );
+extern BinFile TtaWriteOpen ( CONST char *filename );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                                char bval );
 extern ThotBool TtaWriteWideChar ( BinFile file,
-                                   CHAR_T val,
+                                   char val,
                                    CHARSET encoding );
 extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
@@ -44,39 +44,39 @@ extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
                                DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
-extern void TtaExtractName ( CHAR_T* text,
-                             CHAR_T* aDirectory,
-                             CHAR_T* aName );
-extern void MakeCompleteName ( CHAR_T* fname,
-                               CHAR_T* fext,
-                               CHAR_T* directory_list,
-                               CHAR_T* completeName,
+extern void TtaExtractName ( char* text,
+                             char* aDirectory,
+                             char* aName );
+extern void MakeCompleteName ( char* fname,
+                               char* fext,
+                               char* directory_list,
+                               char* completeName,
                                int *length );
-extern void GetPictureFileName ( STRING name,
-                                 STRING fileName );
-extern void FindCompleteName ( CHAR_T* fileName,
-                               CHAR_T* extension,
+extern void GetPictureFileName ( char *name,
+                                 char *fileName );
+extern void FindCompleteName ( char* fileName,
+                               char* extension,
                                PathBuffer directory,
                                PathBuffer completeName,
                                int *length );
 extern void GetDocIdent ( DocumentIdentifier* Ident,
-                          CHAR_T* docName );
+                          char* docName );
 extern void GetDocName ( DocumentIdentifier Ident,
-                         CHAR_T* docName );
-extern int FileWriteAccess ( STRING fileName );
+                         char* docName );
+extern int FileWriteAccess ( char *fileName );
 extern void GetCounterValue ( int number,
                               CounterStyle style,
-                              STRING string,
+                              char *string,
                               int *len );
-extern ThotBool TtaMakeDirectory ( CHAR_T* directory );
-extern ThotBool TtaCheckDirectory ( CHAR_T* directory );
+extern ThotBool TtaMakeDirectory ( char* directory );
+extern ThotBool TtaCheckDirectory ( char* directory );
 
 #else /* __STDC__ */
 
 extern ThotBool TtaReadByte (/* BinFile file,
                                 char* bval */);
 extern ThotBool TtaReadWideChar (/* BinFile file,
-                                    CHAR_T* bval,
+                                    char* bval,
                                     CHARSET encoding */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                 ThotBool * bval */);
@@ -87,15 +87,15 @@ extern ThotBool TtaReadSignedShort (/* BinFile file,
 extern ThotBool TtaReadInteger (/* BinFile file,
                                    int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
-                                CHAR_T* name */);
+                                char* name */);
 extern BinFile TtaReadOpen (/* CONST char *filename */);
 extern void TtaReadClose (/* BinFile file */);
-extern BinFile TtaWriteOpen (/* CONST STRING filename */);
+extern BinFile TtaWriteOpen (/* CONST char *filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
                                  char bval */);
 extern ThotBool TtaWriteWideChar (/* BinFile file,
-                                     CHAR_T val,
+                                     char val,
                                      CHARSET encoding */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                   int sval */);
@@ -111,32 +111,32 @@ extern ThotBool SameDocIdent (/* DocumentIdentifier Ident1,
                                  DocumentIdentifier Ident2 */);
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
-extern void TtaExtractName (/* CHAR_T* text,
-                               CHAR_T* aDirectory,
-                               CHAR_T* aName */);
-extern void MakeCompleteName (/* CHAR_T* fname,
-                                 CHAR_T* fext,
-                                 CHAR_T* directory_list,
-                                 CHAR_T* completeName,
+extern void TtaExtractName (/* char* text,
+                               char* aDirectory,
+                               char* aName */);
+extern void MakeCompleteName (/* char* fname,
+                                 char* fext,
+                                 char* directory_list,
+                                 char* completeName,
                                  int *length */);
-extern void GetPictureFileName (/* STRING name,
-                                   STRING fileName */);
-extern void FindCompleteName (/* CHAR_T* fileName,
-                                 CHAR_T* extension,
+extern void GetPictureFileName (/* char *name,
+                                   char *fileName */);
+extern void FindCompleteName (/* char* fileName,
+                                 char* extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length */);
 extern void GetDocIdent (/* DocumentIdentifier* Ident,
-                            CHAR_T* docName */);
+                            char* docName */);
 extern void GetDocName (/* DocumentIdentifier Ident,
-                           CHAR_T* docName */);
-extern int FileWriteAccess (/* STRING fileName */);
+                           char* docName */);
+extern int FileWriteAccess (/* char *fileName */);
 extern void GetCounterValue (/* int number,
                                 CounterStyle style,
-                                STRING string,
+                                char *string,
                                 int *len */);
-extern ThotBool TtaMakeDirectory (/* CHAR_T* directory */);
-extern ThotBool TtaCheckDirectory (/* CHAR_T* directory */);
+extern ThotBool TtaMakeDirectory (/* char* directory */);
+extern ThotBool TtaCheckDirectory (/* char* directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

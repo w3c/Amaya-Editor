@@ -4271,7 +4271,7 @@ void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
 	  if (*ptr != EOS)
 	    {
 	      /* get next word in the attribute value */
-	      ptr = TtaSkipWCBlanks (ptr);
+	      ptr = TtaSkipBlanks (ptr);
 	      /* process that word */
 	      if (*ptr != EOS && *ptr != ' ')
 		{
@@ -4541,7 +4541,7 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 	  if (*ptr != EOS)
 	    {
 	      /* get next word in the attribute value */
-	      ptr = TtaSkipWCBlanks (ptr);
+	      ptr = TtaSkipBlanks (ptr);
 	      /* process that word */
 	      if (*ptr != EOS && *ptr != ' ')
 		{

@@ -123,8 +123,6 @@ PtrDict             PtFree_Dict;
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
-#include "ustring_f.h"
-
 
 /*----------------------------------------------------------------------
    TtaAllocString
@@ -138,12 +136,13 @@ PtrDict             PtFree_Dict;
    See also:
    TtaGetMemory and TtaFreeMemory.
   ----------------------------------------------------------------------*/
-STRING             TtaAllocString (unsigned int n)
+STRING TtaAllocString (unsigned int n)
 {
     if (n == 0)
        n++;
     return ((STRING) malloc ((size_t) n * sizeof (CHAR_T)));
 }
+
 
 /*----------------------------------------------------------------------
    TtaGetMemory
@@ -157,7 +156,7 @@ STRING             TtaAllocString (unsigned int n)
    See also:
    TtaFreeMemory.
   ----------------------------------------------------------------------*/
-void               *TtaGetMemory (unsigned int n)
+void  *TtaGetMemory (unsigned int n)
 {
   void               *res;
 
@@ -179,7 +178,7 @@ void               *TtaGetMemory (unsigned int n)
    See also:
    TtaGetMemory.
   ----------------------------------------------------------------------*/
-void                TtaFreeMemory (void *ptr)
+void TtaFreeMemory (void *ptr)
 {
    if (ptr)	
       free (ptr);
@@ -397,84 +396,6 @@ char *TtaStrdup (char* str)
    if (res == NULL)
       return (res);
    strcpy (res, str);
-   return (res);
-}
-
-/*----------------------------------------------------------------------
-   TtaWCSdup
-
-   Copy the WC string given in argument to a newly allocated piece of memory.
-   Parameters:
-   str: a zero terminated string.
-   See also:
-   TtaGetMemory.
-  ----------------------------------------------------------------------*/
-CHAR_T *TtaWCSdup (CHAR_T* str)
-{
-   CHAR_T *res;
-
-   if (str == NULL)
-      return (NULL);
-   res = TtaAllocString (ustrlen (str) + 1);
-   if (res == NULL)
-      return (res);
-   ustrcpy (res, str);
-   return (res);
-}
-
-/*----------------------------------------------------------------------
-   TtaWC2ISOdup
-
-   Copy the WC string given in argument to a newly allocated piece of memory.
-   Parameters:
-   str: a zero terminated string.
-   See also:
-   TtaGetMemory.
-  ----------------------------------------------------------------------*/
-char *              TtaWC2ISOdup (CHAR_T* str)
-{
-   char*            res;
-   int              i, len = ustrlen (str);
-
-   if (str == NULL)
-      return (NULL);
-   res = TtaGetMemory (len + 1);
-   if (res == NULL)
-      return (res);
-
-   for (i = 0; i < len; i++)
-       res[i] = (char) str[i];
-
-   res[i] = 0;
- 
-   return (res);
-}
-
-/*----------------------------------------------------------------------
-   TtaISO2WCdup
-
-   Copy the WC string given in argument to a newly allocated piece of memory.
-   Parameters:
-   str: a zero terminated string.
-   See also:
-   TtaGetMemory.
-  ----------------------------------------------------------------------*/
-CHAR_T*            TtaISO2WCdup (char* str)
-{
-   CHAR_T*          res;
-   int              i, len = strlen (str);
-
-   if (str == NULL)
-      return (NULL);
-   res = TtaAllocString (len + 1);
-   if (res == NULL)
-      return (res);
-
-   for (i = 0; i < len; i++)
-       res[i] = (CHAR_T) str[i];
-
-   res[i] = 0;
- 
    return (res);
 }
 
@@ -2041,7 +1962,7 @@ void                GetDictionary (PtrDict * pDict)
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictName[0] = WC_EOS;
+	pdict->DictName[0] = EOS;
 	pdict->DictDirectory = NULL;
 	/* readonly */
 	pdict->DictReadOnly = TRUE;

@@ -7,14 +7,12 @@
 #ifdef __STDC__
 
 extern char* TtaSkipBlanks ( char* ptr );
-extern CHAR_T* TtaSkipWCBlanks ( CHAR_T* ptr );
 extern ThotBool TtaIsBlank ( char* ptr );
-extern ThotBool TtaIsWCBlank ( CHAR_T* ptr );
 extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
-extern CHAR_T* TtaGetEnvString ( char* name );
+extern char* TtaGetEnvString ( char* name );
 extern void TtaClearEnvString ( char *name );
 extern void TtaSetEnvInt ( char *name,
                            int value,
@@ -23,34 +21,32 @@ extern void TtaSetEnvBoolean ( char *name,
                                ThotBool value,
                                int overwrite );
 extern void TtaSetEnvString ( char *name,
-                              CHAR_T* value,
+                              char* value,
                               int overwrite );
 extern void TtaSetDefEnvString ( char *name,
-                                 CHAR_T* value,
+                                 char* value,
                                  int overwrite );
 extern ThotBool TtaGetDefEnvInt ( char* name,
                                   int *value );
 extern ThotBool TtaGetDefEnvBoolean ( char* name,
                                       ThotBool *value );
-extern CHAR_T* TtaGetDefEnvString ( char* name );
+extern char* TtaGetDefEnvString ( char* name );
 extern void TtaSaveAppRegistry ( void );
-extern void TtaInitializeAppRegistry ( CHAR_T* appArgv0 );
+extern void TtaInitializeAppRegistry ( char* appArgv0 );
 extern void TtaFreeAppRegistry ( void );
-extern int SearchFile ( CHAR_T* fileName,
+extern int SearchFile ( char* fileName,
                         int dir,
-                        CHAR_T* fullName );
+                        char* fullName );
 
 #else /* __STDC__ */
 
 extern char* TtaSkipBlanks (/* char* ptr */);
-extern CHAR_T* TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);
-extern ThotBool TtaIsWCBlank (/* CHAR_T* ptr */);
 extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
 extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
-extern CHAR_T* TtaGetEnvString (/* char* name */);
+extern char* TtaGetEnvString (/* char* name */);
 extern void TtaClearEnvString (/* char *name */);
 extern void TtaSetEnvInt (/* char *name,
                              int value,
@@ -59,22 +55,22 @@ extern void TtaSetEnvBoolean (/* char *name,
                                  ThotBool value,
                                  int overwrite */);
 extern void TtaSetEnvString (/* char *name,
-                                CHAR_T* value,
+                                char* value,
                                 int overwrite */);
 extern void TtaSetDefEnvString (/* char *name,
-                                   CHAR_T* value,
+                                   char* value,
                                    int overwrite */);
 extern ThotBool TtaGetDefEnvInt (/* char* name,
                                     int *value */);
 extern ThotBool TtaGetDefEnvBoolean (/* char* name,
                                         ThotBool *value */);
-extern CHAR_T* TtaGetDefEnvString (/* char* name */);
+extern char* TtaGetDefEnvString (/* char* name */);
 extern void TtaSaveAppRegistry (/* void */);
-extern void TtaInitializeAppRegistry (/* CHAR_T* appArgv0 */);
+extern void TtaInitializeAppRegistry (/* char* appArgv0 */);
 extern void TtaFreeAppRegistry (/* void */);
-extern int SearchFile (/* CHAR_T* fileName,
+extern int SearchFile (/* char* fileName,
                           int dir,
-                          CHAR_T* fullName */);
+                          char* fullName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -41,7 +41,7 @@ void ANNOT_SetPath (document)
      Document document;
 #endif /* __STDC__*/
 {
-  CHAR_T  *dirList = TtaGetMemory (2000);
+  char  *dirList = TtaGetMemory (2000);
 
   TtaGetDocumentPath (dirList, 2000);
   strcat (dirList, ":");
@@ -128,12 +128,12 @@ Document doc;
       annot = (AnnotMeta *) ptr->object;
       /* @@ maybe we could add calls to NormalizeFile here */
       if ((annot->annot_url 
-	   && (!ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url)
-	       || !ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
+	   && (!strcasecmp (DocumentURLs[doc_annot], annot->annot_url)
+	       || !strcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
 	  /* RRS: newly created local annotations have only a body URI */
 	  || (annot->body_url
-	      &&  (!ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) 
-		   || !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))))
+	      &&  (!strcasecmp (DocumentURLs[doc_annot], annot->body_url) 
+		   || !strcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))))
 	break;
       ptr = ptr->next;
     }
@@ -195,13 +195,13 @@ void ANNOT_ReloadAnnotMeta (annotDoc)
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, CHAR_T *title)
+void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, char *title)
 #else /* __STDC__*/
 void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
      Document   doc;
      Document   docAnnot;
      AnnotMeta *annot;
-     CHAR_T    *title;
+     char    *title;
 #endif /* __STDC__*/
 {
   ElementType elType;
@@ -211,9 +211,9 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   STRING      user;
   STRING      doc_anchor;
   STRING      source_url;
-  CHAR_T     *cdate;
-  CHAR_T     *mdate;
-  CHAR_T     *type;
+  char     *cdate;
+  char     *mdate;
+  char     *type;
 
   user = annot->author;
   source_url = annot->source_url;
@@ -257,7 +257,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
 	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+	  TtaSetTextContent (el, (char *) s->object->name,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 	}
@@ -268,7 +268,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
 	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+	  TtaSetTextContent (el, (char *) s->object->name,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 	}
@@ -279,7 +279,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
 	  elType.ElTypeNum = Annot_EL_CreatorEmail;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+	  TtaSetTextContent (el, (char *) s->object->name,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
 	}
@@ -307,17 +307,17 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   TtaAttachAttribute (el, attr, docAnnot);
 #if 0
     {
-      doc_anchor = TtaGetMemory (ustrlen (DocumentURLs[doc])
-				 + ustrlen (user)
-				 + ustrlen (DocumentURLs[docAnnot])
+      doc_anchor = TtaGetMemory (strlen (DocumentURLs[doc])
+				 + strlen (user)
+				 + strlen (DocumentURLs[docAnnot])
 				 + 20);
       sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[doc],
 	       ANNOT_ANAME, user, DocumentURLs[docAnnot]);
       annot->name = doc_anchor;
     }
 #endif
-  doc_anchor = TtaGetMemory (ustrlen (DocumentURLs[doc])
-			     + ustrlen (annot->name) 
+  doc_anchor = TtaGetMemory (strlen (DocumentURLs[doc])
+			     + strlen (annot->name) 
 			     + 20);
   sprintf (doc_anchor, "%s#%s", DocumentURLs[doc], annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
@@ -340,16 +340,16 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  ANNOT_InitDocumentBody (Document docAnnot, CHAR_T *title)
+void  ANNOT_InitDocumentBody (Document docAnnot, char *title)
 #else /* __STDC__*/
 void  ANNOT_InitDocumentBody (docAnnot, title)
 Document docAnnot;
-CHAR_T *title;
+char *title;
 #endif /* __STDC__*/
 {
   ElementType elType;
   Element     root, head, body, el, child;
-  CHAR_T     *tmp;
+  char     *tmp;
 
   /*
   ** HTML initialization
@@ -377,7 +377,7 @@ CHAR_T *title;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
   /* @@ maybe parse the URL here */
-  tmp = TtaGetMemory (ustrlen (title) + sizeof ("Annotation of ") + 1);
+  tmp = TtaGetMemory (strlen (title) + sizeof ("Annotation of ") + 1);
   sprintf (tmp, "Annotation of %s", title);
   TtaSetTextContent (el, tmp,
 		     TtaGetDefaultLanguage (), docAnnot);
@@ -403,9 +403,9 @@ CHAR_T *title;
   attrType.AttrTypeNum = HTML_ATTR_meta_content;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
-  ustrcpy (tempfile, HTAppName);
-  ustrcat (tempfile, " ");
-  ustrcat (tempfile, HTAppVersion);
+  strcpy (tempfile, HTAppName);
+  strcat (tempfile, " ");
+  strcat (tempfile, HTAppVersion);
   TtaSetAttributeText (attr, tempfile, meta, docAnnot);
   TtaInsertSibling (meta, child, FALSE, docAnnot);
 #endif
@@ -567,19 +567,19 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
      Document document;
      Document docAnnot;
      AnnotMeta *annot;
-     CHAR_T    *title;
+     char    *title;
      ThotBool  initBody;
 
 #endif /* __STDC__*/
 {
   ThotBool free_title;
-  CHAR_T  *title;
+  char  *title;
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
 
   title = ANNOT_GetHTMLTitle (doc);
-  if (!title || title[0] == WC_EOS)
+  if (!title || title[0] == EOS)
     {
       title = DocumentURLs[doc];
       free_title = FALSE;
@@ -624,7 +624,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
   struct tm   *localDate;
   STRING      strDate;
   STRING      doc_anchor;
-  CHAR_T      tempfile[MAX_LENGTH];
+  char      tempfile[MAX_LENGTH];
   char       *annot_user;
 
   annot_user = GetAnnotUser ();
@@ -665,9 +665,9 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
   attrType.AttrTypeNum = HTML_ATTR_meta_content;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
-  ustrcpy (tempfile, HTAppName);
-  ustrcat (tempfile, " ");
-  ustrcat (tempfile, HTAppVersion);
+  strcpy (tempfile, HTAppName);
+  strcat (tempfile, " ");
+  strcat (tempfile, HTAppVersion);
   TtaSetAttributeText (attr, tempfile, meta, docAnnot);
   TtaInsertSibling (meta, child, FALSE, docAnnot);
 #endif
@@ -836,11 +836,11 @@ void ANNOT_PrepareAnnotView (document)
   Saves the annotation document doc_annot to the local filesystem
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ANNOT_LocalSave (Document doc_annot, CHAR_T *html_filename)
+ThotBool            ANNOT_LocalSave (Document doc_annot, char *html_filename)
 #else  /* __STDC__ */
 ThotBool            ANNOT_LocalSave (doc_annot, html_filename)
 Document            doc_annot;
-CHAR_T             *html_filename;
+char             *html_filename;
 
 #endif /* __STDC__ */
 {

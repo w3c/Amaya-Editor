@@ -16,9 +16,9 @@ extern void ANNOT_ReloadAnnotMeta ( Document annotDoc );
 extern void ANNOT_InitDocumentMeta ( Document doc,
                                      Document docAnnot,
                                      AnnotMeta *annot,
-                                     CHAR_T *title );
+                                     char *title );
 extern void ANNOT_InitDocumentBody ( Document docAnnot,
-                                     CHAR_T *title );
+                                     char *title );
 extern Element ANNOT_AddThreadItem ( Document doc,
                                      AnnotMeta *annot );
 extern void ANNOT_InitDocumentStructure ( Document doc,
@@ -27,7 +27,7 @@ extern void ANNOT_InitDocumentStructure ( Document doc,
                                           ThotBool initBody );
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern ThotBool ANNOT_LocalSave ( Document doc_annot,
-                                  CHAR_T *html_filename );
+                                  char *html_filename );
 
 #else /* __STDC__ */
 
@@ -41,9 +41,9 @@ extern void ANNOT_ReloadAnnotMeta (/* Document annotDoc */);
 extern void ANNOT_InitDocumentMeta (/* Document doc,
                                        Document docAnnot,
                                        AnnotMeta *annot,
-                                       CHAR_T *title */);
+                                       char *title */);
 extern void ANNOT_InitDocumentBody (/* Document docAnnot,
-                                       CHAR_T *title */);
+                                       char *title */);
 extern Element ANNOT_AddThreadItem (/* Document doc,
                                        AnnotMeta *annot */);
 extern void ANNOT_InitDocumentStructure (/* Document doc,
@@ -52,7 +52,7 @@ extern void ANNOT_InitDocumentStructure (/* Document doc,
                                             ThotBool initBody */);
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern ThotBool ANNOT_LocalSave (/* Document doc_annot,
-                                    CHAR_T *html_filename */);
+                                    char *html_filename */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

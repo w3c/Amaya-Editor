@@ -44,85 +44,54 @@
 #include "memory_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
-#include "ustring_f.h"
 #include "views_f.h"
 
 static ThotBool     doc_import[MAX_ITEM_CONF];
-static CHAR_T*      doc_items[MAX_ITEM_CONF];
-static CHAR_T*      doc_items_menu[MAX_ITEM_CONF];
-static CHAR_T*      nat_items[MAX_ITEM_CONF];
-static CHAR_T*      nat_items_menu[MAX_ITEM_CONF];
-static CHAR_T*      ext_items[MAX_ITEM_CONF];
-static CHAR_T*      ext_items_menu[MAX_ITEM_CONF];
-static CHAR_T*      pres_items[MAX_ITEM_CONF];
-static CHAR_T*      pres_items_menu[MAX_ITEM_CONF];
-static CHAR_T*      export_items[MAX_ITEM_CONF];
-static CHAR_T*      export_items_menu[MAX_ITEM_CONF];
+static char        *doc_items[MAX_ITEM_CONF];
+static char        *doc_items_menu[MAX_ITEM_CONF];
+static char        *nat_items[MAX_ITEM_CONF];
+static char        *nat_items_menu[MAX_ITEM_CONF];
+static char        *ext_items[MAX_ITEM_CONF];
+static char        *ext_items_menu[MAX_ITEM_CONF];
+static char        *pres_items[MAX_ITEM_CONF];
+static char        *pres_items_menu[MAX_ITEM_CONF];
+static char        *export_items[MAX_ITEM_CONF];
+static char        *export_items_menu[MAX_ITEM_CONF];
 
 /*----------------------------------------------------------------------
    ConfigInit initializes the configuration module
   ----------------------------------------------------------------------*/
-void                ConfigInit ()
+void ConfigInit ()
 {
-   int                 i;
+  int                 i;
 
-   for (i = 0; i < MAX_ITEM_CONF; i++)
-     {
-	doc_items[i] = NULL;
-	doc_import[i] = FALSE;
-	doc_items_menu[i] = NULL;
-	nat_items[i] = NULL;
-	nat_items_menu[i] = NULL;
-	ext_items[i] = NULL;
-	ext_items_menu[i] = NULL;
-	pres_items[i] = NULL;
-	pres_items_menu[i] = NULL;
-	export_items[i] = NULL;
-	export_items_menu[i] = NULL;
-     }
-   TtaConfigReadConfigFiles (SchemaPath);
+  for (i = 0; i < MAX_ITEM_CONF; i++)
+    {
+      doc_items[i] = NULL;
+      doc_import[i] = FALSE;
+      doc_items_menu[i] = NULL;
+      nat_items[i] = NULL;
+      nat_items_menu[i] = NULL;
+      ext_items[i] = NULL;
+      ext_items_menu[i] = NULL;
+      pres_items[i] = NULL;
+      pres_items_menu[i] = NULL;
+      export_items[i] = NULL;
+      export_items_menu[i] = NULL;
+    }
+  TtaConfigReadConfigFiles (SchemaPath);
 }
 
 /*----------------------------------------------------------------------
    getFirstWord                                                    
   ----------------------------------------------------------------------*/
-static void         getFirstWord (unsigned char* line, CHAR_T* word)
+static void getFirstWord (unsigned char *line, char *word)
 {
    int             indword, indline;
-#  ifdef _I18N_
-   int             nbBytes;
-   CHAR_T          wChar;
-   unsigned char*  mbcsStart;
-#  endif /* _I18N_ */
 
    indline = 0;
-   word[0] = WC_EOS;
-
+   word[0] = EOS;
    /* skip spaces if there are */
-#  ifdef _I18N_
-   /* get the first wide character */
-   mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-   indline += nbBytes; 
-
-   while (wChar <= WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-
-   if (wChar == '#') /* The line contains only a comment */
-      return;
-
-   indword = 0;
-
-   while (wChar > WC_SPACE && wChar != ':' && wChar != WC_EOS) {
-         word[indword++] = wChar;
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-#  else  /* !_I18N_ */
    while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
    if (line[indline] == '#')
@@ -133,73 +102,24 @@ static void         getFirstWord (unsigned char* line, CHAR_T* word)
    /* ou la fin de ligne */
    indword = 0;
 
-   while (line[indline] > SPACE && line[indline] != ':' && line[indline] != EOS)
+   while (line[indline] > SPACE && line[indline] != ':' &&
+	  line[indline] != EOS)
          word[indword++] = line[indline++];
-#  endif /* !_I18N_ */
 
    /* marque la fin du mot trouve' */
-   word[indword] = WC_EOS;
+   word[indword] = EOS;
 }
 
 
 /*----------------------------------------------------------------------
    getSecondWord                                                   
   ----------------------------------------------------------------------*/
-static void         getSecondWord (unsigned char* line, CHAR_T* word)
+static void getSecondWord (unsigned char *line, char *word)
 {
    int              indword, indline;
-#  ifdef _I18N_
-   int              nbBytes;
-   CHAR_T           wChar;
-   unsigned char*   mbcsStart;
-#  endif /* _I18N_ */
 
    indline = 0;
-   word[0] = WC_EOS;
-
-#  ifdef _I18N_
-   /* Skip blanks */
-   mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-   indline += nbBytes; 
-
-   while (wChar <= WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-
-   if (wChar == '#') /* The line contains only a comment */
-      return;
-
-   /* saute le 1er mot, jusqu'a rencontrer le 1er espace */
-   /* ou la fin de ligne */
-
-   while (wChar > WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-   /* saute les espaces qui suivent le 1er mot */
-   while (wChar <= WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-   if (wChar == '#')
-      /* le premier mot est suivi d'un commentaire */
-      return;
-   /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
-   /* espace ou la fin de ligne */
-   indword = 0;
-   while (wChar > WC_SPACE && wChar != WC_EOS) {
-         word[indword++] = wChar;
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-   /* marque la fin du mot trouve' */
-#  else  /* !_I18N_ */
+   word[0] = EOS;
    /* saute les espaces de debut de ligne */
    while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
@@ -222,141 +142,48 @@ static void         getSecondWord (unsigned char* line, CHAR_T* word)
    while (line[indline] > SPACE && line[indline] != EOS)
       word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
-#  endif /* !_I18N_ */
-   word[indword] = WC_EOS;
+   word[indword] = EOS;
 }
 
 /*----------------------------------------------------------------------
    singleWord                                                      
   ----------------------------------------------------------------------*/
-static ThotBool     singleWord (unsigned char* line)
+static ThotBool     singleWord (unsigned char *line)
 {
-   int                 ind;
-#  ifdef _I18N_
-   int              nbBytes;
-   CHAR_T           wChar;
-   unsigned char*   mbcsStart;
-#  endif /* _I18N_ */
+  int                 ind;
 
-   ind = 0;
-
-#  ifdef _I18N_
-   /* saute les espaces de debut de ligne */
-   mbcsStart = &line[ind];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-   ind += nbBytes; 
-
-   while (wChar <= WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         ind += nbBytes; 
-   }
-   if (wChar == '#')
-      /* la ligne commence par un commentaire */
-      return FALSE;
-
-   /* saute le premier mot */
-   while (wChar > WC_SPACE && wChar != '#' && wChar != ':' && wChar != WC_EOS) {
-         mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         ind += nbBytes; 
-   }
-
-   /* saute les espaces qui suivent le 1er mot */
-   while (wChar <= WC_SPACE && wChar != WC_EOS) {
-         mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         ind += nbBytes; 
-   }
-
-   if (wChar == '#' || wChar == WC_EOS)
-      /* il ne reste rien dans la ligne ou seulement un commentaire */
-      return TRUE;
-   else
-      /* il y a des caracteres significatifs apres le 1er mot */
-      return FALSE;
-#  else  /* !_I18N_ */
-   /* saute les espaces de debut de ligne */
-   while (line[ind] <= SPACE && line[ind] != EOS)
-      ind++;
-   if (line[ind] == '#')
-      /* la ligne commence par un commentaire */
-      return FALSE;
-   /* saute le premier mot */
-   while (line[ind] > SPACE && line[ind] != '#' && line[ind] != ':' && line[ind] != EOS)
-      ind++;
-   /* saute les espaces qui suivent le 1er mot */
-   while (line[ind] <= SPACE && line[ind] != EOS)
-      ind++;
-   if (line[ind] == '#' || line[ind] == EOS)
-      /* il ne reste rien dans la ligne ou seulement un commentaire */
-      return TRUE;
-   else
-      /* il y a des caracteres significatifs apres le 1er mot */
-      return FALSE;
-#  endif /* !_I18N_ */
+  ind = 0;
+  /* saute les espaces de debut de ligne */
+  while (line[ind] <= SPACE && line[ind] != EOS)
+    ind++;
+  if (line[ind] == '#')
+    /* la ligne commence par un commentaire */
+    return FALSE;
+  /* saute le premier mot */
+  while (line[ind] > SPACE && line[ind] != '#' && 
+	 line[ind] != ':' && line[ind] != EOS)
+    ind++;
+  /* saute les espaces qui suivent le 1er mot */
+  while (line[ind] <= SPACE && line[ind] != EOS)
+    ind++;
+  if (line[ind] == '#' || line[ind] == EOS)
+    /* il ne reste rien dans la ligne ou seulement un commentaire */
+    return TRUE;
+  else
+    /* il y a des caracteres significatifs apres le 1er mot */
+    return FALSE;
 }
 
 
 /*----------------------------------------------------------------------
    getStringAfterColon                                             
   ----------------------------------------------------------------------*/
-static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
+static void getStringAfterColon (unsigned char *line, char *text)
 {
    int                 indline, indtext;
-#  ifdef _I18N_
-   int              nbBytes;
-   CHAR_T           wChar;
-   unsigned char*   mbcsStart;
-#  endif /* _I18N_ */
 
    indline = 0;
-   text[0] = WC_EOS;
-
-#  ifdef _I18N_
-
-   mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-   indline += nbBytes; 
-
-   while (wChar != ':' && wChar != WC_EOS) {
-         mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-         indline += nbBytes; 
-   }
-   
-   if (wChar == ':') {
-      mbcsStart = &line[indline];
-      nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-      indline += nbBytes; 
-
-      while (wChar <= WC_SPACE && wChar != WC_EOS) {
-            mbcsStart = &line[indline];
-            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-            indline += nbBytes; 
-      }
-      
-      if (wChar == '#' || wChar == WC_EOS)
-         return;
-
-      indtext = 0;
-
-      while (wChar != '#' && wChar != WC_EOS) {
-            text[indtext++] = wChar;
-            mbcsStart = &line[indline];
-            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
-            indline += nbBytes; 
-      }
-      indtext--;
-      while (text[indtext] <= WC_SPACE && indtext >= 0)
-            indtext--;
-      indtext++;
-      /* termine la chaine */
-      text[indtext] = WC_EOS;
-
-   }
-
-#  else  /* !_I18N_ */
+   text[0] = EOS;
    while (line[indline] != ':' && line[indline] != EOS)
       indline++;
    if (line[indline] == ':')
@@ -377,7 +204,6 @@ static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
 	/* termine la chaine */
 	text[indtext] = EOS;
      }
-#   endif /* !_I18N_ */
 }
 
 
@@ -390,12 +216,12 @@ static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
    1 si on trouve le 1er mot,                           
    2 si on trouve le 2eme mot.                          
   ----------------------------------------------------------------------*/
-static ThotBool     readUntil (FILE * file, CHAR_T* word1, CHAR_T* word2)
+static ThotBool readUntil (FILE *file, char *word1, char *word2)
 {
    ThotBool            stop;
    int                 ret;
    char                line[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    stop = FALSE;
    ret = 0;
@@ -408,11 +234,11 @@ static ThotBool     readUntil (FILE * file, CHAR_T* word1, CHAR_T* word2)
 	   getFirstWord (line, word);
 	   if (singleWord (line))
 	     {
-		if (*word1 != WC_EOS)
-		   if (ustrcmp (word, word1) == 0)
+		if (*word1 != EOS)
+		   if (strcmp (word, word1) == 0)
 		      ret = 1;
-		if (*word2 != WC_EOS)
-		   if (ustrcmp (word, word2) == 0)
+		if (*word2 != EOS)
+		   if (strcmp (word, word2) == 0)
 		      ret = 2;
 	     }
 	}
@@ -423,25 +249,26 @@ static ThotBool     readUntil (FILE * file, CHAR_T* word1, CHAR_T* word2)
 /*----------------------------------------------------------------------
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
-static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T** doctypeTrans, int *typ, ThotBool * import)
+static void namesOfDocType (char *fname, char **doctypeOrig,
+			    char **doctypeTrans, int *typ, ThotBool *import)
 {
    int                 i, l, point, res;
-   FILE*               file;
+   FILE               *file;
    char                line[MAX_TXT_LEN];
-   CHAR_T              text[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
+   char                URL_DIR_SEP;
    ThotBool            stop;
-   CHAR_T              URL_DIR_SEP;
 
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
    *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
 
-   if (fname && ustrchr (fname, '/'))
+   if (fname && strchr (fname, '/'))
 	  URL_DIR_SEP = '/';
    else 
-	   URL_DIR_SEP = WC_DIR_SEP;
+	   URL_DIR_SEP = DIR_SEP;
 
    /* ouvre le fichier */
    file = TtaReadOpen (fname);
@@ -466,13 +293,13 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
-   if (ustrcmp (word, "document") == 0)
+   if (strcmp (word, "document") == 0)
       *typ = CONFIG_DOCUMENT_STRUCT;
-   else if (ustrcmp (word, "nature") == 0)
+   else if (strcmp (word, "nature") == 0)
       *typ = CONFIG_NATURE_STRUCT;
-   else if (ustrcmp (word, "extension") == 0)
+   else if (strcmp (word, "extension") == 0)
       *typ = CONFIG_EXTENSION_STRUCT;
-   else if (ustrcmp (word, "document-nature") == 0)
+   else if (strcmp (word, "document-nature") == 0)
       *typ = CONFIG_EXCLUSION;
    else
       /* le premier mot du fichier est invalide */
@@ -482,7 +309,7 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
      }
 
    /* cherche le "." marquant le suffixe a la fin du nom de fichier */
-   i = ustrlen (fname);
+   i = strlen (fname);
    while (i > 0 && fname[i] != '.')
       i--;
    if (fname[i] == '.')
@@ -497,11 +324,11 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
    if (fname[i] == '_')
       /* ignore les fichiers dont le nom commence par "-" */
       return;
-   l = ustrlen (&fname[i]) + 1;
-   *doctypeOrig =	(CHAR_T*) TtaAllocString (l);
+   l = strlen (&fname[i]) + 1;
+   *doctypeOrig =	(char*) TtaGetMemory (l);
    if (point != 0)
-      fname[point] = WC_EOS;
-   ustrcpy (*doctypeOrig, &fname[i]);
+      fname[point] = EOS;
+   strcpy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
       fname[point] = '.';
@@ -535,21 +362,21 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
 	   else
 	     {
 		getFirstWord (line, word);
-		if (ustrcmp (word, *doctypeOrig) == 0)
+		if (strcmp (word, *doctypeOrig) == 0)
 		   stop = TRUE;
 	     }
 	while (!stop);
 
-	if (ustrcmp (word, *doctypeOrig) == 0)
+	if (strcmp (word, *doctypeOrig) == 0)
 	   /* on a trouve' la ligne voulue */
 	  {
 	     getStringAfterColon (line, text);
-	     if (text[0] == WC_EOS)
+	     if (text[0] == EOS)
 		fprintf (stderr, "invalid line in file %s\n   %s\n", fname, line);
 	     else
 	       {
-		  *doctypeTrans = TtaAllocString (ustrlen (text) + 1);
-		  ustrcpy (*doctypeTrans, AsciiTranslate (text));
+		  *doctypeTrans = TtaGetMemory (strlen (text) + 1);
+		  strcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
      }
@@ -559,8 +386,8 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
    /* le nom du schema, on prend le nom d'origine comme traduction */
    if (*doctypeTrans == NULL)
      {
-	*doctypeTrans = TtaAllocString (l);
-	ustrcpy (*doctypeTrans, *doctypeOrig);
+	*doctypeTrans = TtaGetMemory (l);
+	strcpy (*doctypeTrans, *doctypeOrig);
      }
 }
 
@@ -614,22 +441,22 @@ void                ConfigFree (void)
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
+void TtaConfigReadConfigFiles (char *aSchemaPath)
 {
   int                 nbitemdoc, nbitemnat, nbitemext;
   int                 beginning, i;
   int                 typ;
   ThotBool            import;
-  CHAR_T*             Dir;
+  char               *Dir;
   PathBuffer          DirBuffer;
   ThotDirBrowse       thotDir;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
-  CHAR_T*             suffix;
+  char               *suffix;
   PathBuffer          fname;
-  CHAR_T*             nameOrig;
-  CHAR_T*             nameTrans;
+  char               *nameOrig;
+  char               *nameTrans;
   ThotBool            stop;
 
   /* force the english language in schemas */
@@ -647,18 +474,18 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
   nbitemnat = 0;
   nbitemext = 0;
   /* traite successivement tous les directories du path des schemas */
-  ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
+  strncpy (DirBuffer, aSchemaPath, MAX_PATH);
   stop = FALSE;
-  while (DirBuffer[i] != WC_EOS && i < MAX_PATH && !stop)
+  while (DirBuffer[i] != EOS && i < MAX_PATH && !stop)
     {
-      while (DirBuffer[i] != WC_PATH_SEP && DirBuffer[i] != WC_EOS && i < MAX_PATH)
+      while (DirBuffer[i] != PATH_SEP && DirBuffer[i] != EOS && i < MAX_PATH)
 	i++;
-      if (DirBuffer[i] == WC_EOS)
+      if (DirBuffer[i] == EOS)
 	/* dernier directory du path. Il faut s'arreter apres ce directory */
 	stop = TRUE;
-      if (DirBuffer[i] == WC_PATH_SEP)
-	DirBuffer[i] = WC_EOS;
-      if (DirBuffer[i] == WC_EOS)
+      if (DirBuffer[i] == PATH_SEP)
+	DirBuffer[i] = EOS;
+      if (DirBuffer[i] == EOS)
 	/* un directory de schema a ete isole' */
 	{
 	  Dir = &DirBuffer[beginning];
@@ -667,7 +494,7 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
 	    {
 	      /* commande "ls" sur le directory */
 	      thotDir.buf = fname;
-	      thotDir.bufLen = sizeof (fname) / sizeof (CHAR_T);
+	      thotDir.bufLen = sizeof (fname) / sizeof (char);
 	      thotDir.PicMask = ThotDirBrowse_FILES;
 	      if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
 		do
@@ -691,10 +518,10 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
 			  }
 			if (typ == CONFIG_EXCLUSION)
 			  {
-			    nat_items[nbitemnat] = TtaAllocString (ustrlen (nameOrig) + 1);
-			    nat_items_menu[nbitemnat] = TtaAllocString (ustrlen (nameTrans) + 1);
-			    ustrcpy (nat_items[nbitemnat], nameOrig);
-			    ustrcpy (nat_items_menu[nbitemnat], nameTrans);
+			    nat_items[nbitemnat] = TtaGetMemory (strlen (nameOrig) + 1);
+			    nat_items_menu[nbitemnat] = TtaGetMemory (strlen (nameTrans) + 1);
+			    strcpy (nat_items[nbitemnat], nameOrig);
+			    strcpy (nat_items_menu[nbitemnat], nameTrans);
 			    nbitemnat++;
 			  }
 			if (typ == CONFIG_EXTENSION_STRUCT)
@@ -723,7 +550,7 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
    Si doc == TRUE on prend les schemas de documents, sinon 
    les schemas de nature.                                  
   ----------------------------------------------------------------------*/
-int   ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
+int   ConfigMakeDocTypeMenu (char *BufMenu, int *lgmenu, ThotBool doc)
 {
    int                 nbitem, len, i;
 
@@ -739,14 +566,14 @@ int   ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
 	   if (doc_items_menu[i] != NULL)
 	      /* cette entree de la table a une traduction, on la prend */
 	     {
-		len = ustrlen (doc_items_menu[i]);
-		ustrcpy (BufMenu + (*lgmenu), doc_items_menu[i]);
+		len = strlen (doc_items_menu[i]);
+		strcpy (BufMenu + (*lgmenu), doc_items_menu[i]);
 	     }
 	   else
 	      /* pas de traduction, on prend le nom d'origine du schema */
 	     {
-		len = ustrlen (doc_items[i]);
-		ustrcpy (BufMenu + (*lgmenu), doc_items[i]);
+		len = strlen (doc_items[i]);
+		strcpy (BufMenu + (*lgmenu), doc_items[i]);
 	     }
 	   (*lgmenu) += len + 1;
 	   nbitem++;
@@ -759,14 +586,14 @@ int   ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
 	   if (nat_items_menu[i] != NULL)
 	      /* cette entree de la table a une traduction, on la prend */
 	     {
-		len = ustrlen (nat_items_menu[i]);
-		ustrcpy (BufMenu + (*lgmenu), nat_items_menu[i]);
+		len = strlen (nat_items_menu[i]);
+		strcpy (BufMenu + (*lgmenu), nat_items_menu[i]);
 	     }
 	   else
 	      /* pas de traduction, on prend le nom d'origine du schema */
 	     {
-		len = ustrlen (nat_items[i]);
-		ustrcpy (BufMenu + (*lgmenu), nat_items[i]);
+		len = strlen (nat_items[i]);
+		strcpy (BufMenu + (*lgmenu), nat_items[i]);
 	     }
 	   (*lgmenu) += len + 1;
 	   nbitem++;
@@ -783,7 +610,7 @@ int   ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
-void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ)
+void TtaConfigSSchemaExternalName (char *nameUser, char *nameSchema, int Typ)
 {
    int                 i;
    ThotBool            found;
@@ -796,10 +623,10 @@ void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ
 	    case CONFIG_DOCUMENT_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && doc_items[i] != NULL)
 		 {
-		    if (ustrcmp (nameSchema, doc_items[i]) == 0)
+		    if (strcmp (nameSchema, doc_items[i]) == 0)
 		      {
 			 if (doc_items_menu[i] != NULL)
-			    ustrcpy (nameUser, doc_items_menu[i]);
+			    strcpy (nameUser, doc_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -810,10 +637,10 @@ void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ
 	    case CONFIG_NATURE_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && nat_items[i] != NULL)
 		 {
-		    if (ustrcmp (nameSchema, nat_items[i]) == 0)
+		    if (strcmp (nameSchema, nat_items[i]) == 0)
 		      {
 			 if (nat_items_menu[i] != NULL)
-			    ustrcpy (nameUser, nat_items_menu[i]);
+			    strcpy (nameUser, nat_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -824,10 +651,10 @@ void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ
 	    case CONFIG_EXTENSION_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && ext_items[i] != NULL)
 		 {
-		    if (ustrcmp (nameSchema, ext_items[i]) == 0)
+		    if (strcmp (nameSchema, ext_items[i]) == 0)
 		      {
 			 if (ext_items_menu[i] != NULL)
-			    ustrcpy (nameUser, ext_items_menu[i]);
+			    strcpy (nameUser, ext_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -844,7 +671,8 @@ void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ
    Si Doc est vrai, il s'agit d'un schema de document, sinon c'est 
    un schema de nature.                                            
   ----------------------------------------------------------------------*/
-void  ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool Doc)
+void ConfigSSchemaInternalName (char *nameUser, char *nameSchema,
+				ThotBool Doc)
 {
    int                 i;
    ThotBool            found;
@@ -855,10 +683,10 @@ void  ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool 
    if (Doc)
       while (i < MAX_ITEM_CONF && !found && doc_items_menu[i] != NULL)
 	{
-	   if (ustrcmp (nameUser, doc_items_menu[i]) == 0)
+	   if (strcmp (nameUser, doc_items_menu[i]) == 0)
 	     {
 		if (doc_items[i] != NULL)
-		   ustrcpy (nameSchema, doc_items[i]);
+		   strcpy (nameSchema, doc_items[i]);
 		found = TRUE;
 	     }
 	   else
@@ -867,10 +695,10 @@ void  ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool 
    else
       while (i < MAX_ITEM_CONF && !found && nat_items_menu[i] != NULL)
 	{
-	   if (ustrcmp (nameUser, nat_items_menu[i]) == 0)
+	   if (strcmp (nameUser, nat_items_menu[i]) == 0)
 	     {
 		if (nat_items[i] != NULL)
-		   ustrcpy (nameSchema, nat_items[i]);
+		   strcpy (nameSchema, nat_items[i]);
 		found = TRUE;
 	     }
 	   else
@@ -882,14 +710,13 @@ void  ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool 
 /*----------------------------------------------------------------------
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
-static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
+static FILE *openConfigFile (char *name, ThotBool lang)
 {
- 
-   CHAR_T*             suffix;
+   FILE               *file;
+   char               *suffix;
    int                 i;
    PathBuffer          DirBuffer, filename;
-   FILE               *file;
-   CHAR_T*             app_home;
+   char               *app_home;
 
    if (lang)
         suffix = "en";
@@ -898,13 +725,13 @@ static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
 
    /* Search in HOME directory */
    app_home = TtaGetEnvString ("APP_HOME");
-   ustrcpy (DirBuffer, app_home);
+   strcpy (DirBuffer, app_home);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
      {
        /* compose le nom du fichier a ouvrir avec le nom du directory */
        /* des schemas et le suffixe */
-       ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
+       strncpy (DirBuffer, SchemaPath, MAX_PATH);
        MakeCompleteName (name, suffix, DirBuffer, filename, &i);
      }
    /* ouvre le fichier */
@@ -917,20 +744,20 @@ static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
    presentation qui peuvent s'appliquer au schema de structure de  
    nom schema.                                                     
   ----------------------------------------------------------------------*/
-int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
+int ConfigMakeMenuPres (char *schema, char *BufMenu)
 {
    int                 nbitem, len, indmenu;
-   FILE*               file;
+   FILE               *file;
    ThotBool            stop;
    char                line[MAX_TXT_LEN];
-   CHAR_T              text[MAX_TXT_LEN];
-   CHAR_T              textISO[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                textISO[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = WC_EOS;
+      BufMenu[0] = EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -943,41 +770,41 @@ int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
 	 else
 	   {
 	     getFirstWord (line, word);
-	     if (word[0] != WC_EOS)
+	     if (word[0] != EOS)
 	       /* la ligne n'est pas vide */
 	       {
 		 /* si la ligne contient un mot cle marquant le debut */
 		 /* d'une autre section, on a fini */
 		 if (singleWord (line))
 		   {
-		     if (ustrcmp (word, "export") == 0)
+		     if (strcmp (word, "export") == 0)
 		       stop = TRUE;
-		     else if (ustrcmp (word, "import") == 0)
+		     else if (strcmp (word, "import") == 0)
 		       stop = TRUE;
-		     else if (ustrcmp (word, "translation") == 0)
+		     else if (strcmp (word, "translation") == 0)
 		       stop = TRUE;
 		   }
 		 if (!stop)
 		   {
 		     getStringAfterColon (line, text);
-		     if (text[0] == WC_EOS)
+		     if (text[0] == EOS)
 		       fprintf (stderr, "invalid line in file %s\n   %s\n",
 				schema, line);
 		     else
 		       {
-			 ustrcpy (textISO, AsciiTranslate (text));
+			 strcpy (textISO, AsciiTranslate (text));
 			 if (pres_items[nbitem] != NULL)
 			   TtaFreeMemory (pres_items[nbitem]);
-			 pres_items[nbitem] = TtaAllocString (ustrlen(word)+1);
-			 ustrcpy (pres_items[nbitem], word);
+			 pres_items[nbitem] = TtaGetMemory (strlen(word)+1);
+			 strcpy (pres_items[nbitem], word);
 			 if (pres_items_menu[nbitem] != NULL)
 			   TtaFreeMemory (pres_items_menu[nbitem]);
-			 len = ustrlen (textISO) + 1;
-			 pres_items_menu[nbitem] = TtaAllocString (len);
-			 ustrcpy (pres_items_menu[nbitem], textISO);
+			 len = strlen (textISO) + 1;
+			 pres_items_menu[nbitem] = TtaGetMemory (len);
+			 strcpy (pres_items_menu[nbitem], textISO);
 			 if (BufMenu != NULL)
 			   {
-			     ustrcpy (&BufMenu[indmenu], textISO);
+			     strcpy (&BufMenu[indmenu], textISO);
 			     indmenu += len;
 			   }
 			 nbitem++;
@@ -996,9 +823,9 @@ int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
    presentation le nom interne du schema qui se trouve     
    a l'entree de rang choix.                               
   ----------------------------------------------------------------------*/
-void                ConfigGetPSchemaName (int choix, CHAR_T* schpres)
+void ConfigGetPSchemaName (int choix, char *schpres)
 {
-   ustrcpy (schpres, pres_items[choix - 1]);
+   strcpy (schpres, pres_items[choix - 1]);
 }
 
 /*----------------------------------------------------------------------
@@ -1006,7 +833,7 @@ void                ConfigGetPSchemaName (int choix, CHAR_T* schpres)
    structure qui ont des fichiers de langue dans les       
    directories de schemas.                                 
   ----------------------------------------------------------------------*/
-int                 ConfigMakeImportMenu (CHAR_T* BufMenu)
+int ConfigMakeImportMenu (char *BufMenu)
 {
    int                 nbitem, len, i, lgmenu;
 
@@ -1023,14 +850,14 @@ int                 ConfigMakeImportMenu (CHAR_T* BufMenu)
 	     if (doc_items_menu[i] != NULL)
 		/* cette entree de la table a une traduction, on la prend */
 	       {
-		  len = ustrlen (doc_items_menu[i]);
-		  ustrcpy (&BufMenu[lgmenu], doc_items_menu[i]);
+		  len = strlen (doc_items_menu[i]);
+		  strcpy (&BufMenu[lgmenu], doc_items_menu[i]);
 	       }
 	     else
 		/* pas de traduction, on prend le nom d'origine du schema */
 	       {
-		  len = ustrlen (doc_items[i]);
-		  ustrcpy (&BufMenu[lgmenu], doc_items[i]);
+		  len = strlen (doc_items[i]);
+		  strcpy (&BufMenu[lgmenu], doc_items[i]);
 	       }
 	     lgmenu += len + 1;
 	     nbitem++;
@@ -1046,21 +873,21 @@ int                 ConfigMakeImportMenu (CHAR_T* BufMenu)
    traduction qui peuvent s'appliquer au schema de structure de    
    nom schema.                                                     
   ----------------------------------------------------------------------*/
-int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
+int ConfigMakeMenuExport (char *schema, char *BufMenu)
 {
    int                 indmenu;
    int                 nbitem, len;
    FILE               *file;
    ThotBool            stop;
    char                line[MAX_TXT_LEN];
-   CHAR_T              text[MAX_TXT_LEN];
-   CHAR_T              textISO[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                textISO[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = WC_EOS;
+      BufMenu[0] = EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -1073,40 +900,40 @@ int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
 	   else
 	     {
 		getFirstWord (line, word);
-		if (word[0] != WC_EOS)
+		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		    /* si la ligne contient un mot cle marquant le debut */
 		    /* d'une autre section, on a fini */
 		     if (singleWord (line))
 		       {
-			if (ustrcmp (word, "presentation") == 0)
+			if (strcmp (word, "presentation") == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "import") == 0)
+			else if (strcmp (word, "import") == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "translation") == 0)
+			else if (strcmp (word, "translation") == 0)
 			   stop = TRUE;
 		       }
 		     if (!stop)
 		       {
 			  getStringAfterColon (line, text);
-			  if (text[0] == WC_EOS)
+			  if (text[0] == EOS)
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       ustrcpy (textISO, AsciiTranslate (text));
+			       strcpy (textISO, AsciiTranslate (text));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
-			       export_items[nbitem] = TtaAllocString (ustrlen (word) + 10);
-			       ustrcpy (export_items[nbitem], word);
+			       export_items[nbitem] = TtaGetMemory (strlen (word) + 10);
+			       strcpy (export_items[nbitem], word);
 			       if (export_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (export_items_menu[nbitem]);
-			       len = ustrlen (textISO) + 1;
-			       export_items_menu[nbitem] = TtaAllocString (len);
-			       ustrcpy (export_items_menu[nbitem], textISO);
+			       len = strlen (textISO) + 1;
+			       export_items_menu[nbitem] = TtaGetMemory (len);
+			       strcpy (export_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
-				    ustrcpy (&BufMenu[indmenu], textISO);
+				    strcpy (&BufMenu[indmenu], textISO);
 				    indmenu += len;
 				 }
 			       nbitem++;
@@ -1125,45 +952,45 @@ int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
    traduction le nom interne du schema qui se trouve       
    a l'entree de rang choix.                               
   ----------------------------------------------------------------------*/
-void                ConfigGetExportSchemaName (int choix, CHAR_T* schtrad)
+void ConfigGetExportSchemaName (int choix, char *schtrad)
 {
-   ustrcpy (schtrad, export_items[choix - 1]);
+   strcpy (schtrad, export_items[choix - 1]);
 }
 
 
 /*----------------------------------------------------------------------
    Translate                                                       
   ----------------------------------------------------------------------*/
-static ThotBool     Translate (PtrSSchema pSS, CHAR_T* word, CHAR_T* trans)
+static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
 {
    ThotBool            found;
    int                 i, j;
    TtAttribute        *pAttr;
-   CHAR_T              terme[MAX_NAME_LENGTH];
+   char                terme[MAX_NAME_LENGTH];
 
    found = FALSE;
-   ustrncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
+   strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (ustrcmp (terme, pSS->SsRule[i].SrName) == 0)
+      if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
 	{
-	   ustrncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
 	}
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
 	{
 	   pAttr = &pSS->SsAttribute[i];
-	   if (ustrcmp (terme, pAttr->AttrName) == 0)
+	   if (strcmp (terme, pAttr->AttrName) == 0)
 	     {
-		ustrncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		 if (ustrcmp (terme, pAttr->AttrEnumValue[j]) == 0)
+		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
 		   {
-		      ustrncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
@@ -1171,9 +998,9 @@ static ThotBool     Translate (PtrSSchema pSS, CHAR_T* word, CHAR_T* trans)
    if (pSS->SsExtension)
       if (pSS->SsNExtensRules > 0 && pSS->SsExtensBlock != NULL)
 	 for (i = 0; i < pSS->SsNExtensRules; i++)
-	    if (ustrcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
+	    if (strcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
-		 ustrncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		 strncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		 found = TRUE;
 	      }
    return found;
@@ -1182,13 +1009,13 @@ static ThotBool     Translate (PtrSSchema pSS, CHAR_T* word, CHAR_T* trans)
 /*----------------------------------------------------------------------
    ConfigTranslateSSchema                                          
   ----------------------------------------------------------------------*/
-void                ConfigTranslateSSchema (PtrSSchema pSS)
+void ConfigTranslateSSchema (PtrSSchema pSS)
 {
-   FILE*    file;
+   FILE    *file;
+   char    *line;
+   char    *text;
+   char    *word;
    ThotBool stop, error;
-   char*    line;
-   CHAR_T*  text;
-   CHAR_T*  word;
 
    if (pSS == NULL)
       return;
@@ -1201,8 +1028,8 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
    /* avance dans le fichier jusqu'a la ligne qui contient le seul */
    /* mot "translation" */
    line = TtaGetMemory (MAX_TXT_LEN);
-   text = TtaAllocString (MAX_TXT_LEN);
-   word = TtaAllocString (MAX_TXT_LEN);
+   text = TtaGetMemory (MAX_TXT_LEN);
+   word = TtaGetMemory (MAX_TXT_LEN);
    if (readUntil (file, "translation", ""))
       /* lit le fichier ligne a ligne */
       do
@@ -1217,18 +1044,18 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 	     {
 		/* prend le premier mot de la ligne */
 		getFirstWord (line, word);
-		if (word[0] != WC_EOS)
+		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		    /* si la ligne contient un mot cle marquant le debut */
 		    /* d'une autre section, on a fini */
 		    if (singleWord (line))
 		      {
-			if (ustrcmp (word, "presentation") == 0)
+			if (strcmp (word, "presentation") == 0)
 			  stop = TRUE;
-			else if (ustrcmp (word, "export") == 0)
+			else if (strcmp (word, "export") == 0)
 			  stop = TRUE;
-			else if (ustrcmp (word, "import") == 0)
+			else if (strcmp (word, "import") == 0)
 			  stop = TRUE;
 			else
 			  {
@@ -1264,12 +1091,12 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
    dans le fichier .conf correspondant.                            
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
-ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
+ThotBool ConfigDefaultPSchema (char *schstr, char *schpres)
 {
    ThotBool            ok, stop;
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    ok = FALSE;
    /* ouvre le fichier .conf associe' au schema de structure */
@@ -1288,15 +1115,15 @@ ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
 	     {
 		/* prend le premier mot de la ligne */
 		getFirstWord (line, word);
-		if (ustrcmp (word, "style") == 0)
+		if (strcmp (word, "style") == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
 		     getSecondWord (line, word);
-		     if (word[0] != WC_EOS)
+		     if (word[0] != EOS)
 			/* il y a bien un 2eme mot : succes */
 		       {
-			  ustrcpy (schpres, word);
+			  strcpy (schpres, word);
 			  ok = TRUE;
 		       }
 		     stop = TRUE;
@@ -1314,13 +1141,13 @@ ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
    suivi du nom namePSchema.                                
    Retourne TRUE si trouve, FALSE sinon.                   
   ----------------------------------------------------------------------*/
-static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
+static ThotBool readUntilStyle (FILE *file, char *namePSchema)
 {
    ThotBool            stop;
    ThotBool            ok;
    char                line[MAX_TXT_LEN];
-   CHAR_T              word[MAX_TXT_LEN];
-   CHAR_T              name[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
 
    stop = FALSE;
    ok = FALSE;
@@ -1331,11 +1158,11 @@ static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
      else
         {
            getFirstWord (line, word);
-           if (ustrcmp (word, "style") == 0)
+           if (strcmp (word, "style") == 0)
               {
                  getSecondWord (line, word);
-                 ustrcpy (name, word);
-                 if (ustrcmp (name, namePSchema) == 0)
+                 strcpy (name, word);
+                 if (strcmp (name, namePSchema) == 0)
                     ok = TRUE;
               }
         }
@@ -1350,9 +1177,9 @@ static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
    Retourne le file descriptor du fichier si on a trouve'  
    le fichier .conf et la section, NULL sinon.             
   ----------------------------------------------------------------------*/
-static FILE  *openConfFileAndReadUntil (PtrSSchema pSS, CHAR_T* sectName)
+static FILE *openConfFileAndReadUntil (PtrSSchema pSS, char *sectName)
 {
-   FILE*    file;
+   FILE    *file;
 
    /* ouvre le fichier .conf */
    file = NULL;
@@ -1388,11 +1215,11 @@ static FILE  *openConfFileAndReadUntil (PtrSSchema pSS, CHAR_T* sectName)
    Retourne TRUE si succes, FALSE si on a atteint la fin   
    de la section courante ou du fichier.                   
   ----------------------------------------------------------------------*/
-static ThotBool     getNextLineInSection (FILE * file, char* line)
+static ThotBool getNextLineInSection (FILE * file, char *line)
 {
-   ThotBool            ok, stop;
-   CHAR_T              word1[MAX_TXT_LEN];
-   CHAR_T              word2[MAX_TXT_LEN];
+   ThotBool          ok, stop;
+   char              word1[MAX_TXT_LEN];
+   char              word2[MAX_TXT_LEN];
 
    ok = FALSE;
    stop = FALSE;
@@ -1405,7 +1232,7 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 	{
 	   /* prend le permier mot de la ligne lue */
 	   getFirstWord (line, word1);
-	   if (word1[0] != WC_EOS)
+	   if (word1[0] != EOS)
 	      /* la ligne n'est pas vide */
 	     {
 		/* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -1413,13 +1240,13 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 		if (singleWord (line))
 		   /* la ligne contient un seul mot */
 		  {
-		     if (ustrcmp (word1, "open") == 0)
+		     if (strcmp (word1, "open") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "geometry") == 0)
+		     else if (strcmp (word1, "geometry") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "presentation") == 0)
+		     else if (strcmp (word1, "presentation") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "options") == 0)
+		     else if (strcmp (word1, "options") == 0)
 			stop = TRUE;
 		     else
 			/* ligne contenant un seul mot. on considere que c'est OK... */
@@ -1427,7 +1254,7 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 		  }
 		else
 		   /* la ligne contient plus d'un mot */
-		if (ustrcmp (word1, "style") == 0)
+		if (strcmp (word1, "style") == 0)
 		  {
 		     getSecondWord (line, word2);
 		     if (word2[0] != ':')
@@ -1451,7 +1278,7 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 void             ConfigKeyboard (int *x, int *y)
 {
    FILE         *file;
-   CHAR_T        seqLine[MAX_TXT_LEN];
+   char        seqLine[MAX_TXT_LEN];
    char          line[MAX_TXT_LEN];
    int           nbIntegers;
 
@@ -1465,7 +1292,7 @@ void             ConfigKeyboard (int *x, int *y)
 
    /* extrait la partie de la ligne qui suit les deux-points */
    getStringAfterColon (line, seqLine);
-   if (seqLine[0] != WC_EOS)
+   if (seqLine[0] != EOS)
      /* extrait les 4 entiers */
      nbIntegers = usscanf (seqLine, "%d %d", x, y);
    TtaReadClose (file);
@@ -1477,17 +1304,17 @@ void             ConfigKeyboard (int *x, int *y)
    open ou geometry d'un fichier .conf                     
    Retourne TRUE si succes.                                
   ----------------------------------------------------------------------*/
-static ThotBool  getXYWidthHeight (char* line, PtrDocument pDoc, int *x,
-				   int *y, int *width, int *height)
+static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
+				  int *y, int *width, int *height)
 {
-  CHAR_T              seqLine[MAX_TXT_LEN];
+  char                seqLine[MAX_TXT_LEN];
   int                 nbIntegers;
   ThotBool            result;
 
   result = FALSE;
   /* extrait la partie de la ligne qui suit les deux-points */
   getStringAfterColon (line, seqLine);
-  if (seqLine[0] != WC_EOS)
+  if (seqLine[0] != EOS)
     {
       /* extrait les 4 entiers */
       nbIntegers = usscanf (seqLine, "%d %d %d %d", x, y, width, height);
@@ -1505,12 +1332,12 @@ static ThotBool  getXYWidthHeight (char* line, PtrDocument pDoc, int *x,
    specifiees dans la section open du fichier de           
    configuration .conf                                     
   ----------------------------------------------------------------------*/
-void                ConfigOpenFirstViews (PtrDocument pDoc)
+void ConfigOpenFirstViews (PtrDocument pDoc)
 {
    FILE               *file;
    int                 x, y, width, height;
    char                line[MAX_TXT_LEN];
-   CHAR_T              nameview[MAX_TXT_LEN];
+   char                nameview[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
    file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
@@ -1537,12 +1364,12 @@ void                ConfigOpenFirstViews (PtrDocument pDoc)
    dimensions (width, height) de la fenetre ou doit        
    s'afficher la vue de non view pour le document pDoc.     
   ----------------------------------------------------------------------*/
-void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
-			      int *y, int *width, int *height)
+void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
+			     int *y, int *width, int *height)
 {
    FILE               *file;
    char               line[MAX_TXT_LEN];
-   CHAR_T             nameview[MAX_TXT_LEN];
+   char               nameview[MAX_TXT_LEN];
    ThotBool           found;
 
    *x = 0;
@@ -1564,7 +1391,7 @@ void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
 	   /* le 1er mot de la ligne est le nom d'une vue */
 	   getFirstWord (line, nameview);
 	   /* est-ce le nom de la vue cherchee ? */
-	   found = (ustrcmp (nameview, view) == 0);
+	   found = (strcmp (nameview, view) == 0);
 	 }
        if (!found)
 	 /* on n'a pas trouve' dans la section "open". On cherche dans la
@@ -1578,7 +1405,7 @@ void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
 		   /* le 1er mot de la ligne est le nom d'une vue */
 		   getFirstWord (line, nameview);
 		   /* est-ce le nom de la vue cherchee ? */
-		   found = (ustrcmp (nameview, view) == 0);
+		   found = (strcmp (nameview, view) == 0);
 		 }
 	 }
        TtaReadClose (file);
@@ -1591,7 +1418,8 @@ void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
    TtaGetViewXYWH returns the current geometry (x, y, width, and height)
    values associated with the frame where a view is displayed
   ----------------------------------------------------------------------*/
-void                TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width, int *height)
+void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
+		     int *height)
 {
 #ifndef _WINDOWS
   int                 frame;
@@ -1661,13 +1489,13 @@ void                TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, 
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-void    TtaGetViewGeometry (Document document, char* name, int *x, int *y,
-			    int *width, int *height)
+void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
+			 int *width, int *height)
 {
   PtrDocument pDoc;
   char        line[MAX_TXT_LEN];
   char        ptr2[MAX_TXT_LEN];
-  CHAR_T*     ptr;
+  char       *ptr;
 
   
   UserErrorCode = 0;
@@ -1682,7 +1510,7 @@ void    TtaGetViewGeometry (Document document, char* name, int *x, int *y,
     {
       pDoc = LoadedDocument[document - 1];
       ptr = TtaGetEnvString (name);
-      if ( !ptr || ptr[0] == WC_EOS)
+      if ( !ptr || ptr[0] == EOS)
 	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
       else
 	{
@@ -1700,8 +1528,8 @@ void    TtaGetViewGeometry (Document document, char* name, int *x, int *y,
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-void   TtaGetViewGeometryMM (Document document, CHAR_T* name, int *x,
-			     int *y, int *width, int *height)
+void  TtaGetViewGeometryMM (Document document, char *name, int *x,
+			    int *y, int *width, int *height)
 {
    TtaGetViewGeometry (document, name, x, y, width, height);
 }
@@ -1711,12 +1539,13 @@ void   TtaGetViewGeometryMM (Document document, CHAR_T* name, int *x,
    schema de presentation a appliquer a la nature de nom   
    nameNature dans le contexte du schema de structure pSS   
   ----------------------------------------------------------------------*/
-ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* presNature)
+ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
+				 char *presNature)
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   CHAR_T              seqLine[MAX_TXT_LEN];
-   CHAR_T              name[MAX_TXT_LEN];
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
    ThotBool            found;
    ThotBool            ok;
 
@@ -1734,7 +1563,7 @@ ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* pr
 	     /* le 1er mot de la ligne est le nom d'une nature */
 	     getFirstWord (line, name);
 	     /* est-ce le nom de la nature cherchee ? */
-	     found = (ustrcmp (name, nameNature) == 0);
+	     found = (strcmp (name, nameNature) == 0);
 	  }
 	if (found)
 	   /* on a trouve' la ligne de la section presentation qui commence par */
@@ -1743,11 +1572,11 @@ ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* pr
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* presentation a appliquer */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == WC_EOS)
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  ustrncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
+		  strncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
 		  ok = TRUE;
 	       }
 	  }
@@ -1763,12 +1592,13 @@ ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* pr
    Retourne la valeur trouvee dans optionValue, ou une     
    chaine vide si l'option n'est pas trouvee.              
   ----------------------------------------------------------------------*/
-void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* optionValue)
+void ConfigGetPresentationOption (PtrSSchema pSS, char *optionName,
+				  char *optionValue)
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   CHAR_T              seqLine[MAX_TXT_LEN];
-   CHAR_T              name[MAX_TXT_LEN];
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
    ThotBool            found;
 
    optionValue[0] = EOS;
@@ -1785,7 +1615,7 @@ void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* op
 	     /* le 1er mot de la ligne est le nom d'une option */
 	     getFirstWord (line, name);
 	     /* est-ce le nom de l'option cherchee ? */
-	     found = (ustrcmp (name, optionName) == 0);
+	     found = (strcmp (name, optionName) == 0);
 	  }
 	if (found)
 	   /* on a trouve' la ligne de la section options qui commence par */
@@ -1793,10 +1623,10 @@ void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* op
 	  {
 	     /* le nom de l'option est suivi, apres ":", de la valeur de l'option */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == WC_EOS)
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
-		ustrncpy (optionValue, seqLine, MAX_NAME_LENGTH - 1);
+		strncpy (optionValue, seqLine, MAX_NAME_LENGTH - 1);
 	  }
 	TtaReadClose (file);
      }
@@ -1811,14 +1641,15 @@ void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* op
    Retourne le nom du schema trouve' dans schemaName, ou   
    une chaine vide si pas trouve'.                         
   ----------------------------------------------------------------------*/
-void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* schemaName)
+void ConfigGetPSchemaForPageSize (PtrSSchema pSS, char *pageSize,
+				  char *schemaName)
 {
-   FILE*    file;
+   FILE    *file;
    char     line[MAX_TXT_LEN];
-   CHAR_T   word[MAX_TXT_LEN];
-   CHAR_T   seqLine[MAX_TXT_LEN];
-   CHAR_T   lastStyle[MAX_TXT_LEN];
-   CHAR_T   bestStyle[MAX_TXT_LEN];
+   char     word[MAX_TXT_LEN];
+   char     seqLine[MAX_TXT_LEN];
+   char     lastStyle[MAX_TXT_LEN];
+   char     bestStyle[MAX_TXT_LEN];
    int      lastPrefixLen, bestPrefixLen;
    int      score, i;
    ThotBool stop; 
@@ -1846,7 +1677,7 @@ void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* sch
 	     {
 		/* prend le 1er mot de la ligne lue */
 		getFirstWord (line, word);
-		if (ustrcmp (word, "style") == 0)
+		if (strcmp (word, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
 		  {
@@ -1868,24 +1699,24 @@ void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* sch
 		      }
 			  
 		  }
-		else if (ustrcmp (word, "pagesize") == 0)
+		else if (strcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
 		     getStringAfterColon (line, seqLine);
-		     if (seqLine[0] == WC_EOS)
+		     if (seqLine[0] == EOS)
                 fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
-             else if (ustrcmp (seqLine, pageSize) == 0)
+             else if (strcmp (seqLine, pageSize) == 0)
                   /* c'est le format de page cherche'. On a fini */
                   if (score > bestPrefixLen)
                      {
-                        ustrcpy (bestStyle, lastStyle);
+                        strcpy (bestStyle, lastStyle);
                         bestPrefixLen = score;
                      }
           }
 	     }
 	while (!stop);
 	TtaReadClose (file);
-	ustrcpy (schemaName, bestStyle);
+	strcpy (schemaName, bestStyle);
      }
 }
 
@@ -1896,14 +1727,14 @@ void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* sch
    0 si echec.                                                     
    LgMax indique la taille du buffer BufMenu.                      
   ----------------------------------------------------------------------*/
-int                 MakeMenuPattern (STRING BufMenu, int LgMax)
+int MakeMenuPattern (char *BufMenu, int LgMax)
 {
    int                 nbentree;
-   CHAR_T                name[80];
    int                 lgname;
    int                 lgmenu;
    int                 max;
-   STRING              ptr;
+   char                name[80];
+   char               *ptr;
 
    nbentree = 0;
    if (BufMenu != NULL)
@@ -1917,8 +1748,8 @@ int                 MakeMenuPattern (STRING BufMenu, int LgMax)
 	     /* Recupere le nom du pattern */
 	     if (nbentree < max)
 	       {
-		  ustrcpy (name, PatternName (nbentree));
-		  lgname = ustrlen (name) + 1;
+		  strcpy (name, PatternName (nbentree));
+		  lgname = strlen (name) + 1;
 	       }
 	     else
 		lgname = 1;
@@ -1928,7 +1759,7 @@ int                 MakeMenuPattern (STRING BufMenu, int LgMax)
 	     else if (lgname > 1)
 	       {
 		  nbentree++;
-		  ustrcpy (ptr, name);
+		  strcpy (ptr, name);
 		  ptr += lgname;
 		  lgmenu += lgname;
 	       }
@@ -1942,17 +1773,17 @@ int                 MakeMenuPattern (STRING BufMenu, int LgMax)
 /*----------------------------------------------------------------------
    MakeMenuColor cree dans le buffer BufMenu la liste des couleurs 
    disponibles et retourne le nombre d'entrees creees ou           
-   0 si echec.                                                     
-   LgMax indique la taille du buffer BufMenu.                      
+   0 si echec.
+   LgMax indique la taille du buffer BufMenu.
   ----------------------------------------------------------------------*/
-int                 MakeMenuColor (STRING BufMenu, int LgMax)
+int MakeMenuColor (char *BufMenu, int LgMax)
 {
-   int                 nbentree;
-   int                 lgmenu;
-   int                 lgname;
-   int                 max;
-   CHAR_T              name[80];
-   CHAR_T*             ptr;
+   int               nbentree;
+   int               lgmenu;
+   int               lgname;
+   int               max;
+   char              name[80];
+   char             *ptr;
 
    nbentree = 0;
    if (BufMenu != NULL)
@@ -1966,8 +1797,8 @@ int                 MakeMenuColor (STRING BufMenu, int LgMax)
 	     /* Recupere le nom de la couleur */
 	     if (nbentree < max)
 	       {
-		  ustrcpy (name, ColorName (nbentree));
-		  lgname = ustrlen (name) + 1;
+		  strcpy (name, ColorName (nbentree));
+		  lgname = strlen (name) + 1;
 	       }
 	     else
 		lgname = 1;
@@ -1977,7 +1808,7 @@ int                 MakeMenuColor (STRING BufMenu, int LgMax)
 	     else if (lgname > 1)
 	       {
 		  nbentree++;
-		  ustrcpy (ptr, name);
+		  strcpy (ptr, name);
 		  ptr += lgname;
 		  lgmenu += lgname;
 	       }
@@ -1994,13 +1825,14 @@ int                 MakeMenuColor (STRING BufMenu, int LgMax)
    nameNature dans le contexte du schema de structure pSS           
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
-ThotBool  ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* schtypo)
+ThotBool ConfigDefaultTypoSchema (PtrSSchema pSS, char *nameNature,
+				  char *schtypo)
 {
-   ThotBool            ok, found;
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   CHAR_T              seqLine[MAX_TXT_LEN];
-   CHAR_T              name[MAX_TXT_LEN];
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
+   ThotBool            ok, found;
 
    /* ouvre le fichier .conf du document */
    /* et avance jusqu'a la section "typography" */
@@ -2017,7 +1849,7 @@ ThotBool  ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* s
 	     /* le 1er mot de la ligne est le nom d'une nature */
 	     getFirstWord (line, name);
 	     /* est-ce le nom de la nature cherchee ? */
-	     found = (ustrcmp (name, nameNature) == 0);
+	     found = (strcmp (name, nameNature) == 0);
 	  }
 	if (found)
 	   /* on a trouve' la ligne de la section typography qui commence par */
@@ -2026,11 +1858,11 @@ ThotBool  ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* s
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* typographie a appliquer */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == WC_EOS)
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  ustrncpy (schtypo, seqLine, MAX_NAME_LENGTH - 1);
+		  strncpy (schtypo, seqLine, MAX_NAME_LENGTH - 1);
 		  ok = TRUE;
 	       }
 	  }
