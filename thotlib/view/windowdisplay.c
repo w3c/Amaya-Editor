@@ -1513,61 +1513,6 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
-  DrawSegments draw a set of segments.
-  Parameter buffer is a pointer to the list of control points.
-  nb indicates the number of points.
-  The first point is a fake one containing the geometry.
-  fg parameter gives the drawing color.
-  arrow parameter indicates whether :
-  - no arrow have to be drawn (0)
-  - a forward arrow has to be drawn (1)
-  - a backward arrow has to be drawn (2)
-  - both backward and forward arrows have to be drawn (3)
-  ----------------------------------------------------------------------*/
-void DrawSegments (int frame, int thick, int style, int x, int y,
-		   PtrTextBuffer buffer, int nb, int fg, int arrow,
-		   int bg, int pattern)
-{
-  ThotPoint          *points;
-  PtrTextBuffer       adbuff;
-  int                 i, j;
-
-  /* Allocate a table of points */
-  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
-  adbuff = buffer;
-  y += FrameTable[frame].FrTopMargin;
-  j = 1;
-  for (i = 1; i < nb; i++)
-    {
-      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
-	{
-	  /* Next buffer */
-	  adbuff = adbuff->BuNext;
-	  j = 0;
-	}
-      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
-      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
-      j++;
-    }
-
-   DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
-  /* backward arrow  */
-  if (arrow == 2 || arrow == 3)
-    DrawArrowHead (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, fg);
-
-  /* Forward arrow */
-  if (arrow == 1 || arrow == 3)
-    DrawArrowHead (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, fg);
-
-   /* free the table of points */
-   free (points);
-}
-
-/*----------------------------------------------------------------------
   DoDrawPolygon
   Draw a polygon whose points are stored in buffer points
   Parameters fg, bg, and pattern are for drawing
@@ -1638,6 +1583,61 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 #ifndef _WIN_PRINT
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
+}
+
+/*----------------------------------------------------------------------
+  DrawSegments draw a set of segments.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  fg parameter gives the drawing color.
+  arrow parameter indicates whether :
+  - no arrow have to be drawn (0)
+  - a forward arrow has to be drawn (1)
+  - a backward arrow has to be drawn (2)
+  - both backward and forward arrows have to be drawn (3)
+  ----------------------------------------------------------------------*/
+void DrawSegments (int frame, int thick, int style, int x, int y,
+		   PtrTextBuffer buffer, int nb, int fg, int arrow,
+		   int bg, int pattern)
+{
+  ThotPoint          *points;
+  PtrTextBuffer       adbuff;
+  int                 i, j;
+
+  /* Allocate a table of points */
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
+	{
+	  /* Next buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
+      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
+					UnPixel, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
+					UnPixel, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      j++;
+    }
+
+   DoDrawPolygon (frame, thick, style, points, nb - 1, fg, bg, pattern);
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    DrawArrowHead (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, fg);
+
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    DrawArrowHead (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, fg);
+
+   /* free the table of points */
+   free (points);
 }
 
 /*----------------------------------------------------------------------
