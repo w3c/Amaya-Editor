@@ -1663,6 +1663,11 @@ void FreeSchStruc (PtrSSchema pSS)
 	  TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigName);
 	  pSS->SsRule->SrElem[i]->SrOrigName = NULL;
 	}
+      if (pSS->SsRule->SrElem[i]->SrConstruct == CsNatureSchema)
+	{
+	  TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigNat);
+	  pSS->SsRule->SrElem[i]->SrOrigNat = NULL;
+	}
       free (pSS->SsRule->SrElem[i]);
     }
   free (pSS->SsRule);
