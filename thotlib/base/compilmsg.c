@@ -12,9 +12,9 @@
  *
  */
 
+#include "thot_sys.h"
 #include "compilmsg.h"
 #include "message.h"
-#include "thot_sys.h"
 #include "constgrm.h"
 #include "typegrm.h"
 #include "constmedia.h"
