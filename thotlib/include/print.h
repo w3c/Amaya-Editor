@@ -32,16 +32,16 @@ typedef int PrintParameter;
 #include "document.h"
 
 #ifndef __CEXTRACT__
-extern void TtaGetPrintNames (STRING *printDocName, STRING *printDirName);
-extern void TtaPrint (Document document, STRING viewNames, STRING cssNames);
+extern void TtaGetPrintNames (char **printDocName, char **printDirName);
+extern void TtaPrint (Document document, char *viewNames, char *cssNames);
 extern void TtaSetPrintExportFunc (Func exportFunc);
 extern void TtaSetPrintParameter (PrintParameter parameter, int value);
 extern int TtaGetPrintParameter (PrintParameter parameter);
-extern void TtaSetPrintCommand (STRING command);
-extern void TtaGetPrintCommand (STRING command);
-extern void TtaSetPsFile (STRING path);
-extern void TtaGetPsFile (STRING path);
-extern void TtaSetPrintSchema (CHAR_T* name);
+extern void TtaSetPrintCommand (char *command);
+extern void TtaGetPrintCommand (char *command);
+extern void TtaSetPsFile (char *path);
+extern void TtaGetPsFile (char *path);
+extern void TtaSetPrintSchema (char *name);
 
 #endif /* __CEXTRACT__ */
 

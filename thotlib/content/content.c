@@ -581,7 +581,7 @@ ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
 		  i = 0;
 		  while (equal && l < length && i < pBuf->BuLength)
 		    {
-		      l += TtaMBstring2WC (&ptr, &wc);
+		      l += TtaMBstringToWC (&ptr, &wc);
 		      equal = (wc == pBuf->BuContent[i]);
 		      i++;
 		    }
@@ -741,7 +741,7 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
       l = 0;
       while (pos < THOT_MAX_CHAR - 1 && max > l)
 	{
-	  l += TtaMBstring2WC (&src, &pBuf->BuContent[pos]);
+	  l += TtaMBstringToWC (&src, &pBuf->BuContent[pos]);
 	  pos++;
 	  length++;
 	}
@@ -807,7 +807,7 @@ int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
       while (pos < pBuf->BuLength && max > 0)
 	{
 	  ptr = s;
-	  l = TtaWC2MBstring (pBuf->BuContent[pos], &ptr);
+	  l = TtaWCToMBstring (pBuf->BuContent[pos], &ptr);
 	  pos++;
 	  if (l < max)
 	    {
@@ -1102,7 +1102,7 @@ int TtaGetTextLength (Element element)
       while (i < pBuf->BuLength && i < length)
 	{
 	  ptr = c;
-	  l += TtaWC2MBstring (pBuf->BuContent[i], &ptr);
+	  l += TtaWCToMBstring (pBuf->BuContent[i], &ptr);
 	  i++;
 	}
       /* next buffer */
@@ -1162,7 +1162,7 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
 	  l = 0;
 	  while (l < pBuf->BuLength && len < *length)
 	    {
-	      len += TtaWC2MBstring (pBuf->BuContent[l], &ptr);
+	      len += TtaWCToMBstring (pBuf->BuContent[l], &ptr);
 	      l++;
 	    }
 #else /* _I18N_ */

@@ -85,6 +85,7 @@ static ThotBool     FromKeyboard;
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
+#include "uconvert_f.h"
 #include "units_f.h"
 #include "undo_f.h"
 #include "unstructchange_f.h"
@@ -126,7 +127,7 @@ static void CopyString (Buffer source, Buffer target, int count, ptrfont font,
 	  (*nChars)++;
 	  if (car == SPACE)
             (*nSpaces)++;
-	  *width += CharacterWidth ((UCHAR_T) car, font);
+	  *width += CharacterWidth ((CHAR_T) car, font);
 	}
     }
 }
@@ -906,6 +907,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
   PtrElement          pElAttr;  
   ViewSelection      *pViewSel;
   Language            language, plang;
+  unsigned char       text[100];
   int                 index;
   ThotBool            cut;
   ThotBool            notification;
@@ -925,7 +927,10 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 	pHeritAttr = GetTypedAttrAncestor (pSelAb->AbElement->ElParent, 1,
 					   NULL, &pElAttr); 
 	if (pHeritAttr != NULL && pHeritAttr->AeAttrText != NULL)
-	  language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
+	  {
+	    CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, text, 100);
+	    language = TtaGetLanguageIdFromName (text);
+	  }
 	setAttribute = FALSE;
       }
     else
@@ -2428,7 +2433,7 @@ static void         ContentEditing (int editType)
 /*----------------------------------------------------------------------
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
-void                InsertChar (int frame, UCHAR_T c, int keyboard)
+void                InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
@@ -2709,8 +2714,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 				toSplit = TRUE;
 				
 				/* Est-ce un boite qui ne contenait qu'un Ctrl Return ? */
-				if ((c == (UCHAR_T) BREAK_LINE ||
-				     c == (UCHAR_T) NEW_LINE) &&
+				if ((c == (CHAR_T) BREAK_LINE ||
+				     c == (CHAR_T) NEW_LINE) &&
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
@@ -2869,8 +2874,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 				  }
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
-			      if (c == (UCHAR_T) BREAK_LINE ||
-				  c == (UCHAR_T) NEW_LINE)
+			      if (c == (CHAR_T) BREAK_LINE ||
+				  c == (CHAR_T) NEW_LINE)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
@@ -2921,8 +2926,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
 				      pix = 1;
 				}
-			      else if (c == (UCHAR_T) BREAK_LINE ||
-				       c == (UCHAR_T) NEW_LINE)
+			      else if (c == (CHAR_T) BREAK_LINE ||
+				       c == (CHAR_T) NEW_LINE)
 				/* Ctrl Return */
 				{
 				  /* il faut reevaluer la mise en ligne */
@@ -3089,7 +3094,7 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
    PasteXClipboard lit les nbytes du buffer et appelle autant de   
    fois que necessaire Paste_X sur les caracteres lus.     
   ----------------------------------------------------------------------*/
-void                PasteXClipboard (USTRING Xbuffer, int nbytes)
+static void PasteXClipboard (unsigned char *src, int nbytes)
 {
   PtrTextBuffer       clipboard;
   PtrAbstractBox      pAb;
@@ -3099,13 +3104,14 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
   PtrElement          pEl;
   DisplayMode         dispMode;
   Document            doc;
+  CHAR_T             *buffer, b;
   int                 i, j, ind;
-  int                 b, previousChars;
+  int                 previousChars;
   int                 frame, lg;
   ThotBool            lock = TRUE;
 
   /* check the current selection */
-  if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
+  if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &i, &i))
     /* cannot insert */
     return;
   frame = ActiveFrame;
@@ -3116,7 +3122,7 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 
   /* Calcule la position du debut de la selection courante */
   /* l'index dans le buffer, le decalage x ne sont pas utilises */
-  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
+  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &i, &previousChars);
   /* initialise l'insertion */
   previousChars += pSelBox->BxIndChar + 1;
 
@@ -3128,8 +3134,10 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
   j = 0;
   /* number of characters in the whole X clipboard */
   lg = 0;
-  if (Xbuffer != NULL)
+  if (src)
     {
+      /* What is the encoding used by external applications ??? */
+      buffer = TtaConvertIsoToCHAR (src, ISO_8859_1);
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -3142,7 +3150,9 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 	    /* table formatting is not loked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();
 	}
-      for (i = 0; i < nbytes; i++)
+
+      i = 0;
+      while (i < nbytes)
 	{
 	  if (j == FULL_BUFFER)
 	    {
@@ -3152,21 +3162,21 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 	      j = 0;
 	    }
 	  
-	  b = (int) Xbuffer[i];
-	  /* Traduit le BS, FF et blanc dur en espace */
+	  b = buffer[i];
 	  if (b == 8 || b == 12 || b == 160)
+	    /* BS, FF, nbsp becomes a space */
 	    clipboard->BuContent[j++] = SPACE;
-	  if (b == EOL)
-	    clipboard->BuContent[j++] = EOL;
-	  /* Sinon on ne filtre que les caracteres imprimables */
-#ifdef _I18N_
-      else if (iswprint ((CHAR_T)b))
-#else  /* !_I18N_ */
-	  else if ((b >= 32 && b < 127)
-		   || (b > 143 && b <= 255))
-#endif /* !_I18N_ */
-	    clipboard->BuContent[j++] = Xbuffer[i];
+	  else if (b == WC_EOL)
+	    {
+	      clipboard->BuContent[j++] = b;
+	      /* should we generate a break-line ???? */
+	    }
+	  else if (b >= 32)
+	    clipboard->BuContent[j++] = b;
+	  i++;
 	}
+
+      TtaFreeMemory (buffer);
       /* Paste the last X clipboard buffer */
       if (j > 0)
 	{
@@ -3314,7 +3324,7 @@ void TtcInsertChar (Document doc, View view, unsigned char c)
 /*----------------------------------------------------------------------
    TtcCutSelection                                                    
   ----------------------------------------------------------------------*/
-void                TtcCutSelection (Document doc, View view)
+void TtcCutSelection (Document doc, View view)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3386,7 +3396,7 @@ void                TtcCutSelection (Document doc, View view)
 /*----------------------------------------------------------------------
    TtcDeletePreviousChar                                           
   ----------------------------------------------------------------------*/
-void                TtcDeletePreviousChar (Document doc, View view)
+void TtcDeletePreviousChar (Document doc, View view)
 {
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
@@ -3475,7 +3485,7 @@ void                TtcDeletePreviousChar (Document doc, View view)
 /*----------------------------------------------------------------------
    TtcDeleteSelection                                                 
   ----------------------------------------------------------------------*/
-void                TtcDeleteSelection (Document doc, View view)
+void TtcDeleteSelection (Document doc, View view)
 {
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
@@ -3508,7 +3518,7 @@ void                TtcDeleteSelection (Document doc, View view)
 /*----------------------------------------------------------------------
    TtcInclude                                                         
   ----------------------------------------------------------------------*/
-void                TtcInclude (Document document, View view)
+void TtcInclude (Document document, View view)
 {
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
@@ -3541,7 +3551,7 @@ void                TtcInclude (Document document, View view)
 /*----------------------------------------------------------------------
    TtcPastefromX                                                      
   ----------------------------------------------------------------------*/
-void                TtcPasteFromClipboard (Document document, View view)
+void TtcPasteFromClipboard (Document document, View view)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3574,12 +3584,13 @@ void                TtcPasteFromClipboard (Document document, View view)
    if (w == None)
      {
 	/* Pas de selection courante -> on regarde s'il y a un cutbuffer */
-	Xbuffer = (USTRING) XFetchBytes (TtDisplay, &i);
+	Xbuffer = XFetchBytes (TtDisplay, &i);
 	if (Xbuffer)
 	   PasteXClipboard (Xbuffer, i);
      }
    else
-      XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0, wind, CurrentTime);
+      XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
+			 wind, CurrentTime);
 #else /* _GTK */
    if (Xbuffer)
      PasteXClipboard (Xbuffer, strlen(Xbuffer));
@@ -3734,9 +3745,9 @@ void TtcPaste (Document doc, View view)
 	  if (hMem = GetClipboardData (CF_TEXT))
 	    {
 	      lpData = GlobalLock (hMem);
-	      lpDatalength = ustrlen (lpData);
-	      if (Xbuffer == NULL || ustrcmp (Xbuffer, (USTRING) lpData))
-		PasteXClipboard ((USTRING) lpData, lpDatalength);
+	      lpDatalength = strlen (lpData);
+	      if (Xbuffer == NULL || strcmp (Xbuffer, lpData))
+		PasteXClipboard (lpData, lpDatalength);
 	      else  
 		ContentEditing (TEXT_PASTE);
 	      GlobalUnlock (hMem);

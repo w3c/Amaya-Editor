@@ -212,7 +212,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
       else if (pDoc->DocCharset == UTF_8)
 	{
 	  ptr = mbc;
-	  nb_bytes2write = TtaWC2MBstring ((wchar_t) c, &ptr);
+	  nb_bytes2write = TtaWCToMBstring ((wchar_t) c, &ptr);
 	}
       else
 	{
@@ -507,7 +507,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   int fnum, PtrDocument pDoc)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
-  UCHAR_T              c, cs;
+  CHAR_T              c, cs;
   StringTransl        *pTrans;   
   int                  textTransBegin, textTransEnd;
   int                  i, j, k, b, ft, lt;
@@ -530,11 +530,11 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
     /* rangees par ordre alphabetique. On cherche une chaine */
     /* source qui commence par le caractere a traduire. */
     {
-      while (c > (UCHAR_T) (pTSch->TsCharTransl[ft - 1].StSource[b]) &&
+      while (c > (CHAR_T) (pTSch->TsCharTransl[ft - 1].StSource[b]) &&
 	     ft < lt)
 	ft++;
       pTrans = &pTSch->TsCharTransl[ft - 1];
-      if (c == (UCHAR_T) pTrans->StSource[b])
+      if (c == (CHAR_T) pTrans->StSource[b])
 	{
 	  /* le caractere correspond au caractere courant de la */
 	  /* chaine source de la regle ft */
@@ -576,7 +576,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 		      do
 			{
 			  if (cs != EOS)
-			    cs = (UCHAR_T) pNextBufT->BuContent[k++];
+			    cs = (CHAR_T) pNextBufT->BuContent[k++];
 			  if (cs == WC_EOS)
 			    /* passe au buffer suivant du meme texte */
 			    if (pNextBufT->BuNext != NULL)
@@ -590,7 +590,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			  else
 			    {
 			      continu = FALSE;
-			      if (cs == (UCHAR_T) pTSch->TsCharTransl[ft].StSource[j])
+			      if (cs == (CHAR_T) pTSch->TsCharTransl[ft].StSource[j])
 				{
 				  stop = FALSE;
 				  continu = TRUE;
@@ -637,10 +637,10 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	      /* qui contienne ce caractere a cette position dans */
 	      /* la chaine source. On ne cherchera pas au-dela de */
 	      /* cette regle. */
-	      while (c == (UCHAR_T) pTSch->TsCharTransl[j - 1].StSource[b] &&
+	      while (c == (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b] &&
 		     j < lt)
 		j++;
-	      if (c != (UCHAR_T) pTSch->TsCharTransl[j - 1].StSource[b])
+	      if (c != (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b])
 		lt = j - 1;
 	      /* passe au caractere suivant de la chaine source */
 	      /* de la table de traduction */
@@ -674,7 +674,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	    }
 	  if (c != WC_EOS)
 	    {
-	      cs = (UCHAR_T) pBufT->BuContent[i - 1];
+	      cs = (CHAR_T) pBufT->BuContent[i - 1];
 	      PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE);
 	    }
 	  b = 0;
@@ -684,14 +684,14 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 
       /* cherche le caractere suivant a traiter */
       if (c != WC_EOS)
-	c = (UCHAR_T) pBufT->BuContent[i++];
+	c = (CHAR_T) pBufT->BuContent[i++];
       if (c == WC_EOS && pBufT->BuNext != NULL)
 	{
 	  /* passe au buffer suivant du meme element de texte */
 	  pPrevBufT = pBufT;
 	  pBufT = pBufT->BuNext;
 	  i = 1;
-	  c = (UCHAR_T) pBufT->BuContent[0];
+	  c = (CHAR_T) pBufT->BuContent[0];
 	}
     }
   while (c != WC_EOS);
@@ -700,7 +700,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
   /* on sort le debut de la sequence. */
    for (i = 0; i <= b - 1; i++)
      {
-       c = (UCHAR_T) pTSch->TsCharTransl[ft - 1].StSource[i];
+       c = (CHAR_T) pTSch->TsCharTransl[ft - 1].StSource[i];
        PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
      }
 }
@@ -717,7 +717,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
   PtrTextBuffer       pBufT;
   AlphabetTransl     *pTransAlph;
   StringTransl       *pTrans;
-  UCHAR_T             c;
+  CHAR_T             c;
   char                ci;
   int                 i, j, b, ft, lt;
 

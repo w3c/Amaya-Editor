@@ -503,7 +503,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 {
   PtrTextBuffer       pBuffer;
   ptrfont             font;
-  UCHAR_T             character;
+  CHAR_T             character;
   int                 i, j, l;
   int                 nChars;
   int                 wWidth;
@@ -627,7 +627,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   PtrTextBuffer       pBuffer;
   PtrBox              pParentBox;
   Language            language;
-  UCHAR_T             character;
+  CHAR_T             character;
   int                 i, count;
   int                 carWidth, newWidth;
   int                 width;
@@ -677,7 +677,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   while (still)
     {
       /* width of the next character */
-      character = (UCHAR_T) (pBuffer->BuContent[charIndex - 1]);
+      character = (CHAR_T) (pBuffer->BuContent[charIndex - 1]);
       if (character == NUL)
 	carWidth = 0;
       else if (character == SPACE)
@@ -2614,7 +2614,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		     int frame)
 {
    Propagation         propagateStatus;
-   UCHAR_T             charIndex;
+   CHAR_T             charIndex;
    PtrLine             pLine;
    PtrBox              pBox;
    PtrBox              pSelBox;

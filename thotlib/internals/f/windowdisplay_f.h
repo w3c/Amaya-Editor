@@ -8,7 +8,7 @@
 
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
-extern void DrawChar ( UCHAR_T car,
+extern void DrawChar ( char car,
                        int frame,
                        int x,
                        int y,
@@ -316,7 +316,7 @@ extern void PaintWithPattern ( int frame,
 
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
-extern void DrawChar (/* UCHAR_T car,
+extern void DrawChar (/* char car,
                          int frame,
                          int x,
                          int y,

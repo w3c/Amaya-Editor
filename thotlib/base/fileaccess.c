@@ -392,7 +392,7 @@ ThotBool TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
 
    mbc[0] = WC_EOS;
    ptr = mbc;
-   nbBytes = TtaWC2MBstring (val, &ptr);
+   nbBytes = TtaWCToMBstring (val, &ptr);
    if (nbBytes == -1)
       return FALSE;
    if (fwrite ((char *) mbc, sizeof (char), nbBytes, file) == 0)

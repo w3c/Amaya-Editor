@@ -146,23 +146,23 @@ static void TranslateChars (unsigned char *text)
 	{
 	case BREAK_LINE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
+	    text[i] = SHOWN_BREAK_LINE;
 	  break;
 	case THIN_SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
+	    text[i] = SHOWN_THIN_SPACE;
 	  break;
 	case HALF_EM:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_HALF_EM;
+	    text[i] = SHOWN_HALF_EM;
 	  break;
 	case UNBREAKABLE_SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
+	    text[i] = SHOWN_UNBREAKABLE_SPACE;
 	  break;
 	case SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_SPACE;
+	    text[i] = SHOWN_SPACE;
 	  break;
 	case START_ENTITY:
 	  text[i] = '&';
@@ -175,7 +175,7 @@ static void TranslateChars (unsigned char *text)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
 {
    ThotWindow          w;
 
@@ -184,7 +184,6 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
       return;
 
    LoadColor (fg);
-
 #ifdef _GTK
    gdk_draw_string (w, font, TtLineGC, 
 		    x, 
@@ -232,7 +231,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
       if (fg >= 0)
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _GTK */
-      ptcar = TtaAllocString (lg + 1);
+      ptcar = TtaGetMemory (lg + 1);
       if (shadow)
 	{
 	  /* replace each character by a star */

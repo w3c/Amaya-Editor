@@ -33,7 +33,7 @@ static int          LastCharSDomain;
    S'il n'y a pas de caractere suivant retourne le         
    caractere NULL.                                         
   ----------------------------------------------------------------------*/
-UCHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
+CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
     return (WC_EOS);
@@ -61,7 +61,7 @@ UCHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
    S'il n'y a pas de caractere precedent retourne le       
    caractere `\0`.                                         
   ----------------------------------------------------------------------*/
-UCHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
+CHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
     return (WC_EOS);
@@ -239,7 +239,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   PtrElement          pEl, endEl;
   PtrElement          pAncestor;
   PtrTextBuffer       pBuf;
-  UCHAR_T             charact;
+  CHAR_T             charact;
   int                 iChar, endChar;
   int                 len;
   int                 index;
@@ -378,7 +378,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   PtrElement          pEl, endEl;
   PtrElement          pAncestor;
   PtrTextBuffer       pBuf;
-  UCHAR_T             charact;
+  CHAR_T             charact;
   CHAR_T              reverse[MAX_WORD_LEN];
   int                 iChar, endChar, j;
   int                 len;

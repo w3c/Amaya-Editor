@@ -14,10 +14,8 @@ extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern void InsertChar ( int frame,
-                         UCHAR_T c,
+                         CHAR_T c,
                          int keyboard );
-extern void PasteXClipboard ( USTRING Xbuffer,
-                              int nbytes );
 extern void TtcInsertChar ( Document doc,
                             View view,
                             unsigned char c );
@@ -49,10 +47,8 @@ extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void ClearClipboard (/* PtrTextBuffer clipboard */);
 extern void InsertChar (/* int frame,
-                           UCHAR_T c,
+                           CHAR_T c,
                            int keyboard */);
-extern void PasteXClipboard (/* USTRING Xbuffer,
-                                int nbytes */);
 extern void TtcInsertChar (/* Document doc,
                               View view,
                               unsigned char c */);

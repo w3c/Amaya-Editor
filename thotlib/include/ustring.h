@@ -48,18 +48,10 @@ typedef enum {
 #include <wchar.h>
 #ifdef _I18N_
 typedef wchar_t  CHAR_T;
-typedef wchar_t *PCHAR_T;
-typedef wchar_t  UCHAR_T;
-typedef wchar_t *PUCHAR_T;
 typedef wchar_t *STRING;
-typedef wchar_t *USTRING;
 #else  /* _I18N_ */
-typedef char            CHAR_T;
-typedef char           *PCHAR_T;
-typedef unsigned char   UCHAR_T;
-typedef unsigned char  *PUCHAR_T;
-typedef char           *STRING;
-typedef unsigned char  *USTRING;
+typedef unsigned char   CHAR_T;
+typedef unsigned char  *STRING;
 #endif /* _I18N_ */
 
 /*----------------------------------------------------------------------

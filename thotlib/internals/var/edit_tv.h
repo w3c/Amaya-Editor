@@ -8,7 +8,7 @@
 
 THOT_EXPORT int         UserErrorCode;
 
-THOT_EXPORT CHAR_T      DefaultDocumentName[MAX_PATH]; /* default document name */
+THOT_EXPORT char        DefaultDocumentName[MAX_PATH]; /* default document name */
 THOT_EXPORT PtrDocument LoadedDocument[MAX_DOCUMENTS]; /* loaded documents */
 THOT_EXPORT DisplayMode	documentDisplayMode[MAX_DOCUMENTS];
 

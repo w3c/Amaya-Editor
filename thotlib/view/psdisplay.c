@@ -157,7 +157,7 @@ static int CurrentFont (FILE * fout, ptrfont font)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (CHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 {
    FILE               *fout;
    int                 w;
@@ -181,7 +181,7 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    Transcode emit the PostScript code for the given char.
   ----------------------------------------------------------------------*/
-static void Transcode (FILE * fout, int encoding, UCHAR_T car)
+static void Transcode (FILE * fout, int encoding, CHAR_T car)
 {
   switch (car)
     {
@@ -308,7 +308,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
     {
       /* replace each character by a star */
       j = 0;
-      ptcar = TtaAllocString ((size_t) (lg + 1));
+      ptcar = TtaGetMemory ((size_t) (lg + 1));
       while (j < lg)
 	ptcar[j++] = '*';
       ptcar[lg] = EOS;

@@ -51,7 +51,7 @@ static CHAR_T sepcar[] =
 static int PatternHyphen (STRING word, int length, Language language,
 			  ThotBool *addHyphen)
 {
-  char               *iso;     
+  char               *iso;
   int                 i, k;
   int                 status;
   int                *pHyphen;
@@ -59,8 +59,7 @@ static int PatternHyphen (STRING word, int length, Language language,
    *addHyphen = FALSE;
    status = 0;
    /* current patterns concern only iso-latin characters */
-   iso = TtaGetMemory (ustrlen (word) + 1);
-   TtaCopyWC2Iso (iso, word, ISO_8859_1);
+   iso = TtaConvertCHARToIso (word, ISO_8859_1);
    pHyphen = TtaGetPatternHyphenList (iso, language);
    TtaFreeMemory (iso);
    if (pHyphen == NULL)
@@ -107,7 +106,7 @@ ThotBool IsSeparatorChar (CHAR_T c)
   ----------------------------------------------------------------------*/
 void SmallLettering (STRING word)
 {
-   UCHAR_T       c;
+   CHAR_T       c;
    int           j;
 
    j = 0;
@@ -179,10 +178,10 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += CharacterWidth ((UCHAR_T) word[j], font);
+		     lg += CharacterWidth ((CHAR_T) word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += CharacterWidth ((UCHAR_T) word[j - 1], font);
+			lg += CharacterWidth ((CHAR_T) word[j - 1], font);
 		     nbChars += j + 1;
 		     j = 0;
 		  }
@@ -200,7 +199,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += CharacterWidth ((UCHAR_T) word[j], font);
+		       lg += CharacterWidth ((CHAR_T) word[j], font);
 		       nbChars++;
 		    }
 	       }
@@ -307,12 +306,12 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 	  /* Recherche le nombre de caracteres du word qui rentrent */
 	  /* dans la ligne */
 	  length = 0;
-	  charWidth = CharacterWidth ((UCHAR_T) word[length], font);
+	  charWidth = CharacterWidth ((CHAR_T) word[length], font);
 	  while (rest >= charWidth && length < wordLength)
 	    {
 	      rest -= charWidth;
 	      length++;
-	      charWidth = CharacterWidth ((UCHAR_T) word[length], font);
+	      charWidth = CharacterWidth ((CHAR_T) word[length], font);
 	    }
 
 	  if (length > 1)
@@ -340,7 +339,7 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 			{
 			  /* comptabilise le caractere */
 			  length--;
-			  *width += CharacterWidth ((UCHAR_T) (adbuff->BuContent[i++]), font);
+			  *width += CharacterWidth ((CHAR_T) (adbuff->BuContent[i++]), font);
 			}
 		    }
 		  

@@ -14,6 +14,9 @@
 #include <ctype.h>
 #include "thot_gui.h"
 #include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "application.h"
 #include "uconvert.h"
 
 extern unsigned long offset[6];
@@ -352,6 +355,7 @@ unsigned short WIN1257CP [] = {
 };
 #define WIN1257CP_length sizeof(WIN1257CP) / sizeof(unsigned short);
 
+#include "memory_f.h"
 
 /*----------------------------------------------------------------------
   uctio
@@ -415,10 +419,10 @@ CHAR_T utolower (CHAR_T c)
 
 
 /*----------------------------------------------------------------------
-  TtaGetCharFromUnicode returns the ISO or Windows character code
+  TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
-unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
+unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 {
   unsigned int  c, max;
   unsigned short *table;
@@ -512,10 +516,10 @@ unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
 
 
 /*----------------------------------------------------------------------
-  TtaGetUnicodeFromChar returns the Unicode value of the corresponding
+  TtaGetWCFromChar returns the Unicode value of the corresponding
   ISO or Windows character code c.
   ----------------------------------------------------------------------*/
-wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
+wchar_t TtaGetWCFromChar (const unsigned char c, CHARSET encoding)
 {
   unsigned int  val, max;
   unsigned short *table;
@@ -606,11 +610,11 @@ wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
 
 
 /*----------------------------------------------------------------------
-  TtaWC2MBstring converts a wide character into a multibyte string.
+  TtaWCToMBstring converts a wide character into a multibyte string.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the dest multibyte string is updated.
   ----------------------------------------------------------------------*/
-int TtaWC2MBstring (wchar_t src, unsigned char **dest)
+int TtaWCToMBstring (wchar_t src, unsigned char **dest)
 {
   unsigned char   leadByteMark;
   unsigned char  *mbcptr = *dest;
@@ -679,11 +683,11 @@ int TtaWC2MBstring (wchar_t src, unsigned char **dest)
 
 
 /*----------------------------------------------------------------------
-  TtaMBstring2WCS converts a multibyte string into a wide character.
+  TtaMBstringToWCS converts a multibyte string into a wide character.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-int TtaMBstring2WC (unsigned char **src, wchar_t *dest)
+int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
 {
   unsigned char *ptrSrc = *src;
   wchar_t        res;
@@ -793,7 +797,7 @@ int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
   else
     {
       nbBytesToRead = 1;
-      *car = TtaGetUnicodeFromChar (*start, encoding);
+      *car = TtaGetWCFromChar (*start, encoding);
       start++;
     }
   return nbBytesToRead;
@@ -828,45 +832,147 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 }
 
 /*-------------------------------------------------------------
-  TtaCopyWC2Iso copies src (16-bit) into dest (8-bit). This 
-  function supposes that enough memory has been already allocated.
-  Return the encoding detected.
+  TtaConvertWCToIso converts the src (16-bit) into an ISO string
+  (8-bit).
+  The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-void TtaCopyWC2Iso (unsigned char *dest, CHAR_T *src, CHARSET encoding)
+char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
 {
-#ifdef _I18N_
-  int               i;
+  char             *dest;
+  int               i, len;
 
-  i = 0;
-  while (src[i] != WC_EOS)
+  dest = NULL;
+  if (src)
     {
-      dest[i] = TtaGetCharFromUnicode (src[i], encoding);
-      i++;
+      i = 0;
+      while (src[i] != 0)
+	i++;
+      dest = TtaGetMemory (i + 1);
+      i = 0;
+      while (src[i] != 0)
+	{
+	  dest[i] = TtaGetCharFromWC (src[i], encoding);
+	  i++;
+	}
+      dest[i] = EOS;
     }
-  dest[i] = EOS;
-#else  /* _I18N_ */
-  strcpy (dest, src);
-#endif /* _I18N_ */
+  return dest;
 }
 
 
 /*-------------------------------------------------------------
-  TtaCopyIso2WC copies src (8-bit) into dest (16-bits). This 
-  function suposes that enough memory has been already allocated.
+  TtaConvertIsoToWC converts the src (8-bit) into a wide character
+  string (16-bit).
+  The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-void TtaCopyIso2WC (CHAR_T *dest, unsigned char *src, CHARSET encoding)
+wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
 {
-#ifdef _I18N_ 
+  wchar_t          *dest;
   int               i;
 
-  i = 0;
-  while (src[i] != EOS)
+  dest = NULL;
+  if (src)
     {
-      dest[i] = TtaGetUnicodeFromChar (src[i], encoding);
-      i++;
+      i = strlen (src) + 1;
+      dest = TtaGetMemory (i * sizeof (wchar_t));
+      i = 0;
+      while (src[i] != EOS)
+	{
+	  dest[i] = TtaGetWCFromChar (src[i], encoding);
+	  i++;
+	}
+      dest[i] = WC_EOS;
     }
-  dest[i] = WC_EOS;
-#else  /* _I18N_ */
-  strcpy (dest, src);
-#endif /* _I18N_ */
+  return dest;
+}
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
+{
+  wchar_t         *tmp;
+  unsigned char   *dest, *ptr;
+  int              i, l;
+
+  dest = NULL;
+  if (src)
+    {
+      /* generate the WC string */
+      tmp = TtaConvertIsoToWC(src, encoding);
+      /* now generate the Multi Byte string */
+      dest = TtaGetMemory (strlen (src) + 1);
+      i = 0;
+      l = 0;
+      while (tmp[i] != 0)
+	{
+	  ptr = &dest[l];
+	  l += TtaWCToMBstring (tmp[i], &ptr);
+	  i++;
+	}
+      TtaFreeMemory (tmp);
+    }
+  return dest;
+}
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding)
+{
+  wchar_t         *tmp;
+  unsigned char   *dest, *ptr;
+  int              i, l;
+
+  dest = NULL;
+  if (src)
+    {
+      /* generate the WC string */
+      tmp = TtaGetMemory ((strlen (src) + 1) * sizeof (wchar_t));
+      i = 0;
+      l = 0;
+      while (src[l] != 0)
+	{
+	  ptr = &src[l];
+	  l += TtaMBstringToWC (&ptr, &tmp[i]);
+	  i++;
+	}
+      /* now generate the ISO string */
+      dest = TtaConvertWCToIso (tmp, encoding);
+      TtaFreeMemory (tmp);
+    }
+  return dest;
+}
+
+/*-------------------------------------------------------------
+  TtaConvertCHARToIso converts the src CHAR_T* into an ISO
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding)
+{
+#ifdef _I18N_
+  return TtaConvertWCToIso (src, encoding);
+#else /* _I18N_ */
+  return TtaStrdup (src);
+#endif /* _I18N */
+}
+
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToCHAR converts the src (8-bit) into a CHAR_T*
+  string.
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+CHAR_T *TtaConvertIsoToCHAR (unsigned char *src, CHARSET encoding)
+{
+#ifdef _I18N_
+  return TtaConvertIsoToWC (src, encoding);
+#else /* _I18N_ */
+  return TtaStrdup (src);
+#endif /* _I18N */
 }

@@ -78,7 +78,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 /*----------------------------------------------------------------------
    IsTextLeaf teste si un pave est un pave de texte modifiable.     
   ----------------------------------------------------------------------*/
-static ThotBool     IsTextLeaf (PtrAbstractBox pave)
+static ThotBool IsTextLeaf (PtrAbstractBox pave)
 {
    ThotBool            result;
 
@@ -95,7 +95,7 @@ static ThotBool     IsTextLeaf (PtrAbstractBox pave)
   The parameter frame gives the concerned frame.
   The parameter toend is TRUE when moving to the end of the line.
   ----------------------------------------------------------------------*/
-static void         MoveInLine (int frame, ThotBool toend)
+static void MoveInLine (int frame, ThotBool toend)
 {
    PtrLine             pLine;
    PtrAbstractBox      pAb;
@@ -780,282 +780,277 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousChar (Document document, View view)
+void TtcPreviousChar (Document document, View view)
 {
    MovingCommands (1, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextChar (Document document, View view)
+void TtcNextChar (Document document, View view)
 {
    MovingCommands (2, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousLine (Document document, View view)
+void TtcPreviousLine (Document document, View view)
 {
    MovingCommands (8, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextLine (Document document, View view)
+void TtcNextLine (Document document, View view)
 {
    MovingCommands (7, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcStartOfLine (Document document, View view)
+void TtcStartOfLine (Document document, View view)
 {
    MovingCommands (4, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcEndOfLine (Document document, View view)
+void TtcEndOfLine (Document document, View view)
 {
    MovingCommands (3, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousSelChar (Document document, View view)
+void TtcPreviousSelChar (Document document, View view)
 {
    MovingCommands (1, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextSelChar (Document document, View view)
+void TtcNextSelChar (Document document, View view)
 {
    MovingCommands (2, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousSelLine (Document document, View view)
+void TtcPreviousSelLine (Document document, View view)
 {
    MovingCommands (8, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextSelLine (Document document, View view)
+void TtcNextSelLine (Document document, View view)
 {
    MovingCommands (7, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousWord (Document document, View view)
+void TtcPreviousWord (Document document, View view)
 {
    MovingCommands (9, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextWord (Document document, View view)
+void TtcNextWord (Document document, View view)
 {
    MovingCommands (10, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcPreviousSelWord (Document document, View view)
+void TtcPreviousSelWord (Document document, View view)
 {
    MovingCommands (9, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtcNextSelWord (Document document, View view)
+void TtcNextSelWord (Document document, View view)
 {
    MovingCommands (10, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
    CopyXClipboard insere le contenu de la selection courante dans   
-   le Xbuffer pour transmettre la selection X.             
+   le buffer pour transmettre la selection X.             
   ----------------------------------------------------------------------*/
-static int          CopyXClipboard (USTRING *buffer, View view)
+static int CopyXClipboard (unsigned char **buffer, View view)
 {
-   PtrTextBuffer       clipboard;
-   PtrDocument         pDoc;
-   PtrElement          pFirstEl, pLastEl;
-   PtrElement          pEl;
-   PtrAbstractBox      pBlock, pOldBlock;
-   USTRING             Xbuffer;
-   int                 i, j, max;
-   int                 k, lg, maxLength;
-   int                 firstChar, lastChar;
-   int                 v;
-   ThotBool            inAttr;
+  PtrTextBuffer       clipboard;
+  PtrDocument         pDoc;
+  PtrElement          pFirstEl, pLastEl;
+  PtrElement          pEl;
+  PtrAbstractBox      pBlock, pOldBlock;
+  CHAR_T             *text;
+  int                 i, j, max;
+  int                 k, lg, maxLength;
+  int                 firstChar, lastChar;
+  int                 v;
+  ThotBool            inAttr;
 
-   j = 0;
-   inAttr = FALSE;
-   /* Recupere la selection courante */
-   if (!GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
-      /* Rien a copier */
-      return 0;
+  /* get the current view */
+  v = view - 1;
+  j = 0;
+  inAttr = FALSE;
+  /* Recupere la selection courante */
+  if (!GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
+    /* Rien a copier */
+    return 0;
 
-   lg = 1;
-   if (lastChar == 0)
-      /* Il faut prendre tout le contenu de tout l'element */
-      lastChar = pLastEl->ElVolume;
+  lg = 1;
+  if (lastChar == 0)
+    /* Il faut prendre tout le contenu de tout l'element */
+    lastChar = pLastEl->ElVolume;
 
-   /* Calcule la longueur du Xbuffer a produire */
-   if (pFirstEl == pLastEl)
-     /* only one element */
-      maxLength = lastChar - firstChar;
-   else
-     {
-	maxLength = pFirstEl->ElVolume - firstChar;	/* volume 1er element */
-	pEl = pFirstEl;
-	while (pEl != NULL)
-	  {
-	     pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	     if (pEl != NULL)
-		if (ElemIsBefore (pLastEl, pEl))
-		   /* l'element trouve' est apres l'element de fin, on */
-		   /* fait comme si on n'avait pas trouve' */
-		   pEl = NULL;
+  /* Calcule la longueur du buffer a produire */
+  if (pFirstEl == pLastEl)
+    /* only one element */
+    maxLength = lastChar - firstChar;
+  else
+    {
+      maxLength = pFirstEl->ElVolume - firstChar;	/* volume 1er element */
+      pEl = pFirstEl;
+      while (pEl != NULL)
+	{
+	  pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	  if (pEl && ElemIsBefore (pLastEl, pEl))
+	    /* l'element trouve' est apres l'element de fin, on */
+	    /* fait comme si on n'avait pas trouve' */
+	    pEl = NULL;
 
-	     /* On ajoute le volume de l'element */
-	     if (pEl != NULL)
-	       {
-		 if (pEl == pLastEl)
-		   maxLength += lastChar;
-		 else
-		   maxLength += pEl->ElVolume;
-		 lg += 2;
-	       }
-	  }
-     }
+	  /* On ajoute le volume de l'element */
+	  if (pEl != NULL)
+	    {
+	      if (pEl == pLastEl)
+		maxLength += lastChar;
+	      else
+		maxLength += pEl->ElVolume;
+	      lg += 2;
+	    }
+	}
+    }
 
-   if (pDoc == DocSelectedAttr)
-     {
-       /* Selection is within an attribute */
-       firstChar = FirstSelectedCharInAttr;
-       lastChar = LastSelectedCharInAttr;
-       maxLength = LastSelectedCharInAttr - FirstSelectedCharInAttr;
-       inAttr = TRUE;
-       clipboard = AbsBoxSelectedAttr->AbText;
-     }
-   else if (maxLength == 0)
-     /* nothing selected */
-     return 0;
-   else if (pFirstEl->ElTerminal && pFirstEl->ElLeafType == LtText)
-     clipboard = pFirstEl->ElText;
-   else
-     clipboard = NULL;
+  if (pDoc == DocSelectedAttr)
+    {
+      /* Selection is within an attribute */
+      firstChar = FirstSelectedCharInAttr;
+      lastChar = LastSelectedCharInAttr;
+      maxLength = LastSelectedCharInAttr - FirstSelectedCharInAttr;
+      inAttr = TRUE;
+      clipboard = AbsBoxSelectedAttr->AbText;
+    }
+  else if (maxLength == 0)
+    /* nothing selected */
+    return 0;
+  else if (pFirstEl->ElTerminal && pFirstEl->ElLeafType == LtText)
+    clipboard = pFirstEl->ElText;
+  else
+    clipboard = NULL;
 
-   /* Adding 100 characters for extra CR */
-   max = maxLength + lg;
-   /* Allocate the Xbuffer with the right length */
-   Xbuffer = TtaAllocString (max);
+  /* Adding 100 characters for extra CR */
+  max = maxLength + lg;
+  /* Allocate a buffer with the right length */
+  text = TtaGetMemory (max * sizeof (CHAR_T));
+  /* Copy the text into the buffer */
+  i = 0;
+  lg = 0;
+  /* Teste si le premier element est de type texte */
+  if (clipboard)
+    {
+      /* On saute les firstChar premiers caracteres */
+      k = 0;
+      j = clipboard->BuLength;
+      while (clipboard && lg < firstChar)
+	{
+	  j = clipboard->BuLength;
+	  if (j > firstChar - lg)
+	    {
+	      /* La fin du buffer est a copier */
+	      k = firstChar - lg - 1;	/* decalage dans le clipboard */
+	      j -= k;	/* longueur restante dans le clipboard */
+	      lg = firstChar;
+	    }
+	  else
+	    {
+	      /* Il faut sauter tout le buffer */
+	      lg += j;
+	      clipboard = clipboard->BuNext;
+	      j = 0;
+	    }
+	}
 
-   if (*buffer)
-     TtaFreeMemory (*buffer);
-   *buffer = Xbuffer;
-   /* Copy the text into the Xbuffer */
-   i = 0;
-   lg = 0;
-
-   /* get the current view */
-   if (view > 100)
-     v = 0;
-   else
-     v = view - 1;
-
-   /* Teste si le premier element est de type texte */
-   if (clipboard)
-     {
-	/* On saute les firstChar premiers caracteres */
-	k = 0;
-	j = clipboard->BuLength;
-	while (clipboard != NULL && lg < firstChar)
-	  {
-	     j = clipboard->BuLength;
-	     if (j > firstChar - lg)
-	       {
-		  /* La fin du buffer est a copier */
-		  k = firstChar - lg - 1;	/* decalage dans le clipboard */
-		  j -= k;	/* longueur restante dans le clipboard */
-		  lg = firstChar;
-	       }
-	     else
-	       {
-		  /* Il faut sauter tout le buffer */
+      /* Recopie le texte du premier element */
+      lg = 0;
+      while (clipboard != NULL && i < max && lg < maxLength)
+	{
+	  if (j >= max - i)
+	    j = max - i - 1;	/* deborde du buffer */
+	  if (j > maxLength - lg)
+	    j = maxLength - lg;	/* fin du texte a copier */
+	  ustrncpy (&text[i], &clipboard->BuContent[k], j);
+	  i += j;
+	  lg += j;
+	  k = 0;
+	  clipboard = clipboard->BuNext;
+	  if (clipboard != NULL)
+	    j = clipboard->BuLength;
+	}
+    }
+  
+  /* Recopie le texte des elements suivants */
+  pOldBlock = NULL;
+  pEl = pFirstEl;
+  while (pEl != NULL)
+    {
+      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+      if (pEl != NULL)
+	{
+	  /* l'element trouve' est pointe' par pEl */
+	  if (pEl != pLastEl &&
+	      /* l'element trouve' n'est pas l'element ou il faut s'arreter */
+	      ElemIsBefore (pLastEl, pEl))
+	    /* l'element trouve' est apres l'element de fin, on */
+	    /* fait comme si on n'avait pas trouve' */
+	    pEl = NULL;
+	  
+	  if (pEl != NULL)
+	    {
+	      pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
+	      if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
+		/* Ajoute un \n en fin d'element */
+		ustrcpy (&text[i++], TEXT ("\n\n"));
+	      
+	      /* Recopie le texte de l'element */
+	      pOldBlock = pBlock;
+	      clipboard = pEl->ElText;
+	      while (clipboard != NULL && i < max && lg < maxLength)
+		{
+		  j = clipboard->BuLength;
+		  if (j >= max - i)
+		    j = max - i - 1;
+		  if (j > maxLength - lg)
+		    j = maxLength - lg;
+		  ustrncpy (&text[i], clipboard->BuContent, j);
+		  i += j;
 		  lg += j;
 		  clipboard = clipboard->BuNext;
-		  j = 0;
-	       }
-	  }
-
-	/* Recopie le texte du premier element */
-	lg = 0;
-	while (clipboard != NULL && i < max && lg < maxLength)
-	  {
-	     if (j >= max - i)
-		j = max - i - 1;	/* deborde du buffer */
-	     if (j > maxLength - lg)
-		j = maxLength - lg;	/* fin du texte a copier */
-	     ustrncpy (&Xbuffer[i], &clipboard->BuContent[k], j);
-	     i += j;
-	     lg += j;
-	     k = 0;
-	     clipboard = clipboard->BuNext;
-	     if (clipboard != NULL)
-		j = clipboard->BuLength;
-	  }
-     }
-
-   /* Recopie le texte des elements suivants */
-   pOldBlock = NULL;
-   pEl = pFirstEl;
-   while (pEl != NULL)
-     {
-	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	if (pEl != NULL)
-	  {
-	     /* l'element trouve' est pointe' par pEl */
-	     if (pEl != pLastEl)
-		/* l'element trouve' n'est pas l'element ou il faut s'arreter */
-		if (ElemIsBefore (pLastEl, pEl))
-		   /* l'element trouve' est apres l'element de fin, on */
-		   /* fait comme si on n'avait pas trouve' */
-		   pEl = NULL;
-
-	     if (pEl != NULL)
-	       {
-                  pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
-		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
-		     /* Ajoute un \n en fin d'element */
-		     ustrcpy (&Xbuffer[i++], "\n\n");
-
-		  /* Recopie le texte de l'element */
-		  pOldBlock = pBlock;
-		  clipboard = pEl->ElText;
-		  while (clipboard != NULL && i < max && lg < maxLength)
-		    {
-		       j = clipboard->BuLength;
-		       if (j >= max - i)
-			  j = max - i - 1;
-		       if (j > maxLength - lg)
-			  j = maxLength - lg;
-		       ustrncpy (&Xbuffer[i], clipboard->BuContent, j);
-		       i += j;
-		       lg += j;
-		       clipboard = clipboard->BuNext;
-		    }
-	       }
-	  }
-     }
-   Xbuffer [i] = 0;
-   return i;
+		}
+	    }
+	}
+    }
+  text[i] = WC_EOS;
+  if (*buffer)
+    TtaFreeMemory (*buffer);
+  /* What is the encoding used by external applications ??? */
+  *buffer = TtaConvertCHARToIso (text, ISO_8859_1);
+  TtaFreeMemory (text);
+  return i;
 }
 
 /*----------------------------------------------------------------------
@@ -1124,7 +1119,7 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
   PtrTextBuffer       buffer;
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
-  UCHAR_T              c;
+  CHAR_T              c;
   int                 first, last;
   int                 doc, i;
   ThotBool            isSep;

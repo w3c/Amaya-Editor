@@ -598,7 +598,7 @@ void SelectionEvents (void *ev)
 		   else
 		     buffer = partbuffer;
 		   /* paste the content of the selection */
-		   if (ThotLocalActions[T_pasteclipboard] != NULL)
+		   if (ThotLocalActions[T_pasteclipboard])
 		     (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
 		   if (buffer != partbuffer)
 		     TtaFreeMemory (buffer);

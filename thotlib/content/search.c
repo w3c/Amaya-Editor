@@ -52,6 +52,7 @@
 #include "structschema_f.h"
 #include "structselect_f.h"
 #include "tree_f.h"
+#include "uconvert_f.h"
 #include "views_f.h"
 
 /*----------------------------------------------------------------------
@@ -65,11 +66,12 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
 		    int stringLen, CHAR_T replaceStr[THOT_MAX_CHAR],
 		    int replaceLen, ThotBool select)
 {
-  int                 ibuf1, ibuf2, len, diff, dvol, view, i;
   PtrTextBuffer       pBuf1, pBuf2, pBufn;
   PtrAbstractBox      pAb;
   PtrElement          pAsc;
   NotifyOnTarget      notifyEl;
+  unsigned char      *s;
+  int                 ibuf1, ibuf2, len, diff, dvol, view, i;
   ThotBool            DontReplace;
   ThotBool            visible;
 
@@ -164,7 +166,9 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   else
     /* les deux chaines ont meme longueur */
     diff = 0;
-  /* copie la chaine de remplacement */
+
+  /* copy the remplacing string */
+  s = TtaConvertIsoToCHAR (replaceStr, ISO_8859_1);
   len = 0;
   pBufn = pBuf1;
   i = ibuf1;
@@ -180,6 +184,8 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
 	  i = 1;
 	}
     }
+  TtaFreeMemory (s);
+
   if (diff > 0)
     {
       pBufn->BuContent[i - 1] = EOS;

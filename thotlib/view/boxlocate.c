@@ -2708,7 +2708,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
   int                 charWidth;
   int                 newIndex;
   ptrfont             font;
-  UCHAR_T             c;
+  CHAR_T             c;
   ThotBool            notfound;
 
   /* Nombre de caracteres qui precedent */
@@ -2747,7 +2747,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
       notfound = (dx < *x);
 #else
       /* largeur du caractere suivant */
-      c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+      c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
       if (c == 0)
 	charWidth = 0;
       else if (c == SPACE)
@@ -2767,7 +2767,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	  {
 #ifdef STRUCT_EDIT
 	     /* largeur du caractere courant */
-	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
 	     else if (c == SPACE)
@@ -2808,7 +2808,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, in
 	     notfound = (dx < *x);
 #else
 	     /* largeur du caractere suivant */
-	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 	       charWidth = 0;
 	     else if (c == SPACE)

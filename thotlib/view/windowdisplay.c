@@ -68,7 +68,7 @@ void         SetMainWindowBackgroundColor (int frame, int color)
   TranslateChars replaces in the text space chars to their visual
   equivalents and the character 128 by '&'.
   ----------------------------------------------------------------------*/
-static void         TranslateChars (USTRING text)
+static void TranslateChars (unsigned char *text)
 {
   int                 i;
 
@@ -81,23 +81,23 @@ static void         TranslateChars (USTRING text)
 	{
 	case BREAK_LINE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
+	    text[i] = SHOWN_BREAK_LINE;
 	  break;
 	case THIN_SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
+	    text[i] = SHOWN_THIN_SPACE;
 	  break;
 	case HALF_EM:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_HALF_EM;
+	    text[i] = SHOWN_HALF_EM;
 	  break;
 	case UNBREAKABLE_SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
+	    text[i] = SHOWN_UNBREAKABLE_SPACE;
 	  break;
 	case SPACE:
       if (!ShowSpace)
-	    text[i] = (UCHAR_T) SHOWN_SPACE;
+	    text[i] = SHOWN_SPACE;
 	  break;
 	case START_ENTITY:
 	  text[i] = '&';
@@ -212,7 +212,7 @@ static void  DrawOneLine (int frame, int thick, int style, int x1, int y1,
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
 {
   CHAR_T              str[2] = {car, 0};
   HFONT               hOldFont;
@@ -232,7 +232,7 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
    SetBkMode (display, TRANSPARENT);
    SetMapperFlags (display, 1);
    hOldFont = WinLoadFont (display, font);
-   TextOut (display, x, y, (USTRING) str, 1);
+   TextOut (display, x, y, (STRING) str, 1);
    SelectObject (display, hOldFont);
    DeleteObject (ActiveFont);
    ActiveFont = (HFONT)0;
@@ -283,7 +283,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 
   SetMapperFlags (display, 1);
   hOldFont = WinLoadFont (display, font);
-  ptcar = TtaAllocString (lg + 1);
+  ptcar = TtaGetMemory (lg + 1);
   if (shadow)
     {
       /* replace each character by a star */
@@ -313,7 +313,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
       y += FrameTable[frame].FrTopMargin;
       SetTextColor (display, ColorPixel (fg));
       SetBkMode (display, TRANSPARENT);
-      TextOut (display, x, y, (USTRING) ptcar, lg);
+      TextOut (display, x, y, (STRING) ptcar, lg);
       if (hyphen)
 	/* draw the hyphen */
 	TextOut (display, x + width, y, "\255", 1);

@@ -119,6 +119,7 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "structselect_f.h"
 #include "structschema_f.h"
 #include "tree_f.h"
+#include "uconvert_f.h"
 
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -133,7 +134,7 @@ static void InitFormLanguage (Document doc, View view,
    PtrElement          pElAttr;
    char               *s, *ptr;
    char                languageValue[MAX_TXT_LEN];
-   char                Lab[200];
+   char                label[200];
    int                 defItem, nbItem, nbLanguages, firstLanguage, length;
 #ifndef _WINDOWS
    char                bufMenu[MAX_TXT_LEN];
@@ -208,7 +209,7 @@ static void InitFormLanguage (Document doc, View view,
 	   TtaSetSelector (NumSelectLanguage, -1, NULL);
 #endif /* !_WINDOWS */
 	   /* cherche la valeur heritee de l'attribut Langue */
-	   strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
+	   strcpy (label, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
 	   pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
 	   if (pHeritAttr && pHeritAttr->AeAttrText)
 	     {
@@ -216,21 +217,21 @@ static void InitFormLanguage (Document doc, View view,
 	       /* a language name */
 	       CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, languageValue, MAX_TXT_LEN);
 	       language = TtaGetLanguageIdFromName (languageValue);
-	       strcat (Lab, TtaGetLanguageName(language));
+	       strcat (label, TtaGetLanguageName(language));
 	     }
 	 }
        else
 	 /* initialise le selecteur sur l'entree correspondante a la valeur */
 	 /* courante de l'attribut langue. */
-	 Lab[0] = EOS;
+	 label[0] = EOS;
      }
 
 #ifndef _WINDOWS 
-   TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
+   TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, label);
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #else  /* _WINDOWS */
-   sprintf (WIN_Lab, "%s", Lab);
+   sprintf (WIN_Lab, "%s", label);
    WIN_nbItem = nbItem; 
    WIN_Language = language;
 #endif /* _WINDOWS */
@@ -1341,8 +1342,11 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
 	{
    	  /* change la langue de toutes les feuilles de texte du sous-arbre */
    	  /* de l'element */
-   	  if (pAttr->AeAttrText != NULL)
-	    lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+   	  if (pAttr->AeAttrText)
+	    {
+	      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
+	      lang = TtaGetLanguageIdFromName (text);
+	    }
    	  else
 	    /* c'est une suppression de l'attribut Langue */
    	    {

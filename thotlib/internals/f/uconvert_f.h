@@ -9,50 +9,62 @@
 extern int uatoi ( const STRING string );
 extern long uatol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
-extern unsigned char TtaGetCharFromUnicode ( const wchar_t wc,
-                                             CHARSET encoding );
-extern wchar_t TtaGetUnicodeFromChar ( const unsigned char c,
-                                       CHARSET encoding );
-extern int TtaWC2MBstring ( wchar_t src,
-                            unsigned char **dest );
-extern int TtaMBstring2WC ( unsigned char **src,
-                            wchar_t *dest );
+extern unsigned char TtaGetCharFromWC ( wchar_t wc,
+                                        CHARSET encoding );
+extern wchar_t TtaGetWCFromChar ( const unsigned char c,
+                                  CHARSET encoding );
+extern int TtaWCToMBstring ( wchar_t src,
+                             unsigned char **dest );
+extern int TtaMBstringToWC ( unsigned char **src,
+                             wchar_t *dest );
 extern int TtaGetNextWCFromString ( wchar_t *car,
                                     unsigned char **txt,
                                     CHARSET encoding );
 extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
-extern void TtaCopyWC2Iso ( unsigned char *dest,
-                            CHAR_T *src,
-                            CHARSET encoding );
-extern void TtaCopyIso2WC ( CHAR_T *dest,
-                            unsigned char *src,
-                            CHARSET encoding );
+extern char *TtaConvertWCToIso ( wchar_t *src,
+                                 CHARSET encoding );
+extern wchar_t *TtaConvertIsoToWC ( unsigned char *src,
+                                    CHARSET encoding );
+extern unsigned char *TtaConvertIsoToMbs ( unsigned char *src,
+                                           CHARSET encoding );
+extern unsigned char *TtaConverMbsToIso ( unsigned char *src,
+                                          CHARSET encoding );
+extern char *TtaConvertCHARToIso ( CHAR_T *src,
+                                   CHARSET encoding );
+extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
+                                     CHARSET encoding );
 
 #else /* __STDC__ */
 
 extern int uatoi (/* const STRING string */);
 extern long uatol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
-extern unsigned char TtaGetCharFromUnicode (/* const wchar_t wc,
-                                               CHARSET encoding */);
-extern wchar_t TtaGetUnicodeFromChar (/* const unsigned char c,
-                                         CHARSET encoding */);
-extern int TtaWC2MBstring (/* wchar_t src,
-                              unsigned char **dest */);
-extern int TtaMBstring2WC (/* unsigned char **src,
-                              wchar_t *dest */);
+extern unsigned char TtaGetCharFromWC (/* wchar_t wc,
+                                          CHARSET encoding */);
+extern wchar_t TtaGetWCFromChar (/* const unsigned char c,
+                                    CHARSET encoding */);
+extern int TtaWCToMBstring (/* wchar_t src,
+                               unsigned char **dest */);
+extern int TtaMBstringToWC (/* unsigned char **src,
+                               wchar_t *dest */);
 extern int TtaGetNextWCFromString (/* wchar_t *car,
                                       unsigned char **txt,
                                       CHARSET encoding */);
 extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
                                          CHARSET encoding */);
-extern void TtaCopyWC2Iso (/* unsigned char *dest,
-                              CHAR_T *src,
-                              CHARSET encoding */);
-extern void TtaCopyIso2WC (/* CHAR_T *dest,
-                              unsigned char *src,
-                              CHARSET encoding */);
+extern char *TtaConvertWCToIso (/* wchar_t *src,
+                                   CHARSET encoding */);
+extern wchar_t *TtaConvertIsoToWC (/* unsigned char *src,
+                                      CHARSET encoding */);
+extern unsigned char *TtaConvertIsoToMbs (/* unsigned char *src,
+                                             CHARSET encoding */);
+extern unsigned char *TtaConverMbsToIso (/* unsigned char *src,
+                                            CHARSET encoding */);
+extern char *TtaConvertCHARToIso (/* CHAR_T *src,
+                                     CHARSET encoding */);
+extern CHAR_T *TtaConvertIsoToCHAR (/* unsigned char *src,
+                                       CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

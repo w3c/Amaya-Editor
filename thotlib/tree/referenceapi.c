@@ -404,7 +404,7 @@ void TtaCopyAttributeReference (Attribute attribute, Element element,
    element: the element to be up to dated.
    document: the document that contains the element.
    ---------------------------------------------------------------------- */
-void		TtaCopyIncludedElem (Element element, Document document)
+void TtaCopyIncludedElem (Element element, Document document)
 {
    UserErrorCode = 0;
 
@@ -532,7 +532,7 @@ void TtaGiveReferredElement (Element element, Element *target,
    Return value:
    1 = the type is a reference, 0 = the type is not a reference.
   ----------------------------------------------------------------------*/
-int                 TtaIsElementTypeReference (ElementType elementType)
+int TtaIsElementTypeReference (ElementType elementType)
 {
    int                 result;
 

@@ -12,31 +12,31 @@ extern long uatol (const STRING string);
 extern CHAR_T utolower (CHAR_T c);
 
 /*----------------------------------------------------------------------
-  TtaGetCharFromUnicode returns the ISO or Windows character code
+  TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
-extern unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding);
+extern unsigned char TtaGetCharFromWC (const wchar_t wc, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaGetUnicodeFromChar returns the Unicode value of the corresponding
+  TtaGetWCFromChar returns the Unicode value of the corresponding
   ISO or Windows character code c.
   ----------------------------------------------------------------------*/
-extern wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding);
+extern wchar_t TtaGetWCFromChar (const unsigned char c, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaMBstring2WCS converts a multibyte string into a wide character.
+  TtaMBstringT0WC converts a multibyte string into a wide character.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaMBstring2WC (unsigned char **src, wchar_t *dest);
+extern int TtaMBstringToWC (unsigned char **src, wchar_t *dest);
 
 /*----------------------------------------------------------------------
-  TtaWCS2MBs converts a wide character into a multibyte string according to
+  TtaWCToMBs converts a wide character into a multibyte string according to
   the charset.                                                                
   Return the number of bytes in the multibyte character or -1
   The pointer to the dest multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaWC2MBstring (wchar_t src, unsigned char **dest);
+extern int TtaWCToMBstring (wchar_t src, unsigned char **dest);
 
 /*----------------------------------------------------------------------
   TtaGetNextWCFromString: Looks for the next Wide character 
@@ -51,16 +51,45 @@ extern int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET en
 extern int TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaCopyWC2Iso copies src (16-bit) into dest (8-bit). This 
-  function suposes that enough memory has been already allocated.
-  Return the encoding detected.
+  TtaConvertWCToIso converts the src (16-bit) into an ISO string
+  (8-bit).
+  The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern void TtaCopyWC2Iso (unsigned char *dest, CHAR_T *src, CHARSET encoding);
+extern char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaCopyIso2WC copies src (8-bit) into dest (16-bits). This 
-  function suposes that enough memory has been already allocated.
+  TtaConvertIsoToWC converts the src (8-bit) into a wide character
+  string (16-bit).
+  The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern void TtaCopyIso2WC (CHAR_T *dest, unsigned char *src, CHARSET encoding);
+extern wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding);
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+extern unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding);
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+extern unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding);
+
+/*-------------------------------------------------------------
+  TtaConvertCHARToIso converts the src CHAR_T* into an ISO
+  string (8-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+extern char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding);
+
+/*-------------------------------------------------------------
+  TtaConvertIsoToWC converts the src (8-bit) into a CHAR_T*
+  string.
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+extern CHAR_T *TtaConvertIsoToCHAR (unsigned char *src, CHARSET encoding);
 
 #endif /* __UCONVERT_H__ */

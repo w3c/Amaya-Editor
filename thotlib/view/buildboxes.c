@@ -354,7 +354,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
    int                 i, j;
    int                 charWidth;
    int                 spaceWidth;
-   UCHAR_T               car;
+   CHAR_T               car;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
@@ -369,7 +369,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
    while (j <= nChars)
      {
 	/* On traite les differents caracteres */
-	car = (UCHAR_T) (pBuffer->BuContent[i - 1]);
+	car = (CHAR_T) (pBuffer->BuContent[i - 1]);
 	if (car == SPACE)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */

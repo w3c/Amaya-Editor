@@ -124,26 +124,6 @@ PtrDict             PtFree_Dict;
 #include "fileaccess_f.h"
 
 /*----------------------------------------------------------------------
-   TtaAllocString
-
-   Allocates dynamically a string buffer of a specific size
-   Parameters:
-   size: size in bytes (like using malloc) of the desired allocated
-   buffer.
-   Return value:
-   the address of the allocated buffer.
-   See also:
-   TtaGetMemory and TtaFreeMemory.
-  ----------------------------------------------------------------------*/
-STRING TtaAllocString (unsigned int n)
-{
-    if (n == 0)
-       n++;
-    return ((STRING) malloc ((size_t) n * sizeof (CHAR_T)));
-}
-
-
-/*----------------------------------------------------------------------
    TtaGetMemory
 
    Allocates dynamically a buffer of a specific size
