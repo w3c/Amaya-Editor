@@ -65,11 +65,14 @@ extern int          UserErrorCode;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaAllocateDocument (char *documentName)
+Document            TtaAllocateDocument (char *documentName,
+                                         char *documentIdentifier)
 
 #else  /* __STDC__ */
-Document            TtaAllocateDocument (documentName)
+Document            TtaAllocateDocument (documentName,
+                                         documentIdentifier)
 char               *documentName;
+char               *documentIdentifier;
 
 #endif /* __STDC__ */
 
@@ -91,7 +94,7 @@ char               *documentName;
 	/* on donne son nom au document */
 	strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 	/* on acquiert in identificateur pour le document */
-	GetDocIdent (&pDoc->DocIdent, documentName);
+	GetDocIdent (&pDoc->DocIdent, documentIdentifier);
 	/* document en lecture-ecriture */
 	pDoc->DocReadOnly = FALSE;
 	doc = IdentDocument (pDoc);

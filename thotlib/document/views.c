@@ -1289,6 +1289,9 @@ DocViewNumber       selectedView;
 {
    NotifyDialog        notifyDoc;
    int                 X, Y, width, height, theView, view;
+   boolean             viewHasBeenOpen;
+
+   viewHasBeenOpen = TRUE;
 
    if (menuItem != -1)
       /* une vue a ete choisie dans le menu */
@@ -1309,8 +1312,14 @@ DocViewNumber       selectedView;
 		  view = CreateAbstractImage (pDoc, 0, AllViews[theView - 1].VdAssocNum,
 			      AllViews[theView - 1].VdSSchema, selectedView,
 					      TRUE, subTree);
-		  OpenCreatedView (pDoc, view, TRUE, X, Y, width, height);
-		  view += 100;
+                  if (pDoc->DocAssocRoot[view - 1] == NULL)
+                    /*** Associated tree creation has been refused. ***/
+                    viewHasBeenOpen = FALSE;
+                  else
+                    {
+		       OpenCreatedView (pDoc, view, TRUE, X, Y, width, height);
+		       view += 100;
+                    }
 	       }
 	     else
 	       {
@@ -1319,10 +1328,13 @@ DocViewNumber       selectedView;
 					      FALSE, subTree);
 		  OpenCreatedView (pDoc, view, FALSE, X, Y, width, height);
 	       }
-	     notifyDoc.event = TteViewOpen;
-	     notifyDoc.document = (Document) IdentDocument (pDoc);
-	     notifyDoc.view = view;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+             if (viewHasBeenOpen)
+               {
+	          notifyDoc.event = TteViewOpen;
+	          notifyDoc.document = (Document) IdentDocument (pDoc);
+	          notifyDoc.view = view;
+	          CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+               }
 	  }
      }
 }
