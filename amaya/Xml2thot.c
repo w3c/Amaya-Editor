@@ -520,6 +520,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
       XMLCharacterNotSupported = TRUE;
       break;
     case errorParsing:
+      XMLErrorsFound = TRUE;
     case warningMessage:
       if (line == 0)
 	{
@@ -533,8 +534,6 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	}
       else
 	fprintf (ErrFile, "  line %d: %s\n", line, msg);
-      if (type == errorParsing)
-        XMLErrorsFound = TRUE;
       break;
     case errorParsingProfile:
       if (line == 0)
@@ -1706,9 +1705,12 @@ static void       StartOfXmlStartElement (char *name)
 	  sprintf (msgBuffer, 
 		   "Namespace not supported for the element <%s>", name);
 	  XmlParseError (errorParsing, msgBuffer, 0);
-	  sprintf (msgBuffer, "<%s", elementName);	  
 	  /* create an Unknown_namespace element */
 	  newElement = NULL;
+	  if (nsURI != NULL)
+	    sprintf (msgBuffer, "<%s", elementName);	  
+	  else
+	    sprintf (msgBuffer, "<%s", elementName);	  
 	  (*(currentParserCtxt->UnknownNameSpace))
 	    (&XMLcontext, &newElement, msgBuffer);
 	  /* Store the current namespace declarations for this element */
@@ -1898,6 +1900,7 @@ static void       EndOfXmlStartElement (char *name)
 static void       EndOfXmlElement (char *name)
 {
    ElementType    elType;
+   Element        newElement;
    char          *nsURI, *elementName;
    char          *buffer;
    char          *ptr;
@@ -1980,8 +1983,13 @@ static void       EndOfXmlElement (char *name)
   if (UnknownNS)
     {
       /* create an Unknown_namespace element */
-      sprintf (msgBuffer, "</%s", elementName);
-      (*(currentParserCtxt->UnknownNameSpace))(&XMLcontext, msgBuffer);
+      newElement = NULL;
+      if (nsURI != NULL)
+	sprintf (msgBuffer, "</%s", elementName);	  
+      else
+	sprintf (msgBuffer, "</%s", elementName);	  
+      (*(currentParserCtxt->UnknownNameSpace))
+	(&XMLcontext, &newElement, msgBuffer);
     }
   else
     {
@@ -2674,7 +2682,7 @@ static void      EndOfAttributeName (char *xmlName)
      
 {
    char         *buffer;
-   char         *attrName;
+   char         *attrName, *nsURI;
    char         *ptr = NULL;
    char         *s = NULL;
    PtrParserCtxt savParserCtxt = NULL;
@@ -2695,14 +2703,18 @@ static void      EndOfAttributeName (char *xmlName)
    savParserCtxt = currentParserCtxt;
    buffer = TtaGetMemory (strlen (xmlName) + 1);
    strcpy (buffer, (char*) xmlName);
+   nsURI = NULL;
+
    if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
      {
        /* This attribute belongs to a specific namespace */
        *ptr = EOS;
        ptr++;
+       nsURI = TtaGetMemory ((strlen (buffer) + 1));
+       strcpy (nsURI, buffer);
        /* Specific treatment to get round a bug in EXPAT parser */
        /* It replaces first "xml:" prefix by the namespaces URI */
-       if (strcmp (buffer, NAMESPACE_URI) == 0)
+       if (strcmp (nsURI, NAMESPACE_URI) == 0)
 	 {
 	   attrName = TtaGetMemory (strlen (ptr) + 5);
 	   strcpy (attrName, "xml:");
@@ -2743,14 +2755,18 @@ static void      EndOfAttributeName (char *xmlName)
 	   (strcmp (s, "SVG") == 0) ||
 	   (strcmp (s, "MathML") == 0) ||
 	   (strcmp (s, "Annot") == 0))
-	 /* It is not a generic xml document, just ignore the namespace */
+	 /* It is not a generic xml document */
+	 /* generate an "unknown_attr" attribute */
 	 {
 	   currentParserCtxt = savParserCtxt;
 	   sprintf (msgBuffer, 
 		    "Namespace not supported for the attribute \"%s\"",
 		    xmlName);
 	   XmlParseError (errorParsing, msgBuffer, 0);
-	   sprintf (msgBuffer, attrName);
+	   if (nsURI != NULL)
+	     sprintf (msgBuffer, "%s", attrName);
+	   else
+	     sprintf (msgBuffer, "%s", attrName);
 	   UnknownXmlAttribute (msgBuffer);
 	   UnknownAttr = TRUE;
 	 }
@@ -2788,6 +2804,8 @@ static void      EndOfAttributeName (char *xmlName)
 				XMLcontext.lastElement, XMLcontext.doc);
      }
    
+  if (nsURI != NULL)
+    TtaFreeMemory (nsURI);
    TtaFreeMemory (buffer);
    TtaFreeMemory (attrName);
    return;

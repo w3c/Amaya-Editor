@@ -1356,6 +1356,18 @@ void CheckParsingErrors (Document doc)
 	      ShowSource (doc, 1);
 	    }
 	}
+      else if (XMLErrorsFound)
+	{
+	  /* Some elements or attributes are not supported */
+	  strcpy (profile, "");
+	  InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_WARNING));
+	  CleanUpParsingErrors ();
+	  if (UserAnswer)
+	    {
+	      ShowLogFile (doc, 1);
+	      ShowSource (doc, 1);
+	    }
+	}
       CleanUpParsingErrors ();
     }
   else
