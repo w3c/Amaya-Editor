@@ -488,7 +488,20 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
   if (!annot)
     tmp = NULL;
 
-  /* put the title of the annotation in the subject */
+  /* put the type of the annotation */
+  elType.ElTypeNum = Annot_EL_TI_Type;
+  el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
+  if (el)
+    {
+      if (annot && annot->type)
+	{
+	  el = TtaGetFirstChild (el);
+      	  tmp =  ANNOT_GetLabel(&annot_schema_list, annot->type);
+	  TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
+	}
+    }
+
+  /* put the title of the annotation */
   elType.ElTypeNum = Annot_EL_TI_Title;
   el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
   if (el)
@@ -500,7 +513,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
 			 TtaGetDefaultLanguage (), doc);
     }
 
-  /* put the title of the annotation in the subject */
+  /* put the author of the annotation */
   elType.ElTypeNum = Annot_EL_TI_Author;
   el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
   if (el)
@@ -512,7 +525,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
 	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
     }
 
-  /* put the autor of the annotation in the subject */
+  /* put the date of the annotation */
   elType.ElTypeNum = Annot_EL_TI_Date;
   el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
   if (el)

@@ -196,6 +196,16 @@ BOXES
 	Content: (Text ')');
 	END;
 
+ LeftSB_box: BEGIN
+	Visibility: 5;
+	Content: (Text ' [');
+	END;
+
+ RightSB_box: BEGIN
+	Visibility: 5;
+	Content: (Text ']');
+	END;
+
 RULES
 
   Document:
@@ -387,6 +397,8 @@ RULES
 
  TI_Type:
 	BEGIN
+        CreateBefore (LeftSB_box);
+        CreateAfter (RightSB_box);
 	HorizPos: Left = Previous . Right + 5.0;
 	IN Links_view
 	   Visibility: Thread_visibility;
