@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -40,6 +40,16 @@ actualizar, página de inicio, guardar e imprimir. Pero hay una diferencia
 importante: para abrir un enlace debes hacer doble clic sobre él. Consulta <a
 href="activating_a_link.html.es">Activar un enlace</a> para obtener más
 información.</p>
+
+<p class="Note"><strong>Nota</strong>: Este comportamiento puede modificarse
+mediante la ventana de diálogo <strong>Preferencias de navegación</strong>
+que se encuentra en el menú <strong>Editar &gt; Preferencias &gt;
+Navegación</strong>. Desactivando la opción Activar enlaces con un doble
+clic, puedes navegar los documentos con un sólo clic, como se hace
+habitualmente en los navegadores web. Ten en cuenta que en ese caso no podrás
+editar un enlace haciendo clic sobre él.<br />
+En este menú puedes definir otras preferencias de navegación, tales como la
+carga de imágenes y la aplicación de hojas de estilo CSS.</p>
 
 <p>A diferencia de otros navegadores, Amaya proporciona herramientas para la
 edición de páginas web. Para obtener más información sobre la edición,

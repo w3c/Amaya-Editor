@@ -17,7 +17,7 @@
         src="../images/amaya.gif"></td>
       <td><p align="right"><a href="Publishing.html.es" accesskey="p"><img
         alt="previous" src="../images/left.gif"></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif"></a> <a
+        accesskey="t"><img alt="superior" src="../images/up.gif"></a> <a
         href="Printing.html.es" accesskey="n"><img alt="next"
         src="../images/right.gif"></a></p>
       </td>

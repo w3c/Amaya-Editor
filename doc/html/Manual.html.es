@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Manual de Usuario de Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,10 +15,9 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.4 - Marzo de 2004<br />
+<h4 style="text-align:center">Versión 8.7 - Octubre de 2004<br />
 <br />
-<img src="../images/amaya.gif" alt="Amaya" />
-</h4>
+<img src="../images/amaya.gif" alt="Amaya" /></h4>
 <hr />
 <dl>
   <dt><strong>Autores:</strong></dt>
@@ -49,11 +48,15 @@ particulares de <strong>Amaya</strong>.</p>
 <h2><a name="L92011" id="L92011">Iniciar Amaya</a></h2>
 
 <p>Para poner en marcha <strong>Amaya</strong> en Unix, escribe:</p>
-<pre>    amaya [-display host] [document]</pre>
+<pre>    amaya [-display host] [-profile browser|display] [document]</pre>
 
-<p>El parámetro [-display host] es opcional. Define la pantalla anfitrión
-remota en la que Amaya debe mostrar las páginas Web. Si omites este
+<p>El parámetro <code>-display host</code> es opcional. Define la pantalla
+anfitrión remota en la que Amaya debe mostrar las páginas Web. Si omites este
 parámetro, Amaya las mostrará en la pantalla anfitrión local.</p>
+
+<p>El parámetro <code>-profile browser|display</code> es opcional. Permite
+iniciar la aplicación en modo navegador (<code>-profile browser</code>) o en
+modo display (<code>-profile display</code>).</p>
 
 <p>El parámetro <code>[document]</code> es opcional. Es el nombre del archivo
 o el URI del primer documento que <strong>Amaya</strong> debe mostrar al
@@ -414,10 +417,11 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Numbering.html.es#page_body" rel="subdocument">Numeración de
-    secciones</a>
+    secciones y generación de Índice de materias</a>
     <ul>
       <li><a href="numbering_sections/numbering_sections.html.es#page_body"
-        rel="subdocument">Numeración de secciones</a></li>
+        rel="subdocument">Numeración de secciones y generación de Índice de
+        materias</a></li>
     </ul>
   </li>
   <li><a href="MakeBook.html.es#page_body" rel="subdocument">Unir varios
@@ -516,13 +520,12 @@ bienvenida de Amaya.</p>
   <a href="mailto:vatton@w3.org">I. Vatton</a>
 </address>
 
-<p class="policyfooter"><small>Copyright &nbsp;©&nbsp;1994-2003 <a
+<p class="policyfooter"><small>Copyright &nbsp;©&nbsp;1994-2004 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup>(<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.ercim.org/">ERCIM</a>, <a
-href="http://www.keio.ac.jp/">Keio</a>), Todos los derechos reservados. W3C
-<a
+href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal_Disclaimer">liability,</a>
 <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C_Trademarks">trademark</a>,

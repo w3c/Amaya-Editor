@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <title>Acerca de las Teclas de Acceso</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -62,8 +62,8 @@ no podrías utilizar este atajo en las páginas de ayuda de Amaya.</p>
 
 <p>Por omisión, Amaya utiliza la tecla <kbd>Alt</kbd> como modificador de las
 teclas de acceso. Pero puedes cambiar esta configuración por omisión mediante
-la ventana de diálogo que se abre con la opción de menú
-<strong>Editar&gt;Preferencias&gt;Generales</strong>. Puedes elegir la tecla
+la ventana de diálogo que se abre con la opción de menú <strong>Editar &gt;
+Preferencias &gt; Generales</strong>. Puedes elegir la tecla
 <kbd>Control</kbd> en lugar de la tecla <kbd>Alt</kbd>, o incluso desactivar
 las teclas de acceso.</p>
 </div>

@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Enlazar en MathML</title>
-  <meta name="generator"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -40,7 +40,6 @@ de la fórmula siguiente es un enlace a la página de inicio del W3C:</p>
   <mrow>
     <mi>y</mi>
     <mo>=</mo>
-    <mi></mi>
     <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
     xlink:href="http://www.w3.org/">
       <mn>1</mn>
@@ -56,15 +55,14 @@ de la fórmula siguiente es un enlace a la página de inicio del W3C:</p>
       </msqrt>
     </mfrac>
   </mrow>
-</math>
-</p>
+</math></p>
 
 <p>Al hacer doble clic en cualquier carácter de la fracción se carga la
 página de inicio del W3C.</p>
 
 <p>Para crear un enlace así, selecciona una expresión matemática (en el caso
 anterior, la fracción), haz clic en el <strong>Enlace</strong> (elige el menú
-<strong>Enlaces &gt; Crear o cambiar enlaces</strong>), y haz clic en el
+<strong>Enlaces &gt; Crear o cambiar enlace</strong>), y haz clic en el
 destino deseado.</p>
 
 <p>Si el destino es una expresión de una fórmula, primero debes convertir la

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <title>Guardar y publicar documentos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,8 +36,8 @@ class="Link0"><strong>Guardar como</strong></span>.</p>
 
 <p>Además, puedes modificar algunas de las opciones de publicación mediante
 la caja de diálogo <strong>Preferencias de publicación</strong> que se abre
-eligiendo <span
-class="Link0"><strong>Editar&gt;Preferencias&gt;Publicar</strong></span>.</p>
+eligiendo <span class="Link0"><strong>Editar &gt; Preferencias &gt;
+Publicación</strong></span>.</p>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <title>Menú Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -39,7 +39,7 @@ sitúa el cursor en la posición deseada y elige el tipo de elemento en el menú
 <strong>Estructura</strong>.</p>
 
 <p>El menú <strong>Estructura</strong> te permite también crear comentarios
-mediante el comando <strong>Comentario</strong>. Los comentario se muestran
+mediante el comando <strong>Comentario</strong>. Los comentarios se muestran
 únicamente en la vista Estructura, pero pueden crearse en cualquier lugar del
 documento.</p>
 

@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Activar un Enlace</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -50,9 +50,12 @@ distinta según que hagas clic, doble clic o clic derecho en un enlace.</p>
     comportamiento en la ventana de diálogo <strong>Navegación</strong> que
     se abre con la opción de menú <strong>Editar &gt; Preferencias &gt;
     Navegación</strong>. Desactivando la casilla de verificación
-    <strong>Doble clic activa enlaces</strong>, puedes navegar documentos con
-    un clic como se suele hacer en los navegadores Web. Sin embargo, ya no
-    podrás editar un enlace haciendo clic en él.</p>
+    <strong>Activar enlaces con un doble clic</strong>, puedes navegar
+    documentos con un clic como se suele hacer en los navegadores Web. Sin
+    embargo, ya no podrás editar un enlace haciendo clic en él.<br />
+    En el menú <strong>Navegación</strong> puedes definir otras preferencias
+    de navegación, tales como la carga de imágenes o la aplicación de hojas
+    de estilo CSS.</p>
   </li>
 </ul>
 </div>

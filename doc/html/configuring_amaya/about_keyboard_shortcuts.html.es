@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Atajos de teclado</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -117,14 +117,15 @@ class="Link0">Amaya/config</span>.</p>
     <code>ConfigTemplates</code>.</li>
   <li>Menú XHTML:
     <ul>
-      <li>XHTML Menu: <code>ChangeTitle</code>, <code>CreateAddress</code>
+      <li>Menú XHTML: <code>ChangeTitle</code>, <code>CreateAddress</code>
         <code>CreateParagraph</code>, <code>CreateImage</code>,
         <code>CreateHorizontalRule</code>, <code>CreateBlockQuote</code>,
         <code>CreatePreformatted</code>, <code>CreateAddress</code>,
         <code>CreateDivision</code>, <code>CreateNOSCRIPT</code>,
         <code>CreateObject</code>, <code>CreateParameter</code>,
         <code>CreateIFrame</code>, <code>CreateBreak("\212")</code>,
-        <code>CreateAreaRect</code>, <code>CreateAreaCircle</code>,
+        <code>MakeBook</code>, <code>CreateAreaRect</code>,
+        <code>CreateAreaCircle</code>,
         <code>CreateAreaPoly,</code><code>CreateForm</code>,
         <code>CreateFileInput</code>, <code>CreateImageInput</code>,
         <code>CreatePasswordInput</code>, <code>CreateHiddenInput</code>,
@@ -138,15 +139,14 @@ class="Link0">Amaya/config</span>.</p>
         <code>CreateHeading5</code>, <code>CreateHeading6</code>,
         <code>CreateList</code>, <code>CreateNumberedList</code>,
         <code>CreateDefinitionList</code>, <code>CreateDefinitionTerm</code>,
-        <code>CreateDefinitionDef</code>,
-        <code>CreateObject</code>,<code>CreateParameter</code>,
-        <code>MakeBook</code></li>
-      <li>Table submenu: <code>CreateTable</code>,
+        <code>CreateDefinitionDef</code>, <code>CreateObject</code>,
+        <code>CreateParameter</code>, </li>
+      <li>Submenú Tabla: <code>CreateTable</code>,
         <code>CreateCaption</code>, <code>CreateTHead</code>,
         <code>CreateTBody</code>, <code>CreateTFoot</code>,
         <code>CreateRow</code>, <code>CreateDataCell</code>,
         <code>CreateHeadingCell</code>, <code>DeleteColumn</code></li>
-      <li>Estructura submenu: <code>CreateBase</code>,
+      <li>Submenú Estructura: <code>CreateBase</code>,
         <code>CreateMeta</code>, <code>CreateLinkInHead</code>,
         <code>CreateScript</code>, <code>CreateStyle</code>,
         <code>CreateComment.</code></li>
@@ -162,7 +162,7 @@ class="Link0">Amaya/config</span>.</p>
         <code>SetOnOffBig</code>, <code>SetOnOffSmall</code>,
         <code>SetOnOffSub</code>, <code>SetOnOffSup</code>,
         <code>SetOnOffQuotation</code>, <code>SetOnOffBDO</code>.</li>
-      <li>Math submenu: <code>CreateInlineMath</code>,
+      <li>Submenú Math: <code>CreateInlineMath</code>,
         <code>CreateMath</code>, <code>CreateMROOT</code>,
         <code>CreateMSQRT</code>, <code>CreateMFRAC</code>,
         <code>CreateMSUBSUP</code>, <code>CreateMSUB</code>,

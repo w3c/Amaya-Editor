@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Escribir caracteres</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -39,8 +39,8 @@ están disponibles directamente desde el teclado. Algunos están
 predefinidos:</p>
 <ul>
   <li>Para escribir un carácter nulo, pulsa <kbd>Control space</kbd>. Este
-    carácter se guarda como la entidad de carácter
-  <code>&amp;nbsp;</code>.</li>
+    carácter se guarda como la entidad de carácter <code>&amp;nbsp;</code> y
+    se muestra en la vista código fuente con el símbolo ~</li>
   <li>Para escribir el símbolo de euro (&euro;), pulsa <kbd>Alt e</kbd>.</li>
   <li>Para escribir &#x153; (oelig), pulsa <kbd>Control o Control
   e</kbd>.</li>

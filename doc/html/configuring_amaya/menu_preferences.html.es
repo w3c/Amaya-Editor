@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -29,12 +29,12 @@
 <div id="page_body">
 <h1>Menú Preferencias</h1>
 
-<p>Las cajas de diálogo se encuentran en el menú <strong>Editar&gt;
+<p>Las cajas de diálogo se encuentran en el menú <strong>Editar &gt;
 Preferencias</strong>. Hay diez cajas de diálogos:
 <strong>Generales</strong>, <strong>Navegación</strong>,
 <strong>Publicación</strong>, <strong>Caché</strong>, <strong>Proxy</strong>,
 <strong>Colores</strong>, <strong>Geometría de la ventana</strong>, y
-<strong>Negociación de idioma</strong>.</p>
+<strong>Anotaciones</strong> y <strong>Cooperación</strong>.</p>
 
 <p>Cada una de estas cajas de diálogo contienen tres botones:</p>
 
@@ -73,7 +73,7 @@ Preferencias</strong>. Hay diez cajas de diálogos:
 <h2>Preferencias generales</h2>
 
 <p>Para abrir la caja de diálogo <strong>Preferencias generales</strong>,
-elige el menú <strong>Preferencias &gt; Generales</strong>.</p>
+elige el menú <strong>Editar &gt; Preferencias &gt; Generales</strong>.</p>
 
 <h3>Directorios específicos</h3>
 
@@ -334,10 +334,10 @@ siguiente muestra dos ejemplos.</p>
 <table border="1">
   <tbody>
     <tr>
-      <td><p class="TableHead">Entrada HTTP Proxy</p>
-      </td>
-      <td><p class="TableHead">Resultado</p>
-      </td>
+      <th><p class="TableHead">Entrada HTTP Proxy</p>
+      </th>
+      <th><p class="TableHead">Resultado</p>
+      </th>
     </tr>
     <tr>
       <td><p>groucho.marx.edu</p>
@@ -361,7 +361,7 @@ espacios con los que quieres utilizar el proxy. Utiliza los botones radio
 para especificar si el proxy debe o no debe utilizarse con esta lista de
 dominios.Por ejemplo:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in">               ^----------------^----&gt; entradas separadas por espacios</pre>
+<pre style="margin-left:.5in"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; ^--------------^----&gt; entradas separadas por espacios</code></pre>
 
 <h2>Color</h2>
 

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Directorio de configuración y convenciones de archivo</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -77,8 +77,8 @@ diferentes sistemas operativos:</p>
     <tr>
       <td><p class="TableText">Windows NT/XP</p>
       </td>
-      <td><p class="TableText"><code>$HOMEDRIVE\$HOMEPATH\amaya<br />
-        by default c:\Documents and Settings\$user_name\amaya</code></p>
+      <td><p class="TableText"><code>$HOMEDRIVE\$HOMEPATH\amaya</code>, por
+        omisión, c:\Documents and Settings\$user_name\amaya</p>
       </td>
     </tr>
   </tbody>
@@ -127,11 +127,17 @@ en los diferentes sistemas operativos:</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Windows</p>
+      <td><p class="TableText">Windows 9x</p>
       </td>
       <td><p class="TableText"><code>c:\temp\amaya</code> (valor por
         omisión)</p>
       </td>
+    </tr>
+    <tr>
+      <td>Windows XP</td>
+      <td><code>$HOMEDRIVE\$HOMEPATH\Local Settings\Temp\amaya</code>, por
+        omisión, c:\Documents and Settings\$user_name\Local
+        Settings\Temp\amaya</td>
     </tr>
   </tbody>
 </table>
@@ -139,8 +145,8 @@ en los diferentes sistemas operativos:</p>
 <p>Amaya crea archivos en este directorio al navegar documentos remotos o al
 imprimir un documento. La caché también se guarda en este directorio. Puedes
 modificar los directorios AmayaTemp y caché mediante los menús <span
-class="Link0"><strong>Preferencias &gt; Generales</strong> y
-<strong>Preferencias &gt; Caché</strong></span>.</p>
+class="Link0"><strong>Editar &gt; Preferencias &gt; Generales</strong> y
+<strong>Editar &gt; Preferencias &gt; Caché</strong></span>.</p>
 
 <p>Amaya siempre intenta borrar los archivos temporales que crea. Sin embargo
 si Amaya se bloquea, los archivos temperales no se borran. Este hecho no

@@ -40,7 +40,7 @@ se ejecuta el comando <strong>XHTML &gt; Numeración de sección</strong>.</p>
 
 <h1>Índice de materias</h1>
 
-<p>El comando <strong>XHTML &gt; Generar Índice de materias</strong> toma en
+<p>El comando <strong>XHTML &gt; Generar índice de materias</strong> toma en
 cuenta todos los elementos <code>H2</code> a <code>H6</code> posteriores en
 el mismo documento para generar el índice de materias en el punto de
 inserción actual.</p>
@@ -53,9 +53,9 @@ inserción actual.</p>
     serie de listas no numeradas en el punto de inserción actual.</li>
   <li>Un elemento de lista por cada uno de los elementos <code>H2</code> a
     <code>H6</code> incluyendo un enlace al elemento correspondiente.
-    <p>El elemento de lista contiene la copia exacta del elemento
-    <code>Hi</code>. Si el elemento <code>Hi</code> está numerado, el número
-    también se incluye.</p>
+    <p>El elemento de lista contiene una copia del elemento <code>Hi</code>.
+    Si el elemento <code>Hi</code> está numerado, el número también se
+    incluye.</p>
   </li>
 </ul>
 </div>

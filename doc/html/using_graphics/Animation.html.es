@@ -18,7 +18,7 @@
         src="../../images/amaya.gif" /></td>
       <td><p align="right"><a href="SVGLibrary.html.es" accesskey="p"><img
         alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../SVG.html.es" accesskey="t"><img alt="arriba"
+        href="../SVG.html.es" accesskey="t"><img alt="superior" 
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
