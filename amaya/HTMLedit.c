@@ -113,10 +113,11 @@ void                LinkToPreviousTarget (Document doc, View view)
      /* it's not a valid target */
      return;
 
-   UseLastTarget = TRUE;
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    if (el != NULL)
      {
+       UseLastTarget = TRUE;
+       AttrHREFundoable = TRUE;
        /* Look if there is an enclosing anchor element */
        el = SearchAnchor (doc, el, &attr, TRUE);
        if (el == NULL)
@@ -253,10 +254,13 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	 attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
 					      "XLink", "XLinkP");
        attrType.AttrTypeNum = XLink_ATTR_href_;
-       /* create a xlink:type attribute with value "simple" */
        if (TtaIsLeaf (elType))
 	 element = TtaGetParent (element);
-       SetXLinkTypeSimple (element, doc, AttrHREFundoable);
+       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	 /* it's not a MathML element (the MathML 2.0 DTD does not use
+	    the xlink:type attribute) */
+         /* create a xlink:type attribute with value "simple" */
+         SetXLinkTypeSimple (element, doc, AttrHREFundoable);
      }
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
