@@ -17,8 +17,6 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "undo.h"
-#include "registry.h"
 #include "fetchHTMLname.h"
 #include "GraphML.h"
 
@@ -40,7 +38,9 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
+#include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "init_f.h"
 #include "styleparser_f.h"
 
 #define MAX_BUFFER_LENGTH 200
@@ -171,8 +171,6 @@ static char *SkipQuotedString (char *ptr, char quote)
   ----------------------------------------------------------------------*/
 static void  CSSParseError (char *msg, char *value)
 {
-  char       fileName [100];
-
   if (!TtaIsPrinting () && ParsedDoc > 0)
     {
       if (!ErrFile)
@@ -3326,7 +3324,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 {
   ElementType        elType;
   PSchema            tsch;
-  AttributeType      attrType;
+  /*AttributeType      attrType;*/
   char               sel[MAX_ANCESTORS * 50];
   char              *deb, *cur;
   char              *structName;
@@ -3336,7 +3334,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *pseudoclasses[MAX_ANCESTORS];
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
-  int                i, j, k, max, maxAttr;
+  char              *ptr;
+  int                i, j, k, max;
+  int                att, maxAttr;
   ThotBool           isHTML;
   ThotBool           level;
 
@@ -3505,6 +3505,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   k = 0;
   j = 0;
   maxAttr = 0;
+  /* default schema name */
+  ptr = "HTML";
   while (i <= max)
     {
       if (names[i])
@@ -3518,6 +3520,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      ctxt->name[0] = elType.ElTypeNum;
 	      ctxt->names_nb[0] = 0;
 	      ctxt->schema = elType.ElSSchema;
+	      ptr = TtaGetSSchemaName (elType.ElSSchema);
 	      k++;
 	    }
 	  else if (elType.ElTypeNum != 0)
@@ -3551,29 +3554,50 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (classes[i])
 	{
 	  ctxt->attrText[j] = classes[i];
-	  ctxt->attrType[j] = HTML_ATTR_Class;
+	  if (!strcmp (ptr, "GraphML"))
+	    ctxt->attrType[j] = GraphML_ATTR_class;
+	  else if (!strcmp (ptr, "MathML"))
+	    ctxt->attrType[j] = MathML_ATTR_class;
+	  else
+	    ctxt->attrType[j] = HTML_ATTR_Class;
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}
       if (pseudoclasses[i])
 	{
 	  ctxt->attrText[j] = pseudoclasses[i];
-	  ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	  if (!strcmp (ptr, "GraphML"))
+	    ctxt->attrType[j] = GraphML_ATTR_PseudoClass;
+	  else if (!strcmp (ptr, "MathML"))
+	    ctxt->attrType[j] = MathML_ATTR_PseudoClass;
+	  else
+	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}
       if (ids[i])
 	{
 	  ctxt->attrText[j] = ids[i];
-	  ctxt->attrType[j] = HTML_ATTR_ID;
+	  if (!strcmp (ptr, "GraphML"))
+	    ctxt->attrType[j] = GraphML_ATTR_id;
+	  else if (!strcmp (ptr, "MathML"))
+	    ctxt->attrType[j] = MathML_ATTR_id;
+	  else
+	    ctxt->attrType[j] = HTML_ATTR_ID;
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}
       if (attrs[i])
 	{
-	  MapHTMLAttribute (attrs[i], &attrType, names[i], &level, doc);
+	  if (!strcmp (ptr, "GraphML"))
+	    MapXMLAttribute (GRAPH_TYPE, attrs[i], names[i], &level, doc, &att);
+	  else if (!strcmp (ptr, "MathML"))
+	    MapXMLAttribute (MATH_TYPE, attrs[i], names[i], &level, doc, &att);
+	  else
+	    MapXMLAttribute (XHTML_TYPE, attrs[i], names[i], &level, doc, &att);
 	  ctxt->attrText[j] = attrvals[i];
-	  ctxt->attrType[j] = attrType.AttrTypeNum;
+	  /* we should pass also the attribute schema in the context */
+	  ctxt->attrType[j] = att;
 	  maxAttr = i + 1;
 	}
       i++;

@@ -893,7 +893,6 @@ static ThotBool     Within (int ThotType, SSchema ThotSSchema)
   ----------------------------------------------------------------------*/
 void HTMLParseError (Document doc, char* msg)
 {
-
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
      if (OpenParsingErrors (doc) == FALSE)

@@ -27,6 +27,8 @@ extern void DocStatusUpdate ( Document document,
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
 extern void SetBrowserEditor ( Document doc );
+extern void ShowLogFile ( Document doc,
+                          View view );
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
@@ -168,8 +170,6 @@ extern void HelpShortCuts ( Document document,
                             View view );
 extern void HelpAccess ( Document document,
                          View view );
-extern void ShowLogFile ( Document doc,
-                          View view );
 extern void CheckAmayaClosed ( void );
 extern void CloseDocument ( Document doc,
                             View view );
@@ -199,6 +199,8 @@ extern void DocStatusUpdate (/* Document document,
 extern void ChangeToEditorMode (/* Document doc */);
 extern void ChangeToBrowserMode (/* Document doc */);
 extern void SetBrowserEditor (/* Document doc */);
+extern void ShowLogFile (/* Document doc,
+                            View view */);
 extern ThotBool OpenParsingErrors (/* Document document */);
 extern void RemoveParsingErrors (/* Document document */);
 extern void CleanUpParsingErrors (/* void */);
@@ -340,8 +342,6 @@ extern void HelpShortCuts (/* Document document,
                               View view */);
 extern void HelpAccess (/* Document document,
                            View view */);
-extern void ShowLogFile (/* Document doc,
-                            View view */);
 extern void CheckAmayaClosed (/* void */);
 extern void CloseDocument (/* Document doc,
                               View view */);

@@ -11,6 +11,7 @@ ATTR
 
    { att-global }
    class = TEXT;
+   PseudoClass = Text;
    style\240 = TEXT;	{ style }
    id = TEXT;
    xref = TEXT;
@@ -453,6 +454,7 @@ EXCEPT
 
    id:			CssId;
    class:		CssClass;
+   PseudoClass:	        Invisible, CssPseudoClass;
    { attributes for internal use }
    Highlight:	        Invisible;
    Invalid_attribute:	Invisible;

@@ -10,6 +10,7 @@ ATTR
    { global attributes for all GraphML elements }
    id = text;
    class = text;
+   PseudoClass = Text;
    style_ = text;
    xml_space = xml_space_default, xml_space_preserve;
 
@@ -355,6 +356,7 @@ EXCEPT
 
    id:                  CssId;
    class:               CssClass;
+   PseudoClass:	        Invisible, CssPseudoClass;
    Invalid_attribute:   Invisible;
    Highlight:	        Invisible; 
    Ghost_restruct:      Invisible;
