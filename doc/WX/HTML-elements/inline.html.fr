@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" /></p>
       </td>
       <td><p align="right"><a href="../Manual.html.fr"></a></p>
 
