@@ -2797,6 +2797,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	  gtk_timeout_remove (timer);
 	  timer = None;
+	  FrameToView (frame, &document, &view);
+	  TtcCopyToClipboard (document, view);
 	} 
       else if (event->button == 1)
 	{
@@ -2806,8 +2808,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  LocateSelectionInView (frame, ClickX, ClickY, 4);
 	  TtaAbortShowDialogue ();
 	}
-      FrameToView (frame, &document, &view);
-      TtcCopyToClipboard (document, view);
       break;
     case GDK_KEY_PRESS: 
       TtaAbortShowDialogue ();
