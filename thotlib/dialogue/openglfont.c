@@ -274,11 +274,12 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
   int         n, err;
   int         my_platform_id, my_encoding_id;
 
-  err = FT_Select_Charmap (*(font->face), encoding);
-  if (!err)
+  
+  /* Get a Unicode mapping for this font */      
+  if (encoding == ft_encoding_unicode)
     {
-      /* Get a Unicode mapping for this font */      
-      if (encoding == ft_encoding_unicode)
+      err = FT_Select_Charmap (*(font->face), encoding);
+      if (!err)
 	{
 	  /* Microsoft unicode*/
 	  for ( n = 0; n < (*(font->face))->num_charmaps; n++ )
@@ -300,19 +301,30 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
 		charmap = (*(font->face))->charmaps[n];
 		my_platform_id = charmap->platform_id;
 		my_encoding_id = charmap->encoding_id;
-	      if ( (my_platform_id == TT_PLATFORM_APPLE_UNICODE) 
-		    && (my_encoding_id != TT_APPLE_ID_ISO_10646)) 
+		if ( (my_platform_id == TT_PLATFORM_APPLE_UNICODE) 
+		     && (my_encoding_id != TT_APPLE_ID_ISO_10646)) 
 		{
 		  found = charmap;
 		  break;
 		}
 	      }     
-	  if ( !found )
+	  if (!found )
 	    err = 1;
 	  else
 	    (*(font->face))->charmap = found;
 	}
     }
+  /*   else */
+  /*     { */
+  /*       err = FT_Select_Charmap (*(font->face), ft_encoding_symbol);  */
+  /*       if (err) */
+  /* 	{ */
+  /* 	  if (!(*(font->face))->charmap */
+  /* 	      && FT_Select_Charmap ((*(font->face)), ft_encoding_apple_roman) */
+  /* 	      && FT_Select_Charmap ((*(font->face)), ft_encoding_symbol)) */
+  /* 	    FT_Set_Charmap ((*(font->face)), (*(font->face))->charmaps[0]); */
+  /* 	} */  
+  /*     } */
   return err;
 }
 
@@ -446,7 +458,10 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	 ft_encoding_adobe_expert ft_encoding_adobe_custom
 	 ft_encoding_apple_roman 
       */
-      err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
+      if (alphabet == 'G')
+	err = FontCharMap (gl_font, ft_encoding_symbol, alphabet);
+      else
+	err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
@@ -527,7 +542,11 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
   maxy = 0;
   i = 0;
   Xpos = 0x0;
-  left = FT_Get_Char_Index (*(font->face), *string);
+  left = FT_Get_Char_Index (*(font->face), *string); 
+  /* left =  FT_Get_Char_Index (*(font->face), */
+  /* 			    ((*(font->face))->charmap->encoding == ft_encoding_symbol) ?  */
+  /* 			     *string | 0xf000: *string); */
+
   Xpos = 0;
   XWidth = 0;
   while (i < size)
@@ -546,9 +565,13 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
       string++;
       if (*string)
 	{
-	  right = FT_Get_Char_Index (*(font->face), *string);	  
+	  right = FT_Get_Char_Index (*(font->face), *string); 	
+	  /* right = FT_Get_Char_Index (*(font->face), */
+	  /* 			    ((*(font->face))->charmap->encoding ==  ft_encoding_symbol) ?  */
+	  /* 			     *string | 0xf000: *string); */
+  
 	  if (font->kerning)
-	      Xpostest += FaceKernAdvance (*(font->face), left, right);
+	    Xpostest += FaceKernAdvance (*(font->face), left, right);
 	  left = right;
 	}
       else

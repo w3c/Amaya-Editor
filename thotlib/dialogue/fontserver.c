@@ -123,6 +123,7 @@ int GetFontFilename (char script, int family,
 		XftPatternAddString (pat, XFT_FAMILY, "times");
 		XftPatternAddString (pat, XFT_FAMILY, "Times");
 		XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+		XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
 		XftPatternAddString (pat, XFT_FAMILY, "terminus");
 		XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
 		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
@@ -139,6 +140,7 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      
 	      XftPatternAddString (pat, XFT_FAMILY, "verdana");
 	      XftPatternAddString (pat, XFT_FAMILY, "Verdana");
+	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Sans L");
 	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
 	      XftPatternAddString (pat, XFT_FAMILY, "terminus");
 	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
@@ -159,6 +161,7 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "Monotype");
 	      XftPatternAddString (pat, XFT_FAMILY, "Monotype.com");
 	      XftPatternAddString (pat, XFT_FAMILY, "Andale Mono");
+	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Mono L");
 	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
 	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      	      
 	      break;
