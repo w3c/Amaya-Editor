@@ -4052,7 +4052,9 @@ CHAR_T*             data;
 	   LastURLName[0] = WC_EOS;
 	   DirectoryName[0] = WC_EOS;
 	   DocumentName[0] = WC_EOS;
+#ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
+#endif /* !_WINDOWS */
 	 }
        else if (NewFile)
 	 {
