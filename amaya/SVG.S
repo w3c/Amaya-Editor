@@ -275,8 +275,10 @@ STRUCT
 	      dy = text;
 	      opacity)
         = LIST OF (CASE OF
+		   tspan;	{ must be the first option, to allow the Return key
+				  to create tspan elements }
 		   TEXT; desc; title; metadata;
-	           tspan; tref; a;
+	           tref; a;
 	           animate; set_; animateMotion; animateColor; animateTransform;
 		   END);
 
