@@ -75,7 +75,7 @@ Shift Ctrl <Key>S:                 SaveDocumentAs()
 Ctrl <Key>b , Ctrl <Key>b:         GotoPreviousHTML() 
 Ctrl <Key>b , Ctrl <Key>f:         GotoNextHTML() 
 <Key>F5:			   Reload() 
-Ctrl <Key>w:                       AmayaCloseWindow() 
+Ctrl <Key>w:                       AmayaCloseTab() 
 Ctrl <Key>q:                       AmayaClose()
 Ctrl <Key>b , Ctrl <Key>y:         Synchronize()
 
