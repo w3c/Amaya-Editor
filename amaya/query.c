@@ -2701,8 +2701,9 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 		  void *context_tcbf, ThotBool error_html, char *content_type)
 {
    AHTReqContext      *me;
-   char *            ref;
-   char *            esc_url;
+   char *              ref;
+   char *              tmp;
+   char *              esc_url;
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
@@ -2757,7 +2758,15 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    object_counter++;
    
    /* normalize the URL */
-   esc_url = EscapeURL (urlName);
+   tmp = URLToUTF8 (urlName, docid);
+   if (tmp)
+     {
+       esc_url = EscapeURL (tmp);
+       TtaFreeMemory (tmp);
+     }
+   else
+     esc_url = EscapeURL (urlName);
+
    if (esc_url) 
      {
        ref = AmayaParseUrl (esc_url, "", AMAYA_PARSE_ALL);
@@ -3178,8 +3187,16 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    me->context_icbf = (void *) NULL;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
-   /* a liberer tmp_ char * = TtaConvertIsoToMbs (char *, CHARSET */
-   esc_url = EscapeURL (urlName);
+
+   /* normalize the URL */
+   tmp = URLToUTF8 (urlName, docid);
+   if (tmp)
+     {
+       esc_url = EscapeURL (tmp);
+       TtaFreeMemory (tmp);
+     }
+   else
+     esc_url = EscapeURL (urlName);
    me->urlName = TtaStrdup (esc_url);
    TtaFreeMemory (esc_url);
    me->block_size =  file_size;

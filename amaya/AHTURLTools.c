@@ -105,7 +105,10 @@ char *EscapeURL (const char *url)
               break;
 
             default:
-              new_chars = 1; 
+	      if ((unsigned char )*ptr > 127)
+		new_chars = 3;
+	      else
+		new_chars = 1; 
               break;
             }
 
@@ -146,6 +149,35 @@ char *EscapeURL (const char *url)
     buffer = NULL;
 
   return (buffer);
+}
+
+/*----------------------------------------------------------------------
+  URLToUTF8
+  If such convertion is needed, returns a converted string that the
+  user must free.
+  ----------------------------------------------------------------------*/
+char *URLToUTF8 (char *url, Document doc)
+{
+  unsigned char *tmp;
+
+  if (!url || *url == EOS)
+    return NULL;
+  
+  /* does the URL contain chars > 127 ? */
+  tmp = url;
+  while (*tmp)
+    {
+      if (*tmp > 127)
+	break;
+      tmp++;
+    }
+
+  if (*tmp == EOS)
+    return NULL;  /* no such chars found */
+
+  tmp = TtaConvertIsoToMbs (url, TtaGetDocumentCharset (doc));
+
+  return tmp;
 }
 
 
