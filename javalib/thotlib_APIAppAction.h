@@ -11,7 +11,7 @@ extern "C" {
 /* Header for class thotlib_APIAppAction */
 
 typedef struct Classthotlib_APIAppAction {
-#define thotlib_APIAppAction_NUMBER_OF_APP_EVENTS 40
+#define thotlib_APIAppAction_NUMBER_OF_APP_EVENTS 44
 #define thotlib_APIAppAction_TTE_STANDARD_DELETE_FIRST_ITEMS 0
 #define thotlib_APIAppAction_TTE_STANDARD_DELETE_LAST_ITEM 1
 #define thotlib_APIAppAction_TTE_MERGE_DELETE_ITEM 2
@@ -34,28 +34,32 @@ typedef struct Classthotlib_APIAppAction {
 #define thotlib_APIAppAction_TteElemActivate 15
 #define thotlib_APIAppAction_TteElemSetReference 16
 #define thotlib_APIAppAction_TteElemInclude 17
-#define thotlib_APIAppAction_TteElemCopy 18
-#define thotlib_APIAppAction_TteElemPaste 19
-#define thotlib_APIAppAction_TteElemChange 20
-#define thotlib_APIAppAction_TteElemMove 21
-#define thotlib_APIAppAction_TteElemTextModify 22
-#define thotlib_APIAppAction_TteElemGraphModify 23
-#define thotlib_APIAppAction_TteElemTransform 24
-#define thotlib_APIAppAction_TtePRuleCreate 25
-#define thotlib_APIAppAction_TtePRuleModify 26
-#define thotlib_APIAppAction_TtePRuleDelete 27
-#define thotlib_APIAppAction_TteDocOpen 28
-#define thotlib_APIAppAction_TteDocCreate 29
-#define thotlib_APIAppAction_TteDocClose 30
-#define thotlib_APIAppAction_TteDocSave 31
-#define thotlib_APIAppAction_TteDocExport 32
-#define thotlib_APIAppAction_TteViewOpen 33
-#define thotlib_APIAppAction_TteViewClose 34
-#define thotlib_APIAppAction_TteViewResize 35
-#define thotlib_APIAppAction_TteViewScroll 36
-#define thotlib_APIAppAction_TteInit 37
-#define thotlib_APIAppAction_TteExit 38
-#define thotlib_APIAppAction_TteNull 39
+#define thotlib_APIAppAction_TteElemFetchInclude 18
+#define thotlib_APIAppAction_TteElemCopy 19
+#define thotlib_APIAppAction_TteElemPaste 20
+#define thotlib_APIAppAction_TteElemChange 21
+#define thotlib_APIAppAction_TteElemMove 22
+#define thotlib_APIAppAction_TteElemTextModify 23
+#define thotlib_APIAppAction_TteElemGraphModify 24
+#define thotlib_APIAppAction_TteElemTransform 25
+#define thotlib_APIAppAction_TteElemMouseOver 26
+#define thotlib_APIAppAction_TteElemMouseOut 27
+#define thotlib_APIAppAction_TtePRuleCreate 28
+#define thotlib_APIAppAction_TtePRuleModify 29
+#define thotlib_APIAppAction_TtePRuleDelete 30
+#define thotlib_APIAppAction_TteDocOpen 31
+#define thotlib_APIAppAction_TteDocTmpOpen 32
+#define thotlib_APIAppAction_TteDocCreate 33
+#define thotlib_APIAppAction_TteDocClose 34
+#define thotlib_APIAppAction_TteDocSave 35
+#define thotlib_APIAppAction_TteDocExport 36
+#define thotlib_APIAppAction_TteViewOpen 37
+#define thotlib_APIAppAction_TteViewClose 38
+#define thotlib_APIAppAction_TteViewResize 39
+#define thotlib_APIAppAction_TteViewScroll 40
+#define thotlib_APIAppAction_TteInit 41
+#define thotlib_APIAppAction_TteExit 42
+#define thotlib_APIAppAction_TteNull 43
 	int __DUMMY__;
 } Classthotlib_APIAppAction;
 HandleTo(thotlib_APIAppAction);

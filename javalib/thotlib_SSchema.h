@@ -11,7 +11,7 @@ extern "C" {
 /* Header for class thotlib_SSchema */
 
 typedef struct Classthotlib_SSchema {
-  jint sschema;
+  jlong sschema;
 } Classthotlib_SSchema;
 HandleTo(thotlib_SSchema);
 

@@ -20,7 +20,7 @@ extern jlong thotlib_APIReference_TtaNewInclusion(struct Hthotlib_APIReference*,
 extern void thotlib_APIReference_TtaCopyReference(struct Hthotlib_APIReference*, jlong, jlong);
 extern void thotlib_APIReference_TtaSetAttributeReference(struct Hthotlib_APIReference*, jlong, jlong, jint, jlong, jint);
 extern void thotlib_APIReference_TtaCopyAttributeReference(struct Hthotlib_APIReference*, jlong, jlong, jlong);
-extern void thotlib_APIReference_TtaUpdateInclusionElements(struct Hthotlib_APIReference*, jint, jint /* bool */);
+extern void thotlib_APIReference_TtaUpdateInclusionElements(struct Hthotlib_APIReference*, jint, jint /* bool */, jint /* bool */);
 extern void thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference*, jlong, struct Hthotlib_Element*, struct Hjava_lang_StringBuffer*, struct Hthotlib_Document*);
 extern jint thotlib_APIReference_TtaIsElementTypeReference(struct Hthotlib_APIReference*, jlong);
 extern jint thotlib_APIReference_TtaSameReferences(struct Hthotlib_APIReference*, jlong, jlong);

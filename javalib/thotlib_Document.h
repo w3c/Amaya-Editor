@@ -12,6 +12,9 @@ extern "C" {
 
 typedef struct Classthotlib_Document {
   jint document;
+#define thotlib_Document_DisplayImmediately 0
+#define thotlib_Document_DeferredDisplay 1
+#define thotlib_Document_NoComputedDisplay 2
 } Classthotlib_Document;
 HandleTo(thotlib_Document);
 

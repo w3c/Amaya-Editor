@@ -22,6 +22,8 @@ extern void thotlib_Extra_JavaXFlush(struct Hthotlib_Extra*);
 extern jint thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint, HArrayOfObject*);
 extern void thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra*, struct Hthotlib_Action*, struct Hjava_lang_String*);
 extern void thotlib_Extra_JavaRegisterMenuAction(struct Hthotlib_Extra*, struct Hthotlib_Action*, struct Hjava_lang_String*);
+extern void thotlib_Extra_JavaUnregisterAction(struct Hthotlib_Extra*, struct Hjava_lang_String*);
+extern void thotlib_Extra_JavaUnregisterMenuAction(struct Hthotlib_Extra*, struct Hjava_lang_String*);
 extern void thotlib_Extra_AddEditorActionEvent(struct Hthotlib_Extra*, struct Hjava_lang_String*, jint, jint, jint /* bool */);
 extern void thotlib_Extra_AddSSchemaActionEvent(struct Hthotlib_Extra*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint, jint, jint /* bool */);
 

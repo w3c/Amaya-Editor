@@ -145,13 +145,13 @@ thotlib_APIReference_TtaCopyAttributeReference(struct Hthotlib_APIReference* non
  * Java to C function TtaUpdateInclusionElements stub.
  */
 void
-thotlib_APIReference_TtaUpdateInclusionElements(struct Hthotlib_APIReference* none, jint document, jint loadExternalDoc)
+thotlib_APIReference_TtaUpdateInclusionElements(struct Hthotlib_APIReference* none, jint document, jint loadExternalDoc, jint removeExclusions)
 {
 
 
 	thotlib_APIReference_LOCK();
 
-	TtaUpdateInclusionElements((Document ) document, (boolean ) loadExternalDoc);
+	TtaUpdateInclusionElements((Document ) document, (boolean ) loadExternalDoc, (boolean ) removeExclusions);
 
 	thotlib_APIReference_UNLOCK();
 

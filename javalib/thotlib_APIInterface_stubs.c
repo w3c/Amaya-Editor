@@ -242,6 +242,32 @@ thotlib_APIInterface_TtaHandlePendingEvents(struct Hthotlib_APIInterface* none)
 }
 
 /*
+ * Java to C function TtaClickElement stub.
+ */
+void
+thotlib_APIInterface_TtaClickElement(struct Hthotlib_APIInterface* none, struct Hthotlib_Document* jdocument, struct Hthotlib_Element* jelement)
+{
+	Document *document;
+	Element *element;
+
+	/* convert arg struct Hthotlib_Document* jdocument to Document *document */
+	JavaDocument2CDocumentPtr(jdocument,&document);
+	/* convert arg struct Hthotlib_Element* jelement to Element *element */
+	JavaElement2CElementPtr(jelement,&element);
+
+	thotlib_APIInterface_LOCK();
+
+	TtaClickElement((Document *) document, (Element *) element);
+
+	thotlib_APIInterface_UNLOCK();
+
+	/* convert Document *document to arg struct Hthotlib_Document* jdocument */
+	CDocumentPtr2JavaDocument(document,&jdocument);
+	/* convert Element *element to arg struct Hthotlib_Element* jelement */
+	CElementPtr2JavaElement(element,&jelement);
+}
+
+/*
  * Java to C function TtaCreateBitmapLogo stub.
  */
 jlong
@@ -491,6 +517,7 @@ void register_thotlib_APIInterface_stubs(void)
 	addNativeMethod("thotlib_APIInterface_TtaGetViewFrame", thotlib_APIInterface_TtaGetViewFrame);
 	addNativeMethod("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
 	addNativeMethod("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
+	addNativeMethod("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
 	addNativeMethod("thotlib_APIInterface_TtaCreateBitmapLogo", thotlib_APIInterface_TtaCreateBitmapLogo);
 	addNativeMethod("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
 	addNativeMethod("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);

@@ -24,6 +24,7 @@ extern void TtaSetStatus(Document document, View view, char *text, char *name);
 extern ThotWidget TtaGetViewFrame(Document document, View view);
 extern void TtaMainLoop(void);
 extern void TtaHandlePendingEvents(void);
+extern void TtaClickElement(/*OUT*/ Document *document, /*OUT*/ Element *element);
 extern Pixmap TtaCreateBitmapLogo(int width, int height, char *bits);
 extern void TtaSetCursorWatch(Document document, View view);
 extern void TtaResetCursor(Document document, View view);

@@ -223,7 +223,7 @@ extern void         TtaHandlePendingEvents ();
    Returns document and element clicked.
 
   ----------------------------------------------------------------------*/
-extern void         TtaClickElement (Document * document, Element * element);
+extern void         TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
 extern Pixmap       TtaCreatePixmapLogo (char **data);
 
 /*----------------------------------------------------------------------

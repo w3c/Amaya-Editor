@@ -12,6 +12,10 @@ extern "C" {
 
 typedef struct Classthotlib_Attribute {
   jlong attribute;
+  jlong element;
+#define thotlib_Attribute_SearchForward 0
+#define thotlib_Attribute_SearchInTree 1
+#define thotlib_Attribute_SearchBackward 2
 } Classthotlib_Attribute;
 HandleTo(thotlib_Attribute);
 

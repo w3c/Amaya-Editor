@@ -124,7 +124,9 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteElemInclude:
 	case TteElemCopy:
 	case TteElemChange:
-	case TteElemMove: {
+	case TteElemMove:
+	case TteElemMouseOver:
+	case TteElemMouseOut: {
 	    NotifyElement *ev = (NotifyElement *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
 		     "callbackElement", "(IIJJI)I", NULL, FALSE,
@@ -255,6 +257,38 @@ thotlib_Extra_JavaRegisterMenuAction(struct Hthotlib_Extra* none,
 }
 
 /*
+ * The User Action' deregistration stuff.
+ */
+
+void
+thotlib_Extra_JavaUnregisterAction(struct Hthotlib_Extra* none,
+				 struct Hjava_lang_String* actionName)
+{
+    char actionname[300];
+
+    if (actionName == NULL) return;
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    TteAddUserAction (TtaStrdup(actionname), NULL, NULL);
+    JavaThotlibRelease();
+}
+
+void
+thotlib_Extra_JavaUnregisterMenuAction(struct Hthotlib_Extra* none,
+				 struct Hjava_lang_String* actionName)
+{
+    char actionname[300];
+
+    if (actionName == NULL) return;
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    TteAddUserMenuAction (TtaStrdup(actionname), NULL, NULL);
+    JavaThotlibRelease();
+}
+
+/*
  * Adding an action dynamically, both for the the Editor or for
  * a specific DTD given it's name.
  */
@@ -336,6 +370,10 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_JavaRegisterAction);
 	addNativeMethod("thotlib_Extra_JavaRegisterMenuAction",
 	                thotlib_Extra_JavaRegisterMenuAction);
+	addNativeMethod("thotlib_Extra_JavaUnregisterAction",
+	                thotlib_Extra_JavaUnregisterAction);
+	addNativeMethod("thotlib_Extra_JavaUnregisterMenuAction",
+	                thotlib_Extra_JavaUnregisterMenuAction);
 	addNativeMethod("thotlib_Extra_AddEditorActionEvent",
 	                thotlib_Extra_AddEditorActionEvent);
 	addNativeMethod("thotlib_Extra_AddSSchemaActionEvent",

@@ -117,6 +117,12 @@ void JavaStringBuffer2CcharPtr(struct Hjava_lang_StringBuffer* in, char **out)
     /* First, get the Java char[] associated to the StringBuffer */
     HArrayOfChar *buffer = unhand(in)->value;
 
+    if (buffer->length < 30) {
+        fprintf(stderr,
+	  "WARNING : JavaStringBuffer2CcharPtr, using StringBuffer of size %d\n",
+	  buffer->length);
+    }
+
     /*
      * Second, dereference it to get the pointer to the actual data
      * Now pray that we won't overflow the memory allocated !
@@ -126,6 +132,33 @@ void JavaStringBuffer2CcharPtr(struct Hjava_lang_StringBuffer* in, char **out)
 
 void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
 {
+    /*
+     * One need now to convert the internal StringBuffer representation
+     * from a C string to a Java internal one.
+     */
+    HArrayOfChar *buffer = unhand(*out)->value;
+    int buf_size = buffer->length;
+    char *str = (char *) &(unhand(buffer));
+    int str_size = strlen(str);
+    char *tmp, *src, *dst;
+
+    if (buf_size <= 1) return;
+    if (str_size == 0) {
+        str[0] = '\0';
+        str[1] = '\0';
+	unhand(*out)->count = 0;
+	return;
+    }
+    src = tmp = strdup(str);
+    dst = str;
+    while ((*src != '\0') && ((dst - str) < buf_size - 2)) {
+        *dst++ = *src++;
+	*dst++ = '\0';
+    }
+    unhand(*out)->count = (src - tmp);
+    *dst++ = '\0';
+    *dst++ = '\0';
+    free(tmp);
 }
 
 /*
