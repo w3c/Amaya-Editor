@@ -79,10 +79,10 @@ static SpecFont   FirstFontSel = NULL;
   characteristics.
   ----------------------------------------------------------------------*/
 static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
-			   int size, TypeUnit unit)
+			   int size)
 {
    HFONT      hFont;
-   dwCharSet  charset;
+   DWORD      charset;
    char       lpszFace[MAX_LENGTH];
    int        nHeight;
    int        nWidth;
@@ -214,7 +214,7 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
    }
 
    ActiveFont = WIN_LoadFont (font->alphabet, font->family,
-				 font->highlight, font->size, 0);
+				 font->highlight, font->size);
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
 #endif /* _WINDOWS */
@@ -879,9 +879,6 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 #ifdef _WINDOWS
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  char                fontSize[5];
-  char               *pText;
-  char               *pFontSize;
   int                 c;
   HFONT               hOldFont;
 #endif /* _WINDOWS */
@@ -923,27 +920,14 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 	  strcpy (&TtPsFontName[i * 8], PsName);
 	   
 #ifdef _WINDOWS
-	  if (unit == UnRelative)
-	    {
-	      pText = text;
-	      pFontSize = &fontSize[0];
-	      while (!isdigit (*pText))
-		pText++;
-	      if (isdigit (*pText))
-		while (isdigit (*pText))
-		  *pFontSize++ = *pText++;
-	      *pFontSize = 0;
-	      size = atoi (fontSize);
-	    }
-
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
 	  ptfont->alphabet  = alphabet;
 	  ptfont->family    = family;
 	  ptfont->highlight = highlight;
+      size = LogicalPointsSizes[size];
 	  ptfont->size      = size;
-	  ActiveFont = WIN_LoadFont (alphabet, family, highlight,
-				     size, unit);
+	  ActiveFont = WIN_LoadFont (alphabet, family, highlight, size);
 	  if (TtPrinterDC != 0)
 	    {
 	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
