@@ -31,7 +31,7 @@ CONFIGFILES=XKeysymDB thot.ini amaya.keyboard \
 DICOFILES= *.ptn *.dic alphabet clavier
 
 AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr\
-           HTML*.PRS HTML*.TRA Amaya
+           HTML*.PRS HTML*.TRA AmayaPage.html
 
 FONTSFILES=Families.list fonts.dir icones*
 
