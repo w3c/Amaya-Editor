@@ -80,7 +80,7 @@ void TtaShowWindow( int window_id, ThotBool show )
  	+ the window id
         + 0 if too much created windows
   ----------------------------------------------------------------------*/
-int TtaMakeWindow( )
+int TtaMakeWindow( int x, int y, int w, int h)
 {
 #ifdef _WX
   AmayaWindow * p_AmayaWindow = NULL;
@@ -90,7 +90,12 @@ int TtaMakeWindow( )
     return 0; /* there is no more free windows */
 
   /* Create the window */
-  p_AmayaWindow = new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
+  if (w == 0)
+    p_AmayaWindow =
+      new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
+  else
+    p_AmayaWindow =
+      new AmayaWindow( window_id, NULL,  wxPoint (x, y), wxSize (w, h) );
   if (!p_AmayaWindow)
     return -1; /* no enough memory */
   

@@ -2642,11 +2642,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* open the new document in a fresh window */
        isOpen = FALSE;
        requested_doc = 0;
-#ifdef _WX
-       window_id = TtaMakeWindow();
-       page_id   = TtaGetFreePageId( window_id );
-       page_position = 1;
-#endif /* _WX */
      }
    else
      {
@@ -2790,14 +2785,28 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _WX */
 
 #ifdef _WX
+       /* get the geometry of the main window */
+       if (window_id == -1)
+	 {
+	   tmp = "Main_Window_Geometry";
+	   TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);
+	   if (w == 0)
+	     {
+	       tmp = "Formatted_view";
+	       TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);
+	     }
+	   window_id = TtaMakeWindow(x, y, w, h);
+	   page_id   = TtaGetFreePageId( window_id );
+	   page_position = 1;
+	 }
        /* get the geometry of the main window
-	    + x, y
-	    + width, height
-	    + view1, view2 (view2 to open)
-	    + splitratio ( view1_height / view2_height )
+	  + x, y
+	  + width, height
+	  + view1, view2 (view2 to open)
+	  + splitratio ( view1_height / view2_height )
        */
        /* TODO */
-
+       
        /*
 	 int x, y, w, h;
 	 View view1, view2;
@@ -7446,8 +7455,10 @@ void InitAmaya (NotifyEvent * event)
    InitMathML ();
 #ifdef _SVG
    InitSVG ();
+   /*
    InitSVGAnim ();
    InitSVGLibraryManagerStructure ();
+   */
    InitLibrary();
 #endif /* _SVG */
 /* MKP: disable "Cooperation" menu if DAV is not defined or

@@ -347,13 +347,13 @@ extern void TtaGiveSelectPosition (Document document, Element element, View view
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
 
 /*----------------------------------------------------------------------
-  TtaMakeWindow create a AmayaWindow object and place it
+  TtaMakeWindow create an AmayaWindow object and place it
   into WindowTable array
   returns:
  	+ the window id
         + -1 if too much created windows
   ----------------------------------------------------------------------*/
-extern int TtaMakeWindow( );
+extern int TtaMakeWindow(int x, int y, int w, int h );
 
 /*----------------------------------------------------------------------
   TtaMakeFrame create a frame (view container)

@@ -1514,7 +1514,7 @@ void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
     {
       pDoc = LoadedDocument[document - 1];
       ptr = TtaGetEnvString (name);
-      if ( !ptr || ptr[0] == EOS)
+      if (!ptr || ptr[0] == EOS)
 	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
       else
 	{
