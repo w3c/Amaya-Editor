@@ -609,7 +609,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   PtrTabRelations     pTabRel;
   int                *colWidth, *colPercent;
   int                 cNumber, cRef;
-  int                 i, delta, n;
+  int                 i, delta, n, extra, pixels;
   int                 width, nPercent;
   int                 min, max, sum;
   int                 percent, sumPercent;
@@ -861,6 +861,8 @@ printf ("Specific Widths ...\n");
 	    }
 	  else
 	    addExtra = FALSE;
+
+	  pixels = 0;
 	  if (max == 0 || max <= delta)
 	    {
 	      /* extend the maximum of each stretchable column */
@@ -870,25 +872,51 @@ printf ("Specific Widths ...\n");
 	  else
 	    {
 	      useMax = FALSE;
-	      delta = delta - min;
+	      delta = delta - min; /* delta to be distributed */
 	      if (delta)
 		{
 		  /* don't increase the min more than the current max */
+		  /* check if extra space can be found */
+		  extra = 0;
 		  for (cRef = 0; cRef < cNumber; cRef++)
 		    {
 		      box = colBox[cRef]->AbBox;
 		      var = delta * box->BxMaxWidth / max;
+		      /* check if the delat could be increased */
 		      if (colPercent[cRef] < 0 &&
 			  var - colPercent[cRef] > box->BxMaxWidth)
-			/* we'll use the max instead of the min + var */
-			delta = delta  + var - box->BxMaxWidth - colPercent[cRef];
+			{
+			  /* we'll use the max instead of the min + var */
+			  extra = extra + var - box->BxMaxWidth - colPercent[cRef];
+			  n--;
+			}
 		      else if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
 			       box->BxMinWidth + var > box->BxMaxWidth)
-			/* we'll use the max instead of the min + var */
-			delta = delta  + var - box->BxMaxWidth + box->BxMinWidth;
+			{
+			  /* we'll use the max instead of the min + var */
+			  extra = extra + box->BxMinWidth + var - box->BxMaxWidth;
+			  n--;
+			}
 		    }
+		  delta += extra;
+		  /* get the sum of column widths */
+		  pixels = 0;
+		  for (cRef = 0; cRef < cNumber; cRef++)
+		    {
+		      box = colBox[cRef]->AbBox;
+		      var = delta * box->BxMaxWidth / max;
+		      /* check if the delat could be increased */
+		      if ((colPercent[cRef] < 0 &&
+			   var - colPercent[cRef] <= box->BxMaxWidth) ||
+			  (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+			   box->BxMinWidth + var <= box->BxMaxWidth))
+			pixels += var;
+		    }
+		  /* extra pixels availables */
+		  pixels -= delta;
 		}
 	    }
+
 	  for (cRef = 0; cRef < cNumber; cRef++)
 	    {
 	      box = colBox[cRef]->AbBox;
@@ -921,6 +949,11 @@ printf ("Specific Widths ...\n");
 		    i = box->BxMinWidth + var;
 		}
 	      /* update the new inside width */
+	      if (pixels)
+		{
+		  i++;
+		  pixels--;
+		}
 	      i -= box->BxWidth;
 	      ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
@@ -930,43 +963,32 @@ printf ("Specific Widths ...\n");
     }
 
   pTabRel = pBox->BxRows;
-  if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)
-    {
-      /* update rows */
-      if (!PackRows &&
-	  pTabRel->TaRTable[0]->AbEnclosing->AbBox)
-	{
-	  /* pack all rows */
-	  PackRows = TRUE;
-	  width =  table->AbBox->BxW;
-	  box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
-	  delta = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
-	  width -=  delta;
-	  while (pTabRel)
-	    {
-	      for (i = 0; i < MAX_RELAT_DIM &&
-		     pTabRel->TaRTable[i] != NULL &&
-		     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
-		{
-		  box = pTabRel->TaRTable[i]->AbBox;
-		  mbp = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
-		  ChangeDefaultWidth (box, box, width - mbp, 0, frame);
-		}
-	      pTabRel = pTabRel->TaRNext;
-	    }
-	  box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
-	  ChangeDefaultWidth (box, box, width, 0, frame);
-	}
-    }
-#ifdef IV
-  else
+  /* update rows */
+  if (!PackRows &&
+      pTabRel->TaRTable[0]->AbEnclosing &&
+      pTabRel->TaRTable[0]->AbEnclosing->AbBox)
     {
       /* pack all rows */
       PackRows = TRUE;
-      RecordEnclosing (table->AbBox, FALSE);
+      width =  table->AbBox->BxW;
+      box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
+      delta = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
+      width -=  delta;
+      while (pTabRel)
+	{
+	  for (i = 0; i < MAX_RELAT_DIM &&
+		 pTabRel->TaRTable[i] != NULL &&
+		 pTabRel->TaRTable[i]->AbBox != NULL;  i++)
+	    {
+	      box = pTabRel->TaRTable[i]->AbBox;
+	      mbp = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
+	      ChangeDefaultWidth (box, box, width - mbp, 0, frame);
+	    }
+	  pTabRel = pTabRel->TaRNext;
+	}
+      box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
+      ChangeDefaultWidth (box, box, width, 0, frame);
     }
-#endif
-
 
   /* recheck auto and % margins */
   CheckMBP (table, table->AbBox, frame, TRUE);
