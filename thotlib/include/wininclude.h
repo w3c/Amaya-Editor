@@ -22,6 +22,7 @@ extern void       APP_ButtonCallback (ThotButton, int, caddr_t);
 extern void       CleanFrameCatList (int);
 extern int        GetMainFrameNumber (ThotWindow);
 extern LRESULT    ToolBarNotify (int, ThotWindow, WPARAM, LPARAM);
+extern LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 extern int        GetFrameNumber (ThotWindow);
 extern void       TtaHandleOneWindowEvent (MSG*);
 extern void       CreateOpenImgDlgWindow (ThotWindow parent, STRING imgName, int doc_select, int dir_select, int doc_type);
