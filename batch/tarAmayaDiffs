@@ -1,0 +1,69 @@
+#!/bin/sh
+# script to generate diff of amaya release
+# Arnaud  Le Hors - lehors@w3.org
+# 14 Jan 1999
+# Note: I know this could be simplified using gnu tools, but it
+# is more portable this way.
+
+USAGE='Usage: mkdiff [-tmp dir] [-from dir] [-to dir] rev1 rev2'
+
+TMP=/tmp
+TO=`pwd`
+FROM=$TO
+VERBOSE=false
+while [ "`echo $1|cut -c1`" = "-" -a -n "$2" ]
+do case $1 in
+    -tmp) TMP=$2;shift;;
+    -to) TO=$2;shift;;
+    -from) FROM=$2;shift;;
+    -v) VERBOSE=true;;
+    *) echo $USAGE;exit 1;
+    esac;shift
+done   
+
+if [ $# != 2 ]
+then echo $USAGE
+    exit 1
+fi
+
+R1=$1
+R2=$2
+DIR1=$TMP/amaya-$R1
+DIR2=$TMP/amaya-$R2
+PATCH=amaya-src-$R1-to-$R2.patch
+NEWFILES=amaya-src-$R1-to-$R2-newfiles.tar.gz
+OLDFILES=amaya-src-$R1-to-$R2-files-to-rm
+DIFFS=amaya-src-$R1-to-$R2-diffs.tar
+
+# build patch file
+if $VERBOSE
+then set -x
+fi
+mkdir $DIR1
+mkdir $DIR2
+(cd $DIR1;tar xzf $FROM/amaya-src-$R1.tar.gz)
+(cd $DIR2;tar xzf $FROM/amaya-src-$R2.tar.gz)
+echo "Go into the Amaya $R1 source directory, " > $TO/$PATCH
+echo "and feed patch with this file with a command such as:" >> $TO/$PATCH
+echo "  patch -p 0 < $PATCH" >> $TO/$PATCH
+echo 'this will get the modified files up-to-date.' >> $TO/$PATCH
+echo "Then get the new files from $NEWFILES" >>$TO/$PATCH
+echo "and remove the now unnecessary files listed in $OLDFILES" >>$TO/$PATCH
+echo "with a command such as:" >>$TO/$PATCH
+echo "  rm \`cat $OLDFILES\`" >>$TO/$PATCH
+echo 'Finally, you may want to clean up the result with a:' >> $TO/$PATCH
+echo '  find . \( -name \*.orig -o -size 0 \) -exec rm {} \;' >> $TO/$PATCH
+echo >> $TO/$PATCH
+(cd $DIR2;diff -r -c $DIR1 . >>$TO/$PATCH)
+
+# build list of old files to remove
+grep "^Only in $DIR1/" $TO/$PATCH|sed "s|Only in $DIR1/||g"|sed "s|: |/|g">$TO/$OLDFILES
+
+# build archive of new files and modified binary files
+(cd $DIR2;tar czf $TO/$NEWFILES `grep "^Only in \./" $TO/$PATCH|sed "s|Only in \./||g"|sed "s|: |/|g"` `grep "^Binary files" $TO/$PATCH|cut -f3 -d\ |sed "s|$DIR1/||g"`)
+
+# cleanup temp dirs
+rm -rf $DIR1 $DIR2
+
+# generate the tarfile which includes the three generated files
+(cd $TO; tar cvf $DIFFS  $OLDFILES $NEWFILES $PATCH; rm $OLDFILES $NEWFILES $PATCH)
