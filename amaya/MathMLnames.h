@@ -5,10 +5,10 @@ static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order and in lower case */
    {"c", SPACE, MathML_EL_TEXT_UNIT, L_MathMLValue, TRUE},
-   {"cdata", SPACE, HTML_EL_CDATA, L_OtherValue, FALSE},
-   {"cdata_line", SPACE, HTML_EL_CDATA_line, L_OtherValue, FALSE},
-   {"doctype", SPACE, HTML_EL_DOCTYPE, L_OtherValue, FALSE},
-   {"doctype_line", SPACE, HTML_EL_DOCTYPE_line, L_OtherValue, FALSE},
+   {"cdata", SPACE, MathML_EL_CDATA, L_OtherValue, FALSE},
+   {"cdata_line", SPACE, MathML_EL_CDATA_line, L_OtherValue, FALSE},
+   {"doctype", SPACE, MathML_EL_DOCTYPE, L_OtherValue, FALSE},
+   {"doctype_line", SPACE, MathML_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"maligngroup", 'E', MathML_EL_MALIGNGROUP, L_MathMLValue, FALSE},
    {"malignmark", 'E', MathML_EL_MALIGNMARK, L_MathMLValue, FALSE},
    {"math", SPACE, MathML_EL_MathML, L_MathMLValue, TRUE},
@@ -43,10 +43,10 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"munder", SPACE, MathML_EL_MUNDER, L_MathMLValue, FALSE},
    {"munderover", SPACE, MathML_EL_MUNDEROVER, L_MathMLValue, FALSE},
    {"none", SPACE, MathML_EL_Construct, L_MathMLValue, FALSE},
-   {"xmlcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
-   {"xmlcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
-   {"xmlpi", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},
-   {"xmlpi_line", SPACE, HTML_EL_PI_line, L_OtherValue, FALSE},
+   {"xmlcomment", SPACE, MathML_EL_XMLcomment, L_OtherValue, FALSE},
+   {"xmlcomment_line", SPACE, MathML_EL_XMLcomment_line, L_OtherValue, FALSE},
+   {"xmlpi", SPACE, MathML_EL_XMLPI, L_OtherValue, FALSE},
+   {"xmlpi_line", SPACE, MathML_EL_XMLPI_line, L_OtherValue, FALSE},
    {"", SPACE, 0, L_MathMLValue, FALSE}	 /* Last entry. Mandatory */
 };
 
