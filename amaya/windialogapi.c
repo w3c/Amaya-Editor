@@ -160,7 +160,6 @@ static int          baseImage;
 static int          formAlt;
 static int          imgeAlt;
 static int          imageLabel;
-static ThotBool     nameGot         = FALSE;
 static STRING       classList;
 static STRING       langList;
 static STRING       saveList;
@@ -1220,7 +1219,6 @@ HWND  parent;
 				break;
 	}
 
-    nameGot = FALSE;
 }
 
 /*-----------------------------------------------------------------------
@@ -4355,21 +4353,22 @@ LPARAM lParam;
 {
   static HWND hwnNameEdit;
   static HWND hwnPasswdEdit;
+  /* the following var is used to set the focus on the name edit box */
+  static ThotBool setFirstFocus;
 
     switch (msg) {
     case WM_INITDIALOG:
-      SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, _EMPTYSTR_);
-      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, _EMPTYSTR_);
       hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
+	  SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, _EMPTYSTR_);
+      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, _EMPTYSTR_);
+	  setFirstFocus = FALSE;
       break;
 
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE) {
 	if (LOWORD (wParam) == IDC_NAMEEDIT) {
-	  GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
-	  if (Answer_name [0] != 0)
-	    nameGot = TRUE;
+		SetFocus (hwnNameEdit);
 	} else if (LOWORD (wParam) == IDC_PASSWDEDIT)
 	  SetFocus (hwnPasswdEdit);
       }  
@@ -4377,18 +4376,30 @@ LPARAM lParam;
       case ID_CONFIRM:
 	GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
 	GetDlgItemText (hwnDlg, IDC_PASSWDEDIT, Answer_password, sizeof (Answer_password) + 1);
-	EndDialog (hwnDlg, ID_CONFIRM);
+	/* don't end the dialogue unless both answer fields have something */
+	if (Answer_name[0] == EOS)
+	   SetFocus (hwnNameEdit);
+	else if (Answer_password[0] == EOS)
+		SetFocus (hwnPasswdEdit);
+	else
+	   EndDialog (hwnDlg, ID_CONFIRM);
 	break;
 	
       case IDCANCEL:
+    /* we clear the answer fields */
+    Answer_name[0] = Answer_password[0] = EOS;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
       }
       break;
       
-    default: if (!nameGot)
-      SetFocus (hwnNameEdit);
-      return FALSE;
+    default:
+		if (!setFirstFocus)
+		{
+		  setFirstFocus = TRUE;
+		  SetFocus (hwnNameEdit);
+		}
+		return FALSE;
     }
     return TRUE;
 }
