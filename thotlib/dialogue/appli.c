@@ -3402,6 +3402,7 @@ void UpdateScrollbars (int frame)
       XtSetValues (vscroll, args, n);
     }
 #else /*_GTK*/
+  
   if (width == l && x == 0 && width > 60)
     gtk_widget_hide (GTK_WIDGET (hscroll));
   else if (width + x <= l)

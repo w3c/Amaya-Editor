@@ -26,6 +26,9 @@
 #include "memory_f.h"
 #include "picture_f.h"
 
+#ifdef _GL
+void FreeGlTexture (PictInfo  *imageDesc);
+#endif /*_GL*
 
 /*----------------------------------------------------------------------
    NewPictInfo cree un descripteur par element image.       
@@ -123,17 +126,28 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
     {
       /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
+#ifndef _GL
 #ifndef _GTK
 #ifdef _WINDOWS
-#ifndef _GL
       imageDesc->PicMask = -1;
-#endif /*_GL*/
 #else /* _WINDOWS */
       FreePixmap (imageDesc->PicMask);
       imageDesc->PicMask = None;
 #endif /* _WINDOWS */
       FreePixmap (imageDesc->PicPixmap);
+#else /*_GTK*/
+      /*Frees imlib struct that contains 
+       The real ref to pics */
+      if (imageDesc->im)
+	{
+	  gdk_imlib_destroy_image (imageDesc->im);
+	  imageDesc->PicMask = None;
+	  imageDesc->PicPixmap = None;
+	}      
 #endif /* !_GTK */
+#else /*_GL*/
+      FreeGlTexture (imageDesc);
+#endif /*_GL*/
       imageDesc->PicFileName = ptr;
       imageDesc->PicType    = imagetype;
       imageDesc->PicPresent = picPresent;
@@ -148,22 +162,31 @@ void CleanPictInfo (PictInfo *imageDesc)
 {
    if (imageDesc)
      {
-#ifndef _GTK
        if (imageDesc->PicPixmap != None)
-#endif /* !_GTK */
 	 {
+#ifndef _GL
 #ifndef _GTK
 #ifdef _WINDOWS
-#ifndef _GL
       imageDesc->PicMask = -1;
-#endif /*_GL*/
 #else /* _WINDOWS */
 	   FreePixmap (imageDesc->PicMask);
 	   imageDesc->PicMask = None;
 #endif /* _WINDOWS */
 	   FreePixmap (imageDesc->PicPixmap);
 	   imageDesc->PicPixmap = None;
+#else /*_GTK*/
+	   /*Frees imlib struct that contains 
+	     The real ref to pics */
+	   if (imageDesc->im)
+	     {
+	       gdk_imlib_destroy_image (imageDesc->im);
+	       imageDesc->PicMask = None;
+	       imageDesc->PicPixmap = None;
+	     }
 #endif /* !_GTK */
+#else /*_GL*/
+	   FreeGlTexture (imageDesc);
+#endif /*_GL*/
 	   imageDesc->PicXArea = 0;
 	   imageDesc->PicYArea = 0;
 	   imageDesc->PicWArea = 0;
