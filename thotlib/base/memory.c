@@ -125,7 +125,7 @@ PtrDict             PtFree_Dict;
 
 
 
-#ifndef _DEBUG
+#ifndef IV_DEBUG
 /*----------------------------------------------------------------------
    TtaGetMemory
 

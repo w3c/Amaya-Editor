@@ -493,7 +493,7 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   int        argc;
   char**   argv;
 
-#ifdef _DEBUG
+#ifdef IV_DEBUG
    /* Get all memory leak in the debug window after using
    debug and closing the application*/
     #define _CRTDBG_MAP_ALLOC

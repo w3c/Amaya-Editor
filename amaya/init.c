@@ -6625,7 +6625,9 @@ void InitAmaya (NotifyEvent * event)
        ptr[i] = EOS;
        s = ptr;
      }
-   if (IsW3Path (s))
+   if (s)
+   {
+	   if (IsW3Path (s))
      {
        /* it's a remote document */
        strcpy (LastURLName, s);
@@ -6662,6 +6664,7 @@ void InitAmaya (NotifyEvent * event)
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	 }
      }
+   }
    TtaFreeMemory (ptr);
    ptr = NULL;
    Loading_method = CE_ABSOLUTE;
