@@ -65,7 +65,9 @@ extern int AnnotThread_UpdateAnnotates ( List *annot_list,
 extern Document Annot_searchDocument ( char *body_url );
 extern Document AnnotThread_searchRoot ( char *root );
 extern Document AnnotThread_searchThreadDoc ( char *annot_url );
+extern char * Annot_GetMDate ( void *object );
 extern void AnnotThread_sortThreadList ( List **thread_list );
+extern void BM_bookmarksSort ( List **bookmark_list );
 extern ThotBool Annot_isSameURL ( char *url1,
                                   char *url2 );
 extern ThotBool AnnotThread_link2ThreadDoc ( Document doc );
@@ -121,6 +123,8 @@ extern void ANNOT_bodyType_set ( Document annot_doc,
                                  DocumentType bodyType );
 extern void Annot_SetXMLBody ( Document doc );
 extern char * Annot_DocumentURL ( Document doc );
+extern char *Annot_ConcatenateBase ( char *base,
+                                     char *fragment );
 
 #else /* __STDC__ */
 
@@ -183,7 +187,9 @@ extern int AnnotThread_UpdateAnnotates (/* List *annot_list,
 extern Document Annot_searchDocument (/* char *body_url */);
 extern Document AnnotThread_searchRoot (/* char *root */);
 extern Document AnnotThread_searchThreadDoc (/* char *annot_url */);
+extern char * Annot_GetMDate (/* void *object */);
 extern void AnnotThread_sortThreadList (/* List **thread_list */);
+extern void BM_bookmarksSort (/* List **bookmark_list */);
 extern ThotBool Annot_isSameURL (/* char *url1,
                                     char *url2 */);
 extern ThotBool AnnotThread_link2ThreadDoc (/* Document doc */);
@@ -239,6 +245,8 @@ extern void ANNOT_bodyType_set (/* Document annot_doc,
                                    DocumentType bodyType */);
 extern void Annot_SetXMLBody (/* Document doc */);
 extern char * Annot_DocumentURL (/* Document doc */);
+extern char *Annot_ConcatenateBase (/* char *base,
+                                       char *fragment */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

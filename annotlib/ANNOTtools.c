@@ -28,6 +28,12 @@
 #include "ANNOTfiles_f.h"
 #include "ANNOTschemas_f.h"
 
+/* bookmark includes */
+#ifdef BOOKMARKS
+#include "bookmarks.h"
+#include "f/BMtools_f.h"
+#endif /* BOOKMARKS */
+
 /* Amaya includes */
 #include "XPointer.h"
 #include "XPointerparse_f.h"
@@ -1008,6 +1014,15 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 #endif /* ANNOT_ON_ANNOT */
 }
 
+/*------------------------------------------------------------
+  Annot_GetMDate
+  Returns the modified date stored in the AnnotMeta structure
+  ------------------------------------------------------------*/
+char * Annot_GetMDate (void *object)
+{
+  return ((AnnotMeta *) object)->mdate;
+}
+
 #ifdef ANNOT_ON_ANNOT
 /**********************************
  Thread sort algorithm adapted from
@@ -1021,8 +1036,8 @@ typedef struct _Container
   struct _Container *parent; /* id of the parent of this item */
   struct _Container *child;  /* children linked to this thread item*/
   struct _Container *next;   /* sibling of this thread item */
-  AnnotMeta *annot;
-} Container;;
+  void   *object;            /* the object stored in this container */
+} Container;
 
 HTHashtable *id_table;
 
@@ -1057,8 +1072,8 @@ static void ConvertContainerToList (List **result, Container *container)
   container_tmp = container;
   while (container_tmp)
     {
-      if (container_tmp->annot)
-	List_addEnd (result, (void *) container_tmp->annot);
+      if (container_tmp->object)
+	List_addEnd (result, container_tmp->object);
       if (container_tmp->child)
 	{
 	  ConvertContainerToList (result, container_tmp->child);
@@ -1108,7 +1123,7 @@ static void Container_prune (Container **parent)
   previous = NULL;
   while (tmp_entry)
     {
-      if (!tmp_entry->annot && tmp_entry->child)
+      if (!tmp_entry->object && tmp_entry->child)
 	{
 	  if (!tmp_entry->child->next)
 	    {
@@ -1171,7 +1186,7 @@ static void Container_prune (Container **parent)
    Sorts the annotations siblings in the container list
    by most recent date.
    ------------------------------------------------------------*/
-static void Container_sortByDate (Container **list)
+static void Container_sortByDate (Container **list, char * (*get_date_function)(void *))
 {
   time_t date_cur;
   time_t date_next;
@@ -1179,6 +1194,9 @@ static void Container_sortByDate (Container **list)
   Container *entry_cur;
   Container *entry_next;
   Container *previous;
+
+  if (!get_date_function)
+    return;
 
   /* simple bubble sort */
   while (1)
@@ -1189,8 +1207,8 @@ static void Container_sortByDate (Container **list)
       while (entry_cur && entry_cur->next)
 	{
 	  entry_next = entry_cur->next;
-	  date_cur = StrDateToCalTime (entry_cur->annot->mdate);
-	  date_next = StrDateToCalTime (entry_next->annot->mdate);
+	  date_cur = StrDateToCalTime ((*get_date_function) (entry_cur->object));
+	  date_next = StrDateToCalTime ((*get_date_function) (entry_next->object));
 	  /* sort by most recent date */
 	  if (date_cur < date_next)
 	    {
@@ -1239,10 +1257,10 @@ static void  AnnotThread_markOrphan (Container *root)
   while (tmp_entry)
     {
       tmp_entry2 = tmp_entry;
-      while (tmp_entry2 && tmp_entry2->annot == NULL)
+      while (tmp_entry2 && tmp_entry2->object == NULL)
 	tmp_entry2 = tmp_entry2->child;
       if (tmp_entry2)
-	tmp_entry2->annot->is_orphan_item = TRUE;
+	((AnnotMeta *) tmp_entry2->object)->is_orphan_item = TRUE;
       tmp_entry = tmp_entry->next;
     }
 }
@@ -1255,7 +1273,7 @@ static void  AnnotThread_markOrphan (Container *root)
 void AnnotThread_sortThreadList (List **thread_list)
 {
 #ifdef ANNOT_ON_ANNOT
-  List *annot_list, *list_cur, *list_tmp;
+  List *annot_list, *list_cur;
   AnnotMeta *annot_cur;
   int i;
   Container *cur_entry;
@@ -1296,7 +1314,7 @@ void AnnotThread_sortThreadList (List **thread_list)
 	  cur_entry = ThreadItem_new ();
 	  HTHashtable_addObject (id_table, url, cur_entry);
 	}
-      cur_entry->annot = annot_cur;
+      cur_entry->object = (void *) annot_cur;
 	
       /* insert the message container to its parent */
       par_entry = (Container *) HTHashtable_object (id_table, annot_cur->inReplyTo);
@@ -1323,7 +1341,6 @@ void AnnotThread_sortThreadList (List **thread_list)
 
   /* find the root set */
   keys = HTHashtable_keys (id_table);
-  list_tmp = NULL;
   for (i = 0; i < HTArray_size (keys); i++)
     {
       tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
@@ -1331,7 +1348,7 @@ void AnnotThread_sortThreadList (List **thread_list)
 	{
 	  if (tmp_entry == root)
 	    continue;
-	  else if (tmp_entry->annot || tmp_entry->child)
+	  else if (tmp_entry->object || tmp_entry->child)
 	    /* promote to parent */
 	    Container_promoteEntry (&root, tmp_entry);
 	  else if (tmp_entry->child == NULL)
@@ -1365,7 +1382,7 @@ void AnnotThread_sortThreadList (List **thread_list)
       tmp_child = tmp_entry->child;
       while (tmp_child)
 	{
-	  Container_sortByDate (&tmp_child);
+	  Container_sortByDate (&tmp_child, Annot_GetMDate);
 	  tmp_child = tmp_child->child;
 	}
       tmp_entry = tmp_entry->next;
@@ -1386,6 +1403,145 @@ void AnnotThread_sortThreadList (List **thread_list)
     }
   *thread_list = annot_list;
 #endif /* ANNOT_ON_ANNOT */
+}
+
+/*------------------------------------------------------------
+   BM_bookmarksSort
+   Sorts the bookmark list according to parents
+   ------------------------------------------------------------*/
+void BM_bookmarksSort (List **bookmark_list)
+{
+#ifdef BOOKMARKS
+  List *list_cur, *list_tmp;
+  BookmarkP bookmark_cur;
+  int i;
+  Container *cur_entry;
+  Container *par_entry;
+  Container *tmp_entry;
+  Container *root;
+  HTArray *keys;
+  char *url;
+
+  list_cur = *bookmark_list;
+
+  if (!list_cur)
+    return;
+
+  id_table = HTHashtable_new (0);
+
+  /* create a container for the root */
+  bookmark_cur = (BookmarkP) list_cur->object;
+  root = ThreadItem_new ();
+  /* @@ JK this doesn't seem useful now */
+  HTHashtable_addObject (id_table, "", root);
+  while (list_cur)
+    {      
+      bookmark_cur = (BookmarkP) list_cur->object;
+
+      /* create the message container */
+      url = bookmark_cur->self_url;
+      cur_entry = (Container *) HTHashtable_object (id_table, url);
+      if (!cur_entry)
+	{
+	  cur_entry = ThreadItem_new ();
+	  HTHashtable_addObject (id_table, url, cur_entry);
+	}
+
+      cur_entry->object = (void *) bookmark_cur;
+	
+      /* insert the message container to its parent */
+      /* @@ JK: and if there's no parent? We put it in a blank space? */
+      if (bookmark_cur->parent_url)
+	url = bookmark_cur->parent_url;
+      else
+	url = "";
+      par_entry = (Container *) HTHashtable_object (id_table, url); 
+      if (!par_entry)
+	{
+	  par_entry = ThreadItem_new ();
+	  HTHashtable_addObject (id_table, url, par_entry);
+	}	
+      /* add the link from the child to the parent */
+      cur_entry->parent = par_entry;
+      
+      /* insert it with its siblings */
+      if (!par_entry->child)
+	par_entry->child = cur_entry;
+      else
+	{
+	  tmp_entry = par_entry->child;
+	  while (tmp_entry->next)
+	    tmp_entry = tmp_entry->next;
+	  tmp_entry->next = cur_entry;
+	}
+      list_cur = list_cur->next;
+    }
+
+  /* find the root set */
+  keys = HTHashtable_keys (id_table);
+  for (i = 0; i < HTArray_size (keys); i++)
+    {
+      tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
+      if (tmp_entry->parent == NULL)
+	{
+	  if (tmp_entry == root)
+	    continue;
+	  else if (tmp_entry->object || tmp_entry->child)
+	    /* promote to parent */
+	    Container_promoteEntry (&root, tmp_entry);
+	  else if (tmp_entry->child == NULL)
+	    /* destroy */
+	    {
+	      tmp_entry->next = NULL;
+	      ThreadItem_delete (tmp_entry);
+	    }
+	}
+    }
+  for (i = 0; i< HTArray_size (keys); i++)
+    HT_FREE (HTArray_data(keys)[i]);
+
+  HTArray_delete (keys);
+  HTHashtable_delete(id_table);
+
+  /* prune the empty containers */
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      Container_prune (&tmp_entry->child);
+      tmp_entry = tmp_entry->next;
+    }
+
+  /* all is sorted by reply to, now sort it according to dates */
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      Container *tmp_child;
+      
+      tmp_child = tmp_entry->child;
+      while (tmp_child)
+	{
+	  Container_sortByDate (&tmp_child, BM_GetMDate);
+	  tmp_child = tmp_child->child;
+	}
+      tmp_entry = tmp_entry->next;
+    }
+
+  /* mark the root orphan annotations as such. After all the above sorts,
+     these are all the siblings of the first container */
+  /* @@ JK: is this needed? */
+  /* AnnotThread_markOrphan (root); */
+
+  /* copy the result to annot_list. The children of root are live replies.
+   The brothers of root have messages that have lost their in-reply-to parents */
+  list_tmp = NULL;
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      ConvertContainerToList (&list_tmp, tmp_entry->child);
+      tmp_entry = tmp_entry->next;
+    }
+  *bookmark_list = list_tmp;
+#endif /* BOOKMARKS */
 }
 
 /*------------------------------------------------------------
@@ -2821,4 +2977,24 @@ char * Annot_DocumentURL (Document doc)
     ptr = TtaStrdup (DocumentURLs[doc]);
 
   return ptr;
+}
+
+/*-----------------------------------------------------------------------
+  Annot_ConcatenateBase
+  Returns a string that concatenateshas a copy of the document URL. If the document
+  has any parameters, they are concatenated to it.
+  The caller has to free the returned pointer.
+  -----------------------------------------------------------------------*/
+char *Annot_ConcatenateBase (char *base, char *fragment)
+{
+  char *ptr;
+
+  if (base && *base && fragment && *fragment)
+    {
+      ptr = TtaGetMemory (strlen (base) + strlen (fragment) + 1);
+      sprintf (ptr, "%s%s", base, fragment);
+    }
+  else
+    ptr = NULL;
+  return (ptr);
 }
