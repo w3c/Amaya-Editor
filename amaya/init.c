@@ -4215,6 +4215,7 @@ DocumentType     docType;
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
 	}
+      TtaSetDocumentModified (newdoc);
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
       stopped_flag = FetchAndDisplayImages (newdoc, 0);
