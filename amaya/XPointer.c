@@ -514,7 +514,6 @@ ThotBool firstF;
 {
   Element el, prev;
   ElementType elType, prevElType;
-  STRING s;
   int child_count;
   XPathItem *xpath_item;
   XPathList xpath_list = (XPathItem *) NULL;
@@ -595,7 +594,6 @@ View view;
 #endif
 {
   Element     firstEl, lastEl;
-  Element     firstV, lastV;
 
   int         firstCh, lastCh, i;
   int         firstLen;

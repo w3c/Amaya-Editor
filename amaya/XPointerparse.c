@@ -43,7 +43,7 @@
   Symbol table  (move this back to XPointerparse.c)
 ***************************************************/
 /* values for pre-initializing the symbol tables */
-static struct entry keywords[] = {
+static struct entry keywords[][2] = {
   "id", FID,
   "range-to", FRANGE_TO,
   "string-range", FSTRING_RANGE,
@@ -68,7 +68,7 @@ static void Factor (parserContextPtr ctx);
 static void CtxAddError (parserContextPtr ctx, char *msg)
 {
   if (!ctx->error)
-    ctx->error = strdup (msg);
+    ctx->error = TtaStrdup (msg);
 }
 
 /****************
@@ -299,7 +299,6 @@ static int IsValidChar (char c)
   ----------------------------------------------------------------------*/
 static int LexAn (parserContextPtr ctx) 
 {
-  int t;
   char lexbuf[BSIZE];
 
   /* convert symbol to token */
@@ -341,7 +340,7 @@ static int LexAn (parserContextPtr ctx)
 		      || *(ctx->cur+1) == '^')
 		    INC_CUR;
 		  else
-		    error ("LexAn: syntax error in expression");
+		    CtxAddError (ctx, "LexAn: syntax error in expression");
 		}
 	      else if (!IsValidChar (VAL_CUR))
 		break;
@@ -590,8 +589,6 @@ static void Factor (parserContextPtr ctx)
   ----------------------------------------------------------------------*/
 static void Expr (parserContextPtr ctx)
 {
-  int i;
-
   Factor (ctx);
 
   while (1)
@@ -660,8 +657,6 @@ static void SelectToNode (Document doc, nodeInfo *node)
   ----------------------------------------------------------------------*/
 void XPointer_select (parserContextPtr ctx)
 {
-  nodeInfo node;
-
   if (!ctx || ctx->error)
     return;
 
