@@ -2905,7 +2905,7 @@ boolean             isHTML;
       else if (url)
 	{
 	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
-	  if (bg_image == NULL || ustrcasecmp (bg_image,"yes"))
+	  if (bg_image == NULL || !ustrcasecmp (bg_image,"yes"))
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 	      if (callblock != NULL)

@@ -33,7 +33,9 @@
 #define mHomePage         7
 #define mThotPrint        8
 #define mDefaultName      9
-#define MAX_BREDMENU_DLG  10
+#define mBgImages         10
+#define mDoubleClick      11
+#define MAX_BREDMENU_DLG  12
 
 #define AppearanceMenu      1
 #define MAX_APPEARANCEMENU_DLG  2

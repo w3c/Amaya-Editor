@@ -56,10 +56,11 @@ static int Zoom;
 static boolean Multikey;
 static boolean LostUpdateCheck;
 static boolean VerifyPublish;
-static CHAR DefaultName [MAX_LENGTH];
 static CHAR HomePage [MAX_LENGTH];
 static CHAR ThotPrint [MAX_LENGTH];
-
+static CHAR DefaultName [MAX_LENGTH];
+static boolean BgImages;
+static boolean DoubleClick;
 
 /* Appearance menu options */
 static int AppearanceBase;
@@ -231,7 +232,6 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetNetworkConf ();
-	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultNetworkConf ();
@@ -497,7 +497,6 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetBrEdConf ();
-	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultBrEdConf ();
@@ -522,6 +521,14 @@ STRING              data;
 
 	case mMultikey:
 	  Multikey = !Multikey;
+	  break;
+
+	case mBgImages:
+	  BgImages = !BgImages;
+	  break;
+
+	case mDoubleClick:
+	  DoubleClick = !DoubleClick;
 	  break;
 
 	case mTogglePublish:
@@ -553,7 +560,6 @@ STRING              data;
 	    ustrcpy (ThotPrint, data);
 	  else
 	    ThotPrint [0] = EOS;
-
 	  break;
 
 	default:
@@ -576,6 +582,8 @@ static void GetBrEdConf ()
   TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetEnvInt ("ZOOM", &Zoom);
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
+  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
   GetEnvString ("DEFAULTNAME", DefaultName);
@@ -594,11 +602,21 @@ static void SetBrEdConf (void)
 static void SetBrEdConf ()
 #endif /* __STDC__ */
 {
+  int i;
+
   TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, YES);
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, YES);
   TtaSetEnvInt ("ZOOM", Zoom, YES);
+  /* recalibrate the zoom settings in all the active documents */
+  for (i = 0; i < DocumentTableLength -1; i++)
+    {
+      if (DocumentURLs[i])
+	RecalibrateZoom (i, 1);
+    }
   TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, YES);
   TtaSetMultikey (Multikey);
+  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, YES);
+  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, YES);
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, YES);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, YES);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, YES);
@@ -621,6 +639,10 @@ static void GetDefaultBrEdConf ()
   TtaGetDefEnvInt ("ZOOM", &Zoom);
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
 		       BrEdBase + mMultikey, 0);
+  GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
+		       BrEdBase + mBgImages, 0);
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+		       BrEdBase + mDoubleClick, 0);
   GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck, 
 		    BrEdBase + mTogglePublish, 0);
   GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
@@ -644,6 +666,8 @@ static void RefreshBrEdMenu ()
   TtaSetNumberForm (BrEdBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (BrEdBase + mZoom, Zoom);
   TtaSetToggleMenu (BrEdBase + mMultikey, 0, Multikey);
+  TtaSetToggleMenu (BrEdBase + mBgImages, 0, BgImages);
+  TtaSetToggleMenu (BrEdBase + mDoubleClick, 0, DoubleClick);
   TtaSetToggleMenu (BrEdBase + mTogglePublish, 0, LostUpdateCheck);
   TtaSetToggleMenu (BrEdBase + mTogglePublish, 1, 
 		    VerifyPublish);
@@ -693,14 +717,28 @@ STRING              pathname;
    TtaNewNumberForm (BrEdBase + mZoom,
 		     BrEdBase + BrEdMenu,
 		     "Zoom",
-		     0,
-		     65000,
+		     -10,
+		     10,
 		     FALSE);   
    TtaNewToggleMenu (BrEdBase + mMultikey,
 		     BrEdBase + BrEdMenu,
 		     NULL,
 		     1,
 		     "BEnable Multikey",
+		     NULL,
+		     FALSE);
+   TtaNewToggleMenu (BrEdBase + mBgImages,
+		     BrEdBase + BrEdMenu,
+		     NULL,
+		     1,
+		     "BShow background images",
+		     NULL,
+		     FALSE);
+   TtaNewToggleMenu (BrEdBase + mDoubleClick,
+		     BrEdBase + BrEdMenu,
+		     NULL,
+		     1,
+		     "BDouble click activates anchor",
 		     NULL,
 		     FALSE);
    sprintf (s, "%s%c%s", "BUse ETAGS and preconditions", EOS, 
@@ -737,13 +775,12 @@ STRING              pathname;
   TtaShowDialogue (BrEdBase + BrEdMenu, TRUE);
 }
 
-
 /**********************
 ** Appearance Menu
 **********************/
 
 /*----------------------------------------------------------------------
-   callback of the transformation selection menu 
+   callback of the appearance configuration menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AppearanceCallbackDialog (int ref, int typedata, STRING data)
@@ -755,6 +792,44 @@ STRING              data;
 
 #endif
 {
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the network conf menu */
+      TtaDestroyDialogue (AppearanceBase + AppearanceMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - AppearanceBase)
+	{
+	case AppearanceMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      /***
+	      SetAppearanceConf ();
+	      ***/
+	      break;
+	    case 2:
+	      /**
+	      GetDefaultAppearanceConf ();
+	      RefreshAppearanceMenu ();
+	      **/
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+	default:
+	  break;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -774,18 +849,22 @@ STRING              pathname;
    CHAR             s[MAX_LENGTH];
    int              i;
 
-   /* Dialogue form for saving a document */
+   /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Save options");
+   strcpy (&s[i], "Apply");
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Restore defaults");
+   strcpy (&s[i], "Defaults");
    TtaNewSheet (AppearanceBase + AppearanceMenu, 
 		TtaGetViewFrame (document, view),
-		"Appearance Configuration", 2, s, TRUE, 3, 'L', D_DONE);
+	       "Appearance Configuration", 2, s, TRUE, 3, 'L', D_DONE);
 
    TtaShowDialogue (AppearanceBase + AppearanceMenu, TRUE);
 }
 
+void InitEnv ()
+{
+
+}
 #endif /* CONF_MENU */
 
 
