@@ -675,6 +675,10 @@ PicType             filetype;
   int               res;
 
   verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
+  /* verify the PUT by default */
+  if (verify_publish == NULL)
+    verify_publish = 'yes';
+  
   
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 

@@ -113,12 +113,12 @@ HTAlertPar         *reply;
 		       if (bytes_rw > 0)
 			 {
 			   HTNumToStr(bytes_rw, buf, 10);
-			   sprintf (tempbuf, "Read %s bytes", buf);
+			   sprintf (tempbuf, "%s bytes", buf);
 			 } 
 		       else if (raw_rw && *raw_rw>0) 
 			 {
 			   HTNumToStr(*raw_rw, buf, 10);
-			   sprintf (tempbuf, "Read %s bytes", buf);
+			   sprintf (tempbuf, "%s bytes", buf);
 			 } 
 		       else 
 			 buf[0] = EOS;
@@ -151,20 +151,22 @@ HTAlertPar         *reply;
 		      if (bytes_rw > 0)
 			{
 			  HTNumToStr(bytes_rw, buf, 10);
-			  sprintf (tempbuf, "Writing %s bytes ", buf);
+			  sprintf (tempbuf, "%s bytes ", buf);
 			} 
 		      else if (raw_rw && *raw_rw >0) 
 			{
 			  HTNumToStr(*raw_rw, buf, 10);
-			  sprintf (tempbuf, "Writing %s bytes ", buf);
+			  sprintf (tempbuf, "%s bytes ", buf);
 			} 
 		      else 
 			buf[0] = EOS;
 		    }
 		  /* update the message on the status bar */
+		  /****
 		  if (buf[0]) 
 		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
 		  else
+		  ***/
 		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
 		}
 	       break;

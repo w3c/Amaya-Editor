@@ -281,9 +281,9 @@ PicType contentType;
 {
  HTAtom           *atom;
  char             *filename;
- HTEncoding        enc;
- HTEncoding        cte;
- HTLanguage        lang;
+ HTEncoding        enc = NULL;
+ HTEncoding        cte = NULL;
+ HTLanguage        lang = NULL;
  double            quality = 1.0;
 
  switch (contentType)
@@ -916,6 +916,8 @@ int                 status;
    if (status == HT_LOADED || 
        status == HT_CREATED || 
        status == HT_NO_DATA ||
+       /* kludge for work around libwww problem */
+       (status == HT_INTERRUPTED && me->method == METHOD_PUT) ||
 #ifdef AMAYA_WWW_CACHE
        /* what status to use to know we're downloading from a cache? */
        status ==  HT_NOT_MODIFIED ||
@@ -2703,30 +2705,39 @@ int                 docid;
 #endif /* DEBUG_LIBWWW */
        /* enter the critical section */
        lock_stop = TRUE; 
-       HTNet_killAll ();
-
+       /* HTHost_killPipe (me->request->net->host); */
+       /* HTNet_killAll (); */
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
 	 {
 	   if (AmayaIsAlive ())
-	     if (me->reqStatus != HT_END)
-	       {
-		 if (me->terminate_cbf)
-		   (*me->terminate_cbf) (me->docid, -1, me->urlName,
-					 me->outputfile,
-					 me->content_type, me->context_tcbf);
+	     {
+	       if (me->request->net)
+		 HTNet_killPipe (me->request->net);
+	       else
+		 {
+		   if (me->reqStatus != HT_END)
+		     {
+		       if (me->terminate_cbf)
+			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
+					       me->outputfile,
+					       me->content_type, 
+					       me->context_tcbf);
 #ifdef DEBUG_LIBWWW
-		 fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+		       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
 #endif /* DEBUG_LIBWWW */
-		 AHTReqContext_delete (me);
-	       }
+		       AHTReqContext_delete (me);
+		       cur = Amaya->reqlist;
+		     }
 #ifndef _WINDOWS
 #ifdef WWW_XWINDOWS
 	   /* to be on the safe side, remove all outstanding X events */
-	   else 
-	     RequestKillAllXtevents (me);
+		   else 
+		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
+		 }
+	     }
 	 }
        /* expire all outstanding timers */
        HTTimer_expireAll ();
