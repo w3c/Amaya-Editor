@@ -1572,12 +1572,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       if (script == 'Z')
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
-
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
 #else /*_GL*/
       wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
 #endif /*_GL*/
-
       nbcar = 0;
       org = x;
       while (charleft > 0)
@@ -1615,13 +1613,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 		      else
-
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 #else /*_GL*/
 		      x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					org, bl, x, blockbegin, fg, shadow);
-		     
 #endif /*_GL*/
 		      width = width - x;
 		    }
@@ -1655,11 +1651,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
 			  else
-			    if ( prevfont== NULL )
-			      prevfont = nextfont;
-			  x += DrawString (buffer, nbcar, frame, x, y1,
-					     prevfont, org, bl, 0, blockbegin,
-					     fg, shadow);
+			    {
+			      if ( prevfont== NULL)
+				prevfont = nextfont;
+			      x += DrawString (buffer, nbcar, frame, x, y1,
+					       prevfont, org, bl, 0, blockbegin,
+					       fg, shadow);
+			    }
 #else /*_GL*/
 			  x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					    prevfont, org, bl, 0, blockbegin,
