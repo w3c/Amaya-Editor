@@ -3059,12 +3059,12 @@ void ShowSourceOfTimeline (Document document, View view)
      if (charset == UNDEFINED_CHARSET)
      {
      if (DocumentMeta[document]->xmlformat)
-     TtaSetDocumentCharset (SavingDocument, UTF_8);
+     TtaSetDocumentCharset (SavingDocument, UTF_8, FALSE);
      else
-     TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
+     TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
      }
      else
-     TtaSetDocumentCharset (sourceDoc, charset);
+     TtaSetDocumentCharset (sourceDoc, charset, FALSE);
      DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
      StartParser (sourceDoc, tempdocument, documentname, tempdir,
      tempdocument, TRUE);

@@ -3006,7 +3006,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  DocumentMeta[doc]->charset = TtaStrdup (user_charset);
 	  /* change the charset of the doc itself */
 	  charset = TtaGetCharset (user_charset);
-	  TtaSetDocumentCharset (doc, charset);
+	  TtaSetDocumentCharset (doc, charset, FALSE);
 	}
       if (user_mimetype && *user_mimetype)
 	{
@@ -3219,7 +3219,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    TtaFreeMemory (DocumentMeta[doc]->charset);
 	  DocumentMeta[doc]->charset = old_charset;
 	  charset = TtaGetCharset (old_charset);
-	  TtaSetDocumentCharset (doc, charset);
+	  TtaSetDocumentCharset (doc, charset, FALSE);
 	  if (user_mimetype && DocumentMeta[doc]->content_type)
 	    TtaFreeMemory (DocumentMeta[doc]->content_type);
 	  DocumentMeta[doc]->content_type = old_mimetype;

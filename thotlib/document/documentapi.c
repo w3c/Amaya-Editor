@@ -142,10 +142,11 @@ CHARSET TtaGetDocumentCharset (Document document)
 }
 
 
-/*----------------------------------------------------------------------
+/*------------------------------------------------------------------------------
   TtaSetDocumentCharset sets the document charset
- ----------------------------------------------------------------------*/
-void TtaSetDocumentCharset (Document document, CHARSET charSet)
+  The boolean 'default' indicates we are setting the default document charset
+ -------------------------------------------------------------------------------*/
+void TtaSetDocumentCharset (Document document, CHARSET charSet, ThotBool defaultCharset)
 {
   PtrDocument pDoc;
 
@@ -159,7 +160,8 @@ void TtaSetDocumentCharset (Document document, CHARSET charSet)
     {
       pDoc = LoadedDocument[document - 1];
       pDoc->DocCharset = charSet;
-      pDoc->DocDefaultCharset = FALSE;
+      if (!defaultCharset)
+	pDoc->DocDefaultCharset = FALSE;
     }
 }
 

@@ -288,7 +288,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   /* disable auto save */
   TtaSetDocumentBackUpInterval (doc, 0);
   /* Set the document charset */
-  TtaSetDocumentCharset (doc, ISO_8859_1);
+  TtaSetDocumentCharset (doc, ISO_8859_1, FALSE);
   strcpy (charsetName , "iso-8859-1");
   DocumentMeta[doc]->charset = TtaStrdup (charsetName);
 

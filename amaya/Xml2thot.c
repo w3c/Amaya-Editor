@@ -4243,7 +4243,7 @@ static void  InitializeExpatParser (CHARSET charset)
       sprintf (msgBuffer,
 	       "Warning: no encoding specified, assuming UTF-8");
       XmlParseError (undefinedEncoding, msgBuffer, 0);
-      /* TtaSetDocumentCharset (XMLcontext.doc, UTF_8); */
+      TtaSetDocumentCharset (XMLcontext.doc, UTF_8, TRUE);
     }
   else if (charset == UTF_8 || charset == UTF_16)
     /* These encoding are automatically recognized by Expat */

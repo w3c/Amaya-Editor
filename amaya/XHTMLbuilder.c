@@ -124,7 +124,7 @@ void             ParseCharset (Element el, Document doc)
 			   charsetname[index] = EOS;
 			   charset = TtaGetCharset (charsetname);
 			   if (charset != UNDEFINED_CHARSET)
-			     TtaSetDocumentCharset (doc, charset);
+			     TtaSetDocumentCharset (doc, charset, FALSE);
 			 }
 		       TtaFreeMemory (text2);
 		     }       

@@ -13,7 +13,8 @@ extern void TtaSetDocumentProfile ( Document document,
                                     int profile );
 extern CHARSET TtaGetDocumentCharset ( Document document );
 extern void TtaSetDocumentCharset ( Document document,
-                                    CHARSET charSet );
+                                    CHARSET charSet,
+                                    ThotBool defaultCharset );
 extern Document TtaOpenDocument ( char *documentName,
                                   int accessMode );
 extern void UnloadTree ( Document document );
@@ -122,7 +123,8 @@ extern void TtaSetDocumentProfile (/* Document document,
                                       int profile */);
 extern CHARSET TtaGetDocumentCharset (/* Document document */);
 extern void TtaSetDocumentCharset (/* Document document,
-                                      CHARSET charSet */);
+                                      CHARSET charSet,
+                                      ThotBool defaultCharset */);
 extern Document TtaOpenDocument (/* char *documentName,
                                     int accessMode */);
 extern void UnloadTree (/* Document document */);

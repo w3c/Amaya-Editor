@@ -790,7 +790,8 @@ extern CHARSET TtaGetDocumentCharset (Document document);
   TtaSetDocumentCharset sets the document charset
   ----------------------------------------------------------------------*/
 extern void  TtaSetDocumentCharset (Document document,
-				    CHARSET charSet);
+				    CHARSET charSet,
+				    ThotBool defaultCharset);
 
 /*----------------------------------------------------------------------
   TtaGetDocumentProfile

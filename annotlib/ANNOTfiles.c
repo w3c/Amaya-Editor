@@ -108,7 +108,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
       DocumentSource[annotDoc] = 0;
 
       /* set the charset to be UTF-8 by default */
-      TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"));
+      TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"), FALSE);
       DocumentMeta[annotDoc]->charset = TtaStrdup ("UTF-8");
       DocumentMeta[annotDoc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
       

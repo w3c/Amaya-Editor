@@ -1132,7 +1132,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   /* disable auto save */
   TtaSetDocumentBackUpInterval (newLibraryDoc, 0);
   /* Set the document charset */
-  TtaSetDocumentCharset (newLibraryDoc, ISO_8859_1);
+  TtaSetDocumentCharset (newLibraryDoc, ISO_8859_1, FALSE);
   strcpy (charsetName , "iso-8859-1");
   DocumentMeta[newLibraryDoc]->charset = TtaStrdup (charsetName);
 
@@ -2349,7 +2349,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
   if (newSVGDoc != 0)
     {
       TtaSetPSchema (newSVGDoc, "SVGP");
-      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1);
+      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1, FALSE);
       oldStructureChecking = TtaGetStructureChecking (newSVGDoc);
       TtaSetStructureChecking (0, newSVGDoc);
 
@@ -2361,7 +2361,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       DocumentMeta[newSVGDoc]->xmlformat = TRUE;
 
       /* Set the document charset */
-      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1);
+      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1, FALSE);
       strcpy (charsetName , "iso-8859-1");
       DocumentMeta[newSVGDoc]->charset = TtaStrdup (charsetName);
 

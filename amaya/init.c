@@ -3625,17 +3625,17 @@ static Document LoadDocument (Document doc, char *pathname,
 
       if (httpcharset != UNDEFINED_CHARSET && charEncoding)
 	{
-	  TtaSetDocumentCharset (newdoc, httpcharset);
+	  TtaSetDocumentCharset (newdoc, httpcharset, FALSE);
 	  DocumentMeta[newdoc]->charset = TtaStrdup (charEncoding);
 	}
       else if (charset != UNDEFINED_CHARSET)
 	{
-	  TtaSetDocumentCharset (newdoc, charset);
+	  TtaSetDocumentCharset (newdoc, charset, FALSE);
 	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 	}
       else if (metacharset != UNDEFINED_CHARSET)
 	{
-	  TtaSetDocumentCharset (newdoc, metacharset);
+	  TtaSetDocumentCharset (newdoc, metacharset, FALSE);
 	  DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
 	}
       else if (charsetname[0] != EOS)
@@ -4161,12 +4161,12 @@ void ShowSource (Document document, View view)
 	 if (charset == UNDEFINED_CHARSET)
 	   {
 	     if (DocumentMeta[document]->xmlformat)
-	       TtaSetDocumentCharset (SavingDocument, UTF_8);
+	       TtaSetDocumentCharset (SavingDocument, UTF_8, FALSE);
 	     else
-	       TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
+	       TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
 	   }
 	 else
-	   TtaSetDocumentCharset (sourceDoc, charset);
+	   TtaSetDocumentCharset (sourceDoc, charset, FALSE);
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		      tempdocument, TRUE);
@@ -5439,7 +5439,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  SetFileSuffix ();
 	  /* Set the document charset */
 	  if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
-	    TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
+	    TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
 	  break;
 	case 2:	/* "Save as Text" button */
 	  SaveAsText = TRUE;
