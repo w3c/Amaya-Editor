@@ -1820,6 +1820,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     {
       wxLogDebug( _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+      return true;
     }
   else
     return false;
