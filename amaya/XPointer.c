@@ -82,6 +82,14 @@ static Element GetParent (Element el)
 
   returns the first sibling element which doesn't have
   an exception, or NULL otherwise.
+  Because of the way that the Thot tree is built, we need a special
+  algorithm to get the childs we would find in a DOM tree (proposed by
+  VQ):
+  starting from an element, we try to find the first brother.
+  If there are no brother, we get the parent. If the parent is not
+  hidden, there are no other brothers.
+  If the parent is hidden, then we try to get the brothers of this parent.
+  For each brother of the parent, we try to get the last child.
   ----------------------------------------------------------------------*/
 static void PreviousSibling (Element *el)
 {
@@ -91,14 +99,29 @@ static void PreviousSibling (Element *el)
     return;
 
   sibling = *el;
-  do
+  /* get the next sibling in the Thot tree */
+  TtaPreviousSibling (&sibling);
+  if (sibling)
     {
-      TtaPreviousSibling (&sibling);
+      /* if the element is hidden, return the latest child */
+      if (ElIsHidden (sibling))
+	  sibling = TtaGetLastChild (sibling);
+      *el = sibling;
     }
-  while (sibling && ElIsHidden (sibling));
-
-  *el = sibling;
-
+  else
+    {
+      /* if there's no child, repeat the algorithm recursively 
+	 on each parent, element until we find a child or the
+	 the first non-hidden parent */
+      sibling = TtaGetParent (*el);
+      if (ElIsHidden (sibling))
+	{
+	  PreviousSibling (&sibling);
+	  *el = sibling;
+	}
+      else
+	*el = NULL;
+    }
   return;
 }
 
