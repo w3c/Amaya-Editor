@@ -3440,7 +3440,6 @@ BOXES
  ATTR_HREF: BEGIN
 	Content: Text ' href=';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -5483,7 +5482,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		Depth: Creator =;
 		END;
 	END;
 
@@ -5496,7 +5494,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		Depth: 0;
 		END;
 	END;
 
@@ -5509,7 +5506,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		Depth: 0;
 		END;
 	END;
 
@@ -5522,7 +5518,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		Depth: 0;
 		END;
 	END;
 
@@ -5535,7 +5530,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		Depth: 0;
 		END;
 	END;
 
@@ -5548,14 +5542,12 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		Depth: 0;
 		END;
 	END;
 
  ATTR_NOHREF: BEGIN
 	Content: Text ' nohref';
 	Visibility: 0;
-	Depth: Creator =;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
@@ -7311,6 +7303,7 @@ RULES
 		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		Size: Enclosing =;
+		Depth: 0;
 		END;
 	END;
 
@@ -7437,6 +7430,7 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginTop: 0;
@@ -7444,6 +7438,7 @@ RULES
 		MarginBottom: 0;
 		MarginRight: 0;
 		Height: Enclosed . Height;
+		Depth: 0;
 		END;	
 	END;
 
@@ -7464,6 +7459,7 @@ RULES
 		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
+		Depth: 0;
 		END;
 	END;
 
@@ -7501,12 +7497,14 @@ RULES
 		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
+		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		Depth: 0;
 		END;
 	END;
 
@@ -7527,6 +7525,7 @@ RULES
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
+		Depth: 0;
 		END;
 	END;
 
@@ -7547,6 +7546,7 @@ RULES
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
+		Depth: 0;
 		END;
 	END;
 
@@ -7567,6 +7567,7 @@ RULES
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
+		Depth: 0;
 		END;
 	END;
 
@@ -7760,6 +7761,7 @@ RULES
 		   HorizPos: Left = Previous . Right;
 		if within Preformatted
 		   Font: Courier;
+		Depth: 0;
 		END;
 	END;
 
@@ -7795,6 +7797,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		Depth: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -7813,6 +7816,7 @@ RULES
 		Width: 0;
 		VertPos: Top = Previous AREA_S . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Depth: 0;
 		END;
 	END;
 
@@ -8764,9 +8768,11 @@ ATTRIBUTES
 	If NOT AREA
 	   Width: IntWidthPxl px;
 	IN Structure_view BEGIN
-	   If NOT PICTURE_UNIT
+	   If NOT PICTURE_UNIT AND NOT AREA
 	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
+		Width: 0;
+	   If AREA
 		Width: 0;
 	   END;
 	IN Alternate_view BEGIN
@@ -9774,10 +9780,12 @@ ATTRIBUTES
 	IN Structure_view BEGIN
 		Height: Enclosed . Height;
 		VertOverflow: No;
+		Depth: 0;
 		END;	
 	IN Alternate_view BEGIN
 		Height: Enclosed . Height;
 		VertOverflow: No;
+		Depth: 0;
 		END;	
 	END;
 
@@ -10075,7 +10083,7 @@ ATTRIBUTES
 	Width: Refered . Width;
 	Height: Refered . Height;
 	IN Structure_view BEGIN
-		Width: 0;
+		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		VertPos: Top = Previous AREA_S . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
