@@ -193,6 +193,7 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
   Element             element;
   PtrSSchema          schStruct;
   int                 elType;
+  int                 doc;
 
   if (notifyEvent == NULL)
     return FALSE;
@@ -297,14 +298,14 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
     case TteViewClose:
     case TteViewResize:
     case TteViewScroll:
-      element = 0;
-      if (((NotifyDialog *) notifyEvent)->document != 0)
-	if (LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1] != NULL)
-	  {
-	    schStruct = LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1]->DocSSchema;
-	    if (schStruct != NULL)
-	      elType = schStruct->SsRootElem;
-	  }
+      element = NULL;
+      doc = ((NotifyDialog *) notifyEvent)->document;
+      if (doc && LoadedDocument[doc - 1])
+	{
+	  schStruct = LoadedDocument[doc - 1]->DocSSchema;
+	  if (schStruct)
+	    elType = schStruct->SsRootElem;
+	}
       break;
     case TteInit:
     case TteExit:
@@ -315,3 +316,7 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
     }
   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
 }
+
+
+
+

@@ -1082,14 +1082,14 @@ extern Element TtaSearchEmptyElement (SearchDomain scope, Element element);
 extern Element TtaSearchOtherPairedElement (Element element);
 
 /* ----------------------------------------------------------------------
-   SearchElementAmong5Types
+   TtaSearchElementAmong5Types
 
    Returns the first element typed among the 5 types provided
    Searching can be done in a tree or starting from a given element
    towards the beginning of the abstract tree.
    Parameters:
-   searchedTypeX: types of element to be searched. If searchedTypeX.ElSSchema
-   is NULL, searchedTypeX must be a basic type ; then the next basic
+   typeX: types of element to be searched. If typeX.ElSSchema
+   is NULL, typeX must be a basic type ; then the next basic
    element of that type will be returned, whatever its structure
    schema.
    scope: SearchForward or SearchInTree.
@@ -1099,13 +1099,38 @@ extern Element TtaSearchOtherPairedElement (Element element);
    Return value:
    the element found, or NULL if no element has been found.
    ---------------------------------------------------------------------- */
-extern Element SearchElementAmong5Types (ElementType searchedType1, 
-										 ElementType searchedType2,
-										 ElementType searchedType3,
-										 ElementType searchedType4,
-										 ElementType searchedType5, 
-										 SearchDomain scope,
-										 Element element);
+extern Element TtaSearchElementAmong5Types (ElementType type1, 
+					    ElementType type2,
+					    ElementType type3,
+					    ElementType type4,
+					    ElementType type5, 
+					    SearchDomain scope,
+					    Element element);
+/* ----------------------------------------------------------------------
+   TtaBackSearchElementAmong5Types
+
+   Returns the first element typed among the 5 types provided
+   Searching can be done in the tree starting from a given element
+   backward the beginning of the abstract tree.
+   Parameters:
+   typeX: types of element to be searched. If typeX.ElSSchema
+   is NULL, typeX must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward or SearchInTree.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward).
+   Return value:
+   the element found, or NULL if no element has been found.
+   ---------------------------------------------------------------------- */
+extern Element TtaBackSearchElementAmong5Types (ElementType type1, 
+					    ElementType type2,
+					    ElementType type3,
+					    ElementType type4,
+					    ElementType type5, 
+					    SearchDomain scope,
+					    Element element);
 
 /* ----------------------------------------------------------------------
    TtaSearchNoPageBreak

@@ -3007,11 +3007,13 @@ void TtaCleanElementPresentation (Element el, Document doc)
 void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch)
 {
   PtrPRule            pRule;
+  PtrDocument         pDoc;
   PtrSSchema	      pSS;
   AttributePres      *attrs;
   DisplayMode         dispMode;
   int                 nbrules, i, j;
   unsigned int        elType, attrType, max;
+  ThotBool            found;
 
   if (doc == 0 || LoadedDocument[doc - 1] == NULL)
     return;
@@ -3022,6 +3024,17 @@ void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch)
     TtaSetDisplayMode (doc, DeferredDisplay);
   pRule = NULL;
   pSS = (PtrSSchema) sSch;
+  /* check if the structure schema is still there */
+  pDoc = LoadedDocument[doc - 1];
+  i = 0;
+  found = FALSE;
+  while (!found && i < pDoc->DocNNatures)
+    {
+      found = (pSS == pDoc->DocNatureSSchema[i]);
+      i++;
+    }
+  if (!found)
+    return;
 
   /* remove all element rules */
   max = (unsigned int) pSS->SsNRules;

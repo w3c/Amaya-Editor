@@ -1375,7 +1375,8 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 	  pCur = pEl->ElNext;
 	  while (pCur && pCur->ElStructSchema && pRet == NULL)
 	    {
-	      pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2, typeNum1, pSS2, pSS1);
+	      pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2,
+					       typeNum1, pSS2, pSS1);
 	      pCur = pCur->ElNext;
 	    }
 	  /* if failure, searches the first ancestor with a next sibling */
@@ -1398,10 +1399,12 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 		  pAsc = pAsc->ElNext;
 		  if (pAsc != NULL)
 		    {
-		      if (EquivalentType (pAsc, typeNum1, pSS1) || EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
+		      if (EquivalentType (pAsc, typeNum1, pSS1) ||
+			  EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
 			pRet = pAsc;	/* found */
 		      else
-			pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2, pSS1, pSS2);
+			pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2,
+						    pSS1, pSS2);
 		    }
 		}
 	    }
@@ -1440,12 +1443,11 @@ static PtrElement BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2,
   if (!pEl->ElTerminal)
     {
       pChild = pEl->ElFirstChild;
-      if (pChild != NULL)
-	
-	while (pChild->ElNext != NULL)
+      if (pChild)
+	while (pChild->ElNext)
 	  pChild = pChild->ElNext;
       /* searches from the precedent siblings */
-      while (pChild != NULL && pRet == NULL)
+      while (pChild && pRet == NULL)
 	{
 	  pRet = BackSearch2TypesInSubtree (pChild, typeNum2, typeNum1, pSS2, pSS1);
 	  pChild = pChild->ElPrevious;
@@ -1453,7 +1455,8 @@ static PtrElement BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2,
     }
   if (pRet == NULL)
     {
-      if (EquivalentType (pEl, typeNum1, pSS1) || EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
+      if (EquivalentType (pEl, typeNum1, pSS1) ||
+	  EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
 	pRet = pEl;		/* found */
     }
   return pRet;
@@ -1471,33 +1474,35 @@ static PtrElement BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2,
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
+PtrElement BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
+				 PtrSSchema pSS1, PtrSSchema pSS2)
 {
-   PtrElement          pRet, pCur;
+  PtrElement          pRet, pCur;
 
-   pRet = NULL;			/* pRet: result of the search */
-   if (pEl != NULL)
-      /* searches in the subtrees of the siblings preceding the element */
-     {
-	pCur = pEl->ElPrevious;
-	while (pCur != NULL && pRet == NULL)
+  pRet = NULL;			/* pRet: result of the search */
+  if (pEl)
+    /* searches in the subtrees of the siblings preceding the element */
+    {
+      pCur = pEl->ElPrevious;
+      while (pCur != NULL && pRet == NULL)
+	{
+	  pRet = BackSearch2TypesInSubtree (pCur, typeNum2, typeNum1, pSS2, pSS1);
+	  pCur = pCur->ElPrevious;
+	}
+      /* if failure, verify if it's the parent, then search in the subtrees of the uncles
+	 of the element */
+      if (pRet == NULL)
+	if (pEl->ElParent)
 	  {
-	     pRet = BackSearch2TypesInSubtree (pCur, typeNum2, typeNum1, pSS2, pSS1);
-	     pCur = pCur->ElPrevious;
+	    pEl = pEl->ElParent;
+	    if (EquivalentType (pEl, typeNum1, pSS1) ||
+		EquivalentType (pEl, typeNum2, pSS2))
+	      pRet = pEl;	/* found, it's the parent */
+	    else
+	      pRet = BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2);
 	  }
-	/* if failure, verify if it's the parent, then search in the subtrees of the uncles
-	   of the element */
-	if (pRet == NULL)
-	   if (pEl->ElParent != NULL)
-	     {
-		pEl = pEl->ElParent;
-		if (EquivalentType (pEl, typeNum1, pSS1) || EquivalentType (pEl, typeNum2, pSS2))
-		   pRet = pEl;	/* found, it's the parent */
-		else
-		   pRet = BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2);
-	     }
-     }
-   return pRet;
+    }
+  return pRet;
 }
 
 
@@ -1565,7 +1570,7 @@ PtrElement FwdSearch2Attributes (PtrElement pEl, int val, char *textVal,
   ThotBool            stop;
 
   pRet = NULL;
-  if (pEl != NULL)
+  if (pEl)
     /* searches in the subtree of the element */
     {
       pRet = FwdSearch2AttrInSubtree (pEl, FALSE, val, textVal,
@@ -1574,7 +1579,7 @@ PtrElement FwdSearch2Attributes (PtrElement pEl, int val, char *textVal,
 	/* if failure, searches in the subtrees of the next siblings of the element */
 	{
 	  pCur = pEl->ElNext;
-	  while (pCur != NULL && pRet == NULL)
+	  while (pCur && pRet == NULL)
 	    {
 	      pRet = FwdSearch2AttrInSubtree (pCur, TRUE, val, textVal,
 					      attNum, attNum2, pSS, pSS2);
@@ -1632,11 +1637,11 @@ PtrElement BackSearch2Attributes (PtrElement pEl, int val, char *textVal,
   PtrElement          pRet, pCur;
 
   pRet = NULL;
-  if (pEl != NULL)
+  if (pEl)
     /* searches in the subtree of the siblings preceding the element */ 
     {
       pCur = pEl->ElPrevious;
-      while (pCur != NULL && pRet == NULL)
+      while (pCur && pRet == NULL)
 	{
 	  pRet = BackSearch2AttrInSubtree (pCur, val, textVal,
 					   attNum, attNum2, pSS, pSS2);
@@ -3935,15 +3940,14 @@ int TtaGetElementVolume (Element element)
 -- */
 
 /*----------------------------------------------------------------------
-   FwdSearchElementAmong5TypesInSubtree                                        
+   FwdSearch5TypesInSubtree                                        
   ----------------------------------------------------------------------*/
-PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test, 
-											   int typeNum5, int typeNum4, 
-											   int typeNum3, int typeNum2, 
-											   int typeNum1, PtrSSchema pSS5, 
-											   PtrSSchema pSS4, PtrSSchema pSS3, 
-											   PtrSSchema pSS2, PtrSSchema pSS1)
-
+PtrElement FwdSearch5TypesInSubtree (PtrElement pEl, ThotBool test, 
+				     int typeNum5, int typeNum4, 
+				     int typeNum3, int typeNum2, 
+				     int typeNum1, PtrSSchema pSS5, 
+				     PtrSSchema pSS4, PtrSSchema pSS3, 
+				     PtrSSchema pSS2, PtrSSchema pSS1)
 {
   PtrElement          pRet, pChild;
 
@@ -3951,11 +3955,11 @@ PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test,
   if (test)
     {
       if (EquivalentType (pEl, typeNum1, pSS1) ||
-		  EquivalentType (pEl, typeNum2, pSS2) || 
-		  EquivalentType (pEl, typeNum3, pSS3) ||
-		  EquivalentType (pEl, typeNum4, pSS4) ||
-		  EquivalentType (pEl, typeNum5, pSS5) ||
-		  typeNum1 == 0)
+	  EquivalentType (pEl, typeNum2, pSS2) || 
+	  EquivalentType (pEl, typeNum3, pSS3) ||
+	  EquivalentType (pEl, typeNum4, pSS4) ||
+	  EquivalentType (pEl, typeNum5, pSS5) ||
+	  typeNum1 == 0)
 	/* element found */
 	pRet = pEl;
     }
@@ -3965,8 +3969,10 @@ PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test,
       pChild = pEl->ElFirstChild;
       while (pChild != NULL && pRet == NULL)
 	{
-	  pRet = FwdSearchElementAmong5TypesInSubtree (pChild, TRUE, typeNum5, typeNum4, typeNum3,
-		  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+	  pRet = FwdSearch5TypesInSubtree (pChild, TRUE, typeNum5,
+					   typeNum4, typeNum3,
+					   typeNum2, typeNum1,
+					   pSS5, pSS4, pSS3, pSS2, pSS1);
 	  pChild = pChild->ElNext;
 	}
     }
@@ -3974,11 +3980,8 @@ PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test,
 }
 
 
-
-
-
 /*----------------------------------------------------------------------
-   FwdSearchElemAmong5Types
+   FwdSearch5Types
    starting from the element pointed by pEl
    forward searches in the tree an element of type typeNum1 (defined in the
    structure scheme pointed by pSS1) or of typeNum2 (defined in the
@@ -3991,30 +3994,33 @@ PtrElement FwdSearchElementAmong5TypesInSubtree (PtrElement pEl, ThotBool test,
 
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement FwdSearchElemAmong5Types (PtrElement pEl, int typeNum5, 
-									 int typeNum4, int typeNum3, 
-									 int typeNum2, int typeNum1, 
-									 PtrSSchema pSS5, PtrSSchema pSS4,
-									 PtrSSchema pSS3, PtrSSchema pSS2, 
-									 PtrSSchema pSS1)
+PtrElement FwdSearch5Types (PtrElement pEl, int typeNum5, 
+				     int typeNum4, int typeNum3, 
+				     int typeNum2, int typeNum1, 
+				     PtrSSchema pSS5, PtrSSchema pSS4,
+				     PtrSSchema pSS3, PtrSSchema pSS2, 
+				     PtrSSchema pSS1)
 {
   PtrElement          pRet, pCur, pAsc;
   ThotBool            stop;
 
   pRet = NULL;
-  if (pEl != NULL)
+  if (pEl)
     /* searches the subtree of the element */
     {
-      pRet = FwdSearchElementAmong5TypesInSubtree (pEl, FALSE, typeNum5, typeNum4, typeNum3,
-		  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+      pRet = FwdSearch5TypesInSubtree (pEl, FALSE, typeNum5, typeNum4,
+				       typeNum3, typeNum2, typeNum1,
+				       pSS5, pSS4, pSS3, pSS2, pSS1);
       if (pRet == NULL)
 	/* if failure, searches the subtrees of the next siblings of the element */
 	{
 	  pCur = pEl->ElNext;
 	  while (pCur && pCur->ElStructSchema && pRet == NULL)
 	    {
-	      pRet = FwdSearchElementAmong5TypesInSubtree (pCur, TRUE, typeNum5, typeNum4, typeNum3,
-			  typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+	      pRet = FwdSearch5TypesInSubtree (pCur, TRUE, typeNum5,
+					       typeNum4, typeNum3,
+					       typeNum2, typeNum1,
+					       pSS5, pSS4, pSS3, pSS2, pSS1);
 	      pCur = pCur->ElNext;
 	    }
 	  /* if failure, searches the first ancestor with a next sibling */
@@ -4038,15 +4044,16 @@ PtrElement FwdSearchElemAmong5Types (PtrElement pEl, int typeNum5,
 		  if (pAsc != NULL)
 		    {
 		      if (EquivalentType (pAsc, typeNum1, pSS1) || 
-				  EquivalentType (pAsc, typeNum2, pSS2) || 
-				  EquivalentType (pAsc, typeNum3, pSS3) || 
-				  EquivalentType (pAsc, typeNum4, pSS4) || 
-				  EquivalentType (pAsc, typeNum5, pSS5) || 
-				  typeNum1 == 0)
+			  EquivalentType (pAsc, typeNum2, pSS2) || 
+			  EquivalentType (pAsc, typeNum3, pSS3) || 
+			  EquivalentType (pAsc, typeNum4, pSS4) || 
+			  EquivalentType (pAsc, typeNum5, pSS5) || 
+			  typeNum1 == 0)
 			pRet = pAsc;	/* found */
 		      else
-			pRet = FwdSearchElemAmong5Types (pAsc, typeNum5, typeNum4, typeNum3,
-			typeNum2, typeNum1, pSS5, pSS4, pSS3, pSS2, pSS1);
+			pRet = FwdSearch5Types (pAsc, typeNum5, typeNum4,
+						typeNum3, typeNum2, typeNum1,
+						pSS5, pSS4, pSS3, pSS2, pSS1);
 		    }
 		}
 	    }
@@ -4055,16 +4062,114 @@ PtrElement FwdSearchElemAmong5Types (PtrElement pEl, int typeNum5,
   return pRet;
 }
 
+/*----------------------------------------------------------------------
+   BackSearch5TypesInSubtree                                        
+  ----------------------------------------------------------------------*/
+PtrElement BackSearch5TypesInSubtree (PtrElement pEl,  
+				      int typeNum5, int typeNum4, 
+				      int typeNum3, int typeNum2, 
+				      int typeNum1, PtrSSchema pSS5, 
+				      PtrSSchema pSS4, PtrSSchema pSS3, 
+				      PtrSSchema pSS2, PtrSSchema pSS1)
+{
+  PtrElement          pRet, pChild;
+
+  pRet = NULL;
+  if (!pEl->ElTerminal)
+    /* search the children */
+    {
+      pChild = pEl->ElFirstChild;
+      if (pChild)
+	while (pChild->ElNext)
+	  pChild = pChild->ElNext;
+      while (pChild && pRet == NULL)
+	{
+	  pRet = BackSearch5TypesInSubtree (pChild, typeNum5,
+					   typeNum4, typeNum3,
+					   typeNum2, typeNum1,
+					   pSS5, pSS4, pSS3, pSS2, pSS1);
+	  pChild = pChild->ElNext;
+	}
+    }
+  if (pRet == NULL)
+    {
+      if (EquivalentType (pEl, typeNum1, pSS1) ||
+	  EquivalentType (pEl, typeNum2, pSS2) ||
+	  EquivalentType (pEl, typeNum3, pSS3) ||
+	  EquivalentType (pEl, typeNum4, pSS4) ||
+	  EquivalentType (pEl, typeNum3, pSS3))
+	pRet = pEl;		/* found */
+    }
+  return pRet;
+}
+
+
+/*----------------------------------------------------------------------
+   BackSearch5Types
+   starting from the element pointed by pEl
+   backward searches in the tree an element of type typeNum1 (defined in the
+   structure scheme pointed by pSS1) or of typeNum2 (defined in the
+   structure scheme pointed by pSS2)...and so on... or of typeNum5 (defined in the
+   structure scheme pointed by pSS5)
+
+   If there is a pSSX NULL, the search will stop on any element whose
+   type number is typeNum1 or typeNum2 or... typeNum5, independently
+   of its structure schema.
+
+   The function returns a pointed to the found element or NULL.
+  ----------------------------------------------------------------------*/
+PtrElement BackSearch5Types (PtrElement pEl, int typeNum5, 
+				     int typeNum4, int typeNum3, 
+				     int typeNum2, int typeNum1, 
+				     PtrSSchema pSS5, PtrSSchema pSS4,
+				     PtrSSchema pSS3, PtrSSchema pSS2, 
+				     PtrSSchema pSS1)
+{
+  PtrElement          pRet, pCur;
+
+  pRet = NULL;			/* pRet: result of the search */
+  if (pEl)
+    /* searches in the subtrees of the siblings preceding the element */
+    {
+      pCur = pEl->ElPrevious;
+      while (pCur != NULL && pRet == NULL)
+	{
+	  pRet = BackSearch5TypesInSubtree (pCur, typeNum5, typeNum4,
+					    typeNum3, typeNum2, typeNum1,
+					    pSS5, pSS4, pSS3, pSS2, pSS1);
+	  pCur = pCur->ElPrevious;
+	}
+      /* if failure, verify if it's the parent, then search in the subtrees of the uncles
+	 of the element */
+      if (pRet == NULL)
+	if (pEl->ElParent)
+	  {
+	    pEl = pEl->ElParent;
+	    if (EquivalentType (pEl, typeNum1, pSS1) ||
+		EquivalentType (pEl, typeNum2, pSS2) ||
+		EquivalentType (pEl, typeNum3, pSS3) ||
+		EquivalentType (pEl, typeNum4, pSS4) ||
+		EquivalentType (pEl, typeNum5, pSS5))
+	      pRet = pEl;	/* found, it's the parent */
+	    else
+	      pRet = BackSearch5Types (pEl, typeNum5, typeNum4,
+				       typeNum3, typeNum2, typeNum1,
+				       pSS5, pSS4, pSS3, pSS2, pSS1);
+	  }
+    }
+  return pRet;
+}
+
 
 /* ----------------------------------------------------------------------
-   SearchElementAmong5Types
+   TtaSearchElementAmong5Types
 
    Returns the first element typed among the 5 types provided
    Searching can be done in a tree or starting from a given element
    towards the beginning of the abstract tree.
    Parameters:
-   searchedTypeX: types of element to be searched. If searchedTypeX.ElSSchema
-   is NULL, searchedTypeX must be a basic type ; then the next basic
+   typeX: types of element to be searched. If typeX.ElSSchema
+   is NULL, typeX must be a basic type ; then the next basic
    element of that type will be returned, whatever its structure
    schema.
    scope: SearchForward or SearchInTree.
@@ -4074,10 +4179,10 @@ PtrElement FwdSearchElemAmong5Types (PtrElement pEl, int typeNum5,
    Return value:
    the element found, or NULL if no element has been found.
    ---------------------------------------------------------------------- */
-Element SearchElementAmong5Types (ElementType searchedType1, ElementType searchedType2,
-								  ElementType searchedType3, ElementType searchedType4,
-								  ElementType searchedType5, SearchDomain scope, 
-								  Element element)
+Element TtaSearchElementAmong5Types (ElementType type1, ElementType type2,
+				     ElementType type3, ElementType type4,
+				     ElementType type5, SearchDomain scope, 
+				     Element element)
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -4096,63 +4201,75 @@ Element SearchElementAmong5Types (ElementType searchedType1, ElementType searche
 	TtaError (ERR_invalid_parameter);
 	ok = FALSE;
    }
-   else if ((searchedType1.ElSSchema == NULL) ||
-	        (searchedType2.ElSSchema == NULL) ||
-			(searchedType3.ElSSchema == NULL) ||
-			(searchedType4.ElSSchema == NULL) ||
-			(searchedType5.ElSSchema == NULL)) 
+   else if ((type1.ElSSchema == NULL) ||
+	    (type2.ElSSchema == NULL) ||
+	    (type3.ElSSchema == NULL) ||
+	    (type4.ElSSchema == NULL) ||
+	    (type5.ElSSchema == NULL)) 
      {
-	if ((searchedType1.ElTypeNum > MAX_BASIC_TYPE) ||
-		(searchedType2.ElTypeNum > MAX_BASIC_TYPE) ||
-		(searchedType3.ElTypeNum > MAX_BASIC_TYPE) ||
-		(searchedType4.ElTypeNum > MAX_BASIC_TYPE) ||
-		(searchedType5.ElTypeNum > MAX_BASIC_TYPE))
-	  {
-	     TtaError (ERR_invalid_element_type);
-	     ok = FALSE;
-	  }
+       if ((type1.ElTypeNum > MAX_BASIC_TYPE) ||
+	   (type2.ElTypeNum > MAX_BASIC_TYPE) ||
+	   (type3.ElTypeNum > MAX_BASIC_TYPE) ||
+	   (type4.ElTypeNum > MAX_BASIC_TYPE) ||
+	   (type5.ElTypeNum > MAX_BASIC_TYPE))
+	 {
+	   TtaError (ERR_invalid_element_type);
+	   ok = FALSE;
+	 }
      }
-   else if ((searchedType1.ElTypeNum < 1 ||
-	    searchedType1.ElTypeNum > ((PtrSSchema) (searchedType1.ElSSchema))->SsNRules) ||
-		
-		(searchedType2.ElTypeNum < 1 ||
-	    searchedType2.ElTypeNum > ((PtrSSchema) (searchedType2.ElSSchema))->SsNRules) ||
-		
-		(searchedType3.ElTypeNum < 1 ||
-	    searchedType3.ElTypeNum > ((PtrSSchema) (searchedType3.ElSSchema))->SsNRules) ||
-		
-		(searchedType4.ElTypeNum < 1 ||
-	    searchedType4.ElTypeNum > ((PtrSSchema) (searchedType4.ElSSchema))->SsNRules) ||
-		
-		(searchedType5.ElTypeNum < 1 ||
-	    searchedType5.ElTypeNum > ((PtrSSchema) (searchedType5.ElSSchema))->SsNRules))
+   else if ((type1.ElTypeNum < 1 ||
+	     type1.ElTypeNum > ((PtrSSchema) (type1.ElSSchema))->SsNRules) ||
+	    
+	    (type2.ElTypeNum < 1 ||
+	     type2.ElTypeNum > ((PtrSSchema) (type2.ElSSchema))->SsNRules) ||
+	    
+	    (type3.ElTypeNum < 1 ||
+	     type3.ElTypeNum > ((PtrSSchema) (type3.ElSSchema))->SsNRules) ||
+	    
+	    (type4.ElTypeNum < 1 ||
+	     type4.ElTypeNum > ((PtrSSchema) (type4.ElSSchema))->SsNRules) ||
+	    
+	    (type5.ElTypeNum < 1 ||
+	     type5.ElTypeNum > ((PtrSSchema) (type5.ElSSchema))->SsNRules))
      {
-	TtaError (ERR_invalid_element_type);
-	ok = FALSE;
+       TtaError (ERR_invalid_element_type);
+       ok = FALSE;
      }
-
+   
    if (ok)
      {
-	   pEl = FwdSearchElemAmong5Types ((PtrElement) element,
-									   searchedType1.ElTypeNum,
-									   searchedType2.ElTypeNum,
-									   searchedType3.ElTypeNum,
-									   searchedType4.ElTypeNum,
-									   searchedType5.ElTypeNum,
-									   (PtrSSchema) (searchedType1.ElSSchema),
-									   (PtrSSchema) (searchedType2.ElSSchema),
-									   (PtrSSchema) (searchedType3.ElSSchema),
-									   (PtrSSchema) (searchedType4.ElSSchema),
-									   (PtrSSchema) (searchedType5.ElSSchema));
-
-	if (pEl != NULL)
-	   if (scope == SearchInTree)
-	     {
-		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
-		   pEl = NULL;
-	     }
-	if (pEl != NULL)
-	   elementFound = pEl;
+       if (scope == SearchBackward)
+	 pEl = BackSearch5Types ((PtrElement) element,
+				 type1.ElTypeNum,
+				 type2.ElTypeNum,
+				 type3.ElTypeNum,
+				 type4.ElTypeNum,
+				 type5.ElTypeNum,
+				 (PtrSSchema) (type1.ElSSchema),
+				 (PtrSSchema) (type2.ElSSchema),
+				 (PtrSSchema) (type3.ElSSchema),
+				 (PtrSSchema) (type4.ElSSchema),
+				 (PtrSSchema) (type5.ElSSchema));
+       else
+	 {
+	   pEl = FwdSearch5Types ((PtrElement) element,
+				  type1.ElTypeNum,
+				  type2.ElTypeNum,
+				  type3.ElTypeNum,
+				  type4.ElTypeNum,
+				  type5.ElTypeNum,
+				  (PtrSSchema) (type1.ElSSchema),
+				  (PtrSSchema) (type2.ElSSchema),
+				  (PtrSSchema) (type3.ElSSchema),
+				  (PtrSSchema) (type4.ElSSchema),
+				  (PtrSSchema) (type5.ElSSchema));
+	   
+	   if (pEl && scope == SearchInTree &&
+	       !ElemIsWithinSubtree (pEl, (PtrElement) element))
+	     pEl = NULL;
+	 }
+       if (pEl)
+	 elementFound = pEl;
      }
    return ((Element) elementFound);
 }
