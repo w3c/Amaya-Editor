@@ -172,6 +172,7 @@ HelpAtW3C
 
 ################# MathML
 {MathML}
++basic-style
 +hypertext-module
 +maths
 
@@ -473,7 +474,7 @@ HelpTables
 &CreateMROW
 &CreateMMULTISCRIPTS
 &CreateMTABLE
-ellVertExtend
+&CellVertExtend
 &CellHorizExtend
 &CellVertShrink
 &CellHorizShrink

@@ -1007,6 +1007,29 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOn (doc, view, Types, BCreateColumnB);
       TtaSetItemOn (doc, view, Types, BCreateColumnA);
     }
+  else
+    {
+      TtaSetItemOff (doc, view, Types, BCaption);
+      TtaSetItemOff (doc, view, Types, BColgroup);
+      TtaSetItemOff (doc, view, Types, BCol);
+      TtaSetItemOff (doc, view, Types, BTHead);
+      TtaSetItemOff (doc, view, Types, BTBody);
+      TtaSetItemOff (doc, view, Types, BTFoot);
+      TtaSetItemOff (doc, view, Types, BDataCell);
+      TtaSetItemOff (doc, view, Types, BHeadingCell);
+      TtaSetItemOff (doc, view, Types, BCellHExtend);
+      TtaSetItemOff (doc, view, Types, BCellVExtend);
+      TtaSetItemOff (doc, view, Types, BCellHShrink);
+      TtaSetItemOff (doc, view, Types, BCellVShrink);
+      TtaSetItemOff (doc, view, Types, BSelectRow);
+      TtaSetItemOff (doc, view, Types, BCreateRowB);
+      TtaSetItemOff (doc, view, Types, BCreateRowA);
+      TtaSetItemOff (doc, view, Types, BSelectColumn);
+      TtaSetItemOff (doc, view, Types, BCreateColumnB);
+      TtaSetItemOff (doc, view, Types, BCreateColumnA);
+      TtaSetItemOff (doc, view, Types, BPasteBefore);
+      TtaSetItemOff (doc, view, Types, BPasteAfter);
+    }
   if (MTableMenuActive)
     {
       /* a matrice element is selected */
@@ -1020,6 +1043,21 @@ void SetTableMenuOn (Document doc, View view)
       TtaSetItemOn (doc, view, XMLTypes, BMSelectColumn);
       TtaSetItemOn (doc, view, XMLTypes, BMCreateColumnB);
       TtaSetItemOn (doc, view, XMLTypes, BMCreateColumnA);
+    }
+  else
+    {
+      TtaSetItemOff (doc, view, XMLTypes, BMCellHExtend);
+      TtaSetItemOff (doc, view, XMLTypes, BMCellVExtend);
+      TtaSetItemOff (doc, view, XMLTypes, BMCellHShrink);
+      TtaSetItemOff (doc, view, XMLTypes, BMCellVShrink);
+      TtaSetItemOff (doc, view, XMLTypes, BMSelectRow);
+      TtaSetItemOff (doc, view, XMLTypes, BMCreateRowB);
+      TtaSetItemOff (doc, view, XMLTypes, BMCreateRowA);
+      TtaSetItemOff (doc, view, XMLTypes, BMSelectColumn);
+      TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnB);
+      TtaSetItemOff (doc, view, XMLTypes, BMCreateColumnA);
+      TtaSetItemOff (doc, view, XMLTypes, BMPasteBefore);
+      TtaSetItemOff (doc, view, XMLTypes, BMPasteAfter);
     }
 }
 
@@ -1159,6 +1197,7 @@ void UpdateEditorMenus (Document doc)
   TtaSetItemOn (doc, 1, Edit_, BClear);
 
   if (DocumentTypes[doc] == docHTML ||
+      DocumentTypes[doc] == docAnnot ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
       DocumentTypes[doc] == docXml ||

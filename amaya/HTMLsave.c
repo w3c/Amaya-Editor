@@ -1059,18 +1059,16 @@ void RestartParser (Document doc, char *localFile,
 		    char *tempdir, char *documentname)
 {
   CHARSET       charset, doc_charset;
+  DocumentType  thotType;
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
   int           i;
   ThotBool      xmlDec, withDoctype, isXML, isKnown;
-  DocumentType  thotType;
 
   /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
-
   /* Remove the Parsing errors file */
   RemoveParsingErrors (doc);
-
   /* Remove the previous namespaces declaration */
   TtaFreeNamespaceDeclarations (doc);
   TtaSetDisplayMode (doc, NoComputedDisplay);
@@ -1092,11 +1090,9 @@ void RestartParser (Document doc, char *localFile,
   charsetname[0] = EOS;
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
 		  &parsingLevel, &charset, charsetname, &thotType);
-
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
     CheckCharsetInMeta (localFile, &charset, charsetname);
-
   doc_charset = TtaGetDocumentCharset (doc);
   if (charset != doc_charset)
     {
