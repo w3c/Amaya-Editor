@@ -83,24 +83,30 @@ void Prof_InitTable()
 {
   FILE *              Def_FILE;
   FILE *              Prof_FILE; 
-  char *              Prof_File;
+  char *              ptr;
   char                Def_File [MAX_PRO_LENGTH];
-  char                thotdir  [MAX_PRO_LENGTH];
   char                TempString [MAX_PRO_LENGTH];
   int                 i = 0;
 
-  Prof_File = TtaGetEnvString("Profiles_File");
-  if (TtaGetEnvString ("Profile"))
-    strcpy (UserProfile, AddHooks ( TtaGetEnvString ("Profile") ) );
-  
-  strcpy (thotdir,  TtaGetEnvString("THOTDIR"));
-  strcpy (Def_File, strcat(thotdir, DEF_FILE));
+  ptr = TtaGetEnvString("Profiles_File");
+  if (ptr && *ptr)
+      Prof_FILE = fopen(ptr,"r");
+  else
+	  Prof_FILE = NULL;
 
+
+  ptr = TtaGetEnvString ("Profile");
+  if (ptr && *ptr)
+    strcpy (UserProfile, AddHooks (ptr));
+  else
+	 UserProfile[0] = EOS;
+  
+  ptr = TtaGetEnvString("THOTDIR");
+  sprintf (Def_File, "%s%c%s%c%s", ptr, DIR_SEP, "config", DIR_SEP, DEF_FILE);
 
   Def_FILE = fopen(Def_File,"r");
-  Prof_FILE = fopen(Prof_File,"r");
-
-  if ((Def_FILE != NULL) && (Prof_FILE != NULL) && UserProfile)
+ 
+  if (Def_FILE && Prof_FILE && UserProfile)
      {    
        
        /* Fill a table for modules definition */
@@ -135,10 +141,10 @@ void Prof_InitTable()
     defined_profile = TRUE;
 
   /* Close the open files */
-  if (Def_FILE != NULL) 
+  if (Def_FILE) 
       fclose(Def_FILE);
 
-  if (Prof_FILE != NULL)
+  if (Prof_FILE)
       fclose(Prof_FILE);
 }
 
@@ -149,16 +155,14 @@ void Prof_InitTable()
 ----------------------------------------------------------*/
 
 #ifdef __STDC__
-int  Prof_RebuildProTable(STRING Prof_file)
+int  Prof_RebuildProTable(STRING prof_file)
 #else  /* !__STDC__ */
-int  Prof_RebuildProTable(STRING Prof_file)
+int  Prof_RebuildProTable(STRING prof_file)
 #endif /* !__STDC__ */
 {
   FILE *              Prof_FILE; 
-  char *              Prof_File;
-
   
-  Prof_FILE = fopen(Prof_file,"r");
+  Prof_FILE = fopen(prof_file,"r");
   DeleteTable(Pro_Table, &Pro_nbelem);
    if (Prof_FILE != NULL)
      {
@@ -614,7 +618,7 @@ STRING  Table[];
 int nbelem;
 #endif /* !__STDC__ */
 {
-  int i, j, k, kmax;
+  int i, j, kmax;
   char *     tempo;
 
   for (i=0 ; i < nbelem - 1 ; i++)

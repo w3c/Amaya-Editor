@@ -16,7 +16,7 @@
 #define MAX_EDITION_FUNCTIONS       500  /* Maximum of functions that are used for edition */
 #define MAX_PRO                      50         /* Maximun of profile displayed in the interface */
 #define MAX_PRO_LENGTH               50       /* Maximum length of a string */
-#define DEF_FILE                   "/config/ProfileDefs"
+#define DEF_FILE                   "ProfileDefs"
 #define PROFILE_START              '['
 #define MODULE_START               '['
 #define PROFILE_END                ']'
