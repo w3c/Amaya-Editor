@@ -445,5 +445,9 @@ SOURCE=.\libThotEditor.lib
 
 SOURCE=.\libwww.lib
 # End Source File
+# Begin Source File
+
+SOURCE=.\libraptor.lib
+# End Source File
 # End Target
 # End Project

@@ -4,8 +4,7 @@ CFG=annotlib - Win32 Debug
 !MESSAGE No configuration specified. Defaulting to annotlib - Win32 Debug.
 !ENDIF 
 
-!IF "$(CFG)" != "annotlib - Win32 Release" && "$(CFG)" !=\
- "annotlib - Win32 Debug"
+!IF "$(CFG)" != "annotlib - Win32 Release" && "$(CFG)" != "annotlib - Win32 Debug"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
@@ -27,6 +26,7 @@ NULL=nul
 !ENDIF 
 
 CPP=cl.exe
+RSC=rc.exe
 
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
@@ -39,11 +39,15 @@ ALL : "..\annotlib.lib"
 
 !ELSE 
 
-ALL : "..\annotlib.lib"
+ALL : "libraptor - Win32 Release" "libwww - Win32 Release" "libThotTable - Win32 Release" "libThotEditor - Win32 Release" "Compilers - Win32 Release" "..\annotlib.lib"
 
 !ENDIF 
 
+!IF "$(RECURSE)" == "1" 
+CLEAN :"Compilers - Win32 ReleaseCLEAN" "libThotEditor - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "libraptor - Win32 ReleaseCLEAN" 
+!ELSE 
 CLEAN :
+!ENDIF 
 	-@erase "$(INTDIR)\AHTrdf2annot.obj"
 	-@erase "$(INTDIR)\AnnotAPP.obj"
 	-@erase "$(INTDIR)\ANNOTevent.obj"
@@ -52,24 +56,13 @@ CLEAN :
 	-@erase "$(INTDIR)\ANNOTmenu.obj"
 	-@erase "$(INTDIR)\ANNOTschemas.obj"
 	-@erase "$(INTDIR)\ANNOTtools.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "..\annotlib.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-RSC=rc.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\annotlib" /I "..\..\annotlib\f" /I\
- "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h"\
- /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I\
- "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I\
- "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I\
- "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I\
- "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "_MBCS" /D\
- "_LIB" /D "_WINDOWS" /D "__STDC__" /D "WIN32" /D "ANNOTATIONS"\
- /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Release/
-CPP_SBRS=.
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\libraptor" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "__STDC__" /D "ANNOTATIONS" /D "WIN32" /D "_WINDOWS" /D "_I18N_" /D "RAPTOR_RDF_PARSER" /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
 BSC32_SBRS= \
@@ -84,7 +77,11 @@ LIB32_OBJS= \
 	"$(INTDIR)\ANNOTlink.obj" \
 	"$(INTDIR)\ANNOTmenu.obj" \
 	"$(INTDIR)\ANNOTschemas.obj" \
-	"$(INTDIR)\ANNOTtools.obj"
+	"$(INTDIR)\ANNOTtools.obj" \
+	"..\libThotEditor.lib" \
+	"..\libThotTable.lib" \
+	"..\libwww.lib" \
+	"..\libraptor.lib"
 
 "..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -102,11 +99,15 @@ ALL : "..\annotlib.lib"
 
 !ELSE 
 
-ALL : "..\annotlib.lib"
+ALL : "libraptor - Win32 Debug" "libwww - Win32 Debug" "libThotTable - Win32 Debug" "libThotEditor - Win32 Debug" "Compilers - Win32 Debug" "..\annotlib.lib"
 
 !ENDIF 
 
+!IF "$(RECURSE)" == "1" 
+CLEAN :"Compilers - Win32 DebugCLEAN" "libThotEditor - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "libraptor - Win32 DebugCLEAN" 
+!ELSE 
 CLEAN :
+!ENDIF 
 	-@erase "$(INTDIR)\AHTrdf2annot.obj"
 	-@erase "$(INTDIR)\AnnotAPP.obj"
 	-@erase "$(INTDIR)\ANNOTevent.obj"
@@ -115,25 +116,13 @@ CLEAN :
 	-@erase "$(INTDIR)\ANNOTmenu.obj"
 	-@erase "$(INTDIR)\ANNOTschemas.obj"
 	-@erase "$(INTDIR)\ANNOTtools.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "..\annotlib.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-RSC=rc.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f"\
- /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I\
- "..\..\thotlib\include" /I "..\thotlib\internals\f" /I\
- "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I\
- "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include"\
- /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I\
- "..\annotlib\f" /D "_DEBUG" /D "_WINDOWS" /D "__STDC__" /D "WIN32" /D\
- "ANNOTATIONS" /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"\
- /FD /GZ /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\libraptor" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "ANNOT_ON_ANNOT" /D "_DEBUG" /D "__STDC__" /D "ANNOTATIONS" /D "WIN32" /D "_WINDOWS" /D "_I18N_" /D "RAPTOR_RDF_PARSER" /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
 BSC32_SBRS= \
@@ -148,7 +137,11 @@ LIB32_OBJS= \
 	"$(INTDIR)\ANNOTlink.obj" \
 	"$(INTDIR)\ANNOTmenu.obj" \
 	"$(INTDIR)\ANNOTschemas.obj" \
-	"$(INTDIR)\ANNOTtools.obj"
+	"$(INTDIR)\ANNOTtools.obj" \
+	"..\libThotEditor.lib" \
+	"..\libThotTable.lib" \
+	"..\libwww.lib" \
+	"..\libraptor.lib"
 
 "..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -157,2796 +150,225 @@ LIB32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
+.c{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_OBJS)}.obj::
+.cpp{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_OBJS)}.obj::
+.cxx{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(CPP_SBRS)}.sbr::
+.c{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_SBRS)}.sbr::
+.cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_SBRS)}.sbr::
+.cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
 
-!IF "$(CFG)" == "annotlib - Win32 Release" || "$(CFG)" ==\
- "annotlib - Win32 Debug"
-SOURCE=..\..\annotlib\AHTrdf2annot.c
+!IF "$(NO_EXTERNAL_DEPS)" != "1"
+!IF EXISTS("annotlib.dep")
+!INCLUDE "annotlib.dep"
+!ELSE 
+!MESSAGE Warning: cannot find "annotlib.dep"
+!ENDIF 
+!ENDIF 
+
+
+!IF "$(CFG)" == "annotlib - Win32 Release" || "$(CFG)" == "annotlib - Win32 Debug"
 
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
-DEP_CPP_AHTRD=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\hthash.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htrdf.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xmlparse.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
+"Compilers - Win32 Release" : 
+   cd "\Amaya\Windows\Compilers"
+   $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Release" 
+   cd "..\annotlib"
 
-"$(INTDIR)\AHTrdf2annot.obj" : $(SOURCE) $(DEP_CPP_AHTRD) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
+"Compilers - Win32 ReleaseCLEAN" : 
+   cd "\Amaya\Windows\Compilers"
+   $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
-DEP_CPP_AHTRD=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\hthash.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htrdf.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xmlparse.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
+"Compilers - Win32 Debug" : 
+   cd "\Amaya\Windows\Compilers"
+   $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Debug" 
+   cd "..\annotlib"
 
-"$(INTDIR)\AHTrdf2annot.obj" : $(SOURCE) $(DEP_CPP_AHTRD) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
+"Compilers - Win32 DebugCLEAN" : 
+   cd "\Amaya\Windows\Compilers"
+   $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\annotlib"
 
 !ENDIF 
+
+!IF  "$(CFG)" == "annotlib - Win32 Release"
+
+"libThotEditor - Win32 Release" : 
+   cd "\Amaya\Windows\LibThotEditor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Release" 
+   cd "..\annotlib"
+
+"libThotEditor - Win32 ReleaseCLEAN" : 
+   cd "\Amaya\Windows\LibThotEditor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
+
+"libThotEditor - Win32 Debug" : 
+   cd "\Amaya\Windows\LibThotEditor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Debug" 
+   cd "..\annotlib"
+
+"libThotEditor - Win32 DebugCLEAN" : 
+   cd "\Amaya\Windows\LibThotEditor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "annotlib - Win32 Release"
+
+"libThotTable - Win32 Release" : 
+   cd "\Amaya\Windows\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
+   cd "..\annotlib"
+
+"libThotTable - Win32 ReleaseCLEAN" : 
+   cd "\Amaya\Windows\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
+
+"libThotTable - Win32 Debug" : 
+   cd "\Amaya\Windows\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
+   cd "..\annotlib"
+
+"libThotTable - Win32 DebugCLEAN" : 
+   cd "\Amaya\Windows\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "annotlib - Win32 Release"
+
+"libwww - Win32 Release" : 
+   cd "\Amaya\Windows\libwww"
+   $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Release" 
+   cd "..\annotlib"
+
+"libwww - Win32 ReleaseCLEAN" : 
+   cd "\Amaya\Windows\libwww"
+   $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
+
+"libwww - Win32 Debug" : 
+   cd "\Amaya\Windows\libwww"
+   $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Debug" 
+   cd "..\annotlib"
+
+"libwww - Win32 DebugCLEAN" : 
+   cd "\Amaya\Windows\libwww"
+   $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "annotlib - Win32 Release"
+
+"libraptor - Win32 Release" : 
+   cd "\Amaya\Windows\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" 
+   cd "..\annotlib"
+
+"libraptor - Win32 ReleaseCLEAN" : 
+   cd "\Amaya\Windows\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
+
+"libraptor - Win32 Debug" : 
+   cd "\Amaya\Windows\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" 
+   cd "..\annotlib"
+
+"libraptor - Win32 DebugCLEAN" : 
+   cd "\Amaya\Windows\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\annotlib"
+
+!ENDIF 
+
+SOURCE=..\..\annotlib\AHTrdf2annot.c
+
+"$(INTDIR)\AHTrdf2annot.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
 
 SOURCE=..\amaya\AnnotAPP.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\amaya\annot.h"\
-	
-
-"$(INTDIR)\AnnotAPP.obj" : $(SOURCE) $(DEP_CPP_ANNOT) "$(INTDIR)"
+"$(INTDIR)\AnnotAPP.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\amaya\annot.h"\
-	
-
-"$(INTDIR)\AnnotAPP.obj" : $(SOURCE) $(DEP_CPP_ANNOT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTevent.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTE=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\f\xpointer_f.h"\
-	"..\..\amaya\f\xpointerparse_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xpointer.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTevent.obj" : $(SOURCE) $(DEP_CPP_ANNOTE) "$(INTDIR)"
+"$(INTDIR)\ANNOTevent.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTE=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\f\xpointer_f.h"\
-	"..\..\amaya\f\xpointerparse_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xpointer.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTevent.obj" : $(SOURCE) $(DEP_CPP_ANNOTE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTfiles.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTF=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTfiles.obj" : $(SOURCE) $(DEP_CPP_ANNOTF) "$(INTDIR)"
+"$(INTDIR)\ANNOTfiles.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTF=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTfiles.obj" : $(SOURCE) $(DEP_CPP_ANNOTF) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTlink.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTL=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\fetchxmlname_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\f\xlinkedit_f.h"\
-	"..\..\amaya\f\xpointer_f.h"\
-	"..\..\amaya\f\xpointerparse_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xpointer.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTlink.obj" : $(SOURCE) $(DEP_CPP_ANNOTL) "$(INTDIR)"
+"$(INTDIR)\ANNOTlink.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTL=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\fetchxmlname_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\f\xlinkedit_f.h"\
-	"..\..\amaya\f\xpointer_f.h"\
-	"..\..\amaya\f\xpointerparse_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xpointer.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTlink.obj" : $(SOURCE) $(DEP_CPP_ANNOTL) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTmenu.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTM=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmlhistory_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\annotmenu.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTmenu.obj" : $(SOURCE) $(DEP_CPP_ANNOTM) "$(INTDIR)"
+"$(INTDIR)\ANNOTmenu.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTM=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmlhistory_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\annotmenu.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTmenu.obj" : $(SOURCE) $(DEP_CPP_ANNOTM) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTschemas.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTS=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\hthash.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htrdf.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xmlparse.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTschemas.obj" : $(SOURCE) $(DEP_CPP_ANNOTS) "$(INTDIR)"
+"$(INTDIR)\ANNOTschemas.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTS=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\hthash.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htrdf.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\amaya\xmlparse.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTschemas.obj" : $(SOURCE) $(DEP_CPP_ANNOTS) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\annotlib\ANNOTtools.c
 
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTT=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\fetchxmlname_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTtools.obj" : $(SOURCE) $(DEP_CPP_ANNOTT) "$(INTDIR)"
+"$(INTDIR)\ANNOTtools.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-DEP_CPP_ANNOTT=\
-	"..\..\..\libwww\library\src\htaabrow.h"\
-	"..\..\..\libwww\library\src\htaautil.h"\
-	"..\..\..\libwww\library\src\htaccess.h"\
-	"..\..\..\libwww\library\src\htalert.h"\
-	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htancman.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
-	"..\..\..\libwww\library\src\htarray.h"\
-	"..\..\..\libwww\library\src\htassoc.h"\
-	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbinit.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\..\libwww\library\src\htcache.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
-	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
-	"..\..\..\libwww\library\src\htcookie.h"\
-	"..\..\..\libwww\library\src\htdescpt.h"\
-	"..\..\..\libwww\library\src\htdialog.h"\
-	"..\..\..\libwww\library\src\htdir.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hteptocl.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htescape.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htevtlst.h"\
-	"..\..\..\libwww\library\src\htext.h"\
-	"..\..\..\libwww\library\src\htfile.h"\
-	"..\..\..\libwww\library\src\htfilter.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfsave.h"\
-	"..\..\..\libwww\library\src\htftp.h"\
-	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\library\src\htheader.h"\
-	"..\..\..\libwww\library\src\hthinit.h"\
-	"..\..\..\libwww\library\src\hthist.h"\
-	"..\..\..\libwww\library\src\hthome.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\hthstman.h"\
-	"..\..\..\libwww\library\src\hticons.h"\
-	"..\..\..\libwww\library\src\htinet.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlib.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
-	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
-	"..\..\..\libwww\library\src\htlog.h"\
-	"..\..\..\libwww\library\src\htmemlog.h"\
-	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlgen.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
-	"..\..\..\libwww\library\src\htmulti.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htnetman.h"\
-	"..\..\..\libwww\library\src\htnettxt.h"\
-	"..\..\..\libwww\library\src\htnofree.h"\
-	"..\..\..\libwww\library\src\htparse.h"\
-	"..\..\..\libwww\library\src\htpep.h"\
-	"..\..\..\libwww\library\src\htplain.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htreqman.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htrules.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
-	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httchunk.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
-	"..\..\..\libwww\library\src\httexgen.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\http.h"\
-	"..\..\..\libwww\library\src\httpgen.h"\
-	"..\..\..\libwww\library\src\httpreq.h"\
-	"..\..\..\libwww\library\src\httpres.h"\
-	"..\..\..\libwww\library\src\httpserv.h"\
-	"..\..\..\libwww\library\src\httputil.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
-	"..\..\..\libwww\library\src\htutils.h"\
-	"..\..\..\libwww\library\src\htutree.h"\
-	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
-	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
-	"..\..\..\libwww\library\src\htzip.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\wwwapp.h"\
-	"..\..\..\libwww\library\src\wwwcache.h"\
-	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwdir.h"\
-	"..\..\..\libwww\library\src\wwwfile.h"\
-	"..\..\..\libwww\library\src\wwwftp.h"\
-	"..\..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
-	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\wwwzip.h"\
-	"..\..\amaya\ahtinit.h"\
-	"..\..\amaya\amaya.h"\
-	"..\..\amaya\amayamsg.h"\
-	"..\..\amaya\f\ahturltools_f.h"\
-	"..\..\amaya\f\editoractions_f.h"\
-	"..\..\amaya\f\fetchxmlname_f.h"\
-	"..\..\amaya\f\html2thot_f.h"\
-	"..\..\amaya\f\htmlactions_f.h"\
-	"..\..\amaya\f\htmledit_f.h"\
-	"..\..\amaya\f\htmltable_f.h"\
-	"..\..\amaya\f\init_f.h"\
-	"..\..\amaya\f\query_f.h"\
-	"..\..\amaya\libwww.h"\
-	"..\..\amaya\parser.h"\
-	"..\..\annotlib\annotlib.h"\
-	"..\..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\..\annotlib\f\annotevent_f.h"\
-	"..\..\annotlib\f\annotfiles_f.h"\
-	"..\..\annotlib\f\annotlink_f.h"\
-	"..\..\annotlib\f\annotmenu_f.h"\
-	"..\..\annotlib\f\annotschemas_f.h"\
-	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\browser.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\reference.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\selection.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\undo.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\amaya\annot.h"\
-	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
-	"..\amaya\html.h"\
-	"..\amaya\mathml.h"\
-	"..\amaya\textfile.h"\
-	"..\amaya\xlink.h"\
-	
-
-"$(INTDIR)\ANNOTtools.obj" : $(SOURCE) $(DEP_CPP_ANNOTT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 
 !ENDIF 
