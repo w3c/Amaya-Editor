@@ -73,7 +73,7 @@ static int          ReplaceStringLen;	/* length of the replace string */
 static PtrReference CurrRef;	/* pointer to the current reference */
 static PtrDocument  CurrRefDoc;	/* document to which the CurrRef belongs */
 
-static PtrElement   CurrRefElem;	/* element dont on cherche les references */
+static PtrElement   CurrRefElem;	/* element whose references we are looking for */
 static PtrDocument  CurrRefElemDoc;	/* document to which belongs the element we are looking for */
 static PtrExternalDoc pExtCurrDoc;	/* pointer to the external document containing the
 					   current reference */
