@@ -347,6 +347,8 @@ Attribute          *attribute;
 #endif /* __STDC__ */
 
 {
+   PtrAttribute		pAttr;
+
    UserErrorCode = 0;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
@@ -357,7 +359,7 @@ Attribute          *attribute;
       /* parametre document correct */
       ReadAttributePiv (pivotFile, (PtrElement) element,
 		    LoadedDocument[document - 1], create,
-		    (PtrAttribute *) attribute);
+		    (PtrAttribute *) attribute, &pAttr);
 }
 
 /*----------------------------------------------------------------------
