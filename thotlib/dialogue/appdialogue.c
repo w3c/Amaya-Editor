@@ -2197,8 +2197,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
 		    ThotBool editable, void (*procedure) (), char *listUrl)
 {
   int            frame, ret;
-  ThotWidget     w, row;
+  ThotWidget     w;
 #ifndef _WINDOWS
+  ThotWidget     row;
 #ifndef _GTK
   int            n;
   ThotWidget     rowh;
@@ -2229,8 +2230,8 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
 	{
-	  row = FrameTable[frame].Row_Zone;
 #ifndef _WINDOWS
+	  row = FrameTable[frame].Row_Zone;
 #ifndef _GTK
 	  XtUnmanageChild (XtParent (XtParent (row)));
 	  XtManageChild (row);
@@ -2424,14 +2425,14 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      w = CreateWindow ("COMBOBOX", "",
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
 				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) 1, hInstance, NULL);
 	    }
 	  else
 	    {
 	      w = CreateWindow ("COMBOBOX", "",
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
 				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS | WS_TABSTOP,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) 1, hInstance, NULL);
 	      w = GetWindow (w, GW_CHILD);
 	      EnableWindow (w, TRUE);
 	      w = GetParent (w);
@@ -2458,7 +2459,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	  /* Initialize listbox linked to combobox */
 	  InitWdComboBoxList (w, listUrl);
 	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-				 5, 8, 0, 0, FrMainRef[frame], (HMENU) (i + 1),
+				 5, 8, 0, 0, FrMainRef[frame], (HMENU) (2),
 				 hInstance, NULL);
 	  if(newFont)
 	    SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
@@ -2559,7 +2560,7 @@ void TtcSwitchCommands (Document doc, View view)
 {
    int                 frame;
 #ifdef _WINDOWS
-   int     index, nbZonesShown = 0;
+   int     nbZonesShown = 0;
    ThotBool itemChecked = FALSE;
    RECT    r;
 #else /* _WINDOWS */
@@ -3884,7 +3885,6 @@ void DestroyFrame (int frame)
       for (i = 0; i < MAX_BUTTON; i++)
 	FrameTable[frame].Button[i] = 0;
 #else  /* _WINDOWS */
-      FrameTable[frame].Row_Zone = 0;
       FrameTable[frame].Text_Zone = 0;
       if (hAccel[frame])
 	{

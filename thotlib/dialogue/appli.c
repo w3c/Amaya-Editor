@@ -1587,7 +1587,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   int                 cyHSB;
   int                 cyTB;
   int                 x, y;
-  int                 index = 0;
   int                 cyTxtZone;
   DWORD               dwStyle;
   DWORD               dwToolBarStyles;
@@ -1798,16 +1797,13 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     
     cyTxtZone = cyTB;
     /* Adjust text zones */
-    for (index = 0; index < MAX_TEXTZONE; index++)
-      {
-	if (FrameTable[frame].Text_Zone[index] &&
-	    IsWindowVisible (FrameTable[frame].Text_Zone[index]))
+	if (FrameTable[frame].Text_Zone &&
+	    IsWindowVisible (FrameTable[frame].Text_Zone))
 	  {
-	    MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
-	    MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE);
+	    MoveWindow (FrameTable[frame].Label, 15, cyTxtZone + 5, 70, 20, TRUE);
+	    MoveWindow (FrameTable[frame].Text_Zone, 85, cyTxtZone + 5, cx - 100, 20, TRUE);
 	    cyTxtZone += 25;
 	  }
-      }
 
     /* Adjust status bar size. */
     if (IsWindowVisible (FrameTable[frame].WdStatus))
@@ -1976,12 +1972,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
     case WM_DROPFILES:
       nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
-      if (FrameTable[frame].Call_Text[0] != NULL)
+      if (FrameTable[frame].Call_Text != NULL)
 	for (i = 0; i < nNumFiles; i++)
 	  {
 	    DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
 	    /* call the first text-zone entry with the current text */
-	    (*FrameTable[frame].Call_Text[0]) (document, view, DroppedFileName);
+	    (*FrameTable[frame].Call_Text) (document, view, DroppedFileName);
 	  }
       DragFinish ((HDROP)wParam);
       return 0;
