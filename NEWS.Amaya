@@ -18,7 +18,7 @@ Extensions 2.1:
   - Changing the New command: there are 3 different menu entries
     + "New HTML document" displays a form to choose the document location
       first.
-    + "From templace" proposes a list of templates to build you new document
+    + "From template" proposes a list of templates to build you new document
       when you have a template server.
     + "New CSS" displays a form to choose the style sheet location first.
 
@@ -29,7 +29,7 @@ Extensions 2.1:
   all attributes are yet taken into account when formatting mathematical
   expressions.
 
-* LbWWW: 
+* LibWWW: 
 
 * New list of Amaya shortcuts for both Windows and Unix platforms.
 
