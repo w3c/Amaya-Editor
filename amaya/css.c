@@ -396,7 +396,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
                   /* there is another linked CSS style sheet before */
                   oldcss = CSSList;
                   found = FALSE;
-                  /* search if that previous CSS context */
+                  /* search that previous CSS context */
                   while (oldcss && !found)
                     {
                       oldInfo = oldcss->infos[doc];
@@ -459,7 +459,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
                   /* there is another linked CSS style sheet before */
                   oldcss = CSSList;
                   found = FALSE;
-                  /* search if that previous CSS context */
+                  /* search that previous CSS context */
                   while (oldcss && !found)
                     {
                       oldInfo = oldcss->infos[doc];
@@ -677,7 +677,7 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
 		    if (css->infos[i] && css->infos[i]->PiLink == link)
 		      return css;
 		}
-	      else
+	      else if (url)
 		/* it could be the right entry */
 		match = css;
 	    }

@@ -3099,39 +3099,38 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
 
 /*----------------------------------------------------------------------
    ParseAsHTML
-   Load current document considering it's a HTML document     
+   Load current document considering it's a HTML document
   ----------------------------------------------------------------------*/
-void ParseAsHTML (Document document, View view)
+void ParseAsHTML (Document doc, View view)
 {
    char           *tempdocument = NULL;
    char            documentname[MAX_LENGTH];
    char            tempdir[MAX_LENGTH];
    int             i;
 
-   if (!DocumentURLs[document])
+   if (!DocumentURLs[doc])
      /* the document is not loaded yet */
      return;
-   if (!DocumentMeta[document]->xmlformat)
+   if (!DocumentMeta[doc]->xmlformat)
      /* the document is not concerned by this option */
      return;
-   if (!CanReplaceCurrentDocument (document, view))
+   if (!CanReplaceCurrentDocument (doc, view))
       /* abort the command */
       return;
 
-   tempdocument = GetLocalPath (document, DocumentURLs[document]);
+   tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
    TtaExtractName (tempdocument, tempdir, documentname);
 
    /* Initialize the LogFile variables */
    CleanUpParsingErrors ();
 
    /* remove the PARSING.ERR file */
-   RemoveParsingErrors (document);
-   
+   RemoveParsingErrors (doc);
    /* Remove the previous namespaces declaration */
-   TtaFreeNamespaceDeclarations (document);
+   TtaFreeNamespaceDeclarations (doc);
 
    for (i = 1; i < DocumentTableLength; i++)
-     if (DocumentURLs[i] != NULL && DocumentSource[i] == document)
+     if (DocumentURLs[i] != NULL && DocumentSource[i] == doc)
        {
 	 DocumentSource[i] = 0;
 	 if (DocumentTypes[i] == docLog)
@@ -3142,27 +3141,27 @@ void ParseAsHTML (Document document, View view)
 	     TtaFreeMemory (DocumentURLs[i]);
 	     DocumentURLs[i] = NULL;
 	     /* switch off the button Show Log file */
-	     TtaSetItemOff (document, 1, Views, BShowLogFile);
+	     TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	   }
        }
 
-   DocumentMeta[document]->xmlformat = FALSE;
+   /* Removes all CSS informations linked with the document */
+   RemoveDocCSSs (doc);  
+   /* Free access keys table */
+   TtaRemoveDocAccessKeys (doc);
+   DocumentMeta[doc]->xmlformat = FALSE;
    /* parse with the HTML parser */
-   StartParser (document, tempdocument, documentname, tempdir,
+   StartParser (doc, tempdocument, documentname, tempdir,
 		tempdocument, FALSE);
    /* then request to save as XHTML */
-   DocumentMeta[document]->xmlformat = TRUE;
+   DocumentMeta[doc]->xmlformat = TRUE;
    /* fetch and display all images referred by the document */
-   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-   FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE, NULL);
-   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
+   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
+   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
 
    /* check parsing errors */
-   CheckParsingErrors (document);
-
-   /* Consider the document as modified */
-   /*TtaSetDocumentModified (document);*/
-
+   CheckParsingErrors (doc);
    TtaFreeMemory (tempdocument);
 }
 
