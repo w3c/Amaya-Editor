@@ -640,33 +640,6 @@ gboolean GL_DrawCallback (ThotWidget widget,
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   return TRUE;
 }
-/*----------------------------------------------------------------------
-  GL_FocusIn :
-  Manage Drawing Timer upon Frame focus by user
-  ----------------------------------------------------------------------*/
-gboolean GL_FocusIn (ThotWidget widget, GdkEventExpose *event, 
-		     gpointer data)
-{
-  int      frame;
- 
-  frame = (int) data;
-  ActiveFrame = frame;
-  /*Start animation*/
-  return TRUE;
-}  
-/*----------------------------------------------------------------------
-  GL_FocusOut :
-  Manage Drawing Timer upon Frame focus by user
-  ----------------------------------------------------------------------*/
-gboolean GL_FocusOut (ThotWidget widget, GdkEventExpose *event, 
-		      gpointer data)
-{
-  int      frame;
- 
-  frame = (int) data;
-  /* Stop animation*/
-  return TRUE ;
-}
 
 /*----------------------------------------------------------------------
  GL_Destroy :

@@ -3469,16 +3469,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "unrealize",
 			     GTK_SIGNAL_FUNC (GL_Destroy),
 			     (gpointer)frame);
-	   /* when widget is focused */
-	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-			     "focus-in-event",
-			     GTK_SIGNAL_FUNC (GL_FocusIn),
-			     (gpointer)frame);
-	    /* wwhen widget is focused*/
-	  ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-			     "focus-out-event",
-			     GTK_SIGNAL_FUNC (GL_FocusOut),
-			     (gpointer)frame);
+	   
 	   gtk_object_set_data (GTK_OBJECT (drawing_area),
 				"frame",
 				(gpointer) frame); 
