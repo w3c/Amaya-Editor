@@ -1147,12 +1147,12 @@ CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   STRING              s = TtaAllocString (1024);
-
-#  ifndef _WINDOWS
+   CHAR_T              s[500];
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
+
    if (document == 0)
       return;
    else
@@ -1167,33 +1167,33 @@ CONST STRING        name;
 	if (frame != 0)
 	  if (FrameTable[frame].WdStatus != 0)
 	    {
+#ifdef _WINDOWS
 	     if (name != NULL)
 	       {
 		  /* text est un format */
 		  usprintf (s, text, name);
-#                 ifndef _WINDOWS
-		  title_string = XmStringCreateSimple (s);
-#                 endif /* !_WINDOWS */
 	       }
 	     else
-#               ifdef _WINDOWS
 		ustrncpy (&s[0], text, 1024);
-#               else  /* !_WINDOWS */
-		title_string = XmStringCreateSimple (text);
-#               endif /* !_WINDOWS */
 
-#            ifdef _WINDOWS
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
-		 SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#            else  /* !_WINDOWS */
+	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+#else  /* _WINDOWS */
+	     if (name != NULL)
+	       {
+		  /* text est un format */
+		  usprintf (s, text, name);
+		  title_string = XmStringCreateSimple (s);
+	       }
+	     else
+		title_string = XmStringCreateSimple (text);
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	    }
      }
-   TtaFreeMemory (s);
 }
 
 
