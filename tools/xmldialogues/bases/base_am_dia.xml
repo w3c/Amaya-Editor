@@ -1522,8 +1522,8 @@
 	<message xml:lang="tr">BiDi (bdo)</message>
 </label>
 <label define="Math">
-	<message xml:lang="en">Math</message>
-	<message xml:lang="fr">Math</message>
+	<message xml:lang="en">&amp;Math</message>
+	<message xml:lang="fr">&amp;Math</message>
 	<message xml:lang="de">Formel</message>
 	<message xml:lang="it">Math</message>
 	<message xml:lang="tr">Matematik</message>
@@ -1762,8 +1762,8 @@
 	<message xml:lang="tr">Matris sütununu sil</message>
 </label>
 <label define="SVG_">
-	<message xml:lang="en">SVG</message>
-	<message xml:lang="fr">SVG</message>
+	<message xml:lang="en">&amp;SVG</message>
+	<message xml:lang="fr">&amp;SVG</message>
 	<message xml:lang="de">SVG</message>
 	<message xml:lang="it">SVG</message>
 	<message xml:lang="tr">SVG</message>
@@ -1796,8 +1796,8 @@
 	<message xml:lang="tr">XML elementlerin</message>
 </label>
 <label define="BLinkTarget">
-	<message xml:lang="en">Link to previous target</message>
-	<message xml:lang="fr">Lier la cible créée</message>
+	<message xml:lang="en">&amp;Link to previous target</message>
+	<message xml:lang="fr">&amp;Lier la cible créée</message>
 	<message xml:lang="it">Collega al precedente obiettivo</message>
 	<message xml:lang="de">Auf vorherigen Anker</message>
 	<message xml:lang="es">Enlazar el destino previo</message>
@@ -1806,8 +1806,8 @@
 	<message xml:lang="tr">Önceki hedefe bağlantı</message>
 </label>
 <label define="BCreateLink">
-	<message xml:lang="en">Create or change link...</message>
-	<message xml:lang="fr">Créer/changer lien...</message>
+	<message xml:lang="en">&amp;Create or change link...</message>
+	<message xml:lang="fr">&amp;Créer/changer lien...</message>
 	<message xml:lang="de">Erzeugen/Ändern...</message>
 	<message xml:lang="it">Crea o cambia collegamento...</message>
 	<message xml:lang="tr">Baglantı yarat...</message>
@@ -1816,8 +1816,8 @@
 	<message xml:lang="fi">Luo tai muuta linkki...</message>
 </label>
 <label define="BCreateTarget">
-	<message xml:lang="en">Create target</message>
-	<message xml:lang="fr">Créer cible</message>
+	<message xml:lang="en">Create &amp;target</message>
+	<message xml:lang="fr">Créer ci&amp;ble</message>
 	<message xml:lang="de">Anker erzeugen</message>
 	<message xml:lang="it">Crea obiettivo</message>
 	<message xml:lang="tr">Hedef yarat</message>
@@ -1826,8 +1826,8 @@
 	<message xml:lang="fi">Luo kohde</message>
 </label>
 <label define="BDeleteAnchor">
-	<message xml:lang="en">Delete anchor</message>
-	<message xml:lang="fr">Détruire ancre</message>
+	<message xml:lang="en">&amp;Delete anchor</message>
+	<message xml:lang="fr">&amp;Détruire ancre</message>
 	<message xml:lang="de">Verweis/Anker löschen</message>
 	<message xml:lang="it">Cancella ancora</message>
 	<message xml:lang="tr">tanımı sil</message>
@@ -1836,8 +1836,8 @@
 	<message xml:lang="fi">Poista linkki</message>
 </label>
 <label define="BMemorizeXPtr">
-	<message xml:lang="en">Store selection as XPointer</message>
-	<message xml:lang="fr">Sauver la séléction comme XPointer</message>
+	<message xml:lang="en">Store selection as &amp;XPointer</message>
+	<message xml:lang="fr">Sauver la séléction comme &amp;XPointer</message>
 	<message xml:lang="de">Als XPointer speichern</message>
 	<message xml:lang="es">Guardar selección como XPointer</message>
 	<message xml:lang="it">Salva la selezione come XPointer</message>
@@ -1846,8 +1846,8 @@
 	<message xml:lang="tr">seçilen alanı XPointer gibi kaydet</message>
 </label>
 <label define="TShowButtonbar">
-	<message xml:lang="en">Show button bar</message>
-	<message xml:lang="fr">Montrer boutons</message>
+	<message xml:lang="en">Show &amp;button bar</message>
+	<message xml:lang="fr">Montrer &amp;boutons</message>
 	<message xml:lang="de">Symbolleiste anzeigen</message>
 	<message xml:lang="it">Mostra barra dei pulsanti</message>
 	<message xml:lang="tr">Tusları göster</message>
@@ -1856,8 +1856,8 @@
 	<message xml:lang="fi">Näytä painikerivi</message>
 </label>
 <label define="TShowTextZone">
-	<message xml:lang="en">Show address</message>
-	<message xml:lang="fr">Montrer adresse</message>
+	<message xml:lang="en">Show a&amp;ddress</message>
+	<message xml:lang="fr">Montrer a&amp;dresse</message>
 	<message xml:lang="de">Adresszeile anzeigen</message>
 	<message xml:lang="it">Mostra indirizzo</message>
 	<message xml:lang="tr">Adres göster</message>
@@ -1866,8 +1866,8 @@
 	<message xml:lang="fi">Näytä osoite</message>
 </label>
 <label define="TShowMapAreas">
-	<message xml:lang="en">Show map areas</message>
-	<message xml:lang="fr">Montrer les zones actives</message>
+	<message xml:lang="en">Show &amp;map areas</message>
+	<message xml:lang="fr">Montrer les &amp;zones actives</message>
 	<message xml:lang="de">Aktive Bildbereiche</message>
 	<message xml:lang="it">Mostra le zone attive</message>
 	<message xml:lang="tr">Yakınlaştır</message>
@@ -1876,8 +1876,8 @@
 	<message xml:lang="fi">Näytä kartta alueet</message>
 </label>
 <label define="TShowTargets">
-	<message xml:lang="en">Show targets</message>
-	<message xml:lang="fr">Montrer les cibles</message>
+	<message xml:lang="en">Show &amp;targets</message>
+	<message xml:lang="fr">Montrer les &amp;cibles</message>
 	<message xml:lang="de">Anker anzeigen</message>
 	<message xml:lang="it">Mostra obiettivi</message>
 	<message xml:lang="es">Mostrar destinos</message>
@@ -1906,8 +1906,8 @@
 	<message xml:lang="fi">Loitonna</message>
 </label>
 <label define="BShowLogFile">
-	<message xml:lang="en">Show parsing errors</message>
-	<message xml:lang="fr">Montrer les erreurs</message>
+	<message xml:lang="en">Show &amp;parsing errors</message>
+	<message xml:lang="fr">Montrer les &amp;erreurs</message>
 	<message xml:lang="de">Parserfehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
 	<message xml:lang="es">Mostrar errores sintácticos</message>
@@ -1916,8 +1916,8 @@
 	<message xml:lang="tr">Pars hatalarını göster</message>
 </label>
 <label define="BShowStructure">
-	<message xml:lang="en">Show structure</message>
-	<message xml:lang="fr">Montrer la structure</message>
+	<message xml:lang="en">Show &amp;structure</message>
+	<message xml:lang="fr">Montrer la &amp;structure</message>
 	<message xml:lang="de">Struktur</message>
 	<message xml:lang="it">Mostra struttura</message>
 	<message xml:lang="tr">Yapıyı göster</message>
@@ -1926,8 +1926,8 @@
 	<message xml:lang="fi">Näytä rakenne</message>
 </label>
 <label define="BShowAlternate">
-	<message xml:lang="en">Show alternate</message>
-	<message xml:lang="fr">Montrer la vue alternée</message>
+	<message xml:lang="en">Show &amp;alternate</message>
+	<message xml:lang="fr">Montrer la vue &amp;alternée</message>
 	<message xml:lang="de">Textbrowser</message>
 	<message xml:lang="it">Mostra la vista alternativa</message>
 	<message xml:lang="tr">Alternatif gösterim</message>
@@ -1936,8 +1936,8 @@
 	<message xml:lang="fi">Show alternate</message>
 </label>
 <label define="BShowLinks">
-	<message xml:lang="en">Show links</message>
-	<message xml:lang="fr">Montrer les liens</message>
+	<message xml:lang="en">Show &amp;links</message>
+	<message xml:lang="fr">Montrer les &amp;liens</message>
 	<message xml:lang="de">Verweise</message>
 	<message xml:lang="it">Mostra collegamenti</message>
 	<message xml:lang="tr">Bağlantıları göster</message>
@@ -1946,8 +1946,8 @@
 	<message xml:lang="fi">Näytä linkit</message>
 </label>
 <label define="BShowToC">
-	<message xml:lang="en">Show table of contents</message>
-	<message xml:lang="fr">Montrer la table des matières</message>
+	<message xml:lang="en">Show table &amp;of contents</message>
+	<message xml:lang="fr">Montrer la &amp;table des matières</message>
 	<message xml:lang="de">Inhaltsverzeichnis</message>
 	<message xml:lang="it">Mostra sommario</message>
 	<message xml:lang="tr">Içindekileri göster</message>
@@ -1956,8 +1956,8 @@
 	<message xml:lang="fi">Näytä sisällysluettelo</message>
 </label>
 <label define="BShowSource">
-	<message xml:lang="en">Show source</message>
-	<message xml:lang="fr">Montrer le source</message>
+	<message xml:lang="en">Show so&amp;urce</message>
+	<message xml:lang="fr">Montrer le s&amp;ource</message>
 	<message xml:lang="it">Mostra sorgente</message>
 	<message xml:lang="de">Quelltext</message>
 	<message xml:lang="es">Mostrar fuente</message>
@@ -1966,8 +1966,8 @@
 	<message xml:lang="tr">kaynak göster</message>
 </label>
 <label define="BCharacterStyle">
-	<message xml:lang="en">Character style...</message>
-	<message xml:lang="fr">Style de caractères...</message>
+	<message xml:lang="en">C&amp;haracter style...</message>
+	<message xml:lang="fr">Style de &amp;caractères...</message>
 	<message xml:lang="de">Schrift...</message>
 	<message xml:lang="it">Stile dei caratteri...</message>
 	<message xml:lang="tr">Karakter tarzı...</message>
@@ -1976,8 +1976,8 @@
 	<message xml:lang="fi">Fontin tyyli...</message>
 </label>
 <label define="BColors">
-	<message xml:lang="en">Colors...</message>
-	<message xml:lang="fr">Couleurs...</message>
+	<message xml:lang="en">Co&amp;lors...</message>
+	<message xml:lang="fr">Cou&amp;leurs...</message>
 	<message xml:lang="de">Farbe...</message>
 	<message xml:lang="it">Colori...</message>
 	<message xml:lang="tr">Renkler...</message>
@@ -1986,8 +1986,8 @@
 	<message xml:lang="fi">Värit...</message>
 </label>
 <label define="BFormat">
-	<message xml:lang="en">Format...</message>
-	<message xml:lang="fr">Format...</message>
+	<message xml:lang="en">&amp;Format...</message>
+	<message xml:lang="fr">&amp;Format...</message>
 	<message xml:lang="de">Ausrichtung...</message>
 	<message xml:lang="it">Formattazione...</message>
 	<message xml:lang="tr">Biçim...</message>
@@ -1996,8 +1996,8 @@
 	<message xml:lang="fi">Muoto...</message>
 </label>
 <label define="BBackgroundImage">
-	<message xml:lang="en">Background image...</message>
-	<message xml:lang="fr">Image de fond...</message>
+	<message xml:lang="en">&amp;Background image...</message>
+	<message xml:lang="fr">&amp;Image de fond...</message>
 	<message xml:lang="de">Hintergrundbild...</message>
 	<message xml:lang="it">Immagine di sfondo...</message>
 	<message xml:lang="tr">Arkaplan görüntüsü...</message>
@@ -2006,8 +2006,8 @@
 	<message xml:lang="fi">Taustakuva...</message>
 </label>
 <label define="BCreateClass">
-	<message xml:lang="en">Create rule...</message>
-	<message xml:lang="fr">Créer une règle...</message>
+	<message xml:lang="en">Create &amp;rule...</message>
+	<message xml:lang="fr">Créer une &amp;règle...</message>
 	<message xml:lang="de">Regel erzeugen...</message>
 	<message xml:lang="it">Crea una regola...</message>
 	<message xml:lang="tr">Kural yarat...</message>
@@ -2016,8 +2016,8 @@
 	<message xml:lang="fi">Tee sääntö...</message>
 </label>
 <label define="BApplyClass">
-	<message xml:lang="en">Apply class...</message>
-	<message xml:lang="fr">Appliquer une classe...</message>
+	<message xml:lang="en">Apply &amp;class...</message>
+	<message xml:lang="fr">A&amp;ppliquer une classe...</message>
 	<message xml:lang="de">Klasse übernehmen...</message>
 	<message xml:lang="it">Applica una classe...</message>
 	<message xml:lang="tr">\'class\' uygula...</message>
@@ -2026,8 +2026,8 @@
 	<message xml:lang="fi">Käytä luokkaa...</message>
 </label>
 <label define="BLinkCSS">
-	<message xml:lang="en">Link...</message>
-	<message xml:lang="fr">Ajouter...</message>
+	<message xml:lang="en">L&amp;ink...</message>
+	<message xml:lang="fr">&amp;Ajouter...</message>
 	<message xml:lang="it">Collegamento...</message>
 	<message xml:lang="de">Verknüpfen...</message>
 	<message xml:lang="es">Enlace...</message>
@@ -2036,8 +2036,8 @@
 	<message xml:lang="tr">Bağlantı</message>
 </label>
 <label define="BOpenCSS">
-	<message xml:lang="en">Open...</message>
-	<message xml:lang="fr">Ouvrir...</message>
+	<message xml:lang="en">&amp;Open...</message>
+	<message xml:lang="fr">&amp;Ouvrir...</message>
 	<message xml:lang="it">Apri...</message>
 	<message xml:lang="de">Öffnen...</message>
 	<message xml:lang="es">Abrir...</message>
@@ -2046,8 +2046,8 @@
 	<message xml:lang="tr">Aç</message>
 </label>
 <label define="BDisableCSS">
-	<message xml:lang="en">Disable...</message>
-	<message xml:lang="fr">Désactiver...</message>
+	<message xml:lang="en">&amp;Disable...</message>
+	<message xml:lang="fr">&amp;Désactiver...</message>
 	<message xml:lang="it">Disabilita...</message>
 	<message xml:lang="de">Deaktivieren...</message>
 	<message xml:lang="es">Desactivar...</message>
@@ -2056,8 +2056,8 @@
 	<message xml:lang="tr">Olumsuzla</message>
 </label>
 <label define="BEnableCSS">
-	<message xml:lang="en">Enable...</message>
-	<message xml:lang="fr">Réactiver...</message>
+	<message xml:lang="en">&amp;Enable...</message>
+	<message xml:lang="fr">R&amp;éactiver...</message>
 	<message xml:lang="it">Abilita...</message>
 	<message xml:lang="de">Aktivieren...</message>
 	<message xml:lang="es">Activar...</message>
@@ -2066,8 +2066,8 @@
 	<message xml:lang="tr">Olumla</message>
 </label>
 <label define="BRemoveCSS">
-	<message xml:lang="en">Remove...</message>
-	<message xml:lang="fr">Retirer...</message>
+	<message xml:lang="en">Remo&amp;ve...</message>
+	<message xml:lang="fr">Re&amp;tirer...</message>
 	<message xml:lang="it">Rimuovi...</message>
 	<message xml:lang="de">Entfernen...</message>
 	<message xml:lang="es">Eliminar...</message>
@@ -2076,8 +2076,8 @@
 	<message xml:lang="tr">Sil</message>
 </label>
 <label define="TSectionNumber">
-	<message xml:lang="en">Section numbering</message>
-	<message xml:lang="fr">Numéroter les sections</message>
+	<message xml:lang="en">&amp;Section numbering</message>
+	<message xml:lang="fr">&amp;Numéroter les sections</message>
 	<message xml:lang="de">Abschnitte numerieren</message>
 	<message xml:lang="it">Numerazione delle sezioni</message>
 	<message xml:lang="tr">Bölüm numaralandırması</message>
@@ -2086,8 +2086,8 @@
 	<message xml:lang="fi">Osien numerointi</message>
 </label>
 <label define="BMakeBook">
-	<message xml:lang="en">Make book</message>
-	<message xml:lang="fr">Construire un livre</message>
+	<message xml:lang="en">&amp;Make book</message>
+	<message xml:lang="fr">&amp;Construire un livre</message>
 	<message xml:lang="de">Buch erstellen</message>
 	<message xml:lang="it">Crea libro</message>
 	<message xml:lang="tr">Kitap yap</message>
@@ -2096,8 +2096,8 @@
 	<message xml:lang="fi">Valmista kooste</message>
 </label>
 <label define="BMakeID">
-	<message xml:lang="en">Add/Remove IDs...</message>
-	<message xml:lang="fr">Ajouter/Retirer des attributs ID...</message>
+	<message xml:lang="en">&amp;Add/Remove IDs...</message>
+	<message xml:lang="fr">&amp;Ajouter/Retirer des attributs ID...</message>
 	<message xml:lang="es">Crear/Suprimir atributos id...</message>
 	<message xml:lang="it">Aggiungi/Togli ID...</message>
 	<message xml:lang="de">Id hinzufügen/entfernen...</message>
@@ -2106,8 +2106,8 @@
 	<message xml:lang="tr">IDs ekle/sil</message>
 </label>
 <label define="Coptions">
-	<message xml:lang="en">Preferences</message>
-	<message xml:lang="fr">Préférences</message>
+	<message xml:lang="en">&amp;Preferences</message>
+	<message xml:lang="fr">&amp;Préférences</message>
 	<message xml:lang="de">Einstellungen</message>
 	<message xml:lang="it">Preferenze</message>
 	<message xml:lang="es">Preferencias</message>
@@ -2116,8 +2116,8 @@
 	<message xml:lang="tr">Tercih</message>
 </label>
 <label define="BConfigGeneral">
-	<message xml:lang="en">General...</message>
-	<message xml:lang="fr">Générales...</message>
+	<message xml:lang="en">&amp;General...</message>
+	<message xml:lang="fr">&amp;Générales...</message>
 	<message xml:lang="de">Allgemein...</message>
 	<message xml:lang="it">Generali...</message>
 	<message xml:lang="es">General...</message>
@@ -2126,8 +2126,8 @@
 	<message xml:lang="tr">Genel...</message>
 </label>
 <label define="BConfigBrowse">
-	<message xml:lang="en">Browsing...</message>
-	<message xml:lang="fr">Navigation...</message>
+	<message xml:lang="en">&amp;Browsing...</message>
+	<message xml:lang="fr">&amp;Navigation...</message>
 	<message xml:lang="de">Browser...</message>
 	<message xml:lang="fi">Selaus...</message>
 	<message xml:lang="it">Visualizzazione...</message>
@@ -2135,8 +2135,8 @@
 	<message xml:lang="tr">Tarama...</message>
 </label>
 <label define="BConfigPublish">
-	<message xml:lang="en">Publishing...</message>
-	<message xml:lang="fr">Publication...</message>
+	<message xml:lang="en">&amp;Publishing...</message>
+	<message xml:lang="fr">&amp;Publication...</message>
 	<message xml:lang="de">Veröffentlichen...</message>
 	<message xml:lang="it">Pubblicazione...</message>
 	<message xml:lang="es">Publicar...</message>
@@ -2145,8 +2145,8 @@
 	<message xml:lang="tr">Derleme...</message>
 </label>
 <label define="BConfigCache">
-	<message xml:lang="en">Cache...</message>
-	<message xml:lang="fr">Cache...</message>
+	<message xml:lang="en">&amp;Cache...</message>
+	<message xml:lang="fr">&amp;Cache...</message>
 	<message xml:lang="de">Cache...</message>
 	<message xml:lang="it">Cache...</message>
 	<message xml:lang="es">Cache...</message>
@@ -2155,8 +2155,8 @@
 	<message xml:lang="tr">Önbellekleme...</message>
 </label>
 <label define="BConfigProxy">
-	<message xml:lang="en">Proxy...</message>
-	<message xml:lang="fr">Proxy...</message>
+	<message xml:lang="en">Pro&amp;xy...</message>
+	<message xml:lang="fr">Pro&amp;xy...</message>
 	<message xml:lang="de">Proxy...</message>
 	<message xml:lang="it">Proxy...</message>
 	<message xml:lang="es">Proxy...</message>
@@ -2165,8 +2165,8 @@
 	<message xml:lang="tr">Proxy...</message>
 </label>
 <label define="BConfigColor">
-	<message xml:lang="en">Colors...</message>
-	<message xml:lang="fr">Couleurs...</message>
+	<message xml:lang="en">C&amp;olors...</message>
+	<message xml:lang="fr">C&amp;ouleurs...</message>
 	<message xml:lang="de">Farben...</message>
 	<message xml:lang="it">Colori...</message>
 	<message xml:lang="es">Colores...</message>
@@ -2175,8 +2175,8 @@
 	<message xml:lang="tr">Renkler...</message>
 </label>
 <label define="BConfigGeometry">
-	<message xml:lang="en">Window Geometry...</message>
-	<message xml:lang="fr">Géométrie...</message>
+	<message xml:lang="en">&amp;Window Geometry...</message>
+	<message xml:lang="fr">Géo&amp;métrie...</message>
 	<message xml:lang="de">Fenstergeometrie...</message>
 	<message xml:lang="it">Dimensioni della finestra...</message>
 	<message xml:lang="es">Geometría de la ventana...</message>
@@ -2185,8 +2185,8 @@
 	<message xml:lang="tr">Geometri...</message>
 </label>
 <label define="BConfigLanNeg">
-	<message xml:lang="en">Language Negotiation...</message>
-	<message xml:lang="fr">Négociation de Langues...</message>
+	<message xml:lang="en">&amp;Language Negotiation...</message>
+	<message xml:lang="fr">Négociation de &amp;Langues...</message>
 	<message xml:lang="de">Sprachen...</message>
 	<message xml:lang="it">Negoziazione della lingua...</message>
 	<message xml:lang="es">Negociación de idioma...</message>
@@ -2195,8 +2195,8 @@
 	<message xml:lang="tr">Ülke dilleri...</message>
 </label>
 <label define="BConfigProfile">
-	<message xml:lang="en">Profiles...</message>
-	<message xml:lang="fr">Profils...</message>
+	<message xml:lang="en">Pro&amp;files...</message>
+	<message xml:lang="fr">Pro&amp;fils...</message>
 	<message xml:lang="de">Profile...</message>
 	<message xml:lang="it">Profili...</message>
 	<message xml:lang="es">Perfiles...</message>
@@ -2205,8 +2205,8 @@
 	<message xml:lang="tr">Profiller...</message>
 </label>
 <label define="BConfigTemplates">
-	<message xml:lang="en">Templates...</message>
-	<message xml:lang="fr">Modèles de page</message>
+	<message xml:lang="en">&amp;Templates...</message>
+	<message xml:lang="fr">Mo&amp;dèles de page</message>
 	<message xml:lang="de">Schablonen...</message>
 	<message xml:lang="it">Modelli...</message>
 	<message xml:lang="es">Plantillas...</message>
