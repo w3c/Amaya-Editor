@@ -2214,17 +2214,21 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
       /* Find extent of match */
       if (*p == ':')
 	  {
-	  after_access = p + 1;
-	  if (len == 1)
-	    /* it's a local Windows path like c:... */
-	    slashes++;
+		after_access = p + 1;
+#ifdef _WINDOWS
+	    if (len == 1)
+		{
+	      /* it's a local Windows path like c:... */
+	      slashes+=2;
+		}
+#endif /* _WINDOWS */
 	  }
       if (*p == DIR_SEP)
-	{
-	  /* memorize the last slash position and count them */
-	  last_slash = p;
-	  slashes++;
-	}
+	  {
+	    /* memorize the last slash position and count them */
+	    last_slash = p;
+	    slashes++;
+	  }
     }
     
   /* q, p point to the first non-matching character or zero */
@@ -2238,7 +2242,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
     }
   else if ((slashes < 2 && after_access == NULL)
       || (slashes < 3 && after_access != NULL))
-    {
+   {
       /* Two names whitout common path */
       /* exactly the right length */
       len = strlen (aName);
@@ -2275,7 +2279,7 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
     }
 #ifdef _WINDOWS
   len = strlen (return_value);
-  for (ndx = 0; ndx < len; ndx ++)
+   for (ndx = 0; ndx < len; ndx ++)
 	  if (return_value[ndx] == '\\')
 	     return_value[ndx] = '/' ;
 #endif /* _WINDOWS */
