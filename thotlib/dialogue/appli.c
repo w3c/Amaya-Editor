@@ -135,7 +135,6 @@ static ThotBool  fBlocking;
 static ThotBool  moved = FALSE;
 static ThotBool  firstTime = TRUE;
 static ThotBool  paletteRealized = FALSE;
-static ThotBool  AutoScroll = FALSE;
 
 int         X_Pos;
 int         Y_Pos;
@@ -175,11 +174,8 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 
   if (FrRef[frame])
     {
-      GetClientRect (FrRef [frame], &cltRect);
-      if (AutoScroll)
-	ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
-      else 
-	ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect,
+      GetClientRect (FrRef[frame], &cltRect);
+	ScrollWindowEx (FrRef[frame], xf - xd, yf - yd, NULL, &cltRect,
 			NULL, NULL, SW_INVALIDATE);
     }
 }
@@ -1870,7 +1866,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   int          cy;
   int          frame;
   int          status;
-  int          delta;
   int          key;
   int          key_menu;
   int          document, view;
@@ -1912,6 +1907,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  GetClientRect (hwnd, &cRect);
 	  GetCursorPos (&ptCursor);
 	  /* generate a scroll if necessary */
+	  if (ptCursor.y > rect.bottom ||
+	      ptCursor.y < rect.top ||
+	      ptCursor.x > rect.right ||
+	      ptCursor.x < rect.left + 1)
+	  {
 	  if (ptCursor.y > rect.bottom)
 	    {
 	      Y_Pos = cRect.bottom;
@@ -1935,6 +1935,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
 	  /* if (wParam & MK_LBUTTON) */
 	  SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+	  }
 	}
     }
   switch (mMsg)
@@ -2095,9 +2096,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       fBlocking = TRUE;
       if (!moved)	  
 	LocateSelectionInView (frame, ClickX, ClickY, 4);
-      if (AutoScroll)
-	AutoScroll = FALSE;
-      return 0;
+     return 0;
 
     case WM_LBUTTONDBLCLK:
       /* left double click handling */
@@ -2177,7 +2176,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       if (firstTime && fBlocking)
 	{
 	  winCapture = GetCapture ();
-	  AutoScroll = TRUE;
 	  firstTime = FALSE;
 	  SetCapture (hwnd);
 	}
@@ -3377,7 +3375,6 @@ void UpdateScrollbars (int frame)
    GtkAdjustment      *tmpw;
 #endif /* _GTK */
 #else /* _WINDOWS */
-   RECT                rWindow;
    SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
 
