@@ -115,7 +115,7 @@ int                 Zoom;
 
    /* boolean         retour; */
    ViewFrame            *pFrame;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
 
    EndInsert ();
    c1 = 0;
@@ -128,29 +128,29 @@ int                 Zoom;
    if (pFrame->FrAbstractBox != NULL)
       /* On sauvegarde la selection courante dans la fenetre */
      {
-	pMa1 = &pFrame->FrSelectionBegin;
-	if (pMa1->VsBox != NULL)
+	pViewSel = &pFrame->FrSelectionBegin;
+	if (pViewSel->VsBox != NULL)
 	  {
-	     pv1 = pMa1->VsBox->BxAbstractBox;
-	     if (pMa1->VsIndBuf == 0)
+	     pv1 = pViewSel->VsBox->BxAbstractBox;
+	     if (pViewSel->VsIndBuf == 0)
 		c1 = 0;
 	     else
-		c1 = pMa1->VsBox->BxIndChar + pMa1->VsIndBox + 1;
+		c1 = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox + 1;
 	     /* On annule le debut de selection */
-	     pMa1->VsBox = NULL;
+	     pViewSel->VsBox = NULL;
 	  }
 	else
 	   pv1 = NULL;
-	pMa1 = &pFrame->FrSelectionEnd;
-	if (pMa1->VsBox != NULL)
+	pViewSel = &pFrame->FrSelectionEnd;
+	if (pViewSel->VsBox != NULL)
 	  {
-	     pvN = pMa1->VsBox->BxAbstractBox;
-	     if (pMa1->VsIndBuf == 0)
+	     pvN = pViewSel->VsBox->BxAbstractBox;
+	     if (pViewSel->VsIndBuf == 0)
 		cN = 0;
 	     else
-		cN = pMa1->VsBox->BxIndChar + pMa1->VsIndBox + 1;
+		cN = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox + 1;
 	     /* On annule la fin de selection */
-	     pMa1->VsBox = NULL;
+	     pViewSel->VsBox = NULL;
 	  }
 	else
 	   pvN = NULL;

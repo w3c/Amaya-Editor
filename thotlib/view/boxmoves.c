@@ -1742,7 +1742,7 @@ int                 frame;
    boolean             nonnul;
    boolean             deplace;
    BoxRelation           *pRe1;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
    boolean             depabsolu;
    boolean             relexterne;
 
@@ -2099,9 +2099,9 @@ int                 frame;
 			  /* Inclusion dans un bloc de ligne */
 			  if (pAb->AbInLine)
 			    {
-			       pMa1 = &FntrTable[frame - 1].FrSelectionBegin;
-			       if (pBox == pMa1->VsBox)
-				  adligne = pMa1->VsLine;
+			       pViewSel = &FntrTable[frame - 1].FrSelectionBegin;
+			       if (pBox == pViewSel->VsBox)
+				  adligne = pViewSel->VsLine;
 			       else
 				  adligne = SearchLine (pBox);
 			       MajBloc (pAb, adligne, pBox, delta, dbl, frame);

@@ -389,43 +389,43 @@ boolean             Etat;
    PtrBox            pBox;
    PtrAbstractBox             pAb;
    ViewFrame            *pFrame;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
    PtrBox            pBo1;
    ViewSelection            *pMa2;
 
    /* On ne visualise la selection que si la selection est coherente */
    pFrame = &FntrTable[frame - 1];
-   pMa1 = &pFrame->FrSelectionBegin;
-   if (pMa1->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
+   pViewSel = &pFrame->FrSelectionBegin;
+   if (pViewSel->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
      {
 	/* Est-ce que les marques de selection sont dans la meme boite ? */
-	if (pFrame->FrSelectionEnd.VsBox == pMa1->VsBox)
+	if (pFrame->FrSelectionEnd.VsBox == pViewSel->VsBox)
 	   if (!StructSelectionMode && pFrame->FrSelectOnePosition)
 	      /* on ne visualise que la position */
-	      VisuPartiel (frame, pMa1->VsXPos, pMa1->VsXPos + 2, pMa1->VsBox);
-	   else if (pMa1->VsBuffer == NULL
-		    || (pMa1->VsBox->BxNChars == 0 && pMa1->VsBox->BxType == BoComplete))
-	      VisuBoite (frame, pMa1->VsBox, pMa1->VsIndBox);
+	      VisuPartiel (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
+	   else if (pViewSel->VsBuffer == NULL
+		    || (pViewSel->VsBox->BxNChars == 0 && pViewSel->VsBox->BxType == BoComplete))
+	      VisuBoite (frame, pViewSel->VsBox, pViewSel->VsIndBox);
 	   else
-	      VisuPartiel (frame, pMa1->VsXPos, pFrame->FrSelectionEnd.VsXPos, pMa1->VsBox);
+	      VisuPartiel (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);
 	else
 	   /* Les marques de selection sont dans deux boites differentes */
 	   /* Si les deux bornes de la selection sont compatibles */
 	  {
 	     pAb = NULL;
-	     pBo1 = pMa1->VsBox;
-	     if (pMa1->VsBuffer == NULL || pBo1->BxNChars == 0)
-		VisuBoite (frame, pMa1->VsBox, 0);
+	     pBo1 = pViewSel->VsBox;
+	     if (pViewSel->VsBuffer == NULL || pBo1->BxNChars == 0)
+		VisuBoite (frame, pViewSel->VsBox, 0);
 	     else
 	       {
 		  pAb = pBo1->BxAbstractBox;
 		  /* Est-ce que la selection debute en fin de boite ? */
-		  if (pMa1->VsXPos == pBo1->BxWidth)
-		     VisuPartiel (frame, pMa1->VsXPos,
-				  pBo1->BxWidth + 2, pMa1->VsBox);
+		  if (pViewSel->VsXPos == pBo1->BxWidth)
+		     VisuPartiel (frame, pViewSel->VsXPos,
+				  pBo1->BxWidth + 2, pViewSel->VsBox);
 		  else
-		     VisuPartiel (frame, pMa1->VsXPos, pBo1->BxWidth,
-				  pMa1->VsBox);
+		     VisuPartiel (frame, pViewSel->VsXPos, pBo1->BxWidth,
+				  pViewSel->VsBox);
 		  /* Parcours les boites coupees soeurs */
 		  if (pBo1->BxType == BoPiece || pBo1->BxType == BoDotted)
 		    {

@@ -2329,7 +2329,6 @@ int                 frame;
 {
    int                 i;
    PtrDimRelations     pDimRel;
-   PtrDimRelations     pTa1;
 
    /* Il faut reevaluer la dimension des boites dont le contenu est */
    /* englobe et depend de relations hors-structure.                */

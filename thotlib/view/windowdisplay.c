@@ -992,11 +992,11 @@ int                 fg;
    yb = x2 * sina + y2 * cosa;
    x = xb - haut;
    y = yb - large / 2;
-   xc = round (x * cosa + y * sina + .5);
-   yc = round (-x * sina + y * cosa + .5);
+   xc = FloatToInt (x * cosa + y * sina + .5);
+   yc = FloatToInt (-x * sina + y * cosa + .5);
    y = yb + large / 2;
-   xd = round (x * cosa + y * sina + .5);
-   yd = round (-x * sina + y * cosa + .5);
+   xd = FloatToInt (x * cosa + y * sina + .5);
+   yd = FloatToInt (-x * sina + y * cosa + .5);
 
    /* trace */
    point[0].x = x2;
@@ -1898,7 +1898,7 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
    while (depile (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
 	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
-	   NouveauPoint (round (x1), round (y1));
+	   NouveauPoint (FloatToInt (x1), FloatToInt (y1));
 	else
 	  {
 	     tx = le_milieu (x2, x3);
@@ -1991,7 +1991,7 @@ C_points           *controls;
 
    /* fleche vers l'arriere  */
    if (fleche == 2 || fleche == 3)
-      TraceFleche (frame, round (cx1), round (cy1), (int) x1, (int) y1, epais, RO, active, fg);
+      TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, epais, RO, active, fg);
 
    for (i = 2; i < nb; i++)
      {
@@ -2041,7 +2041,7 @@ C_points           *controls;
 
    /* fleche vers l'avant */
    if (fleche == 1 || fleche == 3)
-      TraceFleche (frame, round (cx2), round (cy2), (int) x2, (int) y2, epais, RO, active, fg);
+      TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, epais, RO, active, fg);
 
    finirTrace (0, RO, active);
    /* Libere la table de points */

@@ -179,7 +179,7 @@ int                 frame;
    PtrTextBuffer      pbuff;
    int                 longueur;
    ViewFrame            *pFrame;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
    ViewSelection            *pMa2;
 
    nbuff = adbuff->BuNext;
@@ -194,10 +194,10 @@ int                 frame;
 
    /* Mise a jour des marques de selection courante */
    pFrame = &FntrTable[frame - 1];
-   pMa1 = &pFrame->FrSelectionBegin;
-   if (pMa1->VsBuffer == adbuff)
+   pViewSel = &pFrame->FrSelectionBegin;
+   if (pViewSel->VsBuffer == adbuff)
      {
-	if (pFrame->FrSelectionEnd.VsBuffer == pMa1->VsBuffer)
+	if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
 	  {
 	     pMa2 = &pFrame->FrSelectionEnd;
 	     if (pbuff != NULL)
@@ -212,18 +212,18 @@ int                 frame;
 		  pMa2->VsBuffer = nbuff;
 	       }
 	  }
-	pMa1->VsBuffer = pbuff;
+	pViewSel->VsBuffer = pbuff;
 
 	if (pbuff != NULL)
 	  {
 	     /* On deplace la selection dans les buffers */
-	     pMa1->VsIndBuf += longueur;
-	     pMa1->VsBuffer = pbuff;
+	     pViewSel->VsIndBuf += longueur;
+	     pViewSel->VsBuffer = pbuff;
 	  }
 	else
 	  {
-	     pMa1->VsIndBuf = 1;
-	     pMa1->VsBuffer = nbuff;
+	     pViewSel->VsIndBuf = 1;
+	     pViewSel->VsBuffer = nbuff;
 	  }
      }
 
@@ -247,19 +247,19 @@ int                 dcar;
 #endif /* __STDC__ */
 {
    ViewFrame            *pFrame;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
 
    pFrame = &FntrTable[frame - 1];
-   pMa1 = &pFrame->FrSelectionBegin;
-   pMa1->VsXPos += dx;
-   pMa1->VsIndBox += dcar;
-   pMa1->VsNSpaces += dblanc;
-   pMa1 = &pFrame->FrSelectionEnd;
-   if (pMa1->VsBox == pFrame->FrSelectionBegin.VsBox)
+   pViewSel = &pFrame->FrSelectionBegin;
+   pViewSel->VsXPos += dx;
+   pViewSel->VsIndBox += dcar;
+   pViewSel->VsNSpaces += dblanc;
+   pViewSel = &pFrame->FrSelectionEnd;
+   if (pViewSel->VsBox == pFrame->FrSelectionBegin.VsBox)
      {
-	pMa1->VsXPos += dx;
-	pMa1->VsIndBox += dcar;
-	pMa1->VsNSpaces += dblanc;
+	pViewSel->VsXPos += dx;
+	pViewSel->VsIndBox += dcar;
+	pViewSel->VsNSpaces += dblanc;
      }
 }
 
@@ -476,7 +476,7 @@ boolean             Unique;
    int                 ind, icar;
    PtrBox            pBox;
    ViewFrame            *pFrame;
-   ViewSelection            *pMa1;
+   ViewSelection            *pViewSel;
 
    /* Verifie s'il faut reformater le dernier paragraphe edite */
    if (ThotLocalActions[T_updateparagraph] != NULL)
@@ -532,34 +532,34 @@ boolean             Unique;
 		  /* On memorise les marques de selection */
 		  if (Debut)
 		    {
-		       pMa1 = &pFrame->FrSelectionBegin;
-		       pMa1->VsBox = pBox;
+		       pViewSel = &pFrame->FrSelectionBegin;
+		       pViewSel->VsBox = pBox;
 		       if (Fin && Pav->AbLeafType != LtPlyLine && Pav->AbLeafType != LtPicture)
-			  pMa1->VsIndBox = 0;	/* tout selectionne */
+			  pViewSel->VsIndBox = 0;	/* tout selectionne */
 		       else
-			  pMa1->VsIndBox = c1;
-		       pMa1->VsIndBuf = ind;
-		       pMa1->VsBuffer = adbuff;
-		       pMa1->VsLine = adligne;
+			  pViewSel->VsIndBox = c1;
+		       pViewSel->VsIndBuf = ind;
+		       pViewSel->VsBuffer = adbuff;
+		       pViewSel->VsLine = adligne;
 		       if (Pav->AbLeafType == LtPicture && c1 > 0)
-			  pMa1->VsXPos = pBox->BxWidth;
+			  pViewSel->VsXPos = pBox->BxWidth;
 		       else
-			  pMa1->VsXPos = 0;
-		       pMa1->VsNSpaces = 0;
+			  pViewSel->VsXPos = 0;
+		       pViewSel->VsNSpaces = 0;
 		    }
 		  if (Fin)
 		    {
-		       pMa1 = &pFrame->FrSelectionEnd;
-		       pMa1->VsBox = pBox;
-		       pMa1->VsIndBox = 0;
-		       pMa1->VsIndBuf = ind;
-		       pMa1->VsBuffer = adbuff;
-		       pMa1->VsLine = adligne;
+		       pViewSel = &pFrame->FrSelectionEnd;
+		       pViewSel->VsBox = pBox;
+		       pViewSel->VsIndBox = 0;
+		       pViewSel->VsIndBuf = ind;
+		       pViewSel->VsBuffer = adbuff;
+		       pViewSel->VsLine = adligne;
 		       if (Pav->AbLeafType == LtPicture && c1 > 0)
-			  pMa1->VsXPos = pBox->BxWidth;
+			  pViewSel->VsXPos = pBox->BxWidth;
 		       else
-			  pMa1->VsXPos = 0;
-		       pMa1->VsNSpaces = 0;
+			  pViewSel->VsXPos = 0;
+		       pViewSel->VsNSpaces = 0;
 		    }
 
 	       }
@@ -588,27 +588,27 @@ boolean             Unique;
 		  /* On met a jour le debut de selection */
 		  if (Debut)
 		    {
-		       pMa1 = &pFrame->FrSelectionBegin;
-		       pMa1->VsBox = pBox;
-		       pMa1->VsIndBox = icar;
-		       pMa1->VsIndBuf = ind;
-		       pMa1->VsBuffer = adbuff;
+		       pViewSel = &pFrame->FrSelectionBegin;
+		       pViewSel->VsBox = pBox;
+		       pViewSel->VsIndBox = icar;
+		       pViewSel->VsIndBuf = ind;
+		       pViewSel->VsBuffer = adbuff;
 		       ReevalMrq (&pFrame->FrSelectionBegin);
 		    }
 		  /* On met a jour la fin de selection */
 		  if (Fin)
 		    {
-		       pMa1 = &pFrame->FrSelectionEnd;
+		       pViewSel = &pFrame->FrSelectionEnd;
 		       /* Debut et Fin sur le meme caractere */
 		       if (Debut && c1 >= cN)
 			 {
-			    pMa1->VsBox = pFrame->FrSelectionBegin.VsBox;
-			    pMa1->VsIndBox = pFrame->FrSelectionBegin.VsIndBox;
-			    pMa1->VsLine = pFrame->FrSelectionBegin.VsLine;
-			    pMa1->VsBuffer = pFrame->FrSelectionBegin.VsBuffer;
-			    pMa1->VsIndBuf = pFrame->FrSelectionBegin.VsIndBuf;
-			    pMa1->VsXPos = pFrame->FrSelectionBegin.VsXPos;
-			    pMa1->VsNSpaces = pFrame->FrSelectionBegin.VsNSpaces;
+			    pViewSel->VsBox = pFrame->FrSelectionBegin.VsBox;
+			    pViewSel->VsIndBox = pFrame->FrSelectionBegin.VsIndBox;
+			    pViewSel->VsLine = pFrame->FrSelectionBegin.VsLine;
+			    pViewSel->VsBuffer = pFrame->FrSelectionBegin.VsBuffer;
+			    pViewSel->VsIndBuf = pFrame->FrSelectionBegin.VsIndBuf;
+			    pViewSel->VsXPos = pFrame->FrSelectionBegin.VsXPos;
+			    pViewSel->VsNSpaces = pFrame->FrSelectionBegin.VsNSpaces;
 			 }
 		       else
 			 {
@@ -630,26 +630,26 @@ boolean             Unique;
 				      IndBuffer (&adbuff, &ind);	/* On recherche le buffer et l'indice */
 				   }
 			      }
-			    pMa1->VsBox = pBox;
-			    pMa1->VsIndBox = icar;
-			    pMa1->VsIndBuf = ind;
-			    pMa1->VsBuffer = adbuff;
+			    pViewSel->VsBox = pBox;
+			    pViewSel->VsIndBox = icar;
+			    pViewSel->VsIndBuf = ind;
+			    pViewSel->VsBuffer = adbuff;
 			    ReevalMrq (&pFrame->FrSelectionEnd);
 			 }
 
 		       /* On recherche la position limite du caractere */
-		       pBox = pMa1->VsBox;
+		       pBox = pViewSel->VsBox;
 		       if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
-			  pMa1->VsXPos += pBox->BxWidth;
-		       else if (pMa1->VsIndBox == pBox->BxNChars)
-			  pMa1->VsXPos += 2;
+			  pViewSel->VsXPos += pBox->BxWidth;
+		       else if (pViewSel->VsIndBox == pBox->BxNChars)
+			  pViewSel->VsXPos += 2;
 		       else
 			 {
-			    icar = (int) (pMa1->VsBuffer->BuContent[pMa1->VsIndBuf - 1]);
+			    icar = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
 			    if (icar == BLANC && pBox->BxSpaceWidth != 0)
-			       pMa1->VsXPos += pBox->BxSpaceWidth;
+			       pViewSel->VsXPos += pBox->BxSpaceWidth;
 			    else
-			       pMa1->VsXPos += CarWidth (icar, pBox->BxFont);
+			       pViewSel->VsXPos += CarWidth (icar, pBox->BxFont);
 			 }
 		    }
 	       }

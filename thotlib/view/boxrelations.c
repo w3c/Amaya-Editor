@@ -22,65 +22,61 @@
 #include "font_f.h"
 
 
-
 /* ---------------------------------------------------------------------- */
-/* |    RelPos etablit les liens de dependance entre les deux reperes   | */
-/* |            des boites :                                            | */
+/* |  InsertPosRelation etablit les liens de dependance entre les deux  | */
+/* |            repers des boites :                                     | */
 /* |            - double sens dans le cas du positionnement entre deux  | */
 /* |            soeurs.                                                 | */
 /* |            - sens unique dans le cas du positionnement entre fille | */
 /* |            et mere.                                                | */
 /* |            - sens repere vers axe pour la definition des axes de   | */
-/* |            reference (un deplacement du repere de abox modifie     | */
-/* |            l'axe de reference de debox).                           | */
+/* |            reference (un deplacement du repere de pTargetBox       | */
+/* |            modifie l'axe de reference de pOrginBox).               | */
 /* |            - sens inverse dans le cas d'une dimension elastique    | */
-/* |            (un deplacement du repere de abox modifie la dimension  | */
-/* |            de debox).                                              | */
+/* |            (un deplacement du repere de pTargetBox modifie la      | */
+/* |            dimension de pOrginBox).                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         RelPos (PtrBox debox, PtrBox abox, OpRelation op, BoxEdge rep1, BoxEdge rep2)
+static void       RelPos (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge rep1, BoxEdge rep2)
 #else  /* __STDC__ */
-static void         RelPos (debox, abox, op, rep1, rep2)
-PtrBox            debox;
-PtrBox            abox;
-OpRelation          op;
-BoxEdge         rep1;
-BoxEdge         rep2;
-
+static void       RelPos (pOrginBox, pTargetBox, op, rep1, rep2)
+PtrBox            pOrginBox;
+PtrBox            pTargetBox;
+OpRelation        op;
+BoxEdge           rep1;
+BoxEdge           rep2;
 #endif /* __STDC__ */
 {
    int                 i;
    boolean             boucle;
    boolean             nul;
-   PtrPosRelations      cepos;
-   PtrPosRelations      adpos;
-   PtrPosRelations      pTa1;
-   BoxRelation           *pRe1;
+   PtrPosRelations     cepos;
+   PtrPosRelations     adpos;
+   BoxRelation        *pRe1;
 
    i = 0;
    /* PcFirst sens de la dependance dans les positionnements entre soeurs */
    if (op != OpHorizRef && op != OpVertRef && op != OpWidth && op != OpHeight)
      {
 	/* On recherche une entree libre */
-	adpos = debox->BxPosRelations;
+	adpos = pOrginBox->BxPosRelations;
 	cepos = NULL;
 	boucle = TRUE;
 	while (boucle && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 0;
 	     cepos = adpos;
 	     do
 	       {
 		  i++;
-		  nul = pTa1->PosRTable[i - 1].ReBox == NULL;
+		  nul = adpos->PosRTable[i - 1].ReBox == NULL;
 	       }
 	     while (!(i == MAX_RELAT_POS || nul));
 
 	     if (nul)
 		boucle = FALSE;
 	     else
-		adpos = pTa1->PosRNext;
+		adpos = adpos->PosRNext;
 	     /* Bloc suivant */
 	  }
 
@@ -89,14 +85,14 @@ BoxEdge         rep2;
 	  {
 	     GetBPos (&adpos);
 	     if (cepos == NULL)
-		debox->BxPosRelations = adpos;
+		pOrginBox->BxPosRelations = adpos;
 	     else
 		cepos->PosRNext = adpos;
 	     i = 1;
 	  }
 	pRe1 = &adpos->PosRTable[i - 1];
 	pRe1->ReRefEdge = rep1;
-	pRe1->ReBox = abox;
+	pRe1->ReBox = pTargetBox;
 	pRe1->ReOp = op;
      }
 
@@ -104,25 +100,24 @@ BoxEdge         rep2;
    if (op != OpHorizInc && op != OpVertInc)
      {
 	/* On recherche une entree libre */
-	adpos = abox->BxPosRelations;
+	adpos = pTargetBox->BxPosRelations;
 	cepos = NULL;
 	boucle = TRUE;
 	while (boucle && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 0;
 	     cepos = adpos;
 	     do
 	       {
 		  i++;
-		  nul = pTa1->PosRTable[i - 1].ReBox == NULL;
+		  nul = adpos->PosRTable[i - 1].ReBox == NULL;
 	       }
 	     while (!(i == MAX_RELAT_POS || nul));
 
 	     if (nul)
 		boucle = FALSE;
 	     else
-		adpos = pTa1->PosRNext;	/* Bloc suivant */
+		adpos = adpos->PosRNext;	/* Bloc suivant */
 	  }
 
 	/* Faut-il creer un nouveau bloc de relations ? */
@@ -130,32 +125,32 @@ BoxEdge         rep2;
 	  {
 	     GetBPos (&adpos);
 	     if (cepos == NULL)
-		abox->BxPosRelations = adpos;
+		pTargetBox->BxPosRelations = adpos;
 	     else
 		cepos->PosRNext = adpos;
 	     i = 1;
 	  }
 	pRe1 = &adpos->PosRTable[i - 1];
 	pRe1->ReRefEdge = rep2;
-	pRe1->ReBox = debox;
+	pRe1->ReBox = pOrginBox;
 	pRe1->ReOp = op;
      }
-}				/* RelPos */
+}
+
 
 /* ---------------------------------------------------------------------- */
-/* |    RelDim etablit le lien de dependance entre les dimensions       | */
-/* |            horizontales ou verticales des deux boites (debox vers  | */
-/* |            abox).                                                  | */
+/* | InsertDimRelation etablit le lien entre les dimensions             | */
+/* |         horizontales ou verticales des deux boites (pOrginBox vers | */
+/* |         pTargetBox).                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         RelDim (PtrBox debox, PtrBox abox, boolean MemeDim, boolean horizRef)
+static void       RelDim (PtrBox pOrginBox, PtrBox pTargetBox, boolean MemeDim, boolean horizRef)
 #else  /* __STDC__ */
-static void         RelDim (debox, abox, MemeDim, horizRef)
-PtrBox            debox;
-PtrBox            abox;
+static void       RelDim (pOrginBox, pTargetBox, MemeDim, horizRef)
+PtrBox            pOrginBox;
+PtrBox            pTargetBox;
 boolean             MemeDim;
 boolean             horizRef;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -163,40 +158,37 @@ boolean             horizRef;
    boolean             nul;
    PtrDimRelations      cedim;
    PtrDimRelations      pDimRel;
-   PtrDimRelations      pTa1;
-
 
    i = 0;
    /* On determine la dimension affectee */
    if (horizRef)
       if (MemeDim)
-	 pDimRel = debox->BxWidthRelations;
+	 pDimRel = pOrginBox->BxWidthRelations;
       else
-	 pDimRel = debox->BxHeightRelations;
+	 pDimRel = pOrginBox->BxHeightRelations;
    else if (MemeDim)
-      pDimRel = debox->BxHeightRelations;
+      pDimRel = pOrginBox->BxHeightRelations;
    else
-      pDimRel = debox->BxWidthRelations;
+      pDimRel = pOrginBox->BxWidthRelations;
 
    /* On recherche une entree libre */
    cedim = NULL;
    boucle = TRUE;
    while (boucle && pDimRel != NULL)
      {
-	pTa1 = pDimRel;
 	i = 0;
 	cedim = pDimRel;
 	do
 	  {
 	     i++;
-	     nul = pTa1->DimRTable[i - 1] == NULL;
+	     nul = pDimRel->DimRTable[i - 1] == NULL;
 	  }
 	while (!(i == MAX_RELAT_DIM || nul));
 
 	if (nul)
 	   boucle = FALSE;
 	else
-	   pDimRel = pTa1->DimRNext;
+	   pDimRel = pDimRel->DimRNext;
      }
 
    /* Faut-il creer un nouveau bloc de relations ? */
@@ -205,17 +197,18 @@ boolean             horizRef;
 	GetBDim (&pDimRel);
 	if (cedim == NULL)
 	   if (horizRef)
-	      debox->BxWidthRelations = pDimRel;
+	      pOrginBox->BxWidthRelations = pDimRel;
 	   else
-	      debox->BxHeightRelations = pDimRel;
+	      pOrginBox->BxHeightRelations = pDimRel;
 	else
 	   cedim->DimRNext = pDimRel;
 	i = 1;
      }
 
-   pDimRel->DimRTable[i - 1] = abox;
+   pDimRel->DimRTable[i - 1] = pTargetBox;
    pDimRel->DimRSame[i - 1] = MemeDim;
-}				/* RelDim */
+}
+
 
 /* ---------------------------------------------------------------------- */
 /* |    PavDePos retourne le pointeur sur le pave de reference pour le  | */
@@ -224,20 +217,16 @@ boolean             horizRef;
 /* |            Si la valeur rendue est NULL, le pave se positionne par | */
 /* |            rapport au pave englobant.                              | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static PtrAbstractBox      PavDePos (PtrAbstractBox lepave, boolean horizRef)
-
+static PtrAbstractBox   PavDePos (PtrAbstractBox lepave, boolean horizRef)
 #else  /* __STDC__ */
-static PtrAbstractBox      PavDePos (lepave, horizRef)
-PtrAbstractBox             lepave;
+static PtrAbstractBox   PavDePos (lepave, horizRef)
+PtrAbstractBox      lepave;
 boolean             horizRef;
-
 #endif /* __STDC__ */
-
 {
-   boolean             encore;
-   PtrAbstractBox             pAb;
+   boolean          encore;
+   PtrAbstractBox   pAb;
 
    encore = TRUE;
    pAb = lepave->AbPrevious;
@@ -1601,29 +1590,24 @@ boolean             horizRef;
 /* |    BoiteHInclus recherche la boite qui relie horizontalement pBox  | */
 /* |            a` son englobante :                                     | */
 /* |            - Si on n'a pas modifie les relations, cette boite est  | */
-/* |            memorisee (BxHorizInc).                                  | */
-/* |            - Si la boite possede la relation OpHorizInc, c'est      | */
+/* |            memorisee (BxHorizInc).                                 | */
+/* |            - Si la boite possede la relation OpHorizInc, c'est     | */
 /* |            elle-meme.                                              | */
 /* |            - Sinon on regarde la boite soeur dont elle depend.     | */
-/* |            Retourne son adresse sinon NULL.                                | */
+/* |            Retourne son adresse sinon NULL.                        | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 PtrBox            BoiteHInclus (PtrBox pBox, PtrBox prec)
-
 #else  /* __STDC__ */
 PtrBox            BoiteHInclus (pBox, prec)
 PtrBox            pBox;
 PtrBox            prec;
-
 #endif /* __STDC__ */
-
 {
    PtrBox            box1;
    int                 i;
    PtrPosRelations      adpos;
    boolean             nonnul;
-   PtrPosRelations      pTa1;
    BoxRelation           *pRe1;
    PtrBox            Result;
 
@@ -1657,11 +1641,10 @@ PtrBox            prec;
 	adpos = pBox->BxPosRelations;
 	while (box1 == NULL && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 1;
-	     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+	     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	     while (i <= MAX_RELAT_POS && nonnul)
-		if (pTa1->PosRTable[i - 1].ReOp == OpHorizInc)
+		if (adpos->PosRTable[i - 1].ReOp == OpHorizInc)
 		  {
 		     box1 = pBox;
 		     i = MAX_RELAT_POS + 1;
@@ -1671,10 +1654,10 @@ PtrBox            prec;
 		  {
 		     i++;
 		     if (i <= MAX_RELAT_POS)
-			nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+			nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 		  }
 
-	     adpos = pTa1->PosRNext;
+	     adpos = adpos->PosRNext;
 	     /* Bloc suivant */
 	  }
 
@@ -1682,12 +1665,11 @@ PtrBox            prec;
 	adpos = pBox->BxPosRelations;
 	while (box1 == NULL && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 1;
-	     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+	     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	     while (i <= MAX_RELAT_POS && nonnul)
 	       {
-		  pRe1 = &pTa1->PosRTable[i - 1];
+		  pRe1 = &adpos->PosRTable[i - 1];
 		  if (pRe1->ReBox->BxAbstractBox != NULL)
 		     if (pRe1->ReOp == OpHorizDep
 		     /* Si c'est la bonne relation de dependance */
@@ -1713,17 +1695,17 @@ PtrBox            prec;
 			    {
 			       i++;
 			       if (i <= MAX_RELAT_POS)
-				  nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+				  nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 			    }
 		       }
 		     else
 		       {
 			  i++;
 			  if (i <= MAX_RELAT_POS)
-			     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+			     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 		       }
 	       }
-	     adpos = pTa1->PosRNext;	/* Bloc suivant */
+	     adpos = adpos->PosRNext;	/* Bloc suivant */
 	  }
 
 	pBox->BxHorizInc = box1;
@@ -1757,7 +1739,6 @@ PtrBox            prec;
    int                 i;
    PtrPosRelations      adpos;
    boolean             nonnul;
-   PtrPosRelations      pTa1;
    BoxRelation           *pRe1;
    PtrBox            result;
 
@@ -1792,11 +1773,10 @@ PtrBox            prec;
 	adpos = pBox->BxPosRelations;
 	while (box1 == NULL && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 1;
-	     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+	     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	     while (i <= MAX_RELAT_POS && nonnul)
-		if (pTa1->PosRTable[i - 1].ReOp == OpVertInc)
+		if (adpos->PosRTable[i - 1].ReOp == OpVertInc)
 		  {
 		     box1 = pBox;
 		     i = MAX_RELAT_POS + 1;	/* On a trouve */
@@ -1805,9 +1785,9 @@ PtrBox            prec;
 		  {
 		     i++;
 		     if (i <= MAX_RELAT_POS)
-			nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+			nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 		  }
-	     adpos = pTa1->PosRNext;	/* Bloc suivant */
+	     adpos = adpos->PosRNext;	/* Bloc suivant */
 
 	  }
 
@@ -1815,12 +1795,11 @@ PtrBox            prec;
 	adpos = pBox->BxPosRelations;
 	while (box1 == NULL && adpos != NULL)
 	  {
-	     pTa1 = adpos;
 	     i = 1;
-	     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+	     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	     while (i <= MAX_RELAT_POS && nonnul)
 	       {
-		  pRe1 = &pTa1->PosRTable[i - 1];
+		  pRe1 = &adpos->PosRTable[i - 1];
 		  if (pRe1->ReBox->BxAbstractBox != NULL)
 		     if (pRe1->ReOp == OpVertDep
 		     /* Si c'est la bonne relation de dependance */
@@ -1845,17 +1824,17 @@ PtrBox            prec;
 			    {
 			       i++;
 			       if (i <= MAX_RELAT_POS)
-				  nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+				  nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 			    }
 		       }
 		     else
 		       {
 			  i++;
 			  if (i <= MAX_RELAT_POS)
-			     nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+			     nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 		       }
 	       }
-	     adpos = pTa1->PosRNext;	/* Bloc suivant */
+	     adpos = adpos->PosRNext;	/* Bloc suivant */
 	  }
 
 	pBox->BxVertInc = box1;
@@ -1868,7 +1847,7 @@ PtrBox            prec;
 
 /* ---------------------------------------------------------------------- */
 /* |    DelPos defait, s'il existe, le lien de dependance de position ou| */
-/* |            d'axe horizontal ou vertical de la boite debox et       | */
+/* |            d'axe horizontal ou vertical de la boite pOrginBox et       | */
 /* |            retasse la liste des liens.                             | */
 /* |            Le parametre lepave, quand il est non nul, indique le   | */
 /* |            pave dont on annule la regle de position et sert a`     | */
@@ -1876,16 +1855,16 @@ PtrBox            prec;
 /* |            soeurs : si on trouve une relation associee a` une      | */
 /* |            regle de position qui reference lepave, cette relation  | */
 /* |            ne doit pas etre detruite. Quand lepave est nul, on     | */
-/* |            connait la boite abox referencee dans le lien que l'on  | */
+/* |            connait la boite pTargetBox referencee dans le lien que l'on  | */
 /* |            veut detruire (c'est alors une destruction de lien      | */
 /* |            inverse).                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DelPos (PtrBox debox, PtrBox abox, PtrAbstractBox lepave, boolean Pos, boolean Axe, boolean horizRef)
+static boolean      DelPos (PtrBox pOrginBox, PtrBox pTargetBox, PtrAbstractBox lepave, boolean Pos, boolean Axe, boolean horizRef)
 #else  /* __STDC__ */
-static boolean      DelPos (debox, abox, lepave, Pos, Axe, horizRef)
-PtrBox            debox;
-PtrBox            abox;
+static boolean      DelPos (pOrginBox, pTargetBox, lepave, Pos, Axe, horizRef)
+PtrBox            pOrginBox;
+PtrBox            pTargetBox;
 PtrAbstractBox             lepave;
 boolean             Pos;
 boolean             Axe;
@@ -1901,7 +1880,6 @@ boolean             horizRef;
    PtrPosRelations      precpos;
    PtrPosRelations      adpos;
    PtrAbstractBox             pAb;
-   PtrPosRelations      pTa1;
    BoxRelation           *pRe1;
    boolean             result;
 
@@ -1910,18 +1888,17 @@ boolean             horizRef;
    trouve = 0;
    i = 0;
    cepos = NULL;
-   adpos = debox->BxPosRelations;
+   adpos = pOrginBox->BxPosRelations;
    precpos = NULL;
    boucle = TRUE;
    if (adpos != NULL)
       while (boucle)
 	{
-	   pTa1 = adpos;
 	   i = 1;
-	   nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+	   nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	   while (i <= MAX_RELAT_POS && nonnul)
 	     {
-		pRe1 = &pTa1->PosRTable[i - 1];
+		pRe1 = &adpos->PosRTable[i - 1];
 		/* Si c'est une relation morte, on retasse la liste */
 		if (pRe1->ReBox->BxAbstractBox == NULL)
 		  {
@@ -1929,17 +1906,17 @@ boolean             horizRef;
 		     while (j < MAX_RELAT_POS)
 		       {
 			  k = j + 1;
-			  pTa1->PosRTable[j - 1].ReBox = pTa1->PosRTable[k - 1].ReBox;
-			  pTa1->PosRTable[j - 1].ReRefEdge = pTa1->PosRTable[k - 1].ReRefEdge;
-			  pTa1->PosRTable[j - 1].ReOp = pTa1->PosRTable[k - 1].ReOp;
-			  if (pTa1->PosRTable[k - 1].ReBox == NULL)
+			  adpos->PosRTable[j - 1].ReBox = adpos->PosRTable[k - 1].ReBox;
+			  adpos->PosRTable[j - 1].ReRefEdge = adpos->PosRTable[k - 1].ReRefEdge;
+			  adpos->PosRTable[j - 1].ReOp = adpos->PosRTable[k - 1].ReOp;
+			  if (adpos->PosRTable[k - 1].ReBox == NULL)
 			     j = MAX_RELAT_POS;
 			  else
 			    {
 			       j++;
 			       /* Faut-il annuler la derniere entree ? */
 			       if (j == MAX_RELAT_POS)
-				  pTa1->PosRTable[j - 1].ReBox = NULL;
+				  adpos->PosRTable[j - 1].ReBox = NULL;
 			    }
 		       }
 
@@ -1953,7 +1930,7 @@ boolean             horizRef;
 		else if (horizRef)
 		  {
 		     /* Est-ce l'entree a detruite ? */
-		     if (pRe1->ReBox == abox
+		     if (pRe1->ReBox == pTargetBox
 			 && ((Axe && pRe1->ReOp == OpHorizRef)
 			     || (Pos && pRe1->ReOp == OpHorizInc)
 			  || (Pos && lepave == NULL && pRe1->ReOp == OpHorizDep)
@@ -1966,7 +1943,7 @@ boolean             horizRef;
 
 		     /* Est-ce la relation de position du pave lepave ? */
 		     else if (trouve == 0 && Pos && pRe1->ReOp == OpHorizDep
-			      && lepave != NULL && pRe1->ReBox == abox)
+			      && lepave != NULL && pRe1->ReBox == pTargetBox)
 		       {
 			  pAb = pRe1->ReBox->BxAbstractBox;
 			  pAb = pAb->AbHorizPos.PosAbRef;
@@ -1988,7 +1965,7 @@ boolean             horizRef;
 		  }
 		/* Si c'est une relation en Y */
 		/* Est-ce l'entree a detruite ? */
-		else if (pRe1->ReBox == abox
+		else if (pRe1->ReBox == pTargetBox
 			 && ((Axe && pRe1->ReOp == OpVertRef)
 			     || (Pos && pRe1->ReOp == OpVertInc)
 			  || (Pos && lepave == NULL && pRe1->ReOp == OpVertDep)
@@ -2001,7 +1978,7 @@ boolean             horizRef;
 
 		/* Est-ce la relation de position du pave lepave ? */
 		else if (trouve == 0 && Pos && pRe1->ReOp == OpVertDep
-			 && lepave != NULL && pRe1->ReBox == abox)
+			 && lepave != NULL && pRe1->ReBox == pTargetBox)
 		  {
 		     pAb = pRe1->ReBox->BxAbstractBox;
 		     pAb = pAb->AbVertPos.PosAbRef;
@@ -2022,15 +1999,15 @@ boolean             horizRef;
 		  }
 		i++;
 		if (i <= MAX_RELAT_POS)
-		   nonnul = pTa1->PosRTable[i - 1].ReBox != NULL;
+		   nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
 	     }
 
-	   if (pTa1->PosRNext == NULL)
+	   if (adpos->PosRNext == NULL)
 	      boucle = FALSE;
 	   else
 	     {
 		precpos = adpos;
-		adpos = pTa1->PosRNext;	/* Bloc suivant */
+		adpos = adpos->PosRNext;	/* Bloc suivant */
 	     }
 	}
    /* On a trouve -> on retasse la liste */
@@ -2040,7 +2017,7 @@ boolean             horizRef;
 
 	/* Faut-il defaire la relation inverse ? */
 	if (lepave != NULL && (pRe1->ReOp == OpHorizDep || pRe1->ReOp == OpVertDep))
-	   boucle = DelPos (pRe1->ReBox, debox, NULL, Pos, Axe, horizRef);
+	   boucle = DelPos (pRe1->ReBox, pOrginBox, NULL, Pos, Axe, horizRef);
 
 	if (i > 1)
 	  {
@@ -2054,7 +2031,7 @@ boolean             horizRef;
 	if (i == 1)
 	  {
 	     if (precpos == NULL)
-		debox->BxPosRelations = NULL;
+		pOrginBox->BxPosRelations = NULL;
 	     else
 		precpos->PosRNext = NULL;
 	     FreeBPos (&adpos);
@@ -2070,16 +2047,16 @@ boolean             horizRef;
 
 /* ---------------------------------------------------------------------- */
 /* |    DelDim defait, s'il existe, le lien de de'pendance de dimension | */
-/* |            horizontale ou verticale de la boite debox vers la boite| */
-/* |            abox et retasse la liste des liens.                     | */
+/* |            horizontale ou verticale de la boite pOrginBox vers la boite| */
+/* |            pTargetBox et retasse la liste des liens.                     | */
 /* |            Rend la valeur Vrai si l'operation a ete executee.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DelDim (PtrBox debox, PtrBox abox, boolean horizRef)
+static boolean      DelDim (PtrBox pOrginBox, PtrBox pTargetBox, boolean horizRef)
 #else  /* __STDC__ */
-static boolean      DelDim (debox, abox, horizRef)
-PtrBox            debox;
-PtrBox            abox;
+static boolean      DelDim (pOrginBox, pTargetBox, horizRef)
+PtrBox            pOrginBox;
+PtrBox            pTargetBox;
 boolean             horizRef;
 
 #endif /* __STDC__ */
@@ -2090,51 +2067,49 @@ boolean             horizRef;
    PtrDimRelations      cedim;
    PtrDimRelations      precdim;
    PtrDimRelations      pDimRel;
-   PtrDimRelations      pTa1;
    boolean             result;
 
 
    i = 0;
    /* Cela peut etre une dimension elastique */
-   if ((horizRef && abox->BxHorizFlex) || (!horizRef && abox->BxVertFlex))
-      result = DelPos (debox, abox, NULL, FALSE, FALSE, horizRef);
+   if ((horizRef && pTargetBox->BxHorizFlex) || (!horizRef && pTargetBox->BxVertFlex))
+      result = DelPos (pOrginBox, pTargetBox, NULL, FALSE, FALSE, horizRef);
    else
      {
 	/* On recherche l'entree a detruire et la derniere entree occupee */
 	trouve = 0;
 	cedim = NULL;
 	if (horizRef)
-	   pDimRel = debox->BxWidthRelations;
+	   pDimRel = pOrginBox->BxWidthRelations;
 	else
-	   pDimRel = debox->BxHeightRelations;
+	   pDimRel = pOrginBox->BxHeightRelations;
 	precdim = NULL;
 	boucle = TRUE;
 	if (pDimRel != NULL)
 
 	   while (boucle)
 	     {
-		pTa1 = pDimRel;
 		i = 1;
-		nonnul = pTa1->DimRTable[i - 1] != NULL;
+		nonnul = pDimRel->DimRTable[i - 1] != NULL;
 		while (i <= MAX_RELAT_DIM && nonnul)
 		  {
 		     /* Est-ce l'entree a detruire ? */
-		     if (pTa1->DimRTable[i - 1] == abox)
+		     if (pDimRel->DimRTable[i - 1] == pTargetBox)
 		       {
 			  trouve = i;
 			  cedim = pDimRel;
 		       }
 		     i++;
 		     if (i <= MAX_RELAT_DIM)
-			nonnul = pTa1->DimRTable[i - 1] != NULL;
+			nonnul = pDimRel->DimRTable[i - 1] != NULL;
 		  }
 
-		if (pTa1->DimRNext == NULL)
+		if (pDimRel->DimRNext == NULL)
 		   boucle = FALSE;
 		else
 		  {
 		     precdim = pDimRel;
-		     pDimRel = pTa1->DimRNext;
+		     pDimRel = pDimRel->DimRNext;
 		     /* Bloc suivant */
 		  }
 	     }
@@ -2151,9 +2126,9 @@ boolean             horizRef;
 	       {
 		  if (precdim == NULL)
 		     if (horizRef)
-			debox->BxWidthRelations = NULL;
+			pOrginBox->BxWidthRelations = NULL;
 		     else
-			debox->BxHeightRelations = NULL;
+			pOrginBox->BxHeightRelations = NULL;
 		  else
 		     precdim->DimRNext = NULL;
 		  FreeBDim (&pDimRel);
@@ -2172,82 +2147,82 @@ boolean             horizRef;
 
 /* ---------------------------------------------------------------------- */
 /* |    RazHorsEnglobe detruit les relations hors hierarchie de la boite| */
-/* |            abox.                                                   | */
+/* |            pTargetBox.                                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazHorsEnglobe (PtrBox abox)
+void                RazHorsEnglobe (PtrBox pTargetBox)
 #else  /* __STDC__ */
-void                RazHorsEnglobe (abox)
-PtrBox            abox;
+void                RazHorsEnglobe (pTargetBox)
+PtrBox            pTargetBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox            debox;
+   PtrBox            pOrginBox;
    PtrAbstractBox             pAbbox1;
 
-   pAbbox1 = abox->BxAbstractBox;
+   pAbbox1 = pTargetBox->BxAbstractBox;
 
    /* On detruit la relation de position horizontale hors-structure */
-   if (abox->BxXOutOfStruct)
+   if (pTargetBox->BxXOutOfStruct)
      {
 	if (pAbbox1->AbHorizPos.PosAbRef == NULL)
-	   debox = NULL;
+	   pOrginBox = NULL;
 	else
-	   debox = pAbbox1->AbHorizPos.PosAbRef->AbBox;
-	if (debox != NULL)
-	   DelPos (debox, abox, NULL, TRUE, FALSE, TRUE);
+	   pOrginBox = pAbbox1->AbHorizPos.PosAbRef->AbBox;
+	if (pOrginBox != NULL)
+	   DelPos (pOrginBox, pTargetBox, NULL, TRUE, FALSE, TRUE);
 
 	/* Annule les relations hors-structure */
 	PropageXHorsStruct (pAbbox1, FALSE, pAbbox1->AbHorizEnclosing);
      }
 
    /* On detruit la relation de position verticale hors-structure */
-   if (abox->BxYOutOfStruct)
+   if (pTargetBox->BxYOutOfStruct)
      {
 	if (pAbbox1->AbVertPos.PosAbRef == NULL)
-	   debox = NULL;
+	   pOrginBox = NULL;
 	else
-	   debox = pAbbox1->AbVertPos.PosAbRef->AbBox;
-	if (debox != NULL)
-	   DelPos (debox, abox, NULL, TRUE, FALSE, FALSE);
+	   pOrginBox = pAbbox1->AbVertPos.PosAbRef->AbBox;
+	if (pOrginBox != NULL)
+	   DelPos (pOrginBox, pTargetBox, NULL, TRUE, FALSE, FALSE);
 
 	/* Annule les relations hors-structure */
 	PropageYHorsStruct (pAbbox1, FALSE, pAbbox1->AbVertEnclosing);
      }
 
    /* On detruit la relation de largeur hors-structure */
-   if (abox->BxWOutOfStruct)
+   if (pTargetBox->BxWOutOfStruct)
       /* Est-ce une dimension elastique ? */
-      if (abox->BxHorizFlex)
+      if (pTargetBox->BxHorizFlex)
 	{
-	   debox = pAbbox1->AbWidth.DimPosition.PosAbRef->AbBox;
-	   if (debox != NULL)
-	      DelPos (debox, abox, NULL, FALSE, FALSE, TRUE);
+	   pOrginBox = pAbbox1->AbWidth.DimPosition.PosAbRef->AbBox;
+	   if (pOrginBox != NULL)
+	      DelPos (pOrginBox, pTargetBox, NULL, FALSE, FALSE, TRUE);
 	}
       else
 	{
-	   debox = pAbbox1->AbWidth.DimAbRef->AbBox;
-	   if (debox != NULL)
-	      DelDim (debox, abox, TRUE);
+	   pOrginBox = pAbbox1->AbWidth.DimAbRef->AbBox;
+	   if (pOrginBox != NULL)
+	      DelDim (pOrginBox, pTargetBox, TRUE);
 	}
 
    /* On detruit la relation de hauteur hors-structure */
-   debox = NULL;
-   if (abox->BxHOutOfStruct)
+   pOrginBox = NULL;
+   if (pTargetBox->BxHOutOfStruct)
       /* Est-ce une dimension elastique ? */
-      if (abox->BxVertFlex)
+      if (pTargetBox->BxVertFlex)
 	{
 	   if (pAbbox1->AbHeight.DimPosition.PosAbRef != NULL)
-	      debox = pAbbox1->AbHeight.DimPosition.PosAbRef->AbBox;
-	   if (debox != NULL)
-	      DelPos (debox, abox, NULL, FALSE, FALSE, FALSE);
+	      pOrginBox = pAbbox1->AbHeight.DimPosition.PosAbRef->AbBox;
+	   if (pOrginBox != NULL)
+	      DelPos (pOrginBox, pTargetBox, NULL, FALSE, FALSE, FALSE);
 	}
       else
 	{
 	   if (pAbbox1->AbHeight.DimAbRef != NULL)
-	      debox = pAbbox1->AbHeight.DimAbRef->AbBox;
-	   if (debox != NULL)
-	      DelDim (debox, abox, FALSE);
+	      pOrginBox = pAbbox1->AbHeight.DimAbRef->AbBox;
+	   if (pOrginBox != NULL)
+	      DelDim (pOrginBox, pTargetBox, FALSE);
 	}
 }				/* RazHorsEnglobe */
 
@@ -2310,7 +2285,7 @@ PtrAbstractBox             paveref;
 
 /* ---------------------------------------------------------------------- */
 /* |    RazPosition recherche la boite dont depend la position          | */
-/* |            horizontale (si horizRef est Vrai) sinon verticale de debox :| */
+/* |            horizontale (si horizRef est Vrai) sinon verticale de pOrginBox :| */
 /* |            - Elle peut dependre de son englobante                  | */
 /* |            (relation OpInclus chez elle).                          | */
 /* |            - Elle peut dependre d'une voisine (deux                | */
@@ -2323,10 +2298,10 @@ PtrAbstractBox             paveref;
 /* |            hors-structure.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazPosition (PtrBox debox, boolean horizRef)
+void                RazPosition (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
-void                RazPosition (debox, horizRef)
-PtrBox            debox;
+void                RazPosition (pOrginBox, horizRef)
+PtrBox            pOrginBox;
 boolean             horizRef;
 
 #endif /* __STDC__ */
@@ -2336,9 +2311,9 @@ boolean             horizRef;
    boolean             boucle;
 
 
-   pAb = debox->BxAbstractBox;
+   pAb = pOrginBox->BxAbstractBox;
    /* Est-ce une relation hors-structure ? */
-   if ((horizRef && debox->BxXOutOfStruct) || (!horizRef && debox->BxYOutOfStruct))
+   if ((horizRef && pOrginBox->BxXOutOfStruct) || (!horizRef && pOrginBox->BxYOutOfStruct))
      {
 	/* Si la boite est detruite la procedure RazHorsEnglobe detruit */
 	/* automatiquement cette relation                               */
@@ -2352,18 +2327,18 @@ boolean             horizRef;
 	     boucle = TRUE;
 
 
-	     /* Recherche dans debox l'ancienne relation de positionnement */
+	     /* Recherche dans pOrginBox l'ancienne relation de positionnement */
 	     while (boucle && lepave != NULL)
 	       {
 		  if (lepave->AbBox != NULL)
-		     boucle = !DelPos (debox, lepave->AbBox, pAb, TRUE, FALSE, horizRef);
+		     boucle = !DelPos (pOrginBox, lepave->AbBox, pAb, TRUE, FALSE, horizRef);
 		  lepave = ProchainPave (lepave, pAb);
 	       }
 
 	     /* La relation hors-structure est detruite */
 	     if (horizRef)
 	       {
-		  debox->BxXOutOfStruct = FALSE;
+		  pOrginBox->BxXOutOfStruct = FALSE;
 
 		  /* Des boites voisines ont herite de la relation hors-structure ? */
 		  lepave = pAb->AbEnclosing;
@@ -2389,7 +2364,7 @@ boolean             horizRef;
 	       }
 	     else
 	       {
-		  debox->BxYOutOfStruct = FALSE;
+		  pOrginBox->BxYOutOfStruct = FALSE;
 
 		  /* Des boites voisines ont herite de la relation hors-structure ? */
 		  lepave = pAb->AbEnclosing;
@@ -2421,11 +2396,11 @@ boolean             horizRef;
 	lepave = pAb->AbEnclosing;
 	boucle = TRUE;
 
-	/* Recherche dans la boite debox l'ancienne relation de positionnement */
+	/* Recherche dans la boite pOrginBox l'ancienne relation de positionnement */
 	while (boucle && lepave != NULL)
 	  {
 	     if (lepave->AbBox != NULL)
-		boucle = !DelPos (debox, lepave->AbBox, pAb, TRUE, FALSE, horizRef);
+		boucle = !DelPos (pOrginBox, lepave->AbBox, pAb, TRUE, FALSE, horizRef);
 	     if (lepave == pAb->AbEnclosing)
 		lepave = lepave->AbFirstEnclosed;
 	     else
@@ -2436,7 +2411,7 @@ boolean             horizRef;
 
 /* ---------------------------------------------------------------------- */
 /* |    RazAxe recherche la boite dont depend l'axe de reference        | */
-/* |            horizontal (si horizRef est Vrai) sinon vertical de debox :  | */
+/* |            horizontal (si horizRef est Vrai) sinon vertical de pOrginBox :  | */
 /* |            - Il peut dependre d'elle meme (une relation chez elle).| */
 /* |            - Il peut dependre d'une englobee (une relation chez    | */
 /* |            l'englobee).                                            | */
@@ -2446,10 +2421,10 @@ boolean             horizRef;
 /* |            relation.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazAxe (PtrBox debox, boolean horizRef)
+void                RazAxe (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
-void                RazAxe (debox, horizRef)
-PtrBox            debox;
+void                RazAxe (pOrginBox, horizRef)
+PtrBox            pOrginBox;
 boolean             horizRef;
 
 #endif /* __STDC__ */
@@ -2459,7 +2434,7 @@ boolean             horizRef;
    PtrAbstractBox             lepave;
 
 
-   lepave = debox->BxAbstractBox;
+   lepave = pOrginBox->BxAbstractBox;
    boucle = TRUE;
 
    /* On recherche dans la descendance la dependance de l'axe de reference */
@@ -2467,7 +2442,7 @@ boolean             horizRef;
    while (boucle && pAb != NULL)
      {
 	if (pAb->AbBox != NULL)
-	   boucle = !DelPos (pAb->AbBox, debox, NULL, FALSE, TRUE, horizRef);
+	   boucle = !DelPos (pAb->AbBox, pOrginBox, NULL, FALSE, TRUE, horizRef);
 	if (pAb == lepave)
 	   pAb = pAb->AbFirstEnclosed;
 	else
@@ -2483,14 +2458,14 @@ boolean             horizRef;
 	while (boucle && pAb != NULL)
 	  {
 	     if (pAb != lepave && pAb->AbBox != NULL)
-		boucle = !DelPos (pAb->AbBox, debox, NULL, FALSE, TRUE, horizRef);
+		boucle = !DelPos (pAb->AbBox, pOrginBox, NULL, FALSE, TRUE, horizRef);
 	     pAb = pAb->AbNext;
 	  }
      }
 }				/* RazAxe */
 
 /* ---------------------------------------------------------------------- */
-/* |    RazLiens detruit toutes les relations avec la boite abox chez   | */
+/* |    RazLiens detruit toutes les relations avec la boite pTargetBox chez   | */
 /* |            ses voisines, son englobante et les relations hors      | */
 /* |            hierarchie :                                            | */
 /* |            -> la relation OpVertRef verticale.                        | */
@@ -2500,10 +2475,10 @@ boolean             horizRef;
 /* |            hierarchie.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazLiens (PtrBox abox)
+void                RazLiens (PtrBox pTargetBox)
 #else  /* __STDC__ */
-void                RazLiens (abox)
-PtrBox            abox;
+void                RazLiens (pTargetBox)
+PtrBox            pTargetBox;
 
 #endif /* __STDC__ */
 {
@@ -2511,13 +2486,13 @@ PtrBox            abox;
    PtrAbstractBox             lepave;
 
 
-   lepave = abox->BxAbstractBox;
+   lepave = pTargetBox->BxAbstractBox;
    pAb = lepave->AbEnclosing;
    if (pAb != NULL)
      {
 	/* On detruit les liens d'axe qui la concerne chez l'englobante */
-	DelPos (pAb->AbBox, abox, NULL, FALSE, TRUE, FALSE);	/*en Y */
-	DelPos (pAb->AbBox, abox, NULL, FALSE, TRUE, TRUE);	/*en X */
+	DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, TRUE, FALSE);	/*en Y */
+	DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, TRUE, TRUE);	/*en X */
 
 	/* On detruit les liens qui la concerne chez toutes ses voisines */
 	pAb = pAb->AbFirstEnclosed;
@@ -2526,26 +2501,26 @@ PtrBox            abox;
 	     if (pAb->AbBox != NULL && pAb != lepave)
 	       {
 		  /* En X : enleve la regle de position d'axe ou de dimension */
-		  DelPos (pAb->AbBox, abox, NULL, TRUE, FALSE, FALSE);
-		  DelPos (pAb->AbBox, abox, NULL, FALSE, TRUE, FALSE);
-		  DelPos (pAb->AbBox, abox, NULL, FALSE, FALSE, FALSE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, TRUE, FALSE, FALSE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, TRUE, FALSE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, FALSE, FALSE);
 
 		  /* En Y : enleve la regle de position d'axe ou de dimension */
-		  DelPos (pAb->AbBox, abox, NULL, TRUE, FALSE, TRUE);
-		  DelPos (pAb->AbBox, abox, NULL, FALSE, TRUE, TRUE);
-		  DelPos (pAb->AbBox, abox, NULL, FALSE, FALSE, TRUE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, TRUE, FALSE, TRUE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, TRUE, TRUE);
+		  DelPos (pAb->AbBox, pTargetBox, NULL, FALSE, FALSE, TRUE);
 	       }
 	     pAb = pAb->AbNext;
 	  }
 	/* On detruit eventuellement les liens non hierarchiques */
-	RazHorsEnglobe (abox);
+	RazHorsEnglobe (pTargetBox);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    RazDim recherche la boite dont depend la dimension horizontale  | */
-/* |            ou verticale de debox :                                 | */
+/* |            ou verticale de pOrginBox :                                 | */
 /* |            - Elle peut dependre de son englobante (une relation    | */
 /* |            chez l'englobante).                                     | */
 /* |            - Elle peut dependre d'une voisine (une relation chez   | */
@@ -2557,10 +2532,10 @@ PtrBox            abox;
 /* |            la relation est hors-structure.                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazDim (PtrBox debox, boolean horizRef, int frame)
+void                RazDim (PtrBox pOrginBox, boolean horizRef, int frame)
 #else  /* __STDC__ */
-void                RazDim (debox, horizRef, frame)
-PtrBox            debox;
+void                RazDim (pOrginBox, horizRef, frame)
+PtrBox            pOrginBox;
 boolean             horizRef;
 int                 frame;
 
@@ -2571,12 +2546,12 @@ int                 frame;
    PtrAbstractBox             lepave;
 
 
-   pAb = debox->BxAbstractBox;
+   pAb = pOrginBox->BxAbstractBox;
    lepave = pAb->AbEnclosing;
    boucle = FALSE;
 
    /* Est-ce une relation hors-structure en X ? */
-   if ((horizRef && debox->BxWOutOfStruct) || (!horizRef && debox->BxHOutOfStruct))
+   if ((horizRef && pOrginBox->BxWOutOfStruct) || (!horizRef && pOrginBox->BxHOutOfStruct))
      {
 	/* Si la boite est detruite la procedure RazHorsEnglobe detruit */
 	/* automatiquement cette relation                               */
@@ -2596,27 +2571,27 @@ int                 frame;
 	     if (horizRef)
 	       {
 		  /* La dimension est elastique en X ? */
-		  if (debox->BxHorizFlex)
+		  if (pOrginBox->BxHorizFlex)
 		    {
 		       while (boucle && lepave != NULL)
 			 {
 			    if (lepave->AbBox != NULL)
-			       boucle = !DelPos (lepave->AbBox, debox, NULL, FALSE, FALSE, horizRef);
+			       boucle = !DelPos (lepave->AbBox, pOrginBox, NULL, FALSE, FALSE, horizRef);
 			    if (lepave != NULL)
 			       lepave = ProchainPave (lepave, pAb);
 			 }
 
 		       /* Il faut retablir le point fixe */
-		       debox->BxHorizEdge = debox->BxAbstractBox->AbHorizPos.PosEdge;
+		       pOrginBox->BxHorizEdge = pOrginBox->BxAbstractBox->AbHorizPos.PosEdge;
 
 		       /* La boite n'est pas inversee */
-		       debox->BxHorizInverted = FALSE;
+		       pOrginBox->BxHorizInverted = FALSE;
 
 		       /* La dimension n'est plus elastique */
-		       debox->BxHorizFlex = FALSE;
+		       pOrginBox->BxHorizFlex = FALSE;
 
 		       /* Annule la largeur de la boite */
-		       ModLarg (debox, NULL, NULL, -debox->BxWidth, 0, frame);
+		       ModLarg (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
 
 		    }
 		  /* La dimension n'est pas elastique en X */
@@ -2624,51 +2599,51 @@ int                 frame;
 		     while (boucle && lepave != NULL)
 		       {
 			  if (lepave->AbBox != NULL)
-			     boucle = !DelDim (lepave->AbBox, debox, horizRef);
+			     boucle = !DelDim (lepave->AbBox, pOrginBox, horizRef);
 			  if (lepave != NULL)
 			     lepave = ProchainPave (lepave, pAb);
 		       }
 
 		  /* La relation hors-structure est detruite */
-		  debox->BxWOutOfStruct = FALSE;
+		  pOrginBox->BxWOutOfStruct = FALSE;
 	       }
 	     else
 	       {
 		  /* La dimension est elastique en Y ? */
-		  if (debox->BxVertFlex)
+		  if (pOrginBox->BxVertFlex)
 		    {
 		       while (boucle && lepave != NULL)
 			 {
 			    if (lepave->AbBox != NULL)
-			       boucle = !DelPos (lepave->AbBox, debox, NULL, FALSE, FALSE, horizRef);
+			       boucle = !DelPos (lepave->AbBox, pOrginBox, NULL, FALSE, FALSE, horizRef);
 			    if (lepave != NULL)
 			       lepave = ProchainPave (lepave, pAb);
 			 }
 
 		       /* Il faut retablir le point fixe */
-		       debox->BxVertEdge = debox->BxAbstractBox->AbVertPos.PosEdge;
+		       pOrginBox->BxVertEdge = pOrginBox->BxAbstractBox->AbVertPos.PosEdge;
 
 		       /* La boite n'est pas inversee */
-		       debox->BxVertInverted = FALSE;
+		       pOrginBox->BxVertInverted = FALSE;
 
 		       /* La dimension n'est plus elastique */
-		       debox->BxVertFlex = FALSE;
+		       pOrginBox->BxVertFlex = FALSE;
 
 		       /* Annule la hauteur de la boite */
-		       ModHaut (debox, NULL, NULL, -debox->BxHeight, frame);
+		       ModHaut (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
 		    }
 		  /* La dimension n'est pas elastique en Y */
 		  else
 		     while (boucle && lepave != NULL)
 		       {
 			  if (lepave->AbBox != NULL)
-			     boucle = !DelDim (lepave->AbBox, debox, horizRef);
+			     boucle = !DelDim (lepave->AbBox, pOrginBox, horizRef);
 			  if (lepave != NULL)
 			     lepave = ProchainPave (lepave, pAb);
 		       }
 
 		  /* La relation hors-structure est detruite */
-		  debox->BxHOutOfStruct = FALSE;
+		  pOrginBox->BxHOutOfStruct = FALSE;
 	       }
 
 	  }
@@ -2679,7 +2654,7 @@ int                 frame;
 	/* Est-ce que la dimension depend de l'englobante ? */
 	if (lepave != NULL)
 	  {
-	     boucle = !DelDim (lepave->AbBox, debox, horizRef);
+	     boucle = !DelDim (lepave->AbBox, pOrginBox, horizRef);
 	     if (boucle)
 		lepave = lepave->AbFirstEnclosed;
 	  }
@@ -2689,7 +2664,7 @@ int                 frame;
 	  {
 	     if (lepave->AbBox != NULL && lepave != pAb)
 	       {
-		  boucle = !DelDim (lepave->AbBox, debox, horizRef);
+		  boucle = !DelDim (lepave->AbBox, pOrginBox, horizRef);
 		  if (boucle)
 		     lepave = lepave->AbNext;
 	       }
@@ -2698,35 +2673,35 @@ int                 frame;
 	  }
 
 	/* La dimension est elastique en X ? */
-	if (horizRef && debox->BxHorizFlex)
+	if (horizRef && pOrginBox->BxHorizFlex)
 	  {
 	     /* La boite n'est pas inversee */
-	     debox->BxHorizInverted = FALSE;
+	     pOrginBox->BxHorizInverted = FALSE;
 
 	     /* La dimension n'est plus elastique */
-	     debox->BxHorizFlex = FALSE;
+	     pOrginBox->BxHorizFlex = FALSE;
 
 	     /* Il faut retablir le point fixe */
-	     debox->BxHorizEdge = debox->BxAbstractBox->AbHorizPos.PosEdge;
+	     pOrginBox->BxHorizEdge = pOrginBox->BxAbstractBox->AbHorizPos.PosEdge;
 
 	     /* Annule la largeur de la boite */
-	     ModLarg (debox, NULL, NULL, -debox->BxWidth, 0, frame);
+	     ModLarg (pOrginBox, NULL, NULL, -pOrginBox->BxWidth, 0, frame);
 	  }
 
 	/* La dimension est elastique en Y ? */
-	if (!horizRef && debox->BxVertFlex)
+	if (!horizRef && pOrginBox->BxVertFlex)
 	  {
 	     /* La boite n'est pas inversee */
-	     debox->BxVertInverted = FALSE;
+	     pOrginBox->BxVertInverted = FALSE;
 
 	     /* La dimension n'est plus elastique */
-	     debox->BxVertFlex = FALSE;
+	     pOrginBox->BxVertFlex = FALSE;
 
 	     /* Il faut retablir le point fixe */
-	     debox->BxVertEdge = debox->BxAbstractBox->AbVertPos.PosEdge;
+	     pOrginBox->BxVertEdge = pOrginBox->BxAbstractBox->AbVertPos.PosEdge;
 
 	     /* Annule la hauteur de la boite */
-	     ModHaut (debox, NULL, NULL, -debox->BxHeight, frame);
+	     ModHaut (pOrginBox, NULL, NULL, -pOrginBox->BxHeight, frame);
 	  }
      }
 

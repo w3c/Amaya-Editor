@@ -1330,10 +1330,10 @@ int                 fleche;
    /* fleche vers l'arriere  */
    if (fleche == 2 || fleche == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style,
-	       round ((float) buffer->BuPoints[2].XCoord / 1000 + x),
-	       round ((float) buffer->BuPoints[2].YCoord / 1000 + y),
-	       round ((float) buffer->BuPoints[1].XCoord / 1000 + x),
-      round ((float) buffer->BuPoints[1].YCoord / 1000 + y), epais, lg, lg);
+	       FloatToInt ((float) buffer->BuPoints[2].XCoord / 1000 + x),
+	       FloatToInt ((float) buffer->BuPoints[2].YCoord / 1000 + y),
+	       FloatToInt ((float) buffer->BuPoints[1].XCoord / 1000 + x),
+      FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), epais, lg, lg);
 
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1350,8 +1350,8 @@ int                 fleche;
 	if (i == nb - 1)
 	  {
 	     /* conserve les derniers points pour tracer les fleches */
-	     prevx = round (xp);
-	     prevy = round (yp);
+	     prevx = FloatToInt (xp);
+	     prevy = FloatToInt (yp);
 	  }
 	/* Coordonnees d'un nouveau point */
 	xp = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
@@ -1366,7 +1366,7 @@ int                 fleche;
    j--;
    if (fleche == 1 || fleche == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, prevx, prevy,
-	       round (xp), round (yp), epais, lg, lg);
+	       FloatToInt (xp), FloatToInt (yp), epais, lg, lg);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1518,7 +1518,7 @@ C_points           *controls;
 
    /* fleche vers l'arriere  */
    if (fleche == 2 || fleche == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, round (x2), round (y2), round (x1), round (y1), epais, lg, lg);
+      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x2), FloatToInt (y2), FloatToInt (x1), FloatToInt (y1), epais, lg, lg);
 
    for (i = 2; i < nb; i++)
      {
@@ -1560,7 +1560,7 @@ C_points           *controls;
 
    /* fleche vers l'avant */
    if (fleche == 1 || fleche == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, round (x3), round (y3), round (x1), round (y1), epais, lg, lg);
+      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), epais, lg, lg);
 
 
 }
