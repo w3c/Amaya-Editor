@@ -57,7 +57,7 @@ struct Langue_Ctl
 {
   CharUnit           LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
   CharUnit           LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)                */
-  CHAR_T             LangAlphabet;                   /* Alphabet associe a la langue               */
+  char               LangAlphabet;                   /* Alphabet associe a la langue               */
   CHAR_T             LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal             */
   CHAR_T             LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire            */
   Dictionary         LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires           */

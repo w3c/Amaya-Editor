@@ -80,7 +80,7 @@ static PathBuffer   SaveFileName;
 static ThotBool     SaveDocWithCopy;
 static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern CHAR_T         DefaultFileSuffix[5];        
+extern char         DefaultFileSuffix[5];        
 
 
 
@@ -544,6 +544,6 @@ void PivotLoadResources()
       TteConnectAction (T_writedocument, (Proc) WriteDocument);  
       TteConnectAction (T_setwritedirectory, (Proc) SetWriteDirectory);
     }
-  ustrcpy (DefaultFileSuffix, ".PIV");
+  strcpy (DefaultFileSuffix, ".PIV");
 }
 

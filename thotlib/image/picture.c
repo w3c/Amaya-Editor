@@ -1236,7 +1236,7 @@ ThotBool            printing;
    /* by default no plugins loaded */
    HandlersCounter = 0;
    currentExtraHandler = 0;
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = XbmCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = XbmPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsXbmFormat;
@@ -1245,7 +1245,7 @@ ThotBool            printing;
    PictureMenuType[HandlersCounter] = XBM_FORMAT;
    HandlersCounter++;
 
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = EpsCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = EpsPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsEpsFormat;
@@ -1254,7 +1254,7 @@ ThotBool            printing;
    PictureMenuType[HandlersCounter] = EPS_FORMAT;
    HandlersCounter++;
 
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = XpmCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = XpmPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsXpmFormat;
@@ -1263,7 +1263,7 @@ ThotBool            printing;
    PictureMenuType[HandlersCounter] = XPM_FORMAT;
    HandlersCounter++;
 
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = GifCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = GifPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsGifFormat;
@@ -1272,7 +1272,7 @@ ThotBool            printing;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
    HandlersCounter++;
 
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsPngFormat;
@@ -1281,7 +1281,7 @@ ThotBool            printing;
    PictureMenuType[HandlersCounter] = PNG_FORMAT;
    HandlersCounter++;
 
-   ustrncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
    PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
@@ -1309,7 +1309,7 @@ STRING              buffer;
 {
    int                 i = 0;
    int                 index = 0;
-   STRING              item;
+   char*               item;
 
    *count = HandlersCounter;
    while (i < HandlersCounter)

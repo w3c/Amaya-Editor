@@ -63,10 +63,10 @@ static CHAR_T       result[MAX_TXT_LEN];
    en accents.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T*             AsciiTranslate (CHAR_T* pBuffer)
+char  *             AsciiTranslate (char* pBuffer)
 #else  /* __STDC__ */
-CHAR_T*             AsciiTranslate (pBuffer)
-CHAR_T*             pBuffer;
+char*               AsciiTranslate (pBuffer)
+char*               pBuffer;
 
 #endif /* __STDC__ */
 {
@@ -74,22 +74,22 @@ CHAR_T*             pBuffer;
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
-   while (pBuffer[i] != WC_EOS)
+   while (pBuffer[i] != EOS)
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != TEXT('\\')) && (pBuffer[i] != WC_EOS))
+	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
 	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
-	if (pBuffer[i] != WC_EOS)
-	   if (pBuffer[i + 1] == TEXT('\\'))
+	if (pBuffer[i] != EOS)
+	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
 		result[j++] = pBuffer[i++];
 		result[j++] = pBuffer[i++];
 	     }
-	   else if (pBuffer[i + 1] == TEXT('n'))
+	   else if (pBuffer[i + 1] == 'n')
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
@@ -101,9 +101,9 @@ CHAR_T*             pBuffer;
 		i++;
 		/* on construit le nombre correspondant au caractere */
 		k = 0;
-		while ((pBuffer[i] >= TEXT('0'))
-		       && (pBuffer[i] <= TEXT('9'))
-		       && (pBuffer[i] != WC_EOS)
+		while ((pBuffer[i] >= '0')
+		       && (pBuffer[i] <= '9')
+		       && (pBuffer[i] != EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
 		nombre[k] = WC_EOS;

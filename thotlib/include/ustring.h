@@ -36,9 +36,9 @@ typedef char CharUnit;
 
 
 #ifdef __STDC__
-extern int          ustrcasecmp        (STRING, const STRING);
-extern int          cus2iso_strcasecmp (CharUnit*, const char*);
-extern int          iso2cus_strcasecmp (char*, const CharUnit*);
+extern int          ustrcasecmp        (const STRING, const STRING);
+extern int          cus2iso_strcasecmp (const CharUnit*, const char*);
+extern int          iso2cus_strcasecmp (const char*, const CharUnit*);
 extern STRING       ustrcat            (STRING, const STRING);
 extern STRING       ustrchr            (const STRING, CHAR_T);
 extern int          ustrcmp            (const STRING, const STRING);
@@ -46,14 +46,14 @@ extern int          ustrcoll           (const STRING, const STRING);
 extern STRING       ustrcpy            (STRING, const STRING);
 extern STRING       ustrdup            (const STRING);
 extern size_t       ustrlen            (const STRING);
-extern int          ustrncasecmp       (STRING, const STRING, unsigned int);
+extern int          ustrncasecmp       (const STRING, const STRING, unsigned int);
 extern STRING       ustrncat           (STRING, const STRING, unsigned int);
 extern STRING       ustrncmp           (const STRING, const STRING, unsigned int);
 extern STRING       ustrncpy           (STRING, const STRING, unsigned int);
 extern STRING       ustrrchr           (const STRING, CHAR_T);
 extern STRING       ustrstr            (const STRING, const STRING);
 extern STRING       ustrtok            (STRING, const STRING);
-extern int          StringCaseCompare  (CharUnit*, const CharUnit*);
+extern int          StringCaseCompare  (const CharUnit*, const CharUnit*);
 extern CharUnit*    StringConcat       (CharUnit*, const CharUnit*);
 extern CharUnit*    StrChr             (const CharUnit*, CharUnit);
 extern int          StringCompare      (const CharUnit*, const CharUnit*);
@@ -61,7 +61,7 @@ extern int          StrColl            (const CharUnit*, const CharUnit*);
 extern CharUnit*    StringCopy         (CharUnit*, const CharUnit*);
 extern CharUnit*    StringDuplicate    (const CharUnit*);
 extern size_t       StringLength       (const CharUnit*);
-extern int          StringNCaseCompare (CharUnit*, const CharUnit*, unsigned int);
+extern int          StringNCaseCompare (const CharUnit*, const CharUnit*, unsigned int);
 extern CharUnit*    StringNConcat      (CharUnit*, const CharUnit*, unsigned int);
 extern CharUnit*    StringNCompare     (const CharUnit*, const CharUnit*, unsigned int);
 extern CharUnit*    StringNCopy        (CharUnit*, const CharUnit*, unsigned int);

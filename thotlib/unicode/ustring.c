@@ -20,7 +20,7 @@
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcasecmp (STRING str1, const STRING str2)
+int ustrcasecmp (const STRING str1, const STRING str2)
 #else  /* __STDC__ */
 int ustrcasecmp (str1, str2)
 const STRING str1;
@@ -37,7 +37,7 @@ const STRING str2;
   ustrcasecmp: compare CharUnit* string to a char* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int cus2iso_strcasecmp (CharUnit* str1, const char* str2)
+int cus2iso_strcasecmp (const CharUnit* str1, const char* str2)
 #else  /* __STDC__ */
 int cus2iso_strcasecmp (str1, str2)
 const CharUnit* str1;
@@ -58,7 +58,7 @@ const char*     str2;
   ustrcasecmp: compare CharUnit* string to a char* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int iso2cus_strcasecmp (char* str1, const CharUnit* str2)
+int iso2cus_strcasecmp (const char* str1, const CharUnit* str2)
 #else  /* __STDC__ */
 int iso2cus_strcasecmp (str1, str2)
 const CharUnit* str1;
@@ -190,7 +190,7 @@ const char* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strcpy (char* dest, const STRING src)
+char* wc2iso_strcpy (char* dest, const CHAR_T* src)
 #else  /* __STDC__ */
 char* wc2iso_strcpy (dest, src)
 char*         dest;
@@ -289,7 +289,7 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrncasecmp (STRING str1, const STRING str2, unsigned int count)
+int ustrncasecmp (const STRING str1, const STRING str2, unsigned int count)
 #else  /* __STDC__ */
 int ustrncasecmp (str1, str2, count)
 const STRING str1;
@@ -447,7 +447,7 @@ const STRING strCharSet;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcasecmp (STRING str1, const STRING str2)
+int ustrcasecmp (const STRING str1, const STRING str2)
 #else  /* __STDC__ */
 int ustrcasecmp (str1, str2)
 const STRING str1;
@@ -465,28 +465,36 @@ const STRING str2;
   cus2iso_strcasecmp: compare CharUnit* string to a char* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int cus2iso_strcasecmp (CharUnit* str1, const char* str2)
+int cus2iso_strcasecmp (const CharUnit* str1, const char* str2)
 #else  /* __STDC__ */
 int cus2iso_strcasecmp (str1, str2)
 const CharUnit* str1;
 const char*     str2;
 #endif /* __STDC__ */
 {
-    return ustrcasecmp (str1, str2);
+#   ifdef _WINDOWS
+    return (unsigned int) _stricmp ((char*)str1, (char*)str2);
+#   else  /* !_WINDOWS */
+    return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
+#   endif /* !_WINDOWS */
 }
 
 /*-------------------------------------------------------------
   iso2cus_strcasecmp: compare char* string to a CharUnit* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int iso2cus_strcasecmp (char* str1, const CharUnit* str2)
+int iso2cus_strcasecmp (const char* str1, const CharUnit* str2)
 #else  /* __STDC__ */
 int iso2cus_strcasecmp (str1, str2)
 const CharUnit* str1;
 const char*     str2;
 #endif /* __STDC__ */
 {
-    return ustrcasecmp (str1, str2);
+#   ifdef _WINDOWS
+    return (unsigned int) _stricmp ((char*)str1, (char*)str2);
+#   else  /* !_WINDOWS */
+    return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
+#   endif /* !_WINDOWS */
 }
 
 /*-------------------------------------------------------------
@@ -584,7 +592,7 @@ const char* src;
 {
     return (STRING) strcpy ((char*)dest, (char*)src);
 }
-
+ 
 /*-------------------------------------------------------------
   wc2iso_strcpy: copies src (16-bit) into dest (8-bit). This 
   function suposes that momery has been already allocated in the 
@@ -676,7 +684,7 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrncasecmp (STRING str1, const STRING str2, unsigned int count)
+int ustrncasecmp (const STRING str1, const STRING str2, unsigned int count)
 #else  /* __STDC__ */
 int ustrncasecmp (str1, str2, count)
 const STRING str1;
@@ -744,11 +752,11 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strncpy (STRING dest, const STRING src, unsigned int count)
+STRING iso2wc_strncpy (STRING dest, const char* src, unsigned int count)
 #else  /* __STDC__ */
 STRING iso2wc_strncpy (dest, src, count)
 STRING       dest;
-const STRING src;
+const char*  src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -807,10 +815,10 @@ const STRING strCharSet;
   regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int StringCaseCompare (CharUnit* str1, const CharUnit* str2)
+int StringCaseCompare (const CharUnit* str1, const CharUnit* str2)
 #else  /* !__STDC__ */
 int StringCaseCompare (str1, str2)
-CharUnit*       str1; 
+const CharUnit* str1; 
 const CharUnit* str2;
 #endif /* !__STDC__ */
 {
@@ -963,10 +971,10 @@ const CharUnit* str;
   without regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int StringNCaseCompare (CharUnit* str1, const CharUnit* str2, unsigned int count)
+int StringNCaseCompare (const CharUnit* str1, const CharUnit* str2, unsigned int count)
 #else  /* !__STDC__ */
 int StringNCaseCompare (str1, str2, count)
-CharUnit*       str1; 
+const CharUnit* str1; 
 const CharUnit* str2; 
 unsigned int    count;
 #endif /* !__STDC__ */

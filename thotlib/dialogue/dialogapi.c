@@ -1770,7 +1770,7 @@ int                 number;
    principale d'une application.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitDialogueWindow (STRING name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
+void                TtaInitDialogueWindow (CharUnit* name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
 #else  /* __STDC__ */
 void                TtaInitDialogueWindow (name, geometry, logo, icon, number, textmenu)
 STRING              name;

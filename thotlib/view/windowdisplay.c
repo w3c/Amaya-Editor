@@ -647,7 +647,7 @@ int                 fg;
    int                 xcour, width, nb;
    STRING              ptcar;
 
-   font = ThotLoadFont (TEXT('L'), TEXT('t'), 0, 6, UnPoint, frame);
+   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	w = FrRef[frame];
@@ -3002,22 +3002,22 @@ int yf;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 EndOfString (STRING string, STRING suffix)
+int                 EndOfString (char* string, char* suffix)
 #else  /* __STDC__ */
 int                 EndOfString (string, suffix)
-STRING              string;
-STRING              suffix;
+char*               string;
+char*               suffix;
 
 #endif /* __STDC__ */
 {
    int                 string_lenght, suffix_lenght;
 
-   string_lenght = ustrlen (string);
-   suffix_lenght = ustrlen (suffix);
+   string_lenght = strlen (string);
+   suffix_lenght = strlen (suffix);
    if (string_lenght < suffix_lenght)
       return 0;
    else
-      return (ustrcmp (string + string_lenght - suffix_lenght, suffix) == 0);
+      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 #endif /* _WIN_PRINT */
 

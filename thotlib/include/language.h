@@ -54,7 +54,7 @@ typedef int        *Dictionary;
    Return value:
    identifier of the new language or 0 if the language cannot be added.
   ----------------------------------------------------------------------*/
-extern Language     TtaNewLanguage (STRING languageName, CHAR_T languageAlphabet, STRING principalDictionary, STRING secondDictionary);
+extern Language     TtaNewLanguage (STRING languageName, char languageAlphabet, STRING principalDictionary, STRING secondDictionary);
 
 /*----------------------------------------------------------------------
    TtaRemoveLanguage
@@ -129,7 +129,7 @@ extern Language     TtaGetLanguageIdFromAlphabet (CHAR_T languageAlphabet);
    Return value:
    a character that identifies the alphabet ('L' = latin, 'G' = greek).
   ----------------------------------------------------------------------*/
-extern CHAR_T        TtaGetAlphabet (Language languageId);
+extern char        TtaGetAlphabet (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaGetLanguageName
@@ -252,7 +252,7 @@ extern Language     TtaGetLanguageIdFromName ( /* CharUnit *languageName */ );
 extern CharUnit*    TtaGetVarLANG ( /* void */ );
 extern Language     TtaGetDefaultLanguage ( /* void */ );
 extern Language     TtaGetLanguageIdFromAlphabet ( /* char languageAlphabet */ );
-extern CHAR_T       TtaGetAlphabet ( /* Language languageId */ );
+extern char       TtaGetAlphabet ( /* Language languageId */ );
 extern STRING       TtaGetLanguageName ( /* Language languageId */ );
 extern STRING       TtaGetLanguageCode ( /* Language languageId */ );
 extern int          TtaGetNumberOfLanguages ( /* void */ );

@@ -211,7 +211,7 @@ extern ThotBool     TtaIsInDocumentPath (CharUnit* aDirectory);
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAppendDocumentPath (STRING aDirectory);
+extern void         TtaAppendDocumentPath (CharUnit* aDirectory);
 
 /*----------------------------------------------------------------------
    TtaSetSchemaPath
@@ -722,7 +722,7 @@ extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );
 extern ThotBool     TtaCheckPath (/* char *path */);
 extern ThotBool     TtaIsInDocumentPath ( /*char *aDirectory */ );
-extern void         TtaAppendDocumentPath ( /*char *aDirectory */ );
+extern void         TtaAppendDocumentPath ( /*CharUnit* aDirectory */ );
 extern void         TtaSetSchemaPath ( /* char *path */ );
 extern SSchema      TtaNewNature ( /* SSchema schema, char *natureName, char *presentationName */ );
 extern SSchema      TtaNewSchemaExtension ( /* Document document, char *extensionName, char *presentationName */ );

@@ -98,8 +98,8 @@ THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context for images    */
 THOT_EXPORT ThotWindow TtRootWindow;    /* Thot root window              */
 THOT_EXPORT int        TtWDepth;	/* Screen color depth            */
 THOT_EXPORT int        TtWPrinterDepth;	/* Printer color depth           */
-THOT_EXPORT CHAR_T     TtFontName[MAX_FONT * MAX_FONTNAME];/* font names */
-THOT_EXPORT CHAR_T     TtPsFontName[MAX_FONT * 8];/* PS font names       */
+THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* font names */
+THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];/* PS font names       */
 THOT_EXPORT int        TtFontFrames[MAX_FONT];
 THOT_EXPORT ptrfont    TtFonts[MAX_FONT];/* loaded fonts                 */
 THOT_EXPORT ThotCursor WindowCurs;	/* The window Cursor             */

@@ -29,20 +29,20 @@ extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern ptrfont LoadFont ( CHAR_T name[100],
                           int toPatch );
-extern void FontIdentifier ( CHAR_T alphabet,
-                             CHAR_T family,
+extern void FontIdentifier ( char alphabet,
+                             char family,
                              int highlight,
                              int size,
                              TypeUnit unit,
-                             CHAR_T r_name[10],
-                             CHAR_T r_nameX[100] );
-extern ptrfont ReadFont ( CHAR_T alphabet,
-                          CHAR_T family,
+                             char r_name[10],
+                             char r_nameX[100] );
+extern ptrfont ReadFont ( char alphabet,
+                          char family,
                           int highlight,
                           int size,
                           TypeUnit unit );
-extern ptrfont ThotLoadFont ( CHAR_T alphabet,
-                              CHAR_T family,
+extern ptrfont ThotLoadFont ( char alphabet,
+                              char family,
                               int highlight,
                               int size,
                               TypeUnit unit,
@@ -76,20 +76,20 @@ extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern ptrfont LoadFont (/* CHAR_T name[100],
                             int toPatch */);
-extern void FontIdentifier (/* CHAR_T alphabet,
-                               CHAR_T family,
+extern void FontIdentifier (/* char alphabet,
+                               char family,
                                int highlight,
                                int size,
                                TypeUnit unit,
-                               CHAR_T r_name[10],
-                               CHAR_T r_nameX[100] */);
-extern ptrfont ReadFont (/* CHAR_T alphabet,
-                            CHAR_T family,
+                               char r_name[10],
+                               char r_nameX[100] */);
+extern ptrfont ReadFont (/* char alphabet,
+                            char family,
                             int highlight,
                             int size,
                             TypeUnit unit */);
-extern ptrfont ThotLoadFont (/* CHAR_T alphabet,
-                                CHAR_T family,
+extern ptrfont ThotLoadFont (/* char alphabet,
+                                char family,
                                 int highlight,
                                 int size,
                                 TypeUnit unit,

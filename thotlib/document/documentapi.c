@@ -452,11 +452,11 @@ char*               path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsInDocumentPath (PathBuffer directory)
+ThotBool            TtaIsInDocumentPath (CharUnit* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaIsInDocumentPath (directory)
-char*               directory;
+CharUnit*           directory;
 
 #endif /* __STDC__ */
 
@@ -511,7 +511,7 @@ CharUnit*           directory;
    else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
-	i = ustrlen (DocumentPath);
+	i = StringLength (DocumentPath);
 	if (i + lg + 2 >= MAX_PATH)
 	   TtaError (ERR_string_too_long);
 	else

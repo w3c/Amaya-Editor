@@ -346,8 +346,8 @@ extern void Scroll ( int frame,
                      int yd,
                      int xf,
                      int yf );
-extern int EndOfString ( STRING string,
-                         STRING suffix );
+extern int EndOfString ( char* string,
+                         char* suffix );
 extern void XFlushOutput ( int frame );
 extern void PaintWithPattern ( int frame,
                                int x,
@@ -703,8 +703,8 @@ extern void Scroll (/* int frame,
                        int yd,
                        int xf,
                        int yf */);
-extern int EndOfString (/* STRING string,
-                           STRING suffix */);
+extern int EndOfString (/* char* string,
+                           char* suffix */);
 extern void XFlushOutput (/* int frame */);
 extern void PaintWithPattern (/* int frame,
                                  int x,

@@ -92,7 +92,7 @@ extern Document GetHTMLDocument ( const STRING documentPath,
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                STRING data );
-extern ThotBool CheckMakeDirectory ( STRING name,
+extern ThotBool CheckMakeDirectory ( CharUnit* name,
                                      ThotBool recursive );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
@@ -238,7 +238,7 @@ extern Document GetHTMLDocument (/* const STRING documentPath,
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  STRING data */);
-extern ThotBool CheckMakeDirectory (/* STRING name,
+extern ThotBool CheckMakeDirectory (/* CharUnit* name,
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);

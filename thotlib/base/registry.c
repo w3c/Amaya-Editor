@@ -86,6 +86,7 @@ static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
 static char*         AppRegistryEntryAppli = (char*) 0;
+static CharUnit*     AppNameW;
 static CharUnit      CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
@@ -689,7 +690,7 @@ char* name;
    /* first lookup in the System defaults */
    cour = AppRegistryEntry;
    while (cour != NULL) {
-         if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) && cour->value[0] != EOS) {
+         if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) && cour->value[0] != CUS_EOS) {
 #           ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #           endif
@@ -702,7 +703,7 @@ char* name;
    cour = AppRegistryEntry;
    while (cour != NULL) {
          if (!strcasecmp (cour->appli, AppRegistryEntryAppli)    && 
-             !strcmp (cour->name, name) && cour->value[0] != EOS && 
+             !strcmp (cour->name, name) && cour->value[0] != CUS_EOS && 
              cour->level == REGISTRY_USER) {
 #           ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
@@ -716,7 +717,7 @@ char* name;
    cour = AppRegistryEntry;
    while (cour != NULL) {
          if (!strcasecmp (cour->appli, AppRegistryEntryAppli)    && 
-             !strcmp (cour->name, name) && cour->value[0] != EOS && 
+             !strcmp (cour->name, name) && cour->value[0] != CUS_EOS && 
              cour->level == REGISTRY_SYSTEM) {
 #           ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
@@ -729,7 +730,7 @@ char* name;
    /* then lookup in the Thot library defaults */
    cour = AppRegistryEntry;
    while (cour != NULL) {
-         if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != EOS) {
+         if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != CUS_EOS) {
 #           ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #           endif
@@ -754,7 +755,7 @@ char* name;
 #  endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
 
    if (value == NULL)
-      TtaSetEnvString (name, _EMPTYSTR_, FALSE); 
+      TtaSetEnvString (name, CUSTEXT(""), FALSE); 
    else
        TtaSetEnvString (name, value, FALSE);
   
@@ -1112,7 +1113,7 @@ static STRING    WINReg_get (CONST STRING env)
 
   userBase = TEXT("Software");
   
-  usprintf (textKey, TEXT("%s\\%s\\%s"), userBase, AppRegistryEntryAppli, env);	                    
+  usprintf (textKey, TEXT("%s\\%s\\%s"), userBase, AppNameW, env);	                    
   success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS,
 			  &hKey);
   if (success == ERROR_SUCCESS)
@@ -1146,7 +1147,7 @@ static ThotBool WINReg_set (CONST STRING key, CONST STRING value)
    ustrncpy (ISO2WideChar(protValue), value, protValueLen - 1);
    protValue[protValueLen-1] = EOS;
 
-   usprintf (textKey,TEXT("%s\\%s\\%s"), userBase, AppRegistryEntryAppli, key);	                    
+   usprintf (textKey,TEXT("%s\\%s\\%s"), userBase, AppNameW, key);	                    
    success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
 	                         _EMPTYSTR_, REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
 		                     NULL, &hKey, &dwDisposition);  
@@ -1472,10 +1473,10 @@ CharUnit*           appArgv0;
 
 # ifdef _WINDOWS
   if (appArgv0[0] == CUS_DIR_SEP || (appArgv0[1] == CUSTEXT(':') && appArgv0[2] == CUS_DIR_SEP))
-     StringNCopy (&execname[0], appArgv0, sizeof (execname));
+     StringNCopy (&execname[0], appArgv0, sizeof (execname) / sizeof (CharUnit));
 # else  /* !_WINDOWS */
   if (appArgv0[0] == CUS_DIR_SEP)
-     strncpy (&execname[0], appArgv0, sizeof (execname));
+     strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CharUnit));
 # endif /* _WINDOWS */
    
   /*
@@ -1484,7 +1485,7 @@ CharUnit*           appArgv0;
    */
   else if (TtaFileExist (appArgv0))
     {
-      cus_getcwd (&execname[0], sizeof (execname));
+      cus_getcwd (&execname[0], sizeof (execname) / sizeof (CharUnit));
       StringConcat (execname, CUS_DIR_STR);
       StringConcat (execname, appArgv0);
     }
@@ -1556,6 +1557,9 @@ CharUnit*           appArgv0;
 # else /* !(defined(_WINDOWS) && defined(_I18N_)) */
   AppRegistryEntryAppli = TtaStrdup (appName);
 # endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
+
+  AppNameW = StringDuplicate (appName);
+
 #ifdef HAVE_LSTAT
    /*
     * on Unixes, the binary path started may be a softlink
@@ -1566,7 +1570,7 @@ CharUnit*           appArgv0;
 	  S_ISLNK (stat_buf.st_mode) &&
 	  len > 0)
      {
-       len = readlink (execname, filename, sizeof (filename));
+       len = readlink (execname, filename, sizeof (filename) / sizeof (CharUnit));
        if (len > 0)
 	 {
 	   filename[len] = 0;
@@ -1681,7 +1685,7 @@ CharUnit*           appArgv0;
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
-   cus_sprintf (filename, CUSTEXT("%s%c%s%c%s"), execname, DIR_SEP, THOT_CONFIG_FILENAME, DIR_SEP, THOT_INI_FILENAME);
+   cus_sprintf (filename, CUSTEXT("%s%c%s%c%s"), execname, CUS_DIR_SEP, THOT_CONFIG_FILENAME, CUS_DIR_SEP, THOT_INI_FILENAME);
    if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
@@ -1715,14 +1719,14 @@ CharUnit*           appArgv0;
      {
        dwSize = MAX_PATH;
        GetWindowsDirectory (windir, dwSize);
-       cus_sprintf (app_home, CUSTEXT("%s\\profiles\\%s\\%s"), windir, ptr, AppRegistryEntryAppli);
+       cus_sprintf (app_home, CUSTEXT("%s\\profiles\\%s\\%s"), windir, ptr, AppNameW);
      }
    else
      /* win95: apphome is  thotdir\users\username */
      cus_sprintf (app_home, CUSTEXT("%s\\%s\\%s"), execname, WIN_USERS_HOME_DIR, ptr);   
 #else /* !_WINDOWS */
    ptr = cus_getenv (CUSTEXT("HOME"));
-   cus_sprintf (app_home, "%s%c.%s", ptr, CUS_DIR_SEP, AppRegistryEntryAppli); 
+   cus_sprintf (app_home, "%s%c.%s", ptr, CUS_DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, TRUE);
@@ -1730,7 +1734,7 @@ CharUnit*           appArgv0;
    /* set the default APP_TMPDIR */
 #ifdef _WINDOWS
    /* the tmpdir is DEF_TMPDIR\app-name */
-   cus_sprintf (filename, CUSTEXT("%s%c%s"), DEF_TMPDIR, CUS_DIR_SEP, AppRegistryEntryAppli);
+   cus_sprintf (filename, CUSTEXT("%s%c%s"), DEF_TMPDIR, CUS_DIR_SEP, AppNameW);
    AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename, REGISTRY_SYSTEM, TRUE);
 #else
    /* under Unix, APP_TMPDIR == APP_HOME */
@@ -1797,6 +1801,7 @@ void                TtaFreeAppRegistry ()
     cour = next;
   }
   TtaFreeMemory (AppRegistryEntryAppli);
+  TtaFreeMemory (AppNameW);
   AppRegistryInitialized = 0;
 }
 

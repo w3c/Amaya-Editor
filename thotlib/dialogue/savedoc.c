@@ -84,14 +84,14 @@ int                 ent;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                fontname[100];
-   CHAR_T                text[20];
+   char                fontname[100];
+   char                text[20];
 
    if (TtWDepth > 1)
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
    else
      {
-	FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, 1, text, fontname);
+	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }				/*UnsetEntryMenu */

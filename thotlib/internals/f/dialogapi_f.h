@@ -20,7 +20,7 @@ extern void TtaInitDialogueTranslations ( ThotTranslations translations );
 extern void TtaChangeDialogueFonts ( STRING menufont,
                                      STRING formfont );
 extern int TtaGetReferencesBase ( int number );
-extern void TtaInitDialogueWindow ( STRING name,
+extern void TtaInitDialogueWindow ( CharUnit* name,
                                     STRING geometry,
                                     Pixmap logo,
                                     Pixmap icon,
@@ -168,7 +168,7 @@ extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);
 extern void TtaChangeDialogueFonts (/* STRING menufont,
                                        STRING formfont */);
 extern int TtaGetReferencesBase (/* int number */);
-extern void TtaInitDialogueWindow (/* STRING name,
+extern void TtaInitDialogueWindow (/* CharUnit* name,
                                       STRING geometry,
                                       Pixmap logo,
                                       Pixmap icon,

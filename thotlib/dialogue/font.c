@@ -41,7 +41,7 @@ static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
-static STRING       FontFamily;
+static char*        FontFamily;
 static ThotBool     UseLucidaFamily;
 static ThotBool     UseBitStreamFamily;
 
@@ -65,12 +65,13 @@ static ptrFC LastUsedFont = (ptrFC)0;
 #include "memory_f.h"
 #include "registry_f.h"
 #include "units_f.h"
+#include "ustring_f.h"
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-static CHAR_T  WIN_lpszFace [255];
+static char  WIN_lpszFace [MAX_LENGTH];
 static int   WIN_nHeight;
 static int   WIN_nWidth;
 static int   WIN_fnWeight;
@@ -83,17 +84,18 @@ static int   WIN_fdwStrikeOut;
  *                    characteristics.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static HFONT WIN_LoadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
+static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
 static HFONT WIN_LoadFont (alphabet, family, highlight, size, unit)
-CHAR_T     alphabet;
-CHAR_T     family;
+char     alphabet;
+char     family;
 int      highlight;
 int      size;
 TypeUnit unit;
 #endif /* __STDC__ */
 {
    HFONT hFont;
+   CHAR_T lpszFace [MAX_LENGTH];
 
    WIN_nHeight      = 0;
    WIN_nWidth       = 0;
@@ -102,33 +104,33 @@ TypeUnit unit;
    WIN_fdwUnderline = FALSE;
    WIN_fdwStrikeOut = FALSE;
 
-   if (alphabet != TEXT('L') && alphabet != TEXT('G') && alphabet != TEXT('g'))
+   if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
       return NULL;
 
-   if (alphabet == TEXT('g') || alphabet == TEXT('G')) {
-      family    = TEXT('s');
+   if (alphabet == 'g' || alphabet == 'G') {
+      family    = 's';
       highlight = 0 ;
    }
 
    switch (family) {
-          case TEXT('T'):
-          case TEXT('t'):
-               usprintf (&WIN_lpszFace[0], TEXT("Times New Roman"));
+          case 'T':
+          case 't':
+               sprintf (&WIN_lpszFace[0], "Times New Roman");
                break;
 
-          case TEXT('H'):
-          case TEXT('h'):
-               usprintf (&WIN_lpszFace[0], TEXT("Arial"));
+          case 'H':
+          case 'h':
+               sprintf (&WIN_lpszFace[0], "Arial");
                break;
 
-          case TEXT('C'):
-          case TEXT('c'):
-               usprintf (&WIN_lpszFace[0], TEXT("Courier New"));
+          case 'C':
+          case 'c':
+               sprintf (&WIN_lpszFace[0], "Courier New");
                break;
 
-          case TEXT('S'):
-          case TEXT('s'):
-               usprintf (&WIN_lpszFace[0], TEXT("Symbol"));
+          case 'S':
+          case 's':
+               sprintf (&WIN_lpszFace[0], "Symbol");
                break;
 
           default:
@@ -136,17 +138,17 @@ TypeUnit unit;
    }
 
    switch (StylesTable[highlight]) {
-          case TEXT('r'):
+          case 'r':
                break;
 
-          case TEXT('i'):
-          case TEXT('o'):
+          case 'i':
+          case 'o':
                WIN_fdwItalic = TRUE;
                break;
 
-          case TEXT('b'):
-          case TEXT('g'):
-          case TEXT('q'):
+          case 'b':
+          case 'g':
+          case 'q':
                WIN_fnWeight = FW_BOLD;
                break;
 
@@ -155,12 +157,14 @@ TypeUnit unit;
    }
 
    WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
-      
+
+   iso2wc_strcpy (lpszFace, WIN_lpszFace);
+   
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
                        WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
                        PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
-                       WIN_lpszFace);
+                       lpszFace);
 
    if (hFont == NULL) {
       WinErrorBox (WIN_Main_Wd, TEXT("WIN_LoadFont"));
@@ -676,31 +680,31 @@ int                 toPatch;
  *      FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontIdentifier (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, CHAR_T r_name[10], CHAR_T r_nameX[100])
+void                FontIdentifier (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_name[10], char r_nameX[100])
 #else  /* __STDC__ */
 void                FontIdentifier (alphabet, family, highlight, size, unit, r_name, r_nameX)
-CHAR_T                alphabet;
-CHAR_T                family;
+char                alphabet;
+char                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
-CHAR_T                r_name[10];
-CHAR_T                r_nameX[100];
+char                r_name[10];
+char                r_nameX[100];
 
 #endif /* __STDC__ */
 {
 
    if (highlight > MAX_HIGHLIGHT)
       highlight = MAX_HIGHLIGHT;
-   if (alphabet == TEXT('g') || alphabet == TEXT('G'))
+   if (alphabet == 'g' || alphabet == 'G')
      {
 	highlight = 0;		/* roman only for symbols */
-	family = TEXT('s');		/* times only for symbols */
-	ustrcpy (r_nameX, TEXT("-"));
-	ustrcat (r_nameX, TEXT("*"));
+	family = 's';		/* times only for symbols */
+	strcpy (r_nameX, "-");
+	strcat (r_nameX, "*");
      }
    else
-      ustrcpy (r_nameX, FontFamily);
+      strcpy (r_nameX, FontFamily);
 
    /* apply the current font zoom */
    if (unit == UnRelative)
@@ -718,13 +722,13 @@ CHAR_T                r_nameX[100];
 
    if (UseLucidaFamily)
      {
-	switch ((CHAR_T) TOLOWER (family))
+	switch (TOLOWER (family))
 	      {
-		 case TEXT('t'):
-		    ustrcat (r_nameX, TEXT("bright"));
+		 case 't':
+		    strcat (r_nameX, "bright");
 		    break;
-		 case TEXT('c'):
-		    ustrcat (r_nameX, TEXT("typewriter"));
+		 case 'c':
+		    strcat (r_nameX, "typewriter");
 		    break;
 		 default:
 		    break;
@@ -732,125 +736,120 @@ CHAR_T                r_nameX[100];
      }
    else
      {
-        ustrcat (r_nameX, TEXT("-"));
-	switch ((CHAR_T) TOLOWER (family))
+        strcat (r_nameX, "-");
+	switch (TOLOWER (family))
 	      {
-		 case TEXT('t'):
-		    ustrcat (r_nameX, TEXT("times"));
+		 case 't':
+		    strcat (r_nameX, "times");
 		    break;
-		 case TEXT('h'):
-		    ustrcat (r_nameX, TEXT("helvetica"));
+		 case 'h':
+		    strcat (r_nameX, "helvetica");
 		    break;
-		 case TEXT('c'):
-		    ustrcat (r_nameX, TEXT("courier"));
+		 case 'c':
+		    strcat (r_nameX, "courier");
 		    break;
-		 case TEXT('s'):
-		    ustrcat (r_nameX, TEXT("Symbol"));
+		 case 's':
+		    strcat (r_nameX, "Symbol");
 		    break;
 		 default:
-		    ustrcat (r_nameX, TEXT("*"));
+		    strcat (r_nameX, "*");
 	      }
      }
 
-   ustrcat (r_nameX, TEXT("-"));
-   switch ((CHAR_T) TOLOWER (StylesTable[highlight]))
+   strcat (r_nameX, "-");
+   switch (TOLOWER (StylesTable[highlight]))
 	 {
-	    case TEXT('r'):
-	       ustrcat (r_nameX, TEXT("medium"));
-	       ustrcat (r_nameX, TEXT("-"));
-	       ustrcat (r_nameX, TEXT("r"));
+	    case 'r':
+	       strcat (r_nameX, "medium");
+	       strcat (r_nameX, "-");
+	       strcat (r_nameX, "r");
 	       break;
-	    case TEXT('i'):
-	    case TEXT('o'):
-	       ustrcat (r_nameX, TEXT("medium"));
-	       ustrcat (r_nameX, TEXT("-"));
-	       if ((CHAR_T) TOLOWER (family) == TEXT('h') ||
-		   (CHAR_T) TOLOWER (family) == TEXT('c'))
-		   ustrcat (r_nameX, TEXT("o"));
+	    case 'i':
+	    case 'o':
+	       strcat (r_nameX, "medium");
+	       strcat (r_nameX, "-");
+	       if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+              strcat (r_nameX, "o");
 	       else
-		   ustrcat (r_nameX, TEXT("i"));
+               strcat (r_nameX, "i");
 	       break;
-	    case TEXT('b'):
-	       if (UseLucidaFamily && (CHAR_T) TOLOWER (family) == TEXT('t'))
-		  ustrcat (r_nameX, TEXT("demibold"));
+	    case 'b':
+	       if (UseLucidaFamily && TOLOWER (family) == 't')
+              strcat (r_nameX, "demibold");
 	       else
-		  ustrcat (r_nameX, TEXT("bold"));
-	       ustrcat (r_nameX, TEXT("-"));
-	       ustrcat (r_nameX, TEXT("r"));
+                strcat (r_nameX, "bold");
+	       strcat (r_nameX, "-");
+	       strcat (r_nameX, "r");
 	       break;
-	    case TEXT('g'):
-	    case TEXT('q'):
-	       if (UseLucidaFamily && (CHAR_T) TOLOWER (family) == TEXT('t'))
-		   ustrcat (r_nameX, TEXT("demibold"));
+	    case 'g':
+	    case 'q':
+	       if (UseLucidaFamily && TOLOWER (family) == 't')
+              strcat (r_nameX, "demibold");
 	       else
-		   ustrcat (r_nameX, TEXT("bold"));
-	       ustrcat (r_nameX, TEXT("-"));
-	       if ((CHAR_T) TOLOWER (family) == TEXT('h') ||
-		   (CHAR_T) TOLOWER (family) == TEXT('c'))
-		   ustrcat (r_nameX, TEXT("o"));
+              strcat (r_nameX, "bold");
+              strcat (r_nameX, "-");
+	       if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+              strcat (r_nameX, "o");
 	       else
-		   ustrcat (r_nameX, TEXT("i"));
+               strcat (r_nameX, "i");
 	       break;
 	 }
 
-   ustrcat (r_nameX, TEXT("-"));
-   if ((CHAR_T) TOLOWER (family) == TEXT('h'))
-      ustrcat (r_nameX, TEXT("normal"));  /* narrow helvetica does not exist */
+   strcat (r_nameX, "-");
+   if (TOLOWER (family) == 'h')
+      strcat (r_nameX, "normal");  /* narrow helvetica does not exist */
    else
-      ustrcat (r_nameX, TEXT("*"));
-   if ((CHAR_T) TOLOWER (family) == TEXT('s'))
+      strcat (r_nameX, "*");
+   if (TOLOWER (family) == 's')
      {
 	if (UseBitStreamFamily)
-	   usprintf (r_nameX, TEXT("%s-*-*-%d-83-83-p-*-*-fontspecific"),
-		     r_nameX, size * 10);
+	   sprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
 	else
-	   usprintf (r_nameX,TEXT( "%s-*-%d-*-75-75-p-*-*-fontspecific"),
-		     r_nameX, size);
+	   sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
      }
    else
      {
 	if (UseBitStreamFamily)
-	   usprintf (r_nameX, TEXT("%s-*-*-%d-83-83"), r_nameX, size * 10);
+	   sprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
 	else
-	   usprintf (r_nameX, TEXT("%s-*-%d-*-75-75"), r_nameX, size);
-	ustrcat (r_nameX, TEXT("-"));
-	if ((CHAR_T) TOLOWER (family) == TEXT('c'))
-	    ustrcat (r_nameX, TEXT("m"));
+	   sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
+	strcat (r_nameX, "-");
+	if (TOLOWER (family) == 'c')
+	    strcat (r_nameX, "m");
 	else
-	    ustrcat (r_nameX, TEXT("p"));
-	ustrcat (r_nameX, TEXT("-"));
-	ustrcat (r_nameX, TEXT("*"));
-	ustrcat (r_nameX, TEXT("-"));
-	if ((CHAR_T) TOLOWER (alphabet) == TEXT('l'))
+	    strcat (r_nameX, "p");
+	strcat (r_nameX, "-");
+	strcat (r_nameX, "*");
+	strcat (r_nameX, "-");
+	if (TOLOWER (alphabet) == 'l')
 	{
-	    ustrcat (r_nameX, TEXT("iso8859"));
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, TEXT("1"));
+	    strcat (r_nameX, "iso8859");
+	    strcat (r_nameX, "-");
+	    strcat (r_nameX, "1");
 	}
-	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('e')
-		 || alphabet == TEXT('2'))
+	else if (TOLOWER (alphabet) == 'e' || alphabet == '2')
 	{
-	    ustrcat (r_nameX, TEXT("iso8859"));
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, TEXT("2"));
+	    strcat (r_nameX, "iso8859");
+	    strcat (r_nameX, "-");
+	    strcat (r_nameX, "2");
 	}	
-	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('g'))
+	else if (TOLOWER (alphabet) == 'g')
 	{
-	    ustrcat (r_nameX, TEXT("*"));		/*adobe */
-	    ustrcat (r_nameX, TEXT("-"));		/*adobe */
-	    ustrcat (r_nameX, TEXT("fontspecific"));	/*adobe */
+	    strcat (r_nameX, "*");		/*adobe */
+	    strcat (r_nameX, "-");		/*adobe */
+	    strcat (r_nameX, "fontspecific");	/*adobe */
 	}
 	else
 	{
-	    ustrcat (r_nameX, TEXT("iso8859"));
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, TEXT("1"));
+	    strcat (r_nameX, "iso8859");
+	    strcat (r_nameX, "-");
+	    strcat (r_nameX, "1");
 		/* replace '1' by current alphabet */
-	    r_nameX[ustrlen (r_nameX) -1] = alphabet;
+	    r_nameX[strlen (r_nameX) -1] = alphabet;
 	}
      }
 
-   usprintf (r_name, TEXT("%c%c%c%d"), TOLOWER (alphabet), TOLOWER (family),
+   sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), TOLOWER (family),
 	    StylesTable[highlight], size);
 }
 
@@ -858,18 +857,18 @@ CHAR_T                r_nameX[100];
  *      ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             ReadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
+ptrfont             ReadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
 ptrfont             ReadFont (alphabet, family, highlight, size, unit)
-CHAR_T                alphabet;
-CHAR_T                family;
+char                alphabet;
+char                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                name[10], nameX[100];
+   char             name[10], nameX[100];
 
    FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
 #  ifndef _WINDOWS
@@ -885,11 +884,11 @@ TypeUnit            unit;
  *		a given frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ptrfont      LoadNearestFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame, ThotBool increase)
+static ptrfont      LoadNearestFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame, ThotBool increase)
 #else  /* __STDC__ */
 static ptrfont      LoadNearestFont (alphabet, family, highlight, size, unit, frame, increase)
-CHAR_T                alphabet;
-CHAR_T                family;
+char                alphabet;
+char                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
@@ -899,12 +898,12 @@ ThotBool            increase;
 {
   int                 i, j, deb, index;
   int                 mask;
-  CHAR_T                text[10], PsName[10], textX[100];
+  char                text[10], PsName[10], textX[100];
 #ifdef _WINDOWS
   SIZE                wsize;
   TEXTMETRIC          textMetric;
   CHAR_T              fontSize[5];
-  STRING              pText;
+  char*               pText;
   STRING              pFontSize;
   int                 c;
   HFONT               hOldFont;
@@ -934,7 +933,7 @@ ThotBool            increase;
     FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
    
   /* initialize the Proscript font name */
-  ustrcpy (PsName, text);
+  strcpy (PsName, text);
    
   /* Font cache lookup */
   j = 0;
@@ -943,7 +942,7 @@ ThotBool            increase;
   ptfont = NULL;
   while ((ptfont == NULL) && (i < MAX_FONT) && (TtFonts[i] != NULL))
     {
-      j = ustrcmp (&TtFontName[deb], text);
+      j = strcmp (&TtFontName[deb], text);
       if (j == 0)
 	{
 	  /* Font cache lookup succeeded */
@@ -962,8 +961,8 @@ ThotBool            increase;
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_PLACE_FOR_FONT), textX);
       else
 	{
-	  ustrcpy (&TtFontName[i * MAX_FONTNAME], text);
-	  ustrcpy (&TtPsFontName[i * 8], PsName);
+	  strcpy (&TtFontName[i * MAX_FONTNAME], text);
+	  strcpy (&TtPsFontName[i * 8], PsName);
 	   
 #         ifdef _WINDOWS
 	  if (unit == UnRelative)
@@ -1021,7 +1020,7 @@ ThotBool            increase;
            currentActiveFont = 0;
 	  }
 #      else  /* _WINDOWS */
-	  if (alphabet == TEXT('G') && size > 8 && (size < 16 || size == 24))
+	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
 	    ptfont = LoadFont (textX, size);
 	  else
 	    ptfont = LoadFont (textX, 0);
@@ -1098,11 +1097,11 @@ ThotBool            increase;
  *		a given frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             ThotLoadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame)
+ptrfont             ThotLoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
 ptrfont             ThotLoadFont (alphabet, family, highlight, size, unit, frame)
-CHAR_T                alphabet;
-CHAR_T                family;
+char                alphabet;
+char                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
@@ -1171,16 +1170,16 @@ char*               name;
 #endif /* _WINDOWS */
 {
 #  ifndef _WINDOWS
-   int                 ndir, ncurrent;
-   CHAR_T                FONT_PATH[128];
-   STRING              fontpath;
+   int              ndir, ncurrent;
+   CHAR_T           FONT_PATH[128];
+   STRING           fontpath;
 #  endif /* _WINDOWS */
-   STRING*             dirlist = NULL;
-   STRING*             currentlist = NULL;
-   CharUnit*           value;
-   CHAR_T              alphabet;
-   int                 f3;
-   int                 i;
+   STRING*          dirlist = NULL;
+   STRING*          currentlist = NULL;
+   CharUnit*        value;
+   char             alphabet;
+   int              f3;
+   int              i;
 
    /* is there a predefined font family ? */
    MenuSize = 12;
@@ -1191,20 +1190,20 @@ char*               name;
    MaxNumberOfSizes = 10;
    if (value == NULL)
      {
-	FontFamily = TtaAllocString (8);
-	ustrcpy (FontFamily, TEXT("-"));
-	ustrcat (FontFamily, TEXT("*"));
+	FontFamily = TtaGetMemory (8);
+	strcpy (FontFamily, "-");
+	strcat (FontFamily, "*");
      }
    else
      {
-	FontFamily = TtaAllocString (ustrlen (value) + 1);
-	ustrcpy (FontFamily, value);
-	if (!ustrcmp (FontFamily, TEXT("-b&h-lucida")))
+	FontFamily = TtaGetMemory (StringLength (value) + 1);
+	wc2iso_strcpy (FontFamily, value);
+	if (!strcmp (FontFamily, "-b&h-lucida"))
 	   UseLucidaFamily = TRUE;
 	else
 	  {
 	     UseLucidaFamily = FALSE;
-	     if (!ustrcmp (FontFamily, TEXT("gipsi-bitstream")))
+	     if (!strcmp (FontFamily, "gipsi-bitstream"))
 	       {
 		  UseBitStreamFamily = TRUE;
 		  /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
@@ -1227,7 +1226,7 @@ char*               name;
    /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
-      usscanf (value, TEXT("%d"), &MenuSize);
+      cus_sscanf (value, CUSTEXT("%d"), &MenuSize);
    f3 = MenuSize + 2;
 
 #  ifndef _WINDOWS
@@ -1283,26 +1282,26 @@ char*               name;
       TtFonts[i] = NULL;
 
    /* load first five predefined fonts */
-   FontDialogue = ThotLoadFont (alphabet, TEXT('t'), 0, MenuSize, UnPoint, 0);
+   FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
    if (FontDialogue == NULL)
      {
-	FontDialogue = ThotLoadFont (alphabet, TEXT('l'), 0, MenuSize, UnPoint, 0);
+	FontDialogue = ThotLoadFont (alphabet, 'l', 0, MenuSize, UnPoint, 0);
 	if (FontDialogue == NULL)
 	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
      }
 
-   IFontDialogue = ThotLoadFont (alphabet, TEXT('t'), 2, MenuSize, UnPoint, 0);
+   IFontDialogue = ThotLoadFont (alphabet, 't', 2, MenuSize, UnPoint, 0);
    if (IFontDialogue == NULL)
      {
-	IFontDialogue = ThotLoadFont (alphabet, TEXT('l'), 2, MenuSize, UnPoint, 0);
+	IFontDialogue = ThotLoadFont (alphabet, 'l', 2, MenuSize, UnPoint, 0);
 	if (IFontDialogue == NULL)
 	   IFontDialogue = FontDialogue;
      }
 
-   LargeFontDialogue = ThotLoadFont (alphabet, TEXT('t'), 1, f3, UnPoint, 0);
+   LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
    if (LargeFontDialogue == NULL)
      {
-	LargeFontDialogue = ThotLoadFont (alphabet, TEXT('t'), 1, f3, UnPoint, 0);
+	LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
 	if (LargeFontDialogue == NULL)
 	   LargeFontDialogue = IFontDialogue;
      }
@@ -1394,7 +1393,7 @@ int                 frame;
 		  TtFonts[j] = TtFonts[i];
 		  TtFonts[i] = NULL;
 		  TtFontFrames[j] = TtFontFrames[i];
-		  ustrcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
+		  strcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
 		  i--;
 		  j++;
 	       }

@@ -21,8 +21,8 @@ extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
 extern ThotBool TtaCheckPath ( char* path );
-extern ThotBool TtaIsInDocumentPath ( PathBuffer directory );
-extern void TtaAppendDocumentPath ( STRING directory );
+extern ThotBool TtaIsInDocumentPath ( CharUnit* directory );
+extern void TtaAppendDocumentPath ( CharUnit* directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,
                               STRING natureName,
@@ -92,8 +92,8 @@ extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
 extern ThotBool TtaCheckPath (/* char* path */);
-extern ThotBool TtaIsInDocumentPath (/* PathBuffer directory */);
-extern void TtaAppendDocumentPath (/* STRING directory */);
+extern ThotBool TtaIsInDocumentPath (/* CharUnit* directory */);
+extern void TtaAppendDocumentPath (/* CharUnit* directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* SSchema schema,
                                 STRING natureName,

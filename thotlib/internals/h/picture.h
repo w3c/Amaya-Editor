@@ -41,12 +41,12 @@
 #define NOERROR                1
 #define MAX_PICT_SIZE          32768
 
-#define XbmName  TEXT("Bitmap (.xbm)")
-#define EpsName  TEXT("EPSF (.eps)")
-#define GifName  TEXT("Gif (.gif)")
-#define JpegName TEXT("Jpeg (.jpg)")
-#define XpmName  TEXT("Pixmap (.xpm)")
-#define PngName  TEXT("Ping (.png)")
+#define XbmName  "Bitmap (.xbm)"
+#define EpsName  "EPSF (.eps)"
+#define GifName  "Gif (.gif)"
+#define JpegName "Jpeg (.jpg)"
+#define XpmName  "Pixmap (.xpm)"
+#define PngName  "Ping (.png)"
 
 typedef struct 
 {
@@ -86,7 +86,7 @@ typedef enum
 
 typedef struct
 {
-  CHAR_T   GUI_Name[MAX_FORMAT_NAMELENGHT];
+  char     GUI_Name[MAX_FORMAT_NAMELENGHT];
   Drawable (*Produce_Picture) ();
   void     (*Produce_Postscript) ();
   ThotBool (*Match_Format) ();

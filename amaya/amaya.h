@@ -39,8 +39,15 @@
 #define HTAppName     TEXT ("amaya")
 #define HTAppVersion  TEXT ("V2.5")
 #define HTAppDate     TEXT ("17 Dec 1999")
-#define URL_STR       TEXT ("/")
-#define URL_SEP       TEXT ('/')
+
+#define URL_STR       "/"
+#define URL_SEP       '/'
+
+#define CUS_URL_STR   TEXT ("/")
+#define CUS_URL_SEP   TEXT ('/')
+
+#define WC_URL_STR    TEXT ("/")
+#define WC_URL_SEP    TEXT ('/')
 
 
 /* Number of views used in Amaya */
@@ -192,7 +199,7 @@ typedef enum _ClickEvent {
 
 THOT_EXPORT int          appArgc;
 THOT_EXPORT STRING       *appArgv;
-THOT_EXPORT CHAR_T       TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT CharUnit     TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_text[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];

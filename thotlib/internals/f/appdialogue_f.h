@@ -35,7 +35,7 @@ extern void TteAddMenuItem ( WindowType windowtype,
                              int itemID,
                              char* actionName,
                              char itemType );
-extern void TteOpenMainWindow ( STRING name,
+extern void TteOpenMainWindow ( CharUnit* name,
                                 Pixmap logo,
                                 Pixmap icon );
 extern void APP_ButtonCallback ( ThotButton w,
@@ -152,7 +152,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
                                int itemID,
                                char* actionName,
                                char itemType */);
-extern void TteOpenMainWindow (/* STRING name,
+extern void TteOpenMainWindow (/* CharUnit* name,
                                   Pixmap logo,
                                   Pixmap icon */);
 extern void APP_ButtonCallback (/* ThotButton w,

@@ -15,7 +15,7 @@ extern void TtaGetProfileFileName ( STRING name,
                                     int length );
 extern void TtaGetDefProfileFileName ( STRING name,
                                        int length );
-extern int TtaGetProfilesItems ( STRING *listEntries,
+extern int TtaGetProfilesItems ( char** listEntries,
                                  int length );
 extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
                                      int item,
@@ -35,7 +35,7 @@ extern void TtaGetProfileFileName (/* STRING name,
                                       int length */);
 extern void TtaGetDefProfileFileName (/* STRING name,
                                          int length */);
-extern int TtaGetProfilesItems (/* STRING *listEntries,
+extern int TtaGetProfilesItems (/* char** listEntries,
                                    int length */);
 extern ThotBool Prof_ShowSeparator (/* Menu_Ctl *ptrmenu,
                                        int item,

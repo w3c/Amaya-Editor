@@ -232,12 +232,20 @@ static ThotBool  itemChecked = FALSE;
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
+#include "ustring_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
 extern void InitMathML ();
+
+#ifdef __STDC__
+extern CharUnit* TtaAllocCUString (unsigned int);
+#else  /* !__STDC__ */
+extern CharUnit* TtaAllocCUString ();
+#endif /* !__STDC__ */
+
 
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
@@ -1312,7 +1320,7 @@ STRING             title;
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),	 /* std thot msg */
 		     BaseDialog + DirSelect, ScanFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
-   if (LastURLName[0] != EOS)
+   if (LastURLName[0] != CUS_EOS)
       TtaSetTextForm (BaseDialog + URLName, LastURLName);
    else
      {
@@ -1332,7 +1340,7 @@ STRING             title;
 #else /* _WINDOWS */
 
    CurrentDocument = document;
-   if (LastURLName[0] != EOS)
+   if (LastURLName[0] != CUS_EOS)
       usprintf (s, TEXT("%s"), LastURLName);
    else
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
@@ -1368,8 +1376,8 @@ View        view;
 ThotBool    isHTML;
 #endif
 {
-  CHAR_T              tempfile[MAX_LENGTH];
-  int                 i;
+  CharUnit  tempfile[MAX_LENGTH];
+  int       i;
 
   /* create a new document */
   InNewWindow = TRUE;
@@ -1378,19 +1386,19 @@ ThotBool    isHTML;
       NewCSSfile = FALSE;
       NewHTMLfile = TRUE;
       /* generate a default name for the new document */
-      if (LastURLName[0] != EOS)
+      if (LastURLName[0] != CUS_EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
 	  if (IsW3Path (LastURLName))
 	  {
-		i = ustrlen (tempfile);
-		if (tempfile[i - 1] == TEXT (':'))
+		i = StringLength (tempfile);
+		if (tempfile[i - 1] == CUSTEXT (':'))
 		  /* LastURLName is the root of the server */
-		  i = ustrlen (LastURLName);
-	    usprintf (&LastURLName[i], TEXT("%cNew.html"), URL_SEP);
+		  i = StringLength (LastURLName);
+	    cus_sprintf (&LastURLName[i], CUSTEXT("%cNew.html"), CUS_URL_SEP);
 	  }
 	  else
-	    usprintf (LastURLName, TEXT("%s%cNew.html"), tempfile, DIR_SEP);
+	    cus_sprintf (LastURLName, CUSTEXT("%s%cNew.html"), tempfile, CUS_DIR_SEP);
 	}
       else
 	ustrcpy (DocumentName, TEXT("New.html"));
@@ -1400,10 +1408,10 @@ ThotBool    isHTML;
     {
       NewCSSfile = TRUE;
       NewHTMLfile = FALSE;
-      if (LastURLName[0] != EOS)
+      if (LastURLName[0] != CUS_EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  usprintf (LastURLName, TEXT("%s%cNew.css"), tempfile, DIR_SEP);
+	  cus_sprintf (LastURLName, CUSTEXT("%s%cNew.css"), tempfile, CUS_DIR_SEP);
 	}
       else
 	ustrcpy (DocumentName, TEXT("New.css"));
@@ -1441,20 +1449,20 @@ Document        doc;
 View            view;
 #endif
 {
-  STRING        s;
+  CharUnit* s;
 
   s = TtaGetEnvString ("HOME_PAGE");
    if (!s)
      {
        s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
-	 ustrcpy (LastURLName, s);
+	 StringCopy (LastURLName, s);
        else
-	 LastURLName[0] = EOS;
-       ustrcat (LastURLName, AMAYA_PAGE);
+	 LastURLName[0] = CUS_EOS;
+       StringConcat (LastURLName, AMAYA_PAGE);
      }
    else
-     ustrcpy (LastURLName, s);
+     StringCopy (LastURLName, s);
    InNewWindow = FALSE;
    CurrentDocument = doc;
    CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
@@ -3811,7 +3819,7 @@ STRING              data;
        if (val == 2)
 	 /* Clear */
 	 {
-	   LastURLName[0] = EOS;
+	   LastURLName[0] = CUS_EOS;
 #      ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
 #      endif /* !_WINDOWS */
@@ -3830,7 +3838,7 @@ STRING              data;
 	   if (val == 1)
 	     /* OK */
 	     {
-	       if (LastURLName[0] != EOS)
+	       if (LastURLName[0] != CUS_EOS)
 		 {
 		   if (NewCSSfile || NewHTMLfile)
 		       InitializeNewDoc (LastURLName, NewHTMLfile);
@@ -3887,12 +3895,12 @@ STRING              data;
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
-	   ustrcpy (LastURLName, data);
+	   StringCopy (LastURLName, data);
 	   DocumentName[0] = EOS;
 	 }
        else
 	 {
-	   LastURLName[0] = EOS;
+	   LastURLName[0] = CUS_EOS;
 	   tempfile = TtaAllocString (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile);
 	   
@@ -3943,7 +3951,7 @@ STRING              data;
        
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
-       LastURLName[0] = EOS;
+       LastURLName[0] = CUS_EOS;
        /* construct the document full name */
        tempfile = TtaAllocString (MAX_LENGTH);
        ustrcpy (tempfile, DirectoryName);
@@ -4086,14 +4094,14 @@ STRING              data;
 	   /* Move the information into LastURLName or DirectoryName */
 	   if (IsW3Path (SavePath))
 	     {
-	       ustrcpy (LastURLName, SavePath);
-	       ustrcat (LastURLName, TEXT("/"));
-	       ustrcat (LastURLName, SaveName);
+	       StringCopy (LastURLName, SavePath);
+	       StringConcat (LastURLName, CUSTEXT("/"));
+	       StringConcat (LastURLName, SaveName);
 	       DirectoryName[0] = EOS;
 	     }
 	   else
 	     {
-	       LastURLName[0] = EOS;
+	       LastURLName[0] = CUS_EOS;
 	       ustrcpy (DirectoryName, SavePath);
 	       ustrcat (DocumentName, SaveName);
 	     }
@@ -4406,15 +4414,15 @@ static ThotBool       RestoreAmayaDocs ()
   all the intermediary directories.
   Returns TRUE if the operation succeeds, FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool CheckMakeDirectory (STRING name, ThotBool recursive)
+ThotBool CheckMakeDirectory (CharUnit* name, ThotBool recursive)
 {
-  ThotBool i;
-  STRING tmp_name;
-  CHAR_T *ptr;
-  CHAR_T tmp_char;
+  ThotBool  i;
+  CharUnit* tmp_name;
+  CharUnit* ptr;
+  CharUnit  tmp_char;
 
   /* protection against bad calls */
-  if (!name || *name == EOS)
+  if (!name || *name == CUS_EOS)
     return FALSE;
 
   /* does the directory exist? */
@@ -4432,17 +4440,17 @@ ThotBool CheckMakeDirectory (STRING name, ThotBool recursive)
 	return FALSE;
       
       /* try to create all the missing directories up to name */
-      tmp_name = TtaStrdup (name);
+      tmp_name = StringDuplicate (name);
       ptr = tmp_name;
       /* create all the intermediary directories */
-      while (*ptr != EOS)
+      while (*ptr != CUS_EOS)
 	{
-	  if (*ptr != DIR_SEP)
+	  if (*ptr != CUS_DIR_SEP)
 	    ptr++;
 	  else
 	    {
 	      tmp_char = *ptr;
-	      *ptr = EOS;
+	      *ptr = CUS_EOS;
 	      i = TtaMakeDirectory (tmp_name);
 	      if (!i)
 		{
@@ -4508,7 +4516,8 @@ void                InitAmaya (event)
 NotifyEvent        *event;
 #endif
 {
-   STRING              s, tempname;
+   CharUnit*           s;
+   CharUnit*           tempname;
    int                 i;
    ThotBool            restoredDoc;
 
@@ -4657,28 +4666,28 @@ NotifyEvent        *event;
      }
 
    /* add the temporary directory in document path */
-   ustrcpy (TempFileDirectory, s);
+   StringCopy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
  
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
      /* didn't work, so we exit */
      {
-       usprintf (TempFileDirectory, TEXT("InitAmaya: Couldnt' create directory %s"), s);
+       cus_sprintf (TempFileDirectory, CUSTEXT("InitAmaya: Couldnt' create directory %s"), s);
        MessageBox (NULL, TempFileDirectory, TEXT("Error"), MB_OK);
        exit (1);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    /*
     * Build the User preferences file name:
     * $HOME/.amaya/amaya.css on Unix platforms
     * $HOME\amaya\amaya.css on Windows platforms
     */
-   tempname = TtaAllocString (MAX_LENGTH);
-   usprintf (tempname, TEXT("%s%c%s.css"), s, DIR_SEP, HTAppName);
+   tempname = TtaAllocCUString (MAX_LENGTH);
+   cus_sprintf (tempname, CUSTEXT("%s%c%s.css"), s, CUS_DIR_SEP, HTAppName);
    if (TtaFileExist (tempname))
-     UserCSS = TtaStrdup (tempname);
+     UserCSS = StringDuplicate (tempname);
    else
      /* no User preferences */
      UserCSS = NULL;
@@ -4695,7 +4704,7 @@ NotifyEvent        *event;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and image files */
-       usprintf (tempname, TEXT("%s%c%d"), TempFileDirectory, DIR_SEP, i);
+       cus_sprintf (tempname, CUSTEXT("%s%c%d"), TempFileDirectory, CUS_DIR_SEP, i);
        TtaMakeDirectory (tempname);
        /* adding the CSS directory */
        if (i == 0)
@@ -4703,8 +4712,8 @@ NotifyEvent        *event;
      }
 
    /* allocate working buffers */
-   LastURLName = TtaAllocString (MAX_LENGTH);
-   LastURLName[0] = EOS;
+   LastURLName = TtaAllocCUString (MAX_LENGTH);
+   LastURLName[0] = CUS_EOS;
    DirectoryName = TtaAllocString (MAX_LENGTH);
 
    /* set path on current directory */
@@ -4788,16 +4797,16 @@ NotifyEvent        *event;
      {
        s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
-	 ustrcpy (LastURLName, s);
+	 StringCopy (LastURLName, s);
        else
-	 LastURLName[0] = EOS;
-       ustrcat (LastURLName, AMAYA_PAGE);
+	 LastURLName[0] = CUS_EOS;
+       StringConcat (LastURLName, AMAYA_PAGE);
        CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
      }
    else if (IsW3Path (s))
      {
        /* it is a remote document */
-       ustrcpy (LastURLName, s);
+       StringCopy (LastURLName, s);
        CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
      }
    else
@@ -4811,9 +4820,9 @@ NotifyEvent        *event;
 	   NormalizeFile (s, LastURLName);
 	   /* check if it is an absolute or a relative name */
 #          ifdef _WINDOWS
-	   if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == TEXT(':')))
+	   if ((LastURLName[0] == CUS_DIR_SEP) || (LastURLName[1] == CUSTEXT(':')))
 #          else  /* !_WINDOWS */
-	   if (LastURLName[0] == DIR_SEP)
+	   if (LastURLName[0] == CUS_DIR_SEP)
 #          endif /* !_WINDOWS */
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
@@ -4821,7 +4830,7 @@ NotifyEvent        *event;
 	     /* it is a relative name */
 	     ustrcpy (DocumentName, LastURLName);
 	   /* start with the local document */
-	   LastURLName[0] = EOS;
+	   LastURLName[0] = CUS_EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
 	 }
     else

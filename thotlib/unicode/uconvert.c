@@ -313,7 +313,7 @@ CHAR_T c;
 CharUnit ToLower (CharUnit c) 
 #else  /* !__STDC__ */
 CharUnit ToLower (c)
-CharUnut c;
+CharUnit c;
 #endif /* __STDC__ */
 {
 #   if defined(_WINDOWS) && defined(_I18N_)

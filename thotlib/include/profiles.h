@@ -46,14 +46,14 @@ extern void     TtaGetDefProfileFileName (STRING name, int length);
    listEntries is a provided list of length pointers.
    Returns the number of items
 ------------------------------------------------------------------*/
-extern int      TtaGetProfilesItems (STRING *listEntries, int length);
+extern int      TtaGetProfilesItems (char** listEntries, int length);
 
 #else  /* !__STDC__ */
 extern void     TtaRebuildProTable (/*char *prof_file*/);
 extern ThotBool TtaCanEdit ();
 extern void     TtaGetProfileFileName (/*STRING name, int length*/);
 extern void     TtaGetDefProfileFileName (/*STRING name, int length*/);
-extern int      TtaGetProfilesItems (/*STRING *listEntries, int length*/);
+extern int      TtaGetProfilesItems (/*char** listEntries, int length*/);
 
 #endif /* !__STDC__ */
 

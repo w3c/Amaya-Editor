@@ -26,7 +26,9 @@
 #include "modif.h"
 #include "appdialogue.h"
 #include "dialog.h"
+#ifndef _WINDOWS
 #include "logowindow.h"
+#endif /* !_WINDOWS */
 #include "application.h"
 #include "dialog.h"
 
@@ -230,10 +232,10 @@ int                 number;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR_T                namef1[100];
-   CHAR_T                namef2[100];
-   CHAR_T                text[100];
-   CHAR_T                alphabet;
+   char                namef1[100];
+   char                namef2[100];
+   char                text[100];
+   char                alphabet;
 
 #  ifndef _WINDOWS
    Display            *Dp;
@@ -290,8 +292,8 @@ int                 number;
 #  endif /* !_WINDOWS */
 
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   FontIdentifier (alphabet, TEXT('H'), 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier (alphabet, TEXT('H'), 1, MenuSize, UnPoint, text, namef2);
+   FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
 #  ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
 #  endif /* !_WINDOWS */
@@ -941,7 +943,7 @@ int                 itemsNumber;
 	     /* relie le sous-menu a l'item */
 	     ptrItem[j].SubMenu = newmenu;
 	     ptrItem[j].ItemID = itemID;
-	     ptrItem[j].ItemType = TEXT('M');
+	     ptrItem[j].ItemType = 'M';
 	  }
      }
 }
@@ -1316,10 +1318,10 @@ int                 doc;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteOpenMainWindow (STRING name, Pixmap logo, Pixmap icon)
+void                TteOpenMainWindow (CharUnit* name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
 void                TteOpenMainWindow (name, logo, icon)
-STRING              name;
+CharUnit*           name;
 Pixmap              logo;
 Pixmap              icon;
 
@@ -3797,13 +3799,13 @@ ThotBool     on;
 {
 #  ifndef _GTK
 #  ifndef _WINDOWS 
-   CHAR_T              fontname[100];
-   CHAR_T              text[20];
+   char              fontname[100];
+   char              text[20];
 #  else /* _WINDOWS */
-   HMENU               hMenu;
+   HMENU             hMenu;
 #  endif /* _WINDOWS */
-   int                 view, assoc, frame;
-   int                 ref, item;
+   int               view, assoc, frame;
+   int               ref, item;
 
    if (pDoc == NULL)
       return;
@@ -3825,7 +3827,7 @@ ThotBool     on;
              else if (TtWDepth > 1)
                   TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	         else {
-                  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+                  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
                   TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 			 }  
 #            endif /* _WINDOWS */
@@ -3849,7 +3851,7 @@ ThotBool     on;
           else if (TtWDepth > 1)
                TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
           else {
-               FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+               FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
                TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 		  }
 #         endif /* _WINDOWS */
@@ -3872,8 +3874,8 @@ ThotBool     on;
 {
 #ifndef _GTK
 #ifndef _WINDOWS 
-  CHAR_T                fontname[100];
-  CHAR_T                text[20];
+  char                fontname[100];
+  char                text[20];
 #else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3904,7 +3906,7 @@ ThotBool     on;
 		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	      else
 		{
-		  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 		}
 #endif /* _WINDOWS */
@@ -3931,7 +3933,7 @@ ThotBool     on;
 	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	  else
 	    {
-	      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	    }
 #endif /* _WINDOWS */
@@ -3954,8 +3956,8 @@ ThotBool     on;
 {
 #ifndef _GTK 
 #ifndef _WINDOWS 
-  CHAR_T                fontname[100];
-  CHAR_T                text[20];
+  char                fontname[100];
+  char                text[20];
 #else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3991,7 +3993,7 @@ ThotBool     on;
 			TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 		      else
 			{
-			  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+			  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 			  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 			}
 		    }
@@ -4246,8 +4248,8 @@ int                 itemID;
    int                 item;
    int                 action;
 #ifndef _WINDOWS 
-   CHAR_T                fontname[100];
-   CHAR_T                text[20];
+   char                fontname[100];
+   char                text[20];
 #else /* _WINDOWS */
    HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -4282,7 +4284,7 @@ int                 itemID;
 	 TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
        else
 	 {
-	   FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+	   FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 	   TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	 }
 #endif /* _WINDOWS */
