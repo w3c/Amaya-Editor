@@ -215,7 +215,7 @@ int entry;
   if (*value != old)
     /* change the toggle button state */
     {
-#ifdef _WINDOWS
+#ifndef _WINDOWS
       TtaSetToggleMenu (ref, entry, *value);
 #endif /* WINDOWS */
     }
