@@ -76,6 +76,10 @@ then
 	then
 		echo "solaris2"
 		exit 0
+	elif [ "$MACH" = "OSF1" ]
+	then
+		echo "osf1"
+		exit 0
 	elif [ "$MACH" = "CYGWIN32/NT" ]
 	then
 		echo "gnuwin"

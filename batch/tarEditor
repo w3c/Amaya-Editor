@@ -2,7 +2,7 @@
 THOTVERSION=2.0b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX LINUX-ELF LINUX-SPARC SUN4 SGI RS6000"
+PLATFORMS="solaris2 LINUX LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -96,11 +96,15 @@ do
    Thot/$MACH/bin/str \
    Thot/$MACH/bin/tra \
    Thot/$MACH/bin/print \
+   Thot/batch/MachineType \
    Thot/fonts/Families.list \
    Thot/fonts/fonts.dir \
    Thot/fonts/icones* \
    Thot/fonts/iv* \
    Thot/schemas/Makefile \
+   Thot/schemas/Text_ASCII.inc \
+   Thot/schemas/Text_SGML.inc \
+   Thot/schemas/Text_Latex.inc \
    Thot/schemas/exc_matrix.h \
    Thot/schemas/exc_tableau.h \
    Thot/schemas/Math.h \
