@@ -1064,6 +1064,11 @@ ATTRIBUTES
             CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
+	IF not SVG
+	    BEGIN
+            CreateBefore(AttrName);
+	    CreateBefore(AttrValue);
+	    END;
 	END;
 
   id:

@@ -5029,7 +5029,12 @@ ATTRIBUTES
 
  Language:
 	BEGIN
-	IF HTML and RealLang
+        IF HTML and RealLang
+	    BEGIN
+            CreateBefore(AttrName);
+	    CreateBefore(AttrValue);
+	    END;
+        IF not HTML
 	    BEGIN
             CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
