@@ -10,6 +10,10 @@
  * Authors: V. Quint, J. Kahan, I. Vatton
  *
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
  
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -23,6 +27,11 @@
 #include "HTMLhistory_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
+
+#ifdef _WX
+  #include "wx/msgdlg.h"
+  #include "message_wx.h"
+#endif /* _WX */
 
 #define DOC_HISTORY_SIZE 32
 
@@ -799,10 +808,10 @@ void HelpAmaya (Document document, View view)
    TtaWriteClose (list);
 #endif /* AMAYA_DEBUG */
 
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
    TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
 		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-#endif  /* #if defined(_GTK) || defined(_WX) */
+#endif  /* #if defined(_GTK) */
    
    strcpy (localname, HTAppName);
    strcat (localname, " - ");
@@ -810,20 +819,31 @@ void HelpAmaya (Document document, View view)
    strcat (localname, "     ");
    strcat (localname, HTAppDate);
    
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
    TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
    TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT1));
    TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT2));
    TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
+
 #ifdef _WINGUI
    CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
 			TtaGetMessage(AMAYA, AM_ABOUT1),
 			TtaGetMessage(AMAYA, AM_ABOUT2));
 #endif /* _WINGUI */
-   
+
+#ifdef _WX
+   wxMessageDialog dlg( TtaGetViewFrame(document,view),
+			TtaConvMessageToWX(localname)+_T("\n")+
+			TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1))+_T("\n")+
+			TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT2)),
+			_T(""), /* dialog title */
+			wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP,
+			wxDefaultPosition );
+   dlg.ShowModal();
+#endif /* _WX */
 }
 
 
