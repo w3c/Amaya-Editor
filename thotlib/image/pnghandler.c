@@ -753,9 +753,11 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
+#ifdef _WINDOWS
   if (withAlpha)
     imageDesc->PicMask = buffer;
   else
+#endif /* _WINDOWS */
     TtaFreeMemory (buffer);
 #else /*_GL*/
   /* GL buffer are display independant, 
