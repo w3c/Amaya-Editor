@@ -1034,7 +1034,12 @@ LRESULT CALLBACK CharsetDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (hwnDlg, "Select a Charset");
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      CheckRadioButton (hwnDlg, IDC_USASCII, IDC_ISOL2, IDC_USASCII);
+	  if (!strcmp (UserCharset, "us-ascii"))
+        CheckRadioButton (hwnDlg, IDC_USASCII, IDC_ISOL1, IDC_USASCII);
+	  if (!strcmp (UserCharset, "iso-8859-1"))
+        CheckRadioButton (hwnDlg, IDC_USASCII, IDC_ISOL1, IDC_ISOL1);
+	  else
+        CheckRadioButton (hwnDlg, IDC_USASCII, IDC_ISOL1, IDC_UTF8);
       SetFocus (GetDlgItem (hwnDlg, IDC_USASCII));
       return FALSE;
       break;
@@ -1055,9 +1060,6 @@ LRESULT CALLBACK CharsetDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_ISOL1:
 	  strcpy (SaveFormTmp, "iso-8859-1");
-	  break;
-	case IDC_ISOL2:
-	  strcpy (SaveFormTmp, "iso-8859-2");
 	  break;
 
 	case ID_APPLY:
@@ -1206,7 +1208,6 @@ void SaveAsDlgStatus (char *msg)
 LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				LPARAM lParam)
 {
-  char *ptr;
   char buff[200];
 
   switch (msg)
@@ -1223,47 +1224,55 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       
-      if (HTMLFormat)
-	{
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP),
-			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), "HTML");
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_XML), "XML");
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), "Text");
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG),
+	  if (HTMLFormat ||
+		  DocumentTypes[SavingDocument] == docMath ||
+	      DocumentTypes[SavingDocument] == docSVG)
+	  {
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG),
 			 TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL),
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL),
 			 TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_IMGLOCATION),
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_IMGLOCATION),
 			 TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+	    copyImgWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
+	    transURLWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
+	  }
 
-	  transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
-	  copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
-	  if (SaveAsHTML)
-	    {
-	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
+      if (HTMLFormat)
+	  {
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP),
+			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), "HTML");
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_XML), "XML");
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), "Text");
+	    if (SaveAsHTML)
+		{
+          CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
 	      EnableWindow (transURLWnd, TRUE);
 	      EnableWindow (copyImgWnd, TRUE);
 	    }
-	  else if (SaveAsXML)
+	    else if (SaveAsXML)
 	    {
-	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_XML);
+          CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_XML);
 	      EnableWindow (transURLWnd, TRUE);
 	      EnableWindow (copyImgWnd, TRUE);
 	    }
-	  else if (SaveAsText)
+	    else if (SaveAsText)
 	    {
-	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_TEXT);
+          CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_TEXT);
 	      EnableWindow (transURLWnd, FALSE);
 	      EnableWindow (copyImgWnd, FALSE);
 	    }
-    
-	  if (CopyImages)
-	    CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+	    if (!SaveAsText && CopyImages)
+	      CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+	  }
+	  else if (DocumentTypes[SavingDocument] == docMath)
+	    EnableWindow (copyImgWnd, FALSE);
+
 	  
 	  if (UpdateURLs)
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
-	}
+
       /* mime type */
       _snprintf (buff, 500, "MIME type: %s", 
 		 UserMimeType[0] != EOS ? UserMimeType : "UNKNOWN");
@@ -1329,7 +1338,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 
   	case ID_CHANGECHARSET:
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
 	  if (SaveFormTmp[0] != EOS)
 	  {
 	    _snprintf (buff, 500, "Charset: %s", UserCharset);
@@ -1338,7 +1347,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 
 	case ID_CHANGEMIMETYPE:
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 6);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
 	  if (SaveFormTmp[0] != EOS)
 	  {
 	    _snprintf (buff, 500, "MIME type: %s", UserMimeType);	  
@@ -1349,7 +1358,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case ID_CLEAR:
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, "");
 	  SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, "");
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
 	  break;
 	  
 	case IDC_BROWSE:
@@ -3640,6 +3649,10 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
   strcpy (currentPathName, path_name);
   if (HTMLFormat)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent,
+	(DLGPROC) SaveAsDlgProc);
+  else if (DocumentTypes[SavingDocument] == docMath ||
+	  DocumentTypes[SavingDocument] == docSVG)
+    DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG2), parent,
 	(DLGPROC) SaveAsDlgProc);
   else
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG1), parent,

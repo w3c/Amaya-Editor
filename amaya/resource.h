@@ -255,6 +255,7 @@
 #define IDC_CURSOR1                     551
 #define MIMETYPEDIALOG                  552
 #define CHARSETDIALOG                   553
+#define SAVEASDIALOG2                   554
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
