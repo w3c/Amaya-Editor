@@ -2245,7 +2245,7 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
       pRule->SrSSchemaNat = NULL;
       pRule->SrConstruct = CsAny;
 
-      *mappedName = pRule->SrName;
+      *mappedName = pRule->SrOrigName;
 
 #ifndef NODISPLAY
       /* Initialize and insert the presentation rules */
@@ -2280,11 +2280,11 @@ void TtaGetXmlElementType (char *XMLName, ElementType *elType,
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
- 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
+ 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, XMLName) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
 	       if (mappedName)
-		 *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+		 *mappedName = pSS->SsRule->SrElem[rule]->SrOrigName;
 	       found = TRUE;
 	     }
 	 }
@@ -2302,11 +2302,11 @@ void TtaGetXmlElementType (char *XMLName, ElementType *elType,
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
+		   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, XMLName) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;
 		       if (mappedName)
-			 *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+			 *mappedName = pSS->SsRule->SrElem[rule]->SrOrigName;
 		       elType->ElSSchema = (SSchema) pSS;
 		       found = TRUE;
 		     }
