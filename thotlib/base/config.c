@@ -1647,13 +1647,16 @@ int                *height;
 
 /*----------------------------------------------------------------------
    pixeltomm converts pixels into mm
+   motif_conversion is true whenever we want to convert the geometry value
+   returned by motif.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          pixeltomm (int N, int horiz)
+static int          pixeltomm (int N, int horiz, boolean motif_conversion)
 #else  /* __STDC__ */
-static int          pixeltomm (N, horiz)
+static int          pixeltomm (N, horiz, motif_conversion)
 int                 N;
 int                 horiz;
+boolean             motif_conversion;
 
 #endif /* __STDC__ */
 {
@@ -1663,10 +1666,15 @@ int                 horiz;
       N = (int) (((float) (N * DOT_PER_INCHE) + 0.05) / 83);
     }
 
-   if (horiz)
-     return (N * 254) / (DOT_PER_INCHE * 10);
-   else
-     return (N * 254) / (DOT_PER_INCHE * 10);
+  if (motif_conversion)
+    {
+      if (horiz)
+	N =  (N * 254) / (DOT_PER_INCHE * 10);
+      else
+	N = (N * 254) / (DOT_PER_INCHE * 10);
+    }
+
+  return N;
 }
 
 #ifndef _WINDOWS 
@@ -1697,8 +1705,8 @@ int           *height;
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
-  *width = pixeltomm ((int) w, 1);
-  *height = pixeltomm ((int) h, 0);
+  *width = pixeltomm ((int) w, 1, TRUE);
+  *height = pixeltomm ((int) h, 0, TRUE);
 }
 #endif /* !_WINDOWS *
 
@@ -1784,6 +1792,43 @@ int                *height;
       TtaError (ERR_invalid_document_parameter);
    else if (document != 0)
       ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
+}
+
+/*----------------------------------------------------------------------
+   TtaGetViewGeometryMM returns the position (x, y) and sizes        
+   (width, height) of the frame where a view is displayed. The values
+   returned are in mm
+   Parameters:    document: the document.                  
+   name: the name of the view in P schema.  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGetViewGeometryMM (Document document, STRING name, int *x, int *y, int *width, int *height)
+#else  /* __STDC__ */
+void                TtaGetViewGeometryMM (document, name, x, y, width, height)
+Document            document;
+STRING              name;
+int                *x;
+int                *y;
+int                *width;
+int                *height;
+
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   *x = 0;
+   *y = 0;
+   *width = 0;
+   *height = 0;
+   if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (document != 0)
+      ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
+   /* the above function returns the geometry in pixels, so we'll now convert
+      it to mm */
+   *x = pixeltomm (*x, 1, FALSE);
+   *y = pixeltomm (*y, 0, FALSE);
+   *width = pixeltomm (*width, 1, FALSE);
+   *height = pixeltomm (*height, 0, FALSE);
 }
 
 #ifndef _WIN_PRINT

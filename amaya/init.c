@@ -2509,42 +2509,52 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-  RecalibrateZoom
-  recalibrates the Zoom menu flags to whatever is the current
-  reference zero
+  GotoZoom
+  Moves the Zoom setting on all documents to the specified value
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RecalibrateZoom (Document document, View view)
+void                GotoZoom (int delta)
 #else
-void                RecalibrateZoom (document, view)
-Document            document;
-View                view;
+void                GotoZoom (delta)
+int                 delta;
 #endif
 {
   int               zoom, zoomVal;
-  STRING            zoomStr;
+  int               doc;
 
-  zoom = TtaGetZoom (document, view);
-  
-  /* compare to the standard value? */
-  zoomStr = TtaGetEnvString ("ZOOM");
-  if (zoomStr == NULL)
-    zoomVal = 0;
-  else
+  /* recalibrate the zoom settings in all the active documents */
+  for (doc = 1; doc < DocumentTableLength -1; doc++)
     {
-      sscanf (zoomStr, "%d", &zoomVal);
-      if (zoomVal > 10 || zoomVal < -10)
-	zoomVal = 0;
+      if (DocumentURLs[doc])
+	{
+	  /* calculate the new zoom */
+	  zoom = TtaGetZoom (doc, 1);
+	  zoom = zoom + delta;
+	  if (zoom > 10)
+	    zoom = 10;
+	  else
+	    if (zoom < -10)
+	      zoom = -10;
+	  /* update the zoom settings */
+	  if (zoom > 0) 
+	    {
+	      TtaSetToggleItem (doc, 1, Views, TZoomIn, TRUE);
+	      TtaSetToggleItem (doc, 1, Views, TZoomOut, FALSE);
+	    }
+	  else if (zoom < 0)
+	    {
+	      TtaSetToggleItem (doc, 1, Views, TZoomIn, FALSE);
+	      TtaSetToggleItem (doc, 1, Views, TZoomOut, TRUE);
+	    }
+	  else
+	    {
+	      TtaSetToggleItem (doc, 1, Views, TZoomIn, FALSE);
+	      TtaSetToggleItem (doc, 1, Views, TZoomOut, FALSE);
+	    }
+	  /* zoom the document */
+	  TtaSetZoom (doc, 1, zoom);
+	}
     }
-
-  if (zoom > zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomIn, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomIn, FALSE);
-  if (zoom < zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomOut, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomOut, FALSE);
 }
 
 /*----------------------------------------------------------------------

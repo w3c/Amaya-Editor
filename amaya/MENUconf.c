@@ -39,6 +39,7 @@
 #include "amaya.h"
 #include "MENUconf.h"
 #include "print.h"
+#include "init_f.h"
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -778,7 +779,8 @@ View                view;
 #ifndef _WINDOWS
    RefreshCacheMenu ();
   /* display the menu */
-  TtaShowDialogue (CacheBase + CacheMenu, TRUE);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (CacheBase + CacheMenu, TRUE);
 #else /* !_WINDOWS */
   if (!CacheActive)
     /* only activate the menu if it isn't active already */
@@ -1078,7 +1080,8 @@ View                view;
 #ifndef _WINDOWS
    RefreshProxyMenu ();
   /* display the menu */
-  TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
 #else
   if (!ProxyActive)
     /* only activate the menu if it isn't active already */
@@ -1322,17 +1325,14 @@ static void SetGeneralConf (void)
 static void SetGeneralConf ()
 #endif /* __STDC__ */
 {
-  int i;
+  int oldZoom;
 
   TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, TRUE);
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
+  TtaGetEnvInt ("ZOOM", &oldZoom);
   TtaSetEnvInt ("ZOOM", Zoom, TRUE);
   /* recalibrate the zoom settings in all the active documents */
-  for (i = 0; i < DocumentTableLength -1; i++)
-    {
-      if (DocumentURLs[i])
-	RecalibrateZoom (i, 1);
-    }
+  GotoZoom (Zoom - oldZoom);
   TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
@@ -1462,7 +1462,7 @@ STRING              pathname;
 		   40,
 		   1,
 		   FALSE);
-   TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, "");
+   TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
    /* second line */
    TtaNewNumberForm (GeneralBase + mToolTipDelay,
 		     GeneralBase + GeneralMenu,
@@ -1487,7 +1487,7 @@ STRING              pathname;
    TtaNewNumberForm (GeneralBase + mZoom,
 		     GeneralBase + GeneralMenu,
 		     TtaGetMessage (AMAYA, AM_ZOOM),
-		     0,
+		     -10,
 		     10,
 		     FALSE);   
    /* fourth line */
@@ -1497,7 +1497,7 @@ STRING              pathname;
 		   10,
 		   1,
 		   FALSE);
-   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, "");   
+   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");   
    /* fifth line */
    sprintf (s, "B%s%cB%s%cB%s", 
 	    TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
@@ -1518,6 +1518,7 @@ STRING              pathname;
 #ifndef _WINDOWS
    /* display the menu */
    RefreshGeneralMenu ();
+   TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #else /* !_WINDOWS */
    if (!GeneralActive)
@@ -1824,7 +1825,8 @@ STRING              pathname;
    /* display the menu */
 #ifndef _WINDOWS
    RefreshPublishMenu ();
-  TtaShowDialogue (PublishBase + PublishMenu, TRUE);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
   if (!PublishActive)
     /* only activate the menu if it isn't active already */
@@ -2011,6 +2013,7 @@ STRING              pathname;
 #ifndef _WINDOWS
    RefreshColorMenu ();
    /* display the menu */
+   TtaSetDialoguePosition ();
    TtaShowDialogue (ColorBase + ColorMenu, TRUE);
 #else 
 #endif /* !_WINDOWS */
@@ -2209,25 +2212,26 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Save current geometry");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Restore default geometry");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_RESTORE_GEOMETRY));
 
    TtaNewSheet (GeometryBase + GeometryMenu, 
 		TtaGetViewFrame (document, view),
 	        TtaGetMessage (AMAYA, AM_GEOMETRY_MENU),
-		2, s, TRUE, 1, 'L', D_DONE);
+		2, s, TRUE, 2, 'L', D_DONE);
    /* formatted view */
    TtaNewLabel (GeometryBase + mGeometryLabel1,
 		GeometryBase + GeometryMenu,
-		"The change will be effective when you open a new window."
+		TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE)
 		);
    TtaNewLabel (GeometryBase + mGeometryLabel2,
 		GeometryBase + GeometryMenu,
-		""
+		" "
 		);
 #ifndef _WINDOWS
    /* display the menu */
+   TtaSetDialoguePosition ();
    TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
 #else
 #endif /* !_WINDOWS */
@@ -2301,12 +2305,13 @@ STRING env_var;
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  TtaGetViewGeometryRegistry (GeometryDoc, env_var, &x, &y, &w, &h);
+  TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h);
   sprintf (s, "%d %d %d %d", 
 	   x,
 	   y,
 	   w,
 	   h);
+
   TtaSetEnvString (env_var, s, TRUE);
 }
 

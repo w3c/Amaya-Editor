@@ -166,3 +166,12 @@
 165 **Use ETAGS and preconditions
 166 **Verify each PUT with a GET
 167 **Default name for URLs finishing in '/'
+168 **Geometry Configuration
+169 **Save current geometry
+170 **Restore default geometry
+171 **The change will be effective when you open a new window.
+172 **Color Configuration
+173 **Document foreground color
+174 **Document background color
+175 **Menu foreground color
+176 **Menu background color
