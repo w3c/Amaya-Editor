@@ -209,7 +209,7 @@ libz libz.a : force
 kaffe_get :
 	@(if [ ! -d $(THOTDIR)/$(KAFFE) ] ; \
 	  then \
-	      if [ -f $(THOTDIR)/$(KAFFE).tar.gz ] \
+	      if [ -f $(THOTDIR)/$(KAFFE).tar.gz ] ; \
 	      then \
 	          cd $(THOTDIR) ; gunzip -c $(KAFFE).tar.gz | tar xvf - ; \
 	      else \
