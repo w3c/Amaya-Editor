@@ -893,15 +893,18 @@
                   <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
-                      <object class="wxRadioBox" name="wxID_RADIO_AWARENESS">
-                        <label>Notification WebDAV</label>
-                        <content>
-                          <item>Notification generale</item>
-                          <item>Notification a la fermeture</item>
-                        </content>
-                        <style>wxRA_SPECIFY_ROWS</style>
+                      <object class="wxCheckBox" name="wxID_CHECK_GENERAL">
+                        <label>Notification generale</label>
                       </object>
-                      <flag>wxEXPAND</flag>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_EXIT_AWARENESS">
+                        <label>Notification quand on quitte</label>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
                     </object>
                   </object>
                   <option>0</option>
