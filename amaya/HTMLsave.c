@@ -1020,20 +1020,50 @@ CHAR_T           *documentname;
 #endif
 {
   CHARSET             charset;
+  CHAR_T              htmlErrFile [80];
   int                 parsingLevel;
+  int                 i;
   ThotBool            xmlDec, withDoctype, isXML;
 
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
-  if (ParsingLevel[doc] != parsingLevel)
-    {
-      ;
-    }
+  /* clean up previous log file */
+  HTMLErrorsFound = FALSE;
+  /* remove the log file */
+  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
+	    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+  if (TtaFileExist (htmlErrFile))
+    TtaFileUnlink (htmlErrFile);
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] != NULL)
+      if (DocumentSource[i] == doc && DocumentTypes[i] == docLog)
+	{
+	  /* remove the log file attached to the current document */
+	  TtaCloseDocument (i);
+	  /* remove the log file */
+	  TtaFileUnlink (DocumentURLs[i]);
+	  TtaFreeMemory (DocumentURLs[i]);
+	  DocumentURLs[i] = NULL;
+	  /* switch off the button Show Log file */
+	  TtaSetItemOff (doc, 1, Special, BShowLogFile);
+	}
+  
 #ifdef EXPAT_PARSER
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir, localFile, xmlDec, withDoctype);
   else
 #endif /* EXPAT_PARSER */
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
+
+  /* check parsing errors */
+  if (HTMLErrorsFound)
+    TtaSetItemOn (doc, 1, Special, BShowLogFile);
+  else
+    TtaSetItemOff (doc, 1, Special, BShowLogFile);
+
+  /* fetch and display all images referred by the document */
+  DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
+  FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE);
+  DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
 }
  
 /*----------------------------------------------------------------------
@@ -1649,11 +1679,6 @@ View                view;
 					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
        RestartHTMLParser (htmlDoc, tempdocument, tempdir, documentname);
-
-       /* fetch and display all images referred by the document */
-       DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
-       FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
-       DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
      }
    /* restore original display mode */
    TtaSetDisplayMode (document, dispMode);
@@ -1891,11 +1916,6 @@ View                view;
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
 	   RestartHTMLParser (htmlDoc, localFile, tempdir, documentname);
-
-	   /* fetch and display all images referred by the document */
-	   DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
-	   FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
-	   DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
 	   TtaSetDocumentUnmodified (htmlDoc);
 	   /* Synchronize selections */
 	   event.document = doc;

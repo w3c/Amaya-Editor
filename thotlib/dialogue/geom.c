@@ -106,42 +106,41 @@ int   nb;
  *		be drawn or not.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, ThotBool withborder)
+static void    BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, ThotBool withborder)
 #else  /* __STDC__ */
-static void         BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
-int                 frame;
-int                 x;
-int                 y;
-int                 width;
-int                 height;
-int                 xr;
-int                 yr;
-ThotBool            withborder;
+static void    BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
+int            frame;
+int            x;
+int            y;
+int            width;
+int            height;
+int            xr;
+int            yr;
+ThotBool       withborder;
 #endif /* __STDC__ */
-
 {
 #define step 6
 
-   if (width > 0)
-      /*upper border */
-      VideoInvert (frame, width, 1, x, y);
-   if (height > 1)
-     {
-	VideoInvert (frame, 1, height - 1, x, y + 1);	/* left border */
-	VideoInvert (frame, 1, height - 1, x + width - 1, y + 1);	/* right border */
-     }
-   if (width > 1)
-      VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);		/* bottom */
-   /* reference point */
-   VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
+  if (width > 0)
+    /*upper border */
+    VideoInvert (frame, width, 1, x, y);
+  if (height > 1)
+    {
+      VideoInvert (frame, 1, height - 1, x, y + 1);	/* left border */
+      VideoInvert (frame, 1, height - 1, x + width - 1, y + 1);	/* right border */
+    }
+  if (width > 1)
+    VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);		/* bottom */
+  /* reference point */
+  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
 #ifdef IV
-   if (withborder)
-     {
-	for (i = step; i < width; i += step)
-	   VideoInvert (frame, 1, height - 1, x + i, y + 1);
-	for (i = step; i < height; i += step)
-	   VideoInvert (frame, width - 1, 1, x + 1, y + i);
-     }
+  if (withborder)
+    {
+      for (i = step; i < width; i += step)
+	VideoInvert (frame, 1, height - 1, x + i, y + 1);
+      for (i = step; i < height; i += step)
+	VideoInvert (frame, width - 1, 1, x + 1, y + i);
+    }
 #endif
 }
 
@@ -156,22 +155,22 @@ ThotBool            withborder;
   the selected point.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
+static void    RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
 #else  /* __STDC__ */
-static void         RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
-int                 frame;
-int                 x;
-int                 y;
-PtrTextBuffer       buffer;
-int                 nb;
-int                 point;
-ThotBool            close;
-int                *x1;
-int                *y1;
-int                *x2;
-int                *y2;
-int                *x3;
-int                *y3;
+static void    RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
+int            frame;
+int            x;
+int            y;
+PtrTextBuffer  buffer;
+int            nb;
+int            point;
+ThotBool       close;
+int           *x1;
+int           *y1;
+int           *x2;
+int           *y2;
+int           *x3;
+int           *y3;
 #endif /* __STDC__ */
 
 {

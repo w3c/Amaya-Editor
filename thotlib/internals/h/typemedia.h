@@ -475,6 +475,10 @@ typedef struct _AbstractBox
       char     _AbShape_;         /* Drawing code */
       char     _AbGraphAlphabet_; /* Alphabet used*/
       char     _AbRealShape_;     /* Effective drawing code */
+      int      _AbRx;             /* Horizontal radius */
+      int      _AbRy;             /* Vertical radius */     
+      TypeUnit _AbRxUnit;         /* Unit for the horizontal radius */
+      TypeUnit _AbRyUnit;         /* Unit for the vertical radius */
     } s2;
     struct /* AbLeafType = LtPicture */
     {

@@ -1110,14 +1110,11 @@ Document       doc;
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
-
-	  if (IsHTTPPath (DocumentURLs[doc]))
-	    {
-	      usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
-			TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-	      if (TtaFileExist (htmlErrFile))
-		TtaFileUnlink (htmlErrFile);
-	    }
+	  /* remove the log file */
+	  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
+		    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	  if (TtaFileExist (htmlErrFile))
+	    TtaFileUnlink (htmlErrFile);
 
 	  if (DocumentTypes[doc] == docImage)
 	    DocumentTypes[doc] = docHTML;
@@ -1158,9 +1155,12 @@ Document       doc;
 		  DocumentSource[i] = 0;
 		  if (DocumentTypes[i] == docLog)
 		    {
+		      /* close the window of the log file attached to the current document */
 		      TtaCloseDocument (i);
 		      TtaFreeMemory (DocumentURLs[i]);
 		      DocumentURLs[i] = NULL;
+		      /* switch off the button Show Log file */
+		      TtaSetItemOff (doc, 1, Special, BShowLogFile);
 		    }
 		}
 	  RemoveDocCSSs (doc);

@@ -919,25 +919,28 @@ PictInfo           *imageDesc;
                   rect.width = delta;
 	    }
 #ifndef _GTK 
-
-          valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-	  values.fill_style = FillTiled;
-          values.tile = pixmap;
-          values.ts_x_origin = xFrame;
-          values.ts_y_origin = yFrame;
-          XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
+	  values.tile = pixmap;
+	  values.ts_x_origin = xFrame;
+	  values.ts_y_origin = yFrame;
 	  if (imageDesc->PicPresent == RealSize
 	      /* || w <= imageDesc->PicWArea && h <= imageDesc->PicHArea */)
 	    {
+	      values.fill_style = FillTiled;
+	      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	      if (imageDesc->PicMask)
 		{
 		  XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
 		  XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
 		}
-	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame,
+			      /*w, h);*/
+			      imageDesc->PicWArea, imageDesc->PicHArea);
 	    }
 	  else
 	    {
+	      values.fill_style = FillTiled;
+	      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	    }
