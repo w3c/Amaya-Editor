@@ -3993,11 +3993,9 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  specialTag = FALSE;
 		  /* Export the element name */
 		  pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
-		  if ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
-		      (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
-		      (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
-		      (strcmp (pRe1->SrOrigName, "doctype_line") == 0))
+		  if (TypeHasException (ExcHidden, pNode->ElTypeNumber,	pNode->ElStructSchema))
 		    {
+		      /* Don't export hidden elements */
 		      startName[0] = EOS;
 		      f = pNode->ElNext;
 		      if (f != NULL)
