@@ -326,7 +326,7 @@ PresentationValue  *pval;
 	}
 
       /* not in the list of predefined units */
-      pval->typed_data.unit = STYLE_UNIT_REL;
+      pval->typed_data.unit = STYLE_UNIT_PX;
       pval->typed_data.real = real;
       if (real)
 	{
@@ -3113,7 +3113,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
- ParseCSSPageBreakBefore: parse a CSS background attribute 
+ ParseCSSPageBreakBefore: parse a CSS page-break-before attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSPageBreakBefore (Element element, PSchema tsch,
@@ -3172,7 +3172,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
- ParseCSSPageBreakAfter: parse a CSS background attribute 
+ ParseCSSPageBreakAfter: parse a CSS page-break-after attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSPageBreakAfter (Element element, PSchema tsch,
@@ -3230,7 +3230,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
- ParseCSSPageBreakInside: parse a CSS background attribute 
+ ParseCSSPageBreakInside: parse a CSS page-break-inside attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSPageBreakInside (Element element, PSchema tsch,
@@ -3273,6 +3273,42 @@ ThotBool            isHTML;
   return (cssRule);
 }
 
+
+/*----------------------------------------------------------------------
+   ParseCSSStrokeWidth: parse a CSS stroke-width
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseCSSStrokeWidth (Element element, PSchema tsch,
+                                PresentationContext context, CHAR_T* cssRule,
+		                CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseCSSStrokeWidth (element, tsch, context, cssRule, css,
+                                isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue   width;
+  
+  cssRule = SkipWCBlanksAndComments (cssRule);
+  width.typed_data.value = 0;
+  width.typed_data.unit = STYLE_UNIT_INVALID;
+  width.typed_data.real = FALSE;
+  if (TtaIsDigit (*cssRule))
+     cssRule = ParseCSSUnit (cssRule, &width);
+  if (width.typed_data.unit != STYLE_UNIT_INVALID)
+     {
+     TtaSetStylePresentation (PRLineWeight, element, tsch, context, width);
+     width.typed_data.value = 1;
+     width.typed_data.unit = STYLE_UNIT_REL;
+     }
+  return (cssRule);
+}
 
 /************************************************************************
  *									*  
@@ -3357,7 +3393,12 @@ static CSSProperty CSSProperties[] =
 
    {TEXT("page-break-before"), ParseCSSPageBreakBefore},
    {TEXT("page-break-after"), ParseCSSPageBreakAfter},
-   {TEXT("page-break-inside"), ParseCSSPageBreakInside}
+   {TEXT("page-break-inside"), ParseCSSPageBreakInside},
+
+   /* SVG extensions */
+   {TEXT("stroke-width"), ParseCSSStrokeWidth},
+   {TEXT("stroke"), ParseCSSForeground},
+   {TEXT("fill"), ParseCSSBackgroundColor}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 

@@ -35,6 +35,42 @@ RULES
    XMLcomment_line:
 	if not last create '\12' after;
 
+   desc:
+	BEGIN
+	create SOT;
+	create 'desc';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'desc>\12' after;
+	END;
+
+   title:
+	BEGIN
+	create SOT;
+	create 'title';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'title>\12' after;
+	END;
+
+   metadata:
+	BEGIN
+	create SOT;
+	create 'metadata';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'metadata>\12' after;
+	END;
+
    Line_:
 	BEGIN
 	create SOT;
@@ -346,6 +382,22 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   x:
+	BEGIN
+	create SAN;
+	create 'x="';
+	create x;
+	create DoubleQuote;
+	END;
+
+   y:
+	BEGIN
+	create SAN;
+	create 'y="';
+	create y;
+	create DoubleQuote;
+	END;
+
    width_:
 	BEGIN
 	create SAN;
@@ -359,6 +411,30 @@ ATTRIBUTES
 	create SAN;
 	create 'height="';
 	create height_;
+	create DoubleQuote;
+	END;
+
+   fill:
+	BEGIN
+	create SAN;
+	create 'fill="';
+	create fill;
+	create DoubleQuote;
+	END;
+
+   stroke:
+	BEGIN
+	create SAN;
+	create 'stroke="';
+	create stroke;
+	create DoubleQuote;
+	END;
+
+   stroke_width:
+	BEGIN
+	create SAN;
+	create 'stroke-width="';
+	create stroke_width;
 	create DoubleQuote;
 	END;
 

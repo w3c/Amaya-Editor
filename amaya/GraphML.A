@@ -36,9 +36,10 @@ ATTRIBUTES
  
    style\240:
         BEGIN
+        AttrDelete.Pre ->  UpdateStyleDelete;
+        AttrModify.Pre ->  UpdateStyleDelete;
         AttrCreate.Post -> UpdateStylePost;
         AttrModify.Post -> UpdateStylePost;
-        AttrDelete.Pre ->  UpdateStyleDelete;
         END;
  
    id:
@@ -50,6 +51,10 @@ ATTRIBUTES
 
    position:
 	AttrModify.Post -> AttrPositionChanged;
+   x:
+	AttrModify.Post -> AttrCoordChanged;
+   y:
+	AttrModify.Post -> AttrCoordChanged;
    IntPosX:
 	AttrModify.Post -> AttrIntPosChanged;
    IntPosY:
@@ -62,6 +67,24 @@ ATTRIBUTES
         AttrModify.Post -> AttrIntSizeChanged;
    IntHeight:
         AttrModify.Post -> AttrIntSizeChanged;
+   fill:
+        BEGIN
+	AttrModify.Post -> AttrFillStrokeModified;
+	AttrCreate.Post -> AttrFillStrokeModified;
+	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	END;
+   stroke:
+        BEGIN
+	AttrModify.Post -> AttrFillStrokeModified;
+	AttrCreate.Post -> AttrFillStrokeModified;
+	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	END;
+   stroke_width:
+        BEGIN
+	AttrModify.Post -> AttrFillStrokeModified;
+	AttrCreate.Post -> AttrFillStrokeModified;
+	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	END;
    direction:
 	BEGIN
 	AttrModify.Post -> AttrDirectionModified;

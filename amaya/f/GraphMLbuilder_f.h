@@ -27,6 +27,11 @@ extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
                                    ThotBool *closed,
                                    int arrowHead );
+extern void ParseFillStrokeAttributes (int attrType,
+				       Attribute attr,
+				       Element el,
+				       Document doc,
+				       ThotBool delete );
 extern void ParseDirAndSpaceAttributes ( Element group,
                                          Element el,
                                          Document doc );
@@ -47,6 +52,9 @@ extern void CreatePoints ( Attribute attr,
 extern void ParsePositionAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
+extern void ParseCoordAttribute ( Attribute attr,
+                                  Element el,
+                                  Document doc );
 extern void ParseWidthHeightAttribute ( Attribute attr,
                                         Element el,
                                         Document doc );
@@ -77,6 +85,11 @@ extern Element CreateGraphicLeaf (/* Element el,
                                      Document doc,
                                      ThotBool *closed,
                                      int arrowHead */);
+extern void ParseFillStrokeAttributes (/* int attrType,
+					  Attribute attr,
+					  Element el,
+					  Document doc,
+				          ThotBool delete */);
 extern void ParseDirAndSpaceAttributes (/* Element group,
                                            Element el,
                                            Document doc */);
@@ -97,6 +110,9 @@ extern void CreatePoints (/* Attribute attr,
 extern void ParsePositionAttribute (/* Attribute attr,
                                        Element el,
                                        Document doc */);
+extern void ParseCoordAttribute (/* Attribute attr,
+                                    Element el,
+                                    Document doc */);
 extern void ParseWidthHeightAttribute (/* Attribute attr,
                                           Element el,
                                           Document doc */);

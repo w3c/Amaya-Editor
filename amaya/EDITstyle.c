@@ -226,15 +226,35 @@ NotifyAttribute    *event;
 #endif
 {
    ElementType         elType;
-   ThotBool            isHTML;
+   Element             el;
+   CHAR_T*             style = NULL;
+   int                 len;
 
-   /*  A rule applying to BODY is really meant to address HTML */
+   el = event->element;
+   /*  A rule applying to BODY is really meant to address the HTML element */
    elType = TtaGetElementType (event->element);
-   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ==0);
-   if (elType.ElTypeNum == HTML_EL_BODY && isHTML)
-     TtaCleanStylePresentation (TtaGetParent (event->element), NULL,
-				event->document);
-  TtaCleanStylePresentation (event->element, NULL, event->document);
+   if (elType.ElTypeNum == HTML_EL_BODY &&
+       ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+      el = TtaGetParent (el);
+   len = TtaGetTextAttributeLength (event->attribute);
+   if ((len < 0) || (len > 10000))
+      /* error */
+      return FALSE;
+   if (len == 0)
+      /* empty Style attribute */
+      return FALSE;
+   else
+     {
+	/* parse the old content and remove the corresponding presentation
+	   rules */
+	style = TtaAllocString (len + 2);
+	if (!style)
+	   return FALSE;
+	TtaGiveTextAttributeValue (event->attribute, style, &len);
+	style[len] = WC_EOS;
+	ParseHTMLSpecificStyle (el, style, event->document, TRUE);
+	TtaFreeMemory (style);
+     }
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -429,9 +449,6 @@ NotifyAttribute    *event;
    el = event->element;
    doc = event->document;
 
-   /* First remove all presentation specific rules applied to the element. */
-   UpdateStyleDelete (event);
-
    len = TtaGetTextAttributeLength (event->attribute);
    if ((len < 0) || (len > 10000))
       return;
@@ -460,8 +477,8 @@ NotifyAttribute    *event;
 	else
 #endif
 	   {
-    	atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-    	atType.AttrTypeNum = HTML_ATTR_Style_;
+	   atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   atType.AttrTypeNum = HTML_ATTR_Style_;
 	   }
 	at = TtaGetAttribute (el, atType);
 	if (at != NULL)

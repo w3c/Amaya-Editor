@@ -1250,15 +1250,16 @@ ThotBool            generic;
     case STYLE_UNIT_REL:
       int_unit = UnRelative;
       if (type == PtHeight ||            type == PtWidth ||
+	  type == PtVertPos ||           type == PtHorizPos ||
 	  type == PtMarginTop ||         type == PtMarginRight ||
 	  type == PtMarginBottom ||      type == PtMarginLeft ||
 	  type == PtPaddingTop ||        type == PtPaddingRight ||
 	  type == PtPaddingBottom ||     type == PtPaddingLeft ||
 	  type == PtBorderTopWidth ||    type == PtBorderRightWidth ||
 	  type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
-          type == PtLineWeight ||              type == PtThickness ||
+          type == PtLineWeight ||        type == PtThickness ||
 	  type == PtIndent ||            type == PtLineSpacing ||
-           type == PtBreak1 ||            type == PtBreak2)
+          type == PtBreak1 ||            type == PtBreak2)
 	value *= 10;
       break;
     case STYLE_UNIT_EM:
@@ -2154,6 +2155,9 @@ ThotBool           *absolute;
     case PRBorderLeftWidth:
       *intRule = PtBorderLeftWidth;
       break;      
+    case PRLineWeight:
+      *intRule = PtLineWeight;
+      break;
     case PRVertPos:
       *intRule = PtVertPos;
       break;

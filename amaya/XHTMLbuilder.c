@@ -429,6 +429,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
 
    {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers},
 #endif /* XHTML_BASIC */
+   {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight},
    {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_},
    {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_},
    {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang},
@@ -578,9 +579,10 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__},
 #ifndef XHTML_BASIC
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__},
-#ifndef XHTML_BASIC
-   {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__},
 #endif /* XHTML_BASIC */
+   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth},
+   {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__},
+#ifndef XHTML_BASIC
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__},
 #endif /* XHTML_BASIC */

@@ -12,270 +12,278 @@ ATTR
    class = text;
    style\240 = text;
 
-   { generic attributes for Amaya and XML }
+   { global attributes for Amaya }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
 
 STRUCT
 
-   GraphML = LIST OF (GraphicalElement) + (XMLcomment);
+   GraphML = LIST OF (GraphicsElement) + (XMLcomment);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
-   GraphicalElement = CASE OF
+   GraphicsElement = CASE OF
+	    desc = TEXT;                             { NEW }
+	    title = TEXT;                            { NEW }
+	    metadata = TEXT;                         { NEW }
             Line_
                 (ATTR points = text;
-				IntPosX = integer; IntPosY = integer;
-				IntWidth = integer; IntHeight = integer;
-		      linewidth = integer;
-		      linestyle_ = solid_, dashed_, dotted_;
+                                IntPosX = integer; IntPosY = integer;
+                                IntWidth = integer; IntHeight = integer;
+                      linewidth = integer;
+                      linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none_, start, end_, both;
-		      align = left_, center_, right_;
-		      valign = top_, middle, bottom_;
-		      depth_ = integer;
-				IntLeftDistance = integer;
-				IntRightDistance = integer;
-				IntUpDistance = integer;
-				IntDownDistance = integer)
+                      align = left_, center_, right_;
+                      valign = top_, middle, bottom_;
+                      depth_ = integer;
+                                IntLeftDistance = integer;
+                                IntRightDistance = integer;
+                                IntUpDistance = integer;
+                                IntDownDistance = integer)
                 = GRAPHICS;
             Rectangle
-                (ATTR position = text;
-				IntPosX; IntPosY;
+                (ATTR position = text;               { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
+                      x = text;                      { NEW }
+                      y = text;                      { NEW }
                       width_ = text;
-				IntWidth;
+                                IntWidth;            { OBSOLETE }
                       height_ = text;
-				IntHeight;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape = yes_, no_;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntHeight;           { OBSOLETE }
+	              fill = text;                   { NEW }
+	              stroke = text;                 { NEW }
+	              stroke_width = text;           { NEW }
+                      linewidth;                     { OBSOLETE }
+                      linestyle_;
+                                IntEmptyShape = yes_, no_;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = BEGIN
                   Label = HTML;
                   GRAPHICS;
                   END;
-	    RoundRect
-		(ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
-		= BEGIN
-		  Label;
-		  GRAPHICS;
-		  END;
+            RoundRect
+                (ATTR position;
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      linewidth;
+                      linestyle_;
+                                IntEmptyShape;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
+                = BEGIN
+                  Label;
+                  GRAPHICS;
+                  END;
             Circle
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      linewidth;
+                      linestyle_;
+                                IntEmptyShape;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = BEGIN
                   Label;
-		  GRAPHICS;
+                  GRAPHICS;
                   END;
             Oval
-		(ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                (ATTR position;
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      linewidth;
+                      linestyle_;
+                                IntEmptyShape;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = BEGIN
                   Label;
-		  GRAPHICS;
+                  GRAPHICS;
                   END;
             Polyline
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      points;
-		      arrowhead;
-		      linewidth;
-		      linestyle_;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      points;
+                      arrowhead;
+                      linewidth;
+                      linestyle_;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = GRAPHICS;
             Polygon
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      points;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      points;
+                      linewidth;
+                      linestyle_;
+                                IntEmptyShape;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = BEGIN
                   Label;
-		  GRAPHICS;
+                  GRAPHICS;
                   END;
             Spline
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      points;
-		      arrowhead;
-		      linewidth;
-		      linestyle_;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      points;
+                      arrowhead;
+                      linewidth;
+                      linestyle_;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = GRAPHICS;
             ClosedSpline
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      height_;
-				IntHeight;
-		      points;
-		      linewidth;
-		      linestyle_;
-				IntEmptyShape;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      height_;
+                                IntHeight;
+                      points;
+                      linewidth;
+                      linestyle_;
+                                IntEmptyShape;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = BEGIN
                   Label;
-		  GRAPHICS;
+                  GRAPHICS;
                   END;
             Text_
                 (ATTR position;
-				IntPosX; IntPosY;
-		      width_;
-				IntWidth;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      width_;
+                                IntWidth;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = HTML;
             Math
                 (ATTR position;
-				IntPosX; IntPosY;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance)
+                                IntPosX; IntPosY;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance)
                 = MathML;
             Group
                 (ATTR position;
-				IntPosX; IntPosY;
+                                IntPosX; IntPosY;
                       direction = left_, right_, up, down;
                       hspace = text;
                       vspace = text;
-		      linewidth;
-		      linestyle_;
-		      align;
-		      valign;
-		      depth_;
-				IntLeftDistance;
-				IntRightDistance;
-				IntUpDistance;
-				IntDownDistance;
-				 ShowGroup = Yes_)
-                = LIST OF (GraphicalElement);
+                      linewidth;
+                      linestyle_;
+                      align;
+                      valign;
+                      depth_;
+                                IntLeftDistance;
+                                IntRightDistance;
+                                IntUpDistance;
+                                IntDownDistance;
+                                ShowGroup = Yes_)
+                = LIST OF (GraphicsElement);
             END;
 
 EXCEPT
 
-   GraphML:		IsDraw, NoMove, NoResize, Hidden;
-   Label:		NoMove, NoResize, NoShowBox;
-   Line_:		MoveResize, HighlightChildren, NoShowBox;
-   Rectangle:		MoveResize, HighlightChildren, NoShowBox;
-   RoundRect:		MoveResize, HighlightChildren, NoShowBox;
-   Circle:		MoveResize, HighlightChildren, NoShowBox;
-   Oval:		MoveResize, HighlightChildren, NoShowBox;
-   Polyline:		MoveResize, HighlightChildren, NoShowBox;
-   Polygon:		MoveResize, HighlightChildren, NoShowBox;
-   Spline:		MoveResize, HighlightChildren, NoShowBox;
-   ClosedSpline:	MoveResize, HighlightChildren, NoShowBox;
-   Text_:		MoveResize;
-   Math:		MoveResize;
+   GraphML:             IsDraw, NoMove, NoResize, Hidden;
+   Label:               NoMove, NoResize, NoShowBox;
+   Line_:               MoveResize, HighlightChildren, NoShowBox;
+   Rectangle:           MoveResize, HighlightChildren, NoShowBox;
+   RoundRect:           MoveResize, HighlightChildren, NoShowBox;
+   Circle:              MoveResize, HighlightChildren, NoShowBox;
+   Oval:                MoveResize, HighlightChildren, NoShowBox;
+   Polyline:            MoveResize, HighlightChildren, NoShowBox;
+   Polygon:             MoveResize, HighlightChildren, NoShowBox;
+   Spline:              MoveResize, HighlightChildren, NoShowBox;
+   ClosedSpline:        MoveResize, HighlightChildren, NoShowBox;
+   Text_:               MoveResize;
+   Math:                MoveResize;
    Group:               MoveResize;
-   PICTURE:		MoveResize;
-   TEXT:		NoMove, NoResize;
+   PICTURE:             MoveResize;
+   TEXT:                NoMove, NoResize;
 
-   id:			CssId;
-   class:		CssClass;
-   Invalid_attribute:	Invisible;
-   Ghost_restruct:	Invisible;
-   IntPosX:		Invisible, NewHPos; 
-   IntPosY:		Invisible, NewVPos;
-   IntWidth:		NewWidth, Invisible;
-   IntHeight:		NewHeight, Invisible;
-   IntEmptyShape:	Invisible;
-   IntLeftDistance:	Invisible;
-   IntRightDistance:	Invisible;
-   IntUpDistance:	Invisible;
-   IntDownDistance:	Invisible;
+   id:                  CssId;
+   class:               CssClass;
+   Invalid_attribute:   Invisible;
+   Ghost_restruct:      Invisible;
+   IntPosX:             Invisible, NewHPos; 
+   IntPosY:             Invisible, NewVPos;
+   IntWidth:            NewWidth, Invisible;
+   IntHeight:           NewHeight, Invisible;
+   IntEmptyShape:       Invisible;
+   IntLeftDistance:     Invisible;
+   IntRightDistance:    Invisible;
+   IntUpDistance:       Invisible;
+   IntDownDistance:     Invisible;
 
 END

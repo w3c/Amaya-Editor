@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1998.
+ *  (c) COPYRIGHT MIT and INRIA, 1998-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -16,10 +16,12 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
 #include "GraphML.h"
 #include "HTML.h"
 #include "parser.h"
-
+#include "styleparser_f.h"
+#include "style.h"
 
 static AttributeMapping GraphMLAttributeMappingTable[] =
 {
@@ -32,17 +34,22 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {TEXT("class"), TEXT(""), 'A', GraphML_ATTR_class},
    {TEXT("depth"), TEXT(""), 'A', GraphML_ATTR_depth_},
    {TEXT("direction"), TEXT(""), 'A', GraphML_ATTR_direction},
+   {TEXT("fill"), TEXT(""), 'A', GraphML_ATTR_fill},
    {TEXT("height"), TEXT(""), 'A', GraphML_ATTR_height_},
    {TEXT("hspace"), TEXT(""), 'A', GraphML_ATTR_hspace},
    {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id},
-   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth},
    {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_},
+   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth},
    {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position},
    {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points},
+   {TEXT("stroke"), TEXT(""), 'A', GraphML_ATTR_stroke},
+   {TEXT("stroke-width"), TEXT(""), 'A', GraphML_ATTR_stroke_width},
    {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_},
    {TEXT("valign"), TEXT(""), 'A', GraphML_ATTR_valign},
    {TEXT("vspace"), TEXT(""), 'A', GraphML_ATTR_vspace},
    {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_},
+   {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x},
+   {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y},
    {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct},
 
    {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
@@ -230,7 +237,7 @@ ThotBool            changeShape;
 {
    ElementType	elType;
    Element	leaf, child;
-   CHAR_T		oldShape;
+   CHAR_T       oldShape;
 
    leaf = NULL;
    child = TtaGetLastChild (el);
@@ -242,7 +249,8 @@ ThotBool            changeShape;
 	 {
 	 oldShape = TtaGetGraphicsShape (child);
 	 leaf = child;
-	 if (changeShape && oldShape != shape)
+	 if (oldShape == EOS ||
+             (changeShape && oldShape != shape))
 	    TtaSetGraphicsShape (child, shape, doc);
 	 }
       }
@@ -418,6 +426,46 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
+   ParseFillStrokeAttributes
+   Create or update a specific presentation rule for element el that reflects
+   the value of attribute attr, which is fill, stroke or stroke-width
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
+#else
+void      ParseFillStrokeAttributes (attrType, attr, el, doc, delete)
+int             attrType;
+Attribute	attr;
+Element		el;
+Document	doc;
+ThotBoool       delete;
+#endif
+{
+#define buflen 50
+   CHAR_T               css_command[buflen+20];
+   int                  length, attrKind;
+   STRING               text;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text != NULL)
+      {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* builds the equivalent CSS rule */
+      if (attrType == GraphML_ATTR_fill)
+          usprintf (css_command, TEXT("fill: %s"), text);
+      else if (attrType == GraphML_ATTR_stroke)
+          usprintf (css_command, TEXT("stroke: %s"), text);
+      else if (attrType == GraphML_ATTR_stroke_width)
+          usprintf (css_command, TEXT("stroke-width: %s"), text);
+      /* parse the CSS rule */
+      ParseHTMLSpecificStyle (el, css_command, doc, delete);
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    ParseDirAndSpaceAttributes
    Depending on the values of attributes direction, vspace and hspace
    of element "group", create (or update) attributes IntLeftDistance,
@@ -589,7 +637,7 @@ int             *error
 	new = TtaNewElement (doc, elType);
 	TtaInsertFirstChild (&new, el, doc);
 	/* Create a placeholder within the GraphML element */
-        elType.ElTypeNum = GraphML_EL_GraphicalElement;
+        elType.ElTypeNum = GraphML_EL_GraphicsElement;
 	child = TtaNewElement (doc, elType);
 	TtaInsertFirstChild (&child, new, doc);
 	}
@@ -616,7 +664,7 @@ int             *error
 	child = TtaGetFirstChild (el);
 	if (child != NULL)
 	   {
-	   elType = TtaGetElementType (child);
+	   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	   elType.ElTypeNum = HTML_EL_HTMLfragment;
 	   CreateEnclosingElement (child, elType, doc);
 	   }
@@ -859,9 +907,57 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
+   ParseCoordAttribute
+   Create or update a specific presentation rule for element el that reflects
+   the value of the x or y attribute attr.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
+#else
+void      ParseCoordAttribute (attr, el, doc)
+Attribute	attr;
+Element		el;
+Document	doc;
+
+#endif
+{
+   int                  length, val, attrKind, ruleType;
+   STRING               text, ptr;
+   AttributeType        attrType;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text != NULL)
+      {
+      /* decide of the presentation rule to be created or updated */
+      TtaGiveAttributeType (attr, &attrType, &attrKind);
+      if (attrType.AttrTypeNum == GraphML_ATTR_x)
+          ruleType = PRHorizPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_y)
+          ruleType = PRVertPos;
+      else
+	  return;
+      /* get the value of the x or y attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      ctxt = TtaGetSpecificStyleContext (doc);
+      ctxt->destroy = FALSE;
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+      ptr = TtaSkipWCBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	 TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+      TtaFreeMemory (ctxt);
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    ParseWidthHeightAttribute
-   Create or update attributes IntWidth or IntHeight according to the
-   value of attribute attr, which is width_ or height_
+   Create or update a specific presentation rule for element el that reflects
+   the value of attribute attr, which is width_ or height_
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      ParseWidthHeightAttribute (Attribute attr, Element el, Document doc)
@@ -873,42 +969,52 @@ Document	doc;
 
 #endif
 {
-   AttributeType	attrType, newAttrType;
-   Attribute		intAttr;
-   int			attrKind, length, l;
+   AttributeType	attrType;
+   int			length, val, attrKind, ruleType;
    STRING		text, ptr;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaAllocString (length);
    if (text != NULL)
       {
-      /* get the value of the text attribute */
-      TtaGiveTextAttributeValue (attr, text, &length); 
-      /* decide of the type of the internal attribute to be created or
-         updated */
+      /* decide of the presentation rule to be created or updated */
       TtaGiveAttributeType (attr, &attrType, &attrKind);
-      newAttrType.AttrSSchema = attrType.AttrSSchema;
-      if (attrType.AttrTypeNum == GraphML_ATTR_width_)
-          newAttrType.AttrTypeNum = GraphML_ATTR_IntWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
-          newAttrType.AttrTypeNum = GraphML_ATTR_IntHeight;
-      /* get the internal attribute */
-      intAttr = TtaGetAttribute (el, newAttrType);
-      if (intAttr == NULL)
-        {
-        /* it does not exist, create it */
-        intAttr = TtaNewAttribute (newAttrType);
-        TtaAttachAttribute (el, intAttr, doc);
-        }
-      /* parse the text value and extract the internal value */
-      l = 0;
+      if (attrType.AttrTypeNum == GraphML_ATTR_width_ ||
+          attrType.AttrTypeNum == HTML_ATTR_SvgWidth)
+         ruleType = PRWidth;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_height_ ||
+	       attrType.AttrTypeNum == HTML_ATTR_SvgHeight)
+         ruleType = PRHeight;
+      else
+	 return;
+      /* get the value of the width_ or height_ attribute */
+      TtaGiveTextAttributeValue (attr, text, &length); 
+      ctxt = TtaGetSpecificStyleContext (doc);
+      ctxt->destroy = FALSE;
+      /* parse the attribute value (a number followed by a unit) */
       ptr = text;
-      usscanf (ptr, TEXT("%d"), &l);
-      ptr = SkipInt (ptr);
-      ptr = SkipSep (ptr);
-      /* set the internal value */
-      TtaSetAttributeValue (intAttr, l, el, doc);
-
+      ptr = TtaSkipWCBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	 {
+         if (pval.typed_data.value == 0)
+	    {
+	    if (attrType.AttrTypeNum == HTML_ATTR_SvgWidth ||
+		attrType.AttrTypeNum == HTML_ATTR_SvgHeight)
+	      /* disable rendering of this svg graphics */
+	      ruleType = PRVisibility;
+	    }
+	 else
+	    {
+	    ctxt->destroy = TRUE;
+	    TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
+            ctxt->destroy = FALSE;
+	    }
+	 TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+	 }
+      TtaFreeMemory (ctxt);
       TtaFreeMemory (text);
       }
 }
@@ -939,9 +1045,18 @@ Document	doc;
      case GraphML_ATTR_position:
 	ParsePositionAttribute (attr, el, doc);
 	break;
+     case GraphML_ATTR_x:
+     case GraphML_ATTR_y:
+	ParseCoordAttribute (attr, el, doc);
+	break;
      case GraphML_ATTR_width_:
      case GraphML_ATTR_height_:
 	ParseWidthHeightAttribute (attr, el, doc);
+	break;
+     case GraphML_ATTR_fill:
+     case GraphML_ATTR_stroke:
+     case GraphML_ATTR_stroke_width:
+        ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
 	break;
      case GraphML_ATTR_points:
 	CreatePoints (attr, el, doc);

@@ -1,7 +1,7 @@
 #ifdef GRAPHML
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -193,7 +193,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Group))
       {
       elType.ElSSchema = graphSSchema;
-      elType.ElTypeNum = GraphML_EL_GraphicalElement;
+      elType.ElTypeNum = GraphML_EL_GraphicsElement;
       newFirstSel = TtaGetTypedAncestor (newFirstSel, elType);
       }
 
@@ -213,7 +213,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Group))
       {
       elType.ElSSchema = graphSSchema;
-      elType.ElTypeNum = GraphML_EL_GraphicalElement;
+      elType.ElTypeNum = GraphML_EL_GraphicsElement;
       selEl = TtaGetTypedAncestor (selEl, elType);
       }
 
@@ -261,6 +261,20 @@ void AttrPositionChanged (event)
 #endif /* __STDC__*/
 {
    ParsePositionAttribute (event->attribute, event->element, event->document);
+}
+
+
+/*----------------------------------------------------------------------
+ AttrCoordChanged
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrCoordChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrCoordChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ParseCoordAttribute (event->attribute, event->element, event->document);
 }
 
 
@@ -521,6 +535,38 @@ void AttrIntSizeChanged (event)
 #endif /* __STDC__*/
 {
    UpdateWidthHeightAttribute (event->attribute, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+ AttrFillStrokeModified
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrFillStrokeModified(NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrFillStrokeModified(event)
+NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
+			     event->attribute, event->element,
+			     event->document, FALSE);
+}
+ 
+/*----------------------------------------------------------------------
+   AttrFillStrokeDelete : attribute fill, stroke or stroke-width will be
+   deleted. Remove the corresponding style presentation.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            AttrFillStrokeDelete (NotifyAttribute * event)
+#else
+ThotBool            AttrFillStrokeDelete (event)
+NotifyAttribute    *event;
+#endif
+{
+  ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
+			     event->attribute, event->element,
+			     event->document, TRUE);
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------

@@ -7,8 +7,9 @@
 
 /*
  *
- * Xml2thot parses a HTML file and builds the corresponding abstract tree
- * for a Thot document of type HTML.
+ * Xml2thot initializes and launches the Expat parser and processes all
+ * events sent by Expat. It builds the Thot abstract tree corresponding
+ * to an XML file.
  *
  * Author: V. Quint
  *         L. Carcone 
@@ -114,7 +115,7 @@ static PtrParserCtxt    XLinkParserCtxt = NULL;
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
 #define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
-#define GraphML_URI          TEXT("Unknown URI")
+#define GraphML_URI          TEXT("http://www.w3.org/2000/svg")
 #define XLink_URI            TEXT("http://www.w3.org/1999/xlink")
 
 
@@ -443,10 +444,10 @@ Document         doc;
   /* if not found, look at other contexts */
   if (elType->ElTypeNum == 0)
     {
+      elType->ElSSchema = NULL;
       ctxt = firstParserCtxt;
       while (ctxt != NULL && elType->ElSSchema == NULL)
 	{
-	  elType->ElSSchema = NULL;
 	  if (ctxt != currentParserCtxt)
 	    {
 	      MapXMLElementType (ctxt->XMLtype, XMLname,
@@ -643,19 +644,13 @@ SSchema	  ThotSSchema;
 /*----------------------------------------------------------------------
    InsertSibling   return TRUE if the new element must be inserted
    in the Thot document as a sibling of lastElement;
-   return FALSE it it must be inserted as a child.
+   return FALSE if it must be inserted as a child.
   ----------------------------------------------------------------------*/
 static ThotBool     InsertSibling ()
 {
    if (stackLevel == 0)
        return FALSE;
    else
-     /*
-     if (lastElementClosed ||
-	 TtaIsLeaf (TtaGetElementType (lastElement)) ||
-	 (nameElementStack[stackLevel - 1] != NULL &&
-	  previousElementContent == 'E'))
-     */
      if (lastElementClosed ||
 	 TtaIsLeaf (TtaGetElementType (lastElement)))
        return TRUE;
@@ -863,13 +858,9 @@ Element    *el;
    Element       parent;
 
    if (InsertSibling ())
-     {
        TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
-     }
    else
-     {
        TtaInsertFirstChild (el, lastElement, currentDocument);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -1309,9 +1300,8 @@ STRING    elName;
 
 /*----------------------------------------------------------------------
    StartOfXmlStartTag  
-   The name of an element type has been read in a start tag.
-   Create the corresponding Thot thing (element, attribute,
-   or character), according to the mapping table.
+   The name of an element type has been read from a start tag.
+   Create the corresponding Thot element according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void   StartOfXmlStartTag (CHAR_T* GIname)
@@ -1389,7 +1379,8 @@ CHAR_T*             GIname;
 	    {
 	      newElement = NULL;
 	      
-	      if (elType.ElTypeNum == HTML_EL_HTML)
+	      if (elType.ElTypeNum == HTML_EL_HTML &&
+                  !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 		/* the corresponding Thot element is the root of the
 		   abstract tree, which has been created at initialization */
 		newElement = rootElement;
@@ -1472,9 +1463,10 @@ CHAR_T     *GIname;
 	   return;
    
    /* search the XML tag in the mapping table */
-   /* For <math> tag, research is made with Xhtml Context */
+   /* For <math> and <svg> tags, research is made with Xhtml Context */
    elementParserCtxt = currentParserCtxt;
-   if (ustrcmp (GIname, TEXT("math")) == 0)
+   if (ustrcmp (GIname, TEXT("math")) == 0 ||
+       ustrcmp (GIname, TEXT("svg")) == 0)
      currentParserCtxt = xhtmlParserCtxt;	 
    
    elType.ElSSchema = NULL;
@@ -2345,12 +2337,22 @@ CHAR_T     *attrValue;
 	   break;
 	 }
 
-       if (lastMappedAttr->ThotAttribute == HTML_ATTR_Width__)
+      if (lastMappedAttr->ThotAttribute == HTML_ATTR_Width__)
 	 /* HTML attribute "width" for a table or a hr */
 	 /* create the corresponding attribute IntWidthPercent or */
 	 /* IntWidthPxl */
 	 CreateAttrWidthPercentPxl (attrValue, lastAttrElement,
 				    currentDocument, -1);
+      else
+	if (lastMappedAttr->ThotAttribute == HTML_ATTR_SvgWidth)
+	  /* attribute "width" for a <svg> tag */
+          ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
+				     currentDocument);
+      else
+	if (lastMappedAttr->ThotAttribute == HTML_ATTR_SvgHeight)
+          /* attribute "height" for a <svg> tag */
+          ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
+				     currentDocument);
        else
 	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("size")))
 	   {
@@ -3074,8 +3076,9 @@ const XML_Char **attlist;
 	 }
        elementParserCtxt = currentParserCtxt;
 
-       /* The tag math  is treated with the XHTML context */
-       if (ustrcmp (bufName, TEXT("math")) == 0)
+       /* The <math> or <svg> tag is treated with the XHTML context */
+       if (ustrcmp (bufName, TEXT("math")) == 0 ||
+	   ustrcmp (bufName, TEXT("svg")) == 0)
 	   currentParserCtxt = xhtmlParserCtxt;	 
 	   
        /* Treatment called at the beginning of start tag */
@@ -3110,13 +3113,19 @@ const XML_Char **attlist;
 	   attlist++;
 	 }
 
-       /* Restore the contexte (it may have been changed
-	  by the treatment of the attributes */
+       /* Restore the context (it may have been changed
+	  by the treatment of the attributes) */
        currentParserCtxt = elementParserCtxt;
    
        /* Treatment called at the end of start tag */
        EndOfXmlStartTag (bufName);
 
+       /* if it's a <math> or <svg> tag, set the appropriate context */
+       if (ustrcmp (bufName, TEXT("math")) == 0)
+	  ChangeXmlParserContext (TEXT("MathML"));
+       else if (ustrcmp (bufName, TEXT("svg")) == 0)
+	  ChangeXmlParserContext (TEXT("GraphML"));
+	   
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
      }
@@ -3894,10 +3903,11 @@ ThotBool    plainText;
 	  }
 
 	/* do not check the Thot abstract tree against the structure */
-	/* schema while building the Thot document. */
-#ifndef XHTML_BASIC
+	/* schema while building the Thot document. Some valid XML documents */
+        /* could be considered as invalid Thot documents. For example, */
+        /* a <tbody> as a child of a <table> would be considered invalid */
+        /* because the Thot SSchema requires a Table_body element in between */
 	TtaSetStructureChecking (0, doc);
-#endif /* XHTML_BASIC */
 	/* set the notification mode for the new document */
 	TtaSetNotificationMode (doc, 1);
 

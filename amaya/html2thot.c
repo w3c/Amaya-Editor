@@ -3344,8 +3344,9 @@ CHAR_T                c;
 	    StopParsing ();
 #endif /* STANDALONE */
 	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")))
-	/* a <XMLGRAPHICS> tag has been read */
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")) ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("svg")))
+	/* a tag <xmlgraphics> or <svg> has been read */
         {
 	  /* Parse the GraphML structure */
 #ifndef STANDALONE
@@ -3635,7 +3636,8 @@ CHAR_T*             GIname;
       for (i = 0; GIname[i] != TEXT(':') && GIname[i] != WC_EOS; i++);
       if (GIname[i] == TEXT(':') &&
 	      (ustrcasecmp (&GIname[i+1], TEXT("math")) == 0 ||
-	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0))
+	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0 ||
+	       ustrcasecmp (&GIname[i+1], TEXT("svg")) == 0))
 	/* it's a math or svg tag with a namespace prefix. OK */
 	{
          entry = MapGI (&GIname[i+1], &schema, theDocument);
@@ -4541,7 +4543,14 @@ CHAR_T              c;
          /* IntWidthPxl */
          CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument,
 				    -1);
-
+      else if (lastAttrEntry->ThotAttribute == HTML_ATTR_SvgWidth)
+         /* attribute "width" for a <svg> tag */
+         ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
+				    theDocument);
+      else if (lastAttrEntry->ThotAttribute == HTML_ATTR_SvgHeight)
+         /* attribute "height" for a <svg> tag */
+         ParseWidthHeightAttribute (lastAttribute, lastAttrElement,
+				    theDocument);
       else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
 	 {
 	 TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);

@@ -154,11 +154,10 @@ STRUCT
 	Math							{ MATH }
 	    (ATTR mode = display, inline_math) =
 		MathML;
-        XMLGraphics (ATTR Height_; Width__;
-			IntWidthPercent;
-			IntWidthPxl)
-	 = GraphML with Height_ ?= 200, Width__ ?= '100%',
-			IntWidthPercent ?= 100;
+        XMLGraphics                                             { SVG }
+	    (ATTR !SvgHeight = Text; !SvgWidth = Text) =
+                {  height             width }
+	    GraphML with SvgHeight ?= '5cm', SvgWidth ?= '100%'; 
 	MAP;							{ MAP }
 	END;
 

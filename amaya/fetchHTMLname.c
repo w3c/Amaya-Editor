@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -113,6 +113,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {TEXT("style"), SPACE, HTML_EL_STYLE_, NULL},
    {TEXT("sub"), SPACE, HTML_EL_Subscript, NULL},
    {TEXT("sup"), SPACE, HTML_EL_Superscript, NULL},
+   {TEXT("svg"), SPACE, HTML_EL_XMLGraphics, NULL},
    {TEXT("table"), SPACE, HTML_EL_Table, NULL},
    {TEXT("tbody"), SPACE, HTML_EL_tbody, NULL},
    {TEXT("td"), SPACE, HTML_EL_Data_cell, NULL},
@@ -222,6 +223,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("frameborder"), TEXT(""), 'A', HTML_ATTR_frameborder},
 
    {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers},
+   {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight},
    {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_},
    {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_},
    {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang},
@@ -350,6 +352,9 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__},
+#ifdef GRAPHML
+   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth},
+#endif
    {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__},

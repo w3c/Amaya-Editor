@@ -189,6 +189,18 @@ ATTRIBUTES
 	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;
 
+   SvgWidth:
+	BEGIN
+	AttrCreate.Post -> AttrSvgModified;
+	AttrModify.Post -> AttrSvgModified;
+	END;
+
+   SvgHeight:
+	BEGIN
+	AttrCreate.Post -> AttrSvgModified;
+	AttrModify.Post -> AttrSvgModified;
+	END;
+
    Font_size:
 	BEGIN
 	AttrCreate.Post -> AttrFontSizeCreated;
@@ -290,6 +302,7 @@ ATTRIBUTES
 	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
 	AttrCreate.Post -> UpdateStylePost;
+	AttrModify.Pre ->  UpdateStyleDelete;
 	AttrModify.Post -> UpdateStylePost;
 	AttrDelete.Pre ->  UpdateStyleDelete;
 	AttrDelete.Post -> GlobalAttrDeleted;

@@ -149,6 +149,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("sub"), SPACE, HTML_EL_Subscript},
    {TEXT("sup"), SPACE, HTML_EL_Superscript},
 #endif /* XHTML_BASIC */
+   {TEXT("svg"), SPACE, HTML_EL_XMLGraphics},
    {TEXT("table"), SPACE, HTML_EL_Table},
    {TEXT("tbody"), SPACE, HTML_EL_tbody},
    {TEXT("td"), SPACE, HTML_EL_Data_cell},
@@ -230,10 +231,12 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line},
    {TEXT("circle"), SPACE, GraphML_EL_Circle},
    {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline},
+   {TEXT("desc"), SPACE, GraphML_EL_desc},
    {TEXT("group"), SPACE, GraphML_EL_Group},
    {TEXT("label"), 'X', GraphML_EL_Label}, /* see function GraphMLGetDTDName */
    {TEXT("line"), 'E', GraphML_EL_Line_},
    {TEXT("math"), 'X', GraphML_EL_Math},   /* see function GraphMLGetDTDName */
+   {TEXT("metadata"), SPACE, GraphML_EL_metadata},
    {TEXT("oval"), SPACE, GraphML_EL_Oval},
    {TEXT("polygon"), SPACE, GraphML_EL_Polygon},
    {TEXT("polyline"), 'E', GraphML_EL_Polyline},
@@ -241,6 +244,7 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect},
    {TEXT("spline"), 'E', GraphML_EL_Spline},
    {TEXT("text"), 'X', GraphML_EL_Text_},  /* see function GraphMLGetDTDName */
+   {TEXT("title"), SPACE, GraphML_EL_title},
    {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
 };
 #else /* GRAPHML */

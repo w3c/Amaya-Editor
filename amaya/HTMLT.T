@@ -496,15 +496,15 @@ RULES
 
  XMLGraphics: BEGIN
 #ifdef XML
-	Create '<xmlgraphics xmlns="http://www.w3.org/Graphics/SVG/Amaya2D"';
+	Create '<svg xmlns="http://www.w3.org/2000/svg"';
 #else
-	Create '<xmlgraphics';
+	Create '<svg';
 #endif
 	Create Attributes;
 	Create '>\12';
 	indent +2;
 	indent -2 after;
-	Create '</xmlgraphics>\12' After;
+	Create '</svg>\12' After;
 	END;
 
  Paragraph: BEGIN
@@ -1857,6 +1857,18 @@ ATTRIBUTES
 	Create ' mode="inline"';
  mode = display:
 	Create ' mode="display"';
+
+ SvgHeight: BEGIN
+	Create ' height="';
+	Create SvgHeight;
+	Create DoubleQuote;
+	END;
+
+ SvgWidth: BEGIN
+	Create ' width="';
+	Create SvgWidth;
+	Create DoubleQuote;
+	END;
 
  summary: BEGIN
 	Create ' summary="';

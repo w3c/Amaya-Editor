@@ -1659,7 +1659,7 @@ BOXES
 		END;
 	END;
  Graph_S: BEGIN
-	Content: Text 'GRAPHICS';
+	Content: Text 'SVG';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5571,6 +5571,55 @@ BOXES
 		END;
 	END;
 
+  ATTR_SVGHEIGHT: BEGIN
+	Content: Text ' height=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+  VALUE_SVGHEIGHT: BEGIN
+	Content: (SvgHeight);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+  ATTR_SVGWIDTH: BEGIN
+	Content: Text ' width=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+
+  VALUE_SVGWIDTH: BEGIN
+	Content: (SvgWidth);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
 { ---- Pages ---- }
 
 #ifdef PAGE
@@ -6953,8 +7002,9 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
                 END;
-	IN Alternate_view
-		Visibility: 0;
+	IN Alternate_view BEGIN
+		Width: Enclosing . Width;
+		END;
 	END;
 
  HTMLfragment:
@@ -10178,6 +10228,18 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_MODE_INLINE);
 	MarginTop: 0;
+	END;
+
+  SvgHeight:
+	BEGIN
+	CreateBefore(ATTR_SVGHEIGHT);
+	CreateBefore(VALUE_SVGHEIGHT);
+	END;
+
+  SvgWidth:
+	BEGIN
+	CreateBefore(ATTR_SVGWIDTH);
+	CreateBefore(VALUE_SVGWIDTH);
 	END;
 
   Class:

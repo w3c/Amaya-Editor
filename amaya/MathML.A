@@ -56,9 +56,10 @@ ATTRIBUTES
 
    style\240:
 	BEGIN
+        AttrDelete.Pre ->  UpdateStyleDelete;
+        AttrModify.Pre ->  UpdateStyleDelete;
         AttrCreate.Post -> UpdateStylePost;
         AttrModify.Post -> UpdateStylePost;
-        AttrDelete.Pre ->  UpdateStyleDelete;
 	END;
 
    id:

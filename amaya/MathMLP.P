@@ -2231,20 +2231,6 @@ BOXES
 		Visibility: 0;
 	END;
 
- HR_Graph: BEGIN
-	Content: Graphics 'h';
-	Visibility: 0;
-	IN Math_Structure_view BEGIN
-		Visibility: 10;
-		Height: 0.6;
-	        Width: Enclosing . Width ;
-		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom;
-		LineWeight: 2 pt;
-		Foreground: TAG_Color;
-		END;
-	END;
-
  Comment_Start:
         BEGIN
         Content: Text '<!--';
@@ -2271,7 +2257,6 @@ RULES
 
    MathML:
 	BEGIN
-	CreateLast(HR_Graph);
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;
