@@ -524,7 +524,6 @@ void AmayaNormalWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 	{
 	  p_menu = new wxMenu();
 	  m_pDummyMenuBar->Append( p_menu , p_menu_bar->GetLabelTop(menu_id) );
-	  m_pDummyMenuBar->EnableTop( menu_id, FALSE );
 	  menu_id++;
 	}
     }
@@ -532,6 +531,7 @@ void AmayaNormalWindow::SetMenuBar( wxMenuBar * p_menu_bar )
     {
       // setup the dummy menubar
       wxFrame::SetMenuBar( m_pDummyMenuBar );
+      m_pDummyMenuBar->Disable();
     }
 }
 
