@@ -7,7 +7,7 @@ BODY { background : #FFFFFF }
 <title>
 Using Amaya</title>
 </head>
-<body>
+<body lang="en">
 <p>
 <a href="../../"><img border="0" src="../../Icons/WWW/w3c_home" alt="W3C"></a>
 <a href="../"><img src="amaya.gif" alt="Amaya" border="0"></a> <a
@@ -32,7 +32,11 @@ common word processors and editors. They are not presented here. Only
 <h2><a name="L920">Starting Amaya</a></h2>
 <p>
 To start <strong>Amaya</strong> type:</p>
-<pre>    amaya [document]</pre>
+<pre>    amaya [-display host] [document]</pre>
+<p>
+Parameter [-display host] is optional. It defines the remote host screen where
+Amaya has to display Web pages. If this parameter is omitted, Amaya displays
+on the local host screen.</p>
 <p>
 Parameter <code>[document]</code> is optional. It is the file name or the URL
 of the first document <strong>Amaya</strong> should display when starting. If
@@ -43,11 +47,14 @@ no parameter is given, a default document is presented.</p>
 <strong>Amaya</strong> not only allows you to browse documents on the Web, but
 you can also edit them and <a href="Saving.html#L1052">save</a> them either
 locally or on remote Web servers.</p>
+<p>
+Each following section gives a short description of how to use a specific
+Amaya functionality.</p>
 <ul>
 <li>
 <a rel="Chapter" href="Browsing.html#Browsing">Browsing with Amaya</a> 
 <li>
-<a rel="Chapter" href="Views.html#Views">Views</a> 
+<a rel="Chapter" href="Views.html#Views">Displaying Views</a> 
 <li>
 <a rel="Chapter" href="Selecting.html#Selecting">Selecting</a> 
 <li>
@@ -61,13 +68,14 @@ document structure</a>
 <li>
 <a rel="Chapter" href="Tables.html#Editing">Editing tables</a> 
 <li>
-<a rel="Chapter" href="ImageMaps.html#Client-sid">Client-side image maps</a> 
+<a rel="Chapter" href="ImageMaps.html#Client-sid">Creating and using
+client-side image maps</a> 
 <li>
 <a rel="Chapter" href="StyleSheets.html#Style">Style Sheets</a> 
 <li>
 <a rel="Chapter" href="Attributes.html#Attributes">Editing attributes</a> 
 <li>
-<a href="Math.html#Math" rel="Chapter">Editing mathematics</a>
+<a href="Math.html#Math" rel="Chapter">Editing mathematics</a> 
 <li>
 <a rel="Chapter" href="Searching.html#Searching">Searching and replacing
 text</a> 
@@ -83,9 +91,11 @@ text</a>
 documents</a></p>
 <li>
 <a rel="Chapter" href="Printing.html#Printing">Printing documents</a> 
-<li>
-<a href="Configure.html#Configuring" rel="Chapter">Configuring Amaya</a> 
 </ul>
+<p>
+It is also possible to change  default options in the Amaya application. This
+section describes how to <a href="Configure.html#Configuring"
+rel="Chapter">Configure Amaya</a>.</p>
 <p>
 </p>
 <hr>
