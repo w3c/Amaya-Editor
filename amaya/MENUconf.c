@@ -2871,10 +2871,7 @@ static void SetEnvGeom (char *view_name, Document doc)
 {
   int view;
   int x, y, w, h;
-  
-
-  /* @@ I should be able to remove this line */
-  TtaGetViewGeometry (doc, view_name, &x, &y, &w, &h);
+    
   if (!strcmp (view_name, "Source_view"))
     /* takes the current size and position of the main view */
     view = 1;
