@@ -580,7 +580,9 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 i = currAttr->AeAttrValue;
        
 #if defined(_GTK) || defined(_MOTIF)
-       TtaSetNumberForm (subform, i);
+       /* initialize the input area only when an attribute already exists */
+       if (currAttr)
+	 TtaSetNumberForm (subform, i);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
        
 #ifdef _WINGUI
@@ -677,7 +679,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        
        if (title != NULL)
 	 TtaFreeMemory (title);
-} 
+}
 
 /*----------------------------------------------------------------------
    CallbackReqAttrMenu

@@ -25,8 +25,8 @@
 static Element      CurrentRow = NULL;
 static Element      CurrentColumn = NULL;
 static Element      CurrentCell = NULL;
-static int          PreviousColSpan;
-static int          PreviousRowSpan;
+static int          PreviousColspan;
+static int          PreviousRowspan;
 static ThotBool     NewTable = FALSE;
 
 /*----------------------------------------------------------------------
@@ -93,13 +93,15 @@ static Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
    SetRowExt
    Set the attribute RowExt of cell "cell" in row "row" according to span.
   ----------------------------------------------------------------------*/
-void SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
+int SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
 {
    Element             row, spannedrow, nextspannedrow;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
+   int                 overflow;
 
+   overflow = 0;
    row = TtaGetParent (cell);
    elType = TtaGetElementType (row);
    attrType.AttrSSchema = elType.ElSSchema;
@@ -122,8 +124,9 @@ void SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
        spannedrow = row;
        while (span > 0 && spannedrow != NULL)
 	 {
+	   span--;
 	   nextspannedrow = GetSiblingRow (spannedrow, FALSE, inMath);
-	   if ((span == 1 || nextspannedrow == NULL) && spannedrow != row)
+	   if ((span == 0 || nextspannedrow == NULL) && spannedrow != row)
 	     {
 	       attr = TtaGetAttribute (cell, attrType);
 	       if (attr == NULL)
@@ -134,11 +137,12 @@ void SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
 		 }
 	       if (attr)
 		 TtaSetAttributeReference (attr, cell, doc, spannedrow, doc);
+	       overflow = span;
 	     }
-	   span--;
 	   spannedrow = nextspannedrow;
 	 }
      }
+   return overflow;
 }
 
 /*----------------------------------------------------------------------
@@ -1087,7 +1091,10 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		  else if (span == 0)
 		    colVSpan[cRef] = THOT_MAXINT;
 		}
-	      SetRowExt (cell, span, doc, inMath);
+	      overflow = SetRowExt (cell, span, doc, inMath);
+	      if (overflow > 0 && attr)
+		/* spanning value is too great. update it */
+		TtaSetAttributeValue (attr, span-overflow, cell, doc);
 
 	      /* if there an attribute colspan for that cell,
 		 update attribute ColExt */
@@ -1289,18 +1296,22 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
     }
 
   /* apply delayed colspan */
-  if (cDelayed)
+  if (cDelayed > 0)
     {
       i = 0;
       while (i < cDelayed)
 	{
 	  attr = TtaGetAttribute (delayedColExt[i], attrTypeHSpan);
-	  span = TtaGetAttributeValue (attr);
-	  ChangeColspan (delayedColExt[i], 1, span, doc);
-	  overflow = SetColExt (delayedColExt[i], span, doc, inMath, FALSE);
-	  if (overflow > 0)
-	    /* spanning value is too great. update it */
-	    TtaSetAttributeValue (attr, span-overflow, delayedColExt[i], doc);
+	  if (attr)
+	    {
+	      span = TtaGetAttributeValue (attr);
+	      ChangeColspan (delayedColExt[i], 1, span, doc);
+	      overflow = SetColExt (delayedColExt[i], span, doc, inMath,FALSE);
+	      if (overflow > 0)
+		/* spanning value is too great. update it */
+		TtaSetAttributeValue (attr, span-overflow, delayedColExt[i],
+				      doc);
+	    }
 	  i++;
 	}
     }
@@ -1506,7 +1517,178 @@ void CheckTable (Element table, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  NewCell  a new cell has been created in a HTML table.
+   SpanningCellForRow
+   returns the cell in the column represented by colhead that spans the row
+   element. Return NULL if there is no spanning cell in this column for
+   that row.
+   If a spanning cell is found, parameter colspan returns its colspan value.
+   If update is TRUE, the spanning of the cell is increased (if we are adding
+   a new row) or decreased (when removing a row).
+  ----------------------------------------------------------------------*/
+static Element SpanningCellForRow (Element row, Element colhead,
+				   Document doc, ThotBool inMath,
+				   ThotBool update, ThotBool addRow,
+				   int *colspan)
+{
+  Element             cell, currentRow, lastRow;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 rowspan, pos;
+  ThotBool            lastRemoved, newLastRow;
+
+  *colspan = 1;
+  if (row == NULL)
+    return NULL;
+  elType = TtaGetElementType (row);
+
+  /* look at the rows before the row of interest and find the first row
+     that contains a cell for the column of interest */
+  pos = 0;
+  cell = NULL;
+  currentRow = row;
+  do
+    {
+      currentRow = GetSiblingRow (currentRow, TRUE, inMath);
+      if (currentRow)
+	{
+	  cell = GetCellFromColumnHead (currentRow, colhead, inMath);
+	  pos++;
+	}
+    }
+  while (!cell && currentRow);
+
+  if (cell)
+    /* we have found a cell in a row above (currentRow) */
+    {
+      /* check the rowspan attribute of the cell */
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (inMath)
+	attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	/* this cell has a rowspan attribute */
+	{
+	  rowspan = TtaGetAttributeValue (attr);
+	  if (rowspan == 0 || rowspan - pos > 0)
+	    /* this cell spans the row of interest */
+	    /* rowspan = 0 means that the cell spans to the end of the
+	       current rows group */
+	    {
+	    if (update)
+              {
+	      lastRemoved = FALSE;
+              newLastRow = FALSE;
+	      if (rowspan == 0)
+		{
+		  if (!GetSiblingRow (row, FALSE, inMath))
+		    /* the cell is spanning to the last row and we are
+		       changing the last row */
+		    {
+		      if (addRow)
+			newLastRow = TRUE;
+		      else
+			lastRemoved = TRUE;
+		    }
+		} 
+	      else
+		/* update the spanning */
+		if (addRow)
+		  rowspan++;
+		else
+		  {
+		    rowspan--;
+		    if (rowspan - pos == 0)
+		      /* we are removing the last row spanned by the cell */
+		      lastRemoved = TRUE;
+		  }
+	      if (rowspan == 1)
+	        /* no spanning any more */
+		{
+		  /* do not register this deletion of attribute rowspan in the
+		     undo queue: undo, when undoing a row creation, would send
+		     the event for the attribute before the row is actually
+		     removed. RowDeleted called by undo will do the job */
+		  if (!addRow)
+		    TtaRegisterAttributeDelete (attr, cell, doc);
+		  TtaRemoveAttribute (cell, attr, doc);
+		  if (inMath)
+		    attrType.AttrTypeNum = MathML_ATTR_MRowExt;
+		  else
+		    attrType.AttrTypeNum = HTML_ATTR_RowExt;
+		  attr = TtaGetAttribute (cell, attrType);
+		  if (attr)
+		    TtaRemoveAttribute (cell, attr, doc);
+		  lastRemoved = FALSE;
+		}
+	      else if (rowspan != 0)
+		{
+		  /* do not register this change of attribute rowspan in the
+		     undo queue: undo, when undoing a row creation, would send
+		     the event for the attribute before the row is actually
+		     removed. RowDeleted called by undo will do the job */
+		  if (!addRow)
+		    TtaRegisterAttributeReplace (attr, cell, doc);
+		  TtaSetAttributeValue (attr, rowspan, cell, doc);
+		}
+	      lastRow = NULL;
+	      if (newLastRow)
+		lastRow = row;
+	      if (lastRemoved)
+		lastRow = GetSiblingRow (row, TRUE, inMath);
+	      if (lastRow)
+		/* update the RowExt attribute */
+		{
+		  if (inMath)
+		    attrType.AttrTypeNum = MathML_ATTR_MRowExt;
+		  else
+		    attrType.AttrTypeNum = HTML_ATTR_RowExt;
+		  attr = TtaGetAttribute (cell, attrType);
+		  if (attr)
+		    {
+		      if (currentRow == lastRow)
+			{
+			  TtaRemoveAttribute (cell, attr, doc);
+			  attr = NULL;
+			}
+		    }
+		  else if (currentRow != lastRow)
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      if (attr != NULL)
+			TtaAttachAttribute (cell, attr, doc);
+		    }
+		  if (attr)
+		    TtaSetAttributeReference (attr, cell, doc, lastRow, doc);
+		}
+	      /* we have finished updating */
+	      }
+	    /* get the colspan value of the rowspanning cell */
+	    if (inMath)
+	      attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	    else
+	      attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	    attr = TtaGetAttribute (cell, attrType);
+	    if (attr)
+	      /* this cell has an attribute colspan */
+	      *colspan = TtaGetAttributeValue (attr);
+	    if (*colspan < 0)
+	      *colspan = 1;
+	    }
+	  else
+	    cell = NULL;
+	}
+      else
+	cell = NULL;
+    }
+  return (cell);
+}
+
+/*----------------------------------------------------------------------
+  NewCell  a new cell has been created or pasted in a HTML table.
+  Link it to its column head.
   If generateColumn is TRUE, the new cell generates a new column head.
   If generateEmptyCells is TRUE, generate empty cells for the same column
   in other rows.
@@ -1514,13 +1696,13 @@ void CheckTable (Element table, Document doc)
 void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	      ThotBool generateEmptyCells)
 {
-  Element             newcell, row, colhead, lastColhead;
+  Element             newcell, row, colhead, lastColhead, chead, pcell;
   ElementType         elType;
-  AttributeType       attrType;
+  AttributeType       attrTypeCspan, attrTypeRefC;
   Attribute           attr;
   DisplayMode         dispMode;
   char                ptr[100];
-  int                 span, i;
+  int                 span, i, col;
   ThotBool            before, inMath;
 
   dispMode = TtaGetDisplayMode (doc);
@@ -1528,9 +1710,9 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   elType = TtaGetElementType (cell);
-  attrType.AttrSSchema = elType.ElSSchema;
+  attrTypeCspan.AttrSSchema = elType.ElSSchema;
+  attrTypeRefC.AttrSSchema = elType.ElSSchema;
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
-
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
     /* change the cell into a Data_cell */
     {
@@ -1541,65 +1723,151 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
     }
   else
     newcell = cell;
-
-  /* insert a new column here */
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_TableRow;
-      attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+      attrTypeRefC.AttrTypeNum = MathML_ATTR_MRef_column;
+      attrTypeCspan.AttrTypeNum = MathML_ATTR_columnspan;
     }
   else
     {
       elType.ElTypeNum = HTML_EL_Table_row;
-      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+      attrTypeRefC.AttrTypeNum = HTML_ATTR_Ref_column;
+      attrTypeCspan.AttrTypeNum = HTML_ATTR_colspan_;
     }
   /* get the enclosing row element */
   row = TtaGetTypedAncestor (cell, elType);
   /* locate the previous or the next column head */
   colhead = NULL;
-  cell = GetSiblingCell (cell, TRUE, inMath);
+  cell = GetSiblingCell (newcell, TRUE, inMath);
   if (cell == NULL)
+    /* no cell before the new cell. Try after the new cell */
     {
-      cell = newcell;
-      cell = GetSiblingCell (cell, FALSE, inMath);
+      cell = GetSiblingCell (newcell, FALSE, inMath);
       before = TRUE;
-      if (cell != NULL)
+      if (cell)
+	/* there is a following cell. Get its column head */
 	{
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr != NULL)
-	    TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	  attr = TtaGetAttribute (cell, attrTypeRefC);
+	  if (attr)
+	    {
+	      TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	      if (colhead)
+		/* the column head is found */
+		{
+		  /* if there are some cells spanning from above rows,
+		     skip them. Check previous column heads. */
+		  chead = colhead;
+		  TtaPreviousSibling (&chead);
+		  col = 1;
+		  while (chead)
+		    {
+		      pcell = SpanningCellForRow (row, chead, doc, inMath,
+						  FALSE, FALSE, &span);
+		      if (pcell)
+			/* there is a cell linked to that column head that
+			   spans our row */
+			{
+			  if (span == col)
+			    /* its colspan make it touch our cell */
+			    colhead = chead;
+			  else if (span < col)
+			    /* it leaves room for the new cell. stop */
+			    chead = NULL;
+			}
+		      if (chead)
+			{
+			  TtaPreviousSibling (&chead);
+			  col++;
+			}
+		    }
+
+		  attr = TtaGetAttribute (newcell, attrTypeCspan);
+		  if (attr)
+		    /* the new cell has an attribute colspan */
+		    {
+		      span = TtaGetAttributeValue (attr);
+		      /* ignore span if zero: there is a cell after this
+			 newcell with an "infinite" span. Strange */
+		      if (span > 1)
+			/* skip the previous column heads according to the
+			   span of the new cell */
+			{
+			  for (i = 1; i < span && colhead; i++)
+			    {
+			      lastColhead = colhead;
+			      TtaPreviousSibling (&colhead);
+			    }
+			  if (!colhead)
+			    colhead = lastColhead;
+			}
+		    }
+		}
+	    }
 	}
     }
   else
+    /* there is a cell before the new cell */
     {
       before = FALSE;
-      attr = TtaGetAttribute (cell, attrType);
+      /* get its column head */
+      attr = TtaGetAttribute (cell, attrTypeRefC);
       if (attr != NULL)
 	{
 	  TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
-	  /* if there an attribute colspan for that cell, select the
-	     right colhead */
-	  if (inMath)
-	    attrType.AttrTypeNum = MathML_ATTR_columnspan;
-	  else
-	    attrType.AttrTypeNum = HTML_ATTR_colspan_;
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr != NULL)
+	  if (colhead)
 	    {
-	      span = TtaGetAttributeValue (attr);
-	      if (span > 1 || span == 0)
-		for (i = 1; (i < span || span == 0) && colhead != NULL; i++)
-		  {
-		    lastColhead = colhead;
-		    TtaNextSibling (&colhead);
-		  }
-	      if (span == 0)
-		/* creating a new column after a cell that spans to the
-		   end of the table */
+	      /*if this cell has an attribute colspan, skip some column heads*/
+	      attr = TtaGetAttribute (cell, attrTypeCspan);
+	      if (attr)
 		{
-		  colhead = lastColhead;
-		  before = FALSE;
+		  span = TtaGetAttributeValue (attr);
+		  /* ignore colspan if zero: the new cell would be after this
+		     supposed infinite cell. Strange */
+		  if (span > 1)
+		    {
+		      for (i = 1; i < span && colhead; i++)
+			{
+			  lastColhead = colhead;
+			  TtaNextSibling (&colhead);
+			}
+		      if (!colhead)
+			colhead = lastColhead;
+		    }
 		}
+	      /* if there are some cells spanning from above rows, skip them */
+	      do
+		{
+		  chead = colhead;
+		  TtaNextSibling (&chead);
+		  if (chead)
+		    pcell = SpanningCellForRow (row, chead, doc, inMath, FALSE,
+						FALSE, &span);
+		  else
+		    pcell = NULL;
+		  if (pcell)
+		    {
+		      colhead = chead;
+		      /* if this cell has an attribute colspan, skip some
+			 column heads */
+		      attr = TtaGetAttribute (pcell, attrTypeCspan);
+		      if (attr)
+			{
+			  span = TtaGetAttributeValue (attr);
+			  if (span > 1)
+			    {
+			      for (i = 1; i < span && colhead; i++)
+				{
+				  lastColhead = colhead;
+				  TtaNextSibling (&colhead);
+				}
+			      if (!colhead)
+				colhead = lastColhead;
+			    }
+			}
+		    }
+		}
+	      while (pcell);
 	    }
 	}
     }
@@ -1607,9 +1875,9 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   if (colhead)
     {
       if (generateColumn)
-	  /* generate the new column */
-	  colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
-				   generateEmptyCells);
+	/* generate the new column */
+	colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
+				 generateEmptyCells);
       else if (before)
 	/* select the previous column */
 	TtaPreviousSibling (&colhead);
@@ -1624,6 +1892,45 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
    TtaSetDisplayMode (doc, dispMode);
 }
 
+/*----------------------------------------------------------------------
+ CreateCell
+ The user wants to create a new cell (i.e. a new column). If the new cell
+ is supposed to be right a cell that has attribute colspan = 0,
+ the creation id refused.
+ -----------------------------------------------------------------------*/
+ThotBool CreateCell (NotifyElement *event)
+{
+  Element        row, cell;
+  ElementType    elType;
+  Attribute      attr;
+  AttributeType  attrType;
+  int            i;
+  ThotBool       forbidden;
+
+  forbidden = FALSE;
+  row = event->element;
+  if (event->position > 0)
+    {
+      cell = TtaGetFirstChild (row);
+      for (i = 1; i < event->position && cell; i++)
+	TtaNextSibling (&cell);
+      if (cell)
+	{
+	  elType = TtaGetElementType(row);
+	  attrType.AttrSSchema = elType.ElSSchema;
+          if (TtaSameSSchemas (elType.ElSSchema,
+			       TtaGetSSchema ("MathML", event->document)))
+	    attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	  else
+	    attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr)
+	    if (TtaGetAttributeValue (attr) == 0)
+	      forbidden = TRUE;
+	}
+    }
+  return forbidden;
+}
 
 /*----------------------------------------------------------------------
    CellCreated
@@ -1706,171 +2013,6 @@ void CellPasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-   SpanningCellForRow
-   returns the cell in the column represented by colhead that spans the row
-   element. Return NULL if there is no spanning cell in this column for
-   that row.
-   If a spanning cell is found, parameter colspan returns its colspan value
-   and the spanning of the cell is increased (if we are adding a new row)
-   or decreased (when removing a row).
-  ----------------------------------------------------------------------*/
-static Element SpanningCellForRow (Element row, Element colhead,
-				   Document doc, ThotBool inMath,
-				   ThotBool addRow, int *colspan)
-{
-  Element             cell, currentRow, lastRow;
-  ElementType         elType;
-  Attribute           attr;
-  AttributeType       attrType;
-  int                 rowspan, pos;
-  ThotBool            lastRemoved, newLastRow;
-
-  *colspan = 1;
-  if (row == NULL)
-    return NULL;
-  elType = TtaGetElementType (row);
-
-  /* look at the rows before the row of interest and find the first row
-     that contains a cell for the column of interest */
-  pos = 0;
-  cell = NULL;
-  currentRow = row;
-  do
-    {
-      currentRow = GetSiblingRow (currentRow, TRUE, inMath);
-      if (currentRow)
-	{
-	  cell = GetCellFromColumnHead (currentRow, colhead, inMath);
-	  pos++;
-	}
-    }
-  while (!cell && currentRow);
-
-  if (cell)
-    /* we have found a cell in a row above (currentRow) */
-    {
-      /* check the rowspan attribute of the cell */
-      attrType.AttrSSchema = elType.ElSSchema;
-      if (inMath)
-	attrType.AttrTypeNum = MathML_ATTR_rowspan_;
-      else
-	attrType.AttrTypeNum = HTML_ATTR_rowspan_;
-      attr = TtaGetAttribute (cell, attrType);
-      if (attr)
-	/* this cell has a rowspan attribute */
-	{
-	  rowspan = TtaGetAttributeValue (attr);
-	  if (rowspan == 0 || rowspan - pos > 0)
-	    /* this cell spans the row of interest */
-	    /* rowspan = 0 means that the cell spans to the end of the
-	       current rows group */
-	    {
-	      lastRemoved = FALSE;
-              newLastRow = FALSE;
-	      if (rowspan == 0)
-		{
-		  if (!GetSiblingRow (row, FALSE, inMath))
-		    /* the cell is spanning to the last row and we are
-		       changing the last row */
-		    {
-		      if (addRow)
-			newLastRow = TRUE;
-		      else
-			lastRemoved = TRUE;
-		    }
-		} 
-	      else
-		/* update the spanning */
-		if (addRow)
-		  rowspan++;
-		else
-		  {
-		    rowspan--;
-		    if (rowspan - pos == 0)
-		      /* we are removing the last row spanned by the cell */
-		      lastRemoved = TRUE;
-		  }
-	      if (rowspan == 1)
-	        /* no spanning any more */
-		{
-		  /* do not register this deletion of attribute rowspan in the
-		     undo queue: undo, when undoing a row creation, would send
-		     the event for the attribute before the row is actually
-		     removed. RowDeleted called by undo will do the job */
-		  if (!addRow)
-		    TtaRegisterAttributeDelete (attr, cell, doc);
-		  TtaRemoveAttribute (cell, attr, doc);
-		  if (inMath)
-		    attrType.AttrTypeNum = MathML_ATTR_MRowExt;
-		  else
-		    attrType.AttrTypeNum = HTML_ATTR_RowExt;
-		  attr = TtaGetAttribute (cell, attrType);
-		  if (attr)
-		    TtaRemoveAttribute (cell, attr, doc);
-		  lastRemoved = FALSE;
-		}
-	      else if (rowspan != 0)
-		{
-		  /* do not register this change of attribute rowspan in the
-		     undo queue: undo, when undoing a row creation, would send
-		     the event for the attribute before the row is actually
-		     removed. RowDeleted called by undo will do the job */
-		  if (!addRow)
-		    TtaRegisterAttributeReplace (attr, cell, doc);
-		  TtaSetAttributeValue (attr, rowspan, cell, doc);
-		}
-	      lastRow = NULL;
-	      if (newLastRow)
-		lastRow = row;
-	      if (lastRemoved)
-		lastRow = GetSiblingRow (row, TRUE, inMath);
-	      if (lastRow)
-		/* update the RoxExt attribute */
-		{
-		  if (inMath)
-		    attrType.AttrTypeNum = MathML_ATTR_MRowExt;
-		  else
-		    attrType.AttrTypeNum = HTML_ATTR_RowExt;
-		  attr = TtaGetAttribute (cell, attrType);
-		  if (attr)
-		    {
-		      if (currentRow == lastRow)
-			{
-			  TtaRemoveAttribute (cell, attr, doc);
-			  attr = NULL;
-			}
-		    }
-		  else if (currentRow != lastRow)
-		    {
-		      attr = TtaNewAttribute (attrType);
-		      if (attr != NULL)
-			TtaAttachAttribute (cell, attr, doc);
-		    }
-		  if (attr)
-		    TtaSetAttributeReference (attr, cell, doc, lastRow, doc);
-		}
-	      /* get the colspan value of the element */
-	      if (inMath)
-		attrType.AttrTypeNum = MathML_ATTR_columnspan;
-	      else
-		attrType.AttrTypeNum = HTML_ATTR_colspan_;
-	      attr = TtaGetAttribute (cell, attrType);
-	      if (attr)
-		/* this cell has an attribute rowspan */
-		*colspan = TtaGetAttributeValue (attr);
-	      if (*colspan < 0)
-		*colspan = 1;
-	    }
-	  else
-	    cell = NULL;
-	}
-      else
-	cell = NULL;
-    }
-  return (cell);
-}
-
-/*----------------------------------------------------------------------
    UpdateRowspanForRow
    A new row has been created by the user (if addRow) or will be deleted
    (if not addRow). Take care of the rowspan attribute of the previous rows
@@ -1902,7 +2044,7 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
   while (colhead)
     {
       /* is there a cell in a row above that spans the current row? */
-      prev = SpanningCellForRow (row, colhead, doc, inMath, addRow,
+      prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE, addRow,
 				 &colspan);
       if (addRow && !prev)
 	/* we are creating a new row and no cell from a row above is
@@ -2452,7 +2594,7 @@ void RowPasted (NotifyElement * event)
 		}
 	    }
 	  /* is there a cell in a row above that spans this row? */
-	  prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE,
+	  prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE, TRUE,
 				     &colspan);
 	  if (!prev)
 	    /* no cell from a row above is covering the current cell position*/
@@ -2568,6 +2710,49 @@ static void MoveCellContents (Element nextCell, Element cell,
     }
   /* delete the cell */
   TtaDeleteTree (nextCell, doc);
+}
+
+/*----------------------------------------------------------------------
+  NextCellInRow
+  Return the cell that follows a given cell in the same row.
+  ----------------------------------------------------------------------*/
+Element NextCellInRow (Element cell, ThotBool inMath)
+{
+  return  GetSiblingCell (cell, FALSE, inMath);
+}
+
+/*----------------------------------------------------------------------
+  GetActualColspan
+  Return the number of columns comprised between the beginning of the cell
+  and the end of the table.
+  ----------------------------------------------------------------------*/
+int GetActualColspan (Element cell, ThotBool inMath)
+{
+  Element            colhead;
+  ElementType        elType;
+  Attribute          attr;
+  AttributeType      attrType;
+  int                span;
+  char               name[50];
+  Document           refdoc;
+
+  elType = TtaGetElementType (cell);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+  attr = TtaGetAttribute (cell, attrType);
+  if (attr)
+    TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+  span = 1;
+  while (colhead)
+    {
+      TtaNextSibling (&colhead);
+      if (colhead)
+	span++;
+    }
+  return span;
 }
 
 /*----------------------------------------------------------------------
@@ -2748,25 +2933,37 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
   ----------------------------------------------------------------------*/
 void ColspanCreated (NotifyAttribute * event)
 {
-  ElementType         elType;
-  int                 span, overflow;
+  Element             cell;
+  Attribute           attr;
+  Document            doc;
+  int                 span, max, overflow;
   ThotBool            inMath;
 
-  span = TtaGetAttributeValue (event->attribute);
+  doc = event->document;
+  cell = event->element;
+  attr = event->attribute;
+  inMath = TtaSameSSchemas (TtaGetElementType (cell).ElSSchema,
+			    TtaGetSSchema ("MathML", doc));
+  span = TtaGetAttributeValue (attr);
   if (span < 0 || span == 1)
-    /* invalid value */
-    TtaRemoveAttribute (event->element, event->attribute, event->document);
+    /* invalid value. Change it to 2 */
+    {
+      span = 2;
+      TtaSetAttributeValue (attr, span, cell, doc);
+    }
   else
     {
-      /* for undo operations just restore the col extension */
-      if (event->info != 1)
-	ChangeColspan (event->element, 1, span, event->document);
-      elType = TtaGetElementType (event->element);
-      inMath = TtaSameSSchemas (elType.ElSSchema,
-				TtaGetSSchema ("MathML", event->document));
-      overflow = SetColExt (event->element, span, event->document, inMath,
-			    FALSE);
+      max = GetActualColspan (cell, inMath);
+      if (span > max)
+	{
+	  span = max;
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
     }
+  /* for undo operations just restore the col extension */
+  if (event->info != 1)
+    ChangeColspan (cell, 1, span, doc);
+  overflow = SetColExt (cell, span, doc, inMath, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -2774,9 +2971,9 @@ void ColspanCreated (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool RegisterColspan (NotifyAttribute * event)
 {
-  PreviousColSpan = TtaGetAttributeValue (event->attribute);
-  if (PreviousColSpan < 0)
-    PreviousColSpan = 1;
+  PreviousColspan = TtaGetAttributeValue (event->attribute);
+  if (PreviousColspan < 0)
+    PreviousColspan = 1;
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -2786,32 +2983,48 @@ ThotBool RegisterColspan (NotifyAttribute * event)
 void ColspanModified (NotifyAttribute * event)
 {
   Element             cell;
-  ElementType         elType;
   Attribute           attr;
   Document            doc;
-  int                 span, overflow;
+  int                 span, max, overflow;
   ThotBool            inMath;
 
   doc = event->document;
   cell = event->element;
   attr = event->attribute;
+  inMath = TtaSameSSchemas (TtaGetElementType (cell).ElSSchema,
+			    TtaGetSSchema ("MathML", doc));
   span = TtaGetAttributeValue (attr);
-  if (span < 0)
-    /* invalid value */
-    span = 1;
-  if (span != PreviousColSpan)
+  if (span == 1)
+    /* keep the previous value to restore it when undoing the change */
+    TtaSetAttributeValue (attr, PreviousColspan, cell, doc);
+  else if (span < 0)
+    /* invalid value, keep the previous value */
+    {
+      span = PreviousColspan;
+      TtaSetAttributeValue (attr, span, cell, doc);
+    }
+  else
+    {
+      max = GetActualColspan (cell, inMath);
+      if (span > max)
+	{
+	  span = max;
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
+    }
+  if (span != PreviousColspan)
     {
       /* for undo operations just restore the col extension */
       if (event->info != 1)
-	ChangeColspan (cell, PreviousColSpan, span, doc);
-      elType = TtaGetElementType (cell);
-      inMath = TtaSameSSchemas (elType.ElSSchema,
-				TtaGetSSchema ("MathML", doc));
+	ChangeColspan (cell, PreviousColspan, span, doc);
       overflow = SetColExt (cell, span, doc, inMath, FALSE);
     }
-  if (span == 1)
+  if (span < 0 || span == 1)
     /* invalid value */
-    TtaRemoveAttribute (cell, attr, doc);
+    {
+      TtaRegisterAttributeDelete (attr, cell, doc);
+      TtaRemoveAttribute (cell, attr, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2822,16 +3035,74 @@ void ColspanDeleted (NotifyAttribute * event)
   ElementType         elType;
   ThotBool            inMath;
 
-  if (PreviousColSpan != 1)
+  if (PreviousColspan > 1 || PreviousColspan == 0)
     {
       /* for undo operations just restore the col extension */
       if (event->info != 1)
-	ChangeColspan (event->element, PreviousColSpan, 1, event->document);
+	ChangeColspan (event->element, PreviousColspan, 1, event->document);
       elType = TtaGetElementType (event->element);
       inMath = TtaSameSSchemas (elType.ElSSchema,
 				TtaGetSSchema ("MathML", event->document));
       SetColExt (event->element, 1, event->document, inMath, FALSE);
     }
+}
+
+/*----------------------------------------------------------------------
+  NextCellInColumn
+  Return the cell that follows a given cell in the same column.
+  ----------------------------------------------------------------------*/
+Element NextCellInColumn (Element cell, ThotBool inMath)
+{
+  Element            colhead, row, nextCell;
+  ElementType        elType;
+  Attribute          attr;
+  AttributeType      attrType;
+  char               name[50];
+  Document           refdoc;
+
+  nextCell = NULL;
+  colhead = NULL;
+  elType = TtaGetElementType (cell);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+  attr = TtaGetAttribute (cell, attrType);
+  if (attr)
+    TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+  if (colhead)
+    {
+      row = TtaGetParent (cell);
+      while (row && !nextCell)
+	{
+	  row = GetSiblingRow (row, FALSE, inMath);
+	  if (row)
+	    nextCell = GetCellFromColumnHead (row, colhead, inMath);
+	}
+    }
+  return nextCell;
+}
+
+/*----------------------------------------------------------------------
+  GetActualRowspan
+  Return the number of rows comprised between the beginning of the cell
+  and the end of the rows group.
+  ----------------------------------------------------------------------*/
+int GetActualRowspan (Element cell, ThotBool inMath)
+{
+  Element            row;
+  int                span;
+
+  row = TtaGetParent (cell);
+  span = 1;
+  while (row)
+    {
+      row = GetSiblingRow (row, FALSE, inMath);
+      if (row)
+	span++;
+    }
+  return span;
 }
 
 /*----------------------------------------------------------------------
@@ -3023,24 +3294,41 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
   ----------------------------------------------------------------------*/
 void RowspanCreated (NotifyAttribute * event)
 {
-  ElementType         elType;
-  int                 span;
+  Element             cell;
+  Attribute           attr;
+  Document            doc;
+  int                 span, max;
   ThotBool            inMath;
 
-  span = TtaGetAttributeValue (event->attribute);
+  doc = event->document;
+  cell = event->element;
+  attr = event->attribute;
+  inMath = TtaSameSSchemas (TtaGetElementType (cell).ElSSchema,
+			    TtaGetSSchema ("MathML", doc));
+  span = TtaGetAttributeValue (attr);
   if (span < 0 || span == 1)
-    /* invalid value */
-    TtaRemoveAttribute (event->element, event->attribute, event->document);
-  else 
+    /* invalid value. Change it to 2 */
     {
-      /* for undo operations just restore the row extension */
-      if (event->info != 1)
-	ChangeRowspan (event->element, 1, span, event->document);
-      elType = TtaGetElementType (event->element);
-      inMath = TtaSameSSchemas (elType.ElSSchema,
-				TtaGetSSchema ("MathML", event->document));
-      SetRowExt (event->element, span, event->document, inMath);
+      span = 2;
+      TtaSetAttributeValue (attr, span, cell, doc);
     }
+  else
+    {
+      max = GetActualRowspan (cell, inMath);
+      if (span > max)
+	{
+	  span = max;
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
+    }
+  /* for undo operations just restore the row extension */
+  if (event->info != 1)
+    {
+      /* the creation of the attribute must be registered after the creation
+	 of the empty cells generated by ChangeRowspan.*************/
+      ChangeRowspan (cell, 1, span, doc);
+    }
+  SetRowExt (cell, span, doc, inMath);
 }
 
 /*----------------------------------------------------------------------
@@ -3048,9 +3336,9 @@ void RowspanCreated (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool RegisterRowspan (NotifyAttribute * event)
 {
-  PreviousRowSpan = TtaGetAttributeValue (event->attribute);
-  if (PreviousRowSpan < 0)
-    PreviousRowSpan = 1;
+  PreviousRowspan = TtaGetAttributeValue (event->attribute);
+  if (PreviousRowspan < 0)
+    PreviousRowspan = 1;
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -3060,32 +3348,50 @@ ThotBool RegisterRowspan (NotifyAttribute * event)
 void RowspanModified (NotifyAttribute * event)
 {
   Element             cell;
-  ElementType         elType;
   Attribute           attr;
   Document            doc;
-  int                 span;
+  int                 span, max;
   ThotBool            inMath;
 
   doc = event->document;
   cell = event->element;
   attr = event->attribute;
+  inMath = TtaSameSSchemas (TtaGetElementType (cell).ElSSchema,
+			    TtaGetSSchema ("MathML", doc));
   span = TtaGetAttributeValue (attr);
-  if (span < 0)
-    /* invalid value */
-    span = 1;
-  if (span != PreviousRowSpan)
+  if (span == 1)
+    /* keep the previous value to restore it when undoing the change */
+    TtaSetAttributeValue (attr, PreviousRowspan, cell, doc);
+  else if (span < 0)
+    /* invalid value, keep the previous value */
+    {
+      span = PreviousRowspan;
+      TtaSetAttributeValue (attr, span, cell, doc);
+    }
+  else
+    {
+      max = GetActualRowspan (cell, inMath);
+      if (span > max)
+	{
+	  span = max;
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
+    }
+  if (span != PreviousRowspan)
     {
       /* for undo operations just restore the row extension */
       if (event->info != 1)
-	ChangeRowspan (cell, PreviousRowSpan, span, doc);
-      elType = TtaGetElementType (cell);
-      inMath = TtaSameSSchemas (elType.ElSSchema,
-				TtaGetSSchema ("MathML", doc));
+	  /* ********************* the old value of the attribute should be registered after the
+	     creation of the empty cells generated by ChangeRowspan. */
+	  ChangeRowspan (cell, PreviousRowspan, span, doc);
       SetRowExt (cell, span, doc, inMath);
     }
   if (span < 0 || span == 1)
     /* invalid value */
-    TtaRemoveAttribute (cell, attr, doc);
+    {
+      TtaRegisterAttributeDelete (attr, cell, doc);
+      TtaRemoveAttribute (cell, attr, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3096,11 +3402,11 @@ void RowspanDeleted (NotifyAttribute * event)
   ElementType         elType;
   ThotBool            inMath;
 
-  if (PreviousRowSpan > 1 || PreviousRowSpan == 0)
+  if (PreviousRowspan > 1 || PreviousRowspan == 0)
     {
-      /* for undo operations just restore the col extension */
+      /* for undo operations just restore the row extension */
       if (event->info != 1)
-	ChangeRowspan (event->element, PreviousRowSpan, 1, event->document);
+	ChangeRowspan (event->element, PreviousRowspan, 1, event->document);
       elType = TtaGetElementType (event->element);
       inMath = TtaSameSSchemas (elType.ElSSchema,
 				TtaGetSSchema ("MathML", event->document));

@@ -8923,8 +8923,8 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 
-	     /* a new text entry which contain 'bounds' text */
-	     sprintf (bounds, "%d", min);
+	     /* a new text entry which contain an empty text */
+             bounds[0] = EOS;
 	     w = gtk_entry_new ();
 	     gtk_widget_set_usize (GTK_WIDGET(w),
 				   gdk_string_width (DefaultFont, bounds),

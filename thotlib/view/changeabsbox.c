@@ -1862,6 +1862,14 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 		 {
 		   ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, &pAbbR, pDoc);
 		   ApplDelayedRule (pEl, pDoc);
+		   if (pEl->ElReferredDescr)
+		     /* this element is referred by some other element whose
+			boxes may have changed due to delayed rules that
+			have just been applied. Try to encompass these boxes
+			in the subtree that will be reformatted. This is
+		        useful when addin a last row in a HTML table when
+		        there are sone cells with rowspan = 0 */
+		     pAbbR = pAbbR->AbEnclosing;
 		   pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
 		   /* conserve le pointeur sur le pave a reafficher */
 		   pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp,
@@ -3500,6 +3508,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 				    PtrAttribute pAttrComp)
 {
   PtrPRule            pR, pRuleView1, pRNA, firstOfType;
+  PtrDelayedPRule     pDelR;
   PRuleType           typeRule;
   FunctionType        func;
   PtrAbstractBox      pAb, pRedisp, pPR;
@@ -3664,6 +3673,30 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 					    pAttr->AeAttrSSchema, pAttr, view,
 					    pSchP, TRUE);
 		      pAbNext = pAb;
+		      if (pAb && pAb->AbEnclosing &&
+			  pAb->AbEnclosing->AbDelayedPRule)
+			/* some presentation rules have been delayed */
+			if (pAttr->AeAttrType == AtReferenceAttr &&
+			    pAttr->AeAttrReference &&
+			    pAttr->AeAttrReference->RdReferred &&
+			    pAttr->AeAttrReference->RdReferred->ReReferredElem &&
+			    pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent &&
+			    pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent->ElAbstractBox[view - 1])
+			  /* transfer delayed rules to the abstract box of the
+			     parent of the referred element */
+			  {
+			    pDelR = pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent->ElAbstractBox[view - 1]->AbDelayedPRule;
+			    if (pDelR == NULL)
+			      pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent->ElAbstractBox[view - 1]->AbDelayedPRule =
+				              pAb->AbEnclosing->AbDelayedPRule;
+			    else
+			      {
+				while (pDelR->DpNext != NULL)
+				  pDelR = pDelR->DpNext;
+				pDelR->DpNext = pAb->AbEnclosing->AbDelayedPRule;
+			      }
+			    pAb->AbEnclosing->AbDelayedPRule = NULL;
+			  }
 		    }
 
 		  /* traite les paves crees par la regle de visibilite ou de */

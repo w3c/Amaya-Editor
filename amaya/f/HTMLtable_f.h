@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SetRowExt ( Element cell,
-                        int span,
-                        Document doc,
-                        ThotBool inMath );
+extern int SetRowExt ( Element cell,
+                       int span,
+                       Document doc,
+                       ThotBool inMath );
 extern int SetColExt ( Element cell,
 		       int span,
 		       Document doc,
@@ -50,6 +50,10 @@ extern void CopyCell ( Element cell,
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
+extern Element NextCellInRow ( Element cell,
+			       ThotBool inMath );
+extern int GetActualColspan ( Element cell,
+                              ThotBool inMath);
 extern void ChangeColspan ( Element cell,
                             int oldspan,
                             int newspan,
@@ -58,6 +62,10 @@ extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
 extern void ColspanDeleted ( NotifyAttribute * event );
+extern Element NextCellInColumn ( Element cell,
+			          ThotBool inMath );
+extern int GetActualRowspan ( Element cell,
+                              ThotBool inMath);
 extern void ChangeRowspan ( Element cell,
                             int oldspan,
                             int newspan,
@@ -69,10 +77,10 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
-extern void SetRowExt ( Element cell,
-                          int span,
-                          Document doc,
-                          ThotBool inMath );
+extern int SetRowExt ( Element cell,
+		       int span,
+		       Document doc,
+		       ThotBool inMath );
 extern int SetColExt ( Element cell,
 		       int span,
 		       Document doc,
@@ -113,6 +121,10 @@ extern void CopyCell ( Element cell,
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
+extern Element NextCellInRow (/* Element cell,
+			         ThotBool inMath */);
+extern int GetActualColspan (/* Element cell,
+                                ThotBool inMath */);
 extern void ChangeColspan ( Element cell,
                               int oldspan,
                               int newspan,
@@ -121,6 +133,10 @@ extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
 extern void ColspanDeleted ( NotifyAttribute * event );
+extern Element NextCellInColumn (/* Element cell,
+			            ThotBool inMath */);
+extern int GetActualRowspan (/* Element cell,
+                                ThotBool inMath */);
 extern void ChangeRowspan ( Element cell,
                               int oldspan,
                               int newspan,

@@ -797,7 +797,7 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
    for (view = 0; view < MAX_VIEW_DOC; view++)
      {
 	pAb = pEl->ElAbstractBox[view];
-	if (pAb != NULL)
+	if (pAb)
 	   /* l'element a un pave dans cette vue */
 	   if (pAb->AbEnclosing != NULL)
 	      /* et ce pave a un pave englobant */
@@ -814,10 +814,27 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 		     /* la procedure ApplyRule modifie pAb, on le retablit */
 		     pAbb = pAb;
 		     GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
-		     if (pRule != NULL)
-			ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr);
+		     if (pRule)
+		       if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
+			 if (pAbb->AbElement != pEl && !pAbb->AbNew)
+			   switch (pRule->PrType)
+			     {
+			     case PtWidth: pAbb->AbWidthChange = TRUE;
+			       break;
+			     case PtHeight: pAbb->AbHeightChange = TRUE;
+			       break;
+			     case PtHorizPos: pAbb->AbHorizPosChange = TRUE;
+			       break;
+			     case PtVertPos: pAbb->AbVertPosChange = TRUE;
+			       break;
+			     case PtHorizRef: pAbb->AbHorizRefChange = TRUE;
+			       break;
+			     case PtVertRef: pAbb->AbVertRefChange = TRUE;
+			       break;
+			     default: break;
+			     }
 		  }
-		while (pRule != NULL);
+		while (pRule);
 	     }
      }
 }
