@@ -328,7 +328,6 @@ int is_animated (Document basedoc, Element el)
 void set_expanded_group_of (Document basedoc, Element element_anime, Element new_fresh_group) {
 #ifdef _SVGANIM
 	int k = 0, trouve=0;
-	Element res=NULL;
 	Element tmp = element_anime; 
 	
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
@@ -348,7 +347,6 @@ void set_expanded_group_of (Document basedoc, Element element_anime, Element new
 void set_collapsed_group_of (Document basedoc, Element element_anime, Element new_fresh_group) {
 #ifdef _SVGANIM
 	int k = 0, trouve=0;
-	Element res=NULL;
 	Element tmp = element_anime; 
 	
 	while ((!trouve) && (k<dt[basedoc].nb_relations_animated)) 
@@ -756,7 +754,6 @@ Element insere_texte(Document timelinedoc, Element root, char* couleur, char* te
 	Element child;
 	ElementType   elType,childType;
 	char		        buffer[512];
-	Language lang =TtaGetDefaultLanguage ();
 
 	elType = TtaGetElementType (root);
 	elType.ElTypeNum = Timeline_EL_text_;
@@ -840,7 +837,6 @@ Element insere_image(Document timelinedoc, Element root, char* text, int x, int 
 	Element child;
 	ElementType   elType, childType;
 	char		        buffer[512];
-	Language lang =TtaGetDefaultLanguage ();
 	
 	elType = TtaGetElementType (root);
 	elType.ElTypeNum = type_num;
@@ -896,7 +892,6 @@ Element insere_groupe(Document timelinedoc, Element root, int insere_enfant, int
 #ifdef _SVGANIM
 	AttributeType        attrType;
 	ElementType   elType;
-	Language lang =TtaGetDefaultLanguage ();
 	
 	elType = TtaGetElementType (root);
 	elType.ElTypeNum = type_num;
@@ -1038,7 +1033,6 @@ void set_y_translation (Document timelinedoc, Element found, int hg)
 	char *text, *ptr;
 	ElementType   elType;
 	Element root;
-	Language lang = TtaGetDefaultLanguage ();
 
 	root = TtaGetMainRoot (timelinedoc);
 	elType = TtaGetElementType (root);
@@ -1562,7 +1556,7 @@ View build_timeline(Document basedoc, char* timelineName)
 	strcat(buffer, cte_image_slider_filename);
 	temp_el = insere_rectangle(timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-100, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
 	temp_el = insere_image (timelinedoc, temp_el, buffer, cte_left_bar-6, 8, 0, Timeline_EL_image_slider);
-	sprintf (buffer, "%.2lfs", 0.0);	
+	sprintf (buffer, "%.2fs", (float) 0.0);	
 	dt[basedoc].timing_text = insere_texte ( timelinedoc, temp_el, "black", buffer, cte_elem_font_family, 
 										     cte_elem_font_size, 100, 23, 0);
 
@@ -1953,7 +1947,6 @@ int borne_position_horizontale (Document doc, Element el, int xmin)
 	Attribute attr;
 	AttributeType attrType;
 	ElementType elType;
-	Language lang = TtaGetDefaultLanguage();
 	PRule         presRuleX;
 	presRuleX = TtaGetPRule (el, PRHorizPos);
 	if (presRuleX)
@@ -1999,7 +1992,7 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 		x = borne_position_horizontale (event->document, event->element, cte_left_bar-6);
 
 		d = (x+6-cte_left_bar)/(double)cte_time_sep;
-		sprintf (buffer, "%.2lfs", d);
+		sprintf (buffer, "%.2fs", (float) d);
 		TtaSetTextContent (child, buffer, lang, event->document);
 		TtaSetDocumentUnmodified (event->document);
 	}
