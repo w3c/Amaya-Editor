@@ -121,16 +121,6 @@
 	<message xml:lang="pt">E&amp;stilo</message>
 	<message xml:lang="fi">T&amp;yyli</message>
 </label>
-<label define="Special">
-	<message xml:lang="en">Spe&amp;cial</message>
-	<message xml:lang="fr">Spé&amp;cial</message>
-	<message xml:lang="de">&amp;Extras</message>
-	<message xml:lang="it">S&amp;peciale</message>
-	<message xml:lang="tr">&amp;Özel</message>
-	<message xml:lang="es">Es&amp;pecial</message>
-	<message xml:lang="pt">Es&amp;pecial</message>
-	<message xml:lang="fi">E&amp;rikoiset</message>
-</label>
 <label define="Attributes_">
 	<message xml:lang="en">&amp;Attributes</message>
 	<message xml:lang="fr">&amp;Attributs</message>
@@ -848,6 +838,115 @@
 	<message xml:lang="es">&amp;Transformar...</message>
 	<message xml:lang="pt">Transformar...</message>
 	<message xml:lang="fi">Muunna...</message>
+</label>
+<label define="Coptions">
+	<message xml:lang="en">&amp;Preferences</message>
+	<message xml:lang="fr">&amp;Préférences</message>
+	<message xml:lang="de">Einstellungen</message>
+	<message xml:lang="it">Preferenze</message>
+	<message xml:lang="es">&amp;Preferencias</message>
+	<message xml:lang="pt">Preferências</message>
+	<message xml:lang="fi">Asetukset</message>
+	<message xml:lang="tr">Tercih</message>
+</label>
+<label define="BConfigGeneral">
+	<message xml:lang="en">&amp;General...</message>
+	<message xml:lang="fr">&amp;Générales...</message>
+	<message xml:lang="de">Allgemein...</message>
+	<message xml:lang="it">Generali...</message>
+	<message xml:lang="es">&amp;Generales...</message>
+	<message xml:lang="pt">Geral...</message>
+	<message xml:lang="fi">Yleiset...</message>
+	<message xml:lang="tr">Genel...</message>
+</label>
+<label define="BConfigBrowse">
+	<message xml:lang="en">&amp;Browsing...</message>
+	<message xml:lang="fr">&amp;Navigation...</message>
+	<message xml:lang="de">Browser...</message>
+	<message xml:lang="fi">Selaus...</message>
+	<message xml:lang="it">Visualizzazione...</message>
+	<message xml:lang="es">&amp;Navegación...</message>
+	<message xml:lang="tr">Tarama...</message>
+</label>
+<label define="BConfigPublish">
+	<message xml:lang="en">P&amp;ublishing...</message>
+	<message xml:lang="fr">P&amp;ublication...</message>
+	<message xml:lang="de">Veröffentlichen...</message>
+	<message xml:lang="it">Pubblicazione...</message>
+	<message xml:lang="es">P&amp;ublicación...</message>
+	<message xml:lang="pt">Publicação...</message>
+	<message xml:lang="fi">Julkaisu...</message>
+	<message xml:lang="tr">Derleme...</message>
+</label>
+<label define="BConfigCache">
+	<message xml:lang="en">&amp;Cache...</message>
+	<message xml:lang="fr">&amp;Cache...</message>
+	<message xml:lang="de">Cache...</message>
+	<message xml:lang="it">Cache...</message>
+	<message xml:lang="es">C&amp;aché...</message>
+	<message xml:lang="pt">Cache...</message>
+	<message xml:lang="fi">Välimuisti...</message>
+	<message xml:lang="tr">Önbellekleme...</message>
+</label>
+<label define="BConfigProxy">
+	<message xml:lang="en">Pro&amp;xy...</message>
+	<message xml:lang="fr">Pro&amp;xy...</message>
+	<message xml:lang="de">Proxy...</message>
+	<message xml:lang="it">Proxy...</message>
+	<message xml:lang="es">P&amp;roxy...</message>
+	<message xml:lang="pt">Proxy...</message>
+	<message xml:lang="fi">Välityspalvelin...</message>
+	<message xml:lang="tr">Proxy...</message>
+</label>
+<label define="BConfigColor">
+	<message xml:lang="en">C&amp;olors...</message>
+	<message xml:lang="fr">C&amp;ouleurs...</message>
+	<message xml:lang="de">Farben...</message>
+	<message xml:lang="it">Colori...</message>
+	<message xml:lang="es">&amp;Colores...</message>
+	<message xml:lang="pt">Cores...</message>
+	<message xml:lang="fi">Värit...</message>
+	<message xml:lang="tr">Renkler...</message>
+</label>
+<label define="BConfigGeometry">
+	<message xml:lang="en">&amp;Window Geometry...</message>
+	<message xml:lang="fr">Géo&amp;métrie...</message>
+	<message xml:lang="de">Fenstergeometrie...</message>
+	<message xml:lang="it">Dimensioni della finestra...</message>
+	<message xml:lang="es">Geometría de la &amp;ventana...</message>
+	<message xml:lang="pt">Geometria da janela...</message>
+	<message xml:lang="fi">Ikkunan asetukset...</message>
+	<message xml:lang="tr">Geometri...</message>
+</label>
+<label define="BConfigLanNeg">
+	<message xml:lang="en">&amp;Language Negotiation...</message>
+	<message xml:lang="fr">Négociation de &amp;Langues...</message>
+	<message xml:lang="de">Sprachen...</message>
+	<message xml:lang="it">Negoziazione della lingua...</message>
+	<message xml:lang="es">Negociación de &amp;idioma...</message>
+	<message xml:lang="pt">Negociação de idioma...</message>
+	<message xml:lang="fi">Kieliasetukset...</message>
+	<message xml:lang="tr">Ülke dilleri...</message>
+</label>
+<label define="BConfigProfile">
+	<message xml:lang="en">&amp;Profiles...</message>
+	<message xml:lang="fr">&amp;Profils...</message>
+	<message xml:lang="de">Profile...</message>
+	<message xml:lang="it">Profili...</message>
+	<message xml:lang="es">P&amp;erfiles...</message>
+	<message xml:lang="pt">Perfís...</message>
+	<message xml:lang="fi">Profiilit...</message>
+	<message xml:lang="tr">Profiller...</message>
+</label>
+<label define="BConfigTemplates">
+	<message xml:lang="en">&amp;Templates...</message>
+	<message xml:lang="fr">Mo&amp;dèles de page</message>
+	<message xml:lang="de">Schablonen...</message>
+	<message xml:lang="it">Modelli...</message>
+	<message xml:lang="es">P&amp;lantillas...</message>
+	<message xml:lang="pt">Templates...</message>
+	<message xml:lang="fi">Mallit...</message>
+	<message xml:lang="tr">Sayfa modelleri...</message>
 </label>
 <label define="BTitle">
 	<message xml:lang="en">Change Title...</message>
@@ -1591,9 +1690,29 @@
 	<message xml:lang="pt">rubi</message>
 	<message xml:lang="fi">ruby</message>
 </label>
+<label define="TSectionNumber">
+	<message xml:lang="en">&amp;Section numbering</message>
+	<message xml:lang="fr">&amp;Numéroter les sections</message>
+	<message xml:lang="de">Abschnitte numerieren</message>
+	<message xml:lang="it">Numerazione delle sezioni</message>
+	<message xml:lang="tr">Bölüm numaralandırması</message>
+	<message xml:lang="es">&amp;Numeración de sección</message>
+	<message xml:lang="pt">Numeração de seção</message>
+	<message xml:lang="fi">Osien numerointi</message>
+</label>
+<label define="BMakeBook">
+	<message xml:lang="en">&amp;Make book</message>
+	<message xml:lang="fr">&amp;Construire un livre</message>
+	<message xml:lang="de">Buch erstellen</message>
+	<message xml:lang="it">Crea libro</message>
+	<message xml:lang="tr">Kitap yap</message>
+	<message xml:lang="es">&amp;Hacer libro</message>
+	<message xml:lang="pt">Construir livro</message>
+	<message xml:lang="fi">Valmista kooste</message>
+</label>
 <label define="BDate">
-	<message xml:lang="en">New updated date</message>
-	<message xml:lang="fr">Nouvelle date calculée</message>
+	<message xml:lang="en">Insert time stamp</message>
+	<message xml:lang="fr">Insérer date e mise a jour</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -2182,6 +2301,10 @@
 	<message xml:lang="es">Elementos XML...</message>
 	<message xml:lang="tr">XML elementlerin</message>
 </label>
+<label define="BXDate">
+	<message xml:lang="en">Insert time stamp</message>
+	<message xml:lang="fr">Insérer date e mise a jour</message>
+</label>
 <label define="BLinkTarget">
 	<message xml:lang="en">&amp;Link to previous target</message>
 	<message xml:lang="fr">&amp;Lier la cible créée</message>
@@ -2468,135 +2591,6 @@
 	<message xml:lang="pt">Remover...</message>
 	<message xml:lang="fi">Poista...</message>
 	<message xml:lang="tr">Sil</message>
-</label>
-<label define="TSectionNumber">
-	<message xml:lang="en">&amp;Section numbering</message>
-	<message xml:lang="fr">&amp;Numéroter les sections</message>
-	<message xml:lang="de">Abschnitte numerieren</message>
-	<message xml:lang="it">Numerazione delle sezioni</message>
-	<message xml:lang="tr">Bölüm numaralandırması</message>
-	<message xml:lang="es">&amp;Numeración de sección</message>
-	<message xml:lang="pt">Numeração de seção</message>
-	<message xml:lang="fi">Osien numerointi</message>
-</label>
-<label define="BMakeBook">
-	<message xml:lang="en">&amp;Make book</message>
-	<message xml:lang="fr">&amp;Construire un livre</message>
-	<message xml:lang="de">Buch erstellen</message>
-	<message xml:lang="it">Crea libro</message>
-	<message xml:lang="tr">Kitap yap</message>
-	<message xml:lang="es">&amp;Hacer libro</message>
-	<message xml:lang="pt">Construir livro</message>
-	<message xml:lang="fi">Valmista kooste</message>
-</label>
-<label define="Coptions">
-	<message xml:lang="en">&amp;Preferences</message>
-	<message xml:lang="fr">&amp;Préférences</message>
-	<message xml:lang="de">Einstellungen</message>
-	<message xml:lang="it">Preferenze</message>
-	<message xml:lang="es">&amp;Preferencias</message>
-	<message xml:lang="pt">Preferências</message>
-	<message xml:lang="fi">Asetukset</message>
-	<message xml:lang="tr">Tercih</message>
-</label>
-<label define="BConfigGeneral">
-	<message xml:lang="en">&amp;General...</message>
-	<message xml:lang="fr">&amp;Générales...</message>
-	<message xml:lang="de">Allgemein...</message>
-	<message xml:lang="it">Generali...</message>
-	<message xml:lang="es">&amp;Generales...</message>
-	<message xml:lang="pt">Geral...</message>
-	<message xml:lang="fi">Yleiset...</message>
-	<message xml:lang="tr">Genel...</message>
-</label>
-<label define="BConfigBrowse">
-	<message xml:lang="en">&amp;Browsing...</message>
-	<message xml:lang="fr">&amp;Navigation...</message>
-	<message xml:lang="de">Browser...</message>
-	<message xml:lang="fi">Selaus...</message>
-	<message xml:lang="it">Visualizzazione...</message>
-	<message xml:lang="es">&amp;Navegación...</message>
-	<message xml:lang="tr">Tarama...</message>
-</label>
-<label define="BConfigPublish">
-	<message xml:lang="en">P&amp;ublishing...</message>
-	<message xml:lang="fr">P&amp;ublication...</message>
-	<message xml:lang="de">Veröffentlichen...</message>
-	<message xml:lang="it">Pubblicazione...</message>
-	<message xml:lang="es">P&amp;ublicación...</message>
-	<message xml:lang="pt">Publicação...</message>
-	<message xml:lang="fi">Julkaisu...</message>
-	<message xml:lang="tr">Derleme...</message>
-</label>
-<label define="BConfigCache">
-	<message xml:lang="en">&amp;Cache...</message>
-	<message xml:lang="fr">&amp;Cache...</message>
-	<message xml:lang="de">Cache...</message>
-	<message xml:lang="it">Cache...</message>
-	<message xml:lang="es">C&amp;aché...</message>
-	<message xml:lang="pt">Cache...</message>
-	<message xml:lang="fi">Välimuisti...</message>
-	<message xml:lang="tr">Önbellekleme...</message>
-</label>
-<label define="BConfigProxy">
-	<message xml:lang="en">Pro&amp;xy...</message>
-	<message xml:lang="fr">Pro&amp;xy...</message>
-	<message xml:lang="de">Proxy...</message>
-	<message xml:lang="it">Proxy...</message>
-	<message xml:lang="es">P&amp;roxy...</message>
-	<message xml:lang="pt">Proxy...</message>
-	<message xml:lang="fi">Välityspalvelin...</message>
-	<message xml:lang="tr">Proxy...</message>
-</label>
-<label define="BConfigColor">
-	<message xml:lang="en">C&amp;olors...</message>
-	<message xml:lang="fr">C&amp;ouleurs...</message>
-	<message xml:lang="de">Farben...</message>
-	<message xml:lang="it">Colori...</message>
-	<message xml:lang="es">&amp;Colores...</message>
-	<message xml:lang="pt">Cores...</message>
-	<message xml:lang="fi">Värit...</message>
-	<message xml:lang="tr">Renkler...</message>
-</label>
-<label define="BConfigGeometry">
-	<message xml:lang="en">&amp;Window Geometry...</message>
-	<message xml:lang="fr">Géo&amp;métrie...</message>
-	<message xml:lang="de">Fenstergeometrie...</message>
-	<message xml:lang="it">Dimensioni della finestra...</message>
-	<message xml:lang="es">Geometría de la &amp;ventana...</message>
-	<message xml:lang="pt">Geometria da janela...</message>
-	<message xml:lang="fi">Ikkunan asetukset...</message>
-	<message xml:lang="tr">Geometri...</message>
-</label>
-<label define="BConfigLanNeg">
-	<message xml:lang="en">&amp;Language Negotiation...</message>
-	<message xml:lang="fr">Négociation de &amp;Langues...</message>
-	<message xml:lang="de">Sprachen...</message>
-	<message xml:lang="it">Negoziazione della lingua...</message>
-	<message xml:lang="es">Negociación de &amp;idioma...</message>
-	<message xml:lang="pt">Negociação de idioma...</message>
-	<message xml:lang="fi">Kieliasetukset...</message>
-	<message xml:lang="tr">Ülke dilleri...</message>
-</label>
-<label define="BConfigProfile">
-	<message xml:lang="en">&amp;Profiles...</message>
-	<message xml:lang="fr">&amp;Profils...</message>
-	<message xml:lang="de">Profile...</message>
-	<message xml:lang="it">Profili...</message>
-	<message xml:lang="es">P&amp;erfiles...</message>
-	<message xml:lang="pt">Perfís...</message>
-	<message xml:lang="fi">Profiilit...</message>
-	<message xml:lang="tr">Profiller...</message>
-</label>
-<label define="BConfigTemplates">
-	<message xml:lang="en">&amp;Templates...</message>
-	<message xml:lang="fr">Mo&amp;dèles de page</message>
-	<message xml:lang="de">Schablonen...</message>
-	<message xml:lang="it">Modelli...</message>
-	<message xml:lang="es">P&amp;lantillas...</message>
-	<message xml:lang="pt">Templates...</message>
-	<message xml:lang="fi">Mallit...</message>
-	<message xml:lang="tr">Sayfa modelleri...</message>
 </label>
 <label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>

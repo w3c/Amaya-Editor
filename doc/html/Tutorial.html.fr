@@ -11,17 +11,23 @@
 .exercice {color: #A9B200}
 h1 {color: #FFFFFF; background-color: #7995B6; padding: 5px 1px}
 address {margin-bottom: 30px}
-body {background-color: #F9F7F4; color: #666666; font-family: helvetica; }</style>
-  <meta name="generator" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+body {background-color: #F9F7F4; color: #666666; font-family: helvetica; }
+.author {font-style: italic; font-weight: bold}
+.head {margin: 1em 0 3em 0}
+h1 {font-size: 24pt}
+body {padding-left: 2em}</style>
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
-<h1 id="Amaya">Amaya - Guide utilisateur</h1>
-<address>
-  <p>Irène Vatton <br />
-  $date: Wednesday 25 February 2004 - 12:28:47$</p>
 
-</address>
+<div class="head">
+<h1 id="Amaya">Amaya - Guide utilisateur</h1>
+
+<p class="head"><span class="author">Irène Vatton</span> <br />
+Dernière mise à jour&nbsp;: <!--$date=-->Wednesday 26 May 2004 - 17:04:43<!--$-->
+</p>
+</div>
 
 <p>Ce document a pour but d'aider les nouveaux utilisateurs d'Amaya. Pour
 plus de détail sur l'interface, il faut se reporter au <a
@@ -154,12 +160,12 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
 <span class="xml">&lt;/html&gt;</span></pre>
 
 <h3>Les familles HTML</h3>
- 
-<table border="1"> 
+
+<table border="1">
   <caption></caption>
   <tbody>
     <tr>
-      <th>Famille </th>
+      <th>Famille</th>
       <th>Eléments + attributs</th>
       <th>Strucutre</th>
     </tr>
@@ -247,13 +253,12 @@ final du document tel qu'il est vu par un navigateur Web</p>
   <li>Fichier&nbsp;: création de documents, navigation, impression,
   fermeture.</li>
   <li>Edition&nbsp;: édition de base, recherche/remplacement, correction
-    orthographique.</li>
+    orthographique, paramétrage.</li>
   <li>XHTML : création/remplacement d'éléments (X)HTML.</li>
   <li>XML : création d'éléments XML.</li>
   <li>Liens : création et destruction des liens.</li>
   <li>Vues : gestion des différentes vues du document.</li>
   <li>Style : gestion du style CSS.</li>
-  <li>Spécial : fonctions avancées et de paramétrage.</li>
   <li>Attributs : gestion des attributs de l'élément sélectionné.</li>
   <li>Annotations : création, destruction d'annotations.</li>
   <li>Aide : donne accès au manuel en ligne.</li>
@@ -273,8 +278,6 @@ final du document tel qu'il est vu par un navigateur Web</p>
     recharge le document (accès serveur)</li>
   <li>Page personnelle <img alt="(Home)" src="../images/home.gif" />&nbsp;:
     affiche la page de démarrage</li>
-  <li>Editeur/Navigateur <img alt="(Edition)" src="../images/Editor.gif"
-    />&nbsp;: autorise ou interdit l'édition</li>
   <li>Sauver <img alt="(Sauver)" src="../images/floppy.gif" />&nbsp;: sauver
     les modifications</li>
   <li>Imprimer <img alt="(Imprimer)" src="../images/Print.gif" />&nbsp;:
@@ -329,7 +332,7 @@ final du document tel qu'il est vu par un navigateur Web</p>
 
 <p>Avant d'éditer des documents Web avec Amaya, il est important de fixer un
 certain nombre de paramètres. Pour cela il faut ouvrir au moins deux des dix
-menus de préférences disponibles dans <strong>Spécial/Préférences</strong>.
+menus de préférences disponibles dans <strong>Éditer/Préférences</strong>.
 Chaque menu présente trois boutons d'action :</p>
 
 <table border="0" cellspacing="5" cellpadding="5"
@@ -758,7 +761,7 @@ dans une ancre cible.</p>
 <p>On peut demander à Amaya d'associer un identificateur à tous les éléments
 d'un certain type dans le document. Pour cela on active l'entrée
 <strong>Ajouter/Retirer des attributs ID</strong> dans le menu
-<strong>Spécial</strong>. Par exemple, on peut demander d'associer un
+<strong>Liens</strong>. Par exemple, on peut demander d'associer un
 identificateur à tous les éléments H2.</p>
 
 <h3>Création de liens</h3>

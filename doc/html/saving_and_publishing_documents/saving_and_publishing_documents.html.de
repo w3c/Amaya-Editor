@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <title>Dokumente speichern und veröffentlichen</title>
   <style type="text/css">
  </style>
@@ -21,8 +21,7 @@
       <td><a href="../Publishing.html.de" accesskey="t"><img
         alt="erste Seite" src="../../images/up.gif" /></a> <a
         href="about_saving_in_html.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../../images/right.gif" /></a>
-      </td>
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -45,7 +44,7 @@ Methode unterstützt und man die entsprechenden Rechte hat.</p>
 einstellen. Diese Optionen findet man unter <strong><a
 href="../configuring_amaya/menu_preferences.html.de#Veröffentlichen">Veröffentlichen</a></strong>
 im Untermenü <strong>Einstellungen</strong> des Menüs
-<strong>Extras</strong></p>
+<strong>Bearbeiten</strong></p>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <title>Mit dem Browser und Editor arbeiten</title>
   <style type="text/css">
   </style>
@@ -57,27 +57,6 @@ Auswahl weiterer Informationen bereit:</p>
   <li><a href="../ImageMaps.html.de">Aktive Bildbereiche</a></li>
   <li><a href="../Attributes.html.de">Attribute editieren</a></li>
 </ul>
-
-<h2>Editormodus und Browsermodus</h2>
-
-<p>Per Voreinstellung startet Amaya im Editormodus. In diesem Modus kann man
-das Dokument sowohl editieren als auch browsen.</p>
-
-<p>Die Knopfleiste zeigt den Knopf <img src="../../images/Editor.gif"
-alt="Knopf Editieren" /> wenn sich das Fenster im Editiermodus befindet und
-den Knopf <img src="../../images/Browser.gif" alt="Browser Button" /> wenn
-sich das Fenster im Browsermodus befindet. Im Browsermodus können auch
-Formulare ausgefüllt werden.</p>
-
-<p>Um vom Editormodus in den Browsermodus zu schalten, klickt man auf den
-Knopf <img src="../../images/Editor.gif" alt="Knopf Editieren" />. Dieser
-wechselt dann sein Aussehen in <img src="../../images/Browser.gif"
-alt="Knopf Browsen" />. Um wieder in den Editormodus zu gelangen, den Knopf
-erneut anklicken. In diesen Modus gelangt man auch, wenn man im Menü
-<strong>Bearbeiten</strong> den Befehl <strong>Editormodus</strong>.</p>
-
-<p class="Note"><strong>Anmerkung:</strong> Man kann die Modi in jedem
-Fenster unabhängig voneinander setzen</p>
 
 <h2>Zeichensätze</h2>
 

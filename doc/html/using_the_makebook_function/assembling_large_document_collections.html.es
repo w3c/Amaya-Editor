@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type"
+  content="application/xhtml+xml; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <title>Unir varios documentos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,7 +37,7 @@ documentos separados que pueden tener una estructura similar.</p>
 
 <p>Esta organización es adecuada para su navegación, pero resulta incómoda
 cuando quieres imprimir toda la documentación. Amaya resuelve el problema con
-el comando Hacer libro (<strong>Especial &gt; Hacer libro</strong>).</p>
+el comando Hacer libro (<strong>XHTML&gt;Hacer libro</strong>).</p>
 
 <p>Para enlazar capítulos, tipifica los enlaces asociándoles el atributo
 <code>rel="chapter"</code> o <code>rel="subdocument"</code> al ancla que

@@ -2882,7 +2882,8 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
 LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
 { 
-  int       itemIndex = 0, doc;
+  DisplayMode       dispMode;
+  int               itemIndex = 0, doc;
 
   switch (msg)
     {
@@ -2941,10 +2942,16 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      SetBrowseConf ();
 	      for (doc = 1; doc < MAX_DOCUMENTS; doc++)
 		{
-		  if (DocumentTypes[doc] == docHTML ||
-		      DocumentTypes[doc] == docSVG ||
-		      DocumentTypes[doc] == docMath)
-		    Synchronize (doc, 1);
+		  if (DocumentURLs[doc] &&
+		      (DocumentTypes[doc] == docHTML ||
+		       DocumentTypes[doc] == docSVG ||
+		       DocumentTypes[doc] == docMath))
+		    {
+		      dispMode = TtaGetDisplayMode (doc);
+		      TtaSetDisplayMode (doc, NoComputedDisplay);
+		      Synchronize (doc, 1);
+		      TtaSetDisplayMode (doc, dispMode);
+		    }
 		}
 	      InitLoadImages = LoadImages;
 	      InitLoadObjects = LoadObjects;	      
@@ -3032,7 +3039,8 @@ static void RefreshBrowseMenu ()
   ----------------------------------------------------------------------*/
 static void BrowseCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val, doc;
+  DisplayMode       dispMode;
+  int               val, doc;
 
   if (ref == -1)
     /* removes the network conf menu */
@@ -3060,10 +3068,16 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		  SetBrowseConf ();
 		  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
 		    {
-		      if (DocumentTypes[doc] == docHTML ||
-			  DocumentTypes[doc] == docSVG ||
-			  DocumentTypes[doc] == docMath)
-			Synchronize (doc, 1);
+		      if (DocumentURLs[doc] &&
+			  (DocumentTypes[doc] == docHTML ||
+			   DocumentTypes[doc] == docSVG ||
+			   DocumentTypes[doc] == docMath))
+			{
+			  dispMode = TtaGetDisplayMode (doc);
+			  TtaSetDisplayMode (doc, NoComputedDisplay);
+			  Synchronize (doc, 1);
+			  TtaSetDisplayMode (doc, dispMode);
+			}
 		    }
 		  InitLoadImages = LoadImages;
 		  InitLoadObjects = LoadObjects;

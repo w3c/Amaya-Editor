@@ -1114,7 +1114,6 @@ static void UpdateBrowserMenus (Document doc)
       TtaSetMenuOff (doc, 1, XMLTypes);
       TtaSetMenuOff (doc, 1, Links);
       TtaSetMenuOff (doc, 1, Style);
-      TtaSetItemOff (doc, 1, Special, BMakeBook);
 
       view = TtaGetViewFromName (doc, "Structure_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1225,8 +1224,6 @@ void UpdateEditorMenus (Document doc)
 		TtaSetMenuOn (doc, 1, XMLTypes);
 	      else
 		TtaSetMenuOff (doc, 1, XMLTypes);
-	      TtaSetItemOn (doc, 1, Special, TSectionNumber);
-	      TtaSetItemOn (doc, 1, Special, BMakeBook);
 	      TtaSetItemOn (doc, 1, Edit_, BTransform);
 	    }
 	  else if (DocumentTypes[doc] != docImage)
@@ -2883,7 +2880,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetMenuOff (doc, 1, Links);
 	   TtaSetMenuOff (doc, 1, Views);
 	   TtaSetMenuOff (doc, 1, Style);
-	   TtaSetMenuOff (doc, 1, Special);
 	   TtaSetMenuOff (doc, 1, Attributes_);
 #ifdef ANNOTATIONS
 	   TtaSetMenuOff (doc, 1, Annotations_);
@@ -3130,7 +3126,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     /* hide the address */
 	     TtcSwitchCommands (doc, 1);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
-	   TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
+	   TtaSetToggleItem (doc, 1, Types, TSectionNumber, SNumbering[doc]);
 	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
 	   if (show)
 	     ShowTargets (doc, 1);
@@ -3204,8 +3200,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	   TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
 	   TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
-	   TtaSetItemOff (doc, 1, Special, TSectionNumber);
-	   TtaSetItemOff (doc, 1, Special, BMakeBook);
 	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	   TtaSetItemOff (doc, 1, Views, TShowTargets);
 	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
@@ -3261,8 +3255,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       else
 		 TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
-	       TtaSetItemOff (doc, 1, Special, TSectionNumber);
-	       TtaSetItemOff (doc, 1, Special, BMakeBook);
 	     }
 	 }
      }
@@ -7693,7 +7685,7 @@ void SectionNumbering (Document doc, View view)
   
 #if defined(_GTK) || defined(_WX)  
   SNumbering[doc] = !SNumbering[doc];
-  TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
+  TtaSetToggleItem (doc, 1, Types, TSectionNumber, SNumbering[doc]);
 #endif /* #if defined(_GTK) || defined(_WX) */
   
   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type"
+  content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Über das Konfigurationsverzeichnis und Dateikonventionen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -48,7 +50,7 @@ Dieses Verzeichnis enthält unter anderem:</p>
   <li><strong>win-thot.rc</strong> oder <strong>unix-thot.rc</strong> enthält
     die benutzerdefinierten Einstellungen. Wird mit den Dialogen aus dem
     Untermenü <strong>Einstellungen</strong> des Menüs
-    <strong>Extras</strong> geändert.</li>
+    <strong>Bearbeiten</strong> geändert.</li>
 </ul>
 
 <p class="Note"><strong>Anmerkung:</strong> Diese Dateien werden beim Start
@@ -110,8 +112,8 @@ verschiedenen Plattformen zu finden ist:</p>
 browst oder ein Dokument druckt. Der Cache wird ebenfalls hier abgelegt.
 Dieses Verzeichnis und das Vezeichnis des Cache können über die Dialoge
 <strong>Allgemein</strong> und <strong>Cache</strong> im Menü
-<strong>Extras</strong>, Untermenü <strong>Einstellungen</strong> geändert
-werden.</p>
+<strong>Bearbeiten</strong>, Untermenü <strong>Einstellungen</strong>
+geändert werden.</p>
 
 <p>Amaya versucht immer die erzeugten Dateien zu löschen. Bricht Amaya
 unsauber ab, dann werden diese jedoch nicht gelöscht. Das hat jedoch keine

@@ -113,6 +113,16 @@ MENUS
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;
+	Edit_.Coptions button:BConfigGeneral -> ConfigGeneral;
+	Edit_.Coptions button:BConfigBrowse -> ConfigBrowse;
+	Edit_.Coptions button:BConfigPublish -> ConfigPublish;
+	Edit_.Coptions button:BConfigCache -> ConfigCache;
+	Edit_.Coptions button:BConfigProxy -> ConfigProxy;
+	Edit_.Coptions button:BConfigColor -> ConfigColor;
+	Edit_.Coptions button:BConfigGeometry -> ConfigGeometry;
+	Edit_.Coptions button:BConfigLanNeg -> ConfigLanNeg;
+	Edit_.Coptions button:BConfigProfile -> ConfigProfile;
+	Edit_.Coptions button:BConfigTemplates -> ConfigTemplates;
 
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;
@@ -198,6 +208,9 @@ MENUS
 	Types button:BBlockQuote -> CreateBlockQuote;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
+        Types Separator;
+	Types toggle:TSectionNumber -> SectionNumbering;
+	Types button:BMakeBook -> MakeBook;
 	Types button:BDate -> CreateDate;
 
 	Types Separator;
@@ -265,6 +278,8 @@ MENUS
 	XMLTypes Separator;
 	XMLTypes button:BXMLComment -> CreateComment;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
+	XMLTypes button:BXDate -> CreateDate;
+	XMLTypes Separator;
 
 	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;
 	view:1 Links button:BCreateLink -> CreateOrChangeLink;
@@ -301,20 +316,6 @@ MENUS
 	view:1 Style button:BDisableCSS -> DisableCSS;
 	view:1 Style button:BEnableCSS -> EnableCSS;
 	view:1 Style button:BRemoveCSS -> RemoveCSS;
-
-	view:1 Special toggle:TSectionNumber -> SectionNumbering;
-	view:1 Special button:BMakeBook -> MakeBook;
-        view:1 Special Separator;
-	view:1 Special.Coptions button:BConfigGeneral -> ConfigGeneral;
-	view:1 Special.Coptions button:BConfigBrowse -> ConfigBrowse;
-	view:1 Special.Coptions button:BConfigPublish -> ConfigPublish;
-	view:1 Special.Coptions button:BConfigCache -> ConfigCache;
-	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;
-	view:1 Special.Coptions button:BConfigColor -> ConfigColor;
-	view:1 Special.Coptions button:BConfigGeometry -> ConfigGeometry;
-	view:1 Special.Coptions button:BConfigLanNeg -> ConfigLanNeg;
-	view:1 Special.Coptions button:BConfigProfile -> ConfigProfile;
-	view:1 Special.Coptions button:BConfigTemplates -> ConfigTemplates;
 
 	Attributes_;
 

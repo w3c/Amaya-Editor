@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Problemas conocidos con las anotaciones y los documentos
   modificados</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -99,7 +99,7 @@ en la estructura.</p>
 
 <p>Amaya te permite crear o eliminar automáticamente los atributos
 <code>ID</code> en un conjunto de elementos eligiendo el comando de menú
-<strong>Especial &gt; Crear/Borrar atributos id</strong>.</p>
+<strong>Enlaces &gt; Crear/Borrar atributos id</strong>.</p>
 </div>
 </body>
 </html>

@@ -10,266 +10,266 @@
 8 &Collegamenti
 9 &Viste
 10 &Stile
-11 S&peciale
-12 &Attributi
-13 A&nnotazioni
-14 F&avorites
-15 &Cooperazione
-16 A&iuto
-17 Nuovo
-18 Nuovo documento XHTML 1.1...
-19 Nuovo documento XHTML 1.0 Transitional...
-20 Nuovo documento XHTML 1.0 Strict...
-21 Nuovo documento XHTML 1.0 Basic...
-22 Nuovo documento MathML...
-23 Nuovo documento SVG...
-24 Nuovo stile CSS...
-25 Modello
-26 Apri documento...
-27 Apri in una nuova finestra...
-28 Ricarica documento
-29 Precedente
-30 Successivo
-31 Salva
-32 Salva con nome...
-33 Sincronizza
-34 Cambia/Crea doctype
-35 Elimina doctype
-36 &Aggiungi un doctype
-37 Cambia/Crea doctype XHTML 1.1
-38 Cambia/Crea doctype XHTML 1.0 Transitional
-39 Cambia/Crea doctype XHTML 1.0 Strict
-40 Cambia/Crea doctype XHTML 1.0 Basic
-41 Cambia/Crea doctype HTML 4.01 Transitional
-42 Cambia/Crea doctype HTML 4.01 Strict
-43 Forza una codifica carattere
-44 Unicode (UTF-8)
-45 Western (ISO-8859-1)
-46 Western (ISO-8859-15)
-47 Western (Windows-1252)
-48 Central Europe (ISO-8859-2)
-49 Central Europe (Windows-1250)
-50 South Europe (ISO-8859-3)
-51 Baltic (ISO-8859-4)
-52 Baltic (Windows-1257)
-53 Cyrillic (ISO-8859-5)
-54 Cyrillic (Windows-1251)
-55 Cyrillic (KOI8-R)
-56 Arabic (ISO-8859-6)
-57 Arabic (Windows-1256)
-58 Greek (ISO-8859-7)
-59 Greek (Windows-1253)
-60 Hebrew (ISO-8859-8)
-61 Hebrew (Windows-1255)
-62 Turkish (ISO-8859-9)
-63 Turkish (Windows-125)
-64 Japanese (ISO-2022-JP)
-65 Japanese (EUC-JP)
-66 Japanese (Shift-JIS)
-67 Informazioni sul documento
-68 Imposta e stampa...
-69 Stampa
-70 Chiudi
-71 Esci
-72 Chiudi vista
-73 Ritratta
-74 Rifai
-75 Taglia
-76 Copia
-77 Incolla
-78 Cancella
-79 &Inserisci prima
-80 &Aggiungi dopo
-81 Modo Editor
-82 Trova...
-83 Controllo ortografico...
-84 Trasforma...
-85 Cambia Titolo...
-86 Intestazione
-87 h1
-88 h2
-89 h3
-90 h4
-91 h5
-92 h6
-93 Lista
-94 Lista puntata (ul)
-95 Lista numerata (ol)
-96 Lista di definizioni (dl)
-97 Termine (dt)
-98 Definizione (dd)
-99 Modulo
-100 form
-101 Pulsante (input)
-102 Checkbox (input)
-103 Selettore di file (input)
-104 Controllo nascosto (input)
-105 Immagine (input)...
-106 Password (input)
-107 Pulsante radio (input)
-108 Reset (input)
-109 Invia (input)
-110 Testo (input)
-111 Gruppo di campi (fieldset)
-112 Etichetta (label)
-113 Menu (option)
-114 Sottomenu (optgroup)
-115 Area testo (textarea)
-116 Oggetto
-117 Oggetto (object)
-118 Parametro (param)
-119 Tabella
-120 Tabella (table)
-121 Legenda (caption)
-122 colgroup
-123 col
-124 Intestazione (thead)
-125 Corpo (tbody)
-126 Piede (tfoot)
-127 Cambia la cella a Data (td)
-128 Cambia la cella a Intestazione (th)
-129 Unisci la cella a quella di destra
-130 Unisci la cella a quella sotto
-131 Riduci l'estensione orizzontale
-132 Riduci l'estensione verticale
-133 Seleziona la riga
-134 Inserisci una riga prima
-135 Aggiungi una riga dopo
-136 Seleziona la colonna
-137 Inserisci una colonna prima
-138 Aggiungi una colonna dopo
-139 Incolla prima
-140 Incolla dopo
-141 Area mappabile
-142 Inserisci una mappa
-143 Cerchio (area)
-144 Poligono (area)
-145 Rettangolo (area)
-146 &Struttura
-147 style
-148 Commento
-149 base
-150 meta
-151 link
-152 script
-153 noscript
-154 Paragrafo (p)
-155 Preformattato (pre)
-156 Indirizzo (address)
-157 Riga orizzontale (hr)
-158 Immagine (img)...
-159 A capo (br)
-160 Divisione (div)
-161 blockquote
-162 Cornice (iframe)
-163 ruby
-164 **New updated date
-165 Tipo di informazione
-166 Enfasi (em)
-167 Forte (strong)
-168 Cita (cite)
-169 Definizione (dfn)
-170 Codice (code)
-171 Variabile (var)
-172 Sample (samp)
-173 Tastiera (kbd)
-174 Abbreviazione (abbr)
-175 Acronimo (acronym)
-176 Inserzione (ins)
-177 Cancellazione (del)
-178 Elementi carattere
-179 Italico (i)
-180 Grassetto (b)
-181 Macchina da scrivere (tt)
-182 Grande (big)
-183 Piccolo (small)
-184 Pedice (sub)
-185 Indice (sup)
-186 Citazione (q)
-187 BiDi (bdo)
-188 Nuova formula (math)
-189 &Elementi di base
-190 Testo (mtext)
-191 Identificatore (mi)
-192 Numero (mn)
-193 Operatore (mo)
-194 Spazio (mspace)
-195 Carattere (&xxx;)
-196 InvisibleTimes
-197 ApplyFunction
-198 &Costruzioni
-199 Radice (mroot)
-200 Radice quadrata (msqrt)
-201 Ingloba (menclose)
-202 Frazione (mfrac)
-203 Pedice e indice (msubsup)
-204 Pedice (msub)
-205 Indice (msup)
-206 Sotto e sopra (munderover)
-207 Sotto (munder)
-208 Sopra (mover)
-209 Parentesi (mrow)
-210 Multiscript (mmultiscripts)
-211 **&Matrices
-212 Matrice (mtable)
-213 Unisci la cella a quella di destra
-214 Unisci la cella a quella sotto
-215 Riduci l'estensione orizzontale
-216 Riduci l'estensione verticale
-217 Seleziona la riga
-218 Inserisci una riga prima
-219 Aggiungi una riga dopo
-220 Seleziona la colonna
-221 Inserisci una colonna prima
-222 Aggiungi una colonna dopo
-223 Incolla prima
-224 Incolla dopo
-225 Mostri librería SVG
-226 Aggiunga la selezione nella librería SVG
-227 Commento
-228 Elementi XML...
-229 Collega al precedente obiettivo
-230 Crea o cambia collegamento...
-231 Crea obiettivo
-232 Cancella ancora
-233 Aggiungi/Togli ID...
-234 Mostra barra dei pulsanti
-235 Mostra indirizzo
-236 Mostra le zone attive
-237 Mostra obiettivi
-238 Ingrandisci
-239 Rimpicciolisci
-240 Mostra le errore
-241 Mostra struttura
-242 Mostra sorgente
-243 Mostra collegamenti
-244 Mostra la vista alternativa
-245 Mostra sommario
-246 Stile dei caratteri...
-247 Colori...
-248 Formattazione...
-249 Immagine di sfondo...
-250 Crea una regola...
-251 Applica una classe...
-252 Mostra lo stile applicato...
-253 Collegamento...
-254 Apri...
-255 Disabilita...
-256 Abilita...
-257 Rimuovi...
-258 Numerazione delle sezioni
-259 Crea libro
-260 Preferenze
-261 Generali...
-262 Visualizzazione...
-263 Pubblicazione...
-264 Cache...
-265 Proxy...
-266 Colori...
-267 Dimensioni della finestra...
-268 Negoziazione della lingua...
-269 Profili...
-270 Modelli...
+11 &Attributi
+12 A&nnotazioni
+13 F&avorites
+14 &Cooperazione
+15 A&iuto
+16 Nuovo
+17 Nuovo documento XHTML 1.1...
+18 Nuovo documento XHTML 1.0 Transitional...
+19 Nuovo documento XHTML 1.0 Strict...
+20 Nuovo documento XHTML 1.0 Basic...
+21 Nuovo documento MathML...
+22 Nuovo documento SVG...
+23 Nuovo stile CSS...
+24 Modello
+25 Apri documento...
+26 Apri in una nuova finestra...
+27 Ricarica documento
+28 Precedente
+29 Successivo
+30 Salva
+31 Salva con nome...
+32 Sincronizza
+33 Cambia/Crea doctype
+34 Elimina doctype
+35 &Aggiungi un doctype
+36 Cambia/Crea doctype XHTML 1.1
+37 Cambia/Crea doctype XHTML 1.0 Transitional
+38 Cambia/Crea doctype XHTML 1.0 Strict
+39 Cambia/Crea doctype XHTML 1.0 Basic
+40 Cambia/Crea doctype HTML 4.01 Transitional
+41 Cambia/Crea doctype HTML 4.01 Strict
+42 Forza una codifica carattere
+43 Unicode (UTF-8)
+44 Western (ISO-8859-1)
+45 Western (ISO-8859-15)
+46 Western (Windows-1252)
+47 Central Europe (ISO-8859-2)
+48 Central Europe (Windows-1250)
+49 South Europe (ISO-8859-3)
+50 Baltic (ISO-8859-4)
+51 Baltic (Windows-1257)
+52 Cyrillic (ISO-8859-5)
+53 Cyrillic (Windows-1251)
+54 Cyrillic (KOI8-R)
+55 Arabic (ISO-8859-6)
+56 Arabic (Windows-1256)
+57 Greek (ISO-8859-7)
+58 Greek (Windows-1253)
+59 Hebrew (ISO-8859-8)
+60 Hebrew (Windows-1255)
+61 Turkish (ISO-8859-9)
+62 Turkish (Windows-125)
+63 Japanese (ISO-2022-JP)
+64 Japanese (EUC-JP)
+65 Japanese (Shift-JIS)
+66 Informazioni sul documento
+67 Imposta e stampa...
+68 Stampa
+69 Chiudi
+70 Esci
+71 Chiudi vista
+72 Ritratta
+73 Rifai
+74 Taglia
+75 Copia
+76 Incolla
+77 Cancella
+78 &Inserisci prima
+79 &Aggiungi dopo
+80 Modo Editor
+81 Trova...
+82 Controllo ortografico...
+83 Trasforma...
+84 Preferenze
+85 Generali...
+86 Visualizzazione...
+87 Pubblicazione...
+88 Cache...
+89 Proxy...
+90 Colori...
+91 Dimensioni della finestra...
+92 Negoziazione della lingua...
+93 Profili...
+94 Modelli...
+95 Cambia Titolo...
+96 Intestazione
+97 h1
+98 h2
+99 h3
+100 h4
+101 h5
+102 h6
+103 Lista
+104 Lista puntata (ul)
+105 Lista numerata (ol)
+106 Lista di definizioni (dl)
+107 Termine (dt)
+108 Definizione (dd)
+109 Modulo
+110 form
+111 Pulsante (input)
+112 Checkbox (input)
+113 Selettore di file (input)
+114 Controllo nascosto (input)
+115 Immagine (input)...
+116 Password (input)
+117 Pulsante radio (input)
+118 Reset (input)
+119 Invia (input)
+120 Testo (input)
+121 Gruppo di campi (fieldset)
+122 Etichetta (label)
+123 Menu (option)
+124 Sottomenu (optgroup)
+125 Area testo (textarea)
+126 Oggetto
+127 Oggetto (object)
+128 Parametro (param)
+129 Tabella
+130 Tabella (table)
+131 Legenda (caption)
+132 colgroup
+133 col
+134 Intestazione (thead)
+135 Corpo (tbody)
+136 Piede (tfoot)
+137 Cambia la cella a Data (td)
+138 Cambia la cella a Intestazione (th)
+139 Unisci la cella a quella di destra
+140 Unisci la cella a quella sotto
+141 Riduci l'estensione orizzontale
+142 Riduci l'estensione verticale
+143 Seleziona la riga
+144 Inserisci una riga prima
+145 Aggiungi una riga dopo
+146 Seleziona la colonna
+147 Inserisci una colonna prima
+148 Aggiungi una colonna dopo
+149 Incolla prima
+150 Incolla dopo
+151 Area mappabile
+152 Inserisci una mappa
+153 Cerchio (area)
+154 Poligono (area)
+155 Rettangolo (area)
+156 &Struttura
+157 style
+158 Commento
+159 base
+160 meta
+161 link
+162 script
+163 noscript
+164 Paragrafo (p)
+165 Preformattato (pre)
+166 Indirizzo (address)
+167 Riga orizzontale (hr)
+168 Immagine (img)...
+169 A capo (br)
+170 Divisione (div)
+171 blockquote
+172 Cornice (iframe)
+173 ruby
+174 Numerazione delle sezioni
+175 Crea libro
+176 **Insert time stamp
+177 Tipo di informazione
+178 Enfasi (em)
+179 Forte (strong)
+180 Cita (cite)
+181 Definizione (dfn)
+182 Codice (code)
+183 Variabile (var)
+184 Sample (samp)
+185 Tastiera (kbd)
+186 Abbreviazione (abbr)
+187 Acronimo (acronym)
+188 Inserzione (ins)
+189 Cancellazione (del)
+190 Elementi carattere
+191 Italico (i)
+192 Grassetto (b)
+193 Macchina da scrivere (tt)
+194 Grande (big)
+195 Piccolo (small)
+196 Pedice (sub)
+197 Indice (sup)
+198 Citazione (q)
+199 BiDi (bdo)
+200 Nuova formula (math)
+201 &Elementi di base
+202 Testo (mtext)
+203 Identificatore (mi)
+204 Numero (mn)
+205 Operatore (mo)
+206 Spazio (mspace)
+207 Carattere (&xxx;)
+208 InvisibleTimes
+209 ApplyFunction
+210 &Costruzioni
+211 Radice (mroot)
+212 Radice quadrata (msqrt)
+213 Ingloba (menclose)
+214 Frazione (mfrac)
+215 Pedice e indice (msubsup)
+216 Pedice (msub)
+217 Indice (msup)
+218 Sotto e sopra (munderover)
+219 Sotto (munder)
+220 Sopra (mover)
+221 Parentesi (mrow)
+222 Multiscript (mmultiscripts)
+223 **&Matrices
+224 Matrice (mtable)
+225 Unisci la cella a quella di destra
+226 Unisci la cella a quella sotto
+227 Riduci l'estensione orizzontale
+228 Riduci l'estensione verticale
+229 Seleziona la riga
+230 Inserisci una riga prima
+231 Aggiungi una riga dopo
+232 Seleziona la colonna
+233 Inserisci una colonna prima
+234 Aggiungi una colonna dopo
+235 Incolla prima
+236 Incolla dopo
+237 Mostri librería SVG
+238 Aggiunga la selezione nella librería SVG
+239 Commento
+240 Elementi XML...
+241 **Insert time stamp
+242 Collega al precedente obiettivo
+243 Crea o cambia collegamento...
+244 Crea obiettivo
+245 Cancella ancora
+246 Aggiungi/Togli ID...
+247 Mostra barra dei pulsanti
+248 Mostra indirizzo
+249 Mostra le zone attive
+250 Mostra obiettivi
+251 Ingrandisci
+252 Rimpicciolisci
+253 Mostra le errore
+254 Mostra struttura
+255 Mostra sorgente
+256 Mostra collegamenti
+257 Mostra la vista alternativa
+258 Mostra sommario
+259 Stile dei caratteri...
+260 Colori...
+261 Formattazione...
+262 Immagine di sfondo...
+263 Crea una regola...
+264 Applica una classe...
+265 Mostra lo stile applicato...
+266 Collegamento...
+267 Apri...
+268 Disabilita...
+269 Abilita...
+270 Rimuovi...
 271 Annota la selezione
 272 Annota il documento
 273 Muovi sulla selezione

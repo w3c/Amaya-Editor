@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Construire un livre</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -94,7 +94,7 @@ et <a href="Printing.html.fr#L1062">imprimé</a>avec une table des matières
 complète et une liste de tous les liens.</p>
 
 <p>Pour activer cet outil, choisissez l'item <strong>Construire un
-livre</strong> du menu <strong>Spécial</strong>.</p>
+livre</strong> du menu <strong>XHTML</strong>.</p>
 </div>
 
 <p><a href="Numbering.html.fr"><img alt="previous" src="../images/left.gif"

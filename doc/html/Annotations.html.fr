@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -340,7 +340,7 @@ la position courante du curseur sans avoir besoin de faire la sélection.</p>
 annotation, par exemple pour déplacer plusieurs annotations vers le même
 endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
 Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
-utiliser le menu <strong>Annotations/Sauver la séelction comme
+utiliser le menu <strong>Annotations/Sauver la sélection comme
 XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
 dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
 sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
@@ -465,7 +465,7 @@ trompeuse.</p>
 stratégiques, par exemple pour les éléments DIV. Amaya vous permet d'associer
 ou de retirer automatiquement un attribut ID en sélectionnant l'entrée
 <strong>Ajouter/Retirer des attributs ID</strong> du menu
-<strong>Spécial</strong>. Dans notre exemple, on peut éviter le problème des
+<strong>Liens</strong>. Dans notre exemple, on peut éviter le problème des
 annotations trompeuses en ajoutant un attribut ID au second paragraphe:</p>
 <pre>  &lt;p id="Amaya"&gt;Pour cela, Amaya utilise...&lt;/p&gt;</pre>
 

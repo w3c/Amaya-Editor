@@ -5517,7 +5517,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   DisplayMode         dispMode;
   CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
-  char                c;
+  char                c, *screentype;
   char               *cssRule, *base, *saveDocURL, *ptr;
   int                 index;
   int                 CSSindex;
@@ -5547,6 +5547,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   c = SPACE;
   index = 0;
   base = NULL;
+  screentype = TtaGetEnvString ("SCREEN_TYPE");
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */
@@ -5697,7 +5698,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			  if (TtaIsPrinting ())
 			    base = strstr (&CSSbuffer[import], "print");
 			  else
-			    base = strstr (&CSSbuffer[import], "screen");
+			    base = strstr (&CSSbuffer[import], screentype);
 			  if (base == NULL)
 			    base = strstr (&CSSbuffer[import], "all");
 			  if (base == NULL)

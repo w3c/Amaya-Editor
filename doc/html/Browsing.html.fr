@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -33,14 +33,7 @@ beaucoup d'autres navigateurs du Web, excepté pour ce qui est d'<a
 href="#Activating">activer les liens</a>. Lors d'une opération normale,
 <strong>Amaya</strong> vous permet de naviguer et d´éditer des documents
 simultanément, mais vous pouvez changer ce comportement standard pour chaque
-fenêtre de document indépendamment. Le bouton <img src="../images/Editor.gif"
-alt="editor-mode" /> indique que la fenêtre est en mode éditeur : vous pouvez
-éditer le document courant et naviguer dans cette fenêtre. En cliquant sur ce
-bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
-ainsi cette représentation <img src="../images/Browser.gif"
-alt="browser-mode" /> et vous pouvez seulement naviguer et remplir les
-formulaires. cette option est également disponible à&nbsp;partir de l'option
-<strong>Mode Editeur</strong> du menu d'Édition.</p>
+fenêtre de document indépendamment.</p>
 
 <p>Amaya vous permet d'accéder et d'éditer des documents HTML ainsi que
 certains types de documents XML : XHTML, MathML et SVG. Il vous permet
@@ -86,11 +79,11 @@ point d'insertion à l'intérieur du lien et affiche l'URI complète du lien
 dans la barre d'état de la fenêtre principale.</p>
 
 <p>Ce comportement par défaut peut être modifié ainsi que d'autres paramètres
-par l'intermédiaire du menu Spécial/Préférences/Générales. En modifiant
-"cliquer deux fois pour suivre un lien", vous pourrez naviguer de document en
-document à l'aide d'un simple-clic. Dans ce cas, vous ne pouvez pas mettre
-aisément le point d'insertion à l'intérieur des liens : vous devez soit
-utiliser une sélection étendue soit déplacer le point d'insertion à
+par l'intermédiaire du menu <strong>Éditer/Préférences/Générales</strong>. En
+modifiant "cliquer deux fois pour suivre un lien", vous pourrez naviguer de
+document en document à l'aide d'un simple-clic. Dans ce cas, vous ne pouvez
+pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
+soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
 contrôles. La commande au clavier est <kbd>Alt Enter</kbd> par défaut, mais
@@ -135,8 +128,8 @@ matières. Si l'utilisateur a associé un raccourci clavier <kbd>Alt p</kbd> à
 une commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
 quand ces pages d'aide sont affichées. Par défaut la touche de modification
 utilisée est <strong>Alt</strong>. Le menu de préférences
-<code>Spécial/Préférences/Général</code> permet de modifier cette
-configuration par défaut. L'utilisateur peut utiliser la touche
+<code><strong>Éditer/Préférences/Général</strong></code> permet de modifier
+cette configuration par défaut. L'utilisateur peut utiliser la touche
 <strong>Control</strong> au lieu de <strong>Alt</strong> et peut décider de
 désactiver la prise en compte des accès rapides.</p>
 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -49,26 +49,6 @@ consulta:</p>
   <li><a href="../Tables.html.es#page_body">Editar Tablas</a></li>
   <li><a href="../Math.html.es#page_body">Editar MathML</a></li>
 </ul>
-
-<h2>Modo editor y Modo navegador</h2>
-
-<p>Por omisión, Amaya empieza en modo editor. En este modo puedes editar y
-navegar el documento en la misma ventana.</p>
-
-<p>La barra de botones muestra el botón <img src="../../images/Editor.gif"
-alt="Botón Editor" /> cuando la ventana está en modo editor, y el botón <img
-src="../../images/Browser.gif" alt="Botón navegador" /> cuando la ventana
-está en modo navegador. En modo navegador solamente puedes navegar y rellenar
-formularios.</p>
-
-<p>Para pasar del modo editor al modo navegador, haz clic en el botón <img
-src="../../images/Editor.gif" alt="Botón Editor" />. Haz clic en el botón
-<img src="../../images/Browser.gif" alt="Botón navegador" /> para volver al
-modo editor. También puedes elegir el modo con el comando de menú
-<strong>Editar &gt; Modo Edición</strong>.</p>
-
-<p class="Note"><strong>Nota:</strong> El modo se puede elegir de forma
-independiente en cada ventana de documento.</p>
 
 <h2>Juegos de caracteres</h2>
 

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -180,8 +180,8 @@ Ceci n'aura pas d'impact sur les exécutions d'Amaya ultérieurement.</p>
 
 <h3><a name="preferences">Menus des Préférences</a></h3>
 
-<p>Ces menus se trouvent sous le menu <strong>Spécial/Préférences</strong>.
-Il y a 10 différents menus de préférences disponibles : <a
+<p>Ces menus se trouvent sous le menu <strong>Éditer/Préférences</strong>. Il
+y a 10 différents menus de préférences disponibles : <a
 href="#General">Générales</a>, <a href="#L970">Navigation</a>, <a
 href="#Publishing">Publication</a>, <a href="#Cache">Cache</a>, <a
 href="#Specifying1">Proxy</a>, <a href="#color">Couleurs</a>, <a

@@ -10,266 +10,266 @@
 8 &Bağlantılar
 9 &Görünümler
 10 &Tarz
-11 &Özel
-12 &Özellik
-13 &Eklemeler
+11 &Özellik
+12 &Eklemeler
+13 &Birlikte çalışmak
 14 &Birlikte çalışmak
-15 &Birlikte çalışmak
-16 &Yardım
-17 Yeni
-18 Yeni XHTML 1.1 dosyası...
-19 Yeni XHTML 1.0 Transitional dosyası...
-20 Yeni XHTML 1.0 Strict dosyası...
-21 Yeni XHTML 1.0 Basic dosyası...
-22 Yeni MathML dosyası...
-23 Yeni SVG dosyası...
-24 Yeni CSS düz dizayn...
-25 Model
-26 Belge aç...
-27 Yeni pencerede aç...
-28 Belgeyi yeniden yükle
-29 Geri
-30 Ileri
-31 Kaydet
-32 Isimle kaydet...
-33 Eşlemek
-34 Doctype\'bı düzenle
-35 doctype\'bı sil
-36 **&Add a doctype
-37 XHTML 1.1 doctype
-38 XHTML 1.0 Transitional doctype
-39 XHTML 1.0 Strict doctype
-40 XHTML 1.0 Basic doctype
-41 HTML 4.01 Transitional doctype
-42 HTML 4.01 Strict doctype
-43 **Force a Character Coding
-44 Unicode (UTF-8)
-45 Western (ISO-8859-1)
-46 Western (ISO-8859-15)
-47 Western (Windows-1252)
-48 Central Europe (ISO-8859-2)
-49 Central Europe (Windows-1250)
-50 South Europe (ISO-8859-3)
-51 Baltic (ISO-8859-4)
-52 Baltic (Windows-1257)
-53 Cyrillic (ISO-8859-5)
-54 Cyrillic (Windows-1251)
-55 Cyrillic (KOI8-R)
-56 Arabic (ISO-8859-6)
-57 Arabic (Windows-1256)
-58 Greek (ISO-8859-7)
-59 Greek (Windows-1253)
-60 Hebrew (ISO-8859-8)
-61 Hebrew (Windows-1255)
-62 Turkish (ISO-8859-9)
-63 Turkish (Windows-125)
-64 Japanese (ISO-2022-JP)
-65 Japanese (EUC-JP)
-66 Japanese (Shift-JIS)
-67 Doküman bilgisi
-68 Kur ve yazdır
-69 Yapılandır ve yazdır
-70 Belgeyi kapat
-71 Çıkış
-72 Görünümü kapat
-73 Geri al
-74 Iileri al
-75 Kes
-76 Kopyala
-77 Yapıştır
-78 Temizle
-79 **&Insert before
-80 &Ekle
-81 Editör modu
-82 Ara...
-83 Yazım hataları ara...
-84 Dönüştür
-85 Başlığı değiştir
-86 Başlık
-87 Birinci büyüklük başlığı(h1)
-88 Ikinci büyüklük başlığı (h2)
-89 Üçüncü büyüklük başlığı (h3)
-90 Dördüncü büyüklük başlığı (h4)
-91 Beşinci büyüklük başlığı (h5)
-92 Altıncı büyüklük başlığı (h6)
-93 Liste
-94 Noktalı liste (ul)
-95 Numaralı liste (ol)
-96 Tanım listesi (dl)
-97 Terim (dt)
-98 Tanım (dd)
-99 Form
-100 Form (form)
-101 Düğme (giriş = input)
-102 Değiştir (input)
-103 Dosya seçili (input)
-104 Gizli (input)
-105 Görüntü (input)...
-106 şifre(input)(sifre)
-107 Radio düğmesi (input)
-108 Sıfırlamak (input)
-109 Onayla (input)
-110 Metin girişi (input)
-111 fieldset
-112 label
-113 Seçenek (option)
-114 Alt-menü
-115 Metin alanı (textarea)
-116 Nesne
-117 Nesne (object)
-118 Parametre (param)
-119 Tablo
-120 table
-121 Altyazi (caption)
-122 colgroup
-123 col ……..
-124 thead……
-125 tbody ……..
-126 tfoot………..
-127 **Change to Data cell (td)
-128 **Change to Heading cell (th)
-129 **Join with the cell at the right
-130 **Join with the cell below
-131 **Shrink horizontal extend
-132 **Shrink vertical extend
-133 **Select the row
-134 **Insert a row before
-135 **Append a row after
-136 **Select the column
-137 **Insert a column before
-138 **Append a column after
-139 **Paste before
-140 **Paste after
-141 **Map area
-142 **Insert a map
-143 Daire (area)
-144 Çokgen (area)
-145 Dikdörtgen (area)
-146 &Yapı
-147 Dizayn
-148 Yorum
-149 Temel
-150 meta
-151 Bağlantı (Link)
-152 script
-153 noscript (Script yok)
-154 Paragraf (p)
-155 Tekrar sekillendirilmi (pre)
-156 Address
-157 Yatay çizgi (hr)
-158 Görüntü (img)...
-159 Kesme (br)
-160 Bölme (div)
-161 Bloğu aktar (blockquote)
-162 çizgili çerçeve (iframe)
-163 ruby
-164 **New updated date
-165 Bilgi türü
-166 Vurgu (em)
-167 Kuvvetli (strong)
-168 Metin aktarımı (cite)
-169 Tanım (dfn)
-170 Kod (code)
-171 Değişken (var)
-172 Örnek (samp)
-173 Klaviye (kbd)
-174 kısaltmak (abbr)
-175 acronym
-176 Araya Koy (ins)
-177 Sil (del)
-178 Karakter birimi
-179 Eğik (i)
-180 Kalın (b)
-181 Teletip) (tt)
-182 Büyük (big)
-183 Küçük (small)
-184 Alt (sub)
-185 Üst (sup)
-186 Alıntılama (q)
-187 BiDi (bdo)
-188 Yeni formül (math)
-189 **Basic &Elements
-190 Düz yazı (mtext)
-191 Teşhis eden (mi)
-192 Numara (mn)
-193 Oparatör (mo)
-194 Boşluk (mspace)
-195 Karakter (&xxx;)
-196 Kayip zaman
-197 Fonksiyonu onayla
-198 **&Constructions
-199 Kök (mroot)
-200 Karekök (msqrt)
-201 Kapsamak (menclose)
-202 Kesir (mfrac)
-203 Alt ve üstyazı (msubsup)
-204 altyazı (msub)
-205 üstyazı (msup)
-206 alt ve üst (munderover)
-207 alt (munder)
-208 üst (mover)
-209 Parantezler (mrow)
-210 Multiscripts (mmultiscripts)
-211 **&Matrices
-212 Matris (mtable)
-213 **Join with the cell at the right
-214 **Join with the cell below
-215 **Shrink horizontal extend
-216 **Shrink vertical extend
-217 **Select the row
-218 **Insert a row before
-219 **Append a row after
-220 **Select the column
-221 **Insert a column before
-222 **Append a column after
-223 **Paste before
-224 **Paste after
-225 SVG kütüphanesini göster
-226 SVG kütüphanesine seçili alanı ekle
-227 Yorum
-228 XML elementlerin
-229 Önceki hedefe bağlantı
-230 Baglantı yarat...
-231 Hedef yarat
-232 tanımı sil
-233 IDs ekle/sil
-234 Tusları göster
-235 Adres göster
-236 Yakınlaştır
-237 Hedefi göster
-238 Uzaklaştır
-239 Harita alanlarını göster
-240 Pars hatalarını göster
-241 Yapıyı göster
-242 kaynak göster
-243 Bağlantıları göster
-244 Alternatif gösterim
-245 Içindekileri göster
-246 Karakter tarzı...
-247 Renkler...
-248 Biçim...
-249 Arkaplan görüntüsü...
-250 Kural yarat...
-251 \'class\' uygula...
-252 **Show applied style...
-253 Bağlantı
-254 Aç
-255 Olumsuzla
-256 Olumla
-257 Sil
-258 Bölüm numaralandırması
-259 Kitap yap
-260 Tercih
-261 Genel...
-262 Tarama...
-263 Derleme...
-264 Önbellekleme...
-265 Proxy...
-266 Renkler...
-267 Geometri...
-268 Ülke dilleri...
-269 Profiller...
-270 Sayfa modelleri...
+15 &Yardım
+16 Yeni
+17 Yeni XHTML 1.1 dosyası...
+18 Yeni XHTML 1.0 Transitional dosyası...
+19 Yeni XHTML 1.0 Strict dosyası...
+20 Yeni XHTML 1.0 Basic dosyası...
+21 Yeni MathML dosyası...
+22 Yeni SVG dosyası...
+23 Yeni CSS düz dizayn...
+24 Model
+25 Belge aç...
+26 Yeni pencerede aç...
+27 Belgeyi yeniden yükle
+28 Geri
+29 Ileri
+30 Kaydet
+31 Isimle kaydet...
+32 Eşlemek
+33 Doctype\'bı düzenle
+34 doctype\'bı sil
+35 **&Add a doctype
+36 XHTML 1.1 doctype
+37 XHTML 1.0 Transitional doctype
+38 XHTML 1.0 Strict doctype
+39 XHTML 1.0 Basic doctype
+40 HTML 4.01 Transitional doctype
+41 HTML 4.01 Strict doctype
+42 **Force a Character Coding
+43 Unicode (UTF-8)
+44 Western (ISO-8859-1)
+45 Western (ISO-8859-15)
+46 Western (Windows-1252)
+47 Central Europe (ISO-8859-2)
+48 Central Europe (Windows-1250)
+49 South Europe (ISO-8859-3)
+50 Baltic (ISO-8859-4)
+51 Baltic (Windows-1257)
+52 Cyrillic (ISO-8859-5)
+53 Cyrillic (Windows-1251)
+54 Cyrillic (KOI8-R)
+55 Arabic (ISO-8859-6)
+56 Arabic (Windows-1256)
+57 Greek (ISO-8859-7)
+58 Greek (Windows-1253)
+59 Hebrew (ISO-8859-8)
+60 Hebrew (Windows-1255)
+61 Turkish (ISO-8859-9)
+62 Turkish (Windows-125)
+63 Japanese (ISO-2022-JP)
+64 Japanese (EUC-JP)
+65 Japanese (Shift-JIS)
+66 Doküman bilgisi
+67 Kur ve yazdır
+68 Yapılandır ve yazdır
+69 Belgeyi kapat
+70 Çıkış
+71 Görünümü kapat
+72 Geri al
+73 Iileri al
+74 Kes
+75 Kopyala
+76 Yapıştır
+77 Temizle
+78 **&Insert before
+79 &Ekle
+80 Editör modu
+81 Ara...
+82 Yazım hataları ara...
+83 Dönüştür
+84 Tercih
+85 Genel...
+86 Tarama...
+87 Derleme...
+88 Önbellekleme...
+89 Proxy...
+90 Renkler...
+91 Geometri...
+92 Ülke dilleri...
+93 Profiller...
+94 Sayfa modelleri...
+95 Başlığı değiştir
+96 Başlık
+97 Birinci büyüklük başlığı(h1)
+98 Ikinci büyüklük başlığı (h2)
+99 Üçüncü büyüklük başlığı (h3)
+100 Dördüncü büyüklük başlığı (h4)
+101 Beşinci büyüklük başlığı (h5)
+102 Altıncı büyüklük başlığı (h6)
+103 Liste
+104 Noktalı liste (ul)
+105 Numaralı liste (ol)
+106 Tanım listesi (dl)
+107 Terim (dt)
+108 Tanım (dd)
+109 Form
+110 Form (form)
+111 Düğme (giriş = input)
+112 Değiştir (input)
+113 Dosya seçili (input)
+114 Gizli (input)
+115 Görüntü (input)...
+116 şifre(input)(sifre)
+117 Radio düğmesi (input)
+118 Sıfırlamak (input)
+119 Onayla (input)
+120 Metin girişi (input)
+121 fieldset
+122 label
+123 Seçenek (option)
+124 Alt-menü
+125 Metin alanı (textarea)
+126 Nesne
+127 Nesne (object)
+128 Parametre (param)
+129 Tablo
+130 table
+131 Altyazi (caption)
+132 colgroup
+133 col ……..
+134 thead……
+135 tbody ……..
+136 tfoot………..
+137 **Change to Data cell (td)
+138 **Change to Heading cell (th)
+139 **Join with the cell at the right
+140 **Join with the cell below
+141 **Shrink horizontal extend
+142 **Shrink vertical extend
+143 **Select the row
+144 **Insert a row before
+145 **Append a row after
+146 **Select the column
+147 **Insert a column before
+148 **Append a column after
+149 **Paste before
+150 **Paste after
+151 **Map area
+152 **Insert a map
+153 Daire (area)
+154 Çokgen (area)
+155 Dikdörtgen (area)
+156 &Yapı
+157 Dizayn
+158 Yorum
+159 Temel
+160 meta
+161 Bağlantı (Link)
+162 script
+163 noscript (Script yok)
+164 Paragraf (p)
+165 Tekrar sekillendirilmi (pre)
+166 Address
+167 Yatay çizgi (hr)
+168 Görüntü (img)...
+169 Kesme (br)
+170 Bölme (div)
+171 Bloğu aktar (blockquote)
+172 çizgili çerçeve (iframe)
+173 ruby
+174 Bölüm numaralandırması
+175 Kitap yap
+176 **Insert time stamp
+177 Bilgi türü
+178 Vurgu (em)
+179 Kuvvetli (strong)
+180 Metin aktarımı (cite)
+181 Tanım (dfn)
+182 Kod (code)
+183 Değişken (var)
+184 Örnek (samp)
+185 Klaviye (kbd)
+186 kısaltmak (abbr)
+187 acronym
+188 Araya Koy (ins)
+189 Sil (del)
+190 Karakter birimi
+191 Eğik (i)
+192 Kalın (b)
+193 Teletip) (tt)
+194 Büyük (big)
+195 Küçük (small)
+196 Alt (sub)
+197 Üst (sup)
+198 Alıntılama (q)
+199 BiDi (bdo)
+200 Yeni formül (math)
+201 **Basic &Elements
+202 Düz yazı (mtext)
+203 Teşhis eden (mi)
+204 Numara (mn)
+205 Oparatör (mo)
+206 Boşluk (mspace)
+207 Karakter (&xxx;)
+208 Kayip zaman
+209 Fonksiyonu onayla
+210 **&Constructions
+211 Kök (mroot)
+212 Karekök (msqrt)
+213 Kapsamak (menclose)
+214 Kesir (mfrac)
+215 Alt ve üstyazı (msubsup)
+216 altyazı (msub)
+217 üstyazı (msup)
+218 alt ve üst (munderover)
+219 alt (munder)
+220 üst (mover)
+221 Parantezler (mrow)
+222 Multiscripts (mmultiscripts)
+223 **&Matrices
+224 Matris (mtable)
+225 **Join with the cell at the right
+226 **Join with the cell below
+227 **Shrink horizontal extend
+228 **Shrink vertical extend
+229 **Select the row
+230 **Insert a row before
+231 **Append a row after
+232 **Select the column
+233 **Insert a column before
+234 **Append a column after
+235 **Paste before
+236 **Paste after
+237 SVG kütüphanesini göster
+238 SVG kütüphanesine seçili alanı ekle
+239 Yorum
+240 XML elementlerin
+241 **Insert time stamp
+242 Önceki hedefe bağlantı
+243 Baglantı yarat...
+244 Hedef yarat
+245 tanımı sil
+246 IDs ekle/sil
+247 Tusları göster
+248 Adres göster
+249 Yakınlaştır
+250 Hedefi göster
+251 Uzaklaştır
+252 Harita alanlarını göster
+253 Pars hatalarını göster
+254 Yapıyı göster
+255 kaynak göster
+256 Bağlantıları göster
+257 Alternatif gösterim
+258 Içindekileri göster
+259 Karakter tarzı...
+260 Renkler...
+261 Biçim...
+262 Arkaplan görüntüsü...
+263 Kural yarat...
+264 \'class\' uygula...
+265 **Show applied style...
+266 Bağlantı
+267 Aç
+268 Olumsuzla
+269 Olumla
+270 Sil
 271 Seçili alan ekleme
 272 Doküman eklemek
 273 Seçili alanı taşı

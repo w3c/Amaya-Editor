@@ -3,10 +3,11 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type"
+  content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Bekannte Probleme bei Anmerkungen und modifizierten
   Dokumenten</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -109,7 +110,7 @@ befindet.</p>
 
 <p>Hinweis: mit Amaya kann man automatisch ein <code>id</code>-Attribut einer
 Anzahl von Elementen zuweisen oder von diesen entfernen, indem man <strong>Id
-hinzufügen/entfernen</strong> im Menü <strong>Extras</strong> ausführt.</p>
+hinzufügen/entfernen</strong> im Menü <strong>Verweise</strong> ausführt.</p>
 </div>
 </div>
 </body>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <title>Eine Dokumentensammlung erstellen</title>
   <style type="text/css">
   </style>
@@ -38,7 +37,7 @@ Dokumente, die die gleiche Struktur haben können.</p>
 
 <p>Diese Organisation ist beim Browsen hilfreich hat aber mehrere Nachteile,
 wenn der Dokumentensatz gedruckt werden soll. Amaya stellt hierzu die
-Funktion <strong>Buch erstellen</strong> im Menü <strong>Extras</strong>
+Funktion <strong>Buch erstellen</strong> im Menü <strong>XHTML</strong>
 bereit.</p>
 
 <p>Man verwendet Verweise um Kapitel oder Abschnitte eines Dokuments oder das

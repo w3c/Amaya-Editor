@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -29,7 +29,7 @@
 <div id="page_body">
 <h1>Menú Preferencias</h1>
 
-<p>Las cajas de diálogo se encuentran en el menú <strong>Especial &gt;
+<p>Las cajas de diálogo se encuentran en el menú <strong>Editar&gt;
 Preferencias</strong>. Hay diez cajas de diálogos:
 <strong>Generales</strong>, <strong>Navegación</strong>,
 <strong>Publicación</strong>, <strong>Caché</strong>, <strong>Proxy</strong>,
