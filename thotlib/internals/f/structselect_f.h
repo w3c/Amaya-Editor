@@ -16,9 +16,9 @@ extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
                                       PtrElement * lastEl,
                                       int *firstChar,
                                       int *lastChar );
-extern void GetActiveView ( PtrDocument * pDoc,
+extern void GetActiveView ( PtrDocument *pDoc,
                             int *view,
-                            ThotBool * assoc );
+                            ThotBool *assoc );
 extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement NextInSelection ( PtrElement pEl,
@@ -30,7 +30,7 @@ extern void DeactivateView ( PtrDocument pDoc,
                              int view,
                              ThotBool assoc );
 extern void ShowSelection ( PtrAbstractBox pRootAb,
-                            ThotBool visible );
+                            ThotBool showBegin );
 extern void HighlightVisibleAncestor ( PtrElement pEl );
 extern void MoveCaret ( PtrDocument pDoc,
                         PtrElement pEl,
@@ -95,9 +95,9 @@ extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
                                         PtrElement * lastEl,
                                         int *firstChar,
                                         int *lastChar */);
-extern void GetActiveView (/* PtrDocument * pDoc,
+extern void GetActiveView (/* PtrDocument *pDoc,
                               int *view,
-                              ThotBool * assoc */);
+                              ThotBool *assoc */);
 extern void CancelSelection (/* void */);
 extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
@@ -109,7 +109,7 @@ extern void DeactivateView (/* PtrDocument pDoc,
                                int view,
                                ThotBool assoc */);
 extern void ShowSelection (/* PtrAbstractBox pRootAb,
-                              ThotBool visible */);
+                              ThotBool showBegin */);
 extern void HighlightVisibleAncestor (/* PtrElement pEl */);
 extern void MoveCaret (/* PtrDocument pDoc,
                           PtrElement pEl,

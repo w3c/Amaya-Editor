@@ -962,27 +962,32 @@ void          ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	      if (showBegin &&
 		  (SelectedDocument->DocView[view - 1].DvSync || active))
 		ShowSelectedBox (frame, active);
-	      
+
 	      selBegin = FALSE;
 	      showBegin = FALSE;
 	    }
 	  else if (pAb->AbBox)
 	    DrawBoxSelection (frame, pAb->AbBox);
+	    
 	  /* next abstract box to be highlighted */
 	  pAb = pNextAb;
 	}
+      /* display the new selection */
+      DisplayFrame (frame);
     }
   else if (DocSelectedAttr && AbsBoxSelectedAttr)
     /* the current selection is within an attribute value */
     {
       frame = DocSelectedAttr->DocViewFrame[view - 1];
       pAb = GetAbsBoxSelectedAttr (view);
-      if (pAb != NULL)
+      if (pAb)
 	{
 	  pAb->AbSelected = TRUE;
 	  InsertViewSelMarks (frame, pAb, FirstSelectedCharInAttr,
 			      LastSelectedCharInAttr, TRUE, TRUE, TRUE);
 	  ShowSelectedBox (frame, TRUE);
+	  /* display the new selection */
+	  DisplayFrame (frame);
 	}
     }
 }
@@ -1137,6 +1142,8 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
       /* next abstract box of the element */
       pAb = pNextAb;
     }
+  /* display the new selection */
+  DisplayFrame (frame);
 }
 
 

@@ -155,7 +155,6 @@ typedef struct _Box
   PtrAbstractBox  BxAbstractBox;/* Pointer on the associated abstract box */
   PtrBox          BxPrevious;	        /* Previous displayable box */
   PtrBox          BxNext;	        /* Next displayable box */
-  PtrBox          BxNextBackground;	/* Next background box to display */
   int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* 0 or position of the split box */
   int             BxXOrg;	/* X origin from the root */
@@ -209,6 +208,8 @@ typedef struct _Box
   ThotBool	  BxContentHeight;	/* Real height is the content height */
   ThotBool	  BxContentWidth;	/* Real width is the content width */
   ThotBool        BxShadow;		/* Characters are showed as a set of '*' */
+  ThotBool        BxFill;	        /* The box has borders or background */
+  ThotBool        BxDisplay;	        /* The box has borders or background */
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */

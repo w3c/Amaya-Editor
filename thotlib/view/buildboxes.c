@@ -1019,145 +1019,6 @@ static PtrAbstractBox PreviousLeafAbstractBox (PtrAbstractBox pAb)
 
 
 /*----------------------------------------------------------------------
-  SearchPreviousFillBox searchs the previous filled box the in current view.
-  ----------------------------------------------------------------------*/
-static PtrAbstractBox SearchPreviousFilledBox (PtrAbstractBox pRefAb)
-{
-  PtrAbstractBox    pAb;
-  ThotBool          found;
-
-  if (pRefAb == NULL)
-    return (NULL);
-  else
-    {
-      pAb = pRefAb->AbPrevious;
-      found = FALSE;
-      /* don't take care of dead abstract boxes */
-      while (pAb != NULL && !found)
-	{
-	  if (pAb->AbDead)
-	    pAb = pAb->AbPrevious;
-	  else if (pAb->AbLeafType != LtCompound ||
-		   (pAb->AbBox && pAb->AbBox->BxType == BoCell))
-	    /* skip this cell */
-	    pAb = pAb->AbPrevious;
-	  else if (pAb->AbFillBox)
-	    /* this compound element is in the list */
-	    found = TRUE;
-	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
-		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
-		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-	    /* this compound element is in the list */
-	    found = TRUE;
-	  else
-	    pAb = pAb->AbPrevious;
-	}
-
-      if (!found && pRefAb->AbEnclosing != NULL)
-        {
-	  /* search at the parent level */
-          pAb = pRefAb->AbEnclosing;
-	  if (pAb->AbBox && pAb->AbBox->BxType == BoCell)
-	    /* skip this cell */
-	    pAb = SearchPreviousFilledBox (pAb);
-          else if (pAb->AbFillBox)
-	    /* this compound element is in the list */
-	    return (pAb);
-	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
-		    pAb->AbTopBorder > 0) ||
-		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 &&
-		    pAb->AbLeftBorder > 0) ||
-		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 &&
-		    pAb->AbBottomBorder > 0) ||
-		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
-		    pAb->AbRightBorder > 0))
-	    /* this compound element is in the list */
-	    return (pAb);
-	  else
-	    pAb = SearchPreviousFilledBox (pAb);
-        }
-      return (pAb);
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  AddFilledBox adds the box in the filled list if it's not already
-  registered.
-  ----------------------------------------------------------------------*/
-static void         AddFilledBox (PtrBox pBox, PtrBox pMainBox, int frame)
-{
-  PtrBox            pFilledBox;
-  PtrAbstractBox    pAb;
-  int               color;
-
-  if (pBox != pMainBox)
-    {
-      pFilledBox = pMainBox->BxNextBackground;
-      while (pFilledBox != NULL && pFilledBox != pBox)
-	pFilledBox = pFilledBox->BxNextBackground;
-
-      if (pFilledBox == NULL)
-	{
-	  /* the current filled box is not registered */
-	  pAb = SearchPreviousFilledBox (pBox->BxAbstractBox);
-	  if (pAb == NULL)
-	    {
-	      /* The new box is the first filled box */
-	      pBox->BxNextBackground = pMainBox->BxNextBackground;
-	      pMainBox->BxNextBackground = pBox;
-	    }
-	  else
-	    {
-	      /* Add it in the list */
-	      pFilledBox = pAb->AbBox;
-	      pBox->BxNextBackground = pFilledBox->BxNextBackground;
-	      pFilledBox->BxNextBackground = pBox;
-	    }
-	}
-    }
-  else
-    {
-      color = pBox->BxAbstractBox->AbBackground;
-      if (BackgroundColor[frame] != (ThotColor)color)
-        {
-          /* change the window background color */
-          BackgroundColor[frame] = (ThotColor)color;
-          SetMainWindowBackgroundColor (frame, color);
-        }
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  RemoveFilledBox adds the box in the filled list.
-  ----------------------------------------------------------------------*/
-static void         RemoveFilledBox (PtrBox pBox, PtrBox pMainBox, int frame)
-{
-  PtrBox            pFilledBox;
-
-  if (pBox != pMainBox)
-    {
-      pFilledBox = pMainBox;
-      while (pFilledBox != NULL && pFilledBox->BxNextBackground != pBox)
-	pFilledBox = pFilledBox->BxNextBackground;
-
-      if (pFilledBox != NULL)
-	{
-	  /* remove the box from the list */
-	  pFilledBox->BxNextBackground = pBox->BxNextBackground;
-	  pBox->BxNextBackground = NULL;
-	}
-    }
-  else
-    {
-      BackgroundColor[frame] = DefaultBColor;
-      SetMainWindowBackgroundColor (frame, DefaultBColor);
-    }
-}
-
-/*----------------------------------------------------------------------
    FontStyleAndWeight
    returns the Highlight value for abstract box pAb, according to its
    FontStyle and FontWeight.
@@ -1193,11 +1054,38 @@ static int          FontStyleAndWeight (PtrAbstractBox pAb)
 
 
 /*----------------------------------------------------------------------
+  TransmitFill transmits the background to children boxes.
+  ----------------------------------------------------------------------*/
+static void  TransmitFill (PtrBox pBox, ThotBool state)
+{
+  PtrAbstractBox  pAb, child;
+
+  /* when it's a dummy box report changes to the children */
+  pAb = pBox->BxAbstractBox;
+  pAb = pAb->AbFirstEnclosed;
+  while (pAb)
+    {
+      if (pAb->AbBox)
+	{
+	  if (pAb->AbBox->BxType == BoGhost)
+	    TransmitFill (pAb->AbBox, state);
+	  else
+	    {
+	      pAb->AbBox->BxFill = state;
+	      pAb->AbBox->BxDisplay = state;
+	    }
+	}
+      pAb = pAb->AbNext;
+    }
+}
+
+
+/*----------------------------------------------------------------------
   TransmitMBP transmits margins, borders, and paddings to children boxes.
   i = the added pixels at the beginning
   j =the added pixels at the end
   ----------------------------------------------------------------------*/
-static void     TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
+static void  TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
 {
   PtrAbstractBox  pAb, pCurrentAb;
 
@@ -1583,10 +1471,13 @@ static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, 
 		 pAb->AbBottomBorder > 0) ||
 		(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
 		 pAb->AbRightBorder > 0)))
-	    /* register the box */
-	    AddFilledBox (pCurrentBox, pMainBox, frame);
+	    {
+	      /* register the box */
+	      pCurrentBox->BxDisplay = TRUE;
+	      pCurrentBox->BxFill = pAb->AbFillBox;
+	    }
 	  
-	  /* Il faut creer les boites des paves inclus */
+	  /* create enclosing boxes */
 	  pChildAb = pAb->AbFirstEnclosed;
 	  while (pChildAb != NULL)
 	    {
@@ -1595,6 +1486,8 @@ static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, 
 	    }
 	  if (pCurrentBox->BxType == BoGhost)
 	    {
+	      if (pAb->AbFillBox)
+		TransmitFill (pCurrentBox, TRUE);
 	      /* transmit margins, borders and paddings */
 	      i = pCurrentBox->BxLMargin + pCurrentBox->BxLPadding + pCurrentBox->BxLBorder;
 	      j = pCurrentBox->BxRMargin + pCurrentBox->BxRPadding + pCurrentBox->BxRBorder;
@@ -1947,9 +1840,11 @@ void                RemoveBoxes (PtrAbstractBox pAb, ThotBool toRemake, int fram
 	  /* Liberation des lignes et boites coupees */
 	  pCurrentBox = pAb->AbBox;
 	  if (pAb->AbLeafType == LtCompound)
-	    /* unregister the box */
-	    RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox, frame);
-
+	    {
+	      /* unregister the box */
+	      pCurrentBox->BxDisplay = FALSE;
+	      pCurrentBox->BxFill = FALSE;
+	    }
 	  if (pCurrentBox->BxType == BoBlock)
 	    RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 	  else if (pCurrentBox->BxType == BoTable && ThotLocalActions[T_cleartable])
@@ -2566,11 +2461,21 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 		   pAb->AbBottomBorder > 0) ||
 		  (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
 		   pAb->AbRightBorder > 0))
-		/* register the box */
-		AddFilledBox (pBox, pMainBox, frame);
+		{
+		  /* register the box */
+		  pBox->BxDisplay = TRUE;
+		  pBox->BxFill = pAb->AbFillBox;
+		  if (pBox->BxType == BoGhost && pAb->AbFillBox)
+		    TransmitFill (pBox, TRUE);
+		}
 	      else
-		/* unregister the box in filled list */
-		RemoveFilledBox (pBox, pMainBox, frame);
+		{
+		  /* unregister the box in filled list */
+		  pBox->BxDisplay = FALSE;
+		  pBox->BxFill = FALSE;
+		  if (pBox->BxType == BoGhost)
+		    TransmitFill (pBox, FALSE);
+		}
 	    }
 	}
       /* CHANGE CHARACTER SIZE */
@@ -2997,11 +2902,21 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 		       pAb->AbBottomBorder > 0) ||
 		      (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
 		       pAb->AbRightBorder > 0))
-		    /* register the box in filled list */
-		    AddFilledBox (pBox, pMainBox, frame);
+		    {
+		      /* register the box in filled list */
+		      pBox->BxDisplay = TRUE;
+		      pBox->BxFill = pAb->AbFillBox;
+		      if (pBox->BxType == BoGhost && pAb->AbFillBox)
+			TransmitFill (pBox, TRUE);
+		    }
 		  else
-		    /* unregister the box in filled list */
-		    RemoveFilledBox (pBox, pMainBox, frame);
+		    {
+		      /* unregister the box in filled list */
+		      pBox->BxDisplay = FALSE;
+		      pBox->BxFill = FALSE;
+		      if (pBox->BxType == BoGhost)
+			TransmitFill (pBox, FALSE);
+		    }
 		}
 
 	      /* Check table consistency */

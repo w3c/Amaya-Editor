@@ -3,7 +3,6 @@
 #include <windows.h>
 #include "fileaccess.h"
 
-#ifdef __STDC__
 extern BOOL       RegisterWin95 (CONST WNDCLASS* lpwc);
 extern void       DropFile (Document, View, STRING);
 extern HMENU      WIN_GetMenu (int);
@@ -16,7 +15,6 @@ extern BOOL       WIN_TtaInitDialogue (CHAR_T*);
 extern void       WIN_TtaSetPulldownOff (int, ThotMenu, ThotWindow);
 extern void       WIN_TtaSetPulldownOn (int, ThotMenu, ThotWindow);
 extern void       WIN_TtaSetToggleMenu (int, int, ThotBool, ThotWindow);
-extern void       WIN_APP_TextCallback (ThotWindow, int);
 extern void       WIN_ThotCallBack (ThotWindow, WPARAM, LPARAM);
 extern void       WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial);
 extern void       WIN_InitDialogueFonts (HDC, CHAR_T*);
@@ -78,82 +76,6 @@ extern ThotWindow GetCurrentWindow ();
 extern void       WIN_DisplayWords (void);
 extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
 extern void       CheckTtCmap ();
-
-#else  /* __STDC__ */
-extern BOOL       RegisterWin95 ();
-extern void       DropFile ();
-extern HMENU      WIN_GetMenu ();
-extern void       WinErrorBox ();
-extern HFONT      WinLoadFont ();
-extern int        WIN_InitSystemColors ();
-extern void       WIN_GetDeviceContext ();
-extern void       WIN_ReleaseDeviceContext ();
-extern BOOL       WIN_TtaInitDialogue ();
-extern void       WIN_TtaSetPulldownOff ();
-extern void       WIN_TtaSetPulldownOn ();
-extern void       WIN_TtaSetToggleMenu ();
-extern void       WIN_APP_TextCallback ();
-extern void       WIN_ThotCallBack ();
-extern void       WIN_CharTranslation ();
-extern void       WIN_InitDialogueFonts ();
-extern void       APP_ButtonCallback ();
-extern void       CleanFrameCatList ();
-extern int        GetMainFrameNumber ();
-extern LRESULT    ToolBarNotify ();
-extern int        GetFrameNumber ();
-extern void       TtaHandleOneWindowEvent ();
-extern void       CreateOpenImgDlgWindow ();
-extern void       CreateTableDlgWindow ();
-extern void       WIN_ListSaveDirectory ();
-extern void       ThotCallback ();
-extern void       WIN_TtaSwitchButton ();
-extern void       SwitchIconMath ();
-extern void       AddMathButton ();
-extern int        TtaGetMessageTable ();
-extern int        GetWindowNumber (Document, View);
-extern void       TtaError ();
-extern void       CreateMatrixDlgWindow ();
-extern ThotBool   TtaGetPrinterDC ();
-extern void       ReusePrinterDC ();
-extern void       WinInitPrinterColors ();
-extern void       CreateAltDlgWindow ();
-extern void       CreateCSSDlgWindow ();
-extern void       CreateTitleDlgWindow ();
-extern void       CreateHrefDlgWindow ();
-extern void       CreateHelpDlgWindow ();
-extern void       CreatePrintDlgWindow ();
-extern void       CreateAlign1DlgWindow ();
-extern void       CreateAlign2DlgWindow ();
-extern void       CreateAlign3DlgWindow ();
-extern void       CreateSearchDlgWindow ();
-extern void       CreateSaveAsDlgWindow ();
-extern void       CreateOpenDocDlgWindow ();
-extern void       CreateGraphicsDlgWindow ();
-extern void       CreateSaveListDlgWindow ();
-extern void       CreateCloseDocDlgWindow ();
-extern void       CreateLanguageDlgWindow ();
-extern void       CreateCharacterDlgWindow ();
-extern void       CreateAttributeDlgWindow ();
-extern void       CreateRuleDlgWindow ();
-extern void       CreateApplyClassDlgWindow ();
-extern void       CreateSpellCheckDlgWindow ();
-extern void       CreateMCHARDlgWindow ();
-extern void       CreateMathAttribDlgWindow ();
-extern void       CreateInitConfirmDlgWindow ();
-extern void       CreateInitConfirm3LDlgWindow ();
-extern void       CreateChangeFormatDlgWindow ();
-extern void       CreateGreekKeyboardDlgWindow ();
-extern void       CreateAuthenticationDlgWindow ();
-extern void       CreateBackgroundImageDlgWindow ();
-extern void       CreateMakeIDDlgWindow ();
-extern void       TtaHandleOneEvent ();
-extern ThotWindow TtaGetThotWindow ();
-extern BinFile    TtaReadOpen ();
-extern ThotWindow GetCurrentWindow ();
-extern void       WIN_DisplayWords ();
-extern void       KbdCallbackHandler ();
-extern void       CheckTtCmap ();
-#endif /* __STDC__ */
 
 #endif /* _WIN_FCT_ */
 

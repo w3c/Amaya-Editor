@@ -9,7 +9,6 @@
  * Module de manipulations des images abstraites.
  *
  * Authors: V. Quint (INRIA)
- *          C. Roisin (INRIA) - Columns and pages
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
@@ -23,6 +22,7 @@
 #define THOT_EXPORT extern
 #include "page_tv.h"
 #include "appdialogue_tv.h"
+#include "select_tv.h"
 
 #include "absboxes_f.h"
 #include "abspictures_f.h"
@@ -51,40 +51,30 @@
    le type de l'element de structure auquel correspond le  
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T*             AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
-
-#else  /* __STDC__ */
-CHAR_T*             AbsBoxType (pAb, origName)
-PtrAbstractBox      pAb;
-ThotBool		    origName;
-
-#endif /* __STDC__ */
-
 {
-   PtrElement       pEl;
-   CHAR_T*          text;
+  PtrElement       pEl;
+  CHAR_T*          text;
 
-   text = TtaAllocString (MAX_TXT_LEN);
-
-   if (pAb == NULL)
-      ustrcpy (text, TEXT(" "));
-   else
-     {
-	pEl = pAb->AbElement;
-	/* copie le nom du type d'element structure auquel appartient la boite */
-	if (origName)
-	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
-	else
-	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-	if (pAb->AbPresentationBox)
-	  /* Ajoute le nom du type de boite de presentation */
-	  {
-	     ustrcat (text, TEXT("."));
-	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
-	  }
-     }
-   return (text);
+  text = TtaAllocString (MAX_TXT_LEN);
+  if (pAb == NULL)
+    ustrcpy (text, TEXT(" "));
+  else
+    {
+      pEl = pAb->AbElement;
+      /* copie le nom du type d'element structure auquel appartient la boite */
+      if (origName)
+	ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+      else
+	ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+      if (pAb->AbPresentationBox)
+	/* Ajoute le nom du type de boite de presentation */
+	{
+	  ustrcat (text, TEXT("."));
+	  ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	}
+    }
+  return (text);
 }
 
 
@@ -93,13 +83,7 @@ ThotBool		    origName;
    FreeAbView libere, pour une seule vue, tous les paves englobes par le
    pave pointe par pAb, lui-meme compris.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeAbView (PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-void                FreeAbView (pAb, frame)
-PtrAbstractBox      pAb;
-int                 frame;
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pAbb, pAbbNext;
   PtrTextBuffer       pBT, pNextBT;
@@ -254,13 +238,7 @@ int                 frame;
    FreeAbEl libere, dans toutes les vues, tous les paves de      
    l'element pointe par pEl.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeAbEl (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                FreeAbEl (pEl, pDoc)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbb, pAbbNext;
    int                 v, asView;
@@ -311,35 +289,27 @@ PtrElement          pEl;
    FreeDeadAbstractBoxes libere tous les paves marques Mort dans le           
    sous-arbre de racine pAb.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeDeadAbstractBoxes (PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-void                FreeDeadAbstractBoxes (pAb, frame)
-PtrAbstractBox      pAb;
-int                 frame;
-#endif /* __STDC__ */
 {
-   PtrAbstractBox      pAbb, pAbbNext;
+  PtrAbstractBox      pAbb, pAbbNext;
 
-
-   if (pAb != NULL)
-     {
+  if (pAb != NULL)
+    {
       if (pAb->AbDead)
-	 FreeAbView (pAb, frame);
+	FreeAbView (pAb, frame);
       else
 	{
-	   pAbb = pAb->AbFirstEnclosed;
-	   /* teste tous les paves englobes */
-	   while (pAbb != NULL)
-	     {
-		pAbbNext = pAbb->AbNext;
-		FreeDeadAbstractBoxes (pAbb, frame);
-		pAbb = pAbbNext;
-	     }
+	  pAbb = pAb->AbFirstEnclosed;
+	  /* teste tous les paves englobes */
+	  while (pAbb != NULL)
+	    {
+	      pAbbNext = pAbb->AbNext;
+	      FreeDeadAbstractBoxes (pAbb, frame);
+	      pAbb = pAbbNext;
+	    }
 	}
-     }
+    }
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -348,14 +318,7 @@ int                 frame;
    en queue sinon.                                         
     pAbbRoot est une vraie racine de paves               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
-#else  /* __STDC__ */
-void                AddAbsBoxes (pAbbRoot, pDoc, head)
-PtrAbstractBox      pAbbRoot;
-PtrDocument         pDoc;
-ThotBool            head;
-#endif /* __STDC__ */
+void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 {
    PtrAbstractBox      pAb;
    PtrElement          pEl;
@@ -528,12 +491,7 @@ ThotBool            head;
    de page son traitees comme non-secables.                
    V4 : Les paves de page sont traites comme secables.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsBreakable (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-ThotBool            IsBreakable (pAb)
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
 {
    ThotBool            unbreakable;
    int                 index;
@@ -571,20 +529,10 @@ PtrAbstractBox      pAb;
    KillPresSibling detruit les paves de presentation crees par les   
    regles CreateBefore et CreateAfter de pAb.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         KillPresSibling (PtrAbstractBox pAbbSibling, ThotBool ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * pAbbR, PtrAbstractBox * pAbbReDisp, int *volsupp, PtrAbstractBox pAb, ThotBool exceptCrWith)
-#else  /* __STDC__ */
-static void         KillPresSibling (pAbbSibling, ElemIsBefore, pDoc, pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith)
-PtrAbstractBox      pAbbSibling;
-ThotBool            ElemIsBefore;
-PtrDocument         pDoc;
-PtrAbstractBox     *pAbbR;
-PtrAbstractBox     *pAbbReDisp;
-int                *volsupp;
-PtrAbstractBox      pAb;
-ThotBool            exceptCrWith;
-#endif /* __STDC__ */
-
+static void KillPresSibling (PtrAbstractBox pAbbSibling, ThotBool ElemIsBefore,
+			     PtrDocument pDoc, PtrAbstractBox * pAbbR,
+			     PtrAbstractBox * pAbbReDisp, int *volsupp,
+			     PtrAbstractBox pAb, ThotBool exceptCrWith)
 {
    ThotBool            stop;
 
@@ -623,18 +571,9 @@ ThotBool            exceptCrWith;
    Au retour volsupp indique le volume des paves de        
    presentation tues et pAbbReDisp le pave a reafficher.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         KillPresEnclosing (PtrAbstractBox pAb, ThotBool head, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp, int *volsupp, ThotBool exceptCrWith)
-#else  /* __STDC__ */
-static void         KillPresEnclosing (pAb, head, pDoc, pAbbReDisp, volsupp, exceptCrWith)
-PtrAbstractBox      pAb;
-ThotBool            head;
-PtrDocument         pDoc;
-PtrAbstractBox     *pAbbReDisp;
-int                *volsupp;
-ThotBool            exceptCrWith;
-#endif /* __STDC__ */
-
+static void KillPresEnclosing (PtrAbstractBox pAb, ThotBool head,
+			       PtrDocument pDoc, PtrAbstractBox * pAbbReDisp,
+			       int *volsupp, ThotBool exceptCrWith)
 {
    PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
    ThotBool            stop;
@@ -789,15 +728,7 @@ ThotBool            exceptCrWith;
    cette procedure est toujours appelee avec la racine de  
    la vue si le document est mis en pages.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head, int *dvol)
-#else  /* __STDC__ */
-static void         SupprAbsBoxes (pAbbRoot, pDoc, head, dvol)
-PtrAbstractBox      pAbbRoot;
-PtrDocument         pDoc;
-ThotBool            head;
-int                *dvol;
-#endif /* __STDC__ */
+static void  SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head, int *dvol)
 {
    PtrAbstractBox      pAb, pAbbSibling, pAbbReDisp, pAbbR;
    int                 volsupp, volpres;
@@ -914,15 +845,7 @@ int                *dvol;
    de la vue.                                              
      pAbbRoot est une vraie racine d'image abstraite        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddle, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         AddVolView (VolOpt, pAbbRoot, pElMiddle, pDoc)
-int                 VolOpt;
-PtrAbstractBox      pAbbRoot;
-PtrElement          pElMiddle;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddle, PtrDocument pDoc)
 {
    ThotBool            add, suppress, midHead, stop;
    int                 view, volprec, dvol;
@@ -1024,13 +947,7 @@ PtrDocument         pDoc;
    abstraites en conservant l'element pointe par pEl au    
    milieu (ou a peu pres) de l'image abstraite.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AdjustVolume (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                AdjustVolume (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
   int                 view;
 
@@ -1076,14 +993,7 @@ PtrDocument         pDoc;
   abstraite affichee dans ViewFrame.             
   On cree des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                IncreaseVolume (ThotBool head, int dVol, int frame)
-#else  /* __STDC__ */
-void                IncreaseVolume (head, dVol, frame)
-ThotBool            head;
-int                 dVol;
-int                 frame;
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
@@ -1151,15 +1061,7 @@ int                 frame;
   affichee dans frame.
   On supprime des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DecreaseVolume (ThotBool head, int dVol, int frame)
-#else  /* __STDC__ */
-void                DecreaseVolume (head, dVol, frame)
-ThotBool            head;
-int                 dVol;
-int                 frame;
-#endif /* __STDC__ */
-
 {
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
@@ -1222,17 +1124,7 @@ int                 frame;
    place cet element au milieu de l'image creee.           
    Si affiche est Vrai, l'image est reaffichee.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
-#else  /* __STDC__ */
-void                CheckAbsBox (pEl, view, pDoc, begin, display)
-PtrElement          pEl;
-int                 view;
-PtrDocument         pDoc;
-ThotBool            begin;
-ThotBool            display;
-
-#endif /* __STDC__ */
+void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
 {
   ThotBool            openedView, creation, stop;
   PtrElement          pElAscent, pElPage;
@@ -1628,17 +1520,9 @@ ThotBool            display;
    le pave pAbbLast.                                    
    volTree: le volume total de l'arbre abstrait.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *volBefore, int *volAfter, int *volTree)
-#else  /* __STDC__ */
-void                VolumeTree (pAbbRoot, pAbbFirst, pAbbLast, volBefore, volAfter, volTree)
-PtrAbstractBox      pAbbRoot;
-PtrAbstractBox      pAbbFirst;
-PtrAbstractBox      pAbbLast;
-int                *volBefore;
-int                *volAfter;
-int                *volTree;
-#endif /* __STDC__ */
+void  VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst,
+		  PtrAbstractBox pAbbLast, int *volBefore, int *volAfter,
+		  int *volTree)
 {
   PtrElement          pEl;
   
@@ -1715,15 +1599,7 @@ int                *volTree;
    Si distance = 0, on fait afficher le debut de l'arbre.  
    Si distance = 100, on fait afficher la fin de l'arbre.  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                JumpIntoView (int frame, int distance)
-
-#else  /* __STDC__ */
-void                JumpIntoView (frame, distance)
-int                 frame;
-int                 distance;
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   int                 view;
@@ -1833,7 +1709,7 @@ int                 distance;
 		  position = 2;
 		  pAb = pAbbRoot;
 		}
-	      else if (pEl != NULL)
+	      else if (pEl)
 		/* boite de l'element au milieu de la fenetre */
 		{
 		  if (pEl->ElAbstractBox[view - 1] == NULL)
@@ -1844,13 +1720,20 @@ int                 distance;
 		    pAb = pEl->ElAbstractBox[view - 1];
 		  position = 1;
 		}
-	      if (pAb != NULL && ThotLocalActions[T_showbox] != NULL)
-		(*ThotLocalActions[T_showbox]) (frame, pAb->AbBox, position, 0);
-	      
-	      /* Allume la selection */
-	      HighlightSelection (FALSE, TRUE);
+	      if (pAb)
+		{
+		  if (ThotLocalActions[T_showbox])
+		    (*ThotLocalActions[T_showbox]) (frame, pAb->AbBox, position, 0);
+		  
+		  /* update the selection */
+		  if (pDoc == SelectedDocument)
+		    ShowSelection (SelectedDocument->DocViewRootAb[view], FALSE);
+		}
 	    }
 	}
     }
 }
+
+
+
 

@@ -159,639 +159,11 @@ void                TtaRefresh ()
 
 
 /*----------------------------------------------------------------------
-   RedrawFilledBoxes redraw from top to bottom all filled boxes.
-   Clipping is done by xmin, xmax, ymin, ymax.
-  ----------------------------------------------------------------------*/
-static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, int ymax)
-{
-  PtrAbstractBox      pAb, pAbChild;
-  PtrBox              pBox, pBoxChild;
-  ViewFrame          *pFrame;
-  PictInfo           *imageDesc;
-  PictureScaling      picPresent;
-  int                 x, y;
-  int                 xd, yd;
-  int                 xorg, yorg;
-  int                 width, height;
-  
-  pFrame = &ViewFrameTable[frame - 1];
-  pAb = pFrame->FrAbstractBox;
-  x = pFrame->FrXOrg;
-  y = pFrame->FrYOrg;
-  pBox = pAb->AbBox;
-  if (pBox == NULL)
-    return;
-
-  GetSizesFrame (frame, &width, &height);
-  xd = xmin;
-  yd = ymin;
-  /* clipping on the origin */
-  /* clipping on the width */
-  if (xd + width > xmax)
-    width = xmax - xd;
-  /* clipping on the height */
-  if (yd + height > ymax)
-    height = ymax - yd;
-  if (pAb->AbFillBox)
-    {
-      /* paint the whole window */
-      /* todo: clip when backgroud will be printed */
-      DrawRectangle (frame, 0, 0,
-		     xd - x, yd - y, width, height, pAb->AbForeground,
-		     pAb->AbBackground, pAb->AbFillPattern);
-    }
-  imageDesc = (PictInfo *) pAb->AbPictBackground;
-  if (imageDesc && imageDesc->PicHeight && imageDesc->PicWidth)
-    {
-      xorg = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-      yorg = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-      /* the default presentation is repeat */
-      picPresent = imageDesc->PicPresent;
-      if (picPresent == DefaultPres)
-	picPresent = FillFrame;
-
-      /* check the visibility of the background image */
-      if (picPresent == FillFrame)
-	{
-	  while (xorg + imageDesc->PicWidth < xmin)
-	    xorg += imageDesc->PicWidth;
-	  xd = xorg;
-	  width = width + xmin - xorg;
-	  while (yorg + imageDesc->PicHeight < ymin)
-	    yorg += imageDesc->PicHeight;
-	  yd = yorg + FrameTable[frame].FrTopMargin;
-	  height = height + ymin - yorg;
-	}
-      if (picPresent == YRepeat || picPresent == RealSize)
-	{
-	  xd = xorg;
-	  if (xmin >= xorg + imageDesc->PicWidth)
-	    width = 0;
-	  else
-	    width = width + xmin - xorg;
-	}
-      if (picPresent == XRepeat || picPresent == RealSize)
-	{
-	  yd = yorg + FrameTable[frame].FrTopMargin;
-	  if (ymin >= yorg + imageDesc->PicHeight || pAb->AbTruncatedHead)
-	    height = 0;
-	  else
-	    height = height + ymin - yorg;
-	}
-
-      if (width > 0 && height > 0)
-	DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
-    }
-  
-  /* Background and borders of leaf boxes are managed by DisplayBox */
-  while (pBox->BxNextBackground != NULL)
-    {
-      pBox = pBox->BxNextBackground;
-      pAb = pBox->BxAbstractBox;
-      if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
-	{
-	if (pBox->BxType == BoGhost)
-	  {
-	    /* see child elements */
-	    pAbChild = pAb->AbFirstEnclosed;
-	    while (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox->BxType == BoGhost)
-	      pAbChild = pAbChild->AbFirstEnclosed;
-	    if (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox != NULL)
-	      {
-		pBoxChild = pAbChild->AbBox;
-		/* if the box is split take child boxes */
-		if (pBoxChild->BxType == BoSplit)
-		  pBoxChild = pBoxChild->BxNexChild;
-		do
-		  {
-		    xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin;
-		    yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin;
-		    width = pBoxChild->BxWidth - pBoxChild->BxLMargin - pBoxChild->BxRMargin;
-		    height = pBoxChild->BxHeight - pBoxChild->BxTMargin - pBoxChild->BxBMargin;
-		    /* clipping on the origin */
-		    if (xd < x)
-		      {
-			width = width - x + xd;
-			xd = x;
-		      }
-		    if (yd < y)
-		      {
-			height = height - y + yd;
-			yd = y;
-		      }
-		    /* clipping on the width */
-		    if (xd + width > xmax)
-		      width = xmax - xd;
-		    /* clipping on the height */
-		    if (yd + height > ymax)
-		      height = ymax - yd;
-		    
-		    if (yd + height >= ymin && yd <= ymax &&
-			xd + width >= xmin && xd <= xmax)
-		      {
-			DisplayBorders (pBoxChild, frame, xd - x, yd - y, width, height);
-			/* draw over the padding */
-			xd = pBoxChild->BxXOrg + pBoxChild->BxLMargin + pBoxChild->BxLBorder;
-			yd = pBoxChild->BxYOrg + pBoxChild->BxTMargin + pBoxChild->BxTBorder;
-			width = pBoxChild->BxW + pBoxChild->BxLPadding + pBoxChild->BxRPadding;
-			height = pBoxChild->BxH + pBoxChild->BxTPadding + pBoxChild->BxBPadding;
-			/* clipping on the origin */
-			if (xd < x)
-			  {
-			    width = width - x + xd;
-			    xd = x;
-			  }
-			if (yd < y)
-			  {
-			    height = height - y + yd;
-			    yd = y;
-			  }
-			/* clipping on the width */
-			if (xd + width > xmax)
-			  width = xmax - xd;
-			/* clipping on the height */
-			if (yd + height > ymax)
-			  height = ymax - yd;
-			imageDesc = (PictInfo *) pAb->AbPictBackground;
-			if (imageDesc)
-			  {
-			    /* the default presentation is repeat */
-			    picPresent = imageDesc->PicPresent;
-			    if (picPresent == DefaultPres)
-			      picPresent = FillFrame;
-			    if (picPresent == YRepeat ||
-				picPresent == FillFrame ||
-				(picPresent == XRepeat && !pAb->AbTruncatedHead))
-			      DrawPicture (pBoxChild, imageDesc, frame, xd - x, yd - y, width, height);
-			  }
-			else
-			  DrawRectangle (frame, 0, 0,
-					 xd - x, yd - y,
-					 width, height, pAb->AbForeground,
-					 pAb->AbBackground, pAb->AbFillPattern);
-		      }
-		    pBoxChild = pBoxChild->BxNext;
-		  }
-		while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
-	      }
-	  }
-	else
-	  {
-	    xd = pBox->BxXOrg + pBox->BxLMargin;
-	    yd = pBox->BxYOrg + pBox->BxTMargin;
-	    width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
-	    height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
-	    /* clipping on the origin */
-	    if (xd < x)
-	      {
-		width = width - x + xd;
-		xd = x;
-	      }
-	    if (yd < y)
-	      {
-		height = height - y + yd;
-		yd = y;
-	      }
-	    /* clipping on the width */
-	    if (xd + width > xmax)
-	      width = xmax - xd + 1;
-	    /* clipping on the height */
-	    if (yd + height > ymax)
-	      height = ymax - yd + 1;
-	    
-	    if (yd + height >= ymin && yd <= ymax &&
-		xd + width >= xmin && xd <= xmax)
-	      {
-		DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
-		/* draw over the padding */
-		xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
-		yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
-		width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
-		height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
-		/* clipping on the origin */
-		if (xd < x)
-		  {
-		    width = width - x + xd;
-		    xd = x;
-		  }
-		if (yd < y)
-		  {
-		    height = height - y + yd;
-		    yd = y;
-		  }
-		/* clipping on the width */
-		if (xd + width > xmax)
-		  width = xmax - xd + 1;
-		/* clipping on the height */
-		if (yd + height > ymax)
-		  height = ymax - yd + 1;
-		imageDesc = (PictInfo *) pAb->AbPictBackground;
-		if (imageDesc)
-		  {
-		    /* the default presentation is repeat */
-		    picPresent = imageDesc->PicPresent;
-		    if (picPresent == DefaultPres)
-		      picPresent = FillFrame;
-		    if (picPresent == YRepeat || picPresent == FillFrame ||
-			(picPresent == XRepeat && !pAb->AbTruncatedHead))
-		      DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y,
-				   width, height);
-		    else if (!pAb->AbTruncatedHead)
-		      /* the clipping will work automatically */
-		      DrawPicture (pBox, imageDesc, frame,
-				   pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
-				   pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
-				   pBox->BxW, pBox->BxH);
-		  }
-		else
-		  DrawRectangle (frame, 0, 0, xd - x, yd - y,
-				 width, height, pAb->AbForeground,
-				 pAb->AbBackground, pAb->AbFillPattern);
-	      }
-	  }
-	}
-    }
-}
-
-
-/*----------------------------------------------------------------------
-   RedrawFrameTop redraw from bottom to top a frame.
-   The scroll parameter indicates the height of a scroll
-   back which may take place before recomputing the abstract
-   image.
-   The area is cleaned before redrawing.
-   The origin coordinates of the abstract boxes are expected
-   to be already computed.
-   Return non zero if new abstract boxes were added in order
-   to build the corresponding abstract image.
-  ----------------------------------------------------------------------*/
-ThotBool            RedrawFrameTop (int frame, int scroll)
-{
-   PtrBox              pBox;
-   PtrBox              pTopBox, pBottomBox;
-   PtrBox              pFirstBox;
-   PtrBox              pRootBox;
-   ViewFrame          *pFrame;
-   int                 y, x, vol, h, l;
-   int                 height, bottom;
-   int                 framexmin;
-   int                 framexmax;
-   int                 frameymin;
-   int                 frameymax;
-   int                 plane, delta;
-   int                 nextplane;
-   ThotBool            isbelow;
-   ThotBool            toadd;
-
-   /* are new abstract boxes needed */
-   toadd = FALSE;
-
-   pFrame = &ViewFrameTable[frame - 1];
-   GetSizesFrame (frame, &l, &h);
-   if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
-     return toadd;
-   else if (pFrame->FrClipXBegin < pFrame->FrClipXEnd
-	    && pFrame->FrClipYBegin < pFrame->FrClipYEnd
-	    && pFrame->FrXOrg < pFrame->FrClipXEnd
-	    && pFrame->FrYOrg - scroll < pFrame->FrClipYEnd
-	    && pFrame->FrXOrg + l > pFrame->FrClipXBegin
-	    && pFrame->FrYOrg - scroll + h > pFrame->FrClipYBegin)
-     {
-	pFrame->FrYOrg -= scroll;
-	framexmin = pFrame->FrClipXBegin;
-	framexmax = pFrame->FrClipXEnd;
-	frameymin = pFrame->FrClipYBegin;
-	frameymax = pFrame->FrClipYEnd;
-	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	height = pFrame->FrYOrg;
-	bottom = height + h;
-
-	/* Is there a need to redisplay part of the frame ? */
-	if (framexmin < framexmax && frameymin < frameymax)
-	  {
-	     /* Search the first visible box starting from the */
-	     /* bottom, i.e. the last box drawn                */
-	     pBox = pFrame->FrAbstractBox->AbBox->BxPrevious;
-	     if (pBox == NULL)
-		/* empty document */
-		pBox = pFrame->FrAbstractBox->AbBox;
-	     isbelow = TRUE;
-	     pTopBox = NULL;
-	     pBottomBox = NULL;
-	     vol = 0;
-	     /* half a frame under the bottom of the window */
-	     delta = bottom + h / 2;
-	     while (isbelow)
-	       {
-		  if (pBox->BxYOrg < bottom)
-		     isbelow = FALSE;
-		  else
-		    {
-		       if (pBox->BxYOrg > delta)
-			 {
-			  if (pBox->BxType != BoPiece && pBox->BxType != BoDotted)
-			     /* this is not a breaking box */
-			     vol += pBox->BxAbstractBox->AbVolume;
-			  else if (pBox->BxAbstractBox->AbBox->BxNexChild == pBox)
-			     /* this is the first breaking box */
-			     vol += pBox->BxAbstractBox->AbVolume;
-			 }
-		       if (pBox->BxPrevious == NULL)
-			  isbelow = FALSE;
-                       else
-			 {
-			   y = pBox->BxYOrg + pBox->BxHeight;
-			   /* add the filling of the end of the block */
-			   x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
-			   if ((pBox->BxType == BoPicture) &&
-			       !((y >= pFrame->FrYOrg)     &&
-				 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-				 (x >= pFrame->FrXOrg)                  &&
-				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
-			 }
-		       if (pBox->BxPrevious == pBox)
-			 /* detect cycles */
-			 pBox = NULL;
-		       else
-			 pBox = pBox->BxPrevious;
-		    }
-	       }
-
-	     /* Redraw from top to bottom all filled boxes */
-	     RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
-	     /* paint the background of all selected boxes */
-	     DisplayBgSelection (frame, pFrame->FrAbstractBox);
-	     /* Display planes in reverse order from biggest to lowest */
-	     plane = 65536;
-	     nextplane = plane - 1;
-#ifdef IV
-	     pFirstBox = pBox;
-#else
-	     pFirstBox = pFrame->FrAbstractBox->AbBox;
-	     if (pFirstBox->BxNext)
-	       pFirstBox = pFirstBox->BxNext;
-#endif /* IV */
-	     while (plane != nextplane)
-		/* there is a new plane to display */
-	       {
-		  plane = nextplane;
-		  pBox = pFirstBox;
-		  /* browse all the boxes */
-
-		  /* Draw all the boxes not yet displayed */
-		  while (pBox != NULL)
-		    {
-		       if (pBox->BxAbstractBox->AbDepth == plane)
-			  /* The box is drawn in the current plane */
-			 {
-			    y = pBox->BxYOrg + pBox->BxHeight;
-			    /* add the filling of the end of the block */
-			    x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
-
-			    /* Save the box on top or the first not visible */
-			    if (y > height && pBox->BxYOrg < bottom)
-			      {
-				 if (pBottomBox == NULL)
-				    pBottomBox = pBox;
-				 pTopBox = pBox;
-			      }
-
-			    if (y >= frameymin
-				&& pBox->BxYOrg <= frameymax
-				&& x >= framexmin
-				&& pBox->BxXOrg <= framexmax)
-			      DisplayBox (pBox, frame, framexmin, framexmax, frameymin, frameymax);
-                            else if (pBox->BxType == BoPicture)
-			      {
-				if (!((y >= pFrame->FrYOrg) &&
-				      (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-				      (x >= pFrame->FrXOrg) &&
-				      (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-				  UnmapImage ((PictInfo *)pBox->BxPictInfo);
-				else if (((PictInfo *)pBox->BxPictInfo)->PicType >= PLUGIN_FORMAT)
-				  /* redisplay plugins */
-				  DisplayBox (pBox, frame, framexmin, framexmax, frameymin, frameymax);
-			      }
-#ifdef IV
-			    /* Skip to next box */
-			    if (pBox->BxPrevious == pBox)
-			      /* detect cycles */
-			      pBox = NULL;
-			    else
-			      pBox = pBox->BxPrevious;
-#else
-			    if (pBox->BxNext == pBox)
-			      /* detect cycles */
-			      pBox = NULL;
-			    else
-			      pBox = pBox->BxNext;
-#endif /* IV */
-			 }
-		       else if (pBox->BxAbstractBox->AbDepth < plane)
-			 {
-			    /* keep the lowest value for plane depth */
-			    if (plane == nextplane)
-			       nextplane = pBox->BxAbstractBox->AbDepth;
-			    else if (pBox->BxAbstractBox->AbDepth > nextplane)
-			       nextplane = pBox->BxAbstractBox->AbDepth;
-#ifdef IV
-			    if (pBox->BxPrevious == pBox)
-			      /* detect cycles */
-			      pBox = NULL;
-			    else
-			      pBox = pBox->BxPrevious;
-#else
-			    if (pBox->BxNext == pBox)
-			      /* detect cycles */
-			      pBox = NULL;
-			    else
-			      pBox = pBox->BxNext;
-#endif /* IV */
-			 }
-#ifdef IV
-		       else if (pBox->BxPrevious == pBox)
-			 /* detect cycles */
-			 pBox = NULL;
-		       else
-			  pBox = pBox->BxPrevious;
-#else
-		       else if (pBox->BxNext == pBox)
-			 /* detect cycles */
-			 pBox = NULL;
-		       else
-			 pBox = pBox->BxNext;
-#endif /* IV */
-		    }
-	       }
-
-	     /* The updated area is redrawn */
-	     DefClip (frame, 0, 0, 0, 0);
-	     RemoveClipping (frame);
-
-	     /* If needed complete the partial existing image */
-	     pRootBox = pFrame->FrAbstractBox->AbBox;
-	     if (!FrameUpdating && !TextInserting)
-	       {
-		  /* The concrete image is being filled */
-		  FrameUpdating = TRUE;
-
-		  /* Abstract image overflow of half a frame both on top and bottom */
-		  y = height - pRootBox->BxYOrg;
-		  delta = h / 2;
-
-		  if (vol > 0 && y > delta)
-		     /* Compute the volume to remove */
-		    {
-		       pBox = pRootBox->BxNext;
-		       height -= delta;
-		       y = 0;
-		       while (pBox != NULL)
-			 {
-			    pBottomBox = pBox;
-			    if (pBottomBox->BxYOrg + pBottomBox->BxHeight > height)
-			       pBox = NULL;
-			    else
-			      {
-				 pBox = pBox->BxNext;
-				 if (pBottomBox->BxType != BoPiece && pBottomBox->BxType != BoDotted)
-				    y += pBottomBox->BxAbstractBox->AbVolume;
-				 else if (pBottomBox->BxNexChild == NULL)
-				    y += pBottomBox->BxAbstractBox->AbVolume;
-			      }
-			 }
-		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
-		    }
-
-		  /* It lacks some abtract image at the top of the frame */
-		  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
-		    {
-		       /* Free abstract boxes at the bottom */
-		       if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
-			 {
-			    DecreaseVolume (FALSE, vol, frame);
-			    DefClip (frame, 0, 0, 0, 0);
-			    /* Fill on top, so shift the whole concrete image */
-			 }
-
-		       /* Volume to add */
-		       if (pFrame->FrAbstractBox == NULL)
-			 {
-			    printf ("ERR: No more abastract boxes in %d\n", frame);
-			    vol = -pFrame->FrVolume;
-			 }
-		       else
-			  vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
-
-		       /* Height to add */
-		       delta -= y;
-		       if (vol <= 0)
-			 {
-			    /* volume of the area to add */
-			    vol = delta * l;
-			    /* convert in number of chars */
-			    vol = GetCharsCapacity (vol);
-			 }
-		       if (pTopBox != NULL)
-			 {
-			    y = pTopBox->BxYOrg;
-
-			    /* previous frame limit */
-			    delta = y + pTopBox->BxHeight;
-			 }
-		       IncreaseVolume (TRUE, vol, frame);
-
-		       /* Need to add abstract boxes */
-		       toadd = TRUE;
-
-		       /* Recompute the loaction of the frame in the abstract image */
-		       if (pTopBox != NULL)
-			 {
-			    y = -y + pTopBox->BxYOrg;
-
-			    /* y equal the shift of previous first box */
-			    /* What's already displayed is related to this */
-			    /* previous first box location */
-			    pFrame->FrYOrg += y;
-
-			    /* delta equal the limit of redrawing after shifting */
-			    if (y > 0)
-			       delta = pTopBox->BxYOrg + pTopBox->BxHeight;
-
-			    /* new limit */
-			    pFrame->FrClipYEnd = delta;
-			 }
-		       else
-			  /* No previous box. The frame is drawn */
-			  /* on top of the concrete image */
-			  pFrame->FrYOrg = 0;
-
-		       /* Image should be complete */
-		       FrameUpdating = FALSE;
-		       isbelow = RedrawFrameTop (frame, 0);
-		    }
-
-		  /* A piece of the concrete image lack at the bottom */
-		  else if (pFrame->FrAbstractBox->AbTruncatedTail &&
-			   (bottom > pRootBox->BxYOrg + pRootBox->BxHeight ||
-			    (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-			     pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-			     !pRootBox->BxContentHeight)))
-		    {
-		       y = pRootBox->BxYOrg + pRootBox->BxHeight;
-
-		       /* volume of the area to add */
-		       vol = (bottom - y) * l;
-
-		       /* convert in number of chars */
-		       vol = GetCharsCapacity (vol);
-
-		       /* cleanup the bottom of the frame */
-		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
-
-		       /* don't loop is volume didn't change */
-		       y = pFrame->FrAbstractBox->AbVolume;
-		       IncreaseVolume (FALSE, vol, frame);
-		       y -= pFrame->FrAbstractBox->AbVolume;
-
-		       /* Image should be complete */
-		       FrameUpdating = FALSE;
-
-		       if (y == 0)
-			  printf ("ERR: Nothing to add\n");
-		       else
-			  /* Maybe image is not complete yet */
-			  isbelow = RedrawFrameBottom (frame, 0, NULL);
-		    }
-
-		  /* Volume computed is sufficient */
-		  else
-		     pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-
-		  /* update of image is finished */
-		  FrameUpdating = FALSE;
-	       }
-	  }
-	else
-	   /* The nodified area is not visible */
-	   DefClip (frame, 0, 0, 0, 0);
-     }
-   else
-     {
-	/* Nothing to draw */
-	DefClip (frame, 0, 0, 0, 0);
-	RemoveClipping (frame);
-     }
-   return toadd;
-}
-
-
-/*----------------------------------------------------------------------
    AddBoxToCreate store in adbloc the list of child boxes to be created,
    from the most englobing box down to pBox itself.
    It ensure unicity of boxes referenced in adbloc.
   ----------------------------------------------------------------------*/
-static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
+static void    AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
 {
   PtrAbstractBox      pAb;
   int                 i;
@@ -809,11 +181,11 @@ static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
 	  if (pAb->AbLeafType != LtGraphics || pAb->AbShape != 'g')
 	    pAb = NULL;
 	}
-      else if ((pAb->AbHorizPos.PosUserSpecified)
-	       || (pAb->AbVertPos.PosUserSpecified)
-	       || (pAb->AbWidth.DimUserSpecified)
-	       || (pAb->AbHeight.DimUserSpecified))
-	i = 1;
+      else if (pAb->AbHorizPos.PosUserSpecified ||
+	       pAb->AbVertPos.PosUserSpecified ||
+	       pAb->AbWidth.DimUserSpecified ||
+	       pAb->AbHeight.DimUserSpecified)
+      i = 1;
       else
 	pAb = pAb->AbEnclosing;
     }
@@ -821,12 +193,447 @@ static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
    /* There is an englobing abstract box */
    if (pAb != NULL)
       AddBoxToCreate (tocreate, pAb->AbBox, frame);
-
    /* Add this box to create, if there is no englobing box */
    /* already registered and if this box is visible.       */
-   if (*tocreate == NULL
-       && pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
+   if (*tocreate == NULL &&
+       pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       *tocreate = pBox;
+}
+
+
+/*----------------------------------------------------------------------
+  DrawFilledBox draws a box with background or borders.
+   Clipping is done by xmin, xmax, ymin, ymax.
+  ----------------------------------------------------------------------*/
+static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+  PtrBox              pBox;
+  ViewFrame          *pFrame;
+  PictInfo           *imageDesc;
+  PictureScaling      picPresent;
+  int                 x, y;
+  int                 xd, yd;
+  int                 width, height;
+ 
+  pBox = pAb->AbBox;
+  if (pBox->BxType == BoGhost)
+    return;
+  pFrame = &ViewFrameTable[frame - 1];
+  x = pFrame->FrXOrg;
+  y = pFrame->FrYOrg;
+  if (pBox == NULL)
+    return;
+  xd = pBox->BxXOrg + pBox->BxLMargin;
+  yd = pBox->BxYOrg + pBox->BxTMargin;
+  /* GetSizesFrame (frame, &width, &height); */
+  width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
+  height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
+  /* clipping on the origin */
+  if (xd < x)
+    {
+      width = width - x + xd;
+      xd = x;
+    }
+  if (yd < y)
+    {
+      height = height - y + yd;
+      yd = y;
+    }
+  /* clipping on the width */
+  if (xd + width > xmax)
+    width = xmax - xd + 1;
+  /* clipping on the height */
+  if (yd + height > ymax)
+    height = ymax - yd + 1;
+  
+  if (yd + height >= ymin && yd <= ymax &&
+      xd + width >= xmin && xd <= xmax)
+    {
+      DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
+      /* draw over the padding */
+      xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
+      width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
+      height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
+      /* clipping on the origin */
+      if (xd < x)
+	{
+	  width = width - x + xd;
+	  xd = x;
+	}
+      if (yd < y)
+	{
+	  height = height - y + yd;
+	  yd = y;
+	}
+      /* clipping on the width */
+      if (xd + width > xmax)
+	width = xmax - xd + 1;
+      /* clipping on the height */
+      if (yd + height > ymax)
+	height = ymax - yd + 1;
+      imageDesc = (PictInfo *) pAb->AbPictBackground;
+      if (pAb->AbSelected)
+	/* draw the box background */
+	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
+      else
+	{
+	  if (pBox->BxFill)
+	    /* draw the box background */
+	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
+			   pAb->AbForeground, pAb->AbBackground, pAb->AbFillPattern);
+	  if (imageDesc)
+	    {
+	      /* draw the background image the default presentation is repeat */
+	      picPresent = imageDesc->PicPresent;
+	      if (picPresent == DefaultPres)
+		picPresent = FillFrame;
+	      if (picPresent == YRepeat || picPresent == FillFrame ||
+		  (picPresent == XRepeat && !pAb->AbTruncatedHead))
+		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
+	      else if (!pAb->AbTruncatedHead)
+		/* the clipping will work automatically */
+		DrawPicture (pBox, imageDesc, frame,
+			     pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
+			     pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
+			     pBox->BxW, pBox->BxH);
+	    }
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  DisplayAllBoxes crosses the Abstract tree from top to bottom
+  and left to rigth to display all visible boxes.
+  Parameters xmin, xmax, ymin, ymax give the clipped area.
+  The parameter create returns the box that must be interactively
+  created by the user.
+  tVol and bVol return the volume of not displayed boxes on thetop and
+  on the bottom of the window.
+  ----------------------------------------------------------------------*/
+PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax, PtrBox *create, int *tVol, int *bVol)
+{
+  PtrAbstractBox      pAb, specAb;
+  PtrBox              pBox, box;
+  PtrBox              topBox;
+  ViewFrame          *pFrame;
+  PictInfo           *imageDesc;
+  int                 plane;
+  int                 nextplane;
+  int                 winTop, winBottom;
+  int                 bt, bb;
+  int                 l, h;
+  ThotBool            userSpec;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  pAb = pFrame->FrAbstractBox;
+  GetSizesFrame (frame, &l, &h);
+  winTop = pFrame->FrYOrg;
+  winBottom = winTop + h;
+  pBox = pAb->AbBox;
+  *tVol = *bVol = 0;
+  if (pBox == NULL)
+    return NULL;
+  /* Display planes in reverse order from biggest to lowest */
+  plane = 65536;
+  nextplane = plane - 1;
+  topBox = NULL;
+  pAb = pFrame->FrAbstractBox;
+  if (pBox->BxDisplay || pAb->AbSelected)
+    DrawFilledBox (pAb, frame, xmin, xmax, ymin, ymax);
+  while (plane != nextplane)
+    /* there is a new plane to display */
+    {
+      plane = nextplane;
+      /* Draw all the boxes not yet displayed */
+      pAb = pFrame->FrAbstractBox;
+      while (pAb)
+	{
+	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox)
+	    {
+	      /* box in the current plane */
+	      pBox = pAb->AbBox;
+	      if (pAb->AbLeafType == LtCompound)
+		{
+		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
+		      (pBox->BxDisplay || pAb->AbSelected))
+		    DrawFilledBox (pAb, frame, xmin, xmax, ymin, ymax);
+		}
+	      else
+		{
+		  /* look for the box displayed at the top of the window */
+		  if (pBox->BxType == BoSplit)
+		    {
+		      /* the box itself doen't give right positions */
+		      box = pBox->BxNexChild;
+		      bt = box->BxYOrg;
+		      while (box->BxNexChild)
+			box = box->BxNexChild;
+		      bb = box->BxYOrg + box->BxHeight;
+		    }
+		  else
+		    {
+		      bt = pBox->BxYOrg;
+		      bb = pBox->BxYOrg + pBox->BxHeight;
+		    }
+		  if (bb < winTop)
+		    /* the box is not visible */
+		    *tVol = *tVol + pBox->BxAbstractBox->AbVolume;
+		  else if (bt > winBottom)
+		    /* the box is not visible */
+		    *bVol = *bVol + pBox->BxAbstractBox->AbVolume;
+		  else
+		    {
+		      if (pBox->BxType == BoSplit)
+			/* the box itself doen't give right positions */
+			box = pBox->BxNexChild;
+		      else
+			box = pBox;
+		      if (topBox == NULL)
+			topBox = box;
+		      else if (box->BxYOrg < topBox->BxYOrg)
+			topBox = box;
+		      userSpec = FALSE;
+		      if (pBox->BxNew)
+			{
+			  /* this is a new box */
+			  pBox->BxNew = 0;
+			  specAb = pAb;
+			  while (!userSpec && specAb)
+			    {
+			      if (specAb->AbWidth.DimIsPosition ||
+				  specAb->AbHeight.DimIsPosition)
+				specAb = NULL;
+			      else if (specAb->AbHorizPos.PosUserSpecified ||
+				       specAb->AbVertPos.PosUserSpecified ||
+				       specAb->AbWidth.DimUserSpecified ||
+				       specAb->AbHeight.DimUserSpecified)
+				{
+				  /* one paramater is given by the user */
+				  AddBoxToCreate (create, specAb->AbBox, frame);
+				  userSpec = TRUE;
+				}
+			      else
+				specAb = specAb->AbEnclosing;
+			    }
+			}
+		      if (!userSpec)
+			{
+			  if (pBox->BxType == BoSplit)
+			    while (pBox->BxNexChild)
+			      {
+				pBox = pBox->BxNexChild;
+				if (pBox->BxYOrg + pBox->BxHeight >= ymin  &&
+				    pBox->BxYOrg <= ymax && 
+				    pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
+				    pBox->BxXOrg <= xmax)
+				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+			      }
+			  else if (bb >= ymin  &&
+				   bt <= ymax && 
+				   pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
+				   pBox->BxXOrg <= xmax)
+			    DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+			  else if (pBox->BxType == BoPicture)
+			    {
+			      imageDesc = (PictInfo *)pBox->BxPictInfo;
+			      if (bb < winTop ||
+				  bt > winBottom ||
+				  pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc < pFrame->FrXOrg ||
+				  pBox->BxXOrg > pFrame->FrXOrg + l)
+				UnmapImage (imageDesc);
+			      else if (imageDesc->PicType >= PLUGIN_FORMAT)
+				/* redisplay plugins */
+				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+			    }
+			}
+		    }
+		}
+	    }
+	  else if (pAb->AbDepth < plane)
+	    {
+	      /* keep the lowest value for plane depth */
+	      if (plane == nextplane)
+		nextplane = pAb->AbDepth;
+	      else if (pAb->AbDepth > nextplane)
+		nextplane = pAb->AbDepth;
+	    }
+	  /* get next abstract box */
+	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+	    /* get the first child */
+	    pAb = pAb->AbFirstEnclosed;
+	  else if (pAb->AbNext)
+	    /* get the next sibling */
+	    pAb = pAb->AbNext;
+	  else
+	    {
+	      /* go up in the tree */
+	      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
+		pAb = pAb->AbEnclosing;
+	      pAb = pAb->AbEnclosing;
+	      if (pAb)
+		pAb = pAb->AbNext;
+	    }
+	}
+    }
+  return topBox;
+}
+
+/*----------------------------------------------------------------------
+   RedrawFrameTop redraw from bottom to top a frame.
+   The scroll parameter indicates the height of a scroll
+   back which may take place before recomputing the abstract
+   image.
+   The area is cleaned before redrawing.
+   The origin coordinates of the abstract boxes are expected
+   to be already computed.
+   Return non zero if new abstract boxes were added in order
+   to build the corresponding abstract image.
+  ----------------------------------------------------------------------*/
+ThotBool            RedrawFrameTop (int frame, int scroll)
+{
+  PtrBox              topBox;
+  PtrBox              create;
+  PtrBox              pRootBox;
+  ViewFrame          *pFrame;
+  int                 y, tVol, bVol, h, l;
+  int                 top, bottom;
+  int                 xmin;
+  int                 xmax;
+  int                 ymin;
+  int                 ymax;
+  int                 delta;
+  ThotBool            toadd;
+
+  /* are new abstract boxes needed */
+  toadd = FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
+  GetSizesFrame (frame, &l, &h);
+  xmin = pFrame->FrClipXBegin;
+  xmax = pFrame->FrClipXEnd;
+  ymin = pFrame->FrClipYBegin;
+  ymax = pFrame->FrClipYEnd;
+  if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
+    return toadd;
+  else if (xmin < xmax && ymin < ymax &&
+	   pFrame->FrXOrg < xmax &&
+	   pFrame->FrYOrg - scroll < ymax &&
+	   pFrame->FrXOrg + l > xmin &&
+	   pFrame->FrYOrg - scroll + h > ymin)
+    {
+      pFrame->FrYOrg -= scroll;
+      top = pFrame->FrYOrg;
+      bottom = top + h;
+      /* used to store boxes created on the fly */
+      create = NULL;
+      tVol = bVol = 0;
+      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+		      &xmin, &ymin, &xmax, &ymax, 1);
+
+      /* Is there a need to redisplay part of the frame ? */
+      if (xmin < xmax && ymin < ymax)
+	topBox = DisplayAllBoxes (frame, xmin, xmax, ymin, ymax, &create, &tVol, &bVol);
+	  
+      /* The updated area is redrawn */
+      DefClip (frame, 0, 0, 0, 0);
+      RemoveClipping (frame);
+
+      /* if needed complete the partial existing image */
+      pRootBox = pFrame->FrAbstractBox->AbBox;
+      if (!FrameUpdating && !TextInserting)
+	{
+	  /* The concrete image is being updated */
+	  FrameUpdating = TRUE;
+	  y = top - pRootBox->BxYOrg;
+	  if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
+	    {
+	      /* it lacks some abstract image at the top of the frame */
+	      if (bVol > 0 && bVol < pFrame->FrAbstractBox->AbVolume)
+		{
+		  /* free abstract boxes at the bottom */
+		  DecreaseVolume (FALSE, bVol, frame);
+		  DefClip (frame, 0, 0, 0, 0);
+		}
+	      if (pFrame->FrAbstractBox == NULL)
+		{
+		  printf ("ERR: No more abstract boxes in %d\n", frame);
+		  bVol = -pFrame->FrVolume;
+		}
+	      else
+		bVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
+	      
+	      /* Volume to add */
+	      top = (h / 2 - y) * l;
+	      delta = 0;
+	      /* Volume of the area to recompute */
+	      if (topBox)
+		{
+		  /* register previous location */
+		  y = topBox->BxYOrg;
+		  delta = y + topBox->BxHeight;
+		}
+	      /* Adding abstract boxes at the beginning */
+	      IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
+	      toadd = TRUE;
+	      /* Recompute the loaction of the frame in the abstract image */
+	      if (topBox)
+		{
+		  y = -y + topBox->BxYOrg;
+		  /* y equal the shift of previous first box */
+		  /* What's already displayed is related to this */
+		  /* previous first box location */
+		  pFrame->FrYOrg += y;
+		  /* delta equal the limit of redrawing after shifting */
+		  if (y > 0)
+		    delta = topBox->BxYOrg + topBox->BxHeight;
+		  /* new limit */
+		  pFrame->FrClipYEnd = delta;
+		}
+	      else
+		/* No previous box. The frame is drawn */
+		/* on top of the concrete image */
+		pFrame->FrYOrg = 0;
+	      /* Image should be complete */
+	      FrameUpdating = FALSE;
+	      RedrawFrameTop (frame, 0);
+	    }
+
+	  y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
+	  if (pFrame->FrAbstractBox->AbTruncatedTail &&
+	      (y > 0 || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+			 pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+			 !pRootBox->BxContentHeight)))
+	    {
+	      /* it lacks some abstract image at the bottom of the frame */
+	      /* cleanup the bottom of the frame */
+	      Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+	      /* don't loop is volume didn't change */
+	      tVol = pFrame->FrAbstractBox->AbVolume;
+	      /* Volume to add */
+	      bottom = (y + h / 2) * l;
+	      IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
+	      tVol -= pFrame->FrAbstractBox->AbVolume;
+	      /* Image should be completed */
+	      FrameUpdating = FALSE;
+	      if (tVol == 0)
+		printf ("ERR: Nothing to add\n");
+	      else
+		/* Maybe image is not complete yet */
+		RedrawFrameBottom (frame, 0, NULL);
+	    }
+	  else
+	    /* Volume computed is sufficient */
+	    pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
+	  
+	  /* update of image is finished */
+	  FrameUpdating = FALSE;
+	}
+    }
+  else
+    /* The nodified area is not visible */
+    DefClip (frame, 0, 0, 0, 0);
+   return toadd;
 }
 
 
@@ -843,411 +650,191 @@ static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-ThotBool            RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
+ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 {
-   PtrBox              pBox;
-   PtrBox              pTopBox;
-   PtrBox              pRootBox;
-   PtrBox              ToCreate;
-   PtrBox              pFirstBox;
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb, pParent;
-   int                 plane;
-   int                 nextplane;
-   int                 i, delta;
-   int                 y, x, vol, h, l;
-   int                 height, bottom;
-   int                 framexmin;
-   int                 framexmax;
-   int                 frameymin;
-   int                 frameymax;
-   ThotBool            ontop;
-   ThotBool            toadd;
+  PtrBox              topBox;
+  PtrBox              pRootBox;
+  PtrBox              create;
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  int                 delta;
+  int                 y, tVol, bVol, h, l;
+  int                 top, bottom;
+  int                 xmin;
+  int                 xmax;
+  int                 ymin;
+  int                 ymax;
+  ThotBool            stop;
+  ThotBool            toadd;
 
-#ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
-#endif /* _WINDOWS */
-
-   /* are new abstract boxes needed */
-   toadd = FALSE;
-   /* used to store boxes created on the fly */
-   ToCreate = NULL;
-   pFrame = &ViewFrameTable[frame - 1];
-   GetSizesFrame (frame, &l, &h);
-   if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
-     return toadd;
-   else if (pFrame->FrClipXBegin < pFrame->FrClipXEnd
-	    && pFrame->FrClipYBegin < pFrame->FrClipYEnd
-	    && pFrame->FrXOrg < pFrame->FrClipXEnd
-	    && pFrame->FrYOrg + scroll < pFrame->FrClipYEnd
-	    && pFrame->FrXOrg + l > pFrame->FrClipXBegin
-	    && pFrame->FrYOrg + scroll + h > pFrame->FrClipYBegin)
-     {
-        pFrame->FrYOrg += scroll;
-	framexmin = pFrame->FrClipXBegin;
-	framexmax = pFrame->FrClipXEnd;
-	frameymin = pFrame->FrClipYBegin;
-	frameymax = pFrame->FrClipYEnd;
-
-	/* Search the first visible box or the one below */
-	if (subtree)
-	  {
-	    /* if the box is enclosed by a cell and that cell has
-               a backgroung the frame attached to that cell should be
-	       redisplayed too */ 
-	    pParent = GetParentCell (subtree->AbBox);
-	    if (pParent)
-	      subtree = pParent->AbEnclosing;
-	    else if (TypeHasException (ExcIsCell, subtree->AbElement->ElTypeNumber, subtree->AbElement->ElStructSchema))
-	      subtree = subtree->AbEnclosing;
-	    /* if the box is enclosed by a draw the whole contents of
-	       that draw should be redisplayed */ 
-	    pParent = GetParentDraw (subtree->AbBox);
-	    if (pParent)
-	      subtree = pParent;
-	    pAb = subtree;
-
-	    /* get the first terminal box */
-	    while (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
-	      pAb = pAb->AbFirstEnclosed;
-	    if (pAb)
-	      {
-		pBox = pAb->AbBox;
-		if (pBox && pBox->BxType == BoSplit)
-		  pBox = pBox->BxNexChild;
-	      }
-	    else
-	      pBox = NULL;
-	  }
-	else
-	  {
-	    pAb = pFrame->FrAbstractBox;
-	    if (pAb->AbBox == NULL)
-	      pBox = NULL;
-	    else if (pAb->AbBox->BxNext)
-	      pBox = pAb->AbBox->BxNext;
-	    else
-	      /* empty document */
-	      pBox = pAb->AbBox;
-	  }
-
-	height = pFrame->FrYOrg;
-	bottom = height + h;
-	ontop = TRUE;
-	pTopBox = NULL;
-	vol = 0;
-	delta = height - h / 2;
-
-	/* Redraw from top to bottom all filled boxes */
-	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
-	/* paint the background of all selected boxes */
-	if (subtree)
-	  DisplayBgSelection (frame, subtree);
-	else
-	  DisplayBgSelection (frame, pFrame->FrAbstractBox);
-
-	/* Display planes in reverse order from biggest to lowest */
-	plane = 65536;
-	nextplane = plane - 1;
-	pFirstBox = pBox;
-	while (plane != nextplane)
-	   /* there is a new plane to display */
-	  {
-	     plane = nextplane;
-	     pBox = pFirstBox;
-	     /* browse all the boxes */
-
-	     /* Draw all the boxes not yet displayed */
-	     while (pBox != NULL)
-	       {
-		  /* Will this volume be on top ? */
-		  if (ontop)
+  /* are new abstract boxes needed */
+  toadd = FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
+  GetSizesFrame (frame, &l, &h);
+  xmin = pFrame->FrClipXBegin;
+  xmax = pFrame->FrClipXEnd;
+  ymin = pFrame->FrClipYBegin;
+  ymax = pFrame->FrClipYEnd;
+  if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
+    return toadd;
+  else if (xmin < xmax &&
+	   ymin < ymax &&
+	   pFrame->FrXOrg < xmax &&
+	   pFrame->FrYOrg + scroll < ymax &&
+	   pFrame->FrXOrg + l > xmin &&
+	   pFrame->FrYOrg + scroll + h > ymin)
+    {
+      pFrame->FrYOrg += scroll;
+      top = pFrame->FrYOrg;
+      bottom = top + h;
+      tVol = bVol = 0;
+      delta = top - h / 2;
+      topBox = NULL;
+      /* used to store boxes created on the fly */
+      create = NULL;
+      /* Redraw from top to bottom all filled boxes */
+      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+		      &xmin, &ymin, &xmax, &ymax, 1);
+      /* Is there a need to redisplay part of the frame ? */
+      if (xmin < xmax && ymin < ymax)
+	{
+	  topBox = DisplayAllBoxes (frame, xmin, xmax, ymin, ymax, &create, &tVol, &bVol);
+	  
+	  /* Interactive creation of boxes */
+	  if (create)
+	    {
+	      pAb = create->BxAbstractBox;
+	      DirectCreation (create, frame);
+	      /* Should son's boxes being handled too ? */
+	      while (pAb && pAb->AbFirstEnclosed)
+		{
+		  pAb = pAb->AbFirstEnclosed;
+		  stop = FALSE;
+		  while (!stop && pAb)
 		    {
-		     if (pBox->BxYOrg + pBox->BxHeight < height - h / 4)
-		       {
-			  if ((pBox->BxType != BoPiece &&
-			       pBox->BxType != BoDotted) ||
-			      pBox->BxNexChild == NULL)
-			     vol += pBox->BxAbstractBox->AbVolume;
-		       }
-		     else
-			ontop = FALSE;
+		      if (pAb->AbHorizPos.PosUserSpecified ||
+			  pAb->AbVertPos.PosUserSpecified ||
+			  pAb->AbWidth.DimUserSpecified ||
+			  pAb->AbHeight.DimUserSpecified)
+			DirectCreation (pAb->AbBox, frame);
+		      if (pAb->AbNext)
+			pAb = pAb->AbNext;
+		      else
+			stop = TRUE;
 		    }
-		  if (pBox->BxAbstractBox != NULL &&
-		      pBox->BxAbstractBox->AbDepth == plane)
-		    {
-		       /* The box is drawn in the current plane */
-		       y = pBox->BxYOrg + pBox->BxHeight;
+		}
+	      return (FALSE);
+	    }
+	}
+      /* The updated area is redrawn */
+      DefClip (frame, 0, 0, 0, 0);
+      RemoveClipping (frame);
 
-		       /* take into account the filling of the end of the
-			  block */
-		       x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
-
-		       /* Save the first visible box */
-		       if (y > height && pBox->BxYOrg < bottom)
-			 {
-			    if (pTopBox == NULL)
-			       pTopBox = pBox;
-			 }
-
-		       /* If a box is drawn for the first time, check if   */
-		       /* it (or one of it's ancestors) has to be created  */
-		       /* dynamically */
-		       if (pBox->BxNew)
-			 {
-			    /* this is no a new box */
-			    pBox->BxNew = 0;
-			    pAb = pBox->BxAbstractBox;
-			    i = 0;
-			    while (i == 0)
-			       if (pAb == NULL)
-				  i = 1;
-			       else if (pAb->AbWidth.DimIsPosition
-					|| pAb->AbHeight.DimIsPosition)
-				 {
-				    i = 1;
-				    pAb = NULL;
-				 }
-			       else if ((pAb->AbHorizPos.PosUserSpecified)
-				    || (pAb->AbVertPos.PosUserSpecified)
-				      || (pAb->AbWidth.DimUserSpecified)
-				    || (pAb->AbHeight.DimUserSpecified))
-				  i = 1;
-			       else
-				  pAb = pAb->AbEnclosing;
-			 }
-		       else
-			  pAb = NULL;
-
-                       /** skip box to create dynamically **/
-		       if (pAb != NULL)
-			  /* store the box to create */
-			  AddBoxToCreate (&ToCreate, pAb->AbBox, frame);
-		       else  if (y >= frameymin            && 
-				 pBox->BxYOrg <= frameymax && 
-				 x >= framexmin            && 
-				 pBox->BxXOrg <= framexmax)
-			 DisplayBox (pBox, frame, framexmin, framexmax, frameymin, frameymax);
-		       else if (pBox->BxType == BoPicture)
-			 {
-			   if (!((y >= pFrame->FrYOrg) &&
-				 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-				 (x >= pFrame->FrXOrg) &&
-				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
-			   else if (((PictInfo *)pBox->BxPictInfo)->PicType >= PLUGIN_FORMAT)
-			     /* redisplay plugins */
-			     DisplayBox (pBox, frame, framexmin, framexmax, frameymin, frameymax);
-			 }
-		       /* Skip to next box */
-		       pBox = pBox->BxNext;
-		    }
-		  else if (pBox->BxAbstractBox != NULL && pBox->BxAbstractBox->AbDepth < plane)
-		    {
-		       /* keep the lowest value for plane depth */
-		       if (plane == nextplane)
-			  nextplane = pBox->BxAbstractBox->AbDepth;
-		       else if (pBox->BxAbstractBox->AbDepth > nextplane)
-			  nextplane = pBox->BxAbstractBox->AbDepth;
-		       pBox = pBox->BxNext;
-		    }
-		  else
-		     pBox = pBox->BxNext;
-		  /* if the next box is still included in the subtree? */
-		  if (subtree && !IsParentBox (subtree->AbBox, pBox))
-		    pBox = NULL;
-	       }
-	  }
-
-	/* Interactive creation of boxes missing */
-	if (ToCreate != NULL)
-	  {
-	     DirectCreation (ToCreate, frame);
-	     /* Should the son's boxes being handled too ? */
-	     pAb = ToCreate->BxAbstractBox;
-	     if (pAb != NULL)
-		pAb = pAb->AbFirstEnclosed;
-	     while (pAb != NULL)
-	       {
-		  if ((pAb->AbHorizPos.PosUserSpecified)
-		      || (pAb->AbVertPos.PosUserSpecified)
-		      || (pAb->AbWidth.DimUserSpecified)
-		      || (pAb->AbHeight.DimUserSpecified))
-		    {
-		       ToCreate = pAb->AbBox;
-		       DirectCreation (ToCreate, frame);
-		    }
-		  else
-		     pAb = pAb->AbNext;
-	       }
-	     return (FALSE);
-	  }
-
-	/* The updated area is redrawn */
-	DefClip (frame, 0, 0, 0, 0);
-	RemoveClipping (frame);
-
-	/* If needed complete the partial existing image */
-	pRootBox = pFrame->FrAbstractBox->AbBox;
-	if (!FrameUpdating && (!TextInserting || scroll > 0))
-	  {
-	     FrameUpdating = TRUE;
-
-	     /* The concrete image is being filled */
-	     y = height - pRootBox->BxYOrg;
-
-	     if (pFrame->FrAbstractBox->AbInLine)
-		FrameUpdating = FALSE;
-
-	     /* It lacks a piece of the concrete image at the frame top */
-	     else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
-	       {
-		  /* Fill on top, so shift the whole concrete image */
-		  height = h / 2 - y;
-
-		  /* Height to add */
-		  height = height * l;
-
-		  /* Volume of the area to recompute */
-		  if (pTopBox != NULL)
-		    {
-		      /* register previous location */
-		       y = pTopBox->BxYOrg;
-		       delta = y + pTopBox->BxHeight;
-		    }
-		  IncreaseVolume (TRUE, GetCharsCapacity (height), frame);
-		  toadd = TRUE;
-
-		  /* Adding abstract boxes at the beginning */
-		  /* Recompute the loaction of the frame in the abstract image */
-		  if (pTopBox != NULL)
-		    {
-		       y = -y + pTopBox->BxYOrg;
-
-		       /* y equal the shift of previous first box */
-		       /* What's already displayed is related to this */
-		       /* previous first box location */
-		       pFrame->FrYOrg += y;
-
-		       /* delta equal the limit of redrawing after shifting */
-		       if (y > 0)
-			  delta = pTopBox->BxYOrg + pTopBox->BxHeight;
-
-		       /* new limit */
-		       pFrame->FrClipYEnd = delta;
-		    }
-		  ontop = RedrawFrameTop (frame, 0);
-	       }
-	     y = pFrame->FrYOrg + h - pRootBox->BxYOrg - pRootBox->BxHeight;
-	     delta = h / 2;
-
-	     /* Abstract image overflow of half a frame both on top and bottom */
-	     if (vol > 0 && -y > delta)
-		/* compute the volume to substract */
-	       {
-		  pBox = pRootBox->BxPrevious;
-		  bottom += delta;
-		  y = 0;
-		  while (pBox != NULL)
-		    {
-		       pTopBox = pBox;
-		       if (pTopBox->BxYOrg < bottom)
-			  pBox = NULL;
-		       else
-			 {
-			    pBox = pBox->BxPrevious;
-			    if (pTopBox->BxType != BoPiece && pTopBox->BxType != BoDotted)
-			       y += pTopBox->BxAbstractBox->AbVolume;
-			    else if (pTopBox->BxAbstractBox->AbBox->BxNexChild == pBox)
-			       y += pTopBox->BxAbstractBox->AbVolume;
-			 }
-		    }
-		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
-	       }
-
-	     /* It lacks some abtract image at the bottom of the frame */
-	     else if (pFrame->FrAbstractBox->AbTruncatedTail &&
-		      (y > 0 ||
-		       (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-			pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-			!pRootBox->BxContentHeight)))
-		/* free abstract boxes on top of the frame */
-	       {
-		  if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
-		    {
-		       if (pTopBox != NULL)
-			  y = pTopBox->BxYOrg;
-		       DecreaseVolume (TRUE, vol, frame);
-		       DefClip (frame, 0, 0, 0, 0);
-
-		       /* check location of frame in concrete image */
-		       if (pTopBox != NULL)
-			  pFrame->FrYOrg = pFrame->FrYOrg - y + pTopBox->BxYOrg;
-		    }
-		  if (pFrame->FrAbstractBox == NULL)
-		    {
-		       printf ("ERR: No more abstract box in %d\n", frame);
-		       vol = -pFrame->FrVolume;
-		    }
-		  else
-		     vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
-
-		  /* Volume to add */
-		  if (vol <= 0)
-		    {
-		       /* volume of the area to add */
-		       vol = (y + delta) * l;
-		       /* convert in number of chars */
-		       vol = GetCharsCapacity (vol);
-		    }
-
-		  y = pRootBox->BxYOrg + pRootBox->BxHeight;
-
-		  /* cleanup the bottom of the frame */
-		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
-
-		  /* don't loop is volume didn't change */
-		  y = pFrame->FrAbstractBox->AbVolume;
-		  IncreaseVolume (FALSE, vol, frame);
-		  y -= pFrame->FrAbstractBox->AbVolume;
-
-		  /* Image should be complete */
-		  FrameUpdating = FALSE;
-
-		  if (y == 0)
-		     printf ("ERR: Nothing to add\n");
-		  else
-		     /* Maybe image is not complete yet */
-		     ontop = RedrawFrameBottom (frame, 0, subtree);
-	       }
-
-	     /* Volume computed is sufficient */
-	     else
-	       {
-		  /* Is a cleanup of the bottom of frame needed ? */
+      /* if needed complete the partial existing image */
+      pRootBox = pFrame->FrAbstractBox->AbBox;
+      if (!FrameUpdating && (!TextInserting || scroll > 0))
+	{
+	  /* The concrete image is being updated */
+	  FrameUpdating = TRUE;
+	  y = top - pRootBox->BxYOrg;
+	  if (pFrame->FrAbstractBox->AbInLine)
+	    FrameUpdating = FALSE;
+	  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
+	    {
+	      /* it lacks a piece of the concrete image at the frame top */
+	      /* filling on top will shift the whole concrete image */
+	      top = h / 2 - y;
+	      /* Height to add */
+	      top = top * l;
+	      /* Volume of the area to recompute */
+	      if (topBox != NULL)
+		{
+		  /* register previous location */
+		  y = topBox->BxYOrg;
+		  delta = y + topBox->BxHeight;
+		}
+	      /* Adding abstract boxes at the beginning */
+	      IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
+	      toadd = TRUE;
+	      /* Recompute the location of the frame in the abstract image */
+	      if (topBox != NULL)
+		{
+		  y = -y + topBox->BxYOrg;
+		  /* y equal the shift of previous first box */
+		  /* What's already displayed is related to this */
+		  /* previous first box location */
+		  pFrame->FrYOrg += y;
+		  /* delta equal the limit of redrawing after shifting */
 		  if (y > 0)
-		     Clear (frame, l, y, 0, h - y);
-		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-	       }
+		    delta = topBox->BxYOrg + topBox->BxHeight;
+		  /* new limit */
+		  pFrame->FrClipYEnd = delta;
+		}
+	      RedrawFrameTop (frame, 0);
+	    }
+	  y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
+	  if (pFrame->FrAbstractBox->AbTruncatedTail &&
+		   (y > 0 || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+			      pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+			      !pRootBox->BxContentHeight)))
+	    {
+	      /* it lacks some abstract image at the bottom of the frame */
+	      if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
+		{
+		  /* free abstract boxes on top of the frame */
+		  if (topBox)
+		    y = topBox->BxYOrg;
+		  DecreaseVolume (TRUE, tVol, frame);
+		  DefClip (frame, 0, 0, 0, 0);
+		  /* check location of frame in concrete image */
+		  if (topBox)
+		    pFrame->FrYOrg = pFrame->FrYOrg - y + topBox->BxYOrg;
+		}
+	      if (pFrame->FrAbstractBox == NULL)
+		{
+		  printf ("ERR: No more abstract box in %d\n", frame);
+		  tVol = -pFrame->FrVolume;
+		}
+	      else
+		tVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
+	      
+	      /* cleanup the bottom of the frame */
+	      Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+	      /* don't loop is volume didn't change */
+	      tVol = pFrame->FrAbstractBox->AbVolume;
+	      /* Volume to add */
+	      bottom = (y + h / 2) * l;
+	      IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
+	      tVol -= pFrame->FrAbstractBox->AbVolume;
+	      /* Image should be completed */
+	      FrameUpdating = FALSE;
+	      if (tVol == 0)
+		printf ("ERR: Nothing to add\n");
+	      else
+		/* Maybe image is not complete yet */
+		RedrawFrameBottom (frame, 0, NULL);
+	    }
+	  else
+	    {
+	      /* Volume computed is sufficient */
+	      /* Is a cleanup of the bottom of frame needed ? */
+	      if (y > 0)
+		Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+	      pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
+	    }
 
-	     /* update of image is finished */
-	     FrameUpdating = FALSE;
-	  }
-     }
-   else
-     {
-	/* Nothing to draw */
-	DefClip (frame, 0, 0, 0, 0);
-	RemoveClipping (frame);
-     }
-
-   FirstCreation = FALSE;
-
-#ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
-#endif /* _WINDOWS */
-   return toadd;
+	  /* update of image is finished */
+	  FrameUpdating = FALSE;
+	}
+    }
+  else
+    {
+      /* Nothing to draw */
+      DefClip (frame, 0, 0, 0, 0);
+      RemoveClipping (frame);
+    }
+  FirstCreation = FALSE;
+  return toadd;
 }
 
 

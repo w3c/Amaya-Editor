@@ -465,13 +465,10 @@ void         DrawBoxSelection (int frame, PtrBox pBox)
 	    }
 	}
       else
-	{
-	  /* display other elements */
-	  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		   pBox->BxXOrg + pBox->BxWidth,
-		   pBox->BxYOrg + pBox->BxHeight);
-	  RedrawFrameBottom (frame, 0, pAb);
-	}
+	/* display other elements */
+	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+		 pBox->BxXOrg + pBox->BxWidth,
+		 pBox->BxYOrg + pBox->BxHeight);
     }
 }
 

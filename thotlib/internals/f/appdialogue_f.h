@@ -47,9 +47,9 @@ extern int TtaAddButton ( Document document,
                           STRING info,
                           BYTE type,
                           ThotBool state );
-extern void * TtaGetButtonCallback ( Document document,
-                                     View view,
-                                     int index );
+extern void *TtaGetButtonCallback ( Document document,
+                                    View view,
+                                    int index );
 extern void TtaSwitchButton ( Document document,
                               View view,
                               int index );
@@ -60,6 +60,9 @@ extern void TtaChangeButton ( Document document,
                               ThotBool state );
 extern void TtcSwitchButtonBar ( Document document,
                                  View view );
+extern void APP_TextCallback ( ThotWidget w,
+                               int frame,
+                               void *call_d );
 extern int TtaAddTextZone ( Document document,
                             View view,
                             STRING label,
@@ -161,9 +164,9 @@ extern int TtaAddButton (/* Document document,
                             STRING info,
                             BYTE type,
                             ThotBool state */);
-extern void * TtaGetButtonCallback (/* Document document,
-                                       View view,
-                                       int index */);
+extern void *TtaGetButtonCallback (/* Document document,
+                                      View view,
+                                      int index */);
 extern void TtaSwitchButton (/* Document document,
                                 View view,
                                 int index */);
@@ -174,6 +177,9 @@ extern void TtaChangeButton (/* Document document,
                                 ThotBool state */);
 extern void TtcSwitchButtonBar (/* Document document,
                                    View view */);
+extern void APP_TextCallback (/* ThotWidget w,
+                                 int frame,
+                                 void *call_d */);
 extern int TtaAddTextZone (/* Document document,
                               View view,
                               STRING label,

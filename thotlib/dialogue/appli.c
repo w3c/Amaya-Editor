@@ -1209,7 +1209,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
-    WIN_APP_TextCallback (hwndTextEdit, frame);
+    APP_TextCallback (hwndTextEdit, frame, NULL);
     if (frame != -1)
       SetFocus (FrRef [frame]);
     return 0L;

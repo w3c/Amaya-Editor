@@ -5417,7 +5417,7 @@ BOXES
 	Foreground: Creator =;
 	Background: Creator =;
 	FillPattern: Creator =;
-	Depth: Creator + 2;
+	Depth: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5445,8 +5445,8 @@ BOXES
 	BorderLeftStyle: Creator =;
 	Foreground: Creator =;
 	Background: Creator =;
+	Depth: Creator =;
 	FillPattern: Creator =;
-	Depth: Creator + 4;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5914,7 +5914,7 @@ BOXES
 RULES
 
  HTML:	BEGIN
-	Depth: 5000;
+	Depth: 0;
 	Adjust: Left;
 	Justify: No;
 	Indent: 0;
@@ -7841,7 +7841,6 @@ RULES
 	BEGIN
 	Gather: Yes;
 	LineBreak: No;
-	Depth: Enclosing - 5;
 #ifdef PAGE
 	PageBreak: Yes;
 	NoBreak1 : 3;
@@ -8079,10 +8078,9 @@ RULES
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
 	Width: 20 px;
-	Depth: Enclosing - 5;
 	Adjust: Enclosing =;
 	if NOT RowExt AND  immediately within Table_row
-	  CreateAfter(CellFrame);
+	  CreateBefore(CellFrame);
 	CreateBefore(TD_S);
 	CreateWith(VerticalLine);
 	PaddingTop: 0.2;
@@ -8119,11 +8117,10 @@ RULES
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
 	Width: 20 px;
-	Depth: Enclosing - 5;
 	Weight: Bold;
 	Adjust: VMiddle;
 	if NOT RowExt
-	  CreateAfter(CellFrame);
+	  CreateBefore(CellFrame);
 	CreateBefore(TH_S);
 	CreateWith(VerticalLine);
 	PaddingTop: 0.2;
@@ -9784,7 +9781,8 @@ ATTRIBUTES
 
  RowExt:
 	BEGIN
-	CreateAfter(CellExtFrame);
+	CreateBefore(CellExtFrame);
+	Depth: Enclosing - 1;
 	VertOverflow: Yes;
 	IN Structure_view BEGIN
 		Height: Enclosed . Height;

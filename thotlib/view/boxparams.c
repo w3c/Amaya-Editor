@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  *  traitement des options du Mediateur.
  *
@@ -46,17 +37,7 @@
    InitializeFrameParams initialise le seuil de visibilite et le facteur de     
    zoom de la fenetre frame.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitializeFrameParams (int frame, int Visibilite, int Zoom)
-
-#else  /* __STDC__ */
-void                InitializeFrameParams (frame, Visibilite, Zoom)
-int                 frame;
-int                 Visibilite;
-int                 Zoom;
-
-#endif /* __STDC__ */
-
+void     InitializeFrameParams (int frame, int Visibilite, int Zoom)
 {
    ViewFrame          *pFrame;
 
@@ -73,14 +54,7 @@ int                 Zoom;
    GetFrameParams retourne les valeurs courantes du seuil de visibilite et
    du facteur de zoom de la fenetre.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetFrameParams (int frame, int *Visibilite, int *Zoom)
-#else  /* __STDC__ */
-void                GetFrameParams (frame, Visibilite, Zoom)
-int                 frame;
-int                *Visibilite;
-int                *Zoom;
-#endif /* __STDC__ */
+void       GetFrameParams (int frame, int *Visibilite, int *Zoom)
 {
    ViewFrame          *pFrame;
 
@@ -97,14 +71,7 @@ int                *Zoom;
    SetFrameParams reevalue la vue designee apres decalage des tailles     
    ou/et modification du seuil de visibilite des boites.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetFrameParams (int frame, int Visibilite, int Zoom)
-#else  /* __STDC__ */
-void                SetFrameParams (frame, Visibilite, Zoom)
-int                 frame;
-int                 Visibilite;
-int                 Zoom;
-#endif /* __STDC__ */
+void              SetFrameParams (int frame, int Visibilite, int Zoom)
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      pv1;

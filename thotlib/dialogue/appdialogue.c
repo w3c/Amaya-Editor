@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2000
+ * Copyright (c) INRIA 1996-2001
  */
 
 /*
@@ -135,15 +135,7 @@ int   menu_item;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT ToolBarNotify (frame, hwnd, wParam, lParam)
-int    frame;
-HWND   hwnd; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
    LPNMHDR pnmh = (LPNMHDR) lParam;
    int idCtrl = (int) wParam;
@@ -161,21 +153,12 @@ LPARAM lParam;
          return 1;
       }
    }
-
    return 0;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK textZoneProc (hwnd, msg, wParam, lParam)
-HWND   hwnd; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
     switch (msg) { 
            case WM_KEYDOWN: 
@@ -212,14 +195,7 @@ HWND GetCurrentWindow () {
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TteInitMenus (CHAR_T* name, int number)
-#else  /* __STDC__ */
-void                TteInitMenus (name, number)
-CHAR_T*             name;
-int                 number;
-
-#endif /* __STDC__ */
 {
    int                 i;
    char                namef1[100];
@@ -529,14 +505,7 @@ void    FreeMenus ()
    TteAddMenuAction ajoute une nouvelle action dans la table des      
    actions d'interface.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TteAddMenuAction (char* actionName, Proc procedure, ThotBool state)
-#else  /* __STDC__ */
-void                TteAddMenuAction (actionName, procedure, state)
-char*               actionName;
-Proc                procedure;
-ThotBool            state;
-#endif /* __STDC__ */
 {
    char*               ptr;
    int                 lg;
@@ -566,12 +535,7 @@ ThotBool            state;
    FindMenuAction recherche l'action dans la table des actions        
    d'interface.                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          FindMenuAction (char* actionName)
-#else  /* __STDC__ */
-static int          FindMenuAction (actionName)
-char*               actionName;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -588,13 +552,7 @@ char*               actionName;
    TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
    fenentre.                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteZeroMenu (WindowType windowtype, CHAR_T* schemaName)
-#else  /* __STDC__ */
-void                TteZeroMenu (windowtype, schemaName)
-WindowType          windowtype;
-CHAR_T*             schemaName;
-#endif /* __STDC__ */
+void      TteZeroMenu (WindowType windowtype, CHAR_T* schemaName)
 {
    SchemaMenu_Ctl     *ptrschema;
    ThotBool            ok;
@@ -641,19 +599,7 @@ CHAR_T*             schemaName;
    TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
    nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteAddMenu (WindowType windowtype, CHAR_T* schemaName, int view, int menuID, int itemsNumber, char* menuName)
-
-#else  /* __STDC__ */
-void                TteAddMenu (windowtype, schemaName, view, menuID, itemsNumber, menuName)
-WindowType          windowtype;
-CHAR_T*             schemaName;
-int                 view;
-int                 menuID;
-int                 itemsNumber;
-char*               menuName;
-
-#endif /* __STDC__ */
+void TteAddMenu (WindowType windowtype, CHAR_T* schemaName, int view, int menuID, int itemsNumber, char* menuName)
 {
    Menu_Ctl           *ptrmenu = NULL;
    Menu_Ctl           *newmenu;
@@ -767,18 +713,7 @@ char*               menuName;
 /*----------------------------------------------------------------------
    TteAddSubMenu ajoute un sous-menu pour le schema donne.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteAddSubMenu (WindowType windowtype, CHAR_T* schemaName, int menuID, int itemID, int itemsNumber)
-
-#else  /* __STDC__ */
-void                TteAddSubMenu (windowtype, schemaName, menuID, itemID, itemsNumber)
-WindowType          windowtype;
-CHAR_T*             schemaName;
-int                 menuID;
-int                 itemID;
-int                 itemsNumber;
-
-#endif /* __STDC__ */
+void TteAddSubMenu (WindowType windowtype, CHAR_T* schemaName, int menuID, int itemID, int itemsNumber)
 {
    Menu_Ctl           *ptrmenu;
    Menu_Ctl           *newmenu;
@@ -856,20 +791,7 @@ int                 itemsNumber;
 /*----------------------------------------------------------------------
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, CHAR_T* schemaName, int menuID, int subMenu, int itemID, char* actionName, char itemType)
-
-#else  /* __STDC__ */
-void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
-WindowType          windowtype;
-char*               schemaName;
-int                 menuID;
-int                 subMenu;
-int                 itemID;
-CHAR_T*             actionName;
-char                itemType;
-
-#endif /* __STDC__ */
+void TteAddMenuItem (WindowType windowtype, CHAR_T* schemaName, int menuID, int subMenu, int itemID, char* actionName, char itemType)
 {
   Menu_Ctl           *ptrmenu;
   SchemaMenu_Ctl     *ptrschema;
@@ -956,16 +878,7 @@ char                itemType;
    BuildSubmenu construit un sous-menu attache' a l'item item     
    du menu ref.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BuildSubMenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
-#else  /* __STDC__ */
-static void         BuildSubMenu (ptrmenu, ref, entry, frame)
-Menu_Ctl           *ptrmenu;
-int                 ref;
-int                 entry;
-int                 frame;
-
-#endif /* __STDC__ */
+static void BuildSubMenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
 {
    CHAR_T              string[700];
    char                equiv[MaxEquivLen];
@@ -1049,16 +962,7 @@ int                 frame;
    BuildPopdown construit un menu popdown attache' au bouton      
    de menu.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int frame, int doc)
-#else  /* __STDC__ */
-static void         BuildPopdown (ptrmenu, ref, button, frame, doc)
-Menu_Ctl*           ptrmenu;
-int                 ref;
-ThotMenu            button;
-int                 frame;
-int                 doc;
-#endif /* __STDC__ */
+static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int frame, int doc)
 {
    CHAR_T              string[700];
    char                equiv[MaxEquivLen];
@@ -1211,15 +1115,7 @@ int                 doc;
    icon: the icon pixmap to be displayed in the window or NULL.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteOpenMainWindow (CHAR_T* name, Pixmap logo, Pixmap icon)
-#else  /* __STDC__ */
-void                TteOpenMainWindow (name, logo, icon)
-CHAR_T*             name;
-Pixmap              logo;
-Pixmap              icon;
-
-#endif /* __STDC__ */
+void    TteOpenMainWindow (CHAR_T* name, Pixmap logo, Pixmap icon)
 {
    int                 i, n;
    int                 ref;
@@ -1316,16 +1212,7 @@ Pixmap              icon;
 /*----------------------------------------------------------------------
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
-
-#else  /* __STDC__ */
-void APP_ButtonCallback (w, frame, call_d)
-ThotButton          w;
-int                 frame;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
    Document            document;
    View                view;
@@ -1353,25 +1240,16 @@ caddr_t             call_d;
 }
 
 #ifndef _WINDOWS
+static ThotWidget liteClue = NULL;
 /*----------------------------------------------------------------------
    InitClue
 
    Initialize the liteClue Widget for the application, handling the
    tooltips on buttons.
-
    Parameters:
    toplevel: the application toplevel Shell.
   ----------------------------------------------------------------------*/
-
-static ThotWidget liteClue = NULL;
-
-#ifdef __STDC__
 void         InitClue (ThotWidget toplevel)
-#else  /* __STDC__ */
-void         InitClue (toplevel)
-ThotWidget   toplevel;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -1426,19 +1304,9 @@ ThotWidget   toplevel;
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, STRING info, BYTE type, ThotBool state)
-#else  /* __STDC__ */
-int        TtaAddButton (document, view, picture, procedure, functionName, info, type, state)
-Document   document;
-View       view;
-ThotIcon   picture;
-void       (*procedure) ();
-char*      functionName;
-STRING     info;
-BYTE       type;
-ThotBool   state;
-#endif /* __STDC__ */
+int    TtaAddButton (Document document, View view, ThotIcon picture,
+		     void (*procedure) (), char* functionName, STRING info,
+		     BYTE type, ThotBool state)
 {
   int                 frame, i, index;
 #ifndef _WINDOWS
@@ -1601,15 +1469,7 @@ ThotBool   state;
    view: the concerned view.
    index: the index.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void *              TtaGetButtonCallback (Document document, View view, int index)
-#else  /* __STDC__ */
-void *              TtaGetButtonCallback (document, view, index)
-Document            document;
-View                view;
-int                 index;
-
-#endif /* __STDC__ */
+void      *TtaGetButtonCallback (Document document, View view, int index)
 {
    int                 frame;
 
@@ -1646,14 +1506,7 @@ int                 index;
    view: the concerned view.
    index: the index.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSwitchButton (Document document, View view, int index)
-#else  /* __STDC__ */
-void                TtaSwitchButton (document, view, index)
-Document            document;
-View                view;
-int                 index;
-#endif /* __STDC__ */
+void      TtaSwitchButton (Document document, View view, int index)
 {
   int                 frame;
 #ifndef _WINDOWS
@@ -1719,16 +1572,7 @@ int                 index;
    picture: the new icon.
    state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state)
-#else  /* __STDC__ */
-void                TtaChangeButton (document, view, index, picture, state)
-Document            document;
-View                view;
-int                 index;
-ThotIcon            picture;
-ThotBool            state;
-#endif /* __STDC__ */
+void TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state)
 {
 #ifndef _WINDOWS
   Arg                 args[MAX_ARGS];
@@ -1773,20 +1617,10 @@ ThotBool            state;
 }
 
 
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-void                WIN_TtaSwitchButton (Document document, View view, int index, int picture, int bState, BOOL state)
-#else  /* __STDC__ */
-void                WIN_TtaSwitchButton (document, view, index, picture, bState, state)
-Document            document;
-View                view;
-int                 index;
-int                 picture;
-int                 bState;
-BOOL                state;
-#endif /* __STDC__ */
+void WIN_TtaSwitchButton (Document document, View view, int index, int picture, int bState, BOOL state)
 {
    int                 frame;
 
@@ -1819,19 +1653,11 @@ BOOL                state;
 
    Shows the buttonbar in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcSwitchButtonBar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSwitchButtonBar (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
+void             TtcSwitchButtonBar (Document document, View view)
 {
    int                 frame;
 #ifndef _WINDOWS
@@ -1906,24 +1732,7 @@ View                view;
 /*----------------------------------------------------------------------
    TextAction                                                      
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-void WIN_APP_TextCallback (HWND w, int frame)
-#else  /* __STDC__ */
-void WIN_APP_TextCallback (w, rame)
-HWND w; 
-int  frame;
-#endif /* __STDC__ */
-#else  /* !_WINDOWS */
-#ifdef __STDC__
-static void         APP_TextCallback (ThotWidget w, int frame, XmTextVerifyCallbackStruct * call_d)
-#else  /* __STDC__ */
-static void         APP_TextCallback (w, frame, call_d)
-ThotWidget          w;
-int                 frame;
-XmTextVerifyCallbackStruct *call_d;
-#endif /* __STDC__ */
-#endif /* _WINDOWS */
+void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
    Document            document;
    View                view;
@@ -1965,17 +1774,8 @@ XmTextVerifyCallbackStruct *call_d;
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaAddTextZone (Document document, View view, STRING label, ThotBool editable, void (*procedure) ())
-#else  /* __STDC__ */
-int                 TtaAddTextZone (document, view, label, editable, procedure)
-Document            document;
-View                view;
-STRING              label;
-ThotBool            editable;
-void                (*procedure) ();
-
-#endif /* __STDC__ */
+int   TtaAddTextZone (Document document, View view, STRING label,
+		      ThotBool editable, void (*procedure) ())
 {
    int                 frame, i;
    ThotWidget          w, row;
@@ -2117,16 +1917,19 @@ void                (*procedure) ();
 		  FrameTable[frame].Text_Zone[i] = w;
 		  if (procedure != NULL)
 		    {
-		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_TextCallback, (XtPointer) frame);
+		       XtAddCallback (w, XmNactivateCallback,
+				      (XtCallbackProc) APP_TextCallback,
+				      (XtPointer) frame);
 		       FrameTable[frame].Call_Text[i] = (Proc) procedure;
 		    }
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 		  XtManageChild (XtParent (XtParent (row)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
-		          currentFrame = frame;
+		  currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow (TEXT("EDIT"), TEXT(""), WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+                  w = CreateWindow (TEXT("EDIT"), TEXT(""),
+				    WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 
                   FrameTable[frame].Text_Zone[i] = w;
@@ -2166,16 +1969,7 @@ void                (*procedure) ();
    index: 
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetTextZone (Document document, View view, int index, STRING text)
-#else  /* __STDC__ */
-void                TtaSetTextZone (document, view, index, text)
-Document            document;
-View                view;
-int                 index;
-STRING              text;
-
-#endif /* __STDC__ */
+void TtaSetTextZone (Document document, View view, int index, STRING text)
 {
    int                 frame;
    ThotWidget          w;
@@ -2191,26 +1985,23 @@ STRING              text;
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-	      /* w = FrameTable[frame].Text_Zone[index]; */
-	     /*XtRemoveCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 	     w = FrameTable[frame].Text_Zone[index];
 #ifndef _GTK
 	     if (w != 0)
 		XmTextSetString (w, text);
 #endif /* _GTK */
-#            else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	     w = FrameTable[frame].Text_Zone[index - 1];
 	     if (w != 0)
                  SetWindowText (w, text);
 
-#            endif /* _WINDOWS */
-	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
+#endif /* _WINDOWS */
 	  }
      }
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    XFlush (TtDisplay);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -2224,13 +2015,7 @@ STRING              text;
    document: identifier of the document.
    view: identifier of the view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcSwitchCommands (Document document, View view)
-#else  /* __STDC__ */
-void                TtcSwitchCommands (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
+void       TtcSwitchCommands (Document document, View view)
 {
    int                 frame;
 #ifdef _WINDOWS
@@ -2324,14 +2109,7 @@ View                view;
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawingInput (int *w, int frame, int *infos)
-#else  /* __STDC__ */
-void                DrawingInput (w, frame, infos)
-int                *w;
-int                 frame;
-int                *infos;
-#endif /* __STDC__ */
+void           DrawingInput (int *w, int frame, int *infos)
 {
 }
 
@@ -2548,20 +2326,8 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
    - Le volume affichable dans la fenetre en equivalent caracteres.   
    - L'indice de la fenetre allouee ou 0 en cas d'echec.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y, int width, int height, int *volume, int doc)
-#else  /* __STDC__ */
-int                 MakeFrame (schema, view, name, X, Y, width, height, volume, doc)
-CHAR_T*             schema;
-int                 view;
-STRING              name;
-int                 X;
-int                 Y;
-int                 width;
-int                 height;
-int                *volume;
-int                 doc;
-#endif /* __STDC__ */
+int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
+		int width, int height, int *volume, int doc)
 {
 #ifdef _WINDOWS
    ThotMenu            menu_bar, w;
@@ -3326,13 +3092,7 @@ int                 doc;
    Ferme la fenetre, detruit le fichier et libere l'entree.      
    Libere toutes les boites allouees a la fenetre.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DestroyFrame (int frame)
-#else  /* __STDC__ */
-void                DestroyFrame (frame)
-int                 frame;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -3438,14 +3198,7 @@ int                 frame;
 /*----------------------------------------------------------------------
    GetMenu_Ctl donne le contexte du menu associe' a` la fenetree^tre. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Menu_Ctl    *GetMenu_Ctl (int frame, int menu)
-#else  /* __STDC__ */
-static Menu_Ctl    *GetMenu_Ctl (frame, menu)
-int                 frame;
-int                 menu;
-
-#endif /* __STDC__ */
 {
    int                 i;
    Menu_Ctl           *ptrmenu;
@@ -3465,15 +3218,7 @@ int                 menu;
   FindMenu returns the menu index and its context if this menu is
   displayed in this specific frame or -1.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
-#else  /* __STDC__ */
-int                 FindMenu (frame, menuID, ctxmenu)
-int                 frame;
-int                 menuID;
-Menu_Ctl          **ctxmenu;
-
-#endif /* __STDC__ */
 {
    Menu_Ctl           *ptrmenu;
    int                 m;
@@ -3510,18 +3255,8 @@ Menu_Ctl          **ctxmenu;
   - item index or 0
   - action index or -1
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         FindItemMenu (int frame, int menuID, int itemID, int *menu, int *submenu, int *item, int *action)
-#else  /* __STDC__ */
-static void         FindItemMenu (frame, menuID, itemID, menu, submenu, item, action)
-int                 frame;
-int                 menuID;
-int                 itemID;
-int                *menu;
-int                *submenu;
-int                *item;
-int                *action;
-#endif /* __STDC__ */
+static void   FindItemMenu (int frame, int menuID, int itemID, int *menu,
+			    int *submenu, int *item, int *action)
 {
    Menu_Ctl           *ptrmenu, *ptrsmenu;
    Item_Ctl           *ptr;
@@ -3632,13 +3367,7 @@ int                *action;
   SwitchUndo enables (on=TRUE) or disables (on=FALSE) the Undo
   entry in all document frames.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SwitchUndo (PtrDocument pDoc, ThotBool on)
-#else  /* __STDC__ */
-void         SwitchUndo (pDoc, on)
-PtrDocument  pDoc;
-ThotBool     on;
-#endif /* __STDC__ */
 {
 #  ifndef _GTK
 #  ifndef _WINDOWS 
@@ -3707,13 +3436,7 @@ ThotBool     on;
   SwitchRedo enables (on=TRUE) or disables (on=FALSE) the Redo
   entry in all document frames.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SwitchRedo (PtrDocument pDoc, ThotBool on)
-#else  /* __STDC__ */
-void         SwitchRedo (pDoc, on)
-PtrDocument  pDoc;
-ThotBool     on;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS 
@@ -3789,13 +3512,7 @@ ThotBool     on;
   SwitchPaste enables (on=TRUE) or disables (on=FALSE) the Paste
   entry in all frames.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SwitchPaste (PtrDocument pDoc, ThotBool on)
-#else  /* __STDC__ */
-void         SwitchPaste (pDoc, on)
-PtrDocument  pDoc;
-ThotBool     on;
-#endif /* __STDC__ */
 {
 #ifndef _GTK 
 #ifndef _WINDOWS 
@@ -3853,15 +3570,7 @@ ThotBool     on;
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
    de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetMenuOff (Document document, View view, int menuID)
-#else  /* __STDC__ */
-void                TtaSetMenuOff (document, view, menuID)
-Document            document;
-View                view;
-int                 menuID;
-
-#endif /* __STDC__ */
+void      TtaSetMenuOff (Document document, View view, int menuID)
 {
 #ifndef _GTK
    ThotMenu            w;
@@ -3943,15 +3652,7 @@ int                 menuID;
    TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     
    de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetMenuOn (Document document, View view, int menuID)
-#else  /* __STDC__ */
-void                TtaSetMenuOn (document, view, menuID)
-Document            document;
-View                view;
-int                 menuID;
-
-#endif /* __STDC__ */
+void       TtaSetMenuOn (Document document, View view, int menuID)
 {
 #ifndef _GTK
    ThotMenu            w;
@@ -4021,16 +3722,8 @@ int                 menuID;
    TtaSetToggleItem positionne l'item du menu de la vue du document   
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on)
-#else  /* __STDC__ */
-void                TtaSetToggleItem (document, view, menuID, itemID, on)
-Document            document;
-View                view;
-int                 menuID;
-int                 itemID;
-ThotBool            on;
-#endif /* __STDC__ */
+void   TtaSetToggleItem (Document document, View view, int menuID,
+			 int itemID, ThotBool on)
 {
    int                 frame;
    int                 ref;
@@ -4073,15 +3766,7 @@ ThotBool            on;
    TtaSetItemOff desactive l'item actionName de la vue du document  
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetItemOff (Document document, View view, int menuID, int itemID)
-#else  /* __STDC__ */
-void                TtaSetItemOff (document, view, menuID, itemID)
-Document            document;
-View                view;
-int                 menuID;
-int                 itemID;
-#endif /* __STDC__ */
+void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
 {
    int                 frame;
    int                 ref;
@@ -4137,16 +3822,7 @@ int                 itemID;
    TtaSetItemOn active l'item actionName de la vue du document      
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetItemOn (Document document, View view, int menuID, int itemID)
-#else  /* __STDC__ */
-void                TtaSetItemOn (document, view, menuID, itemID)
-Document            document;
-View                view;
-int                 menuID;
-int                 itemID;
-
-#endif /* __STDC__ */
+void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
 {
    PtrDocument         pDoc;
    int                 frame;
@@ -4227,14 +3903,7 @@ int                 itemID;
    Return:
    reference of the first form or menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaSetCallback (void (*callbakProcedure) (), int set)
-#else  /* __STDC__ */
-int                 TtaSetCallback (callbakProcedure)
-void                (*callbakProcedure) ();
-int                 set;
-
-#endif /* __STDC__ */
+int     TtaSetCallback (void (*callbakProcedure) (), int set)
 {
    PtrCallbackCTX      ctxCallback;
 
@@ -4264,17 +3933,7 @@ int                 set;
 /*----------------------------------------------------------------------
    ThotCallback ge`re tous les retours du dialogue de Thot.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotCallback (int ref, int typedata, STRING data)
-
-#else  /* __STDC__ */
-void                ThotCallback (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif /* __STDC__ */
-
+void      ThotCallback (int ref, int typedata, STRING data)
 {
   int                 frame, item;
   int                 menu, base;

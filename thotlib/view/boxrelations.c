@@ -32,12 +32,7 @@
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ClearBoxMoved (PtrBox pBox)
-#else  /* __STDC__ */
-static void         ClearBoxMoved (pBox)
-PtrBox              pBox;
-#endif /* __STDC__ */
 {
   PtrBox           pNextBox;
   while (pBox != NULL)
@@ -55,14 +50,7 @@ PtrBox              pBox;
    Si la valeur rendue est NULL, le pave se positionne par 
    rapport au pave englobant.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, ThotBool horizRef)
-#else  /* __STDC__ */
-static PtrAbstractBox GetPosRelativeAb (pCurrentAb, horizRef)
-PtrAbstractBox      pCurrentAb;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
 {
    ThotBool            still;
    PtrAbstractBox      pAb;
@@ -102,17 +90,7 @@ ThotBool            horizRef;
    (un deplacement du repere de pTargetBox modifie la      
    dimension de pOrginBox).                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
-#else  /* __STDC__ */
-static void         InsertPosRelation (pOrginBox, pTargetBox, op, originEdge, targetEdge)
-PtrBox              pOrginBox;
-PtrBox              pTargetBox;
-OpRelation          op;
-BoxEdge             originEdge;
-BoxEdge             targetEdge;
-
-#endif /* __STDC__ */
 {
   int                 i;
   ThotBool            loop;
@@ -218,15 +196,7 @@ BoxEdge             targetEdge;
    pTargetBox).
    Si sameDimension est Faux, il faut inverser horizRef.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, ThotBool sameDimension, ThotBool horizRef)
-#else  /* __STDC__ */
-static void         InsertDimRelation (pOrginBox, pTargetBox, sameDimension, horizRef)
-PtrBox              pOrginBox;
-PtrBox              pTargetBox;
-ThotBool            sameDimension;
-ThotBool            horizRef;
-#endif /* __STDC__ */
 {
   PtrDimRelations     pPreviousDimRel;
   PtrDimRelations     pDimRel;
@@ -297,14 +267,7 @@ ThotBool            horizRef;
    l'arborescence se fait de bas en haut et de gauche a`   
    droite.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAbstractBox NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
-#else  /* __STDC__ */
-static PtrAbstractBox NextAbToCheck (pAb, pRefAb)
-PtrAbstractBox      pAb;
-PtrAbstractBox      pRefAb;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pNextAb;
 
@@ -351,15 +314,7 @@ PtrAbstractBox      pRefAb;
 /*----------------------------------------------------------------------
    PropagateXOutOfStruct propage l'indicateur hors-structure.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
-#else  /* __STDC__ */
-static void         PropagateXOutOfStruct (pCurrentAb, status, enclosed)
-PtrAbstractBox      pCurrentAb;
-ThotBool            status;
-ThotBool            enclosed;
-
-#endif /* __STDC__ */
+static void  PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
 {
    PtrAbstractBox      pAb;
    PtrBox              pBox;
@@ -402,15 +357,7 @@ ThotBool            enclosed;
 /*----------------------------------------------------------------------
    PropagateYOutOfStruct propage l'indicateur hors-structure.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
-#else  /* __STDC__ */
-static void         PropagateYOutOfStruct (pCurrentAb, status, enclosed)
-PtrAbstractBox      pCurrentAb;
-ThotBool            status;
-ThotBool            enclosed;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrBox              pBox;
@@ -453,15 +400,7 @@ ThotBool            enclosed;
   updates the position value according to the current edge used.
   The initial value of val depends on the refered box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
-#else  /* __STDC__ */
-void                SetPositionConstraint (localEdge, pBox, val)
-BoxEdge             localEdge;
-PtrBox              pBox;
-int                *val;
-
-#endif /* __STDC__ */
+void    SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
 {
   AbPosition         *pPosAb;
 
@@ -525,14 +464,7 @@ int                *val;
   ComputeRadius updates the horizontal or vartical radius of a rectangle
   with rounded corners.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ComputeRadius (pAb, frame, horizRef)
-PrtAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-#endif /* __STDC__ */
+void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pBox;
 
@@ -559,14 +491,7 @@ ThotBool            horizRef;
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ComputeMBP (pAb, frame, horizRef)
-PrtAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-#endif /* __STDC__ */
 {
   PtrBox              pBox;
   int                 dim, i;
@@ -697,15 +622,7 @@ ThotBool            horizRef;
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ComputePosRelation (rule, pBox, frame, horizRef)
-AbPosition          rule;
-PtrBox              pBox;
-int                 frame;
-ThotBool            horizRef;
-#endif /* __STDC__ */
+void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
   PtrAbstractBox      pRefAb;
   PtrAbstractBox      pAb, child;
@@ -1196,14 +1113,7 @@ ThotBool            horizRef;
    - Else get the sibling box which gives the position.     
    Return a box or NULL.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox              GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
-#else  /* __STDC__ */
-PtrBox              GetHPosRelativePos (pBox, pPreviousBox)
-PtrBox              pBox;
-PtrBox              pPreviousBox;
-
-#endif /* __STDC__ */
 {
   PtrBox              pRelativeBox;
   PtrPosRelations     pPosRel;
@@ -1323,14 +1233,7 @@ PtrBox              pPreviousBox;
    - Else get the sibling box which gives the position.     
    Return a box or NULL.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox              GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
-#else  /* __STDC__ */
-PtrBox              GetVPosRelativeBox (pBox, pPreviousBox)
-PtrBox              pBox;
-PtrBox              pPreviousBox;
-
-#endif /* __STDC__ */
 {
   PtrBox              pRelativeBox;
   PtrPosRelations     pPosRel;
@@ -1464,15 +1367,7 @@ PtrBox              pPreviousBox;
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-ThotBool            ComputeDimRelation (pAb, frame, horizRef)
-PtrAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
+ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pRefBox;
   PtrBox              pBox;
@@ -1486,6 +1381,8 @@ ThotBool            horizRef;
   ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
+  if (pAb->AbElement->ElTypeNumber == 135 && horizRef)
+    printf("Resize a cell\n");
   /* On verifie que la boite est visible */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
@@ -1593,7 +1490,8 @@ ThotBool            horizRef;
 	}
 
       /* Is it a stretchable box? */
-      if ((horizRef && !pAb->AbWidth.DimIsPosition) || (!horizRef && !pAb->AbHeight.DimIsPosition))
+      if ((horizRef && !pAb->AbWidth.DimIsPosition) ||
+	  (!horizRef && !pAb->AbHeight.DimIsPosition))
 	{
 	  if (horizRef)
 	    {
@@ -2190,16 +2088,7 @@ ThotBool            horizRef;
    horizontal ou vertical de la boite, selon que horizRef  
    est VRAI ou FAUX est mis a` jour.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ComputeAxisRelation (rule, pBox, frame, horizRef)
-AbPosition          rule;
-PtrBox              pBox;
-int                 frame;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
+void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
    int                 x, y, dist;
    PtrBox              pRefBox;
@@ -2362,18 +2251,9 @@ ThotBool            horizRef;
    l'on veut detruire (c'est alors une destruction de lien 
    inverse).                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox, PtrAbstractBox pCurrentAb, ThotBool Pos, ThotBool Axe, ThotBool horizRef)
-#else  /* __STDC__ */
-static ThotBool     RemovePosRelation (pOrginBox, pTargetBox, pCurrentAb, Pos, Axe, horizRef)
-PtrBox              pOrginBox;
-PtrBox              pTargetBox;
-PtrAbstractBox      pCurrentAb;
-ThotBool            Pos;
-ThotBool            Axe;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
+static ThotBool     RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
+				       PtrAbstractBox pCurrentAb, ThotBool Pos,
+				       ThotBool Axe, ThotBool horizRef)
 {
    int                 i, found;
    int                 j, k;
@@ -2557,15 +2437,8 @@ ThotBool            horizRef;
    pTargetBox et retasse la liste des liens.                   
    Rend la valeur Vrai si l'operation a ete executee.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, ThotBool horizRef)
-#else  /* __STDC__ */
-static ThotBool     RemoveDimRelation (pOrginBox, pTargetBox, horizRef)
-PtrBox              pOrginBox;
-PtrBox              pTargetBox;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
+static ThotBool RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
+				   ThotBool horizRef)
 {
    int                 i, found;
    ThotBool            loop;
@@ -2654,13 +2527,7 @@ ThotBool            horizRef;
    ClearXOutOfStructRelation detruit les relations hors hierarchie  
    de la boite pTargetBox.                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearXOutOfStructRelation (PtrBox pTargetBox)
-#else  /* __STDC__ */
-void                ClearXOutOfStructRelation (pTargetBox)
-PtrBox              pTargetBox;
-
-#endif /* __STDC__ */
 {
    PtrBox              pOrginBox;
    PtrAbstractBox      pAb;
@@ -2752,14 +2619,7 @@ PtrBox              pTargetBox;
    BtX(Y)HorsStruct indique que la relation est            
    hors-structure.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearPosRelation (PtrBox pOrginBox, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ClearPosRelation (pOrginBox, horizRef)
-PtrBox              pOrginBox;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
@@ -2880,14 +2740,7 @@ ThotBool            horizRef;
    Si cette dependance existe encore, on detruit la        
    relation.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearAxisRelation (PtrBox pOrginBox, ThotBool horizRef)
-#else  /* __STDC__ */
-void                ClearAxisRelation (pOrginBox, horizRef)
-PtrBox              pOrginBox;
-ThotBool            horizRef;
-
-#endif /* __STDC__ */
 {
    ThotBool            loop;
    PtrAbstractBox      pAb;
@@ -2935,13 +2788,7 @@ ThotBool            horizRef;
    -> les relations de positions et de dimensions hors     
    hierarchie.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearAllRelations (PtrBox pTargetBox)
-#else  /* __STDC__ */
-void                ClearAllRelations (pTargetBox)
-PtrBox              pTargetBox;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
@@ -2993,15 +2840,7 @@ PtrBox              pTargetBox;
    relation. L'indicateur BtLg(Ht)HorsStruct indique que   
    la relation est hors-structure.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ClearDimRelation (PtrBox pOrginBox, ThotBool horizRef, int frame)
-#else  /* __STDC__ */
-void                ClearDimRelation (pOrginBox, horizRef, frame)
-PtrBox              pOrginBox;
-ThotBool            horizRef;
-int                 frame;
-
-#endif /* __STDC__ */
+void    ClearDimRelation (PtrBox pOrginBox, ThotBool horizRef, int frame)
 {
    ThotBool            loop;
    PtrAbstractBox      pAb;

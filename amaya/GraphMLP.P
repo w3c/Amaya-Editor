@@ -1782,7 +1782,6 @@ RULES
 	BEGIN
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	Depth: Enclosing + 2;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -1793,7 +1792,6 @@ RULES
 	BEGIN
 	Width: Enclosing . Width;
         Height: Enclosing . Height;
-	Depth: Enclosing + 2;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view

@@ -2150,7 +2150,7 @@ int                 frame;
 			    val = delta;
 			    if (pAb->AbEnclosing != pCurrentAb)
 			      /* refer the outside width */
-			      val = val + l + r;
+			      val = val + diff + l + r;
 			  }
 			/* avoid cycles on the same box */
 			if (box != pBox)
@@ -2174,7 +2174,7 @@ int                 frame;
 			    val = delta;
 			    if (pAb->AbEnclosing != pCurrentAb)
 			      /* refer the outside width */
-			      val = val + l + r;
+			      val = val + diff + l + r;
 			  }
 			ChangeHeight (box, pSourceBox, NULL, val, frame);
 		      }

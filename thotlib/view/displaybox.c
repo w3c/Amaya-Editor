@@ -115,7 +115,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
-  withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
+  withbackground = (pBox->BxFill && pBox->BxDisplay);
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
@@ -919,7 +919,7 @@ static void         DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame, T
     {
     fg = pAb->AbForeground;
     bg = pAb->AbBackground;
-    withbackground = (pAb->AbFillPattern == 2);
+    withbackground = (pBox->BxFill && pBox->BxDisplay);
     }
   pFrame = &ViewFrameTable[frame - 1];
   left = 0;

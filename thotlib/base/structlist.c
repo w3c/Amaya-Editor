@@ -1827,26 +1827,31 @@ FILE               *fileDescriptor;
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "Status:");
+	     if (pAb->AbSelected)
+	       fprintf (fileDescriptor, "SELECTED ");
+	     if (pBox->BxDisplay)
+	       fprintf (fileDescriptor, "Displayed:Y ");
+	     if (pBox->BxFill)
+	       fprintf (fileDescriptor, "Filled:Y ");
 	     if (pBox->BxShadow)
-	       fprintf (fileDescriptor, " Shadow:Y");
+	       fprintf (fileDescriptor, "Shadow:Y ");
 	     if (pAb->AbOnPageBreak)
-	       fprintf (fileDescriptor, " ON PAGE BOUNDARY");
+	       fprintf (fileDescriptor, "ON PAGE BOUNDARY ");
 	     if (pAb->AbAfterPageBreak)
-	       fprintf (fileDescriptor, " OUT OF PAGE");
+	       fprintf (fileDescriptor, "OUT OF PAGE ");
 	     if (!pAb->AbHorizEnclosing)
-		fprintf (fileDescriptor, " Not-Horiz-Enclosed");
+		fprintf (fileDescriptor, "Not-Horiz-Enclosed ");
 	     if (!pAb->AbVertEnclosing)
-		fprintf (fileDescriptor, " Not-Vert-Enclosed");
+		fprintf (fileDescriptor, "Not-Vert-Enclosed ");
 	     /* On liste les relations hors-structure */
 	     if (pBox->BxXOutOfStruct)
-		fprintf (fileDescriptor, " XRelation-Out-Enclosing");
+		fprintf (fileDescriptor, "XRelation-Out-Enclosing ");
 	     if (pBox->BxYOutOfStruct)
-		fprintf (fileDescriptor, " YRelation-Out-Enclosing");
+		fprintf (fileDescriptor, "YRelation-Out-Enclosing ");
 	     if (pBox->BxWOutOfStruct)
-		fprintf (fileDescriptor, " HDimRelation-Out-Enclosing");
+		fprintf (fileDescriptor, "HDimRelation-Out-Enclosing ");
 	     if (pBox->BxHOutOfStruct)
-		fprintf (fileDescriptor, " VDimRelation-Out-Enclosing");
+		fprintf (fileDescriptor, "VDimRelation-Out-Enclosing ");
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)
