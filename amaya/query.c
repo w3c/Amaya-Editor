@@ -2601,7 +2601,7 @@ char *value;
   HTRqHd rqhd = HTRequest_rqHd (request);
   rqhd = rqhd & (~HT_C_ACCEPT_TYPE);
   HTRequest_setRqHd (request, rqhd);
-  HTRequest_addExtraHeader (request, "Accept:", value);
+  HTRequest_addExtraHeader (request, "Accept", value);
 }
 
 	       
