@@ -17,15 +17,15 @@ ATTR
 
 STRUCT
 
-   XML =
-       BEGIN
-	LIST OF (XML_Gen); 
-       END + (xmlcomment, xmlpi, cdata);
-	
-   XML_Gen = LIST OF (XML_Elements);
+   XML
+	  (ATTR RealLang = Yes_;)
+	= BEGIN
+	  LIST OF (XML_Elements); 
+          END + (xmlcomment, xmlpi, cdata);
 
    XML_Elements = CASE OF
 		TEXT; 
+		XML_Embed = NATURE;
 	      END;
            
    xmlcomment = LIST OF (xmlcomment_line = TEXT);
@@ -44,10 +44,13 @@ EXCEPT
    Highlight:	        Invisible;
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
+   RealLang:	        Invisible;
    xmlcomment_line:     Hidden, NoSpellCheck;
    xmlpi_line:          Hidden, NoSpellCheck;
    doctype_line:        Hidden, NoSpellCheck, NoCut;
    doctype:             NoCut;
    cdata_line:          Hidden;
+   XML_Embed:           Hidden, NoSelect;
+   XML_Elements:        Hidden, NoSpellCheck;
 
 END

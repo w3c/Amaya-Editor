@@ -421,6 +421,11 @@ RULES
 
 ATTRIBUTES
 
+  Language:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
   id:
         BEGIN
         CreateBefore(AttrName);

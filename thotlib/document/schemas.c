@@ -2189,6 +2189,10 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
   PtrPSchema          pPSch;
   PtrSRule            pRule;
   int                 rule;
+#ifdef test
+  int                 i;
+  ThotBool            found;
+#endif
 
   pSS = NULL;
   pPSch = NULL;
@@ -2217,7 +2221,7 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
   else
     {
       /* Initializes a new rule structure */
-      pRule = pSS->SsRule->SrElem[rule -1];
+      pRule = pSS->SsRule->SrElem[rule - 1];
       strncpy (pRule->SrName, xmlName, MAX_NAME_LENGTH);
       strncpy (pRule->SrOrigName, xmlName, MAX_NAME_LENGTH);
       pRule->SrNDefAttrs = 0;
@@ -2233,6 +2237,29 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
       pRule->SrNExclusions = 0;
       pRule->SrRefImportedDoc = FALSE;
       pRule->SrSSchemaNat = NULL;
+
+#ifdef test
+      /* Search the first CsChoice rule */
+      /*
+      found = FALSE;
+      for (i = 0; i < rule && !found; i++)
+	{
+	  if (pSS->SsRule->SrElem[i]->SrConstruct == CsChoice)
+	    found = TRUE;
+	}
+      if (found)
+	{
+	  i--;
+	  pSS->SsRule->SrElem[i]->SrChoice[pSS->SsRule->SrElem[i]->SrNChoices] = rule - 1;
+	  pSS->SsRule->SrElem[i]->SrNChoices ++;
+	}
+      pRule->SrConstruct = CsChoice;
+      pRule->SrNChoices = 2;
+      pRule->SrChoice[0] = rule;
+      pRule->SrChoice[1] = i;
+      `*/
+#endif
+
       pRule->SrConstruct = CsAny;
 
       *mappedName = pRule->SrOrigName;
@@ -2268,7 +2295,12 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
        pSS = (PtrSSchema) attrType->AttrSSchema;
        for (att = 0; !found && att < pSS->SsNAttributes; att++)
 	 {
- 	   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+  	   if (strcmp (xmlName, "lang") == 0)
+	     {
+	       attrType->AttrTypeNum = 1;
+	       found = TRUE;
+	     }
+	   else if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
 	     {
 	       attrType->AttrTypeNum = att + 1;
 	       found = TRUE;
@@ -2287,7 +2319,12 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (att = 0; !found && att < pSS->SsNAttributes; att++)
 		 {
-		   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+		   if (strcmp (xmlName, "lang") == 0)
+		     {
+		       attrType->AttrTypeNum = 1;
+		       found = TRUE;
+		     }
+		   else if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
 		     {
 		       attrType->AttrTypeNum = att + 1;
 		       attrType->AttrSSchema = (SSchema) pSS;
@@ -2578,7 +2615,6 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 			      char *NsPrefix, char *NsUri)
 {
-
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 

@@ -57,7 +57,35 @@ static char OldCssName[MAX_LENGTH];
 void XmlAttributeComplete (Attribute attr, Element el, Document doc)
 
 {
-  return;
+   AttributeType    attrType, attrType1;
+   Attribute        intAttr;
+   int		    attrKind;
+
+   TtaGiveAttributeType (attr, &attrType, &attrKind);
+
+   switch (attrType.AttrTypeNum)
+     {
+     case XML_ATTR_Language:
+       if (el == TtaGetRootElement (doc))
+	 /* it's the lang attribute on the root element */
+	 /* set the RealLang attribute */
+	 {
+	   attrType1.AttrSSchema = attrType.AttrSSchema ;
+	   attrType1.AttrTypeNum = XML_ATTR_RealLang;
+	   if (!TtaGetAttribute (el, attrType1))
+	     /* it's not present. Add it */
+	     {
+	       intAttr = TtaNewAttribute (attrType1);
+	       TtaAttachAttribute (el, intAttr, doc);
+	       TtaSetAttributeValue (intAttr, XML_ATTR_RealLang_VAL_Yes_,
+				     el, doc);
+	     }
+	 }
+       break;
+     default:
+       break;
+     }
+   return;
 }
 
 /*----------------------------------------------------------------------

@@ -4061,45 +4061,45 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  
 		  /* Export the attributes */
 		  pAttr = pNode->ElFirstAttr;
-		  if (pAttr != NULL)
-		    ExportXmlBuffer (pDoc, " ");
 		  while (pAttr != NULL)
 		    {
-		      /* Export the attribute prefix if it exists */
-		      ns_prefix = ExportAttrNsPrefix (pDoc, pNode, pAttr);
-		      if (ns_prefix != NULL)
-			ExportXmlBuffer (pDoc, ns_prefix);
-		      
-		      /* Export the attribute name */
-		      pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-		      ExportXmlBuffer (pDoc, pAttr1->AttrName);
-		      ExportXmlBuffer (pDoc, "=");
-		      /* Export the attribute's value */
-		      switch (pAttr1->AttrType)
+		      if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum, pNode->ElStructSchema))
+			/* Don't export invisible attributes */
 			{
-			case AtNumAttr:
-			  ExportXmlBuffer (pDoc, (unsigned char*)pAttr->AeAttrValue);
-			  break;
-			case AtTextAttr:
-			  if (pAttr->AeAttrText)
+			  ExportXmlBuffer (pDoc, " ");
+			  /* Export the attribute prefix if it exists */
+			  ns_prefix = ExportAttrNsPrefix (pDoc, pNode, pAttr);
+			  if (ns_prefix != NULL)
+			    ExportXmlBuffer (pDoc, ns_prefix); 
+			  /* Export the attribute name */
+			  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
+			  ExportXmlBuffer (pDoc, pAttr1->AttrName);
+			  ExportXmlBuffer (pDoc, "=");
+			  /* Export the attribute's value */
+			  switch (pAttr1->AttrType)
 			    {
+			    case AtNumAttr:
+			      ExportXmlBuffer (pDoc, (unsigned char*)pAttr->AeAttrValue);
+			      break;
+			    case AtTextAttr:
+			      if (pAttr->AeAttrText)
+				{
+				  ExportXmlBuffer (pDoc, "\"");
+				  /* Export the text buffer content */
+				  ExportXmlText (pDoc, pAttr->AeAttrText, TRUE, FALSE);
+				  ExportXmlBuffer (pDoc, "\"");
+				}
+			      break;
+			    case AtEnumAttr:
 			      ExportXmlBuffer (pDoc, "\"");
-			      /* Export the text buffer content */
-			      ExportXmlText (pDoc, pAttr->AeAttrText, TRUE, FALSE);
+			      ExportXmlBuffer (pDoc, pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
 			      ExportXmlBuffer (pDoc, "\"");
+			      
+			      break;
+			    default:
+			      break;
 			    }
-			  break;
-			case AtEnumAttr:
-			  ExportXmlBuffer (pDoc, "\"");
-			  ExportXmlBuffer (pDoc, pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-			  ExportXmlBuffer (pDoc, "\"");
-			  
-			  break;
-			default:
-			  break;
 			}
-		      if (pAttr->AeNext)
-			ExportXmlBuffer (pDoc, " ");
 		      pAttr = pAttr->AeNext;
 		    }
 		  

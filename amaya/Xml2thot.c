@@ -2846,6 +2846,11 @@ static void      EndOfAttributeName (char *xmlName)
 	   attrName = TtaGetMemory (strlen (ptr) + 5);
 	   strcpy (attrName, "xml:");
 	   strcat (attrName, ptr);
+	   if (nsURI != NULL)
+	     {
+	       TtaFreeMemory (nsURI);
+	       nsURI = NULL;
+	     }
 	 }
        else
 	 {

@@ -26,7 +26,11 @@ ATTRIBUTES
 
    Language:
 	BEGIN
-	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> AttrLangCreated;
+	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
+	AttrDelete.Post -> AttrLangDeleted;
+	AttrModify.Post -> AttrLangModified;
 	END;
+
 
 END
