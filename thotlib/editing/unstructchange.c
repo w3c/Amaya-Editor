@@ -1891,8 +1891,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 {
 		   /* record the element to be deleted in the history */
 		   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
-		   AddEditOpInHistory (FirstSelectedElement, pDoc, TRUE,FALSE);
-		   TtaDeleteTree ((Element)FirstSelectedElement, doc);
+		   AddEditOpInHistory (pSibling, pDoc, TRUE,FALSE);
+		   TtaDeleteTree (pSibling, doc);
 		   CloseHistorySequence (pDoc);
 		 }
 	     }
