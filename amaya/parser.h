@@ -61,6 +61,7 @@ AttrValueMapping;
 typedef struct _ParserData
 {	     /* global variables used by XML and HTML parsers */
   Document   doc;                   /* the Thot document */
+  CHARSET    encoding;              /* encoding of the document */
   Language   language;              /* language used in the document */
   Element    lastElement;	    /* last element created */
   int        withinTable;           /* <TABLE> has been read */
