@@ -43,7 +43,7 @@ int AmayaTextGraber::m_ThotMask = 0;
 void AmayaTextGraber::OnText(wxCommandEvent& event)
 {
   wxString s = GetValue();
-  SetValue( _T("") );
+  Clear(); // SetValue( _T("") ) crash on windows ...
 
   wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
 
