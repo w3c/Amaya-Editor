@@ -110,9 +110,12 @@ PtrDocument         pDoc;
       notifyDoc.view = 0;
       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	{
-	  /* detruit toutes les vues ouvertes du document */
+	  /* if there is a "Spell checker" menu entry, close the spell checker
+	     dialog box */
 	  if (ThotLocalActions[T_corrector] != NULL)
 	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (STRING) pDoc);
+	  ClearHistory (pDoc);
+	  /* detruit toutes les vues ouvertes du document */
 	  CloseAllViewsDoc (pDoc);
 	  /* free document contents */
 	  UnloadTree (document);

@@ -421,6 +421,7 @@ Document            document;
     /* parameter document is correct */
     {
       pDoc = LoadedDocument[document - 1];
+      ClearHistory (pDoc);
 #ifndef NODISPLAY
       /* Closing all opened views relating to the document */
       /* First, one close the views of the main tree */
