@@ -1022,17 +1022,7 @@ void SvgImageCreated (NotifyElement *event)
 	TtaDeleteTree (el, doc);
 	return;
      }
-   /* search the xlink:href attribute */
    elType = TtaGetElementType (el);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == 0)
-     {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
-     }
-   ComputeSRCattribute (el, doc, 0, attr, text);
    /* set the desc child */
    elType.ElTypeNum = SVG_EL_desc;
    desc = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -1061,6 +1051,16 @@ void SvgImageCreated (NotifyElement *event)
        TtaSetTextContent (leaf, ImgAlt, SPACE, doc);
        ImgAlt[0] = EOS;
      }
+   /* search the xlink:href attribute */
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr == 0)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+     }
+   ComputeSRCattribute (el, doc, 0, attr, text);
 }
 
 
