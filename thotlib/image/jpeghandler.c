@@ -270,7 +270,7 @@ ThotBitmap         *mask1;
     {   
       /* xif and yif contain width and height of the box */
       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-      free(buffer);
+      TtaFreeMemory (buffer);
       buffer = buffer2;
       buffer2 = NULL;
       w = *xif;
@@ -279,7 +279,7 @@ ThotBitmap         *mask1;
   
   pixmap = DataToPixmap (buffer, w, h, 100, colrs);
   
-  free (buffer);  
+  TtaFreeMemory (buffer);  
   if (pixmap == None)
     return ThotBitmapNone;
   else

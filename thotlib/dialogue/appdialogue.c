@@ -56,7 +56,6 @@ extern int          appArgc;
 extern char       **appArgv;
 #endif /* !_WIN_PRINT */
 extern ThotWidget   WIN_curWin;
-
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
 
@@ -100,6 +99,7 @@ int     currentFrame;
 HWND  hwndClient ;
 HWND  ToolBar ;
 HWND  StatusBar;
+HWND  logoFrame;
 HMENU currentMenu;
 #ifdef THOT_TOOLTIPS
 int    nCust[MAX_FRAME][30];
@@ -108,13 +108,17 @@ static HWND hwndTB;
 static int   tipIndex = 0;
 static int   strIndex ;
 
-extern int   CommandToString [MAX_BUTTON];
-extern char  szTbStrings [4096];
+extern int     CommandToString [MAX_BUTTON];
+extern char    szTbStrings [4096];
 #endif /* THOT_TOOLTIPS */
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
+#if 0
+extern HBITMAP appLogo;
+extern int     bmpID;
+#endif /* 0 */
 HMENU hmenu;
 int   menu_item ;
 #ifdef THOT_TOOLTIPS
@@ -2015,6 +2019,7 @@ void                (*procedure) ();
                   wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
                   FrameTable[frame].Label[i] = wLabel;
+				  /* FrameTable[frame].showLogo = TRUE ; */
                   PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #                 endif /* _WINDOWS */
 	       }
@@ -2115,10 +2120,11 @@ View                view;
 #  endif
 
 #  ifdef _WINDOWS
-   int     index;
+   int     index, nbZonesShown = 0;
    boolean itemChecked = FALSE;
    RECT    r;
 #  endif /* _WINDOWS */
+
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -2127,6 +2133,9 @@ View                view;
    else
      {
 	frame = GetWindowNumber (document, view);
+#   ifdef _WINDOWS
+    /* FrameTable[frame].showLogo = !FrameTable[frame].showLogo; */
+#   endif /* _WINDOWS */ 
 	if (frame == 0 || frame > MAX_FRAME)
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
@@ -2264,6 +2273,7 @@ int                 doc;
 #  ifdef _WINDOWS
    hwndClient = 0;
    ToolBar    = 0;
+   logoFrame  = 0;
    StatusBar  = 0;
 #  endif /* _WINDOWS */
 
@@ -2328,6 +2338,11 @@ int                 doc;
 		Y = mmtopixel (Y, 0);
 
 #            ifdef _WINDOWS
+#        if 0
+		 if (appLogo == (HBITMAP)0)
+            appLogo = (HBITMAP) LoadImage (hInstance, bmpID, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+#        endif /* 0 */
+
 	     Main_Wd = CreateWindowEx (0L, tszAppName,	    /* window class name       */
 				       tszAppName,	    /* window caption          */
 				       WS_OVERLAPPEDWINDOW, /* window style            */
@@ -2347,10 +2362,10 @@ int                 doc;
                   fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
 #                 endif /* AMAYA_DEBUG */
                   /* store everything. */
-                  FrMainRef[frame]           = Main_Wd;
-                  FrRef[frame]               = hwndClient;
-                  WinToolBar[frame]          = ToolBar;
-                  FrameTable[frame].WdStatus = StatusBar;
+                  FrMainRef[frame]            = Main_Wd;
+                  FrRef[frame]                = hwndClient;
+                  WinToolBar[frame]           = ToolBar;
+                  FrameTable[frame].WdStatus  = StatusBar;
                   /* and show it up. */
                   
                   menu_bar = CreateMenu ();
@@ -3079,10 +3094,13 @@ int                 menuID;
 #endif /* __STDC__ */
 {
    ThotWidget          w;
-   int                 n, menu;
+   int                 menu;
    int                 frame;
    int                 ref;
    Menu_Ctl           *ptrmenu;
+#  ifndef _WINDOWS
+   int                 n; 
+#  endif /* !_WINDOWS */
 
 #ifndef _WINDOWS
    XmFontList          font;

@@ -204,7 +204,7 @@ HDC     hdc;
 ptrfont font;
 #endif /* __STDC__ */
 {
-  SelectObject (hdc, font->FiFont);
+  return (SelectObject (hdc, font->FiFont));
 }
 #endif /* _WINDOWS */
 
@@ -750,6 +750,7 @@ boolean             increase;
   char               *pText;
   char               *pFontSize;
   int                 c;
+  HFONT               hOldFont;
 #endif /* _WINDOWS */
   ptrfont             ptfont;
 
@@ -835,7 +836,7 @@ boolean             increase;
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
 	  ptfont->FiFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
 	  WIN_GetDeviceContext (-1);
-	  SelectObject (TtDisplay, ptfont->FiFont);
+	  hOldFont = SelectObject (TtDisplay, ptfont->FiFont);
 	  if (GetTextMetrics (TtDisplay, &textMetric))
 	    {
 	      ptfont->FiAscent = textMetric.tmAscent;
@@ -852,6 +853,7 @@ boolean             increase;
 	      ptfont->FiWidths[c] = wsize.cx;
 	      ptfont->FiHeights[c] = wsize.cy;
 	    }
+	  SelectObject (TtDisplay, hOldFont);
 	  WIN_ReleaseDeviceContext ();
 #      else  /* _WINDOWS */
 	  if (alphabet == 'G' && (size > 8 && size < 16 || size == 24))
@@ -1135,8 +1137,11 @@ int                 frame;
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
 #                   ifdef _WINDOWS
+            if (TtDisplay)
+               SelectObject (TtDisplay, (HFONT)0);
 		    if (!DeleteObject (TtFonts[i]->FiFont))
 		      WinErrorBox (WIN_Main_Wd);
+            TtFonts[i]->FiFont = (HFONT)0;
 		    TtaFreeMemory (TtFonts[i]);
 #                   else  /* _WINDOWS */
 		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);

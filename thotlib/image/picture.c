@@ -66,6 +66,10 @@
 #include "pnghandler_f.h"
 #include "epshandler_f.h"
 #include "fileaccess_f.h"
+#include "memory_f.h"
+#ifdef _WINDOWS 
+#include "win_f.h"
+#endif /* _WINDOWS */
 
 PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 int             PictureIdType[MAX_PICT_FORMATS];
@@ -279,7 +283,7 @@ Pixmap              pixmap;
 #     ifndef _WINDOWS
       XFreePixmap (TtDisplay, pixmap);
 #     else  /* _WINDOWS */
-      if (!DeleteObject (pixmap))
+      if (!DeleteObject ((HBITMAP)pixmap))
          WinErrorBox (WIN_Main_Wd);
 #     endif /* _WINDOWS */
 }
@@ -360,9 +364,9 @@ int                *picYOrg;
 	       Rapw = (float) wFrame / (float) picWArea;
 	       Raph = (float) hFrame / (float) picHArea;
 	       if (Rapw <= Raph)
-		  *yTranslate = (hFrame - (picHArea * Rapw)) / 2;
+		  *yTranslate = (int) ((hFrame - (picHArea * Rapw)) / 2);
 	       else
-		  *xTranslate = (wFrame - (picWArea * Raph)) / 2;
+		  *xTranslate = (int) ((wFrame - (picWArea * Raph)) / 2);
 	       break;
 	    case RealSize:
 	    case FillFrame:
@@ -447,13 +451,14 @@ PictInfo           *imageDesc;
 # ifdef _WINDOWS
   HDC     hMemDC;
   HBITMAP hBkgBmp;
+  HBITMAP hOldBitmap1;
+  HBITMAP hOldBitmap2;
   HDC     hOrigDC;
-  HBRUSH  hBrush;
   BITMAP  bm;
   POINT   ptOrg, ptSize;
   int     x, y, clipWidth, clipHeight;
   int     nbPalColors ;
-  HRGN    hrgn, fillRgn;
+  HRGN    hrgn;
 # endif /* _WINDOWS */
 
 
@@ -498,7 +503,7 @@ PictInfo           *imageDesc;
 	case RealSize:
 	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
 	    hMemDC = CreateCompatibleDC (TtDisplay);
-	    SelectObject (hMemDC, pixmap);
+	    hOldBitmap1 = SelectObject (hMemDC, pixmap);
 	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
 	    GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
 	    ptSize.x = bm.bmWidth;
@@ -509,16 +514,12 @@ PictInfo           *imageDesc;
 	    DPtoLP (hMemDC, &ptOrg, 1);
 	    
 	    BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
-	    DeleteDC (hMemDC);
+		SelectObject (hMemDC, hOldBitmap1);
+	    if (!DeleteDC (hMemDC))
+           WinErrorBox (NULL);
 	  } else {
            WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
-	/*
-      if (!TtIsTrueColor) {
-         if (!DeleteObject (TtCmap))
-            WinErrorBox (WIN_Main_Wd);
-         peInitialized = FALSE;
-	  }*/
 #         endif /* _WINDOWS */
 	  break;
 	  
@@ -653,8 +654,8 @@ PictInfo           *imageDesc;
           hOrigDC = CreateCompatibleDC (TtDisplay);
           hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
           SelectClipRgn(TtDisplay, hrgn); 
-          SelectObject (hOrigDC, pixmap);
-          SelectObject (hMemDC, hBkgBmp);
+          hOldBitmap1 = SelectObject (hOrigDC, pixmap);
+          hOldBitmap2 = SelectObject (hMemDC, hBkgBmp);
           
           y = 0;
 
@@ -668,32 +669,21 @@ PictInfo           *imageDesc;
 			 y += imageDesc->PicHArea;
 		  } while (y < (h - yFrame));
 
-          /*
-          for (y = 0; y < (h - yFrame); y += imageDesc->PicHArea)
-              for (x = 0; x < (w - xFrame); x += imageDesc->PicWArea)
-                  if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
-                     WinErrorBox (WIN_Main_Wd);
-          */
-
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+
+		  SelectObject (hOrigDC, hOldBitmap1);
+		  SelectObject (hMemDC, hOldBitmap2);
 
           SelectClipRgn(TtDisplay, NULL); 
 
-		  if (!DeleteObject (hrgn))
-             WinErrorBox (NULL);;
-          DeleteDC (hMemDC);
-          DeleteDC (hOrigDC);
+          if (!DeleteDC (hMemDC))
+             WinErrorBox (WIN_Main_Wd);
+          if (!DeleteDC (hOrigDC))
+             WinErrorBox (WIN_Main_Wd);
           if (!DeleteObject (hBkgBmp))
              WinErrorBox (WIN_Main_Wd);
-
-
-			 /*
-		  if (!TtIsTrueColor) {
-             if (!DeleteObject (TtCmap))
-                WinErrorBox (WIN_Main_Wd);
-             peInitialized = FALSE;
-		  }*/
-		 
+		  if (!DeleteObject (hrgn))
+             WinErrorBox (NULL);;
 #         endif /* _WINDOWS */
 	  break;
 	}
@@ -1058,8 +1048,9 @@ int                 hlogo;
    float               scaleX, scaleY;
 
 #  ifdef _WINDOWS
-   HDC   hDc, hMemDc ;
-   POINT lPt [2];
+   HDC     hDc, hMemDc ;
+   POINT   lPt [2];
+   HBITMAP hOldBitmap;
 #  endif /* _WINDOWS */
    /* Create the temporary picture */
    scaleX = 0.0;
@@ -1110,7 +1101,7 @@ int                 hlogo;
    pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
    hDc    = GetDC (drawable);
    hMemDc = CreateCompatibleDC (hDc);
-   SelectObject (hMemDc, pixmap);
+   hOldBitmap = SelectObject (hMemDc, pixmap);
    Rectangle (hMemDc, 0, 0, w - 1, h - 1);
    lPt[0].x = 0;
    lPt[0].y = 0;
@@ -1135,6 +1126,7 @@ int                 hlogo;
    lPt[1].x = 1;
    lPt[1].y = h - 1;
    Polyline  (hMemDc, lPt, 2);
+   SelectObject (hMemDc, hOldBitmap);
    DeleteDC (hDc);
    DeleteDC (hMemDc);
 #  endif /* _WINDOWS */
@@ -1234,22 +1226,18 @@ int                 frame;
      /* the picture is not visible */
      return;
 
-#  ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
-
    xTranslate = 0;
    yTranslate = 0;
    picXOrg = 0;
    picYOrg = 0;
 
    if ((imageDesc->PicFileName == NULL) || (imageDesc->PicFileName[0] == '\0') || 
-	   (box->BxAbstractBox->AbLeafType == LtCompound && imageDesc->PicPixmap == PictureLogo)) {
-#     ifdef _WINDOWS
-      WIN_ReleaseDeviceContext ();
-#     endif /* _WINDOWS */
+	   (box->BxAbstractBox->AbLeafType == LtCompound && imageDesc->PicPixmap == PictureLogo))
      return;
-   }
+
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (frame);
+#  endif /* _WINDOWS */
 
    drawable = TtaGetThotWindow (frame);
    GetXYOrg (frame, &x, &y);
@@ -1344,19 +1332,19 @@ PictInfo      *imageDesc;
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char         *ZoomPicture (char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
+unsigned char* ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
 #else  /* __STDC__ */
-char         *ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
-char         *cpic;
-int           cWIDE;
-int           cHIGH;
-int           eWIDE;
-int           eHIGH;
-int           bperpix;
+unsigned char* ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
+unsigned char* cpic;
+int            cWIDE;
+int            cHIGH;
+int            eWIDE;
+int            eHIGH;
+int            bperpix;
 #endif /* __STDC__ */
 {
-  int          cy, ex, ey,*cxarr, *cxarrp;
-  char        *clptr,*elptr,*epptr, *epic;
+  int           cy, ex, ey,*cxarr, *cxarrp;
+  unsigned char *clptr,*elptr,*epptr, *epic;
 
   clptr = NULL;
   cxarrp = NULL;
@@ -1435,28 +1423,30 @@ PictInfo           *imageDesc;
    Drawable            myDrawable = None;
    Picture_Report      status;
    unsigned long       Bgcolor;
+#  ifdef _WINDOWS
+   BOOL                DeviceToRelease = FALSE;
+#  endif /* _WINDOWS */
 
    if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
      /* the picture is not visible */
      return;
 
-#  ifdef _WINDOWS
-   if (TtDisplay == 0)
-      WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
-
-   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0') {
-#     ifdef _WINDOWS
-      WIN_ReleaseDeviceContext ();
-#     endif /* _WINDOWS */
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0')
       return;
-   }
 
    GetPictureFileName (imageDesc->PicFileName, fileName);
    typeImage = imageDesc->PicType;
    status = PictureFileOk (fileName, &typeImage);
    w = 0;
    h = 0;
+
+#  ifdef _WINDOWS
+   if (TtDisplay == 0) {
+      WIN_GetDeviceContext (frame);
+      DeviceToRelease = TRUE;
+   }
+#  endif /* _WINDOWS */
+
    if (status != Supported_Format)
      {
 #      ifdef _WINDOWS
@@ -1500,11 +1490,6 @@ PictInfo           *imageDesc;
 #                ifndef _WINDOWS
 		 XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (BackgroundColor[frame]));
-#                else  /* _WINDOWS */
-		 /*
-                 SetBkColor (TtDisplay, Black_Color);
-                 SetTextColor (TtDisplay, ColorPixel (BackgroundColor[frame]));
-		 */
 #                endif /* _WINDOWS */
 	       }
 	     else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox)
@@ -1514,7 +1499,6 @@ PictInfo           *imageDesc;
 		 XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
 		 XSetForeground (TtDisplay, GCpicture, Box_Color);
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-#                else  /* _WINDOWS */
 #                endif /* _WINDOWS */
 	       }
 	     else
@@ -1524,7 +1508,6 @@ PictInfo           *imageDesc;
 		 XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
 		 XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-#                else  /* _WINDOWS */
 #                endif /* _WINDOWS */
 	       }
 	 }
@@ -1624,6 +1607,8 @@ PictInfo           *imageDesc;
       UpdatePictInfo (imageDesc, myDrawable, picMask);
 #     else  /* _WINDOWS */
       UpdatePictInfo (imageDesc, myDrawable);
+      if (DeviceToRelease)
+         WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
 
 }

@@ -284,6 +284,7 @@ char               *fmt;
 
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
    va_list             pa;
    int                 i, lg, vald;
    char               *vals, *p;
@@ -348,6 +349,7 @@ char               *fmt;
 	else
 	   DisplayMessage (pBuffer, msgType);
      }
+#endif /* _WINDOWS */
 }
 
 
@@ -364,7 +366,9 @@ int                 number;
 
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
    TtaDisplayMessage (msgType, TtaGetMessage (origin, number));
+#endif /* _WINDOWS */
 }
 
 
@@ -380,8 +384,10 @@ char               *code;
 
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
    char                pBuffer[THOT_MAX_CHAR];
 
    strncpy (pBuffer, code, THOT_MAX_CHAR);
    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);
+#endif /* _WINDOWS */
 }

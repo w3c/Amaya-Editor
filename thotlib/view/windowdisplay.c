@@ -192,6 +192,7 @@ int                 y2;
 {
 #  ifdef _WINDOWS 
    HPEN pen ;
+   HPEN hOldPen;
 #  endif /* _WINDOWS  */
    x1 += FrameTable[frame].FrLeftMargin;
    y1 += FrameTable[frame].FrTopMargin;
@@ -200,10 +201,11 @@ int                 y2;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-   SelectObject (TtDisplay, pen);
+   hOldPen = SelectObject (TtDisplay, pen);
 
    MoveToEx (TtDisplay, x1, y1, NULL);
    LineTo (TtDisplay, x2, y2);
+   SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
@@ -279,6 +281,7 @@ int                 fg;
    ThotWindow          w;
 #  ifdef _WINDOWS
    char                str[2] = {car, 0};
+   HFONT               hOldFont;
 #  endif /* _WINDOWS */
 
    w = FrRef[frame];
@@ -291,9 +294,9 @@ int                 fg;
    WIN_GetDeviceContext (frame);
    WinLoadGC (fg, RO);
    SetMapperFlags (TtDisplay, 1);
-   WinLoadFont (TtDisplay, font);
+   hOldFont = WinLoadFont (TtDisplay, font);
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   
-   WinUnloadGC ();
+   SelectObject (TtDisplay, hOldFont);
    WIN_ReleaseDeviceContext ();
 #  else  /* _WINDOWS */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
@@ -349,6 +352,7 @@ int                 fg;
 #  ifdef _WINDOWS
    SIZE                size;
    RECT                rect;
+   HFONT               hOldFont;
 #  endif
 
    w = FrRef[frame];
@@ -359,7 +363,7 @@ int                 fg;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       SetMapperFlags (TtDisplay, 1);
-      WinLoadFont (TtDisplay, font);
+      hOldFont = WinLoadFont (TtDisplay, font);
       /* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
       GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
       width = size.cx;
@@ -416,7 +420,7 @@ int                 fg;
       }
       FinishDrawing (0, RO, active);
 #     ifdef _WINDOWS
-	  WinUnloadGC ();
+	  SelectObject (TtDisplay, hOldFont);
       WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
 
@@ -1423,7 +1427,9 @@ int                 pattern;
 
 #  ifdef _WINDOWS
    HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
    HPEN                hPen = 0;
+   HPEN                hOldPen;
 #  endif
 
 #  ifdef _WINDOWS 
@@ -1454,9 +1460,9 @@ int                 pattern;
       WinLoadGC (fg, RO);
    
       hBrush = CreateSolidBrush (Pix_Color[bg]);
-      hBrush = SelectObject (TtDisplay, hBrush);
+      hOldBrush = SelectObject (TtDisplay, hBrush);
       PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-      hBrush = SelectObject (TtDisplay, hBrush);
+      SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
          WinErrorBox (WIN_Main_Wd);
 #  endif /* _WINDOWS */
@@ -1471,10 +1477,10 @@ int                 pattern;
 #       else  /* _WINDOWS */
         if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
            WinErrorBox (WIN_Main_Wd);
-        hPen = SelectObject (TtDisplay, hPen) ;
+        hOldPen = SelectObject (TtDisplay, hPen) ;
         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH)) ;
         Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
-	    WinUnloadGC ();
+		SelectObject (TtDisplay, hOldPen);
 #       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
    }
@@ -1673,6 +1679,7 @@ int                 pattern;
 
 #  ifdef _WINDOWS 
    HPEN hPen;
+   HPEN hOldPen;
 #  endif /* _WINDOWS */
 
    /* Allocate a table of points */
@@ -1714,10 +1721,11 @@ int                 pattern;
       WIN_GetDeviceContext (frame);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
-      hPen = SelectObject (TtDisplay, hPen) ;
+      hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
       Polyline (TtDisplay, points, nb);
       FinishDrawing (0, RO, active);
+	  SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
@@ -2303,6 +2311,7 @@ int                 pattern;
 
 #  ifdef _WINDOWS
    HPEN hPen;
+   HPEN hOldPen;
 #  endif /* _WINDOWS */
 
    width -= thick + 1;
@@ -2329,10 +2338,11 @@ int                 pattern;
       WIN_GetDeviceContext (frame);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
-      hPen = SelectObject (TtDisplay, hPen) ;
+      hOldPen = SelectObject (TtDisplay, hPen) ;
       SelectObject (TtDisplay, GetStockObject (NULL_BRUSH)) ;
 	  if (!Ellipse (TtDisplay, x, y, x + width, y + height))
          WinErrorBox (FrRef  [frame]);
+	  SelectObject (TtDisplay, hOldPen);
 	  WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (FrRef [frame]);
@@ -2502,6 +2512,7 @@ int                 fg;
 
 #  ifdef _WINDOWS
    HPEN pen;
+   HPEN hOldPen;
 #  endif /* _WINDOWS */
 
    if (thick <= 0)
@@ -2556,9 +2567,9 @@ int                 fg;
    WIN_GetDeviceContext (frame);
    WinLoadGC (fg, RO);
    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-   SelectObject (TtDisplay, pen);
+   hOldPen = SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);
-   WinUnloadGC ();
+   SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
@@ -2874,6 +2885,7 @@ int                 y;
 
 #  ifdef _WINDOWS
    HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
 #  endif /* _WINDOWS */
 
    w = FrRef[frame];
@@ -2885,9 +2897,9 @@ int                 y;
 #       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
-	hBrush = SelectObject (TtDisplay, hBrush);
+	hOldBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	hBrush = SelectObject (TtDisplay, hBrush);
+	SelectObject (TtDisplay, hOldBrush);
     WIN_ReleaseDeviceContext ();
 	if (!DeleteObject (hBrush))
        WinErrorBox (WIN_Main_Wd);
@@ -2917,10 +2929,13 @@ ThotGC              GClocal;
    FontOrig (font, string[0], &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
 #  else /* _WINDOWS */
+   HFONT hOldFont;
+
    WIN_GetDeviceContext (GetFrameNumber (w));
    SetMapperFlags (TtDisplay, 1);
-   WinLoadFont(TtDisplay, font);
+   hOldFont = WinLoadFont(TtDisplay, font);
    TextOut(TtDisplay, x, y, string, strlen(string));
+   SelectObject (TtDisplay, hOldFont);
 #  endif /* _WINDOWS */
 }
 
@@ -2975,18 +2990,22 @@ int xf;
 int yf;
 #endif /* __STDC__ */
 {
-   ThotWindow          w;
-
-   w = FrRef[frame];
-
-   if (w != None) {
+   if (FrRef[frame] != None) {
 #     ifndef _WINDOWS
-      XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
+      XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
 #     else  /* _WINDOWS */
+	  RECT cltRect;
       WIN_GetDeviceContext (frame);
+
+	  GetClientRect (FrRef [frame], &cltRect);
+	  /*
       BitBlt (TtDisplay, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
 	      TtDisplay, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
+	  */
+	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);  */
+	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); 
       WIN_ReleaseDeviceContext ();
+      /*InvalidateRect (FrRef[frame], NULL, TRUE);*/
 #     endif /* _WINDOWS */
    }
 }

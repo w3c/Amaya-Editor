@@ -246,7 +246,6 @@ PtrTextBuffer       Bbuffer;
    ThotWindow          w, wdum;
    ThotEvent           event;
 #  ifdef _WINDOWS
-   ThotEvent           eventCopy; 
    RECT  rect;
    POINT cursorPos;
 #  endif /* _WINDOWS */

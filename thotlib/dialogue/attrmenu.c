@@ -46,6 +46,9 @@ static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
 static boolean      dlgInitialized = FALSE; 
+static char         WIN_buffMenu [MAX_TXT_LEN];
+static char         WIN_Lab [1024];
+static int          WIN_nbItem;
 #  endif /* _WINDOWS */
 
 /* the menu attributes */
@@ -90,7 +93,7 @@ static int          formValue;
 static int          nbDlgItems ;
 
 extern HINSTANCE hInstance;
-
+extern LPCTSTR   iconID;
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
 
@@ -164,7 +167,11 @@ PtrAttribute        currAttr;
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
    /* construit le selecteur des Langues */
+#  ifdef _WINDOWS
+   ptr = &WIN_buffMenu [0];
+#  else  /* _WINDOWS */
    ptr = &bufMenu[0];
+#  endif /* _WINDOWS */
    nbItem = 0;
    defItem = -1;
    nbLanguages = TtaGetNumberOfLanguages ();
@@ -262,8 +269,12 @@ PtrAttribute        currAttr;
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #  else  /* _WINDOWS */
+   sprintf (WIN_Lab, "%s", Lab);
+   WIN_nbItem = nbItem; 
+   /*
    CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_LANGUAGE),
-	                        TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu, Lab);
+	                        TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu, Lab, NumMenuAlphaLanguage);
+							*/
 #  endif /* _WINDOWS */
 }
 
@@ -333,7 +344,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	HWND        confirmButton;
 	HWND        doneButton;
 	char*       pBuffer;
-	char        attr_text [500];
+	/* char        attr_text [500]; */
 	int         i, index;
 	static PSTR pWinBuffer;
 	static int  txtLength;
@@ -421,7 +432,7 @@ HWND  parent;
 char* title	;
 #endif /* __STDC__ */
 {
-   WNDCLASS    wndSheetClass ;
+   WNDCLASSEX    wndSheetClass ;
    static char szAppName[] = "SheetClass" ;
    HWND        hwnSheetDialog;
    MSG         msg;
@@ -438,12 +449,11 @@ char* title	;
       wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
       wndSheetClass.lpszMenuName  = NULL ;
       wndSheetClass.lpszClassName = szAppName ;
+      wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
+      wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID) ;
 
-	  if (IS_WIN95) {
-         if (!RegisterWin95 (&wndSheetClass))
-            return (FALSE);
-      } else if (!RegisterClass (&wndSheetClass))
-             return (FALSE);
+	  if (!RegisterClassEx (&wndSheetClass))
+         return (FALSE);
    }
 
    hwnSheetDialog = CreateWindow (szAppName, title,
@@ -483,7 +493,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 
 	if (!dlgInitialized) {
        if (WIN_currAttr) 
-          sprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
+          sprintf (attr_text, "%s", WIN_currAttr->AeAttrText->BuContent);
        else
           attr_text [0] = EOS ;
        dlgInitialized = TRUE;
@@ -592,7 +602,7 @@ HWND  parent;
 char* title	;
 #endif /* __STDC__ */
 {
-   WNDCLASS    wndNumAttrClass ;
+   WNDCLASSEX    wndNumAttrClass ;
    static char szAppName[] = "NumAttrClass" ;
    HWND        hwnNumAttrDialog;
    MSG         msg;
@@ -609,12 +619,11 @@ char* title	;
       wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
       wndNumAttrClass.lpszMenuName  = NULL ;
       wndNumAttrClass.lpszClassName = szAppName ;
+      wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
+      wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID) ;
 
-      if (IS_WIN95) {
-         if (!RegisterWin95 (&wndNumAttrClass))
-            return (FALSE);
-      } else if (!RegisterClass (&wndNumAttrClass))
-             return (FALSE);
+      if (!RegisterClassEx (&wndNumAttrClass))
+         return (FALSE);
    }
 
    hwnNumAttrDialog = CreateWindow (szAppName, title,
@@ -1452,10 +1461,16 @@ int                 frame;
 		     SchCurrentAttr = pAttrNew->AeAttrSSchema;
 		     NumCurrentAttr = 1;
 		     /* restaure l'etat courant du toggle */
+#            ifdef _WINDOWS
+             /* DeleteAttribute (NULL, pAttrNew); */
+             CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_LANGUAGE),
+	                        TtaGetMessage (LIB, TMSG_LANG_OF_EL), WIN_nbItem, WIN_buffMenu, WIN_Lab, NumMenuAlphaLanguage);
+#            else /* _WINDOWS */
 		     if (ActiveAttr[att] == 0)
 			TtaSetToggleMenu (refmenu, att, FALSE);
 		     else
 			TtaSetToggleMenu (refmenu, att, TRUE);
+#           endif /* _WINDOWS */
 		  }
 		else if (pAttr->AttrType == AtEnumAttr &&
 			 pAttr->AttrNEnumValues == 1)
@@ -1482,9 +1497,9 @@ int                 frame;
 		     NumCurrentAttr = AttrNumber[att];
 		     /* restaure l'etat courant du toggle */
 		     if (ActiveAttr[att] == 0)
-			TtaSetToggleMenu (refmenu, att, FALSE);
+                TtaSetToggleMenu (refmenu, att, FALSE);
 		     else
-			TtaSetToggleMenu (refmenu, att, TRUE);
+                TtaSetToggleMenu (refmenu, att, TRUE);
 		     /* et memorise l'attribut en cours de traitement */
 		     CurrentAttr = att;
 		     /* affiche le formulaire */
@@ -1523,7 +1538,6 @@ char               *txt;
 #endif /* __STDC__ */
 {
   Language		i;
-  char			alphabet;
 
   switch (ref)
     {

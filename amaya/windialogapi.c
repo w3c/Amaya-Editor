@@ -98,6 +98,7 @@ static int          fontNum;
 static int          fontStyle;
 static int          fontUnderline;
 static int          fontSize;
+static int          NumMenuAlphabetLanguage;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -389,9 +390,9 @@ BOOL* close_dont_save;
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLanguageDlgWindow (HWND parent, char* title, char* msg1, int nb_item, char* lang_list, char* msg2)
+void CreateLanguageDlgWindow (HWND parent, char* title, char* msg1, int nb_item, char* lang_list, char* msg2, int nmenuLanguage)
 #else  /* !__STDC__ */
-void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2)
+void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, nmenuLanguage)
 HWND  parent;
 char* title;
 char* msg1;
@@ -405,6 +406,7 @@ char* msg2;
 	sprintf (message2, msg2);
 	langList = lang_list;
 	nbItem   = nb_item;
+	NumMenuAlphabetLanguage = nmenuLanguage;
 
 	DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
 }
@@ -1396,6 +1398,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
+                CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
 				wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                        10, 10, 200, 20, hwnDlg, (HMENU) 99, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -1425,17 +1428,32 @@ LPARAM lParam;
 				   itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
 				   itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+                   ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
 				}
 
 			    switch (LOWORD (wParam)) {
-				       case ID_APPLY:
-						    ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+                       case IDC_ISO_LATIN_1:
+                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (char*)0);
+                            break;
+
+                       case IDC_ISO_LATIN_2:
+                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (char*)1);
+                            break;
+
+                       case IDC_ISO_LATIN_9:
+                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (char*)2);
+                            break;
+
+                       case IDC_SYMBOL_ENCOD:
+                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (char*)3);
+                            break;
+
+					   case ID_APPLY:
 							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
 							EndDialog (hwnDlg, ID_APPLY);
 							break;
 
 				       case ID_DELETE:
-						    ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
 							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 2);
 					        EndDialog (hwnDlg, ID_DELETE);
 							break;

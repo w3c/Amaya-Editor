@@ -149,9 +149,9 @@ static Display*       GDp;
 #endif
 
 #ifdef _WINDOWS
-int    iconID;
-static OPENFILENAME OpenFileName;
-static int cyValue = 10;
+LPCTSTR iconID = "IDI_APPICON";
+static  OPENFILENAME OpenFileName;
+static  int cyValue = 10;
 
 static HWND   currentParent;
 #endif /* _WINDOWS */
@@ -656,7 +656,7 @@ int frame;
 
    /* release the previous Device Context. */
    if (TtDisplay)
-      DeleteDC (TtDisplay);
+      ReleaseDC (WIN_curWin, TtDisplay);
 
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
@@ -680,7 +680,7 @@ void WIN_ReleaseDeviceContext ()
    /* release the previous Device Context. */
    /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
    if (TtDisplay != 0)
-      DeleteDC (TtDisplay);
+      ReleaseDC (WIN_curWin, TtDisplay);
 
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
@@ -1763,46 +1763,43 @@ Display           **Dp;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.lpszMenuName  = "AmayaMain" ;
    RootShell.lpszClassName = tszAppName;
+   RootShell.cbSize        = sizeof(WNDCLASSEX);
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
 
-   if (IS_WIN95) {
-      if (!RegisterWin95 (&RootShell))
-         return (FALSE);
-   } else if (!RegisterClass (&RootShell))
-          return (FALSE);
+   if (!RegisterClassEx (&RootShell))
+      return (FALSE);
 
    RootShell.style         = CS_DBLCLKS ;
    RootShell.lpfnWndProc   = ClientWndProc ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
    RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
    RootShell.lpszClassName = "ClientWndProc" ;
    RootShell.lpszMenuName  = NULL ;
+   RootShell.cbSize        = sizeof(WNDCLASSEX);
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
 
-   if (IS_WIN95) {
-      if (!RegisterWin95 (&RootShell))
-         return (FALSE);
-   } else if (!RegisterClass (&RootShell))
-          return (FALSE);
+   if (!RegisterClassEx (&RootShell))
+      return (FALSE);
 
    RootShell.style         = 0 ;
    RootShell.lpfnWndProc   = ThotDlgProc ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
    RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.lpszClassName = "WNDIALOGBOX" ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
+   RootShell.cbSize        = sizeof(WNDCLASSEX);
+   RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
    
-   if (IS_WIN95) {
-      if (!RegisterWin95 (&RootShell))
-         return (FALSE);
-   } else if (!RegisterClass (&RootShell))
-          return (FALSE);
+   if (!RegisterClassEx (&RootShell))
+      return (FALSE);
 #  endif /* !_WIN_PRINT */
 #  endif /* _WINDOWS */
 
@@ -3010,9 +3007,11 @@ char               *equiv;
               } else
                    sprintf (menu_item, "%s", &text[index + 1]);
               if (i == 0 || i == 1) 
-			     AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, menu_item);
+			     /* AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, menu_item); */
+			     AppendMenu (menu, MF_STRING, ref + i, menu_item);
 			  else
-			      AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+			      /* AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
+			      AppendMenu (menu, MF_STRING, ref + i, menu_item);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat) ;

@@ -59,6 +59,8 @@
 
 static BOOL   wndRegistered = FALSE ;
 
+extern LPCTSTR iconID;
+
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* __STDC__ */
@@ -640,7 +642,7 @@ int                 y;
    LastBg = -1;
    LastFg = -1;
 #  else  /* _WINDOWS */
-   WNDCLASS    wndThotPaletteClass ;
+   WNDCLASSEX  wndThotPaletteClass ;
    static char szAppName[] = "ThotColorPalette" ;
    HWND        hwnColorPal;
    MSG         msg;
@@ -651,17 +653,16 @@ int                 y;
       wndThotPaletteClass.cbClsExtra    = 0 ;
       wndThotPaletteClass.cbWndExtra    = 0 ;
       wndThotPaletteClass.hInstance     = hInstance ;
-      wndThotPaletteClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+      wndThotPaletteClass.hIcon         = LoadIcon (NULL, iconID) ;
       wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
       wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH) ;
       wndThotPaletteClass.lpszMenuName  = NULL ;
       wndThotPaletteClass.lpszClassName = szAppName ;
+      wndThotPaletteClass.cbSize        = sizeof(WNDCLASSEX);
+      wndThotPaletteClass.hIconSm       = LoadIcon (hInstance, iconID) ;
 
-      if (IS_WIN95) {
-         if (!RegisterWin95 (&wndThotPaletteClass))
-            return (FALSE);
-      } else if (!RegisterClass (&wndThotPaletteClass))
-             return (FALSE);
+      if (!RegisterClassEx (&wndThotPaletteClass))
+         return FALSE;
    }
 
    hwnColorPal = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_COLORS),
@@ -697,6 +698,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
      HDC         hdc ;
      PAINTSTRUCT ps ;
 	 HBRUSH      hBrush;
+	 HBRUSH      hOldBrush;
      int         i, x, y, nbPalEntries;
 	 HWND        hwnLButton;
 	 HWND        hwnRButton;
@@ -756,9 +758,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                ptrLogPal->palNumEntries = MAX_COLOR;
        
                for (i = 0; i < MAX_COLOR; i++) {
-                   ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
-                   ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-                   ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
+                   ptrLogPal->palPalEntry[i].peRed   = (BYTE) RGB_Table[i].red;
+                   ptrLogPal->palPalEntry[i].peGreen = (BYTE) RGB_Table[i].green;
+                   ptrLogPal->palPalEntry[i].peBlue  = (BYTE) RGB_Table[i].blue;
                    ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
                }
 
@@ -776,9 +778,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                for (y = 0 ; y < VERT_DIV ; y++)
                    for (x = 0 ; x < HORIZ_DIV ; x++) {
                        hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV)) ;
-                       SelectObject (hdc, hBrush);
+                       hOldBrush = SelectObject (hdc, hBrush);
                        Rectangle (hdc, x * cxBlock, (y * cyBlock) + 45,(x + 1) * cxBlock, (y + 1) * cyBlock + 45) ;
-                       SelectObject (hdc, GetStockObject (WHITE_BRUSH));
+                       SelectObject (hdc, hOldBrush);
                        if (!DeleteObject (hBrush))
                           WinErrorBox (WIN_Main_Wd);
                    }

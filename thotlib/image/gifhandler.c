@@ -1,4 +1,4 @@
-/*
+/* 
  *
  *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
@@ -44,7 +44,9 @@
 #include "inites_f.h"
 #include "gifhandler_f.h"
 #include "picture_f.h"
-
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOWS */
 #define	MAXCOLORMAPSIZE		256
 #define scale 65536 / MAXCOLORMAPSIZE;
 #define CM_RED		0
@@ -113,7 +115,7 @@ int WIN_InitSystemColors (void)
 int WIN_InitSystemColors () 
 #endif /* __STDC __ */
 {
-    int i, nbPalEntries;
+    int i;
 
     if (peInitialized)
        return 1;
@@ -127,10 +129,10 @@ int WIN_InitSystemColors ()
     ptrLogPal->palNumEntries = MAX_COLOR;
        
     for (i = 0; i < MAX_COLOR; i++) {
-        ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
-        ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-        ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
-        ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+        ptrLogPal->palPalEntry[i].peRed   = (BYTE) RGB_Table[i].red;
+        ptrLogPal->palPalEntry[i].peGreen = (BYTE) RGB_Table[i].green;
+        ptrLogPal->palPalEntry[i].peBlue  = (BYTE) RGB_Table[i].blue;
+        ptrLogPal->palPalEntry[i].peFlags = (BYTE) PC_RESERVED;
     }
 
     TtCmap = CreatePalette (ptrLogPal);
@@ -151,17 +153,17 @@ int WIN_InitSystemColors ()
    WIN_GetColorIndex
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-unsigned int WIN_GetColorIndex (int r, int g, int b)
+BYTE WIN_GetColorIndex (int r, int g, int b)
 #else /* __STDC__ */
-unsigned int WIN_GetColorIndex (r, g, b)
+BYTE WIN_GetColorIndex (r, g, b)
 int r; 
 int g; 
 int b;
 #endif /* __STDC__ */
 {
-    unsigned int        best;
+    BYTE                best;
+    BYTE                i;
     unsigned short      delred, delgreen, delblue;
-    unsigned int        i;
     unsigned int        dsquare;
     unsigned int        best_dsquare = (unsigned int) -1;
 
@@ -361,7 +363,7 @@ ThotColorStruct colrs[256];
    if (BitSet (buf[4], LOCALCOLORMAP)) { /* Global Colormap */
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
 	   return (NULL);
-	for (i = 0; i < GifScreen.BitPixel; i++) {
+	for (i = 0; i < (int) GifScreen.BitPixel; i++) {
 #           ifndef _WINDOWS
 	    colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
 	    colrs[i].green = GifScreen.ColorMap[1][i] * scale;
@@ -500,7 +502,7 @@ int                 label;
 
 #endif /* __STDC__ */
 {
-   char                buf[256];
+   unsigned char                buf[256];
 
    switch (label) {
 	  case 0x01:		/* Plain Text Extension */
@@ -938,13 +940,6 @@ ThotColorStruct* colrs;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS 
-   unsigned long       c;
-   int                 linepad, shiftnum;
-   int                 bmap_order;
-   int                 shiftstart, shiftstop, shiftinc;
-   int                 bytesperline;
-#  endif /* !_WINDOWS */
    int                 temp;
    int                 w, h;
    HBITMAP             newimage;
@@ -1006,6 +1001,7 @@ ThotColorStruct* colrs;
    
    newimage = CreateCompatibleBitmap (hDC, width, height);
    SetBitmapBits (newimage, width * height * (depth/8), bit_data);
+   TtaFreeMemory (bit_data);
    return newimage;
 }
 #endif /* _WINDOWS */
@@ -1347,16 +1343,7 @@ ThotColorStruct     colrs[256];
    return (Img);
 
 #  else /* _WINDOWS */
-   static int        cbBits, cbPlanes; 
-   int               mapIndex ;
-   int               padding, i, j, ret = 0, nbPalColors;
-   int               Mapping [MAXNUMBER];
-   char*             bmBits;
-   HDC               destMemDC;  
-   HBITMAP           bmp = 0;
    boolean           need_to_dither;
-   unsigned int      colorIndex;
-
    if (THOT_vInfo.depth == 1)
       need_to_dither = TRUE;
    else
@@ -1365,6 +1352,15 @@ ThotColorStruct     colrs[256];
    if (TtIsTrueColor) 
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
+         static int        cbBits, cbPlanes; 
+         BYTE               mapIndex ;
+         int               padding, i, j, ret = 0, nbPalColors;
+         int               Mapping [MAXNUMBER];
+         BYTE*             bmBits;
+         HDC               destMemDC;  
+         HBITMAP           bmp = 0;
+         unsigned int      colorIndex;
+
          destMemDC = CreateCompatibleDC (TtDisplay);
          WIN_InitSystemColors ();
 
@@ -1400,10 +1396,10 @@ ThotColorStruct     colrs[256];
              for (i = 0; i < width; i++) {
                  colorIndex = (unsigned int) image_data [i + j * width];
                  if (Mapping [colorIndex] != -1)
-                    mapIndex = Mapping [colorIndex];
+                    mapIndex = (BYTE) Mapping [colorIndex];
                  else {
                       mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
-                      Mapping [colorIndex] = mapIndex ;  
+                      Mapping [colorIndex] = (int) mapIndex ;  
                  }    
                  bmBits[i + j * (padding + width)] = mapIndex;
              }
@@ -1413,9 +1409,6 @@ ThotColorStruct     colrs[256];
          /* Cleanup */
          
          DeleteDC(destMemDC);
-		 /*
-		 if (!DeleteObject (TtCmap))
-            WinErrorBox (WIN_Main_Wd); */
          TtaFreeMemory (bmBits);
          peInitialized = 0;	 
          return (Pixmap) bmp;

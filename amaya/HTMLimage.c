@@ -332,7 +332,9 @@ char               *imageName;
     }
   else
     {
-fprintf(stderr,"Background image !\n");
+#      ifndef _WINDOWS
+       fprintf(stderr,"Background image !\n");
+#      endif /* _WINDOWS */
       /* create a background image for the element */
       /* set the value */
     }

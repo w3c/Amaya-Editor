@@ -67,7 +67,7 @@ int  Window_Curs;
 
 char docToOpen [256];
 extern boolean viewClosed;
-extern int     iconID;
+/* extern bmpID;  */
 #define AMAYA_PAGE "\\amaya\\AmayaPage.html"
 #else  /* _WINDOWS */
 #define AMAYA_PAGE "/amaya/AmayaPage.html"
@@ -970,7 +970,7 @@ char               *pathname;
 
 #  ifdef _WINDOWS
    Window_Curs = IDC_WINCURSOR;
-   iconID      = IDI_APPICON;
+   /* bmpID = IDB_AMAYALOGO; */
 #  endif /* _WINDOWS */
 
    old_doc = doc;		/* previous document */
@@ -1421,9 +1421,13 @@ View                view;
    documentname = TtaGetMemory (MAX_LENGTH);
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname, NULL);
 
-   if (!IsW3Path (pathname) && !TtaFileExist (pathname))
+   if (!IsW3Path (pathname) && !TtaFileExist (pathname)) {
+      /* Free Memory ***/
+      TtaFreeMemory (pathname);
+	  TtaFreeMemory (documentname);
      /* cannot reload this document */
      return;
+   }
 
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);

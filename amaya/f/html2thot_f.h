@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean      ElementNeedsPlaceholder (Element el);
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern int MapGI ( char *gi,

@@ -1038,6 +1038,8 @@ PtrAttribute        pNewAttr;
    boolean             suppress, compare, inherit, mandatory, create;
    NotifyAttribute     notifyAttr;
 
+   mandatory = FALSE;
+
    /* l'element porte-t-il deja un attribut du meme type ? */
    pAttr = AttributeValue (pEl, pNewAttr);
    create = (pAttr == NULL);

@@ -12,7 +12,7 @@
  * French, but their translation is in progress and the full module
  * will be available in English in the next release.
  * 
- */
+ */ 
  
 /*
  * Handle application frames
@@ -95,12 +95,19 @@ static PtrDocument  OldDocMsgSelect;
 
 extern HWND      hwndClient;
 extern HWND      ToolBar;
+extern HWND      logoFrame;
 extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance;
+
 #ifndef _WIN_PRINT
-extern int       Window_Curs;
+extern int  Window_Curs;
+#if 0
+HBITMAP     appLogo = (HBITMAP)0;
+int         cyLogo;
+int         bmpID;
+#endif /* 0 */
 #endif /* !_WIN_PRINT */
 
 static HWND      hwndHead;
@@ -477,10 +484,7 @@ int                 value;
 #endif /* __STDC__ */
 {
    int        delta, Xpos, Ypos, width, height;
-   int        sMin, sMax, sPos, total, nbPages, remaining;
-   int        y, n, start, end, h;
-   float      carparpix;
-   SCROLLINFO ScrollInfo;
+   int        sPos, nbPages, remaining;
 
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -525,7 +529,6 @@ int                 value;
                delta = value - sPos;
                nbPages = abs (delta) / height;
                remaining = abs (delta) - (height * nbPages);
-			   InvalidateRect (FrRef[frame], NULL, TRUE);
 			   if (nbPages <= 3) {
                   if (delta > 0)
                       delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
@@ -536,7 +539,6 @@ int                 value;
                      delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100) ;
                      JumpIntoView (frame, delta);
                }
-               InvalidateRect (FrRef[frame], NULL, TRUE);
                break;
    }
 }
@@ -1127,15 +1129,19 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-    HWND  hwndTextEdit;
-#   ifdef THOT_TOOLTIPS
-    HWND  hwndToolTip ;
-#   endif /* THOT_TOOLTIPS */
-    RECT  rect;
-    int   doc, view ;
-    char* viewName ;
+    HWND   hwndTextEdit;
+#   ifdef  THOT_TOOLTIPS
+    HWND   hwndToolTip ;
+#   endif  /* THOT_TOOLTIPS */
+    RECT   rect;
+    int    doc, view ;
+    char*  viewName ;
+	/*
+	HDC    hDC, hMemDC;
+	BITMAP bm;
+	*/
+    RECT   rWindow ;
     int  frame = GetMainFrameNumber (hwnd);
-
     GetWindowRect (hwnd, &rect);
 
     switch (mMsg) {
@@ -1235,17 +1241,21 @@ LPARAM      lParam;
                 break ;
 
            case WM_SIZE: {
-                int   cx = LOWORD (lParam) ;
-                int   cy = HIWORD (lParam) ;
-                int   cyStatus ;
-                int   cxVSB ;
-                int   cyHSB ;
-                int   cyTB ;
-                int   x, y ;
-                int   index = 0;
-                int   cyTxtZone ;
-                DWORD dwStyle ;
-                RECT  rWindow ;
+                int    cx = LOWORD (lParam) ;
+                int    cy = HIWORD (lParam) ;
+                int    cyStatus ;
+                int    cxVSB ;
+                int    cyHSB ;
+                int    cyTB ;
+                int    x, y ;
+                int    index = 0;
+                int    cyTxtZone ;
+                DWORD  dwStyle ;
+
+#               if 0
+				if (appLogo) 
+                   GetObject (appLogo, sizeof (BITMAP), &bm);
+#               endif /* 0 */
 
                 /* Adjust toolbar size. */
                 if (IsWindowVisible (WinToolBar[frame])) {
@@ -1265,15 +1275,25 @@ LPARAM      lParam;
                       cyTB = 0 ;
 
                 cyTxtZone = cyTB ;
+				/* cyLogo    = cyTB ; */
 
                 /* Adjust text zones */
                 for (index = 0; index < MAX_TEXTZONE; index++) {
                     if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
-                       MoveWindow (FrameTable[frame].Label[index], 5, cyTxtZone + 5, 100, 20, TRUE);
-                       MoveWindow (FrameTable[frame].Text_Zone[index], 105, cyTxtZone + 5, cx - 120, 20, TRUE) ;
+                       MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
+                       MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE) ;
                        cyTxtZone += 25 ;
                     }
                 }
+/*
+                if (appLogo) {
+				   hDC = GetDC (FrMainRef [frame]);
+				   hMemDC = CreateCompatibleDC (hDC);
+				   SelectObject (hMemDC, appLogo);
+				   BitBlt (hDC, 1, cyTB, bm.bmWidth, bm.bmHeight, hMemDC, 0, 0, SRCCOPY);
+				   DeleteDC (hMemDC);
+				   DeleteDC (hDC);
+				}*/
 
                 /* Adjust status bar size. */
                 if (IsWindowVisible (FrameTable[frame].WdStatus)) {
@@ -1304,10 +1324,25 @@ LPARAM      lParam;
 
                 SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
                 SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
+
                 return 0;
            }
 
-           default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+           default: 
+#                  if 0
+                   GetWindowRect (WinToolBar[frame], &rWindow) ;
+                   ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;
+                   ScreenToClient (hwnd, (LPPOINT) &rWindow.right) ;
+                   if ((frame != -1) && appLogo && FrameTable[frame].showLogo) {
+                      hDC = GetDC (FrMainRef [frame]);
+				      hMemDC = CreateCompatibleDC (hDC);
+				      SelectObject (hMemDC, appLogo);
+				      BitBlt (hDC, 1, cyLogo, bm.bmWidth, bm.bmHeight, hMemDC, 0, 0, SRCCOPY);
+				      DeleteDC (hMemDC);
+				      DeleteDC (hDC);
+				   }
+#                  endif /* 0 */
+			       return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
 

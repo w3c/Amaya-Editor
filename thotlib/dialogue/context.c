@@ -103,24 +103,6 @@ int RO;
 }
 
 /*----------------------------------------------------------------------
- *      WinUnloadGC has to be called after using an GC X-Windows
- *         emulation under MS-Windows.
- ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WinUnloadGC (void)
-#else  /* __STDC__ */
-void WinUnloadGC ()
-#endif /* __STDC__ */
-{
-	/*
-    if (TtLineGC.pen) {
-       DeleteObject (TtLineGC.pen);
-       TtLineGC.pen = 0;
-    }
-	*/
-}
-
-/*----------------------------------------------------------------------
  *      WinInitColors initialize the color table depending on the
  *         device capabilities under MS-Windows.
  ----------------------------------------------------------------------*/
