@@ -57,8 +57,8 @@
 56 %s : sera cree temporairement.\n
 57 %s : ne sera pas cree\n
 58 %s : ne sera pas cree et est reference !?!?\n
-59 Nom du schema a compiler (sans .SCH): 
-60 %s ne ne peut pas etre Included\n
+59 Le suffixe du nom de schema est invalide : %s\n 
+60 %s ne ne peut pas etre inclus\n
 61 %s ne peut pas etre defini comme extern\n
 62 %s : structure extern inconnue\n
 63 L\'element associe %s : est utilise par une autre regle!\n

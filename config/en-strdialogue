@@ -57,7 +57,7 @@
 56 %s : is a temporary element.\n
 57 %s : won\'t be created\n
 58 %s : won\'t be created and is referenced!?!?\n
-59 file name without \".SCH\:
+59 The suffix of the file name is invalid: %s\n
 60 %s cannot be included\n
 61 %s cannot be extern\n
 62 %s : external structure not found\n
