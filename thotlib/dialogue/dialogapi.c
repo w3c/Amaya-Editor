@@ -3624,6 +3624,8 @@ struct E_List     **adbloc;
 	  }
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
+	XtSetArg (args[n], XmNspacing, 5);
+	n++;
 	w = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (w);
 #       endif /* _WINDOWS */
