@@ -46,7 +46,7 @@
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
-void FontOrig (ptrfont font, CHAR_T firstchar, int *pX, int *pY)
+void FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
 {
    if (!font)
       return;
@@ -85,9 +85,11 @@ static void InitDrawing (int style, int thick, int fg)
     {
       /* solid */
 #ifdef _GTK
-      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
+      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID,
+				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 #else /* _GTK */
-      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
+      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid,
+			  CapButt, JoinMiter);
 #endif /* _GTK */
     }
   else
@@ -101,10 +103,12 @@ static void InitDrawing (int style, int thick, int fg)
       dash[1] = 4;
 #ifdef _GTK
       gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
-      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH, GDK_CAP_BUTT, GDK_JOIN_MITER);
+      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH,
+				  GDK_CAP_BUTT, GDK_JOIN_MITER);
 #else /* _GTK */
       XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
-      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
+      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash,
+			  CapButt, JoinMiter);
 #endif /* _GTK */
     }
   /* Load the correct color */
@@ -129,7 +133,7 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
   TranslateChars replaces in the text space chars to their visual
   equivalents and the character 128 by '&'.
   ----------------------------------------------------------------------*/
-static void TranslateChars (USTRING text)
+static void TranslateChars (unsigned char *text)
 {
   int                 i;
 
@@ -2451,7 +2455,7 @@ void Clear (int frame, int width, int height, int x, int y)
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
   ----------------------------------------------------------------------*/
-void WChaine (ThotWindow w, STRING string, int x, int y, ptrfont font,
+void WChaine (ThotWindow w, char *string, int x, int y, ptrfont font,
 	      ThotGC GClocal)
 {
 #ifdef _GTK

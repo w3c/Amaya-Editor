@@ -105,7 +105,7 @@ THOT_EXPORT int            ClickFrame;	      /* Clicked frame           */
 THOT_EXPORT int            ClickX;	      /* Clicked X position      */
 THOT_EXPORT int            ClickY;	      /* Clicked Y position      */
 THOT_EXPORT int            ClickIsDone;	      /* Click done              */
-THOT_EXPORT USTRING        Xbuffer;	      /* Clipboard buffer        */
+THOT_EXPORT unsigned char *Xbuffer;	      /* Clipboard buffer        */
 THOT_EXPORT int		   ClipboardLength;
 THOT_EXPORT Proc	   CurrentCallbackAPI;
 

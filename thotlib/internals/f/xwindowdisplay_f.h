@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void FontOrig ( ptrfont font,
-                       CHAR_T firstchar,
+                       char firstchar,
                        int *pX,
                        int *pY );
 extern void DrawChar ( UCHAR_T car,
@@ -312,7 +312,7 @@ extern void Clear ( int frame,
                     int x,
                     int y );
 extern void WChaine ( ThotWindow w,
-                      STRING string,
+                      char *string,
                       int x,
                       int y,
                       ptrfont font,
@@ -342,7 +342,7 @@ extern void PaintWithPattern ( int frame,
 #else /* __STDC__ */
 
 extern void FontOrig (/* ptrfont font,
-                         CHAR_T firstchar,
+                         char firstchar,
                          int *pX,
                          int *pY */);
 extern void DrawChar (/* UCHAR_T car,
@@ -647,7 +647,7 @@ extern void Clear (/* int frame,
                       int x,
                       int y */);
 extern void WChaine (/* ThotWindow w,
-                        STRING string,
+                        char *string,
                         int x,
                         int y,
                         ptrfont font,

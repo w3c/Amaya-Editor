@@ -128,23 +128,22 @@ static void InitFormLanguage (Document doc, View view,
 			      PtrElement firstSel,
 			      PtrAttribute currAttr)
 {
+   Language            language;
+   PtrAttribute        pHeritAttr;
+   PtrElement          pElAttr;
+   char               *s, *ptr;
+   char                languageValue[MAX_TXT_LEN];
+   char                Lab[200];
+   int                 defItem, nbItem, nbLanguages, firstLanguage, length;
 #ifndef _WINDOWS
    char                bufMenu[MAX_TXT_LEN];
    int                 i;
 #endif /* _WINDOWS */
-   char                string[MAX_TXT_LEN];
-   char               *ptr;
-   char                languageValue[MAX_TXT_LEN];
-   char                Lab[200];
-   Language            language;
-   PtrAttribute        pHeritAttr;
-   PtrElement          pElAttr;
-   int                 defItem, nbItem, nbLanguages, firstLanguage, length;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
    languageValue[0] = EOS;
-   if (currAttr != NULL && currAttr->AeAttrText != NULL)
-     strncpy (languageValue, currAttr->AeAttrText->BuContent,MAX_NAME_LENGTH);
+   if (currAttr && currAttr->AeAttrText)
+     CopyBuffer2MBs (currAttr->AeAttrText, 0, languageValue, MAX_TXT_LEN);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
 #ifdef _WINDOWS
@@ -166,18 +165,18 @@ static void InitFormLanguage (Document doc, View view,
    firstLanguage = TtaGetFirstUserLanguage ();
    for (language = firstLanguage; language < nbLanguages; language++)
      {
-       strcpy (string, TtaGetLanguageName (language));
-       length = strlen (string);
+       s = TtaGetLanguageName (language);
+       length = strlen (s);
        if (length > 0)
 	 {
-	   if (defItem < 0 && languageValue[0] != EOS)
-	     if (strcasecmp (TtaGetLanguageCode(language),languageValue) == 0)
-	       {
-		 defItem = nbItem;
-		 strcpy (languageValue, string);
-	       }
+	   if (defItem < 0 && languageValue[0] != EOS &&
+	       strcasecmp (TtaGetLanguageCode(language), languageValue) == 0)
+	     {
+	       defItem = nbItem;
+	       strcpy (languageValue, s);
+	     }
 	   nbItem++;
-	   strcpy (ptr, string);
+	   strcpy (ptr, s);
 	   ptr += length + 1;
 	 }
      }
@@ -211,14 +210,14 @@ static void InitFormLanguage (Document doc, View view,
 	   /* cherche la valeur heritee de l'attribut Langue */
 	   strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
 	   pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
-	   if (pHeritAttr != NULL)
-	     if (pHeritAttr->AeAttrText != NULL)
-	       {
-		 /* the attribute value is a RFC-1766 code. Convert it into */
-		 /* a language name */
-		 language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
-		 strcat (Lab, TtaGetLanguageName(language));
-	       }
+	   if (pHeritAttr && pHeritAttr->AeAttrText)
+	     {
+	       /* the attribute value is a RFC-1766 code. Convert it into */
+	       /* a language name */
+	       CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, languageValue, MAX_TXT_LEN);
+	       language = TtaGetLanguageIdFromName (languageValue);
+	       strcat (Lab, TtaGetLanguageName(language));
+	     }
 	 }
        else
 	 /* initialise le selecteur sur l'entree correspondante a la valeur */
@@ -599,7 +598,8 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 /*----------------------------------------------------------------------
   InitNumAttrDialogWndProc
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
+					   WPARAM wParam, LPARAM lParam)
 {
   HFONT           newFont;
   ThotWindow      hwnTitle;
@@ -1326,49 +1326,52 @@ void UpdateAttrMenu (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    AttachAttrToElem attachs the attribute to the element
   ----------------------------------------------------------------------*/
-static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
+static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
 {
-   Language            lang;
-   PtrAttribute        pAttrAsc;
-   PtrElement          pElAttr;
+  Language            lang;
+  PtrAttribute        pAttrAsc;
+  PtrElement          pElAttr;
+  char                text[100];
 
-   /* On ne traite pas les marques de page */
-   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-     {
-        if (pAttr->AeAttrNum == 1)
+  /* On ne traite pas les marques de page */
+  if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+    {
+      if (pAttr->AeAttrNum == 1)
    	/* c'est l'attribut langue */
-          {
+	{
    	  /* change la langue de toutes les feuilles de texte du sous-arbre */
    	  /* de l'element */
    	  if (pAttr->AeAttrText != NULL)
-   	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+	    lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
    	  else
-   	     /* c'est une suppression de l'attribut Langue */
+	    /* c'est une suppression de l'attribut Langue */
    	    {
-   	       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
-   	       /* on cherche si un ascendant porte l'attribut Langue */
-   	       if (pEl->ElParent != NULL)
-   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL,
-						  &pElAttr);
-   	       else
-   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL,
-						  &pElAttr);
-
-   	       if (pAttrAsc != NULL)
-   		  /* un ascendant definit la langue, on prend cette langue */
-   		  if (pAttrAsc->AeAttrText != NULL)
-   		     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
+	      lang = TtaGetDefaultLanguage ();		/* langue par defaut */
+	      /* on cherche si un ascendant porte l'attribut Langue */
+	      if (pEl->ElParent != NULL)
+		pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL,
+						 &pElAttr);
+	      else
+		pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL,
+						 &pElAttr);
+	      
+	      if (pAttrAsc && pAttrAsc->AeAttrText)
+		{
+		  /* un ascendant definit la langue, on prend cette langue */
+		  CopyBuffer2MBs (pAttrAsc->AeAttrText, 0, text, 100);
+		  lang = TtaGetLanguageIdFromName (text);
+		}
    	    }
    	  ChangeLanguage (pDoc, pEl, lang, FALSE);
-          }
-
-        /* met la nouvelle valeur de l'attribut dans l'element et */
-        /* applique les regles de presentation de l'attribut a l'element */
-        AttachAttrWithValue (pEl, pDoc, pAttr);
-	/* special attributes */
-        if (ThotLocalActions[T_attrtable] != NULL)
+	}
+      
+      /* met la nouvelle valeur de l'attribut dans l'element et */
+      /* applique les regles de presentation de l'attribut a l'element */
+      AttachAttrWithValue (pEl, pDoc, pAttr);
+      /* special attributes */
+      if (ThotLocalActions[T_attrtable])
    	(*ThotLocalActions[T_attrtable]) (pEl, pAttr, pDoc);
-     }
+    }
 }
 
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,16 +19,13 @@ THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 #include <windows.h>
 #ifndef __GNUC__
 #include <commctrl.h>
-#endif
-
-THOT_EXPORT CHAR_T             szTbStrings [4096];
+#endif /* __GNUC__ */
 THOT_EXPORT WNDCLASSEX         RootShell;
 THOT_EXPORT HMENU              currentMenu;
 THOT_EXPORT HINSTANCE          hInstance;
 THOT_EXPORT int                currentFrame;
 THOT_EXPORT BOOL               buttonCommand;
 #else /* _WINDOWS */
-
 THOT_EXPORT ThotWidget	       RootShell;
 #endif /* !_WINDOWS */
 
@@ -46,6 +43,13 @@ THOT_EXPORT int		       MaxMenuAction;
 
 /* return events for Application and Document windows			  */
 THOT_EXPORT int                ClickIsDone;
-THOT_EXPORT CHAR_T*            servername ;
+THOT_EXPORT char              *servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */
+
+
+
+
+
+
+

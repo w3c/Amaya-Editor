@@ -3265,7 +3265,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = uatoi (zoomStr);
+	       zoomVal = atoi (zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
@@ -3274,7 +3274,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     visiVal = 5;
 	   else
 	     {
-	       visiVal = uatoi (visiStr);
+	       visiVal = atoi (visiStr);
 	       if (visiVal < 0 || visiVal > 10)
 		 visiVal = 5;
 	     }
