@@ -2873,8 +2873,10 @@ int                 frame;
         DestroyWindow (FrMainRef[frame]);
 		CleanFrameCatList (frame);
 
-        for (i = 0; i < MAX_BUTTON; i++)
+        for (i = 0; i < MAX_BUTTON; i++) {
             TtaFreeMemory (FrameTable[frame].Button[i]);
+            FrameTable[frame].Button[i] = 0;
+		}
 
         FrMainRef [0] = 0;
 #       endif /* _WINDOWS */
