@@ -597,6 +597,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 
   /* get the number of columns */
   pBox = table->AbBox;
+  /* check if we're really handling a table */
+  if (pBox && pBox->BxType != BoTable)
+    return;
   pTabRel = pBox->BxColumns;
   cNumber = 0;
   while (pTabRel != NULL)
@@ -1044,6 +1047,9 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   pSS = table->AbElement->ElStructSchema;
   /* how many columns */
   pBox = table->AbBox;
+  /* check if we're really handling a table */
+  if (pBox && pBox->BxType != BoTable)
+    return FALSE;
   pTabRel = pBox->BxColumns;
   cNumber = 0;
   change = FALSE;
