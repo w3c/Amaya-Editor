@@ -39,7 +39,7 @@ AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
            AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg
 
 RESOURCE_XRC_FILES= *.xrc
-RESOURCE_ICONS_FILES= *.png
+RESOURCE_ICONS_FILES= *.png *.ico *.gif
 
 FONTSFILES=Families.list fonts.dir icones* *.ttf *.TTF
 
@@ -528,6 +528,9 @@ install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix)/Amaya/resources ; then $(MKDIR) $(prefix)/Amaya/resources ; fi)
 	@(if test ! -d $(prefix)/Amaya/resources/xrc ; then $(MKDIR) $(prefix)/Amaya/resources/xrc ; fi)
 	@(if test ! -d $(prefix)/Amaya/resources/icons ; then $(MKDIR) $(prefix)/Amaya/resources/icons ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources/icons/16x16 ; then $(MKDIR) $(prefix)/Amaya/resources/icons/16x16 ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources/icons/22x22 ; then $(MKDIR) $(prefix)/Amaya/resources/icons/22x22 ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources/icons/misc ; then $(MKDIR) $(prefix)/Amaya/resources/icons/misc ; fi)
 	@(if test ! -d $(prefix)/Amaya/config ; then $(MKDIR) $(prefix)/Amaya/config ; fi)
 	@(if test ! -d $(prefix)/Amaya/annotlib ; then $(MKDIR) $(prefix)/Amaya/annotlib ; fi)
 	@(if test ! -d $(prefix)/Amaya/fonts ; then $(MKDIR) $(prefix)/Amaya/fonts ; fi)
@@ -566,9 +569,16 @@ install : all @NOPRINT@../bin/print
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/xrc ; \
 	  done ; done)
 	(for i in $(RESOURCE_ICONS_FILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/resources/icons/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons ; \
-	  done ; done)
+	  for file in `$(ECHO) $(THOTDIR)/resources/icons/16x16/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons/16x16 ; \
+	  done ; \
+	  for file in `$(ECHO) $(THOTDIR)/resources/icons/22x22/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons/22x22 ; \
+	  done ; \
+	  for file in `$(ECHO) $(THOTDIR)/resources/icons/misc/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/icons/misc ; \
+	  done ; \
+	  done)
 	(for i in $(DICOFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/dicopar ; \
