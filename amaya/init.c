@@ -2368,14 +2368,13 @@ ThotBool	    history;
       DocumentURLs[newdoc] = s;
       /* save the document's formdata into the document table */
       if (DocumentMeta[newdoc] != NULL)
-	{
-	  TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
-	  TtaFreeMemory (DocumentMeta[(int) newdoc]);
-	}
-      DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+	  TtaFreeMemory (DocumentMeta[newdoc]->form_data);
+      else
+	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
+      DocumentMeta[newdoc]->xmlformat = FALSE;
       DocumentSource[newdoc] = 0;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
@@ -2792,7 +2791,8 @@ View                view;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
-	 DocumentMeta[sourceDoc]->put_default_name = FALSE;
+	 DocumentMeta[sourceDoc]->put_default_name = DocumentMeta[document]->put_default_name;
+	 DocumentMeta[sourceDoc]->xmlformat = DocumentMeta[document]->xmlformat;
 	 DocumentTypes[sourceDoc] = docSource;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
@@ -3239,22 +3239,18 @@ void *context;
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
 	       /* save the document name into the document table */
-	       i = ustrlen (pathname) + 1;
-	       s = TtaAllocString (i);
-	       ustrcpy (s, pathname);
+	       s = TtaStrdup (pathname);
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
-		 {
-		   if (DocumentMeta[newdoc]->form_data)
-		     TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
-		   TtaFreeMemory (DocumentMeta[(int) newdoc]);
-		 }
-	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+		 TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
+	       else
+		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       DocumentMeta[newdoc]->method = method;
 	       DocumentMeta[newdoc]->put_default_name = FALSE;
+	       DocumentMeta[newdoc]->xmlformat = FALSE;
 	       DocumentSource[newdoc] = 0;
 	       ResetStop(newdoc);
 	     }
