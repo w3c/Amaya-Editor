@@ -2789,6 +2789,11 @@ int                 frame;
 		     while (box != NULL)
 			if (box == pBox)
 			   return;
+			else if (box->BxMoved == pFromBox)
+			  {
+			     box->BxMoved = NULL;
+			     box = NULL;
+			  }
 			else
 			   box = box->BxMoved;
 		  }
@@ -2991,6 +2996,11 @@ int                 frame;
 		     while (box != NULL)
 			if (box == pBox)
 			   return;
+			else if (box->BxMoved == pFromBox)
+			  {
+			     box->BxMoved = NULL;
+			     box = NULL;
+			  }
 			else
 			   box = box->BxMoved;
 		  }
