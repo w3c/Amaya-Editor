@@ -6,45 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-#ifndef _DEBUG
-
-extern void  *TtaGetMemory ( unsigned int n );
-extern void  TtaFreeMemory ( void *ptr );
-extern void* TtaRealloc (void *ptr, unsigned int n);
-
-#else /*_DEBUG*/
-
-#ifdef _WINDOWS
-
-/*****************VISUAL STUDIO MEMORY LEAK DETECTION 
-http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vxconenablingmemoryleakdetection.asp
-**********************/
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-#undef malloc
-#define malloc(size) _malloc_dbg(size,_NORMAL_BLOCK,__FILE__,__LINE__)
-
-#undef free
-#define free(ptr) _free_dbg(ptr, _NORMAL_BLOCK)
-
-#undef realloc 
-#define realloc(ptr, size) _realloc_dbg(ptr, size, _NORMAL_BLOCK,__FILE__,__LINE__)
-
-#endif /*_WINDOWS*/
-
-#undef TtaGetMemory
-#define TtaGetMemory(size) malloc(((size)?size:1))    
-
-#undef TtaFreeMemory
-#define TtaFreeMemory(ptr) free(ptr)    
-
-#undef TtaRealloc
-#define TtaRealloc(ptr, size) realloc(ptr, size)   
-
-#endif /*_DEBUG*/
-
+extern void *TtaGetMemory ( unsigned int n );
+extern void TtaFreeMemory ( void *ptr );
+extern void *TtaRealloc ( void *ptr,
+                          unsigned int n );
 extern void FreeAll ( void );
 extern char *TtaStrdup ( char* str );
 extern void InitEditorMemory ( void );
@@ -116,10 +81,10 @@ extern void FreeDictionary ( PtrDict pDict );
 
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void *ptr */);
-extern void FreeAll (/* void */);
-extern char *TtaStrdup (/* char* str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
+extern void FreeAll (/* void */);
+extern char *TtaStrdup (/* char* str */);
 extern void InitEditorMemory (/* void */);
 extern void GetTextBuffer (/* PtrTextBuffer *pBT */);
 extern void FreeTextBuffer (/* PtrTextBuffer pBT */);

@@ -2038,20 +2038,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       else if (pPRule->PrType == PtVertPos)
 		 pAbb1->AbVertEnclosing = FALSE;
 	     }
-	   if (PPos->PosAbRef != pAbb1->AbEnclosing)
-	     /* le pave ne se positionne pas par rapport a l'englobant */
-	     {
-	       if (PPos->PosAbRef->AbEnclosing != pAbb1->AbEnclosing)
-		 /* il ne se positionne pas par rapport a un pave frere */
-		 /* ce pave deroge a la regle d'englobement */
-		 {
-		   if (pPRule->PrType == PtHorizPos)
-		     pAbb1->AbHorizEnclosing = FALSE;
-		   else if (pPRule->PrType == PtVertPos)
-		     pAbb1->AbVertEnclosing = FALSE;
-		 }
-	     }
-	   else
+	   if (PPos->PosAbRef == pAbb1->AbEnclosing)
 	     /* le pave se positionne par rapport a l'englobant */
 	     {
 	       if (pPRule->PrType == PtHorizPos)

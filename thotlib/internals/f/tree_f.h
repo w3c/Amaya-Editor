@@ -147,6 +147,36 @@ extern Element TtaSearchTypedElementInTree ( ElementType searchedType,
                                              Element parent,
                                              Element element );
 extern int TtaGetElementVolume ( Element element );
+extern PtrElement FwdSearchElementAmong5TypesInSubtree ( PtrElement pEl,
+                                                         ThotBool test,
+                                                         int typeNum5,
+                                                         int typeNum4,
+                                                         int typeNum3,
+                                                         int typeNum2,
+                                                         int typeNum1,
+                                                         PtrSSchema pSS5,
+                                                         PtrSSchema pSS4,
+                                                         PtrSSchema pSS3,
+                                                         PtrSSchema pSS2,
+                                                         PtrSSchema pSS1 );
+extern PtrElement FwdSearchElemAmong5Types ( PtrElement pEl,
+                                             int typeNum5,
+                                             int typeNum4,
+                                             int typeNum3,
+                                             int typeNum2,
+                                             int typeNum1,
+                                             PtrSSchema pSS5,
+                                             PtrSSchema pSS4,
+                                             PtrSSchema pSS3,
+                                             PtrSSchema pSS2,
+                                             PtrSSchema pSS1 );
+extern Element SearchElementAmong5Types ( ElementType searchedType1,
+                                          ElementType searchedType2,
+                                          ElementType searchedType3,
+                                          ElementType searchedType4,
+                                          ElementType searchedType5,
+                                          SearchDomain scope,
+                                          Element element );
 
 #else /* __STDC__ */
 
@@ -291,6 +321,36 @@ extern Element TtaSearchTypedElementInTree (/* ElementType searchedType,
                                                Element parent,
                                                Element element */);
 extern int TtaGetElementVolume (/* Element element */);
+extern PtrElement FwdSearchElementAmong5TypesInSubtree (/* PtrElement pEl,
+                                                           ThotBool test,
+                                                           int typeNum5,
+                                                           int typeNum4,
+                                                           int typeNum3,
+                                                           int typeNum2,
+                                                           int typeNum1,
+                                                           PtrSSchema pSS5,
+                                                           PtrSSchema pSS4,
+                                                           PtrSSchema pSS3,
+                                                           PtrSSchema pSS2,
+                                                           PtrSSchema pSS1 */);
+extern PtrElement FwdSearchElemAmong5Types (/* PtrElement pEl,
+                                               int typeNum5,
+                                               int typeNum4,
+                                               int typeNum3,
+                                               int typeNum2,
+                                               int typeNum1,
+                                               PtrSSchema pSS5,
+                                               PtrSSchema pSS4,
+                                               PtrSSchema pSS3,
+                                               PtrSSchema pSS2,
+                                               PtrSSchema pSS1 */);
+extern Element SearchElementAmong5Types (/* ElementType searchedType1,
+                                            ElementType searchedType2,
+                                            ElementType searchedType3,
+                                            ElementType searchedType4,
+                                            ElementType searchedType5,
+                                            SearchDomain scope,
+                                            Element element */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
