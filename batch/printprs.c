@@ -1088,144 +1088,44 @@ static void         wrsuiteregles (PtrPRule RP)
 	  }
 	switch (RP->PrType)
 	      {
-		 case PtFunction:
-		    wrFonctPres (RP);
-		    break;
 		 case PtVisibility:
 		    printf ("Visibility: ");
 		    wrnbherit (RP);
 		    break;
-		 case PtDepth:
-		    printf ("Depth: ");
-		    wrnbherit (RP);
+		 case PtFunction:
+		    wrFonctPres (RP);
 		    break;
-		 case PtFillPattern:
-		    printf ("FillPattern: ");
-		    wrnbherit (RP);
+		 case PtVertOverflow:
+		    printf ("VertOverflow: ");
+		    wrboolean (RP);
 		    break;
-		 case PtBackground:
-		    printf ("Background: ");
-		    wrnbherit (RP);
+		 case PtHorizOverflow:
+		    printf ("HorizOverflow: ");
+		    wrboolean (RP);
 		    break;
-		 case PtForeground:
-		    printf ("Foreground: ");
-		    wrnbherit (RP);
+		 case PtVertRef:
+		    printf ("VertRef: ");
+		    wrpos (RP->PrPosRule, False);
 		    break;
-		 case PtBorderTopColor:
-		    printf ("BorderTopColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent;");
-		    else if (RP->PrPresMode == PresImmediate &&
-			     !RP->PrAttrValue && RP->PrIntValue == -1)
-		       printf ("foreground;");
-		    else
-		       wrnbherit (RP);
+		 case PtHorizRef:
+		    printf ("HorizRef: ");
+		    wrpos (RP->PrPosRule, False);
 		    break;
-		 case PtBorderRightColor:
-		    printf ("BorderRightColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent;");
-		    else if (RP->PrPresMode == PresImmediate &&
-			     !RP->PrAttrValue && RP->PrIntValue == -1)
-		       printf ("foreground;");
-		    else
-		       wrnbherit (RP);
+		 case PtHeight:
+		    printf ("Height: ");
+		    wrdimens (RP->PrDimRule, True);
 		    break;
-		 case PtBorderBottomColor:
-		    printf ("BorderBottomColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent;");
-		    else if (RP->PrPresMode == PresImmediate &&
-			     !RP->PrAttrValue && RP->PrIntValue == -1)
-		       printf ("foreground;");
-		    else
-		       wrnbherit (RP);
+		 case PtWidth:
+		    printf ("Width: ");
+		    wrdimens (RP->PrDimRule, False);
 		    break;
-		 case PtBorderLeftColor:
-		    printf ("BorderLeftColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       printf ("transparent;");
-		    else if (RP->PrPresMode == PresImmediate &&
-			     !RP->PrAttrValue && RP->PrIntValue == -1)
-		       printf ("foreground;");
-		    else
-		       wrnbherit (RP);
+		 case PtVertPos:
+		    printf ("VertPos: ");
+		    wrpos (RP->PrPosRule, True);
 		    break;
-		 case PtFont:
-		    printf ("Font: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtStyle:
-		    printf ("Style: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtWeight:
-		    printf ("Weight: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtUnderline:
-		    printf ("Underline: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtThickness:
-		    printf ("Thickness: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtDirection:
-		    printf ("Direction: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtUnicodeBidi:
-		    printf ("UnicodeBidi: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtLineStyle:
-		    printf ("LineStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtBorderTopStyle:
-		    printf ("BorderTopStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtBorderRightStyle:
-		    printf ("BorderRightStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtBorderBottomStyle:
-		    printf ("BorderBottomStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtBorderLeftStyle:
-		    printf ("BorderLeftStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtBreak1:
-		    printf ("NoBreak1: ");
-		    wrminind (RP);
-		    break;
-		 case PtBreak2:
-		    printf ("NoBreak2: ");
-		    wrminind (RP);
-		    break;
-		 case PtIndent:
-		    printf ("Indent: ");
-		    wrminind (RP);
-		    break;
-		 case PtSize:
-		    printf ("Size: ");
-		    wrsize (RP);
-		    break;
-		 case PtLineSpacing:
-		    printf ("LineSpacing: ");
-		    wrminind (RP);
-		    break;
-		 case PtLineWeight:
-		    printf ("LineWeight: ");
-		    wrminind (RP);
+		 case PtHorizPos:
+		    printf ("HorizPos: ");
+		    wrpos (RP->PrPosRule, True);
 		    break;
 		 case PtMarginTop:
 		    printf ("MarginTop: ");
@@ -1275,40 +1175,144 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("BorderLeftWidth: ");
 		    wrminind (RP);
 		    break;
-		 case PtVertRef:
-		    printf ("VertRef: ");
-		    wrpos (RP->PrPosRule, False);
+		 case PtBorderTopColor:
+		    printf ("BorderTopColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
+		    else
+		       wrnbherit (RP);
 		    break;
-		 case PtHorizRef:
-		    printf ("HorizRef: ");
-		    wrpos (RP->PrPosRule, False);
+		 case PtBorderRightColor:
+		    printf ("BorderRightColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
+		    else
+		       wrnbherit (RP);
 		    break;
-		 case PtVertPos:
-		    printf ("VertPos: ");
-		    wrpos (RP->PrPosRule, True);
+		 case PtBorderBottomColor:
+		    printf ("BorderBottomColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
+		    else
+		       wrnbherit (RP);
 		    break;
-		 case PtHorizPos:
-		    printf ("HorizPos: ");
-		    wrpos (RP->PrPosRule, True);
+		 case PtBorderLeftColor:
+		    printf ("BorderLeftColor: ");
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent;");
+		    else if (RP->PrPresMode == PresImmediate &&
+			     !RP->PrAttrValue && RP->PrIntValue == -1)
+		       printf ("foreground;");
+		    else
+		       wrnbherit (RP);
 		    break;
-		 case PtHeight:
-		    printf ("Height: ");
-		    wrdimens (RP->PrDimRule, True);
+		 case PtBorderTopStyle:
+		    printf ("BorderTopStyle: ");
+		    wrfontstyle (RP);
 		    break;
-		 case PtWidth:
-		    printf ("Width: ");
-		    wrdimens (RP->PrDimRule, False);
+		 case PtBorderRightStyle:
+		    printf ("BorderRightStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtBorderBottomStyle:
+		    printf ("BorderBottomStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtBorderLeftStyle:
+		    printf ("BorderLeftStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtSize:
+		    printf ("Size: ");
+		    wrsize (RP);
+		    break;
+		 case PtStyle:
+		    printf ("Style: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtWeight:
+		    printf ("Weight: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtFont:
+		    printf ("Font: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtUnderline:
+		    printf ("Underline: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtThickness:
+		    printf ("Thickness: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtIndent:
+		    printf ("Indent: ");
+		    wrminind (RP);
+		    break;
+		 case PtLineSpacing:
+		    printf ("LineSpacing: ");
+		    wrminind (RP);
+		    break;
+		 case PtDepth:
+		    printf ("Depth: ");
+		    wrnbherit (RP);
+		    break;
+		 case PtAdjust:
+		    printf ("Adjust: ");
+		    wrajust (RP);
+		    break;
+		 case PtDirection:
+		    printf ("Direction: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtUnicodeBidi:
+		    printf ("UnicodeBidi: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtLineStyle:
+		    printf ("LineStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtLineWeight:
+		    printf ("LineWeight: ");
+		    wrminind (RP);
+		    break;
+		 case PtFillPattern:
+		    printf ("FillPattern: ");
+		    wrnbherit (RP);
+		    break;
+		 case PtBackground:
+		    printf ("Background: ");
+		    wrnbherit (RP);
+		    break;
+		 case PtForeground:
+		    printf ("Foreground: ");
+		    wrnbherit (RP);
 		    break;
 		 case PtHyphenate:
 		    printf ("Hyphenate: ");
 		    wrboolean (RP);
 		    break;
-		 case PtVertOverflow:
-		    printf ("VertOverflow: ");
+	         case PtPageBreak:
+		    printf ("PageBreak: ");
 		    wrboolean (RP);
 		    break;
-		 case PtHorizOverflow:
-		    printf ("HorizOverflow: ");
+	         case PtLineBreak:
+		    printf ("LineBreak: ");
 		    wrboolean (RP);
 		    break;
 	         case PtGather:
@@ -1327,17 +1331,13 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("Display: ");
 		    wrfontstyle (RP);
 		    break;
-	         case PtPageBreak:
-		    printf ("PageBreak: ");
-		    wrboolean (RP);
+		 case PtBreak1:
+		    printf ("NoBreak1: ");
+		    wrminind (RP);
 		    break;
-	         case PtLineBreak:
-		    printf ("LineBreak: ");
-		    wrboolean (RP);
-		    break;
-		 case PtAdjust:
-		    printf ("Adjust: ");
-		    wrajust (RP);
+		 case PtBreak2:
+		    printf ("NoBreak2: ");
+		    wrminind (RP);
 		    break;
 		 case PtPictInfo:
 		    break;

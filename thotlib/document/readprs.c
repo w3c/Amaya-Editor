@@ -49,6 +49,12 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_FUNCTION:
 	       return PtFunction;
 	       break;
+	    case C_PR_VERTOVERFLOW:
+	       return PtVertOverflow;
+	       break;
+	    case C_PR_HORIZOVERFLOW:
+	       return PtHorizOverflow;
+	       break;
 	    case C_PR_VREF:
 	       return PtVertRef;
 	       break;
@@ -103,12 +109,6 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
             case C_PR_BORDERLEFTWIDTH:
                return PtBorderLeftWidth;
                break;
-            case C_PR_XRADIUS:
-	       return PtXRadius;
-               break;
-            case C_PR_YRADIUS:
-	       return PtYRadius;
-               break;
             case C_PR_BORDERTOPCOLOR:
                return PtBorderTopColor;
                break;
@@ -142,20 +142,14 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_WEIGHT:
 	       return PtWeight;
 	       break;
+	    case C_PR_FONT:
+	       return PtFont;
+	       break;
 	    case C_PR_UNDERLINE:
 	       return PtUnderline;
 	       break;
 	    case C_PR_UNDER_THICK:
 	       return PtThickness;
-	       break;
-	    case C_PR_FONT:
-	       return PtFont;
-	       break;
-	    case C_PR_BREAK1:
-	       return PtBreak1;
-	       break;
-	    case C_PR_BREAK2:
-	       return PtBreak2;
 	       break;
 	    case C_PR_INDENT:
 	       return PtIndent;
@@ -163,14 +157,11 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_LINESPACING:
 	       return PtLineSpacing;
 	       break;
-	    case C_PR_ADJUST:
-	       return PtAdjust;
-	       break;
-	    case C_PR_HYPHENATE:
-	       return PtHyphenate;
-	       break;
 	    case C_PR_DEPTH:
 	       return PtDepth;
+	       break;
+	    case C_PR_ADJUST:
+	       return PtAdjust;
 	       break;
 	    case C_PR_DIRECTION:
 	       return PtDirection;
@@ -193,14 +184,8 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_FOREGROUND:
 	       return PtForeground;
 	       break;
-	    case C_PR_VERTOVERFLOW:
-	       return PtVertOverflow;
-	       break;
-	    case C_PR_HORIZOVERFLOW:
-	       return PtHorizOverflow;
-	       break;
-	    case C_PR_GATHER:
-	       return PtGather;
+	    case C_PR_HYPHENATE:
+	       return PtHyphenate;
 	       break;
 	    case C_PR_PAGEBREAK:
 	       return PtPageBreak;
@@ -208,8 +193,23 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_LINEBREAK:
 	       return PtLineBreak;
 	       break;
+	    case C_PR_GATHER:
+	       return PtGather;
+	       break;
+            case C_PR_XRADIUS:
+	       return PtXRadius;
+               break;
+            case C_PR_YRADIUS:
+	       return PtYRadius;
+               break;
 	    case C_PR_DISPLAY:
 	       return PtDisplay;
+	       break;
+	    case C_PR_BREAK1:
+	       return PtBreak1;
+	       break;
+	    case C_PR_BREAK2:
+	       return PtBreak2;
 	       break;
 	    default:
 	       error = True;

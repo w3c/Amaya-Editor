@@ -120,6 +120,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
 	  break;
 	}
       break;
+    case PtVertOverflow:
+      fprintf (fileDescriptor, "VertOverflow");
+      break;
+    case PtHorizOverflow:
+      fprintf (fileDescriptor, "HorizOverflow");
+      break;
     case PtVertRef:
       fprintf (fileDescriptor, "VRef");
       break;
@@ -174,12 +180,6 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtBorderLeftWidth:
       fprintf (fileDescriptor, "BorderLeftWidth");
       break;
-    case PtXRadius:
-      fprintf (fileDescriptor, "XRadius");
-      break;
-    case PtYRadius:
-      fprintf (fileDescriptor, "YRadius");
-      break;
     case PtBorderTopColor:
       fprintf (fileDescriptor, "BorderTopColor");
       break;
@@ -204,17 +204,8 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtBorderLeftStyle:
       fprintf (fileDescriptor, "BorderLeftStyle");
       break;
-    case PtDisplay:
-      fprintf (fileDescriptor, "Display");
-      break;
     case PtSize:
       fprintf (fileDescriptor, "Size");
-      break;
-    case PtUnderline:
-      fprintf (fileDescriptor, "Souligne");
-      break;
-    case PtThickness:
-      fprintf (fileDescriptor, "Epaisseur");
       break;
     case PtStyle:
       fprintf (fileDescriptor, "Style");
@@ -224,6 +215,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtFont:
       fprintf (fileDescriptor, "Font");
+      break;
+    case PtUnderline:
+      fprintf (fileDescriptor, "Souligne");
+      break;
+    case PtThickness:
+      fprintf (fileDescriptor, "Epaisseur");
       break;
     case PtIndent:
       fprintf (fileDescriptor, "Indent");
@@ -236,30 +233,6 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtAdjust:
       fprintf (fileDescriptor, "Adjust");
-      break;
-    case PtHyphenate:
-      fprintf (fileDescriptor, "Hyphenate");
-      break;
-    case PtVertOverflow:
-      fprintf (fileDescriptor, "VertOverflow");
-      break;
-    case PtHorizOverflow:
-      fprintf (fileDescriptor, "HorizOverflow");
-      break;
-    case PtGather:
-      fprintf (fileDescriptor, "Gather");
-      break;
-    case PtPageBreak:
-      fprintf (fileDescriptor, "PageBreak");
-      break;
-    case PtLineBreak:
-      fprintf (fileDescriptor, "LineBreak");
-      break;
-    case PtBreak1:
-      fprintf (fileDescriptor, "NoBr1");
-      break;
-    case PtBreak2:
-      fprintf (fileDescriptor, "NoBr2");
       break;
     case PtDirection:
       fprintf (fileDescriptor, "Direction");
@@ -281,6 +254,33 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtForeground:
       fprintf (fileDescriptor, "Foreground");
+      break;
+    case PtHyphenate:
+      fprintf (fileDescriptor, "Hyphenate");
+      break;
+    case PtPageBreak:
+      fprintf (fileDescriptor, "PageBreak");
+      break;
+    case PtLineBreak:
+      fprintf (fileDescriptor, "LineBreak");
+      break;
+    case PtGather:
+      fprintf (fileDescriptor, "Gather");
+      break;
+    case PtXRadius:
+      fprintf (fileDescriptor, "XRadius");
+      break;
+    case PtYRadius:
+      fprintf (fileDescriptor, "YRadius");
+      break;
+    case PtDisplay:
+      fprintf (fileDescriptor, "Display");
+      break;
+    case PtBreak1:
+      fprintf (fileDescriptor, "NoBr1");
+      break;
+    case PtBreak2:
+      fprintf (fileDescriptor, "NoBr2");
       break;
     case PtPictInfo:
       fprintf (fileDescriptor, "PictInfo");
@@ -3063,6 +3063,14 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		 case PtFunction:
 		    wrFonctPres (RP, fileDescriptor);
 		    break;
+		 case PtVertOverflow:
+		    fprintf (fileDescriptor, "VertOverflow: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+		 case PtHorizOverflow:
+		    fprintf (fileDescriptor, "HorizOverflow: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
 		 case PtVertRef:
 		    fprintf (fileDescriptor, "VertRef: ");
 		    WrPos (RP->PrPosRule, False, fileDescriptor);
@@ -3135,14 +3143,6 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
                     fprintf (fileDescriptor, "BorderLeftWidth: ");
                     wrminind (RP, fileDescriptor);
                     break;
-	         case PtXRadius:
-                    fprintf (fileDescriptor, "XRadius: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-	         case PtYRadius:
-                    fprintf (fileDescriptor, "YRadius: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
                  case PtBorderTopColor:
                     fprintf (fileDescriptor, "BorderTopColor: ");
 	            if (RP->PrPresMode == PresImmediate &&
@@ -3191,14 +3191,10 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
                     fprintf (fileDescriptor, "BorderLeftStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
-	         case PtDisplay:
-		    fprintf (fileDescriptor, "Display: ");
-		    wrfontstyle (RP, fileDescriptor);
+		 case PtSize:
+		    fprintf (fileDescriptor, "Size: ");
+		    wrsize (RP, fileDescriptor);
 		    break;
-         	 case PtFont:
- 		    fprintf (fileDescriptor, "Font: ");
-     		    wrfontstyle (RP, fileDescriptor);
-     		    break;
 		 case PtStyle:
 		    fprintf (fileDescriptor, "Style: ");
 		    wrfontstyle (RP, fileDescriptor);
@@ -3207,6 +3203,10 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    fprintf (fileDescriptor, "Weight: ");
 		    wrfontstyle (RP, fileDescriptor);
 		    break;
+         	 case PtFont:
+ 		    fprintf (fileDescriptor, "Font: ");
+     		    wrfontstyle (RP, fileDescriptor);
+     		    break;
 		 case PtUnderline:
 		    fprintf (fileDescriptor, "Underline: ");
 		    wrfontstyle (RP, fileDescriptor);
@@ -3215,57 +3215,21 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    fprintf (fileDescriptor, "Thickness: ");
 		    wrfontstyle (RP, fileDescriptor);
 		    break;
-		 case PtSize:
-		    fprintf (fileDescriptor, "Size: ");
-		    wrsize (RP, fileDescriptor);
-		    break;
 		 case PtIndent:
 		    fprintf (fileDescriptor, "Indent: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtBreak1:
-		    fprintf (fileDescriptor, "NoBreak1: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtBreak2:
-		    fprintf (fileDescriptor, "NoBreak2: ");
 		    wrminind (RP, fileDescriptor);
 		    break;
 		 case PtLineSpacing:
 		    fprintf (fileDescriptor, "LineSpacing: ");
 		    wrminind (RP, fileDescriptor);
 		    break;
-		 case PtAdjust:
-		    fprintf (fileDescriptor, "Adjust: ");
-		    wrajust (RP, fileDescriptor);
-		    break;
-		 case PtHyphenate:
-		    fprintf (fileDescriptor, "Hyphenate: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-		 case PtVertOverflow:
-		    fprintf (fileDescriptor, "VertOverflow: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-		 case PtHorizOverflow:
-		    fprintf (fileDescriptor, "HorizOverflow: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtGather:
-		    fprintf (fileDescriptor, "Gather: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtPageBreak:
-		    fprintf (fileDescriptor, "PageBreak: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtLineBreak:
-		    fprintf (fileDescriptor, "LineBreak: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
 		 case PtDepth:
 		    fprintf (fileDescriptor, "Depth: ");
 		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtAdjust:
+		    fprintf (fileDescriptor, "Adjust: ");
+		    wrajust (RP, fileDescriptor);
 		    break;
 		 case PtDirection:
 		    fprintf (fileDescriptor, "Direction: ");
@@ -3294,6 +3258,42 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		 case PtForeground:
 		    fprintf (fileDescriptor, "Foreground: ");
 		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtHyphenate:
+		    fprintf (fileDescriptor, "Hyphenate: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtPageBreak:
+		    fprintf (fileDescriptor, "PageBreak: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtLineBreak:
+		    fprintf (fileDescriptor, "LineBreak: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtGather:
+		    fprintf (fileDescriptor, "Gather: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtXRadius:
+                    fprintf (fileDescriptor, "XRadius: ");
+                    wrminind (RP, fileDescriptor);
+                    break;
+	         case PtYRadius:
+                    fprintf (fileDescriptor, "YRadius: ");
+                    wrminind (RP, fileDescriptor);
+                    break;
+	         case PtDisplay:
+		    fprintf (fileDescriptor, "Display: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtBreak1:
+		    fprintf (fileDescriptor, "NoBreak1: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtBreak2:
+		    fprintf (fileDescriptor, "NoBreak2: ");
+		    wrminind (RP, fileDescriptor);
 		    break;
 		 case PtPictInfo:
 		    break;

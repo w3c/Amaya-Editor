@@ -1728,6 +1728,24 @@ static void         CheckDefaultRules ()
 	CurRule->PrType = PtVisibility;
 	InheritRule (InheritParent);
      }
+   if (GetTypedRule (PtVertOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle VertOverflow par defaut, on en cree une : */
+      /* VertOverflow: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtVertOverflow;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = FALSE;
+     }
+   if (GetTypedRule (PtHorizOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle HorizOverflow par defaut, on en cree une : */
+      /* HorizOverflow: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtHorizOverflow;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = FALSE;
+     }
    if (GetTypedRule (PtVertRef, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle VertRef par defaut, on en cree une : */
       /* VertRef: * . Left; */
@@ -1757,40 +1775,6 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoDistAttr = False;
 	CurRule->PrPosRule.PoDistance = 0;
 	CurRule->PrPosRule.PoRelation = RlEnclosed;
-	CurRule->PrPosRule.PoNotRel = False;
-	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
-	CurRule->PrPosRule.PoRefIdent = 0;
-     }
-   if (GetTypedRule (PtVertPos, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle VertPos par defaut, on en cree une : */
-      /* VertPos: Top = Previous . Bottom; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtVertPos;
-	CurRule->PrPosRule.PoPosDef = Top;
-	CurRule->PrPosRule.PoPosRef = Bottom;
-	CurRule->PrPosRule.PoDistUnit = UnRelative;
-	CurRule->PrPosRule.PoDistAttr = False;
-	CurRule->PrPosRule.PoDistance = 0;
-	CurRule->PrPosRule.PoRelation = RlPrevious;
-	CurRule->PrPosRule.PoNotRel = False;
-	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
-	CurRule->PrPosRule.PoRefIdent = 0;
-     }
-   if (GetTypedRule (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle HorizPos par defaut, on en cree une : */
-      /* HorizPos: Left = Enclosing . Left; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtHorizPos;
-	CurRule->PrPosRule.PoPosDef = Left;
-	CurRule->PrPosRule.PoPosRef = Left;
-	CurRule->PrPosRule.PoDistUnit = UnRelative;
-	CurRule->PrPosRule.PoDistAttr = False;
-	CurRule->PrPosRule.PoDistance = 0;
-	CurRule->PrPosRule.PoRelation = RlEnclosing;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
 	CurRule->PrPosRule.PoRefKind = RkPresBox;
@@ -1833,6 +1817,40 @@ static void         CheckDefaultRules ()
 	CurRule->PrDimRule.DrNotRelat = False;
 	CurRule->PrDimRule.DrRefKind = RkElType;
 	CurRule->PrDimRule.DrRefIdent= 0;
+     }
+   if (GetTypedRule (PtVertPos, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle VertPos par defaut, on en cree une : */
+      /* VertPos: Top = Previous . Bottom; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtVertPos;
+	CurRule->PrPosRule.PoPosDef = Top;
+	CurRule->PrPosRule.PoPosRef = Bottom;
+	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDistAttr = False;
+	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoRelation = RlPrevious;
+	CurRule->PrPosRule.PoNotRel = False;
+	CurRule->PrPosRule.PoUserSpecified = False;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
+     }
+   if (GetTypedRule (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle HorizPos par defaut, on en cree une : */
+      /* HorizPos: Left = Enclosing . Left; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtHorizPos;
+	CurRule->PrPosRule.PoPosDef = Left;
+	CurRule->PrPosRule.PoPosRef = Left;
+	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDistAttr = False;
+	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoRelation = RlEnclosing;
+	CurRule->PrPosRule.PoNotRel = False;
+	CurRule->PrPosRule.PoUserSpecified = False;
+	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtMarginTop, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle MarginTop par defaut, on en cree une : */
@@ -2188,33 +2206,6 @@ static void         CheckDefaultRules ()
 	CurRule->PrType = PtHyphenate;
 	InheritRule (InheritParent);
      }
-   if (GetTypedRule (PtVertOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle VertOverflow par defaut, on en cree une : */
-      /* VertOverflow: False; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtVertOverflow;
-	CurRule->PrPresMode = PresImmediate;
-        CurRule->PrBoolValue = FALSE;
-     }
-   if (GetTypedRule (PtHorizOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle HorizOverflow par defaut, on en cree une : */
-      /* HorizOverflow: False; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtHorizOverflow;
-	CurRule->PrPresMode = PresImmediate;
-        CurRule->PrBoolValue = FALSE;
-     }
-   if (GetTypedRule (PtGather, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle Gather par defaut, on en cree une : */
-      /* PtGather: False; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtGather;
-	CurRule->PrPresMode = PresImmediate;
-        CurRule->PrBoolValue = False;
-     }
    if (GetTypedRule (PtPageBreak, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle PageBreak par defaut, on en cree une : */
       /* PageBreak: True; */
@@ -2232,6 +2223,15 @@ static void         CheckDefaultRules ()
 	CurRule->PrType = PtLineBreak;
 	CurRule->PrPresMode = PresImmediate;
         CurRule->PrBoolValue = True;
+     }
+   if (GetTypedRule (PtGather, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Gather par defaut, on en cree une : */
+      /* PtGather: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtGather;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = False;
      }
    if (GetTypedRule (PtDisplay, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Display par defaut, on en cree une : */

@@ -202,9 +202,10 @@ typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
   /* Don't forget to change constant MAX_TRANSL_PRULE when adding rules */
-  /* Don't forget to update PR values in the file presentation.h */
-  PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
-  PtVertPos, PtHorizPos,
+  /* Don't forget to update PRxxx values in the file presentation.h */
+  PtVisibility, PtFunction,
+  PtVertOverflow, PtHorizOverflow, 
+  PtVertRef, PtHorizRef, PtHeight, PtWidth, PtVertPos, PtHorizPos,
   PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
   PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
   PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth, PtBorderLeftWidth,
@@ -213,8 +214,8 @@ typedef enum
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
-  PtHyphenate, PtVertOverflow, PtHorizOverflow, PtPageBreak, PtLineBreak,
-  PtGather, PtXRadius, PtYRadius, PtDisplay,
+  PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
+  PtXRadius, PtYRadius, PtDisplay,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;

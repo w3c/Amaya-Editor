@@ -2281,65 +2281,45 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRVisibility:
       *intRule = PtVisibility;
       break;
-    case PRDepth:
-      *intRule = PtDepth;
+    case PRShowBox:
+      *intRule = PtFunction;
+      *func = FnShowBox;
       break;
-    case PRFillPattern:
-      *intRule = PtFillPattern;
+    case PRPictureMode:
+      *intRule = PtFunction;
+      *func = FnPictureMode;
       break;
-    case PRBackground:
-      *intRule = PtBackground;
+    case PRBackgroundPicture:
+      *intRule = PtFunction;
+      *func = FnBackgroundPicture;
       break;
-    case PRForeground:
-      *intRule = PtForeground;
+    case PRCreateEnclosing:
+      *intRule = PtFunction;
+      *func = FnCreateEnclosing;
       break;
-    case PRBorderTopColor:
-      *intRule = PtBorderTopColor;
+    case PRPageBefore:
+      *intRule = PtFunction;
+      *func = FnPage;
       break;
-    case PRBorderRightColor:
-      *intRule = PtBorderRightColor;
+    case PRVertOverflow:
+      *intRule = PtVertOverflow;
       break;
-    case PRBorderBottomColor:
-      *intRule = PtBorderBottomColor;
+    case PRHorizOverflow:
+      *intRule = PtHorizOverflow;
       break;
-    case PRBorderLeftColor:
-      *intRule = PtBorderLeftColor;
+    case PRHeight:
+      *intRule = PtHeight;
+      *absolute = TRUE;
       break;
-    case PRFont:
-      *intRule = PtFont;
+    case PRWidth:
+      *intRule = PtWidth;
+      *absolute = TRUE;
       break;
-    case PRStyle:
-      *intRule = PtStyle;
+    case PRVertPos:
+      *intRule = PtVertPos;
       break;
-    case PRWeight:
-      *intRule = PtWeight;
-      break;
-    case PRUnderline:
-      *intRule = PtUnderline;
-      break;
-    case PRDisplay:
-      *intRule = PtDisplay;
-      break;
-    case PRBorderTopStyle:
-      *intRule = PtBorderTopStyle;
-      break;
-    case PRBorderRightStyle:
-      *intRule = PtBorderRightStyle;
-      break;
-    case PRBorderBottomStyle:
-      *intRule = PtBorderBottomStyle;
-      break;
-    case PRBorderLeftStyle:
-      *intRule = PtBorderLeftStyle;
-      break;
-    case PRIndent:
-      *intRule = PtIndent;
-      break;
-    case PRSize:
-      *intRule = PtSize;
-      break;
-    case PRLineSpacing:
-      *intRule = PtLineSpacing;
+    case PRHorizPos:
+      *intRule = PtHorizPos;
       break;
     case PRMarginTop:
       *intRule = PtMarginTop;
@@ -2377,39 +2357,53 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRBorderLeftWidth:
       *intRule = PtBorderLeftWidth;
       break;      
-    case PRXRadius:
-      *intRule = PtXRadius;
-      *absolute = TRUE;
+    case PRBorderTopColor:
+      *intRule = PtBorderTopColor;
       break;
-    case PRYRadius:
-      *intRule = PtYRadius;
-      *absolute = TRUE;
+    case PRBorderRightColor:
+      *intRule = PtBorderRightColor;
       break;
-    case PRLineWeight:
-      *intRule = PtLineWeight;
+    case PRBorderBottomColor:
+      *intRule = PtBorderBottomColor;
       break;
-    case PRVertPos:
-      *intRule = PtVertPos;
+    case PRBorderLeftColor:
+      *intRule = PtBorderLeftColor;
       break;
-    case PRHorizPos:
-      *intRule = PtHorizPos;
+    case PRBorderTopStyle:
+      *intRule = PtBorderTopStyle;
       break;
-    case PRHeight:
-      *intRule = PtHeight;
-      *absolute = TRUE;
+    case PRBorderRightStyle:
+      *intRule = PtBorderRightStyle;
       break;
-    case PRWidth:
-      *intRule = PtWidth;
-      *absolute = TRUE;
+    case PRBorderBottomStyle:
+      *intRule = PtBorderBottomStyle;
       break;
-    case PRHyphenate:
-      *intRule = PtHyphenate;
+    case PRBorderLeftStyle:
+      *intRule = PtBorderLeftStyle;
       break;
-    case PRVertOverflow:
-      *intRule = PtVertOverflow;
+    case PRSize:
+      *intRule = PtSize;
       break;
-    case PRHorizOverflow:
-      *intRule = PtHorizOverflow;
+    case PRStyle:
+      *intRule = PtStyle;
+      break;
+    case PRWeight:
+      *intRule = PtWeight;
+      break;
+    case PRFont:
+      *intRule = PtFont;
+      break;
+    case PRUnderline:
+      *intRule = PtUnderline;
+      break;
+    case PRIndent:
+      *intRule = PtIndent;
+      break;
+    case PRLineSpacing:
+      *intRule = PtLineSpacing;
+      break;
+    case PRDepth:
+      *intRule = PtDepth;
       break;
     case PRAdjust:
       *intRule = PtAdjust;
@@ -2420,28 +2414,34 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRUnicodeBidi:
       *intRule = PtUnicodeBidi;
       break;
-    case PRShowBox:
-      *intRule = PtFunction;
-      *func = FnShowBox;
+    case PRLineWeight:
+      *intRule = PtLineWeight;
       break;
-    case PRPictureMode:
-      *intRule = PtFunction;
-      *func = FnPictureMode;
+    case PRFillPattern:
+      *intRule = PtFillPattern;
       break;
-    case PRBackgroundPicture:
-      *intRule = PtFunction;
-      *func = FnBackgroundPicture;
+    case PRBackground:
+      *intRule = PtBackground;
       break;
-    case PRCreateEnclosing:
-      *intRule = PtFunction;
-      *func = FnCreateEnclosing;
+    case PRForeground:
+      *intRule = PtForeground;
       break;
-    case PRPageBefore:
-      *intRule = PtFunction;
-      *func = FnPage;
+    case PRHyphenate:
+      *intRule = PtHyphenate;
       break;
     case PRPageInside:
       *intRule = PtPageBreak;
+      break;
+    case PRXRadius:
+      *intRule = PtXRadius;
+      *absolute = TRUE;
+      break;
+    case PRYRadius:
+      *intRule = PtYRadius;
+      *absolute = TRUE;
+      break;
+    case PRDisplay:
+      *intRule = PtDisplay;
       break;
     default:
       *intRule = PtFunction;
@@ -2624,21 +2624,6 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
     case PtBorderLeftColor:
       setting->type = PRBorderLeftColor;
       break;
-    case PtFont:
-      setting->type = PRFont;
-      break;
-    case PtStyle:
-      setting->type = PRStyle;
-      break;
-    case PtWeight:
-      setting->type = PRWeight;
-      break;
-    case PtUnderline:
-      setting->type = PRUnderline;
-      break;
-    case PtDisplay:
-      setting->type = PRDisplay;
-      break;
     case PtBorderTopStyle:
       setting->type = PRBorderTopStyle;
       break;
@@ -2651,8 +2636,23 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
     case PtBorderLeftStyle:
       setting->type = PRBorderLeftStyle;
       break;
+    case PtFont:
+      setting->type = PRFont;
+      break;
+    case PtStyle:
+      setting->type = PRStyle;
+      break;
+    case PtWeight:
+      setting->type = PRWeight;
+      break;
+    case PtUnderline:
+      setting->type = PRUnderline;
+      break;
     case PtIndent:
       setting->type = PRIndent;
+      break;
+    case PtDisplay:
+      setting->type = PRDisplay;
       break;
     case PtSize:
       setting->type = PRSize;

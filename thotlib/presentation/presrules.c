@@ -1945,7 +1945,7 @@ static ThotBool CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-  ApplyPos 	applique la regle de position PR-pPRule au pave pAbb1.
+  ApplyPos 	applique la regle de position PtrPRule au pave pAbb1.
   rend vrai dans appl si la regle a ete appliquee.
   ----------------------------------------------------------------------*/
 static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
@@ -1966,91 +1966,104 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
    /* le pave est-il une marque de saut de page (le trait horizontal */
    /* qui separe les pages dans les images) ? Dans ce cas, il aura */
    /* une position flottante */
-   if (pAbb1->AbElement->ElTerminal && pAbb1->AbElement->ElLeafType == LtPageColBreak)
-      if (pAbb1->AbLeafType != LtCompound && !pAbb1->AbPresentationBox)
-	 pageBreak = TRUE;
+   if (pAbb1->AbElement->ElTerminal &&
+       pAbb1->AbElement->ElLeafType == LtPageColBreak)
+     if (pAbb1->AbLeafType != LtCompound && !pAbb1->AbPresentationBox)
+       pageBreak = TRUE;
    pPosRule = positionRule;
    if (pPosRule->PoPosDef == NoEdge || pageBreak)
-      /* position flottante: regle VertPos=NULL ou HorizPos=NULL */
+     /* position flottante: regle VertPos=NULL ou HorizPos=NULL */
      {
-	PPos->PosEdge = NoEdge;
-	PPos->PosRefEdge = NoEdge;
-	PPos->PosDistance = 0;
-	PPos->PosUnit = UnRelative;
-	PPos->PosAbRef = NULL;
-	PPos->PosUserSpecified = FALSE;
-	*appl = TRUE;
+       PPos->PosEdge = NoEdge;
+       PPos->PosRefEdge = NoEdge;
+       PPos->PosDistance = 0;
+       PPos->PosUnit = UnRelative;
+       PPos->PosAbRef = NULL;
+       PPos->PosUserSpecified = FALSE;
+       *appl = TRUE;
      }
    else
      {
-	/* cherche le pave (pAbbPos) par rapport auquel le pave */
-	/* traite' se positionne  */
-	pAbbPos = NULL;
-	if (pPosRule->PoRefKind == RkElType ||
-	    pPosRule->PoRefKind == RkAnyElem)
-	   /* appelle l'exception des tableaux, au cas ou ce serait la */
-	   /* regle de hauteur d'un filet vertical d'un tableau */
-	   if (ThotLocalActions[T_abref] != NULL)
-	      (*ThotLocalActions[T_abref]) (pAbb1, pPosRule, pPRule, &pAbbPos);
-	      /* si l'exception n'a pas ete traitee, effectue un traitement
-		 normal */
-	if (pAbbPos == NULL)
-	   pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel,
-			  pPosRule->PoRefIdent, pSchP, pPosRule->PoRelation,
-			  pPosRule->PoRefKind, pAbb1, pAttr, pDoc);
-	if (pAbbPos != NULL)
-	  {
-	     /* on a trouve' le pave de reference */
-	     PPos->PosEdge = pPosRule->PoPosDef;
-	     PPos->PosRefEdge = pPosRule->PoPosRef;
-	     if (pPosRule->PoDistAttr)
-		/* c'est la valeur d'un attribut */
-	       {
-		  if (pPosRule->PoDistance < 0)
-		     /* il faut inverser cette valeur */
-		     PPos->PosDistance = -AttrValue (pAttr);
-		  else
-		     PPos->PosDistance = AttrValue (pAttr);
-		  if (pPosRule->PoDistUnit == UnRelative ||
-		      pPosRule->PoDistUnit == UnXHeight)
-		     /* convertit en 1/10 de caractere */
-		     PPos->PosDistance = 10 * PPos->PosDistance;
-	       }
-	     else
-		/* c'est la valeur elle meme qui est dans la regle */
-		PPos->PosDistance = pPosRule->PoDistance;
-	     PPos->PosUnit = pPosRule->PoDistUnit;
-	     PPos->PosAbRef = pAbbPos;
-	     if (FirstCreation)
-		PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-	     else
-		PPos->PosUserSpecified = FALSE;
-	     if (PPos->PosUserSpecified)
-		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
-	     *appl = TRUE;
-	     /* verifie si le pave deroge a la regle d'englobement */
-	     if (pPosRule->PoRelation == RlRoot &&
-		 PPos->PosAbRef != pAbb1->AbEnclosing)
-	       {
+       /* cherche le pave (pAbbPos) par rapport auquel le pave */
+       /* traite' se positionne  */
+       pAbbPos = NULL;
+       if (pPosRule->PoRefKind == RkElType || pPosRule->PoRefKind == RkAnyElem)
+	 /* appelle l'exception des tableaux, au cas ou ce serait la */
+	 /* regle de hauteur d'un filet vertical d'un tableau */
+	 if (ThotLocalActions[T_abref] != NULL)
+	   (*ThotLocalActions[T_abref]) (pAbb1, pPosRule, pPRule, &pAbbPos);
+       /* si l'exception n'a pas ete traitee, effectue un traitement
+	  normal */
+       if (pAbbPos == NULL)
+	 pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel, pPosRule->PoRefIdent,
+				    pSchP, pPosRule->PoRelation,
+				    pPosRule->PoRefKind, pAbb1, pAttr, pDoc);
+       if (pAbbPos != NULL)
+	 {
+	   /* on a trouve' le pave de reference */
+	   PPos->PosEdge = pPosRule->PoPosDef;
+	   PPos->PosRefEdge = pPosRule->PoPosRef;
+	   if (pPosRule->PoDistAttr)
+	     /* c'est la valeur d'un attribut */
+	     {
+	       if (pPosRule->PoDistance < 0)
+		 /* il faut inverser cette valeur */
+		 PPos->PosDistance = -AttrValue (pAttr);
+	       else
+		 PPos->PosDistance = AttrValue (pAttr);
+	       if (pPosRule->PoDistUnit == UnRelative ||
+		   pPosRule->PoDistUnit == UnXHeight)
+		 /* convertit en 1/10 de caractere */
+		 PPos->PosDistance = 10 * PPos->PosDistance;
+	     }
+	   else
+	     /* c'est la valeur elle meme qui est dans la regle */
+	     PPos->PosDistance = pPosRule->PoDistance;
+	   PPos->PosUnit = pPosRule->PoDistUnit;
+	   PPos->PosAbRef = pAbbPos;
+	   if (FirstCreation)
+	     PPos->PosUserSpecified = pPosRule->PoUserSpecified;
+	   else
+	     PPos->PosUserSpecified = FALSE;
+	   if (PPos->PosUserSpecified)
+	     PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
+	   *appl = TRUE;
+	   /* verifie si le pave deroge a la regle d'englobement */
+	   if (pPosRule->PoRelation == RlRoot &&
+	       PPos->PosAbRef != pAbb1->AbEnclosing)
+	     {
+	       /* ce pave deroge a la regle d'englobement */
+	       if (pPRule->PrType == PtHorizPos)
+		 pAbb1->AbHorizEnclosing = FALSE;
+	       else if (pPRule->PrType == PtVertPos)
+		 pAbb1->AbVertEnclosing = FALSE;
+	     }
+	   if (PPos->PosAbRef != pAbb1->AbEnclosing)
+	     /* le pave ne se positionne pas par rapport a l'englobant */
+	     {
+	       if (PPos->PosAbRef->AbEnclosing != pAbb1->AbEnclosing)
+		 /* il ne se positionne pas par rapport a un pave frere */
 		 /* ce pave deroge a la regle d'englobement */
-		 if (pPRule->PrType == PtHorizPos)
-		   pAbb1->AbHorizEnclosing = FALSE;
-		 else if (pPRule->PrType == PtVertPos)
-		   pAbb1->AbVertEnclosing = FALSE;
-	       }
-	     if (PPos->PosAbRef == pAbb1->AbEnclosing)
-	       {
-		/* le pave se positionne par rapport a l'englobant */
-		if (pPRule->PrType == PtHorizPos)
-		  {
+		 {
+		   if (pPRule->PrType == PtHorizPos)
+		     pAbb1->AbHorizEnclosing = FALSE;
+		   else if (pPRule->PrType == PtVertPos)
+		     pAbb1->AbVertEnclosing = FALSE;
+		 }
+	     }
+	   else
+	     /* le pave se positionne par rapport a l'englobant */
+	     {
+	       if (pPRule->PrType == PtHorizPos)
+		 {
 		   /* position horizontale */
 		   if (PPos->PosDistance < 0)
 		     {
-			if (PPos->PosEdge == Left && PPos->PosRefEdge ==
-			    Left)
-			   /* le cote gauche du pave est a gauche du */
-			   /* cote gauche de l'englobant: debordement */
-			   pAbb1->AbHorizEnclosing = FALSE;
+		       if (PPos->PosEdge == Left && PPos->PosRefEdge ==
+			   Left)
+			 /* le cote gauche du pave est a gauche du */
+			 /* cote gauche de l'englobant: debordement */
+			 pAbb1->AbHorizEnclosing = FALSE;
 		     }
 		   else
 		     {
@@ -2060,61 +2073,62 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 			 /* cote droit de l'englobant: debordement */
 			 pAbb1->AbHorizEnclosing = FALSE;
 		     }
-		  }
-		else if (pPRule->PrType == PtVertPos)
-		  {
-		     /* regarde si le premier fils de l'englobant est un saut de page */
-		     pAbbParent = pAbb1->AbEnclosing;
-		     if (pAbbParent->AbFirstEnclosed != pAbb1
-			 && !pAbbParent->AbFirstEnclosed->AbDead
-		         && pAbbParent->AbFirstEnclosed->AbElement->ElTerminal
-			 && pAbbParent->AbFirstEnclosed->AbElement->ElLeafType == LtPageColBreak)
-		       {
-			  /* positionne par rapport au saut de page */
-			  PPos->PosRefEdge = Bottom;
-			  PPos->PosAbRef = pAbbParent->AbFirstEnclosed;
-			  /* mise a jour de la distance */
-			  /* si PPos->PosDistance est en unite relative on ne fait rien */
-			  /* sinon, PPos->PosDistance est decremente de la hauteur */
-			  /* du haut de la boite haut de page */
-			  if (PPos->PosUnit == UnPoint)
-			    {
-			      /* on cherche la boite page correspondant a la regle page */
-			      /* portee par un des ascendants  */
-			      b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement, pDoc,
-					      pAbbParent->AbFirstEnclosed->AbElement->ElViewPSchema,
-					      &pSchPPage);
-			      PageHeaderHeight = pSchPPage->PsPresentBox->PresBox[b - 1]->PbHeaderHeight;
-			      /* PbHeaderHeight toujours en points typo */
-			      if (PPos->PosDistance - PageHeaderHeight >= 0)
-				PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
-			    }
-			  PPos->PosUserSpecified = FALSE;
-		       }
-		     if (PPos->PosDistance < 0)
-		       {
-			  if (PPos->PosEdge == Top && PPos->PosRefEdge == Top)
-			     /* le haut du pave est au-dessus du */
-			     /* haut de l'englobant: debordement */
-			     pAbb1->AbVertEnclosing = FALSE;
-		       }
-		     else if (PPos->PosDistance > 0)
-			if (PPos->PosEdge == Bottom && PPos->PosRefEdge == Bottom)
-			   /* le bas du pave est au-dessous du */
-			   /* bas de l'englobant: debordement */
-			   pAbb1->AbVertEnclosing = FALSE;
-		  }
-	       }
-	  }
-	else
-	   /* on n'a pas trouve' le pave' de reference */
-	   if (pAbb1->AbLeafType != LtCompound
-	       && !(pPosRule->PoRelation == RlNext
-		    || pPosRule->PoRelation == RlPrevious
-		    || pPosRule->PoRelation == RlSameLevel
-		    || pPosRule->PoRelation == RlCreator
-		    || pPosRule->PoRelation == RlReferred))
-	  {
+		 }
+	       else if (pPRule->PrType == PtVertPos)
+		 {
+		   /* regarde si le premier fils de l'englobant est un saut
+		      de page */
+		   pAbbParent = pAbb1->AbEnclosing;
+		   if (pAbbParent->AbFirstEnclosed != pAbb1 &&
+		       !pAbbParent->AbFirstEnclosed->AbDead &&
+		       pAbbParent->AbFirstEnclosed->AbElement->ElTerminal &&
+		       pAbbParent->AbFirstEnclosed->AbElement->ElLeafType == LtPageColBreak)
+		     {
+		       /* positionne par rapport au saut de page */
+		       PPos->PosRefEdge = Bottom;
+		       PPos->PosAbRef = pAbbParent->AbFirstEnclosed;
+		       /* mise a jour de la distance */
+		       /* si PPos->PosDistance est en unite relative on ne fait
+			  rien sinon, PPos->PosDistance est decremente de la
+			  hauteur du haut de la boite haut de page */
+		       if (PPos->PosUnit == UnPoint)
+			 {
+			   /* on cherche la boite page correspondant a la
+			      regle page portee par un des ascendants  */
+			   b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement, pDoc,
+					       pAbbParent->AbFirstEnclosed->AbElement->ElViewPSchema,
+					       &pSchPPage);
+			   PageHeaderHeight = pSchPPage->PsPresentBox->PresBox[b - 1]->PbHeaderHeight;
+			   /* PbHeaderHeight toujours en points typo */
+			   if (PPos->PosDistance - PageHeaderHeight >= 0)
+			     PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
+			 }
+		       PPos->PosUserSpecified = FALSE;
+		     }
+		   if (PPos->PosDistance < 0)
+		     {
+		       if (PPos->PosEdge == Top && PPos->PosRefEdge == Top)
+			 /* le haut du pave est au-dessus du */
+			 /* haut de l'englobant: debordement */
+			 pAbb1->AbVertEnclosing = FALSE;
+		     }
+		   else if (PPos->PosDistance > 0)
+		     if (PPos->PosEdge == Bottom && PPos->PosRefEdge == Bottom)
+		       /* le bas du pave est au-dessous du */
+		       /* bas de l'englobant: debordement */
+		       pAbb1->AbVertEnclosing = FALSE;
+		 }
+	     }
+	 }
+       else
+	 /* on n'a pas trouve' le pave' de reference */
+	 if (pAbb1->AbLeafType != LtCompound &&
+	     !(pPosRule->PoRelation == RlNext ||
+	       pPosRule->PoRelation == RlPrevious ||
+	       pPosRule->PoRelation == RlSameLevel ||
+	       pPosRule->PoRelation == RlCreator ||
+	       pPosRule->PoRelation == RlReferred))
+	   {
 	     /* inutile de reessayer d'appliquer la regle */
 	     /* quand les paves environnants seront crees. */
 	     PPos->PosEdge = pPosRule->PoPosDef;
@@ -2124,99 +2138,99 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	     PPos->PosAbRef = NULL;
 	     PPos->PosUserSpecified = pPosRule->PoUserSpecified;
 	     if (PPos->PosUserSpecified)
-		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
+	       PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     *appl = TRUE;
-
 	  }
-	else if (pAbb1->AbEnclosing == NULL && pPosRule->PoRelation == RlEnclosing)
+	 else if (pAbb1->AbEnclosing == NULL &&
+		  pPosRule->PoRelation == RlEnclosing)
 	   /* positionnement par rapport a la fenetre */
-	  {
+	   {
 	     PPos->PosEdge = pPosRule->PoPosDef;
 	     PPos->PosRefEdge = pPosRule->PoPosRef;
 	     if (pPosRule->PoDistAttr)
-		/* valeur d'un attribut */
+	       /* valeur d'un attribut */
 	       {
-		  if (pPosRule->PoDistance < 0)
-		     /* inverser cette valeur */
-		     PPos->PosDistance = -AttrValue (pAttr);
-		  else
-		     PPos->PosDistance = AttrValue (pAttr);
-		  if (pPosRule->PoDistUnit == UnRelative ||
-		      pPosRule->PoDistUnit == UnXHeight)
-		     /* convertit en 1/10 de caractere */
-		     PPos->PosDistance = 10 * PPos->PosDistance;
+		 if (pPosRule->PoDistance < 0)
+		   /* inverser cette valeur */
+		   PPos->PosDistance = -AttrValue (pAttr);
+		 else
+		   PPos->PosDistance = AttrValue (pAttr);
+		 if (pPosRule->PoDistUnit == UnRelative ||
+		     pPosRule->PoDistUnit == UnXHeight)
+		   /* convertit en 1/10 de caractere */
+		   PPos->PosDistance = 10 * PPos->PosDistance;
 	       }
 	     else
-		/* c'est la valeur elle meme */
-		PPos->PosDistance = pPosRule->PoDistance;
+	       /* c'est la valeur elle meme */
+	       PPos->PosDistance = pPosRule->PoDistance;
 	     if (FirstCreation)
-		PPos->PosUserSpecified = pPosRule->PoUserSpecified;
+	       PPos->PosUserSpecified = pPosRule->PoUserSpecified;
 	     else
-		PPos->PosUserSpecified = FALSE;
+	       PPos->PosUserSpecified = FALSE;
 	     if (PPos->PosUserSpecified)
-		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
+	       PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     PPos->PosUnit = pPosRule->PoDistUnit;
 	     PPos->PosAbRef = NULL;
 	     *appl = TRUE;
-	  }
-	else
+	   }
+	 else
 	   /* on n'a pas trouv' le pave' de reference */
 	   /* si c'est un positionnement par rapport au precedent ou au */
 	   /* suivant, on positionne le pave par rapport a l'englobant */
 	   if (pAbb1->AbEnclosing != NULL &&
 	       (
-		  (pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlPrevious &&
-	       pPosRule->PoPosDef == Top && pPosRule->PoPosRef == Bottom) ||
-	   (pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlNext &&
-	    pPosRule->PoPosDef == Bottom && pPosRule->PoPosRef == Top) ||
-		  (pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlPrevious &&
-	       pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right) ||
-	   (pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlNext &&
-	    pPosRule->PoPosDef == Right && pPosRule->PoPosRef == Left)
+		(pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlPrevious &&
+		 pPosRule->PoPosDef == Top && pPosRule->PoPosRef == Bottom) ||
+		(pPRule->PrType == PtVertPos && pPosRule->PoRelation == RlNext &&
+		 pPosRule->PoPosDef == Bottom && pPosRule->PoPosRef == Top) ||
+		(pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlPrevious &&
+		 pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right) ||
+		(pPRule->PrType == PtHorizPos && pPosRule->PoRelation == RlNext &&
+		 pPosRule->PoPosDef == Right && pPosRule->PoPosRef == Left)
+		)
 	       )
-	   )
-	   /* c'est une regle de positionnement vertical en dessous du
-	      precedent et on n'a pas trouve' le precedent. On remplace par
-	      un positionnement en haut de l'englobant */
+	     /* c'est une regle de positionnement vertical en dessous du
+		precedent et on n'a pas trouve' le precedent. On remplace par
+		un positionnement en haut de l'englobant */
 	     {
-	     PPos->PosAbRef = pAbb1->AbEnclosing;
-	     PPos->PosEdge = pPosRule->PoPosDef;
-	     PPos->PosRefEdge = pPosRule->PoPosDef;
-	     /* s'agit-il d'une regle de presentation specifique ? */
-	     pRSpec = pAbb1->AbElement->ElFirstPRule;
-	     while (pRSpec != NULL && pRSpec != pPRule)
-		pRSpec = pRSpec->PrNextPRule;
-	     if (pRSpec == pPRule)
-		/* c'est une regle de presentation specifique */
-		/* on prend le decalage en compte */
-		PPos->PosDistance = pPosRule->PoDistance;
-	     else
-		/* c'est une regle generique */
-		/* on se positionne tout contre l'englobant */
-		PPos->PosDistance = 0;
-	     /* on pourra reessayer d'appliquer la regle plus tard : */
-	     /* le precedent existera peut etre, alors */
-	     *appl = FALSE;
-	     PPos->PosUnit = pPosRule->PoDistUnit;
-	     if (FirstCreation)
-		PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-	     else
-		PPos->PosUserSpecified = FALSE;
-	     if (PPos->PosUserSpecified)
-		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
-	     pAbb1->AbVertEnclosing = TRUE;
+	       PPos->PosAbRef = pAbb1->AbEnclosing;
+	       PPos->PosEdge = pPosRule->PoPosDef;
+	       PPos->PosRefEdge = pPosRule->PoPosDef;
+	       /* s'agit-il d'une regle de presentation specifique ? */
+	       pRSpec = pAbb1->AbElement->ElFirstPRule;
+	       while (pRSpec != NULL && pRSpec != pPRule)
+		 pRSpec = pRSpec->PrNextPRule;
+	       if (pRSpec == pPRule)
+		 /* c'est une regle de presentation specifique */
+		 /* on prend le decalage en compte */
+		 PPos->PosDistance = pPosRule->PoDistance;
+	       else
+		 /* c'est une regle generique */
+		 /* on se positionne tout contre l'englobant */
+		 PPos->PosDistance = 0;
+	       /* on pourra reessayer d'appliquer la regle plus tard : */
+	       /* le precedent existera peut etre, alors */
+	       *appl = FALSE;
+	       PPos->PosUnit = pPosRule->PoDistUnit;
+	       if (FirstCreation)
+		 PPos->PosUserSpecified = pPosRule->PoUserSpecified;
+	       else
+		 PPos->PosUserSpecified = FALSE;
+	       if (PPos->PosUserSpecified)
+		 PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
+	       pAbb1->AbVertEnclosing = TRUE;
 	     }
            else
              /* position flottante, equivalente a une regle VertPos=NULL ou
                 HorizPos=NULL */
              {
-	     PPos->PosEdge = NoEdge;
-             PPos->PosRefEdge = NoEdge;
-             PPos->PosDistance = 0;
-             PPos->PosUnit = UnRelative;
-             PPos->PosAbRef = NULL;
-             PPos->PosUserSpecified = FALSE;
-	     *appl = FALSE;
+	       PPos->PosEdge = NoEdge;
+	       PPos->PosRefEdge = NoEdge;
+	       PPos->PosDistance = 0;
+	       PPos->PosUnit = UnRelative;
+	       PPos->PosAbRef = NULL;
+	       PPos->PosUserSpecified = FALSE;
+	       *appl = FALSE;
              }
      }
 }
@@ -3047,6 +3061,18 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	switch (pPRule->PrType)
 	  {
 
+	  case PtVisibility:
+	    pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbVisibility = 10;
+		appl = TRUE;
+	      }
+	    break;
+
 	  case PtFunction:
 	    switch (pPRule->PrPresFunction)
 	      {
@@ -3181,370 +3207,138 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      }	    
 	    break;
 
-	  case PtVisibility:
-	    pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbVisibility = 10;
-		appl = TRUE;
-	      }
+	  case PtVertOverflow:
+	    pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
+					      pAb->AbDocView, &appl);
 	    break;
 
-	  case PtDepth:
-	    pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-					&appl, &unit, pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbDepth = 0;
-		appl = TRUE;
-	      }
+	  case PtHorizOverflow:
+	    pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
+					       pAb->AbDocView, &appl);
 	    break;
 
-	  case PtFillPattern:
-	    pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbFillPattern = 0;
-		appl = TRUE;
-	      }
+          case PtVertRef:
+	    Posit = pAb->AbVertRef;
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
+		      pDoc, &appl);
+	    pAb->AbVertRef = Posit;
 	    break;
 
-	  case PtBackground:
-	    pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbBackground = DefaultBColor;
-		appl = TRUE;
-	      }
+	  case PtHorizRef:
+	    Posit = pAb->AbHorizRef;
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
+		      pDoc, &appl);
+	    pAb->AbHorizRef = Posit;
 	    break;
 
-	  case PtForeground:
-	    pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbForeground = DefaultFColor;
-		appl = TRUE;
-	      }
+	  case PtHeight:
+	    ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	    /* traitement special pour le debordement vertical des cellules */
+	    /* de tableau etendues verticalement */
+	    if (ThotLocalActions[T_vertspan] != NULL)
+	       (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
 	    break;
 
-          case PtBorderTopColor:
-	    pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
-					    pAb->AbDocView, &appl, &unit,
-					    pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderTopColor for the root element. Set initial value */
-	      {
-		pAb->AbTopBColor = -1;
-		appl = TRUE;
-	      }
+	  case PtWidth:
+	    ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
 	    break;
 
-          case PtBorderRightColor:
-	    pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderRightColor for the root element. Set initial value */
+	  case PtVertPos:
+	    /* erreur : ce n'est pas a l'editeur d'interpreter */
+	    /* la mise en ligne. On supprime ce code */
+	    /* Si le precedent est un separateur de page, le pave est */
+	    /* positionne' en dessous de ce saut de page, sauf si le pave */
+	    /* positionne' fait partie d'un separateur de page (c'est une */
+	    /* boite de haut ou de bas de page qui doit etre placee par */
+	    /* rapport au filet separateur) ou s'il se positionne par */
+	    /* rapport a un autre element. */
+	    afterPageBreak = FALSE;
+	    if (pAb->AbPrevious != NULL)
+	      /* il y a un pave precedent */
 	      {
-		pAb->AbRightBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderBottomColor:
-	    pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl, &unit,
-					       pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderBottomColor for the root element. Set initial value*/
-	      {
-		pAb->AbBottomBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderLeftColor:
-	    pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderLeftColor for the root element. Set initial value */
-	      {
-		pAb->AbLeftBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtFont:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		pAb->AbFont = 1;
-		appl = TRUE;
-	      }
-	    else
-	      pAb->AbFont = (int) c & 0xFF;
-	    break;
-
-	  case PtStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbFontStyle = 0;
-		appl = TRUE;
-	      }
-	    else
-	      switch (c)
-		{
-		case 'I':	/* Italic */
-		  pAb->AbFontStyle = 1;
-		  break;
-		case 'O':	/* Oblique */
-		  pAb->AbFontStyle = 2;
-		  break;
-		default:	/* Roman */
-		  pAb->AbFontStyle = 0;
-		  break;
-		}
-	    break;
-
-	  case PtWeight:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbFontWeight = 0;
-		appl = TRUE;
-	      }
-	    else
-	      switch (c)
-		{
-		case 'B':	/* Bold */
-		  pAb->AbFontWeight = 1;
-		  break;
-		default:	/* Normal */
-		  pAb->AbFontWeight = 0;
-		  break;
-		}
-	    break;
-
-	  case PtUnderline:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbUnderline = 0;
-		appl = TRUE;
-	      }
-	    else
-	      switch (c)
-		{
-		case 'C':
-		  pAb->AbUnderline = 3;
-		  break;
-		case 'O':
-		  pAb->AbUnderline = 2;
-		  break;
-		case 'U':
-		  pAb->AbUnderline = 1;
-		  break;
-		default:
-		  pAb->AbUnderline = 0;
-		  break;
-		}
-	    break;
-
-	  case PtThickness:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbThickness = 0;
-		appl = TRUE;
-	      }
-	    else
-	      switch (c)
-		{
-		case 'T':
-		  pAb->AbThickness = 1;
-		  break;
-		default:
-		  pAb->AbThickness = 0;
-		  break;
-		}
-	    break;
-
-	  case PtDirection:
-	    pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		/* initial value: LeftToRight */
-		pAb->AbDirection = 'L';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtUnicodeBidi:
-	    pAb->AbUnicodeBidi = CharRule (pPRule, pAb->AbElement,
-					   pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		/* initial value: Normal */
-		pAb->AbUnicodeBidi = 'N';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineStyle:
-	    pAb->AbLineStyle = CharRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		pAb->AbLineStyle = 'S';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtDisplay:
-	    pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				       &appl);
-	    if (appl)
-	      {
-		if (pAb->AbDisplay == 'I')
-		  /* display: inline */
+		if (!pAb->AbPrevious->AbDead &&
+		    pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
+		    pAb->AbElement->ElTypeNumber != PageBreak + 1)
 		  {
-		    if (pAb->AbEnclosing)
-		      pAb->AbEnclosing->AbInLine = TRUE;
-		    pAb->AbAcceptLineBreak = TRUE;
-		  }
-		else if (pAb->AbDisplay != 'U')
-		  {
-		    /* display: block */
-		    pAb->AbNotInLine = TRUE;
-		    pAb->AbAcceptLineBreak = FALSE;
+		    if (pPRule->PrPosRule.PoRelation == RlSameLevel
+			|| pPRule->PrPosRule.PoRelation == RlPrevious)
+		      afterPageBreak = TRUE;
+		    else if (pPRule->PrPosRule.PoRelation == RlEnclosing &&
+			     pAb->AbPrevious->AbElement-> ElPageType != PgBegin)
+		      afterPageBreak = TRUE;
 		  }
 	      }
-	    else if (pAb->AbElement->ElParent == NULL)
+	    else
+	      /* il n'y a pas de pave precedent */
+	      if (pAb->AbElement->ElPrevious != NULL)
+		/* il y a un element precedent */
+		if (pAb->AbElement->ElPrevious->ElTypeNumber == PageBreak + 1
+		    && pAb->AbElement->ElPrevious->ElViewPSchema == viewSch
+		    && pAb->AbElement->ElTypeNumber != PageBreak + 1)
+		  /* l'element precedent est une marque de page pour la vue */
+		  if (pPRule->PrPosRule.PoRelation == RlSameLevel
+		      || pPRule->PrPosRule.PoRelation == RlPrevious)
+		    afterPageBreak = TRUE;
+	    if (afterPageBreak)
+	      /* position: en dessous du pave precedent */
+	      if (pAb->AbPrevious == NULL)
+		/* le pave de la marque de page n'est pas encore cree', on */
+		/* ne peut pas appliquer la regle de positionnement */
+		appl = FALSE;
+	      else
+		{
+		  pPavP1 = &pAb->AbVertPos;
+		  pPavP1->PosEdge = Top;
+		  pPavP1->PosRefEdge = Bottom;
+		  pPavP1->PosDistance = 0;
+		  pPavP1->PosUnit = UnPoint;
+		  pPavP1->PosAbRef = pAb->AbPrevious;
+		  pPavP1->PosUserSpecified = FALSE;
+		}
+	    else
+	      /* s'il s'agit d'une boite page (celle qui englobe le filet */
+	      /* et les hauts et pieds de page), et si elle n'est precedee */
+	      /* d'aucun element, elle se positionne en haut de l'englobant. */
 	      {
-		pAb->AbDisplay = 'U';
-		appl = TRUE;
+		insidePage = FALSE;
+		if (pAb->AbEnclosing != NULL)
+		  if (pAb->AbElement->ElTypeNumber == PageBreak + 1
+		      && pAb->AbEnclosing->AbElement->
+		      ElTypeNumber != PageBreak + 1
+		      && pAb->AbElement->ElPrevious == NULL)
+		    if (pAb->AbPrevious == NULL)
+		      insidePage = TRUE;
+		
+		if (insidePage)
+		  {
+		    pPavP1 = &pAb->AbVertPos;
+		    pPavP1->PosAbRef = pAb->AbEnclosing;
+		    pPavP1->PosEdge = Top;
+		    pPavP1->PosRefEdge = Top;
+		    pPavP1->PosDistance = 0;
+		    pPavP1->PosUnit = UnPoint;
+		    pPavP1->PosUserSpecified = FALSE;
+		  }
+		else
+		  /* applique la regle de positionnement de l'element */
+		  {
+		    Posit = pAb->AbVertPos;
+		    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
+			      pSchP, pAb, pDoc, &appl);
+		    pAb->AbVertPos = Posit;
+		  }
 	      }
+	    /* traitement special pour le debordement vertical des cellules */
+	    /* de tableau etendues verticalement */
+	    if (ThotLocalActions[T_vertspan] != NULL)
+	      (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
 	    break;
 
-          case PtBorderTopStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbTopStyle = BorderStyleIntValue (c);
-	    break;
-
-          case PtBorderRightStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbRightStyle = BorderStyleIntValue (c);
-	    break;
-
-          case PtBorderBottomStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbBottomStyle = BorderStyleIntValue (c);
-	    break;
-
-          case PtBorderLeftStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbLeftStyle = BorderStyleIntValue (c);
-	    break;
-
-	  case PtIndent:
-	    pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl, &unit,
-					 pAttr, pAb);
-	    pAb->AbIndentUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbIndent = 0;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtSize:
-	    /* on applique la regle de taille */
-	    pAb->AbSize = IntegerRule (pPRule, pAb->AbElement,
-				       pAb->AbDocView, &appl, &unit,
-				       pAttr, pAb);
-	    if (appl)
-	      pAb->AbSizeUnit = unit;
-	    else if (pAb->AbElement->ElParent == NULL)
-	      /* c'est la racine, on met a priori la valeur par defaut */
-	      {
-		pAb->AbSize = 3;
-		pAb->AbSizeUnit = UnRelative;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineSpacing:
-	    pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    pAb->AbLineSpacingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLineSpacing = 10;
-		pAb->AbLineSpacingUnit = UnRelative;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineWeight:
-	    pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbLineWeightUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLineWeight = 1;
-		pAb->AbLineWeightUnit = UnPoint;
-		appl = TRUE;
-	      }
+	  case PtHorizPos:
+	    Posit = pAb->AbHorizPos;
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
+		      pAb, pDoc, &appl);
+	    pAb->AbHorizPos = Posit;
 	    break;
 
           case PtMarginTop:
@@ -3703,140 +3497,343 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      }
             break;
 
-          case PtXRadius:
-	    pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				     &appl, &unit, pAttr, pAb);
-	    pAb->AbRxUnit = unit;
-            break;
-
-          case PtYRadius:
-	    pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				     &appl, &unit, pAttr, pAb);
-	    pAb->AbRyUnit = unit;
-            break;
-
-          case PtVertRef:
-	    Posit = pAb->AbVertRef;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		      pDoc, &appl);
-	    pAb->AbVertRef = Posit;
-	    break;
-
-	  case PtHorizRef:
-	    Posit = pAb->AbHorizRef;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		      pDoc, &appl);
-	    pAb->AbHorizRef = Posit;
-	    break;
-
-	  case PtVertPos:
-	    /* erreur : ce n'est pas a l'editeur d'interpreter */
-	    /* la mise en ligne. On supprime ce code */
-	    /* Si le precedent est un separateur de page, le pave est */
-	    /* positionne' en dessous de ce saut de page, sauf si le pave */
-	    /* positionne' fait partie d'un separateur de page (c'est une */
-	    /* boite de haut ou de bas de page qui doit etre placee par */
-	    /* rapport au filet separateur) ou s'il se positionne par */
-	    /* rapport a un autre element. */
-	    afterPageBreak = FALSE;
-	    if (pAb->AbPrevious != NULL)
-	      /* il y a un pave precedent */
+          case PtBorderTopColor:
+	    pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
+					    pAb->AbDocView, &appl, &unit,
+					    pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* no BorderTopColor for the root element. Set initial value */
 	      {
-		if (!pAb->AbPrevious->AbDead &&
-		    pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
-		    pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		  {
-		    if (pPRule->PrPosRule.PoRelation == RlSameLevel
-			|| pPRule->PrPosRule.PoRelation == RlPrevious)
-		      afterPageBreak = TRUE;
-		    else if (pPRule->PrPosRule.PoRelation == RlEnclosing &&
-			     pAb->AbPrevious->AbElement-> ElPageType != PgBegin)
-		      afterPageBreak = TRUE;
-		  }
+		pAb->AbTopBColor = -1;
+		appl = TRUE;
+	      }
+	    break;
+
+          case PtBorderRightColor:
+	    pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
+					      pAb->AbDocView, &appl, &unit,
+					      pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* no BorderRightColor for the root element. Set initial value */
+	      {
+		pAb->AbRightBColor = -1;
+		appl = TRUE;
+	      }
+	    break;
+
+          case PtBorderBottomColor:
+	    pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
+					       pAb->AbDocView, &appl, &unit,
+					       pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* no BorderBottomColor for the root element. Set initial value*/
+	      {
+		pAb->AbBottomBColor = -1;
+		appl = TRUE;
+	      }
+	    break;
+
+          case PtBorderLeftColor:
+	    pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* no BorderLeftColor for the root element. Set initial value */
+	      {
+		pAb->AbLeftBColor = -1;
+		appl = TRUE;
+	      }
+	    break;
+
+          case PtBorderTopStyle:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+	        c = '0';
+		appl = TRUE;
+	      }
+	    if (appl)
+                pAb->AbTopStyle = BorderStyleIntValue (c);
+	    break;
+
+          case PtBorderRightStyle:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+	        c = '0';
+		appl = TRUE;
+	      }
+	    if (appl)
+                pAb->AbRightStyle = BorderStyleIntValue (c);
+	    break;
+
+          case PtBorderBottomStyle:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+	        c = '0';
+		appl = TRUE;
+	      }
+	    if (appl)
+                pAb->AbBottomStyle = BorderStyleIntValue (c);
+	    break;
+
+          case PtBorderLeftStyle:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+	        c = '0';
+		appl = TRUE;
+	      }
+	    if (appl)
+                pAb->AbLeftStyle = BorderStyleIntValue (c);
+	    break;
+
+	  case PtSize:
+	    /* on applique la regle de taille */
+	    pAb->AbSize = IntegerRule (pPRule, pAb->AbElement,
+				       pAb->AbDocView, &appl, &unit,
+				       pAttr, pAb);
+	    if (appl)
+	      pAb->AbSizeUnit = unit;
+	    else if (pAb->AbElement->ElParent == NULL)
+	      /* c'est la racine, on met a priori la valeur par defaut */
+	      {
+		pAb->AbSize = 3;
+		pAb->AbSizeUnit = UnRelative;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtStyle:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbFontStyle = 0;
+		appl = TRUE;
 	      }
 	    else
-	      /* il n'y a pas de pave precedent */
-	      if (pAb->AbElement->ElPrevious != NULL)
-		/* il y a un element precedent */
-		if (pAb->AbElement->ElPrevious->ElTypeNumber == PageBreak + 1
-		    && pAb->AbElement->ElPrevious->ElViewPSchema == viewSch
-		    && pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		  /* l'element precedent est une marque de page pour la vue */
-		  if (pPRule->PrPosRule.PoRelation == RlSameLevel
-		      || pPRule->PrPosRule.PoRelation == RlPrevious)
-		    afterPageBreak = TRUE;
-	    if (afterPageBreak)
-	      /* position: en dessous du pave precedent */
-	      if (pAb->AbPrevious == NULL)
-		/* le pave de la marque de page n'est pas encore cree', on */
-		/* ne peut pas appliquer la regle de positionnement */
-		appl = FALSE;
-	      else
+	      switch (c)
 		{
-		  pPavP1 = &pAb->AbVertPos;
-		  pPavP1->PosEdge = Top;
-		  pPavP1->PosRefEdge = Bottom;
-		  pPavP1->PosDistance = 0;
-		  pPavP1->PosUnit = UnPoint;
-		  pPavP1->PosAbRef = pAb->AbPrevious;
-		  pPavP1->PosUserSpecified = FALSE;
+		case 'I':	/* Italic */
+		  pAb->AbFontStyle = 1;
+		  break;
+		case 'O':	/* Oblique */
+		  pAb->AbFontStyle = 2;
+		  break;
+		default:	/* Roman */
+		  pAb->AbFontStyle = 0;
+		  break;
 		}
-	    else
-	      /* s'il s'agit d'une boite page (celle qui englobe le filet */
-	      /* et les hauts et pieds de page), et si elle n'est precedee */
-	      /* d'aucun element, elle se positionne en haut de l'englobant. */
+	    break;
+
+	  case PtWeight:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		insidePage = FALSE;
-		if (pAb->AbEnclosing != NULL)
-		  if (pAb->AbElement->ElTypeNumber == PageBreak + 1
-		      && pAb->AbEnclosing->AbElement->
-		      ElTypeNumber != PageBreak + 1
-		      && pAb->AbElement->ElPrevious == NULL)
-		    if (pAb->AbPrevious == NULL)
-		      insidePage = TRUE;
-		
-		if (insidePage)
-		  {
-		    pPavP1 = &pAb->AbVertPos;
-		    pPavP1->PosAbRef = pAb->AbEnclosing;
-		    pPavP1->PosEdge = Top;
-		    pPavP1->PosRefEdge = Top;
-		    pPavP1->PosDistance = 0;
-		    pPavP1->PosUnit = UnPoint;
-		    pPavP1->PosUserSpecified = FALSE;
-		  }
-		else
-		  /* applique la regle de positionnement de l'element */
-		  {
-		    Posit = pAb->AbVertPos;
-		    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
-			      pSchP, pAb, pDoc, &appl);
-		    pAb->AbVertPos = Posit;
-		  }
+		pAb->AbFontWeight = 0;
+		appl = TRUE;
 	      }
-	    /* traitement special pour le debordement vertical des cellules */
-	    /* de tableau etendues verticalement */
-	    if (ThotLocalActions[T_vertspan] != NULL)
-	      (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
+	    else
+	      switch (c)
+		{
+		case 'B':	/* Bold */
+		  pAb->AbFontWeight = 1;
+		  break;
+		default:	/* Normal */
+		  pAb->AbFontWeight = 0;
+		  break;
+		}
 	    break;
 
-	  case PtHorizPos:
-	    Posit = pAb->AbHorizPos;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
-		      pAb, pDoc, &appl);
-	    pAb->AbHorizPos = Posit;
+	  case PtFont:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+		pAb->AbFont = 1;
+		appl = TRUE;
+	      }
+	    else
+	      pAb->AbFont = (int) c & 0xFF;
 	    break;
 
-	  case PtHeight:
-	    ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
-	    /* traitement special pour le debordement vertical des cellules */
-	    /* de tableau etendues verticalement */
-	    if (ThotLocalActions[T_vertspan] != NULL)
-	       (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
+	  case PtUnderline:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbUnderline = 0;
+		appl = TRUE;
+	      }
+	    else
+	      switch (c)
+		{
+		case 'C':
+		  pAb->AbUnderline = 3;
+		  break;
+		case 'O':
+		  pAb->AbUnderline = 2;
+		  break;
+		case 'U':
+		  pAb->AbUnderline = 1;
+		  break;
+		default:
+		  pAb->AbUnderline = 0;
+		  break;
+		}
 	    break;
 
-	  case PtWidth:
-	    ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	  case PtThickness:
+	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbThickness = 0;
+		appl = TRUE;
+	      }
+	    else
+	      switch (c)
+		{
+		case 'T':
+		  pAb->AbThickness = 1;
+		  break;
+		default:
+		  pAb->AbThickness = 0;
+		  break;
+		}
+	    break;
+
+	  case PtIndent:
+	    pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
+					 pAb->AbDocView, &appl, &unit,
+					 pAttr, pAb);
+	    pAb->AbIndentUnit = unit;
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbIndent = 0;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtLineSpacing:
+	    pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
+					      pAb->AbDocView, &appl, &unit,
+					      pAttr, pAb);
+	    pAb->AbLineSpacingUnit = unit;
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbLineSpacing = 10;
+		pAb->AbLineSpacingUnit = UnRelative;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtDepth:
+	    pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+					&appl, &unit, pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbDepth = 0;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtAdjust:
+	    pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				       &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbAdjust = AlignLeft;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtDirection:
+	    pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
+					 pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+		/* initial value: LeftToRight */
+		pAb->AbDirection = 'L';
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtUnicodeBidi:
+	    pAb->AbUnicodeBidi = CharRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+		/* initial value: Normal */
+		pAb->AbUnicodeBidi = 'N';
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtLineStyle:
+	    pAb->AbLineStyle = CharRule (pPRule, pAb->AbElement,
+					 pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+		pAb->AbLineStyle = 'S';
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtLineWeight:
+	    pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	    pAb->AbLineWeightUnit = unit;
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbLineWeight = 1;
+		pAb->AbLineWeightUnit = UnPoint;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtFillPattern:
+	    pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
+					      pAb->AbDocView, &appl, &unit,
+					      pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbFillPattern = 0;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtBackground:
+	    pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbBackground = DefaultBColor;
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtForeground:
+	    pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAb->AbForeground = DefaultFColor;
+		appl = TRUE;
+	      }
 	    break;
 
 	  case PtHyphenate:
@@ -3850,21 +3847,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      }
 	    break;
 
-	  case PtVertOverflow:
-	    pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl);
-	    break;
-
-	  case PtHorizOverflow:
-	    pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl);
-	    break;
-
-	  case PtGather:
-	    pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
-					pAb->AbDocView, &appl);
-	    break;
-
 	  case PtPageBreak:
 	    pAb->AbAcceptPageBreak = BoolRule (pPRule, pAb->AbElement,
 					       pAb->AbDocView, &appl);
@@ -3875,13 +3857,45 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 					       pAb->AbDocView, &appl);
 	    break;
 
-	  case PtAdjust:
-	    pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
+	  case PtGather:
+	    pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
+					pAb->AbDocView, &appl);
+	    break;
+
+          case PtXRadius:
+	    pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl, &unit, pAttr, pAb);
+	    pAb->AbRxUnit = unit;
+            break;
+
+          case PtYRadius:
+	    pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl, &unit, pAttr, pAb);
+	    pAb->AbRyUnit = unit;
+            break;
+
+	  case PtDisplay:
+	    pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				       &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	    if (appl)
 	      {
-		pAb->AbAdjust = AlignLeft;
+		if (pAb->AbDisplay == 'I')
+		  /* display: inline */
+		  {
+		    if (pAb->AbEnclosing)
+		      pAb->AbEnclosing->AbInLine = TRUE;
+		    pAb->AbAcceptLineBreak = TRUE;
+		  }
+		else if (pAb->AbDisplay != 'U')
+		  {
+		    /* display: block */
+		    pAb->AbNotInLine = TRUE;
+		    pAb->AbAcceptLineBreak = FALSE;
+		  }
+	      }
+	    else if (pAb->AbElement->ElParent == NULL)
+	      {
+		pAb->AbDisplay = 'U';
 		appl = TRUE;
 	      }
 	    break;

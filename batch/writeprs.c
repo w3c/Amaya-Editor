@@ -129,6 +129,12 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtFunction:
 	       TtaWriteByte (outfile, C_PR_FUNCTION);
 	       break;
+	    case PtHorizOverflow:
+	       TtaWriteByte (outfile, C_PR_HORIZOVERFLOW);
+	       break;
+	    case PtVertOverflow:
+	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
+	       break;
 	    case PtVertRef:
 	       TtaWriteByte (outfile, C_PR_VREF);
 	       break;
@@ -210,12 +216,6 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtSize:
 	       TtaWriteByte (outfile, C_PR_SIZE);
 	       break;
-	    case PtUnderline:
-	       TtaWriteByte (outfile, C_PR_UNDERLINE);
-	       break;
-	    case PtThickness:
-	       TtaWriteByte (outfile, C_PR_UNDER_THICK);
-	       break;
 	    case PtStyle:
 	       TtaWriteByte (outfile, C_PR_STYLE);
 	       break;
@@ -225,11 +225,11 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtFont:
 	       TtaWriteByte (outfile, C_PR_FONT);
 	       break;
-	    case PtBreak1:
-	       TtaWriteByte (outfile, C_PR_BREAK1);
+	    case PtUnderline:
+	       TtaWriteByte (outfile, C_PR_UNDERLINE);
 	       break;
-	    case PtBreak2:
-	       TtaWriteByte (outfile, C_PR_BREAK2);
+	    case PtThickness:
+	       TtaWriteByte (outfile, C_PR_UNDER_THICK);
 	       break;
 	    case PtIndent:
 	       TtaWriteByte (outfile, C_PR_INDENT);
@@ -237,14 +237,11 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtLineSpacing:
 	       TtaWriteByte (outfile, C_PR_LINESPACING);
 	       break;
-	    case PtAdjust:
-	       TtaWriteByte (outfile, C_PR_ADJUST);
-	       break;
-	    case PtHyphenate:
-	       TtaWriteByte (outfile, C_PR_HYPHENATE);
-	       break;
 	    case PtDepth:
 	       TtaWriteByte (outfile, C_PR_DEPTH);
+	       break;
+	    case PtAdjust:
+	       TtaWriteByte (outfile, C_PR_ADJUST);
 	       break;
 	    case PtDirection:
 	       TtaWriteByte (outfile, C_PR_DIRECTION);
@@ -267,14 +264,8 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtForeground:
 	       TtaWriteByte (outfile, C_PR_FOREGROUND);
 	       break;
-	    case PtHorizOverflow:
-	       TtaWriteByte (outfile, C_PR_HORIZOVERFLOW);
-	       break;
-	    case PtVertOverflow:
-	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
-	       break;
-	    case PtGather:
-	       TtaWriteByte (outfile, C_PR_GATHER);
+	    case PtHyphenate:
+	       TtaWriteByte (outfile, C_PR_HYPHENATE);
 	       break;
 	    case PtPageBreak:
 	       TtaWriteByte (outfile, C_PR_PAGEBREAK);
@@ -282,8 +273,18 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtLineBreak:
 	       TtaWriteByte (outfile, C_PR_LINEBREAK);
 	       break;
+	    case PtGather:
+	       TtaWriteByte (outfile, C_PR_GATHER);
+	       break;
+
 	    case PtDisplay:
 	       TtaWriteByte (outfile, C_PR_DISPLAY);
+	       break;
+	    case PtBreak1:
+	       TtaWriteByte (outfile, C_PR_BREAK1);
+	       break;
+	    case PtBreak2:
+	       TtaWriteByte (outfile, C_PR_BREAK2);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
