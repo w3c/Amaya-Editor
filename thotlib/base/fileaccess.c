@@ -107,35 +107,35 @@ CHARSET             encoding;
                 break;
 
            case ISO_8859_2:
-                *bval = TtaGetUnicodeValueFromISOLatin2Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_2_Code (car);
                 break;
 
            case ISO_8859_3:
-                *bval = TtaGetUnicodeValueFromISOLatin3Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_3_Code (car);
                 break;
 
            case ISO_8859_4:
-                *bval = TtaGetUnicodeValueFromISOLatin4Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_4_Code (car);
                 break;
 
            case ISO_8859_5:
-                *bval = TtaGetUnicodeValueFromISOLatin5Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_5_Code (car);
                 break;
 
            case ISO_8859_6:
-                *bval = TtaGetUnicodeValueFromISOLatin6Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_6_Code (car);
                 break;
 
            case ISO_8859_7:
-                *bval = TtaGetUnicodeValueFromISOLatin7Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_7_Code (car);
                 break;
 
            case ISO_8859_8:
-                *bval = TtaGetUnicodeValueFromISOLatin8Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_8_Code (car);
                 break;
 
            case ISO_8859_9:
-                *bval = TtaGetUnicodeValueFromISOLatin9Code (car);
+                *bval = TtaGetUnicodeValueFrom_ISO_8859_9_Code (car);
                 break;
 
            case WINDOWS_1250:
@@ -544,9 +544,8 @@ CHARSET             encoding;
    nbBytes = TtaWC2MB (val, mbc, encoding);
    if (nbBytes == -1)
       return FALSE;
-   for (i = 0; i < nbBytes; i++)
-       if (fwrite ((char*) &mbc[i], sizeof (char), 1, file) == 0)
-          return FALSE;
+   if (fwrite ((char*) mbc, sizeof (char), nbBytes, file) == 0)
+      return FALSE;
    return TRUE;
    
 #  else  /* !_I18N_ */

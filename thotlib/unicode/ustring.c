@@ -763,49 +763,49 @@ CHARSET        encoding;
 
            case ISO_8859_2:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin2Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_3:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin3Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_4:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin4Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_5:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin5Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_6:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin6Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_7:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin7Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_8:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin8Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*start);
                 start++;
                 break;
 
            case ISO_8859_9:
                 nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromISOLatin9Code (*start);
+                *car = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*start);
                 start++;
                 break;
 

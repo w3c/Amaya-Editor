@@ -17,7 +17,7 @@
 
 extern unsigned long offset[6];
 
-unsigned short ISOLatin2Map [] = {
+unsigned short ISO_8859_2_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -52,7 +52,7 @@ unsigned short ISOLatin2Map [] = {
     0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9
 };
 
-unsigned short ISOLatin3Map [] = {
+unsigned short ISO_8859_3_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -87,7 +87,7 @@ unsigned short ISOLatin3Map [] = {
     0x011D, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x016D, 0x015D, 0x02D9
 };
 
-unsigned short ISOLatin4Map [] = {
+unsigned short ISO_8859_4_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -122,7 +122,7 @@ unsigned short ISOLatin4Map [] = {
     0x00F8, 0x0173, 0x00FA, 0x00FB, 0x00FC, 0x0169, 0x016B, 0x02D9
 };
 
-unsigned short ISOLatin5Map [] = {
+unsigned short ISO_8859_5_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -158,7 +158,7 @@ unsigned short ISOLatin5Map [] = {
 };
 
 /* Arabic ISO Latin encoding */
-unsigned short ISOLatin6Map [] = {
+unsigned short ISO_8859_6_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -194,7 +194,7 @@ unsigned short ISOLatin6Map [] = {
 };
 
 /* Greek */
-unsigned short ISOLatin7Map [] = {
+unsigned short ISO_8859_7_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -230,7 +230,7 @@ unsigned short ISOLatin7Map [] = {
 };
 
 /* Hebrew */
-unsigned short ISOLatin8Map [] = {
+unsigned short ISO_8859_8_Map [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
     0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -660,13 +660,13 @@ const CHAR_T* string;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin2CodeFromUnicode: return the ISO latin 2 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_2_CodeFromUnicode: return the ISO latin 2 code corresponding 
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin2CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_2_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin2CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_2_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -739,18 +739,18 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin2Code: return the Unicode val corresponding to
- * the ISO Latin 2 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_2_Code: return the Unicode val corresponding
+ * to the ISO Latin 2 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin2Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_2_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin2Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_2_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin2Map [c];
+   return ISO_8859_2_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -758,13 +758,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin3CodeFromUnicode: return the ISO latin 3 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_3_CodeFromUnicode: return the ISO latin 3 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin3CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_3_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin3CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_3_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -807,18 +807,18 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin3Code: return the Unicode val corresponding to
- * the ISO Latin 3 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_3_Code: return the Unicode val corresponding
+ * to the ISO Latin 3 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin3Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_3_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin3Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_3_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin3Map [c];
+   return ISO_8859_3_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -826,13 +826,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin4CodeFromUnicode: return the ISO latin 4 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_4_CodeFromUnicode: return the ISO latin 4 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin4CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_4_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin4CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_4_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -898,18 +898,18 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin4Code: return the Unicode val corresponding to
- * the ISO Latin 4 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_4_Code: return the Unicode val corresponding
+ * to the ISO Latin 4 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin4Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_4_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin4Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_4_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin4Map [c];
+   return ISO_8859_4_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -917,13 +917,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin5CodeFromUnicode: return the ISO latin 5 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_5_CodeFromUnicode: return the ISO latin 5 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin5CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_5_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin5CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_5_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -1032,18 +1032,18 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin5Code: return the Unicode val corresponding to
- * the ISO Latin 5 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_5_Code: return the Unicode val corresponding
+ * to the ISO Latin 5 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin5Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_5_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin5Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_5_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin5Map [c];
+   return ISO_8859_5_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -1051,13 +1051,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin6CodeFromUnicode: return the ISO latin 6 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_6_CodeFromUnicode: return the ISO latin 6 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin6CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_6_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin6CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_6_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -1130,18 +1130,18 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin6Code: return the Unicode val corresponding to
- * the ISO Latin 6 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_6_Code: return the Unicode val corresponding
+ * to the ISO Latin 6 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin6Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_6_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin6Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_6_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin6Map [c];
+   return ISO_8859_6_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -1149,13 +1149,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin7CodeFromUnicode: return the ISO latin 7 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_7_CodeFromUnicode: return the ISO latin 7 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin7CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_7_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin7CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_7_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -1244,18 +1244,18 @@ const CHAR_T  wc;
 
 	
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin7Code: return the Unicode val corresponding to
- * the ISO Latin 7 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_7_Code: return the Unicode val corresponding
+ * to the ISO Latin 7 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin7Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_7_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin7Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_7_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin7Map [c];
+   return ISO_8859_7_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -1263,13 +1263,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin8CodeFromUnicode: return the ISO latin 8 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_8_CodeFromUnicode: return the ISO latin 8 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin8CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_8_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin8CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_8_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -1316,18 +1316,18 @@ const CHAR_T  wc;
 	
 	
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin8Code: return the Unicode val corresponding to
- * the ISO Latin 8 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_8_Code: return the Unicode val corresponding
+ * to the ISO Latin 8 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin8Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_8_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin8Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_8_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
-   return ISOLatin8Map [c];
+   return ISO_8859_8_Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -1335,13 +1335,13 @@ const unsigned char wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatin9CodeFromUnicode: return the ISO latin 9 code corresponding to
- * the Unicode value wc.
+ * TtaGet_ISO_8859_9_CodeFromUnicode: return the ISO latin 9 code corresponding
+ * to the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatin9CodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGet_ISO_8859_9_CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatin9CodeFromUnicode (wc)
+unsigned char TtaGet_ISO_8859_9_CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -1362,13 +1362,13 @@ const CHAR_T  wc;
 
 
 /*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFromISOLatin9Code: return the Unicode val corresponding to
- * the ISO Latin 9 code c.
+ * TtaGetUnicodeValueFrom_ISO_8859_9_Code: return the Unicode val corresponding
+ * to the ISO Latin 9 code c.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatin9Code (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_9_Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatin9Code (c)
+CHAR_T              TtaGetUnicodeValueFrom_ISO_8859_9_Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
@@ -2279,42 +2279,42 @@ CHARSET encoding;
                 break;
 
            case ISO_8859_2:
-                *mbchar++ = TtaGetISOLatin2CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_2_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_3:
-                *mbchar++ = TtaGetISOLatin3CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_3_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_4:
-                *mbchar++ = TtaGetISOLatin4CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_4_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_5:
-                *mbchar++ = TtaGetISOLatin5CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_5_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_6:
-                *mbchar++ = TtaGetISOLatin6CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_6_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_7:
-                *mbchar++ = TtaGetISOLatin7CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_7_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_8:
-                *mbchar++ = TtaGetISOLatin8CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_8_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
            case ISO_8859_9:
-                *mbchar++ = TtaGetISOLatin9CodeFromUnicode (wchar);
+                *mbchar++ = TtaGet_ISO_8859_9_CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
@@ -2432,35 +2432,35 @@ CHARSET encoding;
                 break;
 
            case ISO_8859_2:
-                *wchar = TtaGetUnicodeValueFromISOLatin2Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*mbchar);
                 break;
 
            case ISO_8859_3:
-                *wchar = TtaGetUnicodeValueFromISOLatin3Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*mbchar);
                 break;
 
            case ISO_8859_4:
-                *wchar = TtaGetUnicodeValueFromISOLatin4Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*mbchar);
                 break;
 
            case ISO_8859_5:
-                *wchar = TtaGetUnicodeValueFromISOLatin5Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*mbchar);
                 break;
 
            case ISO_8859_6:
-                *wchar = TtaGetUnicodeValueFromISOLatin6Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*mbchar);
                 break;
 
            case ISO_8859_7:
-                *wchar = TtaGetUnicodeValueFromISOLatin7Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*mbchar);
                 break;
 
            case ISO_8859_8:
-                *wchar = TtaGetUnicodeValueFromISOLatin8Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*mbchar);
                 break;
 
            case ISO_8859_9:
-                *wchar = TtaGetUnicodeValueFromISOLatin9Code (*mbchar);
+                *wchar = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*mbchar);
                 break;
 
            case WINDOWS_1250:
@@ -2510,7 +2510,7 @@ CHARSET encoding;
                      nbBytesToConvert = 6;
                  
                 res = 0;
-                switch (nbBytesToConvert) {        /** WARNING: There is not break statement between cases */
+                switch (nbBytesToConvert) { 
                        case 6: res += *mbchar++;
                                res <<= 6;
  
@@ -2573,7 +2573,7 @@ CHARSET         encoding;
 
             case ISO_8859_2: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin2Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2583,7 +2583,7 @@ CHARSET         encoding;
 
             case ISO_8859_3: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin3Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2593,7 +2593,7 @@ CHARSET         encoding;
 
             case ISO_8859_4: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin4Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2603,7 +2603,7 @@ CHARSET         encoding;
 
             case ISO_8859_5: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin5Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2613,7 +2613,7 @@ CHARSET         encoding;
 
             case ISO_8859_6: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin6Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2623,7 +2623,7 @@ CHARSET         encoding;
 
             case ISO_8859_7: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin7Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2633,7 +2633,7 @@ CHARSET         encoding;
 
             case ISO_8859_8: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin8Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2643,7 +2643,7 @@ CHARSET         encoding;
 
             case ISO_8859_9: 
                  while (*ptrSrc) {
-                       *ptrTarget = TtaGetUnicodeValueFromISOLatin9Code (*ptrSrc);
+                       *ptrTarget = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*ptrSrc);
                        nbBytesConverted++;
                        ptrSrc++;
                        ptrTarget++;
@@ -2751,7 +2751,7 @@ CHARSET         encoding;
                        nbBytesConverted += nbBytesToConvert;
 
                        res = 0;
-                       switch (nbBytesToConvert) {        /** WARNING: There is not break statement between cases */
+                       switch (nbBytesToConvert) {
                               case 6: res += *ptrSrc++;
                                       res <<= 6;
    
@@ -2818,7 +2818,7 @@ CHARSET         encoding;
 
            case ISO_8859_2: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin2CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_2_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2828,7 +2828,7 @@ CHARSET         encoding;
 
            case ISO_8859_3: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin3CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_3_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2838,7 +2838,7 @@ CHARSET         encoding;
 
            case ISO_8859_4: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin4CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_4_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2848,7 +2848,7 @@ CHARSET         encoding;
 
            case ISO_8859_5: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin5CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_5_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2858,7 +2858,7 @@ CHARSET         encoding;
 
            case ISO_8859_6: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin6CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_6_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2868,7 +2868,7 @@ CHARSET         encoding;
 
            case ISO_8859_7: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin7CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_7_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2878,7 +2878,7 @@ CHARSET         encoding;
 
            case ISO_8859_8: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin8CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_8_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;
@@ -2888,7 +2888,7 @@ CHARSET         encoding;
 
            case ISO_8859_9: 
                 while (*ptrSrc) {
-                      *ptrTarget = TtaGetISOLatin9CodeFromUnicode (*ptrSrc);
+                      *ptrTarget = TtaGet_ISO_8859_9_CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
                       ptrSrc++;
                       ptrTarget++;

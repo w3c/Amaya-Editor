@@ -116,19 +116,16 @@ TypeUnit unit;
           case 'T':
           case 't':
                sprintf (&WIN_lpszFace[0], "Times New Roman");
-               /* sprintf (&WIN_lpszFace[0], "PMT Hoso Gothic"); */
                break;
 
           case 'H':
           case 'h':
                sprintf (&WIN_lpszFace[0], "Arial");
-               /* sprintf (&WIN_lpszFace[0], "PMT Hoso Gothic"); */
                break;
 
           case 'C':
           case 'c':
                sprintf (&WIN_lpszFace[0], "Courier New");
-               /* sprintf (&WIN_lpszFace[0], "PMT Hoso Mincho"); */
                break;
 
           case 'S':
