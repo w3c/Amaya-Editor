@@ -86,6 +86,20 @@ DEFAULT
 
 BOXES
 
+ Target_gif: BEGIN
+	Content: Picture 'target.gif';
+	HorizPos: Left = Creator . Left;
+	VertPos: Top = Creator . Top;
+	Visibility: 4;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 5;
+	END;
+
    ElementName: BEGIN
 	Content: (ElemName);
 	Visibility: 0;
@@ -1896,6 +1910,7 @@ ATTRIBUTES
         BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
+	CreateAfter(Target_gif);
         END;
 
   xml_base:

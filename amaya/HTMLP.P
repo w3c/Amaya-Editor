@@ -5591,6 +5591,16 @@ ATTRIBUTES
 	 CreateFirst(Target_gif);
 	 CreateFirst(Target_space);
 	END;
+	if map and not ID
+	BEGIN
+	 CreateFirst(Target_gif);
+	 CreateFirst(Target_space);
+	END;
+	if MAP and not ID
+	BEGIN
+	 CreateFirst(Target_gif);
+	 CreateFirst(Target_space);
+	END;
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
 	if MAP Underline: Underlined;
