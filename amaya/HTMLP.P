@@ -1968,7 +1968,6 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
-	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
