@@ -76,8 +76,8 @@
 <h1>Willkommen bei Amaya 9.0</h1>
 
 <p>Amaya ist ein Web-Client, der sowohl als Browser als auch als
-Autorenwerkzeug dient. Amaya wurde vom <a onclick=""
-href="http://www.w3.org/">W3C</a> und <a onclick=""
+Autorenwerkzeug dient. Amaya wurde vom <a
+href="http://www.w3.org/">W3C</a> und <a
 href="http://www.inria.fr/">INRIA</a> entworfen in der Absicht, neue
 Web-Technologien zu demonstrieren und Anwender bei der Erstellung korrekter
 Webseiten zu unterstützen.<br />

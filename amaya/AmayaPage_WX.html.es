@@ -76,8 +76,8 @@
 <h1>Bienvenido a Amaya 9.0</h1>
 
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
-diseñado por el <a onclick="" href="http://www.w3.org/">W3C</a> y el <a
-onclick="" href="http://www.inria.fr/">INRIA</a> con el principal objetivo de
+diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a 
+href="http://www.inria.fr/">INRIA</a> con el principal objetivo de
 demostrar nuevas tecnologías Web y ayudar a los usuarios a producir páginas
 Web válidas.<br />
 Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
