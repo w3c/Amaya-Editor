@@ -1966,7 +1966,7 @@ static void ProxyInit ()
       str = TtaStrdup (strptr);          /* Get copy we can mutilate */
       strptr = str;
       strptrA = WideChar2ISO (strptr);
-      while ((name = HTNextField (&strptrA)) != NULL) {
+      while ((name = ISO2WideChar(HTNextField (&strptrA))) != NULL) {
 	STRING portstr = ustrchr (name, TEXT(':'));
 	unsigned port=0;
 	if (portstr) { 

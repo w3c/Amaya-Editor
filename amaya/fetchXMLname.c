@@ -128,9 +128,9 @@ Document	   doc;
 {
   SSchema	GraphMLSSchema;
 
-  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
+  GraphMLSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
   if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
+    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("GraphML"), TEXT("GraphMLP"));
   return (GraphMLSSchema);
 }
 

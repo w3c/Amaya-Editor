@@ -4136,12 +4136,12 @@ CHAR_T                c;
 	   (void) CloseElement (lastElemEntry, -1, FALSE);
 	   }
 	else 
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "XMLGRAPHICS"))
+	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("XMLGRAPHICS")))
 	   /* a <XMLGRAPHICS> tag has been read */
 	   {
 	   /* Parse the GraphML structure */
 #ifndef STANDALONE
-	   XMLparse ("GraphML", theDocument, lastElement, FALSE,
+	   XMLparse (TEXT("GraphML"), theDocument, lastElement, FALSE,
 		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
 #endif /* STANDALONE */
 	   /* when returning from the XML parser, the end tag has already
@@ -4535,7 +4535,7 @@ CHAR_T                c;
       if (lastElementClosed && (lastElement == rootElement))
          /* an element after the tag </html>, ignore it */
          {
-         ParseHTMLError (theDocument, "Element after tag </html>. Ignored");
+         ParseHTMLError (theDocument, TEXT("Element after tag </html>. Ignored"));
          return;
          }
       ProcessStartGI (theGI);
@@ -4579,7 +4579,7 @@ CHAR_T                c;
    CloseBuffer ();
 
    if (ParsingTextArea)
-      if (ustrcasecmp (inputBuffer, "TEXTAREA") != 0)
+      if (ustrcasecmp (inputBuffer, TEXT("TEXTAREA")) != 0)
          /* We are parsing the contents of a TEXTAREA element. The end
 	    tag is not the one closing the current TEXTAREA, consider it
 	    as plain text */

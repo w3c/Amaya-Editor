@@ -810,7 +810,7 @@ Document            doc;
 	      len = TtaGetTextAttributeLength (attr);
 	      a_class = TtaAllocString (len + 1);
 	      TtaGiveTextAttributeValue (attr, a_class, &len);
-	      found = (!strcmp (a_class, "text/css"));
+	      found = (!ustrcmp (a_class, TEXT("text/css")));
 	      TtaFreeMemory (a_class);
 	    }
 	}
@@ -820,7 +820,7 @@ Document            doc;
   if (!found)
     {
       /* the STYLE element doesn't exist we create it now */
-      el = TtaNewTree (doc, elType, "");
+      el = TtaNewTree (doc, elType, _EMPTYSTR_);
       /* insert the new style element after the title if it exists */
       elType.ElTypeNum = HTML_EL_TITLE;
       title = TtaSearchTypedElement (elType, SearchForward, parent);
@@ -830,7 +830,7 @@ Document            doc;
 	TtaInsertFirstChild (&el, parent, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, "text/css", el, doc);
+      TtaSetAttributeText (attr, TEXT("text/css"), el, doc);
     }
 
   child = TtaGetLastChild (el);
@@ -838,7 +838,7 @@ Document            doc;
     {
       /* there is not TEXT element within the STYLE we create it now */
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      child = TtaNewTree (doc, elType, "");
+      child = TtaNewTree (doc, elType, _EMPTYSTR_);
       TtaInsertFirstChild (&child, el, doc);
       /* remember the element to be registered in the Undo queue */
       el = child;
@@ -1039,7 +1039,7 @@ View                view;
     ClassReference = TtaGetParent (ClassReference);
   /* update the class name selector. */
   elHtmlName = GITagName (ClassReference);
-  if (elHtmlName == TEXT('?'))
+  if (elHtmlName[0] == TEXT('?'))
     InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
   else
     {

@@ -558,7 +558,7 @@ const STRING       url;
 {
    if (!ustrncmp (url, TEXT("http:"), 5)
       || !ustrncmp (url, TEXT("internal:"), 9)
-      || !strncmp (url, "ftp:", 4))
+      || !ustrncmp (url, TEXT("ftp:"), 4))
        /* experimental */
       /***  || !strncmp (url, "ftp:", 4) ***/
      /*** || !strncmp (path, "news:", 5)***/ 
