@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -13,7 +13,7 @@
  * qui compilent, selon cette grammaire, un schema de structure,
  * de presentation, de traduction ou d'application.
  *
- * Author: V. Quint (INRIA)
+ * Author: V. Quint
  *
  */
 
@@ -457,13 +457,20 @@ static void         WriteFiles ()
    ustrcpy (&fileName[lineLength + 1], TEXT("GRM"));
    /* cree le fichier .GRM */
    GRMfile = ufopen (fileName, TEXT("w"));
+   if (GRMfile == NULL)
+     {
+	TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
+			   fileName);
+	exit (1);
+     }
 
    /* cree le fichier .h */
    ustrcpy (&fileName[lineLength + 1], TEXT("h"));
    Hfile = ufopen (fileName, TEXT("w"));
    if (Hfile == NULL)
      {
-	TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE), fileName);
+	TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
+			   fileName);
 	exit (1);
      }
    else
@@ -868,6 +875,13 @@ char              **argv;
 	     ustrcpy (&fileName[i + 1], "LST");
 	     /* cree le fichier .LST */
 	     listFile = fopen (fileName, "w");
+	     if (listFile == NULL)
+	       {
+		 TtaDisplayMessage (FATAL,
+				  TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
+				  fileName);
+		 exit (1);
+	       }
 	     fprintf (listFile, "GRAMMAR OF FILE ");
 	     i = 0;
 	     while (fileName[i] != '.')
