@@ -1512,7 +1512,8 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
   ThotBool        elInStack = FALSE;
   ThotBool        highEnoughLevel = TRUE;
   ThotBool        isAllowed = TRUE;
-
+  CHAR_T          schemaName[MAX_SS_NAME_LENGTH];
+      
   UnknownTag = FALSE;
 
   /* ignore tag <P> within PRE for Xhtml elements */
@@ -1541,12 +1542,18 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 
   if (mappedName == NULL)
     {
+      if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	ustrcpy (schemaName, "XHTML");
+      else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+	ustrcpy (schemaName, "SVG");
+      else
+	ustrcpy (schemaName, currentParserCtxt->SSchemaName);
       if (highEnoughLevel)
 	{
 	  /* element not found in the corresponding DTD */
 	  /* don't process that element */
 	  usprintf (msgBuffer, TEXT("Unknown %s element %s"),
-		    currentParserCtxt->SSchemaName, GIname);
+		   schemaName , GIname);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	  UnknownTag = TRUE;
  	}
@@ -1556,7 +1563,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 	  /* doesn't process that element */
 	  usprintf (msgBuffer,
 		    TEXT("Unknown %s element %s for the current profile"),
-		    currentParserCtxt->SSchemaName, GIname);
+		    schemaName, GIname);
 	  XmlParseError (errorParsingProfile, msgBuffer, 0);
 	  UnknownTag = TRUE;
 	}
@@ -1714,6 +1721,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
    ElementType    elType;
    STRING         mappedName = NULL;
    ThotBool       highEnoughLevel = TRUE;
+   CHAR_T         schemaName[MAX_SS_NAME_LENGTH];
 
    if (XMLcontext.parsingTextArea)
      if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
@@ -1735,12 +1743,18 @@ static void       EndOfXmlElement (CHAR_T *GIname)
 
    if (mappedName == NULL)
      {
+       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	 ustrcpy (schemaName, "XHTML");
+       else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+	 ustrcpy (schemaName, "SVG");
+       else
+	 ustrcpy (schemaName, currentParserCtxt->SSchemaName);
        if (highEnoughLevel)
 	 {
 	   /* element not found in the corresponding DTD */
 	   /* don't process that element */
 	   usprintf (msgBuffer, TEXT("Unknown %s element %s"),
-		     currentParserCtxt->SSchemaName, GIname);
+		     schemaName, GIname);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   UnknownTag = TRUE;
 	 }
@@ -1750,7 +1764,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
 	   /* doesn't process that element */
 	   usprintf (msgBuffer,
 		     TEXT("Unknown %s element %s for the current profile"),
-		     currentParserCtxt->SSchemaName, GIname);
+		     schemaName, GIname);
 	   XmlParseError (errorParsingProfile, msgBuffer, 0);
 	   UnknownTag = TRUE;
 	 }
@@ -2011,13 +2025,13 @@ static void          EndOfXhtmlAttributeName (CHAR_T *attrName,
 	 {
 	   if (highEnoughLevel)
 	     {
-	       usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
+	       usprintf (msgBuffer, TEXT("Unknown XHTML attribute %s"), attrName);
 	       XmlParseError (errorParsing, msgBuffer, 0);
 	     }
 	   else
 	     {
 	       usprintf (msgBuffer,
-			 TEXT("Unknown XML attribute %s for the current profile"),
+			 TEXT("Unknown XHTML attribute %s for the current profile"),
 			 attrName);
 	       XmlParseError (errorParsingProfile, msgBuffer, 0);
 	     }
@@ -2104,6 +2118,7 @@ static void       EndOfXmlAttributeName (CHAR_T  *attrName,
  Attribute        attr;
  CHAR_T           msgBuffer[MaxMsgLength];
  ThotBool         level = TRUE;
+ CHAR_T          schemaName[MAX_SS_NAME_LENGTH];
 
    attrType.AttrTypeNum = 0;
 
@@ -2120,7 +2135,12 @@ static void       EndOfXmlAttributeName (CHAR_T  *attrName,
    if (attrType.AttrTypeNum <= 0)
       /* this attribute is not in a mapping table */
      {
-       usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
+       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+	 ustrcpy (schemaName, "SVG");
+       else
+	 ustrcpy (schemaName, currentParserCtxt->SSchemaName);
+       usprintf (msgBuffer, TEXT("Unknown %s attribute %s"),
+		 schemaName, attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
