@@ -186,7 +186,7 @@ unsigned int        BackGroundPixel;
 
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (TtDisplay) == LSBFirst)
-	   SwapAllBits ((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));
+	   Little_X_Big_Endian((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));
 	for (j = 0, pt1 = Im->data; j < him; j++, pt1 += Im->bytes_per_line)
 	  {
 	     for (i = 0, pt = pt1; i < nbb; i++)

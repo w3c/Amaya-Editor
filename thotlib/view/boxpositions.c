@@ -998,30 +998,6 @@ int                *yCoord;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DimPavePt rend les dimensions en points typographiques du pave  | */
-/* |            passe' en parametre.                                    | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                DimPavePt (PtrAbstractBox pAb, int *height, int *largeur)
-#else  /* __STDC__ */
-void                DimPavePt (pAb, height, largeur)
-PtrAbstractBox             pAb;
-int                *height;
-int                *largeur;
-
-#endif /* __STDC__ */
-{
-
-   if (pAb != NULL)
-      if (pAb->AbBox != NULL)
-	{
-	   *height = PixelToPoint (pAb->AbBox->BxHeight);
-	   *largeur = PixelToPoint (pAb->AbBox->BxWidth);
-	}
-}
-
-
-/* ---------------------------------------------------------------------- */
 /* |    SetBoxToTranslate marque le sous-arbre des paves en cours de    | */
 /* |            placement.                                              | */
 /* ---------------------------------------------------------------------- */

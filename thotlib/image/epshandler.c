@@ -23,7 +23,7 @@
 #define ABS(x) (x<0?-x:x)
 #define MAX(x,y) (x>y?x:y)
 
-extern Pixmap       ImageEPSFPixmapID;
+extern Pixmap       EpsfPictureLogo;
 
 
 /* ------------------------------------------------------------------- */
@@ -138,7 +138,7 @@ Drawable           *PicMask;
    *yif = PointToPixel (*yif);
    *wif = PointToPixel (*wif);
    *hif = PointToPixel (*hif);
-   return (ThotBitmap) ImageEPSFPixmapID;
+   return (ThotBitmap) EpsfPictureLogo;
 #endif /* !NEW_WILLOWS */
 }				/*EpsCreate */
 

@@ -32,10 +32,6 @@
 #include "epshandler_f.h"
 #include "inites_f.h"
 
-#ifndef NEW_WILLOWS
-XVisualInfo            *vptr;
-Visual                 *theVisual;
-#endif
 static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 static int             PictureIdType      [MAX_PICT_FORMATS];
 static int             PictureMenuType      [MAX_PICT_FORMATS];
@@ -46,6 +42,10 @@ Pixmap                 EpsfPictureLogo;
 static boolean         Printing;
 ThotGC                 GCpicture;	
 THOT_VInfo             THOT_vInfo;
+#ifndef NEW_WILLOWS
+XVisualInfo            *vptr;
+Visual                 *theVisual;
+#endif
 
 
 /* ---------------------------------------------------------------------- */
@@ -64,26 +64,6 @@ char               *fileName;
     return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
   else
     return MAX_PICT_FORMATS;
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    SwapAllBits inverse un byte suivant pour permettre la conversion| */
-/* |            big endian - little endian.                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                SwapAllBits (register unsigned char *b, register long n)
-#else  /* __STDC__ */
-void                SwapAllBits (b, n)
-register unsigned char *b;
-register long       n;
-#endif /* __STDC__ */
-{
-  do
-    {
-      *b = MirrorBytes[*b];
-      b++;
-    }
-  while (--n > 0);
 }
 
 
@@ -128,7 +108,7 @@ Pixmap              PicMask;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CentreImage met a jour les parametres xtranslate, ytranslate,   | */
+/* |    Picture_Center met a jour les parametres xtranslate, ytranslate,   | */
 /* |            pxorig, pyorig en fonction des valeur de PicWArea,      | */
 /* |            PicHArea, wif, hif et pres.                             | */
 /* |            - Si on presente ReScale, la translation se             | */
@@ -140,9 +120,9 @@ Pixmap              PicMask;
 /* |            donc pxorig ou pyorig sont non nuls.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                CentreImage (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
+void                Picture_Center (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
 #else  /* __STDC__ */
-void                CentreImage (wimage, himage, wbox, hbox, pres, xtranslate, ytranslate, pxorig, pyorig)
+void                Picture_Center (wimage, himage, wbox, hbox, pres, xtranslate, ytranslate, pxorig, pyorig)
 int                 wimage;
 int                 himage;
 int                 wbox;
@@ -156,8 +136,8 @@ int                *pyorig;
 {
    float               Rapw, Raph;
 
-   /* la boite a les dimensions wbox, hbox */
-   /* l'image a les dimensions wimage, himage */
+   /* the box has the wbox, hbox dimensions */
+   /* the picture has  wimage, himage size */
    *pxorig = 0;
    *pyorig = 0;
    *xtranslate = 0;
@@ -175,11 +155,11 @@ int                *pyorig;
 	       break;
 
 	    case FillFrame:
-	       /* l'image occupe toute la boite */
+	       /* the picture covers all the box space */
 	       break;
 
 	    case RealSize:
-	       /* on deplace l'image au milieu */
+	       /* we center the picture in the box frame */
 	       *xtranslate = (wbox - wimage) / 2;
 	       *ytranslate = (hbox - himage) / 2;
 	       break;
@@ -304,7 +284,7 @@ PictInfo    *imageDesc;
 	switch (imageDesc->PicPresent)
 	      {
 		 case RealSize:
-		    pixmapok = TRUE;	/* tout au plus un centrage */
+		    pixmapok = TRUE;
 		    break;
 		 case ReScale:
 		    pixmapok = ((box->BxWidth == wpix) || (box->BxHeight == hpix));
@@ -374,7 +354,7 @@ char               *fileName;
      }
    return UNKNOWN_FORMAT;
 
-}				/*GetImageFileFormat */
+}	
 
 
 /* ---------------------------------------------------------------------- */
@@ -396,7 +376,8 @@ int                *typeImage;
 {
    Picture_Report          status;
 
-   /* on ne prend que des types connus */
+   /* we consider only the supported image formats */
+
    if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
       *typeImage = UNKNOWN_FORMAT;
 
@@ -590,7 +571,7 @@ int                 hlogo;
    Pixmap              pix;
    float               Scx, Scy;
 
-   /* Create the temporary image */
+   /* Create the temporary picture */
    Scx = 0;
    Scy = 0;
    x = 0;
@@ -628,15 +609,18 @@ int                 hlogo;
    pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
    XFillRectangle (TtDisplay, pix, TtBlackGC, x, y, w, h);
 
-   /* putting the cross */
+   /* putting the cross edges */
+
    XDrawRectangle (TtDisplay, pix, TtDialogueGC, x, y, w - 1, h - 1);
    XDrawLine (TtDisplay, pix, TtDialogueGC, x, y, x + w - 1, y + h - 2);
    XDrawLine (TtDisplay, pix, TtDialogueGC, x + w - 1, y, x, y + h - 2);
    XDrawLine (TtDisplay, pix, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
    XDrawLine (TtDisplay, pix, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
+
 #endif /* NEW_WILLOWS */
 
    /* copying the logo */
+
    if (wlogo > w - 2)		/* 2 pixels used by the enclosing rectangle */
      {
 	wif = w - 2;
@@ -662,17 +646,18 @@ int                 hlogo;
 	pyorig = 0;
      }
 #ifndef NEW_WILLOWS
+
+   /* Drawing In the Picture Box*/
+
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pix, TtDialogueGC, pxorig, pyorig,
 	      wif, hif, xif, yif);
-
-   /* Affichage dans la boite */
    GetXYOrg (frame, &XOrg, &YOrg);
 #endif /* NEW_WILLOWS */
    xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
    yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
    wif = box->BxWidth;
    hif = box->BxHeight;
-   CentreImage (w, h, wif, hif, RealSize, &x, &y, &pxorig, &pyorig);
+   Picture_Center (w, h, wif, hif, RealSize, &x, &y, &pxorig, &pyorig);
 #ifndef NEW_WILLOWS
    drawable = TtaGetThotWindow (frame);
 #endif /* NEW_WILLOWS */
@@ -688,7 +673,7 @@ int                 hlogo;
    pix = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
    XDrawRectangle (TtDisplay, drawable, TtLineGC, xif, yif, wif - 1, hif - 1);
-   /* writing the filename */
+   /* Drawing the filename in the bottom of the Picture Box */
    BaseName (imageDesc->PicFileName, filename, 0, 0);
    fileNameWidth = XTextWidth ((XFontStruct *) FontMenu, filename, strlen (filename));
    if ((fileNameWidth + wlogo <= wif) && (FontHeight (FontMenu) + hlogo <= hif))
@@ -761,9 +746,8 @@ int                 frame;
 	    }
 	  else
 	    {
-	      /* affichage de l'image dans la boite */
 	      if (imageDesc->PicPresent != FillFrame)
-		CentreImage (PicWArea, PicHArea, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
+		Picture_Center (PicWArea, PicHArea, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
 
 	      if (imageDesc->PicMask)
 		{
@@ -839,7 +823,7 @@ PictInfo    *imageDesc;
 		 }
 	       else
 		 {
-		    w = box->BxWidth;	/* utilise' par cgm */
+		    w = box->BxWidth;	
 		    h = box->BxHeight;
 		 }
 
@@ -876,8 +860,6 @@ PictInfo    *imageDesc;
 			       Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
 
 	       noCroppingFrame = ((wif == 0) && (hif == 0));
-	       /* utilise' pour le cgm */
-
 
 	       if (myDrawable == None)
 		 {
@@ -893,8 +875,6 @@ PictInfo    *imageDesc;
 		      {
 			 if (noCroppingFrame)
 			   {
-			      /*large = PixelToPoint (box->BxWidth); */
-			      /*haut = PixelToPoint (box->BxHeight); */
 			      NouvDimImage (box->BxAbstractBox);
 			   }
 			 w = wif;
@@ -921,7 +901,7 @@ PictInfo    *imageDesc;
 
 
 #endif /* NEW_WILLOWS */
-}				/*ReadImage */
+}
 
 
 /* ------------------------------------------------------------------- */
@@ -948,9 +928,11 @@ unsigned long       BackGroundPixel;
    char                fileName[1023];
 
    GetImageFileName (name, fileName);
-   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel);
 
-}				/*PrintImage */
+   (*(PictureHandlerTable[typeImage].Produce_Postscript)) 
+       (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel);
+
+}	 
 
 /* ---------------------------------------------------------------------- */
 /* |    FreeImage libere l'image du descripteur.                        | */
@@ -973,7 +955,7 @@ PictInfo    *imageDesc;
 	imageDesc->PicMask = None;
      }
 #endif /* NEW_WILLOWS */
-}				/*FreeImage */
+}				
 
 
 
@@ -1098,6 +1080,25 @@ char               *buffer;
      }
    buffer = PictureMenu;
 
+}
+/* ---------------------------------------------------------------------- */
+/* |    Little_X_Big_Endian inverse un byte suivant pour permettre la conversion| */
+/* |            big endian - little endian.                             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                Little_X_Big_Endian (register unsigned char *b, register long n)
+#else  /* __STDC__ */
+void                Little_X_Big_Endian (b, n)
+register unsigned char *b;
+register long       n;
+#endif /* __STDC__ */
+{
+  do
+    {
+      *b = MirrorBytes[*b];
+      b++;
+    }
+  while (--n > 0);
 }
 
 
