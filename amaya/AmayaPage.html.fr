@@ -126,11 +126,10 @@ height="349">
 
 <div>
 <p><strong>Amaya</strong> est un client Web qui sert à la fois de navigateur
-et d'outil d'édition.<br>
-Il a été conçu par le <a href="http://www.w3.org/">W3C</a> ayant pour but
-essentiel la démonstrationdes nouvelles technologies dans l'environnement
-WYSIWYG.La version courante supporte les recommendationsHTML, XHTML, MathML,
-SVG,CSS, et  HTTP.</p>
+et d'outil d'édition. Il a été conçu par le <a
+href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration des
+nouvelles technologies dans un environnement WYSIWYG. La version courante
+supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
 </div>
 
 <div>
@@ -139,13 +138,13 @@ SVG,CSS, et  HTTP.</p>
 <h3>Caractéristiques principales</h3>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des boîtes de
-dialogues, des tables et les caractéristiques les plus avancées à partir
-d'HTML. Vous pouvez créer et éditer des expressions mathématiques complexes
-dans les pages Web. Vous pouvez styler vos documents en utilisant les cascades
-de feuilles de style. Vous pouvez publier des documents HTML et XHTML sur un
-serveur local ou lointain à travers HTTP.</p>
+dialogues, des tables et les caractéristiques les plus avancées de HTML. Vous
+pouvez créer et éditer des expressions mathématiques complexes dans les pages
+Web. Vous pouvez styler vos documents en utilisant les cascades de feuilles de
+style. Vous pouvez publier des documents HTML et XHTML sur un serveur local ou
+distant à travers HTTP.</p>
 
-<p>La Navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
+<p>La navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
 et éditer des pages Web en même temps. Pour faire une édition de façon très
 aisée, un simple clic dans Amaya changera seulement le point d'insertion et
 permettra de rentrer le texte; pour suivre un lien, vous devez double cliquer.
@@ -160,7 +159,7 @@ stockées soit dans la machine locale, soit dans des serveurs d'annotation. La
 création d'annotations sur un document ne modifie pas le document
 lui-même.</p>
 
-<p>Une Vue source montre le balisage courant produit par Amaya. En utilisant
+<p>Une vue source montre le balisage courant produit par Amaya. En utilisant
 cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
 page présentée et sur le code source. Amaya fournit une caractéristique
 Défaire/Refaire à multi-niveaux et multi-documents.</p>
@@ -172,9 +171,9 @@ Défaire/Refaire à multi-niveaux et multi-documents.</p>
 <p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder avec
 le menu Aide, qui affiche chaque section séparément. Vous pouvez également
 l'imprimer: il suffit de suivre le lien <a
-href="../doc/amaya/Manual.html">Manuel en ligne</a>. Vous obtiendrez la page
-de garde. Construisez ensuite le livre entier à l'aide de l'entrée "construire
-un livre" du menu Spécial et imprimez le résultat</p>
+href="../doc/amaya/Manual.html.fr">Manuel en ligne</a>. Vous obtiendrez la
+page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
+"construire un livre" du menu Spécial et imprimez le résultat</p>
 </div>
 
 <div>
@@ -188,25 +187,6 @@ du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies du
 logiciel et de sa documentation ou portions de celle-ci, incluant les
 modifications que vous effectuez.</p>
 </div>
-
-<p>With Amaya, you can manipulate rich Web pages containing forms, tables and
-the most advanced features from HTML. You can create and edit complex
-mathematical expressions and simple SVG graphics within Web pages. You can
-style your documents using Cascading Style Sheets. You can publish HTML and
-XHTML documents on local or remote servers through HTTP.</p>
-
-<p>Browsing and authoring are integrated seamlessly. You can browse and edit
-Web pages at the same time. To make editing easier, a simple click in Amaya
-just moves the caret and allows text input; to follow a link, you have to
-double click. This behavior can be changed as well as many other features
-using the Special/Preferences menu.</p>
-
-<p>Amaya includes a collaborative annotation application based on W3C
-technologies (RDF, XLink, and XPointer). Annotations are external comments,
-notes, remarks that can be attached to any Web document or a selected part of
-the document. Annotations are stored either into the local file system or into
-annotation servers and can be shared. The creation of annotations on a
-document doesn't modify the document itself.</p>
 
 <p class="buttonbar"><span class="button"><a href="http://www.w3.org/">Serveur
 W3C</a></span> <span class="button"><a
