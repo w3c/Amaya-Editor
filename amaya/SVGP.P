@@ -765,6 +765,20 @@ RULES
 		END;
 	END;
 
+  clipPath:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
   DOCTYPE:
 	BEGIN
 	Visibility: 0;
@@ -1369,6 +1383,9 @@ ATTRIBUTES
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
+
+  clipPathUnits:
+	CreateBefore(AttrNameAndValue);
 
   Unknown_attribute:
 	BEGIN

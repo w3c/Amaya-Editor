@@ -362,7 +362,19 @@ STRUCT
 
 { Clipping }
 
-   { clipPath }
+   clipPath
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      transform;
+	      clipPathUnits = userSpaceOnUse, objectBoundingBox;)
+	= BEGIN
+	  descTitleMetadata = AGGREGATE desc; title; metadata; END;
+	  clipPathContent = LIST OF (CASE OF path; text_; rect; circle;
+		              ellipse; line; polyline; polygon; use_; END);
+	  END;
 
 { Masking }
 
@@ -403,11 +415,10 @@ STRUCT
 
    GraphicsElement
 	= CASE OF
-	      desc; title; metadata;
-	      defs;
+	      desc; title; metadata; defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; switch; a;
-	      script_; style__; symbol_;
+	      script_; style__; symbol_; clipPath;
 	      XLink;
 	      END;
 
@@ -463,6 +474,13 @@ EXCEPT
    PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
    Unknown_namespace:   NoCreate;
+   descTitleMetadata:	Hidden;
+   clipPathContent:	Hidden;
+   XMLcomment_line:     Hidden;
+   XMLPI_line:          Hidden;
+   DOCTYPE:             NoCut;
+   DOCTYPE_line:        Hidden, NoCut;
+   CDATA_line:          Hidden;
 
    id:                  CssId;
    class:               CssClass;
@@ -474,10 +492,5 @@ EXCEPT
    IntEmptyShape:       Invisible;
    RealLang:	        Invisible;
    Charset:	        Invisible;
-   XMLcomment_line:     Hidden;
-   XMLPI_line:          Hidden;
-   DOCTYPE:             NoCut;
-   DOCTYPE_line:        Hidden, NoCut;
-   CDATA_line:          Hidden;
 
 END

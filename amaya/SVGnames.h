@@ -10,6 +10,7 @@ static ElemMapping    SVGElemMappingTable[] =
    {"cdata", SPACE, SVG_EL_CDATA, L_OtherValue, FALSE},
    {"cdata_line", SPACE, SVG_EL_CDATA_line, L_OtherValue, FALSE},
    {"circle", SPACE, SVG_EL_circle, L_OtherValue, FALSE},
+   {"clipPath", SPACE, SVG_EL_clipPath, L_OtherValue, FALSE},
    {"defs", SPACE, SVG_EL_defs, L_OtherValue, FALSE},
    {"desc", SPACE, SVG_EL_desc, L_OtherValue, FALSE},
    {"doctype", SPACE, SVG_EL_DOCTYPE, L_OtherValue, FALSE},
@@ -47,6 +48,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"unknown_attr", "", 'A', SVG_ATTR_Unknown_attribute, L_OtherValue},
 
    {"class", "", 'A', SVG_ATTR_class, L_OtherValue},
+   {"clipPathUnits", "", 'A', SVG_ATTR_clipPathUnits, L_OtherValue},
    {"cx", "", 'A', SVG_ATTR_cx, L_OtherValue},
    {"cy", "", 'A', SVG_ATTR_cy, L_OtherValue},
    {"d", "", 'A', SVG_ATTR_d, L_OtherValue},
@@ -104,6 +106,8 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
    {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
 
+   {SVG_ATTR_clipPathUnits, "objectBoundingBox", SVG_ATTR_clipPathUnits_VAL_objectBoundingBox},
+   {SVG_ATTR_clipPathUnits, "userSpaceOnUse", SVG_ATTR_clipPathUnits_VAL_userSpaceOnUse},
    {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
    {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
 

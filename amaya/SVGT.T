@@ -382,6 +382,18 @@ RULES
 	create 'foreignObject>\12' after;
 	END;
 
+   clipPath:
+	BEGIN
+	create SOT;
+	create 'clipPath';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'clipPath>\12' after;
+	END;
+
    DOCTYPE: BEGIN
 	NoLineBreak;
 	Create '<!DOCTYPE ';
@@ -964,6 +976,18 @@ ATTRIBUTES
 	create 'target="';
 	create target_;
 	create DoubleQuote;
+	END;
+
+   clipPathUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'clipPathUnits="userSpaceOnUse"';
+	END;
+
+   clipPathUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'clipPathUnits="objectBoundingBox"';
 	END;
 
    Unknown_attribute:

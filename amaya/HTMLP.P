@@ -2484,16 +2484,19 @@ RULES
 	MarginTop: VSpaceBeforeH5;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2 pt;
+	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
@@ -2506,6 +2509,7 @@ RULES
 		MarginTop: 0;
 		HorizPos: Left = Enclosing . Left + 4;
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		Visibility: 6;
 		END;
 	IN Links_view
@@ -2525,16 +2529,19 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH6;
 	Size: Enclosing - 4 pt;
+	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
@@ -2547,6 +2554,7 @@ RULES
 		MarginTop: 0;
 		HorizPos: Left = Enclosing . Left + 5;
 		Size: Enclosing =;
+		Weight: Enclosing =;
 		Visibility: 5;
 		END;
 	IN Links_view
