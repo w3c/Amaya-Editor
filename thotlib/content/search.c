@@ -525,7 +525,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
       found = FALSE;
       pEl = *firstEl;
       if (pEl->ElStructSchema == NULL)
-	/* the element doesn't exist anymore */
+	/* the element doesn't exist anymore or is hidden */
 	return FALSE;
       /* on cherche d'abord la chaine */
       if (forward)
@@ -551,27 +551,28 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		ichar = *firstChar;
 		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, text);
 	      }
+
 	  while (!found && pEl)
 	    {
 	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
-	      if (pEl != NULL)
+	      if (pEl && !ElementIsHidden (pEl) &&
+		  !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
 		/* on a trouve un element de texte */
 		{
 		  /* on verifie que cet element ne fait pas partie d'une */
 		  /* inclusion */
 		  pAncest = pEl;
-		  while (pAncest->ElParent != NULL &&
-			 pAncest->ElSource == NULL)
+		  while (pAncest->ElParent && pAncest->ElSource == NULL &&
+		  !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    pAncest = pAncest->ElParent;
-		  if (pAncest->ElSource == NULL)
+		  if (pAncest->ElSource == NULL &&
+		      !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    /* on n'est pas dans une inclusion */
-		    if (!ElementIsHidden (pEl))
-		      /* l'element n'est pas dans une partie cachee */
-		      {
-			ichar = 1;
-			FwdSearchString (pEl->ElText, 0, &found, &ichar,
-					 caseEquiv, text);
-		      }
+		    {
+		      ichar = 1;
+		      FwdSearchString (pEl->ElText, 0, &found, &ichar,
+				       caseEquiv, text);
+		    }
 		}
 	    }
 	}
@@ -597,30 +598,30 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
 				  text, textLen);
 	      }
-	  while (!found && pEl != NULL)
+	  while (!found && pEl)
 	    {
 	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL, NULL);
-	      if (pEl)
+	      if (pEl && !ElementIsHidden (pEl) &&
+		  !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
 		/* on a trouve' un element de texte */
 		{
 		  /* on verifie que cet element ne fait pas partie d'une */
 		  /* inclusion */
 		  pAncest = pEl;
-		  while (pAncest->ElParent != NULL &&
-			 pAncest->ElSource == NULL)
+		  while (pAncest->ElParent && pAncest->ElSource == NULL &&
+			 !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    pAncest = pAncest->ElParent;
-		  if (pAncest->ElSource == NULL)
+		  if (pAncest->ElSource == NULL &&
+		      !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    /* on n'est pas dans une inclusion */
-		    if (!ElementIsHidden (pEl))
-		      /* l'element n'est pas dans une partie cachee */
-		      {
-			pBuf = pEl->ElText;
-			while (pBuf->BuNext != NULL)
-			  pBuf = pBuf->BuNext;
-			ichar = pEl->ElTextLength;
-			BackSearchString (pBuf, pBuf->BuLength - 1, &found, &ichar,
-					  caseEquiv, text, textLen);
-		      }
+		    {
+		      pBuf = pEl->ElText;
+		      while (pBuf->BuNext != NULL)
+			pBuf = pBuf->BuNext;
+		      ichar = pEl->ElTextLength;
+		      BackSearchString (pBuf, pBuf->BuLength - 1, &found, &ichar,
+					caseEquiv, text, textLen);
+		    }
 		}
 	    }
 	  if (found)

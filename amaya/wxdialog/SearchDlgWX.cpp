@@ -27,12 +27,20 @@ END_EVENT_TABLE()
 /*----------------------------------------------------------------------
   SearchDlgWX create the Search dialog 
   params:
-    + parent : parent window
-    + titlecaption : dialog caption (including the document name)
+    + parent: parent window
+    + caption: dialog caption (including the document name)
+    + searched: the initial searched string
+    + replace: the initial replacing string
+    + do_replace: true if the replace should be done
+    + searchAfter: true is the search goes forward
   ----------------------------------------------------------------------*/
   SearchDlgWX::SearchDlgWX( int ref, 
 			    wxWindow* parent,
-			    const wxString & caption ) : 
+			    const wxString & caption,
+			    const wxString & searched,
+			    const wxString & replace,
+			    bool do_replace,
+			    bool searchAfter) : 
     AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SearchDlgWX"));
@@ -63,15 +71,20 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_NOREPLACEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DO_NOT_REPLACE) ));
 
   // Default values
+  XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetValue(searched);
+  XRCCTRL(*this, "wxID_REPLACE_BY_TXT", wxTextCtrl)->SetValue(replace);
   XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->SetValue(TRUE);
   m_case = XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->GetValue( );
-
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(0);
+  if (do_replace)
+    XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
+  else
+    XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(0);
   m_ireplace = XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->GetSelection( );
-
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
+  if (searchAfter)
+    XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
+  else
+    XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(3);
   m_iarea = XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->GetSelection( );
-
 
   // Give focus to first text control
   //  XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetFocus();
@@ -163,7 +176,7 @@ void SearchDlgWX::OnCancelButton( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
-  OnReplaceBox called when clicking on cancelbutton
+  OnReplaceBox called when clicking on replacebox
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
 {
@@ -173,7 +186,7 @@ void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
-  OnSearchAreaBox called when clicking on cancelbutton
+  OnSearchAreaBox called when clicking on searchareabox
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnSearchAreaBox ( wxCommandEvent& event )
 {
@@ -183,7 +196,7 @@ void SearchDlgWX::OnSearchAreaBox ( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
-  OnCheckCaseBox called when clicking on cancelbutton
+  OnCheckCaseBox called when clicking on checkcasebutton
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnCheckCaseBox ( wxCommandEvent& event )
 {

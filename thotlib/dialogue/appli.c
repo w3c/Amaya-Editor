@@ -3678,9 +3678,6 @@ void UpdateScrollbars (int frame)
   if (width < l)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);
-#ifdef IV
-    FrameTable[frame].WdFrame->GetScrollbarH()->SetScrollbar( x, width, l, width );
-#endif
     FrameTable[frame].WdScrollH->SetScrollbar( x, width, l, width );
   }
   else
@@ -3688,12 +3685,7 @@ void UpdateScrollbars (int frame)
 
   if (height < h)
   {
-if (frame == 2)
-  printf ("UpdateScrollbars height=%d h=%d\n", height, h);
     FrameTable[frame].WdFrame->ShowScrollbar(1);
-#ifdef IV
-    FrameTable[frame].WdFrame->GetScrollbarV()->SetScrollbar( y, height, h, height );
-#endif
     FrameTable[frame].WdScrollV->SetScrollbar( y, height, h, height );
   }
   else

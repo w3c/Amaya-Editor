@@ -52,15 +52,16 @@ static PtrDocument   DocTextOK;
 /* element whose references we are looking for */
 static PtrElement    CurrRefElem;
 static PtrElement    ElemTextOK;
+static char          Caption[200];
 /* precedent searched string */
-static unsigned char pPrecedentString[THOT_MAX_CHAR];
+static char          pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
-static unsigned char pSearchedString[THOT_MAX_CHAR];
+static char          SearchedString[THOT_MAX_CHAR];
 static CHAR_T       *SString = NULL;
 /* length of the searched string */
 static int           SStringLen;
 /* the replace string */
-static unsigned char pReplaceString[THOT_MAX_CHAR];
+static char          ReplacingString[THOT_MAX_CHAR];
 static CHAR_T       *RString = NULL;
 /* length of the replace string */
 static int           RStringLen;
@@ -106,19 +107,13 @@ static int           LastCharTextOK;
 #include "views_f.h"
 #include "word_f.h"
 
-#ifdef _WX
-#include "appdialogue_wx.h"
-static char         wxCaption[200];
-#endif /* _WX */
-
 #ifdef _WINGUI
 static int          iLocation;
 static int          iMode;
 static ThotWindow   SearchW = NULL;
 static char         textToSearch[255];
 static char         newText[255];
-static char         msgCaption[200];
-static ThotBool     searchEnd;
+static ThotBool     SearchEnd;
 
 /*-----------------------------------------------------------------------
  SearchDlgProc
@@ -130,7 +125,7 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       SearchW = hwnDlg;
-      SetWindowText (hwnDlg, msgCaption);
+      SetWindowText (hwnDlg, Caption);
       SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR),
 		     TtaGetMessage (LIB, TMSG_SEARCH_FOR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER),
@@ -161,8 +156,8 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
 		     TtaGetMessage (LIB, TMSG_DONE));
-      SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, pSearchedString);
-      SetDlgItemText (hwnDlg, IDC_REPLACEDIT, pReplaceString);	
+      SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, SearchedString);
+      SetDlgItemText (hwnDlg, IDC_REPLACEDIT, ReplacingString);	
      if (SearchAfter)
 	{
 	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
@@ -173,12 +168,12 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
 	  iLocation = 3;
 	}
- 	  if (AutoReplace)
+     if (AutoReplace)
 	{
 	  iMode = 2;
 	  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_AUTOMATIC);
 	}
-	  else if (WithReplace)
+     else if (WithReplace)
 	{
 	  iMode = 1;
 	  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
@@ -224,7 +219,7 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  searchEnd = FALSE;
+	  SearchEnd = FALSE;
 	  GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
 	  GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
 	  if (newText && newText[0] != '\0' && iMode == 0)
@@ -240,7 +235,7 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) iMode);
 	  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) iLocation);
 	  ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
-	  if (!searchEnd && iLocation == 3)
+	  if (!SearchEnd && iLocation == 3)
 	    {
 	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 	      iLocation = 2;
@@ -418,33 +413,29 @@ void TtcSearchText (Document document, View view)
   PtrElement          pFirstSel;
   PtrElement          pLastSel;
   PtrDocument         pDoc;
-  char                bufTitle[200], string[200];
+  char                string[200];
   int                 firstChar;
   int                 lastChar, i;
   ThotBool            ok;
 
   pDoc = LoadedDocument[document - 1];
   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-  if (ok && pDoc != pDocSel)
-    SearchAfter = FALSE;
-  if (!ok)
+  if (ok)
+      SearchAfter = (pDoc == pDocSel);
+  else
     {
       pDocSel = pDoc;
       pFirstSel = pLastSel = pDoc->DocDocElement;
       firstChar = lastChar = 0;
+      SearchAfter = FALSE;
     }
 
   StartSearch = TRUE;
   /* compose le titre du formulaire "Recherche dans le document..." */
-  strcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
-  strcat (bufTitle, " ");
-  strcat (bufTitle, pDoc->DocDName);
-#ifdef _WINGUI
-  strcpy (msgCaption, bufTitle);
-#endif /* _WINGUI */
-#ifdef _WX
-  strcpy (wxCaption, bufTitle);
-#endif /* _WX */
+  strcpy (Caption, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+  strcat (Caption, " ");
+  strcat (Caption, pDoc->DocDName);
+
   /* feuille de dialogue Rechercher texte et structure */
   strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
@@ -452,12 +443,12 @@ void TtcSearchText (Document document, View view)
 
 #ifdef _GTK
   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
-	       bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
+	       Caption, 2, string, FALSE, 6, 'L', D_DONE);
   
   /* zone de saisie du texte a` rechercher */
   TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
 		  TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextSearch, (char *)pSearchedString);
+  TtaSetTextForm (NumZoneTextSearch, SearchedString);
   
   /* Toggle button "UPPERCASE = lowercase" */
   i = 0;
@@ -470,7 +461,7 @@ void TtcSearchText (Document document, View view)
   /* zone de saisie du texte de remplacement */
   TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
 		  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextReplace, (char *)pReplaceString);
+  TtaSetTextForm (NumZoneTextReplace, ReplacingString);
   
   /* sous-menu mode de remplacement */
   if (!pDoc->DocReadOnly)
@@ -511,9 +502,6 @@ void TtcSearchText (Document document, View view)
   AutoReplace = FALSE;
   strcpy ((char *)pPrecedentString, "");
   
-#ifdef _WINGUI
-  SearchAfter = ok;
-#endif /* _WINGUI */
   SearchLoadResources ();
   /* active le formulaire */
   if (!ok)
@@ -529,14 +517,17 @@ void TtcSearchText (Document document, View view)
 #endif /* _GTK */
 
 #ifdef _WINGUI
-  searchEnd = FALSE;
+  SearchEnd = FALSE;
   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
 
 #ifdef _WX
  {
    ThotBool created;
-   created = CreateSearchDlgWX( NumFormSearchText, TtaGetViewFrame (document, view), wxCaption );
+   created = CreateSearchDlgWX( NumFormSearchText,
+				TtaGetViewFrame (document, view),
+				Caption, SearchedString, ReplacingString,
+				WithReplace, SearchAfter);
    if (created)
      {
        TtaShowDialogue ( NumFormSearchText, TRUE );
@@ -581,20 +572,20 @@ void CallbackTextReplace (int ref, int val, char *txt)
     {
     case NumZoneTextSearch:
       /* Chaine a chercher */
-      strcpy ((char *)pSearchedString, txt);
-      if (strcmp ((char *)pSearchedString, (char *)pPrecedentString) != 0)
+      strcpy (SearchedString, txt);
+      if (strcmp (SearchedString, pPrecedentString) != 0)
 	{
 	  ReplaceDone = FALSE;
-	  strcpy ((char *)pPrecedentString, (char *)pSearchedString);
+	  strcpy (pPrecedentString, SearchedString);
 	}
       /* convert the string if necessary */
       TtaFreeMemory (SString);
-      SString = TtaConvertByteToCHAR (pSearchedString, DialogCharset);
+      SString = TtaConvertByteToCHAR ((unsigned char*)SearchedString, DialogCharset);
       SStringLen = ustrlen (SString);
       break;
     case NumZoneTextReplace:
       /* Chaine a remplacer */
-      if (pReplaceString[0] == EOS && txt[0] != EOS)
+      if (ReplacingString[0] == EOS && txt[0] != EOS)
 	{
 	  if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
 	    {
@@ -605,10 +596,10 @@ void CallbackTextReplace (int ref, int val, char *txt)
 #endif /* _GTK */
 	    }
 	}
-      strcpy ((char *)pReplaceString, txt);
+      strcpy (ReplacingString, txt);
       /* convert the string if necessary */
       TtaFreeMemory (RString);
-      RString = TtaConvertByteToCHAR (pReplaceString, DialogCharset);
+      RString = TtaConvertByteToCHAR ((unsigned char*)ReplacingString, DialogCharset);
       RStringLen = ustrlen (RString);
       /* bascule automatiquement le remplacement */
       break;
@@ -869,19 +860,19 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	    {
 	      /* not found */
 #ifdef _WINGUI
-	      if (!searchEnd)
+	      if (!SearchEnd)
 		{
-		  searchEnd = TRUE;
+		  SearchEnd = TRUE;
 		  if (WithReplace && ReplaceDone)
 		    {
 		    if (!AutoReplace)
 		      MessageBox (NULL,
 				  TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
-				  msgCaption, MB_OK | MB_ICONEXCLAMATION);
+				  Caption, MB_OK | MB_ICONEXCLAMATION);
 		    }
 		  else
 		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
-				msgCaption, MB_OK | MB_ICONEXCLAMATION);
+				Caption, MB_OK | MB_ICONEXCLAMATION);
 		}
 #endif /* _WINGUI */
 #ifdef _GTK      
@@ -905,7 +896,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		      wxMessageDialog 
 			search_messagedialog( (wxWindow*) NULL,
 					      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
-					      TtaConvMessageToWX (wxCaption),
+					      TtaConvMessageToWX (Caption),
 					      (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		      search_messagedialog.ShowModal(); 
 		    }
@@ -915,7 +906,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		  wxMessageDialog 
 		    search_messagedialog( (wxWindow*) NULL,
 					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
-					  TtaConvMessageToWX (wxCaption),
+					  TtaConvMessageToWX (Caption),
 					  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		  search_messagedialog.ShowModal();
 		}
@@ -945,11 +936,11 @@ void SearchLoadResources (void)
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;
 	GetSearchContext (&SearchingD);
-	pSearchedString[0] = EOS;
+	SearchedString[0] = EOS;
 	SStringLen = 0;
 	UpperLower = TRUE;
 	WithReplace = FALSE;
-	pReplaceString[0] = EOS;
+	ReplacingString[0] = EOS;
 	RStringLen = 0;
      }
 }

@@ -250,19 +250,31 @@ ThotBool CreateTitleDlgWX ( int ref,
 /*----------------------------------------------------------------------
   CreateSearchDlgWX create the Search dialog
   params:
-    + caption : the widget caption (including document title)
+    + caption : the caption (including the document title)
+    + searched : the initial searched string
+    + replace : the  initial replace string
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption)
+ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
+			     char* searched,  char* replace,
+			     ThotBool withReplace, ThotBool searchAfter)
 {
 #ifdef _WX
   wxString wx_caption = TtaConvMessageToWX( caption );
+  wxString wx_searched = TtaConvMessageToWX( searched );
+  wxString wx_replace = TtaConvMessageToWX( replace );
 
-  wxLogDebug( _T("SearchDlgWX - caption=")+wx_caption );
+  wxLogDebug( _T("SearchDlgWX - caption=")+wx_caption+
+	      _T("\tsearched=")+wx_searched+
+	      _T("\treplace=")+wx_replace );
 
   SearchDlgWX * p_dlg = new SearchDlgWX( ref,
 					 parent,
-					 wx_caption );
+					 wx_caption,
+					 wx_searched,
+					 wx_replace,
+					 withReplace,
+					 searchAfter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

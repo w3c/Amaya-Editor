@@ -26,7 +26,10 @@ extern ThotBool CreateTitleDlgWX ( int ref,
                                    char *doc_title );
 extern ThotBool CreateSearchDlgWX ( int ref,
                                     ThotWindow parent,
-                                    char* caption );
+                                    char* caption,
+                                    char* searched,
+                                    char* replace,
+                                    ThotBool searchAfter );
 extern ThotBool CreatePrintDlgWX ( int ref,
                                    ThotWindow parent,
                                    char* ps_file );
@@ -82,7 +85,10 @@ extern ThotBool CreateTitleDlgWX ( int ref,
                                      char *doc_title );
 extern ThotBool CreateSearchDlgWX ( int ref,
                                       ThotWindow parent,
-                                      char* caption );
+                                      char* caption,
+                                      char* searched,
+                                      char* replace,
+                                      ThotBool searchAfter );
 extern ThotBool CreatePrintDlgWX ( int ref,
                                      ThotWindow parent,
                                      char* ps_file );

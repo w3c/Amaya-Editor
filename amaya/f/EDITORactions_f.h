@@ -220,10 +220,6 @@ extern void ConfigProxy ( Document doc,
                           View view );
 extern void ConfigLanNeg ( Document doc,
                            View view );
-extern void ConfigProfile ( Document doc,
-                            View view );
-extern void ConfigTemplates ( Document doc,
-                              View view );
 extern void SaveOptions ( Document doc,
                           View view );
 extern void ConfigAnnot ( Document doc,
@@ -487,10 +483,6 @@ extern void ConfigProxy ( Document doc,
                             View view );
 extern void ConfigLanNeg ( Document doc,
                              View view );
-extern void ConfigProfile ( Document doc,
-                              View view );
-extern void ConfigTemplates ( Document doc,
-                                View view );
 extern void SaveOptions ( Document doc,
                             View view );
 extern void ConfigAnnot ( Document doc,

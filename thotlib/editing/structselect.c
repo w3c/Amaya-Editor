@@ -55,7 +55,6 @@
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /* _GL */
-
 #ifdef _GTK
 #include "gtk-functions.h"
 #endif /* _GTK */
@@ -1538,8 +1537,8 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
   Document            doc;
   int                 view, lastView, frame, run;
   ThotBool            abExist, done;
-#ifdef VQ   /* 13 DEC 2001 */
   NotifyDialog        notifyDoc;
+#ifdef VQ   /* 13 DEC 2001 */
   DocViewNumber       docView, freeView;
   AvailableView       viewTable;
   int                 nViews, i;
@@ -1550,7 +1549,7 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 
   /* there is not any abstract box yet */
   abExist = FALSE;
-  if (pEl != NULL && pEl->ElStructSchema != NULL)
+  if (pEl && pEl->ElStructSchema)
     {
       lastView = MAX_VIEW_DOC;
       /* views are scanned twice. In the first run, existing abstract */
@@ -1601,6 +1600,18 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 		  }
 	      }
 
+	  if (!abExist && createView)
+	    {
+	      /* send an event to the application to open another view*/
+	      notifyDoc.event = TteViewOpen;
+	      notifyDoc.document = doc;
+	      notifyDoc.view = createView;
+	      if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+		{
+		  /* application created another view */
+		  abExist = SelectAbsBoxes (pEl, FALSE);
+		}
+	    }
 #ifdef VQ   /* 13 DEC 2001 */
 	  if (!abExist && createView)
 	    /* there is no existing abstract box for this element */

@@ -20,7 +20,11 @@ public:
   // Constructor.
   SearchDlgWX( int ref, 
 	       wxWindow* parent,
-	       const wxString & titlecaption );
+	       const wxString & titlecaption,
+	       const wxString & searched,
+	       const wxString & replace,
+	       bool do_replace,
+	       bool searchAfter);
   
   // Destructor.                  
   virtual ~SearchDlgWX();

@@ -4579,7 +4579,17 @@ void ShowToC (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
-   ViewToClose                                                      
+   RequestView: Thot request to open a view to show the current selection
+  ----------------------------------------------------------------------*/
+ThotBool RequestView (NotifyDialog *event)
+{
+   ShowStructure (event->document, event->view);
+   /* Inform Thot that the view is open by Amaya */
+   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   ViewToClose
   ----------------------------------------------------------------------*/
 ThotBool ViewToClose (NotifyDialog *event)
 {
@@ -4588,26 +4598,24 @@ ThotBool ViewToClose (NotifyDialog *event)
 
    view = event->view;
    document = event->document;
-
    structView = TtaGetViewFromName (document, "Structure_view");
-   if ( structView )
-     SaveGeometryOnExit( document, "Structure_view" );   /* Save the current view geometry */
    altView = TtaGetViewFromName (document, "Alternate_view");
-   if ( altView )
-     SaveGeometryOnExit( document, "Alternate_view" );   /* Save the current view geometry */
    linksView = TtaGetViewFromName (document, "Links_view");
-   if ( linksView )
-     SaveGeometryOnExit( document, "Links_view" );   /* Save the current view geometry */
    tocView = TtaGetViewFromName (document, "Table_of_contents");
-   if ( tocView )
-     SaveGeometryOnExit( document, "Table_of_contents" );   /* Save the current view geometry */
-
-   if ( !structView && !altView && !linksView && !tocView )
-     SaveGeometryOnExit( document, NULL ); /* Save geometry of every view */
-
    if (view != 1)
-     /* let Thot perform normal operation */
-     return FALSE;
+     {
+       /* Save the current view geometry */
+       if (view == structView)
+	 SaveGeometryOnExit (document, "Structure_view");
+       if (view == altView)
+	 SaveGeometryOnExit (document, "Alternate_view");
+       if (view == linksView)
+	 SaveGeometryOnExit (document, "Links_view");
+       if (view == tocView)
+	 SaveGeometryOnExit (document, "Table_of_contents");
+       /* let Thot perform normal operation */
+       return FALSE;
+     }
    else if (DocumentTypes[document] == docLibrary)
      {
        if (TtaIsDocumentModified (document))
@@ -4622,6 +4630,7 @@ ThotBool ViewToClose (NotifyDialog *event)
      /* abort the command and don't let Thot perform normal operation */
      return TRUE;
 
+   SaveGeometryOnExit (document, NULL); /* Save geometry of every view */
    if (structView!= 0 && TtaIsViewOpen (document, structView))
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpen (document, altView))

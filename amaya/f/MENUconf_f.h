@@ -34,10 +34,6 @@ extern void GeometryConfMenu ( Document document,
                                View view );
 extern void LanNegConfMenu ( Document document,
                              View view );
-extern void ProfileConfMenu ( Document document,
-                              View view );
-extern void TemplatesConfMenu ( Document document,
-                                View view );
 extern void AnnotConfMenu ( Document document,
                             View view );
 extern int GetPrefGeneralBase ( void );
@@ -48,8 +44,6 @@ extern int GetPrefPublishBase ( void );
 extern int GetPrefColorBase ( void );
 extern int GetPrefGeometryBase ( void );
 extern int GetPrefLanNegBase ( void );
-extern int GetPrefProfileBase ( void );
-extern int GetPrefTemplatesBase ( void );
 extern int GetPrefAnnotBase ( void );
 extern void SetProp_General ( const Prop_General * prop );
 extern Prop_General GetProp_General ( void );
@@ -99,10 +93,6 @@ extern void GeometryConfMenu ( Document document,
                                  View view );
 extern void LanNegConfMenu ( Document document,
                                View view );
-extern void ProfileConfMenu ( Document document,
-                                View view );
-extern void TemplatesConfMenu ( Document document,
-                                  View view );
 extern void AnnotConfMenu ( Document document,
                               View view );
 extern int GetPrefGeneralBase ( void );
@@ -113,8 +103,6 @@ extern int GetPrefPublishBase ( void );
 extern int GetPrefColorBase ( void );
 extern int GetPrefGeometryBase ( void );
 extern int GetPrefLanNegBase ( void );
-extern int GetPrefProfileBase ( void );
-extern int GetPrefTemplatesBase ( void );
 extern int GetPrefAnnotBase ( void );
 extern void SetProp_General ( const Prop_General * prop );
 extern Prop_General GetProp_General ( void );
