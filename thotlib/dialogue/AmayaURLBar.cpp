@@ -135,7 +135,8 @@ void AmayaURLBar::Append( const wxString & newurl )
  */
 void AmayaURLBar::SetValue( const wxString & newurl )
 {
-  m_pComboBox->SetValue( newurl );
+  // new url should exists into combobox items so just select it.
+  m_pComboBox->SetStringSelection( newurl );
 }
 
 /*
