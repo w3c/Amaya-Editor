@@ -837,7 +837,6 @@ void dump_java(FILE *out) {
 	   is_package = 1;
 	}
     }
-    *class_name = toupper(*class_name);
     fprintf(out,"/*\n");
     dump_cmd(out);
     fprintf(out," */\n");
