@@ -2786,7 +2786,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 			 gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-			 ConnectSignalGTK (w, "toggled",
+			 ConnectSignalGTK (w, "activate",
 					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
@@ -4336,19 +4336,13 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #else  /* _WINDOWS */
 #ifdef _GTK
 		      /* create a check menu */
-		      /*			 tmpw = gtk_check_button_new_with_label (&text[index + 1]);*/
-		      /*			 gtk_widget_show (tmpw);*/
-			 w = gtk_check_menu_item_new_with_label (&text[index + 1]);
-			 gtk_widget_show (w);
-			 /*			 gtk_container_add (GTK_CONTAINER (w), tmpw);*/
-			 /*			 gtk_container_set_border_width (GTK_CONTAINER (w), -2);*/
-			 /*			 gtk_object_set_data (GTK_OBJECT (w), "check_button", (gpointer)tmpw);*/
+		      w = gtk_check_menu_item_new_with_label (&text[index + 1]);
+		      gtk_widget_show (w);
 		      gtk_menu_append (GTK_MENU (menu), w);
 		      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
-		      ConnectSignalGTK (w, "toggled",
-					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		      adbloc->E_ThotWidget[ent] = w;
-		      
+		      ConnectSignalGTK (w, "activate",
+					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);		      
 #else /* _GTK */
 		      /* un toggle a faux */
 		      XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -4853,7 +4847,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			   w = gtk_check_button_new_with_label (&text[index + 1]);
 			   gtk_widget_show (GTK_WIDGET(w));
 			   gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-			   ConnectSignalGTK (w, "activate", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
+			   ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC (CallToggle), (gpointer)catalogue);
 #endif /* !_GTK */
 			   adbloc->E_ThotWidget[ent] = w;
 			 }
@@ -5037,20 +5031,11 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    n++;
 			    XtSetValues (w, args, n);
 #else /* _GTK */
-			    
+			    /* attribut active is set to the good value */
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      {			   
-				RemoveSignalGTK (w, "toggled"); 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
-				ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
-			      }
+			      GTK_TOGGLE_BUTTON(w)->active = TRUE;
 			    else
-			      if (!GTK_CHECK_MENU_ITEM(w)->active)
-				{
-				  RemoveSignalGTK (w, "toggled");
-				  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), TRUE);
-				  ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallMenuGTK), (gpointer)catalogue);
-				}		    
+			      GTK_CHECK_MENU_ITEM(w)->active = TRUE;
 #endif /* !_GTK */
 			  }
 			else
@@ -5061,21 +5046,12 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    XtSetArg (args[n], XmNset, FALSE);
 			    n++;
 			    XtSetValues (w, args, n);
-#else /* _GTK */
-			    
+#else /* _GTK */			    
+			    /* attribut active is set to the good value */
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      {
-				RemoveSignalGTK (w, "toggled"); 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
-				ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
-			      }
+			      GTK_TOGGLE_BUTTON(w)->active = FALSE;
 			    else
-			      if (GTK_CHECK_MENU_ITEM(w)->active)
-				{
-				  RemoveSignalGTK (w, "toggled");
-				  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), FALSE);
-				  ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallMenuGTK), (gpointer)catalogue);
-				}			    
+			      GTK_CHECK_MENU_ITEM(w)->active = FALSE;
 #endif /* !_GTK */
 			  }
 #ifndef _GTK
@@ -5100,8 +5076,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	if (!visible)
 	  XtUnmanageChild (catalogue->Cat_Widget);
 #else /* _GTK */
-		if (!visible)
-		gtk_widget_hide (catalogue->Cat_Widget);
+	if (!visible)
+	  gtk_widget_hide (catalogue->Cat_Widget);
 #endif /* !_GTK */
      }
 #endif /* _WINDOWS */
