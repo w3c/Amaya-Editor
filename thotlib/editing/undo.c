@@ -393,7 +393,6 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
 void AddChangeTypeOpInHistory (PtrElement pEl, int elType, PtrDocument pDoc)
 {
    PtrEditOperation	editOp;
-   PtrElement		pCopy;
 
    if (!pEl)
       return;
@@ -1187,7 +1186,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
       if (pEl)
 	{
 	  newType = pEl->ElTypeNumber;
-	  TtaChangeTypeOfElement (pEl, doc, editOp->EoElementType);
+	  TtaChangeTypeOfElement ((Element)pEl, doc, editOp->EoElementType);
 	  if (reverse)
 	    editOp->EoElementType = newType;
 	  else
