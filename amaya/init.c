@@ -1435,6 +1435,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
 	}
       else
 	strcpy (s, DocumentURLs[doc]);
+      strcpy (LastURLName, s);
     }
 
 #ifdef  _WINDOWS
@@ -1598,10 +1599,8 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
      }
 
    /* open the document */
-   if (docType == docText ||
-       docType == docCSS ||
-       docType == docSource ||
-       docType == docLog)
+   if (docType == docText || docType == docCSS ||
+       docType == docSource || docType == docLog)
      doc = TtaInitDocument ("TextFile", docname, requested_doc);
    else if (docType == docAnnot)
      doc = TtaInitDocument ("Annot", docname, requested_doc);
@@ -1623,10 +1622,8 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
    else if (doc > 0)
      {
        /* assign a presentation model to the document */
-       if (docType == docText ||
-	   docType == docCSS ||
-           docType == docSource ||
-	   docType == docLog)
+       if (docType == docText || docType == docCSS ||
+           docType == docSource || docType == docLog)
 	   TtaSetPSchema (doc, "TextFileP");
        else if (docType == docAnnot)
 	   TtaSetPSchema (doc, "AnnotP");
@@ -1821,9 +1818,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
 	   if (docType == docAnnot)
-	     {
-	       TtcSwitchCommands (doc, 1); /* no command open */
-	     }
+	     TtcSwitchCommands (doc, 1); /* no command open */
 	   else
 	     {
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
@@ -1873,10 +1868,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 		DocumentTypes[doc] != docText)
 	 /* we need to update menus and buttons */
 	 reinitialized = TRUE;
-       else if (docType == docMath ||
-#ifdef ANNOTATIONS
-		docType == docAnnot ||
-#endif /* ANNOTATIONS */
+       else if (docType == docMath || docType == docAnnot ||
 #ifdef XML_GEN      
 	        docType == docXml ||
 #endif /* XML_GEN */
@@ -1894,12 +1886,10 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
      {
      TtaSetItemOff (doc, 1, File, BLatinReading);
      /* now update menus and buttons according to the document status */
-     if ((DocumentTypes[doc] == docText ||
-	  DocumentTypes[doc] == docCSS ||
-	  DocumentTypes[doc] == docSource) ||
+     if ((DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
+	  DocumentTypes[doc] == docMath || DocumentTypes[doc] == docSource) ||
 	 (ReadOnlyDocument[doc] &&
-	  (DocumentTypes[doc] == docHTML ||
-	   DocumentTypes[doc] == docImage ||
+	  (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage ||
 	   DocumentTypes[doc] == docSVG ||
 #ifdef XML_GEN      
 	   DocumentTypes[doc] == docXml ||
@@ -1950,8 +1940,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	 else
 	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
-	 if ((DocumentTypes[doc] == docText ||
-	      DocumentTypes[doc] == docCSS ||
+	 if ((DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
 	      DocumentTypes[doc] == docSource) ||
 	     (ReadOnlyDocument[doc] &&
 	      (DocumentTypes[doc] == docSVG ||
