@@ -1703,6 +1703,19 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
   ----------------------------------------------------------------------*/
+static char *ParseCSSFontSizeAdjust (Element element, PSchema tsch,
+				     PresentationContext context, char *cssRule,
+				     CSSInfoPtr css, ThotBool isHTML)
+{
+  cssRule = SkipProperty (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSFontSize: parse a CSS font size attr string  
+   we expect the input string describing the attribute to be     
+   xx-small, x-small, small, medium, large, x-large, xx-large      
+   or an absolute size, or an imcrement relative to the parent     
+  ----------------------------------------------------------------------*/
 static char *ParseCSSFontSize (Element element, PSchema tsch,
 			       PresentationContext context, char *cssRule,
 			       CSSInfoPtr css, ThotBool isHTML)
@@ -3871,6 +3884,7 @@ static CSSProperty CSSProperties[] =
    {"font-style", ParseCSSFontStyle},
    {"font-variant", ParseCSSFontVariant},
    {"font-weight", ParseCSSFontWeight},
+   {"font-size-adjust", ParseCSSFontSizeAdjust},
    {"font-size", ParseCSSFontSize},
    {"font", ParseCSSFont},
 

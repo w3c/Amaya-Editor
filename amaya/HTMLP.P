@@ -3346,6 +3346,7 @@ RULES
  Preformatted: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	LineBreak: No;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
 	Width: Enclosed . Width;

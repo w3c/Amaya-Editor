@@ -1563,15 +1563,15 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
   /* when it's a dummy box report changes to the children */
   pCurrentAb = pBox->BxAbstractBox;
   pAb = pCurrentAb;
-  if (horizontal)
+  while (pAb && pAb->AbBox &&
+	 (pAb->AbBox->BxType == BoGhost ||
+	   pAb->AbBox->BxType == BoFloatGhost))
+    pAb = pAb->AbFirstEnclosed;
+  if (pAb && pAb->AbBox)
     {
-      while (pAb && pAb->AbBox &&
-	     ( pAb->AbBox->BxType == BoGhost ||
-	       pAb->AbBox->BxType == BoFloatGhost))
-	pAb = pAb->AbFirstEnclosed;
-      if (pAb && pAb->AbBox)
+      /* the first child */
+      if (horizontal)
 	{
-	  /* the first child */
 	  pAb->AbBox->BxLMargin = pBox->BxLMargin;
 	  pAb->AbBox->BxLBorder = pBox->BxLBorder;
 	  pAb->AbBox->BxLPadding = pBox->BxLPadding;
@@ -1580,8 +1580,7 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (i != 0)
 	    {
 	      if (pAb->AbWidth.DimIsPosition ||
-		  pAb->AbWidth.DimAbRef/* ||
-		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
+		  pAb->AbWidth.DimAbRef)
 		/* the outside width is constrained */
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, -i, i, 0, 0, frame);
 	      else
@@ -1589,15 +1588,37 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, 0, i, 0, 0, frame);
 	    }
 	}
-      pAb = pCurrentAb;
-      while (pAb && pAb->AbBox &&
-	     (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
+      else
 	{
-	  pAb = pAb->AbFirstEnclosed;
-	  while (pAb && pAb->AbNext)
-	    pAb = pAb->AbNext;
+	  pAb->AbBox->BxTMargin = pBox->BxTMargin;
+	  pAb->AbBox->BxTBorder = pBox->BxTBorder;
+	  pAb->AbBox->BxTPadding = pBox->BxTPadding;
+	  pAb->AbTopStyle = pCurrentAb->AbTopStyle;
+	  pAb->AbTopBColor = pCurrentAb->AbTopBColor;
+	  if (i || j)
+	    {
+	      if (pAb->AbHeight.DimIsPosition ||
+		  pAb->AbHeight.DimAbRef)
+		/* the outside height is constrained */
+		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, - i - j, i, j,
+			      frame);
+	      else
+		/* the inside height is constrained */
+		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, 0, i, j, frame);
+	    }
 	}
-      if (pAb && pAb->AbBox)
+    }
+  pAb = pCurrentAb;
+  while (pAb && pAb->AbBox &&
+	 (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
+    {
+      pAb = pAb->AbFirstEnclosed;
+      while (pAb && pAb->AbNext)
+	pAb = pAb->AbNext;
+    }
+  if (pAb && pAb->AbBox)
+    {
+      if (horizontal)
 	{
 	  /* the last child */
 	  pAb->AbBox->BxRMargin = pBox->BxRMargin;
@@ -1608,8 +1629,7 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (j != 0)
 	    {
 	      if (pAb->AbWidth.DimIsPosition ||
-		  pAb->AbWidth.DimAbRef/* ||
-		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
+		  pAb->AbWidth.DimAbRef)
 		/* the outside width is constrained */
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, -j, 0, j, 0, frame);
 	      else
@@ -1617,21 +1637,8 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, 0, 0, j, 0, frame);
 	    }
 	}
-    }
-  else
-    {
-      while (pAb && pAb->AbBox &&
-	     (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
-	pAb = pAb->AbFirstEnclosed;
-      while (pAb && pAb->AbBox)
+      else
 	{
-	  /* all children */
-	  pAb->AbBox->BxTMargin = pBox->BxTMargin;
-	  pAb->AbBox->BxTBorder = pBox->BxTBorder;
-	  pAb->AbBox->BxTPadding = pBox->BxTPadding;
-	  pAb->AbTopStyle = pCurrentAb->AbTopStyle;
-	  pAb->AbTopBColor = pCurrentAb->AbTopBColor;
-
 	  pAb->AbBox->BxBMargin = pBox->BxBMargin;
 	  pAb->AbBox->BxBBorder = pBox->BxBBorder;
 	  pAb->AbBox->BxBPadding = pBox->BxBPadding;
@@ -1640,8 +1647,7 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (i || j)
 	    {
 	      if (pAb->AbHeight.DimIsPosition ||
-		  pAb->AbHeight.DimAbRef/* ||
-		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
+		  pAb->AbHeight.DimAbRef)
 		/* the outside height is constrained */
 		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, - i - j, i, j,
 			      frame);
@@ -1649,7 +1655,6 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 		/* the inside height is constrained */
 		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, 0, i, j, frame);
 	    }
-	  pAb = pAb->AbNext;
 	}
     }
 }
@@ -3792,11 +3797,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 		height -= pBox->BxH;	/* ecart de hauteur */
 	      pLine = NULL;
-	      if (width || height)
+	      /* the internal width of a picture updated the box but not the
+		 block of lines */
+	      if (pAb->AbLeafType == LtPicture || width || height)
 		{
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
 			     adjustDelta, height, frame, FALSE);
-#ifdef IV
 		  if (pAb->AbLeafType == LtPicture)
 		    {
 		      if (pBlock)
@@ -3807,7 +3813,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			    RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
 			}
 		    }
-#endif
 		  /* check enclosing cell */
 		  pCell = GetParentCell (pBox);
 		  if (pCell && width && ThotLocalActions[T_checkcolumn])
