@@ -1078,7 +1078,7 @@ int                *carIndex;
    TypeUnit            unit;
    ptrfont             font;
    PictInfo           *picture;
-   char                alphabet;
+   char                alphabet = 'L';
    int                 width, i;
    int                 height;
    boolean             enclosedWidth;
@@ -1344,7 +1344,7 @@ PtrBox              pBox;
      {
 	if (pBox->BxAbstractBox != NULL)
 	   pAb = pBox->BxAbstractBox->AbEnclosing;
-	if (pAb->AbNotInLine)
+	if (pAb != NULL && pAb->AbNotInLine)
 	  pAb = NULL;
      }
 
@@ -1766,7 +1766,7 @@ int                 frame;
    pMainBox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
    pBox = pAb->AbBox;		/* boite du pave */
    result = FALSE;
-
+   condition = FALSE;
    /* On prepare le reaffichage */
    if (pAb->AbNew || pAb->AbDead || pAb->AbChange
        || pAb->AbWidthChange || pAb->AbHeightChange
