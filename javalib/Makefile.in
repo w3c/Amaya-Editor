@@ -16,8 +16,10 @@ INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
 	  @THOTINCLUDES@ @X_CFLAGS@
 
 JAVASTUB= ../bin/javastub
-JAVAC	= cd $(THOTDIR)/classes ; CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip";\
-          export CLASSPATH; javac
+JAVAC	= PATH="`pwd`/../bin:$$PATH" ; export PATH; \
+cd $(THOTDIR)/classes ;\
+CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip";\
+export CLASSPATH; javac
 KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
           export CLASSPATH; ../bin/kaffeh
 

@@ -1,4 +1,3 @@
-#include <native.h>
 #include "JavaTypes.h"
 #include "biss_awt_APIstubs.h"
 

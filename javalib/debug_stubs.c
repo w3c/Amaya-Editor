@@ -4,7 +4,6 @@
  * Daniel Veillard 1997
  */
 
-#include <native.h>
 #include "app.h"
 #include "appaction.h"
 #include "memory.h"

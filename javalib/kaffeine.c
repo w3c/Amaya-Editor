@@ -9,9 +9,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "StubPreamble.h"
-#include "jtypes.h"
-#include "native.h"
+#include "JavaTypes.h"
 #include "registry.h"
 
 #include "thotlib_APIApplication_stubs.h"
