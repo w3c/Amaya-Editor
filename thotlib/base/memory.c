@@ -2481,7 +2481,7 @@ ThotBool            readonly;
 
    pdict = *pDict;
    pdict->DictMaxChars += (pdict->DictReadOnly == FALSE) ? 600 : 2;
-   i = pdict->DictMaxChars;
+   i = pdict->DictMaxChars + 1; /* take into account the EOS */
    /* alloue la chaine necessaire */
    pdict->DictString = (PtrString) GetDictContext (i);
    if (pdict->DictString == NULL)

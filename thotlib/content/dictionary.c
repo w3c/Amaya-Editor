@@ -679,6 +679,7 @@ PtrDict            *pDictionary;
    PtrDocument         document;
    int                 d;
    CHAR_T              dictName[MAX_NAME_LENGTH];
+   CHAR_T              dictDirectory[MAX_NAME_LENGTH]; 
 
    document = NULL;
    if (*pDictionary == NULL)
@@ -696,6 +697,7 @@ PtrDict            *pDictionary;
 	     /* Getting information about the dictionary */
 	     ustrcpy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
+             ustrcpy (dictDirectory, pdict->DictDirectory);
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);
 	     FreeDictionary (pdict);
@@ -704,7 +706,8 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadTreatedDict (pDictionary, 0, document, dictName, document->DocDirectory, FALSE, TRUE);
+   d = LoadTreatedDict (pDictionary, 0, document, dictName, dictDirectory, FALSE, TRUE);
+
    if (d == -1)
       return (FALSE);
 
