@@ -147,11 +147,8 @@ static OPENFILENAME  OpenFileName;
 static int           cyValue = 10;
 #else  /* _WINDOWS */
 #ifndef _GTK
-static XmFontList     formFONT;
 static ThotAppContext Def_AppCont;
 static Display       *GDp;
-#else /* _GTK */
-static GdkFont       *formFONT;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
@@ -2120,12 +2117,9 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    /* Initialisation des options de dialogue */
    DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
 				   XmSTRING_DEFAULT_CHARSET);
-   formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
-				XmSTRING_DEFAULT_CHARSET);
    XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
 #else /* _GTK */
    DefaultFont = gdk_font_load ("fixed");
-   formFONT = gdk_font_load ("fixed");
    TextTranslations = NULL;
    TtDisplay = GDK_DISPLAY ();
 #endif /* _GTK */
@@ -2139,34 +2133,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
 void TtaInitDialogueTranslations (ThotTranslations translations)
 {
    TextTranslations = translations;
-}
-
-/*----------------------------------------------------------------------
-   TtaChangeDialogueFonts change les polices de caracteres du dialogue.
-  ----------------------------------------------------------------------*/
-void TtaChangeDialogueFonts (char *menufont, char *formfont)
-{ 
-#ifndef _WINDOWS
-#ifndef _GTK
-  if (menufont)
-    {
-      XmFontListFree (DefaultFont);
-      DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont),
-				      XmSTRING_DEFAULT_CHARSET);
-    }
-  if (formfont)
-    {
-      XmFontListFree (formFONT);
-      formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont),
-				   XmSTRING_DEFAULT_CHARSET);
-    }
-#else /* _GTK */
-  if (menufont != NULL)
-    DefaultFont = gdk_font_load (menufont);
-  if (formfont != NULL)
-    formFONT = gdk_font_load (formfont);
-#endif /* _GTK */
-#endif /* _WINDOWS */
 }
 
 
@@ -6476,7 +6442,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 
 	/*** Cree les boutons ***/
 	n = 0;
-	XtSetArg (args[n], XmNfontList, formFONT);
+	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
@@ -6486,7 +6452,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	/* Create the hbox for buttons */
 	tmpw = gtk_hbox_new (FALSE, 5);
 	gtk_widget_show_all (tmpw);
-	/*tmpw->style->font=formFONT;*/
 	gtk_widget_set_name (tmpw, "Dialogue");
 	gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
 	row=tmpw;

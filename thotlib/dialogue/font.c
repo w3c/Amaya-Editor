@@ -50,8 +50,6 @@ static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char        *FontFamily;
 static char         GreekFontScript;
-static ThotBool     UseLucidaFamily;
-static ThotBool     UseAdobeFamily;
 #ifdef _WINDOWS
 
 static PtrFont    LastUsedFont = NULL;
@@ -99,8 +97,7 @@ static SpecFont   FirstFontSel = NULL;
  GL_FontIInit 
  Use Freetype2 
   ----------------------------------------------------------------------*/
-void *GL_LoadFont (char alphabet, int family, 
-		   int highlight, int size,
+void *GL_LoadFont (char alphabet, int family, int highlight, int size,
 		   char *xlfd)
 {
   char filename[2048];
@@ -111,10 +108,7 @@ void *GL_LoadFont (char alphabet, int family,
     size = LogicalPointsSizes[size];
   else
     size = 12;
-  if (GetFontFilename (alphabet, family, 
-		      highlight, size, 
-		      UseLucidaFamily, UseAdobeFamily,
-		      filename))
+  if (GetFontFilename (alphabet, family, highlight, size, filename))
       return (gl_font_init (filename, alphabet, size)); 
   return NULL;
 }
@@ -1139,8 +1133,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
   if (script == '1')
     script = 'L';
 
-  if (script != 'L' && script != 'G' 
-      && script != 'Z' && script != 'E' )
+  if (script != 'L' && script != 'G' && script != 'Z' && script != 'E')
     {
       if (script == 'F')
 	strcpy (encoding, "15");
@@ -1195,7 +1188,6 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 		   size);
 	  break;
 	default:
-	  /*sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);*/
    	  break;
 	}
     }
@@ -1219,53 +1211,29 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 	}
       else
 	sprintf (r_nameX,  "-*-dfgothicu_w5-*-*-*-*-%i-*-*-*-*-*-iso10646-*",
-	       size);
+		 size);
     }
   else
     {
-      if (UseLucidaFamily)
+      switch (family)
 	{
-	  switch (family)
-	    {
-	    case 1:
-	      ffamily = "-*-lucidabright";
-	      break;
-	    case 3:
-	      ffamily = "-*-lucidatypewriter";
-	      break;
-	    default:
-	      ffamily = "-*-lucida";
-	      break;
-	    }
+	case 1:
+	  ffamily = "-*-times";
+	  break;
+	case 2:
+	  ffamily = "-*-helvetica";
+	  break;
+	case 3:
+	  ffamily = "-adobe-courier";
+	  break;
+	default:
+	  ffamily = "-*-*";
 	}
-      else
-	{
-	  switch (family)
-	    {
-	    case 1:
-	      if (UseAdobeFamily)
-		ffamily = "-*-new century schoolbook";
-	      else
-		ffamily = "-*-times";
-	      break;
-	    case 2:
-	      ffamily = "-*-helvetica";
-	      break;
-	    case 3:
-	      ffamily = "-adobe-courier";
-	      break;
-	    default:
-	      ffamily = "-*-*";
-	    }
-	}
-  
+      
       switch (highlight)
 	{
 	case 1:
-	  if (UseLucidaFamily && family == 1)
-	    wght = "demibold";
-	  else
-	    wght = "bold";
+	  wght = "bold";
 	  slant = "r";
 	  break;
 	case 2:
@@ -1278,12 +1246,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 	  break;
 	case 4:
 	case 5:
-	  if (UseLucidaFamily && family == 1)
-	    {
-	    wght = "demibold";
-	    slant = "i";
-	    }
-	  else if (family == 2 || family == 2)
+	  if (family == 2 || family == 2)
 	    {
 	    wght = "bold";
 	    slant = "o";
@@ -2186,7 +2149,6 @@ void InitDialogueFonts (char *name)
 	/* old model */
 	FontZoom = (FontZoom * 10) + 100;
     }
-   value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
 #ifdef _WINDOWS
   GreekFontScript = '7';
@@ -2197,28 +2159,8 @@ void InitDialogueFonts (char *name)
   else
     GreekFontScript = '7';
 #endif /* _WINDOWS */
-  if (value == NULL)
-    {
-      FontFamily = TtaGetMemory (8);
-      strcpy (FontFamily, "-*");
-    }
-  else
-    {
-      FontFamily = TtaGetMemory (strlen (value) + 1);
-      strcpy (FontFamily, "-");
-      strcat (FontFamily, value);
-      if (!Printing && !strcmp (FontFamily, "-b&h-lucida"))
-	UseLucidaFamily = TRUE;
-      else
-	{
-	  UseLucidaFamily = FALSE;
-	  if (!Printing && !strcmp (FontFamily, "-adobe"))
-	    UseAdobeFamily = TRUE;
-	  else
-	    UseAdobeFamily = FALSE;
-	}
-    }
-
+  FontFamily = TtaGetMemory (8);
+  strcpy (FontFamily, "-*");
   /* Is there any predefined size for menu fonts ? */
   value = TtaGetEnvString ("FontMenuSize");
   if (value != NULL)
@@ -2286,7 +2228,17 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-  FontDialogue =  LoadNearestFont (script, 1, 0, index, index, 0, TRUE, TRUE);
+  FontDialogue =  LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);
+  if (FontDialogue == NULL)
+    TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
+#ifndef _WINDOWS
+#ifndef _GTK
+  DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont),
+				  XmSTRING_DEFAULT_CHARSET);
+#else /* _GTK */
+  DefaultFont = FontDialogue;
+#endif /* _GTK */
+#endif /* _WINDOWS */
   if (FontDialogue == NULL)
     {
       FontDialogue = LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);

@@ -17,7 +17,6 @@ void *gl_font_init        (const char *font_filename,
 void  gl_font_delete      (void *gl_font);
 int   GetFontFilename     (char script, int family, 
 			   int highlight, int size, 
-			   int UseLucidaFamily, int UseAdobeFamily,
 			   char *filename);
 void  FTLibraryFree ();
 

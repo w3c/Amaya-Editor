@@ -3,9 +3,7 @@
 
 int isnum(char number);
 void FreeFontConfig ();
-char *FontLoadFromConfig (char script, 
-			  int family, 
-			  int highlight);
+char *FontLoadFromConfig (char script, int family, int highlight);
 
 #endif /*__FONTCONFIG_H*/
 

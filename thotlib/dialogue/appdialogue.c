@@ -316,10 +316,6 @@ HWND GetCurrentWindow ()
 void TteInitMenus (char *name, int number)
 {
   int                 i;
-  char                namef1[100];
-  char                namef2[100];
-  char                text[100];
-  char                script;
 
   /* Initialisation du  contexte serveur */
   FrRef[0] = 0;
@@ -360,14 +356,7 @@ void TteInitMenus (char *name, int number)
    /* initialize the LiteClue Widget */
    InitClue(RootShell);
 #endif /* _WINDOWS */
-   script = TtaGetScript (TtaGetDefaultLanguage ());
-   GetFontIdentifier (script, 2, 0, MenuSize, UnPoint, text, namef1);
-   GetFontIdentifier (script, 2, 1, MenuSize, UnPoint, text, namef2);
-#ifndef _WINDOWS
-   TtaChangeDialogueFonts (namef1, namef2);
-#endif /* _WINDOWS */
-
-   /* reserve les menus de Thot */
+   /* reserve Thot entries */
    TtaGetReferencesBase (MAX_ThotMenu);
 
    /* Il faut ajouter les actions internes liees a la structure */

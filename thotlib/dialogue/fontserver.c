@@ -27,18 +27,15 @@
 #include "application.h"
 #include "fontconfig.h"
 
-int GetFontFilenameFromConfig (char script, int family, int highlight, 
-		     int size, int UseLucidaFamily, int UseAdobeFamily,
-		     char *filename)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static int GetFontFilenameFromConfig (char script, int family, int highlight, 
+				      int size, char *filename)
 {
   char *response;
 
-  response = (char *) FontLoadFromConfig (script, 
-					  family, 
-					  highlight);
-  
-  if (response == NULL ||
-      !TtaFileExist (response))
+  response = (char *) FontLoadFromConfig (script,  family, highlight);
+  if (response == NULL || !TtaFileExist (response))
     {
       /*Bad Configuration
        get back to normal loading*/
@@ -54,7 +51,6 @@ int GetFontFilenameFromConfig (char script, int family, int highlight,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int GetFontFilename (char script, int family, int highlight, int size, 
-		     int UseLucidaFamily, int UseAdobeFamily,
 		     char *filename)
 {
 #ifdef _GTK
@@ -63,17 +59,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
   char	        *s;
   int           ok = 0;
 
-  if (GetFontFilenameFromConfig (script,
-				 family,
-				 highlight, 
-				 size,
-				 UseLucidaFamily,
-				 UseAdobeFamily,
-				 filename))
+  if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
   
   pat = XftPatternCreate ();
-
   if (!pat)
     return ok;  
   /*Directs Xft to use client-side fonts*/
@@ -236,86 +225,64 @@ int GetFontFilename (char script, int family, int highlight, int size,
       
       if (size < 0)
 	size = 13;
-	  }
+    }
   else
     {
       XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");
       /*XftPatternAddString (pat, XFT_FOUNDRY, "adobe");*/
       /*XftPatternAddString (pat, XFT_FOUNDRY, "microsoft");*/
-      
-      if (UseLucidaFamily)
+      switch (family)
 	{
-	  switch (family)
-	    {
-	    case 1:
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
-	      break;
-	    case 3:
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidatypewriter");
-	      break;
-	    default:
-	      XftPatternAddString (pat, XFT_FAMILY, "lucida");
-		    break;
-	    }
-	}
-      else
-	{
-	  switch (family)
-	    {
-	    case 1:
-	      if (UseAdobeFamily)
-		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
-	      else
-		XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
-	      XftPatternAddString (pat, XFT_FAMILY, "times");
-	      XftPatternAddString (pat, XFT_FAMILY, "Times");
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
-	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
-	      XftPatternAddString (pat, XFT_FAMILY, "terminus");
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
-	      XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
-	      XftPatternAddString (pat, XFT_FAMILY, "utopia");
-	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");
-	      /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
-	      XftPatternAddString (pat, XFT_FAMILY, "terminal");
-	      XftPatternAddString (pat, XFT_FAMILY, "georgia");
-	      break;
-	    case 2:
-	      XftPatternAddString (pat, XFT_FAMILY, "helvetica");
-	      XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
-	      XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
-	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
-	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      
-	      XftPatternAddString (pat, XFT_FAMILY, "verdana");
-	      XftPatternAddString (pat, XFT_FAMILY, "Verdana");
-	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Sans L");
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
-	      XftPatternAddString (pat, XFT_FAMILY, "terminus");
-	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
-	      XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
-	      XftPatternAddString (pat, XFT_FAMILY, "utopia");
-	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");
-	      /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
-	      XftPatternAddString (pat, XFT_FAMILY, "terminal");
-	      XftPatternAddString (pat, XFT_FAMILY, "trebuchet");
-	      break;
-	    case 3:
-	      XftPatternAddString (pat, XFT_FAMILY, "courier");
-	      XftPatternAddString (pat, XFT_FAMILY, "courier new");
-	      XftPatternAddString (pat, XFT_FAMILY, "Courier");
-	      XftPatternAddString (pat, XFT_FAMILY, "Courier New");
-	      XftPatternAddString (pat, XFT_FAMILY, "mono");
-	      XftPatternAddString (pat, XFT_FAMILY, "sans");
-	      XftPatternAddString (pat, XFT_FAMILY, "serif");
-	      XftPatternAddString (pat, XFT_FAMILY, "Monotype");
-	      XftPatternAddString (pat, XFT_FAMILY, "Monotype.com");
-	      XftPatternAddString (pat, XFT_FAMILY, "Andale Mono");
-	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Mono L");
-	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
-	      XftPatternAddString (pat, XFT_FAMILY, "arial");
-	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");	      	      
-	      break;
-	    }
+	case 1:
+	  XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
+	  XftPatternAddString (pat, XFT_FAMILY, "times");
+	  XftPatternAddString (pat, XFT_FAMILY, "Times");
+	  XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+	  XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
+	  XftPatternAddString (pat, XFT_FAMILY, "terminus");
+	  XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
+	  XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
+	  XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	  XftPatternAddString (pat, XFT_FAMILY, "Utopia");
+	  /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
+	  XftPatternAddString (pat, XFT_FAMILY, "terminal");
+	  XftPatternAddString (pat, XFT_FAMILY, "georgia");
+	  break;
+	case 2:
+	  XftPatternAddString (pat, XFT_FAMILY, "helvetica");
+	  XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
+	  XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
+	  XftPatternAddString (pat, XFT_FAMILY, "Arial");
+	  XftPatternAddString (pat, XFT_FAMILY, "arial");	      
+	  XftPatternAddString (pat, XFT_FAMILY, "verdana");
+	  XftPatternAddString (pat, XFT_FAMILY, "Verdana");
+	  XftPatternAddString (pat, XFT_FAMILY, "Nimbus Sans L");
+	  XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+	  XftPatternAddString (pat, XFT_FAMILY, "terminus");
+	  XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
+	  XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
+	  XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	  XftPatternAddString (pat, XFT_FAMILY, "Utopia");
+	  /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
+	  XftPatternAddString (pat, XFT_FAMILY, "terminal");
+	  XftPatternAddString (pat, XFT_FAMILY, "trebuchet");
+	  break;
+	case 3:
+	  XftPatternAddString (pat, XFT_FAMILY, "courier");
+	  XftPatternAddString (pat, XFT_FAMILY, "courier new");
+	  XftPatternAddString (pat, XFT_FAMILY, "Courier");
+	  XftPatternAddString (pat, XFT_FAMILY, "Courier New");
+	  XftPatternAddString (pat, XFT_FAMILY, "mono");
+	  XftPatternAddString (pat, XFT_FAMILY, "sans");
+	  XftPatternAddString (pat, XFT_FAMILY, "serif");
+	  XftPatternAddString (pat, XFT_FAMILY, "Monotype");
+	  XftPatternAddString (pat, XFT_FAMILY, "Monotype.com");
+	  XftPatternAddString (pat, XFT_FAMILY, "Andale Mono");
+	  XftPatternAddString (pat, XFT_FAMILY, "Nimbus Mono L");
+	  XftPatternAddString (pat, XFT_FAMILY, "Arial");
+	  XftPatternAddString (pat, XFT_FAMILY, "arial");
+	  XftPatternAddString (pat, XFT_FAMILY, "Utopia");	      	      
+	  break;
 	}
       
       switch (highlight)
@@ -327,10 +294,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  break;
 	case 1:
 	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-	  if (UseLucidaFamily && family == 1)
-	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
-	  else
-	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	  
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	  
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 2:
@@ -351,12 +315,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  break;
 	case 4:
 	case 5:
-	  if (UseLucidaFamily && family == 1)
-	    {
-	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
-	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
-	    }
-	  else if (family == 2 || family == 3)
+	  if (family == 2 || family == 3)
 	    {	    
 	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	    
 	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
@@ -400,13 +359,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
   return ok;
 #else /* _GTK */
   
-  if (GetFontFilenameFromConfig (script,
-				 family,
-				 highlight, 
-				 size,
-				 UseLucidaFamily,
-				 UseAdobeFamily,
-				 filename))
+  if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
   
   GetWindowsDirectory (filename , 1024);  
