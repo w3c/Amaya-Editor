@@ -1327,7 +1327,7 @@ char            *relatedName;
     else
       {
 	/* Some path in common */
-	if (slashes == 3 && strncmp (aName, "http:", 5) != 0)
+	if (slashes == 3 && strncmp (aName, "http:", 5) == 0)
 	  /* just the same server */
 	  strcpy (result, last_slash);
 	else
