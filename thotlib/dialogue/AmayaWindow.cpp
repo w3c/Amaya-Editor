@@ -317,14 +317,25 @@ void AmayaWindow::OnMenuItem( wxCommandEvent& event )
 {
   wxMenu * p_menu = (wxMenu *)event.GetEventObject();
   long     id     = event.GetId();
-  wxLogDebug( _T("AmayaWindow::OnMenuItem : p_menu = 0x%x\tmenuid = %d"), p_menu, id );
+
+  wxMenuItem * p_menu_item = NULL;
+  if (GetMenuBar())
+  {
+	  p_menu_item = GetMenuBar()->FindItem(id);
+	  if (!p_menu_item)
+	  {
+		  wxASSERT_MSG(FALSE,_T("Menu item doesnt existe"));
+		  return;
+	  }
+  }
+/*  wxLogDebug( _T("AmayaWindow::OnMenuItem : p_menu = 0x%x\tmenuid = %d"), p_menu, id );
   wxLogDebug( _T("\tp_menu  IsKindOf wxMenuItem %s"), p_menu->IsKindOf(CLASSINFO(wxMenuItem)) ? _T("yes") : _T("no") );
   wxLogDebug( _T("\tp_menu  IsKindOf wxMenu %s"), p_menu->IsKindOf(CLASSINFO(wxMenu)) ? _T("yes") : _T("no") );
 
   wxMenuItem * p_menu_item = p_menu->FindItem( event.GetId() );
   wxLogDebug( _T("\tp_menu_item = 0x%x"), p_menu_item );
   wxLogDebug( _T("\tp_menu_item  IsKindOf wxMenuItem %s"), p_menu_item->IsKindOf(CLASSINFO(wxMenuItem)) ? _T("yes") : _T("no") );
-
+*/
   AmayaContext * p_context = (AmayaContext *)p_menu_item->GetRefData();
   if (p_context)
     {
