@@ -216,10 +216,10 @@ décrits.</p>
             que textes</a></li>
         </ul>
       </li>
-      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a>
+      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a> 
         <ul>
           <li><a href="Printing.html.fr#commande">La commande Paramétrer et
-            Imprimer</a>
+            Imprimer</a> 
             <ul>
               <li><a href="Printing.html.fr#Stations">Plate-forme
               Unix</a></li>
@@ -252,7 +252,9 @@ décrits.</p>
       annotation</a></li>
       <li><a href="Annotations.html.fr#Loading">Charger et présenter les
         annotations</a></li>
-      <li><a href="Annotations.html.fr#Navigating">Activer des
+      <li><a href="Annotations.html.fr#Navigating">Activer les
+      annotations</a></li>
+      <li><a href="Annotations.html.fr#Moving">Déplacer les
       annotations</a></li>
       <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
         annotations et aux documents modifiés</a></li>
