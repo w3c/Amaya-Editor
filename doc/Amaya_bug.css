@@ -1,0 +1,24 @@
+body       {  background: #fffbf0; color: #000
+           }
+caption    {  font-family: helvetica;
+            font-size: 18;
+            font-weight: Bold;
+            text-align: left
+           }
+tr.title   {  background-color: #FFE9C1
+           }
+tr.fixed   {  background-color: #aaffaa
+           }
+tr.done    {  background-color: #aaffaa
+           }
+th         { width: 80;
+           }
+th.summary { width: 450;
+           }
+td.categ   { width: 200;
+           }
+h1         {  size: 14;
+            text-align: center
+           }
+H2         {  size: 12;
+           }

@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title></title>
+  <?xml-stylesheet type="text/css" href="Amaya_bug.css"?>
+</head>
+
+<body>
+<h1>List of known bugs in Amaya</h1>
+
+<p></p>
+<hr />
+
+<table border="0">
+  <caption>Categories</caption>
+  <tbody>
+    <tr>
+      <td class="categ"><a href="#annotations">Annotations</a></td>
+      <td class="categ"><a href="#mathml">MathML</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#browsing">Browsing</a></td>
+      <td class="categ"><a href="#networking">Networking</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#CSS">CSS</a></td>
+      <td class="categ"><a href="#printing">Printing</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#editing">Editing</a></td>
+      <td class="categ"><a href="#svg">SVG</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#formatting">Formatting</a></td>
+      <td class="categ"><a href="#tables">Tables</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#forms">Forms</a></td>
+      <td class="categ"><a href="#interface">User Interface</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#xhtml">(X)HTML</a></td>
+      <td class="categ"><a href="#XML">XML</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#I18N">I18N</a></td>
+      <td class="categ"><a href="#miscellaneous">Miscellaneous</a></td>
+    </tr>
+    <tr>
+      <td class="categ"><a href="#images">Images</a></td>
+      <td class="categ"></td>
+    </tr>
+  </tbody>
+</table>
+<hr />
+
+<p></p>
+
+<table border="1">
+  <caption><span id="annotations">Annotations</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Annotations are not reloaded after a synchronize</td>
+      <td>2002-08-21</td>
+      <td>Laurent</td>
+      <td>José</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="browsing">Browsing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Activating a form action from a modified document replaces the
+        current document and removes it from the History List (and changes
+        are lost). 
+
+        <p>Ex: www.w3.org</p>
+      </td>
+      <td>2001-07-20</td>
+      <td></td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Crash on the following page 
+
+        <p><a href="location.html">location.html</a></p>
+      </td>
+      <td></td>
+      <td>B. L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>In working on the RDF validator, I just bumped into a problem. It
+        seems Amaya limits the length of URIs to 500 chars. 
+
+        <p><a
+        href="http://www.w3.org/2001/tag/doc/get7">http://www.w3.org/2001/tag/doc/get7</a></p>
+      </td>
+      <td>2002-08-14</td>
+      <td>M. Duerst</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="CSS">CSS</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Command Apply Class should list all class attributes used in the
+        document + those used in the CSS style sheets linked to that
+      document</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Can't undo removing a stylesheet</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>p {margin-left:30px; text-indent:-30px} should start first line at
+        oringinal body indent and then rest of lines should be indented 30px.
+        In Amaya first line is in 30px and rest of lines in 60px. A hanging
+        indent yes but shifted by 30px from where it should be. This looks
+        like a negative measure problem.</td>
+      <td>2001-12-03</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>. Both right and left margins are set to the left value 
+
+        <p>. + "bizarrerie" : text brought up horizontal scroll rather than
+        wrapping</p>
+
+        <p><a href="css-bug-margins.html">css-bug-margins</a></p>
+      </td>
+      <td>2002-07-17</td>
+      <td>Lars Bruzelius 
+
+        <p>J. Russel</p>
+      </td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>HTML elements with multiple classes have only the final listed
+        class's style rendered</td>
+      <td>2002-07-20</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>When classes are applied, the associated style is not immediately
+        rendered</td>
+      <td>2002-07-20</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>When style sheets are linked to XML-based files, the appropriate
+        processing instruction should also be generated</td>
+      <td>2002-07-20</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Amaya 6.2 signals background:none as an error.Tthe TR for CSS1
+        states background can take any value of its subsidiaries
+        background-image can take the value none .... therefore background
+        should accept the value none!</td>
+      <td>2002-07-22</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Inconsistent results in amaya 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2002JulSep/0079.html">http://lists.w3.org/Archives/Public/www-amaya/2002JulSep/0079.html</a></p>
+      </td>
+      <td>2002-07-31</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Class specifiers problems 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2002JulSep/0108.html">http://lists.w3.org/Archives/Public/www-amaya/2002JulSep/0108.html</a></p>
+      </td>
+      <td>2002-08-15</td>
+      <td>J. Russel</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>CSS rules with null properties (ie redundant semicolons) throws a
+        parse error in Amaya 
+
+        <p>ex: body {color:black;;;background:white}</p>
+      </td>
+      <td>6.2</td>
+      <td>J. Russel</td>
+      <td>Irène</td>
+      <td>2002-09</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="editing">Editing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Problem copy+paste URLs on Windows 
+
+        <p>I cannot copy a URL from the line where Amaya shows the URL of the
+        current document into another window (e.g. an e-mail) on Windows. The
+        copy buffer always has the content of the last copy I made, i.e.
+        Amaya doesn't seem to put the URL into the copy buffer. A related
+        issue is copying and pasting text out of amaya into a mail message:
+        there are still weird linebreak charactars that appear, and one has
+        to reformat the whole text by hand - very painful - I think I
+        reported this already quite a few times :-)</p>
+      </td>
+      <td>2001-07-20</td>
+      <td>P.Hoschka</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><p>Searching for a single character backwards works only once. When
+        the first occurence of the character is found, the search command is
+        stuck.</p>
+      </td>
+      <td>2002-06-07</td>
+      <td>Vincent</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>There is a bug in the Search dialogue, which can be reproduced as
+        follows: 
+
+        <p>Open the Search dialogue, enter some expression to search for.
+        Select "In the whole document" Click "OK" (Amaya searches and now
+        "After selection" becomes selected). Bug: I cannot select "In the
+        whole document" at this point, unless I select "Within selection" or
+        "Before selection" first and then "In the whole document".</p>
+      </td>
+      <td>2002-07-10</td>
+      <td>K.M. Schneider</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>shift-arrow does not work properly: 
+
+        <p>put the pointer at the beginning of a header, hold down shift,
+        press right-arrow. The selection extends to the end of the element,
+        and then goes back to the beginning rather than extending into the
+        next element.</p>
+      </td>
+      <td>2002-07-10</td>
+      <td>Steven Pemberton</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>1. Open the attached HTML file. 2. Change the view to Stucture
+        View. 3. Click the hr element at the end. 4. Press Enter. 5. Click
+        the p element just created. 6. Click Structure &gt; Script. 7. Type
+        application/x-javascript in the attribute box. As you can see,
+        instead of changing the p element to a script element with the type
+        attribute set to application/x-javascript, it nested the script
+        element within an address element.</td>
+      <td>2002-07-10</td>
+      <td>B. L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Go to a new line, create a DD element with the Types/List menu...
+        Amaya prompts you to insert an image. An object element is also added
+        to the structure.</td>
+      <td>2002-09-11</td>
+      <td>M.-C. Fontaine</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="formatting">Formatting</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>When several span elements use padding in a paragraph, the first
+        one does not show any padding. Also, the last one does not receive
+        any padding on the right. And if one of these span elements crosses a
+        line boundary, the background color disappear. Why is the caret so
+        tall in the span elements with padding? 
+
+        <p><a href="padding.html">padding</a></p>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>When lists are included in blocks that are centered, the list
+        bullets are not centered but the text is.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Unbreakable strings are broken (with hyphens added) whenever the
+        window is narrower than the string. This is in contrast to action of
+        other browsers and leads to unusually displays in some table
+        situations. Fixing the document width and forcing scrolling seems
+        more appropriate.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The default img size is too small. This results in unnecesary
+        screen redraws on common screens like example which uses icons on
+        each line that is a file. 
+
+        <p><a href="http://www.w3.org/History/">History</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The font size appears way larger than any other browser on
+      Windows.</td>
+      <td>2002-07-08</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Images are not floated correctly although this is part of HTML 4.0
+        specification.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The baseline of the code element appears to be lower than the rest
+        of the text by a few pixels in the OpenGL version. I have a line of
+        markup that is essentially: 
+
+        <p>Ex: &lt;p&gt;This text is normal &lt;code&gt;while this text block
+        appear fractionally lower&lt;/code&gt; and this appears normal
+        again.&lt;/p&gt;</p>
+      </td>
+      <td>2002-07-26</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="forms">Forms</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Fieldset doesn't draw container box and legend doesnt title
+      box.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Size = x is not acted upon which yields awkward screens.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Disabled form entry areas are still able to be used.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>A good test case for various problems with forms 
+
+        <p><a href="http://www.cgocable.net/~jrussel/formtest.htm">test
+        case</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="xhtml">(X)HTML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>A Thot pseudo-paragraph contains most of the document, not only the
+        corresponding element. 
+
+        <p><a href="opengis.html">opengis.html</a></p>
+      </td>
+      <td>2001-11-27</td>
+      <td>Irène</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The structure view reveals two spans inside an object instead of
+        the single object element inside a span element. 
+
+        <p><a href="test.xhtml">test.xhtml</a></p>
+      </td>
+      <td></td>
+      <td>Keith Hopper</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>I opened README.cvs from the CVS repository. Amaya considers this a
+        text file since it does not have htm or html as an extension. Amaya
+        should use another method for determining file types.</td>
+      <td>2002-07-28</td>
+      <td>B.L Gurganus</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Bug regarding object element. 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2002JulSep/0128.html">http://lists.w3.org/Archives/Public/www-amaya/002JulSep/0128.html</a></p>
+      </td>
+      <td>2002-08-21</td>
+      <td>K. Hopper</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="I18N">I18N</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Amaya should encode the emdash as &amp;emdash; in dialogue
+      widgets.</td>
+      <td>2001-05</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Arabic Windows platforms write Arabic characters right-to-left even
+        if the requested writing order is left-to-right.</td>
+      <td>2002-07</td>
+      <td></td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>I've noted that amaya converts my &amp;deg; character entity into
+        the &lt;B0&gt; character. This character is rendered incorrectly by
+        some browsers, including Opera 6.03, and I'd rather it keep my
+        character entity anyway.</td>
+      <td>2002-08-28</td>
+      <td>Joseph Reagle</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="images">Images</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Repeated background images are not transparent.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Transparent images are not printed correctly on Windows</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>When I insert an image in a XHTML document, if the image is in the
+        same directory of the document or in a directory inside the directory
+        of the document, Amaya creates an img tag with a relative path (as it
+        should do). But if the image is in a directory outside the directory
+        of the document, Amaya creates an img tag with an absolute path
+        (src="C:\etc...") instead of a relative path (src="..\etc...")</td>
+      <td>6.3</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td>Irène</td>
+      <td>2002-9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="mathml">MathML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Problem with deitalicizing: 
+
+        <p>&gt; &lt;p&gt;&lt;em&gt;= &lt;math xmlns="..."&gt; &gt;
+        &lt;munder&gt; &gt; &lt;mo&gt;&amp;Sum;&lt;/mo&gt; &gt; &lt;mrow&gt;
+        &gt; &lt;mi&gt;x&lt;/mi&gt; &gt; &lt;mo&gt;,&lt;/mo&gt; &gt;
+        &lt;mi&gt;y&lt;/mi&gt; &gt; &lt;/mrow&gt; &gt; &lt;/munder&gt; &gt;
+        &lt;/math&gt; &gt; p(x,y) (-log p(x|y))&lt;/em&gt;&lt;/p&gt;</p>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="networking">Networking</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The toolbar with the STOP icon should be displayed and enabled
+        earlier in the startup sequence. At present, if one has a startup or
+        home page on the internet and there is a service problem, there are
+        situations where the display hangs up searching for a site but with
+        no STOP or 'breakout' method available. 
+
+        <p>Ex: Removing cable connection and starting browser with home page
+        on the internet.</p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cached files are used without checking to see if it is current. A
+        simple timestamp check should allow changed files to be loaded over
+        the cached ones. I suspect a check is being done but on a greater
+        than condition rather than a NOT EQUAL condition. This is important
+        if an isp has not set its clock correctly.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>After a STOP Amaya should display a pop-up and keep the displayed
+        page instead of displaying an error page.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Not unique name allocation in the Amaya cache 
+
+        <p><a
+        href="http://www.w3.org/2002/ws/arch/">http://www.w3.org/2002/ws/arch/</a></p>
+      </td>
+      <td></td>
+      <td>D. Booth</td>
+      <td>José</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="printing">Printing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Some CSS rules page-break are not applied when printing</td>
+      <td>2002-07</td>
+      <td></td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>U.S. top margin too large:: 2.25" (5.75cent).</td>
+      <td>2002-08-27</td>
+      <td>George Herson</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="svg">SVG</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The Enter key in the middle of a text element should create a tspan
+        element</td>
+      <td></td>
+      <td></td>
+      <td>Laurent Vincent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Copy an image in a HTML document and paste it within a SVG drawing:
+        the image dialog box pops up.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Copy an image in a SVG drawing and paste it within an HTML page: no
+        SRC attribute!</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Inheritage between CSS properties color, fill, stroke</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Eyes are not visible, attribute not supported. 
+
+        <p>Problem of positionning.</p>
+
+        <p><a href="esmod.svg">esmod.svg</a></p>
+      </td>
+      <td>2002-05-21</td>
+      <td>Irène</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Make a line parallel with the axis x with the mouse its impossible,
+        the second point of line is changed when this element is created</td>
+      <td>2002-07-26</td>
+      <td>T. Telecken</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Its difficult select with the mouse a line parallel with the axis
+        x. Following a code of a element line parallel with the axis x:
+        &lt;line stroke=black y1=400 x1=92 y2=400 y2=400 x2=196&gt;</td>
+      <td>2002-07-26</td>
+      <td>T. Telecken</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="tables">Tables</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>When changing the width of a cell with the mouse (ctrl click) the
+        table is not reformatted</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Bug in vertical extension of tables</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Default value valign=middle in tables</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Putting attribute rowspan on a cell generates a new column, and
+        when deleting a cell formatting is broken 
+
+        <p>It'd be even grander if Amaya enabled you to graphically create
+        rowspans and colspans. For example, you'd highlight a cell, choose a
+        menu command like "Span [or Merge] Cell to left|right|above|below" or
+        "Split Cell into rows|columns", and Amaya would generate the rowspan
+        and colspan attributes and re-render the table. (Tak Ota's
+        table.el[1]-- an ASCII table editor for Emacs -- lets you create
+        spans that way, and then generate HTML, CALS, TEI, and Latex
+        source.)</p>
+
+        <p>Or you'd highlight two cells and then choose a menu command like
+        "Span [or Merge] Cells" to merge the two cells into one.</p>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>If a table has no height= attribute, the height is computed by the
+        browser. If a table declares height= then ???? Most browsers will
+        check 'set' value against needed and use the maximum of the two.
+        Amaya uses the height setting to be consistent with the img height
+        attribute which normally scales image to the speced height but this
+        leaves problems if speced is less than needed TEXT. If there is no
+        specification on how to handle this conflict, it would be easy enough
+        to err in favor of the user by: a] setting height to default value b]
+        resetting height if height= attribute used c] computing what is
+        needed to prevent outside of border material (this routine is already
+        there for no height speced) d] comparing needed to height e] using
+        the maximum of the two values NEEDED and HEIGHT This routine would
+        work whether or not height was speced. and would prevent out of box
+        messages in most cases!</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Tables become confused if stacked more than two levels down (text
+        printed outside their associated box in the example). 
+
+        <p><a
+        href="http://www.bahnhof.se/~chimbis/tocb/links/">tocb/links</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Errors in mathematics during table construction that are editor
+        detectable, should be flagged to user.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Amaya has a bug in showing a html-page, when in a nested table you
+        have a comment betwen the &lt;table&gt; and the &lt;tbody&gt; 
+
+        <p><a href="commentandtable.html">commentandtable.html</a></p>
+      </td>
+      <td>2002-01-08</td>
+      <td>Roland Wirth</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="interface">User Interface</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The shortcut procedure (shift ctrl *) for edit mode toggle does not
+        work. However the menu selection method works fine! 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html">http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html</a></p>
+      </td>
+      <td>2001-07-13</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cut with shift delete ok but shift insert doesnt paste correctly
+        onn Windows</td>
+      <td>2001-08-02</td>
+      <td>J. Russel</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Star-O does not enter Oslash as advertised. Perhaps character
+        mapping error! 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html">http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html</a></p>
+      </td>
+      <td>2001-07-13</td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>After scrolling to bottom of document, scrolling up to top
+        overscrolls on many docs. And scrolling down overscrolls on some
+        documents. This is with a jpg image background that doesn't go
+        completely to the top or bottom of screen. 
+
+        <p><a
+        href="http://www.cgocable.net/~jrussel/mathsci.htm">mathsci.htm</a></p>
+
+        <p><a
+        href="http://www.cgocable.net/~jrussel/home.htm">home.htm</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The scroll bars can't be pulled to the very bottom or right edge.
+        No information is lost but this is untidy (Windows)</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>If the cursor is inside a word and spell check is done, it includes
+        the fragment. 
+
+        <p>It should say nothing</p>
+      </td>
+      <td>2002-07-28</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Spell Check of text includes the file name in the URL bar. This is
+        incorrect behavior.</td>
+      <td>2002-07-28</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Crash on Find and Replace with no selection</td>
+      <td>2002-07-28</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>I open Find... dialog. Write document to Search for... and Web page
+        to Replace by - everything works Then a change the Search for ... to
+        page - it still searchers for documents I close the dialog box and
+        open again - it still searches for documents (Windows 2000)</td>
+      <td>2002-07-31</td>
+      <td>Marja</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Dialog boxes are sometimes not long enough to hold the contained
+        message. This may be specific to 85dpi and other alternative dpi
+        settings (Windows).</td>
+      <td>2002-07-20</td>
+      <td>B.L. Gurganus</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>f I save a file without .html extension with Save command in the
+        name it creates that file. Earlier Amaya knew to add the .html to the
+        file. Save As... adds .html so it works.</td>
+      <td></td>
+      <td>Marja</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>When saving an all.htm file that includes images, Amaya pops up a
+        dialogue box with a warning (which is confusing, as I reported over a
+        year ago. Whether you hit "confirm" or "cancel", you always get back
+        to the dialogue box asking you for a filename 
+
+        <p><a
+        href="http://lists.w3.org/Archives/Team/w3t-dev/2001JanMar/0026.html">http://lists.w3.org/Archives/Team/w3t-dev/2001JanMar/0026.html</a></p>
+      </td>
+      <td></td>
+      <td>P. Hoschka</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="XML">XML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The export of the xml:space="preserve" attribute interprets ends of
+        line.</td>
+      <td></td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="miscellaneous">Miscellaneous</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Assigned To</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The value of a ALT attribute is limited to 32 caracters ???</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>When trying to cancel the creation of an AREA in an image map, the
+        area is created and can't be deleted by Undo.</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Currently www.w3.org will not get a page from the web (needs
+        http://) but \temp\foobar.htm will get one from local drive. Either
+        the default mode should be switched around so that http:// is assumed
+        (to coincide with other browsers) or that the service MUST BE
+        declared (which is Amaya like solution).</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Follow any link from the table of contents of example. The source
+        anchor is displayed in red, because the href attribute is something
+        like: 
+
+        <p><code>chapter3.html#somename</code></p>
+
+        <p><a
+        href="http://www.w3.org/TR/2000/CR-MathML2-20001113/chapter3.html">chapter3.html.</a></p>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Attribute ALT should be mandatory when creating an AREA</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Paste is invalid when several elements have been created</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>cut&amp;paste buffer truncated??</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Inserting an attribute class on the selection "bla bla
+        &lt;em&gt;bla bla&lt;/em&gt; bla bla" generates 
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;/span&gt;&lt;em
+        class="foo"&gt;bla bla&lt;/em&gt; &lt;span class="foo"&gt; bla
+        bla&lt;/span&gt;</p>
+
+        <p>instead of</p>
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;em&gt;bla bla&lt;/em&gt; bla
+        bla&lt;/span&gt;</p>
+      </td>
+      <td>2001-08-21</td>
+      <td>J. Quint</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+</body>
+</html>
