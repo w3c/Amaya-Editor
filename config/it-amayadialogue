@@ -95,7 +95,7 @@
 93 Identificatore (mi)
 94 Numero (mn)
 95 Operatore (mo)
-96 Carattere (mchar)
+96 Carattere (&xxx;)
 97 Radice (mroot)
 98 Radice quadrata (msqrt)
 99 Ingloba (menclose)

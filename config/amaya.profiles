@@ -315,7 +315,7 @@ HelpTables
 &CreateMI
 &CreateMN
 &CreateMO
-&CreateMCHAR
+&CreateMathEntity
 &CreateMROOT
 &CreateMSQRT
 &CreateMENCLOSE

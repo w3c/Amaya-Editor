@@ -755,12 +755,12 @@
 	<message xml:lang="it">Operatore (mo)</message>
 	<message xml:lang="es">Operador (mo)</message>
 </label>
-<label define="BMCharacter">
-	<message xml:lang="en">Character (mchar)</message>
-	<message xml:lang="fr">Caractère (mchar)</message>
-	<message xml:lang="de">Zeichen (mchar)</message>
-	<message xml:lang="it">Carattere (mchar)</message>
-	<message xml:lang="es">Carácter (mchar)</message>
+<label define="BMEntity">
+	<message xml:lang="en">Character (&amp;xxx;)</message>
+	<message xml:lang="fr">Caractère (&amp;xxx;)</message>
+	<message xml:lang="de">Zeichen (&amp;xxx;)</message>
+	<message xml:lang="it">Carattere (&amp;xxx;)</message>
+	<message xml:lang="es">Carácter (&amp;xxx;)</message>
 </label>
 <label define="BNthRoot">
 	<message xml:lang="en">Root (mroot)</message>
