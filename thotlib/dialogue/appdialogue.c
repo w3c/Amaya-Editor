@@ -347,7 +347,7 @@ HWND GetCurrentWindow ()
   ----------------------------------------------------------------------*/
 void TteInitMenus (char *name, int number)
 {
-  char               *profile;
+  char               *profile = NULL;
   int                 i;
 
   /* Initialisation du  contexte serveur */
