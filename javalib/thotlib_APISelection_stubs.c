@@ -98,12 +98,12 @@ thotlib_APISelection_TtaSetSelectionMode(struct Hthotlib_APISelection* none, jin
  */
 void register_thotlib_APISelection_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APISelection_TtaIsDocumentSelected", thotlib_APISelection_TtaIsDocumentSelected);
-	addExternalNativeFunc("thotlib_APISelection_TtaSelectElement", thotlib_APISelection_TtaSelectElement);
-	addExternalNativeFunc("thotlib_APISelection_TtaSelectString", thotlib_APISelection_TtaSelectString);
-	addExternalNativeFunc("thotlib_APISelection_TtaExtendSelection", thotlib_APISelection_TtaExtendSelection);
-	addExternalNativeFunc("thotlib_APISelection_TtaSelectInterval", thotlib_APISelection_TtaSelectInterval);
-	addExternalNativeFunc("thotlib_APISelection_TtaUnselect", thotlib_APISelection_TtaUnselect);
-	addExternalNativeFunc("thotlib_APISelection_TtaSetSelectionMode", thotlib_APISelection_TtaSetSelectionMode);
+	addNativeMethod("thotlib_APISelection_TtaIsDocumentSelected", thotlib_APISelection_TtaIsDocumentSelected);
+	addNativeMethod("thotlib_APISelection_TtaSelectElement", thotlib_APISelection_TtaSelectElement);
+	addNativeMethod("thotlib_APISelection_TtaSelectString", thotlib_APISelection_TtaSelectString);
+	addNativeMethod("thotlib_APISelection_TtaExtendSelection", thotlib_APISelection_TtaExtendSelection);
+	addNativeMethod("thotlib_APISelection_TtaSelectInterval", thotlib_APISelection_TtaSelectInterval);
+	addNativeMethod("thotlib_APISelection_TtaUnselect", thotlib_APISelection_TtaUnselect);
+	addNativeMethod("thotlib_APISelection_TtaSetSelectionMode", thotlib_APISelection_TtaSetSelectionMode);
 }
 

@@ -13,10 +13,6 @@
 #ifndef __native_h
 #define __native_h
 
-#if 0
-#define	GC_INCREMENTAL
-#endif
-
 #include <jtypes.h>
 
 /*
@@ -44,37 +40,18 @@ typedef struct _iMux {
 	struct _thread*		holder;
 	int			count;
 	struct _thread*		muxWaiters;
+	int			__align__;
 } iMux;
 typedef struct _iCv {
-	struct _thread*		cvWaiters; 
+	struct _thread*		cvWaiters;
 	struct _iMux*		mux;
 } iCv;
-#endif
-
-/* From gc.h */
-#if !defined(__gc_h)
-#define	__gc_h
-
-#if defined(GC_INCREMENTAL)
-typedef struct _gcHead {
-	int			colour;
-	int			size;
-	struct _gcHead*		nextGrey;
-	struct _gcHead*		nextRoot;
-} gcHead;
-#else
-typedef struct _gcHead {
-	int			idx;
-} gcHead;
-#endif
-
 #endif
 
 /* From object.h */
 #if !defined(__object_h)
 #define	__object_h
 struct _object {
-	gcHead			gc;
 	struct _dispatchTable*	dtable;
 	unsigned int		size;
 	iMux			mux;
@@ -83,17 +60,6 @@ struct _object {
 #endif
 #ifndef object
 #define object struct _object
-#endif
-
-/* From baseClasses.h */
-struct _stringClass {
-	object		head;
-	object*		value;
-	int		offset;
-	int		count;
-};
-#ifndef stringClass
-#define stringClass struct _stringClass
 #endif
 
 /* Build an object handle */
@@ -108,7 +74,6 @@ struct _stringClass {
 
 /* Some internal machine object conversions to "standard" types. */
 #define	Hjava_lang_Object	_object
-#define	Hjava_lang_String	_stringClass
 #define	Hjava_lang_Class	_classes
 
 /* Array types */
@@ -125,6 +90,9 @@ typedef struct { object base; struct { object* body[1]; } data[1]; } HArrayOfObj
 /* Get length of arrays */
 #define	obj_length(_obj)	((_obj)->base.size)
 
+/* Get the strings */
+#include <java_lang_String.h>
+
 /* Various useful function prototypes */
 extern char* javaString2CString(struct Hjava_lang_String*, char*, int);
 extern char* makeCString(struct Hjava_lang_String*);
@@ -134,7 +102,11 @@ extern jword	do_execute_java_method(void*, object*, char*, char*, struct _method
 extern jword	do_execute_java_class_method(char*, char*, char*, ...);
 extern object* execute_java_constructor(void*, char*, struct _classes*, char*, ...);
 
-extern void	SignalError(void*, char*, char*);
+extern void	SignalError(void*, char*, char*)
+#ifdef __GNUC__
+    __attribute__((noreturn))
+#endif
+    ;
 
 extern void	classname2pathname(char*, char*);
 
@@ -142,5 +114,4 @@ extern object* AllocObject(char*);
 extern object* AllocArray(int, int);
 extern object* AllocObjectArray(int, char*);
 
-extern void	addExternalNativeFunc(char*, void*);
 #endif

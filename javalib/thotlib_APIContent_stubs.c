@@ -242,23 +242,23 @@ thotlib_APIContent_TtaGetPageView(struct Hthotlib_APIContent* none, jint pageEle
  */
 void register_thotlib_APIContent_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIContent_TtaSetTextContent", thotlib_APIContent_TtaSetTextContent);
-	addExternalNativeFunc("thotlib_APIContent_TtaAppendTextContent", thotlib_APIContent_TtaAppendTextContent);
-	addExternalNativeFunc("thotlib_APIContent_TtaInsertTextContent", thotlib_APIContent_TtaInsertTextContent);
-	addExternalNativeFunc("thotlib_APIContent_TtaDeleteTextContent", thotlib_APIContent_TtaDeleteTextContent);
-	addExternalNativeFunc("thotlib_APIContent_TtaSplitText", thotlib_APIContent_TtaSplitText);
-	addExternalNativeFunc("thotlib_APIContent_TtaMergeText", thotlib_APIContent_TtaMergeText);
-	addExternalNativeFunc("thotlib_APIContent_TtaSetGraphicsShape", thotlib_APIContent_TtaSetGraphicsShape);
-	addExternalNativeFunc("thotlib_APIContent_TtaAddPointInPolyline", thotlib_APIContent_TtaAddPointInPolyline);
-	addExternalNativeFunc("thotlib_APIContent_TtaDeletePointInPolyline", thotlib_APIContent_TtaDeletePointInPolyline);
-	addExternalNativeFunc("thotlib_APIContent_TtaModifyPointInPolyline", thotlib_APIContent_TtaModifyPointInPolyline);
-	addExternalNativeFunc("thotlib_APIContent_TtaChangeLimitOfPolyline", thotlib_APIContent_TtaChangeLimitOfPolyline);
-	addExternalNativeFunc("thotlib_APIContent_TtaCopyPage", thotlib_APIContent_TtaCopyPage);
-	addExternalNativeFunc("thotlib_APIContent_TtaGetTextLength", thotlib_APIContent_TtaGetTextLength);
-	addExternalNativeFunc("thotlib_APIContent_TtaGiveSubString", thotlib_APIContent_TtaGiveSubString);
-	addExternalNativeFunc("thotlib_APIContent_TtaGetGraphicsShape", thotlib_APIContent_TtaGetGraphicsShape);
-	addExternalNativeFunc("thotlib_APIContent_TtaGetPolylineLength", thotlib_APIContent_TtaGetPolylineLength);
-	addExternalNativeFunc("thotlib_APIContent_TtaGetPageNumber", thotlib_APIContent_TtaGetPageNumber);
-	addExternalNativeFunc("thotlib_APIContent_TtaGetPageView", thotlib_APIContent_TtaGetPageView);
+	addNativeMethod("thotlib_APIContent_TtaSetTextContent", thotlib_APIContent_TtaSetTextContent);
+	addNativeMethod("thotlib_APIContent_TtaAppendTextContent", thotlib_APIContent_TtaAppendTextContent);
+	addNativeMethod("thotlib_APIContent_TtaInsertTextContent", thotlib_APIContent_TtaInsertTextContent);
+	addNativeMethod("thotlib_APIContent_TtaDeleteTextContent", thotlib_APIContent_TtaDeleteTextContent);
+	addNativeMethod("thotlib_APIContent_TtaSplitText", thotlib_APIContent_TtaSplitText);
+	addNativeMethod("thotlib_APIContent_TtaMergeText", thotlib_APIContent_TtaMergeText);
+	addNativeMethod("thotlib_APIContent_TtaSetGraphicsShape", thotlib_APIContent_TtaSetGraphicsShape);
+	addNativeMethod("thotlib_APIContent_TtaAddPointInPolyline", thotlib_APIContent_TtaAddPointInPolyline);
+	addNativeMethod("thotlib_APIContent_TtaDeletePointInPolyline", thotlib_APIContent_TtaDeletePointInPolyline);
+	addNativeMethod("thotlib_APIContent_TtaModifyPointInPolyline", thotlib_APIContent_TtaModifyPointInPolyline);
+	addNativeMethod("thotlib_APIContent_TtaChangeLimitOfPolyline", thotlib_APIContent_TtaChangeLimitOfPolyline);
+	addNativeMethod("thotlib_APIContent_TtaCopyPage", thotlib_APIContent_TtaCopyPage);
+	addNativeMethod("thotlib_APIContent_TtaGetTextLength", thotlib_APIContent_TtaGetTextLength);
+	addNativeMethod("thotlib_APIContent_TtaGiveSubString", thotlib_APIContent_TtaGiveSubString);
+	addNativeMethod("thotlib_APIContent_TtaGetGraphicsShape", thotlib_APIContent_TtaGetGraphicsShape);
+	addNativeMethod("thotlib_APIContent_TtaGetPolylineLength", thotlib_APIContent_TtaGetPolylineLength);
+	addNativeMethod("thotlib_APIContent_TtaGetPageNumber", thotlib_APIContent_TtaGetPageNumber);
+	addNativeMethod("thotlib_APIContent_TtaGetPageView", thotlib_APIContent_TtaGetPageView);
 }
 

@@ -1,4 +1,4 @@
-/* lib/support/jtypes.h.  Generated automatically by configure.  */
+/* include/jtypes.h.  Generated automatically by configure.  */
 /*
  * jtypes.h
  * Java types.
@@ -23,7 +23,7 @@
 typedef float		jfloat;
 typedef double		jdouble;
 typedef	void*		jref;
-typedef unsigned char	jchar;
+typedef unsigned short	jchar;
 typedef char		jbyte;
 typedef short 		jshort;
 
@@ -36,23 +36,14 @@ typedef long		jint;
 #endif
 
 #if SIZEOF_LONG == 8
-
-#define HAVE_NATIVE_INT64
 typedef long		jlong;
-
 #elif SIZEOF_LONG_LONG == 8
-
-#define HAVE_NATIVE_INT64
 typedef long long	jlong;
-
 #elif SIZEOF___INT64 == 8
-
-#define HAVE_NATIVE_INT64
 typedef __int64		jlong;
-
 #endif
 
-typedef	jshort		unicode;
+typedef	jchar		unicode;
 
 /* An integer type big enough for a pointer or a 32-bit int/float. */
 #if SIZEOF_VOIDP <= SIZEOF_INT

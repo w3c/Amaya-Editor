@@ -75,68 +75,6 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
-extern int threadedFileDescriptor(int fd);
-extern void yieldThread();
-extern int blockOnFile(int fd, int op);
-
-static int AmayaEventLoopInitialized = 0;
-static int x_window_socket;
-
-/*----------------------------------------------------------------------
-  InitializeEventLoop
-
-  Initialize the AmayaEventLoop environment, including the network
-  interface, Java, etc...
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitAmayaEventLoop (void)
-#else
-void                InitAmayaEventLoop ()
-#endif
-{
-    char *env_value;
-    char  new_env[1024];
-
-    /*
-     * Mark that everything is initialized BEFORE starting the
-     * Java Runtime ...
-     */
-    AmayaEventLoopInitialized = 1;
-
-    /*
-     * set up the environment
-     */
-    strcpy(new_env,"CLASSPATH=");
-    env_value  = TtaGetEnvString("CLASSPATH");
-    if (env_value)
-       strcat(new_env, env_value);
-    env_value = getenv("CLASSPATH");
-    if (env_value) {
-       strcat(new_env,":");
-       strcat(new_env,env_value);
-    }
-    putenv(TtaStrdup(new_env));
-    strcpy(new_env,"KAFFEHOME=");
-    env_value  = TtaGetEnvString("KAFFEHOME");
-    if (env_value)
-       strcat(new_env, env_value);
-    putenv(TtaStrdup(new_env));
-
-    /*
-     * Register the X-Window socket as an input channel
-     */
-    x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
-    threadedFileDescriptor(x_window_socket);
-
-    /*
-     * Startup the Java environment. We should never return
-     * from this call, but InitJava will call TtaMainLoop again
-     * on the Application thread.
-     */
-    InitJava("amaya");
-
-}
-
 /*----------------------------------------------------------------------
   AmayaSelect
 
@@ -205,7 +143,8 @@ ThotEvent *ev;
 {
   int status;
 
-#ifdef WWW_XWINDOWS
+#ifdef _WINDOWS
+#else  /* _WINDOWS */
   status = XtAppPending (app_ctxt);
   while (status & XtIMXEvent) {
      XtAppProcessEvent (app_ctxt, XtIMXEvent);
@@ -218,8 +157,7 @@ ThotEvent *ev;
   blockOnFile(x_window_socket, 0);
   XtAppNextEvent (app_ctxt, ev);
 
-#else  /* WWW_XWINDOWS */
-#endif /* !WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -241,7 +179,8 @@ ThotEvent *ev;
 {
   int status;
 
-#ifdef WWW_XWINDOWS
+#ifdef _WINDOWS
+#else  /* _WINDOWS */
   status = XtAppPending (app_ctxt);
   while (status & XtIMXEvent) {
      XtAppProcessEvent (app_ctxt, XtIMXEvent);
@@ -252,8 +191,7 @@ ThotEvent *ev;
      return(TRUE);
   }
   return(FALSE);
-#else  /* WWW_XWINDOWS */
-#endif /* !WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------

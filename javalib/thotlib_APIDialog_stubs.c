@@ -407,35 +407,35 @@ thotlib_APIDialog_TtaUnmapDialogue(struct Hthotlib_APIDialog* none, jint ref)
  */
 void register_thotlib_APIDialog_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewPulldown", thotlib_APIDialog_TtaNewPulldown);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetPulldownOff", thotlib_APIDialog_TtaSetPulldownOff);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetPulldownOn", thotlib_APIDialog_TtaSetPulldownOn);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewPopup", thotlib_APIDialog_TtaNewPopup);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewSubmenu", thotlib_APIDialog_TtaNewSubmenu);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetMenuForm", thotlib_APIDialog_TtaSetMenuForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewToggleMenu", thotlib_APIDialog_TtaNewToggleMenu);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetToggleMenu", thotlib_APIDialog_TtaSetToggleMenu);
-	addExternalNativeFunc("thotlib_APIDialog_TtaChangeMenuEntry", thotlib_APIDialog_TtaChangeMenuEntry);
-	addExternalNativeFunc("thotlib_APIDialog_TtaRedrawMenuEntry", thotlib_APIDialog_TtaRedrawMenuEntry);
-	addExternalNativeFunc("thotlib_APIDialog_TtaDestroyDialogue", thotlib_APIDialog_TtaDestroyDialogue);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewForm", thotlib_APIDialog_TtaNewForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewSheet", thotlib_APIDialog_TtaNewSheet);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewDialogSheet", thotlib_APIDialog_TtaNewDialogSheet);
-	addExternalNativeFunc("thotlib_APIDialog_TtaChangeFormTitle", thotlib_APIDialog_TtaChangeFormTitle);
-	addExternalNativeFunc("thotlib_APIDialog_TtaAttachForm", thotlib_APIDialog_TtaAttachForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaDetachForm", thotlib_APIDialog_TtaDetachForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewSelector", thotlib_APIDialog_TtaNewSelector);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetSelector", thotlib_APIDialog_TtaSetSelector);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewLabel", thotlib_APIDialog_TtaNewLabel);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewTextForm", thotlib_APIDialog_TtaNewTextForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetTextForm", thotlib_APIDialog_TtaSetTextForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaNewNumberForm", thotlib_APIDialog_TtaNewNumberForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetNumberForm", thotlib_APIDialog_TtaSetNumberForm);
-	addExternalNativeFunc("thotlib_APIDialog_TtaSetDialoguePosition", thotlib_APIDialog_TtaSetDialoguePosition);
-	addExternalNativeFunc("thotlib_APIDialog_TtaShowDialogue", thotlib_APIDialog_TtaShowDialogue);
-	addExternalNativeFunc("thotlib_APIDialog_TtaWaitShowDialogue", thotlib_APIDialog_TtaWaitShowDialogue);
-	addExternalNativeFunc("thotlib_APIDialog_TtaTestWaitShowDialogue", thotlib_APIDialog_TtaTestWaitShowDialogue);
-	addExternalNativeFunc("thotlib_APIDialog_TtaAbortShowDialogue", thotlib_APIDialog_TtaAbortShowDialogue);
-	addExternalNativeFunc("thotlib_APIDialog_TtaUnmapDialogue", thotlib_APIDialog_TtaUnmapDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaNewPulldown", thotlib_APIDialog_TtaNewPulldown);
+	addNativeMethod("thotlib_APIDialog_TtaSetPulldownOff", thotlib_APIDialog_TtaSetPulldownOff);
+	addNativeMethod("thotlib_APIDialog_TtaSetPulldownOn", thotlib_APIDialog_TtaSetPulldownOn);
+	addNativeMethod("thotlib_APIDialog_TtaNewPopup", thotlib_APIDialog_TtaNewPopup);
+	addNativeMethod("thotlib_APIDialog_TtaNewSubmenu", thotlib_APIDialog_TtaNewSubmenu);
+	addNativeMethod("thotlib_APIDialog_TtaSetMenuForm", thotlib_APIDialog_TtaSetMenuForm);
+	addNativeMethod("thotlib_APIDialog_TtaNewToggleMenu", thotlib_APIDialog_TtaNewToggleMenu);
+	addNativeMethod("thotlib_APIDialog_TtaSetToggleMenu", thotlib_APIDialog_TtaSetToggleMenu);
+	addNativeMethod("thotlib_APIDialog_TtaChangeMenuEntry", thotlib_APIDialog_TtaChangeMenuEntry);
+	addNativeMethod("thotlib_APIDialog_TtaRedrawMenuEntry", thotlib_APIDialog_TtaRedrawMenuEntry);
+	addNativeMethod("thotlib_APIDialog_TtaDestroyDialogue", thotlib_APIDialog_TtaDestroyDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaNewForm", thotlib_APIDialog_TtaNewForm);
+	addNativeMethod("thotlib_APIDialog_TtaNewSheet", thotlib_APIDialog_TtaNewSheet);
+	addNativeMethod("thotlib_APIDialog_TtaNewDialogSheet", thotlib_APIDialog_TtaNewDialogSheet);
+	addNativeMethod("thotlib_APIDialog_TtaChangeFormTitle", thotlib_APIDialog_TtaChangeFormTitle);
+	addNativeMethod("thotlib_APIDialog_TtaAttachForm", thotlib_APIDialog_TtaAttachForm);
+	addNativeMethod("thotlib_APIDialog_TtaDetachForm", thotlib_APIDialog_TtaDetachForm);
+	addNativeMethod("thotlib_APIDialog_TtaNewSelector", thotlib_APIDialog_TtaNewSelector);
+	addNativeMethod("thotlib_APIDialog_TtaSetSelector", thotlib_APIDialog_TtaSetSelector);
+	addNativeMethod("thotlib_APIDialog_TtaNewLabel", thotlib_APIDialog_TtaNewLabel);
+	addNativeMethod("thotlib_APIDialog_TtaNewTextForm", thotlib_APIDialog_TtaNewTextForm);
+	addNativeMethod("thotlib_APIDialog_TtaSetTextForm", thotlib_APIDialog_TtaSetTextForm);
+	addNativeMethod("thotlib_APIDialog_TtaNewNumberForm", thotlib_APIDialog_TtaNewNumberForm);
+	addNativeMethod("thotlib_APIDialog_TtaSetNumberForm", thotlib_APIDialog_TtaSetNumberForm);
+	addNativeMethod("thotlib_APIDialog_TtaSetDialoguePosition", thotlib_APIDialog_TtaSetDialoguePosition);
+	addNativeMethod("thotlib_APIDialog_TtaShowDialogue", thotlib_APIDialog_TtaShowDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaWaitShowDialogue", thotlib_APIDialog_TtaWaitShowDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaTestWaitShowDialogue", thotlib_APIDialog_TtaTestWaitShowDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaAbortShowDialogue", thotlib_APIDialog_TtaAbortShowDialogue);
+	addNativeMethod("thotlib_APIDialog_TtaUnmapDialogue", thotlib_APIDialog_TtaUnmapDialogue);
 }
 

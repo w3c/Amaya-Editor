@@ -73,9 +73,9 @@ thotlib_APIRegistry_TtaSaveAppRegistry(struct Hthotlib_APIRegistry* none)
  */
 void register_thotlib_APIRegistry_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIRegistry_TtaInitializeAppRegistry", thotlib_APIRegistry_TtaInitializeAppRegistry);
-	addExternalNativeFunc("thotlib_APIRegistry_TtaGetEnvString", thotlib_APIRegistry_TtaGetEnvString);
-	addExternalNativeFunc("thotlib_APIRegistry_TtaSetEnvString", thotlib_APIRegistry_TtaSetEnvString);
-	addExternalNativeFunc("thotlib_APIRegistry_TtaSaveAppRegistry", thotlib_APIRegistry_TtaSaveAppRegistry);
+	addNativeMethod("thotlib_APIRegistry_TtaInitializeAppRegistry", thotlib_APIRegistry_TtaInitializeAppRegistry);
+	addNativeMethod("thotlib_APIRegistry_TtaGetEnvString", thotlib_APIRegistry_TtaGetEnvString);
+	addNativeMethod("thotlib_APIRegistry_TtaSetEnvString", thotlib_APIRegistry_TtaSetEnvString);
+	addNativeMethod("thotlib_APIRegistry_TtaSaveAppRegistry", thotlib_APIRegistry_TtaSaveAppRegistry);
 }
 

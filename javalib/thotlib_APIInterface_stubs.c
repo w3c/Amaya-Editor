@@ -229,22 +229,22 @@ thotlib_APIInterface_TtaGetScreenDepth(struct Hthotlib_APIInterface* none)
  */
 void register_thotlib_APIInterface_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIInterface_TtaSwitchButton", thotlib_APIInterface_TtaSwitchButton);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetTextZone", thotlib_APIInterface_TtaSetTextZone);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetMenuOff", thotlib_APIInterface_TtaSetMenuOff);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetMenuOn", thotlib_APIInterface_TtaSetMenuOn);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetToggleItem", thotlib_APIInterface_TtaSetToggleItem);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetActionOff", thotlib_APIInterface_TtaSetActionOff);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetActionOn", thotlib_APIInterface_TtaSetActionOn);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetStatus", thotlib_APIInterface_TtaSetStatus);
-	addExternalNativeFunc("thotlib_APIInterface_TtaGetViewFrame", thotlib_APIInterface_TtaGetViewFrame);
-	addExternalNativeFunc("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
-	addExternalNativeFunc("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
-	addExternalNativeFunc("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
-	addExternalNativeFunc("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
-	addExternalNativeFunc("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);
-	addExternalNativeFunc("thotlib_APIInterface_TtaGetMenuColor", thotlib_APIInterface_TtaGetMenuColor);
-	addExternalNativeFunc("thotlib_APIInterface_TtaGetButtonColor", thotlib_APIInterface_TtaGetButtonColor);
-	addExternalNativeFunc("thotlib_APIInterface_TtaGetScreenDepth", thotlib_APIInterface_TtaGetScreenDepth);
+	addNativeMethod("thotlib_APIInterface_TtaSwitchButton", thotlib_APIInterface_TtaSwitchButton);
+	addNativeMethod("thotlib_APIInterface_TtaSetTextZone", thotlib_APIInterface_TtaSetTextZone);
+	addNativeMethod("thotlib_APIInterface_TtaSetMenuOff", thotlib_APIInterface_TtaSetMenuOff);
+	addNativeMethod("thotlib_APIInterface_TtaSetMenuOn", thotlib_APIInterface_TtaSetMenuOn);
+	addNativeMethod("thotlib_APIInterface_TtaSetToggleItem", thotlib_APIInterface_TtaSetToggleItem);
+	addNativeMethod("thotlib_APIInterface_TtaSetActionOff", thotlib_APIInterface_TtaSetActionOff);
+	addNativeMethod("thotlib_APIInterface_TtaSetActionOn", thotlib_APIInterface_TtaSetActionOn);
+	addNativeMethod("thotlib_APIInterface_TtaSetStatus", thotlib_APIInterface_TtaSetStatus);
+	addNativeMethod("thotlib_APIInterface_TtaGetViewFrame", thotlib_APIInterface_TtaGetViewFrame);
+	addNativeMethod("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
+	addNativeMethod("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
+	addNativeMethod("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
+	addNativeMethod("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
+	addNativeMethod("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);
+	addNativeMethod("thotlib_APIInterface_TtaGetMenuColor", thotlib_APIInterface_TtaGetMenuColor);
+	addNativeMethod("thotlib_APIInterface_TtaGetButtonColor", thotlib_APIInterface_TtaGetButtonColor);
+	addNativeMethod("thotlib_APIInterface_TtaGetScreenDepth", thotlib_APIInterface_TtaGetScreenDepth);
 }
 

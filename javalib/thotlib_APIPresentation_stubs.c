@@ -173,17 +173,17 @@ thotlib_APIPresentation_TtaSamePRules(struct Hthotlib_APIPresentation* none, jin
  */
 void register_thotlib_APIPresentation_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIPresentation_TtaNewPRule", thotlib_APIPresentation_TtaNewPRule);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaNewPRuleForNamedView", thotlib_APIPresentation_TtaNewPRuleForNamedView);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaCopyPRule", thotlib_APIPresentation_TtaCopyPRule);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaAttachPRule", thotlib_APIPresentation_TtaAttachPRule);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaRemovePRule", thotlib_APIPresentation_TtaRemovePRule);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaSetPRuleValue", thotlib_APIPresentation_TtaSetPRuleValue);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaChangeBoxSize", thotlib_APIPresentation_TtaChangeBoxSize);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaChangeBoxPosition", thotlib_APIPresentation_TtaChangeBoxPosition);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaGetPRule", thotlib_APIPresentation_TtaGetPRule);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaGetPRuleType", thotlib_APIPresentation_TtaGetPRuleType);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaGetPRuleValue", thotlib_APIPresentation_TtaGetPRuleValue);
-	addExternalNativeFunc("thotlib_APIPresentation_TtaSamePRules", thotlib_APIPresentation_TtaSamePRules);
+	addNativeMethod("thotlib_APIPresentation_TtaNewPRule", thotlib_APIPresentation_TtaNewPRule);
+	addNativeMethod("thotlib_APIPresentation_TtaNewPRuleForNamedView", thotlib_APIPresentation_TtaNewPRuleForNamedView);
+	addNativeMethod("thotlib_APIPresentation_TtaCopyPRule", thotlib_APIPresentation_TtaCopyPRule);
+	addNativeMethod("thotlib_APIPresentation_TtaAttachPRule", thotlib_APIPresentation_TtaAttachPRule);
+	addNativeMethod("thotlib_APIPresentation_TtaRemovePRule", thotlib_APIPresentation_TtaRemovePRule);
+	addNativeMethod("thotlib_APIPresentation_TtaSetPRuleValue", thotlib_APIPresentation_TtaSetPRuleValue);
+	addNativeMethod("thotlib_APIPresentation_TtaChangeBoxSize", thotlib_APIPresentation_TtaChangeBoxSize);
+	addNativeMethod("thotlib_APIPresentation_TtaChangeBoxPosition", thotlib_APIPresentation_TtaChangeBoxPosition);
+	addNativeMethod("thotlib_APIPresentation_TtaGetPRule", thotlib_APIPresentation_TtaGetPRule);
+	addNativeMethod("thotlib_APIPresentation_TtaGetPRuleType", thotlib_APIPresentation_TtaGetPRuleType);
+	addNativeMethod("thotlib_APIPresentation_TtaGetPRuleValue", thotlib_APIPresentation_TtaGetPRuleValue);
+	addNativeMethod("thotlib_APIPresentation_TtaSamePRules", thotlib_APIPresentation_TtaSamePRules);
 }
 

@@ -197,17 +197,17 @@ thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute* none, jlon
  */
 void register_thotlib_APIAttribute_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIAttribute_TtaNewAttribute", thotlib_APIAttribute_TtaNewAttribute);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaAttachAttribute", thotlib_APIAttribute_TtaAttachAttribute);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaRemoveAttribute", thotlib_APIAttribute_TtaRemoveAttribute);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaSetAttributeValue", thotlib_APIAttribute_TtaSetAttributeValue);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaSetAttributeText", thotlib_APIAttribute_TtaSetAttributeText);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaNextAttribute", thotlib_APIAttribute_TtaNextAttribute);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttribute", thotlib_APIAttribute_TtaGetAttribute);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttributeName", thotlib_APIAttribute_TtaGetAttributeName);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaSameAttributeTypes", thotlib_APIAttribute_TtaSameAttributeTypes);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttributeValue", thotlib_APIAttribute_TtaGetAttributeValue);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaGetTextAttributeLength", thotlib_APIAttribute_TtaGetTextAttributeLength);
-	addExternalNativeFunc("thotlib_APIAttribute_TtaSearchAttribute", thotlib_APIAttribute_TtaSearchAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaNewAttribute", thotlib_APIAttribute_TtaNewAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaAttachAttribute", thotlib_APIAttribute_TtaAttachAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaRemoveAttribute", thotlib_APIAttribute_TtaRemoveAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaSetAttributeValue", thotlib_APIAttribute_TtaSetAttributeValue);
+	addNativeMethod("thotlib_APIAttribute_TtaSetAttributeText", thotlib_APIAttribute_TtaSetAttributeText);
+	addNativeMethod("thotlib_APIAttribute_TtaNextAttribute", thotlib_APIAttribute_TtaNextAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaGetAttribute", thotlib_APIAttribute_TtaGetAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeName", thotlib_APIAttribute_TtaGetAttributeName);
+	addNativeMethod("thotlib_APIAttribute_TtaSameAttributeTypes", thotlib_APIAttribute_TtaSameAttributeTypes);
+	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeValue", thotlib_APIAttribute_TtaGetAttributeValue);
+	addNativeMethod("thotlib_APIAttribute_TtaGetTextAttributeLength", thotlib_APIAttribute_TtaGetTextAttributeLength);
+	addNativeMethod("thotlib_APIAttribute_TtaSearchAttribute", thotlib_APIAttribute_TtaSearchAttribute);
 }
 

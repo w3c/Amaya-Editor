@@ -144,14 +144,14 @@ thotlib_APIApplication_TtaStrdup(struct Hthotlib_APIApplication* none, struct Hj
  */
 void register_thotlib_APIApplication_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIApplication_TtaInitialize", thotlib_APIApplication_TtaInitialize);
-	addExternalNativeFunc("thotlib_APIApplication_TtaQuit", thotlib_APIApplication_TtaQuit);
-	addExternalNativeFunc("thotlib_APIApplication_TtaSetErrorMessages", thotlib_APIApplication_TtaSetErrorMessages);
-	addExternalNativeFunc("thotlib_APIApplication_TtaGetVersion", thotlib_APIApplication_TtaGetVersion);
-	addExternalNativeFunc("thotlib_APIApplication_TtaGetErrorCode", thotlib_APIApplication_TtaGetErrorCode);
-	addExternalNativeFunc("thotlib_APIApplication_TtaGetStrError", thotlib_APIApplication_TtaGetStrError);
-	addExternalNativeFunc("thotlib_APIApplication_TtaExtractName", thotlib_APIApplication_TtaExtractName);
-	addExternalNativeFunc("thotlib_APIApplication_TtaCheckDirectory", thotlib_APIApplication_TtaCheckDirectory);
-	addExternalNativeFunc("thotlib_APIApplication_TtaStrdup", thotlib_APIApplication_TtaStrdup);
+	addNativeMethod("thotlib_APIApplication_TtaInitialize", thotlib_APIApplication_TtaInitialize);
+	addNativeMethod("thotlib_APIApplication_TtaQuit", thotlib_APIApplication_TtaQuit);
+	addNativeMethod("thotlib_APIApplication_TtaSetErrorMessages", thotlib_APIApplication_TtaSetErrorMessages);
+	addNativeMethod("thotlib_APIApplication_TtaGetVersion", thotlib_APIApplication_TtaGetVersion);
+	addNativeMethod("thotlib_APIApplication_TtaGetErrorCode", thotlib_APIApplication_TtaGetErrorCode);
+	addNativeMethod("thotlib_APIApplication_TtaGetStrError", thotlib_APIApplication_TtaGetStrError);
+	addNativeMethod("thotlib_APIApplication_TtaExtractName", thotlib_APIApplication_TtaExtractName);
+	addNativeMethod("thotlib_APIApplication_TtaCheckDirectory", thotlib_APIApplication_TtaCheckDirectory);
+	addNativeMethod("thotlib_APIApplication_TtaStrdup", thotlib_APIApplication_TtaStrdup);
 }
 

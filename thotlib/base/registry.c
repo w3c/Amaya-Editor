@@ -504,6 +504,11 @@ char               *name;
      }
 
    /*
+    * appname allows to get the application name.
+    */
+   if (!strcasecmp("appname", name)) return(AppRegistryEntryAppli);
+
+   /*
     * First lookup in the System defaults.
     */
    cour = AppRegistryEntry;
@@ -873,12 +878,19 @@ static void         InitEnviron ()
    else
       strncpy (DocumentPath, pT, MAX_PATH);
 
-   /* The predefined path to schemas */
+   /* The user path to schemas */
    Thot_Sch = (char *) TtaGetEnvString ("THOTSCH");
    if (Thot_Sch == NULL)
       SchemaPath[0] = '\0';
    else
       strncpy (SchemaPath, Thot_Sch, MAX_PATH);
+
+   /* The system path to schemas */
+   Thot_Sch = (char *) TtaGetEnvString ("THOTSYSSCH");
+   if (Thot_Sch != NULL) {
+      strcat (SchemaPath,PATH_STR);
+      strcat (SchemaPath, Thot_Sch);
+   }
 }
 
 /*

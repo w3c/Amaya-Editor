@@ -736,7 +736,7 @@ void dump_stubs(FILE *out) {
     fprintf(out,"void register_%s_stubs(void)\n{\n", classname);
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];
-	fprintf(out,"\taddExternalNativeFunc(\"%s_%s\", %s_%s);\n",
+	fprintf(out,"\taddNativeMethod(\"%s_%s\", %s_%s);\n",
 	        classname, f->name, classname, f->name);
     }
     fprintf(out,"}\n\n");

@@ -305,27 +305,27 @@ thotlib_APIView_TtaClearViewSelections(struct Hthotlib_APIView* none)
  */
 void register_thotlib_APIView_stubs(void)
 {
-	addExternalNativeFunc("thotlib_APIView_TtaOpenMainView", thotlib_APIView_TtaOpenMainView);
-	addExternalNativeFunc("thotlib_APIView_TtaOpenView", thotlib_APIView_TtaOpenView);
-	addExternalNativeFunc("thotlib_APIView_TtaOpenSubView", thotlib_APIView_TtaOpenSubView);
-	addExternalNativeFunc("thotlib_APIView_TtaChangeViewTitle", thotlib_APIView_TtaChangeViewTitle);
-	addExternalNativeFunc("thotlib_APIView_TtaCloseView", thotlib_APIView_TtaCloseView);
-	addExternalNativeFunc("thotlib_APIView_TtaFreeView", thotlib_APIView_TtaFreeView);
-	addExternalNativeFunc("thotlib_APIView_TtaSetSensibility", thotlib_APIView_TtaSetSensibility);
-	addExternalNativeFunc("thotlib_APIView_TtaSetZoom", thotlib_APIView_TtaSetZoom);
-	addExternalNativeFunc("thotlib_APIView_TtaShowElement", thotlib_APIView_TtaShowElement);
-	addExternalNativeFunc("thotlib_APIView_TtaGetSensibility", thotlib_APIView_TtaGetSensibility);
-	addExternalNativeFunc("thotlib_APIView_TtaGetZoom", thotlib_APIView_TtaGetZoom);
-	addExternalNativeFunc("thotlib_APIView_TtaIsPSchemaValid", thotlib_APIView_TtaIsPSchemaValid);
-	addExternalNativeFunc("thotlib_APIView_TtaGetViewName", thotlib_APIView_TtaGetViewName);
-	addExternalNativeFunc("thotlib_APIView_TtaIsViewOpened", thotlib_APIView_TtaIsViewOpened);
-	addExternalNativeFunc("thotlib_APIView_TtaGetViewFromName", thotlib_APIView_TtaGetViewFromName);
-	addExternalNativeFunc("thotlib_APIView_TtaRaiseView", thotlib_APIView_TtaRaiseView);
-	addExternalNativeFunc("thotlib_APIView_TtaSetDisplayMode", thotlib_APIView_TtaSetDisplayMode);
-	addExternalNativeFunc("thotlib_APIView_TtaGetDisplayMode", thotlib_APIView_TtaGetDisplayMode);
-	addExternalNativeFunc("thotlib_APIView_TtaResetViewBackgroundColor", thotlib_APIView_TtaResetViewBackgroundColor);
-	addExternalNativeFunc("thotlib_APIView_TtaSetViewBackgroundColor", thotlib_APIView_TtaSetViewBackgroundColor);
-	addExternalNativeFunc("thotlib_APIView_TtaGetViewBackgroundColor", thotlib_APIView_TtaGetViewBackgroundColor);
-	addExternalNativeFunc("thotlib_APIView_TtaClearViewSelections", thotlib_APIView_TtaClearViewSelections);
+	addNativeMethod("thotlib_APIView_TtaOpenMainView", thotlib_APIView_TtaOpenMainView);
+	addNativeMethod("thotlib_APIView_TtaOpenView", thotlib_APIView_TtaOpenView);
+	addNativeMethod("thotlib_APIView_TtaOpenSubView", thotlib_APIView_TtaOpenSubView);
+	addNativeMethod("thotlib_APIView_TtaChangeViewTitle", thotlib_APIView_TtaChangeViewTitle);
+	addNativeMethod("thotlib_APIView_TtaCloseView", thotlib_APIView_TtaCloseView);
+	addNativeMethod("thotlib_APIView_TtaFreeView", thotlib_APIView_TtaFreeView);
+	addNativeMethod("thotlib_APIView_TtaSetSensibility", thotlib_APIView_TtaSetSensibility);
+	addNativeMethod("thotlib_APIView_TtaSetZoom", thotlib_APIView_TtaSetZoom);
+	addNativeMethod("thotlib_APIView_TtaShowElement", thotlib_APIView_TtaShowElement);
+	addNativeMethod("thotlib_APIView_TtaGetSensibility", thotlib_APIView_TtaGetSensibility);
+	addNativeMethod("thotlib_APIView_TtaGetZoom", thotlib_APIView_TtaGetZoom);
+	addNativeMethod("thotlib_APIView_TtaIsPSchemaValid", thotlib_APIView_TtaIsPSchemaValid);
+	addNativeMethod("thotlib_APIView_TtaGetViewName", thotlib_APIView_TtaGetViewName);
+	addNativeMethod("thotlib_APIView_TtaIsViewOpened", thotlib_APIView_TtaIsViewOpened);
+	addNativeMethod("thotlib_APIView_TtaGetViewFromName", thotlib_APIView_TtaGetViewFromName);
+	addNativeMethod("thotlib_APIView_TtaRaiseView", thotlib_APIView_TtaRaiseView);
+	addNativeMethod("thotlib_APIView_TtaSetDisplayMode", thotlib_APIView_TtaSetDisplayMode);
+	addNativeMethod("thotlib_APIView_TtaGetDisplayMode", thotlib_APIView_TtaGetDisplayMode);
+	addNativeMethod("thotlib_APIView_TtaResetViewBackgroundColor", thotlib_APIView_TtaResetViewBackgroundColor);
+	addNativeMethod("thotlib_APIView_TtaSetViewBackgroundColor", thotlib_APIView_TtaSetViewBackgroundColor);
+	addNativeMethod("thotlib_APIView_TtaGetViewBackgroundColor", thotlib_APIView_TtaGetViewBackgroundColor);
+	addNativeMethod("thotlib_APIView_TtaClearViewSelections", thotlib_APIView_TtaClearViewSelections);
 }
 
