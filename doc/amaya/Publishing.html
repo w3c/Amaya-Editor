@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Publishing</title>
-<meta name="GENERATOR" content="amaya V1.0a Beta">
+<title>Publishing</title>
+<meta name="GENERATOR" content="amaya V1.4a">
 </head>
 <body lang="en">
 
@@ -43,7 +43,7 @@ During these operations, Amaya takes images into account.</p>
 <h4><a name="L1517">The Save command</a></h4>
 <p>
 The save command can be invoked either by choosing <strong>Save</strong> from
-the <strong>File</strong> menu or by clicking on the <img  alt="floppy"
+the <strong>File</strong> menu or by clicking on the <img alt="floppy"
 src="../Icons/floppy.gif" align="middle" border="0"> button. This command
 saves the current document to the location it was fetched from. Newly added
 images are saved in the same directory and no confirmation is asked except if
@@ -64,13 +64,17 @@ location, a remote Web server or the local file system. You can:</p>
 <ul>
 <li>
 save the document to a local disk,
+</li>
 <li>
 save the document to a remote URL,
+</li>
 <li>
 save images embedded in the document in the document directory or a different
 location,
+</li>
 <li>
 transform embedded URLs,
+</li>
 </ul>
 <p>
 <img src="../Icons/SaveAs.gif" alt="SaveAs"></p>
@@ -82,13 +86,16 @@ follows:</p>
 The <strong>Document directories</strong> selector shows the directories
 contained in the current directory. It should be used to save a file on the
 local file system.
+</li>
 <li>
 The <strong>Files</strong> selector shows the files contained in the current
 local directory.
+</li>
 <li>
-The <strong>HTML</strong> and <strong>Text</strong> toggles are exclusive. The
-default is HTML and you have to change it, if you want to produce a text form
-of the current document.
+The <strong>HTML</strong>, <strong>XML</strong> and <strong>Text</strong>
+toggles are exclusive. The default is HTML and you have to change it, if you
+want to produce an XML (Voyager) or a text format of the current document.
+</li>
 <li>
 The <strong>Copy Images</strong> toggle indicates whether the images embedded
 in the current document must be copied along with the document to the new
@@ -98,6 +105,7 @@ later. However switching it off is useful when you have only changed the text
 of the document and the document is stored on the same server. When images are
 copied, Amaya will automatically update all <strong>SRC</strong> attributes to
 point new image locations. New locations will be relative URLs.
+</li>
 <li>
 The <strong>Transform URLs</strong> toggle transforms all current URLs into
 relative URLs when it's possible. Of course, if the document is saved in a
@@ -106,6 +114,7 @@ ensures that all the links in the document remain correct after the copy.
 However if you have several document linked together with relative URLs and
 that you plan to move them to a remote location, disabling URL conversion is
 needed to avoid referencing the initial locations.
+</li>
 <li>
 The <strong>Document location</strong> field indicates the location where the
 HTML file has to be written. This can be a file in the local filesystem (e.g.
@@ -118,6 +127,7 @@ should also make sure that you have the <strong>right to do a PUT</strong>
 method in the case of a remote location. See the page on <a
 href="Put.html">configuring your server to accept the PUT method</a> or ask
 your Web administrator.</p>
+</li>
 <li>
 The <strong>Images location</strong> field allows you to save images (if
 <strong>Copy Images</strong> has been selected) to a different place than the
@@ -136,6 +146,7 @@ reference it as:
 <p>
 This is similar in the case of a document location in the local
 filesystem.</p>
+</li>
 <li>
 using an absolute path, the images are stored at this exact location,
 independently of the document location. In the previous example, if the images
@@ -144,7 +155,9 @@ location specified is "http://pub/WWW/Images", the image is stored at
 modified in the following way:
 <p>
 &lt;IMG SRC="Images/W3C.png"></p>
+</li>
 </ul>
+</li>
 <li>
 Clicking on <strong>OK</strong> starts the process of transforming the
 document and a popup asks for confirmation in both cases:
@@ -152,8 +165,10 @@ document and a popup asks for confirmation in both cases:
 <li>
 the document has to be saved on a remote server, it shows all the URL to be
 written to.
+</li>
 <li>
 the document has to be saved locally and the file already exists.
+</li>
 </ol>
 <p>
 <strong>Notes</strong> :</p>
@@ -162,10 +177,13 @@ the document has to be saved locally and the file already exists.
 When saving to a remote location please check that the http_proxy is not set,
 or that the proxy server and the <a href="Put.html">target server are
 configured to work with the PUT</a> method.
+</li>
 <li><p>
 <b>Amaya</b> does not currently contact the remote server (in case of an
 "http://..." destination) to check whether such a document already exists.</p>
+</li>
 </ul>
+</li>
 </ul>
 
 <h3><a name="L1105">Saving documents as text</a></h3>
@@ -176,6 +194,7 @@ formats. Clicking the <strong>Text</strong> button from the <strong>Output
 Format</strong> menu saves the document in text form, in a local file. A list
 of all URLs used in the document is appended to that file.</p>
 <hr>
+
 </div>
 </body>
 </html>
