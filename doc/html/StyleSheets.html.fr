@@ -5,7 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 8.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -75,7 +76,7 @@ classe</a></h3>
 
 <p>Quand un attribut <code>style</code> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
-de style&nbsp;:</p>
+de style :</p>
 <ul>
   <li>Sélectionnez cet élément (vous devez sélectionner un seul élément et
     cet élément doit avoir un attribut <code>style</code>)</li>
@@ -96,7 +97,7 @@ de style&nbsp;:</p>
 
 <p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
 une règle</strong>, vous pouvez associer ces classes à certains éléments dans
-le document&nbsp;:</p>
+le document :</p>
 <ul>
   <li>Choisissez <strong>Appliquer une classe</strong> depuis le menu
     <strong>Style</strong>. Une boîte de dialogue surgit, affichant toutes
@@ -126,7 +127,7 @@ instance de la feuille de style.</p>
 <a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par
 exemple si vous préférez afficher les document en Helvetica et imprimer avec
 une police de caractères de petite taille, vous pouvez créer votre feuille de
-style utilisateur avec les règles CSS suivantes&nbsp;:</p>
+style utilisateur avec les règles CSS suivantes :</p>
 <pre>@media print {
  BODY {font-size: 10pt}
 }
@@ -190,7 +191,7 @@ peut voir les propriétés CSS appliquées aux éléments englobants.</p>
 
 <p>HTML fournit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
-<strong>Style</strong> permettent de manier ces éléments HTML.</p>
+<strong>XHTML</strong> permettent de manier ces éléments HTML.</p>
 
 <h4>Créer des éléments de style HTML</h4>
 

@@ -29,13 +29,48 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Cascades">Cascades des feuilles de style (CSS)</a>
+    <ul>
+      <li><a href="#feuilles1">Les feuilles de style CSS externes et
+        utilisateur</a>
+        <ul>
+          <li><a href="#L90">Gérer des feuilles de style CSS externes</a></li>
+        </ul>
+      </li>
+      <li><a href="#Visualiser">Visualiser le style appliqué</a></li>
+      <li><a href="#Associer">Associer une classe à un élément</a></li>
+      <li><a href="#L288">Créer et mettre à jour un attribut de style</a>
+        <ul>
+          <li><a href="#Couleurs">Couleurs</a></li>
+          <li><a href="#Caract">Caractères</a></li>
+          <li><a href="#Format">Format</a></li>
+          <li><a href="#Image">Image de fond</a></li>
+          <li><a href="#L554">Créer un style générique pour un élément ou une
+            classe</a></li>
+        </ul>
+      </li>
+      <li><a href="#L613">Créer des éléments de style HTML</a>
+        <ul>
+          <li><a href="#Types">Types information</a></li>
+          <li><a href="#L895">Eléments caractères</a></li>
+          <li><a href="#Supprimer">Supprimer un élément style</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="Style">
-<h2><a name="L1023">Les feuilles de style</a></h2>
+<h2 id="Cascades"><a name="L1023" id="L1023">Cascades des feuilles de style
+(CSS)</a></h2>
 
 <p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
 documents en utilisant les cascades des feuilles de style (CSS).</p>
 
-<h3><a name="feuilles">Les feuilles de style CSS externes et
+<h3 id="feuilles1"><a name="feuilles">Les feuilles de style CSS externes et
 utilisateur</a></h3>
 
 <p>Un document peut associer plusieurs feuilles de style externes qui sont
@@ -61,7 +96,8 @@ votre feuille de style utilisateur avec les règles CSS suivantes :</p>
  body {font-family: Helvetica}
 }</pre>
 
-<h4><a name="Managing">Gérer des feuilles de style CSS externes</a></h4>
+<h4 id="L90"><a name="Managing">Gérer des feuilles de style CSS
+externes</a></h4>
 
 <p>Le menu <strong>Style</strong> donne accès à une série de commandes qui
 permettent de contrôler les feuilles de style CSS externes et de
@@ -111,26 +147,79 @@ l'utilisateur, mais les commandes <strong>Ajouter</strong> et
 <strong>Retirer</strong> concernent uniquement les feuilles de style
 externes.</p>
 
-<h3>Visualiser le style appliqué</h3>
+<h3 id="Visualiser">Visualiser le style appliqué</h3>
 
 <p>S'il y a beaucoup de feuilles de style attachées à un document, il est
 difficile de comprendre pourquoi un élément est visualisé avec cette couleur
 ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
 <strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
 externe les propriétés CSS appliquées au premier élément de la sélection
-courante. L'utilisateur peut afficher le source CSS qui engendre chaque
-propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
-que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
-la sélection change. En appuyant sur la touche <code>F2</code>, l'utilisateur
-peut ainsi voir les propriétés CSS appliquées aux éléments englobants.</p>
+courante.</p>
 
-<h3><a name="Creating" id="Creating">Créer et mettre à jour un attribut de
-style</a></h3>
+<p>L'utilisateur peut afficher le source CSS qui engendre chaque propriété en
+double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
+est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
+change. En appuyant sur la touche <code>F2</code>, l'utilisateur peut ainsi
+voir les propriétés CSS appliquées aux éléments englobants.</p>
+
+<h3 id="Associer">Associer une classe à un élément</h3>
+
+<p>Toutes les classes disponibles pour un document sont listées dans l'outil
+<strong>Appliquer classe</strong>.</p>
+
+<p class="ProcedureCaption">Pour appliquer une classe à un élément :</p>
+<ol>
+  <li>Choisissez la bonne entrée dans l'outil <strong>Appliquer
+    classe</strong>.</li>
+  <li>Si vous voulez sélectionner la classe appliquée à un autre élément,
+    vous devez sélectionner cet élément, puis cliquer sur le bouton <img
+    alt="Refresh" src="../../resources/icons/16x16/refresh.png" />. La liste
+    d'<strong>Appliquer classe</strong> est mise à jour et la classe
+    appliquée est sélectionnée.</li>
+  <li>Sélectionnez un fragment de texte ou un élément.<br />
+    Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
+    utiliser la touche F2 jusqu'à ce que la ligne en bas de la fenêtre
+    affiche son type en première position.</li>
+  <li>Cliquer sur le bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> pour appliquer la classe à la
+    sélection courante.<br />
+    Si un fragment de texte est sélectionné, Amaya engendrera un élément
+    <strong>span</strong> pour englober le texte courant et l'attribut
+    <strong>class</strong> sera attaché à ce nouvel élément
+    <strong>span</strong>.</li>
+</ol>
+
+<p>Pour associer une classe ( attribut <strong>class</strong>) à un élément,
+vous pouvez également utiliser l'outil <a
+href="Attributes.html.fr#L1073"><strong>Attributs</strong></a>. Cet outil
+Attributs permet aussi de retirer l'attribut <strong>class</strong> d'un
+élément ou de le modifier (l'attribut <strong>class</strong> se manipule
+comme un autre attribut).</p>
+
+<p class="ProcedureCaption">Pour retirer la classe d'un élément :</p>
+<ul>
+  <li>Vous pouvez éditer l'attribut <strong>class</strong> dans l'outils
+    <strong>Attributs</strong>.
+    <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
+    pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
+    l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
+    (<img alt="ok" src="../../resources/icons/16x16/ok.png" />).</p>
+  </li>
+  <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
+    dans la vue structure.
+    <p>Pour retirer l'attribut <strong>class</strong>, vous cliquez dans la
+    valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
+    <code>Delete</code> pour détruire l'attribut.</p>
+  </li>
+</ul>
+
+<h3 id="L288"><a name="Creating" id="Creating">Créer et mettre à jour un
+attribut de style</a></h3>
 
 <p>Amaya fournit des outils qui vous permettent d'associer un attribut style
 aux éléments sélectionnés :</p>
 
-<h4>Couleurs</h4>
+<h4 id="Couleurs">Couleurs</h4>
 
 <p>L'outil <strong>Couleurs</strong> permet de choisir les couleurs de
 premier plan et d'arrière plan dans une palette. Quand l'outil
@@ -138,17 +227,17 @@ premier plan et d'arrière plan dans une palette. Quand l'outil
 
 <p><ul>
   <li>Un bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" /> (valeur héritée) ou un
-    rectangle de couleur visualise la couleur du premier plan.</li>
+    src="../../resources/icons/16x16/default.png" /> (valeur par défaut) ou
+    un rectangle de couleur visualise la couleur du premier plan.</li>
   <li>Un autre bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" /> (valeur héritée) ou un
-    rectangle de couleur visualise la couleur d'arrière plan.</li>
+    src="../../resources/icons/16x16/default.png" /> (valeur par défaut) ou
+    un rectangle de couleur visualise la couleur d'arrière plan.</li>
   <li>Un bouton <img alt="switch"
     src="../../resources/icons/misc/switch_colors.png" /> permet d'inverser
     les couleurs du premier plan et d'arrière plan.</li>
   <li>Un bouton <img alt="Default_color"
     src="../../resources/icons/misc/black_white.png" /> permet de restaurer
-    les couleurs par défaut (valeur héritée).</li>
+    les couleurs par défaut (valeurs par défaut).</li>
   <li>Un bouton <img alt="Refresh"
     src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
     couleurs du premier plan et d'arrière plan à partir de la sélection
@@ -161,42 +250,74 @@ premier plan et d'arrière plan dans une palette. Quand l'outil
 
 <p>Pour choisir une nouvelle couleur de premier plan ou d'arrière plan, il
 faut cliquer sur le bouton correspondant. Une palette permet alors de choisir
-librement une couleur. Les couleurs choisies ne sont pas immédiatement
-appliquées à la sélection. Le bouton appliquer doit être cliqué.</p>
+librement une couleur.</p>
+
+<p>La valeur par défaut vous permet de retirer l'information de style
+correspondante pour l'élément sélectionné. Les couleurs choisies ne sont pas
+immédiatement appliquées à la sélection. Le bouton appliquer doit être
+cliqué.</p>
 
 <p class="Note"><strong>Note</strong> : Il est important de choisir des
-couleurs de premier plan ou d'arrière plan suffisament contrastées.</p>
+couleurs de premier plan ou d'arrière plan suffisamment contrastées.</p>
 
-<h4>Caractères</h4>
+<h4 id="Caract">Caractères</h4>
 
 <p>L'outil <strong>Caractères</strong> permet de choisir la police de
 caractère, le style du caractère, la taille du corps et le style souligné.</p>
 <ul>
-  <li>Un selecteur <strong>Police</strong> fournit une liste limitée de
-    polices de caractères.</li>
-  <li>Un selecteur <strong>Souligné</strong> fournit la liste des valeurs
-    possibles.</li>
-  <li>Un selecteur <strong>Corps</strong> fournit une liste limitée de corps
-    exprimés en points.</li>
-  <li>Un selecteur <strong>Style des caractères</strong> fournit une liste
-    limitée de styles possibles.</li>
-  <li>Un selecteur Graisse fournit une liste limitée de graisses
-  possibles.</li>
+  <li>Un sélecteur <strong>Police</strong> fournit une liste limitée de
+    polices de caractères. Un bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> permet d'appliquer seulement
+    cette valeur à la sélection courante.</li>
+  <li>Un sélecteur <strong>Souligné</strong> fournit la liste des valeurs
+    possibles. Un bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> permet d'appliquer seulement
+    cette valeur à la sélection courante.</li>
+  <li>Un sélecteur <strong>Corps</strong> fournit une liste limitée de corps
+    exprimés en points. Un bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> permet d'appliquer seulement
+    cette valeur à la sélection courante.</li>
+  <li>Un sélecteur <strong>Style des caractères</strong> fournit une liste
+    limitée de styles possibles. Un bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> permet d'appliquer seulement
+    cette valeur à la sélection courante.</li>
+  <li>Un sélecteur <strong>Graisse</strong> fournit une liste limitée de
+    graisses possibles. Un bouton <img alt="ok"
+    src="../../resources/icons/16x16/ok.png" /> permet d'appliquer seulement
+    cette valeur à la sélection courante.</li>
   <li>Un bouton <img alt="Refresh"
     src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
     valeurs à partir de la sélection courante.</li>
   <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
-    permet d'appliquer les valeurs à la sélection courante.</li>
+    permet d'appliquer toutes les valeurs à la sélection courante.</li>
 </ul>
 
-<p>Les valeurs choisies ne sont pas immédiatement appliquées à la sélection.
-Le bouton appliquer doit être cliqué.</p>
+<p>La valeur par défaut vous permet de retirer l'information de style
+correspondante pour l'élément sélectionné. Les valeurs choisies ne sont pas
+immédiatement appliquées à la sélection. Le bouton appliquer doit être
+cliqué.</p>
 
-<h4>Format</h4>
+<h4 id="Format">Format</h4>
 
 <p>L'outil <strong>Format</strong> permet de choisir l'alignement, le
 renfoncement, la justification et l'interligne.</p>
 <ul>
+  <li>Un sélecteur d'alignement : cliquez à gauche (<img alt="left"
+    src="../../resources/icons/16x16/format_left.png" />), à droite ( <img
+    alt="right" src="../../resources/icons/16x16/format_right.png" />),
+    centré ( <img alt="center"
+    src="../../resources/icons/16x16/format_center.png" />), justifié ( <img
+    alt="justify" src="../../resources/icons/16x16/format_justify.png" />),
+    ou <img alt="default" src="../../resources/icons/16x16/default.png" />
+    pour choisir la valeur par défaut.</li>
+  <li>Un sélecteur de <strong>Renfoncement</strong> permettant de saisir la
+    valeur en point. Cliquez sur le bouton <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> pour choisir la valeur
+    par défaut.</li>
+  <li>Un sélecteur d'<strong>Interligne</strong> permettant de saisir la
+    valeur en point. Cliquez sur le bouton <img alt="default"
+    src="../../resources/icons/16x16/default.png" /> pour choisir la valeur
+    par défaut.</li>
   <li>Un bouton <img alt="Refresh"
     src="../../resources/icons/16x16/refresh.png" /> permet d'initialiser les
     valeurs à partir de la sélection courante.</li>
@@ -204,97 +325,153 @@ renfoncement, la justification et l'interligne.</p>
     permet d'appliquer les valeurs à la sélection courante.</li>
 </ul>
 
-<h4>Image de fond</h4>
+<p>La valeur par défaut vous permet de retirer l'information de style
+correspondante pour l'élément sélectionné. Les valeurs choisies ne sont pas
+immédiatement appliquées à la sélection. Le bouton appliquer doit être
+cliqué.</p>
 
-<p>Il y a aussi une entrée du menu <strong>Style</strong> :</p>
+<h4 id="Image">Image de fond</h4>
+
+<p>Cette entrée du menu <strong>Style</strong> vous permet de choisir une
+image de fond et sont mode de répétition.</p>
+
+<p class="ProcedureCaption">Pour ajouter une image de fond :</p>
+<ol>
+  <li>Sélectionnez un élément
+    <p>Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
+    utiliser la touche F2 jusqu'à ce que la ligne en bas de la fenêtre
+    affiche son type en première position. Vous pouvez aussi utiliser la vue
+    structure pour le sélectionner.</p>
+  </li>
+  <li>Cliquez sur l'option <strong>Image de fond</strong> dans le menu
+    <strong>Style</strong> pour ouvrir le formulaire qui vous permet de :
+    <ul>
+      <li>Entrer l'URI de l'image ou butiner.</li>
+      <li>Sélectionner le mode de répétition :repeat (<img alt="repeat"
+        src="../../resources/icons/16x16/BG_repeat.png" />), x-repeat ( <img
+        alt="x-repeat" src="../../resources/icons/16x16/BG_repeat_x.png" />),
+        y-repeat (<img alt="y-repeat"
+        src="../../resources/icons/16x16/BG_repeat_y.png" />), ou no-repeat
+        (<img alt="no-repeat"
+        src="../../resources/icons/16x16/BG_norepeat.png" />).</li>
+    </ul>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">Pour retirer l'image de fond :</p>
 <ul>
-  <li>L'option <strong>Image de fond</strong> permet de choisir une image de
-    fond et son mode de répétition.</li>
+  <li>Vous pouvez éditer l'attribut <strong>style</strong> dans l'outils
+    <strong>Attributs</strong>.
+    <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
+    pour supprimer l'attribut <strong>style</strong>, ou vous cliquez sur
+    l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
+    (<img alt="ok" src="../../resources/icons/16x16/ok.png" />).</p>
+  </li>
+  <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>style</strong>
+    dans la vue structure.
+    <p>Pour retirer l'attribut <strong>style</strong>, vous cliquez dans la
+    valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
+    <code>Delete</code> pour détruire l'attribut.</p>
+  </li>
 </ul>
 
-<p>Dans toutes ces boîtes de dialogue, les boutons <strong>Défaut</strong>
-permettent de supprimer l'information de style correspondant pour les
-éléments sélectionnés.</p>
+<h4 id="L554"><a name="Creating," id="Creating,">Créer un style générique
+pour un élément ou une classe</a></h4>
 
-<p>Toutes les modifications faites avec ces boîtes de dialogue peuvent être
-vues immédiatement dans la vue formatée et également dans la vue
-structure.</p>
-
-<h3><a name="Creating," id="Creating,">Créer un style générique pour un
-élément ou une classe</a></h3>
-
-<p>Quand un attribut <code>style</code> a été associé à un élément, vous
+<p>Quand un attribut <strong>style</strong> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
-de style :</p>
-<ul>
-  <li>Sélectionnez cet élément (vous devez sélectionner un seul élément et
-    cet élément doit avoir un attribut <code>style</code>)</li>
+de style en utilisant la commande <strong>Créer une règle</strong>.</p>
+
+<p class="ProcedureCaption">Pour créer un style générique pour un élément ou
+une classe :</p>
+<ol>
+  <li>Sélectionnez l'élément que vous désirez utiliser comme modèle. Par
+    défaut la sélection est mise sur la chaîne de caractères, et vous devez
+    utiliser la touche F2 pour sélectionner l''élément englobant.
+    <p></p>
+    <p class="Note"><strong>Note</strong> : Vous devez sélectionner un seul
+    élément et cet élément doit avoir un attribut <code>style</code>.</p>
+    <p></p>
+  </li>
   <li>Choisissez <strong>Créer une règle</strong> depuis le menu
     <strong>Style</strong>. Une boîte de dialogue surgit et visualise une
     liste de sélecteurs CSS. Cette liste inclus toutes les classes qui sont
     définies pour le document courant (y compris les classes définies par les
-    feuilles de style liées au document), ainsi que les types d'élément
-    auquel le style est associé.</li>
+    feuilles de style liées au document), ainsi que le type de l'élément
+    auquel le style est associé.
+    <p></p>
+  </li>
   <li>Choisissez un sélecteur dans cette liste ou entrez un nouveau nom de
-    classe et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
-    l'élément sélectionné est désormais associé au sélecteur choisi et
-    l'attribut <code>style</code> est supprimé pour l'élément sélectionné.
-    Son contenu est déplacé à l'élément <code>STYLE</code>, dans le
-    <code>HEAD</code> document, et tous les éléments correspondant au
-    sélecteur sont visualisés dans le nouveau style.</li>
-</ul>
+    classe et cliquer sur le bouton <strong>Confirmer</strong>.
+    <p>Le style de l'élément sélectionné est désormais associé au sélecteur
+    choisi et l'attribut <code>style</code> est supprimé pour l'élément
+    sélectionné. Son contenu est déplacé à l'élément <code>STYLE</code>, dans
+    le <code>HEAD</code> document, et tous les éléments correspondant au
+    sélecteur sont visualisés dans le nouveau style.</p>
+  </li>
+</ol>
 
-<p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
-une règle</strong>, vous pouvez associer ces classes à certains éléments dans
-le document :</p>
-<ul>
-  <li>Choisissez <strong>Appliquer une classe</strong> depuis le menu
-    <strong>Style</strong>. Une boîte de dialogue surgit, affichant toutes
-    les classes existantes. Choisissez une de ces classes. Les éléments
-    sélectionnés sont désormais visualisés avec le style associé à la classe
-    choisie.</li>
-</ul>
+<p>Quand vous avez créé une nouvelles classes avec la commande <strong>Créer
+une règle</strong>, cette classe est automatiquement ajoutée à la liste de
+l'outil <strong>Appliquer une classe</strong>.</p>
 
-<p>Pour associer une classe à un élément, vous pouvez également utiliser le
-<a href="Attributes.html.fr#L1073">menu <strong>Attributs</strong></a>. Ce
-menu permet aussi d'effacer un attribut de classe pour un élément ou de le
-changer : l'attribut de classe se manipule comme un autre attribut.</p>
-
-<h3><a name="L1371" id="L1371">Mettre du style en utilisant des éléments
+<h3 id="L613"><a name="L1371" id="L1371">Créer des éléments de style
 HTML</a></h3>
 
 <p>HTML fournit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
-<strong>Style</strong> permettent de manier ces éléments HTML.</p>
+<strong>XHTML</strong> permettent de manier ces éléments HTML.</p>
 
-<h4>Créer des éléments de style HTML</h4>
+<h4 id="Types">Types information</h4>
 
 <p>La commande<strong>Types information</strong> du menu
-<strong>Xhtml</strong> présente un sous-menu offrant un choix d'éléments HTML
-qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
-caractères dans votre page et ensuite choisissez une commande dans ce menu.
-La chaîne de caractères sélectionnée reçoit le style correspondant. Trois de
-ces styles sont également disponibles par l'intermédiaire des boutons :
+<strong>XHTML</strong> présente un sous-menu offrant un choix d'éléments HTML
+qui définissent des styles abstraits.</p>
+
+<p class="ProcedureCaption">Pour appliquer un des Eléments caractères :</p>
+<ol>
+  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
+  <li>Choisissez une commande dans ce menu <strong>Types information</strong>.
+    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
+  </li>
+</ol>
+
+<p>Trois de ces styles sont également disponibles dans l'outil XHTML :
 <em>emphasis</em> (<img src="../../resources/icons/22x22/XHTML_I.png"
 alt="Emphasis button" />), <strong>strong</strong> (<img
 src="../../resources/icons/22x22/XHTML_B.png" alt="Strong button" />) and
 <code>code</code> (<img src="../../resources/icons/22x22/XHTML_T.png"
 alt="Code button" />).</p>
 
+<h4 id="L895">Eléments caractères</h4>
+
 <p>La commande <strong>Éléments caractères</strong> du menu
-<strong>Xhtml</strong> offre un autre menu changeant le style du texte. Les
-premières entrées de ce menu peuvent être remplacées par CSS et ne devraient
-pas être utilisées. Elles sont là uniquement pour se conformer à
-l'implémentation de HTML 3.2.</p>
+<strong>XHTML</strong> offre un autre menu changeant le style du texte.</p>
 
-<h4>Supprimer le style</h4>
+<p class="ProcedureCaption">Pour appliquer un des Eléments caractères :</p>
+<ol>
+  <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
+  <li>Choisissez une commande dans ce menu <strong>Eléments
+    caractères</strong>.
+    <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
+  </li>
+</ol>
 
-<p>Pour supprimer le style d'une chaîne de caractères, sélectionnez tout
-d'abord la chaîne et appliquez de nouveau la commande qui a été utilisée pour
-associer le style que vous voulez supprimer. Toutes les commandes des
-sous-menus <strong>Types</strong> <strong>information</strong> et
-<cite></cite><strong>Éléments caractères</strong> s'annulent si elles sont
-appliquées de nouveau.</p>
+<h4 id="Supprimer">Supprimer un élément style</h4>
+
+<p>Toutes les commandes des sous-menus <strong>Types</strong>
+<strong>information</strong> et <cite></cite><strong>Éléments
+caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
+
+<p class="ProcedureCaption">Pour supprimer un élément style :</p>
+<ol>
+  <li>Sélectionnez l'élément que vous voulez supprimer. Par défaut la
+    sélection est mise sur la chaîne de caractères, et vous devez utiliser la
+    touche F2 pour sélectionner l''élément englobant.</li>
+  <li>Appliquez de nouveau la commande du sous-menu <strong>Types
+    information</strong> ou <strong>Eléments caractères</strong> du
+    menu<strong>XHTML</strong>.</li>
+</ol>
 </div>
 </body>
 </html>
