@@ -719,6 +719,12 @@ char               *pathname;
 		/* reset the corresponding Toggle item in the Views menu */
 		TtaSetToggleItem (doc, 1, Views, TShowStructure, FALSE);
 	     }
+#ifdef MATHML
+	structView = TtaGetViewFromName (doc, "Math_Structure_view");
+	if (structView != 0)
+	   if (TtaIsViewOpened (doc, structView))
+	      TtaCloseView (doc, structView);
+#endif /* MATHML */
         /* close the Links view if it is open */
 	linksView = TtaGetViewFromName (doc, "Links_view");
 	if (linksView != 0)
@@ -1102,7 +1108,13 @@ View                view;
      TtaCloseView (document, mathView);
 #endif /* MATHML */
    else if (structView != 0 && TtaIsViewOpened (document, structView))
-      TtaCloseView (document, structView);
+     {
+        TtaCloseView (document, structView);
+#ifdef MATHML
+	if (mathView != 0 && TtaIsViewOpened (document, mathView))
+	   TtaCloseView (document, mathView);
+#endif /* MATHML */
+     }
    else
      {
 	TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);

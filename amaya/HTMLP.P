@@ -4630,7 +4630,6 @@ RULES
 #ifdef MATHML
  Math: BEGIN
 	CreateBefore(Math_S);
-	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
@@ -4646,7 +4645,6 @@ RULES
 
  MathDisp: BEGIN
 	CreateBefore(MathDisp_S);
-	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
