@@ -3822,7 +3822,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallRadio, catalogue);
 #else /* _GTK */
-	     tmpw = gtk_pixmap_new ((GdkPixmap *)icons[i], NULL);
+	     tmpw = gtk_pixmap_new (((ThotIcon)icons[i])->pixmap, ((ThotIcon )icons[i])->mask);
 	     w = gtk_button_new ();
 	     gtk_container_add (GTK_CONTAINER (w), tmpw);
 	     gtk_widget_show_all (w);
