@@ -31,11 +31,11 @@
 <p>Amaya allows you to include mathematical expressions in web pages,
 following the <a href="http://www.w3.org/TR/REC-MathML/"> Mathematical Markup
 Language</a> (MathML) specification. Mathematical expressions are handled as
-structured components, exactly in the same way as HTML elements. Therefore,
-you can manipulate math expressions in the same way you manipulate other parts
-of HTML documents. All editing commands provided by Amaya for handling text
-are also available for math, and there are some additional controls for
-entering mathematical constructs.</p>
+structured components, in the same way as HTML elements. Therefore, you can
+manipulate math expressions in the same way you manipulate other parts of HTML
+documents. All editing commands provided by Amaya for handling text are also
+available for math, and there are some additional controls for entering
+mathematical constructs.</p>
 
 <h3>Creating a Mathematical Expression</h3>
 
@@ -43,24 +43,30 @@ entering mathematical constructs.</p>
 
 <p>To create a mathematical expression in a document, just <a
 href="Selecting.html#Selecting">move the insertion point</a> (the caret) to
-the position where you want to insert that expression, and then click the
-<strong>Math</strong> button (the rightmost button), or select the
-<strong>Math</strong> entry from the <strong>Types</strong> menu. The
-<strong>Math</strong> button displays a palette that stays on the screen until
-you click the Done button. The item <strong>Mat</strong>h from the
+the position where you want to insert an expression, and then click the
+<strong>Math</strong> button (the rightmost button on the button bar), or
+select the <strong>Math</strong> entry from the <strong>Types</strong> menu.
+The <strong>Math</strong> button displays a palette that stays on the screen
+until you click the Done button. The item <strong>Math</strong> from the
 <strong>Types</strong> menu displays a popup menu. Just choose the most
-convenient tool. Both allow you to select the mathematical construct to be
-inserted.</p>
+convenient tool for you. Both allow you to select the mathematical construct
+to be inserted.</p>
 
 <p>In the Math palette (or menu) the first item allows you to create a new
 formula when the caret is in some HTML element (but the caret should not be
 within a MathML element).</p>
 
-<p>In the <strong>Math</strong> menu (not available in the palette), the next
-items allow you to create new basic elements: Plain text (<code>mtext</code>),
-Identifier (<code>mi</code>), Number (<code>mn</code>), Operator
-(<code>mo</code>). You can also use these commands to change the type of a
-single element or a sequence of elements.</p>
+<p>In the <strong>Math</strong> menu, the next items allow you to create new
+basic elements (not available in the palette): Plain text
+(<code>mtext</code>), Identifier (<code>mi</code>), Number (<code>mn</code>),
+Operator (<code>mo</code>). You can also use these commands to change the type
+of a single element or a sequence of elements.</p>
+
+<p>These items in the <strong>Math</strong> menu are followed by the Character
+(<code>mchar</code>) item. This command allows you to enter a character that
+is not available on the keyboard. It displays a dialogue box where you have to
+enter the character name (for instance <em>alpha </em>for the greek character
+&alpha;).</p>
 
 <p>The next items of the <strong>Math</strong> menu (or palette) allow you to
 create new constructs within a formula. If the caret is not in a formula, a
@@ -86,6 +92,12 @@ available constructs are:</p>
           <mn>1</mn>
         </mrow>
       </msqrt>
+    </math>
+  </li>
+  <li>Enclose, <code>menclose</code>: <math>
+      <menclose>
+        <mn>1234</mn>
+      </menclose>
     </math>
   </li>
   <li>Fraction, <code>mfrac</code>: <math>
@@ -215,7 +227,7 @@ available constructs are:</p>
 <p>The last item of the <strong>Math</strong> palette (<math>
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
-) displays another palette from which you can insert mathematical symbols and
+ ) displays another palette from which you can insert mathematical symbols and
 greek characters.</p>
 
 <h4><a name="Entering">Entering constructs from the keyboard</a></h4>
@@ -246,10 +258,10 @@ For instance, to enter</p>
 </math>
 </p>
 
-<p>just type <code>x=2a+b</code>, (don't forget to first click on the Math
-item of the <strong>Math</strong> menu, if you are not in a mathematical
-expression) and you will get the following structure (you can check in the <a
-href="#Math_Struc">Math_Structure view</a>):</p>
+<p>just type this sequence of 6 characters: <code>x=2a+b</code>, (don't forget
+to first click on the Math item of the <strong>Math</strong> menu, if you are
+not in a mathematical expression) and you will get the following structure
+(you can check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
 <pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
 
 <p>If the result is not exactly what you want, just select the characters that
@@ -268,9 +280,8 @@ if it's not empty. This command is located at the end of submenu
 <p>You may want to change the structure of an existing expression, e.g.
 appending a superscript or puting parentheses around an expression. To do
 that, just select the expression and enter the new construct with the palette,
-the <strong>Math</strong> menu or the <a href="#Entering">keyboard</a>.</p>
-
-<p>You can also use the <strong>Transform</strong> command from the
+the <strong>Math</strong> menu or the <a href="#Entering">keyboard</a>. You
+can also use the <strong>Transform</strong> command from the
 <strong>Edit</strong> menu. Select the expression you want to transform and
 the <strong>Transform</strong> command will display a menu with all possible
 changes.</p>
@@ -282,7 +293,7 @@ href="Views.html#Structure">Show Structure</a> item from the
 <strong>Views</strong> menu actually opens <em>two</em> views:</p>
 <ul>
   <li>the Structure view shows the main structure of the HTML document. In
-    this view, MathML elements are only represented by a <code>MATH</code> tag
+    this view, MathML elements are only represented by a <code>math</code> tag
     and their actual contents is not shown.</li>
   <li>the Math_Structure view shows only MathML elements, but here, all their
     components are visible.</li>
@@ -309,8 +320,8 @@ ambiguity. Consider the following example:</p>
 
 <p>When moving the caret after character <em>b</em>, it is not clear whether
 you want to add something <em>within</em> the square root or <em>after</em>
-it. Selecting (or checking) in the Math_Structure view avoids any
-ambiguity.</p>
+it. Selecting (or checking) in the Math_Structure view avoids any ambiguity.
+You can also check the status line, at the bottom of the main window.</p>
 
 <h3>Links in MathML</h3>
 
@@ -357,16 +368,17 @@ expression.</p>
 
 <h3 id="Limitations">Current limitations</h3>
 
-<p>Amaya implements only the <em>Presentation Tags</em> from MathML, not the
-<em>Content Markup</em>. All presentation elements and attributes are
+<p>Amaya implements only the <em>Presentation Tags</em> from MathML 2.0, not
+the <em>Content Markup</em>. All presentation elements and attributes are
 available, but only some attributes have an impact on the formatted view
 (<code>fontsize</code>, <code>fontweight</code>, <code>fontstyle</code>,
-<code>fontfamily</code>, <code>color</code>). The <code>class</code>,
-<code>id</code> and <code>style</code> attributes are available, with the same
-semantics as in HTML: you can <a href="StyleSheets.html">associate CSS
-style</a> with MathML elements (<code>class</code> and <code>style</code>
-attributes) and a MathML element can be the target of a link (<code>id</code>
-attribute).</p>
+<code>fontfamily</code>, <code>color</code>, <code>numalign</code>,
+<code>denomalign</code>, <code>beveled</code>, <code>notation</code>). The
+<code>class</code>, <code>id</code> and <code>style</code> attributes are
+available, with the same semantics as in HTML: you can <a
+href="StyleSheets.html">associate CSS style</a> with MathML elements
+(<code>class</code> and <code>style</code> attributes) and a MathML element
+can be the target of a link (<code>id</code> attribute).</p>
 
 <p>Due to the lack of mathematical fonts, only a limited set of entities
 representing math symbols are recognized, mainly those available in the Symbol
@@ -385,6 +397,5 @@ src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a> <a href="ImageMaps.html"><img alt="next" border="0"
 src="../Icons/right.gif"></a></p>
 <hr>
-
 </body>
 </html>
