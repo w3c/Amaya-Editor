@@ -212,16 +212,18 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 		 event.GetPosition().x,
 		 event.GetPosition().y );
 
-  long flags  = 0;
-  int page_id = HitTest(ScreenToClient(event.GetPosition()), &flags);
+  int window_id = m_pAmayaWindow->GetWindowId();
+  long flags    = 0;
+  int page_id   = HitTest(ScreenToClient(event.GetPosition()), &flags);
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
   // store the aimed frame, it's possible that it is not the current active one
-  int window_id     = m_pAmayaWindow->GetWindowId();
-  m_MContextFrameId = TtaGetFrameId( window_id, page_id, 1 );
-
-  wxMenu * p_menu = TtaGetContextMenu( window_id );
-  PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
+  if (page_id >= 0)
+    {
+      m_MContextFrameId = TtaGetFrameId( window_id, page_id, 1 );
+      wxMenu * p_menu = TtaGetContextMenu( window_id );
+      PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
+    }
 
 //  event.Skip();
 }
