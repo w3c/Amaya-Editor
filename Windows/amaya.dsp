@@ -199,15 +199,7 @@ SOURCE=..\amaya\ggroup.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=..\thotlib\view\gldisplay.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\gline.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\thotlib\view\glwindowdisplay.c
 # End Source File
 # Begin Source File
 
