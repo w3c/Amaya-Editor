@@ -4,7 +4,7 @@
 # Nov 1999 (Jose Kahan) : first version
 # Mar 2000 (Jose Kahan) : rewrote it to take better advantage of gmake.
 #		          Added some missing dependencies.
-#
+# Mar 2001 (Jose Kahan) : a bday gift: fixed the AnnotAPP dependency problem
 
 @VPATHOPT@= @srcdir@
 THOTDIR= @top_srcdir@
@@ -40,7 +40,7 @@ clean :
 	$(RM) $(ANNOTLIB)/AnnotT.TRA
 	$(RM) $(ANNOTLIB)/AnnotAPP.c
 	$(RM) $(ANNOTLIB)/Annot.h
-	$(RM) $(ANNOTLIB)/Annotations.proto
+	$(RM) $(ANNOTLIB)/Annotactions.proto
 
 install :
 
@@ -94,10 +94,18 @@ include .depends
 	$$PRS $(ALL_AMAYA_OPTIONS) `basename $<`)
 
 #
-# Structure schema compilation 
+# Application  schema compilation 
 #
-# We can't do it using this technique because it produces .c and .h files
+# A more complicated rule, as we generate a .C file. We force the
+# the compilation of such files a la volee
 
+.A.h  : ../bin/app
+	@(APP=`pwd`/../bin/app;\
+	THOTDIR=`pwd`/../.. ;export THOTDIR; \
+	cd `dirname $<`; \
+	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) \
+		-c `dirname $<`/`basename $< .A`APP.c;
 
 #########################################################################
 #									#
@@ -121,18 +129,12 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTmenu.o \
 	ANNOTschemas.o
 
-# special case for generation Annot.h and AnnotAPP.c
-AnnotAPP.c : Annot.A
-	@(APP=`pwd`/../bin/app;\
-	THOTDIR=`pwd`/../.. ;export THOTDIR; \
-	cd `dirname $<`; \
-	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
-
-Annot.h: AnnotAPP.c
-
 #
 # dependencies
 #
+
+# If Annot.A changes, force a compilation
+Annot.h : Annot.A
 
 # recompile all the schemas if Annot.S or HTML.S have changed
 $(AMAYA_ANNOT_SCHEMA) : Annot.S $(THOTDIR)/amaya/HTML.S
@@ -143,7 +145,8 @@ $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h ../amaya/EDITOR.h
 # recompile ANNOTmenu if the menu definitions change
 ANNOTmenu.o : ANNOTmenu.h
 
-libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/XLink.h ../amaya/TextFile.h libAnnot.a
+libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/XLink.h \
+	   ../amaya/TextFile.h libAnnot.a
 
 libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
 
