@@ -413,7 +413,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   else
     {
       buff[lg] = EOS;
-      TranslateChars (buff);
+      /* TranslateChars (buff); */
       j = 0;
       while (j < lg)
 	width += CharacterWidth (buff[j++], font);
@@ -428,7 +428,8 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
       SetTextColor (display, ColorPixel (fg));
       SetBkMode (display, TRANSPARENT);
       SetTextAlign (display, TA_BASELINE | TA_LEFT);
-      TextOut (display, x, y, buff, lg);
+	  /* TextOutW takes Unicode directly, and works on Win9x up */
+      TextOutW (display, x, y, buff, lg);
       if (hyphen)
 	/* draw the hyphen */
 	TextOut (display, x + width, y, "\255", 1);
