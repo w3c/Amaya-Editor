@@ -2471,7 +2471,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
-  PtrBox              pBox, box;
+  PtrBox              pBox;
+#ifdef IV
+  PtrBox              box;
+#endif
   PtrBox              pSelBox;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
@@ -3199,7 +3202,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 
 
 /*----------------------------------------------------------------------
-   PasteXClipboard reads nbytes from the buffer and calls Paste_X as
+   PasteXCliboard reads nbytes from the buffer and calls Paste_X as
    many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
 static void PasteXClipboard (unsigned char *src, int nbytes)
@@ -3294,7 +3297,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
     }
 }
 
-
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    PasteXClipboardW reads nchars from the buffer and calls Paste_X as
    many times as necessary with the characters read.     
@@ -3383,6 +3386,7 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
 	TtaSetDisplayMode (doc, dispMode);
     }
 }
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
