@@ -5578,7 +5578,7 @@ RULES
 	BEGIN
 	HorizRef: * . Top;
 	HorizPos: Left = Enclosing . Left;
-	Width: Enclosing . Width;
+	Width: Enclosed . Width;
 	VertPos: nil;
 #ifdef PAGE
 	PageBreak: No;

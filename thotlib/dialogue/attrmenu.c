@@ -1324,16 +1324,14 @@ char               *valtext;
       break;
     case NumMenuAttr:
       /* retour de la feuille de dialogue elle-meme */
-      if (valmenu == 0)
+      if (valmenu == 0 || valmenu == 2)
 	/* fermeture de la feuille de dialogue */
 	{
 	  /* on detruit la feuille de dialogue */
 	  TtaDestroyDialogue (NumMenuAttr);
 	  AttrFormExists = FALSE;
-	  act = 0;
 	}
-      else
-	act = valmenu;
+      act = valmenu;
       break;
     }
 

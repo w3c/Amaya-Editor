@@ -3293,9 +3293,6 @@ PtrAbstractBox      pAb;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_BAD_FRAME_NB);
    else
      {
-        saveMode = documentDisplayMode[FrameTable[frame].FrDoc - 1];
-	if (saveMode == DisplayImmediately)
-	  documentDisplayMode[FrameTable[frame].FrDoc - 1] = DeferredDisplay;
 	pFrame = &ViewFrameTable[frame - 1];
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAb->AbEnclosing != NULL
@@ -3330,6 +3327,10 @@ PtrAbstractBox      pAb;
 		  pFrame->FrReady = TRUE;
 		  pFrame->FrSelectShown = FALSE;
 	       }
+
+	     saveMode = documentDisplayMode[FrameTable[frame].FrDoc - 1];
+	     if (saveMode == DisplayImmediately)
+	       documentDisplayMode[FrameTable[frame].FrDoc - 1] = DeferredDisplay;
 
 	     /* On prepare le traitement de l'englobement apres modification */
 	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
@@ -3450,6 +3451,16 @@ PtrAbstractBox      pAb;
 		       HeightPack (pParentAb, NULL, frame);
 		    }
 	       }
+
+	     /* restore the current mode */
+	     /* update tables if necessary */
+	     if (saveMode == DisplayImmediately)
+	       {
+		 documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
+		 if (ThotLocalActions[T_colupdates] != NULL)
+		   (*ThotLocalActions[T_colupdates]) (FrameTable[frame].FrDoc);
+	       }
+
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */
 	     ComputeEnclosing (frame);
@@ -3466,11 +3477,6 @@ PtrAbstractBox      pAb;
 	       }
 	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
-	/* restore the current mode */
-	documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
-	/* update tables if necessary */
-	if (saveMode == DisplayImmediately && ThotLocalActions[T_colupdates])
-	  (*ThotLocalActions[T_colupdates]) (FrameTable[frame].FrDoc);
      }
    return result;
 }

@@ -37,7 +37,7 @@ static PtrTabUpdate FirstColUpdate;
 #include "memory_f.h"
 #include "tree_f.h"
 #define MAX_COLROW 50
-#define TAB_DEBUG
+/*#define TAB_DEBUG*/
 
 #ifdef __STDC__
 static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame);
@@ -465,6 +465,7 @@ int             frame;
   int                 i, j, k;
   int                 sum, height, val;
   int                 attrHeight, org;
+  int                 remainder;
   boolean             found;
 
   /* manage spanned columns */
@@ -497,10 +498,13 @@ int             frame;
 
 	  if (found)
 	    {
-	      /* get real cell's height */
+	      /* get the real cell height */
 	      pAb = cell->AbFirstEnclosed;
-	      height = 0;
 	      org = cell->AbBox->BxYOrg;
+	      if (row != NULL)
+		height = row->AbBox->BxYOrg - org;
+	      else
+		height = 0;
 	      while (pAb != NULL)
 		{
 		  if (!pAb->AbDead && pAb->AbBox != NULL )
@@ -520,15 +524,21 @@ int             frame;
 		    pAb = NextSiblingAbsBox (pAb, cell);
 		}
 
-	      /* compare cell's height with rows' heights */
+	      /* compare the cell height with rows heights */
 	      sum = 0;
+	      pAb = NULL;
 	      for (k = 0; k < rowSpans[i] && k < MAX_COLROW; k++)
 		{
 		  rowList[k] = row;
 		  if (row != NULL && row->AbBox != NULL)
 		    {
 		      HeightPack (row, NULL, frame);
-		      sum += row->AbBox->BxHeight;
+		      /* add padding and borders space */
+		      if (pAb != NULL)
+			remainder = row->AbBox->BxYOrg - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
+		      else
+			remainder = 0;
+		      sum += row->AbBox->BxHeight + remainder;
 		    }
 		  /* select nex row in the list */
 		  j++;
@@ -538,6 +548,8 @@ int             frame;
 		      pTabRel = pTabRel->TaRNext;
 		      j = 0;
 		    }
+		  /* keep in minf the previous row */
+		  pAb = row;
 		  if (pTabRel != NULL)
 		    row = pTabRel->TaRTable[j];
 		  else
@@ -592,7 +604,7 @@ boolean         force;
 #endif
 {
   PtrAbstractBox      pBlock, pCell;
-  PtrBox              pBox;
+  PtrBox              pBox, pOldBox;
   Propagation         savePropagate;
   int                 j, var, delta, px, val;
   int                 width, i, cRef, minsize;
@@ -634,6 +646,10 @@ boolean         force;
   var = 0;
   realMin = 0;
   realMax = 0;
+  /* additional space */ 
+    remainder = 0;
+  /* no previous column */
+  pOldBox = NULL;
 #ifdef TAB_DEBUG
 printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 #endif
@@ -641,6 +657,12 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
   for (cRef = 0; cRef < cNumber; cRef++)
     {
       pBox = colBox[cRef]->AbBox;
+      /* add padding and border space */
+      if (pOldBox == NULL)
+	remainder += pBox->BxXOrg - table->AbBox->BxXOrg;
+      else
+	remainder += pBox->BxXOrg - pOldBox->BxXOrg - pOldBox->BxWidth;
+
       if (pBox->BxWidth > 0)
 	delta += pBox->BxWidth;
       /* how many columns can be modified and what is current values */
@@ -671,18 +693,26 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 	      var += pBox->BxMaxWidth;
 	    }
 	}
+
+      /* keep in mind the previous column box */
+      pOldBox = pBox;
 #ifdef TAB_DEBUG
 printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->BxMinWidth, pBox->BxMaxWidth, colWidth[cRef], colPercent[cRef]);
 #endif
     }
 
-  /* additional space for rows */ 
-  if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0] != NULL &&
-      table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed != NULL &&
-      table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed->AbPresentationBox)
-    remainder = table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed->AbWidth.DimValue;
-  else
-    remainder = 0;
+  /* add space after the last column */
+  if (pOldBox != NULL)
+    {
+      /* locate the enclosing box of columns */
+      pBox = pOldBox;
+      while (pBox->BxAbstractBox->AbEnclosing != NULL &&
+	     pBox->BxAbstractBox->AbEnclosing->AbBox->BxType != BoTable)
+	pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+      WidthPack (pBox->BxAbstractBox, NULL, frame);
+      remainder += pBox->BxXOrg + pBox->BxWidth - pOldBox->BxXOrg - pOldBox->BxWidth;
+    }
+
   if (min + sum > 0)
     {
       /* there is almost one column width not given by a % value */
