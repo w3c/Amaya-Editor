@@ -3595,7 +3595,10 @@ static void TranslateTree (PtrElement pEl, Document doc,
      pTSch = GetTranslationSchema (pEl->ElStructSchema);
      if (pTSch == NULL)
        { 
-	 ExportXmlDocument (doc, pEl, TRUE);
+	 if ((strcmp (pEl->ElStructSchema->SsName, "MathML") != 0) &&
+	     (strcmp (pEl->ElStructSchema->SsName, "SVG") != 0) &&
+	     (strcmp (pEl->ElStructSchema->SsName, "XLink") != 0))
+	   ExportXmlDocument (doc, pEl, TRUE);
 	 return;
        }
      
