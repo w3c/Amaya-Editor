@@ -1228,6 +1228,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       !strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
     /* only for TextFile documents */
     TtaGetEnvBoolean ("SHOW_SPECIAL_CHARS", &showSpecial);
+
   script = pBox->BxScript;
   /* is it a box with a right-to-left writing? */
   if (pAb->AbUnicodeBidi == 'O')
@@ -1252,7 +1253,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
     blockbegin = TRUE;
   else
     blockbegin = FALSE;
-  
+
   /* Is an hyphenation mark needed at the end of the box? */
   if (pBox->BxType == BoDotted)
     hyphen = TRUE;
@@ -1298,7 +1299,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	lgspace = whitespace;
       
       /* Do we need to draw a background */
-      if (pAb->AbPresentationBox && pAb->AbFillBox)
+      if (pAb->AbPresentationBox && pAb->AbFillBox && bg >= 0)
 	DrawRectangle (frame, 0, 0,
 		       x - pBox->BxLPadding, y - pBox->BxTPadding,
 		       width + pBox->BxLPadding + pBox->BxRPadding,

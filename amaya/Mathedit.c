@@ -959,10 +959,14 @@ static void         CreateMathConstruct (int construct)
 		     selectFirstChild, displayTableForm, registered;
 
   doc = TtaGetSelectedDocument ();
+  if (doc == NULL || !TtaGetDocumentAccessMode (doc))
+    {
+      /* no selection. Nothing to do */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
   if (!TtaGetDocumentAccessMode (doc))
-    /* the document is in ReadOnly mode */
     return;
-
   selected = NULL;
   docSchema = TtaGetDocumentSSchema (doc);
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
