@@ -1499,19 +1499,27 @@ void            GoToHome (Document doc, View view)
 
   s = TtaGetEnvString ("HOME_PAGE");
   lang = TtaGetVarLANG ();
+
   if (s == NULL)
     {
       s = TtaGetEnvString ("THOTDIR");
-      sprintf (LastURLName, "%s%camaya%c%s.%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
+      sprintf (LastURLName, "%s%camaya%c%s.%s",
+	       s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
       
       if (!TtaFileExist (LastURLName))
-	sprintf (LastURLName, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
+	sprintf (LastURLName, "%s%camaya%c%s",
+		 s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
   else
     strcpy (LastURLName, s);
-  InNewWindow = FALSE;
-  CurrentDocument = doc;
-  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+  
+  if (CanReplaceCurrentDocument (doc, view))
+    {
+      /* load the HOME document */
+      InNewWindow = FALSE;
+      CurrentDocument = doc;
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+    }
 }
 
 
