@@ -5,6 +5,15 @@
  *
  */
 
+/*
+ * Warning:
+ * This module is part of the Thot library, which was originally
+ * developed in French. That's why some comments are still in
+ * French, but their translation is in progress and the full module
+ * will be available in English in the next release.
+ * 
+ */
+
 /*----------------------------------------------------------------------
    Ce module effectue l'analyse syntaxique d'un texte source dont il
    recoit les mots un par un.
