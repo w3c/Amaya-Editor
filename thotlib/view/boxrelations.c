@@ -504,6 +504,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   if (horizRef)
     {
       /* reference for computing percent rules */
+#ifdef IV
       if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
 	{
 	  pBox = pAb->AbEnclosing->AbBox;
@@ -511,8 +512,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	}
       else
 	GetSizesFrame (frame, &dim, &i);
-
+#endif
       pBox = pAb->AbBox;
+      dim = pBox->BxW;
       /* left margin */
       if (pAb->AbLeftMarginUnit == UnPercent)
 	pBox->BxLMargin = PixelValue (pAb->AbLeftMargin, UnPercent, (PtrAbstractBox) dim, 0);
