@@ -162,7 +162,7 @@ sub start_hndl {
 		$string = "#define $current_label" . "\t\t" . $reference_value ."\n" ;
 		print HEADFILE $string ; 
 	}
-	elsif ( $element eq "base_message") {
+	elsif ( $element eq "base") {
 		#nothing	
 	}
 	elsif ( $element eq "language" ) {
@@ -318,7 +318,7 @@ sub char_hndl {
 
 #--------------------------------------------------------------------
 
-sub comment_hndl { # it's just the comment that is automaticaly copied
+sub comment_hndl { # it's just the comment that isn't copied
 	my ($p, $data) = @_;
 	my $line = $p->current_line;
 	

@@ -13,7 +13,7 @@ my $rep_obj = rep_obj (); #name of the object direcitriy for Amaya
 
 #### 	for all the bases
 # directory for bases 
-my $OUT_BASE_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/bases/";
+my $BASE_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
 my $OUT_MSG_directory = "$home/$rep_amaya/Amaya/config/";
 
@@ -35,7 +35,7 @@ my %index =qw ( 	1	dia
   $head_name {'dia'}= 'EDITOR.h';
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
-  $base_name {'dia'} = 'base_am_dia.xml';
+  $base_name {'dia'} = 'base_am_dial.xml';
 
 ####	for Amayamsg => msg or $index {2}
  $head_dir {'msg'} = "$home/$rep_amaya/Amaya/amaya/";
@@ -84,7 +84,7 @@ use Dial_tool_box qw ( 	&add_label
 								&delete_label );
 use Forcer 			qw ( 	&forcer );
 
-		
+#launch		
 
 menu () ;
 
@@ -101,7 +101,7 @@ sub menu {
 
 	`clear`; # ne veux pas marcher
 	print "=======================================================================\n",
-			"\t\tGestionnaire des dialogues d'Amaya\n";
+			"\t\tAmaya Dialogues Manager\n";
 	do {
 		do {
 			print "\nWhat dialogue type would you like to process?\n";
@@ -109,7 +109,7 @@ sub menu {
 			foreach (@list) {
 				print "\t" . $count++ . "=>\t$_\n";
 			}
-			print " Our choice [0]:\t";
+			print "Our choice [0]:\t";
 			$choice = <STDIN> ;
 			chomp ($choice);
 			if ($choice eq "") {
@@ -134,17 +134,18 @@ sub menu1 {
 	my $choice;
 	my $special; 
 	my @list = ( 
-		"Previous menu", 									#0
+		"Go to the previous menu", 					#0
 		"Init the XML base" ,							#1
-		"Adding/Updating a language", 				#2
+		"Add/Update a language", 						#2
 		"Export all dialogues files",					#3
 		"Add a label",										#4
 		"Delete a label",									#5						
-		"Force the base into conformity with \"EDITOR.h\""#6 
+		"Force the base into conformity with a label file(\".h\")"#6 
 		);
 	my $lang = "";
 	my @command = "";
 
+#show the menu
 do { # to continue to treat the same type of dialogue 			
 	do {
 		print "\nWhat kind of thing would you proceed on ",$types{$last_choice}, "?\n";
@@ -161,18 +162,19 @@ do { # to continue to treat the same type of dialogue
 	}
 	while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 	print "\n";
-	
+
+# treats the answer
 	if ($choice == 1) { #Init the XML base
 		$_ = verify ();
 		if ( /^y/i || /^yes/i ) {
 			Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
 													$head_name{ $index{ $last_choice} },
-													$OUT_BASE_directory, 
+													$BASE_directory, 
 													$base_name { $index{ $last_choice} });
 			# to initialise with english
 			print "now,fill the base with english by default\n";
 			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-			$Import_am_msg::basefile = $OUT_BASE_directory . $base_name { $index{ $last_choice}};
+			$Import_am_msg::basefile = $BASE_directory . $base_name { $index{ $last_choice}};
 			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 			$Import_am_msg::encodage = "latin1";
@@ -180,50 +182,56 @@ do { # to continue to treat the same type of dialogue
 		}
 
 	}
-	elsif ($choice == 2) { #Adding/Updating a language
-	
-		print "What language do you want to treat? (in two letters i.e.: en or fr)\n";
+	elsif ($choice == 2) { #Adding/Updating a language	
+		print "What language do you want to treat? (in two letters like the
+		standard ISO-638-1988 i.e.: en or fr)\n";
 		$lang = <STDIN>;
 		chomp $lang;
 		{	
 		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $OUT_BASE_directory  . $base_name { $index{ $last_choice}};
+		$Import_am_msg::basefile = $BASE_directory  . $base_name { $index{ $last_choice}};
 		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 		Import_am_msg::import_a_language ($lang) ;
 		}
+		
 	}	
 	elsif ($choice == 3) { # Export all dialogues files
-		Export_am_msg::export (	$OUT_BASE_directory . $base_name{ $index{ $last_choice}},
+		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
 										$OUT_MSG_directory,
 										$lang_sufix { $index{ $last_choice}},
 										$head_name{ $index{ $last_choice}}
 										);
 	}
 	elsif ($choice == 4) { # Add a label
-		Dial_tool_box::add_label ( $OUT_BASE_directory,
+		Dial_tool_box::add_label ( $BASE_directory,
 											$base_name{ $index{ $last_choice}} 
 											);						
 	}
 	elsif ($choice == 5) { # Delete a labe
-		Dial_tool_box::delete_label ( $OUT_BASE_directory,
+		Dial_tool_box::delete_label ( $BASE_directory,
 												$base_name{ $index{ $last_choice}} 
 												);
 	}
 	elsif ($choice == 6) { # n'arrive que si last_choice = 1
-		#en principe ne reprend que EDITOR.h
-		
+		#en principe ne reprend que EDITOR.h		
 		$_ = verify ();
 		if ( /^y/i || /^yes/i ) {
-			Forcer::forcer ( 	$OUT_BASE_directory,
+			Forcer::forcer ( 	$BASE_directory,
 									$base_name{ $index{ $last_choice}},
 									$head_dir{ $index{ $last_choice}},
 									$head_name{ $index{ $last_choice}}
-								);
-	
+								);	
 		}	
 	}	
 } while ( $choice != 0 ); 
+
+#to do the update automaticaly
+		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
+										$OUT_MSG_directory,
+										$lang_sufix { $index{ $last_choice}},
+										$head_name{ $index{ $last_choice}}
+										);
 
 }
 

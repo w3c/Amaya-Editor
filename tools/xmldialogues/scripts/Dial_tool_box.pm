@@ -140,7 +140,7 @@ sub modify {
 		}
 	}
 	
-	print OUT "\n</messages>\n</base_message>";							
+	print OUT "\n</messages>\n</base>";							
 
 	close (OUT);
 }
@@ -223,7 +223,7 @@ sub start_  {
 		}
 		$control .= ">" ; 
 	}
-	elsif ($tag eq "base_message") { #into $head_line
+	elsif ($tag eq "base") { #into $head_line
 		$base_message = "\n<$tag";
 		$argument{ "version" } += 1;
 		$_ = `date`;chomp;

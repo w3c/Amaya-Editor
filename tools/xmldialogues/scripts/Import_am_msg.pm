@@ -87,7 +87,7 @@ sub import_a_language {
 # declaration of the parser
 	my $parser = new XML::Parser (
 				ErrorContext  => 0, #number of lines shown after a mistake  
-				NoExpand	=> 1  #like his name (i.e. don't translate '&lt'; into '<') 
+				NoExpand	=> 1  #like his name (i.e. don't translate '&lt;' into '<') 
              );
 #	declaration of the subs used when events are noted	
 	$parser->setHandlers(
@@ -379,7 +379,7 @@ sub start_hndl {
 		addbegintag ( $element,$numberparam, @attributes );		
 		print OUT "\n";#	small things necessary for presentation 
 	}
-	elsif ( $element eq "base_message") {
+	elsif ( $element eq "base") {
 		# to do small modification to indicate new version
 		my $num = 0;
 		while ($attributes[$num] ) {

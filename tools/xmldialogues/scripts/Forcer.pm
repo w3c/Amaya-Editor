@@ -147,7 +147,7 @@ close ( BASE );
 sub start {
 	my $p = shift;
 	my $element = shift ;
-	if ( $element eq "base_message" 
+	if ( $element eq "base" 
 		|| $element eq "control" 
 		|| $element eq "language" 
 		|| $element eq "messages") { 
@@ -158,7 +158,7 @@ sub start {
 			$attributes { $attribute } = shift ;
 			$attribute = shift;
 		}
-		if ( $element eq "base_message"  ) {
+		if ( $element eq "base"  ) {
 			if ( defined( $attributes{"version"}) ) {
 				$attributes{"version"} += 1;
 				print OUT "<$element"; 
@@ -228,7 +228,7 @@ sub default {	#for all the cases of an invalid xml document
 ###############################################################################
 
 sub end_the_base {
-	print OUT "</messages>\n</base_message>";
+	print OUT "</messages>\n</base>";
 	close ( OUT ) || die "can't close the new base\n";
 }
 
