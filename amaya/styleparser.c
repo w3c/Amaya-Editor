@@ -416,7 +416,7 @@ char *ParseClampedUnit (char *text,
 	}
       pval->typed_data.unit = UNIT_REL;
       pval->typed_data.value = int_clamped_value;
-      pval->typed_data.real = 0;
+      pval->typed_data.real = FALSE;
       pval->data = int_clamped_value;   
   return (SkipWord (text));
 }
@@ -1270,6 +1270,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_BOX;
+  pval.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "inherit", 7))
     {
       cssRule = SkipWord (cssRule);
@@ -3046,6 +3047,8 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   if (el || tsch)
     {
       /* Ok the image was fetched, finish the background-image handling */
+      image.typed_data.unit = UNIT_REL;
+      image.typed_data.real = FALSE;
       image.pointer = file;
       TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
       
@@ -3053,8 +3056,7 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
       value.typed_data.value = 1;
       value.typed_data.unit = UNIT_REL;
       value.typed_data.real = FALSE;
-      TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
-      
+      TtaSetStylePresentation (PRShowBox, el, tsch, context, value);      
     }
 
   TtaFreeMemory (callblock);

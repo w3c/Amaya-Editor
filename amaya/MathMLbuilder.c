@@ -4004,17 +4004,20 @@ void EvaluateChildRendering (Element el, Document doc)
 {
   ElementType          elType;
   Element              child, renderedChild;
-  SSchema              MathSSchema;
+  SSchema              MathMLSSchema;
+  AttributeType        attrType;
+  Attribute            attr;
   PresentationValue    pval;
   PresentationContext  ctxt;
-  char                *name;
+  char                *value;
+  int                  length;
 
   ctxt = TtaGetSpecificStyleContext (doc);
   ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
   pval.typed_data.unit = UNIT_PX;
   pval.typed_data.value = 0;
   pval.typed_data.real = FALSE;
-  MathSSchema = TtaGetElementType(el).ElSSchema;
+  MathMLSSchema = TtaGetElementType(el).ElSSchema;
   /* process all children in order */
   child = TtaGetFirstChild (el);
   renderedChild = NULL;
@@ -4022,21 +4025,40 @@ void EvaluateChildRendering (Element el, Document doc)
     {
       /* if this child is a comment or a processing instruction, skip it */
       elType = TtaGetElementType (child);
-      if (elType.ElSSchema != MathSSchema ||
-	  (elType.ElTypeNum != MathML_EL_XMLcomment &&
-	   elType.ElTypeNum != MathML_EL_XMLPI &&
-	   elType.ElTypeNum != MathML_EL_Unknown_namespace))
+      ctxt->destroy = FALSE; /* we will most probably create a PRule
+				Visibility: 0; for this child */
+      if (elType.ElSSchema == MathMLSSchema &&
+	  elType.ElTypeNum != MathML_EL_XMLcomment &&
+	  elType.ElTypeNum != MathML_EL_XMLPI &&
+	  elType.ElTypeNum != MathML_EL_Unknown_namespace &&
+	  elType.ElTypeNum != MathML_EL_ANNOTATION)
 	{
-	  name = TtaGetSSchemaName (elType.ElSSchema);
-	  if (!renderedChild &&
-	      (!strcmp (name, "SVG") || !strcmp (name, "MathML")))
+	  if (!renderedChild && elType.ElTypeNum == MathML_EL_ANNOTATION_XML)
 	    {
-	      renderedChild = child;
-	      ctxt->destroy = TRUE;
+	      /* check if the mime type is known */
+	      attrType.AttrSSchema = MathMLSSchema;
+	      attrType.AttrTypeNum = MathML_ATTR_encoding;
+	      attr = TtaGetAttribute (child, attrType);
+	      if (attr)
+		{
+		  length = TtaGetTextAttributeLength (attr);
+		  if (length > 0)
+		    {
+		      value = TtaGetMemory (length+1);
+		      value[0] = EOS;
+		      TtaGiveTextAttributeValue (attr, value, &length);
+		      if (!strncmp (value, "image/svg", 9) ||
+			  !strcmp (value, AM_SVG_MIME_TYPE) ||
+			  !strncmp (value, "text/htm", 8) ||
+			  !strcmp (value, AM_XHTML_MIME_TYPE))
+			{
+			  /* display that child */
+			  renderedChild = child;
+			  ctxt->destroy = TRUE;
+			}  
+		    }
+		}
 	    }
-	  else
-	    ctxt->destroy = FALSE; /* we will most probably create a PRule
-				    Visibility: 0; for this child */
 	  /* set or remove a visibility PRule for this child */
 	  TtaSetStylePresentation (PRVisibility, child, NULL, ctxt, pval);
 	}
@@ -4242,7 +4264,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  /* Create placeholders within the MACTION element */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
-       case MathML_EL_ANNOTATION_XML:
+       case MathML_EL_SEMANTICS:
 	 /* it's a ANNOTATION_XML element */
 	 /* Evaluate what direct child element to be rendered */
 	 EvaluateChildRendering (el, doc);
