@@ -242,9 +242,6 @@ Document            document;
 #  else /* !_WINDOWS */
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
 #  endif /* _WINDOWS */
-   /* for debugging puropose:
-   fprintf (stderr, " %s", cmd);
-   end of debugging code */
    /***
    sprintf (&cmd[i], " %s/%s.PIV &", dir, name);
    ****/

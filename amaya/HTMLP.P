@@ -5442,6 +5442,7 @@ RULES
  Table:
 	BEGIN
 	Gather: Yes;
+	LineBreak: No;
 #ifdef PAGE
 	PageBreak: Yes;
 	NoBreak1 : 3;

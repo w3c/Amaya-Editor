@@ -411,8 +411,8 @@ boolean            *isPageBreakChanged;
 	      
 	      /* traite les paves fils */
 	      pChildAb = pAb->AbFirstEnclosed;
-	      if (pAb->AbBox->BxType == BoTable);
-	      table = pAb;
+	      if (pAb->AbBox->BxType == BoTable)
+		table = pAb;
 	      /* Ce n'est pas la peine de continuer le calcul */
 	      /* des coupures de boites quand la limite de    */
 	      /* page est deplacee */

@@ -1766,7 +1766,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
-   PtrBox              pCurrentBox;
+   PtrBox              pCurrentBox, pPieceBox;
    boolean             changeSelectBegin;
    boolean             changeSelectEnd;
 
@@ -1802,6 +1802,13 @@ int                 frame;
 		FreePolyline (pCurrentBox);
 	     else if (pAb->AbLeafType == LtPicture)
 	        UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
+	     else if (pCurrentBox->BxType == BoSplit)
+	       {
+		 /* libere les boites generees pour la mise en lignes */
+		 pPieceBox = pCurrentBox->BxNexChild;
+		 while (pPieceBox != NULL)
+		   pPieceBox = FreeBox (pPieceBox);
+	       }
 
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;

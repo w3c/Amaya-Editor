@@ -469,9 +469,12 @@ int                *clipOrg;
       while (pAb->AbPrevious != NULL)
 	{
 	  pAb = pAb->AbPrevious;
-	  pTable = SearchEnclosingType (pAb, BoTable);
+	  if (pPageTable != NULL)
+	    pTable = SearchEnclosingType (pAb, BoTable);
+	  else
+	    pTable = NULL;
 	  if (!pAb->AbOnPageBreak &&
-	      (/*pAb->AbElement->ElTypeNumber == PageBreak + 1 ||*/
+	      (pAb->AbElement->ElTypeNumber == PageBreak + 1 ||
 	       pPageTable == NULL || pPageTable != pTable))
 	    {
 	      if (pTable != NULL)
@@ -499,18 +502,19 @@ int                *clipOrg;
       pNext = pAb->AbNext;
       while (pNext != NULL)
 	{
-	  if (!pNext->AbDead)
+	  if (pPageTable != NULL)
+	    pTable = SearchEnclosingType (pNext, BoTable);
+	  else
+	    pTable = NULL;
+	  if (pPageTable == NULL || pPageTable != pTable)
 	    {
-	      /* demande au Mediateur la position et la hauteur du pave */
-	      SetPageHeight (pNext, TRUE, &h, &yTop, &NbCar);
-	      if (yTop < yThread)
-		/* le haut du pave est au-dessus du saut de page */
-		if (yTop + h <= yThread && !pNext->AbOnPageBreak)
-		  {
-		    if (pPageTable != NULL)
-		      pTable = SearchEnclosingType (pNext, BoTable);
-		    if (/*pNext->AbElement->ElTypeNumber == PageBreak + 1 ||*/
-			pPageTable == NULL || pPageTable != pTable)
+	      if (!pNext->AbDead)
+		{
+		  /* demande au Mediateur la position et la hauteur du pave */
+		  SetPageHeight (pNext, TRUE, &h, &yTop, &NbCar);
+		  if (yTop < yThread)
+		    /* le haut du pave est au-dessus du saut de page */
+		    if (yTop + h <= yThread && !pNext->AbOnPageBreak)
 		      {
 			if (pNext->AbPresentationBox)
 			  /* Tue les paves de presentation */
@@ -521,10 +525,10 @@ int                *clipOrg;
 			else
 			  DestroyAbsBoxesView (pNext->AbElement, pDoc, FALSE, viewNb);
 		      }
-		  }
-		else
-		  /* le pave est traverse par le saut de page */
-		  KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
+		    else
+		      /* le pave est traverse par le saut de page */
+		      KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
+		}
 	    }
 	  pNext = pNext->AbNext;
 	}

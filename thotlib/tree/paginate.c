@@ -2008,7 +2008,7 @@ int                 schView;
 			RedispAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
 		     else
 			RedispAbsBox = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
-		     RealPageHeight = PageHeight;
+		     /*RealPageHeight = PageHeight;*/
 		     (void) ChangeConcreteImage (frame, &RealPageHeight, RedispAbsBox);
 		     /* libere tous les paves morts de la vue */
 		     FreeDeadAbstractBoxes (pAb);
