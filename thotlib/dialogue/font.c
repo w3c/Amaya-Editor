@@ -391,7 +391,7 @@ int                 zoom;
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
+	 dist = (val * CharacterAscent ('x', pAb->AbBox->BxFont)) / 10;
        break;
      case UnPoint:
        dist = PointToPixel (val);
@@ -456,7 +456,7 @@ int                 zoom;
        if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = val * 10 / CharacterHeight ('x', pAb->AbBox->BxFont);
+	 dist = val * 10 / CharacterAscent ('x', pAb->AbBox->BxFont);
        break;
      case UnPoint:
        /* take zoom into account */

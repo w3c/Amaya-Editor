@@ -2,13 +2,13 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
-1.5
+1.5a
 =============================================================
 
-Extensions 1.5:
+Extensions 1.5a:
 ---------------
 
-* First implementation of a multi-document, multi-level Undo command
+* First implementation of a multi-document, multi-level Undo/Redo commands
 
 * WAI comments on Image and Maps.
 
@@ -18,6 +18,8 @@ Extensions 1.5:
 * New CSS properties "left-margin", "top-margin", "right-margin",
   "display:none" are now interpreted.
 
+* Loading, Editing, Printing and Saving of CSS files or simple Text files.
+
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
 
@@ -26,7 +28,12 @@ Extensions 1.5:
   - Editor/Browser mode: setting Amaya mode
   - Amaya at W3C: link to the http://www.w3.org/Amaya/User/BinDist.html page
 
-Fixed bugs 1.5:
+* New version of the Thot API:
+  - Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix
+    dialogue API.
+  - New functions: TtaGiveNextElement, TtaGetFirstLeaf, TtaGetLastLeaf
+
+Fixed bugs 1.5a:
 ---------------
 
 * Scripts can now be created within the document Body and are no longer

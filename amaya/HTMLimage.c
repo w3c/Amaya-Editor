@@ -735,7 +735,10 @@ int                 flags;
 #endif  /* AMAYA_JAVA || AMAYA_ILU */
        return FALSE;
      }
-   else if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docTextRO)
+   else if (DocumentTypes[doc] == docText ||
+	    DocumentTypes[doc] == docTextRO ||
+	    DocumentTypes[doc] == docCSS ||
+	    DocumentTypes[doc] == docCSSRO)
      return FALSE;
 
    /* register the current URL */

@@ -20,27 +20,20 @@
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
 
-#ifdef _WINDOWS
-#define HAVE_BOOLEAN
-#include "jconfig.h"
-#endif /* _WINDOWS */
-
 #include "ustring.h" 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
-
-#include "jinclude.h"
-#include "jpeglib.h"
-
-#ifndef _WINDOWS
-#define HAVE_BOOLEAN
-#endif /* _WINDOWS */
 #include "typemedia.h"
 #include "picture.h"
 #include "frame.h"
 #include "message.h"
 #include "application.h"
+#include "jconfig.h"
+
+#include "jinclude.h"
+#include "jpeglib.h"
+
 
 #define THOT_EXPORT extern
 #include "picture_tv.h"

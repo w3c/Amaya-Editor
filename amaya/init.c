@@ -1392,7 +1392,8 @@ boolean             logFile;
       opened = FALSE;
 
    /* open the main view */
-   if (docType == docText || docType == docTextRO)
+   if (docType == docText || docType == docTextRO ||
+       docType == docCSS || docType == docCSSRO)
      doc = TtaNewDocument ("TextFile", docname);
    else
      doc = TtaNewDocument ("HTML", docname);
@@ -1403,7 +1404,8 @@ boolean             logFile;
      }
    else if (doc > 0)
      {
-       if (docType == docText || docType == docTextRO)
+       if (docType == docText || docType == docTextRO||
+	   docType == docCSS || docType == docCSSRO)
 	   TtaSetPSchema (doc, "TextFileP");
        else
 	 {
@@ -1558,16 +1560,20 @@ boolean             logFile;
 
    /* store the new document type */
    reinitialized = FALSE;
-   if (docType == docImage)
+   if (docType == docImage)        /* -------->loading an image */
      {
-       if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docTextRO)
+       if (DocumentTypes[doc] == docReadOnly ||
+	   DocumentTypes[doc] == docTextRO ||
+	   DocumentTypes[doc] == docCSSRO)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
 	   DocumentTypes[doc] = docImageRO;
 	 }
-       else if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docText)
+       else if (DocumentTypes[doc] == docHTML ||
+		DocumentTypes[doc] == docText ||
+		DocumentTypes[doc] == docCSS)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
@@ -1575,48 +1581,90 @@ boolean             logFile;
 	   DocumentTypes[doc] = docImage;
 	 }
      }
-   else if (docType == docImageRO)
+   else if (docType == docImageRO)  /* -------->loading an image in ReadOnly */
      {
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docImageRO;
      }
-   else if (docType == docText)
+   else if (docType == docCSS)      /* -------->loading a CSS file */
      {
-       if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docImageRO)
+       if (DocumentTypes[doc] == docReadOnly ||
+	   DocumentTypes[doc] == docImageRO)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docCSSRO;
+	 }
+       else if (DocumentTypes[doc] == docHTML ||
+		DocumentTypes[doc] == docImage)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadWrite mode */
+	   DocumentTypes[doc] = docCSS;
+	 }
+       else if (DocumentTypes[doc] == docTextRO)
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docCSSRO;
+       else if (DocumentTypes[doc] == docText)
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docCSS;	 
+     }
+   else if (docType == docCSSRO)     /* -------->loading CSS in ReadOnly */
+     {
+       /* document in ReadOnly mode */
+       DocumentTypes[doc] = docCSSRO;
+     }
+   else if (docType == docText)      /* -------->loading a Text file */
+     {
+       if (DocumentTypes[doc] == docReadOnly ||
+	   DocumentTypes[doc] == docImageRO)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
 	   DocumentTypes[doc] = docTextRO;
 	 }
-       else if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage)
+       else if (DocumentTypes[doc] == docHTML ||
+		DocumentTypes[doc] == docImage)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
 	   /* document in ReadWrite mode */
 	   DocumentTypes[doc] = docText;
 	 }
+       else if (DocumentTypes[doc] == docCSSRO)
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docTextRO;
+       else if (DocumentTypes[doc] == docCSS)
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docText;	 
      }
-   else if (docType == docTextRO)
+   else if (docType == docTextRO) /* -------->loading TEXT in ReadOnly */
      {
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docTextRO;
-      }
-   else if (docType == docReadOnly)
+     }
+   else if (docType == docReadOnly) /* -------->loading HTML in ReadOnly */
      {
        /* document in ReadOnly mode */
        DocumentTypes[doc] = docReadOnly;
-      }
-   else
+     }
+   else 			/* -------->loading a HTML file */
      {
-       if (DocumentTypes[doc] == docTextRO || DocumentTypes[doc] == docImageRO)
+       if (DocumentTypes[doc] == docTextRO ||
+	   DocumentTypes[doc] == docImageRO ||
+	   DocumentTypes[doc] == docCSSRO)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
 	   DocumentTypes[doc] = docReadOnly;
 	 }
-       else if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docImage)
+       else if (DocumentTypes[doc] == docText ||
+		DocumentTypes[doc] == docImage ||
+	   DocumentTypes[doc] == docCSS)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
@@ -1630,9 +1678,11 @@ boolean             logFile;
      if (DocumentTypes[doc] == docReadOnly ||
 	 DocumentTypes[doc] == docImageRO ||
 	 DocumentTypes[doc] == docText ||
-	 DocumentTypes[doc] == docTextRO)
+	 DocumentTypes[doc] == docTextRO ||
+	 DocumentTypes[doc] == docCSS ||
+	 DocumentTypes[doc] == docCSSRO)
        {
-	 if (DocumentTypes[doc] != docText)
+	 if (DocumentTypes[doc] != docText && DocumentTypes[doc] != docCSS)
 	   {
 	     /* the document is in ReadOnly mode */
 	     TtaSetItemOff (doc, 1, File, BSave);
@@ -1652,7 +1702,9 @@ boolean             logFile;
 	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
 	 if (DocumentTypes[doc] == docText ||
-	     DocumentTypes[doc] == docTextRO)
+	     DocumentTypes[doc] == docTextRO ||
+	     DocumentTypes[doc] == docCSS ||
+	     DocumentTypes[doc] == docCSSRO)
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOff (doc, 1, Views, TShowTargets);
@@ -1875,6 +1927,11 @@ boolean		    history;
 	  docType = docHTML;
 	  otherFile = FALSE;
 	}
+      else if (IsCSSName (pathname))
+	{
+	  docType = docCSS;
+	  otherFile = FALSE;
+	}
       else if (!IsImageName (pathname))
 	{
 	  docType = docText;
@@ -1904,9 +1961,19 @@ boolean		    history;
 	     content_type[j] = EOS;
 	   if (ustrcasecmp (content_type, "text") == 0)
 	     {
-	       if (ustrncasecmp (&content_type[i+1], "html", 4) == 0)
+	       if (!ustrncasecmp (&content_type[i+1], "html", 4))
 		 {
 		   docType = docHTML;
+		   otherFile = FALSE;
+		 }
+	       else if (!ustrncasecmp (&content_type[i+1], "xml", 3))
+		 {
+		   docType = docHTML;
+		   otherFile = FALSE;
+		 }
+	       else if (!ustrncasecmp (&content_type[i+1], "css", 3))
+		 {
+		   docType = docCSS;
 		   otherFile = FALSE;
 		 }
 	       else
@@ -2005,7 +2072,7 @@ boolean		    history;
 	      TtaFileCopy (tempfile, tempdocument);
 	      TtaFileUnlink (tempfile);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
-	      if (DocumentTypes[doc] == docImage || DocumentTypes[doc] == docImageRO) 
+	      if (DocumentTypes[newdoc] == docImage || DocumentTypes[newdoc] == docImageRO) 
 		  MoveImageFile (doc, newdoc, documentname);
 	    }
 	  else
@@ -2024,7 +2091,7 @@ boolean		    history;
       s = TtaGetMemory (i);
       ustrcpy (s, pathname);
       if (DocumentURLs[newdoc] != NULL)
-	TtaFreeMemory (DocumentURLs[(int) newdoc]);
+	TtaFreeMemory (DocumentURLs[newdoc]);
       DocumentURLs[newdoc] = s;
       /* save the document's formdata into the document table */
       if (DocumentMeta[newdoc] != NULL)
@@ -2057,14 +2124,17 @@ boolean		    history;
 
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
-      plainText = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docTextRO);
+      plainText = (DocumentTypes[newdoc] == docText ||
+		   DocumentTypes[newdoc] == docTextRO ||
+		   DocumentTypes[newdoc] == docCSS ||
+		   DocumentTypes[newdoc] == docCSSRO);
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
       if (!plainText)
 	if (HTMLErrorsFound)
 	  TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
 	else
-          TtaSetItemOff (doc, 1, Special, BShowLogFile);
+          TtaSetItemOff (newdoc, 1, Special, BShowLogFile);
       if (newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
@@ -3143,7 +3213,6 @@ void               *ctx_cbf;
 static void	UpdateSaveAsButtons ()
 #else
 static void	UpdateSaveAsButtons ()
-
 #endif
 {
   int	active;
@@ -3211,7 +3280,7 @@ static void	SetFileSuffix ()
 	  ustrcpy (&SaveName[i], suffix);
 	  /* display the new filename in the dialog box */
 	  filename = TtaGetMemory (MAX_LENGTH);
-	  ustrcpy (filename, DirectoryName);
+	  ustrcpy (filename,SavePath );
 	  ustrcat (filename, DIR_STR);
 	  ustrcat (filename, SaveName);
 	  TtaSetTextForm (BaseDialog + NameSave, filename);

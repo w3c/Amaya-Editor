@@ -18,7 +18,7 @@ mkdep : mkdep.o
 	$(LD) $(LDFLAGS) -o $@ mkdep.o
 
 mkdep.o : @srcdir@/mkdep.c
-	$(CC) $(CFLAGS) -I../.. -c @srcdir@/mkdep.c -o mkdep.o
+	$(CC) $(CFLAGS) -I../../ -c @srcdir@/mkdep.c -o mkdep.o
 
 clean :
 	$(RM) *.o 
@@ -28,7 +28,7 @@ install :
 uninstall :
 
 test: all
-	./mkdep -I../../../w3c-libwww-5.0a/Library/src \
+	./mkdep -I../../../libwww/Library/src \
 	        -I../../../thotlib/internals/h \
 		-I../../../thotlib/internals/var \
 		-I../../../thotlib/internals/f \

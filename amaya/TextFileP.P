@@ -23,11 +23,7 @@ DEFAULT
    BEGIN
    HorizRef : Enclosed . HRef;
    VertRef : * . Left;
-#ifdef PAGE
-   Width : Enclosing . Width;
-#else
    Width : Enclosed . Width;
-#endif
    Height : Enclosed . Height;
    VertPos : Top = Previous . Bottom;
    HorizPos : Left = Enclosing . Left;
@@ -62,6 +58,7 @@ BOXES
 	Justify: No;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+	Width: Enclosed . Width;
 	Height:   1.2 cm;
 	Size : 8 pt;
 	Font: times;
@@ -94,6 +91,7 @@ BOXES
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
 	Height:   1.6 cm;
+	Width: Enclosed .Width;
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -146,6 +144,7 @@ BOXES
 	Justify: No;
 	HorizPos: Left = BODY . Right;
 	VertPos: Top = Enclosing . Top;
+	Width : Enclosed . Width;
 	Height:   1;
 	Size : 12 pt;
 	Font: times;
@@ -167,7 +166,7 @@ RULES
 	Style: Roman;
 	Adjust: Left;
 #ifdef PAGE
-	Size: 11 pt;
+	Size: 10 pt;
 	HorizPos: VMiddle = Enclosing.VMiddle;
 	Page(ThePage);
 	Width: Enclosing . Width;
@@ -195,6 +194,11 @@ RULES
  Line_: BEGIN
 	Line;
 	LineBreak: Yes;
+#ifdef PAGE
+	Width: Enclosing . Width;
+#else
+	Width: Enclosed . Width;
+#endif
 	END;
 
  TEXT_UNIT :

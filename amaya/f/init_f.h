@@ -46,7 +46,7 @@ extern void Reload_callback ( int doc,
                               STRING outputfile,
                               STRING content_type,
                               void * context );
-extern void Reload ( Document document,
+extern void Reload ( Document doc,
                      View view );
 extern void ShowTargets ( Document document,
                           View view );
@@ -55,7 +55,7 @@ extern void ZoomIn ( Document document,
 extern void ZoomOut ( Document document,
                       View view );
 extern void RecalibrateZoom ( Document document,
-			      View view );
+                              View view );
 extern void ShowStructure ( Document document,
                             View view );
 extern void ShowAlternate ( Document document,
@@ -174,7 +174,7 @@ extern void Reload_callback (/* int doc,
                                 STRING outputfile,
                                 STRING content_type,
                                 void * context */);
-extern void Reload (/* Document document,
+extern void Reload (/* Document doc,
                        View view */);
 extern void ShowTargets (/* Document document,
                             View view */);
@@ -183,7 +183,7 @@ extern void ZoomIn (/* Document document,
 extern void ZoomOut (/* Document document,
                         View view */);
 extern void RecalibrateZoom (/* Document document,
-				View view */);
+                                View view */);
 extern void ShowStructure (/* Document document,
                               View view */);
 extern void ShowAlternate (/* Document document,

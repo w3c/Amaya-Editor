@@ -135,8 +135,7 @@ typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 #else /* _WINDOWS *//***********************************WINDOWS**/
 
 #ifndef HAVE_BOOLEAN
-typedef unsigned char boolean;
-#define HAVE_BOOLEAN
+typedef unsigned int boolean;
 #endif
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t
@@ -150,4 +149,5 @@ typedef unsigned char boolean;
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
 
+#define HAVE_BOOLEAN
 #endif /* THOT_SYS_H */

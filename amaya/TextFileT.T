@@ -14,7 +14,7 @@ RULES
 	END;
 
  Line_: BEGIN
-	Create '\12';
+	Create '\12' After;
 	END;
 
 TextTRANSLATE

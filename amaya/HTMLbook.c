@@ -427,23 +427,28 @@ Document            document;
    PrintAs prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
 #ifdef __STDC__
-void                PrintAs (Document document, View view)
+void                PrintAs (Document doc, View view)
 #else  /* __STDC__ */
-void                PrintAs (document, view)
-Document            document;
+void                PrintAs (doc, view)
+Document            doc;
 #endif /* __STDC__ */
 {
   AttributeType      attrType;
   Attribute          attr;
   Element            el;
   CHAR               viewsToPrint[MAX_PATH];
-  boolean            status;
+  boolean            status, textFile;
 
-   CheckPrintingDocument (document);
+  textFile = (DocumentTypes[doc] == docText ||
+	      DocumentTypes[doc] == docTextRO ||
+	      DocumentTypes[doc] == docCSS ||
+	      DocumentTypes[doc] == docCSSRO);
+
+   CheckPrintingDocument (doc);
    ustrcpy (viewsToPrint, "Formatted_view ");
-   if (withToC)
+   if (!textFile && withToC)
      ustrcat (viewsToPrint, "Table_of_contents ");
-   if (numberLinks)
+   if (!textFile && numberLinks)
      /* display numbered links */
      {
        /* associate an attribute InternalLink with all anchors refering
@@ -459,26 +464,39 @@ Document            document;
    else
      {
        if (PageSize == PP_A4)
-	 TtaSetPrintSchema ("HTMLPP");
+	 {
+	   if (textFile)
+	     TtaSetPrintSchema ("TextFilePP");
+	   else
+	     TtaSetPrintSchema ("HTMLPP");
+	 }
        else
-	 TtaSetPrintSchema ("HTMLPPUS");     
+	 {
+	   if (textFile)
+	     TtaSetPrintSchema ("TextFilePPUS");
+	   else
+	     TtaSetPrintSchema ("HTMLPPUS");
+	 }    
      }
    /* post or remove the PrintURL attribute */
-   el =  TtaGetMainRoot (document);
-   status = TtaIsDocumentModified (document);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+   el =  TtaGetMainRoot (doc);
+   status = TtaIsDocumentModified (doc);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   if (textFile)
+     attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+   else
+     attrType.AttrTypeNum = HTML_ATTR_PrintURL;
    attr = TtaGetAttribute (el, attrType);
    if (attr == 0 && printURL)
      {
 	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, document);
+	TtaAttachAttribute (el, attr, doc);
      }
    if (attr != 0 && !printURL)
-     TtaRemoveAttribute (el, attr, document);
+     TtaRemoveAttribute (el, attr, doc);
    TtaPrint (docPrint, viewsToPrint);
    if (!status)
-     TtaSetDocumentUnmodified (document);
+     TtaSetDocumentUnmodified (doc);
 }
 
 
@@ -625,10 +643,10 @@ void                InitPrint ()
   SetupAndPrint sets printing parameters and starts the printing process
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetupAndPrint (Document document, View view)
+void                SetupAndPrint (Document doc, View view)
 #else
-void                SetupAndPrint (document, view)
-Document            document;
+void                SetupAndPrint (doc, view)
+Document            doc;
 View                view;
 #endif
 {
@@ -636,12 +654,18 @@ View                view;
    CHAR             bufMenu[MAX_LENGTH];
    int              i;
 #  endif /* !_WINDOWS */
+   boolean            status, textFile;
+
+   textFile = (DocumentTypes[doc] == docText ||
+	       DocumentTypes[doc] == docTextRO ||
+	       DocumentTypes[doc] == docCSS ||
+	       DocumentTypes[doc] == docCSSRO);
 
    /* Print form */
-   CheckPrintingDocument (document);
+   CheckPrintingDocument (doc);
 
 #  ifndef _WINDOWS
-   TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (document, view), 
+   TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
    i = 0;
@@ -700,8 +724,13 @@ View                view;
    /* activates the Print form */
     TtaShowDialogue (basePrint+NumFormPrint, FALSE);
 #   else  /* _WINDOWS */
-    CreatePrintDlgWindow (TtaGetViewFrame (document, view), PSdir, basePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint); 
+    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir, basePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint); 
 #   endif /* _WINDOWS */
+    if (textFile)
+      {
+	/* invalid dialogue entries */
+	TtaRedrawMenuEntry (basePrint+NumMenuOptions, 1, NULL, -1, FALSE);
+	TtaRedrawMenuEntry (basePrint+NumMenuOptions, 2, NULL, -1, FALSE);	      }
 }
 
 /*----------------------------------------------------------------------
@@ -709,14 +738,14 @@ View                view;
   Execute the "Section Numbering" command
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SectionNumbering (Document document, View view)
+void                SectionNumbering (Document doc, View view)
 #else
-void                SectionNumbering (document, view)
-Document            document;
+void                SectionNumbering (doc, view)
+Document            doc;
 View                view;
 #endif
 {
-   ChangeAttrOnRoot (document, HTML_ATTR_SectionNumbering);
+   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
 
 /*----------------------------------------------------------------------

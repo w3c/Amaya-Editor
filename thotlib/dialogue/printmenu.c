@@ -509,6 +509,7 @@ Document            document;
    i = ustrlen (cmd);
 
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
+printf("%s\n", cmd);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);

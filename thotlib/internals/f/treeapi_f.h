@@ -62,6 +62,8 @@ extern void TtaNextAssociatedRoot ( Document document,
                                     Element * root );
 extern Element TtaGetFirstChild ( Element parent );
 extern Element TtaGetLastChild ( Element parent );
+extern Element TtaGetFirstLeaf ( Element parent );
+extern Element TtaGetLastLeaf ( Element parent );
 extern void TtaPreviousSibling ( Element * element );
 extern void TtaNextSibling ( Element * element );
 extern Element TtaGetSuccessor ( Element element );
@@ -188,6 +190,8 @@ extern void TtaNextAssociatedRoot (/* Document document,
                                       Element * root */);
 extern Element TtaGetFirstChild (/* Element parent */);
 extern Element TtaGetLastChild (/* Element parent */);
+extern Element TtaGetFirstLeaf (/* Element parent */);
+extern Element TtaGetLastLeaf (/* Element parent */);
 extern void TtaPreviousSibling (/* Element * element */);
 extern void TtaNextSibling (/* Element * element */);
 extern Element TtaGetSuccessor (/* Element element */);

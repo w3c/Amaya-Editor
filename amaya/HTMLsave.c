@@ -22,7 +22,6 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
-
 static CHAR         currentDocToSave[MAX_LENGTH];
 static CHAR         currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
@@ -33,6 +32,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
+
 
 static STRING       DefaultName;
 static CHAR         StdDefaultName[] = "Overview.html";
@@ -46,7 +46,7 @@ static int          URL_attr_tab[] = {
    HTML_ATTR_Style_,
    HTML_ATTR_cite
 };
-
+static boolean      TextFormat;
 static int          SRC_attr_tab[] = {
    HTML_ATTR_SRC,
    HTML_ATTR_background_,
@@ -382,15 +382,32 @@ STRING              pathname;
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
+		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
+
+   /* choice between html, xml and text */
    sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXML", EOS, "BText", EOS, "S", EOS,
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer, NULL, TRUE);
-   SaveAsHTML = TRUE;
-   SaveAsXML = FALSE;
-   SaveAsText = FALSE;
+   if (TextFormat)
+     {
+       SaveAsHTML = FALSE;
+       SaveAsXML = FALSE;
+       SaveAsText = TRUE;
+     }
+   else if (IsXMLName (pathname))
+     {
+       SaveAsHTML = FALSE;
+       SaveAsXML = TRUE;
+       SaveAsText = FALSE;
+     }
+   else
+     {
+       SaveAsHTML = TRUE;
+       SaveAsXML = FALSE;
+       SaveAsText = FALSE;
+     }
    TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
@@ -400,11 +417,13 @@ STRING              pathname;
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, ScanFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+   /* second line */
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    TtaNewLabel (BaseDialog + Label1, BaseDialog + SaveForm, "");
    TtaNewLabel (BaseDialog + Label2, BaseDialog + SaveForm, "");
+   /* third line */
    TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
@@ -413,21 +432,148 @@ STRING              pathname;
    TtaNewTextForm (BaseDialog + FilterText, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #  else /* _WINDOWS */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
 #  endif /* _WINDOWS */
+   if (TextFormat)
+     {
+       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
+       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, -1, FALSE);
+       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, FALSE);
+       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, FALSE);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitSaveObjectForm (Document document, View view, STRING object, STRING pathname)
+#else
+void                InitSaveObjectForm (document, view, object, pathname)
+Document            document;
+View                view;
+STRING              object;
+STRING              pathname;
+
+#endif
+{
+#  ifndef _WINDOWS
+   CHAR                tempdir[MAX_LENGTH];
+#  endif /* _WINDOWS */
+
+   if (SavingDocument != 0 || SavingObject != 0)
+     return;
+   SavingObject = document;
+   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
+
+#  ifndef _WINDOWS
+   /* Dialogue form for saving as */
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
+   TtaListDirectory (SavePath, BaseDialog + SaveForm,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseDialog + DirSave, "",
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
+		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
+   TtaSetTextForm (BaseDialog + NameSave, pathname);
+   TtaExtractName (pathname, tempdir, ObjectName);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#  else  /* _WINDOWS */
+   CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-   SaveHTMLDocumentAs                                              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DeleteTempObjectFile (void)
+#else
+void                DeleteTempObjectFile ()
+#endif
+{
+   TtaFileUnlink (tempSavedObject);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DoSaveObjectAs (void)
+#else
+void                DoSaveObjectAs ()
+#endif
+{
+   CHAR                tempfile[MAX_LENGTH];
+   CHAR                msg[MAX_LENGTH];
+   boolean             dst_is_local;
+   int                 res;
+
+   dst_is_local = !IsW3Path (SavePath);
+
+   strcpy (tempfile, SavePath);
+   strcat (tempfile, DIR_STR);
+   strcat (tempfile, ObjectName);
+
+
+   if (!dst_is_local)
+     {
+#ifdef AMAYA_JAVA
+	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
+			    unknown_type,
+			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_USE_PRECONDITIONS, NULL, NULL);
+#else
+	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
+	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
+			    unknown_type,
+			    AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
+			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
+#endif /* AMAYA_JAVA */
+
+
+	if (res)
+	  {
+	     TtaSetDialoguePosition ();
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+	     return;
+	  }
+	SavingObject = 0;
+	SavingDocument = 0;
+	return;
+     }
+   if (TtaFileExist (tempfile))
+     {
+	/* ask confirmation */
+	sprintf (msg, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
+	InitConfirm (SavingObject, 1, msg);
+	if (!UserAnswer)
+	  {
+	     /* the user has to change the name of the saving file */
+	     TtaSetDialoguePosition ();
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+	     return;
+	  }
+     }
+   TtaFileCopy (tempSavedObject, tempfile);
+   /* delete the temporary file */
+   DeleteTempObjectFile ();
+   SavingObject = 0;
+   SavingDocument = 0;
+}
+
+/*----------------------------------------------------------------------
+   SaveDocumentAs                                              
    Entry point called when the user selects the SaveAs function
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SaveDocumentAs (Document document, View view)
+void                SaveDocumentAs (Document doc, View view)
 #else
-void                SaveDocumentAs (document, view)
-Document            document;
+void                SaveDocumentAs (doc, view)
+Document            doc;
 View                view;
 
 #endif
@@ -435,41 +581,58 @@ View                view;
    CHAR             tempname[MAX_LENGTH];
    int              i;
 
-   if (SavingDocument != 0 && SavingDocument != document)
+   if ((SavingDocument != 0 && SavingDocument != doc) ||
+       SavingObject != 0)
       return;
-   if (SavingObject != 0)
-      return;
+
+   TextFormat = (DocumentTypes[doc] == docText ||
+		 DocumentTypes[doc] == docTextRO ||
+		 DocumentTypes[doc] == docCSS ||
+		 DocumentTypes[doc] == docCSSRO);
 
    /* memorize the current document */
    if (SavingDocument == 0)
      {
-       SavingDocument = document;
-       strcpy (tempname, DocumentURLs[document]);
+       SavingDocument = doc;
+       strcpy (tempname, DocumentURLs[doc]);
        /* suppress compress suffixes from tempname */
        i = strlen (tempname) - 1;
        if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
 	 {
 	   tempname[i-2] = EOS;
-	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
+	   TtaFreeMemory (DocumentURLs[doc]);
+	   DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
 	 }
        else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
 	 {
 	   tempname[i-1] = EOS;
-	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
+	   TtaFreeMemory (DocumentURLs[doc]);
+	   DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
 	 }
-       
+
        /* if it is a Web document use the current SavePath */
        if (IsW3Path (tempname))
-	 TtaExtractName (tempname, SavePath, SaveName);
+	 {
+	   TtaExtractName (tempname, SavePath, SaveName);
+	   /* add the suffix .html for HTML documents */
+	   if (!TextFormat &&
+	       (!IsHTMLName (SaveName) || !IsXMLName (SaveName)))
+	     {
+	       strcat (SaveName, ".html");
+	       strcpy (tempname, SavePath);
+	       strcat (tempname, URL_STR);
+	       strcat (tempname, SaveName);
+ 	     }
+	 }
        else
 	 {
-	   TtaGetDocumentDirectory (SavingDocument, tempname, MAX_LENGTH);
+	   TtaGetDocumentDirectory (doc, tempname, MAX_LENGTH);
 	   strcpy (SavePath, tempname);
-	   strcpy (SaveName, TtaGetDocumentName (SavingDocument));
+	   strcpy (SaveName, TtaGetDocumentName (doc));
 	   strcat (tempname, DIR_STR);
-	   if (!IsHTMLName (SaveName))
+	   /* add the suffix .html for HTML documents */
+	   if (!TextFormat &&
+	       (!IsHTMLName (SaveName) || !IsXMLName (SaveName)))
 	     strcat (SaveName, ".html");
 	   strcat (tempname, SaveName);
 	 }
@@ -483,7 +646,7 @@ View                view;
      }
 
    /* display the dialog box */
-   InitSaveForm (document, 1, tempname);
+   InitSaveForm (doc, 1, tempname);
 }
 
 /*----------------------------------------------------------------------
@@ -571,9 +734,10 @@ Document            doc;
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean    SaveDocumentLocally (STRING directoryName, STRING documentName)
+static boolean    SaveDocumentLocally (Document doc, STRING directoryName, STRING documentName)
 #else
-static boolean    SaveDocumentLocally (directoryName, documentName)
+static boolean    SaveDocumentLocally (doc, directoryName, documentName)
+Document          doc;
 STRING            directoryName;
 STRING            documentName;
 
@@ -593,34 +757,33 @@ STRING            documentName;
   strcat (tempname, documentName);
   /* suspend the redisplay due to the temporary update of attributes
      STYLE and META-CONTENT */
-  dispMode = TtaGetDisplayMode (SavingDocument);
+  dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (SavingDocument, DeferredDisplay);
+    TtaSetDisplayMode (doc, DeferredDisplay);
   if (SaveAsText) 
     {
-      SetInternalLinks (SavingDocument);
-      ok = TtaExportDocument (SavingDocument, tempname, "HTMLTT");
+      SetInternalLinks (doc);
+      ok = TtaExportDocument (doc, tempname, "HTMLTT");
     }
   else
     {
-      SetNamespacesAndDTD (SavingDocument);
+      SetNamespacesAndDTD (doc);
       if (SaveAsXML)
-	ok = TtaExportDocument (SavingDocument, tempname, "HTMLTX");
+	ok = TtaExportDocument (doc, tempname, "HTMLTX");
       else
-	ok = TtaExportDocument (SavingDocument, tempname, "HTMLT");
+	ok = TtaExportDocument (doc, tempname, "HTMLT");
       if (ok)
 	{
-	  TtaSetDocumentDirectory (SavingDocument, directoryName);
+	  TtaSetDocumentDirectory (doc, directoryName);
+	  /**********/
 	  strcpy (docname, documentName);
 	  ExtractSuffix (docname, tempname);
 	  /* Change the document name in all views */
-	  TtaSetDocumentName (SavingDocument, docname);
-	  TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-	  TtaSetDocumentUnmodified (SavingDocument);
+	  TtaSetDocumentName (doc, docname);
 	}
     }
   /* retore the redisplay */
-  TtaSetDisplayMode (SavingDocument, dispMode);
+  TtaSetDisplayMode (doc, dispMode);
   return (ok);
 }
 
@@ -796,22 +959,110 @@ boolean             use_preconditions;
 }
 
 /*----------------------------------------------------------------------
+  SaveObjectThroughNet
+  Save a simple file to a remote network location.
+  confirm = TRUE form SAVE_AS and FALSE from SAVE
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      SaveObjectThroughNet (Document document, View view,
+					  STRING url, boolean confirm,
+					  boolean use_preconditions)
+#else
+static boolean      SaveObjectThroughNet (document, view, url, confirm,
+					  use_preconditions)
+Document            document;
+View                view;
+STRING              url;
+boolean             confirm;
+boolean             use_preconditions;
+#endif
+{
+  LoadedImageDesc *pImage;
+  STRING           tempname;
+  STRING           msg;
+  int              remainder = 500;
+  int              index = 0, len, nb = 0;
+  int              imageType, res;
+
+  msg = TtaGetMemory(remainder);
+  if (msg == NULL)
+    return (FALSE);
+
+  /*
+   * Don't use memory allocated on the stack ! May overflow the 
+   * memory allocated for this Java thread.
+   */
+  /* save into the temporary document file */
+  tempname = GetLocalPath (document, url);
+
+  /* build the output */
+  TtaExportDocument (document, tempname, "TextFileT");
+
+  ActiveTransfer (document);
+  TtaHandlePendingEvents ();
+  res = SafeSaveFileThroughNet (document, tempname,
+				url, unknown_type, 
+				use_preconditions);
+  if (res != 0)
+    {
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+      DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+#endif /* AMAYA_JAVA || AMAYA_ILU */
+      ResetStop (document);
+      if (confirm)
+	{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+	  sprintf (msg, "%s %s \n%s",
+		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		   url,
+		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#else /* AMAYA_JAVA || AMAYA_ILU */
+	  sprintf (msg, "%s %s \n%s\n%s",
+		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		   url,
+		   AmayaLastHTTPErrorMsg,
+		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#endif /* AMAYA_JAVA || AMAYA_ILU */
+	  InitConfirm (document, view, msg);
+	  /* JK: to erase the last status message */
+	  TtaSetStatus (document, view, "", NULL);	       
+	  if (UserAnswer)
+	    res = -1;
+	  else
+	    res = 0;
+	}
+      else
+	res = -1;
+    }
+  else
+    {
+      ResetStop (document);
+#ifdef AMAYA_DEBUG
+      fprintf(stderr, "Saving completed\n");
+#endif
+    }
+  TtaFreeMemory (msg);
+  return (res == 0);
+}
+
+/*----------------------------------------------------------------------
   SaveDocumentThroughNet
   Save a document and the included images to a remote network location.
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SaveDocumentThroughNet (Document document, View view,
+static boolean   SaveDocumentThroughNet (Document doc, View view, STRING url,
 					 boolean confirm, boolean with_images,
-					    boolean use_preconditions)
+					 boolean use_preconditions)
 #else
-static boolean      SaveDocumentThroughNet (document, view, confirm,
+static boolean   SaveDocumentThroughNet (doc, view, url, confirm,
                                          with_images, use_preconditions)
-Document            document;
-View                view;
-boolean             confirm;
-boolean             with_images;
-boolean             use_preconditions;
+Document         doc;
+View             view;
+STRING           url;
+boolean          confirm;
+boolean          with_images;
+boolean          use_preconditions;
 #endif
 {
   LoadedImageDesc *pImage;
@@ -821,33 +1072,33 @@ boolean             use_preconditions;
   int              index = 0, len, nb = 0;
   int              imageType, res;
 
+  msg = TtaGetMemory(remainder);
+  if (msg == NULL)
+    return (FALSE);
+
   /*
    * Don't use memory allocated on the stack ! May overflow the 
    * memory allocated for this Java thread.
    */
   /* save into the temporary document file */
-  tempname = GetLocalPath (document, DocumentURLs[document]);
-  msg = TtaGetMemory(remainder);
-  if (msg == NULL)
-    {
-      TtaFreeMemory (tempname);
-      return (FALSE);
-    }
+  tempname = GetLocalPath (doc, url);
 
   /* First step : build the output and ask for confirmation */
-  SetNamespacesAndDTD (document);
-  TtaExportDocument (document, tempname, "HTMLT");
+  SetNamespacesAndDTD (doc);
+  TtaExportDocument (doc, tempname, "HTMLT");
   res = 0;
   if (confirm && with_images)
     {
 #ifndef _WINDOWS
-      TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
-      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+      TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
+		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+		  TRUE, 1, 'L', D_CANCEL);
+      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
+		   TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 #endif /* _WINDOWS */
        
-      strcpy (&msg[index], DocumentURLs[document]);
-      len = strlen (DocumentURLs[document]);
+      strcpy (&msg[index], url);
+      len = strlen (url);
       len++;
       remainder -= len;
       index += len;
@@ -856,7 +1107,7 @@ boolean             use_preconditions;
       pImage = ImageURLs;
       while (pImage != NULL)
 	{
-	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
+	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	    {
 	      if (nb > 30)
 		{
@@ -887,7 +1138,7 @@ boolean             use_preconditions;
       /* wait for an answer */
       TtaWaitShowDialogue ();
 #else  /* _WINDOWS */
-      CreateSaveListDlgWindow (TtaGetViewFrame (document, view), nb, msg, BaseDialog, ConfirmSave);
+      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg, BaseDialog, ConfirmSave);
 #endif /* _WINDOWS */
       if (!UserAnswer)
 	res = -1;
@@ -899,84 +1150,76 @@ boolean             use_preconditions;
    */
   if (res == 0)
     {
-      ActiveTransfer (document);
+      ActiveTransfer (doc);
       TtaHandlePendingEvents ();
       pImage = NULL;
 
-      res = SafeSaveFileThroughNet (document, tempname,
-				    DocumentURLs[document], unknown_type, 
+      res = SafeSaveFileThroughNet (doc, tempname,
+				    url, unknown_type, 
 				    use_preconditions);
       if (res != 0)
 	{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-	  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-	  ResetStop (document);
+	  ResetStop (doc);
 	  if (confirm)
 	    {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+	      sprintf (msg, "%s %s",
+		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		       url);
+#else /* AMAYA_JAVA || AMAYA_ILU */
 	      sprintf (msg, "%s %s \n%s",
 		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		       DocumentURLs[document],
-		       TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA || AMAYA_ILU */
-	      sprintf (msg, "%s %s \n%s\n%s",
-		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		       DocumentURLs[document],
-		       AmayaLastHTTPErrorMsg,
-		       TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		       url,
+		       AmayaLastHTTPErrorMsg);
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-	      InitConfirm (document, view, msg);
+	      InitConfirm (doc, view, msg);
 	      /* JK: to erase the last status message */
-	      TtaSetStatus (document, view, "", NULL);	       
+	      TtaSetStatus (doc, view, "", NULL);	       
 	      if (UserAnswer)
 		res = -1;
 	      else
-		res = 0;
+		res = -1;
 	    }
 	  else
 	    res = -1;
 	}
-      else
-	{
-	  TtaSetDocumentUnmodified (document);
-	  if (with_images)
-	    pImage = ImageURLs;
-	}
+      else if (with_images)
+	pImage = ImageURLs;
 
       while (pImage != NULL)
 	{
-	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
+	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	    {
 	      imageType = pImage->imageType;
-	      res = SafeSaveFileThroughNet(document, pImage->localName,
+	      res = SafeSaveFileThroughNet(doc, pImage->localName,
 					   pImage->originalName, imageType,
 					   use_preconditions);
 	      if (res)
 		{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-		  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+		  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA  || AMAYA_ILU */
-		  ResetStop (document);
+		  ResetStop (doc);
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+		      sprintf (msg, "%s %s",
+			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			       pImage->originalName);
+#else /* AMAYA_JAVA || AMAYA_ILU */
 		      sprintf (msg, "%s %s \n%s",
 			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 			       pImage->originalName, 
-			       TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA || AMAYA_ILU */
-		      sprintf (msg, "%s %s \n%s\n%s",
-			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			       pImage->originalName, 
-			       AmayaLastHTTPErrorMsg,
-			       TtaGetMessage (AMAYA, AM_SAVE_DISK));
+			       AmayaLastHTTPErrorMsg);
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-		      InitConfirm (document, view, msg);
+		      InitConfirm (doc, view, msg);
 		      /* erase the last status message */
-		      TtaSetStatus (document, view, "", NULL);
+		      TtaSetStatus (doc, view, "", NULL);
 		      if (UserAnswer)
 			res = -1;
 		      else
-			res = 0;
+			res = -1;
 		  /* do not continue */
 		  pImage = NULL;
 		}
@@ -987,7 +1230,7 @@ boolean             use_preconditions;
 	  if (pImage != NULL)
 	    pImage = pImage->nextImage;
 	}
-      ResetStop (document);
+      ResetStop (doc);
     }
 
 #ifdef AMAYA_DEBUG
@@ -1005,93 +1248,97 @@ boolean             use_preconditions;
   presses the Save button.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SaveDocument (Document document, View view)
+void                SaveDocument (Document doc, View view)
 #else
-void                SaveDocument (document, view)
-Document            document;
+void                SaveDocument (doc, view)
+Document            doc;
 View                view;
 
 #endif
 {
-   CHAR                tempname[MAX_LENGTH];
-   int                 i, res;
-   boolean             ok;
+  CHAR                tempname[MAX_LENGTH];
+  int                 i, res;
+  boolean             ok;
 
-   if (!TtaGetDocumentAccessMode (document))
-     /* the document is in ReadOnly mode */
-     return;
-
-   if (SavingDocument != 0)
+  if (SavingDocument != 0 || SavingObject != 0)
+    return;
+  else if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
+  else if (!TtaIsDocumentModified (doc))
+    {
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
       return;
-   else if (!TtaIsDocumentModified (document))
-     {
-       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
-       return;
-     }
-   SavingDocument = document;
-   ok = FALSE;
+    }
+  TextFormat = (DocumentTypes[doc] == docText ||
+		DocumentTypes[doc] == docTextRO ||
+		DocumentTypes[doc] == docCSS ||
+		DocumentTypes[doc] == docCSSRO);
+  SavingDocument = doc;
 
-   /* attempt to save through network if possible */
-   strcpy (tempname, DocumentURLs[document]);
-   /* suppress compress suffixes from tempname */
-   i = strlen (tempname) - 1;
-   if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
-     {
-       tempname[i-2] = EOS;
-       TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
-     }
-   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
-     {
-       tempname[i-1] = EOS;
-       TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
-     }
+  ok = FALSE;
+  /* attempt to save through network if possible */
+  strcpy (tempname, DocumentURLs[doc]);
+  /* suppress compress suffixes from tempname */
+  i = strlen (tempname) - 1;
+  if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+    {
+      tempname[i-2] = EOS;
+      TtaFreeMemory (DocumentURLs[doc]);
+      DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+    }
+  else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+    {
+      tempname[i-1] = EOS;
+      TtaFreeMemory (DocumentURLs[doc]);
+      DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+    }
 
 #ifdef AMAYA_DEBUG
-   fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);
+  fprintf(stderr, "SaveDocument : %d to %s\n", doc, tempname);
 #endif
 
-   if (IsW3Path (tempname))
-     {
-       if (AddNoName (document, view, tempname, &ok))
-	 {
-	   ok = TRUE;
-	   /* need to update the document url */
-	   res = strlen(tempname) - 1;
-	   if (tempname[res] != URL_SEP)
-	     strcat (tempname, URL_STR);
-	   strcat (tempname, DefaultName);
-	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
-	 }
+  if (IsW3Path (tempname))
+    {
+      if (AddNoName (doc, view, tempname, &ok))
+	{
+	  ok = TRUE;
+	  /* need to update the document url */
+	  res = strlen(tempname) - 1;
+	  if (tempname[res] != URL_SEP)
+	    strcat (tempname, URL_STR);
+	  strcat (tempname, DefaultName);
+	  TtaFreeMemory (DocumentURLs[doc]);
+	  DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+	}
 
-       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE, TRUE))
-	 {
-	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-	   ok = TRUE;
-	 }
-       else
-	 ok = FALSE;
-       }
-   else
-     {
-       SetNamespacesAndDTD (SavingDocument);
-       ok = TtaExportDocument (document, tempname, "HTMLT");
-       if (ok)
-	 {
-	   TtaSetDocumentUnmodified (document);
-	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-	 }
-     }
+      /* it's a complete name: save it */
+      if (ok)
+	if (TextFormat)
+	  ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc], FALSE, TRUE);
+	else
+	  ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc], FALSE, TRUE, TRUE);
+    }
+  else
+    {
+      if (TextFormat)
+	ok = TtaExportDocument (doc, tempname, "TextFileT");
+      else
+	{
+	  SetNamespacesAndDTD (doc);
+	  ok = TtaExportDocument (doc, tempname, "HTMLT");
+	}
+    }
 
-   SavingDocument = 0;
-   if (!ok)
-     {
-       /* cannot save */
-       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[document]);
-       /*SaveDocumentAs (document, 1);*/
-     }
+  SavingDocument = 0;
+  if (ok)
+    {
+      TtaSetDocumentUnmodified (doc);
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
+    }
+  else
+    /* cannot save */
+    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
 }
 
 
@@ -1168,17 +1415,19 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
-  UpdateDocAndImages
-  change the document URL and if CopyImage is TRUE change all
-  picture SRC attribute. If pictures are saved locally, make the copy
+  UpdateImages
+  if CopyImage is TRUE change all picture SRC attribute and CSS background
+  images.
+  If pictures are saved locally, make the copy
   else add them to the list of remote images to be copied.
   The parameter imgbase gives the relative path of the new image directory.
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            UpdateDocAndImages (boolean src_is_local, boolean dst_is_local, STRING imgbase, STRING newURL)
+static void            UpdateImages (Document doc, boolean src_is_local, boolean dst_is_local, STRING imgbase, STRING newURL)
 #else
-static void            UpdateDocAndImages (src_is_local, dst_is_local, imgbase, newURL)
+static void            UpdateImages (doc, src_is_local, dst_is_local, imgbase, newURL)
+Document               doc;
 boolean                src_is_local;
 boolean                dst_is_local;
 STRING                 imgbase;
@@ -1220,18 +1469,12 @@ STRING                 newURL;
      }
 
    /* save the old document path to locate existing images */
-   strcpy (oldpath, DocumentURLs[SavingDocument]);
+   strcpy (oldpath, DocumentURLs[doc]);
    buflen = strlen (oldpath) - 1;
    if (oldpath[buflen] ==  '/')
      oldpath[buflen] = EOS;
    /* path to search image descriptors */
-   sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
-   /* change the document url if it is not saved as Text */
-   if (!SaveAsText)
-      {
-	TtaFreeMemory (DocumentURLs[SavingDocument]);
-	DocumentURLs[SavingDocument] = (STRING) TtaStrdup (newURL);
-      }
+   sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
 
    if (CopyImages)
      {
@@ -1250,7 +1493,7 @@ STRING                 newURL;
 	* ------------------------|---------------|------------------
 	*/
 
-       root = TtaGetMainRoot (SavingDocument);
+       root = TtaGetMainRoot (doc);
        /* handle style elements */
        elType = TtaGetElementType (root);
        attrType.AttrSSchema = elType.ElSSchema;
@@ -1273,9 +1516,9 @@ STRING                 newURL;
 	   if (sStyle != NULL)
 	     {
 	       /* register the modification to be able to undo it */
-	       TtaRegisterElementReplace (content, SavingDocument);
+	       TtaRegisterElementReplace (content, doc);
 	       /* save this new style element string */
-	       TtaSetTextContent (content, sStyle, lang, SavingDocument);
+	       TtaSetTextContent (content, sStyle, lang, doc);
 
 	       /* current point in sStyle */
 	       stringStyle = sStyle;
@@ -1288,7 +1531,7 @@ STRING                 newURL;
 		   stringStyle = strstr (stringStyle, "url") + 3;
 		   strcpy (url, ptr);
 		   TtaFreeMemory (ptr);
-		   NormalizeURL (url, SavingDocument, tempname, imgname, NULL);
+		   NormalizeURL (url, 0, tempname, imgname, newURL);
 
 		   /* extract the URL from the old style string */
 		   ptr = GetCSSBackgroundURL (oldStyle);
@@ -1310,7 +1553,7 @@ STRING                 newURL;
 			 {
 			   if ((src_is_local) && (!dst_is_local))
 			     /* add the existing localfile to images list to be saved */
-			     AddLocalImage (oldname, imgname, tempname, SavingDocument, &pImage);
+			     AddLocalImage (oldname, imgname, tempname, doc, &pImage);
 			   
 			   /* mark the image descriptor or copy the file */
 			   if (dst_is_local)
@@ -1353,7 +1596,7 @@ STRING                 newURL;
 				     */
 				   strcpy (tempfile, localpath);
 				   strcat (tempfile, imgname);
-				   pImage = SearchLoadedImage (tempfile, SavingDocument);
+				   pImage = SearchLoadedImage (tempfile, doc);
 				   /* update the descriptor */
 				   if (pImage)
 				     {
@@ -1369,7 +1612,7 @@ STRING                 newURL;
 				     }
 				 }
 			       else
-				 AddLocalImage (oldname, imgname, tempname, SavingDocument, &pImage);
+				 AddLocalImage (oldname, imgname, tempname, doc, &pImage);
 			     }
 			 }
 		     }
@@ -1413,9 +1656,9 @@ STRING                 newURL;
 			   if (ptr != NULL)
 			     {
 			       /* register the modification to be able to undo it */
-			       TtaRegisterAttributeReplace (attr, el, SavingDocument);
+			       TtaRegisterAttributeReplace (attr, el, doc);
 			       /* save this new style attribute string */
-			       TtaSetAttributeText (attr, ptr, el, SavingDocument);
+			       TtaSetAttributeText (attr, ptr, el, doc);
 			       strcpy (url, ptr);
 			       TtaFreeMemory (ptr);
 			       /* extract the URL from the new style string */
@@ -1424,7 +1667,7 @@ STRING                 newURL;
 				 {
 				   strcpy (url, ptr);
 				   TtaFreeMemory (ptr);
-				   NormalizeURL (url, SavingDocument, tempname, imgname, NULL);
+				   NormalizeURL (url, 0, tempname, imgname, newURL);
 				 }
 			       /* extract the URL from the old style string */
 			       ptr = GetCSSBackgroundURL (buf);
@@ -1453,10 +1696,10 @@ STRING                 newURL;
 			     /* in same directory -> local name */
 			     strcpy (url, imgname);
 
-			   NormalizeURL (url, SavingDocument, tempname, imgname, NULL);
+			   NormalizeURL (url, 0, tempname, imgname, newURL);
 			   /* register the modification to be able to undo it */
-			   TtaRegisterAttributeReplace (attr, el, SavingDocument);
-			   TtaSetAttributeText (attr, url, el, SavingDocument);
+			   TtaRegisterAttributeReplace (attr, el, doc);
+			   TtaSetAttributeText (attr, url, el, doc);
 			 }
 
 		       /*
@@ -1473,7 +1716,7 @@ STRING                 newURL;
 #endif
 			   if ((src_is_local) && (!dst_is_local))
 			     /* add the localfile to the images list */
-			     AddLocalImage (buf, imgname, tempname, SavingDocument, &pImage);
+			     AddLocalImage (buf, imgname, tempname, doc, &pImage);
 			     
 			   /* mark the image descriptor or copy the file */
 			   if (dst_is_local)
@@ -1511,7 +1754,7 @@ STRING                 newURL;
 				    */
 				   strcpy (tempfile, localpath);
 				   strcat (tempfile, imgname);
-				   pImage = SearchLoadedImage (tempfile, SavingDocument);
+				   pImage = SearchLoadedImage (tempfile, doc);
 				   /* update the descriptor */
 				   if (pImage)
 				     {
@@ -1528,7 +1771,7 @@ STRING                 newURL;
 				 }
 			       else
 				 /* add the localfile to the images list */
-				 AddLocalImage (tempfile, imgname, tempname, SavingDocument, &pImage);
+				 AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
 			     }
 			 }
 		       TtaFreeMemory (buf);
@@ -1572,6 +1815,7 @@ void                DoSaveAs ()
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
   ok = TRUE;
+  toUndo = FALSE;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentURLs[SavingDocument], SavePath, SaveName, (int) CopyImages);
@@ -1652,7 +1896,7 @@ void                DoSaveAs ()
     }
 
   /* Check information before starting the operation */
-  if (ok)
+  if (ok && !TextFormat)
     {
       /* search if there is a BASE element within the document */
       root = TtaGetMainRoot (doc);
@@ -1732,55 +1976,78 @@ void                DoSaveAs ()
   if (ok)
     {
       docModified = TtaIsDocumentModified (doc);
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      /* Transform all URLs to absolute ones */
-      if (UpdateURLs)
-	{
-	  if (base)
-	    /* URLs are still relative to the document base */
-	    SetRelativeURLs (doc, base);
-	  else
-	    /* URLs are relative to the new document directory */
-	    SetRelativeURLs (doc, documentFile);
-	}
-      /* now free base */
-      if (base)
-	TtaFreeMemory (base);
-	
       if (!src_is_local)
 	/* store the name of the local temporary file */
 	localPath = GetLocalPath (doc, DocumentURLs[doc]);
       else
 	localPath = NULL;
-      /* Change the document URL and if CopyImage is TRUE change all
-       * picture SRC attribute. If pictures are saved locally, make the copy
-       * else add them to the list of remote images to be copied.
-       */
-      UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
-      toUndo = TtaCloseUndoSequence (doc);
-      
-      if (dst_is_local)
+
+      if (TextFormat)
 	{
-	  /* Local to Local or Remote to Local */
-	  /* save the local document */
-	  ok = SaveDocumentLocally (SavePath, SaveName);
+	  if (dst_is_local)
+	    {
+	      /* Local to Local or Remote to Local */
+	      /* save the local document */
+	      ok = TtaExportDocument (doc, documentFile, "TextFileT");
+	    }
+	  else
+	    ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
 	}
       else
 	{
-	  /* Local to Remote or Remote to Remote */
-	  /* now save the file as through the normal process of saving */
-	  /* to a remote URL. */
-	  ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages, FALSE);
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  /* Transform all URLs to absolute ones */
+	  if (UpdateURLs)
+	    {
+	      if (base)
+		/* URLs are still relative to the document base */
+		SetRelativeURLs (doc, base);
+	      else
+		/* URLs are relative to the new document directory */
+		SetRelativeURLs (doc, documentFile);
+	    }
+	  /* now free base */
+	  if (base)
+	    TtaFreeMemory (base);
+	  
+	  /* Change the document URL and if CopyImage is TRUE change all
+	   * picture SRC attribute. If pictures are saved locally, make the copy
+	   * else add them to the list of remote images to be copied.
+	   */
+	  UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
+	  toUndo = TtaCloseUndoSequence (doc);
+	  
+	  if (dst_is_local)
+	    {
+	      /* Local to Local or Remote to Local */
+	      /* save the local document */
+	      ok = SaveDocumentLocally (doc, SavePath, SaveName);
+	    }
+	  else
+	    {
+	      /* Local to Remote or Remote to Remote */
+	      /* now save the file as through the normal process of saving */
+	      /* to a remote URL. */
+	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE, CopyImages, FALSE);
+	    }
 	}
-      
+
+      /* the saving operation is finished now */
       SavingDocument = 0;
       if (ok)
 	{
 	  if (toUndo)
 	    TtaCancelLastRegisteredSequence (doc);
+	  /* change the document url */
+	  if (TextFormat || !SaveAsText)
+	    {
+	      TtaFreeMemory (DocumentURLs[doc]);
+	      DocumentURLs[doc] = (STRING) TtaStrdup (documentFile);
+	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
+	      TtaSetDocumentUnmodified (doc);
+	    }
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-	  TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	  /* remove the previous temporary file */
 	  if (localPath)
 	    {
@@ -1807,129 +2074,6 @@ void                DoSaveAs ()
 	}
     }
   TtaFreeMemory (documentFile);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitSaveObjectForm (Document document, View view, STRING object,
-					STRING pathname)
-#else
-void                InitSaveObjectForm (document, view, object, pathname)
-Document            document;
-View                view;
-STRING              object;
-STRING              pathname;
-
-#endif
-{
-#  ifndef _WINDOWS
-   CHAR                tempdir[MAX_LENGTH];
-#  endif /* _WINDOWS */
-
-   if (SavingDocument != 0)
-      return;
-   if (SavingObject != 0)
-      return;
-   SavingObject = document;
-   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
-
-#  ifndef _WINDOWS
-   /* Dialogue form for saving as */
-   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
-   TtaListDirectory (SavePath, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),
-		     BaseDialog + DirSave, "",
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
-   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + NameSave, pathname);
-   TtaExtractName (pathname, tempdir, ObjectName);
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#  else  /* _WINDOWS */
-   CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
-#  endif /* _WINDOWS */
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeleteTempObjectFile (void)
-#else
-void                DeleteTempObjectFile ()
-#endif
-{
-   TtaFileUnlink (tempSavedObject);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DoSaveObjectAs (void)
-#else
-void                DoSaveObjectAs ()
-#endif
-{
-   CHAR                tempfile[MAX_LENGTH];
-   CHAR                msg[MAX_LENGTH];
-   boolean             dst_is_local;
-   int                 res;
-
-   dst_is_local = !IsW3Path (SavePath);
-
-   strcpy (tempfile, SavePath);
-   strcat (tempfile, DIR_STR);
-   strcat (tempfile, ObjectName);
-
-
-   if (!dst_is_local)
-     {
-#ifdef AMAYA_JAVA
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_USE_PRECONDITIONS, NULL, NULL);
-#else
-	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
-			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
-#endif /* AMAYA_JAVA */
-
-
-	if (res)
-	  {
-	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-	     return;
-	  }
-	SavingObject = 0;
-	SavingDocument = 0;
-	return;
-     }
-   if (TtaFileExist (tempfile))
-     {
-	/* ask confirmation */
-	sprintf (msg, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
-	InitConfirm (SavingObject, 1, msg);
-	if (!UserAnswer)
-	  {
-	     /* the user has to change the name of the saving file */
-	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-	     return;
-	  }
-     }
-   TtaFileCopy (tempSavedObject, tempfile);
-   /* delete the temporary file */
-   DeleteTempObjectFile ();
-   SavingObject = 0;
-   SavingDocument = 0;
 }
 
 

@@ -204,9 +204,9 @@ const char         *path;
        i++;
      }
    nsuffix[i] = EOS;
-   if ((!strcmp (nsuffix, "html")) ||
-       (!strcmp (nsuffix, "htm")) ||
-       (!strcmp (nsuffix, "shtml")))
+   if (!strcmp (nsuffix, "html") ||
+       !strcmp (nsuffix, "htm") ||
+       !strcmp (nsuffix, "shtml"))
      return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
      {
@@ -220,9 +220,9 @@ const char         *path;
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if ((!strcmp (nsuffix, "html")) ||
-	   (!strcmp (nsuffix, "htm")) ||
-	   (!strcmp (nsuffix, "shtml")))
+       if (!strcmp (nsuffix, "html") ||
+	   !strcmp (nsuffix, "htm") ||
+	   !strcmp (nsuffix, "shtml"))
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -258,6 +258,41 @@ const char         *path;
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "xml"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+  IsCSSName                                                         
+  returns TRUE if path points to an XML resource.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             IsCSSName (const char *path)
+#else  /* __STDC__ */
+boolean             IsCSSName (path)
+const char         *path;
+#endif /* __STDC__ */
+{
+   char                temppath[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   ExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "css"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "css"))
 	 return (TRUE);
        else
 	 return (FALSE);

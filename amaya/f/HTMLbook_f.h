@@ -7,15 +7,15 @@
 #ifdef __STDC__
 
 extern void SetInternalLinks ( Document document );
-extern void PrintAs ( Document document,
+extern void PrintAs ( Document doc,
                       View view );
 extern void CallbackPrint ( int ref,
                             int typedata,
                             STRING data );
 extern void InitPrint ( void );
-extern void SetupAndPrint ( Document document,
+extern void SetupAndPrint ( Document doc,
                             View view );
-extern void SectionNumbering ( Document document,
+extern void SectionNumbering ( Document doc,
                                View view );
 extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
@@ -30,15 +30,15 @@ extern void MakeBook ( Document document,
 #else /* __STDC__ */
 
 extern void SetInternalLinks (/* Document document */);
-extern void PrintAs (/* Document document,
+extern void PrintAs (/* Document doc,
                         View view */);
 extern void CallbackPrint (/* int ref,
                               int typedata,
                               STRING data */);
 extern void InitPrint (/* void */);
-extern void SetupAndPrint (/* Document document,
+extern void SetupAndPrint (/* Document doc,
                               View view */);
-extern void SectionNumbering (/* Document document,
+extern void SectionNumbering (/* Document doc,
                                  View view */);
 extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
