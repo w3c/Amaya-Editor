@@ -2867,7 +2867,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      /* line position not updated by floating boxes */
 		      /* position when line spacing applies */
 		      org = prevLine->LiYOrg + prevLine->LiHorizRef + lineSpacing - pLine->LiHorizRef;
-		      if (org > pLine->LiYOrg || (!pLine->LiNoOverlap && !standard))
+		      if (org > pLine->LiYOrg ||
+			  (!prevLine->LiNoOverlap && !standard))
 			/* apply the rule of line spacing */
 			pLine->LiYOrg = org;
 		    }
@@ -3774,12 +3775,13 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrBox              pPieceBox;
   PtrBox              pParentBox;
   int                 ascent, descent;
-  int                 i, h;
+  int                 i, h, top;
   int                 pos, linespacing;
   PtrLine             pLine, prevLine;
   PtrLine             pNextLine;
 
   pParentBox = pAb->AbBox;
+  top = pParentBox->BxTMargin + pParentBox->BxTBorder + pParentBox->BxTPadding;
   if (Propagate != ToSiblings || pParentBox->BxVertFlex)
     {
       pLine = SearchLine (pBox);
@@ -3833,24 +3835,18 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		{
 		  /* new position of the current line */
 		  prevLine = pLine->LiPrevious;
-		  if (linespacing < prevLine->LiHorizRef + ascent &&
-		      (prevLine->LiNoOverlap || pLine->LiNoOverlap))
-		    {
-		      /* don't overlap the lines */
-		      if (prevLine->LiNoOverlap)
-			pos =  prevLine->LiYOrg + prevLine->LiHeight;
-		      else
-			pos = prevLine->LiYOrg + prevLine->LiHorizRef;
-		    }
-		  else
-		    pos = prevLine->LiYOrg + prevLine->LiHorizRef + linespacing - ascent;
+		  pos = prevLine->LiYOrg + prevLine->LiHeight;
+		  i = prevLine->LiYOrg + prevLine->LiHorizRef + linespacing - pLine->LiHorizRef;
+		  if (i > pos || !prevLine->LiNoOverlap)
+		    /* apply the rule of line spacing */
+		    pos =  i;
 		  /* vertical shifting of the current line baseline */
 		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
 		}
 	      else
 		{
 		  /* new position of the current line */
-		  pos = 0;
+		  pos = top;
 		  /* vertical shifting of the current line baseline */
 		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
 		}
