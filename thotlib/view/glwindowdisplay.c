@@ -53,27 +53,36 @@
  * degrees to radians and so on...
  * All for EllipticSplit and/or GL_DrawArc
  */
-/*#include <math.h> */
+
+#include <math.h> 
+#include <stdio.h> 
+
+#define PRECISION double
 
 #ifndef M_PI
-#undef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
 #ifndef M_PI_DOUBLE
-#undef M_PI_DOUBLE
 #define M_PI_DOUBLE (6.2831853718027492)
 #endif
 
 /* ((A)*(M_PI/180.0)) */
-#define DEG_TO_RAD(A)   ((double)A)/57.29577957795135
-#define RAD_TO_DEG(A)   ((double)A)*57.29577957795135
+#define DEG_TO_RAD(A)   ((PRECISION)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((PRECISION)A)*57.29577957795135
+
+
+#define DEG_TO_RAD(A) ((A)*(M_PI/180.0))
 
 /*If we should use a static table instead for
   performance bottleneck...*/
 #define DCOS(A) (cos (A))
 #define DSIN(A) (sin (A))
 #define DACOS(A) (acos (A))
+
 #define A_DEGREE 0.017453293
+
+#define A_DEGREE ((PRECISION)(M_PI / 24))
 
 /* Precision of a degree/1 
    If we need more precision 
@@ -823,34 +832,38 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
       gluDeleteTess(tobj);
     }
 }
+
+
 /*----------------------------------------------------------------------
  GL_DrawArc : receive angle at 64* their values...
  but
   ----------------------------------------------------------------------*/
 void GL_DrawArc (int x, int y, 
 		 int w, int h, 
-		 int angle1, int angle2, 
+		 int angle_int1, int angle_int2, 
 		 ThotBool filled)
 {  
-  double angle, anglefinal, fastx, fasty;
-  
+  PRECISION angle, anglefinal, angle1, angle2;
+  PRECISION fastx, fasty, width, height;
+
   /*The formula is simple :
        y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
        x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
     But if we put all those calculation in the while
     Cpu will overheat with 5 *,  2 / and 2 +!!!
     That's why there is those preliminary steps */
-
+  angle1 = (PRECISION) angle_int1;
+  angle2 = (PRECISION) angle_int2;
   angle2 = angle1 + angle2;
   angle1 = angle1 / 64;
   angle2 = angle2 / 64;
-  w =  w / 2;
-  h =  h / 2;
-  fastx = (double) (x + w);
-  fasty = (double) (y + h);
+  width  = ((PRECISION)w) / 2;
+  height = ((PRECISION)h) / 2;
+  fastx  = ((PRECISION)x) + width;
+  fasty  = ((PRECISION)y) + height;
   
-  angle =  (double) DEG_TO_RAD (angle2);
-  anglefinal = (double) DEG_TO_RAD (angle1);
+  angle =  (PRECISION) DEG_TO_RAD (angle2);
+  anglefinal = (PRECISION) DEG_TO_RAD (angle1);
   /* A good optimization is that
    cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
    based on trigo decomposition
@@ -863,22 +876,23 @@ void GL_DrawArc (int x, int y,
   perhaps precalculated tables...*/  
   if (!filled && 0)
     {
-      angle =  (double) DEG_TO_RAD (angle2);
+      angle =  (PRECISION) DEG_TO_RAD (angle2);
       glBegin (GL_POINTS);
       /* another one is to extend the use of Vertex array...
 	 but not only for here... for all computations*/
       while (angle1 <= angle2)
 	{
-	  glVertex2d ( fastx + ((double)w) * DCOS(angle),
-		       fasty - ((double)h) * DSIN(angle));
-	  angle -= (double)A_DEGREE;
+	  glVertex2d (fastx + width * (DCOS(angle)),
+		           fasty - height * (DSIN(angle)));
+	  angle -= (PRECISION)A_DEGREE;
 	  angle2--;
 	}
-      glVertex2d ( fastx + ((double)w) * DCOS (angle),
-		   fasty - ((double)h) * DSIN (angle));
+      glVertex2d ( fastx + width * DCOS (angle),
+		   fasty - height * DSIN (angle));
       glEnd();
+      angle = (PRECISION) DEG_TO_RAD (angle2);
     }
-  angle = (double) DEG_TO_RAD (angle2);
+
   if (filled)
     {
       glBegin (GL_TRIANGLE_FAN);
@@ -890,15 +904,16 @@ void GL_DrawArc (int x, int y,
       glDisable (GL_BLEND);
       glBegin (GL_LINE_STRIP);
     }
-  while (angle1 <= angle2)
+  angle1 = (PRECISION) DEG_TO_RAD (angle1);
+
+  while (angle1 <= angle)
     {
-      glVertex2d (fastx + ((double)w) * DCOS(angle),
-		  fasty - ((double)h) * DSIN(angle));
-      angle -= (double)A_DEGREE;
-      angle2--;
+	glVertex2f (fastx + (width * DCOS(angle)),
+		        fasty - (height* DSIN(angle)));
+    angle -= A_DEGREE;
     }
-  glVertex2d ( fastx + ((double)w) * DCOS (angle),
-	       fasty - ((double)h) * DSIN (angle));
+  	glVertex2f (fastx + (width * DCOS(angle)),
+		        fasty - (height* DSIN(angle)));
   glEnd();
   if (!filled)
     glEnable (GL_BLEND);
