@@ -323,7 +323,7 @@ NotifyAttribute *event;
 }
 
 /*----------------------------------------------------------------------
- UpdatePointsAttribute
+ TranslatePointsAttribute
  update attribute "points" for element el according its content
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1106,6 +1106,15 @@ int                 construct;
 	       TtaSetAttributeText (attr, TEXT("5px"), newEl, doc);
 	       ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
 	     }
+	 }
+       else if (newType.ElTypeNum == GraphML_EL_text_)
+	 /* create a TEXT leaf */
+	 {
+	   childType.ElSSchema = GraphMLSSchema;
+	   childType.ElTypeNum = GraphML_EL_TEXT_UNIT;
+	   child = TtaNewElement (doc, childType);
+	   TtaInsertFirstChild (&child, newEl, doc);
+	   selEl = child;
 	 }
        else if (newType.ElTypeNum == GraphML_EL_foreignObject)
 	 /* create an HTML DIV element in the new element */

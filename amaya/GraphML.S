@@ -238,19 +238,19 @@ STRUCT
    TextComponent
 	= CASE OF
 	      TEXT; 
+	      tspan;
 	      desc;
 	      title;
 	      metadata;
-	      tspan;
 	      END;
 
    SpanElement
 	= CASE OF
 	      TEXT;
+	      tspan; 
 	      desc;
 	      title;
 	      metadata;
-	      tspan; 
 	      END;
    
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
@@ -268,7 +268,7 @@ EXCEPT
    polyline:            MoveResize, HighlightChildren, NoShowBox;
    polygon:             MoveResize, HighlightChildren, NoShowBox;
    image:	        MoveResize, HighlightChildren, NoShowBox;
-   text_:               MoveResize;
+   text_:               MoveResize, NoResize;
    foreignObject:       MoveResize;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;

@@ -1536,8 +1536,8 @@ indLine             wi;
 }
 
 /*----------------------------------------------------------------------
-   GetTypedRule   cherche la regle de type ruleType dans la liste de     
-   regles qui commence par la regle firstR.                         
+   GetTypedRule   cherche la regle de type ruleType pour la vue 1
+   dans la liste de regles qui commence par la regle firstR.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule     GetTypedRule (PRuleType ruleType, PtrPRule firstR)
@@ -1558,7 +1558,7 @@ PtrPRule            firstR;
    do
       if (pRule == NULL)
 	 stop = True;
-      else if (pRule->PrType == ruleType)
+      else if (pRule->PrType == ruleType && pRule->PrViewNum == 1)
 	 stop = True;
       else
 	 pRule = pRule->PrNextPRule;
@@ -5724,67 +5724,68 @@ PtrPRule           *firstPRule;
 
 {
    PtrPRule            oldPRule, curOldPRule, newPRule, curNewPRule, newAnchor;
-   ThotBool             done, stop;
+   ThotBool            done, stop;
 
    if (*firstPRule != NULL)
      {
-	oldPRule = *firstPRule;
-	newAnchor = NULL;
-	/* parcourt l'ancienne chaine des regles pointee par firstPRule */
-	while (oldPRule != NULL)
-	  {
-	     curOldPRule = oldPRule;
-	     /* regle courante de l'ancienne chaine */
-	     oldPRule = oldPRule->PrNextPRule;
-	     if (newAnchor == NULL)
-	       {
-		  newAnchor = curOldPRule;
-		  curOldPRule->PrNextPRule = NULL;
-	       }
-	     else
-	       {
-		  newPRule = NULL;
-		  curNewPRule = newAnchor;
-		  done = False;
-		  stop = False;
-		  /* parcourt la nouvelle chaine */
-		  while (!stop)
-		     if (RuleBefore (curOldPRule, curNewPRule))
+       oldPRule = *firstPRule;
+       newAnchor = NULL;
+       /* parcourt l'ancienne chaine des regles pointee par firstPRule */
+       while (oldPRule != NULL)
+	 {
+	   curOldPRule = oldPRule;
+	   /* regle courante de l'ancienne chaine */
+	   oldPRule = oldPRule->PrNextPRule;
+	   if (newAnchor == NULL)
+	     {
+	       newAnchor = curOldPRule;
+	       curOldPRule->PrNextPRule = NULL;
+	     }
+	   else
+	     {
+	       newPRule = NULL;
+	       curNewPRule = newAnchor;
+	       done = False;
+	       stop = False;
+	       /* parcourt la nouvelle chaine */
+	       while (!stop)
+		 if (RuleBefore (curOldPRule, curNewPRule))
+		   {
+		     if (newPRule == NULL)
+		       /* insere curOldPRule en tete */
 		       {
-			  if (newPRule == NULL)
-			     /* insere curOldPRule en tete */
-			    {
-			       curOldPRule->PrNextPRule = newAnchor;
-			       newAnchor = curOldPRule;
-			    }
-			  else
-			     /* insere curOldPRule apres newPRule */
-			    {
-			       curOldPRule->PrNextPRule = newPRule->PrNextPRule;
-			       newPRule->PrNextPRule = curOldPRule;
-			    }
-			  done = True;
-			  stop = True;
+			 curOldPRule->PrNextPRule = newAnchor;
+			 newAnchor = curOldPRule;
 		       }
 		     else
+		       /* insere curOldPRule apres newPRule */
 		       {
-			  newPRule = curNewPRule;
-			  curNewPRule = curNewPRule->PrNextPRule;
-			  if (curNewPRule == NULL)
-			     stop = True;
+			 curOldPRule->PrNextPRule = newPRule->PrNextPRule;
+			 newPRule->PrNextPRule = curOldPRule;
 		       }
-		  if (!done)
-		     /* ajoute curOldPRule a la fin de la nouvelle chaine, apres newPRule */
-		    {
-		       if (newPRule != NULL)
-			  newPRule->PrNextPRule = curOldPRule;
-		       else
-			  newAnchor = oldPRule;
-		       curOldPRule->PrNextPRule = NULL;
-		    }
-	       }
-	  }
-	*firstPRule = newAnchor;
+		     done = True;
+		     stop = True;
+		   }
+		 else
+		   {
+		     newPRule = curNewPRule;
+		     curNewPRule = curNewPRule->PrNextPRule;
+		     if (curNewPRule == NULL)
+		       stop = True;
+		   }
+	       if (!done)
+		 /* ajoute curOldPRule a la fin de la nouvelle chaine, */
+		 /* apres newPRule */
+		 {
+		   if (newPRule != NULL)
+		     newPRule->PrNextPRule = curOldPRule;
+		   else
+		     newAnchor = oldPRule;
+		   curOldPRule->PrNextPRule = NULL;
+		 }
+	     }
+	 }
+       *firstPRule = newAnchor;
      }
 }
 
@@ -5810,41 +5811,42 @@ void                SortAllPRules ()
 
    /* ordonne les regles des boites de presentation */
    for (j = 0; j < pPSchema->PsNPresentBoxes; j++)
-      SortPresRules (&pPSchema->PsPresentBox[j].PbFirstPRule);
+     SortPresRules (&pPSchema->PsPresentBox[j].PbFirstPRule);
 
    /* ordonne les regles des valeurs d'attribut */
    for (j = 0; j < pSSchema->SsNAttributes; j++)
      {
-	/* pour chaque paquet de regles */
-	pPRuleA = pPSchema->PsAttrPRule[j];
-	for (l = pPSchema->PsNAttrPRule[j]; l-- > 0; pPRuleA = pPRuleA->ApNextAttrPres)
-	  {
-	     /* selon le type de l'attribut */
-	     switch (pSSchema->SsAttribute[j].AttrType)
-		   {
-		      case AtNumAttr:
-			 for (k = 0; k < pPRuleA->ApNCases; k++)
-			    SortPresRules (&pPRuleA->ApCase[k].CaFirstPRule);
-			 break;
-		      case AtTextAttr:
-			 SortPresRules (&pPRuleA->ApTextFirstPRule);
-			 break;
-		      case AtReferenceAttr:
-			 SortPresRules (&pPRuleA->ApRefFirstPRule);
-			 break;
-		      case AtEnumAttr:
-			 for (k = 0; k <= pSSchema->SsAttribute[j].AttrNEnumValues; k++)
-			    SortPresRules (&pPRuleA->ApEnumFirstPRule[k]);
-			 break;
-		      default:
-			 break;
-		   }
-	  }
+       /* pour chaque paquet de regles */
+       pPRuleA = pPSchema->PsAttrPRule[j];
+       for (l = pPSchema->PsNAttrPRule[j]; l-- > 0;
+	    pPRuleA = pPRuleA->ApNextAttrPres)
+	 {
+	   /* selon le type de l'attribut */
+	   switch (pSSchema->SsAttribute[j].AttrType)
+	     {
+	     case AtNumAttr:
+	       for (k = 0; k < pPRuleA->ApNCases; k++)
+		 SortPresRules (&pPRuleA->ApCase[k].CaFirstPRule);
+	       break;
+	     case AtTextAttr:
+	       SortPresRules (&pPRuleA->ApTextFirstPRule);
+	       break;
+	     case AtReferenceAttr:
+	       SortPresRules (&pPRuleA->ApRefFirstPRule);
+	       break;
+	     case AtEnumAttr:
+	       for (k = 0; k <= pSSchema->SsAttribute[j].AttrNEnumValues; k++)
+		 SortPresRules (&pPRuleA->ApEnumFirstPRule[k]);
+	       break;
+	     default:
+	       break;
+	     }
+	 }
      }
-
+   
    /* ordonne les regles des elements structures */
    for (j = 0; j < MAX_RULES_SSCHEMA; j++)
-      SortPresRules (&pPSchema->PsElemPRule[j]);
+     SortPresRules (&pPSchema->PsElemPRule[j]);
 }
 
 /*----------------------------------------------------------------------
@@ -7103,29 +7105,34 @@ char              **argv;
            /* fin d'analyse */
            if (!error)
 	     {
-	       SortAllPRules ();
 	       /* met les regles de presentation dans le bon ordre. */
-	       /* si aucune vue n'est definie, cree la vue par defaut avec un nom */
-	       /* standard */
+	       SortAllPRules ();
+	       /* si aucune vue n'est definie, cree la vue par defaut avec */
+	       /* un nom standard */
 	       if (pPSchema->PsNViews == 0)
 		 {
 		   pPSchema->PsNViews = 1;
-		   ustrcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
+		   ustrcpy (pPSchema->PsView[0],
+			    TtaGetMessage (PRS, SINGLE_VIEW));
 		   pPSchema->PsHostViewList[0] = NULL;
 		 }
-	       /* verifie que toutes les boites de presentation declarees pour les */
-	       /* pages sont bien utilisees et adapte les regles. */
-	       /* cela ne peut se faire qu'apres avoir ajoute' la vue par defaut */
+	       /* verifie que toutes les boites de presentation declarees */
+	       /* pour les pages sont bien utilisees et adapte les regles. */
+	       /* cela ne peut se faire qu'apres avoir ajoute' la vue par */
+	       /* defaut */
 	       CheckPageBoxes ();
-	       /* verifie que toutes les boites de presentation sont bien utilisees */
+	       /* verifie que toutes les boites de presentation sont bien */
+	       /* utilisees */
 	       CheckAllBoxesUsed ();
 	       /* write the compiled schema into the output file */
 	       /* remove temporary file */
 	       TtaFileUnlink (fname);
 	       ustrcat (srceFileName, TEXT(".PRS"));
-	       fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
+	       fileOK = WritePresentationSchema (srceFileName, pPSchema,
+						 pSSchema);
 	       if (!fileOK)
-                 TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);
+                 TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR),
+				    srceFileName);
 	     } 
 	 } 
      } 
