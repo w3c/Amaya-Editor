@@ -5,6 +5,7 @@
 Configuring Amaya</title>
 </head>
 <body>
+
 <table border="0" width="100%">
 <tbody>
 <tr>
@@ -13,9 +14,9 @@ Configuring Amaya</title>
 alt="Amaya" src="../Icons/amaya.gif"></p>
 </td>
 <td><p align="right">
-<a href="../../../../vatton/opera/doc/amaya/MakeBook.html#Assembling"><img
-alt="previous" border="0" src="../Icons/left.gif"></a> <a
-href="Manual.html"><img alt="top" border="0" src="../Icons/up.gif"></a></p>
+<a href="MakeBook.html#Assembling"><img alt="previous" border="0"
+src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif"></a></p>
 </td>
 </tr>
 </tbody>
@@ -63,6 +64,9 @@ The standard User's Preference Styles are defined in the file
 <strong>$HOME/.amaya.css</strong> (Unix) or
 <strong>Thot/amaya/amaya.css</strong> (Windows).
 </ul>
+<p>
+N.B. These configuration files are loaded at runtime. If you change them,
+you'll need to quit and restart Amaya to take them into account.</p>
 
 <h3><a name="L138">Home Page</a></h3>
 <p>
@@ -72,15 +76,33 @@ file</a>.</p>
 
 <h3><a name="Specifying">Specifying the proxies</a></h3>
 <p>
-You can set up the proxy variables by using either <code>thot.ini</code>
-configuration file.</p>
+You can set up the proxy variables by using either the <a
+href="#registry">registry file</a> or your shell's environment variables.</p>
 <p>
-In the <code>[amaya]</code>, section, specify the proxy variables as in the
-example here below:</p>
+If you use the registry file, find the <code>[amaya]</code>, section and
+specify the proxy variables as in the following example:</p>
 <blockquote>
 <pre>HTTP_PROXY=http://groucho.marx.edu:1028
 NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
 </blockquote>
+<p>
+Amaya uses the environment variables proxy and no_proxy for setting up the
+proxies. For example, under the UNIX tcsh shell, you can set them up as
+follows:</p>
+<blockquote>
+<pre>setenv http_proxy http://groucho.marx.edu:1028
+setenv no_proxy harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
+<p>
+One way to do this under Windows is to add the following lines to your
+<code>autoexec.bat</code> file:</p>
+<blockquote>
+<pre>set http_proxy=http://groucho.marx.edu:1028
+set no_proxy=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
+<p>
+Please consult your system's documentation for more complete information on
+how to specify environment variables.</p>
 
 <h3><a name="HTML">Document Windows</a></h3>
 <p>
@@ -201,7 +223,7 @@ href="#registry">registry file</a>.</p>
 It is useful to be able to invoke menu commands directly from the keyboard.
 The Thot toolkit provides a facility that let user accomplish this by means of
 an application  <a href="#keyboard">keyboard shortcuts file</a>. This file
-defines a list of associations between a keyboard sequence an the invoked 
+defines a list of associations between a keyboard sequence an the invoked
 corresponding command.</p>
 <p>
 The syntax used to define an association is:</p>
