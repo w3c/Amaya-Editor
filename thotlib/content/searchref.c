@@ -1,11 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   cherche.c : gestion de la commande de recherche.
-   Projet THOT
-   Module traitant la commande de recherche des references provenant de cherche.c
-   I. Vatton    Avril 1996      
+   Module traitant les recherches de references
  */
 
 #include "thot_sys.h"
@@ -50,80 +44,80 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 
-#define MaxEntreesMenuRef 10
+#define MAX_ITEM_MENU_REF 10
 
 /* ---------------------------------------------------------------------- */
-/* |    ReferSuivante retourne la prochaine reference qui designe       | */
-/* |            l'element pEl.                                          | */
-/* |            - pDocEl est le document auquel appartient pEl.         | */
-/* |            - TraiteNonCharge indique si on prend en compte les     | */
-/* |              documents referencant non charge's (TRUE) ou si au    | */
-/* |              contraire on les ignore (FALSE).                      | */
-/* |            - pRefPrec contient la reference courante a l'appel.    | */
-/* |              Si pRefPrec est NULL et *pDE est NULL, la fonction    | */
-/* |              retourne la premiere reference a` l'element pEl,sinon | */
-/* |              elle retourne la reference qui suit celle qui est     | */
-/* |              pointee par pRefPrec.                                 | */
-/* |            - pDocRef contient au retour un pointeur sur le         | */
-/* |              contexte du document auquel appartient la reference   | */
-/* |              retournee. Seulement si la valeur de retour n'est pas | */
-/* |              NULL.                                                 | */
-/* |            - pDE est le document externe precedemment traite' (si  | */
-/* |              DocExtSuivant est TRUE) ou celui qu'on veut traiter   | */
-/* |              (si DocExtSuivant est FALSE). pDE doit etre NULL si   | */
-/* |              DocExtSuivant est TRUE et qu'on n'a pas encore traite'| */
-/* |              de references externes.                               | */
-/* |              Au retour, pDE vaut NULL si la reference retournee    | */
-/* |              appartient au meme document que l'element pEl; sinon  | */
-/* |              pDE est le document externe auquel appartient la      | */
-/* |              reference trouvee. pDE ne doit pas etre modifie'      | */
-/* |              entre les appels successifs de la fonction.           | */
-/* |            - DocExtSuivant indique si on passe au document         | */
-/* |              referencant suivant celui decrit par pDE (TRUE) ou si | */
-/* |              on traite le document decrit par pDE (FALSE).         | */
-/* |            Retourne un pointeur sur la premiere reference trouvee. | */
-/* |            Si la valeur de retour est NULL et                      | */
-/* |               si pDE est NULL : on n'a rien trouve'.               | */
-/* |               si pDE n'est pas NULL : il y a des references a`     | */
-/* |                    l'element pEl dans le document designe' par pDE | */
-/* |                    mais ce document n'est pas charge' (cela ne se  | */
-/* |                    produit que si TraiteNonCharge est TRUE).       | */
+/* |    ReferSuivante retourne la prochaine reference qui designe	| */
+/* |         l'element pEl.                                             | */
+/* |         - pDoc est le document auquel appartient pEl.              | */
+/* |         - processNotLoaded indique si on prend en compte les 	| */
+/* |           documents referencant non charge's (TRUE) ou si au    	| */
+/* |           contraire on les ignore (FALSE).                      	| */
+/* |         - pPrevRef contient la reference courante a l'appel.    	| */
+/* |           Si pPrevRef est NULL et *pExtDoc est NULL, la fonction   | */
+/* |           retourne la premiere reference a` l'element pEl, sinon 	| */
+/* |           elle retourne la reference qui suit celle qui est     	| */
+/* |           pointee par pPrevRef.                                 	| */
+/* |         - pDocRef contient au retour un pointeur sur le         	| */
+/* |           contexte du document auquel appartient la reference   	| */
+/* |           retournee. Seulement si la valeur de retour n'est pas 	| */
+/* |           NULL.                                                 	| */
+/* |         - pExtDoc est le document externe precedemment traite' (si | */
+/* |           nextExtDoc est TRUE) ou celui qu'on veut traiter   	| */
+/* |           (si nextExtDoc est FALSE). pExtDoc doit etre NULL si     | */
+/* |           nextExtDoc est TRUE et qu'on n'a pas encore traite'	| */
+/* |           de references externes.                               	| */
+/* |           Au retour, pExtDoc vaut NULL si la reference retournee   | */
+/* |           appartient au meme document que l'element pEl; sinon  	| */
+/* |           pExtDoc est le document externe auquel appartient la     | */
+/* |           reference trouvee. pExtDoc ne doit pas etre modifie'     | */
+/* |           entre les appels successifs de la fonction.           	| */
+/* |         - nextExtDoc indique si on passe au document         	| */
+/* |           referencant suivant celui decrit par pExtDoc (TRUE) ou si| */
+/* |           on traite le document decrit par pExtDoc (FALSE).        | */
+/* |         Retourne un pointeur sur la premiere reference trouvee. 	| */
+/* |         Si la valeur de retour est NULL et                      	| */
+/* |            si pExtDoc est NULL : on n'a rien trouve'.              | */
+/* |            si pExtDoc n'est pas NULL : il y a des references a`    | */
+/* |                 l'element pEl dans le document designe' par pExtDoc| */
+/* |                 mais ce document n'est pas charge' (cela ne se  	| */
+/* |                 produit que si processNotLoaded est TRUE).       	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrReference        ReferSuivante (PtrElement pEl, PtrDocument pDocEl, boolean TraiteNonCharge, PtrReference pRefPrec, PtrDocument * pDocRef, PtrExternalDoc * pDE, boolean DocExtSuivant)
+PtrReference        ReferSuivante (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
-PtrReference        ReferSuivante (pEl, pDocEl, TraiteNonCharge, pRefPrec, pDocRef, pDE, DocExtSuivant)
+PtrReference        ReferSuivante (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
 PtrElement          pEl;
-PtrDocument         pDocEl;
-boolean             TraiteNonCharge;
-PtrReference        pRefPrec;
+PtrDocument         pDoc;
+boolean             processNotLoaded;
+PtrReference        pPrevRef;
 PtrDocument        *pDocRef;
-PtrExternalDoc      *pDE;
-boolean             DocExtSuivant;
+PtrExternalDoc     *pExtDoc;
+boolean             nextExtDoc;
 
 #endif /* __STDC__ */
 {
    PtrReference        pRef;
 
-   if (pRefPrec != NULL)
-      pRef = pRefPrec->RdNext;
+   if (pPrevRef != NULL)
+      pRef = pPrevRef->RdNext;
    else
      {
 	pRef = NULL;
-	if (*pDE == NULL)
+	if (*pExtDoc == NULL)
 	   /* premier appel de la fonction */
 	   if (pEl != NULL)
 	      if (pEl->ElReferredDescr != NULL)
 		{
 		   pRef = pEl->ElReferredDescr->ReFirstReference;
-		   *pDocRef = pDocEl;
+		   *pDocRef = pDoc;
 		}
      }
    if (pRef == NULL)
       /* c'etait la derniere reference dans ce document, cherche dans */
       /* un autre document la 1ere reference au meme element */
-      pRef = SearchExternalReferenceToElem (pEl, pDocEl, TraiteNonCharge, pDocRef, pDE,
-			  DocExtSuivant);
+      pRef = SearchExternalReferenceToElem (pEl, pDoc, processNotLoaded,
+					    pDocRef, pExtDoc, nextExtDoc);
    return pRef;
 }
 
@@ -131,71 +125,71 @@ boolean             DocExtSuivant;
 /* ---------------------------------------------------------------------- */
 /* |    ChUneRef cherche une reference a` l'element selectionne'.       | */
 /* |       A l'appel:                                                   | */
-/* |            - ReferCour: pointeur sur la derniere reference trouvee | */
+/* |            - pPrevRef: pointeur sur la derniere reference trouvee  | */
 /* |              ou NULL si on cherche la premiere reference (dans ce  | */
-/* |              cas, pDocExtCour doit aussi etre NULL).               | */
-/* |            - ElemRefCour: l'element dont on cherche les references,| */
+/* |              cas, pExtDoc doit aussi etre NULL).                   | */
+/* |            - pReferredEl: l'element dont on cherche les references,| */
 /* |              NULL si on cherche la premiere reference.             | */
-/* |            - DocDeElemRefCour: le document auquel appartient       | */
+/* |            - pDocReferredEl: le document auquel appartient         | */
 /* |              l'element dont on cherche les references, NULL si on  | */
 /* |              cherche la premiere reference.                        | */
-/* |            - pDocExtCour: pointeur sur le descripteur de document  | */
-/* |              externe contenant la reference ReferCour, NULL si on  | */
+/* |            - pExtDoc: pointeur sur le descripteur de document      | */
+/* |              externe contenant la reference pPrevRef, NULL si on   | */
 /* |              cherche la premiere reference.                        | */
-/* |            - DocExtSuivant indique si on cherche une reference     | */
-/* |              dans le document externe decrit par pDocExtCour       | */
+/* |            - nextExtDoc indique si on cherche une reference        | */
+/* |              dans le document externe decrit par pExtDoc           | */
 /* |              (FALSE) ou dans le document externe suivant.          | */
 /* |       Au retour:                                                   | */
-/* |            - ReferCour: pointeur sur la reference trouvee ou NULL  | */
+/* |            - pPrevRef: pointeur sur la reference trouvee ou NULL   | */
 /* |              si on n'a pas trouve' de reference.                   | */
-/* |            - DocDeReferCour: document auquel appartient la         | */
+/* |            - pDocPrevRef: document auquel appartient la            | */
 /* |              reference trouvee.                                    | */
-/* |            - ElemRefCour: l'element dont on cherche les references.| */
-/* |            - DocDeElemRefCour: le document auquel appartient       | */
+/* |            - pReferredEl: l'element dont on cherche les references.| */
+/* |            - pDocReferredEl: le document auquel appartient         | */
 /* |              l'element dont on cherche les references.             | */
-/* |            - pDocExtCour: document externe dans lequel on a trouve'| */
-/* |              une reference. Peut etre non NULL meme si ReferCour   | */
+/* |            - pExtDoc: document externe dans lequel on a trouve'    | */
+/* |              une reference. Peut etre non NULL meme si pPrevRef    | */
 /* |              est NULL, dans le cas ou ce document externe n'est    | */
 /* |              pas charge':                                          | */
-/* |            Si ReferCour est NULL et                                | */
-/* |                si pDocExtCour est NULL : on n'a rien trouve'.      | */
-/* |                si pDocExtCour n'est pas NULL : il y a des          | */
+/* |            Si pPrevRef est NULL et                                 | */
+/* |                si pExtDoc est NULL : on n'a rien trouve'.          | */
+/* |                si pExtDoc n'est pas NULL : il y a des              | */
 /* |                    references dans le document designe' par        | */
-/* |                    pDocExtCour, mais ce document n'est pas charge' | */
+/* |                    pExtDoc, mais ce document n'est pas charge'     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChUneRef (PtrReference * ReferCour, PtrDocument * DocDeReferCour, PtrElement * ElemRefCour, PtrDocument * DocDeElemRefCour, PtrExternalDoc * pDocExtCour, boolean DocExtSuivant)
+void                ChUneRef (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
-void                ChUneRef (ReferCour, DocDeReferCour, ElemRefCour, DocDeElemRefCour, pDocExtCour, DocExtSuivant)
-PtrReference       *ReferCour;
-PtrDocument        *DocDeReferCour;
-PtrElement         *ElemRefCour;
-PtrDocument        *DocDeElemRefCour;
-PtrExternalDoc      *pDocExtCour;
-boolean             DocExtSuivant;
+void                ChUneRef (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl, pExtDoc, nextExtDoc)
+PtrReference       *pPrevRef;
+PtrDocument        *pDocPrevRef;
+PtrElement         *pReferredEl;
+PtrDocument        *pDocReferredEl;
+PtrExternalDoc     *pExtDoc;
+boolean             nextExtDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          premsel;
-   PtrElement          dersel;
+   PtrElement          firstSel;
+   PtrElement          lastSel;
    PtrElement          pEl;
-   PtrDocument         docsel;
-   int                 premcar;
-   int                 dercar;
-   PtrElement          pAscendant;
+   PtrDocument         pSelDoc;
+   int                 firstChar;
+   int                 lastChar;
+   PtrElement          pAncest;
    boolean             ok;
-   boolean             trouve;
+   boolean             found;
 
    ok = TRUE;
-   if (*ReferCour != NULL || *pDocExtCour != NULL)
+   if (*pPrevRef != NULL || *pExtDoc != NULL)
       /* on a deja une reference courante */
-      *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, TRUE,
-		    *ReferCour, DocDeReferCour, pDocExtCour, DocExtSuivant);
+      *pPrevRef = ReferSuivante (*pReferredEl, *pDocReferredEl, TRUE,
+		    *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
    else
       /* pas de reference courante */
      {
 	/* prend la selection courante */
-	ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+	ok = SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 	if (!ok)
 	   /* pas de selection, message 'Selectionnez' */
 	   TtaDisplaySimpleMessage (INFO, LIB, LIB_SELECT_AN_ELEM);
@@ -203,8 +197,8 @@ boolean             DocExtSuivant;
 	   /* cherche le premier element reference' qui englobe la */
 	   /* selection courante */
 	  {
-	     pEl = premsel;
-	     trouve = FALSE;
+	     pEl = firstSel;
+	     found = FALSE;
 	     do
 	       {
 		  if (pEl->ElReferredDescr != NULL)
@@ -212,55 +206,55 @@ boolean             DocExtSuivant;
 		     if (pEl->ElReferredDescr->ReFirstReference != NULL ||
 			 pEl->ElReferredDescr->ReExtDocRef != NULL)
 			/* l'element est effectivement reference' */
-			trouve = TRUE;
-		  if (!trouve)
+			found = TRUE;
+		  if (!found)
 		     /* l'element n'est pas reference', on passe au pere */
 		     pEl = pEl->ElParent;
 	       }
-	     while (!trouve && pEl != NULL);
-	     if (trouve)
+	     while (!found && pEl != NULL);
+	     if (found)
 		/* on a trouve' un ascendant reference' */
 	       {
 		  /* conserve un pointeur sur l'element dont on cherche les */
 		  /* references ainsi que sur son document */
-		  *ElemRefCour = pEl;
-		  *DocDeElemRefCour = docsel;
+		  *pReferredEl = pEl;
+		  *pDocReferredEl = pSelDoc;
 		  /* cherche la premiere reference a cet element */
-		  *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, TRUE,
-		    *ReferCour, DocDeReferCour, pDocExtCour, DocExtSuivant);
+		  *pPrevRef = ReferSuivante (*pReferredEl, *pDocReferredEl,
+			TRUE, *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
 	       }
 	  }
      }
-   if (*ReferCour != NULL)
+   if (*pPrevRef != NULL)
       /* on a trouve' une reference */
      {
 	ok = TRUE;
 	/* on ignore les references qui sont a l'interieur d'une inclusion */
-	if ((*ReferCour)->RdElement != NULL)
+	if ((*pPrevRef)->RdElement != NULL)
 	  {
-	     pAscendant = (*ReferCour)->RdElement->ElParent;
-	     while (pAscendant->ElParent != NULL && pAscendant->ElSource == NULL)
-		pAscendant = pAscendant->ElParent;
-	     if (pAscendant->ElSource != NULL)
+	     pAncest = (*pPrevRef)->RdElement->ElParent;
+	     while (pAncest->ElParent != NULL && pAncest->ElSource == NULL)
+		pAncest = pAncest->ElParent;
+	     if (pAncest->ElSource != NULL)
 		/* on est dans une inclusion */
 		ok = FALSE;
 	  }
 	/* on ignore les references dans les partie cachees */
 	if (ok)
-	   if (ElementIsHidden ((*ReferCour)->RdElement))
+	   if (ElementIsHidden ((*pPrevRef)->RdElement))
 	      /* on est dans une partie cachee */
 	      ok = FALSE;
 	/* on ignore les references qui sont dans le tampon de Copier-Couper */
 	if (ok)
-	   if (DansTampon ((*ReferCour)->RdElement))
+	   if (DansTampon ((*pPrevRef)->RdElement))
 	      ok = FALSE;
 	if (!ok)
 	   /* cherche la reference suivante au meme element */
-	   ChUneRef (ReferCour, DocDeReferCour, ElemRefCour, DocDeElemRefCour,
-		     pDocExtCour, TRUE);
+	   ChUneRef (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl,
+		     pExtDoc, TRUE);
 	else
 	   /* selectionne la reference trouvee */
-	   SelectWithAPP (*DocDeReferCour, (*ReferCour)->RdElement, FALSE, FALSE);
+	   SelectWithAPP (*pDocPrevRef, (*pPrevRef)->RdElement, FALSE, FALSE);
      }
 }
 
@@ -272,57 +266,52 @@ boolean             DocExtSuivant;
 /* ---------------------------------------------------------------------- */
 void                ChElemRefer ()
 {
-   PtrElement          premsel;
-   PtrElement          dersel;
+   PtrElement          firstSel;
+   PtrElement          lastSel;
+   int                 firstChar;
+   int                 lastChar;
+   PtrDocument         pSelDoc;
    PtrElement          pEl;
-   PtrDocument         docsel;
-   int                 premcar;
-   int                 dercar;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    PtrReference        pRef;
-   DocumentIdentifier     IdentDoc;
+   DocumentIdentifier  docIdent;
    PtrDocument         pDoc;
-   int                 nbEntrees;
-   char                bufMenu[MAX_TXT_LEN];
-   int                 lgBufMenu;
-   PtrReference        TablePRef[MaxEntreesMenuRef];
-   int                 entreeChoisie;
+   int                 nMenuItems;
+   char                menuBuf[MAX_TXT_LEN];
+   int                 menuBufLen;
+   PtrReference        pRefTable[MAX_ITEM_MENU_REF];
+   int                 chosenItem;
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
-   if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
+   if (!SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       TtaDisplaySimpleMessage (INFO, LIB, LIB_SELECT_AN_ELEM);
    else
      {
-	pEl = NULL;		/* pointeur sur l'element reference' */
-	pRef = NULL;		/* pointeur sur le bloc reference */
-	NulIdentDoc (&IdentDoc);
-	nbEntrees = 0;
-	lgBufMenu = 0;
-	if (premsel->ElTerminal && premsel->ElLeafType == LtReference)
+	pEl = NULL;
+	pRef = NULL;
+	NulIdentDoc (&docIdent);
+	nMenuItems = 0;
+	menuBufLen = 0;
+	if (firstSel->ElTerminal && firstSel->ElLeafType == LtReference)
 	   /* la selection est un element reference */
-	   if (premsel->ElReference != NULL && nbEntrees < MaxEntreesMenuRef &&
-	       lgBufMenu + MAX_NAME_LENGTH < MAX_TXT_LEN)
+	   if (firstSel->ElReference != NULL && nMenuItems < MAX_ITEM_MENU_REF &&
+	       menuBufLen + MAX_NAME_LENGTH < MAX_TXT_LEN)
 	     {
-		TablePRef[nbEntrees] = premsel->ElReference;
-		nbEntrees++;
-		strcpy (bufMenu + lgBufMenu, premsel->ElSructSchema->SsRule[premsel->ElTypeNumber - 1].SrName);
-		lgBufMenu += strlen (bufMenu) + 1;
+		pRefTable[nMenuItems] = firstSel->ElReference;
+		nMenuItems++;
+		strcpy (menuBuf + menuBufLen, firstSel->ElSructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
+		menuBufLen += strlen (menuBuf) + 1;
 	     }
-	if (premsel->ElSource != NULL)
+	if (firstSel->ElSource != NULL)
 	   /* la selection est un element inclus */
-	   if (premsel->ElSource != NULL && nbEntrees < MaxEntreesMenuRef &&
-	       lgBufMenu + MAX_NAME_LENGTH < MAX_TXT_LEN)
+	   if (firstSel->ElSource != NULL && nMenuItems < MAX_ITEM_MENU_REF &&
+	       menuBufLen + MAX_NAME_LENGTH < MAX_TXT_LEN)
 	     {
-		TablePRef[nbEntrees] = premsel->ElSource;
-		nbEntrees++;
-	    /****
-	    strcpy(bufMenu+lgBufMenu, TtaGetMessage(LIB_APPLI, LIB_Inclusion));
-	    lgBufMenu += strlen(TtaGetMessage(LIB_APPLI, LIB_Inclusion))+1;
-	    *******/
+		pRefTable[nMenuItems] = firstSel->ElSource;
+		nMenuItems++;
 	     }
-
 	/* cherche si l'element a un attribut reference */
-	pAttr = premsel->ElFirstAttr;
+	pAttr = firstSel->ElFirstAttr;
 	while (pAttr != NULL)
 	  {
 	     if (pAttr->AeAttrType == AtReferenceAttr)
@@ -331,42 +320,42 @@ void                ChElemRefer ()
 		   /* cet attribut a l'exception ActiveRef, on le prend */
 		   if (pAttr->AeAttrReference != NULL)
 		     {
-			TablePRef[nbEntrees] = pAttr->AeAttrReference;
-			nbEntrees++;
-			strcpy (bufMenu + lgBufMenu, pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
-			lgBufMenu += strlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
+			pRefTable[nMenuItems] = pAttr->AeAttrReference;
+			nMenuItems++;
+			strcpy (menuBuf + menuBufLen, pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
+			menuBufLen += strlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
 		     }
 	     pAttr = pAttr->AeNext;
 	  }
-	if (nbEntrees == 0)
+	if (nMenuItems == 0)
 	   pRef = NULL;
-	else if (nbEntrees == 1)
-	   pRef = TablePRef[0];
+	else if (nMenuItems == 1)
+	   pRef = pRefTable[0];
 	else
 	  {
-	     CreeEtActiveMenuReferences (bufMenu, nbEntrees, &entreeChoisie);
-	     pRef = TablePRef[entreeChoisie];
+	     CreeEtActiveMenuReferences (menuBuf, nMenuItems, &chosenItem);
+	     pRef = pRefTable[chosenItem];
 	  }
 	if (pRef != NULL)
 	   /* c'est bien une reference qui est selectionnee */
 	  {
 	     /* l'element reference' est pointe' par pEl */
-	     pEl = ReferredElement (pRef, &IdentDoc, &pDoc);
+	     pEl = ReferredElement (pRef, &docIdent, &pDoc);
 	     if (pEl == NULL)
 		/* il n'y a pas d'element reference' */
-		if (IdentDocNul (IdentDoc) || pDoc != NULL)
+		if (IdentDocNul (docIdent) || pDoc != NULL)
 		   /* ce n'est pas une reference externe ou c'est une reference vide */
 		   TtaDisplaySimpleMessage (INFO, LIB, LIB_EMPTY_REF);
 		else
-		   /* l'element reference' est dans un autre document qui n'est */
-		   /* pas charge' */
+		   /* l'element reference' est dans un autre document qui */
+		   /* n'est pas charge' */
 		   /* on proposera ce nom comme nom par defaut lorsque */
 		   /* l'utilisateur demandera a ouvrir un document */
 		  {
 		     CreateDocument (&pDoc);
 		     if (pDoc != NULL)
 		       {
-			  CopyIdentDoc (&pDoc->DocIdent, IdentDoc);
+			  CopyIdentDoc (&pDoc->DocIdent, docIdent);
 			  /* annule la selection */
 			  RazSelect ();
 			  LoadDocument (&pDoc, NULL);
@@ -374,10 +363,10 @@ void                ChElemRefer ()
 		     if (pDoc != NULL)
 			/* le chargement du document a reussi */
 		       {
-			  pEl = ReferredElement (pRef, &IdentDoc, &pDoc);
+			  pEl = ReferredElement (pRef, &docIdent, &pDoc);
 			  /* s'il s'agit d'une inclusion de */
 			  /* document, applique les regles Transmit */
-			  ApplyTransmitRules (pRef->RdElement, docsel);
+			  ApplyTransmitRules (pRef->RdElement, pSelDoc);
 
 		       }
 		  }
@@ -392,10 +381,10 @@ void                ChElemRefer ()
 	  }
 	if (pEl != NULL)
 	  {
-	     if (!IdentDocNul (IdentDoc))
+	     if (!IdentDocNul (docIdent))
 		/* l'element reference' est dans un autre document */
-		docsel = pDocument (IdentDoc);
-	     SelectWithAPP (docsel, pEl, TRUE, TRUE);
+		pSelDoc = pDocument (docIdent);
+	     SelectWithAPP (pSelDoc, pEl, TRUE, TRUE);
 	     /* dans le cas ou c'est un element d'une paire de marques, on */
 	     /* selectionne l'intervalle compris entre ces marques. */
 	     SelectIntervallePaire ();
@@ -405,8 +394,9 @@ void                ChElemRefer ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NoteElemRefColle        L'element pointe' par pEl vient d'etre  | */
-/* |    colle' dans le document pDoc et l'original vient d'un document  | */
+/* |    RegisterPastedReferredElem					| */
+/* |	L'element pEl vient d'etre colle'				| */
+/* |    dans le document pDoc et l'original vient d'un document		| */
 /* |    different. S'il possede des elements reference's par d'autres   | */
 /* |    documents, on note dans le contexte du document pDoc que cet    | */
 /* |    element a change' de document. Ce sera utile lorsqu'on sauvera  | */
@@ -414,82 +404,82 @@ void                ChElemRefer ()
 /* |    documents referencant les elements deplace's.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         NoteElemRefColle (PtrElement pEl, PtrDocument pDoc, LabelString AncienLabel)
+static void         RegisterPastedReferredElem (PtrElement pEl, PtrDocument pDoc, LabelString oldLabel)
 #else  /* __STDC__ */
-static void         NoteElemRefColle (pEl, pDoc, AncienLabel)
+static void         RegisterPastedReferredElem (pEl, pDoc, oldLabel)
 PtrElement          pEl;
 PtrDocument         pDoc;
-LabelString         AncienLabel;
+LabelString         oldLabel;
 
 #endif /* __STDC__ */
 {
-   PtrChangedReferredEl      ElemRef;
+   PtrChangedReferredEl      pChnRef;
 
    if (pEl->ElReferredDescr != NULL)
       if (pEl->ElReferredDescr->ReExtDocRef != NULL)
 	 /* l'element est reference' par d'autres documents */
 	{
 	   /* acquiert un descripteur et le remplit */
-	   GetElemRefChng (&ElemRef);
-	   strncpy (ElemRef->CrOldLabel, AncienLabel, MAX_LABEL_LEN);
-	   strncpy (ElemRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
-	   CopyIdentDoc (&ElemRef->CrOldDocument, DocDeSauve->DocIdent);
-	   CopyIdentDoc (&ElemRef->CrNewDocument, pDoc->DocIdent);
-	   ElemRef->CrReferringDoc = NULL;
+	   GetElemRefChng (&pChnRef);
+	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
+	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
+	   CopyIdentDoc (&pChnRef->CrOldDocument, DocDeSauve->DocIdent);
+	   CopyIdentDoc (&pChnRef->CrNewDocument, pDoc->DocIdent);
+	   pChnRef->CrReferringDoc = NULL;
 	   /* chaine ce descripteur */
-	   ElemRef->CrNext = pDoc->DocChangedReferredEl;
-	   pDoc->DocChangedReferredEl = ElemRef;
+	   pChnRef->CrNext = pDoc->DocChangedReferredEl;
+	   pDoc->DocChangedReferredEl = pChnRef;
 	   /* copie la liste des documents qui referencent l'element */
-	   CopyDescrExtDoc (pEl, ElemRef);
+	   CopyDescrExtDoc (pEl, pChnRef);
 	}
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PurgeRef        On vient de coller le sous-arbre de racine pRac | */
-/* |    dans le document pDoc. Verifie la coherence des elements        | */
+/* |    PurgeRef        On vient de coller le sous-arbre de racine	| */
+/* |    pRoot dans le document pDoc. Verifie la coherence des elements	| */
 /* |    reference's et des references presents dans ce sous-arbre.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PurgeRef (PtrElement pRac, PtrDocument pDoc)
+void                PurgeRef (PtrElement pRoot, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                PurgeRef (pRac, pDoc)
-PtrElement          pRac;
+void                PurgeRef (pRoot, pDoc)
+PtrElement          pRoot;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pEl, pElRef, pSource;
-   PtrReference        pRef, pRefSuiv;
-   PtrAttribute         pAttr;
-   DocumentIdentifier     IdentDocRef;
-   PtrDocument         pDocRef, pDocRefSuiv;
-   boolean             memedoc, attrref;
-   PtrExternalDoc       pDocExt;
+   PtrReference        pRef, pNextRef;
+   PtrAttribute        pAttr;
+   DocumentIdentifier  docIdentRef;
+   PtrDocument         pDocRef, pNextDocRef;
+   boolean             sameDoc, attrRef;
+   PtrExternalDoc      pExtDoc;
    PtrElement          pElemRef;
    int                 l;
-   LabelString         AncienLabel;
-   PtrReference        pRefTampon;
+   LabelString         oldLabel;
+   PtrReference        pRefClipboard;
 
    /* on se souvient du label de l'original */
-   strncpy (AncienLabel, pRac->ElLabel, MAX_LABEL_LEN);
+   strncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
    if (ChangerLabel || pDoc != DocDeSauve)
      {
 	/* on affecte un nouveau label a l'element */
 	l = NewLabel (pDoc);
-	LabelIntToString (l, pRac->ElLabel);
+	LabelIntToString (l, pRoot->ElLabel);
      }
-   if (pRac->ElReferredDescr != NULL)
+   if (pRoot->ElReferredDescr != NULL)
       /* l'original de l'element colle' est reference' ou possede un label */
      {
-	if (pRac->ElReferredDescr->ReExternalRef)
+	if (pRoot->ElReferredDescr->ReExternalRef)
 	   pSource = NULL;
 	else
-	   pSource = pRac->ElReferredDescr->ReReferredElem;	/* l'element original */
+	   pSource = pRoot->ElReferredDescr->ReReferredElem;	/* l'element original */
 
-	pDocExt = NULL;
-	pRac->ElReferredDescr = NULL;
+	pExtDoc = NULL;
+	pRoot->ElReferredDescr = NULL;
 	/* l'element colle' n'est pas reference', il prend le label de son     */
 	/* element original (celui qui est dans le tampon Couper-Copier)       */
 	/* si la commande precedente etait Couper et s'il ne change pas de     */
@@ -497,37 +487,37 @@ PtrDocument         pDoc;
 	/* changement de document), il prend un nouveau label.                 */
 
 	/* alloue a l'element un descripteur d'element reference' */
-	pRac->ElReferredDescr = NewReferredElDescr (pDoc);
-	pRac->ElReferredDescr->ReExternalRef = FALSE;
-	pRac->ElReferredDescr->ReReferredElem = pRac;
+	pRoot->ElReferredDescr = NewReferredElDescr (pDoc);
+	pRoot->ElReferredDescr->ReExternalRef = FALSE;
+	pRoot->ElReferredDescr->ReReferredElem = pRoot;
 	if (!ChangerLabel && pSource != NULL && pDoc == DocDeSauve)
 	   /* l'element prend le meme label que l'element original */
-	   strncpy (pRac->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 	if (!ChangerLabel && pSource != NULL)
 	  {
 	     /* l'element prend les memes descripteurs de documents */
 	     /* externes referencants que l'element original */
-	     pDocExt = pSource->ElReferredDescr->ReExtDocRef;
-	     while (pDocExt != NULL)
+	     pExtDoc = pSource->ElReferredDescr->ReExtDocRef;
+	     while (pExtDoc != NULL)
 	       {
 		  /* on ne considere pas le document lui-meme comme externe... */
-		  if (!MemeIdentDoc (pDocExt->EdDocIdent, pDoc->DocIdent))
-		     AddDocOfExternalRef (pRac, pDocExt->EdDocIdent, pDoc);
-		  pDocExt = pDocExt->EdNext;
+		  if (!MemeIdentDoc (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		     AddDocOfExternalRef (pRoot, pExtDoc->EdDocIdent, pDoc);
+		  pExtDoc = pExtDoc->EdNext;
 	       }
 	  }
 
 	/* on cherche toutes les references a l'element original et on les */
 	/* fait pointer sur l'element colle'. */
 	/* cherche d'abord la premiere reference */
-	pRef = ReferSuivante (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pDocExt, TRUE);
-	pDocRefSuiv = pDocRef;	/* a priori la reference suivante sera dans le */
+	pRef = ReferSuivante (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
+	pNextDocRef = pDocRef;	/* a priori la reference suivante sera dans le */
 	/* meme document */
 	while (pRef != NULL)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pRefSuiv = ReferSuivante (pSource, DocDeSauve, FALSE, pRef, &pDocRefSuiv, &pDocExt, TRUE);
+	     pNextRef = ReferSuivante (pSource, DocDeSauve, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
 	     /* traite la reference courante */
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
 	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
@@ -541,7 +531,7 @@ PtrDocument         pDoc;
 		     pElemRef = NULL;
 		  else
 		     pElemRef = pRef->RdElement;
-		  SetReference (pElemRef, pRef->RdAttribute, pRac, pDocRef, pDoc, FALSE, FALSE);
+		  SetReference (pElemRef, pRef->RdAttribute, pRoot, pDocRef, pDoc, FALSE, FALSE);
 		  /* si c'est une reference par attribut, verifie la */
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */
@@ -550,16 +540,16 @@ PtrDocument         pDoc;
 		      (*ThotLocalActions[T_TableauVerifExtension])
 			(pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
 	       }
-	     pRef = pRefSuiv;	/* passe a la reference suivante */
-	     pDocRef = pDocRefSuiv;
+	     pRef = pNextRef;	/* passe a la reference suivante */
+	     pDocRef = pNextDocRef;
 	  }
 	if (!ChangerLabel && pDoc != DocDeSauve)
 	   /* l'element a change' de document, on le note dans le */
 	   /* contexte de son nouveau document */
-	   NoteElemRefColle (pRac, pDoc, AncienLabel);
+	   RegisterPastedReferredElem (pRoot, pDoc, oldLabel);
      }
    /* Traite les attributs de type reference porte's par l'element */
-   pAttr = pRac->ElFirstAttr;
+   pAttr = pRoot->ElFirstAttr;
    while (pAttr != NULL)
       /* examine tous les attributs de l'element */
      {
@@ -582,45 +572,45 @@ PtrDocument         pDoc;
 			/* extensions de cellule des tableaux */
 		        if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
 			  (*ThotLocalActions[T_TableauVerifExtension])
-			   (pAttr, pRac, pRac, TRUE);
+			   (pAttr, pRoot, pRoot, TRUE);
 			if (DocDeSauve != pDoc)
 			   /* reference et objet reference' sont */
 			   /* dans des documents differents, on */
 			   /* supprime l'attribut, sauf dans le */
 			   /* cas particulier des tableaux. */
 			  {
-			    attrref = TRUE;
+			    attrRef = TRUE;
 			    if (ThotLocalActions[T_TableauAttributRef]!=NULL)
 			      (*ThotLocalActions[T_TableauAttributRef])
-				(pAttr, &attrref);
-			    if (!attrref)
-			      DeleteAttribute (pRac, pAttr);
+				(pAttr, &attrRef);
+			    if (!attrRef)
+			      DeleteAttribute (pRoot, pAttr);
 			  }
 		     }
 	  }
 	pAttr = pAttr->AeNext;
      }
-   /* Lorsqu'on fait un copier/coller d'un element  LtReference, */
+   /* Lorsqu'on fait un copier/coller d'un element LtReference, */
    /* il faut chainer les references entre element ancien et */
    /* element nouveau : la reference de la copie qui est dans */
    /* le tampon est dechainee entre les deux elements. */
-   /* pRac est le nouvel element cree : son descripteur */
+   /* pRoot est le nouvel element cree : son descripteur */
    /* a ete chaine devant le descripteur de la copie qui est */
    /* dans le tampon, qui est devant celui de l'element copie */
-   if (pRac->ElTerminal && pRac->ElLeafType == LtReference)
+   if (pRoot->ElTerminal && pRoot->ElLeafType == LtReference)
      {
 	/* c'est un element reference */
-	pRef = pRac->ElReference;
+	pRef = pRoot->ElReference;
 	if (pRef != NULL)	/*  on cherche le suivant */
 	  {
-	     pRefTampon = pRef->RdNext;
-	     if (pRefTampon != NULL
-		 && DansTampon (pRefTampon->RdElement))
-		/* il faut retirer pRefTampon du chainage */
+	     pRefClipboard = pRef->RdNext;
+	     if (pRefClipboard != NULL
+		 && DansTampon (pRefClipboard->RdElement))
+		/* il faut retirer pRefClipboard du chainage */
 	       {
-		  pRef->RdNext = pRefTampon->RdNext;
-		  if (pRefTampon->RdNext != NULL)	/* toujours vrai ? */
-		     pRefTampon->RdNext->RdPrevious = pRef;
+		  pRef->RdNext = pRefClipboard->RdNext;
+		  if (pRefClipboard->RdNext != NULL)
+		     pRefClipboard->RdNext->RdPrevious = pRef;
 	       }
 	  }
      }
@@ -630,17 +620,17 @@ PtrDocument         pDoc;
    if (DocDeSauve != pDoc)
      {
 	/* l'element traite' est-il une reference ? */
-	if (pRac->ElTerminal && pRac->ElLeafType == LtReference)
+	if (pRoot->ElTerminal && pRoot->ElLeafType == LtReference)
 	   /* c'est un element reference */
-	   pRef = pRac->ElReference;
+	   pRef = pRoot->ElReference;
 	else			/* c'est peut-etre une inclusion */
-	   pRef = pRac->ElSource;
+	   pRef = pRoot->ElSource;
 	if (pRef != NULL)	/* c'est une reference, on cherche
 				   l'element reference', pElRef */
 	   if (pRef->RdReferred != NULL)
 	     {
-		pElRef = ReferredElement (pRef, &IdentDocRef, &pDocRef);
-		if (pElRef == NULL && IdentDocNul (IdentDocRef))
+		pElRef = ReferredElement (pRef, &docIdentRef, &pDocRef);
+		if (pElRef == NULL && IdentDocNul (docIdentRef))
 		   /* la reference ne designe rien */
 		   pRef->RdReferred = NULL;
 		else
@@ -658,7 +648,7 @@ PtrDocument         pDoc;
 		     else
 			/* l'original etait une reference externe a son document */
 			/* d'origine */
-		     if (MemeIdentDoc (pDoc->DocIdent, IdentDocRef))
+		     if (MemeIdentDoc (pDoc->DocIdent, docIdentRef))
 			/* l'element reference' et la reference sont dans le */
 			/* meme document */
 			pDocRef = pDoc;
@@ -670,30 +660,30 @@ PtrDocument         pDoc;
 			  /* meme temps */
 			  if (!pRef->RdInternalRef)
 			     /* lie la reference a l'element designe' par l'original */
-			     SetReference (pRac, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
+			     SetReference (pRoot, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
 			  else
 			     /* la reference originale etait une reference interne */
 			    {
-			       memedoc = FALSE;
+			       sameDoc = FALSE;
 			       if (pElRef != NULL)
 				  if (!DansTampon (pElRef))
 				     /* l'element reference' est aussi colle', on ne fait */
 				     /* rien : ce cas est traite' plus haut */
-				     memedoc = DansNouveaux (pElRef);
-			       if (!memedoc)
+				     sameDoc = DansNouveaux (pElRef);
+			       if (!sameDoc)
 
 				  /* etablit le lien entre la reference copie'e et */
 				  /* l'element reference */
-				  SetReference (pRac, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
+				  SetReference (pRoot, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
 			    }
 		       }
 		  }
 	     }
      }
-   if (!pRac->ElTerminal && pRac->ElSource == NULL)
+   if (!pRoot->ElTerminal && pRoot->ElSource == NULL)
       /* ce n'est ni une inclusion ni un terminal, on traite tous les fils */
      {
-	pEl = pRac->ElFirstChild;
+	pEl = pRoot->ElFirstChild;
 	while (pEl != NULL)
 	  {
 	     PurgeRef (pEl, pDoc);
