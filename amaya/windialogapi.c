@@ -135,17 +135,20 @@ static TCHAR        szFileName[256];
 static HWND         currentFrame;
 static HWND         currentDlg;
 
-
 HWND wordButton;
 HWND hwnListWords;
 HWND hwndCurrentWord;
 HWND hwndLanguage;
+HWND ghwndAbort;
+HWND ghwndMain;
 char currentWord [MAX_WORD_LEN];
+BOOL gbAbort;
 
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK AbortDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align1DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -164,11 +167,11 @@ LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK PrintInProgressDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
 LRESULT CALLBACK MathDlgProc ();
+LRESULT CALLBACK AbortDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
 LRESULT CALLBACK Align1DlgProc ();
 LRESULT CALLBACK Align2DlgProc ();
@@ -187,9 +190,7 @@ LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthenticationDlgProc ();
 LRESULT CALLBACK BackgroundImageDlgProc ();
-LRESULT CALLBACK PrintInProgressDlgProc ();
-#endif /* __STDC__ */
-
+#endif /* __STDC__ *
 /* ------------------------------------------------------------------------ *
  *                                                                          *
  *  FUNCTION   : GetPrinterDC()                                             *
@@ -266,7 +267,7 @@ int       attr_HREFText;
     attrHRefTxt  = attr_HREFText;
 	strcpy (urlToOpen, attrHref);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -322,7 +323,9 @@ int       num_zone_printer_name;
 int       num_form_print;
 #endif /* __STDC__ */
 {  
+    gbAbort            = FALSE;
 	baseDlg            = printRef;
+	ghwndMain          = parent;
     numMenuSupport     = num_menu_support; 
     numMenuOptions     = num_menu_options; 
     numMenuPaperFormat = num_menu_paper_format; 
@@ -331,6 +334,11 @@ int       num_form_print;
 	sprintf (currentFileToPrint, "%s", ps_dir);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+
+    if (!gbAbort) {
+       EnableWindow  (parent, TRUE);
+       DestroyWindow (ghwndAbort);
+	}
 	TtPrinterDC = NULL;
 }
 
@@ -346,7 +354,7 @@ int       curr_val;
 #endif /* __STDC__ */
 {  
     currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN1DIALOG), parent, (DLGPROC) Align1DlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN1DIALOG), NULL, (DLGPROC) Align1DlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -361,7 +369,7 @@ int       curr_val;
 #endif /* __STDC__ */
 {  
     currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN2DIALOG), parent, (DLGPROC) Align2DlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN2DIALOG), NULL, (DLGPROC) Align2DlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -374,7 +382,7 @@ void CreateSearchDlgWindow (parent)
 HWND      parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), parent, (DLGPROC) SearchDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -524,7 +532,7 @@ int   font_size;
     fontUnderline = font_underline;
     fontSize      = font_size;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), parent, (DLGPROC) CharacterDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -601,7 +609,7 @@ int   chkrSpecial;
 	sprintf (currentLabel, label);
 	sprintf (currentRejectedchars, rejectedChars);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), parent, (DLGPROC) SpellCheckDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -869,6 +877,41 @@ LPARAM lParam;
 	return TRUE;
 }
 	
+/*-----------------------------------------------------------------------*
+ *
+ * FUNCTION:    AbortDlgProc (standard dialog procedure INPUTS/RETURNS)
+ *
+ * COMMENTS:    Handles "Abort" dialog messages
+ *
+ *-----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+LRESULT CALLBACK AbortDlgProc (hwnd, msg, wParam, lParam)
+HWND   hwnd; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* _WINDOWS */
+{
+   switch (msg) {
+          case WM_INITDIALOG: ghwndAbort = hwnd;
+                              EnableMenuItem (GetSystemMenu (ghwndMain, FALSE), SC_CLOSE, MF_GRAYED);
+                              break;
+
+          case WM_COMMAND:    
+               switch (LOWORD (wParam)) {
+                      case IDCANCEL: gbAbort = TRUE;
+                                     AbortDoc (TtPrinterDC);
+                                     EnableWindow  (hwnd, TRUE);
+                                     DestroyWindow (hwnd);
+                                     return TRUE;
+			   }
+               break;
+   }
+   return 0;
+}
+
 /*-----------------------------------------------------------------------
  PrintDlgProc
  ------------------------------------------------------------------------*/
@@ -882,8 +925,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    static LPPRINTER_INFO_5 pInfo5;
-	DWORD                   dwNeeded, dwReturned;
+    /* static LPPRINTER_INFO_5 pInfo5;
+	DWORD                   dwNeeded, dwReturned; */
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -902,41 +945,15 @@ LPARAM lParam;
                      CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
 
                 if (toPrinter) {
-                   if (TtPrinterDC)
-                      DeleteDC (TtPrinterDC);
-
                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
-
-                   TtPrinterDC = GetPrinterDC ();
-                   if (TtPrinterDC) {
-                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
-                      WinInitPrinterColors ();
-				   }
-
-#                  if 0 /******************************************/
-                   EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
-
-                   // Alloue de l’espace pour le tableau PRINTER_INFO_5
-                   if (pInfo5)
-                      HeapFree (GetProcessHeap (), 0, pInfo5) ;
-
-                   pInfo5 = (LPPRINTER_INFO_5) HeapAlloc (GetProcessHeap (), HEAP_NO_SERIALIZE, dwNeeded);
-
-                   // Enfin, remplit le tableau PRINTER_INFO_5
-                   if (!pInfo5 || !EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) pInfo5, dwNeeded, &dwNeeded, &dwReturned))
-                      MessageBox (hwnDlg, "No printer available !", NULL, MB_ICONSTOP);      
-                   else {
-                       SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, pInfo5->pPrinterName);
-                       TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
-					   WinInitPrinterColors ();
-				   }
-#                  endif /* 0 *************************************/
+                   SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "Printer ...");
                 } else if (toPostscript) {
                      CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
 					 TtPrinterDC = NULL;
 				}
 				break;
+
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
                        case IDC_MANUALFEED:
@@ -1013,9 +1030,25 @@ LPARAM lParam;
 
 				       case ID_PRINT:
 					        EndDialog (hwnDlg, ID_PRINT);
+                            if (toPrinter) {
+                               if (TtPrinterDC)
+                                  DeleteDC (TtPrinterDC);
+
+                               TtPrinterDC = GetPrinterDC ();
+                               if (TtPrinterDC) {
+                                  WinInitPrinterColors ();
+                                  ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc);
+							   }
+							}
+
+							EnableWindow (ghwndMain, FALSE);
 						    ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (char*)0);
 							ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
 							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
+                            if (TtPrinterDC) {
+                               DeleteDC (TtPrinterDC);
+                               TtPrinterDC = NULL;
+							}
 							break;
 				       case IDCANCEL:
                             if (TtPrinterDC) {
@@ -1086,6 +1119,7 @@ LPARAM lParam;
 					   case ID_DELETE:
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
@@ -1170,6 +1204,7 @@ LPARAM lParam;
 					   case ID_DELETE:
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
