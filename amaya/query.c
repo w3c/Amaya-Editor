@@ -3271,8 +3271,9 @@ void               *context_tcbf;
 #endif /* __STDC__ */
 {
    AHTReqContext      *me;
+   CHARSET             charset;
    int                 status;
-   unsigned long      file_size;
+   unsigned long       file_size;
    char               *fileURL;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;
@@ -3401,26 +3402,28 @@ void               *context_tcbf;
 
    HTRequest_setOutputFormat (me->request, HTAtom_for (tmp2));
 
-#if 0 /* JK: code ready, but we're not going to use it yet */
    /*
    **  Set the Charset of the file we are uploading 
    */
    /* we set the charset as indicated in the document's metadata
       structure (and only if it exists) */
-   tmp = DocumentMeta[docid]->charset;
-   if (tmp && *tmp != WC_EOS)
+   charset = TtaGetDocumentCharset (docid);
+   if (charset != UNDEFINED_CHARSET)
      {
-       tmp2 = TtaWC2ISOdup (tmp);
-       HTAnchor_setCharset (dest_anc_parent, HTAtom_for (tmp2));
-       TtaFreeMemory (tmp2);
-       tmp2 = HTAtom_name (HTAnchor_charset (dest_anc_parent));
-       /* .. and we give the same charset to the source anchor */
-       /* we go thru setCharSet, rather than change the parent's
-	  anchor, as that's the place that libwww expects it to be */
-       HTAnchor_setCharset (HTAnchor_parent (me->source),
-			    HTAtom_for (tmp2));
+       tmp =  TtaGetCharsetName (charset);
+       if (tmp && *tmp != WC_EOS)
+	 {
+	   tmp2 = TtaWC2ISOdup (tmp);
+	   HTAnchor_setCharset (dest_anc_parent, HTAtom_for (tmp2));
+	   TtaFreeMemory (tmp2);
+	   tmp2 = HTAtom_name (HTAnchor_charset (dest_anc_parent));
+	   /* .. and we give the same charset to the source anchor */
+	   /* we go thru setCharSet, rather than change the parent's
+	      anchor, as that's the place that libwww expects it to be */
+	   HTAnchor_setCharset (HTAnchor_parent (me->source),
+				HTAtom_for (tmp2));
+	 }
      }
-#endif /* CHARSET */
 
    /*
    ** define other request characteristics
