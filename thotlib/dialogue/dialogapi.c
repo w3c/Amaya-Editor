@@ -2615,168 +2615,154 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   struct E_List      *adbloc;
   ThotMenu            menu;
   ThotWidget          w;
-#ifdef _WINDOWS
+#if defined (_WINDOWS) || defined (_GTK)
   char                menu_item [1024];
   char                equiv_item [255];
-#else /* _WINDOWS */
-#ifndef _GTK
+#else /* _WINDOWS || _GTK */
   Arg                 args[MAX_ARGS];
   XmString            title_string = NULL;
-#else /* _GTK */
+#endif /* _WINDOWS || _GTK */
+#ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
   ThotWidget          accelw = NULL;
-  char                menu_item [1024];
-  char                equiv_item [255];
 #endif /* _GTK */
-#endif /* _WINDOWS */
 
 #if defined (_WINDOWS) || defined (_GTK)
   equiv_item[0] = 0;
 #endif /* _WINDOWS || _GTK */
+  if (ref == 0)
+    {
+      TtaError (ERR_invalid_reference);
+      return;
+    }
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL)
+    TtaError (ERR_cannot_create_dialogue);
+  else
+    {
+      /* Est-ce que le catalogue existe deja ? */
+      rebuilded = FALSE;
+      if (catalogue->Cat_Widget != 0)
+	{
+	  if (catalogue->Cat_Type == CAT_PULL)
+	    {
+	      DestContenuMenu (catalogue); /* Modification of the catalogue */
+	      rebuilded = TRUE;
+	    }
+	  else
+	    TtaDestroyDialogue (ref);
+	}
 
-   if (ref == 0)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
-
-   catalogue = CatEntry (ref);
-   if (catalogue == NULL)
-      TtaError (ERR_cannot_create_dialogue);
-   else
-     {
-	/* Est-ce que le catalogue existe deja ? */
-	rebuilded = FALSE;
-	if (catalogue->Cat_Widget != 0)
-	  {
-	     if (catalogue->Cat_Type == CAT_PULL)
-	       {
-		  DestContenuMenu (catalogue);	/* Modification du catalogue */
-		  rebuilded = TRUE;
-	       }
-	     else
-		TtaDestroyDialogue (ref);
-	  }			/*if */
-
-#if !defined(_WINDOWS) && !defined(_GTK)
-	/* Cree le menu correspondant */
-	n = 0;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-#endif /* _WINDOWS && _GTK */
-	if (parent == 0)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return;
-	  }
-	else if (number == 0)
-	   menu = (ThotMenu) - 1;	/* pas de pull-down */
-	else if (!rebuilded)
-	  {
+      if (parent == 0)
+	{
+	  TtaError (ERR_invalid_parent_dialogue);
+	  return;
+	}
+      else if (number == 0)
+	menu = (ThotMenu) - 1;	/* not a pull-down */
+      else if (!rebuilded)
+	{
 #ifdef _WINDOWS
-	     menu = parent;
+	  menu = parent;
 #else  /* _WINDOWS */
 #ifndef _GTK
-	     menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
+	  /* Create the menu */
+	  n = 0;
+	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	  n++;
+	  menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
 #else /* _GTK */
-	     menu = gtk_menu_new ();
-	     /* 
-		peut -être rajouter une bouton pour détacher le menu ?
-		se fait avec gtk_menu_set_tearoff_state;
-	     */
+	  menu = gtk_menu_new ();
+	  /* 
+	     peut -être rajouter une bouton pour détacher le menu ?
+	     se fait avec gtk_menu_set_tearoff_state;
+	  */
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	  }
-	else
-	  menu = (ThotMenu) catalogue->Cat_Widget;
+	}
+      else
+	menu = (ThotMenu) catalogue->Cat_Widget;
 	
-	catalogue->Cat_Ref = ref;
-	catalogue->Cat_Type = CAT_PULL;
-#ifndef _GTK
-	catalogue->Cat_Button = 'L';
-	catalogue->Cat_Data = -1;
-#endif /* _GTK */
-
-	catalogue->Cat_Widget = (ThotWidget) menu;
-	adbloc = catalogue->Cat_Entries;
-	if (number == 0)
-	  {
-	    /* c'est un bouton et non un pull-down */
-	    catalogue->Cat_Data = 1;
-	    if (parent != 0)
-	      {
-#ifndef _WINDOWS
+      catalogue->Cat_Ref = ref;
+      catalogue->Cat_Type = CAT_PULL;
+      catalogue->Cat_Button = 'L';
+      catalogue->Cat_Data = -1;
+      catalogue->Cat_Widget = (ThotWidget) menu;
+      adbloc = catalogue->Cat_Entries;
+#ifdef _WINDOWS
+      if (parent)
+	WIN_AddFrameCatalogue (parent, catalogue);
+      else if (currentParent)
+	WIN_AddFrameCatalogue (currentParent, catalogue);
+      if (number == 0)
+	/* it's a simple button not a pull-down */
+	return;
+#else  /* _WINDOWS */
 #ifdef _GTK 
-                gtk_widget_show_all (parent);
-                ConnectSignalGTK (GTK_OBJECT(parent), "activate",
-				  GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
+      if (number == 0)
+	{
+	  /* it's a simple button not a pull-down */
+	  if (parent)
+	    {
+	      gtk_widget_show_all (parent);
+	      ConnectSignalGTK (GTK_OBJECT(parent), "activate",
+				GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
+	    }
+	  return;
+	}
 #else /* _GTK */
-		XtManageChild (parent);
-		XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
+      if (number == 0)
+	{
+	  /* it's a simple button not a pull-down */
+	  if (parent)
+	    {
+	      XtManagechild (parent);
+	      XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
+	    }
+	  return;
+	}
 #endif /*_GTK */
-#else  /* _WINDOWS */
-		WIN_AddFrameCatalogue (parent, catalogue);
 #endif /* _WINDOWS */
-	       }
+      
+      /*** Create the menu title ***/
+      if (title)
+	{
+	  if (!rebuilded)
+	    {
+	      adbloc = NewEList ();
+	      catalogue->Cat_Entries = adbloc;
 #ifdef _WINDOWS
-	    else if (currentParent != 0)
-	      WIN_AddFrameCatalogue (currentParent, catalogue);
-#endif /* _WINDOWS */
-	     return;
-	  }
-#ifdef _WINDOWS
-	else if (parent != 0)
-	  WIN_AddFrameCatalogue (parent, catalogue);
-	else if (currentParent != 0)
-	  WIN_AddFrameCatalogue (currentParent, catalogue);
-#endif /* WINDOWS */
-
-	/*** Cree le titre du menu ***/
-	if (title != NULL)
-	  {
-#if !defined(_WINDOWS) && !defined(_GTK)
-	    n = 0;
-	    title_string = XmStringCreateSimple (title);
-	    XtSetArg (args[n], XmNlabelString, title_string);
-	    n++;
-#endif /* _WINDOWS && _GTK */
-	    if (!rebuilded)
-	      {
-		adbloc = NewEList ();
-		catalogue->Cat_Entries = adbloc;
-#ifndef _WINDOWS
-#ifndef _GTK
-		XtSetArg (args[n], XmNfontList, DefaultFont);
-		n++;
-		XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		n++;
-		w = XmCreateLabel (menu, "Dialogue", args, n);
-		XtManageChild (w);
-		adbloc->E_ThotWidget[0] = w;
-#endif /*_GTK */
+	      adbloc->E_ThotWidget[0] = (ThotWidget) 0;
+	      adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 #else  /* _WINDOWS */
-		adbloc->E_ThotWidget[0] = (ThotWidget) 0;
-#endif /* _WINDOWS */
-		n = 0;
-#ifndef _WINDOWS
 #ifndef _GTK
-		XtSetArg (args[n], XmNmarginHeight, 0);
-		n++;
-		XtSetArg (args[n], XmNspacing, 0);
-		n++;
-		XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		n++;
-		XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		n++;
-		w = XmCreateSeparator (menu, "Dialogue", args, n);
-		XtManageChild (w);
-		adbloc->E_ThotWidget[1] = w;
+	      n = 0;
+	      title_string = XmStringCreateSimple (title);
+	      XtSetArg (args[n], XmNlabelString, title_string);
+	      n++;
+	      XtSetArg (args[n], XmNfontList, DefaultFont);
+	      n++;
+	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      n++;
+	      w = XmCreateLabel (menu, "Dialogue", args, n);
+	      XtManageChild (w);
+	      adbloc->E_ThotWidget[0] = w;
+	      n = 0;
+	      XtSetArg (args[n], XmNmarginHeight, 0);
+	      n++;
+	      XtSetArg (args[n], XmNspacing, 0);
+	      n++;
+	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      n++;
+	      XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
+	      n++;
+	      w = XmCreateSeparator (menu, "Dialogue", args, n);
+	      XtManageChild (w);
+	      adbloc->E_ThotWidget[1] = w;
 #endif /*_GTK */
-#else  /* _WINDOWS */
-		adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 #endif /* _WINDOWS */
-	      }
+	    }
 #if !defined(_WINDOWS) && !defined(_GTK)
 	    else if (adbloc->E_ThotWidget[0] != 0)
 	      XtSetValues (adbloc->E_ThotWidget[0], args, n);
@@ -4084,7 +4070,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-
 void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 			char *text, char *equiv, ThotBool multipleOptions, char button)
 {

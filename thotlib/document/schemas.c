@@ -2262,8 +2262,8 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
   If elType->ElSSchema is not NULL, search in that specific schema,
   otherwise search in different schemas added to the document.
   ----------------------------------------------------------------------*/
-void TtaGetXmlElementType (char* XMLName, ElementType *elType,
-			   char** mappedName, Document doc)
+void TtaGetXmlElementType (char *XMLName, ElementType *elType,
+			   char **mappedName, Document doc)
 {
   PtrSSchema          pSS;
   int                 rule;
@@ -2282,7 +2282,8 @@ void TtaGetXmlElementType (char* XMLName, ElementType *elType,
  	   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
-	       *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+	       if (mappedName)
+		 *mappedName = pSS->SsRule->SrElem[rule]->SrName;
 	       found = TRUE;
 	     }
 	 }
@@ -2303,7 +2304,8 @@ void TtaGetXmlElementType (char* XMLName, ElementType *elType,
 		   if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;
-		       *mappedName = pSS->SsRule->SrElem[rule]->SrName;
+		       if (mappedName)
+			 *mappedName = pSS->SsRule->SrElem[rule]->SrName;
 		       elType->ElSSchema = (SSchema) pSS;
 		       found = TRUE;
 		     }

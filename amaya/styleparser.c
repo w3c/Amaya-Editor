@@ -4155,8 +4155,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   maxAttr = 0;
   /* default schema name */
   ctxt->schema = NULL;
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  schemaName = TtaGetSSchemaName(elType.ElSSchema);
+  elType.ElSSchema = NULL;
+  schemaName = TtaGetSSchemaName(TtaGetDocumentSSchema (doc));
   if (!strcmp (schemaName, "HTML"))
     xmlType = XHTML_TYPE;
   else if (!strcmp (schemaName, "MathML"))
@@ -4206,6 +4206,30 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		      TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
 		    }
 #endif /* XML_GENERIC */
+		  else
+		    {
+		      if (xmlType != XHTML_TYPE)
+			{
+			  MapXMLElementType (XHTML_TYPE, names[i], &elType,
+					     &mappedName, &c, &level, doc);
+			  if (elType.ElSSchema)
+			    GetXHTMLSSchema (doc);
+			}
+		      if (elType.ElSSchema == NULL && xmlType != MATH_TYPE)
+			{
+			  MapXMLElementType (MATH_TYPE, names[i], &elType,
+					     &mappedName, &c, &level, doc);
+			  if (elType.ElSSchema)
+			    GetMathMLSSchema (doc);
+			}
+		      if (elType.ElSSchema == NULL && xmlType != SVG_TYPE)
+			{
+			  MapXMLElementType (SVG_TYPE, names[i], &elType,
+					     &mappedName, &c, &level, doc);
+			  if (elType.ElSSchema)
+			    GetSVGSSchema (doc);
+			}
+		    }
 		}
 
 	      if (elType.ElSSchema == NULL)
