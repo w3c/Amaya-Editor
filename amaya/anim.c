@@ -807,6 +807,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
 	  ctxt = TtaGetSpecificStyleContext (doc);
 	  /* the specific presentation is not a CSS rule */
 	  ctxt->cssSpecificity = 0;
+	  ctxt->important = TRUE;
 	  ctxt->destroy = FALSE;
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	  TtaFreeMemory (ctxt);
@@ -850,6 +851,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
   ctxt->cssSpecificity = 0;
+  ctxt->important = TRUE;
   ctxt->destroy = FALSE;
   /* decide of the presentation rule to be created or updated */
   TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -874,6 +876,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
 	  TtaNextSibling (&child);
 	pval.typed_data.value = 0;
 	pval.typed_data.unit = UNIT_PX;
+	ctxt->important = TRUE;
 	ctxt->destroy = FALSE;
 	TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
 	ctxt->destroy = TRUE;
