@@ -42,6 +42,7 @@
 #include "readstr_f.h"
 #include "callbackinit_f.h"
 #include "dialogapi_f.h"
+#include "memory_f.h"
 
 /*----------------------------------------------------------------------
   ElementHasAction

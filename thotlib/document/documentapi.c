@@ -732,7 +732,8 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
     {
       if (status)
 	{
-	  if (!pDoc->DocUpdated && ThotLocalActions[T_docmodified])
+	  if ((!pDoc->DocUpdated || !pDoc->DocModified) &&
+	      ThotLocalActions[T_docmodified])
 	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)TRUE);
 	  pDoc->DocModified = TRUE;
 	  pDoc->DocUpdated = TRUE;
@@ -740,7 +741,8 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
 	}
       else
 	{
-	  if (pDoc->DocUpdated && ThotLocalActions[T_docmodified])
+	  if ((pDoc->DocUpdated || pDoc->DocModified) &&
+	      ThotLocalActions[T_docmodified])
 	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)FALSE);
 	  pDoc->DocModified = FALSE;
 	  pDoc->DocUpdated = FALSE;
