@@ -98,131 +98,133 @@
 96 Número (mn)
 97 Operador (mo)
 98 Carácter (&xxx;)
-99 Raíz (mroot)
-100 Raíz cuadrada (msqrt)
-101 Enclose (menclose)
-102 Fracción (mfrac)
-103 Subíndice and superíndice (msubsup)
-104 Subíndice (msub)
-105 Superíndice (msup)
-106 Bajo y sobre (munderover)
-107 Bajo (munder)
-108 Sobre (mover)
-109 Paréntesis (mrow)
-110 Multiscripts (mmultiscripts)
-111 Matriz (mtable)
-112 Eliminar columna de matriz
-113 noscript
-114 Objeto
-115 objeto
-116 Parámetro (param)
-117 Párrafo (p)
-118 Preformateado (pre)
-119 Tabla
-120 tabla
-121 título
-122 colgroup
-123 col
-124 thead
-125 tbody
-126 tfoot
-127 Fila (tr)
-128 Celda datos (td)
-129 Celda cabecera (th)
-130 Eliminar columna de tabla
-131 Enlazar el destino previo
-132 Crear o cambiar enlace...
-133 Crear destino
-134 Borrar ancla
-135 Mostar barra de botones
-136 Mostrar dirección
-137 Mostrar áreas de mapas
-138 Mostrar destinos
-139 Zoom mas
-140 Zoom menos
-141 Mostrar estructura
-142 Mostrar alternativo
-143 Mostrar enlaces
-144 Mostrar tabla de contenidos
-145 Mostrar fuente
-146 Estilo de carácter...
-147 Colores...
-148 Formato...
-149 Imagen de fondo...
-150 Crear regla...
-151 Aplicar clase...
-152 Hojas de estilos
-153 Enlace...
-154 Abrir...
-155 Desactivar...
-156 Activar...
-157 Eliminar...
-158 Tipo de Información
-159 Enfasis (em)
-160 strong
-161 cite
-162 Definición (dfn)
-163 código
-164 Variable (var)
-165 Ejemplo (samp)
-166 Teclado (kbd)
-167 Abreviatura (abbr)
-168 acrónimo
-169 Inserción (ins)
-170 Borrado (del)
-171 Elemento carácter
-172 Itálica (i)
-173 Negrita (b)
-174 Teletipo (tt)
-175 grande
-176 pequeña
-177 Subíndice (sub)
-178 Superíndice (sup)
-179 Remarcado (Quotation q)
-180 BiDi override (bdo)
-181 Numeracón de sección
-182 Hacer libro
-183 Crear/Suprimir attributos ID...
-184 Mostrar fichero log
-185 Preferencias
-186 General...
-187 Publicar...
-188 Cache...
-189 Proxy...
-190 Colores...
-191 Geometría de la ventana...
-192 Negociación de idioma...
-193 Perfiles...
-194 Plantillas...
-195 **Annotate selection
-196 **Annotate document
-197 Post anotacion
-198 **Delete annotation
-199 Cargar anotaciones
-200 Personalizar consulta...
-201 Filtro local...
-202 Configurar...
-203 Sobre Amaya
-204 Sobre Amaya en W3C
-205 Hojear
-206 Seleccionar
-207 Buscar
-208 Vistas
-209 Creación de elementos
-210 Enlaces
-211 Restructuración
-212 Tablas
-213 Matemáticas
-214 Graphics
-215 Mapas de imagen
-216 Hojas de estilo
-217 Atributos
-218 Comprobar ortografía
-219 Publicar
-220 Imprimir
-221 Numerar
-222 Crear libros
-223 **Annotations
-224 Configurar Amaya
-225 **ShortCuts
-226 Accesibilidad en Amaya
+99 InvisibleTimes
+100 ApplyFunction
+101 Raíz (mroot)
+102 Raíz cuadrada (msqrt)
+103 Enclose (menclose)
+104 Fracción (mfrac)
+105 Subíndice and superíndice (msubsup)
+106 Subíndice (msub)
+107 Superíndice (msup)
+108 Bajo y sobre (munderover)
+109 Bajo (munder)
+110 Sobre (mover)
+111 Paréntesis (mrow)
+112 Multiscripts (mmultiscripts)
+113 Matriz (mtable)
+114 Eliminar columna de matriz
+115 noscript
+116 Objeto
+117 objeto
+118 Parámetro (param)
+119 Párrafo (p)
+120 Preformateado (pre)
+121 Tabla
+122 tabla
+123 título
+124 colgroup
+125 col
+126 thead
+127 tbody
+128 tfoot
+129 Fila (tr)
+130 Celda datos (td)
+131 Celda cabecera (th)
+132 Eliminar columna de tabla
+133 Enlazar el destino previo
+134 Crear o cambiar enlace...
+135 Crear destino
+136 Borrar ancla
+137 Mostar barra de botones
+138 Mostrar dirección
+139 Mostrar áreas de mapas
+140 Mostrar destinos
+141 Zoom mas
+142 Zoom menos
+143 Mostrar estructura
+144 Mostrar alternativo
+145 Mostrar enlaces
+146 Mostrar tabla de contenidos
+147 Mostrar fuente
+148 Estilo de carácter...
+149 Colores...
+150 Formato...
+151 Imagen de fondo...
+152 Crear regla...
+153 Aplicar clase...
+154 Hojas de estilos
+155 Enlace...
+156 Abrir...
+157 Desactivar...
+158 Activar...
+159 Eliminar...
+160 Tipo de Información
+161 Enfasis (em)
+162 strong
+163 cite
+164 Definición (dfn)
+165 código
+166 Variable (var)
+167 Ejemplo (samp)
+168 Teclado (kbd)
+169 Abreviatura (abbr)
+170 acrónimo
+171 Inserción (ins)
+172 Borrado (del)
+173 Elemento carácter
+174 Itálica (i)
+175 Negrita (b)
+176 Teletipo (tt)
+177 grande
+178 pequeña
+179 Subíndice (sub)
+180 Superíndice (sup)
+181 Remarcado (Quotation q)
+182 BiDi override (bdo)
+183 Numeracón de sección
+184 Hacer libro
+185 Crear/Suprimir attributos ID...
+186 Mostrar fichero log
+187 Preferencias
+188 General...
+189 Publicar...
+190 Cache...
+191 Proxy...
+192 Colores...
+193 Geometría de la ventana...
+194 Negociación de idioma...
+195 Perfiles...
+196 Plantillas...
+197 **Annotate selection
+198 **Annotate document
+199 Post anotacion
+200 **Delete annotation
+201 Cargar anotaciones
+202 Personalizar consulta...
+203 Filtro local...
+204 Configurar...
+205 Sobre Amaya
+206 Sobre Amaya en W3C
+207 Hojear
+208 Seleccionar
+209 Buscar
+210 Vistas
+211 Creación de elementos
+212 Enlaces
+213 Restructuración
+214 Tablas
+215 Matemáticas
+216 Graphics
+217 Mapas de imagen
+218 Hojas de estilo
+219 Atributos
+220 Comprobar ortografía
+221 Publicar
+222 Imprimir
+223 Numerar
+224 Crear libros
+225 **Annotations
+226 Configurar Amaya
+227 **ShortCuts
+228 Accesibilidad en Amaya

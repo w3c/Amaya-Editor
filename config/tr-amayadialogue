@@ -98,131 +98,133 @@
 96 **Number (mn)
 97 **Operator (mo)
 98 **Character (&xxx;)
-99 Kök (mroot)
-100 Karekök (msqrt)
-101 **Enclose (menclose)
-102 Kesir (mfrac)
-103 Alt ve üstyazý (msubsup)
-104 altyazý (msub)
-105 üstyazý (msup)
-106 altýnda veya üstünde (munderover)
-107 altýnda (munder)
-108 üstünde (mover)
-109 Parantezler (mrow)
-110 Multiscripts (mmultiscripts)
-111 Matris (mtable)
-112 **Delete matrix column
-113 noscript
-114 Nesne
-115 object
-116 Parametre (param)
-117 Paragraf (p)
-118 Preformatted (pre)
-119 Tablo
-120 table
-121 Altyazý (caption)
-122 colgroup
-123 col
-124 thead
-125 tbody
-126 tfoot
-127 Sýra (tr)
-128 Veri hücresi (td)
-129 Baþlýk hücresi (th)
-130 **Delete table column
-131 **Link to previous target
-132 Baðlantý yarat...
-133 Hedef yarat
-134 <A> tanýmý sil
-135 Tuþlarý göster
-136 Adres göster
-137 Yakýnlaþtýr
-138 **Show targets
-139 Uzaklaþtýr
-140 Harita alanlarýný göster
-141 Yapýyý göster
-142 Alternatif gösterim
-143 Baðlantýlarý göster
-144 Ýçindekileri göster
-145 **Show source
-146 Karakter tarzý...
-147 Renkler...
-148 Biçim...
-149 Arkaplan görüntüsü...
-150 Kural yarat...
-151 \'class\' uygula...
-152 Tarzý tanýmlarý
-153 **Link...
-154 **Open...
-155 **Disable...
-156 **Enable...
-157 **Remove...
-158 Bilgi türü
-159 Vurgu (em)
-160 Kuvvetli (strong)
-161 Cite (cite)
-162 Taným (dfn)
-163 Kod (code)
-164 Deðiþken (var)
-165 Örnek (samp)
-166 Tuþtakýmý (kbd)
-167 **Abbreviation (abbr)
-168 **acronym
-169 **Insertion (ins)
-170 **Deletion (del)
-171 Karakter birimi
-172 Ýtalik (i)
-173 Kalýn (b)
-174 Teletype (tt)
-175 Büyük (big)
-176 Küçük (small)
-177 Alt (sub)
-178 Üst (sup)
-179 **Quotation (q)
-180 **BiDi override (bdo)
-181 Bölüm numaralandýrmasý
-182 Kitap yap
-183 **Add/Remove IDs...
-184 **Show log file
-185 **Preferences
-186 **General...
-187 **Publishing...
-188 **Cache...
-189 **Proxy...
-190 **Colors...
-191 **Window Geometry...
-192 **Language Negotiation...
-193 **Profiles...
-194 **Templates...
-195 **Annotate selection
-196 **Annotate document
-197 **Post annotation
-198 **Delete annotation
-199 **Load annotations
-200 **Customize query...
-201 **Local filter...
-202 **Configure...
-203 **About Amaya
-204 Amaya hakkýnda
-205 **Browsing
-206 Tarama
-207 Seçme
-208 Arama
-209 Görünümler
-210 Birim yaratma
-211 Baðlantýlar
-212 Yeniden yapýlandýrma
-213 Tablolar
-214 **Graphics
-215 Matematik
-216 Görüntü haritalarý
-217 Tarz tanýmlarý
-218 Özellikler
-219 Yazým hatalarý aranýyor
-220 Sayfa yerleþtirme
-221 Bastýrma
-222 Numaralandýrmasý
-223 **Annotations
-224 Kitap oluþturma
-225 **ShortCuts
-226 Amaya yapýlandýrmasý
+99 **InvisibleTimes
+100 **ApplyFunction
+101 Kök (mroot)
+102 Karekök (msqrt)
+103 **Enclose (menclose)
+104 Kesir (mfrac)
+105 Alt ve üstyazý (msubsup)
+106 altyazý (msub)
+107 üstyazý (msup)
+108 altýnda veya üstünde (munderover)
+109 altýnda (munder)
+110 üstünde (mover)
+111 Parantezler (mrow)
+112 Multiscripts (mmultiscripts)
+113 Matris (mtable)
+114 **Delete matrix column
+115 noscript
+116 Nesne
+117 object
+118 Parametre (param)
+119 Paragraf (p)
+120 Preformatted (pre)
+121 Tablo
+122 table
+123 Altyazý (caption)
+124 colgroup
+125 col
+126 thead
+127 tbody
+128 tfoot
+129 Sýra (tr)
+130 Veri hücresi (td)
+131 Baþlýk hücresi (th)
+132 **Delete table column
+133 **Link to previous target
+134 Baðlantý yarat...
+135 Hedef yarat
+136 <A> tanýmý sil
+137 Tuþlarý göster
+138 Adres göster
+139 Yakýnlaþtýr
+140 **Show targets
+141 Uzaklaþtýr
+142 Harita alanlarýný göster
+143 Yapýyý göster
+144 Alternatif gösterim
+145 Baðlantýlarý göster
+146 Ýçindekileri göster
+147 **Show source
+148 Karakter tarzý...
+149 Renkler...
+150 Biçim...
+151 Arkaplan görüntüsü...
+152 Kural yarat...
+153 \'class\' uygula...
+154 Tarzý tanýmlarý
+155 **Link...
+156 **Open...
+157 **Disable...
+158 **Enable...
+159 **Remove...
+160 Bilgi türü
+161 Vurgu (em)
+162 Kuvvetli (strong)
+163 Cite (cite)
+164 Taným (dfn)
+165 Kod (code)
+166 Deðiþken (var)
+167 Örnek (samp)
+168 Tuþtakýmý (kbd)
+169 **Abbreviation (abbr)
+170 **acronym
+171 **Insertion (ins)
+172 **Deletion (del)
+173 Karakter birimi
+174 Ýtalik (i)
+175 Kalýn (b)
+176 Teletype (tt)
+177 Büyük (big)
+178 Küçük (small)
+179 Alt (sub)
+180 Üst (sup)
+181 **Quotation (q)
+182 **BiDi override (bdo)
+183 Bölüm numaralandýrmasý
+184 Kitap yap
+185 **Add/Remove IDs...
+186 **Show log file
+187 **Preferences
+188 **General...
+189 **Publishing...
+190 **Cache...
+191 **Proxy...
+192 **Colors...
+193 **Window Geometry...
+194 **Language Negotiation...
+195 **Profiles...
+196 **Templates...
+197 **Annotate selection
+198 **Annotate document
+199 **Post annotation
+200 **Delete annotation
+201 **Load annotations
+202 **Customize query...
+203 **Local filter...
+204 **Configure...
+205 **About Amaya
+206 Amaya hakkýnda
+207 **Browsing
+208 Tarama
+209 Seçme
+210 Arama
+211 Görünümler
+212 Birim yaratma
+213 Baðlantýlar
+214 Yeniden yapýlandýrma
+215 Tablolar
+216 **Graphics
+217 Matematik
+218 Görüntü haritalarý
+219 Tarz tanýmlarý
+220 Özellikler
+221 Yazým hatalarý aranýyor
+222 Sayfa yerleþtirme
+223 Bastýrma
+224 Numaralandýrmasý
+225 **Annotations
+226 Kitap oluþturma
+227 **ShortCuts
+228 Amaya yapýlandýrmasý
