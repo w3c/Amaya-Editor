@@ -3620,7 +3620,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	    DoesViewExist (pEl, pDoc, viewNb))
 	  {
 	    if (!selectedRule[pRule->PrType] ||
-		selectedRule[pRule->PrType]->PrSpecificity <= pRule->PrSpecificity)
+		(!selectedRule[pRule->PrType]->PrImportant &&
+		 selectedRule[pRule->PrType]->PrSpecificity <= pRule->PrSpecificity))
 	      {
 		if (pRule->PrSpecifAttr == 0)
 		  /* this rule does not depend on an attribute */
