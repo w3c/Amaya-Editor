@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editing Mathematics in Amaya</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
@@ -27,33 +30,587 @@
 </table>
 
 <div id="page_body">
-<h1>Editing Mathematics in Amaya</h1>
+<h2>Editing Mathematics in Amaya</h2>
 
-<p>The following topics are covered in this section:</p>
+<h3>Working with Mathematical Expressions</h3>
+
+<p>Amaya enables you to include mathematical expressions in web pages, using
+the Mathematical Markup Language (<a
+href="http://www.w3.org/TR/MathML2/">MathML</a>) specification.</p>
+
+<p>Mathematical expressions are handled as structured components, in the same
+way as HTML elements. Therefore, you can manipulate math expressions in the
+same way you manipulate other parts of HTML documents. All editing commands
+provided by Amaya for handling text are also available for math. In addition,
+there are some other controls for entering mathematical constructs.</p>
+
+<h3>About Entering Math Constructs using the Keyboard</h3>
+
+<p>You are not required to use the Math menu or palette to create and edit
+mathematical expressions. You can enter mathematical constructs directly from
+the keyboard because each item in the Math menu has a keyboard equivalent.
+These shortcuts are listed on the menu and in the table below. You can also
+use the keyboard arrow keys to move the insertion point from one math
+construct to another. The right and left arrows move the insertion point
+according to the structure of the mathematical expression. For example, in a
+fraction when the insertion point is at the end of a numerator, the right
+arrow key moves the insertion point to the beginning of the denominator.</p>
+
+<table border="1" class="TableText">
+  <tbody class="TableText">
+    <tr>
+      <td valign="top"><p class="TableHead"><b>Action</b></p>
+      </td>
+      <td valign="top"><p class="TableHead"><b>Shortcut</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">New formula (math)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-m</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Plain text (mtext)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-x</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Identifier (mi)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-d</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Number (mn)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-n</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Operator (mo)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-g</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Space (mspace)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-Space</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Character (xxx;)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-e</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Invisible Times</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-i</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">ApplyFunction</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-a</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Root (mroot)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-r</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Square root (msqrt)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-q</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Enclose (menclose)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-c</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Fraction (mfrac)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-f</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Subscript and superscript
+        (msubsup)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-b</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Subscript (msub)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-v</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Superscript (msup)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-6</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Under and over (munderover)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-k</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Under (munder)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-u</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Over (mover)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-o</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Parentheses (mrow)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-p</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Multiscripts (mmultiscripts)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-s</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Matrix (mtable)</p>
+      </td>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-t</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>The Math Palette and the Math Menu</h3>
+
+<p>To create a mathematical expression in a document, move the mouse cursor
+to the position where you want to insert an expression, and then click the
+<strong>Math</strong> button, or choose <strong>Math</strong> from the
+<strong>Xml</strong> menu.</p>
+
+<h3>Accessing Commands</h3>
+
+<p>Mathematical expressions can be inserted into a document using either the
+<strong>Math</strong> submenus of the <strong>XML</strong> menu, or by
+choosing an expression from the <strong>Math</strong> palette.</p>
+
+<p>Click the <strong>Math</strong> button <img alt="Math Button"
+src="../images/Math.gif" /> on the button bar to display the
+<strong>Math</strong> palette. Close the palette by clicking the
+<strong>Done</strong> button.</p>
+
+<p>You can also display the Math menu by clicking the <strong>Math</strong>
+item on the <strong>XML</strong> menu.</p>
+
+<h3>Math Menu and Palette Commands</h3>
+
+<p>On the <strong>Math</strong> palette or menu, the first item, <strong>New
+Formula</strong>, allows you to create a new formula when the cursor is in a
+HTML or SVG element, but not within a MathML element.</p>
+
+<p>The <strong>Math</strong> menu also contains elements which are not
+available from the palette. These items include: Plain text
+(<code>mtext</code>), Identifier (<code>mi</code>), Number (<code>mn</code>),
+Operator (<code>mo</code>). These commands can also change the type of a
+single element or a sequence of elements.</p>
+
+<p>The Character (<code>&amp;xxx;</code>) item enables you to enter a
+character that is not available on the keyboard. It displays a dialog where
+you have to enter the character name (for instance alpha for the Greek
+character a).</p>
+
+<p>The next items of the <strong>Math</strong> menu or palette enable you to
+create new constructs within a formula. If the insertion point is not in a
+formula, Amaya first creates a Math element to accept the new construct. The
+available constructs are:</p>
 <ul>
-  <li><a
-    href="editing_mathematics/working_with_math_expressions.html"
-    >Working with Math Expressions</a></li>
-  <li><a
-    href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html"
-    >About Entering Math Constructs Using the
-  Keyboard</a></li>
-  <li><a
-    href="editing_mathematics/the_math_palette_and_the_types.html"
-    >The Math Palette and the XML &gt; Math Menu</a></li>
-  <li><a
-    href="editing_mathematics/about_entering_math_characters.html"
-    >About Entering Math Characters</a></li>
-  <li><a href="editing_mathematics/editing_math_expressions.html"
-    >Editing Math Expressions</a></li>
-  <li><a
-    href="editing_mathematics/viewing_structure_in_mathml.html"
-    >Viewing Structure in MathML</a></li>
-  <li><a href="editing_mathematics/about_linking_in_mathml.html"
-    >About Linking in MathML</a></li>
-  <li><a href="editing_mathematics/math_issues.html"
-    >Known Issues with MathML</a></li>
+  <li>Root with index, <code>mroot</code> in MathML: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mroot>
+        <mrow>
+          <mi>x</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+        <mn>3</mn>
+      </mroot>
+    </math></li>
+  <li>Square root, <code>msqrt</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msqrt>
+        <mrow>
+          <mi>x</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </math></li>
+  <li>Enclose, <code>menclose</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <menclose>
+        <mn>1234</mn>
+      </menclose>
+    </math></li>
+  <li>Fraction, <code>mfrac</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mfrac>
+        <mn>1</mn>
+        <mrow>
+          <mi>x</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </mfrac>
+    </math></li>
+  <li>Expression with subscript and superscript, <code>msubsup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msubsup>
+        <mi>x</mi>
+        <mrow>
+          <mi>i</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+        <mi>n</mi>
+      </msubsup>
+    </math>or <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <msubsup>
+          <mo largeop="true">&#x222b;</mo>
+          <mn>0</mn>
+          <mo>&infin;</mo>
+        </msubsup>
+        <mo>&nbsp;</mo>
+      </mrow>
+    </math></li>
+  <li>Expression with a subscript, <code>msub</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+        <mi>x</mi>
+        <mi>i</mi>
+      </msub>
+    </math></li>
+  <li>Expression with a superscript, <code>msup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msup>
+        <mi>x</mi>
+        <mi>n</mi>
+      </msup>
+    </math></li>
+  <li>Expression with under- and overscript, <code>munderover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <munderover>
+        <mo movablelimits="false">&Sum;</mo>
+        <mrow>
+          <mi>i</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mi>n</mi>
+      </munderover>
+    </math></li>
+  <li>Expression with underscript, <code>munder</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <munder>
+        <mi>x</mi>
+        <mo>¯</mo>
+      </munder>
+    </math></li>
+  <li>Expression with overscript, <code>mover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mi>x</mi>
+        <mover>
+          <mo>&#x2192;</mo>
+          <mtext>maps to</mtext>
+        </mover>
+        <mi>y</mi>
+      </mrow>
+    </math></li>
+  <li>Expression within parentheses, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mo fence="true">(</mo>
+        <mrow>
+          <mi>a</mi>
+          <mo>+</mo>
+          <mi>b</mi>
+        </mrow>
+        <mo fence="true">)</mo>
+      </mrow>
+    </math></li>
+  <li>Expression with prescripts and tensor indices,
+    <code>mmultiscripts</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mmultiscripts>
+        <mi>X</mi>
+        <mi>i</mi>
+        <mi>j</mi>
+        <mprescripts/>
+        <mi>k</mi>
+        <mi>l</mi>
+      </mmultiscripts>
+    </math></li>
+  <li>Matrix or table, <code>mtable</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mi>a</mi>
+          </mtd>
+          <mtd>
+            <mi>b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>c</mi>
+          </mtd>
+          <mtd>
+            <mi>d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math></li>
 </ul>
+
+<p>The last item of the <strong>Math</strong> palette ( <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&alpha;&beta;&gamma;</mi>
+</math>) displays another palette from which you can insert mathematical
+symbols and greek characters.</p>
+
+<h3>About Entering Math Characters</h3>
+
+<p>When you type a character string in a MathML element, Amaya parses the
+string and automatically generates the elements <span class="code"><span
+style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mo</span></span>
+(operator), <span class="code"><span
+style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mn</span></span>
+(number), <span class="code"><span
+style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mi</span></span>
+(identifier), and <span class="code"><span
+style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mtext</span></span>.</p>
+
+<p>For example, to enter the formula <code>x=2a+b</code>:</p>
+<ol>
+  <li>If you are not in a mathematical expression, choose <strong>Math &gt;
+    New formula (math)</strong> from the <strong>Types</strong> menu.
+    <p></p>
+  </li>
+  <li>Type this sequence of 6 characters: <code>x=2a+b</code></li>
+</ol>
+
+<p>Use the Structure view to display the following structure generated by
+Amaya:</p>
+
+<p><code>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</code></p>
+
+<p>If the result is not exactly what you want, select the characters that
+were misinterpreted and change their type with one of the commands such as
+Plain text (<code>mtext</code>), Identifier (<code>mi</code>), Number
+(<code>mn</code>), Operator (<code>mo</code>) or Space (<code>mspace</code>)
+from the <strong>Math</strong> submenu of the <strong>Types</strong> menu.</p>
+
+<h3>Spacing</h3>
+
+<p>Amaya takes care of spacing within math expressions, but in some cases you
+may need to add some additional space. Move the cursor to the position where
+you want to insert space and choose <strong>Math &gt; Space (mspace)</strong>
+from the <strong>Types</strong> menu. This creates a default horizontal
+space. You can then change its <strong>width</strong> attribute to adjust its
+size or you can add other attributes (height, depth, linebreak) to change
+vertical spacing. Refer to the <a
+href="http://www.w3.org/TR/MathML2/chapter3.html#N9197">MathML
+specification</a> for more details.</p>
+
+<h3>Bracket size</h3>
+
+<p>When entering brackets as in the following expression:</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mrow>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
+
+<p>typing the sequence <code>f(x)=</code> would lead to:</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo>(</mo>
+  <mi>x</mi>
+  <mo>)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
+
+<p>Instead, choose <strong>Math &gt; Parentheses</strong> from the
+<strong>Types</strong> menu or select the Parentheses option on the Maths
+palette to enter the parentheses properly.</p>
+
+<h3>Editing Math Expressions</h3>
+
+<p>Amaya provides the same method to create and edit matrices as to edit HTML
+tables. Similar to tables, a specific command (<strong>Delete matrix
+column</strong>) deletes a column in a matrix, even if it's not empty. This
+command is located at the end of the <strong>Math</strong> submenu on the
+<strong>XML</strong> menu.</p>
+
+<h3>Changing the Expression Structure</h3>
+
+<p>You may want to change the structure of an existing expression, such as
+appending a superscript or putting parentheses around an expression. To do
+that, select the expression and enter the new construct with the palette, the
+<strong>Math</strong> menu or the keyboard. You can also use
+<strong>Transform</strong> on the <strong>Edit</strong> menu. Select the
+expression you want to transform and <strong>Transform</strong> will display
+a menu with all possible changes.</p>
+
+<h3>Viewing Structure in MathML</h3>
+
+<p>MathML structure in a document can be viewed by choosing <strong>Show
+Structure</strong> from the <strong>Views</strong> menu. Choosing this option
+opens the Structure view, which reveals the main structure of the document,
+the math elements, and their contents.</p>
+
+<p>Math expressions can be edited in the main view or in the Structure
+view.</p>
+
+<h3>Viewing Structure Example</h3>
+
+<p>The Structure view is especially helpful to avoid ambiguity. For example,
+in the equation below, placing the cursor after character“ b,” it is not
+clear whether you wish to add something within the square root or after
+it.</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>=</mo>
+  <msqrt>
+    <mi>a</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </msqrt>
+  <mo>+</mo>
+  <mn>1</mn>
+</math></p>
+
+<p>Selecting (or checking) in the Structure view avoids any misselections.
+You can also check the status line at the bottom of the main window.</p>
+
+<h3>About Linking in MathML</h3>
+
+<p>You can create and use links in mathematical expressions. These links are
+represented using a draft version of the XML Linking Language (XLink). Only
+simple unidirectional hyperlinks are available, but you can associate a link
+with any part of a formula. For example, the fraction in the formula below is
+a link to the W3C home page:</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
+    xlink:href="http://www.w3.org/">
+      <mn>1</mn>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mi>x</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </mfrac>
+  </mrow>
+</math></p>
+
+<p>Double-clicking any character within the fraction loads the W3C home
+page.</p>
+
+<p>To create such a link, select a math expression (the fraction in the above
+example), click the <strong>Link</strong> button (or choose <strong>Create or
+change link</strong> from the <strong>Links</strong> menu), and click the
+desired target.</p>
+
+<p>If the target is an expression in a formula, you must first turn the
+expression into a target. Select the expression and choose <strong>Create
+target</strong> from the <strong>Links</strong> menu  to create an
+<code>id</code> attribute for the target expression.</p>
+
+<h3>Known Issues With MathML</h3>
+
+<p>The following are known Amaya MathML issues:</p>
+<ul>
+  <li>Amaya implements only the Presentation Tags from MathML 2.0, not the
+    Content Markup. All presentation elements and attributes are available,
+    but only the following attributes are rendered on the screen:
+    <p><code>display, alttext, mathvariant, mathsize, mathcolor,
+    mathbackground, fontsize, fontweight, fontstyle, fontfamily, color,
+    linethickness, numalign, denomalign, bevelled, notation, lquote, rquote,
+    lspace, rspace, largeop, movablelimits, subscriptshift, superscriptshift,
+    form, width </code>(mspace only), <code>height</code> (mspace only),
+    <code>depth</code> (mspace only), <code>align, rowalign, columnalign,
+    frame, framespacing, displaystyle, side, rowspan, columnspan, rowspacing,
+    columnspacing, rowlines, columnlines</code>.</p>
+  </li>
+  <li><span><span>The <code>class</code>, <code>id</code>, and
+    <code>style</code> attributes are available, with the same semantics as
+    in HTML: you can associate CSS styles with MathML elements
+    (<code>class</code> and <code>style</code> attributes) and a MathML
+    element can be the target of a link (<code>id
+    </code>attribute).</span></span></li>
+  <li><span><span>Due to the lack of mathematical fonts in the current
+    version, only a limited set of entities representing math symbols are
+    recognized, mainly those available in the Symbol font. The current
+    version supports the following:</span></span>
+    <p><span><code>Therefore, SuchThat, DownTee, Or, And, Not, Exists,
+    ForAll, Element, NotElement, NotSubset, Subset, SubsetEqual, Superset,
+    SupersetEqual, DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow,
+    LeftArrow, LeftRightArrow, RightArrow, Congruent, GreaterEqual, le,
+    NotEqual, Proportional, VerticalBar, Union, Intersection, PlusMinus,
+    CirclePlus, Sum, Integral, CircleTimes, Product, CenterDot, Diamond,
+    PartialD, DoubleDownArrow, DoubleUpArrow, DownArrow, UpArrow,
+    ApplyFunction, TripleDot, DifferentialD, ImaginaryI, ExponentialE,
+    InvisibleComma, UnderBar, OverBar, ThinSpace, ThickSpace, Hat, OverBar,
+    UnderBar, prime, Prime.</code></span></p>
+  </li>
+</ul>
+
+<p></p>
 </div>
 </body>
 </html>

@@ -3,6 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editing ISO-Latin and Unicode Characters</title>
   <style type="text/css">
   </style>
@@ -28,20 +29,1233 @@
 </table>
 
 <div id="page_body">
-<h1>Editing ISO-Latin and Unicode Characters</h1>
+<h2>Editing ISO-Latin and Unicode Characters</h2>
 
-<p>The following topics are covered in this section:</p>
+<h3>Entering Characters in Amaya</h3>
+
+<p>To enter ISO-Latin characters that are not directly available from the
+keyboard, Amaya uses the standard support provided by the Operating System.
+An optional multi-key support is also provided for Motif versions and Windows
+versions.</p>
+
+<p>Amaya provides a mechanism for assigning <a
+href="../html/ShortCuts.html">Keyboard Shortcuts</a> to characters that are
+not directly available from the keyboard. Some of them are pre-defined:</p>
 <ul>
-  <li><a
-    href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html">Entering
-    Characters in Amaya</a></li>
-  <li><a
-    href="editing_iso-latin-1_characters/about_standard_multikey_support.html">About
-    Standard Multikey Support on Unix platforms</a></li>
-  <li><a
-    href="editing_iso-latin-1_characters/about_white_space_handling.html">About
-    White Space Handling</a></li>
+  <li>To enter a non-breaking space, press <code>Control - space</code>.
+    <p>This character will be saved as an entity (<span class="code"><span
+    style="font-size: 11.0pt;font-family:&#34;Courier New&#34;;"><code>&amp;nbsp;</code></span></span>)
+    and is displayed in the source view with the following colored character:
+    <span style="color: #008BB2">~</span></p>
+  </li>
+  <li>To enter a &euro; (euro) character, press <code>Alt - e</code>.</li>
+  <li>To enter a &#x153; (oelig), press <code>Control - o</code> the
+    <code>Control - e</code>.</li>
+  <li>To enter a &#x152; (OElig), press <code>Shift - Control - O</code> then
+    <code>Shift - Control - e</code>.</li>
+  <li>To enter a «, press either <code>Control - &lt;</code> or Shift -
+    <code>Control - &lt;</code> (it depends on your keyboard).</li>
+  <li>To enter a », press <code>Shift - Control - &gt;</code>.</li>
 </ul>
+
+<p>See the description of the standard input method: <a
+href="../html/editing_iso-latin-1_characters/about_standard_multikey_support.html">Standard
+multi-key for Motif and GTK versions</a></p>
+
+<h3>About Standard Multi-key Support of Motif and GTK</h3>
+
+<p>If an ISO-Latin character is unavailable on the standard keyboard, you can
+insert the character by pressing the special <code>Compose</code> key
+followed by a sequence of two other keys. See the table below for the keys
+used to insert various ISO-Latin characters. Note that in Amaya, you can
+switch the position of the first key and the second one.</p>
+
+<p>If your keyboard doesn't contain the <code>Compose</code> key, you can
+attach it to an existing key such as <code>Alt-Gr</code> with the following
+<code>xmodmap</code> command:</p>
+
+<p><code>keycode 113 = Multi_key</code></p>
+
+<p>You can place this command in the <code>$HOME/.Xmodmap</code> file (in
+Unix), and Amaya will apply it when you will launch your X server.</p>
+
+<table border="0" cellspacing="0" cellpadding="0" class="characters">
+  <thead>
+    <tr>
+      <td style="border:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><strong>Name</strong></p>
+      </td>
+      <td
+      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><strong>Code</strong></p>
+      </td>
+      <td
+      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><strong>First/Second key</strong></p>
+      </td>
+      <td
+      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><strong>Second/First key</strong></p>
+      </td>
+      <td
+      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><strong>Output</strong></p>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><p class="TableText">AElig</p>
+      </td>
+      <td><p class="TableText">198</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td><p class="TableText">Æ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Aacute</p>
+      </td>
+      <td><p class="TableText">193</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">Á</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Acirc</p>
+      </td>
+      <td><p class="TableText">194</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">Â</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Agrave</p>
+      </td>
+      <td><p class="TableText">192</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">À</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Aring</p>
+      </td>
+      <td><p class="TableText">197</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">star</p>
+      </td>
+      <td><p class="TableText">Å</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Atilde</p>
+      </td>
+      <td><p class="TableText">195</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">Ã</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Auml</p>
+      </td>
+      <td><p class="TableText">196</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">Ä</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ccedil</p>
+      </td>
+      <td><p class="TableText">199</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; C</p>
+      </td>
+      <td><p class="TableText">comma</p>
+      </td>
+      <td><p class="TableText">Ç</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Eth</p>
+      </td>
+      <td><p class="TableText">222</p>
+      </td>
+      <td><p class="TableText">-</p>
+      </td>
+      <td><p class="TableText">D</p>
+      </td>
+      <td><p class="TableText">Ð</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Eacute</p>
+      </td>
+      <td><p class="TableText">201</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">É</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ecirc</p>
+      </td>
+      <td><p class="TableText">202</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">Ê</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Egrave</p>
+      </td>
+      <td><p class="TableText">200</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">È</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Euml</p>
+      </td>
+      <td><p class="TableText">203</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">Ë</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Iacute</p>
+      </td>
+      <td><p class="TableText">205</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">Í</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Icirc</p>
+      </td>
+      <td><p class="TableText">206</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">Î</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Igrave</p>
+      </td>
+      <td><p class="TableText">204</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">Ì</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Iuml</p>
+      </td>
+      <td><p class="TableText">207</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">Ï</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ntilde</p>
+      </td>
+      <td><p class="TableText">209</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; N</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">Ñ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Oacute</p>
+      </td>
+      <td><p class="TableText">211</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">Ó</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ocirc</p>
+      </td>
+      <td><p class="TableText">212</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">Ô</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ograve</p>
+      </td>
+      <td><p class="TableText">210</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">Ò</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Oslash</p>
+      </td>
+      <td><p class="TableText">216</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">slash</p>
+      </td>
+      <td><p class="TableText">Ø</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Otilde</p>
+      </td>
+      <td><p class="TableText">213</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">Õ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ouml</p>
+      </td>
+      <td><p class="TableText">214</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">Ö</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Thorn</p>
+      </td>
+      <td><p class="TableText">222</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; T</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; H</p>
+      </td>
+      <td><p class="TableText">Þ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Uacute</p>
+      </td>
+      <td><p class="TableText">205</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">Ú</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ucirc</p>
+      </td>
+      <td><p class="TableText">206</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">Û</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Ugrave</p>
+      </td>
+      <td><p class="TableText">204</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">Ù</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Uuml</p>
+      </td>
+      <td><p class="TableText">207</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">Ü</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">Yacute</p>
+      </td>
+      <td><p class="TableText">221</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; Y</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">Ý</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">aelig</p>
+      </td>
+      <td><p class="TableText">230</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">e</p>
+      </td>
+      <td><p class="TableText">æ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">aacute</p>
+      </td>
+      <td><p class="TableText">225</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">á</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">acirc</p>
+      </td>
+      <td><p class="TableText">226</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">â</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">agrave</p>
+      </td>
+      <td><p class="TableText">224</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">à</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">aring</p>
+      </td>
+      <td><p class="TableText">229</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">star</p>
+      </td>
+      <td><p class="TableText">å</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">atilde</p>
+      </td>
+      <td><p class="TableText">227</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">ã</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">auml</p>
+      </td>
+      <td><p class="TableText">228</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">ä</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">brvbar</p>
+      </td>
+      <td><p class="TableText">166</p>
+      </td>
+      <td><p class="TableText">bar (pipe)</p>
+      </td>
+      <td><p class="TableText">bar</p>
+      </td>
+      <td><p class="TableText">¦</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ccedil</p>
+      </td>
+      <td><p class="TableText">231</p>
+      </td>
+      <td><p class="TableText">c</p>
+      </td>
+      <td><p class="TableText">comma</p>
+      </td>
+      <td><p class="TableText">ç</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">cent</p>
+      </td>
+      <td><p class="TableText">162</p>
+      </td>
+      <td><p class="TableText">c</p>
+      </td>
+      <td><p class="TableText">slash</p>
+      </td>
+      <td><p class="TableText">¢</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">copy</p>
+      </td>
+      <td><p class="TableText">169</p>
+      </td>
+      <td><p class="TableText">c</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">©</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">current</p>
+      </td>
+      <td><p class="TableText">164</p>
+      </td>
+      <td><p class="TableText">x</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">¤</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">deg</p>
+      </td>
+      <td><p class="TableText">176</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">0 (zero)</p>
+      </td>
+      <td><p class="TableText">°</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">eacute</p>
+      </td>
+      <td><p class="TableText">233</p>
+      </td>
+      <td><p class="TableText">e</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">é</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ecirc</p>
+      </td>
+      <td><p class="TableText">234</p>
+      </td>
+      <td><p class="TableText">e</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">ê</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">egrave</p>
+      </td>
+      <td><p class="TableText">232</p>
+      </td>
+      <td><p class="TableText">e</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">è</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">euml</p>
+      </td>
+      <td><p class="TableText">235</p>
+      </td>
+      <td><p class="TableText">e</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">ë</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">eth</p>
+      </td>
+      <td><p class="TableText">240</p>
+      </td>
+      <td><p class="TableText">-</p>
+      </td>
+      <td><p class="TableText">d</p>
+      </td>
+      <td><p class="TableText">ð</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">frac12</p>
+      </td>
+      <td><p class="TableText">189</p>
+      </td>
+      <td><p class="TableText">/</p>
+      </td>
+      <td><p class="TableText">2</p>
+      </td>
+      <td><p class="TableText">½</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">frac14</p>
+      </td>
+      <td><p class="TableText">188</p>
+      </td>
+      <td><p class="TableText">/</p>
+      </td>
+      <td><p class="TableText">4</p>
+      </td>
+      <td><p class="TableText">¼</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">frac34</p>
+      </td>
+      <td><p class="TableText">190</p>
+      </td>
+      <td><p class="TableText">/</p>
+      </td>
+      <td><p class="TableText">3</p>
+      </td>
+      <td><p class="TableText">¾</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">hyphen</p>
+      </td>
+      <td><p class="TableText">173</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">-</p>
+      </td>
+      <td><p class="TableText">­</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">iacute</p>
+      </td>
+      <td><p class="TableText">237</p>
+      </td>
+      <td><p class="TableText">i</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">í</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">icirc</p>
+      </td>
+      <td><p class="TableText">238</p>
+      </td>
+      <td><p class="TableText">i</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">î</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">igrave</p>
+      </td>
+      <td><p class="TableText">236</p>
+      </td>
+      <td><p class="TableText">i</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">ì</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">iexcl</p>
+      </td>
+      <td><p class="TableText">161</p>
+      </td>
+      <td><p class="TableText">! (exclaim)</p>
+      </td>
+      <td><p class="TableText">!</p>
+      </td>
+      <td><p class="TableText">¡</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">iquest</p>
+      </td>
+      <td><p class="TableText">191</p>
+      </td>
+      <td><p class="TableText">? (question)</p>
+      </td>
+      <td><p class="TableText">?</p>
+      </td>
+      <td><p class="TableText">¿</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">laquo</p>
+      </td>
+      <td><p class="TableText">171</p>
+      </td>
+      <td><p class="TableText">&lt; (inferior)</p>
+      </td>
+      <td><p class="TableText">&lt;</p>
+      </td>
+      <td><p class="TableText">«</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">macr</p>
+      </td>
+      <td><p class="TableText">175</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">¯</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">micro</p>
+      </td>
+      <td><p class="TableText">181</p>
+      </td>
+      <td><p class="TableText">/</p>
+      </td>
+      <td><p class="TableText">u</p>
+      </td>
+      <td><p class="TableText">µ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">middot</p>
+      </td>
+      <td><p class="TableText">183</p>
+      </td>
+      <td><p class="TableText">.</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">·</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">nbsp</p>
+      </td>
+      <td><p class="TableText">160</p>
+      </td>
+      <td><p class="TableText">&lt;Ctrl&gt; space</p>
+      </td>
+      <td><p class="TableText">(none)</p>
+      </td>
+      <td><p class="TableText"> </p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">not</p>
+      </td>
+      <td><p class="TableText">172</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">comma</p>
+      </td>
+      <td><p class="TableText">¬</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ntilde</p>
+      </td>
+      <td><p class="TableText">241</p>
+      </td>
+      <td><p class="TableText">n</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">ñ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">oacute</p>
+      </td>
+      <td><p class="TableText">243</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">ó</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ocirc</p>
+      </td>
+      <td><p class="TableText">244</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">ô</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ograve</p>
+      </td>
+      <td><p class="TableText">242</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">ò</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">oslash</p>
+      </td>
+      <td><p class="TableText">248</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">slash</p>
+      </td>
+      <td><p class="TableText">ø</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">otilde</p>
+      </td>
+      <td><p class="TableText">245</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">tilde</p>
+      </td>
+      <td><p class="TableText">õ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ouml</p>
+      </td>
+      <td><p class="TableText">246</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">ö</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ordf</p>
+      </td>
+      <td><p class="TableText">170</p>
+      </td>
+      <td><p class="TableText">a</p>
+      </td>
+      <td><p class="TableText">_ (underscore)</p>
+      </td>
+      <td><p class="TableText">ª</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ordm</p>
+      </td>
+      <td><p class="TableText">186</p>
+      </td>
+      <td><p class="TableText">o</p>
+      </td>
+      <td><p class="TableText">_ (underscore)</p>
+      </td>
+      <td><p class="TableText">º</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">para</p>
+      </td>
+      <td><p class="TableText">182</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; P</p>
+      </td>
+      <td><p class="TableText">! (exclam)</p>
+      </td>
+      <td><p class="TableText">¶</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">plusmn</p>
+      </td>
+      <td><p class="TableText">177</p>
+      </td>
+      <td><p class="TableText">+</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">±</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">pound</p>
+      </td>
+      <td><p class="TableText">163</p>
+      </td>
+      <td><p class="TableText">l</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">£</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">raquo</p>
+      </td>
+      <td><p class="TableText">187</p>
+      </td>
+      <td><p class="TableText">&gt; (superior)</p>
+      </td>
+      <td><p class="TableText">&gt;</p>
+      </td>
+      <td><p class="TableText">»</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">reg</p>
+      </td>
+      <td><p class="TableText">174</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; R</p>
+      </td>
+      <td><p class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td><p class="TableText">®</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">sec</p>
+      </td>
+      <td><p class="TableText">167</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">! (exclam)</p>
+      </td>
+      <td><p class="TableText">§</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">sup1</p>
+      </td>
+      <td><p class="TableText">185</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">1</p>
+      </td>
+      <td><p class="TableText">¹</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">sup2</p>
+      </td>
+      <td><p class="TableText">178</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">2</p>
+      </td>
+      <td><p class="TableText">²</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">sup3</p>
+      </td>
+      <td><p class="TableText">179</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">3</p>
+      </td>
+      <td><p class="TableText">³</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">szlig</p>
+      </td>
+      <td><p class="TableText">223</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">s</p>
+      </td>
+      <td><p class="TableText">ß</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">thorn</p>
+      </td>
+      <td><p class="TableText">254</p>
+      </td>
+      <td><p class="TableText">t</p>
+      </td>
+      <td><p class="TableText">h</p>
+      </td>
+      <td><p class="TableText">þ</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">uacute</p>
+      </td>
+      <td><p class="TableText">250</p>
+      </td>
+      <td><p class="TableText">u</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">ú</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ucirc</p>
+      </td>
+      <td><p class="TableText">251</p>
+      </td>
+      <td><p class="TableText">u</p>
+      </td>
+      <td><p class="TableText">circumflex</p>
+      </td>
+      <td><p class="TableText">û</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">ugrave</p>
+      </td>
+      <td><p class="TableText">249</p>
+      </td>
+      <td><p class="TableText">u</p>
+      </td>
+      <td><p class="TableText">backquote</p>
+      </td>
+      <td><p class="TableText">ù</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">uuml</p>
+      </td>
+      <td><p class="TableText">252</p>
+      </td>
+      <td><p class="TableText">u</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">ü</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">yacute</p>
+      </td>
+      <td><p class="TableText">253</p>
+      </td>
+      <td><p class="TableText">y</p>
+      </td>
+      <td><p class="TableText">quote</p>
+      </td>
+      <td><p class="TableText">ý</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">yen</p>
+      </td>
+      <td><p class="TableText">165</p>
+      </td>
+      <td><p class="TableText">y</p>
+      </td>
+      <td><p class="TableText">- (minus)</p>
+      </td>
+      <td><p class="TableText">¥</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p class="TableText">yuml</p>
+      </td>
+      <td><p class="TableText">255</p>
+      </td>
+      <td><p class="TableText">y</p>
+      </td>
+      <td><p class="TableText">double quote</p>
+      </td>
+      <td><p class="TableText">ÿ</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>About White Space Handling</h3>
+
+<p>Amaya removes insignificant white-space characters when it loads a
+document unless they must be explicitly preserved. This is true for XHTML,
+MathML, and SVG documents, as well as MathML or SVG elements included in a
+HTML document,</p>
+
+<p>The following are considered as insignificant white-space characters:</p>
+<ul>
+  <li>End of line characters (<code>#xD</code> and <code>#xA</code>)</li>
+  <li>Tab characters (<code>#X9</code>)</li>
+  <li>Leading spaces of an element</li>
+  <li>Trailing spaces of an element</li>
+  <li>Contiguous spaces (one space is preserved)</li>
+</ul>
+
+<p>To preserve all the characters for some elements, use the
+<code>xml:space</code> attribute or the <code>PRE</code> element (only valid
+for XHTML documents). The possible values for the <code>xml:space</code>
+attribute are <code>default</code> and <code>preserve</code>.</p>
+<ul>
+  <li>The value <code>default</code> means that an applications' default
+    white-space treatment is acceptable for these elements. In Amaya, the
+    default treatment removes the insignificant white-space characters for
+    all supported DTDs (see above).
+    <p></p>
+  </li>
+  <li>The value <code>preserve</code> indicates that applications will
+    preserve all the characters, except the first one that immediately
+    follows the end tag of the element where it is specified, if that element
+    is an end of line.</li>
+</ul>
+
+<p>You apply the <code>xml:space</code> attribute to all elements within the
+content of the element where it is specified, unless it is overriden with
+another instance of the <code>xml:space</code> attribute.</p>
+
+<p>In an XHTML DTD, the <code>PRE</code> element causes the same behavior as
+the <code>xml:space</code> attribute with the value <code>preserve</code>.</p>
+
+<p>Amaya applies white space handling when it loads a document, not during
+editing. A consequence is that if you type insignificant white-space
+characters, they will be visible and saved but will be removed the next time
+the document is loaded. For example, the following source code:</p>
+
+<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt; insignificant white-space
+&lt;/strong&gt;when it loads ...&lt;/p&gt;</code></p>
+
+<p>displays as follows during editing:</p>
+
+<p><code>Amaya removes the <strong>insignificant white-space</strong> when it
+loads...</code></p>
+
+<p>The text will be saved with that syntax. However, the next time the
+document is loaded, the text will display as:</p>
+
+<p><code>Amaya removes the<strong>insignificant white-space</strong>when it
+loads...</code></p>
+
+<p>because the leading and trailing spaces of the element
+<code>&lt;strong&gt;</code> are considered to be insignificant and are
+removed.</p>
+
+<p>The correct source code would be:</p>
+
+<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt;insignificant
+white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
+
+<p></p>
 </div>
 </body>
 </html>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Using Image Maps</title>
   <style type="text/css">
 
@@ -32,26 +31,238 @@
 </table>
 
 <div id="page_body">
-<h1>Using Image and Maps</h1>
+<h2>Using Image and Maps</h2>
 
-<p>The following topics are covered in this section:</p>
+<p>Amaya enables you to include images and client-side image maps in Web
+pages.</p>
+
+<h3>Adding or replacing an Image</h3>
+
+<p>To <em>insert</em> an image, choose <strong>Image</strong> from the
+<strong>Xhtml</strong> menu, click the <strong>Image</strong> <img
+src="../images/Image.gif" alt="Image button" /> button, or use the keyboard
+shortcut (<code>Control-t</code> in Windows, <code>Control-i</code> in Unix).
+The resulting dialog lets you enter the file name and alternative text ('ALT'
+text) of the desired image. Be careful: the alternative text is mandatory.
+You must provide some text in the corresponding field.</p>
+
+<p>If an image is selected (do so by dragging over the image) when opening
+the image dialog, the selected image is then <em>replaced</em> by the new
+image.</p>
+
+<p>To provide a long description for an image presenting complex information,
+you should do so in a separate document and link it by giving the URI as a
+<span
+style="font-size:9.0pt;font-family:'Courier New'"><code>longdesc</code>.</span>
+This command is also available on the <strong>Attributes</strong> menu.</p>
+
+<p>To help find an image file you can enter a filter field, and use the
+filter button, and the dialog will list only the files that match your
+pattern.</p>
+
+<h3>Creating client-side image maps</h3>
+
+<p>Amaya enables you to use client-side image maps that link an image to one
+or multiple URIs.</p>
+
+<p class="ProcedureCaption">To create a new image map</p>
+<ol>
+  <li>Insert an image into the document by choosing <strong>Image</strong>
+    from the <strong>Xhtml</strong> menu.
+    <p></p>
+    <p class="ProcedureNote"><strong>Note:</strong>    You can also insert an
+    image by clicking the <img src="../images/Image.gif" alt="Image Button"
+    /> icon on the toolbar, or directly from the keyboard by pressing
+    <code>Control + t</code> in Windows or <code>Control + i</code> in
+    Unix.</p>
+    <p></p>
+  </li>
+  <li>Select <strong>Area</strong> from the <strong>Xhtml</strong> menu. Then
+    choose <strong>Circle</strong>, <strong>Polygon</strong>, or
+    <strong>Rectangle</strong>, depending on the shape of the area within the
+    image that you want to create. The following table indicates how to
+    define an area depending on the shape you select.
+    <p class="ProcedureStep" style="margin-left:.75in;text-indent:0in;"> </p>
+    <p class="TableTitle" style="margin-left:0in"><strong>Table 1: Defining
+    shapes</strong></p>
+
+    <table border="1" cellspacing="0" cellpadding="0">
+      <tbody>
+        <tr>
+          <td width="147" valign="top"><p
+            class="TableTitle"><strong>Shape</strong></p>
+          </td>
+          <td width="257" valign="top"><p class="TableTitle"><strong>Defining
+            the Area</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="147" valign="top"><p class="TableText">Circle</p>
+          </td>
+          <td valign="top"><p class="TableText">Click the left mouse button
+            to select the position of one corner of the circle. Hold down the
+            button, move your cursor to the opposite corner, then release the
+            button.</p>
+            <p></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="147" valign="top"><p class="TableText">Polygon</p>
+          </td>
+          <td width="257" valign="top"><p class="TableText">Click the left
+            mouse button at each point that you want to be a corner of the
+            polygon. Right-click to indicate when you have reached the last
+            point.</p>
+            <p></p>
+          </td>
+        </tr>
+        <tr style="height:63.4pt">
+          <td width="147" valign="top"><p class="TableText">Rectangle</p>
+          </td>
+          <td width="257" valign="top"><p class="TableText">Click the left
+            mouse button to select the position of one corner of the circle.
+            Hold down the button, move your cursor to the opposite corner,
+            then release the button.</p>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>When you finish defining the area of the image map, a dialog will
+    display so you can enter the Alternate Text. Alternate text is required
+    for any graphic or image map.</li>
+  <li>Click anywhere within the image map area. Another dialog displays so
+    you can input the URI or target to which you want to link the image.
+    Enter the target of the link associated with the defined area, or
+    <strong>Browse</strong> for the link.
+    <p><b>Tip:</b>     To see an outline of each existing area in the image
+    map, select <strong>Show map areas</strong> from the
+    <strong>Views</strong> menu.</p>
+  </li>
+</ol>
+
+<h3>Using client-side image maps</h3>
+
+<p>Amaya enables you to use client-side image maps.</p>
+
+<p class="ProcedureCaption">To activate an area in an image map</p>
 <ul>
-  <li><a href="using_image_maps/working_with_image_maps.html"
-    rel="subducment">Working with Image Maps</a></li>
-  <li><a href="using_image_maps/adding_an_image.html"
-    >Adding or replacing an Image</a></li>
-  <li><a href="using_image_maps/creating_clientside_image_maps.html"
-    >Creating Clientside Image Maps</a></li>
-  <li><a href="using_image_maps/using_clientside_image_maps.html"
-    >Using Clientside Image Maps</a></li>
-  <li><a href="using_image_maps/moving_image_map_areas.html"
-    >Moving Image Map Areas</a></li>
-  <li><a href="using_image_maps/resizing_image_map_areas.html"
-    >Resizing Image Map Areas</a></li>
-  <li><a
-    href="using_image_maps/about_alternative_text_and_long_descriptions.html"
-    >About Alternative Text and Long Descriptions</a></li>
+  <li>Double-click on the area within the image. Amaya retieves the URI
+    associated to this area, and opens it in the browser.</li>
 </ul>
+
+<p class="ProcedureCaption">To display the existing areas within an image
+map</p>
+<ul>
+  <li>Select <strong>Show Map Areas</strong> from the <strong>Views</strong>
+    menu.
+    <p></p>
+    <p class="Note"><strong>Note:</strong>   You can also display existing
+    areas directly from the keyboard by clicking <code>Alt + V</code> then
+    <code>Alt + M</code>.</p>
+  </li>
+</ul>
+
+<h3>Moving Image Map Areas</h3>
+
+<p class="ProcedureDescription">After you have <a
+href="../html/using_image_maps/creating_clientside_image_maps.html">defined
+an area</a> within an image map, you can move that area somewhere else within
+the image:</p>
+
+<p class="ProcedureCaption">To move the area directly from the keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the image map.</li>
+  <li>Press the <code>Control</code> key and click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the <code>Control</code> key but continue to hold down the
+    mouse button. Use the mouse to move the highlighted image area to its new
+    location.</li>
+</ol>
+
+<p class="ProcedureCaption">To move the area using the Structure view</p>
+<ol>
+  <li>Select <strong>Show Structure</strong> from the <strong>Views</strong>
+    menu (or press<code>Alt + v</code> then <code>Alt + s</code>). The
+    structure view of the document will open in another window.</li>
+  <li>Edit the <code>coords</code> attribute manually. Example:
+    <code>coords=28,5,55,33.</code></li>
+  <li>The image map area will move accordingly in the open browser
+  window.</li>
+</ol>
+
+<h3>Resizing Image Map Areas</h3>
+
+<p>After you have <a
+href="../html/using_image_maps/creating_clientside_image_maps.html">defined
+an area</a> within an image map, you may need to resize that area.</p>
+
+<p class="ProcedureCaption">To resize the image map area directly from the
+keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the image map.</li>
+  <li>Press the <code>Control</code> key and right-click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the Control key but continue to hold down the right-button of
+    the mouse. Use the mouse to drag the image area to the size you want.</li>
+</ol>
+
+<p class="ProcedureCaption">To resize the area using the Structure view</p>
+<ol>
+  <li>Select <strong>Show Structure</strong> from the Select Show Structure
+    menu (or press <code>Alt + v</code> then <code>Alt + s</code>). The
+    structure view of the document will open in another window.</li>
+  <li>Edit the <code>coords</code> attribute manually. For example,
+    <code>coords=25,29,16</code> might become
+  <code>coords=25,28,24.</code></li>
+  <li>The image map area will resize in the open browser window.</li>
+</ol>
+
+<h3>About Alternative Text and Long Descriptions</h3>
+
+<p>Without useful alternative text for images, many web pages become
+difficult or even impossible to navigate, and users are left "feeling their
+way in the dark."</p>
+
+<p>To prevent this problem, you must provide alternative text for elements
+such as images and other multimedia objects. The alternative text is usually
+presented instead of the image by a browser with a voice output system, or on
+a Braille display used by many people who are blind. It is also common for
+users with low-quality connections to request the alternate view, because
+text is transmitted much faster than images.</p>
+
+<p>The alternative text should replace the image in function as well. For
+example, if you use the image as an icon that links to a reference point,
+then the title of the reference itself is a good alternative text.</p>
+
+<p>There are cases where an image is used for purely visual effect, and does
+not add any information value to the page. In this case, it is appropriate to
+use a blank alternative text, although you must still define it by entering
+two double quotes for the alternative text (for example,
+<code>alt=""</code>).</p>
+
+<p>When the image conveys important information that is not available from
+the text of the document, you must provide a description of the information.
+The <code>longdesc</code> option (<strong>Attributes &gt; longdesc</strong>)
+enables you to link a description to the image. This description can be a URI
+(a separate document), or named part of the current document.</p>
+
+<p>To view how a page might be presented without the images, use Show
+Alternate (<span class="Link0"><strong>Views &gt;Show
+Alternate</strong></span>). If the page is spoken by a voice output system,
+then the alternate view might simply be read out.</p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
 </div>
 </body>
 </html>
