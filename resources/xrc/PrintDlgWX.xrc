@@ -15,10 +15,11 @@
               <rows>1</rows>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_PAPER_FORMAT_BOX">
-                  <label>'                                     '</label>
+                  <label>Format du papier</label>
                   <content>
-                    <item/>
-                    <item/></content>
+                    <item>A4</item>
+                    <item>US</item>
+                  </content>
                   <selection>0</selection>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
@@ -27,11 +28,11 @@
               </object>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_OUTPUT_BOX">
-                  <label></label>
+                  <label>Destination</label>
                   <content>
-                    <item/>
-                    <item/></content>
-                  <selection>0</selection>
+                    <item>Imprimante</item>
+                    <item>Fichier PostScript</item>
+                  </content>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
@@ -54,8 +55,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_FILE_TXT_CTRL">
-                  <value></value>
-                  <size></size>
+                  <value>lpr</value>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
                 <border>5</border>
@@ -73,10 +73,11 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxRadioBox" name="wxID_ORIENTATION_BOX">
-                      <label></label>
+                      <label>Orientation</label>
                       <content>
-                        <item/>
-                        <item/></content>
+                        <item>Portrait</item>
+                        <item>Paysage</item>
+                      </content>
                       <style>wxRA_SPECIFY_COLS</style>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
@@ -84,11 +85,12 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxRadioBox" name="wxID_DISPOSITION_BOX">
-                      <label></label>
+                      <label>Disposition</label>
                       <content>
-                        <item/>
-                        <item/>
-                        <item/></content>
+                        <item>1 page/feuille</item>
+                        <item>2 pages/feuille</item>
+                        <item>3pages/feuille</item>
+                      </content>
                       <style>wxRA_SPECIFY_COLS</style>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
@@ -103,7 +105,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_OPTIONS_TXT">
-                      <label></label>
+                      <label>Options</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
@@ -111,39 +113,38 @@
                   <object class="sizeritem">
                     <object class="wxStaticLine"/>
                     <flag>wxALL|wxEXPAND</flag>
-                    <border>5</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_MANUAL_CHK">
-                      <label></label>
+                      <label>Alimentation manuelle</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_TOC_CHK">
-                      <label></label>
+                      <label>Table des matieres</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_LINKS_CHK">
-                      <label></label>
+                      <label>Table des liens</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_PRINT_URL_CHK">
-                      <label></label>
+                      <label>Imprimer l URL</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE_CSS_CHK">
-                      <label></label>
+                      <label>Sans feuilles de style</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>2</border>
@@ -157,12 +158,14 @@
             <border>5</border>
           </object>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
       <object class="sizeritem">
+        <option>0</option>
         <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
-        <border>5</border>
+        <border>7</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">

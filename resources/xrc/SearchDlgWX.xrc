@@ -28,6 +28,9 @@
             <flag>wxALL</flag>
             <border>2</border>
           </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
           <object class="sizeritem">
             <object class="wxStaticLine"/>
             <flag>wxEXPAND</flag>
