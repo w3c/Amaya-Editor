@@ -1000,11 +1000,70 @@ void GL_DrawArc3 (int x, int y,
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 }
 
+void GL_DrawArc (int originX, int originY, 
+		 int w, int h, 
+		 int angle1, int angle2, 
+		 ThotBool filled)
+{
+  double vectorX, vectorY;
+  double vectorY1, vectorX1;
+  double radiusw, radiush, angle;
+  double anglefinal;
+  
+  radiusw = (double)w/2;
+  radiush = (double)h/2;
+
+  angle = DEG_TO_RAD(angle1/64);
+  anglefinal = angle + DEG_TO_RAD(angle2/64);
+
+  if (filled)
+    {
+      /* The center */
+      vectorX1 = originX + radiusw;
+      vectorY1 = originY + radiush;
+  
+      glBegin (GL_TRIANGLE_FAN);
+      for (;angle <= anglefinal; angle += 0.01f)
+	{	
+	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
+	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
+	  glVertex2d (vectorX1,vectorY1);
+	  vectorY1 = vectorY;
+	  vectorX1 = vectorX;			
+	}
+      glVertex2d (vectorX1, vectorY1);
+    }
+  else
+    {
+      vectorX1 = originX + radiusw*2;
+      vectorY1 = originY + radiush;
+
+      if (radiusw < 20.0f && radiush < 20.0f)
+	glBegin(GL_POINTS);
+      else
+	glBegin(GL_LINE_STRIP);
+
+      /* for(angle=0.0f;angle<=(2.0f*3.14159);angle+=0.01f) */
+      for (; angle <= anglefinal; angle+=0.01f)
+	{	
+	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
+	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
+	  glVertex2d (vectorX1,vectorY1);
+	  vectorY1 = vectorY;
+	  vectorX1 = vectorX;			
+	}
+      glVertex2d (vectorX1, vectorY1);
+    }
+  
+  glEnd();
+}
+
+
 /*----------------------------------------------------------------------
  GL_DrawArc : receive angle at 64* their values...
  but
   ----------------------------------------------------------------------*/
-void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
+void GL_DrawArc4 (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
 
 
 

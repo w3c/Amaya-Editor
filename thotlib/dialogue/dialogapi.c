@@ -799,7 +799,7 @@ static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 /*----------------------------------------------------------------------
   Callback pour un bouton du toggle-menu
   ----------------------------------------------------------------------*/
-static void CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   register int        i;
   int                 entry;
@@ -836,6 +836,7 @@ static void CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t cal
 	  i = 0;
 	}
     }
+  return TRUE;  
 }
 
 /*----------------------------------------------------------------------
@@ -5246,7 +5247,10 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			   w = gtk_check_button_new_with_label (&text[index + 1]);
 			   gtk_widget_show_all (GTK_WIDGET(w));
 			   gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-			   ConnectSignalGTK (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC (CallToggle), (gpointer)catalogue);
+			   ConnectSignalGTK (GTK_OBJECT(w), 
+					     "toggled", 
+					     GTK_SIGNAL_FUNC (CallToggle), 
+					     (gpointer)catalogue);
 #endif /* _GTK */
 			   adbloc->E_ThotWidget[ent] = w;
 			 }
@@ -7473,7 +7477,10 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
    catalogue = CatEntry (ref);
    rebuilded = 0;
    if (catalogue == NULL)
-      TtaError (ERR_cannot_create_dialogue);
+     {
+       TtaError (ERR_cannot_create_dialogue);
+       return;
+     }
    else if (catalogue->Cat_Widget != 0 && catalogue->Cat_Type == CAT_LABEL)
      {
 	/* Modification du catalogue */
@@ -8212,7 +8219,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifndef _GTK
   Arg                 args[MAX_ARGS];
 #else /* _GTK */
-  ThotBool            usedoubleclick;
+  ThotBool            usedoubleclick;  
 #endif /* _GTK */
 #endif /* _WINDOWS */
   ThotWidget          w;

@@ -824,6 +824,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
   int                 index;
   ThotBool            found, done;
   
+  modtype = THOT_NO_MOD;
   if (frame > MAX_FRAME)
     frame = 0;
   FrameToView (frame, &document, &view);
@@ -831,7 +832,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 #ifdef _GTK
   if (key == GDK_VoidSymbol)
 #else  /*_GTK*/
-  if (key == NULL)
+  if (key == 0)
 #endif /* _GTK*/
     {
       charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
