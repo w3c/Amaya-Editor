@@ -119,6 +119,14 @@ static void ParseXptrFragment (AnnotMeta *annot, char *buff)
  ------------------------------------------------------------*/
 static ThotBool contains(char *input, const char *s1, const char * s2)
 {
+  /* Input checks */
+  if (input == NULL || s1 == NULL || s2 == NULL)
+      return FALSE;
+  if (strlen(s1) > strlen(input))
+      return FALSE;
+  if (strlen(input) == strlen(s1) && strlen(s2) >= 1)
+      return FALSE;
+
   if (!strncmp(input, s1, strlen(s2)))
       /* Now check the last part */
       if (!strcmp(input + strlen(s1), s2))
