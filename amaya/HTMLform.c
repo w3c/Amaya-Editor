@@ -251,11 +251,8 @@ int                 mode;
 	attrType.AttrTypeNum = HTML_ATTR_NAME;
 	attrTypeS.AttrSSchema = attrType.AttrSSchema;
 	TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-	while (el != NULL)
+	while (el != NULL && TtaIsAncestor(el, ancestor))
 	  {
-	    if(mode == HTML_EL_Submit_Input && !TtaIsAncestor(el, ancestor))
-	      break;
-
 	     if (attr != NULL)
 	       {
 		  elType = TtaGetElementType (el);
