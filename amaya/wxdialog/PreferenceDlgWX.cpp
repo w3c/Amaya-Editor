@@ -271,7 +271,10 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
+#ifdef 0
   prop.FontMenuSize = 0 /* TODO ? */;
+#endif
+
 
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();

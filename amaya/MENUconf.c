@@ -1823,6 +1823,7 @@ void SetGeneralConf (void)
       GProp_General.S_AutoSave = (AutoSave_Interval > 0);
     }
   /* handling show buttons, address, targets and section numbering */
+#ifndef _WX
   TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
   TtaSetEnvBoolean ("SHOW_BUTTONS", GProp_General.S_Buttons, TRUE);
   if (old != GProp_General.S_Buttons)
@@ -1831,6 +1832,7 @@ void SetGeneralConf (void)
   TtaSetEnvBoolean ("SHOW_ADDRESS", GProp_General.S_Address, TRUE);
   if (old != GProp_General.S_Address)
     UpdateShowAddress ();
+#endif /* _WX */
   TtaGetEnvBoolean ("SHOW_TARGET", &old);
   TtaSetEnvBoolean ("SHOW_TARGET", GProp_General.S_Targets, TRUE);
   if (old != GProp_General.S_Targets)
@@ -1850,7 +1852,9 @@ void SetGeneralConf (void)
     TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", TRUE);
   else
     TtaSetEnvString ("ACCESSKEY_MOD", "None", TRUE);
+#ifndef _WX
   TtaSetEnvInt ("FontMenuSize", GProp_General.FontMenuSize, TRUE);
+#endif /* _WX */
 #ifdef _WINGUI
   TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
   strcpy (TempFileDirectory, AppTmpDir);
@@ -2172,9 +2176,11 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	    }
 	  break;
 
+#ifndef _WX
 	case mFontMenuSize:
 	  GProp_General.FontMenuSize = val;
 	  break;
+#endif /* _WX */
 	  
 	case mDialogueLang:
 	  if (data)
