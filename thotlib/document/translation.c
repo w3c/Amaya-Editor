@@ -222,6 +222,8 @@ CHARSET             encoding;
 #else  /* !_I18N_ */
 	 putc (c, fileDesc);
 #endif /* !_I18N_ */
+	 if (c == pTSch->TsEOL[0])
+	    OutputFile[fileNum].OfLineNumber++;
 	 }
        else if (c == pTSch->TsEOL[0])
 	 {
@@ -3524,9 +3526,9 @@ ThotBool            recordLineNb;
        /* pas de schema de traduction correspondant */
        {
        /* if needed, record the current line number of the main output file
-	  in the element being translated */
+          in the element being translated */
        if (recordLineNb)
-	 pEl->ElLineNb = OutputFile[1].OfLineNumber + 1;
+          pEl->ElLineNb = OutputFile[1].OfLineNumber + 1;
        /* Cherche et applique les regles de traduction associees au type */
        /* de l'element et qui doivent s'appliquer avant la traduction du */
        /* contenu de l'element */
