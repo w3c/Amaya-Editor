@@ -702,11 +702,11 @@
 	<message xml:lang="pt">Imprimir</message>
 	<message xml:lang="fi">Tulosta</message>
 </label>
-<label define="BClosePage">
-	<message xml:lang="en">&amp;Close document</message>
-	<message xml:lang="fr">&amp;Fermer le document</message>
+<label define="BCloseTab">
+	<message xml:lang="en">Close &amp;tab</message>
+	<message xml:lang="fr">Fermer l'on&amp;glet</message>
 </label>
-<label define="BClose">
+<label define="BCloseWindow">
 	<message xml:lang="en">&amp;Close window</message>
 	<message xml:lang="fr">&amp;Fermer la fenêtre</message>
 	<message xml:lang="de">Schließen</message>

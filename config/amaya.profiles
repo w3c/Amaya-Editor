@@ -258,7 +258,7 @@ Reload
 SaveDocumentAs
 ShowLogFile
 StopTransfer
-CloseDocument
+CloseWindow
 ReadAsUTF_8
 ReadAsISO_8859_1
 ReadAsISO_8859_15
@@ -311,7 +311,8 @@ Reload
 SaveDocumentAs
 ShowLogFile
 StopTransfer
-ClosePage
+CloseTab
+CloseWindow
 ReadAsUTF_8
 ReadAsISO_8859_1
 ReadAsISO_8859_15

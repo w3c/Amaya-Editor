@@ -459,7 +459,7 @@ void ANNOT_FreeDocumentResource (Document doc)
 	     It'd be nice to keep the annotation open, even if the
 	     doc disappears */
 	  /* while (DocumentURLs[i]) */
-	    CloseDocument (i, 1);
+	    CloseWindow (i, 1);
 	}
     }
 
@@ -1567,7 +1567,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       && doc_annot != tmp_doc)
     {
       ANNOT_ToggleThread (doc_annot, tmp_doc, FALSE);
-      CloseDocument (tmp_doc, 1);
+      CloseWindow (tmp_doc, 1);
     }
 
   /* @@ JK: a patch so that we can follow the reverse link */
@@ -1716,7 +1716,7 @@ void ANNOT_Delete_callback (int doc, int status, char *urlName, char *outputfile
 
 	  /* closes the document window and frees all metada
 	   associated with the document */
-	  CloseDocument (annot_doc, 1);
+	  CloseWindow (annot_doc, 1);
 	}
 
       if (delete_annot)

@@ -153,10 +153,10 @@ extern void SectionNumbering ( Document doc,
 extern void MakeIDMenu ( Document doc,
                          View view );
 extern void CheckAmayaClosed ( void );
-extern void ClosePage ( Document doc,
-                        View view );
-extern void CloseDocument ( Document doc,
-                            View view );
+extern void CloseTab ( Document doc,
+                       View view );
+extern void CloseWindow ( Document doc,
+                          View view );
 extern void AmayaClose ( Document document,
                          View view );
 extern void AddURLInCombobox ( char *pathname,
@@ -322,10 +322,10 @@ extern void SectionNumbering ( Document doc,
 extern void MakeIDMenu ( Document doc,
                            View view );
 extern void CheckAmayaClosed ( void );
-extern void ClosePage ( Document doc,
-                          View view );
-extern void CloseDocument ( Document doc,
-                              View view );
+extern void CloseTab ( Document doc,
+                         View view );
+extern void CloseWindow ( Document doc,
+                            View view );
 extern void AmayaClose ( Document document,
                            View view );
 extern void AddURLInCombobox ( char *pathname,

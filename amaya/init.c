@@ -7532,10 +7532,10 @@ void CheckAmayaClosed ()
 }
 
 /*----------------------------------------------------------------------
-   ClosePage close the current active page
+   CloseTab close the current active page
    Shortcut : CTRL x + CTRL p
   ----------------------------------------------------------------------*/
-void ClosePage (Document doc, View view)
+void CloseTab (Document doc, View view)
 {
 #ifdef _WX
   int page_id       = -1;
@@ -7554,15 +7554,21 @@ void ClosePage (Document doc, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void CloseDocument (Document doc, View view)
+void CloseWindow (Document doc, View view)
 {
-   /* Save the current windows geometry */
-   SaveGeometryOnExit( doc, NULL);
+  /* Save the current windows geometry */
+  SaveGeometryOnExit( doc, NULL);
 
+#ifdef _WX
+  /* get the document's parent window and try to close it */
+  int window_id = TtaGetDocumentWindowId( doc, view );
+  TtaCloseWindow( window_id );
+#else /* _WX */
   if (DocumentURLs[doc])
     TtcCloseDocument (doc, view);
   if (!W3Loading)
     CheckAmayaClosed ();
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
