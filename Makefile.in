@@ -418,7 +418,8 @@ $(THOTDIR)/thotlib/Makefile.in \
 $(THOTDIR)/thotlib/include/Makefile.in \
 $(THOTDIR)/tools/Makefile.in \
 $(THOTDIR)/tools/mkdep/Makefile.in \
-$(THOTDIR)/tools/cextract-1.7/Makefile.in
+$(THOTDIR)/tools/cextract-1.7/Makefile.in \
+$(WX_SRCDIR)/configure.in
 
 rebuild : tools/mkdep/mkdep Makefile
 
@@ -430,12 +431,15 @@ ${srcdir}/stamp-h.in: configure.in config.h.in
 
 stamp.h: config.h.in config.status
 	./config.status
+	cd ./$(WX_BUILDDIR)/ && ./config.status
 
 Makefile: $(MAKEFILE_IN) config.status
 	./config.status
+	cd ./$(WX_BUILDDIR)/ && ./config.status
 
 config.status: configure
 	./config.status --recheck
+	cd ./$(WX_BUILDDIR)/ && ./config.status --recheck
 
 tags:	dummy
 	rm -f ../TAGS

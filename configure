@@ -13613,7 +13613,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
   #   --disable-ftp
   #   --disable-http
   #   --disable-sound
-  WXCONFIGURE_TUNNING_OPTION="--disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
+  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
 
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
