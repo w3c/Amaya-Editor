@@ -46,11 +46,12 @@ static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
 static boolean      dlgInitialized = FALSE; 
-static char         WIN_buffMenu [MAX_TXT_LEN];
 static char         WIN_Lab [1024];
 static int          WIN_nbItem;
+static char         WIN_title [MAX_NAME_LENGTH + 2];
 
 int                 WIN_MenuAlphabet;
+char                WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
 /* the menu attributes */
@@ -828,7 +829,11 @@ int                 view;
       AttrFormExists = TRUE;
     }
 
+#  ifdef _WINDOWS
+   strncpy (WIN_title, pAttr1->AttrName, MAX_NAME_LENGTH);
+#  else  /* !_WINDOWS */
    strncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
+#  endif /* _WINDOWS */
    switch (pAttr1->AttrType)
      {
      case AtNumAttr:
@@ -882,7 +887,11 @@ int                 view;
        /* boucle sur les valeurs possibles de l'attribut */
        while (val < pAttr1->AttrNEnumValues)
 	 {
+#      ifdef _WINDOWS
+	   i = strlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
+#      else  /* !_WINDOWS */
 	   i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
+#      endif /* _WINDOWS */
 	   if (lgmenu + i < MAX_TXT_LEN)
 	     {
 #          ifndef _WINDOWS
@@ -1554,21 +1563,12 @@ int                 frame;
 #            ifndef _WINDOWS
 		     TtaShowDialogue (NumMenuAttr, TRUE);
 #            else  /* _WINDOWS */
-			 if (WIN_AtNumAttr) {
+			 if (WIN_AtNumAttr) 
 		        WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
-			 } else if (WIN_AtTextAttr && !isForm) {
-		            WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
-			 } else if (WIN_AtEnumAttr) {
-                    /* CreateAttributeDlgWindow (currAttrVal, nbDlgItems, WIN_buffMenu); */
-				    if (nbDlgItems == 3)
-                       CreateAlign1DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
-					else if (nbDlgItems == 5)
-                         CreateAlign2DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
-                    else if (nbDlgItems == 4)
-                         CreateAlign3DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
-                    else if (nbDlgItems == 2)
-                         CreateMathAttribDlgWindow (currAttrVal);
-			 }
+			 else if (WIN_AtTextAttr && !isForm) 
+		          WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
+			 else if (WIN_AtEnumAttr) 
+                  CreateAttributeDlgWindow (WIN_title, currAttrVal, nbDlgItems);
 #            endif /* _WINDOWS */
 		  }
 		DeleteAttribute (NULL, pAttrNew);
