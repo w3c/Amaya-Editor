@@ -39,6 +39,7 @@
 +head
 +html-style
 +makebook
++makeid
 +maths
 +object-module
 +print
@@ -47,30 +48,8 @@
 +tables
 +templates
 +views
-
-################# XHTML-TRANSITONAL
-<XHTML-transitional>
-+amayabase
-+areas
-+browsing
-+config
-+css-style
-+edit
-+forms
-+link-module
-+base-module
-+meta-module
-+head
-+html-style
-+makebook
-+maths
-+object-module
-+print
-+source-view
-+spell
-+tables
-+templates
-+views
++svg
++annot
 
 ################# XHTML-STRICT
 <XHTML-strict>
@@ -86,6 +65,7 @@
 +meta-module
 +head
 +makebook
++makeid
 +maths
 +object-module
 +print
@@ -95,6 +75,8 @@
 +tables
 +templates
 +views
++svg
++annot
 
 ################# AMAYA XHTML-BASIC
 <XHTML-basic>
@@ -108,6 +90,7 @@
 +hypertext-module
 +list-module
 +makebook
++makeid
 +object-module
 +print
 +source-view
@@ -141,34 +124,6 @@ ShowMapAreas
 +browsing
 +print
 +source-view
-
-################# AMAYA EXPERIMENTS
-<experimental>
-+amayabase
-+areas
-+browsing
-+config
-+css-style
-+edit
-+basic-form-module
-+forms
-+link-module
-+base-module
-+meta-module
-+head
-+html-style
-+makebook
-+makeid
-+maths
-+object-module
-+print
-+source-view
-+spell
-+tables
-+templates
-+views
-+svg
-+annot
 
 ################# AMAYA FUNCTIONS
 [amayabase]
