@@ -466,6 +466,6 @@ Amaya/thotlib/view/psdisplay.c \
 Amaya/thotlib/view/unstructlocate.c \
 Amaya/thotlib/view/viewapi.c \
 Amaya/thotlib/view/windowdisplay.c \
- | gzip -9  > /tahiti/thottape/sources.tar.gz
+ | gzip -9  > /tahiti/thottape/amaya_src.tar.gz
 cp -p Amaya/thotlib/document/docs.c.new Amaya/thotlib/document/docs.c
 cp -p Amaya/amaya/HTML.S.new Amaya/amaya/HTML.S
