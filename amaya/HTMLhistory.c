@@ -23,14 +23,14 @@
 /* a record in an history */
 typedef struct _HistElement
 {
-  char  *HistUrl;        /* document URL */
-  char  *HistInitialUrl; /* document URL */
-  char  *form_data;      /* data associated with forms */
-  int    method;         /* method used to request this URL */
-  int    HistPosition;	/* volume preceding the first element to be
-			   made visible in the main window */
-  int    HistDistance;	/* distance from the  top of the window to the
-			   top of this element (% of the window height) */
+  char    *HistUrl;        /* document URL */
+  char    *HistInitialUrl; /* document URL */
+  char    *form_data;      /* data associated with forms */
+  int      method;         /* method used to request this URL */
+  int      HistPosition;   /* volume preceding the first element to be
+			      made visible in the main window */
+  int      HistDistance;   /* distance from the  top of the window to the
+			      top of this element (% of the window height) */
 } HistElement;
 
 /* the history of a window */
@@ -415,7 +415,6 @@ void GotoPreviousHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      AddURLInCombobox (url);
       GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
 		   (void *) GotoPreviousHTML_callback,(void *) ctx, UTF_8);
       /* out of the critic section */
@@ -576,10 +575,9 @@ void GotoNextHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      AddURLInCombobox (url);
-      (void) GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-			  (void *) GotoNextHTML_callback, (void *) ctx,
-			  UTF_8);
+      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
+		   (void *) GotoNextHTML_callback, (void *) ctx,
+		   UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;
     }

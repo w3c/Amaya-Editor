@@ -2057,10 +2057,9 @@ void TtcSwitchButtonBar (Document doc, View view)
 }
 
 
-/*----------------------------------------------------------------------
-   TextAction                                                      
-  ----------------------------------------------------------------------*/
 #ifndef _GTK
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
   Document            doc;
@@ -2086,6 +2085,8 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
     }
 }
 #else /* _GTK */
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
 gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
 {
   Document            doc;
@@ -2106,8 +2107,9 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
      For a callback in the signal catching hierarchy*/
   return FALSE;
 }
-#endif /* _GTK */
-#ifdef _GTK
+
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
 gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
 {
   Document            doc;
@@ -2124,6 +2126,24 @@ gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
       return TRUE;
     }
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
+			   gpointer user_data)
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
+gboolean LeaveCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
+			   gpointer user_data)
+{
+  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
+  return FALSE;
 }
 #endif /* _GTK */
 
@@ -2484,10 +2504,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
    Parameters:
    doc: identifier of the document.
    view: identifier of the view.
-   text: the text to be displayed
    listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
-void TtaSetTextZone (Document doc, View view, char *text, char *listUrl)
+void TtaSetTextZone (Document doc, View view, char *listUrl)
 {
   int            frame;
   ThotWidget     w;
@@ -2499,40 +2518,34 @@ void TtaSetTextZone (Document doc, View view, char *text, char *listUrl)
 
   UserErrorCode = 0;
   /* verifie le parametre document */
-  if (doc == 0 && view == 0 && text)
+  if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
-  else
+  else if (listUrl)
     {
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame].WdFrame != 0)
+      else if (FrameTable[frame].WdFrame)
 	{
 	  w = FrameTable[frame].Text_Zone;
-	  if (w != 0)
+	  if (w)
 	    {
 #ifdef _WINDOWS
-	      SetWindowText (w, text);
 	      /* Initialize listbox linked to combobox */
-	      if (listUrl)
-		InitWdComboBoxList (w, listUrl);
+	      InitWdComboBoxList (w, listUrl);
 #else  /* _WINDOWS */
 #ifndef _GTK
-	      XmTextSetString (w, text);
+	      XmTextSetString (w, listUrl);
 #else /* _GTK */
-	      gtk_entry_set_text (GTK_ENTRY (w), text);
-	      if (listUrl)
-		/* list of URL OR Title OF librarIES */
-		{
-		  combo =  FrameTable[frame].Combo;
-		  combo1_items = InitComboBoxList (listUrl);
-		  /* Put created list into into combo */
-		  gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
-		  /* handle arrow key in combobox */
-		  gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
-		  /* Free memory */
-		  g_list_free (combo1_items);
-		}
+	      /* list of URL OR Title OF librarIES */
+	      combo =  FrameTable[frame].Combo;
+	      combo1_items = InitComboBoxList (listUrl);
+	      /* Put created list into into combo */
+	      gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
+	      /* handle arrow key in combobox */
+	      gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
+	      /* Free memory */
+	      g_list_free (combo1_items);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 	    }
@@ -2551,7 +2564,6 @@ void TtaSetTextZone (Document doc, View view, char *text, char *listUrl)
 
    Shows or hides the commands part in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    doc: identifier of the document.
    view: identifier of the view.

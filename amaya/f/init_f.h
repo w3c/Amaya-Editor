@@ -122,7 +122,7 @@ extern Document GetAmayaDoc ( char *documentPath,
                               char *form_data,
                               Document doc,
                               Document baseDoc,
-                              ClickEvent CE_event,
+                              ClickEvent method,
                               ThotBool history,
                               TTcbf *cbf,
                               void *ctx_cbf,
@@ -207,7 +207,8 @@ extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
                          View view );
-extern void AddURLInCombobox ( char *url );
+extern void AddURLInCombobox ( char *url,
+                               ThotBool keep );
 extern void InitStringForCombobox ( void );
 
 #else /* __STDC__ */
@@ -328,7 +329,7 @@ extern Document GetAmayaDoc (/* char *documentPath,
                                 char *form_data,
                                 Document doc,
                                 Document baseDoc,
-                                ClickEvent CE_event,
+                                ClickEvent method,
                                 ThotBool history,
                                 TTcbf *cbf,
                                 void *ctx_cbf,
@@ -413,7 +414,8 @@ extern void CloseDocument (/* Document doc,
                               View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
-extern void AddURLInCombobox (/* char *url */);
+extern void AddURLInCombobox (/* char *url,
+                                 ThotBool keep */);
 extern void InitStringForCombobox (/* void */);
 
 #endif /* __STDC__ */

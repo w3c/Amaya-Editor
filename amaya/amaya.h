@@ -445,18 +445,17 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  char    *initial_url;      /* if the server returns a different URL name
-				after a redirection, we store here the one
-				that the browser first asked */
-  char    *form_data;        /* form data associated with a URL */
-  char    *content_type;     /* content type returned by the server */
-  char    *charset;          /* charset returned by the server */
-  char    *content_length;   /* content length returned by the server */
-  char    *content_location; /* simplified content location returned by the server */
-  char    *full_content_location; /* full content location returned by the server */
+  char      *initial_url;      /* if the server returns a different URL name
+				  after a redirection, we store here the one
+				  that the browser first asked */
+  char      *form_data;        /* form data associated with a URL */
+  char      *content_type;     /* content type returned by the server */
+  char      *charset;          /* charset returned by the server */
+  char      *content_length;   /* content length returned by the server */
+  char      *content_location; /* simplified content location returned by the server */
+  char      *full_content_location; /* full content location returned by the server */
   ClickEvent method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
-  
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document
@@ -495,6 +494,10 @@ THOT_EXPORT Document                 BackupDocument; /* the current backup */
 #define MAX_URL_list 20
 THOT_EXPORT char                    *URL_list;
 THOT_EXPORT int                      URL_list_len;
+THOT_EXPORT ThotBool                 URL_list_keep;
+#ifdef _SVGLIB
+THOT_EXPORT char                    *SVGlib_list;
+#endif /* _SVGLIB */
 
 /* button indexes */
 THOT_EXPORT int iStop;

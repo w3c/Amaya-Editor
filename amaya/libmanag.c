@@ -143,6 +143,66 @@ static char         listTitle [MAX_BUFF];
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 
+
+/*----------------------------------------------------------------------
+  AddLibraryDataIntoStructure
+  Add a new structure url title into a dynamic liste :
+  the Library Manager Structure List
+  parameters: url and title
+  persLib : if persLib is FALSE the Library identified by URL is delivered 
+  with Amaya distribution, else if it's a custom Library.
+  ----------------------------------------------------------------------*/
+static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
+{
+/* Utiliser un tableau plutôt qu'une liste chainée */
+/* ensuite modifier test sur les lignes du tableau avec un indice (Cf. FrameTable)*/
+#ifdef _SVGLIB/*!!!!!!modifier le nom des variables */
+  ListUriTitle     *listCur, *listNext, *listNew; /* *curCel, *nextCel, *newCel*/
+  char             *path, *Title;
+  int               index = 1;
+
+  path = (char *) TtaGetMemory (strlen (url) + 1);
+  strcpy (path, url);
+  Title = CreateUniqueLibraryTitle (title);
+  if (HeaderListUriTitle)
+    {
+      /* list exist */
+      listNext = HeaderListUriTitle;
+      while (listNext)
+	{
+	  listCur = listNext;
+	  /* A EFFECTUER test pour savoir si l'url est deja placer dans la liste */
+	  /* il n'est pas necessaire d'ajouter deux fois la même librairie dans la liste!!!*/
+	  listNext = listNext->next;
+	  index++;
+	}
+      listNew = (ListUriTitle *) TtaGetMemory (sizeof (ListUriTitle));
+      listNew->next = NULL;
+      listNew->URI = path;
+      listNew->Title = Title;
+      listNew->indice = index;
+      if (persLib)
+	listNew->customLibrary = TRUE;
+      else
+	listNew->customLibrary = FALSE;
+      listCur->next = listNew;
+    }
+  else
+    {
+      /* list didn't exist, create it */
+      HeaderListUriTitle = (ListUriTitle *) TtaGetMemory (sizeof (ListUriTitle));
+      HeaderListUriTitle->next = NULL;
+      HeaderListUriTitle->URI = path;
+      HeaderListUriTitle->Title = Title;
+      HeaderListUriTitle->indice = index;
+      if (persLib)
+	HeaderListUriTitle->customLibrary = TRUE;
+      else
+	HeaderListUriTitle->customLibrary = FALSE;
+    }
+#endif /* _SVGLIB */
+}
+
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
  PasteLibraryModelDlgProc
@@ -190,8 +250,8 @@ LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg,
 /*-----------------------------------------------------------------------
  AddNewModelIntoLibraryDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK AddNewModelIntoLibraryDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									  LPARAM lParam)
+LRESULT CALLBACK AddNewModelIntoLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
+						WPARAM wParam, LPARAM lParam)
 {
 #ifdef _SVGLIB
 int    iListIndex = 0;
@@ -502,7 +562,6 @@ ThotBool IsCurrentSelectionContainsUseElement()
 void AddNewModelIntoLibraryForm (Document doc, View view)
 {
 #ifdef _SVGLIB
-  char          *buffer_list;
   int            nbr;
 #ifndef _WINDOWS
   char           bufButton[MAX_LENGTH];
@@ -510,7 +569,6 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
 #endif /* _WINDOWS */
 
   /* Initialize Structure if it's not yet done */
-  InitSVGLibraryManagerStructure();
   SaveLibraryTitleSelection[0] = EOS;
 
   /* Check the current selection */
@@ -527,22 +585,18 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
 		   bufButton, TRUE, 2, 'L', D_CANCEL);
 
       /* Catalogue Or URI text zone */
-      buffer_list = InitSVGBufferForComboBox ();
-      nbr = SVGLibraryListItemNumber (buffer_list);
+      nbr = SVGLibraryListItemNumber (SVGlib_list);
       TtaNewSizedSelector (BaseLibrary + SVGLibCatalogueTitle, BaseLibrary + AddSVGModel,
 			   TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE),
-			   nbr, buffer_list, 50, 3,
+			   nbr, SVGlib_list, 50, 3,
 			   FALSE, FALSE, TRUE);
-      TtaFreeMemory (buffer_list);
-
       /* activates the Add Library Model Dialogue  */
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseLibrary + AddSVGModel, TRUE);
       TtaWaitShowDialogue ();
 #else /* _WINDOWS */
-      buffer_list = InitSVGBufferForComboBox ();
-      nbr = SVGLibraryListItemNumber (buffer_list);
-      CreateAddNewModelIntoLibraryDlgWindow (TtaGetViewFrame (doc, view), nbr, buffer_list);
+      nbr = SVGLibraryListItemNumber (SVGlib_list);
+      CreateAddNewModelIntoLibraryDlgWindow (TtaGetViewFrame (doc, view), nbr, SVGlib_list);
 #endif /* _WINDOWS */
     }
   else
@@ -551,7 +605,6 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
       InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
 		TtaGetMessage (AMAYA, AM_SVGLIB_NO_SVG_SELECTION));
     }
-
 #endif /* _SVGLIB */
 }
 
@@ -1057,7 +1110,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 
   /* save the document name into the document table */
   s = TtaStrdup (libUrl);
-  TtaSetTextZone (newLibraryDoc, 1, libUrl, NULL);
+  TtaSetTextZone (newLibraryDoc, 1, libUrl);
   DocumentURLs[newLibraryDoc] = s;
   DocumentMeta[newLibraryDoc] = DocumentMetaDataAlloc ();
   DocumentMeta[newLibraryDoc]->form_data = NULL;
@@ -1066,18 +1119,13 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   DocumentMeta[newLibraryDoc]->xmlformat = FALSE;
   DocumentSource[newLibraryDoc] = 0;
 
-/*
- *
- * Initialiser les metas: DocumentMeta[newLibraryDoc]
- * OK mais voir si DocumentSource et DocumentURLs ne pose pas de problème
- */
-
-
-
-
+  /*
+   *
+   * Initialiser les metas: DocumentMeta[newLibraryDoc]
+   * OK mais voir si DocumentSource et DocumentURLs ne pose pas de problème
+   */
   /* store the document profile */
   TtaSetDocumentProfile (newLibraryDoc, L_Xhtml11);
-
   ResetStop (newLibraryDoc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (newLibraryDoc);
@@ -1288,65 +1336,6 @@ char *GetLibraryFileTitle (char *url)
 }
 
 /*----------------------------------------------------------------------
-  AddLibraryDataIntoStructure
-  Add a new structure url title into a dynamic liste :
-  the Library Manager Structure List
-  parameters: url and title
-  persLib : if persLib is FALSE the Library identified by URL is delivered 
-  with Amaya distribution, else if it's a custom Library.
-  ----------------------------------------------------------------------*/
-void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
-{
-/* Utiliser un tableau plutôt qu'une liste chainée */
-/* ensuite modifier test sur les lignes du tableau avec un indice (Cf. FrameTable)*/
-#ifdef _SVGLIB/*!!!!!!modifier le nom des variables */
-  ListUriTitle     *listCur, *listNext, *listNew; /* *curCel, *nextCel, *newCel*/
-  char             *path, *Title;
-  int               index = 1;
-
-  path = (char *) TtaGetMemory (strlen (url) + 1);
-  strcpy (path, url);
-  Title = CreateUniqueLibraryTitle (title);
-  if (HeaderListUriTitle)
-    {
-      /* list exist */
-      listNext = HeaderListUriTitle;
-      while (listNext)
-	{
-	  listCur = listNext;
-	  /* A EFFECTUER test pour savoir si l'url est deja placer dans la liste */
-	  /* il n'est pas necessaire d'ajouter deux fois la même librairie dans la liste!!!*/
-	  listNext = listNext->next;
-	  index++;
-	}
-      listNew = (ListUriTitle *) TtaGetMemory (sizeof (ListUriTitle));
-      listNew->next = NULL;
-      listNew->URI = path;
-      listNew->Title = Title;
-      listNew->indice = index;
-      if (persLib)
-	listNew->customLibrary = TRUE;
-      else
-	listNew->customLibrary = FALSE;
-      listCur->next = listNew;
-    }
-  else
-    {
-      /* list didn't exist, create it */
-      HeaderListUriTitle = (ListUriTitle *) TtaGetMemory (sizeof (ListUriTitle));
-      HeaderListUriTitle->next = NULL;
-      HeaderListUriTitle->URI = path;
-      HeaderListUriTitle->Title = Title;
-      HeaderListUriTitle->indice = index;
-      if (persLib)
-	HeaderListUriTitle->customLibrary = TRUE;
-      else
-	HeaderListUriTitle->customLibrary = FALSE;
-    }
-#endif /* _SVGLIB */
-}
-
-/*----------------------------------------------------------------------
   CreateUniqueLibraryTitle
   This function allocates and returns a unique library title
   by adding a int at the end of the library title
@@ -1367,7 +1356,6 @@ char *CreateUniqueLibraryTitle (char *title)
 #endif /* _SVGLIB */
   return Title;
 }
-
 
 /*----------------------------------------------------------------------
   IsLibraryTitleExist
@@ -1460,36 +1448,6 @@ void SVGLIB_FreeDocumentResource ()
 
 
 /*-------------------------------------------------------------------
-  GetLibraryTitleFromPath
-  Search path in the Library Manager Structure List 
-  allocate and return the corresponding title
-  if it exists or NULL else if
-  -------------------------------------------------------------------*/
-char *GetLibraryTitleFromPath (char *path)
-{
-  char             *title = NULL;
-#ifdef _SVGLIB
-  ListUriTitle     *listCur;
-
-  if (HeaderListUriTitle)
-    {
-      /* list exist */
-      listCur = HeaderListUriTitle;
-      while (listCur && (strcmp (listCur->URI, path) != 0))
-	{
-	  listCur = listCur->next;
-	}
-      if (listCur)
-	{
-	  title = (char *) TtaGetMemory (strlen (listCur->Title) + 1);
-	  strcpy (title, listCur->Title);
-	}
-    }
-#endif /* _SVGLIB */
-  return title;
-}
-
-/*-------------------------------------------------------------------
   GetLibraryPathFromTitle
   Search title in the Library Manager Structure list
   and return the corresponding path
@@ -1520,11 +1478,10 @@ char *GetLibraryPathFromTitle (char *title)
   This function allocates memory and returns it.
   So you have to free them after calling this function.
   -------------------------------------------------------------------*/
-char *InitSVGBufferForComboBox ()
+static void InitSVGBufferForComboBox ()
 {
 #ifdef _SVGLIB
   ListUriTitle     *curList;
-  char             *buffer;
   int               lg = 0;
 
   if (HeaderListUriTitle)
@@ -1536,23 +1493,69 @@ char *InitSVGBufferForComboBox ()
 	  lg += strlen (curList->Title) + 1;
 	  curList = curList->next;
 	}
-      buffer = (char *) TtaGetMemory (lg + 10);
+      /* remove the previous list */
+      TtaFreeMemory (SVGlib_list);
+      SVGlib_list = TtaGetMemory (lg + 10);
       curList = HeaderListUriTitle;
-      buffer[0] = EOS;
+      SVGlib_list[0] = EOS;
       lg = 0;
       while (curList)
 	{
-	  strcpy (&buffer[lg], curList->Title);
+	  strcpy (&SVGlib_list[lg], curList->Title);
 	  lg += strlen (curList->Title) + 1;
 	  curList = curList->next;
 	}
-       buffer[lg] = EOS;
-      return buffer;
+       SVGlib_list[lg] = EOS;
     }
 #endif /* _SVGLIB */
-  return NULL;
 }
 
+/*-------------------------------------------------------------------
+  SelectLibraryFromPath
+  Search path in the Library Manager Structure List 
+  Update the list of library for the combobox.
+  -------------------------------------------------------------------*/
+void SelectLibraryFromPath (char *path)
+{
+#ifdef _SVGLIB
+  char             *title;
+  ListUriTitle     *curList;
+  int               lg = 0;
+
+  if (HeaderListUriTitle)
+    {
+      /* length of the string */
+      curList = HeaderListUriTitle;
+      while (curList)
+	{
+	  lg += strlen (curList->Title) + 1;
+	  if (strcmp (curList->URI, path) == 0)
+	    title = curList->Title;
+	  curList = curList->next;
+	}
+      if (title)
+	{
+	  /* remove the previous list */
+	  TtaFreeMemory (SVGlib_list);
+	  SVGlib_list = TtaGetMemory (lg + 10);
+	  curList = HeaderListUriTitle;
+	  /* put the selected library in first position */
+	  strcpy (SVGlib_list, title);
+	  lg = strlen (title) + 1;
+	  while (curList)
+	    {
+	      if (strcmp (curList->URI, path) != 0)
+		{
+		  strcpy (&SVGlib_list[lg], curList->Title);
+		  lg += strlen (curList->Title) + 1;
+		}
+	      curList = curList->next;
+	    }
+	  SVGlib_list[lg] = EOS;
+	}
+    }
+#endif /* _SVGLIB */
+}
 
 /*------------------------------------------------------------------
   InitSVGLibraryManagerStructure
@@ -1568,6 +1571,7 @@ void InitSVGLibraryManagerStructure ()
   char     *urlstring, *librarytitle;
   FILE     *libfile;
 
+  SVGlib_list = NULL;
   if (!HeaderListUriTitle)
     {
       url_home = (char *) TtaGetMemory (MAX_LENGTH);
@@ -1625,7 +1629,6 @@ void InitSVGLibraryManagerStructure ()
 		      TtaFreeMemory (librarytitle);
 		    }
 		}
-		
 	    }
 	  TtaReadClose (libfile);
 	}
@@ -1633,6 +1636,7 @@ void InitSVGLibraryManagerStructure ()
       TtaFreeMemory (url_thot);
       TtaFreeMemory (url_home);
       TtaFreeMemory (urlstring);
+      InitSVGBufferForComboBox ();
     }
 #endif /* _SVGLIB */
 }
@@ -1727,9 +1731,6 @@ void OpenCatalogue (Document doc, View view)
 void ShowLibrary (Document doc, View view)
 {
 #ifdef _SVGLIB
-  /* Initialize Structure if it's not yet done */
-  InitSVGLibraryManagerStructure();
-
   /* open catalogue */
   OpenCatalogue (doc, view);
   /* Création des widgets de la fenêtre pour obtenir l'ergonomie souhaitée */
@@ -2210,10 +2211,6 @@ void CopyOrReference (Document doc, View view)
   char           bufButton[MAX_LENGTH];
   int            i;
 #endif /* _WINDOWS */
-
-  /* Initialize Structure if it's not yet done */
-  InitSVGLibraryManagerStructure();
-
 #ifndef _WINDOWS  
   /* Create the dialogue form */
   i = 0;

@@ -105,7 +105,8 @@ void OpenTemplateDocument (Document doc)
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = TtaStrdup (buffer);
           DocumentMeta[doc]->method = CE_TEMPLATE;
-	  TtaSetTextZone (doc, 1, DocumentURLs[doc], URL_list);
+	  AddURLInCombobox (DocumentURLs[doc], TRUE);
+	  TtaSetTextZone (doc, 1, URL_list);
 	  TtaSetDocumentUnmodified (doc);
           
 	}

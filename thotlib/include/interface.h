@@ -132,10 +132,9 @@ extern int TtaAddTextZone (Document document, View view, char *label,
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
-   text: the text to be displayed
    listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
-extern void TtaSetTextZone (Document document, View view, char *text, char *listUrl);
+extern void TtaSetTextZone (Document document, View view, char *listUrl);
 
 /*----------------------------------------------------------------------
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   

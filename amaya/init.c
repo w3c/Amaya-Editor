@@ -313,7 +313,6 @@ DocumentMetaDataElement *DocumentMetaDataAlloc (void)
   me = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
   memset ((void *) me, 0, sizeof (DocumentMetaDataElement));
   me->method = CE_ABSOLUTE;
-
   return (me);
 }
 
@@ -581,7 +580,8 @@ Document IsDocumentLoaded (char *documentURL, char *form_data)
 	{
 	  /* compare the url */
 	  found = (!strcmp (documentURL, DocumentURLs[i]) ||
-		   (DocumentMeta[i]->initial_url && !strcmp (documentURL, DocumentMeta[i]->initial_url)));
+		   (DocumentMeta[i]->initial_url &&
+		    !strcmp (documentURL, DocumentMeta[i]->initial_url)));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
@@ -919,12 +919,8 @@ static void UpdateBrowserMenus (Document doc)
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
-#ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
-#ifdef _SVGLIB
       DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
       DocumentTypes[doc] == docImage)
     {
       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
@@ -934,16 +930,16 @@ static void UpdateBrowserMenus (Document doc)
       TtaSetItemOn (doc, 1, Views, BShowStructure);
       TtaSetItemOn (doc, 1, Views, BShowLinks);
       TtaSetItemOn (doc, 1, Views, BShowSource);
-#ifdef XML_GENERIC      
       if (DocumentTypes[doc] == docXml)
 	{
+#ifdef XML_GENERIC      
 	  TtaSetMenuOff (doc, 1, Annotations_);
 	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	  TtaSetItemOff (doc, 1, Views, TShowTargets);
 	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	  TtaSetItemOff (doc, 1, Views, BShowToC);
-	}
 #endif /* XML_GENERIC */
+	}
 
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
       TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -961,10 +957,10 @@ static void UpdateBrowserMenus (Document doc)
 
 #ifdef _SVG
       SwitchIconGraph (doc, 1, FALSE);
-#endif /* _SVG */
 #ifdef _SVGLIB
-	 SwitchIconLibrary (doc, 1, FALSE);
+      SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
+#endif /* _SVG */
       
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
@@ -1089,10 +1085,10 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
 #ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
-#endif /* _SVG */
 #ifdef _SVGLIB
-	 SwitchIconLibrary (doc, 1, TRUE);
+	  SwitchIconLibrary (doc, 1, TRUE);
 #endif /* _SVGLIB */
+#endif /* _SVG */
 	}
 
       TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
@@ -1516,7 +1512,8 @@ static void TextURL (Document doc, View view, char *text)
       if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
-	  TtaSetTextZone (doc, view, DocumentURLs[doc], URL_list);
+	  AddURLInCombobox (DocumentURLs[doc], FALSE);
+	  TtaSetTextZone (doc, view, URL_list);
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
@@ -1524,18 +1521,17 @@ static void TextURL (Document doc, View view, char *text)
 	}
 
       /* do the same thing as a callback form open document form */
+#ifdef IV
       if (change)
 	{
 	  /* change the text value */
-	  TtaSetTextZone (doc, view, url, URL_list);
+	  /*TtaSetTextZone (doc, view, url, URL_list);*/
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 	}
       else
+#endif
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
-
-      if (s)
-	TtaFreeMemory (s);
-
+      TtaFreeMemory (s);
       InNewWindow = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
@@ -2449,7 +2445,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   h = 300;
 	   w = 580;
 	 }
-#ifdef _SVGLIB
        else if (docType == docLibrary)
 	 {
 	   x += 500;
@@ -2457,7 +2452,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   h = 500;
 	   w = 400;
 	 }
-#endif /* _SVGLIB */
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
        x = x + (doc - 1) * 10;
@@ -2542,9 +2536,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	       if (InNewWindow == TRUE)
 		 {
 		   /* Initialize SVG Library Buffer string */
-		   string = InitSVGBufferForComboBox ();
 		   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-				   FALSE, OpenLibraryCallback, string);
+				   FALSE, OpenLibraryCallback, SVGlib_list);
 		 }
 #endif /* _SVGLIB */
 	       if (string)
@@ -2665,10 +2658,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVGLIB
 	   AddLibraryButton (doc, 1);
 #endif /* _SVGLIB */
-#endif /* _SVG */
 #ifdef _SVGANIM
 	   AddAnimButton (doc, 1);
 #endif /* _SVGANIM */
+#endif /* _SVG */
 	   if (docType == docAnnot)
 	     {
 	       /* turn off the menus that don't make sense in the annotation view */
@@ -2769,12 +2762,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 (ReadOnlyDocument[doc] &&
 	  (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage ||
 	   DocumentTypes[doc] == docSVG ||
-#ifdef XML_GENERIC      
 	   DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
-#ifdef _SVGLIB
 	   DocumentTypes[doc] == docLibrary ||
-#endif _SVGLIB
 	   DocumentTypes[doc] == docMath)))
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
@@ -2791,10 +2780,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 
 #ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
-#endif /* _SVG */
 #ifdef _SVGLIB
 	 SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
+#endif /* _SVG */
 	 if (ReadOnlyDocument[doc] || DocumentTypes[doc] != docMath)
 	   {
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
@@ -2849,12 +2838,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      else if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docImage ||
 	      DocumentTypes[doc] == docSVG ||
-#ifdef XML_GENERIC      
 	      DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
-#ifdef _SVGLIB
 	      DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
 	      DocumentTypes[doc] == docMath)
        {
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
@@ -3666,14 +3651,14 @@ static Document LoadDocument (Document doc, char *pathname,
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
-#ifdef _SVGLIB
 	  if (DocumentTypes[newdoc] == docLibrary)
 	    {
-	      s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
-	      TtaSetTextZone (newdoc, 1, s, NULL);
+#ifdef _SVGLIB
+	      SelectLibraryFromPath (DocumentURLs[newdoc]);
+	      TtaSetTextZone (newdoc, 1, SVGlib_list);
+#endif /* _SVGLIB */
 	    }
 	  else
-#endif /* _SVGLIB */
 	    {
 	      /* concatenate the URL and its form_data and then
 		 display it on the amaya URL box */
@@ -3681,14 +3666,15 @@ static Document LoadDocument (Document doc, char *pathname,
 	      if (form_data && method != CE_FORM_POST)
 		i += strlen (form_data);
 	      s = TtaGetMemory (i);
-
 	      if (form_data && method != CE_FORM_POST)
 		sprintf (s, "%s?%s", pathname, form_data);
 	      else
 		strcpy (s, pathname);
-	      TtaSetTextZone (newdoc, 1, s, URL_list);
+	      /* add the URI in the combobox string
+		 AddURLInCombobox (docname, FALSE);*/
+	      TtaSetTextZone (newdoc, 1, URL_list);
+	      TtaFreeMemory (s);
 	    }
-	  TtaFreeMemory (s);
 	}
 
       tempdir = TtaGetMemory (MAX_LENGTH);
@@ -4415,53 +4401,55 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 			       char *outputfile, AHTHeaders *http_headers,
 			       void * context)
 {
-   Element             elFound;
-   Document            doc;
-   Document            baseDoc;
-   Document            res;
-   GETHTMLDocument_context *ctx;
-   TTcbf              *cbf;
-   ClickEvent          method;
-   char               *tempfile;
-   char               *target;
-   char               *pathname;
-   char               *initial_url;
-   char               *documentname;
-   char               *form_data;
-   char               *s;
-   int                 i;
-   ThotBool	       history;
-   ThotBool            InNewWindow;
-   ThotBool            ok;
-   ThotBool            stopped_flag = FALSE;
-   ThotBool            local_link;
-   void               *ctx_cbf;
-   char               tempdocument[MAX_LENGTH];
+  Element             elFound;
+  Document            doc;
+  Document            res;
+  GETHTMLDocument_context *ctx;
+  TTcbf              *cbf;
+  ClickEvent         method;
+  void               *ctx_cbf;
+  char                tempdocument[MAX_LENGTH];
+  char               *tempfile;
+  char               *target;
+  char               *pathname;
+  char               *initial_url;
+  char               *documentname;
+  char               *form_data;
+  char               *s;
+  int                 i;
+  ThotBool            InNewWindow;
+  ThotBool            ok, keep;
+  ThotBool            stopped_flag = FALSE;
+  ThotBool            local_link;
 
-   /* restore GETHTMLDocument's context */  
-   ctx = (GETHTMLDocument_context *) context;
-
-   if (!ctx)
-     return;
-
-   baseDoc = ctx->baseDoc;
-   doc = ctx->doc;
-   history = ctx->history;
-   target = ctx->target;
-   documentname = ctx->documentname;
-   initial_url = ctx->initial_url;
-   form_data = ctx->form_data;
-   method = ctx->method;
-   cbf = ctx->cbf;
-   ctx_cbf = ctx->ctx_cbf;
-   local_link = ctx->local_link;
-   InNewWindow = ctx->InNewWindow;
-   ok = TRUE;
-   pathname = TtaGetMemory (MAX_LENGTH + 1);
-   strncpy (pathname, urlName, MAX_LENGTH);
-   pathname[MAX_LENGTH] = EOS;
-   tempfile = TtaGetMemory (MAX_LENGTH + 1);
-   if (outputfile != NULL)
+  /* restore GETHTMLDocument's context */  
+  ctx = (GETHTMLDocument_context *) context;
+  if (!ctx)
+    return;
+  doc = ctx->doc;
+  target = ctx->target;
+  documentname = ctx->documentname;
+  initial_url = ctx->initial_url;
+  form_data = ctx->form_data;
+  cbf = ctx->cbf;
+  ctx_cbf = ctx->ctx_cbf;
+  method = ctx->method;
+  local_link = ctx->local_link;
+  InNewWindow = ctx->InNewWindow;
+  ok = TRUE;
+  pathname = TtaGetMemory (MAX_LENGTH + 1);
+  strncpy (pathname, urlName, MAX_LENGTH);
+  pathname[MAX_LENGTH] = EOS;
+  tempfile = TtaGetMemory (MAX_LENGTH + 1);
+  if (method != CE_MAKEBOOK && method != CE_ANNOT &&
+      method != CE_LOG && method != CE_HELP &&
+      DocumentTypes[newdoc] != docLibrary)
+    {
+      /* add the URI in the combobox string */
+      keep = (method == CE_ABSOLUTE || method == CE_INIT);
+      AddURLInCombobox (pathname, keep);
+    }
+  if (outputfile != NULL)
      {
        strncpy (tempfile, outputfile, MAX_LENGTH);
        tempfile[MAX_LENGTH] = EOS;
@@ -4477,12 +4465,11 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	 {
 	   if (IsW3Path (pathname))
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
-	   
 	   /* parse and display the document */
 	   res = LoadDocument (newdoc, pathname, form_data, 
 			       initial_url, method,
 			       tempfile, documentname,
-			       http_headers, history, &InNewWindow);
+			       http_headers, ctx->history, &InNewWindow);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -4504,7 +4491,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 #ifdef ANNOTATIONS
 		   /* if it's an annotation, add the existing metadata */
 		   if (DocumentTypes[newdoc] == docAnnot)
-		     ANNOT_LoadAnnotation (baseDoc, newdoc);
+		     ANNOT_LoadAnnotation (ctx->baseDoc, newdoc);
 		   /* auto-load the annotations associated with the document */
 		   if (ANNOT_CanAnnotate (newdoc))
 		       ANNOT_AutoLoad (newdoc, 1);
@@ -4525,13 +4512,12 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	       if (DocumentTypes[newdoc] == docLibrary)
 		 {
 #ifdef _SVGLIB
-		 s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
-		 if (s)
-		   TtaSetTextZone (newdoc, 1, s, NULL);
+		   SelectLibraryFromPath (DocumentURLs[newdoc]);
+		   TtaSetTextZone (newdoc, 1, SVGlib_list);
 #endif /* _SVGLIB */
 		 }
 	       else
-		 TtaSetTextZone (newdoc, 1, s, URL_list);
+		 TtaSetTextZone (newdoc, 1, URL_list);
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
 		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
@@ -4596,18 +4582,18 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 }
 
 /*----------------------------------------------------------------------
-  GetAmayaDoc loads the document if it is not loaded yet and    
-  calls the parser if the document can be parsed.
+  GetAmayaDoc loads the document if it is not loaded yet and calls the
+  parser if the document can be parsed.
     - documentPath: can be relative or absolute address.
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
-    - CE_event: CE_FORM_POST for a post request, CE_RELATIVE for a double 
+    - method: CE_FORM_POST for a post request, CE_RELATIVE for a double 
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 Document GetAmayaDoc (char *documentPath, char *form_data,
-		      Document doc, Document baseDoc, ClickEvent CE_event,
+		      Document doc, Document baseDoc, ClickEvent method,
 		      ThotBool history, TTcbf *cbf, void *ctx_cbf,
 		      CHARSET charset)
 {
@@ -4648,8 +4634,8 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
    /* Add the  base content if necessary */
-   if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
-       CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
+   if (method == CE_RELATIVE || method == CE_FORM_GET ||
+       method == CE_FORM_POST || method == CE_MAKEBOOK)
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
@@ -4670,7 +4656,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    else if (IsLibraryName (documentname))
      docType = docLibrary;
 #endif /* _SVGLIB */
-   else if (CE_event == CE_CSS)
+   else if (method == CE_CSS)
      docType = docCSS;
    else
      docType = docHTML;
@@ -4683,9 +4669,9 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	    of normalizeFile, as the function doesn't allocate
 	    memory dynamically (note: this can generate some MAX_LENGTH
 	    problems) */
-	 if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
-	     CE_event == CE_ANNOT || CE_event == CE_FORM_POST ||
-	     CE_event == CE_MAKEBOOK)
+	 if (method == CE_RELATIVE || method == CE_FORM_GET ||
+	     method == CE_ANNOT || method == CE_FORM_POST ||
+	     method == CE_MAKEBOOK)
 	   /* we're following a link, so do all the convertions on
 	      the URL */
 	   NormalizeFile (pathname, tempfile, AM_CONV_ALL);
@@ -4696,7 +4682,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
        }
 
    /* check if the user is already browsing the document in another window */
-   if (CE_event == CE_FORM_GET)
+   if (method == CE_FORM_GET)
      {
        newdoc = IsDocumentLoaded (pathname, form_data);
        /* we don't concatenate the new parameters as we give preference
@@ -4712,7 +4698,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 }
        /* if it's a POST form, we search the document using the
 	  form_data */
-       if (CE_event == CE_FORM_POST)
+       if (method == CE_FORM_POST)
 	 newdoc = IsDocumentLoaded (pathname, form_data);
        else
 	 newdoc = IsDocumentLoaded (pathname, NULL);
@@ -4754,7 +4740,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
      ctx->form_data = TtaStrdup (form_data);
    else
      ctx->form_data = NULL;
-   ctx->method = CE_event;
+   ctx->method = method;
    ctx->cbf = cbf;
    ctx->ctx_cbf = ctx_cbf;
    ctx->local_link = 0;
@@ -4764,19 +4750,19 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    if (newdoc == 0)
      {
        /* document not loaded yet */
-       if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
-	    CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK ||
-	    CE_event == CE_ANNOT) &&
+       if ((method == CE_RELATIVE || method == CE_FORM_GET ||
+	    method == CE_FORM_POST || method == CE_MAKEBOOK ||
+	    method == CE_ANNOT) &&
 	    !IsW3Path (pathname) && !TtaFileExist (pathname))
 	 {
 	   /* the target document doesn't exist */
 	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	   ok = FALSE; /* do not continue */
 	 }
-       else if (CE_event == CE_LOG)
+       else if (method == CE_LOG)
 	   /* need to create a new window for the document */
 	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE, L_Other);
-       else if (CE_event == CE_HELP)
+       else if (method == CE_HELP)
 	 {
 	   /* need to create a new window for the document */
 	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE, L_Other);
@@ -4789,7 +4775,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	     }
 	 }
 #ifdef ANNOTATIONS
-       else if (CE_event == CE_ANNOT)
+       else if (method == CE_ANNOT)
 	 {
 	   /* need to create a new window for the document */
 	   newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE, L_Other);
@@ -4803,7 +4789,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	     /* In case of initial document, open the view before loading */
 	     newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
 	   /* now the new window is open */
-	   if (CE_event == CE_RELATIVE || CE_event == CE_ABSOLUTE)
+	   if (method == CE_RELATIVE || method == CE_ABSOLUTE)
 	     /* don't free the current loaded document */
 	     ctx->method = CE_INIT;
 	 }
@@ -4811,7 +4797,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 {
 	   newdoc = doc;
 	   /* stop current transfer for previous document */
-	   if (CE_event != CE_MAKEBOOK)
+	   if (method != CE_MAKEBOOK)
 	     StopTransfer (baseDoc, 1);
 	   else
 	     /* temporary docs to make a book are not in ReadOnly mode */
@@ -4829,9 +4815,9 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	   /* set up the transfer mode */
 	   mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
 
-	   if (CE_event == CE_FORM_POST)
+	   if (method == CE_FORM_POST)
 	     mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
-	   else if (CE_event == CE_MAKEBOOK)
+	   else if (method == CE_MAKEBOOK)
 	     mode = AMAYA_ASYNC;
 
 	   if (IsW3Path (pathname))
@@ -4840,7 +4826,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		if there are no side effects, I'll remove this bit of code 
 	       */
 #if 0
-	       if (CE_event != CE_FORM_POST
+	       if (method != CE_FORM_POST
 		   && !strcmp (documentname, "noname.html"))
 		 {
 		   slash = strlen (pathname);
@@ -5134,7 +5120,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			    DocumentName);
 	      /* update the list of URLs */
-	      AddURLInCombobox (LastURLName);
 	      if (NewFile)
 		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	      /* load an URL */ 
@@ -5153,7 +5138,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      strcat (tempfile, DIR_STR);
 	      strcat (tempfile, DocumentName);
 	      /* update the list of URLs */
-	      AddURLInCombobox (tempfile);
 	      if (FileExistTarget (tempfile))
 		{
 		  if (InNewWindow)
@@ -5191,7 +5175,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	    {
 	      CompleteUrl (&DocumentName);  
 	      /* update the list of URLs */
-	      AddURLInCombobox (DocumentName);
 	      if (InNewWindow)
 		GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
 			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
@@ -6077,7 +6060,9 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  DocumentURLs[newdoc] = TtaGetMemory (len);
 	  strcpy (DocumentURLs[newdoc], docname);
 	  DocumentSource[newdoc] = 0;
-	  TtaSetTextZone (newdoc, 1, docname, URL_list);
+	  /* add the URI in the combobox string */
+	  AddURLInCombobox (docname, FALSE);
+	  TtaSetTextZone (newdoc, 1, URL_list);
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
 	}
@@ -6427,17 +6412,10 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _GTK
    iconPlugin = (ThotIcon) TtaCreatePixmapLogo (Plugin_xpm);
 #else /*_GTK*/
- iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
+   iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
 #endif /*_GTK*/
 #endif /* AMAYA_PLUGIN */
 #endif /* !_WINDOWS */
-   InitMathML ();
-#ifdef _SVG
-   InitSVG ();
-#endif /* _SVG */
-#ifdef _SVGANIM
-   InitSVGAnim ();
-#endif /* _SVGANIM */
 
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
@@ -6593,10 +6571,21 @@ void InitAmaya (NotifyEvent * event)
 	     TtaGetEnvString ("THOTDIR"));
 #endif /* _WINDOWS */
 
+
+   InitMathML ();
+#ifdef _SVG
+   InitSVG ();
+#endif /* _SVG */
+#ifdef _SVGANIM
+   InitSVGAnim ();
+#endif /* _SVGANIM */
+#ifdef _SVGLIB
+  InitSVGLibraryManagerStructure ();
+#endif /* _SVGLIB */
 /* MKP: disable "Cooperation" menu if DAV is not defined or
  *      initialize davlib module otherwise */
 #ifdef DAV
-   InitDAV();
+   InitDAV ();
 #endif /* DAV */
 #ifdef _SVGLIB
    InitLibrary();
@@ -6618,7 +6607,7 @@ void InitAmaya (NotifyEvent * event)
    if (s == NULL || s[0] == EOS)
      /* no argument: display the Home Page */
      s = TtaGetEnvString ("HOME_PAGE");
-   if (s == NULL || s[0] == EOS)
+   if (URL_list && (s == NULL || s[0] == EOS))
      {
        /* no argument and no Home: display the previous open URI */
        for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
@@ -7334,10 +7323,10 @@ void AmayaClose (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-  AddURLInCombobox
-  Updates the URLs string for combobox
+  AddURLInCombobox adds the new URL in the string for combobox
+  Store that URL inot the file only if keep is TRUE.
   ----------------------------------------------------------------------*/
-void AddURLInCombobox (char *url)
+void AddURLInCombobox (char *url, ThotBool keep)
 {
   char     *urlstring, *app_home, *ptr;
   FILE     *file;
@@ -7350,8 +7339,6 @@ void AddURLInCombobox (char *url)
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
   sprintf (urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
-  file = TtaWriteOpen (urlstring);
-  *urlstring = EOS;
   /* keep the previous list */
   ptr = URL_list;
   /* create a new list */
@@ -7361,22 +7348,28 @@ void AddURLInCombobox (char *url)
   nb = 1;
   URL_list_len = URL_list_len + len + 1;
   URL_list = TtaGetMemory (URL_list_len);  
-  if (file)
+  if (keep)
+    file = TtaWriteOpen (urlstring);
+  *urlstring = EOS;
+  if (!keep || file)
     {
       /* put the new url */
       strcpy (URL_list, url);
-      fprintf (file, "\"%s\"\n", url);
-      if (*ptr != EOS)
+      if (keep)
+	fprintf (file, "\"%s\"\n", url);
+      if (ptr && *ptr != EOS)
 	{
 	  /* now write other urls */
 	  while (ptr[i] != EOS && nb < MAX_URL_list)
 	    {
 	      end = strlen (&ptr[i]) + 1;
-	      if (end != len || strncmp (url, &ptr[i], len))
+	      if ((URL_list_keep || i != 0) &&
+		  (end != len || strncmp (url, &ptr[i], len)))
 		{
 		  /* add the newline between two urls */
 		  strcpy (&URL_list[j], &ptr[i]);
-		  fprintf (file, "\"%s\"\n", &ptr[i]);
+		  if (keep)
+		    fprintf (file, "\"%s\"\n", &ptr[i]);
 		  j += end;
 		  nb++;
 		}
@@ -7384,7 +7377,9 @@ void AddURLInCombobox (char *url)
 	    }
 	}
       URL_list[j] = EOS;
-      TtaWriteClose (file);
+      URL_list_keep = keep;
+      if (keep)
+	TtaWriteClose (file);
     }
   TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);

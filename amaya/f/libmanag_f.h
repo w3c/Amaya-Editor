@@ -23,16 +23,12 @@ extern void AddGraphicalObjectIntoCatalogue ( Document doc,
 extern Document CreateNewLibraryFile ( char *libUrl,
                                        char *libtitle );
 extern char *GetLibraryFileTitle ( char *url );
-extern void AddLibraryDataIntoStructure ( ThotBool persLib,
-                                          char *url,
-                                          char *title );
 extern char *CreateUniqueLibraryTitle ( char *title );
 extern ThotBool IsLibraryTitleExist ( char *title );
 extern ThotBool SearchURIinCurrentSVGLibraryList ( char *URI );
 extern void SVGLIB_FreeDocumentResource ( void );
-extern char *GetLibraryTitleFromPath ( char *path );
 extern char *GetLibraryPathFromTitle ( char *title );
-extern char *InitSVGBufferForComboBox ( void );
+extern void SelectLibraryFromPath ( char *path );
 extern void InitSVGLibraryManagerStructure ( void );
 extern ThotBool IsLibraryName ( const char *path );
 extern void OpenCatalogue ( Document doc,
@@ -110,16 +106,12 @@ extern void AddGraphicalObjectIntoCatalogue (/* Document doc,
 extern Document CreateNewLibraryFile (/* char *libUrl,
                                          char *libtitle */);
 extern char *GetLibraryFileTitle (/* char *url */);
-extern void AddLibraryDataIntoStructure (/* ThotBool persLib,
-                                            char *url,
-                                            char *title */);
 extern char *CreateUniqueLibraryTitle (/* char *title */);
 extern ThotBool IsLibraryTitleExist (/* char *title */);
 extern ThotBool SearchURIinCurrentSVGLibraryList (/* char *URI */);
 extern void SVGLIB_FreeDocumentResource (/* void */);
-extern char *GetLibraryTitleFromPath (/* char *path */);
 extern char *GetLibraryPathFromTitle (/* char *title */);
-extern char *InitSVGBufferForComboBox (/* void */);
+extern void SelectLibraryFromPath (/* char *path */);
 extern void InitSVGLibraryManagerStructure (/* void */);
 extern ThotBool IsLibraryName (/* const char *path */);
 extern void OpenCatalogue (/* Document doc,

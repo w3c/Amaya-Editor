@@ -2745,25 +2745,6 @@ gboolean FocusOutCallbackGTK (GtkWidget *widget, GdkEventFocus *event,
 
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
-gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
-			   gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
-gboolean LeaveCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
-			   gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
-  return FALSE;
-}
-
-
-/*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
 gboolean ButtonPressCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 				 gpointer user_data)
 {
