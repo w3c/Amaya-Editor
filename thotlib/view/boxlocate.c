@@ -194,6 +194,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   int                 nSpaces;
   int                 index, pos;
   int                 xOrg, yOrg;
+  int                 width, height;
   int                 doc, view;
   int                 firstC;
   ThotBool            extend, ok, left = FALSE;
@@ -232,16 +233,24 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	    }
 	  if (pBox)
 	    {
+#ifndef _GL
+	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		pBox->BxLPadding;
+	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		pBox->BxTPadding;
+	      width = pBox->BxWidth;
+	      height = pBox->BxHeight;
+#else /* _GL */
+	      xOrg =  pBox->BxClipX;
+	      yOrg =  pBox->BxClipY;
+	      width = pBox->BxClipW;
+	      height = pBox->BxClipH;
+#endif /* _GL */
 	      pAb = pBox->BxAbstractBox;
 	      if (pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 		{
-#ifndef _GL
-		  pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
-		    - pBox->BxLPadding;
-#else /* _GL */
-		  pos = x - pBox->BxClipX;
-#endif /* _GL */
+		  pos = x - xOrg;
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &nChars, &nSpaces);
 		  nChars = pBox->BxFirstChar + nChars;
@@ -276,8 +285,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		}
 	    }
 	  else
-	    pAb = NULL;
-
+	    {
+	      pAb = NULL;
+	      xOrg =  0;
+	      yOrg =  0;
+	      width = 0;
+	      height = 0;
+	    }
+#
 	  /*CloseInsertion ();*/
 	  FrameToView (frame, &doc, &view);
 	  if (pAb)
@@ -321,19 +336,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    /* the application asks Thot to do nothing */
 		    return;
 		  /* check if the curseur is within the box */
-#ifndef _GL
-		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		    pBox->BxLPadding;
-		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		    pBox->BxTPadding;
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		      y >= yOrg && y <= yOrg + pBox->BxH)
-#else /* _GL */
-		  xOrg =  pBox->BxClipX;
-		  yOrg =  pBox->BxClipY;
-		  if (x >= xOrg && x <= xOrg + pBox->BxClipW &&
-		      y >= yOrg && y <= yOrg + pBox->BxClipH)
-#endif /* _GL */
+		  if (x >= xOrg && x <= xOrg + width &&
+		      y >= yOrg && y <= yOrg + height)
 		    {		      
 		      /* send event TteElemClick.Pre to the application */
 		      el = pAb->AbElement;
@@ -346,17 +350,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  break;
 		case 5:
 		  /* check if the curseur is within the box */
-#ifndef _GL
-		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		    pBox->BxLPadding;
-		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		    pBox->BxTPadding;
-#else /* _GL */
-		  xOrg =  pBox->BxClipX;
-		  yOrg =  pBox->BxClipY;
-#endif /* _GL */
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		      y >= yOrg && y <= yOrg + pBox->BxH)
+		  if (x >= xOrg && x <= xOrg + width &&
+		      y >= yOrg && y <= yOrg + height)
 		    {
 		      /* send event TteElemMClick.Pre to the application */
 		      el = pAb->AbElement;
@@ -366,24 +361,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    }
 		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
 		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
-		  else if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		      y >= yOrg && y <= yOrg + pBox->BxH)
+		  else if (x >= xOrg && x <= xOrg + width &&
+		      y >= yOrg && y <= yOrg + height)
 		    /* send event TteElemMClick.Post to the application */
 		    NotifyClick (TteElemMClick, FALSE, el, doc);
 		  break;
 		case 6:
 		  /* check if the curseur is within the box */
-#ifndef _GL
-		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		    pBox->BxLPadding;
-		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		    pBox->BxTPadding;
-#else /* _GL */
-		  xOrg =  pBox->BxClipX;
-		  yOrg =  pBox->BxClipY;
-#endif /* _GL */
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		      y >= yOrg && y <= yOrg + pBox->BxH)
+		  if (x >= xOrg && x <= xOrg + width &&
+		      y >= yOrg && y <= yOrg + height)
 		    {
 		      /* send event TteElemRClick.Pre to the application */
 		      el = pAb->AbElement;
