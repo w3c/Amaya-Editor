@@ -31,6 +31,8 @@ extern void ANNOT_AutoLoad ( Document doc,
                              View view );
 extern void ANNOT_Load ( Document doc,
                          View view );
+extern void ANNOT_Reload ( Document doc,
+                           View view );
 extern void ANNOT_Create ( Document doc,
                            View view,
                            AnnotMode mode );
@@ -96,6 +98,8 @@ extern void ANNOT_AutoLoad (/* Document doc,
                                View view */);
 extern void ANNOT_Load (/* Document doc,
                            View view */);
+extern void ANNOT_Reload (/* Document doc,
+                             View view */);
 extern void ANNOT_Create (/* Document doc,
                              View view,
                              AnnotMode mode */);

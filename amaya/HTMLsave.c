@@ -1842,6 +1842,10 @@ void Synchronize (Document doc, View view)
        /* reapply the CSS to relative documents */
        UpdateStyleSheet (DocumentURLs[doc], tempdoc);
      }
+
+   if (DocumentTypes[otherDoc] != docSource)
+     ANNOT_Reload (otherDoc, 1);
+
    /* restore original display mode */
    TtaSetDisplayMode (doc, dispMode);
 

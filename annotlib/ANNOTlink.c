@@ -987,6 +987,61 @@ void LINK_DelMetaFromMemory (Document doc)
 }
 
 /*-----------------------------------------------------------------------
+   LINK_ReloadAnnotationIndex
+   -----------------------------------------------------------------------
+   Redisplays an already loaded annotation index.
+  -----------------------------------------------------------------------*/
+void LINK_ReloadAnnotationIndex (Document doc, View view)
+{
+  Element body;
+  List *annot_list, *list_ptr;
+  AnnotMeta *annot;
+  DisplayMode dispMode;
+  /* counts the number of orphan annotations in the document */
+  int orphan_count = 0;
+
+  annot_list = AnnotMetaData[doc].annotations;
+
+  if (!annot_list)
+    /* there are no annotations */
+    return;
+
+  /* avoid refreshing the document while adding the annotation links */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  /* Insert the annotations in the body */
+  view = TtaGetViewFromName (doc, "Formatted_view");
+  body = SearchElementInDoc (doc, HTML_EL_BODY);
+  
+  list_ptr = annot_list;
+  
+  while (list_ptr)
+    {
+      annot = (AnnotMeta *) list_ptr->object;
+      
+      if (annot->is_visible)
+	{
+	  if (! LINK_AddLinkToSource (doc, annot))
+	  annot->show = TRUE;
+	}
+      list_ptr = list_ptr->next;
+    }
+
+  /* show the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+
+  if (orphan_count)
+    {
+      /* warn the user there were some orphan annotations */
+      InitInfo ("Annotation load", 
+		"There were some orphan annotations. You may See them with the Links view.");
+    }
+}
+
+/*-----------------------------------------------------------------------
    LINK_LoadAnnotationIndex
    -----------------------------------------------------------------------
    Searches for an annotation index related to the document. If it exists,

@@ -777,6 +777,15 @@ void ANNOT_Load (Document doc, View view)
 }
 
 /*-----------------------------------------------------------------------
+  ANNOT_Reload
+  Redisplays in the source document an already downloaded annotation index
+  -----------------------------------------------------------------------*/
+void ANNOT_Reload (Document doc, View view)
+{
+  LINK_ReloadAnnotationIndex (doc, view);
+}
+
+/*-----------------------------------------------------------------------
   ANNOT_Create
   Creates an annotation on the selected text. If there's no selected
   text, it doesn't do anything.

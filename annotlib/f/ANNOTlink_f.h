@@ -28,6 +28,8 @@ extern AnnotMeta *LINK_CreateMeta ( Document source_doc,
                                     Document annot_doc,
                                     AnnotMode mode );
 extern void LINK_DelMetaFromMemory ( Document doc );
+extern void LINK_ReloadAnnotationIndex ( Document doc,
+                                         View view );
 extern void LINK_LoadAnnotationIndex ( Document doc,
                                        char *annotIndex,
                                        ThotBool mark_visible );
@@ -59,6 +61,8 @@ extern AnnotMeta *LINK_CreateMeta (/* Document source_doc,
                                       Document annot_doc,
                                       AnnotMode mode */);
 extern void LINK_DelMetaFromMemory (/* Document doc */);
+extern void LINK_ReloadAnnotationIndex (/* Document doc,
+                                           View view */);
 extern void LINK_LoadAnnotationIndex (/* Document doc,
                                          char *annotIndex,
                                          ThotBool mark_visible */);
