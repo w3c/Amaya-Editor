@@ -1119,7 +1119,7 @@ Element             el;
 	AttrHREFdocument = doc;
 	/* Dialogue form to insert HREF name */
 #       ifndef _WINDOWS 
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 #       endif /* !__WINDOWS */
