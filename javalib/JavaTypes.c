@@ -480,6 +480,15 @@ void Javalong2CPixmap(jlong in, Pixmap *out)
     *out = (Pixmap) JavaLong2CPtr(in);
 }
 
+void CThotIcon2Javalong(ThotIcon in, jlong *out)
+{
+    *out = CPtr2JavaLong((void *) in);
+}
+void Javalong2CThotIcon(jlong in, ThotIcon *out)
+{
+    *out = (ThotIcon) JavaLong2CPtr(in);
+}
+
 void CElement2Javalong(Element in, jlong *out)
 {
     *out = CPtr2JavaLong(in);
