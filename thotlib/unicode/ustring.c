@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include "thot_sys.h"
-#include "ustring.h"
 
 #ifdef _I18N_
 /*-------------------------------------------------------------

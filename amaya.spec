@@ -1,5 +1,5 @@
 #
-# spec file for package amaya (Version 1.3)
+# spec file for package amaya (Version 2.0)
 # 
 # Copyright  (c)  1998  S.u.S.E. GmbH  Fuerth, Germany.
 #
@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 1.3b
+%define version 2.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -39,12 +39,14 @@ Authors:
     Vincent.Quint@w3.org,Daniel.Veillard@w3.org
 
 %changelog
+* Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
+- Updated for amaya-2.1
 * Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
 - took the spec file coming from SuSE-1.3 and updated it for RedHat,
   description, license, and version 1.3b
 
 %prep
-%setup -n Thot
+%setup -n Amaya
 %patch
 %build
 export CFLAGS=-O2

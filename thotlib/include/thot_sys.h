@@ -21,15 +21,6 @@
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
-#include "ustring.h"
-#include "uconvert.h"
-#include "uio.h"
-
-#define EOS     '\0'
-#define EOL     '\n'
-#define TAB     '\t'
-#define SPACE    ' '
-
 #include <setjmp.h>
 #include <signal.h>
 #include <math.h>
@@ -51,6 +42,16 @@
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 /**********************************************************/
 #include "sysdep.h"
+
+#include "ustring.h"
+#include "uconvert.h"
+#include "thot_uio.h"
+
+#define EOS     '\0'
+#define EOL     '\n'
+#define TAB     '\t'
+#define SPACE    ' '
+
 
 /* If const does work, or hasn't been redefined before */
 #ifndef CONST

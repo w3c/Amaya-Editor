@@ -17,7 +17,6 @@
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
 
-
 #ifdef _WINDOWS
 /****************************************************************
  *								*

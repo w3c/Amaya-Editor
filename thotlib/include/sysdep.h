@@ -1002,8 +1002,10 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 #define strrchr rindex
 #endif
 #if !defined(HAVE_MEMCPY) && !defined(WWW_MSWINDOWS)
+#if !defined __GNUC__ || __GNUC__ < 2
 #define memcpy(d, s, n) bcopy((s), (d), (n))
 #define memmove(d, s, n) bcopy((s), (d), (n))
+#endif
 #endif
 
 /* Standard headers */
