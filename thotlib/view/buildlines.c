@@ -2457,29 +2457,32 @@ static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
 /*----------------------------------------------------------------------
   InitFloats looks for previous floating boxes.
   ----------------------------------------------------------------------*/
-void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL, PtrBox *floatR)
+static void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL,
+			PtrBox *floatR, int top, ThotBool yAbs)
 {
   PtrFloat            pfloat;
   int                 y;
 
   if (pLine)
-    y = pLine->LiYOrg;
+    y = pLine->LiYOrg + top;
   else
     y = 0;
+  if (yAbs)
+    y += pBlock->BxYOrg;
   pfloat = pBlock->BxLeftFloat;
+  *floatL = NULL;
   while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
-    pfloat = pfloat->FlNext;
-  if (pfloat)
-    *floatL = pfloat->FlBox;
-  else
-    *floatL = NULL;
+    {
+      *floatL = pfloat->FlBox;
+      pfloat = pfloat->FlNext;
+    }
   pfloat = pBlock->BxRightFloat;
+  *floatR = NULL;
   while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
-    pfloat = pfloat->FlNext;
-  if (pfloat)
-    *floatR = pfloat->FlBox;
-  else
-    *floatR = NULL;
+    {
+      *floatR = pfloat->FlBox;
+      pfloat = pfloat->FlNext;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3048,7 +3051,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      GetLine (&pLine);
 	      prevLine->LiNext = pLine;
 	      /* look for previous floating boxes */
-	      InitFloats (pBox, pLine, &floatL, &floatR);
+	      InitFloats (pBox, prevLine, &floatL, &floatR, top, yAbs);
 	    }
 	}
 
