@@ -179,30 +179,33 @@ PictInfo           *imageDesc;
 {
   int        i;
 
-   if (imageDesc->PicPixmap != None)
+   if (imageDesc)
      {
-#      ifndef _WINDOWS
-       FreePixmap (imageDesc->PicMask);
-       imageDesc->PicMask = None;
-#      endif /* _WINDOWS */
-       FreePixmap (imageDesc->PicPixmap);
-       imageDesc->PicPixmap = None;
-       imageDesc->PicXArea = 0;
-       imageDesc->PicYArea = 0;
-       imageDesc->PicWArea = 0;
-       imageDesc->PicHArea = 0;
-       imageDesc->PicWidth = 0;
-       imageDesc->PicHeight = 0;
-       if (imageDesc->PicColors != NULL)
-	 for (i = 0; i < imageDesc->PicNbColors; i++)
-	   TtaFreeThotColor (imageDesc->PicColors[i]);
-       TtaFreeMemory (imageDesc->PicColors);
-       imageDesc->PicColors = NULL;
-     }
+       if (imageDesc->PicPixmap != None)
+	 {
+#          ifndef _WINDOWS
+	   FreePixmap (imageDesc->PicMask);
+	   imageDesc->PicMask = None;
+#          endif /* _WINDOWS */
+	   FreePixmap (imageDesc->PicPixmap);
+	   imageDesc->PicPixmap = None;
+	   imageDesc->PicXArea = 0;
+	   imageDesc->PicYArea = 0;
+	   imageDesc->PicWArea = 0;
+	   imageDesc->PicHArea = 0;
+	   imageDesc->PicWidth = 0;
+	   imageDesc->PicHeight = 0;
+	   if (imageDesc->PicColors != NULL)
+	     for (i = 0; i < imageDesc->PicNbColors; i++)
+	       TtaFreeThotColor (imageDesc->PicColors[i]);
+	   TtaFreeMemory (imageDesc->PicColors);
+	   imageDesc->PicColors = NULL;
+	 }
 
-     if ((imageDesc->PicType >= InlineHandlers) &&
-	 (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
-       (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
+       if ((imageDesc->PicType >= InlineHandlers) &&
+	   (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
+	 (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
+     }
 }
 
 
