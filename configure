@@ -6713,9 +6713,17 @@ fi
 
 if test "$with_dav" = "yes" ; then
    DAV_OPTIONS=-DDAV
+   DAVDIR="davlib"
+   LIBDAV="libwwwdav"
+   WITHDAV="--with-dav" 
+   WWWDAV="-lwwwdav" 
 else
    with_dav="no"
    DAV_OPTIONS=""
+   DAVDIR=""
+   LIBDAV=""
+   WITHDAV="" 
+   WWWDAV="" 
 fi
 
 
@@ -6765,6 +6773,10 @@ if test "$build_amaya" = "yes" ; then
 	    echo "configure: warning: WebDAV makefile not found !!" 1>&2
 	    echo "configure: warning: Disabling WebDAV build !" 1>&2
 	    with_dav="no"
+            DAVDIR=""
+            LIBDAV=""
+            WITHDAV="" 
+            WWWDAV="" 
 	fi
     fi
    
@@ -6800,6 +6812,11 @@ APIINCLUDES=-I${API}
 if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
+
+
+
+
+
 
 
 
@@ -7092,6 +7109,10 @@ s%@PLUGIN_OPTIONS@%$PLUGIN_OPTIONS%g
 s%@AMAYA_ANNOT_OPTIONS@%$AMAYA_ANNOT_OPTIONS%g
 s%@IMGLIBS@%$IMGLIBS%g
 s%@EXTRA_LIBS@%$EXTRA_LIBS%g
+s%@DAVDIR@%$DAVDIR%g
+s%@LIBDAV@%$LIBDAV%g
+s%@WITHDAV@%$WITHDAV%g
+s%@WWWDAV@%$WWWDAV%g
 /@plugin_frag@/r $plugin_frag
 s%@plugin_frag@%%g
 /@www_frag@/r $www_frag

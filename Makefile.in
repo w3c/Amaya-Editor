@@ -16,7 +16,7 @@ LIBPNG	= libpng
 LIBZ	= libz
 
 #MKP: adding davlib
-SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot davlib
+SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
 EXTRA_SUBDIRS= misc pluginlib
 
 prefix = @prefix@
@@ -28,12 +28,7 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-
-ifeq ($(GL_INCLUDES), )
 default : tools thotlib tablelib batch amaya_prog print_prog
-else
-default : tools thotlib tablelib batch amaya_prog
-endif
 
 amaya : tools thotlib tablelib amaya_prog
 
@@ -174,7 +169,8 @@ AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwutils \
 	libwwwftp \
 	libwwwxml \
-	libwwwzip
+	libwwwzip \
+        @LIBDAV@
 
 libwww_config : force
 	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; then \
@@ -188,8 +184,8 @@ libwww_config : force
 	  cd $(LIBWWW) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f wwwconf.h ] ; then \
 	  	$$libwwwdir/configure \
-			--with-dav \
 			--disable-shared \
+			@WITHDAV@ \
 			--with-zlib="$$localdir/libz.a"; \
 		$(ECHO) "libwww is configured" ; \
 	  fi)

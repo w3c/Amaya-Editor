@@ -769,9 +769,17 @@ fi
 
 if test "$with_dav" = "yes" ; then
    DAV_OPTIONS=-DDAV
+   DAVDIR="davlib"
+   LIBDAV="libwwwdav"
+   WITHDAV="--with-dav" 
+   WWWDAV="-lwwwdav" 
 else
    with_dav="no"
    DAV_OPTIONS=""
+   DAVDIR=""
+   LIBDAV=""
+   WITHDAV="" 
+   WWWDAV="" 
 fi
 
 
@@ -827,6 +835,10 @@ dnl  fi
 	    AC_MSG_WARN(WebDAV makefile not found !!)
 	    AC_MSG_WARN(Disabling WebDAV build !)
 	    with_dav="no"
+            DAVDIR=""
+            LIBDAV=""
+            WITHDAV="" 
+            WWWDAV="" 
 	fi
     fi
    
@@ -891,6 +903,11 @@ AC_SUBST(PLUGIN_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_OPTIONS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_LIBS)
+
+AC_SUBST(DAVDIR)
+AC_SUBST(LIBDAV)
+AC_SUBST(WITHDAV)
+AC_SUBST(WWWDAV)
 
 dnl
 dnl Include the option Makefile.xxx fragment according to the configure options

@@ -6,6 +6,7 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
+WWWDAV = @WWWDAV@
 
 include ../Options
 
@@ -235,7 +236,7 @@ AMAYA_OBJ = \
 	Xmlbuilder.o \
 	XHTMLbuilder.o \
 	XPointer.o \
-	XPointerparse.o 	
+	XPointerparse.o 
 
 # Specific schema dependencies
 HTMLtable.o : $(MATH_SCHEMAS)
