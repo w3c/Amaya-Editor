@@ -358,7 +358,8 @@ ThotBool         AttrPathDataDelete (NotifyAttribute * event)
  TranslatePointsAttribute
  update attribute "points" for element el according its content
  -----------------------------------------------------------------------*/
-static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeUnit unit, ThotBool horiz)
+static void TranslatePointsAttribute (Element el, Document doc, int delta,
+				      TypeUnit unit, ThotBool horiz)
 {
   Element		child;
   ElementType		elType;
@@ -813,7 +814,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
   graphRoot = TtaGetTypedAncestor (el, elType);
   while (graphRoot)
     {
-      /* check first the position of the new element */
+      /* check first the position of the new element in pixel value */
       TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &y);
       /* get the unit of the SVG width */
       rule = TtaGetPRule (graphRoot, PRWidth);
@@ -822,7 +823,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
       else
 	unit = UnPixel;
       dh = dw = 0;
-      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &dummy);
+      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &dummy);
       elType = TtaGetElementType (el);
       if (x < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
@@ -834,7 +835,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, unit, TRUE);
+		TranslatePointsAttribute (el, doc, val, UnPixel, TRUE);
 	      else
 		{
 		  if (elType.ElTypeNum == GraphML_EL_circle ||
@@ -850,23 +851,26 @@ void             CheckGraphMLRoot (Document doc, Element el)
 		  else if (elType.ElTypeNum == GraphML_EL_line_)
 		    {
 		      attrType.AttrTypeNum = GraphML_ATTR_x1;
+		      /************** convert to the right value */
 		      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_x2;
 		    }
 		  else
 		    attrType.AttrTypeNum = 0;
 		  if (attrType.AttrTypeNum != 0)
+		    /************** convert to the right value */
 		    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		}
 	      /* check if the SVG width includes that element */
-	      TtaGiveBoxPosition (child, doc, 1, unit, &x, &dummy);
-	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
-	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	      TtaGiveBoxPosition (child, doc, 1, UnPixel, &x, &dummy);
+	      TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
+	      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &hR);
 	      dw = w + x - wR;
 	      if (dw > 0)
 		{
 		  /* increase the width of the SVG element */
 		  attrType.AttrTypeNum = GraphML_ATTR_width_;
+		  /************** convert to the right value */
 		  UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
 		}
 	      /* next element */
@@ -876,13 +880,14 @@ void             CheckGraphMLRoot (Document doc, Element el)
       else if ( elType.ElTypeNum != GraphML_EL_line_)
 	{
 	  /* check if the SVG width includes that element */
-	  TtaGiveBoxPosition (el, doc, 1, unit, &x, &dummy);
-	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+	  TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &dummy);
+	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
 	  dw = w + x - wR;
 	  if (dw > 0)
 	    {
 	      /* increase the width of the SVG element */
 	      attrType.AttrTypeNum = GraphML_ATTR_width_;
+	      /************** convert to the right value */
 	      UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
 	    }
 	}
@@ -892,7 +897,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      TtaGiveBoxSize (graphRoot, doc, 1, unit, &dummy, &hR);
+      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &dummy, &hR);
       elType = TtaGetElementType (el);
       if (y < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
@@ -904,7 +909,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
-		TranslatePointsAttribute (el, doc, val, unit, FALSE);
+		TranslatePointsAttribute (el, doc, val, UnPixel, FALSE);
 	      else
 		{
 		  if (elType.ElTypeNum == GraphML_EL_circle ||
@@ -920,23 +925,26 @@ void             CheckGraphMLRoot (Document doc, Element el)
 		  else if (elType.ElTypeNum == GraphML_EL_line_)
 		    {
 		      attrType.AttrTypeNum = GraphML_ATTR_y1;
+		      /************** convert to the right value */
 		      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_y2;
 		    }
 		  else
 		    attrType.AttrTypeNum = 0;
 		  if (attrType.AttrTypeNum != 0)
+		    /************** convert to the right value */
 		    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		}
 	      /* check if the SVG height includes that element */
-	      TtaGiveBoxPosition (child, doc, 1, unit, &dummy, &y);
-	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
-	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	      TtaGiveBoxPosition (child, doc, 1, UnPixel, &dummy, &y);
+	      TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
+	      TtaGiveBoxSize (graphRoot, doc, 1, UnPixel, &wR, &hR);
 	      dh = h + y - hR;
 	      if (dh > 0)
 		{
 		  /* increase the height of the root element */
 		  attrType.AttrTypeNum = GraphML_ATTR_height_;
+		  /************** convert to the right value */
 		  UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
 		}
 	      /* next element */
@@ -946,13 +954,14 @@ void             CheckGraphMLRoot (Document doc, Element el)
       else if ( elType.ElTypeNum != GraphML_EL_line_)
 	{
 	  /* check if the SVG height includes that element */
-	  TtaGiveBoxPosition (el, doc, 1, unit, &dummy, &y);
-	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+	  TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy, &y);
+	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
 	  dh = h + y - hR;
 	  if (dh > 0)
 	    {
 	      /* increase the height of the root element */
 	      attrType.AttrTypeNum = GraphML_ATTR_height_;
+	      /************** convert to the right value */
 	      UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
 	    }
 	}
@@ -970,6 +979,7 @@ void             CheckGraphMLRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
+		/************** convert to the right value */
 		UpdatePositionOfPoly (child, doc, 0, 0, wR + dw, hR + dh);
 	      /* next element */
 	      TtaNextSibling (&child);

@@ -1189,7 +1189,7 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 		       TtaSetAttributeValue (currentAttribute, val,
 					     lastAttrElement, context->doc);
 		     }
-		   else if (usscanf (attrValue, "%d", &val))
+		   else if (sscanf (attrValue, "%d", &val))
 		     TtaSetAttributeValue (currentAttribute, val,
 					   lastAttrElement, context->doc);
 		   else
@@ -1217,8 +1217,8 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 			   if (lang == 0)
 			     {
 			       sprintf (msgBuffer,
-					 "warning - unsupported language: %s",
-					 attrValue);
+					"warning - unsupported language: %s",
+					attrValue);
 			       if (isXML)
 				 XmlParseError (errorParsing, msgBuffer, 0);
 			       else
