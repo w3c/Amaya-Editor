@@ -258,7 +258,7 @@ ThotBool            nature;
 	       for (i = 0; i < *nViews && !present; i++)
 		 present = (viewList[i].VdView == view + 1 &&
 			    !ustrcmp (viewList[i].VdSSchema->SsName, pSS->SsName));
-	       if (!present && *nViews <= MAX_VIEW_OPEN)
+	       if (!present && *nViews < MAX_VIEW_OPEN)
 		  {
 		  /* on met la vue dans la liste */
 		  viewList[*nViews].VdView = view + 1;
