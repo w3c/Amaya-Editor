@@ -4649,11 +4649,15 @@ Document            doc;
    while (elTBC != NULL)
      {
      el = elTBC->Elem;
-     if (el != NULL)
+     while (el != NULL)
        {
        parent = TtaGetParent (el);
-       if (parent != NULL)
-         if (IsCharacterLevelElement (parent))
+       if (parent == NULL)
+	 el = NULL;
+       else
+         if (!IsCharacterLevelElement (parent))
+	   el = NULL;
+	 else
 	   {
 	   /* move all children of element parent as siblings of this element*/
 	   first = TtaGetFirstChild (parent);
