@@ -255,22 +255,22 @@ PtrAttribute        pAttr;
 	if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
 	   /* c'est bien un pave du type cherche' */
 	   /* recalcule la valeur de la variable de presentation */
-	   if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
-			    pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
+	    if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
+			     pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
+	      {
 
-	      /* la variable de presentation a change' de valeur */
-	     {
+		/* la variable de presentation a change' de valeur */
 		pAbsBox->AbChange = TRUE;
 		if (AssocView (pEl))
-		   frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
+		  frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
 		else
-		   frame = (pDoc)->DocViewFrame[view - 1];
+		  frame = (pDoc)->DocViewFrame[view - 1];
 		height = PageHeight;
 		ChangeConcreteImage (frame, &height, pAbsBox);
 		/* on ne reaffiche pas si on est en train de calculer les pages */
 		if (PageHeight == 0)
-		   DisplayFrame (frame);
-	     }
+		  DisplayFrame (frame);
+	      }
      }
    else
       /* ce n'est pas un pave' de pre'sentation */

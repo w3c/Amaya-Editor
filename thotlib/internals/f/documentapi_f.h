@@ -14,9 +14,9 @@ extern Document TtaOpenDocument ( char *documentName,
                                   int accessMode );
 extern void TtaSaveDocument ( Document document,
                               char *documentName );
-extern void TtaExportDocument ( Document document,
-                                char *fileName,
-                                char *TSchemaName );
+extern boolean TtaExportDocument ( Document document,
+				   char *fileName,
+				   char *TSchemaName );
 extern void TtaCloseDocument ( Document document );
 extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( char *path );
@@ -89,9 +89,9 @@ extern Document TtaOpenDocument (/* char *documentName,
                                     int accessMode */);
 extern void TtaSaveDocument (/* Document document,
                                 char *documentName */);
-extern void TtaExportDocument (/* Document document,
-                                  char *fileName,
-                                  char *TSchemaName */);
+extern boolean TtaExportDocument (/* Document document,
+				     char *fileName,
+				     char *TSchemaName */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* char *path */);

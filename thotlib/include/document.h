@@ -107,9 +107,11 @@ extern void         TtaSaveDocument (Document document, char *documentName);
    TSchemaName: name of the translation schema to be used. The directory
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
+   
+   Return: TRUE if the export success
 
   ----------------------------------------------------------------------*/
-extern void         TtaExportDocument (Document document, char *fileName, char *TSchemaName);
+extern boolean      TtaExportDocument (Document document, char *fileName, char *TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument
@@ -704,7 +706,7 @@ extern void TtaConfigSSchemaExternalName (/*OUT*/ char *nameUser, char *nameSche
 extern Document     TtaNewDocument ( /* char *structureSchema, char *documentName */ );
 extern Document     TtaOpenDocument ( /* char *documentName, int accessMode */ );
 extern void         TtaSaveDocument ( /* Document document, char *documentName */ );
-extern void         TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
+extern boolean      TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
 extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );

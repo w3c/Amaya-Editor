@@ -448,7 +448,6 @@ static boolean CloseTextInsertionWithControl ()
 
 	     /* met a jour le pave */
 	     pSelBox->BxAbstractBox->AbText = pBox->BxBuffer;
-	     NewContent (pSelBox->BxAbstractBox);
 
 	     /* Quand le texte insere' se trouve dans un bloc de lignes */
 	     /* on reformate le bloc de ligne pour retirer les          */
@@ -471,6 +470,7 @@ static boolean CloseTextInsertionWithControl ()
 			   pBox = NULL;
 		     }
 
+	     NewContent (pSelBox->BxAbstractBox);
 	     /* signale la nouvelle selection courante */
 	     pFrame = &ViewFrameTable[frame - 1];
 	     pViewSel = &pFrame->FrSelectionBegin;

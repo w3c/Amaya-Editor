@@ -3395,14 +3395,15 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    ExportDocument     exporte le document pointe' par pDoc, selon le  
    schema de traduction de nom TSchemaName et produit le resultat  
-   dans le fichier de nom fName.					
+   dans le fichier de nom fName.
+   Retourne TRUE si export reussi.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ExportDocument (PtrDocument pDoc, char *fName, char *TSchemaName)
+boolean       ExportDocument (PtrDocument pDoc, char *fName, char *TSchemaName)
 
 #else  /* __STDC__ */
-void                ExportDocument (pDoc, fName, TSchemaName)
+boolean       ExportDocument (pDoc, fName, TSchemaName)
 PtrDocument         pDoc;
 char               *fName;
 char               *TSchemaName;
@@ -3410,15 +3411,14 @@ char               *TSchemaName;
 #endif /* __STDC__ */
 
 {
+   FILE               *outputFile; /* fichier de sortie principal */
    int                 i;
-
-   /* fichier de sortie principal */
-   FILE               *outputFile;
+   boolean             ok = TRUE;
 
    /* cree le fichier de sortie principal */
    outputFile = fopen (fName, "w");
    if (outputFile == NULL)
-      TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);
+     ok = FALSE;
    else
       /* le fichier de sortie principal a ete cree' */
      {
@@ -3440,8 +3440,11 @@ char               *TSchemaName;
 	  }
 	/* charge le schema de traduction du document */
 	if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
-	   /* echec au chargement du schema de traduction */
-	   fclose (outputFile);
+	  {
+	    /* echec au chargement du schema de traduction */
+	    fclose (outputFile);
+	    ok = FALSE;
+	  }
 	else
 	  {
 	     /* separe nom de fichier et extension */
@@ -3476,6 +3479,9 @@ char               *TSchemaName;
    ClearTranslationSchemasTable ();
    fflush (stdout);
    fflush (stderr);
+   if (!ok)
+     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);
+   return (ok);
 }
 
 /*----------------------------------------------------------------------

@@ -449,19 +449,21 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   SaveDocumentLocally save the document in a local file.            
+   SaveDocumentLocally save the document in a local file.
+   Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SaveDocumentLocally (char *directoryName, char *documentName)
+static boolean    SaveDocumentLocally (char *directoryName, char *documentName)
 #else
-static void         SaveDocumentLocally (directoryName, documentName)
-char               *directoryName;
-char               *documentName;
+static boolean    SaveDocumentLocally (directoryName, documentName)
+char             *directoryName;
+char             *documentName;
 
 #endif
 {
    char                tempname[MAX_LENGTH];
    char                docname[100];
+   boolean             ok;
 
 DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);)
 
@@ -471,23 +473,27 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
    if (SaveAsText) 
      {
       SetInternalLinks (SavingDocument);
-      TtaExportDocument (SavingDocument, tempname, "HTMLTT");
+      ok = TtaExportDocument (SavingDocument, tempname, "HTMLTT");
      }
    else
      {
        SetNamespacesAndDTD (SavingDocument);
        if (SaveAsXML)
-	 TtaExportDocument (SavingDocument, tempname, "HTMLTX");
+	 ok = TtaExportDocument (SavingDocument, tempname, "HTMLTX");
        else
-         TtaExportDocument (SavingDocument, tempname, "HTMLT");
-       TtaSetDocumentDirectory (SavingDocument, directoryName);
-       strcpy (docname, documentName);
-       ExtractSuffix (docname, tempname);
-       /* Change the document name in all views */
-       TtaSetDocumentName (SavingDocument, docname);
-       TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-       TtaSetDocumentUnmodified (SavingDocument);
+         ok = TtaExportDocument (SavingDocument, tempname, "HTMLT");
+       if (ok)
+	 {
+	   TtaSetDocumentDirectory (SavingDocument, directoryName);
+	   strcpy (docname, documentName);
+	   ExtractSuffix (docname, tempname);
+	   /* Change the document name in all views */
+	   TtaSetDocumentName (SavingDocument, docname);
+	   TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+	   TtaSetDocumentUnmodified (SavingDocument);
+	 }
      }
+   return (ok);
 }
 
 /*----------------------------------------------------------------------
@@ -626,10 +632,10 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile
   Save a document and the included images to a remote network location.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          SaveDocumentThroughNet (Document document, View view,
+static boolean      SaveDocumentThroughNet (Document document, View view,
 					 boolean confirm, boolean with_images)
 #else
-static int          SaveDocumentThroughNet (document, view, confirm,
+static boolean      SaveDocumentThroughNet (document, view, confirm,
                                          with_images)
 Document            document;
 View                view;
@@ -642,11 +648,7 @@ boolean             with_images;
   char            *msg;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
-  int              res;
-  int              imageType;
-
-  if (!IsW3Path (DocumentURLs[document]))
-    return (-1);
+  int              imageType, res;
 
   /*
    * Don't use memory allocated on the stack ! May overflow the 
@@ -656,7 +658,7 @@ boolean             with_images;
   tempname = GetLocalPath (document, DocumentURLs[document]);
   msg = TtaGetMemory(remainder);
   if (msg == NULL)
-    return (-1);
+    return (FALSE);
 
   /* First step : build the output and ask for confirmation */
   SetNamespacesAndDTD (SavingDocument);
@@ -811,7 +813,7 @@ DBG(fprintf(stderr, "Saving completed\n");)
   TtaFreeMemory (msg);
   if (tempname)
     TtaFreeMemory (tempname);
-  return (res);
+  return (res != 0);
 }
 
 /*----------------------------------------------------------------------
@@ -878,19 +880,10 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
        if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE) == 0)
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-	   SavingDocument = 0;
 	   ok = TRUE;
 	 }
        else
 	 ok = FALSE;
-
-       if (!ok)
-	 {
-	   /* cannot save */
-	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[document]);
-	   SavingDocument = 0;
-	   SaveDocumentAs (document, 1);
-	 }
        }
    else
      {
@@ -898,10 +891,20 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 DBG(fprintf(stderr, "SaveDocument : local saving\n");)
 
        SetNamespacesAndDTD (SavingDocument);
-       TtaExportDocument (document, tempname, "HTMLT");
-       TtaSetDocumentUnmodified (document);
-       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-       SavingDocument = 0;
+       ok = TtaExportDocument (document, tempname, "HTMLT");
+       if (ok)
+	 {
+	   TtaSetDocumentUnmodified (document);
+	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
+	 }
+     }
+
+   SavingDocument = 0;
+   if (!ok)
+     {
+       /* cannot save */
+       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[document]);
+       /*SaveDocumentAs (document, 1);*/
      }
 }
 
@@ -1382,6 +1385,7 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
       strcat (documentFile, "/");
       url_sep = '/';
     }
+
   strcat (documentFile, SaveName);
   if (SaveName[0] == EOS)
     {
@@ -1405,6 +1409,7 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	}
     }
 
+  /* TODO: save the original document */
   if (ok && dst_is_local)
     {
       /* verify that the directory exists */
@@ -1535,8 +1540,7 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	  
 	/* restore the current mode */
 	TtaSetDisplayMode (SavingDocument, dispMode);
-	/* update informations on the document. */
-	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+	doc = SavingDocument;
 	  
 	if (dst_is_local)
 	  {
@@ -1544,9 +1548,7 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 DBG(fprintf(stderr, "   Saving document locally : to %s\n", documentFile);)
 
 	    /* save the local document */
-	    SaveDocumentLocally (SavePath, SaveName);
-	    TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-	    SavingDocument = 0;
+	    ok = SaveDocumentLocally (SavePath, SaveName);
 	  }
 	else
 	  {
@@ -1555,25 +1557,31 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
 	    /* now save the file as through the normal process of saving */
 	    /* to a remote URL. */
-            doc = SavingDocument;
-	    res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
-	    
-	    if (res)
-	      /* restore all urls */
-	      SaveDocumentAs(doc, 1);
-	    else
-	      {
-		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
-		SavingDocument = 0;
-	      }
+	    ok = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
 	  }
 
-	/* remove the previous temporary file */
-	if (localPath)
+	    
+	SavingDocument = 0;
+	TtaSetTextZone (doc, 1, 1, DocumentURLs[SavingDocument]);
+	if (ok)
 	  {
-	    TtaFileUnlink (localPath);
-	    TtaFreeMemory (localPath);
+	/* update informations on the document. */
+	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	    /* remove the previous temporary file */
+	    if (localPath)
+	      {
+		TtaFileUnlink (localPath);
+		TtaFreeMemory (localPath);
+	      }
 	  }
+	else
+	  {
+	    if (localPath)
+	      TtaFreeMemory (localPath);
+	    if (!dst_is_local)
+	      SaveDocumentAs(doc, 1);
+	  }
+
     }
   TtaFreeMemory (documentFile);
 }

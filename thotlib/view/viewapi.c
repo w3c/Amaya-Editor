@@ -2083,7 +2083,6 @@ int                 delta;
    PtrDocument         pDoc;
    int                 v, frame, h;
    PtrAbstractBox      pAbb;
-   boolean             modif;
    PtrAbstractBox      pAbbox1;
 
    pDoc = LoadedDocument[document - 1];
@@ -2095,7 +2094,6 @@ int                 delta;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   modif = FALSE;
    for (v = 1; v <= MAX_VIEW_DOC; v++)
       if (element->ElAbstractBox[v - 1] != NULL
 	  && !element->ElAbstractBox[v - 1]->AbNew
@@ -2112,10 +2110,6 @@ int                 delta;
 		     pAbb = pAbb->AbEnclosing;
 		  }
 	     }
-	   if (AssocView (element))
-	      pDoc->DocAssocModifiedAb[element->ElAssocNum - 1] = NULL;
-	   else
-	      pDoc->DocViewModifiedAb[v - 1] = NULL;
 	   /* met a jour le contenu et le volume et demande le */
 	   /* reaffichage du pave */
 	   pAbbox1 = element->ElAbstractBox[v - 1];
@@ -2126,80 +2120,59 @@ int                 delta;
 	   pAbbox1->AbVolume += delta;
 	   pAbbox1->AbChange = TRUE;
 	   switch (element->ElLeafType)
-		 {
-		    case LtPicture:
-		       /* Rien a faire */
-		       break;
-		    case LtText:
-		       pAbbox1->AbText = element->ElText;
-		       pAbbox1->AbLanguage = element->ElLanguage;
-		       break;
-		    case LtPolyLine:
-		       pAbbox1->AbLeafType = LtPolyLine;
-		       pAbbox1->AbPolyLineBuffer = element->ElPolyLineBuffer;
-		       pAbbox1->AbPolyLineShape = element->ElPolyLineType;
-		       pAbbox1->AbVolume = element->ElNPoints;
-		       break;
-		    case LtSymbol:
-		    case LtGraphics:
-		       pAbbox1->AbLeafType = element->ElLeafType;
-		       pAbbox1->AbShape = element->ElGraph;
-		       pAbbox1->AbGraphAlphabet = 'G';
-		       if (element->ElLeafType == LtGraphics &&
-			   element->ElGraph == 'a' &&
-			   pAbbox1->AbHeight.DimAbRef == NULL)
-			 {
-			   /* force the circle height to be equal to its width */
-			   pAbbox1->AbHeight.DimAbRef = pAbbox1;
-			   pAbbox1->AbHeight.DimSameDimension = FALSE;
-			   pAbbox1->AbHeight.DimValue = 0;
-			   pAbbox1->AbHeight.DimUserSpecified = FALSE;
-			   if (pAbbox1->AbWidth.DimUnit == UnPoint)
-			     pAbbox1->AbHeight.DimUnit = UnPoint;
-			   else
-			     pAbbox1->AbHeight.DimUnit = UnPixel;
-			   pAbbox1->AbHeightChange = TRUE;
-			 }
-		       break;
-		    default:
-		       break;
-		 }
-	   /* memorise le pave a reafficher */
-	   if (AssocView (element))
-	      pDoc->DocAssocModifiedAb[element->ElAssocNum - 1] = element->ElAbstractBox[v - 1];
-	   else
-	      pDoc->DocViewModifiedAb[v - 1] = element->ElAbstractBox[v - 1];
-	   modif = TRUE;
-	}
-   if (modif)
-      /* ajuste le volume dans toutes les vues, ce qui peut modifier */
-      /* le sous-arbre a reafficher */
-     {
-	/* reevalue l'image des vues modifiees */
-	for (v = 1; v <= MAX_VIEW_DOC; v++)
-	   if (element->ElAbstractBox[v - 1] != NULL)
 	     {
-		/* un pave correspondant existe dans la vue v */
-		if (AssocView (element))
-		  {
-		     /* vue d'element associe */
-		     frame = pDoc->DocAssocFrame[element->ElAssocNum - 1];
-		     pAbbox1 = pDoc->DocAssocModifiedAb[element->ElAssocNum - 1];
-		  }
-		else
-		  {
-		     frame = pDoc->DocViewFrame[v - 1];
-		     pAbbox1 = pDoc->DocViewModifiedAb[v - 1];
-		  }
-
-		if (pAbbox1 != NULL)
-		  {
-		     h = 0;
-		     /* on ne s'occupe pas de la hauteur de page */
-		     ChangeConcreteImage (frame, &h, pAbbox1);
-		  }
+	     case LtPicture:
+	       /* Rien a faire */
+	       break;
+	     case LtText:
+	       pAbbox1->AbText = element->ElText;
+	       pAbbox1->AbLanguage = element->ElLanguage;
+	       break;
+	     case LtPolyLine:
+	       pAbbox1->AbLeafType = LtPolyLine;
+	       pAbbox1->AbPolyLineBuffer = element->ElPolyLineBuffer;
+	       pAbbox1->AbPolyLineShape = element->ElPolyLineType;
+	       pAbbox1->AbVolume = element->ElNPoints;
+	       break;
+	     case LtSymbol:
+	     case LtGraphics:
+	       pAbbox1->AbLeafType = element->ElLeafType;
+	       pAbbox1->AbShape = element->ElGraph;
+	       pAbbox1->AbGraphAlphabet = 'G';
+	       if (element->ElLeafType == LtGraphics &&
+		   element->ElGraph == 'a' &&
+		   pAbbox1->AbHeight.DimAbRef == NULL)
+		 {
+		   /* force the circle height to be equal to its width */
+		   pAbbox1->AbHeight.DimAbRef = pAbbox1;
+		   pAbbox1->AbHeight.DimSameDimension = FALSE;
+		   pAbbox1->AbHeight.DimValue = 0;
+		   pAbbox1->AbHeight.DimUserSpecified = FALSE;
+		   if (pAbbox1->AbWidth.DimUnit == UnPoint)
+		     pAbbox1->AbHeight.DimUnit = UnPoint;
+		   else
+		     pAbbox1->AbHeight.DimUnit = UnPixel;
+		   pAbbox1->AbHeightChange = TRUE;
+		 }
+	       break;
+	     default:
+	       break;
 	     }
-     }
+	   /* un pave correspondant existe dans la vue v */
+	   if (AssocView (element))
+	     /* vue d'element associe */
+	     frame = pDoc->DocAssocFrame[element->ElAssocNum - 1];
+	   else
+	     frame = pDoc->DocViewFrame[v - 1];
+	   
+	   if (pAbbox1 != NULL)
+	     {
+	       h = 0;
+	       /* on ne s'occupe pas de la hauteur de page */
+	       ChangeConcreteImage (frame, &h, pAbbox1);
+	     }
+	}
+
    RedisplayCommand (document);
    /* si l'element modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */

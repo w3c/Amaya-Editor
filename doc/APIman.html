@@ -2378,7 +2378,7 @@ and it can still be accessed by the application program.</p>
 
 <hr>
 
-<p>void TtaExportDocument(Document document, char *fileName, char
+<p>boolean TtaExportDocument(Document document, char *fileName, char
 *TSchemaName)</p>
 
 <hr>
@@ -2394,6 +2394,12 @@ including the directory name.</p>
 directory name must not be specified in parameter TSchemaName. See function
 TtaSetSchemaPath.</p>
 
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>TRUE if the document has not saved.
 </dl>
 </div>
 

@@ -2598,8 +2598,6 @@ char               *data;
 	   LastURLName[0] = EOS;
 	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile);
-	   if (change)
-	     TtaSetTextForm (BaseDialog + URLName, tempfile);
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
@@ -2824,8 +2822,6 @@ char               *data;
        if (!IsW3Path (data))
 	 {
 	   change = NormalizeFile (data, tempfile);
-	   if (change)
-	     TtaSetTextForm (BaseDialog + NameSave, tempfile);
 	 }
        else
 	 strcpy (tempfile, data);

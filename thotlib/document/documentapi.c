@@ -366,14 +366,16 @@ char               *documentName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExportDocument (Document document, char *fileName, char *TSchemaName)
+boolean             TtaExportDocument (Document document, char *fileName, char *TSchemaName)
 #else  /* __STDC__ */
-void                TtaExportDocument (document, fileName, TSchemaName)
+boolean             TtaExportDocument (document, fileName, TSchemaName)
 Document            document;
 char               *fileName;
 char               *TSchemaName;
 #endif /* __STDC__ */
 {
+  boolean ok = FALSE;
+
   UserErrorCode = 0;
   /* verifies the parameter document */
   if (document < 1 || document > MAX_DOCUMENTS)
@@ -382,7 +384,8 @@ char               *TSchemaName;
     TtaError (ERR_invalid_document_parameter);
   else
     /* parameter document is correct */
-    ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName);
+    ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName);
+  return (ok);
 }
 
 /*----------------------------------------------------------------------
