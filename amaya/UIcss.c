@@ -398,373 +398,357 @@ char               *data;
 
 #endif
 {
-   int                 val;
-   PRuleInfoPtr        rpi;
-   char                tempfile[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   char               *s;
+  int                 val;
+  PRuleInfoPtr        rpi;
+  char                tempfile[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char               *s;
 
-   val = (int) data;
-
+  val = (int) data;
 #ifdef DEBUG_CSS
-   if (typedata == INTEGER_DATA)
-      fprintf (stderr, "CSSCallbackDialogue(%d,%d) \n",
-	       ref, (int) data);
-   else
-      fprintf (stderr, "CSSCallbackDialogue(%d,\"%s\") \n",
-	       ref, (char *) data);
+  if (typedata == INTEGER_DATA)
+    fprintf (stderr, "CSSCallbackDialogue(%d,%d) \n",
+	     ref, (int) data);
+  else
+    fprintf (stderr, "CSSCallbackDialogue(%d,\"%s\") \n",
+	     ref, (char *) data);
 #endif
 
-   if (currentDocument == -1)
-      return;
+  if (currentDocument == -1)
+    return;
 
-   switch (ref - BaseCSSDialog)
-	 {
-	    case FormCSS:
-	       switch (val)
-		     {
-			case 0:
-			   currentDocument = -1;
-			   TtaDestroyDialogue (BaseCSSDialog + FormCSS);
-			   break;
-			case 1:
-			   if (CSSBrowseState != CSS_BROWSE_None)
-			      break;
-			   if (sauve_css != NULL)
-			      break;
-			   sauve_css = ListCSS;
-			   while (sauve_css != NULL)
-			     {
-				while ((sauve_css != NULL) &&
-				((sauve_css->state != CSS_STATE_Modified) ||
-				(sauve_css->category == CSS_DOCUMENT_STYLE)))
-				   sauve_css = sauve_css->NextCSS;
-				if (sauve_css != NULL)
-				  {
-				     if (SaveCSSThroughNet (currentDocument,
-							 1, sauve_css) == 0)
-					continue;
-				     CSSBrowseState = CSS_BROWSE_SaveAll;
-				     InitBrowse (currentDocument, 1, sauve_css->url);
-				  }
-			     }
-			   break;
-			case 2:
-			   break;
-			case 3:
-			   RebuildAllCSS ();
-			   break;
-			case 4:
-			   SelectExternalCSS (currentDocument, 1);
-			   break;
-			case 5:
-			   DeleteExternalCSS (currentDocument, 1);
-			   break;
-			default:
-			   TtaDestroyDialogue (BaseCSSDialog + FormCSS);
-			   currentDocument = -1;
-			   break;
-		     }
-	       break;
-	    case CSSLName:
-	       RedrawLCSS (data);
-	       RedrawLRPI (NULL);
-	       break;
-	    case RPILList:
-	       RedrawLRPI (data);
-	       break;
-	    case CSSRName:
-	       RedrawRCSS (data);
-	       RedrawRRPI (NULL);
-	       break;
-	    case RPIRList:
-	       RedrawRRPI (data);
-	       break;
-	    case RPIActions:
-	       switch (val)
-		     {
-			case 0:
-			   CSSHandleMerge ('R', FALSE);
-			   break;
-			case 1:
-			   CSSHandleMerge ('R', TRUE);
-			   break;
-			case 2:
-			   /* Delete the RPI currently selected */
-			   if (currentLRPI[0] != EOS)
-			     {
-				rpi = SearchRPISel (currentLRPI, LListRPI);
-				if (rpi == NULL)
-				   break;
-				RemoveRPI (currentDocument, rpi);
-				LListRPIModified = TRUE;
-				LCSS->state = CSS_STATE_Modified;
-				RedrawLRPI (NULL);
-				RebuildHTMLStyleHeader (currentDocument);
-				RedisplayDocument (currentDocument);
-			     }
-			   else if (currentRRPI[0] != EOS)
-			     {
-				rpi = SearchRPISel (currentRRPI, RListRPI);
-				if (rpi == NULL)
-				   break;
-				RemoveRPI (currentDocument, rpi);
-				RCSS->state = CSS_STATE_Modified;
-				RListRPIModified = TRUE;
-				RedrawRRPI (NULL);
-				RebuildHTMLStyleHeader (currentDocument);
-				RedisplayDocument (currentDocument);
-			     }
-			   break;
-			case 3:
-			   CSSHandleMerge ('L', TRUE);
-			   break;
-			case 4:
-			   CSSHandleMerge ('L', FALSE);
-			   break;
-		     }
-	       break;
-	    case RPIText:
-	       SelectRPIEntry ('B', -1, data);
-	       break;
-	    case ListExternalCSS:
-	       strcpy (currentExternalCSS, data);
-	       break;
-	    case FormExternalCSS:
-	       switch (val)
-		     {
-			case 0:
-			   currentExternalCSS[0] = EOS;
-			   break;
-			case 1:
-			   /*
-			    * add currentExternalCSS to the list of external
-			    * style sheets of the document.
-			    */
-			   LoadHTMLExternalStyleSheet (currentExternalCSS,
-						     currentDocument, TRUE);
-			   RedisplayDocument (currentDocument);
-			   if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
-			     {
-				RCSS = SearchCSS (currentDocument, CSS_EXTERNAL_STYLE,
-						  currentExternalCSS);
-				RedrawRCSS (currentExternalCSS);
-				RedrawRRPI (NULL);
-			     }
-			   else
-			     {
-				LCSS = SearchCSS (currentDocument, CSS_EXTERNAL_STYLE,
-						  currentExternalCSS);
-				RedrawLCSS (currentExternalCSS);
-				RedrawLRPI (NULL);
-			     }
-			   break;
-			case 2:
-			   /*
-			    * show the list of CSS rules found in the external
-			    * style sheets pointed by currentExternalCSS.
-			    */
-			   LoadHTMLExternalStyleSheet (currentExternalCSS,
-						    currentDocument, FALSE);
-			   if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
-			     {
-				RCSS = SearchCSS (currentDocument, CSS_BROWSED_STYLE,
-						  currentExternalCSS);
-				RedrawRCSS (currentExternalCSS);
-				RedrawRRPI (NULL);
-			     }
-			   else
-			     {
-				LCSS = SearchCSS (currentDocument, CSS_BROWSED_STYLE,
-						  currentExternalCSS);
-				RedrawLCSS (currentExternalCSS);
-				RedrawLRPI (NULL);
-			     }
-			   break;
-			case 3:
-			   /*
-			    * start a browsing window,
-			    * looking for CSS files on the filesystem.
-			    */
-			   break;
-		     }
-	       break;
-	    case ListDeleteCSS:
-	       strcpy (currentDeleteCSS, data);
-	       break;
-	    case FormDeleteCSS:
-	       switch (val)
-		     {
-			case 0:
-			   currentDeleteCSS[0] = EOS;
-			   break;
-			case 1:
-			   /*
-			    * remove currentDeleteCSS from the list of external
-			    * style sheets of the document.
-			    */
-			   RemoveCSS (currentDeleteCSS, currentDocument);
-			   currentDeleteCSS[0] = EOS;
-			   TtaDestroyDialogue (BaseCSSDialog + FormDeleteCSS);
-			   break;
-		     }
-	       break;
+  switch (ref - BaseCSSDialog)
+    {
+    case FormCSS:
+      switch (val)
+	{
+	case 0:
+	  currentDocument = -1;
+	  TtaDestroyDialogue (BaseCSSDialog + FormCSS);
+	  break;
+	case 1:
+	  if (CSSBrowseState != CSS_BROWSE_None)
+	    break;
+	  if (sauve_css != NULL)
+	    break;
+	  sauve_css = ListCSS;
+	  while (sauve_css != NULL)
+	    {
+	      while ((sauve_css != NULL) &&
+		     ((sauve_css->state != CSS_STATE_Modified) ||
+		      (sauve_css->category == CSS_DOCUMENT_STYLE)))
+		sauve_css = sauve_css->NextCSS;
+	      if (sauve_css != NULL)
+		{
+		  if (SaveCSSThroughNet (currentDocument,
+					 1, sauve_css) == 0)
+		    continue;
+		  CSSBrowseState = CSS_BROWSE_SaveAll;
+		  InitBrowse (currentDocument, 1, sauve_css->url);
+		}
+	    }
+	  break;
+	case 2:
+	  break;
+	case 3:
+	  RebuildAllCSS ();
+	  break;
+	case 4:
+	  SelectExternalCSS (currentDocument, 1);
+	  break;
+	case 5:
+	  DeleteExternalCSS (currentDocument, 1);
+	  break;
+	default:
+	  TtaDestroyDialogue (BaseCSSDialog + FormCSS);
+	  currentDocument = -1;
+	  break;
+	}
+      break;
+    case CSSLName:
+      RedrawLCSS (data);
+      RedrawLRPI (NULL);
+      break;
+    case RPILList:
+      RedrawLRPI (data);
+      break;
+    case CSSRName:
+      RedrawRCSS (data);
+      RedrawRRPI (NULL);
+      break;
+    case RPIRList:
+      RedrawRRPI (data);
+      break;
+    case RPIActions:
+      switch (val)
+	{
+	case 0:
+	  CSSHandleMerge ('R', FALSE);
+	  break;
+	case 1:
+	  CSSHandleMerge ('R', TRUE);
+	  break;
+	case 2:
+	  /* Delete the RPI currently selected */
+	  if (currentLRPI[0] != EOS)
+	    {
+	      rpi = SearchRPISel (currentLRPI, LListRPI);
+	      LListRPIModified = TRUE;
+	      LCSS->state = CSS_STATE_Modified;
+	      RedrawLRPI (NULL);
+	    }
+	  else if (currentRRPI[0] != EOS)
+	    {
+	      rpi = SearchRPISel (currentRRPI, RListRPI);
+	      RCSS->state = CSS_STATE_Modified;
+	      RListRPIModified = TRUE;
+	      RedrawRRPI (NULL);
+	    }
 
-	    case CSSFormConfirm:
-	       CSSUserAnswer = (val == 1);
-	       TtaDestroyDialogue (BaseCSSDialog + CSSFormConfirm);
-	       break;
+	  if (rpi != NULL)
+	    {
+	      RemoveRPI (currentDocument, rpi);
+	      RebuildHTMLStyleHeader (currentDocument);
+	      /*RedisplayDocument (currentDocument);*/
+	    }
+	  break;
+	case 3:
+	  CSSHandleMerge ('L', TRUE);
+	  break;
+	case 4:
+	  CSSHandleMerge ('L', FALSE);
+	  break;
+	}
+      break;
+    case RPIText:
+      SelectRPIEntry ('B', -1, data);
+      break;
+    case ListExternalCSS:
+      strcpy (currentExternalCSS, data);
+      break;
+    case FormExternalCSS:
+      switch (val)
+	{
+	case 0:
+	  currentExternalCSS[0] = EOS;
+	  break;
+	case 1:
+	  /*
+	   * add currentExternalCSS to the list of external
+	   * style sheets of the document.
+	   */
+	  LoadHTMLExternalStyleSheet (currentExternalCSS,
+				      currentDocument, TRUE);
+	  RedisplayDocument (currentDocument);
+	  if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
+	    {
+	      RCSS = SearchCSS (currentDocument, CSS_EXTERNAL_STYLE,
+				currentExternalCSS);
+	      RedrawRCSS (currentExternalCSS);
+	      RedrawRRPI (NULL);
+	    }
+	  else
+	    {
+	      LCSS = SearchCSS (currentDocument, CSS_EXTERNAL_STYLE,
+				currentExternalCSS);
+	      RedrawLCSS (currentExternalCSS);
+	      RedrawLRPI (NULL);
+	    }
+	  break;
+	case 2:
+	  /*
+	   * show the list of CSS rules found in the external
+	   * style sheets pointed by currentExternalCSS.
+	   */
+	  LoadHTMLExternalStyleSheet (currentExternalCSS,
+				      currentDocument, FALSE);
+	  if ((RListRPIIndex == -1) || (LListRPIIndex != -1))
+	    {
+	      RCSS = SearchCSS (currentDocument, CSS_BROWSED_STYLE,
+				currentExternalCSS);
+	      RedrawRCSS (currentExternalCSS);
+	      RedrawRRPI (NULL);
+	    }
+	  else
+	    {
+	      LCSS = SearchCSS (currentDocument, CSS_BROWSED_STYLE,
+				currentExternalCSS);
+	      RedrawLCSS (currentExternalCSS);
+	      RedrawLRPI (NULL);
+	    }
+	  break;
+	case 3:
+	  /*
+	   * start a browsing window,
+	   * looking for CSS files on the filesystem.
+	   */
+	  break;
+	}
+      break;
+    case ListDeleteCSS:
+      strcpy (currentDeleteCSS, data);
+      break;
+    case FormDeleteCSS:
+      switch (val)
+	{
+	case 0:
+	  currentDeleteCSS[0] = EOS;
+	  break;
+	case 1:
+	  /*
+	   * remove currentDeleteCSS from the list of external
+	   * style sheets of the document.
+	   */
+	  RemoveCSS (currentDeleteCSS, currentDocument);
+	  currentDeleteCSS[0] = EOS;
+	  TtaDestroyDialogue (BaseCSSDialog + FormDeleteCSS);
+	  break;
+	}
+      break;
+      
+    case CSSFormConfirm:
+      CSSUserAnswer = (val == 1);
+      TtaDestroyDialogue (BaseCSSDialog + CSSFormConfirm);
+      break;
 
-/*----------------------------------------------------------------------
- *									*
- *		Handling of the Save CSS Form				*
- *									*
-  ----------------------------------------------------------------------*/
-	    case CSSSauvDir:
-	       if (!strcmp (data, ".."))
-		 {
-		    /* suppress last directory */
-		    strcpy (tempname, CSSDirectoryName);
-		    TtaExtractName (tempname, CSSDirectoryName, tempfile);
-		 }
-	       else
-		 {
-		    strcat (CSSDirectoryName, DIR_STR);
-		    strcat (CSSDirectoryName, data);
-		 }
-	       TtaSetTextForm (BaseCSSDialog + CSSNomURL, CSSDirectoryName);
-	       TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-				 TtaGetMessage (LIB, TMSG_DOC_DIR),
-				 BaseCSSDialog + CSSSauvDir, "css",
-	       TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
-	       CSSDocumentName[0] = EOS;
-	       break;
-	    case CSSSauvDoc:
-	       if (CSSDirectoryName[0] == EOS)
-		 {
-		    /* set path on current directory */
-		    s = (char *) TtaGetEnvString ("PWD");
-		    if (s != NULL)
-		       strcpy (CSSDirectoryName, s);
-		 }
-	       /* Extract suffix from document name */
-	       strcpy (CSSDocumentName, data);
-	       /* construct the document full name */
-	       strcpy (tempfile, CSSDirectoryName);
-	       strcat (tempfile, DIR_STR);
-	       strcat (tempfile, CSSDocumentName);
-	       TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
-	       break;
-
-	    case CSSFormSauver:
-	       if (val == 1)
-		 {
-		    /* Ok for saving document */
-		    strcpy (tempfile, CSSDirectoryName);
-		    strcat (tempfile, DIR_STR);
-		    strcat (tempfile, CSSDocumentName);
-		    if (CSSBrowseState == CSS_BROWSE_SaveAll)
-		      {
-			 if (TtaFileExist (tempfile))
-			   {
-			      /* ask confirmation */
-			      sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
-			      CSSConfirm (currentDocument, 1, tempname);
-			      if (CSSUserAnswer)
-				{
-				   /* save the local document */
-				   DumpCSSToFile (currentDocument, sauve_css, tempfile);
-				}
-			      sauve_css = sauve_css->NextCSS;
-			      while ((sauve_css != NULL) &&
-				((sauve_css->state != CSS_STATE_Modified) ||
-			       (sauve_css->category == CSS_DOCUMENT_STYLE)))
-				 sauve_css = sauve_css->NextCSS;
-			      if (sauve_css != NULL)
-				{
-				   InitBrowse (currentDocument, 1, sauve_css->url);
-				}
-			      else
-				{
-				   TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
-				   CSSBrowseState = CSS_BROWSE_None;
-				}
-			   }
-			 else
-			   {
-			      /* save the local document */
-			      DumpCSSToFile (currentDocument, sauve_css, tempfile);
-
-			      sauve_css = sauve_css->NextCSS;
-			      while ((sauve_css != NULL) &&
-				((sauve_css->state != CSS_STATE_Modified) ||
-			       (sauve_css->category == CSS_DOCUMENT_STYLE)))
-				 sauve_css = sauve_css->NextCSS;
-			      if (sauve_css != NULL)
-				{
-				   InitBrowse (currentDocument, 1, sauve_css->url);
-				}
-			      else
-				{
-				   TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
-				   CSSBrowseState = CSS_BROWSE_None;
-				}
-			   }
-		      }
-		 }
-	       else
-		 {
-		    if (CSSBrowseState == CSS_BROWSE_SaveAll)
-		      {
-			 if (sauve_css != NULL)
-			    sauve_css = sauve_css->NextCSS;
-			 while ((sauve_css != NULL) &&
-				((sauve_css->state != CSS_STATE_Modified) ||
-			       (sauve_css->category == CSS_DOCUMENT_STYLE)))
-			    sauve_css = sauve_css->NextCSS;
-			 if (sauve_css != NULL)
-			    InitBrowse (currentDocument, 1, sauve_css->url);
-			 else
-			   {
-			      TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
-			      CSSBrowseState = CSS_BROWSE_None;
-			   }
-		      }
-		 }
-	       break;
-	    case CSSNomURL:
-	       /* Extract document name */
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
-		 {
-		    strcpy (CSSDirectoryName, data);
-		    CSSDocumentName[0] = EOS;
-		    /* reinitialize directories and document lists */
-		    TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-				      TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
-				      ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
-		 }
-	       else
-		 {
-		    if (IsW3Path (data))
-		      {
-			 /* reset the CSSDirectoryName */
-			 strcpy (tempfile, CSSDirectoryName);
-			 strcat (tempfile, DIR_STR);
-			 TtaExtractName (data, CSSDirectoryName, tempname);
-			 strcat (tempfile, tempname);
-			 /* reinitialize directories and document lists */
-			 TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
-					   ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
-			 TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
-		      }
-		    else
-		       TtaExtractName (data, CSSDirectoryName, CSSDocumentName);
-		 }
-
-
-	       break;
-	    default:
-	       break;
-	 }
+      /* Handling of the Save CSS Form */
+    case CSSSauvDir:
+      if (!strcmp (data, ".."))
+	{
+	  /* suppress last directory */
+	  strcpy (tempname, CSSDirectoryName);
+	  TtaExtractName (tempname, CSSDirectoryName, tempfile);
+	}
+      else
+	{
+	  strcat (CSSDirectoryName, DIR_STR);
+	  strcat (CSSDirectoryName, data);
+	}
+      TtaSetTextForm (BaseCSSDialog + CSSNomURL, CSSDirectoryName);
+      TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
+			TtaGetMessage (LIB, TMSG_DOC_DIR),
+			BaseCSSDialog + CSSSauvDir, "css",
+			TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+      CSSDocumentName[0] = EOS;
+      break;
+    case CSSSauvDoc:
+      if (CSSDirectoryName[0] == EOS)
+	{
+	  /* set path on current directory */
+	  s = (char *) TtaGetEnvString ("PWD");
+	  if (s != NULL)
+	    strcpy (CSSDirectoryName, s);
+	}
+      /* Extract suffix from document name */
+      strcpy (CSSDocumentName, data);
+      /* construct the document full name */
+      strcpy (tempfile, CSSDirectoryName);
+      strcat (tempfile, DIR_STR);
+      strcat (tempfile, CSSDocumentName);
+      TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
+      break;
+      
+    case CSSFormSauver:
+      if (val == 1)
+	{
+	  /* Ok for saving document */
+	  strcpy (tempfile, CSSDirectoryName);
+	  strcat (tempfile, DIR_STR);
+	  strcat (tempfile, CSSDocumentName);
+	  if (CSSBrowseState == CSS_BROWSE_SaveAll)
+	    {
+	      if (TtaFileExist (tempfile))
+		{
+		  /* ask confirmation */
+		  sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
+		  CSSConfirm (currentDocument, 1, tempname);
+		  if (CSSUserAnswer)
+		    /* save the local document */
+		    DumpCSSToFile (currentDocument, sauve_css, tempfile);
+		  sauve_css = sauve_css->NextCSS;
+		  while ((sauve_css != NULL) &&
+			 ((sauve_css->state != CSS_STATE_Modified) ||
+			  (sauve_css->category == CSS_DOCUMENT_STYLE)))
+		    sauve_css = sauve_css->NextCSS;
+		  if (sauve_css != NULL)
+		    InitBrowse (currentDocument, 1, sauve_css->url);
+		  else
+		    {
+		      TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
+		      CSSBrowseState = CSS_BROWSE_None;
+		    }
+		}
+	      else
+		{
+		  /* save the local document */
+		  DumpCSSToFile (currentDocument, sauve_css, tempfile);
+		  
+		  sauve_css = sauve_css->NextCSS;
+		  while ((sauve_css != NULL) &&
+			 ((sauve_css->state != CSS_STATE_Modified) ||
+			  (sauve_css->category == CSS_DOCUMENT_STYLE)))
+		    sauve_css = sauve_css->NextCSS;
+		  if (sauve_css != NULL)
+		    InitBrowse (currentDocument, 1, sauve_css->url);
+		  else
+		    {
+		      TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
+		      CSSBrowseState = CSS_BROWSE_None;
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  if (CSSBrowseState == CSS_BROWSE_SaveAll)
+	    {
+	      if (sauve_css != NULL)
+		sauve_css = sauve_css->NextCSS;
+	      while ((sauve_css != NULL) &&
+		     ((sauve_css->state != CSS_STATE_Modified) ||
+		      (sauve_css->category == CSS_DOCUMENT_STYLE)))
+		sauve_css = sauve_css->NextCSS;
+	      if (sauve_css != NULL)
+		InitBrowse (currentDocument, 1, sauve_css->url);
+	      else
+		{
+		  TtaDestroyDialogue (BaseCSSDialog + CSSFormSauver);
+		  CSSBrowseState = CSS_BROWSE_None;
+		}
+	    }
+	}
+      break;
+    case CSSNomURL:
+      /* Extract document name */
+      if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
+	{
+	  strcpy (CSSDirectoryName, data);
+	  CSSDocumentName[0] = EOS;
+	  /* reinitialize directories and document lists */
+	  TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
+			    ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+	}
+      else
+	{
+	  if (IsW3Path (data))
+	    {
+	      /* reset the CSSDirectoryName */
+	      strcpy (tempfile, CSSDirectoryName);
+	      strcat (tempfile, DIR_STR);
+	      TtaExtractName (data, CSSDirectoryName, tempname);
+	      strcat (tempfile, tempname);
+	      /* reinitialize directories and document lists */
+	      TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
+				TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
+				".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
+	      TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
+	    }
+	  else
+	    TtaExtractName (data, CSSDirectoryName, CSSDocumentName);
+	}
+      break;
+    default:
+      break;
+    }
 }

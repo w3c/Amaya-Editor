@@ -9,7 +9,7 @@
  * Everything directly linked to the CSS syntax should now hopefully
  * be contained in this module.
  *
- * Author: D. Veillard
+ * Authors: D. Veillard and I. Vatton
  *
  */
 
@@ -20,8 +20,8 @@
 
 #include "css_f.h"
 #include "html2thot_f.h"
-#include "HTMLstyle_f.h"
 #include "HTMLpresentation_f.h"
+#include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 #include "HTMLimage_f.h"
 
@@ -33,22 +33,20 @@ extern boolean      NonPPresentChanged;
 
 #ifdef _WINDOWS
 #ifndef __GNUC__
-int                 strncasecmp (char *s1, char *s2, size_t n)
+int  strncasecmp (char *s1, char *s2, size_t n)
 {
-   if (n == 0)
-      return 0;
+  if (n == 0)
+    return 0;
 
-   while (n-- != 0 && toupper (*s1) == toupper (*s2))
-     {
-	if (n == 0 || *s1 == EOS || *s2 == EOS)
-	   break;
-	s1++;
-	s2++;
-     }
-
-   return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
+  while (n-- != 0 && toupper (*s1) == toupper (*s2))
+    {
+      if (n == 0 || *s1 == EOS || *s2 == EOS)
+	break;
+      s1++;
+      s2++;
+    }
+  return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
 }
-
 #endif /* ! __GNUC__ */
 #endif /* _WINDOWS */
 
@@ -200,7 +198,7 @@ static boolean         HTMLStyleParserDestructiveMode = FALSE;
 #ifdef __STDC__
 typedef char       *(*HTMLStyleValueParser)
                     (PresentationTarget target,
-		     PresentationContext context, char *attrstr);
+		     PresentationContext context, char *cssRule);
 #else
 typedef char       *(*HTMLStyleValueParser) ();
 #endif
@@ -222,7 +220,7 @@ typedef char       *(*HTMLStyleValueParser) ();
 #if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP) || defined(WWW_MSWINDOWS)
 #define VALUEPARSER(name)						\
 static char        *ParseCSS##name (PresentationTarget target,	\
-			PresentationContext context, char *attrstr);
+			PresentationContext context, char *cssRule);
 #else
 #define VALUEPARSER(name)						\
 static char        *ParseCSS/**/name();
@@ -388,43 +386,10 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
  */
 
 #define ERR -1000000
-/*
-   #define SKIP_BLANK(ptr) \
-   { while (((*(ptr)) == SPACE) || ((*(ptr)) == '\b') || \
-   ((*(ptr)) == EOL) || ((*(ptr)) == '\r')) ptr++; } */
-#define SKIP_WORD(ptr) { while ((isalnum(*ptr)) || (*ptr == '-')) ptr++; }
-#define SKIP_PROPERTY(ptr) { while ((*ptr) && (*ptr != ';') && \
-                                    (*ptr != '}') && (*ptr != ',')) ptr++; }
-#define SKIP_INT(ptr) { while (isdigit(*ptr)) ptr++; }
-#define SKIP_FLOAT(ptr) { while (isdigit(*ptr)) ptr++; \
-      if (*ptr == '.') do ptr++; while (isdigit(*ptr)); }
-#define IS_SEPARATOR(ptr) ((*ptr == ',') || (*ptr == ';'))
-#define IS_BLANK(ptr) (((*(ptr)) == SPACE) || ((*(ptr)) == '\b') || \
-              ((*(ptr)) == EOL) || ((*(ptr)) == '\r'))
-#define START_DESCR(ptr) (*ptr == ':')
-#define IS_WORD(ptr,word) (!strncmp((ptr),(word),strlen(word)))
-#define IS_CASE_WORD(ptr,word) (!strncasecmp((ptr),(word),strlen(word)))
-#define IS_NUM(ptr) \
-      ((isdigit(*ptr)) || (*ptr == '.') || (*ptr == '+') || (*ptr == '-'))
-#define IS_INT(ptr) (isdigit(*ptr))
-#define READ_I(ptr,i) { int l; l = sscanf(ptr,"%d",&i); \
-        if (l <= 0) i = ERR; else SKIP_INT(ptr); }
-#define READ_IOF(ptr,i,f) { int d; READ_I(ptr,i); \
-        if (*ptr == '.') { ptr++; READ_I(ptr,d); f }
-
-
 #ifdef AMAYA_DEBUG
 #define TODO { fprintf(stderr, "code incomplete file %s line %d\n",\
                        __FILE__,__LINE__); };
 #define MSG(msg) fprintf(stderr, msg)
-#else
-	/*static char        *last_message = NULL; */
-
-#define TODO
-	/*#define MSG(msg) last_message = msg */
-static char        *last_message = NULL;
-
-#define MSG(msg) last_message = msg
 #endif
 
 
@@ -473,6 +438,64 @@ static struct unit_def CSSUnitNames[] =
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
+/*----------------------------------------------------------------------
+   SkipBlanks:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char        *SkipBlanks (char *ptr)
+#else
+char        *SkipBlanks (ptr)
+char               *ptr;
+#endif
+{
+  while (*ptr == SPACE || *ptr == '\b' ||  *ptr == '\n' || *ptr == '\r')
+    ptr++;
+  return (ptr);
+}
+/*----------------------------------------------------------------------
+   IsBlank:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean     IsBlank (char *ptr)
+#else
+boolean     IsBlank (ptr)
+char               *ptr;
+#endif
+{
+  if (*ptr == SPACE || *ptr == '\b' ||  *ptr == '\n' || *ptr == '\r')
+    return (TRUE);
+  else
+    return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+   SkipWord:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *SkipWord (char *ptr)
+#else
+static char        *SkipWord (ptr)
+char               *ptr;
+#endif
+{
+  while (isalnum(*ptr) || *ptr == '-')
+    ptr++;
+  return (ptr);
+}
+/*----------------------------------------------------------------------
+   SkipProperty:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char        *SkipProperty (char *ptr)
+#else
+char        *SkipProperty (ptr)
+char               *ptr;
+#endif
+{
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != ',')
+    ptr++;
+  return (ptr);
+}
 
 /*----------------------------------------------------------------------
    ParseCSSUnit :                                                  
@@ -480,12 +503,11 @@ static struct unit_def CSSUnitNames[] =
    value and its unit.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseCSSUnit (char *attrstr, PresentationValue * pval)
+static char        *ParseCSSUnit (char *cssRule, PresentationValue * pval)
 #else
-static char        *ParseCSSUnit (attrstr, pval)
-char               *attrstr;
+static char        *ParseCSSUnit (cssRule, pval)
+char               *cssRule;
 PresentationValue  *pval;
-
 #endif
 {
   int                 val = 0;
@@ -496,72 +518,72 @@ PresentationValue  *pval;
   int                 uni;
 
   pval->typed_data.unit = DRIVERP_UNIT_REL;
-  SKIP_BLANK (attrstr);
-  if (*attrstr == '-')
+  cssRule = SkipBlanks (cssRule);
+  if (*cssRule == '-')
     {
       minus = 1;
-      attrstr++;
-      SKIP_BLANK (attrstr);
+      cssRule++;
+      cssRule = SkipBlanks (cssRule);
     }
 
-  if (*attrstr == '+')
+  if (*cssRule == '+')
     {
-      attrstr++;
-      SKIP_BLANK (attrstr);
+      cssRule++;
+      cssRule = SkipBlanks (cssRule);
     }
 
-  while ((*attrstr >= '0') && (*attrstr <= '9'))
+  while ((*cssRule >= '0') && (*cssRule <= '9'))
     {
       val *= 10;
-      val += *attrstr - '0';
-      attrstr++;
+      val += *cssRule - '0';
+      cssRule++;
       valid = 1;
     }
 
-   if (*attrstr == '.')
+   if (*cssRule == '.')
      {
        real = 1;
        f = val;
        val = 0;
-       attrstr++;
+       cssRule++;
        /* keep only 3 digits */
-       if ((*attrstr >= '0') && (*attrstr <= '9'))
+       if ((*cssRule >= '0') && (*cssRule <= '9'))
 	 {
-	   val = (*attrstr - '0') * 100;
-	   attrstr++;
-	   if ((*attrstr >= '0') && (*attrstr <= '9'))
+	   val = (*cssRule - '0') * 100;
+	   cssRule++;
+	   if ((*cssRule >= '0') && (*cssRule <= '9'))
 	     {
-	       val += (*attrstr - '0') * 10;
-	       attrstr++;
-	       if ((*attrstr >= '0') && (*attrstr <= '9'))
+	       val += (*cssRule - '0') * 10;
+	       cssRule++;
+	       if ((*cssRule >= '0') && (*cssRule <= '9'))
 		 {
-		   val += *attrstr - '0';
-		   attrstr++;
+		   val += *cssRule - '0';
+		   cssRule++;
 		 }
 	     }
 
-	   while ((*attrstr >= '0') && (*attrstr <= '9'))
-	     attrstr++;
+	   while ((*cssRule >= '0') && (*cssRule <= '9'))
+	     cssRule++;
 	   valid = 1;
 	 }
      }
 
    if (!valid)
      {
-       SKIP_WORD (attrstr);
+       cssRule = SkipWord (cssRule);
        pval->typed_data.unit = DRIVERP_UNIT_INVALID;
        pval->typed_data.value = 0;
-       return (attrstr);
+       return (cssRule);
      }
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
    for (uni = 0; uni < NB_UNITS; uni++)
      {
 #ifdef WWW_WINDOWS
-       if (!_strnicmp (CSSUnitNames[uni].sign, attrstr,
+       if (!_strnicmp (CSSUnitNames[uni].sign, cssRule,
 		       strlen (CSSUnitNames[uni].sign)))
 #else  /* WWW_WINDOWS */
-	 if (!strncasecmp (CSSUnitNames[uni].sign, attrstr,
+	 if (!strncasecmp (CSSUnitNames[uni].sign, cssRule,
 			   strlen (CSSUnitNames[uni].sign)))
 #endif /* !WWW_WINDOWS */
 	   {
@@ -581,7 +603,7 @@ PresentationValue  *pval;
 		 else
 		   pval->typed_data.value = val;
 	       }
-	     return (attrstr + strlen (CSSUnitNames[uni].sign));
+	     return (cssRule + strlen (CSSUnitNames[uni].sign));
 	   }
      }
 
@@ -593,7 +615,7 @@ PresentationValue  *pval;
      pval->typed_data.value = -val;
    else
      pval->typed_data.value = val;
-   return (attrstr);
+   return (cssRule);
 }
 
 /************************************************************************
@@ -608,45 +630,45 @@ PresentationValue  *pval;
    this string need to be freed.                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTMLURL (char *attrstr, char **url)
+static char        *ParseHTMLURL (char *cssRule, char **url)
 #else
-static char        *ParseHTMLURL (attrstr, url)
-char               *attrstr;
+static char        *ParseHTMLURL (cssRule, url)
+char               *cssRule;
 char              **url;
 #endif
 {
   char                sauve;
   char               *base;
-  if (((attrstr[0] == 'u') || (attrstr[0] = 'U')) &&
-      ((attrstr[0] == 'r') || (attrstr[0] = 'R')) &&
-      ((attrstr[0] == 'l') || (attrstr[0] = 'L')))
+  if (((cssRule[0] == 'u') || (cssRule[0] = 'U')) &&
+      ((cssRule[0] == 'r') || (cssRule[0] = 'R')) &&
+      ((cssRule[0] == 'l') || (cssRule[0] = 'L')))
     {
-      attrstr += 3;
-      SKIP_BLANK (attrstr);
-      if (*attrstr == '(')
+      cssRule += 3;
+      cssRule = SkipBlanks (cssRule);
+      if (*cssRule == '(')
 	{
-	  attrstr++;
-	  SKIP_BLANK (attrstr);
-	  base = attrstr;
-	  while ((*attrstr != EOS) && (!IS_BLANK (attrstr)) &&
-		 (*attrstr != ')'))
-	    attrstr++;
+	  cssRule++;
+	  cssRule = SkipBlanks (cssRule);
+	  base = cssRule;
+	  while ((*cssRule != EOS) && (!IsBlank (cssRule)) &&
+		 (*cssRule != ')'))
+	    cssRule++;
       
 	  if (url != NULL)
 	    {
-	      sauve = *attrstr;
-	      *attrstr = EOS;
+	      sauve = *cssRule;
+	      *cssRule = EOS;
 	      *url = TtaStrdup (base);
-	      *attrstr = sauve;
+	      *cssRule = sauve;
 	    }
-	  attrstr++;
-	  return (attrstr);
+	  cssRule++;
+	  return (cssRule);
 	}
     }
 
   if (url != NULL)
     *url = NULL;  
-  return (attrstr);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -655,22 +677,22 @@ char              **url;
    return NULL if not found                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *GetHTMLStyleAttrIndex (char *attrstr, int *index)
+static char        *GetHTMLStyleAttrIndex (char *cssRule, int *index)
 #else
-static char        *GetHTMLStyleAttrIndex (attrstr, index)
-char               *attrstr;
+static char        *GetHTMLStyleAttrIndex (cssRule, index)
+char               *cssRule;
 int                *index;
 #endif
 {
    int                 i;
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    for (i = 0; i < NB_CSSSTYLEATTRIBUTE; i++)
-      if (IS_WORD (attrstr, HTMLStyleAttributes[i].name))
+      if (!strncmp (cssRule, HTMLStyleAttributes[i].name, strlen(HTMLStyleAttributes[i].name)))
 	{
 	   *index = i;
-	   return (attrstr + strlen (HTMLStyleAttributes[i].name));
+	   return (cssRule + strlen (HTMLStyleAttributes[i].name));
 	}
    return (NULL);
 }
@@ -680,14 +702,14 @@ int                *index;
    an element                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GetCSSName (Element elem, Document doc)
+char               *GetCSSName (Element el, Document doc)
 #else
-char               *GetCSSName (elem, doc)
-Element             elem;
+char               *GetCSSName (el, doc)
+Element             el;
 Document            doc;
 #endif
 {
-   char               *res = GITagName (elem);
+   char               *res = GITagName (el);
 
    /* some kind of filtering is probably needed !!! */
    if (res == NULL)
@@ -700,10 +722,10 @@ Document            doc;
    CSS names of an element                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int      GetCSSNames (Element elem, Document doc, char **lst, int max)
+static int      GetCSSNames (Element el, Document doc, char **lst, int max)
 #else
-static int      GetCSSNames (elem, doc, lst, max)
-Element         elem;
+static int      GetCSSNames (el, doc, lst, max)
+Element         el;
 Document        doc;
 char          **lst;
 int             max;
@@ -711,16 +733,16 @@ int             max;
 {
    char        *res;
    int          deep;
-   Element      father = elem;
+   Element      father = el;
 
    for (deep = 0; deep < max;)
      {
-	elem = father;
-	if (elem == NULL)
+	el = father;
+	if (el == NULL)
 	   break;
-	father = TtaGetParent (elem);
+	father = TtaGetParent (el);
 
-	res = GITagName (elem);
+	res = GITagName (el);
 
 	if (res == NULL)
 	   continue;
@@ -1028,96 +1050,6 @@ int                  len
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   UpdateStyleDelete : attribute Style will be deleted.            
-   remove the existing style presentation.                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateStyleDelete (NotifyAttribute * event)
-#else
-void                UpdateStyleDelete (event)
-NotifyAttribute    *event;
-#endif
-{
-   PresentationTarget  target;
-   SpecificContextBlock block;
-   PresentationContext context;
-   PresentationValue   unused;
-   
-   unused.data = 0;
-
-   /*
-    * remove all the presentation specific rules applied to the element.
-    */
-   context = (PresentationContext) & block;
-   target = (PresentationTarget) event->element;
-   block.drv = &SpecificStrategy;
-   block.doc = event->document;
-   block.schema = TtaGetDocumentSSchema (event->document);
-   if (context->drv->CleanPresentation != NULL)
-      context->drv->CleanPresentation (target, context, unused);
-}
-
-/*----------------------------------------------------------------------
-   UpdateStylePost : attribute Style has been updated or created.  
-   reflect the new style presentation.                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateStylePost (NotifyAttribute * event)
-#else
-void                UpdateStylePost (event)
-NotifyAttribute    *event;
-#endif
-{
-   Element             el;
-   Document            doc;
-   Attribute           at;
-   AttributeType       atType;
-   char               *style = NULL;
-   int                 len;
-
-   el = event->element;
-   doc = event->document;
-
-   /*
-    * First remove all the presentation specific rules applied to the element.
-    */
-   UpdateStyleDelete (event);
-
-   len = TtaGetTextAttributeLength (event->attribute);
-   if ((len < 0) || (len > 10000))
-      return;
-   if (len == 0)
-     {
-	/*
-	 * suppress the Style Attribute.
-	 */
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	atType.AttrTypeNum = HTML_ATTR_Style_;
-
-	at = TtaGetAttribute (el, atType);
-	if (at != NULL)
-	  {
-	     TtaRemoveAttribute (el, at, doc);
-	     DeleteSpanIfNoAttr (el, doc);
-	  }
-     }
-   else
-     {
-	/*
-	 * parse and apply the new style content.
-	 */
-	style = (char *) TtaGetMemory (len + 2);
-	if (style == NULL)
-	   return;
-	TtaGiveTextAttributeValue (event->attribute, style, &len);
-	style[len] = EOS;
-
-	ParseHTMLSpecificStyle (el, style, doc);
-	TtaFreeMemory(style);
-     }
-}
-
-/*----------------------------------------------------------------------
    SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
        enrich the CSS string.
   ----------------------------------------------------------------------*/
@@ -1152,10 +1084,10 @@ void               *param;
    one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetHTMLStyleString (Element elem, Document doc, char *buf, int *len)
+void                GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
 #else
-void                GetHTMLStyleString (elem, doc, buf, len)
-Element             elem;
+void                GetHTMLStyleString (el, doc, buf, len)
+Element             el;
 Document            doc;
 char               *buf;
 int                *len;
@@ -1173,42 +1105,41 @@ int                *len;
    */
   buf[0] = EOS;
   ctxt = GetSpecificContext (doc);
-  ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[0]);
+  ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[0]);
   FreeSpecificContext (ctxt);
   *len = strlen (buf);
 
   /*
    * BODY / HTML elements specific handling.
    */
-  elType = TtaGetElementType (elem);
-
-   if (elType.ElTypeNum == HTML_EL_HTML)
-     {
-       elType.ElTypeNum = HTML_EL_BODY;
-       elem = TtaSearchTypedElement(elType, SearchForward, elem);
-       if (!elem)
-	 return;
-       if (*len > 0)
-	 strcat(buf,";");
-       *len = strlen (buf);
-       ctxt = GetSpecificContext (doc);
-       ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
-       FreeSpecificContext (ctxt);
-       *len = strlen (buf);
-     }
-   else if (elType.ElTypeNum == HTML_EL_BODY)
-     {
-       elem = TtaGetParent (elem);
-       if (!elem)
-	 return;
-       if (*len > 0)
-	 strcat(buf,";");
-       *len = strlen (buf);
-       ctxt = GetSpecificContext (doc);
-       ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
-       FreeSpecificContext (ctxt);
-       *len = strlen (buf);
-   }
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_HTML)
+    {
+      elType.ElTypeNum = HTML_EL_BODY;
+      el = TtaSearchTypedElement(elType, SearchForward, el);
+      if (!el)
+	return;
+      if (*len > 0)
+	strcat(buf,";");
+      *len = strlen (buf);
+      ctxt = GetSpecificContext (doc);
+      ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
+      FreeSpecificContext (ctxt);
+      *len = strlen (buf);
+    }
+  else if (elType.ElTypeNum == HTML_EL_BODY)
+    {
+      el = TtaGetParent (el);
+      if (!el)
+	return;
+      if (*len > 0)
+	strcat(buf,";");
+      *len = strlen (buf);
+      ctxt = GetSpecificContext (doc);
+      ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
+      FreeSpecificContext (ctxt);
+      *len = strlen (buf);
+    }
 }
 
 /************************************************************************
@@ -1218,53 +1149,54 @@ int                *len;
  *									*  
  ************************************************************************/
 
+
 /*----------------------------------------------------------------------
-   ParseHTMLStyleDecl : parse an CSS Style string                        
+   ParseCSSRule : parse a CSS Style string                        
    we expect the input string describing the style to be of the  
    form : ATTRIBUTE : DESCRIPTION [ , ATTIBUTE : DESCRIPTION ] * 
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLStyleDecl (PresentationTarget target, PresentationContext context, char *attrstr)
+void                ParseCSSRule (PresentationTarget target, PresentationContext context, char *cssRule)
 #else
-void                ParseHTMLStyleDecl (target, context, attrstr)
+void                ParseCSSRule (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
+   PresentationValue   unused;
    int                 styleno;
    char               *new;
-   PresentationValue   unused;
 
-   while (*attrstr != 0)
+   while (*cssRule != 0)
      {
-	SKIP_BLANK (attrstr);
+	cssRule = SkipBlanks (cssRule);
 	/* look for the type of attribute */
-	new = GetHTMLStyleAttrIndex (attrstr, &styleno);
+	new = GetHTMLStyleAttrIndex (cssRule, &styleno);
 	if (!new)
 	  {
-	     attrstr++;
-	     SKIP_WORD (attrstr);
-	     SKIP_BLANK (attrstr);
+	     cssRule++;
+	     cssRule = SkipWord (cssRule);
+	     cssRule = SkipBlanks (cssRule);
 	     continue;
 	  }
 	/*
 	 * update index and skip the ":" indicator if present
 	 */
-	attrstr = new;
-	SKIP_BLANK (attrstr);
-	if (START_DESCR (attrstr))
+	cssRule = new;
+	cssRule = SkipBlanks (cssRule);
+	if (*cssRule == ':')
 	  {
-	     attrstr++;
-	     SKIP_BLANK (attrstr);
+	     cssRule++;
+	     cssRule = SkipBlanks (cssRule);
 	  }
 	/*
 	 * try to parse the attribute associated to this attribute.
 	 */
 	if (HTMLStyleAttributes[styleno].parsing_function != NULL)
 	   new = HTMLStyleAttributes[styleno].
-	      parsing_function (target, context, attrstr);
+	      parsing_function (target, context, cssRule);
 
 	/*
 	 * Update the rendering.
@@ -1275,43 +1207,43 @@ char               *attrstr;
 	/*
 	 * update index and skip the ";" separator if present
 	 */
-	attrstr = new;
-	SKIP_BLANK (attrstr);
-	if (IS_SEPARATOR (attrstr))
+	cssRule = new;
+	cssRule = SkipBlanks (cssRule);
+	if (*cssRule == ',' || *cssRule == ';')
 	  {
-	     attrstr++;
-	     SKIP_BLANK (attrstr);
+	     cssRule++;
+	     cssRule = SkipBlanks (cssRule);
 	  }
      }
 
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLSpecificStyle : parse and apply an CSS Style string. 
+   ParseHTMLSpecificStyle : parse and apply a CSS Style string. 
    This function must be called only to in the context of        
    specific style applying to an element, we will use the        
    specific presentation driver to reflect the new presentation  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLSpecificStyle (Element elem, char *attrstr, Document doc)
+void                ParseHTMLSpecificStyle (Element elem, char *cssRule, Document doc)
 #else
-void                ParseHTMLSpecificStyle (elem, attrstr, doc)
+void                ParseHTMLSpecificStyle (elem, cssRule, doc)
 Element             elem;
-char               *attrstr;
+char               *cssRule;
 Document            doc;
 
 #endif
 {
    PresentationTarget  target;
    SpecificContext     context;
-   PresentationValue   unused;
+   /*PresentationValue   unused;*/
    ElementType         elType;
    Element             el;
 
-   unused.data = 0;
+   /*unused.data = 0;*/
 #ifdef DEBUG_STYLES
    fprintf (stderr, "ParseHTMLSpecificStyle(%s,%s,%d)\n",
-	    GetCSSName (elem, doc), attrstr, doc);
+	    GetCSSName (elem, doc), cssRule, doc);
 #endif
    /* 
     * A rule applying to BODY is really meant to address HTML.
@@ -1337,8 +1269,8 @@ Document            doc;
    if (HTMLStyleParserDestructiveMode)
      context->destroy = 1;
 
-   /* Call the parsor. */
-   ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
+   /* Call the parser */
+   ParseCSSRule (target, (PresentationContext) context, cssRule);
 
    /* free the context */
    FreeSpecificContext(context);
@@ -1353,33 +1285,39 @@ Document            doc;
    Need to add multi-DTD support here !!!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTMLGenericSelector (char *selector, char *attrstr,
-			   GenericContext ctxt, Document doc, PSchema gPres)
+static char        *ParseHTMLGenericSelector (char *selector, char *cssRule,
+			   GenericContext ctxt, Document doc, PSchema pSchema)
 #else
-static char        *ParseHTMLGenericSelector (selector, attrstr, ctxt, doc, gPres)
+static char        *ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, pSchema)
 char               *selector;
-char               *attrstr;
+char               *cssRule;
 GenericContext      ctxt;
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 #endif
 {
-  PresentationTarget  target = (PresentationTarget) gPres;
+  ElementType         elType;
+  /*PresentationValue   unused;*/
+  SSchema	      HTMLschema;
+  PresentationTarget  target = (PresentationTarget) pSchema;
   char                sel[150];
   char                class[150];
   char                pseudoclass[150];
   char                id[150];
   char                attrelemname[150];
-  char               *deb = &sel[0];
-  char               *elem = &sel[0];
-  char               *cur = &sel[0];
-  ElementType         elType;
+  char               *deb;
+  char               *elem;
+  char               *cur;
   char               *ancestors[MAX_ANCESTORS];
   int                 i, j;
-  PresentationValue   unused;
-  SSchema	      HTMLschema;
 
-  unused.data = 0;
+  /*unused.data = 0;*/
+  sel[0] = EOS;
+  class[0] = EOS;
+  pseudoclass[0] = EOS;
+  id[0] = EOS;
+  attrelemname[0] = EOS;
+  deb = cur = elem = &sel[0];
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       ancestors[i] = NULL;
@@ -1390,18 +1328,13 @@ PSchema             gPres;
   /*
    * first format the first selector item, uniformizing blanks.
    */
-  SKIP_BLANK (selector);
-  sel[0] = EOS;
-  class[0] = EOS;
-  pseudoclass[0] = EOS;
-  id[0] = EOS;
-  attrelemname[0] = EOS;
+  selector = SkipBlanks (selector);
   while (1)
     {
       /* put one word in the sel buffer */
       while ((*selector != EOS) && (*selector != ',') &&
 	     (*selector != '.') && (*selector != ':') &&
-	     (*selector != '#') && (!IS_BLANK (selector)))
+	     (*selector != '#') && (!IsBlank (selector)))
 	*cur++ = *selector++;
       *cur++ = EOS;
       
@@ -1415,32 +1348,15 @@ PSchema             gPres;
 	elem = deb;
       deb = cur;
       
-      /* store elem in the list if the string is non-empty */
-      if (*elem != EOS)
-	{
-	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
-	    ancestors[i] = ancestors[i - 1];
-	  ancestors[0] = elem;
-	}
-      /* why did we stop ? */
-      if (*selector == EOS)
-	/* end of the selector */
-	break;
-      else if (*selector == ',')
-	{
-	  /* end of the current selector */
-	  selector++;
-	  break;
-	}
-      else if (*selector == '.')
+      if (*selector == '.')
 	{
 	  /* read the class id : only one allowed by selector */
 	  class[0] = EOS;
-	  cur = &class[0];
+	  cur = class;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IS_BLANK (selector)))
+		 (!IsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -1449,11 +1365,11 @@ PSchema             gPres;
 	{
 	  /* read the pseudoclass id : only one allowed by selector */
 	  pseudoclass[0] = EOS;
-	  cur = &pseudoclass[0];
+	  cur = pseudoclass;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IS_BLANK (selector)))
+		 (!IsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -1466,42 +1382,66 @@ PSchema             gPres;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IS_BLANK (selector)))
+		 (!IsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
 	}
-      else if (IS_BLANK (selector))
-	SKIP_BLANK (selector);
+      else if (IsBlank (selector))
+	{
+	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
+	    ancestors[i] = ancestors[i - 1];
+	  selector = SkipBlanks (selector);
+	  /* don't take class and pseudoclass into account for ancestors */
+	  class[0] = EOS;
+	  pseudoclass[0] = EOS;
+	  id[0] = EOS;
+	}
+
+      /* store elem in the list if the string is non-empty */
+      if (*elem != EOS)
+	ancestors[0] = elem;
+
+      /* why did we stop ? */
+      if (*selector == EOS)
+	/* end of the selector */
+	break;
+      else if (*selector == ',')
+	{
+	  /* end of the current selector */
+	  selector++;
+	  break;
+	}
     }
 
+   /* Now set up the context block */
+  ctxt->box = 0;
   elem = ancestors[0];
   if ((elem == NULL) || (*elem == EOS))
-    elem = &class[0];
-  if (*elem == EOS)
-    elem = &pseudoclass[0];
-  if (*elem == EOS)
-    elem = &id[0];
-  if (*elem == EOS)
-    return (selector);
+    {
+      if (class[0] != EOS)
+	elem = &class[0];
+      else if (pseudoclass[0]  != EOS)
+	elem = &pseudoclass[0];
+      else if (id[0]  != EOS)
+	elem = &id[0];
+      else
+	return (selector);
+    }
 
-   /*
-    * set up the context block.
-    */
-  ctxt->box = 0;
   if (class[0] != EOS)
     {
-      ctxt->class = &class[0];
+      ctxt->class = class;
       ctxt->classattr = HTML_ATTR_Class;
     }
   else if (pseudoclass[0] != EOS)
     {
-      ctxt->class = &pseudoclass[0];
+      ctxt->class = pseudoclass;
       ctxt->classattr = HTML_ATTR_PseudoClass;
     }
   else if (id[0] != EOS)
     {
-      ctxt->class = &id[0];
+      ctxt->class = id;
       ctxt->classattr = HTML_ATTR_ID;
     }
   else
@@ -1562,48 +1502,45 @@ PSchema             gPres;
 	}
     }
 
-  if (attrstr)
-      ParseHTMLStyleDecl (target, (PresentationContext) ctxt, attrstr);
+  if (cssRule)
+      ParseCSSRule (target, (PresentationContext) ctxt, cssRule);
   return (selector);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLGenericStyle : parse and apply an CSS Style string.  
+   ParseCSSGenericStyle : parse and apply a CSS Style string.  
    This function must be called only to in the context of        
    a generic style applying to class of element. The generic     
    presentation driver is used to reflect the new presentation.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseHTMLGenericStyle (char *selector, char *attrstr, Document doc, PSchema gPres)
+void         ParseCSSGenericStyle (char *selector, char *cssRule, Document doc, PSchema pSchema)
 #else
-static void         ParseHTMLGenericStyle (selector, attrstr, doc, gPres)
-char               *selector;
-char               *attrstr;
-Document            doc;
-PSchema             gPres;
+void         ParseCSSGenericStyle (selector, cssRule, doc, pSchema)
+char        *selector;
+char        *cssRule;
+Document     doc;
+PSchema      pSchema;
 #endif
 {
-   GenericContext      ctxt;
+  GenericContext      ctxt;
 
 #ifdef DEBUG_STYLES
-   fprintf (stderr, "ParseHTMLGenericStyle(%s,%s,%d)\n",
-	    selector, attrstr, doc);
+  fprintf (stderr, "ParseCSSGenericStyle(%s,%s,%d)\n", selector, cssRule, doc);
 #endif
+  ctxt = GetGenericContext (doc);
+  if (ctxt == NULL)
+    return;
 
-   ctxt = GetGenericContext (doc);
-   if (ctxt == NULL)
-      return;
+  if (HTMLStyleParserDestructiveMode)
+    ctxt->destroy = 1;
 
-   if (HTMLStyleParserDestructiveMode) ctxt->destroy = 1;
-
-   while ((selector != NULL) && (*selector != 0))
-      selector = ParseHTMLGenericSelector (selector, attrstr, ctxt,
-					   doc, gPres);
-   FreeGenericContext (ctxt);
+  while ((selector != NULL) && (*selector != EOS))
+    selector = ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, pSchema);
+  FreeGenericContext (ctxt);
 
 #ifdef DEBUG_STYLES
-   fprintf (stderr, "ParseHTMLGenericStyle(%s,%s,%d) done\n",
-	    selector, attrstr, doc);
+  fprintf (stderr, "ParseCSSGenericStyle(%s,%s,%d) done\n", selector, cssRule, doc);
 #endif
 }
 
@@ -1618,449 +1555,449 @@ PSchema             gPres;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSTest (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSTest (target, context, attrstr)
+static char        *ParseCSSTest (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
 
-   SKIP_WORD (attrstr);
-   return (attrstr);
+   cssRule = SkipWord (cssRule);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTopWidth : parse an CSS BorderTopWidth
+   ParseCSSBorderTopWidth : parse a CSS BorderTopWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderTopWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderTopWidth (target, context, attrstr)
+static char        *ParseCSSBorderTopWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderTopWidth ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRightWidth : parse an CSS BorderRightWidth
+   ParseCSSBorderRightWidth : parse a CSS BorderRightWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderRightWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderRightWidth (target, context, attrstr)
+static char        *ParseCSSBorderRightWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderRightWidth ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottomWidth : parse an CSS BorderBottomWidth
+   ParseCSSBorderBottomWidth : parse a CSS BorderBottomWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderBottomWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderBottomWidth (target, context, attrstr)
+static char        *ParseCSSBorderBottomWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderBottomWidth ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeftWidth : parse an CSS BorderLeftWidth
+   ParseCSSBorderLeftWidth : parse a CSS BorderLeftWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderLeftWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderLeftWidth (target, context, attrstr)
+static char        *ParseCSSBorderLeftWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderLeftWidth ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderWidth : parse an CSS BorderWidth
+   ParseCSSBorderWidth : parse a CSS BorderWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderWidth (target, context, attrstr)
+static char        *ParseCSSBorderWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderWidth ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTop : parse an CSS BorderTop
+   ParseCSSBorderTop : parse a CSS BorderTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderTop (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderTop (target, context, attrstr)
+static char        *ParseCSSBorderTop (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderTop ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRight : parse an CSS BorderRight
+   ParseCSSBorderRight : parse a CSS BorderRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderRight (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderRight (target, context, attrstr)
+static char        *ParseCSSBorderRight (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderRight ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottom : parse an CSS BorderBottom
+   ParseCSSBorderBottom : parse a CSS BorderBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderBottom (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderBottom (target, context, attrstr)
+static char        *ParseCSSBorderBottom (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderBottom ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeft : parse an CSS BorderLeft
+   ParseCSSBorderLeft : parse a CSS BorderLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderLeft (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderLeft (target, context, attrstr)
+static char        *ParseCSSBorderLeft (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderLeft ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColor : parse an CSS border-color        
+   ParseCSSBorderColor : parse a CSS border-color        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderColor (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderColor (target, context, attrstr)
+static char        *ParseCSSBorderColor (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderColor ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyle : parse an CSS border-style        
+   ParseCSSBorderStyle : parse a CSS border-style        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorderStyle (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorderStyle (target, context, attrstr)
+static char        *ParseCSSBorderStyle (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorderStyle ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorder : parse an CSS border        
+   ParseCSSBorder : parse a CSS border        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBorder (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBorder (target, context, attrstr)
+static char        *ParseCSSBorder (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBorder ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSClear : parse an CSS clear attribute string    
+   ParseCSSClear : parse a CSS clear attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSClear (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSClear (target, context, attrstr)
+static char        *ParseCSSClear (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSClear ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSDisplay : parse an CSS display attribute string        
+   ParseCSSDisplay : parse a CSS display attribute string        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSDisplay (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSDisplay (target, context, attrstr)
+static char        *ParseCSSDisplay (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   pval;
 
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "block"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "block", 5))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_NOTINLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "inline"))
+   else if (!strncasecmp (cssRule, "inline", 6))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_INLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "none"))
+   else if (!strncasecmp (cssRule, "none", 4))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_HIDE;
 	if (context->drv->SetShow)
 	   context->drv->SetShow (target, context, pval);
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "list-item"))
+   else if (!strncasecmp (cssRule, "list-item", 9))
      {
 	MSG ("list-item display value unsupported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
-	fprintf (stderr, "invalid display value %s\n", attrstr);
-	return (attrstr);
+	fprintf (stderr, "invalid display value %s\n", cssRule);
+	return (cssRule);
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFloat : parse an CSS float attribute string    
+   ParseCSSFloat : parse a CSS float attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFloat (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFloat (target, context, attrstr)
+static char        *ParseCSSFloat (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSFloat ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLetterSpacing : parse an CSS letter-spacing    
+   ParseCSSLetterSpacing : parse a CSS letter-spacing    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSLetterSpacing (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSLetterSpacing (target, context, attrstr)
+static char        *ParseCSSLetterSpacing (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSLetterSpacing ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleType : parse an CSS list-style-type
+   ParseCSSListStyleType : parse a CSS list-style-type
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSListStyleType (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSListStyleType (target, context, attrstr)
+static char        *ParseCSSListStyleType (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSListStyleType ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleImage : parse an CSS list-style-image
+   ParseCSSListStyleImage : parse a CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSListStyleImage (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSListStyleImage (target, context, attrstr)
+static char        *ParseCSSListStyleImage (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSListStyleImage ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStylePosition : parse an CSS list-style-position
+   ParseCSSListStylePosition : parse a CSS list-style-position
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSListStylePosition (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSListStylePosition (target, context, attrstr)
+static char        *ParseCSSListStylePosition (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSListStylePosition ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyle : parse an CSS list-style            
+   ParseCSSListStyle : parse a CSS list-style            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSListStyle (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSListStyle (target, context, attrstr)
+static char        *ParseCSSListStyle (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSListStyle ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMagnification : parse an CSS magnification     
+   ParseCSSMagnification : parse a CSS magnification     
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMagnification (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMagnification (target, context, attrstr)
+static char        *ParseCSSMagnification (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   pval;
 
-   SKIP_BLANK (attrstr);
-   attrstr = ParseCSSUnit (attrstr, &pval);
+   cssRule = SkipBlanks (cssRule);
+   cssRule = ParseCSSUnit (cssRule, &pval);
    if ((pval.typed_data.unit == DRIVERP_UNIT_REL) && (pval.typed_data.value >= -10) &&
        (pval.typed_data.value <= 10))
      {
@@ -2073,7 +2010,7 @@ char               *attrstr;
 		 (block->type == HTML_EL_HEAD))
 	       {
 		  CSSSetMagnification (block->doc, (PSchema) target, pval.typed_data.value);
-		  return (attrstr);
+		  return (cssRule);
 	       }
 	  }
      }
@@ -2081,172 +2018,172 @@ char               *attrstr;
      {
 	MSG ("invalid magnification value\n");
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginLeft : parse an CSS margin-left          
+   ParseCSSMarginLeft : parse a CSS margin-left          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMarginLeft (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMarginLeft (target, context, attrstr)
+static char        *ParseCSSMarginLeft (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSMarginLeft ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginRight : parse an CSS margin-right        
+   ParseCSSMarginRight : parse a CSS margin-right        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMarginRight (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMarginRight (target, context, attrstr)
+static char        *ParseCSSMarginRight (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSMarginRight ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMargin : parse an CSS margin attribute string. 
+   ParseCSSMargin : parse a CSS margin attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMargin (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMargin (target, context, attrstr)
+static char        *ParseCSSMargin (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSMargin ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingTop : parse an CSS PaddingTop
+   ParseCSSPaddingTop : parse a CSS PaddingTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPaddingTop (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSPaddingTop (target, context, attrstr)
+static char        *ParseCSSPaddingTop (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSPaddingTop ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingRight : parse an CSS PaddingRight
+   ParseCSSPaddingRight : parse a CSS PaddingRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPaddingRight (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSPaddingRight (target, context, attrstr)
+static char        *ParseCSSPaddingRight (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSPaddingRight ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingBottom : parse an CSS PaddingBottom
+   ParseCSSPaddingBottom : parse a CSS PaddingBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPaddingBottom (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSPaddingBottom (target, context, attrstr)
+static char        *ParseCSSPaddingBottom (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSPaddingBottom ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingLeft : parse an CSS PaddingLeft
+   ParseCSSPaddingLeft : parse a CSS PaddingLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPaddingLeft (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSPaddingLeft (target, context, attrstr)
+static char        *ParseCSSPaddingLeft (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSPaddingLeft ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPadding : parse an CSS padding attribute string. 
+   ParseCSSPadding : parse a CSS padding attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPadding (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSPadding (target, context, attrstr)
+static char        *ParseCSSPadding (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSPadding ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextAlign : parse an CSS text-align            
+   ParseCSSTextAlign : parse a CSS text-align            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSTextAlign (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSTextAlign (target, context, attrstr)
+static char        *ParseCSSTextAlign (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   align;
@@ -2257,31 +2194,31 @@ char               *attrstr;
    justify.typed_data.value = 0;
    justify.typed_data.unit = 1;
 
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "left"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "left", 4))
      {
 	align.typed_data.value = AdjustLeft;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "right"))
+   else if (!strncasecmp (cssRule, "right", 5))
      {
 	align.typed_data.value = AdjustRight;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "center"))
+   else if (!strncasecmp (cssRule, "center", 6))
      {
 	align.typed_data.value = Centered;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "justify"))
+   else if (!strncasecmp (cssRule, "justify", 7))
      {
 	justify.typed_data.value = Justified;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
 	fprintf (stderr, "invalid align value\n");
-	return (attrstr);
+	return (cssRule);
      }
 
    /*
@@ -2299,31 +2236,31 @@ char               *attrstr;
 	if (context->drv->SetHyphenation)
 	   context->drv->SetHyphenation (target, context, justify);
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextIndent : parse an CSS text-indent          
+   ParseCSSTextIndent : parse a CSS text-indent          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSTextIndent (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSTextIndent (target, context, attrstr)
+static char        *ParseCSSTextIndent (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   pval;
 
-   SKIP_BLANK (attrstr);
-   attrstr = ParseCSSUnit (attrstr, &pval);
+   cssRule = SkipBlanks (cssRule);
+   cssRule = ParseCSSUnit (cssRule, &pval);
    if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	fprintf (stderr, "invalid font size\n");
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * install the attribute
@@ -2332,186 +2269,186 @@ char               *attrstr;
      {
 	context->drv->SetIndent (target, context, pval);
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextTransform : parse an CSS text-transform    
+   ParseCSSTextTransform : parse a CSS text-transform    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSTextTransform (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSTextTransform (target, context, attrstr)
+static char        *ParseCSSTextTransform (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSTextTransform ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSVerticalAlign : parse an CSS vertical-align    
+   ParseCSSVerticalAlign : parse a CSS vertical-align    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSVerticalAlign (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSVerticalAlign (target, context, attrstr)
+static char        *ParseCSSVerticalAlign (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSVerticalAlign ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWhiteSpace : parse an CSS white-space          
+   ParseCSSWhiteSpace : parse a CSS white-space          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSWhiteSpace (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSWhiteSpace (target, context, attrstr)
+static char        *ParseCSSWhiteSpace (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "normal"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "normal", 6))
      {
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "pre"))
+   else if (!strncasecmp (cssRule, "pre", 3))
      {
 	MSG ("pre white-space setting unsupported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
-	fprintf (stderr, "invalid white-space value %s\n", attrstr);
-	return (attrstr);
+	fprintf (stderr, "invalid white-space value %s\n", cssRule);
+	return (cssRule);
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWordSpacing : parse an CSS word-spacing        
+   ParseCSSWordSpacing : parse a CSS word-spacing        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSWordSpacing (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSWordSpacing (target, context, attrstr)
+static char        *ParseCSSWordSpacing (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSWordSpacing ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFont : parse an CSS font attribute string      
+   ParseCSSFont : parse a CSS font attribute string      
    we expect the input string describing the attribute to be     
    !!!!!!                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFont (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFont (target, context, attrstr)
+static char        *ParseCSSFont (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSFont ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontSize : parse an CSS font size attr string  
+   ParseCSSFontSize : parse a CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFontSize (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFontSize (target, context, attrstr)
+static char        *ParseCSSFontSize (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   pval;
 
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "xx-small"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 1;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "x-small"))
+   else if (!strncasecmp (cssRule, "x-small", 7))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 2;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "small"))
+   else if (!strncasecmp (cssRule, "small", 5))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 3;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "medium"))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 4;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "large"))
+   else if (!strncasecmp (cssRule, "large", 5))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 5;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "x-large"))
+   else if (!strncasecmp (cssRule, "x-large", 7))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 6;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "xx-large"))
+   else if (!strncasecmp (cssRule, "xx-large", 8))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 8;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
-	attrstr = ParseCSSUnit (attrstr, &pval);
+	cssRule = ParseCSSUnit (cssRule, &pval);
 	if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
 	  {
 	     fprintf (stderr, "invalid font size\n");
-	     return (attrstr);
+	     return (cssRule);
 	  }
      }
 
@@ -2520,65 +2457,65 @@ char               *attrstr;
     */
    if (context->drv->SetFontSize)
       context->drv->SetFontSize (target, context, pval);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontFamily : parse an CSS font family string   
+   ParseCSSFontFamily : parse a CSS font family string   
    we expect the input string describing the attribute to be     
    a common generic font style name                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFontFamily (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFontFamily (target, context, attrstr)
+static char        *ParseCSSFontFamily (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   font;
 
    font.typed_data.value = 0;
    font.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_CASE_WORD (attrstr, "times"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "times", strlen("times")))
      {
 	font.typed_data.value = DRIVERP_FONT_TIMES;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
-   else if (IS_CASE_WORD (attrstr, "serif"))
+   else if (!strncasecmp (cssRule, "serif", strlen("serif")))
      {
 	font.typed_data.value = DRIVERP_FONT_TIMES;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
-   else if (IS_CASE_WORD (attrstr, "helvetica"))
+   else if (!strncasecmp (cssRule, "helvetica", strlen("helvetica")))
      {
 	font.typed_data.value = DRIVERP_FONT_HELVETICA;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
-   else if (IS_CASE_WORD (attrstr, "sans-serif"))
+   else if (!strncasecmp (cssRule, "sans-serif", strlen("sans")))
      {
 	font.typed_data.value = DRIVERP_FONT_HELVETICA;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
-   else if (IS_CASE_WORD (attrstr, "courier"))
+   else if (!strncasecmp (cssRule, "courier", strlen("courier")))
      {
 	font.typed_data.value = DRIVERP_FONT_COURIER;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
-   else if (IS_CASE_WORD (attrstr, "monospace"))
+   else if (!strncasecmp (cssRule, "monospace", strlen("monospace")))
      {
 	font.typed_data.value = DRIVERP_FONT_COURIER;
-	SKIP_PROPERTY (attrstr);
+	cssRule = SkipProperty (cssRule);
      }
    else
      {
 	/* !!!!!! manque cursive et fantasy !!!!!!!! */
 	MSG ("invalid font familly\n");
-	SKIP_PROPERTY (attrstr);
-	return (attrstr);
+	cssRule = SkipProperty (cssRule);
+	return (cssRule);
      }
 
    /*
@@ -2586,23 +2523,23 @@ char               *attrstr;
     */
    if (context->drv->SetFontFamily)
       context->drv->SetFontFamily (target, context, font);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontWeight : parse an CSS font weight string   
+   ParseCSSFontWeight : parse a CSS font weight string   
    we expect the input string describing the attribute to be     
    extra-light, light, demi-light, medium, demi-bold, bold, extra-bold
    or a number encoding for the previous values                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFontWeight (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFontWeight (target, context, attrstr)
+static char        *ParseCSSFontWeight (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   weight;
@@ -2610,43 +2547,43 @@ char               *attrstr;
 
    weight.typed_data.value = 0;
    weight.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "extra-light"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "extra-light", strlen ("extra-light")))
      {
 	weight.typed_data.value = -3;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "light"))
+   else if (!strncasecmp (cssRule, "light", strlen ("light")))
      {
 	weight.typed_data.value = -2;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "demi-light"))
+   else if (!strncasecmp (cssRule, "demi-light", strlen ("demi-light")))
      {
 	weight.typed_data.value = -1;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "medium"))
+   else if (!strncasecmp (cssRule, "medium", strlen ("medium")))
      {
 	weight.typed_data.value = 0;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "extra-bold"))
+   else if (!strncasecmp (cssRule, "extra-bold", strlen ("extra-bold")))
      {
 	weight.typed_data.value = +3;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "bold"))
+   else if (!strncasecmp (cssRule, "bold", strlen ("bold")))
      {
 	weight.typed_data.value = +2;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "demi-bold"))
+   else if (!strncasecmp (cssRule, "demi-bold", strlen ("demi-bold")))
      {
 	weight.typed_data.value = +1;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (sscanf (attrstr, "%d", &val) > 0)
+   else if (sscanf (cssRule, "%d", &val) > 0)
      {
 	if ((val < -3) || (val > 3))
 	  {
@@ -2655,12 +2592,13 @@ char               *attrstr;
 	  }
 	else
 	   weight.typed_data.value = val;
-	SKIP_INT (attrstr);
+	while (isdigit(*cssRule))
+	  cssRule++;
      }
    else
      {
 	fprintf (stderr, "invalid font weight\n");
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * Here we have to reduce since font weight is not well supported
@@ -2685,46 +2623,46 @@ char               *attrstr;
     */
    if (context->drv->SetFontStyle)
       context->drv->SetFontStyle (target, context, weight);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontVariant : parse an CSS font variant string     
+   ParseCSSFontVariant : parse a CSS font variant string     
    we expect the input string describing the attribute to be     
    normal or small-caps
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFontVariant (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFontVariant (target, context, attrstr)
+static char        *ParseCSSFontVariant (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   style;
 
    style.typed_data.value = 0;
    style.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "small-caps"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "small-caps", strlen ("small-caps")))
      {
         /*
 	 * Not supported yet, so we use bold for rendering
 	 */
 	style.typed_data.value = DRIVERP_FONT_BOLD;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "normal"))
+   else if (!strncasecmp (cssRule, "normal", strlen ("normal")))
      {
 	style.typed_data.value = DRIVERP_FONT_ROMAN;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
 	MSG ("invalid font variant\n");
-	return (attrstr);
+	return (cssRule);
      }
 
    /*
@@ -2753,23 +2691,23 @@ char               *attrstr;
 		context->drv->SetFontStyle (target, context, style);
 	  }
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 
 /*----------------------------------------------------------------------
-   ParseCSSFontStyle : parse an CSS font style string     
+   ParseCSSFontStyle : parse a CSS font style string     
    we expect the input string describing the attribute to be     
    italic, oblique or normal                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFontStyle (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSFontStyle (target, context, attrstr)
+static char        *ParseCSSFontStyle (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   style;
@@ -2779,26 +2717,26 @@ char               *attrstr;
    style.typed_data.unit = 1;
    size.typed_data.value = 0;
    size.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "italic"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "italic", 6))
      {
 	style.typed_data.value = DRIVERP_FONT_ITALICS;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "oblique"))
+   else if (!strncasecmp (cssRule, "oblique", 7))
      {
 	style.typed_data.value = DRIVERP_FONT_OBLIQUE;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "normal"))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
 	style.typed_data.value = DRIVERP_FONT_ROMAN;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
 	MSG ("invalid font style\n");
-	return (attrstr);
+	return (cssRule);
      }
 
    /*
@@ -2846,110 +2784,110 @@ char               *attrstr;
 		context->drv->SetFontSize (target, context, size);
 	  }
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLineSpacing : parse an CSS font leading string 
+   ParseCSSLineSpacing : parse a CSS font leading string 
    we expect the input string describing the attribute to be     
    value% or value                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSLineSpacing (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSLineSpacing (target, context, attrstr)
+static char        *ParseCSSLineSpacing (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   lead;
 
-   attrstr = ParseCSSUnit (attrstr, &lead);
+   cssRule = ParseCSSUnit (cssRule, &lead);
    if (lead.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid line spacing\n");
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * install the new presentation.
     */
    if (context->drv->SetLineSpacing)
       context->drv->SetLineSpacing (target, context, lead);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextDecoration : parse an CSS text decor string   
+   ParseCSSTextDecoration : parse a CSS text decor string   
    we expect the input string describing the attribute to be     
    underline, overline, line-through, box, shadowbox, box3d,       
    cartouche, blink or none                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSTextDecoration (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSTextDecoration (target, context, attrstr)
+static char        *ParseCSSTextDecoration (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   decor;
 
    decor.typed_data.value = 0;
    decor.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "underline"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "underline", strlen ("underline")))
      {
 	decor.typed_data.value = Underline;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "overline"))
+   else if (!strncasecmp (cssRule, "overline", strlen ("overline")))
      {
 	decor.typed_data.value = Overline;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "line-through"))
+   else if (!strncasecmp (cssRule, "line-through", strlen ("line-through")))
      {
 	decor.typed_data.value = CrossOut;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "box"))
+   else if (!strncasecmp (cssRule, "box", strlen ("box")))
      {
 	MSG ("the box text-decoration attribute is not yet supported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "boxshadow"))
+   else if (!strncasecmp (cssRule, "boxshadow", strlen ("boxshadow")))
      {
 	MSG ("the boxshadow text-decoration attribute is not yet supported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "box3d"))
+   else if (!strncasecmp (cssRule, "box3d", strlen ("box3d")))
      {
 	MSG ("the box3d text-decoration attribute is not yet supported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "cartouche"))
+   else if (!strncasecmp (cssRule, "cartouche", strlen ("cartouche")))
      {
 	MSG ("the cartouche text-decoration attribute is not yet supported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "blink"))
+   else if (!strncasecmp (cssRule, "blink", strlen ("blink")))
      {
 	MSG ("the blink text-decoration attribute will not be supported\n");
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "none"))
+   else if (!strncasecmp (cssRule, "none", strlen ("none")))
      {
 	decor.typed_data.value = NoUnderline;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
 	fprintf (stderr, "invalid text decoration\n");
-	return (attrstr);
+	return (cssRule);
      }
 
    /*
@@ -2960,21 +2898,21 @@ char               *attrstr;
 	if (context->drv->SetTextUnderlining)
 	   context->drv->SetTextUnderlining (target, context, decor);
      }
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSColor : parse an CSS color attribute string    
+   ParseCSSColor : parse a CSS color attribute string    
    we expect the input string describing the attribute to be     
    either a color name, a 3 tuple or an hexadecimal encoding.    
    The color used will be approximed from the current color      
    table                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseCSSColor (char *attrstr, PresentationValue * val)
+static char        *ParseCSSColor (char *cssRule, PresentationValue * val)
 #else
-static char        *ParseCSSColor (attrstr, val)
-char               *attrstr;
+static char        *ParseCSSColor (cssRule, val)
+char               *cssRule;
 PresentationValue  *val;
 #endif
 {
@@ -2985,7 +2923,7 @@ PresentationValue  *val;
    int                 i;
    int                 best = 0;	/* best color in list found */
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    val->typed_data.unit = DRIVERP_UNIT_INVALID;
    val->typed_data.value = 0;
@@ -2996,65 +2934,65 @@ PresentationValue  *val;
     *        cause  we try first to lokup color name from digits
     *        [0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]
     */
-   if ((*attrstr == '#') ||
-       (isxdigit (attrstr[0]) && isxdigit (attrstr[1]) &&
-	isxdigit (attrstr[2])))
+   if ((*cssRule == '#') ||
+       (isxdigit (cssRule[0]) && isxdigit (cssRule[1]) &&
+	isxdigit (cssRule[2])))
      {
 
-	if (*attrstr == '#')
-	   attrstr++;
+	if (*cssRule == '#')
+	   cssRule++;
 
 	/*
 	 * we expect an hexa encoding like F00 or FF0000.
 	 */
-	if ((!isxdigit (attrstr[0])) || (!isxdigit (attrstr[1])) ||
-	    (!isxdigit (attrstr[2])))
+	if ((!isxdigit (cssRule[0])) || (!isxdigit (cssRule[1])) ||
+	    (!isxdigit (cssRule[2])))
 	  {
-	     fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
+	     fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
 	     goto failed;
 	  }
-	else if (!isxdigit (attrstr[3]))
+	else if (!isxdigit (cssRule[3]))
 	  {
 	     /*
 	      * encoded as on 3 digits #F0F 
 	      */
-	     redval = hexa_val (attrstr[0]) * 16 + hexa_val (attrstr[0]);
-	     greenval = hexa_val (attrstr[1]) * 16 + hexa_val (attrstr[1]);
-	     blueval = hexa_val (attrstr[2]) * 16 + hexa_val (attrstr[2]);
+	     redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
+	     greenval = hexa_val (cssRule[1]) * 16 + hexa_val (cssRule[1]);
+	     blueval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[2]);
 	  }
 	else
 	  {
-	     if ((!isxdigit (attrstr[4])) || (!isxdigit (attrstr[5])))
+	     if ((!isxdigit (cssRule[4])) || (!isxdigit (cssRule[5])))
 	       {
-		  fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
+		  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
 	       }
 	     else
 	       {
 		  /*
 		   * encoded as on 3 digits #FF00FF 
 		   */
-		  redval = hexa_val (attrstr[0]) * 16 +
-		     hexa_val (attrstr[1]);
-		  greenval = hexa_val (attrstr[2]) * 16 +
-		     hexa_val (attrstr[3]);
-		  blueval = hexa_val (attrstr[4]) * 16 +
-		     hexa_val (attrstr[5]);
+		  redval = hexa_val (cssRule[0]) * 16 +
+		     hexa_val (cssRule[1]);
+		  greenval = hexa_val (cssRule[2]) * 16 +
+		     hexa_val (cssRule[3]);
+		  blueval = hexa_val (cssRule[4]) * 16 +
+		     hexa_val (cssRule[5]);
 	       }
 	  }
 	goto found_RGB;
      }
-   else if (IS_CASE_WORD (attrstr, "url"))
+   else if (!strncasecmp (cssRule, "url", 4))
      {
 	char               *url;
 
 	/*
 	 * we don't currently support URL just parse it to skip it.
 	 */
-	attrstr = ParseHTMLURL (attrstr, &url);
+	cssRule = ParseHTMLURL (cssRule, &url);
 	TtaFreeMemory (url);
-	return (attrstr);
+	return (cssRule);
      }
-   else if (isalpha (*attrstr))
+   else if (isalpha (*cssRule))
      {
 
 	/*
@@ -3062,12 +3000,12 @@ PresentationValue  *val;
 	 */
 	for (i = 0; i < sizeof (colname) - 1; i++)
 	  {
-	     if (!(isalnum (attrstr[i])))
+	     if (!(isalnum (cssRule[i])))
 	       {
-		  attrstr += i;
+		  cssRule += i;
 		  break;
 	       }
-	     colname[i] = attrstr[i];
+	     colname[i] = cssRule[i];
 	  }
 	colname[i] = 0;
 
@@ -3088,7 +3026,7 @@ PresentationValue  *val;
 	TtaGiveRGB (colname, &redval, &greenval, &blueval);
 	goto found_RGB;
      }
-   else if ((isdigit (*attrstr)) || (*attrstr == '.'))
+   else if ((isdigit (*cssRule)) || (*cssRule == '.'))
      {
 	/*
 	 * we expect a color defined by it's three components.
@@ -3099,189 +3037,189 @@ PresentationValue  *val;
  failed:
    val->typed_data.unit = DRIVERP_UNIT_INVALID;
    val->typed_data.value = 0;
-   return (attrstr);
+   return (cssRule);
 
  found_RGB:
    best = TtaGetThotColor (redval, greenval, blueval);
    val->typed_data.value = best;
    val->typed_data.unit = DRIVERP_UNIT_REL;
 
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWidth : parse an CSS width attribute           
+   ParseCSSWidth : parse a CSS width attribute           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSWidth (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSWidth (target, context, attrstr)
+static char        *ParseCSSWidth (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    /*
     * first parse the attribute string
     */
-   if (!strcasecmp (attrstr, "auto"))
+   if (!strcasecmp (cssRule, "auto"))
      {
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
 	MSG ("ParseCSSWidth : auto ");
 	TODO;
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * install the new presentation.
     mainview = TtaGetViewFromName(doc, "Document_View");
-    TtaGiveBoxSize(elem, doc, mainview, UnPoint, &width, &height);
+    TtaGiveBoxSize(el, doc, mainview, UnPoint, &width, &height);
     new_height = height;
-    TtaChangeBoxSize(elem doc, mainview, 0, new_height - height, UnPoint);
+    TtaChangeBoxSize(el doc, mainview, 0, new_height - height, UnPoint);
     */
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginTop : parse an CSS margin-top attribute  
+   ParseCSSMarginTop : parse a CSS margin-top attribute  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseCSSMarginTop (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMarginTop (target, context, attrstr)
+static char        *ParseCSSMarginTop (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 
 #endif
 {
    PresentationValue   margin;
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    /*
     * first parse the attribute string
     */
-   attrstr = ParseCSSUnit (attrstr, &margin);
+   cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
-	return (attrstr);
+	return (cssRule);
      }
    if (context->drv->SetVPos)
       context->drv->SetVPos (target, context, margin);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginBottom : parse an CSS margin-bottom      
+   ParseCSSMarginBottom : parse a CSS margin-bottom      
    attribute                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMarginBottom (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSMarginBottom (target, context, attrstr)
+static char        *ParseCSSMarginBottom (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   margin;
 
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    /*
     * first parse the attribute string
     */
-   attrstr = ParseCSSUnit (attrstr, &margin);
+   cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
-	return (attrstr);
+	return (cssRule);
      }
    if (context->drv->SetVPos)
       context->drv->SetVPos (target, context, margin);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSHeight : parse an CSS height attribute                 
+   ParseCSSHeight : parse a CSS height attribute                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSHeight (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSHeight (target, context, attrstr)
+static char        *ParseCSSHeight (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
-   SKIP_BLANK (attrstr);
+   cssRule = SkipBlanks (cssRule);
 
    /*
     * first parse the attribute string
     */
-   if (!strcasecmp (attrstr, "auto"))
+   if (!strcasecmp (cssRule, "auto"))
      {
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
 	MSG ("ParseCSSHeight : auto ");
 	TODO;
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * read the value, and if necessary convert to point size
-    attrstr = ParseCSSUnit(attrstr, &new_height, &unit);
+    cssRule = ParseCSSUnit(cssRule, &new_height, &unit);
     */
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSForeground : parse an CSS foreground attribute 
+   ParseCSSForeground : parse a CSS foreground attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSForeground (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSForeground (target, context, attrstr)
+static char        *ParseCSSForeground (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   best;
 
-   attrstr = ParseCSSColor (attrstr, &best);
+   cssRule = ParseCSSColor (cssRule, &best);
 
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
-	return (attrstr);
+	return (cssRule);
      }
    /*
     * install the new presentation.
     */
    if (context->drv->SetForegroundColor)
       context->drv->SetForegroundColor (target, context, best);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundColor : parse an CSS background color attribute 
+   ParseCSSBackgroundColor : parse a CSS background color attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundColor (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackgroundColor (target, context, attrstr)
+static char        *ParseCSSBackgroundColor (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    ElementType	         elType;
@@ -3293,16 +3231,16 @@ char               *attrstr;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (IS_CASE_WORD (attrstr, "transparent"))
+   if (!strncasecmp (cssRule, "transparent", strlen("")))
      {
        best.typed_data.value = DRIVERP_PATTERN_NONE;
        best.typed_data.unit = DRIVERP_UNIT_REL;
        if (context->drv->SetFillPattern)
 	 context->drv->SetFillPattern (target, context, best);
-       return (attrstr);
+       return (cssRule);
      }
 
-   attrstr = ParseCSSColor (attrstr, &best);
+   cssRule = ParseCSSColor (cssRule, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
 
@@ -3360,7 +3298,7 @@ char               *attrstr;
 	 }
      }
 
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3446,17 +3384,17 @@ void *extra;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundImage : parse an CSS BackgroundImage
+   ParseCSSBackgroundImage : parse a CSS BackgroundImage
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundImage (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackgroundImage (target, context, attrstr)
+static char        *ParseCSSBackgroundImage (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    Element               el;
@@ -3467,12 +3405,11 @@ char               *attrstr;
    PresentationValue     image, value;
    char                 *no_bg_image;
 
-       url = NULL;
-       if (! IS_CASE_WORD (attrstr, "url"))
-	 return (attrstr);
+   url = NULL;
+   if (strncasecmp (cssRule, "url", 4))
+     return (cssRule);
        
-       attrstr = ParseHTMLURL (attrstr, &url);
-
+   cssRule = ParseHTMLURL (cssRule, &url);
    if (context->destroy == 1)
      {
        /* remove the background image PRule */
@@ -3499,7 +3436,7 @@ char               *attrstr;
 	   if ((no_bg_image != NULL) &&
 	       ((!(strcasecmp(no_bg_image,"yes"))) ||
 		(!(strcasecmp(no_bg_image,"true")))))
-	     return (attrstr);
+	     return (cssRule);
 	   
 	   /*
 	    * if the background is set on the HTML or BODY element,
@@ -3546,52 +3483,52 @@ char               *attrstr;
        if (url)
 	 TtaFreeMemory (url);
      }
-       return (attrstr);
+       return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundRepeat : parse an CSS BackgroundRepeat
+   ParseCSSBackgroundRepeat : parse a CSS BackgroundRepeat
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundRepeat (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackgroundRepeat (target, context, attrstr)
+static char        *ParseCSSBackgroundRepeat (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    PresentationValue   repeat;
 
    repeat.typed_data.value = 0;
    repeat.typed_data.unit = 1;
-   SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "no-repeat"))
+   cssRule = SkipBlanks (cssRule);
+   if (!strncasecmp (cssRule, "no-repeat", strlen ("repeat")))
      {
 	repeat.typed_data.value = DRIVERP_SCALE;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "repeat-y"))
+   else if (!strncasecmp (cssRule, "repeat-y", strlen ("repeat")))
      {
 	repeat.typed_data.value = DRIVERP_VREPEAT;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "repeat-x"))
+   else if (!strncasecmp (cssRule, "repeat-x", strlen ("repeat")))
      {
 	repeat.typed_data.value = DRIVERP_HREPEAT;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
-   else if (IS_WORD (attrstr, "repeat"))
+   else if (!strncasecmp (cssRule, "repeat", strlen ("repeat")))
      {
 	repeat.typed_data.value = DRIVERP_REPEAT;
-	SKIP_WORD (attrstr);
+	cssRule = SkipWord (cssRule);
      }
    else
      {
 	fprintf (stderr, "invalid repeat\n");
-	return (attrstr);
+	return (cssRule);
      }
 
    /*
@@ -3599,58 +3536,58 @@ char               *attrstr;
     */
    if (context->drv->SetPictureMode)
        context->drv->SetPictureMode (target, context, repeat);
-   return (attrstr);
+   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundAttachment : parse an CSS BackgroundAttachment
+   ParseCSSBackgroundAttachment : parse a CSS BackgroundAttachment
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundAttachment (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackgroundAttachment (target, context, attrstr)
+static char        *ParseCSSBackgroundAttachment (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBackgroundAttachment ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundPosition : parse an CSS BackgroundPosition
+   ParseCSSBackgroundPosition : parse a CSS BackgroundPosition
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundPosition (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackgroundPosition (target, context, attrstr)
+static char        *ParseCSSBackgroundPosition (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    MSG ("ParseCSSBackgroundPosition ");
    TODO
-      return (attrstr);
+      return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackground : parse an CSS background attribute 
+   ParseCSSBackground : parse a CSS background attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackground (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
+				 PresentationContext context, char *cssRule)
 #else
-static char        *ParseCSSBackground (target, context, attrstr)
+static char        *ParseCSSBackground (target, context, cssRule)
 PresentationTarget  target;
 PresentationContext context;
-char               *attrstr;
+char               *cssRule;
 #endif
 {
    ElementType	         elType;
@@ -3667,11 +3604,11 @@ char               *attrstr;
    url = NULL;
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (IS_CASE_WORD (attrstr, "url"))
+   if (!strncasecmp (cssRule, "url", 4))
      /*
       * we don't currently support URL just parse it to skip it.
       */
-     attrstr = ParseHTMLURL (attrstr, &url);
+     cssRule = ParseHTMLURL (cssRule, &url);
 
    no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
    if ((no_bg_image != NULL) &&
@@ -3682,7 +3619,7 @@ char               *attrstr;
    }
        
 
-   attrstr = ParseCSSColor (attrstr, &best);
+   cssRule = ParseCSSColor (cssRule, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
 
@@ -3778,7 +3715,7 @@ char               *attrstr;
 
    if (url)
      TtaFreeMemory (url);
-   return (attrstr);
+   return (cssRule);
 }
 
 /************************************************************************
@@ -3788,20 +3725,20 @@ char               *attrstr;
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   ParseHTMLStyleDeclaration : parse one HTML style declaration    
+   ParseStyleDeclaration : parse one HTML style declaration    
    stored in the header of a HTML document                       
    We expect the style string to be of the form :                   
    [                                                                
    e.g: pinky, awful { color: pink, font-family: helvetica }        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLStyleDeclaration (Element elem, char *attrstr, Document doc, PSchema gPres)
+void                ParseStyleDeclaration (Element el, char *cssRule, Document doc, PSchema pSchema)
 #else
-void                ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres)
-Element             elem;
-char               *attrstr;
+void                ParseStyleDeclaration (el, cssRule, doc, pSchema)
+Element             el;
+char               *cssRule;
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 #endif
 {
    char               *decl_end;
@@ -3813,12 +3750,12 @@ PSchema             gPres;
    /*
     * separate the selectors string.
     */
-   decl_end = attrstr;
+   decl_end = cssRule;
    while ((*decl_end != 0) && (*decl_end != '{'))
       decl_end++;
    if (*decl_end == 0)
      {
-	fprintf (stderr, "Invalid STYLE declaration header : %s\n", attrstr);
+	fprintf (stderr, "Invalid STYLE declaration header : %s\n", cssRule);
 	return;
      }
    /*
@@ -3831,18 +3768,18 @@ PSchema             gPres;
    sel_end++;
    sauve1 = *sel_end;
    *sel_end = 0;
-   sel = attrstr;
+   sel = cssRule;
 
    /*
     * now, deal with the content ...
     */
    decl_end++;
-   attrstr = decl_end;
+   cssRule = decl_end;
    while ((*decl_end != 0) && (*decl_end != '}'))
       decl_end++;
    if (*decl_end == 0)
      {
-	fprintf (stderr, "Invalid STYLE declaration : %s\n", attrstr);
+	fprintf (stderr, "Invalid STYLE declaration : %s\n", cssRule);
 	return;
      }
    sauve2 = *decl_end;
@@ -3852,7 +3789,7 @@ PSchema             gPres;
     * parse the style attribute string and install the corresponding
     * presentation attributes on the new element
     */
-   ParseHTMLGenericStyle (sel, attrstr, doc, gPres);
+   ParseCSSGenericStyle (sel, cssRule, doc, pSchema);
 
    /* restore the string to its original form ! */
    *sel_end = sauve1;
@@ -3861,21 +3798,21 @@ PSchema             gPres;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLClass : parse an CSS Class string                    
+   ParseHTMLClass : parse a CSS Class string                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLClass (Element elem, char *attrstr, Document doc)
+void                ParseHTMLClass (Element elem, char *cssRule, Document doc)
 #else
-void                ParseHTMLClass (elem, attrstr, doc)
+void                ParseHTMLClass (elem, cssRule, doc)
 Element             elem;
-char               *attrstr;
+char               *cssRule;
 Document            doc;
 #endif
 {
    ElementType         elType;
    Element             el;
-   Attribute           at;
-   AttributeType       atType;
+   Attribute           attr;
+   AttributeType       attrType;
    PRule               rule, new;
    char                selector[101];
    int                 len;
@@ -3886,56 +3823,50 @@ Document            doc;
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
    elType.ElTypeNum = HTML_EL_StyleRule;
    el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
-
    /*
     * browse the style definitions, looking for the given class name.
     */
    if (el == NULL)
      {
 #ifdef DEBUG_STYLES
-	fprintf (stderr, "Invalid class \"%s\" : no class found\n", attrstr);
+	fprintf (stderr, "Invalid class \"%s\" : no class found\n", cssRule);
 #endif
 	return;
      }
    while (el != NULL)
      {
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	atType.AttrTypeNum = HTML_ATTR_Selector;
+       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+       attrType.AttrTypeNum = HTML_ATTR_Selector;
+       attr = TtaGetAttribute (el, attrType);
+       if (attr)
+	 {
+	   len = 100;
+	   TtaGiveTextAttributeValue (attr, selector, &len);
+	   selector[len + 1] = 0;
+	   res = EvaluateClassSelector (elem, cssRule, selector, doc);
+	   if (res > score)
+	     {
+	       best = el;
+	       score = res;
+	     }
+	 }
+       else
+	 MSG ("Invalid StyleRule\n");
 
-	at = TtaGetAttribute (el, atType);
-	if (at)
-	  {
-	     len = 100;
-	     TtaGiveTextAttributeValue (at, selector, &len);
-	     selector[len + 1] = 0;
-	     res = EvaluateClassSelector (elem, attrstr, selector, doc);
-	     if (res > score)
-	       {
-		  best = el;
-		  score = res;
-	       }
-	  }
-	else
-	  {
-	     MSG ("Invalid StyleRule\n");
-	  }
-
-	/* get next StyleRule */
-	TtaNextSibling (&el);
+       /* get next StyleRule */
+       TtaNextSibling (&el);
      }
 
-   /*
-    * apply all presentation specific attributes found.
-    */
+   /* apply all presentation specific attributes found */
    rule = NULL;
    do
      {
-	TtaNextPRule (best, &rule);
-	if (rule)
-	  {
-	     new = TtaCopyPRule (rule);
-	     TtaAttachPRule (elem, new, doc);
-	  }
+       TtaNextPRule (best, &rule);
+       if (rule)
+	 {
+	   new = TtaCopyPRule (rule);
+	   TtaAttachPRule (elem, new, doc);
+	 }
      }
    while (rule != NULL);
 }
@@ -3944,12 +3875,12 @@ Document            doc;
    ParseHTMLStyleSheet : Parse an HTML Style Sheet fragment        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLStyleSheet (char *fragment, Document doc, PSchema gPres)
+void                ParseHTMLStyleSheet (char *fragment, Document doc, PSchema pSchema)
 #else
-void                ParseHTMLStyleSheet (fragment, doc, gPres)
+void                ParseHTMLStyleSheet (fragment, doc, pSchema)
 char               *fragment;
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 #endif
 {
    /* these static variables should pertain to a context block */
@@ -3967,8 +3898,8 @@ PSchema             gPres;
 	/* force the interpetation of the end of the Buffers */
 	StyleBuffer[StyleIndex++] = 0;
 	SelecBuffer[SelecIndex++] = 0;
-	ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
-			       doc, gPres);
+	ParseCSSGenericStyle (SelecBuffer, StyleBuffer,
+			       doc, pSchema);
 
 	StyleIndex = 0;
 	SelecIndex = 0;
@@ -3976,92 +3907,90 @@ PSchema             gPres;
 	in_style = 0;
 	return;
      }
-   while ((*fragment != 0) && (SelecIndex < 1000) &&
-	  (StyleIndex < 3000))
+   while ((*fragment != 0) && (SelecIndex < 1000) && (StyleIndex < 3000))
      {
-	/* comments in external CSS are coded the C way */
-	if (in_comment != 0)
-	  {
-	     if ((last == '*') && (*fragment == '/'))
-	       {
-		  in_comment = 0;
-		  fragment++;
-		  continue;
-	       }
-	     last = *fragment++;
-	     continue;
-	  }			/* else */
-	if (last == '/')
-	  {
-	     if (*fragment == '*')
-	       {
-		  /* start of a comment */
-		  in_comment = 1;
-		  fragment++;
-		  continue;
-	       }
-	     else
-	       {
-		  /* No comment here, put the slash at the correct location */
-		  if (in_selec)
-		     SelecBuffer[SelecIndex++] = '/';
-		  else if (in_style)
-		     StyleBuffer[StyleIndex++] = '/';
-	       }
-	  }
-	last = *fragment++;
-	switch (last)
-	      {
-		 case '/':
-		    /* treated on next char to deal with comments */
-		    break;
-		 case EOL:
-		 case TAB:
-		 case '\r':
-		    if (in_selec)
-		       SelecBuffer[SelecIndex++] = SPACE;
-		    else if (in_style)
-		       StyleBuffer[StyleIndex++] = SPACE;
-		    break;
-		 case '{':
-		    if (in_selec)
-		      {
-			 SelecBuffer[SelecIndex++] = 0;
-			 in_selec = 0;
-			 in_style = 1;
-		      }
-		    break;
-		 case '}':
-		    /* this is an end one element style specification, parse it */
-		    if (in_style)
-		      {
-			 StyleBuffer[StyleIndex++] = 0;
-			 ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
-						doc, gPres);
-
-			 StyleIndex = 0;
-			 SelecIndex = 0;
-			 in_selec = 1;
-			 in_style = 0;
-		      }
-		    break;
-		 default:
-		    if (in_selec)
-		       SelecBuffer[SelecIndex++] = last;
-		    else if (in_style)
-		       StyleBuffer[StyleIndex++] = last;
-		    break;
-	      }
+       /* comments in external CSS are coded the C way */
+       if (in_comment != 0)
+	 {
+	   if ((last == '*') && (*fragment == '/'))
+	     {
+	       in_comment = 0;
+	       fragment++;
+	       continue;
+	     }
+	   last = *fragment++;
+	   continue;
+	 }
+       if (last == '/')
+	 {
+	   if (*fragment == '*')
+	     {
+	       /* start of a comment */
+	       in_comment = 1;
+	       fragment++;
+	       continue;
+	     }
+	   else
+	     {
+	       /* No comment here, put the slash at the correct location */
+	       if (in_selec)
+		 SelecBuffer[SelecIndex++] = '/';
+	       else if (in_style)
+		 StyleBuffer[StyleIndex++] = '/';
+	     }
+	 }
+       last = *fragment++;
+       switch (last)
+	 {
+	 case '/':
+	   /* treated on next char to deal with comments */
+	   break;
+	 case EOL:
+	 case TAB:
+	 case '\r':
+	   if (in_selec)
+	     SelecBuffer[SelecIndex++] = SPACE;
+	   else if (in_style)
+	     StyleBuffer[StyleIndex++] = SPACE;
+	   break;
+	 case '{':
+	   if (in_selec)
+	     {
+	       SelecBuffer[SelecIndex++] = 0;
+	       in_selec = 0;
+	       in_style = 1;
+	     }
+	   break;
+	 case '}':
+	   /* this is an end one element style specification, parse it */
+	   if (in_style)
+	     {
+	       StyleBuffer[StyleIndex++] = 0;
+	       ParseCSSGenericStyle (SelecBuffer, StyleBuffer, doc, pSchema);
+	       
+	       StyleIndex = 0;
+	       SelecIndex = 0;
+	       in_selec = 1;
+	       in_style = 0;
+	     }
+	   break;
+	 default:
+	   if (in_selec)
+	     SelecBuffer[SelecIndex++] = last;
+	   else if (in_style)
+	     StyleBuffer[StyleIndex++] = last;
+	   break;
+	 }
      }
    if ((SelecIndex >= 1000) || (StyleIndex >= 3000))
      {
-	/* something went havoc, reset the parser */
-	MSG ("ParseHTMLStyleSheet : parser error, resetting\n");
-	StyleIndex = 0;
-	SelecIndex = 0;
-	in_selec = 1;
-	in_style = 0;
-	in_comment = 0;
+       /* something went havoc, reset the parser */
+       MSG ("ParseHTMLStyleSheet : parser error, resetting\n");
+       StyleIndex = 0;
+       SelecIndex = 0;
+       in_selec = 1;
+       in_style = 0;
+       in_comment = 0;
      }
 
    if (NonPPresentChanged)
@@ -4083,102 +4012,96 @@ PSchema             gPres;
    - the element and it's place in the tree                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 EvaluateClassContext (Element elem, char *class, char *selector, Document doc)
+int                 EvaluateClassContext (Element el, char *class, char *selector, Document doc)
 #else
-int                 EvaluateClassContext (elem, class, selector, doc)
-Element             elem;
+int                 EvaluateClassContext (el, class, selector, doc)
+Element             el;
 char               *class;
 char               *selector;
 Document            doc;
 #endif
 {
-   Element             father;
-   char               *elHtmlName;
-   char               *end_str;
-   char               *sel = selector;
-   int                 result = 0;
-   char               *names[MAX_DEEP];
-
+  Element             father;
+  char               *elHtmlName;
+  char               *end_str;
+  char               *sel = selector;
+  char               *names[MAX_DEEP];
+  int                 result = 0;
 #ifdef DEBUG_STYLES
-   int                 i;
-   int                 deep;
-
+  int                 i;
+  int                 deep;
 #endif
 
-   elHtmlName = GetCSSName (elem, doc);
-   GetCSSNames (elem, doc, &names[0], MAX_DEEP);
+  elHtmlName = GetCSSName (el, doc);
+  GetCSSNames (el, doc, &names[0], MAX_DEEP);
 
 #ifdef DEBUG_STYLES
-   fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d)\n",
-	    elHtmlName, class, selector, doc);
-   fprintf (stderr, "Context name : ");
-   for (i = 0; i < deep; i++)
-      fprintf (stderr, "%s ", names[i]);
-   fprintf (stderr, "\n");
+  fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d)\n", elHtmlName, class, selector, doc);
+  fprintf (stderr, "Context name : ");
+  for (i = 0; i < deep; i++)
+    fprintf (stderr, "%s ", names[i]);
+  fprintf (stderr, "\n");
 #endif
 
-   /*
-    * look for a selector (ELEM)
-    */
-   SKIP_BLANK (selector);
-   if (*selector == '(')
-     {
-	for (end_str = selector; *end_str; end_str++)
-	   if (*end_str == ')')
-	      break;
-	if (*end_str != ')')
-	  {
-	     fprintf (stderr, "Unmatched '(' in selector \"%s\"\n", sel);
-	  }
-	else
-	  {
-	     /*
-	      * separate the father name, and evaluate it.
-	      */
-	     *end_str = 0;
-	     father = TtaGetParent (elem);
-	     result = EvaluateClassContext (father, class, selector + 1, doc);
-	     *end_str = ')';
-
-	     if (result)
-	       {
-		  /*
-		   * verify that the end of the string match the current element.
-		   */
-		  if (EvaluateClassContext (elem, class, end_str + 1, doc))
-		     result *= 10;
-		  else
-		     result = 0;
-	       }
-	  }
-     }
-   if (!result)
-     {
-	if (!strcasecmp (class, elHtmlName))
-	   result = 1000;
-	else if (!strcasecmp (class, selector))
-	   result = 100;
-     }
+  /*
+   * look for a selector (ELEM)
+   */
+  selector = SkipBlanks (selector);
+  if (*selector == '(')
+    {
+      for (end_str = selector; *end_str; end_str++)
+	if (*end_str == ')')
+	  break;
+      if (*end_str != ')')
+	fprintf (stderr, "Unmatched '(' in selector \"%s\"\n", sel);
+      else
+	{
+	  /*
+	   * separate the father name, and evaluate it.
+	   */
+	  *end_str = 0;
+	  father = TtaGetParent (el);
+	  result = EvaluateClassContext (father, class, selector + 1, doc);
+	  *end_str = ')';
+	  
+	  if (result)
+	    {
+	      /*
+	       * verify that the end of the string match the current element.
+	       */
+	      if (EvaluateClassContext (el, class, end_str + 1, doc))
+		result *= 10;
+	      else
+		result = 0;
+	    }
+	}
+    }
+  if (!result)
+    {
+      if (!strcasecmp (class, elHtmlName))
+	result = 1000;
+      else if (!strcasecmp (class, selector))
+	result = 100;
+    }
 #ifdef DEBUG_STYLES
-   fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d) : %d\n",
-	    elHtmlName, class, sel, doc, result);
+  fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d) : %d\n", elHtmlName, class, sel, doc, result);
 #endif
-   return (result);
+  return (result);
 }
 
 /*----------------------------------------------------------------------
    EvaluateClassSelector : gives a score for an element in a tree  
-   in function of a selector. Three argument enter in the          
-   evaluation process :                                            
+   in function of a selector. Three arguments enter in the          
+   evaluation process:                                            
    - the class name associated to the element                    
    - the selector string associated to the rule                  
    - the element and it's place in the tree                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 EvaluateClassSelector (Element elem, char *class, char *selector, Document doc)
+int                 EvaluateClassSelector (Element el, char *class, char *selector, Document doc)
 #else
-int                 EvaluateClassSelector (elem, class, selector, doc)
-Element             elem;
+int                 EvaluateClassSelector (el, class, selector, doc)
+Element             el;
 char               *class;
 char               *selector;
 Document            doc;
@@ -4188,7 +4111,7 @@ Document            doc;
    int                 L = strlen (selector);
    int                 val = 0;
 
-   val = EvaluateClassContext (elem, class, selector, doc);
+   val = EvaluateClassContext (el, class, selector, doc);
    if (val)
       return (val);
 
@@ -4236,11 +4159,9 @@ int                 type;
    el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
    if (el)
       return (el);
-
-   /*
-    * not found, create it !
-    */
-   return (CreateNewWWWElement (doc, type));
+   else
+     /* not found, create it ! */
+     return (CreateNewWWWElement (doc, type));
 }
 
 /*----------------------------------------------------------------------
@@ -4255,43 +4176,44 @@ Document            doc;
 int                 type;
 #endif
 {
-   Element             father = NULL;
-   ElementType         elType;
-   Element             el;
+   Element          father = NULL;
+   Element          el;
+   ElementType      elType;
 
    /*
     * find the father, create it if necessary.
     */
    switch (type)
-	 {
-	    case HTML_EL_HEAD:
-	       father = TtaGetMainRoot (doc);
-	       break;
-	    case HTML_EL_Styles:
-	       father = CreateWWWElement (doc, HTML_EL_HEAD);
-	       break;
-	    case HTML_EL_StyleRule:
-	       father = CreateWWWElement (doc, HTML_EL_Styles);
-	       break;
-	    case HTML_EL_Links:
-	       father = CreateWWWElement (doc, HTML_EL_HEAD);
-	       break;
-	    case HTML_EL_LINK:
-	       father = CreateWWWElement (doc, HTML_EL_Links);
-	       break;
-
-	    default:
+     {
+     case HTML_EL_HEAD:
+       father = TtaGetMainRoot (doc);
+       break;
+     case HTML_EL_Styles:
+       father = CreateWWWElement (doc, HTML_EL_HEAD);
+       break;
+     case HTML_EL_StyleRule:
+       father = CreateWWWElement (doc, HTML_EL_Styles);
+       break;
+     case HTML_EL_Links:
+       father = CreateWWWElement (doc, HTML_EL_HEAD);
+       break;
+     case HTML_EL_LINK:
+       father = CreateWWWElement (doc, HTML_EL_Links);
+       break;
+       
+     default:
 #ifdef AMAYA_DEBUG
-	       fprintf (stderr, "Don't know how to create father of type %d\n", type);
+       fprintf (stderr, "Don't know how to create father of type %d\n", type);
 #endif
-	       return (NULL);
-	 }
+       return (NULL);
+     }
+
    if (!father)
      {
 #ifdef AMAYA_DEBUG
-	fprintf (stderr, "Unable to get/create father of type %d\n", type);
+       fprintf (stderr, "Unable to get/create father of type %d\n", type);
 #endif
-	return (NULL);
+       return (NULL);
      }
    /*
     * create a new element and prune it in the structure.
@@ -4299,58 +4221,58 @@ int                 type;
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
    elType.ElTypeNum = type;
    if (type == HTML_EL_LINK)
-      el = TtaNewTree (doc, elType, "");
+     el = TtaNewTree (doc, elType, "");
    else
-      el = TtaNewElement (doc, elType);
+     el = TtaNewElement (doc, elType);
    if (!el)
      {
 #ifdef AMAYA_DEBUG
-	fprintf (stderr, "Unable to create type %d\n", type);
+       fprintf (stderr, "Unable to create type %d\n", type);
 #endif
-	return (NULL);
+       return (NULL);
      }
    /*
     * pre processing : eg create mandatory attributes ...
     */
    switch (type)
-	 {
-	    case HTML_EL_LINK:
-	       {
-		  Attribute           at;
-		  AttributeType       atType;
-
-		  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-		  atType.AttrTypeNum = HTML_ATTR_HREF_;
-		  at = TtaNewAttribute (atType);
-		  if (at)
-		    {
-		       TtaAttachAttribute (el, at, doc);
-		    }
-		  break;
-	       }
-	    default:
-	       break;
-	 }
+     {
+     case HTML_EL_LINK:
+       {
+	 Attribute           at;
+	 AttributeType       atType;
+	 
+	 atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	 atType.AttrTypeNum = HTML_ATTR_HREF_;
+	 at = TtaNewAttribute (atType);
+	 if (at)
+	   {
+	     TtaAttachAttribute (el, at, doc);
+	   }
+	 break;
+       }
+     default:
+       break;
+     }
    TtaInsertFirstChild (&el, father, doc);
    /*
     * post processing : eg create child ...
     */
    switch (type)
-	 {
-	/******
-        case HTML_EL_StyleRule: {
-	    Element         contenu;
-
-	    elType.ElSSchema = TtaGetDocumentSSchema(doc);
-	    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	    contenu = TtaNewElement(doc, elType);
-	    TtaInsertFirstChild(&contenu, el, doc);
-            break;
-        }
-	 *****/
-	    default:
-	       break;
+     {
+       /******
+	 case HTML_EL_StyleRule: {
+	 Element         contenu;
+	 
+	 elType.ElSSchema = TtaGetDocumentSSchema(doc);
+	 elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	 contenu = TtaNewElement(doc, elType);
+	 TtaInsertFirstChild(&contenu, el, doc);
+	 break;
 	 }
+	 *****/
+     default:
+       break;
+     }
    return (el);
 }
 
@@ -4367,9 +4289,9 @@ char               *class;
 Document            doc;
 #endif
 {
-   char                name[200];
-   char               *cur = &name[0], *first, save;
-   SSchema	       schema;
+   char             name[200];
+   char            *cur = &name[0], *first, save;
+   SSchema	    schema;
 
    /* make a local copy */
    strncpy (name, class, 199);
@@ -4379,7 +4301,7 @@ Document            doc;
    while (*cur != 0)
      {
 	first = cur;
-	SKIP_WORD (cur);
+	cur = SkipWord (cur);
 	save = *cur;
 	*cur = 0;
 	if (MapGI (first, &schema) == -1)
@@ -4387,137 +4309,12 @@ Document            doc;
 	     return (0);
 	  }
 	*cur = save;
-	SKIP_BLANK (cur);
+	cur = SkipBlanks (cur);
      }
 #ifdef DEBUG_STYLES
    fprintf (stderr, "IsImplicitClassName(%s)\n", class);
 #endif
    return (1);
-}
-
-/*----------------------------------------------------------------------
-   RemoveStyleRule : removes the corresponding class.              
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveStyleRule (Element elClass, Document doc)
-#else
-void                RemoveStyleRule (elem, doc)
-Element             elem;
-Document            doc;
-#endif
-{
-  Attribute           attr;
-  AttributeType       attrType;
-  Element             el;
-  int                 len;
-  char                name[100], value[100];
-
-  if (elClass == NULL)
-    return;
-
-   /* get the name of the class */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Selector;
-   attr = TtaGetAttribute (elClass, attrType);
-   if (attr)
-     {
-	len = 100;
-	TtaGiveTextAttributeValue (attr, name, &len);
-#ifdef DEBUG_STYLES
-	fprintf (stderr, "RemoveStyleRule(%d,%s)\n", doc, name);
-#endif
-	/* search this class in the whole document */
-	el = TtaGetMainRoot (doc);
-	attrType.AttrTypeNum = HTML_ATTR_Class;
-	while (el != NULL)
-	  {
-	    TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-	    if (attr != NULL)
-	      {
-		len = 100;
-		TtaGiveTextAttributeValue (attr, value, &len);
-		if (!strcmp (value, name))
-		  {
-		    TtaRemoveAttribute (el, attr, doc);
-		    DeleteSpanIfNoAttr (el, doc);
-		  }
-	      }
-	  }
-
-	/* Remove the element fom the StyleRule List */
-	TtaRemoveTree (elClass, doc);
-     }
-#ifdef AMAYA_DEBUG
-   else
-     fprintf (stderr, "RemoveStyleRule(%d), invalid element\n", doc);
-#endif
-}
-
-/*----------------------------------------------------------------------
-  RemoveStyle : clean all the presentation attributes of a given element.
-  The parameter removeSpan is True when the span has to be removed.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void              RemoveStyle (Element elem, Document doc, boolean removeSpan)
-#else
-void              RemoveStyle (elem, doc, removeSpan)
-Element           elem;
-Document          doc;
-boolean           removeSpan;
-#endif
-{
-   Attribute            attr;
-   AttributeType        attrType;
-   PresentationTarget   target;
-   SpecificContextBlock block;
-   PresentationContext  context;
-   PresentationValue    unused;
-#ifdef DEBUG_STYLES
-   char                *elHtmlName;
-#endif
-
-   unused.data = 0;
-   if (elem == NULL)
-      return;
-
-#ifdef DEBUG_STYLES
-   elHtmlName = GetCSSName (elem, doc);
-   fprintf (stderr, "RemoveStyle(%s,%d)\n", elHtmlName, doc);
-#endif
-
-   /*
-    * remove any Class or ImplicitClass associated to the element.
-    */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Class;
-
-   attr = TtaGetAttribute (elem, attrType);
-   if (attr != NULL)
-     {
-	TtaRemoveAttribute (elem, attr, doc);
-	if (removeSpan)
-	  DeleteSpanIfNoAttr (elem, doc);
-     }
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
-
-   attr = TtaGetAttribute (elem, attrType);
-   if (attr != NULL)
-     {
-	TtaRemoveAttribute (elem, attr, doc);
-	if (removeSpan)
-	  DeleteSpanIfNoAttr (elem, doc);
-     }
-   /*
-    * remove all the presentation specific rules applied to the element.
-    */
-   context = (PresentationContext) & block;
-   target = (PresentationTarget) elem;
-   block.drv = &SpecificStrategy;
-   block.doc = doc;
-   block.schema = TtaGetDocumentSSchema (doc);
-   if (context->drv->CleanPresentation != NULL)
-      context->drv->CleanPresentation (target, context, unused);
 }
 
 /*----------------------------------------------------------------------
@@ -4553,18 +4350,18 @@ boolean          mode;
    HTMLSetBackgroundColor :
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetBackgroundColor (Document doc, Element elem, char *color)
+void                HTMLSetBackgroundColor (Document doc, Element el, char *color)
 #else
-void                HTMLSetBackgroundColor (doc, elem, color)
+void                HTMLSetBackgroundColor (doc, el, color)
 Document            doc;
-Element             elem;
+Element             el;
 char               *color;
 #endif
 {
-   char                css_command[100];
+   char             css_command[100];
 
    sprintf (css_command, "background: %s", color);
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -4573,11 +4370,11 @@ char               *color;
    image = url of background image
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetBackgroundImage (Document doc, Element elem, int repeat, char *image)
+void                HTMLSetBackgroundImage (Document doc, Element el, int repeat, char *image)
 #else
-void                HTMLSetBackgroundImage (doc, elem, repeat, image)
+void                HTMLSetBackgroundImage (doc, el, repeat, image)
 Document            doc;
-Element             elem;
+Element             el;
 int                 repeat;
 char               *image;
 #endif
@@ -4596,43 +4393,43 @@ char               *image;
      strcat (css_command, "repeat-y");
    else
      strcat (css_command, "no-repeat");
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
 }
 
 /*----------------------------------------------------------------------
    HTMLSetForegroundColor :                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetForegroundColor (Document doc, Element elem, char *color)
+void                HTMLSetForegroundColor (Document doc, Element el, char *color)
 #else
-void                HTMLSetForegroundColor (doc, elem, color)
+void                HTMLSetForegroundColor (doc, el, color)
 Document            doc;
-Element             elem;
+Element             el;
 char               *color;
 #endif
 {
-   char                css_command[100];
+   char             css_command[100];
 
    sprintf (css_command, "color: %s", color);
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
 }
 
 /*----------------------------------------------------------------------
    HTMLResetBackgroundColor :                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLResetBackgroundColor (Document doc, Element elem)
+void                HTMLResetBackgroundColor (Document doc, Element el)
 #else
-void                HTMLResetBackgroundColor (doc, elem)
+void                HTMLResetBackgroundColor (doc, el)
 Document            doc;
-Element             elem;
+Element             el;
 #endif
 {
-   char                css_command[100];
+   char             css_command[100];
 
-   sprintf (css_command, "background: xx"       );
+   sprintf (css_command, "background: xx");
    SetHTMLStyleParserDestructiveMode (TRUE);
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
    SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
@@ -4640,18 +4437,18 @@ Element             elem;
    HTMLResetBackgroundImage :                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLResetBackgroundImage (Document doc, Element elem)
+void                HTMLResetBackgroundImage (Document doc, Element el)
 #else
-void                HTMLResetBackgroundImage (doc, elem)
+void                HTMLResetBackgroundImage (doc, el)
 Document            doc;
-Element             elem;
+Element             el;
 #endif
 {
-   char                css_command[1000];
+   char             css_command[1000];
 
    sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
    SetHTMLStyleParserDestructiveMode (TRUE);
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
    SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
@@ -4659,18 +4456,18 @@ Element             elem;
    HTMLResetForegroundColor :                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLResetForegroundColor (Document doc, Element elem)
+void                HTMLResetForegroundColor (Document doc, Element el)
 #else
-void                HTMLResetForegroundColor (doc, elem)
+void                HTMLResetForegroundColor (doc, el)
 Document            doc;
-Element             elem;
+Element             el;
 #endif
 {
-   char                css_command[100];
+   char             css_command[100];
 
    sprintf (css_command, "color: xx");
    SetHTMLStyleParserDestructiveMode (TRUE);
-   ParseHTMLSpecificStyle (elem, css_command, doc);
+   ParseHTMLSpecificStyle (el, css_command, doc);
    SetHTMLStyleParserDestructiveMode (FALSE);
 }
 

@@ -255,65 +255,58 @@ PRuleInfoPtr        rpi;
 /*----------------------------------------------------------------------
    SearchRPI                                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRuleInfoPtr        SearchRPI (PRuleInfoPtr cour, PRuleInfoPtr list)
 #else
 PRuleInfoPtr        SearchRPI (cour)
 PRuleInfoPtr        cour;
-
 #endif
 {
-   PRuleInfoPtr        rpi = list;
-
-   while (rpi != NULL)
-     {
-	if (!CmpRPI (rpi, cour))
-	  {
+  PRuleInfoPtr      rpi = list;
+  
+  while (rpi != NULL)
+    {
+      if (!CmpRPI (rpi, cour))
+	{
 #ifdef DEBUG_RPI
-	     fprintf (output, "SearchRPI : found %s\n", rpi->selector);
+	  fprintf (output, "SearchRPI : found %s\n", rpi->selector);
 #endif
-	     return (rpi);
-	  }
-	rpi = rpi->NextRPI;
-     }
-   return (NULL);
+	  return (rpi);
+	}
+      rpi = rpi->NextRPI;
+    }
+  return (NULL);
 }
 
 /*----------------------------------------------------------------------
    RemoveRPI                                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RemoveRPI (Document doc, PRuleInfoPtr cour)
 #else
 void                RemoveRPI (doc, cour)
 Document            doc;
 PRuleInfoPtr        cour;
-
 #endif
 {
-   PresentationContext context;
-   PresentationValue   unused;
-   unused.data = 0;
+  PresentationContext context;
+  PresentationValue   unused;
 
-   if (cour == NULL)
-      return;
-
-   /*
-    * call the Generic Presentation driver to clean the associated
-    * in-core structures.
-    */
-   context = (PresentationContext) cour->ctxt;
-   cour->ctxt->destroy = 1;
-   ParseHTMLStyleDecl (cour->pschema, context, cour->css_rule);
-   cour->ctxt->destroy = 0;
-
-   /*
-    * mark the RPI as removed.
-    */
+  unused.data = 0;
+  if (cour == NULL)
+    return;
+  /*
+   * call the Generic Presentation driver to clean the associated
+   * in-core structures.
+   */
+  context = (PresentationContext) cour->ctxt;
+  cour->ctxt->destroy = 1;
+  ParseCSSRule (cour->pschema, context, cour->css_rule);
+  cour->ctxt->destroy = 0;
+   /* mark the RPI as removed */
    cour->state = RemovedRPI;
 }
+
 
 /************************************************************************
  *									*
@@ -323,12 +316,10 @@ PRuleInfoPtr        cour;
  *									*
  ************************************************************************/
 
-
-/*
- * GenericSettingsToCSS :  Callback for ApplyAllGenericSettings,
- *     enrich the CSS string.
- */
-
+/*----------------------------------------------------------------------
+  GenericSettingsToCSS :  Callback for ApplyAllGenericSettings,
+  enrich the CSS string.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GenericSettingsToCSS (GenericTarget target,
      GenericContext ctxt,PresentationSetting settings, void *param)
@@ -336,27 +327,23 @@ static void         GenericSettingsToCSS (GenericTarget target,
 static void         GenericSettingsToCSS (settings, param)
 PresentationSetting settings;
 void               *param;
-
 #endif
 {
-   char               *css_rules = param;
-   char                string[150];
+  char               *css_rules = param;
+  char                string[150];
 
-   string[0] = EOS;
-
-   PresentationSettingsToCSS(settings, &string[0], sizeof(string));
-
-   if ((string[0] != EOS) && (*css_rules != EOS))
-      strcat (css_rules, "; ");
-   if (string[0] != EOS)
-      strcat (css_rules, string);
+  string[0] = EOS;
+  PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+  if ((string[0] != EOS) && (*css_rules != EOS))
+    strcat (css_rules, "; ");
+  if (string[0] != EOS)
+    strcat (css_rules, string);
 }
 
-/*
- * GenericContextToRPI :  transform a Generic Context to a RPI and
- *      add it to the list given as the argument.
- */
-
+/*----------------------------------------------------------------------
+  GenericContextToRPI :  transform a Generic Context to a RPI and
+  add it to the list given as the argument.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GenericContextToRPI (GenericTarget target,
 					 GenericContext ctxt, void *param)
@@ -365,7 +352,6 @@ static void         GenericContextToRPI (target, ctxt, param)
 GenericTarget       target;
 GenericContext      ctxt;
 void               *param;
-
 #endif
 {
    PRuleInfo           local;
@@ -381,21 +367,17 @@ void               *param;
 
    local.pschema = target;
    local.ctxt = ctxt;
-
    string[0] = EOS;
-
    /*
     * this will transform all the Generic Settings associated to
     * the context to one CSS string.
     */
    ApplyAllGenericSettings (target, ctxt, GenericSettingsToCSS, &string[0]);
-
    /*
     * if we were unable to translate this rule in CSS, return
     */
    if (string[0] == 0)
       return;
-
    /* search if such an RPI is already registered */
    exist = TRUE;
    new = SearchRPI (&local, *list);
@@ -424,9 +406,8 @@ void               *param;
 	   new->ctxt->ancestors_nb[i] = local.ctxt->ancestors_nb[i];
 	/*new_rule = 1; */
      }
-   /*
-    * append this CSS rule to the RPI description
-    */
+
+   /* append this CSS rule to the RPI description */
    if (new->css_rule == NULL)
      {
 	css_rule = TtaGetMemory (strlen (string) + 4);
@@ -532,13 +513,12 @@ void               *param;
 /*----------------------------------------------------------------------
    PSchema2RPI : return the list of all RPI associated to a PSchema  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-PRuleInfoPtr        PSchema2RPI (Document doc, PSchema gPres, int zoom, int background)
+PRuleInfoPtr        PSchema2RPI (Document doc, PSchema pSchema, int zoom, int background)
 #else
-PRuleInfoPtr        PSchema2RPI (doc, gPres, zoom, background)
+PRuleInfoPtr        PSchema2RPI (doc, pSchema, zoom, background)
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 int                 zoom;
 int                 background;
 
@@ -563,7 +543,7 @@ int                 background;
 	if (rpi == NULL)
 	   return (NULL);
 	rpi->state = NormalRPI;
-	rpi->pschema = gPres;
+	rpi->pschema = pSchema;
 	rpi->ctxt->type = HTML_EL_BODY;
 	rpi->selector = TtaStrdup ("BODY");
 
@@ -590,7 +570,7 @@ int                 background;
    /*
     * build the RPI list using the presentation driver browsing functions.
     */
-   ApplyAllGenericContext (doc, gPres, GenericContextToRPI, &lrpi);
+   ApplyAllGenericContext (doc, pSchema, GenericContextToRPI, &lrpi);
 
    /*
     * transmit the result to the uper layer.
@@ -601,18 +581,16 @@ int                 background;
 /*----------------------------------------------------------------------
    PSchema2CSS                                                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-int                 PSchema2CSS (Document doc, PSchema gPres, int zoom, int background,
+int                 PSchema2CSS (Document doc, PSchema pSchema, int zoom, int background,
 				 char *output_file)
 #else
-int                 PSchema2CSS (doc, gPres, output_file, zoom, background)
+int                 PSchema2CSS (doc, pSchema, output_file, zoom, background)
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 char               *output_file;
 int                 zoom;
 int                 background;
-
 #endif
 {
    PRuleInfoPtr        rpi, list;
@@ -627,7 +605,7 @@ int                 background;
      }
    else if (output == NULL)
       output = stderr;
-   list = rpi = PSchema2RPI (doc, gPres, zoom, background);
+   list = rpi = PSchema2RPI (doc, pSchema, zoom, background);
 
    if (output != stderr)
      {
@@ -647,12 +625,12 @@ int                 background;
    BuildRPIList : Build the whole list of CSS in use by a document   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildRPIList (Document doc, PSchema gPres, int zoom, int background,
+int                 BuildRPIList (Document doc, PSchema pSchema, int zoom, int background,
 				  char *buf, int size, char *first)
 #else
-int                 BuildRPIList (doc, gPres, zoom, background, buf, size, first)
+int                 BuildRPIList (doc, pSchema, zoom, background, buf, size, first)
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 int                 zoom;
 int                 background;
 char               *buf;
@@ -680,7 +658,7 @@ char               *first;
 	index += len;
 	nb++;
      }
-   list = rpi = PSchema2RPI (doc, gPres, zoom, background);
+   list = rpi = PSchema2RPI (doc, pSchema, zoom, background);
    while (rpi != NULL)
      {
 	len = strlen (rpi->selector);

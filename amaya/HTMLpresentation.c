@@ -18,26 +18,10 @@
 #include "amaya.h"
 #include "css.h"
 
+#include "EDITstyle_f.h"
 #include "HTMLstyle_f.h"
 #include "html2thot_f.h"
 #include "presentation.h"
-
-
-/*----------------------------------------------------------------------
-  DeleteStyleRule
-  A STYLE element will be deleted in the document HEAD.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             DeleteStyleRule (NotifyElement * event)
-#else  /* __STDC__ */
-boolean             DeleteStyleRule (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
-{
-   RemoveStyleRule (event->element, event->document);
-   return TRUE;			/* let Thot perform normal operation */
-}
 
 
 /*----------------------------------------------------------------------
@@ -47,9 +31,9 @@ NotifyElement      *event;
  and return TRUE; span contains then the created Span element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean MakeASpan (Element elem, Element *span, Document doc)
+boolean MakeASpan (Element elem, Element *span, Document doc)
 #else /* __STDC__*/
-static boolean MakeASpan (elem, span, doc)
+boolean MakeASpan (elem, span, doc)
      Element elem;
      Element *span;
      Document doc;
@@ -165,28 +149,28 @@ static void  AttrToSpan (elem, attr, doc)
 
   elType = TtaGetElementType (elem);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-     /* it's a character string */
-     {
-     parent = TtaGetParent (elem);
-     elType = TtaGetElementType (parent);
-     if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
+    /* it's a character string */
+    {
+      parent = TtaGetParent (elem);
+      elType = TtaGetElementType (parent);
+      if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
         /* the parent element is an HTML element */
 	/* Create a Span element and move to attribute to this Span element */
         MakeASpan (elem, &span, doc);
-     else
+      else
         /* move the attribute to the parent element */
 	span = parent;
-     if (span != NULL)
+      if (span != NULL)
         {
-        TtaGiveAttributeType (attr, &attrType, &kind);
-        newAttr = TtaNewAttribute (attrType);
-        TtaAttachAttribute (span, newAttr, doc);
-        len = ATTRLEN - 1;
-        TtaGiveTextAttributeValue (attr, oldValue, &len);
-        TtaRemoveAttribute (elem, attr, doc);
-        TtaSetAttributeText (newAttr, oldValue, span, doc);
+	  TtaGiveAttributeType (attr, &attrType, &kind);
+	  newAttr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (span, newAttr, doc);
+	  len = ATTRLEN - 1;
+	  TtaGiveTextAttributeValue (attr, oldValue, &len);
+	  TtaRemoveAttribute (elem, attr, doc);
+	  TtaSetAttributeText (newAttr, oldValue, span, doc);
         }
-     }
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern char *SkipBlanks (char *ptr);
 extern char CSSparser ( AmayaReadChar readfunc,
                         Document doc );
 extern char *GetCSSName ( Element elem,
@@ -13,15 +14,13 @@ extern char *GetCSSName ( Element elem,
 extern void PresentationSettingsToCSS ( PresentationSetting settings,
                                         char *buffer,
                                         int len );
-extern void UpdateStyleDelete ( NotifyAttribute * event );
-extern void UpdateStylePost ( NotifyAttribute * event );
 extern void GetHTMLStyleString ( Element elem,
                                   Document doc,
                                   char *buf,
                                   int *len );
-extern void ParseHTMLStyleDecl ( PresentationTarget target,
-                                 PresentationContext context,
-                                 char *attrstr );
+extern void ParseCSSRule ( PresentationTarget target,
+			   PresentationContext context,
+			   char *attrstr );
 extern void ParseHTMLSpecificStyle ( Element elem,
                                      char *attrstr,
                                      Document doc );
@@ -29,16 +28,20 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
                                               void *extra );
-extern void ParseHTMLStyleDeclaration ( Element elem,
-                                        char *attrstr,
-                                        Document doc,
-                                        PSchema gPres );
+extern void ParseStyleDeclaration ( Element elem,
+				    char *attrstr,
+				    Document doc,
+				    PSchema gPres );
 extern void ParseHTMLClass ( Element elem,
                              char *attrstr,
                              Document doc );
 extern void ParseHTMLStyleSheet ( char *fragment,
                                   Document doc,
                                   PSchema gPres );
+extern void ParseCSSGenericStyle (char *selector,
+				  char *cssRule,
+				  Document doc,
+				  PSchema pSchema);
 extern int EvaluateClassContext ( Element elem,
                                   char *class,
                                   char *selector,
@@ -53,11 +56,6 @@ extern Element CreateNewWWWElement ( Document doc,
                                      int type );
 extern int IsImplicitClassName ( char *class,
                                  Document doc );
-extern void RemoveStyleRule ( Element elClass,
-                              Document doc );
-extern void RemoveStyle ( Element elem,
-                          Document doc,
-			  boolean removeSpan);
 extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element elem,
@@ -87,6 +85,7 @@ extern void HTMLResetAvisitedColor ( Document doc );
 
 #else /* __STDC__ */
 
+extern char *SkipBlanks (/* char *ptr */);
 extern char CSSparser (/* AmayaReadChar readfunc,
                           Document doc */);
 extern char *GetCSSName (/* Element elem,
@@ -94,15 +93,13 @@ extern char *GetCSSName (/* Element elem,
 extern void PresentationSettingsToCSS (/* PresentationSetting settings,
                                           char *buffer,
                                           int len */);
-extern void UpdateStyleDelete (/* NotifyAttribute * event */);
-extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void GetHTMLStyleString (/* Element elem,
                                     Document doc,
                                     char *buf,
                                     int *len */);
-extern void ParseHTMLStyleDecl (/* PresentationTarget target,
-                                   PresentationContext context,
-                                   char *attrstr */);
+extern void ParseCSSRule (/* PresentationTarget target,
+			     PresentationContext context,
+			     char *attrstr */);
 extern void ParseHTMLSpecificStyle (/* Element elem,
                                        char *attrstr,
                                        Document doc */);
@@ -110,16 +107,20 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,
                                                 void *extra */);
-extern void ParseHTMLStyleDeclaration (/* Element elem,
-                                          char *attrstr,
-                                          Document doc,
-                                          PSchema gPres */);
+extern void ParseStyleDeclaration (/* Element elem,
+				      char *attrstr,
+				      Document doc,
+				      PSchema gPres */);
 extern void ParseHTMLClass (/* Element elem,
                                char *attrstr,
                                Document doc */);
 extern void ParseHTMLStyleSheet (/* char *fragment,
                                     Document doc,
                                     PSchema gPres */);
+extern void ParseCSSGenericStyle (/* char *selector,
+				     char *cssRule,
+				     Document doc,
+				     PSchema pSchema */);
 extern int EvaluateClassContext (/* Element elem,
                                     char *class,
                                     char *selector,
@@ -134,11 +135,6 @@ extern Element CreateNewWWWElement (/* Document doc,
                                        int type */);
 extern int IsImplicitClassName (/* char *class,
                                    Document doc */);
-extern void RemoveStyleRule (/* Element elClass,
-                                Document doc */);
-extern void RemoveStyle (/* Element elem,
-                            Document doc,
-			    boolean removeSpan*/);
 extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element elem,

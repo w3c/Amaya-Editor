@@ -82,7 +82,11 @@ ELEMENTS
 	END;
 
    StyleRule:
+	BEGIN
+	ElemChange.Pre -> DeleteStyleRule;
+	ElemChange.Post -> SetStyleRule;
 	ElemDelete.Pre -> DeleteStyleRule;
+	END;
 
    List_Item:
 	BEGIN

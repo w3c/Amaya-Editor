@@ -36,11 +36,6 @@ typedef struct PRuleInfo
   }
 PRuleInfo          , *PRuleInfoPtr;
 
-
-#define SKIP_BLANK(ptr) \
-     { while (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
-              ((*(ptr)) == '\n') || ((*(ptr)) == '\r')) ptr++; }
-
 typedef enum
   {
      CSS_Unknown,		/* for detecting uninitialized fields */

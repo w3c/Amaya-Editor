@@ -793,16 +793,13 @@ Document            doc;
    CSSInfoPtr          css;
    int                 modified;
 
-   /*
-    * prerequisite : store the modified status of the document
-    */
+   /* prerequisite : store the modified status of the document */
    modified = TtaIsDocumentModified (doc);
 
    /*
     * First search the Styles subtree in the HTML structure and
     * destroy it.
     */
-
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
    elType.ElTypeNum = HTML_EL_Styles;
    el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
@@ -823,20 +820,14 @@ Document            doc;
     */
    css = GetDocumentStyle (doc);
    if (css == NULL)
-     {
-	list = PSchema2RPI (doc, pschema, 0, -1);
-     }
+     list = PSchema2RPI (doc, pschema, 0, -1);
    else
-     {
-	list = PSchema2RPI (doc, pschema,
-			    css->magnification, css->view_background_color);
-     }
+     list = PSchema2RPI (doc, pschema, css->magnification, css->view_background_color);
 
    if (list == NULL)
      {
 #ifdef DEBUG_CSS
-	fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no rules found\n",
-		 doc);
+       fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no rules found\n", doc);
 #endif
 	return;
      }
@@ -862,20 +853,20 @@ Document            doc;
 	atType.AttrTypeNum = HTML_ATTR_Selector;
 	at = TtaNewAttribute (atType);
 	TtaAttachAttribute (el, at, doc);
+#ifdef IV
 	if (rpi->selector[0] == '.')	/* for pure class selectors */
 	   TtaSetAttributeText (at, &rpi->selector[1], el, doc);
 	else
+#endif
 	   TtaSetAttributeText (at, rpi->selector, el, doc);
 
 	rpi = rpi->NextRPI;
      }
 
    CleanListRPI (&list);
-
-   /*
-    * final : restore the modified status of the document
-    */
-   if (! modified) TtaSetDocumentUnmodified(doc);
+   /* final : restore the modified status of the document */
+   if (! modified)
+     TtaSetDocumentUnmodified(doc);
 }
 
 /*----------------------------------------------------------------------
@@ -886,18 +877,18 @@ Document            doc;
    e.g: H2 { color: blue } pinky { color: pink }                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLStyleHeader (Element elem, char *attrstr, Document doc, boolean rebuild)
+void                ParseHTMLStyleHeader (Element el, char *cssRule, Document doc, boolean rebuild)
 #else
-void                ParseHTMLStyleHeader (elem, attrstr, doc, rebuild)
-Element             elem;
-char               *attrstr;
+void                ParseHTMLStyleHeader (el, cssRule, doc, rebuild)
+Element             el;
+char               *cssRule;
 Document            doc;
 boolean                rebuild;
 #endif
 {
   AttributeType       newAtType;
   Attribute           newAt;
-  PSchema             gPres;
+  PSchema             pSchema;
   PSchema             cour, prev = NULL;
   CSSInfoPtr          style;
   char               *decl_end;
@@ -912,41 +903,41 @@ boolean                rebuild;
   style = GetDocumentStyle (doc);
   if (style->pschema == NULL)
     {
-      gPres = TtaNewPSchema ();
+      pSchema = TtaNewPSchema ();
       style->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
-      style->pschema = gPres;
+      style->pschema = pSchema;
       style->category = CSS_DOCUMENT_STYLE;
       style->documents[doc] = TRUE;
       style->url = TtaStrdup (DocumentURLs[doc]);
-      style->css_rule = TtaStrdup (attrstr);
+      style->css_rule = TtaStrdup (cssRule);
       cour = TtaGetFirstPSchema (doc, NULL);
       while (cour != NULL)
 	{
 	  prev = cour;
 	  TtaNextPSchema (&cour, doc, NULL);
 	}
-      TtaAddPSchema (gPres, prev, FALSE, doc, NULL);
+      TtaAddPSchema (pSchema, prev, FALSE, doc, NULL);
     }
   else
     {
-      gPres = style->pschema;
+      pSchema = style->pschema;
       if (!rebuild)
 	{
 	  if (style->css_rule == NULL)
-	    style->css_rule = TtaStrdup (attrstr);
+	    style->css_rule = TtaStrdup (cssRule);
 	  else
 	    {
 	      /*
 	       * concatenate the existing css rule with the next fragment.
 	       */
 	      buf = style->css_rule;
-	      len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
+	      len = strlen (style->css_rule) + 1 + strlen (cssRule) + 1;
 	      style->css_rule = TtaGetMemory (len);
 	      if (style->css_rule == NULL)
 		style->css_rule = buf;
 	      else
 		{
-		  sprintf (style->css_rule, "%s\n%s", buf, attrstr);
+		  sprintf (style->css_rule, "%s\n%s", buf, cssRule);
 		  TtaFreeMemory (buf);
 		}
 	    }
@@ -956,32 +947,32 @@ boolean                rebuild;
   /*
    * Set the attribute style to the content of the string.
    */
-  if (elem != NULL)
+  if (el != NULL)
     {
       newAtType.AttrSSchema = TtaGetDocumentSSchema (doc);
       newAtType.AttrTypeNum = HTML_ATTR_Style_;
-      newAt = TtaGetAttribute (elem, newAtType);
+      newAt = TtaGetAttribute (el, newAtType);
       if (newAt == NULL)
 	{
 	  newAt = TtaNewAttribute (newAtType);
-	  TtaAttachAttribute (elem, newAt, doc);
+	  TtaAttachAttribute (el, newAt, doc);
 	}
-      TtaSetAttributeText (newAt, attrstr, elem, doc);
+      TtaSetAttributeText (newAt, cssRule, el, doc);
     }
   /*
    * now, parse the the whole string ...
    * we need to split it in a set of style declaration.
    */
-  SKIP_BLANK (attrstr);
-  while (*attrstr != 0)
+  cssRule = SkipBlanks (cssRule);
+  while (*cssRule != 0)
     {
-      SKIP_BLANK (attrstr);
-      decl_end = attrstr;
+      cssRule = SkipBlanks (cssRule);
+      decl_end = cssRule;
       while ((*decl_end != 0) && (*decl_end != '}'))
 	decl_end++;
       if (*decl_end == 0)
 	{
-	  fprintf (stderr, "Invalid STYLE header : %s\n", attrstr);
+	  fprintf (stderr, "Invalid STYLE header : %s\n", cssRule);
 	  return;
 	}
       /*
@@ -991,11 +982,11 @@ boolean                rebuild;
       decl_end++;
       saved = *decl_end;
       *decl_end = 0;
-      ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres);
+      ParseStyleDeclaration (el, cssRule, doc, pSchema);
       
       *decl_end = saved;
-      attrstr = decl_end;
-      SKIP_BLANK (attrstr);
+      cssRule = decl_end;
+      cssRule = SkipBlanks (cssRule);
     }
   
   /*
@@ -1007,8 +998,8 @@ boolean                rebuild;
     ApplyExtraPresentation (doc);
   
 #if 0
-  DebugPresent (doc, gPres, "/tmp/generic.styles");
-  PSchema2CSS (doc, gPres, style->magnification, style->view_background_color,
+  DebupSchemaent (doc, pSchema, "/tmp/generic.styles");
+  PSchema2CSS (doc, pSchema, style->magnification, style->view_background_color,
 	       "/tmp/generic.css");
 #endif
 }
@@ -1035,7 +1026,7 @@ Document            doc;
    int                 len;
    int                 local = FALSE;
    int                 toparse;
-   PSchema             gPres, prev;
+   PSchema             pSchema, prev;
    CSSInfoPtr          css;
 
    /* load the CSS */
@@ -1114,25 +1105,25 @@ Document            doc;
     * allocate a new Presentation structure, parse the whole thing
     * and free the buffer.
     */
-   gPres = TtaNewPSchema ();
+   pSchema = TtaNewPSchema ();
    prev = TtaGetFirstPSchema (doc, NULL);
-   TtaAddPSchema (gPres, prev, TRUE, doc, NULL);
+   TtaAddPSchema (pSchema, prev, TRUE, doc, NULL);
    css = NewCSS ();
    css->tempfile = TtaStrdup (tempfile);
    css->name = "External Style";
    css->category = CSS_EXTERNAL_STYLE;
-   css->pschema = gPres;
+   css->pschema = pSchema;
    css->documents[doc] = TRUE;
    css->url = TtaStrdup (URL);
    css->css_rule = TtaStrdup (buffer);
    css->state = CSS_STATE_Unmodified;
    AddCSS (css);
-   ParseHTMLStyleSheet (buffer, doc, gPres);
+   ParseHTMLStyleSheet (buffer, doc, pSchema);
    TtaFreeMemory (buffer);
 
 #if 0
-   DebugPresent (doc, gPres, "/tmp/external.styles");
-   PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
+   DebupSchemaent (doc, pSchema, "/tmp/external.styles");
+   PSchema2CSS (doc, pSchema, css->magnification, css->view_background_color,
 		"/tmp/external.css");
 #endif
 }
@@ -1158,7 +1149,7 @@ int                 merge;
    char               *buffer = NULL;
    FILE               *res;
    int                 len;
-   PSchema             first, gPres;
+   PSchema             first, pSchema;
    CSSInfoPtr          css, user;
    Element             link;
    Attribute           at;
@@ -1245,7 +1236,7 @@ int                 merge;
     * allocate a new Presentation structure, parse the whole thing
     * and free the buffer.
     */
-   gPres = TtaNewPSchema ();
+   pSchema = TtaNewPSchema ();
    css = NewCSS ();
    css->name = NULL;
    css->tempfile = TtaStrdup (tempfile);
@@ -1253,13 +1244,13 @@ int                 merge;
       css->category = CSS_EXTERNAL_STYLE;
    else
       css->category = CSS_BROWSED_STYLE;
-   css->pschema = gPres;
+   css->pschema = pSchema;
    css->documents[doc] = TRUE;
    css->url = TtaStrdup (URL);
    css->css_rule = TtaStrdup (buffer);
    css->state = CSS_STATE_Unmodified;
    AddCSS (css);
-   ParseHTMLStyleSheet (buffer, doc, gPres);
+   ParseHTMLStyleSheet (buffer, doc, pSchema);
    TtaFreeMemory (buffer);
 
    if (merge)
@@ -1300,13 +1291,13 @@ int                 merge;
 	first = TtaGetFirstPSchema (doc, NULL);
 	user = GetUserGenericPresentation ();
 	if ((user != NULL) && (user->pschema == first))
-	     TtaAddPSchema (gPres, first, FALSE, doc, NULL);
+	     TtaAddPSchema (pSchema, first, FALSE, doc, NULL);
 	else
-	     TtaAddPSchema (gPres, first, TRUE, doc, NULL);
+	     TtaAddPSchema (pSchema, first, TRUE, doc, NULL);
      }
 #if 0
-   DebugPresent (doc, gPres, "/tmp/external.styles");
-   PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
+   DebupSchemaent (doc, pSchema, "/tmp/external.styles");
+   PSchema2CSS (doc, pSchema, css->magnification, css->view_background_color,
 		"/tmp/external.css");
 #endif
 }
@@ -1331,7 +1322,7 @@ Document            doc;
    FILE               *res;
    int                 len;
 
-   PSchema             gPres;
+   PSchema             pSchema;
 
    CSSInfoPtr          css;
 
@@ -1416,21 +1407,21 @@ Document            doc;
     * allocate a new Presentation structure, parse the whole thing
     * and free the buffer.
     */
-   gPres = TtaNewPSchema ();
+   pSchema = TtaNewPSchema ();
    css = NewCSS ();
    css->name = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
    css->category = CSS_USER_STYLE;
-   css->pschema = gPres;
+   css->pschema = pSchema;
    css->state = CSS_STATE_Unmodified;
    css->url = TtaStrdup (tempfile);
    css->css_rule = buffer;
    AddCSS (css);
    User_CSS = css;
-   ParseHTMLStyleSheet (buffer, doc, gPres);
+   ParseHTMLStyleSheet (buffer, doc, pSchema);
 
 #if 0
-   DebugPresent (doc, gPres, "/tmp/user.styles");
-   PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
+   DebupSchemaent (doc, pSchema, "/tmp/user.styles");
+   PSchema2CSS (doc, pSchema, css->magnification, css->view_background_color,
 		"/tmp/user.css");
 #endif
 }
@@ -1519,12 +1510,12 @@ Document            doc;
    existing pschema.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MergeNewCSS (char *attrstr, Document doc, PSchema gPres)
+void                MergeNewCSS (char *cssRule, Document doc, PSchema pSchema)
 #else
-void                MergeNewCSS (attrstr, doc, gPres)
-char               *attrstr;
+void                MergeNewCSS (cssRule, doc, pSchema)
+char               *cssRule;
 Document            doc;
-PSchema             gPres;
+PSchema             pSchema;
 
 #endif
 {
@@ -1535,23 +1526,23 @@ PSchema             gPres;
 #endif
 
 #ifdef DEBUG_CSS
-   fprintf (stderr, "MergeNewCSS(\"%s\",..)\n", attrstr);
+   fprintf (stderr, "MergeNewCSS(\"%s\",..)\n", cssRule);
 #endif
 
    /*
     * now, parse the the whole string ...
     * we need to split it in a set of style declaration.
     */
-   SKIP_BLANK (attrstr);
-   while (*attrstr != 0)
+   cssRule = SkipBlanks (cssRule);
+   while (*cssRule != 0)
      {
-	SKIP_BLANK (attrstr);
-	decl_end = attrstr;
+	cssRule = SkipBlanks (cssRule);
+	decl_end = cssRule;
 	while ((*decl_end != 0) && (*decl_end != '}'))
 	   decl_end++;
 	if (*decl_end == 0)
 	  {
-	     fprintf (stderr, "Invalid STYLE : %s\n", attrstr);
+	     fprintf (stderr, "Invalid STYLE : %s\n", cssRule);
 	     return;
 	  }
 	/*
@@ -1561,11 +1552,11 @@ PSchema             gPres;
 	decl_end++;
 	saved = *decl_end;
 	*decl_end = 0;
-	ParseHTMLStyleDeclaration (NULL, attrstr, doc, gPres);
+	ParseStyleDeclaration (NULL, cssRule, doc, pSchema);
 
 	*decl_end = saved;
-	attrstr = decl_end;
-	SKIP_BLANK (attrstr);
+	cssRule = decl_end;
+	cssRule = SkipBlanks (cssRule);
      }
 
    /*
@@ -1574,9 +1565,9 @@ PSchema             gPres;
    RebuildHTMLStyleHeader (doc);
 
 #if 0
-   DebugPresent (doc, gPres, "/tmp/generic.styles");
+   DebupSchemaent (doc, pSchema, "/tmp/generic.styles");
    css = GetDocumentStyle (doc);
-   PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
+   PSchema2CSS (doc, pSchema, css->magnification, css->view_background_color,
 		"/tmp/generic.css");
 #endif
 }
@@ -1588,7 +1579,7 @@ PSchema             gPres;
 void                RemoveCSS (char *name, Document doc)
 #else
 void                RemoveCSS (name, doc)
-char               *attrstr;
+char               *cssRule;
 Document            doc;
 
 #endif
