@@ -3,9 +3,9 @@
 #
 CC=gcc
 # CC=cc
-# CFLAGS=-g -Wall
+CFLAGS=-g -Wall
 # CFLAGS=-pg -O -Wall
- CFLAGS= -O
+# CFLAGS= -O -Wall
 
 
 
@@ -25,5 +25,5 @@ install : all
 	cp javastub ../../`../../batch/MachineType`/bin
 
 test: all
-	./javastub -C thotlib_Interface ../../thotlib/include/interface.h 
+	./javastub -T types.lst -C thotlib_Interface ../../thotlib/include/interface.h 
 

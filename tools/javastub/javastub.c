@@ -5,6 +5,7 @@
  *  Need :
  *     1/ support C comments in function decl
  *     2/ better cleanup (deallocation of strduped strings).
+ *     3/ import types from an external (text) file.
  */
 
 #include <stdio.h>
@@ -43,14 +44,12 @@ typedef struct _Type {
  * add more type as needed.
  */
 
-Type tabType[] = {
+int nbTypes = 4;
+Type tabType[1000] = {
 { 0, "void",	"",		"void",			NULL},
 { 0, "int",	"int",		"jint",			NULL},
 { 0, "boolean",	"boolean",	"jint",			NULL},
 { 1, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
-{ 0, "Document","int",		"jint",			NULL},
-{ 0, "View",	"int",		"jint",			NULL},
-{ 0, "SSchema", "int",		"jint",			NULL},
 };
 
 /*
@@ -118,6 +117,136 @@ int verbose = 0;
 		     ((c) == '_')) 
 #define IS_NUM(c) (((c) >= '0') && ((c) <= '9'))
 
+/*
+ * read_type : read a sequence of type definitions from an external file.
+ */
+void read_type(char *filename)
+{
+    char buffer[1000];
+    char *p, *q;
+    FILE *in;
+    int res;
+    int line = 0;
+    int indir;
+    char name[256];
+    char jname[256];
+    char itype[256];
+    char iname[256];
+    int basetype = nbTypes;
+    int newtype = 0;
+    int i;
+
+    in = fopen(filename, "r");
+    if (in == NULL) {
+        fprintf(stderr,"Cannot open file %s\n", filename);
+        perror("fopen");
+	return;
+    }
+    while (1) {
+        line++;
+        if ((fgets(buffer, sizeof(buffer), in)) == NULL) break;
+	p = &buffer[0];
+	SKIP_BLANK(p)
+	if (*p == '#') continue;
+
+	/* read the number of indirections */
+	indir = 0;
+	if (!(IS_NUM(*p))) {
+	    fprintf(stderr,"file %s, line %d : bad input\n%s\n",
+	            filename, line, buffer);
+            continue;
+	}
+	while (IS_NUM(*p)) { indir = indir * 10 + *p - '0'; p++; }
+
+	/* read the C type name */
+	q = &name[0];
+	SKIP_BLANK(p)
+	if (*p == '"') {
+	    p++;
+	    while ((*p != '\0') && (*p != '"')) *q++ = *p++;
+	    *q = '\0';
+	} else {
+	    while ((*p != '\0') && !IS_BLANK(*p)) *q++ = *p++;
+	    *q = '\0';
+	}
+	if (*p == '\0') {
+	    fprintf(stderr,"file %s, line %d : bad input\n%s\n",
+	            filename, line, buffer);
+            continue;
+	}
+	p++;
+
+	/* read the Java type name */
+	q = &jname[0];
+	SKIP_BLANK(p)
+	if (*p == '"') {
+	    p++;
+	    while ((*p != '\0') && (*p != '"')) *q++ = *p++;
+	    *q = '\0';
+	} else {
+	    while ((*p != '\0') && !IS_BLANK(*p)) *q++ = *p++;
+	    *q = '\0';
+	}
+	if (*p == '\0') {
+	    fprintf(stderr,"file %s, line %d : bad input\n%s\n",
+	            filename, line, buffer);
+            continue;
+	}
+	p++;
+
+	/* read the Java internal type */
+	q = &itype[0];
+	SKIP_BLANK(p)
+	if (*p == '"') {
+	    p++;
+	    while ((*p != '\0') && (*p != '"')) *q++ = *p++;
+	    *q = '\0';
+	} else {
+	    while ((*p != '\0') && !IS_BLANK(*p)) *q++ = *p++;
+	    *q = '\0';
+	}
+	if (*p == '\0') {
+	    fprintf(stderr,"file %s, line %d : input\n%s\n",
+	            filename, line, buffer);
+            continue;
+	}
+	p++;
+
+        /* read the Java internal type name if any */
+	q = &iname[0];
+	*q = 0;
+	SKIP_BLANK(p)
+	if (*p == '"') {
+	    p++;
+	    while ((*p != '\0') && (*p != '"')) *q++ = *p++;
+	    *q = '\0';
+	} else {
+	    while ((*p != '\0') && !IS_BLANK(*p)) *q++ = *p++;
+	    *q = '\0';
+	}
+
+	tabType[nbTypes].indir = indir;
+	tabType[nbTypes].name = strdup(name);
+	tabType[nbTypes].jname = strdup(jname);
+	tabType[nbTypes].itype = strdup(itype);
+	if (iname[0])
+	    tabType[nbTypes].iname = strdup(iname);
+        else
+	    tabType[nbTypes].iname = NULL;
+	nbTypes++;
+	newtype++;
+    }
+    fclose(in);
+    printf("Read %d types from %s : ", newtype, filename);
+    for (;basetype < nbTypes;basetype++) {
+        printf("%s ", tabType[basetype].name);
+        for (i = 0;i < tabType[basetype].indir;i++) printf("*");
+	printf(", ");
+    }
+    printf("\n");
+
+}
+
 static char *parse_identifier(char **next)
 {
     static char identifier[256];
@@ -161,7 +290,7 @@ static int parse_type(char **next)
 	while (*p == '*') { indir++; p++; SKIP_BLANK(p) }
 
 	*next = p;
-        for (i = 0; i < (sizeof(tabType) / sizeof(Type));i++)
+        for (i = 0; i < nbTypes;i++)
 	    if ((!strcmp(name, tabType[i].name)) &&
 	        (indir == tabType[i].indir))
 	        return(i);
@@ -363,8 +492,12 @@ void dump_h(FILE *out) {
 		   ++argv;
 		   --argc;
 		   break;
+	       case 't':
+	       case 'T':
+		   ++argv;
+		   --argc;
+		   break;
 	   }
-
 	   continue;
        }
        fprintf(out,"#include \"%s\"\n", name);
@@ -577,8 +710,15 @@ int main(int argc, char **argv)
 			    classname = *++argv;
 			    --argc;
 			    break;
+		        case 't':
+		        case 'T':
+			    name = *++argv;
+			    --argc;
+			    read_type(name);
+			    break;
 			default:
-			    fprintf(stderr,"%s [-c classname] includes ...\n",
+			    fprintf(stderr,
+	"%s [-c classname] [-t type_file] includes ...\n",
 			            argv[0]);
 		            exit(1);
 		    }
