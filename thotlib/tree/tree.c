@@ -2227,18 +2227,16 @@ PtrElement         *pEl;
    stop = FALSE;
    do
      {
-        if (! ((*pEl)->ElStructSchema->SsExtension))
-          {
-	    if (*pEl == NULL)
-	       stop = TRUE;
-	    else if (!(*pEl)->ElTerminal)
-	       stop = TRUE;
-	    else if ((*pEl)->ElLeafType != LtPageColBreak)
-	       stop = TRUE;
-          }
+     if (*pEl == NULL)
+       stop = TRUE;
+     else if (!(*pEl)->ElTerminal)
+       stop = TRUE;
+     else if (((*pEl)->ElLeafType != LtPageColBreak) &&
+              (((*pEl)->ElStructSchema->SsCode == (*pEl)->ElParent->ElStructSchema->SsCode)))
+       stop = TRUE;
 
-	if (!stop)
-	   *pEl = (*pEl)->ElNext;
+     if (!stop)
+        *pEl = (*pEl)->ElNext;
      }
    while (!stop);
 }
