@@ -1035,7 +1035,7 @@ static ExternalFetchEvent NewFetchEvent = NULL;
 static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
 
 /*----------------------------------------------------------------------
-   TtaSetEventHandling
+   TtaSetMainLoop
 
    Provide a new main loop for processing all events in an application.
 

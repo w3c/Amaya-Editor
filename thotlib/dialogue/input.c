@@ -74,17 +74,18 @@ KEY;
 
 /* Actions table */
 #include "appli_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
+#include "applicationapi_f.h"
 #include "context_f.h"
-#include "windowdisplay_f.h"
+#include "editcommands_f.h"
 #include "input_f.h"
 #include "memory_f.h"
 #include "message_f.h"
-#include "structmodif_f.h"
-#include "structcommands_f.h"
-#include "structselect_f.h"
 #include "registry_f.h"
+#include "structcommands_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "windowdisplay_f.h"
 
 /* Default actions for XK_Up, XK_Left, XK_Right, XK_Down keys */
 #define MY_KEY_Up        0

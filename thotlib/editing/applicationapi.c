@@ -45,8 +45,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
-#include "searchmenu_f.h"
+#include "checkaccess_f.h"
 #include "config_f.h"
 #include "dialogapi_f.h"
 #include "input_f.h"
@@ -55,8 +54,10 @@
 #include "references_f.h"
 #include "schemas_f.h"
 #include "schtrad_f.h"
-#include "structselect_f.h"
+#include "searchmenu_f.h"
 #include "structschema_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
 
 #define VersionId "V2.0"
 

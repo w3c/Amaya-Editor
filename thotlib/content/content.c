@@ -33,6 +33,7 @@
 #include "tree_f.h"
 #include "references_f.h"
 #include "callback_f.h"
+#include "changeabsbox_f.h"
 
 #define THOT_EXPORT extern
 #include "select_tv.h"

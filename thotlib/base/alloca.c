@@ -27,10 +27,6 @@
    your main control loop, etc. to force garbage collection.
  */
 #ifdef SYSV
-#ifndef lint
-static char         SCCSid[] = "@(#)alloca.c	1.1";	/* for the "what" utility */
-
-#endif
 
 #ifdef emacs
 #include "config.h"

@@ -40,6 +40,7 @@
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
+#include "applicationapi_f.h"
 
 
 /*----------------------------------------------------------------------
