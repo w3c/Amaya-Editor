@@ -3642,15 +3642,16 @@ void CreateMimeTypeDlgWindow (ThotWindow parent, int nb_item, char *mimetype_lis
 void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 {
   HTMLFormat = (DocumentTypes[SavingDocument] != docText &&
-		        DocumentTypes[SavingDocument] != docCSS &&
-	            DocumentTypes[SavingDocument] != docMath &&
-	            DocumentTypes[SavingDocument] != docSVG);
+		DocumentTypes[SavingDocument] != docCSS &&
+		DocumentTypes[SavingDocument] != docMath &&
+		DocumentTypes[SavingDocument] != docSVG &&
+		DocumentTypes[SavingDocument] != docImage);
   strcpy (currentPathName, path_name);
   if (HTMLFormat)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent,
 	(DLGPROC) SaveAsDlgProc);
   else if (DocumentTypes[SavingDocument] == docMath ||
-	  DocumentTypes[SavingDocument] == docSVG)
+	   DocumentTypes[SavingDocument] == docSVG)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG2), parent,
 	(DLGPROC) SaveAsDlgProc);
   else
