@@ -18,11 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "fileaccess.h"
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
 #include "fetchXMLname_f.h"
-
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
 #else
@@ -702,7 +700,7 @@ Document doc;
   CHAR_T *html_tmpfile;
 
   AnnotMeta *annot;
-  long content_length;
+  unsigned long content_length;
 
   /* we get the metadata associated to DocAnnot */
   annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
@@ -712,9 +710,9 @@ Document doc;
 
   if (IsFilePath(DocumentURLs[doc]))
     /* skip "file://" */
-    content_length = AGetFileSize (DocumentURLs[doc] + 7);
+    AM_GetFileSize (DocumentURLs[doc] + 7, &content_length);
   else
-    content_length = AGetFileSize (DocumentURLs[doc]);
+    AM_GetFileSize (DocumentURLs[doc], &content_length);
 
   ptr = TtaGetEnvString ("APP_TMPDIR");
   rdf_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
@@ -915,14 +913,9 @@ ThotBool ReplaceLinkToAnnotation (doc, oldAnnotURL, newAnnotURL)
   AttributeType  attrType;
   Attribute      attr;
   
-  CHAR_T *reverse_link_name;
-
   anchor = SearchAnnotation (doc, annotName);
   if (!anchor)
-    {
-      TtaFreeMemory (reverse_link_name);
       return FALSE;
-    }
 
   elType = TtaGetElementType (anchor);
   attrType.AttrSSchema = GetXLinkSSchema (doc);
@@ -1093,30 +1086,6 @@ const char *prefix;
       /* TtaFreeMemory (tmpdir); */
     }
   return (name);
-}
-
-#ifdef __STDC__
-long AGetFileSize (CHAR_T *filename)
-#else
-long AGetFileSize (filename)
-CHAR_T *filename;
-
-#endif /* __STDC__ */
-{
-  ThotFileHandle      handle = ThotFile_BADHANDLE;
-  ThotFileInfo        info;
- 
-  handle = TtaFileOpen (filename, ThotFile_READWRITE);
-  if (handle == ThotFile_BADHANDLE)
-    /* ThotFile_BADHANDLE */
-    return 0L;
-   if (TtaFileStat (handle, &info) == 0)
-     /* bad stat */
-     info.size = 0L;
-
-   TtaFileClose (handle);
-
-   return (info.size);
 }
 
 #ifdef __STDC__
