@@ -337,6 +337,11 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
       TtaFreeMemory (me->content_length);
       me->content_length = NULL;
     }
+  if (me->content_location)
+    {
+      TtaFreeMemory (me->content_location);
+      me->content_location = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -351,7 +356,7 @@ void DocumentInfo (Document document, View view)
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		"Document Information",
-		0, NULL, FALSE, 6, 'L', D_DONE);
+		0, NULL, FALSE, 7, 'L', D_DONE);
 
    /* Document information labels */
    TtaNewLabel (BaseDialog + DocInfoTitle1,
@@ -376,6 +381,11 @@ void DocumentInfo (Document document, View view)
    TtaNewLabel (BaseDialog + DocInfoContentTitle,
 		BaseDialog + DocInfoForm,
 		"CONTENT LENGTH");
+
+   /* Content Location */
+   TtaNewLabel (BaseDialog + DocInfoLocation2Title,
+		BaseDialog + DocInfoForm,
+		"CONTENT LOCATION");
 
    TtaNewLabel (BaseDialog + DocInfoTitle2,
 		BaseDialog + DocInfoForm,
@@ -415,6 +425,14 @@ void DocumentInfo (Document document, View view)
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoContent,
+		BaseDialog + DocInfoForm, content);
+
+   /* Content Location */
+   if (DocumentMeta[document] && DocumentMeta[document]->content_location != NULL)
+     content = DocumentMeta[document]->content_location;
+   else
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
+   TtaNewLabel (BaseDialog + DocInfoLocation2,
 		BaseDialog + DocInfoForm, content);
 
    /* end of dialogue */
@@ -2849,6 +2867,12 @@ static Document LoadDocument (Document doc, char *pathname,
 	DocumentMeta[newdoc]->content_length = TtaStrdup (s);
       else
 	DocumentMeta[newdoc]->content_length = NULL;
+      /* content-location */
+      s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LOCATION);
+      if (s)
+	DocumentMeta[newdoc]->content_location = TtaStrdup (s);
+      else
+	DocumentMeta[newdoc]->content_location = NULL;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */

@@ -298,7 +298,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   AHTReqContext  *me;
   HTAtom         *tmp_atom = NULL;
   char           *tmp_char;
-  char            tmp_wchar[MAX_LENGTH];
+  char           tmp_string[20];
   HTParentAnchor *anchor;
 #if 0
   ThotBool        use_anchor = FALSE;
@@ -339,10 +339,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	      me->http_headers.content_type = NULL;
 	    }
 	  else 
-	    {
-	      strcpy (tmp_wchar, tmp_char);
-	      me->http_headers.content_type = TtaStrdup (tmp_wchar);
-	    }
+	      me->http_headers.content_type = TtaStrdup (tmp_char);
 	  
 #ifdef DEBUG_LIBWWW
 	  fprintf (stderr, "Set content type to: %s\n", 
@@ -366,25 +363,28 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   
   if (tmp_atom)
     {
-      strcpy (tmp_wchar, HTAtom_name (tmp_atom));
-      me->http_headers.charset = TtaStrdup (tmp_wchar);
+      tmp_char = HTAtom_name (tmp_atom);
+      if (tmp_char)
+	me->http_headers.charset = TtaStrdup (tmp_char);
     }
 
   /* copy the content length */
 #ifdef _WINDOWS
-  _snprintf (tmp_wchar, sizeof (tmp_wchar), "%ld", HTAnchor_length (anchor));
+  _snprintf (tmp_string, sizeof (tmp_string), "%ld", HTAnchor_length (anchor));
 #else
-  snprintf (tmp_wchar, sizeof (tmp_wchar), "%ld", HTAnchor_length (anchor));
+  snprintf (tmp_string, sizeof (tmp_string), "%ld", HTAnchor_length (anchor));
 #endif /* _WINDOWS */
-  me->http_headers.content_length = TtaStrdup (tmp_wchar);
+  me->http_headers.content_length = TtaStrdup (tmp_string);
 
   /* copy the reason */
   tmp_char = HTResponse_reason (response);
   if (tmp_char)
-    {
-      strcpy (tmp_wchar, tmp_char);
-      me->http_headers.reason = TtaStrdup (tmp_wchar);
-    }
+      me->http_headers.reason = TtaStrdup (tmp_char);
+
+  /* copy the content-location */
+  tmp_char = HTAnchor_location (anchor);
+  if (tmp_char)
+    me->http_headers.content_location = TtaStrdup (tmp_char);
 }
 
 /*----------------------------------------------------------------------
@@ -404,6 +404,9 @@ static void HTTP_headers_delete (AHTHeaders me)
   
   if (me.reason)
     TtaFreeMemory (me.reason);
+
+  if (me.content_location)
+    TtaFreeMemory (me.content_location);
 }
 
 /*----------------------------------------------------------------------
@@ -431,6 +434,9 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
       break;
     case AM_HTTP_REASON:
       result = me->reason;
+      break;
+    case AM_HTTP_CONTENT_LOCATION:
+      result = me->content_location;
       break;
     default:
       result = NULL;
