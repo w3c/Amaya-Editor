@@ -48,7 +48,6 @@ int                 errorCode;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    char                buffer[50];
 
    UserErrorCode = errorCode;
@@ -172,8 +171,11 @@ int                 errorCode;
 		    sprintf (buffer, "%d\n", errorCode);
 		    break;
 	      }
+#   ifdef _WINDOWS
+    MessageBox (NULL, buffer, "", MB_OK | MB_ICONERROR);
+#   else  /* _WINDOWS */
 	fprintf (stderr, buffer);
+#   endif /* _WINDOWS */
      }
-#   endif /* WINDOWS */
 }
 #endif /* _WIN_PRINT */

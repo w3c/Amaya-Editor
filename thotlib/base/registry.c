@@ -50,6 +50,10 @@
 #      define THOT_INI_FILENAME "thot.ini"
 #endif /* _WINDOWS */
 
+#ifdef _WINDOWS
+char* WIN_Home;
+#endif /* _WINDOWS */
+
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
 #define THOT_LIB_DEFAULTNAME	"thot_lib"
@@ -872,6 +876,8 @@ char               *appArgv0;
 #  ifndef __CYGWIN32__
    extern int _fmode;
 #  endif
+   char* pHome;
+   int   hLen;
 #  else /* ! _WINDOWS */
    struct stat         stat_buf;
 #  endif /* _WINDOWS */
@@ -1164,6 +1170,17 @@ char               *appArgv0;
 
    InitEnviron ();
    AppRegistryModified = 0;
+#  ifdef _WINDOWS
+   hLen = strlen (execname);
+   WIN_Home = (char*) TtaGetMemory (hLen + 1);
+   strcpy (WIN_Home, execname);
+   pHome = &WIN_Home [hLen];
+   while (*pHome != DIR_SEP) {
+         pHome --;
+         hLen--;	
+   } 
+   WIN_Home [hLen] = 0;
+#  endif /* _WINDOWS */
 }
 
 
