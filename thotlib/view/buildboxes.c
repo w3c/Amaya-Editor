@@ -4936,8 +4936,14 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 			      }
 			    pChildAb = pChildAb->AbNext;
 			 }
-		       if (pAb->AbBox && pAb->AbBox->BxType != BoRow)
-		       WidthPack (pParentAb, NULL, frame);
+		       if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell &&
+			   ThotLocalActions[T_checkcolumn])
+			 (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+					  (void *)pParentAb,
+					  (void *)NULL,
+					  (void *)frame);
+		       else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
+			 WidthPack (pParentAb, NULL, frame);
 		       HeightPack (pParentAb, NULL, frame);
 		    }
 	       }
