@@ -790,8 +790,13 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
     } 
-  if (pAb->AbFloat != 'N')
+  if (pAb->AbFloat != 'N' &&
+      (pAb->AbLeafType == LtPicture ||
+       (pAb->AbLeafType == LtCompound &&
+	!pAb->AbWidth.DimIsPosition &&
+	pAb->AbWidth.DimAbRef == NULL)))
     {
+      /* the box position is computed by the line formatter */
       pAb->AbVertPosChange = FALSE;
       pAb->AbHorizPosChange = FALSE;
       return;
@@ -957,15 +962,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  /* don't process this rule */
 	  pRefAb = NULL;
 	}
-      else if (pRefAb &&
-	       pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-	{
-	  /* refers an invisible box */
-	  pRefAb = NULL;
-	  rule.PosRefEdge = Top;
-	  rule.PosEdge = Top;
-	}
-      
+
       if (pRefAb == NULL)
 	{
 	  /* default rule */
@@ -990,7 +987,8 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    {
 	      /* there is an enclosing box */
 	      pRefAb = GetPosRelativeAb (pAb, horizRef);
-	      if (pRefAb)
+	      if (pRefAb &&
+		  pRefAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
 		{
 		  /* Align baselines */
 		  sibling = TRUE;
@@ -1024,7 +1022,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	      if (!pBox->BxVertInverted &&
 		  (rule.PosRefEdge != Top || rule.PosEdge != Top))
 		{
-		  /* a specific patch for vertically extended cells */
+		  /* a specific patch for vertical extended cells */
 		  pAb->AbVertPos.PosRefEdge = Top;
 		  pAb->AbVertPos.PosEdge = Top;
 		  rule.PosRefEdge = Top;
@@ -1033,7 +1031,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	      else if (pBox->BxVertInverted &&
 		       (rule.PosRefEdge != Top || rule.PosEdge != Bottom))
 		{
-		  /* a specific patch for vertacally extended cells */
+		  /* a specific patch for vertical extended cells */
 		  pAb->AbVertPos.PosRefEdge = Bottom;
 		  pAb->AbVertPos.PosEdge = Bottom;
 		  pAb->AbVertPos.PosDistance = 0;
@@ -1275,7 +1273,8 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
     {
       /* default value */
       pBox->BxVertEdge = Top;
-      SetPositionConstraint (localEdge, pBox, &y);
+      if (pRefAb && pRefAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
+	SetPositionConstraint (localEdge, pBox, &y);
     }
 
    /* invisible boxes take no space */
