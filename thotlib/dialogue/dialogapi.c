@@ -6619,7 +6619,7 @@ void                TtaSetNumberForm (int ref, int val)
   ----------------------------------------------------------------------*/
 void                TtaSetDialoguePosition ()
 {
-#ifndef /* _WINDOWS */
+#ifndef _WINDOWS
 #ifndef _GTK
    ThotWindow          wdum;
    int                 xdum;
