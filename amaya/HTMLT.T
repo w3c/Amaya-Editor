@@ -784,16 +784,11 @@ RULES
 	END;
 
  Anchor: BEGIN
-	if IsAnnotation BEGIN
-		Remove;
-		END;
-	if NOT IsAnnotation BEGIN
-		Create '<a';
-		Create Attributes;
-		Create '>';
-		Create '</a>' After;
-		END;
-	END;
+	 Create '<a';
+	 Create Attributes;
+	 Create '>';
+	 Create '</a>' After;
+	 END;
 
  MAP:
 	BEGIN
@@ -1128,14 +1123,9 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	If IsAnnotation BEGIN
-		Remove;
-		END;
-	If NOT IsAnnotation BEGIN
-		Create ' href="';
-		Create Translated HREF_;
-		Create DoubleQuote;
-		END;
+	Create ' href="';
+	Create Translated HREF_;
+	Create DoubleQuote;
 	END;
 
  hreflang :
@@ -1438,14 +1428,9 @@ ATTRIBUTES
 	END;
 
  ID:	BEGIN
-        IF Within XLink BEGIN
-           Remove;
-           END;
-        IF NOT Within XLink BEGIN
-	   Create ' id="';
-	   Create ID;
-	   Create DoubleQuote;
-	   END;
+	Create ' id="';
+	Create ID;
+	Create DoubleQuote;
 	END;
 
  dir = ltr :
@@ -1636,16 +1621,11 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
-	if Anchor and IsAnnotation BEGIN
-		Remove;
-		END;
-	if NOT IsAnnotation BEGIN
-		Create ' name="';
-		Create NAME;
-		Create DoubleQuote;
-                END;
+	Create ' name="';
+	Create NAME;
+	Create DoubleQuote;
 #ifdef XML
-	if Anchor and not ID and NOT IsAnnotation BEGIN
+	if Anchor and not ID BEGIN
        		Create ' id="';
     		Create NAME;
        		Create DoubleQuote;

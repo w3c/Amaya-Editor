@@ -474,10 +474,7 @@ RULES
 	END;
 
  Anchor: BEGIN
-	If IsAnnotation BEGIN
-	    remove;
-	    END;
-	If HREF_ AND NOT InternalLink AND NOT IsAnnotation
+	If HREF_ AND NOT InternalLink
 	  BEGIN
 	    Add AnchorCounter 1;
 	    Create In TmpFile  OUT_AnchorCounter;
@@ -655,7 +652,7 @@ ATTRIBUTES
 
  HREF_:
 	BEGIN
-	If NOT Within LINK AND NOT InternalLink AND NOT IsAnnotation
+	If NOT Within LINK AND NOT InternalLink
 	   BEGIN
 	   Create IN TmpFile HREF_;
 	   END;

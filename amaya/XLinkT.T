@@ -99,6 +99,11 @@ ATTRIBUTES
 	   end;
 	end;
 
+      id:
+	begin
+ 	  remove;
+	end;
+
 {****
    role = TEXT;
 

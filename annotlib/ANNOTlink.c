@@ -304,12 +304,12 @@ AnnotMeta *annot;
   
   /* add a ID attribute so that the annotation doc can point
      back to the source of the annotation link */
-  attrType.AttrSSchema = GetXHTMLSSchema (source_doc);
-  attrType.AttrTypeNum = HTML_ATTR_ID;
+  attrType.AttrTypeNum = XLink_ATTR_id;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
-  /* set the anchor's name */
+  /* set the ID value (anchor endpoint) */
   TtaSetAttributeText (attr, annot->name, anchor, source_doc);
+
   /* @@ JK: maybe add a role so that we know the annotation type */
 
   /* add the annotation to the filter list */

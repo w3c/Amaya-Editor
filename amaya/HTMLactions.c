@@ -467,6 +467,21 @@ Attribute           ignore;
 	  }
      }
 #endif
+#ifdef ANNOTATIONS
+   if (!elFound)
+     {
+       /* search all elements having an attribute ID (defined in the
+	  XLink S schema) */
+       attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+       if (attrType.AttrSSchema)
+	  /* this document uses the XLink DTD */
+	  {
+          attrType.AttrTypeNum = XLink_ATTR_id;
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+	  }
+     }
+#endif /* ANNOTATIONS */
+
    return (elFound);
 }
 

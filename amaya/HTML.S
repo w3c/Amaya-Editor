@@ -221,14 +221,7 @@ STRUCT
 	   onfocus = Text; onblur = Text;
 	 { onfocus         onblur }
 	   InternalLink; ExternalLink;
-	   IsAnnotation = Yes_; 
-         { Annotation }
-	   AnnotationHide = Yes_;
-	 { AnnotationHide }
-           AnnotationIcon1 = Yes_;
-         { AnnotationIcon1 }
-           AnnotationIcon2 = Yes_;
-         { AnnotationIcon2 }) =
+	 { InternalLink  ExternalLink }) =
 	Basic_Set;
 
   Basic_Elem = CASE OF						{ special }
@@ -829,10 +822,6 @@ EXCEPT
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
-	IsAnnotation:   Invisible;
-	AnnotationHide: Invisible;
-        AnnotationIcon1: Invisible;
-        AnnotationIcon2: Invisible;
 	IntWidthPercent:NewPercentWidth, Invisible;
 	IntWidthPxl:	NewWidth, Invisible;
 	IntItemStyle:	Invisible;

@@ -21,7 +21,10 @@ ATTR
    from = TEXT;
 
    to = TEXT;
-	
+
+   { annotations }
+   id = TEXT; { To store the reverse link, from an annotation to a source doc }
+
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
    Ghost_restruct = TEXT;	{ to help structure transformation }
