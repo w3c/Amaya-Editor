@@ -929,9 +929,10 @@ void                   BackUpDocs ()
 	SaveDocument (doc, 1);
 	/* register the temporary doument name */
 	fprintf (f, "%s %s\n", pathname, ptr);
+	TtaFreeMemory (ptr);
       }
   /* now close the crash file */
-  if (f == NULL)
+  if (f != NULL)
     fclose (f);
 }
 
