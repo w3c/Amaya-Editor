@@ -6,8 +6,8 @@
  */
 
 /*
- * rdf2annot.c : parses an annotation RDF Description and intializes
- *              the corresponding memory elements 
+ * AHTrdf2annot.c : parses an annotation RDF Description and intializes
+ *    the corresponding memory elements 
  *
  * NOTE: the code assumes libwww's RDF parser.
  *
@@ -49,8 +49,6 @@ static const char * RDFMS_TYPE = "type";
 static const char * FILE_SCHEME = "file://";
 
 /********************** global variables ***********************/
-
-AnnotMeta *annot;  /* the current annotation */
 
 List *annot_list;  /* a list of annotations */
 
@@ -123,10 +121,12 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
    Parameters:
      rdfp - the RDF parser
      triple - an RDF triple
-     context - user data; NOT used
+     context - pointer to a AnnotMeta structure
  ------------------------------------------------------------*/
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
+  AnnotMeta *annot = (AnnotMeta *) context;
+
   if (rdfp && triple) 
     {
       char * predicate = HTTriple_predicate(triple);
@@ -142,13 +142,13 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #endif
 
       if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
-          annot->source_url = strdup ((char *) object);
+          annot->source_url = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_CREATOR))
-          annot->author = strdup ((char *) object);
+          annot->author = TtaStrdup ((char *) object);
       else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
-          annot->cdate = strdup ((char *) object);
+          annot->cdate = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_DATE))
-          annot->mdate = strdup ((char *) object);
+          annot->mdate = TtaStrdup ((char *) object);
       else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
         {
           if (contains (object, ANNOT_NS, ANNOT_ANNOTATION)) 
@@ -161,24 +161,24 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
                 if (!strncmp (object, ANNOT_NS, len)) 
                   {
                     if (*object + len)
-                        annot->type = strdup (object + len);
+                        annot->type = TtaStrdup (object + len);
                     else
-                        annot->type = strdup (object);
+                        annot->type = TtaStrdup (object);
                   }
 	        else 
-	          annot->type = strdup (object);
+	          annot->type = TtaStrdup (object);
               }
         }
       else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))
           ParseIdFragment (annot, object);
       else if (contains (predicate, HTTP_NS, HTTP_CONTENT_TYPE))
-          annot->content_type = strdup ((char *) object);
+          annot->content_type = TtaStrdup ((char *) object);
       else if (contains (predicate, HTTP_NS, HTTP_CONTENT_LENGTH))
-          annot->content_length = strdup ((char *) object);
+          annot->content_length = TtaStrdup ((char *) object);
       else if (contains (predicate, ANNOT_NS, ANNOT_BODY))
-          annot->body_url = strdup ((char *) object);
+          annot->body_url = TtaStrdup ((char *) object);
       else if (contains (predicate, HTTP_NS, HTTP_BODY))
-          annot->body = strdup ((char *) object);
+          annot->body = TtaStrdup ((char *) object);
     }
 }
 
@@ -199,9 +199,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
   char *uri = file_name;
+  AnnotMeta *annot = NULL;
 
   annot_list = NULL;
-  annot = NULL;
 
   /* Only support a file with a single annotation */
   if (type != ANNOT_LIST)
@@ -210,16 +210,11 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
   annot =  AnnotMeta_new ();
   if (!annot) return NULL;
 
-  if (strncmp (file_name, FILE_SCHEME, 7)) 
-    {
-      uri = malloc (strlen(FILE_SCHEME) + strlen(file_name) + 1);
-      (void) strcpy (uri, FILE_SCHEME);
-      (void) strcat (uri, file_name);
-    }
+  uri = HTLocalToWWW (file_name, "file:");
+  annot->annot_url = TtaStrdup(uri);
+  HT_FREE (uri);
 
-  annot->annot_url = strdup(uri);
-
-  if (HTRDF_parseFile(file_name, triple_handler) != YES)
+  if (HTRDF_parseFile(file_name, triple_handler, annot) != YES)
     {
       AnnotList_free (annot_list);
       annot_list = NULL;
