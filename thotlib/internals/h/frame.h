@@ -46,9 +46,9 @@ typedef struct _Frame_Ctl {
   ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
   Proc       Call_Button[MAX_BUTTON];   /* List of button Callbacks          */
   ThotButton Button[MAX_BUTTON];        /* List of button Widgets            */
-#ifndef _WINDOWS
   ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled buttons                   */
-#else  /* _WINDOWS */
+  ThotBool   CheckedButton[MAX_BUTTON]; /* Checked buttons                   */
+#ifdef _WINDOWS
   int        ButtonId[MAX_BUTTON];
   char      *TbStrings[MAX_BUTTON];     /* Tooltips text                     */
   ThotWidget Label[MAX_TEXTZONE];       /* Labels of text zones              */

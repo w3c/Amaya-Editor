@@ -114,15 +114,14 @@ static SchemaMenu_Ctl *SchemasMenuList;
 extern TBADDBITMAP ThotTBBitmap;
 WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static HWND    hwndTB;
-static BOOL    doSwitchButton = TRUE;
 static int     FormattedViewXPos = 0;
 static int     FormattedViewYPos = 0;
-HWND  hwndClient;
-HWND  ToolBar;
-HWND  StatusBar;
-HWND  logoFrame;
-HMENU hmenu;
-int   menu_item;
+HWND           hwndClient;
+HWND           ToolBar;
+HWND           StatusBar;
+HWND           logoFrame;
+HMENU          hmenu;
+int            menu_item;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1246,29 +1245,24 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
   ----------------------------------------------------------------------*/
 void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
 {
-   Document            document;
-   View                view;
-   int                 i;
+  Document            document;
+  View                view;
+  int                 i;
 
-   i = 0;
-   while (i < MAX_BUTTON && FrameTable[frame].Button[i] != w)
-      i++;
-   if (i < MAX_BUTTON)
-     {
-#ifdef _WINDOWS
-	doSwitchButton = FALSE;
-#else /* _WINDOWS */
-	if (!FrameTable[frame].EnabledButton[i])
+  i = 0;
+  while (i < MAX_BUTTON && FrameTable[frame].Button[i] != w)
+    i++;
+  if (i < MAX_BUTTON)
+    {
+      if (!FrameTable[frame].EnabledButton[i])
+	{
 	  /* the button is not active */
 	  return;
-#endif /* _WINDOWS */
-	CloseInsertion ();
-	FrameToView (frame, &document, &view);
-	(*FrameTable[frame].Call_Button[i]) (document, view);
-     }
-#ifdef _WINDOWS
-   doSwitchButton = TRUE;
-#endif /* _WINDOWS */
+	}
+      CloseInsertion ();
+      FrameToView (frame, &document, &view);
+      (*FrameTable[frame].Call_Button[i]) (document, view);
+    }
 }
 
 #ifndef _WINDOWS
@@ -1390,9 +1384,9 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      row = gtk_vseparator_new ();
 		      gtk_widget_show (row);
 		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
-		      /*		      gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));*/
-		      /*		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);*/
-		      /*		      row = NULL;*/
+		      /* gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));*/
+		      /* gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);*/
+		      /*	              row = NULL;*/
 		    }
 		  else
 		    {
@@ -1423,9 +1417,9 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 #else /* _GTK */
 		  row = FrameTable[frame].Button[0];
 		  n = 0;
-		  XtSetArg (args[n], XmNmarginWidth, 4);
+		  XtSetArg (args[n], XmNmarginWidth, 1);
 		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 2);
+		  XtSetArg (args[n], XmNmarginHeight, 1);
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
@@ -1499,14 +1493,20 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 			{
 			  w->iBitmap      = picture;
 			  w->iString      = -1;
-			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM)(LPTBBUTTON)w);
-			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM) MAKELONG (state, 0));
+			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
+				      (WPARAM) FrameTable[frame].ButtonId[i], 
+				      (LPARAM)(LPTBBUTTON)w);
+			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
+				       (WPARAM) FrameTable[frame].ButtonId[i],
+				       (LPARAM) MAKELONG (state, 0));
 			}
 		      else
 			{
 			  w->iBitmap   = 3;
 			  w->iString   = 0;
-			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM)(LPTBBUTTON)w);
+			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
+				      (WPARAM) FrameTable[frame].ButtonId[i],
+				      (LPARAM)(LPTBBUTTON)w);
 			}
 		    }
 		  
@@ -1525,9 +1525,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
    TtaGetButtonCallback
 
    Get the callback of a button in a document view.
-   Returns the callback if it exists
-           NULL if it doesn't exists
-
+   Returns the callback if it exists, NULL if it doesn't exists
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -1564,62 +1562,56 @@ void *TtaGetButtonCallback (Document document, View view, int index)
 
    Change the status of the button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
    index: the index.
   ----------------------------------------------------------------------*/
-void TtaSwitchButton (Document document, View view, int index)
+void TtaSwitchButton (Document doc, View view, int index)
 {
   int                 frame;
+  ThotBool            status;
 #ifndef _WINDOWS
   int                 n;
-  Pixel               top, bottom;
   Arg                 args[MAX_ARGS];
-#endif
+#endif /* _WINDOWS */
 
   UserErrorCode = 0;
   /* verifie le parametre document */
-  if (document == 0 && view == 0)
+  if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
   else
     {
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
 	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
 	    {
-	      /* Change l'etat du bouton */
+	      /* Change the button state */
+	      status = FrameTable[frame].CheckedButton[index];
+	      FrameTable[frame].CheckedButton[index] = !status;
 #ifdef _WINDOWS
-	      if (doSwitchButton)
-		{
-		  if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) 0))
-		    SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
-		  else
-		    SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
-		}
+	      status = SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED,
+				    (WPARAM) FrameTable[frame].ButtonId[index],
+				    (LPARAM) 0)
+	      if (status != FrameTable[frame].CheckedButton[index])
+		SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
+			     (WPARAM) FrameTable[frame].ButtonId[index],
+			     (LPARAM) MAKELONG (status, 0));
 #else  /* !_WINDOWS */
 #ifndef _GTK
 	      n = 0;
-	      XtSetArg (args[n], XmNtopShadowColor, &top);
-	      n++;
-	      XtSetArg (args[n], XmNbottomShadowColor, &bottom);
-	      n++;
-	      XtGetValues (FrameTable[frame].Button[index], args, n);
-	      n = 0;
-	      XtSetArg (args[n], XmNtopShadowColor, bottom);
-	      n++;
-	      XtSetArg (args[n], XmNbottomShadowColor, top);
+	      if (!status)
+		/* becomes checked */
+		XtSetArg (args[n], XmNbackground, InactiveB_Color);
+	      else
+		/* becomes normal */
+		XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 #else /* _GTK */
-	      /*	      printf("-------------changement d etat d'un boutton\n");*/
-
-
-
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
@@ -1633,7 +1625,6 @@ void TtaSwitchButton (Document document, View view, int index)
 
    Change the button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.
@@ -1641,8 +1632,10 @@ void TtaSwitchButton (Document document, View view, int index)
    picture: the new icon.
    state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
-void TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state)
+void TtaChangeButton (Document doc, View view, int index,
+		      ThotIcon picture, ThotBool state)
 {
+  int                 frame;
 #ifndef _WINDOWS
 #ifndef _GTK
   Arg                 args[MAX_ARGS];
@@ -1651,12 +1644,11 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
   ThotWidget          tmpw;
   ThotWidget          pixtmp;
 #endif /* !_GTK */
-#endif
-  int                 frame;
+#endif /* _WINDOWS */
 
   UserErrorCode = 0;
   /* verifie le parametre document */
-  if (document == 0 && view == 0)
+  if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
 #ifndef _WINDOWS
    else if (picture == None)
@@ -1664,25 +1656,41 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 #endif /* !_WINDOWS */
   else
     {
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
 	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
 	    {
-	      /* Insere le nouvel icone */
+	      /* store the new state */
+	      FrameTable[frame].EnabledButton[index] = state;
 #ifdef _WINDOWS
+	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
+			   (WPARAM) FrameTable[frame].ButtonId[index],
+			   (LPARAM) MAKELONG (state, 0));
 	      if (FrameTable[frame].Button[index]->iBitmap != picture)
+		{
+		  /* store the new icone */
 		  FrameTable[frame].Button[index]->iBitmap = picture;
-	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
+		  TtaSwitchButton (doc, view, index);
+		}
+	      else if (state = FALSE &&
+		       FrameTable[frame].CheckedButton[index] == FALSE)
+		{
+		  FrameTable[frame].CheckedButton[index] == TRUE;
+		  SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
+			       (WPARAM) FrameTable[frame].ButtonId[index],
+			       (LPARAM) MAKELONG (TRUE, 0));
+		}
+		
 #else  /* !_WINDOWS */
+	      /* Insert the new icone */
 #ifndef _GTK
 	      n = 0;
 	      XtSetArg (args[n], XmNlabelPixmap, picture);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
-	      FrameTable[frame].EnabledButton[index] = state;
 #else /* _GTK */
 	      /* Update the toolbar button stat: Replace the old picture by the new */
 	      /* The old picture is linked to the button widget with gtk_object_set_data */
@@ -1697,7 +1705,6 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 		  /*		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);*/
 		}
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
-	      FrameTable[frame].EnabledButton[index] = state;
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
@@ -1709,31 +1716,32 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void WIN_TtaSwitchButton (Document document, View view, int index, int picture, int bState, BOOL state)
+void WIN_TtaSwitchButton (Document doc, View view, int index,
+			  int picture, int bState, BOOL state)
 {
-   int                 frame;
+  int                 frame;
 
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], bState, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
-	       }
-	  }
-     }
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (doc, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+	  if (index >= MAX_BUTTON || index <= 0
+	      || FrameTable[frame].Button[index] == 0)
+	    TtaError (ERR_invalid_parameter);
+	  else
+	    /* Insere le nouvel icone */
+	    SendMessage (WinToolBar[frame], bState,
+			 (WPARAM) FrameTable[frame].ButtonId[index],
+			 (LPARAM) MAKELONG (state, 0));
+	}
+    }
 }
 
 #endif /* _WINDOWS */
@@ -1743,10 +1751,10 @@ void WIN_TtaSwitchButton (Document document, View view, int index, int picture, 
    Shows the buttonbar in a document view.
    This function must specify a valid view of a valid document.
    Parameters:
-   document: identifier of the document.
+   doc: identifier of the document.
    view: identifier of the view.
   ----------------------------------------------------------------------*/
-void TtcSwitchButtonBar (Document document, View view)
+void TtcSwitchButtonBar (Document doc, View view)
 {
    int                 frame;
 #ifndef _WINDOWS
@@ -1760,11 +1768,11 @@ void TtcSwitchButtonBar (Document document, View view)
    UserErrorCode = 0;
    frame = 0;
    /* verifie le parametre document */
-   if (document == 0 && view == 0)
+   if (doc == 0 && view == 0)
       TtaError (ERR_invalid_parameter);
    else
      {
-	frame = GetWindowNumber (document, view);
+	frame = GetWindowNumber (doc, view);
 	if (frame == 0 || frame > MAX_FRAME)
 	  {
 	     TtaError (ERR_invalid_parameter);
@@ -1801,30 +1809,29 @@ void TtcSwitchButtonBar (Document document, View view)
 	XtManageChild (XtParent (XtParent (row)));
      }
    XtAddCallback (FrameTable[frame].WdFrame, XmNresizeCallback,
-		     (XtCallbackProc) FrameResized, (XtPointer) frame);
+		  (XtCallbackProc) FrameResized, (XtPointer) frame);
 #else /* _GTK */
    if (row != 0)
      {
        if(GTK_WIDGET_VISIBLE(row))
-	 {
-	   gtk_widget_hide (GTK_WIDGET(row));
-	 }
+	 gtk_widget_hide (GTK_WIDGET(row));
        else
-	 {
-	   gtk_widget_show_all (GTK_WIDGET(row));
-	 }
+	 gtk_widget_show_all (GTK_WIDGET(row));
      }
 #endif /* !_GTK */
 #else  /* _WINDOWS */
-   if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
-      hmenu = WIN_GetMenu (frame); 
-      CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-      ShowWindow (WinToolBar[frame], SW_HIDE);
-   } else {
-        hmenu = WIN_GetMenu (frame); 
-        CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-        ShowWindow (WinToolBar[frame], SW_SHOW);
-   }
+   if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
+     {
+       hmenu = WIN_GetMenu (frame); 
+       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+       ShowWindow (WinToolBar[frame], SW_HIDE);
+     }
+   else
+     {
+       hmenu = WIN_GetMenu (frame); 
+       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+       ShowWindow (WinToolBar[frame], SW_SHOW);
+     }
    /* Resize other windows */
    GetClientRect (FrMainRef [frame], &r);
    PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
@@ -1843,7 +1850,7 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 void APP_TextCallbackGTK (GtkWidget *w, int frame)
 #endif /* !_GTK */
 {
-   Document            document;
+   Document            doc;
    View                view;
    int                 i;
 #ifndef _WINDOWS
@@ -1858,7 +1865,7 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
       i++;
    if (i < MAX_TEXTZONE)
      {
-	FrameToView (frame, &document, &view);
+	FrameToView (frame, &doc, &view);
 #ifdef _WINDOWS
 	GetWindowText (w, text, sizeof (text) + 1);
 #else /* _WINDOWS */
@@ -1869,7 +1876,7 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
 	/*	printf("textcallback=%s", text);*/
 #endif /* !_GTK */
 #endif /* _WINDOWS */
-	(*FrameTable[frame].Call_Text[i]) (document, view, text);
+	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
      }
 }
 
@@ -1879,13 +1886,13 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
    Adds a new textual command in a document view.
    This function must specify a valid view of a valid document.
    Parameters:
-   document: the concerned document.
+   doc: the concerned document.
    view: the concerned view.
    label: label of the new entry.
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-int TtaAddTextZone (Document document, View view, char *label,
+int TtaAddTextZone (Document doc, View view, char *label,
 		    ThotBool editable, void (*procedure) ())
 {
   int            frame, i;
@@ -1908,11 +1915,11 @@ int TtaAddTextZone (Document document, View view, char *label,
   i = 0;
   w = 0;
   /* verifie le parametre document */
-  if (document == 0 && view == 0)
+  if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
   else
     {
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
@@ -2120,22 +2127,22 @@ int TtaAddTextZone (Document document, View view, char *label,
    Sets the text in text-zone in a document view.
    This function must specify a valid view of a valid document.
    Parameters:
-   document: identifier of the document.
+   doc: identifier of the document.
    view: identifier of the view.
    index: 
   ----------------------------------------------------------------------*/
-void TtaSetTextZone (Document document, View view, int index, char *text)
+void TtaSetTextZone (Document doc, View view, int index, char *text)
 {
    int                 frame;
    ThotWidget          w;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
-   if (document == 0 && view == 0 && (index < 1 || index >= MAX_TEXTZONE) && text != NULL)
+   if (doc == 0 && view == 0 && (index < 1 || index >= MAX_TEXTZONE) && text != NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
-	frame = GetWindowNumber (document, view);
+	frame = GetWindowNumber (doc, view);
 	if (frame == 0 || frame > MAX_FRAME)
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
@@ -2172,10 +2179,10 @@ void TtaSetTextZone (Document document, View view, int index, char *text)
    This function must specify a valid view of a valid document.
 
    Parameters:
-   document: identifier of the document.
+   doc: identifier of the document.
    view: identifier of the view.
   ----------------------------------------------------------------------*/
-void TtcSwitchCommands (Document document, View view)
+void TtcSwitchCommands (Document doc, View view)
 {
    int                 frame;
 #ifdef _WINDOWS
@@ -2191,11 +2198,11 @@ void TtcSwitchCommands (Document document, View view)
 
    UserErrorCode = 0;
    /* verifie le parametre document */
-   if (document == 0 && view == 0)
+   if (doc == 0 && view == 0)
       TtaError (ERR_invalid_parameter);
    else
      {
-	frame = GetWindowNumber (document, view);
+	frame = GetWindowNumber (doc, view);
 	if (frame == 0 || frame > MAX_FRAME)
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
@@ -2707,7 +2714,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
 	   n++;
-	   shell = XtCreatePopupShell (name, applicationShellWidgetClass, RootShell, args, n);
+	   shell = XtCreatePopupShell (name, applicationShellWidgetClass,
+				       RootShell, args, n);
 	   
 	   n = 0;
 	   XtSetArg (args[n], XmNwidth, dx + 4);
@@ -2723,7 +2731,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   Main_Wd = XmCreateMainWindow (shell, "Thot_Doc", args, n);
 
 	   XtManageChild (Main_Wd);
-	   XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
+	   XtAddCallback (shell, XmNdestroyCallback,
+			  (XtCallbackProc) FrameKilled, (XtPointer) frame);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 	   
@@ -2774,74 +2783,73 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   while (ptrmenu != NULL)
 	     {
 	       /* skip menus that concern another view */
-	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
-		 if (Prof_ShowMenu (ptrmenu))
-		   {
-#ifndef _WINDOWS
-		     if (menu_bar == NULL)
-		       {
-			 /*** The menu bar ***/
-#ifdef _GTK
-			 menu_bar = gtk_menu_bar_new ();
-			 /*gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);*/
-			 /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
-
-			 /*			 gtk_widget_ref (menu_bar);*/
-			 /*		 	 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
-						 (GtkDestroyNotify) gtk_widget_unref);*/
-			 gtk_widget_show (menu_bar);
-			 /*gtk_container_add (GTK_CONTAINER (vbox1), menu_bar);*/
-			 gtk_box_pack_start (GTK_BOX (vbox1), menu_bar, FALSE, FALSE, 0);
-#else /* _GTK */
-			 XtSetArg (argument[0], XmNbackground, BgMenu_Color);
-			 XtSetArg (argument[1], XmNspacing, 0);
-			 menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
-			 XtManageChild (menu_bar);
-#endif /* _GTK */
-		       }
-#endif /* _WINDOWS */
-		   
+	       if ((ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
+		   Prof_ShowMenu (ptrmenu))
+		 {
 #ifdef _WINDOWS
-		     w = CreateMenu ();
+		   w = CreateMenu ();
 #else  /* _WINDOWS */
 #ifdef _GTK
-		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
-		     gtk_widget_show (menu_item);
-		     GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
-		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
-		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
-		     w = menu_item;
+		   if (menu_bar == NULL)
+		     {
+		       /*** The menu bar ***/
+		       menu_bar = gtk_menu_bar_new ();
+		       /*gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);*/
+		       /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
+		       
+		       /* gtk_widget_ref (menu_bar);*/
+		       /* gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
+			  (GtkDestroyNotify) gtk_widget_unref);*/
+		       gtk_widget_show (menu_bar);
+		       /* gtk_container_add (GTK_CONTAINER (vbox1), menu_bar);*/
+		       gtk_box_pack_start (GTK_BOX (vbox1), menu_bar, FALSE, FALSE, 0);
+		     }
+		   menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
+		   gtk_widget_show (menu_item);
+		   GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
+		   if (ptrmenu->MenuHelp == TRUE)
+		     gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+		   gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
+		   w = menu_item;
 #if 0
-		     w = gtk_menu_new ();
-		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
-		     gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
+		   w = gtk_menu_new ();
+		   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
+		   gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
 #endif
 #else /* _GTK */
-		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
-		     XtManageChild (w);
+		   if (menu_bar == NULL)
+		     {
+		       /*** The menu bar ***/
+		       XtSetArg (argument[0], XmNbackground, BgMenu_Color);
+		       XtSetArg (argument[1], XmNspacing, 0);
+		       menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
+		       XtManageChild (menu_bar);
+		     }
+		   w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
+		   XtManageChild (w);
 #endif /* _GTK */
 #endif /* _WINDOWS */
-		     FrameTable[frame].WdMenus[i] = w;
-		     FrameTable[frame].EnabledMenus[i] = TRUE;
-		     /* Evite la construction des menus dynamiques */
-		     if (ptrmenu->MenuAttr)
-		       FrameTable[frame].MenuAttr = ptrmenu->MenuID;
-		     else if (ptrmenu->MenuSelect) 
-		       FrameTable[frame].MenuSelect = ptrmenu->MenuID;
-		     else 
-		       BuildPopdown (ptrmenu, ref, w, frame, doc);
+		   FrameTable[frame].WdMenus[i] = w;
+		   FrameTable[frame].EnabledMenus[i] = TRUE;
+		   /* Evite la construction des menus dynamiques */
+		   if (ptrmenu->MenuAttr)
+		     FrameTable[frame].MenuAttr = ptrmenu->MenuID;
+		   else if (ptrmenu->MenuSelect) 
+		     FrameTable[frame].MenuSelect = ptrmenu->MenuID;
+		   else 
+		     BuildPopdown (ptrmenu, ref, w, frame, doc);
 #ifdef _WINDOWS
-		     AppendMenu (menu_bar, MF_POPUP, (UINT) w,
-				 TtaGetMessage (THOT, ptrmenu->MenuID));
+		   AppendMenu (menu_bar, MF_POPUP, (UINT) w,
+			       TtaGetMessage (THOT, ptrmenu->MenuID));
 #else  /* !_WINDOWS */
 #ifndef _GTK
-		     /* Register dynamic menus */
-		     if (ptrmenu->MenuHelp)
-		       {
-			 /* Menu help at the right side*/
-			 XtSetArg (argument[0], XmNmenuHelpWidget, w);
-			 XtSetValues (XtParent (w), argument, 1);
-		       }
+		   /* Register dynamic menus */
+		   if (ptrmenu->MenuHelp)
+		     {
+		       /* Menu help at the right side*/
+		       XtSetArg (argument[0], XmNmenuHelpWidget, w);
+		       XtSetValues (XtParent (w), argument, 1);
+		     }
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		   }
@@ -2866,7 +2874,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /*	   gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 2);*/
 	   gtk_widget_show (toolbar);
 	
-	   /*  gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);*/
+	   /* gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 2);
 
 	   for (i=1; i<MAX_BUTTON ; i++)
@@ -3024,14 +3032,20 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   hscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	   XtManageChild (hscrl);
-	   /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame); */
-	   XtAddCallback (hscrl, XmNdragCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNdecrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNincrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNpageDecrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNdragCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNdecrementCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNincrementCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNpageDecrementCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNpageIncrementCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNtoTopCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	   XtAddCallback (hscrl, XmNtoBottomCallback,
+			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
 	   n++;
@@ -3041,14 +3055,20 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   vscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	   XtManageChild (vscrl);
-	   /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame); */
-	   XtAddCallback (vscrl, XmNdragCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNdecrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNincrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNpageDecrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNdragCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNdecrementCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNincrementCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNpageDecrementCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNpageIncrementCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNtoTopCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	   XtAddCallback (vscrl, XmNtoBottomCallback,
+			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 
 	   /* Vertical row */
 	   n = 0;
@@ -3071,13 +3091,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
+	   XtSetArg (args[n], XmNmarginHeight, 2);
 	   n++;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
 	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
 	   n++;
-	   XtSetArg (args[n], XmNspacing, 0);
+	   XtSetArg (args[n], XmNspacing, 6);
 	   n++;
 	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	   n++;
@@ -3087,6 +3107,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     FrameTable[frame].Button[i] = 0;
 	   FrameTable[frame].Button[0] = hbox1;
 
+	   /*XmCreateSeparator (table1, "", args, n);*/
 	   /* Horizontal row for logo and text zones */
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 5);
