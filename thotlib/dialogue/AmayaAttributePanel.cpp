@@ -178,15 +178,10 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
   if ( !m_pAttrList->IsChecked(event.GetSelection()) )
     {
       ShowAttributValue( wxATTR_TYPE_NONE );
-  /* try to redirect focus to canvas */
-  TtaRedirectFocus();  
       return;
     }
   
   SelectAttribute( event.GetSelection() );
-
-  /* try to redirect focus to canvas */
-  TtaRedirectFocus();  
 }
 
 /*----------------------------------------------------------------------

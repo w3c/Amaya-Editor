@@ -119,10 +119,7 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
   wxLogDebug( _T("AmayaTextGraber::OnKeyDown thotmask=%x, thot_keysym=%x"), m_ThotMask, thot_keysym );
 
   if (
-#ifdef _WINDOWS
-	   /* allow this key only on windows */
 	   thot_keysym == WXK_F2       ||
-#endif /* _WINDOWS */
 	   thot_keysym == WXK_INSERT ||
 	   thot_keysym == WXK_DELETE ||
 	   thot_keysym == WXK_HOME   ||
