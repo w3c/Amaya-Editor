@@ -262,7 +262,7 @@ static void ColorsExpose ()
    ColorsPress
    handles a click on the color palette
   ----------------------------------------------------------------------*/
-static void         ColorsPress (int button, int x, int y)
+static void ColorsPress (int button, int x, int y)
 {
   int                 color, li, co;
 #ifndef _WINDOWS
@@ -275,7 +275,6 @@ static void         ColorsPress (int button, int x, int y)
     /* Affiche les couleurs sur un ecran couleur */
     wcase = CharacterWidth ('m', FontDialogue) * 4;
   hcase = FontHeight (FontDialogue);
-  
   /* Regarde si on n'a pas clique dans le titre */
   if (y < hcase)
     {
@@ -296,7 +295,6 @@ static void         ColorsPress (int button, int x, int y)
   li = x / wcase;
   co = (y - hcase) / hcase;
   color = co * COLORS_COL + li;
-
 #else  /* _WINDOWS  */
   if (y < 60 || y > 345)
     {
@@ -351,6 +349,129 @@ static void         ColorsPress (int button, int x, int y)
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
+ SelectANewFgColor
+  ----------------------------------------------------------------------*/
+static void SelectANewFgColor (HWND hwnd)
+{
+  HDC             hdc;
+  HBRUSH          hBrush;
+  HBRUSH          hOldBrush;
+  HPEN            hPen;
+  HPEN            hOldPen;
+  int             x, y;
+  int             color;
+  unsigned short  red, green, blue;
+
+  if ( LastFg != FgColor)
+    {
+      hdc = GetDC (hwnd);
+      /* Switch off last FG color */
+      if (LastFg >= 0 && LastFg < NColors)
+	{
+	  x = (LastFg % COLORS_COL) * 39;
+	  y = (LastFg / COLORS_COL) * 15 + 60;
+	  hBrush = CreateSolidBrush (ColorPixel (LastFg));
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 39, y + 15);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	}
+      /* Switch on last FG color */
+      LastFg = FgColor;
+      if (LastFg >= 0 && LastFg < NColors)
+	{
+	  x = (LastFg % COLORS_COL) * 39;
+	  y = (LastFg / COLORS_COL) * 15 + 60;
+	  x += 1;
+	  y += 1;	  
+	  red   = 255 - RGB_Table [LastFg].red;
+	  green = 255 - RGB_Table [LastFg].green;
+	  blue  = 255 - RGB_Table [LastFg].blue;
+	  if (TtIsTrueColor)
+	    hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	  else
+	    {
+	      /* give the nearest color pixel */
+	      color = TtaGetThotColor (red, green, blue);
+	      hPen = CreatePen (PS_SOLID, 1, ColorPixel (color));
+	    }
+	  hBrush = CreateSolidBrush (ColorPixel (LastFg));
+	  hOldPen = SelectObject (hdc, hPen);
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 37, y + 13);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  SelectObject (hdc, hOldPen);
+	  DeleteObject (hPen);
+	}
+      DeleteDC (hdc);
+    }
+}
+
+/*----------------------------------------------------------------------
+ SelectANewBgColor
+  ----------------------------------------------------------------------*/
+static void SelectANewBgColor (HWND hwnd)
+{
+  HDC             hdc;
+  HBRUSH          hBrush;
+  HBRUSH          hOldBrush;
+  HPEN            hPen;
+  HPEN            hOldPen;
+  int             x, y;
+  int             color;
+  unsigned short  red, green, blue;
+
+  if ( LastBg != BgColor)
+    {
+      hdc = GetDC (hwnd);
+      /* Switch off last BG color */
+      if (LastBg >= 0 && LastBg < NColors)
+	{
+	  x = (LastBg % COLORS_COL) * 39;
+	  y = (LastBg / COLORS_COL) * 15 + 60;      
+	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 39, y + 15);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	}
+
+      /* Switch on last FG color */
+      LastBg = BgColor;
+      if (LastBg >= 0 && LastBg < NColors)
+	{
+	  x = (LastBg % COLORS_COL) * 39;
+	  y = (LastBg / COLORS_COL) * 15 + 60;
+	  x += 1;
+	  y += 1;
+	  
+	  hdc = GetDC (hwnd);
+	  red   = 255 - RGB_Table [LastBg].red;
+	  green = 255 - RGB_Table [LastBg].green;
+	  blue  = 255 - RGB_Table [LastBg].blue;
+	  if (TtIsTrueColor)
+	    hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
+	  else
+	    {
+	      /* give the nearest color pixel */
+	      color = TtaGetThotColor (red, green, blue);
+	      hPen = CreatePen (PS_SOLID, 1, ColorPixel (color));
+	    }
+	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
+	  hOldPen = SelectObject (hdc, hPen);
+	  hOldBrush = SelectObject (hdc, hBrush);
+	  Rectangle (hdc, x, y, x + 37, y + 13);
+	  SelectObject (hdc, hOldBrush);
+	  DeleteObject (hBrush);
+	  SelectObject (hdc, hOldPen);
+	  DeleteObject (hPen);
+	}
+      DeleteDC (hdc);
+    }
+}
+
+/*----------------------------------------------------------------------
  ThotColorPaletteWndProc
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
@@ -361,11 +482,8 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
   PAINTSTRUCT     ps;
   HBRUSH          hBrush;
   HBRUSH          hOldBrush;
-  HPEN            hPen;
-  HPEN            hOldPen;
   int             x, y, nbPalEntries;
-  int             YPos, color;
-  unsigned short red, green, blue;
+  int             yPos;
   HWND            hwnLButton;
   HWND            hwnRButton;
   HWND            hwnDefaultColors;
@@ -409,176 +527,30 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
       break;
     
     case WM_LBUTTONDOWN:
-      YPos = HIWORD (lParam);
+      yPos = HIWORD (lParam);
       if (HIWORD (lParam) >= 40 && HIWORD (lParam) <= 345)
 	{
 	  ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
-         /* Switch off last FG color */
-	  if (LastFg >= 0 && LastFg != FgColor)
+	  SelectANewFgColor (hwnd);
+	  if (!applyToSelection)
 	    {
-	      x = (LastFg % COLORS_COL) * 39;
-	      y = (LastFg / COLORS_COL) * 15 + 60;
-	      
-	      hdc = GetDC (hwnd);
-	      hBrush = CreateSolidBrush (ColorPixel (LastFg));
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 39, y + 15);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
+	      DeleteObject (TtCmap);
+	      TtCmap = 0;
+	      DestroyWindow (hwnd);
 	    }
-      
-	  /* Switch on last FG color */
-	  if (LastFg != FgColor)
-	    {
-	      LastFg = FgColor;
-	      x = (LastFg % COLORS_COL) * 39;
-	      y = (LastFg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	      
-	      hdc = GetDC (hwnd);
-	      red   = 255 - RGB_Table [LastFg].red;
-	      green = 255 - RGB_Table [LastFg].green;
-	      blue  = 255 - RGB_Table [LastFg].blue;
-	      if (TtIsTrueColor)
-            hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      else
-		  {
-             /* give the nearest color pixel */
-             color = TtaGetThotColor (red, green, blue);
-             hPen = CreatePen (PS_SOLID, 1, ColorPixel (color));
-		  }
-	      hBrush = CreateSolidBrush (ColorPixel (LastFg));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
-	    }
-	  /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
-      if (!applyToSelection)
-	  {
-	    DeleteObject (TtCmap);
-	    TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
 	} 
       break;
       
     case WM_MBUTTONDOWN:
-      ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
-      /* Switch off last BG color */
-      if (LastBg >= 0 && LastBg != BgColor)
-	{
-	  x = (LastBg % COLORS_COL) * 39;
-	  y = (LastBg / COLORS_COL) * 15 + 60;
-      
-	  hdc = GetDC (hwnd);
-	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 39, y + 15);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-
-      /* Switch on last FG color */
-      if (LastBg != BgColor)
-	{
-	  LastBg = BgColor;
-	  x = (LastBg % COLORS_COL) * 39;
-	  y = (LastBg / COLORS_COL) * 15 + 60;
-	  x += 1;
-	  y += 1;
-	  
-	  hdc = GetDC (hwnd);
-	  red   = 255 - RGB_Table [LastBg].red;
-	  green = 255 - RGB_Table [LastBg].green;
-	  blue  = 255 - RGB_Table [LastBg].blue;
-	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
-	  hOldPen = SelectObject (hdc, hPen);
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 37, y + 13);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  SelectObject (hdc, hOldPen);
-	  DeleteObject (hPen);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-      /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
-      if (!applyToSelection)
-	  {
-	    DeleteObject (TtCmap);
-	    TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
-      break;
-      
     case WM_RBUTTONDOWN:
-      ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
-      /* Switch off last BG color */
-      if (LastBg >= 0 && LastBg != BgColor)
-	{
-	  x = (LastBg % COLORS_COL) * 39;
-	  y = (LastBg / COLORS_COL) * 15 + 60;
-	  
-	  hdc = GetDC (hwnd);
-	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 39, y + 15);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  /* SelectObject (hdc, hOldPen); */
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-	  
-      /* Switch on last FG color */
-      if (LastBg != BgColor)
-	{
-	  LastBg = BgColor;
-	  x = (LastBg % COLORS_COL) * 39;
-	  y = (LastBg / COLORS_COL) * 15 + 60;
-	  x += 1;
-	  y += 1;
-	  
-	  hdc = GetDC (hwnd);
-	  red   = 255 - RGB_Table [LastBg].red;
-	  green = 255 - RGB_Table [LastBg].green;
-	  blue  = 255 - RGB_Table [LastBg].blue;
-	  hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	  hBrush = CreateSolidBrush (ColorPixel (LastBg));
-	  hOldPen = SelectObject (hdc, hPen);
-	  hOldBrush = SelectObject (hdc, hBrush);
-	  Rectangle (hdc, x, y, x + 37, y + 13);
-	  SelectObject (hdc, hOldBrush);
-	  DeleteObject (hBrush);
-	  SelectObject (hdc, hOldPen);
-	  DeleteObject (hPen);
-	  EndPaint (hwnd, &ps);
-	  DeleteDC (hdc);
-	}
-      
-      /* SetFocus (FrRef[currentFrame]); */
-	  /* destroy the menu right away */
+      ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
+      SelectANewBgColor (hwnd);
       if (!applyToSelection)
-	  {
-	    DeleteObject (TtCmap);
-
-	     TtCmap = 0;
-	    DestroyWindow (hwnd);
-	  }
+	{
+	  DeleteObject (TtCmap);
+	  TtCmap = 0;
+	  DestroyWindow (hwnd);
+	}
       break;
       
     case WM_PAINT:
@@ -598,54 +570,11 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 		DeleteObject (hBrush);
 		hBrush = (HBRUSH) 0;
 	      }
-	  
-	  /* Switch on last FG color */
-	  if (FgColor >= 0 && FgColor < NColors)
-	    {
-	      LastFg = FgColor;
-	      x = (LastFg % COLORS_COL) * 39;
-	      y = (LastFg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	    
-	      red   = 255 - RGB_Table [LastFg].red;
-	      green = 255 - RGB_Table [LastFg].green;
-	      blue  = 255 - RGB_Table [LastFg].blue;
-	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      hBrush = CreateSolidBrush (ColorPixel (LastFg));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	    }
-
-	  /* Switch on last BG color */
-	  if (BgColor >= 0 && BgColor != LastFg &&
-		  BgColor < NColors)
-	    {
-	      LastBg = BgColor;
-	      x = (LastBg % COLORS_COL) * 39;
-	      y = (LastBg / COLORS_COL) * 15 + 60;
-	      x += 1;
-	      y += 1;
-	      
-	      red   = 255 - RGB_Table [LastBg].red;
-	      green = 255 - RGB_Table [LastBg].green;
-	      blue  = 255 - RGB_Table [LastBg].blue;
-	      hPen = CreatePen (PS_SOLID, 1, RGB (red, green, blue));
-	      hBrush = CreateSolidBrush (ColorPixel (LastBg));
-	      hOldPen = SelectObject (hdc, hPen);
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      Rectangle (hdc, x, y, x + 37, y + 13);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      SelectObject (hdc, hOldPen);
-	      DeleteObject (hPen);
-	    }
-
+	  /* display current colors */
+	  LastFg = -1;
+	  SelectANewFgColor (hwnd);
+	  LastBg = -1;
+	  SelectANewBgColor (hwnd);
 	  EndPaint (hwnd, &ps);
 	  DeleteDC (hdc);
 	} 
