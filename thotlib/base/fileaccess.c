@@ -232,10 +232,10 @@ char               *name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (const char *filename)
+BinFile             TtaReadOpen (CONST char *filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-const char         *filename;
+CONST char         *filename;
 
 #endif /* __STDC__ */
 {
@@ -270,10 +270,10 @@ BinFile             file;
    TtaWriteOpen opens a file for writing.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaWriteOpen (const char *filename)
+BinFile             TtaWriteOpen (CONST char *filename)
 #else  /* __STDC__ */
 BinFile             TtaWriteOpen (filename)
-const char         *filename;
+CONST char         *filename;
 
 #endif /* __STDC__ */
 {

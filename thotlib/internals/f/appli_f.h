@@ -40,8 +40,8 @@ extern ThotWidget TtaGetViewFrame ( Document document,
 extern void DisplaySelMessage ( char *text );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           const char *text,
-                           const char *name );
+                           CONST char *text,
+                           CONST char *name );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,
@@ -112,8 +112,8 @@ extern ThotWidget TtaGetViewFrame (/* Document document,
 extern void DisplaySelMessage (/* char *text */);
 extern void TtaSetStatus (/* Document document,
                              View view,
-                             const char *text,
-                             const char *name */);
+                             CONST char *text,
+                             CONST char *name */);
 extern void FrameCallback (/* int frame,
                               void *evnt */);
 extern void ThotGrab (/* ThotWindow win,

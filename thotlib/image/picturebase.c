@@ -66,10 +66,10 @@ static int ImageBaseHashInitialized = 0;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          GetHash (const char *name)
+static int          GetHash (CONST char *name)
 #else  /* __STDC__ */
 static int          GetHash (name)
-const char         *name;
+CONST char         *name;
 
 #endif /* __STDC__ */
 {

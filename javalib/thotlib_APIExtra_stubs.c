@@ -4,6 +4,11 @@
  * be built automatically by javastub program.
  */
 
+#ifdef CONST
+#undef CONST
+#endif
+#define CONST
+
 #include "app.h"
 #include "appaction.h"
 #include "memory.h"

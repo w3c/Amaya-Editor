@@ -5979,6 +5979,11 @@ test -z "$motif_direct_test_include" && motif_direct_test_include=Xm/Xm.h
     /usr/athena/include       \
     /usr/local/x11r5/include  \
     /usr/lpp/Xamples/include  \
+                              \
+    /usr/lesstif/include      \
+    /usr/local/lesstif/include\
+    /usr/gnu/lesstif/include  \
+    $HOME/lesstif/include     \
     ; \
   do
     if test -r "$ac_dir/$motif_direct_test_include"; then
@@ -6025,6 +6030,11 @@ for ac_dir in `echo "$ac_motif_includes" | sed s/include/lib/` \
     /usr/athena/lib       \
     /usr/local/x11r5/lib  \
     /usr/lpp/Xamples/lib  \
+                          \
+    /usr/lesstif/lib      \
+    /usr/local/lesstif/lib\
+    /usr/gnu/lesstif/lib  \
+    $HOME/lesstif/lib     \
     ; \
 do
   for ac_extension in a so sl; do
@@ -6104,6 +6114,10 @@ if test "${CC}" = "gcc" ; then
          default_www_access="java"
       ;;
   esac
+fi
+
+if test "$ac_cv_c_const" = "no" ; then
+  CFLAGS="${CFLAGS} -DCONST= "
 fi
 
 

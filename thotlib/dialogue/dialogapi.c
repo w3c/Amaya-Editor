@@ -273,10 +273,10 @@ ThotWindow win;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-static boolean isOnlyBlank (const char* text)
+static boolean isOnlyBlank (CONST char* text)
 #else  /* __STDC__ */
 static boolean isOnlyBlank (text)
-const char* text;
+CONST char* text;
 #endif /* __STDC__ */
 {
     char *pText = text;

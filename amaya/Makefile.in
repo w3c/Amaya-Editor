@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
+INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(X_FLAGS)
 LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(IMGLIBS) $(AMAYA_OPTION_LIBS) $(MOTIF_LIBRARIES) -lXm \
 	  $(X_LIBS) -lXt $(X_PRE_LIBS) -lXext -lX11 $(X_EXTRA_LIBS) \
@@ -44,7 +44,7 @@ amaya : $(AMAYA_SCHEMAS) $(AMAYA_SRC) ../thotlib/libThotEditor.a ../tablelib/lib
 #
 # General entry point everything should have compiled correctly
 #
-all : ../bin/amaya
+all : $(AMAYA_SCHEMAS) $(AMAYA_SRC) ../bin/amaya
 
 clean :
 	$(RM) *.o EDITORAPP.c EDITOR.A
@@ -235,7 +235,7 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) EDITOR.A
 
-../bin/amaya : $(AMAYA_SCHEMAS) $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
+../bin/amaya : $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
 	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
 	@$(ECHO) "====>" amaya is done

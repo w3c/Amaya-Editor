@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ $(X_FLAGS)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

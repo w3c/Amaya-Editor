@@ -15,7 +15,7 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya javalib 
+SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya
 EXTRA_SUBDIRS= misc classes javalib
 
 prefix = @prefix@
@@ -124,7 +124,7 @@ proto : rebuild bin/cextract
 
 mkid : 
 	@(echo rebuilding $(THOTDIR)/ID reference file)
-	@(cd $(THOTDIR); mkid --lang-map=$(THOTDIR)/makes/id-lang.map)
+	@(cd $(THOTDIR); mkid --lang-map=makes/id-lang.map)
 
 #
 # Rule du rebuild the Thot schemas

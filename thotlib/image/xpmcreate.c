@@ -1272,7 +1272,7 @@ Pixel              *pixels;
 
 #ifndef WORD64
 /* this item is static but deterministic so let it slide; doesn't
- * hurt re-entrancy of this library. Note if it is actually const then would
+ * hurt re-entrancy of this library. Note if it is actually CONST then would
  * be OK under rules of ANSI-C but probably not C++ which may not
  * want to allocate space for it.
  */

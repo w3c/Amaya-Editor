@@ -597,8 +597,8 @@ char               *name;
 void                TtaSetEnvString (char *name, char *value, int overwrite)
 #else  /* __STDC__ */
 void                TtaSetEnvString (name, value, overwrite)
-const char         *name;
-const char         *value;
+CONST char         *name;
+CONST char         *value;
 int                 overwrite;
 
 #endif
@@ -618,9 +618,9 @@ int                 overwrite;
          the registry file.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          IsThotDir (const char *path)
+static int          IsThotDir (CONST char *path)
 #else  /* __STDC__ */
-static int          IsThotDir (const char *path)
+static int          IsThotDir (CONST char *path)
 #endif				/* __STDC__ */
 {
    char                filename[MAX_PATH];
@@ -657,9 +657,9 @@ static int          IsThotDir (const char *path)
    HKEY_CURRENT_USER\Software\OPERA\Amaya\<var>                       
    HKEY_LOCAL_MACHINE\Software\OPERA\Amaya\<var>                      
   ----------------------------------------------------------------------*/
-static char        *WINReg_get (const char *env)
+static char        *WINReg_get (CONST char *env)
 {
-   static const char   userBase[] = "Software\\OPERA\\Amaya";
+   static CONST char   userBase[] = "Software\\OPERA\\Amaya";
    char                textKey[MAX_PATH];
    HKEY                hKey;
    DWORD               type;
@@ -694,7 +694,7 @@ static char        *WINReg_get (const char *env)
 /*----------------------------------------------------------------------
    WINIni_get - simulates getenv in the Windows/Amaya.ini file     
   ----------------------------------------------------------------------*/
-static char        *WINIni_get (const char *env)
+static char        *WINIni_get (CONST char *env)
 {
    DWORD               res;
    static char         ret[MAX_PATH];	/* thread unsafe! */

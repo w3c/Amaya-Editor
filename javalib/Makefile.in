@@ -13,13 +13,13 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
           -I$(THOTDIR)/amaya -I../amaya -I../include/kaffe \
-	  @THOTINCLUDES@ @X_CFLAGS@
+	  @THOTINCLUDES@ $(X_FLAGS)
 
 JAVASTUB= ../bin/javastub
 JAVAC	= PATH="`pwd`/../bin:$$PATH" ; export PATH; \
 cd $(THOTDIR)/classes ;\
 CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip";\
-export CLASSPATH; javac
+export CLASSPATH; kaffe -mx 64000000 sun.tools.javac.Main
 KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
           export CLASSPATH; ../bin/kaffeh
 
@@ -96,7 +96,7 @@ THOT_JAVA_OBJ = \
 
 libThotJava : libThotJava.a
 
-libThotJava.a : $(THOT_JAVA_OBJ)
+libThotJava.a : stubs $(THOT_JAVA_OBJ)
 	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
 	$(RANLIB) libThotJava.a
 	@$(ECHO) "====>" libThotJava is done
@@ -109,7 +109,7 @@ AMAYA_JAVA_OBJ = \
 
 libAmayaJava : libAmayaJava.a
 
-libAmayaJava.a : $(AMAYA_JAVA_OBJ)
+libAmayaJava.a : stubs $(AMAYA_JAVA_OBJ)
 	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)
 	$(RANLIB) libAmayaJava.a
 	@$(ECHO) "====>" libAmayaJava is done

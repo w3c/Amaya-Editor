@@ -903,13 +903,13 @@ char               *text;
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetStatus (Document document, View view, const char *text, const char *name)
+void                TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
 #else  /* __STDC__ */
 void                TtaSetStatus (document, view, text, name)
 Document            document;
 View                view;
-const char         *text;
-const char         *name;
+CONST char         *text;
+CONST char         *name;
 #endif /* __STDC__ */
 {
    int                 frame;

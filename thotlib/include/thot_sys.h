@@ -27,6 +27,14 @@
 
 #include "sysdep.h"
 
+/*
+ * If const does work, or hasn't been redefined before
+ */
+
+#ifndef CONST
+#define CONST const
+#endif
+
 #if defined(_WINDOWS) || defined(_CONSOLE)
 #include <errno.h>
 #include <limits.h>

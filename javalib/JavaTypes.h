@@ -12,6 +12,19 @@ typedef (*Java2CCallback) (void *arg);
 
 extern void addNativeMethod(char*, void*);
 
+/*
+ * Since there is no way to emulate const in java, all the signatures
+ * extracted by kaffeh can't use "const" iven if the original header
+ * was using const. To avoid signatures clashes between the original
+ * header and the one extracted from the classe on need to disable CONST
+ * when compiling Java stubs.
+ */
+
+#ifdef CONST
+#undef CONST
+#endif
+#define CONST
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "tree.h"

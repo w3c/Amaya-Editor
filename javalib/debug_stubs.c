@@ -4,6 +4,11 @@
  * Daniel Veillard 1997
  */
 
+#ifdef CONST
+#undef CONST
+#endif
+#define CONST
+
 #include "app.h"
 #include "appaction.h"
 #include "memory.h"

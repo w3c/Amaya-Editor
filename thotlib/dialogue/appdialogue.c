@@ -1996,6 +1996,7 @@ int                 doc;
 #  else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
+   ThotWidget          TheFrame;
 #  endif /* _WINDOWS */
    ThotWidget          hscrl;
    ThotWidget          vscrl;
@@ -2429,9 +2430,8 @@ int                 doc;
 	     XtSetArg (args[n], XmNtraversalOn, TRUE);
 	     n++;
 
-	     w = XmCreateFrame (Main_Wd, "Frame", args, n);
+	     TheFrame = w = XmCreateFrame (Main_Wd, "Frame", args, n);
 	     XtManageChild (w);
-	     XmMainWindowSetAreas (Main_Wd, menu_bar, Wframe, hscrl, vscrl, w);
 
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, White_Color);
@@ -2446,7 +2446,6 @@ int                 doc;
 	     n++;
 	     w = XmCreateDrawingArea (w, "", args, n);
 	     XtManageChild (w);
-	     XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
 
 	     /* Row horizontal pour les messages */
 	     n = 0;
@@ -2474,12 +2473,7 @@ int                 doc;
 	     title_string = XmStringCreateSimple (" ");
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
-	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
-	     XtManageChild (FrameTable[frame].WdStatus);
-	     XmStringFree (title_string);
-	     title_string = XmStringCreateSimple (" ");
-	     XtSetArg (args[n - 1], XmNlabelString, title_string);
-	     i = CharacterWidth ('M', LargeFontDialogue) * 25;
+	     i = CharacterWidth ('M', LargeFontDialogue) * 50;
 	     XtSetArg (args[n], XmNwidth, (Dimension) i);
 	     n++;
 	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
@@ -2498,6 +2492,8 @@ int                 doc;
 	     XtSetValues (shell, args, n);
 	     XtPopup (shell, XtGrabNonexclusive);
 
+	     XmMainWindowSetAreas (Main_Wd, menu_bar, Wframe, hscrl, vscrl, TheFrame);
+	     XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
 	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
 	     FrRef[frame] = XtWindowOfObject (w);
 #            endif /* !_WINDOWS */
@@ -2508,7 +2504,6 @@ int                 doc;
 	     n = 0;
 	     XtSetArg (args[n], XmNwidth, &dx);
 	     n++;
-	     XtGetValues (vscrl, args, n);
 	     XtSetArg (args[n], XmNheight, &dy);
 	     n++;
 	     XtGetValues ((Widget) w, args, n);

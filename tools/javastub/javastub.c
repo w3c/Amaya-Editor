@@ -389,6 +389,15 @@ static int parse_type(char **next, inout retval)
 
     SKIP_BLANK(p)
     if (IS_ALPHA(*p)) {
+	/* Ignore any "const" or "CONST" keyword */
+	if ((!strncmp(p, "const", 5)) && (IS_BLANK(p[5]))) {
+	    p += 5;
+            SKIP_BLANK(p)
+	} else if ((!strncmp(p, "CONST", 5)) && (IS_BLANK(p[5]))) {
+	    p += 5;
+            SKIP_BLANK(p)
+	}
+
         /* parse the type base name */
         name[index++] = *p++;
 	while ((IS_ALPHA(*p)) || (IS_NUM(*p)))
