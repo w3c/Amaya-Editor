@@ -149,22 +149,6 @@ BOXES
 	END;
 #else { PAGE }
 
-  RightSpace:
-	BEGIN
-	Fillpattern: nopattern;
-	Underline: NoUnderline;
-	Content: Text '   ';
-	Adjust: Left;
-	HorizPos: Left = BODY . Right;
-	VertPos: Bottom = Enclosing . Bottom;
-	Width: Enclosed . Width;
-	Height: 1;
-	Size: 12 pt;
-	Font: times;
-	Style: Roman;
-	Weight: Normal;
-	END;
-
   IndexBox: BEGIN
         Content: Picture 'AmayaSrcSyncIndex.gif';
         HorizPos: Left = Root . Left;
@@ -224,7 +208,8 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	Width: Enclosing . Width;
 #else
-	CreateWith (RightSpace);
+	MarginRight: 1 em;
+	MarginBottom: 1 em;
 	HorizPos: Left = Enclosing . Left + 1;
 	Width: Enclosed . Width;
 #endif

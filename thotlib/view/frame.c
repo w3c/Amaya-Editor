@@ -207,6 +207,9 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	  if (pBox->BxLMargin < 0)
 	    x1 += pBox->BxLMargin;
 	  x2 += pBox->BxWidth;
+	  if (pBox->BxAbstractBox &&
+	      pBox->BxAbstractBox->AbLeafType == LtText)
+	    x2 += 2;
 	}
       else
 	{
@@ -283,9 +286,10 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	/* increase the redisplay area due to control points */
 	cpoints = EXTRA_GRAPH;
 
-      if (pBox->BxAbstractBox && dw < 0 &&
+      if (pBox->BxAbstractBox &&
 	  (pBox->BxAbstractBox->AbLeafType == LtText ||
 	   pBox->BxAbstractBox->AbLeafType == LtSymbol))
+	/* let Amaya displays the caret at the end of the text */
 	caret = 2;
       else
 	caret = 0;
