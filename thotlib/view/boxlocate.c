@@ -56,6 +56,7 @@
 #include "tree_f.h"
 #include "undo_f.h"
 #include "units_f.h"
+#include "unstructlocate_f.h"
 #include "views_f.h"
 #include "word_f.h"
 

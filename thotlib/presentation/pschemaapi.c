@@ -152,7 +152,6 @@ PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 void TtaMoveDocumentExtensionsToElement (Document document, Element element)
 {
   PtrDocSchemasDescr  pPfS;
-  Element             child;
 
   if (!LoadedDocument[document - 1] || element == NULL)
     return;
@@ -161,12 +160,7 @@ void TtaMoveDocumentExtensionsToElement (Document document, Element element)
       /* link document descriptors to the hierarchy */
       pPfS = LoadedDocument[document - 1]->DocFirstSchDescr;
       LoadedDocument[document - 1]->DocFirstSchDescr = NULL;
-      child = TtaGetFirstChild (element);
-      while (child)
-	{
-	  SetElSchemasExtens ((PtrElement) child, pPfS);
-	  TtaNextSibling (&child);
-	}
+      SetElSchemasExtens ((PtrElement) element, pPfS);
     }
 
 }

@@ -4600,7 +4600,7 @@ void        ParseExternalDocument (char     *fileName,
   char         *ptr = NULL;
   ElementType   elType;
   Element       parent, oldel;
-  Element       body, child, first, last, next;
+  Element       child;
   CHARSET       charset;
   DisplayMode   dispMode;
   gzFile        infile;
@@ -4825,29 +4825,9 @@ void        ParseExternalDocument (char     *fileName,
 	      /* For XHTML documents, we paste only the children of the BODY element */
 	      elType.ElSSchema = TtaGetSSchema ("HTML", externalDoc);
 	      elType.ElTypeNum = HTML_EL_BODY;
-	      body = TtaSearchTypedElement (elType, SearchForward, RootElement);
-	      if (body)
-		{
-		  first = TtaGetFirstChild (body);
-		  last = NULL;
-		  if (first)
-		    {
-		      child = first;
-		      do
-			{
-			  next = child;
-			  TtaNextSibling (&next);	    
-			  TtaRemoveTree (child, externalDoc);
-			  if (child == first)
-			    TtaInsertFirstChild (&child, extEl, externalDoc);
-			  else
-			    TtaInsertSibling (child, last, FALSE, externalDoc);
-			  last = child;
-			  child = next;
-			}
-		      while (child != NULL);
-		    }
-		}
+	      idEl = TtaSearchTypedElement (elType, SearchForward, RootElement);
+	      TtaRemoveTree (idEl, externalDoc);
+	      TtaInsertFirstChild (&idEl, extEl, doc);
 	    }
 	  else
 	    {
@@ -4859,7 +4839,7 @@ void        ParseExternalDocument (char     *fileName,
       /* Move presentation-schema extensions of the external document */
       /* to the sub-tree of which 'extEl' is the root */
       /* This allow to enable the style sheets attached to the external doc */
-      TtaMoveDocumentExtensionsToElement (externalDoc, extEl);
+      TtaMoveDocumentExtensionsToElement (externalDoc, idEl);
 
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);
