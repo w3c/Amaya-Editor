@@ -15,7 +15,7 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya pluginlib misc/annotations
+SUBDIRS	= tools thotlib tablelib batch drawlib indexlib amaya thot misc/annotations
 EXTRA_SUBDIRS= misc classes javalib
 
 prefix = @prefix@
@@ -28,12 +28,16 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-default : thotlib tools amaya thot
+default : tools thotlib tablelib batch amaya thot
 
 Options:
 	@CP@ Options.orig Options
 
 force :
+
+batch: rebuild force
+	@(if test -d batch ; then cd batch ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="-O" ; fi)
 
 tools: rebuild force
 	@(if test -d tools ; then cd tools ; \

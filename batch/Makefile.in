@@ -19,8 +19,7 @@ exec_prefix = @exec_prefix@
 bindir = @bindir@
 datadir = @datadir@
 
-COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/tra ../bin/app \
-          ../bin/printstr ../bin/rescandialogue
+COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/tra ../bin/app
 
 GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 
@@ -29,7 +28,8 @@ LANGUAGES=*.GRM *.LAN *.LST
 .c.o :
 	$(CC) -DCPP="$(CPP)" $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-all : ../bin $(GRMS) $(COMPILERS)
+all : ../bin $(GRMS) $(COMPILERS) \
+          ../bin/printstr ../bin/rescandialogue
 
 APP.GRM : APP.LAN ../bin/grm
 	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
