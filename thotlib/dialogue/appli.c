@@ -1959,13 +1959,13 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
        */
       if (ClickIsDone == 1 &&
 	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN ||
-	   mMsg == WM_SYSKEYDOWN || mMsg == WM_KEYDOWN))
+	   mMsg == WM_CHAR))
 	{
 	  ClickIsDone = 0;
 	  ClickFrame = frame;
 	  ClickX = LOWORD (lParam);
 	  ClickY = HIWORD (lParam);
-	  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+	  return 0/*DefWindowProc (hwnd, mMsg, wParam, lParam)*/;
 	}
     } 
 
