@@ -190,6 +190,7 @@ ATTRIBUTES
   type = simple:
 	BEGIN
 	CreateBefore(ATTR_type_simple);
+	Foreground: Blue;
 	END;
   type = extended:
 	BEGIN
