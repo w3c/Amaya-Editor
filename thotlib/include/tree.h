@@ -1018,6 +1018,30 @@ extern Document     TtaGetCopiedDocument (void);
 extern Element      TtaSearchTypedElement (ElementType searchedType, SearchDomain scope, Element element);
 
 /* ----------------------------------------------------------------------
+   TtaSearchTypedElementInTree
+
+   Returns the first element of a given type. Searching can be done in
+   a tree or starting from a given element towards the beginning or the
+   end of the abstract tree.. In any case the returned element must be
+   part of the parent tree.
+
+   Parameters:
+   searchedType: type of element to be searched. If searchedType.ElSSchema
+   is NULL, searchedType must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward, SearchBackward or SearchInTree.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward or SearchBackward).
+
+   Return value:
+   the element found, or NULL if no element has been found.
+
+   ---------------------------------------------------------------------- */
+extern Element      TtaSearchTypedElementInTree (ElementType searchedType, SearchDomain scope, Element parent, Element element);
+
+/* ----------------------------------------------------------------------
    TtaSearchElementByLabel
 
    Searches the element that has a given label. The search is done in
@@ -1166,6 +1190,7 @@ extern Document     TtaGetDocument ( /* Element element */ );
 extern void         TtaNextCopiedElement ( /* Element *element */ );
 extern Document     TtaGetCopiedDocument ( /* void */ );
 extern Element      TtaSearchTypedElement ( /* ElementType searchedType, SearchDomain scope, Element element */ );
+extern Element      TtaSearchTypedElementInTree ( /* ElementType searchedType, SearchDomain scope, Element parent, Element element */ );
 extern Element      TtaSearchElementByLabel ( /* char *searchedLabel, Element element */ );
 extern Element      TtaSearchEmptyElement ( /* SearchDomain scope, Element element */ );
 extern Element      TtaSearchOtherPairedElement ( /* Element element */ );

@@ -4802,7 +4802,46 @@ SearchBackward).</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1142">11.4.2</a> TtaSearchElementByLabel</h4>
+<h4><a name="sectc1142">11.4.2</a> TtaSearchTypedElementInTree</h4>
+<A NAME="L57610"></A>
+<p>Returns the first element of a given type. Searching can be done in a tree
+or starting from a given element towards the beginning or the end of the
+abstract tree.. In any case the returned element must be  part of the parent
+tree.</p>
+
+<hr>
+
+<p>Element TtaSearchTypedElementInTree(ElementType searchedType, SearchDomain
+scope, Element element)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>searchedType</em>: type of element to be searched. If
+searchedType.ElSSchema is NULL, searchedType must be a basic type ; then the
+next basic element of that type will be returned, whatever its structure
+schema.
+<p><em>scope</em>: SearchForward, SearchBackward or SearchInTree.</p>
+
+<p><em>parent</em>: the limited tree where the searching can be done.</p>
+
+<p><em>element</em>: the element that is the root of the tree (if scope =
+SearchInTree) or the starting element (if scope = SearchForward or
+SearchBackward).</p>
+
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>the element found, or NULL if no element has been found.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1143">11.4.3</a> TtaSearchElementByLabel</h4>
 <A NAME="L3904"></A>
 <p>Searches the element that has a given label. The search is done in a given
 tree.</p>
@@ -4830,7 +4869,7 @@ search is done.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1143">11.4.3</a> TtaSearchEmptyElement</h4>
+<h4><a name="sectc1144">11.4.4</a> TtaSearchEmptyElement</h4>
 <A NAME="L3942"></A>
 <p>Searches the next empty element. An empty element is either a compound
 element without child or a leaf without content. Searching can be done in a
@@ -4861,7 +4900,7 @@ SearchBackward).</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1144">11.4.4</a> TtaSearchOtherPairedElement</h4>
+<h4><a name="sectc1145">11.4.5</a> TtaSearchOtherPairedElement</h4>
 <A NAME="L3981"></A>
 <p>Returns the element that is part of the same pair as a given element.</p>
 
@@ -4885,7 +4924,7 @@ SearchBackward).</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1145">11.4.5</a> TtaSearchNoPageBreak</h4>
+<h4><a name="sectc1146">11.4.6</a> TtaSearchNoPageBreak</h4>
 <A NAME="L4013"></A>
 <p>Returns the first sibling element that is not a page break.</p>
 
@@ -8515,7 +8554,25 @@ mode is withMenu = True.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1823">18.2.3</a> TtaGiveFirstSelectedElement</h4>
+<h4><a name="sectc1823">18.2.3</a> TtaIsSelectionEmpty</h4>
+<A NAME="L57652"></A>
+<p>Indicates whether there is an empty selection (a caret).</p>
+
+<hr>
+
+<p>boolean TtaIsSelectionEmpty()</p>
+
+<hr>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>True if here is a current selection and this selection is empty (a caret).
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1824">18.2.4</a> TtaGiveFirstSelectedElement</h4>
 <A NAME="L8202"></A>
 <p>Returns the first element in the current selection in a given document. If
 this element is a Text element and if only a substring is selected, return
@@ -8553,7 +8610,7 @@ if the</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1824">18.2.4</a> TtaGiveNextSelectedElement</h4>
+<h4><a name="sectc1825">18.2.5</a> TtaGiveNextSelectedElement</h4>
 <A NAME="L8252"></A>
 <p>Returns the element that follows a given element in the current selection
 in a given document. If this element is a Text element and if only a substring

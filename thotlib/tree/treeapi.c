@@ -3431,18 +3431,14 @@ Document            document;
    schema does not allow that insertion.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 boolean             TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document)
-
 #else  /* __STDC__ */
 boolean             TtaCanInsertFirstChild (elementType, parent, document)
 ElementType         elementType;
 Element             parent;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    boolean             ret;
 
@@ -3606,18 +3602,14 @@ Document            TtaGetCopiedDocument ()
    the element found, or NULL if no element has been found.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaSearchTypedElement (ElementType searchedType, SearchDomain scope, Element element)
-
 #else  /* __STDC__ */
 Element             TtaSearchTypedElement (searchedType, scope, element)
 ElementType         searchedType;
 SearchDomain        scope;
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -3671,16 +3663,109 @@ Element             element;
 }
 
 
+/* ----------------------------------------------------------------------
+   TtaSearchTypedElementInTree
+
+   Returns the first element of a given type. Searching can be done in
+   a tree or starting from a given element towards the beginning or the
+   end of the abstract tree. In any case the returned element must be
+   part of the parent tree.
+
+   Parameters:
+   searchedType: type of element to be searched. If searchedType.ElSSchema
+   is NULL, searchedType must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward, SearchBackward or SearchInTree.
+   parent: the limited tree where the searching can be done.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward or SearchBackward).
+
+   Return value:
+   the element found, or NULL if no element has been found.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Element             TtaSearchTypedElementInTree (ElementType searchedType, SearchDomain scope, Element parent, Element element)
+#else  /* __STDC__ */
+Element             TtaSearchTypedElementInTree (searchedType, scope, parent, element)
+ElementType         searchedType;
+SearchDomain        scope;
+Element             parent;
+Element             element;
+#endif /* __STDC__ */
+{
+   PtrElement          pEl;
+   PtrElement          elementFound;
+   boolean             ok;
+
+   UserErrorCode = 0;
+   elementFound = NULL;
+   ok = TRUE;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (searchedType.ElSSchema == NULL)
+     {
+	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
+	  {
+	     TtaError (ERR_invalid_element_type);
+	     ok = FALSE;
+	  }
+     }
+   else if (searchedType.ElTypeNum < 1 ||
+	    searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
+     {
+	TtaError (ERR_invalid_element_type);
+	ok = FALSE;
+     }
+
+   if (ok)
+     {
+	if (scope == SearchBackward)
+	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+	else
+	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+
+	if (pEl != NULL)
+	   if (scope == SearchInTree)
+	     {
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
+		   pEl = NULL;
+	     }
+	if (pEl != NULL)
+	  elementFound = pEl;
+     }
+
+   if (parent != NULL)
+     {
+       /* check if parent is a parent of pEl */
+       while (pEl != NULL && pEl != parent)
+	 pEl = pEl->ElParent;
+     }
+   if (pEl == NULL)
+     elementFound = NULL;
+   return ((Element) elementFound);
+}
+
+
+/* ----------------------------------------------------------------------
+   ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static PtrElement   SearchLabel (char *label, PtrElement pEl)
-
 #else  /* __STDC__ */
 static PtrElement   SearchLabel (label, pEl)
 char               *label;
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pE, pFound;
 
@@ -3718,17 +3803,13 @@ PtrElement          pEl;
    the element found, or NULL if no element has been found.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaSearchElementByLabel (char *searchedLabel, Element element)
-
 #else  /* __STDC__ */
 Element             TtaSearchElementByLabel (searchedLabel, element)
 char               *searchedLabel;
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          elementFound;
 
@@ -3761,17 +3842,13 @@ Element             element;
    the element found, or NULL if not found.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaSearchEmptyElement (SearchDomain scope, Element element)
-
 #else  /* __STDC__ */
 Element             TtaSearchEmptyElement (scope, element)
 SearchDomain        scope;
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrElement          elementFound;
