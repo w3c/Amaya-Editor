@@ -5696,22 +5696,11 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
 void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 			 Pixel color, int activate)
 {
+  struct Cat_Context *catalogue;
 #ifdef _WINDOWS
   HMENU               menu;
-  int                 frame;
-  int                 i, j;
-
-  j = ref - MAX_LocalMenu;
-  i = j / MAX_ITEM;
-  frame = j - (i * MAX_ITEM);	/* reste de la division */
-  menu = WIN_GetMenu (frame);
-  if (activate)
-    EnableMenuItem (menu, ref + entry, MF_ENABLED);
-  else
-    EnableMenuItem (menu, ref + entry, MFS_GRAYED);
 #else /* _WINDOWS */
   ThotWidget          w;
-  struct Cat_Context *catalogue;
   struct E_List      *adbloc;
   int                 ent;
 #ifndef _GTK
@@ -5721,6 +5710,7 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 #else /* _GTK */
   ThotWidget          tmpw;
 #endif /* _GTK */
+#endif /* _WINDOWS */
 
   if (ref == 0)
     {
@@ -5730,18 +5720,24 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
   catalogue = CatEntry (ref);
   if (catalogue == NULL)
     TtaError (ERR_invalid_reference);
-  
   /* Est-ce qu'il s'agit bien d'un menu ou d'un sous-menu ? */
   else if (catalogue->Cat_Widget == 0
 	   || (catalogue->Cat_Type != CAT_MENU
 	       && catalogue->Cat_Type != CAT_POPUP
 	       && catalogue->Cat_Type != CAT_SCRPOPUP
 	       && catalogue->Cat_Type != CAT_PULL
-	       && catalogue->Cat_Type != CAT_TMENU
+           && catalogue->Cat_Type != CAT_TMENU
 	       && catalogue->Cat_Type != CAT_FMENU))
     TtaError (ERR_invalid_parameter);
   else
     {
+#ifdef _WINDOWS
+  menu = catalogue->Cat_Widget;
+  if (activate)
+    EnableMenuItem (menu, ref + entry, MF_ENABLED);
+  else
+    EnableMenuItem (menu, ref + entry, MFS_GRAYED);
+#else /* _WINDOWS */
       /* Recherche l'entree dans le menu ou sous-menu */
       adbloc = catalogue->Cat_Entries;
       ent = entry + 2;	/* decalage de 2 pour le widget titre */
@@ -5853,8 +5849,8 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 	  gtk_widget_show_all (GTK_WIDGET(w));
 #endif /* _GTK */
 	}
-    }
 #endif /* _WINDOWS */
+    }
 }
 
 
