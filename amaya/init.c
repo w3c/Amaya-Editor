@@ -2615,11 +2615,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* create a new window if needed */
        if (window_id == -1)
 	 {
+	   /* get the window parent because the log should stay on top of his parent */
+	   int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
 	   if (docType == docLog)
-	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE);
+	     {
+	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
+	     }
 	   else
-	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL);
-	   page_id   = TtaGetFreePageId( window_id );
+	     window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, parent_window_id );
+	   page_id = TtaGetFreePageId( window_id );
 	   page_position = 1;    
 	 }
 #endif /* _WX */
@@ -6892,18 +6896,18 @@ void InitAmaya (NotifyEvent * event)
 
    /* initialize icons */
 #ifdef _WX
-   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "stop.png") );
+   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "stop.gif") );
    stopN         = (ThotIcon) 0;
-   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "save.png") );
+   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "save.gif") );
    iconSaveNo    = (ThotIcon) 0;
-   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "find.png") );
-   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "reload.png") );
-   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "home.png") );
-   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "back.png") );
+   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "find.gif") );
+   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "reload.gif") );
+   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "home.gif") );
+   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "back.gif") );
    iconBackNo    = (ThotIcon) 0;
-   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "forward.png") );
+   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "forward.gif") );
    iconForwardNo = (ThotIcon) 0;
-   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "print.png") );
+   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "print.gif") );
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
@@ -6928,7 +6932,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) 0;
    iconTable = (ThotIcon) 0;
    iconTableNo = (ThotIcon) 0;
-   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.png") );
+   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.gif") );
 #endif /* _WX */
 #ifdef _GTK
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
