@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void TraiteExceptionCreation ( PtrElement pEl,
-                                      PtrDocument pDoc );
 extern Document TtaNewDocument ( char *structureSchema,
                                  char *documentName );
 extern Document TtaOpenDocument ( char *documentName,
@@ -77,12 +75,11 @@ extern void TtaGetDocumentPath ( char *buffer,
 extern void TtaGetSchemaPath ( char *buffer,
                                int bufferLength );
 extern Document TtaGetDocumentOfSavedElements ( void );
+extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern PtrDocument DocToPtr ( Document document );
 
 #else /* __STDC__ */
 
-extern void TraiteExceptionCreation (/* PtrElement pEl,
-                                        PtrDocument pDoc */);
 extern Document TtaNewDocument (/* char *structureSchema,
                                    char *documentName */);
 extern Document TtaOpenDocument (/* char *documentName,
@@ -152,6 +149,7 @@ extern void TtaGetDocumentPath (/* char *buffer,
 extern void TtaGetSchemaPath (/* char *buffer,
                                  int bufferLength */);
 extern Document TtaGetDocumentOfSavedElements (/* void */);
+extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
 extern PtrDocument DocToPtr (/* Document document */);
 
 #endif /* __STDC__ */

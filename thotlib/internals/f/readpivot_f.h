@@ -6,6 +6,13 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
+extern boolean OpenDocument ( Name docName,
+                              PtrDocument pDoc,
+                              boolean loadIncludedDoc,
+                              boolean skeleton,
+                              PtrSSchema pSS,
+                              boolean withAppEvent );
+extern void DeleteAllTrees ( PtrDocument pDoc );
 extern PtrTextBuffer ReadComment ( BinFile file,
                                    boolean store,
                                    boolean oldformat );
@@ -61,6 +68,13 @@ extern void LoadDocumentPiv ( BinFile file,
 
 #else /* __STDC__ */
 
+extern boolean OpenDocument (/* Name docName,
+                                PtrDocument pDoc,
+                                boolean loadIncludedDoc,
+                                boolean skeleton,
+                                PtrSSchema pSS,
+                                boolean withAppEvent */);
+extern void DeleteAllTrees (/* PtrDocument pDoc */);
 extern PtrTextBuffer ReadComment (/* BinFile file,
                                      boolean store,
                                      boolean oldformat */);

@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern boolean OpenDocument ( Name docName,
                               PtrDocument pDoc,
                               boolean loadIncludedDoc,
@@ -17,7 +16,6 @@ extern void DeleteAllTrees ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
 extern boolean OpenDocument (/* Name docName,
                                 PtrDocument pDoc,
                                 boolean loadIncludedDoc,

@@ -3,7 +3,7 @@
  */
 
 /*
- * printmsg.c : affichage des messages d'erreur de different niveau 
+ * affichage des messages d'erreur sur le terminal 
  */
 
 #include "thot_sys.h"

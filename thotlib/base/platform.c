@@ -439,32 +439,23 @@ void                ThotFile_test (char *name)
 }
 #endif /* INCLUDE_TESTING_CODE */
 
-/*----------------------------------------------------------------------
-   QuitQuitHandler est un handler de quit sur quit.                
-  ----------------------------------------------------------------------*/
-static void         QuitQuitHandler ()
-{
-   exit (1);
-}
-
 
 /*----------------------------------------------------------------------
    CoreHandler est un handler d'erreur fatale.                     
   ----------------------------------------------------------------------*/
 static void         ErrorHandler ()
 {
-   /* si on recoit signal sur signal, tant pis. */
 #ifndef NEW_WILLOWS
-   signal (SIGBUS, SIG_DFL);	/* bus error    */
-   signal (SIGSEGV, SIG_DFL);	/* memory fault */
-   signal (SIGPIPE, SIG_IGN);	/* broken pipe  */
+   signal (SIGBUS, SIG_DFL);
+   signal (SIGSEGV, SIG_DFL);
+   signal (SIGPIPE, SIG_IGN);
 #ifdef SIGABRT
-   signal (SIGABRT, SIG_DFL);	/* ? abort */
+   signal (SIGABRT, SIG_DFL);
 #else
-   signal (SIGIOT, SIG_DFL);	/* ? abort */
+   signal (SIGIOT, SIG_DFL);
 #endif
 #endif /* NEW_WILLOWS */
-   QuitQuitHandler ();
+   exit (1);
 }
 
 
@@ -493,15 +484,15 @@ int                 result;
 static void         QuitHandler ()
 {
 #ifndef NEW_WILLOWS
-   signal (SIGINT, QuitQuitHandler);	/* si jamais on fait encore SIGINT */
-   signal (SIGQUIT, SIG_DFL);	/* si jamais on fait encore SIGQUIT */
-   signal (SIGTERM, QuitQuitHandler);	/* si jamais on fait encore SIGTERM */
+   signal (SIGINT, ErrorHandler);
+   signal (SIGQUIT, SIG_DFL);
+   signal (SIGTERM, ErrorHandler);
 #endif /* NEW_WILLOWS */
-   QuitQuitHandler ();
+   exit (1);
 #ifndef NEW_WILLOWS
-   signal (SIGINT, QuitHandler);	/* rearmer */
-   signal (SIGQUIT, QuitHandler);	/* rearmer */
-   signal (SIGTERM, QuitHandler);	/* rearmer */
+   signal (SIGINT, QuitHandler);
+   signal (SIGQUIT, QuitHandler);
+   signal (SIGTERM, QuitHandler);
 #endif /* NEW_WILLOWS */
 }
 
@@ -511,18 +502,18 @@ static void         QuitHandler ()
 void                InitErrorHandler ()
 {
 #ifndef NEW_WILLOWS
-   signal (SIGBUS, ErrorHandler);	/* bus error */
-   signal (SIGSEGV, ErrorHandler);	/* memory fault */
+   signal (SIGBUS, ErrorHandler);
+   signal (SIGSEGV, ErrorHandler);
 #ifdef SIGABRT
-   signal (SIGABRT, ErrorHandler);	/* ? abort */
+   signal (SIGABRT, ErrorHandler);
 #else
-   signal (SIGIOT, ErrorHandler);	/* ? abort */
+   signal (SIGIOT, ErrorHandler);
 #endif
 
-   signal (SIGHUP, QuitQuitHandler);	/* kill -1 */
-   signal (SIGINT, QuitHandler);	/* ^C */
-   signal (SIGQUIT, QuitHandler);	/* ^\ */
-   signal (SIGTERM, QuitHandler);	/* kill */
+   signal (SIGHUP, ErrorHandler);
+   signal (SIGINT, QuitHandler);
+   signal (SIGQUIT, QuitHandler);
+   signal (SIGTERM, QuitHandler);
 #endif /* NEW_WILLOWS */
 }
 
@@ -636,7 +627,8 @@ unsigned int        count;
 #ifdef WWW_MSWINDOWS
    DWORD               writ;
 
-   ret = WriteFile (handle, buffer, count, &writ, NULL);	/* OK as long as we don't open for overlapped IO */
+   /* OK as long as we don't open for overlapped IO */
+   ret = WriteFile (handle, buffer, count, &writ, NULL);
    if (ret == TRUE)
       ret = (int) writ;
    else
