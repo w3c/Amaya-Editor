@@ -1130,11 +1130,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       for (w = (width * height); w > 0; w--)
 	{
 	  if (bperpix == 1)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  else
 	    /* use one byte per pixel */
 	    col = data[ind++];
+	  else
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
 	  if (IS_WIN95)
 	    temp = (((colrs[col].red * 255) & 63488) |
 		    (((colrs[col].green * 255) >> gshift) & 2016) |

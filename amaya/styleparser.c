@@ -4081,6 +4081,17 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			  LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
 			}
 		    }
+		  else if (*cssRule == '"')
+		    {
+		      /* a simple quoted string */
+		      cssRule++;
+		      cssRule = TtaSkipBlanks (cssRule);
+		      base = cssRule;
+		      while (*cssRule != EOS && *cssRule != '"')
+			cssRule++;
+		      *cssRule = EOS;
+		      LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+		    }
 		  /*
 		    Caution: Strings can either be written with double quotes or
 		    with single quotes. Only double quotes are handled here.
