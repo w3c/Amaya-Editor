@@ -5611,7 +5611,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 
  Ref_column:
 	BEGIN
-	Width: Referred . Width - TableDoubleHSpace;
+        Width: Referred . Width - TableDoubleHSpace;
 	HorizPos: Left = Referred . Left + TableSimpleHSpace;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - 2;

@@ -62,17 +62,16 @@ Element             colhead;
 }
 
 /*----------------------------------------------------------------------
-   UpdateColHeadAttributes
+   UpdateColHeadWidth
 
-   updates attributes Col_width_pxl (width of column in pixels) and/or
-   IntMaxVol (volume of biggest cell in the column) of element colhead
-   according to the width and/or volume of a given cell.
+   updates attribute Col_width_pxl (width of column in pixels) of element
+   colhead according to the width of a given cell.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         UpdateColHeadAttributes (Element colhead, Element cell,
-				    Document doc)
+static void         UpdateColHeadWidth (Element colhead, Element cell,
+					Document doc)
 #else
-static void         UpdateColHeadAttributes (colhead, cell, doc)
+static void         UpdateColHeadWidth (colhead, cell, doc)
 Element             colhead;
 Element             cell;
 Document            doc;
@@ -81,8 +80,8 @@ Document            doc;
 {
    ElementType	       elType;
    AttributeType       attrType;
-   Attribute           attr, attrIntMaxVol, attrCellWidth, attrColWidthPxl;
-   int                 vol, max, span, i, cellWidth;
+   Attribute           attrCellWidth, attrColWidthPxl;
+   int                 max, cellWidth;
 
    /* look for an attribute Cell_width (width, in HTML) */
    elType = TtaGetElementType (cell);
@@ -109,8 +108,35 @@ Document            doc;
       if (cellWidth > max)
          TtaSetAttributeValue (attrColWidthPxl, cellWidth, colhead, doc);
       }
+}
+
+/*----------------------------------------------------------------------
+   UpdateColHeadVol
+
+   updates attributes Col_width_pxl (width of column in pixels) and/or
+   IntMaxVol (volume of biggest cell in the column) of element colhead
+   according to the width and/or volume of a given cell.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         UpdateColHeadVol (Element colhead, Element cell,
+				      Document doc)
+#else
+static void         UpdateColHeadVol (colhead, cell, doc)
+Element             colhead;
+Element             cell;
+Document            doc;
+
+#endif
+{
+   ElementType	       elType;
+   AttributeType       attrType;
+   Attribute           attr, attrIntMaxVol;
+   int                 vol, max, span, i;
+
    /* update attribute IntMaxVol of Column_head if the volume of the cell is
       greater than the current value of IntMaxVol */
+   elType = TtaGetElementType (cell);
+   attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
    attrIntMaxVol = TtaGetAttribute (colhead, attrType);
    if (attrIntMaxVol != NULL)
@@ -162,7 +188,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    SetColumnWidth
 
-   computes the value of attributes Col_width_percent and/or Col_width_pxl
+   computes the value of attributes Col_width_percent or Col_width_pxl
    for each column of the table whose first Column_head is firstcolhead.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -267,7 +293,10 @@ Document            doc;
 				 biggest cell in that column, update the
 				 attributes of the corresponding Column_head */
 				 if (colhead != NULL)
-				   UpdateColHeadAttributes(colhead, cell, doc);
+				   {
+				   UpdateColHeadWidth (colhead, cell, doc);
+				   UpdateColHeadVol (colhead, cell, doc);
+				   }
 			      }
 			    /* get the next cell in the current row */
 			    TtaNextSibling (&cell);
@@ -369,9 +398,16 @@ Document            doc;
 			 }
 		       colwidthpercent = (100 * vol) / total;
 		    }
-		  if (attrColWidthPcent != NULL)
-		     TtaSetAttributeValue (attrColWidthPcent, colwidthpercent,
-					   colhead, doc);
+		  if (attrColWidthPcent == NULL)
+		    {
+		    /* There is no Col_width_percent attribute on that
+		       Column_head. Create one */
+		    attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+		    attrColWidthPcent = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (colhead, attrColWidthPcent, doc);
+		    }
+		  TtaSetAttributeValue (attrColWidthPcent, colwidthpercent,
+					colhead, doc);
 	          }
 		}
 	     /* next Column_head */
@@ -1852,18 +1888,18 @@ Document            doc;
      {
 	colhead = firstcolhead;
 /********
-    nextcell = cell;
-    TtaNextSibling(&nextcell);
-    if (nextcell == NULL)
-      colhead = firstcolhead;
-    else
-      {
-      attr = TtaGetAttribute(nextcell, attrType);
-      if (attr != NULL)
-	TtaGiveReferenceAttributeValue(attr, &colhead, name, &refdoc);
-      else
-	colhead = firstcolhead;
-      }
+	nextcell = cell;
+	TtaNextSibling(&nextcell);
+	if (nextcell == NULL)
+	  colhead = firstcolhead;
+	else
+	  {
+	  attr = TtaGetAttribute(nextcell, attrType);
+	  if (attr != NULL)
+	    TtaGiveReferenceAttributeValue(attr, &colhead, name, &refdoc);
+	  else
+	    colhead = firstcolhead;
+	  }
 ********/
      }
    else
@@ -1935,8 +1971,9 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-   CellCreated     a new cell has been created in a        
-   HTML3 table.                            
+   CellCreated
+
+   a new cell has been created in a table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CellCreated (NotifyElement * event)
@@ -2868,6 +2905,7 @@ NotifyAttribute    *event;
    PreviousRowSpan = TtaGetAttributeValue (attr);
    return FALSE;		/* let Thot perform normal operation */
 }
+
 /*----------------------------------------------------------------------
    RowspanModified                                         
   ----------------------------------------------------------------------*/
@@ -2899,7 +2937,7 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   RowspanDelete                                           
+   RowspanDelete
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RowspanDelete (NotifyAttribute * event)
@@ -2920,4 +2958,208 @@ NotifyAttribute    *event;
      }
    else
       return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  CellWidthCreated
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CellWidthCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void CellWidthCreated(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ElementType         elType;
+   AttributeType       attrType;
+   Element             cell, colhead;
+   Attribute           attr, attrColWidthPcent;
+   Document            doc, refdoc;
+   char                name[50];
+
+   doc = event->document;
+   cell = event->element;
+   /* search the Column_head that corresponds to the cell */
+   elType = TtaGetElementType (cell);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+   attr = TtaGetAttribute (cell, attrType);
+   if (attr != NULL)
+     {
+     TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+     if (colhead != NULL)
+	UpdateColHeadWidth (colhead, cell, doc);
+     }
+   /* remove attribute Col_width_percent if it is present */
+   attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+   attrColWidthPcent = TtaGetAttribute (colhead, attrType);
+   if (attrColWidthPcent != NULL)
+      TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
+}
+ 
+ 
+/*----------------------------------------------------------------------
+  CellWidthModified
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CellWidthModified (NotifyAttribute *event)
+#else /* __STDC__*/
+void CellWidthModified(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ElementType         elType, groupType;
+   AttributeType       attrType;
+   Element             cell, colhead, group, firstgroup, row, tbody;
+   Attribute           attr, attrColWidthPxl;
+   Document            doc, refdoc;
+   char                name[50];
+   DisplayMode         dispMode;
+
+   doc = event->document;
+   cell = event->element;
+   /* search the Column_head that corresponds to the cell */
+   elType = TtaGetElementType (cell);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+   attr = TtaGetAttribute (cell, attrType);
+   if (attr != NULL)
+     {
+     TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+     if (colhead != NULL)
+	/* the corresponding Column_head has been found */
+	{
+	dispMode = TtaGetDisplayMode (doc);
+	TtaSetDisplayMode (doc, DeferredDisplay);
+	/* set remove existing attribute Col_width_pxl */
+        attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+        attrColWidthPxl = TtaGetAttribute (colhead, attrType);
+        if (attrColWidthPxl != NULL)
+	  /* the Column_head has an attribute Col_width_pxl, remove it */
+          TtaRemoveAttribute (colhead, attrColWidthPxl, doc);
+	/* search the group of rows to which the cell belongs */
+	group = cell;
+	do
+	   {
+	   group = TtaGetParent (group);
+	   if (group != NULL)
+	      elType = TtaGetElementType (group);
+	   }
+	while (group != NULL &&
+		elType.ElTypeNum != HTML_EL_thead &&
+		elType.ElTypeNum != HTML_EL_Table_body &&
+		elType.ElTypeNum != HTML_EL_tfoot);
+	if (group != NULL)
+	   {
+	     /* search the first group of rows */
+	     while (elType.ElTypeNum == HTML_EL_thead ||
+		    elType.ElTypeNum == HTML_EL_Table_body ||
+		    elType.ElTypeNum == HTML_EL_tfoot)
+		{
+		firstgroup = group;
+		TtaPreviousSibling (&group);
+		if (group != NULL)
+		   elType = TtaGetElementType (group);
+		else
+		   elType.ElTypeNum = 0;
+		}
+	     /* check all cells in the column, one row after the other */
+	     group = firstgroup;
+	     while (group != NULL)
+	       {
+		  groupType = TtaGetElementType (group);
+		  if (groupType.ElTypeNum == HTML_EL_thead ||
+		      groupType.ElTypeNum == HTML_EL_tfoot)
+		     row = TtaGetFirstChild (group);
+		  else if (groupType.ElTypeNum == HTML_EL_Table_body)
+		    {
+		       tbody = TtaGetFirstChild (group);
+		       if (tbody == NULL)
+			  row = NULL;
+		       else
+			  row = TtaGetFirstChild (tbody);
+		    }
+		  else
+		     row = NULL;
+		  /* check all rows in the group */
+		  while (row != NULL)
+		    {
+		       elType = TtaGetElementType (row);
+		       /* ignore Comments and Invalid_elements */
+		       if (elType.ElTypeNum == HTML_EL_Table_row)
+			 {
+			    cell = GetCellFromColumnHead (row, colhead);
+			    if (cell != NULL)
+			      {
+				 elType = TtaGetElementType (cell);
+				 if (elType.ElTypeNum == HTML_EL_Data_cell ||
+				   elType.ElTypeNum == HTML_EL_Heading_cell)
+				    /* there is a cell */
+				    /* get its width attribute and update
+				       Column_head width accordingly */
+				    UpdateColHeadWidth (colhead, cell, doc);
+			      }
+			 }
+		       TtaNextSibling (&row);
+		       if (row == NULL)
+			  if (groupType.ElTypeNum == HTML_EL_Table_body)
+			     /* get the next tbody element */
+			    {
+			       TtaNextSibling (&tbody);
+			       if (tbody != NULL)
+				  row = TtaGetFirstChild (tbody);
+			    }
+		    }
+		  TtaNextSibling (&group);
+	       }
+	   }
+	TtaSetDisplayMode (doc, dispMode);
+	}
+     }
+}
+ 
+ 
+/*----------------------------------------------------------------------
+  CellWidthDeleted
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CellWidthDeleted (NotifyAttribute *event)
+#else /* __STDC__*/
+void CellWidthDeleted(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ElementType         elType;
+   AttributeType       attrType;
+   Element             cell, colhead, firstcolhead;
+   Attribute           attr, attrColWidthPxl;
+   Document            doc, refdoc;
+   char                name[50];
+
+   /* update attribute Col_width_pxl of the corresponding Column_head */
+   CellWidthModified (event);
+   /* search the Column_head that corresponds to the cell */
+   cell = event->element;
+   elType = TtaGetElementType (cell);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+   attr = TtaGetAttribute (cell, attrType);
+   if (attr != NULL)
+     {
+     TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+     if (colhead != NULL)
+	/* the corresponding Column_head has been found */
+	{
+        attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+        attrColWidthPxl = TtaGetAttribute (colhead, attrType);
+	if (attrColWidthPxl == NULL)
+	   /* the Column_head has no Col_width_pxl attribute. Create a
+	      Col_width_Pcent attribute */
+	   {
+	   firstcolhead = GetFirstColumnHead (cell);
+	   doc = event->document;
+	   SetColumnWidth (firstcolhead, NULL, doc);
+	   }
+	}
+     }
 }

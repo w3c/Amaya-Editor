@@ -105,7 +105,14 @@ ATTRIBUTES
    	BEGIN
    	AttrModify.Post -> graphicsModified;
    	END;
-    
+
+   Cell_width:
+	BEGIN
+	AttrCreate.Post -> CellWidthCreated;
+	AttrModify.Post -> CellWidthModified;
+	AttrDelete.Post -> CellWidthDeleted;
+	END;
+
    colspan:
 	BEGIN
 	AttrCreate.Post -> ColspanCreated;
