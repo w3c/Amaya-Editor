@@ -3178,7 +3178,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	    }
 	  else if (pBlock)
-	    RecomputeLines (pBlock, NULL, NULL, frame);
+	    {
+	      Propagate = ToChildren;
+	      RecomputeLines (pBlock, NULL, NULL, frame);
+	    }
 
 	  Propagate = savpropage;	/* Restaure la regle de propagation */
 	  result = TRUE;
