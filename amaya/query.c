@@ -493,6 +493,10 @@ AHTReqContext      *me;
 	     TtaFreeMemory (me->outputfile);
 	 }
 
+       /* the real name to which we are publishing */
+       if (me->default_put_name)
+	 TtaFreeMemory (me->default_put_name);
+
        /* @@ temp change for the %esc conversion */
        if (me->method == METHOD_PUT && me->urlName)
 	 TtaFreeMemory (me->urlName);
@@ -947,6 +951,8 @@ static int check_handler (HTRequest * request, HTResponse * response,
       /* start with a new, clean request structure */
       HTRequest_delete (me->request);
       me->request = HTRequest_new ();
+      /* add the default PUT name */
+      HTRequest_setDefaultPutName (me->request, me->default_put_name);
       /* clean the associated file structure) */
       HTRequest_setOutputStream (me->request, NULL);
       /* Initialize the other members of the structure */
@@ -983,6 +989,8 @@ static int check_handler (HTRequest * request, HTResponse * response,
 	  /* get a new, clean request structure */
 	  HTRequest_delete (me->request);
 	  me->request = HTRequest_new ();
+	  /* add the default PUT name */
+	  HTRequest_setDefaultPutName (me->request, me->default_put_name);
 	  /* clean the associated file structure) */
 	  HTRequest_setOutputStream (me->request, NULL);
 	  /* Initialize the other members of the structure */
@@ -2281,9 +2289,12 @@ void                QueryInit ()
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 
-   /*** @@@@
-   WWW_TraceFlag = 0;
-   ***/
+   strptr = TtaGetEnvString ("ENABLE_LIBWWW_DEBUG");
+   if (strptr && *strptr)
+     WWW_TraceFlag = SHOW_PROTOCOL_TRACE;
+   else
+     WWW_TraceFlag = 0;
+
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
@@ -3010,6 +3021,26 @@ void               *context_tcbf;
        /* @@ need an error message here */
 	TtaHandlePendingEvents (); 
 	return (HT_ERROR);
+     }
+
+   /*
+   ** Set up the original URL name
+   */
+   if (DocumentMeta[docid]->put_default_name)
+     {
+       char *ptr1, *ptr2;
+       ptr1 = TtaGetEnvString ("DEFAULTNAME");
+       if (ptr1 && *ptr1) 
+	 {
+	   ptr2 = strstr (urlName, ptr1);
+	   if (ptr2) 
+	     {
+	       me->default_put_name = TtaStrdup (urlName);
+	       me->default_put_name[strlen (me->default_put_name)
+				   - strlen (ptr1)] = EOS;
+	       HTRequest_setDefaultPutName (me->request, me->default_put_name);
+	     }
+	 }
      }
 
    me->mode = mode;

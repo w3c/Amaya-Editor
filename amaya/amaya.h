@@ -270,6 +270,7 @@ typedef struct _DocumentMetaDataElement
 {
   STRING form_data;  /* form data associated with a URL */
   ClickEvent method;  /* method used to send this data */
+  ThotBool put_default_name; /* URL name was concatenated with DEFAULT_NAME */ 
 } DocumentMetaDataElement;
 
 #define DocumentTableLength 10

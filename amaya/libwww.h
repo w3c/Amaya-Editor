@@ -73,12 +73,13 @@ typedef struct _AHTReqContext
   {
     HTRequest          *request;	/* Pointer to the associated request object     */
     HTParentAnchor     *anchor;
-    HTMethod            method;	/* What method are we envoking                  */
+    HTMethod            method;	        /* What method are we invoking                  */
     int                 docid;	        /* docid to which this request belongs          */
     AHTReqStatus        reqStatus;	/* status of the request                        */
     HTEventType         read_type;	/* The type operation which must be used during
 					** an Xt read callback */
-    
+    char               *default_put_name;  /* @@what's the def name? */
+
     HTEventType         write_type;	/* The type operation which must be used during
 					** an Xt write callback */
     

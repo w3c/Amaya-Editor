@@ -2341,6 +2341,7 @@ ThotBool	    history;
       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
+      DocumentMeta[newdoc]->put_default_name = FALSE;
       DocumentSource[newdoc] = 0;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
@@ -2814,6 +2815,7 @@ View                view;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
+	 DocumentMeta[sourceDoc]->put_default_name = FALSE;
 	 DocumentTypes[sourceDoc] = docSource;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
@@ -3271,6 +3273,7 @@ void *context;
 	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       DocumentMeta[newdoc]->method = method;
+	       DocumentMeta[newdoc]->put_default_name = FALSE;
 	       DocumentSource[newdoc] = 0;
 	       ResetStop(newdoc);
 	     }

@@ -108,6 +108,7 @@ ThotBool            isHTML;
   DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
+  DocumentMeta[doc]->put_default_name = FALSE;
   DocumentSource[doc] = 0;
 
   ResetStop (doc);

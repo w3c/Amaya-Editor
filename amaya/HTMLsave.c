@@ -1473,6 +1473,7 @@ View                view;
 	  ustrcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = TtaStrdup (tempname);
+	  DocumentMeta[doc]->put_default_name = TRUE; 
 	  if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docHTMLRO)	
 	      /* it's an HTML document. It could have a source doc */
@@ -2056,6 +2057,8 @@ void                DoSaveAs ()
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
   ThotBool	      docModified, toUndo;
+  ThotBool            new_put_def_name;
+  ThotBool            old_put_def_name;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
@@ -2100,6 +2103,9 @@ void                DoSaveAs ()
 	    SavePath[res] = EOS;
 	  /* need to update the document url */
 	  ustrcpy (SaveName, DefaultName);
+	  ustrcat (documentFile, SaveName);
+	  /* set up a temp flag to say we're using the default name */
+	  new_put_def_name = TRUE;
 	}
       else if (!ok)
 	{
@@ -2111,7 +2117,10 @@ void                DoSaveAs ()
 	}
     }
   else
-    ustrcat (documentFile, SaveName);
+    {
+      ustrcat (documentFile, SaveName);
+      new_put_def_name = FALSE;
+    }
 
   doc = SavingDocument;
   if (ok && dst_is_local)
@@ -2221,6 +2230,7 @@ void                DoSaveAs ()
     */
   if (ok)
     {
+      old_put_def_name = DocumentMeta[doc]->put_default_name;
       docModified = TtaIsDocumentModified (doc);
       if (!src_is_local)
 	/* store the name of the local temporary file */
@@ -2237,7 +2247,11 @@ void                DoSaveAs ()
 	      ok = TtaExportDocument (doc, documentFile, TEXT("TextFileT"));
 	    }
 	  else
-	    ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
+	    {
+	      /* update the flag that says if we're using a default name */
+	      DocumentMeta[doc]->put_default_name = new_put_def_name;
+	      ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
+	    }
 	}
       else
 	{
@@ -2274,6 +2288,8 @@ void                DoSaveAs ()
 	      /* Local to Remote or Remote to Remote */
 	      /* now save the file as through the normal process of saving */
 	      /* to a remote URL. */
+	      /* update the flag that says if we're using a default name */
+	      DocumentMeta[doc]->put_default_name = new_put_def_name;
 	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE, CopyImages, FALSE);
 	    }
 	}
@@ -2329,6 +2345,7 @@ void                DoSaveAs ()
 	    TtaSetDocumentUnmodified (doc);
 	  if (localPath)
 	    TtaFreeMemory (localPath);
+	  DocumentMeta[doc]->put_default_name = old_put_def_name;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);
 	}
