@@ -386,10 +386,18 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       /* chain to the CSS list */
       if (CSSList == NULL)
 	CSSList = css;
+      else if (category == CSS_IMPORT && styleElement)
+	{
+	  prev = CSSList;
+	  while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) styleElement)
+	    prev = prev->NextCSS;
+	  css->NextCSS = prev->NextCSS;
+	  prev->NextCSS = css;
+	}
       else
 	{
 	  prev = CSSList;
-	  while (prev->NextCSS != NULL)
+	  while (prev->NextCSS)
 	    prev = prev->NextCSS;
 	  prev->NextCSS = css;
 	}
@@ -648,7 +656,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 
   import = (css != NULL);
   printing = TtaIsPrinting ();
-  if (TtaGetViewFrame (doc, 1) != 0 || TtaIsPrinting ())
+  if (TtaGetViewFrame (doc, 1) != 0 || printing)
     {
       LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
       oldcss = SearchCSS (0, tempURL, NULL);
@@ -657,8 +665,8 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  /* It's a new CSS file: allocate a new Presentation structure */
 	  if (import)
 	    {
-	      /* a @import CSS */
-	      oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, NULL);
+	      /* a @import CSS: add the CSS descriptor just before the main css */
+	      oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, (Element) css);
 	      oldcss->media[doc] = media;
 	    }
 	  else
@@ -681,11 +689,15 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	    oldcss->media[doc] = media;
 	  else if (oldcss->media[doc] != media ||
 		   oldcss->media[doc] != CSS_ALL)
-	    if ((printing && media == CSS_PRINT) ||
-		(!printing && media == CSS_SCREEN))
+	    {
+	      if ((printing && media == CSS_PRINT) ||
+		  (!printing && media == CSS_SCREEN))
 		oldcss->media[doc] = media;
+	    }
 	}
 
+      if (import)
+	oldcss = css;
       if (tempfile[0] == EOS)
 	/* cannot do more */
 	return;

@@ -221,25 +221,31 @@ void  UpdateStyleSheet (char *url, char *tempdoc)
       /* update the copy in .amaya/0 */
       if (css->localName && tempdoc)
 	  TtaFileCopy (tempdoc, css->localName);
-      for (doc = 1; doc < DocumentTableLength; doc++)
-	if (css->documents[doc] && css->enabled[doc])
+      /* if it's an imported CSS updates the main css */
+      while (css && css->category == CSS_IMPORT)
+	css = css->NextCSS;
+      if (css)
 	{
-	  /* Change the Display Mode to take into account the new presentation */
-	  dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, NoComputedDisplay);
-	  /* re-apply that CSS to each related document */
-	  UnlinkCSS (css, doc, TRUE, FALSE);
-	  css->enabled[doc] = TRUE;
-	  if (UserCSS && !strcmp (url, UserCSS))
-	    LoadUserStyleSheet (doc);
-	  else
-	    LoadStyleSheet (url, doc, NULL, NULL,
-			    css->media[doc],
-			    css->category == CSS_USER_STYLE);
-	  /* Restore the display mode */
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, dispMode);
+	  for (doc = 1; doc < DocumentTableLength; doc++)
+	    if (css->documents[doc] && css->enabled[doc])
+	      {
+		/* Change the Display Mode to take into account the new presentation */
+		dispMode = TtaGetDisplayMode (doc);
+		if (dispMode == DisplayImmediately)
+		  TtaSetDisplayMode (doc, NoComputedDisplay);
+		/* re-apply that CSS to each related document */
+		UnlinkCSS (css, doc, TRUE, FALSE);
+		css->enabled[doc] = TRUE;
+		if (UserCSS && !strcmp (css->url, UserCSS))
+		  LoadUserStyleSheet (doc);
+		else
+		  LoadStyleSheet (url, doc, NULL, NULL,
+				  css->media[doc],
+				  css->category == CSS_USER_STYLE);
+		/* Restore the display mode */
+		if (dispMode == DisplayImmediately)
+		  TtaSetDisplayMode (doc, dispMode);
+	      }
 	}
     }
 }
@@ -395,7 +401,8 @@ char *CssToPrint (Document doc, char *printdir)
 	  while (css != NULL)
 	    {
 	      if (css->enabled[doc] &&
-		  css->category == CSS_EXTERNAL_STYLE)
+		  (css->category == CSS_EXTERNAL_STYLE ||
+		   css->category == CSS_IMPORT))
 		{
 		  /* add that file name to the list */
 		  strcpy (&ptr[length], "a ");
