@@ -122,8 +122,8 @@
 120 Parametre (param)
 121 Paragraf (p)
 122 Preformatted (pre)
-123 ruby
-124 Tablo
+123 Tablo
+124 ruby
 125 table
 126 Altyazý (caption)
 127 colgroup
@@ -213,25 +213,26 @@
 211 **Configure...
 212 **About Amaya
 213 Amaya hakkýnda
-214 **Browsing
-215 Tarama
-216 Seçme
-217 Arama
-218 Görünümler
-219 Birim yaratma
-220 Baðlantýlar
-221 Yeniden yapýlandýrma
-222 Tablolar
-223 **Graphics
-224 Matematik
-225 Görüntü haritalarý
-226 Tarz tanýmlarý
-227 Özellikler
-228 Yazým hatalarý aranýyor
-229 Sayfa yerleþtirme
-230 Bastýrma
-231 Numaralandýrmasý
-232 **Annotations
-233 Kitap oluþturma
-234 **ShortCuts
-235 Amaya yapýlandýrmasý
+214 **Index
+215 **Browsing
+216 Tarama
+217 Seçme
+218 Arama
+219 Görünümler
+220 Birim yaratma
+221 Baðlantýlar
+222 Yeniden yapýlandýrma
+223 Tablolar
+224 **Graphics
+225 Matematik
+226 Görüntü haritalarý
+227 Tarz tanýmlarý
+228 Özellikler
+229 Yazým hatalarý aranýyor
+230 Sayfa yerleþtirme
+231 Bastýrma
+232 Numaralandýrmasý
+233 **Annotations
+234 Kitap oluþturma
+235 **ShortCuts
+236 Amaya yapýlandýrmasý

@@ -122,8 +122,8 @@
 120 Parametro (param)
 121 Paragrafo (p)
 122 Preformattato (pre)
-123 ruby
-124 Tabella
+123 Tabella
+124 ruby
 125 Tabella (table)
 126 Legenda (caption)
 127 colgroup
@@ -213,25 +213,26 @@
 211 Configurazione...
 212 Informazioni su Amaya
 213 Informazioni su Amaya al W3C
-214 Navigazione
-215 Selezione
-216 Ricerca
-217 Viste
-218 Creazione elementi
-219 Collegamenti
-220 Ristrutturazione
-221 Tabelle
-222 Matematica
-223 Graphics
-224 Zone attive
-225 Fogli di stile
-226 Attributi
-227 Controllo ortografico
-228 Pubblicazione
-229 Stampa
-230 Numerazione
-231 Creare un libro
-232 Annotazioni
-233 Configurazione di Amaya
-234 Scelte rapide
-235 Accessibility in Amaya
+214 **Index
+215 Navigazione
+216 Selezione
+217 Ricerca
+218 Viste
+219 Creazione elementi
+220 Collegamenti
+221 Ristrutturazione
+222 Tabelle
+223 Matematica
+224 Graphics
+225 Zone attive
+226 Fogli di stile
+227 Attributi
+228 Controllo ortografico
+229 Pubblicazione
+230 Stampa
+231 Numerazione
+232 Creare un libro
+233 Annotazioni
+234 Configurazione di Amaya
+235 Scelte rapide
+236 Accessibility in Amaya

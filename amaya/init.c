@@ -5794,6 +5794,13 @@ static void DisplayHelp (int doc, int index)
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
+void HelpIndex (Document document, View view)
+{
+  DisplayHelp (document, INDEX);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void HelpBrowsing (Document document, View view)
 {
   DisplayHelp (document, BROWSING);

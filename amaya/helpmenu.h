@@ -17,6 +17,7 @@
 ***************************************/
 
 static STRING       Manual[] = {
+  "Index.html",
 "Browsing.html",
 "Selecting.html",
 "Searching.html",
@@ -42,29 +43,29 @@ static STRING       Manual[] = {
 };
 
 /* index name... which relates to the precedent table */
-
-#define BROWSING       0
-#define SELECTING      1
-#define SEARCHING      2
-#define VIEWS          3
-#define CREATING       4
-#define LINKS          5
-#define CHANGING       6
-#define TABLES         7
-#define MATH           8
-#define SVG            9
-#define IMAGEMAPS     10
-#define CSS           11
-#define ATTRIBUTES    12
-#define SPELLCHECKING 13
-#define PUBLISHING    14
-#define PRINTING      15
-#define NUMBERING     16
-#define MAKEBOOK      17
-#define ANNOTATE      18
-#define CONFIGURE     19
-#define SHORTCUTS     20
-#define ACCESS        21
+#define INDEX          0
+#define BROWSING       1
+#define SELECTING      2
+#define SEARCHING      3
+#define VIEWS          4
+#define CREATING       5
+#define LINKS          6
+#define CHANGING       7
+#define TABLES         8
+#define MATH           9
+#define SVG           10
+#define IMAGEMAPS     11
+#define CSS           12
+#define ATTRIBUTES    13
+#define SPELLCHECKING 14
+#define PUBLISHING    15
+#define PRINTING      16
+#define NUMBERING     17
+#define MAKEBOOK      18
+#define ANNOTATE      19
+#define CONFIGURE     20
+#define SHORTCUTS     21
+#define ACCESS        22
 
 #endif /* AMAYA_HELP_H */
 

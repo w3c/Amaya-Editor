@@ -970,6 +970,14 @@
 	<message xml:lang="tr">Tablo</message>
 	<message xml:lang="es">Tabla</message>
 </label>
+<label define="BRuby">
+	<message xml:lang="en">ruby</message>
+	<message xml:lang="fr">ruby</message>
+	<message xml:lang="de">ruby</message>
+	<message xml:lang="it">ruby</message>
+	<message xml:lang="tr">ruby</message>
+	<message xml:lang="es">ruby</message>
+</label>
 <label define="BTable">
 	<message xml:lang="en">table</message>
 	<message xml:lang="fr">table</message>
@@ -1635,6 +1643,10 @@
 	<message xml:lang="it">Informazioni su Amaya al W3C</message>
 	<message xml:lang="tr">Amaya hakkýnda</message>
 	<message xml:lang="es">Sobre Amaya en W3C</message>
+</label>
+<label define="BHelpIndex">
+	<message xml:lang="en">Index</message>
+	<message xml:lang="fr">Index</message>
 </label>
 <label define="BHelpBrowsing">
 	<message xml:lang="en">Browsing</message>

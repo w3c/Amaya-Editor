@@ -122,8 +122,8 @@
 120 Parameter (param)
 121 Paragraph (p)
 122 Preformatted (pre)
-123 ruby
-124 Table
+123 Table
+124 ruby
 125 table
 126 caption
 127 colgroup
@@ -213,25 +213,26 @@
 211 Configure...
 212 About Amaya
 213 About Amaya at W3C
-214 Browsing
-215 Selecting
-216 Searching
-217 Views
-218 Creating elements
-219 Links
-220 Restructuring
-221 Tables
-222 Math
-223 Graphics
-224 Image maps
-225 Style sheets
-226 Attributes
-227 Spell Checking
-228 Publishing
-229 Printing
-230 Numbering
-231 Making books
-232 Annotations
-233 Configuring Amaya
-234 ShortCuts
-235 Accessibility in Amaya
+214 Index
+215 Browsing
+216 Selecting
+217 Searching
+218 Views
+219 Creating elements
+220 Links
+221 Restructuring
+222 Tables
+223 Math
+224 Graphics
+225 Image maps
+226 Style sheets
+227 Attributes
+228 Spell Checking
+229 Publishing
+230 Printing
+231 Numbering
+232 Making books
+233 Annotations
+234 Configuring Amaya
+235 ShortCuts
+236 Accessibility in Amaya
