@@ -51,8 +51,15 @@
 #include "constmedia.h"
 #include "appdialogue.h"
 
-
 extern HINSTANCE hInstance;
+
+/* an optimization to say which common
+menu buttons we want to initialize */
+enum {AM_INIT_APPLY_BUTTON = 1,
+	  AM_INIT_DEFAULT_BUTTON = 2,
+	  AM_INIT_DONE_BUTTON = 4,
+	  AM_INIT_ALL = 0xFFFF};
+
 #endif /* _WINDOWS */
 
 /* this one should be exported from the thotlib */
@@ -65,7 +72,27 @@ static int SafePutStatus;
 /* Cache menu options */
 #ifdef _WINDOWS
 static HWND CacheHwnd = NULL;
+typedef struct _AM_WIN_MenuText {
+   int idc;
+   int message;
+} AM_WIN_MenuText;
+
+/* the message table text to IDC convertion table */
+static AM_WIN_MenuText WIN_CacheMenuText[] = 
+{
+	{AM_INIT_ALL, AM_CACHE_MENU},
+	{IDC_ENABLECACHE, AM_ENABLE_CACHE},
+	{IDC_CACHEPROTECTEDDOCS, AM_CACHE_PROT_DOCS},
+	{IDC_CACHEDISCONNECTEDMODE, AM_DISCONNECTED_MODE},
+	{IDC_CACHEEXPIREIGNORE, AM_IGNORE_EXPIRES},
+	{IDC_IDC_TCACHEDIRECTORY, AM_CACHE_DIR},
+	{IDC_TCACHESIZE, AM_CACHE_SIZE},
+	{IDC_TMAXCACHEFILE, AM_CACHE_ENTRY_SIZE},
+	{ID_FLUSHCACHE, AM_FLUSH_CACHE_BUTTON},
+	{0, 0}
+};
 #endif /* _WINDOWS */
+
 static int      CacheBase;
 static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
@@ -78,6 +105,17 @@ static int      MaxCacheFile;
 /* Proxy menu options */
 #ifdef _WINDOWS
 static HWND     ProxyHwnd = NULL;
+/* the message table text to IDC convertion table */
+static AM_WIN_MenuText WIN_ProxyMenuText[] = 
+{
+	{AM_INIT_ALL, AM_PROXY_MENU},
+	{IDC_THTTPPROXY, AM_HTTP_PROXY},
+	{IDC_TPROXYDOMAIN, AM_PROXY_DOMAIN},
+	{IDC_TSEPENTRIESSPACE, AM_PROXY_DOMAIN_INFO},
+	/* {IDC_NOPROXY, AM_NO_PROXY},
+	{IDC_ONLYPROXY, }, */
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      ProxyBase;
 static CHAR_T   HttpProxy [MAX_LENGTH];
@@ -89,6 +127,20 @@ static ThotBool ProxyDomainIsOnlyProxy;
 static CHAR_T   AppHome [MAX_LENGTH];
 static CHAR_T   AppTmpDir [MAX_LENGTH];
 static HWND     GeneralHwnd = NULL;
+/* the message table text to IDC convertion table */
+static AM_WIN_MenuText WIN_GeneralMenuText[] = 
+{
+	{AM_INIT_ALL, AM_GENERAL_MENU},
+	/* {IDC_TAPPHOME, Amaya user dir}, */
+	/* {IDC_TTMPDIR, AM_TMP_DIR},*/
+	{IDC_THOMEPAGE, AM_HOME_PAGE},
+	{IDC_TZOOM , AM_ZOOM},
+	{IDC_TDIALOGUELANG,AM_DIALOGUE_LANGUAGE},
+	{IDC_MULTIKEY, AM_ENABLE_MULTIKEY},
+	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
+	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      GeneralBase;
 static int      DoubleClickDelay;
@@ -104,6 +156,15 @@ static CHAR_T   HomePage [MAX_LENGTH];
 /* Publish menu options */
 #ifdef _WINDOWS
 static HWND     PublishHwnd =  NULL;
+static AM_WIN_MenuText WIN_PublishMenuText[] = 
+{
+	{AM_INIT_ALL, AM_PUBLISH_MENU},
+	{IDC_LOSTUPDATECHECK, AM_USE_ETAGS},
+	{IDC_VERIFYPUBLISH, AM_VERIFY_PUT},
+	{IDC_TDEFAULTNAME, AM_DEFAULT_NAME},
+	{IDC_TSAFEPUTREDIRECT, AM_SAFE_PUT_REDIRECT},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      PublishBase;
 static ThotBool LostUpdateCheck;
@@ -113,6 +174,14 @@ static CHAR_T   SafePutRedirect [MAX_LENGTH];
 /* Color menu options */
 #ifdef _WINDOWS
 static HWND     ColorHwnd = NULL;
+static AM_WIN_MenuText WIN_ColorMenuText[] = 
+{
+	{AM_INIT_ALL, AM_COLOR_MENU},
+	{IDC_TFGCOLOR, AM_DOC_FG_COLOR},
+	{IDC_TBGCOLOR, AM_DOC_BG_COLOR},
+/* 	{IDC_CHANGCOLOR, AM_COLOR_PALETTE}, */
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      ColorBase;
 static CHAR_T   FgColor [MAX_LENGTH];
@@ -127,6 +196,14 @@ static int      GeometryBase;
 static Document GeometryDoc = 0;
 #ifdef _WINDOWS
 HWND            GeometryHwnd = NULL;
+static AM_WIN_MenuText WIN_GeometryMenuText[] = 
+{
+	{AM_INIT_DONE_BUTTON, AM_GEOMETRY_MENU},
+	{IDC_GEOMCHANGE, AM_GEOMETRY_CHANGE},
+	{ID_APPLY, AM_SAVE_GEOMETRY},
+	{ID_DEFAULTS, AM_RESTORE_GEOMETRY},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 /* common local variables */
 CHAR_T          s[MAX_LENGTH]; /* general purpose buffer */
@@ -134,6 +211,12 @@ CHAR_T          s[MAX_LENGTH]; /* general purpose buffer */
 /* Language negotiation menu options */
 #ifdef _WINDOWS
 static HWND     LanNegHwnd = NULL;
+static AM_WIN_MenuText WIN_LanNegMenuText[] = 
+{
+	{AM_INIT_ALL, BConfigLanNeg},
+	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      LanNegBase;
 static CHAR_T   LanNeg [MAX_LENGTH];
@@ -143,6 +226,14 @@ static CHAR_T   LanNeg [MAX_LENGTH];
 static HWND     ProfileHwnd = NULL;
 static HWND     wndProfilesList;
 static HWND     wndProfile;
+static AM_WIN_MenuText WIN_ProfileMenuText[] = 
+{
+	{AM_INIT_ALL, AM_PROFILE_MENU},
+	{IDC_TPROFILESLOCA, AM_PROFILES_FILE},
+	{IDC_TPROFILESELECT, AM_PROFILE_SELECT},
+	{IDC_TPROFILECHANGE, AM_PROFILE_CHANGE},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      ProfileBase;
 static CHAR_T   Profile [MAX_LENGTH];
@@ -153,6 +244,12 @@ static char*    MenuText[MAX_PRO];
 /* Templates menu option */
 #ifdef _WINDOWS
 static HWND     TemplatesHwnd = NULL;
+static AM_WIN_MenuText WIN_TemplatesMenuText[] = 
+{
+	{AM_INIT_ALL, AM_TEMPLATES_MENU},
+	{IDC_TTEMPLATESURL, AM_TEMPLATES_SERVER},
+	{0, 0}
+};
 #endif /* _WINDOWS */
 static int      TemplatesBase;
 static CHAR_T   TemplatesUrl [MAX_LENGTH];
@@ -501,6 +598,73 @@ CHAR_T* name;
   return result;
 }
 
+#ifdef _WINDOWS
+
+/*----------------------------------------------------------------------
+  WIN_SetCommonText
+  Writes the local text that corresponds to buttons common to all the
+  menus
+    ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static WIN_SetCommonText (HWND hwnDlg, int flags)
+#else
+static WIN_SetCommonText (hwnDlg, flags)
+HWND hwnDlg;
+int flags;
+#endif /* __STDC__ */
+{
+  if (flags & AM_INIT_APPLY_BUTTON)
+    SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
+	 	  TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+  if (flags & AM_INIT_DEFAULT_BUTTON)
+     SetWindowText (GetDlgItem (hwnDlg, ID_DEFAULTS),
+		  TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));	    
+  if (flags & AM_INIT_DONE_BUTTON)
+     SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		  TtaGetMessage (LIB, TMSG_DONE));
+}
+
+/*----------------------------------------------------------------------
+  WIN_SetMenuText
+  Writes the local text message from a given message table to the idc
+  dialogue identifier.
+    ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
+#else
+static void WIN_SetMenuText (hwnDlg, menu)
+HWND hwnDlg;
+AM_WIN_MenuText menu[];
+#endif /* __STDC__ */
+{
+    AM_WIN_MenuText *field;
+    int i;
+
+	if (!hwnDlg || !menu)
+		return;
+	/* intialize the window title */
+	field = &menu[0];
+	/* for the moment, we consider all messages come from the AMAYA table */
+    SetWindowText (hwnDlg, TtaGetMessage (AMAYA, field->message));
+ 
+	/* initialize the common buttons, 
+		the idc field says which buttons we want to intialize */
+	WIN_SetCommonText (hwnDlg, field->idc);
+
+	/* intialize the menu fields */
+	i = 1;
+	field = &menu[i];
+	while (field->idc != 0 && field->message != 0)
+	{
+	  SetWindowText (GetDlgItem (hwnDlg, field->idc),
+		  TtaGetMessage (AMAYA, field->message));
+	  i++;
+	  field = &menu[i];
+	}
+}
+
+#endif /* _WINDOWS */
+  
 /*********************
 ** Cache configuration menu
 ***********************/
@@ -691,7 +855,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				   LPARAM lParam)
 #else  /* !__STDC__ */
 LRESULT CALLBACK WIN_CacheDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
+HWND   hwnDlg; 
 UINT   msg; 
 WPARAM wParam; 
 LPARAM lParam;
@@ -701,6 +865,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       CacheHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_CacheMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshCacheMenu (hwnDlg);
       break;
       
@@ -955,22 +1122,8 @@ View         view;
 #else /* !_WINDOWS */
   if (!CacheHwnd)
     /* only activate the menu if it isn't active already */
-    {
-      switch (app_lang)
-	{ 
-	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_CACHEMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (CACHEMENU), NULL, 
 		     (DLGPROC) WIN_CacheDlgProc);
-	  break;
-	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_CACHEMENU), NULL, 
-		     (DLGPROC) WIN_CacheDlgProc);
-	  break;
-	default:
-	  DialogBox (hInstance, MAKEINTRESOURCE (EN_CACHEMENU), NULL, 
-		     (DLGPROC) WIN_CacheDlgProc);
-	}
-    }
   else
     SetFocus (CacheHwnd);
 #endif /* !_WINDOWS */
@@ -1087,6 +1240,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ProxyHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_ProxyMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshProxyMenu (hwnDlg);
       break;
       
@@ -1306,23 +1462,8 @@ View                view;
 #else
   if (!ProxyHwnd)
     /* only activate the menu if it isn't active already */
-    {
-	  switch (app_lang)
-	   { 
-	   case FR_LANG:
-           DialogBox (hInstance, MAKEINTRESOURCE (FR_PROXYMENU), NULL, 
+     DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, 
 		  (DLGPROC) WIN_ProxyDlgProc);
-	       break;
-	   case DE_LANG:
-		   DialogBox (hInstance, MAKEINTRESOURCE (DE_PROXYMENU), NULL, 
-		  (DLGPROC) WIN_ProxyDlgProc);
-	       break;
-	   default:
-		   DialogBox (hInstance, MAKEINTRESOURCE (EN_PROXYMENU), NULL, 
-		  (DLGPROC) WIN_ProxyDlgProc);
-		   break;
-	   }
-    }
   else
      SetFocus (ProxyHwnd);
 #endif /* !_WINDOWS */
@@ -1641,6 +1782,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       GeneralHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
    
@@ -1895,23 +2039,8 @@ STRING              pathname;
 #else /* !_WINDOWS */
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
-     {
-	   switch (app_lang)
-	   { 
-	   case FR_LANG:
-           DialogBox (hInstance, MAKEINTRESOURCE (FR_GENERALMENU), NULL, 
+		   DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, 
 		  (DLGPROC) WIN_GeneralDlgProc);
-	       break;
-	   case DE_LANG:
-		   DialogBox (hInstance, MAKEINTRESOURCE (DE_GENERALMENU), NULL, 
-		  (DLGPROC) WIN_GeneralDlgProc);
-	       break;
-	   default:
-		   DialogBox (hInstance, MAKEINTRESOURCE (EN_GENERALMENU), NULL, 
-		  (DLGPROC) WIN_GeneralDlgProc);
-		   break;
-	   }
-     }
    else
      SetFocus (GeneralHwnd);
 #endif /* !_WINDOWS */
@@ -2030,6 +2159,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       PublishHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_PublishMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshPublishMenu (hwnDlg);
       break;
 
@@ -2240,24 +2372,8 @@ STRING              pathname;
    TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
   if (!PublishHwnd)
-    /* only activate the menu if it isn't active already */
-    {
-	  switch (app_lang)
-	   { 
-	   case FR_LANG:
-           DialogBox (hInstance, MAKEINTRESOURCE (FR_PUBLISHMENU), NULL, 
-		  (DLGPROC) WIN_PublishDlgProc);
-	       break;
-	   case DE_LANG:
-		   DialogBox (hInstance, MAKEINTRESOURCE (DE_PUBLISHMENU), NULL, 
-		  (DLGPROC) WIN_PublishDlgProc);
-	       break;
-	   default:
-		   DialogBox (hInstance, MAKEINTRESOURCE (EN_PUBLISHMENU), NULL, 
-		  (DLGPROC) WIN_PublishDlgProc);
-		   break;
-	   }
-    }
+	   DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
+	  (DLGPROC) WIN_PublishDlgProc);
   else
      SetFocus (PublishHwnd);
 #endif /* !_WINDOWS */
@@ -2379,6 +2495,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ColorHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_ColorMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshColorMenu (hwnDlg);
       break;
 
@@ -2584,22 +2703,8 @@ STRING              pathname;
 #else 
    if (!ColorHwnd)
     /* only activate the menu if it isn't active already */
-    {
-      switch (app_lang)
-	{
-	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_COLORMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (COLORMENU), NULL, 
 		     (DLGPROC) WIN_ColorDlgProc);
-	  break;
-	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_COLORMENU), NULL, 
-		     (DLGPROC) WIN_ColorDlgProc);
-	  break;
-	default:
-	  DialogBox (hInstance, MAKEINTRESOURCE (EN_COLORMENU), NULL, 
-		     (DLGPROC) WIN_ColorDlgProc);
-	}
-    }
    else
      SetFocus (ColorHwnd);
 #endif /* !_WINDOWS */
@@ -2755,6 +2860,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       GeometryHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_GeometryMenuText);
+	  /* write the current values in the dialog entries */
       break;
 
     case WM_CLOSE:
@@ -2892,21 +3000,8 @@ STRING              pathname;
 	  a menu that points to the current document */
 	 EndDialog (GeometryHwnd, ID_DONE);
   GeometryDoc = document;
-  switch (app_lang)
-    {
-    case FR_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (FR_GEOMETRYMENU), NULL,
+      DialogBox (hInstance, MAKEINTRESOURCE (GEOMETRYMENU), NULL,
 		 (DLGPROC) WIN_GeometryDlgProc);
-      break;
-    case DE_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (DE_GEOMETRYMENU), NULL,
-		 (DLGPROC) WIN_GeometryDlgProc);
-      break;
-    default:
-      DialogBox (hInstance, MAKEINTRESOURCE (EN_GEOMETRYMENU), NULL,
-		 (DLGPROC) WIN_GeometryDlgProc);
-      break;
-    }
 #endif /* !_WINDOWS */
 }
 
@@ -2992,6 +3087,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       LanNegHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_LanNegMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshLanNegMenu (hwnDlg);
       break;
 
@@ -3148,22 +3246,8 @@ STRING              pathname;
 #else 
    if (!LanNegHwnd)
     /* only activate the menu if it isn't active already */
-    {
-      switch (app_lang)
-	{
-	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+	  DialogBox (hInstance, MAKEINTRESOURCE (LANNEGMENU), NULL, 
 		     (DLGPROC) WIN_LanNegDlgProc);
-	  break;
-	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
-		     (DLGPROC) WIN_LanNegDlgProc);
-	  break;
-	default:
-	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
-		     (DLGPROC) WIN_LanNegDlgProc);
-	}
-    }
    else
      SetFocus (LanNegHwnd);
 #endif /* !_WINDOWS */
@@ -3283,10 +3367,11 @@ LPARAM lParam;
    switch (msg)
     {
     case WM_INITDIALOG:
-      ProfileHwnd = hwnDlg; 
+      ProfileHwnd = hwnDlg;
 	       wndProfilesList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 90, 200, 90, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
 	  SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
 	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
       break;
@@ -3549,23 +3634,8 @@ STRING              pathname;
    GetProfileConf ();
 
    if (!ProfileHwnd)
-     /* only activate the menu if it isn't active already */
-     {
-       switch (app_lang)
-	 {
-	 case FR_LANG:
-	   DialogBox (hInstance, MAKEINTRESOURCE (FR_PROFILEMENU), NULL, 
-		      (DLGPROC) WIN_ProfileDlgProc);
-	   break;
-	 case DE_LANG:
-	   DialogBox (hInstance, MAKEINTRESOURCE (DE_PROFILEMENU), NULL, 
-		      (DLGPROC) WIN_ProfileDlgProc);
-	   break;
-	 default:
-	   DialogBox (hInstance, MAKEINTRESOURCE (EN_PROFILEMENU), NULL, 
+	   DialogBox (hInstance, MAKEINTRESOURCE (PROFILEMENU), NULL, 
 		     (DLGPROC) WIN_ProfileDlgProc);
-	 }
-     }
    else
      SetFocus (ProfileHwnd);
 #endif /* !_WINDOWS */
@@ -3651,6 +3721,9 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       TemplatesHwnd = hwnDlg;
+	  /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_TemplatesMenuText);
+	  /* write the current values in the dialog entries */
       WIN_RefreshTemplatesMenu (hwnDlg);
       break;
 
@@ -3807,23 +3880,8 @@ STRING              pathname;
    TtaShowDialogue (TemplatesBase + TemplatesMenu, TRUE);
 #else 
    if (!TemplatesHwnd)
-    /* only activate the menu if it isn't active already */
-    {
-     switch (app_lang)
-	{
-	case FR_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (FR_TEMPLATESMENU), NULL, 
+		DialogBox (hInstance, MAKEINTRESOURCE (TEMPLATESMENU), NULL, 
 		     (DLGPROC) WIN_TemplatesDlgProc);
-	  break;
-	case DE_LANG:
-	  DialogBox (hInstance, MAKEINTRESOURCE (DE_TEMPLATESMENU), NULL, 
-		     (DLGPROC) WIN_TemplatesDlgProc);
-	 break;
-	default:
-		DialogBox (hInstance, MAKEINTRESOURCE (EN_TEMPLATESMENU), NULL, 
-		     (DLGPROC) WIN_TemplatesDlgProc);
-	}
-    }
    else
      SetFocus (TemplatesHwnd);
 #endif /* !_WINDOWS */

@@ -325,8 +325,11 @@
 #define DE_SPELLCHECKDIALOG             480
 #define DE_TABLEDIALOG                  481
 #define EN_PUBLISHMENU                  482
+#define PUBLISHMENU                     482
 #define EN_CACHEMENU                    485
+#define CACHEMENU                       485
 #define EN_PROXYMENU                    486
+#define PROXYMENU                       486
 #define DE_PUBLISHMENU                  493
 #define FR_PUBLISHMENU                  494
 #define FR_PROXYMENU                    495
@@ -334,22 +337,27 @@
 #define DE_CACHEMENU                    497
 #define FR_CACHEMENU                    498
 #define EN_GEOMETRYMENU                 499
+#define GEOMETRYMENU                    499
 #define FR_GEOMETRYMENU                 500
 #define DE_GEOMETRYMENU                 501
 #define EN_COLORMENU                    502
+#define COLORMENU                       502
 #define FR_COLORMENU                    503
 #define DE_COLORMENU                    504
 #define EN_GETALTERNATEDIALOG           505
 #define FR_GETALTERNATEDIALOG           506
 #define DE_GETALTERNATEDIALOG           507
 #define EN_LANNEGMENU                   509
+#define LANNEGMENU                      509
 #define FR_LANNEGMENU                   510
 #define DE_LANNEGMENU                   511
 #define EN_TEMPLATESMENU                513
+#define TEMPLATESMENU                   513
 #define FR_TEMPLATESMENU                514
 #define DE_TEMPLATESMENU                515
 #define FR_PROFILEMENU                  518
 #define EN_PROFILEMENU                  519
+#define PROFILEMENU                     519
 #define DE_PROFILEMENU                  520
 #define MATH_ENTITY_DLG                 534
 #define IDD_DIALOG2                     535
@@ -749,6 +757,25 @@
 #define IDC_VERSION                     1471
 #define IDC_ENTITY_NAME                 1471
 #define IDC_ABOUT1                      1472
+#define IDC_IDC_TCACHEDIRECTORY         1472
+#define IDC_TCACHESIZE                  1473
+#define IDC_TMAXCACHEFILE               1474
+#define IDC_THTTPPROXY                  1475
+#define IDC_TPROXYDOMAIN                1476
+#define IDC_TSEPENTRIESSPACE            1477
+#define IDC_TAPPHOME                    1478
+#define IDC_TTMPDIR                     1479
+#define IDC_THOMEPAGE                   1480
+#define IDC_TZOOM                       1481
+#define IDC_TDIALOGUELANG               1482
+#define IDC_TDEFAULTNAME                1483
+#define IDC_TSAFEPUTREDIRECT            1484
+#define IDC_TFGCOLOR                    1485
+#define IDC_TBGCOLOR                    1486
+#define IDC_GEOMCHANGE                  1487
+#define IDC_TPROFILESLOCA               1488
+#define IDC_TPROFILESELECT              1489
+#define IDC_TPROFILECHANGE              1490
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -782,6 +809,8 @@
 #define ID_BUTTON40050                  40050
 #define ID_BUTTON40051                  40051
 #define IDC_URL                         -1
+#define IDC_TLANNEG                     65535
+#define IDC_TTEMPLATESURL               65535
 
 // Next default values for new objects
 // 
@@ -789,7 +818,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        536
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1472
+#define _APS_NEXT_CONTROL_VALUE         1491
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
