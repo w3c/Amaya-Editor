@@ -1823,9 +1823,9 @@ CHAR_T         *attrName;
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrName (CHAR_T *attrName)
+static ThotBool      EndOfAttrName (CHAR_T *attrName)
 #else
-static void         EndOfAttrName (attrName)
+static ThotBool      EndOfAttrName (attrName)
 CHAR_T         *attrName;
 
 #endif
@@ -1834,13 +1834,14 @@ CHAR_T         *attrName;
    CHAR_T         *bufName;
    CHAR_T         *ptr;
    PtrParserCtxt   oldParserCtxt = NULL;
+   CHAR_T          msgBuffer[MaxMsgLength];
+   ThotBool        attrOK;
 
    if (/*nameElementStack[stackLevel-1] == NULL*/currentMappedName[0] == WC_EOS)
-       return;
+       return FALSE;
 
    /* look for a NS_SEP in the tag name (namespaces) and ignore the
       prefix if there is one */
-   
    buffer = TtaGetMemory (strlen (attrName) + 1);
    ustrcpy (buffer, (CHAR_T*) attrName);
    if (ptr = ustrrchr (buffer, NS_SEP))
@@ -1852,7 +1853,7 @@ CHAR_T         *attrName;
        
        if (currentParserCtxt != NULL &&
 	   ustrcmp (buffer, currentParserCtxt->UriName))
-	 ChangeXmlParserContextUri (buffer);
+	   ChangeXmlParserContextUri (buffer);
      }
    else
      {
@@ -1860,16 +1861,26 @@ CHAR_T         *attrName;
        ustrcpy (bufName, buffer);
      }
    
-   if (currentParserCtxt != NULL)
+   if (currentParserCtxt == NULL)
+     {
+       usprintf (msgBuffer,
+		 TEXT("Unknow Namepaces for attribute :\"%s\""),
+		 attrName);
+       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       attrOK = FALSE;
+     }
+   else
      {
        if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
 	 XhtmlEndOfAttrName (bufName);
        else
 	 XmlEndOfAttrName (bufName);
+       attrOK = TRUE;
      }
-
+   
    TtaFreeMemory (buffer);
    TtaFreeMemory (bufName);
+   return attrOK;
 }
 
 /*----------------------------------------------------------------------
@@ -2850,6 +2861,7 @@ const XML_Char **attlist;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
+   ThotBool        attrOK;
 
 #ifdef LC
    printf ("\n Hndl_ElementStart '%s'", name);
@@ -2886,10 +2898,10 @@ const XML_Char **attlist;
 	 }
 
        /* We stop parsing if context is null, ie,
-	  if Thot doesn't know the corresponding name space */ 
+	  if Thot doesn't know the corresponding Namespaces */ 
       if (currentParserCtxt == NULL)
 	{
-	  usprintf (msgBuffer, TEXT("Unknow Name Space :\"%s\""), name);
+	  usprintf (msgBuffer, TEXT("Unknow Namepaces for element :\"%s\""), name);
 	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	  XMLabort = TRUE;
 	  DisableExpatParser ();
@@ -2901,9 +2913,8 @@ const XML_Char **attlist;
        /* Treatment called at the beginning of start tag */
        StartOfXmlStartTag (bufName);
    
-       /* Treatment called for each attribute */
+       /*-------  Treatment of the attributes -------*/
        nbatts = XML_GetSpecifiedAttributeCount (parser);
-   
        while (*attlist != NULL)
 	 {
 	   /* Create the corresponding Thot attribute */
@@ -2912,12 +2923,16 @@ const XML_Char **attlist;
 #ifdef LC
 	   printf ("\n  attr %s :", bufAttr);
 #endif /* LC */
-	   EndOfAttrName (bufAttr);
+	   attrOK = EndOfAttrName (bufAttr);
 	   TtaFreeMemory (bufAttr);
+
+	   /* Specific context for attribute name is unknown */
+	   if (currentParserCtxt == NULL)
+	     currentParserCtxt = elementParserCtxt;
 	   
 	   /* Filling of the attribute value */
 	   attlist++;
-	   if (*attlist != NULL)
+	   if (*attlist != NULL && attrOK)
 	     {
 	       bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	       strcpy (bufAttr, *attlist);
@@ -2929,13 +2944,11 @@ const XML_Char **attlist;
 	     }
 	   attlist++;
 	 }
-
        /* Restore the context (it may have been changed
 	  by the treatment of the attributes) */
        currentParserCtxt = elementParserCtxt;
    
-       /* Special treatment called at the end of start tag for some
-	  XHTML elements */
+       /*----- Treatment called at the end of start tag -----*/
        EndOfXmlStartTag (bufName);
 
        TtaFreeMemory (bufName);
