@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Jul  8 16:23:34 CEST 2004" version="81">
+<base last_update="Mon Jul 12 11:09:50 CEST 2004" version="82">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1903,7 +1903,7 @@
 </label>
 <label define="BDate">
 	<message xml:lang="en">Insert time stamp</message>
-	<message xml:lang="fr">Insérer date e mise a jour</message>
+	<message xml:lang="fr">Insérer date de mise à jour</message>
 	<message xml:lang="es">Insertar marca de tiempo</message>
 	<message xml:lang="de">Zeitstempel einfügen</message>
 	<message xml:lang="it">Inserisci timestamp</message>
