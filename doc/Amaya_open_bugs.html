@@ -35,91 +35,12 @@ h2         {  font-size: 12; }</style>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
-      <td>1. Open the attached HTML file. 2. Change the view to Stucture
-        View. 3. Click the hr element at the end. 4. Press Enter. 5. Click
-        the p element just created. 6. Click Structure &gt; Script. 7. Type
-        application/x-javascript in the attribute box.
-        <hr />
-        <script type="text/javascript">
-<!---->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </script>
-
-        <p>As you can see, instead of changing the p element to a script
-        element with the type attribute set to application/x-javascript, it
-        nested the script element within an address element.</p>
-      </td>
-      <td>2002-07-10</td>
-      <td>B. L.
-
-        <p>Gurganus</p>
-      </td>
-      <td>2004-05-26</td>
-    </tr>
-    <tr class="fixed">
-      <td>When you edit the source file and then you save it, Amaya
-        synchronizes the formatted view. If you want to leave the source
-        document before the synchonization is ended, Amaya ask you to save
-        again the document (it is not considered as saved before the
-        synchonization is ended).
-
-        <p><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html">http://lists.w3.org/Archives/Public/www-amaya/</a><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2002OctDec/0032.html">2002OctDec/0032.html</a></p>
-      </td>
-      <td>2002-10-13</td>
-      <td>S. Zanelli</td>
-      <td>2004-07-02</td>
-    </tr>
     <tr>
       <td>Arabic Windows platforms write Arabic characters right-to-left even
         if the requested writing order is left-to-right.</td>
       <td>2002-07</td>
       <td></td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Insertion of multi-script text</td>
-      <td>2002-11</td>
-      <td></td>
-      <td>2004-06-10</td>
-    </tr>
-    <tr class="fixed">
-      <td>Would it be possible to get the rendering of Unicode characters
-        fixed in the Windows version? While references like &amp;larr; (and
-        &amp;#x2190;) are rendered correctly, references like &amp;#x2500;
-        are not rendered. Inparticular I need to use the Box Drawing glyphs
-        (x2550 - x257F). I've tried various fonts (fonts.win) but nothing
-        seems to work - do you have a
-
-        <p>solution?</p>
-
-        <p>&larr; and &#x2190;</p>
-      </td>
-      <td>2004-01-21</td>
-      <td>Helm, Phillip</td>
-      <td>2004-07-02</td>
     </tr>
     <tr>
       <td>Support of gb18030
@@ -149,22 +70,6 @@ h2         {  font-size: 12; }</style>
       <td></td>
     </tr>
     <tr>
-      <td>After scrolling to bottom of document, scrolling up to top
-        overscrolls on many docs. And scrolling down overscrolls on some
-        documents. This is with a jpg image background that doesn't go
-        completely to the top or bottom of screen.
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/mathsci.htm">mathsci.htm</a></p>
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/home.htm">home.htm</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>A shortcut key for skipping/replacing+next in the spell checker so
         I don't have to rely upon the mouse and compex navigation to quickly
         move through the document.</td>
@@ -179,48 +84,30 @@ h2         {  font-size: 12; }</style>
       <td>Tom Cloyd</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Amaya crashes when scrolling down and up some documents
-        (MIT minutes for example)</td>
-      <td>2004-07-20</td>
-      <td>D. Connolly</td>
-      <td>2004-08-25</td>
-    </tr>
-    <tr class="fixed">
-      <td>CTRL-Insert and Shift-Insert are not supported as alternatives to
-        CTRL-C
-
-        <p>and CRTL-V.</p>
-      </td>
-      <td>2004-07-22</td>
-      <td>Lars Bruzelius</td>
-      <td>2004-08-20</td>
-    </tr>
-    <tr class="fixed">
-      <td>In text version of Amaya. When some images that already have an alt
-        text. When I try correct the alt of images. When I press the "del"
-        key is the Caos :-( In front of Cursor appear a lot of text
-      repeated.</td>
-      <td>2004-07-23</td>
-      <td>Jorge Fernandes</td>
-      <td>2004-08-20</td>
-    </tr>
-    <tr class="fixed">
-      <td>In 8.6 (unix release version, Mac build) if I add a lang attribute
-        to an element by entering the text instead of scrolling down to the
-        language I want the value isn't added - I get
-
-        <p>&lt;div xml:lang="" lang=""&gt;</p>
-      </td>
-      <td>2004-08-02</td>
-      <td>Charles McCathieNevile</td>
-      <td>2004-08-20</td>
-    </tr>
     <tr>
-      <td>Spell Checking error: wrong replaced text for &lt;strong&gt;
-        elements</td>
-      <td>2004-09-22</td>
-      <td>L. Carcone</td>
+      <td> Is it possible to create such a transformation that transforms
+        '&lt;any_tag&gt;some text&lt;/any_tag&gt;' into 'some text'?
+
+        <p>- I know how to do it for a given element, e.g.</p>
+
+        <p>'Remove strong: (strong{*+}); { * &gt; :*; }' (1).</p>
+
+        <p>- But if I try to generalize it like this:</p>
+
+        <p>'Remove element: (elm:*{*+}); { * &gt; :*; }' (2)</p>
+
+        <p>it removes instead the parent element.</p>
+
+        <p>- If I have the structure text:strong:p:body, (1) removes
+        strong</p>
+
+        <p>correctly, while (2) removes p.</p>
+
+        <p>Of course I could rewrite (1) for any possible tag but I believe
+        there must be an easier way.</p>
+      </td>
+      <td>2004-10-25</td>
+      <td>Jakub Holý</td>
       <td></td>
     </tr>
   </tbody>
@@ -242,28 +129,6 @@ h2         {  font-size: 12; }</style>
       <td>2003-12-11</td>
       <td>Alan</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Restore the document position after a Synchronize or a Save of CSS
-        files.</td>
-      <td>2004-03</td>
-      <td>Thomas</td>
-      <td>2004-06-29</td>
-    </tr>
-    <tr class="fixed">
-      <td>Make CSS selectors case sesitive when XHTML/XML documents are
-        served as XML.</td>
-      <td>2004-04-30</td>
-      <td>Masayasu Ishikawa</td>
-      <td>2004-05-24</td>
-    </tr>
-    <tr class="fixed">
-      <td>Rendering problem with the first links elements of the W3C Open
-        Source page (http://www.w3.org/Status). Seems to define huge
-      margins.</td>
-      <td>2004-04-30</td>
-      <td>Laurent</td>
-      <td>2004-06-18</td>
     </tr>
     <tr>
       <td>The CSS rule nowrap is not interpreted.</td>
@@ -324,15 +189,6 @@ h2         {  font-size: 12; }</style>
       <td>J. Russel</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>If I create a link in a XHTML 1.0 Strict document, Amaya 8.5 (Win
-        XP) let me set the "target" attribute for the &lt;a&gt; element, but
-        W3C validator says that this attribute is not supported by the Strict
-        document type.</td>
-      <td>2004--06-07</td>
-      <td>Bartolomé Sintes Marco</td>
-      <td>2004-06-09</td>
-    </tr>
     <tr>
       <td>The following HTML structure is not correcly displayed:
 
@@ -351,6 +207,27 @@ h2         {  font-size: 12; }</style>
       ids</td>
       <td>2004-10-08</td>
       <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The clear both property is not interpreted when it's attached to a
+        &lt;div&gt; element</td>
+      <td>2004-10-25</td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Should Amaya set the CF_HTML format in the clipboard, aditionally
+        to the other formats it sets, then it's interoperability would be
+        enhanced by letting copy and paste from main browsers into Amaya's
+        browse view without needing to resort to an HTML source view neither
+        in Amaya nor in the other program.
+
+        <p>How to Add HTML Code to the Clipboard by Using Visual C++: <a
+        href="http://support.microsoft.com/kb/q274308/">http://support.microsoft.com/kb/q274308/</a></p>
+      </td>
+      <td></td>
+      <td>Juan Lanus </td>
       <td></td>
     </tr>
   </tbody>
@@ -396,20 +273,6 @@ h2         {  font-size: 12; }</style>
       <td>T. Telecken</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>In the example at: <a
-        href="http://www.graphviz.org/bug/hello-world.xml">http://www.graphviz.org/bug/hello-world.xml</a>
-
-        <p>there is a visible gap between the "hello" node and the edge.</p>
-
-        <p>The ellipse is "cy=30 ry=18" implying that is lowest point should
-        be at y=48. The first point of the edge is at "M36,48" and so the two
-        should be touching.</p>
-      </td>
-      <td>2003-10-20</td>
-      <td>John Ellson</td>
-      <td>2004</td>
-    </tr>
     <tr>
       <td>When moving an object, the svg container box get a null height (as
         in http://waloo.homelinux.net/amaya/html+svg.html) where the second
@@ -437,15 +300,6 @@ h2         {  font-size: 12; }</style>
       <td>Charles</td>
       <td></td>
     </tr>
-    <tr class="done">
-      <td>Amaya fails for IRIs
-
-        <p>http://www.w3.org/2001/08/iri-test/resumeHtmlImgSrcBase.html</p>
-      </td>
-      <td>2004-08-26</td>
-      <td>Martin</td>
-      <td></td>
-    </tr>
   </tbody>
   <tbody>
     <tr class="title">
@@ -468,13 +322,6 @@ h2         {  font-size: 12; }</style>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
-    </tr>
-    <tr class="fixed">
-      <td>The 'print' crashes on Linux/GL when the option 'Table of links' is
-        on.</td>
-      <td>2004-05-14</td>
-      <td>Vincent</td>
-      <td>2004-05-25</td>
     </tr>
     <tr>
       <td>If I print a page (like Amaya's starting page) it prints without a
@@ -500,12 +347,6 @@ h2         {  font-size: 12; }</style>
       <td>Marja</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>On Windows platforms some anotion icons are not displayed.</td>
-      <td>2004-07-12</td>
-      <td>Irène</td>
-      <td>2004-07.12</td>
-    </tr>
   </tbody>
   <tbody>
     <tr class="title">
@@ -524,21 +365,6 @@ h2         {  font-size: 12; }</style>
       </td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Amaya considers as 'invalid' the elements and attributes that
-        belong to a namespace with an undeclared prefix. It should raise a
-        warning 'undeclared prefix' instead</td>
-      <td>2004-09-10</td>
-      <td>B. Bos</td>
-      <td>2004-10-12</td>
-    </tr>
-    <tr class="fixed">
-      <td>When an element is in the scope of an empty default namespace
-        (xmlns=""), Amaya considers the namespace of it's parent</td>
-      <td>2004-09-10</td>
-      <td>B. Bos</td>
-      <td>2004-10-12</td>
-    </tr>
   </tbody>
   <tbody>
     <tr class="title">
@@ -546,17 +372,6 @@ h2         {  font-size: 12; }</style>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya 8.6. The Win98 installation seems to be incomplete (installs
-        in C:\Program\Amaya rather than asking for the preferred location).
-        The installed version is not executable</td>
-      <td>2004-07-15</td>
-      <td>L.Bruzelius
-
-        <p>J.C. Santos</p>
-      </td>
-      <td>2004-08-16</td>
     </tr>
   </tbody>
 </table>
