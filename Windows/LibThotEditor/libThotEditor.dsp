@@ -263,10 +263,6 @@ SOURCE=..\..\thotlib\document\externalref.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\extprintmenu.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\fileaccess.c
 # End Source File
 # Begin Source File
