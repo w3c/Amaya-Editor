@@ -31,6 +31,7 @@
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLsave_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
@@ -5533,7 +5534,6 @@ char*              HTMLbuf;
       } 
 }
 
-
 /*----------------------------------------------------------------------
    ReadTextFile
    read plain text file into a PRE element.
@@ -5550,10 +5550,20 @@ Document           doc;
 STRING	           pathURL;
 #endif
 {
-  Element             parent, el, prev;
-  ElementType         elType;
-  UCHAR_T             charRead;
-  ThotBool            endOfTextFile;
+  Element          parent, el, prev;
+  ElementType      elType;
+  UCHAR_T          charRead;
+  ThotBool         endOfTextFile;
+  Document         htmlDoc;
+  ThotBool         isUTF8 = FALSE;
+  wchar_t          wcharRead;
+  unsigned char   *srcbuf;
+  int              nbBytesToRead, i;
+  unsigned char    extrabuf[7];
+  unsigned char   *ptrextrabuf;
+  char             fallback[5];
+  Language         lang;
+  Element          elLeaf, child, line;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -5561,6 +5571,12 @@ STRING	           pathURL;
   NumberOfCharRead = 0;
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
+
+  if (DocumentTypes[doc] == docSource)
+    {
+      htmlDoc = GetDocFromSource (doc);
+      isUTF8 = (TtaGetDocumentCharset (htmlDoc) == UTF_8);
+    }
 
   /* initialize input buffer */
   charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
@@ -5642,10 +5658,124 @@ STRING	           pathURL;
 	      LgBuffer = 0;
 	    }
 	  inputBuffer[LgBuffer++] = charRead;
+	  if (el != NULL)
+	    {
+	      /* test if last created element is a Symbol */
+	      elType = TtaGetElementType (el);
+	      if (elType.ElTypeNum != TextFile_EL_TEXT_UNIT)
+		{
+		  /* Create a new text leaf */
+		  elType.ElTypeNum = TextFile_EL_TEXT_UNIT;
+		  elLeaf = TtaNewElement (doc, elType);
+		  TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+		  TtaInsertSibling (elLeaf, el,  FALSE, doc);
+		  el = elLeaf;
+		}
+	    }
 	}
 
       /* read next character from the source */
       charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
+      if (isUTF8)
+	{	  
+	  srcbuf = (unsigned char*) &charRead;
+	  nbBytesToRead = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
+	  while (nbBytesToRead > 1)
+	    {
+	      extrabuf[0] = charRead;
+	      i = 1;
+	      while (i < nbBytesToRead)
+		{
+		  charRead = GetNextInputChar (infile,
+					       &CurrentBufChar,
+					       &endOfTextFile);
+		  extrabuf[i] = charRead;
+		  i++;
+		}
+	      ptrextrabuf = (unsigned char *) &extrabuf[0];
+	      nbBytesToRead = TtaGetNextWideCharFromMultibyteString 
+		(&wcharRead, &ptrextrabuf, UTF_8);
+	      
+	      if (wcharRead < 0x100)
+		{
+		  charRead = (char) wcharRead;
+		  nbBytesToRead = 1;
+		}
+	      else
+		{
+		  /* It's not an 8bits character */
+		  /* Put the current content of the buffer */
+		  /* into the document */
+		  if (el == NULL)
+		    {
+		      /* create a new line */
+		      elType.ElTypeNum = TextFile_EL_Line_;
+		      line = TtaNewTree (doc, elType, "");
+		      TtaSetElementLineNumber (line, NumberOfLinesRead);      
+		      if (prev != NULL)
+			TtaInsertSibling (line, prev,  FALSE, doc);
+		      else
+			TtaInsertFirstChild (&line, parent, doc);
+		      prev = el;
+		      /* delete the first element */
+		      child = TtaGetFirstChild (line);
+		      if (child != NULL)
+			TtaDeleteTree (child, doc);      
+		    }
+		  else
+		    {
+		      inputBuffer[LgBuffer] = WC_EOS;
+		      if (LgBuffer != 0)
+			TtaAppendTextContent (el, inputBuffer, doc);
+		      LgBuffer = 0;
+		      line = TtaGetParent (el);
+		    }
+		  /* Try to find a fallback character */
+		  GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+		  if (fallback[0] == '?')
+		    {
+		      /* Character not found in the fallback table */
+		      /* Create a symbol leaf */
+		      elType = TtaGetElementType (el);
+		      elType.ElTypeNum = 3;
+		      elLeaf = TtaNewElement (doc, elType);
+		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+		      child = TtaGetLastChild (line);
+		      if (child == NULL)
+			TtaInsertFirstChild (&elLeaf, line, doc);
+		      else
+			TtaInsertSibling (elLeaf, child,  FALSE, doc);
+		      /* Put the symbol '?' into the new symbol leaf */
+		      TtaSetGraphicsShape (elLeaf, fallback[0], doc);
+		      /* Change the wide char code associated with that symbol */
+		      TtaSetSymbolCode (elLeaf, wcharRead, doc);
+		      /* Make that leaf read-only */
+		      TtaSetAccessRight (elLeaf, ReadOnly, doc);
+		    }
+		  else
+		    {
+		      /* Character found in the fallback table */
+		      /* Create a new text leaf */
+		      elType = TtaGetElementType (el);
+		      elType.ElTypeNum = 1;
+		      elLeaf = TtaNewElement (doc, elType);
+		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+		      child = TtaGetLastChild (line);
+		      if (child == NULL)
+			TtaInsertFirstChild (&elLeaf, line, doc);
+		      else
+			TtaInsertSibling (elLeaf, child,  FALSE, doc);
+		      /* Put the fallback character into the new text leaf */
+		      TtaSetTextContent (elLeaf, fallback, lang, doc);
+		    }
+		  el = elLeaf;
+		  charRead = GetNextInputChar (infile, &CurrentBufChar,
+					       &endOfTextFile);
+		  srcbuf = (unsigned char*) &charRead;
+		  nbBytesToRead = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
+		}
+	    }
+	}
     }
   /* close the document */
   if (LgBuffer != 0)
@@ -5654,7 +5784,6 @@ STRING	           pathURL;
       TtaAppendTextContent (el, inputBuffer, doc);
     }
 }
-
 
 /*----------------------------------------------------------------------
   CheckDocHeader parses the loaded file to detect if it includes:
@@ -7226,6 +7355,7 @@ ThotBool            plainText;
   LgEntityName = 0;
   EntityTableEntry = 0;
   CharRank = 0;
+
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
 
   wc2iso_strcpy (www_file_name, htmlFileName);
