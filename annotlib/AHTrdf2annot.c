@@ -263,13 +263,11 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
   else if (contains (predicate, THREAD_NS, THREAD_INREPLYTO))
     {
       annot->inReplyTo = TtaStrdup ((char *) object);
-      /* JK: a patch, because we need this property for
-	 annotlib to work correctly */
-#if 0  /* @@ JK: I had to remove this for Ralph */
+      /* if it's a local URL, we use the reply to property as
+	 the source of the annotation (what was annotated) */
       if (annot->source_url)
 	TtaFreeMemory (annot->source_url);
       annot->source_url = TtaStrdup ((char *) object);
-#endif
     }
 #endif /* ANNOT_ON_ANNOT */
   else

@@ -28,8 +28,9 @@ extern void ANNOT_ToggleThread ( Document thread_doc,
                                  Document annot_doc,
                                  ThotBool turnOn );
 extern Document ANNOT_GetThreadDoc ( Document thread_doc );
-extern void ANNOT_UpdateThread ( Document doc,
-                                 AnnotMeta *annot );
+extern void ANNOT_UpdateThreadItem ( Document doc,
+                                     AnnotMeta *annot,
+                                     char *body_url );
 extern void ANNOT_InitDocumentStructure ( Document doc,
                                           Document docAnnot,
                                           AnnotMeta *annot,
@@ -62,8 +63,9 @@ extern void ANNOT_ToggleThread (/* Document thread_doc,
                                    Document annot_doc,
                                    ThotBool turnOn */);
 extern Document ANNOT_GetThreadDoc (/* Document thread_doc */);
-extern void ANNOT_UpdateThread (/* Document doc,
-                                   AnnotMeta *annot */);
+extern void ANNOT_UpdateThreadItem (/* Document doc,
+                                       AnnotMeta *annot,
+                                       char *body_url */);
 extern void ANNOT_InitDocumentStructure (/* Document doc,
                                             Document docAnnot,
                                             AnnotMeta *annot,

@@ -131,6 +131,87 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 }
 
 /*-----------------------------------------------------------------------
+   LINK_UpdateAnnotationIndexFile
+   old_source_url and new_source_url must be complete URLs.
+   -----------------------------------------------------------------------*/
+void LINK_UpdateAnnotationIndexFile (char *old_source_url, char *new_source_url)
+{
+  char *annot_dir;
+  char *annot_main_index;
+  char *annot_main_index_file;
+  char *annot_new_main_index_file;
+  char url[MAX_LENGTH];
+  char index_file[MAX_LENGTH];
+  char buffer[MAX_LENGTH];
+  char *tmp_url;
+  char *tmp_index_file;
+  FILE *fp_old, *fp_new;
+  ThotBool move;
+
+  annot_dir = GetAnnotDir ();
+  annot_main_index = GetAnnotMainIndex ();
+  annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
+					+ strlen (annot_main_index) 
+					+ 10);
+  sprintf (annot_main_index_file, "%s%c%s", 
+	    annot_dir, 
+	    DIR_SEP,  
+	    annot_main_index);
+  annot_new_main_index_file = TtaGetMemory (strlen (annot_dir) 
+					    + strlen (annot_main_index) 
+					    + 11);
+  sprintf (annot_new_main_index_file, "%s%ct%s", 
+	    annot_dir, 
+	    DIR_SEP,  
+	    annot_main_index);
+
+  move = FALSE;
+  if (TtaFileExist (annot_main_index_file))
+    {
+      if ((fp_old = fopen (annot_main_index_file, "r")))
+	{
+	  if ((fp_new = fopen (annot_new_main_index_file, "w")))
+	    {
+	      while (fgets (buffer, MAX_LENGTH, fp_old))
+		{
+		  sscanf (buffer, "%s %s\n", url, index_file);
+		  /* convert local URLs into file: ones */
+		  if (!IsFilePath (url) && !IsW3Path (url))
+		    tmp_url = LocalToWWW (url);
+		  else
+		    tmp_url = url;
+		  if (!IsFilePath (index_file) && !IsW3Path (index_file))
+		    tmp_index_file = LocalToWWW (index_file);
+		  else
+		    tmp_index_file = index_file;
+		  if (!strcasecmp (old_source_url, tmp_url))
+		    fprintf (fp_new, "%s %s\n", new_source_url, tmp_index_file);
+		  else
+		    fprintf (fp_new, "%s %s\n", tmp_url, tmp_index_file);
+		  if (tmp_url != url)
+		    TtaFreeMemory (tmp_url);
+		  if (tmp_index_file != index_file)
+		    TtaFreeMemory (tmp_index_file);
+		}
+	      fclose (fp_new);
+	      move = TRUE;
+	    }
+	  fclose (fp_old);
+	}
+      TtaFreeMemory (index_file);
+    }
+  
+  if (move)
+    {
+      TtaFileCopy (annot_new_main_index_file, annot_main_index_file);
+      TtaFileUnlink (annot_new_main_index_file);
+    }
+
+  TtaFreeMemory (annot_main_index_file);
+  TtaFreeMemory (annot_new_main_index_file);
+}
+
+/*-----------------------------------------------------------------------
   AddAnnotationIndexFile 
   adds a new entry to the main annot index file
   -----------------------------------------------------------------------*/
@@ -183,7 +264,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   Element el;
   char s[MAX_LENGTH];
   char *iconName;
-  RDFStatementP iconS = (RDFStatementP)NULL;
+  RDFStatementP iconS = (RDFStatementP) NULL;
 
   el = TtaGetFirstChild (anchor);
   
@@ -192,10 +273,9 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 					   USESICON_PROPNAME,
 					   TRUE);
 
-  if (annot->type) {
+  if (annot->type)
     iconS = ANNOT_FindRDFStatement (annot->type->statements, PROP_usesIcon);
-  }
-
+  
   if (iconS)
     iconName = iconS->object->name;
   else
@@ -544,6 +624,21 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 }
 
 /*-----------------------------------------------------------------------
+   LINK_UpdateLink
+   Updates the local index reference of an annotation that was posted
+   but that still has local annotations attached to it.
+  -----------------------------------------------------------------------*/
+void LINK_UpdateLink (Document source_doc, ThotBool isReplyTo)
+{
+  char   *indexName, *doc_url;
+  List   *annot_list = NULL;
+  
+  annot_list = AnnotMetaData[source_doc].annotations;  
+  doc_url = DocumentURLs[source_doc];
+  indexName = LINK_GetAnnotationIndexFile (doc_url);
+}
+
+/*-----------------------------------------------------------------------
    LINK_DeleteLink
    For a given source doc, deletes the index entry from the main index and
    removes the documents index file.
@@ -556,6 +651,7 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
   char *main_index;
   char *main_index_file_old;
   char *main_index_file_new;
+  char *source_doc_url;
   int len;
   int error;
   FILE *fp_old = NULL;
@@ -603,16 +699,26 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 
   if (!error)
     {
+      if (IsW3Path (DocumentURLs[source_doc])
+	  || IsFilePath (DocumentURLs[source_doc]))
+	source_doc_url = DocumentURLs[source_doc];
+      else
+	source_doc_url = ANNOT_MakeFileURL (DocumentURLs[source_doc]);
+		    
+		    
       /* search and remove the index entry */
       len = strlen (DocumentURLs[source_doc]);
       while (fgets (buffer, sizeof (buffer), fp_old))
 	{
-	  if (strncmp (DocumentURLs[source_doc], buffer, len))
+	  if (strncmp (source_doc_url, buffer, len))
 	    fputs (buffer, fp_new);
 	}
       fclose (fp_new);
       fclose (fp_old);
       
+      if (source_doc_url != DocumentURLs[source_doc])
+	TtaFreeMemory (source_doc_url);
+
       /* rename the main index file */
       TtaFileUnlink (main_index_file_old);
       rename (main_index_file_new, main_index_file_old);
@@ -632,31 +738,41 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
 {
   AnnotMeta   *annot;
   char      *annot_user;
-  
+  char      *source_doc_url; /* the url we will use to refer to the source doc */
+
   /*
   **  Make a new annotation entry, add it to annotlist, and initialize it.
   */
-  annot =  AnnotMeta_new ();
+
+#ifdef ANNOT_ON_ANNOT
+  if (DocumentTypes[source_doc] == docAnnot && AnnotMetaData[source_doc].annot_url)
+    source_doc_url = AnnotMetaData[source_doc].annot_url;
+  else
+#endif /* ANNOT_ON_ANNOT */
+    source_doc_url = DocumentURLs[source_doc];
+
+
+  /* download the local annotations, if they do exist, but mark them
+     invisible */
   if (!IsW3Path (DocumentURLs[annot_doc]) && 
       (!AnnotMetaData[source_doc].annotations 
        && !AnnotMetaData[source_doc].local_annot_loaded))
     {
       char *annotIndex;
 
-      /* download the local annotations, if they do exist, but mark them
-	 invisible */
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
       LINK_LoadAnnotationIndex (source_doc, annotIndex, FALSE);
       TtaFreeMemory (annotIndex);
       AnnotMetaData[source_doc].local_annot_loaded = TRUE;
     }
 
-  if (IsW3Path (DocumentURLs[source_doc])
-      || IsFilePath(DocumentURLs[source_doc]))
-    annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
+  annot =  AnnotMeta_new ();
+  if (IsW3Path (source_doc_url)
+      || IsFilePath(source_doc_url))
+    annot->source_url = TtaStrdup (source_doc_url);
   else
     {
-      annot->source_url = ANNOT_MakeFileURL (DocumentURLs[source_doc]);
+      annot->source_url = ANNOT_MakeFileURL (source_doc_url);
     }
   
   /* get the current date... cdate = mdate at this stage */
@@ -691,18 +807,24 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
   LINK_CreateAName (annot);
 
 #ifdef ANNOT_ON_ANNOT
+  /* initialize the annot_url we will use to reference this annotation*/
+  AnnotMetaData[annot_doc].annot_url = TtaStrdup (annot->body_url);
+
   if (mode & ANNOT_isReplyTo)
     {
+      char *source_annot_url;
+
+      source_annot_url = AnnotMetaData[source_doc].annot_url;
       /* initialize the thread info */
       if (!AnnotMetaData[source_doc].thread)
 	{
 	  AnnotMetaData[source_doc].thread = &AnnotThread[source_doc];
-	  AnnotThread[source_doc].rootOfThread = TtaStrdup (annot->source_url);
+	  AnnotThread[source_doc].rootOfThread = TtaStrdup (source_annot_url);
 	}
       AnnotMetaData[annot_doc].thread = AnnotMetaData[source_doc].thread;
       annot->thread = AnnotMetaData[source_doc].thread;
       AnnotMetaData[source_doc].thread->references++;
-      annot->inReplyTo = TtaStrdup (annot->source_url);
+      annot->inReplyTo = TtaStrdup (source_annot_url);
       /* maybe useless */
       annot->rootOfThread = TtaStrdup (AnnotMetaData[source_doc].thread->rootOfThread);
       /* and add the annotation to the list of threads */
@@ -738,6 +860,12 @@ void LINK_DelMetaFromMemory (Document doc)
   /* we no longer need this part of the RDF model; it holds only
      for the annotations of this document */
   SCHEMA_FreeRDFModel (&AnnotMetaData[doc].rdf_model);
+
+  if (AnnotMetaData[doc].annot_url)
+    {
+      TtaFreeMemory (AnnotMetaData[doc].annot_url);
+      AnnotMetaData[doc].annot_url = NULL;
+    }
 
 #ifdef ANNOT_ON_ANNOT 
   /* @@ JK: maybe remove the references too */
@@ -852,7 +980,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 		thread = &AnnotThread[doc_thread];
 
 	      /* there was no thread. Create a new one if it's the same rootOfThread document */
-	      if (!thread && Annot_isSameURL (DocumentURLs[doc], annot->rootOfThread))
+	      if (!thread && Annot_isSameURL (AnnotMetaData[doc].annot_url, annot->rootOfThread))
 		{
 		  /* add the root of thread (used by load index later on) */
 		  AnnotThread[doc].rootOfThread = 

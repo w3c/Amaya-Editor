@@ -626,13 +626,14 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
 	  break;
 
 #if 0 /* This case is no longer necessary given FixFileURL() */
+#endif
+
 	case AM_BODY_FILE:
 	  if (annot->body_url && IsFilePath (annot->body_url))
 	    ptr = annot->body_url + sizeof ("file://") - 1;
 	  else
 	    ptr = annot->body_url;
 	  break;
-#endif
 
 	case AM_ANAME:
 	  ptr = annot->name;
@@ -648,6 +649,65 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
     }
 
   return (found) ? annot : NULL;
+}
+
+/*------------------------------------------------------------
+   AnnotList_searchAnnotBodyURL
+   Returns the URL of annot body that corresponds to annot_url
+   or NULL if it doesn't exist
+   ------------------------------------------------------------*/
+char *AnnotList_searchAnnotBodyURL (Document source_doc, char *annot_url)
+{
+  AnnotMeta *annot;
+
+  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				 annot_url,
+				 AM_ANNOT_URL);
+#ifdef ANNOT_ON_ANNOT
+  if (!annot && AnnotThread[source_doc].annotations)
+    annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
+				   annot_url,
+				   AM_ANNOT_URL);
+#endif /* ANNOT_ON_ANNOT */
+
+  if (annot && annot->body_url)
+    return annot->body_url;
+  else
+    return NULL;
+}
+
+/*------------------------------------------------------------
+   AnnotList_searchAnnotBodyURL
+   Returns the URL of annot that corresponds to annot_url
+   or NULL if it doesn't exist
+   ------------------------------------------------------------*/
+char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
+{
+  AnnotMeta *annot;
+  char *ptr;
+
+  if (!IsW3Path (body_url) && !IsFilePath (body_url))
+    ptr = ANNOT_MakeFileURL (body_url);
+  else
+    ptr = body_url;
+
+  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				 ptr,
+				 AM_BODY_URL);
+#ifdef ANNOT_ON_ANNOT
+  if (!annot && AnnotThread[source_doc].annotations)
+    annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
+				   ptr,
+				   AM_BODY_URL);
+#endif /* ANNOT_ON_ANNOT */
+
+  if (ptr != body_url)
+    TtaFreeMemory (ptr);
+
+  if (annot && annot->annot_url)
+    return annot->annot_url;
+  else
+    return NULL;
 }
 
 /*------------------------------------------------------------
@@ -716,7 +776,7 @@ Document AnnotThread_searchRoot (char *root)
 #ifdef ANNOT_ON_ANNOT
   int i;
 
-  for (i = 0; i < DocumentTableLength; i++)
+  for (i = 1; i < DocumentTableLength; i++)
     {
       if (!AnnotThread[i].rootOfThread)
 	continue;
@@ -758,6 +818,93 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
   return (i == DocumentTableLength) ? 0 : i;
 #else
   return 0;
+#endif /* ANNOT_ON_ANNOT */
+}
+
+/*------------------------------------------------------------
+   AnnotThread_sortThreadList
+   Sorts the thread list pointed by annotlist by InReplyTos.
+   ------------------------------------------------------------*/
+void AnnotThread_sortThreadList (List **thread_list)
+{
+#ifdef ANNOT_ON_ANNOT
+  char *rootOfThread;
+  char *annot_next_url;
+  ThotBool swap;
+  List *annot_list, *list_cur, *list_next, *list_tmp;
+
+  AnnotMeta *annot_cur, *annot_next;
+
+  annot_list = *thread_list;
+
+  if (!annot_list)
+    return;
+
+  /* sort of bubble sort on InReplyTo. Top = rootOfThread */
+  
+  list_cur = annot_list;
+  annot_cur = (AnnotMeta *) list_cur->object;
+  if (!annot_cur || !annot_cur->rootOfThread)
+    return;
+  rootOfThread = annot_cur->rootOfThread;
+
+  while (list_cur)
+    {
+      annot_cur = (AnnotMeta *) list_cur->object;
+      if (!strcasecmp (annot_cur->inReplyTo, rootOfThread))
+	{
+	  /* sorted, we skip it */
+	  list_cur = list_cur->next;
+	  continue;;
+	}
+
+      list_next = list_cur->next;
+      if (!list_next)
+	/* we have finished */
+	break;
+
+      swap = FALSE;
+      while (list_next)
+	{
+	  annot_next = (AnnotMeta *) list_next->object;
+	  if (IsFilePath (annot_next->annot_url))
+	    annot_next_url = annot_next->body_url;
+	  else
+	    annot_next_url = annot_next->annot_url;
+	  if (!strcasecmp (annot_next_url, annot_cur->inReplyTo))
+	    {
+	      /* swap */
+
+	      /* previous */
+	      if (list_cur == annot_list)
+		annot_list = list_cur->next;
+	      else
+		{
+		  list_tmp = annot_list;
+		  while (list_tmp->next != list_cur)
+		    list_tmp = list_tmp->next;
+		  list_tmp->next = list_cur->next;
+		}
+	      /* insert it after in-reply-to */
+	      list_cur->next = list_next->next;
+	      list_next->next = list_cur;
+
+	      /* and start again */
+	      list_cur = annot_list;
+	      swap = TRUE;
+	      break;
+	    }
+	  list_next = list_next->next;
+	}
+
+      if (!swap)
+	/* either there was no reply-to parent or the element
+	   was already in place. We leave it there for the moment. */
+	list_cur = list_cur->next;
+    }
+
+  if (*thread_list != annot_list)
+    *thread_list = annot_list;
 #endif /* ANNOT_ON_ANNOT */
 }
 
@@ -963,7 +1110,7 @@ void AnnotList_print (List *annot_list)
 }
 
 /* ------------------------------------------------------------
-   AnnotList_dumpCommonMeta
+   Annot_dumpCommonMeta
    Dumps the common metatada for both local and remote annotations
    to the file pointed by fp.
    ------------------------------------------------------------*/
@@ -987,9 +1134,13 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 	     "<r:type resource=\"%s\" />\n",
 	     annot->type->name);
   
-  fprintf (fp, 
-	   "<a:annotates r:resource=\"%s\" />\n",
-	   annot->source_url);
+#ifdef ANNOT_ON_ANNOT
+  /* replies don't have the annotates property */
+  if (!annot->inReplyTo)
+#endif /* ANNOT_ON_ANNOT */
+    fprintf (fp, 
+	     "<a:annotates r:resource=\"%s\" />\n",
+	     annot->source_url);
   
   /* @@ JK: Removed because we're now using xptr */
 #if 0
@@ -1181,8 +1332,6 @@ char * ANNOT_PreparePostBody (Document doc)
 	   "xmlns:http=\"" HTTP_NS "\"\n"
 	   "xmlns:d=\"" DC_NS "\">\n",
 	   ANNOT_NS);
-
-  Annot_dumpCommonMeta (annot, fp);
 
   /* beginning of the annotation's  metadata  */
   fprintf (fp, "<r:Description>\n");
@@ -1852,6 +2001,29 @@ char * LocalToWWW (char *url)
   /* if the URL doesn't have a path, return */
   if (!url || (url[0] != DIR_SEP && url[1] != ':'))
     return NULL;
+
+  tmp = HTLocalToWWW (url, "file://");
+  return (tmp);
+}
+
+/*-----------------------------------------------------------------------
+  TestLocalToWWW
+  If the string that's given in input is a local URL, it
+  converts it into a file: one. Caller has to free the
+  returned string.
+  If the string is already a file: or other kind of URL, it
+  returns the same string.
+  -----------------------------------------------------------------------*/
+char * TestLocalToWWW (char *url)
+{
+  char *tmp;
+
+  /* if the URL doesn't have a path, return */
+  if (!url || (url[0] != DIR_SEP && url[1] != ':'))
+    return url;
+
+  if (IsFilePath (url) || IsW3Path (url))
+    return url;
 
   tmp = HTLocalToWWW (url, "file://");
   return (tmp);

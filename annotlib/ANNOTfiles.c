@@ -201,7 +201,22 @@ void ANNOT_LoadAnnotation (Document doc, Document docAnnot)
      we copy it from the existing metadata */
   annot = GetMetaData (doc, docAnnot);
   if (annot)
-    ANNOT_InitDocumentStructure (doc, docAnnot, annot, ANNOT_initNone);
+    {
+      ANNOT_InitDocumentStructure (doc, docAnnot, annot, ANNOT_initNone);
+      /* save the annot_url to which we should reply (or annotate)
+	 this annotation */
+      if (AnnotMetaData[docAnnot].annot_url)
+	TtaFreeMemory (AnnotMetaData[docAnnot].annot_url);
+      /* Locally stored annotations have a parser generated URI, that
+	 changes each time they are parsed. We use the body URL instead
+	 to reply to them.
+	 Remote annotations have a correct url, so we use it. When
+         pubishing an annotation, we'll do the necessary changes */
+      if (annot->annot_url && IsW3Path (annot->annot_url))
+	AnnotMetaData[docAnnot].annot_url = TtaStrdup (annot->annot_url);
+      else
+	AnnotMetaData[docAnnot].annot_url = TtaStrdup (annot->body_url);
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -222,6 +237,11 @@ void ANNOT_ReloadAnnotMeta (Document annotDoc)
      this annotation, as it is a reload */
   ANNOT_FreeDocumentResource (annotDoc);
   /* initialize the meta data */
+  if (IsW3Path (annot->annot_url))
+    AnnotMetaData[annotDoc].annot_url = annot->annot_url;
+  else
+    AnnotMetaData[annotDoc].annot_url = annot->body_url;
+
   ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, ANNOT_initNone);
 }
 
@@ -497,6 +517,8 @@ static Element ANNOT_ThreadItem_new (Document doc)
 /*-----------------------------------------------------------------------
   ANNOT_ThreadItem_init
   Inits a thread item default fields.
+  If useSource == TRUE, we're initializing the thread, so the first
+  item points to the root of thread.
   -----------------------------------------------------------------------*/
 static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta *annot_doc, ThotBool useSource)
 {
@@ -504,12 +526,18 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
-  char               *href;
   char               *tmp;
   AnnotMeta          *annot;
 
-  attrType.AttrSSchema = elType.ElSSchema = TtaGetSSchema ("Annot", doc);
+  if (useSource)
+    annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+  else
+    annot = annot_doc;
+  
+  if (!annot)
+    tmp = NULL;
 
+  attrType.AttrSSchema = elType.ElSSchema = TtaGetSSchema ("Annot", doc);
   /*
   **  initialize the reverse link 
   */
@@ -520,19 +548,22 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
     TtaRemoveAttribute (thread_item, attr, doc);
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (thread_item, attr, doc);
-  tmp = (useSource) ? annot_doc->source_url : annot_doc->body_url,
-  href = TtaGetMemory (strlen (tmp) + 20);
-  sprintf (href, "%s", tmp);
-  TtaSetAttributeText (attr, href, thread_item, doc);
-  TtaFreeMemory (href);
+  TtaSetAttributeText (attr, annot->body_url, thread_item, doc);
 
-  if (useSource)
-    annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+  /* initialize the Annot_HREF_. This attribute helps
+     sort the thread items in conjunction with the inreplyto URL */
+  attrType.AttrTypeNum = Annot_ATTR_Annot_HREF_;
+  /* remove the previous reverse link if it exists already */
+  attr = TtaGetAttribute (thread_item, attrType);
+  if (attr)
+    TtaRemoveAttribute (thread_item, attr, doc);
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (thread_item, attr, doc);
+  if (annot->annot_url && !IsFilePath (annot->annot_url))
+    tmp = annot->annot_url;
   else
-    annot = annot_doc;
-
-  if (!annot)
-    tmp = NULL;
+    tmp = annot->body_url;
+  TtaSetAttributeText (attr, tmp, thread_item, doc);
 
   /* put the type of the annotation */
   elType.ElTypeNum = Annot_EL_TI_Type;
@@ -601,7 +632,7 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
 {
 #ifdef ANNOT_ON_ANNOT
   ElementType    elType;
-  Element        root, thread_item, el;
+  Element        root, thread_item, el, rootOfThread;
   Attribute      attr;
   AttributeType  attrType;
   char          *url;
@@ -614,7 +645,7 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   el = TtaSearchTypedElement (elType, SearchInTree, root);
 
   if (el)
-    root = el;
+    rootOfThread = el;
   else
     {
       /* create the thread element */
@@ -623,24 +654,25 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
       if (!el)
 	return NULL; /* couldn't find a body! */
       elType.ElTypeNum = Annot_EL_Thread;
-      root =  TtaNewTree (doc, elType, "");
+      rootOfThread =  TtaNewTree (doc, elType, "");
       /* insert the thread */
-      TtaInsertSibling (root, el, FALSE, doc);
+      TtaInsertSibling (rootOfThread, el, FALSE, doc);
       /* and initialize the root of the thread */
-      el = TtaGetFirstChild (root);
+      el = TtaGetFirstChild (rootOfThread);
       ANNOT_ThreadItem_init (el, doc,  annot, TRUE);
     }
 
   /* try to find where to insert the element */
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  attrType.AttrTypeNum = Annot_ATTR_Annot_HREF_;
+  root = rootOfThread;
   TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
   while (el)
     {
       i = TtaGetTextAttributeLength (attr) + 1;
       url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      if (!strcasecmp (url, annot->source_url))
+      if (!strcasecmp (url, annot->inReplyTo))
 	{
 	  TtaFreeMemory (url);
 	  break;
@@ -649,11 +681,13 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
       root = el;
       TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
     }
-  root = el;
   
-  if (!root)
-    /* we can't insert a reply to nothing! */
-    return NULL;
+  if (el)
+    root = el;
+  else
+    /* we didn't find the ReplyTo, so we insert it as a child of the root 
+     @@ and maybe add an attribute (unknown thread... ) */
+    root = TtaGetFirstChild (rootOfThread);
       
   /* find the container and insert it */
   el = TtaGetLastChild (root);
@@ -716,17 +750,18 @@ void ANNOT_DeleteThread (Document thread_doc)
 void ANNOT_BuildThread (Document thread_doc)
 {
 #ifdef ANNOT_ON_ANNOT
-  List *annot_ptr;
+  List *annot_list;
   AnnotMeta *annot;
 
-  annot_ptr = AnnotThread[thread_doc].annotations;
+  annot_list = AnnotThread[thread_doc].annotations;
+  /* sort the thread */
+  AnnotThread_sortThreadList (&annot_list);
   /* erase previous thread */
-  
-  while (annot_ptr)
+  while (annot_list)
     {
-      annot = (AnnotMeta *) annot_ptr->object;
+      annot = (AnnotMeta *) annot_list->object;
       ANNOT_AddThreadItem (thread_doc, annot);
-      annot_ptr = annot_ptr->next;
+      annot_list = annot_list->next;
     }
 #endif /* ANNOT_ON_ANNOT */
 }
@@ -811,6 +846,8 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
   doc_annot = 0;
   /* we find the the Thread element and make it our root */
   root = TtaGetRootElement (thread_doc);
+  if (!root)
+    return 0;
   elType = TtaGetElementType (root);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Annot_ATTR_Selected_;
@@ -847,10 +884,12 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
 }
 
 /*-----------------------------------------------------------------------
-  ANNOT_UpdateThread
+  ANNOT_UpdateThreadItem
   Updates the metadata of a thread item.
+  @@ If we published the roof ot the thread, update all references
+  to this item.
   -----------------------------------------------------------------------*/
-void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
+void ANNOT_UpdateThreadItem (Document doc, AnnotMeta *annot, char *body_url)
 {
 #ifdef ANNOT_ON_ANNOT
   Document       thread_doc;
@@ -883,7 +922,7 @@ void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
       i = TtaGetTextAttributeLength (attr) + 1;
       url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      if (!strcasecmp (url, annot->body_url))
+      if (!strcasecmp (url, body_url))
 	{
 	  TtaFreeMemory (url);
 	  break;
@@ -922,7 +961,6 @@ void ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
 
   if (mode & ANNOT_initATitle)
     {
-      annot->title = TtaStrdup (source_doc_title);
       if (mode & ANNOT_isReplyTo)
 	text = "Reply to ";
       else
@@ -1165,9 +1203,15 @@ void ANNOT_PrepareAnnotView (Document document)
     TtaSetItemOff (document, view, Views, BShowLinks);
 
     /* annotations */
+#ifdef ANNOT_ON_ANNOT
+    TtaSetItemOn (document, view, Annotations_, BAnnotateSelection);
+    TtaSetItemOn (document, view, Annotations_, BAnnotateDocument);
+    TtaSetItemOn (document, view, Annotations_, BReplyToAnnotation);
+#else
     TtaSetItemOff (document, view, Annotations_, BAnnotateSelection);
     TtaSetItemOff (document, view, Annotations_, BAnnotateDocument);
     TtaSetItemOff (document, view, Annotations_, BReplyToAnnotation);
+#endif /* ANNOT_ON_ANNOT */
 
 #if 0
     TtaAddTextZone (document, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,

@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern char *LINK_GetAnnotationIndexFile ( char *source_url );
+extern void LINK_UpdateAnnotationIndexFile ( char *old_source_url,
+                                             char *new_source_url );
 extern void LINK_AddAnnotIcon ( Document source_doc,
                                 Element anchor,
                                 AnnotMeta *annot );
@@ -16,6 +18,8 @@ extern void LINK_RemoveLinkFromSource ( Document source_doc,
                                         Element el );
 extern void LINK_SaveLink ( Document source_doc,
                             ThotBool isReplyTo );
+extern void LINK_UpdateLink ( Document source_doc,
+                              ThotBool isReplyTo );
 extern void LINK_DeleteLink ( Document source_doc,
                               ThotBool isReplyTo );
 extern AnnotMeta *LINK_CreateMeta ( Document source_doc,
@@ -32,6 +36,8 @@ extern Element LINK_SelectSourceDoc ( Document doc,
 #else /* __STDC__ */
 
 extern char *LINK_GetAnnotationIndexFile (/* char *source_url */);
+extern void LINK_UpdateAnnotationIndexFile (/* char *old_source_url,
+                                               char *new_source_url */);
 extern void LINK_AddAnnotIcon (/* Document source_doc,
                                   Element anchor,
                                   AnnotMeta *annot */);
@@ -41,6 +47,8 @@ extern void LINK_RemoveLinkFromSource (/* Document source_doc,
                                           Element el */);
 extern void LINK_SaveLink (/* Document source_doc,
                               ThotBool isReplyTo */);
+extern void LINK_UpdateLink (/* Document source_doc,
+                                ThotBool isReplyTo */);
 extern void LINK_DeleteLink (/* Document source_doc,
                                 ThotBool isReplyTo */);
 extern AnnotMeta *LINK_CreateMeta (/* Document source_doc,

@@ -151,6 +151,8 @@ typedef struct _AnnotMetaDataList {
   /* the threads */
   AnnotThreadList *thread;
 #endif /*ANNOT_ON_ANNOT */
+  /* the URL of the annotation metadata */
+  char *annot_url; 
   /* filter information */
   List *authors;
   List *types;

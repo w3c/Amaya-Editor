@@ -46,11 +46,16 @@ extern List *AnnotList_search ( List *list,
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
                                           char *url,
                                           AnnotMetaDataSearch searchType );
+extern char *AnnotList_searchAnnotBodyURL ( Document source_doc,
+                                            char *annot_url );
+extern char *AnnotList_searchAnnotURL ( Document source_doc,
+                                        char *body_url );
 extern ThotBool AnnotList_delAnnot ( List **list,
                                      char *url,
                                      ThotBool useAnnotUrl );
 extern Document AnnotThread_searchRoot ( char *root );
 extern Document AnnotThread_searchThreadDoc ( char *annot_url );
+extern void AnnotThread_sortThreadList ( List **thread_list );
 extern ThotBool Annot_isSameURL ( char *url1,
                                   char *url2 );
 extern ThotBool AnnotThread_link2ThreadDoc ( Document doc );
@@ -93,6 +98,7 @@ extern Element ANNOT_GetHTMLRoot ( Document doc,
 extern void ANNOT_CreateHTMLTree ( Document doc );
 extern void WWWToLocal ( char *url );
 extern char * LocalToWWW ( char *url );
+extern char * TestLocalToWWW ( char *url );
 extern char *FixFileURL ( char *url );
 extern ThotBool Annot_IsReplyTo ( Document doc_annot );
 
@@ -138,11 +144,16 @@ extern List *AnnotList_search (/* List *list,
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
                                             char *url,
                                             AnnotMetaDataSearch searchType */);
+extern char *AnnotList_searchAnnotBodyURL (/* Document source_doc,
+                                              char *annot_url */);
+extern char *AnnotList_searchAnnotURL (/* Document source_doc,
+                                          char *body_url */);
 extern ThotBool AnnotList_delAnnot (/* List **list,
                                        char *url,
                                        ThotBool useAnnotUrl */);
 extern Document AnnotThread_searchRoot (/* char *root */);
 extern Document AnnotThread_searchThreadDoc (/* char *annot_url */);
+extern void AnnotThread_sortThreadList (/* List **thread_list */);
 extern ThotBool Annot_isSameURL (/* char *url1,
                                     char *url2 */);
 extern ThotBool AnnotThread_link2ThreadDoc (/* Document doc */);
@@ -185,6 +196,7 @@ extern Element ANNOT_GetHTMLRoot (/* Document doc,
 extern void ANNOT_CreateHTMLTree (/* Document doc */);
 extern void WWWToLocal (/* char *url */);
 extern char * LocalToWWW (/* char *url */);
+extern char * TestLocalToWWW (/* char *url */);
 extern char *FixFileURL (/* char *url */);
 extern ThotBool Annot_IsReplyTo (/* Document doc_annot */);
 

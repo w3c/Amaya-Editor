@@ -183,7 +183,7 @@ char *GetAnnotDir (void)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure GetAnnotDir
+   Procedure CopyAnnotServers
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
@@ -216,6 +216,7 @@ List *CopyAnnotServers (char *server_list)
   TtaFreeMemory (scratch);
   return me;
 }
+
 /*-----------------------------------------------------------------------
    CopyAlgaeTemplateURL
    Prepares a query URL using the algae text template. Any %u will be
@@ -436,13 +437,19 @@ void ANNOT_FreeDocumentResource (Document doc)
       int source_doc;
       AnnotMeta *annot;
       Element annotEl;
-      char *body_url = FixFileURL (DocumentURLs[doc]);
+      char *body_url;
       
       source_doc = DocumentMeta[doc]->source_doc;
+      if (!IsW3Path(body_url))
+	body_url = FixFileURL (DocumentURLs[doc]);
+      else
+	body_url = DocumentURLs[doc];
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     body_url,
 				     AM_BODY_URL);
-      TtaFreeMemory (body_url);
+      if (body_url != DocumentURLs[doc])
+	TtaFreeMemory (body_url);
+
       if (annot)
 	{
 	  annotEl = SearchAnnotation (source_doc, annot->name);
@@ -491,20 +498,26 @@ void RemoteLoad_callback (int doc, int status,
       the source document hasn't disappeared in the meantime */
    if (status == HT_OK
        && DocumentURLs[source_doc] 
-       && !strcmp (DocumentURLs[source_doc], source_doc_url))
+       && ( Annot_isSameURL (DocumentURLs[source_doc], source_doc_url)
+	   || (AnnotMetaData[source_doc].annot_url 
+	       &&  Annot_isSameURL (AnnotMetaData[source_doc].annot_url, source_doc_url))))
      {
        LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
        /* clear the status line if there was no error*/
-       TtaSetStatus (doc, 1,  "", NULL);
+       TtaSetStatus (doc, 1,  "Done!", NULL);
      }
    else
      {
        char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
-	 TtaSetStatus (doc, 1, "Failed to load the annotation index: %s", ptr);
+	 {
+	   char buffer[MAX_LENGTH];
+	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE), ptr);
+	   TtaSetStatus (doc, 1, buffer, NULL);
+	 }
        else
-	 TtaSetStatus (doc, 1, "Failed to load the annotation index", NULL);
+	 TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE), NULL);
      }
    
    TtaFreeMemory (source_doc_url);
@@ -522,6 +535,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   char *annotIndex;
   char *annotURL;
   char *tmp_url;
+  char *doc_url;
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
@@ -549,6 +563,14 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
    * Parsing test!
   */
 
+#ifdef ANNOT_ON_ANNOT
+  if (DocumentTypes[doc] == docAnnot)
+    doc_url = AnnotMetaData[doc].annot_url;
+  else
+#endif /* ANNOT_ON_ANNOT */
+    doc_url = DocumentURLs[doc];
+
+
   /*
    * load the local annotations if there's no annotserver or if
    * annotServers include the localhost
@@ -556,12 +578,12 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   if ((mode & AM_LOAD_LOCAL)
       && (!annotServers || AnnotList_search (annotServers, "localhost")))
     {
-      annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
+      annotIndex = LINK_GetAnnotationIndexFile (doc_url);
       LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
       TtaFreeMemory (annotIndex);
       AnnotMetaData[doc].local_annot_loaded = TRUE;
     }
-
+  
   /* 
    * Query each annotation server for annotations related to this 
    * document
@@ -583,20 +605,32 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
 	  /* store the source document infos */
 	  ctx->source_doc = doc;
-	  ctx->source_doc_url = TtaStrdup (DocumentURLs[doc]);
+	  ctx->source_doc_url = TtaStrdup (doc_url);
 	  /* "compute" the url we're looking up in the annotation server */
-	  if (!IsW3Path (DocumentURLs[doc]) &&
-	      !IsFilePath (DocumentURLs[doc]))
-	    tmp_url = LocalToWWW (DocumentURLs[doc]);
+	  if (!IsW3Path (doc_url) &&
+	      !IsFilePath (doc_url))
+	    tmp_url = LocalToWWW (doc_url);
 	  else
-	    tmp_url = DocumentURLs[doc];
+	    tmp_url = doc_url;
 	  if (!annotCustomQuery || !annotAlgaeText || 
 	      annotAlgaeText[0] == EOS)
 	    {
-	      annotURL = TtaGetMemory (strlen (tmp_url)
-				       + sizeof ("w3c_annotates=")
-				       + 50);
-	      sprintf (annotURL, "w3c_annotates=%s", tmp_url);
+#ifdef ANNOT_ON_ANNOT
+	      if (DocumentTypes[doc] == docAnnot)
+		{
+		  annotURL = TtaGetMemory (2 * strlen (tmp_url)
+					   + sizeof ("w3c_annotates=&w3c_replyTree=")
+					   + 50);
+		  sprintf (annotURL, "w3c_annotates=%s&w3c_replyTree=%s", tmp_url, tmp_url);
+		}
+	      else
+#endif /* ANNOT_ON_ANNOT */
+		{
+		  annotURL = TtaGetMemory (strlen (tmp_url)
+					   + sizeof ("w3c_annotates=")
+					   + 50);
+		  sprintf (annotURL, "w3c_annotates=%s", tmp_url);
+		}
 	    }
 	  else
 	    /* substitute the %u for DocumentURLs[doc] and go for it! */
@@ -604,7 +638,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	       the exact size */
 	    CopyAlgaeTemplateURL (&annotURL, tmp_url);
 
-	  if (tmp_url != DocumentURLs[doc])
+	  if (tmp_url != doc_url)
 	    TtaFreeMemory (tmp_url);
 
 	  if (IsFilePath (annotURL))
@@ -715,15 +749,15 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
 	 && !IsW3Path (DocumentURLs[doc])
 	 && !TtaFileExist (DocumentURLs[doc])))
     {
-      InitInfo ("Error",
-		"You cannot annotate a modified document. Please save it first.");
+      InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
+		TtaGetMessage (AMAYA, AM_NO_ANNOT_MOD_DOC));
       return;
     }
 
   if (!annotUser || *annotUser == EOS)
     {
-      InitInfo ("Make a new annotation", 
-		"No annotation user declared. Please open the Annotations/Configure menu.");
+      InitInfo (TtaGetMessage (AMAYA, AM_NEW_ANNOTATION),
+		TtaGetMessage (AMAYA, AM_NO_ANNOT_USER));
       return;
     }
 
@@ -737,8 +771,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   if (!xptr)
     {
       TtaSetStatus (doc, 1,
-		    /*  TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE), */
-		    "Unable to build an XPointer for this annotation",
+		    TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE),
 		    NULL);
       return;
     }
@@ -831,9 +864,12 @@ void ANNOT_Post_callback (int doc, int status,
      document ... */
 
    REMOTELOAD_context *ctx;
-   int source_doc;
+   Document  source_doc;
    /* For saving threads */
    ThotBool isReplyTo;
+   ThotBool update_index_file;
+   char *previous_body_url;
+   char *previous_annot_url;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
@@ -873,12 +909,37 @@ void ANNOT_Post_callback (int doc, int status,
 		   && strcmp (returned_annot->source_url, annot->source_url))
 		 fprintf (stderr, "PostCallback: POST returned an annotation for a different source: %s vs %s\n",
 			  returned_annot->source_url, annot->source_url);
-	       if (returned_annot->annot_url)
+
+	       /* updated the annot_url and  inReplyTo values if they have changed*/
+	       if (returned_annot->annot_url
+		   && (!annot->annot_url || strcasecmp (annot->annot_url, returned_annot->annot_url)))
 		 {
 		   TtaFreeMemory (annot->annot_url);
 		   annot->annot_url = returned_annot->annot_url;
 		   returned_annot->annot_url = NULL;
 		 }
+
+#ifdef ANNOT_ON_ANNOT
+	       if (returned_annot->inReplyTo 
+		   && (!annot->inReplyTo || strcasecmp (annot->inReplyTo, returned_annot->inReplyTo)))
+		 {
+		   TtaFreeMemory (annot->inReplyTo);
+		   annot->inReplyTo = returned_annot->inReplyTo;
+		   returned_annot->inReplyTo = NULL;
+		   /* if we have an inReplyto, we use it instead of
+		      annot_url (annot_url comes from the annotates
+		      property */
+		 }
+#endif /* ANNOT_ON_ANNOT */
+	       /* update the shortcut to annot_url that we use for the
+		  actual operations */
+	       if (annot->annot_url && strcasecmp (annot->annot_url, AnnotMetaData[doc].annot_url))
+		 {
+		   previous_annot_url = AnnotMetaData[doc].annot_url;
+		   AnnotMetaData[doc].annot_url = TtaStrdup (annot->annot_url);
+		 }
+	       else
+		 previous_annot_url = AnnotMetaData[doc].annot_url;
 
 	       /* replace the body only if it changed */
 	       if (returned_annot->body_url
@@ -889,20 +950,55 @@ void ANNOT_Post_callback (int doc, int status,
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
 					    returned_annot->body_url);
 
+		   /*
+		     @@ JK: In principle, nothing's pointing to the body, except for the context.
+		    */
 		   if (IsFilePath (annot->body_url))
 		     {
 		       /* local annot was just made a shared annot;
 			  update the annotation index or delete it
 			  if it's now empty */
-		       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
-			 LINK_SaveLink (source_doc, isReplyTo);
-		       else
-			 LINK_DeleteLink (source_doc, isReplyTo);
-		     }
 
+		       /* erase the reference to the local annotation reference in the local thread */
+		       if (isReplyTo)
+			 {
+			   if (
+#ifdef ANNOT_ON_ANNOT
+			       (isReplyTo 
+				&& AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
+#endif /* ANNOT_ON_ANNOT */
+			       (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0))
+			     LINK_SaveLink (source_doc, isReplyTo);
+			   else
+			     LINK_DeleteLink (source_doc, isReplyTo);
+			 }
+
+#ifdef ANNOT_ON_ANNOT
+		       /* update the index entry if we posted an annotation that has other annotations
+			  glued to it */
+		       /* @@ JK: but we have not yet downloaded the annotations */
+		       update_index_file = FALSE;
+		       if (AnnotMetaData[doc].local_annot_loaded
+			   && AnnotList_localCount (AnnotMetaData[doc].annotations) > 0)
+			 update_index_file = TRUE;
+		       else
+			 {
+			   char *annotIndex;
+			   annotIndex = LINK_GetAnnotationIndexFile (previous_annot_url);
+			   if (annotIndex && strcasecmp (previous_annot_url, AnnotMetaData[doc].annot_url))
+			     update_index_file = TRUE;
+			   if (annotIndex)
+			     TtaFreeMemory (annotIndex);
+			 }
+		       if (update_index_file)
+			 LINK_UpdateAnnotationIndexFile (previous_annot_url,  AnnotMetaData[doc].annot_url);
+		       /* update the threads that follow this annotation */
+		     }
+#endif /* ANNOT_ON_ANNOT */
+		   
 		   /* update the annotation body_url */
 		   /* TtaFileUnlink (annot->body_url); */
-		   TtaFreeMemory (annot->body_url);
+		   previous_body_url = annot->body_url;
 		   /* update the metadata of the annotation */
 		   annot->body_url = returned_annot->body_url;
 		   returned_annot->body_url = NULL;
@@ -910,7 +1006,15 @@ void ANNOT_Post_callback (int doc, int status,
 		      body too */
 		   TtaFreeMemory (DocumentURLs[doc]);
 		   DocumentURLs[doc] = TtaStrdup (annot->body_url);
+#ifdef ANNOT_ON_ANNOT
+		   /* update the item in the thread list to point to the new body */
+		   ANNOT_UpdateThreadItem (doc, annot,previous_body_url);
+#endif /* ANNOT_ON_ANNOT */
+		   TtaFreeMemory (previous_body_url);
 		 }
+
+	       if (previous_annot_url != AnnotMetaData[doc].annot_url)
+		 TtaFreeMemory (previous_annot_url);
 
 	       if (listP->next)
 		 fprintf (stderr, "PostCallback: POST returned more than one annotation\n");
@@ -931,9 +1035,13 @@ void ANNOT_Post_callback (int doc, int status,
        char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
-	 TtaSetStatus (doc, 1, "Failed to post the annotation: %s", ptr);
+	 {
+	   char buffer[MAX_LENGTH];
+	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE), ptr);
+	   TtaSetStatus (doc, 1, buffer, NULL);
+	 }
        else
-	 TtaSetStatus (doc, 1, "Failed to post the annotation", NULL);
+	 TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE), NULL);
      }
 
    /* erase the rdf container */
@@ -1001,6 +1109,12 @@ void ANNOT_Post (Document doc, View view)
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     DocumentURLs[doc], AM_BODY_URL);
 
+#ifdef ANNOT__ON_ANNOT
+      if (!annot && AnnotMetaData[source_doc].thread)
+	annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].thread->annotations,
+				       annot_url, AM_BODY_URL);
+#endif /* ANNOT_ANNOT */
+      
       if (!annot)
 	/* @@ JK: give some error message, free the ctx */
 	return;
@@ -1043,7 +1157,7 @@ void ANNOT_Post (Document doc, View view)
   /* @@ JK: here we should delete the context or call the callback in case of
      error */
   if (res)
-    TtaSetStatus (doc, 1, "Failed to post the annotation", NULL);
+    TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE), NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1176,7 +1290,7 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
 }
 
 /*-----------------------------------------------------------------------
-  Annot_Raisesourcedoc
+  Annot_RaiseSourceDoc
   The user has double clicked on the annot link to the source document
   -----------------------------------------------------------------------*/
 ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
@@ -1222,6 +1336,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 
   /* remove the selection */
   TtaUnselect (doc_annot);
+
   /* 
   ** get the source document URL 
   */
@@ -1235,10 +1350,12 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       url = TtaGetMemory (length);
       TtaGiveTextAttributeValue (HrefAttr, url, &length);
     }
+
 #ifdef ANNOT_ON_ANNOT
   /* unless we're browsing the document corresponding to this
      thread item, we close it */
   thread_doc = ANNOT_GetThreadDoc (doc_annot);
+  
   if (thread_doc != 0 && !Annot_isSameURL (DocumentURLs[thread_doc], url)
       && doc_annot != thread_doc)
     {
@@ -1405,9 +1522,13 @@ void ANNOT_Delete_callback (int doc, int status,
       char *ptr;
       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
       if (ptr)
-	TtaSetStatus (doc, 1, "Failed to delete the annotation: %s", ptr);
+	{
+	   char buffer[MAX_LENGTH];
+	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_DELETE_FAILURE), ptr);
+	   TtaSetStatus (doc, 1, buffer, NULL);
+	}
       else
-	TtaSetStatus (doc, 1, "Failed to delete the annotation", NULL);
+	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_ANNOT_DELETE_FAILURE), NULL);
     }
 
   if (output_file)
@@ -1420,7 +1541,7 @@ void ANNOT_Delete_callback (int doc, int status,
   TtaFreeMemory (ctx);
   /* clear the status line if there was no error*/
   if (status == HT_OK && doc == source_doc)
-    TtaSetStatus (doc, 1,  "Annotation deleted!", NULL);
+    TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_DELETED), NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1823,7 +1944,7 @@ ThotBool  Annot_UpdateTitle (NotifyElement *event)
       TtaGiveTextContent (el, annot->title, &len, &lang);
     }
   /* update the title of the window */
-  ANNOT_UpdateThread (doc, annot);
+  ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* ANNOT_ON_ANNOT */
   return FALSE; /* let Thot perform normal operation */
@@ -1865,6 +1986,7 @@ void ANNOT_AddLink (Document doc, View view)
   TtaSetTextContent (newEl, "jose", TtaGetDefaultLanguage (), doc);
 #endif
 }
+
 
 
 
