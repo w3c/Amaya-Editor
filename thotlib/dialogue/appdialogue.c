@@ -3650,18 +3650,16 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdStatus = statusbar;
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
-	   /* approximate the real size of the drawing area */
-	   FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
-	   FrameTable[frame].FrWidth  = width;   /**********/
-	   FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
-	   FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
-	   FrameTable[frame].FrHeight = height; /***********/
 	   FrameTable[frame].WdFrame =  drawing_area;
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
 	   /* Must be called after the show all
 	      (otherwise ->window is NULL)*/
            FrRef[frame] = drawing_area->window;
+	   /* approximate the real size of the drawing area */
+	   FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
+	   FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
+	   FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
