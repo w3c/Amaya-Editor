@@ -5768,10 +5768,10 @@ BOXES
 #endif { LANDSCAPE }
 #else { US_PAPER }
 #ifdef LANDSCAPE
-	Width: 25.9 cm;
+	Width: 26.9 cm;
 	Height: 17.6 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	HorizPos: Left = Enclosing . Left + 1.7 cm;
 #else { LANDSCAPE }
 	Width: 15.6 cm;
 	Height: 25.9 cm;
