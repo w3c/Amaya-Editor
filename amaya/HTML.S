@@ -80,12 +80,12 @@ STRUCT
 	END + (Object, STYLE_, SCRIPT_, META, LINK);
 
   STYLE_							{ STYLE }
-     (ATTR Notation = Text; media = Text) =
-	 { type             media }
+     (ATTR !Notation = Text; media = Text) =
+	 {  type             media }
 	 TEXT - (STYLE_, SCRIPT_, META, LINK);
 
   SCRIPT_							{ SCRIPT }
-     (ATTR charset = Text; content_type = Text;
+     (ATTR charset = Text; !content_type = Text;
 	 { charset          type }
 	   script_language = Text; script_src = Text;
 	 { language                src }
@@ -96,8 +96,8 @@ STRUCT
   META								{ META }
      (ATTR http_equiv = Text;
 	 { http-equiv }
-	   meta_name = Text; meta_content = Text;
-         { name              content }
+	   meta_name = Text; !meta_content = Text;
+         { name               content }
 	   scheme = Text) =
 	 { scheme }
 	CONSTANT C_Empty;
@@ -303,8 +303,8 @@ STRUCT
 	END;
 
   BaseFont							{ BASEFONT }
-     (ATTR BaseFontSize = Integer; BaseFontColor = Text;
-	 { size                    color }
+     (ATTR !BaseFontSize = Integer; BaseFontColor = Text;
+	 {  size                    color }
 	   BaseFontFace = Text) =
          { face }
 	CONSTANT C_Empty;
@@ -354,9 +354,10 @@ STRUCT
 	 { codebase         archive         code }
 	   object = Text; alt = Text; applet_name = Text;
 	 { object         alt         name }
-	   Width__; IntWidthPercent; IntWidthPxl;
-           Height_; IntHeightPercent; IntHeightPxl;
-	 { width    height }
+	   !Width__; IntWidthPercent; IntWidthPxl;
+	 {  width }
+           !Height_; IntHeightPercent; IntHeightPxl;
+	 {  height }
 	   Alignment; hspace; vspace) =
 	 { align      hspace  vspace }
 	LIST OF (Applet_Content = CASE OF
@@ -364,7 +365,7 @@ STRUCT
 				  Basic_Set;
 				  END);
   Parameter							{ PARAM }
-     (ATTR Param_name = Text; Param_value = Text;
+     (ATTR !Param_name = Text; Param_value = Text;
 	 { name               value }
 	   valuetype = data_, ref, object_;
 	 { valuetype   data   ref  object }
@@ -518,8 +519,8 @@ STRUCT
 	LIST OF (Option);
 
   Text_Area							{ TEXTAREA }
-     (ATTR !NAME; Rows = Integer; Columns = Integer;
-	 {  name  rows            cols }
+     (ATTR NAME; !Rows = Integer; !Columns = Integer;
+	 { name   rows             cols }
 	   disabled; readonly = Yes_; tabindex; accesskey;
 	 { disabled  readonly         tabindex  accesskey  }
 	   onfocus; onblur; onselect = Text; onchange;
@@ -657,7 +658,7 @@ STRUCT
 	Inserted_Text = TEXT;
 	END;
 
-  Table_								{ TABLE }
+  Table_							{ TABLE }
      (ATTR summary = Text; Width__; Border = Integer;
 	 { summary         width    border }
 	   frame = void, above, below, hsides, lhs, rhs,
@@ -770,18 +771,18 @@ STRUCT
 	LIST OF (Element);
 
   MAP								{ MAP }
-     (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
+     (ATTR !NAME; Ref_IMG = REFERENCE(Any)) =
 	 { name linked to an image}
 	LIST OF (ElemOrArea = CASE OF Element; AREA; END);
 
   map								{ MAP }
-     (ATTR NAME) =
+     (ATTR !NAME) =
 	 { name }
 	LIST OF (Element);
 
   AREA								{ AREA }
-     (ATTR shape; coords; HREF_; target_; nohref = Yes_; ALT;
-	 { shape  coords  href   target   nohref         alt }
+     (ATTR shape; coords; HREF_; target_; nohref = Yes_; !ALT;
+	 { shape  coords  href   target   nohref          alt }
 	   tabindex; accesskey; onfocus; onblur;
 	 { tabindex  accesskey  onfocus  onblur }
 	   x_coord = Integer; y_coord = Integer; IntWidthPxl;

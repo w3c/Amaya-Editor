@@ -834,7 +834,7 @@ static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
 /*----------------------------------------------------------------------
    BuildAttrMenu
    builds the Attributes menu and returns the number of attributes added
-   to the composite menu.
+   to the menu.
    Returns also the number of events attibutes and updates the corresponding
    buffer.
   ----------------------------------------------------------------------*/
@@ -932,12 +932,13 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 	      if (pRe1 != NULL)
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 0; att < pRe1->SrNLocalAttrs; att++)
-		  if (nbOfEntries - *nbEvent < MAX_MENU &&
-		      !AttrHasException (ExcInvisible,
-					 pRe1->SrLocalAttr->Num[att], pSS) &&
-		      TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[att],
-				       firstSel, SelDoc))
-		    {
+		  if (!pSS->SsAttribute->TtAttr[pRe1->SrLocalAttr->Num[att] - 1]->AttrGlobal)
+		   if (nbOfEntries - *nbEvent < MAX_MENU &&
+		       !AttrHasException (ExcInvisible,
+					  pRe1->SrLocalAttr->Num[att], pSS) &&
+		       TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[att],
+					firstSel, SelDoc))
+		      {
 		      /* conserve le schema de structure et le numero */
 		      /* d'attribut de cette nouvelle entree du menu */
 		      AttrStruct[nbOfEntries] = pSS;
@@ -949,7 +950,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		      if (AttrEvent[nbOfEntries])
 			(*nbEvent)++;
 		      nbOfEntries++;
-		    }
+		      }
 	      /* passe a l'extension suivante du schema du document */
 	      pSchExt = pSchExt->SsNextExtens;
 	      /* cherche dans cette extension de schema la regle d'extension */
@@ -1111,7 +1112,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 #ifdef _WX
   /* update the attribute dialog */
   if (p_dlg)
-    p_dlg->UpdateAttributeList( bufMenuAttr, nbItemAttr, ActiveAttr, bufEventAttr, nbEvent, ActiveEventAttr );
+    p_dlg->UpdateAttributeList (bufMenuAttr, nbItemAttr, ActiveAttr, bufEventAttr, nbEvent, ActiveEventAttr);
 #endif /* _WX */
 
 #ifndef _WX
@@ -1323,8 +1324,9 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   PtrAttribute        pAttrNew;
   DisplayMode         dispMode = DeferredDisplay;
   Document            doc = 0;
+  PtrSRule            pSRule;
   char               *tmp;
-  int                 firstChar, lastChar;
+  int                 firstChar, lastChar, att;
   int                 act;
   ThotBool            lock = TRUE;
 
@@ -1357,13 +1359,36 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
       break;
     }
 
+  /* demande quelle est la selection courante */
+  if (!GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
+    /* no selection. quit */
+    return;
+
+  if (act == 2)
+    /* the user wants to delete the attribute. Is it a mandatory attribute
+       for the selected element ? */
+    if (SchCurrentAttr == firstSel->ElStructSchema)
+      {
+	/* get the structure rule defining the selected element */
+	pSRule = firstSel->ElStructSchema->SsRule->SrElem[firstSel->ElTypeNumber - 1];
+	/* look for the attribute in the list of allowed attributes for this
+	   element type */
+        for (att = 0; att < pSRule->SrNLocalAttrs; att++)
+	  if (pSRule->SrLocalAttr->Num[att] == NumCurrentAttr)
+	    /* this is the attribute of interest */
+	    {
+	      if (pSRule->SrRequiredAttr->Bln[att])
+		/* mandatory attribute */
+		act = 0;
+	      /* stop */
+	      att = pSRule->SrNLocalAttrs;
+	    }
+      }
+
   if (act > 0)
     {
       /* ce n'est pas une simple fermeture de la feuille de dialogue */
-      /* demande quelle est la selection courante */
-      if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
-			       &lastChar))
-	/* il y a bien une selection */
 	{
 	  /* on ne fait rien si le document ou` se trouve la selection
 	     n'utilise pas le schema de structure qui definit l'attribut */
@@ -1470,6 +1495,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel;
   PtrReference        Ref;
+  PtrSRule            pSRule;
   Document            doc;
   View                view;
   int                 item, i;
@@ -1477,6 +1503,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 #ifdef _WINGUI
   int                 currAttrVal = -1;
 #endif /* _WINGUI */
+  ThotBool            mandatory;
 
   FrameToView (frame, &doc, &view);
   item = att;
@@ -1573,6 +1600,21 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 	      }
 	    else
 	      {
+		/* is this attribute mandatory ? */
+		mandatory = FALSE;
+		/* get the structure rule defining the selected element */
+		pSRule = firstSel->ElStructSchema->SsRule->SrElem[firstSel->ElTypeNumber - 1];
+		/* look for the attribute in the list of allowed attributes
+		   for this element type */
+		for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+		  if (pSRule->SrLocalAttr->Num[i] == AttrNumber[att])
+		    /* this is the attribute of interest */
+		    {
+		      mandatory = pSRule->SrRequiredAttr->Bln[i];
+		      /* stop */
+		      i = pSRule->SrNLocalAttrs;
+		    }
+
 		/* construit le formulaire de saisie de la valeur de */
 		/* l'attribut */
 		MenuValues (pAttr, FALSE, currAttr, SelDoc, view);
