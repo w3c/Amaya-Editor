@@ -7,10 +7,10 @@
 #ifdef __STDC__
 
 extern void CallbackConfirmMenu ( int ref,
-                                  int typedata,
+                                  int typeData,
                                   char *data );
 extern void CallbackNewDocMenu ( int ref,
-                                 int typedata,
+                                 int typeData,
                                  char *data );
 extern void TtcCreateDocument ( Document document,
                                 View view );
@@ -18,10 +18,10 @@ extern void TtcCreateDocument ( Document document,
 #else /* __STDC__ */
 
 extern void CallbackConfirmMenu (/* int ref,
-                                    int typedata,
+                                    int typeData,
                                     char *data */);
 extern void CallbackNewDocMenu (/* int ref,
-                                   int typedata,
+                                   int typeData,
                                    char *data */);
 extern void TtcCreateDocument (/* Document document,
                                   View view */);
