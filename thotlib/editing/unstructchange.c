@@ -574,6 +574,7 @@ void PasteCommand ()
   PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, addedCell,
                       pCell;
   PtrPasteElem        pPasteD;
+  ElementType         cellType;
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, info = 0;
@@ -619,6 +620,7 @@ void PasteCommand ()
 	    {
 	      pCell = firstSel;
 	      beginning = (firstChar < 2);
+	      /* look for the enclosing cell */
 	      while (pCell &&
 		     !TypeHasException (ExcIsCell, pCell->ElTypeNumber,
 					pCell->ElStructSchema))
@@ -637,6 +639,8 @@ void PasteCommand ()
 	      /* paste a column in a table */
 	      /* look for the current column position */
 	      pColHead = GetColHeadOfCell (pCell);
+	      cellType.ElTypeNum = pCell->ElTypeNumber;
+	      cellType.ElSSchema = (SSchema) pCell->ElStructSchema;
 	      if (!before)
 		{
 		  /* get the last column of the cell */
@@ -837,8 +841,8 @@ void PasteCommand ()
 	      pRow = pNextRow;
 	      if (pRow && pPasteD == NULL)
 		/* there are more rows than pasted cell */
-		addedCell = NewSubtree (firstSel->ElTypeNumber,
-					firstSel->ElStructSchema, pDoc, FALSE,
+		addedCell = NewSubtree (cellType.ElTypeNum,
+					(PtrSSchema) cellType.ElSSchema, pDoc, TRUE,
 					TRUE, TRUE, TRUE);
 	      before = savebefore;
 	    }
