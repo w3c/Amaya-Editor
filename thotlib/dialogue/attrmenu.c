@@ -1344,7 +1344,7 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
    	  /* de l'element */
    	  if (pAttr->AeAttrText)
 	    {
-	      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
+	      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
 	      lang = TtaGetLanguageIdFromName (text);
 	    }
    	  else
@@ -1362,7 +1362,7 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
 	      if (pAttrAsc && pAttrAsc->AeAttrText)
 		{
 		  /* un ascendant definit la langue, on prend cette langue */
-		  CopyBuffer2MBs (pAttrAsc->AeAttrText, 0, text, 100);
+		  CopyBuffer2MBs (pAttrAsc->AeAttrText, 0, text, 99);
 		  lang = TtaGetLanguageIdFromName (text);
 		}
    	    }

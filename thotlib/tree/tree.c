@@ -799,7 +799,7 @@ static void LeavesInheritLanguage (PtrElement pEl)
 	  pAttr->AeAttrText->BuContent[0] != WC_EOS)
 	/* this Language attribute has a value */
 	{
-	  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
+	  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
 	  lang = TtaGetLanguageIdFromName (text);
 	  /* changes the language of the text leaves of the subtree */
 	  ChangeLanguageLeaves (pEl, lang);
@@ -3519,8 +3519,8 @@ void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 	   pAttr = GetTypedAttrForElem (pDoc->DocDocElement, 1, NULL);
 	   if (pAttr && pAttr->AeAttrText)
 	     {
-	       CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 100);
-		 lang = TtaGetLanguageIdFromName (text);
+	       CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+	       lang = TtaGetLanguageIdFromName (text);
 	     }
 	 }
        /* changes the language of the text leaves */

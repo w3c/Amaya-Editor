@@ -203,9 +203,9 @@ static void  CSSParseError (char *msg, char *value)
 	}
       CSSErrorsFound = TRUE;
       if (LineNumber < 0)
-	fprintf (ErrFile, "  In Style attribute %s %s\n", msg, value);
+	fprintf (ErrFile, "  In Style attribute %s %s\"\n", msg, value);
       else
-	fprintf (ErrFile, "  line %d: %s %s\n", LineNumber + NewLineSkipped,
+	fprintf (ErrFile, "  line %d: %s %s\"\n", LineNumber + NewLineSkipped,
 		 msg, value);
     }
 }
@@ -227,7 +227,7 @@ static char *SkipProperty (char *ptr)
   *ptr = EOS;
 #ifdef CSS_WARNING
   if (*deb != EOS)
-    CSSParseError ("CSS property ignored:", deb);
+    CSSParseError ("CSS property ignored \"", deb);
 #endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
@@ -236,7 +236,7 @@ static char *SkipProperty (char *ptr)
 /*----------------------------------------------------------------------
    SkipProperty:                                                  
   ----------------------------------------------------------------------*/
-static char *SkipValue (char *ptr)
+static char *SkipValue (char *ptr, ThotBool error)
 {
   char       *deb;
   char        c;
@@ -247,10 +247,15 @@ static char *SkipValue (char *ptr)
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
-#ifdef CSS_WARNING
   if (*deb != EOS && *deb != ',')
-    CSSParseError ("CSS value ignored:", deb);
+    {
+      if (error)
+	CSSParseError ("invalid CSS value \"", deb);
+#ifdef CSS_WARNING
+      else
+	CSSParseError ("CSS value ignored \"", deb);
 #endif /* CSS_WARNING */
+    }
   *ptr = c;
   return (ptr);
 }
@@ -470,7 +475,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
   if (ptr == cssRule)
     {
-      cssRule = SkipValue (cssRule);
+      cssRule = SkipValue (cssRule, TRUE);
       val->typed_data.value = 0;
       val->typed_data.unit = STYLE_UNIT_INVALID;
     }
@@ -929,7 +934,7 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule);
+	cssRule = SkipValue (cssRule, TRUE);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -956,7 +961,7 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule);
+	cssRule = SkipValue (cssRule, TRUE);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -983,7 +988,7 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule);
+	cssRule = SkipValue (cssRule, TRUE);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1010,7 +1015,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule);
+	cssRule = SkipValue (cssRule, TRUE);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1052,7 +1057,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1087,7 +1092,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "list-item", 9))
-     cssRule = SkipValue (cssRule);
+     cssRule = SkipValue (cssRule, FALSE);
    else
      CSSParseError ("Invalid display value", cssRule);
 
@@ -1101,7 +1106,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1113,7 +1118,7 @@ static char *ParseCSSLetterSpacing (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1125,7 +1130,7 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1137,7 +1142,7 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 				     PresentationContext context, char *cssRule,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1150,7 +1155,7 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 					char *cssRule, CSSInfoPtr css,
 					ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1162,7 +1167,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1242,7 +1247,7 @@ static char *ParseCSSTextTransform (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1254,7 +1259,7 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1284,7 +1289,7 @@ static char *ParseCSSWordSpacing (Element element, PSchema tsch,
 				  PresentationContext context, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule);
+  cssRule = SkipValue (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -1517,7 +1522,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
   if (font.typed_data.value != 0)
      {
        cssRule = SkipBlanksAndComments (cssRule);
-       cssRule = SkipValue (cssRule);
+       cssRule = SkipValue (cssRule, FALSE);
        /* install the new presentation */
        TtaSetStylePresentation (PRFont, element, tsch, context, font);
      }
@@ -1760,6 +1765,8 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	      NewLineSkipped = skippedNL;
 	      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
 	    }
+	  if (ptr == cssRule)
+	    cssRule = SkipValue (cssRule, TRUE);
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
