@@ -56,6 +56,16 @@ static int      AnimButton;
 #endif /* _WINDOWS */
 
 
+
+/* code convention : 
+ basedoc : edited document
+ timelinedoc : timeline document
+*/
+
+
+
+
+
 /* this one should be exported from the thotlib */
 extern char  *ColorName (int num);
 
@@ -1422,7 +1432,6 @@ static int Get_center_y_of_SVG_el (Element el)
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
-	Element parent = TtaGetParent (el);
     ElementType elType = TtaGetElementType (el);
    
     attrType.AttrSSchema = elType.ElSSchema;
@@ -1481,7 +1490,6 @@ static int Get_center_x_of_SVG_el (Element el)
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
-	Element parent = TtaGetParent (el);
     ElementType elType = TtaGetElementType (el);
    
     attrType.AttrSSchema = elType.ElSSchema;
@@ -2836,7 +2844,7 @@ void ShowTimeLineWindow (Document document, View view)
 	Document t;
 /*      	- already created -> show it
 			- not created     -> create it */
-	Get_timeline_of_doc(document, &t, &v);
+	Get_timeline_of_doc (document, &t, &v);
 	if (t)
 		TtaRaiseView (dt[document].timelinedoc, v);
 	else 
