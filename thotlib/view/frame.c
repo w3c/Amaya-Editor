@@ -350,7 +350,9 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax, PtrBo
       pAb = pFrame->FrAbstractBox;
       while (pAb)
 	{
-	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox)
+	  if (pAb->AbDepth == plane &&
+	      pAb != pFrame->FrAbstractBox &&
+	      pAb->AbBox)
 	    {
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
