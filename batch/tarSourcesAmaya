@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.4
+AMAYAVERSION=1.4a
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
 
@@ -574,17 +574,18 @@ Thot/tools/cextract-1.7/proto.h \
 Thot/tools/cextract-1.7/xtract.h \
 Thot/schemas/exc_Table.h \
 Thot/WINNT/*.mak \
+Thot/WINNT/*.mkf \
 Thot/WINNT/Compilers/*.mak \
 Thot/WINNT/LibThotKernel/*.mak \
-Thot/WINNT/app/*.mak
-Thot/WINNT/cpp/*.mak
-Thot/WINNT/libThotTable/*.mak
-Thot/WINNT/libjpeg/*.mak
-Thot/WINNT/libpng/*.mak
-Thot/WINNT/printlib/*.mak
-Thot/WINNT/prs/*.mak
-Thot/WINNT/str/*.mak
-Thot/WINNT/thotprinter/*.mak
-Thot/WINNT/tra/*.mak
-Thot/WINNT/zlib/*.mak
+Thot/WINNT/app/*.mak \
+Thot/WINNT/cpp/*.mak \
+Thot/WINNT/libThotTable/*.mak \
+Thot/WINNT/libjpeg/*.mak \
+Thot/WINNT/libpng/*.mak \
+Thot/WINNT/printlib/*.mak \
+Thot/WINNT/prs/*.mak \
+Thot/WINNT/str/*.mak \
+Thot/WINNT/thotprinter/*.mak \
+Thot/WINNT/tra/*.mak \
+Thot/WINNT/zlib/*.mak \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tar.gz
