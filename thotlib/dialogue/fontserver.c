@@ -192,15 +192,57 @@ int GetFontFilename (char script, int family, int highlight, int size,
     {
       switch (family)
 	{
+	case 1:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixone"); 
+	  break;
+	case 2:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixtwo"); 
+	  break;	  
+	case 3: 
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixthree"); 
+	  break;
+	case 4:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixfour"); 
+	  break;
+	case 5:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixfive"); 
+	  break;	  
 	case 6:
 	  XftPatternAddString (pat, XFT_FAMILY, "esstixsix"); 
 	  break;
 	case 7:
 	  XftPatternAddString (pat, XFT_FAMILY, "esstixseven"); 
 	  break;	  
+	case 8:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixeight"); 
+	  break;
+	case 9:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixnine"); 
+	  break;	  
 	case 10: 
 	  XftPatternAddString (pat, XFT_FAMILY, "esstixten"); 
 	  break;
+	case 11:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixeleven"); 
+	  break;
+	case 12:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixtwelve"); 
+	  break;	  
+	case 13: 
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixthirteen"); 
+	  break;
+	case 14:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixfourteen"); 
+	  break;	  
+	case 15:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixfifteen"); 
+	  break;
+	case 16:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixsixteen"); 
+	  break;	  
+	case 17:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixseventeen"); 
+	  break;	  
 	default:
    	  break;
 	}

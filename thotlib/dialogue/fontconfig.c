@@ -470,6 +470,26 @@ char *FontLoadFromConfig (char script, int face, int style)
       intscript = 21;
       switch (face)
 	{
+	case 1:
+	  face = 1;
+	  style = 1;
+	  break;
+	case 2:
+	  face = 1;
+	  style = 2;
+	  break;
+	case 3:
+	  face = 1;
+	  style = 3;
+	  break;
+	case 4:
+	  face = 1;
+	  style = 4;
+	  break;
+	case 5:
+	  face = 1;
+	  style = 5;
+	  break;	  
 	case 6:
 	  face = 2;
 	  style = 1;
@@ -478,10 +498,46 @@ char *FontLoadFromConfig (char script, int face, int style)
 	  face = 2;
 	  style = 2;
 	  break;	  
+	case 8:
+	  face = 2;
+	  style = 3;
+	  break;
+	case 9:
+	  face = 2;
+	  style = 4;
+	  break;	  
 	case 10:
+	  face = 2;
+	  style = 5;
+	  break;
+	case 11:
 	  face = 3;
 	  style = 1;
 	  break;
+	case 12:
+	  face = 3;
+	  style = 2;
+	  break;	  
+	case 13:
+	  face = 3;
+	  style = 3;
+	  break;
+	case 14:
+	  face = 3;
+	  style = 4;
+	  break;
+	case 15:
+	  face = 3;
+	  style = 5;
+	  break;
+	case 16:
+	  face = 4;
+	  style = 1;
+	  break;
+	case 17:
+	  face = 4;
+	  style = 2;
+	  break;	  
 	default:
 	  intscript = 20;
 	  face = 1;

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern char *SkipSep ( char *ptr );
 extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,
@@ -73,6 +74,7 @@ extern void StartParser ( Document doc,
                           ThotBool external_doc );
 
 #else /* __STDC__ */
+
 extern char *SkipSep ( char *ptr );
 extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,

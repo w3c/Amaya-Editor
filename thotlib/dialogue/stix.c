@@ -666,6 +666,25 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
+  else if (c >= Stix_MathOp1_Start && c < Stix_MathOp1_Start + Stix_MathOp1_length)
+    {
+      entry = Stix_MathOp1[c - Stix_MathOp1_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c >= Stix_MathOp2_Start && c < Stix_MathOp2_Start + Stix_MathOp2_length)
+    {
+      entry = Stix_MathOp2[c - Stix_MathOp2_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c >= Stix_GeomShapes_Start && c < Stix_GeomShapes_Start + Stix_GeomShapes_length)
+    {
+      entry = Stix_GeomShapes[c - Stix_GeomShapes_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+
   if (face == 1)
     *font = &(fontset->SFont_1);
   else if (face == 2)
@@ -705,8 +724,11 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
 
 #ifdef _GL
   /* load the stix font if needed */
-  if (face > 0 && **font == NULL )
-    **font = LoadStixFont (face, fontset->FontSize);
+  if (face > 0)
+    {
+      if (**font == NULL)
+	**font = LoadStixFont (face, fontset->FontSize);
+    }
 #endif /* _GL */
   return index;
 }

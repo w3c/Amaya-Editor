@@ -648,11 +648,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   if (font == NULL)
     return 6;
   else
-#ifndef _GL
     return CharacterWidth (car, font);
-#else /*_GL*/
-    return CharacterWidth (c, font);
-#endif /*_GL*/
 }
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
@@ -677,9 +673,6 @@ int CharacterHeight (int c, ThotFont font)
   else
     l = gdk_char_height (font, c);
 #endif /* _GTK */
-#ifdef _WX
-    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
-#endif /* _WX */
 #endif /*_GL*/
   return l;
 }
@@ -1778,32 +1771,40 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	{
 	  if (c >= 0x370 && c < 0x3FF)
 	    {
-	      /* Greek characters */
-	      code = GreekFontScript;
-	      /* should use STIX fonts here */
-	      if (c == 0x3C2 || c == 0x3D1 ||
-		       c == 0x3D2 || c == 0x3D5 ||
-		       c == 0x3D6)
-		/* final sigma, thetasym, upsih, phi, piv */
-		/* use the Symbol font */
+#ifdef _GL
+	      /* use STIX fonts here */
+	      code = 'E';
+	      car = GetStixFontAndIndex (c, fontset, &pfont);
+	      if (pfont == NULL )
+#endif /* _GL */
 		{
-		  code = 'G';
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
-		}
-	      else if (code == '7')
-		{
-		  pfont = &(fontset->Font_7);
+		  /* Greek characters */
+		  code = GreekFontScript;
+		  /* should use STIX fonts here */
+		  if (c == 0x3C2 || c == 0x3D1 ||
+		      c == 0x3D2 || c == 0x3D5 ||
+		      c == 0x3D6)
+		    /* final sigma, thetasym, upsih, phi, piv */
+		    /* use the Symbol font */
+		    {
+		      code = 'G';
+		      pfont = &(fontset->Font_16);
+		      encoding = ISO_SYMBOL;
+		    }
+		  else if (code == '7')
+		    {
+		      pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
-		  encoding = WINDOWS_1253;
+		      encoding = WINDOWS_1253;
 #else /* _WINDOWS */
 		  encoding = ISO_8859_7;
 #endif /* _WINDOWS */
-		}
-	      else
-		{
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
+		    }
+		  else
+		    {
+		      pfont = &(fontset->Font_16);
+		      encoding = ISO_SYMBOL;
+		    }
 		}
 	    }
 	  else if (c == 0x210E /* planckh */ ||
@@ -2045,22 +2046,25 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      /* attach that font to the current frame */
 	      lfont = *pfont;
-	      for (frame = 1; frame <= MAX_FRAME; frame++)
+	      if (code != 'E')
 		{
-		  mask = 1 << (frame - 1);
-		  if (fontset->FontMask & mask)
+		  for (frame = 1; frame <= MAX_FRAME; frame++)
 		    {
-		      lfont = LoadNearestFont (code, fontset->FontFamily,
-					       fontset->FontHighlight,
-				   fontset->FontSize, fontset->FontSize,
-					       frame, TRUE, TRUE);
-		      if (code == '7' && GreekFontScript == 'G')
-			/* use the font Symbol instead of a greek font */
-			encoding = ISO_SYMBOL;
+		      mask = 1 << (frame - 1);
+		      if (fontset->FontMask & mask)
+			{
+			  lfont = LoadNearestFont (code, fontset->FontFamily,
+						   fontset->FontHighlight,
+						   fontset->FontSize, fontset->FontSize,
+						   frame, TRUE, TRUE);
+			  if (code == '7' && GreekFontScript == 'G')
+			    /* use the font Symbol instead of a greek font */
+			    encoding = ISO_SYMBOL;
+			}
 		    }
+		  /* even if the font is not found avoid to retry later */
+		  *pfont = lfont;
 		}
-	      /* even if the font is not found avoid to retry later */
-	      *pfont = lfont;
 	      *font = lfont;
 	    }
 	  else
@@ -2072,9 +2076,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      car = UNDISPLAYED_UNICODE;
 	      *font = NULL;
 	    }
-	  else if ((code == 'Z')||(code == '6'))
+	  else if (code == 'Z' || code == '6')
 	    car = c;
-	  else
+	  else if (code != 'E')
 	    car = (int)TtaGetCharFromWC (c, encoding);
 	}
     }   
@@ -2086,10 +2090,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
     }
   
 		  
-#ifndef _GL  
-  return car;
+#ifdef _GL
+  if (code == 'E' || code == 'G')
+    return car;
+  else
+    return c;
 #else /*_GL*/
-  return c;
+  return car;
 #endif /*_GL*/
 }
 
