@@ -64,7 +64,9 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
 AmayaDialog::~AmayaDialog()
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaDialog::~AmayaDialog"));
-  
+
+  TtaDestroyDialogue( m_Ref );
+
   /* then give focus to canvas */
   //  TtaRedirectFocus();
 }
