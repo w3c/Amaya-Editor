@@ -1161,6 +1161,11 @@ int                 extra;
    PtrPRule           *chain;
    PtrPRule            cur, prev = NULL;
    int                 i, j, tmp, nb_ancestors;
+   Document doc;
+   PtrSSchema pSS;
+   int elType = 0;
+   int attrType = 0;
+   int presBox = 0;
 
    /* first sort the ancestors list */
    for (i = 0; i < MAX_ANCESTORS; i++)
@@ -1184,14 +1189,20 @@ int                 extra;
     */
    if (ctxt->box != 0)
      {
+	presBox = ctxt->box;
 	chain = BoxRuleInsert (tsch, ctxt);
      }
    else if ((ctxt->attr) || (ctxt->class))
      {
+	if (ctxt->attr)
+	    attrType = ctxt->attr;
+	else
+	    attrType = ctxt->classattr;
 	chain = PresAttrRuleInsert (tsch, ctxt);
      }
    else if (ctxt->type != 0)
      {
+        elType = ctxt->type;
 	chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
      }
    else
@@ -1243,6 +1254,12 @@ int                 extra;
    else
 	prev->PrNextPRule = cur->PrNextPRule;
    cur->PrNextPRule = NULL;
+
+   /* update the rendering */
+   doc = ctxt->doc;
+   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
+   ApplyPRules (doc, pSS, elType, attrType, presBox, cur, TRUE);
+
 
    /* Free the PRule */
    FreePresentRule(cur);

@@ -162,8 +162,6 @@ PresentationValue   v;
    Document doc;
    PtrSSchema pSS;
    int elType = 0;
-   int attrType = 0;
-   int presBox = 0;
    PtrPRule pRule;
 
    if (ctxt == NULL) return(-1);
@@ -181,7 +179,7 @@ PresentationValue   v;
    if (pRule == NULL)
       return (-1);
 
-   ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+   ApplyPRules (doc, pSS, elType, 0, 0, pRule, FALSE);
    return(0);
 }
 
@@ -278,6 +276,9 @@ int                 extra;
 #endif
 {
     PtrPRule cur, prev;
+    Document doc;
+    PtrSSchema pSS;
+    ElementType elType;
     
     prev = NULL;
     cur = ((PtrElement) el)->ElFirstPRule;
@@ -317,6 +318,12 @@ int                 extra;
     else
 	prev->PrNextPRule = cur->PrNextPRule;
     cur->PrNextPRule = NULL;
+
+    /* update the presentation */
+    doc = TtaGetDocument(el);
+    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
+    elType = TtaGetElementType(el);
+    ApplyPRules (doc, pSS, elType.ElTypeNum, 0, 0, cur, TRUE);
 
     /* Free the PRule */
     FreePresentRule(cur);
@@ -628,7 +635,7 @@ PresentationValue   v;
 
    if (ctxt->destroy) {
        RemoveElementPRule (el, PtFunction, FnBackgroundPicture);
-       return;
+       return(0);
    }
    cst = PresConstInsert (tsch, v.pointer);
    rule = InsertElementPRule (el, PtFunction, FnBackgroundPicture);

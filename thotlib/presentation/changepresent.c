@@ -2532,19 +2532,20 @@ boolean            remove;
 			  found = TRUE;
 			  if (pRP != NULL)
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
-			  else if (remove && ruleType == PtFunction)
+			  else if (remove && ruleType == PtFunction &&
+			           pAb->AbLeafType == LtCompound)
 			    {
 			      /* remove a PtFunction rule */
-			      if (pRP->PrPresFunction == FnBackgroundPicture
-				  && pAb->AbPictInfo != NULL)
+			      if (pCurrentRule->PrPresFunction == FnBackgroundPicture
+				  && pAb->AbPictBackground != NULL)
 				{
-				  TtaFreeMemory ((((PictInfo *) (pAb->AbPictInfo))->PicFileName));
-				  FreePictInfo ((int *) (pAb->AbPictInfo));
-				  pAb->AbPictInfo = NULL;
+				  TtaFreeMemory ((((PictInfo *) (pAb->AbPictBackground))->PicFileName));
+				  FreePictInfo ((int *) (pAb->AbPictBackground));
+				  pAb->AbPictBackground = NULL;
 				}
-			      else if (pRP->PrPresFunction == FnPictureMode
-				       && pAb->AbPictInfo != NULL)
-				((PictInfo *) (pAb->AbPictInfo))->PicPresent = FillFrame;
+			      else if (pCurrentRule->PrPresFunction == FnPictureMode
+				       && pAb->AbPictBackground != NULL)
+				((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
 			      pAb->AbAspectChange = TRUE;
 			    }
 			}
