@@ -173,7 +173,7 @@ Document            doc;
  * Manipulate with care !!!
  */
 
-static boolean         HTMLStyleParserDestructiveMode = False;
+static boolean         HTMLStyleParserDestructiveMode = FALSE;
 
 /*
  * A HTML3StyleValueParser is a function used to parse  the
@@ -1338,13 +1338,13 @@ Document            doc;
     * create the context of the Specific presentation driver.
     */
    context = GetSpecificContext(doc);
-   if (context == NULL) return;
+   if (context == NULL)
+     return;
    target = (PresentationTarget) elem;
-   if (HTMLStyleParserDestructiveMode) context->destroy = 1;
+   if (HTMLStyleParserDestructiveMode)
+     context->destroy = 1;
 
-   /*
-    * Call the parsor.
-    */
+   /* Call the parsor. */
    ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
 
    /* free the context */
@@ -3315,7 +3315,7 @@ char               *attrstr;
 	       if (setColor)
 		 {
 		   CSSSetBackground (gblock->doc, (PSchema) target, best.typed_data.value);
-		   setColor = False;
+		   setColor = FALSE;
 		 }
 	     }
 	 }
@@ -3331,7 +3331,7 @@ char               *attrstr;
 	       if (setColor)
 		 {
 		   TtaSetViewBackgroundColor (sblock->doc, 1, best.typed_data.value);
-		   setColor = False;
+		   setColor = FALSE;
 		 }
 	     }
 	 }
@@ -3382,13 +3382,14 @@ void *extra;
 #endif
 {
    BackgroundImageCallbackPtr callblock = (BackgroundImageCallbackPtr) extra;
-   PresentationTarget target;
+   PresentationTarget  target;
    PresentationContext context;
-   PresentationValue image;
-   PresentationValue repeat;
-   PresentationValue unused;
+   PresentationValue   image;
+   PresentationValue   repeat;
+   PresentationValue   unused;
 
-   if (callblock == NULL) return;
+   if (callblock == NULL)
+     return;
    target = callblock->target;
    context = &callblock->context.blk;
 
@@ -3418,9 +3419,8 @@ void *extra;
    /*
     * Update the Document header if this is a generic rule
     */
-   if (context->drv == &GenericStrategy) {
+   if (context->drv == &GenericStrategy)
        RebuildHTMLStyleHeader(doc);
-   }
 
    /*
     * Update the rendering.
@@ -3445,72 +3445,83 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   Element             el;
+   Element               el;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
    char                 *url;
    BackgroundImageCallbackPtr callblock;
+   PresentationValue     image;
    char                 *no_bg_image;
 
-   url = NULL;
-   if (! IS_CASE_WORD (attrstr, "url"))
-       return (attrstr);
+       url = NULL;
+       if (! IS_CASE_WORD (attrstr, "url"))
+	 return (attrstr);
+       
+       attrstr = ParseHTMLURL (attrstr, &url);
 
-   attrstr = ParseHTMLURL (attrstr, &url);
-
-   if (url)
+   if (context->destroy == 1)
      {
-       no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
-       if ((no_bg_image != NULL) &&
-	   ((!(strcasecmp(no_bg_image,"yes"))) ||
-	    (!(strcasecmp(no_bg_image,"true")))))
-	   return (attrstr);
-
-       /*
-	* if the background is set on the HTML or BODY element,
-	* set the background color for the full window.
-	*/
-       if (context->drv == &GenericStrategy)
-	 {
-	   gblock = (GenericContext) context;
-	   callblock = (BackgroundImageCallbackPtr)
-	       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-	   if (callblock != NULL) {
-	       callblock->target = target;
-	       memcpy(&callblock->context.generic, gblock,
-		      sizeof(GenericContextBlock));
-
-	       /* fetch and display background image of element */
-	       el = TtaGetMainRoot (gblock->doc);
-
-	       FetchImage (gblock->doc, el, url, 0,
-			   ParseCSSBackgroundImageCallback,
-			   callblock);
-	   }
-	 }
-       else if (context->drv == &SpecificStrategy)
-	 {
-	   sblock = (SpecificContextBlock *) context;
-	       callblock = (BackgroundImageCallbackPtr)
-		   TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
-	       if (callblock != NULL) {
-		   callblock->target = target;
-		   memcpy(&callblock->context.specific, sblock,
-			  sizeof(SpecificContextBlock));
-
-		   /* fetch and display background image of element */
-		   el = TtaGetMainRoot (sblock->doc);
-
-		   FetchImage (sblock->doc, el, url, 0,
-			       ParseCSSBackgroundImageCallback,
-			       callblock);
-	       }
-	 }
+       /* remove the background image PRule */
+       image.pointer = NULL;
+       if (context->drv->SetBgImage)
+	 context->drv->SetBgImage (target, context, image);
      }
-
-   if (url)
-     TtaFreeMemory (url);
-   return (attrstr);
+   else
+     {   
+       if (url)
+	 {
+	   no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
+	   if ((no_bg_image != NULL) &&
+	       ((!(strcasecmp(no_bg_image,"yes"))) ||
+		(!(strcasecmp(no_bg_image,"true")))))
+	     return (attrstr);
+	   
+	   /*
+	    * if the background is set on the HTML or BODY element,
+	    * set the background color for the full window.
+	    */
+	   if (context->drv == &GenericStrategy)
+	     {
+	       gblock = (GenericContext) context;
+	       callblock = (BackgroundImageCallbackPtr)
+		 TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	       if (callblock != NULL) {
+		 callblock->target = target;
+		 memcpy(&callblock->context.generic, gblock,
+			sizeof(GenericContextBlock));
+		 
+		 /* fetch and display background image of element */
+		 el = TtaGetMainRoot (gblock->doc);
+		 
+		 FetchImage (gblock->doc, el, url, 0,
+			     ParseCSSBackgroundImageCallback,
+			     callblock);
+	       }
+	     }
+	   else if (context->drv == &SpecificStrategy)
+	     {
+	       sblock = (SpecificContextBlock *) context;
+	       callblock = (BackgroundImageCallbackPtr)
+		 TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	       if (callblock != NULL) {
+		 callblock->target = target;
+		 memcpy(&callblock->context.specific, sblock,
+			sizeof(SpecificContextBlock));
+		 
+		 /* fetch and display background image of element */
+		 el = TtaGetMainRoot (sblock->doc);
+		 
+		 FetchImage (sblock->doc, el, url, 0,
+			     ParseCSSBackgroundImageCallback,
+			     callblock);
+	       }
+	     }
+	 }
+       
+       if (url)
+	 TtaFreeMemory (url);
+     }
+       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
@@ -3666,7 +3677,7 @@ char               *attrstr;
 		 {
 		   CSSSetBackground (gblock->doc, (PSchema) target,
 		                     best.typed_data.value);
-		   setColor = False;
+		   setColor = FALSE;
 		 }
 	       if (url)
 		 {
@@ -3700,7 +3711,7 @@ char               *attrstr;
 		 {
 		   TtaSetViewBackgroundColor (sblock->doc, 1,
 		                              best.typed_data.value);
-		   setColor = False;
+		   setColor = FALSE;
 		 }
 	       if (url)
 		 {
@@ -4581,9 +4592,9 @@ Element             elem;
    char                css_command[100];
 
    sprintf (css_command, "background: xx"       );
-   SetHTMLStyleParserDestructiveMode (True);
+   SetHTMLStyleParserDestructiveMode (TRUE);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4600,9 +4611,9 @@ Element             elem;
    char                css_command[1000];
 
    sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
-   SetHTMLStyleParserDestructiveMode (True);
+   SetHTMLStyleParserDestructiveMode (TRUE);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4619,9 +4630,9 @@ Element             elem;
    char                css_command[100];
 
    sprintf (css_command, "color: xx");
-   SetHTMLStyleParserDestructiveMode (True);
+   SetHTMLStyleParserDestructiveMode (TRUE);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4638,7 +4649,7 @@ char               *color;
    char                css_command[100];
 
    sprintf (css_command, "A:link { color : %s }", color);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4655,7 +4666,7 @@ char               *color;
    char                css_command[100];
 
    sprintf (css_command, "A:active { color : %s }", color);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4672,7 +4683,7 @@ char               *color;
    char                css_command[100];
 
    sprintf (css_command, "A:visited { color : %s }", color);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4688,9 +4699,9 @@ Document            doc;
    char                css_command[100];
 
    sprintf (css_command, "A:link { color : red }");
-   SetHTMLStyleParserDestructiveMode (True);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (TRUE);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4706,9 +4717,9 @@ Document            doc;
    char                css_command[100];
 
    sprintf (css_command, "A:active { color : red }");
-   SetHTMLStyleParserDestructiveMode (True);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (TRUE);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4724,7 +4735,7 @@ Document            doc;
    char                css_command[100];
 
    sprintf (css_command, "A:visited { color : red }");
-   SetHTMLStyleParserDestructiveMode (True);
-   ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetHTMLStyleParserDestructiveMode (False);
+   SetHTMLStyleParserDestructiveMode (TRUE);
+   ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
+   SetHTMLStyleParserDestructiveMode (FALSE);
 }
