@@ -25,6 +25,7 @@ CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
 	    de-amayadialogue de-amayamsg de-libdialogue de-corrdialogue \
 	    tr-amayadialogue tr-amayamsg tr-libdialogue tr-corrdialogue \
 	    it-amayadialogue it-amayamsg it-libdialogue it-corrdialogue \
+	    es-amayadialogue es-amayamsg es-libdialogue es-corrdialogue \
 	    annot.schemas annotschema.rdf annottypes.rdf
 
 ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
