@@ -152,41 +152,49 @@ int                 imagetype;
 {
   PtrTextBuffer       pBuffer;
   PictInfo           *image;
+  char               *ptr;
 
   image = NULL;
   if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
     {
-      /* C'est un element image -. accroche le descripteur a l'element */
+      /* image element -> attach the element descriptor to abtract box */
       if (ppav->AbElement->ElPictInfo == NULL)
 	  {
-	    /* Creation du descripteur */
+	    /* Create the element descriptor */
 	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	    ppav->AbElement->ElPictInfo = (int *) image;
 	  }
       ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
+      ptr = filename;
      }
    else if (ppav->AbPresentationBox)
      {
-       /*  Ce n'est pas un element image -> Creation du descripteur */
+       /*  It's not an image element -> Create the descriptor */
        image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
        ppav->AbPictInfo = (int *) image;
+      ptr = filename;
      }
    else if (ppav->AbLeafType == LtCompound)
      {
+       /*  It's not an image element -> Create the descriptor */
        image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
        ppav->AbPictBackground = (int *) image;
+       /* create the text buffer */
+       ptr = TtaGetMemory (strlen (filename) + 1);
+       strcpy (ptr, filename);
      }
 
   if (image)
     {
       /* Initialize image descriptor */
-      if (filename == NULL)
+      if (ptr == NULL)
 	{
 	  GetTextBuffer (&pBuffer);
 	  ppav->AbElement->ElText = pBuffer;
-	  filename = &pBuffer->BuContent[0];
+	  ptr = &pBuffer->BuContent[0];
 	}
-      image->PicFileName = filename;
+      /* use the buffer allocated by the picture content */
+      image->PicFileName = ptr;
       image->PicPixmap = 0;
       image->PicMask = 0;
       image->PicType = imagetype;
@@ -214,7 +222,7 @@ void                FreePictInfo (desc)
 int                *desc;
 #endif /* __STDC__ */
 {
-   PictInfo           *image;
+   PictInfo        *image;
 
    if (desc != NULL)
      {
@@ -222,7 +230,6 @@ int                *desc;
 	FreePicture (image);
 	TtaFreeMemory ((char *) image);
      }
-
 }
 
 

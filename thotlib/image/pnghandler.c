@@ -624,45 +624,33 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 
 
   buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg );
-
-   if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
-
-       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       free(buffer);
-       buffer = buffer2;
-       buffer2 = NULL;
-       w = *xif;
-       h = *yif;
-   }
-
-  if (buffer == NULL) return (Drawable) ThotBitmapNone;
-
-  if ( bg >= 0)
-    { 
-      *mask1 = MakeMask(TtDisplay, buffer, w, h, bg);
-    } 
-     
-  pixmap = DataToPixmap(buffer, w, h, ncolors,  colrs);
-
-  free(buffer);
-
-
- if (pixmap == None)
-    { 
-   
-      return (ThotBitmap) ThotBitmapNone; 
+  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+    {
+      /* xif and yif contain width and height of the box */
+      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      free(buffer);
+      buffer = buffer2;
+      buffer2 = NULL;
+      w = *xif;
+      h = *yif;
     }
+
+  if (buffer == NULL)
+    return (Drawable) ThotBitmapNone;
+  if ( bg >= 0)
+    *mask1 = MakeMask(TtDisplay, buffer, w, h, bg);
+  
+  pixmap = DataToPixmap(buffer, w, h, ncolors,  colrs);
+  free(buffer);
+  if (pixmap == None)
+    return (ThotBitmap) ThotBitmapNone; 
   else
     { 
-
       *wif = w;
-      *hif = h;
-      
+      *hif = h;      
       *xif = 0;
       *yif = 0;
-
       return (ThotBitmap) pixmap;
-	  	  
     }
 #endif /* !_WINDOWS */
 }

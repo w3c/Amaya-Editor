@@ -3940,6 +3940,7 @@ PtrAttribute        pAttr;
 		    case PtPictInfo:
 		       CopyPictInfo (pAbb1->AbPictInfo, (int *) &(pPRule->PrPictInfo));
 		       myPictInfo = (PictInfo *) pAbb1->AbPictInfo;
+		       /* use the buffer allocated by the picture content */
 		       myPictInfo->PicFileName = pAbb1->AbElement->ElText->BuContent;
 		       break;
 		    default:

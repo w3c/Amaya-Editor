@@ -236,45 +236,39 @@ ThotBitmap         *mask1;
 
 #endif /* __STDC__ */
 {
-   int                 w, h;
-   Pixmap              pixmap;
-   ThotColorStruct     colrs[256];
-   unsigned char      *buffer,*buffer2;
+  int                 w, h;
+  Pixmap              pixmap;
+  ThotColorStruct     colrs[256];
+  unsigned char      *buffer,*buffer2;
 
-   /* effective load of the Picture from Jpeg Library */
-
-   buffer = ReadJpegToData (fn, &w, &h, colrs);
-
-  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
-
-       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       free(buffer);
-       buffer = buffer2;
-       buffer2 = NULL;
-       w = *xif;
-       h = *yif;
-   }
-
+  /* effective load of the Picture from Jpeg Library */
+  buffer = ReadJpegToData (fn, &w, &h, colrs);
+  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+    {   
+      /* xif and yif contain width and height of the box */
+      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      free(buffer);
+      buffer = buffer2;
+      buffer2 = NULL;
+      w = *xif;
+      h = *yif;
+    }
+  
 #ifndef _WINDOWS
-   pixmap = DataToPixmap (buffer, w, h, 100, colrs);
+  pixmap = DataToPixmap (buffer, w, h, 100, colrs);
 #endif /* _WINDOWS */
-
-   free (buffer);
-
-   if (pixmap == None)
-     {
-	return ThotBitmapNone;	/* Problems loading the jpeg File */
-     }
-   else
-     {
-	*wif = w;
-	*hif = h;
-
-	*xif = 0;
-	*yif = 0;
-
-	return (ThotBitmap) pixmap;
-     }
+  
+  free (buffer);  
+  if (pixmap == None)
+    return ThotBitmapNone;
+  else
+    {
+      *wif = w;
+      *hif = h;
+      *xif = 0;
+      *yif = 0;
+      return (ThotBitmap) pixmap;
+    }
 }
 
 

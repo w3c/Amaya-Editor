@@ -964,15 +964,19 @@ PictInfo      *imageDesc;
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char            *ZoomPicture (char *cpic,int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
+char         *ZoomPicture (char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
 #else  /* __STDC__ */
-char            *ZoomPicture (cpic,cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
-      char *cpic;
-      int cWIDE, cHIGH , eWIDE, eHIGH, bperpix;
+char         *ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
+char         *cpic;
+int           cWIDE;
+int           cHIGH;
+int           eWIDE;
+int           eHIGH;
+int           bperpix;
 #endif /* __STDC__ */
 {
-   int          cy, ex, ey,*cxarr, *cxarrp;
-   char        *clptr,*elptr,*epptr, *epic;
+  int          cy, ex, ey,*cxarr, *cxarrp;
+  char        *clptr,*elptr,*epptr, *epic;
 
   clptr = NULL;
   cxarrp = NULL;
@@ -980,10 +984,10 @@ char            *ZoomPicture (cpic,cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
   /* check for size */
   if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
       (cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
-    return(NULL);
+    return (NULL);
 
   /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
-  if (eWIDE==cWIDE && eHIGH==cHIGH)
+  if (eWIDE == cWIDE && eHIGH == cHIGH)
     /* 1:1 expansion.  points destinqtion pic at source pic */
     epic = cpic;
   else
@@ -1099,7 +1103,9 @@ PictInfo           *imageDesc;
 		 /* Black and white screen */
 		 XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (BackgroundColor[frame]));
-	       } else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox) {
+	       }
+	     else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox)
+	       {
 		 /* Set active Box Color */
 		 XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
 		 XSetForeground (TtDisplay, GCpicture, Box_Color);
@@ -1129,10 +1135,17 @@ PictInfo           *imageDesc;
 	     }
 	   else
 	     {
+	       /* xFrame and yFrame get the box size if picture is */
+	       /* rescaled and receive the position of the picture */
 	       if ((box->BxWidth != 0) && (box->BxHeight != 0))
 		 {
 		   xFrame = box->BxWidth;
 		   yFrame = box->BxHeight;
+		 }
+	       else if (pres != ReScale)
+		 {
+		   xFrame = 0;
+		   yFrame = 0;
 		 }
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
@@ -1153,7 +1166,7 @@ PictInfo           *imageDesc;
 	     {
 	       if (w == 0 && h == 0)
 		 {
-		 /* no size for the box, take the image size */
+		 /* the box size is unknown, keep the image size */
 		   w = wFrame;
 		   h = hFrame;
 		 }

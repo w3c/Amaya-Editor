@@ -1306,66 +1306,56 @@ ThotBitmap         *mask1;
 
 #endif /* __STDC__ */
 {
-   int                 w, h;
-   Pixmap              pixmap;
-   int                 i;
-   ThotColorStruct     colrs[256];
-   unsigned char      *buffer, *buffer2;
-   int                 ncolors, cpp;
+  int                 w, h;
+  Pixmap              pixmap;
+  int                 i;
+  ThotColorStruct     colrs[256];
+  unsigned char      *buffer, *buffer2;
+  int                 ncolors, cpp;
 
-   Gif89.transparent = -1;
-   Gif89.delayTime = -1;
-   Gif89.inputFlag = -1;
-   Gif89.disposal = 0;
+  Gif89.transparent = -1;
+  Gif89.delayTime = -1;
+  Gif89.inputFlag = -1;
+  Gif89.disposal = 0;
 
-   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-
-   if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
-
-       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       free(buffer);
-       buffer = buffer2;
-       buffer2 = NULL;
-       w = *xif;
-       h = *yif;
-   }
+  buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
+  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif)))
+    {   
+      /* xif and yif contain width and height of the box */
+      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      free(buffer);
+      buffer = buffer2;
+      buffer2 = NULL;
+      w = *xif;
+      h = *yif;
+    }
 
    if (buffer == NULL)
-      return ThotBitmapNone;
+     return ThotBitmapNone;
 
    if (Gif89.transparent != -1)
      {
-	if (Gif89.transparent < 0)
-	  {
-	     i = 256 + Gif89.transparent;
-	  }
-	else
-	  {
-	     i = Gif89.transparent;
-	  }
-
+       if (Gif89.transparent < 0)
+	 i = 256 + Gif89.transparent;
+       else
+	 i = Gif89.transparent;
+       
 #ifndef _WINDOWS
-	*mask1 = MakeMask (TtDisplay, buffer, w, h, i);
+       *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #endif /* _WINDOWS */
      }
 
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
-
    free (buffer);
-
    if (pixmap == None)
-     {
-	return ThotBitmapNone;
-     }
+     return ThotBitmapNone;
    else
      {
-	*wif = w;
-	*hif = h;
-
-	*xif = 0;
-	*yif = 0;
-
-	return (ThotBitmap) pixmap;
+       *wif = w;
+       *hif = h;
+       *xif = 0;
+       *yif = 0;
+       return (ThotBitmap) pixmap;
      }
 }
 
