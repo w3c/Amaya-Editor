@@ -4461,6 +4461,7 @@ void ShowSource (Document document, View view)
     	    DocStatusUpdate (document, TRUE);
 	 /* Synchronize selections */
 	 event.document = document;
+	 event.element = NULL;
 	 SynchronizeSourceView (&event);
        }
      TtaFreeMemory (localFile);

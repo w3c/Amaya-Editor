@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern int LookupSymbol ( XPointerContextPtr ctx,
                           char *s );
 extern void XPointer_select ( XPointerContextPtr ctx );
@@ -20,6 +21,7 @@ extern XPointerContextPtr XPointer_parse ( Document doc,
                                            char *buffer );
 
 #else /* __STDC__ */
+
 extern int LookupSymbol ( XPointerContextPtr ctx,
                             char *s );
 extern void XPointer_select ( XPointerContextPtr ctx );

@@ -101,8 +101,8 @@ extern void TtaExecuteMenuAction (char *actionName, Document doc, View view);
    Returns index
   ----------------------------------------------------------------------*/
 extern int TtaAddButton (Document document, View view, ThotIcon picture,
-						 void (*procedure) (), char* functionName, char *info,
-						 unsigned char type, ThotBool state);
+			 void (*procedure) (), char* functionName, char *info,
+			 unsigned char type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -253,10 +253,16 @@ extern void TtaMainLoop (void);
 extern void TtaHandlePendingEvents ();
 
 /*----------------------------------------------------------------------
-   TtaClickElement
-   Returns document and element clicked.
+  TtaClickElement
+  Waits for a new click and returns the cliked document and element.
   ----------------------------------------------------------------------*/
-extern void TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
+extern void TtaClickElement (Document *document, Element *element);
+
+/*----------------------------------------------------------------------
+  TtaGetClickedElement
+  Returns the last clicked document and element.
+  ----------------------------------------------------------------------*/
+extern void TtaGetClickedElement (Document *document, Element *element);
   
 /*----------------------------------------------------------------------
    TtaCreateBitmap

@@ -59,6 +59,7 @@
 #include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
+#include "boxlocate_f.h"
 #include "callback_f.h"
 #include "context_f.h"
 #include "dialogapi_f.h"
@@ -230,34 +231,58 @@ int TtaGetScreenDepth ()
 }
 
 /*----------------------------------------------------------------------
-   TtaClickElement
-   Returns document and element clicked.
+  TtaClickElement
+  Waits for a new click and returns the cliked document and element.
   ----------------------------------------------------------------------*/
-void TtaClickElement (Document * document, Element * element)
+void TtaClickElement (Document *document, Element *element)
 {
-   PtrAbstractBox      absBox;
-   PtrDocument         pDoc;
-   int                 frame;
-   int                 view;
+  PtrAbstractBox      pAb;
+  int                 frame;
 
-   UserErrorCode = 0;
-   if (element == NULL || document == NULL)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	*element = (Element) None;
-	*document = (Document) None;
+  UserErrorCode = 0;
+  if (element == NULL || document == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      *element = (Element) None;
+      *document = (Document) None;
+      GiveClickedAbsBox (&frame, &pAb);
+      if (frame == 0 || pAb == NULL)
+	return;
+      else
+	{
+	  *element = (Element) pAb->AbElement;
+	  *document = FrameTable[frame].FrDoc;
+	}
+    }
+}
 
-	GiveClickedAbsBox (&frame, &absBox);
-	if (frame == 0 || absBox == 0)
-	   return;
-	else
-	  {
-	     *element = (Element) absBox->AbElement;
-	     GetDocAndView (frame, &pDoc, &view);
-	     *document = (Document) IdentDocument (pDoc);
-	  }
-     }
+
+/*----------------------------------------------------------------------
+  TtaGetClickedElement
+  Returns the last clicked element.
+  ----------------------------------------------------------------------*/
+void TtaGetClickedElement (Document *document, Element *element)
+{
+  PtrAbstractBox pAb;
+
+  UserErrorCode = 0;
+  if (element == NULL || document == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      *element = (Element) None;
+      *document = (Document) None;
+      LocateSelectionInView (ClickFrame, ClickX, ClickY, 7);
+      pAb = GetClickedAbsBox (ClickFrame, ClickX, ClickY);
+      if (ClickFrame == 0 || pAb == NULL)
+	return;
+      else
+	{
+	  *element = (Element) pAb->AbElement;
+	  *document = FrameTable[ClickFrame].FrDoc;
+	}
+    }
 }
 
 

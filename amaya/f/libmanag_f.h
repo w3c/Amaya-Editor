@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern ThotBool IsCurrentSelectionSVG ( void );
 extern ThotBool IsCurrentSelectionContainsUseElement ( void );
 extern void AddNewModelIntoLibraryForm ( Document doc,
@@ -87,6 +88,7 @@ extern void OpenLibraryCallback ( Document doc,
                                   char *text );
 
 #else /* __STDC__ */
+
 extern ThotBool IsCurrentSelectionSVG ( void );
 extern ThotBool IsCurrentSelectionContainsUseElement ( void );
 extern void AddNewModelIntoLibraryForm ( Document doc,

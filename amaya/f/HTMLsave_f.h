@@ -34,6 +34,9 @@ extern void RestartParser ( Document doc,
                             ThotBool show_errors );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
+extern void DoSynchronize ( Document doc,
+                            View view,
+                            NotifyElement *event );
 extern void Synchronize ( Document doc,
                           View view );
 extern void SaveDocument ( Document doc,
@@ -77,6 +80,9 @@ extern void RestartParser ( Document doc,
                               ThotBool show_errors );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
+extern void DoSynchronize ( Document doc,
+                              View view,
+                              NotifyElement *event );
 extern void Synchronize ( Document doc,
                             View view );
 extern void SaveDocument ( Document doc,

@@ -42,6 +42,7 @@ static char       *DisplayCategory[]={
 #include "EDITstyle_f.h"
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
+#include "HTMLhistory_f.h"
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
@@ -367,6 +368,9 @@ void UpdateStyleSheet (char *url, char *tempdoc)
   Document            doc;
   PInfoPtr            pInfo, refInfo, nextInfo;
   DisplayMode         dispMode;
+  Element             el;
+  int		      position;
+  int		      distance;
   ThotBool            found;
 
   css = CSSList;
@@ -399,6 +403,9 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			  /* if it's an imported CSS updates the main css */
 			  if (pInfo->PiCategory == CSS_IMPORT)
 			    refcss = (CSSInfoPtr) pInfo->PiLink;
+
+			  /* get the current position in the document */
+			  position = RelativePosition (doc, &distance);
 			  /* Change the Display Mode to take into account the
 			     new presentation */
 			  dispMode = TtaGetDisplayMode (doc);
@@ -424,6 +431,9 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			      if (dispMode == DisplayImmediately)
 				TtaSetDisplayMode (doc, dispMode);
 			    }
+			  /* restore the current position in the document */
+			  el = ElementAtPosition (doc, position);
+			  TtaShowElement (doc, 1, el, distance);
 			}
 		      /* manage the next entry */
 		      pInfo = nextInfo;

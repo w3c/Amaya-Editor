@@ -7,9 +7,9 @@ DEFAULT
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
 	ElemSelect.Post -> CheckSynchronize;
-        ElemClick.Pre -> SimpleClickInLog;
-	ElemActivate.Pre -> DoubleClickInLog;
-        ElemRClick.Pre -> RightClickInLog;
+        ElemClick.Pre -> SimpleClickInText;
+	ElemActivate.Pre -> DoubleClickInText;
+        ElemRClick.Pre -> RightClickInText;
    END;
 
 ATTRIBUTES

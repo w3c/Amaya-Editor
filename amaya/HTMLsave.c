@@ -1322,9 +1322,12 @@ void RestartParser (Document doc, char *localFile,
   ----------------------------------------------------------------------*/
 void RedisplaySourceFile (Document doc)
 {
+  Element             el;
   char               *localFile;
   char	              documentname[MAX_LENGTH];
   char	              tempdir[MAX_LENGTH];
+  int		      position;
+  int		      distance;
   NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML ||
@@ -1336,7 +1339,10 @@ void RedisplaySourceFile (Document doc)
     if (DocumentSource[doc])
       /* The source code of this document is currently displayed */
       {
+	/* get the current position in the document */
+	position = RelativePosition (DocumentSource[doc], &distance);
 	TtaClearUndoHistory (DocumentSource[doc]);
+
 	/* Get its local copy */
 	localFile = GetLocalPath (doc, DocumentURLs[doc]);
 	TtaExtractName (localFile, tempdir, documentname);
@@ -1346,7 +1352,12 @@ void RedisplaySourceFile (Document doc)
 	/* Clear the document history because the document is reparsed */
 	TtaClearUndoHistory (DocumentSource[doc]);
 	TtaSetDocumentUnmodified (DocumentSource[doc]);
+
+	/* restore the current position in the document */
+	el = ElementAtPosition (DocumentSource[doc], position);
+	TtaShowElement (DocumentSource[doc], 1, el, distance);
 	event.document = doc;
+	event.element = NULL;
 	SynchronizeSourceView (&event);
 	TtaSetDocumentName (DocumentSource[doc], documentname);
 	SetWindowTitle (doc, DocumentSource[doc], 0);
@@ -1909,20 +1920,23 @@ Document GetDocFromSource (Document sourceDoc)
   return xmlDoc;
 }
 
+ 
 /*----------------------------------------------------------------------
-   Synchronize
+   DoSynchronize
    save the current view (source/structure) in a temporary file 
    and update the other view (structure/source).      
   ----------------------------------------------------------------------*/
-void Synchronize (Document doc, View view)
+void DoSynchronize (Document doc, View view, NotifyElement *event)
 {
+   Element           el;
    DisplayMode       dispMode;
    Document          xmlDoc, otherDoc;
-   NotifyElement     event;
    char             *tempdoc = NULL;
    char              docname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
    int               line, index;
+   int		     position;
+   int		     distance;
    ThotBool          saveBefore;
 
    if (!DocumentURLs[doc])
@@ -1957,8 +1971,7 @@ void Synchronize (Document doc, View view)
    if (Synchronizing)
      return;
    Synchronizing = TRUE;
-   /* close log files */
-   CloseLogs (doc);
+
    /* change display mode to avoid flicker due to callbacks executed when
       saving some elements, for instance META */
    dispMode = TtaGetDisplayMode (doc);
@@ -1975,6 +1988,8 @@ void Synchronize (Document doc, View view)
        tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
        if (saveBefore)
 	 {
+	   /* close log files */
+	   CloseLogs (doc);
 	   /* save the current state of the document into the temporary file */
 	   SetNamespacesAndDTD (doc);
 	   if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
@@ -2008,6 +2023,9 @@ void Synchronize (Document doc, View view)
 	   /*TtaExtractName (tempdoc, tempdir, docname);
 	     RestartParser (doc, tempdoc, tempdir, docname, TRUE);*/
 	}
+
+       /* restore original display mode */
+       TtaSetDisplayMode (doc, dispMode);
      }
    else if (DocumentTypes[doc] == docSource)
      /* it's a source document */
@@ -2016,6 +2034,12 @@ void Synchronize (Document doc, View view)
        otherDoc = xmlDoc;
        if (saveBefore)
 	 {
+	   /* close log files */
+	   CloseLogs (xmlDoc);
+	   /* get the current position in the document */
+	   position = RelativePosition (xmlDoc, &distance);
+	   TtaClearUndoHistory (xmlDoc);
+
 	   /* save the current state of the document into the temporary file */
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
@@ -2026,6 +2050,12 @@ void Synchronize (Document doc, View view)
 	   TtaSetDocumentModified (otherDoc);
 	   /* the source can be closed without save */
 	   TtaSetDocumentUnmodified (doc);
+
+	   /* restore original display mode */
+	   TtaSetDisplayMode (doc, dispMode);
+	   /* restore the current position in the document */
+	   el = ElementAtPosition (DocumentSource[doc], position);
+	   TtaShowElement (DocumentSource[doc], 1, el, distance);
 	   /* but it could be saved too */
 	   TtaSetItemOn (doc, 1, File, BSave);
 	 }
@@ -2045,27 +2075,41 @@ void Synchronize (Document doc, View view)
 	 }
      }
 
-   /* restore original display mode */
-   TtaSetDisplayMode (doc, dispMode);
-
    /* disable the Synchronize command for both documents */
    if (otherDoc)
-   {
-     if (DocumentTypes[doc] != docCSS)
-       {
-	 TtaSetItemOff (otherDoc, 1, File, BSynchro);
-	 TtaSetDocumentUnupdated (otherDoc);
-       }
-     TtaSetItemOff (doc, 1, File, BSynchro);
-     TtaSetDocumentUnupdated (doc);
-     
-     /* Synchronize selections */
-     event.document = doc;
-     SynchronizeSourceView (&event);
-   }
+     {
+       if (DocumentTypes[doc] != docCSS)
+	 {
+	   TtaSetItemOff (otherDoc, 1, File, BSynchro);
+	   TtaSetDocumentUnupdated (otherDoc);
+	 }
+       TtaSetItemOff (doc, 1, File, BSynchro);
+       TtaSetDocumentUnupdated (doc);
+       
+       /* Synchronize selections */
+       if (saveBefore)
+	 /* recheck the clicked element */
+	 TtaGetClickedElement (&(event->document), &(event->element));
+       SynchronizeSourceView (event);
+     }
    TtaFreeMemory (tempdoc);
    Synchronizing = FALSE;
 }
+
+/*----------------------------------------------------------------------
+   Synchronize
+   save the current view (source/structure) in a temporary file 
+   and update the other view (structure/source).      
+  ----------------------------------------------------------------------*/
+void Synchronize (Document doc, View view)
+{
+  NotifyElement     event;
+
+  event.document = doc;
+  event.element = NULL;
+  DoSynchronize (doc, view, &event);
+}
+
 
 /*----------------------------------------------------------------------
   SaveDocument

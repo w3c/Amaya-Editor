@@ -12,8 +12,10 @@ extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern ThotColor TtaGetMenuColor ( void );
 extern int TtaGetScreenDepth ( void );
-extern void TtaClickElement ( Document * document,
-                              Element * element );
+extern void TtaClickElement ( Document *document,
+                              Element *element );
+extern void TtaGetClickedElement ( Document *document,
+                                   Element *element );
 extern void TtaGiveSelectPosition ( Document document,
                                     Element element,
                                     View view,
@@ -28,8 +30,10 @@ extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern ThotColor TtaGetMenuColor ( void );
 extern int TtaGetScreenDepth ( void );
-extern void TtaClickElement ( Document * document,
-                                Element * element );
+extern void TtaClickElement ( Document *document,
+                                Element *element );
+extern void TtaGetClickedElement ( Document *document,
+                                     Element *element );
 extern void TtaGiveSelectPosition ( Document document,
                                       Element element,
                                       View view,

@@ -149,8 +149,7 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame,
 }
 
 /*----------------------------------------------------------------------
-  NotifyClick sends a message event to parent elements
-  of a graphic.
+  NotifyClick sends a message event to parent elements of a graphic.
   ----------------------------------------------------------------------*/
 static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 {
@@ -191,6 +190,7 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
     4 -> click an element
     5 -> click with the middle button
     6 -> click with the right button
+    7 -> reset the selection without notification
   ----------------------------------------------------------------------*/
 void LocateSelectionInView (int frame, int x, int y, int button)
 {
@@ -397,6 +397,9 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    /* send event TteElemRClick.Post to the application */
 		    NotifyClick (TteElemRClick, FALSE, el, doc);
 		  break;
+		case 7: /* reset the previous selection */
+		  ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
+		  return;
 		default: break;
 		}
 	    }
@@ -1298,7 +1301,6 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
   else
     return (pBox->BxAbstractBox);
 }
-
 
 /*----------------------------------------------------------------------
   GetEnclosingClickedBox checks if the point x, y belongs to the abstract

@@ -2332,7 +2332,7 @@ void InitDialogueFonts (char *name)
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
   if (DialogFont == NULL)
     {
-      DialogFont = ReadFont ('L', 2, 0, index, UnRelative);
+      DialogFont = ReadFont ('L', 1, 0, index, UnRelative);
       if (DialogFont == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }

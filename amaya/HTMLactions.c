@@ -2473,21 +2473,27 @@ void CheckSynchronize (NotifyElement *event)
 {
   if (event->document != SelectionDoc)
     {
-      if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
+      if (SelectionDoc && DocumentURLs[SelectionDoc])
 	{
 	  /* Reset buttons state in previous selected document */
 	  UpdateContextSensitiveMenus (SelectionDoc);
 	  /* Synchronize the content of the old document */
-	  Synchronize( SelectionDoc, 1 );
+	  if ((DocumentSource[SelectionDoc] &&
+	       (DocumentTypes[SelectionDoc] == docHTML ||
+		DocumentTypes[SelectionDoc] == docSVG ||
+		DocumentTypes[SelectionDoc] == docLibrary ||
+		DocumentTypes[SelectionDoc] == docMath)) ||
+	      DocumentTypes[SelectionDoc] == docSource)
+	    DoSynchronize (SelectionDoc, 1, event);
 	}
-      /* change the new selected document */
+      else
+	/* the document didn't change. Only synchronize the selection. */
+	SynchronizeSourceView (event);
       SelectionDoc = event->document;
     }
   else
-    {
-      /* the document didn't change. Only synchronize the selection. */
-      SynchronizeSourceView( event );
-    }
+    /* the document didn't change. Only synchronize the selection. */
+    SynchronizeSourceView (event);
 }
 
 /*----------------------------------------------------------------------
@@ -2547,6 +2553,9 @@ void SynchronizeSourceView (NotifyElement *event)
     /* looks for the element in the other document that corresponds to
        the clicked element */
     {
+      if (firstSel == NULL && event->document == doc)
+	/* the current selection is not already registered */
+	firstSel = event->element;
       if (firstSel)
 	{
 	 otherEl = NULL;
@@ -2804,9 +2813,9 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
 }
 
 /*----------------------------------------------------------------------
-  ShowLogLine points the corresponding line.
+  ShowTextLine points the corresponding line.
  -----------------------------------------------------------------------*/
-static ThotBool ShowLogLine (Element el, Document doc)
+static ThotBool ShowTextLine (Element el, Document doc)
 {
   Document	      otherDoc = 0;
   Element             otherEl;
@@ -2893,9 +2902,9 @@ static ThotBool ShowLogLine (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  SimpleClickInLog The user has clicked a log message.         
+  SimpleClickInText The user has clicked a log message.         
   ----------------------------------------------------------------------*/
-ThotBool SimpleClickInLog (NotifyElement *event)
+ThotBool SimpleClickInText (NotifyElement *event)
 {
   ThotBool usedouble;
 
@@ -2904,30 +2913,30 @@ ThotBool SimpleClickInLog (NotifyElement *event)
     return TRUE;
   else
     /* don't let Thot perform normal operation if there is an activation */
-    return (ShowLogLine (event->element, event->document));
+    return (ShowTextLine (event->element, event->document));
 }
 
 /*----------------------------------------------------------------------
-  DoubleClickInLog The user has double-clicked a log message.         
+  DoubleClickInText The user has double-clicked a log message.         
   ----------------------------------------------------------------------*/
-ThotBool DoubleClickInLog (NotifyElement *event)
+ThotBool DoubleClickInText (NotifyElement *event)
 {
   ThotBool usedouble;
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     /* don't let Thot perform normal operation */
-    return (ShowLogLine (event->element, event->document));
+    return (ShowTextLine (event->element, event->document));
   else
     return FALSE;
 }
 
 /*----------------------------------------------------------------------
-  RightClickInLog The user has right-clicked a log message.         
+  RightClickInText The user has right-clicked a log message.         
   ----------------------------------------------------------------------*/
-ThotBool RightClickInLog (NotifyElement *event)
+ThotBool RightClickInText (NotifyElement *event)
 {
-  return (ShowLogLine (event->element, event->document));
+  return (ShowTextLine (event->element, event->document));
 }
 
 /*----------------------------------------------------------------------
@@ -2935,15 +2944,27 @@ ThotBool RightClickInLog (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
 {
+  Document       doc;
+
   if (event->document != SelectionDoc)
     {
-      if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
+      if (SelectionDoc && DocumentURLs[SelectionDoc])
 	{
 	  /* Reset buttons state in previous selected document */
 	  UpdateContextSensitiveMenus (SelectionDoc);
-	  Synchronize( SelectionDoc, 1 );
+	  doc = event->document;
+	  /* Synchronize the content of the old document */
+	  if ((DocumentSource[SelectionDoc] &&
+	       (DocumentTypes[SelectionDoc] == docHTML ||
+		DocumentTypes[SelectionDoc] == docSVG ||
+		DocumentTypes[SelectionDoc] == docLibrary ||
+		DocumentTypes[SelectionDoc] == docMath)) ||
+	      DocumentTypes[SelectionDoc] == docSource)
+	    DoSynchronize (SelectionDoc, 1, event);
 	}
-      /* change the new selected document */
+      else
+	/* change the new selected document */
+	SynchronizeSourceView (event);
       SelectionDoc = event->document;
     }
   else
