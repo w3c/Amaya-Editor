@@ -1910,10 +1910,6 @@ void                InitMathML ()
 #  ifndef _WINDOWS 
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
-#  ifdef AMAYA_JAVA
-   TtaRegisterPixmap("Math", iconMath);
-   TtaRegisterPixmap("MathNo", iconMathNo);
-#  endif /* AMAYA_JAVA */
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
    mIcons[1] = TtaCreatePixmapLogo (root_xpm);
    mIcons[2] = TtaCreatePixmapLogo (sqrt_xpm);

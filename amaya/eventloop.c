@@ -79,7 +79,6 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
-#ifndef AMAYA_JAVA
 static int AmayaEventLoopInitialized = 0;
 static int NbAmayaSelect = 0;
 
@@ -240,7 +239,6 @@ ThotAppContext app_ctxt;
 #endif /* _WINDOWS */
      }
 }
-#endif /* !AMAYA_JAVA */
 
  
 /************************************************************************

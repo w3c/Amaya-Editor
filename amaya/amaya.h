@@ -77,15 +77,7 @@ typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
                      void *context);
 
 /* How are Network accesses provided ? */
-#ifdef AMAYA_JAVA
-#include "libjava.h"
-#else
-#ifdef AMAYA_ILU
-#include "libilu.h"
-#else
 #include "libwww.h"
-#endif
-#endif
 
 /* The different events to open a new document */
 typedef enum _ClickEvent {
@@ -170,19 +162,12 @@ typedef enum _ClickEvent {
 #define AMAYA_NOREDIR	128
 /* post an annonation */
 #define AMAYA_FILE_POST 256
-#ifndef AMAYA_JAVA
 /* Prevents a stop race condition in ASYNC transfers */
 #define AMAYA_ASYNC_SAFE_STOP  256
 #define AMAYA_LOAD_CSS   512
 #define AMAYA_FLUSH_REQUEST 1024
 #define AMAYA_USE_PRECONDITIONS 2048
 #define AMAYA_LOAD_IMAGE 4096
-
-#else
-#define AMAYA_ASYNC_SAFE_STOP  0
-#define AMAYA_LOAD_CSS   0
-#define AMAYA_USE_PRECONDITIONS 0
-#endif /* ! AMAYA_JAVA */
 
 /*
  * Flags to indicate the action to take when the network options

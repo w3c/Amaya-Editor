@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef AMAYA_JAVA
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 
@@ -264,12 +262,3 @@ HTStream           *output_stream;
 {
    return AHTMemConv_new (request);
 }
-
-
-/*
-  End of Module AHTMemConv.c
-*/
-#endif /* ! AMAYA_JAVA */
-
-
-

@@ -369,7 +369,6 @@ dnl  ***************************************************************
 
 THOT_VER="2.2"
 AMAYA_VER="1.5"
-KAFFE_VER="cvs"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -392,7 +391,6 @@ dnl Adjust the some variables depending on the host and compiler
 dnl Thot NEED signed chars !!!
 dnl
 
-KAFFE_ENGINE=""
 if test "${CC}" = "gcc" ; then
   CFLAGS="${CFLAGS} -W "
   case "${host}" in
@@ -466,59 +464,12 @@ if test "$build_thot" = "yes" ;  then
 fi
 
 dnl
-dnl Check for additionnal packages kaffe-xxx or libwww
+dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
-
-AC_ARG_ENABLE(java,    [  --enable-java           Add Kaffe Java virtual machine])
-AC_ARG_ENABLE(javaawt, [  --enable-java-awt       Add Kaffe Java Biss AWT])
-AC_ARG_ENABLE(intr,    [  --enable-intr           Use Kaffe Java Interpreter])
-AC_ARG_ENABLE(jit,     [  --enable-jit            Use Kaffe Java JIT Compiler])
-AC_ARG_ENABLE(plugin,  [  --enable-plugin         Add Netscape Plug-Ins support])
 AC_ARG_ENABLE(math,    [  --enable-math           Add Math support ])
 AC_ARG_ENABLE(graph,   [  --enable-graph          Add Graphics support ])
 AC_ARG_ENABLE(annot,   [  --enable-annot          Add Annotations support ])
-
-dnl
-dnl Check for the Kaffe engine to use : interpreter or JIT
-dnl
-
-with_java=""
-if test "$enable_intr" = "yes" ; then
-    with_java="yes"
-    KAFFE_ENGINE="--with-engine=intrp"
-fi
-if test "$enable_intr" = "no" ; then
-    with_java="yes"
-    KAFFE_ENGINE="--with-engine=jit"
-fi
-if test "$enable_jit" = "yes" ; then
-    with_java="yes"
-    KAFFE_ENGINE="--with-engine=jit"
-fi
-if test "$enable_jit" = "no" ; then
-    with_java="yes"
-    KAFFE_ENGINE="--with-engine=intr"
-fi
-
-
-dnl
-dnl java is disabled by default
-dnl
-
-if test "$enable_java" = "yes" ; then
-    with_java="yes"
-fi
-
-dnl
-dnl if java, java-awt is enabled by default
-dnl
-
-if test "$enable_javaawt" = "no" ; then
-    java_awt_option="-DJAVA_NO_AWT"
-else
-    java_awt_option=""
-fi
 
 dnl
 dnl plugins support is disabled by default
@@ -526,7 +477,7 @@ dnl
 
 if test "$with_plugin" = "" ; then
   if test "$enable_plugin" = "yes" ; then
-    with_plugin="yes"
+    with_plugin="no"
   else
     with_plugin="no"
   fi
@@ -567,67 +518,10 @@ fi
 
 
 if test "$build_amaya" = "yes" ; then
-
-    if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in \
-            -a ! -f $srcdir/kaffe-$KAFFE_VER.tar.gz ; then
-	if test "$with_java" = "yes" ; then
-	    AC_MSG_WARN(kaffe-$KAFFE_VER sources not found, disabling Java !)
-	    with_java="no"
-	fi
-    fi
-
-    if test "$with_java" = "yes" ; then
-	#
-	# Verify that Java code is available.
-	# Look first for thotlib, amaya and jigsaw classes source code
-	#
-	if test -f $srcdir/classes/org/w3c/www/protocol/http/HttpURLConnection.java \
-		; then
-	    with_java_sources="yes"
-	else
-	    with_java_sources="no"
-	fi 
-	#
-	# Then check for a sources ZIP for the classes.
-	#
-	if test -f $srcdir/classes/sources.zip \
-		; then
-	    with_java_sources="yes"
-	else
-	    with_java_sources="no"
-	fi 
-
-	#
-	# Then check for precompiled classes packages.
-	#
-	if test -f $srcdir/classes/jigsaw.zip \
-		; then
-	    with_java_package="yes"
-	else
-	    with_java_package="no"
-	fi 
-
-	#
-	# At least one of both should be available.
-	#
-	if test "$with_java_sources" = "no" -a "$with_java_package" = "no"
-	then
-	    AC_MSG_WARN(Amaya Java classes not found : disabling Java!)
-            with_java="no"
-	else
-	    #
-	    # kaffe may require libgmp ...
-	    #
-	    AC_CHECK_LIB(gmp,mpz_abs)
-	fi
-    fi
-
     if test ! -f $srcdir/../libwww/Makefile.in ; then
-	if test "$with_java" = "no" ; then
-	    AC_MSG_WARN(libwww sources not found !!)
-	    AC_MSG_WARN(Disabling Amaya build !)
-	    build_amaya="no"
-	fi
+	AC_MSG_WARN(libwww sources not found !!)
+	AC_MSG_WARN(Disabling Amaya build !)
+	build_amaya="no"
     fi
 
     if test ! -f $srcdir/amaya/MathML.S ; then
@@ -664,8 +558,6 @@ dnl
 THOT_OPTIONS=
 AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
-dnl JAVA_OPTIONS="-DDEBUG_KAFFE -DDEBUG_LOCK -DDEBUG_SELECT -DDEBUG_SELECT_CHANNELS -DDEBUG_TIMING -DSYNC_DNS"
-JAVA_OPTIONS="$java_awt_option"
 AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -699,11 +591,8 @@ dnl
 
 AC_SUBST(THOT_VER)
 AC_SUBST(AMAYA_VER)
-AC_SUBST(KAFFE_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
-
-AC_SUBST(KAFFE_ENGINE)
 
 AC_SUBST(THOTINCLUDES)
 AC_SUBST(APIINCLUDES)
@@ -712,7 +601,6 @@ AC_SUBST(VPATHOPT)
 AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
 AC_SUBST(PLUGIN_OPTIONS)
-AC_SUBST(JAVA_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_OPTIONS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_LIBS)
@@ -722,53 +610,30 @@ dnl Include the option Makefile.xxx fragment according to the configure options
 dnl
 
 if test "$with_plugin" = "yes" ; then
-    AC_SUBST_FILE(plugin_frag)dnl
+    AC_SUBST_FILE(plugin_frag)
     plugin_frag=$srcdir/pluginlib/Makefile.plugin
 else
     AC_SUBST_FILE(plugin_frag)
     plugin_frag=/dev/null
 fi
 
-if test "$with_java" = "yes" ; then
-    AC_SUBST_FILE(java_frag)
-    java_frag=$srcdir/javalib/Makefile.java
     AC_SUBST_FILE(www_frag)
-    www_frag=/dev/null
-    if test "$with_java_sources" = "yes" ; then
-	AC_SUBST_FILE(javasrc_frag)
-	javasrc_frag=$srcdir/javalib/Makefile.javasrc
-	AC_SUBST_FILE(javanosrc_frag)
-	javanosrc_frag=/dev/null
-    else
-	AC_SUBST_FILE(javasrc_frag)
-	javasrc_frag=/dev/null
-	AC_SUBST_FILE(javanosrc_frag)
-	javanosrc_frag=$srcdir/javalib/Makefile.javanosrc
-    fi
-else
-    java_frag=/dev/null
-    javasrc_frag=/dev/null
-    javanosrc_frag=/dev/null
-
-    AC_SUBST_FILE(java_frag)
-    AC_SUBST_FILE(www_frag)dnl
     www_frag=$srcdir/amaya/Makefile.libwww
-fi
 
-if test "$with_math" = "yes" ; then
-    AC_SUBST_FILE(math_frag)
-    math_frag=$srcdir/amaya/Makefile.math
-else
+if test "$with_math" = "no" ; then
     AC_SUBST_FILE(math_frag)
     math_frag=/dev/null
+else
+    AC_SUBST_FILE(math_frag)
+    math_frag=$srcdir/amaya/Makefile.math
 fi
 
-if test "$with_graph" = "yes" ; then
-    AC_SUBST_FILE(graph_frag)
-    graph_frag=$srcdir/amaya/Makefile.graph
-else
+if test "$with_graph" = "no" ; then
     AC_SUBST_FILE(graph_frag)
     graph_frag=/dev/null
+else
+    AC_SUBST_FILE(graph_frag)
+    graph_frag=$srcdir/amaya/Makefile.graph
 fi
 
 if test "$with_annot" = "yes" ; then
@@ -808,14 +673,6 @@ $srcdir/pluginlib/Makefile.plugin"
     if test "$with_annot" = "yes" ; then
        make_output="$make_output annotlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/annotlib/Makefile.in"
-    fi
-
-    if test "$with_java" = "yes" ; then
-       make_output="$make_output tools/javastub/Makefile \
-tools/dns_daemon/Makefile javalib/Makefile"
-       EXTRA_MAKEFILE_IN="$srcdir/tools/javastub/Makefile.in \
-$srcdir/tools/dns_daemon/Makefile.in \
-$srcdir/javalib/Makefile.in"
     fi
 fi
 
@@ -912,27 +769,9 @@ else
 fi
 
 if test "$build_amaya" = "yes" ; then
-    if test "$with_java" = "yes" -a "$with_plugin" = "yes" ; then
-        AC_MSG_WARN(Amaya configured with both Java and Plugins support)
-dnl        AC_MSG_WARN(Beware this combination doesn't work well)
-    else
-	if test "$with_java" = "yes" ; then
-	    if test "$KAFFE_ENGINE" = "--with-engine=jit" ;  then
-	       echo Amaya configured with Java JIT support
-	    else
-	        if test "$KAFFE_ENGINE" = "--with-engine=intr" ;  then
-		    echo Amaya configured with Java interpreter support
-	        else
-		    echo Amaya configured with Java support
-		fi
-            fi
-	    echo Using kaffe-$KAFFE_VER Java virtual machine
-	else
-	    echo Amaya configured with libWWW
-	fi
-	if test "$with_plugin" = "yes" ; then
-	    echo Amaya configured with Plugins support
-	fi
+    echo Amaya configured with libWWW
+    if test "$with_plugin" = "yes" ; then
+        echo Amaya configured with Plugins support
     fi
     if test "$with_math" = "yes" ; then
 	echo Amaya configured with Math support

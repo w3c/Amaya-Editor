@@ -3,8 +3,6 @@
 **
 */
 
-#ifndef AMAYA_JAVA
-
 /* Amaya includes  */
 #define THOT_EXPORT extern
 
@@ -176,8 +174,3 @@ PUBLIC BOOL AHTEventTerminate (void)
     DestroyWindow(HTSocketWin);
     return YES;
 }
-		 
-#endif /* !_AMAYA_JAVA */
-
-
-

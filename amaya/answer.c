@@ -13,8 +13,6 @@
  *
  */
 
-#ifndef AMAYA_JAVA
-
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -826,11 +824,3 @@ int status;
 	}
     }
 }
-   
-
-
-/*
-  end of Module answer.c
-*/
-
-#endif

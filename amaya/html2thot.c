@@ -7517,9 +7517,6 @@ ThotBool            plainText;
 	TtaSaveDocument (doc, pivotFileName);
 	TtaCloseDocument (doc);
 #else  /* STANDALONE */
-        #ifdef AMAYA_JAVA
-	handleLinkHeaders (doc);
-        #endif /* AMAYA_JAVA */
 	TtaFreeMemory (docURL);
 	/* an HTML document could be a template */
 	if (!plainText)

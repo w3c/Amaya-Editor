@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Compiling Amaya</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body lang="en">
@@ -51,13 +51,11 @@ compilers) from the distributed <a href="Sources.html">source tree</a>.</p>
   </li>
   <li><span style="color : #FF0000">Create a subtree (obj)</span>  for object
     and launch configure to create the Makefile(s):
-    <p>Configure accepts 4 specific parameters allowing to select packages to
+    <p>Configure accepts 3 specific parameters allowing to select packages to
     be compiled:</p>
-    <pre>      --with-amaya            Build the Amaya HTML browser/editor
-      --enable-plugin         Add Netscape Plug-Ins support</pre>
-    <p><strong>Plugins</strong> are not available by default.  To compile
-    <strong>Amaya</strong> with Plugins, use the following:</p>
-    <pre> ../configure --enable-plugin
+    <pre>      --disable-math            Build Amaya without math
+      --disable-graph           Build Amaya without graphics
+      --enable-annot            Build Amaya with Annotations support
  </pre>
     This creates all the Makefiles needed and generate an Options.orig file
     containing all the variable which can be tuned. For example one can just
@@ -297,7 +295,6 @@ release.</p>
 
 <p></p>
 <hr>
-
 <address>
   <a href="mailto:irene.vatton@w3.org">Irène Vatton</a><br>
   <br>

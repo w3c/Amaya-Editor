@@ -19,9 +19,7 @@
 
 
 #include "init_f.h"
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
-#endif
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "EDITORactions_f.h"
@@ -581,9 +579,6 @@ void *context;
 	 TtaFreeMemory (base_url);
      }
 
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-   FilesLoading[doc]--;
-#endif
    if (DocumentURLs[doc] != NULL)
      {
 	/* the image could not be loaded */
@@ -674,11 +669,8 @@ void *context;
   if (DocumentURLs[doc] != NULL)
     {
       /* an image of the document is now loaded */
-
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
       /* update the stop button status */
       ResetStop (doc);
-#endif /* AMAYA_JAVA */
 
       /* the image could not be loaded */
       if (status != 0)
@@ -819,19 +811,11 @@ void               *extra;
 	      FetchImage_ctx->desc = desc;
 	      FetchImage_ctx->base_url =  TtaWCSdup (DocumentURLs[doc]);
 
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	      FilesLoading[doc]++;
-	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
-		                AMAYA_ASYNC | flags, NULL, NULL,
-				(void *) libWWWImageLoaded,
-				(void *) FetchImage_ctx, NO, NULL);
-#else /* !AMAYA_JAVA && !AMAYA_ILU */
 	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) libWWWImageLoaded,
 				(void *) FetchImage_ctx, NO, NULL);
-#endif /* !AMAYA_JAVA && !AMAYA_ILU */
 	      if (i != -1) 
 		desc->status = IMAGE_LOADED;
 	      else
@@ -917,17 +901,12 @@ int                 flags;
    STRING              currentURL;
    ThotBool            stopped_flag;
 
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-   if (FilesLoading[doc] == 0)
-     {
-#else 
    /* JK: verify if StopTransfer was previously called */
    if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
      {
        /* transfer interrupted */
        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
        DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-#endif  /* AMAYA_JAVA || AMAYA_ILU */
        return FALSE;
      }
    else if (DocumentTypes[doc] == docText ||
@@ -945,10 +924,8 @@ int                 flags;
    /* prepare the attribute to be searched */
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_SRC;
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
-#endif
    /* search all elements having an attribute SRC */
    do
      {
@@ -958,10 +935,8 @@ int                 flags;
 	    /* the document has been removed */
 	    break;
 
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	    break;
-#endif
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
@@ -971,14 +946,10 @@ int                 flags;
      }
    while (el != NULL);
 
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    if (W3Loading != doc)
        stopped_flag = FALSE;
    else
      stopped_flag = TRUE;
-#else
-   stopped_flag = FALSE;
-#endif
 
    /* Images fetching is now finished */
    TtaFreeMemory (currentURL);

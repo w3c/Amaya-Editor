@@ -520,19 +520,11 @@ void                DoSaveObjectAs ()
 
    if (!dst_is_local)
      {
-#ifdef AMAYA_JAVA
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_USE_PRECONDITIONS, NULL, NULL);
-#else
 	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
 	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
 			    unknown_type,
 			    AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
 			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
-#endif /* AMAYA_JAVA */
-
-
 	if (res)
 	  {
 #        ifndef _WINDOWS
@@ -1095,12 +1087,8 @@ ThotBool     use_preconditions;
   /* Save */
   /* JK: SYNC requests assume that the remotefile name is a static array */
   ustrcpy (tempfile, remotefile);
-#ifdef AMAYA_JAVA
-  mode = AMAYA_SYNC | AMAYA_NOCACHE;
-#else /* AMAYA_JAVA */
   mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
   mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
-#endif /* AMAYA_JAVA */
 
   res = PutObjectWWW (doc, localfile, tempfile, mode, filetype, NULL, NULL);
   if (res != 0)
@@ -1118,13 +1106,8 @@ ThotBool     use_preconditions;
 
   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
   ustrcpy (tempURL, remotefile);
-#ifdef AMAYA_JAVA
-  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
-		      NULL, NULL, NULL, NULL, NO, NULL);
-#else /* AMAYA_JAVA */
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE
 		      | AMAYA_FLUSH_REQUEST, NULL, NULL, NULL, NULL, NO, NULL);
-#endif /* AMAYA_JAVA */
   if (res != 0)
     {
       /* The HTTP GET method failed ! */
@@ -1141,8 +1124,6 @@ ThotBool     use_preconditions;
 #ifdef AMAYA_DEBUG
       fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);
 #endif
-#ifdef AMAYA_JAVA
-#endif /* AMAYA_JAVA */
       if (! TtaCompareFiles(tempfile, localfile))
 	{
 	  usprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED), remotefile);
@@ -1150,8 +1131,6 @@ ThotBool     use_preconditions;
 	  if (!UserAnswer)
 	    res = -1;
 	}
-#ifdef AMAYA_JAVA
-#endif /* AMAYA_JAVA */
     }
 
   if (TtaFileExist (tempfile))
@@ -1203,22 +1182,13 @@ ThotBool            use_preconditions;
   res = SafeSaveFileThroughNet (document, tempname, url, unknown_type, use_preconditions);
   if (res != 0)
     {
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA || AMAYA_ILU */
       ResetStop (document);
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-      sprintf (msg, "%s %s \n%s",
-	       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-	       url,
-	       TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA || AMAYA_ILU */
       usprintf (msg, TEXT("%s %s \n%s\n%s"),
 		TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		url,
 		AmayaLastHTTPErrorMsg,
 		TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#endif /* AMAYA_JAVA || AMAYA_ILU */
       if (confirm)
 	{
 	  InitConfirm (document, view, msg);
@@ -1277,10 +1247,6 @@ ThotBool         use_preconditions;
   if (msg == NULL)
     return (FALSE);
 
-  /*
-   * Don't use memory allocated on the stack ! May overflow the 
-   * memory allocated for this Java thread.
-   */
   /* save into the temporary document file */
   tempname = GetLocalPath (doc, url);
 
@@ -1368,20 +1334,12 @@ ThotBool         use_preconditions;
       res = SafeSaveFileThroughNet (doc, tempname, url, unknown_type, use_preconditions);
       if (res != 0)
 	{
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA || AMAYA_ILU */
 	  ResetStop (doc);
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	  sprintf (msg, "%s %s",
-		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		   url);
-#else /* AMAYA_JAVA || AMAYA_ILU */
 	  usprintf (msg, TEXT("%s %s --> %s"),
 		    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		    url,
 		    AmayaLastHTTPErrorMsg);
-#endif /* AMAYA_JAVA || AMAYA_ILU */
 	  if (confirm)
 	    {
 	      InitConfirm (doc, view, msg);
@@ -1411,27 +1369,19 @@ ThotBool         use_preconditions;
 					   use_preconditions);
 	      if (res)
 		{
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 		  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA  || AMAYA_ILU */
 		  ResetStop (doc);
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-		      sprintf (msg, "%s %s",
-			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			       pImage->originalName);
-#else /* AMAYA_JAVA || AMAYA_ILU */
-		      usprintf (msg, TEXT("%s %s \n%s"),
-			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			       pImage->originalName, 
-			       AmayaLastHTTPErrorMsg);
-#endif /* AMAYA_JAVA || AMAYA_ILU */
-		      InitConfirm (doc, view, msg);
-		      /* erase the last status message */
-		      TtaSetStatus (doc, view, TEXT(""), NULL);
-		      if (UserAnswer)
-			res = -1;
-		      else
-			res = -1;
+		  usprintf (msg, TEXT("%s %s \n%s"),
+			    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			    pImage->originalName, 
+			    AmayaLastHTTPErrorMsg);
+		  InitConfirm (doc, view, msg);
+		  /* erase the last status message */
+		  TtaSetStatus (doc, view, TEXT(""), NULL);
+		  if (UserAnswer)
+		    res = -1;
+		  else
+		    res = -1;
 		  /* do not continue */
 		  pImage = NULL;
 		}

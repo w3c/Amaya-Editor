@@ -449,7 +449,9 @@ ThotBool            redisplay;
 	  {
 	     pElRef = pRef->RdElement;
 	     /* un element qui reference */
-	     if (pElRef != NULL)
+	     if (pElRef != NULL &&
+		 /* avoid to update the attribute reference of a removed element */
+		 (pElRef->ElPrevious != NULL || pElRef->ElNext != NULL || pElRef->ElParent != NULL))
 		if (pRef->RdAttribute != NULL)
 		   /* reference par attribut */
 		   /* retire la presentation de cet attribut et reaffiche */

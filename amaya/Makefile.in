@@ -11,7 +11,7 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(X_FLAGS)
 XMLIB   = -lXm
-LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
+LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ANNOT_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) \
@@ -105,9 +105,6 @@ force :
 #									#
 #########################################################################
 
-#include the fragment "javalib/Makefile.java" for java if configured in
-@java_frag@
-
 #include the fragment "pluginlib/Makefile.plugin" for plugins if configured in
 @plugin_frag@
 
@@ -130,31 +127,31 @@ force :
 #									#
 #########################################################################
 
-ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) $(AMAYA_JAVA_OPTIONS) \
+ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) \
 	 $(AMAYA_PLUGIN_OPTIONS) $(AMAYA_LIBWWW_OPTIONS) \
 	 $(AMAYA_MATH_OPTIONS) $(AMAYA_GRAPH_OPTIONS) $(AMAYA_ANNOT_OPTIONS) 
 
-AMAYA_OPTION_INCLUDES= $(AMAYA_JAVA_INCLUDES) $(AMAYA_PLUGIN_INCLUDES) \
+AMAYA_OPTION_INCLUDES= $(AMAYA_PLUGIN_INCLUDES) \
          $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES) \
 	 $(AMAYA_GRAPH_INCLUDES) $(AMAYA_ANNOT_INCLUDES) 
 
-AMAYA_OPTION_OBJ= $(AMAYA_JAVA_OBJ) $(AMAYA_PLUGIN_OBJ) \
+AMAYA_OPTION_OBJ= $(AMAYA_PLUGIN_OBJ) \
          $(AMAYA_LIBWWW_OBJ) $(AMAYA_GRAPH_OBJ) $(AMAYA_MATH_OBJ) \
          $(AMAYA_ANNOT_OBJ) 
 
-AMAYA_SRC= $(AMAYA_JAVA_SRC) $(AMAYA_PLUGIN_SRC) \
+AMAYA_SRC= $(AMAYA_PLUGIN_SRC) \
          $(AMAYA_LIBWWW_SRC) $(AMAYA_MATH_SRC) $(AMAYA_GRAPH_SRC) \
          $(AMAYA_ANNOT_SRC) 
 
-AMAYA_OPTION_LIBS= $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
+AMAYA_OPTION_LIBS= $(AMAYA_PLUGIN_LIBS) \
          $(AMAYA_LIBWWW_OPTION_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
          $(AMAYA_ANNOT_LIBS) 
 
-AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_JAVA_EXTRA_LIBS) $(AMAYA_PLUGIN_EXTRA_LIBS) \
+AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_PLUGIN_EXTRA_LIBS) \
          $(AMAYA_LIBWWW_EXTRA_LIBS) $(AMAYA_MATH_EXTRA_LIBS) \
          $(AMAYA_GRAPH_EXTRA_LIBS) $(AMAYA_ANNOT_EXTRA_LIBRS)
 
-AMAYA_OPTION_SCHEMAS= $(AMAYA_JAVA_SCHEMAS) $(AMAYA_PLUGIN_SCHEMAS) \
+AMAYA_OPTION_SCHEMAS= $(AMAYA_PLUGIN_SCHEMAS) \
          $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS) \
          $(AMAYA_ANNOT_SCHEMAS) 
 
@@ -218,7 +215,6 @@ AMAYA_OBJ = \
 	HTMLtable.o \
 	html2thot.o \
 	init.o \
-	javaamaya.o \
 	MENUconf.o \
 	templates.o \
 	trans.o \
@@ -363,7 +359,7 @@ html2piv: ../bin/html2piv
 	$(CC) $(LDFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -o ../bin/html2piv  @srcdir@/html2thot.c $(HTML2THOT_LIBS)
 	@$(ECHO) "====>" html2piv is done
 
-install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
+install : all ../bin/print $(AMAYA_PLUGIN_INSTALL) \
 		$(AMAYA_ANNOT_INSTALL)
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/Amaya ; then $(MKDIR) $(prefix)/Amaya ; fi)
@@ -397,7 +393,7 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/fonts ; \
 	  done ; done)
 
-uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL) \
+uninstall : $(AMAYA_PLUGIN_UNINSTALL) \
 		$(AMAYA_ANNOT_UNINSTALL) \
 	$(RM) -rf $(prefix)/thot
 	$(RM) -rf $(prefix)/Amaya

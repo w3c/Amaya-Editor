@@ -158,9 +158,7 @@ static int      TemplatesBase;
 static CHAR_T   TemplatesUrl [MAX_LENGTH];
 static int      CurrentProfile = -1;
 
-#ifndef AMAYA_JAVA
 #include "query_f.h"
-#endif
 #include "init_f.h"
 
 
@@ -817,10 +815,7 @@ STRING              data;
 	    case 1:
 	      ValidateCacheConf ();
 	      SetCacheConf ();
-#ifdef AMAYA_JAVA
-#else      
 	      libwww_updateNetworkConf (CacheStatus);
-#endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      CacheStatus = 0;
 	      TtaDestroyDialogue (ref);
@@ -832,12 +827,9 @@ STRING              data;
 	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
 	    case 3:
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
 	      /* @@ docid isn't used! */
 	      StopAllRequests (1);
 	      libwww_CleanCache ();
-#endif /* AMAYA_JAVA */
 	      break;
 
 	    default:
@@ -1196,10 +1188,7 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetProxyConf ();
-#ifdef AMAYA_JAVA
-#else      
 	      libwww_updateNetworkConf (ProxyStatus);
-#endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      ProxyStatus = 0;
 	      TtaDestroyDialogue (ref);
@@ -2138,10 +2127,7 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetPublishConf ();
-#ifdef AMAYA_JAVA
-#else      
 	      libwww_updateNetworkConf (SafePutStatus);
-#endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      SafePutStatus = 0;
 	      TtaDestroyDialogue (ref);

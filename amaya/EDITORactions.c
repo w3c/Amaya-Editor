@@ -29,10 +29,7 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
 #include "query_f.h"
-#endif /* AMAYA_JAVA */
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
@@ -2327,11 +2324,8 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
   StopAllRequests (doc);
   libwww_CleanCache ();
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2346,10 +2340,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
    ColorConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2364,10 +2355,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else 
    GeometryConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2382,10 +2370,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else 
    GeneralConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2400,10 +2385,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
    PublishConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2418,10 +2400,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
   CacheConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2436,10 +2415,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
   ProxyConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2454,10 +2430,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else 
    LanNegConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2472,10 +2445,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
   ProfileConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2490,10 +2460,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else 
    TemplatesConfMenu (doc, view);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -2508,10 +2475,7 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
   TtaSaveAppRegistry ();
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------

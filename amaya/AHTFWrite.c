@@ -15,8 +15,6 @@
  *
  */
 
-#ifndef AMAYA_JAVA
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 
@@ -323,10 +321,3 @@ BOOL                leave_open;
    me->request = request;
    return me;
 }
-
-
-/*
-  End of Module AHTFWrite.c
-*/
-
-#endif /* !AMAYA_JAVA */

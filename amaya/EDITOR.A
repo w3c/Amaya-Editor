@@ -8,12 +8,6 @@ USES
 #ifdef ANNOTATIONS
        , Annot
 #endif
-#ifdef AMAYA_JAVA
-       , Java
-#endif
-#ifdef AMAYA_ILU
-       , Ilu
-#endif
        , MathML
 #ifdef GRAPHML
        , GraphML

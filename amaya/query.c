@@ -14,8 +14,6 @@
  *         J. Kahan/R. Guetari Windows 95/NT routines
  */
 
-#ifndef AMAYA_JAVA
-
 /* defines to include elsewhere
 *********************************/
 
@@ -3622,9 +3620,3 @@ int status;
       AHTAcceptLanguagesInit (acceptLanguages);
     }
 }
-
-#endif /* AMAYA_JAVA */
-
-/*
-  end of Module query.c
-*/

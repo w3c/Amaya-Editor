@@ -19,8 +19,6 @@
 #include <glib.h>
 #endif /* _GTK */
 
-#ifndef AMAYA_JAVA
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "AHTBridge_f.h"
@@ -951,11 +949,3 @@ HTTimer *libwww_timer;
 #endif /* _GTK */
 
 #endif /* !_WINDOWS */
-
-#endif /* !AMAYA_JAVA */
-
-
-
-
-
-

@@ -74,10 +74,6 @@
 #endif /* !_WINDOWS */
 #endif /* AMAYA_PLUGIN */
 
-#ifdef AMAYA_JAVA
-#include "Java.xpm"
-#endif /* AMAYA_JAVA */
-
 #ifdef ANNOTATIONS
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
@@ -149,9 +145,6 @@ static ThotIcon       iconHome;
 #ifdef AMAYA_PLUGIN
 static ThotIcon       iconPlugin;
 #endif /* AMAYA_PLUGIN */
-#ifdef AMAYA_JAVA
-static ThotIcon       iconJava;
-#endif /* AMAYA_JAVA */
 #endif /* _WINDOWS */
 
 #ifdef _WINDOWS
@@ -210,9 +203,6 @@ static ThotBool  itemChecked = FALSE;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-#include "query_f.h"
-#endif /* !AMAYA_JAVA  && !AMAYA_ILU */
 #include "trans_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
@@ -243,10 +233,6 @@ extern void InitMathML ();
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */
-#ifdef AMAYA_JAVA
-#include "javaamaya_f.h"
-extern void CreateFormJava (Document, View);
-#endif
 
 /* the structure used for storing the context of the 
    GetHTMLDocument_callback function */
@@ -961,17 +947,6 @@ View                view;
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
-#if defined(AMAYA_JAVA)
-  else if (FilesLoading[document] != 0)
-    StopRequest (document);
-#else 
-#if defined(AMAYA_ILU)
-  else if (FilesLoading[document] != 0)
-    {
-      StopRequest (document);
-      FilesLoading[document] = 0;
-    }
-#else
   else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       if (TtaGetViewFrame (document, 1) != 0)
@@ -983,8 +958,6 @@ View                view;
 		    TtaGetMessage (AMAYA, AM_LOAD_ABORT), 
 		    NULL);
     }
-#endif /* !AMAYA_ILU */
-#endif /* !AMAYA_JAVA */
 }
 
 
@@ -1618,11 +1591,6 @@ ThotBool     logFile;
 #        endif /* !_WINDOWS */
 #        endif /* AMAYA_PLUGIN */
 
-#ifdef AMAYA_JAVA
-	   TtaAddButton (doc, 1, iconJava, CreateFormJava, "CreateFormJava",
-			 TtaGetMessage (AMAYA, AM_BUTTON_JAVA),
-			 TBSTYLE_BUTTON, TRUE);
-#endif /* AMAYA_JAVA */
 	   AddMathButton (doc, 1);
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
@@ -2599,22 +2567,7 @@ View                view;
    position = RelativePosition (doc, &distance);
 
    W3Loading = doc;	/* this document is currently in load */
-
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-   /* Check against concurrent loading on the same frame */
-   if (FilesLoading[doc])
-     {
-       TtaFreeMemory (pathname);
-       TtaFreeMemory (documentname);
-       return;
-     }
-#endif 
-
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-   mode = AMAYA_SYNC | AMAYA_NOCACHE;
-#else
    mode = AMAYA_ASYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
-#endif /* AMAYA_JAVA */
 
    if (method == CE_FORM_POST)
      mode |= AMAYA_FORM_POST;
@@ -2636,16 +2589,10 @@ View                view;
    if (IsW3Path (pathname))
      {
        /* load the document from the Web */
-#ifdef AMAYA_JAVA
-       toparse = GetObjectWWW (doc, pathname, form_data, tempfile, 
-			       mode, 
-			       NULL, NULL, NULL, NULL, YES, NULL);
-#else /* AMAYA_JAVA */
        toparse = GetObjectWWW (doc, pathname, form_data, tempfile, 
 			       mode,
 			       NULL, NULL, (void *) Reload_callback, 
 			       (void *) ctx, YES, NULL);
-#endif /* AMAYA_JAVA */
      }
    else if (TtaFileExist (pathname))
      Reload_callback (doc, 0, pathname, tempfile, NULL, (void *) ctx);
@@ -3510,29 +3457,13 @@ void               *ctx_cbf;
 		 DocumentTypes[newdoc] = docHTML;
 	     }
 
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	   if (ok)
-	     {
-	       /* Check against concurrent loading on the same frame */
-	       if (FilesLoading[newdoc])
-		 {
-		   newdoc = 0;
-		   ok = FALSE;
-		 }
-	     }
-#endif /* AMAYA_JAVA */
-
 	   if (ok)
 	     {
 	       /* this document is currently in load */
 	       W3Loading = newdoc;
 	       ActiveTransfer (newdoc);
 	       /* set up the transfer mode */
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	       mode = AMAYA_ASYNC;
-#else
 	       mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
-#endif /* AMAYA_JAVA */
 
 	       if (CE_event == CE_FORM_POST)
 		 mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
@@ -4425,11 +4356,7 @@ void                FreeAmayaStructures ()
       FreeXMLParser ();
       FreeDocHistory ();
       FreeTransform ();
-#ifdef AMAYA_JAVA
-      CloseJava ();
-#else
       QueryClose ();
-#endif
 #ifdef ANNOTATIONS
       ANNOT_Quit ();
 #endif /* ANNOTATIONS */
@@ -4525,43 +4452,6 @@ NotifyEvent        *event;
 #ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
 #endif /* AMAYA_PLUGIN */
-#ifdef AMAYA_JAVA
-   TtaRegisterPixmap("stopR", stopR);
-   TtaRegisterPixmap("stopN", stopN);
-   TtaRegisterPixmap("Save", iconSave);
-   TtaRegisterPixmap("SaveNo", iconSaveNo);
-   TtaRegisterPixmap("Find", iconFind);
-   TtaRegisterPixmap("Reload", iconReload);
-   TtaRegisterPixmap("Italic", iconI);
-   TtaRegisterPixmap("Bold", iconB);
-   TtaRegisterPixmap("TeleType", iconT);
-   TtaRegisterPixmap("Back", iconBack);
-   TtaRegisterPixmap("BackNo", iconBackNo);
-   TtaRegisterPixmap("Forward", iconForward);
-   TtaRegisterPixmap("ForwardNo", iconForwardNo);
-   TtaRegisterPixmap("H1", iconH1);
-   TtaRegisterPixmap("H1No", iconH1);
-   TtaRegisterPixmap("H2", iconH2);
-   TtaRegisterPixmap("H2No", iconH2);
-   TtaRegisterPixmap("H3", iconH3);
-   TtaRegisterPixmap("H3No", iconH3);
-   TtaRegisterPixmap("Print", iconPrint);
-   TtaRegisterPixmap("Bullet", iconBullet);
-   TtaRegisterPixmap("BulletNo", iconBullet);
-   TtaRegisterPixmap("Numbered", iconNum);
-   TtaRegisterPixmap("NumberedNo", iconNum);
-   TtaRegisterPixmap("Definition", iconDL);
-   TtaRegisterPixmap("DefinitionNo", iconDL);
-   TtaRegisterPixmap("Link", iconLink);
-   TtaRegisterPixmap("LinkNo", iconLink);
-   TtaRegisterPixmap("Table", iconTable);
-   TtaRegisterPixmap("TableNo", iconTable);
-   iconJava = TtaCreatePixmapLogo (Java_xpm);
-   TtaRegisterPixmap("Java", iconJava);
-#  ifdef AMAYA_PLUGIN
-   TtaRegisterPixmap("Plugin", iconPlugin);
-#  endif /* AMAYA_PLUGIN */
-#  endif /* AMAYA_JAVA */
 #  endif /* !_WINDOWS */
    InitMathML ();
 #ifdef GRAPHML
@@ -4699,10 +4589,8 @@ NotifyEvent        *event;
 #ifdef ANNOTATIONS
    ANNOT_Init ();
 #endif /* ANNOTATIONS */
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* initialize the libwww */
    QueryInit ();
-#endif
 
    CurrentDocument = 0;
    DocBook = 0;

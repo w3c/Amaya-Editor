@@ -1294,10 +1294,6 @@ void                InitGraphML ()
 #  ifndef _WINDOWS
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
-#  ifdef AMAYA_JAVA
-   TtaRegisterPixmap("Graph", iconGraph);
-   TtaRegisterPixmap("GraphNo", iconGraphNo);
-#  endif /* AMAYA_JAVA */
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
    mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
    mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);

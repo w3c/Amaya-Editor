@@ -136,7 +136,7 @@ int                 AMAYA;
 #define AM_WAITING_TRANSFERS	      124
 #define AM_PRINT_TOC		      125
 #define AM_NUMBERED_LINKS	      126
-#define AM_BUTTON_JAVA                127
+
 #define AM_REPEAT_MODE                128
 #define AM_REPEAT                     129
 #define AM_REPEAT_X                   130

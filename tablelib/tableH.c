@@ -47,6 +47,7 @@ static ThotBool          Lock = FALSE;
 #include "buildlines_f.h"
 #include "createabsbox_f.h"
 #include "exceptions_f.h"
+#include "frame_f.h"
 #include "memory_f.h"
 #include "tree_f.h"
 #define MAX_COLROW 50
@@ -685,7 +686,7 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 		  if (firstRow != NULL)
 		    {
 		      HeightPack (firstRow->AbEnclosing, firstRow->AbBox, frame);
-		      HeightPack (table, firstRow->AbEnclosing, frame);
+		      HeightPack (table, firstRow->AbBox, frame);
 		    }
 		  /* Redisplay views */
 		  if (ThotLocalActions[T_redisplay] != NULL)
