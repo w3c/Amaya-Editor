@@ -8,6 +8,12 @@ TRANSLATION XLink;
 CONST
    nsdcl = ' xmlns:xlink="http://www.w3.org/1999/xlink"';
 
+RULES
+
+   XLink: begin
+        remove;
+        end;
+
 ATTRIBUTES
 
    type = simple:
@@ -97,6 +103,21 @@ ATTRIBUTES
 	   create href_;
 	   create '"';
 	   end;
+	end;
+
+      AnnotIsHidden:
+        begin
+	  remove;
+	end;
+
+      AnnotIcon1:
+        begin
+	  remove;
+	end;
+
+      AnnotOrphIcon:
+        begin
+	  remove;
 	end;
 
       id:
