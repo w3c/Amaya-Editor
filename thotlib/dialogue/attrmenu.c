@@ -1052,8 +1052,8 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   if (selectionOK && SelDoc == pDoc)
     /* il y a une selection et elle est dans le document traite' */
     {
-      /* cherche les attributs definis dans les differents schemas de */
-      /* structure */
+      /* cherche les attributs globaux definis dans les differents schemas */
+      /* de structure */
       pSS = NULL;
       pEl = firstSel;
       /* cherche tous les schemas de structure utilises par les ascendants */
@@ -1111,8 +1111,9 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		  pSS = pSS->SsNextExtens;
 		}
 	      while (pSS != NULL);
-	      /* next parent element */
-	      pEl = pEl->ElParent;
+
+	      /***** pEl = pEl->ElParent; *****/
+	      pEl = NULL;
 	    }
 	}
       

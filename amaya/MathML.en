@@ -53,6 +53,8 @@ MACTION: maction
 MTD: mtd
 MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
+MathMLCharacters: \0
+Construct: \0
 
 Langue: lang
 xml_space_default: default

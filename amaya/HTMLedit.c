@@ -2200,12 +2200,11 @@ void                AttrItemStyle (NotifyAttribute * event)
    GlobalAttrInMenu
    Called by Thot when building the Attributes menu.
    Prevent Thot from including a global attribute in the menu if the selected
-   element do not accept this attribute.
+   element does not accept this attribute.
   ----------------------------------------------------------------------*/
 ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 {
    ElementType         elType;
-   SSchema	       HTMLSSchema;
    char               *attr;
 
    elType = TtaGetElementType (event->element);
@@ -2233,11 +2232,12 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
      /* it's not a global attribute. Accept it */
      return FALSE;
 
-   HTMLSSchema = TtaGetSSchema ("HTML", event->document);
-   if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-     {
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"HTML"))
+     /* it's not a HTML element */
+     return TRUE;
+   else
       /* it's a HTML element */
-
+     {
        /* BASE and SCRIPT do not accept any global attribute */
        if (elType.ElTypeNum == HTML_EL_BASE ||
 	   elType.ElTypeNum == HTML_EL_SCRIPT ||

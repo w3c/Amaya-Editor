@@ -1801,6 +1801,48 @@ void                MathSelectionChanged (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   GlobalMathAttrInMenu
+   Called by Thot when building the Attributes menu.
+   Prevent Thot from including a global attribute in the menu if the selected
+   element does not accept this attribute.
+  ----------------------------------------------------------------------*/
+ThotBool  GlobalMathAttrInMenu (NotifyAttribute * event)
+{
+   ElementType         elType;
+   char               *attr;
+
+   elType = TtaGetElementType (event->element);
+   attr = GetXMLAttributeName (event->attributeType, elType, event->document);
+   if (attr[0] == EOS)
+      return TRUE;	/* don't put an invalid attribute in the menu */
+
+   /* handle only Global attributes */
+   if (event->attributeType.AttrTypeNum != MathML_ATTR_class &&
+       event->attributeType.AttrTypeNum != MathML_ATTR_style_ &&
+       event->attributeType.AttrTypeNum != MathML_ATTR_id &&
+       event->attributeType.AttrTypeNum != MathML_ATTR_xref &&
+       event->attributeType.AttrTypeNum != MathML_ATTR_other &&
+       event->attributeType.AttrTypeNum != MathML_ATTR_xml_space)
+     /* it's not a global attribute. Accept it */
+     return FALSE;
+
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML"))
+     /* it's not a MathML element */
+     return TRUE;
+   else
+      /* it's a MathML element */
+     {
+       /*  Construct, TableRow, and MathMLCharacters do not accept any
+	   global attribute */
+       if (elType.ElTypeNum == MathML_EL_Construct ||
+	   elType.ElTypeNum == MathML_EL_TableRow ||
+	   elType.ElTypeNum == MathML_EL_MathMLCharacters)
+	 return TRUE;
+     }
+   return FALSE;
+}
+
+/*----------------------------------------------------------------------
  MathMoveForward
  Moves the caret to the next position in the MathML structure
  -----------------------------------------------------------------------*/
