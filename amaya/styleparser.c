@@ -2413,7 +2413,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 {
   char           *ptr, *p;
   int             skippedNL;
-  ThotBool            variant = FALSE, style = FALSE, weight = FALSE; 
+  ThotBool        variant = FALSE, style = FALSE, weight = FALSE, found; 
 
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "caption", 7))
@@ -2436,6 +2436,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
       p = cssRule;
       while (*cssRule != ';' && *cssRule != EOS && p == cssRule)
 	{
+	  found = FALSE;
 	  /* style, variant, weight can appear in any order */
 	  ptr = cssRule;
 	  skippedNL = NewLineSkipped;
@@ -2443,6 +2444,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	  if (ptr != cssRule)
 	    {
 	      skippedNL = NewLineSkipped;
+	      found = TRUE;
 	      style = TRUE;
 	    }
 	  else
@@ -2452,6 +2454,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	  if (ptr != cssRule)
 	    {
 	      skippedNL = NewLineSkipped;
+	      found = TRUE;
 	      variant = TRUE;
 	    }
 	  else
@@ -2461,6 +2464,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	  if (ptr != cssRule)
 	    {
 	      skippedNL = NewLineSkipped;
+	      found = TRUE;
 	      weight = TRUE;
 	    }
 	  else
@@ -2468,6 +2472,9 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	  cssRule = SkipBlanksAndComments (cssRule);
 	  p = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, TRUE);
 	  NewLineSkipped = skippedNL;
+	  if (!found)
+	    /* break the loop when the current value was not parsed */
+	    p = cssRule + 1;
 	}
       ptr = cssRule;
       /* set default variant, style, weight */
