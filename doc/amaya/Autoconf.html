@@ -56,24 +56,22 @@ href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone).
 Here is a simple recipe explaining how to build using autoconf:</p>
 <ol>
 <li>
-install your source code tree:
-<pre>gunzip -c /tmp/thot-src-xxx.tar.gz | tar xvf -</pre>
+Install your source code tree:
+<pre>gunzip -c /tmp/amaya-src-xxx.tar.gz | tar xvf -</pre>
 <p>
-this will create a Thot subtree of approximately 13 MBytes. Then add the
-<strong>Amaya</strong> sources.</p>
-<pre>cd Thot
-gunzip -c /tmp/amaya-src-yyy.tar.gz | tar xvf -</pre>
+this will create a Thot subtree of approximately 13
+MBytes.<strong></strong></p>
 <li>
-Lauch configure to create the Makefile(s), it is cleaner to create a subtree
-for objects:
-<pre>mkdir Target
-cd Target
+<span style="color : #FF0000">Create a subtree (obj)</span>  for object and
+lauch configure to create the Makefile(s):
+<pre>cd Thot
+mkdir obj 
+cd obj 
 ../configure</pre>
 <p>
 Configure accepts 4 specific parameters allowing to select packages to be
 compiled:</p>
 <pre>      
-      --with-thot             Build the Thot editor
       --with-amaya            Build the Amaya HTML browser/editor
       --enable-java           Add Kaffe Java virtual machine
       --enable-plugin         Add Netscape Plug-Ins support</pre>
@@ -95,8 +93,8 @@ containing all the variable which can be tuned. For example one can just
 change the CFLAGS values. Be careful, autoconf usually set up the debug flag
 "-g" which tends to generate very big library and binaries.
 <p>
-With -g the Target tree can grow up to 100 MBytes while without it it won't
-use more than 20 MBytes.</p>
+With -g the obj  tree can grow up to 100 MBytes while without it it won't use
+more than 20 MBytes.</p>
 <p>
 It also gives some hints on how the source tree is configured.</p>
 <p>
@@ -151,7 +149,7 @@ make <strong>proto</strong> : rebuild all the prototype include files xxx_f.h
 from their xxx.c counterpart.
 <li>
 make <strong>clean</strong> : removes all object files, but keep the binaries
-in <code>Thot/</code><strong>Target</strong><code>/bin</code> .
+in <code>Thot/</code><strong>obj </strong><code>/bin</code> .
 <li>
 make <strong>kaffe</strong> : rebuild the kaffe libraries and binaries (if
 sources are available).
@@ -188,7 +186,7 @@ Errors may append at diffferent stages in the compilation process. Here is a
 small checklist:</p>
 <ul>
 <li>
-from the start: typing make in the <code>Thot/</code><strong>Target</strong>
+from the start: typing make in the <code>Thot/</code><strong>obj </strong>
 directory doesn't work. This means that the step 1 or 2 of the <a
 href="#L666">previous section</a> failed.
 <ol>
@@ -196,7 +194,7 @@ href="#L666">previous section</a> failed.
 do you use GNU make? The Makefile organization heavily relies on including
 sub-Makefiles and some old versions of Make don't support it.
 <li>
-do you have write access on the <code>Thot/</code><strong>Target</strong>
+do you have write access on the <code>Thot/</code><strong>obj </strong>
 directory ?
 <li>
 do you have all mandatory sources ?
@@ -209,7 +207,7 @@ of the supported platform:
 check that you have some room left for the object.
 <li>
 verify the include path for the X-Windows and Motif include files in
-<code>Thot/</code><strong>Target</strong><code>/Options.</code>
+<code>Thot/</code><strong>obj </strong><code>/Options.</code>
 <li>
 verify that the target directory for the object exist and is writable. The
 object name is shown in the make output behind the <strong>-o</strong> flag.
@@ -258,7 +256,7 @@ an error occured at link time:
 <li>
 Check that the current directory contains all the precompiled libraries,
 namely <code>libjpeg.a</code>, <code>libpng.a</code> and <code>libz.a</code>
-for the <strong>Target</strong>. If these files are lacking, fetch the
+for the <strong>obj </strong>. If these files are lacking, fetch the
 appropriate
 <code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code> <a
 href="SourceDist.html">distribution</a> file and install it.
@@ -286,7 +284,7 @@ libraries should be quite straightforward.</p>
 <li>
 verify the library path (<strong>-L</strong> flags in
 <strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries files in
-<code>Thot/</code><strong>Target</strong><code>/Makefile</code>.
+<code>Thot/</code><strong>obj </strong><code>/Makefile</code>.
 <li>
 Check whether <strong>-lSM</strong> and <strong>-lICE</strong>  X11R6
 libraries are needed. These were not needed (available) when working on an
