@@ -35,6 +35,11 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#include "stix.h"
+#endif /*_GL*/
+
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
@@ -125,7 +130,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 #ifndef _GL
       GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
 #else
-	GetMathFontFromChar (pBox->BxAbstractBox->AbShape, &font);
+      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font);
 #endif
       if (font != NULL)
 	{
@@ -1645,9 +1650,6 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	}
     }
 }
-#ifdef _GL
-extern ThotBool GL_Drawing;
-#endif /* _GL */
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
