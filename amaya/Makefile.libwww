@@ -35,7 +35,6 @@ AMAYA_LIBWWW_LIBS= \
 			-lwwwutils \
 			-lwwwzip \
 			-lwwwftp \
-			-lwwwdav \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5 \
 		-L../$(LIBWWW)/modules/expat/xmlparse/.libs \

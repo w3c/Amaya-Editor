@@ -751,7 +751,7 @@ if test "$with_annot_threads" = "" ; then
 	ANNOT_THREAD_OPTIONS=
     else
 	with_annot_threads="yes"
-	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
+	ANNOT_THREAD_OPTIONS=
     fi
 fi
 

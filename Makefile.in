@@ -174,7 +174,6 @@ AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwutils \
 	libwwwftp \
 	libwwwxml \
-	libwwwdav \
 	libwwwzip
 
 libwww_config : force

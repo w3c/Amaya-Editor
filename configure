@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -1130,7 +1130,7 @@ fi
 
 fi
 
-for ac_prog in gawk mawk nawk awk
+for ac_prog in mawk gawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -4903,7 +4903,7 @@ else
 int main() {
 
 /* Ultrix mips cc rejects this.  */
-typedef int charset[2]; const charset x;
+typedef int charset[2]; const charset x = {0,0};
 /* SunOS 4.1.1 cc rejects this.  */
 char const *const *ccp;
 char **p;
@@ -4978,7 +4978,7 @@ for ac_kw in inline __inline__ __inline; do
 #include "confdefs.h"
 
 int main() {
-} $ac_kw foo() {
+} int $ac_kw foo() {
 ; return 0; }
 EOF
 if { (eval echo configure:4985: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
@@ -5292,7 +5292,7 @@ else
 #include "confdefs.h"
 #include <alloca.h>
 int main() {
-char *p = alloca(2 * sizeof(int));
+void *p = alloca(2 * sizeof(int));
 ; return 0; }
 EOF
 if { (eval echo configure:5299: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
@@ -5799,12 +5799,15 @@ else
 #include <sys/types.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 /* This mess was copied from the GNU getpagesize.h.  */
 #ifndef HAVE_GETPAGESIZE
-# ifdef HAVE_UNISTD_H
-#  include <unistd.h>
-# endif
 
 /* Assume that all systems that can run configure have sys/param.h.  */
 # ifndef HAVE_SYS_PARAM_H
@@ -5859,7 +5862,7 @@ main()
 	/*
 	 * First, make a file with some known garbage in it.
 	 */
-	data = malloc(pagesize);
+	data = (char*)malloc(pagesize);
 	if (!data)
 		exit(1);
 	for (i = 0; i < pagesize; ++i)
@@ -5880,7 +5883,7 @@ main()
 	fd = open("conftestmmap", O_RDWR);
 	if (fd < 0)
 		exit(1);
-	data2 = malloc(2 * pagesize);
+	data2 = (char*)malloc(2 * pagesize);
 	if (!data2)
 		exit(1);
 	data2 += (pagesize - ((int) data2 & (pagesize - 1))) & (pagesize - 1);
@@ -5898,7 +5901,7 @@ main()
 	 */
 	for (i = 0; i < pagesize; ++i)
 		*(data2 + i) = *(data2 + i) + 1;
-	data3 = malloc(pagesize);
+	data3 = (char*)malloc(pagesize);
 	if (!data3)
 		exit(1);
 	if (read(fd, data3, pagesize) != pagesize)
@@ -5912,7 +5915,7 @@ main()
 }
 
 EOF
-if { (eval echo configure:5916: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:5919: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   ac_cv_func_mmap_fixed_mapped=yes
 else
@@ -5935,12 +5938,12 @@ EOF
 fi
 
 echo $ac_n "checking return type of signal handlers""... $ac_c" 1>&6
-echo "configure:5939: checking return type of signal handlers" >&5
+echo "configure:5942: checking return type of signal handlers" >&5
 if eval "test \"`echo '$''{'ac_cv_type_signal'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5944 "configure"
+#line 5947 "configure"
 #include "confdefs.h"
 #include <sys/types.h>
 #include <signal.h>
@@ -5957,7 +5960,7 @@ int main() {
 int i;
 ; return 0; }
 EOF
-if { (eval echo configure:5961: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:5964: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   ac_cv_type_signal=void
 else
@@ -5976,12 +5979,12 @@ EOF
 
 
 echo $ac_n "checking for vprintf""... $ac_c" 1>&6
-echo "configure:5980: checking for vprintf" >&5
+echo "configure:5983: checking for vprintf" >&5
 if eval "test \"`echo '$''{'ac_cv_func_vprintf'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5985 "configure"
+#line 5988 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char vprintf(); below.  */
@@ -6004,7 +6007,7 @@ vprintf();
 
 ; return 0; }
 EOF
-if { (eval echo configure:6008: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:6011: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func_vprintf=yes"
 else
@@ -6028,12 +6031,12 @@ fi
 
 if test "$ac_cv_func_vprintf" != yes; then
 echo $ac_n "checking for _doprnt""... $ac_c" 1>&6
-echo "configure:6032: checking for _doprnt" >&5
+echo "configure:6035: checking for _doprnt" >&5
 if eval "test \"`echo '$''{'ac_cv_func__doprnt'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 6037 "configure"
+#line 6040 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char _doprnt(); below.  */
@@ -6056,7 +6059,7 @@ _doprnt();
 
 ; return 0; }
 EOF
-if { (eval echo configure:6060: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:6063: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func__doprnt=yes"
 else
@@ -6083,12 +6086,12 @@ fi
 for ac_func in getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
-echo "configure:6087: checking for $ac_func" >&5
+echo "configure:6090: checking for $ac_func" >&5
 if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 6092 "configure"
+#line 6095 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char $ac_func(); below.  */
@@ -6111,7 +6114,7 @@ $ac_func();
 
 ; return 0; }
 EOF
-if { (eval echo configure:6115: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:6118: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func_$ac_func=yes"
 else
@@ -6215,7 +6218,7 @@ motif_includes=NONE
 motif_libraries=NONE
 
 echo $ac_n "checking for Motif""... $ac_c" 1>&6
-echo "configure:6219: checking for Motif" >&5
+echo "configure:6222: checking for Motif" >&5
 if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
 else
@@ -6390,9 +6393,9 @@ fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6394: checking for libjpeg version = 6b" >&5
+echo "configure:6397: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6396 "configure"
+#line 6399 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6411,9 +6414,9 @@ fi
 rm -f conftest*
 
     echo $ac_n "checking for libpng version = 1.0.x""... $ac_c" 1>&6
-echo "configure:6415: checking for libpng version = 1.0.x" >&5
+echo "configure:6418: checking for libpng version = 1.0.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6417 "configure"
+#line 6420 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
@@ -6501,7 +6504,7 @@ fi
 
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6505: checking OpenGL" >&5
+echo "configure:6508: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6517,7 +6520,7 @@ echo "configure:6505: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6521: checking GLU" >&5	
+echo "configure:6524: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6538,7 +6541,7 @@ echo "configure:6521: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6542: checking GTKGLAREA" >&5	
+echo "configure:6545: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6560,7 +6563,7 @@ echo "configure:6542: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6564: checking freetype" >&5	
+echo "configure:6567: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6690,7 +6693,7 @@ if test "$with_annot_threads" = "" ; then
 	ANNOT_THREAD_OPTIONS=
     else
 	with_annot_threads="yes"
-	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
+	ANNOT_THREAD_OPTIONS=
     fi
 fi
 
