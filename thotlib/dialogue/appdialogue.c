@@ -1989,7 +1989,7 @@ int                 doc;
 	     /* Initialise les menus dynamiques */
 	     FrameTable[frame].MenuAttr = -1;
 	     FrameTable[frame].MenuSelect = -1;
-	     /* menu_bar = 0; */
+	     menu_bar = 0;
 	     /*** Parametres de creation des boutons menus ***/
 	     n = 0;
 #ifndef _WINDOWS
