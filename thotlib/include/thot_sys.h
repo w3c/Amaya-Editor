@@ -98,16 +98,15 @@ typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
 /* added functions */
 void                bzero (void *s, size_t n);
 int                 _getpid (void);
+#define strcasecmp(a, b) _stricmp(a, b)
+#define index(str, ch) strchr(str, ch)
 
 /* function mappings */
-#define index(str, ch) strchr(str, ch)
 #define stat _stat		/* stat(a,b), struct stat and probably everything else */
 #define fstat(fileno, buf) _fstat(fileno, buf)
 #define getcwd(buffer, len) _getcwd(buffer, len)
-#define strcasecmp(a, b) _stricmp(a, b)
 #define access(f,m) _access((f),(m))
 #define unlink(f) _unlink((f))
-
 #endif /* ! __GNUC__ */
 
 #ifndef R_OK
@@ -133,10 +132,17 @@ int                 _getpid (void);
 /*
  * Constants for PATHs
  */
+#if defined(__GNUC__) || defined(__GNUWIN32)
+#define DIR_SEP '/'
+#define DIR_STR "/"
+#define PATH_SEP ':'
+#define PATH_STR ":"
+#else  !__GNUC__ 
 #define DIR_SEP '\\'
 #define DIR_STR "\\"
 #define PATH_SEP ';'
 #define PATH_STR ";"
+#endif /* __GNUC__ */
 
 #ifndef False
 #define False 0

@@ -162,7 +162,7 @@ struct struct_winerror win_errtab[] =
  */
 
 char               *thotargv[] =
-{"amaya", "/opera/daniel/color.html"};
+{"amaya", "/opera/gnuwin/test.html"};
 int                 thotargc = 1;
 
 LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -447,9 +447,29 @@ BOOL PASCAL         WinMain (HINSTANCE hInst,
 			     LPSTR lpCommand,
 			     int nShow)
 {
-   hInstance = hInst;
+   ATOM                res;
+
+   hInstance  = hInst;
    nAmayaShow = nShow;
    tszAppName = "amaya";
+
+   RootShell.cbSize = sizeof (RootShell);
+   RootShell.style = CS_HREDRAW | CS_VREDRAW;
+   RootShell.lpfnWndProc = WndProc;
+   RootShell.cbClsExtra = 0;
+   RootShell.cbWndExtra = 0;
+   RootShell.hInstance = hInstance;
+   RootShell.hIcon = LoadIcon (0, IDI_APPLICATION);
+   RootShell.hCursor = LoadCursor (0, IDC_ARROW);
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+   RootShell.lpszMenuName = NULL;
+   RootShell.lpszClassName = tszAppName;
+   RootShell.hIconSm = LoadIcon (0, IDI_APPLICATION);
+
+   if (!(res = RegisterClassEx (&RootShell)))
+     {
+	WinErrorBox ();
+     }
 
    thotmain (thotargc, thotargv);
    return (TRUE);
@@ -1232,7 +1252,7 @@ void                MyWarningHandler ()
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-void                TtaInitDialogueWindows (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
 #else  /* _WINDOWS */
 #ifdef __STDC__
 void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, ThotAppContext * app_context, Display ** Dp)
@@ -1243,33 +1263,15 @@ char               *server;
 char               *txtOK;
 char               *txtRAZ;
 char               *txtDone;
-ThotAppContext       *app_context;
+ThotAppContext     *app_context;
 Display           **Dp;
 
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
    int                 n;
+
 #ifdef _WINDOWS
-   ATOM                res;
-
-   RootShell.cbSize = sizeof (RootShell);
-   RootShell.style = CS_HREDRAW | CS_VREDRAW;
-   RootShell.lpfnWndProc = WndProc;
-   RootShell.cbClsExtra = 0;
-   RootShell.cbWndExtra = 0;
-   RootShell.hInstance = hInstance;
-   RootShell.hIcon = LoadIcon (0, IDI_APPLICATION);
-   RootShell.hCursor = LoadCursor (0, IDC_ARROW);
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
-   RootShell.lpszMenuName = NULL;
-   RootShell.lpszClassName = tszAppName;
-   RootShell.hIconSm = LoadIcon (0, IDI_APPLICATION);
-
-   if (!(res = RegisterClassEx (&RootShell)))
-     {
-	WinErrorBox ();
-     }
    InitCommonControls ();
 #endif /* _WINDOWS */
 
@@ -1423,8 +1425,8 @@ char               *textmenu;
 {
 #ifndef _WINDOWS
    Arg                 args[10];
-
 #endif /* !_WINDOWS */
+
    ThotWidget          Main_Wd;
    ThotWidget          frame;
    ThotWidget          w;
@@ -1438,7 +1440,6 @@ char               *textmenu;
 
 #ifndef _WINDOWS
    Pixmap              lthot;
-
 #endif /* _WINDOWS */
 
    FrRef[0] = 0;
@@ -1447,6 +1448,7 @@ char               *textmenu;
    FrameTable[0].WdFrame = 0;	/* widget frame */
    n = 0;
    value = TtaGetEnvString ("Geometry");
+
 #ifndef _WINDOWS
    if (value != NULL)
      {

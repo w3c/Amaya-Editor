@@ -123,8 +123,8 @@ char               *applicationName;
    FullStructureChecking = FALSE;
 
    /* Initializes the table of documents */
-   for (i = 1; i <= MAX_DOCUMENTS; i++)
-      LoadedDocument[i - 1] = NULL;
+   for (i = 0; i < MAX_DOCUMENTS; i++)
+      LoadedDocument[i] = NULL;
 
    /* Initializes the table of local actions */
    for (i = 0; i < MAX_LOCAL_ACTIONS; i++)

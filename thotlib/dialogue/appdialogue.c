@@ -165,8 +165,8 @@ int                 number;
 	     }
      }
 #ifdef _WINDOWS
-   TtaInitDialogueWindows (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-			   TtaGetMessage (LIB, TMSG_CANCEL));
+   TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+			   TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE));
 #else  /* _WINDOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 		    TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE), &app_cont, &Dp);
@@ -2116,33 +2116,31 @@ int                 doc;
 	     /*** Creation de la zone boutons  ***/
 #ifdef _WINDOWS
 #if 0
-	     WinToolBar[frame] = CreateWindow (
-						 TOOLBARCLASSNAME,	/* window class name */
-						 NULL,	/* window caption */
-						 WS_CHILD | WS_VISIBLE |
-						 WS_CLIPSIBLINGS | CCS_TOP |
-						 TBSTYLE_TOOLTIPS,	/* window style */
-						 0,	/* initial x pos */
-						 0,	/* initial y pos */
-						 0,	/* initial x size */
-						 0,	/* initial y size */
-						 Main_Wd,	/* parent window handle */
-						 0,	/* window menu handle */
-						 hInstance,	/* program instance handle */
-						 0);	/* creation parameters */
+	     WinToolBar[frame] = CreateWindow (TOOLBARCLASSNAME,	/* window class name */
+					       NULL,	/* window caption */
+					       WS_CHILD | WS_VISIBLE |
+					       WS_CLIPSIBLINGS | CCS_TOP |
+					       TBSTYLE_TOOLTIPS,	/* window style */
+					       0,	/* initial x pos */
+					       0,	/* initial y pos */
+					       0,	/* initial x size */
+					       0,	/* initial y size */
+					       Main_Wd,	/* parent window handle */
+					       0,	/* window menu handle */
+					       hInstance,	/* program instance handle */
+					       0);	/* creation parameters */
 #endif
-	     WinToolBar[frame] = CreateToolbarEx (
-						    Main_Wd,	/* parent window handle */
-						    WS_CHILD | WS_VISIBLE |
-						 WS_CLIPSIBLINGS | CCS_TOP |
-						    TBSTYLE_TOOLTIPS,	/* window style */
-						    1, 0,
-						    HINST_COMMCTRL,
-						    IDB_STD_SMALL_COLOR,
-						    WIN_buttons,
-						    5,	/* nb button */
-						    0, 0, 0, 0,		/* button size */
-						    sizeof (TBBUTTON));
+	     WinToolBar[frame] = CreateToolbarEx (Main_Wd,	/* parent window handle */
+						  WS_CHILD | WS_VISIBLE |
+						  WS_CLIPSIBLINGS | CCS_TOP |
+						  TBSTYLE_TOOLTIPS,	/* window style */
+						  1, 0,
+						  HINST_COMMCTRL,
+						  IDB_STD_SMALL_COLOR,
+						  WIN_buttons,
+						  5,	/* nb button */
+						  0, 0, 0, 0,		/* button size */
+						  sizeof (TBBUTTON));
 
 	     if (!WinToolBar[frame])
 	       {

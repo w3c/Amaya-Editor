@@ -204,7 +204,7 @@ int                 y2;
    y2 += FrameTable[frame].FrTopMargin;
 #ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, TtLineGC);
+   WinLoadGC (WIN_curHdc, &TtLineGC);
    MoveToEx (WIN_curHdc, x1, y1, NULL);
    LineTo (WIN_curHdc, x2, y2);
 #else  /* _WINDOWS */
@@ -290,7 +290,7 @@ int                 fg;
 
 #ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, TtLineGC);
+   WinLoadGC (WIN_curHdc, &TtLineGC);
    WinLoadFont (WIN_curHdc, font);
    TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, str, 1);
 #else  /* _WINDOWS */
@@ -377,7 +377,7 @@ int                 fg;
 	     ptcar[lg] = '\0';
 	     SpaceToChar (ptcar);	/* substitute spaces */
 #ifdef _WINDOWS
-	     WinLoadGC (WIN_curHdc, TtLineGC);
+	     WinLoadGC (WIN_curHdc, &TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -387,7 +387,7 @@ int                 fg;
 	else
 	  {
 #ifdef _WINDOWS
-	     WinLoadGC (WIN_curHdc, TtLineGC);
+	     WinLoadGC (WIN_curHdc, &TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -1412,7 +1412,7 @@ int                 pattern;
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
 	WIN_GetDeviceContext (frame);
-	WinLoadGC (WIN_curHdc, TtLineGC);
+	WinLoadGC (WIN_curHdc, &TtLineGC);
 	hBrush = CreateSolidBrush (Pix_Color[bg]);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
 	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);

@@ -8,12 +8,19 @@
 
 extern void DebugBreak ( void );
 extern void MyWarningHandler ( void );
+#ifdef _WINDOWS
+extern void TtaInitDialogue ( char *server,
+                              char *txtOK,
+                              char *txtRAZ,
+                              char *txtDone);
+#else /* !_WINDOWS */
 extern void TtaInitDialogue ( char *server,
                               char *txtOK,
                               char *txtRAZ,
                               char *txtDone,
                               ThotAppContext * app_context,
                               Display ** Dp );
+#endif /* !_WINDOWS */
 extern void TtaInitDialogueTranslations ( ThotTranslations translations );
 extern void TtaChangeDialogueFonts ( char *menufont,
                                      char *formfont );

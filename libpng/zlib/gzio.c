@@ -55,6 +55,10 @@ local gzFile gz_open OF((char *path, char *mode, int  fd));
 local void   putLong OF((FILE *file, uLong x));
 local uLong  getLong OF((Bytef *buf));
 
+#ifdef _WINDOWS
+int errno;
+#endif
+
  /* ===========================================================================
  * Cleanup then free the given gz_stream. Return a zlib error code.
  */

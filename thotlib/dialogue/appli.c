@@ -159,7 +159,7 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	 */
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
-	     WIN_curHdc = BeginPaint (w, &ps);
+	    /* WIN_curHdc = BeginPaint (w, &ps); */
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
 			ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
@@ -918,6 +918,8 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    int                 comm;
    HDC                 saveHdc;	/* Used to save WIN_curHdc during current event processing */
    int                 frame;
+   PAINTSTRUCT         ps;
+   RECT                rect;
 
    if (msg == WM_CREATE)
      {
@@ -963,12 +965,13 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	 {
 
 	    case WM_PAINT:
-	       WinInitColors ();	/* has to go to some better place !!!! */
+	       /* WinInitColors (); */	/* has to go to some better place !!!! */
 	       /*
 	        * Some part of the Client Area has to be repaint.
 	        */
 	       saveHdc = WIN_curHdc;
-	       WIN_curHdc = NULL;
+	       WIN_curHdc = BeginPaint (hWnd, &ps);
+               GetClientRect (hWnd, &rect);
 	       WIN_HandleExpose (hWnd, frame, wParam, lParam);
 	       WIN_ReleaseDeviceContext ();
 	       WIN_curHdc = saveHdc;
@@ -1044,7 +1047,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
 		 }
 	       return (0);
-
+	       
 	    case WM_SIZE:
 	       {
 		  RECT                rWindow;
@@ -1071,7 +1074,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		  WIN_ReleaseDeviceContext ();
 		  return (0);
 	       }
-
+	       
 	    case WM_VSCROLL:
 	       MSChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	       WIN_ReleaseDeviceContext ();

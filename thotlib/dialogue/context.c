@@ -504,9 +504,6 @@ static void         InitGraphicContexts ()
    Pixmap              pix;
 
 #endif /* _WINDOWS */
-#ifdef _WINDOWS
-   ThotGC              gcModel;
-#endif
 
    /*
     * Create a Graphic Context to write white on black.
@@ -523,11 +520,10 @@ static void         InitGraphicContexts ()
    TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtWhiteGC;
-   gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
-   gcModel->pen = GetStockObject (WHITE_PEN);
-   gcModel->background = Black_Color;
-   gcModel->foreground = White_Color;
+   TtWhiteGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
+   TtWhiteGC.pen = GetStockObject (WHITE_PEN);
+   TtWhiteGC.background = Black_Color;
+   TtWhiteGC.foreground = White_Color;
 #endif /* _WINDOWS */
 
    /*
@@ -539,11 +535,10 @@ static void         InitGraphicContexts ()
    TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtBlackGC;
-   gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
-   gcModel->pen = GetStockObject (BLACK_PEN);
-   gcModel->background = White_Color;
-   gcModel->foreground = Black_Color;
+   TtBlackGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
+   TtBlackGC.pen = GetStockObject (BLACK_PEN);
+   TtBlackGC.background = White_Color;
+   TtBlackGC.foreground = Black_Color;
 #endif /* _WINDOWS */
 
    /*
@@ -557,14 +552,13 @@ static void         InitGraphicContexts ()
    XSetTile (TtDisplay, TtLineGC, pix);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtLineGC;
-   gcModel->capabilities = THOT_GC_FOREGROUND |
+   TtLineGC.capabilities = THOT_GC_FOREGROUND |
    /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ THOT_GC_PEN;
-   gcModel->pen = GetStockObject (BLACK_PEN);
-   /* gcModel->background = White_Color; */
-   gcModel->foreground = Black_Color;
+   TtLineGC.pen = GetStockObject (BLACK_PEN);
+   /* TtLineGC.background = White_Color; */
+   TtLineGC.foreground = Black_Color;
    /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
-   /* gcModel->brush = CreatePatternBrush(WIN_LastBitmap); */
+   /* TtLineGC.brush = CreatePatternBrush(WIN_LastBitmap); */
 #endif /* _WINDOWS */
 
    /*
@@ -574,11 +568,10 @@ static void         InitGraphicContexts ()
    TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtDialogueGC;
-   gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
-   gcModel->pen = GetStockObject (BLACK_PEN);
-   gcModel->background = White_Color;
-   gcModel->foreground = Black_Color;
+   TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
+   TtDialogueGC.pen = GetStockObject (BLACK_PEN);
+   TtDialogueGC.background = White_Color;
+   TtDialogueGC.foreground = Black_Color;
 #endif /* _WINDOWS */
 
    /*
@@ -597,15 +590,14 @@ static void         InitGraphicContexts ()
    TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtDialogueGC;
-   gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
+   TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
       THOT_GC_FUNCTION;
-   gcModel->mode = R2_XORPEN;
+   TtDialogueGC.mode = R2_XORPEN;
    if (TtWDepth > 1)
-      gcModel->foreground = Black_Color;
+      TtDialogueGC.foreground = Black_Color;
    else
-      gcModel->foreground = Select_Color;
-   gcModel->background = White_Color;
+      TtDialogueGC.foreground = Select_Color;
+   TtDialogueGC.background = White_Color;
 #endif /* _WINDOWS */
 
    /*
@@ -619,16 +611,14 @@ static void         InitGraphicContexts ()
    XFreePixmap (TtDisplay, pix);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
-   gcModel = &TtGreyGC;
-   gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
+   TtGreyGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
    /* THOT_GC_BRUSH | */ THOT_GC_PEN |
       THOT_GC_FUNCTION;
-   gcModel = &TtBlackGC;
-   gcModel->background = White_Color;
-   gcModel->foreground = Black_Color;
-   gcModel->mode = R2_XORPEN;
+   TtBlackGC.background = White_Color;
+   TtBlackGC.foreground = Black_Color;
+   TtBlackGC.mode = R2_XORPEN;
    /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
-   /* gcModel->brush = CreatePatternBrush(WIN_LastBitmap); */
+   /* TtBlackGC.brush = CreatePatternBrush(WIN_LastBitmap); */
    DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
 #endif
