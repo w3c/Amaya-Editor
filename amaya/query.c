@@ -520,10 +520,11 @@ static void         Thread_deleteAll ()
 	    {
 	      if (me->request)
 		{
-#ifndef _WINDOWS 
+#ifndef _WINDOWS
+#ifdef WWW_XWINDOWS 
 		  RequestKillAllXtevents (me);
+#endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
-
 		  if (!HTRequest_kill (me->request))
 		    AHTReqContext_delete (me);
 		}
@@ -2502,6 +2503,8 @@ int                 docid;
 		"before kill: %d\n", Amaya->open_requests);
 #endif /* DEBUG_LIBWWW */
        
+	   /* delete all timers first */
+	   HTTimer_deleteAll ();
        HTNet_killAll();
        EventOrder_deleteAll();
 
@@ -2518,8 +2521,13 @@ int                 docid;
 		 fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
 		 AHTReqContext_delete (me);
 	       }
+#ifndef _WINDOWS
+#ifdef WWW_XWINDOWS
 	   /* to be on the safe side, remove all outstanding X events */
-	   else ( RequestKillAllXtevents (me));
+	   else 
+                 RequestKillAllXtevents (me);
+#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 	 }
        /* Delete remaining channels */
        HTChannel_deleteAll();
