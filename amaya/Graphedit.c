@@ -684,7 +684,10 @@ int                 construct;
 
    automaticPlacement = FALSE;
    if (!parent)
+      {
+      parent = graphRoot;
       sibling = TtaGetFirstChild (graphRoot);
+      }
    else
       /* if parent has a "direction" attribute, the user has not to choose
 	 the position of this element */
