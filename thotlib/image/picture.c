@@ -827,11 +827,12 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   ViewFrame*        pFrame;
   PtrAbstractBox    pAb;
   PictureScaling    picPresent;
-  int               delta, dx, dy, x, y, ix, jy;
+  int               x, y, ix, jy;
   int               clipWidth, clipHeight;
 #ifdef _GL
   int               i, j;
 #else /* _GL */
+  int               delta, dx, dy;
 #ifdef _WINDOWS
   HDC               hMemDC;
   BITMAP            bm;
