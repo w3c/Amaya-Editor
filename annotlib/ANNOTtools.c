@@ -2007,7 +2007,6 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
       fprintf (fp,
 	       "<d:title>%s</d:title>\n",
 	       tmp);
-      /* IV: why this string is freed? TtaFreeMemory (tmp);*/
     }
   
   if (annot->author)
