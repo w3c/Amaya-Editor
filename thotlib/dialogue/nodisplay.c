@@ -103,19 +103,19 @@ PtrSSchema          pSS;
 
 /* GlobalSearchRulepEl est appele' par le module pivlec */
 #ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, boolean Pag, boolean attr, PtrAttribute * pAttr)
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, boolean Pag, boolean attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-PtrPRule            GlobalSearchRulepEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, Pag, attr, pAttr)
+PtrPRule            GlobalSearchRulepEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, typeFunc, Pag, attr, pAttr)
 PtrElement          pEl;
 PtrPSchema         *pSPR;
 int                 NumPres;
 PtrPSchema          pSchP;
 int                 Vue;
 PRuleType           TRegle;
+FunctionType        typeFunc;
 boolean             Pag;
 boolean             attr;
 PtrAttribute       *pAttr;
-
 #endif /* __STDC__ */
 {
    return NULL;

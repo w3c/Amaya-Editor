@@ -26,7 +26,6 @@
 #include "xpmP.h"
 #include "xpm.h"
 
-#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"

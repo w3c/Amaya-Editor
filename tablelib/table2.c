@@ -353,7 +353,7 @@ PtrDocument         pDoc;
 	   /* The_Columns, Simple_Column ou Compound_Column */
 	  {
 	     /* on cherche sa regle de hauteur */
-	     pRule = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
+	     pRule = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 	     if (pRule->PrDimRule.DrPosition)
 		/* c'est une hauteur elastique */
 		if (pRule->PrDimRule.DrPosRule.PoRefElem)

@@ -1870,7 +1870,7 @@ boolean             link;
 	      /* ce qui est lu dans le fichier          */
 	      {
 		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-					   pPRule->PrType, FALSE, TRUE, &pAttr);
+					   pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
 		if (pR1 != NULL)
 		  
 		  {
@@ -1895,7 +1895,7 @@ boolean             link;
 	    /* l'element, puis on la modifie selon   */
 	    /* ce qui est lu dans le fichier         */
 	    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-				       pPRule->PrType, FALSE, TRUE, &pAttr);
+				       pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
 	    if (pR1 != NULL)
 	      *pPRule = *pR1;
 	    pPRule->PrViewNum = view;

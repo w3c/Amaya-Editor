@@ -110,7 +110,7 @@ int                 view;
 	     stop = FALSE;
 	     while (!stop)
 	       {
-		  *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, TRUE, &pAttr);
+		  *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, FnAny, TRUE, &pAttr);
 		  if (*pPRule != NULL)
 		    {
 		       if ((*pPRule)->PrPresMode == PresInherit && ((*pPRule)->PrInheritMode == InheritParent ||
@@ -145,7 +145,7 @@ int                 view;
 			 {
 			    if (pAbbF->AbElement == pE)
 			      {
-				 *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR, ruleType, TRUE, &pAttr);
+				 *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR, ruleType, FnAny, TRUE, &pAttr);
 				 if (*pPRule != NULL)
 				   {
 				      if ((*pPRule)->PrPresMode == PresInherit
@@ -245,7 +245,7 @@ PtrDocument         pDoc;
 	if (pAbbCur != NULL)
 	  {
 	     /* il y a un element suivant dont le pave pAbbCur pourrait heriter de pAb */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, TRUE, &pAttrib);
+	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
 	     if (pPRule != NULL)
 	       {
 		  if (pPRule->PrPresMode == PresInherit &&
@@ -303,7 +303,7 @@ PtrDocument         pDoc;
 	  {
 	     /* il y a un element ascendant dont le pave pAbbCur pourrait heriter */
 	     /* de pAb */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, TRUE, &pAttrib);
+	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
 	     if (pPRule != NULL)
 		if (pPRule->PrPresMode == PresInherit &&
 		    pPRule->PrInheritMode == InheritChild)
@@ -342,7 +342,7 @@ PtrDocument         pDoc;
 	      pAbbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, TRUE, &pAttrib);
+		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
 		if (pPRule != NULL)
 		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur, on l'applique */
@@ -374,7 +374,7 @@ PtrDocument         pDoc;
 	      pAbbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, TRUE, &pAttrib);
+		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
 		if (pPRule != NULL)
 		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur, on l'applique */
@@ -405,7 +405,7 @@ PtrDocument         pDoc;
 	     if (pAbbCur->AbPresentationBox && pAbbCur->AbElement == pEl)
 		/* c'est un pave de presentation de l'element, on le traite */
 	       {
-		  pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, TRUE, &pAttrib);
+		  pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
 		  if (pPRule != NULL)
 		     if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 			/* la regle de ce pave herite de son createur, on l'applique */
@@ -823,7 +823,7 @@ boolean             display;
    if (deltaY != 0)
      {
 	/* cherche d'abord la regle de position qui s'applique a l'element */
-	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtVertPos, FALSE, TRUE,
+	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtVertPos, FnAny, FALSE, TRUE,
 				     &pAttr);
 	/* on ne decale pas les paves qui ont une position flottante ou qui */
 	/* sont dans une mise en ligne */
@@ -969,7 +969,7 @@ boolean             display;
    if (deltaX != 0)
       /* cherche d'abord la regle de position qui s'applique a l'element */
      {
-	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHorizPos, FALSE, TRUE, &pAttr);
+	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
 	/* on ne decale pas les paves qui ont une position flottante ou qui */
 	/* sont mis en lignes */
 	if (pRStd->PrPosRule.PoPosDef != NoEdge
@@ -1183,7 +1183,7 @@ boolean             display;
    if (deltaX != 0)
      {
 	/* cherche d'abord la regle de dimension qui s'applique a l'element */
-	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FALSE, TRUE, &pAttr);
+	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
 	/* on ne change pas la largeur si c'est celle du contenu ou si */
 	/* c'est une boite elastique.  */
 	ok = TRUE;
@@ -1345,7 +1345,7 @@ boolean             display;
    if (deltaY != 0)
       /* cherche d'abord la regle de dimension qui s'applique a l'element */
      {
-	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FALSE, TRUE, &pAttr);
+	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
 	/* on ne change pas la hauteur si c'est celle du contenu ou si c'est */
 	/* une boite elastique. */
 	ok = TRUE;
@@ -1850,7 +1850,7 @@ int                 viewToApply;
 		/* applique la regle standard de meme type que la regle courante */
 		/* aux paves de l'element qui existent dans les vues de meme type */
 		/* que la view active. */
-		ApplyStandardRule (pEl, pDoc, pPRule->PrType, viewSch);
+		ApplyStandardRule (pEl, pDoc, pPRule->PrType, pPRule->PrPresFunction, viewSch);
 		notifyPres.event = TtePRuleDelete;
 		notifyPres.document = (Document) IdentDocument (pDoc);
 		notifyPres.element = (Element) pEl;
@@ -2331,6 +2331,13 @@ PtrPSchema          pSPR;
     case PtForeground:
       pAb->AbAspectChange = TRUE;
       break;
+    case PtFunction:
+      if (pRP->PrPresFunction == FnPictureMode
+	  || pRP->PrPresFunction == FnBackgroundPicture)
+	pAb->AbAspectChange = TRUE;
+      else
+	pAb->AbChange = TRUE;
+      break;
     default:
       pAb->AbChange = TRUE;
       break;
@@ -2348,12 +2355,13 @@ PtrPSchema          pSPR;
   pour la view viewSch.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ApplyStandardRule (PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
+void                ApplyStandardRule (PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, FunctionType funcType, int viewSch)
 #else  /* __STDC__ */
-void                ApplyStandardRule (pEl, pDoc, ruleType, viewSch)
+void                ApplyStandardRule (pEl, pDoc, ruleType, funcType, viewSch)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PRuleType           ruleType;
+FunctionType        funcType;
 int                 viewSch;
 
 #endif /* __STDC__ */
@@ -2400,7 +2408,7 @@ int                 viewSch;
 	      {
 		/* cherche la regle standard si on ne l'a pas encore */
 		if (pRP == NULL)
-		  pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
+		  pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, funcType, TRUE, &pAttr);
 		if (pRP != NULL)
 		  ApplyPRuleAndRedisplay(pAb, pDoc, pAttr, pRP, pSPR);
 	      }
@@ -2510,7 +2518,7 @@ boolean            remove;
 		  if (pCurrentRule->PrViewNum == 1 || pCurrentRule->PrViewNum == viewSch)
 		    {
 		      /* checks if the abstract box is concerned by the new rule */
-		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
+		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, pCurrentRule->PrPresFunction, TRUE, &pAttr);
 		      if (pRP == pCurrentRule || remove)
 			ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 		    }

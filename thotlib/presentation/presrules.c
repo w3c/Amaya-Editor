@@ -1588,7 +1588,7 @@ PtrAbstractBox      pAbbCreated;
 
    result = FnLine;
    /* cherche les regles de creation en ignorant les attributs */
-   pPRuleCre = SearchRulepAb (pDoc, pAbbCreator, &pSPR, PtFunction, FALSE, &pAttr);
+   pPRuleCre = SearchRulepAb (pDoc, pAbbCreator, &pSPR, PtFunction, FnAny, FALSE, &pAttr);
    if (!PageCreateRule (pPRuleCre, pSPR, pAbbCreated, &result))
       /* on n'a pas found la regle qui cree la bonne boite */
       /* on cherche les regles de creation associees aux attributs */
@@ -2882,10 +2882,8 @@ PtrAbstractBox     *pAb;
    		Retourne Vrai si un tel element existe et dans ce cas,	
    		pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static boolean      SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
-
 #else  /* __STDC__ */
 static boolean      SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
 int                *presBoxType;
@@ -2893,7 +2891,6 @@ PtrPSchema         *pSchP;
 PtrSSchema         *pSchS;
 Name                presBoxName;
 PtrElement         *pEl;
-
 #endif /* __STDC__ */
 
 {
@@ -2907,7 +2904,7 @@ PtrElement         *pEl;
 
    result = FALSE;
    /* cherche toutes les regles de  creation de cet element */
-   pPRuleCre = GlobalSearchRulepEl (*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pA);
+   pPRuleCre = GlobalSearchRulepEl (*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pA);
    stop = FALSE;
    do
       if (pPRuleCre == NULL)
@@ -3369,7 +3366,7 @@ boolean             withDescCopy;
 	     pPRule1 = NULL;
 	     if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	       {
-		  pPRule1 = GlobalSearchRulepEl (pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pAttr);
+		  pPRule1 = GlobalSearchRulepEl (pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pAttr);
 		  pPRule1 = GetRuleCopy (pPRule1);
 	       }
 	     if (pPRule1 == NULL)
@@ -3914,18 +3911,21 @@ PtrAttribute        pAttr;
 		  if (pAbb1->AbElement->ElTerminal &&
 		      pAbb1->AbElement->ElLeafType == LtPicture)
 		    {
-		      if (pAbb1->AbElement->ElPictInfo != NULL)
-			((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      if (pAbb1->AbElement->ElPictInfo == NULL)
+			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
+		      ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		    }
 		  else if (pAbb1->AbPresentationBox)
 		    {
-		      if (pAbb1->AbPictInfo != NULL)
-			((PictInfo *) (pAbb1->AbPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      if (pAbb1->AbPictInfo == NULL)
+			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
+		      ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		    }
 		  else if (pAbb1->AbLeafType == LtCompound)
 		    {
-		      if (pAbb1->AbPictBackground != NULL)
-			((PictInfo *) (pAbb1->AbPictBackground))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
+		      if (pAbb1->AbPictBackground == NULL)
+			NewPictInfo (pAbb1, NULL, UNKNOWN_FORMAT);
+		      ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		    }
 		break;
 	      default:
@@ -4118,7 +4118,7 @@ PtrAbstractBox      pAb;
    /* traite le changement de largeur */
 
    /* cherche d'abord la regle de dimension qui s'applique a l'element */
-   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FALSE, TRUE, &pAttr);
+   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
    /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
    ok = FALSE;
    if (!pRStd->PrDimRule.DrPosition)
@@ -4153,7 +4153,7 @@ PtrAbstractBox      pAb;
    /* traite le changement de hauteur de la boite */
 
    /* cherche d'abord la regle de dimension qui s'applique a l'element */
-   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FALSE, TRUE, &pAttr);
+   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
    /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
    ok = FALSE;
    if (!pRStd->PrDimRule.DrPosition)

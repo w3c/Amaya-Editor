@@ -93,15 +93,12 @@ PtrAbstractBox      pAbb2;
    Enclosing retourne un pointeur sur le pave de plus bas niveau   
    qui englobe a la fois les deux paves pAbb1 et pAbb2.    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAbstractBox      Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
-
 #else  /* __STDC__ */
 PtrAbstractBox      Enclosing (pAbb1, pAbb2)
 PtrAbstractBox      pAbb1;
 PtrAbstractBox      pAbb2;
-
 #endif /* __STDC__ */
 
 {
@@ -134,64 +131,64 @@ PtrAbstractBox      pAbb2;
    SimpleSearchRulepEl cherche dans la chaine pRule la regle du       
    type typeRule a appliquer pour la vue view.                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl, int view, PRuleType typeRule, PtrPRule * pRule)
-
+void                SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl, int view, PRuleType typeRule, FunctionType typeFunc, PtrPRule * pRule)
 #else  /* __STDC__ */
-void                SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule, pRule)
+void                SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule, typeFunc, pRule)
 PtrPRule           *pRuleView1;
 PtrElement          pEl;
 int                 view;
 PRuleType           typeRule;
+FunctionType        typeFunc;
 PtrPRule           *pRule;
-
 #endif /* __STDC__ */
 
 {
-   boolean             found;
-   PtrPRule            pR;
+  boolean             found;
+  PtrPRule            pR;
 
-   pR = *pRule;
-   *pRuleView1 = NULL;
-   found = FALSE;
-   while (!found && pR != NULL)
-     {
-	if (pR->PrType == typeRule)
-	  {
-	     /* regle du type cherche' */
-	     if (pR->PrViewNum == view)
-		/* pour la vue voulue */
+  pR = *pRule;
+  *pRuleView1 = NULL;
+  found = FALSE;
+  while (!found && pR != NULL)
+    {
+      if (pR->PrType == typeRule
+	  && (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc))
+	{
+	  /* regle du type cherche' */
+	  if (pR->PrViewNum == view)
+	    /* pour la vue voulue */
+	    if (pR->PrCond == NULL ||
+		CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
+	      /* les conditions d'application de la regle sont satisfaites */
+	      found = TRUE;
+	  
+	  if (!found)
+	    {
+	      if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
+		/* regle du type cherche' pour la vue 1 */
 		if (pR->PrCond == NULL ||
 		    CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
-		   /* les conditions d'application de la regle sont satisfaites */
-		   found = TRUE;
-	     if (!found)
-	       {
-		  if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
-		     /* regle du type cherche' pour la vue 1 */
-		     if (pR->PrCond == NULL ||
-			 CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
-			/* les conditions d'application de la regle sont satisfaites */
-			/* on la garde pour le cas ou on ne trouve pas mieux */
-			*pRuleView1 = pR;
-		  /* regle suivante */
-		  pR = pR->PrNextPRule;
-	       }
-	  }
-	else
-	   /* ce n'est pas le type de regle cherche' */
+		  /* les conditions d'application de la regle sont satisfaites */
+		  /* on la garde pour le cas ou on ne trouve pas mieux */
+		  *pRuleView1 = pR;
+	      /* regle suivante */
+	      pR = pR->PrNextPRule;
+	    }
+	}
+      else
+	/* ce n'est pas le type de regle cherche' */
 	if (pR->PrType > typeRule)
-	   /* il n'y a plus de regle de ce type, stop */
-	   pR = NULL;
+	  /* il n'y a plus de regle de ce type, stop */
+	  pR = NULL;
 	else
-	   /* regle suivante */
-	   pR = pR->PrNextPRule;
-     }
-   if (found)
-      *pRule = pR;
-   else
-      *pRule = NULL;
+	  /* regle suivante */
+	  pR = pR->PrNextPRule;
+    }
+  if (found)
+    *pRule = pR;
+  else
+    *pRule = NULL;
 }
 
 
@@ -220,12 +217,10 @@ PtrPRule           *pRule;
    a un attribut, au retour pAttr pointe sur le bloc       
    attribut correspondant, sinon pAttr est NULL.           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, boolean isElPage, boolean attr, PtrAttribute * pAttr)
-
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, FunctionType typeFunc, boolean isElPage, boolean attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, isElPage, attr, pAttr)
+PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, typeFunc, isElPage, attr, pAttr)
 PtrElement          pEl;
 PtrPSchema         *pSPR;
 PtrSSchema         *pSSR;
@@ -233,10 +228,10 @@ int                 presNum;
 PtrPSchema          pSchP;
 int                 view;
 PRuleType           typeRule;
+FunctionType        typeFunc;
 boolean             isElPage;
 boolean             attr;
 PtrAttribute       *pAttr;
-
 #endif /* __STDC__ */
 
 {
@@ -269,8 +264,10 @@ PtrAttribute       *pAttr;
 	     pRule = pEl->ElFirstPRule;
 	     stop = FALSE;
 	     while (pRule != NULL && !stop)
-		if (pRule->PrType == typeRule && pRule->PrViewNum == view)
-		   /* regle du type cherche' pour la vue voulue, c'est bon */
+		if (pRule->PrType == typeRule
+		    && (typeRule != PtFunction
+			|| typeFunc == FnAny || pRule->PrPresFunction == typeFunc)
+		    && pRule->PrViewNum == view)
 		   stop = TRUE;
 		else
 		   /* regle suivante */
@@ -508,6 +505,7 @@ PtrAttribute       *pAttr;
 		     pHd = pHd->HdNextPSchema;
 		  pSP = pHd->HdPSchema;
 	       }
+
 	     while (pRule == NULL && pSP != NULL)
 	       {
 		  /* premiere regle de presentation de ce type d'element */
@@ -519,7 +517,7 @@ PtrAttribute       *pAttr;
 		  /* cherche une regle du type voulu, pour la vue voulue, parmi */
 		  /* les regles du type d'element */
 		  pRuleView1 = NULL;
-		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, &pRule);
+		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule);
 		  if (pRule == NULL)
 		     /* on n'a pas encore trouve'. On continue de chercher dans les */
 		     /* schemas de presentation de moindre priorite' */
@@ -548,13 +546,15 @@ PtrAttribute       *pAttr;
 		  pRuleSpecView1 = pRuleView1;
 		  /* premiere regle de presentation par defaut */
 		  pRule = pSchP->PsFirstDefaultPRule;
-		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, &pRule);
+		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule);
 		  if (pRule == NULL)
 		     if (pRuleSpecView1 != NULL)
 			pRule = pRuleSpecView1;
 		     else
 			pRule = pRuleView1;
 	       }
+	     else if (pSP != NULL)
+	       /* the rule is relative to an additional schema */
 	     *pSPR = pSchP;
 	     *pSSR = pSchS;
 	  }
@@ -572,41 +572,38 @@ PtrAttribute       *pAttr;
    Au retour, pSPR contient un pointeur sur le schema de   
    structure auquel appartient la regle.                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, boolean attr, PtrAttribute * pAttr)
-
+PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, FunctionType typeFunc, boolean attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-PtrPRule            SearchRulepAb (pDoc, pAb, pSPR, typeRule, attr, pAttr)
+PtrPRule            SearchRulepAb (pDoc, pAb, pSPR, typeRule, typeFunc, attr, pAttr)
 PtrDocument         pDoc;
 PtrAbstractBox      pAb;
 PtrPSchema         *pSPR;
 PRuleType           typeRule;
+FunctionType        typeFunc;
 boolean             attr;
 PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
-   int                 presNum;
-   PtrAbstractBox      pAbbox1;
-   PtrSSchema          pSSR;
-   PtrPRule            pRuleFound;
-
-   if (pAb == NULL)
-      pRuleFound = NULL;
-   else
-     {
-	pAbbox1 = pAb;
-	if (pAbbox1->AbPresentationBox)
-	   presNum = pAbbox1->AbTypeNum;
-	else
-	   presNum = 0;
-	pRuleFound = GlobalSearchRulepEl (pAbbox1->AbElement, pSPR, &pSSR, presNum,
-					  pAbbox1->AbPSchema, pDoc->DocView[pAbbox1->AbDocView - 1].DvPSchemaView,
-					  typeRule, FALSE, attr, pAttr);
-     }
-   return pRuleFound;
+  int                 presNum;
+  PtrSSchema          pSSR;
+  PtrPRule            pRuleFound;
+  
+  if (pAb == NULL)
+    pRuleFound = NULL;
+  else
+    {
+      if (pAb->AbPresentationBox)
+	presNum = pAb->AbTypeNum;
+      else
+	presNum = 0;
+      pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pSPR, &pSSR, presNum,
+					pAb->AbPSchema, pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+					typeRule, typeFunc, FALSE, attr, pAttr);
+    }
+  return pRuleFound;
 }
 
 
@@ -800,7 +797,7 @@ PtrAttribute        pAttr;
 					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 					/* cherche et applique la regle de dimension */
-					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtHeight, TRUE, &pAttrDim);
+					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtHeight, FnAny, TRUE, &pAttrDim);
 #ifdef __COLPAGE__
 					(void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc, pAttrDim, &bool);
 #else  /* __COLPAGE__ */
@@ -877,7 +874,7 @@ PtrAttribute        pAttr;
 					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 					/* cherche et applique la regle de dimension */
-					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtWidth, TRUE, &pAttrDim);
+					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtWidth, FnAny, TRUE, &pAttrDim);
 #ifdef __COLPAGE__
 					(void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc, pAttrDim, &bool);
 #else  /* __COLPAGE__ */
@@ -1049,7 +1046,7 @@ PtrDocument         pDoc;
 	pPosAb->PosDistance = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertRef, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertRef, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	appl = ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1067,7 +1064,7 @@ PtrDocument         pDoc;
 	pPosAb->PosDistance = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizRef, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizRef, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1086,7 +1083,7 @@ PtrDocument         pDoc;
 	     pPosAb->PosDistance = 0;
 	     pPosAb->PosAbRef = NULL;
 	     pPosAb->PosUserSpecified = FALSE;
-	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
+	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1108,7 +1105,7 @@ PtrDocument         pDoc;
 	pDimAb->DimUnit = UnRelative;
 	pDimAb->DimSameDimension = TRUE;
 	pDimAb->DimUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1126,7 +1123,7 @@ PtrDocument         pDoc;
 	     pPosAb->PosRefEdge = Left;
 	     pPosAb->PosDistance = 0;
 	     pPosAb->PosAbRef = NULL;
-	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, TRUE, &pAttr);
+	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 	     pPosAb->PosUserSpecified = FALSE;
 #ifdef __COLPAGE__
 	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1149,7 +1146,7 @@ PtrDocument         pDoc;
 	pDimAb->DimUnit = UnRelative;
 	pDimAb->DimSameDimension = TRUE;
 	pDimAb->DimUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1166,7 +1163,7 @@ PtrDocument         pDoc;
 	pPosAb->PosDistance = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertPos, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1188,7 +1185,7 @@ PtrDocument         pDoc;
 	pPosAb->PosDistance = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
-	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizPos, TRUE, &pAttr);
+	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1380,25 +1377,25 @@ PtrDocument         pDoc;
    if (pAbb != NULL)
      {
 	/* il y a un pave englobant */
-	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertRef, TRUE, &pAttr);
+	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertRef, FnAny, TRUE, &pAttr);
 	if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
 	  {
 	     *pAbbReDisp = pAbb;
 	     pAbb->AbVertRefChange = TRUE;
 	  }
-	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizRef, TRUE, &pAttr);
+	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizRef, FnAny, TRUE, &pAttr);
 	if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
 	  {
 	     *pAbbReDisp = pAbb;
 	     pAbb->AbHorizRefChange = TRUE;
 	  }
-	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, TRUE, &pAttr);
+	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 	if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
 	  {
 	     *pAbbReDisp = pAbb;
 	     pAbb->AbHeightChange = TRUE;
 	  }
-	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, TRUE, &pAttr);
+	pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 	if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
 	  {
 	     *pAbbReDisp = pAbb;
@@ -1414,25 +1411,25 @@ PtrDocument         pDoc;
 	     if (!pAbb->AbDead)
 		/* on ne traite pas les paves morts */
 	       {
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbVertPosChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbHorizPosChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbHeightChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
@@ -1451,25 +1448,25 @@ PtrDocument         pDoc;
 	  {
 	     if (!pAbb->AbDead)
 	       {
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbVertPosChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbHorizPosChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
 		       pAbb->AbHeightChange = TRUE;
 		    }
-		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, TRUE, &pAttr);
+		  pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 		  if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
 		    {
 		       *pAbbReDisp = pAbb->AbEnclosing;
@@ -3666,7 +3663,7 @@ PtrDocument         pDocRef;
 		 /* reference une regle FnCopy qui copie ce type de pave */
 		{
 		   found = FALSE;
-		   pRule = SearchRulepAb (pDocRef, pPavRef, &pSPR, PtFunction, TRUE, &pAttr);
+		   pRule = SearchRulepAb (pDocRef, pPavRef, &pSPR, PtFunction, FnAny, TRUE, &pAttr);
 		   stop = FALSE;
 		   do
 		      if (pRule == NULL)
@@ -4160,7 +4157,7 @@ boolean             redisp;
 	     if (pAbbox1->AbEnclosing->AbPresentationBox)
 		presNum = pAbbox1->AbEnclosing->AbTypeNum;
 	     pRCre = GlobalSearchRulepEl (pAbbox1->AbElement, &pSPR, &pSSR, presNum, NULL,
-				  viewSch, PtFunction, TRUE, FALSE, &pAttr);
+				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	     stop = FALSE;
 	     do
 		if (pRCre == NULL)
@@ -4330,7 +4327,7 @@ boolean             redisp;
 		  if (pAb->AbPresentationBox)
 		     presNum = boxType;
 		  pRCre = GlobalSearchRulepEl (pAb->AbElement, &pSPR, &pSSR, presNum, NULL,
-				  viewSch, PtFunction, TRUE, FALSE, &pAttr);
+				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 		  stop = FALSE;
 		  do
 		     if (pRCre == NULL)
@@ -5118,7 +5115,7 @@ PtrDocument         pDoc;
        || typeRule == PtForeground)
       /* cherche la regle de ce type qui s'applique au pave' */
      {
-	pRPres = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, TRUE, &pA);
+	pRPres = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, FnAny, TRUE, &pA);
 	if (pRPres->PrPresMode == PresInherit)
 	   /* c'est une regle d'heritage, on l'applique au pave' */
 #ifdef __COLPAGE__
@@ -5208,7 +5205,7 @@ PtrAttribute        pAttr;
 		    /* reapplique la regle complementaire */
 		    if (pRule->PrType == PtVertPos)
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
+			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight, FnAny,
 						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
@@ -5220,7 +5217,7 @@ PtrAttribute        pAttr;
 		      }
 		    else
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
+			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos, FnAny,
 						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
@@ -5244,7 +5241,7 @@ PtrAttribute        pAttr;
 		    /* reapplique la regle complementaire */
 		    if (pRule->PrType == PtHorizPos)
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
+			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth, FnAny,
 						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
@@ -5256,7 +5253,7 @@ PtrAttribute        pAttr;
 		      }
 		    else
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
+			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos, FnAny,
 						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
@@ -5479,7 +5476,7 @@ PtrAttribute        pAttrComp;
 				       /* regle specifique de la vue traitee */
 				       if (remove)
 					 {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TRUE, &pAttrib);
+					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, FnAny, TRUE, &pAttrib);
 					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
 					 }
 				       else
@@ -5489,7 +5486,7 @@ PtrAttribute        pAttrComp;
 				    if (pRuleView1 != NULL)
 				       if (remove)
 					 {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TRUE, &pAttrib);
+					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, FnAny, TRUE, &pAttrib);
 					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
 					 }
 				       else

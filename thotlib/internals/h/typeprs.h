@@ -252,7 +252,7 @@ typedef enum
 {
   FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
   FnCreateAfter, FnColumn, FnCopy, FnContentRef, FnSubColumn, FnNoLine,
-  FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode
+  FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode, FnAny
 } FunctionType;
 
 typedef enum

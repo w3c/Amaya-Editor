@@ -93,45 +93,59 @@ int                 imagetype;
   PictInfo           *image;
   char               *ptr;
 
-  image = NULL;
   if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
     {
       /* image element -> attach the element descriptor to abtract box */
-      if (ppav->AbElement->ElPictInfo == NULL)
+      image = (PictInfo *) ppav->AbElement->ElPictInfo;
+      if (image == NULL)
 	  {
 	    /* Create the element descriptor */
 	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	    ppav->AbElement->ElPictInfo = (int *) image;
 	  }
       ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
-      ptr = filename;
-     }
-   else if (ppav->AbPresentationBox)
-     {
-       /*  It's not an image element -> Create the descriptor */
-       image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-       ppav->AbPictInfo = (int *) image;
-      ptr = filename;
-     }
-   else if (ppav->AbLeafType == LtCompound)
-     {
-       /*  It's not an image element -> Create the descriptor */
-       image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-       ppav->AbPictBackground = (int *) image;
-       /* create the text buffer */
-       ptr = TtaGetMemory (strlen (filename) + 1);
-       strcpy (ptr, filename);
-     }
-
-  if (image)
-    {
-      /* Initialize image descriptor */
-      if (ptr == NULL)
+      if (filename == NULL)
 	{
 	  GetTextBuffer (&pBuffer);
 	  ppav->AbElement->ElText = pBuffer;
 	  ptr = &pBuffer->BuContent[0];
 	}
+      else
+	ptr = filename;
+     }
+   else if (ppav->AbPresentationBox)
+     {
+       /*  It's not an image element -> Create the descriptor */
+      image = (PictInfo *) ppav->AbPictInfo;
+      if (image == NULL)
+	{
+	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  ppav->AbPictInfo = (int *) image;
+	}
+      ptr = filename;
+     }
+   else if (ppav->AbLeafType == LtCompound)
+     {
+       /*  It's not an image element -> Create the descriptor */
+      image = (PictInfo *) ppav->AbPictBackground;
+      if (image == NULL)
+	{
+	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  ppav->AbPictBackground = (int *) image;
+	}
+       /* create the text buffer */
+      if (filename == NULL)
+	ptr = NULL;
+      else
+	{
+	  ptr = TtaGetMemory (strlen (filename) + 1);
+	  strcpy (ptr, filename);
+	}
+     }
+
+  if (image)
+    {
+      /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
       image->PicFileName = ptr;
       image->PicPixmap = 0;

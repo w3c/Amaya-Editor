@@ -385,8 +385,8 @@ Document            document;
 	   else
 	     pPreviousPres->PrNextPRule = pPres->PrNextPRule;
 #ifndef NODISPLAY
-	   RedisplayDefaultPresentation (document, (PtrElement) element,
-					 pPres->PrType, pPres->PrViewNum);
+	   RedisplayDefaultPresentation (document, (PtrElement) element, pPres->PrType,
+					 pPres->PrPresFunction,pPres->PrViewNum);
 #endif
 	   FreePresentRule (pPres);
 	 }

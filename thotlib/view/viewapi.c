@@ -2672,12 +2672,13 @@ PtrPRule            pRule;
    RedisplayDefaultPresentation                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedisplayDefaultPresentation (Document document, PtrElement pEl, PRuleType typeRuleP, int view)
+void                RedisplayDefaultPresentation (Document document, PtrElement pEl, PRuleType typeRuleP, FunctionType funcType, int view)
 #else  /* __STDC__ */
-void                RedisplayDefaultPresentation (document, pEl, typeRuleP, view)
+void                RedisplayDefaultPresentation (document, pEl, typeRuleP, funcType, view)
 Document            document;
 PtrElement          pEl;
 PRuleType           typeRuleP;
+FunctionType        funcType;
 int                 view;
 #endif /* __STDC__ */
 {
@@ -2694,7 +2695,7 @@ int                 view;
       for functions */
    if (typeRuleP == PtFunction)
       return;
-   ApplyStandardRule (pEl, LoadedDocument[document - 1], typeRuleP, view);
+   ApplyStandardRule (pEl, LoadedDocument[document - 1], typeRuleP, funcType, view);
    AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */

@@ -36,11 +36,14 @@
 #include "thotdir.h"
 #include "png.h"
 #include "fileaccess.h"
+
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT
 #include "picture_tv.h"
 
 #include "appli_f.h"
@@ -580,6 +583,11 @@ boolean             printing;
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
    XSetBackground (TtDisplay, TtGraphicGC, White_Color);
    XSetGraphicsExposures (TtDisplay, TtGraphicGC, FALSE);
+   /* initialize Graphic context to create pixmap */
+   GCimage = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
+   XSetForeground (TtDisplay, GCimage, Black_Color);
+   XSetBackground (TtDisplay, GCimage, White_Color);
+   XSetGraphicsExposures (TtDisplay, GCimage, FALSE);
 
    /* initialize Graphic context to display tiled pictures */
    tiledGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
@@ -938,6 +946,10 @@ int                 frame;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
+   if (imageDesc->PicFileName == NULL)
+     return;
+   else if (imageDesc->PicFileName[0] == '\0')
+     return;
 
    drawable = TtaGetThotWindow (frame);
    GetXYOrg (frame, &x, &y);
@@ -1145,7 +1157,7 @@ PictInfo           *imageDesc;
 
    if (imageDesc->PicFileName == NULL)
      return;
-   if (imageDesc->PicFileName[0] == '\0')
+   else if (imageDesc->PicFileName[0] == '\0')
      return;
 
    GetPictureFileName (imageDesc->PicFileName, fileName);

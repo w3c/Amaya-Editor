@@ -1149,17 +1149,19 @@ ThotColorStruct     colrs[256];
 	  Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
    }
 
-   if ((tmpimage == None) || (Img == (Pixmap) None)) {
-      if (tmpimage != None)
+   if ((tmpimage == None) || (Img == (Pixmap) None))
+     {
+       if (tmpimage != None)
 	 XDestroyImage (tmpimage);
-      if (Img != (Pixmap) None)
+       if (Img != (Pixmap) None)
 	 XFreePixmap (TtDisplay, Img);
-      Img = None;
-   } else {
-	  XPutImage (TtDisplay, Img, TtGraphicGC, tmpimage, 0, 0, 0, 0, width, height);
-	  XDestroyImage (tmpimage);
-   }
-
+       Img = None;
+     }
+   else
+     {
+       XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
+       XDestroyImage (tmpimage);
+     }
    TtaFreeMemory ((char*) Mapping);
 
    return (Img);

@@ -789,10 +789,10 @@ int                 schView;
 	SearchPresSchema (pAb->AbElement, &pSchP, &entry, &pSchS);
 	ret = TRUE;
 	/* cherche la regle NoBreak1 qui s'applique au pave */
-	*pR1 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL, schView, PtBreak1,
+	*pR1 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL, schView, PtBreak1, FnAny,
 				    FALSE, TRUE, pAt1);
 	/* cherche la regle NoBreak2 qui s'applique au pave */
-	*pR2 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL, schView, PtBreak2,
+	*pR2 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL, schView, PtBreak2, FnAny,
 				    FALSE, TRUE, pAt2);
      }
    return ret;
@@ -2263,7 +2263,7 @@ PtrDocument         pDoc;
 	     /* on met (ou on modifie) une regle de presentation specifique */
 	     /* cherche d'abord la regle qui s'applique a l'element */
 	     pRStd = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0, NULL, schView,
-					  PtHeight, FALSE, TRUE, &pAttr);
+					  PtHeight, FnAny, FALSE, TRUE, &pAttr);
 	     /* cherche si l'element a deja une regle de hauteur specifique */
 	     pRuleDimV = SearchPresRule (pElPage, PtHeight, 0, &New, pDoc, view);
 	     if (New)

@@ -614,7 +614,7 @@ int                *NbCol;
 			  pRule = (*pSchPPage)->PsPresentBox[TypeP - 1].PbFirstPRule;
 			  /* on recherche la regle colonne de la page */
 			  typeRule = PtFunction;
-			  SimpleSearchRulepEl (&pRule, pPrevious, viewNb, typeRule, &pRule);
+			  SimpleSearchRulepEl (&pRule, pPrevious, viewNb, typeRule, FnColumn, &pRule);
 			  stop = FALSE;
 			  while (!stop && pRule != NULL)
 			     if (pRule->PrType != PtFunction)
@@ -665,7 +665,7 @@ int                *NbCol;
 				     .PbFirstPRule;
 				  /* on recherche la regle colonne de la page */
 				  typeRule = PtFunction;
-				  SimpleSearchRulepEl (&pRule, pElAscent, viewNb, typeRule, &pRule);
+				  SimpleSearchRulepEl (&pRule, pElAscent, viewNb, typeRule, FnColumn, &pRule);
 				  while (!stop && pRule != NULL)
 				     if (pRule->PrType != PtFunction)
 					pRule = NULL;
@@ -1098,17 +1098,13 @@ DocViewNumber       viewNb;
 
 /*----------------------------------------------------------------------
    CrPavHB  cree les paves de l'element associe pEl.              
-   Ce pave doit etre place en haut ou bas de la           
-   page courante pElPage.                                 
-   Si l'element pere de pEl (c'est la racine de           
-   l'arbre associe) n'a pas de pave dans la page,         
-   il faut le  creer en meme temps.                       
+   Ce pave doit etre place en haut ou bas de la page courante pElPage.            
+   Si l'element pere de pEl (c'est la racine de l'arbre associe) n'a pas
+   de pave dans la page, il faut le  creer en meme temps. 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CrPavHB (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 			     PtrElement pElPage, boolean forward)
-
 #else  /* __STDC__ */
 void                CrPavHB (pEl, pDoc, viewNb, pElPage, forward)
 PtrElement          pEl;
@@ -1116,7 +1112,6 @@ PtrDocument         pDoc;
 DocViewNumber       viewNb;
 PtrElement          pElPage;
 boolean             forward;
-
 #endif /* __STDC__ */
 
 {
@@ -1153,7 +1148,7 @@ boolean             forward;
 	   /* associes */
 	   stop = FALSE;
 	   pRCre = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0,
-			    NULL, viewSch, PtFunction, TRUE, FALSE, &pAttr);
+			    NULL, viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	   do
 	      if (pRCre == NULL)
 		 stop = TRUE;
@@ -1581,7 +1576,7 @@ boolean             forward;
 		     /* on met (ou on modifie) une regle de presentation specifique */
 		     /* cherche d'abord la regle qui s'applique a l'element */
 		     pRStd = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0, NULL, viewSch,
-					     PtHeight, FALSE, TRUE, &pAttr);
+					     PtHeight, FnAny, FALSE, TRUE, &pAttr);
 		     /* cherche si l'element a deja une regle de hauteur specifique */
 		     pRuleDimV = SearchPresRule (pElPage, PtHeight, 0,
 						 &nouveau, pDoc, viewNb);
@@ -2439,7 +2434,7 @@ boolean            *arret;
 				   for (typeRule = PtVertRef; typeRule <= PtHorizPos; typeRule++)
 				     {
 					/* recherche de la regle */
-					pRule = SearchRulepAb (pDoc, pPsuiv, &pSPres, typeRule, TRUE, &pAttr);
+					pRule = SearchRulepAb (pDoc, pPsuiv, &pSPres, typeRule, FnAny, TRUE, &pAttr);
 					/* application de la regle */
 					if (!ApplyRule (pRule, pSPres, pPsuiv, pDoc, pAttr, &bool))
 					   Delay (pRule, pSPres, pPsuiv, pAttr, pNewAbbox);
@@ -3048,7 +3043,7 @@ boolean            *arret;
 					      /* de presentation pAbb ; */
 					      pRCre = GlobalSearchRulepEl (pDupPav->AbElement,
 									   &pSPres, &pSchS, 0, NULL, viewSch,
-									   PtFunction, TRUE, FALSE, &pAttr);
+									   PtFunction, FnAny, TRUE, FALSE, &pAttr);
 					      stop = FALSE;
 					      do
 						 if (pRCre == NULL)
@@ -3173,7 +3168,7 @@ boolean            *arret;
 		  for (typeRule = PtVertRef; typeRule <= PtHorizPos; typeRule++)
 		    {
 		       /* recherche de la regle */
-		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, typeRule, TRUE, &pAttr);
+		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, typeRule, FnAny, TRUE, &pAttr);
 		       /* application de la regle */
 		       if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
 			  Delay (pRule, pSPres, pAbb, pAttr, pNewAbbox);
@@ -3181,7 +3176,7 @@ boolean            *arret;
 		  if (!pAbb->AbPresentationBox)
 		    {
 		       /* application des regles de creation repetees */
-		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, PtFunction, TRUE, &pAttr);
+		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, PtFunction, FnAny, TRUE, &pAttr);
 		       /* pRule est la premiere regle de creation si il y en a */
 		       do
 			  if (pRule != NULL)
