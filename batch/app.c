@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "compilmsg.h"
 #include "appmsg.h"
@@ -13,71 +11,51 @@
 #include "app.h"
 #include "modif.h"
 #include "menuaction.h"
+#include "registry.h"
 
 #include "analsynt.f"
-#include "cdialog.f"
+#include "compilmsg.f"
 #include "environ.f"
 #include "filesystem.f"
 #include "memory.f"
 #include "message.f"
-#include "wrschApp.f"
-#include "compilmsg.f"
 #include "rdschstr.f"
 #include "storage.f"
-
-#ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char *);
-extern void         TtaSaveAppRegistry (void);
-
-#else
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
+#include "wrschApp.f"
 
 #define EXPORT
-#include "compil.var"
 #include "environ.var"
-#undef EXPORT
-#define EXPORT extern
 #include "analsynt.var"
 #include "compil.var"
+#undef EXPORT
+#define EXPORT extern
 
 EXPORT int         linenb;
-EXPORT PtrExternAppliList pAppli;
+EXPORT PtrEventsSet pAppli;
 EXPORT PtrSSchema pSchStr;
+extern int          IncNbIdent;
 
 int                 linenb;	/* compteur de lignes dans le fichier source */
-
 static Name          filename;
-
-extern int          IncNbIdent;
 PtrSSchema        pSchStr;
-PtrExternAppliList  pAppli;
+PtrEventsSet        pAppli;
 
 /* Pointeur sur la liste des schemas d'interfaces utilise's par EDITOR.A */
 PtrAppName          SchemasUsed = NULL;
-
 /* Pointeur sur la liste des noms de menus effectivement utilises */
 PtrAppName          MenusUsed = NULL;
-
 /* pointeur sur la liste des noms d'items effectivement utilises */
 PtrAppName          ItemsUsed = NULL;
-
 /* pointeur sur la liste des noms d'actions effectivement utilisees */
 PtrAppName          ActionsUsed = NULL;
-
 /* pointeur sur la chaine des menus de la fenetre principale de l'application */
 PtrAppMenu          MainWindowMenus = NULL;
-
 /* pointeur sur la chaine des menus des frames document de l'application */
 PtrAppMenu          DocWindowMenus = NULL;
-
 /* pointeur sur la chaine des descripteurs des menus de chaque type de document */
 PtrAppDocType       DocTypeMenus = NULL;
-
-static boolean      PairePremier = False;	/* on a rencontre' le mot cle "First"  */
-static boolean      PaireSecond = False;	/* on a rencontre' le mot cle "Second" */
+static boolean      PairePremier = False; /* on a rencontre' le mot cle "First"  */
+static boolean      PaireSecond = False;  /* on a rencontre' le mot cle "Second" */
 static int          ruleNb;
 static int          attribNb;
 static int          curEvent;	/* l'evenement courant               */
@@ -87,7 +65,6 @@ static boolean      DefaultSection;	/* on est dans la section DEFAULT    */
 static boolean      ElementsSection;	/* on est dans la section ELEMENTS   */
 static boolean      AttributesSection;	/* on est dans la section ATTRIBUTES */
 static boolean      MenusSection;	/* on est dans la section MENUS      */
-
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
 static char         MenuName[100];
@@ -585,50 +562,49 @@ grmcode             pr;
    int                 typeId;
 
    switch (x)
+     {
+       /* traitement selon le code du mot-cle court */
+     case CHR_59:
+       /*  ;  */
+       switch (r)
 	 {
-	       /* traitement selon le code du mot-cle court */
-	    case CHR_59:
-	       /*  ;  */
-	       switch (r)
-		     {
-			case RULE_EvtAction:
-			   if (DefaultSection)
-			      typeId = 0;
-			   else if (ElementsSection)
-			      typeId = ruleNb;
-			   else if (AttributesSection)
-			      typeId = attribNb;
-			   InitEventActions (pAppli, typeId, curEvent, PreEvent,
-					     eventAction);
-			   curEvent = 0;
-			   PreEvent = True;
-			   eventAction = NULL;
-			   break;
-			case RULE_NewMenu:
-			   NewMenuComplete ();
-			   initMenu ();
-			   break;
-			default:
-			   break;
-		     }
-	       break;
-	    case CHR_44:
-	       /*  ,  */
-	       break;
-
-	    case CHR_46:
-	       /* .  */
-	       break;
-
-	    case CHR_58:
-	       /* :  */
-	       if (r == RULE_Menus)
-		  initMenu ();
-	       break;
-
-	    default:
-	       break;
+	 case RULE_EvtAction:
+	   if (DefaultSection)
+	     typeId = 0;
+	   else if (ElementsSection)
+	     typeId = ruleNb;
+	   else if (AttributesSection)
+	     typeId = attribNb;
+	   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
+	   curEvent = 0;
+	   PreEvent = True;
+	   eventAction = NULL;
+	   break;
+	 case RULE_NewMenu:
+	   NewMenuComplete ();
+	   initMenu ();
+	   break;
+	 default:
+	   break;
 	 }
+       break;
+     case CHR_44:
+       /*  ,  */
+       break;
+       
+     case CHR_46:
+       /* .  */
+       break;
+       
+     case CHR_58:
+       /* :  */
+       if (r == RULE_Menus)
+	 initMenu ();
+       break;
+       
+     default:
+       break;
+     }
 }
 
 
@@ -794,7 +770,7 @@ iline               wi;
 			 /* construct an abstract schemas structure */
 			 pSchStr = ConstructAbstractSchStruct ();
 			 /* acquiert un schema */
-			 pAppli = MakeNewApplicationStruct (pSchStr->SsCode, filename);
+			 pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
 			 /* pointeur sur la chaine des descripteurs des menus des */
 			 /* differents types de document */
 			 DocTypeMenus = NULL;
@@ -813,7 +789,7 @@ iline               wi;
 					   inputLine, linenb);
 			 else
 			    /* acquiert un schema */
-			    pAppli = MakeNewApplicationStruct (pSchStr->SsCode, filename);
+			    pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
 		      }
 		 }
 	       else
@@ -970,7 +946,7 @@ iline               wi;
 	       if (strcmp (filename, "EDITOR") == 0 && pSchStr == NULL)
 		 {
 		    pSchStr = ConstructAbstractSchStruct ();
-		    pAppli = MakeNewApplicationStruct (pSchStr->SsCode, filename);
+		    pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
 		 }
 	       if (pr == RULE_AttrActions)
 		 {
@@ -1652,7 +1628,7 @@ char              **argv;
 		       /* ecrit le schema compile' dans le fichier de sortie     */
 		       /* le directory des schemas est le directory courant      */
 		       DirectorySchemas[0] = '\0';
-		       WrSchAPP (pfilename, pAppli, pSchStr);
+		       GenerateApplication (pfilename, pAppli, pSchStr);
 		       strcpy (pfilename, filename);
 		       if (strcmp (pfilename, "EDITOR") != 0)
 			  WriteDefineFile (pfilename);

@@ -283,7 +283,7 @@ typedef struct _StructSchema
 					/* presentation effectivement associe*/
 	PtrHandlePSchema SsFirstPSchemaExtens;	/* premier schema de presentation */
 					/* additionnel */
-	PtrExternAppliList SsActionList;	/* Pointer to the list of actions */
+	PtrEventsSet    SsActionList;	/* Pointer to the list of actions */
 					/* that can be applied in documents */
 					/* with this schema. */
 	boolean		SsExtension;	/* Faux si schema de document ou de */

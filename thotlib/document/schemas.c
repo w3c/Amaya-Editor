@@ -34,7 +34,7 @@ UnePresent;
 
 #include "app.h"
 
-extern PtrExternAppliList applicationList;
+extern PtrEventsSet applicationList;
 
 #include "appdialogue.h"
 
@@ -71,7 +71,7 @@ PtrSSchema        scheme;
 
 {
    char                appliName[MAX_NAME_LENGTH];
-   PtrExternAppliList  appliaction;
+   PtrEventsSet  appliaction;
 
    strcpy (appliName, scheme->SsName);
    scheme->SsActionList = NULL;
@@ -79,8 +79,8 @@ PtrSSchema        scheme;
      {
 	/* Do the application specific initialisations and update StructSchema. */
 	appliaction = applicationList;
-	while (appliaction != NULL && strcmp (appliaction->appId, appliName) != 0)
-	   appliaction = appliaction->next;
+	while (appliaction != NULL && strcmp (appliaction->EvSName, appliName) != 0)
+	   appliaction = appliaction->EvSNext;
 	if (appliaction != NULL)
 	   /* It contains the complete set of event/action for an application. */
 	   scheme->SsActionList = appliaction;

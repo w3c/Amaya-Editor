@@ -1,7 +1,3 @@
-/* -- 
- * Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- 
- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -17,8 +13,8 @@
 #include "appinit.f"
 
 /* Global variable pointing to the list of action-definitions. */
-extern PtrExternAppliList applicationList;
-extern PtrExternAppliList applicationEditor;
+extern PtrEventsSet applicationList;
+extern PtrEventsSet applicationEditor;
 
 /* FUNCTIONS FOR GENERATING THE ACTION-LISTS */
 #ifdef __STDC__
@@ -39,7 +35,6 @@ PtrElement          pEl;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean      ExecuteAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
-
 #else  /* __STDC__ */
 static boolean      ExecuteAction (notifyEvent, event, pre, type, element, schStruct)
 NotifyEvent        *notifyEvent;
@@ -48,95 +43,94 @@ boolean             pre;
 int                 type;
 Element             element;
 PtrSSchema        schStruct;
-
 #endif /* __STDC__ */
 {
-   PtrActionBindingList binding;
-   PtrExternAppliList  appliActions;
-   boolean             ret;
-   Proc                doitProc;
-   Func                doitFunc;
+  PtrActionEvent      pactevent;
+  PtrEventsSet        appliActions;
+  boolean             status;
+  Proc                proctodo;
+  Func                functodo;
 
-   doitProc = NULL;
-   doitFunc = NULL;
+  proctodo = NULL;
+  functodo = NULL;
 
-   /* See all actions linked with this event in different schemas */
-   while (schStruct != NULL && doitProc == NULL && doitFunc == NULL)
-     {
-	appliActions = schStruct->SsActionList;
-	if (appliActions != NULL)
-	  {
-	     /* take the concerned actions list */
-	     binding = appliActions->eventsList[event];
-	     while (binding != NULL)
-	       {
-		  if (binding->pre == pre && (binding->type == 0 || binding->type == type))
-		    {
-		       if (pre)
-			  doitFunc = (Func) binding->action->doAction;
-		       else
-			  doitProc = binding->action->doAction;
-		       binding = NULL;	/* end of research */
-		    }
+  /* See all actions linked with this event in different schemas */
+  while (schStruct != NULL && proctodo == NULL && functodo == NULL)
+    {
+      appliActions = schStruct->SsActionList;
+      if (appliActions != NULL)
+	{
+	  /* take the concerned actions list */
+	  pactevent = appliActions->EvSList[event];
+	  while (pactevent != NULL)
+	    {
+	      if (pactevent->AEvPre == pre && (pactevent->AEvType == 0 || pactevent->AEvType == type))
+		{
+		  if (pre)
+		    functodo = (Func) pactevent->AEvAction->ActAction;
 		  else
-		     binding = binding->next;	/* continue */
-	       }
-	  }
-
-	/* See in the parent schema */
-	if (doitProc == NULL && doitFunc == NULL)
-	  {
-	     ret = True;	/* still in the same schema */
-	     if (element != 0)
+		    proctodo = pactevent->AEvAction->ActAction;
+		  pactevent = NULL;	/* end of research */
+		}
+	      else
+		pactevent = pactevent->AEvNext;	/* continue */
+	    }
+	}
+      
+      /* See in the parent schema */
+      if (proctodo == NULL && functodo == NULL)
+	{
+	  status = True;	/* still in the same schema */
+	  if (element != 0)
+	    element = (Element) ((PtrElement) element)->ElParent;
+	  while (status && element != 0)
+	    {
+	      status = (schStruct == ((PtrElement) element)->ElSructSchema);
+	      if (!status)
+		/* a new schema */
+		schStruct = ((PtrElement) element)->ElSructSchema;
+	      else
 		element = (Element) ((PtrElement) element)->ElParent;
-	     while (ret && element != 0)
-	       {
-		  ret = (schStruct == ((PtrElement) element)->ElSructSchema);
-		  if (!ret)
-		     /* a new schema */
-		     schStruct = ((PtrElement) element)->ElSructSchema;
+	    }
+	  
+	  if (element == 0)
+	    schStruct = NULL;	/* no more schema */
+	}
+    }
+  
+  /* See all actions linked with this event in EDITOR application */
+  if (proctodo == NULL && functodo == NULL)
+    {
+      appliActions = applicationEditor;
+      if (appliActions != NULL)
+	{
+	  /* take the concerned actions list */
+	  pactevent = appliActions->EvSList[event];
+	  while (pactevent != NULL)
+	    {
+	      if (pactevent->AEvPre == pre && (pactevent->AEvType == 0 || pactevent->AEvType == type))
+		{
+		  if (pre)
+		    functodo = (Func) pactevent->AEvAction->ActAction;
 		  else
-		     element = (Element) ((PtrElement) element)->ElParent;
-	       }
-
-	     if (element == 0)
-		schStruct = NULL;	/* no more schema */
-	  }
-     }
-
-   /* See all actions linked with this event in EDITOR application */
-   if (doitProc == NULL && doitFunc == NULL)
-     {
-	appliActions = applicationEditor;
-	if (appliActions != NULL)
-	  {
-	     /* take the concerned actions list */
-	     binding = appliActions->eventsList[event];
-	     while (binding != NULL)
-	       {
-		  if (binding->pre == pre && (binding->type == 0 || binding->type == type))
-		    {
-		       if (pre)
-			  doitFunc = (Func) binding->action->doAction;
-		       else
-			  doitProc = binding->action->doAction;
-		       binding = NULL;	/* end of research */
-		    }
-		  else
-		     binding = binding->next;	/* continue */
-	       }
-	  }
-     }
-
-   ret = False;
-   if (doitFunc != NULL || doitProc != NULL)
-     {
-	if (doitFunc != NULL)
-	   ret = (*doitFunc) (notifyEvent);
-	else
-	   (*doitProc) (notifyEvent);
-     }
-   return ret;
+		    proctodo = pactevent->AEvAction->ActAction;
+		  pactevent = NULL;	/* end of research */
+		}
+	      else
+		pactevent = pactevent->AEvNext;
+	    }
+	}
+    }
+  
+  status = False;
+  if (functodo != NULL || proctodo != NULL)
+    {
+      if (functodo != NULL)
+	status = (*functodo) (notifyEvent);
+      else
+	(*proctodo) (notifyEvent);
+    }
+  return status;
 }
 
 
@@ -149,12 +143,10 @@ PtrSSchema        schStruct;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             SendAttributeMessage (NotifyAttribute * notifyAttr, boolean pre)
-
 #else  /* __STDC__ */
 boolean             SendAttributeMessage (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
-
 #endif /* __STDC__ */
 {
    Element             element;

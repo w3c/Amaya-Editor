@@ -1,8 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*  Thot Toolkit Events defined by Irene Vatton */
-
 #ifndef _APP_H_
 #define _APP_H_
 #include "interface.h"
@@ -23,40 +18,31 @@ typedef enum
 typedef struct _APP_action *PtrAction;
 typedef struct _APP_action
 {
-  char               *ActionName;	/* Name of the action */
-  Proc                doAction;	/* The action to be executed */
-  boolean             actPre;	/* Previous event implies function */
-  APPevent            actEvent;	/* What NotifyEvent context to generate */
-  PtrAction           next;	/* Next action in the list */
+  char               *ActName;	/* Name of the action */
+  Proc                ActAction;/* The action to be executed */
+  boolean             ActPre;	/* Previous event implies function */
+  APPevent            ActEvent;	/* What NotifyEvent context to generate */
+  PtrAction           ActNext;	/* Next action in the list */
 } APP_action;
 
 
-typedef struct _actionbindinglist *PtrActionBindingList;
-typedef struct _actionbindinglist
+typedef struct _ActionEvent *PtrActionEvent;
+typedef struct _ActionEvent
 {
-  PtrAction           action;	/* A pointer to the action  */
-  int                 type;	/* element or attribute type associated with */
-  boolean             pre;	/* Pre or Post event */
-  PtrActionBindingList next;	/* Next set of binding (event, action) */
-} actionbindinglist;
+  PtrAction           AEvAction;/* A pointer to the action  */
+  int                 AEvType;	/* Element or attribute type associated with */
+  boolean             AEvPre;	/* Pre or Post event */
+  PtrActionEvent      AEvNext;	/* Next set of(event/action) */
+} ActionEvent;
 
-typedef struct _externapplilist *PtrExternAppliList;
-typedef struct _externapplilist
+typedef struct _EventsSet *PtrEventsSet;
+typedef struct _EventsSet
 {
-  int                 strId;	/* Contains an identifier of what document-type
-				   (S-file) the "action-table" is for */
-  char               *appId;	/* Contains an identifier of what "action-table"
-				   to use. */
-  /* The two identifiers above determine the Message/actions to apply.
-     This meens that you can have more I-files for the same document-type
-     (S-file). */
-  PtrActionBindingList eventsList[NUMBER_OF_APP_EVENTS];
-  /* Each entry above points to a list of bindings concerning this specific
-     event. Default binding will be the last entry of this list.
-     Entries have to be in the same order than in the enum ECFevent */
-  PtrExternAppliList  next;	/* Contains a pointer to the next 
-				   "External application". */
-} externapplilist;
+  int                 EvSStructId;/* Identifier of SSchema */
+  char               *EvSName;	/* Name of the events set */
+  PtrActionEvent      EvSList[NUMBER_OF_APP_EVENTS];
+  PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
+} EventsSet;
 
 extern void         KeyboardsLoadResources ();
 extern void         StructEditingLoadResources ();
@@ -81,8 +67,8 @@ extern void         TteAddSubMenu (WindowType windowtype, char *schemaName, int 
 extern void         TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType);
 
 extern void         InsertAction (char *actionName, Proc doIt);
-extern void         InitEventActions (PtrExternAppliList ptrAction, int typeId, APPevent event, boolean pre, char *actionName);
-extern PtrExternAppliList MakeNewApplicationStruct (int structureId, char *applicationName);
+extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName);
+extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcChangeType (Document document, View view);
 
@@ -161,8 +147,8 @@ extern void         TteAddSubMenu ( /*WindowType windowtype, char *schemaName, i
 extern void         TteAddMenuItem ( /*WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType */ );
 
 extern void         InsertAction ( /*char *actionName, Proc doIt */ );
-extern void         InitEventActions ( /*PtrExternAppliList ptrAction, int typeId, ECFevent event, boolean pre, char *actionName */ );
-extern PtrExternAppliList MakeNewApplicationStruct ( /*int structureId, char *applicationName */ );
+extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, boolean pre, char *actionName */ );
+extern PtrEventsSet TteNewEventsSet ( /*int structureId, char *name */ );
 
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters ( /*Document document, View view */ );
