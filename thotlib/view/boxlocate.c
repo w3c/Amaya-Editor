@@ -147,6 +147,8 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
   NotifyElement       notifyEl;
   ThotBool            ok;
 
+  if (!pEl)
+    return FALSE;
   ok = FALSE;
   pAsc = pEl;
   if (pEl && pEl->ElTerminal &&

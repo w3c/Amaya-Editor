@@ -2112,86 +2112,66 @@ Element GetEnclosingForm (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  InsertForm creates a form element if there is no parent element
-  which is a form.
-  Return
-   - the new created form element,
-   - NULL if these element cannot be created
-   - or the current selected element if there is already a parent form.
-
-   withinP is TRUE if the current selection is within a paragraph in a form.
+  PrepareFormControl 
+  
+  Return the selected element and meke sure there is at least a space
+  character before the insertion point.
+  withinP is TRUE if the current selection is within a paragraph or
+  a pseudo-paragraph.
   ----------------------------------------------------------------------*/
-static Element InsertForm (Document doc, View view, ThotBool *withinP)
+static Element PrepareFormControl (Document doc, ThotBool *withinP)
 {
    ElementType         elType;
-   Element             el, parent, form;
+   Element             el, parent;
    int                 firstchar, lastchar;
    int                 len;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
    *withinP = FALSE;
-   if (el != NULL)
+   if (el)
+     /* some element is selected */
      {
+       /* check whether the selected element is within a P element */
        elType = TtaGetElementType (el);
-       elType.ElTypeNum = HTML_EL_Form;
-       /* within HTML element */
-       form = TtaGetTypedAncestor (el, elType);
-#ifdef IV
-       /* It's not mandatory to create an enclosing form */
-       if (form == NULL)
+       parent = el;
+       while (parent &&
+	      elType.ElTypeNum != HTML_EL_Paragraph &&
+	      elType.ElTypeNum != HTML_EL_Pseudo_paragraph &&
+	      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 {
-	   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	     {
-	       /* create the form element */
-	       elType.ElTypeNum = HTML_EL_Form;
-	       TtaCreateElement (elType, doc);
-	       /* get the new created element */
-	       TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-	       form = el;
-	     }
-	   else
-	     /* cannot create a form element here */
-	     el = NULL;
+	   parent = TtaGetParent (parent);
+	   elType = TtaGetElementType (parent);
 	 }
-       else
-#endif
+       *withinP = ((elType.ElTypeNum == HTML_EL_Paragraph ||
+		    elType.ElTypeNum == HTML_EL_Pseudo_paragraph) &&
+		   !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"));
+       if (*withinP)
 	 {
-	   /* there is a parent form element */
-	   parent = el;
-	   while (parent != form
-		  && elType.ElTypeNum != HTML_EL_Paragraph
-		  && elType.ElTypeNum != HTML_EL_Pseudo_paragraph
-		  && !strcmp(TtaGetSSchemaName (elType.ElSSchema),
-			      "HTML"))
+	   elType = TtaGetElementType (el);
+	   if (elType.ElTypeNum == HTML_EL_Basic_Set ||
+	       elType.ElTypeNum == HTML_EL_Basic_Elem)
+	     /* the selected element is an undefined element. Make it
+		a text leaf */
 	     {
-	       parent = TtaGetParent (parent);
-	       elType = TtaGetElementType (parent);
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       parent = el;
+	       el = TtaNewElement (doc, elType);
+	       TtaInsertFirstChild (&el, parent, doc);
 	     }
-	   /* check whether the selected element is within a P element */
-	   *withinP = (parent != form);
-	   if (*withinP)
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	     /* the selected element is a text leaf */
 	     {
-	       elType = TtaGetElementType (el);
-	       if (elType.ElTypeNum == HTML_EL_Basic_Set)
+	       /* add a space if necessary */
+	       len = TtaGetTextLength (el);
+	       if (len == 0)
 		 {
-		   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		   parent = el;
-		   el = TtaNewElement (doc, elType);
-		   TtaInsertFirstChild (&el, parent, doc);
+		   TtaSetTextContent (el, " ",
+				      TtaGetDefaultLanguage (), doc);
+		   /* set a caret after the new space */
+		   TtaSelectString (doc, el, 2, 1);
 		 }
-	       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-		 {
-		   /* add a space if necessary */
-		   len = TtaGetTextLength (el);
-		   if (len == 0)
-		     {
-		       TtaSetTextContent (el, " ",
-					  TtaGetDefaultLanguage (), doc);
-		       TtaSelectString (doc, el, 2, 2);
-		     }
-		   
-		 }
+	       
 	     }
 	 }
      }
@@ -2240,7 +2220,7 @@ static void CreateInputElement (Document doc, View view, int elInput)
    ThotBool            withinP;
 
    /* create the form if necessary */
-   el = InsertForm (doc, view, &withinP);
+   el = PrepareFormControl (doc, &withinP);
    if (el != NULL)
      {
        /* the element can be created */
@@ -2268,48 +2248,49 @@ static void CreateInputElement (Document doc, View view, int elInput)
 	   TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
 	   if (input)
 	     {
-	     elType = TtaGetElementType (input);
-	     while (elType.ElTypeNum != elInput)
-	       {
-	       input = TtaGetParent (input);
 	       elType = TtaGetElementType (input);
-	       }
-	     /* add a text before if needed */
-	     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	     el = input;
-	     TtaPreviousSibling (&el);
-	     if (el == NULL)
-	       {
-	       el = TtaNewElement (doc, elType);
-	       TtaInsertSibling (el, input, TRUE, doc);
-	       }
+	       while (input && elType.ElTypeNum != elInput)
+		 {
+		   input = TtaGetParent (input);
+		   elType = TtaGetElementType (input);
+		 }
+	       /* add a text before if needed */
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       el = input;
+	       TtaPreviousSibling (&el);
+	       if (el == NULL)
+		 {
+		   el = TtaNewElement (doc, elType);
+		   TtaInsertSibling (el, input, TRUE, doc);
+		 }
 	     }
 	 }
        /* Insert a text element after */
        if (input)
 	 {
-         el = input;
-         TtaNextSibling (&el);
-         if (el == NULL)
-	   {
-	   el = TtaNewElement (doc, elType);
-	   TtaInsertSibling (el, input, FALSE, doc);
-	   if (elInput == HTML_EL_Text_Input ||
-	       elInput == HTML_EL_Password_Input ||
-               elInput == HTML_EL_File_Input)
-	     /* set the default size if there is no size attribute */
+	   el = input;
+	   TtaNextSibling (&el);
+	   if (el == NULL)
 	     {
-	       attrType.AttrSSchema = elType.ElSSchema;
-	       attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
-	       attr = TtaGetAttribute (input, attrType);
-	       if (!attr)
-		 CreateAttrIntAreaSize (20, input, doc);
+	       el = TtaNewElement (doc, elType);
+	       TtaInsertSibling (el, input, FALSE, doc);
+	       if (elInput == HTML_EL_Text_Input ||
+		   elInput == HTML_EL_Password_Input ||
+		   elInput == HTML_EL_File_Input)
+		 /* set the default size if there is no size attribute */
+		 {
+		   attrType.AttrSSchema = elType.ElSSchema;
+		   attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
+		   attr = TtaGetAttribute (input, attrType);
+		   if (!attr)
+		     CreateAttrIntAreaSize (20, input, doc);
+		 }
+	       /* if it's not a HTML_EL_BUTTON_ or a SELECT
+		  select the following text element */
+	       if (elInput != HTML_EL_BUTTON_ &&
+		   elInput != HTML_EL_Option_Menu)
+		 TtaSelectElement (doc, el);
 	     }
-	   /* if it's not a HTML_EL_BUTTON_ or a SELECT
-	      select the following text element */
-	   if (elInput != HTML_EL_BUTTON_ && elInput != HTML_EL_Option_Menu)
-	   TtaSelectElement (doc, el);
-	   }
 	 }
      }
 }
@@ -2440,7 +2421,7 @@ void CreateImageInput (Document doc, View view)
   ThotBool            withinP;
 
   /* create the form if necessary */
-  el = InsertForm (doc, view, &withinP);
+  el = PrepareFormControl (doc, &withinP);
   if (el != NULL)
     {
       /* the element can be created */
@@ -2456,54 +2437,53 @@ void CreateImageInput (Document doc, View view)
       if (input)
 	{
 	  elType = TtaGetElementType (input);
-	  while (elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
+	  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the img element was created */
 	    {
-	      input = TtaGetParent (input);
-	      elType = TtaGetElementType (input);
-	    }
-	  /* add the attribute isInput */
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_IsInput;
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (input, attr, doc);
-	  
-	  /* use the ALT value to generate the attribute NAME */
-	  attrType.AttrTypeNum = HTML_ATTR_ALT;
-	  attr = TtaGetAttribute (input, attrType);
-	  if (attr)
-	    {
-	      length = TtaGetTextAttributeLength (attr) + 10;
-	      value = TtaGetMemory (length);
-	      TtaGiveTextAttributeValue (attr, value, &length);
-	      attrType.AttrTypeNum = HTML_ATTR_NAME;
+	      /* add the attribute isInput */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_IsInput;
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (input, attr, doc);
-	      TtaSetAttributeText (attr, value, input, doc);
-	      TtaFreeMemory (value);
-	      /* Check attribute NAME or ID in order to make sure that its
-		 value unique in the document */
-	      MakeUniqueName (input, doc);
+
+	      /* use the ALT value to generate the attribute NAME */
+	      attrType.AttrTypeNum = HTML_ATTR_ALT;
+	      attr = TtaGetAttribute (input, attrType);
+	      if (attr)
+		{
+		  length = TtaGetTextAttributeLength (attr) + 10;
+		  value = TtaGetMemory (length);
+		  TtaGiveTextAttributeValue (attr, value, &length);
+		  attrType.AttrTypeNum = HTML_ATTR_NAME;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (input, attr, doc);
+		  TtaSetAttributeText (attr, value, input, doc);
+		  TtaFreeMemory (value);
+		  /* Check attribute NAME or ID in order to make sure that its
+		     value unique in the document */
+		  MakeUniqueName (input, doc);
+		}
+	      /* add a text before if needed */
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      el = input;
+	      TtaPreviousSibling (&el);
+	      if (el == NULL)
+		{
+		  el = TtaNewElement (doc, elType);
+		  TtaInsertSibling (el, input, TRUE, doc);
+		}
 	    }
-	  /* add a text before if needed */
-	  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	  /* Insert a text element after */
 	  el = input;
-	  TtaPreviousSibling (&el);
+	  TtaNextSibling (&el);
 	  if (el == NULL)
 	    {
 	      el = TtaNewElement (doc, elType);
-	      TtaInsertSibling (el, input, TRUE, doc);
+	      TtaInsertSibling (el, input, FALSE, doc);
+	      /* if it's not a HTML_EL_BUTTON_ or a SELECT
+		 select the following text element */
+	      TtaSelectElement (doc, el);
 	    }
-	}
-      /* Insert a text element after */
-      el = input;
-      TtaNextSibling (&el);
-      if (el == NULL)
-	{
-	  el = TtaNewElement (doc, elType);
-	  TtaInsertSibling (el, input, FALSE, doc);
-	  /* if it's not a HTML_EL_BUTTON_ or a SELECT
-	     select the following text element */
-	  TtaSelectElement (doc, el);
 	}
     }
 }

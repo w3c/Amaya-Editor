@@ -280,7 +280,7 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
    PtrElement          pEl;
 
    *pDoc = NULL;
-   if (SelectedDocument)
+   if (SelectedDocument && FirstSelectedElement->ElStructSchema)
      {
 	/* there is a current selection */
 	ret = TRUE;
