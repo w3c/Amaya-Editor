@@ -1020,19 +1020,18 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 	delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
       break;
     }
-
-  HorizontalScroll (frame, delta, 1);
+  if (delta)
+    HorizontalScroll (frame, delta, 1);
 }
-#endif /* _WINDOWS */
+#else /* _WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void FrameHScrolled (int *w, int frame, int *param)
 #else /* _GTK */
-     void FrameHScrolledGTK (GtkAdjustment *w, int frame)
+void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _GTK */
 {
   int                 delta, l;
@@ -1086,31 +1085,15 @@ void FrameHScrolled (int *w, int frame, int *param)
 	  XtSetArg (args[n], XmNsliderSize, &l);
 	  n++;
 	  XtGetValues (FrameTable[frame].WdScrollH, args, n);
-#else /* _GTK */
-	  /* l is the width of the page */
-	  l = w->page_size;
-	  /*	   l = FrameTable[frame].FrWidth;*/
-#endif /* _GTK */
-#ifndef _GTK
 	  /* On regarde si le deplacement bute sur le bord droit */
 	  if (info->value + l >= FrameTable[frame].FrWidth)
-#else /* _GTK */
-	    /* On regarde si le deplacement bute sur le bord droit */
-	    if (w->value + l >= FrameTable[frame].FrWidth)	     
-#endif /* _GTK */
 	      delta = FrameTable[frame].FrScrollWidth;
 	    else
 	      {
-#ifndef _GTK
 		/* translate the position in the scroll bar into a shift value in the document */
 		delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
-#else /* _GTK */
-		/* translate the position in the scroll bar into a shift value in the document */
-		delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
-#endif /* _GTK */
-		delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
+		delta = delta + FrameTable[frame].FrScrollOrg - ViewFrameTable[frame - 1].FrXOrg;
 	      }
-#ifndef _GTK
 	}
       else if (info->reason == XmCR_TO_TOP)
 	/* force the left alignment */
@@ -1118,13 +1101,26 @@ void FrameHScrolled (int *w, int frame, int *param)
       else if (info->reason == XmCR_TO_BOTTOM)
 	/* force the right alignment */
 	delta = FrameTable[frame].FrScrollWidth;
+#else /* _GTK */
+       /* l is the width of the page */
+       l = w->page_size;
+       /* On regarde si le deplacement bute sur le bord droit */
+       if (w->value + l >= FrameTable[frame].FrWidth)	     
+	 delta = FrameTable[frame].FrScrollWidth;
+       else
+	 {
+	   /* translate the position in the scroll bar into a shift value in the document */
+	   delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+	   delta = delta + FrameTable[frame].FrScrollOrg - ViewFrameTable[frame - 1].FrXOrg;
+	 }
 #endif /* _GTK */
-      HorizontalScroll (frame, delta, 1);
-      notifyDoc.document = doc;
-      notifyDoc.view = view;
-      notifyDoc.verticalValue = 0;
-      notifyDoc.horizontalValue = delta;
-      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+       if (delta)
+	 HorizontalScroll (frame, delta, 1);
+       notifyDoc.document = doc;
+       notifyDoc.view = view;
+       notifyDoc.verticalValue = 0;
+       notifyDoc.horizontalValue = delta;
+       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 } 
 
@@ -1146,7 +1142,8 @@ void FrameVScrolled (int *w, int frame, int *param)
   Document            doc;
 
   /* ne pas traiter si le document est en mode NoComputedDisplay */
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+  if (FrameTable[frame].FrDoc &&
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
   FrameToView (frame, &doc, &view);
   infos = (XmScrollBarCallbackStruct *) param;
@@ -1234,7 +1231,7 @@ void FrameVScrolled (int *w, int frame, int *param)
 	  /* recompute the scroll bars */
 	  UpdateScrollbars (frame);
 	}
-      else
+      else if (delta)
 	VerticalScroll (frame, delta, 1);
       notifyDoc.document = doc;
       notifyDoc.view = view;
@@ -1244,7 +1241,6 @@ void FrameVScrolled (int *w, int frame, int *param)
     }
 }
 #else /* _GTK */
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
@@ -1266,7 +1262,8 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       else 
 	delta = -(viewed * FrameTable[frame].FrHeight 
 		  + (int) ((left * FrameTable[frame].FrHeight) / height));
-      VerticalScroll (frame, delta, 1);
+      if (delta)
+	VerticalScroll (frame, delta, 1);
     } 
   else 
     {
@@ -1274,7 +1271,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       JumpIntoView (frame, delta);
     }
 }
-
 #endif /*_GTK*/
 #endif /* _WINDOWS */
 

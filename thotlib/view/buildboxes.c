@@ -4045,14 +4045,12 @@ void RebuildConcreteImage (int frame)
        
 	   pBox = pAb->AbBox;
 	   status = pFrame->FrReady;
-	   pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-	   /* Faut-il changer les dimensions de la boite document */
+	   pFrame->FrReady = FALSE;	/* lock the frame */
 	   if (!pBox->BxContentWidth
 	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
 	     {
-	       /* la dimension de la boite depend de la fenetre */
+	       /* the width of the document depends on the window */
 	       condition = ComputeDimRelation (pAb, frame, TRUE);
-	       /* S'il y a une regle de minimum il faut la verifier */
 	       if (!condition)
 		 {
 		   GiveEnclosureSize (pAb, frame, &width, &height);
@@ -4062,9 +4060,8 @@ void RebuildConcreteImage (int frame)
 	   if (!pBox->BxContentHeight
 	       || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
 	     {
-	       /* la dimension de la boite depend de la fenetre */
+	       /* the height of the document depends on the window */
 	       condition = ComputeDimRelation (pAb, frame, FALSE);
-	       /* S'il y a une regle de minimum il faut la verifier */
 	       if (!condition)
 		 {
 		   GiveEnclosureSize (pAb, frame, &width, &height);
@@ -4072,17 +4069,18 @@ void RebuildConcreteImage (int frame)
 		 }
 	     }
 	   
-	   /* Faut-il deplacer la boite document dans la fenetre? */
+	   /* check constraints */
 	   ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
 	   ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
 	   
 	   /* On elimine le scroll horizontal */
 	   GetSizesFrame (frame, &width, &height);
-	   if (pFrame->FrXOrg != 0)
+	   CheckScrollingWidth (frame);
+	   if (pFrame->FrXOrg != FrameTable[frame].FrScrollOrg)
 	     {
-	       pFrame->FrXOrg = 0;
+	       pFrame->FrXOrg = FrameTable[frame].FrScrollOrg;
 	       /* Force le reaffichage */
-	       DefClip (frame, 0, 0, width, height);
+	       DefClip (frame, pFrame->FrXOrg, 0, width, height);
 	     }
 	   /* Si la vue n'est pas coupee en tete on elimine le scroll vertical */
 	   if (!pAb->AbTruncatedHead && pFrame->FrYOrg != 0)
@@ -4446,7 +4444,7 @@ void CheckScrollingWidth (int frame)
   PtrBox              pBox;
   ViewFrame          *pFrame;
   int                 max, org;
-  int                 w, h;
+  int                 w, h, l;
 
   if  (AnyWidthUpdate)
     {
@@ -4459,6 +4457,8 @@ void CheckScrollingWidth (int frame)
 	  pBox = pAb->AbBox;
 	  max = pBox->BxWidth;
 	  org = pBox->BxXOrg;
+	  if (pBox->BxLMargin < 0)
+	    org += pBox->BxLMargin;
 	  if (!pBox->BxContentWidth)
 	    {
 	      /* take the first leaf box */
@@ -4470,6 +4470,8 @@ void CheckScrollingWidth (int frame)
 		    max = pBox->BxXOrg + pBox->BxWidth;
 		  if (pBox->BxXOrg < org)
 		    org = pBox->BxXOrg;
+		  if (pBox->BxXOrg + pBox->BxLMargin < org)
+		    org = pBox->BxXOrg + pBox->BxLMargin;
 		  pBox = pBox->BxNext;
 		}
 	    }

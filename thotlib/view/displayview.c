@@ -558,7 +558,7 @@ static void         DestroyImage (PtrDocument pDoc)
    RebuildImage recree l'image abstraite de toutes les vues            
    ouvertes du document pDoc                                      
   ----------------------------------------------------------------------*/
-static void         RebuildImage (PtrDocument pDoc)
+static void RebuildImage (PtrDocument pDoc)
 {
   int                 view;
   PtrElement          pElRoot;
@@ -581,6 +581,10 @@ static void         RebuildImage (PtrDocument pDoc)
        ChangeConcreteImage (frame, &h, pAbbRoot);
        /* force to redraw all the frame */
        pFrame = &ViewFrameTable[frame - 1];
+       CheckScrollingWidth (frame);
+       if (FrameTable[frame].FrScrollOrg < 0)
+	 /* by default show the left side */
+	  pFrame->FrXOrg = FrameTable[frame].FrScrollOrg;
        GetSizesFrame (frame, &w, &h);
        DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
        }

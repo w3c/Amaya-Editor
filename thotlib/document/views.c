@@ -31,6 +31,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
+#include "boxes_tv.h"
 
 
 #include "absboxes_f.h"
