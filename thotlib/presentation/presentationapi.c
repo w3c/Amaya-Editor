@@ -149,17 +149,20 @@ ThotBool       isNew;
 /*----------------------------------------------------------------------
   NewPosition is called when the user moves a box.
   pAb is the abstract box	
-  X and Y give the new positions in pixels.
+  X and Y give the new positions in pixels, xref, yref the position
+  of the reference point in the box.
   frame is the frame.				
   display is TRUE when it's necessary to redisplay the concrete image.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, ThotBool display)
+void                NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref, int frame, ThotBool display)
 #else  /* __STDC__ */
-void                NewPosition (pAb, X, Y, frame, display)
+void                NewPosition (pAb, X, xref, Y, yref, frame, display)
 PtrAbstractBox      pAb;
 int                 X;
+int                 xref;
 int                 Y;
+int                 yref;
 int                 frame;
 ThotBool            display;
 
@@ -212,6 +215,7 @@ ThotBool            display;
   
   /* avoid too many redisplays */
   doc = FrameTable[frame].FrDoc;
+  pParent = pAb->AbEnclosing;
   dispMode = documentDisplayMode[doc - 1];
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
@@ -223,7 +227,6 @@ ThotBool            display;
       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
       doit = FALSE;
-      y = Y;
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge &&
 	  pAb->AbVertPos.PosAbRef != NULL && !isLined)
@@ -252,11 +255,12 @@ ThotBool            display;
 	    dy = LogicalValue (dy, unit, pAb,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  
-	  if (!BoxCreating && !histOpen)
+	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
 	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	      histOpen = TRUE;
 	    }
+
 	  if (attr)
 	    {
 	      pRuleV = pRStd;
@@ -290,6 +294,7 @@ ThotBool            display;
 		{
 		  /* create a new rule for the element */
 		  pR = pRuleV->PrNextPRule;
+		  unit = UnPixel;
 		  /* copy the standard rule */
 		  *pRuleV = *pRStd;
 		  pRuleV->PrCond = NULL;
@@ -303,6 +308,16 @@ ThotBool            display;
 		      pRuleV->PrSpecifAttr = pAttrV->AeAttrNum;
 		      pRuleV->PrSpecifAttrSSchema = pAttrV->AeAttrSSchema;
 		    }
+		  if (isPos)
+		    {
+		      /* get the initial position */
+		      dy = Y + yref;
+		      if (pParent)
+			dy -= pParent->AbBox->BxYOrg;
+		    }
+		  else
+		    /* position rule of stretched box is related to the parent */
+		    dy = Y;
 		  value = 0;
 		}
 	      else
@@ -358,7 +373,6 @@ ThotBool            display;
       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
       doit = FALSE;
-      x = X;
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge
 	  && pAb->AbHorizPos.PosAbRef != NULL
@@ -388,11 +402,12 @@ ThotBool            display;
 	    dx = LogicalValue (dx, unit, pAb,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  
-	  if (!BoxCreating && !histOpen)
+	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
 	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	      histOpen = TRUE;
 	    }
+
 	  if (attr)
 	    {
 	      pRuleH = pRStd;
@@ -425,6 +440,7 @@ ThotBool            display;
 		{
 		  /* create a new rule for the element */
 		  pR = pRuleH->PrNextPRule;
+		  unit = UnPixel;
 		  /* copy the standard rule */
 		  *pRuleH = *pRStd;
 		  pRuleH->PrCond = NULL;
@@ -438,8 +454,20 @@ ThotBool            display;
 		      pRuleH->PrSpecifAttr = pAttrH->AeAttrNum;
 		      pRuleH->PrSpecifAttrSSchema = pAttrH->AeAttrSSchema;
 		    }
+		  if (isPos)
+		    {
+		      /* get the initial position */
+		      dx = X + xref;
+		      if (pParent)
+			dx -= pParent->AbBox->BxXOrg;
+		    }
+		  else
+		    /* position rule of stretched box is related to the parent */
+		    dx = X;
+		  value = 0;
 		}
-	      value = pRuleH->PrPosRule.PoDistance;
+	      else
+		value = pRuleH->PrPosRule.PoDistance;
 	      dx += value;
 
 	      /* modify the distance in the specific rule */
@@ -484,10 +512,7 @@ ThotBool            display;
     }
 
   if (!BoxCreating && histOpen)
-    {
-      CloseHistorySequence (pDoc);
-      histOpen = FALSE;
-    }
+    CloseHistorySequence (pDoc);
   
   if (reDisp && display)
     {
@@ -548,8 +573,8 @@ ThotBool            display;
   doc = FrameTable[frame].FrDoc;
   /* nothing to redisplay */
   reDisp = FALSE;
-  histOpen = FALSE;
   dispMode = documentDisplayMode[doc - 1];
+  histOpen = FALSE;
   if (dispMode == DisplayImmediately)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);
@@ -624,12 +649,11 @@ ThotBool            display;
 	    /* convert the new height in logical value */
 	    dx = LogicalValue (dx, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	  
-	  if (!BoxCreating && !histOpen)
+	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
 	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	      histOpen = TRUE;
 	    }
-
 	  if (attr)
 	    {
 	      pRuleH = pRStd;
@@ -661,6 +685,7 @@ ThotBool            display;
 		{
 		  /* create a new rule for the element */
 		  pR = pRuleH->PrNextPRule;
+		  unit = UnPixel;
 		  /* copy the standard rule */
 		  *pRuleH = *pRStd;
 		  pRuleH->PrCond = NULL;
@@ -827,7 +852,7 @@ ThotBool            display;
 	     dy = LogicalValue (dy, unit, pAb,
 				ViewFrameTable[frame - 1].FrMagnification);
 	   
-	   if (!BoxCreating && !histOpen)
+	   if (!BoxCreating && !pDoc->DocEditSequence)
 	     {
 	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	       histOpen = TRUE;
@@ -865,6 +890,7 @@ ThotBool            display;
 		 {
 		   /* create a new rule for the element */
 		   pR = pRuleV->PrNextPRule;
+		   unit = UnPixel;
 		   /* copy the standard rule */
 		   *pRuleV = *pRStd;
 		   pRuleV->PrCond = NULL;
@@ -941,7 +967,7 @@ ThotBool            display;
 						    PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
 		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
 		       pAb->AbVertPosChange = TRUE;
-		     }	       
+		     }
 		   reDisp = TRUE;
 		 }
 	       if (attr)
@@ -961,10 +987,7 @@ ThotBool            display;
      }
 
    if (!BoxCreating && histOpen)
-     {
-       CloseHistorySequence (pDoc);
-       histOpen = FALSE;
-     }
+     CloseHistorySequence (pDoc);
   
    if (reDisp && display)
      {
@@ -2035,7 +2058,7 @@ TypeUnit            unit;
 		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
-		  NewPosition (pAb, deltaX + pAb->AbBox->BxXOrg, deltaY + pAb->AbBox->BxYOrg, frame, FALSE);
+		  NewPosition (pAb, deltaX + pAb->AbBox->BxXOrg, 0, deltaY + pAb->AbBox->BxYOrg, 0, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }

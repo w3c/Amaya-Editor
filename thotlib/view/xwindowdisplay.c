@@ -2380,9 +2380,7 @@ int                 pattern;
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
    if (pat == 0 && thick <= 0)
       return;
 
@@ -2402,7 +2400,7 @@ int                 pattern;
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
-      gdk_draw_arc (FrRef[frame], TtLineGC,FALSE,  x, y, width, height, 0, 360 * 64);
+      gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
 #else /* _GTK */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */

@@ -16,7 +16,9 @@ extern void PRuleMessagePost ( PtrElement pEl,
                                ThotBool isNew );
 extern void NewPosition ( PtrAbstractBox pAb,
                           int X,
+                          int xref,
                           int Y,
+                          int yref,
                           int frame,
                           ThotBool display );
 extern void NewDimension ( PtrAbstractBox pAb,
@@ -104,7 +106,9 @@ extern void PRuleMessagePost (/* PtrElement pEl,
                                  ThotBool isNew */);
 extern void NewPosition (/* PtrAbstractBox pAb,
                             int X,
+                            int xref,
                             int Y,
+                            int yref,
                             int frame,
                             ThotBool display */);
 extern void NewDimension (/* PtrAbstractBox pAb,

@@ -3219,16 +3219,16 @@ int                 pattern;
 
       hOldPen = SelectObject (TtPrinterDC, hPen);
       if (!Ellipse (TtPrinterDC, x, y, x + width, y + height))
-	WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
+	WinErrorBox (FrRef  [frame], TEXT("DrawEllips (2)"));
       SelectObject (TtPrinterDC, hOldPen);
       if (!DeleteObject (hPen))
-	WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllipse (3)"));
+	WinErrorBox (FrRef [frame], TEXT("DrawEllipse (3)"));
       hPen = (HPEN) 0;
       if (hBrush)
 	{
 	  SelectObject (TtPrinterDC, hOldBrush);
 	  if (!DeleteObject (hBrush))
-	    WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
+	    WinErrorBox (WIN_Main_Wd, TEXT("DrawEllips (4)"));
 	  hBrush = (HBRUSH)0;
 	}
     }
@@ -3279,22 +3279,22 @@ int                 pattern;
    if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
      ClipError (frame);
    if (!Ellipse (TtDisplay, x, y, x + width, y + height))
-     WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
+     WinErrorBox (FrRef  [frame], TEXT("DrawEllips (2)"));
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
-     WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllips (3)"));
+     WinErrorBox (FrRef [frame], TEXT("DrawEllips (3)"));
    hPen = (HPEN) 0;
    if (hBrush)
      {
        SelectObject (TtDisplay, hOldBrush);
        if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
+         WinErrorBox (WIN_Main_Wd, TEXT("DrawEllips (4)"));
        hBrush = (HBRUSH)0;
      }
    WIN_ReleaseDeviceContext ();
    if (pat != (Pixmap) 0)
      if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("windowdisplay.c - DrawEllips (5)"));
+       WinErrorBox (NULL, TEXT("DrawEllips (5)"));
    pat = (Pixmap) 0;
 #endif /* _WIN_PRINT */
 }

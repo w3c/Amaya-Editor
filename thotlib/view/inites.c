@@ -813,551 +813,551 @@ int         motif;
 	WIN_LastBitmap = 0;
      }
    switch (motif)
-	 {
-	    case 1:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray8_width;
-	       bitmap.bmHeight     = gray8_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray8_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 2:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray0_width;
-	       bitmap.bmHeight     = gray0_height;
-	       /* bitmap.bmWidthBytes = gray0_width / 4; */
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray0_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 3:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray1_width;
-	       bitmap.bmHeight     = gray1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 4:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray2_width;
-	       bitmap.bmHeight     = gray2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 5:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray3_width;
-	       bitmap.bmHeight     = gray3_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 6:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray4_width;
-	       bitmap.bmHeight     = gray4_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray4_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 7:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray5_width;
-	       bitmap.bmHeight     = gray5_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray5_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 8:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray6_width;
-	       bitmap.bmHeight     = gray6_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray6_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 9:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = gray7_width;
-	       bitmap.bmHeight     = gray7_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = gray7_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 10:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = horiz1_width;
-	       bitmap.bmHeight     = horiz1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = horiz1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 11:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = horiz2_width;
-	       bitmap.bmHeight     = horiz2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = horiz2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 12:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = horiz3_width;
-	       bitmap.bmHeight     = horiz3_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = horiz3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 13:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = vert1_width;
-	       bitmap.bmHeight     = vert1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = vert1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 14:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = vert2_width;
-	       bitmap.bmHeight     = vert2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = vert2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 15:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = vert3_width;
-	       bitmap.bmHeight     = vert3_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = vert3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 16:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = left1_width;
-	       bitmap.bmHeight     = left1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = left1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 17:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = left2_width;
-	       bitmap.bmHeight     = left2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = left2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 18:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = left3_width;
-	       bitmap.bmHeight     = left3_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = left3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 19:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = right1_width;
-	       bitmap.bmHeight     = right1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = right1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 20:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = right2_width;
-	       bitmap.bmHeight     = right2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = right2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 21:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = right3_width;
-	       bitmap.bmHeight     = right3_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = right3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 22:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = square1_width;
-	       bitmap.bmHeight     = square1_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = square1_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 23:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = square2_width;
-	       bitmap.bmHeight     = square2_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = square2_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 24:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = square3_width;
-	       bitmap.bmHeight     = square3_height;
-	       bitmap.bmWidthBytes = 24;
-           bitmap.bmBits       = square3_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 25:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = lozenge_width;
-	       bitmap.bmHeight     = lozenge_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = lozenge_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 26:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = brick_width;
-	       bitmap.bmHeight     = brick_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = brick_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 27:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = tile_width;
-	       bitmap.bmHeight     = tile_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = tile_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 28:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = sea_width;
-	       bitmap.bmHeight     = sea_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = sea_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    case 29:
-	       bitmap.bmType       = 0;
-           bitmap.bmPlanes     = 1;
-           bitmap.bmBitsPixel  = 1;
-	       bitmap.bmWidth      = basket_width;
-	       bitmap.bmHeight     = basket_height;
-	       bitmap.bmWidthBytes = 2;
-           bitmap.bmBits       = basket_bits;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       break;
-	    default:
-	       hBitmap = 0;
-	       break;
-	 }
+     {
+     case 1:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray8_width;
+       bitmap.bmHeight     = gray8_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray8_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 2:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray0_width;
+       bitmap.bmHeight     = gray0_height;
+       /* bitmap.bmWidthBytes = gray0_width / 4; */
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray0_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 3:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray1_width;
+       bitmap.bmHeight     = gray1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 4:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray2_width;
+       bitmap.bmHeight     = gray2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 5:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray3_width;
+       bitmap.bmHeight     = gray3_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 6:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray4_width;
+       bitmap.bmHeight     = gray4_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray4_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 7:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray5_width;
+       bitmap.bmHeight     = gray5_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray5_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 8:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray6_width;
+       bitmap.bmHeight     = gray6_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray6_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 9:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = gray7_width;
+       bitmap.bmHeight     = gray7_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = gray7_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 10:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = horiz1_width;
+       bitmap.bmHeight     = horiz1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = horiz1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 11:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = horiz2_width;
+       bitmap.bmHeight     = horiz2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = horiz2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 12:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = horiz3_width;
+       bitmap.bmHeight     = horiz3_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = horiz3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 13:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = vert1_width;
+       bitmap.bmHeight     = vert1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = vert1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 14:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = vert2_width;
+       bitmap.bmHeight     = vert2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = vert2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 15:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = vert3_width;
+       bitmap.bmHeight     = vert3_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = vert3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 16:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = left1_width;
+       bitmap.bmHeight     = left1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = left1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 17:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = left2_width;
+       bitmap.bmHeight     = left2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = left2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 18:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = left3_width;
+       bitmap.bmHeight     = left3_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = left3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 19:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = right1_width;
+       bitmap.bmHeight     = right1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = right1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 20:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = right2_width;
+       bitmap.bmHeight     = right2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = right2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 21:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = right3_width;
+       bitmap.bmHeight     = right3_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = right3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 22:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = square1_width;
+       bitmap.bmHeight     = square1_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = square1_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 23:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = square2_width;
+       bitmap.bmHeight     = square2_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = square2_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 24:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = square3_width;
+       bitmap.bmHeight     = square3_height;
+       bitmap.bmWidthBytes = 24;
+       bitmap.bmBits       = square3_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 25:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = lozenge_width;
+       bitmap.bmHeight     = lozenge_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = lozenge_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 26:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = brick_width;
+       bitmap.bmHeight     = brick_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = brick_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 27:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = tile_width;
+       bitmap.bmHeight     = tile_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = tile_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 28:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = sea_width;
+       bitmap.bmHeight     = sea_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = sea_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     case 29:
+       bitmap.bmType       = 0;
+       bitmap.bmPlanes     = 1;
+       bitmap.bmBitsPixel  = 1;
+       bitmap.bmWidth      = basket_width;
+       bitmap.bmHeight     = basket_height;
+       bitmap.bmWidthBytes = 2;
+       bitmap.bmBits       = basket_bits;
+       hBitmap = CreateBitmapIndirect (&bitmap);
+       break;
+     default:
+       hBitmap = 0;
+       break;
+     }
    /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap;
 #else /* _WINDOWS */
 #ifdef _GTK
    switch (motif)
-	 {
-	    case 1:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
-				  gray8_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 2:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
-				  gray0_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 3:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
-				  gray1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 4:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
-				  gray2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 5:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
-				  gray3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 6:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
-				  gray4_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 7:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
-				  gray5_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 8:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
-				  gray6_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 9:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
-				  gray7_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 10:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
-				 horiz1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 11:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
-				 horiz2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 12:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
-				 horiz3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 13:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
-				  vert1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 14:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
-				  vert2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 15:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
-				  vert3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 16:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
-				  left1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 17:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
-				  left2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 18:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
-				  left3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 19:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
-				 right1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 20:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
-				 right2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 21:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
-				 right3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 22:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
-				square1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 23:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
-				square2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 24:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
-				square3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 25:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
-				lozenge_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 26:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
-				  brick_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 27:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
-				   tile_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 28:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
-				    sea_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    case 29:
-	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
-				 basket_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
-	       break;
-	    default:
-	       pixmap = None;
-	       break;
-	 }
+     {
+     case 1:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
+					     gray8_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 2:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
+					     gray0_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 3:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
+					     gray1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 4:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
+					     gray2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 5:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
+					     gray3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 6:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
+					     gray4_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 7:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
+					     gray5_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 8:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
+					     gray6_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 9:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
+					     gray7_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 10:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
+					     horiz1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 11:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
+					     horiz2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 12:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
+					     horiz3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 13:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
+					     vert1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 14:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
+					     vert2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 15:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
+					     vert3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 16:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
+					     left1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 17:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
+					     left2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 18:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
+					     left3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 19:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
+					     right1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 20:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
+					     right2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 21:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
+					     right3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 22:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
+					     square1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 23:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
+					     square2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 24:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
+					     square3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 25:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
+					     lozenge_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 26:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
+					     brick_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 27:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
+					     tile_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 28:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
+					     sea_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     case 29:
+       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
+					     basket_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       break;
+     default:
+       pixmap = None;
+       break;
+     }
 #else /* _GTK */
    switch (motif)
-	 {
-	    case 1:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
-				  gray8_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 2:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
-				  gray0_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 3:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
-				  gray1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 4:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
-				  gray2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 5:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
-				  gray3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 6:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
-				  gray4_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 7:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
-				  gray5_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 8:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
-				  gray6_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 9:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
-				  gray7_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 10:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
-				 horiz1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 11:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
-				 horiz2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 12:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
-				 horiz3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 13:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
-				  vert1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 14:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
-				  vert2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 15:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
-				  vert3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 16:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
-				  left1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 17:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
-				  left2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 18:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
-				  left3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 19:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
-				 right1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 20:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
-				 right2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 21:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
-				 right3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 22:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
-				square1_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 23:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
-				square2_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 24:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
-				square3_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 25:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
-				lozenge_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 26:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
-				  brick_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 27:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
-				   tile_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 28:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
-				    sea_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    case 29:
-	       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
-				 basket_height, FgPixel, BgPixel, TtWDepth);
-	       break;
-	    default:
-	       pixmap = None;
-	       break;
-	 }
+     {
+     case 1:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
+					     gray8_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 2:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
+					     gray0_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 3:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
+					     gray1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 4:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
+					     gray2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 5:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
+					     gray3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 6:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
+					     gray4_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 7:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
+					     gray5_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 8:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
+					     gray6_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 9:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
+					     gray7_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 10:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
+					     horiz1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 11:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
+					     horiz2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 12:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
+					     horiz3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 13:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
+					     vert1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 14:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
+					     vert2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 15:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
+					     vert3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 16:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
+					     left1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 17:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
+					     left2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 18:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
+					     left3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 19:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
+					     right1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 20:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
+					     right2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 21:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
+					     right3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 22:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
+					     square1_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 23:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
+					     square2_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 24:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
+					     square3_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 25:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
+					     lozenge_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 26:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
+					     brick_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 27:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
+					     tile_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 28:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
+					     sea_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     case 29:
+       pixmap = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
+					     basket_height, FgPixel, BgPixel, TtWDepth);
+       break;
+     default:
+       pixmap = None;
+       break;
+     }
    XFlush (TtDisplay);
 #endif /* _GTK */
 #endif /* _WINDOWS */

@@ -1693,10 +1693,9 @@ int               ym;
   ViewFrame          *pFrame;
   int                 x, width;
   int                 y, height;
-  int                 xr, xmin;
-  int                 yr, xmax;
-  int                 ymin;
-  int                 ymax;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
+  int                 xref, yref;
   int                 pointselect;
   ThotBool            still, okH, okV;
 
@@ -1706,13 +1705,13 @@ int               ym;
   if (pFrame->FrAbstractBox != NULL)
     {
       /* Get positions in the window */
-      xr = xm + pFrame->FrXOrg;
-      yr = ym + pFrame->FrYOrg;
+      x = xm + pFrame->FrXOrg;
+      y = ym + pFrame->FrYOrg;
 
       /* Look for the box displayed at that point */
       if (ThotLocalActions[T_selecbox] != NULL)
 	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
-					 frame, xr, yr, &pointselect);
+					 frame, x, y, &pointselect);
       if (pBox == NULL)
 	pAb = NULL;
       else
@@ -1784,12 +1783,12 @@ int               ym;
 			  if (pBox->BxHorizInverted)
 			    NewDimension (pAb, x, y, frame, TRUE);
 			  else
-			    NewPosition (pAb, x, y, frame, TRUE);
+			    NewPosition (pAb, x, 0, y, 0, frame, TRUE);
 			  break;
 			case 3:
 			case 5:
 			  if (pBox->BxHorizInverted)
-			    NewPosition (pAb, x, y, frame, TRUE);
+			    NewPosition (pAb, x, 0, y, 0, frame, TRUE);
 			  else
 			    NewDimension (pAb, x, y, frame, TRUE);
 			  break;
@@ -1817,57 +1816,48 @@ int               ym;
 	    }
 	  else
 	    {
-	      /* get the reference point */
-	      switch (pBox->BxHorizEdge)
-		{
-		case Left:
-		  xr = x;
-		  break;
-		case Right:
-		  xr = x + width;
-		  break;
-		case VertMiddle:
-		  xr = x + width / 2;
-		  break;
-		case VertRef:
-		  xr = x + pBox->BxVertRef;
-		  break;
-		default:
-		  xr = x;
-		  break;
-		}
-	      
-	      switch (pBox->BxVertEdge)
-		{
-		case Top:
-		  yr = y;
-		  break;
-		case Bottom:
-		  yr = y + height;
-		  break;
-		case HorizMiddle:
-		  yr = y + height / 2;
-		  break;
-		case HorizRef:
-		  yr = y + pBox->BxHorizRef;
-		  break;
-		default:
-		  yr = y;
-		  break;
-		}
-
 	      /* set positions related to the window */
 	      xmin -= pFrame->FrXOrg;
 	      xmax -= pFrame->FrXOrg;
 	      ymin -= pFrame->FrYOrg;
 	      ymax -= pFrame->FrYOrg;
 	      /* execute the interaction */
-	      UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
-	      
+	      GeometryMove (frame, &x, &y, width, height, pBox, xmin, xmax, ymin, ymax, xm, ym);
 	      /* get back changes */
 	      x += pFrame->FrXOrg;
 	      y += pFrame->FrYOrg;
-	      NewPosition (pAb, x, y, frame, TRUE);
+	      /* get the position of reference point */
+	      switch (pBox->BxHorizEdge)
+		{
+		case Right:
+		  xref = width;
+		  break;
+		case VertMiddle:
+		  xref = width / 2;
+		  break;
+		case VertRef:
+		  xref = pBox->BxVertRef;
+		  break;
+		default:
+		  xref = 0;
+		  break;
+		}
+	      switch (pBox->BxVertEdge)
+		{
+		case Bottom:
+		  yref = height;
+		  break;
+		case HorizMiddle:
+		  yref = height / 2;
+		  break;
+		case HorizRef:
+		  yref = pBox->BxHorizRef;
+		  break;
+		default:
+		  yref = 0;
+		  break;
+		}
+	      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 	    }
 	}
     }
@@ -1988,11 +1978,8 @@ int              *max;
 
 
 /*----------------------------------------------------------------------
-   ApplyDirectResize recherche la boite candidate pour un changement 
-   de dimension. Si la plus petite boite englobant le point  
-   x,y de la fenetre frame ne peut pas etre redimensionnee,  
-   la procedure prend la boite englobante et ainsi de        
-   suite.                                                    
+   ApplyDirectResize looks for a box that can be resized at the current
+   position (xm, ym).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyDirectResize (int frame, int xm, int ym)
@@ -2008,10 +1995,8 @@ int                 ym;
    ViewFrame          *pFrame;
    int                 x, width;
    int                 y, height;
-   int                 xr, xmin;
-   int                 yr, xmax;
-   int                 ymin;
-   int                 ymax;
+   int                 xmin, xmax;
+   int                 ymin, ymax;
    int                 percentW, percentH;
    int                 pointselect;
    ThotBool            still, okH, okV;
@@ -2022,13 +2007,13 @@ int                 ym;
    if (pFrame->FrAbstractBox != NULL)
      {
 	/* On note les coordonnees par rapport a l'image concrete */
-	xr = xm + pFrame->FrXOrg;
-	yr = ym + pFrame->FrYOrg;
+	x = xm + pFrame->FrXOrg;
+	y = ym + pFrame->FrYOrg;
 
 	/* On recherche la boite englobant le point designe */
 	/* designation style Grenoble */
 	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
+	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, x, y,
 					    &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;
@@ -2077,46 +2062,6 @@ int                 ym;
 	     y = pBox->BxYOrg - pFrame->FrYOrg;
 	     width = pBox->BxWidth;
 	     height = pBox->BxHeight;
-
-	     /* On note les coordonnees du point de reference */
-	     switch (pBox->BxHorizEdge)
-		   {
-		      case Left:
-			 xr = x;
-			 break;
-		      case Right:
-			 xr = x + width;
-			 break;
-		      case VertMiddle:
-			 xr = x + width / 2;
-			 break;
-		      case VertRef:
-			 xr = x + pBox->BxVertRef;
-			 break;
-		      default:
-			 xr = x + width;
-			 break;
-		   }
-
-	     switch (pBox->BxVertEdge)
-		   {
-		      case Top:
-			 yr = y;
-			 break;
-		      case Bottom:
-			 yr = y + height;
-			 break;
-		      case HorizMiddle:
-			 yr = y + height / 2;
-			 break;
-		      case HorizRef:
-			 yr = y + pBox->BxHorizRef;
-			 break;
-		      default:
-			 yr = y + height;
-			 break;
-		   }
-
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
 	     /* On retablit les positions par rapport a la fenetre */
 	     xmin -= pFrame->FrXOrg;
@@ -2153,10 +2098,10 @@ int                 ym;
 		 else if (pAb->AbHeight.DimValue == 0)
 		   percentH = 100;
 	       }
-	     UserGeometryResize (frame, x, y, &width, &height, xr, yr,
+	     GeometryResize (frame, x, y, &width, &height, pBox,
 				 xmin, xmax, ymin, ymax, xm, ym,
 				 percentW, percentH);
-	     /* On transmet la modification a l'editeur */
+	     /* Notify changes */
 	     if (percentW)
 	       NewDimension (pAb, 0, height, frame, TRUE);
 	     else if (percentH)
@@ -2185,13 +2130,14 @@ int                 frame;
 {
    ViewFrame          *pFrame;
    PtrAbstractBox      pAb;
-   int                 x, y;
+   PtrDocument         pDoc;
+   int                 x, y, xref, yref;
    int                 width, height;
-   int                 xr, yr;
    int                 xmin, xmax;
    int                 Ymin, Ymax;
    int                 percentW, percentH;
    ThotBool            modPosition, modDimension;
+   ThotBool            histOpen;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
    if (BoxCreating)
@@ -2218,46 +2164,6 @@ int                 frame;
    width = pBox->BxWidth;
    height = pBox->BxHeight;
    pAb = pBox->BxAbstractBox;
-
-   /* On note les coordonnees du point de reference */
-   switch (pBox->BxHorizEdge)
-	 {
-	    case Left:
-	       xr = x;
-	       break;
-	    case Right:
-	       xr = x + width;
-	       break;
-	    case VertMiddle:
-	       xr = x + width / 2;
-	       break;
-	    case VertRef:
-	       xr = x + pBox->BxVertRef;
-	       break;
-	    default:
-	       xr = x;
-	       break;
-	 }
-
-   switch (pBox->BxVertEdge)
-	 {
-	    case Top:
-	       yr = y;
-	       break;
-	    case Bottom:
-	       yr = y + height;
-	       break;
-	    case HorizMiddle:
-	       yr = y + height / 2;
-	       break;
-	    case HorizRef:
-	       yr = y + pBox->BxHorizRef;
-	       break;
-	    default:
-	       yr = y;
-	       break;
-	 }
-
    modPosition = (CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax)
 		  || CanBeTranslated (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modPosition)
@@ -2311,18 +2217,53 @@ int                 frame;
 	    else if (pAb->AbHeight.DimValue == 0)
 	      percentH = 100;
 	  }
-	UserGeometryCreate (frame, &x, &y, xr, yr, &width, &height,
-			    xmin, xmax, Ymin, Ymax,
-			    pAb->AbHorizPos.PosUserSpecified,
-			    pAb->AbVertPos.PosUserSpecified,
-			    pAb->AbWidth.DimUserSpecified,
-			    pAb->AbHeight.DimUserSpecified,
-			    percentW, percentH);
+	GeometryCreate (frame, &x, &y, &width, &height,
+			xmin, xmax, Ymin, Ymax, pBox,
+			pAb->AbHorizPos.PosUserSpecified,
+			pAb->AbVertPos.PosUserSpecified,
+			pAb->AbWidth.DimUserSpecified,
+			pAb->AbHeight.DimUserSpecified,
+			percentW, percentH);
 
-	/* Notification de la boite saisie */
-	x += pFrame->FrXOrg;
-	y += pFrame->FrYOrg;
-	NewPosition (pAb, x, y, frame, TRUE);
+	/* Notification of the new created box */
+	x = x + pFrame->FrXOrg;
+	y = y + pFrame->FrYOrg;
+	/* get the position of reference point */
+	switch (pBox->BxHorizEdge)
+	  {
+	  case Right:
+	    xref = width;
+	    break;
+	  case VertMiddle:
+	    xref = width / 2;
+	    break;
+	  case VertRef:
+	    xref = pBox->BxVertRef;
+	    break;
+	  default:
+	    xref = 0;
+	    break;
+	  }
+	switch (pBox->BxVertEdge)
+	  {
+	  case Bottom:
+	    yref = height;
+	    break;
+	  case HorizMiddle:
+	    yref = height / 2;
+	    break;
+	  case HorizRef:
+	    yref = pBox->BxHorizRef;
+	    break;
+	  default:
+	    yref = 0;
+	    break;
+	  }
+	pDoc = DocumentOfElement (pAb->AbElement);
+	histOpen = pDoc->DocEditSequence;
+	if (!histOpen)
+	  OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, 0, 0);
+	NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 	if (percentW)
 	  NewDimension (pAb, 0, height, frame, TRUE);
 	else if (percentH)
@@ -2333,6 +2274,8 @@ int                 frame;
 	pAb->AbVertPos.PosUserSpecified = FALSE;
 	pAb->AbWidth.DimUserSpecified = FALSE;
 	pAb->AbHeight.DimUserSpecified = FALSE;
+	if (!histOpen)
+	  CloseHistorySequence (pDoc);	  
      }
 
    /* Traitement de la creation interactive termine */

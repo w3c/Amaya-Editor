@@ -44,6 +44,7 @@ static Pixmap   iconGraphNo;
 static int      GraphButton;
 static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
+static ThotBool InCreation = FALSE;
 #define BUFFER_LENGTH 100
 
 #ifdef _WINDOWS
@@ -820,7 +821,8 @@ Element          el;
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      if (x < 0)
+      elType = TtaGetElementType (el);
+      if (x < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
 	  /* translate the whole SVG contents */
 	  child = TtaGetFirstChild (graphRoot);
@@ -887,7 +889,8 @@ Element          el;
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      if (y < 0)
+      elType = TtaGetElementType (el);
+      if (y < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
 	  /* translate the whole SVG contents */
 	  child = TtaGetFirstChild (graphRoot);
@@ -972,6 +975,31 @@ NotifyElement *event;
   /* check that the svg element includes that element */
   CheckGraphMLRoot (event->document, event->element);
 }
+
+/*----------------------------------------------------------------------
+ GraphicsPRuleChange
+ A presentation rule is going to be changed by Thot.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GraphicsPRuleChanged (NotifyPresentation *event)
+#else /* __STDC__*/
+void                GraphicsPRuleChanged (event)
+NotifyPresentation *event;
+#endif /* __STDC__*/
+{
+  int           presType;
+
+  if (InCreation)
+    /* don't check anything during the creation */
+    return;
+
+  presType = event->pRuleType;
+  if (presType == PRVertPos || presType == PRHorizPos ||
+      presType == PRHeight ||  presType == PRWidth)
+    /* check that the svg element includes that element */
+    CheckGraphMLRoot (event->document, event->element);
+}
+
 
 /*----------------------------------------------------------------------
  GraphicsPRuleChange
@@ -1096,8 +1124,6 @@ NotifyPresentation *event;
 	  width = TtaGetPRuleValue (presRule);
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
-      /* check that the svg element includes that element */
-      CheckGraphMLRoot (event->document, event->element);
     }
   return ret; /* let Thot perform normal operation */
 }
@@ -1255,7 +1281,7 @@ int                 construct;
   DisplayMode       dispMode;
   char		    shape;
   STRING            name;
-  int		    c1, i, j, w, h;
+  int		    c1, i, w, h;
   int	            oldStructureChecking;
   int              docModified;
   ThotBool	    found, newGraph = FALSE;
@@ -1407,7 +1433,7 @@ int                 construct;
     default:
       break;
     }
-
+  InCreation = TRUE;
   if (newType.ElTypeNum > 0)
     {
       dispMode = TtaGetDisplayMode (doc);
@@ -1512,10 +1538,12 @@ int                 construct;
 	  if (!docModified)
 	    TtaSetDocumentUnmodified (doc);
 	  TtaSelectElement (doc, first);
+	  InCreation = FALSE;
 	  return;
 	}
     }
   /* adapt the size of the SVG root element if necessary */
+  InCreation = FALSE;
   CheckGraphMLRoot (doc, newEl);
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
