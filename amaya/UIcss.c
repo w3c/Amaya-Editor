@@ -403,7 +403,7 @@ STRING              printdir;
 		      text = GetStyleContents (el);
 		      if (text)
 			{
-			  fprintf (file, text);
+			  fprintf (file, "%s", text);
 			  TtaFreeMemory (text);
 			}
 		    }
