@@ -277,8 +277,8 @@ sub end_hndl { #	do the modification if necessary
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				
 			$string = "$reference_value " . $string ;
-			$fh =  $list_handles [  $handle_names_ref{ $current_language} ];
-	    	print_in_a_file ( $fh,"$string\n");
+			$fh =  $list_handles[$handle_names_ref{$current_language}];
+			print_in_a_file ( $fh,"$string\n");
 			$record_verification {$current_language } = 1 ;
 			
 	}	
@@ -286,7 +286,7 @@ sub end_hndl { #	do the modification if necessary
 # must create as many files as  present languages (and erase the olds) 
 ## JK: list_of lang_occur is not initalized for some obscure reason. I force 
 ## it here
-                @list_of_lang_occur = split(' ', "en fr de it tr es pt");
+                @list_of_lang_occur = split(' ', "en fr de it tr es pt fi");
 		foreach $prefix (@list_of_lang_occur) {
 			$file_name = $where . $prefix . $sufix ;
 			push (@list_of_dialogues_files ,$file_name);

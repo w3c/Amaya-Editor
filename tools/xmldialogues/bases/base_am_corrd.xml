@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue May 28 14:10:58 CEST 2002" version="8">
+<base last_update="Wed Sep 11 16:39:05 CEST 2002" version="10">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">de</language>
@@ -8,6 +8,7 @@
 	<language encoding="latin1">tr</language>
 	<language encoding="latin1">es</language>
 	<language encoding="latin1">pt</language>
+	<language encoding="latin1">fi</language>
 </control>
 <messages>
 <label define="Number_Propositions">
@@ -18,6 +19,7 @@
 	<message xml:lang="tr">Önerilerin sayýsý</message>
 	<message xml:lang="es">Number of proposals</message>
 	<message xml:lang="pt">Número de propostas</message>
+	<message xml:lang="fi">Ehdotuksien lukumäärä</message>
 </label>
 <label define="What">
 	<message xml:lang="en">Checking</message>
@@ -27,6 +29,7 @@
 	<message xml:lang="tr">Kontrol ediliyor</message>
 	<message xml:lang="es">Checking</message>
 	<message xml:lang="pt">Verificação</message>
+	<message xml:lang="fi">Tarkistetaan</message>
 </label>
 <label define="Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
@@ -36,6 +39,7 @@
 	<message xml:lang="tr">Atla ve sonraki</message>
 	<message xml:lang="es">Buscar/Saltar</message>
 	<message xml:lang="pt">Buscar/Pular</message>
+	<message xml:lang="fi">Etsi/Hylkää</message>
 </label>
 <label define="Replace_With">
 	<message xml:lang="en">Replace (+ dic)</message>
@@ -45,6 +49,7 @@
 	<message xml:lang="tr">Deðiþtir (+ sözlük)</message>
 	<message xml:lang="es">Reemplazar (+ dic)</message>
 	<message xml:lang="pt">Substituir (+ dic)</message>
+	<message xml:lang="fi">Korvaa (+ dic)</message>
 </label>
 <label define="Replace_Without">
 	<message xml:lang="en">Replace and next</message>
@@ -54,6 +59,7 @@
 	<message xml:lang="tr">Deðiþtir ve sonraki</message>
 	<message xml:lang="es">Reemplazar y siguiente</message>
 	<message xml:lang="pt">Substituir e próximo</message>
+	<message xml:lang="fi">Korvaa ja seuraava</message>
 </label>
 <label define="Keep_Unknown">
 	<message xml:lang="en">Other language</message>
@@ -63,6 +69,7 @@
 	<message xml:lang="tr">Baþka dil</message>
 	<message xml:lang="es">Otro idioma</message>
 	<message xml:lang="pt">Outro idioma</message>
+	<message xml:lang="fi">Toinen kieli</message>
 </label>
 <label define="Pass_With">
 	<message xml:lang="en">Skip (+ dic)</message>
@@ -72,6 +79,7 @@
 	<message xml:lang="tr">Atla (+ sozluk)</message>
 	<message xml:lang="es">Saltar (+ dic)</message>
 	<message xml:lang="pt">Pular (+ dic)</message>
+	<message xml:lang="fi">Hylkää (+ dic)</message>
 </label>
 <label define="Specials">
 	<message xml:lang="en">words containing:</message>
@@ -81,6 +89,7 @@
 	<message xml:lang="tr">words containing:</message>
 	<message xml:lang="es">palabras que contengan:</message>
 	<message xml:lang="pt">Palavras contendo:</message>
+	<message xml:lang="fi">sanat, joissa:</message>
 </label>
 <label define="Correct">
 	<message xml:lang="en">Spell checking ...</message>
@@ -90,6 +99,7 @@
 	<message xml:lang="tr">Yazým hatalarý aranýyor...</message>
 	<message xml:lang="es">Verificando ortografía ...</message>
 	<message xml:lang="pt">Verificar ortografia...</message>
+	<message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
 </label>
 <label define="Romans">
 	<message xml:lang="en">Roman numerals</message>
@@ -99,6 +109,7 @@
 	<message xml:lang="tr">Roma rakamlarý</message>
 	<message xml:lang="es">Números romanos</message>
 	<message xml:lang="pt">Numerais romanos</message>
+	<message xml:lang="fi">Roomalaiset numerot</message>
 </label>
 <label define="Ignore">
 	<message xml:lang="en">Ignore</message>
@@ -108,6 +119,7 @@
 	<message xml:lang="tr">Aldýrma</message>
 	<message xml:lang="es">Ignorar</message>
 	<message xml:lang="pt">Ignorar</message>
+	<message xml:lang="fi">Ohita</message>
 </label>
 <label define="Capitals">
 	<message xml:lang="en">words that are all caps</message>
@@ -117,6 +129,7 @@
 	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
 	<message xml:lang="es">palabras mayúsculas</message>
 	<message xml:lang="pt">palavras todas maíusculas</message>
+	<message xml:lang="fi">sanat, joissa kaikki isolla</message>
 </label>
 <label define="Arabics">
 	<message xml:lang="en">words with digits</message>
@@ -126,6 +139,7 @@
 	<message xml:lang="tr">Rakam içeren sözcükler</message>
 	<message xml:lang="es">palabras con dígitos</message>
 	<message xml:lang="pt">palavras com dígitos</message>
+	<message xml:lang="fi">sanat, joissa numeroita</message>
 </label>
 <label define="NO_PARAM">
 	<message xml:lang="en">Parameter file error</message>
@@ -135,6 +149,7 @@
 	<message xml:lang="tr">Parametre dosya hatasý</message>
 	<message xml:lang="es">Error fichero de parametro</message>
 	<message xml:lang="pt">Erro em arquivo de parâmetros</message>
+	<message xml:lang="fi">Parametritiedosto virhe</message>
 </label>
 <label define="NO_KEYBOARD">
 	<message xml:lang="en">No keyboard file</message>
@@ -144,6 +159,7 @@
 	<message xml:lang="tr">Tuþtakýmý dosyasý yok</message>
 	<message xml:lang="es">No hay fichero de teclado</message>
 	<message xml:lang="pt">Não há arquivo de teclado</message>
+	<message xml:lang="fi">Ei näppäimistötiedostoa</message>
 </label>
 <label define="NO_SAVE">
 	<message xml:lang="en">Cannot save the document dictionary</message>
@@ -153,6 +169,7 @@
 	<message xml:lang="tr">Belge sözlüðü kaydedilemiyor</message>
 	<message xml:lang="es">No puedo guardar el diccionario del documento</message>
 	<message xml:lang="pt">Não é possível salvar o dicionário do documento</message>
+	<message xml:lang="fi">Dokumentin sanastoa ei voi tallentaa</message>
 </label>
 <label define="REFUSE_WORD">
 	<message xml:lang="en">Incorrect word "%s" refused in this dictionary</message>
@@ -162,6 +179,7 @@
 	<message xml:lang="tr">Yanlýþ sözcük "%s" bu sözlükte kabul edilmiyor</message>
 	<message xml:lang="es">Palabra incorrecta "%s" recahzada en este dictionario</message>
 	<message xml:lang="pt">Palavra incorreta "%s" recusada neste dicionário</message>
+	<message xml:lang="fi">Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa</message>
 </label>
 <label define="ADD_WORD">
 	<message xml:lang="en">Word "%s" added in the document dictionary</message>
@@ -171,6 +189,7 @@
 	<message xml:lang="tr">"%s" sözcüðü belge sözlüðüne eklendi</message>
 	<message xml:lang="es">La palabra "%s" añadida al diccionario del documento</message>
 	<message xml:lang="pt">Palavra "%s" adicionada ao dicionário do documento</message>
+	<message xml:lang="fi">Sana "%s" lisätty dokumentin sanastoon</message>
 </label>
 <label define="END_CHECK">
 	<message xml:lang="en">End of spell checking</message>
@@ -180,6 +199,7 @@
 	<message xml:lang="tr">Yazým hatalarý arama sonu</message>
 	<message xml:lang="es">Final de la corrección ortográfica</message>
 	<message xml:lang="pt">Fim da verificação ortográfica</message>
+	<message xml:lang="fi">Oikeinkirjoitustarkistus valmis!</message>
 </label>
 <label define="STOP_CHECK">
 	<message xml:lang="en">Spell checking aborted</message>
@@ -189,6 +209,7 @@
 	<message xml:lang="tr">Yazým hatasý aramasý iptal edildi</message>
 	<message xml:lang="es">Corrección ortográfica abortada</message>
 	<message xml:lang="pt">Abortada a verificação ortográfica</message>
+	<message xml:lang="fi">Oikeinkirjoitustarkistus keskeytetty!</message>
 </label>
 <label define="NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
@@ -198,6 +219,7 @@
 	<message xml:lang="tr">Lütfen bir belge seçin</message>
 	<message xml:lang="es">Por favor, seleccione un documento</message>
 	<message xml:lang="pt">Por favor selecione um documento</message>
+	<message xml:lang="fi">Valitse dokumentti</message>
 </label>
 <label define="OK_SAVE">
 	<message xml:lang="en">Document dictionary saved: %s</message>
@@ -207,6 +229,7 @@
 	<message xml:lang="tr">Belge sözlüðü kaydedildi: %s</message>
 	<message xml:lang="es">Diccionario del documento guardado: %s</message>
 	<message xml:lang="pt">Dicionário do documento salvo: %s</message>
+	<message xml:lang="fi">Dokumentin sanasto tallennettu: %s</message>
 </label>
 <label define="MSG_MAX_CHECK">
 </label>
