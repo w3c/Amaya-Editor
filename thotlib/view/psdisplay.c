@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*
  * psdisplay.c : All the Postscript generation routines.
  *
@@ -1569,6 +1560,35 @@ C_points           *controls;
    fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, thick, nb);
 }
 
+/*----------------------------------------------------------------------
+  DrawPath draws a path.
+  Parameter path is a pointer to the list of path segments
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int RO, int active, int fg, int bg, int pattern)
+
+#else  /* __STDC__ */
+void                DrawPath (frame, thick, style, x, y, path, RO, active, fg, bg, pattern)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+PtrPathSeg          path;
+int                 RO;
+int                 active;
+int                 fg;
+int                 bg;
+int                 pattern;
+
+#endif /* __STDC__ */
+{
+  /****** to be written *******/
+  return;
+}
 
 /*----------------------------------------------------------------------
    DrawDiamond draw a diamond.

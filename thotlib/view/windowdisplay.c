@@ -2546,6 +2546,36 @@ C_points     *controls;
 }
 
 /*----------------------------------------------------------------------
+  DrawPath draws a path.
+  Parameter path is a pointer to the list of path segments
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int RO, int active, int fg, int bg, int pattern)
+
+#else  /* __STDC__ */
+void                DrawPath (frame, thick, style, x, y, path, RO, active, fg, bg, pattern)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+PtrPathSeg          path;
+int                 RO;
+int                 active;
+int                 fg;
+int                 bg;
+int                 pattern;
+
+#endif /* __STDC__ */
+{
+  /****** to be written *******/
+  return;
+}
+
+/*----------------------------------------------------------------------
   DrawOval draw a rectangle with smoothed corners.
   RO indicates whether it's a read-only box
   active indicates if the box is active

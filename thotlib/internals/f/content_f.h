@@ -22,6 +22,7 @@ extern ThotBool MergeTextElements ( PtrElement pEl,
                                     ThotBool removeAbsBox );
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
+extern PtrPathSeg CopyPath ( PtrPathSeg firstPathEl );
 extern ThotBool StringAndTextEqual ( STRING String,
                                      PtrTextBuffer pBuf );
 extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
@@ -70,6 +71,7 @@ extern ThotBool MergeTextElements (/* PtrElement pEl,
                                       ThotBool removeAbsBox */);
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
+extern PtrPathSeg CopyPath (/* PtrPathSeg firstPathEl */);
 extern ThotBool StringAndTextEqual (/* STRING String,
                                        PtrTextBuffer pBuf */);
 extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,

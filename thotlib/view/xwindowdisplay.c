@@ -34,7 +34,7 @@
 #define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
 #define SEG_SPLINE      5
 #define ALLOC_POINTS    300
-static ThotPoint   *points;	/* control points for curbs */
+static ThotPoint   *points;	/* control points for curves */
 static int          npoints;
 static int          MAX_points;
 
@@ -1773,18 +1773,18 @@ int                 x, y;
 #endif /* __STDC__ */
 {
    ThotPoint          *tmp;
-   int                 taille;
+   int                 size;
 
    if (npoints >= MAX_points)
      {
-	taille = MAX_points + ALLOC_POINTS;
-	if ((tmp = (ThotPoint *) realloc (points, taille * sizeof (ThotPoint))) == 0)
+	size = MAX_points + ALLOC_POINTS;
+	if ((tmp = (ThotPoint *) realloc (points, size * sizeof (ThotPoint))) == 0)
 	   return (FALSE);
 	else
 	  {
 	     /* la reallocation a reussi */
 	     points = tmp;
-	     MAX_points = taille;
+	     MAX_points = size;
 	  }
      }
 
@@ -1895,6 +1895,44 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 
 	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
 	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
+  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         QuadraticSplit (float a1, float b1, float a2, float b2, float a3, float b3)
+#else  /* __STDC__ */
+static void         QuadraticSplit (a1, b1, a2, b2, a3, b3)
+float               a1, b1, a2, b2, a3, b3;
+
+#endif /* __STDC__ */
+{
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, i, j;
+   float               sx, sy;
+   float               xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
+     {
+	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx   = (float) MIDDLE_OF (x1, x2);
+	     sy   = (float) MIDDLE_OF (y1, y2);
+	     xmid = (float) MIDDLE_OF (sx, tx);
+	     ymid = (float) MIDDLE_OF (sy, ty);
+
+	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
+	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
 	  }
      }
 }
@@ -2174,7 +2212,128 @@ C_points           *controls;
 }
 
 /*----------------------------------------------------------------------
-  DrawOval draw a rectangle with smoothed corners.
+  DrawPath draws a path.
+  Parameter path is a pointer to the list of path segments
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int RO, int active, int fg, int bg, int pattern)
+
+#else  /* __STDC__ */
+void                DrawPath (frame, thick, style, x, y, path, RO, active, fg, bg, pattern)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+PtrPathSeg          path;
+int                 RO;
+int                 active;
+int                 fg;
+int                 bg;
+int                 pattern;
+
+#endif /* __STDC__ */
+{
+  PtrPathSeg          pPa;
+  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+
+  if (thick > 0 && fg >= 0)
+    {
+      InitDrawing (style, thick, fg);
+      y += FrameTable[frame].FrTopMargin;
+      pPa = path;
+      while (pPa)
+	{
+	  switch (pPa->PaShape)
+	    {
+	    case PtLine:
+	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      DoDrawOneLine (frame, x1, y1, x2, y2);
+	      break;
+
+	    case PtCubicBezier:
+	      /* alloue la liste des points */
+	      npoints = 0;
+	      MAX_points = ALLOC_POINTS;
+	      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx2 = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+	      PolyNewPoint ((int) x2, (int) y2);
+#ifdef _GTK
+	      gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
+#else /* _GTK */
+	      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
+			  CoordModeOrigin);
+#endif /* _GTK */
+	      /* free the table of points */
+	      free (points);
+	      break;
+
+	    case PtQuadraticBezier:
+	      /* alloue la liste des points */
+	      npoints = 0;
+	      MAX_points = ALLOC_POINTS;
+	      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2);
+	      PolyNewPoint ((int) x2, (int) y2);
+#ifdef _GTK
+	      gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
+#else /* _GTK */
+	      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
+			  CoordModeOrigin);
+#endif /* _GTK */
+	      /* free the table of points */
+	      free (points);
+	      break;
+
+	    case PtEllipticalArc:
+	      /**** to do ****/
+	      break;
+	    }
+	  pPa = pPa->PaNext;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawOval draw a rectangle with rounded corners.
   RO indicates whether it's a read-only box
   active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing

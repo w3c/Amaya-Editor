@@ -223,12 +223,16 @@ typedef struct _Box
       int	 _BxSpaceWidth_;/* >0 of the box is justified */
       int	 _BxFirstChar_;	/* First character in buffer */
     } s0;
-    struct /* BoPicture */
+    struct /* BoPicture - used for pictures, polylines and paths */
     {
-      int	 *_BxPictInfo_;  /* Image pointer in memory
+      union
+        {
+        int	 *_BxPictInfo_;  /* Image pointer in memory
 				    List of control points for a spline
 				    + twisting ratio of the control
 			            points */
+	PtrPathSeg _BxFirstPathSeg_; /* pointer to the first path segment */
+        } u;
       float 	 _BxXRatio_;
       float 	 _BxYRation_;
     } s1;
@@ -264,7 +268,8 @@ typedef struct _Box
 #define BxNPixels u.s0._BxNPixels_
 #define BxSpaceWidth u.s0._BxSpaceWidth_
 #define BxFirstChar u.s0._BxFirstChar_
-#define BxPictInfo u.s1._BxPictInfo_
+#define BxPictInfo u.s1.u._BxPictInfo_
+#define BxFirstPathSeg u.s1.u._BxFirstPathSeg_
 #define BxXRatio u.s1._BxXRatio_
 #define BxYRatio u.s1._BxYRation_
 #define BxFirstLine u.s2._BxFirstLine_

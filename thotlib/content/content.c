@@ -554,6 +554,42 @@ PtrElement          pEl;
    return ret;
 }
 
+/*----------------------------------------------------------------------
+   CopyPath
+   create a copy of the string of path elements pointed to by firstPathEl
+   and return a pointer to the first element of the copy.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrPathSeg       CopyPath (PtrPathSeg firstPathEl)
+#else  /* __STDC__ */
+PtrPathSeg       CopyPath (firstPathEl)
+PtrPathSeg firstPathEl;
+#endif /* __STDC__ */
+{
+   PtrPathSeg    pSourcePa, pPrevPa, pPa, first;
+
+   pSourcePa = firstPathEl;
+   first = NULL;
+   while (pSourcePa)
+     {
+       GetPathSeg (&pPa);
+       *pPa = *pSourcePa;
+       if (!first)
+	 {
+	   first = pPa;
+	   pPa->PaPrevious = NULL;
+	 }
+       else
+	 {
+	   pPrevPa->PaNext = pPa;
+	   pPa->PaPrevious = pPrevPa;
+         }
+       pPa->PaNext = NULL;
+       pPrevPa = pPa;
+       pSourcePa = pSourcePa->PaNext;
+     }
+   return first;
+}
 
 /*----------------------------------------------------------------------
    StringAndTextEqual compare une chaine de caracteres (String) et 

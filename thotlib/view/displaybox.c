@@ -79,23 +79,28 @@ Thotbool            selected;
       RO = 0;
 
       /* For changing drawing color */
-      DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
+      DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0,
+		     pBox->BxAbstractBox->AbForeground,
 		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+           pBox->BxLPadding - x;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+           pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
-      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd, width, height);
+      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd, width,
+		   height);
       /* Should the end of de line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x;
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+               pBox->BxLPadding - x;
 	  yd = pBox->BxYOrg + pBox->BxHorizRef - y;
-	  DrawPoints (frame, xd + width, yd,
-		      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
+	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op,
+		      pBox->BxAbstractBox->AbForeground);
 	}
 
       /* show the selection on the whole image */
@@ -146,8 +151,10 @@ ThotBool            selected;
       if (font != NULL)
 	{
 	  /* Position in the frame */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+               pBox->BxLPadding - pFrame->FrXOrg;
+	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+               pBox->BxTPadding - pFrame->FrYOrg;
 	  
 	  op = 0;
 	  RO = 0;
@@ -177,13 +184,16 @@ ThotBool            selected;
 	      DrawRadical (frame, i, xd, yd, width, height, font, RO, op, fg);
 	      break;
 	    case 'i':
-	      DrawIntegral (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      DrawIntegral (frame, i, xd, yd, width, height, 0, font, RO, op,
+			    fg);
 	      break;
 	    case 'c':
-	      DrawIntegral (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      DrawIntegral (frame, i, xd, yd, width, height, 1, font, RO, op,
+			    fg);
 	      break;
 	    case 'd':
-	      DrawIntegral (frame, i, xd, yd, width, height, 2, font, RO, op, fg);
+	      DrawIntegral (frame, i, xd, yd, width, height, 2, font, RO, op,
+			    fg);
 	      break;
 	    case 'S':
 	      DrawSigma (frame, xd, yd, width, height, font, RO, op, fg);
@@ -192,22 +202,27 @@ ThotBool            selected;
 	      DrawPi (frame, xd, yd, width, height, font, RO, op, fg);
 	      break;
 	    case 'I':
-	      DrawIntersection (frame, xd, yd, width, height, font, RO, op, fg);
+	      DrawIntersection (frame, xd, yd, width, height, font, RO, op,
+				fg);
 	      break;
 	    case 'U':
 	      DrawUnion (frame, xd, yd, width, height, font, RO, op, fg);
 	      break;
             case 'o':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, RO, op, fg);
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, RO,
+				   op, fg);
 	      break;
             case 'u':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, RO,
+				   op, fg);
 	      break;
 	    case 'h':
-	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, RO,
+				  op, fg);
 	      break;
 	    case 'v':
-	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op,
+				fg);
 	      break;
 	    case 'R':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 0, RO, op, fg);
@@ -222,34 +237,43 @@ ThotBool            selected;
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, RO, op, fg);
 	      break;
 	    case '(':
-	      DrawParenthesis (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      DrawParenthesis (frame, i, xd, yd, width, height, 0, font, RO,
+			       op, fg);
 	      break;
 	    case ')':
-	      DrawParenthesis (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      DrawParenthesis (frame, i, xd, yd, width, height, 1, font, RO,
+			       op, fg);
 	      break;
 	    case '{':
-	      DrawBrace (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      DrawBrace (frame, i, xd, yd, width, height, 0, font, RO, op,
+			 fg);
 	      break;
 	    case '}':
 	      DrawBrace (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
 	      break;
 	    case '[':
-	      DrawBracket (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      DrawBracket (frame, i, xd, yd, width, height, 0, font, RO, op,
+			   fg);
 	      break;
 	    case ']':
-	      DrawBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      DrawBracket (frame, i, xd, yd, width, height, 1, font, RO, op,
+			   fg);
 	      break;
 	    case '<':
-	      DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, RO,
+				 op, fg);
 	      break;
 	    case '>':
-	      DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, RO,
+				 op, fg);
 	      break;
 	    case '|':
-	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op,
+				fg);
 	      break;
 	    case 'D':
-	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1,
+				      RO, op, fg);
 	      break;
 	    case '?':
 	      DrawChar ('?', frame, xd, yd, font, RO, op, fg);
@@ -262,7 +286,8 @@ ThotBool            selected;
 	    {
 	      /* fill the end of the line with dots */
 	      yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	      DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
+	      DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op,
+			  fg);
 	    }
 
 	  /* show the selection on the beginning or the end of the image */
@@ -377,8 +402,10 @@ ThotBool            selected;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	   pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	   pBox->BxTPadding - pFrame->FrYOrg;
       op = 0;
       RO = 0;
 
@@ -430,34 +457,44 @@ ThotBool            selected;
 	switch (pAb->AbRealShape)
 	  {
 	  case '\260':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 2);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 2);
 	    break;
 	  case '\261':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 5);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 5);
 	    break;
 	  case '\262':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 6);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 6);
 	    break;
 	  case '\263':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 7);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 7);
 	    break;
 	  case '\264':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 8);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 8);
 	    break;
 	  case '\265':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 9);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 9);
 	    break;
 	  case '\266':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 1);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 1);
 	    break;
 	  case '\267':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 0);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 0);
 	    break;
 	  case '\270':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 4);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, 4);
 	    break;
 	  case '0':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, pat);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg,
+			   bg, pat);
 	    break;
 	  case '1':
 	  case '2':
@@ -468,76 +505,100 @@ ThotBool            selected;
 	  case '7':
 	  case '8':
 	  case 'R':
-	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
+	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op,
+			   fg, bg, pat);
 	    break;
 	  case 'g':
 	    /* Coords of the line are given by the enclosing box */
 	    pAb = pAb->AbEnclosing;
-	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
-		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	    if ((pAb->AbHorizPos.PosEdge == Left &&
+		 pAb->AbVertPos.PosEdge == Top) ||
+		(pAb->AbHorizPos.PosEdge == Right &&
+		 pAb->AbVertPos.PosEdge == Bottom))
 	      /* draw a \ */
-	      DrawSlash (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
+	      DrawSlash (frame, i, style, xd, yd, width, height, 1, RO,
+			 op, fg);
 	    else
 	      /* draw a / */
-	      DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	      DrawSlash (frame, i, style, xd, yd, width, height, 0, RO,
+			 op, fg);
 	    break;
 	  case 'C':
 	    if (pBox->BxRx == 0 && pBox->BxRy == 0)
-	      DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
+	      DrawRectangle (frame, i, style, xd, yd, width, height, RO,
+			     op, fg, bg, pat);
 	    else
-	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pat);
+	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
+			pBox->BxRy, RO, op, fg, bg, pat);
 	    break;
 	  case 'L':
-	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
+	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg,
+			 bg, pat);
 	    break;
 	  case 'a':
 	  case 'c':
-	    DrawEllips (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
+	    DrawEllips (frame, i, style, xd, yd, width, height, RO, op, fg,
+			bg, pat);
 	    break;
 	  case 'h':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
+	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1,
+				RO, op, fg);
 	    break;
 	  case 't':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0,
+				RO, op, fg);
 	    break;
 	  case 'b':
-	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, RO, op, fg);
+	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2,
+				RO, op, fg);
 	    break;
 	  case 'v':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
+	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 1,
+			      RO, op, fg);
 	    break;
 	  case 'l':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 0,
+			      RO, op, fg);
 	    break;
 	  case 'r':
-	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, RO, op, fg);
+	    DrawVerticalLine (frame, i, style, xd, yd, width, height, 2,
+			      RO, op, fg);
 	    break;
 	  case '/':
-	    DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	    DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op,
+		       fg);
 	    break;
 	  case '\\':
-	    DrawSlash (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
+	    DrawSlash (frame, i, style, xd, yd, width, height, 1, RO, op,
+		       fg);
 	    break;
 	  case '>':
-	     DrawArrow (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
+	     DrawArrow (frame, i, style, xd, yd, width, height, 0, RO, op,
+			fg);
 	     break;
 	  case 'E':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 45, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 45, RO, op,
+		       fg);
 	    break;
 	  case '^':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 90, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 90, RO, op,
+		       fg);
 	    break;
 	  case 'O':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 135, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 135, RO, op,
+		       fg);
 	    break;
 	  case '<':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 180, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 180, RO, op,
+		       fg);
 	    break;
 	  case 'o':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 225, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 225, RO, op,
+		       fg);
 	    break;
 	  case 'V':
-	    DrawArrow (frame, i, style, xd, yd, width, height, 270, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 270, RO, op,
+		       fg);
 	    break;
 	  case 'e':
 	    DrawArrow (frame, i, style, xd, yd, width,
@@ -580,7 +641,8 @@ ThotBool            selected;
 	if (selected)
 	  {
 	  if (pFrame->FrSelectOnePosition)
-	    DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
+	    DisplayPointSelection (frame, pBox,
+				   pFrame->FrSelectionBegin.VsIndBox);
 	  else
 	    DisplayPointSelection (frame, pBox, 0);
 	  }
@@ -700,14 +762,16 @@ ThotBool            selected;
   /* Transform the polyline if the box size has changed */
   PolyTransform (pBox, frame);
   pAb = pBox->BxAbstractBox;
-  fg = pAb->AbForeground;
-  bg = pAb->AbBackground;
-  pat = pAb->AbFillPattern;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      fg = pAb->AbForeground;
+      bg = pAb->AbBackground;
+      pat = pAb->AbFillPattern;
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	   pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	   pBox->BxTPadding - pFrame->FrYOrg;
       op = 0;
       RO = 0;
       
@@ -751,7 +815,8 @@ ThotBool            selected;
 	    arrow = 2;
 	  else
 	    arrow = 3;
-	  DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow, bg, pat);
+	  DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer,
+			pBox->BxNChars, RO, op, fg, arrow, bg, pat);
 	  break;
 	case 'B':	/* Beziers (open) */
 	case 'A':	/* Beziers (open) forward arrow */
@@ -767,9 +832,11 @@ ThotBool            selected;
 	    arrow = 3;
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
-	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer,
+		    pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawCurve (frame, i, style, xd, yd, pBox->BxBuffer,
-		    pBox->BxNChars, RO, op, fg, arrow, (C_points *) pBox->BxPictInfo);
+		    pBox->BxNChars, RO, op, fg, arrow,
+                    (C_points *) pBox->BxPictInfo);
 	  break;
 	case 'p':	/* polygon */
 	  DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
@@ -778,9 +845,11 @@ ThotBool            selected;
 	case 's':	/* closed spline */
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
-	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, 
+                    pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
-		      pBox->BxNChars, RO, op, fg, bg, pat, (C_points *) pBox->BxPictInfo);
+		      pBox->BxNChars, RO, op, fg, bg, pat,
+		      (C_points *) pBox->BxPictInfo);
 	  break;
 	default:
 	  break;
@@ -797,7 +866,90 @@ ThotBool            selected;
       if (selected)
 	{
 	if (pFrame->FrSelectOnePosition)
-	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
+	  DisplayPointSelection (frame, pBox,
+				 pFrame->FrSelectionBegin.VsIndBox);
+	else if (pBox->BxNChars > 1)
+	  DisplayPointSelection (frame, pBox, 0);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DisplayPath displays a path.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DisplayPath (PtrBox pBox, int frame, ThotBool selected)
+#else  /* __STDC__ */
+static void         DisplayPath (pBox, frame, selected)
+PtrBox              pBox;
+int                 frame;
+ThotBool            selected;
+#endif /* __STDC__ */
+{
+  PtrAbstractBox      pAb;
+  ViewFrame          *pFrame;
+  int                 i, xd, yd;
+  int                 op, RO;
+  int                 fg, bg;
+  int                 pat;
+  int                 style;
+  int                 width;
+
+  /* If the path does not contain any segment, return */
+  if (!pBox->BxFirstPathSeg)
+    return;
+
+  pAb = pBox->BxAbstractBox;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
+    {
+      fg = pAb->AbForeground;
+      bg = pAb->AbBackground;
+      pat = pAb->AbFillPattern;
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	   pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	   pBox->BxTPadding - pFrame->FrYOrg;
+      op = 0;
+      RO = 0;
+      
+      /* Style and thickness of the line */
+      i = GetLineWeight (pAb);
+      switch (pAb->AbLineStyle)
+	{
+	case 'S':
+	  style = 5; /* solid */
+	  break;
+	case '-':
+	  style = 4; /* dashed */
+	  break;
+	case '.':    /* dotted */
+	  style = 3;
+	  break;
+	default:
+	  style = 5; /* solid */
+	}
+
+      DrawPath (frame, i, style, xd, yd, pBox->BxFirstPathSeg, RO, op, fg,
+		bg, pat);
+
+      if (pBox->BxEndOfBloc > 0)
+	{
+          /* box sizes have to be positive */
+	  width = pBox->BxW;
+	  if (width < 0)
+	    width = 0;
+	  /* fill the end of the line with dots */
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
+	}
+      
+      /* show the selection on the whole image */
+      if (selected)
+	{
+	if (pFrame->FrSelectOnePosition)
+	  DisplayPointSelection (frame, pBox,
+				 pFrame->FrSelectionBegin.VsIndBox);
 	else if (pBox->BxNChars > 1)
 	  DisplayPointSelection (frame, pBox, 0);
 	}
@@ -897,8 +1049,10 @@ ThotBool            selected;
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
-      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	  pBox->BxLPadding - pFrame->FrXOrg;
+      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	  pBox->BxTPadding - pFrame->FrYOrg;
       bl = 0;
       newind = pBox->BxFirstChar;
       newbuff = pBox->BxBuffer;
@@ -975,7 +1129,8 @@ ThotBool            selected;
 	    DrawRectangle (frame, 0, 0,
 			   x - pBox->BxLPadding, y - pBox->BxTPadding,
 			   width + pBox->BxLPadding + pBox->BxRPadding,
-			   FontHeight (pBox->BxFont) + pBox->BxTPadding + pBox->BxBPadding,
+			   FontHeight (pBox->BxFont) + pBox->BxTPadding +
+			                               pBox->BxBPadding,
 			   0, 0, 0, bg, 2);
 	}
 
@@ -1012,7 +1167,8 @@ ThotBool            selected;
 		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
 		{
 		  nbox = pFrame->FrSelectionBegin.VsBox;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox && nbox != pBox)
+		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
+			 nbox != pBox)
 		    nbox = nbox->BxNexChild;
 		  if (nbox == pBox)
 		    /* it's within the current selection */
@@ -1061,13 +1217,17 @@ ThotBool            selected;
 		    {
 		      /* Show the space chars */
 		      if (car == SPACE || car == TAB) 
-			DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+			DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont,
+				  RO, op, fg);
 		      else if (car == THIN_SPACE)
-			DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+			DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont,
+				  RO, op, fg);
 		      else if (car == HALF_EM)
-			DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
+			DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont,
+				  RO, op, fg);
 		      else if (car == UNBREAKABLE_SPACE)
-			DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+			DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y,
+				  pBox->BxFont, RO, op, fg);
 		    }
 		 
 		  nbcar = 0;
@@ -1099,18 +1259,24 @@ ThotBool            selected;
 	     if (charleft <= 0)
 	       {
 		 /* Finished */
-		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
+		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
+				  pBox->BxFont, width, bl, withline,
+				  blockbegin, RO, op, fg, shadow);
 		 if (pBox->BxUnderline != 0)
-		   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxWidth, fg);
+		   DisplayUnderline (frame, x, y, pBox->BxFont,
+				     pBox->BxUnderline, pBox->BxWidth, fg);
 		 /* Next char lookup */
 		 if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
 		      (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) &&
 		     !ShowSpace)
-		   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
+		   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont,
+			     RO, op, fg);
 	       }
 	     else
 	       {
-		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
+				  pBox->BxFont, 0, bl, 0, blockbegin, RO, op,
+				  fg, shadow);
 		 bl = 0;
 		 /* Skip to next buffer */
 		 if (adbuff->BuNext == NULL)
@@ -1133,9 +1299,11 @@ ThotBool            selected;
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	      pBox->BxLPadding;
 	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
+	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y,
+		      pBox->BxEndOfBloc, RO, op, fg);
 	}
       /* display a caret if needed */
       if (left != right)
@@ -1198,7 +1366,8 @@ int                 h;
 			      x, yFrame + box->BxTMargin,
 			      w, 1,
 			      0, 0, 0, color);
-	  /* the width of the bottom line depends on the visibility of vertical borders */
+	  /* the width of the bottom line depends on the visibility of
+	     vertical borders */
 	  dim = w;
 	  pos = x;
 	  if (l > 0)
@@ -1223,7 +1392,8 @@ int                 h;
 	  break;
 	}
     }
-  if (box->BxLBorder && pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 && l > 0)
+  if (box->BxLBorder && pAb->AbLeftStyle > 2 &&
+      pAb->AbLeftBColor != -2 && l > 0)
     {
       if (pAb->AbLeftBColor == -1)
 	color = pAb->AbForeground;
@@ -1246,7 +1416,8 @@ int                 h;
 			    xFrame + box->BxLMargin, y,
 			    1, h,
 			    0, 0, 0, color);
-	  /* the width of the right line depends on the visibility of horizontal borders */
+	  /* the width of the right line depends on the visibility of
+	     horizontal borders */
 	  dim = h;
 	  pos = y;
 	  if (t > 0)
@@ -1270,7 +1441,8 @@ int                 h;
 	  break;
 	}
     }
-  if (box->BxBBorder && pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 && b > 0)
+  if (box->BxBBorder && pAb->AbBottomStyle > 2 &&
+      pAb->AbBottomBColor != -2 && b > 0)
     {
       if (pAb->AbBottomBColor == -1)
 	color = pAb->AbForeground;
@@ -1289,7 +1461,8 @@ int                 h;
 	  break;
 	case 6: /* double */
 	  /* top line */
-	  /* the width of the bottom line depends on the visibility of vertical borders */
+	  /* the width of the bottom line depends on the visibility of
+	     vertical borders */
 	  dim = w;
 	  pos = x;
 	  if (l > 0)
@@ -1301,7 +1474,8 @@ int                 h;
 	    dim -= r;
 	  /* bottom line */
 	  DrawHorizontalLine (frame, 1, 5,
-			      pos, yFrame + box->BxHeight - box->BxBMargin - box->BxBBorder,
+			      pos, yFrame + box->BxHeight - box->BxBMargin -
+			                                    box->BxBBorder,
 			      dim, 1,
 			      0, 0, 0, color);
 	  /* bottom line */
@@ -1313,13 +1487,15 @@ int                 h;
 	  break;
 	default:
 	  DrawHorizontalLine (frame, b, pAb->AbBottomStyle,
-			      x, yFrame + box->BxHeight - box->BxBMargin - box->BxBBorder,
+			      x, yFrame + box->BxHeight - box->BxBMargin -
+			                                  box->BxBBorder,
 			      w, b,
 			      2, 0, 0, color);
 	  break;
 	}
     }
-  if (box->BxRBorder && pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 && r > 0)
+  if (box->BxRBorder && pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
+      r > 0)
     {
       if (pAb->AbRightBColor == -1)
 	color = pAb->AbForeground;
@@ -1337,7 +1513,8 @@ int                 h;
 	case 7: /* groove */
 	  break;
 	case 6: /* double */
-	  /* the width of the left line depends on the visibility of horizontal borders */
+	  /* the width of the left line depends on the visibility of
+	     horizontal borders */
 	  dim = h;
 	  pos = y;
 	  if (t > 0)
@@ -1349,7 +1526,8 @@ int                 h;
 	    dim -= b;
 	  /* left line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + box->BxWidth - box->BxRMargin - box->BxRBorder, pos,
+			    xFrame + box->BxWidth - box->BxRMargin -
+			                            box->BxRBorder, pos,
 			    1, dim,
 			    0, 0, 0, color);
 	  /* rigth line */
@@ -1360,7 +1538,8 @@ int                 h;
 	  break;
 	default:
 	  DrawVerticalLine (frame, r, pAb->AbRightStyle,
-			    xFrame + box->BxWidth - box->BxRMargin - box->BxRBorder, y,
+			    xFrame + box->BxWidth - box->BxRMargin -
+			                            box->BxRBorder, y,
 			    r, h,
 			    2, 0, 0, color);
 	  break;
@@ -1448,7 +1627,9 @@ int                 ymax;
 		  box == pFrame->FrSelectionEnd.VsBox);
       if (pAb->AbLeafType == LtSymbol)
 	DisplayEmptyBox (box, frame, '2', selected);
-      else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtGraphics)
+      else if (pAb->AbLeafType != LtPolyLine &&
+	       pAb->AbLeafType != LtGraphics &&
+	       pAb->AbLeafType != LtPath)
 	{
 	  if (selected)
 	    DisplayStringSelection (frame, 0, box->BxWidth, box);
@@ -1477,6 +1658,9 @@ int                 ymax;
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
     DrawPolyLine (box, frame, selected);
+  else if (pAb->AbLeafType == LtPath)
+    /* Path */
+    DisplayPath (box, frame, selected);
 
   /* then display borders */
   if (yd + height >= ymin

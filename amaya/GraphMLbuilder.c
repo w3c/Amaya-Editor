@@ -1218,6 +1218,8 @@ Document	doc;
       command = *ptr;
       ptr++;
       prevCommand = WC_EOS;
+      xcur = 0;
+      ycur = 0;
       while (command != EOS)
          {
          relative = TRUE;
@@ -1251,6 +1253,8 @@ Document	doc;
 	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
 	     seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     xcur = xinit;
+	     ycur = yinit;
 	     break;
 
 	   case 'L':
@@ -1463,9 +1467,9 @@ Document	doc;
 	 if (command != EOS)
 	   {
 	   prevCommand = command;
-	   if (command != 'Z' && command != 'z')
+	   if (command == 'Z' || command == 'z')
 	     /* don't expect coordinates after a close path command, only
-		a new command or the end of the string to be parsed */
+		a new command or end of the string */
 	     {
              ptr = TtaSkipWCBlanks (ptr);	     
 	     command = *ptr;

@@ -1914,7 +1914,8 @@ FILE               *fileDescriptor;
 					     j = 1;
 					     fprintf (fileDescriptor, "|");
 					  }
-					putc (adbuff->BuContent[j - 1], fileDescriptor);
+					putc (adbuff->BuContent[j - 1],
+					      fileDescriptor);
 					i--;
 					j++;
 				     }
@@ -1937,7 +1938,8 @@ FILE               *fileDescriptor;
 			 /* On est en fin de buffer ? */
 			 while (i > 0)
 			   {
-			      while (adbuff->BuNext != NULL && adbuff->BuContent[j - 1] == EOS)
+			      while (adbuff->BuNext != NULL &&
+				     adbuff->BuContent[j - 1] == EOS)
 				{
 				   adbuff = adbuff->BuNext;
 				   j = 1;
@@ -2011,7 +2013,7 @@ FILE               *fileDescriptor;
 			 fprintf (fileDescriptor, "PATH\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (fileDescriptor, " ");
-			 WrPath (pAb->AbFirstPathSeg, 60, fileDescriptor);
+			 WrPath (pBox->BxFirstPathSeg, 60, fileDescriptor);
 			 break;
 		      default:
 			 break;
