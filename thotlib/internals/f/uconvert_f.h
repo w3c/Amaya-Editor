@@ -17,9 +17,9 @@ extern CHAR_T TtaGetUnicodeValueFromISOLatin6Code ( const unsigned char c );
 extern unsigned char TtaGetWindows1256CPCodeFromUnicode ( const CHAR_T wc );
 extern CHAR_T TtaGetUnicodeValueFromWindows1256CP ( const unsigned char c );
 extern int TtaWC2MB ( CHAR_T wchar,
-                      char* mbchar,
+                      unsigned char* mbchar,
                       CHARSET encoding );
-extern int TtaMB2WC ( char* mbchar,
+extern int TtaMB2WC ( unsigned char* mbchar,
                       CHAR_T* wchar,
                       CHARSET encoding );
 
