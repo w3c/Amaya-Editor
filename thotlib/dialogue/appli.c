@@ -3108,11 +3108,7 @@ void UpdateScrollbars (int frame)
 #ifndef _WINDOWS
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
-#else /* _GTK */
-   l = FrameTable[frame].FrWidth;
-   h = FrameTable[frame].FrHeight; 
-#endif /* !_GTK */
- if (width + Xpos <= l)
+   if (width + Xpos <= l)
      {
 #ifndef _GTK
        n = 0;
@@ -3129,7 +3125,7 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = width-13;
        tmpw->step_increment = 8;
        tmpw->value = Xpos;
-       gtk_adjustment_changed(tmpw);
+       gtk_adjustment_changed (tmpw);
 #endif /* !_GTK */
      }
    if (height + Ypos <= h)
@@ -3147,12 +3143,12 @@ void UpdateScrollbars (int frame)
        tmpw->upper = h;
        tmpw->page_size = height;
        tmpw->page_increment = height;
-       tmpw->step_increment = 6; 
+       tmpw->step_increment = 6;
        tmpw->value = Ypos;
-       gtk_adjustment_changed(tmpw);
+       gtk_adjustment_changed (tmpw);
 #endif /* !_GTK */
      }
-#ifdef _WINDOWS
+#else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);
    h = rWindow.bottom - rWindow.top;
    l = rWindow.right - rWindow.left;
@@ -3160,35 +3156,21 @@ void UpdateScrollbars (int frame)
    scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
    scrollInfo.nMin   = 0;
 
-   if (width + Xpos <= l) {
+   if (width + Xpos <= l) 
+     {
       scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
       scrollInfo.nPos   = Xpos;
       SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
-   }
-
-   if (height + Ypos <= h) {
+     }
+   if (height + Ypos <= h) 
+     {
       scrollInfo.nMax   = h;
       scrollInfo.nPage  = height;
       scrollInfo.nPos   = Ypos;
       SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-   }
+     }
 #endif /* _WINDOWS */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
