@@ -60,8 +60,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
   char	        *s;
   int           ok = 0;
 
+#ifndef _GL
+  if (!Printing)
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
+#endif /* _GL */
   
   pat = XftPatternCreate ();
   if (!pat)

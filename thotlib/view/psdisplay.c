@@ -271,7 +271,7 @@ static void FillWithPattern (FILE *fout, int fg, int bg, int pattern)
    this is used only by the thot formmating engine.
    bl indicate that there are one or more spaces before the string
    hyphen indicate whether an hyphen char has to be added.
-   StartABlock is 1 if the text is at a paragraph beginning
+   StartABlock is not null if the text is at a paragraph beginning
    (no justification of first spaces).
    parameter fg indicate the drawing color
    Returns the lenght of the string drawn.

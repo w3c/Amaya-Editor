@@ -368,11 +368,6 @@ static FontScript **FontConfigLoad ()
   int                 script;
   ThotBool            complete;
 
-#if defined(_GL) && !defined(_WINDOWS)
-  if (Printing)
-    /* as long as Pastscript doesn't load extra fonts */
-    return;
-#endif /* defined(_GL) && !defined(_WINDOWS) */
   appHome = TtaGetEnvString ("APP_HOME");
 #ifndef _GL
 #ifdef _WINDOWS

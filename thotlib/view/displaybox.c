@@ -1661,9 +1661,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #ifdef _WINDOWS
 			x += lg;
 #else /* _WINDOWS */
-		      if (Printing)
+			/*if (Printing)
 			org -= lg;
-		      else
+			else*/
 			x += lg;
 #endif /* _WINDOWS */
 		      xpos = x;

@@ -1400,6 +1400,9 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 #if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL)
   int i, j, k, internalsize;
 
+#ifndef _GL
+  if (!Printing)
+#endif /* _GL */
   result = FontLoadFromConfig (script, family, highlight);
   if (result)
     {
