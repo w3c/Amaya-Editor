@@ -145,29 +145,32 @@ int                XMLtype;
     - content 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (int XMLtype,
-				      STRING XMLname,
-				      ElementType *elType,
-				      STRING *mappedName,
-				      CHAR_T *content,
-				      Document doc)
+void         MapXMLElementType (int XMLtype,
+				STRING XMLname,
+				ElementType *elType,
+				STRING *mappedName,
+				CHAR_T *content,
+				ThotBool *highEnoughLevel,
+				Document doc)
 #else
-void               MapXMLElementType (XMLtype,
-				      XMLname,
-				      elType,
-				      mappedName,
-				      content,
-				      doc)
-int                XMLtype;
-STRING             XMLname;
-ElementType       *elType;
-STRING            *mappedName;
-CHAR_T  	  *content;
-Document           doc;
+void         MapXMLElementType (XMLtype, XMLname, elType, mappedName,
+				content, highEnoughLevel, doc)
+int            XMLtype;
+STRING         XMLname;
+ElementType   *elType;
+STRING        *mappedName;
+CHAR_T        *content;
+ThotBool      *highEnoughLevel;
+Document       doc;
 #endif
 {
    int                 i;
    ElemMapping        *ptr;
+
+   /* Initialize variables */
+   *mappedName = NULL;
+   *highEnoughLevel = TRUE;
+   elType->ElTypeNum = 0;
 
    /* Select the right table */
    if (XMLtype == XHTML_TYPE)
@@ -175,36 +178,46 @@ Document           doc;
    else if (XMLtype == MATH_TYPE)
      {
        if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
-	 /* Maths are not allowed in this document */
-	 ptr = NULL;
+	 {
+	   /* Maths are not allowed in this document */
+	   ptr = NULL;
+	   *highEnoughLevel = FALSE;
+	 }
        else
 	 ptr = MathMLElemMappingTable;
      }
    else if (XMLtype == GRAPH_TYPE)
      {
        if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
-	 /* Graphics are not allowed in this document */
-	 ptr = NULL;
+	 {
+	   /* Graphics are not allowed in this document */
+	   ptr = NULL;
+	   *highEnoughLevel = FALSE;
+	 }
        else
 	 ptr = GraphMLElemMappingTable;
      }
    else
      ptr = NULL;
-   *mappedName = NULL;
-   elType->ElTypeNum = 0;
+   
    if (ptr != NULL)
      {
        /* search in the ElemMappingTable */
        i = 0;
        /* look for the first concerned entry in the table */
        while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != WC_EOS)
-	 i++;
-
+	 i++;     
        /* look at all entries starting with the right character */
        do
-	 if (ustrcmp (ptr[i].XMLname, XMLname) || ptr[i].Level > ParsingLevel[doc])
-	   /* it's not the tag or this tag is not valid for the current parsing level */
+	 if (ustrcmp (ptr[i].XMLname, XMLname))
+	   /* it's not the tag */
 	   i++;
+	 else if (ptr[i].Level > ParsingLevel[doc])
+	   {
+	     /* this tag is not valid for the current parsing level */
+	     *highEnoughLevel = FALSE;
+	     i++;
+	   }
 	 else
 	   {
 	     elType->ElTypeNum = ptr[i].ThotType;

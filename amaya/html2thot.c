@@ -5895,7 +5895,9 @@ CHARSET    *charset;
 	      if (http)
 		{
 		  /* looks for the "Content-Type" declaration */
-		  content = strstr (http, "Content-Type");
+		  content = strstr (http, "content-type");
+		  if (!content)
+		    content = strstr (http, "Content-Type");
 		  if (content)
 		    {
 		      /* check whether there is a charset */

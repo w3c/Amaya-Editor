@@ -17,6 +17,7 @@ extern void MapXMLElementType ( int XMLtype,
                                 ElementType *elType,
                                 STRING *mappedName,
                                 CHAR_T *content,
+                                ThotBool *highEnoughLevel,
                                 Document doc );
 extern CHAR_T* GetXMLElementName ( ElementType elType,
                                    Document doc );
@@ -43,6 +44,7 @@ extern void MapXMLElementType (/* int XMLtype,
                                   ElementType *elType,
                                   STRING *mappedName,
                                   CHAR_T *content,
+                                  ThotBool *highEnoughLevel,
                                   Document doc */);
 extern CHAR_T* GetXMLElementName (/* ElementType elType,
                                      Document doc */);

@@ -187,13 +187,21 @@ static ThotBool     RemoveLineBreak = FALSE;
 static ThotBool     RemoveLeadingSpace = FALSE;   
 static ThotBool     RemoveTrailingSpace = FALSE;
 static ThotBool     RemoveContiguousSpace = FALSE;
-static ThotBool     CharsetErrorFound = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
 static int          extraOffset = 0;
 static int          htmlLineRead = 0;
 static int          htmlCharRead = 0;
+
+/* Error types */
+typedef enum
+{
+  errorEncoding,
+  errorNotWellFormed,
+  errorParsing,
+  errorParsingProfile,
+} ErrorType;
 
 /* Virtual DOCTYPE Declaration */
 #define DECL_DOCTYPE "<!DOCTYPE html PUBLIC \"\" \"\">\n"
@@ -466,11 +474,11 @@ Element		el;
    When the line is 0 ask to expat the current line number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        XmlParseError (Document doc, CHAR_T* msg, int line)
+static void  XmlParseError (ErrorType type, CHAR_T *msg, int line)
 #else
-void        XmlParseError (doc, msg, line)
-Document    doc;
-CHAR_T*     msg;
+static void  XmlParseError (type, msg, line)
+ErrorType   type;
+CHAR_T     *msg;
 int         line;
 #endif
 {
@@ -486,51 +494,59 @@ int         line;
    if (!ErrFile)
      {
        usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"),
-		 TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+		 TempFileDirectory, DIR_SEP, XMLcontext.doc, DIR_SEP);
        if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
          return;
      }
 
-   if (line != 0)
-     if (line == -1)
-       {
-	 CharsetErrorFound = TRUE;
-	 if (docURL != NULL)
-	   {
-	     fprintf (ErrFile, "*** Errors in %s\n", docURL);
-	     TtaFreeMemory (docURL);
-	     docURL = NULL;
-	   }
-	 fprintf (ErrFile, "  %s\n", mbcsMsg);
-       }
-     else
-       {
-	 XMLErrorsFound = TRUE;
-	 fprintf (ErrFile, "  line %d, char %d: %s\n", line, 0, mbcsMsg);
-	 fclose (ErrFile);
-	 ErrFile = NULL;
-       }
-   else
+   if (docURL != NULL)
      {
-       XMLErrorsFound = TRUE;
-       if (doc == XMLcontext.doc)
+       fprintf (ErrFile, "*** Errors in %s\n", docURL);
+       TtaFreeMemory (docURL);
+       docURL = NULL;
+     }
+   
+   switch (type)
+     {
+     case errorEncoding: 
+       fprintf (ErrFile, "  %s\n", mbcsMsg);
+       break;
+     case errorNotWellFormed:
+       if (line == 0)
 	 {
-	   /* the error message is related to the document being parsed */
-	   if (docURL != NULL)
-	     {
-	       fprintf (ErrFile, "*** Errors in %s\n", docURL);
-	       TtaFreeMemory (docURL);
-	       docURL = NULL;
-	     }
-	   /* print the line number and character number before the message */
 	   fprintf (ErrFile, "  line %d, char %d: %s\n",
 		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
 		    XML_GetCurrentColumnNumber (parser),
 		    mbcsMsg);
 	 }
        else
-	 /* print only the error message */
-	 fprintf (ErrFile, "%s\n", mbcsMsg);
+	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
+       XMLNotWellFormed = TRUE;
+       break;
+     case errorParsing:
+       if (line == 0)
+	 {
+	   fprintf (ErrFile, "  line %d, char %d: %s\n",
+		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (parser),
+		    mbcsMsg);
+	 }
+       else
+	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
+       XMLErrorsFound = TRUE;
+       break;
+     case errorParsingProfile:
+       if (line == 0)
+	 {
+	   fprintf (ErrFile, "  line %d, char %d: %s\n",
+		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (parser),
+		    mbcsMsg);
+	 }
+       else
+	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
+       XMLErrorsFoundInProfile = TRUE;
+       break;
      }
 }
 
@@ -978,17 +994,16 @@ Element  *el;
    Schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       GetXmlElType (STRING       XMLname,
-				ElementType *elType,
-				STRING      *mappedName,
-				CHAR_T      *content,
-				Document     doc)
+static void   GetXmlElType (STRING XMLname, ElementType *elType,
+			    STRING *mappedName, CHAR_T *content,
+			    ThotBool *level, Document doc)
 #else
-static void       GetXmlElType (XMLname, elType, mappedName, content, doc)
+static void   GetXmlElType (XMLname, elType, mappedName, content, level, doc)
 STRING         XMLname;
 ElementType   *elType;
 STRING        *mappedName;
 CHAR_T        *content;
+ThotBool      *level;
 Document       doc;
 #endif
 {
@@ -1000,8 +1015,8 @@ Document       doc;
   if (currentParserCtxt != NULL)
     {
       elType->ElSSchema = currentParserCtxt->XMLSSchema;
-      MapXMLElementType (currentParserCtxt->XMLtype, XMLname,
-			 elType, mappedName, content, doc);
+      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
+			 mappedName, content, level, doc);
     }
   else
     {
@@ -1408,11 +1423,12 @@ CHAR_T*             GIname;
 
 #endif
 {
-  ElementType         elType;
-  Element             newElement;
-  CHAR_T              msgBuffer[MaxMsgLength];
-  STRING              mappedName = NULL;
-  ThotBool            elInStack = FALSE;
+  ElementType     elType;
+  Element         newElement;
+  CHAR_T          msgBuffer[MaxMsgLength];
+  STRING          mappedName = NULL;
+  ThotBool        elInStack = FALSE;
+  ThotBool        highEnoughLevel = TRUE;
 
   UnknownTag = FALSE;
 
@@ -1428,8 +1444,7 @@ CHAR_T*             GIname;
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
-      XmlParseError (XMLcontext.doc, TEXT("**FATAL** Too many XML levels"),0);
-      XMLNotWellFormed = TRUE;
+      XmlParseError (errorNotWellFormed, TEXT("**FATAL** Too many XML levels"), 0);
       UnknownTag = TRUE;
       return;
     }
@@ -1438,22 +1453,31 @@ CHAR_T*             GIname;
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
   currentElementName[0] = WC_EOS;
-  GetXmlElType (GIname, &elType, &mappedName,
-		&currentElementContent, XMLcontext.doc);
+  GetXmlElType (GIname, &elType, &mappedName, &currentElementContent,
+		&highEnoughLevel, XMLcontext.doc);
 
   if (mappedName == NULL)
-    /* element not found in the corresponding DTD */
     {
-      if (ParsingLevel[XMLcontext.doc] != L_Transitional)
+      if (highEnoughLevel)
 	{
-	  /***  What to do in this case ? */
+	  /* element not found in the corresponding DTD */
+	  /* don't process that element */
+	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+	  XmlParseError (errorParsing, msgBuffer, 0);
+	  UnknownTag = TRUE;
+ 	}
+      else
+	{
+	  /* element invalid for the current profile */
+	  /* doesn't process that element */
+	  usprintf (msgBuffer,
+		    TEXT("Unknown XML element %s for the current profile"),
+		    GIname);
+	  XmlParseError (errorParsingProfile, msgBuffer, 0);
+	  UnknownTag = TRUE;
 	}
-      /* doesn't process that element */
-      usprintf (msgBuffer, TEXT("Invalid XML element %s"), GIname);
-      XmlParseError (XMLcontext.doc, msgBuffer, 0);
-      UnknownTag = TRUE;
       return;
-    }
+   }
   else
     ustrcpy (currentElementName, mappedName);
   
@@ -1465,7 +1489,7 @@ CHAR_T*             GIname;
     {
       usprintf (msgBuffer,
 		TEXT("The XML element %s is not allowed here"), GIname);
-      XmlParseError (XMLcontext.doc, msgBuffer, 0);
+      XmlParseError (errorParsing, msgBuffer, 0);
       UnknownTag = TRUE;
       elInStack = FALSE;
     }
@@ -1615,6 +1639,7 @@ CHAR_T     *GIname;
    CHAR_T         msgBuffer[MaxMsgLength];
    ElementType    elType;
    STRING         mappedName = NULL;
+   ThotBool       highEnoughLevel = TRUE;
 
    if (XMLcontext.parsingTextArea)
      if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
@@ -1631,28 +1656,38 @@ CHAR_T     *GIname;
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
    currentElementName[0] = WC_EOS;
-   GetXmlElType (GIname, &elType, &mappedName,
-		 &currentElementContent, XMLcontext.doc);
-   
+   GetXmlElType (GIname, &elType, &mappedName, &currentElementContent,
+		 &highEnoughLevel, XMLcontext.doc);
+
    if (mappedName == NULL)
-     /* element not found in the corresponding DTD */
      {
-       if (ParsingLevel[XMLcontext.doc] != L_Transitional)
+       if (highEnoughLevel)
 	 {
-	   /***  What to do in this case ? */
+	   /* element not found in the corresponding DTD */
+	   /* don't process that element */
+	   usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+	   XmlParseError (errorParsing, msgBuffer, 0);
+	   UnknownTag = TRUE;
 	 }
-       /* doesn't process that element */
-       usprintf (msgBuffer, TEXT("Invalid XML element %s"), GIname);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       else
+	 {
+	   /* element invalid for the current profile */
+	   /* doesn't process that element */
+	   usprintf (msgBuffer,
+		     TEXT("Unknown XML element %s for the current profile"),
+		     GIname);
+	   XmlParseError (errorParsingProfile, msgBuffer, 0);
+	   UnknownTag = TRUE;
+	 }
      }
    else
      {
        /* element found in the corresponding DTD */
        if (!XmlCloseElement (mappedName))
-	 /* the end tag does not close any current element */
 	 {
+	   /* the end tag does not close any current element */
 	   usprintf (msgBuffer, TEXT("Unexpected end tag %s"), GIname);
-	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
+	   XmlParseError (errorParsing, msgBuffer, 0);
 	 }
      }
 }
@@ -1977,8 +2012,8 @@ Document  doc;
 	 lastMappedAttr = NULL;
        else
 	 {
-	   usprintf (msgBuffer, TEXT("Unknown attribute %s"), attrName);
-	   XmlParseError (doc, msgBuffer, 0);
+	   usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
+	   XmlParseError (errorParsing, msgBuffer, 0);
 	   /* attach an Invalid_attribute to the current element */
 	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
 				       currentElementName, doc);
@@ -2085,7 +2120,7 @@ Document    doc;
       /* this attribute is not in a mapping table */
      {
        usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
-       XmlParseError (doc, msgBuffer, 0);
+       XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
      {
@@ -2163,7 +2198,7 @@ CHAR_T         *attrName;
      {
        usprintf (msgBuffer,
 		 TEXT("Unknown Namepaces for attribute :\"%s\""), attrName);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
      {
@@ -2252,7 +2287,7 @@ CHAR_T*             val;
   if (value < 0)
     {
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
-      XmlParseError (XMLcontext.doc, msgBuffer, 0);
+      XmlParseError (errorParsing, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
 			 NULL, XMLcontext.doc);
@@ -2312,7 +2347,7 @@ CHAR_T     *attrValue;
        if (val <= 0)
 	 {
 	   usprintf (msgBuffer, TEXT("Unknown attribute value %s"), attrValue);
-	   XmlParseError (XMLcontext.doc, msgBuffer, 0);	
+	   XmlParseError (errorParsing, msgBuffer, 0);	
 	 }
        else
 	 TtaSetAttributeValue (currentAttribute, val,
@@ -2417,7 +2452,7 @@ CHAR_T     *attrValue;
 		       usprintf (msgBuffer,
 				 TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, attrValue);
-		       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+		       XmlParseError (errorParsing, msgBuffer, 0);
 
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
@@ -2454,9 +2489,9 @@ CHAR_T     *attrValue;
 			   TtaRemoveAttribute (lastAttrElement,
 					       currentAttribute, XMLcontext.doc);
 			   usprintf (msgBuffer,
-				     TEXT("Invalid attribute value \"%s\""),
+				     TEXT("Unknown attribute value \"%s\""),
 				     attrValue);
-			   XmlParseError (XMLcontext.doc, msgBuffer, 0);
+			   XmlParseError (errorParsing, msgBuffer, 0);
 			 }
 		     }
 		   break;
@@ -2474,7 +2509,7 @@ CHAR_T     *attrValue;
 			       usprintf (msgBuffer,
 					 TEXT("Unknown language: %s"),
 					 attrValue);
-			       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+			       XmlParseError (errorParsing, msgBuffer, 0);
 			     }
 			   else
 			     {
@@ -2688,8 +2723,8 @@ int      length;
      {
        /* Unknown entity */
        lang = -1;
-       usprintf (msgBuffer, TEXT("Unknown entity %s"), buffer);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       usprintf (msgBuffer, TEXT("Unknown XML entity %s"), buffer);
+       XmlParseError (errorParsing, msgBuffer, 0);
      }
    else if (alphabet != TEXT(' '))   
        lang = TtaGetLanguageIdFromAlphabet(alphabet);
@@ -2727,12 +2762,13 @@ CHAR_T     *commentValue;
    STRING        mappedName;
    CHAR_T        cont;
    int           start, i, error;
+   ThotBool      level = TRUE;
 
    /* Create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLcomment"), &elType,
-		 &mappedName, &cont, XMLcontext.doc);
+   GetXmlElType (TEXT("XMLcomment"), &elType, &mappedName,
+		 &cont, &level, XMLcontext.doc);
    if (elType.ElTypeNum > 0)
      {
        commentEl = TtaNewElement (XMLcontext.doc, elType);
@@ -2743,8 +2779,8 @@ CHAR_T     *commentValue;
        /* Element XMLcomment */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXmlElType (TEXT("XMLcomment_line"), &elType,
-		     &mappedName, &cont, XMLcontext.doc);
+       GetXmlElType (TEXT("XMLcomment_line"), &elType, &mappedName,
+		     &cont, &level, XMLcontext.doc);
        commentLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);
@@ -2818,11 +2854,12 @@ CHAR_T   *PiData;
    CHAR_T        cont;
    int           i, start, len, error;
    CHAR_T       *PiValue = NULL;
+   ThotBool      level = TRUE;
 
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName, &cont, XMLcontext.doc);
+   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName, &cont, &level, XMLcontext.doc);
    if (elType.ElTypeNum > 0)
      {
        PiEl = TtaNewElement (XMLcontext.doc, elType);
@@ -2833,7 +2870,7 @@ CHAR_T   *PiData;
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
        GetXmlElType (TEXT("XMLPI_line"), &elType,
-		     &mappedName, &cont, XMLcontext.doc);
+		     &mappedName, &cont, &level, XMLcontext.doc);
        PiLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (PiLineEl);
        TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
@@ -3171,8 +3208,7 @@ const XML_Char **attlist;
 	{
 	  usprintf (msgBuffer, 
 		    TEXT("Unknown Namepaces for element :\"%s\""), name);
-	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
-	  XMLNotWellFormed = TRUE;
+	  XmlParseError (errorNotWellFormed, msgBuffer, 0);
 	  DisableExpatParser ();
 	  return;
 	}
@@ -3716,7 +3752,6 @@ ThotBool   isSubTree;
   UnknownTag = FALSE;
   XMLrootName[0] = WC_EOS;
   XMLrootClosed = FALSE;
-  CharsetErrorFound = FALSE;
 
   XMLNotWellFormed = FALSE;
   htmlLineRead = 0;
@@ -3777,11 +3812,8 @@ Language   lang;
 
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-    {
-      XmlParseError (XMLcontext.doc,
-		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-      XMLNotWellFormed = TRUE;
-    }
+    XmlParseError (errorNotWellFormed,
+		   (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 
   /* Parse the input XML buffer and complete the Thot document */
   if (!XMLNotWellFormed)
@@ -3802,10 +3834,8 @@ Language   lang;
       if (!XML_Parse (parser, transBuffer, tmpLen, 1))
 	{
 	  if (!XMLrootClosed)
-	    {
-	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	      XMLNotWellFormed = TRUE;
-	    }
+	    XmlParseError (errorNotWellFormed,
+			   (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	}
       if (transBuffer != NULL)   
 	TtaFreeMemory (transBuffer);   
@@ -3916,11 +3946,8 @@ Language  lang;
 
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-    {
-      XmlParseError (XMLcontext.doc,
-		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-      XMLNotWellFormed = TRUE;
-    }
+    XmlParseError (errorNotWellFormed,
+		   (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
   else
     {
       extraLineRead = XML_GetCurrentLineNumber (parser);
@@ -3941,10 +3968,8 @@ Language  lang;
       if (!XML_Parse (parser, tmpBuffer, tmpLen, 1))
 	{
 	  if (!XMLrootClosed)
-	    {
-	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	      XMLNotWellFormed = TRUE;
-	    }
+	    XmlParseError (errorNotWellFormed,
+			   (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	}
     }
   else
@@ -3995,10 +4020,8 @@ Language  lang;
 	      if (XMLrootClosed)
 		endOfParsing = TRUE;
 	      else
-		{
-		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		  XMLNotWellFormed = TRUE;
-		}
+		XmlParseError (errorNotWellFormed,
+			       (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	    }
 	  else
 	    {
@@ -4094,11 +4117,8 @@ ThotBool  *xmlDoctype;
 		 {
 		   i++;
 		   if (!XML_Parse (parser, bufferRead, i, FALSE))
-		     {
-		       XmlParseError (XMLcontext.doc,
-				      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		       XMLNotWellFormed = TRUE;
-		     }
+		     XmlParseError (errorNotWellFormed,
+				    (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 		   res = res - i;
 		 }
 	     }
@@ -4106,21 +4126,16 @@ ThotBool  *xmlDoctype;
 	   /* Virtual DOCTYPE Declaration */
 	   tmpLineRead = XML_GetCurrentLineNumber (parser);
 	   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-	     {
-	       XmlParseError (XMLcontext.doc,
-			      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	       XMLNotWellFormed = TRUE;
-	     }
+	     XmlParseError (errorNotWellFormed,
+			    (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	   *xmlDoctype = TRUE;
 	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
 	 }
 
        /* Standard EXPAT processing */
        if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
-	 {
-	   XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	   XMLNotWellFormed = TRUE;
-	 }
+	 XmlParseError (errorNotWellFormed,
+			(CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
      }
    
    if (ErrFile)
@@ -4175,7 +4190,6 @@ ThotBool    xmlDoctype;
   CHARSET         charset;
   ThotBool        XMLUnknownEncoding;
   ThotBool        XMLUndefinedEncoding;
-  ThotBool        XMLErrorsFoundInProfile;
 
   /* General initialization */
   rootElement = TtaGetMainRoot (doc);
@@ -4290,9 +4304,9 @@ ThotBool    xmlDoctype;
       charset = TtaGetDocumentCharset (doc);
       if (charset == UNDEFINED_CHARSET)
 	{
-	  XMLUndefinedEncoding = TRUE;
-	  XmlParseError (XMLcontext.doc,
+	  XmlParseError (errorEncoding,
 			 TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING), -1);
+	  XMLUndefinedEncoding = TRUE;
 	}
       else 
 	{
@@ -4306,9 +4320,9 @@ ThotBool    xmlDoctype;
 	      charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
 	       charset != ISO_8859_15  && charset !=  ISO_8859_supp)
 	    {
-	      XMLUnknownEncoding = TRUE;
-	      XmlParseError (XMLcontext.doc,
+	      XmlParseError (errorEncoding,
 			     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
+	      XMLUnknownEncoding = TRUE;
 	    }
 	}
       /* Specific initialization for expat */

@@ -71,7 +71,8 @@ Document            doc;
   CHAR_T          c;
   int             i;
   int             entry;
-  ThotBool	  isHTML;
+  ThotBool	  isHTML; 
+  ThotBool	  level; 
 
   /* TODO: use NameSpaces to search in the right table */
   entry = -1;
@@ -124,9 +125,9 @@ Document            doc;
 	  elType.ElSSchema = *schema;
 	  
 	  if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
-	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, doc);
+	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
-	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, doc);
+	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0)
 	    {
 	      entry = -1;
@@ -159,6 +160,7 @@ Document            doc;
   CHAR_T              c;
   CHAR_T*             ptr;
   int                 i;
+  ThotBool	      level; 
 
   /* TODO: use NameSpaces to search in the right table */
   elType->ElSSchema = NULL;
@@ -193,9 +195,9 @@ Document            doc;
   while (pHTMLGIMapping[i].XMLname[0] == c);
 
   /* if not found, look at the XML mapping tables */
-  MapXMLElementType (MATH_TYPE, gi, elType, &ptr, &c, doc);
+  MapXMLElementType (MATH_TYPE, gi, elType, &ptr, &c, &level, doc);
   if (elType->ElTypeNum == 0)
-  MapXMLElementType (GRAPH_TYPE, gi, elType, &ptr, &c, doc);
+  MapXMLElementType (GRAPH_TYPE, gi, elType, &ptr, &c, &level, doc);
 }
 
 /*----------------------------------------------------------------------

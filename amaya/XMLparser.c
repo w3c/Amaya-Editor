@@ -433,6 +433,7 @@ Document            doc;
 #endif
 {
   PtrParserCtxt	ctxt;
+  ThotBool      level;
 
   /* initialize all parser contexts if not done yet */
   if (firstParserCtxt == NULL)
@@ -444,7 +445,7 @@ Document            doc;
       /* by default we're looking at in the current schema */
       elType->ElSSchema = currentParserCtxt->XMLSSchema;
       MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
-			 mappedName, content, doc);
+			 mappedName, content, &level, doc);
     }
   else if (elType->ElSSchema != NULL)
     {
@@ -456,7 +457,7 @@ Document            doc;
       /* get the Thot element number */
       if (ctxt != NULL)
 	MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName,
-			   content, doc);
+			   content, &level, doc);
     }
 
   /* if not found, look at other contexts */
@@ -470,7 +471,7 @@ Document            doc;
 	  if (ctxt != currentParserCtxt)
 	    {
 	      MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName,
-				 content, doc);
+				 content, &level, doc);
 	      if (elType->ElSSchema != NULL)
 		ctxt->XMLSSchema = elType->ElSSchema;
 	    }
