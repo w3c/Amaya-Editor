@@ -679,45 +679,44 @@ int                *picYOrg;
 
 #endif /* __STDC__ */
 {
-   float               Rapw, Raph;
+  float               Rapw, Raph;
 
-   /* the box has the wFrame, hFrame dimensions */
-   /* the picture has  picWArea, picHArea size */
-
-   *picXOrg = 0;
-   *picYOrg = 0;
-   *xTranslate = 0;
-   *yTranslate = 0;
-
-   switch (pres)
-	 {
-	    case ReScale:
-	       Rapw = (float) wFrame / (float) picWArea;
-	       Raph = (float) hFrame / (float) picHArea;
-	       if (Rapw <= Raph)
-		  *yTranslate = (int) ((hFrame - (picHArea * Rapw)) / 2);
-	       else
-		  *xTranslate = (int) ((wFrame - (picWArea * Raph)) / 2);
-	       break;
-	    case RealSize:
-	    case FillFrame:
-	    case XRepeat:
-	    case YRepeat:
-	       /* we center the picture in the box frame */
-	       *xTranslate = (wFrame - picWArea) / 2;
-	       *yTranslate = (hFrame - picHArea) / 2;
-	       break;
-	 }
-   if (picWArea > wFrame)
-     {
-	*picXOrg = -*xTranslate;
-	*xTranslate = 0;
-     }
-   if (picHArea > hFrame)
-     {
-	*picYOrg = -*yTranslate;
-	*yTranslate = 0;
-     }
+  /* the box has the wFrame, hFrame dimensions */
+  /* the picture has  picWArea, picHArea size */
+  *picXOrg = 0;
+  *picYOrg = 0;
+  *xTranslate = 0;
+  *yTranslate = 0;
+  switch (pres)
+    {
+    case ReScale:
+    case DefaultPres:
+      Rapw = (float) wFrame / (float) picWArea;
+      Raph = (float) hFrame / (float) picHArea;
+      if (Rapw <= Raph)
+	*yTranslate = (int) ((hFrame - (picHArea * Rapw)) / 2);
+      else
+	*xTranslate = (int) ((wFrame - (picWArea * Raph)) / 2);
+      break;
+    case RealSize:
+    case FillFrame:
+    case XRepeat:
+    case YRepeat:
+      /* we center the picture in the box frame */
+      *xTranslate = (wFrame - picWArea) / 2;
+      *yTranslate = (hFrame - picHArea) / 2;
+      break;
+    }
+  if (picWArea > wFrame)
+    {
+      *picXOrg = -*xTranslate;
+      *xTranslate = 0;
+    }
+  if (picHArea > hFrame)
+    {
+      *picYOrg = -*yTranslate;
+      *yTranslate = 0;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -802,7 +801,7 @@ PtrBox       box;
       picYOrg = 0;
     }
 
-#ifdef _WINDOWS 		 
+#ifdef _WINDOWS
   if (!TtIsTrueColor)
     {
       WIN_InitSystemColors (TtDisplay);
@@ -1069,40 +1068,10 @@ PtrBox       box;
           hrgn = (HRGN) 0;
 #endif /* _WINDOWS */
 	  break;
+
+	default: break;
 	}
     }
-}
-
-
-
-/*----------------------------------------------------------------------
-   IsValid retourne FALSE si le pixmap contenu dans imageDesc       
-   est vide. On retourne TRUE s'il est egal aux images     
-   predefinies BadPixmap.                                  
-   - if we use RealSize, we  return TRUE.                  
-   - if we use  ReScale, we return TRUE                    
-   the box have one of the two  dimensions a least equals  
-   to the one of the pixmap.                               
-   - if we use  ReScale FillFrame, we return TRUE if the   
-   frame box  has the same size than the pixmap in         
-   both directions.                                        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsValid (int wFrame, int hFrame, PictInfo* imageDesc)
-#else  /* __STDC__ */
-static ThotBool     IsValid (wFrame, hFrame, imageDesc)
-int                 wFrame;
-int                 hFrame;
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
-{
-  if (imageDesc->PicPixmap == None)
-    return (FALSE);
-  else if (imageDesc->PicPresent == ReScale &&
-	   (imageDesc->PicWArea != wFrame || imageDesc->PicHArea != hFrame))
-    return (FALSE);
-  else
-    return (TRUE);
 }
 
 
@@ -1624,7 +1593,17 @@ int                 frame;
   typeImage = imageDesc->PicType;
   GetPictureFileName (imageDesc->PicFileName, fileName);
 
+  /* the default presenation depends on the box type */
   pres = imageDesc->PicPresent;
+  if (pres == DefaultPres)
+    {
+      if (box->BxType == BoPicture)
+	/* an image is rescaled */
+	pres = ReScale;
+      else
+	/* a background image is repeated */
+	pres = FillFrame;
+    }
   /* resize plugins if necessary */
   if (typeImage >= InlineHandlers)
     {
@@ -1644,14 +1623,17 @@ int                 frame;
 	DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
-	  if (!IsValid (w, h, imageDesc))
+	  if (imageDesc->PicPixmap == None ||
+	      (pres == ReScale &&
+	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)))
 	    {
+	      /* need to load or to rescale the picture */
 	      LoadPicture (frame, box, imageDesc);
 	      picWArea = imageDesc->PicWArea;
 	      picHArea = imageDesc->PicHArea;
 	      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
 	    }
-	  if (imageDesc->PicPresent == RealSize && box->BxAbstractBox->AbLeafType == LtPicture)
+	  if (pres == RealSize && box->BxAbstractBox->AbLeafType == LtPicture)
 	    /* Center real sized images wihin their picture boxes */
 	    Picture_Center (picWArea, picHArea, w, h, pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
 	  
@@ -1888,8 +1870,16 @@ PictInfo           *imageDesc;
       /* Supported format */
       imageDesc->PicType = typeImage;
       pres = imageDesc->PicPresent;
-      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) &&
-	  pres == ReScale)
+      if (pres == DefaultPres)
+	{
+	  if (box->BxType == BoPicture)
+	    /* an image is rescaled */
+	    pres = ReScale;
+	  else
+	    /* a background image is repeated */
+	    pres = FillFrame;
+	}
+      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (box == NULL)
@@ -2031,7 +2021,7 @@ PictInfo           *imageDesc;
 	}
     }
 
-  if (imageDesc->PicPresent != ReScale || Printing)
+  if (pres != ReScale || Printing)
     {
       imageDesc->PicXArea = xFrame;
       imageDesc->PicYArea = yFrame;
@@ -2129,7 +2119,7 @@ PictureScaling      picPresent;
       i = (int) picPresent;
       break;
     default:
-      i = (int) RealSize;
+      i = (int) ReScale;
       break;
     }
   /* based on the function GetPictureHandlersList */
