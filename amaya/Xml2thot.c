@@ -3118,6 +3118,8 @@ const XML_Char **attlist;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
+   Element         savCurrentElement;
+   ThotBool        isRoot = FALSE;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementStart '%s'\n", name);
@@ -3125,7 +3127,10 @@ const XML_Char **attlist;
   
    /* Initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == WC_EOS)
-     strcpy (XMLrootName, (CHAR_T*) name);
+     {
+       strcpy (XMLrootName, (CHAR_T*) name);
+       isRoot = TRUE;
+     }
 
    /* Treatment for the GI */
    if (XMLcontext.parsingTextArea)
@@ -3177,6 +3182,12 @@ const XML_Char **attlist;
 	  StartOfXmlStartElement (bufName);
 	  
 	  /*-------  Treatment of the attributes -------*/
+	  if (isRoot)
+	    {
+	      savCurrentElement = XMLcontext.lastElement;
+	      XMLcontext.lastElement = rootElement;
+	    }
+
 	  nbatts = XML_GetSpecifiedAttributeCount (parser);
 	  while (*attlist != NULL)
 	    {
@@ -3207,6 +3218,9 @@ const XML_Char **attlist;
 		}
 	      attlist++;
 	    }
+	  if (isRoot)
+	    XMLcontext.lastElement = savCurrentElement;
+
 	  /* Restore the context (it may have been changed */
 	  /* by the treatment of the attributes) */
 	  currentParserCtxt = elementParserCtxt;
