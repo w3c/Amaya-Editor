@@ -6741,14 +6741,14 @@ void InitAmaya (NotifyEvent * event)
 #ifdef ANNOTATIONS
    ANNOT_Init ();
 #endif /* ANNOTATIONS */
-#ifdef BOOKMARKS
-   BM_Init ();
-#endif /* BOOKMARKS */
-
    /* initialize the libwww */
    QueryInit ();
    /* initialize the Amaya cache */
    InitAmayaCache ();
+#ifdef BOOKMARKS
+   BM_Init ();
+#endif /* BOOKMARKS */
+
 #ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));
