@@ -281,7 +281,6 @@ MENUS
 
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
-	view:1 Special button:BMakeID -> MakeIDMenu;
         view:1 Special Separator;
 	view:1 Special.Coptions button:BConfigGeneral -> ConfigGeneral;
 	view:1 Special.Coptions button:BConfigBrowse -> ConfigBrowse;
