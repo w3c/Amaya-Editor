@@ -10,7 +10,11 @@ CONST
 RULES
 
  HTML : BEGIN
+#ifdef COUGAR
+	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">\12';
+#else
 	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\12';
+#endif
 	Create '<html';
 	Create Attributes;
 	Create '>\12';
