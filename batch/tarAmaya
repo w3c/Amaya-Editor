@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=4.3
+AMAYAVERSION=4.3.1
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF"
@@ -23,6 +23,7 @@ echo "Plarform ------->" $MACH
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.kb \
    Amaya/config/amaya.keyboard \
+   Amaya/config/amaya.emacs |
    Amaya/config/amaya.profiles \
    Amaya/config/*thot.rc \
    Amaya/config/*-amayadialogue \
