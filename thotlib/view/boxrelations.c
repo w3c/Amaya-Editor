@@ -1016,10 +1016,10 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  x = x + pRefBox->BxVertRef;
 	  break;
 	case HorizMiddle:
-	  y = y + (pRefBox->BxH / 2);
+	  y = y + (pRefBox->BxHeight / 2);
 	  break;
 	case VertMiddle:
-	  x = x + (pRefBox->BxW / 2);
+	  x = x + (pRefBox->BxWidth / 2);
 	  break;
 	default:
 	  break;
