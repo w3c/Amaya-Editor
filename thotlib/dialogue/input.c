@@ -562,7 +562,7 @@ void CharTranslation (GdkEventKey * event, gpointer * data)
 
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
-   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK );
+   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
    if (event->state == state)
      {
        strncpy (string, event->string, 2);
@@ -580,8 +580,8 @@ void CharTranslation (GdkEventKey * event, gpointer * data)
    PicMask = 0;
    if (state & GDK_SHIFT_MASK)
       PicMask |= THOT_MOD_SHIFT;
-   if (state & GDK_LOCK_MASK)
-      PicMask |= THOT_MOD_SHIFT;
+   /*if (state & GDK_LOCK_MASK)
+     PicMask |= THOT_MOD_SHIFT;*/
    if (state & GDK_CONTROL_MASK)
       PicMask |= THOT_MOD_CTRL;
    if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
@@ -614,8 +614,8 @@ void CharTranslation (ThotKeyEvent *event)
    PicMask = 0;
    if (state & ShiftMask)
       PicMask |= THOT_MOD_SHIFT;
-   if (state & LockMask)
-      PicMask |= THOT_MOD_SHIFT;
+   /*if (state & LockMask)
+     PicMask |= THOT_MOD_SHIFT;*/
    if (state & ControlMask)
       PicMask |= THOT_MOD_CTRL;
    if (state & Mod1Mask || state & Mod4Mask)
