@@ -753,6 +753,7 @@ char               *fname;
 	     if (menuAction->AppFunction)
 	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, TRUE);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
+	     else
 	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, FALSE);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
 	     if (!menuAction->AppStandardName)
