@@ -464,12 +464,6 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
     }
   GL_SetupPixelFormat (hDC);
   hGLRC = wglCreateContext (hDC);
-  GL_Windows[frame] = hDC;
-  GL_Context[frame] = hGLRC;
-#ifdef _SHARELIST
-  if (GL_Context[1]) 
-    wglShareLists (GL_Context[1], hGLRC);
-#endif /*_SHARELIST*/
   if (wglMakeCurrent (hDC, hGLRC))
     {
       SetGlPipelineState ();
@@ -484,6 +478,12 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	    }
 	}
     }
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
+#ifdef _SHARELIST
+  if (GL_Context[1]) 
+    wglShareLists (GL_Context[1], hGLRC);
+#endif /*_SHARELIST*/
   ActiveFrame = frame;
 }
 
@@ -545,16 +545,22 @@ void InitDrawing (int style, int thick, int fg)
 	   glLineWidth ((GLfloat) 0.5); 
 	   glPointSize ((GLfloat) 0.5); 
 	 }
+     glDisable (GL_LINE_STIPPLE);
     }
   else
     {
       if (style == 3)
 	/* dotted */
-	dash[0] = 4;
+	  {
+    	glEnable (GL_LINE_STIPPLE);
+        glLineStipple (1, 0x1111); 
+	  }
       else
 	/* dashed */
-	dash[0] = 8;
-      dash[1] = 4;
+	  {
+	    glEnable (GL_LINE_STIPPLE);
+	    glLineStipple (1, 0x0F0F); 
+	  }
       if (thick)
 	{
 	  S_thick = thick;
@@ -566,8 +572,7 @@ void InitDrawing (int style, int thick, int fg)
 	  glLineWidth ((GLfloat) 0.5); 
 	  glPointSize ((GLfloat) 0.5); 
 	}
-     glEnable (GL_LINE_STIPPLE);
-     glLineStipple (2, *((int *) (&dash[0]))); 
+     
     }
   GL_SetForeground (fg);
 }
@@ -1598,6 +1603,7 @@ void GLResize (int width, int height, int x, int y)
   glLoadIdentity (); 
 
 }
+
 /*-----------------------------------
  gl_window_resize : Some video cards or software 
 implementations  mechanisms clears when resizing 
@@ -1605,6 +1611,7 @@ viewport so we redraw all
 ------------------------------------*/
 void gl_window_resize (int frame, int width, int height)
 {
+#ifdef _GTK
 #ifdef _GTK
   GtkWidget *widget;
 #endif /*_GTK*/
@@ -1632,6 +1639,7 @@ void gl_window_resize (int frame, int width, int height)
 	FrameRedraw (frame, width, height);
 	GL_realize (frame);	 
       }
+#endif /*_GTK*/
 
 }
 /*-----------------------------------

@@ -465,16 +465,15 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipYBegin = ymin;
      pFrame->FrClipYEnd = ymax;
 #else /*_GL*/
+	 
      BeginPaint (w, &ps);
-     GL_MakeCurrent (frame);	
-     GL_ActivateDrawing (frame);
+     GL_prepare (frame);
      DefRegion (frame, ps.rcPaint.left, 
 		ps.rcPaint.top, ps.rcPaint.right,
 		ps.rcPaint.bottom);
      RedrawFrameBottom (frame, 0, NULL);
-     /* glMatroxBUG (frame, x, y, width, height);	*/
+     /*glMatroxBUG (frame, x, y, width, height);	*/
      GL_Swap (frame);
-     GL_MakeCurrent (ActiveFrame);
      EndPaint (w, &ps);
 #endif /*_GL*/
    }
@@ -499,15 +498,17 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-   GL_MakeCurrent (frame);	
-   GLResize (width, height, 0 ,0);
-   /*Clear (frame, width, height, 0, 0);*/
-   GL_ActivateDrawing (frame);
-   /* need to recompute the content of the window */
-   RebuildConcreteImage (frame);    
-   GL_DrawAll (NULL, frame);
-   GL_Swap (frame);
-   glFinish();
+   if (GL_prepare (frame))
+   {
+     GLResize (width, height, 0 ,0);
+     /* need to recompute the content of the window */
+     DefRegion (frame, 0, 
+ 		0, width,
+ 		height);
+      RedrawFrameBottom (frame, 0, NULL);
+	  GL_realize (frame);
+	 GL_DrawAll (NULL, -1);
+   }
 #endif/*_GL*/
    /* recompute the scroll bars */
    UpdateScrollbars (frame);
@@ -775,7 +776,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	FrameRedraw (frame, width, height);
 	glFlush();
 	glFinish ();
-FrameTable[frame].DblBuffNeedSwap = TRUE;
+   FrameTable[frame].DblBuffNeedSwap = TRUE;
 	/*GL_Swap (frame);*/
       }
   return TRUE;
