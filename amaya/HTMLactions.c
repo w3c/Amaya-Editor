@@ -136,10 +136,12 @@ NotifyElement      *event;
    else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
        /* it is a double click on graphic submit element? */
-       elFound = TtaGetParent (event->element);
-       elType = TtaGetElementType (elFound);
-       if (elType.ElTypeNum == HTML_EL_Input)
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_NAME;
+       attr = TtaGetAttribute (event->element, attrType);
+       if (attr)
 	 {
+	   /* it's a graphic submit element */
 	   SubmitForm (event->document, event->element);
 	   return TRUE;
 	 }
