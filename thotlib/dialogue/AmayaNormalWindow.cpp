@@ -748,7 +748,8 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
   else
     ClosePanel();
 
-  event.Skip();
+  // do not skip this event because on windows, the callback is called twice
+  //event.Skip();
 }
 
 /*
