@@ -3114,183 +3114,179 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		      int xDelta, int spaceDelta, int frame)
 {
-   PtrTextBuffer       pNewBuff;
-   PtrBox              ibox1;
-   PtrBox              pParentBox;
-   AbDimension        *pDimAb;
-   PtrLine             pLi2;
-   int                 lostPixels;
-   int                 maxlostPixels;
-   int                 length;
-   int                 realLength = 0;
-   int                 width, maxLength;
-   int                 newIndex;
-   int                 nSpaces;
+  PtrTextBuffer       pNewBuff;
+  PtrBox              ibox1;
+  PtrBox              pParentBox;
+  AbDimension        *pDimAb;
+  PtrLine             pLi2;
+  int                 lostPixels;
+  int                 maxlostPixels;
+  int                 length;
+  int                 realLength = 0;
+  int                 width, maxLength;
+  int                 newIndex;
+  int                 nSpaces;
 
-   /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
-   while (pAb->AbBox->BxType == BoGhost)
-      pAb = pAb->AbEnclosing;
-   pParentBox = pAb->AbBox;
-
-   if (pLine != NULL)
-     {
-	pDimAb = &pAb->AbWidth;
-	/* C'est une ligne extensible --> on l'etend */
-	if (pParentBox->BxContentWidth)
-	  {
-	     /* Si le bloc de lignes deborde de sa dimension minimale */
-	     if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-		 && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
-	       {
-		  /* Il faut prendre la largeur du minimum */
-		  pParentBox->BxContentWidth = FALSE;
-		  RecomputeLines (pAb, NULL, NULL, frame);
-	       }
-	     else
-	       {
-		  ShiftLine (pLine, pAb, pBox, xDelta, frame);
-		  pLine->LiXMax = pLine->LiRealLength;
-		  ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, 0, 0, frame);
-	       }
-	  }
-	/* Si le bloc de lignes deborde de sa dimension minimale */
-	else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-		 && pLine->LiRealLength + xDelta > pParentBox->BxW)
-	  {
-	     /* Il faut prendre la largeur du contenu */
-	     pParentBox->BxContentWidth = TRUE;
-	     RecomputeLines (pAb, NULL, NULL, frame);
-	  }
-	/* C'est une ligne non extensible */
-	else
-	  {
-	     /* calcule la place qu'il reste dans la ligne courante */
-	     pLine->LiNSpaces += spaceDelta;
-	     maxlostPixels = pLine->LiNSpaces * SPACE_VALUE_MAX + xDelta;
-	     if (pLine->LiSpaceWidth > 0)
-	       {
-		  /* Line justifiee */
-		  lostPixels = BoxCharacterWidth (SPACE, pBox->BxFont);
-		  realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
-		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
-	       }
-	     else
-		lostPixels = pLine->LiXMax - pLine->LiRealLength;
-
-	     /* Est-ce que la boite debordait de la ligne ? */
-	     if (pBox->BxW - xDelta > pLine->LiXMax)
-	       {
-		 /* Pixels liberes dans la ligne */
-		  lostPixels = pLine->LiXMax - pBox->BxW;
-		  if (lostPixels > 0)
-		     RecomputeLines (pAb, pLine, NULL, frame);
-	       }
-	     /* Peut-on compresser ou completer la ligne ? */
-	     else if ((xDelta > 0 && xDelta <= lostPixels)
-		      || (xDelta < 0 && (lostPixels < maxlostPixels
-		  || (pLine->LiPrevious == NULL && pLine->LiNext == NULL))))
-		if (pLine->LiSpaceWidth == 0)
-		   ShiftLine (pLine, pAb, pBox, xDelta, frame);
-		else
-		  {
-		     CompressLine (pLine, xDelta, frame, spaceDelta);
-		     pLine->LiRealLength = realLength;
-		  }
-	     /* Peut-on eviter la reevaluation du bloc de lignes ? */
-	     else if (xDelta < 0)
-	       {
-
-		  /* Peut-on remonter le premier mot de la ligne courante ? */
-		  if (pLine->LiPrevious != NULL)
+  /* For ghost boxes go up to the block of lines */
+  while (pAb->AbBox->BxType == BoGhost)
+    pAb = pAb->AbEnclosing;
+  pParentBox = pAb->AbBox;
+  if (pLine)
+    {
+      pDimAb = &pAb->AbWidth;
+      if (pParentBox->BxContentWidth)
+	{
+	  /* the line can be extended */
+	  if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
+	      && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
+	    {
+	      /* The block  min width is larger than its inside width */
+	      /* use the min width */
+	      pParentBox->BxContentWidth = FALSE;
+	      RecomputeLines (pAb, NULL, NULL, frame);
+	    }
+	  else
+	    {
+	      ShiftLine (pLine, pAb, pBox, xDelta, frame);
+	      pLine->LiXMax = pLine->LiRealLength;
+	      ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, 0, 0, frame);
+	    }
+	}
+      else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
+	       && pLine->LiRealLength + xDelta > pParentBox->BxW)
+	{
+	  /* The block inside width is larger than its min width */
+	  /* use the inside width */
+	  pParentBox->BxContentWidth = TRUE;
+	  RecomputeLines (pAb, NULL, NULL, frame);
+	}
+      else
+	{
+	  /* cannot extend the line width */
+	  /* check the room is available in the current line */
+	  pLine->LiNSpaces += spaceDelta;
+	  maxlostPixels = pLine->LiNSpaces * SPACE_VALUE_MAX + xDelta;
+	  if (pLine->LiSpaceWidth > 0)
+	    {
+	      /* justified line */
+	      lostPixels = BoxCharacterWidth (SPACE, pBox->BxFont);
+	      realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
+	      lostPixels = pLine->LiXMax - pLine->LiMinLength;
+	    }
+	  else
+	    lostPixels = pLine->LiXMax - pLine->LiRealLength;
+	  
+	  if (pBox->BxW - xDelta > pLine->LiXMax)
+	    {
+	      /* The box too large */
+	      /* freed pixels in the line */
+	      lostPixels = pLine->LiXMax - pBox->BxW;
+	      if (lostPixels > 0)
+		RecomputeLines (pAb, pLine, NULL, frame);
+	    }
+	  else if ((xDelta > 0 && xDelta <= lostPixels) ||
+		   (xDelta < 0 && (lostPixels < maxlostPixels
+				   || (pLine->LiPrevious == NULL && pLine->LiNext == NULL))))
+	    /* compress or complete the current line */
+	    if (pLine->LiSpaceWidth == 0)
+	      ShiftLine (pLine, pAb, pBox, xDelta, frame);
+	    else
+	      {
+		CompressLine (pLine, xDelta, frame, spaceDelta);
+		pLine->LiRealLength = realLength;
+	      }
+	  else if (xDelta < 0)
+	    {
+	      /* Avoid to recompute the whole block of lines */
+	      /* try to move the first word into the previous line */
+	      if (pLine->LiPrevious)
+		{
+		  /* available width */
+		  maxLength = pLine->LiPrevious->LiXMax - pLine->LiPrevious->LiRealLength - SPACE_VALUE_MAX;
+		  if (pLine->LiFirstPiece)
+		    ibox1 = pLine->LiFirstPiece;
+		  else
+		    ibox1 = pLine->LiFirstBox;
+		  if (ibox1->BxWidth > maxLength)
 		    {
-		       /* Largeur restante */
-		       maxLength = pLine->LiPrevious->LiXMax - pLine->LiPrevious->LiRealLength - SPACE_VALUE_MAX;
-		       if (pLine->LiFirstPiece != NULL)
-			  ibox1 = pLine->LiFirstPiece;
-		       else
-			  ibox1 = pLine->LiFirstBox;
-		       if (ibox1->BxWidth > maxLength)
-			 {
+		      if (ibox1->BxAbstractBox->AbLeafType == LtText &&
+			  maxLength > 0)
+			{
+			  if (pLine->LiNSpaces == 0)
+			    /* No space in the line -> recompute lines */
+			    maxLength = 1;
+			  else
+			    {
+			      length = ibox1->BxNChars;
+			      /* look for a break */
+			      maxLength = SearchBreak (pLine, ibox1,
+						       maxLength, ibox1->BxFont,
+						       &length, &width, &nSpaces,
+						       &newIndex, &pNewBuff);
+			    }
+			  
+			  if (maxLength > 0)
+			    RecomputeLines (pAb, pLine->LiPrevious, NULL, frame);
+			}
+		      else
+			maxLength = 0;
+		    }
+		}
+	      else
+		maxLength = 0;
+	      
+	      /* try to move the last word into the next line */
+	      if (maxLength == 0)
+		{
+		  if (pLine->LiNext)
+		    {
+		      maxLength = pLine->LiXMax - pLine->LiRealLength - xDelta;
+		      pLi2 = pLine->LiNext;
+		      if (pLi2->LiFirstPiece != NULL)
+			ibox1 = pLi2->LiFirstPiece;
+		      else
+			ibox1 = pLi2->LiFirstBox;
+		      
+		      if (ibox1->BxWidth > maxLength)
+			{
 			  if (ibox1->BxAbstractBox->AbLeafType == LtText &&
 			      maxLength > 0)
 			    {
-			       /* Elimine le cas des lignes sans blanc */
-			       if (pLine->LiNSpaces == 0)
-				  maxLength = 1;  /* force la reevaluation */
-			       else
-				 {
-				    length = ibox1->BxNChars;
-				    /* regarde si on peut trouver une coupure*/
-				    maxLength = SearchBreak (pLine, ibox1,
-                                                maxLength, ibox1->BxFont,
-                                                &length, &width, &nSpaces,
-						&newIndex, &pNewBuff);
-				 }
-
-			       if (maxLength > 0)
-				  RecomputeLines (pAb, pLine->LiPrevious, NULL,
-						  frame);
-			    }
-			  else
-			     maxLength = 0;
-			 }
-		    }
-		  else
-		     maxLength = 0;
-
-		  /* Peut-on remonter le premier mot de la ligne suivante ? */
-		  if (maxLength == 0)
-		    {
-		      if (pLine->LiNext != NULL)
-			{
-			  maxLength = pLine->LiXMax - pLine->LiRealLength - xDelta;
-			  pLi2 = pLine->LiNext;
-			  if (pLi2->LiFirstPiece != NULL)
-			    ibox1 = pLi2->LiFirstPiece;
-			  else
-			    ibox1 = pLi2->LiFirstBox;
-			  
-			  if (ibox1->BxWidth > maxLength)
-			    {
-			      if (ibox1->BxAbstractBox->AbLeafType == LtText &&
-				  maxLength > 0)
-				{
-				  /* Elimine le cas des lignes sans blanc */
-				  if (pLi2->LiNSpaces == 0)
-				    maxLength = 1; /* force la reevaluation */
-				  else
-				    {
-				      length = ibox1->BxNChars;
-				      /* regarde si on peut trouver une
-					 coupure */
-				      maxLength = SearchBreak (pLi2, ibox1,
-						  maxLength, ibox1->BxFont,
-						  &length, &width, &nSpaces,
-						  &newIndex, &pNewBuff);
-				    }
-				}
+			      if (pLi2->LiNSpaces == 0)
+				/* No space in the line -> recompute lines */
+				maxLength = 1;
 			      else
-				maxLength = 0;
+				{
+				  length = ibox1->BxNChars;
+				  /* look for a break */
+				  maxLength = SearchBreak (pLi2, ibox1,
+							   maxLength, ibox1->BxFont,
+							   &length, &width, &nSpaces,
+							   &newIndex, &pNewBuff);
+				}
 			    }
-			}
-		      
-		      if (maxLength > 0)
-			RecomputeLines (pAb, pLine, NULL, frame);
-		      else if (pLine->LiSpaceWidth == 0)
-			ShiftLine (pLine, pAb, pBox, xDelta, frame);
-		      else
-			{
-			  CompressLine (pLine, xDelta, frame, spaceDelta);
-			  pLine->LiRealLength = realLength;
+			  else
+			    maxLength = 0;
 			}
 		    }
-		  else
+		  
+		  if (maxLength > 0)
 		    RecomputeLines (pAb, pLine, NULL, frame);
-	       }
-	     else
-	       RecomputeLines (pAb, pLine, NULL, frame);
-	  }
-     }
+		  else if (pLine->LiSpaceWidth == 0)
+		    ShiftLine (pLine, pAb, pBox, xDelta, frame);
+		  else
+		    {
+		      CompressLine (pLine, xDelta, frame, spaceDelta);
+		      pLine->LiRealLength = realLength;
+		    }
+		}
+	      else
+		RecomputeLines (pAb, pLine, NULL, frame);
+	    }
+	  else
+	    RecomputeLines (pAb, pLine, NULL, frame);
+	}
+    }
 }
 
 

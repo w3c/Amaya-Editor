@@ -2044,9 +2044,10 @@ PtrLine SearchLine (PtrBox pBox)
    pAb = NULL;
    if (pBox)
      {
-       pAb = pBox->BxAbstractBox->AbEnclosing;
+       pAb = pBox->BxAbstractBox;
        if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
 	 pAb = NULL;
+       pAb = pAb->AbEnclosing;
      }
 
    /* look for an enclosing block of lines */
@@ -2054,10 +2055,9 @@ PtrLine SearchLine (PtrBox pBox)
      {
 	if (pAb->AbBox == NULL)
 	   pAb = NULL;
-	/* Est-ce une boite fille d'une boite eclatee ? */
 	else if (pAb->AbBox->BxType == BoGhost)
 	  {
-	     /* Si oui on saute les niveaux des paves eclates */
+	     /* It's a ghost, look for the enclosing block */
 	     still = TRUE;
 	     while (still)
 	       {
@@ -2073,8 +2073,8 @@ PtrLine SearchLine (PtrBox pBox)
 		     still = FALSE;
 	       }
 	  }
-	/* Est-ce que la boite est directement incluse dans une ligne */
 	else if (!pAb->AbInLine)
+	  /* the box in not within a block of lines */
 	   pAb = NULL;
      }
 
@@ -2084,15 +2084,13 @@ PtrLine SearchLine (PtrBox pBox)
 	pLine = pCurrentBox->BxFirstLine;
 	/* Look for the line which includes the current box */
 	still = TRUE;
-	while (still && pLine != NULL)
+	while (still && pLine)
 	  {
-	     /* On recherche la boite dans la ligne */
-	     if (pLine->LiFirstPiece != NULL)
+	     /* Locate the box in the set of lines */
+	     if (pLine->LiFirstPiece)
 		pBoxInLine = pLine->LiFirstPiece;
 	     else
 		pBoxInLine = pLine->LiFirstBox;
-
-	     /* Boucle sur les boites de la ligne */
 	     if (pBoxInLine)
 	       do
 		 {
@@ -2103,24 +2101,24 @@ PtrLine SearchLine (PtrBox pBox)
 		     pBoxPiece = pBoxInLine;
 		  if (pBoxPiece == pBox)
 		    {
-		       /* On a trouve la ligne */
+		       /* the line is founs */
 		       still = FALSE;
 		       pBoxPiece = pLine->LiLastBox;
 		    }
+		  /* else get next box */
 		  else if ((pBoxPiece->BxType == BoScript ||
 			    pBoxPiece->BxType == BoPiece) &&
 			   pBoxPiece->BxNexChild)
 		    pBoxInLine = pBoxPiece->BxNexChild;
-		  /* Sinon on passe a la boite suivante */
 		  else
 		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
 		 }
 	       while (pBoxPiece != pLine->LiLastBox
 		      && pBoxPiece != pLine->LiLastPiece
-		      && pBoxInLine != NULL);
+		      && pBoxInLine);
 
 	     if (still)
-	       /* On passe a la ligne suivante */
+	       /* get next line */
 	       pLine = pLine->LiNext;
 	  }
      }
