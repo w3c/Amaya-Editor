@@ -1,0 +1,107 @@
+! file MathML.trans : transformation in MathML
+! see HTML.trans for a description of Trans language
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!surround an element with a root
+root : *;
+	{
+	*>MROOT:*;
+	*>MROOT:MTEXT." ";
+	}
+
+!surround an element with a square root
+square root: *;
+        {
+        *> MSQRT:*;
+        }
+
+!surround a set of elements with a square root
+square root: *,*+;
+        {
+        *> MSQRT.MROW:*;
+        }
+
+! removes a square root
+remove sqrt: MSQRT{*+};
+        {
+        *> :*;
+        }
+
+!surround element(s) with a fraction
+fraction: (num:*,den:*) | MROW{num:*,den:*} | *;
+        {
+        num > MFRAC:*;
+        den > MFRAC:*;
+        *> MFRAC:*;
+        *> MFRAC:MTEXT." ";
+        }
+
+!removes a fraction level, replacing it by mrow
+remove frac: MFRAC{(num:*,den:*)|numalone:*};
+        {
+        num > MROW:*;
+        den > MROW:*;
+        numalone > :*;
+        }
+
+
+!surroud element with a subsup
+add subsup:*;
+	{
+	* > MSUBSUP:*;
+	* > MSUBSUP:MTEXT." ";
+	* > MSUBSUP:MTEXT." ";
+	}
+
+!surroud element with a sub
+add subscript:*;
+	{
+	* > MSUB:*;
+	* > MSUB:MTEXT." ";
+	}
+
+!surroud element with a sup
+add superscript:*;
+	{
+	* > MSUP:*;
+	* > MSUP:MTEXT." ";
+	}
+
+!changes MSUB in MSUP
+superscript:MSUB;
+	{
+	MSUB > MSUP;
+	}
+
+!changes MSUP in MSUB
+subscript:MSUP;
+	{
+	MSUP > MSUB;
+	}
+
+!changes MSUB or MSUP in MSUBSUP
+subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
+	{
+	base > MSUBSUP:*;
+	sup > MSUBSUP:MTEXT." ";
+	sup > MSUBSUP:*;
+	sub > MSUBSUP:*;
+	sub > MSUBSUP:MTEXT." ";
+	}
+
+! removes a Row level
+remove row: MROW{*+};
+        {
+        *> :*;
+        }
+
+
+!does not work!!!
+!parenthesise: row:MROW | *;
+!        {
+!        *>:MF."(";
+!        *>:*;
+!        *>:MF.")";
+!        }
+

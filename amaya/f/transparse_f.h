@@ -7,12 +7,14 @@
 #ifdef __STDC__
 
 extern void FreeList ( strListSymb * pl );
-extern int ppStartParser ( char *name );
+extern int ppStartParser ( char *name,
+                           strTransSet **resTrSet );
 
 #else /* __STDC__ */
 
 extern void FreeList (/* strListSymb * pl */);
-extern int ppStartParser (/* char *name */);
+extern int ppStartParser (/* char *name,
+                             strTranSet **resTrSet */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

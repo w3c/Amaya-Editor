@@ -17,6 +17,8 @@
 /* a converter which reads a .trans file and creates the trans tables     */
 /* Without this option, it creates a function ppStartParser that parses a   */
 /* trans file and displays the internal representation of transformations.  */
+/* !!!!!! WARNING : It does not works due to lack of time for maintening */
+/* this code !!!!!!! */ 
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -58,6 +60,7 @@ static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
 static parChoice   *ppLastChoice;
 static strTransDesc   *ppTrans;	/* current transformation descriptor */
+static strTransSet    *ppTransSet; /* current transformation set */
 static strSymbDesc    *ppSymb;	/* current pattern symbol descriptor */
 static strAttrDesc    *ppAttr;	/* attribute descriptor */
 static strNodeDesc    *ppNode;	/* node descriptor */
@@ -83,28 +86,28 @@ static State        returnState;	/* return state from subautomaton */
 #include "transparse_f.h"
 
 /*----------------------------------------------------------------------
-  Init all transformation of the environement to valid,
-   sets the value  strMatchEnv.MaxDepth 
+  Init all transformation of the transformation set to valid,
+   sets the value  transSet.MaxDepth 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetTransValid (strTransDesc * trans)
+static void         SetTransValid (strTransSet  * transSet)
 #else
-static void         SetTransValid (trans)
-strTransDesc          *trans;
+static void         SetTransValid (transSet)
+strTransSet          *transSet;
 
 #endif
 {
    strTransDesc          *td;
    strSymbDesc           *sd;
 
-   td = trans;
+   td = transSet->Transformations;
    while (td)
      {
 	if (!(td->IsActiveTrans))
 	  {
 	     td->IsActiveTrans = TRUE;
-	     if (td->PatDepth > strMatchEnv.MaxDepth)
-		strMatchEnv.MaxDepth = td->PatDepth;
+	     if (td->PatDepth > transSet->MaxDepth)
+		transSet->MaxDepth = td->PatDepth;
 	     sd = td->Symbols;
 	     while (sd)
 	       {
@@ -915,8 +918,8 @@ unsigned char       c;
 	NewSymbol ();
 	AddTerminal (ppChoice);
 	/* check if the current depth is the maximal depth */
-	if (patDepth > strMatchEnv.MaxDepth)
-	   strMatchEnv.MaxDepth = patDepth;
+	if (patDepth > ppTransSet->MaxDepth)
+	   ppTransSet->MaxDepth = patDepth;
 	if (patDepth > ppTrans->PatDepth)
 	   ppTrans->PatDepth = patDepth;
 	patDepth--;
@@ -1781,10 +1784,10 @@ unsigned char       c;
    ppTrans->RootDesc->Next = NULL;
 
    /* inserts the new transformation in the list of transformations */
-   td = strMatchEnv.Transformations;
-   strMatchEnv.NbTrans++;
+   td = ppTransSet->Transformations;
+   ppTransSet->NbTrans++;
    if (td == NULL)
-      strMatchEnv.Transformations = ppTrans;
+      ppTransSet->Transformations = ppTrans;
    else
      {
 	while (td->Next != NULL)
@@ -2287,16 +2290,16 @@ static void         initpparse ()
    strTransDesc          *td, *td2;
 
    /* frees old transformation descriptors */
-   td = strMatchEnv.Transformations;
+   td = ppTransSet->Transformations;
    while (td)
      {
 	td2 = td->Next;
 	FreeTrans (td);
 	td = td2;
      }
-   strMatchEnv.NbTrans = 0;
-   strMatchEnv.MaxDepth = 0;
-   strMatchEnv.Transformations = NULL;
+   ppTransSet->NbTrans = 0;
+   ppTransSet->MaxDepth = 0;
+   ppTransSet->Transformations = NULL;
 }
 
 
@@ -2304,11 +2307,11 @@ static void         initpparse ()
    	ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ppStartParser (char *name)
+int                 ppStartParser (char *name, strTransSet **resTrSet)
 #else
-int                 ppStartParser (name)
+int                 ppStartParser (name, resTrSet)
 char               *name;
-
+strTransSet        **resTrSet;
 #endif
 {
    char                msg[200];
@@ -2326,9 +2329,26 @@ char               *name;
 #endif
 
 #ifndef PPSTANDALONE
+   /* searches if a transformation set is already allocated */
+   /* for the file to be parsed */
+   ppTransSet = strMatchEnv.TransSets;
+   while (ppTransSet != NULL && (strcmp (ppTransSet->TransFileName, name) != 0))
+     ppTransSet = ppTransSet->Next;
+   if (ppTransSet == NULL)
+     {
+       ppTransSet = TtaGetMemory (sizeof (strTransSet));
+       strcpy (ppTransSet->TransFileName, name);
+       ppTransSet->timeLastWrite = (time_t) 0;
+       ppTransSet->NbTrans = 0;
+       ppTransSet->MaxDepth = 0;
+       ppTransSet->Transformations = NULL;
+       ppTransSet->Next = strMatchEnv.TransSets;
+       strMatchEnv.TransSets = ppTransSet;
+     }
+
    /* build the transformation file name from schema directory and schema name */
    
-   TtaGetSchemaPath(pathes,MAX_LENGTH);
+   TtaGetSchemaPath (pathes, MAX_LENGTH);
    cour = pathes;
    while (!found && cour != NULL)
      {
@@ -2349,19 +2369,20 @@ char               *name;
 	if (!found)
 	   cour = (char *)(next+1);
      }
+   
    /* check if the file is newer than last read */
    StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
    
    status = stat (fileName, StatBuffer);
    if (status != -1)
      {
-	if (StatBuffer->st_mtime == timeLastWrite)
+	if (StatBuffer->st_mtime == ppTransSet->timeLastWrite)
 	/* the file is unchanged, activing all the transformations */
-	   SetTransValid (strMatchEnv.Transformations);
+	   SetTransValid (ppTransSet);
 	else
 	  {
        	/* the file xxx.trans has been touched, parsing it */
-	     timeLastWrite = StatBuffer->st_mtime;
+	     ppTransSet->timeLastWrite = StatBuffer->st_mtime;
 	     infile = TtaReadOpen(fileName);
 #else
    infile = fopen (name, "r");
@@ -2400,6 +2421,10 @@ char               *name;
 	   	fclose (infile);
   	       }
 #endif
+   if (!ppError)
+     *resTrSet = ppTransSet;
+   else
+     *resTrSet = NULL;
    return !ppError;
 }
 

@@ -161,20 +161,33 @@ typedef struct _TransDesc
   }
 strTransDesc;
 
+typedef struct _TransSet
+{
+  /* name of the transformation set (eg, name of file without suffix .trans) */
+  char		      TransFileName [20];
+  time_t	      timeLastWrite;
+  /* number of transformations */
+  int                 NbTrans;
+  /* patterns max depth */
+  int                 MaxDepth;
+  /* transformation descriptor list */
+  strTransDesc       *Transformations;
+  /* next set */
+  struct _TransSet   *Next;
+}
+strTransSet;
+
 /* transformation environement */
 struct _strMatchEnv
-  {
+{
 #ifndef PPSTANDALONE
-     StructureTree       SourceTree;
-     strListElem        *ListSubTrees;
+  StructureTree       SourceTree;
+  strListElem        *ListSubTrees;
 #endif
-     /* number of transformations */
-     int                 NbTrans;
-     /* patterns max depth*/
-     int                 MaxDepth;
-     strTransDesc       *Transformations;
-  }
+  strTransSet	     *TransSets; 
+}
 strMatchEnv;
+
 
 
 
@@ -190,9 +203,6 @@ int                 TRANSDIAL;
 #define TRANS_MSG_MAX 1
 #define TransMenu 1
 #define MAX_TRANS_DLG 2
-
-/*last modification date of transformation resource file */
-time_t              timeLastWrite;
 
 #endif
 #endif /* _TRANS_H__ */
