@@ -11,11 +11,24 @@ AMAYA_JAVA_INCLUDES= -I$(THOTDIR)/javalib -I$(THOTDIR)/javalib/f
 
 AMAYA_JAVA_OBJ=
 
+# Old (pre 0.9.1)
+#AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
+#    ../libkaffe_vm.a ../libkaffe_bissawt.a ../libkaffe_agent.a \
+#    ../libkaffe_net.a ../libkaffe_native.a
+#
+#AMAYA_JAVA_EXTRA_LIBS=
+#
+
 AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
-    ../libkaffe_vm.a ../libkaffe_bissawt.a ../libkaffe_agent.a \
-    ../libkaffe_net.a ../libkaffe_native.a
+    ../libkaffevm.a ../libagent.a \
+    ../libnet.a ../libnative.a
 
 AMAYA_JAVA_EXTRA_LIBS=
+
+# 0.9.2 shared ...
+#AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a
+#
+#AMAYA_JAVA_EXTRA_LIBS= -L../bin -lkaffevm -lagent -lnet -lnative -lzip
 
 AMAYA_JAVA_SRC= java_stubs
 
@@ -27,7 +40,7 @@ java_stubs :
 ../javalib/libThotJava.a ../javalib/libAmayaJava.a : java_force
 	@(cd ../javalib ; make libThotJava libAmayaJava)
 
-../libkaffe_bissawt.a ../libkaffe_vm.a ../libkaffe_native.a ../libkaffe_agent.a ../libkaffe_net.a :
+../libkaffevm.a ../libnative.a ../libagent.a ../libnet.a :
 	@(cd .. ;  make kaffe)
 
 AMAYA_JAVA_INSTALL=amaya_java_install

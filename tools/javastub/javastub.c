@@ -65,7 +65,8 @@ typedef struct _Type {
 int nbTypes = 5;
 Type tabType[1000] = {
 { 0, TYPE_IN, "void",	"",		"void",			NULL},
-{ 0, TYPE_IN, "boolean","boolean",	"jint",			NULL},
+{ 0, TYPE_IN, "boolean","boolean",	"jbool",		NULL},
+{ 0, TYPE_IN, "char",	"char",		"jchar",		NULL},
 { 0, TYPE_IN, "int",	"int",		"jint",			NULL},
 { 1, TYPE_IN, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
 { 1, TYPE_OUT,"char",	"StringBuffer",	"struct Hjava_lang_StringBuffer*", "java_lang_StringBuffer"},
@@ -1038,13 +1039,19 @@ void dump_stubs(FILE *out) {
 	rt = &tabType[f->type];
 
         fprintf(out,"/*\n * Java to C function %s stub.\n */\n",f->name);
-	fprintf(out,"%s\n%s_%s(struct H%s* none", rt->itype, classname,
+#if 0
+        /* Pre kaffe-0.9.2 */
+	fprintf(out,"%s\n%s_%s(struct H%s* none, ", rt->itype, classname,
 	       f->name, classname);
+#else
+	fprintf(out,"%s\n%s_%s(", rt->itype, classname,
+	       f->name);
+#endif
 	for (n = 0;n < f->nb_args;n++) {
 	    a = &f->args[n];
 	    t = &tabType[a->type];
 
-	    fprintf(out,", ");
+	    if (n != 0) fprintf(out,", ");
 	    fprintf(out,"%s ", t->itype);
 	    if (t->convert != NULL)
 		fprintf(out,"j");

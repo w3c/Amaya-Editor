@@ -3,7 +3,7 @@
 
 void register_biss_awt_API_stubs(void)
 {
-#ifndef _WINDOWS
+#ifndef JAVA_NO_AWT
       addNativeMethod("biss_awt_kernel_NativeLib_initStdColor",
 		      biss_awt_kernel_NativeLib_initStdColor);
       addNativeMethod("biss_awt_kernel_NativeLib_getNextEvent",

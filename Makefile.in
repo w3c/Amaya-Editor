@@ -242,6 +242,9 @@ kaffe_install:
 	@$(ECHO) Cleaning temp $(KAFFE) files
 	@($(RM) -r share man )
 
+#	@($(CP) libagent* libkaffevm* libnative* libnet* libzip* bin)
+#	@($(RM) libagent* libkaffevm* libnative* libnet* libzip*)
+
 kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
 	@(echo $(KAFFE) reinstalled)
 

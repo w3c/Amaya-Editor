@@ -20,6 +20,9 @@
 static int JavaEventLoopInitialized =0;
 int x_window_socket;
 
+/* Appeared with Kaffe-0.9.2 */
+extern char *realClassPath;
+
 /*
  * If DoJavaSelectPoll is selected, any JavaSelectCall on the
  * x-window socket will fail with value -1 if BreakJavaSelectPoll
@@ -246,6 +249,20 @@ ThotAppContext app_ctx;
     if (env_value)
        strcat(new_env, env_value);
     putenv(TtaStrdup(new_env));
+
+    /*
+     * setup the CLASSPATH value for Kaffe.
+     */
+    strcpy(new_env,"");
+    env_value  = TtaGetEnvString("CLASSPATH");
+    if (env_value)
+       strcat(new_env, env_value);
+    env_value = getenv("CLASSPATH");
+    if (env_value) {
+       strcat(new_env,":");
+       strcat(new_env,env_value);
+    }
+    realClassPath = TtaStrdup(new_env);
 
     /*
      * Register the X-Window socket as an input channel

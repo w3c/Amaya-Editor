@@ -4,7 +4,7 @@
 # Indir retval C type     Java type  Java internal   convert?
 #
 #  To complete java types handled by javastubs
-     0     0   char          char       int
+     0     0   char          char       jchar
      0     0   unsigned      int        jint
 #  These are in fact enums
      0     0   AccessRight   int        jint
@@ -21,7 +21,7 @@
 #  These are true ints
      0     0   Document      int        jint
      0     0   View          int        jint
-     0     0   Language      char       jint
+     0     0   Language      char       jchar
      0     0   Pixel         int        jint
 #  Tricky : interfacing directy with objects when using
 #  pointer to objects.

@@ -56,7 +56,7 @@ include .depends
 
 force :
 
-../bin/str : force
+../bin/str :
 	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
 
 ../bin/tra :

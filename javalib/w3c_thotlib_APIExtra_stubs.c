@@ -32,7 +32,7 @@ w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* req,
  * The C Callback interface.
  */
 void
-w3c_thotlib_Extra_Java2CCallback(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_Java2CCallback( /* struct Hw3c_thotlib_Extra* none, */
                              struct Hjava_lang_Object* arg, jlong callback)
 {
     Java2CCallback callback_func = (Java2CCallback)
@@ -47,7 +47,7 @@ w3c_thotlib_Extra_Java2CCallback(struct Hw3c_thotlib_Extra* none,
  * Call the poll loop.
  */
 void
-w3c_thotlib_Extra_JavaPollLoop(struct Hw3c_thotlib_Extra* none)
+w3c_thotlib_Extra_JavaPollLoop( /* struct Hw3c_thotlib_Extra* none */)
 {
     JavaThotlibLock();
     JavaPollLoop();
@@ -58,7 +58,7 @@ w3c_thotlib_Extra_JavaPollLoop(struct Hw3c_thotlib_Extra* none)
  * Stop a poll loop.
  */
 void
-w3c_thotlib_Extra_JavaStopPoll(struct Hw3c_thotlib_Extra* none)
+w3c_thotlib_Extra_JavaStopPoll( /* struct Hw3c_thotlib_Extra* none */)
 {
     JavaStopPoll();
 }
@@ -67,7 +67,7 @@ w3c_thotlib_Extra_JavaStopPoll(struct Hw3c_thotlib_Extra* none)
  * Call a Java Applet entry point.
  */
 jint
-w3c_thotlib_Extra_JavaStartApplet(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_JavaStartApplet( /* struct Hw3c_thotlib_Extra* none, */
                               struct Hjava_lang_String* class, 
 			      struct Hjava_lang_String* signature,
 			      jint doc,
@@ -95,7 +95,7 @@ w3c_thotlib_Extra_JavaStartApplet(struct Hw3c_thotlib_Extra* none,
  * Flush the X-Windows stream.
  */
 void
-w3c_thotlib_Extra_JavaXFlush(struct Hw3c_thotlib_Extra* none)
+w3c_thotlib_Extra_JavaXFlush( /* struct Hw3c_thotlib_Extra* none */)
 {
 #ifndef _WINDOWS
     XFlush(TtaGetCurrentDisplay());
@@ -262,7 +262,7 @@ w3c_thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
  */
 
 void
-w3c_thotlib_Extra_JavaRegisterAction(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_JavaRegisterAction( /* struct Hw3c_thotlib_Extra* none, */
                                  struct Hw3c_thotlib_Action* handler,
 				 struct Hjava_lang_String* actionName)
 {
@@ -279,7 +279,7 @@ w3c_thotlib_Extra_JavaRegisterAction(struct Hw3c_thotlib_Extra* none,
 }
 
 void
-w3c_thotlib_Extra_JavaRegisterMenuAction(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_JavaRegisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
                                  struct Hw3c_thotlib_Action* handler,
 				 struct Hjava_lang_String* actionName)
 {
@@ -300,7 +300,7 @@ w3c_thotlib_Extra_JavaRegisterMenuAction(struct Hw3c_thotlib_Extra* none,
  */
 
 void
-w3c_thotlib_Extra_JavaUnregisterAction(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_JavaUnregisterAction( /* struct Hw3c_thotlib_Extra* none, */
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -314,7 +314,7 @@ w3c_thotlib_Extra_JavaUnregisterAction(struct Hw3c_thotlib_Extra* none,
 }
 
 void
-w3c_thotlib_Extra_JavaUnregisterMenuAction(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_JavaUnregisterMenuAction( /* struct Hw3c_thotlib_Extra* none, */
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -333,9 +333,9 @@ w3c_thotlib_Extra_JavaUnregisterMenuAction(struct Hw3c_thotlib_Extra* none,
  */
 
 void
-w3c_thotlib_Extra_AddEditorActionEvent(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_AddEditorActionEvent( /* struct Hw3c_thotlib_Extra* none, */
        struct Hjava_lang_String* actionName, jint eventType,
-       jint typeId, jint /* bool */ pre) {
+       jint typeId, jbool pre) {
     char actionname[300];
     boolean is_pre;
     PtrEventsSet EditorEvents;
@@ -356,10 +356,10 @@ w3c_thotlib_Extra_AddEditorActionEvent(struct Hw3c_thotlib_Extra* none,
 }
 
 void
-w3c_thotlib_Extra_AddSSchemaActionEvent(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_AddSSchemaActionEvent( /* struct Hw3c_thotlib_Extra* none, */
        struct Hjava_lang_String* DTDName,
        struct Hjava_lang_String* actionName, jint eventType,
-       jint typeId, jint /* bool */ pre) {
+       jint typeId, jbool pre) {
     char actionname[300];
     char dtdname[300];
     boolean is_pre;
@@ -383,7 +383,7 @@ w3c_thotlib_Extra_AddSSchemaActionEvent(struct Hw3c_thotlib_Extra* none,
 }
 
 void
-w3c_thotlib_Extra_TtaGetElementType(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaGetElementType( /* struct Hw3c_thotlib_Extra* none, */
 		struct Hw3c_thotlib_ElementType* elType, jlong el) {
     ElementType et;
 
@@ -394,7 +394,7 @@ w3c_thotlib_Extra_TtaGetElementType(struct Hw3c_thotlib_Extra* none,
 }
 
 struct Hjava_lang_String*
-w3c_thotlib_Extra_TtaGetElementTypeName(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaGetElementTypeName( /* struct Hw3c_thotlib_Extra* none, */
 		jlong sschema, jint type) {
     char *res;
     ElementType et;
@@ -411,7 +411,7 @@ w3c_thotlib_Extra_TtaGetElementTypeName(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewAttribute(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaNewAttribute( /* struct Hw3c_thotlib_Extra* none, */
 		struct Hw3c_thotlib_AttributeType* atType) {
     AttributeType att;
     Attribute at;
@@ -425,7 +425,7 @@ w3c_thotlib_Extra_TtaNewAttribute(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaGetAttribute(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaGetAttribute( /* struct Hw3c_thotlib_Extra* none, */
 		jlong element, struct Hw3c_thotlib_AttributeType* atType) {
     AttributeType att;
     Attribute at;
@@ -440,7 +440,7 @@ w3c_thotlib_Extra_TtaGetAttribute(struct Hw3c_thotlib_Extra* none,
 }
 
 void
-w3c_thotlib_Extra_TtaSearchAttribute(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaSearchAttribute( /* struct Hw3c_thotlib_Extra* none, */
 		struct Hw3c_thotlib_AttributeType* atType, jint scope,
 		jlong element, struct Hw3c_thotlib_Element* el,
 		struct Hw3c_thotlib_Attribute* at) {
@@ -460,7 +460,7 @@ w3c_thotlib_Extra_TtaSearchAttribute(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaSearchTypedElement(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaSearchTypedElement( /* struct Hw3c_thotlib_Extra* none, */
 		struct Hw3c_thotlib_ElementType* elType, jint scope,
 		struct Hw3c_thotlib_Element* el) {
     ElementType lelt;
@@ -476,7 +476,7 @@ w3c_thotlib_Extra_TtaSearchTypedElement(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewElement(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaNewElement( /* struct Hw3c_thotlib_Extra* none, */
 		jint document, struct Hw3c_thotlib_ElementType* elType) {
     ElementType elt;
     Element el;
@@ -490,7 +490,7 @@ w3c_thotlib_Extra_TtaNewElement(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaNewTree(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaNewTree( /* struct Hw3c_thotlib_Extra* none, */
 		jint document, struct Hw3c_thotlib_ElementType* elType,
 		struct Hjava_lang_String* jlabel) {
     ElementType elt;
@@ -512,7 +512,7 @@ w3c_thotlib_Extra_TtaNewTree(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaCreateDescent(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaCreateDescent( /* struct Hw3c_thotlib_Extra* none, */
 		jint document, jlong element,
 		struct Hw3c_thotlib_ElementType* elType) {
     ElementType elt;
@@ -527,7 +527,7 @@ w3c_thotlib_Extra_TtaCreateDescent(struct Hw3c_thotlib_Extra* none,
 }
 
 jlong
-w3c_thotlib_Extra_TtaCreateDescentWithContent(struct Hw3c_thotlib_Extra* none,
+w3c_thotlib_Extra_TtaCreateDescentWithContent( /* struct Hw3c_thotlib_Extra* none, */
 		jint document, jlong element,
 		struct Hw3c_thotlib_ElementType* elType) {
     ElementType elt;
