@@ -1627,7 +1627,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 	    {
 	      if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
 		/* the outside width is constrained */
-		ResizeWidth (pBox, pBox, NULL, -i-j, 0, 0, 0, frame);
+		ResizeWidth (pBox, pBox, NULL, -i-j, i, j, 0, frame);
 	      else
 		/* the inside width is constrained */
 		ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
@@ -1643,7 +1643,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 	    {
 	      if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
 		/* the outside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, -i-j, 0, 0, frame);
+		ResizeHeight (pBox, pBox, NULL, -i-j, i, j, frame);
 	      else
 		/* the inside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
@@ -2062,8 +2062,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	}
 
-if (!strcmp (pAb->AbElement->ElLabel, "L94"))
-  printf ("InitialBuild \n");
       /* Dimensionnement de la boite par contraintes */
       /* Il faut initialiser le trace reel et l'indication */
       /* des reperes inverses (en cas de boite elastique)  */

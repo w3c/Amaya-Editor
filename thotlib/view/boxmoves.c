@@ -1878,6 +1878,10 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom,
   if (pAb && !pAb->AbDead)
     {
       pParent = pAb->AbEnclosing;
+      /* check if there are enclosing ghost boxes */ 
+      while (pParent && pParent->AbBox &&
+	     pParent->AbBox->BxType == BoComplete)
+	pParent = pParent->AbEnclosing;
       if (pParent && pParent->AbBox &&
 	     (pParent->AbBox->BxType == BoGhost ||
 	      pParent->AbBox->BxType == BoFloatGhost))
@@ -2009,15 +2013,15 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
 
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
-  if (pCurrentAb->AbMBPChange || l || r)
-    /* margins borders and are not interpreted yet */
-    diff = l + extraL + r + extraR;
-  else
+  if (!pCurrentAb->AbMBPChange && delta)
     {
       extraL += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       extraR += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
       diff = pBox->BxW + extraL + extraR - pBox->BxWidth;
     }
+  else
+    /* margins borders and are not interpreted yet */
+    diff = l + extraL + r + extraR;
 
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
@@ -2551,15 +2555,15 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
 
   GetExtraMargins (pBox, NULL, &extraT, &extraB, &i, &j);
-  if (pCurrentAb->AbMBPChange || t || b)
-    /* margins borders and are not interpreted yet */
-    diff = t + extraT + b + extraB;
-  else
+  if (!pCurrentAb->AbMBPChange && delta)
     {
       extraT += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
       extraB += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
       diff = pBox->BxH + extraT + extraB - pBox->BxHeight;
     }
+  else
+    /* margins borders and are not interpreted yet */
+    diff = t + extraT + b + extraB;
 
   if (delta || diff)
     {
@@ -3194,8 +3198,6 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        * and it's not a stretchable box.
        * In other cases, move also enclosed boxes.
        */
-if (!strcmp (pCurrentAb->AbElement->ElLabel, "L94"))
-  printf ("Move L94 x=%d delta=%d \n", pBox->BxXOrg, delta);
       if (absoluteMove)
 	{
 	  
