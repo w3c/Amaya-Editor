@@ -853,8 +853,11 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		     pAb->AbVolume = pEl->ElVolume;
 		     break;
 		   case LtSymbol:
+		     pAb->AbLeafType = pEl->ElLeafType;
+		     pAb->AbShape = pEl->ElGraph;
+		     break;
 		   case LtGraphics:
-		     pAb->AbLeafType = LtGraphics;
+		     pAb->AbLeafType = pEl->ElLeafType;
 		     pAb->AbShape = pEl->ElGraph;
 		     pAb->AbGraphScript = 'G';
 		     if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
