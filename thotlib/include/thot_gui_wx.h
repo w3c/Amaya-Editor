@@ -6,10 +6,10 @@
 /* don't include wx.h to optimize compilation */
 /* only declare that these classes are used */
 class wxObject;
-class wxScrollBar;
 class AmayaFrame;
 class AmayaWindow;
 class AmayaToolBar;
+class AmayaScrollBar;
 class wxStatusBar;
 class wxWindow;
 class wxButton;
@@ -24,7 +24,7 @@ class wxBitmap;
 class wxEvent;
 
 typedef wxWindow *	ThotWidget;
-typedef wxScrollBar * 	ThotScrollBar;
+typedef AmayaScrollBar * ThotScrollBar;
 typedef AmayaFrame *	ThotFrame;
 typedef wxStatusBar *	ThotStatusBar;
 

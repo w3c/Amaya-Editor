@@ -12,6 +12,7 @@ class AmayaPage;
 class AmayaWindow;
 class AmayaContext;
 class wxGLContext;
+class AmayaScrollBar;
 
 /*
  *  Description:  - AmayaFrame is contained by a AmayaPage
@@ -69,8 +70,8 @@ public:
   int GetFrameId();
   void RaiseFrame();
 
-  wxScrollBar * GetScrollbarH();
-  wxScrollBar * GetScrollbarV();
+  AmayaScrollBar * GetScrollbarH();
+  AmayaScrollBar * GetScrollbarV();
   void ShowScrollbar( int scrollbar_id );
   void HideScrollbar( int scrollbar_id );  
 
@@ -159,8 +160,8 @@ protected:
   wxBoxSizer * m_pHSizer;
   wxBoxSizer * m_pVSizer;
   
-  wxScrollBar *   m_pScrollBarH;
-  wxScrollBar *   m_pScrollBarV;
+  AmayaScrollBar *   m_pScrollBarH;
+  AmayaScrollBar *   m_pScrollBarV;
 
   AmayaTextGraber * m_pTextGraber;
 

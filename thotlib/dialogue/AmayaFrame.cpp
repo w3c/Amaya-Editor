@@ -43,6 +43,7 @@
 #include "AmayaPage.h"
 #include "AmayaCallback.h"
 #include "AmayaTextGraber.h"
+#include "AmayaScrollBar.h"
 #include "wx/log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
@@ -51,7 +52,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
  *      Method:  AmayaFrame
- * Description:  just construct a frame : AmayaCanvas + 2 wxScrollBar into a wxFlexGridSizer
+ * Description:  just construct a frame : AmayaCanvas + 2 AmayaScrollBar into a wxFlexGridSizer
  *--------------------------------------------------------------------------------------
  */
 AmayaFrame::AmayaFrame(
@@ -211,11 +212,11 @@ int AmayaFrame::GetFrameId()
 {
   return m_FrameId;
 }
-wxScrollBar * AmayaFrame::GetScrollbarH()
+AmayaScrollBar * AmayaFrame::GetScrollbarH()
 {
   return m_pScrollBarH;
 }
-wxScrollBar * AmayaFrame::GetScrollbarV()
+AmayaScrollBar * AmayaFrame::GetScrollbarV()
 {
   return m_pScrollBarV;
 }
@@ -284,11 +285,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	   {
         
 	     // Create vertical scrollbar
-	     m_pScrollBarV = new wxScrollBar( this,
-					      -1,
-					      wxDefaultPosition,
-					      wxDefaultSize,
-					      wxSB_VERTICAL );
+	     m_pScrollBarV = new AmayaScrollBar( this, -1, wxSB_VERTICAL );
 	     m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
 	   }
 	 else
@@ -306,11 +303,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	 if (!m_pScrollBarH)
 	   {
 	     // Create vertical and horizontal scrollbars
-	     m_pScrollBarH = new wxScrollBar( this,
-					      -1,
-					      wxDefaultPosition,
-					      wxDefaultSize,
-					      wxSB_HORIZONTAL );
+	     m_pScrollBarH = new AmayaScrollBar( this, -1, wxSB_HORIZONTAL );
 	     m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
 	   }
 	 else
