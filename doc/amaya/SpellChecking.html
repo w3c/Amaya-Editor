@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Spell checking</title>
-  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -39,11 +39,8 @@ purpose.</p>
 
 <p>When the user wants to register a new word, the spell checker creates or
 updates  the "user's personal dictionary". By default, the "user's personal
-dictionary" is $HOME/.thot.DIC, but the user can define another file. Before
-starting Amaya, the user must set the  <code>parameter <a
-href="Configure.html#Personnal">"EXTENDDICT="</a></code> in the registry file
-($HOME/.thotrc file) to change the default name . Thus, the checker will use,
-in addition to the dictionary specific to the language, this dictionary (in
+dictionary" <code>AmayaHome/dictionary.DCT</code>.. The checker will use, in
+addition to the dictionary specific to the language, this dictionary (in
 read-write mode) to control all documents.&ensp;This dictionary is created and
 automatically updated by the spelling checker when the commands ``Skip
 (+dic)'' and ``Replace (+dic)'' are issued (see below).</p>
