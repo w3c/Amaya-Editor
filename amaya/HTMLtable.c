@@ -603,7 +603,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead, prevColhead;
   Element             cell, nextCell, group, new;
-  Element             differredHSpan[MAX_COLS];
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
