@@ -509,6 +509,9 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
   else if (inRow &&
 	   TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema))
     notify = FALSE;
+  else if (inTable &&
+	   TypeHasException (ExcIsColHead, pEl->ElTypeNumber, pEl->ElStructSchema))
+    notify = FALSE;
   if (notify)
     cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
   else
