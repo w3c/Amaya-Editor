@@ -1544,21 +1544,21 @@ char	 *name;
   int                 firstNameChar = 0;
   
 #ifdef DEBUG
-  TtaSetErrorMessages(TRUE);
+  TtaSetErrorMessages (TRUE);
 #endif
-  StoreTableActions();
+  StoreTableActions ();
   file = TtaReadOpen (name);
-  i=0;
-  strcpy(tempDocName,name);
+  i = 0;
+  strcpy (tempDocName, name);
   while((size_t)i < strlen (tempDocName) && tempDocName [i] != '.')
     {
-      if (tempDocName[i]=='/')
-	firstNameChar = i+1;
+      if (tempDocName[i] == '/')
+	firstNameChar = i + 1;
       i++;
     }
-  tempDocName[i]=EOS;
-  tempDocName[firstNameChar-1]=EOS;
-  strcpy(currentDocumentName,&tempDocName[firstNameChar]); 
+  tempDocName[i] = EOS;
+  tempDocName[firstNameChar - 1] = EOS;
+  strcpy (currentDocumentName, &tempDocName[firstNameChar]); 
   nbAssocRoot = 0;              
   /* intialise the Xml automaton if it has not been initialized yet */
   if (!XmlautomatonInitalized)

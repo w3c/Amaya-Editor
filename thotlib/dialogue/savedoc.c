@@ -114,20 +114,42 @@ void                BuildSaveDocMenu ()
        if (ThotLocalActions[T_setwritedirectory] != NULL &&
 	   ThotLocalActions[T_writedocument] != NULL)
 	 {
+	   if (DocumentToSave->DocPivotVersion == 5)
+	     {
+	       (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
+							  SaveFileName, 
+							  SaveDirectoryName, 
+							  SaveDocWithCopy, 
+							SaveDocWithMove);
+	       (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
+	     }
+	   else
+	     {
+	       ustrcat (outputFileName, ".PIV"); 
+	       (void) StoreDocument (DocumentToSave,
+				     SaveFileName, SaveDirectoryName,
+				     SaveDocWithCopy, SaveDocWithMove);
+	     }
+	 }
+     }
+   else if (!ustrcmp (TraductionSchemaName, "_ThotOther_"))
+     {
+       if (DocumentToSave->DocPivotVersion == 5)
+         {
+	   ustrcat (outputFileName, ".PIV"); 
+	   (void) StoreDocument (DocumentToSave,
+				 SaveFileName, SaveDirectoryName,
+				 SaveDocWithCopy, SaveDocWithMove);
+	 }
+       else if (ThotLocalActions[T_xmlparsedoc] != NULL)
+	 {
 	   (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
 						      SaveFileName, 
 						      SaveDirectoryName, 
 						      SaveDocWithCopy, 
 						      SaveDocWithMove);
 	   (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
-	 }
-     }
-   else if (!ustrcmp (TraductionSchemaName, "PIV"))
-     {
-       ustrcat (outputFileName, ".PIV"); 
-       (void) StoreDocument (DocumentToSave,
-			     SaveFileName, SaveDirectoryName,
-			     SaveDocWithCopy, SaveDocWithMove);
+	 } 
      }
    else
       /* exporter le document */
@@ -261,7 +283,7 @@ STRING              txt;
 		 }
 	       else if (val == PivotEntryNum)
 		 {
-		   ustrcpy (TraductionSchemaName, "PIV");
+		   ustrcpy (TraductionSchemaName, "_ThotOther_");
 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
@@ -403,7 +425,7 @@ PtrDocument         pDoc;
 		   src += l + 1;
 		}
 	      nbitem++;
-	      if (ustrcmp (DefaultFileSuffix, ".xml") == 0)
+	      if (pDoc->DocPivotVersion == 5)
 		{
 		  ustrcpy (dest, "B");
 		  dest++;
@@ -411,8 +433,15 @@ PtrDocument         pDoc;
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
-	      else 
-		PivotEntryNum = -1;
+	      else if (ThotLocalActions[T_xmlparsedoc] != NULL)
+		/* XML extensions are loaded add xml item */
+		{
+		  ustrcpy (dest, "B");
+		  dest++;
+		  ustrcpy (dest, "XML");
+		  PivotEntryNum = nbitem;
+		  nbitem++;
+		}
 	      TtaNewSubmenu (NumMenuFormatDocToSave, NumFormSaveAs, 0,
 			     TtaGetMessage (LIB, TMSG_DOC_FORMAT), nbitem, BufMenuB, NULL, TRUE);
 	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
@@ -432,7 +461,10 @@ PtrDocument         pDoc;
 	      ustrcpy (BufMenu, SaveDirectoryName);
 	      ustrcat (BufMenu, DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
-	      ustrcat (BufMenu, DefaultFileSuffix);
+	      if (pDoc->DocPivotVersion == 5)
+		ustrcat (BufMenu, ".xml");
+	      else
+		ustrcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
 		      TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);

@@ -44,6 +44,7 @@
 #include "reference.h"
 #include "constxml.h"
 #include "typexml.h"
+#include "edit_tv.h"
 
 /* temporary pointer to parser prefixlist */
 static PrefixType *ParserPrefixs;
@@ -279,9 +280,12 @@ static void  XmlSetLabel (Document doc,Element el, unsigned char *value)
   ----------------------------------------------------------------------*/
 static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
 {
+  PtrDocument   pDoc;
   Attribute	attr;
   AttributeType	attrType;
-
+  Language      lang;
+  boolean       found;
+  int           i;
   if (el != NULL)
     {
       attrType.AttrTypeNum = 1; /* langage attr */
@@ -294,9 +298,20 @@ static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (el, attr, doc);
 	}
-      TtaSetAttributeText(attr,value,el,doc);
+      TtaSetAttributeText (attr, value, el, doc);
+      lang = TtaGetLanguageIdFromName (value);
+      pDoc = LoadedDocument[doc - 1];
+      found = FALSE;
+      for (i = 0; i < pDoc->DocNLanguages && !found; i++)
+	if (pDoc->DocLanguages[i] == lang)
+	  found = TRUE;
+      if (!found)
+	{
+	  pDoc->DocLanguages[pDoc->DocNLanguages] = lang;
+	  pDoc->DocNLanguages ++;
+	}
       /* change parser context */
-      XmlChangeCurrentLangage(TtaGetLanguageIdFromName(value));
+      XmlChangeCurrentLangage(lang);
     }
 }
 

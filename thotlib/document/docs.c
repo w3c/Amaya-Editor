@@ -283,6 +283,8 @@ STRING              fileName;
     }
   if (*pDoc != NULL)
      {
+       /* Set the pivot version to 5 (xml) */
+       (*pDoc)->DocPivotVersion = 5;
        
        /* conserve le path actuel des schemas dans le contexte du document */
        ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
@@ -301,6 +303,8 @@ STRING              fileName;
          /* charges et fait reafficher ces references si elles sont */
          /* deja affichees */
          RedisplayExternalRefs (*pDoc);
+       /* Set the doc unmodified */
+       (*pDoc)->DocModified = 0;
      }
 
 }

@@ -260,8 +260,12 @@ int                 mode;
 
 {
   boolean ok = FALSE;
-
-  if (mode >= 0 && mode <= 5)
+  
+  /* save old documents in piv format */
+  if (pDoc != NULL && pDoc->DocPivotVersion < 5 && mode != 0)
+    ok = WriteDocument (pDoc, mode);
+ 
+  else if (mode >= 0 && mode <= 5)
     switch (mode)
       {
       case 0:
