@@ -120,7 +120,7 @@ STRING SearchAttributeInElt (doc, el, attrTypeNum)
   if (!el) 
     return NULL;
 
-  text[0] = '\0';
+  text[0] = EOS;
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = attrTypeNum;
   attr = TtaGetAttribute (el, attrType);
@@ -147,7 +147,7 @@ void SubstituteCharInString (char *buffer, char old, char new)
 #else
 void SubstituteCharInString (buffer, old, new)
 char *buffer;
-char old;
+char  old;
 char new;
 #endif /* __STDC__ */
 {

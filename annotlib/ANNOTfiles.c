@@ -639,13 +639,14 @@ Document            doc;
 
 #endif /* __STDC__ */
 {
-  STRING filename;
+  CHAR_T *filename;
   
-  filename =  DocumentURLs[doc];
-  /* we skip the file: prefix */
-  filename += 5;
+  filename =  TtaAllocString (DocumentURLs[doc]);
+  /* we skip the file: prefix if it's present */
+  NormalizeFile (DocumentURLs[doc], filename);
   TtaExportDocument (doc, filename, TEXT("AnnotT"));
 
+  TtaFreeMemory (filename);
   return TRUE; /* prevent Thot from performing normal save operation */
 }
 

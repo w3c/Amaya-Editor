@@ -19,10 +19,10 @@
 #include "annotlib.h"
 
 /* some state variables */
-static char *annotUser; /* user id for saving the annotation */
-static char *annotDir;   /* directory where we're storing the annotations */
-static char *annotServer; /* URL pointing to the annot server script */
-static char *annotMainIndex; /* index file where we give the correspondance
+static CHAR_T *annotUser; /* user id for saving the annotation */
+static CHAR_T *annotDir;   /* directory where we're storing the annotations */
+static CHAR_T *annotServer; /* URL pointing to the annot server script */
+static CHAR_T *annotMainIndex; /* index file where we give the correspondance
 				between URLs and annotations */
 static ThotBool annotAutoLoad; /* should annotations be downloaded
 				  automatically? */
@@ -47,9 +47,9 @@ typedef struct _REMOTESAVE_context {
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING GetAnnotUser (void)
+CHAR_T *GetAnnotUser (void)
 #else /* __STDC__*/
-STRING GetAnnotUser (void)
+CHAR_T *GetAnnotUser (void)
 #endif /* __STDC__*/
 {
   return annotUser;
@@ -62,9 +62,9 @@ STRING GetAnnotUser (void)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING GetAnnotMainIndex (void)
+CHAR_T *GetAnnotMainIndex (void)
 #else /* __STDC__*/
-STRING GetAnnotationMainIndex(void)
+CHAR_T *GetAnnotationMainIndex(void)
 #endif /* __STDC__*/
 {
   return annotMainIndex;
@@ -77,9 +77,9 @@ STRING GetAnnotationMainIndex(void)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING GetAnnotDir (void)
+CHAR_T *GetAnnotDir (void)
 #else /* __STDC__*/
-STRING GetAnnotDir (void)
+CHAR_T *GetAnnotDir (void)
 #endif /* __STDC__*/
 {
   return annotDir;
@@ -96,30 +96,30 @@ void ANNOT_Init ()
 void ANNOT_Init ()
 #endif /* __STDC__*/
 {
-  STRING tmp;
+  CHAR_T *tmp;
 
   /* setup the default registry values */
   tmp = TtaGetEnvString ("APP_HOME");
-  annotDir = TtaGetMemory (strlen (tmp) + strlen (ANNOT_DIR) + 2);
-  sprintf (annotDir, "%s%c%s", tmp, DIR_SEP, ANNOT_DIR);
+  annotDir = TtaGetMemory (ustrlen (tmp) + ustrlen (ANNOT_DIR) + 2);
+  usprintf (annotDir, TEXT("%s%c%s"), tmp, DIR_SEP, ANNOT_DIR);
   TtaSetEnvString ("ANNOT_DIR", annotDir, FALSE);
   TtaFreeMemory (annotDir);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", ANNOT_MAIN_INDEX, FALSE);
   TtaSetEnvString ("ANNOT_USER", ANNOT_USER, FALSE);
-  TtaSetEnvString ("ANNOT_AUTOLOAD", "yes", FALSE);
+  TtaSetEnvString ("ANNOT_AUTOLOAD", TEXT("yes"), FALSE);
 
   /* initialize the annot global variables */
-  annotDir = TtaStrdup (TtaGetEnvString ("ANNOT_DIR"));
-  annotMainIndex = TtaStrdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
-  annotUser = TtaStrdup (TtaGetEnvString ("ANNOT_USER"));
-  annotAutoLoad = !strcasecmp (TtaGetEnvString ("ANNOT_AUTOLOAD"), "yes");
+  annotDir = TtaWCSdup (TtaGetEnvString ("ANNOT_DIR"));
+  annotMainIndex = TtaWCSdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
+  annotUser = TtaWCSdup (TtaGetEnvString ("ANNOT_USER"));
+  annotAutoLoad = !ustrcasecmp (TtaGetEnvString ("ANNOT_AUTOLOAD"), "yes");
   tmp = TtaGetEnvString ("ANNOT_SERVER");
   if (tmp)
-    annotServer = TtaStrdup (tmp);
+    annotServer = TtaWCSdup (tmp);
   else
     annotServer = NULL;
   /* @@ should be a nice mode! */
-  mkdir (annotDir, 0777);
+  umkdir (annotDir, 0777);
 }
 
 /*-----------------------------------------------------------------------
@@ -168,8 +168,8 @@ View view;
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               RemoteLoad_callback (int doc, int status, 
-					 STRING urlName,
-					 STRING outputfile, 
+					 CHAR_T *urlName,
+					 CHAR_T *outputfile, 
 					 AHTHeaders *http_headers,
 					 void * context)
 #else  /* __STDC__ */
@@ -178,8 +178,8 @@ void               RemoteLoad_callback (doc, status, urlName,
 					context)
 int doc;
 int status;
-STRING urlName;
-STRING outputfile;
+CHAR_T *urlName;
+CHAR_T *outputfile;
 AHTHeaders *http_headers;
 void *context;
 
@@ -284,7 +284,7 @@ void ANNOT_Create (doc, view)
 {
   ElementType elType;
   Element     first, last;
-  STRING      labf, labl;
+  CHAR_T     *labf, *labl;
   int         c1, cN, i;
   Document    docAnnot;
 
@@ -303,8 +303,8 @@ void ANNOT_Create (doc, view)
     return;
 
   /* Link the source document to the annotation */
-  labf = TtaStrdup (TtaGetElementLabel (first));
-  labl = TtaStrdup (TtaGetElementLabel (last));
+  labf = TtaWCSdup (TtaGetElementLabel (first));
+  labl = TtaWCSdup (TtaGetElementLabel (last));
   LINK_New (doc, docAnnot, labf, c1, labl, cN);
   TtaFreeMemory (labf);
   TtaFreeMemory (labl);
@@ -318,7 +318,7 @@ void ANNOT_Create (doc, view)
   tabRefAnnot[docAnnot].c1 = c1;
   strcpy (tabRefAnnot[docAnnot].labl, TtaGetElementLabel (last));
   tabRefAnnot[docAnnot].cN = cN;
-  tabRefAnnot[docAnnot].docName = TtaStrdup (TtaGetDocumentName (docAnnot));
+  tabRefAnnot[docAnnot].docName = TtaWCSdup (TtaGetDocumentName (docAnnot));
 #endif
 }
 
@@ -421,8 +421,8 @@ int doc;
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               ANNOT_Post_callback (int doc, int status, 
-					 STRING urlName,
-					 STRING outputfile, 
+					 CHAR_T *urlName,
+					 CHAR_T *outputfile, 
 					 AHTHeaders *http_headers,
 					 void * context)
 #else  /* __STDC__ */
@@ -431,8 +431,8 @@ void               ANNOT_Post_callback (doc, status, urlName,
 					context)
 int doc;
 int status;
-STRING urlName;
-STRING outputfile;
+CHAR_T *urlName;
+CHAR_T *outputfile;
 AHTHeaders *http_headers;
 void *context;
 
@@ -549,7 +549,7 @@ void ANNOT_Delete (document, view)
 {
   ElementType elType;
   Element     first, last;
-  STRING      annotName, fileName;
+  CHAR_T *     annotName, fileName;
   int         i;
 
   printf ("(ANNOT_Delete) DEBUT\n");
@@ -618,7 +618,7 @@ void ANNOT_Save (docAnnot, viewAnnot)
 {
 
   Document document;
-  STRING   annotName;
+  CHAR_T *  annotName;
 
   document = AnnotationTargetDocument (docAnnot);
   annotName = TtaGetDocumentName (docAnnot);

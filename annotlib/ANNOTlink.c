@@ -29,29 +29,34 @@ char *source_url;
 #endif /* __STDC__ */
 {
   int found;
-  char *annot_dir;
-  char *annot_main_index;
-  char *annot_main_index2;
-  char url[MAX_LENGTH];
-  char buffer[MAX_LENGTH];
-  char *index_file;
+  CHAR_T *annot_dir;
+  CHAR_T *annot_main_index;
+  CHAR_T *annot_main_index_file;
+  CHAR_T url[MAX_LENGTH];
+  CHAR_T buffer[MAX_LENGTH];
+  CHAR_T *index_file;
   FILE *fp;
   
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index2 = TtaGetMemory (strlen (annot_dir) + strlen (annot_main_index) + 10);
-  sprintf (annot_main_index2, "%s%c%s", annot_dir, DIR_SEP,  annot_main_index);
+  annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
+					+ ustrlen (annot_main_index) 
+					+ 10);
+  usprintf (annot_main_index_file, TEXT("%s%c%s"), 
+	    annot_dir, 
+	    DIR_SEP,  
+	    annot_main_index);
   
-  if (TtaFileExist (annot_main_index2))
+  if (TtaFileExist (annot_main_index_file))
     {
       index_file = TtaGetMemory (MAX_PATH);
       found = 0;
-      if ((fp = fopen (annot_main_index2, "r")))
+      if ((fp = fopen (annot_main_index_file, "r")))
 	{
-	  while (fgets (buffer, MAX_LENGTH, fp))
+	  while (ufgets (buffer, MAX_LENGTH, fp))
 	    {
-	      sscanf (buffer, "%s %s\n", url, index_file);
-	      if (!strcasecmp (source_url, url))
+	      usscanf (buffer, TEXT("%s %s\n"), url, index_file);
+	      if (!ustrcasecmp (source_url, url))
 		{
 		  found = 1;
 		  break;
@@ -68,7 +73,7 @@ char *source_url;
   else
     index_file = NULL;
 
-  TtaFreeMemory (annot_main_index2);
+  TtaFreeMemory (annot_main_index_file);
   
   return (index_file);
 }
@@ -85,22 +90,28 @@ char *source_url;
 char *index_file;
 #endif /* __STDC__ */
 {
-  char *annot_dir;
-  char *annot_main_index;
-  char *annot_main_index2;
+  CHAR_T *annot_dir;
+  CHAR_T *annot_main_index;
+  CHAR_T *annot_main_index_file;
   FILE *fp;
   
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
-  annot_main_index2 = TtaGetMemory (strlen (annot_dir) + strlen (annot_main_index) + 10);
-  sprintf (annot_main_index2, "%s%c%s", annot_dir, DIR_SEP, annot_main_index);
+  annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
+					+ ustrlen (annot_main_index)
+					+ 10);
+  usprintf (annot_main_index_file, 
+	    TEXT("%s%c%s"), 
+	    annot_dir, 
+	    DIR_SEP, 
+	    annot_main_index);
 
-  if ((fp = fopen (annot_main_index2, "a")))
+  if ((fp = fopen (annot_main_index_file, "a")))
     {
-      fprintf (fp, "%s %s\n", source_url, index_file);
+      ufprintf (fp, TEXT("%s %s\n"), source_url, index_file);
       fclose (fp);
     }
-  TtaFreeMemory (annot_main_index2);
+  TtaFreeMemory (annot_main_index_file);
 }
 
 /*-----------------------------------------------------------------------
@@ -110,25 +121,25 @@ char *index_file;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_New (Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN)
+void LINK_New (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
 #else /* __STDC__*/
 void LINK_New (source_doc, annot_doc, labf, c1, labl, cN)
 Document source_doc; 
 Document annot_doc; 
-STRING labf;
+CHAR_T *labf;
 int c1;
-STRING labl;
+CHAR_T *labl;
 int cN;
 #endif /* __STDC__*/
 {
-  View     view;
-  STRING   annotName;
-  Element  element;
-
   LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
   LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
 
 #if 0
+  View     view;
+  CHAR_T *  annotName;
+  Element  element;
+
   annotName = TtaGetMemory (20);
   strcpy (annotName, TtaGetDocumentName (docAnnot));
   document  = AnnotationTargetDocument (docAnnot);
@@ -145,7 +156,7 @@ int cN;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_AddLinkToSource (doc, annotFile, labf, c1, labl, cN)
+   Procedure LINK_AddLinkToSource (source_doc, annot_doc, labf, c1, labl, cN)
   -----------------------------------------------------------------------
    Ajoute un lien de type annotation dans un document donne vers le
    document de nom annotName. Le lien est cree juste avant l'element
@@ -153,14 +164,14 @@ int cN;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_AddLinkToSource (Document source_doc, char *annot_file, STRING labf, int c1, STRING labl, int cN)
+void LINK_AddLinkToSource (Document source_doc, CHAR_T *annot_file, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
 #else /* __STDC__*/
 void LINK_AddLinkToSource (source_doc, annot_file, labf, c1, labl, cN)
 Document source_doc; 
-STRING annot_file;
-STRING labf;
+CHAR_T *annot_file;
+CHAR_T *labf;
 int c1;
-STRING labl;
+CHAR_T *labl;
 int cN;
 #endif /* __STDC__*/
 {
@@ -168,7 +179,7 @@ int cN;
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
-  STRING        annotName;
+  CHAR_T       *annotName;
   char         *annot_user;
 
   annot_user = GetAnnotUser ();
@@ -225,15 +236,15 @@ int cN;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SaveLink (Document source_doc, Document annot_doc, STRING labf, int c1, STRING labl, int cN)
+void LINK_SaveLink (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
 #else /* __STDC__*/
 void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
      Document source_doc;
      Document annot_doc;
-     STRING   annotName;
-     STRING   labf;
+     CHAR_T *  annotName;
+     CHAR_T *  labf;
      int      c1;
-     STRING   labl;
+     CHAR_T *  labl;
      int      cN;
 #endif /* __STDC__*/
 {
@@ -253,7 +264,11 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
 
   /* Add the new link */
   annot_user = GetAnnotUser ();
-  fprintf (indexFile, "%s|%s|%s|%d|%s|%d\n", annot_user, DocumentURLs[annot_doc], labf, c1, labl, cN);
+  ufprintf (indexFile, TEXT("%s|%s|%s|%d|%s|%d\n"), 
+	    annot_user, 
+	    DocumentURLs[annot_doc], 
+	    labf, c1, 
+	    labl, cN);
  
   /* clean up and quit */
   fclose (indexFile);
@@ -289,7 +304,7 @@ void LINK_DelMetaFromMemory (Document doc)
   -----------------------------------------------------------------------
   Copies the parsed metadata to memory
   -----------------------------------------------------------------------*/
-void LINK_AddMetaToMemory (Document doc, STRING annotUser, STRING annotDate, STRING annotType, STRING annotFile)
+void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, CHAR_T *annotType, CHAR_T *annotFile)
 {
   AnnotMetaDataElement *me;
 
@@ -323,16 +338,16 @@ void LINK_AddMetaToMemory (Document doc, STRING annotUser, STRING annotDate, STR
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_LoadAnnotations (Document doc, char *annotIndex)
+void LINK_LoadAnnotations (Document doc, CHAR_T *annotIndex)
 #else /* __STDC__*/
 void LINK_LoadAnnotations (doc, annotIndex)
      Document doc;
-     char *annotIndex;
+     CHAR_T *annotIndex;
 #endif /* __STDC__*/
 {
   View    view;
   Element el, body;
-  STRING  annotFile, labf, labl, annotUser;
+  CHAR_T  *annotFile, *labf, *labl, *annotUser;
   FILE    *fp;
   int     c1, cN;
   char    buffer[MAX_LENGTH];
@@ -353,10 +368,17 @@ void LINK_LoadAnnotations (doc, annotIndex)
   labl    = TtaGetMemory (10);
   view = TtaGetViewFromName (doc, "Formatted_view");
   body = SearchElementInDoc (doc, HTML_EL_BODY);
-  while (fgets (buffer, MAX_LENGTH, fp))
+  while (ufgets (buffer, MAX_LENGTH, fp))
   {
     SubstituteCharInString (buffer, '|', ' ');
-    sscanf (buffer, "%s %s %s %d %s %d\n", annotUser, annotFile, labf, &c1, labl, &cN);
+    usscanf (buffer, 
+	     "%s %s %s %d %s %d\n", 
+	     annotUser, 
+	     annotFile, 
+	     labf, 
+	     &c1, 
+	     labl, 
+	     &cN);
     if ((el = TtaSearchElementByLabel (labf, body)) == NULL)
       fprintf (stderr, "This annotations has lost its parent!\n");
     else 
@@ -384,11 +406,11 @@ void LINK_LoadAnnotations (doc, annotIndex)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_Remove (Document document, STRING annotName)
+void LINK_Remove (Document document, CHAR_T *annotName)
 #else /* __STDC__*/
 void LINK_Remove (document, annotName)
      Document document;
-     STRING   annotName;
+     CHAR_T *  annotName;
 #endif /* __STDC__*/
 {
   ElementType   elType;
@@ -398,8 +420,8 @@ void LINK_Remove (document, annotName)
   int           lg;
   ThotBool       removeAnnot;
 
-  STRING textClass = TtaGetMemory (200);
-  STRING textName =  TtaGetMemory (200);
+  CHAR_T *textClass = TtaGetMemory (200);
+  CHAR_T *textName =  TtaGetMemory (200);
 
   elCour = SearchElementInDoc (document, HTML_EL_BODY);
   elType.ElSSchema          = 
@@ -457,21 +479,21 @@ void LINK_Remove (document, annotName)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SaveLink (Document document, STRING annotName, STRING labf, int c1, STRING labl, int cN)
+void LINK_SaveLink (Document document, CHAR_T *annotName, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
 #else /* __STDC__*/
 void LINK_SaveLink (document, annotName, labf, c1, labl, cN)
      Document document;
-     STRING   annotName;
-     STRING   labf;
+     CHAR_T *  annotName;
+     CHAR_T *  labf;
      int      c1;
-     STRING   labl;
+     CHAR_T *  labl;
      int      cN;
 #endif /* __STDC__*/
 {
   FILE   *newLinkFile, *oldLinkFile;
   char   buffer[MAX_LENGTH];
-  STRING newFileName;
-  STRING oldFileName;
+  CHAR_T *newFileName;
+  CHAR_T *oldFileName;
 
   /* Open the annotation index */
   oldFileName = LINK_GetAnnotationIndexFile (document);
@@ -510,14 +532,14 @@ void LINK_SaveLink (document, annotName, labf, c1, labl, cN)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_RemoveLink (Document document, STRING annotName)
+void LINK_RemoveLink (Document document, CHAR_T *annotName)
 #else /* __STDC__*/
 void LINK_RemoveLink (document, annotName)
      Document document;
-     STRING   annotName;
+     CHAR_T *  annotName;
 #endif /* __STDC__*/
 {
-  STRING   newFileName, oldFileName, docName, userName, labf, labl;
+  CHAR_T   *newFileName, *oldFileName, *docName, *userName, *labf, *labl;
   FILE     *newLinkFile, *oldLinkFile;
   int      nbAnnot, c1, cN, i;
 
@@ -579,7 +601,7 @@ void LINK_HideAnnotations (document)
   Element       anchor, elCour, elSuiv;
   AttributeType attrType;
   Attribute     attr;
-  STRING        text;
+  CHAR_T *       text;
   int           *text_lg;
   ThotBool       removeAnnot;
 
@@ -636,8 +658,8 @@ void LINK_ParcoursAnchor (document)
   ElementType elType;
   Element     body, elCour;
 
-  STRING anchorClass = TtaGetMemory (20);
-  STRING anchorName  = TtaGetMemory (100);
+  CHAR_T *anchorClass = TtaGetMemory (20);
+  CHAR_T *anchorName  = TtaGetMemory (100);
 
   body = SearchElementInDoc (document, HTML_EL_BODY);
   elType = TtaGetElementType (body);
@@ -674,7 +696,7 @@ void LINK_UpdateAnnotations (document)
 {
   Element       body, el;
   View          view;
-  STRING        fileName, docName, prem, der;
+  CHAR_T        *fileName, *docName, *prem, *der;
   FILE          *linkFile;
   int            nbAnnot, c_prem, c_der, i;
 
