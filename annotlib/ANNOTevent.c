@@ -626,10 +626,14 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   else
 #endif /* ANNOT_ON_ANNOT */
     doc_url = DocumentURLs[doc];
-  tmp_doc_url = TestLocalToWWW (doc_url);
+  tmp_doc_url = LocalToWWW (doc_url);
+  if (!tmp_doc_url)
+    tmp_doc_url = doc_url;
 
   body_url = DocumentURLs[doc];
-  tmp_body_url = TestLocalToWWW (body_url);
+  tmp_body_url = LocalToWWW (body_url);
+  if (!tmp_body_url)
+    tmp_body_url = body_url;
 
   /*
    * load the local annotations if there's no annotserver or if
