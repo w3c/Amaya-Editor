@@ -984,10 +984,18 @@ char               *param;
 	    case DRIVERP_SHOWBOX:
 	       break;
 	    case DRIVERP_BGIMAGE:
-	       if (settings->value.pointer != NULL)
-		   sprintf (buffer, "background-image: url(%s)",
-		            (char *) settings->value.pointer);
-               else
+	       if (settings->value.pointer != NULL) {
+	           LoadedImageDesc *imgInfo;
+
+		   imgInfo = SearchLoadedImage((char *)settings->value.pointer,
+		                               0);
+		   if (imgInfo != NULL)
+		       sprintf (buffer, "background-image: url(%s)",
+				(char *) imgInfo->originalName);
+		   else
+		       sprintf (buffer, "background-image: url(%s)",
+		                (char *)settings->value.pointer);
+               } else
 		   sprintf (buffer, "background-image: none");
 	       break;
 	    case DRIVERP_PICTUREMODE:
@@ -1143,7 +1151,7 @@ void               *param;
    PresentationSettingsToCSS(settings, &string[0], sizeof(string));
 
    if ((string[0] != EOS) && (*css_rules != EOS))
-      strcat (css_rules, ", ");
+      strcat (css_rules, "; ");
    if (string[0] != EOS)
       strcat (css_rules, string);
 }

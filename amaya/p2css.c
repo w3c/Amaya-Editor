@@ -362,7 +362,7 @@ void               *param;
    PresentationSettingsToCSS(settings, &string[0], sizeof(string));
 
    if ((string[0] != EOS) && (*css_rules != EOS))
-      strcat (css_rules, ", ");
+      strcat (css_rules, "; ");
    if (string[0] != EOS)
       strcat (css_rules, string);
 }
