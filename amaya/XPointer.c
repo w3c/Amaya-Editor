@@ -642,7 +642,9 @@ View view;
   else
     {
       TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
+#ifdef DEBUG_XPOINTER
       printf ("last Ch is %d, i is %d\n", lastCh, i);
+#endif 
       AdjustSelMode (lastEl, &lastCh, i, &mode);
     }
 
@@ -692,7 +694,7 @@ View view;
   if (lastEl)
     TtaFreeMemory (lastXpath);
 
-#ifdef ANNOTATIONS  
+#ifdef DEBUG_XPOINTER
   {
     XPointerContextPtr ctx;
     fprintf (stderr, "final expression is: %s\n", xptr_expr);
