@@ -102,7 +102,7 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\Compilers.pdb" /machine:I386 /out:"$(OUTDIR)\Compilers.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\winthotcompilers.obj" \
-	"..\LibThotKernel.lib" \
+	"$(OUTDIR)\LibThotKernel.lib" \
 	"$(OUTDIR)\app.lib" \
 	"$(OUTDIR)\prs.lib" \
 	"$(OUTDIR)\str.lib" \
@@ -201,7 +201,7 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\Compilers.pdb" /debug /machine:I386 /out:"$(OUTDIR)\Compilers.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\winthotcompilers.obj" \
-	"..\LibThotKernel.lib" \
+	"$(OUTDIR)\LibThotKernel.lib" \
 	"$(OUTDIR)\app.lib" \
 	"$(OUTDIR)\prs.lib" \
 	"$(OUTDIR)\str.lib" \
