@@ -1084,7 +1084,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document, FALSE);
 	    }
 	}
-     else if (nb == 0)
+     else if (nb == 0 && !found)
        {
 	 /* Rien a inserer */ 
 	 Automata_current = NULL;

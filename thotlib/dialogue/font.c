@@ -152,7 +152,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
        charset = DEFAULT_CHARSET;
        break;
      case '3':
-       charset = DEFAULT_CHARSET;
+       charset = EASTEUROPE_CHARSET;
        break;
      case '4':
        charset = DEFAULT_CHARSET;
@@ -168,6 +168,9 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
        break;
      case '8':
        charset = HEBREW_CHARSET;
+       break;
+     case '9':
+       charset = TURKISH_CHARSET;
        break;
  	 default:
        charset = DEFAULT_CHARSET;
@@ -987,6 +990,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   TEXTMETRIC          textMetric;
   int                 c;
   HFONT               hOldFont;
+  HDC                 display;
 #endif /* _WINDOWS */
   PtrFont             ptfont;
 
@@ -1038,32 +1042,20 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  size = LogicalPointsSizes[size];
 	  ptfont->size      = size;
 	  ActiveFont = WIN_LoadFont (script, family, highlight, size);
-	  if (TtPrinterDC != 0)
-	    {
+	  if (TtPrinterDC != NULL)
+	  {
+		  display = TtPrinterDC;
 	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
-	      if (GetTextMetrics (TtPrinterDC, &textMetric))
-		{
-		  ptfont->FiAscent = textMetric.tmAscent;
-		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-		}
-	      else
-		{
-		  ptfont->FiAscent = 0;
-		  ptfont->FiHeight = 0;
-		}
-	      for (c = 0; c < 256; c++)
-		{
-		  GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c),
-				      1, (LPSIZE) (&wsize));
-		  ptfont->FiWidths[c] = wsize.cx;
-		  ptfont->FiHeights[c] = wsize.cy;
-		}
 	      SelectObject (TtPrinterDC, hOldFont);
 	    }
 	  else
-	    { 
-	      hOldFont = SelectObject (TtDisplay, ActiveFont);
-	      if (GetTextMetrics (TtDisplay, &textMetric))
+	    {
+		  display = GetDC(FrRef[frame]);
+	      hOldFont = SelectObject (display, ActiveFont);
+		  /*if (frame)
+	        SelectObject (TtDisplay, hOldFont);*/
+	    }
+	  if (GetTextMetrics (display, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
 		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
@@ -1075,16 +1067,16 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		}
 	      for (c = 0; c < 256; c++)
 		{
-		  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c),
+		  GetTextExtentPoint (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[c] = wsize.cx;
 		  ptfont->FiHeights[c] = wsize.cy;
 		}
-	      /* SelectObject (TtDisplay, hOldFont); */
-	      if (!DeleteObject (SelectObject (TtDisplay, ActiveFont)))
-		WinErrorBox (NULL, "LoadNearestFont (1)");
+	      if (ActiveFont)
+	       DeleteObject (ActiveFont);
 	      ActiveFont = 0;
-	    }
+	  if (TtPrinterDC == NULL && display)
+		ReleaseDC (FrRef[frame], display);
 #else  /* _WINDOWS */
 	  ptfont = LoadFont (textX);
 #endif /* !_WINDOWS */
