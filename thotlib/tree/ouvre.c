@@ -1,11 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    ouvre.c : gestion de l'ouverture et de la fermeture d'un document.
-   Major Changes:
-   PMA 7/06/91  remise en forme
-   IV : Septembre 92 adaptation Tool Kit
  */
 
 #include "thot_sys.h"
@@ -25,79 +19,104 @@
 #include "pivlec.f"
 #include "refext.f"
 
-/***** debut ajout *****/
-
+/* ---------------------------------------------------------------------- */
+/* |	FreeUnusedReferredElemDesc					| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         LibereDescRefInutiles (PtrDocument pDoc)
+static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         LibereDescRefInutiles (pDoc)
+static void         FreeUnusedReferredElemDesc (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
-   PtrReferredDescr    pr, prPrec;
+   PtrReferredDescr    pRefD, pPrevRefD;
 
-   pr = pDoc->DocReferredEl;
+   pRefD = pDoc->DocReferredEl;
    do
       /* parcourt la chaine des descripteurs de reference du document */
      {
 	/* (Le premier descripteur de la chaine est bidon) */
-	pr = pr->ReNext;
-	if (pr != NULL)
-	   if (!pr->ReExternalRef)
-	      if (pr->ReExtDocRef == NULL)
-		 if (pr->ReFirstReference == NULL)
+	pRefD = pRefD->ReNext;
+	if (pRefD != NULL)
+	   if (!pRefD->ReExternalRef)
+	      if (pRefD->ReExtDocRef == NULL)
+		 if (pRefD->ReFirstReference == NULL)
 		   {
-		      if (pr->ReReferredElem != NULL)
-			 pr->ReReferredElem->ElReferredDescr = NULL;
-		      pr->ReReferredElem = NULL;
-		      prPrec = pr->RePrevious;
-		      prPrec->ReNext = pr->ReNext;
-		      if (pr->ReNext != NULL)
-			 pr->ReNext->RePrevious = prPrec;
-		      FreeDescReference (pr);
-		      pr = prPrec;
+		      if (pRefD->ReReferredElem != NULL)
+			 pRefD->ReReferredElem->ElReferredDescr = NULL;
+		      pRefD->ReReferredElem = NULL;
+		      pPrevRefD = pRefD->RePrevious;
+		      pPrevRefD->ReNext = pRefD->ReNext;
+		      if (pRefD->ReNext != NULL)
+			 pRefD->ReNext->RePrevious = pPrevRefD;
+		      FreeDescReference (pRefD);
+		      pRefD = pPrevRefD;
 		   }
      }
-   while (pr != NULL);
+   while (pRefD != NULL);
 }
 
-/***** fin ajout *****/
-
 /* ---------------------------------------------------------------------- */
-/* |    OuvreDoc ouvre le fichier document de nom NomDoc et le charge   | */
-/* |            dans pDoc. ChargeDocExt indique s'il faut charger ou    | */
-/* |            non les documents externes dont des parties sont        | */
-/* |            incluses dans le document a` ouvrir. Retourne faux si   | */
-/* |            le document n'a pas pu etre charge'. Charge le          | */
-/* |            squelette si Squelette est True. Ne pas charger de      | */
-/* |            schema de structure et utiliser pSCharge si             | */
-/* |            pSCharge <> NULL.                                       | */
+/* |    pDocument cherche si le document d'identificateur docIdent est	| */
+/* |	charge'.							| */
+/* |            Retourne un pointeur sur son contexte, ou NULL s'il	| */
+/* |            n'est pas charge'.                                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             OuvreDoc (Name NomDoc, PtrDocument pDoc, boolean ChargeDocExt, boolean Squelette, PtrSSchema pSCharge, boolean avecMsgAPP)
+PtrDocument         pDocument (DocumentIdentifier docIdent)
 
 #else  /* __STDC__ */
-boolean             OuvreDoc (NomDoc, pDoc, ChargeDocExt, Squelette, pSCharge, avecMsgAPP)
-Name                 NomDoc;
+PtrDocument         pDocument (docIdent)
+DocumentIdentifier     docIdent;
+
+#endif /* __STDC__ */
+
+{
+   int                 doc;
+   PtrDocument	       pDoc;
+
+   pDoc = NULL;
+   for (doc = 0; doc < MAX_DOCUMENTS; doc++)
+      if (TabDocuments[doc] != NULL)
+	 if (MemeIdentDoc (TabDocuments[doc]->DocIdent, docIdent))
+	    pDoc = TabDocuments[doc];
+   return pDoc;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    OuvreDoc ouvre le fichier document de nom docName et le charge  | */
+/* |            dans pDoc. loadIncludedDoc indique s'il faut charger ou | */
+/* |            non les documents externes dont des parties sont        | */
+/* |            incluses dans le document a` ouvrir. Retourne faux si   | */
+/* |            le document n'a pas pu etre charge'. Charge le          | */
+/* |            squelette si skeleton est True. Ne pas charger de       | */
+/* |            schema de structure et utiliser pSS si pSS <> NULL.     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             OuvreDoc (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
+
+#else  /* __STDC__ */
+boolean             OuvreDoc (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
+Name                 docName;
 PtrDocument         pDoc;
-boolean             ChargeDocExt;
-boolean             Squelette;
-PtrSSchema        pSCharge;
-boolean             avecMsgAPP;
+boolean             loadIncludedDoc;
+boolean             skeleton;
+PtrSSchema        pSS;
+boolean             withAppEvent;
 
 #endif /* __STDC__ */
 
 {
    boolean             ret;
    int                 i;
-   PathBuffer          NomDirectory;
-   PtrChangedReferredEl      ChngExt;
-   BinFile             fichpiv;
-   char                texte[MAX_TXT_LEN];
+   PathBuffer          directoryName;
+   PtrChangedReferredEl      pChngRef;
+   FILE             *pivotFile;
+   char                text[MAX_TXT_LEN];
 
    ret = False;
    if (pDoc != NULL)
@@ -113,10 +132,10 @@ boolean             avecMsgAPP;
 	else
 	   /* le document n'a pas d'identificateur, on l'accede par son nom */
 	  {
-	     strncpy (pDoc->DocDName, NomDoc, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
 	     /* On confond identificateur et nom de document */
-	     strncpy (pDoc->DocIdent, NomDoc, MAX_DOC_IDENT_LEN);
+	     strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	  }
 	if (pDoc->DocDName[0] > ' ')
 	   /* nom de document non vide */
@@ -124,21 +143,21 @@ boolean             avecMsgAPP;
 	     /* compose le nom du fichier a ouvrir avec le nom du directory */
 	     /* des documents... */
 	     if (pDoc->DocDirectory[0] == '\0')
-		strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
+		strncpy (directoryName, DirectoryDoc, MAX_PATH);
 	     else
-		strncpy (NomDirectory, pDoc->DocDirectory, MAX_PATH);
-	     BuildFileName (pDoc->DocDName, "PIV", NomDirectory, texte, &i);
+		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
+	     BuildFileName (pDoc->DocDName, "PIV", directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
-	     fichpiv = BIOreadOpen (texte);
-	     if (fichpiv != 0)
+	     pivotFile = BIOreadOpen (text);
+	     if (pivotFile != 0)
 		/* le fichier existe */
 		/* internalise le fichier pivot sans charger les documents */
 		/* externes qui contiennent des elements inclus. */
 	       {
 		  /* le document appartient au directory courant */
-		  strncpy (pDoc->DocDirectory, NomDirectory, MAX_PATH);
-		  ChargeDoc (fichpiv, pDoc, ChargeDocExt, Squelette, pSCharge, avecMsgAPP);
-		  BIOreadClose (fichpiv);
+		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
+		  ChargeDoc (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent);
+		  BIOreadClose (pivotFile);
 		  if (pDoc->DocRootElement != NULL)
 		     /* le document lu n'est pas vide */
 		    {
@@ -146,28 +165,28 @@ boolean             avecMsgAPP;
 		       ret = True;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       DoFileName (pDoc->DocDName, "EXT", NomDirectory, texte, &i);
-		       fichpiv = BIOreadOpen (texte);
-		       if (fichpiv != 0)
+		       DoFileName (pDoc->DocDName, "EXT", directoryName, text, &i);
+		       pivotFile = BIOreadOpen (text);
+		       if (pivotFile != 0)
 			 {
-			    ChargeExt (fichpiv, pDoc, NULL, False);
-			    BIOreadClose (fichpiv);
+			    ChargeExt (pivotFile, pDoc, NULL, False);
+			    BIOreadClose (pivotFile);
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       DoFileName (pDoc->DocDName, "REF", NomDirectory, texte, &i);
-		       fichpiv = BIOreadOpen (texte);
-		       if (fichpiv != 0)
+		       DoFileName (pDoc->DocDName, "REF", directoryName, text, &i);
+		       pivotFile = BIOreadOpen (text);
+		       if (pivotFile != 0)
 			 {
-			    ChargeRef (fichpiv, &ChngExt);
-			    BIOreadClose (fichpiv);
+			    ChargeRef (pivotFile, &pChngRef);
+			    BIOreadClose (pivotFile);
 			    /* traite les mises a jour de */
 			    /* references sortantes */
-			    if (ChngExt != NULL)
-			       MiseAJourRef (ChngExt, pDoc);
+			    if (pChngRef != NULL)
+			       MiseAJourRef (pChngRef, pDoc);
 			 }
 		       /* libere les descripteurs d'element reference' inutilise's */
-		       LibereDescRefInutiles (pDoc);
+		       FreeUnusedReferredElemDesc (pDoc);
 		    }
 	       }
 	  }
@@ -175,31 +194,6 @@ boolean             avecMsgAPP;
    return ret;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    pDocument cherche si le document d'identificateur IdentDocu est charge'.        | */
-/* |            Retourne un pointeur sur son contexte, ou NULL s'il n'est| */
-/* |            pas charge'.                                            | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-PtrDocument         pDocument (DocumentIdentifier IdentDocu)
-
-#else  /* __STDC__ */
-PtrDocument         pDocument (IdentDocu)
-DocumentIdentifier     IdentDocu;
-
-#endif /* __STDC__ */
-
-{
-   int                 d;
-
-   for (d = 0; d < MAX_DOCUMENTS; d++)
-      if (TabDocuments[d] != NULL)
-	 if (MemeIdentDoc (TabDocuments[d]->DocIdent, IdentDocu))
-	    return TabDocuments[d];
-   return NULL;
-}
 
 /* ---------------------------------------------------------------------- */
 /* |    SupprDoc supprime les arbres abstraits d'un document et de tous | */
@@ -219,14 +213,10 @@ PtrDocument         pDoc;
 
 {
    int                 i;
-   PtrTextBuffer      pBuf;
-   PtrTextBuffer      pBufSuiv;
-   PtrOutReference      RefSort;
-   PtrOutReference      RefSortSuiv;
-   PtrChangedReferredEl      ERCh;
-   PtrChangedReferredEl      ERChSuiv;
-   PtrExternalDoc       DocExt;
-   PtrExternalDoc       DocExtSuiv;
+   PtrOutReference      pOutRef, pNextOutRef;
+   PtrChangedReferredEl      pChnRef, pNextChnRef;
+   PtrTextBuffer      pBuf, pNextBuf;
+   PtrExternalDoc       pExtDoc, pNextExtDoc;
 
    if (pDoc != NULL)
      {
@@ -234,9 +224,9 @@ PtrDocument         pDoc;
 	pBuf = pDoc->DocComment;
 	while (pBuf != NULL)
 	  {
-	     pBufSuiv = pBuf->BuNext;
+	     pNextBuf = pBuf->BuNext;
 	     FreeBufTexte (pBuf);
-	     pBuf = pBufSuiv;
+	     pBuf = pNextBuf;
 	  }
 	pDoc->DocComment = NULL;
 	/* libere tout l'arbre du document et ses descripteurs de reference */
@@ -253,40 +243,39 @@ PtrDocument         pDoc;
 	FreeDescReference (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
 	/* libere les descripteurs de references sortantes creees */
-	RefSort = pDoc->DocNewOutRef;
-	while (RefSort != NULL)
+	pOutRef = pDoc->DocNewOutRef;
+	while (pOutRef != NULL)
 	  {
-	     RefSortSuiv = RefSort->OrNext;
-	     FreeRefSortante (RefSort);
-	     RefSort = RefSortSuiv;
+	     pNextOutRef = pOutRef->OrNext;
+	     FreeRefSortante (pOutRef);
+	     pOutRef = pNextOutRef;
 	  }
 	/* libere les descripteurs de references sortantes detruites */
-	RefSort = pDoc->DocDeadOutRef;
-	while (RefSort != NULL)
+	pOutRef = pDoc->DocDeadOutRef;
+	while (pOutRef != NULL)
 	  {
-	     RefSortSuiv = RefSort->OrNext;
-	     FreeRefSortante (RefSort);
-	     RefSort = RefSortSuiv;
+	     pNextOutRef = pOutRef->OrNext;
+	     FreeRefSortante (pOutRef);
+	     pOutRef = pNextOutRef;
 	  }
 	/* libere les decripteurs d'element reference's change's */
-	ERCh = pDoc->DocChangedReferredEl;
+	pChnRef = pDoc->DocChangedReferredEl;
 
-	while (ERCh != NULL)
+	while (pChnRef != NULL)
 	  {
-	     ERChSuiv = ERCh->CrNext;
-	     DocExt = ERCh->CrReferringDoc;
-	     ERCh->CrReferringDoc = NULL;
-	     while (DocExt != NULL)
+	     pNextChnRef = pChnRef->CrNext;
+	     pExtDoc = pChnRef->CrReferringDoc;
+	     pChnRef->CrReferringDoc = NULL;
+	     while (pExtDoc != NULL)
 	       {
-		  DocExtSuiv = DocExt->EdNext;
-		  FreeDocExterne (DocExt);
-		  DocExt = DocExtSuiv;
+		  pNextExtDoc = pExtDoc->EdNext;
+		  FreeDocExterne (pExtDoc);
+		  pExtDoc = pNextExtDoc;
 	       }
-	     FreeElemRefChng (ERCh);
-	     ERCh = ERChSuiv;
+	     FreeElemRefChng (pChnRef);
+	     pChnRef = pNextChnRef;
 	  }
 
      }
 }
 
-/* End Of Module ouvre */
