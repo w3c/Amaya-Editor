@@ -184,6 +184,7 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 	{IDC_TSECOLOR, AM_DOC_SEL_COLOR},
 	{IDC_TINCOLOR, AM_DOC_INS_COLOR},
  	{IDC_CHANGCOLOR, AM_COLOR_PALETTE},
+ 	{IDC_CHANGCOLOR2, AM_COLOR_PALETTE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -2089,6 +2090,7 @@ STRING       pathname;
    TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #else /* !_WINDOWS */
+
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
@@ -2596,11 +2598,20 @@ LPARAM lParam;
 	{
 	  /* action buttons */
 	case IDC_CHANGCOLOR:
-	  TtcGetPaletteColors (&fgcolor, &bgcolor);
+	  TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE);
 	  if (fgcolor != -1)
 	    ustrcpy (FgColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
 	    ustrcpy (BgColor, ColorName (bgcolor));
+	  WIN_RefreshColorMenu (ColorHwnd);
+	  SetFocus (ColorHwnd);
+	  break;
+	case IDC_CHANGCOLOR2:
+	  TtcGetPaletteColors (&fgcolor, &bgcolor, FALSE);
+	  if (fgcolor != -1)
+	    ustrcpy (SelColor, ColorName (fgcolor));
+	  if (bgcolor != -1)
+	    ustrcpy (InsColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
