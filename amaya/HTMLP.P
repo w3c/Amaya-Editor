@@ -5164,10 +5164,16 @@ ATTRIBUTES
 	CreateBefore(ATTR_WIDTH);
 	CreateBefore(VALUE_WIDTH);
 	If Applet
-	   Width: Width_ pt;
+	   Width: Width_ px;
+	If PICTURE_UNIT
+	   Width: Width_ px;
 	IN Structure_view
+	   BEGIN
 	   If Applet
 		Width: Enclosing . Width;
+	   If PICTURE_UNIT
+		Width: Enclosing . Width;
+	   END;
 	END;
 
  Height_:
@@ -5175,10 +5181,16 @@ ATTRIBUTES
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
 	If Applet
-	   Height: Height_ pt;
+	   Height: Height_ px;
+	If PICTURE_UNIT
+	   Height: Height_ px;
 	IN Structure_view
+	   BEGIN
 	   If Applet
 		Height: Enclosed . Height;
+	   If PICTURE_UNIT
+		Height: Enclosed . Height;
+	   END;
 	END;
 
  hspace:
@@ -5853,6 +5865,9 @@ dans des paragraphes s affichent a cote de leur cadre...
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_CELLHEIGHT);
+	Height: Cell_height px;
+	IN Structure_view
+		Height: Enclosed . Height;
 	END;
 
  Word_wrap = No_wrap :

@@ -2994,7 +2994,7 @@ int                 frame;
 			ShowBox (frame, pAb->AbBox, position, 0);
 
 		     /* Allume la selection */
-		     HighlightSelection (FALSE, FALSE);
+		     HighlightSelection (FALSE);
 		  }
 	     }
 	}

@@ -179,6 +179,8 @@ colspan: colspan
 rowspan: rowspan
 Cell_align: align
 Cell_valign: valign
+Cell_width: width
+Cell_height: height
 Word_wrap: nowrap
 shape: shape
 coords: coords

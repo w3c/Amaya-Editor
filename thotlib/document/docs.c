@@ -757,7 +757,7 @@ PtrDocument         pDoc;
      }
    if (setSelect)
       /* rallume la selection */
-      HighlightSelection (FALSE, FALSE);
+      HighlightSelection (FALSE);
 }
 
 

@@ -2,7 +2,7 @@
  *** Copyright (c) 1996 INRIA, All rights reserved
  ***/
 
-/* Included headerfiles */
+/* Included header files */
 #include "app.h"
 #include "HTML.h"
 #include "tree.h"
@@ -14,8 +14,10 @@ static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
 
 /*----------------------------------------------------------------------
-   GetCellFromColumnHead   returns the cell that corresponds to    
-   Column_head colhead in a given row.                     
+   GetCellFromColumnHead
+
+   returns the cell that corresponds to the Column_head element colhead
+   in a given row.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      GetCellFromColumnHead (Element row, Element colhead)
@@ -60,9 +62,108 @@ Element             colhead;
 }
 
 /*----------------------------------------------------------------------
-   SetColumnWidth  computes the value of attribute Col_width_percent
-   for each column of the table whose first Column_head is 
-   firstcolhead.                                           
+   UpdateColHeadAttributes
+
+   updates attributes Col_width_pxl (width of column in pixels) and/or
+   IntMaxVol (volume of biggest cell in the column) of element colhead
+   according to the width and/or volume of a given cell.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         UpdateColHeadAttributes (Element colhead, Element cell,
+				    Document doc)
+#else
+static void         UpdateColHeadAttributes (colhead, cell, doc)
+Element             colhead;
+Element             cell;
+Document            doc;
+
+#endif
+{
+   ElementType	       elType;
+   AttributeType       attrType;
+   Attribute           attr, attrIntMaxVol, attrCellWidth, attrColWidthPxl;
+   int                 vol, max, span, i, cellWidth;
+
+   /* look for an attribute Cell_width (width, in HTML) */
+   elType = TtaGetElementType (cell);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Cell_width;
+   attrCellWidth = TtaGetAttribute (cell, attrType);
+   if (attrCellWidth != NULL)
+      /* this cell has an attribute Cell_width */
+      {
+      cellWidth = TtaGetAttributeValue (attrCellWidth);
+      attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+      attrColWidthPxl = TtaGetAttribute (colhead, attrType);
+      if (attrColWidthPxl != NULL)
+	/* the Column_head has an attribute Col_width_pxl, get its value */
+	max = TtaGetAttributeValue (attrColWidthPxl);
+      else
+	/* create an attribute Col_width_pxl for the Column_head */
+	{
+	attrColWidthPxl = TtaNewAttribute (attrType);
+	TtaAttachAttribute (colhead, attrColWidthPxl, doc);
+	max = 0;
+	}
+      /* set value of attribute Col_width_pxl */
+      if (cellWidth > max)
+         TtaSetAttributeValue (attrColWidthPxl, cellWidth, colhead, doc);
+      }
+   /* update attribute IntMaxVol of Column_head if the volume of the cell is
+      greater than the current value of IntMaxVol */
+   attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
+   attrIntMaxVol = TtaGetAttribute (colhead, attrType);
+   if (attrIntMaxVol != NULL)
+	{
+	   max = TtaGetAttributeValue (attrIntMaxVol);
+	   vol = TtaGetElementVolume (cell);
+	   /* when loading a document, images are not loaded when */
+	   /* this procedure is executed: their volume is 0 */
+	   if (vol == 0)
+	     {
+		/* does this cell only contain an image element? */
+		if (TtaGetFirstChild (cell) != NULL)
+		   /* assume vol = 30 */
+		   vol = 30;
+	     }
+	   else
+	     {
+		attrType.AttrTypeNum = HTML_ATTR_rowspan;
+		attr = TtaGetAttribute (cell, attrType);
+		if (attr != NULL)
+		  {
+		     /* the cell has an attribute rowspan */
+		     span = TtaGetAttributeValue (attr);
+		  }
+		attrType.AttrTypeNum = HTML_ATTR_colspan;
+		attr = TtaGetAttribute (cell, attrType);
+		if (attr != NULL)
+		  {
+		     /* the cell has an attribute colspan */
+		     span = TtaGetAttributeValue (attr);
+		     vol = vol / span;
+		     for (i = 1; i < span; i++)
+		       {
+			  if (vol > max)
+			     TtaSetAttributeValue (attrIntMaxVol, vol, colhead,
+						   doc);
+			  TtaNextSibling (&colhead);
+			  attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
+			  attrIntMaxVol = TtaGetAttribute (colhead, attrType);
+		       }
+		  }
+	     }
+	   if (vol > max)
+	      TtaSetAttributeValue (attrIntMaxVol, vol, colhead, doc);
+	}
+}
+
+
+/*----------------------------------------------------------------------
+   SetColumnWidth
+
+   computes the value of attributes Col_width_percent and/or Col_width_pxl
+   for each column of the table whose first Column_head is firstcolhead.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetColumnWidth (Element firstcolhead, Element newcolhead,
@@ -78,9 +179,9 @@ Document            doc;
    Element             el, group, row, tbody, colhead, cell;
    ElementType         elType, groupType;
    AttributeType       attrType;
-   Attribute           attr, attrIntMaxVol;
-   int                 nb, vol, max, span, i, volnew, total, nbEmptyCols,
-                       volemptycol, colwidth;
+   Attribute           attr, attrColWidthPcent, attrColWidthPxl;
+   int                 nb, vol, volnew, total, nbEmptyCols,
+                       volemptycol, colwidthpercent;
    char                name[50];
    Document            refdoc;
 
@@ -90,10 +191,10 @@ Document            doc;
    dispMode = TtaGetDisplayMode (doc);
    TtaSetDisplayMode (doc, DeferredDisplay);
 #endif
-   /* Create an attribute IntVolMax for each Column_head if it does not exist */
+   /* Create an attribute IntVolMax for each Column_head if it does not exist*/
    /* This attribute will contain the volume (number of characters) of the */
    /* biggest cell in the corresponding column */
-   /* for the momment, initialize all IntVolMax attributes to 0 */
+   /* Initialize all IntVolMax attributes to 0 */
    elType = TtaGetElementType (firstcolhead);
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
@@ -103,7 +204,8 @@ Document            doc;
 	attr = TtaGetAttribute (colhead, attrType);
 	if (attr == NULL)
 	  {
-	     /* There is no IntVolMax attribute on that Column_head. Create one */
+	     /* There is no IntVolMax attribute on that Column_head.
+		Create one */
 	     attr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (colhead, attr, doc);
 	  }
@@ -113,15 +215,16 @@ Document            doc;
 	TtaNextSibling (&colhead);
      }
 
-   /* process all rows in the table and looks for the cell having the */
-   /* largest volume in each column. Store the maximum volume in attribute */
-   /* IntMaxVol for each column */
+   /* process all cells in the table and looks for the cell having the */
+   /* largest volume and/or largest width in each column. */
+   /* For each column, store the maximum volume in attribute IntMaxVol and */
+   /* the maximum width in attribute Col_width_pxl */
    el = TtaGetParent (firstcolhead);
    if (el != NULL)
      {
 	TtaNextSibling (&el);
 	group = el;
-	/* process all row groups (thead, tbody, tfoot) */
+	/* process all row groups: thead, tbody, tfoot */
 	while (group != NULL)
 	  {
 	     groupType = TtaGetElementType (group);
@@ -152,72 +255,19 @@ Document            doc;
 			    if (elType.ElTypeNum == HTML_EL_Data_cell ||
 				elType.ElTypeNum == HTML_EL_Heading_cell)
 			      {
-				 /* get the Column_head corresponding to that cell, using */
-				 /* the Ref_column attribute */
+				 /* get the Column_head corresponding to that
+				    cell, using the Ref_column attribute */
 				 colhead = NULL;
 				 attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 				 attr = TtaGetAttribute (cell, attrType);
 				 if (attr != NULL)
-				    TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
-				 /* if this cell is bigger than the current biggest cell in */
-				 /* that column, update the volume of the biggest cell */
+				    TtaGiveReferenceAttributeValue (attr,
+						      &colhead, name, &refdoc);
+				 /* if this cell is bigger than the current
+				 biggest cell in that column, update the
+				 attributes of the corresponding Column_head */
 				 if (colhead != NULL)
-				   {
-				      attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
-				      attrIntMaxVol = TtaGetAttribute (colhead, attrType);
-				      if (attrIntMaxVol != NULL)
-					{
-					   max = TtaGetAttributeValue (attrIntMaxVol);
-					   vol = TtaGetElementVolume (cell);
-					   /* look for an attribute Cell_width */
-					   attrType.AttrTypeNum = HTML_ATTR_Cell_width;
-					   attr = TtaGetAttribute (cell, attrType);
-					   if (attr != NULL)
-					      /* the cell has an attribute Cell_width */
-					      TtaGetAttributeValue (attr);
-					   /* cellwidth = suggested width for the cell (pixels) */
-/****** take cellwidth into account **********/
-					   /* when loading a document, images are not loaded when */
-					   /* this procedure is executed: their volume is 0 */
-					   if (vol == 0)
-					     {
-						/* does this cell only contain an image element? */
-						if (TtaGetFirstChild (cell) != NULL)
-						   /* assume vol = 30 */
-						   vol = 30;
-					     }
-					   else
-					     {
-						attrType.AttrTypeNum = HTML_ATTR_rowspan;
-						attr = TtaGetAttribute (cell, attrType);
-						if (attr != NULL)
-						  {
-						     /* the cell has an attribute rowspan */
-						     span = TtaGetAttributeValue (attr);
-/***** removed		         vol = vol / span;
-******/
-						  }
-						attrType.AttrTypeNum = HTML_ATTR_colspan;
-						attr = TtaGetAttribute (cell, attrType);
-						if (attr != NULL)
-						  {
-						     /* the cell has an attribute colspan */
-						     span = TtaGetAttributeValue (attr);
-						     vol = vol / span;
-						     for (i = 1; i < span; i++)
-						       {
-							  if (vol > max)
-							     TtaSetAttributeValue (attrIntMaxVol, vol, colhead, doc);
-							  TtaNextSibling (&colhead);
-							  attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
-							  attrIntMaxVol = TtaGetAttribute (colhead, attrType);
-						       }
-						  }
-					     }
-					   if (vol > max)
-					      TtaSetAttributeValue (attrIntMaxVol, vol, colhead, doc);
-					}
-				   }
+				   UpdateColHeadAttributes(colhead, cell, doc);
 			      }
 			    /* get the next cell in the current row */
 			    TtaNextSibling (&cell);
@@ -237,9 +287,9 @@ Document            doc;
 	     /* get the next row group in the table */
 	     TtaNextSibling (&group);
 	  }
-	/* the maximum volume of cells in each column is known (attribute */
-	/* IntMaxVol). Compute the relative width (attribute Col_width_percent) */
-	/* of each column */
+	/* the size of the largest cell in each column is known (attributes */
+	/* IntMaxVol and Col_width_pxl). Compute the relative width */
+	/* (attribute Col_width_percent) of each column */
 	/* compute first the number of columns (nb) and the sum of maximum */
 	/* volumes (total) */
 	total = 0;
@@ -271,9 +321,9 @@ Document            doc;
 	  }
 	if (newcolhead != NULL)
 	  {
-	     /* a new column has been created by the user. It's empty but its */
-	     /* width should not be 0.  An average width is assigned to that new */
-	     /* column. (The new column is counted in nb). */
+	     /* a new column has been created by the user. It's empty but */
+	     /* its width should not be 0.  An average width is assigned to */
+	     /* that new column. (The new column is counted in nb). */
 	     if (nb > 2)
 		volnew = total / (nb - 1);
 	     else
@@ -282,16 +332,30 @@ Document            doc;
 	  }
 	/* set the relative width (% of table width) of each Column_head */
 	colhead = firstcolhead;
-	colwidth = 100;
+	colwidthpercent = 100;
 	if (total == 0 && nb > 0)
 	   /* empty table. All columns will have the same width. */
-	   colwidth = 100 / nb;
+	   colwidthpercent = 100 / nb;
 	while (colhead != NULL)
 	  {
-	     attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
-	     attr = TtaGetAttribute (colhead, attrType);
-	     if (attr != NULL)
-	       {
+	     /* get attributes Col_width_percent and Col_width_pxl for that
+		Column_head */
+	     attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+	     attrColWidthPcent = TtaGetAttribute (colhead, attrType);
+	     attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+	     attrColWidthPxl = TtaGetAttribute (colhead, attrType);
+	     /* if there is an attribute Col_width_pxl, remove attribute
+		Col_width_percent */
+	     if (attrColWidthPxl != NULL && attrColWidthPcent != NULL)
+		TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
+	     else
+		/* there is no attribute Col_width_pxl, compute the value of
+		   attribute Col_width_percent */
+		{
+	        attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
+	        attr = TtaGetAttribute (colhead, attrType);
+	        if (attr != NULL)
+	          {
 		  if (total != 0)
 		    {
 		       if (colhead == newcolhead)
@@ -303,13 +367,13 @@ Document            doc;
 			    if (vol == 0)
 			       vol = volemptycol;
 			 }
-		       colwidth = (100 * vol) / total;
+		       colwidthpercent = (100 * vol) / total;
 		    }
-		  attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
-		  attr = TtaGetAttribute (colhead, attrType);
-		  if (attr != NULL)
-		     TtaSetAttributeValue (attr, colwidth, colhead, doc);
-	       }
+		  if (attrColWidthPcent != NULL)
+		     TtaSetAttributeValue (attrColWidthPcent, colwidthpercent,
+					   colhead, doc);
+	          }
+		}
 	     /* next Column_head */
 	     TtaNextSibling (&colhead);
 	  }

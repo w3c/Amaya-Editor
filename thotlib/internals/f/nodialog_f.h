@@ -87,8 +87,7 @@ extern void SelectElement ( PtrDocument pDoc,
                             boolean Debut,
                             boolean Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
-extern void HighlightSelection ( boolean DebVisible,
-                                 boolean drag );
+extern void HighlightSelection ( boolean DebVisible );
 extern void CancelSelection ( void );
 extern void MergeAndSelect ( PtrDocument SelDoc,
                              PtrElement PremSel,
@@ -245,8 +244,7 @@ extern void SelectElement (/* PtrDocument pDoc,
                               boolean Debut,
                               boolean Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void HighlightSelection (/* boolean DebVisible,
-                                   boolean drag */);
+extern void HighlightSelection (/* boolean DebVisible */);
 extern void CancelSelection (/* void */);
 extern void MergeAndSelect (/* PtrDocument SelDoc,
                                PtrElement PremSel,

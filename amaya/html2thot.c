@@ -4,13 +4,8 @@
 
 /*----------------------------------------------------------------------
    
-   html2thot parses an HTML file and builds a Thot document of     
-   type HTML.                                                      
-   
-   Author: Vincent Quint                                           
-   VarDate:   November 1994                                           
-   
-   Copyright INRIA 1994, 1995, 1996                                
+   html2thot parses an HTML file and builds the abstract tree of a Thot
+   document of type HTML.                                                      
    
   ----------------------------------------------------------------------*/
 
