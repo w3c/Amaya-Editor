@@ -1262,6 +1262,12 @@ DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
 	TtaDestroyDialogue (BaseDialog + SaveForm);
 
 	/*
+	 * Transform all URLs to absolute ones.
+	 */
+	if (UpdateURLs)
+	   SetAbsoluteURLs (SavingDocument, 1);
+
+	/*
 	 * change all Picture SRC to the remote URL.
 	 * and add them to the list of remote images.
 	 */
@@ -1269,12 +1275,6 @@ DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
 	strcat (tempfile, DIR_STR);
 	strcat (tempfile, DocumentName);
 	UpdateImages (imgbase, src_is_local, dst_is_local, tempfile);
-
-	/*
-	 * Transform all URLs to absolute ones.
-	 */
-	if (UpdateURLs)
-	   SetAbsoluteURLs (SavingDocument, 1);
 
 	/*
 	 * now save the file as-if

@@ -463,6 +463,8 @@ void               *param;
 		  {
 		     if (string[0] != 0)
 			strcat (string, " ");
+		     if (new->ctxt->ancestors[i] == HTML_EL_HTML)
+		         new->ctxt->ancestors[i] = HTML_EL_BODY;
 		     strcat (string, GITagNameByType (new->ctxt->ancestors[i]));
 		  }
 	     }
@@ -476,6 +478,8 @@ void               *param;
 	  {
 	     if (string[0] != 0)
 		strcat (string, " ");
+	     if (new->ctxt->type == HTML_EL_HTML)
+		 new->ctxt->type = HTML_EL_BODY;
 	     strcat (string, GITagNameByType (new->ctxt->type));
 	  }
 	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
@@ -484,6 +488,8 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
+		  if (new->ctxt->attrelem == HTML_EL_HTML)
+		      new->ctxt->attrelem = HTML_EL_BODY;
 		  strcat (string, GITagNameByType (new->ctxt->attrelem));
 	       }
 	     strcat (string, ".");
@@ -495,6 +501,8 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
+		  if (new->ctxt->attrelem == HTML_EL_HTML)
+		      new->ctxt->attrelem = HTML_EL_BODY;
 		  strcat (string, GITagNameByType (new->ctxt->attrelem));
 	       }
 	     strcat (string, ":");

@@ -1497,10 +1497,13 @@ PSchema             gPres;
     }
   
   ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
-  if (attrelemname[0] != EOS)
+  if (attrelemname[0] != EOS) {
     GIType (attrelemname, &ctxt->attrelem);
+    if (ctxt->attrelem == HTML_EL_BODY) ctxt->attrelem = HTML_EL_HTML;
+  }
   
   GIType (elem, &ctxt->type);
+  if (ctxt->type == HTML_EL_BODY) ctxt->type = HTML_EL_HTML;
   if ((ctxt->type == 0) && (ctxt->attr == 0) &&
       (ctxt->attrval == 0) && (ctxt->classattr == 0))
     {
@@ -1518,6 +1521,7 @@ PSchema             gPres;
 	break;
       type = attr = attrval = 0;
       GIType (ancestors[i], &type);
+      if (ancestors[i] == HTML_EL_BODY) ancestors[i] = HTML_EL_HTML;
       if (type == 0)
 	continue;
       for (j = 0; j < MAX_ANCESTORS; j++)
