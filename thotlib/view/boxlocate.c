@@ -31,7 +31,6 @@
 #include "appdialogue_tv.h"
 
 #include "absboxes_f.h"
-#include "appdialogue_tv.h"
 #include "applicationapi_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
@@ -41,6 +40,7 @@
 #include "buildlines_f.h"
 #include "callback_f.h"
 #include "changepresent_f.h"
+#include "dialogapi_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"

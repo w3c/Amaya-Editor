@@ -1489,9 +1489,9 @@ static void         CreateInputElement (Document doc, View view, int elInput)
 	   {
 	   el = TtaNewElement (doc, elType);
 	   TtaInsertSibling (el, input, FALSE, doc);
-	   /* if it's not a HTML_EL_BUTTON or a SELECT
+	   /* if it's not a HTML_EL_BUTTON_ or a SELECT
 	      select the following text element */
-	   if (elInput != HTML_EL_BUTTON && elInput != HTML_EL_Option_Menu)
+	   if (elInput != HTML_EL_BUTTON_ && elInput != HTML_EL_Option_Menu)
 	   TtaSelectElement (doc, el);
 	   }
 	 }
@@ -1685,7 +1685,7 @@ void                CreateImageInput (Document doc, View view)
 	{
 	  el = TtaNewElement (doc, elType);
 	  TtaInsertSibling (el, input, FALSE, doc);
-	  /* if it's not a HTML_EL_BUTTON or a SELECT
+	  /* if it's not a HTML_EL_BUTTON_ or a SELECT
 	     select the following text element */
 	  TtaSelectElement (doc, el);
 	}
@@ -1721,7 +1721,7 @@ void                CreateLabel (Document doc, View view)
   ----------------------------------------------------------------------*/
 void                CreatePushButton (Document doc, View view)
 {
-  CreateInputElement (doc, view, HTML_EL_BUTTON);
+  CreateInputElement (doc, view, HTML_EL_BUTTON_);
 }
 
 /*----------------------------------------------------------------------
