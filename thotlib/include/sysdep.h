@@ -811,11 +811,11 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 #endif
 
 /* syslog.h */
-#ifdef HAVE_SYSLOG_H
-#include <syslog.h>
-#else
 #ifdef HAVE_SYS_SYSLOG_H
 #include <sys/syslog.h>
+#else
+#ifdef HAVE_SYSLOG_H
+#include <syslog.h>
 #endif
 #endif
 
