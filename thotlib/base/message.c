@@ -61,7 +61,14 @@ unsigned char *AsciiTranslate (char *pBuffer)
     {
       /* On lit jusqu'au premier backslash rencontre */
       while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
-	result[j++] = pBuffer[i++];
+	{
+#ifndef _WINDOWS
+	  if (pBuffer[i] == '&')
+	    i++;
+	  else
+#endif /* _WINDOWS */
+	    result[j++] = pBuffer[i++];
+	}
 
       /* Teste si on est en presence de deux backslashs ou */
       /* si on se trouve devant un caractere special */
@@ -266,8 +273,8 @@ void FreeAllMessages ()
 
 
 /*----------------------------------------------------------------------
-   TtaGetMessage retourne le message correspondant a` l'origine et 
-   l'indice 0 a` N donne'.                                 
+   TtaGetMessage retourne le message correspondant a l'origine et 
+   l'indice 0 a N donne.                                 
   ----------------------------------------------------------------------*/
 char *TtaGetMessage (int origin, int num)
 {
