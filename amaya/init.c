@@ -2952,12 +2952,6 @@ static Document LoadDocument (Document doc, char *pathname,
 		   isXML = TRUE;
 		   unknown = FALSE;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "css", 3))
-		 {
-		   docType = docCSS;
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
-		 }
 	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
 			!strncasecmp (&content_type[i+1], "x-mathml", 8))
 		 {
@@ -2965,12 +2959,6 @@ static Document LoadDocument (Document doc, char *pathname,
 		   isXML = TRUE;
 		   docType = docMath;
 		   parsingLevel = L_MathML;
-		   unknown = FALSE;
-		 }
-	       else
-		 {
-		   docType = docText;
-		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
 	     }
