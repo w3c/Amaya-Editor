@@ -661,12 +661,26 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   int                 x,y;
   int                 height;
   static int          timer = None; 
-  
+  int                 firstycheck = 0;
+
   frame = (int) data; 
   FrameToView (frame, &doc, &view);
-  gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
-  if (w->parent->parent->parent->allocation.y > y)
-    y = w->parent->parent->parent->allocation.y;
+  
+  firstycheck = (int) gtk_object_get_data  (GTK_OBJECT(w->parent->parent->parent), 
+					   "Yboolean");
+  if (firstycheck)
+    {
+      y = (int) gtk_object_get_data (GTK_OBJECT(w->parent->parent->parent),
+				     "Yorigin");
+      gtk_object_set_data (GTK_OBJECT(w->parent->parent->parent),
+			   "Yboolean", (gpointer) 0);
+    }
+  else
+    gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
+  /*  if (w->parent->parent->parent->allocation.y > y)
+      y = w->parent->parent->parent->allocation.y;*/
+
+
   if (timer != None)
     {
       gtk_timeout_remove (timer);
