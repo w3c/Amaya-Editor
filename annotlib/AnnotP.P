@@ -1,0 +1,196 @@
+PRESENTATION Annot;
+
+VIEWS
+   Formatted_view;
+
+#ifdef PAGE
+PRINT
+   Formatted_view;
+#endif
+
+#define DOC_FONTSIZE 12 pt
+#define RDF_FONTSIZE 14 pt
+#define STRUCT_INDENT 0.5 cm
+#define RDF_Color Blue
+
+DEFAULT
+	BEGIN
+	HorizRef: Enclosed . HRef;
+	VertRef: * . Left;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	Justify: Enclosing =;
+	Hyphenate: Enclosing =;
+	LineSpacing: Enclosing =;
+	LineWeight: Enclosing =;
+	LineBreak: Yes;
+	PageBreak: Yes;
+	Visibility: Enclosing =;
+	Font: Enclosing =;
+	Style: Enclosing =;
+	Weight: Enclosing =;
+	Underline: Enclosing =;
+	Thickness: Enclosing =;
+	Size: Enclosing =;
+	Adjust: Enclosing =;
+	Indent: Enclosing =;
+	Depth: Enclosing =;
+	FillPattern: nopattern;
+	END;
+
+BOXES
+
+ HR_Graph1: BEGIN
+	Content: Graphics 'Z';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	Foreground: RDF_Color;
+	LineWeight: 1 px;
+	Visibility: Creator =;
+	END;
+
+ HR_Graph2: BEGIN
+	Content: Graphics 'X';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	Foreground: White;
+	LineWeight: 1 px;
+	Visibility: Creator =;
+	END;
+
+ Author_Box:
+	BEGIN
+	Content: (Text 'Author: ');
+	Visibility: Creator =;
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+	Foreground: RDF_Color;
+	END;
+
+ SourceDoc_Box:
+	BEGIN
+	Content: (Text 'Source document: ');
+	Visibility: Creator =;
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+	Foreground: RDF_Color;
+	END;
+
+ RDFtype_Box:
+	BEGIN
+	Content: (Text 'Annotation type: ');
+	Visibility: Creator =;
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+	Foreground: RDF_Color;
+	END;
+
+ Date_Box:
+	BEGIN
+	Content: (Text 'Date: ');
+	Visibility: Creator =;
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+	Foreground: RDF_Color;
+	END;
+
+ ValueType: BEGIN
+	Content: (Resource);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	END;
+
+RULES
+
+  Annot:
+	BEGIN
+	Adjust: Left;
+	Justify: No;
+	Indent: 0;
+	Font: Times;
+	Style: Roman;
+	Weight: Normal;
+	LineWeight: 0;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height min;
+	Size: DOC_FONTSIZE;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	END;
+
+ Description:
+	BEGIN
+	CreateLast(HR_Graph1);
+	CreateLast(HR_Graph2);
+	Visibility: Enclosing =;
+	Width: Right = Enclosing . Right - STRUCT_INDENT;
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+ Body:
+	BEGIN
+	Width: Enclosing . Width;
+	Height: 1 cm min;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous . Bottom + 0.2;
+	END;
+
+ Author:
+	BEGIN
+	CreateBefore (Author_Box);
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
+	END;
+
+ SourceDoc:
+	BEGIN
+	CreateBefore (SourceDoc_Box);
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
+	END;
+
+ RDFtype:
+	BEGIN
+	CreateBefore (RDFtype_Box);
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
+	Width: 1 px;
+	END;
+
+ AnnotDate:
+	BEGIN
+	CreateBefore (Date_Box);
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
+	END;
+
+ATTRIBUTES
+
+ Resource:
+	BEGIN
+ 	CreateBefore(ValueType);
+        END;
+
+END
