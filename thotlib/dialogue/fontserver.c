@@ -21,8 +21,13 @@ int GetFontFilename(char script, int family,
   XftResult     result;  
   char	*s;
   int ok = 0;
-  
+  int render, core;
+
   pat = XftPatternCreate ();
+  render = False;
+  core = True;
+  (void) XftPatternGetBool (pat, XFT_RENDER, 0, &render);
+  (void) XftPatternGetBool (pat, XFT_CORE, 0, &core);
   if (!pat)
     return ok;    
   if (script != 'L' && script != 'G')
@@ -149,9 +154,9 @@ int GetFontFilename(char script, int family,
 	  break;
 	}
     }
-  XftPatternAddDouble (pat, XFT_SIZE, (((double) size) / 10.0));
+  XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
   /* Returns a pattern more precise that let us load fonts*/
-  match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result);  
+  match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
   if (match) 
     {
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
@@ -161,7 +166,7 @@ int GetFontFilename(char script, int family,
        }
      XftPatternDestroy (match);
     }    
-  XftPatternDestroy (pat);
+  XftPatternDestroy (pat); 
   return ok;
 }
 
