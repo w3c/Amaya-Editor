@@ -110,6 +110,7 @@ public:
 
   void SetActive( bool active = TRUE );
   bool IsActive();
+  bool IsMenuActive();
   void DistributeFocus();
 
   void FreeFrame();

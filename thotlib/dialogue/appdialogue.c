@@ -3891,7 +3891,7 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 #ifdef _WX
 	      /* the frame must be active when enable/disable menu items 
 	       * Active frame <=> Menu's frame is the current one on the parent window */
-	      if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsActive())
+	      if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsMenuActive())
 		{
 		  wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
 		  menu_id = 0;
@@ -3960,7 +3960,7 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 #ifdef _WX
 	     /* the frame must be active when enable/disable menu items 
 	      * Active frame <=> Menu's frame is the current one on the parent window */
-	     if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsActive())
+	     if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsMenuActive())
 	       {
 		 wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
 		 menu_id = 0;

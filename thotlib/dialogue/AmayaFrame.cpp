@@ -776,6 +776,21 @@ bool AmayaFrame::IsActive()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
+ *      Method:  IsMenuActive
+ * Description:  returns true if the frame's menu is the top menu of the parent window
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaFrame::IsMenuActive()
+{
+  AmayaWindow * p_window = GetWindowParent();
+  if ( !p_window )
+    return false;
+  return (p_window->GetMenuBar() == GetMenuBar());
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
  *      Method:  RaiseFrame
  * Description:  popup the frame container and activate it
  *--------------------------------------------------------------------------------------
