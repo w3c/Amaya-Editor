@@ -4095,8 +4095,10 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 
   charRead = EOS;
   *endOfFile = FALSE;
+
   if (buffer)
     {
+      /* read from a buffer */
 #ifdef _I18N_
       if (SecondByte != EOS)
 	{
@@ -4107,21 +4109,25 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
       else
 	{
 	  charRead = buffer[(*index)++];
-	  if (HTMLcontext.encoding != UTF_8)
+	  if (charRead == EOS)
+	    *endOfFile = TRUE;
+	  else
 	    {
-	      /* translate ISO-latin characters into a UTF-8 string */
-	      ptr = fallback;
-	      wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
-	      res = TtaWCToMBstring (wcharRead, &ptr);
-	      /* handle the first character */
-	      charRead = fallback[0];
-	      if (res > 1)
-		/* store the second UTF-8 byte */
-		SecondByte = fallback[1];
+	      if (HTMLcontext.encoding != UTF_8)
+		{
+		  /* translate ISO-latin characters into a UTF-8 string */
+		  ptr = fallback;
+		  wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
+		  res = TtaWCToMBstring (wcharRead, &ptr);
+		  /* handle the first character */
+		  charRead = fallback[0];
+		  if (res > 1)
+		    /* store the second UTF-8 byte */
+		    SecondByte = fallback[1];
+		}
 	    }
 	}
 #else /* _I18N_ */
-      /* read from a buffer */
       ptr = &buffer[*index];
       nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr,
 					HTMLcontext.encoding);
@@ -4185,17 +4191,22 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	  else
 	    {
 	      charRead = FileBuffer[(*index)++];
-	      if (HTMLcontext.encoding != UTF_8)
+	      if (charRead == EOS)
+		*endOfFile = TRUE;
+	      else
 		{
-		  /* translate the ISO-latin-1 character into a UTF-8 string */
-		  ptr = fallback;
-		  wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
-		  res = TtaWCToMBstring (wcharRead, &ptr);
-		  /* handle the first character */
-		  charRead = fallback[0];
-		  if (res > 1)
-		    /* store the second UTF-8 byte */
-		    SecondByte = fallback[1];
+		  if (HTMLcontext.encoding != UTF_8)
+		    {
+		      /* translate the ISO-latin-1 character into a UTF-8 string */
+		      ptr = fallback;
+		      wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
+		      res = TtaWCToMBstring (wcharRead, &ptr);
+		      /* handle the first character */
+		      charRead = fallback[0];
+		      if (res > 1)
+			/* store the second UTF-8 byte */
+			SecondByte = fallback[1];
+		    }
 		}
 	    }
 #else /* _I18N_ */
