@@ -317,7 +317,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	{ 
 	  LoadColor (fg);
 #ifdef _GTK
-	  gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg);
+	  gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg * 2);
 	  if (hyphen)
 	    /* draw the hyphen */
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");

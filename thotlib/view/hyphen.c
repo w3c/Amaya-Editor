@@ -364,7 +364,7 @@ ThotBool CanHyphen (PtrBox pBox)
       pBox->BxScript != 'H' && pBox->BxScript != 'A' &&
       pBox->BxScript != 'G' &&
       pBox->BxAbstractBox->AbLeafType == LtText &&
-      pBox->BxAbstractBox->AbHyphenate)
+      (pBox->BxAbstractBox->AbHyphenate || pBox->BxScript == 'Z'))
     {
       language = pBox->BxAbstractBox->AbLang;
       if (pBox->BxScript != TtaGetScript (pBox->BxAbstractBox->AbLang))

@@ -1154,6 +1154,8 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   /* search a break */
   lostPixels = SearchBreak (pLine, pBox, max, font, &length, &width,
 			    &nSpaces, &newIndex, &pNewBuff);
+  /*if (pBox->BxScript == 'Z')
+    printf ("length=%d width=%d\n", length, width);*/
   if (lostPixels <= 0)
     /* don't break on a space */
     spaceWidth = 0;
@@ -1724,7 +1726,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	       if (pNextBox)
 		 {
 		   if (pNextBox->BxType == BoScript &&
-		       pNextBox != pNextBox->BxAbstractBox->AbBox->BxNexChild)
+		       pNextBox != pNextBox->BxAbstractBox->AbBox->BxNexChild &&
+		       pNextBox->BxPrevious)
 		     pNextBox = pNextBox->BxPrevious;
 		   else
 		     pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);
@@ -1753,6 +1756,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   {
 		     BreakPieceOfBox (pLine, pNextBox, pNextBox->BxW - 1, pRootAb);
 		     pBox = pNextBox;
+		     toCut = FALSE;
 		   }
 		 else
 		   {

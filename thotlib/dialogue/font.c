@@ -331,6 +331,12 @@ int CharacterWidth (int c, PtrFont font)
 	l = gdk_char_width (font, 32) / 4;
       else if (c == HALF_EM)
 	l = gdk_char_width (font, 32) / 2;
+      else if (c > 256)
+	{
+	  l = gdk_text_width_wc (font, (GdkWChar *)&c, 2);
+	  if (l == 0)
+	    l = gdk_char_width (font, 32);
+	}
       else
 	l = gdk_char_width (font, c);
 #else /* _GTK */
@@ -564,12 +570,10 @@ int FontHeight (PtrFont font)
     return (gl_font_height (font));
 #else /* _GL */
 #ifdef _WINDOWS
-  return (font->FiHeight);
+    return (font->FiHeight);
 #else  /* _WINDOWS */
 #ifdef _GTK
-    /* in the string below, 'r' represents the greek character rho (lowercase)
-       and produces a descender in the string when using the Symbol font */
-    return (gdk_string_height (font, "AXpr") + 3); /* need some extra space */
+    return (font->ascent + font->descent);
 #else /* _GTK */
     return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
 #endif /* _GTK */
@@ -1043,7 +1047,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #if defined (_WINDOWS) && !defined (_GL)
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  int                 c, ind;
+  int                 c, ind, space = 32;
   HFONT               hOldFont;
   HDC                 display;
 #endif /* _WINDOWS */
@@ -1125,6 +1129,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		{
 		  GetTextExtentPoint (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
+		  if (wsize.cx == 0)
+		    GetTextExtentPoint (display, (LPCTSTR) (&space),
+					1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[ind] = wsize.cx;
 		  ptfont->FiHeights[ind] = wsize.cy;
 		  c++;
