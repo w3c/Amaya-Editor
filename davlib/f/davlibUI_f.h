@@ -9,6 +9,10 @@
 extern void DAVSetLockIndicator ( Document docid );
 extern void DAVDisplayMessage ( char *msg,
                                 char *arg );
+extern void DAVDisplayMultiLineMessage ( Document docid,
+                                         char *line1,
+                                         char *line2,
+                                         char *line3 );
 extern BOOL DAVConfirmDialog ( Document docid,
                                char *msg1,
                                char *msg2,
@@ -33,6 +37,10 @@ extern void DAVShowMultiStatusInfo ( AHTReqContext *context );
 extern void DAVSetLockIndicator (/* Document docid */);
 extern void DAVDisplayMessage (/* char *msg,
                                   char *arg */);
+extern void DAVDisplayMultiLineMessage (/* Document docid,
+                                           char *line1,
+                                           char *line2,
+                                           char *line3 */);
 extern BOOL DAVConfirmDialog (/* Document docid,
                                  char *msg1,
                                  char *msg2,
