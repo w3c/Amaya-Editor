@@ -328,7 +328,10 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
    xp = x + (fh / 4);
    y += FrameTable[frame].FrTopMargin;
 
-   InitDrawing (5, 1, fg);
+   if (fh > 14)
+     InitDrawing (5, 1, fg);
+   else
+     InitDrawing (5, 0, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 

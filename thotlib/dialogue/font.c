@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) Windows version
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
- *			P. Cheyrou-lagreze (INRIA) - Opengl Version
+ *	    P. Cheyrou-lagreze (INRIA) - Opengl Version
  *
  */
 
@@ -904,9 +904,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	  sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
    	  break;
 	}
-#ifdef _PCLDEBUGFONT
-      printf ("%s\n", r_nameX);
-#endif /*_PCLDEBUGFONT*/
     }
   else if (script == 'Z')
     {
@@ -1228,7 +1225,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 	}
-      if (ptfont == NULL)
+      if (ptfont == NULL && script != 'E')
 	{
 	  if (script != '1' && script != 'L' && script != 'G' && size != -1)
 	    /* try without highlight and no specific size */
@@ -1293,7 +1290,7 @@ void *LoadStixFont (int family, int size)
 {
   return ((void *) LoadNearestFont ('E', family, 0, size, 
 				    size, ActiveFrame,
-				    TRUE, TRUE));
+				    FALSE, FALSE));
 }
 /*----------------------------------------------------------------------
   GetFontAndIndexFromSpec return the glyph index and the font
@@ -1310,6 +1307,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
   unsigned int       mask;
 
   *font = NULL;
+  car = EOS;
   if (fontset)
     {
       if (c <= 0xFF)
@@ -1726,7 +1724,7 @@ void InitDialogueFonts (char *name)
 {
 #ifndef _WINDOWS
   int              ndir, ncurrent;
-  char             FONT_PATH[128];
+  char            FONT_PATH[128];
   char            *fontpath;
 #endif /* _WINDOWS */
   char           **dirlist = NULL;

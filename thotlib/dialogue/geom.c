@@ -329,7 +329,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #else /*_GTK*/
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
-   GdkWindowPrivate    *xwindow2;   
 #endif /*_GTK*/
   float               ratioX, ratioY;
   int                 ret;
@@ -344,8 +343,10 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   POINT               ptCur;
   HCURSOR             cross;
 #else /* _WINDOWS */
+#ifndef _GTK
   ThotWindow          wdum;
   int                 dx, dy;
+#endif /*_GTK*/
   int                 e, f;
 #endif /* _WINDOWS */
 
@@ -368,15 +369,17 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   cross = LoadCursor (NULL, IDC_CROSS);
 #else /* !_WINDOWS */
 #ifndef _GTK
-  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
+  e = PointerMotionMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
 #else /* _GTK */
-  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, NULL, e, 0);
+  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
+  e = GDK_BUTTON_MOTION_MASK | GDK_POINTER_MOTION_MASK 
+    | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
+  ThotGrab (w, HVCurs, e, 0);
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
 		None, 
@@ -558,6 +561,8 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	}
 #else /* !_WINDOWS */
 #ifndef _GTK
+
+#ifdef _LSOSOS
       if (XPending (TtDisplay) == 0)
 	{
 	  /* current pointer position */
@@ -637,7 +642,8 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    }
 	  else
 	    lasty = newy;
-
+#endif
+	  XNextEvent (TtDisplay, &event);
 	  switch (event.type)
 	    {
 	    case KeyPress:
@@ -648,12 +654,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    case ButtonPress:
 	      /* it's a press button event */
 	      input = TRUE;
-	      if (wrap)
-		{
-		  /* align the cursor position */
-		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-		  wrap = FALSE;		  
-		}
 	      break;
 
 	    case ButtonRelease:
@@ -699,128 +699,73 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 	      XtDispatchEvent (&event);
 	      break;
-
-	    default: break;
-	    }
-	}
-#else /* _GTK */
-      if (gdk_events_pending () == 0)
-	{
-	  /* current pointer position */
-	  xwindow = (GdkWindowPrivate*) w;
-	  xwindow2 = (GdkWindowPrivate*) wdum;
-	  xwindow2 = TtaGetMemory (sizeof(GdkWindowPrivate*));
-	  XQueryPointer (GDK_DISPLAY(), 
-			 xwindow->xwindow, 
-			 &(xwindow2->xwindow), 
-			 &(xwindow2->xwindow), 
-			 &dx, &dy, 
-			 &newx, &newy, 
-			 &e);
-	  TtaFreeMemory (xwindow2);
-	  /* coordinate checking */
-	  newx = DO_ALIGN (newx - x);
-	  newx += x;
-	  newy = DO_ALIGN (newy - y);
-	  newy += y;
-	  if (newx < x || newx > x + width || newy < y || newy > y + height)
-	    {
-	      /* CHKR_LIMIT to size of the box */
-	      /* new X valid position */
+	    case MotionNotify:
+	      /* check the coordinates */
+	      newx = x + DO_ALIGN ((int) event.xmotion.x - x);
+	      newy = y + DO_ALIGN ((int) event.xmotion.y - y);
+	      /* Update the X position */
 	      if (newx < x)
-		newx = x;
-	      else if (newx > x + width)
-		newx = x + width;
-
-	      /* new Y valid position */
-               if (newy < y)
-		 newy = y;
-               else if (newy > y + height)
-		 newy = y + height;
-              xwindow = (GdkWindowPrivate*) w;
-	      XWarpPointer (GDK_DISPLAY(), 
-			    None, 
-			    xwindow->xwindow,
-			    0, 0, 0, 0, lastx, lasty);
-            }
-
-	  /* Draw the new segments resulting of the new point */
-	  if (newx != lastx || newy != lasty)
-	    {
-	      if (x1 != -1)
 		{
-		  gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
-		  gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
+		  newx = x;
+		  wrap = TRUE;
 		}
-	      if (x3 != -1)
+	      else if (newx > x + width)
 		{
-		  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
-		  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
+		  newx = x + width;
+		  wrap = TRUE;
+		}
+	      
+	      /* Update the Y position */
+	      if (newy < y)
+		{
+		  newy = y;
+		  wrap = TRUE;
+		}
+	      else if (newy > y + height)
+		{
+		  newy = y + height;
+		  wrap = TRUE;
+		} 
+	      
+	      /* shows the new adjacent segment position */
+	      if (1 || newx != lastx || newy != lasty)
+		{
+		  if (x1 != -1)
+		    {
+		      XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, lastx, lasty);
+		      XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, newx, newy);
+		    }
+		  if (x3 != -1)
+		    {
+		      XDrawLine (TtDisplay, w, TtInvertGC, lastx, lasty, x3, y3);
+		      XDrawLine (TtDisplay, w, TtInvertGC, newx, newy, x3, y3);
+		    }
 		}
 	      lastx = newx;
 	      lasty = newy;
+	      if (wrap)
+		{
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+		  wrap = FALSE;
+		}
+	      break;
+	    default: 
+	      break;
 	    }
-	}
-      else
-	{
+	
+#else /* _GTK */
 	  event = gdk_event_get ();
 	  if (event)
-	    {
-	      /* Check for window ID */
-	      if (((GdkEventMotion *)event)->window == w)
-		{
-		  /* check the coordinates */
-		  newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
-		  newy = y + DO_ALIGN ((int) ((GdkEventMotion *)event)->y - y);
-		  /* CHKR_LIMIT to size of the box */
-		  /* new X valid position */
-		  if (newx < x)
-		    {
-		      lastx = x;
-		      wrap = TRUE;
-		    }
-		  else if (newx > x + width)
-		    {
-		      lastx = x + width;
-		      wrap = TRUE;
-		    }
-		  else
-		    lastx = newx;
-		  
-		  /* new Y valid position */
-		  if (newy < y)
-		    {
-		      lasty = y;
-		      wrap = TRUE;
-		      }
-		  else if (newy > y + height)
-		    {
-		      lasty = y + height;
-		      wrap = TRUE;
-		    }
-		  else
-		    lasty = newy;
-		} 	      
-	      /* we only deal with button press events */
-	      switch (event->type)
-		{	      
-		case GDK_KEY_PRESS:
+		/* we only deal with button press events */
+	    switch (event->type)
+	      {	 	      
+	      case GDK_KEY_PRESS:
 		  /* stop the creation of the polyline */
 		  ret = 1;
 		  break;
 		case GDK_BUTTON_PRESS:
 		  /* it's a press button event */
 		  input = TRUE;
-		  if (wrap)
-		    {
-		      /* align the cursor position */
-		      xwindow = (GdkWindowPrivate*) w;
-		      XWarpPointer (GDK_DISPLAY(), 
-				    None, 
-				    xwindow->xwindow,
-				    0, 0, 0, 0, lastx, lasty);
-		      wrap = FALSE;		  
-		    }
 		  break;
 		case  GDK_BUTTON_RELEASE:
 		  if (input)
@@ -831,7 +776,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		      y1 = lasty;
 		      (*nbpoints)++;
 		      point++;
-		      /* points are registerd */
+		      /* points are registered */
 		      input = TRUE;
 		      
 		      /* update the box buffer */
@@ -851,11 +796,8 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		      else if (maxPoints == 0 && (int) ((GdkEventButton *)event)->button != 1)
 			/* any other button : end of user input */
 			ret = 1;
-		    }
-		  else
-		    {
-		      newx = lastx;
-		      newy = lasty;
+
+		      input = FALSE;
 		    }
 		  break;
 		  
@@ -865,13 +807,68 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		    FrameToRedisplay (((GdkEventExpose *)event)->window, 
 				      f, 
 				      (GdkEventExpose *) & event);
-		  /*XtDispatchEvent (&event);*/
 		  break;
+	      case GDK_MOTION_NOTIFY:
+	 	/* Check for window ID */
+		if (((GdkEventMotion *)event)->window == w)
+		  {
+		    /* check the coordinates */
+		    newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
+		    newy = y + DO_ALIGN ((int) ((GdkEventMotion *)event)->y - y);
+		    /* Update the X position */
+		    if (newx < x)
+		      {
+			newx = x;
+			wrap = TRUE;
+		      }
+		    else if (newx > x + width)
+		      {
+			newx = x + width;
+			wrap = TRUE;
+		      }
+		    
+		    /* Update the Y position */
+		    if (newy < y)
+		      {
+			newy = y;
+	      wrap = TRUE;
+	    }
+	  else if (newy > y + height)
+	    {
+	      newy = y + height;
+	      wrap = TRUE;
+	    } 
+	   
+	  /* shows the new adjacent segment position */
+	  if (1 || newx != lastx || newy != lasty)
+	    {
+	      if (x1 != -1)
+		{
+		  gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
+		  gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
+		}
+	      if (x3 != -1)
+		{
+		  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
+		  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
+		}
+	    }
+	  lastx = newx;
+	  lasty = newy;
+	  if (wrap)
+	    {
+	      xwindow = (GdkWindowPrivate*) w;
+	      XWarpPointer (GDK_DISPLAY(), 
+			    None, 
+			    xwindow->xwindow,
+			    0, 0, 0, 0, lastx, lasty);
+	      wrap = FALSE;
+	    }
+	      }
+		break;
 		default: 
 		  break;
 		}
-	    }
-	}
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	}
@@ -885,7 +882,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #ifndef _GTK
   XFlush (TtDisplay);
 #else /* _GTK */
-
+  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 }
@@ -955,8 +952,9 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
 #else /* _GTK */
+  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, NULL, e, 0);
+  ThotGrab (w, HVCurs, e, 0);
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
 		None, 
@@ -997,7 +995,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	    newy = y;
 	  else if (newy > y + height)
 	    newy = y + height;
-	  //SetCursorPos (newx, newy);
+	  /*SetCursorPos (newx, newy);*/
 	}
 	  
       GetMessage (&event, NULL, 0, 0);
@@ -1119,7 +1117,6 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 		  XDrawLine (TtDisplay, w, TtInvertGC, lastx, lasty, x3, y3);
 		  XDrawLine (TtDisplay, w, TtInvertGC, newx, newy, x3, y3);
 		}
-	      XFlush (TtDisplay);
 	    }
 	  lastx = newx;
 	  lasty = newy;
@@ -1203,7 +1200,6 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 		  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
 		  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
 		}
-	      XFlush (TtDisplay);
 	    }
 	  lastx = newx;
 	  lasty = newy;
@@ -1224,7 +1220,6 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	    FrameToRedisplay (((GdkEventExpose *)event)->window, 
 			      f, 
 			      (GdkEventExpose *) & event);
-	  /*XtDispatchEvent (&event);*/
 	  break;
 	default:
           break;
@@ -1232,7 +1227,6 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 #endif /* !_GTK */
 #endif /* _WINDOWS */
     }
-
   /* erase box frame */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
 #ifdef _WINDOWS
@@ -1242,6 +1236,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 #ifndef _GTK
   XFlush (TtDisplay);
 #else /* _GTK */
+  gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 }
@@ -2860,7 +2855,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    /* new box */
 		    BoxGeometry (frame, newx, newy, width, height, newx + xref, newy + yref);
 		  }
-		XFlush (TtDisplay);
 		*x = newx;
 		*y = newy;
 	      }
@@ -2937,11 +2931,11 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 #else /*_GTK*/
  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
  if ((xmin >= *x) && (xmax <= *x + width))
-    ThotGrab (w, NULL, e, 0);
+    ThotGrab (w, VCurs, e, 0);
   else if ((ymin >= *y) && (ymax <= *y + height))
-    ThotGrab (w, NULL, e, 0);
+    ThotGrab (w, HCurs, e, 0);
   else
-    ThotGrab (w, NULL, e, 0);
+    ThotGrab (w, HVCurs, e, 0);
 #endif /*_GTK*/
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
    /* restore the Thot Library state */
@@ -3071,7 +3065,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   XFlush (TtDisplay);
 #else /*_GTK*/
   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  ThotGrab (w, NULL, e, 0);
+  ThotGrab (w, HVCurs, e, 0);
 #endif /* !_GTK */
 #endif /* !_WINDOWS */
 
@@ -3363,48 +3357,4 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

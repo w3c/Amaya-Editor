@@ -121,7 +121,7 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
   a frame. The glyphs are drawn with the Greek font and lines.
   ----------------------------------------------------------------------*/
 static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
-{
+{ 
   PtrFont             font;
   ViewFrame          *pFrame;
   ThotBool            withbackground;
@@ -136,7 +136,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
       font = NULL;
-#ifdef _STYX
       GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
       if (font == NULL)
 	{
@@ -145,10 +144,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	}
       else
 	StixExist = TRUE;
-#else /*_STYX*/
-      GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
-      StixExist = FALSE;
-#endif /*_STYX*/
       if (font != NULL)
 	{
 	  /* Position in the frame */

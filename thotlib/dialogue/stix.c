@@ -26,8 +26,14 @@
 
 #ifdef _GL
 #include "openglfont.h"
+#include "glwindowdisplay.h"
 #endif /*_GL*/
 
+#ifdef _WINDOWS
+#include "windowdisplay_f.h"
+#else /*_WINDOWS*/
+#include "xwindowdisplay_f.h"
+#endif /*_WINDOWS*/
 #include "font_f.h"
 
 static void *GreekfontSmall =  NULL; 
@@ -255,11 +261,13 @@ void DrawStixChar (PtrFont font, CHAR_T symb,
 		   int fg, int frame)
 {
 #ifndef _GL
-   x = x + ((l - CharacterWidth (symb, font)) / 2);
-   y = y + ((h - CharacterHeight (symb, font)) / 2) 
-     + CharacterAscent (symb, font);
+   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
+   y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
+     + CharacterAscent ((char) symb, font);
+
    DrawChar (symb, frame, x, y, font, fg);
 #else /*_GL*/
+
    GL_DrawStixChar (font, symb, x, y, fg, h-5, l, h, frame);
 #endif /*_GL*/
 
@@ -297,13 +305,14 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
      }
    if (type == 2)		
      /* double integral */
-      DrawIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
+      DrawStixIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
 		    y, l, h, -1, font, fg);
-   else if (type == 1)		
-     /* contour integral */
+   /*contour integral
+   else if (type == 1)	
       DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
 		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
 		font, fg);
+      */
 
 }
 /*----------------------------------------------------------------------
@@ -464,9 +473,6 @@ void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
       return;
   } 
 }
-
-
-
 
 #ifdef _GREEKGESTION
 

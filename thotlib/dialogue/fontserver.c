@@ -21,11 +21,11 @@
 /* Font Server */
 #include <gdk/gdkx.h>
 #include "X11/Xft/Xft.h"
-#include "X11/Xft/XftFreetype.h"
+//#include "X11/Xft/XftFreetype.h"
 #else /* _GTK */
 #include <windows.h>
 #endif  /* _GTK */
-
+ 
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
@@ -89,10 +89,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
       XftPatternAddString (pat, XFT_FAMILY, "Symbol");       
       XftPatternAddString (pat, XFT_ENCODING, "fontspecific"); 
-      /*
-      XftPatternAddString (pat, XFT_FAMILY, "esstix10");
-      XftPatternAddString (pat, XFT_FAMILY, "esstixten"); 
-      */
     }
   else if (script == 'E')
     {
@@ -247,10 +243,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	{
 	case 0:
 	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-	  /* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 1:
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
 	  if (UseLucidaFamily && family == 1)
 	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
 	  else
@@ -258,9 +255,16 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 2:
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
+	  if (family == 2 || family == 3)
+	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
+	  else
+	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
+	  break;
 	case 3:
 	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-	  /* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
 	  if (family == 2 || family == 3)
 	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
 	  else
@@ -286,7 +290,8 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  break;
 	}
     }
-  XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
+  if (script != 'E')
+    XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
   /* Returns a pattern more precise that let us load fonts*/
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
   if (match) 
@@ -295,7 +300,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
        {
 	 strcpy (filename, s);  
 	 if (script == 'E')
-	   if (!strstr (filename, "esstix") )
+	   if (strstr (filename, "esstix") == NULL)
 	     {
 	       XftPatternDestroy (match);
 	       XftPatternDestroy (pat); 

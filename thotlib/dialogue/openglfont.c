@@ -319,7 +319,8 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
       {
 	   if (encoding == ft_encoding_symbol)
 	   {
-		err = FT_Select_Charmap (*(font->face), ft_encoding_symbol);
+	     err = 0;
+	     /*FT_Select_Charmap (*(font->face), ft_encoding_symbol);*/
 		if (err)
 		  {	 
 		    if ((*(font->face))->num_charmaps > 0) 

@@ -175,7 +175,6 @@ static void TranslateChars (unsigned char *text)
 void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 {
    ThotWindow          w;
-
    w = FrRef[frame];
    if (w == None)
       return;
@@ -184,7 +183,6 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
    y = y + FrameTable[frame].FrTopMargin;
 #ifdef _GTK
    gdk_draw_text (w, font, TtLineGC, x, y, &car, 1);
-
 #else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
    XDrawString (TtDisplay, w, TtLineGC, x, y, &car, 1);
