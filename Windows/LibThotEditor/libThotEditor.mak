@@ -25,9 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -176,7 +173,40 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP=cl.exe
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -290,6 +320,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
 	"$(INTDIR)\style.obj" \
+	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmsg.obj" \
 	"$(INTDIR)\translation.obj" \
@@ -309,8 +340,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\tableH.obj"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -593,7 +623,40 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDOWS_DLL" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP=cl.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "_WINDOWS_DLL" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -703,6 +766,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\structschema.sbr" \
 	"$(INTDIR)\structselect.sbr" \
 	"$(INTDIR)\style.sbr" \
+	"$(INTDIR)\tableH.sbr" \
 	"$(INTDIR)\textcommands.sbr" \
 	"$(INTDIR)\thotmsg.sbr" \
 	"$(INTDIR)\translation.sbr" \
@@ -722,8 +786,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\writedoc.sbr" \
 	"$(INTDIR)\writepivot.sbr" \
 	"$(INTDIR)\xbmhandler.sbr" \
-	"$(INTDIR)\xpmhandler.sbr" \
-	"$(INTDIR)\tableH.sbr"
+	"$(INTDIR)\xpmhandler.sbr"
 
 "$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -839,6 +902,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
 	"$(INTDIR)\style.obj" \
+	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmsg.obj" \
 	"$(INTDIR)\translation.obj" \
@@ -858,8 +922,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\tableH.obj"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -867,36 +930,6 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"

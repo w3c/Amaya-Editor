@@ -39,12 +39,12 @@ ALL : "$(OUTDIR)\thotprinter.dll"
 
 !ELSE 
 
-ALL : "Compilers - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "printlib - Win32 Release" "libThotTable - Win32 Release" "$(OUTDIR)\thotprinter.dll"
+ALL : "Compilers - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "printlib - Win32 Release" "$(OUTDIR)\thotprinter.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotTable - Win32 ReleaseCLEAN" "printlib - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" 
+CLEAN :"printlib - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -68,7 +68,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\thotlib\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_SVG" /D "_I18N_" /Fp"$(INTDIR)\thotprinter.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\thotlib\include" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_SVG" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDOWS_DLL" /D "_WINGUI" /Fp"$(INTDIR)\thotprinter.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -119,7 +119,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\psdisplay.obj" \
 	"$(INTDIR)\styleparser.obj" \
 	"..\printlib.lib" \
-	"..\libThotTable.lib" \
 	"..\libjpeg.lib" \
 	"..\libpng.lib"
 
@@ -142,12 +141,12 @@ ALL : "$(OUTDIR)\thotprinter.dll"
 
 !ELSE 
 
-ALL : "Compilers - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "printlib - Win32 Debug" "libThotTable - Win32 Debug" "$(OUTDIR)\thotprinter.dll"
+ALL : "Compilers - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "printlib - Win32 Debug" "$(OUTDIR)\thotprinter.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotTable - Win32 DebugCLEAN" "printlib - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" 
+CLEAN :"printlib - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -160,6 +159,7 @@ CLEAN :
 	-@erase "$(INTDIR)\psdisplay.obj"
 	-@erase "$(INTDIR)\styleparser.obj"
 	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\thotprinter.dll"
 	-@erase "$(OUTDIR)\thotprinter.exp"
 	-@erase "$(OUTDIR)\thotprinter.ilk"
@@ -173,7 +173,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MTd /W3 /GX /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /D "_AMAYA_RELEASE_" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_I18N_" /D "_SVG" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\thotprinter.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MTd /W3 /GX /ZI /Od /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_SVG" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDOWS_DLL" /D "_WINGUI" /Fp"$(INTDIR)\thotprinter.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -213,7 +213,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\thotprinter.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=user32.lib gdi32.lib advapi32.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\thotprinter.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib" /out:"$(OUTDIR)\thotprinter.dll" /implib:"$(OUTDIR)\thotprinter.lib" /pdbtype:sept 
+LINK32_FLAGS=user32.lib gdi32.lib advapi32.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\thotprinter.pdb" /debug /machine:I386 /nodefaultlib:"LIBCMTD.lib" /out:"$(OUTDIR)\thotprinter.dll" /implib:"$(OUTDIR)\thotprinter.lib" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\css.obj" \
 	"$(INTDIR)\fetchHTMLname.obj" \
@@ -224,7 +224,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\psdisplay.obj" \
 	"$(INTDIR)\styleparser.obj" \
 	"..\printlib.lib" \
-	"..\libThotTable.lib" \
 	"..\libjpeg.lib" \
 	"..\libpng.lib"
 
@@ -246,32 +245,6 @@ LINK32_OBJS= \
 
 
 !IF "$(CFG)" == "thotprinter - Win32 Release" || "$(CFG)" == "thotprinter - Win32 Debug"
-
-!IF  "$(CFG)" == "thotprinter - Win32 Release"
-
-"libThotTable - Win32 Release" : 
-   cd "\src\Amaya\Windows\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
-   cd "..\thotprinter"
-
-"libThotTable - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
-   cd "..\thotprinter"
-
-!ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
-
-"libThotTable - Win32 Debug" : 
-   cd "\src\Amaya\Windows\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
-   cd "..\thotprinter"
-
-"libThotTable - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
-   cd "..\thotprinter"
-
-!ENDIF 
 
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 

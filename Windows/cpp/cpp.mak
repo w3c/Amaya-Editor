@@ -57,7 +57,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "WINDOWS_COMPILERS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -148,7 +148,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\internals\f" /D "WINDOWS_COMPILERS" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\internals\f" /D "_I18N_" /D "_DEBUG" /D "WINDOWS_COMPILERS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<

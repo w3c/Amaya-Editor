@@ -25,9 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 OUTDIR=.\..
@@ -176,7 +173,40 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -292,14 +322,14 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWriter.obj" \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
+	"$(INTDIR)\HTXML.obj" \
 	"$(INTDIR)\HTXParse.obj" \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
-	"$(INTDIR)\xmltok.obj" \
 	"$(INTDIR)\xmlparse.obj" \
 	"$(INTDIR)\xmlrole.obj" \
-	"$(INTDIR)\HTXML.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -455,7 +485,40 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -571,14 +634,14 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWriter.obj" \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
+	"$(INTDIR)\HTXML.obj" \
 	"$(INTDIR)\HTXParse.obj" \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
-	"$(INTDIR)\xmltok.obj" \
 	"$(INTDIR)\xmlparse.obj" \
 	"$(INTDIR)\xmlrole.obj" \
-	"$(INTDIR)\HTXML.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -587,36 +650,6 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -633,24 +666,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 "zlib - Win32 Release" : 
-   cd "\Amaya\Windows\zlib"
+   cd "\src\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
    cd "..\libwww"
 
 "zlib - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\zlib"
+   cd "\src\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\libwww"
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 "zlib - Win32 Debug" : 
-   cd "\Amaya\Windows\zlib"
+   cd "\src\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
    cd "..\libwww"
 
 "zlib - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\zlib"
+   cd "\src\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\libwww"
 

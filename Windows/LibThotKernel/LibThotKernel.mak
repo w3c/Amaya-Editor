@@ -48,6 +48,7 @@ CLEAN :
 	-@erase "$(INTDIR)\exceptions.obj"
 	-@erase "$(INTDIR)\externalref.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
+	-@erase "$(INTDIR)\global.obj"
 	-@erase "$(INTDIR)\labelalloc.obj"
 	-@erase "$(INTDIR)\language.obj"
 	-@erase "$(INTDIR)\memory.obj"
@@ -83,7 +84,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_WINGUI" /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -134,6 +135,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\labelalloc.obj" \
 	"$(INTDIR)\language.obj" \
 	"$(INTDIR)\memory.obj" \
@@ -188,6 +190,7 @@ CLEAN :
 	-@erase "$(INTDIR)\exceptions.obj"
 	-@erase "$(INTDIR)\externalref.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
+	-@erase "$(INTDIR)\global.obj"
 	-@erase "$(INTDIR)\labelalloc.obj"
 	-@erase "$(INTDIR)\language.obj"
 	-@erase "$(INTDIR)\memory.obj"
@@ -223,7 +226,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /D "__STDC__" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /D "__STDC__" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\LibThotKernel.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -274,6 +277,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
 	"$(INTDIR)\fileaccess.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\labelalloc.obj" \
 	"$(INTDIR)\language.obj" \
 	"$(INTDIR)\memory.obj" \
@@ -381,6 +385,12 @@ SOURCE=..\..\thotlib\document\externalref.c
 SOURCE=..\..\thotlib\base\fileaccess.c
 
 "$(INTDIR)\fileaccess.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\thotlib\base\global.c
+
+"$(INTDIR)\global.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

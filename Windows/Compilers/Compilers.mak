@@ -60,7 +60,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -101,7 +101,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\Compilers.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\Compilers.pdb" /machine:I386 /out:"$(OUTDIR)\Compilers.exe" 
+LINK32_FLAGS=comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\Compilers.pdb" /machine:I386 /nodefaultlib:"libc.lib" /out:"$(OUTDIR)\Compilers.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\winthotcompilers.obj" \
 	"$(INTDIR)\Compilers.res" \
@@ -170,7 +170,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\f" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\f" /D "_I18N_" /D "_DEBUG" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -243,7 +243,9 @@ OutDir=.\..\bin
 # End Custom Macros
 
 $(DS_POSTBUILD_DEP) : "tra - Win32 Debug" "str - Win32 Debug" "prs - Win32 Debug" "LibThotKernel - Win32 Debug" "cpp - Win32 Debug" "app - Win32 Debug" "$(OUTDIR)\Compilers.exe" "$(OUTDIR)\Compilers.bsc"
-   ..\bin\Compilers.exe
+   echo "Before Compilers.exe"
+	..\bin\Compilers.exe
+	echo "After Compilers.exe"
 	echo Helper for Post-build step > "$(DS_POSTBUILD_DEP)"
 
 !ENDIF 
