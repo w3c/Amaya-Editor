@@ -2190,11 +2190,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /* Est-ce que la boite englobante doit etre eclatee ? */
 	  if (pCurrentAb->AbAcceptLineBreak && pCurrentAb->AbEnclosing &&
 	      (pCurrentAb->AbEnclosing->AbInLine ||
-	       pCurrentAb->AbEnclosing->AbBox->BxType == BoGhost))
+	       (pCurrentAb->AbEnclosing->AbBox &&
+		pCurrentAb->AbEnclosing->AbBox->BxType == BoGhost)))
 	    pCurrentAb->AbBox->BxType = BoGhost;
 	  
 	  /* L'indicateur de mise en lignes depend de la boite englobante */
-	  condition = pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost;
+	  condition = pCurrentAb->AbInLine || 
+	              (pCurrentAb->AbBox &&pCurrentAb->AbBox->BxType == BoGhost);
 	  
 	  /* Faut-il dechainer la boite englobante ? */
 	  if ((pNextBox != NULL) && (pNextBox == pCurrentAb->AbBox))

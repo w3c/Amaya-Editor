@@ -1194,15 +1194,19 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, " Weight:%d", pAb->AbFontWeight);
 	fprintf (fileDescriptor, " Size:%d", pAb->AbSize);
 	wrTypeUnit (pAb->AbSizeUnit, fileDescriptor);
-	fprintf (fileDescriptor, "\n");
-	for (j = 1; j <= Indent + 6; j++)
-	   fprintf (fileDescriptor, " ");
-	if (!pAb->AbHorizEnclosing)
-	   fprintf (fileDescriptor, "HorizEncl:N ");
-	if (!pAb->AbVertEnclosing)
-	   fprintf (fileDescriptor, "VertEncl:N ");
-	if (pAb->AbNotInLine)
-	   fprintf (fileDescriptor, "NotInLine ");
+	if (!pAb->AbHorizEnclosing || !pAb->AbVertEnclosing ||
+	    pAb->AbNotInLine)
+	  {
+	    fprintf (fileDescriptor, "\n");
+	    for (j = 1; j <= Indent + 6; j++)
+	      fprintf (fileDescriptor, " ");
+	    if (!pAb->AbHorizEnclosing)
+	      fprintf (fileDescriptor, "HorizEncl:N ");
+	    if (!pAb->AbVertEnclosing)
+	      fprintf (fileDescriptor, "VertEncl:N ");
+	    if (pAb->AbNotInLine)
+	      fprintf (fileDescriptor, "NotInLine ");
+	  }
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
