@@ -8225,21 +8225,22 @@ static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
    Creates a new subtree and returns its reference.
    Parent gives the widget to which the new subtree should be attached.
   ----------------------------------------------------------------------*/
-ThotWidget TtaAddSubTree (ThotWidget parent)
+ThotWidget TtaAddSubTree (ThotWidget tree_item)
      /* add some tree stuff here */
 {
   ThotWidget subtree = NULL;
 #ifdef _GTK
 
-  if (!parent)
+  if (!tree_item)
     return NULL;
 
   subtree = gtk_tree_new();
-  gtk_tree_set_view_lines (GTK_TREE(subtree), TRUE);
-  
-  gtk_tree_item_set_subtree (GTK_TREE_ITEM(parent),
+  gtk_tree_item_set_subtree (GTK_TREE_ITEM(tree_item),
 			    subtree);
-  gtk_widget_show_all (subtree);
+
+  gtk_tree_set_view_lines (GTK_TREE(subtree), TRUE);
+  gtk_tree_item_expand (GTK_TREE_ITEM(tree_item));
+  RemoveSignalGTK (GTK_OBJECT(subtree), "select_child");
 #endif
   return (subtree);
 
@@ -8261,15 +8262,17 @@ ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label,
 
 #ifdef _GTK
   tree_item = gtk_tree_item_new_with_label ((item_label) ? item_label : "");
+  gtk_tree_append(GTK_TREE(parent), tree_item);
+
+  if (selected)
+    gtk_tree_select_child (GTK_TREE(parent), GTK_WIDGET(tree_item));
+
   /* connect the signals we're interested in */
   ConnectSignalGTK (GTK_OBJECT(tree_item), "select", GTK_SIGNAL_FUNC(TreeItemSelect), 
 		    (gpointer) TRUE);
   ConnectSignalGTK (GTK_OBJECT(tree_item), "deselect", GTK_SIGNAL_FUNC(TreeItemSelect), 
 		    (gpointer) FALSE);
   
-  if (selected)
-    gtk_tree_item_select (GTK_TREE_ITEM (tree_item));
-
   /* memorize callback function and client data */
   gtk_object_set_data (GTK_OBJECT(tree_item), 
 		       "cbf", 
@@ -8277,10 +8280,9 @@ ThotWidget TtaAddTreeItem (ThotWidget parent, char *item_label,
   gtk_object_set_data (GTK_OBJECT(tree_item), 
 		       "user_data", 
 		       (gpointer) user_data);
-  gtk_tree_append(GTK_TREE(parent), tree_item);
-
+  gtk_widget_ref (GTK_WIDGET(tree_item));
   if (!collapsed)
-    gtk_tree_item_expand (GTK_TREE_ITEM(parent));
+    gtk_tree_item_expand (GTK_TREE_ITEM(tree_item));
 
   gtk_widget_show_all (tree_item);
 #endif /* _GTK */
@@ -8385,9 +8387,11 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 
 	  tree = gtk_tree_new();
 	  gtk_tree_set_view_lines (GTK_TREE(tree), TRUE);
+	  gtk_tree_set_view_mode (GTK_TREE(tree), GTK_TREE_VIEW_ITEM);
 	  gtk_tree_set_selection_mode (GTK_TREE(tree),
 				       (multiple) ? GTK_SELECTION_MULTIPLE :
 				       GTK_SELECTION_SINGLE);
+	  RemoveSignalGTK (GTK_OBJECT(tree), "select_child");
 	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), 
 						 tree);
 	}

@@ -356,7 +356,7 @@ extern void TtaSetNumberForm (int ref, int val);
    Creates a new subtree and returns its reference.
    Parent gives the widget to which the new subtree should be attached.
   ----------------------------------------------------------------------*/
-extern ThotWidget TtaAddSubTree (ThotWidget parent);
+extern ThotWidget TtaAddSubTree (ThotWidget tree_item);
 
 /*----------------------------------------------------------------------
    TtaAddTreeItem
