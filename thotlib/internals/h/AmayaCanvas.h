@@ -4,6 +4,7 @@
 #define __AMAYACANVAS_H__
 
 #include "wx/wx.h"
+#include "wx/timer.h"
 #ifdef _GL
   #include "wx/glcanvas.h"
 #else // #ifdef _GL
@@ -90,12 +91,21 @@ protected:
   void OnMouseDown( wxMouseEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnChar( wxKeyEvent& event );  
-  
+  void OnTimerMouseMove( wxTimerEvent& event );
+
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
 
   bool m_Init;
   void Init();
   void Render();
+
+ protected:
+  wxTimer m_MouseMoveTimer;
+  int     m_LastMouseMoveModMask;
+  int     m_LastMouseMoveX;
+  int     m_LastMouseMoveY;
+  bool    m_IsMouseSelecting;
+
 //  bool m_init; 
   
 };
