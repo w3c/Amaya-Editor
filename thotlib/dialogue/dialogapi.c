@@ -1099,7 +1099,7 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 #ifndef _GTK	
 	strncpy (text, XmTextGetString (wtext), 10);
 #else /* _GTK */
-	strncpy (text, gtk_editable_get_chars(GTK_EDITABLE(wtext), 0, -1), 10);
+	strncpy (text, gtk_entry_get_text (GTK_ENTRY (wtext)), 10);
 #endif /* !_GTK */
 	text[10] = EOS;
 	if (text[0] != EOS)
@@ -1231,40 +1231,24 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 		      /*________________________________________________ Un sous-menu __*/
 		      else if (catalogue->Cat_Type == CAT_FMENU)
 			{
-#ifdef _GTK
-			  /* a virer plus tard */
-			  /*			  printf("callsheet-> CAT_MENU\n");*/
-#endif
 			  i = catalogue->Cat_Data;
 			  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
 			}
 		      /*______________________________________________ Un toggle-menu __*/
 		      else if (catalogue->Cat_Type == CAT_TMENU)
-			{	
-#ifdef _GTK		
-			  /* a virer plus tard */
-			  /*			  printf("callsheet-> CAT_TMENU\n");*/
-#endif
+			{
 			  ReturnTogglevalues (catalogue);
 			}
 		      /*______________________________ Une feuille de saisie d'entier __*/
 		      else if (catalogue->Cat_Type == CAT_INT)
 			{
-#ifdef _GTK
-			  /* a virer plus tard */
-			  /*			  printf("callsheet-> CAT_INT\n");*/
-#endif
 			  CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
 #ifndef _GTK			  
 			  strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
 #else /* _GTK */
-			  strncpy (text, gtk_editable_get_chars(GTK_EDITABLE(catalogue->Cat_Entries->E_ThotWidget[1]), 0, -1), 10);
+			  strncpy (text, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries->E_ThotWidget[1])), 10);
 #endif /* !_GTK */
 			  text[10] = EOS;
-#ifdef _GTK
-			  /*			  printf("le text entre est: '%s'\n", text);*/
-#endif
-
 			  if (text[0] != EOS)
 			    sscanf (text, "%d", &i);
 			  else
@@ -1274,27 +1258,18 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 		      /*______________________________ Une feuille de saisie de texte __*/
 		      else if (catalogue->Cat_Type == CAT_TEXT)
 			{
-#ifdef _GTK
-			  /* a virer plus tard */
-			  /*			  printf("callsheet-> CAT_TEXT\n");*/
-#endif
 #ifndef _GTK
 
 
 			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
 					       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
 #else /* _GTK */
-			  /*			  printf("la chaine vo:%s\n", gtk_editable_get_chars(GTK_EDITABLE(catalogue->Cat_Entries),0,-1));*/
-			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, gtk_editable_get_chars(GTK_EDITABLE(catalogue->Cat_Entries), 0, -1));
+			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
 #endif /* !_GTK */
 			}
 		      /*_______________________________________________ Un selecteur __*/
 		      else if (catalogue->Cat_Type == CAT_SELECT)
 			{
-#ifdef _GTK
-			  /* a virer plus tard */
-			  /*			  printf("callsheet-> CAT_SELECT\n");*/
-#endif
 			  if (catalogue->Cat_SelectList)
 			    {
 #ifndef _GTK
@@ -1351,10 +1326,6 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
       /*** On fait disparaitre le formulaire ***/
       if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
 	{
-#ifdef _GTK
-	  /* a virer plus tard */
-	  /*	  printf("callsheet-> CAT_DIALOG || CAT_FORM\n");*/
-#endif
 #ifndef _GTK
 	  XtUnmanageChild (parentCatalogue->Cat_Widget);
 	  XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
@@ -1448,7 +1419,7 @@ static void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
    ThotWidget         wtext;
 #endif /* !_GTK */
    char              *text = NULL;
-
+    
    if (catalogue->Cat_Widget != 0)
      {
       if (catalogue->Cat_Type == CAT_TEXT)
@@ -1458,7 +1429,7 @@ static void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
 			       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
 #else /* _GTK */
-	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, gtk_editable_get_chars(GTK_EDITABLE(catalogue->Cat_Entries), 0, -1));      
+	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries)));      
 #endif /* !_GTK */
 	}
       else if (catalogue->Cat_Type == CAT_SELECT)
@@ -1470,7 +1441,6 @@ static void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	  TtaFreeMemory (text);
 #else /* _GTK */
-	  /*	  printf("Bordel le text a change\n");*/
 	  text = gtk_entry_get_text (GTK_ENTRY (w));
 	  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 #endif /* !_GTK */
@@ -1573,7 +1543,7 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
 #endif /* !_WINDOWS */
 #ifdef _GTK
    /* Sets the current locale according to the program environment */
-   /*   printf("LOCAL: %s\n", gtk_set_locale ());*/
+   gtk_set_locale ();
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
      printf ("GUI can't be initialized\n");
@@ -2238,7 +2208,7 @@ void DisplayMessage (char *text, int msgType)
 #ifndef _GTK
 	strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
 #else /* _GTK */
-	strncpy (buff, gtk_editable_get_chars(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1), 500);
+	strncpy (buff, gtk_entry_get_text (GTK_ENTRY(FrameTable[0].WdStatus)), 500);
 #endif /* !_GTK */
 	n = strlen (buff);
 
