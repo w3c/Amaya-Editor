@@ -146,8 +146,8 @@ static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
       {
       pEl = editOp->EoSavedElement;
       if (pEl)
-         {
          /* if the saved selection is in the freed element, cancel it */
+         {
 	 /* first, get the delimiter that contains the selection */
 	 prevOp = editOp;
 	 do
@@ -155,20 +155,15 @@ static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
 	 while (prevOp && prevOp->EoType != EtDelimiter);
 	 /* then, check that selection */
 	 if (prevOp)
-	    {
-            if (prevOp->EoFirstSelectedEl)
-	       if (ElemIsWithinSubtree (prevOp->EoFirstSelectedEl, pEl))
+            if ((prevOp->EoFirstSelectedEl &&
+		 ElemIsWithinSubtree (prevOp->EoFirstSelectedEl, pEl)) ||
+		(prevOp->EoLastSelectedEl &&
+		 ElemIsWithinSubtree (prevOp->EoLastSelectedEl, pEl)))
 	          {
 	          prevOp->EoFirstSelectedEl = NULL;
 	          prevOp->EoLastSelectedEl = NULL;
+		  prevOp->EoColumnSelected = FALSE;
 	          }
-            if (prevOp->EoLastSelectedEl)
-	       if (ElemIsWithinSubtree (prevOp->EoLastSelectedEl, pEl))
-	          {
-	          prevOp->EoFirstSelectedEl = NULL;
-	          prevOp->EoLastSelectedEl = NULL;
-	          }
-	    }
          /* free the saved element */
          DeleteElement (&pEl, pDoc);
          }
@@ -789,6 +784,7 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement last
   editOp->EoFirstSelectedChar = firstSelChar;
   editOp->EoLastSelectedEl = lastSel;
   editOp->EoLastSelectedChar = lastSelChar;
+  editOp->EoColumnSelected = WholeColumnSelected;
   if (attr)
     {
       editOp->EoSelectedAttrSch = attr->AeAttrSSchema;
@@ -1027,6 +1023,9 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	      notifyEl.position = 0;
 	      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	    }
+	  if (editOp->EoColumnSelected && SelectedColumn)
+	    /* select the whole column */
+	    TtaSelectEnclosingColumn ((Element)(editOp->EoFirstSelectedEl));
         }
       if (editOp->EoInitialSequence)
 	/* That's the first sequence registered since the document was loaded
@@ -1284,6 +1283,7 @@ static void OpenRedoSequence (Document doc)
       editOp->EoFirstSelectedChar = FirstSelectedCharInAttr;
       editOp->EoLastSelectedEl = AbsBoxSelectedAttr->AbElement;
       editOp->EoLastSelectedChar = LastSelectedCharInAttr;
+      editOp->EoColumnSelected = FALSE;
     }
   else
     {
@@ -1295,6 +1295,7 @@ static void OpenRedoSequence (Document doc)
       editOp->EoFirstSelectedChar = firstSelChar;
       editOp->EoLastSelectedEl = (PtrElement)lastSel;
       editOp->EoLastSelectedChar = lastSelChar;
+      editOp->EoColumnSelected = WholeColumnSelected;
     }
   editOp->EoInitialSequence = !pDoc->DocModified;
   CheckUniqueInit (editOp);
