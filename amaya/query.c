@@ -1833,7 +1833,7 @@ int i;
     {
 #ifdef _WINDOWS   
       MessageBox (NULL, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE), 
-		  "query.c:InitCache", MB_OK);
+		  "Cache", MB_OK);
 #else /* !_WINDOWS */
       TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE),
 			 NULL);
