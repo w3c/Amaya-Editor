@@ -1778,8 +1778,6 @@ ThotBool            inTree;
 	      /* l'insertion est demande'e par l'utilisateur */
 	      if (CannotInsertNearElement (pEl, beforeElement))
 		ok = FALSE;
-	      else if (TypeHasException (ExcNoCreate, typeNum, pSS))
-		ok = FALSE;
 	      }
 	  }
       }
