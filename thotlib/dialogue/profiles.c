@@ -222,6 +222,7 @@ Menu_Ctl *ptrmenu;
 {
   int      item    = 0;
 
+  return FALSE;
   if (ptrmenu == NULL)
     return TRUE;
   if (ptrmenu->ItemsNb == 0)
@@ -232,7 +233,7 @@ Menu_Ctl *ptrmenu;
 	{
 	  if (ptrmenu->ItemsList[item].ItemType == TEXT('M'))
 	   {
-	     if (!RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu))
+	     if (!RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
 	       return FALSE;
 	   } 
 	  else
