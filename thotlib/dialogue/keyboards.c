@@ -596,7 +596,7 @@ int                 nbitem;
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    XtSetArg (args[n], XmNfontList, xfont);
@@ -665,17 +665,17 @@ int                 nbitem;
    XtManageChild (w);
 
    GCmodel.function = GXcopy;
-   GCmodel.foreground = Black_Color;
+   GCmodel.foreground = FgMenu_Color;
    GCmodel.background = BgMenu_Color;
    GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
 
 /*** Cree le bouton Quit ***/
    n = 0;
-   XtSetArg (args[n], XmNbackground, Button_Color);
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNforeground, Black_Color);
+   XtSetArg (args[n], XmNforeground, FgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -693,9 +693,9 @@ int                 nbitem;
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNforeground, Black_Color);
+   XtSetArg (args[n], XmNforeground, FgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
 
    /* Affiche les differents boutons du clavier */

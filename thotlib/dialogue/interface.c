@@ -1409,18 +1409,6 @@ Pixel               TtaGetMenuColor ()
 
 
 /*----------------------------------------------------------------------
-   TtaGetButtonColor
-
-   Returns the color used for displaying active buttons in forms.
-
-  ----------------------------------------------------------------------*/
-Pixel               TtaGetButtonColor ()
-{
-   UserErrorCode = 0;
-   return (Pixel) Button_Color;
-}
-
-/*----------------------------------------------------------------------
    DisplayEmptyBoxLoadResources: displays the empty boxes.            
   ----------------------------------------------------------------------*/
 void                DisplayEmptyBoxLoadResources ()

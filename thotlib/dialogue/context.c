@@ -369,7 +369,7 @@ STRING              name;
      }
    /* Initialize colors for the application */
    Black_Color  = cblack.pixel;
-   Button_Color = Select_Color = cblack.pixel;
+   FgMenu_Color = Select_Color = cblack.pixel;
    White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 #endif /* _WINDOWS */
@@ -384,10 +384,12 @@ STRING              name;
 #       endif /* _WINDOWS */
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
-	/* scrolls color */
-	found = FindColor (0, name, "ScrollColor", "Grey", &Scroll_Color);
-	/* color for the selection menu */
+	/* color for the menu background */
 	found = FindColor (0, name, "MenuBgColor", "Grey", &BgMenu_Color);
+	/* color for the menu foregroundground */
+	found = FindColor (0, name, "MenuFgColor", "Black", &FgMenu_Color);
+	/* scrolls color */
+	Scroll_Color = BgMenu_Color;
 	/* color for the selection */
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
@@ -395,8 +397,6 @@ STRING              name;
 	found = FindColor (0, name, "DocSelectColor", "Blue", &Select_Color);
 #       endif /* _WINDOWS */
 	/* color for borders and buttons */
-	found = FindColor (0, name, "ButtonColor", "Grey", &Button_Color);
-	/* color for incative options and buttons */
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
 #       else  /* _WINDOWS */
@@ -404,13 +404,9 @@ STRING              name;
 #       endif /* _WINDOWS */
      }
    else
-     {
       /* at least allocate the selection color */
       found = FindColor (0, name, "DocSelectColor", "White", &Select_Color);
 
-      /* color for borders and buttons */
-      found = FindColor (0, name, "ButtonColor", "White", &Button_Color);
-      }
    /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
 #  ifndef _WINDOWS
@@ -503,7 +499,7 @@ static void InitGraphicContexts ()
 
    /* Create a Graphic Context to write black on white. */
 #  ifndef _WINDOWS
-   GCmodel.foreground = Button_Color;
+   GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #  endif /* _WINDOWS */

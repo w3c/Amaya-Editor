@@ -470,7 +470,7 @@ int                 y;
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -497,7 +497,7 @@ int                 y;
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNadjustLast, FALSE);
    n++;
@@ -518,9 +518,9 @@ int                 y;
 
    /* Les labels */
    n = 0;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNforeground, Black_Color);
+   XtSetArg (args[n], XmNforeground, FgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -533,9 +533,9 @@ int                 y;
    XtManageChild (w);
    XmStringFree (title_string);
    n = 0;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNforeground, Black_Color);
+   XtSetArg (args[n], XmNforeground, FgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -560,7 +560,7 @@ int                 y;
 
 /*** Cree un DrawingArea pour contenir les touches de la palette ***/
    n = 0;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -579,7 +579,7 @@ int                 y;
    frame = XmCreateFrame (row, "Frame", args, n);
    XtManageChild (frame);
    n = 0;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -600,7 +600,7 @@ int                 y;
 
 /*** Cree un Row-Column pour contenir le bouton Quit ***/
    n = 0;
-   XtSetArg (args[n], XmNborderColor, Button_Color);
+   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
@@ -617,17 +617,17 @@ int                 y;
 
    /* Cree si necessaire le contexte graphique des cles */
    GCmodel.function = GXcopy;
-   GCmodel.foreground = Black_Color;
+   GCmodel.foreground = FgMenu_Color;
    GCmodel.background = BgMenu_Color;
    GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
 
 /*** Cree le bouton Quit ***/
    n = 0;
-   XtSetArg (args[n], XmNbackground, Button_Color);
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNforeground, Black_Color);
+   XtSetArg (args[n], XmNforeground, FgMenu_Color);
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;

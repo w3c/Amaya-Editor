@@ -34,9 +34,9 @@ THOT_EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
 THOT_EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
 THOT_EXPORT ThotColor White_Color;      /* Couleur de fond             */
 THOT_EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */
-THOT_EXPORT ThotColor Button_Color;     /* Couleur des boutons         */
 THOT_EXPORT ThotColor Select_Color;     /* Couleur de la selection     */
 THOT_EXPORT ThotColor BgMenu_Color;     /* Couleur des menus           */
+THOT_EXPORT ThotColor FgMenu_Color;     /* Couleur des boutons         */
 THOT_EXPORT ThotColor Box_Color;        /* Couleur des boites actives  */
 THOT_EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
