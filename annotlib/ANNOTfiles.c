@@ -301,6 +301,16 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
 	}
     }
 
+  /* title metadata */
+  if (annot->title)
+    {
+      elType.ElTypeNum = Annot_EL_ATitle;
+      el = TtaSearchTypedElement (elType, SearchInTree, head);
+      el = TtaGetFirstChild (el);
+      TtaSetTextContent (el, annot->title, TtaGetDefaultLanguage (), 
+			 docAnnot); 
+    }
+  
   /* Creation Date metadata */
   elType.ElTypeNum = Annot_EL_AnnotCDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
@@ -588,29 +598,21 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
 
 #endif /* __STDC__*/
 {
-  ThotBool free_title;
   char  *title;
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
 
-  title = ANNOT_GetHTMLTitle (doc);
-  if (!title || title[0] == EOS)
-    {
-      title = DocumentURLs[doc];
-      free_title = FALSE;
-    }
+  if (annot->title && annot->title[0] != EOS)
+    title = annot->title;
   else
-    free_title = TRUE;
+    title = DocumentURLs[doc];
 
   /* initialize the meta data */
   ANNOT_InitDocumentMeta (doc, docAnnot, annot, title);
   /* initialize the html body */
   if (initBody)
     ANNOT_InitDocumentBody (docAnnot, title);
-
-  if (free_title)
-    TtaFreeMemory (title);
 
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);
