@@ -422,6 +422,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"ALIGN", "H6", 'A', HTML_ATTR_Align},
    {"ALIGN", "HR", 'A', HTML_ATTR_Align},
    {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
+#ifdef COUGAR
+   {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
+#endif
    {"ALIGN", "P", 'A', HTML_ATTR_Align},
    {"ALIGN", "TABLE", 'A', HTML_ATTR_Table_align},
    {"ALIGN", "TD", 'A', HTML_ATTR_Cell_align},
@@ -432,6 +435,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"BACKGROUND", "", 'A', HTML_ATTR_background_},
    {"BGCOLOR", "", 'A', HTML_ATTR_BackgroundColor},
    {"BORDER", "IMG", 'A', HTML_ATTR_Img_border},
+#ifdef COUGAR
+   {"BORDER", "OBJECT", 'A', HTML_ATTR_Img_border},
+#endif
    {"BORDER", "TABLE", 'A', HTML_ATTR_Border},
    {"CELLSPACING", "", 'A', HTML_ATTR_cellspacing},
    {"CELLPADDING", "", 'A', HTML_ATTR_cellpadding},

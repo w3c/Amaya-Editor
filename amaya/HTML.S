@@ -171,7 +171,8 @@ STRUCT
 
 #ifdef COUGAR
   Object (ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
-	  codetype = TEXT; Alignment; !Height_; !Width_; hspace; vspace) =
+	  codetype = TEXT; Alignment; !Height_; !Width_; hspace; vspace;
+	  Img_border; USEMAP; ALT) =
 	BEGIN
 	PICTURE;
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
