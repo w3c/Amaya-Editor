@@ -1059,9 +1059,11 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
 	FrameTable[frame].FrHeight == new_height))
     /* frame should not be displayed */
     return FALSE;
-  else if ( (FrameTable[frame].FrWidth - new_width == new_height - FrameTable[frame].FrHeight) ||
-	    (abs(FrameTable[frame].FrWidth - new_width) == FrameTable[frame].WdScrollH->GetSize().GetHeight()) ||
-	    (abs(FrameTable[frame].FrHeight - new_height) == FrameTable[frame].WdScrollV->GetSize().GetWidth())
+  else if ( (FrameTable[frame].FrWidth - new_width == new_height - FrameTable[frame].FrHeight)
+#ifdef _WX
+	    || (abs(FrameTable[frame].FrWidth - new_width) == FrameTable[frame].WdScrollH->GetSize().GetHeight()) 
+	    || (abs(FrameTable[frame].FrHeight - new_height) == FrameTable[frame].WdScrollV->GetSize().GetWidth())
+#endif /* _WX */
 	    )
     {
       /* prevent an infinite loop */
