@@ -16,6 +16,8 @@ Thot/dicopar/alphabet \
 Thot/dicopar/Eprinc.dic \
 Thot/dicopar/Fprinc.dic \
 Thot/dicopar/*.ptn \
+Thot/dicopar/alphabet \
+Thot/dicopar/clavier \
  | $COMPRESS  > /tahiti/thottape/amaya-dic-tar.gz
 
 for MACH in $PLATFORMS
@@ -40,6 +42,7 @@ do
    Thot/config/fr-corrdialogue \
    Thot/dicopar/*.ptn \
    Thot/dicopar/alphabet \
+   Thot/dicopar/clavier \
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
    Thot/amaya/COPYRIGHT \
