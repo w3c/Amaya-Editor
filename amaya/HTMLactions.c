@@ -2707,7 +2707,7 @@ void SynchronizeSourceView (NotifyElement *event)
 	      TtaNextSibling (&el);
 	    }
 	}
-      sprintf (message, "line %d char %d", line, firstChar);
+      sprintf (message, "char %d", firstChar);
       TtaSetStatus (doc, 1, message, NULL);
     }
 }
@@ -2805,7 +2805,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
 		}
 	      else
 		TtaSelectElement (doc, el);
-	      sprintf (message, "line %d char %d", line, index);
+	      sprintf (message, "char %d", index);
 	      TtaSetStatus (doc, 1, message, NULL);
 	    }
 	}
