@@ -1,0 +1,324 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <sys/fcntl.h>
+#include <sys/mman.h>
+
+#define MAX_PATH	100
+#define MAX_PATH_LENGHT	256
+#define MAX_INCLUDE	200
+
+char *filename, *command, __depname[MAX_PATH_LENGHT] = "\n\t@touch ";
+
+#define depname (__depname+9)
+
+struct path_struct {
+	int len;
+	char buffer[MAX_PATH_LENGHT-sizeof(int)];
+} path_array[MAX_PATH] = {
+	{  0, "" }
+};
+
+int nb_path = 0;
+
+typedef char include_name[MAX_PATH_LENGHT];
+
+include_name include_list[MAX_INCLUDE];
+
+int nb_include = 0;
+
+static void add_local_include(char *name)
+{
+	int i = 0;
+
+        for (i = 0;i < nb_include;i++) {
+	    if (!strcmp(include_list[i], name)) return;
+	}
+	strcpy(include_list[nb_include], name);
+	nb_include++;
+}
+
+static void handle_local_include(char *name, int len)
+{
+	int plen;
+	struct path_struct *path;
+	int i = 0;
+
+        for (i = 0;i < nb_path;i++) {
+	   path = &path_array[i];
+	   plen = path->len;
+	   memcpy(path->buffer+plen, name, len);
+	   plen += len;
+	   path->buffer[plen] = '\0';
+	   if (access(path->buffer, F_OK))
+		   continue;
+
+	   add_local_include(path->buffer);
+	   return;
+	}
+#ifdef WITH_DEBUG
+	{ 
+	   char file_name[MAX_PATH_LENGHT];
+	   strncpy(file_name,name,len);
+	   file_name[len] = '\0';
+	   fprintf(stderr,"Path for include %s not found\n", file_name);
+	}
+#endif
+}
+
+#if defined(__alpha__) || defined(__i386__)
+#define LE_MACHINE
+#endif
+
+#ifdef LE_MACHINE
+#define next_byte(x) (x >>= 8)
+#define current ((unsigned char) __buf)
+#else
+#define next_byte(x) (x <<= 8)
+#define current (__buf >> 8*(sizeof(unsigned long)-1))
+#endif
+
+#define GETNEXT { \
+next_byte(__buf); \
+if (!__nrbuf) { \
+	__buf = *(unsigned long *) next; \
+	__nrbuf = sizeof(unsigned long); \
+	if (!__buf) \
+		break; \
+} next++; __nrbuf--; }
+#define CASE(c,label) if (current == c) goto label
+#define NOTCASE(c,label) if (current != c) goto label
+
+static void state_machine(register char *next)
+{
+	for(;;) {
+	register unsigned long __buf = 0;
+	register unsigned long __nrbuf = 0;
+
+normal:
+	GETNEXT
+__normal:
+	CASE('/',slash);
+	CASE('"',string);
+	CASE('\'',char_const);
+	CASE('#',preproc);
+	goto normal;
+
+slash:
+	GETNEXT
+	CASE('*',comment);
+	goto __normal;
+
+string:
+	GETNEXT
+	CASE('"',normal);
+	NOTCASE('\\',string);
+	GETNEXT
+	goto string;
+
+char_const:
+	GETNEXT
+	CASE('\'',normal);
+	NOTCASE('\\',char_const);
+	GETNEXT
+	goto char_const;
+
+comment:
+	GETNEXT
+__comment:
+	NOTCASE('*',comment);
+	GETNEXT
+	CASE('/',normal);
+	goto __comment;
+
+preproc:
+	GETNEXT
+	CASE('\n',normal);
+	CASE(' ',preproc);
+	CASE('\t',preproc);
+	CASE('i',i_preproc);
+	GETNEXT
+
+skippreproc:
+	CASE('\n',normal);
+	CASE('\\',skippreprocslash);
+	GETNEXT
+	goto skippreproc;
+
+skippreprocslash:
+	GETNEXT;
+	GETNEXT;
+	goto skippreproc;
+
+i_preproc:
+	GETNEXT
+	CASE('f',if_line);
+	NOTCASE('n',skippreproc);
+	GETNEXT
+	NOTCASE('c',skippreproc);
+	GETNEXT
+	NOTCASE('l',skippreproc);
+	GETNEXT
+	NOTCASE('u',skippreproc);
+	GETNEXT
+	NOTCASE('d',skippreproc);
+	GETNEXT
+	NOTCASE('e',skippreproc);
+
+/* "# include" found */
+include_line:
+	GETNEXT
+	CASE('\n',normal);
+	NOTCASE('"', include_line);
+
+/* "local" include file */
+{
+	char *incname = next;
+local_include_name:
+	GETNEXT
+	CASE('\n',normal);
+	NOTCASE('"', local_include_name);
+	handle_local_include(incname, next-incname-1);
+	goto skippreproc;
+}
+
+if_line:
+if_start:
+	GETNEXT
+	CASE('\n', normal);
+	CASE('_', if_middle);
+	if (current >= 'a' && current <= 'z')
+		goto if_middle;
+	if (current < 'A' || current > 'Z')
+		goto if_start;
+
+if_middle:
+	GETNEXT
+	CASE('\n', normal);
+	CASE('_', if_middle);
+	if (current >= 'a' && current <= 'z')
+		goto if_middle;
+	if (current < 'A' || current > 'Z')
+		goto if_start;
+	goto if_middle;
+	}
+}
+
+static void do_depend(void)
+{
+	char *map;
+	int mapsize;
+	int pagesizem1 = getpagesize()-1;
+	int fd = open(filename, O_RDONLY);
+	struct stat st;
+
+	if (fd < 0) {
+		perror("mkdep: open");
+		return;
+	}
+	fstat(fd, &st);
+	mapsize = st.st_size + 2*sizeof(unsigned long);
+	mapsize = (mapsize+pagesizem1) & ~pagesizem1;
+	map = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
+	if (-1 == (long)map) {
+		perror("mkdep: mmap");
+		close(fd);
+		return;
+	}
+	close(fd);
+	state_machine(map);
+	munmap(map, mapsize);
+}
+
+int main(int argc, char **argv)
+{
+	int i;
+	int my_argc = argc;
+	char **my_argv = argv;
+	char pwd[MAX_PATH_LENGHT];
+	char buffer[MAX_PATH_LENGHT];
+
+        getcwd(pwd, sizeof(pwd));
+
+	while (--my_argc > 0) {
+		int len;
+		char *name = *++my_argv;
+
+                if ((name[0] == '-') && (name[1] == 'I')) {
+		    if (name[2] != '/') {
+		        strcpy(buffer, "-I");
+		        strcat(buffer, pwd);
+		        strcat(buffer, "/");
+		        strcat(buffer, &name[2]);
+		        name = &buffer[0];
+		    }
+
+		    strcpy(path_array[nb_path].buffer, &name[2]);
+		    len = strlen(path_array[nb_path].buffer);
+		    if (path_array[nb_path].buffer[len - 1] != '/') {
+		        strcat(path_array[nb_path].buffer,"/");
+			len++;
+		    }
+		    path_array[nb_path].len = len;
+		    nb_path++;
+		    path_array[nb_path].len = 0;
+		}
+	}
+	while (--argc > 0) {
+		int len;
+		char *name = *++argv;
+
+                if (name[0] == '-') continue;
+		if (name[0] != '/') {
+		   strcpy(buffer, pwd);
+                   strcat(buffer, "/");
+                   strcat(buffer, name);
+		   name = &buffer[0];
+		}
+
+		filename = name;
+		len = strlen(name);
+		memcpy(depname, name, len+1);
+		command = __depname;
+		if (len > 2 && name[len-2] == '.') {
+			switch (name[len-1]) {
+				case 'c':
+				case 'S':
+					depname[len-1] = 'o';
+					command = "";
+			}
+		}
+		nb_include = 0;
+
+                /*
+		 * print the base dependancy between the .o and .c file.
+		 */
+	        printf("%s : %s", depname,filename);
+
+		/*
+		 * do basic dependancies on the C source file.
+		 */
+		do_depend();
+
+		/*
+		 * recurse dependancies on the included files.
+		 * Warning, nb_include will grow over the loop.
+		 */
+		for (i = 0;i < nb_include;i++) {
+		    filename = include_list[i];
+		    do_depend();
+		}
+
+                /*
+		 * dump the dependancies found.
+		 */
+		for (i = 0;i < nb_include;i++)
+		    printf(" \\\n   %s", include_list[i]);
+		printf("\n\n");
+	}
+	return 0;
+}
