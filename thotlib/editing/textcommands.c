@@ -86,7 +86,8 @@ static ThotBool IsTextLeaf (PtrAbstractBox pave)
    if (pave == NULL)
       result = FALSE;
    else
-      result = (!pave->AbPresentationBox || pave->AbCanBeModified) && pave->AbLeafType == LtText;
+      result = (!pave->AbPresentationBox || pave->AbCanBeModified) &&
+	pave->AbLeafType == LtText;
    return result;
 }
 
@@ -101,7 +102,7 @@ static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
 {
    PtrLine             pLine;
    PtrAbstractBox      pAb;
-   PtrBox              pBox;
+   PtrBox              pBox, ibox;
    int                 nChars;
    ViewSelection      *pViewSel;
 
@@ -118,7 +119,13 @@ static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
 	   pBox = pLine->LiLastPiece;
 	else
 	   pBox = pLine->LiLastBox;
-
+	ibox = pBox;
+	while (ibox && ibox->BxAbstractBox->AbPresentationBox &&
+	       ibox != pLine->LiFirstPiece && ibox != pLine->LiFirstBox)
+	  /* try to select a box which is not a presentation box */
+	  ibox = ibox->BxPrevious;
+	if (ibox && ibox != pBox)
+	  pBox = ibox;
 	pAb = pBox->BxAbstractBox;
 	if (IsTextLeaf (pAb))
 	   nChars = pBox->BxFirstChar + pBox->BxNChars;
@@ -129,7 +136,13 @@ static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
 	   pBox = pLine->LiFirstPiece;
 	else
 	   pBox = pLine->LiFirstBox;
-
+	ibox = pBox;
+	while (ibox && ibox->BxAbstractBox->AbPresentationBox &&
+	       ibox != pLine->LiLastPiece && ibox != pLine->LiLastBox)
+	  /* try to select a box which is not a presentation box */
+	  ibox = ibox->BxNext;
+	if (ibox && ibox != pBox)
+	  pBox = ibox;
 	pAb = pBox->BxAbstractBox;
 	if (IsTextLeaf (pAb))
 	   nChars = pBox->BxFirstChar;
@@ -713,7 +726,6 @@ static void MovingCommands (int code, Document doc, View view,
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
 	      else
 		x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
-	      /*x = ClickX + pFrame->FrXOrg;*/
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
 		{
@@ -731,6 +743,18 @@ static void MovingCommands (int code, Document doc, View view,
 		      /*x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;*/
 		      pBox = pBoxEnd;
 		    }
+		}
+	      /* there was a drag, but it's finished now */
+	      else if (!extendSel)
+		{
+		  if (!SelPosition &&
+		      (pBoxBegin != pBoxEnd ||
+		       !IsConstantConstructor (pBox->BxAbstractBox->AbElement)))
+		    /* changing from an extension to a simple selection */
+		    ClickX = x - pFrame->FrXOrg;
+		  else
+		    /* take the original position into account */
+		    x = ClickX + pFrame->FrXOrg;
 		}
 	      else if (extendSel)
 		LeftExtended = TRUE;
