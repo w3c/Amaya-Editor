@@ -3067,6 +3067,9 @@ static void         EndOfStartGI (c)
 CHAR_T              c;
 #endif
 {
+#ifndef EXPAT_PARSER
+  CHAR_T        schemaName[20];
+#endif
   CHAR_T        theGI[MaxMsgLength];
   int		 i;
 
