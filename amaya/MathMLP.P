@@ -2897,7 +2897,7 @@ ATTRIBUTES
 
   IntHorizStretch:
 	BEGIN
-        Width: Enclosing . Width ;
+        Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
 	END;
   IntHorizStretch (SYMBOL_UNIT):

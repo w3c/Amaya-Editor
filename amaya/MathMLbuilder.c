@@ -966,29 +966,18 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		   len = 2;
 		   TtaGiveBufferContent (textEl, text, len, &lang);
 		   script = TtaGetScript (lang);
-		   if (
-		       (text[0] == '-' || text[0] == '_' ||
-			text[0] == 175))
+		   if (text[0] == '-' || text[0] == '_' || text[0] == 0xAF ||
+		       text[0] == 0x0332 || text[0] == 0x2212)
 		     /* a horizontal line in the middle of the box */
 		     c = 'h'; 
-		   else 
-		     if (text[0] == 0x2190)
-		       c = 'L';  /* arrow left */
-		     else if (text[0] == 0x2192)
-		       c = 'R';  /* arrow right */
-		     else if (text[0] == 45)        /* - (minus) */
-		       /* a horizontal line in the middle of the box */
-		       c = 'h'; 
-		     else if (text[0] == 0x2212)    /* - (minus) */
-		       /* a horizontal line in the middle of the box */
-		       c = 'h'; 
-		     else if (text[0] == 0x0332)    /* UnderBar */
-		       /* a horizontal line */
-		       c = 'h'; 
-		     else if (text[0] == 65079)
-		       c = 'o';  /* Over brace */
-		     else if (text[0] == 65080)
-		       c = 'u';  /* Under brace */
+		   else  if (text[0] == 0x2190)
+		     c = 'L';  /* arrow left */
+		   else if (text[0] == 0x2192)
+		     c = 'R';  /* arrow right */
+		   else if (text[0] == 0xFE37)
+		     c = 'o';  /* Over brace */
+		   else if (text[0] == 0xFE38)
+		     c = 'u';  /* Under brace */
 		   if (c != EOS)
 		     doit = TRUE;
 		 }
@@ -999,11 +988,11 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	       /* attach a IntHorizStretch attribute to the element
 		  (UnderOverBase, Underscript, or Overscript) */
 	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, doc);
 	       TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
+	       TtaAttachAttribute (el, attr, doc);
 	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (child, attr, doc);
 	       TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, child, doc);
+	       TtaAttachAttribute (child, attr, doc);
 	     }
 	   if (c != EOS)
 	     {
@@ -1015,8 +1004,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		 if (*selEl == textEl)
 		   *selEl = symbolEl;
 	       TtaDeleteTree (textEl, doc);
-	       if (c != EOS)
-		 TtaSetGraphicsShape (symbolEl, c, doc);
+	       TtaSetGraphicsShape (symbolEl, c, doc);
 	     }
 	   }
 	}

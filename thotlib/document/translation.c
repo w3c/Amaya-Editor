@@ -1115,64 +1115,64 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		    switch (ci)
 		      {
 		      case 'c':
-			c = 8750; /*ContourIntegral*/
+			c = 0x222E; /* contour integral */
 			break;
 		      case 'd':
-			c = 8748; /*double integral???*/
+			c = 0x222C; /* double integral */
 			break;
 		      case 'h':
-			c = 175; /*OverBar*/
+			c = 0x00AF; /* overline */
 			break;
 		      case 'i':
-			c = 8747; /*Integral*/
+			c = 0x222B; /* integral */
 			break;
 		      case 'o':
-			c = 65079; /*OverBrace*/
+			c = 0xFE37; /* over brace */
 			break;
 		      case 'r':
-			c = 8730; /*Sqrt*/
+			c = 0x221A; /* square root */
 			break;
 		      case 'u':
-			c = 65080; /*UnderBrace*/
+			c = 0xFE38; /* under brace */
 			break;
 		      case 'v':
-			c = 124; /*VerticalLine*/
+			c = 0x007C; /* vertical line */
 			break;
 		      case 'D':
-			c = 8741; /*DoubleVerticalBar*/
+			c = 0x2225; /* double vertical line */
 			break;
 		      case 'I':
-			c = 8898; /*Intersection*/
+			c = 0x22C2; /* n-ary intersection */
 			break;
 		      case 'L':
-			c = 8592; /*LeftArrow*/
+			c = 0x2190; /* leftwards arrow */
 			break;
 		      case 'P':
-			c = 8719; /*Product*/
+			c = 0x220F; /* n-ary product */
 			break;
 		      case 'R':
-			c = 8658; /*Rightarrow*/
+			c = 0x2192; /* rightwards arrow */
 			break;
 		      case 'S':
-			c = 8721; /*Sum*/
+			c = 0x2211; /* n-ary summation */
 			break;
 		      case 'U':
-			c = 8899; /*Union*/
+			c = 0x22C3; /* n-ary union */
 			break;
 		      case 'V':
-			c = 8595; /*DownArrow*/
+			c = 0x2193; /* downwards arrow */
 			break;
 		      case '^':
-			c = 8593; /*UpArrow*/
+			c = 0x2191; /* upwards arrow */
 			break;
 		      case '<':
-			c = 9001; /*LeftAngleBracket*/
+			c = 0x2329; /* left-pointing angle bracket */
 			break;
 		      case '>':
-			c = 9002; /*RightAngleBracket*/
+			c = 0x232A; /* right-pointing angle bracket */
 			break;
 		      case '|':
-			c = 8739; /*VerticalBar*/
+			c = 0x2223; /* divides */
 			break;
 		      default:
 			c = (CHAR_T)ci;
