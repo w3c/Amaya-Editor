@@ -19,6 +19,9 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#ifdef _WINDOWS 
+#include <fcntl.h>
+#endif /* _WINDOWS */
 
 #if defined(__svr4__)
 #define CATCH_SIG
@@ -88,6 +91,13 @@ static  boolean    AmayaIsAlive;
 #include "AHTMemConv_f.h"
 #include "AHTFWrite_f.h"
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
+#else
+int WIN_Activate_Request ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   GetDocIdStatus
@@ -284,12 +294,14 @@ AHTReqContext      *me;
 	HTRequest_delete (me->request);
 
 	if (me->error_stream != (char *) NULL)
-	  TtaFreeMemory (me->error_stream);
-#ifdef WWW_XWINDOWS	
+	  HT_FREE (me->error_stream);
+#     ifndef _WINDOWS
+#     ifdef WWW_XWINDOWS	
 	if (me->read_xtinput_id || me->write_xtinput_id ||
             me->except_xtinput_id)
           RequestKillAllXtevents(me);
-#endif
+#     endif /* WWW_XWINDOWS */
+#     endif /* !_WINDOWS */
 	TtaFreeMemory ((void *) me);
 
 	Amaya->open_requests--;
@@ -382,7 +394,9 @@ static void         Thread_deleteAll ()
 	       {
 		  if (me->request)
 		    {
+#              ifndef _WINDOWS 
 		       RequestKillAllXtevents (me);
+#              endif /* !_WINDOWS */
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
@@ -1010,7 +1024,11 @@ static void         AHTAlertInit ()
 #endif
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
+#  ifndef _WINDOWS
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
+#  else  /* _WINDOWS */
+   HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
+#  endif /* _WINDOWS */
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
@@ -1139,13 +1157,15 @@ void                QueryInit ()
 
    /* New AHTBridge stuff */
 
-   HTEvent_setRegisterCallback (AHTEvent_register);
+
+#  ifndef _WINDOWS 
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
+#  endif /* !_WINDOWS */
    
 #  ifdef _WINDOWS
    HTEventInit ();
-   WIN_InitializeSockets ();
 #  endif _WINDOWS;
+   HTEvent_setRegisterCallback (AHTEvent_register);
 
    /* Setup authentication manager */
     /***
@@ -1592,7 +1612,6 @@ void               *context_tcbf;
    /*AHTReqContext      *me; */
    int                 status;
 
-#  ifndef _WINDOWS
    int                 fd;
    struct stat         file_stat;
    char               *mem_ptr;
@@ -1614,8 +1633,11 @@ void               *context_tcbf;
 	return HT_ERROR;
      }
    /* read the file into memory */
-
+#  ifndef _WINDOWS
    if ((fd = open (fileName, O_RDONLY)) == -1)
+#  else /* _WINDOWS */
+   if ((fd = open (fileName, _O_RDONLY)) == -1)
+#  endif /* _WINDOWS */
      {
 	/* if we could not open the file, exit */
 	/*error msg here */
@@ -1655,7 +1677,6 @@ void               *context_tcbf;
 
    TtaFreeMemory (mem_ptr);
    TtaHandlePendingEvents ();
-#endif /*!_WINDOWS */
    return (status);
 }
 
@@ -1717,8 +1738,11 @@ char               *outputfile;
    me->outputfile = (char *) NULL;
    me->urlName = urlName;
 
+#ifdef _WINDOWS
+   HTRequest_setPreemptive (me->request, YES);
+#else
    HTRequest_setPreemptive (me->request, NO);
-
+#endif /* _WINDOWS */
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
    HTRequest_setMethod (me->request, METHOD_PUT);
@@ -1733,7 +1757,9 @@ char               *outputfile;
       output stream */
 
    HTRequest_setPostCallback (me->request, AHTUpload_callback);
+   /*****
    HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+   ******/
    /*
    HTRequest_setOutputStream (me->request, HTFWriter_new (me->request, me->output, YES));
    */
@@ -1749,7 +1775,9 @@ char               *outputfile;
    if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR || HTError_hasSeverity (HTRequest_error (me->request), ERR_INFO))
      {
        status = HT_ERROR;
+	   /*
        AHTReqContext_delete (me);
+	   */
      }     
    else
      {
@@ -1762,7 +1790,9 @@ char               *outputfile;
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
+#        ifndef _WINDOWS
 	     status = LoopForStop (me);
+#        endif /* !_WINDOWS */
 	     AHTReqContext_delete (me);
 	  }
      }
@@ -1819,7 +1849,9 @@ int                 docid;
 			   case HT_NEW_PENDING:
 			   case HT_WAITING:
 			   default:
+#                 ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
+#                 endif /* !_WINDOWS */
 			      me->reqStatus = HT_ABORT;
 			      HTRequest_kill (me->request);
 

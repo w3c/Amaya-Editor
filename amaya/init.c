@@ -39,6 +39,9 @@
 #include "DL.xpm"
 #include "Link.xpm"
 #include "Table.xpm"
+#ifdef _WINDOWS
+#include "resource.h"
+#endif /* _WINDOWS */
 #ifdef AMAYA_PLUGIN
 #include "plugin.h"
 #include "Plugin.xpm"
@@ -77,7 +80,10 @@ char docToOpen [256];
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
-#define AMAYA_PAGE "http://www.w3.org/pub/WWW/Amaya/"
+/*
+#define AMAYA_PAGE "http://tuvalu.inrialpes.fr:3030/aa/test.html"
+*/
+#define AMAYA_PAGE "http://www.w3.org"
 static int          AmayaInitialized = 0;
 static Pixmap       stopR;
 static Pixmap       stopN;
@@ -1122,6 +1128,7 @@ char               *pathname;
 	if (!opened)
 	  {
 	     /* Add a button */
+#        ifndef _WINDOWS
 	     TtaAddButton (doc, 1, stopN, StopTransfer,
 			   TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
 	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML,
@@ -1168,7 +1175,37 @@ char               *pathname;
 			   TtaGetMessage (AMAYA, AM_BUTTON_LINK));
 	     TtaAddButton (doc, 1, iconTable, CreateTable,
 			   TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
-#ifdef AMAYA_PLUGIN
+
+#        else /* _WINDOWS */
+
+	     TtaAddButton (doc, 1, 0, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
+	     TtaAddButton (doc, 1, 0, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
+	     TtaAddButton (doc, 1, 0, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, STD_REDOW, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
+	     TtaAddButton (doc, 1, 0, NULL, NULL); /* SEPARATOR */
+
+	     TtaAddButton (doc, 1, STD_FILESAVE, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+	     TtaAddButton (doc, 1, STD_PRINT, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+	     TtaAddButton (doc, 1, STD_FIND, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
+	     TtaAddButton (doc, 1, 0, NULL, NULL);  /* SEPARATOR */
+
+	     IButton =  TtaAddButton (doc, 1, 0, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
+	     BButton =  TtaAddButton (doc, 1, 0, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
+	     TTButton = TtaAddButton (doc, 1, 0, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE));
+	     TtaAddButton (doc, 1, 0, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS));
+	     TtaAddButton (doc, 1, 0, NULL, NULL);  /* SEPARATOR */
+
+	     TtaAddButton (doc, 1, 0, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+	     TtaAddButton (doc, 1, 0, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1));
+	     TtaAddButton (doc, 1, 0, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2));
+	     TtaAddButton (doc, 1, 0, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3));
+	     TtaAddButton (doc, 1, 0, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
+	     TtaAddButton (doc, 1, 0, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
+	     TtaAddButton (doc, 1, 0, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
+	     TtaAddButton (doc, 1, 0, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
+	     TtaAddButton (doc, 1, 0, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
+#        endif /* _WINDOWS */
+#ifdef AMAYA_PLUGIN 
 	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
 #endif /* AMAYA_PLUGIN */

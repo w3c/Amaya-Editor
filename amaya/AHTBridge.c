@@ -212,7 +212,7 @@ XtInputId          *id;
 #     ifndef _WINDOWS
       if (THD_TRACE)
 	 fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
-#     endif
+#     endif	 /* !_WINDOWS */
       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
 	 /* free the memory allocated for async requests */
 	 AHTPrintPendingRequestStatus (me->docid, YES);
@@ -258,7 +258,7 @@ HTAlertPar         *reply;
    AHTReqContext      *me = HTRequest_context (request);
 
    if (me->reqStatus == HT_NEW) {
-      if (me->outputfile && (me->output = fopen (me->outputfile, "wb")) == NULL) {
+      if ((me->output != stdout) && me->outputfile && (me->output = fopen (me->outputfile, "wb")) == NULL) {
 	     /* the request is associated with a file */
 	     me->outputfile[0] = EOS;	/* file could not be opened */
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
@@ -322,7 +322,7 @@ HTAlertPar         *reply;
 
    if (me->reqStatus == HT_NEW || me->reqStatus == HT_PENDING) {
 	/* the request is active, open the output file */
-       if (!(me->output = fopen (me->outputfile, "w"))) {
+       if ((me->output != stdout) && !(me->output = fopen (me->outputfile, "w"))) {
 	   me->outputfile[0] = EOS;	
 	   /* file could not be opened */
 	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
@@ -357,7 +357,6 @@ HTAlertPar         *reply;
 }
 #endif /* _WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   AHTEvent_register
   callback called by libwww whenever a socket is open and associated
@@ -380,6 +379,7 @@ HTPriority          p;
    AHTReqContext      *me;      /* current request */
    int                 status;  /* libwww status associated with the socket number */
 
+   /* verify this under UNIX */
    if (sock == INVSOC)
       return (0);
 
@@ -397,7 +397,7 @@ HTPriority          p;
 	if (me->reqStatus == HT_NEW)
 	  {
 	     /* we are opening a pending request */
-	     if ((me->output = fopen (me->outputfile, "w")) == NULL)
+	     if ((me->output != stdout) && (me->output = fopen (me->outputfile, "w")) == NULL)
 	       {
 		  me->outputfile[0] = '\0';	/* file could not be opened */
 		  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
@@ -420,10 +420,7 @@ HTPriority          p;
 	   fprintf (stderr, "AHTEvent_register: url %s, sock %d, ops %lu \n",
 		    me->urlName, sock, ops);
 
-	/* add the input */
-	if (me->reqStatus == HT_NEW)
-	   me->reqStatus = HT_WAITING;
-
+#ifndef _WINDOWS
 	if (ops & ReadBits)
 	  {
 	     me->read_ops = ops;
@@ -441,10 +438,12 @@ HTPriority          p;
 	     me->except_ops = ops;
 	     RequestRegisterExceptXtevent (me, sock);
 	  }
-     }
-
+#endif	 /* !_WINDOWS */
+   }
    return (status);
 }
+
+#ifndef _WINDOWS
 
 /*----------------------------------------------------------------------
   AHTEvent_unregister

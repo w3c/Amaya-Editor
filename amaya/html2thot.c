@@ -2342,7 +2342,8 @@ Element             el;
 					       theDocument);
 			  }
 		     }
-		   TtaFreeMemory (text);
+		   /*
+		   TtaFreeMemory (text);*/
 		   }
 	       break;
 

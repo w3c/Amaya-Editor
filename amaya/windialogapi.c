@@ -8,7 +8,7 @@
 /*
  * WIndows Dialogue API routines for Amaya
  *
- * Author: R. Guetari (W3C/INRIA): Windows NT/95 routines
+ * Author: R. Guetari (W3C/INRIA)
  *
  */
 #ifdef _WINDOWS
@@ -21,6 +21,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "constmenu.h"
 
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
@@ -167,6 +168,7 @@ LPARAM lParam;
            case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_URLEDIT, "");
 			    break;
+
            case WM_COMMAND:
 	            switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
@@ -174,25 +176,15 @@ LPARAM lParam;
 							AttrHREFvalue = (char*) TtaGetMemory (strlen (urlToOpen) + 1);
 							strcpy (AttrHREFvalue, urlToOpen);
 							CallbackDialogue (currentRef, INTEGER_DATA, (char*) 1);
-#if 0
-	                        /* create an attribute HREF for the Link_Anchor */
-	                        attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
-	                        attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	                        attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
-	                        if (attrHREF == 0) {
-	                           /* create an attribute HREF for the element */
-	                           attrHREF = TtaNewAttribute (attrType);
-	                           TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
-	                        }
-	                        TtaSetAttributeText (attrHREF, urlToOpen, AttrHREFelement, AttrHREFdocument);
-#endif /* 0 */
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
+
 				       case ID_DONE:
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
 				}
 				break;
+
            default: return (FALSE) ;
     }
 	return TRUE;
@@ -245,36 +237,80 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static int iMode, iLocation;
+	static char textToSearch [255];
+	static char newText [255];
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, "");
 			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, "");
 
-				iMode     = IDC_NOREPLACE ;
-				iLocation = IDC_WHOLEDOC;
+				iMode     = 0 ;
+				iLocation = 3 ;
 
-				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, iMode);
-				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, iLocation);
+				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
+				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
 
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
-				       case ID_NOREPLACE:
+						    GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
+						    GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
+							if (newText && newText[0] != '\0' && iMode == 0)
+							   iMode = 1;
+
+						    if (iMode == 1 || iMode == 2) {
+							   ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
+				               CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
+							   iMode = 1;
+							}
+						    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
+						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char*) iMode);
+						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char*) iLocation);
+						    ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 1);
+				            CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							iLocation = 2;
+							break;
+
+					   case ID_NOREPLACE:
+						    break;
 				       case ID_DONE:
+						    ThotCallback (120, 1, NULL);
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
+
 					   case IDC_NOREPLACE:
-					   case IDC_ONREQUEST:
-					   case IDC_AUTOMATIC:
-						    iMode = LOWORD (wParam) ;
+						    iMode = 0 ;
 							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
 							break;
+
+					   case IDC_ONREQUEST:
+						    iMode = 1 ;
+							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
+							break;
+
+					   case IDC_AUTOMATIC:
+						    iMode = 2 ;
+							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
+							break;
+
 					   case IDC_BEFORE:
+						    iLocation = 0;
+							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
+							break;
+
 					   case IDC_WITHIN:
+						    iLocation = 1;
+							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
+							break;
+
 					   case IDC_AFTER:
+						    iLocation = 2;
+							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
+							break;
+
 					   case IDC_WHOLEDOC:
-						    iLocation = LOWORD (wParam);
+						    iLocation = 3;
 							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
 							break;
 				}
