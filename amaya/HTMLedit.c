@@ -1072,6 +1072,9 @@ NotifyAttribute    *event;
 {
    Element             el;
    ElementType         elType;
+   AttributeType       attrType;
+   Attribute	       attr;
+   char		       buffer[15];
 
    el = event->element;
    elType = TtaGetElementType (el);
@@ -1082,6 +1085,15 @@ NotifyAttribute    *event;
 	 {
 	   UpdateImageMap (el, event->document, OldWidth, -1);
 	   OldWidth = -1;
+	   /* update attribute Width__ */
+	   attrType.AttrSSchema = event->attributeType.AttrSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Width__;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr)
+	      {
+	      sprintf (buffer, "%d", TtaGetAttributeValue (event->attribute));
+	      TtaSetAttributeText (attr, buffer, el, event->document);
+	      }
 	 }
        else
 	 {
