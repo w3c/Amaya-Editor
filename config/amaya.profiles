@@ -162,6 +162,11 @@ ShowMapAreas
 +svg
 +tables
 
+################# MathML
+{MathML}
++hypertext-module
++maths
+
 ################# AMAYA FUNCTIONS
 [amayabase]
 AmayaClose
@@ -214,11 +219,11 @@ HelpAccess
 &NewXHTMLBasic
 &NewMathML
 &NewSVG
-SaveDocument
+&SaveDocument
 SetBrowserEditor
 &TransformType
 &TtcCutSelection
-&TtcCopySelection
+TtcCopySelection
 &TtcDeleteSelection
 &TtcPaste
 &TtcUndo
@@ -329,9 +334,9 @@ ShowTargets
 &CreateBase
 
 [clientside-module]
-CreateAreaCircle
-CreateAreaPoly
-CreateAreaRect
+&CreateAreaCircle
+&CreateAreaPoly
+&CreateAreaRect
 ShowMapAreas
 HelpImageMaps
 
