@@ -91,10 +91,6 @@ SOURCE=..\..\thotlib\base\actions.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\base\alloca.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\appdialogue.c
 # End Source File
 # Begin Source File
@@ -323,14 +319,6 @@ SOURCE=..\..\thotlib\document\language.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\libjpeg.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\libpng.lib
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\memory.c
 # End Source File
 # Begin Source File
@@ -340,10 +328,6 @@ SOURCE=..\..\thotlib\base\message.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\modiftype.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\openview.c
 # End Source File
 # Begin Source File
 

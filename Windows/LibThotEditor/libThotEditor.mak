@@ -27,8 +27,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -51,7 +49,6 @@ CLEAN :
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
-	-@erase "$(INTDIR)\alloca.obj"
 	-@erase "$(INTDIR)\appdialogue.obj"
 	-@erase "$(INTDIR)\appli.obj"
 	-@erase "$(INTDIR)\applicationapi.obj"
@@ -95,7 +92,6 @@ CLEAN :
 	-@erase "$(INTDIR)\epshandler.obj"
 	-@erase "$(INTDIR)\exceptions.obj"
 	-@erase "$(INTDIR)\externalref.obj"
-	-@erase "$(INTDIR)\extprintmenu.obj"
 	-@erase "$(INTDIR)\fileaccess.obj"
 	-@erase "$(INTDIR)\font.obj"
 	-@erase "$(INTDIR)\frame.obj"
@@ -112,7 +108,6 @@ CLEAN :
 	-@erase "$(INTDIR)\memory.obj"
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\modiftype.obj"
-	-@erase "$(INTDIR)\openview.obj"
 	-@erase "$(INTDIR)\pagecommands.obj"
 	-@erase "$(INTDIR)\paginate.obj"
 	-@erase "$(INTDIR)\picture.obj"
@@ -187,6 +182,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 RSC=rc.exe
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -196,462 +192,6 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotEditor.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\absboxes.obj" \
-	"$(INTDIR)\abspictures.obj" \
-	"$(INTDIR)\actions.obj" \
-	"$(INTDIR)\alloca.obj" \
-	"$(INTDIR)\appdialogue.obj" \
-	"$(INTDIR)\appli.obj" \
-	"$(INTDIR)\applicationapi.obj" \
-	"$(INTDIR)\attributeapi.obj" \
-	"$(INTDIR)\attributes.obj" \
-	"$(INTDIR)\attrmenu.obj" \
-	"$(INTDIR)\attrpresent.obj" \
-	"$(INTDIR)\boxlocate.obj" \
-	"$(INTDIR)\boxmoves.obj" \
-	"$(INTDIR)\boxparams.obj" \
-	"$(INTDIR)\boxpositions.obj" \
-	"$(INTDIR)\boxrelations.obj" \
-	"$(INTDIR)\boxselection.obj" \
-	"$(INTDIR)\browser.obj" \
-	"$(INTDIR)\buildboxes.obj" \
-	"$(INTDIR)\buildlines.obj" \
-	"$(INTDIR)\callback.obj" \
-	"$(INTDIR)\callbackinit.obj" \
-	"$(INTDIR)\changeabsbox.obj" \
-	"$(INTDIR)\changepresent.obj" \
-	"$(INTDIR)\checkaccess.obj" \
-	"$(INTDIR)\checkermenu.obj" \
-	"$(INTDIR)\closedoc.obj" \
-	"$(INTDIR)\colors.obj" \
-	"$(INTDIR)\config.obj" \
-	"$(INTDIR)\content.obj" \
-	"$(INTDIR)\contentapi.obj" \
-	"$(INTDIR)\context.obj" \
-	"$(INTDIR)\createabsbox.obj" \
-	"$(INTDIR)\createpages.obj" \
-	"$(INTDIR)\creationmenu.obj" \
-	"$(INTDIR)\dialogapi.obj" \
-	"$(INTDIR)\dictionary.obj" \
-	"$(INTDIR)\displaybox.obj" \
-	"$(INTDIR)\displayselect.obj" \
-	"$(INTDIR)\displayview.obj" \
-	"$(INTDIR)\docs.obj" \
-	"$(INTDIR)\documentapi.obj" \
-	"$(INTDIR)\draw.obj" \
-	"$(INTDIR)\editcommands.obj" \
-	"$(INTDIR)\epshandler.obj" \
-	"$(INTDIR)\exceptions.obj" \
-	"$(INTDIR)\externalref.obj" \
-	"$(INTDIR)\extprintmenu.obj" \
-	"$(INTDIR)\fileaccess.obj" \
-	"$(INTDIR)\font.obj" \
-	"$(INTDIR)\frame.obj" \
-	"$(INTDIR)\geom.obj" \
-	"$(INTDIR)\gifhandler.obj" \
-	"$(INTDIR)\hyphen.obj" \
-	"$(INTDIR)\inites.obj" \
-	"$(INTDIR)\input.obj" \
-	"$(INTDIR)\interface.obj" \
-	"$(INTDIR)\jpeghandler.obj" \
-	"$(INTDIR)\keyboards.obj" \
-	"$(INTDIR)\labelalloc.obj" \
-	"$(INTDIR)\language.obj" \
-	"$(INTDIR)\memory.obj" \
-	"$(INTDIR)\message.obj" \
-	"$(INTDIR)\modiftype.obj" \
-	"$(INTDIR)\openview.obj" \
-	"$(INTDIR)\pagecommands.obj" \
-	"$(INTDIR)\paginate.obj" \
-	"$(INTDIR)\picture.obj" \
-	"$(INTDIR)\pictureapi.obj" \
-	"$(INTDIR)\pivot.obj" \
-	"$(INTDIR)\platform.obj" \
-	"$(INTDIR)\pnghandler.obj" \
-	"$(INTDIR)\presentationapi.obj" \
-	"$(INTDIR)\presentmenu.obj" \
-	"$(INTDIR)\presrules.obj" \
-	"$(INTDIR)\presvariables.obj" \
-	"$(INTDIR)\printmenu.obj" \
-	"$(INTDIR)\Profiles.obj" \
-	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
-	"$(INTDIR)\readpivot.obj" \
-	"$(INTDIR)\readprs.obj" \
-	"$(INTDIR)\readstr.obj" \
-	"$(INTDIR)\readtra.obj" \
-	"$(INTDIR)\referenceapi.obj" \
-	"$(INTDIR)\references.obj" \
-	"$(INTDIR)\registry.obj" \
-	"$(INTDIR)\res.obj" \
-	"$(INTDIR)\resgen.obj" \
-	"$(INTDIR)\resmatch.obj" \
-	"$(INTDIR)\schemas.obj" \
-	"$(INTDIR)\schtrad.obj" \
-	"$(INTDIR)\scroll.obj" \
-	"$(INTDIR)\search.obj" \
-	"$(INTDIR)\searchmenu.obj" \
-	"$(INTDIR)\searchmenustr.obj" \
-	"$(INTDIR)\searchref.obj" \
-	"$(INTDIR)\selectionapi.obj" \
-	"$(INTDIR)\spellchecker.obj" \
-	"$(INTDIR)\structchange.obj" \
-	"$(INTDIR)\structcommands.obj" \
-	"$(INTDIR)\structcreation.obj" \
-	"$(INTDIR)\structlist.obj" \
-	"$(INTDIR)\structlocate.obj" \
-	"$(INTDIR)\structmodif.obj" \
-	"$(INTDIR)\structschema.obj" \
-	"$(INTDIR)\structselect.obj" \
-	"$(INTDIR)\style.obj" \
-	"$(INTDIR)\textcommands.obj" \
-	"$(INTDIR)\thotmsg.obj" \
-	"$(INTDIR)\translation.obj" \
-	"$(INTDIR)\tree.obj" \
-	"$(INTDIR)\treeapi.obj" \
-	"$(INTDIR)\uconvert.obj" \
-	"$(INTDIR)\Uio.obj" \
-	"$(INTDIR)\undo.obj" \
-	"$(INTDIR)\undoapi.obj" \
-	"$(INTDIR)\units.obj" \
-	"$(INTDIR)\unstructchange.obj" \
-	"$(INTDIR)\unstructlocate.obj" \
-	"$(INTDIR)\ustring.obj" \
-	"$(INTDIR)\viewapi.obj" \
-	"$(INTDIR)\views.obj" \
-	"$(INTDIR)\windowdisplay.obj" \
-	"$(INTDIR)\word.obj" \
-	"$(INTDIR)\writedoc.obj" \
-	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib"
-
-"$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-OUTDIR=.\..
-INTDIR=.\Debug
-# Begin Custom Macros
-OutDir=.\..\ 
-# End Custom Macros
-
-!IF "$(RECURSE)" == "0" 
-
-ALL : "$(OUTDIR)\libThotEditor.lib"
-
-!ELSE 
-
-ALL : "$(OUTDIR)\libThotEditor.lib"
-
-!ENDIF 
-
-CLEAN :
-	-@erase "$(INTDIR)\absboxes.obj"
-	-@erase "$(INTDIR)\abspictures.obj"
-	-@erase "$(INTDIR)\actions.obj"
-	-@erase "$(INTDIR)\alloca.obj"
-	-@erase "$(INTDIR)\appdialogue.obj"
-	-@erase "$(INTDIR)\appli.obj"
-	-@erase "$(INTDIR)\applicationapi.obj"
-	-@erase "$(INTDIR)\attributeapi.obj"
-	-@erase "$(INTDIR)\attributes.obj"
-	-@erase "$(INTDIR)\attrmenu.obj"
-	-@erase "$(INTDIR)\attrpresent.obj"
-	-@erase "$(INTDIR)\boxlocate.obj"
-	-@erase "$(INTDIR)\boxmoves.obj"
-	-@erase "$(INTDIR)\boxparams.obj"
-	-@erase "$(INTDIR)\boxpositions.obj"
-	-@erase "$(INTDIR)\boxrelations.obj"
-	-@erase "$(INTDIR)\boxselection.obj"
-	-@erase "$(INTDIR)\browser.obj"
-	-@erase "$(INTDIR)\buildboxes.obj"
-	-@erase "$(INTDIR)\buildlines.obj"
-	-@erase "$(INTDIR)\callback.obj"
-	-@erase "$(INTDIR)\callbackinit.obj"
-	-@erase "$(INTDIR)\changeabsbox.obj"
-	-@erase "$(INTDIR)\changepresent.obj"
-	-@erase "$(INTDIR)\checkaccess.obj"
-	-@erase "$(INTDIR)\checkermenu.obj"
-	-@erase "$(INTDIR)\closedoc.obj"
-	-@erase "$(INTDIR)\colors.obj"
-	-@erase "$(INTDIR)\config.obj"
-	-@erase "$(INTDIR)\content.obj"
-	-@erase "$(INTDIR)\contentapi.obj"
-	-@erase "$(INTDIR)\context.obj"
-	-@erase "$(INTDIR)\createabsbox.obj"
-	-@erase "$(INTDIR)\createpages.obj"
-	-@erase "$(INTDIR)\creationmenu.obj"
-	-@erase "$(INTDIR)\dialogapi.obj"
-	-@erase "$(INTDIR)\dictionary.obj"
-	-@erase "$(INTDIR)\displaybox.obj"
-	-@erase "$(INTDIR)\displayselect.obj"
-	-@erase "$(INTDIR)\displayview.obj"
-	-@erase "$(INTDIR)\docs.obj"
-	-@erase "$(INTDIR)\documentapi.obj"
-	-@erase "$(INTDIR)\draw.obj"
-	-@erase "$(INTDIR)\editcommands.obj"
-	-@erase "$(INTDIR)\epshandler.obj"
-	-@erase "$(INTDIR)\exceptions.obj"
-	-@erase "$(INTDIR)\externalref.obj"
-	-@erase "$(INTDIR)\extprintmenu.obj"
-	-@erase "$(INTDIR)\fileaccess.obj"
-	-@erase "$(INTDIR)\font.obj"
-	-@erase "$(INTDIR)\frame.obj"
-	-@erase "$(INTDIR)\geom.obj"
-	-@erase "$(INTDIR)\gifhandler.obj"
-	-@erase "$(INTDIR)\hyphen.obj"
-	-@erase "$(INTDIR)\inites.obj"
-	-@erase "$(INTDIR)\input.obj"
-	-@erase "$(INTDIR)\interface.obj"
-	-@erase "$(INTDIR)\jpeghandler.obj"
-	-@erase "$(INTDIR)\keyboards.obj"
-	-@erase "$(INTDIR)\labelalloc.obj"
-	-@erase "$(INTDIR)\language.obj"
-	-@erase "$(INTDIR)\memory.obj"
-	-@erase "$(INTDIR)\message.obj"
-	-@erase "$(INTDIR)\modiftype.obj"
-	-@erase "$(INTDIR)\openview.obj"
-	-@erase "$(INTDIR)\pagecommands.obj"
-	-@erase "$(INTDIR)\paginate.obj"
-	-@erase "$(INTDIR)\picture.obj"
-	-@erase "$(INTDIR)\pictureapi.obj"
-	-@erase "$(INTDIR)\pivot.obj"
-	-@erase "$(INTDIR)\platform.obj"
-	-@erase "$(INTDIR)\pnghandler.obj"
-	-@erase "$(INTDIR)\presentationapi.obj"
-	-@erase "$(INTDIR)\presentmenu.obj"
-	-@erase "$(INTDIR)\presrules.obj"
-	-@erase "$(INTDIR)\presvariables.obj"
-	-@erase "$(INTDIR)\printmenu.obj"
-	-@erase "$(INTDIR)\Profiles.obj"
-	-@erase "$(INTDIR)\pschemaapi.obj"
-	-@erase "$(INTDIR)\quit.obj"
-	-@erase "$(INTDIR)\readpivot.obj"
-	-@erase "$(INTDIR)\readprs.obj"
-	-@erase "$(INTDIR)\readstr.obj"
-	-@erase "$(INTDIR)\readtra.obj"
-	-@erase "$(INTDIR)\referenceapi.obj"
-	-@erase "$(INTDIR)\references.obj"
-	-@erase "$(INTDIR)\registry.obj"
-	-@erase "$(INTDIR)\res.obj"
-	-@erase "$(INTDIR)\resgen.obj"
-	-@erase "$(INTDIR)\resmatch.obj"
-	-@erase "$(INTDIR)\schemas.obj"
-	-@erase "$(INTDIR)\schtrad.obj"
-	-@erase "$(INTDIR)\scroll.obj"
-	-@erase "$(INTDIR)\search.obj"
-	-@erase "$(INTDIR)\searchmenu.obj"
-	-@erase "$(INTDIR)\searchmenustr.obj"
-	-@erase "$(INTDIR)\searchref.obj"
-	-@erase "$(INTDIR)\selectionapi.obj"
-	-@erase "$(INTDIR)\spellchecker.obj"
-	-@erase "$(INTDIR)\structchange.obj"
-	-@erase "$(INTDIR)\structcommands.obj"
-	-@erase "$(INTDIR)\structcreation.obj"
-	-@erase "$(INTDIR)\structlist.obj"
-	-@erase "$(INTDIR)\structlocate.obj"
-	-@erase "$(INTDIR)\structmodif.obj"
-	-@erase "$(INTDIR)\structschema.obj"
-	-@erase "$(INTDIR)\structselect.obj"
-	-@erase "$(INTDIR)\style.obj"
-	-@erase "$(INTDIR)\textcommands.obj"
-	-@erase "$(INTDIR)\thotmsg.obj"
-	-@erase "$(INTDIR)\translation.obj"
-	-@erase "$(INTDIR)\tree.obj"
-	-@erase "$(INTDIR)\treeapi.obj"
-	-@erase "$(INTDIR)\uconvert.obj"
-	-@erase "$(INTDIR)\Uio.obj"
-	-@erase "$(INTDIR)\undo.obj"
-	-@erase "$(INTDIR)\undoapi.obj"
-	-@erase "$(INTDIR)\units.obj"
-	-@erase "$(INTDIR)\unstructchange.obj"
-	-@erase "$(INTDIR)\unstructlocate.obj"
-	-@erase "$(INTDIR)\ustring.obj"
-	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(INTDIR)\viewapi.obj"
-	-@erase "$(INTDIR)\views.obj"
-	-@erase "$(INTDIR)\windowdisplay.obj"
-	-@erase "$(INTDIR)\word.obj"
-	-@erase "$(INTDIR)\writedoc.obj"
-	-@erase "$(INTDIR)\writepivot.obj"
-	-@erase "$(INTDIR)\xbmhandler.obj"
-	-@erase "$(INTDIR)\xpmhandler.obj"
-	-@erase "$(OUTDIR)\libThotEditor.lib"
-
-"$(OUTDIR)" :
-    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
-
-"$(INTDIR)" :
-    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
-
-RSC=rc.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
- "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
- "..\..\libpng\zlib" /I "..\..\amaya" /D "_DEBUG" /D "WWW_WIN_ASYNC" /D\
- "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D\
- "SOCKSTHOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotEditor.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\absboxes.obj" \
-	"$(INTDIR)\abspictures.obj" \
-	"$(INTDIR)\actions.obj" \
-	"$(INTDIR)\alloca.obj" \
-	"$(INTDIR)\appdialogue.obj" \
-	"$(INTDIR)\appli.obj" \
-	"$(INTDIR)\applicationapi.obj" \
-	"$(INTDIR)\attributeapi.obj" \
-	"$(INTDIR)\attributes.obj" \
-	"$(INTDIR)\attrmenu.obj" \
-	"$(INTDIR)\attrpresent.obj" \
-	"$(INTDIR)\boxlocate.obj" \
-	"$(INTDIR)\boxmoves.obj" \
-	"$(INTDIR)\boxparams.obj" \
-	"$(INTDIR)\boxpositions.obj" \
-	"$(INTDIR)\boxrelations.obj" \
-	"$(INTDIR)\boxselection.obj" \
-	"$(INTDIR)\browser.obj" \
-	"$(INTDIR)\buildboxes.obj" \
-	"$(INTDIR)\buildlines.obj" \
-	"$(INTDIR)\callback.obj" \
-	"$(INTDIR)\callbackinit.obj" \
-	"$(INTDIR)\changeabsbox.obj" \
-	"$(INTDIR)\changepresent.obj" \
-	"$(INTDIR)\checkaccess.obj" \
-	"$(INTDIR)\checkermenu.obj" \
-	"$(INTDIR)\closedoc.obj" \
-	"$(INTDIR)\colors.obj" \
-	"$(INTDIR)\config.obj" \
-	"$(INTDIR)\content.obj" \
-	"$(INTDIR)\contentapi.obj" \
-	"$(INTDIR)\context.obj" \
-	"$(INTDIR)\createabsbox.obj" \
-	"$(INTDIR)\createpages.obj" \
-	"$(INTDIR)\creationmenu.obj" \
-	"$(INTDIR)\dialogapi.obj" \
-	"$(INTDIR)\dictionary.obj" \
-	"$(INTDIR)\displaybox.obj" \
-	"$(INTDIR)\displayselect.obj" \
-	"$(INTDIR)\displayview.obj" \
-	"$(INTDIR)\docs.obj" \
-	"$(INTDIR)\documentapi.obj" \
-	"$(INTDIR)\draw.obj" \
-	"$(INTDIR)\editcommands.obj" \
-	"$(INTDIR)\epshandler.obj" \
-	"$(INTDIR)\exceptions.obj" \
-	"$(INTDIR)\externalref.obj" \
-	"$(INTDIR)\extprintmenu.obj" \
-	"$(INTDIR)\fileaccess.obj" \
-	"$(INTDIR)\font.obj" \
-	"$(INTDIR)\frame.obj" \
-	"$(INTDIR)\geom.obj" \
-	"$(INTDIR)\gifhandler.obj" \
-	"$(INTDIR)\hyphen.obj" \
-	"$(INTDIR)\inites.obj" \
-	"$(INTDIR)\input.obj" \
-	"$(INTDIR)\interface.obj" \
-	"$(INTDIR)\jpeghandler.obj" \
-	"$(INTDIR)\keyboards.obj" \
-	"$(INTDIR)\labelalloc.obj" \
-	"$(INTDIR)\language.obj" \
-	"$(INTDIR)\memory.obj" \
-	"$(INTDIR)\message.obj" \
-	"$(INTDIR)\modiftype.obj" \
-	"$(INTDIR)\openview.obj" \
-	"$(INTDIR)\pagecommands.obj" \
-	"$(INTDIR)\paginate.obj" \
-	"$(INTDIR)\picture.obj" \
-	"$(INTDIR)\pictureapi.obj" \
-	"$(INTDIR)\pivot.obj" \
-	"$(INTDIR)\platform.obj" \
-	"$(INTDIR)\pnghandler.obj" \
-	"$(INTDIR)\presentationapi.obj" \
-	"$(INTDIR)\presentmenu.obj" \
-	"$(INTDIR)\presrules.obj" \
-	"$(INTDIR)\presvariables.obj" \
-	"$(INTDIR)\printmenu.obj" \
-	"$(INTDIR)\Profiles.obj" \
-	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
-	"$(INTDIR)\readpivot.obj" \
-	"$(INTDIR)\readprs.obj" \
-	"$(INTDIR)\readstr.obj" \
-	"$(INTDIR)\readtra.obj" \
-	"$(INTDIR)\referenceapi.obj" \
-	"$(INTDIR)\references.obj" \
-	"$(INTDIR)\registry.obj" \
-	"$(INTDIR)\res.obj" \
-	"$(INTDIR)\resgen.obj" \
-	"$(INTDIR)\resmatch.obj" \
-	"$(INTDIR)\schemas.obj" \
-	"$(INTDIR)\schtrad.obj" \
-	"$(INTDIR)\scroll.obj" \
-	"$(INTDIR)\search.obj" \
-	"$(INTDIR)\searchmenu.obj" \
-	"$(INTDIR)\searchmenustr.obj" \
-	"$(INTDIR)\searchref.obj" \
-	"$(INTDIR)\selectionapi.obj" \
-	"$(INTDIR)\spellchecker.obj" \
-	"$(INTDIR)\structchange.obj" \
-	"$(INTDIR)\structcommands.obj" \
-	"$(INTDIR)\structcreation.obj" \
-	"$(INTDIR)\structlist.obj" \
-	"$(INTDIR)\structlocate.obj" \
-	"$(INTDIR)\structmodif.obj" \
-	"$(INTDIR)\structschema.obj" \
-	"$(INTDIR)\structselect.obj" \
-	"$(INTDIR)\style.obj" \
-	"$(INTDIR)\textcommands.obj" \
-	"$(INTDIR)\thotmsg.obj" \
-	"$(INTDIR)\translation.obj" \
-	"$(INTDIR)\tree.obj" \
-	"$(INTDIR)\treeapi.obj" \
-	"$(INTDIR)\uconvert.obj" \
-	"$(INTDIR)\Uio.obj" \
-	"$(INTDIR)\undo.obj" \
-	"$(INTDIR)\undoapi.obj" \
-	"$(INTDIR)\units.obj" \
-	"$(INTDIR)\unstructchange.obj" \
-	"$(INTDIR)\unstructlocate.obj" \
-	"$(INTDIR)\ustring.obj" \
-	"$(INTDIR)\viewapi.obj" \
-	"$(INTDIR)\views.obj" \
-	"$(INTDIR)\windowdisplay.obj" \
-	"$(INTDIR)\word.obj" \
-	"$(INTDIR)\writedoc.obj" \
-	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib"
-
-"$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -682,6 +222,482 @@ LIB32_OBJS= \
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
+
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotEditor.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\absboxes.obj" \
+	"$(INTDIR)\abspictures.obj" \
+	"$(INTDIR)\actions.obj" \
+	"$(INTDIR)\appdialogue.obj" \
+	"$(INTDIR)\appli.obj" \
+	"$(INTDIR)\applicationapi.obj" \
+	"$(INTDIR)\attributeapi.obj" \
+	"$(INTDIR)\attributes.obj" \
+	"$(INTDIR)\attrmenu.obj" \
+	"$(INTDIR)\attrpresent.obj" \
+	"$(INTDIR)\boxlocate.obj" \
+	"$(INTDIR)\boxmoves.obj" \
+	"$(INTDIR)\boxparams.obj" \
+	"$(INTDIR)\boxpositions.obj" \
+	"$(INTDIR)\boxrelations.obj" \
+	"$(INTDIR)\boxselection.obj" \
+	"$(INTDIR)\browser.obj" \
+	"$(INTDIR)\buildboxes.obj" \
+	"$(INTDIR)\buildlines.obj" \
+	"$(INTDIR)\callback.obj" \
+	"$(INTDIR)\callbackinit.obj" \
+	"$(INTDIR)\changeabsbox.obj" \
+	"$(INTDIR)\changepresent.obj" \
+	"$(INTDIR)\checkaccess.obj" \
+	"$(INTDIR)\checkermenu.obj" \
+	"$(INTDIR)\closedoc.obj" \
+	"$(INTDIR)\colors.obj" \
+	"$(INTDIR)\config.obj" \
+	"$(INTDIR)\content.obj" \
+	"$(INTDIR)\contentapi.obj" \
+	"$(INTDIR)\context.obj" \
+	"$(INTDIR)\createabsbox.obj" \
+	"$(INTDIR)\createpages.obj" \
+	"$(INTDIR)\creationmenu.obj" \
+	"$(INTDIR)\dialogapi.obj" \
+	"$(INTDIR)\dictionary.obj" \
+	"$(INTDIR)\displaybox.obj" \
+	"$(INTDIR)\displayselect.obj" \
+	"$(INTDIR)\displayview.obj" \
+	"$(INTDIR)\docs.obj" \
+	"$(INTDIR)\documentapi.obj" \
+	"$(INTDIR)\draw.obj" \
+	"$(INTDIR)\editcommands.obj" \
+	"$(INTDIR)\epshandler.obj" \
+	"$(INTDIR)\exceptions.obj" \
+	"$(INTDIR)\externalref.obj" \
+	"$(INTDIR)\fileaccess.obj" \
+	"$(INTDIR)\font.obj" \
+	"$(INTDIR)\frame.obj" \
+	"$(INTDIR)\geom.obj" \
+	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\hyphen.obj" \
+	"$(INTDIR)\inites.obj" \
+	"$(INTDIR)\input.obj" \
+	"$(INTDIR)\interface.obj" \
+	"$(INTDIR)\jpeghandler.obj" \
+	"$(INTDIR)\keyboards.obj" \
+	"$(INTDIR)\labelalloc.obj" \
+	"$(INTDIR)\language.obj" \
+	"$(INTDIR)\memory.obj" \
+	"$(INTDIR)\message.obj" \
+	"$(INTDIR)\modiftype.obj" \
+	"$(INTDIR)\pagecommands.obj" \
+	"$(INTDIR)\paginate.obj" \
+	"$(INTDIR)\picture.obj" \
+	"$(INTDIR)\pictureapi.obj" \
+	"$(INTDIR)\pivot.obj" \
+	"$(INTDIR)\platform.obj" \
+	"$(INTDIR)\pnghandler.obj" \
+	"$(INTDIR)\presentationapi.obj" \
+	"$(INTDIR)\presentmenu.obj" \
+	"$(INTDIR)\presrules.obj" \
+	"$(INTDIR)\presvariables.obj" \
+	"$(INTDIR)\printmenu.obj" \
+	"$(INTDIR)\Profiles.obj" \
+	"$(INTDIR)\pschemaapi.obj" \
+	"$(INTDIR)\quit.obj" \
+	"$(INTDIR)\readpivot.obj" \
+	"$(INTDIR)\readprs.obj" \
+	"$(INTDIR)\readstr.obj" \
+	"$(INTDIR)\readtra.obj" \
+	"$(INTDIR)\referenceapi.obj" \
+	"$(INTDIR)\references.obj" \
+	"$(INTDIR)\registry.obj" \
+	"$(INTDIR)\res.obj" \
+	"$(INTDIR)\resgen.obj" \
+	"$(INTDIR)\resmatch.obj" \
+	"$(INTDIR)\schemas.obj" \
+	"$(INTDIR)\schtrad.obj" \
+	"$(INTDIR)\scroll.obj" \
+	"$(INTDIR)\search.obj" \
+	"$(INTDIR)\searchmenu.obj" \
+	"$(INTDIR)\searchmenustr.obj" \
+	"$(INTDIR)\searchref.obj" \
+	"$(INTDIR)\selectionapi.obj" \
+	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\structchange.obj" \
+	"$(INTDIR)\structcommands.obj" \
+	"$(INTDIR)\structcreation.obj" \
+	"$(INTDIR)\structlist.obj" \
+	"$(INTDIR)\structlocate.obj" \
+	"$(INTDIR)\structmodif.obj" \
+	"$(INTDIR)\structschema.obj" \
+	"$(INTDIR)\structselect.obj" \
+	"$(INTDIR)\style.obj" \
+	"$(INTDIR)\textcommands.obj" \
+	"$(INTDIR)\thotmsg.obj" \
+	"$(INTDIR)\translation.obj" \
+	"$(INTDIR)\tree.obj" \
+	"$(INTDIR)\treeapi.obj" \
+	"$(INTDIR)\uconvert.obj" \
+	"$(INTDIR)\Uio.obj" \
+	"$(INTDIR)\undo.obj" \
+	"$(INTDIR)\undoapi.obj" \
+	"$(INTDIR)\units.obj" \
+	"$(INTDIR)\unstructchange.obj" \
+	"$(INTDIR)\unstructlocate.obj" \
+	"$(INTDIR)\ustring.obj" \
+	"$(INTDIR)\viewapi.obj" \
+	"$(INTDIR)\views.obj" \
+	"$(INTDIR)\windowdisplay.obj" \
+	"$(INTDIR)\word.obj" \
+	"$(INTDIR)\writedoc.obj" \
+	"$(INTDIR)\writepivot.obj" \
+	"$(INTDIR)\xbmhandler.obj" \
+	"$(INTDIR)\xpmhandler.obj"
+
+"$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+OUTDIR=.\..
+INTDIR=.\Debug
+# Begin Custom Macros
+OutDir=.\..\ 
+# End Custom Macros
+
+!IF "$(RECURSE)" == "0" 
+
+ALL : "$(OUTDIR)\libThotEditor.lib"
+
+!ELSE 
+
+ALL : "$(OUTDIR)\libThotEditor.lib"
+
+!ENDIF 
+
+CLEAN :
+	-@erase "$(INTDIR)\absboxes.obj"
+	-@erase "$(INTDIR)\abspictures.obj"
+	-@erase "$(INTDIR)\actions.obj"
+	-@erase "$(INTDIR)\appdialogue.obj"
+	-@erase "$(INTDIR)\appli.obj"
+	-@erase "$(INTDIR)\applicationapi.obj"
+	-@erase "$(INTDIR)\attributeapi.obj"
+	-@erase "$(INTDIR)\attributes.obj"
+	-@erase "$(INTDIR)\attrmenu.obj"
+	-@erase "$(INTDIR)\attrpresent.obj"
+	-@erase "$(INTDIR)\boxlocate.obj"
+	-@erase "$(INTDIR)\boxmoves.obj"
+	-@erase "$(INTDIR)\boxparams.obj"
+	-@erase "$(INTDIR)\boxpositions.obj"
+	-@erase "$(INTDIR)\boxrelations.obj"
+	-@erase "$(INTDIR)\boxselection.obj"
+	-@erase "$(INTDIR)\browser.obj"
+	-@erase "$(INTDIR)\buildboxes.obj"
+	-@erase "$(INTDIR)\buildlines.obj"
+	-@erase "$(INTDIR)\callback.obj"
+	-@erase "$(INTDIR)\callbackinit.obj"
+	-@erase "$(INTDIR)\changeabsbox.obj"
+	-@erase "$(INTDIR)\changepresent.obj"
+	-@erase "$(INTDIR)\checkaccess.obj"
+	-@erase "$(INTDIR)\checkermenu.obj"
+	-@erase "$(INTDIR)\closedoc.obj"
+	-@erase "$(INTDIR)\colors.obj"
+	-@erase "$(INTDIR)\config.obj"
+	-@erase "$(INTDIR)\content.obj"
+	-@erase "$(INTDIR)\contentapi.obj"
+	-@erase "$(INTDIR)\context.obj"
+	-@erase "$(INTDIR)\createabsbox.obj"
+	-@erase "$(INTDIR)\createpages.obj"
+	-@erase "$(INTDIR)\creationmenu.obj"
+	-@erase "$(INTDIR)\dialogapi.obj"
+	-@erase "$(INTDIR)\dictionary.obj"
+	-@erase "$(INTDIR)\displaybox.obj"
+	-@erase "$(INTDIR)\displayselect.obj"
+	-@erase "$(INTDIR)\displayview.obj"
+	-@erase "$(INTDIR)\docs.obj"
+	-@erase "$(INTDIR)\documentapi.obj"
+	-@erase "$(INTDIR)\draw.obj"
+	-@erase "$(INTDIR)\editcommands.obj"
+	-@erase "$(INTDIR)\epshandler.obj"
+	-@erase "$(INTDIR)\exceptions.obj"
+	-@erase "$(INTDIR)\externalref.obj"
+	-@erase "$(INTDIR)\fileaccess.obj"
+	-@erase "$(INTDIR)\font.obj"
+	-@erase "$(INTDIR)\frame.obj"
+	-@erase "$(INTDIR)\geom.obj"
+	-@erase "$(INTDIR)\gifhandler.obj"
+	-@erase "$(INTDIR)\hyphen.obj"
+	-@erase "$(INTDIR)\inites.obj"
+	-@erase "$(INTDIR)\input.obj"
+	-@erase "$(INTDIR)\interface.obj"
+	-@erase "$(INTDIR)\jpeghandler.obj"
+	-@erase "$(INTDIR)\keyboards.obj"
+	-@erase "$(INTDIR)\labelalloc.obj"
+	-@erase "$(INTDIR)\language.obj"
+	-@erase "$(INTDIR)\memory.obj"
+	-@erase "$(INTDIR)\message.obj"
+	-@erase "$(INTDIR)\modiftype.obj"
+	-@erase "$(INTDIR)\pagecommands.obj"
+	-@erase "$(INTDIR)\paginate.obj"
+	-@erase "$(INTDIR)\picture.obj"
+	-@erase "$(INTDIR)\pictureapi.obj"
+	-@erase "$(INTDIR)\pivot.obj"
+	-@erase "$(INTDIR)\platform.obj"
+	-@erase "$(INTDIR)\pnghandler.obj"
+	-@erase "$(INTDIR)\presentationapi.obj"
+	-@erase "$(INTDIR)\presentmenu.obj"
+	-@erase "$(INTDIR)\presrules.obj"
+	-@erase "$(INTDIR)\presvariables.obj"
+	-@erase "$(INTDIR)\printmenu.obj"
+	-@erase "$(INTDIR)\Profiles.obj"
+	-@erase "$(INTDIR)\pschemaapi.obj"
+	-@erase "$(INTDIR)\quit.obj"
+	-@erase "$(INTDIR)\readpivot.obj"
+	-@erase "$(INTDIR)\readprs.obj"
+	-@erase "$(INTDIR)\readstr.obj"
+	-@erase "$(INTDIR)\readtra.obj"
+	-@erase "$(INTDIR)\referenceapi.obj"
+	-@erase "$(INTDIR)\references.obj"
+	-@erase "$(INTDIR)\registry.obj"
+	-@erase "$(INTDIR)\res.obj"
+	-@erase "$(INTDIR)\resgen.obj"
+	-@erase "$(INTDIR)\resmatch.obj"
+	-@erase "$(INTDIR)\schemas.obj"
+	-@erase "$(INTDIR)\schtrad.obj"
+	-@erase "$(INTDIR)\scroll.obj"
+	-@erase "$(INTDIR)\search.obj"
+	-@erase "$(INTDIR)\searchmenu.obj"
+	-@erase "$(INTDIR)\searchmenustr.obj"
+	-@erase "$(INTDIR)\searchref.obj"
+	-@erase "$(INTDIR)\selectionapi.obj"
+	-@erase "$(INTDIR)\spellchecker.obj"
+	-@erase "$(INTDIR)\structchange.obj"
+	-@erase "$(INTDIR)\structcommands.obj"
+	-@erase "$(INTDIR)\structcreation.obj"
+	-@erase "$(INTDIR)\structlist.obj"
+	-@erase "$(INTDIR)\structlocate.obj"
+	-@erase "$(INTDIR)\structmodif.obj"
+	-@erase "$(INTDIR)\structschema.obj"
+	-@erase "$(INTDIR)\structselect.obj"
+	-@erase "$(INTDIR)\style.obj"
+	-@erase "$(INTDIR)\textcommands.obj"
+	-@erase "$(INTDIR)\thotmsg.obj"
+	-@erase "$(INTDIR)\translation.obj"
+	-@erase "$(INTDIR)\tree.obj"
+	-@erase "$(INTDIR)\treeapi.obj"
+	-@erase "$(INTDIR)\uconvert.obj"
+	-@erase "$(INTDIR)\Uio.obj"
+	-@erase "$(INTDIR)\undo.obj"
+	-@erase "$(INTDIR)\undoapi.obj"
+	-@erase "$(INTDIR)\units.obj"
+	-@erase "$(INTDIR)\unstructchange.obj"
+	-@erase "$(INTDIR)\unstructlocate.obj"
+	-@erase "$(INTDIR)\ustring.obj"
+	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\viewapi.obj"
+	-@erase "$(INTDIR)\views.obj"
+	-@erase "$(INTDIR)\windowdisplay.obj"
+	-@erase "$(INTDIR)\word.obj"
+	-@erase "$(INTDIR)\writedoc.obj"
+	-@erase "$(INTDIR)\writepivot.obj"
+	-@erase "$(INTDIR)\xbmhandler.obj"
+	-@erase "$(INTDIR)\xpmhandler.obj"
+	-@erase "$(OUTDIR)\libThotEditor.lib"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+"$(INTDIR)" :
+    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
+
+RSC=rc.exe
+CPP=cl.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
+ "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
+ "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
+ "..\..\libpng\zlib" /I "..\..\amaya" /D "_DEBUG" /D "WWW_WIN_ASYNC" /D\
+ "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D\
+ "SOCKSTHOT_TOOLTIPS" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\"\
+ /Fd"$(INTDIR)\\" /FD /c 
+CPP_OBJS=.\Debug/
+CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotEditor.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\absboxes.obj" \
+	"$(INTDIR)\abspictures.obj" \
+	"$(INTDIR)\actions.obj" \
+	"$(INTDIR)\appdialogue.obj" \
+	"$(INTDIR)\appli.obj" \
+	"$(INTDIR)\applicationapi.obj" \
+	"$(INTDIR)\attributeapi.obj" \
+	"$(INTDIR)\attributes.obj" \
+	"$(INTDIR)\attrmenu.obj" \
+	"$(INTDIR)\attrpresent.obj" \
+	"$(INTDIR)\boxlocate.obj" \
+	"$(INTDIR)\boxmoves.obj" \
+	"$(INTDIR)\boxparams.obj" \
+	"$(INTDIR)\boxpositions.obj" \
+	"$(INTDIR)\boxrelations.obj" \
+	"$(INTDIR)\boxselection.obj" \
+	"$(INTDIR)\browser.obj" \
+	"$(INTDIR)\buildboxes.obj" \
+	"$(INTDIR)\buildlines.obj" \
+	"$(INTDIR)\callback.obj" \
+	"$(INTDIR)\callbackinit.obj" \
+	"$(INTDIR)\changeabsbox.obj" \
+	"$(INTDIR)\changepresent.obj" \
+	"$(INTDIR)\checkaccess.obj" \
+	"$(INTDIR)\checkermenu.obj" \
+	"$(INTDIR)\closedoc.obj" \
+	"$(INTDIR)\colors.obj" \
+	"$(INTDIR)\config.obj" \
+	"$(INTDIR)\content.obj" \
+	"$(INTDIR)\contentapi.obj" \
+	"$(INTDIR)\context.obj" \
+	"$(INTDIR)\createabsbox.obj" \
+	"$(INTDIR)\createpages.obj" \
+	"$(INTDIR)\creationmenu.obj" \
+	"$(INTDIR)\dialogapi.obj" \
+	"$(INTDIR)\dictionary.obj" \
+	"$(INTDIR)\displaybox.obj" \
+	"$(INTDIR)\displayselect.obj" \
+	"$(INTDIR)\displayview.obj" \
+	"$(INTDIR)\docs.obj" \
+	"$(INTDIR)\documentapi.obj" \
+	"$(INTDIR)\draw.obj" \
+	"$(INTDIR)\editcommands.obj" \
+	"$(INTDIR)\epshandler.obj" \
+	"$(INTDIR)\exceptions.obj" \
+	"$(INTDIR)\externalref.obj" \
+	"$(INTDIR)\fileaccess.obj" \
+	"$(INTDIR)\font.obj" \
+	"$(INTDIR)\frame.obj" \
+	"$(INTDIR)\geom.obj" \
+	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\hyphen.obj" \
+	"$(INTDIR)\inites.obj" \
+	"$(INTDIR)\input.obj" \
+	"$(INTDIR)\interface.obj" \
+	"$(INTDIR)\jpeghandler.obj" \
+	"$(INTDIR)\keyboards.obj" \
+	"$(INTDIR)\labelalloc.obj" \
+	"$(INTDIR)\language.obj" \
+	"$(INTDIR)\memory.obj" \
+	"$(INTDIR)\message.obj" \
+	"$(INTDIR)\modiftype.obj" \
+	"$(INTDIR)\pagecommands.obj" \
+	"$(INTDIR)\paginate.obj" \
+	"$(INTDIR)\picture.obj" \
+	"$(INTDIR)\pictureapi.obj" \
+	"$(INTDIR)\pivot.obj" \
+	"$(INTDIR)\platform.obj" \
+	"$(INTDIR)\pnghandler.obj" \
+	"$(INTDIR)\presentationapi.obj" \
+	"$(INTDIR)\presentmenu.obj" \
+	"$(INTDIR)\presrules.obj" \
+	"$(INTDIR)\presvariables.obj" \
+	"$(INTDIR)\printmenu.obj" \
+	"$(INTDIR)\Profiles.obj" \
+	"$(INTDIR)\pschemaapi.obj" \
+	"$(INTDIR)\quit.obj" \
+	"$(INTDIR)\readpivot.obj" \
+	"$(INTDIR)\readprs.obj" \
+	"$(INTDIR)\readstr.obj" \
+	"$(INTDIR)\readtra.obj" \
+	"$(INTDIR)\referenceapi.obj" \
+	"$(INTDIR)\references.obj" \
+	"$(INTDIR)\registry.obj" \
+	"$(INTDIR)\res.obj" \
+	"$(INTDIR)\resgen.obj" \
+	"$(INTDIR)\resmatch.obj" \
+	"$(INTDIR)\schemas.obj" \
+	"$(INTDIR)\schtrad.obj" \
+	"$(INTDIR)\scroll.obj" \
+	"$(INTDIR)\search.obj" \
+	"$(INTDIR)\searchmenu.obj" \
+	"$(INTDIR)\searchmenustr.obj" \
+	"$(INTDIR)\searchref.obj" \
+	"$(INTDIR)\selectionapi.obj" \
+	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\structchange.obj" \
+	"$(INTDIR)\structcommands.obj" \
+	"$(INTDIR)\structcreation.obj" \
+	"$(INTDIR)\structlist.obj" \
+	"$(INTDIR)\structlocate.obj" \
+	"$(INTDIR)\structmodif.obj" \
+	"$(INTDIR)\structschema.obj" \
+	"$(INTDIR)\structselect.obj" \
+	"$(INTDIR)\style.obj" \
+	"$(INTDIR)\textcommands.obj" \
+	"$(INTDIR)\thotmsg.obj" \
+	"$(INTDIR)\translation.obj" \
+	"$(INTDIR)\tree.obj" \
+	"$(INTDIR)\treeapi.obj" \
+	"$(INTDIR)\uconvert.obj" \
+	"$(INTDIR)\Uio.obj" \
+	"$(INTDIR)\undo.obj" \
+	"$(INTDIR)\undoapi.obj" \
+	"$(INTDIR)\units.obj" \
+	"$(INTDIR)\unstructchange.obj" \
+	"$(INTDIR)\unstructlocate.obj" \
+	"$(INTDIR)\ustring.obj" \
+	"$(INTDIR)\viewapi.obj" \
+	"$(INTDIR)\views.obj" \
+	"$(INTDIR)\windowdisplay.obj" \
+	"$(INTDIR)\word.obj" \
+	"$(INTDIR)\writedoc.obj" \
+	"$(INTDIR)\writepivot.obj" \
+	"$(INTDIR)\xbmhandler.obj" \
+	"$(INTDIR)\xpmhandler.obj"
+
+"$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
 
 
 !IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" ==\
@@ -719,6 +735,7 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\scroll_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
@@ -744,9 +761,6 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
-	
-NODEP_CPP_ABSBO=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\absboxes.obj" : $(SOURCE) $(DEP_CPP_ABSBO) "$(INTDIR)"
@@ -982,15 +996,6 @@ DEP_CPP_ACTIO=\
 
 
 !ENDIF 
-
-SOURCE=..\..\thotlib\base\alloca.c
-DEP_CPP_ALLOC=\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\alloca.obj" : $(SOURCE) $(DEP_CPP_ALLOC) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
 
 SOURCE=..\..\thotlib\dialogue\appdialogue.c
 
@@ -1231,9 +1236,6 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-NODEP_CPP_APPLI=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\appli.obj" : $(SOURCE) $(DEP_CPP_APPLI) "$(INTDIR)"
@@ -1682,6 +1684,7 @@ DEP_CPP_ATTRIB=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presvariables_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
@@ -1843,7 +1846,6 @@ DEP_CPP_ATTRM=\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -1974,6 +1976,7 @@ DEP_CPP_ATTRP=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -2076,6 +2079,7 @@ DEP_CPP_BOXLO=\
 	"..\..\thotlib\internals\f\buildlines_f.h"\
 	"..\..\thotlib\internals\f\callback_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\dialogapi_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -3237,7 +3241,6 @@ DEP_CPP_CALLBA=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -3351,6 +3354,7 @@ DEP_CPP_CHANG=\
 	"..\..\thotlib\internals\f\presrules_f.h"\
 	"..\..\thotlib\internals\f\presvariables_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\search_f.h"\
 	"..\..\thotlib\internals\f\searchref_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
@@ -3485,6 +3489,7 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
@@ -3763,6 +3768,7 @@ DEP_CPP_CHECKE=\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\dictionary_f.h"\
+	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\spellchecker_f.h"\
@@ -3789,10 +3795,8 @@ DEP_CPP_CHECKE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\spell_tv.h"\
-	
-NODEP_CPP_CHECKE=\
-	"..\..\thotlib\internals\f\savedoc_f.h"\
 	
 
 "$(INTDIR)\checkermenu.obj" : $(SOURCE) $(DEP_CPP_CHECKE) "$(INTDIR)"
@@ -3917,9 +3921,6 @@ DEP_CPP_CLOSE=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
-	
-NODEP_CPP_CLOSE=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\closedoc.obj" : $(SOURCE) $(DEP_CPP_CLOSE) "$(INTDIR)"
@@ -4912,6 +4913,7 @@ DEP_CPP_CREATI=\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\config_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5022,7 +5024,6 @@ DEP_CPP_DIALO=\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5147,7 +5148,6 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constmenu.h"\
@@ -5539,9 +5539,6 @@ DEP_CPP_DISPLAY=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
-NODEP_CPP_DISPLAY=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\displayview.obj" : $(SOURCE) $(DEP_CPP_DISPLAY) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -5738,9 +5735,6 @@ DEP_CPP_DOCS_=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\print_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
-	
-NODEP_CPP_DOCS_=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\docs.obj" : $(SOURCE) $(DEP_CPP_DOCS_) "$(INTDIR)"
@@ -6590,116 +6584,6 @@ DEP_CPP_EXTER=\
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\dialogue\extprintmenu.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-DEP_CPP_EXTPR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\print.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\printmenu_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
-
-"$(INTDIR)\extprintmenu.obj" : $(SOURCE) $(DEP_CPP_EXTPR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_EXTPR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\print.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\printmenu_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\print_tv.h"\
-	
-
-"$(INTDIR)\extprintmenu.obj" : $(SOURCE) $(DEP_CPP_EXTPR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\base\fileaccess.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -6831,7 +6715,6 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\f\windowdisplay_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -7509,6 +7392,7 @@ DEP_CPP_INPUT=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
+	"..\..\thotlib\internals\f\callback_f.h"\
 	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\input_f.h"\
@@ -7540,6 +7424,7 @@ DEP_CPP_INPUT=\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
 	
 
 "$(INTDIR)\input.obj" : $(SOURCE) $(DEP_CPP_INPUT) "$(INTDIR)"
@@ -8107,7 +7992,6 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -8303,7 +8187,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -8437,10 +8320,6 @@ DEP_CPP_MODIF=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
-NODEP_CPP_MODIF=\
-	"..\..\thotlib\internals\f\picturemenu_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\modiftype.obj" : $(SOURCE) $(DEP_CPP_MODIF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -8507,116 +8386,6 @@ DEP_CPP_MODIF=\
 	
 
 "$(INTDIR)\modiftype.obj" : $(SOURCE) $(DEP_CPP_MODIF) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\dialogue\openview.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-DEP_CPP_OPENV=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
-
-"$(INTDIR)\openview.obj" : $(SOURCE) $(DEP_CPP_OPENV) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_OPENV=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\appdialogue_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\viewapi_f.h"\
-	"..\..\thotlib\internals\f\views_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	
-
-"$(INTDIR)\openview.obj" : $(SOURCE) $(DEP_CPP_OPENV) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8767,6 +8536,7 @@ DEP_CPP_PAGIN=\
 	"..\..\thotlib\internals\f\presrules_f.h"\
 	"..\..\thotlib\internals\f\presvariables_f.h"\
 	"..\..\thotlib\internals\f\print_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
@@ -9452,6 +9222,7 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
@@ -9622,9 +9393,6 @@ DEP_CPP_PRESEN=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
-NODEP_CPP_PRESEN=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -9772,9 +9540,6 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-NODEP_CPP_PRESR=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\presrules.obj" : $(SOURCE) $(DEP_CPP_PRESR) "$(INTDIR)"
@@ -10031,9 +9796,6 @@ DEP_CPP_PRINT=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\print_tv.h"\
 	
-NODEP_CPP_PRINT=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\printmenu.obj" : $(SOURCE) $(DEP_CPP_PRINT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -10151,7 +9913,6 @@ DEP_CPP_PROFI=\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -10491,9 +10252,6 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-NODEP_CPP_READP=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\readpivot.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
@@ -10905,6 +10663,7 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\readpivot_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\search_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
@@ -10924,9 +10683,6 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
-	
-NODEP_CPP_REFER=\
-	"..\..\thotlib\internals\f\schemastr_f.h"\
 	
 
 "$(INTDIR)\referenceapi.obj" : $(SOURCE) $(DEP_CPP_REFER) "$(INTDIR)"
@@ -11823,9 +11579,6 @@ DEP_CPP_SEARC=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
-NODEP_CPP_SEARC=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\search.obj" : $(SOURCE) $(DEP_CPP_SEARC) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -11973,9 +11726,6 @@ DEP_CPP_SEARCH=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-NODEP_CPP_SEARCH=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\searchmenu.obj" : $(SOURCE) $(DEP_CPP_SEARCH) "$(INTDIR)"
@@ -12125,9 +11875,6 @@ DEP_CPP_SEARCHM=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
-NODEP_CPP_SEARCHM=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\searchmenustr.obj" : $(SOURCE) $(DEP_CPP_SEARCHM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -12276,9 +12023,6 @@ DEP_CPP_SEARCHR=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\modif_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-NODEP_CPP_SEARCHR=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\searchref.obj" : $(SOURCE) $(DEP_CPP_SEARCHR) "$(INTDIR)"
@@ -13059,9 +12803,6 @@ DEP_CPP_STRUCTC=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
-NODEP_CPP_STRUCTC=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\structcreation.obj" : $(SOURCE) $(DEP_CPP_STRUCTC) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -13190,6 +12931,7 @@ DEP_CPP_STRUCTL=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
@@ -13630,9 +13372,6 @@ DEP_CPP_STRUCTS=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
-NODEP_CPP_STRUCTS=\
-	"..\..\thotlib\internals\f\schemastr_f.h"\
-	
 
 "$(INTDIR)\structschema.obj" : $(SOURCE) $(DEP_CPP_STRUCTS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -13877,7 +13616,9 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -14157,9 +13898,6 @@ DEP_CPP_THOTM=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
-	
-NODEP_CPP_THOTM=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\thotmsg.obj" : $(SOURCE) $(DEP_CPP_THOTM) "$(INTDIR)"
@@ -15643,9 +15381,6 @@ DEP_CPP_VIEWS=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
-NODEP_CPP_VIEWS=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	
 
 "$(INTDIR)\views.obj" : $(SOURCE) $(DEP_CPP_VIEWS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -16041,9 +15776,6 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\print_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
-	
-NODEP_CPP_WRITE=\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	
 
 "$(INTDIR)\writedoc.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
