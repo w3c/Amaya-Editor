@@ -2215,7 +2215,8 @@ int                 editType;
 	    /* don't remove the selection if it is at the end of the text */
 	    if (pAb->AbLeafType == LtText &&
 		pBox == ViewFrameTable[frame - 1].FrSelectionEnd.VsBox &&
-		pViewSel->VsIndBox >= pBox->BxNChars)
+		pViewSel->VsIndBox >= pBox->BxNChars &&
+		pBox->BxAbstractBox->AbVolume != 0)
 	      return;
 	  }
 
@@ -3620,6 +3621,7 @@ View                view;
 			    pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
 	       ContentEditing (TEXT_SUP);
 	     }
+	   pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
 	   if (moveAfter &&
 	       pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
 	     TtcPreviousChar (document, view);
