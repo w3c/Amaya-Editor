@@ -63,7 +63,7 @@ associates the following icons:</p>
  </tr>
 
  <tr>
-  <td width="35"><img src="../../../amaya/comment.png" alt="Comment"/></td>
+  <td width="35"><img src="../../../amaya/annot.png" alt="Comment"/></td>
   <td>Comment</td>
  </tr>
 
@@ -90,14 +90,15 @@ associates the following icons:</p>
 </table>
 
 <p>
-The property name is
+The property name for adding annotation icons is
 <a href="http://www.w3.org/2001/10/typeIcon#usesIcon"
 >http://www.w3.org/2001/10/typeIcon#usesIcon</a>.
-The typical RDF/XML syntax to specify an icon named
+For instance, to specify an icon named
 file:///home/question-icon.jpg for annotations that have type 
 <a href="http://www.w3.org/2000/10/annotationType#Question"
 >http://www.w3.org/2000/10/annotationType#Question</a>
-that you would enter into a file that Amaya reads at startup is:</p>
+you would enter the following RDF/XML into a file that
+Amaya reads at startup is:</p>
 
 <pre>
 &lt;rdf:RDF
@@ -149,7 +150,7 @@ is, the icon must appear in a local or mounted directory to Amaya.
 Two special forms of non-file: URIs are supported.  If the file path
 name starts with "$THOTDIR" or "$APP_HOME" then the corresponding
 Amaya installation directory or personal Amaya home directory is
-substituted.</p>
+substituted into the pathname.</p>
 
 </div>
 
