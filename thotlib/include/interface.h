@@ -76,7 +76,8 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    info: text to display when the cursor stays on the button.
-   Parameters type and state are only used on Windows versions.
+   type: button type, only used on Windows versions.
+   state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
 extern int          TtaAddButton (Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, boolean state);
@@ -119,7 +120,7 @@ extern void         TtaSwitchButton (Document document, View view, int index);
    view: the concerned view.
    index: the index.
    picture: the new icon.
-   state: the new state
+   state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
 extern void         TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state);
 

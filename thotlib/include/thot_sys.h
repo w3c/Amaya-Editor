@@ -26,98 +26,93 @@
 #define TAB     '\t'
 #define SPACE    ' '
 
-
 #include <setjmp.h>
 #include <signal.h>
 #include <math.h>
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
-
 #include "sysdep.h"
 
-/*
- * If const does work, or hasn't been redefined before
- */
-
-#ifndef CONST
-#define CONST const
-#endif
-
+/**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
 #include <errno.h>
 #include <limits.h>
 #include <fcntl.h>
- /*
- * MS-Windows platform.
- */
+ /* MS-Windows platform */
 #ifndef WWW_MSWINDOWS
 #define WWW_MSWINDOWS
 #endif /* !WWW_MSWINDOWS */
-
-#else  /* defined(_WINDOWS) || defined(_CONSOLE) */
-#if defined (WILLOWS) || defined(_WINDOWS)
-
-/*
- * MS-Windows emulation on Unix.
- */
 #ifndef _WINDOWS
 #define _WINDOWS
 #endif /* !_WINDOWS */
-
-#else  /* defined (WILLOWS) || defined(_WINDOWS) */
-
-/*
- * Motif/Intrinsic/X11 on Unix
- */
-#ifndef WWW_XWINDOWS
-#define WWW_XWINDOWS
-#endif /* !WWW_XWINDOWS */
-
-#endif /* !(defined (WILLOWS) || defined(_WINDOWS)) */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
+/**********************************************************/
+
+/* If const does work, or hasn't been redefined before */
+#ifndef CONST
+#define CONST const
+#endif
 
 #ifndef MAX_PATH
 #define MAX_PATH HT_MAX_PATH	/* nombre de caracteres par liste de path */
 #endif
 
-
-#ifndef TRUE
-#define TRUE  1
+#ifndef FALSE
 #define FALSE 0
-#endif /* !TRUE */
+#endif
+#ifndef TRUE
+#define TRUE  (!False)
+#endif
 
-#ifdef WWW_MSWINDOWS
+/********************************************************WINDOWS**/
+#ifdef _WINDOWS
+/*------------------------------------------------------GNUC--*/
+#if defined(__GNUC__) || defined(__GNUWIN32)
+#ifndef EXTERN
+#define EXTERN extern
+#endif
 
-/* type mappings */
-typedef char        Boolean;	/* X11/Intrinsic.h */
-#define Bool		int	/* X11/Xlib.h */
-#define None		0L	/* X11/X.h */
-
-#ifndef __GNUC__
-
-/*
- * Ugly patches to cope with Visual C++
- */
-
+/* Constants for PATHs */
+#define DIR_SEP '/'
+#define DIR_STR "/"
+#define PATH_SEP ':'
+#define PATH_STR ":"
+#else /* __GNUC__ */ /*---------------------------------GNUC--*/
+/* Ugly patches to cope with Visual C++ */
 /* preproccessor flags */
 #undef NOERROR
 
 /* lacking types */
 typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
-
 /* added functions */
 void                bzero (void *s, size_t n);
 int                 _getpid (void);
 #define strcasecmp(a, b) _stricmp(a, b)
 #define index(str, ch) strchr(str, ch)
-
 /* function mappings */
-#define stat _stat		/* stat(a,b), struct stat and probably everything else */
+#define stat _stat /* stat(a,b), struct stat and probably everything else */
 #define fstat(fileno, buf) _fstat(fileno, buf)
 #define getcwd(buffer, len) _getcwd(buffer, len)
 #define access(f,m) _access((f),(m))
 #define unlink(f) _unlink((f))
+
+/* Constants for PATHs */
+#define DIR_SEP '\\'
+#define DIR_STR "\\"
+#define PATH_SEP ';'
+#define PATH_STR ";"
 #endif /* ! __GNUC__ */
+/*------------------------------------------------------GNUC--*/
+
+/* type mappings */
+#else  /* _WINDOWS */
+
+#ifdef _WINDOWS
+typedef BOOL        Boolean;	/* X11/Intrinsic.h */
+typedef BOOL        boolean;
+#define Bool	    int	/* X11/Xlib.h */
+#define None	    0L	/* X11/X.h */
+#define Bool	    int	/* X11/Xlib.h */
 
 #ifndef R_OK
 #define R_OK 4
@@ -133,31 +128,6 @@ int                 _getpid (void);
 #define ThotPid_get()	_getpid()
 #define ThotPid		int
 
-#ifdef __GNUC__
-#ifndef EXTERN
-#define EXTERN extern
-#endif
-#endif
-
-/*
- * Constants for PATHs
- */
-/*
-  #if defined(__GNUC__) || defined(__GNUWIN32)
-  #define DIR_SEP '/'
-  #define DIR_STR "/"
-  #define PATH_SEP ':'
-  #define PATH_STR ":"
-  #else  !__GNUC__ 
-*/
-#define DIR_SEP '\\'
-#define DIR_STR "\\"
-#define PATH_SEP ';'
-#define PATH_STR ";"
-/*
-#endif 
-*/
-
 #ifndef False
 #define False 0
 #endif
@@ -165,27 +135,22 @@ int                 _getpid (void);
 #define True 1
 #endif
 
-#else  /* WWW_WINDOWS */
+#endif /* _WINDOWS *//***********************************WINDOWS**/
 
-#ifdef _WINDOWS
-typedef BOOL        Boolean;	/* X11/Intrinsic.h */
-
-#define Bool		int	/* X11/Xlib.h */
-#define None		0L	/* X11/X.h */
-
-#endif /* _WINDOWS */
-
+#ifndef HAVE_BOOLEAN
+typedef unsigned char boolean;
+#define HAVE_BOOLEAN
+#endif
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t
 
-/*
- * Constants for PATHs
- */
+/* Constants for PATHs */
 #define DIR_SEP '/'
 #define DIR_STR "/"
 #define PATH_SEP ':'
 #define PATH_STR ":"
 
-#endif /* !WWW_WINDOWS */
+#endif /* _WINDOWS */
+/********************************************************WINDOWS**/
 
 #endif /* THOT_SYS_H */

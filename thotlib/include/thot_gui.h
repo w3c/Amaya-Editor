@@ -17,21 +17,13 @@
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
 
-#if defined(_WIN32) || defined(WIN32)
-#ifndef _WINDOWS
-#define _WINDOWS
-#endif
-#endif
 
-#if defined(_WINDOWS) || defined(_CONSOLE)
-#define WWW_MSWINDOWS
-
+#ifdef _WINDOWS
 /****************************************************************
  *								*
  * MS-Windows specific definition, constants ...		*
  *								*
  ****************************************************************/
-
 #include <windows.h>
 #include <commdlg.h>
 #include <commctrl.h>
@@ -39,14 +31,10 @@
 #include <stdio.h>
 
 #include "typebase.h"
-/*
- * The current HDC : the current Device context in use.
- */
+/* The current HDC : the current Device context in use */
 extern HDC          TtDisplay;
 
-/*
- * Emulation of a X-Windows Graphic Context in MS-Windows
- */
+/* Emulation of a X-Windows Graphic Context in MS-Windows */
 #define THOT_GC_FOREGROUND  0x01
 #define THOT_GC_BACKGROUND  0x02
 #define THOT_GC_BRUSH       0x04
@@ -97,7 +85,7 @@ typedef void       *XtInputId;
 typedef int         ThotIcon;
 #define None            0
 #define TBBUTTONS_BASE 50000
-#define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
+#define ThotColorNone ((COLORREF)~1) /* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
 
 #define FOR_MSW			/* for XPM stuff ! */
@@ -106,25 +94,13 @@ typedef int         ThotIcon;
 #include "simx.h"
 typedef XColor    ThotColorStruct;
 
-#else  /* defined(_WINDOWS) || defined(_CONSOLE) */
-#ifdef _WINDOWS
-
-/************************************************************************
- *									*
- * Special case : building on Unix but for a WILLOWS			*
- * (i.e. WINDOWS) environment.						*
- *									*
- ************************************************************************/
 #else  /* _WINDOWS */
-
 /************************************************************************
  *									*
  * standard Unix interface : based on Motif + Intrinsics + X-Window	*
  *									*
  ************************************************************************/
-
 #define WWW_XWINDOWS
-
 #include <X11/keysym.h>
 #include <X11/IntrinsicP.h>
 #include <X11/CoreP.h>
@@ -200,14 +176,12 @@ typedef Pixmap         ThotIcon;
 #define ThotBitmapNone ((ThotBitmap)-1)
 
 #endif /* ! _WINDOWS */
-#endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 
 /************************************************************************
  *									*
  * Common definition for all the GUIs					*
  *									*
  ************************************************************************/
-
 typedef struct
 {
 #ifdef __cplusplus

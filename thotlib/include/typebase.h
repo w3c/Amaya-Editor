@@ -16,24 +16,13 @@
  
 #ifndef _TYPEBASE_H_
 #define _TYPEBASE_H_
-
-#ifndef HAVE_BOOLEAN
-#ifdef _WINDOWS
-typedef BOOL boolean;
-#else  /* !_WINDOWS */
-typedef unsigned char boolean;
-#endif /* _WINDOWS */
-
-#define HAVE_BOOLEAN
+/* do not declare before */
+#ifndef False
+#define False   0
 #endif
-/*
-   #ifndef False
-   #define False   0
-   #endif
-   #ifndef True
-   #define True    (!False)
-   #endif
- */
+#ifndef True
+#define True    (!False)
+#endif
 
 /* Description des unites */
 typedef enum
