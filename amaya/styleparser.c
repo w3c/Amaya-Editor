@@ -1211,6 +1211,7 @@ static char *ParseCSSBorder (Element element, PSchema tsch,
   return (cssRule);
 }
 
+
 /*----------------------------------------------------------------------
    ParseCSSFloat: parse a CSS float attribute string    
   ----------------------------------------------------------------------*/
@@ -3380,6 +3381,12 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, ctxt);
       /*TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);*/
+
+      /* check the second value */
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
+	cssRule = ParseCSSBackgroundPosition (element, tsch, ctxt,
+					      cssRule, css, isHTML);
     }
   return (cssRule);
 }
@@ -3671,7 +3678,7 @@ static char *ParseCSSTop (Element element, PSchema tsch,
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
     {
-      CSSParseError ("top value", ptr, cssRule);
+      cssRule = SkipValue ("top value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
   /***
@@ -3712,7 +3719,7 @@ static char *ParseCSSRight (Element element, PSchema tsch,
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
     {
-      CSSParseError ("right value", ptr, cssRule);
+      cssRule = SkipValue ("right value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
   /***
@@ -3753,7 +3760,7 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
     {
-      CSSParseError ("bottom value", ptr, cssRule);
+      cssRule = SkipValue ("bottom value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
   /***
@@ -3794,7 +3801,7 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
     {
-      CSSParseError ("left value", ptr, cssRule);
+      cssRule = SkipValue ("left value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
   /***
@@ -3834,7 +3841,7 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
       cssRule = ParseCSSUnit (cssRule, &val);
       if (val.typed_data.unit != UNIT_BOX)
 	{
-	  CSSParseError ("z-index value", ptr, cssRule);
+	  cssRule = SkipValue ("z-index value", ptr);
 	  val.typed_data.unit = UNIT_BOX;
 	}
     }
@@ -3968,7 +3975,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   DisplayMode         dispMode;
-  char               *p = NULL;
+  char               *p = NULL, c;
   char               *valueStart;
   int                 lg;
   unsigned int        i;
@@ -4068,8 +4075,11 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		}
 	      else
 		{
-		  CSSPrintError ("Unknown property", cssRule);
 		  cssRule = SkipProperty (cssRule);
+		  c = *cssRule;
+		  *cssRule = EOS;
+		  CSSPrintError ("Unknown CSS2 property", p);
+		  *cssRule = c;
 		}
 	    }
 	}
