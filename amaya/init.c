@@ -966,7 +966,6 @@ static void UpdateBrowserMenus (Document doc)
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
       DocumentTypes[doc] == docXml ||
-      DocumentTypes[doc] == docLibrary ||
       DocumentTypes[doc] == docImage)
     {
       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
@@ -978,13 +977,11 @@ static void UpdateBrowserMenus (Document doc)
       TtaSetItemOn (doc, 1, Views, BShowSource);
       if (DocumentTypes[doc] == docXml)
 	{
-#ifdef XML_GENERIC      
 	  TtaSetMenuOff (doc, 1, Annotations_);
 	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	  TtaSetItemOff (doc, 1, Views, TShowTargets);
 	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	  TtaSetItemOff (doc, 1, Views, BShowToC);
-#endif /* XML_GENERIC */
 	}
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
       TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -1098,8 +1095,7 @@ static void UpdateEditorMenus (Document doc)
 	      TtaGetDocumentProfile (doc) != L_Strict)
 	    TtaSetMenuOn (doc, 1, XMLTypes);
 	  if (DocumentTypes[doc] == docHTML ||
-	      DocumentTypes[doc] == docImage ||
-	      DocumentTypes[doc] == docLibrary)
+	      DocumentTypes[doc] == docImage)
 	    {
 	      TtaSetMenuOn (doc, 1, Types);
 	      TtaSetItemOn (doc, 1, Views, TShowMapAreas);
@@ -1110,7 +1106,6 @@ static void UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, 1, Special, TSectionNumber);
 	  TtaSetItemOn (doc, 1, Special, BMakeBook);
 	  TtaSetItemOn (doc, 1, Special, BMakeID);
-
 	  TtaChangeButton (doc, 1, iI, iconI, TRUE);
 	  TtaChangeButton (doc, 1, iB, iconB, TRUE);
 	  TtaChangeButton (doc, 1, iT, iconT, TRUE);
@@ -2711,6 +2706,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetItemOff (doc, 1, File, BDocInfo);
 	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
 	   TtaSetItemOff (doc, 1, File, BPrint);
+	   TtaSetItemOff (doc, 1, Edit_, BTransform);
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
@@ -2753,6 +2749,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	     }
 	   if (docType != docLibrary)
 	     TtcSwitchCommands (doc, 1); /* no command open */
+	   isOpen = TRUE;
 	 }
        else if (!isOpen)
 	 {
@@ -2931,11 +2928,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	 }
+       else if (!reinitialized)
+	 /* we have to redraw buttons and menus? */
+	 reinitialized = docType != DocumentTypes[doc];
      }
 
-   /* do we have to redraw buttons and menus? */
-   if (!reinitialized)
-     reinitialized = docType != DocumentTypes[doc];
    /* store the new document type */
    DocumentTypes[doc] = docType;
    if (reinitialized || !isOpen)
@@ -2964,8 +2961,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetItemOff (doc, 1, Views, BShowToC);
 	   TtaSetMenuOff (doc, 1, Doctype1);
 	   TtaSetMenuOff (doc, 1, Types);
-	   if (DocumentTypes[doc] != docMath)
+	   if (DocumentTypes[doc] == docMath)
+	     TtaSetMenuOn (doc, 1, Views);
+	   else
 	     {
+	       TtaSetItemOff (doc, 1, Edit_, BTransform);
 	       TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	       SwitchIconMath (doc, 1, FALSE);
 	       TtaSetMenuOff (doc, 1, XMLTypes);
@@ -4291,32 +4291,6 @@ void ShowSource (Document document, View view)
 	     ReadOnlyDocument[sourceDoc] = TRUE;
 	     SetDocumentReadOnly (sourceDoc);
 	   }
-	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */
-	 TtcSwitchCommands (sourceDoc, 1); /* no command open */
-	 TtaSetItemOff (sourceDoc, 1, File, New1);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlBasic);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlStrict);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtml11);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtmlTransitional);
-	 TtaSetItemOff (sourceDoc, 1, File, BMathml);
-	 TtaSetItemOff (sourceDoc, 1, File, BSvg);
-	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
-	 TtaSetItemOff (sourceDoc, 1, File, BCss);
-	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
-	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
-	 TtaSetItemOff (sourceDoc, 1, File, BReload);
-	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
-	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
-	 TtaSetItemOff (sourceDoc, 1, Views, TShowButtonbar);
-	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
-	 TtaSetMenuOff (sourceDoc, 1, Special);
-	 TtaSetMenuOff (sourceDoc, 1, Help_);
-	 /* Update the doctype menu */
-	 UpdateDoctypeMenu (sourceDoc);
-#ifdef ANNOTATIONS
-	 TtaSetMenuOff (sourceDoc, 1, Annotations_);
-#endif /* ANNOTATIONS */
-
     	 /* Switch the synchronization entry */
     	 if (TtaIsDocumentModified (document))
     	    DocStatusUpdate (document, TRUE);
