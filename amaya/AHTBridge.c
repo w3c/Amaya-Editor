@@ -24,6 +24,11 @@
 #include "query_f.h"
 #include "answer_f.h"
 
+#if 0
+#define DEBUG_LIBWWW
+#define THD_TRACE 1
+#endif
+
 #ifndef _WINDOWS
 /* Amaya's X appcontext */
 
@@ -31,12 +36,12 @@ extern ThotAppContext app_cont;
 
 /* Private functions */
 #ifdef __STDC__
-static void         RequestRegisterReadXtevent (AHTReqContext *, SOCKET);
-static void         RequestKillReadXtevent (AHTReqContext *);
-static void         RequestRegisterWriteXtevent (AHTReqContext *, SOCKET);
-static void         RequestKillWriteXtevent (AHTReqContext *);
-static void         RequestRegisterExceptXtevent (AHTReqContext *, SOCKET);
-static void         RequestKillExceptXtevent (AHTReqContext *);
+static void         RequestRegisterReadXtevent (SOCKET);
+static void         RequestKillReadXtevent (SOCKET);
+static void         RequestRegisterWriteXtevent ( SOCKET);
+static void         RequestKillWriteXtevent (SOCKET);
+static void         RequestRegisterExceptXtevent ( SOCKET);
+static void         RequestKillExceptXtevent (SOCKET);
 #else /* __STDC__ */
 static void         RequesAddReadXtevent ();
 static void         RequestKillReadXtevent ();
@@ -45,12 +50,13 @@ static void         RequestKillWriteXtevent ();
 static void         RequestRegisterExceptXtevent ();
 static void         RequestKillExceptXtevent ();
 #endif /* __STDC__ */
+
 #endif /* _WINDOWS */
 
 /* Private variables */
 
 /*
- * this set of SockOps map our WinSock "socket event SockOps" into 
+ * this set of HTEventType map our WinSock "socket event HTEventType" into 
  * our read and write sets. Note that under the canonical Unix model,
  * a non-blocking socket passed to an accept() call will appear as readable, 
  * whilst a non-blocking call to connect() will appear as writeable. In add.
@@ -58,16 +64,21 @@ static void         RequestKillExceptXtevent ();
  * BSD Unix semantics 
  */
 
-static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
-static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
-static const SockOps ExceptBits = FD_OOB;
+static const HTEventType ReadBits = HTEvent_READ | HTEvent_ACCEPT | HTEvent_CLOSE;
+static const HTEventType WriteBits = HTEvent_WRITE | HTEvent_CONNECT;
+static const HTEventType ExceptBits = HTEvent_OOB;
+
+typedef struct sStatus {
+  XtInputId read;             /* the different XtId's */
+  XtInputId write;
+  XtInputId except;
+} SocketStatus;
 
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
-static XtInputId persSockets[SOCK_TABLE_SIZE];
+static SocketStatus persSockets[SOCK_TABLE_SIZE];
 
-/* Private functions */
-
+boolean libDoStop = 1;
 /*--------------------------------------------------------------------
   AHTCallback_bridge
   this function acts as a bridge between Xt and libwww. From the Xt
@@ -95,161 +106,45 @@ XtInputId          *id;
 #endif /* __STDC__ */
 {
    int                 status;  /* the status result of the libwwww call */
-   HTRequest          *rqp = NULL;
-   AHTReqContext      *me;
-   SockOps             ops;	
+   HTEventType         type  = HTEvent_ALL;	
    int                 v;
    int 		       socket = *s;
-   HTEventCallback    *cbf;
-
-   /* Libwww 5.0a does not take into account the ops parameter
-      in the invocation of for this function call */
-
-   ops = FD_WRITE;
-   cbf = (HTEventCallback *) __RetrieveCBF (socket, ops, &rqp);
+   ms_t                now = HTGetTimeInMillis();
    
    v = HASH (socket);
-   if (persSockets[v]) 
-     {
-       persSockets[v] = 0;
-       /* we're not sure what can be the value of rqp */
-       rqp = NULL;
-     }
-   
-   /* if rqp is NULL, we are dealing with a persistent socket shutdown */
-   if (!(cbf) || !(rqp) || rqp->priority == HT_PRIORITY_OFF) 
-     {
-       if (cbf)
-	 (*cbf) (socket, 0, FD_READ);
 
-   /* remove the Xt input which caused this callback */
-#  ifdef WWW_XWINDOWS
-       XtRemoveInput (*id);
-#  endif
-       return (0);
-     }
-   
-   me = HTRequest_context (rqp);
-   
-#ifdef DEBUG_LIBWWW
-   fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
-#endif
-   
-   switch ((XtInputId) cd) {
-   case XtInputReadMask:
-	       ops = me->read_ops;
-	       ops = FD_READ;
-	       break;
-	  case XtInputWriteMask:
-	       ops = me->write_ops;
-	       ops = FD_WRITE;
-	       break;
-	  case XtInputExceptMask:
-	       ops = me->except_ops;
-	       ops = FD_OOB;
-	       break;
-	  default:
-	       break;
-   } /* switch */
+   /* convert the FD into an HTEventType which will allow us to find the
+      request associated with the socket */
 
+   /* I could send some other data here, like the event itself, right */
+   switch ((XtInputId) cd) 
+     {
+     case XtInputReadMask:
+       type = HTEvent_READ;
+       break;
+     case XtInputWriteMask:
+       type = HTEvent_WRITE;
+       break;
+     case XtInputExceptMask:
+       type = HTEvent_OOB;
+       break;
+     default:
+       type = HTEvent_ALL; 
+       break;
+     } /* switch */
+   
    /* Invokes the callback associated to the requests */
    
-   /* first we change the status of the request, to say it
-      has entered a critical section */
-   
-   /* JK: An early warning of problems */
-   if ((HTRequest_outputStream(me->request) == (HTStream *) NULL))
-      fprintf(stderr,"\n **ERROR** opening %s\n\n", me->urlName);
-
-   me->reqStatus = HT_BUSY;
-
-   if ((me->mode & AMAYA_ASYNC)
-       || (me->mode & AMAYA_IASYNC))
-       /* set protection to avoid stopping an active request */
-       me->mode |= AMAYA_ASYNC_SAFE_STOP;
-
-       /* invoke the libwww callback */
-   status = (*cbf) (socket, rqp, ops);
-
+   libDoStop = 0;
+   if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
+     {
 #ifdef DEBUG_LIBWWW
-   if (status != HT_OK)
-      HTTrace ("Callback.... returned a value != HT_OK");
+     HTTrace ("Callback.... returned a value != HT_OK");
 #endif
-   /* Several states can happen after this callback. They
-    * are indicated by the me->reqStatus structure member and
-    * the fds external variables. The following lines examine
-    * the states and correspondly update the Xt event register
-    *
-    * Regarding the me->reqStatus member, we have the following
-    * possible states:
-    *   
-    * HT_BUSY:    Request has blocked
-    * HT_WAITING: Request has been reissued
-    * HT_ABORT:   Request has been stopped
-    * HT_END:     Request has ended
-    */
+     }
 
-   if ((me->mode & AMAYA_ASYNC)
-       || (me->mode & AMAYA_IASYNC))
-       /* remove protection to avoid stopping an active request */
-       me->mode &= ~AMAYA_ASYNC_SAFE_STOP;
+   libDoStop = 1;
 
-   if (me->reqStatus == HT_ABORT) {
-   /* Has the user stopped the request? */
-     me->reqStatus = HT_WAITING;
-     StopRequest (me->docid);
-     return (0);
-   }
-
-   if (me->reqStatus == HT_WAITING ||
-       me->reqStatus == HT_NEW) {
-     /* the request is being reissued */
-     /*
-      * (1) The old request has ended and the library
-      * assigned the old socket number to a pending
-      * request.
-      *
-      * (2) The request has been reissued after an 
-      * authentication or redirection directive and
-      * we are using the same old socket number.
-      */
-     
-#ifdef DEBUG_LIBWWW
-     fprintf (stderr, "*** detected a reissue of request \n");
-#endif
-     return (0);
-   }
-
-   /* we verify if the request exists. If it has ended, we will have
-      a reqStatus with an HT_END value */
-
-   if ((me->reqStatus == HT_END) ||
-       (me->reqStatus == HT_ERR)) {
-        /* request has ended */
-#ifdef DEBUG_LIBWWW
-       fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, socket);
-#endif
-
-       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
-	 {
-	   /* free the memory allocated for async requests */
-	   /* IV: invert two following lines */
-	   AHTPrintPendingRequestStatus (me->docid, YES);
-	   AHTReqContext_delete (me);
-	 } 
-
-       else if (me->reqStatus == HT_END &&
-		HTError_hasSeverity (HTRequest_error (me->request),
-				     ERR_NON_FATAL))
-
-	 /* did the SYNC request end because of an error? If yes, report it back to the caller */
-	 me->reqStatus = HT_ERR;
-       return (0);
-   }
-
-   /* The request is still alive, so change it's status to indicate 
-      it's out of the critical section */
-   me->reqStatus = HT_WAITING;
    return (0);
 }
 #endif /* !_WINDOWS */
@@ -264,24 +159,24 @@ XtInputId          *id;
 void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void *param, int status)
 #else
 void ProcessTerminateRequest (request, response, param, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *param;
-int                 status;
-
+HTRequest *request;
+HTResponse *response;
+void *param;
+int status;
 #endif
 {   
-  AHTReqContext      *me = HTRequest_context (request);
+  AHTReqContext *me = HTRequest_context (request);
 
-  /* Second Step: choose a correct treatment in function of the request's
+  /* choose a correct treatment in function of the request's
      being associated with an error, with an interruption, or with a
      succesful completion */
    
   if (me->reqStatus == HT_END)
     {
-      if (AmayaIsAlive () && me->terminate_cbf)
+      if (AmayaIsAlive ()  && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
 			      me->content_type, me->context_tcbf);
+
     }
   else if (me->reqStatus == HT_ABORT)
     /* either the application ended or the user pressed the stop 
@@ -299,7 +194,7 @@ int                 status;
   else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
-      if (AmayaIsAlive () && me->terminate_cbf)
+      if (AmayaIsAlive && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
 			      me->content_type, me->context_tcbf);
       
@@ -309,18 +204,18 @@ int                 status;
 	  me->outputfile[0] = EOS;
 	}
     }
-  
-#ifdef _WINDOWS
+
    /* we erase the context if we're dealing with an asynchronous request */
   if ((me->mode & AMAYA_ASYNC) ||
-      (me->mode & AMAYA_IASYNC)) {
-    me->reqStatus = HT_END;
-    AHTLoadTerminate_handler (request, response, param, status);
-    AHTReqContext_delete (me);
-  }
-#endif /* _WINDOWS */
-
-}   
+      (me->mode & AMAYA_IASYNC)) 
+    {
+      me->reqStatus = HT_END;
+      /*** @@@ do we need this? yes!! **/
+      AHTLoadTerminate_handler (request, response, param, status);
+      AHTPrintPendingRequestStatus (me->docid, YES);
+      AHTReqContext_delete (me);
+    }
+}
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------
@@ -350,34 +245,41 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
 
-   if (me->reqStatus == HT_NEW) {
-     if (!(me->output) &&
-         (me->output != stdout) && 
-	 me->outputfile && 
-	 (me->output = fopen (me->outputfile, "wb")) == NULL) {
-       /* the request is associated with a file */
-       me->outputfile[0] = EOS;	/* file could not be opened */
-       TtaSetStatus (me->docid, 1, 
-		     TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		     me->outputfile);
-       me->reqStatus = HT_ERR;
-       if (me->error_html)
-	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
-      } else {
-	if (THD_TRACE)
-	  fprintf (stderr, "WIN_Activate_Request: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
-        /*change the status of the request */
-        me->reqStatus = HT_WAITING;
-      }
-   } 
-   else if (me->reqStatus == HT_WAITING) {
-     
-     /*change the status of the request */
-     rewind (me->output);
-     if (HTRequest_outputStream (me->request) == NULL)
-       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-   } 
+   if (me->reqStatus == HT_NEW) 
+     {
+       if (!(me->output)
+	   && (me->output != stdout) 
+	   && me->outputfile
+	   &&  (me->output = fopen (me->outputfile, "wb")) == NULL) {
+	 /* the request is associated with a file */
+	 me->outputfile[0] = EOS;	/* file could not be opened */
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+		       me->outputfile);
+	 me->reqStatus = HT_ERR;
+
+	 if (me->error_html)
+	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+       } 
+       else
+	 {
+#ifdef DEBUG_LIBWWW
+	   if (THD_TRACE)
+	     fprintf (stderr, "WIN_Activate_Request: Activating pending %s. "
+		      "Open fd %d\n", me->urlName, (int) me->output);
+#endif /* DEBUG_LIBWWW */
+	   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
+	   /*change the status of the request */
+	   me->reqStatus = HT_WAITING;
+	 }
+     } 
+   else if (me->reqStatus == HT_WAITING)
+     {
+       /*change the status of the request */
+       rewind (me->output);
+       if (HTRequest_outputStream (me->request) == NULL)
+	 HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+     } 
    else {
      me->reqStatus = HT_ERR;
    }
@@ -387,90 +289,6 @@ HTAlertPar         *reply;
 
 #else /* _WINDOWS */
 
-/*----------------------------------------------------------------
-  Add_NewSocket_to_Loop
-  when there are more open requests than available sockets, the 
-  requests are put in a "pending state." When a socket becomes
-  available, libwww associates it with a pending request and then
-  calls this callback function. This function is responsible for
-  opening the temporary file where the GET and POST  results
-  will be stored. The function is also responsible for 
-  registering the socket with the Xt event loop.
-  Consult the libwww manual for more details on the signature
-  of this function.
-  ----------------------------------------------------------------*/
-#ifdef __STDC__
-int                 Add_NewSocket_to_Loop (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
-#else
-int                 Add_NewSocket_to_Loop (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC__ */
-{
-   AHTReqContext      *me = HTRequest_context (request);
-   int status = HT_OK;
-
-#ifdef DEBUG_LIBWWW
-     fprintf (stderr, "(Activating a request\n");
-#endif
-
-     /* request was aborted (redirection, authentication) and now is is
-	being automatically reissued */
-
-     if (me->reqStatus == HT_BUSY && me->output) {
-       fclose (me->output);
-       me->output = NULL;
-     }
-
-     /* the request is active, open the output file */
-     if (!(me->output) &&
-	 (me->output != stdout) && 
-	 me->outputfile &&
-	 !(me->output = fopen (me->outputfile, "w"))) {
-       me->outputfile[0] = EOS;	
-       /* file could not be opened */
-       TtaSetStatus (me->docid, 1, 
-		     TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		     me->outputfile);
-       me->reqStatus = HT_ERR;
-       status = HT_ERROR;
-       /* should the error be shown on the Amaya doc window? */
-       if (me->error_html)
-	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
-     }
-
-     if (me->output) {
-       
-       HTRequest_setOutputStream (me->request,
-				  AHTFWriter_new (me->request, 
-						  me->output, 
-						  YES));
-       me->reqStatus = HT_WAITING;
-#ifdef DEBUG_LIBWWW
-	 fprintf (stderr, "Add_NewSocket_to_Loop: Activating "
-		  "pending %s . Open fd %p, stream %p\n", 
-		  me->urlName, (int) me->output, HTRequest_outputStream(me->request));
-#endif
-
-     }
-#ifdef DEBUG_LIBWWW
-     else {
-	 fprintf (stderr, "Add_NewSocket_to_Loop: Error, me->output == NULL\n"
-		  "for URL %s . Open fd %p, stream %p\n", 
-		  me->urlName, (int) me->output, HTRequest_outputStream(me->request));
-     }
-#endif
-
-   
-     return (status);
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
   AHTEvent_register
   callback called by libwww whenever a socket is open and associated
@@ -479,104 +297,48 @@ HTAlertPar         *reply;
   In addition, it registers the request with libwww.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 AHTEvent_register (SOCKET sock, HTRequest * rqp, SockOps ops, HTEventCallback * cbf, HTPriority p)
+int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 #else
-int                 AHTEvent_register (sock, rqp, ops, cbf, p)
-SOCKET              sock;
-HTRequest          *rqp;
-SockOps             ops;
-HTEventCallback    *cbf;
-HTPriority          p;
-
+int AHTEvent_register (sock, type, event)
+SOCKET sock;
+HTEventType type;
+HTEvent *event;
 #endif /* __STDC__ */
 {
-  AHTReqContext      *me;      /* current request */
-  int                 status;  /* libwww status associated with the socket number */
-# ifndef _WINDOWS 
-  int                 v;
-# endif /* _WINDOWS */
+  int  status;
 
-#ifdef DEBUG_LIBWWW
-	  fprintf(stderr, "HTEvent_register\n");
-#endif /* DEBUG_LIBWWW */
   if (sock == INVSOC)
-    return (0);
-
-  /* get the request associated to the socket number */
-
-#ifndef _WINDOWS
-  v = HASH (sock);
-  if (persSockets[v] != 0)
     {
-      XtRemoveInput (persSockets[v]);
-      persSockets[v] = 0;      
-    }
-#endif
-
-  if (rqp == NULL) 
-    {
-#ifndef _WINDOWS 
-      if (ops == FD_CLOSE)
-	{
 #ifdef DEBUG_LIBWWW
-	  fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
+      fprintf(stderr, "AHTEvent_register: sock = INVSOC\n");
 #endif /* DEBUG_LIBWWW */
-
-	  persSockets[v] = XtAppAddInput (app_cont, 
-					  sock,
-					  (XtPointer) XtInputReadMask,
-					  (XtInputCallbackProc) AHTCallback_bridge,
-					  (XtPointer) XtInputReadMask);
-	} /* *fd_close */
-
-#endif /* !_WINDOWS */
+      return (0);
     }
-  else /* rqp */
-    {
-      me = HTRequest_context (rqp);
-      
-      /* Erase any trailing events */
-      /*	  HTEventrg_unregister (sock, FD_ALL); */
-      
-#ifndef _WINDOWS
-       if (ops & ReadBits)
-	 {
-	   me->read_ops = ops;
-	   RequestRegisterReadXtevent (me, sock);
-	 }
-       
-       if (ops & WriteBits)
-	 {
-	   me->write_ops = ops;
-	   RequestRegisterWriteXtevent (me, sock);
-	 }
-       
-       if (ops & ExceptBits)
-	 {
-	   me->except_ops = ops;
-	   RequestRegisterExceptXtevent (me, sock);
-	 }
-#endif	 /* !_WINDOWS */
-       
-#ifdef DEBUG_LIBWWW
-       fprintf (stderr, "AHTEvent_register: URL %s, SOCK %d, 
-                ops %lu, fd %p \n",
-		me->urlName, sock, ops, me->output);
-#endif /* DEBUG_LIBWWW */       
-     } /* if *rqp */
 
+#ifndef _WINDOWS
+	/* need something special for HTEvent_CLOSE */
+  if (type & ReadBits)
+    RequestRegisterReadXtevent (sock);
+  
+  if (type & WriteBits)
+    RequestRegisterWriteXtevent (sock);
+  
+  if (type & ExceptBits)
+    RequestRegisterExceptXtevent (sock);
+#endif	 /* !_WINDOWS */
+  
 #ifdef _WINDOWS   
   /* under windows, libwww requires an explicit FD_CLOSE registration 
-   to detect HTTP responses not having a Content-Length header */
-   status = HTEventrg_register (sock, rqp, ops | FD_CLOSE,
-				cbf, p);
+     to detect HTTP responses not having a Content-Length header */
+  status = HTEventList_register (sock, type | HTEvent_CLOSE , event);
 #else
-   status = HTEventrg_register (sock, rqp, ops,
-				cbf, p);
+  status = HTEventList_register (sock, type, event);
 #endif /* _WINDOWS */
-
-   return (status);
+  
+  return (status);
 }
+
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   AHTEvent_unregister
@@ -586,66 +348,40 @@ HTPriority          p;
   the request from libwww.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 AHTEvent_unregister (SOCKET sock, SockOps ops)
+int AHTEvent_unregister (SOCKET sock, HTEventType type)
 #else
-int                 AHTEvent_unregister (sock, ops)
+int AHTEvent_unregister (sock, type)
 SOCKET              sock;
-SockOps             ops;
+HTEventType         type;
 
 #endif /* __STDC__ */
 {
-   int                 status;
-   HTRequest          *rqp = NULL;
-#  ifndef _WINDOWS
-   AHTReqContext      *me;
-   int                 v;
-#  endif /* _WINDOWS */
-
-
-   /* Libwww 5.0a does not take into account the third parameter
-      **  for this function call */
-
-#ifndef _WINDOWS
-   HTEventCallback     *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
-#endif /* _WINDOWS */
-
-   if (sock == INVSOC)
-     return HT_OK;
+  int    status;
 
 #ifndef _WINDOWS   
-#ifdef DEBUG_LIBWWW
-   fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x\n", cbf, sock, rqp, ops);
-#endif /* DEBUG_LIBWWW */
-
-   v = HASH (sock);
-   if (persSockets[v] != 0) 
-     {
-       XtRemoveInput (persSockets[v]);
-       persSockets[v] = 0;
-     }
-
-   if (cbf)
-     {
-       if (rqp && (me = HTRequest_context (rqp)) )
-	 {
-	   if (ops & ReadBits) 
-	     RequestKillReadXtevent (me);
-	   
-	   if (ops & WriteBits)
-	     RequestKillWriteXtevent (me);
-	   
-	   if (ops & ExceptBits)
-	     RequestKillExceptXtevent (me);
-	 }
-     }
+   /* remove the Xt event hooks */
+   if (type & ReadBits) 
+     RequestKillReadXtevent (sock);
+   
+   if (type & WriteBits)
+     RequestKillWriteXtevent (sock);
+   
+   if (type & ExceptBits) 
+     RequestKillExceptXtevent (sock);
 #endif /* !_WINDOWS */
 
-   status = HTEventrg_unregister (sock, ops);
+   /* @@@ if this is the default for windows, no need to have AHTEvent_..
+      in windows!! */
 
+   /* call libwww's default routine */
+   status = HTEventList_unregister (sock, type);
+   
    return (status);
 }
 
 #ifndef _WINDOWS
+
+/* Private functions */
 
 /*----------------------------------------------------------------------
   RequestKillAllXtevents
@@ -659,12 +395,29 @@ void                RequestKillAllXtevents (me)
 AHTReqContext      *me;
 #endif /* __STDC__ */
 {
-   if (THD_TRACE)
-      fprintf (stderr, "Request_kill: Clearing Xtinputs\n");
+  int sock = INVSOC;
 
-   RequestKillReadXtevent (me);
-   RequestKillWriteXtevent (me);
-   RequestKillExceptXtevent (me);
+  return;
+
+  /* @@@ what to do with this one? @@@ */
+  if (me->read_sock != INVSOC)
+    sock = me->read_sock;
+  else
+    if (me->write_sock != INVSOC)
+          sock = me->write_sock;
+  else
+    if (me->except_sock != INVSOC)
+          sock = me->except_sock;
+
+#ifdef DEBUG_LIBWWW
+   if (THD_TRACE)
+      fprintf (stderr, "RequestKillAllXtEvents: Clearing XtInputs\n");
+#endif /* DEBUG_LIBWWW */
+
+
+   RequestKillReadXtevent (sock);
+   RequestKillWriteXtevent (sock);
+   RequestKillExceptXtevent (sock);
 }
 
 /*----------------------------------------------------------------------
@@ -672,30 +425,31 @@ AHTReqContext      *me;
   Registers with Xt the read events associated with socket sock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestRegisterReadXtevent (AHTReqContext * me, SOCKET sock)
+static void         RequestRegisterReadXtevent (SOCKET sock)
 #else
-static void         RequestRegisterReadXtevent (me, sock)
-AHTReqContext      *me;
+static void         RequestRegisterReadXtevent (sock)
 SOCKET sock;
 #endif /* __STDC__ */
 {
-  if (me->read_xtinput_id)
+  int v;
+
+  v = HASH (sock);
+
+  if (!persSockets[v].read)
     {
+      persSockets[v].read  =
+	XtAppAddInput (app_cont,
+		       sock,
+		       (XtPointer) XtInputReadMask,
+		       (XtInputCallbackProc) AHTCallback_bridge,
+		       (XtPointer) XtInputReadMask);
+      
+#ifdef DEBUG_LIBWWW
       if (THD_TRACE)
-	fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d R\n", me->read_xtinput_id, sock);
-      XtRemoveInput (me->read_xtinput_id);
+	fprintf (stderr, "RegisterReadXtEvent: adding XtInput %lu Socket %d\n",
+		 persSockets[v].read, sock);
+#endif /* DEBUG_LIBWWW */
     }
-
-  me->read_xtinput_id =
-    XtAppAddInput (app_cont,
-		   sock,
-		   (XtPointer) XtInputReadMask,
-		   (XtInputCallbackProc) AHTCallback_bridge,
-		   (XtPointer) XtInputReadMask);
-
-   if (THD_TRACE)
-    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
-	     me->read_xtinput_id, sock);
 
 }
 
@@ -704,19 +458,26 @@ SOCKET sock;
   kills any read Xt event associated with the request pointed to by "me".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestKillReadXtevent (AHTReqContext * me)
+static void         RequestKillReadXtevent (SOCKET sock)
 #else
-static void         RequestKillReadXtevent (me)
-AHTReqContext      *me;
+static void         RequestKillReadXtevent (sock)
+SOCKET              sock;
 #endif /* __STDC__ */
 {
-   if (me->read_xtinput_id)
-     {
-	if (THD_TRACE)
-	   fprintf (stderr, "Request_kill: Clearing Xtinput %lu R\n", me->read_xtinput_id);
-	XtRemoveInput (me->read_xtinput_id);
-	me->read_xtinput_id = (XtInputId) NULL;
-     }
+  int v;
+
+  v = HASH (sock);
+
+  if (persSockets[v].read)
+    {
+#ifdef DEBUG_LIBWWW
+      if (THD_TRACE)
+	fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
+		 persSockets[v].read);
+#endif /* DEBUG_LIBWWW */
+      XtRemoveInput (persSockets[v].read);
+      persSockets[v].read = (XtInputId) NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -724,31 +485,31 @@ AHTReqContext      *me;
   Registers with Xt the write events associated with socket sock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestRegisterWriteXtevent (AHTReqContext * me, SOCKET sock)
+static void         RequestRegisterWriteXtevent (SOCKET sock)
 #else
-static void         RequestRegisterWriteXtevent (me, sock)
-AHTReqContext      *me;
+static void         RequestRegisterWriteXtevent (sock)
 SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-   if (me->write_xtinput_id)
-    {
-      if (THD_TRACE)
-	fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d W\n", me->write_xtinput_id, sock);
-      XtRemoveInput (me->write_xtinput_id);
-    }
+  int v;
+  v = HASH (sock);
 
-  me->write_xtinput_id =
-    XtAppAddInput (app_cont,
-		   sock,
+  if (!persSockets[v].write)
+    {   
+      persSockets[v].write =
+	XtAppAddInput (app_cont,
+		       sock,
 		   (XtPointer) XtInputWriteMask,
 		   (XtInputCallbackProc) AHTCallback_bridge,
 		   (XtPointer) XtInputWriteMask);
-
+#ifdef DEBUG_LIBWWW   
   if (THD_TRACE)
-    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
-	     me->write_xtinput_id, sock);
+    fprintf (stderr, "RegisterWriteXtEvent: Adding XtInput %lu Socket %d\n",
+	     persSockets[v].write, sock);
+#endif /* DEBUG_LIBWWW */
+  
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -757,19 +518,27 @@ SOCKET              sock;
   by "me".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestKillWriteXtevent (AHTReqContext * me)
+static void         RequestKillWriteXtevent (SOCKET sock)
 #else
-static void         RequestKillWriteXtevent (me)
-AHTReqContext      *me;
+static void         RequestKillWriteXtevent (sock)
+SOCKET sock;
 #endif /* __STDC__ */
 {
-   if (me->write_xtinput_id)
-     {
-	if (THD_TRACE)
-	   fprintf (stderr, "Request_kill: Clearing Write Xtinputs %lu\n", me->write_xtinput_id);
-	XtRemoveInput (me->write_xtinput_id);
-	me->write_xtinput_id = (XtInputId) NULL;
-     }
+  int v;
+
+  v = HASH (sock);
+
+  if (persSockets[v].write)
+    {
+#ifdef DEBUG_LIBWWW   
+      if (THD_TRACE)
+	fprintf (stderr, "UnRegisterWriteXtEvent: Clearing Write XtInputs "
+		 "%lu\n",
+		 persSockets[v].write);
+#endif /* DEBUG_LIBWWW */
+      XtRemoveInput (persSockets[v].write);
+      persSockets[v].write =  (XtInputId) NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -777,32 +546,32 @@ AHTReqContext      *me;
   Registers with Xt the except events associated with socket sock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestRegisterExceptXtevent (AHTReqContext * me, SOCKET sock)
+static void         RequestRegisterExceptXtevent (SOCKET sock)
 #else
-static void         RequestRegisterExceptXtevent (me, sock)
-AHTReqContext      *me;
+static void         RequestRegisterExceptXtevent (sock)
 SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-   if (me->except_xtinput_id)
+  int v;
+
+  v = HASH (sock);
+
+   if (!persSockets[v].except)
      {
-       if (THD_TRACE)
-	   fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d E\n", me->except_xtinput_id, sock);
-	XtRemoveInput (me->except_xtinput_id);
+   
+       persSockets[v].except =
+	 XtAppAddInput (app_cont,
+			sock,
+			(XtPointer) XtInputExceptMask,
+			(XtInputCallbackProc) AHTCallback_bridge,
+			(XtPointer) XtInputExceptMask);
+#ifdef DEBUG_LIBWWW      
+   if (THD_TRACE)
+     fprintf (stderr, "RegisterExceptXtEvent: adding XtInput %lu Socket %d\n",
+	      persSockets[v].except, sock);
+#endif /* DEBUG_LIBWWW */
      }
-
-  me->except_xtinput_id =
-    XtAppAddInput (app_cont,
-		   sock,
-		   (XtPointer) XtInputExceptMask,
-		   (XtInputCallbackProc) AHTCallback_bridge,
-		   (XtPointer) XtInputExceptMask);
-
-  if (THD_TRACE)
-    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n",
-	     me->write_xtinput_id, sock);
-
 }
 
 /*----------------------------------------------------------------------
@@ -811,21 +580,178 @@ SOCKET              sock;
   by "me".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RequestKillExceptXtevent (AHTReqContext * me)
+static void         RequestKillExceptXtevent (SOCKET sock)
 #else
-static void         RequestKillExceptXtevent (me)
-AHTReqContext      *me;
+static void         RequestKillExceptXtevent (sock)
+SOCKET sock;
 #endif /* __STDC__ */
 {
-   if (me->except_xtinput_id)
-     {
-	if (THD_TRACE)
-	   fprintf (stderr, "Request_kill: Clearing Except Xtinputs %lu\n", me->except_xtinput_id);
-	XtRemoveInput (me->except_xtinput_id);
-	me->except_xtinput_id = (XtInputId) NULL;
-     }
+  int v;
+
+  v = HASH (sock);
+  if (persSockets[v].except)
+    {
+#ifdef DEBUG_LIBWWW   
+      if (THD_TRACE)
+	fprintf (stderr, "UnregisterExceptXtEvent: Clearing Except XtInputs "
+		 "%lu\n", persSockets[v].except);
+#endif /* DEBUG_LIBWWW */
+      XtRemoveInput (persSockets[v].except);
+      persSockets[v].except = (XtInputId) NULL;
+    }
 }
+
+/*----------------------------------------------------------------------
+  Xt Timer functions 
+  ----------------------------------------------------------------------*/
+
+struct _HTTimer {
+    ms_t        millis;         /* Relative value in millis */
+    ms_t        expires;        /* Absolute value in millis */
+    BOOL        relative;
+    BOOL        repetitive;
+    void *      param;          /* Client supplied context */
+    HTTimerCallback * cbf;
+};
+
+struct _AmayaTimer {
+  HTTimer *libwww_timer;
+  XtIntervalId xt_timer;
+};
+
+typedef struct _AmayaTimer AmayaTimer;
+
+static HTList *Timers = NULL;
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void *TimerCallback (XtPointer cdata, XtIntervalId *id)
+{
+  HTList *cur, *last;
+  AmayaTimer *me;
+  HTTimer *libwww_timer;
+
+  if (!AmayaIsAlive () 
+      || Timers == NULL)
+    return (0);
+
+  /* find the timer from the uid */
+  last = cur = Timers;
+  while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
+    {
+      if (me->xt_timer == *id)
+	break;
+      last = cur;
+    }
+
+  if (me)
+    {
+      libwww_timer = me->libwww_timer;
+      /* remove the element from the list @@@ can be optimized later */
+      HTList_quickRemoveElement(cur, last);
+      TtaFreeMemory (me);
+      HTTimer_dispatch (libwww_timer);
+    }
+
+  return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void KillAllTimers ()
+{
+  /* @@@ maybe add something else to kill the Xt things */
+  if (Timers)
+    HTList_delete (Timers);
+
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SetTimer (HTTimer *libwww_timer)
+{
+  HTList *cur, *last;
+  AmayaTimer *me;
+
+  if (!AmayaIsAlive 
+      || libwww_timer == NULL
+      || libwww_timer->expires == 0)
+    return;
+
+  if (Timers == NULL)
+    Timers = HTList_new ();
+
+  /* see if this timer existed already */
+  last = cur = Timers;
+  while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
+    {
+      if (me->libwww_timer == libwww_timer)
+	break;
+      last = cur;
+    }
+
+  if (me)
+    {
+    /* remove the old timer */
+      if (me->xt_timer) 
+	{
+	  XtRemoveTimeOut (me->xt_timer);
+	  me->xt_timer = NULL;
+	}
+    }
+  else
+    {
+      /* create a new element */
+      me = TtaGetMemory (sizeof (AmayaTimer));
+      /* and add it to the list */
+      HTList_addObject(last, (void *) me);
+      me->libwww_timer = libwww_timer;
+    }
+
+  /* add a new time out */
+  me->xt_timer = XtAppAddTimeOut (app_cont,
+				 me->libwww_timer->millis,
+				 (XtTimerCallbackProc) TimerCallback,
+				 (XtPointer *) (void *) me);
+
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DeleteTimer (HTTimer *timer)
+{
+  HTList *cur, *last;
+  AmayaTimer *me;
+
+  if (Timers == NULL || timer == NULL)
+    return;
+
+  /* find the id */
+  last = cur = Timers;
+  while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
+    {
+      if (me->libwww_timer == timer)
+	break;
+      last = cur;
+    }
+
+  if (me)
+    {
+      /* remove the Xt timer */
+      XtRemoveTimeOut (me->xt_timer);
+      /* and the element from the list */
+      HTList_quickRemoveElement(cur, last);
+      TtaFreeMemory (me);
+    }
+}
+
+
 #endif /* !_WINDOWS */
 
 #endif /* !AMAYA_JAVA */
+
+
+
+
+
 

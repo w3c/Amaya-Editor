@@ -10,10 +10,6 @@ extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
 extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
-extern int AHTLoadTerminate_handler ( HTRequest * request,
-                                      HTResponse * response,
-                                      void *param,
-                                      int status );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern void InvokeGetObjectWWW_callback ( int docid,
@@ -40,29 +36,18 @@ extern int PutObjectWWW ( int docid,
                           PicType contentType,
                           TTcbf * terminate_cbf,
                           void *context_tcbf );
-extern int UploadMemWWW ( int docid,
-                          HTMethod method,
-                          char *urlName,
-                          PicType contentType,
-                          char *mem_ptr,
-                          unsigned long block_size,
-                          int mode,
-                          TTcbf * terminate_cbf,
-                          void *context_tcbf,
-                          char *outputfile );
 extern void StopRequest ( int docid );
 extern boolean AmayaIsAlive ( void );
-
+extern int AHTLoadTerminate_handler ( HTRequest * request, 
+				      HTResponse * response,
+				      void *param, 
+				      int status );
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
 extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
-extern int AHTLoadTerminate_handler (/* HTRequest * request,
-                                        HTResponse * response,
-                                        void *param,
-                                        int status */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern void InvokeGetObjectWWW_callback (/* int docid,
@@ -89,18 +74,11 @@ extern int PutObjectWWW (/* int docid,
                             PicType contentType,
                             TTcbf * terminate_cbf,
                             void *context_tcbf */);
-extern int UploadMemWWW (/* int docid,
-                            HTMethod method,
-                            char *urlName,
-                            PicType contentType,
-                            char *mem_ptr,
-                            unsigned long block_size,
-                            int mode,
-                            TTcbf * terminate_cbf,
-                            void *context_tcbf,
-                            char *outputfile */);
 extern void StopRequest (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
-
+extern int AHTLoadTerminate_handler (/* HTRequest * request, 
+					HTResponse * response,
+					void *param, 
+					int status */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

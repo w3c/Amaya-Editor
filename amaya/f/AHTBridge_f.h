@@ -4,6 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
+
 #ifdef __STDC__
 
 extern void *AHTCallback_bridge ( caddr_t cd,
@@ -19,24 +20,23 @@ extern int Add_NewSocket_to_Loop ( HTRequest * request,
                                    const char *dfault,
                                    void *input,
                                    HTAlertPar * reply );
-extern int AHTEvent_register ( SOCKET sock,
-                               HTRequest * rqp,
-                               SockOps ops,
-                               HTEventCallback * cbf,
-                               HTPriority p );
+extern int AHTEvent_register ( SOCKET sock, 
+			       HTEventType type,
+			       HTEvent *event );
 extern int AHTEvent_unregister ( SOCKET sock,
-                                 SockOps ops );
+				 HTEventType type);
 extern void RequestKillAllXtevents ( AHTReqContext * me );
-
+void SetTimer ( HTTimer *libwww_timer );
+void DeleteTimer ( HTTimer *timer );
 #else /* __STDC__ */
 
 extern void *AHTCallback_bridge (/* caddr_t cd,
                                     int *s,
                                     XtInputId * id */);
 extern void ProcessTerminateRequest (/* HTRequest * request,
-                                        HTResponse * response,
-                                        void *param,
-                                        int status */);
+                                      HTResponse * response,
+                                      void *param,
+                                      int status */);
 extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      HTAlertOpcode op,
                                      int msgnum,
@@ -44,13 +44,15 @@ extern int Add_NewSocket_to_Loop (/* HTRequest * request,
                                      void *input,
                                      HTAlertPar * reply */);
 extern int AHTEvent_register (/* SOCKET sock,
-                                 HTRequest * rqp,
-                                 SockOps ops,
-                                 HTEventCallback * cbf,
-                                 HTPriority p */);
+				 HTEventType type,
+				 HTEvent *event */);
 extern int AHTEvent_unregister (/* SOCKET sock,
-                                   SockOps ops */);
+				   HTEventType type */);
 extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-
+void SetTimer (/* HTTimer *libwww_timer */);
+void DeleteTimer (/* HTTimer *timer */);
 #endif /* __STDC__ */
+
+extern boolean libDoStop;
+
 #endif /* __CEXTRACT__ */

@@ -2191,7 +2191,7 @@ void               *ctx_cbf;
 	       ActiveTransfer (newdoc);
 	       /* set up the transfer mode */
 	       if (CE_event == CE_FORM_POST)
-		 mode = AMAYA_SYNC | AMAYA_FORM_POST;
+		 mode = AMAYA_ASYNC | AMAYA_FORM_POST | AMAYA_NOCACHE;
 	       else if (CE_event == CE_MAKEBOOK)
 		 mode = AMAYA_ASYNC;
 	       else

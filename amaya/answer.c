@@ -87,7 +87,7 @@ void               *input, HTAlertPar * reply;
 		   
 		   if (cl > 0)
 		     {
-		       bytes_rw = HTRequest_bytesRead (request);
+		       bytes_rw = HTNet_bytesRead (request->net);
 		       pro = (int) ((bytes_rw * 100l) / cl);
 		       
 		       if (pro > 100)		/* libwww reports > 100! */
@@ -133,12 +133,16 @@ void               *input, HTAlertPar * reply;
 	    case HT_PROG_DONE:
 	       /* a message is displayed elsewhere */
 	       break;
+#if 0
+	       /* @@@ changed **/
 	    case HT_PROG_WAIT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_SOCKET), NULL);
 	       break;
+	       /* @@@ changed **/
 	    case HT_PROG_GC:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CACHE_GC), NULL);
 	       break;
+#endif
 	    default:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_STATUS), NULL);
 	       break;

@@ -8,6 +8,20 @@
 #ifndef AMAYA_LIBWWW_H
 #define AMAYA_LIBWWW_H
 
+/***********
+Things to put in sysdep.h???
+**********/
+/*typedef u_long SockOps; */
+#ifndef _WINSOCKAPI_
+#define FD_READ         0x01
+#define FD_WRITE        0x02
+#define FD_OOB          0x04
+#define FD_ACCEPT       0x08
+#define FD_CONNECT      0x10
+#define FD_CLOSE        0x20
+#endif /* _WINSOCKAPI_ */
+typedef unsigned long ms_t;
+/************/
 
 #include "WWWLib.h"
 #include "WWWApp.h"
@@ -17,16 +31,12 @@
 #include "HTReq.h"
 #include "HTAncMan.h"
 #include "HTAccess.h"
-#include "HTEvntrg.h"
 #include "HTAlert.h"
 #include "HTNetMan.h"
 #include "HTBInit.h"
 #include "WWWHTTP.h"		/* HTTP access module */
 #include "HTProxy.h"
 #include "HTHost.h"
-
-/* a definition missing in HTHost.h ! */
-extern int HTHost_catchClose (SOCKET soc, HTRequest * request, SockOps ops);
 
 typedef struct _AHTDocIdStatus
   {
@@ -40,7 +50,8 @@ typedef struct __AmayaContext
   {
      HTList             *reqlist;	/* List of current requests */
      HTList             *docid_status;	/* Status for each active docid */
-     int                 open_requests;		/* number of open requests */
+     int                 open_requests;	/* number of open requests */
+    boolean              cache;         /* cache active */
   }
 AmayaContext;
 
@@ -54,7 +65,8 @@ typedef enum _AHTReqStatus
      HT_BUSY = 4,         /* the request is currently being processed */
      HT_END = 8,          /* the request has ended */
      HT_ABORT = 16,       /* user aborted the request */
-     HT_ERR = 32          /* an error happened during the request */
+     HT_CACHE = 32,
+     HT_ERR = 64          /* an error happened during the request */
   }
 AHTReqStatus;
 
@@ -69,13 +81,13 @@ typedef struct _AHTReqContext
      HTMethod            method;	/* What method are we envoking                  */
      int                 docid;	        /* docid to which this request belongs          */
      AHTReqStatus        reqStatus;	/* status of the request                        */
-     SockOps             read_ops;	/* The ops operation which must be used during
+     HTEventType             read_type;	/* The type operation which must be used during
 					   ** an Xt read callback */
 
-     SockOps             write_ops;	/* The ops operation which must be used during
+     HTEventType             write_type;	/* The type operation which must be used during
 					   ** an Xt write callback */
 
-     SockOps             except_ops;	/* The ops operation which must be used during
+     HTEventType             except_type;	/* The type operation which must be used during
 					   ** an Xt exception callback */
 
 #ifdef WWW_XWINDOWS
@@ -115,9 +127,12 @@ typedef struct _AHTReqContext
 
      HTParentAnchor     *dest;	/* Destination for PUT etc.              */
      unsigned long       block_size;	/* size in bytes of the file to put      */
-     int                 put_counter;	/* number of bytes already put           */
-     char               *mem_ptr;	/* ptr to a struct in mem which contains a copy */
+    int                 put_counter;	/* number of bytes already put           */
+    char               *mem_ptr;	/* ptr to a struct in mem which contains a copy */
      /* of the file to put                           */
+
+    HTAssocList        *formdata;        /* ptr to a struct containing the formdata used with POST */
+
      char               *error_stream;        /* pointer to an error message associated with the
 						 request */
      int                 error_stream_size;   /* size of the above message */
@@ -132,3 +147,4 @@ THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 
 #endif /* AMAYA_LIBWWW_H */
+
