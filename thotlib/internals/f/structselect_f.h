@@ -64,8 +64,7 @@ extern void ExtendSelection ( PtrElement pEl,
                               ThotBool drag );
 extern void AddInSelection ( PtrElement pEl,
                              ThotBool last );
-extern void RemoveFromSelection ( PtrElement pEl,
-                                  PtrDocument pDoc );
+extern void RemoveFromSelection ( PtrElement pEl );
 extern void SelectElementWithEvent ( PtrDocument pDoc,
                                      PtrElement pEl,
                                      ThotBool begin,
@@ -157,8 +156,7 @@ extern void ExtendSelection (/* PtrElement pEl,
                                 ThotBool drag */);
 extern void AddInSelection (/* PtrElement pEl,
                                ThotBool last */);
-extern void RemoveFromSelection (/* PtrElement pEl,
-                                    PtrDocument pDoc */);
+extern void RemoveFromSelection (/* PtrElement pEl */);
 extern void SelectElementWithEvent (/* PtrDocument pDoc,
                                        PtrElement pEl,
                                        ThotBool begin,

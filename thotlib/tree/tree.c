@@ -1112,18 +1112,18 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
    ElemIsBefore
-   returns TRUE if the element pointed by pEl1 is in the tree preceding the
-   element pointed by pEl2. The element itself and its ancestors are not
+   returns TRUE if the element pointed by pEl1 is begfore the element pointed
+   by pEl2 in the document order. The element itself and its ancestors are not
    taken into account during this test.
   ----------------------------------------------------------------------*/
 ThotBool            ElemIsBefore (PtrElement pEl1, PtrElement pEl2)
 {
    PtrElement          pEl;
    ThotBool            found;
-   ThotBool            avant;
+   ThotBool            before;
 
    if (pEl1 == pEl2)
-      avant = FALSE;
+      before = FALSE;
    else
      {
 	pEl = pEl2;
@@ -1138,9 +1138,44 @@ ThotBool            ElemIsBefore (PtrElement pEl1, PtrElement pEl2)
 	       }
 	     pEl = pEl->ElParent;
 	  }
-	avant = found;
+	before = found;
      }
-   return avant;
+   return before;
+}
+
+/*----------------------------------------------------------------------
+   ElemIsBeforeWithin
+   returns TRUE if the element pointed by pEl1 is before the element pointed
+   by pEl2. Both elements belong to the same subtree.
+  ----------------------------------------------------------------------*/
+ThotBool            ElemIsBeforeWithin (PtrElement pEl1, PtrElement pEl2,
+					PtrElement subTree)
+{
+   PtrElement          pEl;
+   ThotBool            found;
+   ThotBool            before;
+
+   if (pEl1 == pEl2)
+      before = FALSE;
+   else
+     {
+	pEl = pEl2;
+	found = FALSE;
+	while (pEl != NULL && !found)
+	  {
+	     while (pEl->ElPrevious != NULL)
+	       {
+		  pEl = pEl->ElPrevious;
+		  if (ElemIsWithinSubtree (pEl1, pEl))
+		     found = TRUE;
+	       }
+	     pEl = pEl->ElParent;
+	     if (pEl == subTree)
+	       pEl = NULL;
+	  }
+	before = found;
+     }
+   return before;
 }
 
 /*----------------------------------------------------------------------
@@ -1152,12 +1187,12 @@ ThotBool            ElemIsAnAncestor (PtrElement pEl1, PtrElement pEl2)
 {
    PtrElement          p;
    ThotBool            found;
-   ThotBool            englobe;
+   ThotBool            ancestor;
 
    if (pEl1 == NULL)
-      englobe = FALSE;
+      ancestor = FALSE;
    else if (pEl2 == NULL)
-      englobe = TRUE;
+      ancestor = TRUE;
    else
      {
 	found = FALSE;
@@ -1167,9 +1202,9 @@ ThotBool            ElemIsAnAncestor (PtrElement pEl1, PtrElement pEl2)
 	      found = TRUE;
 	   else
 	      p = p->ElParent;
-	englobe = found;
+	ancestor = found;
      }
-   return englobe;
+   return ancestor;
 }
 
 /*----------------------------------------------------------------------

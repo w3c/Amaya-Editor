@@ -4,17 +4,16 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
 
 /*
  * variables used for selecting logical elements and contents
  */
 
-THOT_EXPORT int         KeyboardMode;	/* current keyboard */
+THOT_EXPORT int          KeyboardMode;	/* current keyboard */
 
 /* the document containing the current selection, */
 /* NULL if there is no selection at all */
-THOT_EXPORT PtrDocument SelectedDocument;
+THOT_EXPORT PtrDocument  SelectedDocument;
 
 /* number of the view from which the user has selected */
 THOT_EXPORT int          SelectedView;
@@ -56,6 +55,15 @@ THOT_EXPORT ThotBool     SelectionUpdatesMenus;
 LastSelectedElement, FirstSelectedChar, LastSelectedChar */
 /* If FALSE the selection is represented by table SelElement */
 THOT_EXPORT ThotBool     SelContinue;
+/* SelectedColumn is meaningful only when SelContinue is TRUE. In this case,
+if SelectedColumn is not NULL, the current selection is all table cells
+comprised between FirstSelectedElement and LastSelectedElement that belong
+to the same table column whose head is SelectedColumn. FirstSelectedElement
+and LastSelectedElement are (within) cells belonging to the same column. */
+THOT_EXPORT PtrElement   SelectedColumn;
+/* When SelectedColumn is not NULL, WholeColumnSelected indicates whether the
+   whole column is selected or only some (parts of) its cells */
+THOT_EXPORT ThotBool     WholeColumnSelected;
 /* Current selection mode */
 THOT_EXPORT ThotBool 	 StructSelectionMode;
 /* selection in the character string of an attribute value */

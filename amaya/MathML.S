@@ -489,7 +489,7 @@ EXCEPT
    MTR:			IsRow;
    MLABELEDTR:          IsRow;
    RowLabel:	        Hidden, NoMove, NoResize;
-   MTD:			IsCell, NoMove, NoResize;
+   MTD:			IsCell, NoMove, NoResize, NoBreakByReturn;
    CellWrapper:		NoCut, Hidden;
    FencedSeparator:	Hidden, NoCut, NoCreate;
    C_Empty:		Hidden, NoSelect;

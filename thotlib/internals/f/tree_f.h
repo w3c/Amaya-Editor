@@ -35,6 +35,9 @@ extern ThotBool EquivalentType ( PtrElement pEl,
                                  PtrSSchema pSS );
 extern ThotBool ElemIsBefore ( PtrElement pEl1,
                                PtrElement pEl2 );
+extern ThotBool ElemIsBeforeWithin ( PtrElement pEl1,
+                                     PtrElement pEl2,
+				     PtrElement subTree );
 extern ThotBool ElemIsAnAncestor ( PtrElement pEl1,
                                    PtrElement pEl2 );
 extern PtrElement CommonAncestor ( PtrElement pEl1,
@@ -236,6 +239,9 @@ extern ThotBool EquivalentType (/* PtrElement pEl,
                                    PtrSSchema pSS */);
 extern ThotBool ElemIsBefore (/* PtrElement pEl1,
                                  PtrElement pEl2 */);
+extern ThotBool ElemIsBeforeWithin (/* PtrElement pEl1,
+                                       PtrElement pEl2,
+				       PtrElement subTree */);
 extern ThotBool ElemIsAnAncestor (/* PtrElement pEl1,
                                      PtrElement pEl2 */);
 extern PtrElement CommonAncestor (/* PtrElement pEl1,

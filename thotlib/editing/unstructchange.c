@@ -864,6 +864,8 @@ void SelectSiblings (PtrElement *firstEl, PtrElement *lastEl,
 {
    PtrElement          pParent;
 
+   if (!SelContinue)
+     return;
    if ((*firstEl)->ElParent != (*lastEl)->ElParent)
       /* essaie de ramener la selection a une suite de freres */
      {
