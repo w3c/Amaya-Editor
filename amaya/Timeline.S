@@ -191,7 +191,7 @@ STRUCT
    GraphicsElement
 	= CASE OF
          exp_period; col_period; rect_interface; rect_id; text_; text_id; timing_text; tline; image_slider; 
-   	     image_collapse; image_help; image_keypos; Timeline; abstract_group;
+   	     image_collapse; image_help; image_motion; image_color; image_toolbar; image_interp; Timeline; abstract_group;
 		  END;
 	     
 
