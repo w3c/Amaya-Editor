@@ -259,6 +259,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
   annot_list = NULL;
+  (void)FindAnnot (&annot_list, "***reset***", FALSE);
+
 
   if (type != ANNOT_LIST)
       return NULL;
