@@ -118,6 +118,7 @@ ThotBool TtaChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
       /* redisplay the selection message */
       BuildSelectionMessage ();
 #endif
+      SetDocumentModified (LoadedDocument[doc - 1], TRUE, 0);
       return TRUE;
     }
   return FALSE;
