@@ -887,7 +887,7 @@ static void         InitEnviron ()
    if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL)) {
        strncpy (SchemaPath, Thot_Sch, MAX_PATH);
        strcat (SchemaPath,PATH_STR);
-       strcat (SchemaPath, Thot_Sch);
+       strcat (SchemaPath, Thot_Sys_Sch);
    } else if (Thot_Sch != NULL)
        strncpy (SchemaPath, Thot_Sch, MAX_PATH);
    else if (Thot_Sys_Sch != NULL)
