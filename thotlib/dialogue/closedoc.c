@@ -140,7 +140,8 @@ ThotBool            CloseADocument (Document document, Document docform,
 	{
 	  /* si le document a ete modifie', demande a l'utilisateur s'il */
 	  /* veut le sauver. L'utilisateur peut aussi annuler la commande.*/
-	  if (!pDoc->DocReadOnly && pDoc->DocModified)
+	  /* if (!pDoc->DocReadOnly && pDoc->DocModified) */
+	  if (pDoc->DocModified)
 	    {
 	      /* Faut-il creer le formulaire TtcCloseDocument */
 	      if (ThotLocalActions[T_confirmclose] == NULL)

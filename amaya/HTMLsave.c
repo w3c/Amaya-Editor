@@ -1934,9 +1934,6 @@ void SaveDocument (Document doc, View view)
 
   if (SavingDocument != 0 || SavingObject != 0)
     return;
-  else if (!TtaGetDocumentAccessMode (doc))
-    /* the document is in ReadOnly mode */
-    return;
   else if (!TtaIsDocumentModified (doc))
     {
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");

@@ -335,7 +335,7 @@ static ThotBool     interactiveSave (PtrDocument pDoc)
   ThotBool            status;
   
   status = FALSE;
-  if (!pDoc->DocReadOnly && pDoc->DocSSchema)
+  if (pDoc->DocSSchema)
     status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,SaveDocWithCopy, SaveDocWithMove);
   
   if (status)
