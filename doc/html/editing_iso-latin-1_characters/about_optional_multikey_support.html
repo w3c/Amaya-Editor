@@ -1,0 +1,1245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>About Optional Multi-key Support</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 5.1">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>About Optional Multi-key Support</h1>
+
+<p>Amaya provides an optional multi-key input method based on a two-key
+sequence beginning with the accent and followed by the letter to be accented.
+For example, to obtain an a-tilde (<code>ã</code>), you first press
+<code>~</code> then type <code>a</code>. To obtain a tilde (<code>~</code>),
+press <code>~</code> twice.</p>
+
+<p>See the table below for the keys used to insert various ISO-Latin-1
+characters.</p>
+
+<table border="1" cellspacing="0" cellpadding="0"
+style="border-collapse:collapse;  border:none;">
+  <thead>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;    padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead">Name</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border:solid windowtext .5pt;    border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead">Code</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border:solid windowtext .5pt;    border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead">First key</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border:solid windowtext .5pt;    border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead">Second key</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border:solid windowtext .5pt;    border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead">Output</p>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Aacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">193</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Á</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Acirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">194</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Â</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Agrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">192</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">À</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Aring</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">197</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">star</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Å</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Atilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">195</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ã</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Auml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">196</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; A</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ä</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ccedil</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">199</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; C</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ç</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Eacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">201</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">É</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ecirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">202</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ê</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Egrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">200</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">È</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Euml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">203</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; E</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ë</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Iacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">205</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Í</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Icirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">206</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Î</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Igrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">204</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ì</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Iuml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">207</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; I</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ï</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ntilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">209</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; N</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ñ</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Oacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">211</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ó</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ocirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">212</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ô</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ograve</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">210</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ò</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Oslash</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">216</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">star</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ø</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Otilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">213</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Õ</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ouml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">214</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; O</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ö</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Uacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">205</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ú</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ucirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">206</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Û</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ugrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">204</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ù</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Uuml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">207</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; U</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ü</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Yacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">221</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">&lt;Shift&gt; Y</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Ý</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">aacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">225</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">á</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">acirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">226</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">â</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">agrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">224</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">à</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">aring</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">229</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">star</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">å</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">atilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">227</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ã</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">auml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">228</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">a</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ä</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ccedil</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">231</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">c</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ç</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">eacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">233</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">e</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">é</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ecirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">234</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">e</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ê</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">egrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">232</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">e</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">è</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">euml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">235</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">e</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ë</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">iacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">237</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">i</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">í</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">icirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">238</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">i</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">î</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">igrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">236</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">i</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ì</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ntilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">241</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">n</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ñ</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">oacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">243</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ó</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ocirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">244</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ô</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ograve</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">242</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ò</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">oslash</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">248</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">star</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ø</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">otilde</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">245</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">tilde</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">õ</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ouml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">246</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">o</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ö</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">uacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">250</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">u</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ú</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ucirc</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">251</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">circumflex</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">u</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">û</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ugrave</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">249</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">backquote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">u</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ù</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">uuml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">252</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">u</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ü</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">yacute</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">253</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">y</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ý</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="96" valign="top"
+      style="width:1.0in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">yuml</p>
+      </td>
+      <td width="60" valign="top"
+      style="width:45.0pt;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">255</p>
+      </td>
+      <td width="132" valign="top"
+      style="width:99.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">double quote</p>
+      </td>
+      <td width="144" valign="top"
+      style="width:1.5in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">y</p>
+      </td>
+      <td width="72" valign="top"
+      style="width:.75in;border-top:none;border-left:none;   border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">ÿ</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p> </p>
+</body>
+</html>

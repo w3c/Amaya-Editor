@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>About Controlling Printing with CSS</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 5.1">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>About Controlling Printing with CSS</h1>
+
+<p>Amaya does not print links as underlined. To make this happen, add the
+following line to your user style sheet (amaya.css, located in the <span
+class="Link0">Amaya home directory</span>):</p>
+
+<p><code>@media print {a:link {text-decoration: underline} ... }</code></p>
+
+<p>Amaya supports the CSS page break property <code>page-break-before:
+always</code>. When you attach this property to a specific element using an
+attribute style, Amaya generates a page break before that element. When you
+attach this property to an element type within the style element of the
+document or within an external CSS style sheet, Amaya generates a page break
+before each instance of that element.</p>
+</body>
+</html>

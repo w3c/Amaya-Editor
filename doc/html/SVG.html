@@ -1,223 +1,25 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Editing Graphics</title>
-  <meta name="GENERATOR" content="amaya 5.1" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body>
+<h1>Editing Graphics</h1>
 
-<table summary="toc">
-  <tbody>
-    <tr>
-      <td><img src="../images/w3c_home" /><img alt="Amaya"
-        src="../images/amaya.gif" /></td>
-      <td><p><a href="Math.html" accesskey="p"><img alt="previous"
-        src="../images/left.gif" /></a> <a href="Manual.html"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="ImageMaps.html" accesskey="n"><img src="../images/right.gif"
-        /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div id="Editing">
-<h2>Editing graphics</h2>
-
-<p>Amaya allows you to include vector graphics in Web pages, following the
-Scalable Vector Graphics (<a href="http://www.w3.org/TR/svg/">SVG</a>)
-specification. SVG elements are handled as structured components, in the same
-way as HTML elements. Therefore, you can manipulate SVG graphics in the same
-way you manipulate other parts of HTML documents. All editing commands
-provided by Amaya for handling text are also available for graphics. There
-are also some additional controls for entering SVG elements.</p>
-
-<h3><a name="Creating">Creating graphics with the palette</a></h3>
-
-<p>To create a new SVG element in a document, just move the insertion point
-(the caret) to the position where you want to insert it, and then click the
-<strong>Graphics</strong> button <img src="../images/Graph.gif" alt="Graph"
-/>. The Graphics button displays a palette that stays on the screen until you
-click the <code>Done</code> button. Just choose the element you want to
-create. The available graphics elements are:</p>
+<p>Select a topic from the list below:</p>
 <ul>
-  <li>A line, <code>line</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
-            stroke="1"/>
-    </svg>
-  </li>
-  <li>A rectangle, <code>rect</code> in SVG with no <code>rx</code> or
-    <code>ry</code> attributes, <svg xmlns="http://www.w3.org/2000/svg"
-    width="2cm" height="0.6cm">
-      <rect x="6px" width="22px" height="18px"
-            style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
-    </svg>
-  </li>
-  <li>A rectangle with rounded corners, <code>rect</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" stroke="1" width="23px" height="18px"
-            style="fill: #E5E500; stroke: #4C00E5"/>
-    </svg>
-  </li>
-  <li>A circle, <code>circle</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <circle cy="10px" cx="12px" r="10px"
-              style="fill: #C1FFE9; stroke: #FF0000" stroke="1"/>
-    </svg>
-  </li>
-  <li>An ellipse, <code>ellipse</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
-            stroke="1"/>
-    </svg>
-  </li>
-  <li>A polyline, <code>polyline</code> in SVG,<svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6" stroke="1"
-                style="stroke: #0000B2; fill: #FFA069"/>
-    </svg>
-  </li>
-  <li>A polygon, <code>polygon</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
-      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11" stroke="1"
-               style="fill: #C8FF95; stroke: #000000"/>
-    </svg>
-  </li>
-  <li>An open curve, <code>path</code> in SVG,<svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <path stroke="blue" fill="none"
-            d="M 0,16 C 0,15 4,6 9,7 C 13,7 12,16 16,16 C 20,15 24,1 22,0"
-            style="stroke: #0071FF" stroke-width="2px"/>
-    </svg>
-  </li>
-  <li>A closed curve, <code>path</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <path stroke="black" fill="none"
-            d="M 14,4 C 11,4 8,0 6,1 C 3,1 1,4 1,7 C 0,9 2,12 5,14 C 7,15 13,14 16,14 C 17,13 21,12 23,11 C 24,9 29,7 29,4 C 28,1 24,0 22,0 C 19,0 16,3 14,4 Z"
-            style="fill: #FFE9C1; stroke: #B20000"/>
-    </svg>
-  </li>
-</ul>
-<ul>
-  <li>An embedded HTML fragment, <code>foreignObject</code> in SVG,<svg
-    xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px">
-      <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"
-            stroke="1"/>
-      <foreignObject width="120px" y="0" x="20px">
-
-        <div xmlns="http://www.w3.org/1999/xhtml">
-        <ul>
-          <li>First item</li>
-          <li>Second item</li>
-        </ul>
-        </div>
-      </foreignObject>
-    </svg>
-  </li>
-  <li>A SVG text, <code>text</code> in SVG<svg
-    xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
-      <text y="33px" x="13px"
-            style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A
-        character string in SVG
-      </text>
-    </svg>
-  </li>
+	<li><a href="using_graphics/working_with_graphics.html" rel="subdocument">Working with Graphics</a></li>
+	<li><a href="using_graphics/creating_graphics_with_the_palette.html" rel="subdocument">Creating Graphics with the Palette</a></li>
+	<li><a href="using_graphics/moving_graphics.html" rel="subdocument">Moving Graphics</a></li> 
+    <li><a href="using_graphics/painting_graphics.html" rel="subdocument">Painting Graphics</a></li>
+    <li><a href="using_graphics/resizing_graphics.html" rel="subdocument">Resizing Graphics</a></li>
 </ul>
 
-<p></p>
-
-<p>When you select a shape in the palette and the selection is in the HTML
-structure of the document, Amaya creates a new SVG element just at the
-beginning of the current selection and the selected shape into this new SVG.
-Amaya generates SVG drawings as blocks, between paragraphs. If you wish to
-display a drawing inline, today you have let Amaya creates it between
-paragraphs then edit the source code to move it.</p>
-
-<p>When the current selected element is a SVG element, the new shape is added
-to the current SVG drawing. The new created shape is added after and then can
-overlap previous ones.</p>
-
-<p>The creation of a shape needs some direct interactions with the user:</p>
-<ul>
-  <li>To create a rectangle, you must first select the position of the left
-    corner by pressing the left mouse button. Keep the button pressed down
-    and move to the position of the opposite corner, then release the button.
-    The shape is now defined.</li>
-  <li>To create a circle or an ellipse, you must first select the position of
-    the center by pressing the left mouse button. Keep the button pressed
-    down and move right and/or bottom, then release the button. The shape is
-    now defined.</li>
-  <li>For a polyline and polygon, enter each point by clicking the
-    corresponding position with the left mouse button. To indicate the last
-    point, click with the middle or right button.</li>
-</ul>
-
-<p>You can insert an image within a SVG drawing. Choose
-<strong>Image</strong> from the <strong>Types</strong> menu or click on the
-image <img alt="Image " src="../images/Image.gif" longdesc="longdesc.htm" />
-button from the button bar and proceed in the <a
-href="ImageMaps.html#Adding">same way as in HTML</a>.</p>
-
-<p>For inserting a mathematical expression into a SVG drawing, you have just
-to click in the <strong>Math</strong> palette when the selection in within a
-SVG. Amaya will generate a SVG <code>foreignObject</code> to embed the MathML
-markup.</p>
-
-<h3><a name="Moving">Moving graphics</a></h3>
-<ul>
-  <li>By direct manipulation - combining the <strong>Control key</strong>
-    with the <strong>Left button</strong> of the mouse within a shape allows
-    you to move this shape.</li>
-  <li>By editing attributes.</li>
-</ul>
-
-<h3><a name="Resizing">Resizing graphics</a></h3>
-<ul>
-  <li>By direct manipulation - combining the <strong>Control key</strong>
-    with the <strong>Middle</strong> or the <strong>Right button</strong> of
-    the mouse within a shape allows you to resize this shape.</li>
-  <li>By editing attributes.</li>
-</ul>
-
-<h3><a name="Painting">Painting graphics</a></h3>
-
-<p>With Amaya, you can paint (i.e., fill or stroke) SVG elements with a
-single color. The default <code>fill</code> color is <code>black</code> and
-the default <code>stroke</code> color is <code>transparent</code>. But you
-can change these values:</p>
-<ul type="square">
-  <li>Either by editing SVG attributes <code>fill</code> and
-    <code>stroke</code> (<span style="color: #E55500">example, fill="
-    #C8FF95" stroke=" #000000"</span>),</li>
-  <li>Or by editing the SVG attribute <code>style</code> with CSS properties
-    <code>fill</code> and <code>stroke</code> (<span
-    style="color: #E55500">example, style="fill: #C8FF95; stroke:
-    #000000"</span>).</li>
-</ul>
-
-<p>The palette displayed by the menu entry <strong>Style/Colors</strong>
-allows you to generate the SVG <code>style</code> attribute. In the Amaya
-palette, a click with the left mouse button generates the stroke property and
-a click with the middle or right mouse button generates the fill property.</p>
-
-<p>A SVG <code>text</code> is considered as a graphic shape, so the
-<code>fill</code> property paints the character contents and the
-<code>stroke</code> property paints the character border. Amaya applies the
-fill property to characters, but not the stroke property. That explains why a
-click with the left mouse button has no immediate effect, and a click with
-the middle or right mouse button paints the <code>text</code> element.</p>
-
-<p></p>
-
-<p></p>
-</div>
-
-<p><a href="Math.html"><img alt="previous" src="../images/left.gif" /></a><a
-href="Manual.html"><img alt="top" src="../images/up.gif" /></a><a
-href="ImageMaps.html"><img alt="next" src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Known Issues with Annotations and Modified Documents</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 5.1">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Known Issues with Annotations and Modified Documents</h1>
+
+<p>When you use annotations with live documents (documents whose contents can
+be modified), you may encounter two kinds of problems: orphan annotations and
+misleading annotations. To explain these problems, we must first describe how
+Amaya attaches annotations to documents.</p>
+
+<p>Amaya uses XPointer to indicate where an annotation should be attached to
+a document. XPointers are based in the structure of the document. To build an
+XPointer for a selection, for example, Amaya starts from the first point of
+the selection and walk backwards through the document's structure, until it
+finds the root of the document. If an element has an ID attribute, Amaya
+stops building the XPointer and considers the element with the ID attribute
+value to be the beginning of that XPointer.</p>
+
+<p>Note that the use of the ID attribute enables the document author to move
+the entire reference by the Xpointer to another location within the document,
+without needing to update the XPointer. The XPointer doesn't depend on the
+elements that precede it.</p>
+
+<p>An annotation becomes an “orphan” when it can no longer be attached to a
+document, that is, when the XPointer doesn't resolve to any element in the
+structure. This happens when a document's structure is modified. Amaya
+displays a warning if it detects any orphan annotations while downloading a
+set of annotations from an annotation server. All orphan annotations are
+visible from the Links view and are associated with an icon that shows a
+question mark superimposed on the annotation pencil.</p>
+
+<p>An annotation becomes “misleading” when it points to a wrong piece of
+information. This problem is common when you annotate a portion of text that
+may change. In the first release, Amaya does not warn the user if an
+annotation is misleading. A future release may notify users of the potential
+for an annotation to be misleading.</p>
+
+<p><strong>How can you protect yourself?</strong></p>
+
+<p>As the author of a document, try to use the ID attribute in strategic
+places, for example, inside DIV elements. Amaya enables you to automatically
+associate or remove an ID attribute to/from a set of elements by choosing
+<strong>Add/Remove ID</strong> from the <strong>Special</strong> menu.</p>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>About Configuration Directory and File Conventions</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 5.1">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>About Configuration Directory and File Conventions</h1>
+
+<p>Amaya uses a number of default directories to store configuration
+information.</p>
+
+<h2>The config Directory</h2>
+
+<p>Amaya stores most of the default values and all of the dialog messages in
+the config directory. This directory's parent is the one in which Amaya was
+installed (the default is Amaya/config on Unix; see the table below for the
+location on Windows).</p>
+
+<h2>The AmayaHome Directory</h2>
+
+<p>Amaya stores the user preferences and other user configuration files in a
+directory called the AmayaHome directory. The following table shows where
+this directory is stored in different architectures:</p>
+
+<table border="1" cellspacing="0" cellpadding="0"
+style="border-collapse:collapse;  border:none;">
+  <tbody>
+    <tr>
+      <td width="139" valign="top"
+      style="width:1.45in;border:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>Architecture</b></p>
+      </td>
+      <td width="300" valign="top"
+      style="width:225.0pt;border:solid windowtext .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>AmayaHome Directory Location</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="139" valign="top"
+      style="width:1.45in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Unix</p>
+      </td>
+      <td width="300" valign="top"
+      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>$HOME/.amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="139" valign="top"
+      style="width:1.45in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows 95/ Windows 98</p>
+      </td>
+      <td width="300" valign="top"
+      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code> or,
+        if the user didn't login to Windows,
+        <code>AMAYA-INSTALL-DIR\users\default</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="139" valign="top"
+      style="width:1.45in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows NT</p>
+      </td>
+      <td width="300" valign="top"
+      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>C:\winnt\profiles\username\Amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="139" valign="top"
+      style="width:1.45in;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows 2000</p>
+      </td>
+      <td width="300" valign="top"
+      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>C:\Program Files\Amaya\config</code></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This directory is preserved even when installing new versions of Amaya. It
+may contain the following files:</p>
+<ul>
+  <li><strong>thot.rc</strong>: Contains the user preferences, changed
+    through the <strong>Preferences</strong> submenus on the
+    <strong>Special</strong> menu.
+    <p></p>
+  </li>
+  <li><strong>amaya.keyboard</strong> (Unix) or <strong>amaya.kb</strong>
+    (Windows): Defines Amaya keyboard shortcuts.
+    <p></p>
+  </li>
+  <li><strong>amaya.css</strong>: Contains the user's style sheet.
+    <p></p>
+  </li>
+  <li><strong>dictionary.DCT</strong>: Amaya provides a multilingual spell
+    checker. By default, the spell checker works with two dictionaries:
+    English and French (you can download these dictionaries from the W3C
+    servers). When you want to register a new word, the spell checker creates
+    or updates your personal dictionary.</li>
+</ul>
+
+<p class="Note0"><strong>Note</strong>:    The amaya.keyboard, amaya.kb, and
+amaya.css files are loaded at launch time. If you change them, you must quit
+and restart Amaya to take the changes into account.</p>
+
+<h2>The AmayaTemp Directory</h2>
+
+<p>Amaya stores all the temporary files it creates in a directory called the
+AmayaTemp directory. The following table shows where this directory is stored
+within different architectures:</p>
+
+<table border="1" cellspacing="0" cellpadding="0"
+style="border-collapse:collapse;  border:none;">
+  <tbody>
+    <tr>
+      <td width="98" valign="top"
+      style="width:73.45pt;border:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>Architecture</b></p>
+      </td>
+      <td width="257" valign="top"
+      style="width:192.95pt;border:solid windowtext .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>AmayaTemp Directory</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="98" valign="top"
+      style="width:73.45pt;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Unix</p>
+      </td>
+      <td width="257" valign="top"
+      style="width:192.95pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>$HOME/.amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="98" valign="top"
+      style="width:73.45pt;border:solid windowtext .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows</p>
+      </td>
+      <td width="257" valign="top"
+      style="width:192.95pt;border-top:none;border-left:   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>c:\temp\amaya</code> (default value)</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Amaya creates files in this directory when browsing remote documents or
+printing a document. The cache is also stored in this directory. You can
+change the AmayaTemp and cache directories by using the General and Cache
+preferences (<span class="Link0">choose <strong>Preferences &gt;
+General</strong> or <strong>Preferences &gt; Cache</strong> from the
+<strong>Special </strong></span><span class="Link0">menu</span>).</p>
+
+<p>Amaya always tries to delete all the temporary files it creates. However,
+if Amaya crashes, the temporary files are not deleted. This will not impact
+subsequent executions of Amaya.</p>
+</body>
+</html>

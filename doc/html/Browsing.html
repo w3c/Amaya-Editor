@@ -1,226 +1,29 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-  <title>Browsing with Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Browsing and Editing with Amaya</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body>
+<h1>Browsing and Editing with Amaya</h1>
 
-<table border="0">
-  <tbody>
-    <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
-      </td>
-      <td><p><a href="Manual.html" accesskey="t"><img alt=""
-        src="../images/up.gif" /></a> <a href="Selecting.html"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div id="Browsing">
-<h2>Browsing versus Editing</h2>
-
-<p><strong>Amaya</strong> is mainly an editor with browsing capabilities.
-When used as a browser, it behaves like many other Web browsers, except for
-<a href="#Activating">activating links</a>. In normal operation
-<strong>Amaya</strong> allows you to browse and edit documents
-simultaneously, but you can change this standard behavior for each document
-window independently. The <img src="../images/Editor.gif" alt="editor-mode"
-/> button shows up that the window is in editor mode: you can edit the
-current document and browse in this window. By clicking on that button, you
-switch the window to browser mode. The button is then displayed as <img
-src="../images/Browser.gif" alt="browser-mode" /> and you can only browse and
-fill in forms. This option is also available from the Edit menu option
-<strong>Editor Mode</strong>, and as a keyboard shortcut (the default is
-<strong>Shift-Control-*</strong>).</p>
-
-<p>Amaya allows you to browse and edit HTML documents as well as some XML
-documents types : XHTML, MathML and SVG. It allows you to browse the others
-XML documents types, to display their content and to apply the associated CSS
-style sheets.</p>
-
-<p>HTML documents are read by default as ISO-latin-1 files. Without any
-information about the charset in the HTTP header or in a META element, a HTML
-document is considered as encoded in ISO-latin-1. XML documents are read by
-default as UTF 8 files. When there is no information about the charset in the
-HTTP header, in the XML declaration, or in a META element, an XML document is
-considered as encoded in UTF 8. As the default charset is different for HTML
-documents and XML documents, it often occurs that authors created ISO-latin-1
-XML documents which don't provide information about the charset. As soon as a
-character analyzed by the XML parser doesn't match a valid UTF 8 character
-(it should occur if the document is encoded in ISO-latin-1 but parsed as an
-UTF 8 file), the document is considered as invalid: the parsing is stopped
-and an error message is displayed. In that specific case, the command
-"<strong>Reparse in HTML</strong>" is activated. That command allows you to
-reopen the document with a charset set to ISO-latin-1. The reopen document is
-now considered as modified (a charset has been added) and can be saved.</p>
-
-<p><a name="entities">Amaya interprets character entities</a>. When the
-corresponding character is not available, it displays a '?' (or it displays
-the entity value when the entity is within an attribute value or when the
-entity is unknown). When the document is saved these character entities are
-restored, except if the document encoding is ISO-latin-1 and the entity
-corresponds to an ISO-latin-1 character. In that case, the ISO Latin-1 code
-of the character is used. If the document encoding is ASCII, Amaya translates
-ISO-latin-1 characters not available in ASCII into entities.</p>
-
-<h3><a name="Activating">Activating a link</a></h3>
-
-<p>Links are usually displayed in blue (or underlined on monochrome
-displays). As <strong>Amaya</strong> is an editor, you must double click on a
-link to activate it. A single click just moves the insertion point and
-displays the expanded URI of the link into the status bar of the main
-view.</p>
-
-<p>This behavior can be changed as well as many other parameters using a
-preferences menu. By changing the "Double click activates link", you can
-browse documents with a simple-click. In that case, you cannot easily put the
-insert point within anchors: you have to use the drag and/or arrows to move
-the insert point within an anchor. It is also possible to use the keyboard to
-activate links, as well as form controls. The default keyboard command is
-<strong>Alt-Enter</strong> but the command <em>DoAction</em> can be mapped to
-a different <a href="ShortCuts.html">shortcut</a>. The command
-<em>NextLinkOrFormElement</em>, mapped by default to the shortcut
-<strong>Tab</strong>, allows you to find the next (or the first) link or HTML
-form element in the document. The command <em>PreviousLinkOrFormElement</em>,
-mapped by default to the shortcut <strong>Shift-Tab</strong>, allows you to
-find the previous (or the last) link or HTML form element in the document.</p>
-
-<p>The document retrieved by this operation <em>replaces</em> the current
-document in the same window, in the same mode (editor or browser). If the
-current document has been modified and has not been saved yet, Amaya pops up
-a dialogue box that asks if you accept to lose modifications.</p>
-
-<p>A simple click or a double click with the right button of the mouse (it
-works also with the middle button on Windows platforms) <em>opens</em> the
-target document into a new window.</p>
-
-<h3><a name="Access">Access keys</a></h3>
-
-<p>An author could associate an attribute <code>accesskey</code> to a form
-field, an area, or a link. The following elements support the accesskey:
-AREA, BUTTON, INPUT, LABEL, LEGEND, and TEXTAREA.This can be crucial to
-people with motoric disabilities but there are other conditions where it
-could be necessary or useful.</p>
-
-<p>When the author associated an attribute accesskey to a link in a document
-(example <code>accesskey="n" or accesskey="N"</code>), the command
-<strong>Alt-accesskey</strong> (in the example Alt-a) will activate that
-link. Pressing <strong>Alt- accesskey</strong> when assigned to a form
-element will give the focus to that element (the following element for LABEL
-and LEGEND).</p>
-
-<p>Access keys overwrite Amaya shortcuts. For example Help pages declare
-access keys: "n" for going to the next page, "p" for going to the previous
-page and "t" for the table of contents. If the user has assigned a shortcut
-Alt-p to an Amaya command, this shortcut won't be accessible when these help
-pages are displayed. By default the modifier key used for access keys is
-<strong>Alt</strong>. The preferences menu
-<code>Special/Preferences/General</code> lets one changes this default
-configuration. The user can use the key <strong>Control</strong> instead of
-<strong>Alt</strong> or can decide to disable the access keys handler.</p>
-
-<h3><a name="L515">Target anchors</a></h3>
-
-<p>Some pieces of text can be displayed with a <a name="target">target icon
-<img src="../images/target.gif" alt=" target " /></a>. These icons are not
-part of the document and can be displayed or hidden just by controlling the
-<strong>Show targets</strong> status of the current window, which is an
-option in the <strong>Views</strong> menu. The default keyboard command is
-<strong>Control-v Control-t</strong> in Unix, <strong>Alt-v Alt-l</strong> in
-Windows.</p>
-
-<p>These icons are associated to <em>target elements</em>, i.e. elements with
-an <code>ID</code> attribute, or <em>target anchors</em>, i.e. anchors with a
-<code>name</code> attribute. They identify possible targets for links. These
-icons are intended to make the creation of links easier. As you can quickly
-recognize the possible target of a link, you can <a
-href="Links.html#L245">create links</a> faster.</p>
-
-<h3><a name="Opening">Opening documents</a></h3>
-
-<p>You can open local or remote documents in several different ways:</p>
-<dl>
-  <dt>File menu</dt>
-    <dd>Two entries from the File menu, <strong>Open Document</strong> and
-      <strong>Open in New Window</strong>, allow you to open a new document
-      in the same window or in a new window respectively. The default
-      keyboard commands are respectively <strong>Control-x Control-f</strong>
-      and <strong>Control-x Control-o</strong> in Unix,
-      <strong>Control-o</strong> and <strong>Shift-Control-O</strong> in
-      Windows. Both commands bring up a dialog box where you can enter either
-      a local file name or an URI. You can also select a file from the
-      <strong>Browse</strong> option that contains a file browser and helps
-      you to locate local files. 
-      <p>When the document is correctly specified, click on the
-      <strong>Confirm</strong> button. This command could be also used to
-      create a new local document.</p>
-    </dd>
-  <dt>Command line "Open"</dt>
-    <dd>This area displays the file name or the URI of the current document.
-      You can edit it to specify a different (local or remote) document to be
-      displayed in the same window. Press the Enter key when the cursor is in
-      this area to actually load the document. This command could be also
-      used to create a new local document.</dd>
-  <dt>Following links</dt>
-    <dd><a href="#Activating">Activating a link</a> to get the corresponding
-      document.</dd>
-</dl>
-
-<h3><a name="Moving">Moving backward and forward</a></h3>
-
-<p>There are several ways to move backward or forward through the history
-list:</p>
-<dl>
-  <dt>File menu</dt>
-    <dd>There are entries in the file menu for Forward and Backward. The
-      default keyboard shortcuts are <strong>Alt-b</strong> and
-      <strong>Alt-f</strong> in Unix, and Alt-left-arrow and Alt-right-arrow
-      in Windows</dd>
-  <dt>Button bar</dt>
-    <dd>Two buttons: <img alt="Back " src="../images/Back.gif" /> and <img
-      alt="Forward " src="../images/Forward.gif" /> allow you to go back to
-      the previous page or forward to the next one.</dd>
-</dl>
-
-<h3><a name="Reloading">Reloading a page</a></h3>
-
-<p>Documents can be reloaded using the <strong>Reload</strong> option in the
-<strong>File</strong> menu, the shortcut <strong>Alt-r</strong> in Unix and
-<strong>Control-r</strong> in Windows, or the <img src="../images/Reload.png"
-alt="reload" /> button on the button bar.</p>
-
-<h3><a name="Keyboard">Keyboard control</a></h3>
-
-<p>Amaya provides keyboard control for many functions. Default keyboard
-commands are provided at appropriate places in the documentation. The help
-section on <a href="Configure.html">Configuring Amaya</a> describes how to
-change the defaults, and the current key bindings are provided next to the
-relevant menu option in all menus.</p>
-
-<p>For Emacs users, a configuration file
-<code>Amaya/config/amaya.emacs</code> is available. The user can create a
-link from his own private space <code>$HOME/.amaya/amaya.keyboard</code> to
-this file if he wants to work with Emacs shortcuts.</p>
-
-<p>Some keys are predefined, like:</p>
+<p>Select a topic from the list below:</p>
 <ul>
-  <li>The key <strong>Enter</strong> within a <code>input</code> (type
-    <code>text</code> or <code>password</code>) submits the corresponding
-    form.</li>
-  <li>The key <strong>Tab</strong> within a form element moves the cursor
-    focus on the next form element, or skips to the first form element within
-    the form.</li>
+	 <li><a href="browsing/working_with_the_amaya_browser_and_editor.html" rel="subdocument">Working with the Amaya Browser and Editor</a></li> 
+    <li><a href="browsing/about_access_keys.html" rel="subdocument">About Access Keys</a></li>
+    <li><a href="browsing/about_moving_backward_and_forward.html" rel="subdocument">About Moving Backward and Forward</a></li>
+    <li><a href="browsing/about_target_anchors.html" rel="subdocument">About Target Anchors</a></li>
+	<li><a href="browsing/activating_a_link.html" rel="subdocument">Activating a Link</a></li>
+	<li><a href="browsing/opening_documents.html" rel="subdocument">Opening Documents</a></li>
+	<li><a href="browsing/reloading_a_page.html">Reloading a Page</a></li>
+	<li><a href="browsing/types.html" rel="subdocument">Types</a></li>
 </ul>
-</div>
 
-<p><a href="Manual.html"><img alt="" /></a></p>
 </body>
 </html>
+
