@@ -146,6 +146,7 @@ int                 style;
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
+   pen = (HPEN) 0;
 }
 
 /*----------------------------------------------------------------------
@@ -210,6 +211,7 @@ int                 fg;
       SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
+      hPen = (HPEN) 0;
    }
 }
 #endif /* _WINDOWS */
@@ -1173,6 +1175,7 @@ int                 fg;
              SelectObject (TtPrinterDC, hOldPen);
              if (!DeleteObject (pen))
                 WinErrorBox (WIN_Main_Wd);
+             pen = (HPEN) 0;
 	  }
    }
 #  else /* _WINDOWS */
@@ -1699,6 +1702,7 @@ int                 pattern;
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))
             WinErrorBox (WIN_Main_Wd);
+         hBrush = (HBRUSH) 0;
 	  }
 
       if (thick > 0) {
@@ -1960,6 +1964,7 @@ int                 pattern;
 	  SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
+      hPen = (HPEN) 0;
    }
    /* free the table of points */
    free (points);
@@ -2354,6 +2359,7 @@ int                 pattern;
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (hPen))
       WinErrorBox (FrRef [frame]);
+   hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtPrinterDC, hOldBrush);
       if (!DeleteObject (hBrush))
@@ -2499,6 +2505,7 @@ int                 pattern;
       SelectObject (TtPrinterDC, hOldPen);
       if (!DeleteObject (hPen))
          WinErrorBox (FrRef [frame]);
+      hPen = (HPEN) 0;
       if (hBrush) {
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))

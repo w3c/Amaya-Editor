@@ -256,6 +256,7 @@ void WinErrorBox (hWnd)
 HWND hWnd;
 #endif /* __STDC__ */
 {
+#  ifndef _AMAYA_RELEASE_
    int                 msg;
    CHAR_T                str[200];
 
@@ -273,6 +274,8 @@ HWND hWnd;
        usprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, tszAppName, MB_OK);
+#  else /* _AMAYA_RELEASE_ */
+#  endif /* _AMAYA_RELEASE_ */
 }
 
 /*----------------------------------------------------------------------
@@ -5541,6 +5544,7 @@ int                 ref;
                      /* RemoveMenu (w, ref + itNdx, MF_BYCOMMAND); */
                  DestroyMenu (w);
                  subMenuID [currentFrame] = (UINT)w;
+                 /* CHECK  CHECK  CHECK  CHECK  CHECK  CHECK  CHECK */
 #                endif /* _WINDOWS */
 				 n = 0;
 #                                ifndef _WINDOWS

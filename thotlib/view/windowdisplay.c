@@ -243,6 +243,7 @@ int                 y2;
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
+   pen = (HPEN) 0;
 #  else  /* _WINDOWS */
    XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
 #  endif /* _WINDOWS */
@@ -331,8 +332,10 @@ int                 fg;
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
    result = SelectClipRgn (TtDisplay, clipRgn); 
+#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
       MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#  endif /* _AMAYA_RELEASE_ */
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
@@ -406,8 +409,10 @@ int                 shadow;
       width = size.cx;
 
       result = SelectClipRgn (TtDisplay, clipRgn);  
+#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
          MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#     endif /* _AMAYA_RELEASE_ */
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
 #     else  /* _WINDOWS */
@@ -982,6 +987,7 @@ int                 fg;
     SelectObject (TtPrinterDC, hOldPen);
     if (!DeleteObject (pen))
        WinErrorBox (WIN_Main_Wd);
+    pen = (HPEN) 0;
 #   else  /* _WINDOWS */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 	FinishDrawing (0, RO, active);
@@ -1056,8 +1062,10 @@ int                 fg;
 #  ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
+#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
          MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#     endif /* _AMAYA_RELEASE_ */
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -1069,6 +1077,7 @@ int                 fg;
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
+      hPen = (HPEN) 0;
 #  else  /* _WINDOWS */
 	XSetTile (TtDisplay, TtGreyGC, pattern);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
@@ -1590,13 +1599,16 @@ int                 pattern;
    }
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
+#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
       MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#  endif /* _AMAYA_RELEASE_ */
    if (!Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
       WinErrorBox (FrRef [frame]);
+   hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
@@ -1859,8 +1871,10 @@ int                 pattern;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
+#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
          MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#     endif /* _AMAYA_RELEASE_ */
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -1874,6 +1888,7 @@ int                 pattern;
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
+      hPen = (HPEN) 0;
 #     else  /* !_WINDOWS */
       InitDrawing (0, style, thick, RO, active, fg);
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
@@ -2264,8 +2279,10 @@ C_points           *controls;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
+#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
          MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#     endif /* _AMAYA_RELEASE_ */
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -2279,6 +2296,7 @@ C_points           *controls;
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
+      hPen = (HPEN) 0;
 #     else  /* !_WINDOWS */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #     endif /* _WINDOWS */
@@ -2393,13 +2411,16 @@ int                 pattern;
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
+#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
       MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#  endif /* _AMAYA_RELEASE_ */
    if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
       WinErrorBox (FrRef [frame]);
+   hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
@@ -2638,13 +2659,16 @@ int                 pattern;
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
+#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
       MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+#  endif /* _AMAYA_RELEASE_ */
    if (!Ellipse (TtDisplay, x, y, x + width, y + height))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
       WinErrorBox (FrRef [frame]);
+   hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
@@ -2893,6 +2917,7 @@ int                 fg;
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
+   pen = (HPEN) 0;
 #  endif /* _WINDOWS */
 }
 
@@ -3225,6 +3250,7 @@ int                 y;
     /* WIN_ReleaseDeviceContext (); */
 	if (!DeleteObject (hBrush))
        WinErrorBox (WIN_Main_Wd);
+    hBrush = (HBRUSH) 0;
 #       endif /* _WINDOWS */
      }
 }
@@ -3258,8 +3284,10 @@ ThotGC              GClocal;
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont(TtDisplay, font);
    result = SelectClipRgn (TtDisplay, clipRgn);  
+#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
       MessageBox (NULL, "Cannot select clipping region", "Warning", MB_OK);
+#  endif /* _AMAYA_RELEASE_ */
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
    TextOut(TtDisplay, x, y, string, ustrlen(string));

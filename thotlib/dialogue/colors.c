@@ -968,6 +968,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                        SelectObject (hdc, hOldBrush);
                        if (!DeleteObject (hBrush))
                           WinErrorBox (WIN_Main_Wd);
+                       hBrush = (HBRUSH) 0;
                    }
 
                   /* Switch on last FG color */
@@ -1029,8 +1030,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			          case _IDDONE_:
                            if (!DeleteObject (TtCmap))
                               WinErrorBox (WIN_Main_Wd);
-                           else
-                               TtCmap = 0;
+                           TtCmap = 0;
                            DestroyWindow (hwnd);
 						   break;
 			   }

@@ -460,34 +460,49 @@ LPBITMAPINFO* lpBmpInfo;
 
    if (hDestDC && !DeleteDC (hDestDC))
       WinErrorBox (WIN_Main_Wd);
+   hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
       WinErrorBox (WIN_Main_Wd);
+   hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
       WinErrorBox (WIN_Main_Wd);
+   hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
       WinErrorBox (WIN_Main_Wd);
+   hOrDC = (HDC) 0;
    if (hImageDC && !DeleteDC (hImageDC))
       WinErrorBox (WIN_Main_Wd);
+   hImageDC = (HDC) 0;
    if (hDC && !DeleteDC (hDC))
       WinErrorBox (WIN_Main_Wd);
+   hDC = (HDC) 0;
    if (bitmap && !DeleteObject (bitmap))
       WinErrorBox (WIN_Main_Wd);
+   bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
       WinErrorBox (WIN_Main_Wd);
+   bitmapOr = (HBITMAP) 0;
    if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
       WinErrorBox (WIN_Main_Wd);
+   bitmapAnd = (HBITMAP) 0;
    if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
       WinErrorBox (WIN_Main_Wd);
+   bitmapInvAnd = (HBITMAP) 0;
    if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
       WinErrorBox (WIN_Main_Wd);
+   bitmapDest = (HBITMAP) 0;
    if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapDest = (HBITMAP) 0;
 
    return lpBits;
 }
@@ -575,33 +590,47 @@ int      blue;
 
    if (hDestDC && !DeleteDC (hDestDC))
       WinErrorBox (WIN_Main_Wd);
+   hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
       WinErrorBox (WIN_Main_Wd);
+   hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
       WinErrorBox (WIN_Main_Wd);
+   hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
       WinErrorBox (WIN_Main_Wd);
+   hOrDC = (HDC) 0;
    if (hImageDC && !DeleteDC (hImageDC))
       WinErrorBox (WIN_Main_Wd);
+   hImageDC = (HDC) 0;
 
    if (bitmap && !DeleteObject (bitmap))
       WinErrorBox (WIN_Main_Wd);
+   bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
       WinErrorBox (WIN_Main_Wd);
+   bitmapOr = (HBITMAP) 0;
    if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
       WinErrorBox (WIN_Main_Wd);
+   bitmapAnd = (HBITMAP) 0;
    if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
       WinErrorBox (WIN_Main_Wd);
+   bitmapInvAnd = (HBITMAP) 0;
    if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
       WinErrorBox (WIN_Main_Wd);
+   bitmapDest = (HBITMAP) 0;
    if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
       WinErrorBox (WIN_Main_Wd);
+   pOldBitmapDest = (HBITMAP) 0;
 }
 #endif /* _WINDOWS */
 
@@ -641,6 +670,7 @@ Pixmap              pixmap;
 #     else  /* _WINDOWS */
       if (pixmap && !DeleteObject ((HBITMAP)pixmap))
          WinErrorBox (WIN_Main_Wd);
+      pixmap = 0;
 #     endif /* _WINDOWS */
 }
 
@@ -874,6 +904,7 @@ PictInfo           *imageDesc;
 		SelectObject (hMemDC, hOldBitmap1);
 	    if (hMemDC && !DeleteDC (hMemDC))
            WinErrorBox (NULL);
+        hMemDC = (HDC) 0;
 	  } else {
            WIN_LayoutTransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
@@ -1035,12 +1066,16 @@ PictInfo           *imageDesc;
 
           if (hMemDC && !DeleteDC (hMemDC))
              WinErrorBox (WIN_Main_Wd);
+          hMemDC = (HDC) 0;
           if (hOrigDC && !DeleteDC (hOrigDC))
              WinErrorBox (WIN_Main_Wd);
+          hOrigDC = (HDC) 0;
           if (hBkgBmp && !DeleteObject (hBkgBmp))
              WinErrorBox (WIN_Main_Wd);
+          hBkgBmp = (HBITMAP) 0;
 		  if (hrgn && !DeleteObject (hrgn))
              WinErrorBox (NULL);;
+          hrgn = (HRGN) 0;
 #         endif /* _WINDOWS */
 	  break;
 	}
@@ -1497,6 +1532,7 @@ int                 hlogo;
 #  ifdef _WINDOWS
    if (pixmap && !DeleteObject (pixmap))
       WinErrorBox (WIN_Main_Wd);
+   pixmap = (HBITMAP) 0;
 #  endif /* _WINDOWS */ 
 #  ifndef _WINDOWS
    XFreePixmap (TtDisplay, pixmap);

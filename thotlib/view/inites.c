@@ -233,6 +233,7 @@ void         FreeDocColors ()
 #ifdef _WINDOWS
    if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
      WinErrorBox (WIN_Main_Wd);
+   TtCmap = 0;
 #endif /* _WINDOWS */
 #endif /* _WIN_PRINT */
    TtaFreeMemory (ExtRGB_Table);
