@@ -1355,28 +1355,32 @@ AnimTime ComputeThotCurrentTime (int frame)
   return current_time;
 }
 
-
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
 /*----------------------------------------------------------------------
   SetGlPipelineState : Detect Opengl, Software, Hardware, 
   Set The Openlg State machine to the fastest state possible for drawing 2d.
   ----------------------------------------------------------------------*/
 void SetGlPipelineState ()
-{  
+{
   const char *version = (const char *) gluGetString (GLU_VERSION);
-  const char *renderer = (const char*)glGetString (GL_RENDERER);
+  const char *renderer = (const char*) glGetString (GL_RENDERER);
   ThotBool graph_aa = TRUE;
   ThotBool badbuffer = FALSE;
-
-  Software_Mode = FALSE;
-  if ( renderer && ( strstr (renderer, "Mesa")
-      || strstr (renderer, "Microsoft")
-      || strstr (renderer, "Sgi")) )
-    if (!strstr (renderer, "Mesa DRI"))
-      Software_Mode = TRUE;  
-  if (version && (strstr (version, "1.0") || strstr (version, "1.1")) ) 
+  
+  SetSoftware_Mode( FALSE );
+  if ( renderer &&
+       ( strstr (renderer, "Mesa") ||
+	 strstr (renderer, "Microsoft") ||
+	 strstr (renderer, "Sgi")) )
+    if ( !strstr (renderer, "Mesa DRI") )
+      SetSoftware_Mode( TRUE );
+  
+  /* Test if GLU version is >= 1.2 
+   * 1.2 is needed for tesselate functions : gluNewTess, gluTessCallback ...*/
+  if ( version &&
+       ( strstr (version, "1.0") ||
+	 strstr (version, "1.1")) ) 
     {
-
 #ifdef _WINGUI
       WinErrorBox (NULL,  GLU_ERROR_MSG);
 #endif /*  _WINGUI */
@@ -1384,42 +1388,35 @@ void SetGlPipelineState ()
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
       fprintf( stderr, GLU_ERROR_MSG);
 #endif /* #if defined(_MOTIF) || defined(_GTK)  || defined(_WX) */
-      
       exit (1);
     }
-
+  
   if (!Software_Mode)
     {
       TtaGetEnvBoolean ("ENABLE_BAD_BUFFER", &badbuffer);
       SetBadCard (!badbuffer);
     }
-#ifdef _PCLDEBUG
-  printf ("\n%s", (Software_Mode)?
-	   "Soft":"Hard");
+  
+  /* Print opengl status : usefull for debug on multiple plateformes */
+  printf ("\nOpenGL Status:");
+  printf ("\n  Software Mode = %s", Software_Mode ? "Soft" : "Hard" );
   /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-  printf ("\nVENDOR : %s\nVERSION : %s\nRENDERER : %s", 
+  printf ("\n  VENDOR : %s\n  VERSION : %s\n  RENDERER : %s", 
 	   (char *)glGetString(GL_VENDOR), 
 	   (char *)glGetString(GL_VERSION), 
 	   (char *)glGetString(GL_RENDERER));
   /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
-  printf ("\nGLU Version : %s", 
+  printf ("\n  GLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
-
-
-  {
-    int auxnumBuffers, acred, acgreen, acblue, acalpha;
-
-    glGetIntegerv (GL_AUX_BUFFERS, &auxnumBuffers);
-
-    glGetIntegerv (GL_ACCUM_RED_BITS, &acred);
-    glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
-    glGetIntegerv (GL_ACCUM_BLUE_BITS, &acblue); 
-    glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
-
-    printf ("\n Aux buffers count %i \nAcumm rgba : %i %i %i %i", 
-	     auxnumBuffers, acred, acgreen, acblue, acalpha);
-  }
-#endif /*_PCLDEBUG*/
+  int auxnumBuffers, acred, acgreen, acblue, acalpha;
+  glGetIntegerv (GL_AUX_BUFFERS,      &auxnumBuffers);
+  glGetIntegerv (GL_ACCUM_RED_BITS,   &acred);
+  glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
+  glGetIntegerv (GL_ACCUM_BLUE_BITS,  &acblue); 
+  glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
+  printf ("\n  Aux buffers count %d", auxnumBuffers);
+  printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
+  printf ("\n");
 
   /*  glClearColor (1, 0, 0, 0); */
   /* no fog*/
@@ -1450,7 +1447,6 @@ void SetGlPipelineState ()
       Those Options give better 
       quality image upon performance loss
       Must be a user Option  */
-
   TtaGetEnvBoolean ("ENABLE_GRAPH_ANTI_ALIASING", &graph_aa);
   if (graph_aa)
     {
@@ -1466,19 +1462,16 @@ void SetGlPipelineState ()
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
 	  GL_NICEST );    
 
-  /* Bitmap font Text writing (even in texture font)*/
+  /* Bitmap font Text writing (even in texture font) */
   glPixelStorei( GL_UNPACK_LSB_FIRST, GL_FALSE);
   glPixelStorei( GL_UNPACK_ROW_LENGTH, 0);
-
   glPixelStorei( GL_UNPACK_ALIGNMENT, 1);
 
-  /* Needs to clear buffer after allocating it before drawing*/
-
+  /* Needs to clear buffer after allocating it before drawing */
   glDisable (GL_SCISSOR_TEST);
   glClear (GL_COLOR_BUFFER_BIT);
   glEnable (GL_SCISSOR_TEST);  
   glShadeModel (GL_FLAT);
-
 
   /* Not recommended for hardware cards... 
      Global Antialiasing is done elsewhere...*/
@@ -1500,20 +1493,21 @@ void SetGlPipelineState ()
   glBlendFunc (GL_SRC_ALPHA, 
 	       GL_ONE_MINUS_SRC_ALPHA); 
   GL_SetOpacity (1000);
+
 #ifdef _GTK
   if (GL_Err())
-    g_print ("Bad INIT\n"); 
-#endif /*_GTK*/
+    g_print ("OpenGL: Bad INIT\n");
+#endif /* _GTK */
 
 #ifdef _WX
   if (GL_Err())
-    wxPrintf( _T("OpenGL Bad INIT\n") ); 
-#endif /*_WX*/
+    wxPrintf( _T("OpenGL: Bad INIT\n") ); 
+#endif /* _WX */
 
 #ifdef _WINGUI
   if (GL_Err())
-    WinErrorBox (NULL, "Bad INIT\n");
-#endif  /*_WINGUI*/
+    WinErrorBox (NULL, "OpenGL: Bad INIT\n");
+#endif  /* _WINGUI */
 }
 
 
@@ -1624,6 +1618,8 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
 /*----------------------------------------------------------------------
   GLSynchronize: Make sure all opengl calls are done
   ----------------------------------------------------------------------*/
+#if 0
+/* NOT USED */
 void gl_synchronize ()
 {
 #ifdef _GTK
@@ -1635,6 +1631,7 @@ void gl_synchronize ()
     gdk_gl_wait_gl ();
 #endif /* _GTK */
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
   GLResize: 
@@ -1687,7 +1684,7 @@ int glMatroxBUG (int frame, int x, int y,
 		 width+x, y+height);
       return 1;      
     }
-  return 0;  
+  return 0;
 }
 
 /*----------------------------------------------------------------------
