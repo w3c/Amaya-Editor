@@ -1368,6 +1368,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       /* Add the new doctype */
       CreateDoctype (ext_doc, eltype, new_doctype, FALSE, FALSE);
       /* link the source view to this new document */
+      DocumentMeta[doc]->xmlformat = xml_doctype;
       DocumentSource[ext_doc] = DocumentSource[doc];
       DocumentSource[doc] = 0;
       /* Notify the document as modified */
