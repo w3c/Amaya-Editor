@@ -2090,10 +2090,9 @@ Element            *elSelect;
      }
 }
 /*----------------------------------------------------------------------
-   IsValidHtmlChild(element, tag)                                       
-   returns TRUE if the tag is valid as a direct descendant of an element 
-   of type elType 
-   WARNING This function works until there are no cycles in S schema
+   IsValidHtmlChild                                       
+   returns TRUE if tag is a valid child of an element of type elType 
+   WARNING This function works as long as there are no cycles in S schema
            whithout any HTML element inside....
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2108,7 +2107,7 @@ STRING              prevtag;
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
-  int                 cardinal, i = 0;
+  int                 cardinal, i = 0, start;
   ElementType 	      *subTypes;
   ThotBool            result, found;
   Construct           constOfType;
@@ -2133,8 +2132,9 @@ STRING              prevtag;
 	/* search if tag can be inserted as a child of the identity */
 	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
-      if (!result && !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
-	  ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), TEXT("MathML")) == 0)
+      if (!result &&
+	  !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
+	  !ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), TEXT("MathML")))
 	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
       break;
 
@@ -2149,81 +2149,103 @@ STRING              prevtag;
 
     case ConstructChoice:
       for (i = 0; !result && i < cardinal; i++)
-	{
-	  if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
+	 if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
-	  else if (!ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
-	}
+      if (!result)
+         for (i = 0; !result && i < cardinal; i++)
+	    if (!ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
+		!ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
+		!ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
+	       result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
       break;
 
     case ConstructOrderedAggregate:
-      found = (!ustrcmp (prevtag, TEXT("")));
-      GIType (prevtag, &prevElType, (Document)TransDoc);
-      found = (prevElType.ElTypeNum == 0);
-      /* searches the rule of previous sibling */
-      for (i = 0; !found && i < cardinal; i++)
+      start = 0;
+      if (!ustrcmp (prevtag, TEXT("")))
+	found = TRUE;
+      else
+	/* there is a previous sibling */
 	{
+        /* search the rule of that previous sibling */
+	GIType (prevtag, &prevElType, (Document)TransDoc);
+	found = (prevElType.ElTypeNum == 0);
+	for (i = 0; !found && i < cardinal; i++)
+	  {
 	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
+	    {
 	    found = TRUE;
+	    start = i+1;
+	    }
 	  else if (ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
 		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 	    i = cardinal;
+	  }
 	}
       if (found)
 	{
+	  i = start;
 	  while (!result && i < cardinal)
 	    {
 	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		result = TRUE;
-	      else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-		result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
-	      if (!result)
+	      else
 		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
 		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")) ||
-		    TtaIsOptionalInAggregate(i,elemType)) 
+		    TtaIsOptionalInAggregate(i, elemType)) 
 		  i++;
 		else
 		  i = cardinal;
 	    }
+	  if (!result)
+	    {
+	    i = start;
+	    while (!result && i < cardinal)
+	      {
+	      if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
+		  !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
+		  !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
+		result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	      else
+		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
+		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
+		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")) ||
+		    TtaIsOptionalInAggregate(i, elemType)) 
+		  i++;
+		else
+		  i = cardinal;
+	      }
+	    }
 	}
       break;
+
     case ConstructUnorderedAggregate:
-      while (!result && i < cardinal)
-	{
+      for (i = 0; !result && i < cardinal; i++)
 	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    result = TRUE;
-	  else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
-		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
+      if (!result)
+	for (i = 0; !result && i < cardinal; i++)
+	  if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
+	      !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
+	      !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
 	    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
-	  if (!result)
-	    if (TtaIsOptionalInAggregate(i,elemType)) 
-	      i++;
-	    else
-	      i = cardinal;
-	}    
+      break;
+
     case ConstructNature:
-      {
-	if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
-	  {
-	    if (subTypes[0].ElTypeNum == 0)
-	      TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
-	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
-	      result = TRUE;
-	    else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
-		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
-		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
-	  }
-      }
-	      
+      if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
+	{
+	if (subTypes[0].ElTypeNum == 0)
+	   TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
+	if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+	   result = TRUE;
+	else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
+		 !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
+		 !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
+	   result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	}
+      break;
+
     case ConstructConstant:
     case ConstructReference:
     case ConstructBasicType:
