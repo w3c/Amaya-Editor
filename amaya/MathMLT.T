@@ -660,7 +660,7 @@ ATTRIBUTES
    fontsize:
 	begin
 	create SAN;
-	create 'fontsize="';
+	create 'mathsize="';
 	create fontsize;
 	create '"';	
 	end;
@@ -698,11 +698,106 @@ ATTRIBUTES
    color:
 	begin
 	create SAN;
-	create 'color="';
+	create 'mathcolor="';
 	create color;
 	create '"';	
 	end;
 
+  mathvariant = normal_:
+	begin
+	create SAN;
+	create 'mathvariant="normal"';
+	end;
+  mathvariant = bold_:
+	begin
+	create SAN;
+	create 'mathvariant="bold"';
+	end;
+  mathvariant = italic:
+	begin
+	create SAN;
+	create 'mathvariant="italic"';
+	end;
+  mathvariant = bold_italic:
+	begin
+	create SAN;
+	create 'mathvariant="bold-italic"';
+	end;
+  mathvariant = double_struck:
+	begin
+	create SAN;
+	create 'mathvariant="double-struck"';
+	end;
+  mathvariant = bold_fraktur:
+	begin
+	create SAN;
+	create 'mathvariant="bold-fraktur"';
+	end;
+  mathvariant = script:
+	begin
+	create SAN;
+	create 'mathvariant="script"';
+	end;
+  mathvariant = bold_script:
+	begin
+	create SAN;
+	create 'mathvariant="bold-script"';
+	end;
+  mathvariant = fraktur:
+	begin
+	create SAN;
+	create 'mathvariant="fraktur"';
+	end;
+  mathvariant = sans_serif:
+	begin
+	create SAN;
+	create 'mathvariant="sans-serif"';
+	end;
+  mathvariant = bold_sans_serif:
+	begin
+	create SAN;
+	create 'mathvariant="bold-sans-serif"';
+	end;
+  mathvariant = sans_serif_italic:
+	begin
+	create SAN;
+	create 'mathvariant="sans-serif-italic"';
+	end;
+  mathvariant = sans_serif_bold_italic:
+	begin
+	create SAN;
+	create 'mathvariant="sans-serif-bold-italic"';
+	end;
+  mathvariant = monospace:
+	begin
+	create SAN;
+	create 'mathvariant="monospace"';
+	end;
+
+  mathsize:
+	begin
+	create SAN;
+	create 'mathsize="';
+	create mathsize;
+	create '"';	
+	end;
+
+  mathcolor:
+	begin
+	create SAN;
+	create 'mathcolor="';
+	create mathcolor;
+	create '"';	
+	end;
+
+  mathbackground:
+	begin
+	create SAN;
+	create 'mathbackground="';
+	create mathbackground;
+	create '"';	
+	end;
+   
    form = prefix:
 	begin
 	create SAN;

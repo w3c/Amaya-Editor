@@ -83,13 +83,21 @@ ATTRIBUTES
         AttrCreate.Post -> MathPresentAttrCreated;
         AttrModify.Post -> MathPresentAttrCreated;
         AttrDelete.Pre ->  MathAttrFontsizeDelete;
+	AttrMenu.Pre ->    MathStyleAttrInMenu;
         END;
  
+   fontweight:
+	AttrMenu.Pre ->    MathStyleAttrInMenu;
+
+   fontstyle:
+	AttrMenu.Pre ->    MathStyleAttrInMenu;
+
    fontfamily:
         BEGIN
         AttrCreate.Post -> MathAttrFontfamilyCreated;
         AttrModify.Post -> MathAttrFontfamilyCreated;
         AttrDelete.Pre ->  MathAttrFontfamilyDelete;
+	AttrMenu.Pre ->    MathStyleAttrInMenu;
         END;
 
    color:
@@ -97,6 +105,28 @@ ATTRIBUTES
         AttrCreate.Post -> MathAttrColorCreated;
         AttrModify.Post -> MathAttrColorCreated;
         AttrDelete.Pre ->  MathAttrColorDelete;
+	AttrMenu.Pre ->    MathStyleAttrInMenu;
+        END;
+
+   mathsize:
+        BEGIN
+        AttrCreate.Post -> MathPresentAttrCreated;
+        AttrModify.Post -> MathPresentAttrCreated;
+        AttrDelete.Pre ->  MathAttrFontsizeDelete;
+        END;
+
+   mathcolor:
+        BEGIN
+        AttrCreate.Post -> MathAttrColorCreated;
+        AttrModify.Post -> MathAttrColorCreated;
+        AttrDelete.Pre ->  MathAttrColorDelete;
+        END;
+
+   mathbackground:
+        BEGIN
+        AttrCreate.Post -> MathAttrBackgroundCreated;
+        AttrModify.Post -> MathAttrBackgroundCreated;
+        AttrDelete.Pre ->  MathAttrBackgroundDelete;
         END;
 
    form:

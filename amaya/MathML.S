@@ -50,27 +50,38 @@ STRUCT
 
       { ptoken }
       MTEXT
-	  (ATTR fontsize = TEXT;
-		fontweight = normal_, bold_;
-		fontstyle = normal_, italic;
+	  (ATTR fontsize = TEXT;                        { deprecated }
+		fontweight = normal_, bold_;            { deprecated }
+		fontstyle = normal_, italic;            { deprecated }
+		fontfamily = TEXT;                      { deprecated }
+		color = TEXT;                           { deprecated }
+	        mathvariant = normal_, bold_, italic, bold_italic, 
+	                      double_struck, bold_fraktur, script,
+	                      bold_script, fraktur, sans_serif,
+	                      bold_sans_serif, sans_serif_italic,
+	                      sans_serif_bold_italic, monospace;
+	        mathsize = TEXT;
+	        mathcolor = TEXT;
+	        mathbackground = TEXT;
 		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
-		fontfamily = TEXT;
-		color = TEXT; 
 		IntParseMe = yes_)                      { for internal use }
 	  = LIST OF (MathMLCharacters);
 
       MI
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
+	        mathvariant; mathsize; mathcolor; mathbackground;
 		IntFontstyle)
 	  = LIST OF (MathMLCharacters);
 
       MN
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
+	        mathvariant; mathsize; mathcolor; mathbackground;
 		IntFontstyle)
 	  = LIST OF (MathMLCharacters);
 
       MO
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
+	        mathvariant; mathsize; mathcolor; mathbackground;
 		form = prefix, infix, postfix;
 		fence = true, false;
 		separator = true, false;
@@ -89,7 +100,8 @@ STRUCT
 	  = LIST OF (MathMLCharacters);
 
       MS
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
+	        mathvariant; mathsize; mathcolor; mathbackground;
 		lquote = TEXT;
 		rquote = TEXT; 
 		IntFontstyle)
@@ -140,10 +152,13 @@ STRUCT
 	    END;
 
       MSTYLE
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
+	        mathvariant; mathsize; mathcolor; mathbackground;
 		form; fence; separator; lspace; rspace; stretchy; symmetric;
-		maxsize; minsize; largeop; movablelimits; accent;
-		lquote; rquote; linethickness;
+{***   only 25 attributes can be declared...
+		maxsize; minsize; largeop; movablelimits;
+***}
+		accent; lquote; rquote; linethickness;
 		scriptlevel = TEXT;
 		scriptsizemultiplier = TEXT;
 		scriptminsize = TEXT;
@@ -209,7 +224,7 @@ STRUCT
 
       { MF is for internal use. Exported as MO }
       MF
-	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
 		form; fence; separator; lspace;	rspace;	stretchy;
 		symmetric; maxsize; minsize; largeop; movablelimits;
 		accent;

@@ -319,6 +319,21 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
 
+ {MathML_ATTR_mathvariant, TEXT("normal"), MathML_ATTR_mathvariant_VAL_normal_},
+ {MathML_ATTR_mathvariant, TEXT("bold"), MathML_ATTR_mathvariant_VAL_bold_},
+ {MathML_ATTR_mathvariant, TEXT("italic"), MathML_ATTR_mathvariant_VAL_italic},
+ {MathML_ATTR_mathvariant, TEXT("bold-italic"), MathML_ATTR_mathvariant_VAL_bold_italic},
+ {MathML_ATTR_mathvariant, TEXT("double-struck"), MathML_ATTR_mathvariant_VAL_double_struck},
+ {MathML_ATTR_mathvariant, TEXT("bold-fraktur"), MathML_ATTR_mathvariant_VAL_bold_fraktur},
+ {MathML_ATTR_mathvariant, TEXT("script"), MathML_ATTR_mathvariant_VAL_script},
+ {MathML_ATTR_mathvariant, TEXT("bold-script"), MathML_ATTR_mathvariant_VAL_bold_script},
+ {MathML_ATTR_mathvariant, TEXT("fraktur"), MathML_ATTR_mathvariant_VAL_fraktur},
+ {MathML_ATTR_mathvariant, TEXT("sans-serif"), MathML_ATTR_mathvariant_VAL_sans_serif},
+ {MathML_ATTR_mathvariant, TEXT("bold-sans-serif"), MathML_ATTR_mathvariant_VAL_bold_sans_serif},
+ {MathML_ATTR_mathvariant, TEXT("sans-serif-italic"), MathML_ATTR_mathvariant_VAL_sans_serif_italic},
+ {MathML_ATTR_mathvariant, TEXT("sans-serif-bold-italic"), MathML_ATTR_mathvariant_VAL_sans_serif_bold_italic},
+ {MathML_ATTR_mathvariant, TEXT("monospace"), MathML_ATTR_mathvariant_VAL_monospace},
+
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
 
@@ -2535,6 +2550,15 @@ void MathMLAttrToStyleProperty (doc, el, value, attr)
     case MathML_ATTR_fontsize:
        usprintf (css_command, TEXT("font-size: %s"), value);
        break;
+    case MathML_ATTR_mathsize:
+       if (ustrcmp (value, TEXT("small")) == 0)
+	 ustrcpy (value, TEXT("80%"));
+       else if (ustrcmp (value, TEXT("normal")) == 0)
+	 ustrcpy (value, TEXT("100%"));
+       else if (ustrcmp (value, TEXT("big")) == 0)
+	 ustrcpy (value, TEXT("125%"));
+       usprintf (css_command, TEXT("font-size: %s"), value);
+       break;
     case MathML_ATTR_lspace:
        usprintf (css_command, TEXT("padding-left: %s"), value);
        break;
@@ -2728,17 +2752,20 @@ Document	doc;
 	 }
      }
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||
-       attrType.AttrTypeNum == MathML_ATTR_background_ ||
-       attrType.AttrTypeNum == MathML_ATTR_fontsize ||
-       attrType.AttrTypeNum == MathML_ATTR_fontfamily ||
-       attrType.AttrTypeNum == MathML_ATTR_linethickness ||
-       attrType.AttrTypeNum == MathML_ATTR_lspace ||
-       attrType.AttrTypeNum == MathML_ATTR_rspace ||
-       attrType.AttrTypeNum == MathML_ATTR_scriptlevel ||
-       attrType.AttrTypeNum == MathML_ATTR_width_ ||
-       attrType.AttrTypeNum == MathML_ATTR_height_ ||
-       attrType.AttrTypeNum == MathML_ATTR_depth_ )
-      {
+	    attrType.AttrTypeNum == MathML_ATTR_mathcolor ||
+	    attrType.AttrTypeNum == MathML_ATTR_background_ ||
+	    attrType.AttrTypeNum == MathML_ATTR_mathbackground ||
+	    attrType.AttrTypeNum == MathML_ATTR_fontsize ||
+	    attrType.AttrTypeNum == MathML_ATTR_mathsize ||
+	    attrType.AttrTypeNum == MathML_ATTR_fontfamily ||
+	    attrType.AttrTypeNum == MathML_ATTR_linethickness ||
+	    attrType.AttrTypeNum == MathML_ATTR_lspace ||
+	    attrType.AttrTypeNum == MathML_ATTR_rspace ||
+	    attrType.AttrTypeNum == MathML_ATTR_scriptlevel ||
+	    attrType.AttrTypeNum == MathML_ATTR_width_ ||
+	    attrType.AttrTypeNum == MathML_ATTR_height_ ||
+	    attrType.AttrTypeNum == MathML_ATTR_depth_ )
+     {
       length = TtaGetTextAttributeLength (attr);
       if (length >= buflen)
          length = buflen - 1;
@@ -2750,9 +2777,11 @@ Document	doc;
 	   switch (attrType.AttrTypeNum)
 	     {
 	     case MathML_ATTR_color:
+	     case MathML_ATTR_mathcolor:
                HTMLSetForegroundColor (doc, el, value);
 	       break;
 	     case MathML_ATTR_background_:
+	     case MathML_ATTR_mathbackground:
                HTMLSetBackgroundColor (doc, el, value);
 	       break;
 	     case MathML_ATTR_fontfamily:
@@ -2762,6 +2791,7 @@ Document	doc;
 	       MathMLlinethickness (doc, el, value);
 	       break;
 	     case MathML_ATTR_fontsize:
+	     case MathML_ATTR_mathsize:
 	     case MathML_ATTR_lspace:
 	     case MathML_ATTR_rspace:
 	       MathMLAttrToStyleProperty (doc, el, value,attrType.AttrTypeNum);

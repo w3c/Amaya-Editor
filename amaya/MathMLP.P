@@ -837,6 +837,231 @@ BOXES
                 END;
         END;
 
+ ATTR_mathvariant_normal: BEGIN
+        Content: Text ' mathvariant=normal';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_bold: BEGIN
+        Content: Text ' mathvariant=bold';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_italic: BEGIN
+        Content: Text ' mathvariant=italic';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_bold_italic: BEGIN
+        Content: Text ' mathvariant=bold-italic';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_double_struck: BEGIN
+        Content: Text ' mathvariant=double-struck';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_bold_fraktur: BEGIN
+        Content: Text ' mathvariant=bold-fraktur';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_script: BEGIN
+        Content: Text ' mathvariant=script';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_bold_script: BEGIN
+        Content: Text ' mathvariant=bold-script';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_fraktur: BEGIN
+        Content: Text ' mathvariant=fraktur';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_s_serif: BEGIN
+        Content: Text ' mathvariant=sans-serif';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_bold_s_serif: BEGIN
+        Content: Text ' mathvariant=bold-sans-serif';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_s_serif_italic: BEGIN
+        Content: Text ' mathvariant=sans-serif-italic';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_s_serif_b_ital: BEGIN
+        Content: Text ' mathvariant=sans-serif-bold-italic';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_mathvariant_monospace: BEGIN
+        Content: Text ' mathvariant=monospace';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_mathsize: BEGIN
+        Content: Text ' mathsize=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ VALUE_mathsize: BEGIN
+        Content: (mathsize);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_mathcolor: BEGIN
+        Content: Text ' mathcolor=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ VALUE_mathcolor: BEGIN
+        Content: (mathcolor);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_mathbackground: BEGIN
+        Content: Text ' mathbackground=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ 
+ VALUE_mathbackground: BEGIN
+        Content: (mathbackground);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
  ATTR_form_prefix: BEGIN
         Content: Text ' form=prefix';
         Visibility: 0;
@@ -3566,6 +3791,207 @@ ATTRIBUTES
 	CreateBefore(VALUE_color);
 	IN Structure_view
 		Foreground: Enclosing =;
+	END;
+
+  mathvariant = normal_:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_normal);
+	Font: times;
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = bold_:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_bold);
+	Font: times;
+	Style: roman;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = italic:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_italic);
+	Font: times;
+	Style: italics;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = bold_italic:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_bold_italic);
+	Font: times;
+	Style: italics;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = double_struck:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_double_struck);
+	Font: times;	{*** double-struck ***}
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = bold_fraktur:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_bold_fraktur);
+	Font: times;   {*** fraktur ***}
+	Style: roman;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = script:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_script);
+	Font: times;    {*** script ***}
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = bold_script:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_bold_script);
+	Font: times;	{*** script ***}
+	Style: roman;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = fraktur:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_fraktur);
+	Font: times;	{*** fraktur ***}
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = sans_serif:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_s_serif);
+	Font: helvetica;
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = bold_sans_serif:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_bold_s_serif);
+	Font: helvetica;
+	Style: roman;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = sans_serif_italic:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_s_serif_italic);
+	Font: helvetica;
+	Style: italics;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = sans_serif_bold_italic:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_s_serif_b_ital);
+	Font: helvetica;
+	Style: italics;
+	Weight: bold;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+  mathvariant = monospace:
+	BEGIN
+	CreateBefore(ATTR_mathvariant_monospace);
+	Font: courier;
+	Style: roman;
+	Weight: normal;
+	IN Structure_view
+		BEGIN
+		Font: Enclosing =;
+		Style: Enclosing =;
+		Weight: Enclosing =;
+		END;
+	END;
+
+  mathsize:
+	BEGIN
+	CreateBefore(ATTR_mathsize);
+	CreateBefore(VALUE_mathsize);
+	END;
+
+  mathcolor:
+	BEGIN
+	CreateBefore(ATTR_mathcolor);
+	CreateBefore(VALUE_mathcolor);
+	END;
+
+  mathbackground:
+	BEGIN
+	CreateBefore(ATTR_mathbackground);
+	CreateBefore(VALUE_mathbackground);
 	END;
 
   form = prefix:

@@ -3980,6 +3980,22 @@ void MathAttrOtherCreated (event)
 }
 
 /*----------------------------------------------------------------------
+   MathStyleAttrInMenu
+   Called by Thot when building the Attribute menu.
+   Prevent Thot from including a deprecated attribute in the menu.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
+#else  /* __STDC__ */
+ThotBool            MathStyleAttrInMenu (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+  return TRUE;	/* don't put a deprecated attribute in the menu */
+}
+
+/*----------------------------------------------------------------------
  MathPresentAttrCreated
  An attribute fontsize has been created or updated by the user.
  -----------------------------------------------------------------------*/

@@ -59,6 +59,14 @@ inline_: inline
 scale_: scale
 normal_: normal
 bold_: bold
+bold_italic: bold-italic
+double_struck: double-struck
+bold_fraktur: bold-fraktur
+bold_script: bold-script
+sans_serif: sans-serif
+bold_sans_serif: bold-sans-serif
+sans_serif_italic: sans-serif-italic
+sans_serif_bold_italic: sans-serif-bold-italic
 
 xml_space_default: default
 xml_space_preserve: preserve

@@ -50,7 +50,7 @@ AttributeMapping;
 typedef struct _AttrValueMapping
 {	     /* mapping of a XML attribute value */
   int        ThotAttr;	        /* corresponding Thot attribute */
-  CHAR_T     XMLattrValue[20];	/* XML value */
+  CHAR_T     XMLattrValue[24];	/* XML value */
   int        ThotAttrValue;	/* corresponding value of the Thot attribute */
 }
 AttrValueMapping;
