@@ -15,6 +15,17 @@ AC_INIT(thotlib/internals/h/constpiv.h)
 AC_REVISION
 
 dnl
+dnl Verify that configure is not being called in the Amaya directory
+dnl
+if test -d batch -a -f configure.in ; then
+   echo ERROR: You must invoke the configure script in a subidrectory
+   echo under the Amaya tree.
+   echo For example:
+   echo "  cd Amaya ; mkdir obj ; cd obj ; ../configure [your options] "
+   exit 1
+fi
+
+dnl
 dnl Checks for platform information
 dnl
 
@@ -765,7 +776,7 @@ fi
 fi
 fi
 
-echo "Now start \"make all\" (GNU make preferably) to build the bianries"
+echo "Now type \"make all\" (GNU make preferably) to build the binaries"
 
 
 
