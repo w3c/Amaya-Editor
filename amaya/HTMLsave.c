@@ -779,7 +779,6 @@ void                   BackUpDocs ()
   Document             doc;
   char                 pathname[MAX_LENGTH];
   char                 docname[MAX_LENGTH];
-  char                 savename[MAX_LENGTH];
 
   /* check all modified documents */
   for (doc = 1; doc < DocumentTableLength; doc++)
@@ -849,16 +848,16 @@ char                  *newURL;
    if (imgbase && strchr (newURL, '/'))
       sprintf (url_str, "/");
    else 
-       sprintf (url_str, "%s", DIR_STR);
+      sprintf (url_str, "%s", DIR_STR);
 
    /* save the old document path to locate images */
    strcpy (tempfile, DocumentURLs[SavingDocument]);
    TtaExtractName (tempfile, oldpath, tempname);
 
-   if (oldpath && strchr (oldpath, '/'))
+   if (strchr (oldpath, '/'))
       sprintf (path_sep, "/");
    else 
-       sprintf (path_sep, "%s", DIR_STR);
+      sprintf (path_sep, "%s", DIR_STR);
 
    strcat (oldpath, path_sep);
    /* path to search image descriptors */
