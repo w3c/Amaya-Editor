@@ -2427,6 +2427,7 @@ ThotBool TtaIsSpecialKey( int wx_keycode )
   ----------------------------------------------------------------------*/
 void TtaSendStatsInfo()
 {
+#ifdef SEND_STATS
 #ifdef _WX
   if (Printing)
     return;
@@ -2460,4 +2461,5 @@ void TtaSendStatsInfo()
       TtaSetEnvString ("VERSION", (char *)TtaGetAppVersion(), TRUE);
     }
 #endif /* _WX */
+#endif /* SEND_STATS */
 }
