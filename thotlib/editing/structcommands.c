@@ -486,6 +486,7 @@ PtrSSchema          newSSchema;
 #endif /* __STDC__ */
 {
    NotifyElement       notifyEl;
+   PtrElement	       pDummyEl, nextEl;
    boolean             ret;
 
    ret = FALSE;
@@ -506,9 +507,22 @@ PtrSSchema          newSSchema;
 	/* detruit les paves de l'element qui va changer de type */
 	DestroyAbsBoxes (pEl, pDoc, TRUE);
 	AbstractImageUpdated (pDoc);
+
+	/* create a dummy element for renumbering the following elements */
+        GetElement (&pDummyEl);
+	pDummyEl->ElTypeNumber = pEl->ElTypeNumber;
+	pDummyEl->ElStructSchema = pEl->ElStructSchema;
+
 	/* on transforme le type de l'element, en changeant les types */
 	/* qui doivent l'etre dans ses descendants */
 	IsomorphicTransform (pEl, newSSchema, newTypeNum, pDoc);
+
+	/* The following elements must take into account the deletion of the
+	   old type */
+	nextEl = NextElement (pEl);
+	UpdateNumbers (nextEl, pDummyEl, pDoc, TRUE);
+	FreeElement (pDummyEl);
+
 	/* transformation is done */
 	ret = TRUE;
 	RemoveExcludedElem (&pEl);
@@ -529,7 +543,9 @@ PtrSSchema          newSSchema;
 	     /* si on est dans un element copie' par inclusion, on met a jour
 	        les copies de cet element. */
 	     RedisplayCopies (pEl, pDoc, TRUE);
-	     UpdateNumbers (NextElement (pEl), pEl, pDoc, TRUE);
+	     /* Renumbers the following element, taking into account the new
+		type of the element */
+	     UpdateNumbers (nextEl, pEl, pDoc, TRUE);
 	     /* indique que le document est modifie' */
 	     pDoc->DocModified = TRUE;
 	     pDoc->DocNTypedChars += 30;
