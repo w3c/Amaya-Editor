@@ -4517,11 +4517,13 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
   unsigned char *ptrextrabuf;
   int            res;
   int            nbBytes;
-  int  i;
+  long           nbBytesToRead;
+  int            i;
   Language       lang;
   ElementType    elType;
   Element        elLeaf;
   ThotBool       isHTML;
+
   wcharRead = 0;
   charRead = WC_EOS;
   *endOfFile = FALSE;
@@ -4576,11 +4578,12 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
 	      /* We are reading a UTF8-coded character data */
 	      srcbuf = (unsigned char *) &FileBuffer[(*index)];
 	      nbBytes = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
-	      if (nbBytes > 1 && (*index + nbBytes > LastCharInFileBuffer))
+	      if (nbBytes > 1 && (*index + (nbBytes -1) > LastCharInFileBuffer))
 		{
 		  for (i = 0; *index + i <= LastCharInFileBuffer; i++)
 		    extrabuf[i] = srcbuf[i];
-		  res = gzread (infile, &extrabuf[i], nbBytes - i);
+		  nbBytesToRead = nbBytes - i;
+		  res = gzread (infile, &extrabuf[i], nbBytesToRead);
 		  if (res <= 0)
 		    {
 		      /* error or end of file */
