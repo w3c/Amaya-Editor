@@ -2410,6 +2410,20 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
 }
 #endif /*_GLPRINT*/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+   DeleteAFile                                                         
+  ----------------------------------------------------------------------*/
+static void DeleteAFile (char *fileName)
+{
+  if (TtaFileExist (fileName))
+#ifndef _WX
+    DeleteFile (fileName);
+#else /* _WX */
+    /* TODO */
+#endif /* _WX */
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    Main program                                                           
@@ -2815,10 +2829,10 @@ int main (int argc, char **argv)
 	    {
 #ifdef _WINDOWS
 #ifndef _WX
-		  sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+	      sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
 	      CopyFile (cmd, printer, FALSE);
 #else /* _WX */
-		  /* TODO */
+	      /* TODO */
 #endif /* _WX */
 #else  /* _WINDOWS */
 	      sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
@@ -2840,21 +2854,11 @@ int main (int argc, char **argv)
     {
 #ifdef _WINDOWS
       if (!strcmp (destination, "PSFILE"))
-	  {
-#ifndef _WX
-	    DeleteFile (cmd);
-#else /* _WX */
-		  /* TODO */
-#endif /* _WX */
-	  }
+	DeleteAFile (cmd);
       else
 	{
 	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
-#ifndef _WX
-	  DeleteFile (name);
-#else /* _WX */
-		  /* TODO */
-#endif /* _WX */
+	  DeleteAFile (name);
 	  if (tmpDir)
 	    {
 	      length = strlen (tmpDir);
@@ -2862,14 +2866,8 @@ int main (int argc, char **argv)
 	      for (i = 0; i < cssCounter; i++)
 		{
 		  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		      strncmp(CSSName[i], tmpDir, length) == 0)
-		  {
-#ifndef _WX
-		    DeleteFile (CSSName[i]);
-#else /* _WX */
-		  /* TODO */
-#endif /* _WX */
-		  }
+		      strncasecmp(CSSName[i], tmpDir, length) == 0)
+		    DeleteAFile (CSSName[i]);
 		  TtaFreeMemory (CSSName[i]);
 		  CSSName[i] = NULL;
 		}
@@ -2883,11 +2881,7 @@ int main (int argc, char **argv)
                                        strlen(TheDoc->DocNatureName[i]) + 6);
 		      sprintf (fileName, "%s\\%s.STR", tmpDir, TheDoc->DocNatureName[i]);
 		      if (TtaFileExist (fileName))
-#ifndef _WX
-			DeleteFile (fileName);
-#else /* _WX */
-		        /* TODO */
-#endif /* _WX */
+			DeleteAFile (fileName);
 		      TtaFreeMemory (fileName);
 		    } 
 		  if (TheDoc->DocNaturePresName[i])
@@ -2895,21 +2889,16 @@ int main (int argc, char **argv)
 		      fileName = (char *)TtaGetMemory (length +
                                      strlen(TheDoc->DocNaturePresName[i]) + 6);
 		      sprintf (fileName, "%s\\%s.PRS", tmpDir, TheDoc->DocNaturePresName[i]);
-		      if (TtaFileExist (fileName))
-#ifndef _WX
-			DeleteFile (fileName);
-#else /* _WX */
-		        /* TODO */
-#endif /* _WX */
+			DeleteAFile (fileName);
 		      TtaFreeMemory (fileName);
 		    } 
 		}
 	      if (rmdir (tempDir))
 		  {
 #ifndef _WX
-			  WinErrorBox (NULL, "PrintDoc (4)");
+		    WinErrorBox (NULL, "PrintDoc (4)");
 #else /* _WX */
-		  /* TODO: ... */
+		    /* TODO: ... */
 #endif /* _WX */
 		  }
 	    }
