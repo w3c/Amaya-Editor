@@ -459,9 +459,6 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
-static FILE*        ErrFile = (FILE*) 0;
-static CHAR_T       ErrFileName [80];
-
 #ifdef __STDC__
 static void         ProcessStartGI (CHAR_T* GIname);
 #else
@@ -3049,9 +3046,7 @@ CHAR_T              c;
 #endif
 {
    CHAR_T        theGI[MaxMsgLength];
-#ifndef EXPAT_PARSER
    CHAR_T        schemaName[MaxMsgLength];
-#endif /* EXPAT_PARSER */
    int		 i;
 
    if (HTMLcontext.parsingTextArea)
@@ -3114,7 +3109,10 @@ CHAR_T              c;
 	  else
 	    CurrentBufChar = StartOfTagIndx;
 	  /* Parse the corresponding element with the XML parser */
-#ifdef EXPAT_PARSER
+	  /*
+	  printf ("    CurrentBufChar = %d, NumberOfCharRead = %d, NumberOfLinesRead= %d\n", CurrentBufChar, NumberOfCharRead, NumberOfLinesRead);
+	  */
+#ifdef LC
 	  if (!StartXmlSubTreeParser (stream,
 				      FileBuffer,
 				      &CurrentBufChar,
@@ -3139,6 +3137,9 @@ CHAR_T              c;
 #endif /* EXPAT_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
+	  /*
+	  printf ("    CurrentBufChar = %d, NumberOfCharRead = %d, NumberOfLinesRead= %d\n", CurrentBufChar, NumberOfCharRead, NumberOfLinesRead);
+	  */
 	  NormalTransition = FALSE;
 	  currentState = 0;
 	  CharProcessed = TRUE;
@@ -3366,6 +3367,7 @@ CHAR_T                c;
       InitBuffer ();
       return;
       }
+
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
    if (UnknownTag)
