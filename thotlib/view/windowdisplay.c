@@ -633,7 +633,7 @@ int                 shadow;
   - 3 = cross-over
   
                   (x,y)
-          __________________+_______________________________\_/__ height
+          _________________________________________________\_/__ top
           /|\    I    I          /|\       /|\   /|\        
            |     I\  /I           |         |     |       
            |  ___I_\/_I_______    |ascent   |     |  
@@ -641,8 +641,8 @@ int                 shadow;
            |     I    I  I  |     |         |  __\|/ middle
            |  ___I____I__I__/____\|/        | 
            |             I                  |
-	   |             I                  |
-	  \|/____________I_________________\|/_ bottom
+	       |             I                  |
+	      \|/____________I_________________\|/_ bottom
 	      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -663,12 +663,9 @@ int                 fg;
 #endif /* __STDC__ */
 {
   int                 fheight;	/* font height           */
-  int                 ascent;	/* font ascent           */
   int                 bottom;	/* underline position    */
   int                 middle;	/* cross-over position   */
-  int                 height;	/* overline position     */
   int                 thickness;	/* thickness of drawing */
-  int                 shift;	/* shifting of drawing   */
 
   if (fg < 0)
     return;
@@ -682,12 +679,9 @@ int                 fg;
   if (lg > 0)
     {
       fheight = FontHeight (font);
-      ascent = FontAscent (font);
       thickness = ((fheight / 20) + 1) * (thick + 1);
-      shift = thick * thickness;
-      height = y + shift;
-      bottom = y + ascent + 2 + shift;
-      middle = y + fheight / 2 - shift;
+      bottom = fheight - thickness;
+      middle = fheight / 2;
       /*
        * for an underline independant of the font add
        * the following lines here :
@@ -698,15 +692,17 @@ int                 fg;
       switch (type)
 	{
 	case 1: /* underlined */
-	  DrawOneLine (frame, thick, 5, x - lg, bottom, x, bottom, fg);
+	  bottom += y;
+	  DrawOneLine (frame, thickness, 5, x - lg, bottom, x, bottom, fg);
 	  break;
 	  
 	case 2: /* overlined */
-	  DrawOneLine (frame, thick, 5, x - lg, height, x, height, fg);
+	  DrawOneLine (frame, thickness, 5, x - lg, y, x, y, fg);
 	  break;
 	  
 	case 3: /* cross-over */
-	  DrawOneLine (frame, thick, 5, x - lg, middle, x, middle, fg);
+	  middle += y;
+	  DrawOneLine (frame, thickness, 5, x - lg, middle, x, middle, fg);
 	  break;
 	  
 	default: /* not underlined */

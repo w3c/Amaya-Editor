@@ -469,7 +469,7 @@ int                 shadow;
   - 3 = cross-over
   
                   (x,y)
-          __________________+_______________________________\_/__ height
+          _________________________________________________\_/__ top
           /|\    I    I          /|\       /|\   /|\        
            |     I\  /I           |         |     |       
            |  ___I_\/_I_______    |ascent   |     |  
@@ -477,8 +477,8 @@ int                 shadow;
            |     I    I  I  |     |         |  __\|/ middle
            |  ___I____I__I__/____\|/        | 
            |             I                  |
-	   |             I                  |
-	  \|/____________I_________________\|/_ bottom
+	       |             I                  |
+	      \|/____________I_________________\|/_ bottom
 	      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -503,7 +503,7 @@ int                 fg;
    int                 ascent;	/* font ascent           */
    int                 bottom;	/* underline position    */
    int                 middle;	/* cross-over position   */
-   int                 height;	/* overline position     */
+   int                 top;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
    int                 shift;	/* shifting of drawing   */
 
@@ -520,7 +520,7 @@ int                 fg;
 	thickness = ((fheight / 20) + 1) * (thick + 1);
 	shift = thick * thickness;
 	y += FrameTable[frame].FrTopMargin;
-	height = y + shift;
+	top = y + shift;
 	bottom = y + ascent + 2 + shift;
 	middle = y + fheight / 2 - shift;
 
@@ -528,7 +528,7 @@ int                 fg;
 	 * for an underline independant of the font add
 	 * the following lines here :
 	 *         thickness = 1;
-	 *         height = y + 2 * thickness;
+	 *         top = y + 2 * thickness;
 	 *         bottom = y + ascent + 3;
 	 */
 	InitDrawing (0, 5, thickness, RO, active, fg);
@@ -541,7 +541,7 @@ int                 fg;
 	    
 	  case 2:
 	    /* overlined */
-	    DoDrawOneLine (frame, x - lg, height, x, height);
+	    DoDrawOneLine (frame, x - lg, top, x, top);
 	    break;
 	    
 	  case 3:
