@@ -68,6 +68,7 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
+
 dnl
 dnl Checks for libraries.
 dnl
@@ -597,12 +598,12 @@ fi # with_wx = no
 # the wx version
 AMAYAWX_MAJVER=9
 AMAYAWX_MINVER=1
-AMAYAWX_SUBVER=0
+AMAYAWX_SUBVER=1
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
 AMAYA_MINVER=7
-AMAYA_SUBVER=2
+AMAYA_SUBVER=3
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
@@ -646,10 +647,12 @@ CEXTRACT_FLAGS="+O"
 dnl
 dnl Adjust the some variables depending on the host and compiler
 dnl Thotlib NEED signed chars !!!
-dnl
+dnl The configure default is -g -O2 and we force -O2
+CFLAGS="-O2 "
+CXXFLAGS="-O2 "
 
 if test "${CC}" = "gcc" ; then
-  CFLAGS="${CFLAGS} -W "
+ CFLAGS="${CFLAGS} -W "
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
