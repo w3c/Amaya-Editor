@@ -6815,7 +6815,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	if Invalid_element and LastAttr
 	   CreateAfter(INVALID_E);
 	if Anchor
-	   CreateAfter(VALUE_Invalid_attribute);
+	   CreateBefore(VALUE_Invalid_attribute);
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element and NOT Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
