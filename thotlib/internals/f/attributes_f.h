@@ -18,7 +18,7 @@ extern void IsolateSelection ( PtrDocument pDoc,
                                PtrElement * pLastSel,
                                int *firstChar,
                                int *lastChar,
-			       boolean createEmpty );
+                               boolean createEmpty );
 extern void ApplyAttrPRulesToElem ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pAttr,
@@ -84,7 +84,7 @@ extern void IsolateSelection (/* PtrDocument pDoc,
                                  PtrElement * pLastSel,
                                  int *firstChar,
                                  int *lastChar,
-			         boolean createEmpty */);
+                                 boolean createEmpty */);
 extern void ApplyAttrPRulesToElem (/* PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr,

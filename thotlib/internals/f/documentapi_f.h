@@ -17,10 +17,6 @@ extern void TtaSaveDocument ( Document document,
 extern void TtaExportDocument ( Document document,
                                 char *fileName,
                                 char *TSchemaName );
-extern void TtaExportTree ( Element element,
-                            Document document,
-                            char *fileName,
-                            char *TSchemaName );
 extern void TtaCloseDocument ( Document document );
 extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( char *path );
@@ -96,10 +92,6 @@ extern void TtaSaveDocument (/* Document document,
 extern void TtaExportDocument (/* Document document,
                                   char *fileName,
                                   char *TSchemaName */);
-extern void TtaExportTree (/* Element element,
-                              Document document,
-                              char *fileName,
-                              char *TSchemaName */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* char *path */);

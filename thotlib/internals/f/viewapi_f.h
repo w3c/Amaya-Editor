@@ -43,6 +43,9 @@ extern void TtaSetSensibility ( Document document,
 extern void TtaSetZoom ( Document document,
                          View view,
                          int value );
+extern Element TtaGetFirstElementShown ( Document document,
+                                         View view,
+                                         int *position );
 extern void TtaShowElement ( Document document,
                              View view,
                              Element element,
@@ -94,8 +97,8 @@ extern void RedisplayLeaf ( PtrElement element,
                             int delta );
 extern void RedisplaySplittedText ( PtrElement element,
                                     int position,
-				    PtrElement pNewEl,
-				    PtrElement pNextEl,
+                                    PtrElement pNewEl,
+                                    PtrElement pNextEl,
                                     Document document );
 extern void RedisplayMergedText ( PtrElement element,
                                   Document document );
@@ -122,13 +125,6 @@ extern void RedispNewGeometry ( Document document,
 extern void TtaSetDisplayMode ( Document document,
                                 DisplayMode newDisplayMode );
 extern DisplayMode TtaGetDisplayMode ( Document document );
-extern void TtaResetViewBackgroundColor ( Document doc,
-                                          View view );
-extern void TtaSetViewBackgroundColor ( Document doc,
-                                        View view,
-                                        int color );
-extern int TtaGetViewBackgroundColor ( Document doc,
-                                       View view );
 
 #else /* __STDC__ */
 
@@ -169,6 +165,9 @@ extern void TtaSetSensibility (/* Document document,
 extern void TtaSetZoom (/* Document document,
                            View view,
                            int value */);
+extern Element TtaGetFirstElementShown (/* Document document,
+                                           View view,
+                                           int *position */);
 extern void TtaShowElement (/* Document document,
                                View view,
                                Element element,
@@ -220,8 +219,8 @@ extern void RedisplayLeaf (/* PtrElement element,
                               int delta */);
 extern void RedisplaySplittedText (/* PtrElement element,
                                       int position,
-				      PtrElement pNewEl,
-				      PtrElement pNextEl,
+                                      PtrElement pNewEl,
+                                      PtrElement pNextEl,
                                       Document document */);
 extern void RedisplayMergedText (/* PtrElement element,
                                     Document document */);
@@ -248,13 +247,6 @@ extern void RedispNewGeometry (/* Document document,
 extern void TtaSetDisplayMode (/* Document document,
                                   DisplayMode newDisplayMode */);
 extern DisplayMode TtaGetDisplayMode (/* Document document */);
-extern void TtaResetViewBackgroundColor (/* Document doc,
-                                            View view */);
-extern void TtaSetViewBackgroundColor (/* Document doc,
-                                          View view,
-                                          int color */);
-extern int TtaGetViewBackgroundColor (/* Document doc,
-                                         View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -82,6 +82,8 @@ extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                                         int frame );
+extern void SetMainWindowBackgroundColor ( int frame,
+                                           int color );
 extern void Clear ( int frame,
                     int larg,
                     int haut,
@@ -220,6 +222,8 @@ extern void DirectCreation (/* PtrBox pBox,
                                int frame */);
 extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                           int frame */);
+extern void SetMainWindowBackgroundColor (/* int frame,
+                                             int color */);
 extern void Clear (/* int frame,
                       int larg,
                       int haut,

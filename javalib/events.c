@@ -17,10 +17,6 @@
 
 #include "events_f.h"
 
-#ifdef WITH_ILU
-#define DEBUG_TIMERS
-#define DEBUG_CHANNELS
-#endif
 #ifdef STANDALONE
 #define DEBUG_TIMERS
 #define DEBUG_TIMERS_LISTS
@@ -191,7 +187,9 @@ static void unlinkTimer(timerPtr timer) {
 	    }
 	}
     }
+#ifdef DEBUG_TIMERS
     fprintf(stderr,"unlinkTimer : not found\n");
+#endif
     return;
 
 found :
@@ -508,7 +506,9 @@ static channelPtr unlinkChannel(int chan, channelPtr *list) {
         prev = prev->next;
     }
 
+#ifdef DEBUG_CHANNELS
     printf("unlinkChannel %d : not found !\n", chan);
+#endif
     return(NULL);
 }
 

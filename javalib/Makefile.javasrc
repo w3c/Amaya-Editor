@@ -14,6 +14,12 @@ export CLASSPATH; kaffe -mx 64000000 sun.tools.javac.Main
 KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
           export CLASSPATH; ../bin/kaffeh
 
+# this rule rebuilds the .class files
+# in the classes directory.
+
+classes : 
+	cd $(THOTDIR)/classes ; make
+
 # this rule rebuilds jigsaw.zip, amaya.zip and thotlib.zip
 # in the classes directory.
 

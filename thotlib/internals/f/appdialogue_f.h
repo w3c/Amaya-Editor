@@ -45,6 +45,9 @@ extern int TtaAddButton ( Document document,
                           Pixmap picture,
                           void (*procedure) (),
                           char *info );
+extern void * TtaGetButtonCallback ( Document document,
+                                     View view,
+                                     int index );
 extern void TtaSwitchButton ( Document document,
                               View view,
                               int index );
@@ -92,14 +95,14 @@ extern void TtaSetToggleItem ( Document document,
                                int menuID,
                                int itemID,
                                boolean on );
-extern void TtaSetActionOff ( Document document,
-                              View view,
-                              int menuID,
-                              int itemID );
-extern void TtaSetActionOn ( Document document,
-                             View view,
-                             int menuID,
-                             int itemID );
+extern void TtaSetItemOff ( Document document,
+                            View view,
+                            int menuID,
+                            int itemID );
+extern void TtaSetItemOn ( Document document,
+                           View view,
+                           int menuID,
+                           int itemID );
 extern int TtaSetCallback ( void (*callbakProcedure) (),
                             int set );
 extern void ThotCallback ( int ref,
@@ -147,6 +150,9 @@ extern int TtaAddButton (/* Document document,
                             Pixmap picture,
                             void (*procedure) (),
                             char *info */);
+extern void * TtaGetButtonCallback (/* Document document,
+                                       View view,
+                                       int index */);
 extern void TtaSwitchButton (/* Document document,
                                 View view,
                                 int index */);
@@ -194,14 +200,14 @@ extern void TtaSetToggleItem (/* Document document,
                                  int menuID,
                                  int itemID,
                                  boolean on */);
-extern void TtaSetActionOff (/* Document document,
-                                View view,
-                                int menuID,
-                                int itemID */);
-extern void TtaSetActionOn (/* Document document,
-                               View view,
-                               int menuID,
-                               int itemID */);
+extern void TtaSetItemOff (/* Document document,
+                              View view,
+                              int menuID,
+                              int itemID */);
+extern void TtaSetItemOn (/* Document document,
+                             View view,
+                             int menuID,
+                             int itemID */);
 extern int TtaSetCallback (/* void (*callbakProcedure) (),
                               int set */);
 extern void ThotCallback (/* int ref,

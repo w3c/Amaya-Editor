@@ -31,8 +31,8 @@ extern void SetElementStyle ( char *style,
 extern void AddElementStyle ( char *style,
                               Element el,
                               int document );
-extern int LoadHTMLDocument ( char *URL,
-                              int document );
+extern int AmayaLoadHTMLDocument ( char *URL,
+                                   int document );
 
 #else /* __STDC__ */
 
@@ -61,8 +61,8 @@ extern void SetElementStyle (/* char *style,
 extern void AddElementStyle (/* char *style,
                                 Element el,
                                 int document */);
-extern int LoadHTMLDocument (/* char *URL,
-                                int document */);
+extern int AmayaLoadHTMLDocument (/* char *URL,
+                                     int document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

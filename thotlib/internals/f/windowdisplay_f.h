@@ -320,8 +320,8 @@ extern void StorePageInfo ( int pagenum,
 extern void psBoundingBox ( int frame,
                             int width,
                             int height );
-extern void SetMainWindowBackgroundColor (int frame,
-					  int color);
+extern void SetMainWindowBackgroundColor ( int frame,
+                                           int color );
 extern void Clear ( int frame,
                     int width,
                     int height,
@@ -677,7 +677,7 @@ extern void psBoundingBox (/* int frame,
                               int width,
                               int height */);
 extern void SetMainWindowBackgroundColor (/* int frame,
-					  int color */);
+                                             int color */);
 extern void Clear (/* int frame,
                       int width,
                       int height,

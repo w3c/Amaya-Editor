@@ -6,7 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void KbdCallbackHandler ( ThotWidget w,
+                                 int param,
+                                 caddr_t call_d );
 extern void KeyboardMap ( int kb );
+extern void GraphicsLoadResources ( void );
 extern void KeyboardsLoadResources ( void );
 extern void TtcDisplayMathKeyboard ( Document document,
                                      View view );
@@ -19,7 +23,11 @@ extern void TtcDisplayGreekKeyboard ( Document document,
 
 #else /* __STDC__ */
 
+extern void KbdCallbackHandler (/* ThotWidget w,
+                                   int param,
+                                   caddr_t call_d */);
 extern void KeyboardMap (/* int kb */);
+extern void GraphicsLoadResources (/* void */);
 extern void KeyboardsLoadResources (/* void */);
 extern void TtcDisplayMathKeyboard (/* Document document,
                                        View view */);

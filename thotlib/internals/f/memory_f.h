@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void *TtaGetMemory ( unsigned int n );
-extern void TtaFreeMemory ( void *ptr );
+extern void TtaFreeMemory ( void* ptr );
 extern char *TtaStrdup ( char *str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
@@ -79,7 +79,7 @@ extern void FreeDictionary ( PtrDict pDict );
 #else /* __STDC__ */
 
 extern void *TtaGetMemory (/* unsigned int n */);
-extern void TtaFreeMemory (/* void *ptr */);
+extern void TtaFreeMemory (/* void* ptr */);
 extern char *TtaStrdup (/* char *str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);

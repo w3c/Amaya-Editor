@@ -292,19 +292,19 @@ int document;
 }
 
 /*----------------------------------------------------------------------
-  LoadHTMLDocument : Load an HTML Document.
+  AmayaLoadHTMLDocument : Load an HTML Document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int LoadHTMLDocument (char *URL, int document)
+int AmayaLoadHTMLDocument (char *URL, int document)
 #else
-int LoadHTMLDocument (URL, document)
+int AmayaLoadHTMLDocument (URL, document)
 char *URL;
 int document;
 #endif
 {
     Document res;
     
-    res = GetHTMLDocument(URL, NULL, document, document, CE_FALSE, TRUE);
+    res = GetHTMLDocument(URL, NULL, document, document, CE_FALSE, TRUE, TRUE);
 
     return((int) res);
 }
