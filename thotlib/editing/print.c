@@ -617,14 +617,16 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *view, ThotBool *assoc)
 /*----------------------------------------------------------------------
    OpenPSFile opens the printing file and write the PS prologue.
   ----------------------------------------------------------------------*/
-static int          OpenPSFile (PtrDocument pDoc, int *volume)
+static int OpenPSFile (PtrDocument pDoc, int *volume)
 {
+  ViewFrame          *pFrame;
+#ifndef _WINDOWS
   FILE               *PSfile;
   CHAR_T              tmp[MAX_PATH];
   CHAR_T              fileName[256];
-  ViewFrame          *pFrame;
-  long                i;
   int                 len;
+#endif /* _WINDOWS */
+  int                 i;
 
   /* Est-ce la premiere creation de frame ? */
   i = 1;

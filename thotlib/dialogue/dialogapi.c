@@ -961,7 +961,7 @@ static void  CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t ca
    ReturnTogglevalues retourne les entre'es bascule'es du             
    toggle-menu catalogue.                                             
   ----------------------------------------------------------------------*/
-static void         ReturnTogglevalues (struct Cat_Context *catalogue)
+static void ReturnTogglevalues (struct Cat_Context *catalogue)
 {
    register int        i;
    register int        index;
@@ -1001,7 +1001,7 @@ static void         ReturnTogglevalues (struct Cat_Context *catalogue)
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire.                         
   ----------------------------------------------------------------------*/
-static void         INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
+static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 {
 #ifndef _GTK
    register int        n;
@@ -1065,7 +1065,7 @@ static void         INITform (ThotWidget w, struct Cat_Context *parentCatalogue,
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire avec positionnement.     
   ----------------------------------------------------------------------*/
-static void         INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
+static void INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 {
 #ifndef _GTK
    TtaSetDialoguePosition ();
@@ -1301,7 +1301,7 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 /*----------------------------------------------------------------------
    Callback de selection dans une liste.                              
   ----------------------------------------------------------------------*/
-static void         CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
+static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
 {
    STRING              text = NULL;
    ThotBool            ok;
@@ -1323,7 +1323,7 @@ static void         CallList (ThotWidget w, struct Cat_Context *catalogue, XmLis
 /*----------------------------------------------------------------------
    Callback de saisie de texte.                                       
   ----------------------------------------------------------------------*/
-static void         CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
 #ifndef _GTK
    ThotWidget          wtext;
@@ -1351,7 +1351,7 @@ static void         CallTextChange (ThotWidget w, struct Cat_Context *catalogue,
 /*----------------------------------------------------------------------
    Callback pour un bouton du label de selecteur                      
   ----------------------------------------------------------------------*/
-static void         CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -2049,7 +2049,7 @@ void TtaDefineDialogueCallback (void (*procedure) ())
 /*----------------------------------------------------------------------
    ClearChildren nettoie tous les catalalogues fils du catalogue.     
   ----------------------------------------------------------------------*/
-static void         ClearChildren (struct Cat_Context *parentCatalogue)
+static void ClearChildren (struct Cat_Context *parentCatalogue)
 {
 #ifndef _GTK
    register int        icat;
@@ -2519,21 +2519,19 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
               AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
 
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                          copyCat = catalogue;
-                          WIN_AddFrameCatalogue (parent, copyCat);
+              copyCat = catalogue;
+              WIN_AddFrameCatalogue (parent, copyCat);
 #else  /* _WINDOWS */
 #ifdef _GTK
-                          w = gtk_check_menu_item_new_with_label (&text[index + 1]);
-                          gtk_widget_show (w);
-                          gtk_menu_append (GTK_MENU (parent),w);
-                          gtk_check_menu_item_set_state (GTK_CHECK_MENU_ITEM (w), TRUE);
-                          gtk_signal_connect (GTK_OBJECT (w), "activate",
-                                              GTK_SIGNAL_FUNC (CallMenu),(gpointer)catalogue);
+              w = gtk_check_menu_item_new_with_label (&text[index + 1]);
+              gtk_widget_show (w);
+              gtk_menu_append (GTK_MENU (parent),w);
+              gtk_check_menu_item_set_state (GTK_CHECK_MENU_ITEM (w), TRUE);
+              gtk_signal_connect (GTK_OBJECT (w), "activate",
+                                  GTK_SIGNAL_FUNC (CallMenu),(gpointer)catalogue);
 
-                          gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-                          adbloc->E_ThotWidget[ent] = w;
-
-
+              gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
+              adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
@@ -2547,61 +2545,59 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 		     else if (text[index] == TEXT('M'))
 		       /*_______________________________________ Creation d'un sous-menu __*/
 		       {
-			  /* En attendant le sous-menu on cree un bouton */
+			     /* En attendant le sous-menu on cree un bouton */
 #ifdef _WINDOWS
-                          w = (HMENU) CreatePopupMenu ();
-                          subMenuID [currentFrame] = (UINT) w;
-                          if (equiv_item && equiv_item [0] != 0) {
-                             usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item); 
-                             /* InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item); */
-                             AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
-                             equiv_item [0] = 0;
-						  } else 
-                               /* InsertMenu (menu, i, MF_POPUP, (UINT) w, &text[index + 1]); */
-                               AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
-                          adbloc->E_ThotWidget[ent] = w;
-						  /* *** T O    V E R I F Y *** */
-                          copyCat = catalogue;
-                          WIN_AddFrameCatalogue (parent, copyCat);
-						  /* *** T O    V E R I F Y  *** */
+                 w = (HMENU) CreatePopupMenu ();
+                 subMenuID [currentFrame] = (UINT) w;
+                 if (equiv_item && equiv_item [0] != 0)
+				 {
+                   usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item); 
+                   /* InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item); */
+                   AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
+                   equiv_item [0] = 0;
+				 }
+				 else 
+                   /* InsertMenu (menu, i, MF_POPUP, (UINT) w, &text[index + 1]); */
+                   AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
+                 adbloc->E_ThotWidget[ent] = w;
+		  	     /* *** T O    V E R I F Y *** */
+                 copyCat = catalogue;
+                 WIN_AddFrameCatalogue (parent, copyCat);
+		         /* *** T O    V E R I F Y  *** */
 #else  /* _WINDOWS */
 #ifdef _GTK
-                         w =  gtk_menu_item_new_with_label (&text[index + 1]);
-                         gtk_widget_show (w);
-                         gtk_menu_append (GTK_MENU (parent),w);
-                         adbloc->E_ThotWidget[ent] = w;
-
+                 w =  gtk_menu_item_new_with_label (&text[index + 1]);
+                 gtk_widget_show (w);
+                 gtk_menu_append (GTK_MENU (parent),w);
+                 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
-
-			  w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
-			  adbloc->E_ThotWidget[ent] = w;
+			     w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
+			     adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-
 #endif /* _WINDOWS */
 		       }
 		     else if (text[index] == TEXT('F'))
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  ustrcpy (heading, &text[index + 1]);
-			  ustrcat (heading, TEXT("..."));
+			     ustrcpy (heading, &text[index + 1]);
+			     ustrcat (heading, TEXT("..."));
 #ifdef _WINDOWS
-			  w = (HMENU) CreateMenu ();
-              /* InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
-			  AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&heading));
-			  adbloc->E_ThotWidget[ent] = (ThotWidget) w;
+			     w = (HMENU) CreateMenu ();
+                 /* InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
+			     AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&heading));
+			     adbloc->E_ThotWidget[ent] = (ThotWidget) w;
 #else  /* _WINDOWS */
 #ifdef _GTK
-                         w = gtk_menu_item_new_with_label ( &text[index + 1]);
-                         gtk_menu_append (GTK_MENU (parent),w);
-                         gtk_widget_show (w);
-                         gtk_signal_connect (GTK_OBJECT (w), "activate",
-                                                   GTK_SIGNAL_FUNC (CallMenu),(gpointer) catalogue);
-                         adbloc->E_ThotWidget[ent] = w;
-
+                 w = gtk_menu_item_new_with_label ( &text[index + 1]);
+                 gtk_menu_append (GTK_MENU (parent),w);
+                 gtk_widget_show (w);
+                 gtk_signal_connect (GTK_OBJECT (w), "activate",
+                                     GTK_SIGNAL_FUNC (CallMenu),(gpointer) catalogue);
+                 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
-			  w = XmCreatePushButton (menu, heading, args, n);
-			  XtManageChild (w);
-			  adbloc->E_ThotWidget[ent] = w;
+			     w = XmCreatePushButton (menu, heading, args, n);
+			     XtManageChild (w);
+			     adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		       }
@@ -2767,7 +2763,8 @@ void                TtaSetPulldownOn (int ref, ThotWidget parent)
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button)
+void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
+				  STRING text, STRING equiv, char button)
 {
 #ifndef _GTK
    register int        count;
