@@ -1429,7 +1429,9 @@ static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* !_GTK */
 {
    ThotWidget         wtext;
+#ifdef _GTK
    ThotWidget         tmpw;
+#endif /* !_GTK */
    char              *text = NULL;
 
    if (catalogue->Cat_Widget != 0)

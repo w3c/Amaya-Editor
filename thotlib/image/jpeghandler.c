@@ -203,7 +203,6 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   int                 w, h;
   Pixmap              pixmap = (Pixmap)NULL;
   ThotColorStruct     colrs[256];
-  unsigned char      *pixels;
   unsigned char      *buffer = NULL, *buffer2 = NULL;
 
   /* effective load of the Picture from Jpeg Library */

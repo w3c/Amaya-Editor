@@ -189,7 +189,7 @@ extern int TtaSetCallback (void (*callbakProcedure) (), int set);
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-extern void TtaSetStatus (Document document, View view, CONST char *text, CONST char *name);
+extern void TtaSetStatus (Document document, View view, char *text, char *name);
 
 /*----------------------------------------------------------------------
    TtaGetViewFrame retourne le widget du frame de la vue document.    

@@ -675,7 +675,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   char                value;
   char               *data;
   int                 diff, count, width, height;
-  int                 bpl, y, index, ind;
+  int                 bpl, y, ind;
 
   width  = w;
   height = h;
@@ -693,53 +693,53 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
       {
 	data_ptr = data;
 	max_data = data_ptr + width;
-	if (bperpix == 2)
-	  {
-	    /* use two bytes per pixel */
-	    while (data_ptr < max_data)
-	      {
-		value = 0;
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		col = spixels[ind++];
-		value = (value << 1 | col != bg);
-		*(data_ptr++) = value;
-	      }
-	  }
-	else
+	if (bperpix == 1)
 	  {
 	    /* use one byte per pixel */
 	    while (data_ptr < max_data)
 	      {
 		value = 0;
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
 		col = pixels[ind++];
-		value = (value << 1 | col != bg);
+		value = ((value << 1) | (col != bg));
+		*(data_ptr++) = value;
+	      }
+	  }
+	else
+	  {
+	    /* use two bytes per pixel */
+	    while (data_ptr < max_data)
+	      {
+		value = 0;
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
+		col = spixels[ind++];
+		value = ((value << 1) | (col != bg));
 		*(data_ptr++) = value;
 	      }
 	  }
@@ -748,10 +748,10 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 	    value = 0;
 	    for (count = 0; count < diff; count++)
 	      {
-		if (bperpix == 2)
-		  col = spixels[ind++];
-		else
+		if (bperpix == 1)
 		  col = pixels[ind++];
+		else
+		  col = spixels[ind++];
 		  if (col != bg)
 		    value |= (0x80 >> count);
 	      }
@@ -765,34 +765,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 	{
 	  data_ptr = data;
 	  max_data = data_ptr + width;
-	  if (bperpix == 2)
-	    {
-	      /* use two bytes per pixel */
-	      while (data_ptr < max_data)
-		{
-		  value = 0;
-		  ind += 8;
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  col = spixels[--ind];
-		  value = (value << 1 | col != bg);
-		  ind += 8;
-		  *(data_ptr++) = value;
-		}
-	    }
-	  else
+	  if (bperpix == 1)
 	    {
 	      /* use one byte per pixel */
 	      while (data_ptr < max_data)
@@ -800,21 +773,48 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		  value = 0;
 		  ind += 8;
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
 		  col = pixels[--ind];
-		  value = (value << 1 | col != bg);
+		  value = ((value << 1) | (col != bg));
+		  ind += 8;
+		  *(data_ptr++) = value;
+		}
+	    }
+	  else
+	    {
+	      /* use two bytes per pixel */
+	      while (data_ptr < max_data)
+		{
+		  value = 0;
+		  ind += 8;
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
+		  col = spixels[--ind];
+		  value = ((value << 1) | (col != bg));
 		  ind += 8;
 		  *(data_ptr++) = value;
 		}
@@ -824,11 +824,11 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 	      value = 0;
 	      for (count = 0; count < diff; count++)
 	      {
-		if (bperpix == 2)
-		  col = spixels[ind++];
-		else
+		if (bperpix == 1)
 		  col = pixels[ind++];
-		  if (col != bg)
+		else
+		  col = spixels[ind++];
+		if (col != bg)
 		    value |= (1 << count);
 	      }
 	      *(data_ptr++) = value;
@@ -956,12 +956,12 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
       bshift = gshift + nbbits (theVisual->green_mask);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 2)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  else
+	  if (bperpix == 1)
 	    /* use one byte per pixel */
 	    col = data[ind++];
+	  else
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
 	  temp = ((colrs[col].red & theVisual->red_mask) | 
 		  ((colrs[col].green >> gshift) & theVisual->green_mask) |
 		  (((colrs[col].blue >> bshift) & theVisual->blue_mask)));
@@ -1003,12 +1003,12 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
       useMSB = (newimage->bits_per_pixel > 24);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 2)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  else
+	  if (bperpix == 1)
 	    /* use one byte per pixel */
 	    col = data[ind++];
+	  else
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
 	  c = (((colrs[col].red >> 8) & 0xff) << rshift) |
 	    (((colrs[col].green >> 8) & 0xff) << gshift) |
 	    (((colrs[col].blue >> 8) & 0xff) << bshift);
@@ -1106,12 +1106,12 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       bshift = 11;
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 2)
-	    /* use one byte per pixel */
-	    col = data[ind++];
-	  else
+	  if (bperpix == 1)
 	    /* use two bytes per pixel */
 	    col = sdata[ind++];
+	  else
+	    /* use one byte per pixel */
+	    col = data[ind++];
 	  if (IS_WIN95)
 	    temp = (((colrs[col].red * 255) & 63488) |
 		    (((colrs[col].green * 255) >> gshift) & 2016) |
@@ -1133,12 +1133,12 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (bperpix == 2)
-		/* use two bytes per pixel */
-		col = sdata[ind++];
-	      else
+	      if (bperpix == 1)
 		/* use one byte per pixel */
 		col = data[ind++];
+	      else
+		/* use two bytes per pixel */
+		col = sdata[ind++];
 	      *bitp++ = colrs[col].blue;
 	      *bitp++ = colrs[col].green;
 	      *bitp++ = colrs[col].red;
@@ -1157,12 +1157,12 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (bperpix == 2)
-		/* use two bytes per pixel */
-		col = sdata[ind++];
-	      else
+	      if (bperpix == 1)
 		/* use one byte per pixel */
 		col = data[ind++];
+	      else
+		/* use two bytes per pixel */
+		col = sdata[ind++];
 	      *bitp++ = colrs[col].blue;
 	      *bitp++ = colrs[col].green;
 	      *bitp++ = colrs[col].red;
@@ -1189,11 +1189,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 #ifndef _WINDOWS
   Pixmap              img;
   XImage             *image;
-  unsigned char      *ptr;
-  unsigned char      *ptr2;
-  int                 i, size;
-  int                 delta, not_right_col, not_last_row;
-  int                 cx, cy;
+  int                 size;
 
   /* find the visual class. */
   size = width * height;
@@ -1372,7 +1368,9 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if (GifTransparent >= 0)
     {
 #ifdef _WINDOWS
-      /* register the transparent color index */
+      /* register the Thot color index of the transparent color */
+      i = TtaGetThotColor (colrs[GifTransparent].red, colrs[GifTransparent].green,
+			   colrs[GifTransparent].blue);
       imageDesc->PicMask = GifTransparent;
 #else  /* _WINDOWS */
       /* register the transparent mask */

@@ -202,7 +202,7 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
+void TtaSetStatus (Document document, View view, char *text, char *name)
 {
 }
 

@@ -261,6 +261,9 @@ LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp)
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
+  TransparentPicture
+  displays the image without background (pixels with the color bg).
+  The color bg is an index in the thot color table.
   ----------------------------------------------------------------------*/
 static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 				int w, int h, int bg)
@@ -283,6 +286,7 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
    COLORREF crOldBkColor;
    int      red, green, blue;
 
+   /* give the RGB of the background color */
    TtaGiveThotRGB (bg, &red, &green, &blue);
    crColor = RGB (red, green, blue);
    hMemDC = CreateCompatibleDC (TtDisplay);
@@ -580,9 +584,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		DeleteDC (hMemDC);
 	    }
 	  else
-	    TransparentPicture (pixmap, xFrame, yFrame,
-				imageDesc->PicWArea, imageDesc->PicHArea,
-				imageDesc->PicMask);
+	    {
+	      TransparentPicture (pixmap, xFrame, yFrame,
+				  imageDesc->PicWArea, imageDesc->PicHArea,
+				  imageDesc->PicMask);
+	    }
 #endif /* _WINDOWS */
 	  break;
 	  
@@ -752,13 +758,13 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
           SelectClipRgn(TtDisplay, NULL);
 
           if (hMemDC)
-			  DeleteDC (hMemDC);
+	    DeleteDC (hMemDC);
           if (hOrigDC)
-			  DeleteDC (hOrigDC);
+	    DeleteDC (hOrigDC);
           if (bitmapTiled)
-			  DeleteObject (bitmapTiled);
+	    DeleteObject (bitmapTiled);
 	  if (hrgn)
-		  DeleteObject (hrgn);
+	    DeleteObject (hrgn);
 #endif /* _WINDOWS */
 	  break;
 
