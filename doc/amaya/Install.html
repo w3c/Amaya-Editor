@@ -1,113 +1,119 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<HTML>
-<HEAD>
-<TITLE>How to install the Amaya Binary Release</TITLE>
-</HEAD>
-<BODY>
+<!doctype html public "-//w3c//dtd html 3.2 final//en">
+<html>
+<head>
+<title>
+How to install the Amaya Binary Release</title>
+</head>
+<body>
 <!-- Created by: Vincent Quint. 8 July 96 -->
 <!-- Changed by: Jose Kahan,  8-Jul-1996 -->
 <!-- Changed by: Daniel Veillard, 14-Nov-1996 -->
-<P>
-<A href="../../"><IMG border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></A>
-<A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A> <A
-href="./"><IMG border="0" src="../../Icons/WWW/guide48x" alt="Using"></A></P>
-<H1>How to install the Amaya Binary Release</H1>
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
+<a href="../"><img border="0" src="amaya.gif" alt="Amaya"></a> <a
+href="./"><img border="0" src="../../Icons/WWW/guide48x" alt="Using"></a></p>
+<h1>How to install the Amaya Binary Release</h1>
 
-<P>
-<IMG src="warning.gif"> In the following, we assume that the path stored in
-the archive begins with the <CODE><STRONG>Thot</STRONG></CODE> directory (this
+<p>
+<img src="warning.gif"> In the following, we assume that the path stored in
+the archive begins with the <code><strong>Thot</strong></code> directory (this
 change was introduced for the source distribution). Older binary distributions
-use <CODE><STRONG>Amaya</STRONG></CODE> as the top directory name instead.</P>
-<H3>Choose a place for Amaya</H3>
+use <code><strong>Amaya</strong></code> as the top directory name instead.</p>
+<h3>Choose a place for Amaya</h3>
 
-<P>
+<p>
 Supposing the binary distribution was loaded fine, one must choose a place to
-install it. We suggest</P>
-<UL>
-<LI>/usr/local for a system wide installation
-<LI>the user home directory for a personnal installation
-</UL>
-<P>
+install it. We suggest</p>
+<ul>
+  <li>
+  /usr/local for a system wide installation
+  <li>
+  the user home directory for a personnal installation
+</ul>
+<p>
 A Linux version doesn't need more that 5 Megabytes of disk space, even a RISC
-architecture distribution should not exceed 10 Megabytes.</P>
-<H3>Extract the distribution</H3>
+architecture distribution should not exceed 10 Megabytes.</p>
+<h3>Extract the distribution</h3>
 
-<P>
+<p>
 Move the distribution to this directory, check that the rights on this
-directory allow you to create a directory and extract the distribution.</P>
-<P>
-On a <STRONG>Linux ELF</STRONG> platform one must invoke:</P>
-<P>
-<CODE>tar xvzf amaya-linux-elf-<STRONG>Release</STRONG>.tar.gz</CODE></P>
-<P>
-Where <STRONG>Release</STRONG> has to be replaced by the current verion
-number.</P>
-<P>
-And for an <STRONG>Linux a.out</STRONG> platform:</P>
-<P>
-<CODE>tar xvzf amaya-linux-<STRONG>Release</STRONG>.tar.gz</CODE></P>
-<P>
-More generally if the distribution is a tar.gz file:</P>
-<P>
-<CODE>gunzip -c
-amaya-<STRONG>Platform</STRONG>-<STRONG>Release</STRONG>.tar.gz | tar xvf
--</CODE></P>
-<P>
+directory allow you to create a directory and extract the distribution.</p>
+<p>
+On a <strong>Linux ELF</strong> platform one must invoke:</p>
+<p>
+<code>tar xvzf amaya-linux-elf-<strong>Release</strong>.tar.gz</code></p>
+<p>
+Where <strong>Release</strong> has to be replaced by the current verion
+number.</p>
+<p>
+More generally if the distribution is a tar.gz file:</p>
+<p>
+<code>gunzip -c
+amaya-<strong>Platform</strong>-<strong>Release</strong>.tar.gz | tar xvf
+-</code></p>
+<p>
 Whatever the method used, this should print around 40 lines of output and
-create a new directory called <CODE>Thot</CODE> populated with a few files and
+create a new directory called <code>Thot</code> populated with a few files and
 directories. If not, your distribution file was probably corrupted during
-transfer, please get a new one. Read carefully the <CODE>COPYRIGHT</CODE>,
-<CODE>README</CODE> and <CODE>AboutTho</CODE>t  files.</P>
-<H3>Set up the environment and start Amaya</H3>
+transfer, please get a new one. Read carefully the <code>COPYRIGHT</code>,
+<code>README</code> and <code>AboutTho</code>t  files.</p>
+<h3>Set up the environment and start Amaya</h3>
 
-<P>
-The file <CODE>Thot/SYSTEM/bin/amaya</CODE> is the <STRONG>Amaya</STRONG>
+<p>
+The file <code>Thot/SYSTEM/bin/amaya</code> is the <strong>Amaya</strong>
 binary, the best thing is to add the path to the Thot/SYSTEM/bin directory to
-your PATH environment variable. For example on a <STRONG>Linux-ELF</STRONG>
-system:</P>
-<P>
-<CODE>setenv PATH $PATH:/usr/local/Thot/LINUX-ELF/bin</CODE></P>
-<P>
+your PATH environment variable. For example on a <strong>Linux-ELF</strong>
+system:</p>
+<p>
+<code>setenv PATH $PATH:/usr/local/Thot/LINUX-ELF/bin</code></p>
+<p>
 for a csh or tcsh shell. When using sh, bash or another variant of the Bourne
-shell</P>
-<P>
-<CODE>PATH=$PATH:/usr/local/Thot/LINUX-ELF/bin ; export $PATH</CODE></P>
-<P>
+shell</p>
+<p>
+<code>PATH=$PATH:/usr/local/Thot/LINUX-ELF/bin ; export $PATH</code></p>
+<p>
 Maybe this command should be added to the .login startup script. Once done one
-can lauch <STRONG>Amaya</STRONG> simply by typing "amaya" to the shell prompt.
-The <STRONG>Amaya</STRONG> main window should open and display the first page
-of the <STRONG>Amaya</STRONG> documentation.</P>
-<H3>If something goes wrong</H3>
+can lauch <strong>Amaya</strong> simply by typing "amaya" to the shell prompt.
+The <strong>Amaya</strong> main window should open and display the first page
+of the <strong>Amaya</strong> documentation.</p>
+<h3>If something goes wrong</h3>
 
-<UL>
-<LI>If <STRONG>Amaya</STRONG> doesn't seems to work, check the following
-points:
-<OL>
-<LI>the <CODE>DISPLAY</CODE> variable is correctly set.
-<LI>The binary just installed is the correct one, i.e. it is the correct
-binaries for the current machine (don't try to start the Linux-ELF version on
-a Solaris machine or an old Linux a.out installation).
-<LI>If the binary version is ok, check the availability of the dynamic
-libraries needed by the executable file amayamain (located under
-<CODE>Thot/bin/SYSTEM/amaya</CODE>). for example on a
-<STRONG>Linux-ELF</STRONG> system type
-<P>
-<CODE>ldd Thot/LINUX-ELF/bin/amaya</CODE></P>
-<P>
-and check that there is no missing libraries.</P>
-</OL>
-<LI>One can install packages for different platform under the same directory
-(for example on a server filesystem exported via NFS to an heterogenous set of
-machines), use the appropriate <CODE>PATH</CODE> on each platform.
-<LI>All the traffic on the Amaya mailing-list is archived <A
-href="http://opera.inrialpes.fr/amaya/messages/">here</A>. Please have a look
-at it before sending us mail if something goes wrong. Remember, it's an Alpha
-release.
-</UL>
-<HR>
-<ADDRESS>
-<A href="mailto:Daniel.Veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/09
-18:10:15$</ADDRESS>
-</BODY>
-</HTML>
+<ul>
+  <li>
+  If <strong>Amaya</strong> doesn't seems to work, check the following points:
+  <ol>
+    <li>
+    the <code>DISPLAY</code> variable is correctly set.
+    <li>
+    eventually remove your previous registry file $HOME/.thotrc. 
+    <li>
+    The binary just installed is the correct one, i.e. it is the correct
+    binaries for the current machine (don't try to start the Linux-ELF version
+    on a Solaris machine or an old Linux a.out installation).
+    <li>
+    If the binary version is ok, check the availability of the dynamic
+    libraries needed by the executable file amayamain (located under
+    <code>Thot/bin/SYSTEM/amaya</code>). for example on a
+    <strong>Linux-ELF</strong> system type
+    <p>
+    <code>ldd Thot/LINUX-ELF/bin/amaya</code></p>
+    <p>
+    and check that there is no missing libraries.</p>
+  </ol>
+  <li>
+  One can install packages for different platform under the same directory
+  (for example on a server filesystem exported via NFS to an heterogenous set
+  of machines), use the appropriate <code>PATH</code> on each platform.
+  <li>
+  All the traffic on the Amaya mailing-list is archived <a
+  href="http://opera.inrialpes.fr/amaya/messages/">here</a>. Please have a
+  look at it before sending us mail if something goes wrong. Remember, it's an
+  Alpha release.
+</ul>
+<hr>
+<address>
+<a href="mailto:Daniel.Veillard@w3.org">Daniel Veillard</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$</address>
+</body>
+</html>
