@@ -18,6 +18,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "undo.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {
@@ -4094,21 +4095,24 @@ boolean             destroy;
    This function uses the current css context or creates it. It's able
    to work on the given buffer or call GetNextInputChar to read the parsed
    file.
+   Parameter withUndo indicates whether the changes made in the document
+   structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer)
+CHAR                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, boolean withUndo)
 #else
-CHAR                ReadCSSRules (doc, docRef, css, buffer)
+CHAR                ReadCSSRules (doc, docRef, css, buffer, withUndo)
 Document            doc;
 Document            docRef;
 CSSInfoPtr          css;
 STRING              buffer;
+boolean             withUndo;
 #endif
 {
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType;
-  Element             parent, el, title;
+  Element             parent, el, title, createdEl;
   CHAR                c;
   STRING              cssRule, base;
   STRING              schemaName;
@@ -4122,6 +4126,7 @@ STRING              buffer;
   boolean             ignoreMedia;
   boolean             noRule, CSSparsing;
 
+  createdEl = NULL;
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
   CSSindex = 0;
@@ -4149,6 +4154,9 @@ STRING              buffer;
 	      el = TtaNewTree (doc, elType, "");
 	      TtaInsertFirstChild (&el, parent, doc);
 	      parent = el;
+	      if (withUndo && !createdEl)
+		 /* remember the element to be registered in the Undo queue */
+		 createdEl = el;
 	    }
 	  elType.ElTypeNum = HTML_EL_STYLE_;
 	  parent = el;
@@ -4169,6 +4177,9 @@ STRING              buffer;
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (el, attr, doc);
 	      TtaSetAttributeText (attr, "text/css", el, doc);
+	      if (withUndo && !createdEl)
+		 /* remember the element to be registered in the Undo queue */
+		 createdEl = el;
 	    }
 	  /* if the Text element doesn't exist we create it now */
 	  parent = el;
@@ -4178,6 +4189,9 @@ STRING              buffer;
 	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	      el = TtaNewTree (doc, elType, "");
 	      TtaInsertFirstChild (&el, parent, doc);
+	      if (withUndo && !createdEl)
+		 /* remember the element to be registered in the Undo queue */
+		 createdEl = el;
 	    }
 	  if (css == NULL)
 	    css = SearchCSS (doc, NULL);
@@ -4308,9 +4322,18 @@ STRING              buffer;
 	    {
 	      if (el != NULL)
 		{
+	          if (withUndo && !createdEl)
+		     /* no HEAD or STYLE element has been created above.
+		     Register the previous value of the STYLE element
+		     in the Undo queue */
+		     TtaRegisterElementReplace (el, doc);
 		  /* add information in the document tree */
 		  lg = TtaGetTextLength (el);
 		  TtaInsertTextContent (el, lg, CSSbuffer, doc);
+	          if (withUndo && createdEl)
+		     /* a HEAD or STYLE element has been created above, it is
+		     complete now. Register it in the Undo queue */
+		     TtaRegisterElementCreate (createdEl, doc);
 		}
 	      /* apply CSS rule if it's not just a saving of text */
 	      if (!noRule && !ignoreMedia)

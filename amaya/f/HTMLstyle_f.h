@@ -71,7 +71,8 @@ extern void ApplyCSSRules ( Element el,
 extern CHAR ReadCSSRules ( Document doc,
                            Document docRef,
                            CSSInfoPtr css,
-                           STRING buffer );
+                           STRING buffer,
+                           boolean withUndo );
 
 #else /* __STDC__ */
 
@@ -140,7 +141,8 @@ extern void ApplyCSSRules (/* Element el,
 extern CHAR ReadCSSRules (/* Document doc,
                              Document docRef,
                              CSSInfoPtr css,
-                             STRING buffer */);
+                             STRING buffer,
+                             boolean withUndo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

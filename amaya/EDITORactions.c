@@ -1305,6 +1305,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  DeleteColumn
+  Delete a column in a table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeleteColumn (Document document, View view)
@@ -1315,14 +1317,15 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  Element             el, cell, colHead;
+  Element             el, cell, colHead, selCell, leaf;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   Document            refDoc;
   SSchema	      HTMLSSchema;
   CHAR                name[50];
-  int                 firstchar, lastchar;
+  int                 firstchar, lastchar, len;
+  boolean             selBefore;
 
   /* get the first selected element */
   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
@@ -1346,15 +1349,43 @@ View                view;
 	}
       if (cell != NULL)
 	{
-	  attrType.AttrSSchema = elType.ElSSchema;
+	  /* prepare the new selection */
+	  selCell = cell;
+	  TtaNextSibling (&selCell);
+	  if (selCell)
+	     selBefore = FALSE;
+	  else
+	     {
+	     selCell = cell;
+	     TtaPreviousSibling (&selCell);
+	     selBefore = TRUE;
+	     }
 	  /* get current column */
+	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 	  attr = TtaGetAttribute (cell, attrType);
 	  if (attr != NULL)
 	    {
 	      TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
 	      TtaOpenUndoSequence (document, el, el, firstchar, lastchar);
+	      /* remove column */
 	      RemoveColumn (colHead, document, FALSE, FALSE);
+	      /* set new selection */
+	      if (selBefore)
+	         leaf = TtaGetLastLeaf (selCell);
+	      else
+	         leaf = TtaGetFirstLeaf (selCell);
+	      elType = TtaGetElementType (leaf);
+	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	        if (selBefore)
+	           {
+	           len = TtaGetTextLength (leaf);
+		   TtaSelectString (document, leaf, len+1, len);
+		   }
+	        else
+		   TtaSelectString (document, leaf, 1, 0);
+	      else
+		TtaSelectElement (document, leaf);
 	      TtaCloseUndoSequence (document);
 	    }
 	}

@@ -1900,6 +1900,74 @@ Element             parent;
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetFirstLeaf
+
+   Returns the first leaf element of a given element.
+
+   Parameter:
+   parent: the element for which the first leaf element is asked.
+
+   Return value:
+   the first leaf element of parent; parent itself if it has no leaf
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+Element             TtaGetFirstLeaf (Element parent)
+
+#else  /* __STDC__ */
+Element             TtaGetFirstLeaf (parent)
+Element             parent;
+
+#endif /* __STDC__ */
+
+{
+   Element          leaf;
+
+   UserErrorCode = 0;
+   leaf = parent;
+   if (parent == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+     leaf = (Element)FirstLeaf ((PtrElement)parent);
+   return (leaf);
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetLastLeaf
+
+   Returns the last leaf element of a given element.
+
+   Parameter:
+   parent: the element for which the last leaf element is asked.
+
+   Return value:
+   the last leaf element of parent; parent itself if it has no leaf.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+Element             TtaGetLastLeaf (Element parent)
+
+#else  /* __STDC__ */
+Element             TtaGetLastLeaf (parent)
+Element             parent;
+
+#endif /* __STDC__ */
+
+{
+   Element          leaf;
+
+   UserErrorCode = 0;
+   leaf = NULL;
+   if (parent == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+      leaf = (Element)FirstLeaf ((PtrElement)parent);
+   return (leaf);
+}
+
+/* ----------------------------------------------------------------------
    TtaPreviousSibling
 
    Returns the previous sibling element of a given element.

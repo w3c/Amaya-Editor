@@ -5990,7 +5990,7 @@ STRING              HTMLbuf;
 			    if (ParsingCSS)
 			      {
 #ifndef STANDALONE
-				 charRead = ReadCSSRules (theDocument, theDocument, NULL, NULL);
+				 charRead = ReadCSSRules (theDocument, theDocument, NULL, NULL, FALSE);
 				 /* when returning from the CSS parser, a '<' has been
 				    read by the CSS parser and the following character,
 				    which is in charRead */
@@ -7326,7 +7326,6 @@ boolean	            plainText;
 #endif
 {
   gzFile              stream = NULL;
-  FILE               *infile;
   Element             el, oldel;
   AttributeType       attrType;
   Attribute           attr;

@@ -438,6 +438,34 @@ extern Element      TtaGetFirstChild (Element parent);
 extern Element      TtaGetLastChild (Element parent);
 
 /* ----------------------------------------------------------------------
+   TtaGetFirstLeaf
+
+   Returns the first leaf element of a given element.
+
+   Parameter:
+   parent: the element for which the first leaf element is asked.
+
+   Return value:
+   the first leaf element of parent; parent itself if it has no leaf
+
+   ---------------------------------------------------------------------- */
+extern Element      TtaGetFirstLeaf (Element parent);
+
+/* ----------------------------------------------------------------------
+   TtaGetLastLeaf
+
+   Returns the last leaf element of a given element.
+
+   Parameter:
+   parent: the element for which the last leaf element is asked.
+
+   Return value:
+   the last leaf element of parent; parent itself if it has no leaf.
+
+   ---------------------------------------------------------------------- */
+extern Element      TtaGetLastLeaf (Element parent);
+
+/* ----------------------------------------------------------------------
    TtaPreviousSibling
 
    Returns the previous sibling element of a given element.
@@ -1172,6 +1200,8 @@ extern Element      TtaGetMainRoot ( /* Document document */ );
 extern void         TtaNextAssociatedRoot ( /* Document document, Element *root */ );
 extern Element      TtaGetFirstChild ( /* Element parent */ );
 extern Element      TtaGetLastChild ( /* Element parent */ );
+extern Element      TtaGetFirstLeaf ( /* Element parent */ );
+extern Element      TtaGetLastLeaf ( /* Element parent */ );
 extern void         TtaPreviousSibling ( /* Element *element */ );
 extern void         TtaNextSibling ( /* Element *element */ );
 extern Element      TtaGetSuccessor ( /* Element element */ );

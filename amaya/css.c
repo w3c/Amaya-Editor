@@ -415,12 +415,12 @@ CSSInfoPtr          css;
 
       if (css != NULL)
 	/* apply CSS rules in current Presentation structure (import) */
-	ReadCSSRules (0, doc, css, buffer);
+	ReadCSSRules (0, doc, css, buffer, FALSE);
       else if (!oldcss->documents[doc])
 	{
 	  /* apply CSS rules */
 	  oldcss->documents[doc] = TRUE;
-	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer);
+	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer, FALSE);
 	}
 	
       TtaFreeMemory (buffer);
@@ -538,7 +538,7 @@ Document            doc;
       /* parse the whole thing and free the buffer */
       if (buffer != NULL)
 	{
-	  ReadCSSRules (0, doc, css, buffer);
+	  ReadCSSRules (0, doc, css, buffer, FALSE);
 	  TtaFreeMemory (buffer);
 	}
     }

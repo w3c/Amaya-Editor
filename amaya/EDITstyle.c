@@ -16,6 +16,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "undo.h"
  
 #include "css_f.h"
 #include "html2thot_f.h"
@@ -64,7 +65,7 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-  RemoveStyle : clean all the presentation attributes of a given element.
+  RemoveStyle : clean all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -83,31 +84,19 @@ boolean           removeSpan;
    if (el == NULL)
       return;
 
-   /*
-    * remove any Class or ImplicitClass associated to the element.
-    */
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-   attrType.AttrTypeNum = HTML_ATTR_Class;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr != NULL)
-     {
-	TtaRemoveAttribute (el, attr, doc);
-	if (removeSpan)
-	  DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
-	TtaSetDocumentModified (doc);
-     }
-
    attrType.AttrTypeNum = HTML_ATTR_Style_;
    attr = TtaGetAttribute (el, attrType);
    if (attr != NULL)
-     {
-	TtaRemoveAttribute (el, attr, doc);
-	if (removeSpan)
-	  DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
-	TtaSetDocumentModified (doc);
-     }
+      {
+      TtaRegisterAttributeDelete (attr, el, doc);
+      TtaRemoveAttribute (el, attr, doc);
+      if (removeSpan)
+	 DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
+      TtaSetDocumentModified (doc);
+      }
 
-   /* remove all the presentation specific rules applied to the element */
+   /* remove all the specific presentation rules applied to the element */
    CleanStylePresentation (el, doc);
 }
 
@@ -384,7 +373,7 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   STRING              a_class = CurrentClass;
-  int		      firstSelectedChar, lastSelectedChar, i, j, lg;
+  int		      firstSelectedChar, lastSelectedChar, i, lg;
   DisplayMode         dispMode;
   boolean	      setClassAttr;
 
@@ -400,8 +389,6 @@ Document            doc;
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
   if (firstSelectedEl == NULL)
      return;
-  TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
-
   TtaClearViewSelections ();
   /* stop displaying changes that will be made in the document */
   dispMode = TtaGetDisplayMode (doc);
@@ -418,98 +405,93 @@ Document            doc;
   else
      setClassAttr = FALSE;
 
+  TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
+  TtaUnselect (doc);
+
+  /* process the last selected element */
+  elType = TtaGetElementType (lastSelectedEl);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     /* it's a text element */
+     {
+     lg = TtaGetTextLength (lastSelectedEl);
+     if (lastSelectedChar < lg && lastSelectedChar != 0)
+	/* the last selected element is only partly selected. Split it */
+	TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
+     else
+	/* selection ends at the end of the text element */
+	if (lastSelectedEl != firstSelectedEl ||
+	    (lastSelectedEl == firstSelectedEl && firstSelectedChar <= 1))
+	   /* this text element is entirely selected */
+	   {
+	   parent = TtaGetParent (lastSelectedEl);
+	   elType = TtaGetElementType (parent);
+	   if (elType.ElTypeNum == HTML_EL_Span &&
+	       !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	      /* the parent element is a SPAN */
+	      if (lastSelectedEl == TtaGetFirstChild (parent) &&
+	          lastSelectedEl == TtaGetLastChild (parent))
+	         /* this text element is the only child of the SPAN */
+	         /* Process the SPAN instead of the text element */
+	         {
+	         lastSelectedEl = parent;
+	         if (firstSelectedEl == lastSelectedEl)
+		    firstSelectedEl = parent;
+	         }
+	}
+     }
+
+  /* process the first selected element */
+  elType = TtaGetElementType (firstSelectedEl);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     /* it's a text element */
+     if (firstSelectedChar <= 1)
+	/* selection starts at the beginning of the element */
+	/* this text element is then entirely selected */
+	{
+	parent = TtaGetParent (firstSelectedEl);
+	elType = TtaGetElementType (parent);
+	if (elType.ElTypeNum == HTML_EL_Span &&
+	    !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	   /* parent is a SPAN element */
+	   if (firstSelectedEl == TtaGetFirstChild (parent) &&
+	       firstSelectedEl == TtaGetLastChild (parent))
+	      /* this text element is the only child of the SPAN */
+	      /* Process the SPAN instead of the text element */
+	      {
+	      firstSelectedEl = parent;
+	      if (lastSelectedEl == firstSelectedEl)
+	         lastSelectedEl = parent;
+	      }
+	}
+     else
+	/* that element is only partly selected. Split it */
+	{
+	el = firstSelectedEl;
+	TtaSplitText (firstSelectedEl, firstSelectedChar - 1, doc);
+	TtaNextSibling (&firstSelectedEl);
+	if (lastSelectedEl == el)
+	   {
+	   /* we have to change the end of selection because the last
+	      selected element was split */
+	   lastSelectedEl = firstSelectedEl;
+	   }
+	}
+
+  TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
   /* process all selected elements */
   cour = firstSelectedEl;
   while (cour != NULL)
      {
       /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
-	 first for the next element to be processed */
-      next = cour;
-      TtaGiveNextSelectedElement (doc, &next, &i, &j);
-
-      if (cour == firstSelectedEl)
-        /* process the first selected element */
-	{
-	elType = TtaGetElementType (firstSelectedEl);
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	   /* It's a text element */
-	   if (firstSelectedChar <= 1)
-	      /* selection starts at the beginning of the element */
-	      {
-	      if (lastSelectedEl != firstSelectedEl ||
-		  (lastSelectedEl == firstSelectedEl && lastSelectedChar == 0))
-	         /* this text element is entirely selected */
-		 {
-		 parent = TtaGetParent (cour);
-		 elType = TtaGetElementType (parent);
-		 if (elType.ElTypeNum == HTML_EL_Span &&
-		     !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-		    /* parent is a SPAN element */
-		    if (firstSelectedEl == TtaGetFirstChild (parent) &&
-			firstSelectedEl == TtaGetLastChild (parent))
-		        /* this is the only child of the SPAN. Process the
-		           SPAN instead of the text element */
-			{
-			cour = parent;
-			firstSelectedEl = parent;
-			if (lastSelectedEl == firstSelectedEl)
-			   lastSelectedEl = parent;
-			}
-		 }
-	      }
-	   else
-	      /* It's only partly selected. Split it */
-	      {
-	      el = firstSelectedEl;
-	      TtaSplitText (firstSelectedEl, firstSelectedChar - 1, doc);
-	      TtaNextSibling (&firstSelectedEl);
-	      cour = firstSelectedEl;
-	      firstSelectedChar = 0;
-	      if (lastSelectedEl == el)
-	         {
-	         /* we have to change the end of selection because the last
-		    selected element was split */
-	         lastSelectedEl = firstSelectedEl;
-	         lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
-	         }
-	      }
-	}
-
+	 first the next element to be processed */
       if (cour == lastSelectedEl)
-	{
-        /* process the last selected element */
-	elType = TtaGetElementType (lastSelectedEl);
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	   /* it's a text element */
-	   {
-	   lg = TtaGetTextLength (lastSelectedEl);
-	   if (lastSelectedChar >= lg || lastSelectedChar == 0)
-	      /* selection ends at the end of the element */
-	      /* this text element is entirely selected */
-	      {
-	      parent = TtaGetParent (cour);
-	      elType = TtaGetElementType (parent);
-	      if (elType.ElTypeNum == HTML_EL_Span &&
-		  !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-		 /* parent element is a SPAN */
-		 if (lastSelectedEl == TtaGetFirstChild (parent) &&
-		     lastSelectedEl == TtaGetLastChild (parent))
-		    /* this is the only child of the SPAN. Process the
-		       SPAN instead of the text element */
-		    {
-		    cour = parent;
-		    lastSelectedEl = parent;
-		    }
-	      }
-	   else
-	      /* It's only partly selected. Split it */
-	      TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
-	   }
-	}
+         next = NULL;
+      else
+	 {
+         next = cour;
+         TtaGiveNextElement (doc, &next, lastSelectedEl);
+	 }
 
-      /* remove any Style attribute left */
-      RemoveStyle (cour, doc, FALSE);
-	  
       if (!setClassAttr)
 	 {
 	 DeleteSpanIfNoAttr (cour, doc, &firstChild, &lastChild);
@@ -548,13 +530,20 @@ Document            doc;
 	     {
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (cour, attr, doc);
+	      TtaSetAttributeText (attr, a_class, cour, doc);
+	      TtaRegisterAttributeCreate (attr, cour, doc);
 	     }
-	  TtaSetAttributeText (attr, a_class, cour, doc);
+	  else
+	     {
+	     TtaRegisterAttributeReplace (attr, cour, doc);
+	     TtaSetAttributeText (attr, a_class, cour, doc);
+	     }
 	  TtaSetDocumentModified (doc);
 	 }
-      /* jump to next element until last one is reached. */
+      /* jump to the next element */
       cour = next;
      }
+  TtaCloseUndoSequence (doc);
 
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
@@ -564,8 +553,9 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   UpdateClass : Change a class to reflect the presentation        
-   attributes of the selected elements                             
+   UpdateClass
+   Change or create a class to reflect the Style attribute of the
+   selected element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdateClass (Document doc)
@@ -582,7 +572,7 @@ Document            doc;
   STRING              a_class;
   int                 len, base;
 
-  /* check whether it's the element type or a godd class name */
+  /* check whether it's the element type or a class name */
   ustrcpy (stylestring, "\n");
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
@@ -606,9 +596,12 @@ Document            doc;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
   ustrcat (stylestring, "}");
   
-  /* change the selected element to be of the new class. */
+  TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
+
+  /* remove the Style attribute */
   RemoveStyle (ClassReference, doc, FALSE);
 
+  /* create the class attribute */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   if (stylestring[1] == '.')
     {
@@ -627,7 +620,9 @@ Document            doc;
     }
   /* parse and apply this new CSS to the current document */
   /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
-  ReadCSSRules (doc, doc, NULL, stylestring);
+  ReadCSSRules (doc, doc, NULL, stylestring, TRUE);
+
+  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -714,8 +709,8 @@ STRING              first;
 }
 
 /*----------------------------------------------------------------------
-   CreateClass creates a class to reflect the presentation    
-   attributes of the selected element
+   CreateClass
+   creates a class from the Style attribute of the selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateClass (Document doc, View view)
@@ -748,13 +743,12 @@ View                view;
   if (ClassReference == NULL)
     return;
   
-  /* if a subset of an element is selected, select the parent instead */
+  /* if only a part of an element is selected, select the parent instead */
   elType = TtaGetElementType (ClassReference);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     ClassReference = TtaGetParent (ClassReference);
-  /* updating the class name selector. */
+  /* update the class name selector. */
   elHtmlName = GetCSSName (ClassReference, doc);
-  
 #  ifndef _WINDOWS
   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
 	      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
