@@ -1758,6 +1758,9 @@ char               *AppVersion;
    if (!content_encodings)
       content_encodings = HTList_new ();
 
+   /* inhibits libwww's automatic file_suffix_binding */
+   HTFile_doFileSuffixBinding (FALSE);
+
    /* Register the default set of transport protocols */
    HTTransportInit ();
 
@@ -2552,6 +2555,8 @@ void               *context_tcbf;
    struct stat         file_stat;
    char               *fileURL;
    char               *etag = NULL;
+   HTParentAnchor     *dest_anc_parent;
+   char               *tmp;
    int                 UsePreconditions;
 
    UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
@@ -2636,14 +2641,32 @@ void               *context_tcbf;
 #endif /* _WINDOWS */
    me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
-
    me->dest = HTAnchor_findAddress (urlName);
+   /* we memorize the anchor's parent @ as we use it a number of times
+      in the following lines */
+   dest_anc_parent = HTAnchor_parent (me->dest);
 
-   /* Set the Content-Type of the file we are uploading */
-   HTAnchor_setFormat (HTAnchor_parent (me->source),
-		       AHTGuessAtom_for (me->urlName, contentType));
-   HTAnchor_setFormat (HTAnchor_parent (me->dest),
-		       AHTGuessAtom_for (me->urlName, contentType));
+   /*
+   **  Set the Content-Type of the file we are uploading 
+   */
+   /* we try to use any content-type previosuly associated
+      with the parent. If it doesn't exist, we try to guess it
+      from the URL */
+   tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
+   if (!tmp || !strcmp (tmp, "www/unknown"))
+     {
+       HTAnchor_setFormat (dest_anc_parent,
+			   AHTGuessAtom_for (me->urlName, contentType));
+       tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
+     }
+   /* .. and we give the same type to the source anchor */
+   /* we go thru setOutputFormat, rather than change the parent's
+      anchor, as that's the place that libwww expects it to be */
+
+   HTAnchor_setFormat (me->source,
+		       HTAtom_for (tmp));
+   HTRequest_setOutputFormat (me->request,
+			      HTAtom_for (tmp));
 
    /* associate the anchor to the request */
    HTRequest_setEntityAnchor (me->request, HTAnchor_parent (me->source));
