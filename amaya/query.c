@@ -143,9 +143,9 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 
 /* prototypes */
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 #ifdef AMAYA_WWW_CACHE
 /***************************************************************
@@ -1825,9 +1825,9 @@ static void         AHTProtocolInit (void)
   /* TODO: verifier que le param YES est adapte pour WX */
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
 #endif /* _WINDOWS */
-#if defined(_GTK) || defined(_WX)
+#if defined(_UNIX)
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_UNIX) */
 
 #ifdef AMAYA_WWW_CACHE
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
@@ -1899,9 +1899,9 @@ static void         AHTAlertInit (void)
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
 
-#ifdef _WINGUI /* <<-- SG : it was __WINGUI : I replace it with _WINGUI */
+#ifdef _WINDOWS
    HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
    
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow ( (HTErrorShow)(~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG)) );	/* process all messages except debug ones*/
@@ -3152,22 +3152,22 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 	 me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
        strcpy (me->urlName, urlName);
 	 /* TODO: a tester que ca marche bien avec WX */
-#ifdef _WINGUI
+#ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
-#endif /*_WINGUI */
+#endif /*_WINDOWS */
      } /* AMAYA_ASYNC mode */ 
    else 
-#ifdef _WINGUI
+#ifdef _WINDOWS
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
        HTRequest_setPreemptive (me->request, YES);
      }
-#endif /* !_WINGUI */
+#endif /* !_WINDOWS */
    
-#if defined(_UNIX) || defined(_WX)
+#if defined(_UNIX)
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
@@ -3179,7 +3179,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
      generated
      ****/
    HTRequest_setPreemptive (me->request, NO);
-#endif /* #if defined(_UNIX) || defined(_WX) */
+#endif /* #if defined(_UNIX) */
 
    /*
    ** Make sure that the first request is flushed immediately and not

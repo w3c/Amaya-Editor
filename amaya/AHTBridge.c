@@ -268,7 +268,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     }
 }
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 /*----------------------------------------------------------------
   WIN_Activate_Request
   when there are more open requests than available sockets, the 
@@ -285,7 +285,7 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op,
 			  int msgnum, const char *dfault, void *input,
 			  HTAlertPar * reply)
 {
-   AHTReqContext      *me = HTRequest_context (request);
+   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
 
    if (me->reqStatus == HT_NEW) 
      {
@@ -331,7 +331,7 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op,
    return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   AHTEvent_register
@@ -351,7 +351,8 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 #endif /* DEBUG_LIBWWW */
       return (0);
     }
-
+   else
+   {
 #if defined(_GTK) || defined(_WX)
   /* need something special for HTEvent_CLOSE */
   if (type & ReadBits)
@@ -373,6 +374,7 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 #endif /* #if defined(_UNIX) */
 
   return (status);
+   }
 }
 
 /*----------------------------------------------------------------------

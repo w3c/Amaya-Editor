@@ -140,7 +140,8 @@ bool wxAmayaSocketEvent::UnregisterSocket( int register_id )
  */
 bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 {
-  //  wxLogDebug( _T("wxAmayaSocketEvent::CheckSocketStat") );
+  if (m_NbRegistredSocket <= 0)
+	  return false;
 
   struct timeval tv;
   fd_set read_fds, write_fds, except_fds;
