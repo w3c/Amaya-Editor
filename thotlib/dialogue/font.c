@@ -96,7 +96,6 @@ static SpecFont   FirstFontSel = NULL;
 static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 {
   char filename[2048];
-  
   if (size > MaxNumberOfSizes)
     size = LogicalPointsSizes[MaxNumberOfSizes];
   else if (size >= 0)
@@ -2257,7 +2256,7 @@ void InitDialogueFonts (char *name)
     sscanf (value, "%d", &MenuSize);
   f3 = MenuSize + 2;
 
-#ifdef _GTK
+#if defined(_GTK)
   if (!Printing)
     {
       fontpath = TtaGetEnvString ("THOTFONT");
@@ -2368,9 +2367,18 @@ void InitDialogueFonts (char *name)
   /* Need a default GL font because the format is different */
   DefaultGLFont = NULL;
   i = 1;
+  int font_size = 1;
   while (DefaultGLFont == NULL && i < 3)
     {
-      DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 3);
+      font_size = 3;
+      for (font_size = 3; !DefaultGLFont && font_size < MaxNumberOfSizes; font_size++)
+	{
+	  DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, font_size);
+	}
+      if (!DefaultGLFont)
+	DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 2);
+      if (!DefaultGLFont)
+	DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 1);
       i++;
     }
   if (DefaultGLFont == NULL)
