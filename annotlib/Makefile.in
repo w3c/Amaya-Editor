@@ -129,13 +129,22 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTmenu.o \
 	ANNOTschemas.o
 
+AMAYA_BM_SCHEMA= \
+	Topics.STR \
+	Topics.h \
+	TopicsP.PRS
+
 AMAYA_BM_OBJ= @ANNOTLIB_COMPILE_BM@ \
+	TopicsAPP.o \
 	BMevent.o \
 	BMmenu.o \
-	BMfile.o
+	BMfile.o \
+	BMview.o \
+	BMtools.o
 
 AMAYA_ANNOTLIB_OBJ= $(AMAYA_ANNOT_OBJ) $(AMAYA_BM_OBJ)
 
+AMAYA_ANNOTLIB_SCHEMA = $(AMAYA_ANNOT_SCHEMA) $(AMAYA_BM_SCHEMA)
 #
 # dependencies
 #
@@ -152,6 +161,12 @@ $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h ../amaya/EDITOR.h
 # recompile ANNOTmenu if the menu definitions change
 ANNOTmenu.o : ANNOTmenu.h
 
+# If Topics.A changes, force a compilation
+Topics.h : Topics.A
+
+# recompile all the schemas if Topics.S change
+$(AMAYA_BM_SCHEMA) : Topics.S
+
 # recompile all the objects if the h files (generated or not) have changed
 $(AMAYA_BM_OBJ) : bookmarks.h annotlib.h
 
@@ -162,9 +177,9 @@ BMmenu.o : BMmenu.h
 BMfile.o : bookmarks.h
 
 libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/XLink.h \
-	   ../amaya/TextFile.h libAnnot.a
+	   ../amaya/TextFile.h libAnnot.a $(AMAYA_BM_SCHEMA)
 
-libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
+libAnnotSchemas : $(AMAYA_ANNOTLIB_SCHEMA)
 
 libAnnot.a : Annot.STR  $(AMAYA_ANNOTLIB_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOTLIB_OBJ)
