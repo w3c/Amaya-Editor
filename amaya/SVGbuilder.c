@@ -895,9 +895,11 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	 elType.ElTypeNum == SVG_EL_use_ ||
 	 elType.ElTypeNum == SVG_EL_switch ||
 	 elType.ElTypeNum == SVG_EL_a ||
+	 elType.ElTypeNum == SVG_EL_text_ ||
+	 elType.ElTypeNum == SVG_EL_tspan ||
 	 elType.ElTypeNum == SVG_EL_foreignObject)
-       /* add marker, pattern mask, filter, feImage, font, glyph,
-          missing_glyph, clipPath */
+       /* add tref, textPath, altGlyph, clipPath, marker, pattern, mask,
+	  filter, feImage, font, glyph, missing_glyph */
        /* this element may have a text-anchor attribute */
        {
 	 attrType.AttrSSchema = elType.ElSSchema;

@@ -2061,7 +2061,12 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
    decor.typed_data.unit = STYLE_UNIT_REL;
    decor.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "underline", strlen ("underline")))
+   if (!strncasecmp (cssRule, "none", strlen ("none")))
+     {
+	decor.typed_data.value = NoUnderline;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "underline", strlen ("underline")))
      {
 	decor.typed_data.value = Underline;
 	cssRule = SkipWord (cssRule);
@@ -2081,10 +2086,10 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 	/* the blink text-decoration attribute is not supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "none", strlen ("none")))
+   else if (!strncasecmp (cssRule, "inherit", 7))
      {
-	decor.typed_data.value = NoUnderline;
-	cssRule = SkipWord (cssRule);
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
      }
    else
      {
