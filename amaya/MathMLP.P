@@ -7,6 +7,7 @@ PRESENTATION MathML;
 VIEWS
    Formatted_view, Math_Structure_view;
 
+#define OPERATOR_SPACE 0.2
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
 #define DOC_FONTSIZE 12 pt
@@ -15,41 +16,11 @@ VIEWS
 
 #ifdef BLACK_WHITE
 #define TAG_Color Black
-#define ATTR_Color Black
-#define ATTRVALUE_Color Black
-#define INVALID_Color Black
-#define UNKNOWNTAG_Color Black
 #else
 #define TAG_Color Blue
-#define ATTR_Color Blue
-#define ATTRVALUE_Color Black
-#define INVALID_Color Red
-#define UNKNOWNTAG_Color Red
-#define LINK_Color DarkIndigo1
-#define TARGET_Color DarkGreen2
 #endif
 
 #define TAG_Font Helvetica
-#define ATTR_Style Bold
-#define ATTR_Style_Links_view Italics
-#define ATTR_Visibility 6
-#define INPUT_Font Courier
-#define COMMENT_Visibility 5
-#define COMMENT_Font Helvetica
-#define COMMENT_Style Italics
-#define INVALID_Style Bold
-#define INVALID_Visibility 5
-#define INVALID_Font Helvetica
-#define TableSimpleHSpace 4 pt
-#define TableDoubleHSpace 8 pt
-#define TableSimpleVSpace 0.4
-#define VSpaceBeforeH1 1
-#define VSpaceBeforeH2 0.5
-#define VSpaceBeforeH3 0.5
-#define VSpaceBeforeH4 0.5
-#define VSpaceBeforeH5 0.5
-#define VSpaceBeforeH6 0.5
-#define VSpaceInToC 0.2
 
 DEFAULT
 
@@ -315,7 +286,7 @@ BOXES
 
  MOspace: BEGIN
 	Content: text ' ';
-	Width : 0.3;
+	Width : OPERATOR_SPACE;
 	VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
 	IN Math_Structure_view
@@ -778,22 +749,22 @@ ATTRIBUTES
 	END;
   addspace = spacebefore:
 	BEGIN
-	HorizPos: Left = Previous . Right + 0.3;
+	HorizPos: Left = Previous . Right + OPERATOR_SPACE;
 	IN Math_Structure_view
 		HorizPos: Left = Enclosing . Left;
 	END;
   addspace = spaceafter:
 	BEGIN
 	HorizPos: Left = Previous . Right;
-{***	Width: Enclosed . Width + 0.3;
+{***	Width: Enclosed . Width + OPERATOR_SPACE;
 ****}	CreateAfter(MOspace);
 	IN Math_Structure_view
 		HorizPos: Left = Enclosing . Left;
 	END;
   addspace = both:
 	BEGIN
-	HorizPos: Left = Previous . Right + 0.3;
-{***	Width: Enclosed . Width + 0.3;
+	HorizPos: Left = Previous . Right + OPERATOR_SPACE;
+{***	Width: Enclosed . Width + OPERATOR_SPACE;
 ****}	CreateAfter(MOspace);	
 	IN Math_Structure_view
 		HorizPos: Left = Enclosing . Left;
