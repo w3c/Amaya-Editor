@@ -147,7 +147,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
     dirTitle = "";
   if (fileTitle == NULL)
     fileTitle = "";
-
+  isSuffix = FALSE;
   /* S'il s'agit d'un directory accessible */
   if (TtaCheckDirectory (dirname)
       && strcmp (dirname, "/afs") != 0

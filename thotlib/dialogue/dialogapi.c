@@ -3458,7 +3458,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 #else /* _WINDOWS */
   char                menu_item [1024];
   GtkWidget          *gtklist;
-  GtkWidget          *scr_window;
+  GtkWidget          *scr_window = NULL;
   GtkWidget          *event_box;
   GtkWidget          *first = NULL;
   GList              *glist = NULL;
