@@ -205,6 +205,7 @@
 #define GALPHABETDIALOG                 363
 #define GETSAVEDIALOG                   364
 #define SAVELISTDIALOG                  365
+#define IDC_WINCURSOR                   376
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -547,9 +548,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        368
+#define _APS_NEXT_RESOURCE_VALUE        377
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1373
+#define _APS_NEXT_CONTROL_VALUE         1374
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

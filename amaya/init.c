@@ -63,6 +63,8 @@
 #include <direct.h>
 #endif 
 */
+int  Window_Curs;
+
 char docToOpen [256];
 extern boolean viewClosed;
 #define AMAYA_PAGE "\\amaya\\AmayaPage.html"
@@ -151,6 +153,8 @@ static Pixmap       iconJava;
 #define stopN         22
 #define iconBackNo    23
 #define iconForwardNo 24
+
+static BOOL itemChecked = FALSE;
 #endif /* _WINDOWS */
 
 #include "css_f.h"
@@ -918,6 +922,10 @@ char               *pathname;
    int                 x, y, w, h;
 #  ifdef _WINDOWS
    int                 indexButton = 0;
+#  endif /* _WINDOWS */
+
+#  ifdef _WINDOWS
+   Window_Curs = IDC_WINCURSOR;
 #  endif /* _WINDOWS */
 
    old_doc = doc;		/* previous document */
@@ -2679,6 +2687,25 @@ View                view;
 
 #endif
 {
+#  if 0
+#  ifdef _WINDOWS
+   int frame = GetWindowNumber (document, view);
+
+   if (frame == 0 || frame > MAX_FRAME)
+      TtaError (ERR_invalid_parameter);
+   else {
+        HMENU hmenu = GetMenu (FrMainRef[frame]); 
+        if (!itemChecked) {
+          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+          itemChecked = TRUE ;
+       } else {
+              hmenu = GetMenu (FrMainRef[frame]); 
+              CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+              itemChecked = FALSE ;
+       }
+   }
+#  endif /* _WINDOWS */
+#  endif /* 0 */
    ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 

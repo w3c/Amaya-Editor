@@ -1470,7 +1470,7 @@ int                 attrNum;
       return;
    shape = TtaGetAttributeValue (attrShape);
    /* prepare the coords string */
-   length = 200;
+   length = 2000;
    text = TtaGetMemory (length);
    if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
      {

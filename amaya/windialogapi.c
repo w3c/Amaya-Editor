@@ -78,6 +78,8 @@ static int          nameSave;
 static int          imgSave;
 static int          toggleSave;
 static int          confirmSave;
+static int          attrHRefForm;
+static int          attrHRefTxt;
 static char*        classList;
 static char*        langList;
 static char*        saveList;
@@ -148,14 +150,20 @@ LRESULT CALLBACK AuthenticationDlgProc ();
  CreateLinkDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLinkDlgWindow (HWND parent, int ref)
+void CreateLinkDlgWindow (HWND parent, char* attrHref, int base_dlg, int attr_HREFForm, int attr_HREFText)
 #else  /* !__STDC__ */
-void CreateLinkDlgWindow (parent, ref)
+void CreateLinkDlgWindow (parent, attrHref, base_dlg, attr_HREFForm, attr_HREFText)
 HWND      parent;
-int       ref;
+char*     attrHref;
+int       base_dlg; 
+int       attr_HREFForm; 
+int       attr_HREFText;
 #endif /* __STDC__ */
 {  
-	currentRef = ref;
+    baseDlg      = base_dlg;
+    attrHRefForm = attr_HREFForm;
+    attrHRefTxt  = attr_HREFText;
+	strcpy (urlToOpen, attrHref);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
 }
@@ -508,6 +516,14 @@ HWND  parent;
 	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthenticationDlgProc);
 }
 
+
+        /*********************************************************
+         *                                                       *
+         *                   C A L L B A C K S                   *
+         *                                                       *
+         *********************************************************/
+
+
 /*-----------------------------------------------------------------------
  LinkDlgProc
  ------------------------------------------------------------------------*/
@@ -523,7 +539,7 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_URLEDIT, "");
+			    SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
 			    break;
 
            case WM_COMMAND:
@@ -532,11 +548,14 @@ LPARAM lParam;
 						    GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
 							AttrHREFvalue = (char*) TtaGetMemory (strlen (urlToOpen) + 1);
 							strcpy (AttrHREFvalue, urlToOpen);
-							CallbackDialogue (currentRef, INTEGER_DATA, (char*) 1);
+							ThotCallback (baseDlg + attrHRefTxt, STRING_DATA, urlToOpen);
+							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (char*) 1);
+							/* CallbackDialogue (currentRef, INTEGER_DATA, (char*) 1); */
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 
 				       case ID_DONE:
+							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (char*) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
 				}
@@ -1578,23 +1597,23 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
                 hwndLanguage = CreateWindow ("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                             90, 15, 160, 20, hwnDlg, (HMENU) 2,  
+                                             13, 10, 150, 16, hwnDlg, (HMENU) 2,  
                                              (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 			    wndLabel = CreateWindow ("STATIC", currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                     90, 40, 160, 20, hwnDlg, (HMENU) 99, 
+					                     13, 29, 150, 16, hwnDlg, (HMENU) 99, 
 										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
-                                            90, 65, 160, 30, hwnDlg, IDC_WORDBUTTON, 
+                                            13, 48, 150, 20, hwnDlg, IDC_WORDBUTTON, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         90, 100, 160, 110, hwnDlg, (HMENU) 1, 
+					                         13, 72, 150, 70, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				hwndCurrentWord = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                            90, 205, 160, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
+					                            13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
  
 

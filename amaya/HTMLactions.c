@@ -38,6 +38,7 @@
 
 #ifdef _WINDOWS
 HWND currentWindow = NULL;
+static char WIN_buffer [1024];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1136,13 +1137,16 @@ Element             el;
 	     strcpy (AttrHREFvalue, buffer);
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
 #            else  /* _WINDOWS */
-             CreateLinkDlgWindow (currentWindow, BaseDialog + AttrHREFForm);
+             /* CreateLinkDlgWindow (currentWindow, BaseDialog + AttrHREFForm, buffer); */
 #            endif /* _WINDOWS */
 	     TtaFreeMemory (buffer);
 	  }
-#       ifndef _WINDOWS
+
+#   ifndef _WINDOWS
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
-#       endif  /* _WINDOWS */
+#   else  /* _WINDOWS */
+    CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
+#   endif  /* _WINDOWS */
      }
    else
      {
