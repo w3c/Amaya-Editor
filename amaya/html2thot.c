@@ -5313,8 +5313,8 @@ static void CheckHeadElements (Element el, Element *elHead,
   create a copy of element charEl for all descendants of el which are not
   block level elements.
   ----------------------------------------------------------------------*/
-static void     EncloseCharLevelElem (Element el, Element charEl,
-				      Document doc, ThotBool *done)
+static void EncloseCharLevelElem (Element el, Element charEl,
+				  Document doc, ThotBool *done)
 {
    Element      child, next, copy, prev, elem;
    ElementType	elType;
@@ -5360,11 +5360,11 @@ static void     EncloseCharLevelElem (Element el, Element charEl,
 		 }
 	       else
 		 {
+		   elType = TtaGetElementType (charEl);
 		   copy = TtaCopyTree (charEl, doc, doc, el);
 		   TtaInsertSibling (copy, elem, TRUE, doc);
 		   TtaRemoveTree (elem, doc);
 		   TtaInsertFirstChild (&elem, copy, doc);
-		   elType = TtaGetElementType (charEl);
 		   /* do it only once for an Anchor */
 		   if (elType.ElTypeNum == HTML_EL_Anchor)
 		     *done = TRUE;
@@ -5412,7 +5412,7 @@ static void  MergeElements (Element old, Element el, Document doc)
   if element el is a pseudo-paragraph and its neighbours elements are also
   pseudo paragraphs, merge these elements into a single pseudo-paragraph.
   ----------------------------------------------------------------------*/
-static          void MergePseudoParagraph (Element el, Document doc)
+static void MergePseudoParagraph (Element el, Document doc)
 {
   Element	prev, next;
   ElementType	elType;
@@ -5446,159 +5446,192 @@ static          void MergePseudoParagraph (Element el, Document doc)
   CheckBlocksInCharElem
   handle character-level elements which contain block-level elements
   ----------------------------------------------------------------------*/
-static void            CheckBlocksInCharElem (Document doc)
+static void CheckBlocksInCharElem (Document doc)
 {
-   Element             el, parent, child, first, last, next, copy, newparent,
-		       elem, prev, firstNotCharElem;
-   PtrElemToBeChecked  elTBC, nextElTBC, TBC;
-   ElementType	       elType, parentType;
-   ThotBool            done;
-
-   /* check all block-level elements whose parent was a character-level
-      element */
-   elTBC = FirstElemToBeChecked;
-   while (elTBC != NULL)
-     {
-     el = elTBC->Elem;
-     while (el != NULL)
-       {
-       parent = TtaGetParent (el);
-       if (parent == NULL)
-	 el = NULL;
-       else
-	 if (!IsCharacterLevelElement (parent))
-	   {
-	   MergePseudoParagraph (el, doc);
-	   el = NULL;
-	   }
-	 else
-	   {
-	   /* move all children of element parent as siblings of this element*/
-	   first = TtaGetFirstChild (parent);
-	   child = first;
-	   do
-	     {
-	     next = child;
-	     TtaNextSibling (&next);
-	     TtaRemoveTree (child, doc);
-	     TtaInsertSibling (child, parent, TRUE, doc);
-	     last = child;
-	     child = next;
-	     }
-	   while (child != NULL);
-	   /* copy the character-level element for all elements that have been
-	      moved */
-	   newparent = TtaGetParent (parent);
-	   elem = first;
-	   prev = NULL;
-	   firstNotCharElem = NULL;
-	   parentType = TtaGetElementType (parent);
-	   do
-	     {
-	     /* if the character level element (parent) is an anchor, don't
-		repeat it several times */
-	     if (elem == last || parentType.ElTypeNum == HTML_EL_Anchor)
-	       next = NULL;
-	     else
-	       {
-	       next = elem;
-	       TtaNextSibling (&next);
-	       }
-	     elType = TtaGetElementType (elem);
-	     if (!IsCharacterLevelElement (elem) &&
-		 elType.ElTypeNum != HTML_EL_Comment_ &&
-		 elType.ElTypeNum != HTML_EL_Frame)
-	       /* This is not a character level element */
-	       /* create copies of element parent for all decendants of child*/
-	       {
-	       done = FALSE;
-	       EncloseCharLevelElem (elem, parent, doc, &done);
-	       if (done)
-		  next = NULL;
-	       prev = NULL;
-	       if (firstNotCharElem == NULL)
-		  firstNotCharElem = elem;
-	       }
-	     else
-	       /* this is a character level element */
-	       /* enclose elem in a copy of parent element */
-	       {
-	       if (prev != NULL)
-		 {
-		 TtaRemoveTree (elem, doc);
-		 TtaInsertSibling (elem, prev, FALSE, doc);
-		 }
-	       else
-	         {
-	         copy = TtaCopyTree (parent, doc, doc, newparent);
-	         TtaInsertSibling (copy, elem, TRUE, doc);
-	         TtaRemoveTree (elem, doc);
-	         TtaInsertFirstChild (&elem, copy, doc);
-		 }
-	       prev = elem;
-	       }
-	     elem = next;
-	     }
-	   while (elem != NULL);
-	   /* delete the old character-level element */
-	   TtaDeleteTree (parent, doc);
-
-	   /* if, among the elements that have just been moved, there are
-	      pseudo-paragraphs which are now children of a block element,
-	      remove these pseudo-paragraphs */
-	   elem = firstNotCharElem;
-	   parent = TtaGetParent (firstNotCharElem);
-	   if (parent != NULL)
-	      if (!IsBlockElement (parent))
-	         elem = NULL;
-	   while (elem != NULL)
-	     {
-	     if (elem == last)
-		next = NULL;
-	     else
-		{
-		next = elem;
-		TtaNextSibling (&next);
-		}
-	     elType = TtaGetElementType (elem);
-	     if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-		{
-		   child = TtaGetFirstChild (elem);
-		   do
-		     {
-		     next = child;
-		     TtaNextSibling (&next);
-		     TtaRemoveTree (child, doc);
-		     TtaInsertSibling (child, elem, TRUE, doc);
-		     child = next;
-		     }
-		   while (child != NULL);
-		   if (elem == el)
-		      el = NULL;
-		   /* if this element is in the queue, remove it from the queue */
-		   TBC = elTBC->nextElemToBeChecked;
-		   while (TBC != NULL)
-		      {
-		      if (TBC->Elem == elem)
-			 TBC->Elem = NULL;
-		      TBC = TBC->nextElemToBeChecked;
-		      }
-		   TtaDeleteTree (elem, doc);
-		}
-	     elem = next;	     
-	     }
-	   /* if el is a Pseudo-paragraph, merge it with its next or previous
-	      siblings if they also are Pseudo-paragraphs */
-	   if (el != NULL)
+  Element             el, parent, child, first, last, next, copy;
+  Element             newparent, elem, prev, firstNotCharElem;
+  PtrElemToBeChecked  elTBC, nextElTBC, TBC;
+  ElementType	      elType, parentType;
+  ThotBool            done;
+  
+  /* check all block-level elements whose parent was a character-level
+     element */
+  elTBC = FirstElemToBeChecked;
+  while (elTBC != NULL)
+    {
+      el = elTBC->Elem;
+      while (el != NULL)
+	{
+	  parent = TtaGetParent (el);
+	  if (parent == NULL)
+	    el = NULL;
+	  else if (!IsCharacterLevelElement (parent))
+	    {
 	      MergePseudoParagraph (el, doc);
-	   }
-       }
-     nextElTBC = elTBC->nextElemToBeChecked;
-     TtaFreeMemory (elTBC);
-     elTBC = nextElTBC;
-     }
-   FirstElemToBeChecked = NULL;
-   LastElemToBeChecked = NULL;
+	      el = NULL;
+	    }
+	  else
+	    {
+	      parentType = TtaGetElementType (parent);
+	      elType = TtaGetElementType (el);
+	      firstNotCharElem = NULL;
+	      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		{
+		  first = TtaGetFirstChild (el);
+		  child = first;
+		  /* move the pseudo paragrah as sibling of parent*/
+		  TtaRemoveTree (el, doc);
+		  TtaInsertSibling (el, parent, TRUE, doc);
+		  /* move all children of element el as siblings of el */
+		  do
+		    {
+		      next = child;
+		      TtaNextSibling (&next);
+		      /* register the next element to be checked */
+		      if (firstNotCharElem == NULL &&
+			  !IsCharacterLevelElement (child))
+			firstNotCharElem = child;		    
+		      TtaRemoveTree (child, doc);
+		      if (child == first)
+			TtaInsertFirstChild (&child, parent, doc);
+		      else
+			TtaInsertSibling (child, last, TRUE, doc);
+		      last = child;
+		      child = next;
+		    }
+		  while (child != NULL);
+		  /* then move the parent as a child of the pseudo paragrah */
+		  TtaRemoveTree (parent, doc);
+		  TtaInsertFirstChild (&parent, el, doc);
+		}
+	      else
+		{
+		  /* move all children of element parent as siblings of el */
+		  first = TtaGetFirstChild (parent);
+		  child = first;
+		  do
+		    {
+		      next = child;
+		      TtaNextSibling (&next);
+		      TtaRemoveTree (child, doc);
+		      TtaInsertSibling (child, parent, TRUE, doc);
+		      last = child;
+		      child = next;
+		    }
+		  while (child != NULL);
+		  /* copy the character-level element for all elements that have been
+		     moved */
+		  newparent = TtaGetParent (parent);
+		  elem = first;
+		  prev = NULL;
+		  do
+		    {
+		      /* if the character level element (parent) is an anchor, don't
+			 repeat it several times */
+		      if (elem == last || parentType.ElTypeNum == HTML_EL_Anchor)
+			next = NULL;
+		      else
+			{
+			  next = elem;
+			  TtaNextSibling (&next);
+			}
+		      elType = TtaGetElementType (elem);
+		      if (elType.ElTypeNum != HTML_EL_Comment_ &&
+			  elType.ElTypeNum != HTML_EL_Frame &&
+			  !IsCharacterLevelElement (elem))
+			/* This is not a character level element */
+			/* create a copy of parent for all decendants of child */
+			{
+			  done = FALSE;
+			  EncloseCharLevelElem (elem, parent, doc, &done);
+			  if (done)
+			    next = NULL;
+			  prev = NULL;
+			  /* register the next element to be checked */
+			  if (firstNotCharElem == NULL)
+			    firstNotCharElem = elem;		    
+			}
+		      else
+			/* this is a character level element */
+			/* enclose elem in a copy of parent element */
+			{
+			  if (prev != NULL)
+			    {
+			      TtaRemoveTree (elem, doc);
+			      TtaInsertSibling (elem, prev, FALSE, doc);
+			    }
+			  else
+			    {
+			      copy = TtaCopyTree (parent, doc, doc, newparent);
+			      TtaInsertSibling (copy, elem, TRUE, doc);
+			      TtaRemoveTree (elem, doc);
+			      TtaInsertFirstChild (&elem, copy, doc);
+			    }
+			  prev = elem;
+			}
+		      elem = next;
+		    }
+		  while (elem != NULL);
+		  /* delete the old character-level element */
+		  TtaDeleteTree (parent, doc);
+		}
+
+	      /* if, among the elements that have just been moved, there are
+		 pseudo-paragraphs which are now children of a block element,
+		 remove these pseudo-paragraphs */
+	      elem = firstNotCharElem;
+	      parent = TtaGetParent (firstNotCharElem);
+	      if (parent != NULL && !IsBlockElement (parent))
+		  elem = NULL;
+	      while (elem != NULL)
+		{
+		  if (elem == last)
+		    next = NULL;
+		  else
+		    {
+		      next = elem;
+		      TtaNextSibling (&next);
+		    }
+		  elType = TtaGetElementType (elem);
+		  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		    {
+		      child = TtaGetFirstChild (elem);
+		      do
+			{
+			  next = child;
+			  TtaNextSibling (&next);
+			  TtaRemoveTree (child, doc);
+			  TtaInsertSibling (child, elem, TRUE, doc);
+			  child = next;
+			}
+		      while (child != NULL);
+		      if (elem == el)
+			el = NULL;
+
+		      /* if this element is in the queue, remove it from the queue */
+		      TBC = elTBC->nextElemToBeChecked;
+		      while (TBC != NULL)
+			{
+			  if (TBC->Elem == elem)
+			    TBC->Elem = NULL;
+			  TBC = TBC->nextElemToBeChecked;
+			}
+		      TtaDeleteTree (elem, doc);
+		    }
+		  elem = next;	     
+		}
+	      /* if el is a Pseudo-paragraph, merge it with its next or previous
+		 siblings if they also are Pseudo-paragraphs */
+	      if (el != NULL)
+		MergePseudoParagraph (el, doc);
+	    }
+	}
+      nextElTBC = elTBC->nextElemToBeChecked;
+      TtaFreeMemory (elTBC);
+      elTBC = nextElTBC;
+    }
+  FirstElemToBeChecked = NULL;
+  LastElemToBeChecked = NULL;
 }
 
 
