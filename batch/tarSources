@@ -44,7 +44,6 @@ Amaya/amaya/HTMLstyleColor.h \
 Amaya/amaya/HTMLtable.c \
 Amaya/amaya/Text_SGML.inc \
 Amaya/amaya/UIcss.c \
-Amaya/amaya/UIcss.h \
 Amaya/amaya/amaya.h \
 Amaya/amaya/amayamsg.h \
 Amaya/amaya/answer.c \
@@ -279,7 +278,6 @@ Amaya/libjpeg/jmemdos.c \
 Amaya/libjpeg/jmemdosa.asm \
 Amaya/libjpeg/jmemmgr.c \
 Amaya/libjpeg/jmemname.c \
-Amaya/libjpeg/jmemname.c.old \
 Amaya/libjpeg/jmemnobs.c \
 Amaya/libjpeg/jmemsys.h \
 Amaya/libjpeg/jmorecfg.h \
@@ -398,7 +396,6 @@ Amaya/libpng/zlib/inftrees.h \
 Amaya/libpng/zlib/infutil.c \
 Amaya/libpng/zlib/infutil.h \
 Amaya/libpng/zlib/minigzip.c \
-Amaya/libpng/zlib/minigzip.c.old \
 Amaya/libpng/zlib/trees.c \
 Amaya/libpng/zlib/uncompr.c \
 Amaya/libpng/zlib/zconf.h \
@@ -419,9 +416,11 @@ Amaya/thotlib/base/thotmsg.c \
 Amaya/thotlib/content/content.c \
 Amaya/thotlib/content/contentapi.c \
 Amaya/thotlib/content/dictionary.c \
+Amaya/thotlib/content/regexp.c \
 Amaya/thotlib/content/search.c \
 Amaya/thotlib/content/searchref.c \
 Amaya/thotlib/content/word.c \
+Amaya/thotlib/dialogue/LiteClue.c \
 Amaya/thotlib/dialogue/appdialogue.c \
 Amaya/thotlib/dialogue/appli.c \
 Amaya/thotlib/dialogue/attrmenu.c \
@@ -434,6 +433,7 @@ Amaya/thotlib/dialogue/context.c \
 Amaya/thotlib/dialogue/createdoc.c \
 Amaya/thotlib/dialogue/creationmenu.c \
 Amaya/thotlib/dialogue/dialogapi.c \
+Amaya/thotlib/dialogue/extprintmenu.c \
 Amaya/thotlib/dialogue/font.c \
 Amaya/thotlib/dialogue/geom.c \
 Amaya/thotlib/dialogue/input.c \
@@ -470,21 +470,21 @@ Amaya/thotlib/document/schtrad.c \
 Amaya/thotlib/document/translation.c \
 Amaya/thotlib/document/views.c \
 Amaya/thotlib/document/writepivot.c \
-Amaya/thotlib/edition/applicationapi.c \
-Amaya/thotlib/edition/checkermenu.c \
-Amaya/thotlib/edition/editcommands.c \
-Amaya/thotlib/edition/print.c \
-Amaya/thotlib/edition/scroll.c \
-Amaya/thotlib/edition/selectionapi.c \
-Amaya/thotlib/edition/spellchecker.c \
-Amaya/thotlib/edition/structchange.c \
-Amaya/thotlib/edition/structcommands.c \
-Amaya/thotlib/edition/structcreation.c \
-Amaya/thotlib/edition/structmodif.c \
-Amaya/thotlib/edition/structselect.c \
-Amaya/thotlib/edition/textcommands.c \
-Amaya/thotlib/edition/unstructchange.c \
-Amaya/thotlib/edition/viewcommands.c \
+Amaya/thotlib/editing/applicationapi.c \
+Amaya/thotlib/editing/checkermenu.c \
+Amaya/thotlib/editing/editcommands.c \
+Amaya/thotlib/editing/print.c \
+Amaya/thotlib/editing/scroll.c \
+Amaya/thotlib/editing/selectionapi.c \
+Amaya/thotlib/editing/spellchecker.c \
+Amaya/thotlib/editing/structchange.c \
+Amaya/thotlib/editing/structcommands.c \
+Amaya/thotlib/editing/structcreation.c \
+Amaya/thotlib/editing/structmodif.c \
+Amaya/thotlib/editing/structselect.c \
+Amaya/thotlib/editing/textcommands.c \
+Amaya/thotlib/editing/unstructchange.c \
+Amaya/thotlib/editing/viewcommands.c \
 Amaya/thotlib/image/abspictures.c \
 Amaya/thotlib/image/epshandler.c \
 Amaya/thotlib/image/gifhandler.c \
@@ -541,6 +541,7 @@ Amaya/thotlib/include/thot_sys.h \
 Amaya/thotlib/include/tree.h \
 Amaya/thotlib/include/typebase.h \
 Amaya/thotlib/include/view.h \
+Amaya/thotlib/internals/f/LiteClue_f.h \
 Amaya/thotlib/internals/f/absboxes_f.h \
 Amaya/thotlib/internals/f/abspictures_f.h \
 Amaya/thotlib/internals/f/alloca_f.h \
@@ -635,6 +636,7 @@ Amaya/thotlib/internals/f/readstr_f.h \
 Amaya/thotlib/internals/f/readtra_f.h \
 Amaya/thotlib/internals/f/referenceapi_f.h \
 Amaya/thotlib/internals/f/references_f.h \
+Amaya/thotlib/internals/f/regexp_f.h \
 Amaya/thotlib/internals/f/registry_f.h \
 Amaya/thotlib/internals/f/savedoc_f.h \
 Amaya/thotlib/internals/f/schemas_f.h \
@@ -647,6 +649,7 @@ Amaya/thotlib/internals/f/searchmenustr_f.h \
 Amaya/thotlib/internals/f/searchref_f.h \
 Amaya/thotlib/internals/f/selectionapi_f.h \
 Amaya/thotlib/internals/f/selectmenu_f.h \
+Amaya/thotlib/internals/f/sortmenu_f.h \
 Amaya/thotlib/internals/f/specificdriver_f.h \
 Amaya/thotlib/internals/f/spellchecker_f.h \
 Amaya/thotlib/internals/f/structcommands_f.h \
@@ -691,6 +694,8 @@ Amaya/thotlib/internals/f/xpmrdftoi_f.h \
 Amaya/thotlib/internals/f/xpmrdftop_f.h \
 Amaya/thotlib/internals/f/xpmrgb_f.h \
 Amaya/thotlib/internals/f/zoom_f.h \
+Amaya/thotlib/internals/h/LiteClue.h \
+Amaya/thotlib/internals/h/LiteClueP.h \
 Amaya/thotlib/internals/h/appdef.h \
 Amaya/thotlib/internals/h/prsdef.h \
 Amaya/thotlib/internals/h/strdef.h \
@@ -874,7 +879,6 @@ Amaya/w3c-libwww-5.0a/Icons/32x32/warning.gif \
 Amaya/w3c-libwww-5.0a/Icons/Makefile.am \
 Amaya/w3c-libwww-5.0a/Icons/Makefile.in \
 Amaya/w3c-libwww-5.0a/Icons/README \
-Amaya/w3c-libwww-5.0a/Icons/WWW/Makefile \
 Amaya/w3c-libwww-5.0a/Icons/WWW/Bug48x.gif \
 Amaya/w3c-libwww-5.0a/Icons/WWW/LMB48x.gif \
 Amaya/w3c-libwww-5.0a/Icons/WWW/Lib48x.gif \
@@ -897,10 +901,8 @@ Amaya/w3c-libwww-5.0a/Icons/WWW/robot48x.gif \
 Amaya/w3c-libwww-5.0a/Icons/WWW/serv48x.gif \
 Amaya/w3c-libwww-5.0a/Icons/WWW/startup48x.gif \
 Amaya/w3c-libwww-5.0a/Icons/WWW/w3c_48x48.gif \
-Amaya/w3c-libwww-5.0a/Icons/internal/Makefile \
 Amaya/w3c-libwww-5.0a/Icons/internal/Makefile.am \
 Amaya/w3c-libwww-5.0a/Icons/internal/Makefile.in \
-Amaya/w3c-libwww-5.0a/Icons/Makefile \
 Amaya/w3c-libwww-5.0a/Library/Examples/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/Examples/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/Examples/chunk.c \
@@ -911,29 +913,24 @@ Amaya/w3c-libwww-5.0a/Library/Examples/libapp_1.c \
 Amaya/w3c-libwww-5.0a/Library/Examples/libapp_2.c \
 Amaya/w3c-libwww-5.0a/Library/Examples/libapp_3.c \
 Amaya/w3c-libwww-5.0a/Library/Examples/libapp_4.c \
-Amaya/w3c-libwww-5.0a/Library/Examples/Makefile \
 Amaya/w3c-libwww-5.0a/Library/Activity.html \
 Amaya/w3c-libwww-5.0a/Library/Distribution.html \
 Amaya/w3c-libwww-5.0a/Library/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/Overview.html \
 Amaya/w3c-libwww-5.0a/Library/README \
-Amaya/w3c-libwww-5.0a/Library/Test/User/Makefile \
 Amaya/w3c-libwww-5.0a/Library/Test/User/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/Test/User/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/Test/User/Overview.html \
 Amaya/w3c-libwww-5.0a/Library/Test/User/gluecode.html \
 Amaya/w3c-libwww-5.0a/Library/Test/User/running.html \
 Amaya/w3c-libwww-5.0a/Library/Test/User/tests.html \
-Amaya/w3c-libwww-5.0a/Library/Test/src/Makefile \
 Amaya/w3c-libwww-5.0a/Library/Test/src/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/Test/src/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/Test/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/Test/Makefile.in \
-Amaya/w3c-libwww-5.0a/Library/Test/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Architecture/Alert.html \
 Amaya/w3c-libwww-5.0a/Library/User/Architecture/A.gif \
-Amaya/w3c-libwww-5.0a/Library/User/Architecture/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Architecture/Anchors.gif \
 Amaya/w3c-libwww-5.0a/Library/User/Architecture/Anchors.html \
 Amaya/w3c-libwww-5.0a/Library/User/Architecture/App.html \
@@ -1000,7 +997,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Start.html \
 Amaya/w3c-libwww-5.0a/Library/User/ToDo.html \
 Amaya/w3c-libwww-5.0a/Library/User/Using.html \
 Amaya/w3c-libwww-5.0a/Library/User/WAIS.html \
-Amaya/w3c-libwww-5.0a/Library/User/Guide/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/App.html \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/Central.html \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/Core.html \
@@ -1021,7 +1017,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Guide/Threads.html \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/URI.html \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/Utils.html \
 Amaya/w3c-libwww-5.0a/Library/User/Guide/choppy.html \
-Amaya/w3c-libwww-5.0a/Library/User/Patch/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/Overview.html \
@@ -1038,7 +1033,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Patch/lib_4.0_bug_1.html \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/lib_4.0_bug_2.html \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/lib_4.0_bug_3.html \
 Amaya/w3c-libwww-5.0a/Library/User/Patch/lib_5.0_1.fix \
-Amaya/w3c-libwww-5.0a/Library/User/Platform/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/GNUMake.html \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/Makefile.in \
@@ -1046,7 +1040,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Platform/Overview.html \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/WinDLL.html \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/Windows.html \
 Amaya/w3c-libwww-5.0a/Library/User/Platform/win31.html \
-Amaya/w3c-libwww-5.0a/Library/User/Style/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Style/Body.html \
 Amaya/w3c-libwww-5.0a/Library/User/Style/CallingLibwww.html \
 Amaya/w3c-libwww-5.0a/Library/User/Style/Cpp.html \
@@ -1059,7 +1052,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Style/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/User/Style/Makefile.in \
 Amaya/w3c-libwww-5.0a/Library/User/Style/ModuleHeader.html \
 Amaya/w3c-libwww-5.0a/Library/User/Style/Overview.html \
-Amaya/w3c-libwww-5.0a/Library/User/Using/Makefile \
 Amaya/w3c-libwww-5.0a/Library/User/Using/Access.html \
 Amaya/w3c-libwww-5.0a/Library/User/Using/AnchorExample.gif \
 Amaya/w3c-libwww-5.0a/Library/User/Using/Anchors.html \
@@ -1102,8 +1094,6 @@ Amaya/w3c-libwww-5.0a/Library/User/Using/Transport.html \
 Amaya/w3c-libwww-5.0a/Library/User/Using/UserProfile.html \
 Amaya/w3c-libwww-5.0a/Library/User/Using/Utils.html \
 Amaya/w3c-libwww-5.0a/Library/User/Using/choppy.html \
-Amaya/w3c-libwww-5.0a/Library/User/Makefile \
-Amaya/w3c-libwww-5.0a/Library/src/vms/Makefile \
 Amaya/w3c-libwww-5.0a/Library/src/vms/COPYING.LIB \
 Amaya/w3c-libwww-5.0a/Library/src/vms/Makefile.am \
 Amaya/w3c-libwww-5.0a/Library/src/vms/Makefile.in \
@@ -1416,7 +1406,6 @@ Amaya/w3c-libwww-5.0a/Library/src/HTUtils.html \
 Amaya/w3c-libwww-5.0a/Library/src/HTWAIS.c \
 Amaya/w3c-libwww-5.0a/Library/src/HTWAIS.html \
 Amaya/w3c-libwww-5.0a/Library/src/HTWSRC.c \
-Amaya/w3c-libwww-5.0a/Library/src/cru \
 Amaya/w3c-libwww-5.0a/Library/src/HTWSRC.h \
 Amaya/w3c-libwww-5.0a/Library/src/HTWSRC.html \
 Amaya/w3c-libwww-5.0a/Library/src/HTWWWStr.c \
@@ -1497,10 +1486,6 @@ Amaya/w3c-libwww-5.0a/Library/src/windows/wwwtelnt.def \
 Amaya/w3c-libwww-5.0a/Library/src/windows/wwwtrans.def \
 Amaya/w3c-libwww-5.0a/Library/src/windows/wwwutils.def \
 Amaya/w3c-libwww-5.0a/Library/src/windows/wwwwais.def \
-Amaya/w3c-libwww-5.0a/Library/src/windows/Makefile \
-Amaya/w3c-libwww-5.0a/Library/src/Makefile \
-Amaya/w3c-libwww-5.0a/Library/Makefile \
-Amaya/w3c-libwww-5.0a/config/Makefile \
 Amaya/w3c-libwww-5.0a/config/Makefile.am \
 Amaya/w3c-libwww-5.0a/config/Makefile.in \
 Amaya/w3c-libwww-5.0a/config/config.guess \
@@ -1509,7 +1494,6 @@ Amaya/w3c-libwww-5.0a/config/install-sh \
 Amaya/w3c-libwww-5.0a/config/makedefs.pl \
 Amaya/w3c-libwww-5.0a/config/makexprt.pl \
 Amaya/w3c-libwww-5.0a/config/mkinstalldirs \
-Amaya/w3c-libwww-5.0a/Makefile \
  | $COMPRESS  > $DEST/amaya-src-$VERSION.tar.gz
 
 for MACH in $PLATFORMS
