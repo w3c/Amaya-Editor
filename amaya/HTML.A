@@ -416,5 +416,4 @@ ATTRIBUTES
 	AttrModify.Post -> AddAccessKey;
 	AttrDelete.Pre -> RemoveAccessKey;	
 	END;
-
 END
