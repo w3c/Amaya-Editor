@@ -9,4 +9,11 @@ DEFAULT
 	ElemSelect.Post -> SynchronizeSourceView;
    END;
 
+ATTRIBUTES
+
+   Langue:
+	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+	END;
+
 END

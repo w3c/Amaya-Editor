@@ -1353,9 +1353,11 @@ View                view;
        TtaExtractName (tempdocument, tempdir, documentname);
        StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
 		    FALSE);
-       TtaSetDocumentModified (htmlDoc);
-       /* the source is now up to date */
+       /* the source document is now up to date */
        TtaSetDocumentUnmodified (document);
+       /* but the document can be saved */
+       TtaSetDocumentModified (htmlDoc);
+       TtaSetItemOn (htmlDoc, 1, File, BSynchro);
      }
 
    /* Synchronize selections */

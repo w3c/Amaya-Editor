@@ -1993,17 +1993,24 @@ NotifyAttribute    *event;
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
    elType = TtaGetElementType (event->element);
-   if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-      /* it's not an HTML element */
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+     /* it's not a HTML document */
       return TRUE;	/* don't put any HTML attribute in the menu */
+
+   if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+      /* it's not a HTML element */
+      return TRUE;	/* don't put any HTML attribute in the menu */
+
    /* BASE and SCRIPT do not accept any global attribute */
    if (elType.ElTypeNum == HTML_EL_BASE ||
        elType.ElTypeNum == HTML_EL_SCRIPT)
       return TRUE;
+
    /* BASEFONT and PARAM accept only ID */
    if (elType.ElTypeNum == HTML_EL_BaseFont ||
        elType.ElTypeNum == HTML_EL_Parameter)
       return (event->attributeType.AttrTypeNum != HTML_ATTR_ID);
+
    /* coreattrs */
    if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
        event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
