@@ -851,7 +851,7 @@ void            ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
       else
 	pAb = NULL;
       pNextEl = pEl;
-      while (pAb && pNextEl)
+      while (pAb == NULL && pNextEl)
 	{
 	  /* get the next element in the current selection */
 	  stop = FALSE;
@@ -907,15 +907,23 @@ void            ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	    {
 	      /* select children intead of the current abstract box */
 	      if (depth < MAX_TRANSMIT)
-		pSelAb[depth++] = pAb;
+		  pSelAb[depth++] = pAb;
 	      pAb = pAb->AbFirstEnclosed;
+	      pEl = pAb->AbElement;
 	    }
 
 	  /* is that the last visible abstract box of the selection? */
 	  pNextAb = pAb->AbNext;
+	  while (pNextAb == NULL && depth > 0)
+	    {
+	      /* all children of the ghost element are now highlighted */ 
+	      pNextAb = pSelAb[--depth]->AbNext;
+	      pEl = pSelAb[depth]->AbElement;
+	    }
 	  if (pNextAb && pNextAb->AbElement != pEl)
 	    /* the next abstract box does not belong to the element */
 	    pNextAb = NULL;
+
 	  if (pNextAb == NULL)
 	    /* search the next element in the selection having an */
 	    /* abstract box in the subtree */
@@ -924,7 +932,7 @@ void            ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	      stop = FALSE;
 	      do
 		{
-		  pNextEl = NextInSelection (pNextEl,LastSelectedElement);
+		  pNextEl = NextInSelection (pNextEl, LastSelectedElement);
 		  if (pNextEl == NULL)
 		    stop = TRUE;
 		  else if (pNextEl->ElAbstractBox[view - 1] != NULL)
@@ -963,9 +971,6 @@ void            ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	    DrawBoxSelection (frame, pAb->AbBox);
 	  /* next abstract box to be highlighted */
 	  pAb = pNextAb;
-	  if (pAb == NULL && depth > 0)
-	    /* all children of the ghost element are now highlighted */ 
-	    pAb = pSelAb[--depth];
 	}
     }
   else if (DocSelectedAttr && AbsBoxSelectedAttr)
