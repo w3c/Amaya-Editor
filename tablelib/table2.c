@@ -17,12 +17,11 @@
  /*
  *
  * Authors: V. Quint (INRIA)
- *          C. Roisin (INRIA) 
+ *          I. Vatton (INRIA) 
  */
 
 /*
    table2.c : Traitements specifiques a la structure Table.
-
  */
 
 #include "thot_sys.h"
@@ -53,18 +52,8 @@
    CanApplAttrRules retourne vrai dans ApplAttrsi on peut 
    appliquer les regles de l'attribut a` l'element.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, ThotBool * ApplAttr)
-
-#else  /* __STDC__ */
-void                CanApplAttrRules (pEl, pAttr, pDoc, ApplAttr)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-ThotBool            *ApplAttr;
-
-#endif /* __STDC__ */
-
+void CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
+					   ThotBool *ApplAttr)
 {
    int                 attr;
    PtrAttribute        pAttrTab;
@@ -149,19 +138,8 @@ ThotBool            *ApplAttr;
    l'element de pAb. Dans les autres cas, ou si le pave   
    cherche' n'existe pas, elle retourne NULL.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                CheckHeightRuleHairline (PtrAbstractBox pAb, PosRule * position, PtrPRule pRule, PtrAbstractBox * pAbFootTable)
-
-#else  /* __STDC__ */
-void                CheckHeightRuleHairline (pAb, position, pRule, *pAbFootTable)
-PtrAbstractBox      pAb;
-PosRule            *position;
-PtrPRule            pRule;
-PtrAbstractBox     *pAbFootTable;
-
-#endif /* __STDC__ */
-
+void CheckHeightRuleHairline (PtrAbstractBox pAb, PosRule *position,
+							  PtrPRule pRule, PtrAbstractBox * pAbFootTable)
 {
    PtrElement          pEl;
 
@@ -208,14 +186,7 @@ PtrAbstractBox     *pAbFootTable;
    sinon. Si l'element pEl n'est pas une ligne de tableau, 
    le booleen PcLast n'est pas modifie'.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CheckNextIsFootTable (PtrElement pEl, ThotBool * PcLast)
-#else  /* __STDC__ */
-void                CheckNextIsFootTable (pEl, PcLast)
-PtrElement          pEl;
-ThotBool            *PcLast;
-#endif /* __STDC__ */
-
+void CheckNextIsFootTable (PtrElement pEl, ThotBool * PcLast)
 {
    if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema)
        || TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
@@ -243,14 +214,7 @@ ThotBool            *PcLast;
 /*----------------------------------------------------------------------
    SetVertOverflow                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetVertOverflow (PtrPRule pRule, PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                SetVertOverflow (pRule, pAb)
-PtrPRule            pRule;
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
-
+void SetVertOverflow (PtrPRule pRule, PtrAbstractBox pAb)
 {
    PtrElement          pEl;
    ThotBool             found;
@@ -300,15 +264,7 @@ PtrAbstractBox      pAb;
   les boites de presentation qui representent un filet vertical
   dans le sous-arbre de pAb verticaux
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplHeightHairline (PtrAbstractBox pAb, int view, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         ApplHeightHairline (pAb, view, pDoc)
-PtrAbstractBox      pAb;
-int                 view;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+static void ApplHeightHairline (PtrAbstractBox pAb, int view, PtrDocument pDoc)
 {
    PtrAbstractBox      pFils;
    PtrElement          pEl;
@@ -372,14 +328,7 @@ PtrDocument         pDoc;
   verticaux crees par les elements de l'entete qui precede l'element
   de type FootTable pointe' par pFootTable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplHeightRuleToHairlines (PtrElement pFootTable, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                ApplHeightRuleToHairlines (pFootTable, pDoc)
-PtrElement          pFootTable;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void ApplHeightRuleToHairlines (PtrElement pFootTable, PtrDocument pDoc)
 {
    PtrElement          pEl;
    PtrAbstractBox      pAb;
@@ -424,16 +373,7 @@ PtrDocument         pDoc;
   creees par la ligne de tableau qui precede le saut de page pointe'
   par pElPage.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DeleteRowHairline (PtrElement pElPage, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         DeleteRowHairline (pElPage, pDoc)
-PtrElement          pElPage;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static void DeleteRowHairline (PtrElement pElPage, PtrDocument pDoc)
 {
    PtrElement          pEl;
    int                 view;
@@ -490,16 +430,8 @@ PtrDocument         pDoc;
   La recherche s'arrete sur l'element StopElem si Restrict = TRUE
   Renvoi un pointeur sur l'element trouve ou NULL si rien n'a ete trouve
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem, int TypeExcept, ThotBool Restrict)
-#else  /* __STDC__ */
-static PtrElement   SearchTypeExcept (pElToCut, StopElem, TypeExcept, Restrict)
-PtrElement          pElToCut;
-PtrElement          StopElem;
-int                 TypeExcept;
-ThotBool             Restrict;
-#endif /* __STDC__ */
-
+static PtrElement SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem,
+									int TypeExcept, ThotBool Restrict)
 {
    PtrElement          pE, Repetition;
 
@@ -544,18 +476,8 @@ ThotBool             Restrict;
   et retourne Vrai. Si on n'est pas dans une structure a coupure speciale,
   ne fait rien et retourne Faux.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb, ThotBool * cutDone)
-
-#else  /* __STDC__ */
-void                InsertPageInTable (pElPage, pDoc, viewNb, cutDone)
-PtrElement          pElPage;
-PtrDocument         pDoc;
-int                 viewNb;
-ThotBool            *cutDone;
-
-#endif /* __STDC__ */
-
+void InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb,
+						ThotBool * cutDone)
 {
    PtrElement          pEl, pElToCopy, pSpecial;
    ThotBool             finish;
@@ -656,14 +578,7 @@ ThotBool            *cutDone;
   pElPage est dans une structure a coupure speciale, supprime les
   elements repetes qui precedent et qui suivent.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeletePageInTable (PtrElement pElPage, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                DeletePageInTable (pElPage, pDoc)
-PtrElement          pElPage;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void DeletePageInTable (PtrElement pElPage, PtrDocument pDoc)
 {
    PtrElement          pElPrevious, pElPrevious1, pElNext, pElNext1;
    ThotBool             stop;
@@ -721,16 +636,7 @@ PtrDocument         pDoc;
   detruit les paves des elements repetes qui precedent et ceux des
   elements repetes qui suivent.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeletePageAbsBoxes (PtrElement pElPage, PtrDocument pDoc, int viewNb)
-#else  /* __STDC__ */
-void                DeletePageAbsBoxes (pElPage, pDoc, viewNb)
-PtrElement          pElPage;
-PtrDocument         pDoc;
-int                 viewNb;
-
-#endif /* __STDC__ */
-
+void DeletePageAbsBoxes (PtrElement pElPage, PtrDocument pDoc, int viewNb)
 {
    PtrElement          pElPrevious, pElNext;
    ThotBool             stop;
@@ -784,7 +690,7 @@ int                 viewNb;
    Table2LoadResources : connecte les ressources de traitement des  
    tableaux hors de l'editeur (pour le print)          	                                        
   ----------------------------------------------------------------------*/
-void                Table2LoadResources ()
+void Table2LoadResources ()
 {
 
    if (ThotLocalActions[T_vertspan] == NULL)
