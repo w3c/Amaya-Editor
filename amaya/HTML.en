@@ -14,13 +14,13 @@ export
 translation
 
 TEXT_UNIT: Text
-GRAPHICS_UNIT: \240
+GRAPHICS_UNIT: \0
 SYMBOL_UNIT: Symbol
 PICTURE_UNIT: img
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
-C_Foot: \240
+C_Foot: \0
 HTML: html
 BODY: body
 Invalid_element: invalid element
@@ -37,7 +37,7 @@ NOSCRIPT: noscript
 Address: address
 Block_Quote: blockquote
 Horizontal_Rule: hr
-Basic_Set: \240
+Basic_Set: \0
 Paragraph: p
 H1: h1
 H2: h2
@@ -47,7 +47,7 @@ H5: h5
 H6: h6
 Preformatted: pre
 Anchor: a
-Basic_Elem: \240
+Basic_Elem: \0
 Subscript: sub
 Superscript: sup
 Span: span
@@ -95,7 +95,7 @@ Term_List: term list
 Term: dt
 Definition: dd
 Form: form
-Form_Element: \240
+Form_Element: \0
 Option_Menu: select
 Option: option
 OptGroup: optgroup

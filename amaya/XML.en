@@ -20,9 +20,9 @@ PAGE_BREAK: Page_break
 
 Language: xml:lang
 xmlcomment: comment
-xmlcomment_line: \240
+xmlcomment_line: \0
 xmlpi: PI
-xmlpi_line: \240
-doctype_line: \240
-cdata_line: \240
-XML_Element: \240
+xmlpi_line: \0
+doctype_line: \0
+cdata_line: \0
+XML_Element: \0

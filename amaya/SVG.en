@@ -5,12 +5,12 @@ export
 
 translation
 
-TEXT_UNIT: \240
-GRAPHICS_UNIT: \240
-SYMBOL_UNIT: \240
-PICTURE_UNIT: \240
+TEXT_UNIT: \0
+GRAPHICS_UNIT: \0
+SYMBOL_UNIT: \0
+PICTURE_UNIT: \0
 
-C_Empty: \240
+C_Empty: \0
 SVG: svg
 symbol_: symbol
 use_: use
@@ -18,7 +18,7 @@ style__: style
 line_: line
 text_: text
 circle_: circle
-SpanElement: \240
+SpanElement: \0
 color_profile: color-profile
 script_: script
 set_: set
@@ -30,11 +30,11 @@ font_face_uri: font-face-uri
 font_face_format: font-face-format
 font_face_name: font-face-name
 definition_src: definition-src
-DOCTYPE_line: \240
+DOCTYPE_line: \0
 XMLcomment: Comment
-XMLcomment_line: \240
+XMLcomment_line: \0
 XMLPI: PI
-XMLPI_line: \240
+XMLPI_line: \0
 
 Language: xml:lang
 xml_base: xml:base
