@@ -147,17 +147,17 @@ int TtaMakeFrame( Document doc, int view, int width, int height, int * volume )
     + true if ok
     + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-bool TtaAttachFrame( int frame_id, int window_id /* TODO rajouter des parametres pour indiquer a quel endroit dans la window on attache la frame (partie haute, partie basse, quel onglet?, frame volante ?)*/ )
+ThotBool TtaAttachFrame( int frame_id, int window_id /* TODO rajouter des parametres pour indiquer a quel endroit dans la window on attache la frame (partie haute, partie basse, quel onglet?, frame volante ?)*/ )
 {
 #ifdef _WX
   AmayaWindow * p_window = WindowsTable[window_id];
 
   if (p_window == NULL)
-    return false;
+    return FALSE;
 
   return p_window->AttachFrame( FrameTable[frame_id].WdFrame );  
 #else
-  return false;
+  return FALSE;
 #endif /* #ifdef _WX */
 }
 
@@ -171,12 +171,12 @@ bool TtaAttachFrame( int frame_id, int window_id /* TODO rajouter des parametres
     + true if ok
     + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-bool TtaDetachFrame( int frame_id, int window_id )
+ThotBool TtaDetachFrame( int frame_id, int window_id )
 {
 #ifdef _WX
-  return false;
+  return FALSE;
 #else
-  return false;
+  return FALSE;
 #endif /* #ifdef _WX */
 }
 
@@ -222,11 +222,11 @@ int TtaAttachPanel( int window_id )
     + true if ok
     + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-bool TtaDetachPanel( int panel_id, int window_id )
+ThotBool TtaDetachPanel( int panel_id, int window_id )
 {
 #ifdef _WX
-  return false;
+  return FALSE;
 #else
-  return false;
+  return FALSE;
 #endif /* #ifdef _WX */
 }
