@@ -3840,7 +3840,7 @@ Language  lang;
 #endif
 {
   ThotBool     endOfParsing = FALSE;
-  int          res;
+  int          res = 0;
   int          tmpLen = 0;
   int          offset = 0;
   int          i;
@@ -4021,11 +4021,8 @@ ThotBool  *xmlDoctype;
 {
 #define	 COPY_BUFFER_SIZE	1024
    char         bufferRead[COPY_BUFFER_SIZE];
-   char         tmpBuffer[COPY_BUFFER_SIZE];
-   char         tmp2Buffer[COPY_BUFFER_SIZE];
-   CHAR_T      *ptr;
+   int          i;
    int          res;
-   int          tmplen;
    ThotBool     endOfFile = FALSE;
    int          tmpLineRead = 0;
   
@@ -4046,7 +4043,8 @@ ThotBool  *xmlDoctype;
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
        if (res < COPY_BUFFER_SIZE)
 	   endOfFile = TRUE;
-       
+       i = 0;
+
        if (!*xmlDoctype)
 	 /* There is no DOCTYPE Declaration 
 	    We include a virtual DOCTYPE declaration so that EXPAT parser
@@ -4054,23 +4052,20 @@ ThotBool  *xmlDoctype;
 	 {
 	   if (*xmlDec)
 	     /* There is a XML declaration */
-	     /* We look for first '>' character */
+	     /* We look for the first '>' character */
 	     {
-	       strcpy (tmpBuffer, bufferRead);
-	       if ((ptr = ustrchr (tmpBuffer, TEXT('>'))))
+	       while ((bufferRead[i] != TEXT('>')) && i < res)
+		 i++;
+	       if (i < res)
 		 {
-		   ptr++;
-		   strcpy (tmp2Buffer, ptr);
-		   *ptr = WC_EOS;
-		   tmplen = strlen (tmpBuffer);
-		   if (!XML_Parse (parser, tmpBuffer, tmplen, FALSE))
+		   i++;
+		   if (!XML_Parse (parser, bufferRead, i, FALSE))
 		     {
 		       XmlParseError (XMLcontext.doc,
 				      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 		       XMLabort = TRUE;
 		     }
-		   res = res - tmplen;
-		   strcpy (bufferRead, tmp2Buffer);
+		   res = res - i;
 		 }
 	     }
 
@@ -4087,7 +4082,7 @@ ThotBool  *xmlDoctype;
 	 }
 
        /* Standard EXPAT processing */
-       if (!XML_Parse (parser, bufferRead, res, endOfFile))
+       if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
 	 {
 	   XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	   XMLabort = TRUE;
