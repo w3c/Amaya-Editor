@@ -6,6 +6,8 @@
 #include "JavaTypes.h"
 #include "JavaTypes_f.h"
 
+/* #define DEBUG_ARCH */
+
 /*
  * General conversion routines between java types and C types.
  */
@@ -83,13 +85,17 @@ void do_ptr_need_shift(void) {
 
     iptr = (int   *) jptr;
     if (*iptr == 0xAABBCCDD) {
-fprintf(stderr,"do_ptr_need_shift() : no\n");
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"do_ptr_need_shift() : no\n");
+#endif
         int_ptr_need_shift = 0;
 	return;
     }
     iptr++;
     if (*iptr == 0xAABBCCDD) {
-fprintf(stderr,"do_ptr_need_shift() : yes\n");
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"do_ptr_need_shift() : yes\n");
+#endif
         int_ptr_need_shift = 1;
 	return;
     }
@@ -105,6 +111,40 @@ int *JavaLongPtr2CIntPtr(jlong *in)
 
     if (int_ptr_need_shift) res++;
     return (res);
+}
+
+/*
+ * Another problem when creating Java internal (Unicode) strings:
+ *
+ * On an LSBF machine, the unicode string for an ASCII string is
+ *     0, S, 0, t, 0, r, 0, i, 0, n, 0, g, 0, 0
+ * on an MSBF this is :
+ *     S, 0, t, 0, r, 0, i, 0, n, 0, g, 0, 0, 0
+ * We need to check it since we are building strings directly in
+ * Kaffe memory.
+ */
+
+static int lsbf_architecture = -1;
+typedef union tst_lsbf { char str[2]; unsigned short int2; };
+void is_lsbf_architecture(void) {
+    static union tst_lsbf test;
+
+    test.int2 = 32;
+    if (test.str[0] == ' ') {
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"is_lsbf_architecture() : yes\n");
+#endif
+        lsbf_architecture = 1;
+	return;
+    } else if (test.str[1] == ' ') {
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"is_lsbf_architecture() : no\n");
+#endif
+        lsbf_architecture = 0;
+	return;
+    }
+    fprintf(stderr,"is_lsbf_architecture() : memory storage error !\n");
+    exit(1);
 }
 
 /*
@@ -147,7 +187,7 @@ void CElementType2JavaElementType(ElementType in, struct Hthotlib_ElementType* o
 
 void JavaDocument2CDocumentPtr(struct Hthotlib_Document* in, Document **out)
 {
-    *out = (Document *) JavaLongPtr2CIntPtr(&(unhand(in)->document));
+    *out = (Document *) &(unhand(in)->document);
 }
 void CDocumentPtr2JavaDocument(Document *in, struct Hthotlib_Document** out)
 {
@@ -240,6 +280,7 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
     int str_size = strlen(str);
     char *tmp, *src, *dst;
 
+    if (lsbf_architecture < 0) is_lsbf_architecture();
     if (buf_size <= 1) return;
     if (str_size == 0) {
         str[0] = '\0';
@@ -250,8 +291,13 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
     src = tmp = strdup(str);
     dst = str;
     while ((*src != '\0') && ((dst - str) < buf_size - 2)) {
-        *dst++ = *src++;
-	*dst++ = '\0';
+        if (lsbf_architecture) {
+	    *dst++ = *src++;
+	    *dst++ = '\0';
+	} else {
+	    *dst++ = '\0';
+	    *dst++ = *src++;
+	}
     }
     unhand(*out)->count = (src - tmp);
     *dst++ = '\0';
