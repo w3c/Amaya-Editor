@@ -272,7 +272,6 @@ ATTRIBUTES
 	END;	
    xlink_href:
 	BEGIN
-        AttrModify.Pre ->  AttrXlinkHrefWillBeChanged;
 	AttrModify.Post -> AttrXlinkHrefChanged;
 	AttrDelete.Pre ->  DeleteAttrXlinkHref;
 	END;

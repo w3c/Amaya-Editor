@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -73,20 +73,21 @@
 #include "tree_f.h"
 #include "undo_f.h"
 #include "views_f.h"
- 
+
 /* descriptor of the selection to do after redosplaying */
 typedef struct _SelectionDescriptor
   {
-     ThotBool            SDSelActive;
-     Element             SDElemSel;
-     int                 SDPremCar;
-     int                 SDDerCar;
-     Element             SDElemExt;
-     int                 SDCarExt;
+    Element             SDElemSel;
+    Element             SDElemExt;
+    Attribute           SDAttribute;
+    int                 SDPremCar;
+    int                 SDDerCar;
+    int                 SDCarExt;
+    ThotBool            SDSelActive;
   }
 SelectionDescriptor;
  
-static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
+static SelectionDescriptor NewDocSelection[MAX_DOCUMENTS];
 
 /*----------------------------------------------------------------------
    RedisplayDocViews demande le reaffichage de toutes les vues du	
@@ -891,12 +892,12 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    RedisplayCommand        Selon le mode d'affichage, execute ou   
    met en attente une commande de reaffichage secondaire.          
   ----------------------------------------------------------------------*/
-void         RedisplayCommand (Document document)
+void RedisplayCommand (Document doc)
 {
-   if (documentDisplayMode[document - 1] == DisplayImmediately)
+   if (documentDisplayMode[doc - 1] == DisplayImmediately)
      {
 	/* reaffiche ce qui a deja ete prepare' */
-	RedisplayDocViews (LoadedDocument[document - 1]);
+	RedisplayDocViews (LoadedDocument[doc - 1]);
      }
 }
 
@@ -905,18 +906,19 @@ void         RedisplayCommand (Document document)
 /*----------------------------------------------------------------------
   NewSelection
   ----------------------------------------------------------------------*/
-void    NewSelection (Document document, Element element,
-		      int firstCharacter, int lastCharacter)
+void NewSelection (Document doc, Element element, Attribute attr,
+		   int firstCharacter, int lastCharacter)
 {
 
    /* annule l'extension precedente */
-   documentNewSelection[document - 1].SDElemExt = NULL;
-   documentNewSelection[document - 1].SDCarExt = 0;
+   NewDocSelection[doc - 1].SDElemExt = NULL;
+   NewDocSelection[doc - 1].SDCarExt = 0;
    /* enregistre cette nouvelle selection */
-   documentNewSelection[document - 1].SDSelActive = TRUE;
-   documentNewSelection[document - 1].SDElemSel = element;
-   documentNewSelection[document - 1].SDPremCar = firstCharacter;
-   documentNewSelection[document - 1].SDDerCar = lastCharacter;
+   NewDocSelection[doc - 1].SDSelActive = TRUE;
+   NewDocSelection[doc - 1].SDAttribute = attr;
+   NewDocSelection[doc - 1].SDElemSel = element;
+   NewDocSelection[doc - 1].SDPremCar = firstCharacter;
+   NewDocSelection[doc - 1].SDDerCar = lastCharacter;
 }
 
 /*----------------------------------------------------------------------
@@ -925,8 +927,9 @@ void    NewSelection (Document document, Element element,
 void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
 {
    /* enregistre cette nouvelle extension de selection */
-   documentNewSelection[doc - 1].SDElemExt = element;
-   documentNewSelection[doc - 1].SDCarExt = lastCharacter;
+  if (NewDocSelection[doc - 1].SDAttribute == NULL)
+    NewDocSelection[doc - 1].SDElemExt = element;
+   NewDocSelection[doc - 1].SDCarExt = lastCharacter;
 }
 
 /*----------------------------------------------------------------------
@@ -940,7 +943,7 @@ void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
    view: the view to be closed.
 
   ----------------------------------------------------------------------*/
-void                TtaFreeView (Document document, View view)
+void TtaFreeView (Document document, View view)
 {
    PtrDocument         pDoc;
 
@@ -964,14 +967,14 @@ void                TtaFreeView (Document document, View view)
 /*----------------------------------------------------------------------
   IsSelectionRegistered
   ----------------------------------------------------------------------*/
-ThotBool     IsSelectionRegistered (Document document, ThotBool * abort)
+ThotBool IsSelectionRegistered (Document doc, ThotBool *abort)
 {
-   ThotBool            ret;
+  ThotBool            ret;
 
-   ret = documentNewSelection[document - 1].SDSelActive;
-   if (ret)
-      *abort = (documentNewSelection[document - 1].SDElemSel == NULL);
-   return ret;
+  ret = NewDocSelection[doc - 1].SDSelActive;
+  if (ret)
+    *abort = (NewDocSelection[doc - 1].SDElemSel == NULL);
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -1002,29 +1005,29 @@ ThotBool     IsSelectionRegistered (Document document, ThotBool * abort)
    it is initially in the immediate mode.
 
    Parameters:
-   document: the document.
+   doc: the document.
    NewDisplayMode: new display mode for that document.
   ----------------------------------------------------------------------*/
-void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
+void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 {
   DisplayMode       oldDisplayMode;
   PtrDocument       pDoc;
 
   UserErrorCode = 0;
   /* Checks the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS)
+  if (doc < 1 || doc > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
+  else if (LoadedDocument[doc - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else
     /* parameter document is ok */
     {
-      pDoc = LoadedDocument[document - 1];
+      pDoc = LoadedDocument[doc - 1];
       /* si le document n'a pas de schema de presentation, on ne fait rien */
       if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
 	return;
 
-      oldDisplayMode = documentDisplayMode[document - 1];
+      oldDisplayMode = documentDisplayMode[doc - 1];
       if (oldDisplayMode != newDisplayMode)
 	/* il y a effectivement changement de mode */
 	{
@@ -1039,14 +1042,14 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 	      else if (newDisplayMode == SuspendDisplay)
 		TtaClearViewSelections ();
 	      /* on met a jour le mode d'affichage */
-	      documentDisplayMode[document - 1] = newDisplayMode;
+	      documentDisplayMode[doc - 1] = newDisplayMode;
 	    }
 	  else if (newDisplayMode == DisplayImmediately)
 	    /* le document passe du mode affichage differe' ou sans calcul  */
 	    /* d'image au mode  d'affichage immediat */
 	    {
 	      /* on met a jour le mode d'affichage */
-	      documentDisplayMode[document - 1] = newDisplayMode;
+	      documentDisplayMode[doc - 1] = newDisplayMode;
 	      
               if (oldDisplayMode == NoComputedDisplay)
 		/* il faut recalculer l'image */
@@ -1054,7 +1057,7 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 	      else if (oldDisplayMode == SuspendDisplay)
 		AbstractImageUpdated (pDoc);
 	      
-	      if (!documentNewSelection[document - 1].SDSelActive)
+	      if (!NewDocSelection[doc - 1].SDSelActive)
 		{
 		  /* la selection n'a pas change', on la rallume */
 		  if (oldDisplayMode == SuspendDisplay)
@@ -1064,7 +1067,7 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 		/* la selection a change', on etablit la selection */
 		/* enregistree */
 		{
-		  if (documentNewSelection[document - 1].SDElemSel == NULL)
+		  if (NewDocSelection[doc - 1].SDElemSel == NULL)
 		    /* c'est une annulation de selection */
 		    {
 		      if (ThotLocalActions[T_resetsel])
@@ -1073,33 +1076,33 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 		  else
 		    {
 		      /* il y a effectivement une selection a etablir */
-		      if (documentNewSelection[document - 1].SDPremCar == 0 &&
-			  documentNewSelection[document - 1].SDDerCar == 0)
+		      if (NewDocSelection[doc - 1].SDPremCar == 0 &&
+			  NewDocSelection[doc - 1].SDDerCar == 0)
 			/* selection d'un element complet */
-			SelectElement (pDoc, (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
+			SelectElement (pDoc, (PtrElement) (NewDocSelection[doc - 1].SDElemSel), TRUE, TRUE);
 		      else
 			/* selection d'une chaine */
 			if (ThotLocalActions[T_selstring])
 			  (*ThotLocalActions[T_selstring]) (pDoc,
-			      (PtrElement) (documentNewSelection[document - 1].SDElemSel),
-			      documentNewSelection[document - 1].SDPremCar,
-			      documentNewSelection[document - 1].SDDerCar);
+			      (PtrElement) (NewDocSelection[doc - 1].SDElemSel),
+			      NewDocSelection[doc - 1].SDPremCar,
+			      NewDocSelection[doc - 1].SDDerCar);
 		      /* il n'y a plus de selection a etablir */
-		      documentNewSelection[document - 1].SDElemSel = NULL;
+		      NewDocSelection[doc - 1].SDElemSel = NULL;
 		    }
 		  /* etablit l'extension de selection enregistree */
-		  if (documentNewSelection[document - 1].SDElemExt != NULL)
+		  if (NewDocSelection[doc - 1].SDElemExt != NULL)
 		    /* il y a une extension de selection a etablir */
 		    {
 		      if (ThotLocalActions[T_extendsel])
-			(*ThotLocalActions[T_extendsel]) ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
-				documentNewSelection[document - 1].SDCarExt,
+			(*ThotLocalActions[T_extendsel]) ((PtrElement) (NewDocSelection[doc - 1].SDElemExt),
+				NewDocSelection[doc - 1].SDCarExt,
 				FALSE, FALSE, FALSE);
 		      /* il n'y a plus d'extension de selection a etablir */
-		      documentNewSelection[document - 1].SDElemExt = NULL;
+		      NewDocSelection[doc - 1].SDElemExt = NULL;
 		    }
 		  /* plus de selection a faire pour ce document */
-		  documentNewSelection[document - 1].SDSelActive = FALSE;
+		  NewDocSelection[doc - 1].SDSelActive = FALSE;
 		}
 	      
               /* reaffiche ce qui a deja ete prepare' */
@@ -1111,12 +1114,12 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 	      /* au mode d'affichage sans calcul d'image  */
 	      DestroyImage (pDoc);
 	      /* on met a jour le mode d'affichage */
-	      documentDisplayMode[document - 1] = newDisplayMode;
+	      documentDisplayMode[doc - 1] = newDisplayMode;
 	    }
 	  else if (oldDisplayMode == NoComputedDisplay)
 	    {
 	      /* on met a jour le mode d'affichage */
-	      documentDisplayMode[document - 1] = newDisplayMode;
+	      documentDisplayMode[doc - 1] = newDisplayMode;
 	      /* le document passe du mode affichage sans calcul d'image   */
 	      /* au mode d'affichage differe'  */
 	      RebuildImage (pDoc);
@@ -1125,12 +1128,12 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 		   newDisplayMode == DeferredDisplay)
 	    {
 	      /* on met a jour le mode d'affichage */
-	      documentDisplayMode[document - 1] = newDisplayMode;
+	      documentDisplayMode[doc - 1] = newDisplayMode;
 	      AbstractImageUpdated (pDoc);
 	    }
 	  else
 	    /* on met a jour le mode d'affichage */
-	    documentDisplayMode[document - 1] = newDisplayMode;
+	    documentDisplayMode[doc - 1] = newDisplayMode;
 
 	}
     }
@@ -1140,7 +1143,6 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
    TtaGetDisplayMode
 
    Returns the current display mode for a document.
-
    Parameter:
    document: the document.
 

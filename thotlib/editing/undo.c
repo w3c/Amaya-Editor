@@ -16,7 +16,6 @@
 #include "constmedia.h"
 #include "constmenu.h"
 #include "typemedia.h"
-#include "modif.h"
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
@@ -679,8 +678,8 @@ static void CancelOldestSequence (PtrDocument pDoc, ThotBool undo)
    firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
 	 that must be set when the operation will be undone.
   ----------------------------------------------------------------------*/
-void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel,
-			  PtrElement lastSel, int firstSelChar, int lastSelChar)
+void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
+			  PtrAttribute attr, int firstSelChar, int lastSelChar)
 {
   PtrEditOperation	editOp;
 
@@ -705,6 +704,16 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel,
   editOp->EoFirstSelectedChar = firstSelChar;
   editOp->EoLastSelectedEl = lastSel;
   editOp->EoLastSelectedChar = lastSelChar;
+  if (attr)
+    {
+      editOp->EoSelectedAttrSch = attr->AeAttrSSchema;
+      editOp->EoSelectedAttr = attr->AeAttrNum;
+    }
+  else
+    {
+      editOp->EoSelectedAttrSch = NULL;
+      editOp->EoSelectedAttr = 0;
+    }
   /* update the number of editing commands remaining in the history */
   UpdateHistoryLength (1, pDoc);
   /* If the history is too long, cancel the oldest sequence in the history */
@@ -812,9 +821,10 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
    PtrElement		pEl, pSibling,
                         newParent, newPreviousSibling, newCreatedElement,
                         newSavedElement;
-   PtrAttribute         SavedAttribute, CreatedAttribute;
+   PtrAttribute         SavedAttribute, CreatedAttribute, pAttr;
    PtrDocument		pDoc;
    PtrEditOperation	queue;
+   AttributeType        attrType;
    NotifyElement	notifyEl;
    NotifyOnValue        notifyGraph;
    NotifyAttribute	notifyAttr;
@@ -852,10 +862,28 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 			(SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
         notifyEl.position = 0;
         CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-        if (editOp->EoFirstSelectedChar > 0)
+        if (editOp->EoSelectedAttrSch)
+	  {
+	    attrType.AttrSSchema = editOp->EoSelectedAttrSch;
+	    attrType.AttrTypeNum = editOp->EoSelectedAttr;
+	    pAttr = TtaGetAttribute (editOp->EoFirstSelectedEl,
+				     attrType);
+	    HighlightAttrSelection (LoadedDocument[doc - 1],
+				    editOp->EoFirstSelectedEl,
+				    pAttr,
+				    editOp->EoFirstSelectedChar,
+				    editOp->EoLastSelectedChar);
+	  }
+        else if (editOp->EoFirstSelectedChar > 0)
           {
           if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
-   	     i = editOp->EoLastSelectedChar;
+	    {
+	      if (editOp->EoFirstSelectedEl->ElTerminal &&
+		  editOp->EoFirstSelectedEl->ElLeafType == LtPicture)
+		i = editOp->EoFirstSelectedChar;
+	      else
+		i = editOp->EoLastSelectedChar;
+	    }
           else
    	     i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl));
           TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
@@ -1116,6 +1144,7 @@ static void OpenRedoSequence (Document doc)
   PtrDocument		pDoc;
   PtrEditOperation	editOp;
   Element		firstSel, lastSel;
+  PtrAttribute          pAttr;
   int			firstSelChar, lastSelChar, i;
 
   pDoc = LoadedDocument [doc - 1];
@@ -1129,12 +1158,27 @@ static void OpenRedoSequence (Document doc)
   pDoc->DocLastUndone = editOp;
   editOp->EoNextOp = NULL;
   /* store the current selection in this descriptor */
-  TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
-  TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
-  editOp->EoFirstSelectedEl = (PtrElement)firstSel;
-  editOp->EoFirstSelectedChar = firstSelChar;
-  editOp->EoLastSelectedEl = (PtrElement)lastSel;
-  editOp->EoLastSelectedChar = lastSelChar;
+  if (AbsBoxSelectedAttr)
+    {
+      pAttr = AbsBoxSelectedAttr->AbCreatorAttr;
+      editOp->EoSelectedAttrSch = pAttr->AeAttrSSchema;
+      editOp->EoSelectedAttr = pAttr->AeAttrNum;
+      editOp->EoFirstSelectedEl = AbsBoxSelectedAttr->AbElement;
+      editOp->EoFirstSelectedChar = FirstSelectedCharInAttr;
+      editOp->EoLastSelectedEl = AbsBoxSelectedAttr->AbElement;
+      editOp->EoLastSelectedChar = LastSelectedCharInAttr;
+    }
+  else
+    {
+      editOp->EoSelectedAttrSch = NULL;
+      editOp->EoSelectedAttr = 0;
+      TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
+      TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
+      editOp->EoFirstSelectedEl = (PtrElement)firstSel;
+      editOp->EoFirstSelectedChar = firstSelChar;
+      editOp->EoLastSelectedEl = (PtrElement)lastSel;
+      editOp->EoLastSelectedChar = lastSelChar;
+    }
   /* update the number of editing sequences registered in the Redo queue */
   UpdateRedoLength (1, pDoc);
   /* If the Redo queue is too long, cancel the oldest sequence */
@@ -1148,7 +1192,7 @@ static void OpenRedoSequence (Document doc)
    of document doc and forget about this sequence: it won't be redone by
    the next Redo command issued by the user.
   ----------------------------------------------------------------------*/
-void                UndoNoRedo (Document doc)
+void UndoNoRedo (Document doc)
 {
    PtrDocument          pDoc;
    ThotBool		doit;
@@ -1180,7 +1224,7 @@ void                UndoNoRedo (Document doc)
    Undo the latest sequence of editing operations recorded in the history
    of document doc and register it in the Redo queue.
   ----------------------------------------------------------------------*/
-void                TtcUndo (Document doc, View view)
+void TtcUndo (Document doc, View view)
 {
    PtrDocument          pDoc;
    DisplayMode          dispMode;
@@ -1226,10 +1270,11 @@ void                TtcUndo (Document doc, View view)
    Redo the latest sequence of editing operations undone by the TtcUndo
    and register it in the editing history.
   ----------------------------------------------------------------------*/
-void                TtcRedo (Document doc, View view)
+void TtcRedo (Document doc, View view)
 {
    PtrDocument          pDoc;
    Element		firstSel, lastSel;
+   PtrAttribute         pAttr;
    DisplayMode          dispMode;
    int			firstSelChar, lastSelChar, i;
    ThotBool		doit;
@@ -1240,11 +1285,21 @@ void                TtcRedo (Document doc, View view)
       return;
 
    /* Start a new sequence in the Undo queue */
-   TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
-   TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
+  if (AbsBoxSelectedAttr)
+    {
+      pAttr = AbsBoxSelectedAttr->AbCreatorAttr;
+      firstSelChar = FirstSelectedCharInAttr;
+      lastSelChar = LastSelectedCharInAttr;
+    }
+  else
+    {
+      pAttr = NULL;
+      TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
+      TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
+    }
    TtaUnselect (doc);
    OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
-			firstSelChar, lastSelChar);
+			pAttr, firstSelChar, lastSelChar);
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);

@@ -15,7 +15,6 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "modif.h"
 #include "appdialogue.h"
 #include "dialog.h"
 #ifdef _WINDOWS

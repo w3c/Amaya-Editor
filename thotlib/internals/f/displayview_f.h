@@ -42,9 +42,10 @@ extern void UndisplayAttribute ( PtrElement pEl,
 extern void DisplayAttribute ( PtrElement pEl,
                                PtrAttribute pAttr,
                                Document document );
-extern void RedisplayCommand ( Document document );
-extern void NewSelection ( Document document,
+extern void RedisplayCommand ( Document doc );
+extern void NewSelection ( Document doc,
                            Element element,
+                           Attribute attr,
                            int firstCharacter,
                            int lastCharacter );
 extern void NewSelectionExtension ( Document doc,
@@ -52,9 +53,9 @@ extern void NewSelectionExtension ( Document doc,
                                     int lastCharacter );
 extern void TtaFreeView ( Document document,
                           View view );
-extern ThotBool IsSelectionRegistered ( Document document,
-                                        ThotBool * abort );
-extern void TtaSetDisplayMode ( Document document,
+extern ThotBool IsSelectionRegistered ( Document doc,
+                                        ThotBool *abort );
+extern void TtaSetDisplayMode ( Document doc,
                                 DisplayMode newDisplayMode );
 extern DisplayMode TtaGetDisplayMode ( Document document );
 
@@ -96,9 +97,10 @@ extern void UndisplayAttribute (/* PtrElement pEl,
 extern void DisplayAttribute (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  Document document */);
-extern void RedisplayCommand (/* Document document */);
-extern void NewSelection (/* Document document,
+extern void RedisplayCommand (/* Document doc */);
+extern void NewSelection (/* Document doc,
                              Element element,
+                             Attribute attr,
                              int firstCharacter,
                              int lastCharacter */);
 extern void NewSelectionExtension (/* Document doc,
@@ -106,9 +108,9 @@ extern void NewSelectionExtension (/* Document doc,
                                       int lastCharacter */);
 extern void TtaFreeView (/* Document document,
                             View view */);
-extern ThotBool IsSelectionRegistered (/* Document document,
-                                          ThotBool * abort */);
-extern void TtaSetDisplayMode (/* Document document,
+extern ThotBool IsSelectionRegistered (/* Document doc,
+                                          ThotBool *abort */);
+extern void TtaSetDisplayMode (/* Document doc,
                                   DisplayMode newDisplayMode */);
 extern DisplayMode TtaGetDisplayMode (/* Document document */);
 

@@ -134,23 +134,28 @@ static void CopyString (Buffer source, Buffer target, int count,
 }
 
 /*----------------------------------------------------------------------
-   RegisterInHistory
-   register element pEl in the editing history, to allow UNDO
+  RegisterInHistory
+  register element pEl and attribute pAttr in the UNDO history
   ----------------------------------------------------------------------*/
-static void RegisterInHistory (PtrElement pEl, int frame,
+static void RegisterInHistory (PtrElement pEl, PtrAttribute pAttr, int frame,
 			       int firstCharIndex, int lastCharIndex)
 {
-   PtrDocument         pDoc;
-   int                 view;
-   ThotBool            opened;
+  PtrDocument         pDoc;
+  int                 view;
+  ThotBool            open;
 
-   GetDocAndView (frame, &pDoc, &view);
-   opened = pDoc->DocEditSequence;
-   if (!opened)
-     OpenHistorySequence (pDoc, pEl, pEl, firstCharIndex, lastCharIndex);
-   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
-   if (!opened)
-     CloseHistorySequence (pDoc);
+  GetDocAndView (frame, &pDoc, &view);
+  open = pDoc->DocEditSequence;
+  if (SelPosition)
+    lastCharIndex--;
+  if (!open)
+    OpenHistorySequence (pDoc, pEl, pEl, pAttr, firstCharIndex, lastCharIndex);
+  if (pAttr == NULL)
+    {
+      AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+      if (!open)
+	CloseHistorySequence (pDoc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -422,13 +427,13 @@ static ThotBool CloseTextInsertionWithControl ()
 	      pSelBox->BxAbstractBox->AbCreatorAttr)
 	    {
 	      /* update the selection within the attribute */
-	      FirstSelectedCharInAttr = pSelBox->BxFirstChar + pViewSelEnd->VsIndBox + 1;
-	      LastSelectedCharInAttr = pSelBox->BxFirstChar + pViewSel->VsIndBox + 1;
-	      SelPosition = (FirstSelectedCharInAttr < LastSelectedCharInAttr);
+	      FirstSelectedCharInAttr = pSelBox->BxFirstChar + pViewSelEnd->VsIndBox;
+	      LastSelectedCharInAttr = pSelBox->BxFirstChar + pViewSel->VsIndBox;
+	      SelPosition = (LastSelectedCharInAttr <= FirstSelectedCharInAttr);
 	    }
 	  NewContent (pSelBox->BxAbstractBox);
 	  /* update the new selection */
-	  if (pViewSel->VsBox)
+	  if (pViewSel->VsBox && LastInsertAttr == NULL)
 	    {
 	      i = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
 	      /* Faut-il changer l'autre extremite de la selection ? */
@@ -798,22 +803,20 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 	       {
 		  LastInsertAttr = pBox->BxAbstractBox->AbCreatorAttr;
 		  LastInsertAttrElem = pBox->BxAbstractBox->AbElement;
-		  APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE);
-		  /* Don't register the editing operation in the history:
-		     procedure NewContent does the job */
+		  if (!APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE))
+		    /* register the editing operation in the history */
+		    RegisterInHistory (LastInsertAttrElem, LastInsertAttr, frame,
+				       FirstSelectedCharInAttr, LastSelectedCharInAttr);
 	       }
 	  }
 	else if (LastInsertElText != pBox->BxAbstractBox->AbElement)
 	  {
 	    /* it's a text element */
 	     LastInsertElText = pBox->BxAbstractBox->AbElement;
-	     APPtextModify (LastInsertElText, frame, TRUE);
-	     /* register the editing operation in the history */
-	     i = FirstSelectedChar;
-	     k = LastSelectedChar;
-	     if (SelPosition)
-	        k--;
-	     RegisterInHistory (LastInsertElText, frame, i, k);
+	     if (!APPtextModify (LastInsertElText, frame, TRUE))
+	       /* register the editing operation in the history */
+	       RegisterInHistory (LastInsertElText, NULL, frame,
+				  FirstSelectedChar, LastSelectedChar);
 	  }
 
 	/* Memorize  the enclosing cell */
@@ -1368,7 +1371,7 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
       /* give access to the application image menu */
       if (!APPtextModify (pAb->AbElement, frame, TRUE))
 	/* register the editing operation in the history */
-	RegisterInHistory (pAb->AbElement, frame, 0, 0);	     
+	RegisterInHistory (pAb->AbElement, NULL, frame, 0, 0);	     
     }
 }
 
@@ -1560,7 +1563,9 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	pTargetBuffer->BuContent[i] = EOS;
 	
 	/* Faut-il liberer le buffer 'pTargetBuffer' ? */
-	if (pTargetBuffer->BuLength == 0 && charsDelta != pAb->AbVolume)
+	if (pTargetBuffer->BuLength == 0 &&
+	    (charsDelta != pAb->AbVolume ||
+	     (charsDelta == pAb->AbVolume && pTargetBuffer->BuPrevious)))
 	  {
 	    /* Est-ce que l'on libere le premier buffer du pave ? */
 	    if (pTargetBuffer == pAb->AbText)
@@ -1575,7 +1580,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	    
 	    if (pTargetBuffer == pViewSel->VsBuffer)
 	      {
-	    /* the selection points to a freed buffer */
+		/* the selection points to a freed buffer */
 		if (pSourceBuffer && pSourceBuffer->BuNext)
 		  /* move after the deleted part */
 		  pViewSel->VsBuffer = pSourceBuffer->BuNext;
@@ -1702,7 +1707,7 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 {
   PtrTextBuffer       pTargetBuffer;
   ViewFrame          *pFrame;
-  int                 i, end;
+  int                 start, end;
   int                 xDelta, charsDelta;
   int                 spacesDelta;
 
@@ -1712,28 +1717,25 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
       if (pAb->AbLeafType == LtText)
 	{
 	  pFrame = &ViewFrameTable[frame - 1];
+	  /* index of the beginning */
+	  pTargetBuffer = NULL;
+	  start = pFrame->FrSelectionBegin.VsIndBox;
+	  end = pFrame->FrSelectionEnd.VsIndBuf;
+	  if (SelPosition)
+	    /* suppress the next char */
+	    end++;
 	  /* get values xDelta, spacesDelta, charsDelta */
-	  if (pFrame->FrSelectionBegin.VsIndBox == pAb->AbVolume)
+	  if (start == pAb->AbVolume)
 	    {
 	      xDelta = 0;
 	      spacesDelta = 0;
 	    }
 	  else
-	    {
-	      /* index of the beginning */
-	      pTargetBuffer = NULL;
-	      end = pFrame->FrSelectionEnd.VsIndBuf;
-	      if (SelPosition)
-		/* suppress the next char */
-		end++;
-	      i = 0;
-	      CopyBuffers (pBox->BxFont, frame,
-			   pFrame->FrSelectionBegin.VsIndBuf,
-			   end, i,
-			   pFrame->FrSelectionBegin.VsBuffer,
-			   pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
-			   &xDelta, &spacesDelta, &charsDelta);
-	    }
+	    CopyBuffers (pBox->BxFont, frame,
+			 start, end, 0,
+			 pFrame->FrSelectionBegin.VsBuffer,
+			 pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
+			 &xDelta, &spacesDelta, &charsDelta);
 	}
     }
   /* remove the contents of the current selection */
@@ -1900,6 +1902,9 @@ static void         ContentEditing (int editType)
   PtrBox              pSelBox;
   PtrAbstractBox      pAb, pCell;
   PtrAbstractBox      pLastAb, pBlock;
+  PtrAttribute        pAttr;
+  PtrElement          pEl;
+  PtrDocument         pDoc;
   AbDimension        *pPavD1;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
@@ -1910,7 +1915,7 @@ static void         ContentEditing (int editType)
   int                 x, y;
   int                 i, j;
   int                 spacesDelta, charsDelta;
-  int                 frame;
+  int                 frame, doc;
   ThotBool            still, ok, textPasted;
   ThotBool            defaultWidth, defaultHeight;
   ThotBool            show, graphEdit;
@@ -2107,7 +2112,24 @@ static void         ContentEditing (int editType)
 	  
 	  if (pAb)
 	    {
-	      if (FirstSelectedElement != LastSelectedElement ||
+	      if ((editType == TEXT_CUT || editType == TEXT_DEL) &&
+		  pAb->AbCreatorAttr && pAb->AbVolume == 0)
+		{
+		  /* delete on an empty attribute value remove the attribute */
+		  pAttr = pAb->AbCreatorAttr;
+		  pEl = pAb->AbElement;
+		  doc = FrameTable[frame].FrDoc;
+		  pDoc = LoadedDocument[doc - 1];
+		  if (pDoc->DocEditSequence)
+		    /* close the previous sequence */
+		    CloseHistorySequence (pDoc);
+		  OpenHistorySequence (pDoc, pEl, pEl, pAttr, 1, 0);
+		  TtaRemoveAttribute ((Element) pEl, (Attribute) pAttr, doc);
+		  CloseHistorySequence (pDoc);
+		  SelectElement (pDoc, pEl, FALSE, FALSE);
+		  return;
+		}
+	      else if (FirstSelectedElement != LastSelectedElement ||
 		  pAb != pLastAb)
 		/* more than one element or one abstract box */
 		pAb = NULL;
@@ -2310,11 +2332,14 @@ static void         ContentEditing (int editType)
 		    pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar > pAb->AbVolume)
 		  {
 		    /* current selection is at the element end */
-		    if (ThotLocalActions[T_deletenextchar] != NULL)
+		    if (pAb->AbPresentationBox && pAb->AbCanBeModified )
+		      /* do nothing */
+		      DefClip (frame, 0, 0, 0, 0);		      
+		    else if (ThotLocalActions[T_deletenextchar] != NULL)
 		      (*ThotLocalActions[T_deletenextchar]) (frame,
 						       pAb->AbElement, FALSE);
 		    else
-		      /* Pas de reaffichage */
+		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);
 		    /* Il n'est pas necessaire de mettre a jour la selection */
 		    pFrame->FrReady = TRUE;
@@ -3444,7 +3469,15 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
-	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
+	  if (AbsBoxSelectedAttr && FirstSelectedCharInAttr < LastSelectedCharInAttr)
+	    /* the history sequence will be closed at the end of the insertion */
+	    OpenHistorySequence (pDoc, firstEl, lastEl,
+				 AbsBoxSelectedAttr->AbCreatorAttr,
+				 FirstSelectedCharInAttr,
+				 LastSelectedCharInAttr);
+	  else if (firstChar < lastChar)
+	    /* the history sequence will be closed at the end of the insertiont */
+	    OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar, lastChar);
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
 	    {
@@ -3503,7 +3536,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	    (*ThotLocalActions[T_unlock]) ();
 
 	  /* close the undo sequence */
-	  CloseHistorySequence (pDoc);
+	  /* CloseHistorySequence (pDoc);*/
 
 	  /* compare the document encoding and the character value */
 	  if (pDoc->DocCharset == US_ASCII && c > 127)
@@ -3646,12 +3679,12 @@ void TtcDeletePreviousChar (Document doc, View view)
       if (delPrev)
 	{
 	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	  if (pViewSel->VsBox != NULL &&
-	      pViewSel->VsBox->BxAbstractBox != NULL &&
+	  if (pViewSel->VsBox &&
+	      pViewSel->VsBox->BxAbstractBox &&
 	      (!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
-	       pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 0 ||
-	       (pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 1 &&
-		pViewSel->VsBox->BxAbstractBox->AbVolume == 1)))
+	       pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 1))
+	    if (!pViewSel->VsBox->BxAbstractBox->AbPresentationBox ||
+		pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox > 1)
 	    InsertChar (frame, 127, -1);
 	}
       else
@@ -3911,7 +3944,7 @@ void TtcPaste (Document doc, View view)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
 
 	  /* start the undo sequence */
-	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
+	  OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar, lastChar);
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
 	    {

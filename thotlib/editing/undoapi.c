@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -62,7 +62,7 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
 			  Element lastSel, int firstSelChar,
 				   int lastSelChar)
 {
-  int i;
+  int           i;
 
   if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
@@ -86,7 +86,7 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
 
       /* inits the history sequence */
       OpenHistorySequence (LoadedDocument [document - 1], 
-			   (PtrElement)firstSel, (PtrElement)lastSel, 
+			   (PtrElement)firstSel, (PtrElement)lastSel, NULL,
 			   firstSelChar, lastSelChar);	     
     }
 }
@@ -100,7 +100,7 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
-ThotBool      TtaCloseUndoSequence (Document document)
+ThotBool TtaCloseUndoSequence (Document document)
 {
   ThotBool	result;
 

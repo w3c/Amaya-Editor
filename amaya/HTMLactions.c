@@ -750,10 +750,6 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	   /* manually invoke the callback */
 	   FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
 				   (void *) ctx);
-	   /*
-	     if (PseudoAttr != NULL)
-	     TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	   */
 	 }
        else
 	 /* the target element seems to be in another document */
@@ -787,6 +783,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	       TtaSetStatus (doc, 1,
 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			   documentURL);
+	       TtaFreeMemory (url);
+	       TtaFreeMemory (ctx);
 	       return (FALSE);
 	     }
 #ifdef ANNOTATIONS
@@ -834,6 +832,11 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 					     method, history, 
 					     (void *) FollowTheLink_callback,
 					     (void *) ctx, charset);
+	     }
+	   else
+	     {
+	       TtaFreeMemory (url);
+	       TtaFreeMemory (ctx);
 	     }
 	 }
        return (TRUE);

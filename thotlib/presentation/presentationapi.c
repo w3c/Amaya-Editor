@@ -229,7 +229,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	  
 	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
-	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	      OpenHistorySequence (pDoc, pEl, pEl, NULL,0, 0);
 	      histOpen = TRUE;
 	    }
 
@@ -376,7 +376,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	  
 	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
-	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	      OpenHistorySequence (pDoc, pEl, pEl, NULL, 0, 0);
 	      histOpen = TRUE;
 	    }
 
@@ -621,7 +621,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	  
 	  if (!BoxCreating && !pDoc->DocEditSequence)
 	    {
-	      OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	      OpenHistorySequence (pDoc, pEl, pEl, NULL, 0, 0);
 	      histOpen = TRUE;
 	    }
 	  if (attrH)
@@ -789,7 +789,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	   
 	   if (!BoxCreating && !pDoc->DocEditSequence)
 	     {
-	       OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	       OpenHistorySequence (pDoc, pEl, pEl, NULL, 0, 0);
 	       histOpen = TRUE;
 	     }
 

@@ -32,6 +32,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
+#include "select_tv.h"
 #ifndef NODISPLAY
 #include "frame_tv.h"
 #endif
@@ -289,7 +290,8 @@ static void SetContent (Element element, unsigned char *content,
 				   &lastSelection, &firstChar,
 				   &lastChar);
       changeSelection = FALSE;
-      if (selOk && selDoc == LoadedDocument[document - 1])
+      if (selOk && selDoc == LoadedDocument[document - 1] &&
+	  AbsBoxSelectedAttr == NULL)
 	{
 	  if (pEl == firstSelection)
 	    /* The selection starts in the element */

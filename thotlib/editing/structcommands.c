@@ -17,7 +17,6 @@
 #include "constmedia.h"
 #include "constmenu.h"
 #include "typemedia.h"
-#include "modif.h"
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
@@ -1277,7 +1276,7 @@ void CutCommand (ThotBool save)
 		  {
 		    /* open the sequence of editing operations for the history */
 		    OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
-				         firstCharInit, lastCharInit);
+				         NULL, firstCharInit, lastCharInit);
 		    recorded = FALSE;
 		    if (firstChar > 1)
 		      /* la selection commence a l'interieur d'un element */
@@ -2629,8 +2628,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		ok = FALSE;
 	      else
 		{
-		OpenHistorySequence (pSelDoc, firstSel, lastSel, firstChar,
-				     lastChar);
+		OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
+				     firstChar, lastChar);
 	        ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum, pSS);
 		CloseHistorySequence (pSelDoc);
 		}
@@ -2651,8 +2650,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		if (firstSel != lastSel)
 		  {
 		    /* store the command in the history */
-		    OpenHistorySequence (pSelDoc, firstSel, lastSel, firstChar,
-				         lastChar);
+		    OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
+					 firstChar, lastChar);
 		    pEl = firstSel;
 		    do
 		      {
@@ -2816,7 +2815,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	  if (ok && pEl != NULL)
 	    {
 	      /* After element */
-	      OpenHistorySequence (pSelDoc, firstSel, lastSel,
+	      OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
 				   origFirstChar, origLastChar);
 	      ok = !CannotInsertNearElement (pEl, FALSE);
 	      if (ok)

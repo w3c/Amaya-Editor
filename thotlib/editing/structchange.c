@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,7 +19,6 @@
 #include "constmenu.h"
 #include "typemedia.h"
 #include "language.h"
-#include "modif.h"
 #include "appaction.h"
 #include "appstruct.h"
 #include "fileaccess.h"
@@ -999,8 +998,8 @@ void StructReturnKey ()
       if (CanSplitElement (firstSel, firstChar, TRUE, &pNewAncest, &pEl,
 				     &pElReplicate))
         {
-	  OpenHistorySequence (pDoc, firstSel,
-			       lastSel, firstChar, lastChar - 1);
+	  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+			       firstChar, lastChar - 1);
 	  histSeq = TRUE;
 	  AddEditOpInHistory (firstSel, pDoc, TRUE, TRUE);
   	  
@@ -1115,8 +1114,8 @@ void StructReturnKey ()
 		    ChangeFirstLast (pEl, pDoc, 0, TRUE);
 		  if (!histSeq)
 		    {
-		      OpenHistorySequence (pDoc, firstSel,
-					   lastSel, firstChar, lastChar - 1);
+		      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+					   firstChar, lastChar - 1);
 		      histSeq = TRUE;
 		    }
 		  AddEditOpInHistory (pNewEl, pDoc, FALSE, TRUE);

@@ -19,7 +19,6 @@
 
 #include "constmedia.h"
 #include "typemedia.h"
-#include "modif.h"
 #include "res.h"
 #include "language.h"
 #include "libmsg.h"

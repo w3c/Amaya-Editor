@@ -23,6 +23,11 @@ extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
 extern ThotBool HiddenType ( PtrElement pEl );
+extern void HighlightAttrSelection ( PtrDocument pDoc,
+                                     PtrElement pEl,
+                                     PtrAttribute pAttr,
+                                     int firstChar,
+                                     int lastChar );
 extern void HighlightSelection ( ThotBool showBegin,
                                  ThotBool clearOldSel );
 extern void DeactivateView ( PtrDocument pDoc,
@@ -105,6 +110,11 @@ extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
 extern ThotBool HiddenType (/* PtrElement pEl */);
+extern void HighlightAttrSelection (/* PtrDocument pDoc,
+                                       PtrElement pEl,
+                                       PtrAttribute pAttr,
+                                       int firstChar,
+                                       int lastChar */);
 extern void HighlightSelection (/* ThotBool showBegin,
                                    ThotBool clearOldSel */);
 extern void DeactivateView (/* PtrDocument pDoc,

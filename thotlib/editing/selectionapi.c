@@ -81,7 +81,7 @@ void TtaSelectElement (Document document, Element selectedElement)
 	   SelectElement (LoadedDocument[document - 1],
 			  (PtrElement) selectedElement, TRUE, FALSE);
        else
-	 NewSelection (document, selectedElement, 0, 0);
+	 NewSelection (document, selectedElement, NULL, 0, 0);
      }
 }
 
@@ -176,7 +176,7 @@ void  TtaSelectString (Document document, Element textElement,
 	 SelectString (LoadedDocument[document - 1],
 		       (PtrElement) textElement, firstCharacter, lastCharacter);
        else
-	 NewSelection (document, textElement, firstCharacter, lastCharacter);
+	 NewSelection (document, textElement, NULL, firstCharacter, lastCharacter);
      }
 }
 
@@ -232,13 +232,10 @@ void TtaExtendSelection (Document document, Element element, int lastCharacter)
       if (!ok)
 	/* Error: no selection */
 	TtaError (ERR_no_selection_in_document);
+      else if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+	ExtendSelection ((PtrElement) element, lastCharacter, TRUE, FALSE, FALSE);
       else
-	{
-	  if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
-	    ExtendSelection ((PtrElement) element, lastCharacter, TRUE, FALSE, FALSE);
-	  else
-	    NewSelectionExtension (document, element, lastCharacter);
-	}
+	NewSelectionExtension (document, element, lastCharacter);
     }
 }
 

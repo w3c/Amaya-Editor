@@ -19,7 +19,6 @@
 #include "constmenu.h"
 #include "typemedia.h"
 #include "language.h"
-#include "modif.h"
 #include "appaction.h"
 #include "appstruct.h"
 #include "fileaccess.h"
@@ -710,7 +709,7 @@ void PasteCommand ()
 	    for (i = 0; i < NCreatedElements; i++)
 	      AssignPairIdentifiers (CreatedElement[i], pDoc);
 	    /* register the pasted elements in the editing history */
-	    OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
+	    OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
 				 lastChar-1);
 	    /* envoie l'evenement ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
@@ -1096,8 +1095,8 @@ void TtcCreateElement (Document doc, View view)
 				/* store the editing operation in the history*/
 				if (!histSeq)
 				  {
-				    OpenHistorySequence (pDoc, firstSel,
-						 lastSel, firstChar, lastChar);
+				    OpenHistorySequence (pDoc, firstSel, lastSel,
+						 NULL, firstChar, lastChar);
 				    histSeq = TRUE;
 				  }
 				AddEditOpInHistory (pParent->ElParent, pDoc,
@@ -1200,7 +1199,7 @@ void TtcCreateElement (Document doc, View view)
 			/* store the editing operation in the history */
 			if (!histSeq)
 			  {
-			    OpenHistorySequence (pDoc, firstSel, lastSel,
+			    OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
 						 firstChar, lastChar);
 			    histSeq = TRUE;
 			  }
@@ -1321,8 +1320,8 @@ void TtcCreateElement (Document doc, View view)
 	      /* register the operation in history */
 	      if (!histSeq)
 		{
-		  OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
-				       lastChar);
+		  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+				       firstChar, lastChar);
 		  histSeq = TRUE;
 		}
 	      AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
@@ -1463,7 +1462,7 @@ void TtcCreateElement (Document doc, View view)
 		  deleteEmpty = TRUE;
 		  if (!histSeq)
 		    {
-		      OpenHistorySequence (pDoc, firstSel, lastSel,
+		      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
 					   firstChar, lastChar);
 		      histSeq = TRUE;
 		    }
@@ -1548,7 +1547,7 @@ void TtcCreateElement (Document doc, View view)
 		}
 	      if (!histSeq)
 		{
-		  OpenHistorySequence (pDoc, firstSel, lastSel,
+		  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
 				       firstChar, lastChar);
 		  histSeq = TRUE;
 		}
@@ -1724,7 +1723,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
      /* BackSpace at the beginning of a non empty element (pParent) whose
         previous sibling (pSibling) is empty.  Delete the empty sibling */
      {
-       OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+       OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
        /* record the element to be deleted in the history */
        AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
        TtaDeleteTree ((Element)pSibling, doc);
@@ -1848,7 +1847,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 /* pSibling is empty. Delete it */
 		 {
 		   /* record the element to be deleted in the history */
-		   OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+		   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
 		   AddEditOpInHistory (FirstSelectedElement, pDoc, TRUE,FALSE);
 		   TtaDeleteTree ((Element)FirstSelectedElement, doc);
 		   CloseHistorySequence (pDoc);
@@ -1922,7 +1921,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 				 pParent->ElStructSchema);
 
        /* start history sequence */
-       OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+       OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
 
        j = 0;
        while (pElem != NULL)

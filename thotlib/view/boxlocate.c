@@ -2981,7 +2981,7 @@ void                DirectCreation (PtrBox pBox, int frame)
       pDoc = DocumentOfElement (pAb->AbElement);
       histOpen = pDoc->DocEditSequence;
       if (!histOpen)
-	OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, 0, 0);
+	OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, NULL, 0, 0);
       NewPosition (pAb, x, xref, y, yref, frame, TRUE);
       if (percentW)
 	NewDimension (pAb, 0, height, frame, TRUE);

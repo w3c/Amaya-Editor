@@ -1263,7 +1263,7 @@ static void         ApplyPresentMod (int applyDomain)
 	   /* il y a quelque chose a changer, on parcourt la selection */
 	   /* courante et on change ce qu'a demande' l'utilisateur */
 	  {
-	    OpenHistorySequence (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
+	    OpenHistorySequence (pSelDoc, pFirstSel, pLastSel, NULL, firstChar, lastChar);
 	    pEl = pFirstSel;
 	    pPrevBlock = NULL;
 	    while (pEl != NULL)

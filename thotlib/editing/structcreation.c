@@ -679,8 +679,8 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			    /* chaine l'element cree */
 			    opened = pDoc->DocEditSequence;
 			    if (!opened)
-			      OpenHistorySequence (pDoc, pEl, pEl, firstChar,
-						   lastChar);
+			      OpenHistorySequence (pDoc, pEl, pEl, NULL,
+						   firstChar, lastChar);
 			    AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
 			    if (!opened)
 			      CloseHistorySequence (pDoc);
@@ -700,8 +700,8 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			    InsertFirstChild (pEl, pE);
 			    opened = pDoc->DocEditSequence;
 			    if (!opened)
-			      OpenHistorySequence (pDoc, pEl, pEl, firstChar,
-						   lastChar);
+			      OpenHistorySequence (pDoc, pEl, pEl, NULL,
+						   firstChar, lastChar);
 			    AddEditOpInHistory (pE, pDoc, FALSE, TRUE);
 			    if (!opened)
 			      CloseHistorySequence (pDoc);
@@ -949,57 +949,18 @@ void NewContent (PtrAbstractBox pAb)
 	    default:
 	      break;
 	    }
-	  /* reafficher l'attribut */
-	  /********  when undoing this operation, the whole element having
-		     this attribute will be selected. How to record the current
-		     selection, which is within the attribute value? *********/
-	  OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	  /* redisplay the attribute */
 	  AttachAttrWithValue (pEl, pDoc, pNewAttr);
 	  CloseHistorySequence (pDoc);
 	  pAttr = AttributeValue (pEl, pNewAttr);
 	  DeleteAttribute (NULL, pNewAttr);
 	  /* apply these changes */
 	  AbstractImageUpdated (pDoc);
-	  if (selInAttr)
-	    {
-	      /* update the selection */
-	      pAb = pEl->ElAbstractBox[view - 1];
-	      while (pAb && pAb->AbElement == pEl)
-		{
-		  if (pAb->AbPresentationBox)
-		    {
-		    /* pAb is a presentation abstract box for the element */
-		    /* to which the attribute is attached */
-		    if (pAb->AbCanBeModified && pAb->AbCreatorAttr == pAttr &&
-			!pAb->AbDead)
-		      SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
-					 LastSelectedCharInAttr, !SelPosition);
-		    }
-		  else
-		    /* pAb is the main abstract box for the element to which */
-		    /* the attribute is attached. Process its children */
-		    {
-		      pAbMain = pAb;
-		      pAb = pAb->AbFirstEnclosed;
-		      while (pAb != NULL)
-			{
-			  if (pAb->AbElement == pEl)
-			    if (pAb->AbPresentationBox && pAb->AbCanBeModified)
-			      if (pAb->AbCreatorAttr == pAttr)
-				SelectStringInAttr (pDoc, pAb,
-						    FirstSelectedCharInAttr,
-						    LastSelectedCharInAttr,
-						    !SelPosition);
-				
-			  pAb = pAb->AbNext;
-			}
-		      pAb = pAbMain;  /* return to parent */
-		    }
-		  pAb = pAb->AbNext;
-		}
-	    }
 	  AbstractImageUpdated (pDoc);
 	  RedisplayDocViews (pDoc);
+	  if (selInAttr)
+	    HighlightAttrSelection (pDoc, pEl, pAttr, FirstSelectedCharInAttr,
+				    LastSelectedCharInAttr);
 	}
     }
   else if (pEl->ElTerminal)

@@ -27,6 +27,7 @@ extern PtrElement GetLastCreatedElemInHistory ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement firstSel,
                                   PtrElement lastSel,
+                                  PtrAttribute attr,
                                   int firstSelChar,
                                   int lastSelChar );
 extern ThotBool CloseHistorySequence ( PtrDocument pDoc );
@@ -60,6 +61,7 @@ extern PtrElement GetLastCreatedElemInHistory (/* PtrDocument pDoc */);
 extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement firstSel,
                                     PtrElement lastSel,
+                                    PtrAttribute attr,
                                     int firstSelChar,
                                     int lastSelChar */);
 extern ThotBool CloseHistorySequence (/* PtrDocument pDoc */);

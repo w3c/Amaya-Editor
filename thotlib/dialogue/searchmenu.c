@@ -673,7 +673,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	      pFirstSel = pCurrEl;
 	      if (AutoReplace)
 		OpenHistorySequence (SearchingD->SDocument, pFirstSel,
-				     pLastSel, firstChar, lastChar);
+				     pLastSel, NULL, firstChar, lastChar);
 	      do
 		{
 		  stop = TRUE;
@@ -707,8 +707,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			       command) */
 			    if (!AutoReplace)
 			      OpenHistorySequence (SearchingD->SDocument,
-					       pFirstSel, pFirstSel, firstChar,
-					       firstChar + SStringLen);
+					       pFirstSel, pFirstSel, NULL,
+					       firstChar, firstChar + SStringLen);
 			    AddEditOpInHistory (pFirstSel,
 						SearchingD->SDocument,
 						TRUE, TRUE);

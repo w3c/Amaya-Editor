@@ -540,6 +540,8 @@ typedef struct _EditOperation
       int           _EoLastSelectedChar_;/* index of last selected character in
 					    the last selected element, if it's
 					    a character string */
+      PtrSSchema    _EoSelectedAttrSch_; /* schema of the selected attribute */
+      int           _EoSelectedAttr_;    /* index of the selected attribute */
     } s0;
     struct        /* EoType = EtElement */
     {
@@ -592,6 +594,8 @@ typedef struct _NsUriDescr
 #define EoFirstSelectedChar u.s0._EoFirstSelectedChar_
 #define EoLastSelectedEl u.s0._EoLastSelectedEl_
 #define EoLastSelectedChar u.s0._EoLastSelectedChar_
+#define EoSelectedAttrSch u.s0._EoSelectedAttrSch_
+#define EoSelectedAttr u.s0._EoSelectedAttr_
 #define EoParent u.s1._EoParent_
 #define EoPreviousSibling u.s1._EoPreviousSibling_
 #define EoCreatedElement u.s1._EoCreatedElement_

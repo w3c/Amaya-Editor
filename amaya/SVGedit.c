@@ -54,9 +54,6 @@ static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
 
-#define oldHrefMaxLen 400
-static  char  oldXlinkHrefValue[oldHrefMaxLen];
-
 #define BUFFER_LENGTH 100
 
 #ifdef _WINDOWS
@@ -2191,23 +2188,6 @@ void UsePasted (NotifyElement * event)
     }
 }
 
-/*----------------------------------------------------------------------
-   AttrXlinkHrefWillBeChanged: attribute xlink:href will be modified.
-   Keep its initial value in case an invalid value be entered.
-  ----------------------------------------------------------------------*/
-ThotBool AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
-{
-   Element             el;
-   int                 len;
-
-   el = event->element;
-   len = TtaGetTextAttributeLength (event->attribute);
-   if (len >= oldHrefMaxLen)
-      len = oldHrefMaxLen - 1;
-   TtaGiveTextAttributeValue (event->attribute, oldXlinkHrefValue, &len);
-   oldXlinkHrefValue[len] = EOS;
-   return FALSE;  /* let Thot perform normal operation */
-}
 
 /*----------------------------------------------------------------------
  AttrXlinkHrefChanged
@@ -2221,11 +2201,7 @@ void AttrXlinkHrefChanged (NotifyAttribute *event)
    length = TtaGetTextAttributeLength (event->attribute);
    if (length <= 0)
      /* attribute empty. Invalid. restore previous value */
-     {
-     TtaSetAttributeText (event->attribute, oldXlinkHrefValue, event->element,
-			  event->document);
      return;
-     }
    text = TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (event->attribute, text, &length);
    elType = TtaGetElementType (event->element);
