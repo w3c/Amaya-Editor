@@ -49,7 +49,8 @@ Thot/amaya/COPYRIGHT \
 Thot/amaya/AmayaPage.html \
 Thot/amaya/AHTBridge.c \
 Thot/amaya/AHTFWrite.c \
-Thot/amaya/AHTErrors.h \
+Thot/amaya/AHTEvntrg.h \
+Thot/amaya/AHTEvntrg.c \
 Thot/amaya/AHTMemConv.c \
 Thot/amaya/AHTURLTools.c \
 Thot/amaya/EDITOR.A \
