@@ -2156,7 +2156,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 x, lineSpacing, indentLine;
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
-  int                 top, left, rigth;
+  int                 top, left, rigth, spacing;
   ThotBool            toAdjust;
   ThotBool            breakLine;
   ThotBool            orgXComplete;
@@ -2211,6 +2211,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* compute the line spacing */
   lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
 			    pAb, ViewFrameTable[frame - 1].FrMagnification);
+  /* space added at the top and bottom of the paragraph */
+  spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
+  if (spacing > 0)
+    spacing /= 2;
+  else
+    spacing = 0;
   width = pBox->BxW;
   if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
     {
@@ -2240,7 +2246,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  pBoxToBreak = NULL;
 	  pPreviousLine = NULL;
 	  /* origin of the next line */
-	  org = top + ((lineSpacing + 1) / 2);
+	  org = top + spacing;
 	  /* height of the block box */
 	  *height = org - top;
 	  toLineSpace = FALSE;
@@ -2526,7 +2532,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
   else
     {
-      *height = BoxFontHeight (pBox->BxFont) + ((lineSpacing + 1) / 2);
+      *height = BoxFontHeight (pBox->BxFont) + spacing;
       if (pNextBox && !pNextBox->BxAbstractBox->AbHorizEnclosing)
 	do
 	  if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
@@ -2580,7 +2586,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + rigth;
   pBox->BxMaxWidth += left + rigth;
-  *height = *height + ((lineSpacing + 1) / 2);
+  *height = *height + spacing;
 }
 
 
