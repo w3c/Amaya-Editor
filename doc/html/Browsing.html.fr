@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.1c, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -30,7 +30,7 @@
 <p><strong>Amaya</strong> est essentiellement un éditeur ayant des capacités
 de navigation. Lorsqu'il est utilisé comme navigateur, il se comporte comme
 beaucoup d'autres navigateurs du Web, excepté pour ce qui est d'<a
-href="#L311">activer les liens</a>. Lors d'une opération normale,
+href="#Activating">activer les liens</a>. Lors d'une opération normale,
 <strong>Amaya</strong> vous permet de naviguer et d´éditer des documents
 simultanément, mais vous pouvez changer ce comportement standard pour chaque
 fenêtre de document indépendamment. Le bouton <img src="../images/Editor.gif"
@@ -177,7 +177,7 @@ vite.</p>
       apparaître une boîte de dialogue dans laquelle vous pouvez entrer un
       nom de fichier local ou une URI. Vous pouvez également choisir un
       fichier à partir de l'option <strong>Butiner</strong> qui vous propose
-      un sélecteur de fichiers locaux. 
+      un sélecteur de fichiers locaux.
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>. Cette commande peut aussi être utilisée
       pour créer un nouveau document local.</p>

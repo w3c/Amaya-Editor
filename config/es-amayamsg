@@ -186,7 +186,7 @@
 184 Numeración de sección
 185 Exportar CR/LF
 186 Preferencias de navegación
-187 Cargar imágenes (img, object, embed)
+187 Cargar imágenes (img)
 188 Doble clic activa enlaces
 189 Preferencias de publicación
 190 Usar ETAGS y precondiciones
@@ -370,5 +370,5 @@
 368 **All CSS
 369 **CSS style rules applied to the <%s> element\n
 370 **Blue lines are links activated by a double (or a single) click\n
-371 **Load objects
+371 **Load objects (object, embed)
 372 **No style rule for this element

@@ -186,7 +186,7 @@
 184 Section numbering
 185 Export CR/LF
 186 Browsing Preferences
-187 Load images (img, object, embed)
+187 Load images (img)
 188 Double click activates link
 189 Publishing Preferences
 190 Use ETAGS and preconditions
@@ -370,5 +370,5 @@
 368 All CSS
 369 CSS style rules applied to the <%s> element\n
 370 Blue lines are links activated by a double (or a single) click\n
-371 Load objects
+371 Load objects (object, embed)
 372 No style rule for this element

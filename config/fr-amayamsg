@@ -186,7 +186,7 @@
 184 Numéroter les sections
 185 Exporter CR/LF
 186 Configuration de navigation
-187 Charger les images (img, object, embed)
+187 Charger les images (img)
 188 Cliquer deux fois pour suivre un lien
 189 Configuration de la publication
 190 Utiliser les ETAGS et les pré-conditions
@@ -370,5 +370,5 @@
 368 Toutes les CSS
 369 Règles de style CSS appliqué   l'élément <%s> \n
 370 Les lignes bleues sont des liens activés par un double (ou simple) click
-371 Charger les objets
+371 Charger les objets (object, embed)
 372 Pas de règle de style pour cet élément
