@@ -613,7 +613,7 @@ void AmayaCanvas::Init()
  *       Class:  AmayaCanvas
  *      Method:  IsParentPageActive
  * Description:  test if the page which contains this canvas is selected or not
- *               selected = visible + not being close
+ *               selected = visible 
  *--------------------------------------------------------------------------------------
  */
 bool AmayaCanvas::IsParentPageActive()
@@ -624,8 +624,9 @@ bool AmayaCanvas::IsParentPageActive()
   AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
   if (!p_page)
     return FALSE;
-
-  return (p_page->IsSelected() && !p_page->IsClosed());
+  // if we are closing the page, continue to draw into because maybe the page has been modified so a dialog is poped up
+  // we need to draw the page else a gray page will be shown when the document was modified.
+  return (p_page->IsSelected() /*&& !p_page->IsClosed()*/);
 }
 
 /*
