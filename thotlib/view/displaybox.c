@@ -938,7 +938,7 @@ int GL_UnicodeDrawString (int fg,
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
   ----------------------------------------------------------------------*/
-#if defined(_GL) && !defined(_I18N_)
+#if !defined (_GL) || (defined(_GL) && !defined(_I18N_))
 static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				  ThotBool selected)
 {
