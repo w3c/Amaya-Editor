@@ -64,8 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /FD /c
-# SUBTRACT CPP /YX
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -81,10 +80,6 @@ LIB32=link.exe -lib
 
 # Name "libwww - Win32 Release"
 # Name "libwww - Win32 Debug"
-# Begin Source File
-
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\hashtable.c
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
@@ -417,10 +412,6 @@ SOURCE=..\..\..\libwww\Library\src\HTProxy.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Libwww\Library\Src\HTRDF.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\libwww\Library\src\HTReader.c
 # End Source File
 # Begin Source File
@@ -533,7 +524,7 @@ SOURCE=..\..\..\libwww\Library\src\HTWWWStr.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Libwww\Library\Src\HTXML.c
+SOURCE=..\..\..\libwww\Library\Src\HTXML.c
 # End Source File
 # Begin Source File
 
@@ -553,19 +544,18 @@ SOURCE=..\..\..\libwww\Library\src\SGML.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\xmlparse.c
+SOURCE=..\..\..\libwww\modules\expat\lib\xmlparse.c
+# ADD CPP /D "COMPILED_FROM_DSP"
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmlrole.c
+SOURCE=..\..\..\libwww\modules\expat\lib\xmlrole.c
+# ADD CPP /D "COMPILED_FROM_DSP"
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmltok.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\zlib.lib
+SOURCE=..\..\..\libwww\modules\expat\lib\xmltok.c
+# ADD CPP /D "COMPILED_FROM_DSP"
 # End Source File
 # End Target
 # End Project

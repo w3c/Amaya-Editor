@@ -136,6 +136,12 @@ static HGLRC GL_Context[50];
 #define SLICES 360
 #define SLICES_SIZE 361
 
+/* Animation Smoothness*/
+#define FPS 25 /*Frame Per Second*/
+#define INTERVAL 0.030 /*1/FPS*/ /* 1/25 */
+#define FRAME_TIME 30 /*(INTERVAL*1000) */
+/* milliseconds */
+
 
 /*--------- STATICS ------*/
 
@@ -1812,26 +1818,6 @@ void GL_ActivateDrawing(int frame)
     FrameTable[frame].DblBuffNeedSwap = TRUE;
 }
 
-#define FPS 25 /*Frame Per Second*/
-#define INTERVAL 0.030 /*1/FPS*/ /* 1/25 */
-#define FRAME_TIME 30 /*(INTERVAL*1000) */
-/* milliseconds */
-
-/*----------------------------------------------------------------------
-   ViewToFrame : returns the frame number that doc and view represents
-  ----------------------------------------------------------------------*/
-int ViewToFrame (int doc, int view)
-{
-  int                 frame;
-
-  for (frame = 1; frame <= MAX_FRAME; frame++)
-    {
-      if (doc == FrameTable[frame].FrDoc &&
-	  view == FrameTable[frame].FrView )
-	return frame;
-    }
-  return -1;
-}
 
 /*----------------------------------------------------------------------
   TtaChangePlay : Activate Animation
@@ -1870,18 +1856,19 @@ static void TtaChangePlay (int frame)
 	  if (Timer)
 	    {
 	      remove = FALSE;
-	      for (frame = 0; frame >= MAX_FRAME; frame++)
-		if (FrameTable[frame].Anim_play)
-		  remove = TRUE;
+	      for (frame = 0; frame < MAX_FRAME; frame++)
+		  {
+		     if (FrameTable[frame].Anim_play)
+		        remove = TRUE;
+		  }
 	      if (remove)
 		{
+
 #ifdef _GTK
-		  gtk_timeout_remove (Timer); 
-	
+		  gtk_timeout_remove (Timer); 	
 #else /*_GTK*/
 #ifdef _WINDOWS
-		  KillTimer(FrMainRef[Timer], Timer);
-
+		  KillTimer (FrMainRef[Timer], Timer);
 #endif /*_WINDOWS*/
 #endif /*_GTK*/
 		  Timer = 0; 
@@ -1908,7 +1895,7 @@ void TtaPlay (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtaNoPlay (int frame)
 {
-  if (frame && frame <= MAX_FRAME)
+  if (frame && frame < MAX_FRAME)
     if (FrameTable[frame].Anim_play)
       {
 	TtaChangePlay (frame);
@@ -1923,7 +1910,7 @@ void TtaNoPlay (int frame)
 void TtaPause (int frame)
 {
 
-  if (frame && frame <= MAX_FRAME)
+  if (frame && frame < MAX_FRAME)
     if (FrameTable[frame].Anim_play)
       {
 	TtaChangePlay (frame);

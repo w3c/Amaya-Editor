@@ -1144,7 +1144,9 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-0-iso8859-1",
 		 ffamily, wght, slant, size);
    GeneratePoscriptFont (r_name, script, family, highlight, size);
+#ifndef _WINDOWS
    ptfont=LoadFont(r_nameX);
+#endif /*_WINDOWS*/
 
  }   
   else

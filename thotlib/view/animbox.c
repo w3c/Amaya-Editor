@@ -881,4 +881,5 @@ ThotBool Animate_boxes (int frame,
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   return FALSE;
 #endif /* _GL */
+  return TRUE;
 }
