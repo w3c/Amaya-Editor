@@ -47,7 +47,7 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
   wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
   m_pValidateButton = new wxBitmapButton( this
 					  ,-1
-					  ,wxBitmap( amaya_directory + _T("/resources/icons/toolbar/ok.png") )
+					  ,wxBitmap( amaya_directory + _T("/resources/icons/logo.png") )
 					  ,wxDefaultPosition
 					  ,wxSize(32,32)
 					  ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );

@@ -1956,6 +1956,10 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
       FrameToView (frame, &doc, &view);
       w = GetWindow (w, GW_CHILD);
       GetWindowText (w, text, sizeof (text) + 1);
+      (*(Proc3)FrameTable[frame].Call_Text) (
+		(void*)doc,
+		(void*)view,
+		(void*)text);
     }
 #endif /* _WINGUI */
 }
