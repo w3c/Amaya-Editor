@@ -43,7 +43,10 @@ Extensions 2.2:
     latest created target. The default shortcut is "Ctrl Shif L".
 
 * A mechanism of templates allows you to experiment templates provided by
-  the W3C server or to install your own template server.
+  the W3C server or to install your own template server. To use the sample
+  W3C template server, open the Special/Preferences/Templates menu and
+  type in the following URL: http://cgi.w3.org/cgi-bin/createform.pl. Quit
+  Amaya and there'll be a new option in the File/New submenu: From template.
 
 Fixed bugs 2.2:
 ---------------
@@ -58,6 +61,8 @@ Fixed bugs 2.2:
     the selection relatively to the beginning of the selection instead of
     the end.
   - Empty Math boxes were not displayed on Windows platforms.
+  - The cancel button didn't always work in the Windows authentication 
+    dialogue.
 
 * CSS:
   - When the color was invalid Amaya used the black. Now the CSS rule is
@@ -88,6 +93,21 @@ Fixed bugs 2.2:
 * Some memory leaks in the Windows version are fixed.
 
 * There was a memory leak when the download of a distant image failed.
+
+* Amaya could crash if you had a single document window with pending net
+  requests and you closed it.
+
+Known bugs 2.2:
+---------------
+
+* Opening the source view of an HTML document which doesn't 
+  have an extension and which includes an image having the same name as that
+  of the document, may result in the opening of the image source, rather than
+  that of the document. Under Windows, this may happen even if the
+  the document and the image's names only differ in case.
+
+* Amaya doesn't saves yet the current positions of Windows upon exiting. This
+  will be done in the next release.
 
 =============================================================
 2.1
