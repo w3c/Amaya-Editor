@@ -1008,12 +1008,8 @@ static ThotBool ActivateElement (Element element, Document document)
 	elType1 = TtaGetElementType (elFound);
 	if (elType1.ElTypeNum == HTML_EL_Option)
 	  {
-#ifdef _WX
-	     InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
-#else /* _WX */
-	     SelectOneOption (document, elFound);
-#endif /* _WX */
-	     return (TRUE);
+	    SelectOneOption (document, elFound);
+	    return (TRUE);
 	  }
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Option_Menu)
@@ -1024,12 +1020,8 @@ static ThotBool ActivateElement (Element element, Document document)
         elFound = TtaSearchTypedElement (elType1, SearchInTree, element);
         if (elFound)
 	  {
-#ifdef _WX
-	     InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
-#else /* _WX */
-	     SelectOneOption (document, elFound);
-#endif /* _WX */
-	     return (TRUE);
+	    SelectOneOption (document, elFound);
+	    return (TRUE);
 	  }
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_Checkbox_Input)

@@ -23,6 +23,10 @@
 #define FORM_DEBUG
 **/
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -34,7 +38,6 @@
 #ifdef _WINGUI
   #include "wininclude.h"
 #endif /* _WINGUI */
-
 
 #include "init_f.h"
 #include "html2thot_f.h"
@@ -1382,6 +1385,10 @@ void SelectOneOption (Document doc, Element el)
 		     TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
 #endif /* #if defined(_GTK) || _WX */
 
+#ifdef _WX
+	       wxASSERT_MSG( !multipleOptions, _T("TODO: multipleOptions") );
+#endif /* _WX */
+	       
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
 #if defined(_GTK)  || defined(_WX)

@@ -1874,8 +1874,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	listBox = NULL;
 #endif /* _WINGUI */
 #ifdef _WX
-      menu = (ThotWindow)new AmayaPopupList( parent, parent->ScreenToClient(wxGetMousePosition()));
-      ((AmayaPopupList*)menu)->SetSize( -1, height * 20 );
+      menu = (ThotWindow)new AmayaPopupList( ref );
 #endif /* _WX */
 #ifdef _GTK      
       menu =  gtk_window_new (GTK_WINDOW_POPUP);
@@ -1990,7 +1989,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 #endif /* _WINGUI */
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
-		    ((AmayaPopupList *)menu)->Append(TtaConvMessageToWX(menu_item));
+		    ((AmayaPopupList *)menu)->Append(i, TtaConvMessageToWX(menu_item));
 		    w = (ThotWidget) i;
 #endif /* _WX */
 #ifdef _GTK        
@@ -2069,9 +2068,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       /* remember the catalogue */
       SetProp (menu, "ref", (HANDLE) ref);      
 #endif /* _WINGUI */
-#ifdef _WX
-      menu->Destroy();
-#endif /* _WX */
 #ifdef _GTK     
       if (menu && glist)
 	{
@@ -6001,30 +5997,11 @@ void TtaShowDialogue (int ref, ThotBool remanent)
     }
   else if (catalogue->Cat_Type == CAT_SCRPOPUP)
     {
-      /* Faut-il invalider un TtaShowDialogue precedent */
-      TtaAbortShowDialogue ();
-      /* Memorise qu'un retour sur le catalogue est attendu et */
-      /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
-      if (!remanent)
-	{
-	  ShowReturn = 1;
-	  ShowCat = catalogue;
-	}
-
-      TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedoubleclick);
-      if (catalogue->Cat_Button == 'L')
-	{
-	  if (usedoubleclick)
-	    /* prevent to close immediately the popup menu */
-	    n = 3;
-	  else
-	    n = 1;
-	}
-      else
-	n = 3;
-
-      catalogue->Cat_Widget->Show();
-      catalogue->Cat_Widget->Raise();      
+      /* this is a HTML form selector */
+      wxWindow * p_parent = wxDynamicCast(catalogue->Cat_ParentWidget, wxWindow);
+      wxMenu * p_menu = (wxMenu *)catalogue->Cat_Widget;
+      wxPoint pos = wxGetMousePosition();
+      p_parent->PopupMenu(p_menu, p_parent->ScreenToClient(pos));
     }      
 #endif /* _WX */
 

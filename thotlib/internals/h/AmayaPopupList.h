@@ -4,54 +4,30 @@
 #define __AMAYAPOPUPLIST_H__
 
 #include "wx/wx.h"
-#include "wx/panel.h"
-
-class AmayaPopupL : public wxListBox
-{
- public:
-  DECLARE_DYNAMIC_CLASS(AmayaPopupL)
-
-  AmayaPopupL( wxWindow * parent = NULL );
-  virtual ~AmayaPopupL();
-
- protected:
-  DECLARE_EVENT_TABLE()
-  void OnKillFocus( wxFocusEvent & event );
-  void OnSetFocus( wxFocusEvent & event );
-  void OnSelect( wxCommandEvent& event );
-};
 
 /*
  * =====================================================================================
- *        Class:  AmayaURLBar
+ *        Class:  AmayaPopupList
  * 
  *       Author:  Stephane GULLY
  *      Created:  06/05/2004 04:45:34 PM CET
  * =====================================================================================
  */
-class AmayaPopupList : public wxPanel
+class AmayaPopupList : public wxMenu
 {
 
  public:
   DECLARE_DYNAMIC_CLASS(AmayaPopupList)
 
-  AmayaPopupList ( wxWindow * parent = NULL, wxPoint pos = wxDefaultPosition );
+  AmayaPopupList ( int ref = 0 );
   virtual ~AmayaPopupList();
-
-  void Append( const wxString & item );
-  virtual void SetSize( int w, int h );
 
  protected:
   DECLARE_EVENT_TABLE()
-  void OnSetFocus( wxFocusEvent & event );
-  void OnKillFocus( wxFocusEvent & event );
-  void OnSelect( wxCommandEvent& event );
-  void OnIdle( wxIdleEvent& event );
+  void OnMenuItem( wxCommandEvent& event );
 
  protected:
-  AmayaPopupL * m_pList;
-  bool m_ShouldBeDestroyed;
-  bool m_HasBeenSelected;
+  int m_Ref;
 };
 
 #endif // __AMAYAPOPUPLIST_H__
