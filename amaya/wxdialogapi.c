@@ -8,6 +8,7 @@
 
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+#include "wxdialog/file_filters.h"
 
 #ifdef _WX
   #include "wxdialog/AuthentDlgWX.h"
@@ -118,15 +119,6 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
   return FALSE;
 #endif /* _WX */
 }
-
-#define APPFILENAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|All files (*)|*")
-#define APPCSSNAMEFILTER _T("CSS files (*.css)|*.css|All files (*)|*")
-#define APPSVGNAMEFILTER _T("SVG files (*.svg)|*.svg|All files (*)|*")
-#define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*)|*")
-#define APPHTMLNAMEFILTER _T("HTML files (*.html)|*.html|HTML files (*.htm)|*.htm|All files (*)|*")
-#define APPIMAGENAMEFILTER _T("All files (*)|*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif|Image files (*.bmp)|*.bmp")
-#define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*)|*")
-#define APPALLFILESFILTER _T("All files (*)|*")
 
 /*----------------------------------------------------------------------
   CreateOpenDocDlgWX create the dialog for openging new documents
