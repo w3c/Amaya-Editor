@@ -1934,8 +1934,7 @@ out_proto(omode, f_ptr, mode, do_comments)
 
     } else if (one_arg_per_line) {
 
-      if (mode != MODE_COMMENT)
-	 out_char(omode, ' ');
+      out_char(omode, ' ');
 
       /* break at each variable */
       for (ch_out = f_ptr->plist;
@@ -1951,8 +1950,10 @@ out_proto(omode, f_ptr, mode, do_comments)
 	       outch_cnt++) {
 	    out_char(omode, ' ');
 	  }
-          if (mode == MODE_COMMENT)
+          if (mode == MODE_COMMENT) {
 	     out_char(omode, ' ');
+	     out_char(omode, ' ');
+	  }
 	}
       }
       out_char(omode, ' ');
