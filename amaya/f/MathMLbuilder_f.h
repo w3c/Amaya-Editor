@@ -6,14 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern SSchema GetMathMLSSchema ( Document doc );
-extern void MapMathMLElementType ( STRING XMLname,
-                                   ElementType *elType,
-                                   STRING* mappedName,
-                                   STRING content,
-                                   Document doc );
-extern void GetMathMLElementName ( ElementType elType,
-                                   STRING *buffer );
 extern void MapMathMLAttribute ( STRING Attr,
                                  AttributeType *attrType,
                                  STRING elementName,
@@ -68,14 +60,6 @@ extern void MathMLGetDTDName ( STRING DTDname,
 
 #else /* __STDC__ */
 
-extern SSchema GetMathMLSSchema (/* Document doc */);
-extern void MapMathMLElementType (/* STRING XMLname,
-                                     ElementType *elType,
-                                     STRING* mappedName,
-                                     STRING content,
-                                     Document doc */);
-extern void GetMathMLElementName (/* ElementType elType,
-                                     STRING *buffer */);
 extern void MapMathMLAttribute (/* STRING Attr,
                                    AttributeType *attrType,
                                    STRING elementName,

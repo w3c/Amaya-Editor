@@ -10,12 +10,6 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern int MapGI ( STRING gi,
-                   SSchema *schema,
-                   Document doc );
-extern void GIType ( STRING gi,
-                     ElementType *elType,
-                     Document doc );
 extern STRING GITagNameByType ( ElementType elType );
 extern STRING GITagName ( Element elem );
 extern void MapHTMLAttribute ( STRING Attr,
@@ -66,12 +60,6 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern int MapGI (/* STRING gi,
-                     SSchema *schema,
-                     Document doc */);
-extern void GIType (/* STRING gi,
-                       ElementType *elType,
-                       Document doc */);
 extern STRING GITagNameByType (/* ElementType elType */);
 extern STRING GITagName (/* Element elem */);
 extern void MapHTMLAttribute (/* STRING Attr,

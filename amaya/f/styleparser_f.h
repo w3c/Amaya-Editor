@@ -7,8 +7,6 @@
 #ifdef __STDC__
 
 extern STRING SkipProperty ( STRING ptr );
-extern STRING GetCSSName ( Element el,
-                           Document doc );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
@@ -25,14 +23,6 @@ extern void ParseHTMLSpecificStyle ( Element el,
                                      STRING cssRule,
                                      Document doc,
                                      ThotBool destroy );
-extern int EvaluateClassContext ( Element el,
-                                  STRING class,
-                                  STRING selector,
-                                  Document doc );
-extern int EvaluateClassSelector ( Element el,
-                                   STRING class,
-                                   STRING selector,
-                                   Document doc );
 extern int IsImplicitClassName ( STRING class,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
@@ -72,8 +62,6 @@ extern CHAR_T ReadCSSRules ( Document docRef,
 #else /* __STDC__ */
 
 extern STRING SkipProperty (/* STRING ptr */);
-extern STRING GetCSSName (/* Element el,
-                             Document doc */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 STRING file,
@@ -90,14 +78,6 @@ extern void ParseHTMLSpecificStyle (/* Element el,
                                        STRING cssRule,
                                        Document doc,
                                        ThotBool destroy */);
-extern int EvaluateClassContext (/* Element el,
-                                    STRING class,
-                                    STRING selector,
-                                    Document doc */);
-extern int EvaluateClassSelector (/* Element el,
-                                     STRING class,
-                                     STRING selector,
-                                     Document doc */);
 extern int IsImplicitClassName (/* STRING class,
                                    Document doc */);
 extern void HTMLSetBackgroundColor (/* Document doc,

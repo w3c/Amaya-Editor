@@ -18,9 +18,6 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
-
-#include "html2thot_f.h"
-#include "GraphMLbuilder_f.h"
 #include "view.h"
 
 #include "GraphML.h"
@@ -53,12 +50,16 @@ static int      GraphDialogue;
 static ThotBool PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
-#include "HTMLpresentation_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
 #define iconGraph 22
 #define iconGraphNo 22
 #endif /* _WINDOWS */
+
+#include "fetchXMLname_f.h"
+#include "html2thot_f.h"
+#include "GraphMLbuilder_f.h"
+#include "HTMLpresentation_f.h"
 
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree

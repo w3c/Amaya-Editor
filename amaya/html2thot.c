@@ -18,35 +18,33 @@
 /* Without this option, it creates a function StartParser that parses a   */
 /* file and creates the internal representation of a Thot document.       */
 
-/* Amaya includes  */
-
 #ifdef STANDALONE
 /* Includes for STANDALONE version */
-#include <stdio.h>
-#include "HTML.h"
 #define THOT_EXPORT
 #include "amaya.h"
+#include "language.h"
 
 #else /* !STANDALONE */
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "zlib.h"
-
-#include "language.h"
+#include "fetchHTMLname.h"
 
 #include "css_f.h"
+#include "fetchHTMLname_f.h"
+#include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
-#include "XMLparser_f.h"
 #include "HTMLimage_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
+#include "XMLparser_f.h"
 #endif /* STANDALONE */
 
+#include "zlib.h"
 #include "parser.h"
 
 typedef UCHAR_T entityName[10];
@@ -757,246 +755,6 @@ typedef struct _ElemToBeChecked
   }
 ElemToBeChecked;
 
-typedef struct _ClosedElement *PtrClosedElement;
-typedef struct _ClosedElement
-  {				        /* an element closed by a start tag */
-     int                 tagNum;	/* rank (in GIMappingTable) of closed
-					    element */
-     PtrClosedElement    nextClosedElem;/* next element closed by the same
-					    start tag */
-  }
-ClosedElement;
-
-#define MaxGIlength 14
-typedef UCHAR_T GI[MaxGIlength];
-
-typedef struct _GIMapping
-  {                                     /* mapping of a HTML element */
-     GI                  htmlGI;        /* name of the HTML element */
-     CHAR_T              htmlContents;  /* info about the contents of the HTML element:
-                                           'E'=empty,  space=some contents */
-     int                 ThotType;      /* type of the Thot element or attribute */
-     PtrClosedElement    firstClosedElem;/* first element closed by the start
-					    tag htmlGI */
-  }
-GIMapping;
-
-/* mapping table of HTML elements */
-static GIMapping    HTMLGIMappingTable[] =
-{
-   /* This table MUST be in alphabetical order */
-#if defined(_I18N_) || defined(__JIS__)
-   {L"A", SPACE, HTML_EL_Anchor, NULL},
-   {L"ABBR", SPACE, HTML_EL_ABBR, NULL},
-   {L"ACRONYM", SPACE, HTML_EL_ACRONYM, NULL},
-   {L"ADDRESS", SPACE, HTML_EL_Address, NULL},
-   {L"APPLET", SPACE, HTML_EL_Applet, NULL},
-   {L"AREA", L'E', HTML_EL_AREA, NULL},
-   {L"B", SPACE, HTML_EL_Bold_text, NULL},
-   {L"BASE", L'E', HTML_EL_BASE, NULL},
-   {L"BASEFONT", L'E', HTML_EL_BaseFont, NULL},
-   {L"BDO", SPACE, HTML_EL_BDO, NULL},
-   {L"BIG", SPACE, HTML_EL_Big_text, NULL},
-   {L"BLOCKQUOTE", SPACE, HTML_EL_Block_Quote, NULL},
-   {L"BODY", SPACE, HTML_EL_BODY, NULL},
-   {L"BR", L'E', HTML_EL_BR, NULL},
-   {L"BUTTON", SPACE, HTML_EL_BUTTON, NULL},
-   {L"C", SPACE, HTML_EL_TEXT_UNIT, NULL},
-   {L"CAPTION", SPACE, HTML_EL_CAPTION, NULL},
-   {L"CENTER", SPACE, HTML_EL_Center, NULL},
-   {L"CITE", SPACE, HTML_EL_Cite, NULL},
-   {L"CODE", SPACE, HTML_EL_Code, NULL},
-   {L"COLGROUP", SPACE, HTML_EL_COLGROUP, NULL},
-   {L"COL", SPACE, HTML_EL_COL, NULL},
-   {L"DD", SPACE, HTML_EL_Definition, NULL},
-   {L"DEL", SPACE, HTML_EL_DEL, NULL},
-   {L"DFN", SPACE, HTML_EL_Def, NULL},
-   {L"DIR", SPACE, HTML_EL_Directory, NULL},
-   {L"DIV", SPACE, HTML_EL_Division, NULL},
-   {L"DL", SPACE, HTML_EL_Definition_List, NULL},
-   {L"DT", SPACE, HTML_EL_Term, NULL},
-   {L"EM", SPACE, HTML_EL_Emphasis, NULL},
-   {L"FIELDSET", SPACE, HTML_EL_FIELDSET, NULL},
-   {L"FONT", SPACE, HTML_EL_Font_, NULL},
-   {L"FORM", SPACE, HTML_EL_Form, NULL},
-   {L"FRAME", L'E', HTML_EL_FRAME, NULL},
-   {L"FRAMESET", SPACE, HTML_EL_FRAMESET, NULL},
-   {L"H1", SPACE, HTML_EL_H1, NULL},
-   {L"H2", SPACE, HTML_EL_H2, NULL},
-   {L"H3", SPACE, HTML_EL_H3, NULL},
-   {L"H4", SPACE, HTML_EL_H4, NULL},
-   {L"H5", SPACE, HTML_EL_H5, NULL},
-   {L"H6", SPACE, HTML_EL_H6, NULL},
-   {L"HEAD", SPACE, HTML_EL_HEAD, NULL},
-   {L"HR", L'E', HTML_EL_Horizontal_Rule, NULL},
-   {L"HTML", SPACE, HTML_EL_HTML, NULL},
-   {L"I", SPACE, HTML_EL_Italic_text, NULL},
-   {L"IFRAME", SPACE, HTML_EL_IFRAME, NULL},
-   {L"IMAGE", L'E', HTML_EL_PICTURE_UNIT, NULL},
-   {L"IMG", L'E', HTML_EL_PICTURE_UNIT, NULL},
-   {L"INPUT", L'E', HTML_EL_Input, NULL},
-   {L"INS", SPACE, HTML_EL_INS, NULL},
-   {L"ISINDEX", L'E', HTML_EL_ISINDEX, NULL},
-   {L"KBD", SPACE, HTML_EL_Keyboard, NULL},
-   {L"LABEL", SPACE, HTML_EL_LABEL, NULL},
-   {L"LEGEND", SPACE, HTML_EL_LEGEND, NULL},
-   {L"LI", SPACE, HTML_EL_List_Item, NULL},
-   {L"LINK", L'E', HTML_EL_LINK, NULL},
-   {L"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
-   {L"MAP", SPACE, HTML_EL_MAP, NULL},
-   {L"MATH", SPACE, HTML_EL_Math, NULL},
-   {L"MATHDISP", SPACE, HTML_EL_Math, NULL},  /* for compatibility with an
-				     old version of MathML: WD-math-970704 */
-   {L"MENU", SPACE, HTML_EL_Menu, NULL},
-   {L"META", L'E', HTML_EL_META, NULL},
-   {L"NOFRAMES", SPACE, HTML_EL_NOFRAMES, NULL},
-   {L"NOSCRIPT", SPACE, HTML_EL_NOSCRIPT, NULL},
-   {L"OBJECT", SPACE, HTML_EL_Object, NULL},
-   {L"OL", SPACE, HTML_EL_Numbered_List, NULL},
-   {L"OPTGROUP", SPACE, HTML_EL_OptGroup, NULL},
-   {L"OPTION", SPACE, HTML_EL_Option, NULL},
-   {L"P", SPACE, HTML_EL_Paragraph, NULL},
-   {L"P*", SPACE, HTML_EL_Pseudo_paragraph, NULL},
-   {L"PARAM", L'E', HTML_EL_Parameter, NULL},
-   {L"PLAINTEXT", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
-   {L"PRE", SPACE, HTML_EL_Preformatted, NULL},
-   {L"Q", SPACE, HTML_EL_Quotation, NULL},
-   {L"S", SPACE, HTML_EL_Struck_text, NULL},
-   {L"SAMP", SPACE, HTML_EL_Sample, NULL},
-   {L"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
-   {L"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
-   {L"SMALL", SPACE, HTML_EL_Small_text, NULL},
-   {L"SPAN", SPACE, HTML_EL_Span, NULL},
-   {L"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
-   {L"STRONG", SPACE, HTML_EL_Strong, NULL},
-   {L"STYLE", SPACE, HTML_EL_STYLE_, NULL},
-   {L"SUB", SPACE, HTML_EL_Subscript, NULL},
-   {L"SUP", SPACE, HTML_EL_Superscript, NULL},
-   {L"TABLE", SPACE, HTML_EL_Table, NULL},
-   {L"TBODY", SPACE, HTML_EL_tbody, NULL},
-   {L"TD", SPACE, HTML_EL_Data_cell, NULL},
-   {L"TEXTAREA", SPACE, HTML_EL_Text_Area, NULL},
-   {L"TFOOT", SPACE, HTML_EL_tfoot, NULL},
-   {L"TH", SPACE, HTML_EL_Heading_cell, NULL},
-   {L"THEAD", SPACE, HTML_EL_thead, NULL},
-   {L"TITLE", SPACE, HTML_EL_TITLE, NULL},
-   {L"TR", SPACE, HTML_EL_Table_row, NULL},
-   {L"TT", SPACE, HTML_EL_Teletype_text, NULL},
-   {L"U", SPACE, HTML_EL_Underlined_text, NULL},
-   {L"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
-   {L"VAR", SPACE, HTML_EL_Variable, NULL},
-#ifdef GRAPHML
-   {L"XMLGRAPHICS", SPACE, HTML_EL_XMLGraphics, NULL},
-#endif
-   {L"XMP", SPACE, HTML_EL_Preformatted, NULL},		/* converted to PRE */
-   {L"", SPACE, 0, NULL}	/* Last entry. Mandatory */
-#else /* ! defined(_I18N_) && !defined(__JIS__) */
-   {"A", SPACE, HTML_EL_Anchor, NULL},
-   {"ABBR", SPACE, HTML_EL_ABBR, NULL},
-   {"ACRONYM", SPACE, HTML_EL_ACRONYM, NULL},
-   {"ADDRESS", SPACE, HTML_EL_Address, NULL},
-   {"APPLET", SPACE, HTML_EL_Applet, NULL},
-   {"AREA", 'E', HTML_EL_AREA, NULL},
-   {"B", SPACE, HTML_EL_Bold_text, NULL},
-   {"BASE", 'E', HTML_EL_BASE, NULL},
-   {"BASEFONT", 'E', HTML_EL_BaseFont, NULL},
-   {"BDO", SPACE, HTML_EL_BDO, NULL},
-   {"BIG", SPACE, HTML_EL_Big_text, NULL},
-   {"BLOCKQUOTE", SPACE, HTML_EL_Block_Quote, NULL},
-   {"BODY", SPACE, HTML_EL_BODY, NULL},
-   {"BR", 'E', HTML_EL_BR, NULL},
-   {"BUTTON", SPACE, HTML_EL_BUTTON, NULL},
-   {"C", SPACE, HTML_EL_TEXT_UNIT, NULL},
-   {"CAPTION", SPACE, HTML_EL_CAPTION, NULL},
-   {"CENTER", SPACE, HTML_EL_Center, NULL},
-   {"CITE", SPACE, HTML_EL_Cite, NULL},
-   {"CODE", SPACE, HTML_EL_Code, NULL},
-   {"COLGROUP", SPACE, HTML_EL_COLGROUP, NULL},
-   {"COL", SPACE, HTML_EL_COL, NULL},
-   {"DD", SPACE, HTML_EL_Definition, NULL},
-   {"DEL", SPACE, HTML_EL_DEL, NULL},
-   {"DFN", SPACE, HTML_EL_Def, NULL},
-   {"DIR", SPACE, HTML_EL_Directory, NULL},
-   {"DIV", SPACE, HTML_EL_Division, NULL},
-   {"DL", SPACE, HTML_EL_Definition_List, NULL},
-   {"DT", SPACE, HTML_EL_Term, NULL},
-   {"EM", SPACE, HTML_EL_Emphasis, NULL},
-   {"FIELDSET", SPACE, HTML_EL_FIELDSET, NULL},
-   {"FONT", SPACE, HTML_EL_Font_, NULL},
-   {"FORM", SPACE, HTML_EL_Form, NULL},
-   {"FRAME", 'E', HTML_EL_FRAME, NULL},
-   {"FRAMESET", SPACE, HTML_EL_FRAMESET, NULL},
-   {"H1", SPACE, HTML_EL_H1, NULL},
-   {"H2", SPACE, HTML_EL_H2, NULL},
-   {"H3", SPACE, HTML_EL_H3, NULL},
-   {"H4", SPACE, HTML_EL_H4, NULL},
-   {"H5", SPACE, HTML_EL_H5, NULL},
-   {"H6", SPACE, HTML_EL_H6, NULL},
-   {"HEAD", SPACE, HTML_EL_HEAD, NULL},
-   {"HR", 'E', HTML_EL_Horizontal_Rule, NULL},
-   {"HTML", SPACE, HTML_EL_HTML, NULL},
-   {"I", SPACE, HTML_EL_Italic_text, NULL},
-   {"IFRAME", SPACE, HTML_EL_IFRAME, NULL},
-   {"IMAGE", 'E', HTML_EL_PICTURE_UNIT, NULL},
-   {"IMG", 'E', HTML_EL_PICTURE_UNIT, NULL},
-   {"INPUT", 'E', HTML_EL_Input, NULL},
-   {"INS", SPACE, HTML_EL_INS, NULL},
-   {"ISINDEX", 'E', HTML_EL_ISINDEX, NULL},
-   {"KBD", SPACE, HTML_EL_Keyboard, NULL},
-   {"LABEL", SPACE, HTML_EL_LABEL, NULL},
-   {"LEGEND", SPACE, HTML_EL_LEGEND, NULL},
-   {"LI", SPACE, HTML_EL_List_Item, NULL},
-   {"LINK", 'E', HTML_EL_LINK, NULL},
-   {"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
-   {"MAP", SPACE, HTML_EL_MAP, NULL},
-   {"MATH", SPACE, HTML_EL_Math, NULL},
-   {"MATHDISP", SPACE, HTML_EL_Math, NULL},  /* for compatibility with an
-				     old version of MathML: WD-math-970704 */
-   {"MENU", SPACE, HTML_EL_Menu, NULL},
-   {"META", 'E', HTML_EL_META, NULL},
-   {"NOFRAMES", SPACE, HTML_EL_NOFRAMES, NULL},
-   {"NOSCRIPT", SPACE, HTML_EL_NOSCRIPT, NULL},
-   {"OBJECT", SPACE, HTML_EL_Object, NULL},
-   {"OL", SPACE, HTML_EL_Numbered_List, NULL},
-   {"OPTGROUP", SPACE, HTML_EL_OptGroup, NULL},
-   {"OPTION", SPACE, HTML_EL_Option, NULL},
-   {"P", SPACE, HTML_EL_Paragraph, NULL},
-   {"P*", SPACE, HTML_EL_Pseudo_paragraph, NULL},
-   {"PARAM", 'E', HTML_EL_Parameter, NULL},
-   {"PLAINTEXT", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
-   {"PRE", SPACE, HTML_EL_Preformatted, NULL},
-   {"Q", SPACE, HTML_EL_Quotation, NULL},
-   {"S", SPACE, HTML_EL_Struck_text, NULL},
-   {"SAMP", SPACE, HTML_EL_Sample, NULL},
-   {"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
-   {"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
-   {"SMALL", SPACE, HTML_EL_Small_text, NULL},
-   {"SPAN", SPACE, HTML_EL_Span, NULL},
-   {"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
-   {"STRONG", SPACE, HTML_EL_Strong, NULL},
-   {"STYLE", SPACE, HTML_EL_STYLE_, NULL},
-   {"SUB", SPACE, HTML_EL_Subscript, NULL},
-   {"SUP", SPACE, HTML_EL_Superscript, NULL},
-   {"TABLE", SPACE, HTML_EL_Table, NULL},
-   {"TBODY", SPACE, HTML_EL_tbody, NULL},
-   {"TD", SPACE, HTML_EL_Data_cell, NULL},
-   {"TEXTAREA", SPACE, HTML_EL_Text_Area, NULL},
-   {"TFOOT", SPACE, HTML_EL_tfoot, NULL},
-   {"TH", SPACE, HTML_EL_Heading_cell, NULL},
-   {"THEAD", SPACE, HTML_EL_thead, NULL},
-   {"TITLE", SPACE, HTML_EL_TITLE, NULL},
-   {"TR", SPACE, HTML_EL_Table_row, NULL},
-   {"TT", SPACE, HTML_EL_Teletype_text, NULL},
-   {"U", SPACE, HTML_EL_Underlined_text, NULL},
-   {"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
-   {"VAR", SPACE, HTML_EL_Variable, NULL},
-#ifdef GRAPHML
-   {"XMLGRAPHICS", SPACE, HTML_EL_XMLGraphics, NULL},
-#endif
-   {"XMP", SPACE, HTML_EL_Preformatted, NULL},		/* converted to PRE */
-   {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
-#endif /* defined(_I18N_) || defined(__JIS__) */
-};
 
 /* elements that cannot contain text as immediate children.
    When some text is present in the HTML file it must be surrounded
@@ -1922,7 +1680,6 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 typedef int         State;	/* a state of the automaton */
 
 /* ---------------------- static variables ---------------------- */
-
 /* parser stack */
 #define MaxStack 200		/* maximum stack height */
 static int          GINumberStack[MaxStack]; /* entry of GIMappingTable */
@@ -1970,7 +1727,7 @@ static int          LgBuffer = 0;	  /* actual length of text in input
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
-static SSchema      DocumentSSchema = NULL;	  /* the HTML structure schema */
+static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
 static ThotBool     lastElementClosed = FALSE;/* last element is complete */
@@ -2023,8 +1780,7 @@ static void         ProcessStartGI ();
 static FILE*   ErrFile = (FILE*) 0;
 static CHAR_T    ErrFileName [80];
 
-extern ThotBool HTMLErrorsFound;
- 
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2212,113 +1968,6 @@ Document            document;
    TtaFreeMemory (text);
 }
 
-
-/*----------------------------------------------------------------------
-   MapGI
-   search in the mapping tables the entry for the element of
-   name GI and returns the rank of that entry.
-   When returning, schema contains the Thot SSchema that defines that element,
-   Returns -1 and schema = NULL if not found.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MapGI (STRING gi, SSchema *schema, Document doc)
-#else
-int                 MapGI (gi, schema, doc)
-STRING              gi;
-SSchema		   *schema;
-Document            doc;
-#endif
-{
-  int                 i;
-  int                 entry;
-  ElementType	      elType;
-  STRING              mappedName; 
-  CHAR_T                content;
-  ThotBool	      isHTML;
-
-  entry = -1;
-  if (*schema == NULL)
-    isHTML = FALSE;
-  else
-    isHTML = !(ustrcmp (TtaGetSSchemaName (*schema), TEXT("HTML")));
-  /* first, look at the HTML mapping table */
-  i = 0;
-  if (*schema == NULL || isHTML)
-    do
-      if (!ustrcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
-	entry = i;
-      else
-	i++;
-    while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
-
-  if (entry < 0)
-    if (*schema != NULL && isHTML)
-      *schema = NULL;
-    else
-      /* not found. Look at the XML mapping tables */
-      {
-	elType.ElTypeNum = 0;
-	elType.ElSSchema = *schema;
-#ifndef STANDALONE
-	MapXMLElementType (gi, &elType, &mappedName, &content, doc);
-#endif
-	if (elType.ElTypeNum == 0)
-	  {
-            entry = -1;
-	    elType.ElSSchema = NULL;
-	    *schema = NULL;
-	  }
-	else
-	  {
-            entry = elType.ElTypeNum;
-            *schema = elType.ElSSchema;
-	  }
-      }
-  return entry;
-}
-
-/*----------------------------------------------------------------------
-   GIType  search in mapping tables the Element type associated with
-   a given GI Name. If not found returns zero.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GIType (STRING gi, ElementType *elType, Document doc)
-#else
-void                GIType (gi, elType, doc)
-STRING              gi;
-ElementType        *elType;
-Document	    doc;
-#endif
-{
-  int                 i;
-  STRING	      mappedName; 
-  CHAR_T                content;
-
-  elType->ElSSchema = NULL;
-  elType->ElTypeNum = 0;
-  /* First, look at the HTML mapping table */
-  i = 0;
-  do
-    {
-      if (!ustrcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
-	{
-	  
-	  if (DocumentSSchema == NULL && ! (doc == (Document) 0))
-	    elType->ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	  else	    
-	    elType->ElSSchema = DocumentSSchema;
-	  elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
-	  return;
-	}
-      i++;
-    }
-  while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
-#ifndef STANDALONE
-  /* if not found, look at the XML mapping tables */
-  MapXMLElementType (gi, elType, &mappedName, &content, doc);
-#endif
-}
-
 /*----------------------------------------------------------------------
    GITagNameByType search in the mapping tables the name for a given type
   ----------------------------------------------------------------------*/
@@ -2339,16 +1988,16 @@ ElementType elType;
       if (ustrcmp (TEXT("HTML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	do
 	  {
-	    if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
-		ustrcmp (HTMLGIMappingTable[i].htmlGI, TEXT("LISTING")))	/* use PRE */
-	      return (STRING) HTMLGIMappingTable[i].htmlGI;
+	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum &&
+		ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("LISTING")))	/* use PRE */
+	      return (STRING) pHTMLGIMapping[i].htmlGI;
 	    i++;
 	  }
-	while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
+	while (pHTMLGIMapping[i].htmlGI[0] != EOS);
 #ifndef STANDALONE
       else
 	{
-	  GetXMLElementNameFromThotType (elType, &buffer);
+	  GetXMLElementName (elType, &buffer);
 	  return buffer;
 	}
 #endif
@@ -2403,7 +2052,7 @@ int                 elemEntry;
 	       }
 	 else if (elemEntry >= 0 &&
 		  !ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
-				HTMLGIMappingTable[elemEntry].htmlGI))
+				pHTMLGIMapping[elemEntry].htmlGI))
 	       {
 	       entry = i;
 	       *schema = DocumentSSchema;
@@ -2639,11 +2288,11 @@ void                InitMapping ()
 		newCE = firstCE;
 	     else
 		newCE = copyCEstring (firstCE);
-	     if (HTMLGIMappingTable[curCE->tagNum].firstClosedElem == NULL)
-		HTMLGIMappingTable[curCE->tagNum].firstClosedElem = newCE;
+	     if (pHTMLGIMapping[curCE->tagNum].firstClosedElem == NULL)
+		pHTMLGIMapping[curCE->tagNum].firstClosedElem = newCE;
 	     else
 	       {
-		  lastCE = HTMLGIMappingTable[curCE->tagNum].firstClosedElem;
+		  lastCE = pHTMLGIMapping[curCE->tagNum].firstClosedElem;
 		  while (lastCE->nextClosedElem != NULL)
 		     lastCE = lastCE->nextClosedElem;
 		  lastCE->nextClosedElem = newCE;
@@ -2684,7 +2333,7 @@ void                InitMapping ()
 	if (ustrcmp (name, TEXT("closes")) != 0)
 	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"closes\" in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
-	lastCE = HTMLGIMappingTable[entry].firstClosedElem;
+	lastCE = pHTMLGIMapping[entry].firstClosedElem;
 	if (lastCE != NULL)
 	   while (lastCE->nextClosedElem != NULL)
 	      lastCE = lastCE->nextClosedElem;
@@ -2706,7 +2355,7 @@ void                InitMapping ()
 		     fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 		  if (lastCE == NULL)
-		     HTMLGIMappingTable[entry].firstClosedElem = newCE;
+		     pHTMLGIMapping[entry].firstClosedElem = newCE;
 		  else
 		     lastCE->nextClosedElem = newCE;
 		  lastCE = newCE;
@@ -2827,7 +2476,7 @@ static ThotBool     InsertSibling ()
    else if (lastElementClosed ||
 	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
 	    (GINumberStack[StackLevel - 1] >= 0 &&
-	     HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
+	     pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
       return TRUE;
    else
       return FALSE;
@@ -4053,11 +3702,11 @@ Element el;
 
 /*----------------------------------------------------------------------
    CloseElement
-   End of HTML element defined in entry entry of HTMLGIMappingTable.
+   End of HTML element defined in entry entry of pHTMLGIMapping.
    Terminate all corresponding Thot elements.
    If start < 0, an explicit end tag has been encountered in the HTML file,
    else the end of element is implied by the beginning of an element
-   described by entry start of HTMLGIMappingTable.
+   described by entry start of pHTMLGIMapping.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
@@ -4078,7 +3727,7 @@ ThotBool            onStartTag;
    stop = FALSE;
    /* type of the element to be closed */
    elType.ElSSchema = DocumentSSchema;
-   elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
+   elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
    if (StackLevel > 0)
      {
        el = lastElement;
@@ -4092,14 +3741,14 @@ ThotBool            onStartTag;
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("FORM")) ||
-		!ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("FONT")) ||
-		!ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("CENTER"))))
+	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("FORM")) ||
+		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("FONT")) ||
+		!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CENTER"))))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("TBODY")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("TR")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("TH")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("TD")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TBODY")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TR")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TH")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TD")))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -4120,33 +3769,33 @@ ThotBool            onStartTag;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("LI")))
+	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("LI")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("OL")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("UL")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("DIR")) ||
-		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("MENU")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("OL")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("UL")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("DIR")) ||
+		   !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("MENU")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("OPTION")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("OPTION")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("SELECT")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("SELECT")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("DD")) ||
-		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("DT")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("DD")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("DT")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("DL")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("DL")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("TR")) ||
-		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("TD")) ||
-		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, TEXT("TH")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TR")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TD")) ||
+		    !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("TH")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, TEXT("TABLE")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("TABLE")))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -4454,10 +4103,10 @@ CHAR_T                c;
    if ((lastElement != NULL) && (lastElemEntry != -1))
      {
 	math = FALSE;
-	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("MATH")))
+	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATH")))
 	   /* a <MATH> tag has been read */
 	   math = TRUE;
-	else if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("MATHDISP")))
+	else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATHDISP")))
 	   /* a <MATHDISP> tag has been read.  add an attribute "mode=display"
 	      (for compatibility with old MathML version WD-math-970704 */
 	   {
@@ -4477,34 +4126,38 @@ CHAR_T                c;
 	   }
         if (math)
 	   {
+#ifndef STANDALONE
 	   /* Parse the MathML structure */
 	   XMLparse (TEXT("MathML"), theDocument, lastElement, FALSE,
-		    currentLanguage, HTMLGIMappingTable[lastElemEntry].htmlGI);
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
+#endif /* STANDALONE */
 	   /* when returning from the XML parser, the end tag has already
 	      been read */
 	   (void) CloseElement (lastElemEntry, -1, FALSE);
 	   }
 	else 
-	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "XMLGRAPHICS"))
+	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "XMLGRAPHICS"))
 	   /* a <XMLGRAPHICS> tag has been read */
 	   {
 	   /* Parse the GraphML structure */
+#ifndef STANDALONE
 	   XMLparse ("GraphML", theDocument, lastElement, FALSE,
-		    currentLanguage, HTMLGIMappingTable[lastElemEntry].htmlGI);
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
+#endif /* STANDALONE */
 	   /* when returning from the XML parser, the end tag has already
 	      been read */
 	   (void) CloseElement (lastElemEntry, -1, FALSE);	   
 	   }
 	else
-	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("PRE")) ||
-	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("STYLE")) ||
-	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("SCRIPT")) )
+	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("PRE")) ||
+	    !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("STYLE")) ||
+	    !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("SCRIPT")) )
 	   /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	   AfterTagPRE = TRUE;
-	else if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("TABLE")))
+	else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("TABLE")))
 	   /* <TABLE> has been read */
 	   WithinTable++;
-	else if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E')
+	else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
 	   /* this is an empty element. Do not expect an end tag */
 	   {
 	     CloseElement (lastElemEntry, -1, TRUE);
@@ -4572,23 +4225,23 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TR")))
-	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TH")) &&
-	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TD")))
+       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TR")))
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")) &&
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")))
-	   if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("CAPTION")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("THEAD")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TFOOT")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TBODY")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("COLGROUP")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("COL")) &&
-	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TR")))
-	     if (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TD")) ||
-		 !ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TH")))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CAPTION")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("THEAD")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TFOOT")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TBODY")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COLGROUP")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COL")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TR")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")) ||
+		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")))
 	       /* Table cell within a TABLE, without a TR. Assume TR */
 	       {
 		/* save the last last GI read from the input file */
@@ -4603,21 +4256,21 @@ int                 entry;
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("CAPTION")) == 0 ||
-	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("THEAD")) == 0 ||
-	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TFOOT")) == 0 ||
-	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TBODY")) == 0 ||
-	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("COLGROUP")) == 0)
-	   if (ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")) != 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("CAPTION")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("THEAD")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TFOOT")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TBODY")) == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("COLGROUP")) == 0)
+	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TABLE")) != 0)
 	      ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("THEAD")) ||
-	     !ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TFOOT")) ||
-	     !ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TBODY")))
-	   if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TR")))
-	     if (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TD")) ||
-		 !ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("TH")))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("THEAD")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TFOOT")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("TBODY")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TR")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TD")) ||
+		 !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("TH")))
 	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
 	       /* Assume TR */
 	       {
@@ -4632,17 +4285,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("BODY")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("BODY")) == 0)
 	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("HEAD")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("HEAD")) == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, TEXT("STYLE")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("STYLE")) == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
@@ -4664,10 +4317,10 @@ int                 entry;
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
-   if (HTMLGIMappingTable[entry].htmlGI[0] == 'H' &&
-       HTMLGIMappingTable[entry].htmlGI[1] >= '1' &&
-       HTMLGIMappingTable[entry].htmlGI[1] <= '6' &&
-       HTMLGIMappingTable[entry].htmlGI[2] == EOS)
+   if (pHTMLGIMapping[entry].htmlGI[0] == 'H' &&
+       pHTMLGIMapping[entry].htmlGI[1] >= '1' &&
+       pHTMLGIMapping[entry].htmlGI[1] <= '6' &&
+       pHTMLGIMapping[entry].htmlGI[2] == EOS)
       /* the new element is a Hn */
       if (StackLevel > 1)
 	 if (ElementStack[StackLevel - 1] != NULL)
@@ -4772,7 +4425,7 @@ STRING              GIname;
   else
     {
       /* does this start tag also imply the end tag of some current elements? */
-      pClose = HTMLGIMappingTable[entry].firstClosedElem;
+      pClose = pHTMLGIMapping[entry].firstClosedElem;
       while (pClose != NULL)
 	{
 	  CloseElement (pClose->tagNum, entry, TRUE);
@@ -4794,9 +4447,9 @@ STRING              GIname;
 	  {
 	    el = NULL;
 	    sameLevel = TRUE;
-	    if (HTMLGIMappingTable[entry].ThotType > 0)
+	    if (pHTMLGIMapping[entry].ThotType > 0)
 	      {
-		if (HTMLGIMappingTable[entry].ThotType == HTML_EL_HTML)
+		if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
 		  /* the corresponding Thot element is the root of the
 		     abstract tree, which has been created at initialization */
 		  el = rootElement;
@@ -4804,8 +4457,8 @@ STRING              GIname;
 		  /* create a Thot element */
 		  {
 		    elType.ElSSchema = DocumentSSchema;
-		    elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
-		    if (HTMLGIMappingTable[entry].htmlContents == 'E')
+		    elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
+		    if (pHTMLGIMapping[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
 		      /* in the Thot structure schema */
 		      el = TtaNewTree (theDocument, elType, _EMPTYSTR_);
@@ -4816,7 +4469,7 @@ STRING              GIname;
 		    sameLevel = InsertElement (&el);
 		    if (el != NULL)
 		      {
-			if (HTMLGIMappingTable[entry].htmlContents == 'E')
+			if (pHTMLGIMapping[entry].htmlContents == 'E')
 			  lastElementClosed = TRUE;
 			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			  /* an empty Text element has been created. The */
@@ -4825,7 +4478,7 @@ STRING              GIname;
 		      }
 		  }
 	      }
-	    if (HTMLGIMappingTable[entry].htmlContents != 'E')
+	    if (pHTMLGIMapping[entry].htmlContents != 'E')
 	      {
 		ElementStack[StackLevel] = el;
 		if (sameLevel)
@@ -6557,9 +6210,9 @@ void                FreeHTMLParser ()
       }
 
    /* free descriptors of elements closed by a start tag */
-   for (entry = 0; HTMLGIMappingTable[entry].htmlGI[0] != EOS; entry++)
+   for (entry = 0; pHTMLGIMapping[entry].htmlGI[0] != EOS; entry++)
       {
-      pClose = HTMLGIMappingTable[entry].firstClosedElem;
+      pClose = pHTMLGIMapping[entry].firstClosedElem;
       while (pClose != NULL)
 	 {
 	 nextClose = pClose->nextClosedElem;
@@ -8215,16 +7868,17 @@ int                 argc;
 char              **argv;
 #endif
 {
+  gzFile              stream;
   Element             el, oldel;
   Document            doc;
   FILE               *infile;
   STRING              pathURL = NULL;
-  CHAR_T                htmlFileName[200];
-  CHAR_T                pivotFileName[200];
-  CHAR_T                documentDirectory[200];
-  CHAR_T                documentName[200];
+  CHAR_T              htmlFileName[200];
+  CHAR_T              pivotFileName[200];
+  CHAR_T              documentDirectory[200];
+  CHAR_T              documentName[200];
   int                 returnCode;
-  ThotBool	       plainText;
+  ThotBool	      plainText;
 
   /* check the number of arguments in command line */
   returnCode = 0;
@@ -8280,6 +7934,7 @@ char              **argv;
 	  else
 	    /* set the notification mode for the new document */
 	    TtaSetNotificationMode (doc, 1);
+	  stream = gzopen (pivotFileName, "r");
 #else  /* STANDALONE */
 /*----------------------------------------------------------------------
    StartParser loads the file Directory/htmlFileName for

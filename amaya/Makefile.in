@@ -170,7 +170,7 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             $(AMAYA_OPTION_LIBS) ../libpng.a ../libz.a ../libjpeg.a
 
-HTML2THOT_LIBS= ../thotlib/libThotKernel.a
+HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
 amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema
 
@@ -200,6 +200,8 @@ AMAYA_OBJ = \
 	HTMLedit.o \
 	HTMLsave.o \
 	html2thot.o \
+	fetchHTMLname.o \
+	fetchXMLname.o \
 	styleparser.o \
 	EDITstyle.o \
 	HTMLimage.o \

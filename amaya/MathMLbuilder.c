@@ -20,10 +20,6 @@
 #include "MathML.h"
 #include "parser.h"
 
-#include "Mathedit_f.h"
-#include "XMLparser_f.h"
-#include "styleparser_f.h"
-
 typedef UCHAR_T  MathEntityName[30];
 typedef struct _MathEntity
   {			 /* a Math entity representing an operator char */
@@ -179,8 +175,8 @@ static MathEntity        MathEntityTable[] =
     {L"lsqb", 91, L'G'},
     {L"lt", 60, L'L'},
     {L"middot", 215, L'G'},
-	{L"mldr", 188, L'G'},
-	{L"mu", 109, L'G'},
+    {L"mldr", 188, L'G'},
+    {L"mu", 109, L'G'},
     {L"ne", 185, L'G'},
     {L"not", 216, L'G'},
     {L"notin", 207, L'G'},
@@ -430,393 +426,108 @@ static MathEntity        MathEntityTable[] =
 
 #endif
 };
-   /* mapping table of MathML elements */
-
-static ElemMapping    MathMLElemMappingTable[] =
-{
-   /* This table MUST be in alphabetical order */
-#  if defined (_I18N_) || defined (__JIS__)
-	{L"XMLcomment", SPACE, MathML_EL_XMLcomment},
-   {L"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
-   {L"maligngroup", 'E', MathML_EL_MALIGNGROUP},
-   {L"malignmark", 'E', MathML_EL_MALIGNMARK},
-   {L"merror", SPACE, MathML_EL_MERROR},
-   {L"mf", SPACE, MathML_EL_MF},  /* for compatibility with an old version of
-				    MathML: WD-math-970704 */
-   {L"mfenced", SPACE, MathML_EL_MFENCED},
-   {L"mfrac", SPACE, MathML_EL_MFRAC},
-   {L"mi", SPACE, MathML_EL_MI},
-   {L"mmultiscripts", SPACE, MathML_EL_MMULTISCRIPTS},
-   {L"mn", SPACE, MathML_EL_MN},
-   {L"mo", SPACE, MathML_EL_MO},
-   {L"mover", SPACE, MathML_EL_MOVER},
-   {L"mpadded", SPACE, MathML_EL_MPADDED},
-   {L"mphantom", SPACE, MathML_EL_MPHANTOM},
-   {L"mprescripts", SPACE, MathML_EL_PrescriptPairs},
-   {L"mroot", SPACE, MathML_EL_MROOT},
-   {L"mrow", SPACE, MathML_EL_MROW},
-   {L"ms", SPACE, MathML_EL_MS},
-   {L"mspace", 'E', MathML_EL_MSPACE},
-   {L"msqrt", SPACE, MathML_EL_MSQRT},
-   {L"mstyle", SPACE, MathML_EL_MSTYLE},
-   {L"msub", SPACE, MathML_EL_MSUB},
-   {L"msubsup", SPACE, MathML_EL_MSUBSUP},
-   {L"msup", SPACE, MathML_EL_MSUP},
-   {L"mtable", SPACE, MathML_EL_MTABLE},
-   {L"mtd", SPACE, MathML_EL_MTD},
-   {L"mtext", SPACE, MathML_EL_MTEXT},
-   {L"mtr", SPACE, MathML_EL_MTR},
-   {L"munder", SPACE, MathML_EL_MUNDER},
-   {L"munderover", SPACE, MathML_EL_MUNDEROVER},
-   {L"none", SPACE, MathML_EL_Construct},
-   {L"sep", 'E', MathML_EL_SEP},
-   {L"", SPACE, 0}	/* Last entry. Mandatory */
-#  else /*  !defined (_I18N_) &&  ! defined (__JIS__) */ 
-	{"XMLcomment", SPACE, MathML_EL_XMLcomment},
-   {"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
-   {"maction", SPACE, MathML_EL_MACTION},
-   {"maligngroup", 'E', MathML_EL_MALIGNGROUP},
-   {"malignmark", 'E', MathML_EL_MALIGNMARK},
-   {"merror", SPACE, MathML_EL_MERROR},
-   {"mf", SPACE, MathML_EL_MF},  /* for compatibility with an old version of
-				    MathML: WD-math-970704 */
-   {"mfenced", SPACE, MathML_EL_MFENCED},
-   {"mfrac", SPACE, MathML_EL_MFRAC},
-   {"mi", SPACE, MathML_EL_MI},
-   {"mmultiscripts", SPACE, MathML_EL_MMULTISCRIPTS},
-   {"mn", SPACE, MathML_EL_MN},
-   {"mo", SPACE, MathML_EL_MO},
-   {"mover", SPACE, MathML_EL_MOVER},
-   {"mpadded", SPACE, MathML_EL_MPADDED},
-   {"mphantom", SPACE, MathML_EL_MPHANTOM},
-   {"mprescripts", SPACE, MathML_EL_PrescriptPairs},
-   {"mroot", SPACE, MathML_EL_MROOT},
-   {"mrow", SPACE, MathML_EL_MROW},
-   {"ms", SPACE, MathML_EL_MS},
-   {"mspace", 'E', MathML_EL_MSPACE},
-   {"msqrt", SPACE, MathML_EL_MSQRT},
-   {"mstyle", SPACE, MathML_EL_MSTYLE},
-   {"msub", SPACE, MathML_EL_MSUB},
-   {"msubsup", SPACE, MathML_EL_MSUBSUP},
-   {"msup", SPACE, MathML_EL_MSUP},
-   {"mtable", SPACE, MathML_EL_MTABLE},
-   {"mtd", SPACE, MathML_EL_MTD},
-   {"mtext", SPACE, MathML_EL_MTEXT},
-   {"mtr", SPACE, MathML_EL_MTR},
-   {"munder", SPACE, MathML_EL_MUNDER},
-   {"munderover", SPACE, MathML_EL_MUNDEROVER},
-   {"none", SPACE, MathML_EL_Construct},
-   {"sep", 'E', MathML_EL_SEP},
-   {"", SPACE, 0}	/* Last entry. Mandatory */
-#  endif /* defined (_I18N_) || defined (__JIS__) */
-};
 
 static AttributeMapping MathMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-#if defined (_I18N_) || defined (__JIS__) 
-   {L"unknown_attr", _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
-   {L"ZZGHOST", _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
+   {TEXT ("unknown_attr"), _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
+   {TEXT ("ZZGHOST"), _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
+   {TEXT ("accent"), TEXT (""), 'A', MathML_ATTR_accent},
+   {TEXT ("accentunder"), TEXT (""), 'A', MathML_ATTR_accentunder},
+   {TEXT ("actiontype"), TEXT (""), 'A', MathML_ATTR_actiontype},
+   {TEXT ("align"), TEXT (""), 'A', MathML_ATTR_align},
+   {TEXT ("alignmentscope"), TEXT (""), 'A', MathML_ATTR_alignmentscope},
+   {TEXT ("background"), TEXT (""), 'A', MathML_ATTR_background_},
+   {TEXT ("class"), TEXT (""), 'A', MathML_ATTR_class},
+   {TEXT ("close"), TEXT (""), 'A', MathML_ATTR_close},
+   {TEXT ("columnalign"), TEXT (""), 'A', MathML_ATTR_columnalign},
+   {TEXT ("columnlines"), TEXT (""), 'A', MathML_ATTR_columnlines},
+   {TEXT ("columnspacing"), TEXT (""), 'A', MathML_ATTR_columnspacing},
+   {TEXT ("columnspan"), TEXT (""), 'A', MathML_ATTR_columnspan},
+   {TEXT ("color"), TEXT (""), 'A', MathML_ATTR_color},
+   {TEXT ("depth"), TEXT (""), 'A', MathML_ATTR_depth_},
+   {TEXT ("displaystyle"), TEXT (""), 'A', MathML_ATTR_displaystyle},
+   {TEXT ("edge"), TEXT (""), 'A', MathML_ATTR_edge},
+   {TEXT ("equalcolumns"), TEXT (""), 'A', MathML_ATTR_equalcolumns},
+   {TEXT ("equalrows"), TEXT (""), 'A', MathML_ATTR_equalrows},
+   {TEXT ("fence"), TEXT (""), 'A', MathML_ATTR_fence},
+   {TEXT ("fontfamily"), TEXT (""), 'A', MathML_ATTR_fontfamily},
+   {TEXT ("fontstyle"), TEXT (""), 'A', MathML_ATTR_fontstyle},
+   {TEXT ("fontsize"), TEXT (""), 'A', MathML_ATTR_fontsize},
+   {TEXT ("fontweight"), TEXT (""), 'A', MathML_ATTR_fontweight},
+   {TEXT ("form"), TEXT (""), 'A', MathML_ATTR_form},
+   {TEXT ("frame"), TEXT (""), 'A', MathML_ATTR_frame},
+   {TEXT ("framespacing"), TEXT (""), 'A', MathML_ATTR_framespacing},
+   {TEXT ("groupalign"), TEXT (""), 'A', MathML_ATTR_groupalign},
+   {TEXT ("height"), TEXT (""), 'A', MathML_ATTR_height_},
+   {TEXT ("id"), TEXT (""), 'A', MathML_ATTR_id},
+   {TEXT ("largeop"), TEXT (""), 'A', MathML_ATTR_largeop},
+   {TEXT ("linethickness"), TEXT (""), 'A', MathML_ATTR_linethickness},
+   {TEXT ("link"), TEXT (""), 'A', MathML_ATTR_link},
+   {TEXT ("lquote"), TEXT (""), 'A', MathML_ATTR_lquote},
+   {TEXT ("lspace"), TEXT (""), 'A', MathML_ATTR_lspace},
+   {TEXT ("maxsize"), TEXT (""), 'A', MathML_ATTR_maxsize},
+   {TEXT ("minsize"), TEXT (""), 'A', MathML_ATTR_minsize},
+   {TEXT ("movablelimits"), TEXT (""), 'A', MathML_ATTR_movablelimits},
+   {TEXT ("open"), TEXT (""), 'A', MathML_ATTR_open},
+   {TEXT ("other"), TEXT (""), 'A', MathML_ATTR_other},
+   {TEXT ("rowalign"), TEXT (""), 'A', MathML_ATTR_rowalign},
+   {TEXT ("rowlines"), TEXT (""), 'A', MathML_ATTR_rowlines},
+   {TEXT ("rowspacing"), TEXT (""), 'A', MathML_ATTR_rowspacing},
+   {TEXT ("rowspan"), TEXT (""), 'A', MathML_ATTR_rowspan_},
+   {TEXT ("rquote"), TEXT (""), 'A', MathML_ATTR_rquote},
+   {TEXT ("rspace"), TEXT (""), 'A', MathML_ATTR_rspace},
+   {TEXT ("scriptlevel"), TEXT (""), 'A', MathML_ATTR_scriptlevel},
+   {TEXT ("scriptminsize"), TEXT (""), 'A', MathML_ATTR_scriptminsize},
+   {TEXT ("scriptsizemultiplier"), TEXT (""), 'A', MathML_ATTR_scriptsizemultiplier},
+   {TEXT ("selection"), TEXT (""), 'A', MathML_ATTR_selection},
+   {TEXT ("separator"), TEXT (""), 'A', MathML_ATTR_separator},
+   {TEXT ("separators"), TEXT (""), 'A', MathML_ATTR_separators},
+   {TEXT ("stretchy"), TEXT (""), 'A', MathML_ATTR_stretchy},
+   {TEXT ("style"), TEXT (""), 'A', MathML_ATTR_style_},
+   {TEXT ("subscriptshift"), TEXT (""), 'A', MathML_ATTR_subscriptshift},
+   {TEXT ("superscriptshift"), TEXT (""), 'A', MathML_ATTR_superscriptshift},
+   {TEXT ("symmetric"), TEXT (""), 'A', MathML_ATTR_symmetric},
+   {TEXT ("width"), TEXT (""), 'A', MathML_ATTR_width_},
 
-   {L"accent", L"", L'A', MathML_ATTR_accent},
-   {L"accentunder", L"", L'A', MathML_ATTR_accentunder},
-   {L"actiontype", L"", L'A', MathML_ATTR_actiontype},
-   {L"align", L"", L'A', MathML_ATTR_align},
-   {L"alignmentscope", L"", L'A', MathML_ATTR_alignmentscope},
-   {L"background", L"", L'A', MathML_ATTR_background_},
-   {L"class", L"", L'A', MathML_ATTR_class},
-   {L"close", L"", L'A', MathML_ATTR_close},
-   {L"columnalign", L"", L'A', MathML_ATTR_columnalign},
-   {L"columnlines", L"", L'A', MathML_ATTR_columnlines},
-   {L"columnspacing", L"", L'A', MathML_ATTR_columnspacing},
-   {L"columnspan", L"", L'A', MathML_ATTR_columnspan},
-   {L"color", L"", L'A', MathML_ATTR_color},
-   {L"depth", L"", L'A', MathML_ATTR_depth_},
-   {L"displaystyle", L"", L'A', MathML_ATTR_displaystyle},
-   {L"edge", L"", L'A', MathML_ATTR_edge},
-   {L"equalcolumns", L"", L'A', MathML_ATTR_equalcolumns},
-   {L"equalrows", L"", L'A', MathML_ATTR_equalrows},
-   {L"fence", L"", L'A', MathML_ATTR_fence},
-   {L"fontfamily", L"", L'A', MathML_ATTR_fontfamily},
-   {L"fontstyle", L"", L'A', MathML_ATTR_fontstyle},
-   {L"fontsize", L"", L'A', MathML_ATTR_fontsize},
-   {L"fontweight", L"", L'A', MathML_ATTR_fontweight},
-   {L"form", L"", L'A', MathML_ATTR_form},
-   {L"frame", L"", L'A', MathML_ATTR_frame},
-   {L"framespacing", L"", L'A', MathML_ATTR_framespacing},
-   {L"groupalign", L"", L'A', MathML_ATTR_groupalign},
-   {L"height", L"", L'A', MathML_ATTR_height_},
-   {L"id", L"", L'A', MathML_ATTR_id},
-   {L"largeop", L"", L'A', MathML_ATTR_largeop},
-   {L"linethickness", L"", L'A', MathML_ATTR_linethickness},
-   {L"link", L"", L'A', MathML_ATTR_link},
-   {L"lquote", L"", L'A', MathML_ATTR_lquote},
-   {L"lspace", L"", L'A', MathML_ATTR_lspace},
-   {L"maxsize", L"", L'A', MathML_ATTR_maxsize},
-   {L"minsize", L"", L'A', MathML_ATTR_minsize},
-   {L"movablelimits", L"", L'A', MathML_ATTR_movablelimits},
-   {L"open", L"", L'A', MathML_ATTR_open},
-   {L"other", L"", L'A', MathML_ATTR_other},
-   {L"rowalign", L"", L'A', MathML_ATTR_rowalign},
-   {L"rowlines", L"", L'A', MathML_ATTR_rowlines},
-   {L"rowspacing", L"", L'A', MathML_ATTR_rowspacing},
-   {L"rowspan", L"", L'A', MathML_ATTR_rowspan_},
-   {L"rquote", L"", L'A', MathML_ATTR_rquote},
-   {L"rspace", L"", L'A', MathML_ATTR_rspace},
-   {L"scriptlevel", L"", L'A', MathML_ATTR_scriptlevel},
-   {L"scriptminsize", L"", L'A', MathML_ATTR_scriptminsize},
-   {L"scriptsizemultiplier", L"", L'A', MathML_ATTR_scriptsizemultiplier},
-   {L"selection", L"", L'A', MathML_ATTR_selection},
-   {L"separator", L"", L'A', MathML_ATTR_separator},
-   {L"separators", L"", L'A', MathML_ATTR_separators},
-   {L"stretchy", L"", L'A', MathML_ATTR_stretchy},
-   {L"style", L"", L'A', MathML_ATTR_style_},
-   {L"subscriptshift", L"", L'A', MathML_ATTR_subscriptshift},
-   {L"superscriptshift", L"", L'A', MathML_ATTR_superscriptshift},
-   {L"symmetric", L"", L'A', MathML_ATTR_symmetric},
-   {L"width", L"", L'A', MathML_ATTR_width_},
-
-    {L"", L"", EOS, 0}		/* Last entry. Mandatory */
-#else /* defined (_I18N_) || defined (__JIS__) */
-   {"unknown_attr", _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
-   {"ZZGHOST", _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
-
-   {"accent", "", 'A', MathML_ATTR_accent},
-   {"accentunder", "", 'A', MathML_ATTR_accentunder},
-   {"actiontype", "", 'A', MathML_ATTR_actiontype},
-   {"align", "", 'A', MathML_ATTR_align},
-   {"alignmentscope", "", 'A', MathML_ATTR_alignmentscope},
-   {"background", "", 'A', MathML_ATTR_background_},
-   {"class", "", 'A', MathML_ATTR_class},
-   {"close", "", 'A', MathML_ATTR_close},
-   {"columnalign", "", 'A', MathML_ATTR_columnalign},
-   {"columnlines", "", 'A', MathML_ATTR_columnlines},
-   {"columnspacing", "", 'A', MathML_ATTR_columnspacing},
-   {"columnspan", "", 'A', MathML_ATTR_columnspan},
-   {"color", "", 'A', MathML_ATTR_color},
-   {"depth", "", 'A', MathML_ATTR_depth_},
-   {"displaystyle", "", 'A', MathML_ATTR_displaystyle},
-   {"edge", "", 'A', MathML_ATTR_edge},
-   {"equalcolumns", "", 'A', MathML_ATTR_equalcolumns},
-   {"equalrows", "", 'A', MathML_ATTR_equalrows},
-   {"fence", "", 'A', MathML_ATTR_fence},
-   {"fontfamily", "", 'A', MathML_ATTR_fontfamily},
-   {"fontstyle", "", 'A', MathML_ATTR_fontstyle},
-   {"fontsize", "", 'A', MathML_ATTR_fontsize},
-   {"fontweight", "", 'A', MathML_ATTR_fontweight},
-   {"form", "", 'A', MathML_ATTR_form},
-   {"frame", "", 'A', MathML_ATTR_frame},
-   {"framespacing", "", 'A', MathML_ATTR_framespacing},
-   {"groupalign", "", 'A', MathML_ATTR_groupalign},
-   {"height", "", 'A', MathML_ATTR_height_},
-   {"id", "", 'A', MathML_ATTR_id},
-   {"largeop", "", 'A', MathML_ATTR_largeop},
-   {"linethickness", "", 'A', MathML_ATTR_linethickness},
-   {"link", "", 'A', MathML_ATTR_link},
-   {"lquote", "", 'A', MathML_ATTR_lquote},
-   {"lspace", "", 'A', MathML_ATTR_lspace},
-   {"maxsize", "", 'A', MathML_ATTR_maxsize},
-   {"minsize", "", 'A', MathML_ATTR_minsize},
-   {"movablelimits", "", 'A', MathML_ATTR_movablelimits},
-   {"open", "", 'A', MathML_ATTR_open},
-   {"other", "", 'A', MathML_ATTR_other},
-   {"rowalign", "", 'A', MathML_ATTR_rowalign},
-   {"rowlines", "", 'A', MathML_ATTR_rowlines},
-   {"rowspacing", "", 'A', MathML_ATTR_rowspacing},
-   {"rowspan", "", 'A', MathML_ATTR_rowspan_},
-   {"rquote", "", 'A', MathML_ATTR_rquote},
-   {"rspace", "", 'A', MathML_ATTR_rspace},
-   {"scriptlevel", "", 'A', MathML_ATTR_scriptlevel},
-   {"scriptminsize", "", 'A', MathML_ATTR_scriptminsize},
-   {"scriptsizemultiplier", "", 'A', MathML_ATTR_scriptsizemultiplier},
-   {"selection", "", 'A', MathML_ATTR_selection},
-   {"separator", "", 'A', MathML_ATTR_separator},
-   {"separators", "", 'A', MathML_ATTR_separators},
-   {"stretchy", "", 'A', MathML_ATTR_stretchy},
-   {"style", "", 'A', MathML_ATTR_style_},
-   {"subscriptshift", "", 'A', MathML_ATTR_subscriptshift},
-   {"superscriptshift", "", 'A', MathML_ATTR_superscriptshift},
-   {"symmetric", "", 'A', MathML_ATTR_symmetric},
-   {"width", "", 'A', MathML_ATTR_width_},
-
-    {"", "", EOS, 0}		/* Last entry. Mandatory */
-#endif /* defined (_I18N_) || defined (__JIS__) */
+    {TEXT (""), TEXT (""), EOS, 0}		/* Last entry. Mandatory */
 };
 
 /* mapping table of attribute values */
 
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
-#  if defined (_I18N_) || defined(__JIS__)
-   {MathML_ATTR_accent, L"true", MathML_ATTR_accent_VAL_true},
-   {MathML_ATTR_accent, L"false", MathML_ATTR_accent_VAL_false},
-   {MathML_ATTR_accentunder, L"true", MathML_ATTR_accentunder_VAL_true},
-   {MathML_ATTR_accentunder, L"false", MathML_ATTR_accentunder_VAL_false},
-   {MathML_ATTR_displaystyle, L"true", MathML_ATTR_displaystyle_VAL_true},
-   {MathML_ATTR_displaystyle, L"false", MathML_ATTR_displaystyle_VAL_false},
-   {MathML_ATTR_edge, L"left", MathML_ATTR_edge_VAL_left_},
-   {MathML_ATTR_edge, L"right", MathML_ATTR_edge_VAL_right_},
-   {MathML_ATTR_fence, L"true", MathML_ATTR_fence_VAL_true},
-   {MathML_ATTR_fence, L"false", MathML_ATTR_fence_VAL_false},
-   {MathML_ATTR_fontstyle, L"italic", MathML_ATTR_fontstyle_VAL_italic},
-   {MathML_ATTR_fontstyle, L"normal", MathML_ATTR_fontstyle_VAL_normal_},
-******  some missing attributes here: fontweight, form, frame, etc...
-   {MathML_ATTR_link, L"document", MathML_ATTR_link_VAL_document},
-   {MathML_ATTR_link, L"extended", MathML_ATTR_link_VAL_extended},
-   {MathML_ATTR_link, L"group", MathML_ATTR_link_VAL_group},
-   {MathML_ATTR_link, L"locator", MathML_ATTR_link_VAL_locator},
-   {MathML_ATTR_link, L"simple", MathML_ATTR_link_VAL_simple},
+   {MathML_ATTR_accent, TEXT ("true"), MathML_ATTR_accent_VAL_true},
+   {MathML_ATTR_accent, TEXT ("false"), MathML_ATTR_accent_VAL_false},
+   {MathML_ATTR_accentunder, TEXT ("true"), MathML_ATTR_accentunder_VAL_true},
+   {MathML_ATTR_accentunder, TEXT ("false"), MathML_ATTR_accentunder_VAL_false},
+   {MathML_ATTR_displaystyle, TEXT ("true"), MathML_ATTR_displaystyle_VAL_true},
+   {MathML_ATTR_displaystyle, TEXT ("false"), MathML_ATTR_displaystyle_VAL_false},
+   {MathML_ATTR_edge, TEXT ("left"), MathML_ATTR_edge_VAL_left_},
+   {MathML_ATTR_edge, TEXT ("right"), MathML_ATTR_edge_VAL_right_},
+   {MathML_ATTR_fence, TEXT ("true"), MathML_ATTR_fence_VAL_true},
+   {MathML_ATTR_fence, TEXT ("false"), MathML_ATTR_fence_VAL_false},
+   {MathML_ATTR_fontstyle, TEXT ("italic"), MathML_ATTR_fontstyle_VAL_italic},
+   {MathML_ATTR_fontstyle, TEXT ("normal"), MathML_ATTR_fontstyle_VAL_normal_},
+   /*******  some missing attributes here: fontweight, form, frame, etc...*/
+   {MathML_ATTR_link, TEXT ("document"), MathML_ATTR_link_VAL_document},
+   {MathML_ATTR_link, TEXT ("extended"), MathML_ATTR_link_VAL_extended},
+   {MathML_ATTR_link, TEXT ("group"), MathML_ATTR_link_VAL_group},
+   {MathML_ATTR_link, TEXT ("locator"), MathML_ATTR_link_VAL_locator},
+   {MathML_ATTR_link, TEXT ("simple"), MathML_ATTR_link_VAL_simple},
 
-   {0, L"", 0}			/* Last entry. Mandatory */
-#  else /* defined (_I18N_) || defined(__JIS__) */
-   {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
-   {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
-
-   {MathML_ATTR_accentunder, "true", MathML_ATTR_accentunder_VAL_true},
-   {MathML_ATTR_accentunder, "false", MathML_ATTR_accentunder_VAL_false},
-
-   {MathML_ATTR_displaystyle, "true", MathML_ATTR_displaystyle_VAL_true},
-   {MathML_ATTR_displaystyle, "false", MathML_ATTR_displaystyle_VAL_false},
-
-   {MathML_ATTR_edge, "left", MathML_ATTR_edge_VAL_left_},
-   {MathML_ATTR_edge, "right", MathML_ATTR_edge_VAL_right_},
-
-   {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
-   {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
-
-   {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
-   {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal_},
-
-   {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
-   {MathML_ATTR_fontweight, "normal_", MathML_ATTR_fontweight_VAL_normal_},
-
-   {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
-   {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
-   {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
-
-   {MathML_ATTR_frame, "none", MathML_ATTR_frame_VAL_none},
-   {MathML_ATTR_frame, "solid", MathML_ATTR_frame_VAL_solid_},
-   {MathML_ATTR_frame, "dashed", MathML_ATTR_frame_VAL_dashed_},
-
-   {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
-   {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
-
-   {MathML_ATTR_link, "document", MathML_ATTR_link_VAL_document},
-   {MathML_ATTR_link, "extended", MathML_ATTR_link_VAL_extended},
-   {MathML_ATTR_link, "group", MathML_ATTR_link_VAL_group},
-   {MathML_ATTR_link, "locator", MathML_ATTR_link_VAL_locator},
-   {MathML_ATTR_link, "simple", MathML_ATTR_link_VAL_simple},
-
-   {MathML_ATTR_movablelimits, "true", MathML_ATTR_movablelimits_VAL_true},
-   {MathML_ATTR_movablelimits, "false", MathML_ATTR_movablelimits_VAL_false},
-
-   {MathML_ATTR_separator, "true", MathML_ATTR_separator_VAL_true},
-   {MathML_ATTR_separator, "false", MathML_ATTR_separator_VAL_false},
-
-   {MathML_ATTR_stretchy, "true", MathML_ATTR_stretchy_VAL_true},
-   {MathML_ATTR_stretchy, "false", MathML_ATTR_stretchy_VAL_false},
-
-   {MathML_ATTR_symmetric, "true", MathML_ATTR_symmetric_VAL_true},
-   {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
-
-   {0, "", 0}			/* Last entry. Mandatory */
-#  endif /* defined (_I18N_) || defined(__JIS__) */
+   {0, TEXT (""), 0}			/* Last entry. Mandatory */
 };
 
 #define MaxMsgLength 200
 
+
 #include "HTMLtable_f.h"
-
-/*----------------------------------------------------------------------
-   GetMathMLSSchema returns the MathML Thot schema for document doc.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-SSchema            GetMathMLSSchema (Document doc)
-#else
-SSchema            GetMathMLSSchema (doc)
-Document	   doc;
-
-#endif
-{
-  SSchema	MathMLSSchema;
-
-   MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
-   if (MathMLSSchema == NULL)
-      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"), TEXT("MathMLP"));
-   return (MathMLSSchema);
-}
-
-
-/*----------------------------------------------------------------------
-   MapMathMLElementType
-   search in the mapping tables the entry for the element type of
-   name XMLname and returns the corresponding Thot element type.
-   Returns -1 and schema = NULL if not found.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               MapMathMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
-#else
-void               MapMathMLElementType (XMLname, elType, mappedName, content, doc)
-STRING              XMLname;
-ElementType	   *elType;
-USTRING*           mappedName;
-STRING	           content;
-Document            doc;
-#endif
-{
-   int                 i;
-
-   elType->ElTypeNum = 0;
-   /* search in MathMLElemMappingTable */
-   i = 0;
-   do
-       if (ustrcasecmp (MathMLElemMappingTable[i].XMLname, XMLname))
-	  i++;
-       else
-	  {
-	  elType->ElTypeNum = MathMLElemMappingTable[i].ThotType;
-	  if (elType->ElSSchema == NULL)
-	    elType->ElSSchema = GetMathMLSSchema (doc);
-	  *mappedName = MathMLElemMappingTable[i].XMLname;
-	  *content = MathMLElemMappingTable[i].XMLcontents;
-	  }
-   while (elType->ElTypeNum <= 0 && MathMLElemMappingTable[i].XMLname[0] != EOS);
-}
-
-/*----------------------------------------------------------------------
-   GetMathMLElementName
-   search in the mapping tables the XML name for a given Thot type
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               GetMathMLElementName (ElementType elType, STRING *buffer)
-#else
-void               GetMathMLElementName (elType, buffer)
-ElementType elType;
-STRING buffer;
-
-#endif
-{
-   int                 i;
-
-   if (elType.ElTypeNum > 0)
-     {
-	i = 0;
-	if (ustrcmp (TEXT("MathML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
-	  do
-	    {
-	     if (MathMLElemMappingTable[i].ThotType == elType.ElTypeNum)
-		{
-		*buffer = MathMLElemMappingTable[i].XMLname;
-		return;
-		}
-	     i++;
-	    }
-	  while (MathMLElemMappingTable[i].XMLname[0] != EOS);	  
-     }
-   *buffer = TEXT("???");
-   return;
-}
+#include "Mathedit_f.h"
+#include "XMLparser_f.h"
+#include "styleparser_f.h"
+#include "fetchXMLname_f.h"
 
 /*----------------------------------------------------------------------
    MapMathMLAttribute

@@ -61,9 +61,10 @@ static ThotBool	InitMaths;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 
+#include "html2thot_f.h"
+#include "fetchXMLname_f.h"
 #include "HTMLtable_f.h"
 #include "MathMLbuilder_f.h"
-#include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
 #ifdef _WINDOWS

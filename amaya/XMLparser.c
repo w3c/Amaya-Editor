@@ -13,15 +13,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
-#ifdef MATHML
-#include "MathMLbuilder_f.h"
-#endif
-#ifdef GRAPHML
-#include "GraphMLbuilder_f.h"
-#endif
-#include "html2thot_f.h"
-#include "styleparser_f.h"
+#include "parser.h"
 
 #define MAX_LENGTH     512
 
@@ -70,28 +62,23 @@ when parsing an XML document fragment according to a given DTD */
 typedef struct _XMLparserContext *PtrParserCtxt;
 typedef struct _XMLparserContext
   {
-     PtrParserCtxt NextParserCtxt;	/* next parser context */
-     STRING	   SSchemaName;		/* name of Thot structure schema */
-     SSchema	   XMLSSchema;		/* the Thot structure schema */
-     Proc	   InitBuilder;		/* action to be called when the parser
-					   begins parsing a fragment */
-     Proc	   MapElementType;	/* returns the Thot element type
-					   corresponding to an XML tag name */
-     Proc	   GetElementName;	/* returns the XML tag name corresp.
-					   to a Thot element type */
-     Proc	   MapAttribute;	/* returns the Thot attribute corresp.
+    PtrParserCtxt NextParserCtxt;	/* next parser context */
+    STRING	   SSchemaName;		/* name of Thot structure schema */
+    SSchema	   XMLSSchema;		/* the Thot structure schema */
+    int            XMLtype;             /* indentifier used by fetchname */
+    Proc	   MapAttribute;	/* returns the Thot attribute corresp.
 					   to an XML attribute name */
-     Proc	   MapAttributeValue;	/* returns the Thot value corresp. to
+    Proc	   MapAttributeValue;	/* returns the Thot value corresp. to
 					   the name of an XML attribute value*/
-     Proc	   MapEntity;		/* returns the value of a XML entity */
-
-     Proc	   EntityCreated;	/* action to be called when an entity
+    Proc	   MapEntity;		/* returns the value of a XML entity */
+    
+    Proc	   EntityCreated;	/* action to be called when an entity
 					   has been parsed */
-     Proc	   ElementComplete;	/* action to be called when an element
+    Proc	   ElementComplete;	/* action to be called when an element
 					   has been generated completely */
-     Proc	   AttributeComplete;	/* action to be called when an
+    Proc	   AttributeComplete;	/* action to be called when an
 					   attribute has been generated */
-     Proc	   GetDTDName;		/* returns the name of the DTD to be
+    Proc	   GetDTDName;		/* returns the name of the DTD to be
 					   used for parsing the contents of an
 					   element that uses a different DTD */
   }
@@ -151,6 +138,17 @@ static int          entityNameLength = 0; /* length of entity name read so
 static Element	    commentText = NULL;	  /* Text element representing the
 					     contents of the current comment */
 
+#ifdef MATHML
+#include "MathMLbuilder_f.h"
+#endif
+#ifdef GRAPHML
+#include "GraphMLbuilder_f.h"
+#endif
+#include "fetchXMLname_f.h"
+#include "html2thot_f.h"
+#include "styleparser_f.h"
+
+
 /*----------------------------------------------------------------------
    InitParserContexts
    Create the chain of parser contexts decribing all recognized XML DTDs
@@ -179,9 +177,7 @@ static void            InitParserContexts ()
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
    ctxt->XMLSSchema = NULL;
-   ctxt->InitBuilder = (Proc) GetMathMLSSchema;
-   ctxt->MapElementType = (Proc) MapMathMLElementType;
-   ctxt->GetElementName = (Proc) GetMathMLElementName;
+   ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
    ctxt->MapEntity = (Proc) MapMathMLEntity;
@@ -203,9 +199,7 @@ static void            InitParserContexts ()
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, "GraphML");
    ctxt->XMLSSchema = NULL;
-   ctxt->InitBuilder = (Proc) GetGraphMLSSchema;
-   ctxt->MapElementType = (Proc) MapGraphMLElementType;
-   ctxt->GetElementName = (Proc) GetGraphMLElementName;
+   ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
    ctxt->MapEntity = (Proc) MapGraphMLEntity;
@@ -215,39 +209,6 @@ static void            InitParserContexts ()
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
    prevCtxt = ctxt;
 #endif /* GRAPHML */
-}
-
-/*----------------------------------------------------------------------
-   GetXMLElementNameFromThotType
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void  GetXMLElementNameFromThotType (ElementType elType, STRING *buffer)
-#else
-void  GetXMLElementNameFromThotType (elType, buffer)
-ElementType elType;
-STRING *buffer;
-
-#endif
-{
-   PtrParserCtxt	ctxt;
-
-   if (currentParserCtxt != NULL &&
-       currentParserCtxt->XMLSSchema == elType.ElSSchema)
-      (*(currentParserCtxt->GetElementName)) (elType, buffer);
-   else
-      {
-      /* initialize all parser contexts if not done yet */
-      if (firstParserCtxt == NULL)
-         InitParserContexts ();
-
-      ctxt = firstParserCtxt;
-      while (ctxt != NULL &&
-	    ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
-	 ctxt = ctxt->NextParserCtxt;
-      if (ctxt != NULL &&
-	  !ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
-	 (*(ctxt->GetElementName)) (elType, buffer);
-      }
 }
 
 /*----------------------------------------------------------------------
@@ -430,15 +391,74 @@ STRING              DTDname;
 #endif
 {
   currentParserCtxt = firstParserCtxt;
-  while (currentParserCtxt != NULL &&
-	 ustrcmp (DTDname, currentParserCtxt->SSchemaName))
+  while (currentParserCtxt != NULL && ustrcmp (DTDname, currentParserCtxt->SSchemaName))
      currentParserCtxt = currentParserCtxt->NextParserCtxt;
-  /* initialize the corresponding builder */
+
+  /* initialize the corresponding entry */
+  if (currentParserCtxt != NULL && currentParserCtxt->XMLSSchema == NULL)
+       currentParserCtxt->XMLSSchema = GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
+}
+
+
+/*----------------------------------------------------------------------
+   GetXMLElementType
+   Search in the mapping tables the entry for the element type of
+   name XMLname and returns the corresponding Thot element type.
+   Returns -1 and schema = NULL if not found.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               GetXMLElementType (STRING XMLname, ElementType *elType, USTRING* mappedName, STRING content, Document doc)
+#else
+void               GetXMLElementType (XMLname, elType, mappedName, content, doc)
+STRING              XMLname;
+ElementType        *elType;
+USTRING            *mappedName;
+STRING              content;
+Document            doc;
+#endif
+{
+  PtrParserCtxt	ctxt;
+
+  /* initialize all parser contexts if not done yet */
+  if (firstParserCtxt == NULL)
+    InitParserContexts ();
+
+  /* Look at the current context if there is one */
   if (currentParserCtxt != NULL)
-     {
-     (*(currentParserCtxt->InitBuilder)) (currentDocument);
-     currentParserCtxt->XMLSSchema = TtaGetSSchema (DTDname, currentDocument);
-     }
+    {
+      /* by default we're looking at in the current schema */
+      elType->ElSSchema = currentParserCtxt->XMLSSchema;
+      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType, mappedName, content, doc);
+    }
+  else if (elType->ElSSchema != NULL)
+    {
+      /* The schema is known -> search the corresponding context */
+      ctxt = firstParserCtxt;
+      while (ctxt != NULL &&
+	     ustrcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
+	  ctxt = ctxt->NextParserCtxt;
+      /* get the Thot element number */
+      if (ctxt != NULL)
+	MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName, content, doc);
+    }
+
+  /* if not found, look at other contexts */
+  if (elType->ElTypeNum == 0)
+    {
+      
+      ctxt = firstParserCtxt;
+      while (ctxt != NULL && elType->ElSSchema == NULL)
+	{
+	  elType->ElSSchema = NULL;
+	  if (ctxt != currentParserCtxt)
+	    {
+	      MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName, content, doc);
+	      if (elType->ElSSchema != NULL)
+		ctxt->XMLSSchema = elType->ElSSchema;
+	    }
+	  ctxt = ctxt->NextParserCtxt;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -557,61 +577,6 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
-   MapXMLElementType
-   Search in the mapping tables the entry for the element type of
-   name XMLname and returns the corresponding Thot element type.
-   Returns -1 and schema = NULL if not found.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               MapXMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
-#else
-void               MapXMLElementType (XMLname, elType, mappedName, content, doc)
-STRING              XMLname;
-ElementType        *elType;
-STRING*             mappedName;
-STRING              content;
-Document            doc;
-#endif
-{
-  PtrParserCtxt	ctxt;
-
-  /* initialize all parser contexts if not done yet */
-  if (firstParserCtxt == NULL)
-    InitParserContexts ();
-
-  /* Look at the current context if there is one */
-  if (currentParserCtxt != NULL)
-    (*(currentParserCtxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
-  else if (elType->ElSSchema != NULL)
-    {
-      /* The schema is known -> search the corresponding context */
-      ctxt = firstParserCtxt;
-      while (ctxt != NULL &&
-	     ustrcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
-	  ctxt = ctxt->NextParserCtxt;
-      /* get the Thot element number */
-      if (ctxt != NULL)
-	(*(ctxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
-    }
-  /* if not found, look at other contexts */
-  if (elType->ElSSchema == NULL)
-    {
-      
-      ctxt = firstParserCtxt;
-      while (ctxt != NULL && elType->ElSSchema == NULL)
-	{
-	  if (ctxt != currentParserCtxt)
-	    {
-	      (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
-	      if (elType->ElSSchema != NULL)
-		ctxt->XMLSSchema = elType->ElSSchema;
-	    }
-	  ctxt = ctxt->NextParserCtxt;
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
    EndOfStartGI
    The name of an element type has been read in a start tag.
    Create the corresponding Thot element.
@@ -626,8 +591,8 @@ CHAR_T                c;
    Element		newElement;
    ElementType		elType;
    int			i;
-   STRING		typeName;
-   UCHAR_T                msgBuffer[MAX_BUFFER_LENGTH];
+   USTRING              mappedName;
+   UCHAR_T              msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -645,8 +610,7 @@ CHAR_T                c;
 	  i = 0;
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       MapXMLElementType (&inputBuffer[i], &elType, &typeName,
-			  &currentElementContent, currentDocument);
+       GetXMLElementType (&inputBuffer[i], &elType, &mappedName, &currentElementContent, currentDocument);
        if (elType.ElTypeNum <= 0)
 	  {
 	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
@@ -660,7 +624,7 @@ CHAR_T                c;
 	  XMLInsertElement (newElement);
 	  currentElement = newElement;
           currentElementClosed = FALSE;
-	  XMLelementType[stackLevel] = typeName;
+	  XMLelementType[stackLevel] = mappedName;
 	  elementStack[stackLevel] = newElement;
 	  }
        currentAttribute = NULL;
@@ -1216,37 +1180,37 @@ CHAR_T                c;
 {
    ElementType	elType;
    Element	commentEl, commentLineEl;
-   STRING	typeName;
-   UCHAR_T msgBuffer[MAX_BUFFER_LENGTH];
-   CHAR_T		cont;
+   USTRING      mappedName;
+   CHAR_T       cont;
+   UCHAR_T      msgBuffer[MAX_BUFFER_LENGTH];
 
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   MapXMLElementType (TEXT("XMLcomment"), &elType, &typeName, &cont, currentDocument);
+   GetXMLElementType (TEXT("XMLcomment"), &elType, &mappedName, &cont, currentDocument);
    if (elType.ElTypeNum <= 0)
-      {
-      usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
-      ParseHTMLError (currentDocument, msgBuffer);
-      }
+     {
+       usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
+       ParseHTMLError (currentDocument, msgBuffer);
+     }
    else
-      {
-      commentEl = TtaNewElement (currentDocument, elType);
-      XMLInsertElement (commentEl);
-      /* create a XMLcomment_line element as the first child of */
-      /* element XMLcomment */
-      elType.ElSSchema = NULL;
-      elType.ElTypeNum = 0;
-      MapXMLElementType (TEXT("XMLcomment_line"), &elType, &typeName, &cont, currentDocument);
-      commentLineEl = TtaNewElement (currentDocument, elType);
-      TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
-      /* create a TEXT element as the first child of element XMLcomment_line */
-      elType.ElTypeNum = 1;
-      commentText = TtaNewElement (currentDocument, elType);
-      TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-      TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
-      currentElement = commentEl;
-      }
+     {
+       commentEl = TtaNewElement (currentDocument, elType);
+       XMLInsertElement (commentEl);
+       /* create a XMLcomment_line element as the first child of */
+       /* element XMLcomment */
+       elType.ElSSchema = NULL;
+       elType.ElTypeNum = 0;
+       GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName, &cont, currentDocument);
+       commentLineEl = TtaNewElement (currentDocument, elType);
+       TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
+       /* create a TEXT element as the first child of element XMLcomment_line */
+       elType.ElTypeNum = 1;
+       commentText = TtaNewElement (currentDocument, elType);
+       TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
+       TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
+       currentElement = commentEl;
+     }
    /* the input buffer is now empty */
    bufferLength = 0;
 }
@@ -1265,13 +1229,13 @@ UCHAR_T       c;
 {
    ElementType	elType;
    Element	commentLineEl;
-   STRING	typeName;
-   CHAR_T		cont;
+   USTRING      mappedName;
+   CHAR_T	cont;
 
    if (c != EOS)
-      if ((int) c == EOL || (int) c == __CR__)
-         /* new line in a comment */
-         {
+     if ((int) c == EOL || (int) c == __CR__)
+       /* new line in a comment */
+       {
 	 /* put the content of inputBuffer into the current XMLcomment_line */
 	 inputBuffer[bufferLength] = EOS;
 	 TtaAppendTextContent (commentText, inputBuffer, currentDocument);
@@ -1279,7 +1243,7 @@ UCHAR_T       c;
 	 /* create a new XMLcomment_line element */
 	 elType.ElSSchema = NULL;
 	 elType.ElTypeNum = 0;
-	 MapXMLElementType (TEXT("XMLcomment_line"), &elType, &typeName, &cont, currentDocument);
+	 GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName, &cont, currentDocument);
 	 commentLineEl = TtaNewElement (currentDocument, elType);
 	 /* inserts the new XMLcomment_line after the previous one */
 	 TtaInsertSibling (commentLineEl, TtaGetParent (commentText), FALSE,
@@ -1289,18 +1253,18 @@ UCHAR_T       c;
 	 commentText = TtaNewElement (currentDocument, elType);
 	 TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
 	 TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
-	 }
-       else
-         {
+       }
+     else
+       {
          if (bufferLength >= ALLMOST_FULL_BUFFER)
-            {
-	    /* close the input buffer */
-	    inputBuffer[bufferLength] = EOS;
-            TtaAppendTextContent (commentText, inputBuffer, currentDocument);
-            bufferLength = 0;
-            }
+	   {
+	     /* close the input buffer */
+	     inputBuffer[bufferLength] = EOS;
+	     TtaAppendTextContent (commentText, inputBuffer, currentDocument);
+	     bufferLength = 0;
+	   }
          inputBuffer[bufferLength++] = c;
-         }
+       }
 }
  
 /*----------------------------------------------------------------------
@@ -1902,6 +1866,7 @@ STRING closingTag;
      XMLElementComplete (el, currentDocument);
 
   /* restore the previous parsing environment */
+  currentParserCtxt->XMLSSchema = NULL;
   currentParserCtxt = oldParserCtxt;
   currentDocument = oldDocument;
   currentLanguage = oldLanguage;

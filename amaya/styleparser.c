@@ -337,27 +337,6 @@ PresentationValue  *pval;
  *									*  
  ************************************************************************/
 
-/*----------------------------------------------------------------------
-   GetCSSName : return a string corresponding to the CSS name of   
-   an element                                                   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              GetCSSName (Element el, Document doc)
-#else
-STRING              GetCSSName (el, doc)
-Element             el;
-Document            doc;
-#endif
-{
-  STRING              res = GITagName (el);
-
-  /* some kind of filtering is probably needed !!! */
-  if (res == NULL)
-    return (TEXT("unknown"));
-  return (res);
-}
-
-
 /************************************************************************
  *									*  
  *	CORE OF THE CSS PARSER : THESE TAKE THE CSS STRINGS 		*
@@ -3411,7 +3390,6 @@ CSSInfoPtr      css;
       GIType (attrelemname, &elType, doc);
       ctxt->attrelem = elType.ElTypeNum;
     }
-  
   GIType (elem, &elType, doc);
   ctxt->type = elType.ElTypeNum;
   ctxt->schema = elType.ElSSchema;
@@ -3537,114 +3515,6 @@ ThotBool            destroy;
  *	EVALUATION FUNCTIONS / CASCADING AND OVERLOADING		*
  *									*  
  ************************************************************************/
-
-/*----------------------------------------------------------------------
-   EvaluateClassContext : gives a score for an element in a tree   
-   in function of a selector. Three argument enter in the          
-   evaluation process :                                            
-   - the class name associated to the element                    
-   - the selector string associated to the rule                  
-   - the element and it's place in the tree                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 EvaluateClassContext (Element el, STRING class, STRING selector, Document doc)
-#else
-int                 EvaluateClassContext (el, class, selector, doc)
-Element             el;
-STRING              class;
-STRING              selector;
-Document            doc;
-#endif
-{
-  Element             father;
-  STRING              elHtmlName;
-  STRING              end_str;
-  STRING              sel = selector;
-  int                 result = 0;
-
-  elHtmlName = GetCSSName (el, doc);
-
-  /* look for a selector (ELEM) */
-  selector = SkipBlanksAndComments (selector);
-  if (*selector == '(')
-    {
-      for (end_str = selector; *end_str; end_str++)
-	if (*end_str == ')')
-	  break;
-      if (*end_str != ')')
-	fprintf (stderr, "Unmatched '(' in selector \"%s\"\n", sel);
-      else
-	{
-	  /*
-	   * separate the father name, and evaluate it.
-	   */
-	  *end_str = 0;
-	  father = TtaGetParent (el);
-	  result = EvaluateClassContext (father, class, selector + 1, doc);
-	  *end_str = ')';
-	  
-	  if (result)
-	    {
-	      /*
-	       * verify that the end of the string match the current element.
-	       */
-	      if (EvaluateClassContext (el, class, end_str + 1, doc))
-		result *= 10;
-	      else
-		result = 0;
-	    }
-	}
-    }
-  if (!result)
-    {
-      if (!ustrcasecmp (class, elHtmlName))
-	result = 1000;
-      else if (!ustrcasecmp (class, selector))
-	result = 100;
-    }
-  return (result);
-}
-
-/*----------------------------------------------------------------------
-   EvaluateClassSelector : gives a score for an element in a tree  
-   in function of a selector. Three arguments enter in the          
-   evaluation process:                                            
-   - the class name associated to the element                    
-   - the selector string associated to the rule                  
-   - the element and it's place in the tree                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 EvaluateClassSelector (Element el, STRING class, STRING selector, Document doc)
-#else
-int                 EvaluateClassSelector (el, class, selector, doc)
-Element             el;
-STRING              class;
-STRING              selector;
-Document            doc;
-#endif
-{
-   int                 l = ustrlen (class);
-   int                 L = ustrlen (selector);
-   int                 val = 0;
-
-   val = EvaluateClassContext (el, class, selector, doc);
-   if (val)
-      return (val);
-
-   if (L < l)
-      return (0);
-
-   /*
-    * first approximation based on substrings .... :-( !!!!!!!!!!
-    */
-   while (*selector != 0)
-      if ((*selector == *class) && (!ustrncmp (class, selector, l)))
-	 return (val = ((l * 1000) / L));
-      else
-	 selector++;
-
-   return (val);
-}
 
 /*----------------------------------------------------------------------
    IsImplicitClassName : return wether the Class name is an        

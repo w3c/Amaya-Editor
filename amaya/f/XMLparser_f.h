@@ -6,15 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GetXMLElementNameFromThotType ( ElementType elType,
-                                            STRING *buffer );
 extern void XMLInsertElement ( Element el );
 extern void XMLElementComplete ( Element el,
                                  Document doc );
 extern void XMLTextToDocument ( void );
-extern void MapXMLElementType ( STRING XMLname,
+extern void GetXMLElementType ( STRING XMLname,
                                 ElementType *elType,
-                                STRING* mappedName,
+                                USTRING* mappedName,
                                 STRING content,
                                 Document doc );
 extern void FreeXMLParser ( void );
@@ -27,15 +25,13 @@ extern void XMLparse ( STRING DTDname,
 
 #else /* __STDC__ */
 
-extern void GetXMLElementNameFromThotType (/* ElementType elType,
-                                              STRING *buffer */);
 extern void XMLInsertElement (/* Element el */);
 extern void XMLElementComplete (/* Element el,
                                    Document doc */);
 extern void XMLTextToDocument (/* void */);
-extern void MapXMLElementType (/* STRING XMLname,
+extern void GetXMLElementType (/* STRING XMLname,
                                   ElementType *elType,
-                                  STRING* mappedName,
+                                  USTRING* mappedName,
                                   STRING content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);

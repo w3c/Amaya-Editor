@@ -6,16 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern SSchema GetGraphMLSSchema ( Document doc );
 extern void GraphMLGetDTDName ( STRING DTDname,
                                 STRING elementName );
-extern void MapGraphMLElementType ( STRING XMLname,
-                                    ElementType *elType,
-                                    STRING* mappedName,
-                                    STRING content,
-                                    Document doc );
-extern void GetGraphMLElementName ( ElementType elType,
-                                    STRING* buffer );
 extern void MapGraphMLAttribute ( STRING Attr,
                                   AttributeType *attrType,
                                   STRING elementName,
@@ -62,16 +54,8 @@ extern void GraphMLAttributeComplete ( Attribute attr,
 
 #else /* __STDC__ */
 
-extern SSchema GetGraphMLSSchema (/* Document doc */);
 extern void GraphMLGetDTDName (/* STRING DTDname,
                                   STRING elementName */);
-extern void MapGraphMLElementType (/* STRING XMLname,
-                                      ElementType *elType,
-                                      STRING* mappedName,
-                                      STRING content,
-                                      Document doc */);
-extern void GetGraphMLElementName (/* ElementType elType,
-                                      STRING* buffer */);
 extern void MapGraphMLAttribute (/* STRING Attr,
                                     AttributeType *attrType,
                                     STRING elementName,

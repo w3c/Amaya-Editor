@@ -67,8 +67,6 @@ typedef struct _FollowTheLink_context {
   STRING               url;
 } FollowTheLink_context;
 
-extern ThotBool HTMLErrorsFound;
-
 /*----------------------------------------------------------------------
    ResetFontOrPhraseOnText: The text element elem should
    not be any longer within an element of type notType.

@@ -1479,7 +1479,6 @@ strNode            *TN;
   NS = (strGenStack *) TtaGetMemory (sizeof (strGenStack));
   NS->Tag = TtaAllocString (NAME_LENGTH);
   ustrcpy (NS->Tag, ND->Tag);
-   
   GIType (NS->Tag, &elType, TransDoc);
  
 #ifdef MATHML

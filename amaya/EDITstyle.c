@@ -711,10 +711,12 @@ Document            doc;
 {
   Attribute           attr;
   AttributeType       attrType;
+  Element             el, parent, child, title;
   ElementType         elType, selType;
   CHAR_T              stylestring[1000];
   STRING              a_class;
   int                 len, base;
+  ThotBool            found;
 
   /* check whether it's the element type or a class name */
   ustrcpy (stylestring, _NEWLINE_);
@@ -751,22 +753,22 @@ Document            doc;
 #ifdef MATHML
       if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	 {
-	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = MathML_ATTR_class;
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_class;
 	 }
       else
 #endif
 #ifdef GRAPHML
       if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	 {
-	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = GraphML_ATTR_class;
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = GraphML_ATTR_class;
 	 }
       else
 #endif
 	 {
-         attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-         attrType.AttrTypeNum = HTML_ATTR_Class;
+	   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   attrType.AttrTypeNum = HTML_ATTR_Class;
 	 }
       attr = TtaGetAttribute (ClassReference, attrType);
       if (!attr)
@@ -785,8 +787,77 @@ Document            doc;
     }
   /* remove the Style attribute */
   RemoveElementStyle (ClassReference, doc, FALSE);
+  /* generate or update the style element */
+  parent = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (parent);
+  elType.ElTypeNum = HTML_EL_HEAD;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Notation;
+  el = TtaSearchTypedElement (elType, SearchForward, parent);
+  found = FALSE;
+  while (!found && el)
+    {
+      /* is there any style element? */
+      elType.ElTypeNum = HTML_EL_STYLE_;
+      parent = el;
+      el = TtaSearchTypedElementInTree (elType, SearchForward, parent, el);
+      if (el)
+	{
+	  /* is it a text/css one? */
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      len = TtaGetTextAttributeLength (attr);
+	      a_class = TtaAllocString (len + 1);
+	      TtaGiveTextAttributeValue (attr, a_class, &len);
+	      found = (!strcmp (a_class, "text/css"));
+	      TtaFreeMemory (a_class);
+	    }
+	}
+      
+    }
+
+  if (!found)
+    {
+      /* the STYLE element doesn't exist we create it now */
+      el = TtaNewTree (doc, elType, "");
+      /* insert the new style element after the title if it exists */
+      elType.ElTypeNum = HTML_EL_TITLE;
+      title = TtaSearchTypedElement (elType, SearchForward, parent);
+      if (title != NULL)
+	TtaInsertSibling (el, title, FALSE, doc);
+      else
+	TtaInsertFirstChild (&el, parent, doc);
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, "text/css", el, doc);
+    }
+
+  child = TtaGetLastChild (el);
+  if (child == NULL)
+    {
+      /* there is not TEXT element within the STYLE we create it now */
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      child = TtaNewTree (doc, elType, "");
+      TtaInsertFirstChild (&child, el, doc);
+      /* remember the element to be registered in the Undo queue */
+      el = child;
+      found = FALSE;
+    }
+
+  if (found)
+    /* Register the previous value of the STYLE element in the Undo queue */
+    TtaRegisterElementReplace (child, doc);
+
+  /* update the STYLE element */
+  len = TtaGetTextLength (child);
+  TtaInsertTextContent (child, len, stylestring, doc);
+
+  if (!found)
+    /* Register the created STYLE or child element in the Undo queue */
+    TtaRegisterElementCreate (el, doc);
+
   /* parse and apply this new CSS to the current document */
-  /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
   ReadCSSRules (doc, NULL, stylestring, TRUE);
 
   TtaCloseUndoSequence (doc);
@@ -963,66 +1034,72 @@ View                view;
 
   /* if only a part of an element is selected, select the parent instead */
   elType = TtaGetElementType (ClassReference);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
     ClassReference = TtaGetParent (ClassReference);
   /* update the class name selector. */
-  elHtmlName = GetCSSName (ClassReference, doc);
-#  ifndef _WINDOWS
-  TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
-	      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
-#  endif /* !_WINDOWS */
-  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-#  ifndef _WINDOWS
-  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
-		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-#  endif /* !_WINDOWS */
-  
-  /* preselect the entry corresponding to the class of the element. */
-#ifdef MATHML
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
-     {
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_class;
-     }
+  elHtmlName = GITagName (ClassReference);
+  if (elHtmlName == TEXT('?'))
+    InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
   else
+    {
+#ifndef _WINDOWS
+      TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
+		  TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
+#endif /* !_WINDOWS */
+      NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
+#ifndef _WINDOWS
+      TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
+		      TtaGetMessage (AMAYA, AM_SEL_CLASS),
+		      NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
+#endif /* !_WINDOWS */
+      
+      /* preselect the entry corresponding to the class of the element. */
+#ifdef MATHML
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_class;
+	}
+      else
 #endif
 #ifdef GRAPHML
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-     {
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = GraphML_ATTR_class;
-     }
-  else
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	  {
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = GraphML_ATTR_class;
+	  }
+	else
 #endif
-     {
-     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-     attrType.AttrTypeNum = HTML_ATTR_Class;
-     }
-  attr = TtaGetAttribute (ClassReference, attrType);
-  if (attr)
-    {
-      len = 50;
-      TtaGiveTextAttributeValue (attr, a_class, &len);
-#   ifndef _WINDOWS
-      TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#   endif /* _WINDOWS */
-      ustrcpy (CurrentClass, a_class);
-    }
-  else
-    {
-#   ifndef _WINDOWS
-      TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#   endif /* _WINDOWS */
-      ustrcpy (CurrentClass, elHtmlName);
-    }
+	  {
+	    attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	    attrType.AttrTypeNum = HTML_ATTR_Class;
+	  }
+      attr = TtaGetAttribute (ClassReference, attrType);
+      if (attr)
+	{
+	  len = 50;
+	  TtaGiveTextAttributeValue (attr, a_class, &len);
+#ifndef _WINDOWS
+	  TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
+#endif /* _WINDOWS */
+	  ustrcpy (CurrentClass, a_class);
+	}
+      else
+	{
+#ifndef _WINDOWS
+	  TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
+#endif /* _WINDOWS */
+	  ustrcpy (CurrentClass, elHtmlName);
+	}
   
-  /* pop-up the dialogue box. */
-#  ifndef _WINDOWS
-  TtaShowDialogue (BaseDialog + ClassForm, TRUE);
-#  else  /* _WINDOWS */
-  CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ListBuffer);
-#  endif /* _WINDOWS */
+      /* pop-up the dialogue box. */
+#ifndef _WINDOWS
+      TtaShowDialogue (BaseDialog + ClassForm, TRUE);
+#else  /* _WINDOWS */
+      CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ListBuffer);
+#endif /* _WINDOWS */
+    }
 }
 
 /*----------------------------------------------------------------------

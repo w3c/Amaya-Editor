@@ -288,7 +288,6 @@ typedef struct _RELOAD_context {
 		   element (% of the window height) */
 } RELOAD_context;
 
-ThotBool HTMLErrorsFound = FALSE;
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -4247,6 +4246,8 @@ NotifyEvent        *event;
    SelectionInTT = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
+   HTMLErrorsFound = FALSE;
+
    /* initialize icons */
 #  ifndef _WINDOWS
    stopR = TtaCreatePixmapLogo (stopR_xpm);

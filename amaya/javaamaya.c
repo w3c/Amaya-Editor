@@ -154,7 +154,7 @@ char *tag;
 {
     ElementType	elType;
 
-    GIType (tag, &elType, (Document) 0);
+    GIType (tag, &elType, 0);
     return (elType.ElTypeNum); /**** should return elType *****/
 }
 

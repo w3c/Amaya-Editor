@@ -43,17 +43,10 @@ extern STRING TtaAllocString ();
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 
-#if defined(_I18N_) || defined(__JIS__) 
-#   define HTAppName     L"amaya"
-#   define HTAppVersion  L"V2.1a"
-#   define URL_STR       L"/"
-#   define URL_SEP       L'/'
-#else /* !_I18N_  */
-#     define HTAppName     "amaya"
-#     define HTAppVersion  "V2.1"
-#     define URL_STR       "/"
-#     define URL_SEP       '/'
-#endif /* _I18N_ */
+#define HTAppName     TEXT ("amaya")
+#define HTAppVersion  TEXT ("V2.1a")
+#define URL_STR       TEXT ("/")
+#define URL_SEP       TEXT ('/')
 
 
 /* Number of views used in Amaya */
@@ -257,6 +250,7 @@ THOT_EXPORT ThotBool     SelectionInSub;
 THOT_EXPORT ThotBool     SelectionInSup;
 THOT_EXPORT ThotBool     SelectionInQuote;
 THOT_EXPORT ThotBool     SelectionInBDO;
+THOT_EXPORT ThotBool     HTMLErrorsFound;
 
 typedef enum
 {

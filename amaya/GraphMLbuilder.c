@@ -24,28 +24,6 @@
 #include "HTML.h"
 #include "parser.h"
 
-/* mapping table of GraphML elements */
-
-static ElemMapping    GraphMLElemMappingTable[] =
-{
-   /* This table MUST be in alphabetical order */
-   {"XMLcomment", SPACE, GraphML_EL_XMLcomment},
-   {"XMLcomment_line", SPACE, GraphML_EL_XMLcomment_line},
-   {"circle", SPACE, GraphML_EL_Circle},
-   {"closedspline", SPACE, GraphML_EL_ClosedSpline},
-   {"group", SPACE, GraphML_EL_Group},
-   {"label", 'X', GraphML_EL_Label},	/* see function GraphMLGetDTDName */
-   {"line", 'E', GraphML_EL_Line_},
-   {"math", 'X', GraphML_EL_Math},	/* see function GraphMLGetDTDName */
-   {"oval", SPACE, GraphML_EL_Oval},
-   {"polygon", SPACE, GraphML_EL_Polygon},
-   {"polyline", 'E', GraphML_EL_Polyline},
-   {"rect", SPACE, GraphML_EL_Rectangle},
-   {"spline", 'E', GraphML_EL_Spline},
-   {"roundrect", SPACE, GraphML_EL_RoundRect},
-   {"text", 'X', GraphML_EL_Text_},	/* see function GraphMLGetDTDName */
-   {"", SPACE, 0}	/* Last entry. Mandatory */
-};
 
 static AttributeMapping GraphMLAttributeMappingTable[] =
 {
@@ -107,24 +85,6 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 
 #define MaxMsgLength 200
 
-/*----------------------------------------------------------------------
-   GetGraphMLSSchema returns the GraphML Thot schema for document doc.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-SSchema            GetGraphMLSSchema (Document doc)
-#else
-SSchema            GetGraphMLSSchema (doc)
-Document	   doc;
-
-#endif
-{
-  SSchema	GraphMLSSchema;
-
-  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
-  if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
-  return (GraphMLSSchema);
-}
 
 /*----------------------------------------------------------------------
    GraphMLGetDTDName
@@ -143,81 +103,10 @@ STRING elementName;
 {
    if (ustrcmp (elementName, "math") == 0)
       ustrcpy (DTDname, "MathML");
-   else if (ustrcmp (elementName, "label") == 0 ||
-	    ustrcmp (elementName, "text") == 0)
+   else if (ustrcmp (elementName, "label") == 0 || ustrcmp (elementName, "text") == 0)
       ustrcpy (DTDname, "HTML");
    else
       ustrcpy (DTDname, "");
-}
-
-/*----------------------------------------------------------------------
-   MapGraphMLElementType
-   search in the mapping tables the entry for the element type of
-   name XMLname and returns the corresponding Thot element type.
-   Returns -1 and schema = NULL if not found.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               MapGraphMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
-#else
-void               MapGraphMLElementType (XMLname, elType, mappedName, content, doc)
-STRING              XMLname;
-ElementType	   *elType;
-STRING*		    mappedName;
-STRING	            content;
-Document            doc;
-#endif
-{
-   int                 i;
-
-   elType->ElTypeNum = 0;
-   /* search in GraphMLElemMappingTable */
-   i = 0;
-   do
-       if (ustrcasecmp (GraphMLElemMappingTable[i].XMLname, XMLname))
-	  i++;
-       else
-	  {
-	  elType->ElTypeNum = GraphMLElemMappingTable[i].ThotType;
-	  if (elType->ElSSchema == NULL)
-	    elType->ElSSchema = GetGraphMLSSchema (doc);
-	  *mappedName = GraphMLElemMappingTable[i].XMLname;
-	  *content = GraphMLElemMappingTable[i].XMLcontents;
-	  }
-   while (elType->ElTypeNum <= 0 && GraphMLElemMappingTable[i].XMLname[0] != EOS);
-}
-
-/*----------------------------------------------------------------------
-   GetGraphMLElementName
-   search in the mapping table the XML name for a given Thot type
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               GetGraphMLElementName (ElementType elType, STRING* buffer)
-#else
-void               GetGraphMLElementName (elType, buffer)
-ElementType elType;
-STRING* buffer;
-
-#endif
-{
-   int                 i;
-
-   if (elType.ElTypeNum > 0)
-     {
-	i = 0;
-	if (ustrcmp ("GraphML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
-	  do
-	    {
-	     if (GraphMLElemMappingTable[i].ThotType == elType.ElTypeNum)
-		{
-		*buffer = GraphMLElemMappingTable[i].XMLname;
-		return;
-		}
-	     i++;
-	    }
-	  while (GraphMLElemMappingTable[i].XMLname[0] != EOS);	  
-     }
-   *buffer = "???";
-   return;
 }
 
 /*----------------------------------------------------------------------

@@ -8,6 +8,9 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#define MATH_TYPE 1
+#define GRAPH_TYPE 2
+
 #define MaxTypeNameLength 16
 typedef UCHAR_T typeName[MaxTypeNameLength];
 
