@@ -203,7 +203,7 @@ libmd5 : force
 		@(localdir=`pwd`; \
 		 zlibsrcdir="$$localdir/../libpng/zlib"; \
 		 cd $(LIBWWW)/modules/md5 ; \
-		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(AMAYA_EXPAT_OPTIONS)" \
+		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
 		 CPPFLAGS="$(CPPFLAGS) -I$$zlibsrcdir" \
 	        	    libmd5.la)
 
@@ -219,7 +219,7 @@ libwww_make_module_expat \
 libexpat : force
 		@(localdir=`pwd`; \
 		  cd $(LIBWWW)/modules/expat/ ; \
-		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
+		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
 		  CPPFLAGS="$(CPPFLAGS)" \
 	        	    )
 
@@ -247,7 +247,7 @@ $(AMAYA_LIBWWW_STANDARD_LIBS) : force
 		      all_libs="$$all_libs $$lib.la" ; \
 		   done ; \
 		  cd $(LIBWWW)/Library/src ; \
-		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
+		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
 		  CPPFLAGS="$(CPPFLAGS) -I$$zlibsrcdir" \
 			     $$all_libs)
 
