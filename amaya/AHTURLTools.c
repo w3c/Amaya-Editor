@@ -2426,17 +2426,18 @@ char *GetTempName (const char *dir, const char *prefix)
 {
 #ifdef JOSE
 
-  static char tmpbufmem[FILENAME_MAX];
+  static char tmpbufmem[PATH_MAX + 1];
   int len;
   int i;
 
   if (!dir || *dir == EOS || !TtaDirExists (dir))
     return NULL;
 
-  /* make sure that the name is no bigger than FILENAME_MAX */
+  /* make sure that the name is no bigger than PATH_MAX + the 6 tempname chars we
+   will add */
 
   len = strlen (dir);
-  if (len + L_tmpnam > FILENAME_MAX)
+  if (len + 6 > PATH_MAX)
     return NULL;
 
   /* copy the dir name, and add a DIR_SEP if it's missing */
