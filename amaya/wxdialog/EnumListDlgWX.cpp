@@ -5,7 +5,7 @@
 #include "wx/string.h"
 
 #include "AmayaApp.h"
-#include "ListDlgWX.h"
+#include "EnumListDlgWX.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -16,37 +16,45 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ListDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),       ListDlgWX::OnOkButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),   ListDlgWX::OnCancelButton )
-  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST"), ListDlgWX::OnOkButton)
+BEGIN_EVENT_TABLE(EnumListDlgWX, AmayaDialog)
+  EVT_BUTTON(     XRCID("wxID_OK"),       EnumListDlgWX::OnOkButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),   EnumListDlgWX::OnCancelButton )
+  //  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST"), EnumListDlgWX::OnOkButton)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
-  ListDlgWX create the dialog used to open/disable/enabel.. a CSS file
+  EnumListDlgWX create the dialog used to open/disable/enabel.. a CSS file
   params:
     + parent : parent window
     + title : dialog title
   ----------------------------------------------------------------------*/
-ListDlgWX::ListDlgWX( int ref,
-		      int subref,
-		      wxWindow* parent,
-		      const wxString & title,
-		      const wxArrayString& items ) :
+EnumListDlgWX::EnumListDlgWX( int ref,
+			      int subref,
+			      wxWindow* parent,
+			      const wxString & title,
+			      const wxString & label,
+			      const wxArrayString& items,
+			      int selection ) :
   AmayaDialog( parent, ref )
   ,m_SubRef(subref)
 {
-  wxXmlResource::Get()->LoadDialog(this, parent, wxT("ListDlgWX"));
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("EnumListDlgWX"));
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( title );
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
-  XRCCTRL(*this, "wxID_LIST", wxListBox)->Append( items );
 
-  // pre-select the first item
-  XRCCTRL(*this, "wxID_LIST", wxListBox)->SetSelection(0);
+
+  // setup the radiobox
+  wxPanel * p_panel = XRCCTRL(*this, "wxID_PANEL_LIST", wxPanel);
+  wxSizer * p_sizer = p_panel->GetSizer();
+  m_pRadiobox = new wxRadioBox( p_panel, -1, label,
+				wxDefaultPosition, wxDefaultSize,
+				items );
+  m_pRadiobox->SetSelection( selection );
+  p_sizer->Prepend(m_pRadiobox, 1, wxALL|wxEXPAND, 0);
+  Fit(); /* tell the top window to resize */
 
   SetAutoLayout( TRUE );
 }
@@ -54,7 +62,7 @@ ListDlgWX::ListDlgWX( int ref,
 /*----------------------------------------------------------------------
   Destructor. (Empty, as I don't need anything special done when destructing).
   ----------------------------------------------------------------------*/
-ListDlgWX::~ListDlgWX()
+EnumListDlgWX::~EnumListDlgWX()
 {
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
@@ -64,21 +72,11 @@ ListDlgWX::~ListDlgWX()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void ListDlgWX::OnOkButton( wxCommandEvent& event )
+void EnumListDlgWX::OnOkButton( wxCommandEvent& event )
 {
-  wxString selected_item = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetStringSelection();
-  if ( !selected_item.IsEmpty() )
-    {  
-      // allocate a temporary buffer
-      char buffer[512];
-      wxASSERT( selected_item.Len() < 512 );
-      strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
-      ThotCallback (m_SubRef, STRING_DATA, buffer);
-      // entry
-      int i = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetSelection();
-      ThotCallback (m_SubRef+1, INTEGER_DATA, (char*) i);
-    }
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+  int selected_item = m_pRadiobox->GetSelection();
+  ThotCallback (m_SubRef, INTEGER_DATA, (char*)selected_item);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
@@ -86,9 +84,10 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
   params:
   returns:
   ----------------------------------------------------------------------*/
-void ListDlgWX::OnCancelButton( wxCommandEvent& event )
+void EnumListDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  Close();
+  //  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */

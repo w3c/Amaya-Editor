@@ -68,11 +68,13 @@ extern ThotBool CreateAuthentDlgWX ( int ref,
                                      char *auth_realm,
                                      char *server );
 extern ThotBool CreateCSSDlgWX ( int ref,
+                                 int subref,
                                  ThotWindow parent,
                                  char *title,
                                  int nb_item,
                                  char *items );
 extern ThotBool CreateListDlgWX ( int ref,
+                                  int subref,
                                   ThotWindow parent,
                                   char *title,
                                   int nb_item,
@@ -120,6 +122,20 @@ extern ThotBool CreateListEditDlgWX ( int ref,
                                       int nb_item,
                                       const char *items,
                                       const char * selected_item );
+extern ThotBool CreateEnumListDlgWX ( int ref,
+                                      int subref,
+                                      ThotWindow parent,
+                                      const char *title,
+                                      const char *label,
+                                      int nb_item,
+                                      const char *items,
+                                      int selection );
+extern ThotBool CreateNumDlgWX ( int ref,
+                                 int subref,
+                                 ThotWindow parent,
+                                 const char *title,
+                                 const char *label,
+                                 int value );
 
 #else /* __STDC__ */
 
@@ -185,11 +201,13 @@ extern ThotBool CreateAuthentDlgWX ( int ref,
                                        char *auth_realm,
                                        char *server );
 extern ThotBool CreateCSSDlgWX ( int ref,
+                                   int subref,
                                    ThotWindow parent,
                                    char *title,
                                    int nb_item,
                                    char *items );
 extern ThotBool CreateListDlgWX ( int ref,
+                                    int subref,
                                     ThotWindow parent,
                                     char *title,
                                     int nb_item,
@@ -237,6 +255,20 @@ extern ThotBool CreateListEditDlgWX ( int ref,
                                         int nb_item,
                                         const char *items,
                                         const char * selected_item );
+extern ThotBool CreateEnumListDlgWX ( int ref,
+                                        int subref,
+                                        ThotWindow parent,
+                                        const char *title,
+                                        const char *label,
+                                        int nb_item,
+                                        const char *items,
+                                        int selection );
+extern ThotBool CreateNumDlgWX ( int ref,
+                                   int subref,
+                                   ThotWindow parent,
+                                   const char *title,
+                                   const char *label,
+                                   int value );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,7 +1,7 @@
 #ifdef _WX
 
-#ifndef __LISTDLGWX_H__
-#define __LISTDLGWX_H__
+#ifndef __ENUMLISTDLGWX_H__
+#define __ENUMLISTDLGWX_H__
 
 //-----------------------------------------------------------------------------
 // Headers
@@ -9,20 +9,22 @@
 #include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: ListDlgWX
+// Class definition: EnumListDlgWX
 //-----------------------------------------------------------------------------
-class ListDlgWX : public AmayaDialog
+class EnumListDlgWX : public AmayaDialog
 {
 public: 
   // Constructor.
-  ListDlgWX( int ref,
-	     int subref,
-	     wxWindow* parent,
-	     const wxString & title,
-	     const wxArrayString& items );
+  EnumListDlgWX( int ref,
+		 int subref,
+		 wxWindow* parent,
+		 const wxString & title,
+		 const wxString & label,
+		 const wxArrayString& items,
+		 int selection );
     
   // Destructor.                  
-  virtual ~ListDlgWX();
+  virtual ~EnumListDlgWX();
 
 private:
   void OnOkButton( wxCommandEvent& event );
@@ -32,10 +34,10 @@ private:
   DECLARE_EVENT_TABLE()
 
 private:
-  wxString m_Filter;
   int m_SubRef;
+  wxRadioBox * m_pRadiobox;
 };
 
-#endif  //__LISTDLGWX_H__
+#endif  //__ENUMLISTDLGWX_H__
 
 #endif /* _WX */

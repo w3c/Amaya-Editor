@@ -2593,13 +2593,14 @@ void TransformType (Document doc, View view)
       if (i > 0)
 	{
 #ifdef _WX
-	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransForm,
+	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransMenu,
+					      TransBaseDialog + TransMenu + 1,
 					      TtaGetViewFrame (doc, 1),
 					      TtaGetMessage (AMAYA, AM_TRANS),
 					      i, menuBuf);
 	  FormVal = 0;
 	  if (created)
-	    TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
+	    TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
 #else /* _WX */
 	  /* if some transformations have been matched, shows the menu */
 	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
