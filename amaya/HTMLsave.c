@@ -2204,9 +2204,7 @@ void BackUpDocs ()
   ----------------------------------------------------------------------*/
 static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
 {
-  DisplayMode         dispMode;
   char                tempname[MAX_LENGTH];
-  int                 line = 0, index = 0;
   ThotBool            ok;
 
   ok = FALSE;
