@@ -296,7 +296,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"scheme", "meta", 'A', HTML_ATTR_scheme, L_BasicValue},
    {"scope", "", 'A', HTML_ATTR_scope, L_BasicValue},
    {"scrolling", "", 'A', HTML_ATTR_scrolling, L_TransitionalValue},
-   {"selected", "", 'A', HTML_ATTR_Selected, L_BasicValue},
+   {"selected", "option", 'A', HTML_ATTR_Selected, L_BasicValue},
    {"shape", "", 'A', HTML_ATTR_shape, L_StrictValue},
    {"size", "basefont", 'A', HTML_ATTR_BaseFontSize, L_TransitionalValue},
    {"size", "font", 'A', HTML_ATTR_Font_size, L_TransitionalValue},
