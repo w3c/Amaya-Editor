@@ -894,8 +894,10 @@ fi
     break
   fi
   done
-  AC_SUBST(STDCPP_INCLUDES)
-  AC_SUBST(STDCPP_LIBRARIES)
+
+# not used in makefiles
+#  AC_SUBST(STDCPP_INCLUDES)
+#  AC_SUBST(STDCPP_LIBRARIES)
 
   NOPRINT=""
   PRINTIFNOTGL=" print_prog"
