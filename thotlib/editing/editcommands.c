@@ -3944,8 +3944,13 @@ void TtcPaste (Document doc, View view)
 	  if (hMem = GetClipboardData (CF_UNICODETEXT))
 	    {			
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
+		  char *dest;
 		  lpDatalength = wcslen (lpData);
-  	      PasteXClipboardW (lpData, lpDatalength);
+		  dest = TtaConvertWCToByte (lpData, UTF_8);
+		  if (Xbuffer == NULL || dest == NULL || strcmp (Xbuffer, dest))
+  	        PasteXClipboardW (lpData, lpDatalength);
+	      else 
+	        ContentEditing (TEXT_PASTE);
 	      GlobalUnlock (hMem);
 	    }
 	  /* the CF_TEXT part is probably not necessary, because
@@ -3955,7 +3960,10 @@ void TtcPaste (Document doc, View view)
 	    {
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = strlen (lpData);	      
-	      PasteXClipboard (lpData, lpDatalength);
+		  if (Xbuffer == NULL || strcmp (Xbuffer, lpData)) /****/
+ 	        PasteXClipboard (lpData, lpDatalength);
+	      else 
+	        ContentEditing (TEXT_PASTE);
 	      GlobalUnlock (hMem);
 	    }
 	  else 
