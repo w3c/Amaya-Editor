@@ -240,6 +240,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 		w = width - 1;
 	      else
 		w = width;
+	      /* in SVG foreground and background are inverted in the main
+		 view */
+	      if (!strcmp(pBox->BxAbstractBox->AbElement->ElStructSchema->SsName, "SVG") &&
+		  FrameTable[frame].FrView == 1)
+		fg = pBox->BxAbstractBox->AbBackground;
 	      DrawRectangle (frame, 1, 5, xd, yd, w, height-1, fg, 0, 0);
 	      break;
 	    default:

@@ -723,6 +723,7 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: 10;
 		Width: Enclosing . Width ;
+		Height: Enclosed . Height;
 		END;
 	END;
 
