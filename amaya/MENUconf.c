@@ -1062,6 +1062,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  libwww_CleanCache ();
 	  break;
 	case ID_DONE:
+	case IDCANCEL:
 	  CacheHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -1372,6 +1373,7 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+	case IDCANCEL:
 	  /* reset the status flag */
 	  ProxyStatus = 0;
 	  ProxyHwnd = NULL;
@@ -2062,6 +2064,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  GeneralHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -2430,6 +2433,7 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  SafePutStatus = 0;
 	  PublishHwnd = NULL;
@@ -2745,6 +2749,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  SafePutStatus = 0;
 	  BrowseHwnd = NULL;
@@ -2757,7 +2762,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  WIN_RefreshBrowseMenu (hwnDlg);
 	  break;
 	}
-      break;	     
+      break;
     default: return FALSE;
     }
   return TRUE;
@@ -3092,6 +3097,7 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  ColorHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3398,6 +3404,7 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  GeometryDoc = 0;
 	  GeometryHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3590,6 +3597,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  LanNegHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3841,6 +3849,7 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* as the user may have changed the profile,
 	     we need to rebuild the profile list again */
 	  ptr = TtaGetEnvString ("Profiles_File");
@@ -4128,6 +4137,7 @@ LRESULT CALLBACK WIN_TemplatesDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  TemplatesHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -4414,6 +4424,7 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
+    case IDCANCEL:
 	  /* reset the status flag */
 	  AnnotHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
