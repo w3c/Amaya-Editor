@@ -506,12 +506,19 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 #ifndef _WINDOWS
    int i;
    ThotWidget tree;
+   char *label;
+   int longest_label;
+
+   longest_label = 17;
 
    if (BookmarkBase == 0)
      BookmarkBase = TtaSetCallback (BookmarkMenuCallbackDialog, MAX_BOOKMARKMENU_DLG);
    
    if (aDynBookmark && aBookmark)
      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
+
+   /* create the new bookmark structure */
+   InitBookmarkMenu (doc, bookmark);
 
    /* dump the topics as a thot three */
    if (BTopicTree != 0)
@@ -530,57 +537,90 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    TtaNewSheet (BookmarkBase + BookmarkMenu, 
 		TtaGetViewFrame (doc, view),
 		"Bookmark Properties",
-		2, s, FALSE, 9, 'L', D_DONE);
+		3, s, TRUE, 2, 'L', D_DONE);
 
-
+   /* topic hiearchy */
+   label = "Topic hierarchy:";
+   TtaNewPaddedLabel (BookmarkBase + mBMTopicTreeL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
    tree = TtaNewTreeForm (BookmarkBase + mBMTopicTree,
 			  BookmarkBase + BookmarkMenu,
-			  "Topic hierarchy:",
+			  NULL,
 			  TRUE);
-   
    if (tree)
      BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
 
+   /* Title */
+   label = "Title:";
+   TtaNewPaddedLabel (BookmarkBase + mBMTitleL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMTitle,
 		   BookmarkBase + BookmarkMenu,
-		   "Title:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+
+   /* Recalls */
+   label = "Recalls";
+   TtaNewPaddedLabel (BookmarkBase + mBMBookmarksL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMBookmarks,
 		   BookmarkBase + BookmarkMenu,
-		   "URL:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+   /* Author */
+   label = "Author:";
+   TtaNewPaddedLabel (BookmarkBase + mBMAuthorL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMAuthor,
 		   BookmarkBase + BookmarkMenu,
-		   "Author:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+
+   /* Created */
+   label = "Created:";
+   TtaNewPaddedLabel (BookmarkBase + mBMCreatedL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
+   TtaNewLabel (BookmarkBase + mBMCreated,  BookmarkBase + BookmarkMenu, 
+		aBookmark->created);
+   /*
    TtaNewTextForm (BookmarkBase + mBMCreated,
 		   BookmarkBase + BookmarkMenu,
-		   "Created:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+   */
+   /* Modified */
+   label = "Modified:";
+   TtaNewPaddedLabel (BookmarkBase + mBMModifiedL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
+   TtaNewLabel (BookmarkBase + mBMModified,  BookmarkBase + BookmarkMenu, 
+		aBookmark->modified);
+   /*
    TtaNewTextForm (BookmarkBase + mBMModified,
 		   BookmarkBase + BookmarkMenu,
-		   "Last Modified:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+   */
+   /* Description */
+   label = "Description:";
+   TtaNewPaddedLabel (BookmarkBase + mBMDescriptionL,  BookmarkBase + BookmarkMenu, 
+		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMDescription,
 		   BookmarkBase + BookmarkMenu,
-		   "Description:",
+		   NULL,
 		   30,
 		   5,
 		   TRUE);
 #endif /* !_WINDOWS */
-
-   /* create the new bookmark structure */
-   InitBookmarkMenu (doc, bookmark);
 
 #ifndef _WINDOWS
    RefreshBookmarkMenu ();
@@ -629,8 +669,6 @@ static void RefreshTopicMenu ()
   TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url));
   TtaSetTextForm (TopicBase + mTMTitle, BM_bufferContent (aDynTopic->title));
   TtaSetTextForm (TopicBase + mTMAuthor, BM_bufferContent (aDynTopic->author));
-  TtaSetTextForm (TopicBase + mTMCreated, aTopic->created);
-  TtaSetTextForm (TopicBase + mTMModified, aTopic->modified);
   TtaSetTextForm (TopicBase + mTMDescription, BM_bufferContent (aDynTopic->description));
 }
 
@@ -754,6 +792,8 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 {
 #ifndef _WINDOWS
    int i;
+   char *label;
+   int longest_label = 17;
    ThotWidget tree;
 
    if (TopicBase == 0)
@@ -761,6 +801,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
   
    if (aTopic && aDynTopic)
      BMmenu_bookmarkFree (&aDynTopic, &aTopic);
+
+   /* make the new topic */
+   InitTopicMenu (doc, bookmark);
 
    /* dump the topics as a thot three */
    if (TTopicTree != 0)
@@ -780,58 +823,103 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    TtaNewSheet (TopicBase + TopicMenu, 
 		TtaGetViewFrame (doc, view),
 		"Topic Properties",
-		1, s, FALSE, 9, 'L', D_DONE);
+		1, s, TRUE, 2, 'L', D_DONE);
 
+   /* topic hierarchy */
+   label = "Topic hierarchy:";
+   TtaNewPaddedLabel (TopicBase + mTMTopicTreeL,  TopicBase + TopicMenu,
+		      label, longest_label);
    tree = TtaNewTreeForm (TopicBase + mTMTopicTree,
-		   TopicBase + TopicMenu,
-		   "Topic hierarchy:",
-		   FALSE);
-
+			  TopicBase + TopicMenu,
+			  NULL,
+			  FALSE);
    if (tree)
      BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
 
+   /* parent topic */
+   label = "Parent Topic:";
+   TtaNewPaddedLabel (TopicBase + mTMParentTopicL,  TopicBase + TopicMenu,
+		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMParentTopic,
 		   TopicBase + TopicMenu,
-		   "Parent Topic:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
 
+   /* topic title */
+   label = "Topic Title:";
+   TtaNewPaddedLabel (TopicBase + mTMTitleL,  TopicBase + TopicMenu,
+		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMTitle,
 		   TopicBase + TopicMenu,
-		   "Topic Title:",
+		   NULL, 
 		   30,
 		   1,
 		   TRUE);
 
+   /* author */
+   label = "Author:";
+   TtaNewPaddedLabel (TopicBase + mTMAuthorL,  TopicBase + TopicMenu,
+		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMAuthor,
 		   TopicBase + TopicMenu,
-		   "Author:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+
+   /* created */
+   label = "Created:";
+   TtaNewPaddedLabel (TopicBase + mTMCreatedL,  TopicBase + TopicMenu,
+		      label, longest_label);
+   TtaNewLabel (TopicBase + mTMCreated, TopicBase + TopicMenu,
+		aTopic->created);
+   /*
+   TtaNewLabel (TopicBase + mTML1, TopicBase + TopicMenu,
+		"");
+   TtaNewLabel (TopicBase + mTML2, TopicBase + TopicMenu,
+		"");
+   */
+   /*
    TtaNewTextForm (TopicBase + mTMCreated,
 		   TopicBase + TopicMenu,
-		   "Created:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+   */
+   /* last modified */
+   label = "Last Modified:";
+   TtaNewPaddedLabel (TopicBase + mTMModifiedL,  TopicBase + TopicMenu,
+		      label, longest_label);
+   TtaNewLabel (TopicBase + mTMModified, TopicBase + TopicMenu,
+		aTopic->modified);
+   /*
+   TtaNewLabel (TopicBase + mTML3, TopicBase + TopicMenu,
+		"");
+   TtaNewLabel (TopicBase + mTML4, TopicBase + TopicMenu,
+		"");
+   */
+   /*
    TtaNewTextForm (TopicBase + mTMModified,
 		   TopicBase + TopicMenu,
-		   "Last Modified:",
+		   NULL,
 		   30,
 		   1,
 		   TRUE);
+   */
+   /* description */
+   label = "Description:";
+   TtaNewPaddedLabel (TopicBase + mTMDescriptionL,  TopicBase + TopicMenu,
+		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMDescription,
 		   TopicBase + TopicMenu,
-		   "Description:",
+		   NULL,
 		   30,
 		   5,
 		   TRUE);
 #endif /* !_WINDOWS */
-
-   /* make the new topic */
-   InitTopicMenu (doc, bookmark);
 
 #ifndef _WINDOWS
    RefreshTopicMenu ();

@@ -21,7 +21,14 @@
 #define mBMDescription          6
 #define mBMTitle                7
 #define mBMTopicTree            9
-#define MAX_BOOKMARKMENU_DLG    10
+#define mBMBookmarksL           10
+#define mBMAuthorL              11
+#define mBMCreatedL             12
+#define mBMModifiedL            13
+#define mBMDescriptionL         14
+#define mBMTitleL               15
+#define mBMTopicTreeL           16
+#define MAX_BOOKMARKMENU_DLG    17
 
 #define TopicMenu               1
 #define mTMParentTopic          2
@@ -31,7 +38,14 @@
 #define mTMDescription          7
 #define mTMTitle                8
 #define mTMTopicTree            9
-#define MAX_TOPICMENU_DLG       10
+#define mTMParentTopicL         10
+#define mTMAuthorL              11
+#define mTMCreatedL             12
+#define mTMModifiedL            13
+#define mTMDescriptionL         14
+#define mTMTitleL               15
+#define mTMTopicTreeL           16
+#define MAX_TOPICMENU_DLG       17
 
 #define TopicURLMenu            1
 #define mTUMURL                 2
