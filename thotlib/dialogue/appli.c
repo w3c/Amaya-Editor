@@ -1752,16 +1752,17 @@ void               *event;
 	       while (event.type != ButtonRelease && event.type != ButtonPress)
 		 {
 		   if (event.type == MotionNotify ||
-		       (event.type != ConfigureNotify &&
+		       (/*event.type != ConfigureNotify &&
 			event.type != MapNotify &&
 			event.type != UnmapNotify &&
 			event.type != DestroyNotify &&
-			event.type != NoExpose &&
+			event.type != NoExpose && */
 			(event.xmotion.y > h || event.xmotion.y < 0)))
 		     {
 		       dx = event.xmotion.x - ClickX;
 		       dy = event.xmotion.y - ClickY;
-		       if (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+		       if (dx > 2 || dx < -2 || dy > 2 || dy < -2 ||
+			   event.xmotion.y > h || event.xmotion.y < 0)
 			 {
 			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
 			   comm = 1;	/* il y a un drag */

@@ -1156,7 +1156,7 @@ ThotEvent          *ev;
 
 #ifndef _WINDOWS
    status = XtAppPending (app_cont);
-   if (status != 0)
+   if (status & XtIMXEvent)
        XtAppNextEvent (app_cont, ev);
    else
      {
