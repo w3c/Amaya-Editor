@@ -297,7 +297,7 @@ extern void TtaSetMultikey ( ThotBool value );
    Parameters:
    value :
   ----------------------------------------------------------------------*/
-extern ThotBool TtaGetMulitkey();
+extern ThotBool TtaGetMultikey();
 #endif /* __CEXTRACT__ */
 
 #endif
