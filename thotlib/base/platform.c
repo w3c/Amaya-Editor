@@ -124,7 +124,7 @@ ThotDirBrowse      *me;
 #else  /* WWW_MSWINDOWS */
    int                 i;
    int                 ls_car;
-   BOOLEAN             notEof;
+   boolean             notEof;
    struct stat         fileStat;
 
    while (TRUE)

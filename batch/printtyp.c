@@ -368,8 +368,9 @@ char              **argv;
 #endif /* __STDC__ */
 
 {
+   int i;
 
-   TYP = TtaGetMessageTable ("libdialogue", MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    TYP = TtaGetMessageTable ("typdialogue", TYP_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';

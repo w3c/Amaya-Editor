@@ -15,6 +15,8 @@
 #define MAX_INCLUDE	200
 #define MAX_SUB_INCLUDE 30
 
+int use_relative_pathnames = 0;
+
 /*
  * include tree + hash table access 
  */
@@ -343,7 +345,8 @@ static void do_depend(void)
 #ifdef linux
 	mmap_map = mmap(NULL, mmap_mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (-1 == (long)mmap_map) {
-		perror("mkdep: mmap");
+		fprintf(stderr,"mkdep : mmap file %s : ", filename);
+		perror("");
 		close(fd);
 		return;
 	}
@@ -374,6 +377,7 @@ int main(int argc, char **argv)
 	char **my_argv = argv;
 	char pwd[MAX_PATH_LENGHT];
 	char buffer[MAX_PATH_LENGHT];
+	char *vpath = NULL;
 
         init_dep();
         getcwd(pwd, sizeof(pwd));
@@ -382,8 +386,13 @@ int main(int argc, char **argv)
 		int len;
 		char *name = *++my_argv;
 
-                if ((name[0] == '-') && (name[1] == 'I')) {
-		    if (name[2] != '/') {
+		if (!strcmp(name, "-relative")) {
+		    use_relative_pathnames = 1;
+		} else if (!strcmp(name, "-vpath")) {
+		    vpath = *++my_argv;
+		    --my_argc;
+		} else if ((name[0] == '-') && (name[1] == 'I')) {
+		    if ((!use_relative_pathnames) && (name[2] != '/')) {
 		        strcpy(buffer, "-I");
 		        strcat(buffer, pwd);
 		        strcat(buffer, "/");
@@ -406,8 +415,13 @@ int main(int argc, char **argv)
 		int len;
 		char *name = *++argv;
 
-                if (name[0] == '-') continue;
-		if (name[0] != '/') {
+		if (!strcmp(name, "-vpath")) {
+		    ++argv;
+		    --argc;
+		    continue;
+                }
+		if (name[0] == '-') continue;
+		if ((!use_relative_pathnames) && (name[0] != '/')) {
 		   strcpy(buffer, pwd);
                    strcat(buffer, "/");
                    strcat(buffer, name);
@@ -431,7 +445,13 @@ int main(int argc, char **argv)
                 /*
 		 * print the base dependancy between the .o and .c file.
 		 */
-	        printf("%s : %s", depname,filename);
+		if ((vpath != NULL) && (!strncmp(depname, vpath, strlen(vpath)))) {
+		    char *relpath = &depname[strlen(vpath)];
+
+		    if (*relpath == '/') relpath++;
+		    printf("%s : %s", relpath, filename);
+		} else
+		    printf("%s : %s", depname,filename);
 
 		/*
 		 * do basic dependancies on the C source file.
@@ -473,7 +493,10 @@ int main(int argc, char **argv)
 		 * dump the dependancies found.
 		 */
 		for (i = 0;i < nb_include;i++)
-		    printf(" \\\n   %s", include_list[i]);
+		    if (!strncmp(include_list[i], "./", 2))
+		        printf(" \\\n   %s", &include_list[i][2]);
+		    else
+			printf(" \\\n   %s", include_list[i]);
 		printf("\n\n");
 	}
 #ifdef DEBUG_HASH

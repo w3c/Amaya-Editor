@@ -1117,11 +1117,12 @@ char               *appArgv0;
    /* Check a compiled-in value (non standard) */
    if (IsThotDir (COMPILED_IN_THOTDIR))
      {
+        strcpy(execname, COMPILED_IN_THOTDIR);
 	AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR,
 			  REGISTRY_INSTALL, TRUE);
 	goto load_system_settings;
      }
-   else if (thot_dir_env != NULL) 
+   else
      {
         fprintf(stderr,"Invalid COMPILED_IN_THOTDIR compile-time value : %s\n",
 	        COMPILED_IN_THOTDIR);
