@@ -86,12 +86,15 @@ static char      URL_txt [500];
 static char      doc_title [500];
 
 int         cyToolBar ;
+int         CommandToString [MAX_BUTTON];
 char        szTbStrings [4096];
 HWND        hwndToolTip ;
-DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER | TBSTYLE_TOOLTIPS;
+HWND        hwndTT;
+DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP AmayaTBBitmap;
 
+#if 0
 #ifdef __STDC__
 BOOL InitToolTip (HWND hwndToolBar)
 #else  /* __STDC__ */
@@ -107,19 +110,10 @@ HWND hwndToolBar;
    if (hwndTT == NULL) 
       return FALSE ;
 
-   /* Add tooltip for main combo box */
-   ZeroMemory (&ti, sizeof (TOOLINFO)) ;
-   ti.cbSize = sizeof (TOOLINFO) ;
-   ti.uFlags = TTF_IDISHWND | TTF_CENTERTIP | TTF_SUBCLASS ;
-   ti.hwnd   = hwndToolBar ;
-   ti.uId    = (UINT) (HWND) hwndComboBox ;
-   ti.lpszText = LPSTR_TEXTCALLBACK ;
-   bSuccess = ToolTip_AddTool (hwndTT, &ti) ;
-   if (!bSuccess)
-      return FALSE ;
 
    return bSuccess ;
 }
+#endif /* 0 */
 
 #ifdef __STDC__
 void CopyToolTipText (LPTOOLTIPTEXT lpttt)
@@ -134,14 +128,6 @@ LPTOOLTIPTEXT lpttt;
    int cMax ;
    LPSTR pString ;
    LPSTR pDest = lpttt->lpszText ;
-
-   /* Check for combo box window handles */
-   if (lpttt->uFlags & TTF_IDISHWND) {
-      if ((iButton == (int) hwndCombo) || (iButton == (int) hwndEdit)) {
-         lstrcpy (pDest, "1-2-3 ComboBox") ;
-         return ;
-      }
-   }
 
    /* Map command ID to string index */
    for (i = 0 ; CommandToString[i] != -1 ; i++) {
@@ -1093,13 +1079,13 @@ LPARAM      lParam;
 	         /* Create toolbar  */
 		 AmayaTBBitmap.hInst = hInstance;
 		 AmayaTBBitmap.nID   = ID_TOOLBAR;
-                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
+                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
                  ToolBar_AddString (ToolBar, 0, szTbStrings);
-                 hwndToolTip = ToolBar_GetToolTips (ToolBar);
-
+                 /*hwndToolTip = ToolBar_GetToolTips (ToolBar);*/
+				 /*
                  if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
-                    InitToolTip (ToolBar) ;
+                    InitToolTip (ToolBar) ;	*/
 
                  /* Create status bar  */
                  StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
@@ -1135,12 +1121,9 @@ LPARAM      lParam;
                  LPNMHDR pnmh = (LPNMHDR) lParam ;
                  int idCtrl = (int) wParam ;
 
-		 /* Display notification details in notify window */
-		 DisplayNotificationDetails (wParam, lParam) ;
-		 
 		 /*Toolbar notifications */
 		 if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
-		    return ToolBarNotify (hwnd, wParam, lParam) ;
+		    return ToolBarNotify (frame, hwnd, wParam, lParam) ;
 		 
 		 /* Fetch tooltip text */
 		 if (pnmh->code == TTN_NEEDTEXT) {
