@@ -413,6 +413,11 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM
 	  else
 		  SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
       HrefUrl [0] = 0;
+
+	  /* set the default focus and return FALSE to validate it */
+	  SetFocus (GetDlgItem (hwnDlg, IDC_GETURL));
+	  return FALSE;
+
       break;
       
     case WM_COMMAND:
