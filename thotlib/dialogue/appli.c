@@ -136,7 +136,7 @@ extern void ZoomOut (Document document, View view);
 // This flag is used to recalculate the glcanvas after a RESIZE event
 // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
 // (it appends only on some hardware opengl implementations on Linux)
-static ThotBool g_NeedRedisplayAllTheFrame = FALSE;
+static ThotBool g_NeedRedisplayAllTheFrame[MAX_FRAME];
 #endif /* _GL */
 
 #ifdef _WINGUI
@@ -1031,12 +1031,12 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
   /*    return TRUE; */
   if (GL_prepare (frame))
     {
-      if ( g_NeedRedisplayAllTheFrame && (glhard () || GetBadCard ()) )
+      if ( g_NeedRedisplayAllTheFrame[frame] && (glhard () || GetBadCard ()) )
 	{
 	  // we need to recalculate the glcanvas only once : after the RESIZE event
 	  // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
 	  // (it appends only on some hardware opengl implementations on Linux)
-	  g_NeedRedisplayAllTheFrame = FALSE;
+	  g_NeedRedisplayAllTheFrame[frame] = FALSE;
 
 	  // redraw the whole frame content
 	  x = pFrame->FrXOrg;
@@ -1121,7 +1121,7 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       // we need to recalculate the glcanvas after the RESIZE event
       // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
       // (it appends only on some hardware opengl implementations on Linux)
-      g_NeedRedisplayAllTheFrame = TRUE;
+      g_NeedRedisplayAllTheFrame[frame] = TRUE;
 #endif /* !defined(_MACOS) && !defined(_WINDOWS) */
 
     }
