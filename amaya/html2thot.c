@@ -706,7 +706,13 @@ Document            document;
    attrType.AttrTypeNum = HTML_ATTR_shape;
    attrShape = TtaGetAttribute (element, attrType);
    if (attrShape == NULL)
-      return;			/* not allowed */
+     /* no shape attribute. Create one with value rectangle */
+     {
+	attrShape = TtaNewAttribute (attrType);
+        TtaAttachAttribute (element, attrShape, document);
+	shape = HTML_ATTR_shape_VAL_rectangle;
+	TtaSetAttributeValue (attrShape, shape, element, document);
+     }
    else
       shape = TtaGetAttributeValue (attrShape);
    length = TtaGetTextAttributeLength (attrCoords);
@@ -4947,6 +4953,29 @@ in the Head ****/
 		do
 		   ok = TtaMergeText (el, theDocument);
 		while (ok);
+	  }
+
+	/* checks all MAP elements. If they are within a Block element, */
+	/* move them up in the structure */
+	el = rootElement;
+	elType = TtaGetElementType (el);
+	elType.ElTypeNum = HTML_EL_MAP;
+	/* search all MAP elements in the document */
+	while (el != NULL)
+	  {
+	     /* search the next MAP element in the abstract tree */
+	     el = TtaSearchTypedElement (elType, SearchForward, el);
+	     if (el != NULL)
+		/* a MAP element has been found. */
+		{
+		parent = TtaGetParent(el);
+		if (IsBlockElement (parent))
+		  /* its parent is a block element */
+		  {
+		  TtaRemoveTree (el, theDocument);
+		  TtaInsertSibling (el, parent, TRUE, theDocument);
+		  }
+		}
 	  }
 
 	/* add other checks here */
