@@ -260,13 +260,16 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
    PtrDocSchemasDescr   pPfS, pPrevPfS;
    int                  i;
 
-   if (schemaName == NULL || schemaName[0] == EOS || pSS == NULL)
+   if (pSS == NULL)
      /* invalid parameter */
      return FALSE;
+   if (schemaName == NULL)
+     /* no presentation schema specified, get the default from the structure schema */
+     schemaName = pSS->SsDefaultPSchema;
    pPSchema = NULL;
    /* Look at the table of loaded schemas */
    for (i = 0; i < MAX_PSCHEMAS &&
-	       ustrcmp (schemaName, LoadedPSchema[i].PresSchemaName); i++);
+	       strcmp (schemaName, LoadedPSchema[i].PresSchemaName); i++);
    if (i < MAX_PSCHEMAS)
       /* This schema is in the table, no need to load it */
       {
@@ -712,7 +715,8 @@ static void         AppendSRule (int *ret, PtrSSchema pSS)
 /*----------------------------------------------------------------------
    CreateNature
    retourne le numero de la regle definissant le type de nom SSchName
-   dans le schema de structure pointe par pSS.                                    S'il n'existe pas de type de ce nom, ajoute une regle de type   
+   dans le schema de structure pointe par pSS.
+   S'il n'existe pas de type de ce nom, ajoute une regle de type   
    CsNatureSchema au schema de structure et charge le schema de	
    structure de nom SSchName; retourne le numero de la regle creee	
    ou 0 si echec creation.						
