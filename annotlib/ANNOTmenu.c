@@ -24,6 +24,16 @@ w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
 #include "annotlib.h"
 #include "ANNOTmenu.h"
 
+#ifdef _WINDOWS
+#include "resource.h"
+#include "wininclude.h"
+
+#include "constmedia.h"
+#include "appdialogue.h"
+
+extern HINSTANCE hInstance;
+#endif /* _WINDOWS */
+
 /* common local variables */
 static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
@@ -50,6 +60,11 @@ static SelType  AnnotSelType;
 static int      AnnotTypesBase;
 static CHAR_T   AnnotTypesSelItem[MAX_LENGTH];
 static List     *typesList;
+
+#ifdef _WINDOWS
+static HWND       FilterHwnd = NULL;
+static ThotWindow FilterSelHwnd = NULL;
+#endif /* WINDOWS */
 
 typedef struct _typeSelector
 {
@@ -273,6 +288,36 @@ View         view;
  *************************************************/
 
 /*---------------------------------------------------------------
+  WIN_AnnotFilterNewSelector
+  Does the equivalent of the Thotlib selector for the Annotation
+  Filter.
+  ------------------------------------------------------------------*/
+#ifdef _WINDOWS
+static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_entries)
+{
+  int index = 0;
+  int i = 0;
+
+  if (!FilterSelHwnd)
+    /* create a new window if it didn't exist */
+    FilterSelHwnd = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				 10, 40, 310, 200, FilterHwnd, (HMENU) 1, 
+				(HINSTANCE) GetWindowLong (FilterHwnd, GWL_HINSTANCE), NULL);
+  else
+    /* erase the text of the existing window */
+    SendMessage (FilterSelHwnd, LB_RESETCONTENT, 0, 0);
+
+  while (i < nb_entries && entries[index] != '\0')
+    {
+      SendMessage (FilterSelHwnd, LB_INSERTSTRING, i, (LPARAM) &entries[index]); 
+      /* @@ Longueur de l'intitule ?? */
+      index += ustrlen (&entries[index]) + 1;
+      i++;
+    }
+}
+#endif /* _WINDOWS */
+
+/*---------------------------------------------------------------
   BuildAnnotFilterSelector builds the list allowing to select a profile
 ------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -323,17 +368,19 @@ Document doc;
        list_item = list_item->next;
      }
 
-#ifndef _WINDOWS
-   /* Fill in the form  */
-   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
-		   AnnotFilterBase + AnnotFilterMenu,
-		   NULL,
-		   nb_entries,
-		   s,
-		   5,
-		   NULL,
-		   TRUE,
-		   TRUE);
+#ifdef _WINDOWS
+  WIN_AnnotFilterNewSelector (doc, s, nb_entries);
+#else /* _WINDOWS */
+  /* Fill in the form  */
+  TtaNewSelector (AnnotFilterBase + mFilterSelector, 
+		  AnnotFilterBase + AnnotFilterMenu,
+		  NULL,
+		  nb_entries,
+		  s,
+		  5,
+		  NULL,
+		  TRUE,
+		  TRUE);
 #endif /* _WINDOWS */
 }
 
@@ -593,6 +640,93 @@ ThotBool show;
   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
+#ifdef _WINDOWS
+/*-----------------------------------------------------------------------
+ AnnotFilterDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_AnnotFilterDlgProc (hwnDlg, msg, wParam, lParam)
+ThotWindow   hwndParent;
+UINT   msg;
+WPARAM wParam;
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+  int  index = 0;
+  int itemIndex;
+  UINT  i = 0; 
+    
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+	  FilterHwnd = hwnDlg;
+      SetWindowText (hwnDlg, "Annotation Local Filter Menu");
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), "Show selection");
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), "Hide selection");
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), "Show all");
+	  SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), "Hide all");
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
+      BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+    break;
+    
+    case WM_CLOSE:
+    case WM_DESTROY:
+	  FilterHwnd = NULL;
+	  /* the filter select window is destroyed automatically when we kill
+		  the parent window */
+	  FilterSelHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      if (LOWORD (wParam) == 1)
+	{
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	    {
+	      itemIndex = SendMessage (FilterSelHwnd, LB_GETCURSEL, 0, 0);
+	      itemIndex = SendMessage (FilterSelHwnd, LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
+		  break;
+	    }
+	}
+
+    switch (LOWORD (wParam))
+	{
+	case ID_ANNOTSHOW:
+	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+				 AnnotSelItem, TRUE);
+	  /* maybe refresh the dialogue */
+	  break;
+	  
+	case ID_ANNOTHIDE:
+	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+				 AnnotSelItem, FALSE);
+	  /* maybe refresh the dialogue */
+	  break;
+
+	case ID_ANNOTSHOWALL:
+	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
+	  /* maybe refresh the dialogue and reset the selection */
+	  break;
+
+	case ID_ANNOTHIDEALL:
+	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
+	  /* maybe refresh the dialogue and reset the selection */
+	  break;
+
+	case ID_DONE:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+	break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+}
+#else /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
@@ -665,9 +799,7 @@ CHAR_T             *data;
 	      AnnotSelType = val;
 	      AnnotSelItem[0] = WC_EOS;
 	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
-#ifndef _WINDOWS
 	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
-#endif /* !_WINDOWS */
 	    }
 	  break;
 
@@ -676,6 +808,7 @@ CHAR_T             *data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   AnnotFilter
@@ -689,12 +822,17 @@ Document            document;
 View                view;
 #endif /* __STDC__*/
 {
+	/* local variables */
+#ifndef _WINDOWS
   int              i;
+#endif /* !_WINDOWS */
 
+#ifndef _WINDOWS
   /* initialize the base if it hasn't yet been done */
   if (AnnotFilterBase == 0)
     AnnotFilterBase =  TtaSetCallback (AnnotFilterCallbackDialog,
 					 MAX_ANNOTFILTER_DLG);
+#endif /* !_WINDOWS */
 
   /* make a copy of the current document and view, so that we can
      find this info in the callback */
@@ -703,8 +841,9 @@ View                view;
   AnnotSelItem[0] = WC_EOS;
   AnnotSelIndex = -1;
   AnnotSelType = 0;
-  
+
   /* Create the dialogue form */
+#ifndef _WINDOWS
   i = 0;
   strcpy (&s[i], TEXT("Show"));
   i += ustrlen (&s[i]) + 1;
@@ -714,7 +853,6 @@ View                view;
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Hide all"));
 
-#ifndef _WINDOWS
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
 	       TEXT("Annotation Filter  "), 4, s, TRUE, 2, 'L', 
@@ -729,7 +867,6 @@ View                view;
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
 	       AnnotFilterBase + AnnotFilterMenu,
 	       TEXT("     a * prefix means hidden"));
-#endif /* !_WINDOWS */
 	       
   /* create the radio buttons for choosing a selector */
   i = 0;
@@ -751,14 +888,21 @@ View                view;
   /* display the selectors */
   BuildAnnotFilterSelector (document, BY_AUTHOR);
 
-#ifndef _WINDOWS
   /* choose the BY_AUTHOR radio button */
   TtaSetMenuForm (AnnotFilterBase + mSelectFilter, 0);
-  
+#endif /* !_WINDOWS */
+
   /* display the menu */
+#ifndef _WINDOWS
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
-#endif /* _WINDOWS */
+#else /* !_WINDOWS */
+  if (!FilterHwnd)
+    /* only activate the menu if it isn't active already */
+     DialogBox (hInstance, MAKEINTRESOURCE (ANNOTFILTERMENU), NULL, (DLGPROC) WIN_AnnotFilterDlgProc);
+  else
+     SetFocus (FilterHwnd);
+#endif /* !_WINDOWS */
 }
 
 /***************************************************
@@ -998,7 +1142,6 @@ View                view;
   }
 #endif /* _WINDOWS */
   return NULL;
-
 }
 
 /*----------------------------------------------------------------------
@@ -1039,13 +1182,20 @@ View                view;
 
 	  entry = nb_entries - ReturnOptionMenu - 1;
 	  for (item = typesList; item && (entry > 0); item=item->next, entry);
-	  if (item && item->object)
+	  if (item->object)
 	    result = ((TypeSelector *) item->object)->type;
 	}
     }
   List_delAll (&typesList, List_delCharObj);
   return result;
 }
+
+
+
+
+
+
+
 
 
 

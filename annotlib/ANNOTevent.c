@@ -339,9 +339,8 @@ void ANNOT_Init ()
   annotAlgaeText = TtaStrdup (DEFAULT_ALGAE_QUERY);
 
   /* create the directory where we'll store the annotations if it
-     doesn't exist ** how to check that with the thotlib? */
-  /* @@ should be a nice mode! */
-  umkdir (annotDir, 0777);
+     doesn't exist */
+  TtaMakeDirectory (annotDir);
 }
 
 /*-----------------------------------------------------------------------
