@@ -8,9 +8,9 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=4.3.2
+AMAYAVERSION=v.r
 THOTDIR=$PWD/../..
-DEST=/tahiti/thottape
+DEST=$HOME
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"

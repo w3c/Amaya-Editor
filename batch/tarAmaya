@@ -4,10 +4,10 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=4.3.2
+AMAYAVERSION=v.r
 THOTDIR=$PWD/../..
-DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF"
+DEST=$HOME
+PLATFORMS="solaris8 LINUX-ELF"
 
 TAR="tar cvzfh "
 COMPRESS="gzip -9"
