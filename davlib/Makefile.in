@@ -11,7 +11,7 @@ AMAYA_DAV_OPTIONS=-DDAV -DHT_DAV
 
 include ../Options
 
-INCLUDES =-DHAVE_CONFIG_H $(AMAYA_DAV_OPTIONS) -I.. \
+INCLUDES =-DHAVE_CONFIG_H -I.. \
 	  -I../amaya -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
 	  -I@top_srcdir@/../libwww/Library/src \
@@ -118,37 +118,37 @@ AMAYA_DAV_OBJ= \
 #
 
 list.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/tree/list.c -o list.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/list.c -o list.o
 
 awstring.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/tree/awstring.c -o awstring.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awstring.c -o awstring.o
 
 awpair.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/tree/awpair.c -o awpair.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awpair.c -o awpair.o
 
 awnode.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/tree/awnode.c -o awnode.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awnode.c -o awnode.o
 
 awtree.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/tree/awtree.c -o awtree.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awtree.c -o awtree.o
 
 awparser.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/awparser.c -o awparser.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/awparser.c -o awparser.o
 
 AHTLockBase.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/AHTLockBase.c -o AHTLockBase.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/AHTLockBase.c -o AHTLockBase.o
 
 davlib.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/davlib.c -o davlib.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlib.c -o davlib.o
 
 davlibCommon.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/davlibCommon.c -o davlibCommon.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibCommon.c -o davlibCommon.o
 
 davlibUI.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/davlibUI.c -o davlibUI.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibUI.c -o davlibUI.o
 
 davlibRequests.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $(DAVLIB)/davlibRequests.c -o davlibRequests.o
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibRequests.c -o davlibRequests.o
 	
 
 davlib.a : $(AMAYA_DAV_OBJ)
