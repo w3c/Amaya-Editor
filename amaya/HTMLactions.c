@@ -430,6 +430,46 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
+  DblClickOnButton     The user has double-clicked a BUTTON element.         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DblClickOnButton (Element element, Document document)
+#else  /* __STDC__ */
+static void         DblClickOnButton (element, document)
+Element		element;
+Document	document;
+
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           attr;
+   ElementType         elType;
+   int		       type;
+
+   elType = TtaGetElementType (element);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Button_type;
+   attr = TtaGetAttribute (element, attrType);
+   if (!attr)
+      /* default value of attribute type is submit */
+      type = HTML_ATTR_Button_type_VAL_submit;
+   else
+      type = TtaGetAttributeValue (attr);
+   if (type == HTML_ATTR_Button_type_VAL_button)
+      {
+      /**** Activate the corresponding event ****/;
+      }
+   else
+      {
+      if (W3Loading)
+         /* interrupt current transfer */
+         StopTransfer (W3Loading, 1);	   
+      SubmitForm (document, element);
+      }
+}
+
+
+/*----------------------------------------------------------------------
   DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -444,7 +484,6 @@ NotifyElement      *event;
    Attribute           attr;
    Element             anchor, elFound, ancestor, element;
    ElementType         elType, elType1;
-   int		       type;
    boolean	       ok, isHTML;
 
    element = event->element;
@@ -497,28 +536,19 @@ NotifyElement      *event;
 	   SubmitForm (event->document, element);
 	   }
 	else if (elType1.ElTypeNum == HTML_EL_BUTTON)
-	   {
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_Button_type;
-	   attr = TtaGetAttribute (element, attrType);
-	   if (!attr)
-	      /* default value of attribute type is submit */
-	      type = HTML_ATTR_Button_type_VAL_submit;
-	   else
-	      type = TtaGetAttributeValue (attr);
-	   if (type == HTML_ATTR_Button_type_VAL_button)
-	      {
-	      /**** Activate the corresponding event ****/;
-	      }
-	   else
-	      {
-	      if (W3Loading)
-	         /* interrupt current transfer */
-	         StopTransfer (W3Loading, 1);	   
-	      SubmitForm (event->document, element);
-	      }
-	   }
+	   DblClickOnButton (element, event->document);
 	return (TRUE);
+     }
+   else if (isHTML && (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+		       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+		       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+		       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT))
+     {
+       /* is it a double click in BUTTON element? */
+       elType.ElTypeNum = HTML_EL_BUTTON;
+       elFound = TtaGetTypedAncestor (element, elType);
+       if (elFound)
+	  DblClickOnButton (elFound, event->document);
      }
    else if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
