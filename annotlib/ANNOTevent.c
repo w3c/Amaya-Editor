@@ -22,10 +22,6 @@
 #include "XPointer_f.h"
 #include "XPointerparse_f.h"
 
-/* define this variable to use the HTTP DELETE method when deleting
-   annotations */
-/*#undef ANNOT_DELETE */
-
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
@@ -1318,7 +1314,6 @@ void ANNOT_Delete (document, view)
   Attribute	   attr;
   CHAR_T          *annot_url;
   CHAR_T          *annot_server;
-  CHAR_T          *form_data;
   CHAR_T          *char_ptr;
   List            *list_ptr;
   int              i;
@@ -1470,42 +1465,19 @@ void ANNOT_Delete (document, view)
 
       if (annot_server)
 	{
-
-#ifdef ANNOT_DELETE
-	  form_data = NULL;
-#else
-	  /* compute the form_data */
-	  form_data = TtaGetMemory  (sizeof (TEXT("delete_source="))
-				     + ustrlen (annot->annot_url)
-				     + sizeof (TEXT("&rdftype="))
-				     + sizeof (ANNOTATION_PROP)
-				     + 1);
-	  usprintf (form_data,
-		    "delete_source=%s&rdftype=%s", annot->annot_url, ANNOTATION_PROP);
-#endif
 	  /* launch the request */
 	  ANNOT_UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
-#ifdef ANNOT_DELETE
 			      annot->annot_url,
 			      NULL,
-#else
-			      annot_server,
-			      form_data,
-#endif
 			      ctx->output_file,
-#ifdef ANNOT_DELETE
 			      AMAYA_ASYNC | AMAYA_DELETE | AMAYA_FLUSH_REQUEST,
-#else
-			      AMAYA_ASYNC | AMAYA_FORM_POST | AMAYA_FLUSH_REQUEST,
-#endif
 			      NULL,
 			      NULL, 
 			      (void *)  ANNOT_Delete_callback,
 			      (void *) ctx,
 			      NO,
 			      NULL);
-	  TtaFreeMemory (form_data);
 	  /* do something with res in case of error (invoke the callback? */
 	}
       else
