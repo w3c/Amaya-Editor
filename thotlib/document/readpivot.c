@@ -21,7 +21,6 @@
 #include "storage.h"
 #include "typecorr.h"
 #include "appdialogue.h"
-#include "labelAllocator.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -68,7 +67,6 @@ static int          newColor[] =
 #include "structschema_f.h"
 #include "content_f.h"
 #include "applicationapi_f.h"
-#include "labelalloc_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							
@@ -1749,7 +1747,7 @@ PtrAttribute        *pAttr;
 
 
 /*----------------------------------------------------------------------
-   ReadAttribute lit dans le fichier pivFile un attribut qui est   
+   ReadAttributePiv lit dans le fichier pivFile un attribut qui est   
    sous forme pivot. Le fichier doit etre positionne' juste apres  
    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  
    est positionne' sur le premier octet qui suit l'attribut        
@@ -1759,14 +1757,14 @@ PtrAttribute        *pAttr;
    Si create est vrai, un attribut est cree' et attache' a l'element 
    pointe' par pEl; un pointeur sur cet attribut est retourne'     
    dans pReadAttr.                                                 
-   ATTENTION: ReadAttribute utilise la table des natures du document  
+   ATTENTION: ReadAttributePiv utilise la table des natures du document  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
+void         ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
 
 #else  /* __STDC__ */
-static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
+void         ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -2483,7 +2481,7 @@ boolean             createDesc;
 	/* lit les attributs de l'element s'il y en a */
 	while (*tag == (char) C_PIV_ATTR && !error)
 	  {
-	     ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
+	     ReadAttributePiv (pivFile, pEl, pDoc, create, &pAttr);
 	     if (!error)
 		if (!BIOreadByte (pivFile, tag))
 		   PivotError (pivFile);
