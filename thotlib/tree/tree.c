@@ -3606,25 +3606,30 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
 
    GetElement (&pNew);
    *pNew = *pEl;
-   /* computes the label's value */
-   ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
+   pNew->ElParent = NULL;
+   pNew->ElPrevious = NULL;
+   pNew->ElNext = NULL;
+   pNew->ElReferredDescr = NULL;
    /* copies the attributes without verifying because we don't change 
       the structure  scheme */
    CopyAttributes (pEl, pNew, pDoc, pDoc, FALSE, TRUE);
    /* copies the specific presentation rules */
    CopyPresRules (pEl, pNew);
-   pNew->ElPrevious = NULL;
-   pNew->ElParent = NULL;
-   pNew->ElReferredDescr = NULL;
-   pNew->ElPrevious = NULL;
-   pNew->ElNext = NULL;
-   pNew->ElText = NULL;
-   pNew->ElFirstChild = NULL;
-   pNew->ElLanguage = pEl->ElLanguage;
-   pNew->ElCopyDescr = NULL;
-   pNew->ElVolume = 0;
    for (view = 0; view < MAX_VIEW_DOC; view++)
       pNew->ElAbstractBox[view] = NULL;
+   /* keep same values for ElStructSchema and TypeNumber (/
+   pNew->ElVolume = 0;
+   pNew->ElCopyDescr = NULL;
+   /* computes the label's value */
+   ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
+   pNew->ElCopy = NULL;
+   pNew->ElTransform = NULL;
+   pNew->ElAnimation = NULL;
+   pNew->ElGradient = NULL;
+   pNew->ElFirstChild = NULL;
+   pNew->ElText = NULL;
+   pNew->ElTextLength = 0;
+   pNew->ElLanguage = pEl->ElLanguage;
    return pNew;
 }
 
