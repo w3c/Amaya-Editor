@@ -4966,49 +4966,6 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 			    }
 			}
 		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<html", 5))
-		    {
-		      /* the html tag is found */
-		      i += 5;
-		      /* it's not necessary to continue */
-		      *thotType = docHTML;
-		      found = FALSE;
-		      endOfSniffedFile = TRUE;
-		      /* by default all HTML tags are accepted */
-		      *parsingLevel = L_Transitional;
-		      end = strstr (&FileBuffer[i], ">");
-		      ptr = strstr (&FileBuffer[i], "XHTML");
-		      if (!ptr || (ptr && ptr > end))
-			ptr = strstr (&FileBuffer[i], "xhtml");
-		      if (ptr && ptr < end)
-			*isXML = TRUE;
-
-		      ptr = strstr (&FileBuffer[i], "Strict");
-		      if (!ptr || (ptr && ptr > end))
-			ptr = strstr (&FileBuffer[i], "strict");
-		      if (ptr && ptr < end)
-			*parsingLevel = L_Strict;
-		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<svg", 4))
-		    {
-		      /* the svg tag is found */
-		      i += 4;
-		      /* it's not necessary to continue */
-		      found = FALSE;
-		      endOfSniffedFile = TRUE;
-		      *isXML = TRUE;
-		      *thotType = docSVG;
-		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<math", 5))
-		    {
-		      /* the math tag is found */
-		      i += 5;
-		      /* it's not necessary to continue */
-		      found = FALSE;
-		      endOfSniffedFile = TRUE;
-		      *isXML = TRUE;
-		      *thotType = docMath;
-		    }
 		  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
 			   !strncmp (&FileBuffer[i], "<?", 2))
 		    {
@@ -5038,10 +4995,70 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 			/* it's not necessary to continue */
 			endOfSniffedFile = TRUE;			
 		    }
+		  else if (FileBuffer[i] == '<')
+		    {
+		      /* it's most probably a start tag. Is there a
+			 namespace prefix? */
+		      i++;
+		      j = i;
+		      while (j < res &&
+			     (FileBuffer[j] != SPACE  &&
+			      FileBuffer[j] != EOL    &&
+			      FileBuffer[j] != TAB    &&
+			      FileBuffer[j] != __CR__ &&
+			      FileBuffer[j] != ':'))
+			j++;
+		      if (FileBuffer[j] == ':')
+			/* there is a prefix, skip it */
+			i = j + 1;
+		      if (!strncasecmp (&FileBuffer[i], "html", 4))
+			{
+			  /* the html tag is found */
+			  i += 4;
+			  /* it's not necessary to continue */
+			  *thotType = docHTML;
+			  found = FALSE;
+			  endOfSniffedFile = TRUE;
+			  /* by default all HTML tags are accepted */
+			  *parsingLevel = L_Transitional;
+			  end = strstr (&FileBuffer[i], ">");
+			  ptr = strstr (&FileBuffer[i], "XHTML");
+			  if (!ptr || (ptr && ptr > end))
+			    ptr = strstr (&FileBuffer[i], "xhtml");
+			  if (ptr && ptr < end)
+			    *isXML = TRUE;
+			  
+			  ptr = strstr (&FileBuffer[i], "Strict");
+			  if (!ptr || (ptr && ptr > end))
+			    ptr = strstr (&FileBuffer[i], "strict");
+			  if (ptr && ptr < end)
+			    *parsingLevel = L_Strict;
+			}
+		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
+			{
+			  /* the svg tag is found */
+			  i += 3;
+			  /* it's not necessary to continue */
+			  found = FALSE;
+			  endOfSniffedFile = TRUE;
+			  *isXML = TRUE;
+			  *thotType = docSVG;
+			}
+		      else if (!strncasecmp (&FileBuffer[i], "math", 4))
+			{
+			  /* the math tag is found */
+			  i += 4;
+			  /* it's not necessary to continue */
+			  found = FALSE;
+			  endOfSniffedFile = TRUE;
+			  *isXML = TRUE;
+			  *thotType = docMath;
+			}
+		    }
 		  else
 		    {
-		      /* it's not a comment or a PI */
-		      /* stop the analyze */
+		      /* it's not a comment nor a PI nor a start tag */
+		      /* stop sniffing */
 		      found = FALSE;
 		      endOfSniffedFile = TRUE;
 		    }

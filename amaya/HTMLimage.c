@@ -464,11 +464,6 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
 {
   ElementType         elType;
   int                 modified, i;
-  Document            newdoc;
-  int                 parsingLevel;
-  CHARSET             charset;
-  DocumentType        thotType;
-  ThotBool            xmlDec, withDoctype, isXML;
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
@@ -480,7 +475,7 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
 	  /* it's an SVG image */
 	  /* parse the SVG file and include the parse tree at the
              position of the image element */
-	  ;
+	  /****** to do *****/;
 	} 
       else
 	{
@@ -508,7 +503,6 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
   /* the image is loaded */
   TtaSetStatus (doc, 1, TEXT(" "), NULL);
 }
-
 
 /*----------------------------------------------------------------------
    HandleImageLoaded is the callback procedure when the image is loaded	
@@ -577,12 +571,12 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	else
 	  {
 	    TtaFileUnlink (tempfile);	
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
 	    rename (outputfile, tempfile);
-#   else /* _WINDOWS */
+#else /* _WINDOWS */
 	    if (urename (outputfile, tempfile) != 0)
 	      usprintf (tempfile, TEXT("%s"), outputfile); 
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
 
 	/* save pathname */
