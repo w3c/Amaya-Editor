@@ -10,7 +10,9 @@ AMAYA_MATH_OBJ= \
 	MathMLAPP.o \
 	Mathedit.o
 
-AMAYA_MATH_SRC= 
+AMAYA_MATH_SRC= \
+        $(AMAYA)/MathML.h \
+	$(AMAYA)/MathMLAPP.c 
 
 AMAYA_MATH_LIBS= 
 
@@ -52,3 +54,4 @@ $(AMAYA)/MathML.h $(AMAYA)/MathMLAPP.c : $(AMAYA)/MathML.STR $(AMAYA)/MathML.A
 	APP=`pwd`/../bin/app;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$APP $(ALL_AMAYA_OPTIONS) MathML
+

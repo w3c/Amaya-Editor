@@ -1,12 +1,11 @@
 #!/bin/sh
-AMAYAVERSION=1.0b
-THOTVERSION=2.1b
+AMAYAVERSION=1.1
+THOTVERSION=2.1c
 
 CC=gcc
 CFLAGS=-O2
 THOTTAPE=/tahiti/thottape
 THOTDIR=/tahiti/diffusion/opera
-MACHINE=`$THOTDIR/batch/MachineType`
 TESTDIR=$HOME/tmp
 
 if [ -f $TESTDIR/Thot ]
@@ -23,35 +22,25 @@ mkdir -p $TESTDIR
 cd $TESTDIR
 echo
 echo Extracting Thot library sources $THOTVERSION
-echo
 tar xvzf $THOTTAPE/thot-src-$THOTVERSION.tar.gz
 echo
-echo Extracting Thot libs $THOTVERSION for $MACHINE
-echo
-tar xvzf $THOTTAPE/thot-libs-$MACHINE-$THOTVERSION.tar.gz
 cd Thot
 echo
-echo Extracting Thot Editor sources $THOTVERSION
-echo
-tar xvzf $THOTTAPE/thoteditor-src-$THOTVERSION.tar.gz
+#echo Extracting Thot Editor sources $THOTVERSION
+#tar xvzf $THOTTAPE/thoteditor-src-$THOTVERSION.tar.gz
 echo
 echo Extracting Amaya sources $AMAYAVERSION
-echo
 tar xvzf $THOTTAPE/amaya-src-$AMAYAVERSION.tar.gz
 echo
-echo Extracting Amaya libs $THOTVERSION for $MACHINE
+echo Going to $TESTDIR specific directory
+cd $TESTDIR
+mkdir archi
+cd archi
 echo
-tar xvzf $THOTTAPE/amaya-libs-$MACHINE-$AMAYAVERSION.tar.gz
-echo
-echo Going to $MACHINE specific directory
-echo
-cd $MACHINE
-echo
-echo Setting up Makefile
-echo
-#sed -e "s+/\^THOTDIR.*\$+THOTDIR=$TESTDIR/Thot+" < Makefile.orig > Makefile
-cp Makefile.orig Makefile
+echo Setting up Conguration
+../configure --disable-java
 echo
 echo Starting compile with THOTDIR=$TESTDIR/Thot CC=$CC CFLAGS=$CFLAGS
 echo
-make THOTDIR=$TESTDIR/Thot CC=$CC CFLAGS=$CFLAGS amaya thot
+make
+make amaya

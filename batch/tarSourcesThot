@@ -860,17 +860,6 @@ Thot/tools/javastub/javastub.c \
 Thot/schemas/exc_Table.h \
  | $COMPRESS  > $DEST/thot-src-$THOTVERSION.tar.gz
 
-for MACH in $PLATFORMS
-do
-    $TAR - \
-    Thot/$MACH/Makefile.orig \
-    Thot/$MACH/config.h \
-    Thot/$MACH/libjpeg.a \
-    Thot/$MACH/libpng.a \
-    Thot/$MACH/libz.a \
-    | $COMPRESS  > $DEST/thot-libs-$MACH-$THOTVERSION.tar.gz
-done
-
 $TAR - \
 Thot/dicopar/Eprinc.dic \
 | $COMPRESS  > $DEST/English.tar.gz 

@@ -20,7 +20,7 @@ for MACH in $PLATFORMS
 do
    $TAR - \
    Thot/README \
-   Thot/NEWS.Amaya.1\
+   Thot/NEWS.Amaya.1.1\
    Thot/COPYRIGHT \
    Thot/README.amaya \
    Thot/config/XKeysymDB \

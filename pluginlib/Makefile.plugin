@@ -13,6 +13,6 @@ AMAYA_PLUGIN_LIBS= ../pluginlib/libThotPlugin.a
 plugin_force :
 
 ../pluginlib/libThotPlugin.a : plugin_force
-	@(cd ../pluginlib ; make libThotPlugin.a)
+	@(cd ../pluginlib ; $(MAKE) libThotPlugin.a)
 
 

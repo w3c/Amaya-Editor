@@ -20,6 +20,7 @@ cd $THOTDIR
 
 $TAR - \
 INSTALL \
+WINNT \
 amaya/Makefile.in \
 javalib/Makefile.in \
 pluginlib/Makefile.in \
