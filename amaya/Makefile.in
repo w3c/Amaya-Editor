@@ -370,6 +370,7 @@ install : all ../bin/print $(AMAYA_PLUGIN_INSTALL) \
 	@(if test ! -d $(prefix)/Amaya/doc ; then $(MKDIR) $(prefix)/Amaya/doc ; fi)
 	@(if test ! -d $(prefix)/Amaya/applis ; then $(MKDIR) $(prefix)/Amaya/applis ; fi)
 	@(if test ! -d $(prefix)/Amaya/applis/bin ; then $(MKDIR) $(prefix)/Amaya/applis/bin ; fi)
+	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(prefix)/Amaya/applis/bin
 	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/applis/bin
 	$(RM) $(bindir)/amaya
