@@ -487,7 +487,7 @@ STRUCT
 	 { enctype         onsubmit         onreset }
 	   target_; accept_charset = Text) =
 	 { target   accept-charset }
-	LIST OF (Form_Element) + (Input) with METHOD ?= Get_;
+	LIST OF (Form_Element) + (Input);
 
   Form_Element = CASE OF
 	Paragraph;						{ P }
