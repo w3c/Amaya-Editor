@@ -1095,9 +1095,14 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	      if (withAlpha)
 		/* skip the alpha channel */
 		ind++;
-	      temp = ((r & 63488) |
-		      ((g >> gshift) & 2016) |
-		      ((b >> bshift) & 31));
+	      if (IS_WIN95)
+	      temp = (((r * 255) & 63488) |
+		      (((g * 255) >> gshift) & 2016) |
+		      (((b * 255) >> bshift) & 31));
+	      else
+	      temp = (((r << 8) & 63488) |
+		      (((g << 8) >> gshift) & 2016) |
+		      (((b << 8) >> bshift) & 31));
 	    }
 	  else
 	    {
