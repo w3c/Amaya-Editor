@@ -11,8 +11,6 @@ extern void CheckSVGRoot ( Document doc,
 extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                 View view );
-extern void AddLibraryButton ( Document doc,
-                               View view );
 extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
@@ -22,6 +20,7 @@ extern void UsePasted ( NotifyElement * event );
 extern ThotBool AttrXlinkHrefWillBeChanged ( NotifyAttribute * event );
 extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
+extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -30,8 +29,6 @@ extern void CheckSVGRoot (/* Document doc,
 extern void InitSVG (/* void */);
 extern void AddGraphicsButton (/* Document doc,
                                   View view */);
-extern void AddLibraryButton (/* Document doc,
-                                 View view */);
 extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);
@@ -41,6 +38,7 @@ extern void UsePasted (/* NotifyElement * event */);
 extern ThotBool AttrXlinkHrefWillBeChanged (/* NotifyAttribute * event */);
 extern void AttrXlinkHrefChanged (/* NotifyAttribute *event */);
 extern ThotBool DeleteAttrXlinkHref (/* NotifyAttribute *event */);
+extern void AttrAnimTimeChanged (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

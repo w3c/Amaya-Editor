@@ -24,11 +24,16 @@ extern void Set_slider_position ( Document basedoc,
                                   Document timelinedoc,
                                   double f );
 extern void TimelineTextPostModify ( NotifyOnTarget *event );
+extern ThotBool TimelineElSelection ( NotifyElement *event );
 extern ThotBool TimelineElClicked ( NotifyElement *event );
 extern void Timeline_finished_moving_slider ( NotifyPresentation *event );
-extern void Timeline_exp_period_modified ( NotifyOnValue *event );
-extern void Timeline_col_period_modified ( NotifyOnValue *event );
+extern void Timeline_exp_period_modified ( NotifyPresentation *event );
+extern ThotBool Timeline_col_period_pre_modify ( NotifyPresentation *event );
+extern void Timeline_col_period_modified ( NotifyPresentation *event );
 extern void TimelineWindowClose ( NotifyDialog * event );
+extern void Update_period_position_and_size ( Document basedoc,
+                                              Element animtag );
+extern void Update_element_id_on_timeline ( NotifyAttribute* event );
 
 #else /* __STDC__ */
 
@@ -50,11 +55,16 @@ extern void Set_slider_position (/* Document basedoc,
                                     Document timelinedoc,
                                     double f */);
 extern void TimelineTextPostModify (/* NotifyOnTarget *event */);
+extern ThotBool TimelineElSelection (/* NotifyElement *event */);
 extern ThotBool TimelineElClicked (/* NotifyElement *event */);
 extern void Timeline_finished_moving_slider (/* NotifyPresentation *event */);
-extern void Timeline_exp_period_modified (/* NotifyOnValue *event */);
-extern void Timeline_col_period_modified (/* NotifyOnValue *event */);
+extern void Timeline_exp_period_modified (/* NotifyPresentation *event */);
+extern ThotBool Timeline_col_period_pre_modify (/* NotifyPresentation *event */);
+extern void Timeline_col_period_modified (/* NotifyPresentation *event */);
 extern void TimelineWindowClose (/* NotifyDialog * event */);
+extern void Update_period_position_and_size (/* Document basedoc,
+                                                Element animtag */);
+extern void Update_element_id_on_timeline (/* NotifyAttribute* event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
