@@ -583,6 +583,10 @@ dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
 
 if test "$with_gl" = "yes" ; then
+	# setup a list of standard paths int LDFLAGS
+	# for AC_CHECK_LIB library existance checks
+	LDFLAGS_OLD=$LDFLAGS
+	LDFLAGS="-L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib"
   	AC_MSG_CHECKING([OpenGL])
 	for ac_dir in               		\
 		/usr/include 			\
@@ -595,10 +599,10 @@ if test "$with_gl" = "yes" ; then
 		if test "$ac_dir" != "/usr/include" ; then
 		   GL_INCLUDES="-I$ac_dir"
 		fi
-                AC_CHECK_LIB(GL,glBegin,,AC_MSG_ERROR(Cannot find OpenGL library. Please install OpenGL.))
+        AC_CHECK_LIB(GL,glBegin,,AC_MSG_ERROR(Cannot find OpenGL library. Please install OpenGL.))
 		AC_MSG_RESULT([yes])
-       	 	break	
-    	    fi
+       	break	
+      fi
 	done	
   	AC_MSG_CHECKING([GLU])	
 	for ac_dir in               		\
@@ -615,12 +619,13 @@ if test "$with_gl" = "yes" ; then
 			fi
 		fi
 		# now test that glu version is >= 1.2
-                AC_CHECK_LIB(GLU,gluNewTess,,AC_CHECK_LIB(glu32,gluNewTess,,AC_MSG_ERROR(Cannot find OpenGL GLU lib or existing version is < 1.2. Pease upgrade your GLU library.)))
+        AC_CHECK_LIB(GLU,gluNewTess,,AC_CHECK_LIB(glu32,gluNewTess,,AC_MSG_ERROR(Cannot find OpenGL GLU lib or existing version is < 1.2. Pease upgrade your GLU library.)))
 		AC_MSG_RESULT([yes])
-       	 	break	
-    	    fi
+       	break	
+      fi
 	done
-
+	LDFLAGS=$LDFLAGS_OLD
+	
 	# check for gtkglarea.h only if gtk gui is selected
 	if test "$with_gtk" = "yes" ; then
     	  AC_MSG_CHECKING([GTKGLAREA])	
