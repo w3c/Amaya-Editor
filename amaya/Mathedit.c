@@ -676,7 +676,7 @@ View                view;
 # ifndef _WINDOWS
   TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
 # else  /* _WINDOWS */
-  WIN_TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTATE_ENABLED);
+  WIN_TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 # endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();

@@ -418,7 +418,7 @@ Document            document;
 		 /* if there was no error message, display the LOADED message */
 		 TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 #        ifdef _WINDOWS
-         WIN_TtaChangeButton (document, 1, 1, stopN, TBSTATE_INDETERMINATE);
+         WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
 #        else  /* !_WINDOWS */
 	       TtaChangeButton (document, 1, 1, stopN);
 #        endif /* _WINDOWS */
@@ -455,10 +455,10 @@ boolean		    on;
       index = 2;
 #     ifdef _WINDOWS 
       if (on) {
-         state   = TBSTATE_ENABLED;
+         state   = TRUE;
 		 picture = iconBack; 
       } else {
-          state = TBSTATE_INDETERMINATE;
+          state = FALSE;
 		  picture = iconBackNo;
 	  }
 #     else  /* !_WINDOWS */
@@ -471,10 +471,10 @@ boolean		    on;
         index = 3;
 #       ifdef _WINDOWS
         if (on) {
-           state = TBSTATE_ENABLED;
+           state = TRUE;
 		   picture = iconForward;
         } else {
-            state = TBSTATE_INDETERMINATE;
+            state = FALSE;
 			picture = iconForwardNo;
 		}
 #       else /* !_WINDOWS */
@@ -510,7 +510,7 @@ Document            doc;
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
 #    ifdef _WINDOWS 
-     WIN_TtaChangeButton (document, 1, 1 , stopR, TBSTATE_ENABLED);
+     WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
 #    else  /* _WINDOWS */
      TtaChangeButton (document, 1, 1, stopR);
 #    endif /* _WINDOWS */
@@ -567,7 +567,7 @@ View                view;
 #else
   if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
-      WIN_TtaChangeButton (document, 1, 1, stopN, TBSTATE_INDETERMINATE);
+      WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -1021,32 +1021,37 @@ char               *pathname;
 
 #        else /* _WINDOWS */
 
-	     WIN_TtaAddButton (doc, 1, stopN, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTATE_ENABLED); /* SEPARATOR */
+	     /* WIN_TtaAddButton (doc, 1, stopN, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, TBSTATE_ENABLED); */
 
-	     WIN_TtaAddButton (doc, 1, inconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconFind, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTATE_ENABLED);  /* SEPARATOR */
+		 WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
+	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
+	     WIN_TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, FALSE);
 
-	     IButton =  WIN_TtaAddButton (doc, 1, inconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTATE_ENABLED);
-	     BButton =  WIN_TtaAddButton (doc, 1, inconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTATE_ENABLED);
-	     TTButton = WIN_TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTATE_ENABLED);  /* SEPARATOR */
+	     WIN_TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED); /* SEPARATOR */
 
-	     WIN_TtaAddButton (doc, 1, inconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK), TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, inconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconFind, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
+
+	     IButton =  WIN_TtaAddButton (doc, 1, inconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTYLE_CHECK, TBSTATE_ENABLED);
+	     BButton =  WIN_TtaAddButton (doc, 1, inconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTYLE_CHECK, TBSTATE_ENABLED);
+	     TTButton = WIN_TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE), TBSTYLE_CHECK, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
+
+	     WIN_TtaAddButton (doc, 1, inconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 #        endif /* _WINDOWS */
 
 #        ifdef AMAYA_PLUGIN 
