@@ -400,18 +400,40 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
     + ps_file : postscript file
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
+ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,
+			    char* printer_file,
+			    char* ps_file,
+			    int paper_format,
+			    int orientation,
+			    int disposition,
+			    int paper_print,
+			    bool manual_feed,
+			    bool with_toc,
+			    bool with_links,
+			    bool with_url,
+			    bool ignore_css )
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
+  wxString wx_printer_file = TtaConvMessageToWX( printer_file );
   wxString wx_ps_file = TtaConvMessageToWX( ps_file );
 
   PrintDlgWX * p_dlg = new PrintDlgWX( ref,
 				       parent,
-				       wx_ps_file );
+				       wx_printer_file,
+				       wx_ps_file,
+				       paper_format,
+				       orientation,
+				       disposition,
+				       paper_print,
+				       manual_feed,
+				       with_toc,
+				       with_links,
+				       with_url,
+				       ignore_css );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */

@@ -38,11 +38,21 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 PrintDlgWX::PrintDlgWX( int ref,
 			wxWindow* parent,
-			const wxString & ps_file ) :
+			const wxString & printer_file,
+			const wxString & ps_file,
+			int paper_format,
+			int orientation,
+			int disposition,
+			int paper_print,
+			bool manual_feed,
+			bool with_toc,
+			bool with_links,
+			bool with_url,
+			bool ignore_css ) :
   AmayaDialog( parent, ref )
 {
   int  page_size;
-  m_Printer = TtaConvMessageToWX( TtaGetEnvString ("THOTPRINT") );
+  m_Printer = printer_file;
   m_PS = ps_file;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PrintDlgWX"));
@@ -54,32 +64,31 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PAPER_SIZE) ));
   XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_A4) ));
   XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_US) ));
-  page_size = TtaGetPrintParameter (PP_PaperSize);
-  if (page_size == PP_US)
-    XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetSelection(1);
-  else
-    XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetSelection(0);
+  XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetSelection(paper_format);
 
   // output radio box 
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_OUTPUT) ));
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PRINTER) ));
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PS_FILE) ));
-  XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetSelection(0);
-  m_print = 0;
-  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
+  XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetSelection(paper_print);
+  m_print = paper_print;
+  if (paper_print == 0)
+    XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
+  else
+    XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
 
   // orientation radio box  
   XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ORIENTATION) ));
   XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_PORTRAIT) ));
   XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_LANDSCAPE) ));
-  XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetSelection(0);
+  XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetSelection(orientation);
 
   // disposition radio box
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_REDUCTION) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_1_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_2_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_4_PAGE_SHEET) ));
-  XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetSelection(0);
+  XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetSelection(disposition);
 
   // options check list
   XRCCTRL(*this, "wxID_OPTIONS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
@@ -88,18 +97,15 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NUMBERED_LINKS) ));
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_URL) ));
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WITH_CSS) ));
-  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(FALSE);
-  XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetValue(FALSE);
-  XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetValue(FALSE);
-  XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetValue(TRUE);
-  XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetValue(FALSE);
+  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
+  XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetValue(with_toc);
+  XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetValue(with_links);
+  XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetValue(with_url);
+  XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetValue(ignore_css);
 
   // buttons
   XRCCTRL(*this, "wxID_PRINTBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BUTTON_PRINT) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
-
-  // Set focus to ...
-  //  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetFocus();
 
   Layout();
   

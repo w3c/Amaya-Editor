@@ -840,8 +840,63 @@ void SetupAndPrint (Document doc, View view)
 #endif /* _WINGUI */
 #ifdef _WX
   {
+    int paper_format;
+    int orientation;
+    int disposition;
+    int paper_print;
+    bool manual_feed;
+    bool with_toc;
+    bool with_links;
+    bool with_url;
+    bool ignore_css;
+
+    /* Paper format submenu */
+    if (PageSize == PP_US)
+      paper_format = 1;
+    else
+      paper_format = 0;
+
+    /* Orientation submenu */
+    if (Orientation == PP_Landscape)
+      orientation = 1;
+    else
+      orientation = 0;
+
+    /* Pages per sheet submenu */
+    if (PagePerSheet == 1)
+      disposition = 0;
+    else if (PagePerSheet == 2)
+      disposition = 1;
+    else
+      disposition = 2;
+
+    /* PaperPrint selector */
+    if (PaperPrint == PP_PRINTER)
+      paper_print = 0;
+    else
+      paper_print = 1;
+    
+    /* The toggle */
+    manual_feed = (ManualFeed == PP_ON);
+    with_toc = WithToC;
+    with_links = NumberLinks;
+    with_url = PrintURL;
+    ignore_css = IgnoreCSS;
+
+    /* The dialog creation */
     ThotBool created;
-    created = CreatePrintDlgWX (BasePrint + FormPrint, TtaGetViewFrame (doc, view), PSfile);
+    created = CreatePrintDlgWX (BasePrint + FormPrint, TtaGetViewFrame (doc, view),
+				PPrinter,
+				PSfile, 
+				paper_format,
+				orientation,
+				disposition,
+				paper_print,
+				manual_feed,
+				with_toc,
+				with_links,
+				with_url,
+				ignore_css);
     if (created)
       {
 	TtaShowDialogue (BasePrint+FormPrint, FALSE);
