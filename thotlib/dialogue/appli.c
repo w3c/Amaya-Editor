@@ -717,6 +717,88 @@ void  GL_DestroyFrame (int frame)
   GL_Context[frame] = 0;
 #endif /* _WINDOWS */
 }
+
+/*----------------------------------------------------------------------
+  GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
+  setting up pxel format,
+  Creating the frame number if needed.
+  ----------------------------------------------------------------------*/
+void GL_Win32ContextInit (HWND hwndClient, int frame)
+{
+  static ThotBool dialogfont_enabled = FALSE;
+  int frame_index;
+  HGLRC hGLRC;
+  HDC hDC;
+  ThotBool found;
+
+  hDC = 0;
+  hDC = GetDC (hwndClient);	
+  if (!hDC) 
+    {      
+      MessageBox(NULL, "ERROR!", "No device context", MB_OK); 
+      return;    
+    }
+  else if (dialogfont_enabled)
+    {
+      for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	{  
+	  if (GL_Windows[frame_index] == hDC) 
+	    return;
+	}
+    }
+  found = FALSE;       
+  if (frame <= 0)
+    {
+      frame = 1;
+      while (frame <= MAX_FRAME && !found)
+	{
+	  /* Seeks a free frame slot */
+	  found = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
+	  if (!found)
+	    frame++;
+	}	
+      if (!found)
+	{
+	  frame = 1;
+	  while (frame <= MAX_FRAME && !found)
+	    {
+	      /* Seeks a free frame slot */
+	      found = (FrameTable[frame].WdFrame == 0);
+	      if (!found)
+		frame++;
+	    }
+	}
+    }
+  GL_SetupPixelFormat (hDC);
+  hGLRC = wglCreateContext (hDC);
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
+  if (wglMakeCurrent (hDC, hGLRC))
+    {
+      SetGlPipelineState ();
+      if (!dialogfont_enabled)
+	{
+	  InitDialogueFonts ("");
+	  dialogfont_enabled = TRUE;
+	  for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	    {  
+	      if (frame_index != frame)
+		{
+		  GL_Windows[frame_index] = 0;
+		  GL_Context[frame_index] = 0;
+		}
+	    }
+	}
+    }
+#ifndef _NOSHARELIST
+  if (Shared_Context != -1 && Shared_Context != frame) 
+    wglShareLists (GL_Context[Shared_Context], hGLRC);
+  else
+    Shared_Context = frame;
+#endif /*_NOSHARELIST*/
+  ActiveFrame = frame;
+  ReleaseDC (hwndClient, GL_Windows[frame]);
+}
 #endif /* _GL */
 
 static ThotBool  FrameResizedGTKInProgress = FALSE;
