@@ -17,9 +17,10 @@
 #include "message.h"
 #include "dialog.h"
 #include "constmedia.h"
-#include"constmenu.h"
+#include "constmenu.h"
 #include "typemedia.h"
 #include "interface.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -36,11 +37,15 @@
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
+#include "thotmsg_f.h"
 
 static char     NameOfElementToBeCreated[MAX_TXT_LEN];
 
 /*----------------------------------------------------------------------
   BuildElementSelector
+  Build a selector containing all the element types defined in the
+  structure schema of the first selected element.
+  Return the number of entries in the selector created.
   ----------------------------------------------------------------------*/
 static int BuildElementSelector (PtrDocument pDoc)
 {
@@ -52,6 +57,7 @@ static int BuildElementSelector (PtrDocument pDoc)
   PtrSSchema     pSS;
   int            nbItem, len, typeNum, height, firstChar, lastChar;
   NotifyElement  notifyEl;
+  ThotBool       withTextInput;
 
   nbItem = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
@@ -59,11 +65,16 @@ static int BuildElementSelector (PtrDocument pDoc)
     return 0;
   if (pSelDoc != pDoc)
     return 0;
+  
+  pSS = firstSel->ElStructSchema;
+  if (!strcmp (pSS->SsName, "TextFile"))
+    /* don't create structure elements in a Text file */
+    return 0;
+
   /* make the list of all possible element types */
   menuBuf[0] = EOS;
   menuInd = 0;
   len = 0;
-  pSS = firstSel->ElStructSchema;
   for (typeNum = pSS->SsRootElem + 1; typeNum <= pSS->SsNRules; typeNum++)
     if (!TypeHasException (ExcIsPlaceholder, typeNum, pSS) &&
 	!TypeHasException (ExcNoCreate, typeNum, pSS) &&
@@ -100,9 +111,14 @@ static int BuildElementSelector (PtrDocument pDoc)
 	 height = 4;
        else
 	 height = nbItem;
+       /* does not allow the user to create new type names in well
+	  defined XML vocabularies */
+       withTextInput =  (strcmp (pSS->SsName, "HTML") &&
+			 strcmp (pSS->SsName, "SVG") &&
+			 strcmp (pSS->SsName, "MathML"));
        TtaNewSelector (NumSelectElemToBeCreated, NumFormElemToBeCreated,
 		       TtaGetMessage (LIB, TMSG_EL_TYPE), nbItem, menuBuf,
-		       height, NULL, TRUE, TRUE);
+		       height, NULL, withTextInput, TRUE);
     }
   return nbItem;
 #else
@@ -112,6 +128,8 @@ static int BuildElementSelector (PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
   TtaShowElementMenu
+  Display a dialog allowing the user to choose or enter the typename of an
+  element to be created.  
   ----------------------------------------------------------------------*/
 void TtaShowElementMenu (Document doc, View view)
 {
@@ -119,14 +137,23 @@ void TtaShowElementMenu (Document doc, View view)
   char          menuBuf[MAX_TXT_LEN];
   int           nbItem;
 
-  /* generate the form with two buttons Apply and Done */
-  strcpy (menuBuf, TtaGetMessage (LIB, TMSG_APPLY));
-  TtaNewSheet (NumFormElemToBeCreated, TtaGetViewFrame (doc, view),
-	       TtaGetMessage(LIB, TMSG_EL_TYPE), 1, menuBuf, FALSE, 2, 'L',
-	       D_DONE);
-  nbItem = BuildElementSelector (LoadedDocument[doc - 1]);
-  if (nbItem > 0)
-    TtaShowDialogue (NumFormElemToBeCreated, TRUE);
+  UserErrorCode = 0;
+  if (doc < 1 || doc > MAX_DOCUMENTS)
+    /* Checks the parameter document */
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[doc - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (!LoadedDocument[doc - 1]->DocReadOnly)
+    {
+      /* generate the form with two buttons Apply and Done */
+      strcpy (menuBuf, TtaGetMessage (LIB, TMSG_APPLY));
+      TtaNewSheet (NumFormElemToBeCreated, TtaGetViewFrame (doc, view),
+		   TtaGetMessage(LIB, TMSG_EL_TYPE), 1, menuBuf, FALSE, 2, 'L',
+		   D_DONE);
+      nbItem = BuildElementSelector (LoadedDocument[doc - 1]);
+      if (nbItem > 0)
+	TtaShowDialogue (NumFormElemToBeCreated, TRUE);
+    }
 #endif /* _GTK */
 }
 
@@ -147,11 +174,11 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
   switch (ref)
     {
     case NumSelectElemToBeCreated:
-      /* name of element to be created */
+      /* type name of element to be created */
       if (txt == NULL)
 	NameOfElementToBeCreated[0] = EOS;
       else
-	/* save the name of the element to be created */
+	/* save the type name of the element to be created */
 	strncpy (NameOfElementToBeCreated, txt, MAX_TXT_LEN);
       break;
     case NumFormElemToBeCreated:
@@ -162,7 +189,7 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
 	  /* Cancel */
 	  break;
 	case 1:
-	  /* appliquer la nouvelle valeur */
+	  /* Do it */
 	  doit = TRUE;
 	  break;
 	}
@@ -174,27 +201,36 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
 			       &lastChar))
 	{
 	  done = FALSE;
-	  pSS = pDoc->DocSSchema;
+	  /* look for this type name in the structure schema */
+	  pSS = firstSel->ElStructSchema;
 	  for (typeNum = pSS->SsRootElem + 1; typeNum <= pSS->SsNRules;
 	       typeNum++)
 	    if (!strcmp (NameOfElementToBeCreated,
 			 pSS->SsRule->SrElem[typeNum - 1]->SrName))
+	      /* type name found */
 	      {
+		/* create an element at the current position */
 		CreateNewElement (typeNum, pSS, pDoc, FALSE);
 		done = TRUE;
 	      }
 	  if (!done)
-	    /* this type neme is unknown in the structure schema */
+	    /* this type name is unknown in the structure schema */
 	    {
-	      /********* first check that the document is generic XML.
-			 otherwise, do not create a new element type *******/
-	      typeNum = 0;
-	      AppendXmlElement (NameOfElementToBeCreated, &typeNum, pSS,
-				&mappedName, pDoc);
-	      if (typeNum > 0)
+	      /* does not allow the user to create new type names in well
+		 defined XML vocabularies */
+	      if (strcmp (pSS->SsName, "HTML") &&
+		  strcmp (pSS->SsName, "SVG") &&
+		  strcmp (pSS->SsName, "MathML") &&
+		  strcmp (pSS->SsName, "TextFile"))
 		{
-		  CreateNewElement (typeNum, pSS, pDoc, FALSE);
-		  BuildElementSelector (pDoc);
+		  typeNum = 0;
+		  AppendXmlElement (NameOfElementToBeCreated, &typeNum, pSS,
+				    &mappedName, pDoc);
+		  if (typeNum > 0)
+		    {
+		      CreateNewElement (typeNum, pSS, pDoc, FALSE);
+		      BuildElementSelector (pDoc);
+		    }
 		}
 	    }
 	}
