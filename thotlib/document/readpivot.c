@@ -521,6 +521,9 @@ BinFile             file;
 	    case C_PIV_PERCENT:
 	       return UnPercent;
 	       break;
+	    case C_PIV_PX:
+	       return UnPixel;
+	       break;
 	    default:
 	       return UnRelative;
 	 }
