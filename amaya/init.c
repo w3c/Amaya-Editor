@@ -672,7 +672,7 @@ char               *pathname;
 
 	     TtaAddButton (doc, 1, iconSave, SaveDocument,
 			   TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
-	     TtaAddButton (doc, 1, iconPrint, TtcPrint,
+	     TtaAddButton (doc, 1, iconPrint, PrintAs,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
 	     TtaAddButton (doc, 1, iconFind, TtcSearchText,
 			   TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
