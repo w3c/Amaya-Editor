@@ -13,13 +13,15 @@
 AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
   m_pAmayaApp(p_amaya_app)
 {
-  m_InstanceName           = wxString::Format(_T("AMAYA-%s"), wxGetUserId().c_str());
+  m_InstanceName           = wxString::Format(m_pAmayaApp->GetAppName()+_T("-%s"), wxGetUserId().c_str());
   m_pSingleInstance_Checker = new wxSingleInstanceChecker(m_InstanceName);
 
   m_ServicePort       = _T("4242");
   m_ServiceTopic      = m_InstanceName;
   m_ServiceHostname   = _T("localhost");
   m_pURLGrabberServer = NULL;
+
+  wxLogDebug(_T("AppInstanceName=") + m_InstanceName);
 }
 
 /*
