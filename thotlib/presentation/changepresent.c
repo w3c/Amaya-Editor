@@ -65,7 +65,7 @@ static void         ApplyInherit ();
 
 
 /*----------------------------------------------------------------------
-   	ApplyRuleSubTree							
+  ApplyRuleSubTree
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplyRuleSubTree (PtrElement pE, PRuleType ruleType, PtrDocument pDoc, PtrPRule * pPRule, int view)
@@ -1517,8 +1517,8 @@ boolean             display;
 
 
 /*----------------------------------------------------------------------
-   	ApplyNewRule applique au pave courant la regle de		
-   		presentation specifique qui vient d'etre creee.		
+  ApplyNewRule applique au pave courant la regle de		
+  presentation specifique qui vient d'etre creee.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
@@ -1615,8 +1615,8 @@ PtrElement          pEl;
 
 
 /*----------------------------------------------------------------------
-   	ModifyGraphics	applique a l'element pEl les modifications sur	
-   		les graphiques demandes par l'utilisateur.		
+  ModifyGraphics applique a l'element pEl les modifications sur	
+  les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
@@ -1750,8 +1750,8 @@ int                 LineColor;
 
 
 /*----------------------------------------------------------------------
-   	RemoveSpecifPres supprime toutes les regles de presentation specifiques
-   		associees a l'element pEl.				
+  RemoveSpecifPres supprime toutes les regles de presentation specifiques
+  associees a l'element pEl.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
@@ -1818,21 +1818,17 @@ int                 viewToApply;
 }
 
 /*----------------------------------------------------------------------
-   	ModifyColor change la presentation specifique de la couleur	
-   	de fond ou de trace' (selon Background) pour tous les elements de la	
-   	selection courante.						
+  ModifyColor change la presentation specifique de la couleur	
+  de fond ou de trace' (selon Background) pour tous les elements de la	
+  selection courante.						
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ModifyColor (int colorNum, boolean Background)
-
 #else  /* __STDC__ */
 void                ModifyColor (colorNum, Background)
 int                 colorNum;
 boolean             Background;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         SelDoc;
    PtrElement          pElFirstSel, pElLastSel, pEl;
@@ -1881,6 +1877,9 @@ boolean             Background;
 				     modifFillPattern = TRUE;
 				     fillPatternNum = 2;
 				  }
+			     /* force background display */
+			     if (pAb->AbLeafType == LtCompound)
+			       pAb->AbFillBox = TRUE;
 			  }
 			if (colorNum == -1)
 			  {
@@ -1913,8 +1912,8 @@ boolean             Background;
 
 
 /*----------------------------------------------------------------------
-   	ModifyChar	applique a l'element pEl les modifications sur	
-   		les caracteres demandes par l'utilisateur.		
+  ModifyChar applique a l'element pEl les modifications sur	
+  les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)

@@ -5046,28 +5046,24 @@ int                 cattype;
    int                 n;
    int                 index;
    int                 count;
-   int                 res;
-   int                 strSize;
    struct Cat_Context* catalogue;
    struct E_List*      adbloc;
-
    ThotWidget          form;
    ThotWidget          row;
    ThotWidget          w;
    char*               ptr = NULL;
 
-#ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-   Arg                 argform[1];
-   XmString            title_string;
-#endif /* _WINDOWS */
 #ifdef _WINDOWS
-   int        charWidth;
-   TEXTMETRIC tm;
-
+   int                 strSize;
+   int                 charWidth;
+   TEXTMETRIC          tm;
    WIN_GetDeviceContext (-1);
    GetTextMetrics (WIN_curHdc, &tm);
    charWidth = tm.tmAveCharWidth;
+#else /* _WINDOWS */
+   Arg                 args[MAX_ARGS];
+   Arg                 argform[1];
+   XmString            title_string;
 #endif /* _WINDOWS */
 
    if (ref == 0)

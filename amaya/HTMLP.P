@@ -4663,6 +4663,9 @@ RULES
 	CreateBefore(UL_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
+	BackgroundPicture: '/tahiti/vatton/gifs/background.gif';
+	PictureMode: RepeatXY;
+	FillPattern: nopattern;
 #ifdef PAGE
 	if NOT within Table
 	   Justify: Yes;

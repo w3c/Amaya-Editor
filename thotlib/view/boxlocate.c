@@ -1378,14 +1378,14 @@ int                *max;
        found = FALSE;
        while (!found && ok && pEl != NULL)
 	 {
-	   if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	       found = TRUE;
-	   else if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+	   if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
 	   else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
 	   else if (!horizRef && TypeHasException (ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
+	   else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	       found = TRUE;
 	   /* if no directive is done, see the parent */
 	   pEl = pEl->ElParent;
 	 }
@@ -1740,14 +1740,14 @@ int                *max;
        found = FALSE;
        while (!found && ok && pEl != NULL)
 	 {
-	   if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     found = TRUE;
-	   else if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	   if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
 	   else if (horizRef && TypeHasException (ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
 	   else if (!horizRef && TypeHasException (ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     ok = FALSE;
+	   else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     found = TRUE;
 	   /* if no directive is done, see the parent */
 	   pEl = pEl->ElParent;
 	 }

@@ -1176,10 +1176,12 @@ PictInfo           *imageDesc;
 		   xFrame = 0;
 		   yFrame = 0;
 		 }
-	       else if ((box->BxWidth != 0) && (box->BxHeight != 0))
+	       else
 		 {
-		   xFrame = box->BxWidth;
-		   yFrame = box->BxHeight;
+		   if (box->BxWidth != 0)
+		     xFrame = box->BxWidth;
+		   if(box->BxHeight != 0)
+		     yFrame = box->BxHeight;
 		 }
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
