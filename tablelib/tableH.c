@@ -52,25 +52,14 @@ static ThotBool          Lock = FALSE;
 #include "tree_f.h"
 #define MAX_COLROW 50
 
-#ifdef __STDC__
 static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int frame);
-#else
-static ThotBool SetCellWidths (/*PtrAbstractBox cell, PtrAbstractBox table, int frame*/);
-#endif
 
 /*----------------------------------------------------------------------
   DifferFormatting registers differed table formatting in the right
   order:
   The ancestor before its child.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void       DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
-#else  /* __STDC__ */
-static void       DifferFormatting (table, cell, frame)
-PtrAbstractBox    table;
-PtrAbstractBox    cell;
-int               frame;
-#endif /* __STDC__ */
+static void  DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
 {
   PtrLockRelations    pLockRel;
   PtrLockRelations    pPreviousLockRel;
@@ -148,13 +137,7 @@ int               frame;
    IsDifferredTable
    Return TRUE if this table is already registered.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool   IsDifferredTable(PtrAbstractBox table, PtrAbstractBox cell)
-#else  /* __STDC__ */
-static ThotBool   IsDifferredTable (table, cell)
-PtrAbstractBox    table;
-PtrAbstractBox    cell;
-#endif /* __STDC__ */
 {
   PtrLockRelations    pLockRel;
   int                 i;
@@ -188,13 +171,7 @@ PtrAbstractBox    cell;
   When pRoot is not Null, the returned abstract box has to be included
   within the pRoot.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAbstractBox NextSiblingAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
-#else  /* __STDC__ */
-static PtrAbstractBox NextSiblingAbsBox (pAb, pRoot)
-PtrAbstractBox      pAb;
-PtrAbstractBox      pRoot;
-#endif /* __STDC__ */
 {
   ThotBool           skip;
 
@@ -228,13 +205,7 @@ PtrAbstractBox      pRoot;
 /*----------------------------------------------------------------------
    GetTaRBlock allocates table relations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void       GetTaRBlock (PtrTabRelations *pBlock)
-#else  /* __STDC__ */
-static void       GetTaRBlock (pBlock)
-PtrTabRelations  *pBlock;
-#endif /* __STDC__ */
-
 {
   PtrTabRelations   pNewBlock;
   int               i;
@@ -255,13 +226,7 @@ PtrTabRelations  *pBlock;
 /*----------------------------------------------------------------------
    FreeTaRBlock frees table relations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void       FreeTaRBlock (PtrTabRelations pBlock)
-#else  /* __STDC__ */
-static void       FreeTaRBlock (pBlock)
-PtrTabRelations   pBlock;
-#endif /* __STDC__ */
-
 {
   if (pBlock != NULL)
     {
@@ -274,13 +239,7 @@ PtrTabRelations   pBlock;
   BuildColOrRowList builds the list of columns or rows included within
   a table
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
-#else
-static void      BuildOrColRowList (table, colrow)
-PtrAbstractBox   table;
-BoxType          colrow;
-#endif
 {
   PtrTabRelations     pTabRel, pOldTabRel;
   PtrTabRelations     pPreviousTabRel;
@@ -423,14 +382,7 @@ BoxType          colrow;
   The parameter percent returns the value of the attribute which has
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int *width, int *percent)
-#else
-static ThotBool  GiveAttrWidth (pAb, width, percent)
-PtrAbstractBox  pAb;
-int            *width;
-int            *percent;
-#endif
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -473,13 +425,7 @@ int            *percent;
 /*----------------------------------------------------------------------
   CheckRowHeights checks row-spanned cells with related rows.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     CheckRowHeights (PtrAbstractBox table, int frame)
-#else
-static void     CheckRowHeights (table, frame)
-PtrAbstractBox  table;
-int             frame;
-#endif
 {
   PtrAttribute        pAttr;
   PtrSSchema          pSS = NULL;
@@ -623,18 +569,7 @@ int             frame;
   width.
   The parameter freely lets know that the width can be increased.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
-#else
-static void     CheckTableWidths (table, frame, freely)
-PtrAbstractBox  table;
-int             cNumber;
-PtrAbstractBox *colBox;
-int            *colWidth;
-int            *colPercent;
-int             frame;
-ThotBool        freely;
-#endif
 {
   PtrAbstractBox      pCell;
   PtrAbstractBox     *colBox;
@@ -960,13 +895,7 @@ printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
 
   The table width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     ChangeTableWidth (PtrAbstractBox table, int frame)
-#else
-static void     ChangeTableWidth (table, frame)
-PtrAbstractBox  table;
-int             frame;
-#endif
 {
   if (Lock)
     /* the table formatting is locked */
@@ -986,16 +915,7 @@ int             frame;
   GiveCellWidths returns the minimum width, the maximum width, the
   constrained width and the percent width of a specific cell.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     GiveCellWidths (PtrAbstractBox cell, int *min, int *max, int *width, int *percent)
-#else
-static void     GiveCellWidths (cell, min, max)
-PtrAbstractBox  cell;
-int            *min;
-int            *max;
-int            *width;
-int            *percent;
-#endif
+static void GiveCellWidths (PtrAbstractBox cell, int *min, int *max, int *width, int *percent)
 {
   PtrAbstractBox      pAb;
   PtrBox              box;
@@ -1083,13 +1003,7 @@ int            *percent;
   - TaRTPercent = the contrained width in percent
   Return TRUE if any table width is modified
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
-#else
-static ThotBool SetTableWidths (table, frame)
-PtrAbstractBox  table;
-int             frame;
-#endif
 {
   PtrAttribute        pAttr;
   PtrSSchema          pSS;
@@ -1484,14 +1398,7 @@ int             frame;
   If TRUE updates table widths.
   Return TRUE if any table width is modified
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int frame)
-#else
-static ThtoBool SetCellWidths (cell, table, frame)
-PtrAbstractBox  cell;
-PtrAbstractBox  table;
-int             frame;
-#endif
 {
   PtrBox              box;
   int                 min, max;
@@ -1526,13 +1433,7 @@ int             frame;
 
   The cell height changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      UpdateCellHeight (PtrAbstractBox cell, int frame)
-#else
-static void      UpdateCellHeight (cell, frame)
-PtrAbstractBox   cell;
-int              frame;
-#endif
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1556,14 +1457,7 @@ int              frame;
 
   The column width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
-#else
-static void      UpdateColumnWidth (cell, col, frame)
-PtrAbstractBox   cell;
-PtrAbstractBox   col;
-int              frame;
-#endif
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1612,15 +1506,7 @@ int              frame;
    - a column (table == NULL && col != NULL)
    - a row (table == NULL && row != NULL)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void      UpdateTable (PtrAbstractBox table, PtrAbstractBox col, PtrAbstractBox row, int frame)
-#else
-static void      UpdateTable (table, col, row, frame)
-PtrAbstractBox   table;
-PtrAbstractBox   col;
-PtrAbstractBox   row;
-int              frame;
-#endif
+static void  UpdateTable (PtrAbstractBox table, PtrAbstractBox col, PtrAbstractBox row, int frame)
 {
   PtrAbstractBox      pAb;
 
@@ -1683,12 +1569,7 @@ int              frame;
 /*----------------------------------------------------------------------
    ClearTable removes table information
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      ClearTable (PtrAbstractBox table)
-#else
-static void      ClearTable (table)
-PtrAbstractBox   table;
-#endif
 {
   PtrTabSpan          pTabSpan;
   PtrBox              pBox;
@@ -1713,14 +1594,7 @@ PtrAbstractBox   table;
 /*----------------------------------------------------------------------
    ClearTable removes table information
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void      IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
-#else
-static void      IsFirstColumn (cell, table, result)
-PtrAbstractBox   cell;
-PtrAbstractBox   table;
-oolean          *result;
-#endif
+static void  IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
 {
   PtrAbstractBox      col, firstcol;
   PtrAttribute        pAttr;
@@ -1904,12 +1778,7 @@ void    TtaUnlockTableFormatting ()
 /*----------------------------------------------------------------------
   TtaGiveTableFormattingLock gives the status of the table formatting lock.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      TtaGiveTableFormattingLock (ThotBool *lock)
-#else  /* __STDC__ */
-void      TtaGiveTableFormattingLock (lock)
-ThotBool *lock;
-#endif /* __STDC__ */
 {
   /* check if we're not processing a TtaUnlockTableFormatting */
   if (DifferedChecks != NULL)
