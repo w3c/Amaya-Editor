@@ -4152,7 +4152,11 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   else
     {
       /* read from a file */
+#ifdef _I18N_
+      if (*index == 0 && SecondByte == EOS)
+#else /* _I18N_ */
       if (*index == 0)
+#endif /* _I18N_ */
 	{
 	  if (NotToReadFile)
 	    NotToReadFile = FALSE;

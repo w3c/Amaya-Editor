@@ -1396,7 +1396,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, Arabic) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Enclosing . Left + LIST_SHIFT;
+	HorizPos: Right = Next . VRef - LIST_SHIFT;
 	MarginRight: LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
