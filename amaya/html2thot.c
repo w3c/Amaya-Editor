@@ -3326,6 +3326,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 
   fallback[0] = EOS;
   fallback[1] = EOS;
+  fallback[2] = EOS;
   /* look for that code in the fallback table */
   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
 	 UnicodeFallbackTable[i].unicodeVal > 0;  i++);
