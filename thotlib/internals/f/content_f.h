@@ -13,10 +13,11 @@ extern void SplitTextElement ( PtrElement pEl,
                                int rank,
                                PtrDocument pDoc,
                                boolean withAppEvent );
-extern void MergeTextElements ( PtrElement pEl,
-                                PtrElement * pFreeEl,
-                                PtrDocument pDoc,
-                                boolean withAppEvent );
+extern boolean MergeTextElements ( PtrElement pEl,
+                                   PtrElement * pFreeEl,
+                                   PtrDocument pDoc,
+                                   boolean withAppEvent,
+                                   boolean removeAbsBox );
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
 extern boolean StringAndTextEqual ( char *String,
@@ -53,10 +54,11 @@ extern void SplitTextElement (/* PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
                                  boolean withAppEvent */);
-extern void MergeTextElements (/* PtrElement pEl,
-                                  PtrElement * pFreeEl,
-                                  PtrDocument pDoc,
-                                  boolean withAppEvent */);
+extern boolean MergeTextElements (/* PtrElement pEl,
+                                     PtrElement * pFreeEl,
+                                     PtrDocument pDoc,
+                                     boolean withAppEvent,
+                                     boolean removeAbsBox */);
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
 extern boolean StringAndTextEqual (/* char *String,
