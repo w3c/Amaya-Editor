@@ -3992,9 +3992,20 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  pLine = SearchLine (pBox);
 		  if (pLine)
 		    {
-		      i = PixelValue (pPosAb->PosDistance,
-				      pPosAb->PosUnit, pAb,
-				      ViewFrameTable[frame - 1].FrMagnification);
+		      if (pPosAb->PosUnit == UnPercent)
+			i = PixelValue (pPosAb->PosDistance, UnPercent,
+					(PtrAbstractBox) (pAb->AbBox->BxW), 0);
+		      else
+			i = PixelValue (pPosAb->PosDistance,
+					pPosAb->PosUnit, pAb,
+					ViewFrameTable[frame - 1].FrMagnification);
+		      if (pPosAb->PosDeltaUnit == UnPercent)
+			i += PixelValue (pPosAb->PosDistDelta, UnPercent,
+					(PtrAbstractBox) (pAb->AbBox->BxW), 0);
+		      else
+			i += PixelValue (pPosAb->PosDistDelta,
+					 pPosAb->PosDeltaUnit, pAb,
+					 ViewFrameTable[frame - 1].FrMagnification);
 		      pLine->LiYOrg += i;
 		      EncloseInLine (pBox, frame, pAb->AbEnclosing);
 		    }

@@ -3268,7 +3268,17 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine)
 	{
 	  pPosAb = &pAb->AbHorizRef;
-	  x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+	  if (pPosAb->PosUnit == UnPercent)
+	    x = PixelValue (pPosAb->PosDistance, UnPercent,
+			    (PtrAbstractBox) (pAb->AbBox->BxW), 0);
+	  else
+	    x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  if (pPosAb->PosDeltaUnit == UnPercent)
+	    x += PixelValue (pPosAb->PosDistDelta, UnPercent,
+			    (PtrAbstractBox) (pAb->AbBox->BxW), 0);
+	  else
+	    x += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
 			  ViewFrameTable[frame - 1].FrMagnification);
 	  x += top;
 	  MoveHorizRef (pBox, NULL,

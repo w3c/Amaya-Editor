@@ -3715,10 +3715,16 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			    else
 			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
 					      ViewFrameTable[frame - 1].FrMagnification);
+			    if (pPosAb->PosDeltaUnit == UnPercent)
+			      j = PixelValue (pPosAb->PosDistDelta, UnPercent,
+					      (PtrAbstractBox) ((int)pAb->AbBox->BxW), 0);
+			    else
+			      j = PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
+					      ViewFrameTable[frame - 1].FrMagnification);
 			    if (pChildBox->BxType == BoMulScript &&
 				pChildBox->BxNexChild)
 			      pChildBox = pChildBox->BxNexChild;
-			    i = i + pChildBox->BxXOrg + pChildBox->BxVertRef - pBox->BxXOrg;
+			    i = i + j + pChildBox->BxXOrg + pChildBox->BxVertRef - pBox->BxXOrg;
 			    MoveVertRef (pBox, pChildBox, i - pBox->BxVertRef, frame);
 			  }
 		      }
@@ -3957,11 +3963,18 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			      i = PixelValue (pPosAb->PosDistance, UnPercent, 
 					      (PtrAbstractBox) ((int)pAb->AbBox->BxH), 0);
 			    else
-			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+					      ViewFrameTable[frame - 1].FrMagnification);
+			    if (pPosAb->PosDeltaUnit == UnPercent)
+			      j = PixelValue (pPosAb->PosDistDelta, UnPercent, 
+					      (PtrAbstractBox) ((int)pAb->AbBox->BxH), 0);
+			    else
+			      j = PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
+					      pAb, ViewFrameTable[frame - 1].FrMagnification);
 			    if (pChildBox->BxType == BoMulScript &&
 				pChildBox->BxNexChild)
 			      pChildBox = pChildBox->BxNexChild;
-			    i = i + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
+			    i = i + j + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
 			    MoveHorizRef (pBox, pChildBox, i - pBox->BxHorizRef, frame);
 			  }
 		      }

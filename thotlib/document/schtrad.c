@@ -269,13 +269,13 @@ PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
   IsTranslateTag
-  Indicates if the translation schema export the textual format
-  of the document (in this case, don't export namespace decalrations).
+  Indicates if the translation schema exports the textual format
+  of the document (in this case, don't export namespace declarations).
   Currently used for HTMLTT schema only.
   (In the next release, this function will be replaced by a new field
    in the translation schema structure)
   ----------------------------------------------------------------------*/
-ThotBool        IsTranslateTag (PtrTSchema pTSch, PtrSSchema pSSch)
+ThotBool IsTranslateTag (PtrTSchema pTSch, PtrSSchema pSSch)
 {
    int                 i;
    ThotBool            found, translate;
