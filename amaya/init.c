@@ -7296,10 +7296,8 @@ char *InitStringForCombobox()
   
   
   /* Read list_url.dat into APP_HOME directory */
-  sprintf (url_home,
-	   "%s%clist_url.dat",
-	   app_home,
-	   DIR_SEP);
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (url_home, "%s%clist_url.dat", app_home, DIR_SEP);
   /* ./.amaya/list_url.dat */
   urlfile = TtaReadOpen (url_home);
   *urlstring = EOS;
