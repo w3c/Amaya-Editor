@@ -1454,7 +1454,7 @@ int                 frame;
 	      LineCreation (frame, pBox, &x, &y, &xDelta, &yDelta);
 	      /* Update the enclosing stretchable box */
 	      pAb = pAb->AbEnclosing;
-	      NewPosition (pAb, x, y, frame, TRUE);
+	      NewPosition (pAb, x, 0, y, 0, frame, TRUE);
 	      NewDimension (pAb, xDelta, yDelta, frame, TRUE);
 	    }
 	  else
