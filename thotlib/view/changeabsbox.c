@@ -266,7 +266,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	     not the main presentation schema (pHd is NULL when it's the main
 	     P schema) */
 	  /* Note that schema extensions (pHd != NULL), aka CSS stylesheets,
-	     apply only to the main view (viewSch = 1) */
+	     apply only to the main view (view = 1) */
 	  if (view == 1 || pHd == NULL)
 	    {
 	      /* look at the rules associated with the element type in this
@@ -280,16 +280,21 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
 				   &pR, pDoc);
 	      if (!pR && view > 1)
-		/* no rule for the view of interest, take the rule for the
-		   main view */
-		pR = pRuleView1;
-	      if (pR)
-		if (RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
-		  {
-		    pRule = pR;
-		    *pSPR = pSP;
-		    *pSSR = pSchS;
-		  }
+		/* no rule for the view of interest, take the rule associated
+		   with the element type for the main view, unless the default
+		   rules from the main present schema have already provided a
+		   rule for the right view */
+		{
+		  if (pRule->PrViewNum != view)
+		    pRule = pRuleView1;
+		}
+	      else
+		if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+		    {
+		      pRule = pR;
+		      *pSPR = pSP;
+		      *pSSR = pSchS;
+		    }
 
 	      /* look at the rules associated with attributes of ancestors
 		 that apply to the element, for all views if it's the main

@@ -3348,15 +3348,14 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    pRuleView = pRule;
 		  /* if it's the main view, record the rule for the cascade */
 		  /* but presentation function are applied immediately */
-		  if (view == 1 && pRuleView->PrType != PtFunction)
+		  if (pRuleView->PrType != PtFunction)
 		    {
 		      selectedRule[pRuleView->PrType] = pRuleView;
 		      schemaOfSelectedRule[pRuleView->PrType] = pSchP;      
 		      attrOfSelectedRule[pRuleView->PrType] = NULL;
 		    }
 		  else
-		    /* it's not the main view or it's a presentation funtion,
-		       apply the rule immediately */
+		    /* it's a presentation function, apply the rule now */
 		    if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
 		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
 				   queuePA, queuePS, queuePP, queuePR, lqueue);

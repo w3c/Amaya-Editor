@@ -60,6 +60,7 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
 #include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "hyphen_f.h"
+#include "memory_f.h"
 #include "registry_f.h"
 #include "search_f.h"
 #include "spellchecker_f.h"
