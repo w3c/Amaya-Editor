@@ -491,10 +491,6 @@ SOURCE=..\..\thotlib\dialogue\stix.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\editing\structchange.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\editing\structcommands.c
 # End Source File
 # Begin Source File
@@ -504,10 +500,6 @@ SOURCE=..\..\thotlib\editing\structcreation.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\structlist.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\structlocate.c
 # End Source File
 # Begin Source File
 

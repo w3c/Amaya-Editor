@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -134,11 +137,9 @@ CLEAN :
 	-@erase "$(INTDIR)\selectionapi.obj"
 	-@erase "$(INTDIR)\spellchecker.obj"
 	-@erase "$(INTDIR)\stix.obj"
-	-@erase "$(INTDIR)\structchange.obj"
 	-@erase "$(INTDIR)\structcommands.obj"
 	-@erase "$(INTDIR)\structcreation.obj"
 	-@erase "$(INTDIR)\structlist.obj"
-	-@erase "$(INTDIR)\structlocate.obj"
 	-@erase "$(INTDIR)\structmodif.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\structselect.obj"
@@ -172,40 +173,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -310,11 +278,9 @@ LIB32_OBJS= \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
 	"$(INTDIR)\stix.obj" \
-	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
 	"$(INTDIR)\structlist.obj" \
-	"$(INTDIR)\structlocate.obj" \
 	"$(INTDIR)\structmodif.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
@@ -551,16 +517,12 @@ CLEAN :
 	-@erase "$(INTDIR)\spellchecker.sbr"
 	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\stix.sbr"
-	-@erase "$(INTDIR)\structchange.obj"
-	-@erase "$(INTDIR)\structchange.sbr"
 	-@erase "$(INTDIR)\structcommands.obj"
 	-@erase "$(INTDIR)\structcommands.sbr"
 	-@erase "$(INTDIR)\structcreation.obj"
 	-@erase "$(INTDIR)\structcreation.sbr"
 	-@erase "$(INTDIR)\structlist.obj"
 	-@erase "$(INTDIR)\structlist.sbr"
-	-@erase "$(INTDIR)\structlocate.obj"
-	-@erase "$(INTDIR)\structlocate.sbr"
 	-@erase "$(INTDIR)\structmodif.obj"
 	-@erase "$(INTDIR)\structmodif.sbr"
 	-@erase "$(INTDIR)\structschema.obj"
@@ -619,40 +581,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -753,11 +682,9 @@ BSC32_SBRS= \
 	"$(INTDIR)\selectionapi.sbr" \
 	"$(INTDIR)\spellchecker.sbr" \
 	"$(INTDIR)\stix.sbr" \
-	"$(INTDIR)\structchange.sbr" \
 	"$(INTDIR)\structcommands.sbr" \
 	"$(INTDIR)\structcreation.sbr" \
 	"$(INTDIR)\structlist.sbr" \
-	"$(INTDIR)\structlocate.sbr" \
 	"$(INTDIR)\structmodif.sbr" \
 	"$(INTDIR)\structschema.sbr" \
 	"$(INTDIR)\structselect.sbr" \
@@ -888,11 +815,9 @@ LIB32_OBJS= \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
 	"$(INTDIR)\stix.obj" \
-	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
 	"$(INTDIR)\structlist.obj" \
-	"$(INTDIR)\structlocate.obj" \
 	"$(INTDIR)\structmodif.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
@@ -924,6 +849,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -2682,24 +2637,6 @@ SOURCE=..\..\thotlib\dialogue\stix.c
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\editing\structchange.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-
-"$(INTDIR)\structchange.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-
-"$(INTDIR)\structchange.obj"	"$(INTDIR)\structchange.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\editing\structcommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -2749,24 +2686,6 @@ SOURCE=..\..\thotlib\base\structlist.c
 
 
 "$(INTDIR)\structlist.obj"	"$(INTDIR)\structlist.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\view\structlocate.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-
-"$(INTDIR)\structlocate.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-
-"$(INTDIR)\structlocate.obj"	"$(INTDIR)\structlocate.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
