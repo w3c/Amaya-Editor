@@ -372,13 +372,16 @@ Element             elem;
 	  {
 	     styleAttr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (elem, styleAttr, doc);
+	     /* copy the style string into the style attribute */
+	     TtaSetAttributeText (styleAttr, style, elem, doc);
+	     TtaRegisterAttributeCreate (styleAttr, elem, doc);
 	  }
-	/* copy the style string into the style attribute */
-	TtaSetAttributeText (styleAttr, style, elem, doc);
-	if (styleAttr == 0)
-	   TtaRegisterAttributeReplace (styleAttr, elem, doc);
 	else
-	   TtaRegisterAttributeCreate (styleAttr, elem, doc);
+	  {
+	     TtaRegisterAttributeReplace (styleAttr, elem, doc);
+	     /* copy the style string into the style attribute */
+	     TtaSetAttributeText (styleAttr, style, elem, doc);
+	  }
      }
    TtaFreeMemory (style);
 }

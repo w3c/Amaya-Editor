@@ -154,4 +154,6 @@ int                 AMAYA;
 #define AM_REQUEST_TIMEOUT	      142
 #define AM_OVERWRITE_CHECK            143
 #define AM_ETAG_CHANGED	      	      144
-#define AMAYA_MSG_MAX                 145
+#define AM_BACKGROUND_IMAGE           145
+#define AM_BG_IMAGE_NOT_ALLOWED       146
+#define AMAYA_MSG_MAX                 147

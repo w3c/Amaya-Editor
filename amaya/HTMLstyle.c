@@ -3865,8 +3865,9 @@ int                 repeat;
 STRING              image;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR                css_command[400];
 
+   /******* check buffer overflow ********/
    sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
    if (repeat == DRIVERP_REPEAT)
      ustrcat (css_command, "repeat");

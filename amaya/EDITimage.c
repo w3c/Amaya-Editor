@@ -100,7 +100,8 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-   CallbackImage manage returns of Picture form.                   
+   CallbackImage
+   Handle callbacks from the "Picture" and "Background image" forms.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackImage (int ref, int typedata, STRING data)
@@ -119,7 +120,7 @@ STRING              data;
   LoadedImageDesc   *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
-  int                i, c1;
+  int                i, c1, cN;
   int                val;
   boolean            change;
 
@@ -128,43 +129,50 @@ STRING              data;
     {
     case FormImage:
     case FormBackground:
-      /* *********Load URL or local image********* */
       if (val == 2)
 	{
-	  /* Clear */
+	  /* Clear button */
 	  LastURLImage[0] = EOS;
 	  TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 	}
       else if (val == 3)
-	/* Parse */
+	/* Filter button */
 	{
 	  /* reinitialize directories and document lists */
 	  TtaListDirectory (DirectoryImage, ref,
 			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
 			    ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	}
-      else
+      else if (val == 0)
+	/* Cancel button */
 	{
-	  if (val == 0)
+	  LastURLImage[0] = EOS;
+	  TtaDestroyDialogue (ref);
+	  BgDocument = 0;
+	}
+      else
+	/* Confirm button */
+	if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
+	  /* IMG element without ALT attribute: error message */
 	    {
-	      LastURLImage[0] = EOS;
-	      TtaDestroyDialogue (ref);
-	      BgDocument = 0;
+	      TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
+			   TtaGetMessage (AMAYA, AM_ALT_MISSING));
 	    }
-	  else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
-	    {
-	      TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING));
-	    }
-	  else if (ref == BaseImage + FormBackground && BgDocument != 0)
+	else if (ref == BaseImage + FormBackground && BgDocument != 0)
 	    {
 	      /* save BgDocument because operation can be too long */
 	      document = BgDocument;
 	      /* get the first and last selected element */
 	      TtaGiveFirstSelectedElement (document, &first, &c1, &i);
+	      TtaGiveLastSelectedElement (document, &last, &i, &cN);
+	      TtaOpenUndoSequence (document, first, last, c1, cN);
+
+	      el = NULL;
 	      if (first == NULL)
+		/* no current selection */
 		{
 		  /* set the pRule on the root element */
-		  el =  TtaGetMainRoot (document);
+		  el = TtaGetMainRoot (document);
 		  elType.ElSSchema = TtaGetDocumentSSchema (document);
 		  elType.ElTypeNum = HTML_EL_BODY;
 		  /* set the style on body element */
@@ -175,11 +183,17 @@ STRING              data;
 		{
 		  elStyle = el = first;
 		  elType = TtaGetElementType (el);
-		  if (elType.ElTypeNum == HTML_EL_BODY)
+		  if (elType.ElTypeNum == HTML_EL_HTML)
 		    {
-		      /* move the pRule on the root element */
-		      el =  TtaGetMainRoot (document);
+		      elType.ElTypeNum = HTML_EL_BODY;
+		      elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
 		      last = el;
+		    }
+		  else if (elType.ElTypeNum == HTML_EL_BODY)
+		    /* move the pRule on the root element */
+		    {
+		    el =  TtaGetMainRoot (document);
+		    last = el;
 		    }
 		  else
 		    {
@@ -192,12 +206,8 @@ STRING              data;
 			  parentType.ElTypeNum = HTML_EL_HEAD;
 			  parent = TtaGetTypedAncestor (el, parentType);
 			}
-
 		      if (parent != NULL)
-			{
-			  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
-			  return;
-			}
+			el = NULL;
 		      else
 			{
 			  /* style is not allowed in MAP */
@@ -209,64 +219,97 @@ STRING              data;
 			      parent = TtaGetTypedAncestor (el, parentType);
 			    }
 			  if (parent != NULL)
-			    {
-			      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
-			      return;
-			    }
+			    el = NULL;
 			  else
-			    last = el;
+			    {
+			      elType = TtaGetElementType (last);
+			      if (elType.ElTypeNum == HTML_EL_MAP)
+				parent = el;
+			      else
+				{
+			          parentType.ElTypeNum = HTML_EL_MAP;
+			          parent = TtaGetTypedAncestor (el, parentType);
+			        }
+			      if (parent != NULL)
+				el = NULL;
+			    } 
 			}
-
-		      /* TODO:  TtaGiveLastSelectedElement (document, &last, &i, &cN); */
-		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-			  elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-			{
-			  el = TtaGetParent (el);
-			  /* if the PRule is on a Pseudo-Paragraph,
-			     move it to the enclosing element */
-			  elType = TtaGetElementType (el);
-			}
-		      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-			el = TtaGetParent (el);
-		      elStyle = el;
-		      last = el;
 		    }
 		}
-
-	      if (LastURLImage[0] == EOS)
-		HTMLResetBackgroundImage (document, el);
+	      if (!el)
+		TtaSetStatus (document, 1,
+			      TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED),
+			      NULL);
 	      else
 		{
-		  if (RepeatValue == 0)
-		    i = DRIVERP_REPEAT;
-		  else if (RepeatValue == 1)
-		    i = DRIVERP_HREPEAT;
-		  else if (RepeatValue == 2)
-		    i = DRIVERP_VREPEAT;
-		  else
-		    i = DRIVERP_SCALE;
-		  if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
-		    {
-		      /*
-			load a local image into a remote document 
-			copy image file into the temporary directory of the document
-			*/
-		      TtaExtractName (LastURLImage, tempfile, tempname);
-		      NormalizeURL (tempname, document, tempfile, tempname, NULL);
-		      AddLoadedImage (tempname, tempfile, document, &desc);
-		      desc->status = IMAGE_MODIFIED;
-		      TtaFileCopy (LastURLImage, desc->localName);
-		      HTMLSetBackgroundImage (document, el, i, tempname);
-		    }
-		  else
-		    HTMLSetBackgroundImage (document, el, i, LastURLImage);
+		if (RepeatValue == 0)
+		  i = DRIVERP_REPEAT;
+		else if (RepeatValue == 1)
+		  i = DRIVERP_HREPEAT;
+		else if (RepeatValue == 2)
+		  i = DRIVERP_VREPEAT;
+		else
+		  i = DRIVERP_SCALE;
+		if (IsHTTPPath (DocumentURLs[document]) &&
+		    !IsHTTPPath (LastURLImage))
+		  {
+		    /* load a local image into a remote document 
+		    copy image file into the temporary directory of the
+		    document */
+		    TtaExtractName (LastURLImage, tempfile, tempname);
+		    NormalizeURL (tempname, document, tempfile, tempname,
+				  NULL);
+		    AddLoadedImage (tempname, tempfile, document, &desc);
+		    desc->status = IMAGE_MODIFIED;
+		    TtaFileCopy (LastURLImage, desc->localName);
+		  }
+		do
+		  {
+		    elType = TtaGetElementType (el);
+		    /* if the PRule is on a text string or picture, move it
+		       to the enclosing element */
+		    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+			elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		      {
+			el = TtaGetParent (el);
+		        elStyle = el;
+			if (TtaIsAncestor (last, el))
+			    last = el;
+			elType = TtaGetElementType (el);
+		      }
+		    /* if the PRule is on a Pseudo-Paragraph, move it to
+		       the enclosing element */
+		    if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		      {
+		        el = TtaGetParent (el);
+		        elStyle = el;
+			if (TtaIsAncestor (last, el))
+			    last = el;
+		      }
+	            if (LastURLImage[0] == EOS)
+		      HTMLResetBackgroundImage (document, el);
+	            else
+		      if (IsHTTPPath (DocumentURLs[document]) &&
+		          !IsHTTPPath (LastURLImage))
+		        HTMLSetBackgroundImage (document, el, i, tempname);
+		      else
+		        HTMLSetBackgroundImage (document, el, i, LastURLImage);
+	            SetStyleAttribute (document, elStyle);
+		    if (last == NULL || el == last)
+		      el = NULL;
+		    else
+		      {
+		        TtaGiveNextSelectedElement (document, &el, &c1,&cN);
+		        elStyle = el;
+		      }
+		  }
+		while (el);
 		}
-	      SetStyleAttribute (document, elStyle);
+	      TtaCloseUndoSequence (document);
 	      TtaSetDocumentModified (document);
 	    }
-	  else
+	else
 	    TtaDestroyDialogue (ref);
-	}
       break;
     case RepeatImage:
       RepeatValue = val;
@@ -318,11 +361,15 @@ STRING              data;
 	}
       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
       TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-			TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-			ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+			TtaGetMessage (LIB, TMSG_DOC_DIR),
+			BaseImage + ImageDir, ImgFilter,
+			TtaGetMessage (AMAYA, AM_FILES),
+			BaseImage + ImageSel);
       TtaListDirectory (DirectoryImage, BaseImage + FormBackground,
-			TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-			ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+			TtaGetMessage (LIB, TMSG_DOC_DIR),
+			BaseImage + ImageDir, ImgFilter,
+			TtaGetMessage (AMAYA, AM_FILES),
+			BaseImage + ImageSel);
       ImageName[0] = EOS;
       break;
     case ImageSel:
@@ -446,7 +493,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-  ChangeBackgroundImage displays a form
+  ChangeBackgroundImage
+  display a form to set or change the background image
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ChangeBackgroundImage (Document document, View view)
@@ -456,13 +504,12 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   STRING               s = (STRING) TtaGetMemory (MAX_LENGTH * sizeof (char)); 
+   STRING           s = (STRING) TtaGetMemory (MAX_LENGTH * sizeof (char)); 
 #  ifndef _WINDOWS
    int                 i;
 #  endif /* _WINDOWS */
 
    /* there is a selection */
-   /* Dialogue form for open URL or local */
 #  ifndef _WINDOWS
    i = 0;
    ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -471,10 +518,11 @@ void ChangeBackgroundImage (document, view)
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
-   TtaNewSheet (BaseImage + FormBackground, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
-		3, s, TRUE, 2, 'L', D_CANCEL);
+   TtaNewSheet (BaseImage + FormBackground, TtaGetViewFrame(document, view),
+		TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE), 3, s, TRUE, 2,
+		'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormBackground,
-		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormBackground, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormBackground,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
