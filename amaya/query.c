@@ -247,7 +247,7 @@ AHTReqContext      *me;
 	if (me->error_stream != (char *) NULL)
 	   HT_FREE (me->error_stream);
 
-	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	if (AmayaCloseFlag == TRUE && (me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	  {
 	    if(me->urlName)
 	      TtaFreeMemory (me->urlName);
@@ -1211,6 +1211,9 @@ void                QueryClose ()
    /* Later, the following call should use all the active docids. For the mome
       nt, it stops everything */
    /* StopRequest (); */
+
+   AmayaCloseFlag = TRUE;
+
    Thread_deleteAll ();
 
 #ifndef HACK_WWW
@@ -1221,7 +1224,6 @@ void                QueryClose ()
    HTGateway_deleteAll ();
    AHTProfile_delete ();
 
-   AmayaCloseFlag = TRUE;
 }
 
 
