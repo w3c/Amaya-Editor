@@ -1,3 +1,4 @@
+
 /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1999.
@@ -169,17 +170,17 @@ View view;
 void               RemoteLoad_callback (int doc, int status, 
 					 STRING urlName,
 					 STRING outputfile, 
-					 STRING content_type,
+					 AHTHeaders *http_headers,
 					 void * context)
 #else  /* __STDC__ */
 void               RemoteLoad_callback (doc, status, urlName,
-					outputfile, content_type, 
+					outputfile, http_headers,
 					context)
 int doc;
 int status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 
 #endif
@@ -332,11 +333,11 @@ int doc;
   FILE *fp2;
   char tmp_str[80];
 
-  char *source_doc;
+  char *source_doc ="http://www.w3.org";
   char *author;
   char *date;
   char *type;
-  char *xpath = "";
+  char *xpath = "id(shouldBeDoneSomeday)";
   char *ptr;
 
   /* @@@ should be long */
@@ -363,7 +364,8 @@ int doc;
 
   fp = fopen ("/tmp/rdf.tmp", "w");
   fprintf (fp,
-	   "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+	   "<?xml version=\"1.0\" ?>\n"
+ 	   "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
 	   "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
 	   "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n"
 	   "<r:Description>\n"
@@ -385,6 +387,16 @@ int doc;
   fp2 = fopen (ptr, "r");
   if (fp2)
     {
+      /* skip the first 3 lines (to have a valid XML doc )*/
+      /* ahem, skip the first 3 lines, in the hard way! */
+      {
+	int i;
+	char c;
+	for (i = 0; i<3; i++)
+	  {
+	    while ((c = getc (fp2)) != '\n');
+	  }
+      }
       fgets (tmp_str, 79, fp2);
       while (!feof (fp2)) {
 	fprintf (fp, "  %s", tmp_str);
@@ -411,17 +423,17 @@ int doc;
 void               ANNOT_Post_callback (int doc, int status, 
 					 STRING urlName,
 					 STRING outputfile, 
-					 STRING content_type,
+					 AHTHeaders *http_headers,
 					 void * context)
 #else  /* __STDC__ */
 void               ANNOT_Post_callback (doc, status, urlName,
-					outputfile, content_type, 
+					outputfile, http_headers,
 					context)
 int doc;
 int status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 
 #endif
@@ -442,9 +454,11 @@ void *context;
      return;
    remoteAnnotIndex = ctx->remoteAnnotIndex;
    TtaFreeMemory (ctx);
+#if 0
    if (status == 0)
      LINK_LoadAnnotations (doc, remoteAnnotIndex);
    /* TtaFileUnlink (remoteAnnotIndex);*/
+#endif
    TtaFreeMemory (remoteAnnotIndex);
 }
 
@@ -465,7 +479,8 @@ View view;
   char *annotIndex;
   char *annotUrl;
   char *tmpfile;
-  char *annotServer = "http://tuvalu.inrialpes.fr:46277";
+  /*  char *annotServer = "http://tuvalu.inrialpes.fr:7990"; */
+  char *annotServer = "http://quake.w3.org"; 
 
   REMOTELOAD_context *ctx;
   int res;
@@ -492,13 +507,13 @@ View view;
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
   /* "compute" the url we're looking up in the annotation server */
   annotUrl = TtaGetMemory (MAX_LENGTH);
-  sprintf (annotUrl, "%s/%s", annotServer, "cgi-bin/printenv");
+  sprintf (annotUrl, "%s/%s", annotServer, "CGI/annotate");
   /* launch the request */
   res = GetObjectWWW (doc,
 		      annotUrl,
-		      NULL,
+		      TEXT("/tmp/rdf.tmp"),
 		      ctx->remoteAnnotIndex,
-		      AMAYA_ANNOT_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 		      NULL,
 		      NULL, 
 		      (void *)  ANNOT_Post_callback,
