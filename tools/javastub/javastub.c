@@ -765,9 +765,12 @@ void dump_stubs(FILE *out) {
 	 */
 	fprintf(out,"\n");
 	if (rt->convert != NULL) {
-	   if (!strcmp(rt->jname, "String"))
-	      fprintf(out,"\treturn(makeJavaString(res, sizeof(res)));\n");
-	   else
+	   if (!strcmp(rt->jname, "String")) {
+	      fprintf(out,"\tif (res == NULL)\n");
+	      fprintf(out,"\t\treturn(NULL);\n");
+	      fprintf(out,"\telse;\n");
+	      fprintf(out,"\t\treturn(makeJavaString(res, strlen(res)));\n");
+	   } else
 	      fprintf(out,"\treturn(result);\n");
         } else {
 	   fprintf(out,"\treturn((%s) res);\n", rt->itype);
