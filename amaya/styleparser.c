@@ -5223,7 +5223,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof, quoted;
   ThotBool            ignoreMedia, media;
-  ThotBool            noRule, ignoreImport;
+  ThotBool            noRule, ignoreImport, skip;
   CSSInfoPtr          refcss = NULL;
 
   CSScomment = MAX_CSS_LENGTH;
@@ -5241,6 +5241,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   index = 0;
   base = NULL;
   quoted = FALSE;
+  skip = FALSE;
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */
@@ -5277,7 +5278,21 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       c = buffer[index++];
       eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
-      if (CSScomment == MAX_CSS_LENGTH ||
+      if (skip)
+	{
+	  if (c == '}')
+	    {
+	      /* end of the @font-face */
+	      skip = FALSE;
+	      import = MAX_CSS_LENGTH;
+	      noRule = TRUE;
+	      CSSindex = 0;
+	    }
+	  if (c == EOL)
+	    LineNumber++;
+	  c = CR;
+	}
+      else if (CSScomment == MAX_CSS_LENGTH ||
 	  c == '*' || c == '/' || c == '<')
 	{
 	  /* we're not within a comment or we're parsing * or / */
@@ -5384,6 +5399,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			ignoreMedia = TRUE;
 		      noRule = TRUE;
 		    }
+		  else if (import != MAX_CSS_LENGTH &&
+			   !strncasecmp (&CSSbuffer[import], "@font-face", 10))
+		    skip = TRUE;
 		}
 	      break;
 	    case '}':

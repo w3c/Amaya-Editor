@@ -496,7 +496,7 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
 	      else
 		prevInfo->PiNext = pInfo->PiNext;
 	    }
-	  if (css->enabled[doc])
+	  if (css->enabled[doc] && css->category != CSS_EMBED)
 	    {
 	      /* disapply the CSS */
 	      while (pInfo->PiSchemas != NULL)
