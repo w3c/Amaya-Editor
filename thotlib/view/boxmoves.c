@@ -3201,7 +3201,8 @@ int                 frame;
   if (pBox->BxType == BoBlock || pBox->BxType == BoCell)
     /* don't pack a block or a cell but transmit to enclosing box */
     WidthPack (pAb->AbEnclosing, pSourceBox, frame);
-  else if (pBox->BxType == BoGhost)
+  else if (pBox->BxType == BoGhost || pBox->BxType == BoColumn)
+    /* don't pack a column head or a ghost element */
     return;
   else if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
     {
