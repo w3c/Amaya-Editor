@@ -39,6 +39,10 @@
 #include "typemedia.h"
 #include "frame.h"
 
+#ifdef _WX
+  #include "wxinclude.h"
+#endif /* _WX */
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -69,7 +73,11 @@ One Timer To Rule Them All
 (ie : all animation, frame, and windows are using the same timer, 
 using start value substract to get their own time)
 */
-static int      AnimTimer = 0; 
+#ifdef _WX
+  static wxAmayaTimer * AnimTimer = 0; 
+#else /* _WX */
+  static int      AnimTimer = 0; 
+#endif /* _WX */
 static ThotBool BadGLCard = FALSE;
 /* Animation Smoothness*/
 #define FPS 25 /*Frame Per Second*/
@@ -137,12 +145,23 @@ VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)
  GL_DrawAll ();   
 } 
 #endif /*_WINGUI*/
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  MyAnimTimerProcWX : Call drawing upon timer calls
+  ----------------------------------------------------------------------*/
+void MyAnimTimerProcWX( void * data )     
+{ 
+ GL_DrawAll ();
+} 
+#endif /* _WX */
+
 /*----------------------------------------------------------------------
   TtaChangePlay : Activate Animation
   ----------------------------------------------------------------------*/
 void TtaChangePlay (int frame)
 {
-  ThotBool remove;
+  ThotBool other_animation;
 
   if (frame && frame <= MAX_FRAME)
     if (FrameTable[frame].Animated_Boxes)
@@ -174,19 +193,27 @@ void TtaChangePlay (int frame)
 	    }    
 #endif /*_WINGUI*/
 
+#ifdef _WX
+	    {
+	      AnimTimer = new wxAmayaTimer( MyAnimTimerProcWX, NULL );
+	      /* start a one shot timer */
+	      AnimTimer->Start( FRAME_TIME , FALSE );
+	    }
+#endif /* _WX */
+
 	    FrameTable[frame].BeginTime = 0;
 	    FrameTable[frame].LastTime = 0;
 	  }
 	else
 	  if (AnimTimer)
 	    {
-	      remove = FALSE;
+	      other_animation = FALSE;
 	      for (frame = 0; frame < MAX_FRAME; frame++)
 		{
 		  if (FrameTable[frame].Anim_play)
-		    remove = TRUE;
+		    other_animation = TRUE;
 		}
-	      if (remove)
+	      if (!other_animation)
 		{
 
 #ifdef _GTK
@@ -197,6 +224,10 @@ void TtaChangePlay (int frame)
 		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
 		  KillTimer (NULL, AnimTimer);
 #endif /*_WINGUI*/
+
+#ifdef _WX
+		  delete AnimTimer;
+#endif /* _WX */
 
 		  AnimTimer = 0; 
 		}
@@ -330,7 +361,7 @@ ThotBool GL_DrawAll ()
 	}  
       FrameUpdating = FALSE;     
     }
-  return TRUE;  
+  return TRUE;
 }
 
 
