@@ -956,7 +956,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -6227,6 +6227,7 @@ test -z "$motif_direct_test_include" && motif_direct_test_include=Xm/Xm.h
   for ac_dir in               \
     /usr/include/Motif1.2     \
     /usr/Motif1.2/include     \
+    /sw/Lesstif/Motif2.0/include \
                               \
     /usr/motif/include        \
                               \
@@ -6281,6 +6282,7 @@ LIBS="-l$motif_direct_test_library $LIBS"
 for ac_dir in `echo "$ac_motif_includes" | sed s/include/lib/` \
     /usr/lib/Motif1.2     \
     /usr/Motif1.2/lib     \
+    /sw/Lesstif/Motif2.0/lib \
                           \
     /usr/motif/lib        \
                           \
@@ -6317,7 +6319,7 @@ for ac_dir in `echo "$ac_motif_includes" | sed s/include/lib/` \
     $HOME/lesstif/lib     \
     ; \
 do
-  for ac_extension in a so sl; do
+  for ac_extension in a so sl la; do
     if test -r $ac_dir/lib${motif_direct_test_library}.$ac_extension; then
       no_motif= ac_motif_libraries=$ac_dir
       break 2
