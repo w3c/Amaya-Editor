@@ -101,7 +101,7 @@ typedef struct _dynBookmark
 
 /* @@ JK: a quick hack to be able to compile under Windows */
 #ifdef _WINGUI
-#ifndef vprintf
-#  define vprintf _vprintf
+#ifndef vsnprintf
+#  define vsnprintf _vsnprintf
 #endif
 #endif
