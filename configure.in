@@ -18,10 +18,14 @@ dnl
 dnl Verify that configure is not being called in the Amaya directory
 dnl
 if test -d batch -a -f configure.in ; then
+   echo 
+   echo "****************************************************************"
    echo ERROR: You must invoke the configure script in a subidrectory
    echo under the Amaya tree.
    echo For example:
    echo "  cd Amaya ; mkdir obj ; cd obj ; ../configure [your options] "
+   echo "****************************************************************"
+   echo 
    exit 1
 fi
 
@@ -505,8 +509,11 @@ dnl
 dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
-AC_ARG_ENABLE(svg,   [  --disable-svg           remove SVG support ])
-AC_ARG_ENABLE(annot,   [  --disable-annot         remove Annotations support ])
+AC_ARG_ENABLE(svg,           [  --disable-svg           remove SVG support ])
+AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations support ])
+AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
+AC_ARG_ENABLE(annot-threads, [  --disable-annot-threads remove annotation threads ])
+AC_ARG_ENABLE(i18n,          [  --with-18n              enable I18N support (experimental) ])
 
 dnl
 dnl plugins support is disabled by default
@@ -542,6 +549,44 @@ if test "$with_annot" = "" ; then
     fi
 fi
 
+dnl
+dnl Generic XML support enabled by default
+dnl
+if test "$with_generic_xml" = "" ; then
+    if test "$enable_generic_xml" = "no" ; then
+	with_generic_xml="no"
+	GENERIC_XML_OPTIONS=
+    else
+	with_generic_xml="yes"
+	GENERIC_XML_OPTIONS=-DXML_GENERIC
+    fi
+fi
+
+dnl
+dnl Annotation thread support disabled by default
+dnl
+if test "$with_annot_threads" = "" ; then
+    if test "$enable_annot_threads" = "yes" ; then
+	with_annot_threads="yes"
+	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT
+    else
+	with_annot_threads="no"
+	ANNOT_THREAD_OPTIONS=
+    fi
+fi
+
+dnl
+dnl I18N support disabled by default
+dnl
+if test "$with_i18n" = "" ; then
+    if test "$enable_i18n" = "yes" ; then
+	with_i18n="yes"
+	I18N_OPTIONS=-D_I18N_
+    else
+	with_i18n="no"
+	I18N_OPTIONS=""
+    fi
+fi
 
 if test "$build_amaya" = "yes" ; then
     if test ! -f $srcdir/../libwww/Makefile.in ; then
@@ -576,6 +621,13 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
+    if test "$with_annot" = "no" -a "$with_annot_threads" = "yes" ; then
+	AC_MSG_WARN(You must select the annotation support to have threads)
+	AC_MSG_WARN(Disabling annotation thread support)
+	with_annot_threads="no"
+	ANNOT_THREAD_OPTIONS=
+    fi
+
     if test "$with_plugin" = "yes" ; then
         AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
 	AC_MSG_WARN(Disabling plugin build !)
@@ -588,10 +640,10 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$GTK_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS"
+THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $ANNOT_THREAD_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
-AMAYA_ANNOT_OPTIONS=
+AMAYA_ANNOT_OPTIONS="$ANNOT_THREAD_OPTIONS"
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
 
@@ -752,6 +804,15 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_annot" = "yes" ; then
 	echo Amaya configured with Annotations support
+    fi
+    if test "$with_annot_threads" = "yes" ; then
+	echo Amaya configured with Annotation threads support
+    fi
+    if test "$with_generic_xml" = "yes" ; then
+	echo Amaya configured with generic XML suppport
+    fi
+    if test "$with_i18n" = "yes" ; then
+	echo Amaya configured with I18N suppport \(experimental\)
     fi
 fi
 
