@@ -63,6 +63,7 @@ extern char *MakeRelativeURL ( char *aName,
                                char *relatedName );
 extern ThotBool AM_GetFileSize ( char *filename,
                                  unsigned long *file_size );
+extern ThotBool AM_UseXHTMLMimeType ( void );
 
 #else /* __STDC__ */
 
@@ -123,6 +124,7 @@ extern char *MakeRelativeURL (/* char *aName,
                                  char *relatedName */);
 extern ThotBool AM_GetFileSize (/* char *filename,
                                    unsigned long *file_size */);
+extern ThotBool AM_UseXHTMLMimeType (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2152,3 +2152,18 @@ ThotBool AM_GetFileSize (char *filename, unsigned long *file_size)
    *file_size = (unsigned long) info.size;
    return TRUE;
 }
+
+/*----------------------------------------------------------------------
+  AM_UseXHTMLMimeType
+  Returns TRUE if the user has configured Amaya to use this MIME type,
+  FALSE otherwise.
+  ---------------------------------------------------------------------*/
+ThotBool AM_UseXHTMLMimeType (void)
+{
+  ThotBool xhtml_mimetype;
+  
+  /* does the user wants to use the new MIME type? */
+  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+
+  return (xhtml_mimetype);
+}

@@ -764,7 +764,7 @@ void SaveDocumentAs (Document doc, View view)
      {
        if (DocumentTypes[doc] == docHTML)
 	 {
-	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat && AM_UseXHTMLMimeType () )
 	     strcpy (UserMimeType, AM_XHTML_MIME_TYPE);
 	   else
 	     strcpy (UserMimeType, "text/html");

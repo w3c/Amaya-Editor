@@ -70,10 +70,12 @@ extern void DeleteMColumn ( Document document,
 extern void MathElementDeleted ( NotifyElement *event );
 extern void FenceModified ( NotifyOnValue *event );
 extern void MathAttrOtherCreated ( NotifyAttribute *event );
-extern ThotBool MathStyleAttrInMenu ( NotifyAttribute * event );
 extern void MathEntityModified ( NotifyAttribute *event );
+extern void MathDisplayAttrCreated ( NotifyAttribute *event );
+extern ThotBool MathDisplayAttrDelete ( NotifyAttribute *event );
 extern void MathPresentAttrCreated ( NotifyAttribute *event );
 extern ThotBool MathAttrFontsizeDelete ( NotifyAttribute *event );
+extern ThotBool MathStyleAttrInMenu ( NotifyAttribute * event );
 extern ThotBool MathAttrLspaceDelete ( NotifyAttribute *event );
 extern ThotBool MathAttrRspaceDelete ( NotifyAttribute *event );
 extern void MathAttrFontfamilyCreated ( NotifyAttribute *event );
@@ -182,10 +184,12 @@ extern void DeleteMColumn (/* Document document,
 extern void MathElementDeleted (/* NotifyElement *event */);
 extern void FenceModified (/* NotifyOnValue *event */);
 extern void MathAttrOtherCreated (/* NotifyAttribute *event */);
-extern ThotBool MathStyleAttrInMenu (/* NotifyAttribute * event */);
 extern void MathEntityModified (/* NotifyAttribute *event */);
+extern void MathDisplayAttrCreated (/* NotifyAttribute *event */);
+extern ThotBool MathDisplayAttrDelete (/* NotifyAttribute *event */);
 extern void MathPresentAttrCreated (/* NotifyAttribute *event */);
 extern ThotBool MathAttrFontsizeDelete (/* NotifyAttribute *event */);
+extern ThotBool MathStyleAttrInMenu (/* NotifyAttribute * event */);
 extern ThotBool MathAttrLspaceDelete (/* NotifyAttribute *event */);
 extern ThotBool MathAttrRspaceDelete (/* NotifyAttribute *event */);
 extern void MathAttrFontfamilyCreated (/* NotifyAttribute *event */);

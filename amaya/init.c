@@ -3003,7 +3003,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	strcpy (local_content_type , "text/plain");
       else if (docType == docHTML)
 	{
-	  if (isXML)
+	  if (isXML && AM_UseXHTMLMimeType () )
 	    strcpy (local_content_type , AM_XHTML_MIME_TYPE);
 	  else
 	    strcpy (local_content_type , "text/html");

@@ -67,9 +67,9 @@ extern void MathMLSpacingAttr ( Document doc,
                                 char *value,
                                 int attr );
 extern void MathMLSetDisplayAttr ( Element el,
-				   Attribute attr,
-				   Document doc,
-				   ThotBool delete );
+                                   Attribute attr,
+                                   Document doc,
+                                   ThotBool delete );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -139,9 +139,9 @@ extern void MathMLSpacingAttr (/* Document doc,
                                   char *value,
                                   int attr */);
 extern void MathMLSetDisplayAttr (/* Element el,
-				     Attribute attr,
-				     Document doc,
-				     ThotBool delete */);
+                                     Attribute attr,
+                                     Document doc,
+                                     ThotBool delete */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);
