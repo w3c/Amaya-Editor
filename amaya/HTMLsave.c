@@ -213,7 +213,7 @@ char               *pathname;
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -232,7 +232,7 @@ View                view;
    char                tempname[MAX_LENGTH];
    int                 i;
 
-   if (SavingDocument != (Document) None)
+   if ((SavingDocument != (Document) None) && (SavingDocument != document))
       return;
    if (SavingObject != (Document) None)
       return;
@@ -885,7 +885,7 @@ DBG(fprintf(stderr, "     document has no BASE\n");)
 
 DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 
-               if (src_is_local) {
+               if ((src_is_local) && (!dst_is_local)) {
 
 DBG(fprintf(stderr, "     AddLocalImage %s\n", buf);)
 
@@ -909,7 +909,10 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", buf);)
 		   else
 		     {
 		       /* rebuild the old image path */
-		       strcpy (tempname, oldpath);
+		       if (buf[0] != DIR_SEP)
+			   strcpy (tempname, oldpath);
+		       else
+		           tempname[0] = '\0';
 		       strcat (tempname, buf);
 		     }
 		   if (imgbase[0] != EOS)
@@ -1153,7 +1156,7 @@ DBG(fprintf(stderr, "   Moving document locally : to %s\n", tempfile);)
 	       {
 		  /* the user has to change the name of the saving file */
 		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+		  SaveDocumentAs(SavingDocument, 1);
 		  return;
 	       }
 	  }
@@ -1196,7 +1199,7 @@ DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
 	       {
 		  /* the user has to change the name of the saving file */
 		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+		  SaveDocumentAs(SavingDocument, 1);
 		  return;
 	       }
 	  }
@@ -1252,7 +1255,7 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", tempfile);)
 	  {
 	    /* restore all urls */
 	    TtaSetDialoguePosition ();
-	    TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+	    SaveDocumentAs(SavingDocument, 1);
 	  }
 	else
 	  {
@@ -1294,7 +1297,7 @@ DBG(fprintf(stderr, "   Copying remote document to remote URL %s\n", tempfile);)
 	if (res)
 	  {
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+	     SaveDocumentAs(SavingDocument, 1);
 	  }
 	else
 	  {
