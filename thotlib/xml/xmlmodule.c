@@ -17,8 +17,8 @@
      - ThotBool ParseXMLAttribute (PrefixType **pPrefixs,
                                    Document doc,
 				   Element el, 
-				   char *attrName, 
-				   char *value)
+				   STRING attrName, 
+				   STRING value)
             Parse the Thot attribute (pPrefixs is the parser prefix list
 	      for opening document's nature in XmlAddNS. updated.)
      - void  XmlSetRef(Document doc)
@@ -48,16 +48,18 @@
 
 /* temporary pointer to parser prefixlist */
 static PrefixType *ParserPrefixs;
+
 /* reference storing structure */
 typedef struct _XmlReferenceType
 {
   Element       El;
   Attribute     Attr;
   Document      TargetDoc;
-  char         *TargetLabel;
-  ThotBool      IsInclusion;
+  STRING        TargetLabel;
+  ThotBool       IsInclusion;
   struct _XmlReferenceType *Next;
 }XmlReferenceType;
+
 /* references list */
 static XmlReferenceType *ReferenceList = NULL;
 
@@ -70,39 +72,53 @@ static XmlReferenceType *ReferenceList = NULL;
        this actually loads the SSchema and Pschema.
        if prefix is null this is the main SSchema of the doc.
    ----------------------------------------------------------------------*/
- void XmlAddNSPresentation (Document doc, unsigned char *prefix, unsigned char *presentationName)
- {
-   PrefixType         *courPrefix;
+#ifdef __STDC__
+void XmlAddNSPresentation (Document doc, STRING prefix, STRING presentationName)
+#else /* __STDC__ */
+void XmlAddNSPresentation (doc, prefix, presentationName)
+Document doc;
+STRING prefix;
+STRING presentationName;
+#endif /* __STDC__ */
+{
+  PrefixType         *courPrefix;
  
   if (presentationName != NULL && presentationName[0]!= EOS && doc!=0)
-     {
-       if (prefix == NULL || prefix[0] == EOS)
-	 TtaSetPSchema (doc, presentationName);
-       else
-       {
-         courPrefix = ParserPrefixs;
-         while (courPrefix != NULL && ustrcmp (courPrefix->Name, prefix))
-           courPrefix = courPrefix->Next;
-         if (courPrefix != NULL)
-           {
-             if (courPrefix->IsExtSchema)
-               courPrefix->Schema = TtaNewSchemaExtension (doc,  courPrefix->SchemaName, presentationName);
-             else
-               courPrefix->Schema = TtaNewNature (TtaGetDocumentSSchema (doc), courPrefix->SchemaName, presentationName);
-           }
-       }
-     }
- }
+    {
+      if (prefix == NULL || prefix[0] == EOS)
+	TtaSetPSchema (doc, presentationName);
+      else
+	{
+	  courPrefix = ParserPrefixs;
+	  while (courPrefix != NULL && ustrcmp (courPrefix->Name, prefix))
+	    courPrefix = courPrefix->Next;
+	  if (courPrefix != NULL)
+	    {
+	      if (courPrefix->IsExtSchema)
+		courPrefix->Schema = TtaNewSchemaExtension (doc, courPrefix->SchemaName, presentationName);
+	      else
+		courPrefix->Schema = TtaNewNature (TtaGetDocumentSSchema (doc), courPrefix->SchemaName, presentationName);
+	    }
+	}
+    }
+}
                    
  /*----------------------------------------------------------------------
     XmlAddNS: add a nature or extension in the document
       Schemas aren't added here because we have to know the
       presentation schema to add them. Waiting API
   ----------------------------------------------------------------------*/
-void XmlAddNSSchema (Document doc, unsigned char *prefixName, unsigned char *schemaName)
+#ifdef __STDC__
+void XmlAddNSSchema (Document doc, STRING prefixName, STRING schemaName)
+#else /* __STDC__ */
+void XmlAddNSSchema (doc, prefixName, schemaName)
+Document doc;
+STRING prefixName;
+STRING schemaName;
+#endif /* __STDC__ */
 {
   PrefixType         *newPrefix;
-  char                buf[32];
+  CHAR_T              buf[32];
   
   buf[0]='\0';
   if (schemaName != NULL && prefixName!= NULL && schemaName[0]!= EOS && doc!=0)
@@ -114,12 +130,12 @@ void XmlAddNSSchema (Document doc, unsigned char *prefixName, unsigned char *sch
 	newPrefix->Name = TtaStrdup (prefixName);
 	newPrefix->Schema = TtaGetSSchema (schemaName, doc);
 	newPrefix->IsExtSchema = FALSE;
-	if (strlen (schemaName) > 4 && 
-	    !strcmp (&schemaName[strlen (schemaName) - 4],"_EXT"))
+	if (ustrlen (schemaName) > 4 && 
+	    !ustrcmp (&schemaName[ustrlen (schemaName) - 4],"_EXT"))
 	  /* We've read an extension */
 	  {
 	    if (newPrefix->Schema == NULL)
-	      schemaName[strlen(schemaName)-4] = EOS;
+	      schemaName[ustrlen(schemaName)-4] = EOS;
 	    newPrefix->Schema = TtaNewSchemaExtension (doc, schemaName, 
 						       buf);
 	    newPrefix->IsExtSchema = TRUE;
@@ -139,16 +155,16 @@ void XmlAddNSSchema (Document doc, unsigned char *prefixName, unsigned char *sch
   XmlGetPrefixSchema: seach the prefix associated schema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-SSchema XmlGetNSSchema (unsigned char *prefix)
-#else
+SSchema XmlGetNSSchema (STRING prefix)
+#else /* __STDC__ */
 SSchema XmlGetNSSchema (prefix)
-unsigned char *prefixName;
-#endif
+STRING prefixName;
+#endif /* __STDC__ */
 {
   PrefixType  *courPrefix;
   
   courPrefix = ParserPrefixs;
-  while (courPrefix != NULL && strcmp (courPrefix->Name, prefix))
+  while (courPrefix != NULL && ustrcmp (courPrefix->Name, prefix))
     courPrefix = courPrefix->Next;
   if (courPrefix!=NULL)
     return (courPrefix->Schema);
@@ -160,7 +176,14 @@ unsigned char *prefixName;
    XmlAddRef: add a reference in list for later updating
               attr=NULL if reference element
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void XmlAddRef (Document doc, Element el, Attribute attr)
+#else /* __STDC__ */
+void XmlAddRef (doc, el, attr)
+Document doc;
+Element el;
+Attribute attr;
+#endif /* __STDC__ */
 {
   XmlReferenceType  *newRef;
 
@@ -181,11 +204,18 @@ void XmlAddRef (Document doc, Element el, Attribute attr)
    XmlSetTarget: update the reference's target label
                  after xml:href attribute (for element) or ref attr.
   ----------------------------------------------------------------------*/
-void  XmlSetTarget (Document doc, Element el, unsigned char *value)
+#ifdef __STDC__
+void  XmlSetTarget (Document doc, Element el, STRING value)
+#else /* __STDC__ */
+void  XmlSetTarget (doc, el, value)
+Document doc;
+Element el;
+STRING value;
+#endif /* __STDC__ */
 {
-  char docName[100];
-  char label[20];
-  int   i = 0;
+  CHAR_T docName[100];
+  CHAR_T label[20];
+  int    i = 0;
   XmlReferenceType *tempRef;
 
   if (el != NULL)
@@ -193,19 +223,19 @@ void  XmlSetTarget (Document doc, Element el, unsigned char *value)
       tempRef = ReferenceList;
       while (tempRef != NULL)
 	{
-	  if (tempRef->El==el)
+	  if (tempRef->El == el)
 	/* Reference is found */
 	    {
-	      while (value[i]!='#')
+	      while (value[i] != '#')
 		{
 		  docName[i] = value[i];
 		  i++;
 		}
-	      if (i!=0)
+	      if (i != 0)
 		/* Warning: Reference from another document */
 		{/* To Complete */}
-	      strcpy(label,&value[i]);
-	      tempRef->TargetLabel = TtaStrdup(label);
+	      ustrcpy(label, &value[i]);
+	      tempRef->TargetLabel = TtaStrdup (label);
 	      break;
 	    }
 	  tempRef = tempRef->Next;
@@ -216,18 +246,23 @@ void  XmlSetTarget (Document doc, Element el, unsigned char *value)
 /*----------------------------------------------------------------------
    XmlSetRef: Update references after the end of parsing
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void XmlSetRef (Document doc)
+#else /* __STDC__ */
+void XmlSetRef (doc)
+#endif /* __STDC__ */
 {
   XmlReferenceType *tempRef;
   XmlReferenceType *inter;
+
   tempRef = ReferenceList;
   while (tempRef != NULL)
     {
       if (tempRef->TargetLabel != NULL && tempRef->El != NULL)
 	{
 	  /* in same document */
-	  if (tempRef->TargetDoc==0)
-	    tempRef->TargetDoc=doc;
+	  if (tempRef->TargetDoc == 0)
+	    tempRef->TargetDoc = doc;
 	  /* To complete */
 	  else
 	    {
@@ -235,9 +270,11 @@ void XmlSetRef (Document doc)
 	  /* reference attribute */
 	  if (tempRef->Attr!=NULL)
 	    {
-	      TtaSetAttributeReference(tempRef->Attr,tempRef->El,doc,
+	      TtaSetAttributeReference(tempRef->Attr,
+				       tempRef->El,
+				       doc,
 				       TtaSearchElementByLabel(tempRef->TargetLabel,
-				         TtaGetMainRoot(tempRef->TargetDoc)),
+							       TtaGetMainRoot( tempRef->TargetDoc)),
 				       tempRef->TargetDoc);
 	    }
 	  else
@@ -245,7 +282,7 @@ void XmlSetRef (Document doc)
 	    {
 	      TtaSetReference (tempRef->El,doc,
 			       TtaSearchElementByLabel(tempRef->TargetLabel,
-			         TtaGetMainRoot(tempRef->TargetDoc)),
+						       TtaGetMainRoot(tempRef->TargetDoc)),
 			       tempRef->TargetDoc);
 	    }
 	}
@@ -261,14 +298,29 @@ void XmlSetRef (Document doc)
    XmlSetLinkType: XLL composed links ain't implemented yet
                    We consider it always "simple"
   ----------------------------------------------------------------------*/
-static void  XmlSetLinkType (Document doc,Element el, unsigned char *value)
-{  
+#ifdef __STDC__
+static void  XmlSetLinkType (Document doc, Element el, STRING value)
+#else /* __STDC__ */
+static void  XmlSetLinkType (doc, el, value)
+Document doc;
+Element el;
+STRING value;
+#endif /* __STDC__ */
+{
+  
 }
 
 /*----------------------------------------------------------------------
    XmlSetLabel: set an element label
   ----------------------------------------------------------------------*/
-static void  XmlSetLabel (Document doc,Element el, unsigned char *value)
+#ifdef __STDC__
+static void  XmlSetLabel (Document doc,Element el, STRING value)
+#else /* __STDC__ */
+static void  XmlSetLabel (doc, el, value)
+Document doc;
+Element el;
+STRING value;
+#endif /* __STDC__ */
 {
   /* Warning: Needed API for setting label*/
   if (el !=NULL)
@@ -278,7 +330,14 @@ static void  XmlSetLabel (Document doc,Element el, unsigned char *value)
 /*----------------------------------------------------------------------
    XmlSetLanguage
   ----------------------------------------------------------------------*/
-static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
+#ifdef __STDC__
+static void XmlSetLanguage (Document doc, Element el, STRING value)
+#else /* __STDC__ */
+static void XmlSetLanguage (doc, el, value)
+Document doc; 
+Element el; 
+STRING value;
+#endif /* __STDC__ */
 {
   PtrDocument   pDoc;
   Attribute	attr;
@@ -290,7 +349,7 @@ static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
     {
       attrType.AttrTypeNum = 1; /* langage attr */
       attrType.AttrSSchema = TtaGetElementType(el).ElSSchema;
-
+      
       attr = TtaGetAttribute (el, attrType);
       /* creating attribute */
       if (attr == NULL)
@@ -318,7 +377,14 @@ static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
 /*----------------------------------------------------------------------
    XmlSetInclusion: storing the inline attribute. Not used yet.
   ----------------------------------------------------------------------*/
-static void XmlSetInclusion (Document doc,Element el, unsigned char *value)
+#ifdef __STDC__
+static void XmlSetInclusion (Document doc,Element el, STRING value)
+#else /* __STDC__ */
+static void XmlSetInclusion ( doc, el, value)
+Document doc;
+Element el;
+unsigned char *value;
+#endif /* __STDC__ */
 {
   XmlReferenceType *tempRef;
   
@@ -338,30 +404,38 @@ static void XmlSetInclusion (Document doc,Element el, unsigned char *value)
   ----------------------------------------------------------------------*/
 static XmlAttrEntry XmlAttr[] = 
 {
-  {XML_LANG_ATTR, (Proc) XmlSetLanguage},
-  {XML_ID_ATTR, (Proc) XmlSetLabel},
-  {XML_HREF_ATTR, (Proc) XmlSetTarget},
-  {XML_LINK_ATTR, (Proc) XmlSetLinkType},
+  {XML_LANG_ATTR,   (Proc) XmlSetLanguage},
+  {XML_ID_ATTR,     (Proc) XmlSetLabel},
+  {XML_HREF_ATTR,   (Proc) XmlSetTarget},
+  {XML_LINK_ATTR,   (Proc) XmlSetLinkType},
   {XML_INLINE_ATTR, (Proc) XmlSetInclusion},
-  {"", (Proc) NULL}
+  {"",              (Proc) NULL}
 };
 
 /*----------------------------------------------------------------------
    ParseXmlAttribute: Handle XML/XLL attributes
   ----------------------------------------------------------------------*/
-ThotBool ParseXmlAttribute (Document doc,Element el, unsigned char *attrName, unsigned char *value)
+#ifdef __STDC__
+ThotBool ParseXmlAttribute (Document doc,Element el, STRING attrName, STRING value)
+#else /* __STDC__ */
+ThotBool ParseXmlAttribute (doc, el, attrName, value)
+Document doc;
+Element el; 
+STRING attrName;
+STRING value;
+#endif /* __STDC__ */
 {
-  int i=0;
+  int i = 0;
   
   while (XmlAttr[i].AttrAction != (Proc)NULL && 
-	 strcmp (attrName,XmlAttr[i].AttrName)) 
+	 ustrcmp (attrName,XmlAttr[i].AttrName)) 
     i++;
   if (XmlAttr[i].AttrAction != (Proc)NULL)
     {
-      (*(XmlAttr[i].AttrAction))(doc,el,value);
+      (*(XmlAttr[i].AttrAction)) (doc,el,value);
     }
   else
     return (FALSE);
 
-  return TRUE;
+  return (TRUE);
 }

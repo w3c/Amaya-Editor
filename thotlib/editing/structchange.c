@@ -143,16 +143,15 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
    PtrSSchema          pSSSibling;
-   PtrElement          pSavedChild, pSibling, pPastedEl, pFree, pDescRoot,
-                       pPrevNew, pParent, pDesc, pCopy, pClose, pCreatedEl,
-                       pElAttr, firstSel, lastSel;
+   PtrElement          pSavedChild, pSibling, pPastedEl, pDescRoot,
+                       pParent, pDesc, pCopy, pClose, pCreatedEl,
+                       pElAttr;
    PtrAttribute        pInheritLang, pLangAttr;
-   PtrDocument         pSelDoc;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
    Document            doc;
    int                 view, distance, numAssoc, i, NSiblings, originDoc,
-                       siblingType, firstChar, lastChar;
+                       siblingType;
    ThotBool            typeOK, creation, list, stop, optional, last, table;
 
    typeOK = FALSE;
@@ -514,16 +513,7 @@ PtrSSchema          pSS;
 		  }
 	     }
 	   
-	   /* Register Pasted Elements in the editing history */
-	   GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-	   if (pDoc == pSelDoc)
-	     {
-	       OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
-				    lastChar-1);
-	       for (i = 0; i < NCreatedElements; i++)
-		 AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-	       CloseHistorySequence (pDoc);
-	     }
+
 	   /* traite dans les elements colle's toutes les references et les */
 	   /* elements reference's ainsi que les exclusions */
 	   for (i = 0; i < NCreatedElements; i++)
@@ -587,33 +577,14 @@ PtrSSchema          pSS;
 	   for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
 		 UpdateRefAttributes (CreatedElement[i], pDoc);
+
 	   if (CreatedElement[0]!=NULL)
-	     {
-	       pPrevNew = CreatedElement[0]->ElPrevious;
-	       if (pPrevNew != NULL)
-		 *firstPastedChar = pPrevNew->ElTextLength + 1;
-	       else
-		 *firstPastedChar = 0;
-	       for (i = 0; i < NCreatedElements ; i++)
-		 {
-		   if (pPrevNew != NULL)
-		     if (IsIdenticalTextType (pPrevNew, pDoc, &pFree))
-		       /* la fusion avec le precedent a eu lieu */
-		       {
-			 CreatedElement[i] = pPrevNew;
-			 /* chaine l'element libere' par la fusion */
-			 AppendToFreeList (pFree, pFirstFree);
-		       }
-		     else if (i == 0)
-		       /* pas de fusion avec l'element precedent */
-		       /* les elements colles */
-		       *firstPastedChar = 0;
-		   pPrevNew = CreatedElement[i];
-		 }
-	       if (IsIdenticalTextType (pPrevNew, pDoc, &pFree))
-		 AppendToFreeList (pFree, pFirstFree);
+	     if (before)
+	       *pFirstPastedEl = CreatedElement[NCreatedElements - 1];
+	     else
 	       *pFirstPastedEl = CreatedElement[0];
-	     }
+	   
+
 #ifdef IV
 	   /* cherche a fusionner les nouveaux elements avec leurs voisins */
 	   for (i = NCreatedElements - 1; i >= 0; i--)

@@ -1,7 +1,25 @@
-#include "ustring.h"
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+   module:  parsexml.c
+   Authors: Monte Regis
+            Bonhomme Stephane
+
+   Comments: this module handle specific thot elements and attributes
+             (namespace thot) during xml parsing
 
 
+   Compilation directives: -DXML_DEBUG for Debuging
+
+   
+*/
 #include "ustring.h"
+#include "uconvert.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -26,7 +44,7 @@
 
 typedef struct _XmlPresentationType{
   Element  El;
-  char    *ViewName;
+  STRING   ViewName;
   int      PRuleNum;
   int      PRuleValue;
   TypeUnit PRuleUnit;
@@ -34,11 +52,11 @@ typedef struct _XmlPresentationType{
   struct  _XmlPresentationType *Next;
 }XmlPresentationType;
 
-static char     PPrefixName[9] = "";
-static char     PSchemaName[30] = "";
-static int      XmlMaxID = 0;
+static CHAR_T     PPrefixName[9] = "";
+static CHAR_T     PSchemaName[30] = "";
+static int        XmlMaxID = 0;
 /*static PrefixType     *ParserPrefixs;*/
-static XmlPresentationType *XmlPresentation=NULL;
+static XmlPresentationType *XmlPresentation = NULL;
 static int PBnumber = 0;
 static int PBview = 0;
 static int PBtype = 0;
@@ -51,45 +69,45 @@ static int PBtype = 0;
   XmlSetPageNum: sets the next pagebreak number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetPageNum (Document doc, Element el, char *value)
+static void XmlSetPageNum (Document doc, Element el, STRING value)
 #else
 static void XmlSetPageNum (doc, el, value)
 Document doc;
-Element el;
-char *value;
+Element  el;
+STRING   value;
 #endif
 {
-  PBnumber = atoi (value);
+  PBnumber = uctoi (value);
 }
 
 /*----------------------------------------------------------------------
   XmlSetPageView : sets the next pagebreak View number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetPageView (Document doc, Element el, char *value)
+static void XmlSetPageView (Document doc, Element el, STRING value)
 #else
 static void XmlSetPageView (doc, el, value)
 Document doc;
-Element el;
-char *value;
+Element  el;
+STRING   value;
 #endif
 {
-  PBview = atoi (value);
+  PBview = uctoi (value);
 }
 
 /*----------------------------------------------------------------------
   XmlSetPageType : sets the next pagebreak Type number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetPageType (Document doc, Element el, char *value)
+static void XmlSetPageType (Document doc, Element el, STRING value)
 #else
 static void XmlSetPageType (doc, el, value)
 Document doc;
-Element el;
-char *value;
+Element  el;
+STRING   value;
 #endif
 {
-  PBtype = atoi (value);
+  PBtype = uctoi (value);
 }
 
 /*----------------------------------------------------------------------
@@ -129,31 +147,31 @@ Element el;
    XmlSetPPrefix
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetPPrefix (Document doc, Element el, char *value)
+static void XmlSetPPrefix (Document doc, Element el, STRING value)
 #else
 static void XmlSetPPrefix (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
-  strcpy (PPrefixName, value);
+  ustrcpy (PPrefixName, value);
 }
 
 /*----------------------------------------------------------------------
    XmlSetPSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetPSchema (Document doc, Element el, char *value)
+static void XmlSetPSchema (Document doc, Element el, STRING value)
 #else
 static void XmlSetPSchema (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
-  if (PPrefixName[0]!=EOS)
-    if (!strcmp (PPrefixName, DEFAULT_VALUE))
+  if (PPrefixName[0] != EOS)
+    if (!ustrcmp (PPrefixName, DEFAULT_VALUE))
       XmlAddNSPresentation (doc, "", value);
   else
     XmlAddNSPresentation (doc, PPrefixName, value);
@@ -165,56 +183,56 @@ char *value;
   XmlSetHolophraste 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlSetHolophraste (Document doc, Element el, char *value)
+static void XmlSetHolophraste (Document doc, Element el, STRING value)
 #else
 static void XmlSetHolophraste (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
-  if ( el != NULL && !strcmp(value, TRUE_VALUE))
-      TtaHolophrastElement(el,TRUE,doc);
+  if ( el != NULL && !ustrcmp (value, TRUE_VALUE))
+    TtaHolophrastElement (el, TRUE, doc);
 }
 
 /*----------------------------------------------------------------------
    XmlHoldPresentation
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlHoldPresentation (Document doc, Element el, char *value)
+static void  XmlHoldPresentation (Document doc, Element el, STRING value)
 #else
 static void  XmlHoldPresentation (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
 
   XmlPresentationType  *newPres;
-  int     begin  = 0;
-  int     end    = 0;
-  int     length = 0;
-  ThotBool sign   = FALSE;
+  int                   begin  = 0;
+  int                   end    = 0;
+  int                   length = 0;
+  ThotBool              sign   = FALSE;
 
   if (el != NULL)
     {
-      length = strlen (value) - 1;
+      length = ustrlen (value) - 1;
       while (begin < length)
 	{
-	  newPres = (XmlPresentationType *)TtaGetMemory(sizeof(XmlPresentationType));
+	  newPres = (XmlPresentationType *) TtaGetMemory (sizeof (XmlPresentationType));
 	  newPres->Next = XmlPresentation;
 	  XmlPresentation = newPres;
 	  
 	  XmlPresentation->El = el;
 	  /* reading view name */
-	  while (end<length && value[end] != ':') end++;
+	  while (end < length && value[end] != ':') end++;
 	  value[end] = EOS;
 	  newPres->ViewName = TtaStrdup (&value[begin]);
 	  begin = end + 1;
 	  /* reading Prule type */
 	  while (end<length && value[end] != ':') end++;
 	  value[end] = EOS;
-	  newPres->PRuleNum = atoi (&value[begin]);
+	  newPres->PRuleNum = uctoi (&value[begin]);
 	  begin = end + 1;
 
 	  if (newPres->PRuleNum == PtHeight ||
@@ -231,7 +249,7 @@ char *value;
 	      /* reading unit */
 	      while(end < length && value[end] != ':') end++;
 	      value[end] = EOS;
-	      newPres->PRuleUnit = (TypeUnit) atoi (&value[begin]);
+	      newPres->PRuleUnit = (TypeUnit) uctoi (&value[begin]);
 	      begin = end + 1;
 	    }
 
@@ -264,7 +282,7 @@ char *value;
 	  /* reading the absolute value */
 	  while(end < length && value[end] != ';') end++;
 	  value[end] = EOS;
-	  newPres->PRuleValue = atoi (&value[begin]);
+	  newPres->PRuleValue = uctoi (&value[begin]);
 	  begin = end + 1;
 
 	  /* signing the value */
@@ -414,12 +432,12 @@ Document doc;
    XmlSetGraphicsShape
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlSetGraphicsShape (Document doc, Element el, char *value)
+static void  XmlSetGraphicsShape (Document doc, Element el, STRING value)
 #else
 static void  XmlSetGraphicsShape (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
   if (el != NULL)
@@ -430,12 +448,12 @@ char *value;
    XmlSetPairedPosition
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlSetPairedPosition(Document doc, Element el, char *value)
+static void  XmlSetPairedPosition(Document doc, Element el, STRING value)
 #else
 static void  XmlSetPairedPosition (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {}
 
@@ -443,12 +461,12 @@ char *value;
    XmlSetLinePoints
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlSetLinePoints(Document doc,Element el, char *value)
+static void  XmlSetLinePoints(Document doc, Element el, STRING value)
 #else
 static void  XmlSetLinePoints (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
   int     begin=0;
@@ -460,18 +478,18 @@ char *value;
 
   if (el !=NULL)
     {
-      length = strlen (value)-1;
+      length = ustrlen (value)-1;
 
       while(begin<length)
 	{
 	  while(end<length&&value[end]!=',') end++;
 	  value[end]=EOS;
-	  x = atoi(&value[begin]);
+	  x = uctoi(&value[begin]);
 	  begin = end + 1;
 
 	  while(end<length&&value[end]!=';') end++;
 	  value[end]=EOS;
-	  y = atoi(&value[begin]);
+	  y = uctoi(&value[begin]);
 	  begin = end + 1;
 
 	  TtaAddPointInPolyline(el,rank,UnPoint,x,y,doc);
@@ -484,12 +502,12 @@ char *value;
    XmlSetSrc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlSetSrc (Document doc, Element el, char *value)
+static void  XmlSetSrc (Document doc, Element el, STRING value)
 #else
 static void  XmlSetSrc (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
   if (el != NULL)
@@ -499,12 +517,12 @@ char *value;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlSetMaxId (Document doc, Element el, char *value)
+static void  XmlSetMaxId (Document doc, Element el, STRING value)
 #else
 static void  XmlSetMaxId (doc, el, value)
 Document doc;
 Element el;
-char *value;
+STRING value;
 #endif
 {
   if (value != 0)
@@ -538,19 +556,19 @@ static XmlAttrEntry ThotAttr[] =
   ParseThotAttribute: parse  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+ThotBool ParseThotAttribute (Document doc, Element el, STRING attrName, STRING value)
 #else /* __STDC__ */
-ThotBool ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+ThotBool ParseThotAttribute (Document doc, Element el, STRING attrName, STRING value)
 Document doc;
 Element el;
-char *attrName;
-char *value;
+STRING attrName;
+STRING  value;
 #endif /* __STDC__ */
 
 {
   int i=0;
   while (ThotAttr[i].AttrAction != (Proc)NULL && 
-	 strcmp(attrName,ThotAttr[i].AttrName)) 
+	 ustrcmp(attrName,ThotAttr[i].AttrName)) 
     i++;
 
   if (ThotAttr[i].AttrAction != (Proc)NULL)

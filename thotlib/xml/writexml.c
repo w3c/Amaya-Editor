@@ -54,31 +54,32 @@ static int        XmlDepth = 0;     /* Tree depth */
 static Document   OpenedRefDoc[10] = {0,0,0,0,0,0,0,0,0,0};
 static int        NbOpenedRefDoc = 0;/* structures for extern references */
 static StrAtomPair *ListAtomPair;    /* list of first paired elements */
-
+static ThotBool writeBeginTextTag = FALSE; /* should a text element be fused */
+                                          /* with its next sibling ? */
 
 /*----------------------------------------------------------------------
   XmlGetElementLabel : gets a label for the element el
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlGetElementLabel (char *buffer, Element el)
+static void XmlGetElementLabel (STRING buffer, Element el)
 #else /* __STDC__ */
 static void XmlGetElementLabel (buffer, el)
-char *buffer;
+STRING buffer;
 Element el;
 #endif /* __STDC__ */
 {
-  buffer[0] = '\0';
+  buffer[0] = EOS;
   ustrcpy (buffer, TtaGetElementLabel (el));
   if (buffer[0] != '#')
     {
       buffer[0] = '#';
-      buffer[1] = '\0';
+      buffer[1] = EOS;
       ustrncat(buffer, NameThotToXml
 	      (TtaGetElementType(el).ElSSchema, 
 	       TtaGetElementType(el).ElTypeNum, 0, 0),3);
       
       ustrcat(buffer,"_");
-      ustrcat(buffer,TtaGetElementLabel(el)+1);
+      ustrcat(buffer, TtaGetElementLabel (el) + 1);
     } 
 }
 
@@ -87,19 +88,19 @@ Element el;
 	Writes a string in the xmlFile WITHOUT the trailing \0
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool XmlWriteString (BinFile xmlFile, char *str)
+static ThotBool  XmlWriteString (BinFile xmlFile, STRING str)
 #else /* __STDC__ */
-static ThotBool XmlWriteString (xmlFile, str)
-BinFile  xmlFile;
-char           *str;
-
+static ThotBool  XmlWriteString (xmlFile, str)
+BinFile    xmlFile;
+STRING     str;
 #endif /* __STDC__ */
+
 {
   ThotBool        ok = TRUE;
   int             i = 0;
 
   if (str != NULL)
-    while (str[i] != '\0')
+    while (str[i] != EOS)
       {
         ok = ok && TtaWriteByte (xmlFile, str[i]);
         i++;
@@ -113,12 +114,11 @@ char           *str;
 	i.e. consider XML escaped caracters
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool XmlWriteCharData (BinFile xmlFile, char *str)
+static ThotBool  XmlWriteCharData (BinFile xmlFile,STRING str)
 #else /* __STDC__ */
 static ThotBool XmlWriteCharData (xmlFile, str)
 BinFile  xmlFile;
-char           *str;
-
+STRING   str;
 #endif /* __STDC__ */
 {
   ThotBool        ok = TRUE;
@@ -719,6 +719,39 @@ Document       doc;
     }
   return ok;
 }
+/*----------------------------------------------------------------------
+  XmlSameText returns true if the element following el has the same
+  attributes, specific presentation and both are nor referenced
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool         XmlSameText (Element el)
+#else /* __STDC__ */
+static ThotBool         XmlSameText (el)
+Element         el;
+#endif /* __STDC__ */
+{
+  PtrElement pEl1, pEl2;
+  	
+  writeBeginTextTag = TRUE;
+  
+  pEl1 = (PtrElement)el;
+  if (pEl1 != NULL)
+    {
+      pEl2 = pEl1->ElNext;
+      if (pEl2 != NULL && pEl1->ElLeafType == LtText && pEl1->ElTerminal)
+	if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
+	  if (pEl2->ElLanguage == pEl1->ElLanguage)
+	    if (!pEl2->ElHolophrast && !pEl1->ElHolophrast)
+	      if (SameAttributes (pEl1, pEl2))
+		if (pEl1->ElSource == NULL && pEl2->ElSource == NULL)
+		  if (BothHaveNoSpecRules (pEl1, pEl2))
+		    if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
+		      if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+			if (pEl1->ElSource == NULL && pEl2->ElSource == NULL)
+			  writeBeginTextTag = FALSE;
+    }
+  return (!writeBeginTextTag);
+}
 
 /*----------------------------------------------------------------------
   XmlWriteLeaf: Write a leaf element in xmlFile
@@ -828,23 +861,24 @@ ThotBool        taggedText;
 	  tempChar = TtaGetMemory (tempLength);
 	  TtaGiveTextContent (el, tempChar, &tempLength, &tempLanguage);
 	  /* language is specified before in TEXT tag */
-	  if (taggedText)
+	  if (taggedText || writeBeginTextTag)
 	    /* A TEXT tag has been opened */
 	    ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
 	  /* Put Text content */
 #ifdef INDENT
-	  for (i=0;i<XmlDepth+1;i++)
+	  for (i = 0;i<XmlDepth+1;i++)
 	    ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
 #endif
 	  ok = ok && XmlWriteCharData (xmlFile, tempChar);
 	  ok = ok && XmlWriteString (xmlFile, "\n");
 	  TtaFreeMemory(tempChar);
+	  writeBeginTextTag = FALSE;
 	  /* Warning: No API for associating Text sheets */
-	  if (taggedText)
+	  if (taggedText && !XmlSameText (el))
 	  /* if TEXT tag opened, ends tag */
 	    {
 #ifdef INDENT
-	      for (i=0;i<XmlDepth;i++)
+	      for (i=0 ; i<XmlDepth;i++)
 		ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
 #endif
 	      ok = ok && XmlWriteString (xmlFile, OPEN_END_TAG);
@@ -1128,7 +1162,8 @@ ThotBool        withEvent;
       !TtaIsElementReferred(el) && 
       !TtaIsHolophrasted(el));
 
-  if (toWrite && taggedText)
+  if (toWrite && taggedText && 
+      (elType.ElTypeNum != 1 || writeBeginTextTag))
     /* We write that Tag */
     {
       /* Write depth spaces */

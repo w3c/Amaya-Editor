@@ -7,44 +7,44 @@
 #ifdef __STDC__
 
 extern void XmlAddNSPresentation ( Document doc,
-                                   unsigned char *prefix,
-                                   unsigned char *presentationName );
+                                   STRING prefix,
+                                   STRING presentationName );
 extern void XmlAddNSSchema ( Document doc,
-                             unsigned char *prefixName,
-                             unsigned char *schemaName );
-extern SSchema XmlGetNSSchema ( unsigned char *prefix );
+                             STRING prefixName,
+                             STRING schemaName );
+extern SSchema XmlGetNSSchema ( STRING prefix );
 extern void XmlAddRef ( Document doc,
                         Element el,
                         Attribute attr );
 extern void XmlSetTarget ( Document doc,
                            Element el,
-                           unsigned char *value );
+                           STRING value );
 extern void XmlSetRef ( Document doc );
 extern ThotBool ParseXmlAttribute ( Document doc,
                                     Element el,
-                                    unsigned char *attrName,
-                                    unsigned char *value );
+                                    STRING attrName,
+                                    STRING value );
 
 #else /* __STDC__ */
 
 extern void XmlAddNSPresentation (/* Document doc,
-                                     unsigned char *prefix,
-                                     unsigned char *presentationName */);
+                                     STRING prefix,
+                                     STRING presentationName */);
 extern void XmlAddNSSchema (/* Document doc,
-                               unsigned char *prefixName,
-                               unsigned char *schemaName */);
-extern SSchema XmlGetNSSchema (/* unsigned char *prefix */);
+                               STRING prefixName,
+                               STRING schemaName */);
+extern SSchema XmlGetNSSchema (/* STRING prefix */);
 extern void XmlAddRef (/* Document doc,
                           Element el,
                           Attribute attr */);
 extern void XmlSetTarget (/* Document doc,
                              Element el,
-                             unsigned char *value */);
+                             STRING value */);
 extern void XmlSetRef (/* Document doc */);
 extern ThotBool ParseXmlAttribute (/* Document doc,
                                       Element el,
-                                      unsigned char *attrName,
-                                      unsigned char *value */);
+                                      STRING attrName,
+                                      STRING value */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
