@@ -265,7 +265,7 @@ int              elementT;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el, head, parent, new;
+   Element             el, head, parent, new, title;
    SSchema             docSchema;
    int                 i, j;
    boolean             before;
@@ -292,16 +292,35 @@ int              elementT;
 	 }
        else
 	 {
-	   /* the current selection is not within the head */
+	   /* the current selection is within the head */
 	   parent = TtaGetParent (el);
-	   /* insert before the current element */
-	   before = TRUE;
-	   while (parent != head)
+	   /* does the selection precede the title? */
+	   elType = TtaGetElementType (el);
+	   if (elType.ElTypeNum == HTML_EL_TITLE)
+	     /* the title is selected, insert after it */
+	     before = FALSE;
+	   else
 	     {
-	       el = parent;
-	       /* insert after the parent element */
-	       before = FALSE;
-	       parent = TtaGetParent (el);
+	       elType.ElTypeNum = HTML_EL_TITLE;
+	       title = TtaSearchTypedElement (elType, SearchForward, el);
+	       if (title != NULL)
+		 {
+		   /* insert after the title */
+		   before = FALSE;
+		   el = title;
+		 }
+	       else
+		 {
+		   /* insert before the current element */
+		   before = TRUE;
+		   while (parent != head)
+		     {
+		       el = parent;
+		       /* insert after the parent element */
+		       before = FALSE;
+		       parent = TtaGetParent (el);
+		     }
+		 }
 	     }
 	 }
        /* now insert the new element after el */

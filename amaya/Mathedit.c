@@ -25,7 +25,7 @@
 #endif
 #ifndef _WINDOWS
 #include "Math.xpm"
-#include "math.xpm"
+#include "Bmath.xpm"
 #include "root.xpm"
 #include "sqrt.xpm"
 #include "frac.xpm"

@@ -3972,7 +3972,7 @@ char               *buffer;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType;
-  Element             parent, el;
+  Element             parent, el, title;
   char                c;
   char               *cssRule, *base;
   char               *schemaName;
@@ -4021,13 +4021,18 @@ char               *buffer;
 	  if (el == NULL)
 	    {
 	      el = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&el, parent, doc);
+	      /* insert the new style element after the title if it exists */
+	      elType.ElTypeNum = HTML_EL_TITLE;
+	      title = TtaSearchTypedElement (elType, SearchForward, parent);
+	      if (title != NULL)
+		TtaInsertSibling (el, title, FALSE, doc);
+	      else
+		TtaInsertFirstChild (&el, parent, doc);
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = HTML_ATTR_Notation;
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (el, attr, doc);
 	      TtaSetAttributeText (attr, "text/css", el, doc);
-
 	    }
 	  /* if the Text element doesn't exist we create it now */
 	  parent = el;
