@@ -286,7 +286,6 @@ ${AMAYADIR}/tools/cextract-1.7/patchlevel.h \
 ${AMAYADIR}/tools/cextract-1.7/proto.h \
 ${AMAYADIR}/tools/cextract-1.7/xtract.h \
 ${AMAYADIR}/resources/icons/*.gif \
-${AMAYADIR}/resources/icons/*.png \
 ${AMAYADIR}/resources/xrc/*.xrc \
 ${AMAYADIR}/Windows/*.mak \
 ${AMAYADIR}/Windows/*.dsp \
