@@ -337,7 +337,10 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 	{
 	  /* On passe au buffer suivant */
 	  len -= pBuf->BuLength;
-	  pBuf = pBuf->BuNext;
+	  if (pBuf->BuNext == NULL)
+	    len = pBuf->BuLength - 1;
+	  else
+	    pBuf = pBuf->BuNext;
 	}
       index = len;
       charact = pBuf->BuContent[index];
