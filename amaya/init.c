@@ -604,30 +604,30 @@ char               *pathname;
 	if (!opened)
 	  {
 	     /* Add a button */
-	     TtaAddButton (doc, 1, stopR, StopTransfer);
-	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML);
-	     TtaAddButton (doc, 1, iconForward, GotoNextHTML);
-	     TtaAddButton (doc, 1, iconReload, Reload);
-	     TtaAddButton (doc, 1, None, NULL);
+	     TtaAddButton (doc, 1, stopR, StopTransfer, NULL);
+	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, NULL);
+	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, NULL);
+	     TtaAddButton (doc, 1, iconReload, Reload, NULL);
+	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconSave, SaveDocument);
-	     TtaAddButton (doc, 1, iconPrint, TtcPrint);
-	     TtaAddButton (doc, 1, iconFind, TtcSearchText);
-	     TtaAddButton (doc, 1, None, NULL);
+	     TtaAddButton (doc, 1, iconSave, SaveDocument, NULL);
+	     TtaAddButton (doc, 1, iconPrint, TtcPrint, NULL);
+	     TtaAddButton (doc, 1, iconFind, TtcSearchText, NULL);
+	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     IButton = TtaAddButton (doc, 1, iconI, SetCharEmphasis);
-	     BButton = TtaAddButton (doc, 1, iconB, SetCharStrong);
-	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode);
-	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog);
-	     TtaAddButton (doc, 1, None, NULL);
+	     IButton = TtaAddButton (doc, 1, iconI, SetCharEmphasis, NULL);
+	     BButton = TtaAddButton (doc, 1, iconB, SetCharStrong, NULL);
+	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode, NULL);
+	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog, NULL);
+	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconImage, CreateImage);
-	     TtaAddButton (doc, 1, iconH1, CreateHeading1);
-	     TtaAddButton (doc, 1, iconH2, CreateHeading2);
-	     TtaAddButton (doc, 1, iconH3, CreateHeading3);
-	     TtaAddButton (doc, 1, iconBullet, CreateList);
-	     TtaAddButton (doc, 1, iconNum, CreateNumberedList);
-	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList);
+	     TtaAddButton (doc, 1, iconImage, CreateImage, NULL);
+	     TtaAddButton (doc, 1, iconH1, CreateHeading1, NULL);
+	     TtaAddButton (doc, 1, iconH2, CreateHeading2, NULL);
+	     TtaAddButton (doc, 1, iconH3, CreateHeading3, NULL);
+	     TtaAddButton (doc, 1, iconBullet, CreateList, NULL);
+	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, NULL);
+	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, NULL);
 
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);
