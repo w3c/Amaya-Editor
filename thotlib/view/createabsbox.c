@@ -2027,8 +2027,19 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   ThotBool            found, ok;
 
   pRule = NULL;
+
   if (pSchP == NULL)
-    return (NULL);
+    {
+      *valueNum = 0;
+      return (NULL);
+    }
+
+  if (strcmp (pAttr->AeAttrSSchema->SsName, pSchP->PsStructName))
+    {
+      *valueNum = 0;
+      return (NULL);
+    }
+
   pAPRule = pSchP->PsAttrPRule->AttrPres[pAttr->AeAttrNum - 1];
 
   /* on cherche quel est le paquet de regles qui s'applique */
