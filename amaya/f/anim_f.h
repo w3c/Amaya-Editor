@@ -16,15 +16,14 @@ extern void AddAnimButton ( Document doc,
                             View view );
 extern void ShowSourceOfTimeline ( Document document,
                                    View view );
-extern ThotBool TimelineTextPreModify ( NotifyOnTarget *event );
-extern void set_slider_position ( Document basedoc,
+extern void Set_slider_position ( Document basedoc,
                                   Document timelinedoc,
                                   double f );
 extern void TimelineTextPostModify ( NotifyOnTarget *event );
 extern ThotBool TimelineElClicked ( NotifyElement *event );
 extern void Timeline_finished_moving_slider ( NotifyPresentation *event );
-extern ThotBool TimelineBeforeElModified ( NotifyOnValue *event );
-extern void TimelineAfterElModified ( NotifyOnValue *event );
+extern void Timeline_exp_period_modified ( NotifyOnValue *event );
+extern void Timeline_col_period_modified ( NotifyOnValue *event );
 extern void TimelineWindowClose ( NotifyDialog * event );
 
 #else /* __STDC__ */
@@ -39,15 +38,14 @@ extern void AddAnimButton (/* Document doc,
                               View view */);
 extern void ShowSourceOfTimeline (/* Document document,
                                      View view */);
-extern ThotBool TimelineTextPreModify (/* NotifyOnTarget *event */);
-extern void set_slider_position (/* Document basedoc,
+extern void Set_slider_position (/* Document basedoc,
                                     Document timelinedoc,
                                     double f */);
 extern void TimelineTextPostModify (/* NotifyOnTarget *event */);
 extern ThotBool TimelineElClicked (/* NotifyElement *event */);
 extern void Timeline_finished_moving_slider (/* NotifyPresentation *event */);
-extern ThotBool TimelineBeforeElModified (/* NotifyOnValue *event */);
-extern void TimelineAfterElModified (/* NotifyOnValue *event */);
+extern void Timeline_exp_period_modified (/* NotifyOnValue *event */);
+extern void Timeline_col_period_modified (/* NotifyOnValue *event */);
 extern void TimelineWindowClose (/* NotifyDialog * event */);
 
 #endif /* __STDC__ */
