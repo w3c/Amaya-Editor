@@ -69,6 +69,9 @@ ELEMENTS
   Unnumbered_List:
 	ElemChange.Post -> ListChangedType;
 
+  Numbered_List:
+	ElemChange.Post -> ListChangedType;
+
   Frame:
 	ElemSelect.Pre -> FrameToSelect;
 
