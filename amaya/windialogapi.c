@@ -1948,7 +1948,7 @@ LPARAM lParam;
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
 				if (SaveAsHTML)
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
-				else if (SaveAsXML)
+				else if (SaveAsXHTML)
 				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
 				else if (SaveAsText)
 				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);

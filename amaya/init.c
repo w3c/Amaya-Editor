@@ -3217,7 +3217,7 @@ static void	UpdateSaveAsButtons ()
 {
   int	active;
 
-  if (SaveAsHTML || SaveAsXML)
+  if (SaveAsHTML || SaveAsXHTML)
      active = 1;
   else
      active = 0;
@@ -3249,7 +3249,7 @@ static void	SetFileSuffix ()
 #else /* _WINDOWS */
 	ustrcpy (suffix, "html");
 #endif /* _WINDOWS */
-       else if (SaveAsXML)
+       else if (SaveAsXHTML)
 	ustrcpy (suffix, "xml");
        else if (SaveAsText)
 	ustrcpy (suffix, "txt");
@@ -3522,18 +3522,18 @@ STRING              data;
 	 {
 	 case 0:	/* "Save as HTML" button */
 	   SaveAsHTML = !SaveAsHTML;
-	   SaveAsXML = !SaveAsHTML;
+	   SaveAsXHTML = !SaveAsHTML;
 	   SaveAsText = FALSE;
 #      ifndef _WINDOWS
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 #       endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
-	   SaveAsXML = !SaveAsXML;
-	   SaveAsHTML = !SaveAsXML;
+	   SaveAsXHTML = !SaveAsXHTML;
+	   SaveAsHTML = !SaveAsXHTML;
 	   SaveAsText = FALSE;
 #      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
@@ -3545,9 +3545,9 @@ STRING              data;
 	 case 2:	/* "Save as Text" button */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
-	   SaveAsXML = FALSE;
+	   SaveAsXHTML = FALSE;
 #      ifndef _WINDOWS
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 #      endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
@@ -4092,7 +4092,7 @@ NotifyEvent        *event;
    SaveImgsURL[0] = EOS;
    ustrcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
-   SaveAsXML = FALSE;
+   SaveAsXHTML = FALSE;
    SaveAsText = FALSE;
    CopyImages = FALSE;
    UpdateURLs = FALSE;

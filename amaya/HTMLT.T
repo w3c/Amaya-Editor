@@ -1,6 +1,6 @@
 		{ Author: I. Vatton 	 1994-1995-1996  }
 
-{ If variable XML is set, the document is saved in the XML (Voyager) syntax.
+{ If variable XML is set, the document is saved in the XHTML syntax.
   Otherwise, it is saved in plain HTML }
 
 TRANSLATION HTML;
@@ -14,17 +14,15 @@ RULES
 
  HTML : BEGIN
 #ifdef XML
-	Create '<?xml version="1.0"?>\12';
-	Create '<?xml-stylesheet type="text/css" href="voyager.css"?>\12';
 	if HtmlDTD = Frameset
 	   BEGIN
-	   Create '<!DOCTYPE html SYSTEM "http://www.w3.org/TR/WD-html-in-xml/DTD/frameset.dtd>\12"';
-	   Create '<html xmlns="http://www.w3.org/Profiles/voyager-frameset"';
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12                      "xhtml1-frameset.dtd">\12';
+	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-frameset"';
 	   END;
 	if not HtmlDTD = Frameset
 	   BEGIN
-	   Create '<!DOCTYPE html SYSTEM "http://www.w3.org/TR/WD-html-in-xml/DTD/loose.dtd">\12';
-	   Create '<html xmlns="http://www.w3.org/Profiles/voyager-loose"';
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12                      "xhtml1-transitional.dtd">\12';
+	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-transitional"';
 	   END;
 	Create Namespaces;
 #else
@@ -459,9 +457,9 @@ RULES
 #endif
 
  Paragraph: BEGIN
-	Create '<p';
+	Create '\12<p';
 	Create Attributes;
-	Create '>\12';
+	Create '>';
 	Create '</p>' After;
 	Create '\12' After;
 	END;
@@ -964,6 +962,11 @@ ATTRIBUTES
 	    Create ' lang="';
 	    Create Langue;
 	    Create DoubleQuote;
+#ifdef XML
+	    Create ' xml:lang="';
+	    Create Langue;
+	    Create DoubleQuote;
+#endif
 	    END;
 
  content_type: BEGIN
@@ -1545,6 +1548,14 @@ ATTRIBUTES
 	Create ' name="';
 	Create NAME;
 	Create DoubleQuote;
+#ifdef XML
+	if Anchor and not ID
+	       BEGIN
+	       Create ' id="';
+	       Create NAME;
+	       Create DoubleQuote;
+	       END;
+#endif
 	END;
 
  Multiple:

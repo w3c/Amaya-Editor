@@ -384,8 +384,8 @@ STRING              pathname;
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
 
-   /* choice between html, xml and text */
-   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXML", EOS, "BText", EOS, "S", EOS,
+   /* choice between html, xhtml and text */
+   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXHTML", EOS, "BText", EOS, "S", EOS,
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
@@ -393,23 +393,23 @@ STRING              pathname;
    if (TextFormat)
      {
        SaveAsHTML = FALSE;
-       SaveAsXML = FALSE;
+       SaveAsXHTML = FALSE;
        SaveAsText = TRUE;
      }
    else if (IsXMLName (pathname))
      {
        SaveAsHTML = FALSE;
-       SaveAsXML = TRUE;
+       SaveAsXHTML = TRUE;
        SaveAsText = FALSE;
      }
    else
      {
        SaveAsHTML = TRUE;
-       SaveAsXML = FALSE;
+       SaveAsXHTML = FALSE;
        SaveAsText = FALSE;
      }
    TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 5, UpdateURLs);
@@ -768,7 +768,7 @@ STRING            documentName;
   else
     {
       SetNamespacesAndDTD (doc);
-      if (SaveAsXML)
+      if (SaveAsXHTML)
 	ok = TtaExportDocument (doc, tempname, "HTMLTX");
       else
 	ok = TtaExportDocument (doc, tempname, "HTMLT");
