@@ -1092,6 +1092,7 @@
 	<message xml:lang="en">Store selection as XPointer</message>
 	<message xml:lang="fr">Sauver la séléction comme XPointer</message>
 	<message xml:lang="de">Auswahl als XPointer speichern</message>
+	<message xml:lang="es">Guardar la selección como XPointer</message> 
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show buttonbar</message>
@@ -1566,11 +1567,13 @@
 	<message xml:lang="en">Move to selection</message>
 	<message xml:lang="fr">Déplacer sur la séléction</message>
 	<message xml:lang="de">Anmerkung in die auswahl verschieben</message>
+	<message xml:lang="es">Mover a la selección</message>
 </label>
 <label define="BMoveAnnotXPtr">
 	<message xml:lang="en">Move to stored XPointer</message>
 	<message xml:lang="fr">Déplacer sur le XPointer enregistré</message>
 	<message xml:lang="de">Anmerkung in gespeicherten XPointer verschieben</message>
+	<message xml:lang="es">Mover al XPointer memorizado</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
