@@ -279,7 +279,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		pR = pSP->PsElemPRule->ElemPres[index - 1];
 	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
 				   &pR, pDoc);
-	      if (!pR && view > 1)
+	      if (!pR && view > 1 && pRule)
 		/* no rule for the view of interest, take the rule associated
 		   with the element type for the main view, unless the default
 		   rules from the main present schema have already provided a
