@@ -156,7 +156,7 @@ static void RegisterInHistory (PtrElement pEl, int frame,
    APPtextModify envoie un message qui notifie qu'un texte est     
    modifie'.                                               
   ----------------------------------------------------------------------*/
-static ThotBool     APPtextModify (PtrElement pEl, int frame, ThotBool pre)
+static ThotBool APPtextModify (PtrElement pEl, int frame, ThotBool pre)
 {
    PtrElement          pParentEl;
    ThotBool            result;
@@ -2119,6 +2119,7 @@ static void         ContentEditing (int editType)
 		/* more than one element or one abstract box */
 		pAb = NULL;
 	      else if (pAb->AbElement != FirstSelectedElement &&
+		       FirstSelectedElement != NULL &&
 			(editType == TEXT_CUT || editType == TEXT_DEL ||
 			 editType == TEXT_SUP || editType == TEXT_COPY))
 		pAb = NULL;
