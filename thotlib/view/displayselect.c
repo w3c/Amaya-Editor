@@ -60,12 +60,12 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       halfThick = thick / 2;
 
       /* selection points */
-      leftX = pBox->BxXOrg - pFrame->FrXOrg;
-      topY = pBox->BxYOrg - pFrame->FrYOrg;
-      bottomY = topY + pBox->BxHeight - thick;
-      rightX = leftX + pBox->BxWidth - thick;
-      middleX = leftX + (pBox->BxWidth / 2) - halfThick;
-      middleY = topY + (pBox->BxHeight / 2) - halfThick;
+      leftX = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      bottomY = topY + pBox->BxH - thick;
+      rightX = leftX + pBox->BxW - thick;
+      middleX = leftX + (pBox->BxW / 2) - halfThick;
+      middleY = topY + (pBox->BxH / 2) - halfThick;
       if (pAb->AbLeafType == LtPicture)
 	{
 	  /* 8 control points */
@@ -518,7 +518,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
   PtrAbstractBox      pAb;
   int                 width, height;
   int                 topY, h;
-  int                 col;
+  int                 col, l;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox != NULL)
@@ -543,20 +543,25 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       /* and the scrolling zone */
       width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
 	      - pFrame->FrXOrg;
-
-      topY = pBox->BxYOrg - pFrame->FrYOrg;
-      h = pBox->BxHeight;
+      /* don't take into account margins and borders */
+      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	     pBox->BxTPadding - pFrame->FrYOrg;
+      h = pBox->BxH;
       if (topY > height)
 	h = 0;
       else if (topY + h > height)
 	h = height - topY;
       
-      leftX = leftX + pBox->BxXOrg - pFrame->FrXOrg;
+      /* don't take into account margins and borders */
+      l = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      leftX = leftX + l - pFrame->FrXOrg;
       if (leftX > width)
 	width = 0;
       else
 	{
-	  rightX = rightX + pBox->BxXOrg - pFrame->FrXOrg;
+	  if (rightX > pBox->BxW)
+	    rightX = pBox->BxW;
+	  rightX = rightX + l - pFrame->FrXOrg;
 	  if (rightX > width)
 	    width -= leftX;
 	  else
