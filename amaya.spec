@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 6.4
+%define version 7.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya
-Release:      4
-Copyright:    Copyright 1995-2001 (MIT) (INRIA), (L)GPL compatible
+Release:      1
+Copyright:    Copyright 1995-2002 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
