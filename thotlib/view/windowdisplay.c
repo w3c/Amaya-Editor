@@ -348,6 +348,7 @@ int                 fg;
 #  ifdef _WINDOWS
    char                str[2] = {car, 0};
    HFONT               hOldFont;
+   int                 result;
 #  endif /* _WINDOWS */
 
    w = FrRef[frame];
@@ -361,6 +362,11 @@ int                 fg;
    WinLoadGC (TtDisplay, fg, RO);
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
+   result = SelectClipRgn (TtDisplay, clipRgn); 
+   if (result == ERROR)
+      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+   /* if (!GetClipRgn(TtDisplay, clipRgn))
+      WinErrorBox (NULL); */
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   
    SelectObject (TtDisplay, hOldFont);
    WIN_ReleaseDeviceContext ();
@@ -416,6 +422,7 @@ int                 shadow;
    SIZE                size;
    RECT                rect;
    HFONT               hOldFont;
+   int                 result;
 #  endif /* !_WINDOWS */
 
    w = FrRef[frame];
@@ -429,6 +436,12 @@ int                 shadow;
       hOldFont = WinLoadFont (TtDisplay, font);
       GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
       width = size.cx;
+
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
 #     else  /* _WINDOWS */
       XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
       /* compute the width of the string */
@@ -477,6 +490,7 @@ int                 shadow;
            }
            if (lg != 0) {
 #             ifdef _WINDOWS
+              /* GetClipRgn(TtDisplay, clipRgn); */
               TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
 #             else  /* _WINDOWS */
 	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -488,6 +502,7 @@ int                 shadow;
 	{
          /* draw the hyphen */
 #        ifdef _WINDOWS
+         /* GetClipRgn(TtDisplay, clipRgn); */
          TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
 #        else  /* _WINDOWS */
          XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
@@ -1020,6 +1035,7 @@ int                 fg;
    HPEN                hPen;
    HPEN                hOldPen;
    ThotPoint           point[4];
+   int                 result;
 #  else  /* !_WINDOWS */
    ThotPoint           point[3];
 #  endif /* _WINDOWS */
@@ -1060,7 +1076,11 @@ int                 fg;
      {
 #  ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
-      GetClipRgn(TtDisplay, clipRgn);
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
@@ -1528,18 +1548,11 @@ int                 pattern;
    HBRUSH              hOldBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
+   int                 result;
 #  endif
 
-#  ifdef _WINDOWS 
-   WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
    if (width <= 0 || height <= 0)
-     {
-#     ifdef _WINDOWS
-      WIN_ReleaseDeviceContext ();
-#     endif /* _WINDOWS */
       return;
-     }
 
    if (width > thick + 1)
      width = width - thick - 1;
@@ -1548,57 +1561,62 @@ int                 pattern;
    x += thick / 2;
    y += thick / 2;
 
-   /* Fill in the rectangle */
+#  ifdef _WINDOWS 
+   WIN_GetDeviceContext (frame);
+#  endif /* _WINDOWS */
+
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+#  ifdef _WINDOWS 
+   /* SelectClipRgn(TtDisplay, clipRgn); */
+   WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-#  ifndef _WINDOWS
+      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hOldBrush = SelectObject (TtDisplay, hBrush);
+   } else {
+         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+		 hBrush = (HBRUSH) 0;
+   }
+
+   if (thick > 0) {
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         WinErrorBox (WIN_Main_Wd);
+   } else {
+          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+             WinErrorBox (WIN_Main_Wd);
+   }
+   hOldPen = SelectObject (TtDisplay, hPen) ;
+   result = SelectClipRgn (TtDisplay, clipRgn); 
+   if (result == ERROR)
+      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+   if (!Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height))
+      WinErrorBox (FrRef  [frame]);
+   SelectObject (TtDisplay, hOldPen);
+   if (!DeleteObject (hPen))
+      WinErrorBox (FrRef [frame]);
+   if (hBrush) {
+      SelectObject (TtDisplay, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd);
+      hBrush = (HBRUSH)0;
+   }
+   WIN_ReleaseDeviceContext ();
+#  else  /* !_WINDOWS */
+   if (pat != 0) {
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
                       x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
       XFreePixmap (TtDisplay, pat);
-#  else /* _WINDOWS */
-      /* SelectClipRgn(TtDisplay, clipRgn); */
-      GetClipRgn(TtDisplay, clipRgn);
-      WinLoadGC (TtDisplay, fg, RO);
-   
-      hBrush = CreateSolidBrush (Pix_Color[bg]);
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
-      /* PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY); */
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
-      SelectObject (TtDisplay, hOldPen);
-      if (hPen && !DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
-	  hPen = (HPEN)0;
-#     endif /* _WINDOWS */
    }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#       ifndef _WINDOWS
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#       else  /* _WINDOWS */
-        if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
-           WinErrorBox (WIN_Main_Wd);
-        hOldPen = SelectObject (TtDisplay, hPen) ;
-        SelectObject (TtDisplay, GetStockObject (NULL_BRUSH)) ;
-        Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
-		SelectObject (TtDisplay, hOldPen);
-#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
    }
-#       ifdef _WINDOWS 
-	WIN_ReleaseDeviceContext ();
-    if (hPen && !DeleteObject (hPen))
-       WinErrorBox (WIN_Main_Wd);
-#       endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1795,6 +1813,7 @@ int                 pattern;
 #  ifdef _WINDOWS 
    HPEN hPen;
    HPEN hOldPen;
+   int  result;
 #  else  /* _WINDOWS */
    Pixmap              pat;
 #  endif /* _WINDOWS */
@@ -1836,7 +1855,11 @@ int                 pattern;
    if (thick > 0) {
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
-      GetClipRgn(TtDisplay, clipRgn);
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
@@ -2278,6 +2301,7 @@ int                 pattern;
    HBRUSH              hOldBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
+   int                 result;
 #  else  /* !_WINDOWS */
    int                 xf, yf;
    XArc                xarc[4];
@@ -2286,11 +2310,12 @@ int                 pattern;
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS 
-   WIN_GetDeviceContext (frame);
-   if (width <= 0 || height <= 0) {
-      WIN_ReleaseDeviceContext ();
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (width <= 0 || height <= 0) 
       return;
-   }
+
+   WIN_GetDeviceContext (frame);
 
    arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
 
@@ -2302,72 +2327,39 @@ int                 pattern;
    y += thick / 2;
 
    /* Fill in the rectangle */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-   if (thick > 0) {
-      /* SelectClipRgn(TtDisplay, clipRgn); */
-      GetClipRgn(TtDisplay, clipRgn);
-      WinLoadGC (TtDisplay, fg, RO);
-      if (pat != 0) {
-         hBrush = CreateSolidBrush (Pix_Color[bg]);
-         hOldBrush = SelectObject (TtDisplay, hBrush);
-	  } else
-            SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
-         WinErrorBox (FrRef  [frame]);
-	  SelectObject (TtDisplay, hOldPen);
-	  if (!DeleteObject (hPen))
-         WinErrorBox (FrRef [frame]);
-      if (hBrush) {
-         SelectObject (TtDisplay, hOldBrush);
-         if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd);
-	     hBrush = (HBRUSH)0;
-	  }
-   }
-
-#  if 0 /*************************************************************************/
+   WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-      SelectClipRgn(TtDisplay, clipRgn); 
-      WinLoadGC (TtDisplay, fg, RO);
-   
       hBrush = CreateSolidBrush (Pix_Color[bg]);
       hOldBrush = SelectObject (TtDisplay, hBrush);
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
-         WinErrorBox (FrRef  [frame]);
-	  SelectObject (TtDisplay, hOldPen);
-	  if (!DeleteObject (hPen))
-         WinErrorBox (FrRef [frame]);
+   } else {
+         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+		 hBrush = (HBRUSH) 0;
    }
 
-   /* Draw the border */
    if (thick > 0) {
-      InitDrawing (0, style, thick, RO, active, fg);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      SelectObject (TtDisplay, GetStockObject (NULL_BRUSH)) ;
-	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
-         WinErrorBox (FrRef  [frame]);
-      SelectObject (TtDisplay, hOldPen);
-      FinishDrawing (0, RO, active);
+   } else {
+          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+             WinErrorBox (WIN_Main_Wd);
    }
-	WIN_ReleaseDeviceContext ();
-    if (hPen && !DeleteObject (hPen))
-       WinErrorBox (WIN_Main_Wd);
-    if (hBrush) {
-       SelectObject (TtDisplay, hOldBrush);
-       if (!DeleteObject (hBrush))
-          WinErrorBox (WIN_Main_Wd);
-	   hBrush = (HBRUSH)0;
-	}	
-#endif /* 0 ****************************************************************/
+
+   hOldPen = SelectObject (TtDisplay, hPen) ;
+   result = SelectClipRgn (TtDisplay, clipRgn); 
+   if (result == ERROR)
+      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+   if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
+      WinErrorBox (FrRef  [frame]);
+   SelectObject (TtDisplay, hOldPen);
+   if (!DeleteObject (hPen))
+      WinErrorBox (FrRef [frame]);
+   if (hBrush) {
+      SelectObject (TtDisplay, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd);
+      hBrush = (HBRUSH)0;
+   }
+   WIN_ReleaseDeviceContext ();
 #  else  /* !_WINDOWS */
    width -= thick;
    height -= thick;
@@ -2520,6 +2512,7 @@ int                 pattern;
    HPEN   hOldPen;
    HBRUSH hBrush;
    HBRUSH hOldBrush;
+   int    result;
 #  endif /* _WINDOWS */
    Pixmap              pat;
 
@@ -2534,7 +2527,11 @@ int                 pattern;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       /* SelectClipRgn(TtDisplay, clipRgn); */
-      GetClipRgn(TtDisplay, clipRgn);
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
    
       hBrush = CreateSolidBrush (Pix_Color[bg]);
@@ -3157,10 +3154,16 @@ ThotGC              GClocal;
    XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
 #  else /* _WINDOWS */
    HFONT hOldFont;
+   int   result;
 
    WIN_GetDeviceContext (GetFrameNumber (w));
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont(TtDisplay, font);
+   result = SelectClipRgn (TtDisplay, clipRgn);  
+   if (result == ERROR)
+      MessageBox (NULL, "Cannot select clipping region", "Warning", MB_OK);
+   /* if (!GetClipRgn(TtDisplay, clipRgn))
+      WinErrorBox (NULL); */
    TextOut(TtDisplay, x, y, string, strlen(string));
    SelectObject (TtDisplay, hOldFont);
 #  endif /* _WINDOWS */
@@ -3226,10 +3229,10 @@ int yf;
 
 	  GetClientRect (FrRef [frame], &cltRect);
 
-	  ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
+	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL); */
 	  /* UpdateWindow (FrRef [frame]); */
 	  /* ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); */
-	  /* ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect); */
+	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);
       WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
    }

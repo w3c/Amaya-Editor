@@ -885,8 +885,12 @@ int                 view;
 	   i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
 	   if (lgmenu + i < MAX_TXT_LEN)
 	     {
+#          ifndef _WINDOWS
 	       bufMenu[lgmenu] = 'B';
 	       strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+#          else  /* _WINDOWS */
+	       strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+#          endif /* _WINDOWS */
 	       val++;
 	     }
 	   lgmenu += i;
@@ -1555,12 +1559,15 @@ int                 frame;
 			 } else if (WIN_AtTextAttr && !isForm) {
 		            WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
 			 } else if (WIN_AtEnumAttr) {
+                    /* CreateAttributeDlgWindow (currAttrVal, nbDlgItems, WIN_buffMenu); */
 				    if (nbDlgItems == 3)
                        CreateAlign1DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
 					else if (nbDlgItems == 5)
                          CreateAlign2DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
                     else if (nbDlgItems == 4)
                          CreateAlign3DlgWindow (TtaGetViewFrame (doc, view), currAttrVal);
+                    else if (nbDlgItems == 2)
+                         CreateMathAttribDlgWindow (currAttrVal);
 			 }
 #            endif /* _WINDOWS */
 		  }

@@ -133,62 +133,9 @@ void WinInitColors ()
 
    /* Create a color palette for the Thot set of colors. */
 
-   /********************************************************************************
-   ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
-                          sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
-
-   ptrLogPal->palVersion    = 0x300;
-   ptrLogPal->palNumEntries = MAX_COLOR;
-       
-   for (i = 0; i < MAX_COLOR; i++) {
-       ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
-       ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-       ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
-       ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
-   }
-
-   TtCmap = CreatePalette (ptrLogPal);
-      
-   if (TtCmap == NULL) {
-#     ifdef _WIN_DEBUG
-      fprintf (stderr, "couldn't CreatePalette\n");												  
-#     endif 
-	  WinErrorBox (WIN_Main_Wd);
-   } else {
-          SelectPalette (TtDisplay, TtCmap, FALSE);
-          nbPalEntries = RealizePalette (TtDisplay);
-          if (nbPalEntries == 0)
-             WinErrorBox (WIN_Main_Wd);
-   }
-   *********************************************************************************/
-
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
        Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-
-   /* initialize some standard colors. */
-#  if 0
-   Black_Color     = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 0));
-   White_Color     = GetNearestColor (TtDisplay, PALETTERGB (255, 255, 255));
-   Scroll_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
-   Button_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
-   Select_Color    = GetNearestColor (TtDisplay, PALETTERGB (70, 130, 180));
-   BgMenu_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
-   Box_Color       = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
-   RO_Color        = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 205));
-   InactiveB_Color = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
-#  endif /* 0 */
-
-   Black_Color     =   1;
-   White_Color     =   0;
-   Scroll_Color    =   4;
-   Button_Color    =   4;
-   Select_Color    =  83;
-   BgMenu_Color    =   4;
-   Box_Color       =  12;
-   RO_Color        =  79;
-   InactiveB_Color =  12;
-
 
    /* set up the default background colors for all views. */
    for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
@@ -363,8 +310,11 @@ ThotColor* colorpixel;
 	/* register the default background color */
 	if (strcmp (colorplace, "BackgroundColor") == 0)
 	   DefaultBColor = col;
-
+#   ifdef _WINDOWS 
+	*colorpixel = col;
+#   else  /* _WINDOWS */
 	*colorpixel = ColorPixel (col);
+#   endif /* _WINDOWS */
 	return (TRUE);
      }
    else

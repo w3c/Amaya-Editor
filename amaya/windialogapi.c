@@ -187,6 +187,7 @@ LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CreateRuleDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MathAttribDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -213,6 +214,7 @@ LRESULT CALLBACK CharacterDlgProc ();
 LRESULT CALLBACK CreateRuleDlgProc ();
 LRESULT CALLBACK ApplyClassDlgProc ();
 LRESULT CALLBACK SpellCheckDlgProc ();
+LRESULT CALLBACK MathAttribDlgProc ();
 LRESULT CALLBACK InitConfirmDlgProc ();
 LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
@@ -634,6 +636,20 @@ int   font_size;
  CreateCreateRuleDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
+void CreateAttributeDlgWindow (int attr_val, int nb_items, char* buffer) 
+#else  /* __STDC__ */
+void CreateAttributeDlgWindow (attr_val, nb_items, buffer) 
+int   attr_val; 
+int   nb_items; 
+char* buffer; 
+#endif /* __STDC__ */
+{
+}
+
+/*-----------------------------------------------------------------------
+ CreateCreateRuleDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
 void CreateCreateRuleDlgWindow (HWND parent, int base_dlg, int class_form, int class_select, int nb_class, char* class_list)
 #else  /* !__STDC__ */
 void CreateCreateRuleDlgWindow (parent, nb_class, class_list)
@@ -705,6 +721,20 @@ int   chkrSpecial;
 	sprintf (currentRejectedchars, rejectedChars);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateInitConfirmDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathAttribDlgWindow (int curr_val)
+#else  /* __STDC__ */
+void CreateMathAttribDlgWindow (curr_val)
+int attr_val;
+#endif /* __STDC__ */
+{
+    currAttrVal = curr_val;
+	DialogBox (hInstance, MAKEINTRESOURCE (MATHATTRIBDIALOG), NULL, (DLGPROC) MathAttribDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -2492,6 +2522,71 @@ LPARAM lParam;
 		   default: return FALSE;
 	}
 	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ MathAttribDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK MathAttribDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK MathAttribDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iLocation;
+    switch (msg) {
+	       case WM_INITDIALOG:
+                switch (currAttrVal) {
+                       case 1: CheckRadioButton (hwnDlg, IDC_DISPLAY, IDC_INLINEMATH, IDC_DISPLAY);
+                               break;
+
+                       case 2: CheckRadioButton (hwnDlg, IDC_DISPLAY, IDC_INLINEMATH, IDC_INLINEMATH);
+                               break;
+
+                       default: break;
+				}
+                break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+					   case IDC_DISPLAY:
+                            iLocation = 0;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case IDC_INLINEMATH:
+                            iLocation = 1;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+				       case ID_APPLY:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case ID_DELETE:
+						    /* ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation); */
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+					 	    EndDialog (hwnDlg, ID_DELETE);
+							break;
+
+					   case ID_DONE:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+					   case WM_DESTROY:
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
 }
 
 /*-----------------------------------------------------------------------

@@ -457,6 +457,21 @@ BEGIN
                     WS_EX_STATICEDGE
 END
 
+MATHATTRIBDIALOG DIALOG DISCARDABLE  0, 0, 172, 71
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Attributes"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,50,50,14
+    PUSHBUTTON      "Delete",ID_DELETE,61,50,50,14
+    DEFPUSHBUTTON   "Done",ID_DONE,115,50,50,14
+    GROUPBOX        "Mode",IDC_MODE,7,7,158,38
+    CONTROL         "Display",IDC_DISPLAY,"Button",BS_AUTORADIOBUTTON,14,18,
+                    100,9
+    CONTROL         "Inline math",IDC_INLINEMATH,"Button",BS_AUTORADIOBUTTON,
+                    14,31,100,9
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -594,6 +609,15 @@ BEGIN
         VERTGUIDE, 7
         VERTGUIDE, 144
         BOTTOMMARGIN, 104
+    END
+
+    MATHATTRIBDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 165
+        VERTGUIDE, 14
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 64
     END
 END
 #endif    // APSTUDIO_INVOKED

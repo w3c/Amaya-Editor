@@ -901,7 +901,7 @@ char                c;
 				currentDocument);
 	   if (HTMLStyleAttribute)
 	      ParseHTMLSpecificStyle (currentElement, (char *) inputBuffer,
-				      currentDocument);
+				      currentDocument, FALSE);
 	   break;
 	case 3:       /* reference */
 	   break;

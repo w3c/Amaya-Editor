@@ -674,10 +674,7 @@ int                *yd;
 int                *xf;
 int                *yf;
 int                 raz;
-
 #endif /* __STDC__ */
-
-
 {
    FrameTable[frame].FrHeight = *yf;
 }

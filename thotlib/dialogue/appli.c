@@ -2278,7 +2278,6 @@ int                *yd;
 int                *xf;
 int                *yf;
 int                 raz;
-
 #endif /* __STDC__ */
 {
    int              clipx, clipy, clipwidth, clipheight;
@@ -2322,9 +2321,9 @@ int                 raz;
 #   else  /* _WINDOWS */ 
     if (TtDisplay == (HDC) 0)
        WIN_GetDeviceContext (frame);
-    clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
-                             clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
-    SelectClipRgn(TtDisplay, clipRgn); 
+    if (!(clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
+                             clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
+       WinErrorBox (NULL);
 #   endif /* _WINDOWS */
 	if (raz > 0)
 #      ifdef _WINDOWS 
