@@ -3722,7 +3722,7 @@ static void         EndOfDoctypeDecl (char c)
 	   elType.ElTypeNum = HTML_EL_DOCTYPE;
 	   doctype = TtaNewElement (HTMLcontext.doc, elType);
 	   TtaSetElementLineNumber (doctype, NumberOfLinesRead);
-	   TtaInsertFirstChild (&doctype, docEl, HTMLcontext.doc);
+	   InsertElement (&doctype);
 	   /* Make the DOCTYPE element read-only */
 	   TtaSetAccessRight (doctype, ReadOnly, HTMLcontext.doc);
 	   HTMLcontext.lastElement = doctype;
