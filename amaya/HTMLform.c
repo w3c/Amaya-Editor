@@ -990,6 +990,9 @@ ThotBool HandleTab (NotifyOnTarget *event)
 		case HTML_EL_Option_Menu:
 		case HTML_EL_Checkbox_Input:
 		case HTML_EL_Radio_Input:
+		case HTML_EL_Submit_Input:
+		case HTML_EL_Reset_Input:
+		case HTML_EL_Button_Input:
 		  /* no included text: select the element itself */
 		  TtaSelectElement (event->document, el);
 		  found =TRUE;
