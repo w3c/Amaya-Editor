@@ -268,7 +268,7 @@ PtrDocument pDoc;
        NbCopies = 1;
        Reduction = 100;
        PagesPerSheet = 1;
-       pProcExportPrintDoc = NULL;
+       pFuncExportPrintDoc = NULL;
        if (pDocPrint->DocDirectory[0] == DIR_SEP)
 	 sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName);
        else
