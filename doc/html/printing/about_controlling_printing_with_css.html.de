@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Über die Druckkontrolle mit Formatvorlagen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="print_command.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Printing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über die Druckkontrolle mit Formatvorlagen</h1>
+
+<p>Amaya druckt Verweise nicht unterstrichen. Um dies zu erreichen muss man
+in der benutzerdefinierten Formatvorlage (amaya.css im Arbeistverzeichnis)
+folgende Zeile einfügen:</p>
+
+<p><code>@media print {a:link {text-decoration: underline} ... }</code></p>
+
+<p>Amaya unterstützt in Formatvorlagen die Eigenschaft
+<code>page-break-before: always</code>. Fügt man diese Eigenschaft mit einem
+Formatattribut einem Element hinzu, dann generiert Amaya den Seitenumbruch
+vor diesem Element. Fügt man diese Eigenschaft in ein Style-Element oder eine
+externe Formatvorlage ein, so generiert Amaya den Seitenumbruch vor jeder
+Instanz dieses Elements.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "./xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>HTML-Elemente</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" width="100%" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya-de.gif" /> <a
+        href="../Document.html"><img alt="vorherige Seite"
+        src="../../images/left-de.gif" /> <img alt="erste Seite" border="0"
+        src="../../images/up-de.gif" /></a> <a href="headings.html"><img
+        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div>
+
+<div id="page_body">
+<h1>HTML-Elemente</h1>
+
+<p>Amaya erkennt alle Elemente der DTD HTML 4.0 Loose und HTML 4.0 Frameset
+generiert aber nur solche der DTD HTML 4.0 Strict. Die folgende Liste enthält
+alle Elemente, die mit Amaya erzeugt werden können, wobei jede mit ihrer
+Spezifikation in der DTD verknüpft ist. <a href="infoTypes.html">Hilfe</a> zu
+deren Verwendung in Amaya ist ebenfalls verfügbar.</p>
+<dl>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/links.html#edef-A">a</a></dt>
+    <dd>Anker: Verweis und/oder Ziel eines Verweises</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR">abbr</a></dt>
+    <dd>Abkürzung (z. B.: WWW, HTTP)</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM">acronym</a></dt>
+    <dd>Akronym: Abkürzung, die normalerweise als Wort gesprochen wird (z.B.
+      LASER oder WYSIWYG)</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS">address</a></dt>
+    <dd>Informationen über den Autor</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/objects.html#edef-AREA">area</a></dt>
+    <dd>clientseitige aktive Bildbereiche</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-B">b</a></dt>
+    <dd>Textstil: fett (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/links.html#edef-BASE">base</a></dt>
+    <dd>Basis-URI eines Dokuments</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/dirlang.html#edef-BDO">bdo</a></dt>
+    <dd>I18N BiDi over-ride</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-BIG">big</a></dt>
+    <dd>Textstil: groß (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-BLOCKQUOTE">blockquote</a></dt>
+    <dd>langes Zitat</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-BODY">body</a></dt>
+    <dd>Körper des Dokuments</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-BR">br</a></dt>
+    <dd>erzwungener Zeilenumbruch</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-BUTTON">button</a></dt>
+    <dd>Knopf</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-CAPTION">caption</a></dt>
+    <dd>Tabellenüberschrift</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CITE">cite</a></dt>
+    <dd>Zitatquelle</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CODE">code</a></dt>
+    <dd>Programmfragment</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-COL">col</a></dt>
+    <dd>Tabellenspalte</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-COLGROUP">colgroup</a></dt>
+    <dd>Gruppen von Tabellenspalten</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">dd</a></dt>
+    <dd>Definitionsbeschreibung</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del" name="DEL"
+  id="DEL">del</a></dt>
+    <dd>gelöschter Text</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN">dfn</a></dt>
+    <dd>Definition</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-DIV">div</a></dt>
+    <dd>generischer Sprach- oder Formatabschnitt</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></dt>
+    <dd>Definitionsliste</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">dt</a></dt>
+    <dd>Begriff, der definiert wird</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">em</a></dt>
+    <dd>Betonung</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-FIELDSET">fieldset</a></dt>
+    <dd>Gruppe von Formularfelder</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-FORM" name="FORM"
+  id="FORM">form</a></dt>
+    <dd>interaktives Formular</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1">h1, h2, h3, h4,
+  h5, h6</a></dt>
+    <dd>Überschrift</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-HEAD">head</a></dt>
+    <dd>Kopf eines Dokuments</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-HR">hr</a></dt>
+    <dd>horizontale Linie</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-HTML">html</a></dt>
+    <dd>Stammelement eines Dokuments</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-I">i</a></dt>
+    <dd>Textstil: schräg (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/present/frames.html#edef-IFRAME">iframe</a></dt>
+    <dd>eingebettetes Fenster</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/objects.html#edef-IMG">img</a></dt>
+    <dd>eingebettetes Bild</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-INPUT">input</a></dt>
+    <dd>Formulareingabe</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins">ins</a></dt>
+    <dd>eingefügter Text (i. V. m. del)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD">kbd</a></dt>
+    <dd>Text, der vom Benutzer eingegeben werden soll</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-LABEL">label</a></dt>
+    <dd>Beschriftung eines Formularfeldes</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-LEGEND">legend</a></dt>
+    <dd>Legende einer Formularfeldgruppe</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">li</a></dt>
+    <dd>Listenelement</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/links.html#edef-LINK">link</a></dt>
+    <dd>medienunabhängiger Verweis</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/objects.html#edef-MAP">map</a></dt>
+    <dd>clientseitiger Bildbereich</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-META">meta</a></dt>
+    <dd>generische Metainformation</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/scripts.html#edef-NOSCRIPT">noscript</a></dt>
+    <dd>alternativer Behälter zur Wiedergabe von Information, für Browser,
+      welche keine Skripte unterstützen</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/objects.html#edef-OBJECT"
+  name="OBJECT" id="OBJECT">object</a></dt>
+    <dd>generisches eingebettetes Objekt</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">ol</a></dt>
+    <dd>geordnete Liste</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-OPTGROUP">optgroup</a></dt>
+    <dd>Optionsgruppe (Menü)</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-OPTION">option</a></dt>
+    <dd>Option (Menü)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-P">p</a></dt>
+    <dd>Absatz</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/objects.html#edef-PARAM">param</a></dt>
+    <dd>benamter Eigenschaftswert (Objekt)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-PRE">pre</a></dt>
+    <dd>Textstil: vorformatiert (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q">q</a></dt>
+    <dd>kurzes Zitat</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP">samp</a></dt>
+    <dd>Beispiel</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/scripts.html#edef-SCRIPT">script</a></dt>
+    <dd>Skript</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-SELECT">select</a></dt>
+    <dd>Optionsauswahl</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-SMALL">small</a></dt>
+    <dd>Textstil: klein (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-SPAN">span</a></dt>
+    <dd>generischer Behälter für Text oder Stil</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">strong</a></dt>
+    <dd>Hervorhebung</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/styles.html#edef-STYLE">style</a></dt>
+    <dd>Formatierungsinformation</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SUB">sub</a></dt>
+    <dd>Textstil: tiefgestellt (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SUP">sup</a></dt>
+    <dd>Textstil: hochgestellt (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TABLE">table</a></dt>
+    <dd>Tabelle</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TBODY">tbody</a></dt>
+    <dd>Tabellenkörper</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TD">td</a></dt>
+    <dd>Tabellenzelle</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/interact/forms.html#edef-TEXTAREA">textarea</a></dt>
+    <dd>mehrzeiliges Textfeld</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TFOOT">tfoot</a></dt>
+    <dd>Fußzeile einer Tabelle</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TH">th</a></dt>
+    <dd>Zelle für Tabellenüberschrift</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-THEAD">thead</a></dt>
+    <dd>Gruppe von Zellen für Tabellenüberschrift</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-TITLE">title</a></dt>
+    <dd>Titel eines Dokuments</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TR">tr</a></dt>
+    <dd>Tabellenzeile</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/graphics.html#edef-TT">tt</a></dt>
+    <dd>Textstil: feste Schriftbreite (dieser Effekt sollte mittels <a
+      href="../StyleSheets.html">Formatvorlagen</a> oder <a
+      href="infoTypes.html">struktureller Auszeichnung</a> erzielt
+    werden)</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL" name="UL"
+  id="UL">ul</a></dt>
+    <dd>ungeordnete Liste</dd>
+  <dt><a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR">var</a></dt>
+    <dd>Variable oder Argument</dd>
+</dl>
+</div>
+
+<p>Mit Amaya kann man keine Framesets erzeugen. Es ist aber möglich in der
+Strukturansicht Framesets zu editieren: Elemente können kopiert und eingefügt
+werden und passende Attribute stehen zur Verfügung.</p>
+<dl>
+  <dt><a href="http://www.w3.org/TR/REC-html40/present/frames.html#edef-FRAME">frame</a></dt>
+    <dd>Fenster</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/present/frames.html#edef-FRAMESET">frameset</a></dt>
+    <dd>Fenstersatz</dd>
+  <dt><a
+  href="http://www.w3.org/TR/REC-html40/present/frames.html#edef-NOFRAMES">noframes</a></dt>
+    <dd>alternativer Behälter von Informationen für Browser, die keine Frames
+      darstellen können</dd>
+</dl>
+
+<p>In Amaya können die folgenden Elemente, welche im DTD HTML 4.0 Strict
+abgelehnt werden, nicht erzeugt werden. Diese sollten durch die
+vorgeschlagenen Elemente ersetzt werden.</p>
+<dl>
+  <dt>applet</dt>
+    <dd>Sollte durch das Element <a href="#OBJECT">object</a> ersetzt
+    werden</dd>
+  <dt>basefont</dt>
+    <dd>Sollte durch die Verwendung einer <a
+      href="../StyleSheets.html">Formatvorlage</a> ersetzt werden</dd>
+  <dt>center</dt>
+    <dd>Sollte durch die Verwendung einer <a
+      href="../StyleSheets.html">Formatvorlage</a> ersetzt werden</dd>
+  <dt>dir</dt>
+    <dd>Sollte durch das Element <a href="#UL">ul</a> ersetzt werden</dd>
+  <dt>font</dt>
+    <dd>Sollte durch die Verwendung einer <a
+      href="../StyleSheets.html">Formatvorlage</a> ersetzt werden</dd>
+  <dt>isindex</dt>
+    <dd>Sollte durch die Verwendung eines <a href="#FORM">Formulars</a>
+      ersetzt werden</dd>
+  <dt>menu</dt>
+    <dd>Sollte durch das Element <a href="#UL">ul</a> ersetzt werden</dd>
+  <dt>s und strike</dt>
+    <dd>Sollte durch die Verwendung von <a href="#DEL">del</a> oder einer <a
+      href="../StyleSheets.html">Formatvorlage</a> ersetzt werden</dd>
+  <dt>u</dt>
+    <dd>Sollte durch die Verwendung einer <a
+      href="../StyleSheets.html">Formatvorlage</a> ersetzt werden</dd>
+</dl>
+</div>
+</body>
+</html>

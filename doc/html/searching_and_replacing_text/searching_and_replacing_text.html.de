@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Text suchen und ersetzen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Searching.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Text suchen und ersetzen</h1>
+
+<p>Der Dialog <strong>Suchen und Ersetzen</strong> wird über das Menü
+<strong>Bearbeiten</strong>, den Knopf <img src="../../images/find-de.gif"
+alt="Knopf Suchen/Ersetzen" /> in der Knopfleiste oder das Tastenkürzel
+<code>Strg Umschalt %</code> in Unix oder <code>Strg f</code> in Windows
+aufgerufen.</p>
+
+<p>Hier kann man Text nach verschiedenen Kriterien suchen und ersetzen:</p>
+<ul type="disc">
+  <li>Man muss im Feld <strong>Suche nach</strong> die zu suchende
+    Zeichenkette eingeben.</li>
+  <li>Ist die Option <strong>Buchstabenlage ignorieren</strong> aktiviert,
+    dann wird die Suche unabhängig von der Groß- oder Kleinschreibung
+    durchgeführt, ansonsten wird nur der Text gefunden, welcher genau der
+    Schreibweise im Feld <strong>Suche nach</strong> entspricht.</li>
+  <li>Der gefundene Text kann durch den Text, welcher im Feld <strong>Ersetze
+    durch</strong> eingegeben wurde ausgetauscht werden. Hierbei ist noch der
+    Modus der Ersetzung anzugeben: 
+    <ul>
+      <li><strong>Nicht ersetzen</strong>: der gefundenen Text wird nicht
+        ersetzt, auch wenn das Feld <strong>Ersetze durch</strong> eine
+        Zeichenkette enthält. Es ist ein einfacher Suchvorgang.</li>
+      <li><strong>Bestätigen</strong>: wird die Zeichenkette gefunden, so
+        wird diese von Amaya markiert. Man kann dann einen der folgenden
+        Knöpfe anklicken: 
+        <ul>
+          <li><strong>OK</strong> um den Text zu ersetzen und mit der Suche
+            fortzufahren.</li>
+          <li><strong>Überspringen</strong> um mit der Suche fortzufahren</li>
+        </ul>
+      </li>
+      <li><strong>Alle ersetzen</strong>: alle Textstellen werden automatisch
+        in dem Suchraum ersetzt, der im Feld <strong>Suchraum</strong>
+        spezifiziert wurde.</li>
+    </ul>
+  </li>
+  <li>Die Optionen im Feld <strong>Suchraum</strong> legen fest, wo im
+    Dokument gesucht werden soll. 
+    <ul>
+      <li><strong>Oberhalb der Markierung</strong>: die Suche beginnt am
+        Anfang der Markierung und bewegt sich bis zum Anfang des
+      Dokuments.</li>
+      <li><strong>Innerhalb der Markierung</strong>: die Suche bewegt sich
+        vom Anfang bis zum Ende der Markierung.</li>
+      <li><strong>Unterhalb der Markierung</strong>: die Suche beginnt am
+        Ende der Markierung und bewegt sich bis zum Ende des Dokuments.</li>
+      <li><strong>Im ganzen Dokument</strong>: Die Suche bewegt sich vom
+        Anfang des Dokuments bis zu dessem Ende, unabhängig davon welcher
+        Teil markiert war.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Um die Suchoperation zu starten muss man auf den Knopf <strong>OK</strong>
+klicken. Wird der gesuchte Text gefunden, dann positioniert Amaya das
+Dokument so, dass der gesuchte Text sichtbar wird. Klickt man wieder auf den
+Knopf, dann wird die Suche fortgesetzt. Wird der Text nicht gefunden, so
+erscheint die Nachricht <strong>Suche beendet</strong>.</p>
+
+<p>Der Dialog kann durch anklicken des Knopfes <strong>Beenden</strong>
+verlassen werden.</p>
+
+<p>Ersetzungen können mit dem Befehl <strong>Rückgängig</strong> im Menü
+<strong>Bearbeiten</strong> oder durch das Tastenkürzel <kbd>Strg z</kbd>
+rückgängig gemacht werden.</p>
+</div>
+</body>
+</html>

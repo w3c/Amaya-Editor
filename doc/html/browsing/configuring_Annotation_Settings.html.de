@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Einstellungen für Anmerkungen konfigurieren</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a accesskey="p" href="./annotation_menu.html"><img alt="previous"
+        src="../../images/left-de.gif" /></a> <a accesskey="t"
+        href="../Annotations.html"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a accesskey="n"
+        href="./creating_an_annotation.html"><img alt="nächste Seite"
+        src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Einstellungen für Anmerkungen konfigurieren</h1>
+
+<p>Hierzu muss man <strong>Konfigurieren</strong> im Menü
+<strong>Anmerkungen</strong> wählen. Es wird der folgende Dialog geöffnet:</p>
+
+<p><img alt="Der Dialog Einstellungen für Anmerkungen"
+src="../../images/configuration_for_annotations-de.png" /></p>
+
+<p>In Unix wird eine etwas davon abweichende Schnittstelle angezeigt, die
+aber die gleiche Funktionalität besitzt.</p>
+<dl>
+  <dt>Autor</dt>
+    <dd>Der Autor der Anmerkungen. Fehlwertmäßig wird der Login-Name benutzt.
+      Hier sollte etwas sinnvolles eingegeben werden.</dd>
+  <dt>Veröffentlichen auf</dt>
+    <dd>Diese Einstellung definiert den Server auf dem Anmerkungen
+      veröffentlicht werden sollen. Lokale Anmerkungen werden immer im
+      lokalen Repository gespeichert und fehlwertmäßig ist dieses Feld leer.
+      Dieser Server wird nicht automatisch in die Liste der Anmerkungsserver
+      übernommen und sollte dort ebenfalls eingetragen werden.</dd>
+  <dt>Laden von</dt>
+    <dd>Eine Liste von Server, auf denen Amaya nach Anmerkungen suchen soll.
+      Hier kann man einen oder mehrere Server eintragen. Der reservierte
+      Servername <code>localhost</code> weist Amaya an lokale Anmerkungen zu
+      suchen, was aber nicht bedeutet, dass ein lokaler Server laufen muss
+      (sonst würde seine vollständige URI angegeben werden).</dd>
+    <dd>Unter Unix werden die Anmerkungsserver in einer, durch Leerzeichen
+      getrennte Liste angezeigt. Unter Windows kann man einen neuen Server
+      hinzufügen, indem man in die Liste klickt, die Eingabetaste betätigt
+      und den Namen eingibt. Fehlwertmäßig wird diese Liste auf
+      <code>localhost</code> gesetzt. 
+      <p class="ProcedureNote"><strong>Tip</strong>:<br />
+      um einen Server vorübergehend zu deaktivieren, kann vor dessen URI ein
+      Minuszeichen (-) eingeben. Dieser wird dann von Amaya ignoriert.</p>
+    </dd>
+  <dt>Lokale Anmerkungen automatisch laden / Entfernte Anmerkungen
+  automatisch laden</dt>
+    <dd>Amaya kann, jedesmal, wenn ein Dokument gebrowst wird, Anmerkungen
+      automatisch laden (indem ein Server abgefragt wird). Sind diese
+      Optionen nicht markiert, kann man über <strong>Laden</strong> im Menü
+      <strong>Anmerkungen</strong> dies manuell erledigen. 
+      <p class="Note"><strong>Anmerkung:</strong> Aktiviert man
+      <strong>Entfernte Anmerkungen automatisch laden</strong>, so kann dies,
+      bedingt durch das Auflösen der DNS-Namen zu einer Verzögerung führen.
+      Fehlwertmäßig sind beide Optionen deaktiviert.</p>
+    </dd>
+  <dt>Offline-Modus</dt>
+    <dd>Diese Option ist nützlich, wenn man offline arbeiten möchte, aber
+      dennoch lokale Anmerkungen automatisch laden will. Hierbei werden beim
+      Start von Amaya entfernte Anmerkungen nicht automatisch geladen.</dd>
+</dl>
+</div>
+</body>
+</html>

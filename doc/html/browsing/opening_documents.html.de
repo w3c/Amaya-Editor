@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Ein Dokument öffnen</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="working_with_the_amaya_browser_and_editor.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../Browsing.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up-de.gif" /></a> <a
+        href="activating_a_link.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Ein Dokument öffnen</h1>
+
+<p>Man kann sowohl lokale als auch entfernte Dokumente auf verschiedene Arten
+öffnen:</p>
+<ul>
+  <li>Ein Dokument im derzeitigen Fenster öffnen.</li>
+  <li>Ein Dokument in einem neuen Fenster öffnen.</li>
+  <li>Ein Dokument über das Eingabefeld <strong>Adresse</strong> öffnen.</li>
+</ul>
+
+<p class="ProcedureCaption">Um ein Dokument im derzeitigen Fenster zu
+öffnen:</p>
+<ol>
+  <li><strong>Öffnen</strong> im Menü <strong>Datei</strong> wählen.
+    Alternativ kann man auch ein Tastenkürzel verwenden. Unter Windows
+    <kbd>Strg o</kbd> <kbd>Strg o</kbd> und unter Unix <kbd>Strg x Strg
+    f</kbd> drücken. Es wird der Dialog <strong>Öffnen</strong>
+  angezeigt.</li>
+  <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
+    gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
+    um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
+  <li>Ist das Dokument richtig spezifiziert,
+    <strong>OK</strong><strong></strong>anklicken</li>
+</ol>
+
+<p class="ProcedureCaption">Um ein Dokument in einem neuen Fenster zu
+öffnen:</p>
+<ol>
+  <li><strong>Öffnen (neues Fenster)</strong> im Menü <strong>Datei</strong>
+    wählen. Alternativ kann man auch ein Tastenkürzel verwenden. Unter
+    Windows <kbd>Strg Umschalt o</kbd> und unter Unix <kbd>Strg x Strg
+    f</kbd>. Es wird ein Dialog geöffnet.</li>
+  <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
+    gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
+    um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
+  <li>Ist das Dokument richtig spezifiziert, <strong>OK</strong>
+    anklicken<strong>.</strong></li>
+</ol>
+
+<p class="ProcedureCaption">Um ein Dokument über das Eingabefeld
+<strong>Adresse</strong> zu öffnen:</p>
+<ol>
+  <li>Den Dateinamen oder URI markieren.</li>
+  <li>Die Taste <strong>Entf</strong> drücken, den neuen Dateinamen oder URI
+    eingeben und die Taste <strong>Eingabe</strong> betätigen. </li>
+</ol>
+</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Ein neues Dokument erzeugen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Document.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="structure.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Ein neues Dokument erzeugen</h1>
+
+<p>Mit Amaya kann man sowohl lokale als auch entfernte Dokumente erzeugen.
+Drei Typen von Dokumenten stehen zur Verfügung:</p>
+<ul>
+  <li>XHTML</li>
+  <li>MathML</li>
+  <li>SVG</li>
+</ul>
+
+<p class="ProcedureCaption">Um ein Dokument zu erzeugen:</p>
+<ol>
+  <li><strong>Neu</strong> Im Menü <strong>Datei</strong> wählen und den
+    gewünschten Typ auswählen. Es wird ein Dialog angezeigt. </li>
+  <li>Hier den URI oder den lokalen Pfad des Dokuments eingeben (es wird ein
+    lokaler Pfad vorgeschlagen). </li>
+  <li>Den Knopf <strong>OK</strong>&nbsp;anklicken. Es wird ein neues Fenster
+    geöffnet und ein Wurzelelement eingetragen.</li>
+</ol>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Attribute über das Menü Attribute editieren</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="working_with_attributes.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Attributes.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="copying_attributes.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Attribute über das Menü Attribute editieren</h1>
+
+<p>Das Menü <strong>Attribute</strong> zeigt alle Attribute, die einem
+markierten Element zugeordnet werden können und markiert die Attribute, die
+ein Element bereits besitzt (mit einem Haken). Über das Menü kann ein
+Attribut erzeugt, entfernt oder dessen Wert geändert werden.</p>
+
+<p class="ProcedureCaption">Um ein Attribut zu editieren:</p>
+<ol>
+  <li>Das ganze Element markieren.</li>
+  <li>Im Menü <strong>Attribute</strong> das gewünschte Attribut
+  anklicken.</li>
+  <li>Amaya agiert gemäß dem gewählten Attribut: 
+    <ul>
+      <li>Ein boolsches Attribut (wie etwa <code>ismap</code> bei Bilder)
+        wird entweder hinzugefügt, wenn es nicht vorhanden ist, oder
+        entfernt, wenn es vorhanden ist.</li>
+      <li>Bei Attributen, die einen definierten Bereich von Werten haben (wie
+        etwa <code>align</code> bei einer Überschrift), zeigt Amaya einen
+        Dialog, mit einer Liste dieser Werte und drei Knöpfen an: 
+        <ul>
+          <li>Um das Attribut zu erzeugen oder es zu ändern, den Wert
+            auswählen und <strong>Übernehmen</strong> anklicken.</li>
+          <li>Um das Attribut zu entfernen, <strong>Löschen</strong>
+            anklicken.</li>
+          <li><strong>Beenden</strong> schließt den Dialog.</li>
+        </ul>
+      </li>
+      <li>Bei Attributen, die beliebige Werte haben können (wie etwa
+        <code>href</code> bei einem Anker), zeigt Amaya einen Dialog mit
+        einem Eingabefeld und drei Knöpfen an: 
+        <ul>
+          <li>Um das Attribut zu erzeugen oder es zu ändern, den Wert
+            eingeben oder editieren und <strong>Übernehmen</strong>
+          anklicken.</li>
+          <li>Um das Attribut zu entfernen, <strong>Löschen</strong>
+            anklicken.</li>
+          <li><strong>Beenden</strong> schließt den Dialog. </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+</div>
+</body>
+</html>

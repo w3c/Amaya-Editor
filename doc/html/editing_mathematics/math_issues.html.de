@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Bekannte Probleme bei MathML</title>
+  <style type="text/css">
+  </style>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya-de.gif"></td>
+      <td><a href="about_linking_in_mathml.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif"></a> <a
+        href="../Math.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif"></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Bekannte Probleme bei MathML</h1>
+
+<p>Es folgen bekannte Probleme über MathML in Amaya:</p>
+<ul>
+  <li>In Amaya sind nur die Präsentationstags von MathML 2.0 implementiert,
+    nicht aber deren Content Markup. Alle Präsentationselemente und Attribute
+    sind verfügbar, es werden aber nur die folgenden Attribute am Bildschirm
+    dargestellt: 
+    <p><code>alttext, mathvariant, mathsize, mathcolor, mathbackground,
+    fontsize, fontweight, fontstyle, fontfamily, color, linethickness,
+    numalign, denomalign, bevelled, notation, lquote, rquote, lspace, rspace,
+    subscriptshift, superscriptshift, form, width </code>(mspace only),
+    <code>height</code> (mspace only),  <code>depth</code> (mspace only),
+    <code>align, rowalign, columnalign, frame, rowspan, columnspan</code>.</p>
+  </li>
+  <li><span><span>Die Attribute <code>class</code>, <code>id</code> und
+    <code>style</code> sind mit der gleichen Semantik wie in HTML verfügbar:
+    man kann Formatvorlagen mit MathML-Elementen verknüpfen (Attribut
+    <code>class</code> und <code>style</code>) und ein MathMl-Element kann
+    Ziel eines Verweises sein (Attribut <code>id</code>).</span></span></li>
+  <li><span><span>Weil in der derzeitigen Version mathematische Zeichensätze
+    nicht ausreichend zur Verfügung stehen, wird nur eine begrenzte Anzahl
+    von Symbolen erkannt, in der Hauptsache die, welche im Zeichensatz Symbol
+    zur Verfügung stehen. Derzeit werden folgende Zeichen
+    unterstützt:</span></span>
+    <p><code>folglich, sodass, senkrecht, oder, und, nicht, existiert, für
+    alle, Element, nicht Element, nicht Untermenge, Untermenge, Untermenge
+    gleich, Obermenge, Obermenge gleich, Doppelpfeil links, Doppelpfeil
+    links-rechts, Doppelfeil rechts, Pfeil links, Pfeil links-rechts, Pfeil
+    rechts, Kongruent, größer gleich, kleiner gleich, ungleich, proportional,
+    Senkrechtstrich, Vereinigungsmenge, Schnittmenge, Plus-Minus, Kreis-Plus,
+    Summer, Integral, Krei-Mal, Produkt, Mittelpunkt, Diamand, partielles
+    Differential, Doppelpfeil unten, Doppelpfeil oben, Pfeil unten, Pfeil
+    oben, angewendete Funktion, Dreifachpunkt, Differntial, imaginäres i,
+    exponentielles e, unsichtbares Komma, Unterstrich, Überstrich, kleines
+    Leerzeichen, großes Leerzeichen, Hut, Hochstrich, Tiefstrich, primzahl,
+    Primzahl</code></p>
+  </li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Über alternativen Text und lange Beschreibungen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="resizing_image_map_areas.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über alternativen Text und lange Beschreibungen</h1>
+
+<p>Ohne sinnvollen Text im Attribut <code>alt</code> eines Bildes ist es auf
+einigen Browsern schwer oder sogar unmöglich in einem Web-Dokument zu
+navigieren. Der Leser muss sich <q>blind durch die Gegend tasten</q>.</p>
+
+<p>Um diesem Problem vorzubeugen, muss man in Amaya immer alternativen Text
+für ein Bild oder andere Multimediaobjekte angeben. Der alternative Text wird
+dann gewöhnlich anstelle des Bildes von einem Browser mit einem
+Sprachausgabesystem oder einem Braillegerät ausgegeben um blinden Menschen zu
+helfen. Es ist außerdem üblich, bei Browsern, welche über eine langsame
+Leitung versorgt werden, Bilder zu unterdrücken, da dies die
+Darstellungsgeschwindigkeit erhöht.</p>
+
+<p>Der alternative Text sollte auch die Funktionalität eines Bildes
+widergeben. Hat man beispielsweise ein Icon, welches als Verweis dient, dann
+ist der Titel des Verweiszieles eine gute Alternative.</p>
+
+<p>Es gibt Fälle, wo Bilder nur zu visuellen Effekten angewendet werden und
+keinen Informationsgehalt für das Dokument haben. Hier ist als alternativer
+Text ein leerer Text angebracht, den man aber dennoch definieren muss,
+beispielsweise <code>alt=""</code>.</p>
+
+<p>Trägt das Bild wichtige Informationen, die nicht aus dem Text des
+Dokuments hervorgehen, dann muss man diese Information beschreiben. Mit Hilfe
+des Attributs <code>longdesc</code> kann man dem Bild eine Beschreibung
+zuordnen. Diese Beschreibung kann sich in einem anderen Dokument oder im
+selben Dokument befinden.</p>
+
+<p>Um zu sehen, wie eine Seite ohne Bilder präsentiert wird kann man
+<strong>Textbrowser</strong> im Menü <strong>Ansicht</strong> verwenden. Wird
+die Seite mit einem Sprachausgabesystem ausgegeben dann wird der alternative
+Text vorgelesen.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Mit Formaten und Formatvorlagen arbeiten</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../StyleSheets.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="creating_and_updating_a_style_attribute.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit Formaten und Formatvorlagen arbeiten</h1>
+
+<p>Mit Hilfe des Menüs <strong>Formate</strong> kann man das Erscheinungsbild
+eines Dokuments auf zwei Arten veränderen:</p>
+<ul>
+  <li>Durch die Verwendung von Formatvorlagen (Cascading Style Sheets
+  CSS)</li>
+  <li>Durch die Verwendung von Elementen und Attributen aus HTML</li>
+</ul>
+
+<p>Die mittleren Elemente des Menüs <strong>Formate</strong> finden bei den
+Formatvorlagen und die unteren beiden bei den Elementen Verwendung.</p>
+
+<p>Siehe hierzu:</p>
+<ul>
+  <li><a href="creating_and_updating_a_style_attribute.html#page_body"
+    rel="subdocument">Ein Formatattribut erzeugen und aktualisieren</a> <a
+    href="" rel="subdocument"></a></li>
+  <li><a
+    href="creating_generic_style_for_an_element_or_a_class.html#page_body"
+    rel="subdocument">Ein generisches Format für ein Element oder eine Klasse
+    erzeugen</a></li>
+  <li><a href="about_linking_external_and_user_style_sheets.html#page_body"
+    rel="subdocument">Über die Verknüpfung externer und benutzerdefinierter
+    Formatvorlagen</a></li>
+  <li><a href="handling_external_css.html#page_body"
+    rel="subdocument">Externe Formatvorlagen handhaben</a></li>
+  <li><a href="about_applying_style_using_html_elements.html#page_body"
+    rel="subdocument">Ein Format erzeugen</a></li>
+  <li><a href="creating_html_style_elements.html#page_body"
+    rel="subdocument">Formatelemente erzeugen</a></li>
+  <li><a href="removing_style.html#page_body" rel="subdocument">Formate
+    entfernen</a></li>
+</ul>
+</div>
+</body>
+</html>

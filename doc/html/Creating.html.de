@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Elemente editieren</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya-de.gif" /></p>
+      </td>
+      <td><a href="Document.html.de" accesskey="p"><img alt="vorherige Seite"
+        src="../images/left-de.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        href="Attributes.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Elemente editieren</h1>
+
+<p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
+<ul>
+  <li><a href="elements/buttons_and_types_menu.html#page_body"
+    rel="subdocument">Das Menü Elemente und die Knopfleiste</a></li>
+  <li><a href="elements/the_structure_menu.html#page_body"
+    rel="subdocument">Das Menü Struktur</a></li>
+  <li><a href="elements/the_enter_key.html#page_body" rel="subdocument">Die
+    Eingabetaste</a></li>
+  <li><a href="elements/exiting_anchors.html#page_body"
+    rel="subdocument">Einen Anker oder eine formatierte Zeichenkette
+    verlassen</a></li>
+  <li><a href="elements/creating_nested_structures.html#page_body"
+    rel="subdocument">Verschachtelte Strukturen erzeugen</a></li>
+  <li><a href="elements/changing_the_document_title.html#page_body"
+    rel="subdocument">Den Titel eines Dokuments ändern</a></li>
+</ul>
+</div>
+</body>
+</html>

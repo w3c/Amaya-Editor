@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Eine Ansicht öffnen</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="working_with_document_views.html.de" accesskey="p"><img
+        alt="nächste Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Views.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="closing_a_view.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Eine Ansicht öffnen</h1>
+
+<p>Amaya kann mehrere Ansichten eines Dokuments gleichzeitig darstellen. Jede
+Ansicht wird in einem separaten Fenter angezeigt. Damit ist man in der Lage
+klar zu erkennen, was passiert, wenn man komplexe Dokumente bearbeitet. Das
+ist auch hilfreich, wenn man sich in einem Dokument hin- und herbewegt.</p>
+
+<p class="ProcedureNote"><strong>Anmerkung:</strong> Die verschiedenen
+Ansichten können nur aus der Browseransicht heraus aktiviert werden.</p>
+
+<p class="ProcedureCaption">Um eine Ansicht zu öffnen:</p>
+<ul>
+  <li>im Menü <strong>Ansicht</strong> die gewünschte Ansicht auswählen.</li>
+  <li>oder das entsprechende Tastenkürzel benutzen, welche in der folgenden
+    Tabelle aufgelistet werden: 
+    <p></p>
+
+    <table border="0" cellspacing="0" cellpadding="0"
+    style="border-collapse:collapse;border:none; width: 5.15in">
+      <tbody>
+        <tr>
+          <td valign="top"
+          style="border-top:solid 1.5pt;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableTitle"><strong>Ansicht</strong></p>
+          </td>
+          <td valign="top"
+          style="border-top:solid 1.5pt;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:none;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableTitle"><strong>Tastenkürzel</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"
+          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText">Struktur</p>
+          </td>
+          <td valign="top"
+          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText"><code>Alt v Alt s</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"
+          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText">Textbrowser</p>
+          </td>
+          <td valign="top"
+          style="border:none;                 border-bottom:solid .5pt;                 padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText"><code>Alt v Alt i</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"
+          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText">Verweise</p>
+          </td>
+          <td valign="top"
+          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText"><code>Alt v Alt l</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"
+          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText">Inhaltsverzeichnis</p>
+          </td>
+          <td valign="top"
+          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText"><code>Alt v Alt c</code></p>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"
+          style="border-top:none;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText">Quelltext</p>
+          </td>
+          <td valign="top"
+          style="border:none;                  border-bottom:solid 1.5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
+            class="TableText"><code>Alt v Alt h</code></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>&nbsp;</p>
+    <p class="Note"><strong>Anmerkung:</strong>&nbsp;Diese Befehle können
+    auch dazu benutzt werden ein verstecktes Fenster einer Ansicht in den
+    Vordergrund zu bringen.</p>
+  </li>
+</ul>
+</div>
+</body>
+</html>

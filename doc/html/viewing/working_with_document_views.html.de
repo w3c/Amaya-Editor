@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Mit Ansichten arbeiten</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+</head>
+
+<body xml:lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Views.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="opening_a_view.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit Ansichten arbeiten</h1>
+
+<p>Amaya kann verschiedene Ansichten eines Dokuments gleichzeitig darstellen.
+Jede Ansicht wird in einem separaten Fenster angezeigt, sodass man gut
+erkennen kann was passiert, wenn man komplexe Dokumente editiert.</p>
+
+<p>Die verschiedenen Fenster können auch helfen sich schnell durch ein
+Dokument zu bewegen. Klickt man beispielsweise in der Ansicht
+<em>Inhaltsverzeichnis</em> auf eine Überschrift, dann wird in der
+<strong>Browseransicht</strong> der entsprechende Abschnitt angezeigt.</p>
+
+<p>Es stehen sechs Ansichten zur Verfügung:</p>
+
+<table border="0" cellspacing="8">
+  <tbody>
+    <tr>
+      <td valign="top"><img width="109" height="142"
+        src="../../images/formattedview-de.jpg" alt="Browseransicht" /></td>
+      <td valign="top"><p class="TableHead">Browser (Fehlwert)</p>
+
+        <p class="TableText">Diese Ansicht entspricht der anderer grafischer
+        Browser. Dies ist eine dynamische, direkt manipulierbare Ansicht.
+        Hier werden alle Änderungen direkt angezeigt, im Gegensatzt zu
+        Editoren, welche nur eine Serie von statischen Schnappschüssen des
+        Dokuments bereitstellen.</p>
+
+        <p></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText"><img width="108" height="98"
+        alt="Strukturansicht" src="../../images/structureview-de.jpg" /></p>
+      </td>
+      <td valign="top"><p class="TableHead">Struktur</p>
+
+        <p class="TableText">Diese Ansicht zeigt die Struktur des Dokuments.
+        Jedes Element wird durch seinen Tagnamen repräsentiert, dem in der
+        gleichen Zeile seine Attribute folgen. Elemente, welche in einem
+        Element enthalten sind werden unterhalb davon neben einer blauen,
+        vertikalen Linie dargestellt.</p>
+
+        <p class="TableText">Jeder in schwarz dargestellte Text kann direkt
+        editiet werden. Um blau dargestellten Text zu editieren muss man die
+        Editierbefehle benutzen.</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText"><img width="108" height="102"
+        alt="Textbrowseransicht" src="../../images/alternateview-de.jpg" /></p>
+      </td>
+      <td valign="top"><p class="TableHead">Textbrowser</p>
+
+        <p class="TableText">Diese Ansicht zeigt das Dokument so, wie es in
+        einem Browser dargestellt würde, der nicht grafikfähig ist. Das ist
+        hilfreich um die Benutzerfreundlichkeit des Dokuments zu
+        überprüfen.</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText"><img width="109" height="122"
+        alt="Verweisansicht" src="../../images/linksview-de.jpg" /></p>
+      </td>
+      <td valign="top"><p class="TableHead">Verweise</p>
+
+        <p class="TableText">Diese Ansicht zeigt eine Liste aller verwendeter
+        Verweise und das Element, in denen diese enthalten sind. Dies ist bei
+        der Bearbeitung von Verweisen hilfreich.</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText"><img width="111" height="168"
+        alt="Inhaltsverzeichnisansicht" src="../../images/tocview-de.jpg" /></p>
+      </td>
+      <td valign="top"><p class="TableHead">Inhaltsverzeichnis</p>
+
+        <p class="TableText">Diese Ansicht zeigt eine Liste aller
+        Überschriften des Dokuments. Ist das Dokument gut strukturiert, so
+        erhält mein damit einen Überblick über das Dokument.</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText"><img width="109" height="115"
+        alt="Quellcodeansicht" src="../../images/sourceview-de.jpg" /></p>
+      </td>
+      <td valign="top"><p class="TableHead">Quellcode</p>
+
+        <p class="TableText">Diese Ansicht zeigt den aktuellen Quellcode.
+        Hier kann man die Syntax des Dokuments editieren.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Man kann jede Ansicht zu jeder Zeit öffnen oder schließen. Schließt man
+aber die Browseransicht, dann werden alle anderen auch geschlossen.</p>
+</div>
+</body>
+</html>

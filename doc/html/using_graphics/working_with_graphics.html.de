@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Mit Grafiken arbeiten</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../SVG.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="creating_graphics_with_the_palette.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit Grafiken arbeiten</h1>
+
+<p>Mit Amaya kann man in ein Web-Dokument Vektorgrafiken einfügen, die der
+Spezifikation Scalable Vector Graphics (SVG) entsprechen.</p>
+
+<p>Amaya behandelt SVG-Elemente als strukturierte Komponenten, in der
+gleichen Weise wie HTML-Elemente. Daher kann man SVG-Grafiken in der gleichen
+Weise wie andere Teile des HTML-Dokuments manipulieren.</p>
+
+<p>Alle für Text zur Verfügung stehenden Editiermöglichkeiten können auch auf
+Grafiken angewendet werden. Amaya hat zusätzlich noch einige Befehle um
+SVG-Elemente zu bearbeiten.</p>
+
+<p>Weitere Informationen findet man unter:</p>
+<ul>
+  <li><a href="creating_graphics_with_the_palette.html">Grafiken mit der
+    Palette erzeugen</a></li>
+  <li><a href="moving_graphics.html">Grafiken verschieben</a></li>
+  <li><a href="resizing_graphics.html">Die Größe einer Grafik ändern</a></li>
+  <li><a href="painting_graphics.html">Grafiken einfärben</a></li>
+</ul>
+</div>
+</body>
+</html>

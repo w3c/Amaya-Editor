@@ -1,0 +1,115 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Über die Eingabe mathematischer Zeichen</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya-de.gif"></td>
+      <td><a href="the_math_palette_and_the_types.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif"></a> <a
+        href="../Math.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif"></a> <a
+        href="editing_math_expressions.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif"></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über die Eingabe mathematischer Zeichen</h1>
+
+<p>Wenn man in einem MathML-Element eine Zeichenkette eingibt, so wird diese
+von Amaya geparst und automatisch die Elemente <span class="code"><span
+style='font-size:11.0pt;font-family:"Courier New";'><strong>mo</strong></span></span>
+(operator), <span class="code"><span
+style='font-size:11.0pt;font-family:"Courier New";'><strong>mn</strong></span></span>
+(number), <span class="code"><span
+style='font-size:11.0pt;font-family:"Courier New";'><strong>mi</strong></span></span>
+(identifier) und <span class="code"><span
+style='font-size:11.0pt;font-family:"Courier New";'><strong>mtext</strong></span></span>
+(text) generiert.</p>
+
+<p>Man möchte beispielsweise die Formel <code>x=2a+b</code> eingeben:</p>
+<ol>
+  <li>Befindet man sich nicht innerhalb eines mathematischen Ausdrucks, so
+    muss man zunächst den Knopf Formel <img alt="Knopf Mathematik"
+    src="../../images/Math-de.gif"> in der Knopfleiste anklicken, und mit dem
+    Knopf Math ein neues MathML-Element erzeugen.</li>
+  <li>Danach die Sequenz dieser 6 Zeichen eintippen:
+  <strong>x=2a+b</strong></li>
+</ol>
+
+<p>In derStrukturansicht wird die folgende, von Amaya generierte Struktur
+angezeigt:</p>
+
+<p><code>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</code></p>
+
+<p>Entspricht dies nicht dem, was man erwartet, dann muss man die Zeichen,
+welche fehlinterpretiert wurden, markieren und deren Typ mit dem
+entsprechenden Befehl, wie etwa <strong>Text</strong> (<code>mtext</code>),
+<strong>Bezeichner</strong> (<code>mi</code>) oder <strong>Zahl</strong>
+(<code>mnmo</code>) im Untermenü <strong>Formel</strong> des Menüs
+<strong>Elemente</strong> ändern.</p>
+
+<h2>Zeichenabstand</h2>
+
+<p>Amaya kümmert sich um die Leerzeichen in mathematischen Ausdrücken. Es
+kann aber manchmal nötig sein zusätzliche Leerzeichen einzufügen. Hierzu den
+Cursor an die gewünschte Stelle positionieren und
+<strong>Leerzeichen</strong> im Untermenü <strong>Formel</strong> auswählen.
+Dies erzeugt ein fehlwertmäßiges horizontales Leerzeichen. Danach kann man
+dessen Attribut <strong>width</strong> änderen um die Größe des Leerzeichens
+anzupassen. Hier können auch andere Attribute (height, depth oder linebreak)
+geändert werden um den vertikalen Abstand anzupassen. Details findet man
+unter der<a href="http://www.w3.org/TR/MathML2/chapter3.html#N9197">
+MathML-Spezifikation</a> beim W3C.</p>
+
+<h2>Größe von Klammern</h2>
+
+<p>Gibt man, wie im folgenden Ausdruck:</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mrow>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
+
+<p>Klammern ein, dann führt das Tippen der Sequenz <code>f(x)=</code> zu:</p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo>(</mo>
+  <mi>x</mi>
+  <mo>)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
+
+<p>Hier muss man daher im Menü <strong>Elemente</strong>, Untermenü
+<strong>Formel</strong> das Element <strong>Klammern</strong> wählen um die
+Klammern in geeigneter Weise darzustellen.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Über benutzerfreundlichen Inhalt</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="about_amayas_accessibility_features.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../Access.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über benutzerfreundlichen Inhalt</h1>
+
+<p>Mit Amaya kann man benutzerfreundlichen Inhalt produzieren, welcher den
+Richtlinien des W3C entspricht. Einige <span class="Link0"><a
+href="about_amayas_accessibility_features.html">benutzerfreundliche
+Besonderheiten</a></span> sind bereits eingebaut. So kann man beispielsweise
+kein Bild ohne die Spezifikation eines alternativen Textes hinzufügen, weil
+das Attribut <code>alt</code> für Bilder und aktive Bildbereiche verlangt
+wird.</p>
+
+<p>Amaya ereugt automatisch dem W3C entsprechende Auszeichnung. Man
+kontrolliert jedoch andere Eigenschaften, wie sinnvolle lange Beschreibungen
+und Überschriften über das Menü <strong>Attribute</strong> (Browseransicht)
+oder <strong>Struktur</strong> (Strukturansicht).</p>
+
+<p>Zur Zeit beschreibt die Hilfe von Amaya wie man HTML-Elemente
+benutzerfreundlich verwendet. Weitere, noch zu schreibende Dokumentation,
+wird Information enthalten, wie man Benutzerfreundlichkeit für jegliche
+Seite, die man erzeugt erzielt.</p>
+
+<p>Die vollständigsten Anleitungen sind die des W3C über benutzerfreundlichen
+Inhalt. Die Initiative des W3C zur Benutzerfreundlichleit gibt die folgenden
+Ratschläge um benutzerfreundliche Web-Seiten zu erstellen:</p>
+<ul>
+  <li><strong>Bilder und Animationen</strong>. Man sollte das Attribut
+    <code>alt</code> benutzen, um die Funktion des Visuals zu beschreiben.
+    Weitere Informationen findet man unter: <span class="Link0"><a
+    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    arbeiten</a></span>.</li>
+  <li><strong>Aktive Bildbereiche</strong>. Man sollte diese auf der
+    Clientseite definieren und mit Text versehen. Weitere Informationen
+    findet man unter: <span class="Link0"><a
+    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    arbeiten</a></span>.</li>
+  <li><strong>Multimedia</strong>. Audio sollte man mit Überschrift und
+    Inhaltsangabe und Video mit einer Beschreibung versehen.</li>
+  <li><strong>Verweise</strong>. Man sollte Text verwenden, welcher einen
+    inhaltlichen Sinn ergibt. So sollte man beispielsweise "hier klicken" als
+    Text für Verweis vermeiden.</li>
+  <li><strong>Seitenorganisation</strong>. Man sollte Überschriften, Listen
+    und eine konsistente Struktur verwenden. Man sollte, wenn möglich,
+    Formatvorlagen für Layout und Stil heranziehen. Siehe <span
+    class="Link0"><a href="../style_sheets/working_with_styles.html">Mit
+    Formaten und Formatvorlagen arbeiten</a></span>.</li>
+  <li><strong>Grafen und Schaubilder</strong>. Man sollte die Daten
+    zusammenfassen oder <span class="Link0"><span
+    style="font-family: courier">longdesc</span></span> benutzen. Weitere
+    Informationen findet man bei: <span class="Link0"><a
+    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    arbeiten</a></span>.</li>
+  <li><strong>Skripte, Applets und Plug-ins</strong>. Man sollte alternativen
+    Inhalt zur Verfügung stellen, falls diese Dinge von einem Browser nicht
+    unterstützt werden oder nicht zugreifbar sind.</li>
+  <li><strong>Tabellen</strong>. Man sollte Tabellen verwenden um
+    zeilenweises Lesen sinnvoll zu gestalten und eine Zusammenfassung
+    beifügen. Weitere Informationen findet man bei: <span class="Link0"><a
+    href="../editing_tables/working_with_tables.html">Mit Tabellen
+    arbeiten</a></span>.</li>
+  <li><strong>Frames</strong>. Man sollte solche Seiten mit Hilfe von
+    <code>NOFRAMES</code> auch für Browser, die keine Frames unterstützen
+    auslegen. Hierbei sollte man bedeutungsvolle Titel benutzen.</li>
+  <li><strong>Seine Arbeit überprüfen</strong>. Man sollte seine Dokumente
+    validieren bevor man sie <span class="Link0"><a
+    href="../saving_and_publishing_documents/saving_and_publishing_documents.html">veröffentlicht</a></span>.
+    Man kann die Werkzeuge, Prüflisten und Richtlinien des W3C unter <span
+    class="Link0"><a
+    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a></span>
+    benutzen</li>
+</ul>
+</div>
+</body>
+</html>

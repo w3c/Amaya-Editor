@@ -1,0 +1,249 @@
+<?xml version="1.0"
+encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta
+  http-equiv="Content-Type" content="text/html; charset=iso-8859-1"
+  />
+<title>Über Tastenkürzel</title>
+<style
+  type="text/css">
+  </style>
+<meta name="GENERATOR"
+  content="amaya 6.1, see http://www.w3.org/Amaya/" />
+<link
+  href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body
+xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+<tbody>
+<tr>
+<td><img alt="W3C"
+        src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+<td><a
+        href="menu_preferences.html.de" accesskey="p"><img alt="vorherige Seite"
+        src="../../images/left-de.gif" /></a> <a href="../Configure.html"
+        accesskey="t"><img alt="erste Seite" src="../../images/up-de.gif"
+      /></a></td>
+</tr>
+</tbody>
+</table>
+
+<div
+id="page_body">
+<h1>Über Tastenkürzel</h1>
+
+<p>Es ist nützlich Menübefehle
+direkt über die Tastatur zu aktivieren. Das Thot Toolkit bewerkstelligt das
+durch die Verwendung einer Datei für Tastenkürzel. Diese Datei definiert eine
+Liste von Verbindungen zwischen einen auszuführenden Befehl und einer
+Tastensequenz.</p>
+
+<p>Die Syntax, um solch eine Verbindung zu definieren
+ist:</p>
+
+<p><code>Directive = KeySeq ':' IdentCommand ;<br
+/>
+&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
+&nbsp;KeySet = [ Modifier
+] [ 'Shift' ] Key ;<br />
+&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;'
+SpecialKey ;<br />
+&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br
+/>
+&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
+&nbsp;SpecialKey = 'Escape' /
+'Delete' / 'Space' / 'BackSpace' /<br
+/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br
+/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br
+/>
+&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br
+/>
+&nbsp;Char = KeyValue / OctalValue ;&nbsp; OctalValue = '\' NUMBER
+;</code></p>
+
+<p>Als Beispiel sehe man sich die Standarddateien
+amaya.keyboard (Unix) oder amaya.kb (Windows) an, die sich im Verzeichnis
+<span class="Link0">Amaya/config</span> befinden.</p>
+
+<p>Liste der
+verfügbaren Befehle:</p>
+<ul>
+<li>Cursorbewegung: 
+<ul>
+<li>zeichenweise:
+        <code>TtcNextChar</code>,<code>TtcPreviousChar</code></li>
+<li>zeilenweise:<code>TtcNextLine</code>,<code>TtcPreviousLine</code>,
+        <code>TtcStartOfLine</code>,
+        <code>TtcEndOfLine</code></li>
+<li>elementweise:
+        <code>TtcNextElement</code>,<code>TtcPreviousElement</code>,
+        <code>TtcChildElement</code>,
+        <code>TtcParentElement</code></li>
+<li>seitenweise blättern:
+        <code>TtcPageDown</code>,
+        <code>TtcPageUp</code>,<code>TtcPageTop</code>,<code>TtcPageEnd</code></li>
+<li>zeilenweise
+        blättern: <code>TtcLineUp</code>,
+    <code>TtcLineDown</code></li>
+</ul>
+</li>
+<li>Einem Verweis folgen
+    oder eine Formularelement aktivieren (Menü, Knopf, u.s.w.):
+    <code>DoAction</code>.</li>
+<li>Zum nächsten (oder ersten, falls eine
+    Markierung vorliegt) Verweis oder Formularelement im Dokument springen:
+    <code>NextLinkOrFormElement</code>.</li>
+<li>Zum vorhergehenden Verweis
+    oder Formularelement im Dokument springen:
+    <code>PreviousLinkOrFormElement</code>.</li>
+<li>Menü Datei:
+    <code>New</code>, <code>NewTemplate</code>, <code>NewCss</code>,
+    <code>OpenDoc</code>, <code>OpenDocInNewWindow</code>,
+    <code>Reload</code>, <code>GotoPreviousHTML</code>,
+    <code>GotoNextHTML</code>, <code>GoToHome</code>,
+    <code>SaveDocument</code>, <code>SaveDocumentAs</code>,
+    <code>Synchronize</code>, <code>SetupAndPrint</code>,
+    <code>PrintAs</code>, <code>CloseDocument</code>,
+  <code>AmayaClose</code></li>
+<li>Menü Bearbeiten: <code>TtcUndo</code>,
+    <code>TtcRedo</code>, <code>TtcCutSelection</code>,
+    <code>TtcCopySelection</code>, <code>TtcPaste</code>,
+    <code>TtcDeleteSelection</code>, <code>SetBrowserEditor</code>,
+    <code>TtcSearchText</code>, <code>SpellCheck</code>,
+    <code>TransformType</code>.</li>
+<li>Menü Struktur:
+    <code>CreateBase</code>, <code>CreateMeta</code>,
+    <code>CreateLinkInHead</code>, <code>CreateScript</code>,
+    <code>CreateStyle</code>, <code>CreateComment.</code></li>
+<li>Menü
+    Elemente: 
+<ul>
+<li>Hauptmenü: <code>ChangeTitle</code>,
+        <code>CreateAddress</code> <code>CreateParagraph</code>,
+        <code>CreateImage</code>, <code>CreateHorizontalRule</code>,
+        <code>CreateBlockQuote</code>, <code>CreatePreformatted</code>,
+        <code>CreateAddress</code>, <code>CreateDivision</code>,
+        <code>CreateNOSCRIPT</code>, <code>CreateObject</code>,
+        <code>CreateParameter</code>, <code>CreateIFrame</code>,
+        <code>CreateBreak("\212")</code></li>
+<li>Untermenü aktiver
+        Bildbereich: <code>CreateAreaRect</code>,
+        <code>CreateAreaCircle</code>,
+        <code>CreateAreaPoly</code></li>
+<li>Untermenü Formular:
+        <code>CreateForm</code>, <code>CreateFileInput</code>,
+        <code>CreateImageInput</code>, <code>CreatePasswordInput</code>,
+        <code>CreateHiddenInput</code>, <code>CreateLabel</code>,
+        <code>CreateFieldset</code>, <code>CreateOptGroup</code>,
+        <code>CreateToggle</code>, <code>CreateRadio</code>,
+        <code>CreateOption</code>, <code>CreateTextInput</code>,
+        <code>CreateTextArea</code>, <code>CreateSubmit</code>,
+        <code>CreateReset</code></li>
+<li>Untermenü Überschrift:
+        <code>CreateHeading1</code>, <code>CreateHeading2</code>,
+        <code>CreateHeading3</code>, <code>CreateHeading4</code>,
+        <code>CreateHeading5</code>,
+        <code>CreateHeading6</code></li>
+<li>Untermenü Liste:
+        <code>CreateList</code>, <code>CreateNumberedList</code>,
+        <code>ThotCreateMenu</code>, <code>ThotCreateDirectory</code>,
+        <code>CreateDefinitionList</code>, <code>CreateDefinitionTerm</code>,
+        <code>CreateDefinitionDef</code></li>
+<li>Untermenü Formel:
+        <code>CreateInlineMath</code>, <code>CreateMath</code>,
+        <code>CreateMROOT</code>, <code>CreateMSQRT</code>,
+        <code>CreateMFRAC</code>, <code>CreateMSUBSUP</code>,
+        <code>CreateMSUB</code>, <code>CreateMSUP</code>,
+        <code>CreateMUNDEROVER</code>, <code>CreateMUNDER</code>,
+        <code>CreateMOVER</code>, <code>CreateMROW</code>,
+        <code>CreateMMULTISCRIPTS</code>,
+        <code>CreateMTABLE</code></li>
+<li>Untermenü Objekt:
+        <code>CreateObject</code>,<code>CreateParameter</code></li>
+<li>Untermenü
+        Tabelle: <code>CreateTable</code>, <code>CreateCaption</code>,
+        <code>CreateTHead</code>, <code>CreateTBody</code>,
+        <code>CreateTFoot</code>, <code>CreateRow</code>,
+        <code>CreateDataCell</code>, <code>CreateHeadingCell</code>,
+        <code>DeleteColumn</code></li>
+</ul>
+</li>
+<li>Menü Verweise
+    <code>LinkToPreviousTarget</code>, <code>CreateOrChangeLink</code>,
+    <code>CreateTarget</code>, <code>DeleteAnchor</code>.</li>
+<li>Menü
+    Ansichten: <code>TtcSwitchButtonBar</code>,
+    <code>TtcSwitchCommands</code>, <code>ShowMapAreas</code>,
+    <code>ShowTargets</code>, <code>ZoomIn</code>, <code>ZoomOut</code>,
+    <code>ShowStructure</code>, <code>ShowAlternate</code>,
+    <code>ShowLinks</code>, <code>ShowToC</code>,
+  <code>ShowSource</code></li>
+<li>Menü Formate: 
+<ul>
+<li>Hauptmenü:
+        <code>TtcChangeCharacters</code>, <code>TtcChangeColors</code>,
+        <code>TtcChangeFormat</code>, <code>ChangeBackgroundImage</code>,
+        <code>CreateClass</code>,
+        <code>ApplyClass</code>.</li>
+<li>Untermenü Formatvorlagen:
+        <code>LinkCSS</code>, <code>OpenCSS</code>, <code>DisableCSS</code>,
+        <code>EnableCSS</code>, <code>RemoveCSS</code>.</li>
+<li>Untermenü
+        Inhaltsorientiert: <code>SetOnOffEmphasis</code>,
+        <code>SetOnOffStrong</code>, <code>SetOnOffCite</code>,
+        <code>SetOnOffDefinition</code>, <code>SetOnOffCode</code>,
+        <code>SetOnOffVariable</code>, <code>SetOnOffSample</code>,
+        <code>SetOnOffKeyboard</code>, <code>SetOnOffAbbr</code>,
+        <code>SetOnOffAcronym</code>, <code>SetOnOffINS</code>,
+        <code>SetOnOffDEL</code>.</li>
+<li>Untermenü Darstellungsorientiert:
+        <code>SetOnOffItalic</code>, <code>SetOnOffBold</code>,
+        <code>SetOnOffTeletype</code>, <code>SetOnOffBig</code>,
+        <code>SetOnOffSmall</code>, <code>SetOnOffSub</code>,
+        <code>SetOnOffSup</code>, <code>SetOnOffQuotation</code>,
+        <code>SetOnOffBDO</code>.</li>
+</ul>
+</li>
+<li>Menü Extras:
+    <code>MakeBook</code>, <code>MakeID</code>, <code>ShowLogFile</code>,
+    <code>ConfigGeneral</code>, <code>ConfigPublish</code>,
+    <code>ConfigCache</code>, <code>ConfigProxy</code>,
+    <code>ConfigColor</code>, <code>ConfigGeometry</code>,
+    <code>ConfigLanNeg</code>, <code>ConfigProfile</code>,
+    <code>ConfigTemplates</code>.</li>
+<li>Menü
+    Anmerkungen:<code>AnnotateSelection</code>,
+    <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
+    <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
+    <code>FilterAnnot</code>, <code>ConfigAnnot</code>.</li>
+<li>Menü Hilfe:
+    <code>HelpAmaya</code>, <code>HelpAtW3C</code>,
+    <code>HelpBrowsing</code>, <code>HelpSelecting</code>,
+    <code>HelpSearching</code>, <code>HelpViews</code>,
+    <code>HelpCreating</code>, <code>HelpLinks</code>,
+    <code>HelpChanging</code>, <code>HelpTables</code>,
+    <code>HelpMath</code>, <code>HelpSVG</code>, <code>HelpImageMaps</code>,
+    <code>HelpStyleSheets</code>, <code>HelpAttributes</code>,
+    <code>HelpPublishing</code>, <code>HelpPrinting</code>,
+    <code>HelpNumbering</code>, <code>HelpMakeBook</code>,
+    <code>HelpAnnotation</code>, <code>HelpConfigure</code>,
+    <code>HelpShortCuts</code>,
+<code>HelpAccess</code>.</li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Der Befehl Speichern unter</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="the_save_command.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Publishing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="saving_documents_as_text.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Der Befehl Speichern unter</h1>
+
+<p><strong>Speichern unter</strong> im Menü <strong>Datei</strong> öffnet
+einen Dialog, mit dem man das Dokument als HTML, XML oder Text lokal oder auf
+eine entfernte URI abspeichern kann. Weiterhin kann man wählen, ob
+eingelagerte Bilder im gleichen Verzeichnis oder an eine andere Stelle
+gespeichert werden sollen, wobei im letzteren Fall die URIs der Bilder im
+Dokument entsprechend transformiert werden.</p>
+
+<h2>Der Dialog Speichern unter</h2>
+
+<p>Die Felder dieses Dialogs werden folgendermaßen benutzt:</p>
+<ul>
+  <li><strong>Dokument</strong> gibt an, wohin das Dokument geschrieben
+    werden soll. Dies kann der Pfad zu einer lokalen Datei (wie etwa
+    <code>/pub/html/welcome.html</code>) oder eine entfernte URI (wie etwa
+    <code>http://www.w3.org/pub/WWW/Welcome.html</code>) sein. 
+    <p class="Note"><strong>Anmerkung:</strong> der <span xml:lang="de"
+    lang="de" style="font-weight:normal">URI</span> muss vollständig
+    angegeben werden und es muss sichergestellt sein, dass man auf dem Server
+    die Methode <code>PUT</code> verwenden darf. Unter <a
+    href="http://www.w3.org/Amaya/User/Put.html">http://www.w3.org/Amaya/User/Put.html</a>
+    wird erklärt, wie man einen Server dementsprechend konfiguriert.</p>
+  </li>
+  <li><strong>Format</strong> bietet die Auswahl zwischen
+    <strong>HTML</strong>, <strong>XML</strong> (XHTML) und
+    <strong>Text</strong>. Dieses Feld wird nicht beim Speichern eines SVG-
+    oder MathML-Dokuments, einer Formatvorlage oder irgendeines anderen
+    Dokumententyps angezeigt. Fehlwertmäßig behält Amaya das derzeitige
+    Dokumentenformat bei. Wählt man <strong>Text</strong>, so werden alle
+    HTML-Elemente durch Leerzeichen, Zeilenvorschub und dergleichen
+  ersetzt.</li>
+</ul>
+<ul>
+  <li><strong>Bilder kopieren</strong> gibt an, ob im Dokument eingelagerte
+    Bilder in das gleiche Verzeichnis wie das Dokument gespeichert werden
+    sollen. Im Allgemeinen ist es besser diese Option zu aktivieren, weil man
+    sonst nicht sicher sein kann, dass die Bilder gefunden werden, wenn das
+    Dokument später geladen wird. Das Deaktivieren dieser Option ist
+    nützlich, wenn man nur den Text des Dokuments geändert hat und dieses auf
+    den selben Server gespeichert wird. Werden die Bilder kopiert, so werden
+    alle <strong>src</strong>-Attribute von Amaya entsprechend transformiert.
+    Die neuen URIs sind relativ.</li>
+  <li><strong>URIs transformieren</strong> transformiert, wenn möglich, alle
+    URIs des Dokuments in relative URIs. Wird das Dokument im lokalen
+    Dateisystem gespeichert und zeigen URIs auf entfernte Dateien, dann
+    werden diese als absolut gespeichert. Dies garantiert, dass alle Verweise
+    im Dokument nach dem Kopieren gültig bleiben. Hat man jedoch mehrere
+    Dokumente über relative Verweise verknüpft und plant man diese Dokumente
+    auf einen anderen Server zu verschieben, dann muss diese Option
+    deaktiviert werden, damit die URIs nicht geändert werden.</li>
+  <li><strong>Bilder</strong> gibt an, wohin Bilder gespeichert werden sollen
+    (wenn man <strong>Bilder kopieren</strong> gewählt hat, Bilder also nicht
+    in das selbe Verzeichnis wie das Dokument gespeichert werden sollen).
+    Hier wird der Pfad zu einem Verzeichnis im lokalen Dateisystem oder der
+    URI zu einem entfernten Server eingegeben. 
+    <ul>
+      <li>Wird ein relativer Pfad angegeben, so werden die Bilder relativ zu
+        dem Verzeichnis des Dokuments gespeichert. Beispiel: enthält
+        <strong>Dokument</strong>
+        <code>http://www.w3.org/pub/WWW/Welcome.html</code> und enthält
+        <strong>Bilder</strong> <code>Images</code>, dann wird ein Bild mit
+        dem Attribut <code>src="W3C-de.png"</code> im Dokument auf den URI
+        <code>http://www.w3.org/pub/WWW/Images/W3C-de.png</code> gespeichert und
+        die HTML-Datei wird wiefolgt geändert: 
+        <p><code>&lt;img src="Images/W3C-de.png"&gt;</code></p>
+        <p>Entsprechendes gilt, wenn das Dokument auf das lokale Dateisystem
+        gespeichert wird.</p>
+      </li>
+      <li>Gibt man einen absoluten Pfad an, dann werden die Bilder,
+        unabhängig vom Pfad des Dokuments, an genau diese Stelle gespeichert.
+        Zum vorherigen Beispiel: ist Bilderlokation
+        <code>http://pub/WWW/Images</code>, dann wird das Bild auf
+        <code>http://www.w3.org/pub/WWW/Images/W3C-de.png</code> gespeichert und
+        die HTML-Datei folgendermaßen modifiziert: 
+        <p><code>&lt;img src="Images/W3C-de.png"&gt;</code></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Weiterhin gibt es noch folgende Knöpfe:</p>
+<ul>
+  <li><strong>OK</strong> startet den Transformationsprozess für das
+    Dokument. In folgenden beiden Fällen erscheint nocheinmal ein Dialog zur
+    Bestätigung: 
+    <ul>
+      <li>Das Dokument soll auf einen entfernten Server gespeichert werden.
+        Amaya zeigt den vollständigen URI zur Verifikation an.</li>
+      <li>Das Dokument soll lokal gespeichert werden und die Datei existiert
+        bereits.</li>
+    </ul>
+  </li>
+  <li><strong>Durchsuchen</strong> zeigt einen Dialog, mit dem man ein
+    lokales Verzeichnis auswählen kann: 
+    <ul>
+      <li>Das Feld <strong>Verzeichnis</strong> zeigt die Verzeichnisse im
+        derzeitigen Verzeichnis.</li>
+      <li>Das Feld <strong>Dateien</strong> zeigt die Dateien im derzeitigen
+        Verzeichnis.</li>
+    </ul>
+  </li>
+  <li><strong>Zurücksetzen</strong> löscht die Einträge in den Feldern
+    <strong>Dokument</strong> und <strong>Bilder</strong>.</li>
+  <li><strong>Ändern Zeichensatz</strong> öffnet ein Popup-Fenster, in dem
+    man den Zeichensatz des Dokuments wählen kann. Diese Option arbeitet nur
+    bei Dokumenten, welche einen Zeichensatz unterstützen, wie HTML- oder
+    XML-Dokumente und steht sowohl beim Seichern auf das lokale Dateisystem
+    als auch auf einen entfernten Server zur Verfügung.</li>
+  <li><strong>Ändern MIME Type</strong> öffnet ein Popup-Fenster, in dem man
+    den MIME-Type des Dokuments wählen kann. Wird der gewünschte MIME-Type
+    nicht gelistet, so kann man ihn selber eingeben.</li>
+  <li><strong>Abbrechen</strong> terminiert den Dialog.</li>
+</ul>
+
+<p class="Note"><strong>Hinweis</strong>: Speichert man auf einen entfernten
+Server, dann sollte man prüfen, ob <strong>HTTP Proxy</strong> (Menü
+<strong>Extras</strong>, Untermenü <strong>Einstellungen</strong>, Dialog
+<strong>Proxy</strong>) deaktiviert ist, oder aber, ob der Proxyserver oder
+der betreffende Server die Methode PUT unterstützen. Amaya verifiziert
+momentan nicht, ob die Datei auf dem Server bereits existiert.</p>
+</div>
+</body>
+</html>

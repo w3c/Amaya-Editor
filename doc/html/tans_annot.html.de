@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>No title</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+<p><a href="../../"><img src="../images/w3c_home" alt="W3C" /></a> <a
+href="../"><img src="../images/amaya-de.gif" alt="Amaya" /></a></p>
+
+<div id="page_body">
+<h1>Anmerkungen des Übersetzers</h1>
+
+<p>Die Dokumente in der Hilfe von Amaya wurden weitgehend "eins zu eins" aus
+dem Englischen übersetzt. In einigen Fällen habe ich kleinere Änderungen
+vorgenommen um die Dokumentation der Funktionalität der derzeitigen Version
+(6.1) anzupassen. Leider gibt es momentan keine Möglichkeit Amaya so zu
+konfigurieren, dass man die deutsche Hilfe bekommt. Das muss man selbst
+erledigen: im Verzeichnis <code>amaya</code> das Verzeichnis <code>doc</code>
+in <code>doc.en</code> und <code>doc.de</code> in <code>html</code>
+ändern.</p>
+
+<p>Weiterhin habe ich das Inhaltsverzeichnis des Handbuchs an den letzten
+Stand angepasst und so geändert, dass man die relevante Information sofort
+erhält.</p>
+
+<p>Die Oberfläche von Amaya, also die Beschriftung der Menüleiste, Menüs,
+Untermenüs, Dialoge und dergleichen, kann man an die deutsche Sprache
+anpassen. Hierzu muss man im Verzeichnis <code>config</code> die Dateien, die
+mit "en-" beginnen kopieren und dabei "en-" durch "de-" ersetzen und die
+entsprechen Texte darin ändern. Das ist zwar etwas mühsam, aber es ist
+machbar. Leider gibt es meherere Dialoge, wie z.B. <code>Id
+hinzufügen/entfernen</code> im Menü <code>Extras</code>, welcher nicht
+angepasst werden können, weil er fest in der Software verdrahtet ist. Man
+kann sich aber gerne beim <a
+href="http://www.w3.org/Amaya/Actors.html#contribute1">W3C</a> melden um bei
+der Weiterentwicklung dieser tollen Software mitzuhelfen.</p>
+
+<p>Grammatik- und Rechtschreibfehler bitte ich zu entschuldigen. Kritik,
+Anregungen, Verbesserungsvorschläge usw. bitte an</p>
+<address>
+  <a href="mailto://rudolf.troeller@dwd.de">rudolf.troeller@dwd.de</a>
+</address>
+</div>
+</body>
+</html>

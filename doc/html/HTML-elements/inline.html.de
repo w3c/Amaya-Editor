@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "../xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Über inhaltsorientierte Formate</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" width="100%" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya-de.gif" /></p>
+      </td>
+      <td><p align="right"><a href="../Manual.html"></a></p>
+
+        <p align="right"><a href="address.html"><img alt="vorherige Seite"
+        border="0" src="../../images/left-de.gif" /></a> <a
+        href="../Document.html"><img alt="erste Seite" border="0"
+        src="../../images/up-de.gif" /></a> <a href="40styling.html"><img
+        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Inline3">
+
+<div id="page_body">
+<h1>Über inhaltsorientierte Formate</h1>
+
+<p>Der Text innerhalb eines Absatzes oder Blockelementes kann über mehrere
+Wege aufbereitet werden, wie beispielsweise Betonung oder Hervorhebung. Die
+meisten dieser Elemente werden hier beschrieben. Verweise, welche ebenfalls
+eingelagerte Elemente sind, werden separat behandelt.</p>
+
+<div>
+<h2><a name="Inline21"></a><a name="Definition">Definitionen</a></h2>
+
+<p>Das Element <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>DFN</code></a> wird
+benutzt um eine in einem Text <dfn>eingelagerte Definition</dfn> zu markieren
+(ein Wort, welches als Definition dient).</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung von Definitionen zu ändern.</p>
+</div>
+
+<div>
+<h2><a name="Inline1">Zitate</a></h2>
+
+<p>Zitate, welche im Text eingelagert sind, können mittels "einer Anführung"
+oder mit dem HTML-Element <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>blockquote</code></a>
+markiert werden. Dieses Element kann man über das Menü
+<strong>Elemente</strong> mit dem Befehl <strong>Eingerücktes Zitat</strong>
+oder über das Tastenkürzel <kbd>Alt t, Alt q</kbd> erstellen. Mit Hilfe des
+Attributs <code>cite</code> kann man in dem Zitat auf die Quelle
+verweisen.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung von eingelagerten Zitaten zu ändern. Die HTML-Spezifikation
+statuiert, dass man eingelagerte Zitate in die landesüblichen
+Anführungszeichen einschließen sollte.</p>
+</div>
+
+<div>
+<h2><a name="Sample">Benutzereingaben, Computerausgaben und
+Programmcode</a></h2>
+
+<p>Es stehen Elemente zur Auszeichnung von Programmcode, wie
+<code>statement:do-something</code> mit separater Auszeichnung für
+<var>Variablen</var>, <kbd>Benutzereingaben</kbd> und
+<samp>Programmausgaben</samp> zur Verfügung: die Elemente <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-code"><code>code</code></a>, <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-var"><code>var</code></a>, <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-kbd"><code>kbd</code></a> und <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-samp"><code>samp</code></a>.
+Diese Elemente findet man im Untermenü <strong>Inhaltsorientiert</strong> des
+Menüs <strong>Formate</strong>. Die Tastenkürzel (unter Unix) sind: <kbd>Alt
+t Alt c</kbd> für <code>code</code>, <kbd>Alt t Alt v</kbd> für
+<code>var</code>, <kbd>Alt t Alt k</kbd> für <code>kbd</code> und <kbd>Alt t
+Alt s</kbd> für <code>samp</code>.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung dieser Elemente zu ändern.</p>
+</div>
+
+<div>
+<h2><a name="Inline">Akronyme und Abkürzungen</a></h2>
+
+<p>Akronyme und Abkürzungen sollten als solche mittels der Elemente <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>acronym</code></a>
+und <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>abbr</code></a>
+markiert werden, welche im Untermenü <strong>Inhaltsorientiert</strong> des
+Menüs <strong>Formate</strong> zu finden sind. Unter Unix stehen die
+Tastenkürzel <kbd>Alt t Alt z</kbd> für <code>acronym</code> und <kbd>Alt t
+Alt a</kbd> für <code>abbr</code> zur Verfügung.</p>
+
+<p>Das Attribut <code>title</code> kann zur Expandierung des Acronyms
+herangezogen werden: man möchte beispielsweise den Text <acronym
+title="World Wide Web Consortium">W3C</acronym>, als Akronym auszeichnen. Aus
+dem Untermenü <strong>Inhaltsorientiert</strong> des Menüs
+<strong>Formate</strong> den Befehl <strong>Akronym</strong> wählen, das
+ganze Element mittels der Taste <kbd>Esc</kbd> unter Unix oder <kbd>F2</kbd>
+unter Windows markieren, aus dem Menü <strong>Attribute</strong> das
+Attribut<strong>title</strong> wählen, den Text <kbd>World Wide Web
+Consortium</kbd> eingeben und den Knopf <strong>Übernehmen</strong>
+drücken.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung dieser Elemente zu ändern.</p>
+</div>
+
+<div>
+<h2><a name="Inline2">Eingefügter Text und entfernter Text</a></h2>
+
+<p>Die Elemente <a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
+name="DEL"><code>del</code></a> und <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>ins</code></a> stehen
+im Untermenü <strong>Inhaltsorientiert</strong> des Menüs
+<strong>Formate</strong> zur Verfügung, um Text auszuzeichnen, der entfernt
+wurde oder <del>entfernt werden sollte</del> und/oder <ins>durch neuen Text
+ersetzt wurde</ins> oder ersetzt werden sollte.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung dieser Elemente zu ändern.</p>
+</div>
+
+<div>
+<h2><a name="Emphasis">Betonung</a></h2>
+
+<p>HTML besitzt Elemente um zwei Arten der Betonung zu definieren:</p>
+<ol>
+  <li><em>normale Betonung</em> mit dem Element <a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">em</a> und</li>
+  <li><strong>starke Betonung (Hervorhebung)</strong> mit dem Element
+    <code><a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">strong</a></code></li>
+</ol>
+
+<p>Beide können über die Knöpfe <img src="../../images/Em-de.gif" alt="Emphasis"
+/> und <img src="../../images/Strong-de.gif" alt="Strong" /> der Knopfleiste
+oder das Untermenü <strong>Inhaltsorientiert</strong> des Menüs
+<strong>Formate</strong> angewendet werden. Außerdem stehen als Tastenkürzel
+<kbd>Umschalt Strg I</kbd> und <kbd>Umschalt Strg B</kbd> zur Verfügung.
+Besteht eine Markierung, dann wird die Betonung darauf angewendet.
+Anderenfalls wird das Element als Kind des bestehenden Elementes erzeugt.</p>
+
+<p>Die Elemente zur Betonung werden unter Amaya wie ein Umschalter behandelt.
+Plaziert man den Cursor beispielsweise innerhalb des Elements
+<strong>strong</strong>, markiert das Ganze mit <kbd>Esc</kbd> unter Unix
+oder <kbd>F2</kbd> unter Windows und klickt den Knopf <img
+src="../../images/Strong-de.gif" alt="Strong" />, dann wird das Element
+<strong>strong</strong> entfernt.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung dieser Elemente zu ändern.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

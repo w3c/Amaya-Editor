@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Skalierbare Vektorgrafiken</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
+        src="../images/amaya-de.gif" /></td>
+      <td><a href="Math.html.de" accesskey="p"><img alt="vorherige Seite"
+        src="../images/left-de.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        href="XML.html.de" accesskey="n"><img src="../images/right-de.gif"
+        /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Skalierbare Vektorgrafiken</h1>
+
+<p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
+<ul>
+  <li><a href="using_graphics/working_with_graphics.html#page_body"
+    rel="subdocument">Mit Grafiken arbeiten</a></li>
+  <li><a href="using_graphics/creating_graphics_with_the_palette.html#page_body"
+    rel="subdocument">Grafiken mit der Palette erzeugen</a></li>
+  <li><a href="using_graphics/moving_graphics.html#page_body"
+    rel="subdocument">Grafiken verschieben</a></li>
+  <li><a href="using_graphics/resizing_graphics.html#page_body" rel="subdocument">Die
+    Größe einer Grafik ändern</a></li>
+  <li><a href="using_graphics/painting_graphics.html#page_body"
+    rel="subdocument">Grafiken einfärben</a></li>
+</ul>
+</div>
+</body>
+</html>

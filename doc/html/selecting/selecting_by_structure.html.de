@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>In der Strukturansicht markieren</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="selecting_images.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Selecting.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>In der Strukturansicht markieren</h1>
+
+<p>In der Strukturansicht kann man bequem und schnell große Elemente oder
+Gruppen von Elementen markieren.</p>
+<ul>
+  <li>Um ein großes Element, wie beispielsweise eine komplexe Tabelle, zu
+    markieren klickt man entweder auf dessen blau dargestelltes Tag, auf den
+    Namen eines beliebigen Attributs von ihm oder auf die vertikale Linie,
+    welche mit ihm verbunden ist.</li>
+</ul>
+<ul>
+  <li>Um ein Zeichen oder eine Zeichenkette innerhalb eines Elements zu
+    markieren, klickt man auf das Zeichen oder zieht die Maus über die
+    Zeichenkette.</li>
+</ul>
+<ul>
+  <li>In der Strukturansicht werden Attribute, welche editiert werden können,
+    fett dargestellt. Diese werden markiert, indem man die Maus darüber
+  zieht.</li>
+</ul>
+
+<p class="ProcedureCaption">Strukturelemente mit der Tastatur markieren:</p>
+<ul>
+  <li>Ein Element wird mit der Taste <code>Esc</code> (Unix) oder
+    <code>F2</code> (Windows) markiert. Drückt man diese Taste mehrmals, dann
+    werden auch dessen übergeordneten Elemente (und deren Inhalt)
+  markiert.</li>
+  <li><code>Strg -</code> (Minus) markiert ein Kindelement.</li>
+  <li><code>Strg k</code> markiert das nächste Element auf der gleichen Ebene
+    oder das übergeordnete Element wenn es kein Element auf der gleichen
+    Ebene gibt.</li>
+  <li><code>Strg j</code> markiert das vorhergehende Element auf der gleichen
+    Ebene oder das übergeordnete Element wenn es kein Element auf der
+    gleichen Ebene gibt.</li>
+</ul>
+</div>
+</body>
+</html>

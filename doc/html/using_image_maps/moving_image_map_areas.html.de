@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Einen aktiven Bildbereich verschieben</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="using_clientside_image_maps.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="resizing_image_map_areas.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Einen aktiven Bildbereich verschieben</h1>
+
+<p class="ProcedureDescription">Nachdem man <a
+href="creating_clientside_image_maps.html">einen aktiven Bildbereich
+erzeugt</a> hat, kann man diesen innerhalb des Bildes verschieben.</p>
+
+<p class="ProcedureCaption">Um dies über die Tastatur zu tun:</p>
+<ol>
+  <li>Den Cursor in diesen Bereich plazieren.</li>
+  <li>Die Taste <code>Strg</code> und die linke Maustaste drücken. Damit wird
+    der Bereich markiert.</li>
+  <li>Die Taste <code>Strg</code> loslassen aber die Maustaste gedrückt
+    halten und den Bereich auf die gewünschte Stelle ziehen.</li>
+</ol>
+
+<p class="ProcedureCaption">Um dies in der Strukturansicht zu tun:</p>
+<ol>
+  <li>Den Cursor in einen aktiven Bereich plazieren.</li>
+  <li>Im Menü <strong>Ansicht</strong> den Befehl <strong>Struktur</strong>
+    wählen (Tastenkürzel <code>Alt v Alt s</code>) und dort das Attribut
+    <code>coords</code> editieren. Beispielsweise
+    <code>coords=28,5,55,33.</code></li>
+  <li>Der Bildbereich wird im Browserfenster entsprechend verschoben.</li>
+</ol>
+</div>
+</body>
+</html>

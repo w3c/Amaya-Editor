@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Die Datei HTML.trans benutzen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></p>
+      </td>
+      <td><a href="about_merging_elements.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Changing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Datei HTML.trans benutzen</h1>
+
+<p>Dieses Dokument ist eine Einführung zu dem von <strong>Amaya</strong>
+bereitgestellten Mechanismus der strukturierten Transformation. Es beschreibt
+die Syntax der Transformationssprache und wie Transformationen im Editor
+durchgeführt werden.</p>
+
+<p>Die Datei <code>amaya/HTML.trans</code> enthält die Beschreibung der
+verfügbaren Transformationen. Diese Datei kann während einer Sitzung in
+<strong>Amaya</strong> editiert werden. Sie wird dynamisch geparst wenn die
+Transformationsprozedur vom Editor aufgerufen wird, sodass neue
+Transformationen während einer Editiersitzung hinzugefügt werden können.</p>
+
+<p class="ProcedureNote"><strong>Warnung</strong>: da die Beschreibung der
+Transformationen Tags enthalten kann, sollte diese Datei
+<strong>nicht</strong> mit Amaya editiert werden. Man muss irgend einen
+anderen Editor benutzen.</p>
+
+<h2>Syntax der Amaya-Transformationssprache</h2>
+
+<p>Kommentare beginnen mit <code><strong>!</strong></code> und gehen bis zum
+Zeilenende.</p>
+
+<p>Die Datei enthält eine Liste von Transformationsbeschreibungen. Jede
+Transformation wird durch drei Teile beschrieben:</p>
+<ul>
+  <li>Ein <em>Name</em>, der mit einem Doppelpunkt abgeschlossen wird.</li>
+  <li>Ein <em>Muster</em>, das mit einem Semikolon abgeschlossen wird.</li>
+  <li>Eine Liste von <em>Regeln</em>, die in geschweifte Klammern
+    eingeschlossen wird. Jede Regel wird mit einem Semikolon terminiert.</li>
+</ul>
+
+<p>Der Name erscheint im Menü <strong>Transformation</strong> und
+identifiziert die Transformation.</p>
+
+<h3>Das Muster</h3>
+
+<p>Das Muster beschreibt die spezifische Organisation der Elemente, welche
+transformiert werden sollen. Es agiert als Filter über der DTD von HTML. Der
+Zweck des Musters ist eine spezielle Kombination von Elementen zu
+identifizieren auf die die Transformation angewendet werden kann. Mit einem
+Muster ist es möglich Bedingungen für die Sequenz von Tags, den Inhalt eines
+Tags oder die Existenz eines Wertes oder Attributs anzugeben.</p>
+
+<p>Formal enthält ein Muster einen HTML-Tag (möglicherweise mit Attributen)
+und Operatoren:</p>
+
+<p><strong><code>|</code></strong> Auswahl (oder)</p>
+
+<p><strong><code>,</code></strong> Geschwister</p>
+
+<p><strong><code>+</code></strong> Sequenz</p>
+
+<p><strong><code>?</code></strong> Option</p>
+
+<p><strong><code>( )</code></strong> Gruppierung von Knoten</p>
+
+<p>Die Klammern <code><strong>{</strong></code>
+<code><strong>}</strong></code> definieren den Inhalt eines Knotens.</p>
+
+<p>Das Symbol <strong><code>*</code></strong> ist ein Token, welches auf
+jedes Element zutrifft.</p>
+
+<p>Es ist möglich ein Tag umzunennen, indem man ihm einen Namen, gefolgt von
+einem Doppelpunkt (<strong><code>:</code></strong>). voranstellt</p>
+
+<p>Das Tag kann Attribute haben. Ist kein Wert angegeben, dann trifft ein
+Element zu, wenn es das entsprechende Attribut hat. Ist ein Wert für ein
+Attribut angegeben, dann trifft ein Element zu, wenn das entsprechende
+Attribut vorhanden ist und den entsprechenden Wert hat.</p>
+
+<p><a href="#L235">Beispiele</a> von Mustern findet man am Ende des
+Dokuments</p>
+
+<h3>Die Regeln</h3>
+
+<p>Eine Regel besagt, wie die, durch ein Muster identifizierten Elemente
+transformiert werden. Eine Regel besteht aus zwei Teilen, die durch das
+Symbol <strong><code>&gt;</code></strong> getrennt sind:</p>
+<ul>
+  <li>Ein durch ein Muster oder Namen definiertes Tag.</li>
+  <li>Eine Liste, welche die Tags enthält, die generiert werden sollen und
+    eine Stelle wo sie eingefügt werden sollen.</li>
+</ul>
+
+<p>Die Liste selbst besteht aus zwei, durch einen Doppelpunkt
+(<strong><code>:</code></strong>) getrennten Teilen:</p>
+<ul>
+  <li>Der Pfad (die Stelle, wo die neuen Tags eingefügt werden sollen).</li>
+  <li>Die Liste der Tags, welche generiert werden sollen.</li>
+</ul>
+
+<p>Der Pfad wird im äußersten linken Ast des Dokumentenbaums gesucht und zwar
+vom Elternelement des Elements welches dem obersten Symbol im Suchmuster
+entsprach.</p>
+
+<p>In der Tagliste wird der Punkt (<code><strong>.</strong></code>) benutzt
+um in der Baumstruktur hinabzuwandern</p>
+
+<p>Wenn das Spezialsymbol Stern (<code><strong>*</strong></code>) am Ende der
+zu generierenden Tagliste steht, so wird das ursprüngliche Tag nicht
+verändert, kann aber an eine andere Stelle verschoben werden.</p>
+
+<p>Taucht ein Tag oder ein Name im linken Teil der Regel mehrmals in einem
+Muster auf, dann transformiert die Regel alle die Elemente, welche im Muster
+vorkommen.</p>
+
+<h2>Der Transformationsprozess</h2>
+
+<p>Wählt der Benutzer den Befehl <strong>Transformiern</strong> aus dem Menü
+<strong>Bearbeiten</strong>, dann parst Amaya die Datei
+<code>HTML.trans</code>. Danach werden die markierten Elemente mit dem Muster
+jeder Transformation gesucht. Die Namen der gefundenen Transformationen
+werden dem Benutzer in einem Popup-Menü angezeigt.</p>
+
+<p>Treffen mehrere Transformationen mit gleichem Namen auf die markierten
+Elemente zu, dann wird die Transformation auf der obersten Ebene dem Benutzer
+angezeigt. Treffen mehrere Transformationen auf der gleichen Ebene zu, dann
+wird die erste in der Datei <code>HTML.trans</code> gefundene genommen. Daher
+sollte man spezifische Muster vor den allgemeinen anlegen.</p>
+
+<p>Nachdem eine Transformation vom Benutzer ausgewählt wurde, wird die
+Zielstruktur gemäß den Regeln erstellt, indem die markierten Elemente
+transformiert werden.</p>
+
+<p>Am Ende wird der Inhalt der zu transformierenden Elemente (Text, Bilder,
+aber auch strukturierte Elemente) in die transformierten Elemente
+verschoben.</p>
+
+<p>Der Transformationsprozess für HTML-Elemente ist vollständig in <a
+href="http://opera.inrialpes.fr/opera/papers9696.html"><em>Interactively
+Restructuring HTML Documents</em></a> beschrieben, ein Dokument, welches auf
+der <a href="http://www5conf.inria.fr/">fünften internationalen
+WWW-Konferenz</a> in Paris im Mai 96 von Cécile Roisin und Stéphane Bonhomme
+vorgestellt wurde.</p>
+
+<h2><a name="L235" id="L235">Beispiele:</a></h2>
+<ul>
+  <li>Das erste Beispiel vereinigt mehrere unsortierte Listen (ul). 
+    <p></p>
+    <pre>    Merge Lists: (ul{li+})+;
+    {
+    li &gt; ul:li;
+    }</pre>
+    <p>Das Muster trifft auf eine Sequenz von unsortierten Listen zu, welche
+    eine Sequenz von Listenelementen (li) enthalten.</p>
+    <p>Die Regel besagt, dass jedesmal, wenn ein Element beim Durchgang über
+    die passenden Elemente angetroffen wird, ein neues li-Tag innerhalb einer
+    ul erzeugt werden soll. Wird die Regel das erste Mal angewendet, dann ist
+    die resultierende Struktur noch leer. Es gibt noch kein ul-Element, in
+    das ein li-Element gelegt werden kann. Daher wird das ul-Element zuerst
+    erzeugt damit die Regel angewendet werden kann.</p>
+  </li>
+  <li>Das zweite Beispiel transformiert eine Definitionsliste in eine
+    Tabelle. 
+    <p></p>
+    <pre>    Table: dl{(dt|dd)+};
+    {
+    dt &gt; &lt;table border=1&gt;.tbody:tr.td;
+    dd &gt; &lt;table border=1&gt;.tbody.tr:td;
+    }</pre>
+    <p>Das Muster passt auf jedes Definitionslistenelement (dl).</p>
+    <p>Die Regel beschreibt, wie die Tabelle inkrementell erstellt werden
+    soll, wenn die Struktur der markierten Definitionsliste durchlaufen
+    wird:</p>
+    <ul>
+      <li>jedes dt involviert die Erzeugung einer neuen Tabellenzeile in
+        einem Tabellenkörper.</li>
+      <li>jedes dd involviert die Erzeugung einer neuen Tabellenzelle in der
+        vorher erzeugten Tabellenzeile</li>
+    </ul>
+  </li>
+  <li>Das dritte Beispiel entfernt ein Tabellenelement, lässt dessen Inhalt
+    aber unverändert. 
+    <p></p>
+    <pre>    Remove Table:
+    table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
+                             th{(?cell_content:*)+}
+                           )})+})+};
+    {
+    caption&gt;h3;
+    cell_content&gt;:*;
+    }</pre>
+    <p>Das Muster passt auf eine beliebige Tabelle und identifiziert den
+    Inhalt einer jeglichen Tabellenzelle (cell_content).</p>
+    <p>Die zweite Regel besagt, dass der Inhalt jeder Zelle an die Stelle in
+    der ursprünglichen Tabelle verschoben werden soll.</p>
+  </li>
+  <li>Die Datei <code>amaya/HTML.trans</code> enthält weitere Beispiele.</li>
+</ul>
+<hr />
+<address>
+  <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a> <br />
+  Date: 2002/03/28 15:00:17
+</address>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Anmerkungen navigieren</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a accesskey="p"
+        href="./loading_and_presenting_annotations.html"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a accesskey="n"
+        href="./moving_annotations.html"><img alt="next"
+        src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Anmerkungen navigieren</h1>
+
+<p>Anmerkungen können mit <strong>Verweise</strong> aus dem Menü <span
+class="Link"><strong>Ansicht</strong> navigiert werden</span>. Das Fenster
+<strong>Verweise</strong> wird angezeigt und stellt alle der Anmerkungen dar.
+Im Dokument- und Verweisfenster werden Anmerkungen mit dem Icon <img
+alt="Anmerkungs-Icon" src="../../images/annot-de.png" /> gekennzeichnet.</p>
+
+<h2>Anmerkungen im Fenster Verweise</h2>
+
+<p>Das Verweisfenster zeigt alle Anmerkungenan, unabhängig davon ob sie durch
+einen <strong>Filter</strong> im Menü <strong>Anmerkungen</strong>
+ausgeblendet wurden. Wie im Browserfenster markiert ein einfacher Klick die
+Anmerkung und ein Doppelklick stellt die Anmerkung dar. Dies ist ein Beispiel
+dafür, wie man von einem Verweis auf eine Anmerkung zu einer anderen
+navigiert, auch dann, wenn die Anmerkung wegen einer Behinderung des
+Benutzers oder wegen Charakteristika des verwendeten Gerätes nicht zu sehen
+ist.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Über das Konfigurationsverzeichnis und Dateikonventionen</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="configuring_amaya.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Configure.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="menu_preferences.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über das Konfigurationsverzeichnis und Dateikonventionen</h1>
+
+<p>Amaya benutzt eine Anzahl von Verzeichnissen, in denen Informationen über
+die Konfiguration gespeichert werden.</p>
+
+<h2>Das Verzeichnis config</h2>
+
+<p>Amaya speichert die meisten Fehlwerte und alle Dialogmeldungen in diesem
+Verzeichnis. Das Verzeichnis befindet sich unterhalb des Verzeichnisses, in
+dem Amaya installiert wurde. Der Fehlwert ist
+<code>Heimatverzeichnis/config</code>.</p>
+
+<h2>Das Heimatverzeichnis</h2>
+
+<p>Amaya speichert die Benutzereinstellungen und andere Konfigurationsdateien
+in diesem Verzeichnis. Die folgende Tabelle zeigt, wo dieses Verzeichnis
+unter den verschiedenen Plattformen zu finden ist:</p>
+
+<table border="1" cellspacing="0" cellpadding="0"
+style="border:solid;">
+  <tbody>
+    <tr>
+      <td valign="top"
+      style="width:.95in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-top:solid 1.5pt"><p
+        class="TableHead"><b>Plattform</b></p>
+      </td>
+      <td valign="top"
+      style="width:225.0pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-top:solid 1.5pt"><p
+        class="TableHead"><b>Heimatverzeichnis</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.95in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Unix</p>
+      </td>
+      <td valign="top"
+      style="width:225.0pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>$HOME/.amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.95in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows 95/98</p>
+      </td>
+      <td valign="top"
+      style="width:225.0pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code> oder
+        falls der Benutzer sich nicht angemeldet hat
+        <code>AMAYA-INSTALL-DIR\users\default</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.95in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows NT</p>
+      </td>
+      <td valign="top"
+      style="width:225.0pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>C:\winnt\profiles\username\Amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.95in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-bottom:solid 1.5pt"><p
+        class="TableText">Windows 2000</p>
+      </td>
+      <td valign="top"
+      style="width:225.0pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-bottom:solid 1.5pt"><p
+        class="TableText"><code>C:\Program Files\Amaya\config</code></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Dieses Verzeichnis wird bei einer Neuinstallation (neue Version) von Amaya
+nicht überschrieben und es kann folgende Dateien enthalten:</p>
+<ul>
+  <li><strong>thot.rc</strong>: enthält die benutzerdefinierten
+    Einstellungen. Wird mit den Dialogen aus dem Untermenü
+    <strong>Einstellungen</strong> des Menüs <strong>Extras</strong>
+  geändert.</li>
+  <li><strong>amaya.keyboard</strong> (Unix): definiert die Tastenkürzel.
+    Unter Windows befindet sich diese Datei in config und heißt
+    <strong>amaya.kb</strong> und steht im Verzeichnis config.</li>
+  <li><strong>amaya.css</strong>: enthält die benutzerdefinierte
+    Formatvorlage.</li>
+  <li><strong>dictionary.DCT</strong>: Amaya stellt eine multiliguale
+    Rechtschreibprüfung zur Verfügung. Fehlwertmäßig arbeitet die
+    Rechtschreibprüfung mit zwei Wörterbücher: Englisch und Französisch
+    (diese kann man vom W3C herunterladen). Möchte man ein neues Wort
+    eintragen, dann erzeugt oder ändert die Rechtschreibprüfung dieses
+    persönliche Wörterbuch.</li>
+</ul>
+
+<p class="Note"><strong>Anmerkung:</strong> Die Dateien
+<strong>amaya.keyboard</strong>, <strong>amaya.kb</strong> und
+<strong>amaya.css</strong> werden beim Start von Amaya geladen. Werden diese
+geändert, so muss Amaya beendet und neu gestartet werden, damit diese
+Änderungen wirksam werden.</p>
+
+<h2>Das Temporärverzeichnis</h2>
+
+<p>Amaya speichert in dieses Verzeichnis alle temporären Dateien, die es
+erzeugt. Die folgende Tabell zeigt, wo dieses Verzeichnis unter den
+verschiedenen Plattformen zu finden ist:</p>
+
+<table border="1" cellspacing="0" cellpadding="0"
+style="border:solid;">
+  <tbody>
+    <tr>
+      <td valign="top"
+      style="width:.63in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-top:solid 1.5pt"><p
+        class="TableHead"><b>Plattform</b></p>
+      </td>
+      <td valign="top"
+      style="width:192.95pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-top:solid 1.5pt"><p
+        class="TableHead"><b>Temporärverzeichnis</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.63in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Unix</p>
+      </td>
+      <td valign="top"
+      style="width:192.95pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>$HOME/.amaya</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="width:.63in;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-bottom:solid 1.5pt"><p
+        class="TableText">Windows</p>
+      </td>
+      <td valign="top"
+      style="width:192.95pt;border:solid .5pt;padding:0in 5.4pt 0in 5.4pt;border-bottom:solid 1.5pt"><p
+        class="TableText"><code>c:\temp\amaya</code> (default value)</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Amaya erzeugt in diesem Verzeichnis Dateien, wenn man entfernte Dokumente
+browst oder ein Dokument druckt. Der Cache wird ebenfalls hier abgelegt.
+Dieses Verzeichnis und das Vezeichnis des Cache können über die Dialoge
+<strong>Allgemein</strong> und <strong>Cache</strong> im Menü
+<strong>Extras</strong>, Untermenü <strong>Einstellungen</strong> geändert
+werden.</p>
+
+<p>Amaya versucht immer die erzeugten Dateien zu löschen. Bricht Amaya
+unsauber ab, dann werden diese jedoch nicht gelöscht. Das hat jedoch keine
+Auswirkung bei einem erneuten Start von Amaya.</p>
+</div>
+</body>
+</html>

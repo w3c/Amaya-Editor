@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Formate entfernen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="creating_html_style_elements.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../StyleSheets.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Formate entfernen</h1>
+
+<p>HTML stellt einige Formate zur Verfügung, die es erlauben Zeichenketten zu
+formatieren. Diese Formate können auch wieder von einer Zeichenkette entfernt
+werden.</p>
+
+<p class="ProcedureCaption">Um ein Format von einer Zeichenkette zu
+entfernen</p>
+<ol>
+  <li>Dieses im Dokument markieren.</li>
+  <li>Im Menü <strong>Formate</strong> das Untermenü
+    <strong>Inhaltsorientiert</strong> wählen.</li>
+  <li>Das zu entfernende Format auswählen. 
+    <p></p>
+  </li>
+</ol>
+
+<p class="ProcedureNote"><strong>Anmerkung:</strong> man kann Formate auch
+direkt über die Tastatur oder die entsprechenden Knöpfe der Knopfleiste
+löschen. Die Formate, deren Tastenkürzel und die entsprechenden Knöpfe werden
+in der folgenden Tabelle aufgelistet. Die Formate werden von allen Elementen
+im markierten Text entfernt-</p>
+</div>
+</body>
+</html>

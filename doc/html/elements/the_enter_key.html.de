@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Die Eingabetaste</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="the_structure_menu.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Creating.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="exiting_anchors.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Eingabetaste</h1>
+
+<p>Wenn man ein neues Dokument oder einen neuen Teil eines Dokuments
+schreibt, dann kann man Elemente sequentiell durch Drücken der
+<strong>Eingabetaste</strong> erzeugen. Das derzeitige Element wird beendet
+und hinter diesem direkt ein neues erzeugt.</p>
+
+<p>Am häufigsten ist das neue Element einfach ein Absatz. Man kann den Typ
+des neuen Elements ändern, indem man den gewünschten Typ aus dem Menü
+<strong>Elemente</strong> wählt oder den entsprechenden Knopf in der
+Knopfleiste anklickt.</p>
+
+<p>Befindet sich ein &lt;pre&gt;-formatiertes Element am Ende eines Dokuments
+und steht der Cursor am Ende dieses Elements, so bewirkt das Drücken der
+Eingabetaste, dass innerhalb des Elements eine neue Zeile eingefügt wird. Um
+hinter dem Element ein neues zu erzeugen, muss man das ganze
+&lt;pre&gt;-Element markieren und dann die Eingabetaste drücken.</p>
+
+<p>In der gleichen Weise kann man einen neuen Absatz hinter einer Tabelle
+erzeugen.</p>
+
+<p>Ist ein ganzes Element, wie etwa &lt;h2&gt; oder &lt;li&gt; markiert, dann
+bewirkt das Drücken der Eingabetaste, dass das gleiche Element dahinter
+erzeugt wird.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Ein Format erzeugen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="handling_external_css.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../StyleSheets.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="creating_html_style_elements.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Ein Format erzeugen</h1>
+
+<p>HTML stellt einige Elemente zur Verfügung, mit denen man Zeichenketten ein
+Format zuweisen kann. Zwei Untermenüs stehen dazu im Menü
+<strong>Formate</strong> zur Verfügung:</p>
+<ul>
+  <li>Inhaltsorientiert</li>
+  <li>Darstellungsorientiert</li>
+</ul>
+
+<p>Siehe hierzu:</p>
+<ul>
+  <li><a href="../HTML-elements/inline.html#page_body">Über
+    inhaltsorientierte Formate</a></li>
+  <li><a href="../HTML-elements/40styling.html#page_body">Über
+    darstellungsorientierte Formate</a></li>
+</ul>
+
+<p>Die folgende Tabelle zeigt die Formatelement der inhaltsorientierten
+Formate, deren Tastenkürzel und den entsprechenden Knopf in der
+Knopfleiste.</p>
+
+<table class="characters">
+  <tbody>
+    <tr>
+      <td valign="top"><p class="TableTitle"><strong>Menübefehl</strong></p>
+      </td>
+      <td valign="top"><p class="TableTitle"><strong>Tastenkürzel</strong></p>
+      </td>
+      <td valign="top"><p class="TableTitle"><strong>Knopf</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Betonung (em)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Umschalt Ctrl-I</code></p>
+      </td>
+      <td valign="top"><img src="../../images/Em-de.gif" alt="Emphasis button"
+      /></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Hervorhebung (strong)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Umschalt Ctrl-B</code></p>
+      </td>
+      <td valign="top"><img src="../../images/Strong-de.gif" alt="Strong button"
+        /></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Zitatquelle (cite)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code><code>Alt
+        w</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Definition (dfn)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        d</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Programmcode (code)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        c</code></p>
+      </td>
+      <td valign="top"><img src="../../images/code-de.gif" alt="Code button"
+      /></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Variable (var)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        v</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Beispiel (samp)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        s</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Tastatureingabe (kbd)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        k</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Abkürzung (abbr)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        a</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Akronym (acronym)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        z</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Eingefügter Text (ins)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        i</code></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Gelöschter Text (del)</p>
+      </td>
+      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
+        Delete</code></p>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Eine Dokumentensammlung erstellen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../MakeBook.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Eine Dokumentensammlung erstellen</h1>
+
+<p>Mit Amaya kann man Dokumentensammlungen handhaben. Solch eine Sammlung
+kann beispielsweise ein Satz technischer Dokumentation sein, die durch
+mehrere Web-Seiten repräsentiert wird. Eine dieser Seiten enthält den Titel
+des ganzen Dokumentensatzes (ein <code>&lt;h1&gt;</code>-Element), eine
+Einführung (einige andere Elemente) und eine Liste <code>&lt;ol&gt;</code>
+und/oder <code>&lt;ul&gt;</code> deren Einträge Verweise auf jedes Kapitel
+beinhalten. Kapitel sind separate Dokumente, die die gleiche Struktur haben
+können.</p>
+
+<p>Diese Organisation ist beim Browsen hilfreich hat aber mehrere Nachteile,
+wenn der Dokumentensatz gedruckt werden soll. Amaya stellt hierzu die
+Funktion <strong>Buch erstellen</strong> im Menü <strong>Extras</strong>
+bereit.</p>
+
+<p>Man benutzt Verweise um Kapitel oder Abschnitte eines Dokuments zu
+verknüpfen. Diese werden in den Attributen <code>rel="Kapitel"</code> oder
+<code>rel="Abschnitt"</code> mit den Verweiszielen, die sich auf ein Kapitel
+oder Abschnitt beziehen verknüpft.</p>
+
+<p>Jedes Kapitel oder jeder Abschnitt, auf die man sich bezieht, kann ein</p>
+<ul>
+  <li>externes Dokument oder eine</li>
+  <li>Abschnitt eines großen, externen Dokuments</li>
+</ul>
+sein. 
+
+<p>Um sich auf einen Abschnitt zu beziehen, setzt man gewöhnlich das Element
+<code>div</code> ein, der den Teil des Dokuments identifiziert, welchen man
+einfügen möchte und um dieses Zielelement zu verknüpfen.</p>
+
+<p>Aktiviert man dann die Funktion <strong>Buch erstellen</strong>, dann
+werden alle Blockelemente, die einen Verweis auf ein Kapitel oder einen
+Abschnitt haben durch die entsprechenden Dokumente (oder Teile davon)
+ersetzt. Amaya zeigt dann das so erstellte, gesammte Dokument an, welches aus
+der Zusammenstellung der einzelnen Dokumente besteht:</p>
+<ul>
+  <li>Bezieht sich der Verweis auf ein Dokument, dann fügt Amaya den
+    gesammten Inhalt von dessem <code>body</code>-Element ein.</li>
+  <li>Bezieht sich der Verweis auf ein Zielelement, dann fügt Amaya dieses
+    Element und dessen gesammten Inhalt ein.</li>
+  <li>Bezieht sich der Verweis auf einen Anker, dann fügt Amaya dessen
+    Inhalt, nicht aber den Anker selbst ein.</li>
+</ul>
+
+<p>Vor dem Einfügen wird von Amaya ein neues <code>div</code>-Element mit dem
+Attribut <code>id</code> erzeugt, um jedes eingefügte Teil klar unterscheiden
+zu können.</p>
+
+<p>Die eingefügten Teile können selbst Verweise, Anker und Ankerelemente
+enthalten. Amaya stellt, während der Zusammenstellung eines Buches sicher,
+dass jedes <code>name</code>- und <code>id</code>-Attribut in der
+Zusammenstellung unterscheidbar bleibt. Hierbei wird gegebenenfalls dessen
+Wert geändert und der entsprechende Verweis aktualisiert.</p>
+
+<p>Zur gleichen Zeit werden Verweise, welche sich auf ein externes Dokument
+oder einen Abschnitt davon beziehen so geändert, dass sie nun auf die
+eingefügte, mittels eines <code>div</code>-Elements eingeschlossene
+Textstelle verweisen. Dies stellt sicher, dass das zusammengestellte Dokument
+kohärent bleibt.</p>
+
+<p>Dieses große Dokument kann dann durchnumeriert und mit einem
+Inhaltsverzeichnis und einer Liste aller Verweise gedruckt werden.</p>
+</div>
+</body>
+</html>

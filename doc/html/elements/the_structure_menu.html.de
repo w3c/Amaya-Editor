@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Das Menü Struktur</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="buttons_and_types_menu.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Creating.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="the_enter_key.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Das Menü Struktur</h1>
+
+<p>Mit dem Menü <strong>Elemente</strong> ist man nur in der Lage Elemente
+innerhalb des Dokumentenkörpers einzufügen. Um Elemente im Element
+<code>&lt;HEAD</code>&gt; einzufügen (im Dokumentenkopf), muss man das Menü
+<strong>Struktur</strong> der Strukturansicht benutzen.</p>
+
+<p>Dieses Menü steht nur in der Strukturansicht zur Verfügung.</p>
+
+<p>Das Menü <strong>Struktur</strong> arbeitet genau so wie das Menü
+<strong>Elemente</strong> in der Browseransicht: den Cursor positionieren und
+ein Element auswählen.</p>
+
+<p>Über das Menü <strong>Struktur</strong> kann man auch
+<strong>Kommentar</strong> eingeben. Kommentare werden nur in der
+Strukturansicht angezeigt und können an jeder beliebigen Position im Dokument
+eigefügt werden.</p>
+
+<h2>Generierte Elemente</h2>
+
+<p>Einige HTML-Elemente sind aus verschiedenen anderen Elementen
+zusammengestellt. Beispielsweise besteht eine Tabelle aus einer Überschrift
+(<code>caption</code>), mehreren Zeilen (<code>tr</code>) und mehreren Zellen
+(<code>td</code> oder <code>th</code>) in jeder Zeile.</p>
+
+<p>Wenn Amaya diese Elemente generiert, dann erzeugt es auch dessen
+Komponenten. Eine Tabelle wird mit einem Überschriftselement und einer Zeile,
+welche eine einzige Zelle enthält, generiert. Der Cursor wird automatisch in
+die erste Komponente plaziert. Man kann dessen Inhalt sofort oder später
+eingeben. Man kann sich mit der Maus oder den Pfeiltasten zu einer anderen
+(leeren) Komponente bewegen.</p>
+</div>
+</body>
+</html>

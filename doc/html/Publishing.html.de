@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Speichern und veröffentlichen</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya-de.gif" /></p>
+      </td>
+      <td><a href="SpellChecking.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../images/left-de.gif" /></a> <a
+        href="Manual.html.de" accesskey="t"><img alt="erste Seite"
+        src="../images/up-de.gif" /></a> <a href="Printing.html"
+        accesskey="n"><img alt="nächste Seite" src="../images/right-de.gif"
+        /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Speichern und veröffentlichen</h1>
+
+<p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
+<ul>
+  <li><a
+    href="saving_and_publishing_documents/saving_and_publishing_documents.html#page_body"
+    rel="subdocument">Dokumente speichern und veröffentlichen</a></li>
+  <li><a href="saving_and_publishing_documents/about_saving_in_html.html#page_body"
+    rel="subdocument">Über das Speichern auf einem Server</a></li>
+  <li><a href="saving_and_publishing_documents/the_save_command.html#page_body"
+    rel="subdocument">Der Befehl Speichern</a></li>
+  <li><a href="saving_and_publishing_documents/the_saveas_command.html#page_body"
+    rel="subdocument">Der Befehl Speichern unter</a></li>
+  <li><a href="saving_and_publishing_documents/saving_documents_as_text.html#page_body"
+    rel="subdocument">Dokumente als Text speichern</a></li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Über Anmerkungen lokal speichern</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a accesskey="p" href="./about_reading_annotations.html"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a accesskey="n"
+        href="./about_storing_remote_annotations.html"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über Anmerkungen lokal speichern</h1>
+
+<p>Amaya kann Anmerkungen im lokalen Dateisystem (auch als lokale Anmerkung
+bezeichnet) oder entfernt auf einen Server, der über das Internet erreicht
+werden kann (auch als entfernte Anmerkung bezeichnet), speichern.</p>
+
+<p>Man braucht keinen Server um lokale Anmerkungen zu erzeugen. Anmerkungen
+werden unterhalb des Heimatverzeichnisses des Benutzers in einem speziellen
+Verzeichnis mit dem Namen <strong>amaya/annotations</strong> gespeichert, und
+können nur vom Benutzer selbst angezeigt werden. Dieses Verzeichnis enthält
+drei verschiedene Dateien:</p>
+<ul>
+  <li><strong>annot.index:</strong> assoziiert URIs mit den Dateien, welche
+    die Metadaten zu den Anmerkungen enthalten.</li>
+  <li><strong>index.</strong><em><span
+    style="color: #0000FF"><code>random</code></span></em><strong>:</strong>
+    enthält die Metadaten einer Anmerkung, welche einer gegebenen URI
+    zugeordnet ist. Die Metadaten werden mit RDF spezifiziert.<br />
+  </li>
+  <li><strong>annot</strong><em><span
+    style="color: #0000FF"><code>random</code></span></em><strong>.html:</strong>
+    enhält den Text der Anmerkung im XHTML-Format.</li>
+</ul>
+
+<p><em><span style="color: #0000FF"><code>random</code></span></em> ist eine
+von Amaya erzeugte zufällige Zeichenfolge.</p>
+
+<p>Eine lokale Anmerkung kann zu jeder Zeit in eine entfernte konvertiert
+werden, indem man <strong>Veröffentlichen</strong> im Menü
+<strong>Anmerkungen</strong> ausführt. Wurde dies erfolgreich bewerkstelligt,
+dann wird die lokale Anmerkung gelöscht, da sie auf einen Server verschoben
+wurde.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Aktive Bildbereiche</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya-de.gif" /></p>
+      </td>
+      <td><a href="Tables.html.de" accesskey="p"><img alt="vorherige Seite"
+        src="../images/left-de.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        href="Math.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Aktive Bildbereiche</h1>
+
+<p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
+<ul>
+  <li><a href="using_image_maps/working_with_image_maps.html#page_body"
+    rel="subducment">Mit aktiven Bildbereichen arbeiten</a></li>
+  <li><a href="using_image_maps/adding_an_image.html#page_body"
+    rel="subdocument">Ein Bild einfügen</a></li>
+  <li><a
+    href="using_image_maps/creating_clientside_image_maps.html#page_body"
+    rel="subdocument">Clientseitige aktive Bildbereiche erzeugen</a></li>
+  <li><a href="using_image_maps/using_clientside_image_maps.html#page_body"
+    rel="subdocument">Clientseitige aktive Bildbereiche benutzen</a></li>
+  <li><a href="using_image_maps/moving_image_map_areas.html#page_body"
+    rel="subdocument">Einen aktiven Bildbereich verschieben</a></li>
+  <li><a href="using_image_maps/resizing_image_map_areas.html#page_body"
+    rel="subdocument">Die Größe eines aktiven Bildbereichs ändern</a></li>
+  <li><a
+    href="using_image_maps/about_alternative_text_and_long_descriptions.html#page_body"
+    rel="subdocument">Über alternativen Text und lange Beschreibungen</a></li>
+</ul>
+</div>
+</body>
+</html>

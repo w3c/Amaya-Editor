@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Mit Attributen arbeiten</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Attributes.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="editing_attributes_through_the_attributes_menu.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit Attributen arbeiten</h1>
+
+<p>Attribute können in der Regel nur Elementen zugewiesen werden. Möchte man
+dennoch einer Zeichenkette ein Attribut zuweisen, dann verfährt man in der
+gleichen Weise wie bei den Elementen. Hierbei wird die Zeichenkette
+automatisch in das Element <strong>span</strong> eingeschlossen.</p>
+
+<p>Attribute kann man auf zwei Arten editieren:</p>
+<ul>
+  <li>über das Menü <span class="Link0"><strong>Attribute</strong></span></li>
+  <li>in der Strukturansicht.</li>
+</ul>
+
+<p>Zusätzlich kann man <span class="Link0">Attribute von einem Element auf
+ein anderes kopieren</span>.</p>
+
+<p>Im Menü <strong>Attribute</strong> werden immer nur die für ein Element
+verfügbaren Attribute angezeigt.</p>
+
+<p>Weitere Informationen findet man unter:</p>
+<ul>
+  <li><a href="editing_attributes_through_the_attributes_menu.html"
+    rel="subdocument">Attribute über das Menü editieren</a></li>
+  <li><a href="copying_attributes.html.de" rel="subdocument">Attribute
+    kopieren</a></li>
+  <li><a href="editing_attributes_in_the_structure_view.html"
+    rel="subdocument">Attribute in der Strukturansicht editieren</a></li>
+</ul>
+</div>
+</body>
+</html>

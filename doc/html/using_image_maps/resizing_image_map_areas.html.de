@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Die Größe eines aktiven Bildbereichs ändern</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="moving_image_map_areas.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="about_alternative_text_and_long_descriptions.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Größe eines aktiven Bildbereichs ändern</h1>
+
+<p>Nachdem man <a href="creating_clientside_image_maps.html">einen aktiven
+Bildbereich erzeugt</a> hat, kann es sein, dass man diesen vergrößern
+möchte.</p>
+
+<p class="ProcedureCaption">Um dies mit der Maus zu tun:</p>
+<ol>
+  <li>Den Cursor in einen aktiven Bereich plazieren.</li>
+  <li>Die Taste <code>Strg</code> und die rechte Maustaste drücken um den
+    Bereich zu markieren.</li>
+  <li>Die Taste <code>Strg</code> loslassen, die rechte Maustaste aber
+    gedrückt halten. Die Maus ziehen um den Bereich auf die gewünschte Größe
+    zu bringen.</li>
+</ol>
+
+<p class="ProcedureCaption">Um dies in der Strukturansicht zu tun:</p>
+<ol>
+  <li>den Cursor in einen aktiven Bereich plazieren.</li>
+  <li>Im Menü <strong>Ansicht</strong> den Befehl <strong>Struktur</strong>
+    wählen (Tastenkürzel <code>Alt v Alt s</code>) und dort das Attribut
+    <code>coords</code> editieren. Beispielsweise soll
+    <code>coords=25,29,16</code> zu <code>coords=25,28,24</code> werden.</li>
+  <li>Der Bildbereich wird im Browserfenster entsprechend angepasst.</li>
+</ol>
+</div>
+</body>
+</html>

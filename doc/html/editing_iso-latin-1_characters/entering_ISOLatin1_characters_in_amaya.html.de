@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Sonderzeichen eingeben</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../EditChar.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="about_optional_multikey_support.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="Section1">
+
+<div id="page_body">
+<h1>Sonderzeichen eingeben</h1>
+
+<p>Um Zeichen aus dem Zeichensatz ISO-Latin (iso-8859-1) einzugeben, welche nicht auf der
+Tastatur zu finden sind, benutzt Amaya das Standardverfahren des
+Betriebssystems. Eine optionale Unterstützung von Mehfachtasten für Motiv und
+Windows wird zusätzlich bereitgestellt.</p>
+
+<p>Amaya stellt einen Mechanismus zu Verfügung, mit dem man <a
+href="../ShortCuts.html">Tastenkürzel</a> einem Zeichen zuordnen kann,
+welches nicht auf der Tastatur zu finden ist. Einige dieser Tastenkürzel sind
+bereits vordefiniert:</p>
+<ul>
+  <li><kbd>Strg Leertaste</kbd> erzeugt ein "non breaking space"
+    (&amp;nbsp;). Dies wird als Einheit gespeichert.</li>
+  <li><kbd>Alt e</kbd> erzeugt ein &euro; (Euro).</li>
+  <li><kbd>Strg o, Strg e</kbd> erzeugt ein &oelig; (oelig).</li>
+  <li><kbd>Umschalt Strg o, Umschalt Strg e</kbd> erzeugt ein &OElig;
+  (OElig).</li>
+  <li><kbd>Strg &lt;</kbd> (oder <kbd>Umschalt Strg &lt;</kbd>) erzeugt ein «
+    (das hängt von der Tastatur ab).</li>
+  <li><kbd>Strg &gt;</kbd> (oder <kbd>Umschalt Strg &gt;</kbd>) erzeugt ein »
+    (das hängt von der Tastatur ab).</li>
+</ul>
+
+<p>Weitere Informationen erhält man in der Beschreibung der beiden Methoden
+zur Mehrfachtasteneingabe:</p>
+<ul>
+  <li><a
+    href="about_standard_multikey_support.html">Standardmehrfachtasten</a></li>
+  <li><a href="about_optional_multikey_support.html">optionale
+    Mehrfachtasten</a></li>
+</ul>
+
+<p>Um die gewünschte Methode auszuwählen, muss im Menü
+<strong>Extras</strong>, Untermenü <strong>Einstellungen</strong>, Dialog
+<strong>Allgemein</strong> die Option <strong>Optionale
+Mehrfachtasten</strong> <strong>verwenden</strong> bearbeitet werden. Wenn
+diese aktiviert ist, werden die optionalen Mehrfachtasten unterstützt,
+ansonsten die Standardmehrfachtasten.</p>
+</div>
+</div>
+</body>
+</html>

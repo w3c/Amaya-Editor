@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Über Zugriffstasten</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="reloading_a_page.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Browsing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="forms.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über Zugriffstasten</h1>
+
+<p>Mit Zugriffstasten bewegt man den Cursor in ein Feld eines Formulars, auf
+einen aktiven Bildbereich oder einen Verweis. Dieser Zugriff kann für
+Menschen mit motorischen Behinderungen entscheident sein. Es gibt aber noch
+andere Bedingungen, wo dies nötig oder hilfreich sein kann.</p>
+
+<p>Wenn man ein Web-Dokument entwickelt, dann kann man das Attribut
+<code>accesskey</code> bestimmten Elementen zuweisen.</p>
+
+<p>Beispiel: weist man das Attribut <code>accesskey</code> einem Verweis
+mittels <code>accesskey="n"</code> oder <code>accesskey="N"</code> zu, dann
+wird das Tastenkürzel <kbd>Alt accesskey</kbd> (<kbd>Alt n</kbd> oder
+<kbd>Alt N</kbd>) diesen Verweis aktivieren. Weist man das Attribut
+<code>accesskey</code> einem Formularelement zu, dann wird durch Drücken von
+<kbd>Alt accesskey</kbd> diesem Element (oder dem Element, welches auf das
+<code>label</code>- oder <code>legend</code>-Element folgt) der Fokus
+zugewiesen.</p>
+
+<p>Zugriffstasten überschreiben die Tastenkürzel von Amaya. Beispiel: die
+Hilfeseiten von Amaya deklarieren folgende Zufriffstasten:</p>
+<ul>
+  <li><strong>n</strong>: nächstes Dokument</li>
+  <li><strong>p</strong>: vorheriges Dokument</li>
+  <li><strong>t</strong>: Inhaltsverzeichnis</li>
+</ul>
+
+<p>Hat man das Tastenkürzel <kbd>Alt p</kbd> einem Befehl von Amaya
+zugewiesen, dann steht dieses Kürzel, wenn Hilfeseiten von Amaya angezeigt
+werden nicht zur Verfügung.</p>
+
+<p>Fehlwertmäßig benutzt Amaya die Taste <kbd>Alt</kbd> als Modifikator für
+Zugriffstasten. Das kann man jedoch über das Menü <strong>Extras</strong>
+Untermenü <strong>Einstellungen</strong>, Dialog <strong>Allgemein</strong>
+ändern. Man kann dort die Taste <kbd>Strg</kbd> als Modifikator wählen oder
+Zugriffstasten überhaupt deaktivieren.</p>
+</div>
+</body>
+</html>

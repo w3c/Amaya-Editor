@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Einen Verweis ändern</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="removing_a_link_or_a_target_anchor.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../Links.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Einen Verweis ändern</h1>
+
+<p>Diese Prozedur wird verwendet um das Ziel eines Verweises, nicht aber
+dessen Anker zu ändern.</p>
+
+<p class="ProcedureCaption">Um dies zu tun:</p>
+<ol>
+  <li>Den Cursor innerhalb des Ankers plazieren und den Knopf
+    <strong>Verweis</strong> <img src="../../images/Link-de.gif"
+    alt="Knopg Verweis" /> in der Knopfleiste anklicken oder im Menü
+    <strong>Verweis</strong> den Befehl <strong>Verweis
+    erzeugen/ändern</strong> wählen oder das Tastenkürzel <kbd>Umsdhalt Strg
+    L</kbd> verwenden. Der Cursor nimmt die Gestalt einer Hand an.</li>
+  <li>&nbsp; 
+    <ul>
+      <li>Befindet sich das Zieldokument in einem anderen Amayafenster, dann
+        auf dieses Fenster klicken.</li>
+      <li>Ist dies nicht der Fall, irgend eine Taste drücken oder in das
+        Fenster klicken. Es wird ein Dialog geöffnet. Hier den URI des
+        Zieldokuments eingeben oder <strong>Durchsuchen</strong> anklicken um
+        das Dokument zu suchen. Dann den Knopf <strong>Übernehmen</strong>
+        anklicken.</li>
+    </ul>
+    <p class="ProcedureNote"><strong>Anmerkung:</strong> Man kann das
+    Attribut <code>href</code> eines Ankers auch manuell in der
+    Strukturansicht editieren oder in der Verweisansicht ändern, indem man
+    dort im Menü <strong>Attribute</strong> den Befehl <strong>href</strong>
+    auswählt.</p>
+  </li>
+</ol>
+</div>
+</body>
+</html>

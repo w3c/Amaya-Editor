@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Die Struktur eines Dokuments ändern</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Changing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="the_transform_command.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Struktur eines Dokuments ändern</h1>
+
+<p>Einfache Strukturänderungen können über das Menü <strong>Elemente</strong>
+durchgeführt werden. Komplexere Transformationen müssen mit anderen Mittel
+erreicht werden.</p>
+
+<p>Weitere Informationen findet man unter:</p>
+<ul>
+  <li><a href="../elements/the_structure_menu.html">Das Menü Struktur</a></li>
+  <li><a href="the_transform_command.html#page_body" rel="subdocument">Ein
+    Dokument transformieren</a></li>
+  <li><a href="about_inserting_a_division.html#page_body"
+    rel="subdocument">Über das Einfügen eines Abschnitts</a></li>
+  <li><a href="about_merging_elements.html#page_body" rel="subdocument">Über
+    das Verschachteln von Elementen</a></li>
+  <li><a href="Transform.html#page_body" rel="subdocument">Die Datei
+    HTML.trans benutzen</a></li>
+</ul>
+
+<p><a></a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Der Befehl Drucken</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="windows_platforms.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Printing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="about_controlling_printing_with_css.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Der Befehl Drucken</h1>
+
+<p>Dieser Befehl druckt das derzeitige Dokument unter Verwendung der
+fehlwertmäßigen Druckeinstellungen oder der Druckeinstellungen, die man mit
+<strong>Druckoptionen</strong> im Menü <strong>Datei</strong> festgelegt
+hat.</p>
+
+<p>Auf Windowsplattformen wird, wenn man diesen Befehl das erste Mal aufruft,
+der Dialog zur Festlegung des Standarddruckers angezeigt, um zu verifizieren,
+dass der Standarddrucker der richtige ist.</p>
+</div>
+</body>
+</html>

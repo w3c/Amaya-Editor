@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Ein Ankerelement erzeugen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="creating_a_target_anchor.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Links.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="removing_a_link_or_a_target_anchor.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Ein Ankerelement erzeugen</h1>
+
+<p>In HTML 4.0 kann ein Element, welches das Attribut <code>id</code> hat als
+Ziel eines Verweises dienen. Bevor man einen Verweis auf ein Element erzeugt,
+muss man dieses zuerst als Anker deklarieren.</p>
+
+<p class="ProcedureCaption">Um einen Ankerelement zu erzeugen:</p>
+<ol>
+  <li>Eine Zeichenkette innerhalb des Elements markieren oder den Cursor dort
+    plazieren und die Taste <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd>
+    (Windows) drücken um das ganze Element zu markieren.</li>
+  <li>Das Menü <strong>Verweis</strong> öffnen und <strong>Anker
+    erzeugen</strong> wählen. Das gewählte Element besitzt nun das Attribut
+    <em>id</em> und identifiziert es damit als Anker. Amaya generiert
+    automatisch einen Wert für dieses Attribut, welcher nur einmal im
+    Dokument vorkommt. Ist die Option <strong>Anker anzeigen</strong> im Menü
+    <strong>Ansicht</strong> aktiviert, dann wird der Anker mit einem Icon
+    markiert. In der Verweisansicht werden Verweiseziele immer mit diesem
+    Icon dargestellt. 
+    <p class="ProcedureNote"><strong>Anmerkung:</strong> Man kann Anker auch
+    direkt über das Menü <strong>Attribute</strong>, Befehl
+    <strong>id</strong> eingeben. Der Wert des Attributs wird von Amaya auf
+    Doppeldeutigkeit geprüft und gegebenenfalls abgeändert, falls er in einem
+    anderen Attribut (name oder id) vorkommt. Eine anderer Weg, diese
+    Attribute zu erzeugen ist über das Menü <strong>Extras</strong>, Befehl
+    <strong>Id hinzufügen/entfernen</strong> Hierbei erzeugt Amaya für alle
+    Elemente, innerhalb eines Dokuments oder innerhalb einer Markierung,
+    deren Attribut <strong>name</strong> einem bestimmten Wert entspricht,
+    das Attribut <strong>id</strong>. Einfach den Namen eingeben und den
+    Knopf <strong>Id erzeugen</strong> anklicken.</p>
+  </li>
+</ol>
+</div>
+</body>
+</html>

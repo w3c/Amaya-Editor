@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <title>Die Strukturansicht in MathML</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya-de.gif"></td>
+      <td><a href="editing_math_expressions.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif"></a> <a
+        href="../Math.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif"></a> <a href="about_linking_in_mathml.html"
+        accesskey="n"><img alt="nächste Seite"
+        src="../../images/right-de.gif"></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Die Strukturansicht in MathML</h1>
+
+<p>Die Struktur von MathML kann mit <strong>Struktur</strong> im Menü
+<strong>Ansicht</strong> angezeigt werden. Hier wird das Strukturfenster
+geöffnet, welches die Hauptstruktur des HTML-Dokuments offenlegt und dessen
+mathematischen Elemente und deren Inhalt widergibt.</p>
+
+<p>Mathematische Ausdrücke können in der normalen Ansicht oder in der
+Strukturansicht editiert werden.</p>
+
+<h2>Beispiel für eine Strukturansicht</h2>
+
+<p>Die Strukturansicht ist in besonderer Weise hilfreich, um Zweideutigkeiten
+zu vermeiden. Plaziert man in der unten gezeigten Gleichung den Cursor hinter
+den Buchstaben "b", dann ist nicht klar ob man etwas unter der Wurzel oder
+dahinter einfügen möchte.</p>
+
+<p>x = <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mroot>
+    <mrow>
+      <mi>a</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+    </mrow>
+    <none/>
+  </mroot>
+</math>+1</p>
+
+<p>Eine Markierung (oder Überprüfung) in der Strukturansicht vermeidet diese
+Fehlmarkierung. Man sollte auch die Statuszeile des Hauptfensters
+beachten.</p>
+</div>
+</body>
+</html>

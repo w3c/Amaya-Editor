@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Verweise</title>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya-de.gif" /></p>
+      </td>
+      <td><a href="Changing.html.de" accesskey="p"><img alt="vorherige Seite"
+        src="../images/left-de.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        href="Tables.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../images/right-de.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Verweise</h1>
+
+<p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
+<ul>
+  <li><a href="linking/creating_an_external_link.html#page_body"
+    rel="subdocument">Einen externen Verweis erzeugen</a></li>
+  <li><a href="linking/creating_an_internal_link.html#page_body"
+    rel="subdocument">Einen internen Verweis erzeugen</a></li>
+  <li><a href="linking/creating_a_target_anchor.html#page_body" rel="subdocument">Einen
+    Anker erzeugen</a></li>
+  <li><a href="linking/creating_a_target_element.html#page_body" rel="subdocument">Ein
+    Ankerelement erzeugen</a></li>
+  <li><a href="linking/removing_a_link_or_a_target_anchor.html#page_body"
+    rel="subdocument">Einen Verweis oder Anker entfernen</a></li>
+  <li><a href="linking/changing_a_link.html#page_body" rel="subdocument">Einen Verweis
+    ändern</a></li>
+</ul>
+</div>
+</body>
+</html>

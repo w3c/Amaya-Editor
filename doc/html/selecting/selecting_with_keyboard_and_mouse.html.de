@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Mit Maus und Tastatur markieren</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Selecting.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="selecting_images.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit Maus und Tastatur markieren</h1>
+
+<p>In Amaya arbeiten viele Befehle auf der derzeitigen Markierung. Eine
+Markierung kann man mit der Maus oder mit der Tastatur setzen.</p>
+
+<p>Unabhängig davon, wie man eine Markierung macht, zeigt Amaya in der
+Statuszeile das erste markierte Element gefolgt von den Elementen, in die es
+eingeschlossen ist, an. Das kann bei komplexen Dokumentstrukturen hilfreich
+sein.</p>
+
+<p>Die markierte Stelle im Dokument wird farblich hervorgehoben. Die
+Markierungsfarbe kann man im Menü <strong>Extras</strong>, Untermenü
+<strong>Einstellungen</strong>, Dialog <strong>Farben</strong> festlegen. </p>
+
+<h2>Mit der Maus markieren</h2>
+<ul>
+  <li>Der Cursor wird mit der linken Maustaste positioniert.<br />
+  </li>
+  <li>Ein Bereich wird durch Ziehen bei gedrückter linker Maustaste
+    markiert.<br />
+  </li>
+  <li>Ein Wort wird durch Doppelklick markiert.<br />
+  </li>
+  <li>Ein Element wird durch Doppelklick markiert.<br />
+  </li>
+  <li>Eine Markierung wird durch Ziehen mit gedrücker linker Maustaste und
+    gedrückter <code>Umschalttaste</code> erweitert.</li>
+</ul>
+
+<h2>Mit der Tastatur positionieren und markieren</h2>
+<ul>
+  <li>Der Cursor wird mit den vier Pfeiltasten bewegt. Gibt es im
+    Dokumentenfenster noch keine sichtbare Markierung (nach dem Laden), dann
+    erzeugt Amaya dadurch eine Markierung in der linken oberen Ecke des
+    Fensters.<br />
+  </li>
+  <li>Die Taste <code>Pos1</code> setzt den Cursor an den Zeilenanfang.<br />
+  </li>
+  <li>Die Taste <code>Ende</code> setzt den Cursor an das Zeilenende.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Pfeil links</code> bewegt den Cursor
+    an den Wortanfang.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Pfeil rechts</code> bewegt den Cursor
+    an den Anfang des nächsten Wortes.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Pfeil hoch</code> bewegt das Dokument
+    eine Zeile nach oben.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Pfeil runter</code> bewegt das
+    Dokument eine Zeile nach unten.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Pos1</code> bewegt das Dokument an
+    seinen Anfang.<br />
+  </li>
+  <li>Die Tastenkombination <code>Strg Ende</code> bewegt das Dokument an
+    sein Ende.</li>
+  <li>Eine Markierung wird durch Drücken einer Pfeiltaste, bei gedrückter
+    <code>Umschalttaste</code> in die gewünschte Richtung erzeugt oder
+    erweitert.<br />
+  </li>
+  <li>Die Tastenkombination <code>Alt Eingabe</code> markiert ein Wort.
+    Befindet sich das Wort in einem aktiven Verweis, so wird dieser damit
+    aktiviert.<br />
+  </li>
+  <li>Die Tastenkombination <code>Umschalt Strg Pfeil links</code> markiert
+    vom Cursor bis zum Wortanfang.<br />
+  </li>
+  <li>Die Tastenkombination <code>Umschalt Strg Pfeil rechts</code> markiert
+    vom Cursor bis zum Ende des nächsten Wortes.<br />
+  </li>
+</ul>
+
+<p class="ProcedureNote"><strong>Hinweis</strong>: man kann Elemente auch
+über die Strukturansicht markieren.</p>
+</div>
+</body>
+</html>

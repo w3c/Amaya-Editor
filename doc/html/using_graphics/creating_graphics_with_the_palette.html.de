@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Grafiken mit der Palette erzeugen</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="working_with_graphics.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../SVG.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="moving_graphics.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Grafiken mit der Palette erzeugen</h1>
+
+<p>Um ein neues SVG-Element zu erzeugen, den Cursor an die Stelle plazieren,
+wo die Grafik eingefügt werden soll und den Knopf <strong>Grafik</strong>
+<img src="../../images/Graph-de.gif" alt="Knopf Grafik" /> anklicken. Es wird
+eine Palette von grafischen Elementen angezeigt, welche solange geöffnet
+bleibt, bis man den Knopf <strong>Beenden</strong> anklickt.</p>
+
+<p>Folgende grafischen Elemente stehen zur Verfügung:</p>
+<ul>
+  <li><code>Linie</code> (line) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
+            stroke="#B20000"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>Rechteck</code> (rect) ohne die Attribute <code>rx</code> oder
+    <code>ry</code> 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <rect x="6px" width="22px" height="18px"
+            style="fill: #FFCB69; stroke: #0071FF" stroke="#0071ff"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>gerundetes Rechteck</code> (rect) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <rect rx="6px" stroke="#4c00e5" width="23px" height="18px"
+            style="fill: #E5E500; stroke: #4C00E5" x="9px" y="2px"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>Kreis</code> (circle) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <circle cy="13px" cx="20px" r="10px"
+              style="fill: #C1FFE9; stroke: #FF0000" stroke="#ff0000"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>Ellipse</code> (ellipse), 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="1cm">
+      <ellipse cy="14px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
+            stroke="#b795ff"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>offenes Polygon</code> (polyline) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <polyline points="4,16 23,0 37,16 55,6" stroke="#0000b2"
+                style="stroke: #0000B2; fill: #FFA069"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>geschlossenes Polygon</code> (polygon) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
+      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
+               stroke="#000000" style="fill: #C8FF95; stroke: #000000"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>offene Kurve</code> (path) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <path stroke="blue" fill="none"
+            d="M 0,16 C 0,15 4,6 9,7 C 13,7 12,16 16,16 C 20,15 24,1 22,0"
+            style="stroke: #0071FF" stroke-width="2px"/>
+    </svg>
+    </p>
+  </li>
+  <li><code>geschlossene Kurve</code> (path) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <path stroke="black" fill="none"
+            d="M 14,4 C 11,4 8,0 6,1 C 3,1 1,4 1,7 C 0,9 2,12 5,14 C 7,15 13,14 16,14 C 17,13 21,12 23,11 C 24,9 29,7 29,4 C 28,1 24,0 22,0 C 19,0 16,3 14,4 Z"
+            style="fill: #FFE9C1; stroke: #B20000"/>
+    </svg>
+    </p>
+  </li>
+</ul>
+<ul>
+  <li><code>eingelagertes HTML-Fragment</code> (foreignObject) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="6cm" height="57px">
+      <rect y="0" x="7px" width="140px" height="45px" style="fill: #C1FFFF"
+            stroke="#c1ffff"/>
+      <foreignObject width="140px" y="0" x="20px">
+
+        <div xmlns="http://www.w3.org/1999/xhtml">
+        <ul>
+          <li>erstes Element</li>
+          <li>zweites Element</li>
+        </ul>
+        </div>
+      </foreignObject>
+    </svg>
+    </p>
+  </li>
+  <li><code>Text</code> (text) 
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="2cm">
+      <text y="20px" x="-1px"
+            style="font-family: helvetica; font-size: 12pt; fill: #0000B2">eineZeichenketteinSVG
+      </text>
+    </svg>
+    </p>
+  </li>
+</ul>
+
+<h2>Eine Grafik mit der Palette erzeugen</h2>
+
+<p>Befindet sich eine Markierung innerhalb der Struktur eines HTML-Elements
+und wählt man ein neues SVG-Gebilde, so generiert Amaya am Anfang des
+markierten HTML-Elements ein neues SVG-Element und fügt das Grafikgebilde
+dort ein. Amaya generiert SVG-Gebilde als Blöcke zwischen HTML-Absätzen. Um
+eine Grafik inline anzuzeigen, muss man diese zwischen zwei Absätzen erzeugen
+und dann den Quellcode editieren, um diese zu verschieben.</p>
+
+<p>Ist das markierte Element ein SVG-Element, dann wird das neue Gebilde
+diesem Element an dessem Ende hinzugefügt und kann daher das vorhergehende
+überlagern.</p>
+
+<p>Die Erzeugung eines Gebildes verlangt eine Interaktion mit dem
+Benutzer:</p>
+<ul>
+  <li>Rechteck: die linke, obere Ecke wir durch Drücken der linken Maustaste
+    markiert, die Maus wird bei gedrückter linker Taste an die rechte untere
+    Ecke gezogen und dann losgelassen. Damit ist das Gebilde definiert.</li>
+  <li>Kreis oder Ellipse: der Mittelpunkt wird durch Drücken der linken
+    Maustaste markiert. Die Maus wird bei gedrückter linker Maustaste nach
+    rechts oder unten gezogen, bis die Größe des Gebildes erreicht ist und
+    die Maustaste wird losgelassen.</li>
+  <li>Bei einem offenen oder geschlossenen Polygon werden die einzelnen
+    Punkte mit der linken Maustaste gesetzt. Der letzte Punkt wird mit der
+    rechten Maustaste gesetzt.</li>
+</ul>
+
+<h2>Andere Element einfügen</h2>
+
+<p>Man kann in eine SVG-Grafik ein Bild einfügen: aus dem Menü
+<strong>Element</strong> den Befehl <strong>Bild</strong> wählen oder den
+Knopf <strong>Bild einfügen</strong><img alt="Knopf Bild"
+src="../../images/Image-de.gif" /> in der Knopfleiste anklicken und in der
+gleichen Weise verfahren, wie man das in HTML auch macht.</p>
+
+<p>Um einen mathematischen Ausdruck in eine SVG-Zeichnung einzufügen, muss
+man die Zeichnung markieren und das entsprechende Objekt aus der Palette
+Mathematik (<strong>Formel</strong> im Menü <strong>Elemente</strong> oder
+Knopf <strong>Formel</strong> <img alt="Knopf Formel"
+src="../../images/Math-de.gif" /> in der Knopfleiste) wählen. Amaya generiert
+dann ein <code>foreignObject</code> um das Element einzufügen.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Eine Tabelle erzeugen</title>
+  <style type="text/css">
+  </style>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="working_with_tables.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Tables.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="add_column.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Eine Tabelle erzeugen</h1>
+
+<p class="ProcedureCaption">Um eine neue Tabelle zu erzeugen:</p>
+<ol>
+  <li>Den Cursor an die Stelle im Dokument plazieren, an der die Tabelle
+    erzeugt werden soll. </li>
+  <li>Den Knopf <strong>Tabelle</strong> in der Knopfleiste anklicken oder im
+    Menü <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong> die
+    Option <strong>Neue Tabelle</strong> wählen. Der Dialog
+    <strong>NeueTabelle</strong> wird angezeigt. </li>
+  <li>Hier die Anzahl der Zeilen und Spalten, sowie die Breite des Rahmens
+    eingeben. </li>
+  <li>Den Knopf <strong>Erzeugen</strong> anklicken. Amaya generiert eine
+    grafische Repräsentation der Tabelle. </li>
+  <li>Der Cursor wird automatisch oberhalb der Tabelle positioniert, wo man
+    die Tabellenüberschrift eingeben kann. Wird keine Überschrift gewünscht,
+    muss man die Taste <kbd>Entf</kbd> drücken. </li>
+  <li>Die neue Tabelle enthält leere Zellen. In diese kann man Text oder
+    andere Elemente einfügen. Mit den Pfeiltasten kann man sich von einer
+    Zelle zur anderen bewegen.</li>
+</ol>
+</div>
+</body>
+</html>

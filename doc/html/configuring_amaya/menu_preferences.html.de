@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Das Untermenü Einstellungen</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="about_configuration_directory_and_file_conventions.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../Configure.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up-de.gif" /></a> <a
+        href="about_keyboard_shortcuts.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Das Untermenü Einstellungen</h1>
+
+<p>Diese Dialoge findet man unter dem Menü <strong>Extras</strong> Untermenü
+<strong>Einstellungen</strong>. Neun Dialoge stehen zur Verfügung:
+<strong>Allgemein</strong>, <strong>Veröffentlichen</strong>,
+<strong>Cache</strong>, <strong>Proxy</strong>, <strong>Farben</strong>,
+<strong>Fenstergeometrie</strong>, <strong>Sprachen</strong>,
+<strong>Profile</strong> und <strong>Vorlagen</strong>.</p>
+
+<p>Jeder dieser Dialoge enthält drei Schaltflächen:</p>
+
+<table border="1" cellspacing="0" cellpadding="5"
+style="margin-left:3.75pt;           border-collapse:collapse;           border:none">
+  <tbody>
+    <tr>
+      <td
+      style="width:120pt;                 border-top:solid .75pt;                 border-left:none;                 border-bottom:double 1.5pt;                 border-right:none;                 "><p
+        class="TableHead"><b>Knopf</b></p>
+      </td>
+      <td
+      style="width:300pt;                 border-top:solid .75pt;                 border-left:solid .5pt;                 border-bottom:double 1.5pt;                 border-right:none;                 margin-left:5pt;                 "><p
+        class="TableHead"><b>Aktion</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="width:120pt;                 border-top:none;                 border-left:none;                 border-right:none;                 border-bottom:solid black .5pt;                 margin-right:5pt;                 "><p
+        class="TableText">Übernehmen</p>
+      </td>
+      <td
+      style="width:300pt;                 border:none;                 border-bottom:solid black .5pt;                 border-left:solid .5pt;                 margin-left:5pt;                 "><p
+        class="TableText">Validiert und speichert die Optionen</p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="width:120pt;                 border-top:none;                 border-left:none;                 border-bottom:solid black .5pt;                 border-right:none;                 "><p
+        class="TableText">Fehlwert</p>
+      </td>
+      <td
+      style="width:300pt;                 border:none;                 border-bottom:solid black .5pt;                 border-left:solid .5pt;                 margin-left:5pt;                 "><p
+        class="TableText">Setzt die Optionen auf ihre Fehlwerte.
+        <strong>Übernehmen</strong> klicken, um die Werte zu speichern.</p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="width:120pt;                 border-top:none;                 border-left:none;                 border-bottom:solid 1.5pt;                 border-right:none;                 "><p
+        class="TableText">Beenden</p>
+      </td>
+      <td
+      style="width:300pt;                 border:none;                 border-bottom:solid 1.5pt;                 border-left:solid .5pt;                 margin-left:5pt;                 "><p
+        class="TableText">Schließt den Dialog.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><a name="Allgemein">Allgemeine Einstellungen</a></h2>
+
+<p>Mit diesem Dialog werden allgemeine, die gesamte Anwendung betreffende
+Einstellungen vorgenommen.</p>
+
+<p><img alt="Der Dialog allgemeine Einstellungen"
+src="../../images/general_preferences-de.png" /></p>
+
+<h3>Spezielle Verzeichnisse</h3>
+<dl>
+  <dt>Heimatverzeichnis</dt>
+    <dd>Wird nur auf Windowsplattformen benutzt. Spezifiziert das
+      Verzeichnis, in dem die Benutzereinstellungen gespeichert werden. 
+      <p class="Note"><strong>Anmerkung:</strong> Dieses Verzeichnis kann
+      nicht verlagert werden.</p>
+    </dd>
+  <dt>Temporärverzeichnis</dt>
+    <dd>Wird nur auf Windowsplattformen benutzt. Spezifiziert das
+      Verzeichnis, in dem Amaya seine temporären Dateien ablegt,
+      beispielsweise während des Druckens. Der Fehlwert ist
+      <code>c:\temp</code>. 
+      <p class="Note"><strong>Anmerkung:</strong> Wird dieses Verzeichnis
+      verlagert, dann wird das vorhergehende nicht entfernt. Das alte
+      Verzeichnis muss manuell gelöscht werden. Wurde der
+      <strong>Cache</strong> in diesem Verzeichnis angelegt, dann wird ein
+      neuer Cache im neuen Verzeichnis angelegt.</p>
+    </dd>
+  <dt>Startseite</dt>
+    <dd>Spezifiziert die Startseite, die angezeigt wird, wenn Amaya startet
+      oder wenn der Benutzer auf die Schaltfläche "Startseite" klickt. Eine
+      Beispiel wäre: <code><a
+      href="http://www.w3.org/">http://www.w3.org</a></code> 
+      <p class="Note"><strong>Anmerkung:</strong> Es muss ein vollständiger
+      URI angegeben werden.</p>
+    </dd>
+</dl>
+
+<h3>Checkboxen</h3>
+<dl>
+  <dt>Optionale Mehrfachtasten verwenden</dt>
+    <dd>Aktiviert oder deaktiviert die optionale Eingabe von Mehrfachtasten.
+      Diese beruht auf der Sequenz zwei aufeinanderfolgender
+      Tastaturanschlägen: eine Akzenttaste, gefolgt von einer
+      Buchstabenttaste. Um also das Zeichen "ã" zu erhalten drückt man erst
+      die Taste "~" und dann "a". Um das Zeichen "~" zu erhalten, muss die
+      Taste "~" zweimal gedrückt werden. Zeichensequenzen, welche von der
+      Standardeingabemethode für Mehrfachtasten und der optinalen
+      Eingabemethode für Mehrfachstasten benutzt werden, sind in zwei
+      Tabellen zusammengefasst.</dd>
+  <dt>Hintergrundbild anzeigen</dt>
+    <dd>Kontrolliert ob Hintergrundbilder angezeigt werden sollen. Diese
+      Option ist nur wirksam, wenn ein neues Dokument geladen wird.</dd>
+  <dt>Doppelklick aktiviert Verweis</dt>
+    <dd>Seit der ersten Version von Amaya aktivieren die Benutzer Verweise
+      mit einem Doppelklick. Damit ist man in der Lage zu wählen, ob man
+      einen Verweis editieren oder diesem folgen möchte. Dieses Verhalten
+      wird durch deaktivieren dieser Option abgeschaltet.</dd>
+  <dt>Anker anzeigen</dt>
+    <dd>Anker werden mit einem Icon gekennzeichnet.</dd>
+  <dt>Abschnitte numerieren</dt>
+    <dd>Alle Überschriften der Ebene 2 bis Ebene 6 werden numeriert.</dd>
+  <dt>CR/LF exportieren</dt>
+    <dd>?</dd>
+  <dt>FTP zulassen (experimentell)</dt>
+    <dd>Ermöglicht Amaya Verweise auf FTP-URIs zu folgen. Diese Eigenschaft
+      ist experimentell und noch nicht voll ausgetestet. So wird
+      beispielsweise bei FTP-Verbindungen, die eine Benutzerauthentifizierung
+      verlangen die Authentifizierungsinformation nicht immer gespeichert.
+      Weiterhin kann Amaya beim Betätigen der Schaltfläche
+      <strong>Stop</strong> während einer FTP-Übertragung abstürzen. Trotz
+      dieser Probleme wurde diese Option in Amaya integriert damit andere
+      Entwickler helfen können dies schneller auszutesten. Fehlwertmäßig ist
+      diese Option deaktiviert.</dd>
+  <dt>Zugriffstasten</dt>
+    <dd>Spezifiziert den Modifikator der benutzt werden soll
+      (<code>Alt</code> oder <code>Strg</code>), um die, in einem Dokument
+      definierten <a href="..\Browsing.html#Access">Zugriffstasten</a>, zu
+      aktivieren oder legt fest, das die Zugriffstasten, welche in einem
+      Dokument definiert sind ignoriert werden sollen.</dd>
+</dl>
+
+<h3>Unix-spezifische Optionen</h3>
+
+<p>Zwei Optionen sind nur unter dem Betriebssystem Unix verfügbar:
+<strong>Schriftgröße in Menüs</strong> und
+<strong>Doppelklickverzögerung</strong>.</p>
+<dl>
+  <dt>Schriftgröße in Menüs</dt>
+    <dd>Spezifiziert die Schriftgröße aller Menüs in Amaya. Diese Option wird
+      nur beim Start von Amaya ausgewertet.</dd>
+  <dt>Doppelklickverzögerung</dt>
+    <dd>Mit dieser Option kontrolliert man die Zeit, die vergehen muss, damit
+      ein zweimaliges Klicken als Doppelklick interpretiert wird. Diese
+      Option wird nur beim Start von Amaya ausgewertet.</dd>
+</dl>
+
+<h3>Schriftzoom und Sprache</h3>
+<dl>
+  <dt>Schriftzoom</dt>
+    <dd>Hier kann man den Fehlert für den Schriftzoom eines Dokuments
+      festlegen. Der Text, nicht aber Bilder, wird entsprechen der
+      Größenangabe (in Prozent) kleiner oder größer als die Originalgröße
+      dargestellt. Diese Änderung wirkt sich, für alle geöffneten Fenster
+      gleichermaßen, sofort aus.</dd>
+  <dt>Dialogsprache</dt>
+    <dd>Spezifiziert die Sprache, welche in allen Menüs und Dialognachrichten
+      von Amaya benutzt wird. Der Fehlwert ist American English
+      (<code>en_US</code>). Zur Zeit werden nur drei weitere Sprachen
+      angeboten: Englisch (<code>en</code>), Französisch (<code>fr</code>)
+      und Deutsch (<code>de</code>). Wenn Amaya gestartet wird, werden die
+      Dateien der entsprechenden Sprache geladen. Diese beginnen mit: en-,
+      fr- oder de- und befinden sich im Verzeichnis
+      <strong>Amaya/config</strong>. 
+      <p>In Thot wird ein Dokument über ein Schema spezifiziert. In Amaya
+      werden die Dialogmeldungen, die angezeigt werden, wenn ein Dokument
+      geparst oder über ein bestimmtes Schema abgespeichert werden, in einer
+      Datei gehalten. Deren Name setzt sich wiefolgt zusammen:
+      <strong>Amaya/amaya/HTML.</strong><em><strong>code</strong></em>, wobei
+      das Suffix <em>code</em> eine Abkürzung für die Sprache ist (z. B.
+      <code><span xml:lang="de" lang="de"
+      style='font-family:"Courier New"; '>en</span></code> <span
+      xml:lang="de" lang="de">oder</span><code><span xml:lang="de" lang="de"
+      style='font-family:"Courier New"; '>fr</span></code><span xml:lang="de"
+      lang="de">). Diese Datei hat vier Abschnitte:</span></p>
+      <p class="Bullet"><span xml:lang="de" lang="de"
+      style="font-family:Symbol; ">·<span
+      style='font:7.0pt "Times New Roman"'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp;</span></span><strong><span xml:lang="de"
+      lang="de">extension</span></strong><span xml:lang="de" lang="de">: wird
+      von Amaya nicht benutzt</span></p>
+      <p class="Bullet"><span xml:lang="de" lang="de"
+      style="font-family:Symbol; ">·<span
+      style='font:7.0pt "Times New Roman"'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp;</span></span><strong><span xml:lang="de"
+      lang="de">presentation</span></strong><span xml:lang="de" lang="de">:
+      wird von Amaya nicht benutzt</span></p>
+      <p class="Bullet"><span xml:lang="de" lang="de"
+      style="font-family:Symbol; ">·<span
+      style='font:7.0pt "Times New Roman"'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp;</span></span><strong><span xml:lang="de"
+      lang="de">export</span></strong><span xml:lang="de" lang="de">:
+      identifiziert den Text, welcher für jedes Übersetzungsschema
+      (<strong>Speichern unter</strong>) angezeigt wird</span></p>
+      <p class="Bullet"><span xml:lang="de" lang="de"
+      style="font-family:Symbol; ">·<span
+      style='font:7.0pt "Times New Roman"'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp;</span></span><strong><span xml:lang="de"
+      lang="de">translation</span></strong><span xml:lang="de" lang="de">:
+      identifiziert den Text, welcher für jedes Element und Attribut in der
+      Thot-HTML-Struktur angezeigt wird.</span></p>
+      <p><span xml:lang="de" lang="de">Amaya kann an jeden Zeichensatz aus
+      ISO-Latin (iso-8859-1) angepasst werden, indem man die entsprechenden
+      Dialogdateien schreibt. Diese müssen sich alle in gleichen Verzeichnis
+      befinden (beispielsweise Amaya/config) und den richtigen ISO-639-Prefix
+      haben (it- für Italienisch, de- für Deutsch, u.s.w.). Außerdem muss für
+      die entsprechende Datei HTML.code erzeugt werden.</span></p>
+    </dd>
+</dl>
+
+<h2>Veröffentlichen</h2>
+
+<p>In diesem Dialog kann man Einstellungen für ETAGS und Preconditions
+vornehemen, festlegen, ob jedes PUT-Kommando mit einem GET verifiziert werden
+soll, den Fehlwert des Namens für einen URI, der mit einem Schrägstrich ("/")
+endet festlegen und die Umleitung für PUT an spezifische Domänen angeben. Die
+Optionen werden nachfolgend erklärt.</p>
+
+<p><img alt="Der Dialog Einstellungen fpr Veröffentlichen"
+src="../../images/publishing_preferences-de.png" /></p>
+<dl>
+  <dt>Für XHTML application/xhtml+xml verwenden</dt>
+    <dd>Diese Option verknüpft den neuen offiziellen MIME-Typ
+      application/xhtml+xml mit jedem neu erzeugten XHTML-Dokument. Diese
+      Option ist fehlwertmäßig deaktiviert, weil noich nicht alle Server
+      diesen MIME-Typ unterstützen. Man beachte, dass die Aktivierung dieser
+      Option eine Änderung der Serverkonfiguration zur Folge hat, wenn der
+      Server die Metadaten nicht andersweitig speichert. Diese Option
+      modifiziert nicht den MIME-Typ existierender Dokumente, es sei denn,
+      man speichert die mit dem Befehl <strong>Speichern unter</strong>.</dd>
+  <dt>ETAGS und Preconditions verwenden</dt>
+    <dd>HTTP/1.1 führte neue Header ein um das <a
+      href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">lost
+      updates</a>-Problem beim Veröffentlichen zu vermeiden. Das Aktivieren
+      dieser Option weist auf Konflikte hin, wenn zwei Benutzer das gleiche
+      Dokument veröffentlichen.</dd>
+  <dt>PUT durch GET verifizieren</dt>
+    <dd>Wenn man dem Server nicht vertraut dann weist die Aktivierung dieser
+      Option Amaya an jedes Dukument, welches veröffentlicht wurde sofort
+      wieder vom Server zu holen und es mit dem gespeicherten zu vergleichen.
+      Sind beide unterschiedlich, so wird man von Amaya gewarnt.</dd>
+  <dt>Dateiname, falls URI mit '/' endet</dt>
+    <dd>Ein HTTP-Server assoziert gewöhnlich eine URI, die mit '/' endet mit
+      einem Dateinamen, beispielsweise Overview.html. Mit dieser Option wird
+      dieser Name festgelegt, wenn man mit Amaya solch eine URI
+      veröffentlicht.</dd>
+  <dt>PUT automatisch an diese Domäne umleiten</dt>
+    <dd>Gemäß den Spezifikationen von HTTP/1.1 sollten PUT-Operatinen nicht
+      automatisch umgeleitet werden, es sei denn dies kann durch den Benutzer
+      bestätigt werden, weil dies die Bedingungen unter denen der Request
+      abgegeben wurde ändern kann. Hier kann man verhindern, dass Amaya die
+      Warnung "PUT umgeleitet" anzeigt, indem man die Domäne des Servers, auf
+      dem man veröffentlicht angibt. Man kann eine oder mehrere Domänen,
+      durch Leerzeichen getrennt, angeben (z. B. <code>www.w3.org
+      groucho.marx.edu</code>).</dd>
+</dl>
+
+<h2>Cache</h2>
+
+<p>Amaya stellt mittels libwww einen Cache zur Verfügung. Der Cache ist
+fehlwertmäßig aktiviert und befindet sich unter dem Verzeichnis libwww-cache
+im Temporärverzeichnis. In dem Menü befindet sich zusätzlich noch der Knopf
+Cache leeren , womit der Inhalt des Cache-Verzeichnisses gelöscht wird.</p>
+
+<p><img alt="Der Dialog Einstellungen für Cache"
+src="../../images/cache_preferences-de.png" /></p>
+<dl>
+  <dt>Cache aktivieren</dt>
+    <dd>Aktiviert oder deaktiviert den Cache.</dd>
+  <dt>Geschützte Dokumente cachen</dt>
+    <dd>Fehlwertmäßig werden durch ein Passwort geschützte Dokumente nicht im
+      Cache gespeichert. Das Aktivieren dieser Option lässt dies zu.</dd>
+  <dt>Offline-Modus</dt>
+    <dd>Dokumente immer aus dem Cache holen.</dd>
+  <dt>Verfallsdatum ignorieren</dt>
+    <dd>Dokumente, deren Header ein Verfallsdatum angeben werden nicht
+      gelöscht.</dd>
+  <dt>Verzeichnis</dt>
+    <dd>Identifiziert das Elternverzeichnis des Cache. Bei einer Verlagerung
+      wird der Inhalt des alten Verzeichnisses nicht gelöscht. Das muss man
+      selber erledigen. 
+      <p class="Note"><strong>Anmerkung:</strong> <br />
+      Mechanismen zum Schutz von Dateien verhindern, dass man den Cache auf
+      ein Verzeichnis im NFS (Network File System) legen kann.</p>
+    </dd>
+  <dt>Cachegröße</dt>
+    <dd>Die Größe des Cache-Repository in Megabyte.</dd>
+  <dt>Eintragsgröße</dt>
+    <dd>Die Größe eines Eintrags im Cache-Repository im Megabyte.</dd>
+</dl>
+
+<h2>Proxy</h2>
+
+<p>Im diesem Dialog kann man einen Proxy spezifizieren und Domänen angeben,
+auf denen ein Proxy benutzt oder nicht benutzt werden soll.</p>
+
+<p><img alt="Der Dialog Einstellungen für Proxy"
+src="../../images/proxy_preferences-de.png" /></p>
+<dl>
+  <dt>HTTP Proxy</dt>
+    <dd>Identifiziert den Proxy, welcher für HTTP-Requests benutzt werden
+      soll. Es muss der volle Domänenname angegeben werden. Läuft der Server
+      nicht auf Port 80, dann muss dieser auch noch angegeben werden. die
+      folgende Tabelle zeigt zwei Beispiele. 
+      <p></p>
+
+      <table border="1" cellspacing="0" cellpadding="0"
+      style="margin-left:.2in;           border-collapse:  collapse;           border:none; ">
+        <tbody>
+          <tr>
+            <td valign="top"
+            style="width:145.85pt;                   border-top:solid green 1.5pt;                   border-left:none;                   border-bottom:solid green .75pt;                   border-right:none;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="TableHead"><span xml:lang="de" lang="de"
+              style="font-weight:normal"><b>HTTP Proxy</b></span></p>
+            </td>
+            <td valign="top"
+            style="width:282.55pt;                   border-top:solid green 1.5pt;                   border-left:none;                   border-bottom:solid green .75pt;                   border-right:none;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="TableHead"><span xml:lang="de" lang="de"
+              style="font-weight:normal"><b>Ergebnis</b></span></p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top"
+            style="width:145.85pt;                   border:none;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="Code0"><span xml:lang="de"
+              lang="de">groucho.marx.edu</span></p>
+              <p class="Code0"><span xml:lang="de" lang="de"></span></p>
+            </td>
+            <td valign="top"
+            style="width:282.55pt;                   border:none;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="TableText"><span xml:lang="de" lang="de">deklariert
+              einen Proxy namens groucho.marx.edu, der auf dem
+              fehlwertmäßigen Port 80 läuft.</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top"
+            style="width:145.85pt;                   border:none;                   border-bottom:   solid green 1.5pt;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="Code0"><span xml:lang="de"
+              lang="de">groucho.marx.edu:1234</span></p>
+              <p class="Code0"><span xml:lang="de" lang="de"></span></p>
+            </td>
+            <td valign="top"
+            style="width:282.55pt;                   border:none;                   border-bottom:   solid green 1.5pt;                   padding:0in 5.4pt 0in 5.4pt"><p
+              class="TableText"><span xml:lang="de" lang="de">deklariert
+              einen Proxy namens groucho.marx.edu, der auf dem Port 1234
+              läuft.</span></p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </dd>
+  <dt>Proxy-Domänen</dt>
+    <dd>Eine, durch Leerzeichen getrennte Liste von Domänen, auf denen ein
+      Proxy benutzt werden soll. Mit den Radioknöpfen kann man selektieren,
+      ob diese Liste benutzt oder ausgeschlossen werden soll.</dd>
+</dl>
+
+<h2>Farben</h2>
+
+<p>In diesem Dialog kann man die fehlwertmäßige Hintergrundfarbe und die
+Textfarbe für ein Dokument, die Cursorfarbe und die Markierungsfarbe
+bestimmen.</p>
+
+<p><img alt="Der Dialog Einstellungen für Farben"
+src="../../images/color_preferences-de.png" /></p>
+<dl>
+  <dt>Schrift</dt>
+    <dd>Dies ist die Farbe der Schrift im Dokument.</dd>
+  <dt>Hintergrund</dt>
+    <dd>Dies ist die Hintergrundfarbe des Dokuments.</dd>
+  <dt>Cursor</dt>
+    <dd>Dies ist die Farbe des Cursors.</dd>
+  <dt>Markierung</dt>
+    <dd>Dies ist die Hintergrundfarbe einer Markierung.</dd>
+</dl>
+
+<p>In der Unixversion kann man auch noch die Farben der Menüs einstellen. In
+Windows muss man dazu das Control Panel bemühen.</p>
+
+<p>Alle Farbwerte können als Farbname, im hexadezimalen Format und in der
+RGB-Notation eingegeben werden:</p>
+<ul>
+  <li>gültige Farbnamen sind: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime,
+    Maroon, Navy, Olive, Purple, Red, Silver, Teal, Yellow und White.</li>
+  <li>gültige Hexwerte sind: #RRGGBB, (00-ff).</li>
+  <li>die RGB-Notation ist: rgb(rrr, ggg, bbb) (000-fff).</li>
+</ul>
+
+<p>Wird eine ungültige Farbe angegeben, dann wird der Fehlwert benutzt. In
+Windows kann man die Farben auch mit der Farbpalette wählen.</p>
+
+<p class="Note"><strong>Anmerkung:</strong> <br />
+Farbänderungen werden erst beim Öffnen eines neuen Fensters oder beim
+Aktualisieren eines Dokuments wirksam.</p>
+
+<p>Setzen oder Ändern der Farben für Verweise, besuchte Verweise und aktive
+Verweise wird durch die Formatvorlage Amaya.css gehandhabt.</p>
+
+<h2>Fenstergeometrie</h2>
+
+<p>Mit Hilfe dieses Dialogs kann man die aktuelle Position und Größe der
+verschiedenen momentan geöffneten Ansichtenfenster eines Dokuments speichern
+oder deren Fehlwerte laden.</p>
+
+<p><img alt="Der Dialig Einstellungen für Geometrie"
+src="../../images/geometry_preferences-de.png" /></p>
+
+<p>Die Werte, welche gespeichert werden, gehören zum jeweiligen Fenster einer
+Dokumentenansicht von dem dieser Dialog aufgerufen wurde. Die Änderungen
+werden erst beim Öffnen eines neuen Dokumentenfensters wirksam.</p>
+
+<h2>Sprachen</h2>
+
+<p>Existieren verschieden Sprachversionen eines Dokuments und ist ein Server
+für "Language Negotiation" konfiguriert, dann kann man hier die Sprachen für
+diese Verhandlung, in der Reihenfolge ihrer Priorität angeben.</p>
+
+<p><img alt="Der Dialog Einstellungen für Sprache"
+src="../../images/language_negotiation-de.png" /></p>
+
+<p>Man kann diese <a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">Pressemitteilung</a>
+testen, welche in französischer, englischer und japanischer Version vorliegt.
+Ändert man den ISO-Code für die o. g. Sprachen, so erhält man dessen
+Version.</p>
+
+<h2>Profile</h2>
+
+<p>In Amaya definiert ein Profil das "Look und Feel" der
+Benutzerschnittstelle. Man kann Profile verwenden, welche die Menü- und
+Knopfleiste verbergen. Dieser Dialog ermöglicht die Auswahl eines
+Profiverzeichnisses und der dort enthaltenen Profildateien. Die Änderung des
+Profils wird erst beim nächsten Start von Amaya wirksam.</p>
+
+<p><img alt="Der Dialog Einstellungen für Profile"
+src="../../images/profiles_preferences-de.png" /></p>
+
+<h2>Schablonen</h2>
+
+<p>Eine Schablone ist ein Modell oder ein Skelett eines Dokuments, welches
+man dazu verwenden kann um seine eigenen Dokumente zu erstellen. In diesem
+Dialog kann man den URI eines Schablonenservers spezifizieren, der sowohl
+lokal, als auch entfernt sein kann.</p>
+<img alt="Der Dialog Einstellungen für Vorlagen"
+src="../../images/templates_preferences-de.png" /> 
+
+<p>Man muss Amaya beenden um diese Option zu validieren. Startet man danach
+Amaya wieder, dann enthällt das Menü <strong>Datei</strong>, Untermenü
+<strong>Neu</strong> die Option <strong>Schablonen</strong>. Der Index des
+Vorlagenservers wird geöffnet. Fehlwertmäßig wird der Vorlagenserver <a
+href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>
+beim W3C zur Verfügung gestellt. Siehe <a
+href="http://www.w3.org/Amaya/User/Templates.html">Vorlagen benutzen.</a></p>
+</div>
+</body>
+</html>

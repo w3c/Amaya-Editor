@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Das Menü Elemente und die Knopfleiste</title>
+  <style type="text/css">
+  </style>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Creating.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="the_structure_menu.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Das Menü Elemente und die Knopfleiste</h1>
+
+<p>Die Befehle im Menü <strong>Elemente</strong> und die entsprechenden
+Knöpfe in der Knopfleiste erzeugen innerhalb eines Dokuments ein neues
+Element an der Cursorposition. Um die Befehle aus dem Menü
+<strong>Elemente</strong> zu verwenden, muss man den Cursor an die gewünschte
+Position plazieren und das gewünschte Element aus dem Memü auswählen.</p>
+
+<h2>Einfügepunkt</h2>
+
+<p>Wenn man neue Elemente erzeugt, dann ist es wichtig einen
+<em>Einfügepunkt</em> auszuwählen und nicht eine Markierung zu verwenden. Ist
+eine Markierung nicht leer, dann versucht Amaya das Element, was zu der
+Markierung gehört in das gewählte Element zu <em>transformieren</em>.</p>
+
+<h2>Positionen von Elementen</h2>
+
+<p>Manchmal können Elemente an der gewünschten Stelle nicht erzeugt werden,
+weil die DTD von HTML das nicht zulässt. Amaya versucht dann das Element an
+der nächst möglichen Stelle zu plaziern. Beispiel: befindet sich der Cursor
+am Ende der letzten Zeile eines Absatzes und drückt man auf den Knopf <img
+src="../../images/H2-de.gif" alt="Knopf Überschrift Ebene 2" /> , dann erzeugt
+Amaya die Überschrift unterhalb des Absatzes.</p>
+
+<p>In einigen anderen Fällen ändert Amaya die existierende Struktur um das
+gewünschte Element zu erzeugen: befindet sich der Cursor innerhalb eines
+Listenelements, wenn man eine Überschrift der Ebene 2 erzeugen will, dann
+wird das Listenelement und die Liste selbst aufgebrochen, um die Überschrift
+an der gewählten Position zu erzeugen und um den Forderungen der HTML-DTD
+genüge zu tun.</p>
+</div>
+</body>
+</html>

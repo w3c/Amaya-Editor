@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Externe Formatvorlagen handhaben</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="about_linking_external_and_user_style_sheets.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../StyleSheets.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up-de.gif" /></a> <a
+        href="about_applying_style_using_html_elements.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Externe Formatvorlagen handhaben</h1>
+
+<p>Das Untermenü <strong>Formatvorlage</strong> im Menü
+<strong>Formate</strong> stellt eine Anzahl von Befehlen zur Verfügung um
+externe und benutzerdefinierte Formatvorlagen zu handhaben.</p>
+<ul>
+  <li>Mit <strong>Verknüpfen</strong> verknüpft man eine externe
+    Formatvorlage mit dem derzeitigen Dokument. Der Cursor nimmt die Gestalt
+    einer Hand an. Wird die Formatvorlage bereits ein einem Fenster
+    angezeigt, so braucht man dieses nur anzuklicken. Wird die Formatvorlage
+    nicht angezeigt, muss man auf das derzeitige Dokument klicken um einen
+    Dialog anzuzeigen, in dem man den URI der Formatvorlage eingeben kann.
+    Dieser Befehl fügt das Element <strong>link</strong> im Kopf des
+    Dokuments ein. </li>
+  <li><strong>Öffnen</strong> zeigt einen Dialog an, mit dem man ein dem
+    Dokument zugeordnete Formatvorlage öffnen kann. </li>
+  <li><strong>Deaktivieren</strong> entfernt alle Effekte, welche durch die
+    zugeordnete Formatvorlage erzeugt werden. Hierbei wird der Verweis im
+    Kopf des Dokuments nicht entfernt. </li>
+  <li><strong>Aktivieren</strong> ist das Gegenteil zu
+    <strong>Deaktivieren</strong>. </li>
+  <li><strong>Entfernen</strong> macht das gleiche wie
+    <strong>Deaktivieren</strong>. Hierbei wird aber zusätzlich noch der
+    Verweis aus dem Kopf des Dokuments entfernt.</li>
+</ul>
+
+<p>Die Befehle <strong>Öffnen</strong>, <strong>Aktivieren</strong> und
+<strong>Deaktivieren</strong> können auf eine benutzerdefinierte
+Formatvorlage angewendet werden. Die Befehle <strong>Verknüpfen</strong> und
+<strong>Entfernen</strong> gelten nur bei verknüpften Formatvorlagen.</p>
+
+<p>Im Dialog der zu öffnenden Vorlagen wird ein Hinweis angezeigt, wenn
+momentan keine Formatvorlage mit dem Dokument verknüpft ist.</p>
+</div>
+</body>
+</html>

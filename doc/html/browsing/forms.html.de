@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Über Formulare</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="about_access_keys.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Browsing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über Formulare</h1>
+
+<p>Da Amaya sowohl Browser als auch Editor ist, unterscheiden sich einige
+Formularelemente von denen herkömmlicher Browser. In diesem Abschnitt werden
+die wichtigsten Unterschiede dargestellt.</p>
+
+<h2>Das Menü mit Einfachauswahl (GTK und WIN32)</h2>
+
+<p>Um das Menü zu aktivieren muss es doppelt angeklickt werden. Dadurch wird
+das Menü aufgeklappt und alle Einträge werden dargestellt. Ein Eintrag kann
+sowohl mit des Maus alsauch über die Tastatur selektiert werden.</p>
+
+<p>Wählt man mit der Tastatur, so muss zunächst ein Eintag mit der Maus
+angeklickt werden. Das Drücken der Eingabetaste aktiviert dann diesen
+Eintrag. Mit den Tasten Bild nach oben und Bild nach unten kann man in der
+Liste scrollen. Man kann das Menü jederzeit durch Drücken der Taste Esc
+deaktivieren und die Auswahl verwerfen.</p>
+
+<p>Mit der Maus wird durch einen Klick ein Eintrag selektiert. Ein
+Doppelklick aktiviert den Eintrag. Um das Menü zu verlassen und die Auswahl
+zu verwerfen klickt man einfach irgendwo außerhalb (das funktioniert bei GTK
+noch nicht). Um im Menü zu blättern benutzt man den Scrollbalken.</p>
+
+<h2>Das Menü mit Mehrfachauswahl</h2>
+
+<p>Das Verhalten dieses Menüs entspricht dem mit der Einfachauswahl. Man kann
+einen Eintrag nur einzeln selektieren, die aber mehrmals hintereinander.
+Werden die Einträge aktiviert und gekennzeichnet. Unter Windows wird hierbei
+dem Eintrag ein "&gt;"-Zeichen angehängt. Unter GTK werden diese farblich
+markiert. Das Menü wird, wie oben beschrieben verlassen und die Auswahl
+verworfen.</p>
+</div>
+</body>
+</html>

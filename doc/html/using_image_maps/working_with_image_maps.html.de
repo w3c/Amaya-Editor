@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Mit aktiven Bildbereichen arbeiten</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><p><a href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="adding_an_image.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Mit aktiven Bildbereichen arbeiten</h1>
+
+<p>Mit Amaya kann man Bilder und clientseitige aktive Bildbereiche in ein
+Web-Dokument einfügen. Informationen hierzu findet man unter:</p>
+<ul>
+  <li><a href="adding_an_image.html">Ein Bild hinzufügen</a></li>
+  <li><a href="creating_clientside_image_maps.html">Clientseitige aktive
+    Bildbereiche erzeugen</a></li>
+  <li><a href="using_clientside_image_maps.html">Clientseitige aktive
+    Bildbereiche benutzen</a></li>
+  <li><a href="moving_image_map_areas.html">Einen aktiven Bildbereich
+    verschieben</a></li>
+  <li><a href="resizing_image_map_areas.html">Die Größe eines aktiven
+    Bildbereichs ändern</a></li>
+  <li><a href="about_alternative_text_and_long_descriptions.html">Über
+    alternativen Text und lange Beschreibungen</a></li>
+</ul>
+</div>
+</body>
+</html>

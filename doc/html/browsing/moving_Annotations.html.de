@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Anmerkungen verschieben</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a accesskey="p" href="./navigating_annotations.html"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a accesskey="n"
+        href="./replying_to_annotations.html"><img alt="nächste Seite"
+        src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Anmerkungen verschieben</h1>
+
+<p>Man kann eine Anmerkung an jede beliebige Stelle im selben Dokument
+verschieben. Damit kann man beispielsweise <a
+href="annotation_issues.html">Waisenkinder und fehlgeleitete
+Anmerkungen</a><a
+href="../saving_and_publishing_documents/annotation_issues.html">
+</a>behandeln. Man kann eine Anmerkung entweder an eine markierte Stelle im
+Dokument oder an die Stelle, die in einem <span class="Link">XPointer</span>
+gespeichert ist, verschieben. Es ist aber nur möglich Anmerkungen innerhalb
+des Dokumentes zu verschieben, in dem sie auch erzeugt wurden.</p>
+
+<h3>Eine Anmerkung an eine andere Stelle im Dokument verschieben</h3>
+
+<p class="ProcedureCaption">Um eine Anmerkung an eine andere Stelle zu
+verschieben:</p>
+<ol>
+  <li>Das Anmerkungs-Icon doppelt anklicken. Das Anmerkungsfenster wird
+    geöffnet.</li>
+  <li>Im eigentlichen Dokument die Stelle markieren, an welche die Anmerkung
+    verschoben werden soll.</li>
+  <li>Im Anmerkungsfenster <strong>Auf Markierung verschieben</strong> im
+    Menü <strong>Anmerkungen</strong> wählen.</li>
+</ol>
+
+<h3>Eine Anmerkung an einen zuvor gespeicherten XPointer verschieben</h3>
+
+<p>Man kann die Stelle, an die man eine Anmerkung verschieben möchte zuvor
+als XPointer speichern und die Anmerkung dann dorthin verschieben. Diese
+Fähigkeit ist nützlich, wenn man mehrere Anmerkungen an die gleiche Stelle
+verschieben möchte oder wenn man sich weiter im Text bewegt, bevor man die
+Anmerkung verschiebt.</p>
+
+<p class="ProcedureCaption">Mehrere Anmerkungen werden folgendermaßen
+verschoben:</p>
+<ol>
+  <li>Den Text markieren, an welche die Anmerkung verschoben werden soll.</li>
+  <li><strong>Als XPointer speichern</strong> im Menü
+    <strong>Verweise</strong> wählen um einen XPointer abzuspeichern, welcher
+    diese Stelle repräsentiert.</li>
+  <li>Das Anmerkungs-Icon doppelt anklicken. Das Anmerkungsfenster wird
+    geöffnet.</li>
+  <li>Im Anmerkungsfenster <strong>Auf XPointer verschieben</strong>, im Menü
+    <strong>Anmerkungen</strong> wählen.</li>
+</ol>
+
+<p class="Note"><strong>Anmerkung</strong>: Amaya verschiebt das
+Anmerkungs-Icon an den markierten Text und markiert das Dokument als
+modifiziert.</p>
+
+<p>Um diese Änderung wirksam werden zu lassen, muss die Anmerkung gespeichert
+werden, anderenfalls geht sie verloren. Man kann eine Anmerkung auch an die
+Stelle, wo der Cursor steht, verschieben, ohne vorher eine Textstelle
+markiert zu haben.</p>
+</div>
+</body>
+</html>

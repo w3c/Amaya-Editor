@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "../../xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Listen</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" width="100%" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya-de.gif" /></p>
+      </td>
+      <td><p align="right"><a href="headings.html"><img alt="vorherige Seite"
+        border="0" src="../../images/left-de.gif" /></a> <a
+        href="../Document.html"><img alt="erste Seite" border="0"
+        src="../../images/up-de.gif" /></a> <a href="address.html"><img
+        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="List">
+
+<div id="page_body">
+<h1>Listen</h1>
+
+<p>Es gibt in HTML drei Typen von Listen. Die beiden einfachen sind:
+geordnete Liste und ungeordnete Liste und die dritte ist die
+Definitionsliste. Listen haben eine Blockstruktur, können aber in anderen
+Listen enthalten sein.</p>
+
+<p>Beispiel:</p>
+<dl>
+  <dt>Definitionsliste</dt>
+    <dd>Dies ist eine Definitionsliste (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>) - sie
+      besitzt zu definierende Begriffe (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">dt</a></code>) und
+      Definitionen (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">dd</a></code>) als
+      Kinder.</dd>
+    <dd>Ein Begriff kann meherer Definitionen beinhalten.</dd>
+  <dt>Geordnete Liste</dt>
+    <dd>Es gibt drei Arten von Listen
+      <ol>
+        <li>geordnete Listen (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">ol</a></code>)</li>
+        <li>ungeordnete Listen (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL" name="UL"
+          id="UL">ul</a></code>)</li>
+        <li>Definitionslisten (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>)</li>
+      </ol>
+    </dd>
+  <dt>geordnete und ungeordnete Listen</dt>
+    <dd>geordnete und ungeordnete Listen besitzen die gleichen
+      Charakteristika:
+      <ul>
+        <li>sie sind einfach</li>
+        <li>beide haben Listenelemente als Kinder (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">li</a></code>)</li>
+      </ul>
+    </dd>
+</dl>
+
+<p>Die drei Typen von Listen können durch die Knöpfe <img
+src="../../images/OList-de.gif" alt="Knopf ungeordnete Liste" />, <img
+src="../../images/NumList-de.gif" alt="Knopf geordnete Liste" /> und <img
+src="../../images/DL-de.gif" alt="Knopf Definitionsliste" /> der Knopfleiste,
+über das Menü <strong>Elemente</strong> oder über Tastenkürzel <kbd>control-l
+control-o</kbd> (geordnete Liste), <kbd>control-l control-u</kbd>
+(ungeordnete Liste) und <kbd>control-l control-d</kbd> (Definitionsliste)
+erzeugt werden.</p>
+
+<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+Darstellung der Listen zu ändern. Dies beinhaltet sowohl die Darstellung der
+grafischen Zeichen, welche sogar ein Bild sein können, als auch die
+Darstellung des Textes, beispielsweise verschiedene Schriftarten für Begriffe
+und deren Definition.</p>
+</div>
+</div>
+</body>
+</html>

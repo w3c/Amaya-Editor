@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>XML-Dokumente laden</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Xml.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a href="xml_using_style.html"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif" /></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>XML-Dokumente laden</h1>
+
+<p>Amaya kann jedes wohlgeformte XML-Dokument darstellen und eine
+Formatvorlage danit verknüpfen. </p>
+
+<p>Amaya besitzt eine begrenzte Unterstützung für die Darstellung und
+Editierung von Dokumenten, welche sich nicht auf die bekannten DTD oder
+Namespace beziehen (XHTML, MathML und SVG). Obwohl Amaya nicht die
+assozierten DTD analysiert, kann es doch die Gültigkeit eines jeden
+XML-Dokuments verifizieren und spezifische Informationen über Elemente und
+Attribute und deren Organisation innerhalb des Dokuments bekommen. </p>
+</div>
+</body>
+</html>

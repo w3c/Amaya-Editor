@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Formatelemente erzeugen</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="about_applying_style_using_html_elements.html"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        /></a> <a href="../StyleSheets.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up-de.gif" /></a> <a
+        href="removing_style.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="Section1">
+
+<div id="page_body">
+<h1>Formatelemente erzeugen</h1>
+
+<p>Über die Untermenüs <strong>Inhaltsorientiert</strong> und
+<strong>Darstellungsorientiert</strong> im Menü <strong>Formate</strong> kann
+man einem Dokument Formatelemente hinzufügen.</p>
+
+<h2>Inhaltsorientierte Formate</h2>
+
+<p>Das Untermenü <strong>Inhaltsorientiert</strong> listet Elemente, welche
+abstrakte Formate definieren. Drei dieser Formate sind auch über die Knöpfe
+<img src="../../images/Em-de.gif" alt="Knopf Betonung" /> für Betonung (em),
+<img src="../../images/strong-de.gif" alt="Kopf starke Betonung" /> für
+Hervorhebung (strong) und <img src="../../images/code-de.gif"
+alt="Knopf feste Schriftbreite" /> für Programmcode (code) erreichbar.</p>
+
+<p class="ProcedureCaption">Um diese anzuwenden:</p>
+<ol>
+  <li>Die Zeichenkette markieren.</li>
+  <li>Das entsprechende Element im Menü auswählen. 
+    <p>Die Zeichenkette wird entsprechend formatiert dargestellt.</p>
+  </li>
+</ol>
+
+<h2>Darstellungsorientierte Formate</h2>
+
+<p>Das Untermenü <strong>Darstellungsorientiert</strong> gestattet es Text in
+den veralteten Formaten aus HTML 3.2 zu formatieren. Diese werden wie oben
+beschrieben angewendet.</p>
+</div>
+</div>
+</body>
+</html>

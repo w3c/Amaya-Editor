@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Über die Besonderheiten der Benutzerfreundlichkeit</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="accessibility_in_amaya.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        href="../Access.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="about_producing_accessible_content.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Über die Besonderheiten der Benutzerfreundlichkeit</h1>
+
+<p>Benutzerfreundlichkeit für behinderte Menschen wird mit jeder Version von
+Amaya verbessert. Derzeit kann man die meisten Menübefehle auch über die
+Tastatur aktivieren und die meisten Editierfunktionen (außer der Eingabe von
+Text) auch über die Maus ausführen.</p>
+
+<p>Die Besonderheiten zur Benutzerfreundlichkeit in der derzeitigen Version
+beinhalten:</p>
+<ul>
+  <li>Navigation und Textbearbeitung in den Ansichten Textbrowser, Verweise,
+    Struktur und Inhaltsverzeichnis, welche alle mit der normalen
+    Browseransicht synchronisiert werden. Siehe <span class="Link0"><a
+    href="../viewing/working_with_document_views.html">Mit Ansichten
+    arbeiten</a></span>.</li>
+  <li>Textbearbeitung in der Ansicht Quellcode und manuelles Synchronisieren
+    mit jeder anderen Ansicht. Weitere Informationen findet man unter <span
+    class="Link0"><a href="../viewing/working_with_document_views.html">Mit
+    Ansichten arbeiten</a></span>.</li>
+  <li>Dynamisches Hinzufügen, Entfernen und Editieren mehrerer
+    Formatvorlagen, inklusive einer benutzerdefinierten Formatvorlage. Siehe
+    <span class="Link0"><a
+    href="../style_sheets/working_with_styles.html">Mit Ansichten
+    arbeiten</a></span>.</li>
+  <li>Zuordnung von Zugriffstasten an Formularfelder, aktive Bildbereiche
+    oder Verweise. Siehe <span class="Link0"><a
+    href="../browsing/about_access_keys.html">Über
+  Zugriffstasten</a></span>.</li>
+  <li>Die Benutzung von Tastenkürzel für Menüoptionen, Verweise und
+    Formularfelder. Siehe <a
+    href="../selecting/selecting_with_keyboard_and_mouse.html">Mit Maus und
+    Tastatur markieren</a> und <span class="Link0"><a
+    href="../configuring_amaya/configuring_amaya.html">Über
+    Zugriffstasten</a></span>.</li>
+</ul>
+</div>
+</body>
+</html>

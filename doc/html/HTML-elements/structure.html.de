@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Die Dokumentstruktur</title>
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" width="100%" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
+        border="0" alt="Amaya" src="../../images/amaya-de.gif" /></p>
+      </td>
+      <td><p align="right"><a href="creating_new_documents.html"><img
+        alt="vorherige Seite" border="0" src="../../images/left-de.gif" /></a>
+        <a href="../Document.html"><img alt="erste Seite" border="0"
+        src="../../images/up-de.gif" /></a> <a href="infoTypes.html"><img
+        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="HTML">
+
+<div id="page_body">
+<h1>Die Dokumentstruktur</h1>
+
+<p>HTML-Dokumente sind in ihrer Struktur relativ flach. Anders als Dokumente,
+die Abschnitte enthalten, welche wiederum Unterabschnitte enthalten, werden
+in HTML diese Textabschnitte durch unterschiedliche <a
+href="headings.html">Überschriftselemente</a> markiert, die sich auf der
+gleichen Ebene wie Absätze und andere Blockelemente befinden. Es gibt das
+Element <code>div</code>, mit dem man Abschnitte gruppieren kann. Um eine
+Gruppierung vorzunehmen muss man den zu gruppierenden Teil des Dokuments
+markieren und aus dem Menü <strong>Elemente</strong> den Befehl
+<strong>Abschnitt</strong> auswählen (oder das Tastenkürzel <kbd>Ctrl-t
+Ctrl-v</kbd> verwenden).</p>
+
+<p>Es gibt eine spezielle Struktur, den Verweis, welche das Web erst zu dem
+macht was es ist. Mehr dazu unter <a href="../Links.html">Verweise</a>.</p>
+
+<p>Eine normale HTML-Seite sollte mindestens folgendes beinhalten: <a
+href="../Creating.html#Changing">einen Titel</a>, <a
+href="headings.html">eine Überschrift der Ebene 1</a> und <a
+href="address.html">eine Adresse oder andere Informationen über den
+Autor</a>. Darüber hinaus kann sie Absätze, Listen, Bilder, Tabellen und
+anderen Inhalt enthalten, welcher mit Überschriften der verschiedenen Ebenen
+in Unterabschnitte eingeteilt ist.</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Dokumente drucken</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya-de.gif" /></td>
+      <td><a href="../Printing.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up-de.gif" /></a> <a
+        href="using_the_setup_and_print_command.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Dokumente drucken</h1>
+
+<p>Amaya kann Dokumente mit oder ohne Formatvorlagen auf Unix- und auf
+Windowsplattformen drucken.</p>
+
+<p class="Note"><b>Wichtig:</b>&nbsp;Auf Unixplattformen kann nur Postscript
+erzeugt werden. Daher braucht man hier einen postscriptfähigen Drucker oder
+man muss das Dokument mit einem geeigneten Programm konvertieren.</p>
+
+<p>Man kann Dokumente auf drei verschiedene Arten drucken:</p>
+<ul>
+  <li><span class="Link0">Über <strong>Druckoptionen</strong> im Menü
+    <strong>Datei</strong></span>. Hier kann man vor dem Drucken noch einige
+    Parameter einstellen.</li>
+  <li><span class="Link0">Über <strong>Drucken</strong> im Menü
+    <strong>Datei</strong></span>. Hier wird das Dokument mit den derzeitigen
+    Druckoptionen ausgedruckt.</li>
+  <li>Über den Knopf <img src="../../images/print-de.gif" alt="Knopf Drucken" />
+    auf der Knopfleiste. Auf Unixplattformen ist dies ein Kürzel für den
+    Befehl <strong>Drucken</strong>. Auf Windowsplattformen ist dies ein
+    Kürzel für den Befehl <strong>Druckoptionen</strong>, wegen Problemen mit
+    den DLLs von Windows 95.</li>
+</ul>
+</div>
+</body>
+</html>
