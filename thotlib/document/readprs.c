@@ -1227,7 +1227,11 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 					pDim = &pPR->PrDimRule;
 					TtaReadBool (file, &pDim->DrPosition);
 					if (pDim->DrPosition)
-					   ReadPosRule (file, &pDim->DrPosRule);
+					  {
+					    ReadPosRule (file, &pDim->DrPosRule);
+					    /* this rule cannot be overwritten */
+					    pPR->PrImportant = TRUE;
+					  }
 					else
 					  {
 					     TtaReadBool (file, &pDim->DrAbsolute);

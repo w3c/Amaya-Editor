@@ -1975,8 +1975,8 @@ static ThotBool CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-  ApplyPos 	applique la regle de position PtrPRule au pave pAbb1.
-  rend vrai dans appl si la regle a ete appliquee.
+  ApplyPos applies the pos rule pRule  to the abstract box pAb.
+  Returns TRUE in appl if the rule is applied.
   ----------------------------------------------------------------------*/
 static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 		      PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1,
@@ -2252,164 +2252,163 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
      }
 }
 
+
 /*----------------------------------------------------------------------
-   	ApplyDim	 applique au pave pointe' par pAb la regle	
-   		de dimension pointee par pPRule.			
+  ApplyDim applies the dim rule pRule  to the abstract box pAb.		
+  Returns TRUE in appl if the rule is applied.
   ----------------------------------------------------------------------*/
 static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
 		      PtrPSchema pSchP, PtrAttribute pAttr, ThotBool *appl,
 		      PtrPRule pPRule, PtrDocument pDoc)
 {
-   PtrAbstractBox      pAbbRef;
-   PtrAttribute        pA;
-   ThotBool            stop;
-   DimensionRule      *pDRule;
-   int                 attrRule;
+  PtrAbstractBox      pAbbRef;
+  PtrAttribute        pA;
+  ThotBool            stop;
+  DimensionRule      *pDRule;
+  int                 attrRule;
 
-   /* on met a priori les valeurs correspondant a une dimension */
-   /* egale a celle du contenu. */
-   pdimAb->DimIsPosition = FALSE;
-   pdimAb->DimValue = -1;
-   pdimAb->DimAbRef = NULL;
-   pdimAb->DimUnit = pPRule->PrDimRule.DrUnit;
-   pdimAb->DimSameDimension = TRUE;
-   pdimAb->DimMinimum = pPRule->PrDimRule.DrMin;
-   if (FirstCreation)
-      pdimAb->DimUserSpecified = pPRule->PrDimRule.DrUserSpecified;
-   else
-      pdimAb->DimUserSpecified = FALSE;
-   if (pdimAb->DimUserSpecified)
-      pdimAb->DimUserSpecified = CheckPPosUser (pAb, pDoc);
+  *appl = FALSE;
+  pDRule = &pPRule->PrDimRule;
+  /* by default inherit from the contents */
+  pdimAb->DimIsPosition = FALSE;
+  pdimAb->DimValue = -1;
+  pdimAb->DimAbRef = NULL;
+  pdimAb->DimUnit = pPRule->PrDimRule.DrUnit;
+  pdimAb->DimSameDimension = TRUE;
+  pdimAb->DimMinimum = pPRule->PrDimRule.DrMin;
+  if (FirstCreation)
+    pdimAb->DimUserSpecified = pPRule->PrDimRule.DrUserSpecified;
+  else
+    pdimAb->DimUserSpecified = FALSE;
+  if (pdimAb->DimUserSpecified)
+    pdimAb->DimUserSpecified = CheckPPosUser (pAb, pDoc);
 
-   *appl = FALSE;
-   pDRule = &pPRule->PrDimRule;
-   if (pDRule->DrPosition)
-     {
-	/* Box elastique, la dimension est definie comme une position */
-	/* applique la regle */
-	ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr,
-		  pSchP, pAb, pDoc, appl);
-	/* si la regle a pu etre appliquee, le boite est reellement elastique*/
-	if (*appl)
-	   pdimAb->DimIsPosition = TRUE;
-     }
-   else if (pDRule->DrAbsolute)
-     {
-	/* valeur absolue */
-	if (pDRule->DrAttr)
-	   /* c'est la valeur d'un attribut */
+  if (pDRule->DrPosition)
+    {
+      /* Stretched box, the dimension is defined by a pos rule */
+      ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr,
+		pSchP, pAb, pDoc, appl);
+      if (*appl)
+	/* the stretch rule is now applied */
+	pdimAb->DimIsPosition = TRUE;
+    }
+  else if (pDRule->DrAbsolute)
+    {
+      /* absolute value */
+      if (pDRule->DrAttr)
+	/* it's an attribute value */
+	{
+	  if (pDRule->DrValue < 0)
+	    /* reverse the value */
+	    pdimAb->DimValue = -AttrValue (pAttr);
+	  else
+	    pdimAb->DimValue = AttrValue (pAttr);
+	  if (pDRule->DrUnit == UnRelative ||
+	      pDRule->DrUnit == UnXHeight)
+	    /* convert into 1/10 of characters */
+	    pdimAb->DimValue = 10 * pdimAb->DimValue;
+	}
+      else
+	/* take the value in the rule */
+	pdimAb->DimValue = pDRule->DrValue;
+      *appl = TRUE;
+    }
+  else if (pDRule->DrRelation == RlEnclosed)
+    {
+      /* contents value */
+      if (!pAb->AbEnclosing)
+	/* value for the root element */
+	pdimAb->DimValue = 0;
+      *appl = TRUE;
+    }
+  else
+    {
+      /* dimensions relatives a l'englobant ou un frere */
+      pdimAb->DimSameDimension = pDRule->DrSameDimens;
+      /* essaie d'appliquer la regle de dimensionnement relatif */
+      pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent,
+				 pSchP, pDRule->DrRelation,
+				 pDRule->DrRefKind, pAb, pAttr, pDoc);
+      pdimAb->DimAbRef = pAbbRef;
+      if (pAbbRef == NULL && pAb->AbElement != NULL)
+	if (pAb->AbEnclosing == NULL && pDRule->DrRelation == RlEnclosing)
+	  /* heritage des dimensions de la fenetre */
 	  {
-	     if (pDRule->DrValue < 0)
-		/* il faut inverser cette valeur */
-		pdimAb->DimValue = -AttrValue (pAttr);
-	     else
-		pdimAb->DimValue = AttrValue (pAttr);
-	     if (pDRule->DrUnit == UnRelative ||
-		 pDRule->DrUnit == UnXHeight)
-		/* convertit en 1/10 de caractere */
-		pdimAb->DimValue = 10 * pdimAb->DimValue;
-	  }
-	else
-	   /* c'est la valeur elle meme qui est dans la regle */
-	   pdimAb->DimValue = pDRule->DrValue;
-	*appl = TRUE;
-     }
-   else if (pDRule->DrRelation == RlEnclosed)
-     {
-	/* dimension du contenu */
-	/* les valeurs mises a priori conviennent, sauf si c'est la racine */
-	if (!pAb->AbEnclosing)
-	   pdimAb->DimValue = 0;
-	*appl = TRUE;
-     }
-   else
-     {
-	/* dimensions relatives a l'englobant ou un frere */
-	pdimAb->DimSameDimension = pDRule->DrSameDimens;
-	/* essaie d'appliquer la regle de dimensionnement relatif */
-	pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent,
-				   pSchP, pDRule->DrRelation,
-				   pDRule->DrRefKind, pAb, pAttr, pDoc);
-	pdimAb->DimAbRef = pAbbRef;
-	if (pAbbRef == NULL && pAb->AbElement != NULL)
-	   if (pAb->AbEnclosing == NULL && pDRule->DrRelation == RlEnclosing)
-	      /* heritage des dimensions de la fenetre */
-	     {
-		if (pDRule->DrValue == 0)
+	    if (pDRule->DrValue == 0)
+	      {
+		pdimAb->DimValue = 100;
+		pdimAb->DimUnit = UnPercent;
+	      }
+	    else
+	      {
+		pdimAb->DimUnit = pDRule->DrUnit;
+		if (pDRule->DrAttr)
+		  /* c'est la valeur d'un attribut */
 		  {
-		     pdimAb->DimValue = 100;
-		     pdimAb->DimUnit = UnPercent;
+		    if (pDRule->DrValue < 0)
+		      /* inverser cette valeur */
+		      pdimAb->DimValue = -AttrValue (pAttr);
+		    else
+		      pdimAb->DimValue = AttrValue (pAttr);
+		    if (pDRule->DrUnit == UnRelative ||
+			pDRule->DrUnit == UnXHeight)
+		      /* convertit en 1/10 de caractere */
+		      pdimAb->DimValue = 10 * pdimAb->DimValue;
 		  }
 		else
-		  {
-		     pdimAb->DimUnit = pDRule->DrUnit;
-		     if (pDRule->DrAttr)
-			/* c'est la valeur d'un attribut */
-		       {
-			  if (pDRule->DrValue < 0)
-			     /* inverser cette valeur */
-			     pdimAb->DimValue = -AttrValue (pAttr);
-			  else
-			     pdimAb->DimValue = AttrValue (pAttr);
-			  if (pDRule->DrUnit == UnRelative ||
-			      pDRule->DrUnit == UnXHeight)
-			     /* convertit en 1/10 de caractere */
-			     pdimAb->DimValue = 10 * pdimAb->DimValue;
-		       }
-		     else
-			/* c'est la valeur elle meme */
-			pdimAb->DimValue = pDRule->DrValue;
-		  }
-		*appl = TRUE;
-	     }
-	if (pAbbRef != NULL)
-	  {
-	     if (pDRule->DrAttr)
-		/* c'est la valeur d'un attribut */
-	       {
-		  pA = pAttr;
-		  attrRule = pDRule->DrValue;
-		  if (pDRule->DrValue < 0)
-		     attrRule = -attrRule;
-
-		  /* l'attribut est-il celui de la regle ? */
-		  if (pAttr->AeAttrNum != attrRule ||
-		      PresentationSchema (pAttr->AeAttrSSchema, pDoc) != pSchP)
-		     /* ce n'est pas l'attribut indique' dans la regle, */
-		     /* cherche si l'elem. possede l'attribut de la regle */
-		    {
-		       pA = pAb->AbElement->ElFirstAttr;
-		       stop = FALSE;
-		       do
-			  if (pA == NULL)
-			     stop = TRUE;	/* dernier attribut de l'element */
-			  else if (pA->AeAttrNum == attrRule &&
-				   PresentationSchema (pA->AeAttrSSchema, pDoc) == pSchP)
-			     stop = TRUE;	/* c'est l'attribut cherche' */
-			  else
-			     pA = pA->AeNext;
-		       while (!stop);
-		    }
-		  pdimAb->DimValue = AttrValue (pA);
-		  if (pDRule->DrValue < 0)
-		     /* inverser cette valeur */
-		     pdimAb->DimValue = -pdimAb->DimValue;
-		  if (pDRule->DrUnit == UnRelative ||
-		      pDRule->DrUnit == UnXHeight)
-		     /* convertit en 1/10 de caractere */
-		     pdimAb->DimValue = 10 * pdimAb->DimValue;
-	       }
-	     else
-		/* c'est la valeur elle-meme */
-		pdimAb->DimValue = pDRule->DrValue;
-	     pdimAb->DimUnit = pDRule->DrUnit;
-	     *appl = TRUE;
+		  /* c'est la valeur elle meme */
+		  pdimAb->DimValue = pDRule->DrValue;
+	      }
+	    *appl = TRUE;
 	  }
-     }
+      if (pAbbRef != NULL)
+	{
+	  if (pDRule->DrAttr)
+	    /* c'est la valeur d'un attribut */
+	    {
+	      pA = pAttr;
+	      attrRule = pDRule->DrValue;
+	      if (pDRule->DrValue < 0)
+		attrRule = -attrRule;
+	      
+	      /* l'attribut est-il celui de la regle ? */
+	      if (pAttr->AeAttrNum != attrRule ||
+		  PresentationSchema (pAttr->AeAttrSSchema, pDoc) != pSchP)
+		/* ce n'est pas l'attribut indique' dans la regle, */
+		/* cherche si l'elem. possede l'attribut de la regle */
+		{
+		  pA = pAb->AbElement->ElFirstAttr;
+		  stop = FALSE;
+		  do
+		    if (pA == NULL)
+		      stop = TRUE;	/* dernier attribut de l'element */
+		    else if (pA->AeAttrNum == attrRule &&
+			     PresentationSchema (pA->AeAttrSSchema, pDoc) == pSchP)
+		      stop = TRUE;	/* c'est l'attribut cherche' */
+		    else
+		      pA = pA->AeNext;
+		  while (!stop);
+		}
+	      pdimAb->DimValue = AttrValue (pA);
+	      if (pDRule->DrValue < 0)
+		/* inverser cette valeur */
+		pdimAb->DimValue = -pdimAb->DimValue;
+	      if (pDRule->DrUnit == UnRelative ||
+		  pDRule->DrUnit == UnXHeight)
+		/* convertit en 1/10 de caractere */
+		pdimAb->DimValue = 10 * pdimAb->DimValue;
+	    }
+	  else
+	    /* c'est la valeur elle-meme */
+	    pdimAb->DimValue = pDRule->DrValue;
+	  pdimAb->DimUnit = pDRule->DrUnit;
+	  *appl = TRUE;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
-  ApplyPage 	applique une regle Page		
+  ApplyPage applies the page rule.
   ----------------------------------------------------------------------*/
 static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 		       PtrPRule pPRule, FunctionType pageType)
