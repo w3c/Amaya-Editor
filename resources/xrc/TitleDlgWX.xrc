@@ -30,6 +30,7 @@
             <border>5</border>
             <object class="wxButton" name="wxID_CONFIRMBUTTON">
               <label>CONFIRMBUTTON</label>
+              <default>1</default>
             </object>
           </object>
           <object class="sizeritem">

@@ -47,6 +47,9 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(doc_title);
 
+  // Give focus to ...
+  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
+
   Layout();
   
   SetAutoLayout( TRUE );
