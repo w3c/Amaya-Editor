@@ -111,17 +111,10 @@ typedef struct _Frame_Ctl {
   ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets              */
   ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                     */
 
-//  Proc       		Call_Button[MAX_BUTTON];   /* List of toolbar button Callbacks  */
-//  ThotControl 	Button[MAX_BUTTON];        /* List of toolbar button Widgets    */
   ThotBool   		EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
   ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
 
-//  ThotWidget Row_Zone;                  /* Parent widget of Text_Zone        */
-//  ThotWidget Combo;                     /* List of combobox Widgets          */
-//  ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
   Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
-
-//  ThotToolBar	ToolBar;		/* The toolbar : on GTK toolbar is Button[0] */
   
 #ifdef _GL
   ThotBool   DblBuffNeedSwap;
@@ -147,8 +140,6 @@ typedef struct _Window_Ctl {
   ThotStatusBar WdStatus;               /* Widget of the window status bar   */
 
   ThotControl 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
-  ThotBool   	EnabledButtonDefault[MAX_BUTTON]; /* Default status for toolbar buttons */
-  ThotBool   	CheckedButtonDefault[MAX_BUTTON]; /* Default checked value for toolbar buttons */  
   Proc          Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
   Proc          Call_Text;                        /* This is the callback which is called when a url is activated */
 
