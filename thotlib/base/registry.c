@@ -81,6 +81,11 @@ static char        *AppRegistryEntryAppli = NULL;
 static char         CurrentDir[MAX_PATH];
 static char        *Thot_Dir;
 
+#ifdef _WINDOWS
+void CleanRegistry () {
+     AppRegistryInitialized = 0;
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -846,7 +851,7 @@ static void         InitEnviron ()
   We load the ressources file from the installation directory and
   the specific user values from the user HOME dir.
   ----------------------------------------------------------------------*/
- #ifdef __STDC__
+#ifdef __STDC__
 void                TtaInitializeAppRegistry (char *appArgv0)
 #else  /* __STDC__ */
 void                TtaInitializeAppRegistry (appArgv0)

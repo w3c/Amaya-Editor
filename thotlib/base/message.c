@@ -281,75 +281,71 @@ void                TtaDisplayMessage (int msgType, char *fmt,...)
 void                TtaDisplayMessage (msgType, fmt,...)
 int                 msgType;
 char               *fmt;
-
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
    va_list             pa;
    int                 i, lg, vald;
    char               *vals, *p;
    char                pBuffer[MAX_PATH];
 
-   if (fmt)
-     {
-	/* construct the final message */
-#ifdef STDC_HEADERS
-	va_start (pa, fmt);
-#else  /* STDC_HEADERS */
-	va_start (pa);
-#endif /* STDC_HEADERS */
-	i = 0;
-	for (p = fmt; *p && i + 1 < MAX_PATH; p++)
-	  {
-	     if (*p != '%')
-	       {
-		  pBuffer[i++] = *p;
-	       }
-	     else
-	       {
-		 p++;
-		  switch (*p)
-			{
-			   case 'd':
-			      /* it is a value */
-			      vald = va_arg (pa, int);
+#  ifdef _WINDOWS
+   int len = strlen (fmt);
+    for (i = 0; i < len; i++)
+        if (fmt [i] == '\n')
+           fmt [i] = ' ';
+#  endif /* _WINDOWS */
 
-			      if (i + 10 < MAX_PATH)
-				{
-				   sprintf (&pBuffer[i], "%d", vald);
-				   i += strlen (&pBuffer[i]);
-				}
-			      else
-				 i = MAX_PATH;
-			      break;
-			   case 's':
-			      /* it is a string */
-			      vals = va_arg (pa, char *);
+   if (fmt) {
+      /* construct the final message */
+#     ifdef STDC_HEADERS
+      va_start (pa, fmt);
+#     else  /* STDC_HEADERS */
+      va_start (pa);
+#     endif /* STDC_HEADERS */
+      i = 0;
+      for (p = fmt; *p && i + 1 < MAX_PATH; p++) {
+          if (*p != '%') 
+             pBuffer[i++] = *p;
+          else {
+               p++;
+               switch (*p) {
+                      case 'd':
+                           /* it is a value */
+                           vald = va_arg (pa, int);
 
-			      lg = strlen (vals);
-			      if (i + lg < MAX_PATH)
-				{
-				   strcpy (&pBuffer[i], vals);
-				   i += lg;
-				}
-			      else
-				 i = MAX_PATH;
-			      break;
-			   default:
-			      /* other value not allowed */
-			      pBuffer[i++] = *p;
-			      break;
-			}
-	       }
-	  }
-	/* Display the final message */
-	pBuffer[i] = EOS;
-	if (msgType == CONFIRM)
-	   DisplayConfirmMessage (pBuffer);
-	else
-	   DisplayMessage (pBuffer, msgType);
-     }
-#endif /* _WINDOWS */
+                           if (i + 10 < MAX_PATH) {
+                              sprintf (&pBuffer[i], "%d", vald);
+                              i += strlen (&pBuffer[i]);
+						   } else
+                                  i = MAX_PATH;
+			               break;
+
+                      case 's':
+                           /* it is a string */
+                           vals = va_arg (pa, char *);
+
+                           lg = strlen (vals);
+                           if (i + lg < MAX_PATH) {
+                              strcpy (&pBuffer[i], vals);
+                              i += lg;
+						   } else
+                                  i = MAX_PATH;
+                           break;
+
+                      default:
+                              /* other value not allowed */
+                              pBuffer[i++] = *p;
+                              break;
+			   } 
+		  } 
+	  } 
+      /* Display the final message */
+      pBuffer[i] = EOS;
+      if (msgType == CONFIRM)
+         DisplayConfirmMessage (pBuffer);
+      else
+	       DisplayMessage (pBuffer, msgType);
+   }
 }
 
 
@@ -366,9 +362,7 @@ int                 number;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
    TtaDisplayMessage (msgType, TtaGetMessage (origin, number));
-#endif /* _WINDOWS */
 }
 
 

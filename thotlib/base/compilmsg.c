@@ -25,6 +25,12 @@
 
 int                 UserErrorCode;
 
+#ifdef _WINDOWS
+extern HDC compilersDC;
+extern HWND hWnd;
+extern int    _CY_;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    DisplayConfirmMessage
    displays the given message (text).
@@ -37,7 +43,33 @@ char               *text;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   TEXTMETRIC  textMetric;
+   HFONT       hFont, hOldFont;
+   int         cxChar, cyChar;
+
+   if (compilersDC) {
+      hFont = CreateFont (16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, 
+                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
+                          DEFAULT_PITCH | FF_DONTCARE, "Small Font");
+
+      hOldFont = SelectObject (compilersDC, hFont);
+
+      GetTextMetrics (compilersDC, &textMetric);
+      cxChar = textMetric.tmAveCharWidth;
+      cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
+
+      _CY_ += cyChar;
+
+      if (!TextOut (compilersDC, 5, _CY_, text, strlen (text)))
+         MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
+
+      SelectObject (compilersDC, hOldFont);
+	  DeleteObject (hFont);
+   } 
+#  else  /* _WINDOWS */
    fprintf (stderr, text);
+#  endif /* _WINDOWS */
 }
 
 
@@ -54,7 +86,40 @@ int                 msgType;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   TEXTMETRIC  textMetric;
+   HFONT       hFont, hOldFont;
+   int         cxChar, cyChar;
+
+   if (compilersDC) {
+      /* hFont = CreateFont (16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, 
+                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
+                          DEFAULT_PITCH | FF_DONTCARE, "Times New Roman"); */
+      hFont = CreateFont (16, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, 
+                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
+                          DEFAULT_PITCH | FF_DONTCARE, "Arial");
+
+      hOldFont = SelectObject (compilersDC, hFont);
+
+      GetTextMetrics (compilersDC, &textMetric);
+      cxChar = textMetric.tmAveCharWidth;
+      cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
+
+	  if (_CY_ >= 1000) {
+         ScrollWindow (hWnd, 0, -cyChar, NULL, NULL);
+         UpdateWindow (hWnd);
+	  } else
+           _CY_ += cyChar;
+
+      if (!TextOut (compilersDC, 5, _CY_, text, strlen (text)))
+         MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
+
+      SelectObject (compilersDC, hOldFont);
+	  DeleteObject (hFont);
+   } 
+#  else  /* _WINDOWS */
    fprintf (stderr, text);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
