@@ -633,7 +633,8 @@ EXCEPT
    XMLcomment_line:     Hidden, NoSpellCheck;
    XMLPI_line:          Hidden, NoSpellCheck;
    CDATA_line:          Hidden;
-
+   XMLPI:	        ReturnCreateNL, NoReplicate;
+   XMLcomment:	        ReturnCreateNL, NoReplicate;
    id:                  CssId;
    class:               CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;

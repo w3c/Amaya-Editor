@@ -444,6 +444,8 @@ EXCEPT
    DOCTYPE:		NoCut;
    DOCTYPE_line:  	Hidden, NoSpellCheck, NoCut;
    CDATA_line:          Hidden;
+   XMLPI:	        ReturnCreateNL, NoReplicate;
+   XMLcomment:	        ReturnCreateNL, NoReplicate;	
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;
    Construct1:		Hidden;

@@ -886,6 +886,8 @@ EXCEPT
 	Definition_Item:Hidden;
 	Term_List:	Hidden;
 	Definitions:	Hidden;
+        XMLPI:	        ReturnCreateNL, NoReplicate;
+	Comment\240:	ReturnCreateNL, NoReplicate;
 	Comment_line:	Hidden, NoSpellCheck;
 	PI_line:	Hidden, NoSpellCheck;
 	DOCTYPE:	NoCut;
