@@ -1385,18 +1385,18 @@ void SelectOneOption (Document doc, Element el)
 		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu,
 					   i, TRUE, FrMainRef [ActiveFrame]);
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
 	       if (multipleOptions)
 		 for (i = 0; i < nbitems; i++)
 		   if (selected[i])         
 		     TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
 	       TtaSetDialoguePosition ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
 	       TtaWaitShowProcDialogue ();

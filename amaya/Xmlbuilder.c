@@ -545,20 +545,14 @@ void CreateXMLElementMenu (Document doc, View view)
       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			 NULL, nbitems, buffer, NULL, FALSE, 'L');
 #endif /* WINDOWS || _GTK */
-
-#ifdef _MOTIF      
-      TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-		   NULL, nbitems, buffer, NULL, 'L');
-#endif /* _MOTIF */
-      
       TtaFreeMemory (buffer);
       		     
       /* activate the menu that has just been created */
       ReturnOption = -1;
       ReturnOptionMenu = -1;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
       TtaSetDialoguePosition ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
       
       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
       /* wait for an answer from the user */

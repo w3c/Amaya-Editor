@@ -796,10 +796,10 @@ void HelpAmaya (Document document, View view)
    fclose (list);
 #endif /* AMAYA_DEBUG */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
    TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
 		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-#endif  /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif  /* #if defined(_GTK) || defined(_WX) */
    
    strcpy (localname, HTAppName);
    strcat (localname, " - ");
@@ -807,15 +807,14 @@ void HelpAmaya (Document document, View view)
    strcat (localname, "     ");
    strcat (localname, HTAppDate);
    
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
    TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
    TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT1));
    TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT2));
    TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-   
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
    CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
 			TtaGetMessage(AMAYA, AM_ABOUT1),

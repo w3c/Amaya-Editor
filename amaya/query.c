@@ -659,13 +659,13 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	  
        if (me->error_stream != (char *) NULL)
 	 HT_FREE (me->error_stream);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS	
        if (me->read_xtinput_id || me->write_xtinput_id ||
 	   me->except_xtinput_id)
 	 RequestKillAllXtevents(me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
        
        if (me->reqStatus == HT_ABORT)
 	 {
@@ -735,35 +735,30 @@ static void         Thread_deleteAll (void)
     {
       if (Amaya->open_requests > 0)
 #ifdef DEBUG_LIBWWW
-      fprintf (stderr, "Thread_deleteAll: Killing %d outstanding "
-	               "requests\n", Amaya->open_requests);
+	fprintf (stderr, "Thread_deleteAll: Killing %d outstanding "
+		 "requests\n", Amaya->open_requests);
 #endif   
-	{
-	  cur = Amaya->reqlist;
-	  
-	  /* erase the requests */
-	  while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
-	    {
-	      if (me->request)
-		{
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+      {
+	cur = Amaya->reqlist;  
+	/* erase the requests */
+	while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
+	  {
+	    if (me->request)
+	      {
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS 
-		  RequestKillAllXtevents (me);
+		RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
-      
-		  if (!HTRequest_kill (me->request))
-		    AHTReqContext_delete (me);
-		}
-	    }		/* while */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+		if (!HTRequest_kill (me->request))
+		  AHTReqContext_delete (me);
+	      }
+	  }
 	  
-	  /* erase the docid_status entities */
-	  while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((HTList *) Amaya->docid_status)))
-	    TtaFreeMemory ((void *) docid_status);
-	  
-	}			/* if */
-	
+	/* erase the docid_status entities */
+	while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((HTList *) Amaya->docid_status)))
+	  TtaFreeMemory ((void *) docid_status);
+      }
     }
 }
  
@@ -1838,9 +1833,9 @@ static void         AHTProtocolInit (void)
   /* TODO: verifier que le param YES est adapte pour WX */
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
 #endif /* _WINDOWS */
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_GTK) || defined(_NOGUI)
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_NOGUI) */
 
 #ifdef AMAYA_WWW_CACHE
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
@@ -1848,7 +1843,6 @@ static void         AHTProtocolInit (void)
 #if 0 /* experimental code */
 #endif
    HTProtocol_add ("ftp", "tcp", FTP_PORT, NO, HTLoadFTP, NULL);
-
 
    /* initialize pipelining */
   strptr = TtaGetEnvString ("ENABLE_PIPELINING");
@@ -1892,12 +1886,12 @@ static void         AHTNetInit (void)
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
-  HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+  HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
   
-   /**** for later ?? ****/
-   /*  HTNet_addAfter(HTInfoFilter, 	NULL,		NULL, HT_ALL,		HT_FILTER_LATE); */
+  /**** for later ?? ****/
+  /*  HTNet_addAfter(HTInfoFilter,NULL, NULL, HT_ALL, HT_FILTER_LATE); */
   /* @@ JK: Filters for doing ftp authentication */
   HTNet_addAfter (HTAuthFilter, "ftp://*", NULL, HT_NO_ACCESS, HT_FILTER_MIDDLE);
   HTNet_addAfter (HTAuthFilter, "ftp://*", NULL, HT_REAUTH, HT_FILTER_MIDDLE);
@@ -2026,12 +2020,12 @@ static void RecCleanCache (char *dirname)
   wxRmdir(wx_dir_name);
 #endif /* _WX */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_GTK) || defined(_NOGUI)
   DIR *dp;
   struct stat st;
 #ifdef HAVE_DIRENT_H
   struct dirent *d;
-#else
+#else /* HAVE_DIRENT_H */
   struct direct *d;
 #endif /* HAVE_DIRENT_H */
   char filename[BUFSIZ+1];
@@ -2077,7 +2071,7 @@ static void RecCleanCache (char *dirname)
 	}
     }
   closedir (dp);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_NOGUI) */
 }
 #endif /* AMAYA_WWW_CACHE */
 
@@ -2568,12 +2562,12 @@ void         QueryInit ()
    wxAmayaSocketEventLoop::InitSocketLib();
 #endif /* _WX */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
    HTEvent_setRegisterCallback ( AHTEvent_register);
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
    HTTimer_registerSetTimerCallback ((BOOL (*)(HTTimer*)) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((BOOL (*)(HTTimer*))AMAYA_DeleteTimer);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 
 #ifdef HTDEBUG
    /* an undocumented option for being able to generate an HTTP protocol
@@ -2727,7 +2721,7 @@ static int          LoopForStop (AHTReqContext * me)
     exit (0);
 #endif /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
    ThotEvent                ev;
 
    /* to test the async calls  */
@@ -2747,20 +2741,18 @@ static int          LoopForStop (AHTReqContext * me)
 	 wxAmayaSocketEvent::CheckSocketStatus( 500 );
 #endif /* _WX */
    }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
    switch (me->reqStatus) {
-	  case HT_ERR:
-          case HT_ABORT:
-	       status_req = NO;
-	       break;
-
-	  case HT_END:
-	       status_req = YES;
-	       break;
-
-	  default:
-	       break;
+   case HT_ERR:
+   case HT_ABORT:
+     status_req = NO;
+     break;
+   case HT_END:
+     status_req = YES;
+     break;
+   default:
+     break;
    }
    return (status_req);
 }
@@ -2779,11 +2771,11 @@ void QueryClose ()
      a non-existent Amaya window */
   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   /** need to erase all existing timers too **/
    HTTimer_registerSetTimerCallback (NULL);
    HTTimer_registerDeleteTimerCallback (NULL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
   HTHost_setActivateRequestCallback (NULL);
   Thread_deleteAll ();
  
@@ -3789,14 +3781,14 @@ void                StopAllRequests (int docid)
 			 }
 		       cur = Amaya->reqlist;
 		     }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS
 		   /* to be on the safe side, remove all outstanding 
 		      X events */
 		   else 
 		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 		 }
 	     }
 	   /* Delete remaining channels */
@@ -3930,7 +3922,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
   return TRUE;
 #endif /* _WX */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_GTK) || defined(_NOGUI)
   int instances;
   char *ptr;
   pid_t pid;
@@ -3995,7 +3987,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
     }
   closedir (dp);
   return (instances == 0);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_NOGUI) */
 
 }
 

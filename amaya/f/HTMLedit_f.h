@@ -131,9 +131,6 @@ extern Element SearchAnchor ( Document doc,
                               Element element,
                               Attribute *HrefAttr,
                               ThotBool name );
-extern void UpdateAtom ( Document doc,
-                         char *url,
-                         char *title );
 
 #else /* __STDC__ */
 
@@ -262,9 +259,6 @@ extern Element SearchAnchor ( Document doc,
                                 Element element,
                                 Attribute *HrefAttr,
                                 ThotBool name );
-extern void UpdateAtom ( Document doc,
-                           char *url,
-                           char *title );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

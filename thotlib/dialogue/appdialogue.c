@@ -22,18 +22,14 @@
 #include "dialog.h"
 
 #ifdef _WINGUI
-  #include "wininclude.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
-
 #ifdef _WX
-  #include "appdialogue_wx_f.h"
+#include "appdialogue_wx_f.h"
 #endif /* _WX */
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 #include "logowindow.h"
 #include "LiteClue.h"
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-#ifdef _GTK
 #include "logo.xpm"
 #endif /* _GTK */
 
@@ -89,10 +85,10 @@ static GdkAtom String_Type = GDK_SELECTION_TYPE_STRING; /* info=1 */
 #include "profiles_f.h"
 #include "thotmsg_f.h"
 
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK)
 #include "LiteClue_f.h"
 #include "xwindowdisplay_f.h"
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) */
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
@@ -345,53 +341,6 @@ HWND GetCurrentWindow ()
 }
 #endif /* _WINGUI */
 
-#ifdef _MOTIF
-  /* This is not used in GTK because you can choose the text
-     you want to show when you create the button */
-static ThotWidget liteClue = NULL;
-/*----------------------------------------------------------------------
-   InitClue
-
-   Initialize the liteClue Widget for the application, handling the
-   tooltips on buttons.
-   Parameters:
-   toplevel: the application toplevel Shell.
-  ----------------------------------------------------------------------*/
-void InitClue (ThotWidget toplevel)
-{
-   Arg                 args[MAX_ARGS];
-   int                 n;
-   int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
-   char               *user_delay;
-   ThotColor           bg, fg;
-
-   if (liteClue != NULL) return;
-   liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
-                                   toplevel, NULL);
-   
-   user_delay = TtaGetEnvString("TOOLTIPDELAY");
-   if (user_delay != NULL)
-     {
-       if (sscanf(user_delay,"%d",&wait_ms) != 1) 
-	 {
-	   TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
-	   wait_ms = 500;
-	 }
-     }
-   bg = ColorPixel(ColorNumber("Yellow"));
-   fg = ColorPixel(ColorNumber("Black"));
-   n = 0;
-   XtSetArg (args[n], XtNbackground, bg);
-   n++;
-   XtSetArg (args[n], XtNforeground, fg);
-   n++;
-   XtSetArg (args[n], XtNfont, DefaultFont);
-   n++;
-   XtSetArg (args[n], XgcNwaitPeriod, wait_ms);
-   n++;
-   XtSetValues (liteClue, args, n);
-}
-#endif /* _MOTIF */
 
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
@@ -423,26 +372,10 @@ void TteInitMenus (char *name, int number)
 	  }
     }
   TtaInitDialogue (servername, &app_cont);
-
-#ifdef  _MOTIF
-  if (!RootShell)
-    {
-      /* Connection au serveur X impossible */
-      printf ("*** Not initialized\n");
-      printf ("*** Fatal Error: X connexion refused\n");
-      exit (1);
-    }
-#endif     /* ----- #ifdef _MOTIF  ----- */
-
-   /* Definition de la procedure de retour des dialogues */
-   TtaDefineDialogueCallback ((Proc)ThotCallback);
-   Dict_Init ();
-   ThotInitDisplay (name, 0, 0);
-
-#if defined(_MOTIF)
-   /* initialize the LiteClue Widget */
-   InitClue(RootShell);
-#endif /* #if defined(_MOTIF) */
+  /* Definition de la procedure de retour des dialogues */
+  TtaDefineDialogueCallback ((Proc)ThotCallback);
+  Dict_Init ();
+  ThotInitDisplay (name, 0, 0);
    
    /* reserve Thot entries */
    TtaGetReferencesBase (MAX_ThotMenu);
@@ -1476,18 +1409,7 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
    /* no external action declared at that time */
    ActionList = NULL;
    TteLoadApplications ();
-
-#ifdef  _MOTIF
-   if (TtDisplay == 0)
-     {
-        /* Connexion au serveur X impossible */
-        TtaError (ERR_cannot_open_main_window);
-      	exit (1);
-     }
-     else
-#endif     /* ----- #ifdef _MOTIF  ----- */
-
-#ifdef  _GTK
+#ifdef _GTK
    if (TtDisplay == 0)
      {
         /* Connexion au serveur X impossible */
@@ -1495,9 +1417,8 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
      		gtk_exit (1);
      }
      else
-#endif     /* ----- #ifdef _GTK  ----- */
-       
-{
+#endif /* _GTK */
+       {
 	/* Compte le nombre de menus a creer */
 	n = 0;
 	i = 0;
@@ -1523,16 +1444,9 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 		ptrmenu = NULL;
 	  }
 	/* icone des fenetres de documents */
-#ifdef  _MOTIF
-	wind_pixmap = XCreateBitmapFromData (TtDisplay,
-					     XDefaultRootWindow (TtDisplay),
-					     (char *)logowindow_bits,
-					     logowindow_width,
-					     logowindow_height);
-#endif     /* ----- #ifdef _MOTIF  ----- */
-#ifdef  _GTK
+#ifdef _GTK
 	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height, (char *)logowindow_bits);
-#endif     /* ----- #ifdef _GTK  ----- */
+#endif /* _GTK */
 
   /**** creation des menus ****/
 	ptrmenu = MainMenuList;
@@ -1559,14 +1473,14 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
      }
 }
 
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK)
+#if defined(_WINGUI) || defined(_GTK)
 /*----------------------------------------------------------------------
-   Toolbar Action callback (MOTIF, GTK, WINDOWS)
+   Toolbar Action callback (GTK, WINDOWS)
    this callback is activated when a toolbar button has been pressed
    ----------------------------------------------------------------------*/
-#if defined(_MOTIF) || defined(_WINGUI)
+#if defined(_WINGUI)
 void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
-#endif     /* ----- #if defined(_MOTIF) || defined(_WINGUI)  ----- */
+#endif     /* ----- #if defined(_WINGUI)  ----- */
 #ifdef  _GTK
 static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 #endif     /* ----- #ifdef _GTK  ----- */
@@ -1583,9 +1497,9 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
       if (!FrameTable[frame].EnabledButton[i])
 	{
 	  /* the button is not active */
-#if defined(_MOTIF) || defined(_WINGUI)
+#if defined(_WINGUI)
     return;
-#endif     /* ----- #if defined(_MOTIF) || defined(_WINGUI)  ----- */
+#endif     /* ----- #if defined(_WINGUI)  ----- */
 #ifdef  _GTK
     return FALSE;
 #endif     /* ----- #ifdef _GTK  ----- */
@@ -1607,7 +1521,7 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
   return FALSE;
 #endif /* _GTK */
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) */
 
 /*----------------------------------------------------------------------
    TtaAddButton
@@ -1631,12 +1545,6 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  unsigned char type, ThotBool state)
 {
   int                 frame, i, index;
-#ifdef _MOTIF
-  ThotWidget          w, row;
-  int                 n;
-  XmString            title_string;
-  Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 #ifdef _GTK
   ThotWidget          w, row;
   ThotWidget          toolbar;
@@ -1735,68 +1643,9 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      gtk_widget_show_all (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
-        FrameTable[frame].Button[i] = row;
+		  FrameTable[frame].Button[i] = row;
 #endif /* _GTK */
-                  
-#ifdef _MOTIF 
-		  row = FrameTable[frame].Button[0];
-		  n = 0;
-		  XtSetArg (args[n], XmNmarginWidth, 1);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 1);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNhighlightThickness, 0);
-		  n++;
-		  XtSetArg (args[n], XmNshadowThickness, 0);
-		  n++;
-		  XtSetArg (args[n], XmNtraversalOn, FALSE);
-		  n++;
-		  if (picture == None)
-		    {
-		      /* insere une chaine vide */
-		      title_string = XmStringCreateSimple ("  ");
-		      XtSetArg (args[n], XmNlabelString, title_string);
-		      n++;
-		      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		      n++;
-		      XtSetArg (args[n], XmNheight, (unsigned short) 30);
-		      n++;
-		      w = XmCreateLabel (row, "Logo", args, n);
-		      XtManageChild (w);
-		      XmStringFree (title_string);
-		    }
-		  else
-		    {
-		      /* insere l'icone du bouton */
-		      XtSetArg (args[n], XmNlabelType, XmPIXMAP);
-		      n++;
-		      XtSetArg (args[n], XmNlabelPixmap, picture);
-		      n++;
-		      if (procedure == NULL)
-			{
-			  w = XmCreateCascadeButton (row, "dialogue", args, n);
-			  XtManageChild (w);
-			}
-		      else
-			{
-			  w = XmCreatePushButton (row, "dialogue", args, n);
-			  XtManageChild (w);
-			  XtAddCallback (w, XmNactivateCallback,
-                             (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
-			  FrameTable[frame].Call_Button[i] = (Proc) procedure;
-			}
-		    }
-		  /* force la mise a jour de la fenetre */
-		  XtManageChild (row);
-                  FrameTable[frame].Button[i] = w;
-		  if (info != NULL && procedure != NULL)
-		    XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
-#endif /* _MOTIF */
-      
 		  FrameTable[frame].CheckedButton[i] = FALSE;
-
 #ifdef _WINGUI
 		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
 		  FrameTable[frame].Button[i] = w;
@@ -1864,10 +1713,6 @@ void TtaSwitchButton (Document doc, View view, int index)
 {
   int                 frame;
   ThotBool            status;
-#ifdef _MOTIF
-  int                 n;
-  Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 
   UserErrorCode = 0;
   /* verifie le parametre document */
@@ -1886,17 +1731,16 @@ void TtaSwitchButton (Document doc, View view, int index)
 	    return; /* there is no parents */
 #endif /* _WX */        
 #ifndef _WX
-	  if ( index < MAX_BUTTON && index > 0 &&
-	       FrameTable[frame].Button[index] != 0 )
+	  if (index < MAX_BUTTON && index > 0 &&
+	      FrameTable[frame].Button[index] != 0)
 #else /* _WX */
-	  if ( index < MAX_BUTTON && index > 0 &&
-	       WindowTable[window_id].Button[index] != 0 )
+	  if (index < MAX_BUTTON && index > 0 &&
+	      WindowTable[window_id].Button[index] != 0)
 #endif /* _WX */
 	    {
 	      /* Change the button state */
 	      status = FrameTable[frame].CheckedButton[index];
 	      FrameTable[frame].CheckedButton[index] = !status;
-
 #ifdef _WINGUI
 	      status = SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED,
 				    (WPARAM) FrameTable[frame].ButtonId[index],
@@ -1906,19 +1750,6 @@ void TtaSwitchButton (Document doc, View view, int index)
 			     (WPARAM) FrameTable[frame].ButtonId[index],
 			     (LPARAM) MAKELONG (!status, 0));
 #endif /* _WINGUI */
-
-#ifdef _MOTIF
-	      n = 0;
-	      if (!status)
-		/* becomes checked */
-		XtSetArg (args[n], XmNbackground, InactiveB_Color);
-	      else
-		/* becomes normal */
-		XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetValues (FrameTable[frame].Button[index], args, n);
-#endif /* _MOTIF */
-        
 #ifdef _GTK
 	      if (!status)
 		/* becomes checked */
@@ -1929,9 +1760,7 @@ void TtaSwitchButton (Document doc, View view, int index)
 		gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
 				       GTK_RELIEF_NONE);
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
-
 #endif /* _GTK */
-
 #ifdef _WX
 	      /* TODO: cette fonction est appele pour les toggle buttons (exemple: Strong Emphasis ...), a prioris on en a pas besoin pour la nouvelle interface */
 	      /*WindowTable[window_id].Button[index]*/
@@ -1958,10 +1787,6 @@ void TtaChangeButton (Document doc, View view, int index,
 		      ThotIcon picture, ThotBool state)
 {
   int                 frame;
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  int                 n;
-#endif /* _MOTIF */  
 #ifdef _GTK
   ThotWidget          tmpw;
 #endif /* _GTK */
@@ -1970,10 +1795,10 @@ void TtaChangeButton (Document doc, View view, int index,
   /* verifie le parametre document */
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    else if (picture == None)
       TtaError (ERR_invalid_parameter);
-#endif /* defined(_MOTIF) || defined(_GTK) */
+#endif /* defined(_GTK) */
   else
     {
       frame = GetWindowNumber (doc, view);
@@ -2006,15 +1831,7 @@ void TtaChangeButton (Document doc, View view, int index,
 		  TtaSwitchButton (doc, view, index);
 		}
 #endif  /* _WINGUI */
-
-        /* Insert the new icone */
-#ifdef _MOTIF
-	      n = 0;
-	      XtSetArg (args[n], XmNlabelPixmap, picture);
-	      n++;
-	      XtSetValues (FrameTable[frame].Button[index], args, n);
-#endif /* _MOTIF */
-
+	      /* Insert the new icone */
 #ifdef _GTK     
 	      /* Update the toolbar button stat: Replace the old picture by the new */
 	      /* The old picture is linked to the button widget with gtk_object_set_data */
@@ -2023,7 +1840,6 @@ void TtaChangeButton (Document doc, View view, int index,
 		      gtk_pixmap_set (GTK_PIXMAP(tmpw), picture->pixmap, picture->mask);
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* _GTK */
-
 #ifdef _WX
 	      wxLogDebug(_T("TtaChangeButton"));
 	      WindowTable[window_id].Button[index]->Enable( state );
@@ -2047,11 +1863,6 @@ void TtaChangeButton (Document doc, View view, int index,
 void TtcSwitchButtonBar (Document doc, View view)
 {
    int                 frame;
-#ifdef  _MOTIF
-   unsigned short      dy;
-   Arg                 args[MAX_ARGS];
-   ThotWidget          row;   
-#endif     /* ----- #ifdef _MOTIF  ----- */
 #ifdef  _GTK
    ThotWidget          row;
 #endif     /* ----- #ifdef _GTK  ----- */   
@@ -2078,39 +1889,8 @@ void TtcSwitchButtonBar (Document doc, View view)
 #endif // #ifndef _WX // TODO	
      }
 
-#if defined(_GTK) || defined(_MOTIF)
-   row = FrameTable[frame].Button[0];
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
-#ifdef _MOTIF
-   XtRemoveCallback (FrameTable[frame].WdFrame, XmNresizeCallback,
-		     (XtCallbackProc) FrameResized, (XtPointer) frame);
-   XtSetArg (args[0], XmNheight, &dy);
-   if (row != 0)
-     {
-	XtUnmanageChild (XtParent (XtParent (row)));
-	if (XtIsManaged (row))
-	  {
-	     XtGetValues (row, args, 1);
-	     XtUnmanageChild (row);
-	     dy = -dy;
-	     XtUnmanageChild (XtParent (row));
-	  }
-	else
-	  {
-	     XtManageChild (row);
-	     XtGetValues (row, args, 1);
-	  }
-
-	/*FrameResized((int *)w, frame, NULL); */
-	XtManageChild (XtParent (row));
-	XtManageChild (XtParent (XtParent (row)));
-     }
-   XtAddCallback (FrameTable[frame].WdFrame, XmNresizeCallback,
-		  (XtCallbackProc) FrameResized, (XtPointer) frame);
-#endif /* _MOTIF */
-   
 #ifdef _GTK
+   row = FrameTable[frame].Button[0];
    if (row != 0)
      {
        if(GTK_WIDGET_VISIBLE(row))
@@ -2120,7 +1900,6 @@ void TtcSwitchButtonBar (Document doc, View view)
 
      }
 #endif /* _GTK */   
-   
 #ifdef _WINGUI
    if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
      {
@@ -2143,7 +1922,6 @@ void TtcSwitchButtonBar (Document doc, View view)
    TtaHandlePendingEvents ();
 }
 
-
 /*----------------------------------------------------------------------
    TtaIsButtonActivated
 
@@ -2159,46 +1937,29 @@ ThotBool TtaIsButtonActivated (Document document, View view)
    TtaSetButtonActivatedStatus
    Used to setup the button activated status from outside
   ----------------------------------------------------------------------*/
-ThotBool TtaSetButtonActivatedStatus( ThotBool new_status )
+void TtaSetButtonActivatedStatus( ThotBool new_status )
 {
   ActivatedButton = new_status;
 }
+
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
   Document            doc;
   View                view;
-#ifdef _MOTIF
-  char               *text;
-#endif /* _MOTIF */
-#ifdef _WINGUI
   char                text[1024];
   
   w = GetParent (w);
-#endif /* _WINGUI */
-  
   CloseInsertion ();
   if (FrameTable[frame].Text_Zone == w)
     {
       FrameToView (frame, &doc, &view);
-
-#ifdef _WINGUI
       w = GetWindow (w, GW_CHILD);
       GetWindowText (w, text, sizeof (text) + 1);
-#endif /* _WINGUI */
-
-#ifdef _MOTIF
-      text = XmTextGetString (w);
-#endif /* _MOTIF */
-
-      (*(Proc3)FrameTable[frame].Call_Text) (
-		(void*)doc,
-		(void*)view,
-		(void*)text);
     }
-#endif /* defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 }
 
 #ifdef _GTK
@@ -2421,24 +2182,12 @@ int TtaAddTextZone (Document doc, View view, char *label,
 {
   int            frame, ret;
   ThotWidget     w;
-#if defined(_GTK) || defined(_MOTIF)
-  ThotWidget     row;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-  
-#ifdef _MOTIF
-  int            n;
-  ThotWidget     rowh;
-  ThotWidget    *brother;
-  XmString       title_string;
-  Arg            args[MAX_ARGS];
-#endif /* _MOTIF */
-  
 #ifdef _GTK
+  ThotWidget     row;
   GList         *combo1_items = NULL;
   ThotWidget     combo;
   ThotWidget     ComboList;
 #endif /* _GTK */
-
 #ifdef _WINGUI
   RECT           rect;
   ThotWidget     wLabel;
@@ -2463,128 +2212,15 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	{
 #ifdef _WX
 	  /* first initialze the urlbar widget */
-	  TtaInitializeURLBar( frame,
+	  TtaInitializeURLBar (frame,
 			       label,
 			       editable,
-			       procedure );
+			       procedure);
 	  /* then fill it with urls */
 	  TtaSetURLBar( frame, listUrl);
 #endif /* _WX */
-
-#if defined(_GTK) || defined(_MOTIF)
-	  row = FrameTable[frame].Row_Zone;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-    
-#ifdef _MOTIF
-	  XtUnmanageChild (XtParent (XtParent (row)));
-	  XtManageChild (row);
-	  
-	  /* Insere la nouvelle zone de texte */
-	  n = 0;
-	  XtSetArg (args[n], XmNchildren, &brother);
-	  n++;
-	  XtGetValues (row, args, n);
-	  
-	  n = 0;
-	  XtSetArg (args[n], XmNmarginWidth, 0);
-	  n++;
-	  XtSetArg (args[n], XmNmarginHeight, 0);
-	  n++;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-	  n++;
-	  if (brother == NULL)
-	    {
-	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-	      n++;
-	    }
-	  else
-	    {
-	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
-	      n++;
-	      XtSetArg (args[n], XmNtopWidget, *brother);
-	      n++;
-	      XtSetArg (args[n], XmNbottomWidget, *brother);
-	      n++;
-	    }
-	  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	  n++;
-	  rowh = XmCreateForm (row, "Dialogue", args, n);
-	  XtManageChild (rowh);
-	  if (label)
-	    {
-	      n = 0;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNheight, (unsigned short) FontHeight (LargeDialogFont));
-	      n++;
-	      XtSetArg (args[n], XmNfontList, DefaultFont);
-	      n++;
-	      title_string = XmStringCreateSimple (label);
-	      XtSetArg (args[n], XmNlabelString, title_string);
-	      n++;
-	      XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
-	      n++;
-	      XtSetArg (args[n], XmNy, (unsigned short) 10);
-	      n++;
-	      XtSetArg (args[n], XmNwidth, (unsigned short) 60);
-	      n++;
-	      w = XmCreateLabel (rowh, "Dialogue", args, n);
-	      XtManageChild (w);
-	      XmStringFree (title_string);
-	    }
-	  
-	  n = 0;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
-	  n++;
-	  XtSetArg (args[n], XmNtraversalOn, TRUE);
-	  n++;
-	  XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
-	  n++;
-	  XtSetArg (args[n], XmNsensitive, TRUE);
-	  n++;
-	  XtSetArg (args[n], XmNeditable, editable);
-	  n++;
-	  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-	  n++;
-	  XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-	  n++;
-	  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	  n++;
-	  if (label)
-	    {
-	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
-	      n++;
-	      XtSetArg (args[n], XmNleftWidget, w);
-	      n++;
-	    }
-	  else
-	    {
-	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-	      n++;
-	    }
-	  w = XmCreateText (rowh, "Dialogue", args, n);
-	  XtManageChild (w);
-	  FrameTable[frame].Text_Zone = w;
-	  if (procedure)
-	    {
-	      XtAddCallback (w, XmNactivateCallback,
-			     (XtCallbackProc) APP_TextCallback,
-			     (XtPointer) frame);
-	      FrameTable[frame].Call_Text = (Proc) procedure;
-	    }
-	  XtManageChild (XtParent (XtParent (XtParent (row))));
-	  XtManageChild (XtParent (XtParent (row)));
-#endif /* _MOTIF */
-
 #ifdef _GTK
+	  row = FrameTable[frame].Row_Zone;
 	  /* row est de type GTK_HBOX */
 	  /*gtk_widget_hide (row->parent->parent);*/
 	  /* Insert a label for the entry text */	      
@@ -2672,8 +2308,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	  gtk_widget_show (w);
 	  gtk_widget_show (combo);
 	  gtk_widget_show (row);
-#endif /* _GTK */
-    
+#endif /* _GTK */    
 #ifdef _WINGUI
 	  currentFrame = frame;
 	  GetClientRect (FrMainRef [frame], &rect);
@@ -2715,7 +2350,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
 							 (DWORD) ComboBoxProc);
 	  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINGUI */
-    
 	  ret = 1;
 	}
     }
@@ -2764,11 +2398,6 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 	      /* Initialize listbox linked to combobox */
 	      InitWdComboBoxList (w, listUrl);
 #endif  /* _WINGUI */
-        
-#ifdef _MOTIF
-	      XmTextSetString (w, listUrl);
-#endif /* #ifdef _MOTIF */
-        
 #ifdef _GTK
 	      /* list of URL OR Title OF librarIES */
 	      combo =  FrameTable[frame].Combo;
@@ -2780,16 +2409,12 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 	      /* Free memory */
 	      g_list_free (combo1_items);
 #endif /* _GTK */
-
 #ifdef _WX
 	      TtaSetURLBar( frame, listUrl);
 #endif /* _WX */
 	    }
 	}
     }
-#ifdef _MOTIF
-  XFlush (TtDisplay);
-#endif /* _MOTIF */
 }
 
 
@@ -2805,24 +2430,14 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 void TtcSwitchCommands (Document doc, View view)
 {
    int                 frame;
-
 #ifdef _WINGUI
    int     nbZonesShown = 0;
    ThotBool itemChecked = FALSE;
    RECT    r;
 #endif /* _WINGUI */
-
-#ifdef _MOTIF
-   unsigned short      y, dy;
-   Arg                 args[MAX_ARGS];
-   ThotWidget          w;
-   ThotWidget          row;   
-#endif /* _MOTIF */
-   
 #ifdef _GTK
    ThotWidget          row;
 #endif /* _GTK */
-
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -2836,35 +2451,6 @@ void TtcSwitchCommands (Document doc, View view)
 #ifndef _WX // TODO	
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-#ifdef _MOTIF
-	     row = XtParent (FrameTable[frame].Row_Zone);
-	     XtSetArg (args[0], XmNwidth, &dy);
-	     if (row != 0)
-	       {
-		  XtUnmanageChild (XtParent (XtParent (row)));
-		  if (XtIsManaged (row))
-		    {
-		       XtGetValues (row, args, 1);
-		       XtUnmanageChild (row);
-		       dy = -dy;
-		    }
-		  else
-		    {
-		       XtManageChild (row);
-		       XtGetValues (row, args, 1);
-		    }
-		  XFlush (TtDisplay);
-		  /* Il faut forcer la reevaluation de la fenetre */
-		  w = FrameTable[frame].WdFrame;
-		  XtSetArg (args[0], XmNwidth, &y);
-		  XtGetValues (row, args, 1);
-		  XtSetArg (args[0], XmNwidth, y + dy);
-		  XtSetValues (row, args, 1);
-		  FrameResized ((int *) w, frame, NULL);
-		  XtManageChild (XtParent (XtParent (row)));
-	       }
-#endif /* _MOTIF */
-       
 #ifdef _GTK 
 	     row = GTK_WIDGET (FrameTable[frame].Row_Zone)->parent;
 	     if (row != 0)
@@ -2876,7 +2462,6 @@ void TtcSwitchCommands (Document doc, View view)
 
 	       }
 #endif /* _GTK */
-       
 #ifdef _WINGUI
 	     if (FrameTable[frame].Text_Zone &&
 		 IsWindowVisible (FrameTable[frame].Text_Zone))
@@ -2903,7 +2488,6 @@ void TtcSwitchCommands (Document doc, View view)
              GetClientRect (FrMainRef[frame], &r);
              PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINGUI */
-             
 	  }
 #endif // #ifndef _WX // TODO		
      }
@@ -3193,20 +2777,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		int width, int height, int *volume, int doc,
 		ThotBool withMenu, ThotBool withButton)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
+#if defined(_GTK) || defined(_WINGUI)
 #ifdef _WINGUI
    ThotMenu            menu_bar, w=0;
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    ThotMenuBar         menu_bar;
    ThotWidget          w=0; /* menu button */
    ThotWidget          drawing_area; 
    ThotWidget          hbox1, hbox2;
    ThotWidget          vbox1;
    unsigned short      dx, dy;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-   
+#endif /* #if defined(_GTK) */
 #ifdef _GTK
    ThotWidget          menu_item;
    ThotWidget          logo_pixmap;
@@ -3219,15 +2801,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    GtkAccelGroup      *accel_group;
    GtkWidget          *wrap_text;
 #endif /* _GTK */
-#ifdef _MOTIF 
-   ThotWidget          drawing_frame; 
-   ThotWidget          table1;
-   ThotWidget          shell;
-   Arg                 args[MAX_ARGS], argument[5];
-   XmString            title_string;
-   char                string[700];
-   int                 n;
-#endif /* _MOTIF */
    ThotWidget          Main_Wd = 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
@@ -3335,8 +2908,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		 }
 	     }
 #endif /* _WINGUI */
-     
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
      if (width < MIN_WIDTH)
 	     dx = MIN_WIDTH;
 	   else
@@ -3349,9 +2921,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     X = 2;
 	   if (Y < 0)
 	     Y = 2;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
-#ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	   /*	   gtk_widget_show_all (Main_Wd);*/
@@ -3374,51 +2943,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
 	   accel_group = NULL;
 	   /* Create the vbox which contain all the elements of the view */
-	   
 #endif /* _GTK */
-
-#ifdef _MOTIF
-	   /*** Building the document window ***/
-	   n = 0;
-	   XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
-	   n++;
-	   sprintf (string, "+%d+%d", X, Y);
-	   XtSetArg (args[n], XmNgeometry, (String) string);
-	   n++;
-	   XtSetArg (args[n], XmNwidth, dx + 4);
-	   n++;
-	   XtSetArg (args[n], XmNheight, dy + 4);
-	   n++;
-	   if (wind_pixmap != 0)
-	     {
-	       /* Creation of the associated icon window */
-	       XtSetArg (args[n], XmNiconPixmap, wind_pixmap);
-	       n++;
-	     }
-	   XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_ALL);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-	   shell = XtCreatePopupShell (name, applicationShellWidgetClass,
-				       RootShell, args, n);
-	   
-	   n = 0;
-	   XtSetArg (args[n], XmNwidth, dx + 4);
-	   n++;
-	   XtSetArg (args[n], XmNheight, dy + 4);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, Scroll_Color);
-	   n++;
-	   XtSetArg (args[n], XmNspacing, 0);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-	   Main_Wd = XmCreateMainWindow (shell, "Thot_Doc", args, n);
-
-	   XtManageChild (Main_Wd);
-	   XtAddCallback (shell, XmNdestroyCallback,
-			  (XtCallbackProc) FrameKilled, (XtPointer) frame);
-#endif /* _MOTIF */
 	   
 	   /* Look for the menu list to be built */
 	   ptrmenu = NULL;
@@ -3449,29 +2974,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuPaste = -1;
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
-
 #ifdef _GL
 	   FrameTable[frame].DblBuffNeedSwap = TRUE;
 	   FrameTable[frame].BeginTime = 0;
 	   FrameTable[frame].Anim_play = FALSE;
 	   FrameTable[frame].Animated_Boxes = NULL;
 #endif /* _GL */
-
-#ifdef _MOTIF
-	   n = 0;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNfontList, DefaultFont);
-	   n++;
-	   XtSetArg (args[n], XmNspacing, 0);
-	   n++;
-	   XtSetArg (args[n], XmNborderWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-#endif /* _MOTIF */
 
 	   while (ptrmenu)
 	     {
@@ -3482,7 +2990,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _WINGUI
 		   w = CreateMenu ();
 #endif /* _WINGUI */
-       
 #ifdef _GTK
 		   if (menu_bar == NULL)
 		     {
@@ -3499,20 +3006,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
 		   w = menu_item;
 #endif /* _GTK */
-
-#ifdef _MOTIF
-		   if (menu_bar == NULL)
-		     {
-		       /*** The menu bar ***/
-		       XtSetArg (argument[0], XmNbackground, BgMenu_Color);
-		       XtSetArg (argument[1], XmNspacing, 0);
-		       menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
-		       XtManageChild (menu_bar);
-		     }
-		   w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
-		   XtManageChild (w);
-#endif /* _MOTIF */
-       
 		   FrameTable[frame].WdMenus[i] = w;
 		   FrameTable[frame].EnabledMenus[i] = TRUE;
 		   /* Evite la construction des menus dynamiques */
@@ -3527,17 +3020,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   AppendMenu (menu_bar, MF_POPUP, (UINT) w,
 			       TtaGetMessage (THOT, ptrmenu->MenuID));
 #endif  /* _WINGUI */
-       
-#ifdef _MOTIF
-		   /* Register dynamic menus */
-		   if (ptrmenu->MenuHelp)
-		     {
-		       /* Menu help at the right side*/
-		       XtSetArg (argument[0], XmNmenuHelpWidget, w);
-		       XtSetValues (XtParent (w), argument, 1);
-		     }
-#endif /* _MOTIF */
-      
 		   }
 	       ptrmenu = ptrmenu->NextMenu;
 	       ref += MAX_ITEM;
@@ -3880,256 +3362,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
 #endif /* _GTK */
-
-#ifdef _MOTIF
-	   /*** Creation of scrollbars ***/
-	   n = 0;
-	   XtSetArg (args[n], XmNbackground, Scroll_Color);
-	   n++;
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	   n++;
-	   XtSetArg (args[n], XmNvalue, 0);
-	   n++;
-	   hscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
-	   XtManageChild (hscrl);
-	   XtAddCallback (hscrl, XmNdragCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNdecrementCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNincrementCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNpageDecrementCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNpageIncrementCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNtoTopCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   XtAddCallback (hscrl, XmNtoBottomCallback,
-			  (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-	   n = 0;
-	   XtSetArg (args[n], XmNbackground, Scroll_Color);
-	   n++;
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	   n++;
-	   XtSetArg (args[n], XmNvalue, 0);
-	   n++;
-	   vscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
-	   XtManageChild (vscrl);
-	   XtAddCallback (vscrl, XmNdragCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNdecrementCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNincrementCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNpageDecrementCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNpageIncrementCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNtoTopCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-	   XtAddCallback (vscrl, XmNtoBottomCallback,
-			  (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-
-	   /* Vertical row */
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-	   n++;
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	   n++;
-	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	   n++;
-	   table1 = XmCreateRowColumn (Main_Wd, "", args, n);
-	   XtManageChild (table1);
-	   
-	   /* Horizontal box for the button bar */
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 2);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	   n++;
-	   XtSetArg (args[n], XmNspacing, 6);
-	   n++;
-	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	   n++;
-	   hbox1 = XmCreateRowColumn (table1, "", args, n);
-	   FrameTable[frame].Button[0] = hbox1;
-
-	   /*XmCreateSeparator (table1, "", args, n);*/
-	   /* Horizontal row for logo and text zones */
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 5);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNwidth, dx);
-	   n++;
-	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	   n++;
-	   hbox1 = XmCreateForm (table1, "", args, n);
-	   XtManageChild (hbox1);
-
-	   /* logo */
-	   if (image != 0)
-	     {
-	       n = 0;
-	       XtSetArg (args[n], XmNmarginWidth, 0);
-	       n++;
-	       XtSetArg (args[n], XmNmarginHeight, 2);
-	       n++;
-	       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	       n++;
-	       XtSetArg (args[n], XmNlabelType, XmPIXMAP);
-	       n++;
-	       XtSetArg (args[n], XmNlabelPixmap, image);
-	       n++;
-	       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-	       n++;
-	       XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-	       n++;
-	       w = XmCreateLabel (hbox1, "Logo", args, n);
-	       XtManageChild (w);
-	     }
-
-	   /*** Creation of text zones  ***/
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-	   n++;
-	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-
-	   if (image != 0)
-	     {
-	       XtSetArg (args[n], XmNleftOffset, 5);
-	       n++;
-	       XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
-	       n++;
-	       XtSetArg (args[n], XmNleftWidget, w);
-	       n++;
-	     }
-	   else
-	     {
-	       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-	       n++;
-	     }
-
-	   vbox1 = XmCreateForm (hbox1, "", args, n);
-	   FrameTable[frame].Text_Zone = 0;
-	   FrameTable[frame].Row_Zone = vbox1;
-
-	   /*** The document frame ***/
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, Scroll_Color);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-	   XtSetArg (args[n], XmNtraversalOn, TRUE);
-	   n++;
-	   drawing_frame = XmCreateFrame (Main_Wd, "Frame", args, n);
-	   XtManageChild (drawing_frame);
-
-	   /* the drawing area*/
-	   n = 0;
-	   XtSetArg (args[n], XmNbackground, White_Color);
-	   n++;
-	   XtSetArg (args[n], XmNforeground, Black_Color);
-	   n++;
-	   XtSetArg (args[n], XmNfontList, DefaultFont);
-	   n++;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-	   drawing_area = XmCreateDrawingArea (drawing_frame, "", args, n);
-	   XtManageChild (drawing_area);
-
-	   /* Horizontal row for buttom messages */
-	   n = 0;
-	   XtSetArg (args[n], XmNmarginWidth, 0);
-	   n++;
-	   XtSetArg (args[n], XmNmarginHeight, 0);
-	   n++;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	   n++;
-	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-	   n++;
-	   hbox2 = XmCreateRowColumn (Main_Wd, "", args, n);
-	   XtManageChild (hbox2);
-	   
-	   /* the label for the message in the statubar */
-	   n = 0;
-	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	   n++;
-	   XtSetArg (args[n], XmNheight, (unsigned short) FontHeight (LargeDialogFont));
-	   n++;
-	   XtSetArg (args[n], XmNfontList, DefaultFont);
-	   n++;
-	   title_string = XmStringCreateSimple (" ");
-	   XtSetArg (args[n], XmNlabelString, title_string);
-	   n++;
-	   i = CharacterWidth ('M', LargeDialogFont) * 50;
-	   XtSetArg (args[n], XmNwidth, (unsigned short) i);
-	   n++;
-	   FrameTable[frame].WdStatus = XmCreateLabel (hbox2, "Thot_MSG", args, n);
-	   XtManageChild (FrameTable[frame].WdStatus);
-	   XmStringFree (title_string);
-	   n = 0;
-	   XtSetArg (args[n], XmNmessageWindow, hbox2);
-	   n++;
-	   XtSetValues (Main_Wd, args, n);
-
-	   n = 0;
-	   XtSetArg (args[n], XmNx, (Position) X + 4);
-	   n++;
-	   XtSetArg (args[n], XmNy, (Position) Y + 4);
-	   n++;
-	   XtSetValues (shell, args, n);
-	   XtPopup (shell, XtGrabNonexclusive);
-	   
-	   XmMainWindowSetAreas (Main_Wd, menu_bar, table1, hscrl, vscrl, drawing_frame);
-	   XtAddCallback (drawing_area, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
-	   XtAddCallback (drawing_area, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
-	   FrameTable[frame].WdScrollH = hscrl;
-	   FrameTable[frame].WdScrollV = vscrl;
-	   FrameTable[frame].WdFrame = drawing_area;
-	   FrRef[frame] = XtWindowOfObject (drawing_area);
-
-	   /* approximate the real size of the drawing area */
-	   FrameTable[frame].FrWidth  = (int) dx - 20;
-	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
-	   FrameTable[frame].FrHeight = (int) dy - 20;
-           FrameTable[frame].WdFrame =  drawing_area;
-#endif /* _MOTIF */
-           
 #ifdef _WINGUI
 	   /*** scrollbars ***/
 	   hscrl = CreateWindow ("scrollbar", 
@@ -4162,7 +3394,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   else
 	     FrameTable[frame].WdFrame = (ThotMenu) w;
 #endif /* _WINGUI */
-
 	   FrameTable[frame].FrScrollOrg = 0;
 
 	   /* get registry default values for visibility */
@@ -4193,16 +3424,15 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        UpdateWindow (Main_Wd);
        InitCommonControls ();
 #endif /* _WINGUI */
-       
 #ifdef _GL
        FrameTable[frame].Scroll_enabled = TRUE;
 #endif /* _GL */ 
      }
    return (frame);
-#else /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
+#else /* #if defined(_GTK) || defined(_WINGUI) */
    /* this is for none gui compilation */
    return 0;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
+#endif /* #if defined(_GTK) || defined(_WINGUI) */
 }
 
 /*----------------------------------------------------------------------
@@ -4269,22 +3499,12 @@ void DestroyFrame (int frame)
 	  i++;
 	}
 
-      
-#ifdef _MOTIF
-      XFlushOutput (0);
-      /* Detache les procedures de callback */
-      XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
-      XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#endif /* _MOTIF */
-
 #ifdef _GTK
       gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
-
 #ifdef _WX
 	TtaDestroyFrame( frame );
 #endif /* _WX */
-
 #ifdef _WINGUI
       FrameTable[frame].Text_Zone = 0;
       if (hAccel[frame])
@@ -4319,12 +3539,10 @@ void DestroyFrame (int frame)
   if (FrMainRef[frame])
     DestroyWindow (FrMainRef[frame]);
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
       for (i = 0; i < MAX_BUTTON; i++)
 	FrameTable[frame].Button[i] = 0;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
+#endif /* #if defined(_GTK) */
 #ifdef _WX
       TtaHandlePendingEvents();
 #endif /* _WX */
@@ -4481,15 +3699,12 @@ static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
       /* yes */
       *menu = m;
       *submenu = sm;
-
 #ifdef _WINGUI
       *item = entry;
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
       *item = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-      
+#endif /* #if defined(_GTK) || defined(_WX) */
       *action = j;
     }
   else
@@ -4599,94 +3814,64 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
   ----------------------------------------------------------------------*/
 void TtaSetMenuOff (Document document, View view, int menuID)
 {
-   ThotMenu            w;
-   int                 menu;
-   int                 frame;
-   int                 ref;
-   Menu_Ctl*           ptrmenu;
-#ifdef _MOTIF
-   int                 n; 
-   XmFontList          font;
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
-
-   if (document == 0 && view == 0)
-     frame = 0;
-   else
-     frame = GetWindowNumber (document, view);
-
-   /* Check parameters */
-   if (frame > MAX_FRAME)
-     return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-     return;
-
-   menu = FindMenu (frame, menuID, &ptrmenu);
-   if (menu != -1)
-     {
-       menu--;
-       if (FrameTable[frame].EnabledMenus[menu])
-	 {
-	   /* Get the button widget */
-	   w = FrameTable[frame].WdMenus[menu];
-	   if (w != 0)
-	     {
-	       FrameTable[frame].EnabledMenus[menu] = FALSE;
-	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	       /* Disable */
-#ifdef _WINGUI
-	       WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
-#endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)
-	       TtaSetPulldownOff (ref, w);
-	       TtaSetPulldownOff (ref, w);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-	       
-	       /* Set the button inactive */
-#ifdef _MOTIF
-     if (TtWDepth > 1)
-		 {
-		   /* Change the color */
-		   n = 0;
-		   XtSetArg (args[n], XmNforeground, InactiveB_Color);
-		   n++;
-		   XtSetValues (w, args, n);
-		   XtManageChild (w);
-		 }
-     else
-		 {
-		   /* Change the font */
-		   font = XmFontListCreate ((XFontStruct *) IDialogFont,
-					    XmSTRING_DEFAULT_CHARSET);
-		   n = 0;
-		   XtSetArg (args[n], XmNfontList, font);
-		   n++;
-		   XtSetValues (w, args, n);
-		   XtManageChild (w);
-		   XmFontListFree (font);
-		 }
-#endif /* _MOTIF */
-
-#ifdef _GTK
-	       gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-#endif /* _GTK */
-
+  ThotMenu            w;
+  int                 menu;
+  int                 frame;
+  int                 ref;
 #ifdef _WX
-	       wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
-
-	       int menu_id = 0;
-	       while ( menu_id < p_menu_bar->GetMenuCount() &&
-		       p_menu_bar->GetMenu(menu_id) != w )
-		 menu_id++;
-	       if ( menu_id < p_menu_bar->GetMenuCount() )
-		 p_menu_bar->EnableTop( menu_id , FALSE );
-	       else
-		 wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+  int                 menu_id;
 #endif /* _WX */
-       }
-	 }
-     }
+  Menu_Ctl*           ptrmenu;
+
+  if (document == 0 && view == 0)
+    frame = 0;
+  else
+    frame = GetWindowNumber (document, view);
+
+  /* Check parameters */
+  if (frame > MAX_FRAME)
+    return;
+  else if ((FrameTable[frame].WdFrame) == 0)
+    return;
+
+  menu = FindMenu (frame, menuID, &ptrmenu);
+  if (menu != -1)
+    {
+      menu--;
+#if defined(_GTK) || defined(_WX)
+      if (FrameTable[frame].EnabledMenus[menu])
+#endif /* #if defined(_GTK) || defined(_WX) */
+	{
+	  /* Get the button widget */
+	  w = FrameTable[frame].WdMenus[menu];
+	  if (w != 0)
+	    {
+	      FrameTable[frame].EnabledMenus[menu] = FALSE;
+	      ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+	      /* Disable */
+#ifdef _WINGUI
+	      WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
+#endif /* _WINGUI */
+#ifdef _GTK
+	      TtaSetPulldownOff (ref, w);
+	      TtaSetPulldownOff (ref, w);
+	      /* Set the button inactive */
+	      gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
+#endif /* _GTK */
+#ifdef _WX
+	      wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
+	      menu_id = 0;
+	      while (menu_id < p_menu_bar->GetMenuCount() &&
+		     p_menu_bar->GetMenu(menu_id) != w)
+		menu_id++;
+	      if (menu_id < p_menu_bar->GetMenuCount())
+		p_menu_bar->EnableTop (menu_id, FALSE);
+	      else
+		wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+#endif /* _WX */
+	    }
+	}
+    }
 }
 
 
@@ -4696,89 +3881,61 @@ void TtaSetMenuOff (Document document, View view, int menuID)
   ----------------------------------------------------------------------*/
 void TtaSetMenuOn (Document document, View view, int menuID)
 {
-   ThotMenu            w;
-   int                 menu;
-   int                 frame;
-   int                 ref;
-   Menu_Ctl*           ptrmenu;
+  ThotMenu            w;
+  int                 menu;
+  int                 frame;
+  int                 ref;
+#ifdef _WX
+  int                 menu_id;
+#endif /* _WX */
+  Menu_Ctl*           ptrmenu;
 
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
+  if (document == 0 && view == 0)
+    frame = 0;
+  else
+    frame = GetWindowNumber (document, view);
 
-   if (document == 0 && view == 0)
-     frame = 0;
-   else
-     frame = GetWindowNumber (document, view);
-
-   /* Check parameters */
-   if (frame > MAX_FRAME)
-     return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-     return;
-   menu = FindMenu (frame, menuID, &ptrmenu);
-   if (menu != -1)
-   {
-       menu--;
-       
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
-       if (!FrameTable[frame].EnabledMenus[menu])
-	   {
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+  /* Check parameters */
+  if (frame > MAX_FRAME)
+    return;
+  else if ((FrameTable[frame].WdFrame) == 0)
+    return;
+  menu = FindMenu (frame, menuID, &ptrmenu);
+  if (menu != -1)
+    {
+      menu--;       
+#if defined(_GTK) || defined(_WX)
+      if (!FrameTable[frame].EnabledMenus[menu])
+#endif /* #if defined(_GTK) || defined(_WX) */
+	{
           /* Get the button widget */
           w = FrameTable[frame].WdMenus[menu];
-	  if (w != 0) {
-             FrameTable[frame].EnabledMenus[menu] = TRUE;
-             ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-             /* Enaable */
+	  if (w != 0)
+	    {
+	      FrameTable[frame].EnabledMenus[menu] = TRUE;
+	      ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+	      /* Enaable */
 #ifdef _WINGUI
-             WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
+	      WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)
-             TtaSetPulldownOn (ref, w);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
-#ifdef _MOTIF
-             /* Set the button active */
-             if (TtWDepth > 1) 
-	       {
-		 /* Change the color */
-		 XtSetArg (args[0], XmNforeground, FgMenu_Color);
-		 XtSetValues (w, args, 1);
-		 XtManageChild (w);
-	       }
-	     else
-	       {
-		 /* Change the font */
-		 XtSetArg (args[0], XmNfontList, DefaultFont);
-		 XtSetValues (w, args, 1);
-		 XtManageChild (w);
-	       }
-#endif /* _MOTIF */
-       
 #ifdef _GTK
+             TtaSetPulldownOn (ref, w);
 	     gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 #endif /* _GTK */
-
 #ifdef _WX
 	     wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
-	     
-	     int menu_id = 0;
-	     while ( menu_id < p_menu_bar->GetMenuCount() &&
-		     p_menu_bar->GetMenu(menu_id) != w )
+	     menu_id = 0;
+	     while (menu_id < p_menu_bar->GetMenuCount() &&
+		    p_menu_bar->GetMenu(menu_id) != w)
 	       menu_id++;
-	     if ( menu_id < p_menu_bar->GetMenuCount() )
-	       p_menu_bar->EnableTop( menu_id , TRUE );
+	     if (menu_id < p_menu_bar->GetMenuCount())
+	       p_menu_bar->EnableTop (menu_id, TRUE);
 	     else
 	       wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
 #endif /* _WX */
-
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
-		  }  	  
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
-	   } 
-   }  
+	    }  	  
+	} 
+    }  
 }
 
 
@@ -4815,16 +3972,13 @@ void   TtaSetToggleItem (Document document, View view, int menuID,
 	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	if (submenu != 0)
 	   ref += submenu * MAX_MENU * MAX_ITEM;
-  /* enable the entry */
-  
+	/* enable the entry */
 #ifdef _WINGUI
 	WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
 #endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	TtaSetToggleMenu (ref, item, on);
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
-
+#endif /* #if defined(_GTK) || defined(_WX) */
      }
 }
 
@@ -5169,9 +4323,9 @@ void ThotCallback (int ref, int typedata, char *data)
 	if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
 	  /* retour du menu des attributs */
 	  {
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK)
 	    TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) */
 	    (*(Proc3)ThotLocalActions[T_rattr]) (
 		(void *)ref,
 		(void *)((int) data),
@@ -5203,9 +4357,9 @@ void ThotCallback (int ref, int typedata, char *data)
 	  if (menu == menuThot)
 	    {
 	      /* traitement du menu attribut */
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK)
 	      TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) */
 	      (*(Proc3)ThotLocalActions[T_rattr]) (
 			(void *)ref,
 			(void *)((int) data),
@@ -5216,9 +4370,9 @@ void ThotCallback (int ref, int typedata, char *data)
 	  if (menu == menuThot)
 	    {
 	      /* traitement du menu selection */
-#if defined(_GTK) || defined(_MOTIF)
+#if defined(_GTK)
 	      TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* #if defined(_GTK) */
 	      (*(Proc3)ThotLocalActions[T_rselect]) (
 			(void *)ref,
 			(void *)((int) data + 1),

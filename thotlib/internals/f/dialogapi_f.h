@@ -134,9 +134,6 @@ extern void TtaNewPaddedLabel ( int ref,
                                 int ref_parent,
                                 char *text,
                                 int padding );
-extern void TtaNewButton ( int ref,
-                           int ref_parent,
-                           char *text );
 extern void TtaNewTextForm ( int ref,
                              int ref_parent,
                              char *title,
@@ -318,9 +315,6 @@ extern void TtaNewPaddedLabel ( int ref,
                                   int ref_parent,
                                   char *text,
                                   int padding );
-extern void TtaNewButton ( int ref,
-                             int ref_parent,
-                             char *text );
 extern void TtaNewTextForm ( int ref,
                                int ref_parent,
                                char *title,

@@ -384,7 +384,7 @@ static ThotBool _GetSysUserName (char *username)
   }
 #endif /* _WX */
 
-#if defined(_GTK) || defined(_MOTIF) 
+#if defined(_GTK) 
   uid_t           uid;
   struct passwd  *pwd;
   char           *pw_name;
@@ -399,7 +399,7 @@ static ThotBool _GetSysUserName (char *username)
     return FALSE;
   strncpy (username, pw_name, MAX_LENGTH - 1);
   username[MAX_LENGTH - 1] = EOS;
-#endif /* #if defined(_GTK) || defined(_MOTIF)  */
+#endif /* #if defined(_GTK) */
 
   return TRUE;
 }

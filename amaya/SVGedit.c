@@ -30,7 +30,7 @@
 #include "SVG.h"
 #include "HTML.h"
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 #include "Graph.xpm"
 #include "GraphNo.xpm"
 #include "line.xpm"
@@ -45,7 +45,7 @@
 #include "label.xpm"
 #include "text.xpm"
 #include "group.xpm"
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #include "libmanag_f.h"
 #include "anim_f.h"
@@ -2103,11 +2103,10 @@ static void ShowGraphicsPalette (Document doc, View view)
      /* the document is in ReadOnly mode */
      return;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   if (!PaletteDisplayed)
     {
       PaletteDisplayed = TRUE;
- 
       /* Dialogue box for the graphics palette */
       TtaNewSheet (GraphDialogue + FormGraph, TtaGetViewFrame (doc, view),
                    TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
@@ -2122,25 +2121,20 @@ static void ShowGraphicsPalette (Document doc, View view)
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
 
-#ifdef _GTK
-      w =   CatWidget (GraphDialogue + FormGraph);
-      gtk_signal_connect (GTK_OBJECT (w), 
-			"delete_event",
-			GTK_SIGNAL_FUNC (CloseSvgPalette), 
-			(gpointer)(GraphDialogue + FormGraph));
+  w =   CatWidget (GraphDialogue + FormGraph);
+  gtk_signal_connect (GTK_OBJECT (w), 
+		      "delete_event",
+		      GTK_SIGNAL_FUNC (CloseSvgPalette), 
+		      (gpointer)(GraphDialogue + FormGraph));
 
-      gtk_signal_connect (GTK_OBJECT (w), 
-			"destroy",
-			GTK_SIGNAL_FUNC (CloseSvgPalette), 
-			(gpointer)(GraphDialogue + FormGraph));
-#endif /*_GTK*/
-      
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-      
+  gtk_signal_connect (GTK_OBJECT (w), 
+		      "destroy",
+		      GTK_SIGNAL_FUNC (CloseSvgPalette), 
+		      (gpointer)(GraphDialogue + FormGraph));
+#endif /* #if defined(_GTK) */
 #ifdef _WINGUI
   CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
 #endif /* _WINGUI */
-  
 }
 #endif /* _SVG */
 
@@ -2150,7 +2144,6 @@ static void ShowGraphicsPalette (Document doc, View view)
 void FreeSVG ()
 {
 #ifdef _SVG
-
 #if defined(_WX)
   if (iconGraph)
     delete iconGraph;
@@ -2166,7 +2159,6 @@ void FreeSVG ()
   iconGraphNo = (ThotIcon) NULL;
   memset( mIcons, 0, 12 * sizeof(ThotIcon) );
 #endif /* defined(_WX) */
-
 #endif /* _SVG */
 }
 
@@ -2176,8 +2168,7 @@ void FreeSVG ()
 void InitSVG ()
 {
 #ifdef _SVG
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
@@ -2192,7 +2183,7 @@ void InitSVG ()
    mIcons[9] = TtaCreatePixmapLogo (label_xpm);
    mIcons[10] = TtaCreatePixmapLogo (text_xpm);
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
    
    GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
@@ -2204,7 +2195,8 @@ void InitSVG ()
 void AddGraphicsButton (Document doc, View view)
 {
 #ifdef _SVG
-  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph, (Proc)ShowGraphicsPalette,
+  GraphButton = TtaAddButton (doc, 1, (ThotIcon)iconGraph,
+			      (Proc)ShowGraphicsPalette,
 			      "ShowGraphicsPalette",
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);

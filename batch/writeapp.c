@@ -530,16 +530,16 @@ static void         WriteActionList (char *fname)
 	  menuAction = menuAction->AppNextName;
 	}
       fprintf (AppFile, "/*################### Main program #########################*/\n");
-      fprintf (AppFile, "#if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) || defined(_WX)\n");
-      fprintf (AppFile, "#if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK)\n");
+      fprintf (AppFile, "#if defined(_WINGUI) || defined(_GTK) || defined(_WX)\n");
+      fprintf (AppFile, "#if defined(_WINGUI) || defined(_GTK)\n");
       fprintf (AppFile, "int main (int argc, char** argv)\n");
-      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_GTK) */\n");
       fprintf (AppFile, "#if defined(_WX)\n");
       fprintf (AppFile, "int amaya_main (int argc, char** argv)\n");
       fprintf (AppFile, "#endif /* defined(_WX) */\n");
-      fprintf (AppFile, "#else  /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#else  /* #if defined(_WINGUI) || defined(_GTK) */\n");
       fprintf (AppFile, "int main (int argc, char **argv)\n");
-      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_GTK) */\n");
       fprintf (AppFile, "{\n");
       
       fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");

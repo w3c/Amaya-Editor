@@ -607,7 +607,8 @@ void ChangeTitle (Document doc, View view)
        strcpy (Answer_text, (char *)title);
        TtaFreeMemory (title);
        CurrentDocument = doc;
-#if defined(_MOTIF) || defined(_GTK)
+
+#if defined(_GTK)
        TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
 		   TtaGetMessage (AMAYA, AM_CHANGE_TITLE), TRUE, 2, 'L', D_CANCEL);
        TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "",
@@ -616,12 +617,10 @@ void ChangeTitle (Document doc, View view)
        TtaSetTextForm (BaseDialog + TitleText, Answer_text);
        TtaSetDialoguePosition ();
        TtaShowDialogue (BaseDialog + TitleForm, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
+#endif /* #if defined(_GTK) */
 #ifdef _WINGUI       
        CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINGUI */
-       
 #ifdef _WX
        CreateTitleDlgWX (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WX */
@@ -694,10 +693,10 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
    char               *buffer = NULL, *name;
    int                 length;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 i;
    char                s[MAX_LENGTH];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
    
    ThotBool            isHTML;
    ThotBool            fromButton = FALSE;
@@ -802,7 +801,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 
     TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
 	/* Dialogue form for open URL or local */
 	i = 0;
 	strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -827,8 +826,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	strcat (s, DocumentName);*/
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
+#endif /* #if defined(_GTK) */
 #ifdef _WINGUI
 	if (LinkAsXmlCSS || LinkAsCSS)
 	  /* select a CSS file */
@@ -839,7 +837,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
 			       DocSelect, DirSelect, docText);
 #endif  /* _WINGUI */
-
      }
 }
 
@@ -4019,35 +4016,4 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
    return elAnchor;
 }
 
-/*----------------------------------------------------------------------
-   UpdateAtom
-   On X-Windows, update the content of atom BROWSER_HISTORY_INFO with
-   title and url of current doc  
-   cf: http://zenon.inria.fr/koala/colas/browser-history/       
-  ----------------------------------------------------------------------*/
-void UpdateAtom (Document doc, char *url, char *title)
-{
-#ifdef _MOTIF
-   static Atom         property_name = 0;
-   char               *v;
-   int                 v_size;
-   Display            *dpy = TtaGetCurrentDisplay ();
-   ThotWindow          win;
-   ThotWidget	       frame;
-
-   frame = TtaGetViewFrame (doc, 1);
-   if (frame == 0)
-      return;
-   win = XtWindow (XtParent (XtParent (XtParent (frame))));
-   /* 13 is strlen("URL=0TITLE=00") */
-   v_size = strlen (title) + strlen (url) + 13;
-   v = (char *)TtaGetMemory (v_size);
-   sprintf (v, "URL=%s%cTITLE=%s%c", url, 0, title, 0);
-   if (!property_name)
-      property_name = XInternAtom (dpy, "BROWSER_HISTORY_INFO", FALSE);
-   XChangeProperty (dpy, win, property_name, XA_STRING, 8, PropModeReplace,
-		    (unsigned char *)v, v_size);
-   TtaFreeMemory (v);
-#endif /* _MOTIF */
-}
 

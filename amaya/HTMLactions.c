@@ -1601,7 +1601,7 @@ void UpdateTitle (Element el, Document doc)
 	     }
 	   TtaNextSibling (&next);
 	 }
-	UpdateAtom (doc, DocumentURLs[doc], text);
+
 	if (DocumentTypes[doc] != docSource)
 	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
     	if (DocumentTypes[doc] == docSource || DocumentSource[doc])

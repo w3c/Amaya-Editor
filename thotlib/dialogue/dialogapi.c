@@ -64,9 +64,9 @@ extern char**     appArgv;
 //CallbackDialogueProc = (Proc)CallbackError;
 //WithMessages = TRUE;
 //ShowCat = NULL;
+
 #ifdef _WINGUI
 //  cyValue = 10;
-#endif  /* _WINGUI */
 
 /*----------------------------------------------------------------------
   GetMenuParentNumber:  returns the Thot window number associated to a     
@@ -96,7 +96,6 @@ static int GetMenuParentNumber (ThotMenu menu)
   return frame;
 }
 
-#ifdef _WINGUI
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM);
@@ -444,23 +443,6 @@ ThotWidget TtaCatWidget(int ref)
   return (CatWidget (ref));
 }
 
-#ifdef _MOTIF
-/*----------------------------------------------------------------------
-  Callback for closing a menu
-  ----------------------------------------------------------------------*/
-static void UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-{
-  struct Cat_Context *icatal;
-  
-  /* Une attende est peut etre debloquee */
-  icatal = catalogue;
-  while (icatal->Cat_PtParent)
-    icatal = icatal->Cat_PtParent;
-  if (icatal == ShowCat && ShowReturn == 1)
-    ShowReturn = 0;
-}
-#endif /* _MOTIF */
-
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_InitScrPopup
@@ -516,22 +498,13 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-static void ConfirmMessage (ThotWidget w, ThotWidget MsgBox, caddr_t call_d)
-{
-  XtPopdown (MsgBox);
-}
-#endif /* _MOTIF */
-
 #ifdef _GTK
 static ThotBool ConfirmMessageGTK (ThotWidget w, ThotWidget MsgBox)
 {
   gtk_widget_hide (MsgBox);
   return TRUE;
 }
-#endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
   Callback inits a form.
   ----------------------------------------------------------------------*/
@@ -539,10 +512,6 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 {
   int                 ent;
   struct E_List      *adbloc;
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  register int        n;
-#endif /* _MOTIF */
   struct Cat_Context *catalogue;
 
   /* Affiche le formulaire */
@@ -557,13 +526,7 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	{
 	  /* Il faut sauter les widgets des RowColumns */
 	  if (adbloc->E_Free[ent] == 'N')
-	    {
-	      catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
-#ifdef _MOTIF
-	      if (catalogue->Cat_Widget)
-		XtManageChild (catalogue->Cat_Widget);
-#endif /* _MOTIF */
-	    }
+	    catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
 	  /* Faut-il passer au bloc suivant ? */
 	  ent++;
 	  if (ent >= C_NUMBER)
@@ -576,23 +539,6 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	    }
 	}
       w = parentCatalogue->Cat_Widget;
-#ifdef _MOTIF
-      /*** Positionne le formulaire a la position courante du show ***/
-      n = 0;
-      XtSetArg (args[n], XmNx, (Position) ShowX);
-      n++;
-      XtSetArg (args[n], XmNy, (Position) ShowY);
-      n++;
-      XtSetValues (XtParent (w), args, n);
-      XtManageChild (w);
-      XtManageChild (XtParent (w));
-      if (PopShell)
-	{
-	  XtSetValues (PopShell, args, n);
-	  XtPopup (PopShell, XtGrabNonexclusive);
-	}
-#endif /* _MOTIF */
-#ifdef _GTK
       if (PopShell)
 	{
 	  gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);
@@ -603,10 +549,9 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	  gtk_window_set_position (GTK_WINDOW (w), GTK_WIN_POS_MOUSE);
 	  gtk_widget_show_all (GTK_WIDGET(w));
 	}
-#endif /* _GTK */
     }
 }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   warning handler                                                    
@@ -615,28 +560,6 @@ void MyWarningHandler (char *s)
 {
 }
 
-#ifdef _MOTIF
-/*----------------------------------------------------------------------
-  Procedure which controls Motif dialogue colors
-  ----------------------------------------------------------------------*/
-void ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg,
-		      ThotColorStruct *sel, ThotColorStruct *top,
-		      ThotColorStruct *bottom)
-{
-   top->red = RGB_Table[3].red *256;
-   top->green = RGB_Table[3].green *256;
-   top->blue = RGB_Table[3].blue *256;
-   bottom->red = RGB_Table[6].red *256;
-   bottom->green = RGB_Table[6].green *256;
-   bottom->blue = RGB_Table[6].blue *256;
-   fg->red = RGB_Table[7].red *256;
-   fg->green = RGB_Table[7].green *256;
-   fg->blue = RGB_Table[7].blue *256;
-   sel->red = RGB_Table[5].red *256;
-   sel->green = RGB_Table[5].green *256;
-   sel->blue = RGB_Table[5].blue *256;
-}
-#endif /* _MOTIF */
 
 /*----------------------------------------------------------------------
    TtaInitDialogue
@@ -648,10 +571,10 @@ void ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg,
   ----------------------------------------------------------------------*/
 void TtaInitDialogue (char *server, ThotAppContext *app_context)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 n;
    char               *arg;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
    CurrentWait = 0;
    ShowReturn = 0;
@@ -756,30 +679,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
    RegisterClassEx (&RootShell);
 #endif /* _WINGUI */
-
-#ifdef _MOTIF
-   /* Ouverture de l'application pour le serveur X-ThotWindow */
-   RootShell = 0;
-   XtToolkitInitialize ();
-   n = 0;
-   arg = NULL;
-   Def_AppCont = XtCreateApplicationContext ();
-   GDp = XtOpenDisplay (Def_AppCont, server, "appli", "Dialogue", NULL, 0, &n, &arg);
-   if (!GDp)
-     /* No server connection */
-     return;
-   *app_context = Def_AppCont;
-   TtDisplay = GDp;
-   RootShell = XtAppCreateShell ("", "Dialogue", applicationShellWidgetClass, GDp, NULL, 0);
-   /* 28/Nov/2000: Contribution by Johaness Zellner for enabling tear-off menus */
-   XmRepTypeInstallTearOffModelConverter ();
-   /* redirect handler warnings */
-   XtAppSetWarningHandler (*app_context, MyWarningHandler);
-   /* Initialisation des options de dialogue */
-   DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
-				   XmSTRING_DEFAULT_CHARSET);
-   XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
-#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -787,11 +686,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
   ----------------------------------------------------------------------*/
 void InitDialogueFont ()
 {
-#ifdef _MOTIF
-  DefaultFont = XmFontListCreate ((XFontStruct *)DialogFont,
-				  XmSTRING_DEFAULT_CHARSET);
-#endif /* _MOTIF */
-
 #ifdef _GTK
   DefaultFont = DialogFont;
 #endif /* _GTK */
@@ -817,18 +711,12 @@ int TtaGetReferencesBase (int number)
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
-#if defined(_MOTIF) || defined(_GTK)
-#ifdef _MOTIF
-   XmString            title_string, OK_string;
-   Arg                 args[MAX_ARGS];
-   int                 n;
-#endif /* _MOTIF */
+#ifdef _GTK
    ThotWidget          row, w;
    ThotWidget          msgbox;
 
    /* get current position */
    TtaSetDialoguePosition ();
-#ifdef _GTK
    /* Create the window message */
    msgbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_widget_realize (GTK_WIDGET(msgbox));
@@ -846,7 +734,7 @@ void DisplayConfirmMessage (char *text)
    /* the label */
    w = gtk_label_new (text);
    gtk_misc_set_alignment (GTK_MISC (w), 0., 0.5);
-   gtk_misc_set_padding (GTK_MISC (w), 10., 0.);
+   gtk_misc_set_padding (GTK_MISC (w), 10, 0);
    gtk_widget_show (GTK_WIDGET(w));
    gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_CENTER);
    gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
@@ -864,105 +752,6 @@ void DisplayConfirmMessage (char *text)
    gtk_widget_show_all (msgbox);
    gdk_window_raise (msgbox->window);
 #endif /* _GTK */
-#ifdef _MOTIF
-   /* C  reate the window message */
-   title_string = XmStringCreateSimple (text);
-   OK_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   n = 0;
-   XtSetArg (args[n], XmNx, (Position) ShowX);
-   n++;
-   XtSetArg (args[n], XmNy, (Position) ShowY);
-   n++;
-   XtSetArg (args[n], XmNallowShellResize, TRUE);
-   n++;
-   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
-   n++;
-   msgbox = XtCreatePopupShell (TtaGetMessage (LIB, TMSG_LIB_CONFIRM), applicationShellWidgetClass,
-				RootShell, args, n);
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, DefaultFont);
-   n++;
-   XtSetArg (args[n], XmNdialogTitle, OK_string);
-   n++;
-   XtSetArg (args[n], XmNautoUnmanage, FALSE);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 10);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   w = XmCreateBulletinBoard (msgbox, "Dialogue", args, n);
-   XtManageChild (w);
-   /*** Create a Row-Column to add the label and OK button ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   /*XtSetArg (args[n], XmNadjustLast, FALSE);
-     n++;*/
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   /*XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-     n++;*/
-   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-   n++;
-   XtSetArg (args[n], XmNresizeHeight, TRUE);
-   n++;
-   row = XmCreateRowColumn (w, "Dialogue", args, n);
-   XtManageChild (row);
-   /* the label */
-   n = 0;
-   XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
-   n++;
-   XtSetArg (args[n], XmNfontList, DefaultFont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNlabelString, title_string);
-   n++;
-   w = XmCreateLabel (row, "Thot_MSG", args, n);
-   XtManageChild (w);
-   /*** Create the Row-Column that includes OK button ***/
-   n = 0;
-   XtSetArg (args[n], XmNfontList, DefaultFont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 100);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   row = XmCreateRowColumn (row, "Dialogue", args, n);
-   XtManageChild (row);
-   /*** Create the OK button ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, DefaultFont);
-   n++;
-   w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), args, n);
-   XtManageChild (w);
-   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) ConfirmMessage, msgbox);
-   /* display the message */
-   XtPopup (msgbox, XtGrabNonexclusive);
-   XmStringFree (title_string);
-   XmStringFree (OK_string);
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -973,7 +762,7 @@ void DisplayConfirmMessage (char *text)
   ----------------------------------------------------------------------*/
 void DisplayMessage (char *text, int msgType)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    int                 lg;
    int                 n;
    char                buff[500 + 1];
@@ -984,12 +773,7 @@ void DisplayMessage (char *text, int msgType)
    if (MainShell && WithMessages && lg > 0)
      {
 	/* take current messages */
-#ifdef _MOTIF
-	strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
-#endif /* _MOTIF */
-#ifdef _GTK
 	strncpy (buff, gtk_entry_get_text (GTK_ENTRY(FrameTable[0].WdStatus)), 500);
-#endif /* _GTK */
 	n = strlen (buff);
 	if (msgType == INFO)
 	  {
@@ -1016,35 +800,20 @@ void DisplayMessage (char *text, int msgType)
 		  strncpy (&buff[n], text, 500 - n);
 		  lg += n;
 		  /* copy text */
-#ifdef _MOTIF
-		  XmTextSetString (FrameTable[0].WdStatus, buff);
-#endif /* _MOTIF */
-#ifdef _GTK
 		  if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
 		    gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
 		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
-#endif /* _GTK */
 	       }
 	     else
 	       {
 		  /* enough space, just add new message at the end */
 		  strcpy (buff, "\n");
 		  strcat (buff, text);
-#ifdef _MOTIF
-		  XmTextInsert (FrameTable[0].WdStatus, n, buff);
-#endif /* _MOTIF */
-#ifdef _GTK
 		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
-#endif /* _GTK */
 		  lg += n;
 	       }
 	     /* select the message end to force scroll down */
-#ifdef _MOTIF
-	     XmTextSetSelection (FrameTable[0].WdStatus, lg, lg, 500);
-#endif /* _MOTIF */
-#ifdef _GTK
 	     gtk_editable_select_region(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1);
-#endif /* _GTK */
 	  }
 	else if (msgType == OVERHEAD)
 	  {
@@ -1052,20 +821,12 @@ void DisplayMessage (char *text, int msgType)
 	     while (buff[n] != EOL && n >= 0)
 		n--;
 	     /* replace last message by the new one */
-#ifdef _MOTIF
-	     XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
-#endif /* _MOTIF */
-#ifdef _GTK
 	     if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
 	       gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
 	     gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, text, -1);
-#endif /* _GTK */
-    }
-#ifdef _MOTIF
-	XFlush (GDp);
-#endif /* _MOTIF */
+	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1077,7 +838,6 @@ static void ClearChildren (struct Cat_Context *parentCatalogue)
   struct Cat_Context *catalogue;
   struct Cat_List    *adlist;
 
-  /* Tous les sous-menus ou sous-formulaires sont detruits par MOTIF */
   /* Recherche les catalogues qui sont les fils de parentCatalogue */
   adlist = PtrCatalogue;
   while (adlist)
@@ -1137,10 +897,6 @@ int DestContenuMenu (struct Cat_Context *catalogue)
 	if (catalogue->Cat_Type == CAT_LABEL)
 	  {
 	     /* Recupere le widget parent du widget detruit */
-#ifdef _MOTIF
-	     w = XtParent (catalogue->Cat_Widget);
-	     XtDestroyWidget (catalogue->Cat_Widget);
-#endif /* _MOTIF */
 #ifdef _GTK
 	     w = GTK_WIDGET(catalogue->Cat_Widget)->parent;
 	     gtk_widget_destroy (catalogue->Cat_Widget);
@@ -1168,13 +924,6 @@ int DestContenuMenu (struct Cat_Context *catalogue)
 			w = GetParent (adbloc->E_ThotWidget[ent]);
 		     DestroyWindow (adbloc->E_ThotWidget[ent]);
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-		     if (w == 0 && ent)
-			w = XtParent (adbloc->E_ThotWidget[ent]);
-		     /* Libere les widgets */
-		     XtUnmanageChild (adbloc->E_ThotWidget[ent]);
-		     XtDestroyWidget (adbloc->E_ThotWidget[ent]);
-#endif /* _MOTIF */
 #ifdef _GTK
 		     if (w == 0 && ent)
 		       w = GTK_WIDGET(adbloc->E_ThotWidget[ent])->parent;
@@ -1196,7 +945,7 @@ int DestContenuMenu (struct Cat_Context *catalogue)
 			  ent = 0;
 		       }
 		  }
-	     /* Note que tous les fils sont detruits par MOTIF */
+	     /* delete all children */
 	     if (catalogue->Cat_Type == CAT_POPUP
 		 || catalogue->Cat_Type == CAT_SCRPOPUP
 		 || catalogue->Cat_Type == CAT_PULL
@@ -1244,11 +993,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   char                menu_item [1024];
   char                equiv_item [255];
 #endif /* _WINGUI || _GTK  || defined(_WX) */
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  XmString            title_string = NULL;
-  int                 n = 0;
-#endif /* _MOTIF */
 #ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
@@ -1293,13 +1037,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _WINGUI
 	  menu = parent;
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-	  /* Create the menu */
-	  n = 0;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
-#endif /* _MOTIF */
 #ifdef _GTK
 	  menu = gtk_menu_new ();
 	  /* 
@@ -1366,18 +1103,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	  return;
 	}
 #endif /* _GTK */
-#ifdef _MOTIF
-      if (number == 0)
-	{
-	  /* it's a simple button not a pull-down */
-	  if (parent)
-	    {
-	      XtManageChild (parent);
-	      XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
-	    }
-	  return;
-	}
-#endif /*_MOTIF */
 
       /*** Create the menu title ***/
       if (title)
@@ -1391,61 +1116,12 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	      adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 	    }
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-	  if (!rebuilded)
-	    {
-	      adbloc = NewEList ();
-	      catalogue->Cat_Entries = adbloc;
-	      n = 0;
-	      title_string = XmStringCreateSimple (title);
-	      XtSetArg (args[n], XmNlabelString, title_string);
-	      n++;
-	      XtSetArg (args[n], XmNfontList, DefaultFont);
-	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      w = XmCreateLabel (menu, "Dialogue", args, n);
-	      XtManageChild (w);
-	      adbloc->E_ThotWidget[0] = w;
-	      n = 0;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
-	      n++;
-	      XtSetArg (args[n], XmNspacing, 0);
-	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-	      n++;
-	      w = XmCreateSeparator (menu, "Dialogue", args, n);
-	      XtManageChild (w);
-	      adbloc->E_ThotWidget[1] = w;
-	    }
-	  else if (adbloc->E_ThotWidget[0])
-	    XtSetValues (adbloc->E_ThotWidget[0], args, n);
-	  if (!title_string)
-	    XmStringFree (title_string);
-#endif /* _MOTIF */
 	}
       else if (!rebuilded)
 	{
 	  adbloc = NewEList ();
 	  catalogue->Cat_Entries = adbloc;
 	}
-#ifdef _MOTIF
-      n = 0;
-      XtSetArg (args[n], XmNfontList, DefaultFont);
-      n++;
-      XtSetArg (args[n], XmNmarginWidth, 0);
-      n++;
-      XtSetArg (args[n], XmNmarginHeight, 0);
-      n++;
-      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-      n++;
-      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-      n++;
-      if (equiv)
-	n++;
-#endif /* _MOTIF */
       
       /* Cree les differentes entrees du menu */
       i = 0;
@@ -1478,10 +1154,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		/* Note l'accelerateur */
 		if (equiv)
 		  {
-#ifdef _MOTIF
-		    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-		    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
-#endif /* _MOTIF */
 #ifdef _WINGUI
 		    if (&equiv[eindex] != EOS)
 		      strcpy (equiv_item, &equiv[eindex]); 
@@ -1554,12 +1226,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu), w);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF
-		    w = XmCreatePushButton (menu, &text[index + 1], args, n);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-		    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'T')
 		  /*__________________________________________ Creation d'un toggle __*/
@@ -1626,14 +1292,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 				      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF
-        XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-		    XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
-		    w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-		    XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'M')
 		  /*_______________________________________ Creation d'un sous-menu __*/
@@ -1669,10 +1327,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu),w);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF
-		    w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
-		    adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'S')
 		  /*_________________________________ Creation d'un separateur __*/
@@ -1698,13 +1352,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu),w); 
 		    adbloc->E_ThotWidget[ent] = w;		 
 #endif /* _GTK */
-#ifdef _MOTIF      
-		    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
-		    w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
-
 		  }
 		else
 		  /*____________________________________ Une erreur de construction __*/
@@ -1714,11 +1361,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 TtaError (ERR_invalid_parameter);
 			 return;
 		  }
-#ifdef _MOTIF
-		/* liberation de la string */
-		if (equiv && !title_string)
-		  XmStringFree (title_string);
-#endif /* _MOTIF */
 		i++;
 		ent++;
 		index += count + 1;
@@ -1732,33 +1374,22 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	  gtk_object_set_data (GTK_OBJECT(menu), "MenuItem", (gpointer)parent);
 	  gtk_widget_show_all (parent);
 #endif /* _GTK */
-#ifdef _MOTIF
-	  n = 0;
-	  XtSetArg (args[n], XmNsubMenuId, menu);
-	  n++;
-	  XtSetValues (parent, args, n);
-	  XtManageChild (parent);
-#endif /* _MOTIF */
 	}
     }
 }
 
-#if defined(_MOTIF) || defined(_GTK) || defined (_WINGUI) || defined(_WX)
+#if defined(_GTK) || defined (_WINGUI) || defined(_WX)
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINGUI
 void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 void TtaSetPulldownOff (int ref, ThotMenu parent)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 {
    struct Cat_Context *catalogue;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
-
 #ifdef _WINGUI
    int                 frame;
 #endif /* _WINGUI */
@@ -1772,14 +1403,6 @@ void TtaSetPulldownOff (int ref, ThotMenu parent)
 	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
-#ifdef _MOTIF
-	else if (catalogue->Cat_Widget)
-	  {
-             XtSetArg (args[0], XmNsubMenuId, NULL);
-             XtSetValues (parent, args, 1);
-             XtManageChild (parent);
-	  }
-#endif /* _MOTIF */
 #ifdef _GTK
 	else if (catalogue->Cat_Widget)
 	  {
@@ -1805,15 +1428,12 @@ void TtaSetPulldownOff (int ref, ThotMenu parent)
 #ifdef _WINGUI
 void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined (_GTK) || defined(_WX)
+#if defined (_GTK) || defined(_WX)
 void TtaSetPulldownOn (int ref, ThotMenu parent)
-#endif /* #if defined(_MOTIF) || defined (_GTK) || defined(_WX) */
+#endif /* #if defined (_GTK) || defined(_WX) */
 {
    struct Cat_Context *catalogue;
    ThotWidget          menu;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 #ifdef _WINGUI
    int                 frame;
 #endif /* _WINGUI */
@@ -1830,11 +1450,6 @@ void TtaSetPulldownOn (int ref, ThotMenu parent)
 	else if (catalogue->Cat_Widget)
 	  {
 	     menu = catalogue->Cat_Widget;
-#ifdef _MOTIF
-             XtSetArg (args[0], XmNsubMenuId, menu);
-             XtSetValues (parent, args, 1);
-             XtManageChild (parent);
-#endif /* _MOTIF */
 #ifdef _GTK
 	     gtk_widget_set_sensitive (GTK_WIDGET(parent), TRUE);
 	     gtk_widget_show_all (GTK_WIDGET(parent));
@@ -1847,7 +1462,7 @@ void TtaSetPulldownOn (int ref, ThotMenu parent)
 	  }
      }
 }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined (_WINGUI) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined (_WINGUI) || defined(_WX) */
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 
@@ -1865,7 +1480,7 @@ void TtaSetPulldownOn (int ref, ThotMenu parent)
 void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		  char *text, char *equiv, char button)
 {
-#if defined (_GTK) || defined(_MOTIF) || defined(_WINGUI)
+#if defined (_GTK) || defined(_WINGUI)
   register int        count;
   register int        index;
   register int        ent;
@@ -1879,21 +1494,14 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
   HMENU               w;
   int                 nbOldItems, ndx;
 #endif /* _WINGUI */
-#if defined (_GTK) || defined(_MOTIF)
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  XmString            title_string = NULL;
-  int                 n;
-#endif /* _MOTIF */
 #ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
   char                menu_item [1024];
   char                equiv_item [255];
-#endif /* _GTK */
   ThotWidget          menu;
   ThotWidget          w;
-#endif /* #if defined (_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
 #ifdef _GTK
   equiv_item[0] = 0;
@@ -1922,28 +1530,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	  else
 	    TtaDestroyDialogue (ref);
 	}
-#ifdef _MOTIF
-      if (!rebuilded)
-	{
-	  /* Creation du Popup Shell pour contenir le menu */
-	  n = 0;
-	  XtSetArg (args[n], XmNheight, (Dimension) 10);
-	  n++;
-	  XtSetArg (args[n], XmNwidth, (Dimension) 10);
-	  n++;
-	  menu = XtCreatePopupShell ("Dialogue", xmMenuShellWidgetClass, RootShell, args, n);
-	}
-      /* Cree le menu correspondant */
-      if (button == 'R')
-	XtSetArg (args[0], XmNwhichButton, Button3);
-      else if (button == 'M')
-	XtSetArg (args[0], XmNwhichButton, Button2);
-      else
-	{
-	  button = 'L';
-	  XtSetArg (args[0], XmNwhichButton, Button1);
-	}
-#endif /* _MOTIF */
 #ifdef _GTK
       menu = gtk_menu_new ();
       ConnectSignalGTK (GTK_OBJECT (menu), "delete_event",
@@ -1953,21 +1539,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 #endif /* _GTK */
       if (!rebuilded)
 	{
-#ifdef _MOTIF
-	  n = 1;
-	  XtSetArg (args[n], XmNmarginWidth, 0);
-	  n++;
-	  XtSetArg (args[n], XmNmarginHeight, 0);
-	  n++;
-	  XtSetArg (args[n], XmNspacing, 0);
-	  n++;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNrowColumnType, XmMENU_POPUP);
-	  n++;
-	  menu = XmCreateRowColumn (menu, "Dialogue", args, n);
-	  XtAddCallback (XtParent (menu), XmNpopdownCallback, (XtCallbackProc) UnmapMenu, catalogue);
-#endif /* _MOTIF */
 #ifdef _WINGUI
 	  menu = CreatePopupMenu ();
 #endif /* _WINGUI */
@@ -1987,12 +1558,7 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	  adbloc = catalogue->Cat_Entries;
 	  /* Si on a change de bouton on met a jour le widget avec args[0] */
 	  if (catalogue->Cat_Button != button)
-	    {
-#ifdef _MOTIF
-	      XtSetValues (menu, args, 1);
-#endif /* _MOTIF */
-	      catalogue->Cat_Button = button;
-	    }
+	    catalogue->Cat_Button = button;
 	  else
 	    button = catalogue->Cat_Button;
 	}
@@ -2005,63 +1571,15 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
       /*** Cree le titre du menu ***/
       if (title)
 	{
-#ifdef _MOTIF
-	  n = 0;
-	  title_string = XmStringCreateSimple (title);
-	  XtSetArg (args[n], XmNlabelString, title_string);
-	  n++;
-#endif /* _MOTIF */
-    
 	  if (!rebuilded)
 	    {
 #ifdef _WINGUI
 	      adbloc->E_ThotWidget[0] = (ThotWidget) 0;
 	      adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 #endif /* _WINGUI */
-#ifdef _MOTIF
-	      XtSetArg (args[n], XmNfontList, DefaultFont);
-	      n++;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
-	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	      n++;
-	      w = XmCreateLabel (menu, "Dialogue", args, n);
-	      XtManageChild (w);
-	      adbloc->E_ThotWidget[0] = w;
-	      n = 0;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-	      n++;
-	      w = XmCreateSeparator (menu, "Dialogue", args, n);
-	      XtManageChild (w);
-	      adbloc->E_ThotWidget[1] = w;
-#endif /* _MOTIF */
 	    }
-#ifdef _MOTIF
-	  else if (adbloc->E_ThotWidget[0])
-	    XtSetValues (adbloc->E_ThotWidget[0], args, n);
-	  XmStringFree (title_string);
-#endif /* _MOTIF */
 	}
       /* Cree les differentes entrees du menu */
-#ifdef _MOTIF
-      n = 0;
-      XtSetArg (args[n], XmNfontList, DefaultFont);
-      n++;
-      XtSetArg (args[n], XmNmarginWidth, 0);
-      n++;
-      XtSetArg (args[n], XmNmarginHeight, 0);
-      n++;
-      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-      n++;
-      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-      n++;
-      if (equiv)
-	n++;
-#endif /* _MOTIF */
 #ifdef _WINGUI
       nbOldItems = GetMenuItemCount (menu);
       for (ndx = 0; ndx < nbOldItems; ndx ++)
@@ -2099,10 +1617,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		/* Note l'accelerateur */
 		if (equiv)
 		  {
-#ifdef _MOTIF
-		    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-		    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
-#endif /* _MOTIF */
 #ifdef _GTK
 		    if (&equiv[eindex] != EOS)
 		      strcpy (equiv_item, &equiv[eindex]); 
@@ -2147,12 +1661,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu), w);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF
-		    w = XmCreatePushButton (menu, &text[index + 1], args, n);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-		    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'T')
 		  /*__________________________________________ Creation d'un toggle __*/
@@ -2194,14 +1702,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 				      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF
-		    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-		    XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
-		    w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-		    XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'M')
 		  /*_______________________________________ Creation d'un sous-menu __*/
@@ -2219,10 +1719,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu),w);
 		    adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF        
-		    w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
-		    adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		  }
 		else if (text[index] == 'S')
 		  /*_________________________________ Creation d'un separateur __*/
@@ -2237,12 +1733,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		    gtk_menu_append (GTK_MENU (menu),w); 
 		    adbloc->E_ThotWidget[ent] = w;		 
 #endif /* _GTK */
-#ifdef _MOTIF        
-		    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
-		    w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
-		    XtManageChild (w);
-		    adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		  }
 		else
 		  /*____________________________________ Une erreur de construction __*/
@@ -2251,18 +1741,13 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
 		    return;
 		  }
-#ifdef _MOTIF
-		/* liberation de la string */
-		if (equiv)
-		  XmStringFree (title_string);
-#endif /* _MOTIF */
 		i++;
 		ent++;
 		index += count + 1;
 	      }
 	  }
     }
-#endif /* #if defined (_GTK) || defined(_MOTIF) || defined(_WINGUI)  */
+#endif /* #if defined (_GTK) || defined(_WINGUI)  */
 }
 
 /*----------------------------------------------------------------------
@@ -2620,10 +2105,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	}
 #endif /* _GTK */
 #endif /* _WINGUI || GTK*/
-#ifdef _MOTIF
-      /* this widget is only supported on Windows and GTK */
-      TtaError (ERR_cannot_create_dialogue);
-#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -2640,10 +2121,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 {
    ThotWidget          row;
    ThotWidget          w;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   int                 n;
-#endif /* _MOTIF */
 
    /* Il faut sauter la 1ere entree allouee a un Row-Column */
    *entry = 1;
@@ -2655,9 +2132,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 #ifdef _WINGUI
    row = GetParent (w);
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-   row = XtParent (w);
-#endif /* _MOTIF */
 #ifdef _GTK
    row = GTK_WIDGET(w->parent);
 #endif /* _GTK */
@@ -2681,31 +2155,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
    /* Faut-il ajouter un nouveau Row-Column ? */
    if (*index % catalogue->Cat_FormPack == 0)
      {
-#ifdef _MOTIF
-	n = 0;
-	XtSetArg (args[n], XmNadjustLast, FALSE);
-	n++;
-	if (catalogue->Cat_in_lines)
-	  {
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	   n++;
-	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	   n++;
-	  }
-	else
-	  {
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	   n++;
-	   XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-	   n++;
-	  }
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNspacing, 5);
-	n++;
-	w = XmCreateRowColumn (row, "Dialogue", args, n);
-	XtManageChild (w);
-#endif /* _MOTIF */
 #ifdef _GTK
 	if (catalogue->Cat_in_lines)
 	  w = gtk_hbox_new (FALSE, 5);
@@ -2746,7 +2195,7 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 		     int number, ThotIcon * icons, ThotBool horizontal)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    int                 i;
    int                 ent;
    struct Cat_Context *catalogue;
@@ -2755,14 +2204,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
    ThotWidget          menu;
    ThotWidget          w;
    ThotWidget          row;
-#ifdef _MOTIF
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
    ThotWidget          tmpw;
-#endif /* _GTK */
 
    if (ref == 0)
      {
@@ -2778,9 +2220,6 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
    else
      {
 	catalogue->Cat_React = TRUE;
-#ifdef _MOTIF
-	title_string = 0;
-#endif /* #ifdef _MOTIF */
 	parentCatalogue = CatEntry (ref_parent);
 	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
@@ -2799,26 +2238,10 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
 	     w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-#ifdef _MOTIF
-	     /*** Cree un sous-menu d'un formulaire ***/
-	     n = 0;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNspacing, 0);
-	     n++;
-	     menu = XmCreateRowColumn (w, "Dialogue", args, n);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	     menu = gtk_vbox_new (FALSE, 0);
 	     gtk_widget_show_all (menu);
 	     gtk_container_add (GTK_CONTAINER(w), menu);	     
-#endif /* _GTK */
-
-       catalogue->Cat_Ref = ref;
+	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_FMENU;
 	     catalogue->Cat_Data = -1;
 	     catalogue->Cat_Widget = menu;
@@ -2832,33 +2255,6 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	/*** Cree le titre du sous-menu ***/
 	if (title)
 	  {
-#ifdef _MOTIF
-	     n = 0;
-	     title_string = XmStringCreateSimple (title);
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     w = XmCreateLabel (menu, "Dialogue", args, n);
-	     XtManageChild (w);
-	     adbloc->E_ThotWidget[0] = w;
-	     n = 0;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-	     n++;
-	     w = XmCreateSeparator (menu, "Dialogue", args, n);
-	     XtManageChild (w);
-	     adbloc->E_ThotWidget[1] = w;
-	     XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	     /* add a label */
 	     w = gtk_label_new (title);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
@@ -2875,51 +2271,14 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     gtk_widget_show_all (w);
 	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 	     adbloc->E_ThotWidget[1] = w;
-#endif /* _GTK */
 	  }
 
-#ifdef _MOTIF
-	/* Cree un Row-Column d'icone dans le Row-Column du formulaire */
-	n = 0;
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNspacing, 0);
-	n++;
-	XtSetArg (args[n], XmNrowColumnType, XmMENU_BAR);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	if (horizontal)
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	else
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	n++;
-	row = XmCreateRowColumn (menu, "Dialogue", args, n);
-	XtManageChild (row);
-
-	/*** Cree les differentes entrees du sous-menu ***/
-	n = 0;
-	XtSetArg (args[n], XmNfontList, DefaultFont);
-	n++;
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNlabelType, XmPIXMAP);
-	n++;
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	if (horizontal)
 	  row = gtk_hbox_new (FALSE, 0);
 	else
 	  row = gtk_vbox_new (FALSE, 0);
 	gtk_widget_show_all (row);
 	gtk_container_add (GTK_CONTAINER(menu), row);
-#endif /* _GTK */
 	i = 0;
 	ent = 2;
 	while (i < number)
@@ -2934,13 +2293,6 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     /* On ne traite que des entrees de type bouton */
 	     adbloc->E_Type[ent] = 'B';
 	     adbloc->E_Free[ent] = 'Y';
-#ifdef _MOTIF
-	     XtSetArg (args[n], XmNlabelPixmap, icons[i]);
-	     w = XmCreateCascadeButton (row, "dialogue", args, n + 1);
-	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallRadio, catalogue);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	     tmpw = gtk_pixmap_new (((ThotIcon)icons[i])->pixmap, ((ThotIcon )icons[i])->mask);
 	     w = gtk_button_new ();
 	     gtk_container_add (GTK_CONTAINER (w), tmpw);
@@ -2949,13 +2301,12 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     /* Connecte the clicked acton to the button */
 	     ConnectSignalGTK (GTK_OBJECT(w), "clicked",
 			       GTK_SIGNAL_FUNC(/*CallRadioGTK*/CallIconButtonGTK), (gpointer)catalogue);
-#endif /* _GTK */
 	     adbloc->E_ThotWidget[ent] = w;
 	     i++;
 	     ent++;
 	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2993,11 +2344,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   char                menu_item [1024];
   char                equiv_item [255];
 #endif /* _WINGUI || _GTK || defined(_WX) */
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  XmString            title_string = NULL;
-  int                 n = 0;
-#endif /* _MOTIF */  
 #ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
@@ -3060,19 +2406,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WX
 	      menu = (ThotMenu)w;
 #endif  /* _WX */
-#ifdef _MOTIF
-	      /*** Cree un sous-menu d'un formulaire ***/
-	      n = 0;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNmarginWidth, 0);
-	      n++;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
-	      n++;
-	      XtSetArg (args[n], XmNspacing, 0);
-	      n++;
-	      menu = XmCreateRowColumn (w, "Dialogue", args, n);
-#endif /* _MOTIF */
 #ifdef _GTK
 	      menu = gtk_vbox_new (FALSE, 0);
 	      gtk_widget_show_all (menu);
@@ -3131,38 +2464,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 		} 
 #endif /* _WINGUI */
-#ifdef _MOTIF        
-	      if (!rebuilded)
-		{
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  XtSetArg (args[n], XmNfontList, DefaultFont);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  w = XmCreateLabel (menu, "Dialogue", args, n);
-		  XtManageChild (w);
-		  adbloc->E_ThotWidget[0] = w;
-		  n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		  n++;
-		  w = XmCreateSeparator (menu, "Dialogue", args, n);
-		  XtManageChild (w);
-		  adbloc->E_ThotWidget[1] = w;
-		} 
-	      else if (adbloc->E_ThotWidget[0])
-		XtSetValues (adbloc->E_ThotWidget[0], args, n);
-	      if (!title_string)
-		XmStringFree (title_string);
-#endif /* _MOTIF */
 	    }
 	  if (!rebuilded)
 	    {
@@ -3173,44 +2474,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 	      gtk_widget_set_name (GTK_WIDGET(row), "Dialogue");
 	      gtk_box_pack_start (GTK_BOX(menu), GTK_WIDGET(row), FALSE, FALSE, 0);
 #endif /* _GTK */
-#ifdef _MOTIF
-	      /* Cree un Row-Column de Radio dans le Row-Column du formulaire */
-	      n = 0;
-	      XtSetArg (args[n], XmNradioAlwaysOne, TRUE);
-	      n++;
-	      XtSetArg (args[n], XmNradioBehavior, TRUE);
-	      n++;
-	      XtSetArg (args[n], XmNmarginWidth, 0);
-	      n++;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
-	      n++;
-	      XtSetArg (args[n], XmNspacing, 0);
-	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      row = XmCreateRowColumn (menu, "Dialogue", args, n);
-	      XtManageChild (row);
-#endif /* _MOTIF */
 	    }
 	  else
 	    /* Sinon on recupere le widget parent des entrees */
 	    row = catalogue->Cat_XtWParent;
-#ifdef _MOTIF
+
 	  /*** Cree les differentes entrees du sous-menu ***/
-	  n = 0;
-	  XtSetArg (args[n], XmNindicatorType, XmONE_OF_MANY);
-	  n++;
-	  XtSetArg (args[n], XmNfontList, DefaultFont);
-	  n++;
-	  XtSetArg (args[n], XmNmarginWidth, 0);
-	  n++;
-	  XtSetArg (args[n], XmNmarginHeight, 0);
-	  n++;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	  n++;
-#endif /* _MOTIF */
 	  i = 0;
 	  index = 0;
 	  eindex = 0;
@@ -3259,12 +2528,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  WIN_AddFrameCatalogue (w, catalogue);
 		  adbloc->E_ThotWidget[ent] = w;
 #endif  /* _WINGUI */
-#ifdef _MOTIF      
-		  w = XmCreateToggleButton (row, &text[index + 1], args, n);
-		  XtManageChild (w);
-		  XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallRadio, catalogue);
-		  adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		  i++;
 		  index += count + 1;
 		  ent++;
@@ -3304,26 +2567,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      menu = gtk_menu_new ();
 		      menu->style->font=DefaultFont;
 #endif /* _GTK */
-#ifdef _MOTIF
-		      n = 0;
-		      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		      n++;
-		      button = parentCatalogue->Cat_Button;
-		      if (button == 'R')
-			XtSetArg (args[n], XmNwhichButton, Button3);
-		      else if (button == 'M')
-			XtSetArg (args[n], XmNwhichButton, Button2);
-		      else 
-			XtSetArg (args[n], XmNwhichButton, Button1);
-		      n++;
-		      XtSetArg (args[n], XmNmarginWidth, 0);
-		      n++;
-		      XtSetArg (args[n], XmNmarginHeight, 0);
-		      n++;
-		      XtSetArg (args[n], XmNspacing, 0);
-		      n++;
-		      menu = XmCreatePulldownMenu (w, "Dialogue", args, n);
-#endif /* _MOTIF */
 		      catalogue->Cat_Button = button;
 		      catalogue->Cat_Data = -1;
 		      /* Memorise l'entree decalee de 2 pour le widget titre */
@@ -3348,13 +2591,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      if (!IsMenu (catalogue->Cat_Widget))
 			  catalogue->Cat_Widget = w;
 #endif /* _WINGUI */
-#ifdef _MOTIF
-		      n = 0;
-		      XtSetArg (args[n], XmNsubMenuId, menu);
-		      n++;
-		      XtSetValues (w, args, n);
-		      XtManageChild (w);
-#endif /* _MOTIF */
 #ifdef _GTK
 		      /* assign the submenu to the menu bar*/
 		      gtk_widget_show_all (w);
@@ -3392,37 +2628,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  adbloc->E_ThotWidget[1] = w;
 		}
 #endif /* _WINGUI */
-#ifdef _MOTIF
-	      if (!rebuilded)
-		{
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  XtSetArg (args[n], XmNfontList, DefaultFont);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  w = XmCreateLabel (menu, "Dialogue", args, n);
-		  XtManageChild (w);
-		  adbloc->E_ThotWidget[0] = w;
-		  n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		  n++;
-		  w = XmCreateSeparator (menu, "Dialogue", args, n);
-		  XtManageChild (w);
-		  adbloc->E_ThotWidget[1] = w;
-		}
-	      else if (adbloc->E_ThotWidget[0])
-		XtSetValues (adbloc->E_ThotWidget[0], args, n);
-	      XmStringFree (title_string);
-#endif /* _MOTIF */
 #ifdef _GTK
 	      if (!rebuilded)
 		{
@@ -3445,23 +2650,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  adbloc->E_ThotWidget[1] = 0;
 		}
 #endif /* _WX */
-	    } 
+	    }
+
 	  /* Cree les differentes entrees du sous-menu */
-#ifdef _MOTIF
-	  n = 0;
-	  XtSetArg (args[n], XmNfontList, DefaultFont);
-	  n++;
-	  XtSetArg (args[n], XmNmarginWidth, 0);
-	  n++;
-	  XtSetArg (args[n], XmNmarginHeight, 0);
-	  n++;
-	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	  n++;
-	  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	  n++;
-	  if (equiv)
-	    n++;
-#endif /* _MOTIF */
 	  i = 0;
 	  index = 0;
 	  eindex = 0;
@@ -3494,10 +2685,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      if (&equiv[eindex] != EOS)
 			strcpy (equiv_item, &equiv[eindex]); 
 #endif /* _WINGUI */
-#ifdef _MOTIF
-		      title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-		      XtSetArg (args[n - 1], XmNacceleratorText, title_string);
-#endif /* _MOTIF */
 #if defined(_GTK) || defined(_WX)
 		      if (&equiv[eindex] != EOS)
 			strcpy (equiv_item, &equiv[eindex]); 
@@ -3564,12 +2751,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		      adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF           
-		      w = XmCreatePushButton (menu, &text[index + 1], args, n);
-		      XtManageChild (w);
-		      adbloc->E_ThotWidget[ent] = w;
-		      XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		    }
 		  else if (text[index] == 'T')
 		    {
@@ -3636,15 +2817,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      ConnectSignalGTK (GTK_OBJECT(w), "activate",
 					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);		      
 #endif /* _GTK */
-#ifdef _MOTIF          
-		      /* un toggle a faux */
-		      XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-		      XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
-		      w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
-		      XtManageChild (w);
-		      adbloc->E_ThotWidget[ent] = w;
-		      XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* _MOTIF */
 		    }
 		  else if (text[index] == 'M')
 		    {
@@ -3675,10 +2847,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 
 		      adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF          
-		      w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
-		      adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		    }
 		  else if (text[index] == 'S')
 		    {
@@ -3709,12 +2877,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#ifdef _MOTIF          
-		      XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
-		      w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
-		      XtManageChild (w);
-		      adbloc->E_ThotWidget[ent] = w;
-#endif /* _MOTIF */
 		    }
 		  else
 		    {
@@ -3725,10 +2887,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		    } 
 		  
 		  /* free the string */
-#ifdef _MOTIF
-		  if (equiv)
-		    XmStringFree (title_string);
-#endif /* _MOTIF */
 		  i++;
 		  index += count + 1;
 		  ent++;
@@ -3745,18 +2903,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   ----------------------------------------------------------------------*/
 void TtaSetMenuForm (int ref, int val)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    register int        i;
    register int        ent;
    ThotBool            visible;
    struct E_List      *adbloc;
-#ifdef _MOTIF
-   register int        n;
-   Arg                 args[MAX_ARGS];
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
    guint               id_toggled;
-#endif /* _GTK */
    struct Cat_Context *catalogue;
 
    catalogue = CatEntry (ref);
@@ -3774,16 +2926,6 @@ void TtaSetMenuForm (int ref, int val)
 	  }
 
 	/* Est-ce que le sous-menu est actuellement affiche */
-#ifdef _MOTIF
-	if (XtIsManaged (catalogue->Cat_Widget))
-	   visible = TRUE;
-	else
-	  {
-	     visible = FALSE;
-	     XtManageChild (catalogue->Cat_Widget);
-	  }
-#endif /* _MOTIF */
-#ifdef _GTK
 	if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
 	   visible = TRUE;
 	else
@@ -3791,65 +2933,43 @@ void TtaSetMenuForm (int ref, int val)
 	     visible = FALSE;
 	     gtk_widget_show_all (catalogue->Cat_Widget);
 	  }
-#endif /* _GTK */
+
 	/* Positionnement de la valeur de chaque entree */
 	adbloc = catalogue->Cat_Entries;
 	ent = 0;
 	i = 2;			/* decalage de 2 pour le widget titre */
 	while (adbloc)
 	  {
-	     while (i < C_NUMBER)
-	       {
-		  if (adbloc->E_ThotWidget[i] == 0)
-		     i = C_NUMBER;
-		  else if (ent == val)
-		    {
-#ifdef _MOTIF
-		       n = 0;
-		       XtSetArg (args[n], XmNset, TRUE);
-		       n++;
-		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
-#endif /* _MOTIF */
-#ifdef _GTK
+	    while (i < C_NUMBER)
+	      {
+		if (adbloc->E_ThotWidget[i] == 0)
+		  i = C_NUMBER;
+		else if (ent == val)
+		  {
+		    id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							       "toggled");
+		    gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+					      id_toggled);
+		    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						  TRUE);
+		  }
+		else
+		  {
+		    id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							       "toggled");
+		    gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+					      id_toggled);
+		    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						  FALSE);
+		  }
+		i++;
+		ent++;
+	      }
+	    /* Passe au bloc suivant */
+	    adbloc = adbloc->E_Next;
+	    i = 0;
+	  }
 
-		       id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-							  "toggled");
-		       gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-						 id_toggled);
-		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
-						     TRUE);
-#endif /* _GTK */
-           
-		    }
-		  else
-		    {
-#ifdef _MOTIF
-		       n = 0;
-		       XtSetArg (args[n], XmNset, FALSE);
-		       n++;
-		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
-#endif /* _MOTIF */
-#ifdef _GTK
-		       id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-							  "toggled");
-		       gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-						 id_toggled);
-		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
-						     FALSE);
-#endif /* _GTK */
-		    }
-		  i++;
-		  ent++;
-	       }
-	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Next;
-	     i = 0;
-	  }			/*while */
-#ifdef _MOTIF
-	if (!visible)
-	   XtUnmanageChild (catalogue->Cat_Widget);
-#endif /* _MOTIF */
-#ifdef _GTK
 	adbloc = catalogue->Cat_Entries;
 	ent = 0;
 	i = 2;			/* decalage de 2 pour le widget titre */
@@ -3875,11 +2995,11 @@ void TtaSetMenuForm (int ref, int val)
 	  }		
 	if (!visible)
 	  gtk_widget_hide (catalogue->Cat_Widget);
-#endif /* _GTK */
+
 	/* La selection de l'utilisateur est desactivee */
 	catalogue->Cat_Data = val;
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3899,7 +3019,7 @@ void TtaSetMenuForm (int ref, int val)
 void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 		       char *text, char *equiv, ThotBool react)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    register int        count;
    register int        index;
    int                 eindex;
@@ -3909,11 +3029,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-   int                 n;
-#endif /* _MOTIF */
    ThotWidget          menu;
    ThotWidget          w;
    ThotWidget          row;
@@ -3929,9 +3044,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
    else
      {
 	catalogue->Cat_React = react;
-#ifdef _MOTIF
-	title_string = 0;
-#endif /* _MOTIF */
 	/* Faut-il detruire le catalogue precedent ? */
 	rebuilded = FALSE;
 	if (catalogue->Cat_Widget)
@@ -3963,27 +3075,11 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 	     if (!rebuilded)
 	       {
 		  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-#ifdef _MOTIF
-		  /* Cree un sous-menu d'un formulaire */
-		  n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNspacing, 0);
-		  n++;
-		  menu = XmCreateRowColumn (w, "Dialogue", args, n);
-#endif /* _MOTIF */
-#ifdef _GTK
 		  /* create a new vbox to contain the toggle buttons */
 		  menu = gtk_vbox_new (FALSE, 1);
 		  gtk_widget_show_all (menu);
 		  gtk_widget_set_name (menu, "Dialogue");
 		  gtk_container_add (GTK_CONTAINER(w), menu);
-#endif /* _GTK */
-      
 		  catalogue->Cat_Ref = ref;
 		  catalogue->Cat_Type = CAT_TMENU;
 		  catalogue->Cat_Widget = menu;
@@ -4003,38 +3099,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 	     /*** Cree le titre du sous-menu ***/
 	     if (title)
 	       {
-#ifdef _MOTIF
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  if (!rebuilded)
-		    {
-		       XtSetArg (args[n], XmNfontList, DefaultFont);
-		       n++;
-		       XtSetArg (args[n], XmNmarginHeight, 0);
-		       n++;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		       n++;
-		       w = XmCreateLabel (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-		       adbloc->E_ThotWidget[0] = w;
-		       n = 0;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		       n++;
-		       w = XmCreateSeparator (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-		       adbloc->E_ThotWidget[1] = w;
-		    }
-		  else if (adbloc->E_ThotWidget[0])
-		     XtSetValues (adbloc->E_ThotWidget[0], args, n);
-		  XmStringFree (title_string);
-#endif /* _MOTIF */
-#ifdef _GTK
 		  if (!rebuilded)
 		    {
 		      /* new label for the title */
@@ -4055,33 +3119,14 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 		    }
 		  else if (adbloc->E_ThotWidget[0])
 		    gtk_label_set_text (GTK_LABEL(adbloc->E_ThotWidget[0]), title);
-#endif /* _GTK */
 	       }
 	     if (!rebuilded)
 	       {
-#ifdef _MOTIF
-		  /* Cree un Row-Column de Toggle dans le Row-Column du formulaire */
-		  n = 0;
-		  XtSetArg (args[n], XmNradioAlwaysOne, FALSE);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNspacing, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  row = XmCreateRowColumn (menu, "Dialogue", args, n);
-		  XtManageChild (row);
-#endif /* _MOTIF */
-#ifdef _GTK
 		  /* create a new vbox for the list */
 		  row = gtk_vbox_new (FALSE, 1);
 		  gtk_widget_set_name (GTK_WIDGET(row), "Dialogue");
 		  gtk_widget_show_all (GTK_WIDGET(row));
 		  gtk_box_pack_start (GTK_BOX(menu), GTK_WIDGET(row),  FALSE, FALSE, 0);
-#endif /* _GTK */
 	       }
 	     else
 	       /* Sinon on recupere le widget parent des entrees */
@@ -4089,27 +3134,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 	     
 	     /* note le nombre d'entrees du toggle */
 	     catalogue->Cat_Data = number;	/* recouvre Cat_XtWParent */
-#ifdef _MOTIF
-	     /* Cree les differentes entrees du sous-menu */
-	     n = 0;
-	     XtSetArg (args[n], XmNindicatorType, XmN_OF_MANY);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     if (equiv)
-	       {
-		  XtSetArg (args[n + 1], XmNacceleratorText, title_string);
-		  n++;
-	       }
-#endif /* _MOTIF */
 	     i = 0;
 	     index = 0;
 	     eindex = 0;
@@ -4142,24 +3166,13 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 
 		       /* Note l'accelerateur */
 		       if (equiv)
-			 {
-#ifdef _MOTIF
-			   title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-#endif /* _MOTIF */
-			   eindex += strlen (&equiv[eindex]) + 1;
-			 }
+			 eindex += strlen (&equiv[eindex]) + 1;
+
 		       /* On accepte toggles, boutons et separateurs */
 		       if (text[index] == 'B' || text[index] == 'T')
 			 /*____________________________________ Creation d'un bouton __*/
 			 {
 			   adbloc->E_Type[ent] = 'B';
-#ifdef _MOTIF
-			   w = XmCreateToggleButton (row, &text[index + 1], args, n);
-		       
-			   XtManageChild (w);
-			   XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
-#endif /* _MOTIF */
-#ifdef _GTK
 			   /* add a check button to the list */
 			   w = gtk_check_button_new_with_label (&text[index + 1]);
 			   gtk_widget_show_all (GTK_WIDGET(w));
@@ -4168,32 +3181,19 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 					     "toggled", 
 					     GTK_SIGNAL_FUNC (CallToggleGTK), 
 					     (gpointer)catalogue);
-#endif /* _GTK */
 			   adbloc->E_ThotWidget[ent] = w;
 			 }
 		       else if (text[index] == 'S')
 			 /*_______________________________ Creation d'un separateur __*/
 			 {
 			   adbloc->E_Type[ent] = 'S';
-#ifdef _MOTIF
-			    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
-			    w = XmCreateSeparator (row, "Dialogue", args, n+1);
-			    XtManageChild (w);
-#endif /* _MOTIF */
-#ifdef _GTK
 			    /* add a separator to the list */
 			    w = gtk_hseparator_new ();
 			    gtk_widget_show_all (w);
 			    gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-#endif /* _GTK */
 			    adbloc->E_ThotWidget[ent] = w;
 			 }
            
-#ifdef _MOTIF
-		       /* liberation de la string */
-		       if (equiv)
-			  XmStringFree (title_string);
-#endif /* _MOTIF */
 		       i++;
 		       index += count + 1;
 		       ent++;
@@ -4203,7 +3203,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 	else
 	   TtaError (ERR_invalid_parameter);
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -4216,9 +3216,9 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #ifdef _WINGUI 
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif  /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
 void TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || _NOGUI */
+#endif /* #if defined(_GTK) || defined(_WX) || _NOGUI */
 {
 #ifdef _WINGUI 
   struct Cat_Context *catalogue;
@@ -4290,193 +3290,143 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
     }
 #endif /* _WINGUI  */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   ThotWidget          w;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   register int        n;
-#endif /* _MOTIF */
-   register int        i;
-   register int        ent;
-   ThotBool            visible;
-   ThotBool            done;
-   struct E_List      *adbloc;
-   struct Cat_Context *catalogue;
+  register int        i;
+  register int        ent;
+  ThotBool            visible;
+  ThotBool            done;
+  struct E_List      *adbloc;
+  struct Cat_Context *catalogue;
 
-   catalogue = CatEntry (ref);
-   if (catalogue == NULL)
-      TtaError (ERR_invalid_reference);
-   else if (catalogue->Cat_Widget == 0)
-      TtaError (ERR_invalid_reference);
-   else
-     {
-	/* Si ce n'est pas un menu sous-menu */
-	if (catalogue->Cat_Type != CAT_TMENU
-	    && catalogue->Cat_Type != CAT_MENU
-	    && catalogue->Cat_Type != CAT_PULL
-	    && catalogue->Cat_Type != CAT_POPUP
-	    && catalogue->Cat_Type != CAT_SCRPOPUP)
-	  {
-	     TtaError (ERR_invalid_reference);
-	     return;
-	  }
-	else if (catalogue->Cat_Type == CAT_TMENU && val > catalogue->Cat_Data)
-	  {
-	     /* ce n'est pas une entree du toggle */
-	     TtaError (ERR_invalid_reference);
-	     return;
-	  }
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL)
+    TtaError (ERR_invalid_reference);
+  else if (catalogue->Cat_Widget == 0)
+    TtaError (ERR_invalid_reference);
+  else
+    {
+      /* Si ce n'est pas un menu sous-menu */
+      if (catalogue->Cat_Type != CAT_TMENU
+	  && catalogue->Cat_Type != CAT_MENU
+	  && catalogue->Cat_Type != CAT_PULL
+	  && catalogue->Cat_Type != CAT_POPUP
+	  && catalogue->Cat_Type != CAT_SCRPOPUP)
+	{
+	  TtaError (ERR_invalid_reference);
+	  return;
+	}
+      else if (catalogue->Cat_Type == CAT_TMENU && val > catalogue->Cat_Data)
+	{
+	  /* ce n'est pas une entree du toggle */
+	  TtaError (ERR_invalid_reference);
+	  return;
+	}
   
-	/* Est-ce que le sous-menu est actuellement affiche */
-#ifdef _MOTIF
-	else if (XtIsManaged (catalogue->Cat_Widget))
-	  visible = TRUE;
-	else
-	  {
-	    visible = FALSE;
-	    XtManageChild (catalogue->Cat_Widget);
-	  }
-#endif /* #ifdef _MOTIF */
+      /* Est-ce que le sous-menu est actuellement affiche */
 #ifdef _GTK
-  else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
-	  visible = TRUE;
-	else
-	  {
-	    visible = FALSE;
-	    if (catalogue->Cat_Type != CAT_SCRPOPUP)
-	      gtk_widget_show_all (catalogue->Cat_Widget);
-	  }
-#endif /* _GTK */
-	/* Positionnement de la valeur de chaque entree */
-	adbloc = catalogue->Cat_Entries;
-	ent = 0;
-	i = 2;			/* decalage de 2 pour le widget titre */
-	done = FALSE;
-	while (adbloc && !done)
-	  {
-	    while (i < C_NUMBER)
-	      {
-		/* S'il n'y a pas de bouton  */
-		if (adbloc->E_ThotWidget[i] == 0)
-		  i = C_NUMBER;
-		/* C'est une entree qu'il faut initialiser */
-		else if (ent == val || val == -1)
-		  {
-		    if (catalogue->Cat_Type != CAT_TMENU && adbloc->E_Type[i] != 'T')
-		      {
-			/* ce n'est pas une entree du toggle */
-			TtaError (ERR_invalid_reference);
-			return;
-		      }
-		    else
-		      {
-			w = adbloc->E_ThotWidget[i];
-#ifdef _MOTIF
-			/* retire les callbacks */
-			if (catalogue->Cat_Type == CAT_TMENU)
-			  XtRemoveCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
-			else
-			  XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* #ifdef _MOTIF */
-			if (on)
-			  /* Bouton allume */
-			  {
-#ifdef _MOTIF
-			    n = 0;
-			    XtSetArg (args[n], XmNset, TRUE);
-			    n++;
-			    XtSetValues (w, args, n);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-			    /* attribut active is set to the good value */
-			    if (catalogue->Cat_Type == CAT_TMENU)
-			      {
-				RemoveSignalGTK (GTK_OBJECT(w), "toggled");
-			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
-				ConnectSignalGTK (GTK_OBJECT(w), "toggled",
-						  GTK_SIGNAL_FUNC (CallMenuGTK), 
-						  (gpointer) catalogue);
-			      }
-			      /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = TRUE; */
-			    else if (catalogue->Cat_Type == CAT_SCRPOPUP)
-			      {
-				/* catalogue = GTK_OBJECT(w)->userData; */
-				/* RemoveSignalGTK (GTK_OBJECT(w), "activate"); */
-				RemoveSignalGTK (GTK_OBJECT(w), "select");
-				gtk_list_item_select (GTK_LIST_ITEM (w));
-				ConnectSignalGTK (GTK_OBJECT(w), "select",
-						  GTK_SIGNAL_FUNC (CallMenuGTK), 
-						  (gpointer) catalogue);
-			      }
-			    else
-			      GTK_CHECK_MENU_ITEM(w)->active = TRUE;
-#endif /* _GTK */
-#ifdef _WX
-			    /* attribut active is set to the good value */
-			    //			    if (catalogue->Cat_Type == CAT_TMENU)
-			      {
-				((wxMenuItem *)w)->Check( TRUE );
-			      }
-#endif /* _WX */
-			  }
-			else
-			  /* Etat initial du bouton : eteint */
-			  {
-#ifdef _MOTIF
-			    n = 0;
-			    XtSetArg (args[n], XmNset, FALSE);
-			    n++;
-			    XtSetValues (w, args, n);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-			    /* attribut active is set to the good value */
-			    if (catalogue->Cat_Type == CAT_TMENU)
-			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
-			    /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = FALSE; */
-			    else
-			      GTK_CHECK_MENU_ITEM(w)->active = FALSE;
-#endif /* _GTK */
-#ifdef _WX
-			    /* attribut active is set to the good value */
-			    //			    if (catalogue->Cat_Type == CAT_TMENU)
-			      {
-				((wxMenuItem*)w)->Check( FALSE );
-			      }
-#endif /* _WX */
-			  }
-      
-#ifdef _MOTIF
-			/* retablit les callbacks */
-			if (catalogue->Cat_Type == CAT_TMENU)
-			  XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
-			else
-			  XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* #ifdef _MOTIF */
-      
-			 }
-		    adbloc->E_Free[i] = 'N';		/* La valeur est la valeur initiale */
-		    done = TRUE;
-		    break;
-		  }
-		/* Sinon l'entree garde son etat precedent  */
-		  i++;
-		  ent++;
-	      }		/*while */
-	    /* Passe au bloc suivant */
-	    adbloc = adbloc->E_Next;
-	    i = 0;
-	  }			/*while */
-#ifdef _MOTIF
-	if (!visible)
-	  XtUnmanageChild (catalogue->Cat_Widget);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-	if (!visible && catalogue->Cat_Type != CAT_SCRPOPUP)
-	  gtk_widget_hide (catalogue->Cat_Widget);
+      else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
+	visible = TRUE;
+      else
+	{
+	  visible = FALSE;
+	  if (catalogue->Cat_Type != CAT_SCRPOPUP)
+	    gtk_widget_show_all (catalogue->Cat_Widget);
+	}
 #endif /* _GTK */
 
+      /* Positionnement de la valeur de chaque entree */
+      adbloc = catalogue->Cat_Entries;
+      ent = 0;
+      i = 2;			/* decalage de 2 pour le widget titre */
+      done = FALSE;
+      while (adbloc && !done)
+	{
+	  while (i < C_NUMBER)
+	    {
+	      /* S'il n'y a pas de bouton  */
+	      if (adbloc->E_ThotWidget[i] == 0)
+		i = C_NUMBER;
+	      /* C'est une entree qu'il faut initialiser */
+	      else if (ent == val || val == -1)
+		{
+		  if (catalogue->Cat_Type != CAT_TMENU && adbloc->E_Type[i] != 'T')
+		    {
+		      /* ce n'est pas une entree du toggle */
+		      TtaError (ERR_invalid_reference);
+		      return;
+		    }
+		  else
+		    {
+		      w = adbloc->E_ThotWidget[i];
+		      if (on)
+			/* Bouton allume */
+			{
+#ifdef _GTK
+			  /* attribut active is set to the good value */
+			  if (catalogue->Cat_Type == CAT_TMENU)
+			    {
+			      RemoveSignalGTK (GTK_OBJECT(w), "toggled");
+			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
+			      ConnectSignalGTK (GTK_OBJECT(w), "toggled",
+						GTK_SIGNAL_FUNC (CallMenuGTK), 
+						(gpointer) catalogue);
+			    }
+			  /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = TRUE; */
+			  else if (catalogue->Cat_Type == CAT_SCRPOPUP)
+			    {
+			      RemoveSignalGTK (GTK_OBJECT(w), "select");
+			      gtk_list_item_select (GTK_LIST_ITEM (w));
+			      ConnectSignalGTK (GTK_OBJECT(w), "select",
+						GTK_SIGNAL_FUNC (CallMenuGTK), 
+						(gpointer) catalogue);
+			    }
+			  else
+			    GTK_CHECK_MENU_ITEM(w)->active = TRUE;
+#endif /* _GTK */
+#ifdef _WX
+			  /* attribut active is set to the good value */
+			  //  if (catalogue->Cat_Type == CAT_TMENU)
+			  ((wxMenuItem *)w)->Check( TRUE );
+#endif /* _WX */
+			}
+		      else
+			/* Etat initial du bouton : eteint */
+			{
+#ifdef _GTK
+			  /* attribut active is set to the good value */
+			  if (catalogue->Cat_Type == CAT_TMENU)
+			    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
+			  /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = FALSE; */
+			  else
+			    GTK_CHECK_MENU_ITEM(w)->active = FALSE;
+#endif /* _GTK */
+#ifdef _WX
+			  /* attribut active is set to the good value */
+			  // if (catalogue->Cat_Type == CAT_TMENU)
+			  ((wxMenuItem*)w)->Check( FALSE );
+#endif /* _WX */
+			}
+		    }
+		  adbloc->E_Free[i] = 'N';  /* La valeur est la valeur initiale */
+		  done = TRUE;
+		  break;
+		}
+	      /* Sinon l'entree garde son etat precedent  */
+	      i++;
+	      ent++;
+	    }
+	  /* Passe au bloc suivant */
+	  adbloc = adbloc->E_Next;
+	  i = 0;
+	}
+
+#ifdef _GTK
+      if (!visible && catalogue->Cat_Type != CAT_SCRPOPUP)
+	gtk_widget_hide (catalogue->Cat_Widget);
+#endif /* _GTK */
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -4489,11 +3439,6 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
    int                 ent;
-#ifdef _MOTIF
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-#endif /* #ifdef _MOTIF */
 
    if (ref == 0)
      {
@@ -4533,22 +3478,10 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
 	else
 	  {
 	     w = adbloc->E_ThotWidget[ent];
-
-#ifdef _MOTIF
-	     title_string = XmStringCreateSimple (text);
-	     n = 0;
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetValues (w, args, n);
-	     XtManageChild (w);
-	     XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-       
 #ifdef _GTK
 	     gtk_label_set_text (GTK_LABEL(w), text);
 	     gtk_widget_show_all (w);
 #endif /* _GTK */
-
 	  }
      }
 }
@@ -4564,23 +3497,12 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 #ifdef _WINGUI
   HMENU               menu;
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)
-
+#ifdef _GTK
   ThotWidget          w;
   struct E_List      *adbloc;
   int                 ent;
-#ifdef _MOTIF
-  int                 n;
-  Arg                 args[MAX_ARGS];
-  XmFontList          font;
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
   ThotWidget          tmpw;
 #endif /* _GTK */
-  
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   if (ref == 0)
     {
@@ -4630,7 +3552,7 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
       p_menu->Enable( ref + entry, FALSE );
 #endif /* _WX */
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
       /* Recherche l'entree dans le menu ou sous-menu */
       adbloc = catalogue->Cat_Entries;
       ent = entry + 2;	/* decalage de 2 pour le widget titre */
@@ -4644,37 +3566,13 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 	  else
 	    adbloc = adbloc->E_Next;
 	  ent -= C_NUMBER;
-	}			/*while */
+	}
       
       if (adbloc->E_ThotWidget[ent] == 0)
 	TtaError (ERR_invalid_parameter);
       else
 	{
 	  w = adbloc->E_ThotWidget[ent];
-#ifdef _MOTIF
-	  /* Recupere si necessaire la couleur par defaut */
-	  n = 0;
-	  /* Faut-il changer la police de caracteres ? */
-	  if (fontname)
-	    font = XmFontListCreate (XLoadQueryFont (GDp, fontname), XmSTRING_DEFAULT_CHARSET);
-	  else
-	    font = DefaultFont;
-	  XtSetArg (args[n], XmNfontList, font);
-	  n++;
-	  if ((int) color != -1)
-	    {
-	      /* La couleur imposee par l'application */
-	      XtSetArg (args[n], XmNforeground, color);
-	      n++;
-	       }
-	  else
-	    {
-	      /* La couleur par defaut */
-	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	      n++;
-	    }
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	  /* if the widget is a FORM sub menu, then it is a radiolist
 	     the label font must be change, and not the radiolist font. 
 	     REM: the label could be show with gtk_object_get_data */
@@ -4698,54 +3596,18 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 	    gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
 	  else
 	    gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
-#endif /* _GTK */
     
 	  /* Faut-il activer ou desactiver le Callback */
 	  if (activate != -1)
 	    {
-	      if (catalogue->Cat_Type == CAT_POPUP
-		  || catalogue->Cat_Type == CAT_SCRPOPUP
-		  || catalogue->Cat_Type == CAT_PULL
-		  || catalogue->Cat_Type == CAT_MENU)
-		{
-#ifdef _MOTIF
-		  XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-		  if (activate)
-		    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-#endif /* #ifdef _MOTIF */
-		}
-	      else
-		/*CAT_FMENU et CAT_TMENU */
-#ifdef _MOTIF
-		if (activate)
-		  {
-		    XtSetArg (args[n], XmNsensitive, TRUE);
-		    n++;
-		  }
-		else
-		  {
-		    XtSetArg (args[n], XmNsensitive, FALSE);
-		    n++;
-		  }
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	      if (activate)
 		gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 	      else
 		gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-#endif /* _GTK */
 	    }
-#ifdef _MOTIF
-	  XtSetValues (w, args, n);
-	  XtManageChild (w);
-	  if (fontname)
-	    XmFontListFree (font);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	  gtk_widget_show_all (GTK_WIDGET(w));
-#endif /* _GTK */
 	}
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
     }
 }
 
@@ -4803,9 +3665,6 @@ static int DestForm (int ref)
 		      || parentCatalogue->Cat_Type == CAT_DIALOG)
 		    /*__________________________________________ Dans un formulaire __*/
 		    {
-#ifdef _MOTIF
-		      XtUnmanageChild (catalogue->Cat_Widget);
-#endif /* _MOTIF */
 		      adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
 		      adbloc->E_Free[entry] = 'Y';
 		    }
@@ -4821,18 +3680,9 @@ static int DestForm (int ref)
 	      catalogue->Cat_Entries = NULL;
 	      /* Note que tous les fils sont detruits */
 	      if (catalogue->Cat_Type != CAT_INT)
-		{
-		  ClearChildren (catalogue);
-#ifdef _MOTIF
-		  XtRemoveCallback (catalogue->Cat_Widget, XmNdestroyCallback,
-				    (XtCallbackProc) formKill, catalogue);
-#endif /* _MOTIF */
-		}
+		ClearChildren (catalogue);
 	    }
 
-#ifdef _MOTIF
-	  XtDestroyWidget (catalogue->Cat_Widget);
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
 	  gtk_widget_destroy (catalogue->Cat_Widget);
 #endif /* _GTK */
@@ -4860,17 +3710,7 @@ void TtaUnmapDialogue (int ref)
     return;
   else if (catalogue->Cat_Widget == 0)
     return;
-#ifdef _MOTIF
-  else if (XtIsManaged (catalogue->Cat_Widget))
-    {
-      /* Traitement particulier des formulaires */
-	if (catalogue->Cat_Type == CAT_FORM
-	    || catalogue->Cat_Type == CAT_SHEET
-	    || catalogue->Cat_Type == CAT_DIALOG)
-	  XtUnmanageChild (XtParent (catalogue->Cat_Widget));
-	XtUnmanageChild (catalogue->Cat_Widget);
-    }
-#endif /* #ifdef _MOTIF */
+
 #ifdef _GTK
   else if (GTK_WIDGET_VISIBLE(catalogue->Cat_Widget))
     {    
@@ -4905,10 +3745,6 @@ void TtaDestroyDialogue (int ref)
 #ifdef _WINGUI
    int                 nbMenuItems, itNdx;
 #endif /* _WINGUI */
-#ifdef _MOTIF
-   int                 n;
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 
    if (ref == 0)
      {
@@ -4979,13 +3815,6 @@ void TtaDestroyDialogue (int ref)
 				 subMenuID [currentFrame] = (UINT)w;
 				 /* CHECK  CHECK  CHECK  CHECK  CHECK  CHECK  CHECK */
 #endif /* _WINGUI */
-#ifdef _MOTIF
-				 n = 0;
-				 XtSetArg (args[n], XmNsubMenuId, 0);
-				 n++;
-				 XtSetValues (w, args, n);
-				 XtManageChild (w);
-#endif /* #ifdef _MOTIF */
 				 adbloc->E_Free[entry] = 'Y';
 			      }
 			 }
@@ -5003,13 +3832,6 @@ void TtaDestroyDialogue (int ref)
 	     /* C'est surement une destruction de formulaire */
 	     if (DestForm (ref))
 		TtaError (ERR_invalid_reference);
-#ifdef _MOTIF
-	     if (PopShell)
-	       {
-		 XtDestroyWidget (PopShell);
-		 PopShell = 0;
-	       }
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
 	     if (PopShell && GTK_IS_WIDGET (PopShell))
 	       gtk_widget_destroy (GTK_WIDGET (PopShell));
@@ -5029,10 +3851,6 @@ void TtaDestroyDialogue (int ref)
 	/* Libere les blocs des entrees */
 	FreeEList (catalogue->Cat_Entries);
 	catalogue->Cat_Entries = NULL;
-#ifdef _MOTIF
-	if (catalogue->Cat_Type != CAT_PULL)
-	   XtDestroyWidget (catalogue->Cat_Widget);
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
        	if (catalogue->Cat_Type != CAT_PULL)
 	  gtk_widget_destroy (GTK_WIDGET(catalogue->Cat_Widget));
@@ -5091,11 +3909,6 @@ void TtaDestroyDialogue (int ref)
 void TtaChangeFormTitle (int ref, char *title)
 {
    struct Cat_Context *catalogue;
-#ifdef _MOTIF
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-#endif /* #ifdef _MOTIF */
    
    if (ref == 0)
      {
@@ -5110,20 +3923,12 @@ void TtaChangeFormTitle (int ref, char *title)
       TtaError (ERR_invalid_reference);
    else
      {
-#ifdef _MOTIF
-       /* Set the window title with motif */
-       title_string = XmStringCreateSimple (title);
-       n = 0;
-       XtSetArg (args[n], XmNdialogTitle, title_string);
-       n++;
-       XtSetValues (catalogue->Cat_Widget, args, n);
-#endif /* #ifdef _MOTIF */   
 #ifdef _GTK
        /* Set the window title with GTK */
        gdk_window_set_title(GTK_WIDGET(catalogue->Cat_Widget)->window, title);
 #endif /* _GTK */
 #ifdef _WX
-	     /* TODO : a faire qd on aura porte les dialogues */
+       /* TODO: a faire qd on aura porte les dialogues */
 #endif /* #ifdef _WX */
      }
 }
@@ -5134,7 +3939,7 @@ void TtaChangeFormTitle (int ref, char *title)
   ----------------------------------------------------------------------*/
 void TtaSetDefaultButton (int ref, int button)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
    struct Cat_Context *catalogue;
 
    if (ref)
@@ -5143,7 +3948,7 @@ void TtaSetDefaultButton (int ref, int button)
        if (catalogue)
 	 catalogue->Cat_Default = (unsigned char) button;
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -5153,7 +3958,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		      char *text, ThotBool horizontal, int package,
 		      char button, int dbutton, int cattype)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    int                 ent;
    int                 index;
    int                 count;
@@ -5162,15 +3967,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
    ThotWidget          form;
    ThotWidget          w;
    char               *ptr = NULL;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   Arg                 argform[1];
-   int                 n;
-   XmString            title_string, OK_string;
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
    ThotWidget          tmpw;
-#endif /* _GTK */
    ThotWidget          row;
 
    if (ref == 0)
@@ -5189,20 +3986,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	/* Recherche le widget parent */
 	if (MainShell == 0 && parent == 0)
 	  {
-#ifdef _MOTIF
-	    OK_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	    n = 0;
-	    XtSetArg (args[n], XmNx, (Position) ShowX);
-	    n++;
-	    XtSetArg (args[n], XmNy, (Position) ShowY);
-	    n++;
-	    XtSetArg (args[n], XmNallowShellResize, TRUE);
-	    n++;
-	    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
-	    n++;
-	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	    PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -5212,15 +3995,15 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 			      "destroy",
 			      GTK_SIGNAL_FUNC (DeletePopShell),
 			      (gpointer)NULL);
-#endif /* _GTK */
-    }
+	  }
 	/*________________________________________________ Feuillet principal __*/
 	else
 	  {
-	     /* Il n'y a pas de menu parent */
-	     catalogue->Cat_PtParent = NULL;
-	     catalogue->Cat_EntryParent = 0;
+	    /* Il n'y a pas de menu parent */
+	    catalogue->Cat_PtParent = NULL;
+	    catalogue->Cat_EntryParent = 0;
 	  }
+
 	/* No focus in sub-menus */
 	catalogue->Cat_Focus = FALSE;
 	/* Cree la fenetre du formulaire */
@@ -5230,33 +4013,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	   w = PopShell;
 	else
 	   w = MainShell;
-#ifdef _MOTIF
-	n = 0;
-	XtSetArg (args[n], XmNfontList, DefaultFont);
-	n++;
-	if (w == PopShell)
-	  form = PopShell;
-	else
-	  form = XtCreateWidget (title, topLevelShellWidgetClass, w, args, n);
-	XtAddCallback (form, XmNdestroyCallback, (XtCallbackProc) formKill, catalogue);
-	/*** Cree le formulaire dans sa frame ***/
-	title_string = XmStringCreateSimple (title);
-	XtSetArg (args[n], XmNdialogTitle, title_string);
-	n++;
-	XtSetArg (args[n], XmNautoUnmanage, FALSE);
-	n++;
-	XtSetArg (args[n], XmNdefaultPosition, FALSE);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	form = XmCreateBulletinBoard (form, "", args, n);
-	XtAddCallback (XtParent (form), XmNpopdownCallback,
-		       (XtCallbackProc) CallSheet, catalogue);
-	XtAddCallback (XtParent (form), XmNdestroyCallback,
-		       (XtCallbackProc) formKill, catalogue);
-	XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
+
 	/* Creation of the window */
 	if (w == PopShell)
 	  form = PopShell;
@@ -5270,7 +4027,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 			    GTK_SIGNAL_FUNC (formKillGTK), (gpointer) catalogue);
 	}
 	gtk_container_set_border_width (GTK_CONTAINER (form), 10);
-#endif /* _GTK */
+
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = cattype;
 	catalogue->Cat_Button = button;
@@ -5281,61 +4038,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	catalogue->Cat_Entries = adbloc;
 	adbloc->E_Next = NewEList ();
 	adbloc = adbloc->E_Next;
-#ifdef _MOTIF
-	/*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
-	/*** en dessous des sous-menus et sous-formulaires.    ***/
-	n = 0;
-	XtSetArg (args[n], XmNadjustLast, FALSE);
-	n++;
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNspacing, 2);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	row = XmCreateRowColumn (form, "Dialogue", args, n);
-	XtManageChild (row);
 
-	/*** Cree un Row-Column pour contenir les lignes ou colonnes ***/
-	/*** de sous-menus et sous-formulaires.                      ***/
-	n = 0;
-	XtSetArg (args[n], XmNadjustLast, FALSE);
-	n++;
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNspacing, 2);
-	n++;
-	if (horizontal)
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	else
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	w = XmCreateRowColumn (row, "Dialogue", args, n);
-	XtManageChild (w);
-	/*** Cree un 1er Row-Column pour contenir les sous-menus/formulaires ***/
-	n = 0;
-	XtSetArg (args[n], XmNadjustLast, FALSE);
-	n++;
-	XtSetArg (args[n], XmNspacing, 5);
-	n++;
-	catalogue->Cat_in_lines = (int) horizontal;
-	if (horizontal)
-	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	else
-	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	w = XmCreateRowColumn (w, "Dialogue", args, n);
-	XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	/* Create the vbox for button & other vbox or hbox*/
 	row = gtk_vbox_new (FALSE, 5);
 	gtk_widget_show_all (row);
@@ -5356,49 +4059,18 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	gtk_widget_show_all (tmpw);
 	gtk_box_pack_start (GTK_BOX(w), tmpw,  TRUE, TRUE, 0);
 	w = tmpw;
-#endif /* _GTK */
-  adbloc->E_ThotWidget[0] = w;
+	adbloc->E_ThotWidget[0] = w;
 	adbloc->E_Free[0] = 'X';
 	if (number < 0)
 	   /* il n'y a pas de boutons a engendrer */
 	   return;
-#ifdef _MOTIF
-	/*** Cree un Row-Column pour contenir les boutons QUIT/... ***/
-	n = 0;
-	XtSetArg (args[n], XmNadjustLast, FALSE);
-	n++;
-	XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-	n++;
-	XtSetArg (args[n], XmNpacking, XmPACK_TIGHT/*XmPACK_COLUMN*/);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNspacing, 5);
-	n++;
-	XtSetArg (args[n], XmNnumColumns, number);
-	n++;
-	row = XmCreateRowColumn (row, "Dialogue", args, n);
-	XtManageChild (row);
 
-	/*** Cree les boutons ***/
-	n = 0;
-	XtSetArg (args[n], XmNfontList, DefaultFont);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	/* Create the hbox for buttons */
 	tmpw = gtk_hbox_new (FALSE, 5);
 	gtk_widget_show_all (tmpw);
 	gtk_widget_set_name (tmpw, "Dialogue");
 	gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
 	row=tmpw;
-#endif /* _GTK */
 	adbloc = catalogue->Cat_Entries;
 	if (cattype == CAT_SHEET)
 	   ent = 1;
@@ -5406,21 +4078,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	  {
 	    /*** Cree le bouton de confirmation du formulaire ***/
 	     ent = 1;
-#ifdef _MOTIF
-	     w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-				     args, n);
-	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback,
-			    (XtCallbackProc) CallSheet, catalogue);
-	     /* Definit le bouton de confirmation comme bouton par defaut */
-	     XtSetArg (argform[0], XmNdefaultButton, w);
-	     XtSetValues (form, argform, 1);
-	     adbloc->E_ThotWidget[1] = w;
-	     /* Definit le bouton de confirmation comme bouton par defaut */
-	     XtSetArg (argform[0], XmNdefaultButton, w);
-	     XtSetValues (form, argform, 1);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	     w = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
 	     GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
 	     gtk_widget_show_all (GTK_WIDGET (w));
@@ -5429,8 +4086,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 			       GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) catalogue);
 	     gtk_widget_grab_default (GTK_WIDGET (w));
 	     adbloc->E_ThotWidget[1] = w;
-#endif /* _GTK */
-    }
+	  }
 	else
 	   ent = 0;
 	/*** Cree les autres boutons du feuillet ***/
@@ -5448,13 +4104,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		     ptr = &text[index];
 		  else
 		    {
-#ifdef _MOTIF
-		       w = XmCreatePushButton (row, &text[index], args, n);
-		       XtManageChild (w);
-		       XtAddCallback (w, XmNactivateCallback,
-				      (XtCallbackProc) CallSheet, catalogue);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 		       w = gtk_button_new_with_label (&text[index]);
 		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
 		       gtk_widget_show_all (GTK_WIDGET (w));
@@ -5463,19 +4112,10 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 					 GTK_SIGNAL_FUNC (CallSheetGTK),
 					 (gpointer) catalogue);
 		       gtk_widget_grab_default (GTK_WIDGET(w));
-#endif /* _GTK */
 		       adbloc->E_ThotWidget[ent] = w;
 		    }
-#ifdef _MOTIF
-		  /* Definit le bouton de confirmation comme bouton par defaut */
-		  if (index == 0)
-		     XtSetArg (argform[0], XmNdefaultButton, w);
-		  XtSetValues (form, argform, 1);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 		  if (index == 0 && number > 0)
 		    gtk_widget_grab_default (GTK_WIDGET(w));
-#endif /* _GTK */
 	       }
 	     index += count + 1;
 	     ent++;
@@ -5485,51 +4125,32 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	   switch (dbutton)
 	     {
 	     case D_CANCEL:
-#ifdef _MOTIF
-	       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_CANCEL));
 	       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	       gtk_widget_show_all (w);
 	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
-#endif /* _GTK */
 	       break;
 	     case D_DONE:
-#ifdef _MOTIF
-	       w = XmCreatePushButton (row,
-				       TtaGetMessage (LIB, TMSG_DONE), args, n);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DONE));
 	       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	       gtk_widget_show_all (w);
 	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
-#endif /* _GTK */
 	       break;
 	     }
 	else
-#ifdef _MOTIF
-	  w = XmCreatePushButton (row, ptr, args, n);
-	XtManageChild (w);
-	XtAddCallback (w, XmNactivateCallback,
-		       (XtCallbackProc) CallSheet, catalogue);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-	{
-	  w = gtk_button_new_with_label(ptr);
-	  GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
-	  gtk_widget_show_all (GTK_WIDGET (w));
-	  gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 5);
-	}
+	  {
+	    w = gtk_button_new_with_label(ptr);
+	    GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
+	    gtk_widget_show_all (GTK_WIDGET (w));
+	    gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 5);
+	  }
 	gtk_widget_show_all (GTK_WIDGET (w));
 	ConnectSignalGTK (GTK_OBJECT (w), "clicked",
 			  GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer)catalogue);
-#endif /* _GTK */
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -5547,10 +4168,10 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 void TtaNewForm (int ref, ThotWidget parent, char *title,
 		 ThotBool horizontal, int package, char button, int dbutton)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    NewSheet (ref, parent, title, 0, NULL, horizontal, package,
 	     button, dbutton, CAT_FORM);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5574,10 +4195,10 @@ void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
 		  char *text, ThotBool horizontal, int package,
 		  char button, int dbutton)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    NewSheet (ref, parent, title, number, text, horizontal, package,
 	     button, dbutton, CAT_SHEET);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 
@@ -5602,10 +4223,10 @@ void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
 			int number, char *text, ThotBool horizontal,
 			int package, char button)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    NewSheet (ref, parent, title, number - 1, text, horizontal, package,
 	     button, D_DONE, CAT_DIALOG);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5614,7 +4235,7 @@ void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
   ----------------------------------------------------------------------*/
 void TtaAttachForm (int ref)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
@@ -5669,21 +4290,11 @@ void TtaAttachForm (int ref)
 	  {
 	     /* marque que le sous-menu est attache */
 	     adbloc->E_Free[entry] = 'N';
-#ifdef _MOTIF
-	     /* affiche le widget sur l'ecran */
-	     if (XtIsManaged (parentCatalogue->Cat_Widget))
-		XtManageChild (catalogue->Cat_Widget);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     if ( GTK_WIDGET_VISIBLE(parentCatalogue->Cat_Widget) )
-	       {
-		 gdk_window_raise (GTK_WIDGET(catalogue->Cat_Widget)->window);
-	       }
-#endif /* _GTK */ 
+	       gdk_window_raise (GTK_WIDGET(catalogue->Cat_Widget)->window);
 	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5692,7 +4303,7 @@ void TtaAttachForm (int ref)
   ----------------------------------------------------------------------*/
 void TtaDetachForm (int ref)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
@@ -5746,19 +4357,11 @@ void TtaDetachForm (int ref)
 	     /* marque que le sous-menu est detache */
 	     adbloc->E_Free[entry] = 'Y';
 
-#ifdef _MOTIF
-	     /* retire le widget de l'ecran */
-	     if (XtIsManaged (catalogue->Cat_Widget))
-		XtUnmanageChild (catalogue->Cat_Widget);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
-       if ( GTK_WIDGET_VISIBLE(catalogue->Cat_Widget) )
+       if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
 	       gtk_widget_hide (catalogue->Cat_Widget);
-#endif /* _GTK */
 	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5780,23 +4383,11 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 			  int number, char *text, int width, int height,
 			  char *label, ThotBool withText, ThotBool react)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
-
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   int                 n;
-   XmString            title_string;
-   XmString           *item;
-   ThotWidget          wt;
-#endif /* #ifdef _MOTIF */
-   
-#ifdef _GTK
    GList              *item = NULL;
    ThotWidget          tmpw, tmpw2;
-#endif /* _GTK */
-   
    int                 ent;
    int                 index;
    int                 i;
@@ -5855,31 +4446,6 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
    catalogue->Cat_SelectList = !withText;
    catalogue->Cat_React = react;
 
-#ifdef _MOTIF
-   if (number == 0)
-     {
-	/* Cree un selecteur avec une entree a blanc */
-	item = (XmString *) TtaGetMemory (sizeof (XmString) * 2);
-	item[0] = XmStringCreateLtoR (" ", XmSTRING_DEFAULT_CHARSET);
-	number = 1;
-     }
-   else
-     {
-	/* Cree les differentes entrees du selecteur */
-	item = (XmString *) TtaGetMemory (sizeof (XmString) * (number + 1));
-	i = 0;
-	index = 0;
-	while (i < number && text[index] != EOS)
-	  {
-	     item[i++] = XmStringCreateLtoR (&text[index], XmSTRING_DEFAULT_CHARSET);
-	     index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */
-	  }
-	number = i;
-     }
-   item[number] = NULL;
-#endif /* #ifdef _MOTIF */
-
-#ifdef _GTK
    /* Ici on ajoute les entrees au selecteur */
    if (number == 0)
      {
@@ -5919,7 +4485,6 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	  }
 	number = i;
      }
-#endif /* _GTK */
 
    /* Faut-il simplement mettre a jour le selecteur ? */
    if (rebuilded)
@@ -5927,91 +4492,20 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	/* On met a jour le titre du selecteur */
 	if (catalogue->Cat_Title && title)
 	  {
-
-#ifdef _MOTIF
-	     n = 0;
-	     title_string = XmStringCreateSimple (title);
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetValues (catalogue->Cat_Title, args, n);
-	     XtManageChild (catalogue->Cat_Title);
-	     XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* update the title label */
 	     gtk_label_set_text (GTK_LABEL(catalogue->Cat_Title),title);
 	     gtk_widget_show (GTK_WIDGET(catalogue->Cat_Title));
-#endif /* _GTK */
-
-    }
+	  }
 	/* On met a jour le label attache au bouton du selecteur */
 	if (catalogue->Cat_SelectLabel && label)
 	  {
-
-#ifdef _MOTIF
-	     n = 0;
-	     title_string = XmStringCreateSimple (label);
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetValues (catalogue->Cat_SelectLabel, args, n);
-	     XtManageChild (catalogue->Cat_SelectLabel);
-	     XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* update the selector label*/
 	     gtk_label_set_text (GTK_LABEL(gtk_object_get_data (GTK_OBJECT(catalogue->Cat_SelectLabel),"ButtonLabel")), label);
 	     gtk_widget_show (GTK_WIDGET (catalogue->Cat_SelectLabel));
-#endif /* _GTK */
-
-    }
+	  }
 	/* On met a jour le selecteur (catalogue->Cat_Entries) */
 	catalogue->Cat_ListLength = number;
-
-#ifdef _MOTIF
-	n = 0;
-#endif /* #ifdef _MOTIF */
-  
 	w = (ThotWidget) catalogue->Cat_Entries;
-
-#ifdef _MOTIF
-	if (catalogue->Cat_SelectList)
-	  {
-	     /* Une simple liste */
-	     XtSetArg (args[n], XmNitems, item);
-	     n++;
-	     XtSetArg (args[n], XmNitemCount, number);
-	     n++;
-
-	     /* Detruit l'ancienne liste */
-	     XmListDeleteAllItems (w);
-	     /* Remplace par la nouvelle liste */
-	     XtSetValues (w, args, n);
-	  }
-	else
-	  {
-	     /* Un selecteur */
-	     XtSetArg (args[n], XmNlistItems, item);
-	     n++;
-	     XtSetArg (args[n], XmNlistItemCount, number);
-	     n++;
-	     /*XtSetArg(args[n], XmNlistVisibleItemCount, height); n++; */
-	     title_string = XmStringCreateSimple ("");
-	     XtSetArg (args[n], XmNselectionLabelString, title_string);
-	     n++;
-
-	     /* Detruit l'ancienne liste */
-	     wt = XmSelectionBoxGetChild (w, XmDIALOG_LIST);
-	     XmListDeleteAllItems (wt);
-	     /* Remplace par la nouvelle liste */
-	     XtSetValues (w, args, n);
-	     XmStringFree (title_string);
-	  }
-	XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	/* delete the old list elements */
 	if ((gint)gtk_object_get_data(GTK_OBJECT(w), "GList") > 0)
 	  gtk_list_clear_items (GTK_LIST (w), 0, (gint)gtk_object_get_data(GTK_OBJECT (w), "GList"));
@@ -6020,42 +4514,15 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	/* update the number of list element */
 	gtk_object_set_data(GTK_OBJECT(w), "GList", (gpointer)g_list_length (item));
 	gtk_widget_show (GTK_WIDGET(w));
-#endif /* _GTK */
      }
    else
      {
        /*_______________________________________ C'est un nouveau formulaire __*/
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
-#ifdef _MOTIF
-	/* Cree un sous-menu d'un formulaire */
-	/*** Cree un Row-Column dans le Row-Column du formulaire ***/
-	n = 0;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	if (width)
-	  {
-	    XtSetArg (args[n], XmNwidth, (Dimension) width);
-	    n++;
-	    XtSetArg (args[n], XmNresizeWidth, FALSE);
-	    n++;
-	  }
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNspacing, 0);
-	n++;
-	row = XmCreateRowColumn (w, "Dialogue", args, n);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	row = gtk_vbox_new (FALSE, 0);
 	gtk_widget_show (row);
 	gtk_widget_set_name (row, "Dialogue");
 	gtk_container_add (GTK_CONTAINER (w), row);
-#endif /* _GTK */
-  
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = CAT_SELECT;
 	catalogue->Cat_ListLength = number;
@@ -6067,55 +4534,16 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	/*** Cree le titre du selecteur ***/
 	if (title)
 	  {
-
-#ifdef _MOTIF
-	     n = 0;
-	     title_string = XmStringCreateSimple (title);
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     w = XmCreateLabel (row, "Dialogue", args, n);
-	     XtManageChild (w);
-	     catalogue->Cat_Title = w;
-	     XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     w = gtk_label_new (title);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 	     gtk_widget_show (w);
 	     w->style->font=DefaultFont;
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 	     catalogue->Cat_Title = w;
-#endif /* _GTK */
-       
 	  }
 	/*** Cree le label attache au selecteur ***/
 	if (label)
 	  {
-
-#ifdef _MOTIF
-	     n = 0;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     w = XmCreatePushButton (row, label, args, n);
-	     XtManageChild (w);
-	     catalogue->Cat_SelectLabel = w;
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallLabel, catalogue);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     w = gtk_button_new ();
 	     gtk_widget_show (w);
 	     w->style->font=DefaultFont;
@@ -6127,97 +4555,13 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 				 (gpointer)tmpw);
 	     gtk_container_add(GTK_CONTAINER(w),GTK_WIDGET(tmpw));
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-	     ConnectSignalGTK (GTK_OBJECT(w), "clicked", GTK_SIGNAL_FUNC (CallLabel), (gpointer)catalogue);
+	     ConnectSignalGTK (GTK_OBJECT(w), "clicked",
+			       GTK_SIGNAL_FUNC (CallLabel), (gpointer)catalogue);
 	     catalogue->Cat_SelectLabel = w;
-#endif /* _GTK */
 	  }
 	else
 	   catalogue->Cat_SelectLabel = 0;
 
-#ifdef _MOTIF
-	n = 0;
-	XtSetArg (args[n], XmNmarginWidth, 0);
-	n++;
-	XtSetArg (args[n], XmNmarginHeight, 0);
-	n++;
-	XtSetArg (args[n], XmNspacing, 0);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNfontList, DefaultFont);
-	n++;
-	if (catalogue->Cat_SelectList)
-	  {
-	     /* Une simple liste */
-	     XtSetArg (args[n], XmNselectionPolicy, XmSINGLE_SELECT);
-	     n++;
-	     if (width == 0)
-	       {
-		 XtSetArg (args[n], XmNlistSizePolicy, XmVARIABLE);
-		 n++;
-	       }
-	     else
-	       {
-		 XtSetArg (args[n], XmNlistSizePolicy, XmCONSTANT);
-		 n++;
-	       }
-	     XtSetArg (args[n], XmNitems, item);
-	     n++;
-	     XtSetArg (args[n], XmNitemCount, number);
-	     n++;
-	     XtSetArg (args[n], XmNvisibleItemCount, height);
-	     n++;
-	     w = XmCreateScrolledList (row, title, args, n);
-	     XtManageChild (w);
-	     /* Si le selecteur est reactif */
-	     if (react)
-		XtAddCallback (w, XmNsingleSelectionCallback, (XtCallbackProc) CallList, catalogue);
-	  }
-	else
-	  {
-	     /* Un selecteur */
-	     XtSetArg (args[n], XmNlistItems, item);
-	     n++;
-	     XtSetArg (args[n], XmNlistItemCount, number);
-	     n++;
-	     XtSetArg (args[n], XmNlistVisibleItemCount, height);
-	     n++;
-	     XtSetArg (args[n], XmNdialogType, XmDIALOG_COMMAND);
-	     n++;
-	     if (TextTranslations)
-	       {
-		  XtSetArg (args[n], XmNtextTranslations, TextTranslations);
-		  n++;
-	       }
-	     title_string = XmStringCreateSimple ("");
-	     XtSetArg (args[n], XmNselectionLabelString, title_string);
-	     n++;
-	     w = XmCreateSelectionBox (row, title, args, n);
-	     XtManageChild (w);
-	     XmStringFree (title_string);
-	     /* Controle la couleur des widgets fils */
-	     n = 0;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNtroughColor, BgMenu_Color);
-	     n++;
-	     wt = XmSelectionBoxGetChild (w, XmDIALOG_LIST);
-	     XtSetValues (wt, args, n);
-	     wt = XmSelectionBoxGetChild (w, XmDIALOG_TEXT);
-	     XtSetValues (wt, args, n - 1);
-	     /* Si le selecteur est reactif */
-	     if (react)
-		XtAddCallback (wt, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-	  }
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	if (catalogue->Cat_SelectList)
 	  {
 	    /* A simple list */
@@ -6296,23 +4640,10 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_widget_grab_focus (GTK_WIDGET(w));
 	    catalogue->Cat_Focus = TRUE;
 	  }
-#endif /* _GTK */
 	/* Conserve le widget du selecteur dans l'entree Cat_Entries */
 	catalogue->Cat_Entries = (struct E_List *) w;
      }
-   
-#ifdef _MOTIF
-   /* Libere les XmString allouees */
-   i = 0;
-   while (item[i])
-     {
-	XmStringFree (item[i]);
-	i++;
-     }
-   TtaFreeMemory ( item);
-#endif
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6334,10 +4665,10 @@ void TtaNewSelector (int ref, int ref_parent, char *title, int number,
 		     char *text, int height, char *label,
 		     ThotBool withText, ThotBool react)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height,
 		       label, withText, react);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6345,12 +4676,9 @@ void TtaNewSelector (int ref, int ref_parent, char *title, int number,
   ----------------------------------------------------------------------*/
 void TtaActiveSelector (int ref)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    ThotWidget          w;
    struct Cat_Context *catalogue;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -6361,22 +4689,11 @@ void TtaActiveSelector (int ref)
       TtaError (ERR_invalid_reference);
    else
      {
-       
-#ifdef _MOTIF
-	/* Recupere le widget du selecteur */
-	w = (ThotWidget) catalogue->Cat_Entries;
-	XtSetArg (args[0], XmNsensitive, TRUE);
-	XtSetValues (w, args, 1);
-	XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	w = (ThotWidget) catalogue->Cat_Entries;
 	gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 	gtk_widget_show (GTK_WIDGET(w));
-#endif /* _GTK */
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6384,12 +4701,9 @@ void TtaActiveSelector (int ref)
   ----------------------------------------------------------------------*/
 void TtaDesactiveSelector (int ref)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   ThotWidget          w;
    struct Cat_Context *catalogue;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-#endif /* _MOTIF */
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -6400,23 +4714,11 @@ void TtaDesactiveSelector (int ref)
       TtaError (ERR_invalid_reference);
    else
      {
-       
-#ifdef _MOTIF
-	/* Recupere le widget du selecteur */
-	w = (ThotWidget) catalogue->Cat_Entries;
-	XtSetArg (args[0], XmNsensitive, FALSE);
-	XtSetValues (w, args, 1);
-	XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	w = (ThotWidget) catalogue->Cat_Entries;
 	gtk_widget_show (GTK_WIDGET(w));
 	gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-#endif /* _GTK */
-  
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6428,12 +4730,7 @@ void TtaDesactiveSelector (int ref)
   ----------------------------------------------------------------------*/
 void TtaSetSelector (int ref, int entry, char *text)
 {
-#if defined(_MOTIF) || defined(_GTK)
-
-#ifdef _MOTIF
-   ThotWidget          w;
-#endif /* #ifdef _MOTIF */
-   
+#if defined(_GTK)
    ThotWidget          wt;
    ThotWidget          select;
    struct Cat_Context *catalogue;
@@ -6452,19 +4749,6 @@ void TtaSetSelector (int ref, int entry, char *text)
 	     return;
 	  }
 
-#ifdef _MOTIF
-	if (!catalogue->Cat_SelectList)
-	  {
-	     wt = XmSelectionBoxGetChild (select, XmDIALOG_TEXT);
-	     /* Si le selecteur est reactif */
-	     if (catalogue->Cat_React)
-		XtRemoveCallback (wt, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-	  }
-	else if (catalogue->Cat_React)
-	   XtRemoveCallback (select, XmNsingleSelectionCallback, (XtCallbackProc) CallList, catalogue);
-#endif /* #ifdef _MOTIF */
-
-#ifdef _GTK
 	if (!catalogue->Cat_SelectList)
 	  {
 	    wt = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT(select), "EntryZone"));
@@ -6477,50 +4761,13 @@ void TtaSetSelector (int ref, int entry, char *text)
 	    RemoveSignalGTK (GTK_OBJECT(select), "selection_changed"); 
 	    RemoveSignalGTK (GTK_OBJECT(select), "button_press_event"); 
 	  }
-#endif /* _GTK */
 
-  if (entry >= 0 && entry < catalogue->Cat_ListLength)
-	  {
-
-#ifdef _MOTIF
-	     /* Initialise l'entree de la liste */
-	     if (catalogue->Cat_SelectList)
-		XmListSelectPos (select, entry + 1, TRUE);
-	     else
-	       {
-		  w = XmSelectionBoxGetChild (select, XmDIALOG_LIST);
-		  XmListSelectPos (w, entry + 1, TRUE);
-	       }
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
-	     gtk_list_select_item (GTK_LIST(select), entry);
-#endif /* _GTK */
-	  }
+	if (entry >= 0 && entry < catalogue->Cat_ListLength)
+	  gtk_list_select_item (GTK_LIST(select), entry);
 	else if (catalogue->Cat_SelectList)
-   {
-#ifdef _MOTIF
-	   XmListDeselectAllItems (select);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-	   gtk_list_unselect_all (GTK_LIST(select));
-#endif /* _GTK */
-   } 
+	  gtk_list_unselect_all (GTK_LIST(select));
 	else
 	  {
-
-#ifdef _MOTIF
-	     /* Initialise le champ texte */
-	     if (catalogue->Cat_ListLength)
-	       {
-		  /* Deselectionne dans la liste */
-		  w = XmSelectionBoxGetChild (select, XmDIALOG_LIST);
-		  XmListDeselectAllItems (w);
-	       }
-	     XmTextSetString (wt, text);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* Initialise le champ texte */
 	     if (catalogue->Cat_ListLength)
 	       gtk_list_unselect_all (GTK_LIST(select));
@@ -6528,39 +4775,25 @@ void TtaSetSelector (int ref, int entry, char *text)
 	       gtk_entry_set_text (GTK_ENTRY (wt), "");
 	     else
 	       gtk_entry_set_text (GTK_ENTRY (wt), text);
-#endif /* _GTK */
-       
 	  }
 
 	/* Si le selecteur est reactif */
 	if (catalogue->Cat_React)
 	  {
-#ifdef _MOTIF
-	   if (catalogue->Cat_SelectList)
-	      XtAddCallback (select, XmNsingleSelectionCallback,
-			     (XtCallbackProc) CallList, catalogue);
-	   else
-	      XtAddCallback (wt, XmNvalueChangedCallback,
-			     (XtCallbackProc) CallTextChange, catalogue);
-#endif /* #ifdef _MOTIF */
-     
-#ifdef _GTK
 	   if (catalogue->Cat_SelectList)
 	     {
-	     ConnectSignalGTK (GTK_OBJECT(select),"selection_changed"
-			       , GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-	     ConnectSignalGTK (GTK_OBJECT(select), "button_press_event",
-			       GTK_SIGNAL_FUNC (CallTextEnterGTK),
-			       (gpointer)catalogue);
+	       ConnectSignalGTK (GTK_OBJECT(select),"selection_changed"
+				 , GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
+	       ConnectSignalGTK (GTK_OBJECT(select), "button_press_event",
+				 GTK_SIGNAL_FUNC (CallTextEnterGTK),
+				 (gpointer)catalogue);
 	     }
 	   else
 	     ConnectSignalGTK (GTK_OBJECT(wt),"changed",
 			       GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
-#endif /* _GTK */
-     
 	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6569,19 +4802,9 @@ void TtaSetSelector (int ref, int entry, char *text)
   ----------------------------------------------------------------------*/
 static void NewLabel (int ref, int ref_parent, char *text, int padding)
 {
-#if defined(_MOTIF) || defined(_GTK)
-
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-   int                 n;
-#endif /* #ifdef _MOTIF */
-   
-#ifdef _GTK
+#if defined(_GTK)
    ThotWidget          tmpw;
    int                 width, height;
-#endif /* _GTK */
-   
    int                 i;
    int                 ent;
    int                 rebuilded;
@@ -6607,28 +4830,8 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
      {
 	/* Modification du catalogue */
 	w = catalogue->Cat_Widget;
-
-#ifdef _MOTIF
-	/* Regarde si le widget est affiche */
-	if (XtIsManaged (w))
-	   rebuilded = 2;
-	else
-	   rebuilded = 1;
-	n = 0;
-	title_string = XmStringCreateSimple (text);
-	XtSetArg (args[n], XmNlabelString, title_string);
-	n++;
-	XtSetValues (w, args, n);
-	/* Faut-il reafficher le widget ? */
-	if (rebuilded == 2)
-	   XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	gtk_widget_show (w);
 	gtk_label_set_text (GTK_LABEL (w), text);	
-#endif /* _GTK */
-  
      }
    else
      {
@@ -6663,25 +4866,6 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
 	  }
 	/* Recupere le widget parent */
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
-#ifdef _MOTIF
-	/*** Cree l'intitule ***/
-	n = 0;
-	title_string = XmStringCreateSimple (text);
-	XtSetArg (args[n], XmNfontList, DefaultFont);
-	n++;
-	XtSetArg (args[n], XmNlabelString, title_string);
-	n++;
-	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	/*XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;*/
-	w = XmCreateLabel (w, "Dialogue", args, n);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	tmpw = gtk_label_new (text);
 	gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 	gtk_widget_show (GTK_WIDGET(tmpw));
@@ -6700,8 +4884,6 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
 	/* on fou les couleurs (A FAIRE)*/
 	gtk_widget_set_name (tmpw, "Dialogue");
 	w=tmpw;
-#endif /* _GTK */
-  
 	catalogue->Cat_Widget = w;
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = CAT_LABEL;
@@ -6711,11 +4893,7 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Entries = NULL;
      }
-#ifdef _MOTIF
-   XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6725,9 +4903,9 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
   ----------------------------------------------------------------------*/
 void TtaNewLabel (int ref, int ref_parent, char *text)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   NewLabel (ref, ref_parent, text, 0);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6739,18 +4917,9 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
   ----------------------------------------------------------------------*/
 void TtaNewPaddedLabel (int ref, int ref_parent, char *text, int padding)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   NewLabel (ref, ref_parent, text, padding);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-   TtaNewButton cree un nouveau bouton dans un formulaire       
-   The parameter ref donne la re'fe'rence du catalogue.               
-   The parameter text donne l'intitule' du boutton.                              
-  ----------------------------------------------------------------------*/
-void TtaNewButton (int ref, int ref_parent, char *text)
-{
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6764,7 +4933,7 @@ void TtaNewButton (int ref, int ref_parent, char *text)
 void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
  		     int height, ThotBool react)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 ent;
    int                 i;
    struct Cat_Context *catalogue;
@@ -6772,15 +4941,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
    struct E_List      *adbloc;
    ThotWidget          w;
    ThotWidget          row;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-   int                 n;
-#endif /* #ifdef _MOTIF */
-   
-#ifdef _GTK
    ThotWidget          tmpw;
-#endif /* _GTK */
 
    if (ref == 0)
      {
@@ -6826,78 +4987,6 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
-#ifdef _MOTIF
-	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-	     n = 0;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNspacing, 0);
-	     n++;
-	     row = XmCreateRowColumn (row, "Dialogue", args, n);
-	     /*** Cree le titre ***/
-	     if (title)
-	       {
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNfontList, DefaultFont);
-		  n++;
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  w = XmCreateLabel (row, "Dialogue", args, n);
-		  XtManageChild (w);
-		  XmStringFree (title_string);
-	       }		/*if */
-	     /* Cree une feuille de saisie de texte */
-	     n = 0;
-	     if (width == 0)
-		XtSetArg (args[n], XmNcolumns, 10);
-	     else
-		XtSetArg (args[n], XmNcolumns, width);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     if (TextTranslations)
-		XtSetArg (args[n], XmNtranslations, TextTranslations);
-	     n++;
-	     if (height < 2)
-	       {
-		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
-		  n++;
-		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
-		  w = XmCreateText (row, "Dialogue", args, n);
-	       }
-	     else
-	       {
-		  XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT);
-		  n++;
-		  XtSetArg (args[n], XmNrows, (short) height);
-		  n++;
-		  w = XmCreateScrolledText (row, "Dialogue", args, n);
-	       }
-	     XtManageChild (w);
-	     /* Si la feuille de saisie est reactive */
-	     if (react)
-		XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* create the vbox for all the elements */
 	     tmpw = gtk_vbox_new (FALSE, 0);
 	     gtk_widget_show (GTK_WIDGET(tmpw));
@@ -6954,7 +5043,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     /* report Enter to the form */
 	     ConnectSignalGTK (GTK_OBJECT(w), "activate",
 				 GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) parentCatalogue);
-#endif /* _GTK */
+
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_TEXT;
 	     /* L'entree Cat_Entries contient le numero du widget texte */
@@ -6966,7 +5055,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     catalogue->Cat_EntryParent = i;
 	  }
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6995,12 +5084,7 @@ void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
   ----------------------------------------------------------------------*/
 void TtaSetTextForm (int ref, char *text)
 {
-#if defined(_MOTIF) || defined(_GTK)
-
-#ifdef _MOTIF
-   int                 lg;
-#endif /* #ifdef _MOTIF */
-   
+#if defined(_GTK)
    struct Cat_Context *catalogue;
    ThotWidget          w;
 
@@ -7017,21 +5101,6 @@ void TtaSetTextForm (int ref, char *text)
      {
         w = (ThotWidget) catalogue->Cat_Entries;
         /* Si la feuille de saisie est reactive */
-
-#ifdef _MOTIF
-        if (catalogue->Cat_React)
-	  XtRemoveCallback (w, XmNvalueChangedCallback,
-			    (XtCallbackProc) CallTextChange, catalogue);
-        XmTextSetString (w, text);
-        lg = strlen (text);
-        XmTextSetSelection (w, lg, lg, 500);
-        /* Si la feuille de saisie est reactive */
-        if (catalogue->Cat_React)
-	  XtAddCallback (w, XmNvalueChangedCallback,
-			 (XtCallbackProc) CallTextChange, catalogue);
-#endif /* #ifdef _MOTIF */
-        
-#ifdef _GTK
         if (catalogue->Cat_React)
 	  RemoveSignalGTK (GTK_OBJECT(w), "changed");  
 	if (GTK_IS_ENTRY (w))
@@ -7042,10 +5111,8 @@ void TtaSetTextForm (int ref, char *text)
         if (catalogue->Cat_React)
 	  ConnectSignalGTK (GTK_OBJECT(w), "changed",
 			    GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
-#endif /* _GTK */
      }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7060,21 +5127,13 @@ void TtaSetTextForm (int ref, char *text)
 void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 		       int max, ThotBool react)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    int                 ent;
    int                 i;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
-#ifdef _MOTIF
-   Arg                 args[MAX_ARGS];
-   int                 n;
-   XmString            title_string;
-#endif /* #ifdef _MOTIF */
-   
-#ifdef _GTK
    ThotWidget          tmpw;
-#endif /* _GTK */
    ThotWidget          w;
    ThotWidget          row;
    char                bounds[100];
@@ -7120,32 +5179,12 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	else
 	  {
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
-#ifdef _MOTIF
-	     /* Cree a l'interieur Row-Column du formulaire */
-	     n = 0;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     /*XtSetArg(args[n], XmNpacking, XmPACK_NONE); n++; */
-	     XtSetArg (args[n], XmNadjustLast, FALSE);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNspacing, 0);
-	     n++;
-	     row = XmCreateRowColumn (row, "Dialogue", args, n);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* add a vbox to contain the elements */
 	     tmpw = gtk_vbox_new (FALSE, 0);
 	     gtk_widget_show (tmpw);
 	     gtk_widget_set_name (tmpw, "Dialogue");
 	     gtk_container_add (GTK_CONTAINER(row), tmpw);
 	     row=tmpw;
-#endif /* _GTK */
        
 	     catalogue->Cat_Widget = row;
 	     catalogue->Cat_PtParent = parentCatalogue;
@@ -7160,36 +5199,6 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     /*** Cree le titre du sous-menu ***/
 	     if (title)
 	       {
-#ifdef _MOTIF
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  XtSetArg (args[n], XmNfontList, DefaultFont);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNadjustLast, FALSE);
-		  n++;
-		  w = XmCreateLabel (row, "Dialogue", args, n);
-		  XtManageChild (w);
-		  /*n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		  n++;
-		  w = XmCreateSeparator (row, "Dialogue", args, n);
-		  XtManageChild (w);*/
-		  XmStringFree (title_string);
-#endif /* #ifdef _MOTIF */
-
-#ifdef _GTK
 		  /* add a title label */
 		  w = gtk_label_new (title);
 		  gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
@@ -7197,7 +5206,6 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 		  gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
 		  gtk_widget_set_name (w, "Dialogue");
 		  gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-#endif /* _GTK */
 	       }
 	     /* Cree une feuille de saisie d'un nombre */
 	     if (min < max)
@@ -7221,52 +5229,6 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 		 ent = min;
 	       }
        
-#ifdef _MOTIF
-	     title_string = XmStringCreateSimple (bounds);
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNlabelString, title_string);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     w = XmCreateLabel (row, "Dialogue", args, n);
-	     XtManageChild (w);
-	     XmStringFree (title_string);
-
-	     /* Cree une feuille de saisie annexe */
-	     n = 0;
-	     XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     sprintf (bounds, "%d", min);
-	     XtSetArg (args[n], XmNvalue, bounds);
-	     n++;
-	     if (min < 0)
-		i = 1;
-	     else
-		i = 0;
-	     do
-	       {
-		  ent = ent / 10;
-		  i++;
-	       }
-	     while (ent > 0);
-	     XtSetArg (args[n], XmNcolumns, i);
-	     n++;
-	     XtSetArg (args[n], XmNmaxLength, i + 1);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     w = XmCreateText (row, "Dialogue", args, n);
-	     XtManageChild (w);
-	     if (catalogue->Cat_React)
-	       XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-#endif /* #ifdef _MOTIF */
-       
-#ifdef _GTK
 	     /* a new label for the title */
 	     w = gtk_label_new (bounds);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
@@ -7288,12 +5250,10 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     gtk_entry_set_text (GTK_ENTRY (w), bounds);
 	     if (catalogue->Cat_React)
 	       ConnectSignalGTK (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-#endif /* _GTK */
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
 	  }
      }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7303,7 +5263,7 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
   ----------------------------------------------------------------------*/
 void TtaSetNumberForm (int ref, int val)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    char              text[10];
    int                 lg;
    ThotWidget          wtext;
@@ -7329,20 +5289,6 @@ void TtaSetNumberForm (int ref, int val)
 	     return;
 	  }
 	wtext = catalogue->Cat_Entries->E_ThotWidget[1];
-#ifdef _MOTIF
-	/* Desactive la procedure de Callback */
-	if (catalogue->Cat_React)
-	  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-	sprintf (text, "%d", val);
-	XmTextSetString (wtext, text);
-	lg = strlen (text);
-	XmTextSetSelection (wtext, lg, lg, 500);
-	/* Reactive la procedure de Callback */
-	if (catalogue->Cat_React)
-	  XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-#endif /* #ifdef _MOTIF */
-  
-#ifdef _GTK
 	/* Desactive la procedure de Callback */
 	if (catalogue->Cat_React)
 	  RemoveSignalGTK (GTK_OBJECT(wtext), "changed");  
@@ -7352,16 +5298,12 @@ void TtaSetNumberForm (int ref, int val)
 	/* Reactive la procedure de Callback */
 	if (catalogue->Cat_React)
 	  ConnectSignalGTK (GTK_OBJECT(wtext), "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-#endif /* _GTK */
-
      }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 
 #ifdef _GTK
-
 typedef void Treecbf (ThotWidget w, ThotBool state, void *user_data);
 
 /*----------------------------------------------------------------------
@@ -7369,7 +5311,7 @@ typedef void Treecbf (ThotWidget w, ThotBool state, void *user_data);
   Clears all selected entries in tree thru a cbf function, except
   for node_skip.
   ----------------------------------------------------------------------*/
-static void TreeRecUnselectCBF (GtkCTree *tree,  GtkCTreeNode  *node, gpointer data)
+static void TreeRecUnselectCBF (GtkCTree *tree, GtkCTreeNode *node, gpointer data)
 {
   GtkCTreeNode *node_skip =  GTK_CTREE_NODE (data);
   Treecbf  *cbf;
@@ -7483,7 +5425,6 @@ static ThotBool TreeFocus (ThotWidget w, GdkEventFocus *ev,
 
   return FALSE;
 }
-
 #endif /* GTK */
 
 /*----------------------------------------------------------------------
@@ -7495,7 +5436,6 @@ ThotWidget TtaClearTree (ThotWidget tree)
      /* add some tree stuff here */
 {
   ThotWidget tree_widget = NULL;
-
 #ifdef _GTK
   GList *children;
 
@@ -7516,7 +5456,6 @@ ThotWidget TtaClearTree (ThotWidget tree)
   else
     return NULL;
 #endif /* _GTK */
-
   return (tree_widget);
 }
 
@@ -7537,12 +5476,10 @@ ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
 			  void *user_data)
 {
   ThotWidget tree_item = NULL;
-
 #ifdef _GTK
   gchar *ctree_label[1];
 
   ctree_label[0]= (item_label) ?  (gchar *) item_label : (gchar *) "";
-
   tree_item = (ThotWidget) gtk_ctree_insert_node ((GtkCTree *) tree,
 						  (GtkCTreeNode *) parent,
 						  (GtkCTreeNode *) sibling,
@@ -7568,7 +5505,6 @@ ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
 			   GTK_CTREE_NODE(tree_item), 
 			   (gpointer) user_data);
 #endif /* _GTK */
-  
   return (tree_item);
 }
 
@@ -7911,7 +5847,7 @@ ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label,
   ----------------------------------------------------------------------*/
 void TtaAbortShowDialogue ()
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   if (ShowReturn == 1)
     {
       /* Debloque l'attente courante */
@@ -7919,23 +5855,7 @@ void TtaAbortShowDialogue ()
       /* Invalide le menu ou formulaire courant */
       if (ShowCat  && ShowCat->Cat_Widget)
 	{
-#ifdef _MOTIF
-    if (XtIsManaged (ShowCat->Cat_Widget))
-	    {
-	      /* Traitement particulier des formulaires */
-	      if (ShowCat->Cat_Type == CAT_FORM
-		  || ShowCat->Cat_Type == CAT_SHEET
-		  || ShowCat->Cat_Type == CAT_DIALOG)
-		{
-		  XtUnmanageChild (XtParent (ShowCat->Cat_Widget));
-		  CallSheet (None, ShowCat, NULL);
-		}
-	      else
-		XtUnmanageChild (ShowCat->Cat_Widget);
-	    }
-#endif /* #ifdef _MOTIF */    
-#ifdef _GTK
-	  if( GTK_WIDGET_VISIBLE(ShowCat->Cat_Widget) )
+	  if (GTK_WIDGET_VISIBLE(ShowCat->Cat_Widget))
 	    {
 	      /* Traitement particulier des formulaires */
 	      if (ShowCat->Cat_Type == CAT_FORM
@@ -7949,10 +5869,9 @@ void TtaAbortShowDialogue ()
 	      else
 		gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget));
 	    }
-#endif /* _GTK */ 
 	}
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7961,22 +5880,11 @@ void TtaAbortShowDialogue ()
   ----------------------------------------------------------------------*/
 void TtaSetDialoguePosition ()
 {
-#ifdef _MOTIF
-   ThotWindow          wdum;
-   int                 xdum;
-   int                 ydum;
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
    GdkModifierType     flag_tmp;
-#endif /* _GTK */
 
-#ifdef _MOTIF
-   wdum = RootWindow (GDp, DefaultScreen (GDp));
-   XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, (unsigned int *)&xdum);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
-   gdk_window_get_pointer((GdkWindow *)(gdk_window_get_toplevels()->data),
-			  &ShowX, &ShowY, &flag_tmp);
+   gdk_window_get_pointer ((GdkWindow *)(gdk_window_get_toplevels()->data),
+			  &ShowX,  &ShowY, &flag_tmp);
 #endif /* _GTK */
 }
 
@@ -7988,10 +5896,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifdef _WINGUI
   POINT               curPoint;
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-  int                 n;  
-  Arg                 args[MAX_ARGS];
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
   int                 n;  
   ThotBool            usedoubleclick;  
@@ -8033,18 +5937,12 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       UpdateWindow (w);
     }
 #endif  /* _WINGUI */
-#ifdef _MOTIF
-  if (XtIsManaged (w))
-    XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
-#endif /* #ifdef _MOTIF */
 #ifdef _GTK
   if (GTK_WIDGET_VISIBLE (w))
     {
       gtk_widget_show_all (GTK_WIDGET (w));
       gdk_window_raise (GTK_WIDGET (w)->window);
     }
-#endif /* _GTK */
-#if defined(_MOTIF) || defined(_GTK)
   /*===========> Active un pop-up menu */
   else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL
 	   || catalogue->Cat_Type == CAT_SCRPOPUP)
@@ -8058,17 +5956,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  ShowReturn = 1;
 	  ShowCat = catalogue;
 	}
-#ifdef _MOTIF
-      /*** Positionne le pop-up a la position courante du show ***/
-      n = 0;
-      XtSetArg (args[n], XmNx, (Position) ShowX);
-      n++;
-      XtSetArg (args[n], XmNy, (Position) ShowY);
-      n++;
-      XtSetValues (w, args, n);
-      XtManageChild (w);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
       TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedoubleclick);
       if (catalogue->Cat_Button == 'L')
 	{
@@ -8094,8 +5981,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  gtk_widget_show_all ((GtkWidget *) w);
 	  gdk_keyboard_grab (((GtkWidget *)w)->window, TRUE, GDK_CURRENT_TIME);
 	}
-#endif /* _GTK */
-      
     } 
   /*===========> Active un formulaire */
   else if ((catalogue->Cat_Type == CAT_FORM ||
@@ -8118,22 +6003,16 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  catalogue->Cat_Type == CAT_FORM) &&
 	  catalogue->Cat_Entries)
 	{
-#ifdef _MOTIF
-	  XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
-	  XtSetValues (w, args, 1);
-#endif /* #ifdef _MOTIF */
-#ifdef _GTK
 	  if (catalogue->Cat_Entries->E_ThotWidget[1])
 	    gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[1]));
 	  else if (catalogue->Cat_Entries->E_ThotWidget[0])
 	    gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[0]));
-#endif /* _GTK */
 	}
       INITform (w, catalogue, NULL);
     }
   else
     TtaError (ERR_invalid_reference);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -8154,9 +6033,9 @@ void TtaWaitShowProcDialogue ()
 	DispatchMessage (&event);
       }
 #endif  /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8172,7 +6051,7 @@ void TtaWaitShowDialogue ()
   TranslateMessage (&event);
   DispatchMessage (&event);
 #endif  /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_GTK)  
   /* a TtaWaitShowDialogue pending */
   CurrentWait = 1;
   while (ShowReturn == 1)
@@ -8182,7 +6061,7 @@ void TtaWaitShowDialogue ()
     }
   /* Fin de l'attente */
   CurrentWait = 0;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
   
 }
 

@@ -39,12 +39,7 @@
 #define THD_TRACE 1
 #endif
 
-#ifdef _MOTIF
-  /* Amaya's X appcontext */
-  extern ThotAppContext app_cont;
-#endif /* #ifdef _MOTIF */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   /* Private functions */
   static void         RequestRegisterReadXtevent (SOCKET);
   static void         RequestKillReadXtevent (SOCKET);
@@ -52,7 +47,7 @@
   static void         RequestKillWriteXtevent (SOCKET);
   static void         RequestRegisterExceptXtevent ( SOCKET);
   static void         RequestKillExceptXtevent (SOCKET);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
 /* Private variables */
 
@@ -69,14 +64,6 @@ static const HTEventType ReadBits = (HTEventType)(HTEvent_READ | HTEvent_ACCEPT 
 static const HTEventType WriteBits = (HTEventType)(HTEvent_WRITE | HTEvent_CONNECT);
 static const HTEventType ExceptBits = (HTEventType)HTEvent_OOB;
 
-#ifdef _MOTIF
-  typedef struct sStatus {
-    XtInputId read;             /* the different Xt Id's */
-    XtInputId write;
-    XtInputId except;
-  } SocketStatus;
-#endif /*! #ifdef _MOTIF */
-
 #if defined(_GTK)
   typedef struct sStatus {
     gint read;             /* the different GTK Id's */
@@ -84,7 +71,6 @@ static const HTEventType ExceptBits = (HTEventType)HTEvent_OOB;
     gint except;
   } SocketStatus;
 #endif /* _GTK */
-
 #if defined(_WX)
 typedef struct sStatus {
   int read;
@@ -92,7 +78,6 @@ typedef struct sStatus {
   int except;
 } SocketStatus;
 #endif /* _WX */
-
 #if defined(_NOGUI)
   typedef struct sStatus {
     int read;
@@ -100,12 +85,11 @@ typedef struct sStatus {
     int except;
   } SocketStatus;
 #endif /* #ifdef _NOGUI */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   #define SOCK_TABLE_SIZE 67
   #define HASH(s) ((s) % SOCK_TABLE_SIZE)
   static SocketStatus persSockets[SOCK_TABLE_SIZE];
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge
@@ -125,49 +109,7 @@ typedef struct sStatus {
   -------------------------------------------------------------------*/
 void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 {
-#ifdef _MOTIF
-   int                 status;  /* the status result of the libwwww call */
-   HTEventType         type  = HTEvent_ALL;	
-   int                 v;
-   int 		       socket = *s;
-   ms_t                now = HTGetTimeInMillis();
-   
-   v = HASH (socket);
-
-   /* convert the FD into an HTEventType which will allow us to find the
-      request associated with the socket */
-
-   /* I could send some other data here, like the event itself, right */
-   switch ((XtInputId) cd) 
-     {
-     case XtInputReadMask:
-       type = HTEvent_READ;
-       break;
-     case XtInputWriteMask:
-       type = HTEvent_WRITE;
-       break;
-     case XtInputExceptMask:
-       type = HTEvent_OOB;
-       break;
-     default:
-       type = HTEvent_ALL; 
-       break;
-     } /* switch */
-   
-   /* Invokes the callback associated to the requests */
-   
-   /**   CanDoStop_set (FALSE); **/
-   if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
-     {
-#ifdef DEBUG_LIBWWW
-     HTTrace ("Callback.... returned a value != HT_OK");
-#endif
-     }
-
-   /***   CanDoStop_set (TRUE); **/
-#endif /* _MOTIF */
-   
-   return (0);
+  return (0);
 }
 
 #if defined(_GTK)
@@ -404,7 +346,7 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
       return (0);
     }
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   /* need something special for HTEvent_CLOSE */
   if (type & ReadBits)
     RequestRegisterReadXtevent (sock);
@@ -414,18 +356,16 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
   
   if (type & ExceptBits)
     RequestRegisterExceptXtevent (sock);
-#endif	 /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-  
+#endif	 /* defined(_GTK) || defined(_WX) */
 #ifdef _WINDOWS
   /* under windows, libwww requires an explicit FD_CLOSE registration 
      to detect HTTP responses not having a Content-Length header */
   status = HTEventList_register (sock, (HTEventType)(type | HTEvent_CLOSE) , event);
 #endif /* _WINDOWS */
-
 #if defined(_UNIX)
   status = HTEventList_register (sock, type, event);
 #endif /* #if defined(_UNIX) */
-  
+
   return (status);
 }
 
@@ -443,7 +383,7 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
   if (sock == INVSOC)
     return HT_OK;
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
    /* remove the Xt event hooks */
    if (type & ReadBits) 
      RequestKillReadXtevent (sock);
@@ -453,14 +393,12 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
    
    if (type & ExceptBits) 
      RequestKillExceptXtevent (sock);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
    /* @@@ if this is the default for windows, no need to have AHTEvent_..
       in windows!! */
-
    /* call libwww's default routine */
    status = HTEventList_unregister (sock, type);
-   
    return (status);
 }
 
@@ -473,11 +411,10 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
   ----------------------------------------------------------------------*/
 void RequestKillAllXtevents (AHTReqContext * me)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int sock = INVSOC;
 
   return;
-
   /* @@@ what to do with this one? @@@ */
   if (me->read_sock != INVSOC)
     sock = me->read_sock;
@@ -493,11 +430,10 @@ void RequestKillAllXtevents (AHTReqContext * me)
       fprintf (stderr, "RequestKillAllXtEvents: Clearing XtInputs\n");
 #endif /* DEBUG_LIBWWW */
 
-
    RequestKillReadXtevent (sock);
    RequestKillWriteXtevent (sock);
    RequestKillExceptXtevent (sock);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
 }
 
 /*----------------------------------------------------------------------
@@ -506,34 +442,20 @@ void RequestKillAllXtevents (AHTReqContext * me)
   ----------------------------------------------------------------------*/
 static void RequestRegisterReadXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
 
   v = HASH (sock);
-
   if (!persSockets[v].read)
     {
-      
-#ifdef _MOTIF
-      persSockets[v].read  =
-	XtAppAddInput (app_cont,
-		       sock,
-		       (XtPointer) XtInputReadMask,
-		       (XtInputCallbackProc) AHTCallback_bridge,
-		       (XtPointer) XtInputReadMask);
-#endif /* _MOTIF */
-      
 #if defined(_GTK)
-     persSockets[v].read  =
-       gdk_input_add ((gint) sock,
-		      GDK_INPUT_READ,
-		      AHTCallback_bridgeGTK,
-		      (gpointer) sock);
+     persSockets[v].read  = gdk_input_add ((gint) sock,
+					   GDK_INPUT_READ,
+					   AHTCallback_bridgeGTK,
+					   (gpointer) sock);
 #endif /* _GTK */
-
 #if defined(_WX)
-     persSockets[v].read  =
-       wxAmayaSocketEvent::RegisterSocket( sock,
+     persSockets[v].read  = wxAmayaSocketEvent::RegisterSocket( sock,
 					   WXAMAYASOCKET_READ,
 					   AHTCallback_bridgeWX );
 #endif /* _WX */
@@ -544,7 +466,7 @@ static void RequestRegisterReadXtevent (SOCKET sock)
 		 persSockets[v].read, sock);
 #endif /* DEBUG_LIBWWW */
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 }
 
 /*----------------------------------------------------------------------
@@ -553,11 +475,10 @@ static void RequestRegisterReadXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillReadXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
 
   v = HASH (sock);
-
   if (persSockets[v].read)
     {
 #ifdef DEBUG_LIBWWW
@@ -565,24 +486,18 @@ static void RequestKillReadXtevent (SOCKET sock)
 	fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
 		 persSockets[v].read);
 #endif /* DEBUG_LIBWWW */
-
-#ifdef _MOTIF
-      XtRemoveInput (persSockets[v].read);
-      persSockets[v].read = (XtInputId) NULL;
-#endif /* _MOTIF */
       
 #if defined(_GTK)
       gdk_input_remove (persSockets[v].read);
       persSockets[v].read = (gint) 0;
 #endif /* !_GTK */
-
 #if defined(_WX)
       wxAmayaSocketEvent::UnregisterSocket( persSockets[v].read );
       persSockets[v].read = 0;
 #endif /* _WX */
 
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
 }
 
 /*----------------------------------------------------------------------
@@ -591,32 +506,20 @@ static void RequestKillReadXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestRegisterWriteXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
-  v = HASH (sock);
 
+  v = HASH (sock);
   if (!persSockets[v].write)
     {   
-#ifdef _MOTIF
-      persSockets[v].write =
-	XtAppAddInput (app_cont,
-		       sock,
-		   (XtPointer) XtInputWriteMask,
-		   (XtInputCallbackProc) AHTCallback_bridge,
-		   (XtPointer) XtInputWriteMask);
-#endif /* _MOTIF */
-      
 #if defined(_GTK) 
-     persSockets[v].write  =
-       gdk_input_add ((gint) sock,
-		      GDK_INPUT_WRITE,
-		      AHTCallback_bridgeGTK,
-		      (gpointer) sock);
+     persSockets[v].write  = gdk_input_add ((gint) sock,
+					    GDK_INPUT_WRITE,
+					    AHTCallback_bridgeGTK,
+					    (gpointer) sock);
 #endif /* _GTK  */
-
 #if defined(_WX)
-     persSockets[v].write  =
-       wxAmayaSocketEvent::RegisterSocket( sock,
+     persSockets[v].write  = wxAmayaSocketEvent::RegisterSocket( sock,
 					   WXAMAYASOCKET_WRITE,
 					   AHTCallback_bridgeWX );
 #endif /* _WX */
@@ -628,7 +531,7 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
 #endif /* DEBUG_LIBWWW */
   
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
 }
 
 /*----------------------------------------------------------------------
@@ -638,11 +541,10 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillWriteXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
 
   v = HASH (sock);
-
   if (persSockets[v].write)
     {
 #ifdef DEBUG_LIBWWW   
@@ -652,23 +554,17 @@ static void RequestKillWriteXtevent (SOCKET sock)
 		 persSockets[v].write);
 #endif /* DEBUG_LIBWWW */
       
-#ifdef _MOTIF
-      XtRemoveInput (persSockets[v].write);
-      persSockets[v].write =  (XtInputId) NULL;
-#endif /* _MOTIF */
-      
 #if defined(_GTK)
       gdk_input_remove (persSockets[v].write);
       persSockets[v].write = (gint) 0;
 #endif /* _GTK */
-
 #if defined(_WX)
       wxAmayaSocketEvent::UnregisterSocket( persSockets[v].write );
       persSockets[v].write = 0;
 #endif /* _WX */
 
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
 }
 
 /*----------------------------------------------------------------------
@@ -677,30 +573,18 @@ static void RequestKillWriteXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestRegisterExceptXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
 
   v = HASH (sock);
-
    if (!persSockets[v].except)
      {
-#ifdef _MOTIF
-       persSockets[v].except =
-	 XtAppAddInput (app_cont,
-			sock,
-			(XtPointer) XtInputExceptMask,
-			(XtInputCallbackProc) AHTCallback_bridge,
-			(XtPointer) XtInputExceptMask);
-#endif /* _MOTIF */
-       
 #if defined(_GTK)
-     persSockets[v].except  =
-       gdk_input_add ((gint) sock,
-		      GDK_INPUT_EXCEPTION,
-		      AHTCallback_bridgeGTK,
-		      (gpointer) sock);
+     persSockets[v].except  = gdk_input_add ((gint) sock,
+					     GDK_INPUT_EXCEPTION,
+					     AHTCallback_bridgeGTK,
+					     (gpointer) sock);
 #endif /* _GTK */
-
 #if defined(_WX)
      persSockets[v].except =
        wxAmayaSocketEvent::RegisterSocket( sock,
@@ -714,7 +598,7 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
 	      persSockets[v].except, sock);
 #endif /* DEBUG_LIBWWW */
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
 }
 
 /*----------------------------------------------------------------------
@@ -724,7 +608,7 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillExceptXtevent (SOCKET sock)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   int v;
 
   v = HASH (sock);
@@ -736,23 +620,16 @@ static void RequestKillExceptXtevent (SOCKET sock)
 		 "%lu\n", persSockets[v].except);
 #endif /* DEBUG_LIBWWW */
 
-#ifdef _MOTIF
-      XtRemoveInput (persSockets[v].except);
-      persSockets[v].except = (XtInputId) NULL;
-#endif /* _MOTIF */
-      
 #if defined(_GTK)
       gdk_input_remove (persSockets[v].except);
       persSockets[v].except = (gint) 0;
 #endif /* _GTK */
-
 #if defined(_WX)
       wxAmayaSocketEvent::UnregisterSocket( persSockets[v].except );
       persSockets[v].except = 0;
 #endif /* _WX */
-      
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 }
 
 /*----------------------------------------------------------------------
@@ -760,35 +637,26 @@ static void RequestKillExceptXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 
 struct _HTTimer {
-    ms_t        millis;         /* Relative value in millis */
-    ms_t        expires;        /* Absolute value in millis */
-    BOOL        relative;
-    BOOL        repetitive;
-    void *      param;          /* Client supplied context */
-    HTTimerCallback * cbf;
+  ms_t        millis;         /* Relative value in millis */
+  ms_t        expires;        /* Absolute value in millis */
+  BOOL        relative;
+  BOOL        repetitive;
+  void *      param;          /* Client supplied context */
+  HTTimerCallback * cbf;
 };
 
 struct _AmayaTimer {
   HTTimer *libwww_timer;
-
-#ifdef _MOTIF
-  XtIntervalId xt_timer;
-#endif /* _MOTIF */
-  
 #ifdef _GTK
   guint  xt_timer;
 #endif /* _GTK */
-
 #ifdef _WX
   wxAmayaTimer * xt_timer;
 #endif /* _WX */
-
 #ifdef _NOGUI
   unsigned int xt_timer;
 #endif /* #ifdef _NOGUI */  
-  
 };
-
 typedef struct _AmayaTimer AmayaTimer;
 
 static HTList *Timers = NULL;
@@ -800,36 +668,7 @@ static HTList *Timers = NULL;
   ----------------------------------------------------------------------*/
 void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 {
-#ifdef _MOTIF
-  HTList *cur, *last;
-  AmayaTimer *me;
-  HTTimer *libwww_timer;
-
-  if (!AmayaIsAlive () 
-      || Timers == NULL)
-    return (0);
-
-  /* find the timer from the uid */
-  last = cur = Timers;
-  while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
-    {
-      if (me->xt_timer == *id)
-	break;
-      last = cur;
-    }
-
-  if (me)
-    {
-      libwww_timer = me->libwww_timer;
-      /* remove the element from the list @@@ can be optimized later */
-      HTList_quickRemoveElement(cur, last);
-      TtaFreeMemory (me);
-      HTTimer_dispatch (libwww_timer);
-    }
-#endif /* _MOTIF */
-  
   return (0);
-  
 }
 
 #ifdef _GTK
@@ -918,12 +757,12 @@ void TimerCallbackWX( void * p_context )
   ----------------------------------------------------------------------*/
 void KillAllTimers (void)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   /* @@@ maybe add something else to kill the Xt things */
   if (Timers)
     HTList_delete (Timers);
   Timers = NULL;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 }
 
 /*----------------------------------------------------------------------
@@ -931,7 +770,7 @@ void KillAllTimers (void)
  ----------------------------------------------------------------------*/
 void AMAYA_SetTimer (HTTimer *libwww_timer)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   HTList *cur, *last;
   AmayaTimer *me;
 
@@ -957,16 +796,10 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
     /* remove the old timer */
       if (me->xt_timer) 
 	{
-#ifdef _MOTIF
-	  XtRemoveTimeOut (me->xt_timer);
-	  me->xt_timer = (XtIntervalId) NULL;
-#endif /* _MOTIF */
-
 #ifdef _GTK
 	  gtk_timeout_remove (me->xt_timer);
 	  me->xt_timer = (guint) 0;
 #endif /* !_GTK */
-
 #ifdef _WX
 	  delete wxDynamicCast(me->xt_timer, wxTimer);
 	  me->xt_timer = NULL;
@@ -983,26 +816,18 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
     }
 
   /* add a new time out */
-#ifdef _MOTIF
-  me->xt_timer = XtAppAddTimeOut (app_cont,
-				 me->libwww_timer->millis,
-				 (XtTimerCallbackProc) TimerCallback,
-				 (XtPointer *) (void *) me);
-#endif /* _MOTIF */
-  
 #ifdef _GTK
   me->xt_timer = gtk_timeout_add ((guint32) me->libwww_timer->millis,
 				  (GtkFunction) TimerCallbackGTK,
 				  (gpointer) me);
 #endif /* _GTK */
-
 #ifdef _WX
   me->xt_timer = new wxAmayaTimer( TimerCallbackWX, me);
   /* start a one shot timer */
   me->xt_timer->Start( me->libwww_timer->millis, TRUE );
 #endif /* _WX */
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
 }
 
 /*----------------------------------------------------------------------
@@ -1010,7 +835,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   ----------------------------------------------------------------------*/
 void AMAYA_DeleteTimer (HTTimer *libwww_timer)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
   HTList *cur, *last;
   AmayaTimer *me;
 
@@ -1029,14 +854,9 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
   if (me)
     {
       /* remove the Xt timer */
-#ifdef _MOTIF
-      XtRemoveTimeOut (me->xt_timer);
-#endif /* _MOTIF */
-      
 #ifdef _GTK
       gtk_timeout_remove (me->xt_timer);
 #endif /* _GTK */
-
 #ifdef _WX
       delete wxDynamicCast(me->xt_timer, wxTimer);
 #endif /* _WX */
@@ -1045,6 +865,6 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
       HTList_removeObject (Timers, me);
       TtaFreeMemory (me);
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 }
 
