@@ -2154,7 +2154,7 @@ static void wrlevel (Level n, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrdistunit ecrit le nom d'une unite' de distance.               
   ----------------------------------------------------------------------*/
-static void         wrdistunit (TypeUnit u, FILE *fileDescriptor)
+static void wrdistunit (TypeUnit u, FILE *fileDescriptor)
 {
    switch (u)
 	 {
@@ -2215,7 +2215,7 @@ static void wrnomboite (int b, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrModeHerit ecrit au terminal un mode d'heritage.               
   ----------------------------------------------------------------------*/
-static void         wrModeHerit (InheritMode M, FILE *fileDescriptor)
+static void wrModeHerit (InheritMode M, FILE *fileDescriptor)
 {
    switch (M)
 	 {
@@ -2241,7 +2241,7 @@ static void         wrModeHerit (InheritMode M, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrsize ecrit au terminal la regle de taille pointee par pR.     
   ----------------------------------------------------------------------*/
-static void         wrsize (PtrPRule pR, FILE *fileDescriptor)
+static void wrsize (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -2298,7 +2298,7 @@ static void         wrsize (PtrPRule pR, FILE *fileDescriptor)
    wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-static void         wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
+static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -2476,7 +2476,7 @@ static void         wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
    wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-static void         wrnbherit (PtrPRule pR, FILE *fileDescriptor)
+static void wrnbherit (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
      if (pR->PrInhPercent)
@@ -2934,7 +2934,7 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrajust ecrit au terminal la regle d'ajustement des lignes.     
   ----------------------------------------------------------------------*/
-static void         wrajust (PtrPRule pR, FILE *fileDescriptor)
+static void wrajust (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
@@ -2964,7 +2964,7 @@ static void         wrajust (PtrPRule pR, FILE *fileDescriptor)
    wrjustif
    ecrit la regle booleenne pointee par pR.
   ----------------------------------------------------------------------*/
-static void         wrjustif (PtrPRule pR, FILE *fileDescriptor)
+static void wrjustif (PtrPRule pR, FILE *fileDescriptor)
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
@@ -2982,7 +2982,7 @@ static void         wrjustif (PtrPRule pR, FILE *fileDescriptor)
    wrsuiteregles ecrit au terminal la suite de regles chainees dont 
    RP pointe sur la regle de tete.                         
   ----------------------------------------------------------------------*/
-static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
+static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 {
    PtrCondition        pCond;
 
@@ -3254,7 +3254,11 @@ static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		 case PtPictInfo:
 		    break;
 	      }
-	fprintf (fileDescriptor, "\n");		/* passe a la regle suivante */
+	fprintf (fileDescriptor, "   {-- ");
+	if (RP->PrImportant)
+	  fprintf (fileDescriptor, "!important");
+	fprintf (fileDescriptor, " specificity = %d", RP->PrSpecificity);
+	fprintf (fileDescriptor, " --}\n"); /* next rule */
 	RP = RP->PrNextPRule;
      }
 }

@@ -28,6 +28,7 @@ typedef struct struct_GenericContext
     SSchema       schema;         /* associated structure */
     unsigned int  type;           /* type of element */
     int           cssSpecificity; /* specificity according to selector */
+    ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*
      * below is the context description.
@@ -47,6 +48,7 @@ typedef struct struct_SpecificContext
     int           type;           /* type of element */
     int           cssSpecificity; /* For specific rules: > 0 when the rule
 				     translates a CSS style rule */
+    ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*
      * The end of the block is to be filled with other kind

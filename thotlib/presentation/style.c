@@ -297,9 +297,9 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
    for a given type of rule associated to an element.
    Parameter specificity is the specificity od the corresponding CSS rule.
   ----------------------------------------------------------------------*/
-static PtrPRule  InsertElementPRule (PtrElement el, PtrDocument pDoc,
-				     PRuleType type, unsigned int extra,
-				     int specificity)
+static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
+				    PRuleType type, unsigned int extra,
+				    int specificity)
 {
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -380,7 +380,7 @@ static PtrPRule  InsertElementPRule (PtrElement el, PtrDocument pDoc,
    Function used to to remove a specific presentation rule
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-static void  RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extra)
+static void RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extra)
 {
     PtrPRule cur, prev;
     Document doc;
@@ -440,7 +440,7 @@ static void  RemoveElementPRule (PtrElement el, PRuleType type, unsigned int ext
   BoxRuleInsert looks in the array of boxes for an entry corresponding
   to the current context. If not found we add a new one to the array.
   ----------------------------------------------------------------------*/
-static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
+static PtrPRule *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
 {
   PtrPresentationBox  box;
   int                 i, size;
@@ -1093,6 +1093,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  pRule->PrCond = NULL;
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
+	  pRule->PrImportant = ctxt->important;
 	  /* store the rule priority */
 	  pRule->PrSpecificity = ctxt->cssSpecificity;
 	  pRule->PrSpecifAttrSSchema = NULL;
@@ -1100,18 +1101,19 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  /* In case of an attribute rule, add the Attr condition */
 	  att = 0;
 	  while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
-	    att++;
-	  if (att < MAX_ANCESTORS && ctxt->type)
-	    /* the attribute should be attached to that element */
+	  att++;
+	  if (att == 0 && ctxt->type)
+	    /* the attribute is attached to that element like a selector "a#id" */
 	    PresRuleAddAncestorCond (pRule, ctxt->type, 0);
 	  /* add other conditions ... */
 	  i = 0;
 	  while (i < MAX_ANCESTORS)
 	    {
-	      if (ctxt->name[i] && ctxt->names_nb[i] > 0)
+	      if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0)
+		/* it's an ancestor like a selector "li a" */
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
-		/* the attribute should be attached to that element */
+		/* it's another attribute */
 		PresRuleAddAttrCond (pRule, ctxt->attrType[i]);
 	      i++;
 	    }
