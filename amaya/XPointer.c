@@ -122,26 +122,34 @@ static void AdjustSelMode (Element el, int *start, int index, selMode *mode)
   returns the number of characters that may be found in inline
   sibling elements from element Mark, such as in <p>an 
   <strong>inline</strong> example</p>.
+  If any inline sibling elements are found, the Mark element is updated
+  to point to its parent.
   ----------------------------------------------------------------------*/
-static int CountInlineChars (Element mark)
+static int CountInlineChars (Element *mark)
 {
   ElementType elType;
   Element el;
+  Element parent;
   int count = 0;
 
-  elType = TtaGetElementType (mark);
+  elType = TtaGetElementType (*mark);
 
   if (elType.ElTypeNum != THOT_TEXT_UNIT)
     return 0;
 
-  el = TtaGetParent (mark);
+  parent = TtaGetParent (*mark);
+  el = parent;
   while (1)
     {
       el = TtaSearchTypedElement (elType, SearchForward, el);
-      if (el == mark)
+      if (el == *mark)
 	break;
       count += TtaGetTextLength (el);
     }
+
+  /* @@ JK: if count? */
+  if (count > 0)
+    *mark = parent;
 
   return count;
 }
@@ -281,15 +289,16 @@ static Element AGetParent (Element el)
   Because of the way that the Thot tree is built, we need a special
   algorithm to get the childs we would find in a DOM tree (proposed by
   VQ):
-  starting from an element, we try to find the first brother.
-  If there are no brother, we get the parent. If the parent is not
-  hidden, there are no other brothers.
+  starting from an element, we try to find the first sibling.
+  If there are no siblings, we get the parent. If the parent is not
+  hidden, there are no other brothers, and we return NULL.
   If the parent is hidden, then we try to get the brothers of this parent.
   For each brother of the parent, we try to get the last child.
   ----------------------------------------------------------------------*/
 static void PreviousSibling (Element *el)
 {
   Element sibling;
+  Element tmp_el;
 
   if (!el || !*el)
     return;
@@ -301,7 +310,16 @@ static void PreviousSibling (Element *el)
     {
       /* if the element is hidden, return the latest child */
       if (ElIsHidden (sibling))
-	  sibling = TtaGetLastChild (sibling);
+	{
+	  tmp_el = TtaGetLastChild (sibling);
+	  if (!tmp_el)
+	    {
+	      /* there was no child, let's try the next brother */
+	      PreviousSibling (&sibling);
+	    }
+	  else
+	    sibling = tmp_el;
+	}
       *el = sibling;
     }
   else
@@ -310,13 +328,13 @@ static void PreviousSibling (Element *el)
 	 on each parent, element until we find a child or the
 	 the first non-hidden parent */
       sibling = TtaGetParent (*el);
-      if (ElIsHidden (sibling))
-	{
+
+      /* we only continue searching if the parent is hidden */
+      if (sibling && ElIsHidden (sibling))
 	  PreviousSibling (&sibling);
-	  *el = sibling;
-	}
       else
-	*el = NULL;
+	sibling = NULL;
+      *el = sibling;
     }
   return;
 }
@@ -543,7 +561,7 @@ ThotBool firstF;
 
   /* if the user selected a text, adjust the start/end indexes according
      to its siblings inlined text */
-  firstCh += CountInlineChars (start);
+  firstCh += CountInlineChars (&start);
 
   el = start;
   /* if we chose a hidden element, climb up */
