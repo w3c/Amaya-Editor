@@ -38,7 +38,9 @@
 #include "DL.xpm"
 #include "Link.xpm"
 #include "Table.xpm"
+#ifdef AMAY_PLUGIN
 #include "Plugin.xpm"
+#endif
 
 #ifdef _WINDOWS
 #ifndef __GNUC__
@@ -73,8 +75,10 @@ static Pixmap       iconNum;
 static Pixmap       iconDL;
 static Pixmap       iconLink;
 static Pixmap       iconTable;
+#ifdef AMAY_PLUGIN
+#include "plugin.h"
 static Pixmap       iconPlugin;
-
+#endif
 
 #include "css_f.h"
 #include "HTMLhistory_f.h"
@@ -92,7 +96,6 @@ static Pixmap       iconPlugin;
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
-extern void CreateFormPlugin (Document, View);
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -645,8 +648,9 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
 	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
 	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
+#ifdef AMAYA_PLUGIN
 	     TtaAddButton (doc, 1, iconPlugin, CreateFormPlugin, TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
-
+#endif
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);
 
