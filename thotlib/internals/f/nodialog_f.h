@@ -53,14 +53,6 @@ extern int CopyXClipboard ( unsigned char **buffer );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
                                char *texte );
-extern void DefineClipping ( int frame,
-                             int orgx,
-                             int orgy,
-                             int *xd,
-                             int *yd,
-                             int *xf,
-                             int *yf );
-extern void RemoveClipping ( int frame );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
@@ -204,14 +196,6 @@ extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
                                  char *texte */);
-extern void DefineClipping (/* int frame,
-                               int orgx,
-                               int orgy,
-                               int *xd,
-                               int *yd,
-                               int *xf,
-                               int *yf */);
-extern void RemoveClipping (/* int frame */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,

@@ -363,6 +363,48 @@ char* server;
 #endif /* ! _WINDOWS */
 }
 
+/*----------------------------------------------------------------------------*/
+/* DefineClipping  limite la zone de reaffichage sur la fenetre frame et      */
+/*                 recalcule ses limites sur l'image concrete.                */
+/*                 Dans le cas du print, c'est exactement la hauteur de page. */
+/*  --------------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
+
+#else  /* __STDC__ */
+void                DefineClipping (frame, orgx, orgy, xd, yd, xf, yf, raz)
+int                 frame;
+int                 orgx;
+int                 orgy;
+int                *xd;
+int                *yd;
+int                *xf;
+int                *yf;
+int                 raz;
+
+#endif /* __STDC__ */
+
+
+{
+   FrameTable[frame].FrHeight = *yf;
+}
+/*----------------------------------------------------------------------
+   RemoveClipping annule le rectangle de clipping de la fenetre frame.  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveClipping (int frame)
+#else  /* __STDC__ */
+void                RemoveClipping (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+
+{   
+   FrameTable[frame].FrWidth = 32000;
+   FrameTable[frame].FrHeight = 1000;
+
+}
+
 
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.
@@ -380,6 +422,7 @@ int                *height;
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
 }
+
 
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.              
@@ -1177,8 +1220,7 @@ int                *volume;
 
    /* On initialise la table des frames  (attention MYSTERES)*/
    FrameTable[i].FrDoc = IdentDocument (TheDoc);
-   FrameTable[i].FrWidth = 32000;
-   FrameTable[i].FrHeight = 1000;
+   RemoveClipping(i);
    *volume = 16000;
    return (i);
 }
