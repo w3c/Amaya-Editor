@@ -2906,6 +2906,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   height = 0;
   pMainBox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
   pBox = pAb->AbBox;		/* boite du pave */
+  pBlock = NULL;
   result = FALSE;
   condition = FALSE;
   pParent = pAb->AbEnclosing;
@@ -2933,7 +2934,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		/* within a block */
 		inLine = TRUE;
 	      else
-		inLineFloat = FALSE;
+		inLineFloat = TRUE;
 	    }
 	}
     }
@@ -3168,14 +3169,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pAb->AbFloatChange = FALSE;
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pBox);
+	  /*pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);*/
 	  if (pCell && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
-	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 	      if (pBlock)
 		RecomputeLines (pBlock, NULL, NULL, frame);
 	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	    }
+	  else if (pBlock)
+	    RecomputeLines (pBlock, NULL, NULL, frame);
+
 	  Propagate = savpropage;	/* Restaure la regle de propagation */
 	  result = TRUE;
 	  pAb->AbWidthChange = FALSE;

@@ -3938,14 +3938,24 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 				   &appl);
 	  if (pAb->AbFloat != 'N')
 	    {
-	      if (pAb->AbEnclosing)
+	      if (pAb->AbEnclosing &&
+		  pAb->AbEnclosing->AbElement &&
+		  pAb->AbEnclosing->AbElement->ElStructSchema &&
+		  (!strcmp (pAb->AbEnclosing->AbElement->ElStructSchema->SsName, "SVG") ||
+		   !strcmp (pAb->AbEnclosing->AbElement->ElStructSchema->SsName, "MathML")))
+		/* don't accept float within SVG and MathML */
+		pAb->AbFloat = 'N';
+	      else
 		{
-		  /* rule gather on the parent box */
-		  pAb->AbEnclosing->AbBuildAll = TRUE;
-		  pAb->AbEnclosing->AbBuildAll = TRUE;
+		  if (pAb->AbEnclosing)
+		    {
+		      /* rule gather on the parent box */
+		      pAb->AbEnclosing->AbBuildAll = TRUE;
+		      pAb->AbEnclosing->AbBuildAll = TRUE;
+		    }
+		  pAb->AbAcceptLineBreak = FALSE;
+		  pAb->AbBuildAll = TRUE;
 		}
-	      pAb->AbAcceptLineBreak = FALSE;
-	      pAb->AbBuildAll = TRUE;
 	    }
 	  break;
 	case PtClear:
