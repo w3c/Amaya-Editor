@@ -1808,99 +1808,98 @@ void UpdateContextSensitiveMenus (Document doc)
 	   elType.ElTypeNum = HTML_EL_Table;
 	   withinTable = (TtaGetTypedAncestor (firstSel, elType) != NULL);
 	 }
-     }
 
-   /* update table menu entries */
-   if ((!withinTable || inMath) && TableMenuActive)
-     {
-       TableMenuActive = FALSE;
-       TtaSetItemOff (doc, 1, Types, BCaption);
-       TtaSetItemOff (doc, 1, Types, BColgroup);
-       TtaSetItemOff (doc, 1, Types, BCol);
-       TtaSetItemOff (doc, 1, Types, BTHead);
-       TtaSetItemOff (doc, 1, Types, BTBody);
-       TtaSetItemOff (doc, 1, Types, BTFoot);
-       TtaSetItemOff (doc, 1, Types, BDataCell);
-       TtaSetItemOff (doc, 1, Types, BHeadingCell);
-       TtaSetItemOff (doc, 1, Types, BCellHExtend);
-       TtaSetItemOff (doc, 1, Types, BCellVExtend);
-       TtaSetItemOff (doc, 1, Types, BCellHShrink);
-       TtaSetItemOff (doc, 1, Types, BCellVShrink);
-       TtaSetItemOff (doc, 1, Types, BSelectRow);
-       TtaSetItemOff (doc, 1, Types, BCreateRowB);
-       TtaSetItemOff (doc, 1, Types, BCreateRowA);
-       TtaSetItemOff (doc, 1, Types, BSelectColumn);
-       TtaSetItemOff (doc, 1, Types, BCreateColumnB);
-       TtaSetItemOff (doc, 1, Types, BCreateColumnA);
-       TtaSetItemOff (doc, 1, Types, BPasteBefore);
-       TtaSetItemOff (doc, 1, Types, BPasteAfter);
-     }
-   if ((!withinTable || !inMath) && MTableMenuActive)
-     {
-       MTableMenuActive = FALSE;
-       TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
-       TtaSetItemOff (doc, 1, XMLTypes, BMSelectRow);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowB);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowA);
-       TtaSetItemOff (doc, 1, XMLTypes, BMSelectColumn);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnB);
-       TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnA);
-       TtaSetItemOff (doc, 1, XMLTypes, BMPasteBefore);
-       TtaSetItemOff (doc, 1, XMLTypes, BMPasteAfter);
-     }
-   if (withinTable && !inMath && !TableMenuActive)
-     {
-       TableMenuActive = TRUE;
-       TtaSetItemOn (doc, 1, Types, BCaption);
-       TtaSetItemOn (doc, 1, Types, BColgroup);
-       TtaSetItemOn (doc, 1, Types, BCol);
-       TtaSetItemOn (doc, 1, Types, BTHead);
-       TtaSetItemOn (doc, 1, Types, BTBody);
-       TtaSetItemOn (doc, 1, Types, BTFoot);
-       TtaSetItemOn (doc, 1, Types, BDataCell);
-       TtaSetItemOn (doc, 1, Types, BHeadingCell);
-       TtaSetItemOn (doc, 1, Types, BCellHExtend);
-       TtaSetItemOn (doc, 1, Types, BCellVExtend);
-       TtaSetItemOn (doc, 1, Types, BCellHShrink);
-       TtaSetItemOn (doc, 1, Types, BCellVShrink);
-       TtaSetItemOn (doc, 1, Types, BSelectRow);
-       TtaSetItemOn (doc, 1, Types, BCreateRowB);
-       TtaSetItemOn (doc, 1, Types, BCreateRowA);
-       TtaSetItemOn (doc, 1, Types, BSelectColumn);
-       TtaSetItemOn (doc, 1, Types, BCreateColumnB);
-       TtaSetItemOn (doc, 1, Types, BCreateColumnA);
-     }
-   if (withinTable && inMath && !MTableMenuActive)
-     {
-       MTableMenuActive = TRUE;
-       TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCellHShrink);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCellVShrink);
-       TtaSetItemOn (doc, 1, XMLTypes, BMSelectRow);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowB);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowA);
-       TtaSetItemOn (doc, 1, XMLTypes, BMSelectColumn);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnB);
-       TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnA);
-     }
-   if (withinTable && TtaIsColumnRowSelected (doc))
-     {
-       if (inMath)
+       /* update table menu entries */
+       if ((!withinTable || inMath) && TableMenuActive)
 	 {
-	   TtaSetItemOn (doc, 1, XMLTypes, BMPasteBefore);
-	   TtaSetItemOn (doc, 1, XMLTypes, BMPasteAfter);
+	   TableMenuActive = FALSE;
+	   TtaSetItemOff (doc, 1, Types, BCaption);
+	   TtaSetItemOff (doc, 1, Types, BColgroup);
+	   TtaSetItemOff (doc, 1, Types, BCol);
+	   TtaSetItemOff (doc, 1, Types, BTHead);
+	   TtaSetItemOff (doc, 1, Types, BTBody);
+	   TtaSetItemOff (doc, 1, Types, BTFoot);
+	   TtaSetItemOff (doc, 1, Types, BDataCell);
+	   TtaSetItemOff (doc, 1, Types, BHeadingCell);
+	   TtaSetItemOff (doc, 1, Types, BCellHExtend);
+	   TtaSetItemOff (doc, 1, Types, BCellVExtend);
+	   TtaSetItemOff (doc, 1, Types, BCellHShrink);
+	   TtaSetItemOff (doc, 1, Types, BCellVShrink);
+	   TtaSetItemOff (doc, 1, Types, BSelectRow);
+	   TtaSetItemOff (doc, 1, Types, BCreateRowB);
+	   TtaSetItemOff (doc, 1, Types, BCreateRowA);
+	   TtaSetItemOff (doc, 1, Types, BSelectColumn);
+	   TtaSetItemOff (doc, 1, Types, BCreateColumnB);
+	   TtaSetItemOff (doc, 1, Types, BCreateColumnA);
+	   TtaSetItemOff (doc, 1, Types, BPasteBefore);
+	   TtaSetItemOff (doc, 1, Types, BPasteAfter);
 	 }
-       else
+       if ((!withinTable || !inMath) && MTableMenuActive)
 	 {
-	   TtaSetItemOn (doc, 1, Types, BPasteBefore);
-	   TtaSetItemOn (doc, 1, Types, BPasteAfter);
+	   MTableMenuActive = FALSE;
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMSelectRow);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowB);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowA);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMSelectColumn);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnB);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnA);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMPasteBefore);
+	   TtaSetItemOff (doc, 1, XMLTypes, BMPasteAfter);
+	 }
+       if (withinTable && !inMath && !TableMenuActive)
+	 {
+	   TableMenuActive = TRUE;
+	   TtaSetItemOn (doc, 1, Types, BCaption);
+	   TtaSetItemOn (doc, 1, Types, BColgroup);
+	   TtaSetItemOn (doc, 1, Types, BCol);
+	   TtaSetItemOn (doc, 1, Types, BTHead);
+	   TtaSetItemOn (doc, 1, Types, BTBody);
+	   TtaSetItemOn (doc, 1, Types, BTFoot);
+	   TtaSetItemOn (doc, 1, Types, BDataCell);
+	   TtaSetItemOn (doc, 1, Types, BHeadingCell);
+	   TtaSetItemOn (doc, 1, Types, BCellHExtend);
+	   TtaSetItemOn (doc, 1, Types, BCellVExtend);
+	   TtaSetItemOn (doc, 1, Types, BCellHShrink);
+	   TtaSetItemOn (doc, 1, Types, BCellVShrink);
+	   TtaSetItemOn (doc, 1, Types, BSelectRow);
+	   TtaSetItemOn (doc, 1, Types, BCreateRowB);
+	   TtaSetItemOn (doc, 1, Types, BCreateRowA);
+	   TtaSetItemOn (doc, 1, Types, BSelectColumn);
+	   TtaSetItemOn (doc, 1, Types, BCreateColumnB);
+	   TtaSetItemOn (doc, 1, Types, BCreateColumnA);
+	 }
+       if (withinTable && inMath && !MTableMenuActive)
+	 {
+	   MTableMenuActive = TRUE;
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCellHShrink);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCellVShrink);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMSelectRow);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowB);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowA);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMSelectColumn);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnB);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnA);
+	 }
+       if (withinTable && TtaIsColumnRowSelected (doc))
+	 {
+	   if (inMath)
+	     {
+	       TtaSetItemOn (doc, 1, XMLTypes, BMPasteBefore);
+	       TtaSetItemOn (doc, 1, XMLTypes, BMPasteAfter);
+	     }
+	   else
+	     {
+	       TtaSetItemOn (doc, 1, Types, BPasteBefore);
+	       TtaSetItemOn (doc, 1, Types, BPasteAfter);
+	     }
 	 }
      }
-
    if (!withHTML)
      return;
    if (firstSel == NULL)

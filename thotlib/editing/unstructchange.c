@@ -948,6 +948,9 @@ void PasteCommand ()
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,
 				      &cancelled, pDoc, &pasteOrig, addedCell);
+	      else if (WholeColumnSaved && pRow)
+		pPasted = PasteAnElement (pRow, pPasteD, TRUE, before,
+				      &cancelled, pDoc, &pasteOrig, addedCell);
 	      else
 		pPasted = NULL;
 	      if (pPasted == NULL && !WholeColumnSaved && !cancelled &&

@@ -2065,7 +2065,7 @@ void ElementDeleted (NotifyElement *event)
 
 /*----------------------------------------------------------------------
    RegisterURLSavedElements
-   Elements from document doc have been saved in the Thot Copy/Cut buffer.
+   Elements from document doc have been saved into the Thot Copy/Cut buffer.
    Save the URL of this document, to allow relative URIs contained
    in these elements to be adapted when they are pasted.
   ----------------------------------------------------------------------*/
@@ -2074,6 +2074,8 @@ void RegisterURLSavedElements (Document doc)
   if (SavedDocumentURL)
     TtaFreeMemory (SavedDocumentURL);
   SavedDocumentURL = GetBaseURL (doc);
+  /* Paste functions in the table menu could be active now */
+  UpdateContextSensitiveMenus (doc);
 }
 
 /*----------------------------------------------------------------------

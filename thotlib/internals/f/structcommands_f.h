@@ -30,6 +30,7 @@ extern void CutCommand ( ThotBool save );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );
+extern void TtaSetNextCellInColumnFunction ( Proc5 procedure );
 extern ThotBool EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int typeNum,
                                PtrSSchema pSS,
@@ -67,6 +68,7 @@ extern void CutCommand ( ThotBool save );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );
+extern void TtaSetNextCellInColumnFunction ( Proc5 procedure );
 extern ThotBool EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int typeNum,
                                  PtrSSchema pSS,

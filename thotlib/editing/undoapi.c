@@ -379,6 +379,21 @@ void TtaCancelLastRegisteredOperation (Document document)
 }
 
 /* ----------------------------------------------------------------------
+   TtaCancelLastRegisteredAttrOperation
+
+   Cancel the latest attribute registered in the editing history of document.
+  ----------------------------------------------------------------------*/
+void TtaCancelLastRegisteredAttrOperation (Document document)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    CancelLastAttrOperationFromHistory (LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
    TtaGetLastCreatedElemInHistory
 
    If the last operation recorded in the history is the creation of an

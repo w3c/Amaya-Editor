@@ -41,6 +41,7 @@ extern void TtaChangeLastRegisteredAttr ( Element oldEl,
                                           Document document );
 extern void TtaReplaceLastRegisteredAttr ( Document document );
 extern void TtaCancelLastRegisteredOperation ( Document document );
+extern void TtaCancelLastRegisteredAttrOperation ( Document document );
 extern Element TtaGetLastCreatedElemInHistory ( Document document );
 extern void TtaChangeInfoLastRegisteredElem ( Document document,
                                               int newInfo );
@@ -83,6 +84,7 @@ extern void TtaChangeLastRegisteredAttr ( Element oldEl,
                                             Document document );
 extern void TtaReplaceLastRegisteredAttr ( Document document );
 extern void TtaCancelLastRegisteredOperation ( Document document );
+extern void TtaCancelLastRegisteredAttrOperation ( Document document );
 extern Element TtaGetLastCreatedElemInHistory ( Document document );
 extern void TtaChangeInfoLastRegisteredElem ( Document document,
                                                 int newInfo );

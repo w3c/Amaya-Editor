@@ -180,6 +180,13 @@ extern void TtaReplaceLastRegisteredAttr (Document document);
 extern void TtaCancelLastRegisteredOperation (Document document);
 
 /* ----------------------------------------------------------------------
+   TtaCancelLastRegisteredAttrOperation
+
+   Cancel the latest attribute registered in the editing history of document.
+  ----------------------------------------------------------------------*/
+extern void TtaCancelLastRegisteredAttrOperation (Document document);
+
+/* ----------------------------------------------------------------------
    TtaGetLastCreatedElemInHistory
 
    If the last operation recorded in the history is the creation of an

@@ -683,6 +683,23 @@ void CancelLastEditFromHistory (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+   CancelLastAttrOperationFromHistory
+   Cancel the most recent attribute change registered in the editing history.
+  ----------------------------------------------------------------------*/
+void CancelLastAttrOperationFromHistory (PtrDocument pDoc)
+{
+   if (!pDoc->DocLastEdit)
+     /* history empty. Error */
+     {
+      HistError (6);
+      return;
+     }
+   if (pDoc->DocLastEdit->EoType == EtAttribute)
+     /* Remove the latest operation descriptor */
+     CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
+}
+
+/*----------------------------------------------------------------------
    GetLastCreatedElemInHistory
    If the last operation recorded in the history is the creation of an
    element, return that element, otherwise return NULL.
@@ -1124,13 +1141,20 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	  /* tell the application that an element will be removed from the
 	     abstract tree. Last parameter indicates that this event comes
 	     from the undo/redo command. */
-	  SendEventSubTree (TteElemDelete, pDoc, pEl,
-			    TTE_STANDARD_DELETE_LAST_ITEM, 1, FALSE, FALSE);
+	  if (editOp->EoInfo == 0)
+	    SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM,
+			      1, FALSE, FALSE);
+	  else
+	    SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM,
+			      editOp->EoInfo, FALSE, FALSE);
 	  /* prepare event TteElemDelete to be sent to the application */
 	  notifyEl.event = TteElemDelete;
 	  notifyEl.document = doc;
 	  notifyEl.element = (Element) (pEl->ElParent);
-	  notifyEl.info = 1; /* sent by undo */
+	  if (editOp->EoInfo == 0)
+	    notifyEl.info = 1; /* sent by undo */
+	  else
+	    notifyEl.info = editOp->EoInfo;
 	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	  nSiblings = 0;
@@ -1156,7 +1180,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	  editOp->EoCreatedElement = NULL;
 	}
       /* insert the saved element in the abstract tree */
-      if (editOp->EoSavedElement)
+      else if (editOp->EoSavedElement)
 	{
 	  pEl = editOp->EoSavedElement;
 	  if (editOp->EoPreviousSibling)

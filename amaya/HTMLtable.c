@@ -3481,7 +3481,7 @@ void ColspanModified (NotifyAttribute * event)
 	     registration of the creation or deletion of cells done by
              ChangeColspan. That way, when undoing the attribute modification,
 	     the deletion or creation of cells can be undone correctly */
-          TtaCancelLastRegisteredOperation (doc);
+          TtaCancelLastRegisteredAttrOperation (doc);
 	  ChangeColspan (cell, PreviousColspan, &span, doc);
 	  TtaSetAttributeValue (attr, PreviousColspan, cell, doc);
 	  TtaRegisterAttributeReplace (attr, cell, doc);

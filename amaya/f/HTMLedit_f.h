@@ -57,6 +57,7 @@ extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
                            View view );
+extern void UpdateAttrNAME ( NotifyAttribute * event );
 extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );
@@ -183,6 +184,7 @@ extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
                              View view );
+extern void UpdateAttrNAME ( NotifyAttribute * event );
 extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );

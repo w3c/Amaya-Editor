@@ -59,10 +59,10 @@ extern void CopyCell ( Element cell,
                        Document doc,
                        ThotBool inRow );
 extern void NextCellInColumn ( Element* cell,
-			       Element* row,
-			       Element colHead,
-			       Document doc,
-			       ThotBool* fake );
+                               Element* row,
+                               Element colHead,
+                               Document doc,
+                               ThotBool* fake );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
@@ -142,10 +142,10 @@ extern void CopyCell ( Element cell,
                          Document doc,
                          ThotBool inRow );
 extern void NextCellInColumn ( Element* cell,
-			       Element* row,
-			       Element colHead,
-			       Document doc,
-			       ThotBool* fake );
+                                 Element* row,
+                                 Element colHead,
+                                 Document doc,
+                                 ThotBool* fake );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );

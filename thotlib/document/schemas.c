@@ -908,7 +908,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 ReleaseStructureSchema (pNatureSS, pDoc);
 	 pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
 	 }
-      if (ThotLocalActions[T_initevents] != NULL)
+      else if (ThotLocalActions[T_initevents] != NULL)
 	 (*(Proc1)ThotLocalActions[T_initevents]) (pNatureSS);
 #endif /* NODISPLAY */
       }
