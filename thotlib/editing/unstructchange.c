@@ -581,7 +581,7 @@ void PasteCommand ()
   ThotBool            savebefore;
 
   before = FALSE;
-  pColHead = pRow = pTable = NULL;
+  pColHead = pRow = pNextRow = pTable = NULL;
   if (FirstSavedElement == NULL)
     return;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
