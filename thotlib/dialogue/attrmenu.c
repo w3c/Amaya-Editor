@@ -33,6 +33,7 @@
 #include "appdialogue.h"
 #ifdef _WINDOWS
 #include "winsys.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 #undef THOT_EXPORT
@@ -45,21 +46,6 @@
 /* flags to show the existence of the TtAttribute forms*/
 static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
-#ifdef _WINDOWS
-static CHAR_T       WIN_Lab[1024];
-static int          WIN_nbItem;
-static CHAR_T       WIN_title[MAX_NAME_LENGTH + 2];
-
-extern WNDPROC      lpfnTextZoneWndProc ;
-
-CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
-
-#ifdef __STDC__
-extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* !__STDC__ */
-extern LRESULT CALLBACK textZoneProc ();
-#endif /* !__STDC_ */
-#endif /* _WINDOWS */
 
 
 #define LgMaxAttrText 500
@@ -92,18 +78,33 @@ static PtrAttribute PtrReqAttr;
 #define ID_DELETE    1003
 #define ID_EDITVALUE 1004
 
-static HWND         hwnEdit;
-static TtAttribute *WIN_pAttr1;
-static BOOL         wndRegistered;
-static BOOL         wndSheetRegistered;
-static BOOL         wndNumAttrRegistered;
-static BOOL         WIN_AtNumAttr  = FALSE;
-static BOOL         WIN_AtTextAttr = FALSE;
-static BOOL         WIN_AtEnumAttr = FALSE;
-static BOOL         isForm         = FALSE;
-static PtrAttribute WIN_currAttr;
+
+#ifdef _WINDOWS
+extern WNDPROC      lpfnTextZoneWndProc ;
+CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
+
+#ifdef __STDC__
+extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
+#else  /* !__STDC__ */
+extern LRESULT CALLBACK textZoneProc ();
+#endif /* !__STDC_ */
+#endif /* _WINDOWS */
+
+static CHAR_T       WIN_Lab[1024];
 static CHAR_T       formRange[100];
 static CHAR_T       Attr_text[LgMaxAttrText];
+static STRING       szAppName;
+static ThotWindow   hwnEdit;
+static TtAttribute *WIN_pAttr1;
+static ThotBool     wndRegistered;
+static ThotBool     wndSheetRegistered;
+static ThotBool     wndNumAttrRegistered;
+static ThotBool     WIN_AtNumAttr  = FALSE;
+static ThotBool     WIN_AtTextAttr = FALSE;
+static ThotBool     WIN_AtEnumAttr = FALSE;
+static ThotBool     isForm         = FALSE;
+static PtrAttribute WIN_currAttr;
+static int          WIN_nbItem;
 static int          formValue;
 static int          nbDlgItems;
 static int          WIN_Language;
@@ -111,19 +112,6 @@ static int          WIN_Language;
 extern HINSTANCE hInstance;
 extern LPCTSTR   iconID;
 extern UINT      subMenuID[MAX_FRAME];
-#ifdef __STDC__
-extern BOOL RegisterWin95 (CONST WNDCLASS*);
-
-LRESULT CALLBACK InitFormDialogWndProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK InitSheetDialogWndProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK InitNumAttrDialogWndProc (HWND, UINT, WPARAM, LPARAM);
-#else  /* __STDC__ */
-extern BOOL RegisterWin95 ();
-
-LRESULT CALLBACK InitFormDialogWndProc ();
-LRESULT CALLBACK InitSheetDialogWndProc ();
-LRESULT CALLBACK InitNumAttrDialogWndProc ();
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 #include "appdialogue_f.h"
@@ -148,10 +136,6 @@ LRESULT CALLBACK InitNumAttrDialogWndProc ();
 #include "tree_f.h"
 #include "ustring_f.h"
 
-
-#ifdef _WINDOWS
-#include "wininclude.h"
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -278,80 +262,21 @@ PtrAttribute        currAttr;
 }
 
 #ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  WIN_InitFormDialog
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static BOOL WIN_InitFormDialog (HWND parent, STRING title)
-#else  /* __STDC__ */
-static BOOL WIN_InitFormDialog (parent, title)
-HWND  parent;
-STRING title	;
-#endif /* __STDC__ */
-{
-   WNDCLASS    wndFormClass;
-   STRING      szAppName; 
-   HWND        hwnFromDialog;
-   MSG         msg;
-   int         frame;
-
-   szAppName = TEXT("FormClass");
-   if (!wndRegistered)
-     {
-       wndRegistered = TRUE;
-       wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
-       wndFormClass.cbClsExtra    = 0;
-       wndFormClass.cbWndExtra    = 0;
-       wndFormClass.hInstance     = hInstance;
-       wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndFormClass.lpszClassName = szAppName;
-       wndFormClass.lpszMenuName  = NULL;
-       
-       if (IS_WIN95)
-	 {
-	   if (!RegisterWin95 (&wndFormClass))
-	     return (FALSE);
-	 }
-       else if (!RegisterClass (&wndFormClass))
-	 return (FALSE);
-     }
-
-   hwnFromDialog = CreateWindow (szAppName, title,
-                                 DS_MODALFRAME | WS_POPUP | 
-                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                 ClickX, ClickY,
-                                 340, 100,
-                                 parent, NULL, hInstance, NULL);
-
-   ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnFromDialog);
-
-   while (GetMessage (&msg, NULL, 0, 0))
-     {
-       frame = GetFrameNumber (msg.hwnd);
-       TranslateMessage (&msg);
-       DispatchMessage (&msg);
-     }
-   return TRUE;
-}
 
 /*----------------------------------------------------------------------
  InitFormDialogWndProc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
-LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-  HWND          hwnTitle;
-  HWND          confirmButton;
-  HWND          doneButton;
-  int           i;
-  int           txtLength;
+  ThotWindow          hwnTitle;
+  ThotWindow          confirmButton;
+  ThotWindow          doneButton;
+  int                 i;
+  int                 txtLength;
   
   switch (iMsg)
     {
@@ -447,53 +372,56 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 }
 
 /*----------------------------------------------------------------------
-  WIN_InitSheetDialog
+  WIN_InitFormDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BOOL WIN_InitSheetDialog (HWND parent, STRING title)
+static ThotBool WIN_InitFormDialog (ThotWindow parent, STRING title)
 #else  /* __STDC__ */
-static BOOL WIN_InitSheetDialog (parent, title)
-HWND  parent;
-STRING title	;
+static ThotBool WIN_InitFormDialog (parent, title)
+ThotWindow      parent;
+STRING          title;
 #endif /* __STDC__ */
 {
-   WNDCLASSEX    wndSheetClass;
-   STRING        szAppName;
-   HWND          hwnSheetDialog;
-   MSG           msg;
-   int           frame;
+   WNDCLASS    wndFormClass;
+   STRING      szAppName; 
+   ThotWindow        hwnFromDialog;
+   MSG         msg;
+   int         frame;
 
-   szAppName = TEXT("SheetClass");
-   if (!wndSheetRegistered)
+   szAppName = TEXT("FormClass");
+   if (!wndRegistered)
      {
-       wndSheetRegistered = TRUE;
-       wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc;
-       wndSheetClass.cbClsExtra    = 0;
-       wndSheetClass.cbWndExtra    = 0;
-       wndSheetClass.hInstance     = hInstance;
-       wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndSheetClass.lpszMenuName  = NULL;
-       wndSheetClass.lpszClassName = szAppName;
-       wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
-       wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID);
+       wndRegistered = TRUE;
+       wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
+       wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
+       wndFormClass.cbClsExtra    = 0;
+       wndFormClass.cbWndExtra    = 0;
+       wndFormClass.hInstance     = hInstance;
+       wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+       wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+       wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+       wndFormClass.lpszClassName = szAppName;
+       wndFormClass.lpszMenuName  = NULL;
        
-       if (!RegisterClassEx (&wndSheetClass))
-         return (FALSE);
+       if (IS_WIN95)
+	 {
+	   if (!RegisterWin95 (&wndFormClass))
+	     return (FALSE);
+	 }
+       else if (!RegisterClass (&wndFormClass))
+	 return (FALSE);
      }
-   
-   hwnSheetDialog = CreateWindow (szAppName, title,
-				  DS_MODALFRAME | WS_POPUP | WS_VISIBLE |
-				      WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
-				  ClickX, ClickY,
-				  340, 100,
-				  parent, NULL, hInstance, NULL);
-   
-   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnSheetDialog);
-   
+
+   hwnFromDialog = CreateWindow (szAppName, title,
+                                 DS_MODALFRAME | WS_POPUP | 
+                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+                                 ClickX, ClickY,
+                                 340, 100,
+                                 parent, NULL, hInstance, NULL);
+
+   ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnFromDialog);
+
    while (GetMessage (&msg, NULL, 0, 0))
      {
        frame = GetFrameNumber (msg.hwnd);
@@ -507,17 +435,21 @@ STRING title	;
   InitSheetDialogWndProc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
-LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitSheetDialogWndProc (hwnd, iMsg, wParam, lParam)
+ThotWindow hwnd;
+UINT       iMsg;
+WPARAM     wParam;
+LPARAM     lParam;
 #endif /* __STDC__ */
 {
-  HWND          hwnTitle;
-  HWND          applyButton;
-  HWND          deleteButton;
-  HWND          doneButton;
-  int           i;
-  int           txtLength;
+  ThotWindow          hwnTitle;
+  ThotWindow          applyButton;
+  ThotWindow          deleteButton;
+  ThotWindow          doneButton;
+  int                 i;
+  int                 txtLength;
 
   switch (iMsg)
     {
@@ -632,52 +564,51 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 }
 
 /*----------------------------------------------------------------------
-  WIN_InitNumAttrDialog
+  WIN_InitSheetDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BOOL WIN_InitNumAttrDialog (HWND parent, STRING title)
+static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 #else  /* __STDC__ */
-static BOOL WIN_InitNumAttrDialog (parent, title)
-HWND  parent;
-STRING title	;
+static ThotBool WIN_InitSheetDialog (parent)
+ThotWindow      parent;
 #endif /* __STDC__ */
 {
-   WNDCLASSEX    wndNumAttrClass;
-   static STRING szAppName;
-   HWND          hwnNumAttrDialog;
+   WNDCLASSEX    wndSheetClass;
+   STRING        szAppName;
+   ThotWindow    hwnSheetDialog;
    MSG           msg;
    int           frame;
 
-   szAppName = TEXT("NumAttrClass");
-   if (!wndNumAttrRegistered)
+   szAppName = TEXT("SheetClass");
+   if (!wndSheetRegistered)
      {
-       wndNumAttrRegistered = TRUE;
-       wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc;
-       wndNumAttrClass.cbClsExtra    = 0;
-       wndNumAttrClass.cbWndExtra    = 0;
-       wndNumAttrClass.hInstance     = hInstance;
-       wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndNumAttrClass.lpszMenuName  = NULL;
-       wndNumAttrClass.lpszClassName = szAppName;
-       wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
-       wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID);
+       wndSheetRegistered = TRUE;
+       wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
+       wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc;
+       wndSheetClass.cbClsExtra    = 0;
+       wndSheetClass.cbWndExtra    = 0;
+       wndSheetClass.hInstance     = hInstance;
+       wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+       wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+       wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+       wndSheetClass.lpszMenuName  = NULL;
+       wndSheetClass.lpszClassName = szAppName;
+       wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
+       wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID);
        
-       if (!RegisterClassEx (&wndNumAttrClass))
+       if (!RegisterClassEx (&wndSheetClass))
          return (FALSE);
      }
    
-   hwnNumAttrDialog = CreateWindow (szAppName, title,
-                                    DS_MODALFRAME | WS_POPUP | 
-                                    WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                    ClickX, ClickY,
-                                    285, 110,
-                                    parent, NULL, hInstance, NULL);
+   hwnSheetDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
+				  DS_MODALFRAME | WS_POPUP | WS_VISIBLE |
+				      WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
+				  ClickX, ClickY,
+				  340, 100,
+				  parent, NULL, hInstance, NULL);
    
-   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnNumAttrDialog);
+   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnSheetDialog);
    
    while (GetMessage (&msg, NULL, 0, 0))
      {
@@ -692,17 +623,21 @@ STRING title	;
   InitNumAttrDialogWndProc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
-LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitNumAttrDialogWndProc (hwnd, iMsg, wParam, lParam)
+ThotWindow hwnd;
+UINT       iMsg;
+WPARAM     wParam;
+LPARAM     lParam;
 #endif /* __STDC__ */
 {
-  HWND        hwnTitle;
-  HWND        hwnRange;
-  HWND        applyButton;
-  HWND        deleteButton;
-  HWND        doneButton;
-  BOOL        ok;
+  ThotWindow        hwnTitle;
+  ThotWindow        hwnRange;
+  ThotWindow        applyButton;
+  ThotWindow        deleteButton;
+  ThotWindow        doneButton;
+  ThotBool    ok;
   int         val;
 
   switch (iMsg)
@@ -794,6 +729,61 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
     }
   return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
+
+/*----------------------------------------------------------------------
+  WIN_InitNumAttrDialog
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
+#else  /* __STDC__ */
+static ThotBool WIN_InitNumAttrDialog (parent)
+ThotWindow      parent;
+#endif /* __STDC__ */
+{
+   WNDCLASSEX    wndNumAttrClass;
+   ThotWindow    hwnNumAttrDialog;
+   MSG           msg;
+   int           frame;
+
+   szAppName = TEXT("NumAttrClass");
+   if (!wndNumAttrRegistered)
+     {
+       wndNumAttrRegistered = TRUE;
+       wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;
+       wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc;
+       wndNumAttrClass.cbClsExtra    = 0;
+       wndNumAttrClass.cbWndExtra    = 0;
+       wndNumAttrClass.hInstance     = hInstance;
+       wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+       wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+       wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+       wndNumAttrClass.lpszMenuName  = NULL;
+       wndNumAttrClass.lpszClassName = szAppName;
+       wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
+       wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID);
+       
+       if (!RegisterClassEx (&wndNumAttrClass))
+         return (FALSE);
+     }
+   
+   hwnNumAttrDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
+                                    DS_MODALFRAME | WS_POPUP | 
+                                    WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+                                    ClickX, ClickY,
+                                    285, 110,
+                                    parent, NULL, hInstance, NULL);
+   
+   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnNumAttrDialog);
+   
+   while (GetMessage (&msg, NULL, 0, 0))
+     {
+       frame = GetFrameNumber (msg.hwnd);
+       TranslateMessage (&msg);
+       DispatchMessage (&msg);
+     }
+   return TRUE;
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -813,9 +803,7 @@ ThotBool            required;
 PtrAttribute        currAttr;
 PtrDocument         pDoc;
 int                 view;
-
 #endif /* __STDC__ */
-
 {
    int                 i, lgmenu, val;
    int                 form, subform;
@@ -870,11 +858,7 @@ int                 view;
        AttrFormExists = TRUE;
      }  
 
-#ifdef _WINDOWS
-   ustrncpy (WIN_title, pAttr1->AttrName, MAX_NAME_LENGTH);
-#else  /* !_WINDOWS */
    ustrncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
-#endif /* _WINDOWS */
    switch (pAttr1->AttrType)
      {
      case AtNumAttr: /* attribut a valeur numerique */
@@ -1858,13 +1842,11 @@ int                 frame;
 		TtaShowDialogue (NumMenuAttr, TRUE);
 #else  /* _WINDOWS */
 		if (WIN_AtNumAttr) 
-		  WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view),
-					 TtaGetMessage (LIB, TMSG_ATTR));
+		  WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view));
 		else if (WIN_AtTextAttr && !isForm) 
-		  WIN_InitSheetDialog (TtaGetViewFrame (doc, view),
-				       TtaGetMessage (LIB, TMSG_ATTR));
+		  WIN_InitSheetDialog (TtaGetViewFrame (doc, view));
 		else if (WIN_AtEnumAttr) 
-                  CreateAttributeDlgWindow (WIN_title, currAttrVal,nbDlgItems);
+                  CreateAttributeDlgWindow (title, currAttrVal, nbDlgItems);
 #endif /* _WINDOWS */
 	      }
 	    DeleteAttribute (NULL, pAttrNew);

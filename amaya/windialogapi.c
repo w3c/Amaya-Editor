@@ -106,7 +106,6 @@ static CHAR_T*      saveList;
 static CHAR_T*      cssList;
 static CHAR_T       textToSearch [255];
 static CHAR_T       newText [255];
-static int          numFormClose;
 static int          currentDoc;
 static int          currentView;
 static int          currentRef;
@@ -1563,7 +1562,7 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- CloseDocDlgProc
+  SaveListDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -1641,42 +1640,45 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    switch (msg) {
-	       case WM_INITDIALOG:
-			    SetWindowText (hwnDlg, wndTitle);
-				SetWindowText (GetDlgItem (hwnDlg, IDC_CLOSEMSG), message);
-				SetWindowText (GetDlgItem (hwnDlg, ID_SAVEDOC), TtaGetMessage (LIB, TMSG_SAVE_DOC));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_DONTSAVE), TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
-				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-				break;
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-				       case IDCANCEL:
-                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)0);
-			                closeDontSave = TRUE;
-                            saveBeforeClose = FALSE;
-					        EndDialog (hwnDlg, IDCANCEL);
-							break;
-
-				       case ID_SAVEDOC:
-                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)1);
-			                closeDontSave   = FALSE;
-	                        saveBeforeClose = TRUE;
-							EndDialog (hwnDlg, ID_SAVEDOC);
-							break;
-
-				       case IDC_DONTSAVE:
-                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)2);
-			                closeDontSave   = FALSE;
-                            saveBeforeClose = FALSE;
-					        EndDialog (hwnDlg, IDC_DONTSAVE);
-							break;
-				}
-				break;
-				default: return FALSE;
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_CLOSE_DOC));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLOSEMSG), message);
+      SetWindowText (GetDlgItem (hwnDlg, ID_SAVEDOC), TtaGetMessage (LIB, TMSG_SAVE_DOC));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_DONTSAVE), TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      break;
+      
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDCANCEL:
+	  ThotCallback (NumFormClose, INTEGER_DATA, (CHAR_T*)0);
+	  closeDontSave = TRUE;
+	  saveBeforeClose = FALSE;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  break;
+	  
+	case ID_SAVEDOC:
+	  ThotCallback (NumFormClose, INTEGER_DATA, (CHAR_T*)1);
+	  closeDontSave   = FALSE;
+	  saveBeforeClose = TRUE;
+	  EndDialog (hwnDlg, ID_SAVEDOC);
+	  break;
+	  
+	case IDC_DONTSAVE:
+	  ThotCallback (NumFormClose, INTEGER_DATA, (CHAR_T*)2);
+	  closeDontSave   = FALSE;
+	  saveBeforeClose = FALSE;
+	  EndDialog (hwnDlg, IDC_DONTSAVE);
+	  break;
 	}
-	return TRUE;
+      break;
+    default:
+      return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3817,12 +3819,12 @@ ThotWindow frame;
  CreateSaveListDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list)
+void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list)
 #else  /* !__STDC__ */
-void CreateSaveListDlgWindow (parent, nb_item, save_list)
-ThotWindow   parent;
-int    nb_item;
-STRING save_list;
+void       CreateSaveListDlgWindow (parent, nb_item, save_list)
+ThotWindow parent;
+int        nb_item;
+STRING     save_list;
 #endif /* __STDC__ */
 {  
   nbItem      = (UINT)nb_item;
@@ -3834,23 +3836,17 @@ STRING save_list;
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCloseDocDlgWindow (ThotWindow parent, STRING title, STRING msg, int num_form_close, ThotBool* save_befor, ThotBool* close_dont_save)
+void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save)
 #else  /* !__STDC__ */
-void CreateCloseDocDlgWindow (parent, title, msg, num_form_close, save_befor, close_dont_save)
-ThotWindow      parent;
-STRING    title;
+void       CreateCloseDocDlgWindow (parent, msg, save_befor, close_dont_save)
+ThotWindow parent;
 STRING    msg;
-int       num_form_close;
-ThotBool* save_befor;
-ThotBool* close_dont_save;
+ThotBool *save_befor;
+ThotBool *close_dont_save;
 #endif /* __STDC__ */
 {  
   ustrcpy (message, msg);
-  ustrcpy (wndTitle, title);
-  numFormClose = num_form_close;
-
   DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
-
   *save_befor = saveBeforeClose;
   *close_dont_save = closeDontSave;
 }
@@ -3859,18 +3855,18 @@ ThotBool* close_dont_save;
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLanguageDlgWindow (ThotWindow parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int lang_value, STRING curLang)
+void        CreateLanguageDlgWindow (ThotWindow parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int lang_value, STRING curLang)
 #else  /* !__STDC__ */
-void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, lang_value, curLang)
+void        CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, lang_value, curLang)
 ThotWindow  parent;
-STRING title;
-STRING msg1;
-int   nb_item;
-STRING lang_list;
-STRING msg2;
-int   nmenuLanguage;
-int   lang_value;
-STRING curLang;
+STRING      title;
+STRING      msg1;
+int         nb_item;
+STRING      lang_list;
+STRING      msg2;
+int         nmenuLanguage;
+int         lang_value;
+STRING      curLang;
 #endif /* __STDC__ */
 {  
   ustrcpy (wndTitle, title);
@@ -3880,7 +3876,6 @@ STRING curLang;
   langList                = lang_list;
   nbItem                  = (UINT)nb_item;
   LangValue               = lang_value;
-  
   DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
 }
 

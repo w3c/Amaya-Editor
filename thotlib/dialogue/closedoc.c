@@ -68,24 +68,24 @@ STRING              data;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
-   switch ((int) data)
-	 {
-	    case 0:
-	       /* abandon du formulaire */
-	       break;
-	    case 1:
-	       /* sauver avant de fermer */
-	       CloseDontSave = FALSE;
-	       SaveBeforeClosing = TRUE;
-	       break;
-	    case 2:
-	       /* fermer sans sauver */
-	       CloseDontSave = FALSE;
-	       break;
-	 }
-   TtaDestroyDialogue (NumFormClose);
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+  switch ((int) data)
+    {
+    case 0:
+      /* abandon du formulaire */
+      break;
+    case 1:
+      /* sauver avant de fermer */
+      CloseDontSave = FALSE;
+      SaveBeforeClosing = TRUE;
+      break;
+    case 2:
+      /* fermer sans sauver */
+      CloseDontSave = FALSE;
+      break;
+    }
+  TtaDestroyDialogue (NumFormClose);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -102,13 +102,13 @@ Document            document;
 View                view;
 ThotBool           *confirmation;
 ThotBool           *save;
-
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
-   CHAR_T                buftext[300];
-   CHAR_T                bufbutton[300];
+   CHAR_T              buftext[300];
+#ifndef _WINDOWS
+   CHAR_T              bufbutton[300];
    int                 i;
+#endif /* _WINDOWS */
 
    CloseDontSave = TRUE;
    SaveBeforeClosing = FALSE;
@@ -116,15 +116,12 @@ ThotBool           *save;
    /* initialise le label du formulaire "Fermer" en y mettant le nom */
    /* du document */
    ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   ustrcat (buftext, " ");
+   ustrcat (buftext, TEXT(" "));
    ustrcat (buftext, pDoc->DocDName);
-   ustrcat (buftext, " ");
+   ustrcat (buftext, TEXT(" "));
    ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
-#  ifdef _WINDOWS
-   sprintf (message, buftext);
-#  endif /* _WINDOWS */
-
+#ifndef _WINDOWS
    /* Feuille de dialogue Fermer */
    ustrcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    i = ustrlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
@@ -138,18 +135,9 @@ ThotBool           *save;
    TtaShowDialogue (NumFormClose, FALSE);
    /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
-#  else  /* _WINDOWS */
-   CHAR_T    buftext[300];
-   BOOL    save_befor, close_dont_save;
-   ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   ustrcat (buftext, TEXT(" "));
-   ustrcat (buftext, pDoc->DocDName);
-   ustrcat (buftext, TEXT(" "));
-   ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
-   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, NumFormClose, &save_befor, &close_dont_save);
-   SaveBeforeClosing = save_befor ;
-   CloseDontSave     = close_dont_save;
-#  endif /* _WINDOWS */
+#else  /* _WINDOWS */
+   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext, &SaveBeforeClosing, &CloseDontSave);
+#endif /* _WINDOWS */
    *save = SaveBeforeClosing;
    *confirmation = !CloseDontSave;
 }

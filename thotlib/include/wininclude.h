@@ -54,7 +54,7 @@ extern void       CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name);
 extern void       CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName, int doc_select, int dir_select, int doc_type);
 extern void       CreateGraphicsDlgWindow (int, int, int, ThotWindow);
 extern void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list);
-extern void       CreateCloseDocDlgWindow (ThotWindow, STRING, STRING, int, BOOL*, BOOL*);
+extern void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save);
 extern void       CreateLanguageDlgWindow (ThotWindow, STRING, STRING, int, STRING, STRING, int, STRING);
 extern void       CreateCharacterDlgWindow (ThotWindow, int, int, int, int, int);
 extern void       CreateAttributeDlgWindow (STRING, int, int);
