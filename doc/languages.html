@@ -12,7 +12,7 @@
 
 <H4>Translated from French by Ethan Munson</H4>
 
-<H4>Version of March 26, 1997</H4>
+<H4>Version of March 28, 1997</H4>
 
 <P>&copy; 1996 INRIA
 
@@ -144,10 +144,12 @@
       <LI><SMALL><A href="#sectd42253">Underlining</A></SMALL>
       </UL>
     <LI><A href="#sectc4226">Stacking order</A>
-    <LI><A href="#sectc4227">Line Style</A>
+    <LI><A href="#sectc4227">Line style</A>
     <LI><A href="#sectc4228">Line thickness</A>
     <LI><A href="#sectc4229">Fill pattern</A>
     <LI><A href="#sectc4230">Colors</A>
+    <LI><A href="#sectc4230a">Background color and border</A>
+    <LI><A href="#sectc4230b">Background pictures</A>
     <LI><A href="#sectc4231">Presentation box content</A>
     <LI><A href="#sectc4232">Presentation box creation</A>
     <LI><A href="#sectc4233">Page layout</A>
@@ -1978,6 +1980,7 @@ exceptions are indicated by a name.  They are separated by semicolons.</P>
      ExcValue      ='NoCut' / 'NoCreate' /
                     'NoHMove' / 'NoVMove' / 'NoMove' /
                     'NoHResize' / 'NoVResize' / 'NoResize' /
+		    'MoveResize' /
                     'NewWidth' / 'NewHeight' /
                     'NewHPos' / 'NewVPos' /
                     'Invisible' / 'NoSelect' /
@@ -1992,39 +1995,50 @@ The following are the available exceptions:</P>
 <DL>
 <DT><TT>NoCut</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be destroyed by the editor.
+which this exception is applied cannot be deleted by the editor.
 </DD>
 <DT><TT>NoCreate</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
 which this exception is applied cannot be created by ordinary commands for
 creating new elements.  These elements are usually created by special actions
-associated with otherexceptions.
+associated with other exceptions.
 </DD>
 <DT><TT>NoHMove</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be moved horizontally with the mouse.
+which this exception is applied cannot be moved horizontally with the
+mouse.  Their children elements cannot be moved either.
 </DD>
 <DT><TT>NoVMove</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be moved vertically with the mouse.
+which this exception is applied cannot be moved vertically with the
+mouse.  Their children elements cannot be moved either.
 </DD>
 <DT><TT>NoMove</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
 which this exception is applied cannot be moved in any direction with the
-mouse.
+mouse.  Their children elements cannot be moved either.
 </DD>
 <DT><TT>NoHResize</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be resized horizontally with the mouse.
+which this exception is applied cannot be resized horizontally with the
+mouse.  Their children elements cannot be resized either.
 </DD>
 <DT><TT>NoVResize</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be resized vertically with the mouse.
+which this exception is applied cannot be resized vertically with the
+mouse.  Their children elements cannot be resized either.
 </DD>
 <DT><TT>NoResize</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
 which this exception is applied cannot be resized in any direction with the
-mouse.
+mouse.  Their children elements cannot be resized either.
+</DD>
+<DT><TT>MoveResize</TT></DT>
+<DD>This exception can only be applied to element types.  Elements of a type to
+which this exception is applied can be moved and resized in any direction
+with the mouse, even if one of their ancestor element has an exception that
+prevents moving or resizing.  Their children elements can also be resized or
+moved.
 </DD>
 <DT><TT>NoSelect</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
@@ -2450,7 +2464,9 @@ well as for the objects which they contain, is based on the notion of the
 <P>
 Corresponding to each element of the document is a box,  which is the
 rectangle enclosing the element on the display device (screen or sheet of
-paper);  the outline of this rectangle is normally not visible. The sides of
+paper);  the outline of this rectangle is not visible, except when a
+<A href="#sectc4230a"><TT>ShowBox</TT> rule</A> applies to the element. The
+sides of
 the box are parallel to the sides of the screen or the sheet of paper.  By way
 of example, a box is associated with a character string, a line of text, a
 page, a paragraph, a title, a mathematical formula, or a table cell.</P>
@@ -4144,11 +4160,13 @@ are displayed or printed,
 <LI>for presentation boxes only, the contents of the box.
 </UL>
 <P>
-The <A name="presfunct">presentation functions</A>are:</P>
+The <A name="presfunct">presentation functions</A> are:</P>
 <UL>
 <LI>the creation of a presentation box
 <LI>the line-breaking or page-breaking style,
-<LI>the copying of another box.
+<LI>the copying of another box,
+<LI>the display of the box background and border,
+<LI>the display of a background picture and its aspect.
 </UL>
 <P>
 For each box and each view, every presentation parameter is defined once and
@@ -4159,7 +4177,7 @@ many presentation boxes.  Another element may not use any presentation
 functions.</P>
 <P>
 Each rule defining a presentation parameter begins with a keyword followed by
-a colon. the keyword indicates the parameter which is the subject of the rule.
+a colon.  The keyword indicates the parameter which is the subject of the rule.
 After the keyword and the colon, the remainder of the rule varies.  All rules
 are terminated by a semicolon.</P>
 <PRE>
@@ -4194,13 +4212,16 @@ are terminated by a semicolon.</P>
                 'LineWeight' ':'    DistanceInherit /
                 'FillPattern' ':'   NameInherit /
                 'Background' ':'    NameInherit /
-                'Foreground' ':'    NameInherit .
+                'Foreground' ':'    NameInherit /
                 'Content' ':'       VarConst .
      PresFunc = Creation '(' BoxID ')' /
                 'Line' /
                 'NoLine' /
                 'Page' '(' BoxID ')' /
-                'Copy' '(' BoxTypeToCopy ')' .
+                'Copy' '(' BoxTypeToCopy ')' /
+                'ShowBox' /
+		'BackgroundPicture' ':' FileName /
+		'PictureMode' ':'   PictMode /
 </PRE>
 </DIV>
 
@@ -5550,16 +5571,18 @@ the reverse).</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name=sectc4227>Line Style</A></H3>
+<H3><A name=sectc4227>Line style</A></H3>
 
 <P>
 The <TT>LineStyle</TT> rule determines the style of line which should be used
-to draw all the elements contained in the box.  The line style can be
+to draw all the elements contained in the box and the box itself, if it has
+a <A href="#sectc4230a"><TT>ShowBox</TT> rule</A>.  The line style can be
 indicated by a name (<TT>Solid</TT>, <TT>Dashed</TT>, <TT>Dotted</TT>) or it
-can be inherited.  Only elements of the graphic base type are affected by this
+can be inherited.  All elements of the graphic base type are affected by this
 rule, but it can be attached to any box and transmitted by inheritance to the
-graphic elements.</P>
-<P>
+graphic elements.  The border of elements having a
+<A href="#sectc4230a"><TT>ShowBox</TT> rule</A>
+is drawn according to the line style specified by this rule.<P>
 Only identical inheritance is allowed: the box takes the same line style as
 the box from which it inherits.  This is indicated by an equals sign after the
 kinship specification.</P>
@@ -5601,9 +5624,10 @@ in the same way as <A href="#sectd42221">line spacing</A>.</P>
                  'LineWeight' ':' DistOrInherit
 </PRE>
 <P>
-Only elements of the graphic base type are affected by this rule, but it can
+All elements of the graphic base type are affected by this rule, but it can
 be attached to any box and transmitted by inheritance to the graphic
-elements.</P>
+elements. The border of element having a <A href="#sectc4230a"><TT>ShowBox</TT>
+rule</A> is also drawn according to the thickness specified by this rule.</P>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
@@ -5628,6 +5652,8 @@ and the elements composing figures are given an inheritance rule:</P>
 <P>
 The <TT>FillPattern</TT> rule determines the pattern used to fill closed
 graphical elements (circles, rectangles, etc.) which appear in the box.  This
+rule also specifies the pattern used to fill the box associated with
+elements having a <A href="#sectc4230a"><TT>ShowBox</TT> rule<A>.  This
 pattern can be indicated by a named constant or by inheritance.  The named
 constant identifies one of the patterns available in Thot.  The names of the
 available patterns are: nopattern, foregroundcolor, backgroundcolor, gray1,
@@ -5679,17 +5705,20 @@ and the elements composing figures are given an inheritance rule:</P>
 
 <P>
 The <TT>Foreground</TT> and <TT>Background</TT> rules determine the foreground
-and background colors of the base elements which appear in the box. These
-colors cancan be specified with a named constant or by inheritance. The named
+and background colors of the base elements which appear in the box. They also
+control the color of boxes associated with elements having a
+<A href="#sectc4230a"><TT>ShowBox</TT> rule</A>.  These
+colors can be specified with a named constant or by inheritance.  The named
 constants specify one of the available colors in Thot.  The available color
 names can be found in the file <TT>thot.color</TT>.</P>
 <P>
-In contrast to the preceding rules, the color rules affect all base elements
-the same way, no matter what their type (text, graphics, pictures, symbols),
-but they only affect base elements.  The color rules can nevertheless be
-associated with any box and can be transmitted to the base elements by
-inheritance.  Like the preceding rules, only inheritance of the same value is
-allowed.</P>
+The color rules affect the same way all base elements and elements having a
+<A href="#sectc4230a"><TT>ShowBox</TT> rule</A>,
+no matter what their type (text, graphics, pictures,
+symbols).  The color rules can be associated with any box and can be
+transmitted by inheritance to the base elements or the elements having
+a <A href="#sectc4230a"><TT>ShowBox</TT> rule</A>.  Like the preceding rules,
+only inheritance of the same value is allowed.</P>
 <PRE>
                  'Foreground' ':' NameInherit
                  'Background' ':' NameInherit
@@ -5719,6 +5748,85 @@ and the elements composing figures are given inheritance rules:</P>
    FillPattern : Enclosing =;
 </PRE>
 </BLOCKQUOTE>
+</DIV>
+
+<DIV class="subsection">
+<H3><A name=sectc4230a>Background color and border</A></H3>
+
+<P>
+Boxes associated with structural elements are normally not visible, but it
+is possible to draw their border and/or to paint their area when it is needed.
+This is achieved by associating the <TT>ShowBox</TT> rule with the concerned
+element.  This rule has no parameter and no value. It is simply written
+<TT>Showbox;</TT>. It is not inherited nor transmitted to any other element.
+It applies only to the element with which it is associated.</P>
+<PRE>
+                 'ShowBox'
+</PRE>
+<P>
+When an element has a <TT>ShowBox</TT> rule, the border is drawn only if
+the <TT>LineWeight</TT> rule that applies to that element has a non-zero
+value (this value can be inherited).  The color, style and thickness of the
+border are defined by the <TT>Foreground</TT>, <TT>LineStyle</TT>, and
+<TT>LineWeight</TT> rules that apply to the element.</P>
+<P>
+When an element has a <TT>ShowBox</TT> rule, the background of this element
+is paint only if the value of the <TT>FillPattern</TT> rule that applies to
+that element is not <TT>nopattern</TT>.  The pattern and color(s) of the
+background are defined by the <TT>FillPattern</TT>, <TT>Background</TT>, and
+<TT>Foreground</TT> rules that apply to the element.</P>
+</DIV>
+
+<DIV class="subsection">
+<H3><A name=sectc4230b>Background pictures</A></H3>
+
+<P>
+The <TT>BackgroundPicture</TT> rule allows to display a picture as the
+background of an element.  It has a single parameter, the file name of the
+picture.  This is a string delimited by single quotes.  If the first
+character in this string is '/', it is considered as an absolute path,
+otherwise the file is searched for along the schema directory
+path.  This file may contain a picture in any format accepted by
+Thot (xbm, xpm, gif, jpeg, png, etc.)</P>
+<P>
+The <TT>BackgroundPicture</TT> and <TT>PictureMode</TT> rules apply only to
+the element with which they are associated.  They are not inherited nor
+transmitted to children elements.</P>
+<P>
+The background picture has not always the same size as the element's box.
+There are diffrent ways to fill the element box with the picture.  This is
+specified by the <TT>PictureMode</TT> rule, which should be associated to
+the same element.  This rule may take one of the following values:</P>
+<DL>
+<DT><TT>NormalSize</TT>
+<DD>The picture is centered in the box, and clipped if it is too large.
+
+<DT><TT>Scale</TT>
+<DD>The picture is zoomed to fit the box size.
+
+<DT><TT>RepeatX</TT>
+<DD>The picture is repeated horizontally to fit the box width.
+
+<DT><TT>RepeatY</TT>
+<DD>The picture is repeated vertically to fit the box height.
+
+<DT><TT>RepeatXY</TT>
+<DD>The picture is repeated both horizontally and vertically to fill the box.
+</DL>
+<P>
+If an element has a <TT>BackgroundPicture</TT> rule and no <TT>PictureMode</TT>
+rule, the <TT>NormalSize</TT> value is assumed.</P>
+<PRE>
+                 'BackgroundPicture' ':' FileName /
+                 'PictureMode' ':' PictMode .
+ 
+      FileName = STRING .
+      PictMode = 'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
+</PRE>
+<P>
+The <TT>BackgroundPicture</TT> and <TT>PictureMode</TT> rules apply only to
+the element with which they are associated.  They are not inherited nor
+transmitted to children elements.</P>
 </DIV>
 
 <DIV class="subsection">
@@ -8205,6 +8313,7 @@ ExcValSeq      = ExcValue &lt; ',' ExcValue > .
 ExcValue       = 'NoCut' / 'NoCreate' /
                  'NoHMove' / 'NoVMove' / 'NoMove' /
                  'NoHResize' / 'NoVResize' / 'NoResize' /
+		 'MoveResize' /
                  'NewWidth' / 'NewHeight' /
                  'NewHPos' / 'NewVPos' /
                  'Invisible' / 'NoSelect' /
@@ -8399,13 +8508,16 @@ PresParam       = 'VertRef' ':' HorizPosition /
                   'LineWeight' ':' DistOrInherit /
                   'FillPattern' ':' NameInherit /
                   'Background' ':' NameInherit /
-                  'Foreground' ':' NameInherit .
+                  'Foreground' ':' NameInherit /
                   'Content' ':' VarConst .
 PresFunc        = Creation '(' BoxID ')' /
                   'Line' /
                   'NoLine' /
                   'Page' '(' BoxID ')' /
-                  'Copy' '(' BoxTypeToCopy ')' .
+                  'Copy' '(' BoxTypeToCopy ')' /
+                  'ShowBox' /
+		  'BackgroundPicture' ':' FileName /
+		  'PictureMode' ':' PictMode .
 
 BoxTypeToCopy   = BoxID [ ExtStruct ] /
                    ElemID [ ExtStruct ] .
@@ -8506,6 +8618,10 @@ UnderLineInherit= Kinship '=' /
                   'NoUnderline' / 'Underlined' / 
                   'Overlined' / 'CrossedOut' .
 ThicknessInherit= Kinship '=' / 'Thick' / 'Thin' .
+
+FileName =        STRING .
+PictMode =        'NormalSize' / 'Scale' /
+                  'RepeatXY' / 'RepeatX' / 'RepeatY' .
 
 VarConst        = ConstID / ConstType ConstValue /
                   VarID / '(' FunctionSeq ')' /
