@@ -128,6 +128,8 @@ public:
 
   void SetupURLBar();
 
+  void SetMenuBar( wxMenuBar * p_menu_bar );
+
  public:
 
  public:
@@ -155,10 +157,7 @@ public:
   wxMenuItem * m_pMenuItemToggleFullScreen;
   wxMenuItem * m_pMenuItemToggleToolTip;
 
-  wxMenuBar * m_pMenuBar;
-  wxMenu * m_pFileMenu;
-  wxMenu * m_pViewMenu;
-  wxMenu * m_pInfoMenu;
+  wxMenuBar * m_pDummyMenuBar;
   
   wxSplitterWindow * m_pSplitterWindow;
   

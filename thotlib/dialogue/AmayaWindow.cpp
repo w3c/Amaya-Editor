@@ -74,7 +74,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_IsToolTipEnable( DEFAULT_TOOGLE_TOOLTIP ),
   m_SlashRatio( 0.20 ),
   m_IsClosing( FALSE ),
-  m_pURLBar( NULL )
+  m_pURLBar( NULL ),
+  m_pDummyMenuBar( NULL )
 {
   // Create a splitted vertical window
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
@@ -121,7 +122,7 @@ AmayaWindow::AmayaWindow (  int            window_id
 
   // Creation of the statusbar
   CreateStatusBar( 1 );
-
+  
   SetAutoLayout(TRUE);
 
   // NOTICE : the menu bar is created for each AmayaFrame, 
@@ -502,6 +503,43 @@ bool AmayaWindow::IsClosing()
 {
   return m_IsClosing;
 }
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SetMenuBar
+ * Description:  override the wxFrame::SetMenuBar methode and check if the menu bar is NULL
+ *               if NULL then replace the menubar with a dummy menu bar to avoid ugly effects when closing a frame
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
+{
+  if ( p_menu_bar )
+    {
+      wxFrame::SetMenuBar( p_menu_bar );
+
+
+      // create a dummy menu bar to avoid ugly effects when a frame is closed
+      if ( m_pDummyMenuBar )
+	delete m_pDummyMenuBar;
+      m_pDummyMenuBar = new wxMenuBar();
+      int menu_id = 0;
+      wxMenu * p_menu = NULL;
+      while ( menu_id < p_menu_bar->GetMenuCount() )
+	{
+	  p_menu = new wxMenu();
+	  m_pDummyMenuBar->Append( p_menu , p_menu_bar->GetLabelTop(menu_id) );
+	  m_pDummyMenuBar->EnableTop( menu_id, FALSE );
+	  menu_id++;
+	}
+    }
+  else
+    {
+      // setup the dummy menubar
+      wxFrame::SetMenuBar( m_pDummyMenuBar );
+    }
+}
+
 
 /*
  *--------------------------------------------------------------------------------------
