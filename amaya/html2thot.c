@@ -908,7 +908,7 @@ void               ParseHTMLError (Document doc, CHAR_T* msg)
        if (docURL != NULL)
 	 {
 	   if (!XMLErrorsFound)
-	     fprintf (ErrFile, "*** Errors in %s\n", docURL);
+	     fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
 	   TtaFreeMemory (docURL);
 	   docURL = NULL;
 	 }
@@ -2709,7 +2709,7 @@ static void           ProcessStartGI (CHAR_T* GIname)
 	{
 	  if (ustrlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = WC_EOS;
-	  usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
+	  usprintf (msgBuffer, TEXT("warning - unknown tag <%s>"), GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
@@ -2964,7 +2964,7 @@ static void        EndOfEndTag (CHAR_T c)
         {
         if (ustrlen (inputBuffer) > MaxMsgLength - 20)
 	   inputBuffer[MaxMsgLength - 20] = WC_EOS;
-	usprintf (msgBuffer, TEXT("Unknown tag </%s>"), inputBuffer);
+	usprintf (msgBuffer, TEXT("warning - unknown tag </%s>"), inputBuffer);
 	ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	/* create an Invalid_element */
 	usprintf (msgBuffer, TEXT("</%s"), inputBuffer);

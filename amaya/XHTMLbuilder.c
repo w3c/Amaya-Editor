@@ -1195,7 +1195,8 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 			   lang = TtaGetLanguageIdFromName (attrValue);
 			   if (lang == 0)
 			     {
-			       usprintf (msgBuffer, TEXT("Unknown language: %s"),
+			       usprintf (msgBuffer,
+					 TEXT("warning - unsupported language: %s"),
 					 attrValue);
 			       if (isXML)
 				 XmlParseError (errorParsing, msgBuffer, 0);

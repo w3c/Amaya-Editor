@@ -34,13 +34,14 @@
 
 
 /*----------------------------------------------------------------------
-  DisplayPointSelection draw characteristics point of the box.
+  DisplayPointSelection draw control points of the box.
   ----------------------------------------------------------------------*/
 void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   PtrTextBuffer       pBuffer;
+  PtrPathSeg          pPa;
   int                 leftX, rightX;
   int                 topY, bottomY;
   int                 minX, thick;
@@ -67,7 +68,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       middleY = topY + (pBox->BxHeight - thick) / 2;
       if (pAb->AbLeafType == LtPicture)
 	{
-	  /* 8 characteristic points */
+	  /* 8 control points */
 	  DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			 0, InsertColor, 2);
 	  DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
@@ -87,8 +88,8 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	}
       else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
 	{
-	  /* Draw characteristic points of the polyline */
-	  /* if there is almost one point in he polyline */
+	  /* Draw control points of the polyline */
+	  /* if there is at least one point in the polyline */
 	  pBuffer = pBox->BxBuffer;
 	  leftX = pBox->BxXOrg - pFrame->FrXOrg;
 	  topY = pBox->BxYOrg - pFrame->FrYOrg;
@@ -124,6 +125,33 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 		}
 	      
 	      j++;
+	    }
+	}
+      else if (pAb->AbLeafType == LtPath)
+	{
+	  /* Draw control points of the path */
+	  pPa = pAb->AbFirstPathSeg;
+	  leftX = pBox->BxXOrg - pFrame->FrXOrg;
+	  topY = pBox->BxYOrg - pFrame->FrYOrg;
+	  while (pPa)
+	    {
+	      if (pPa->PaNewSubpath || !pPa->PaPrevious)
+		/* this path segment starts a new subpath */
+		{
+		  x = leftX + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+		  y = topY + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+		  DrawRectangle (frame, 0, 0, x, y, thick, thick, 0,
+				 InsertColor, 2);
+		}
+	      x = leftX + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y = topY + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      DrawRectangle (frame, 0, 0, x, y, thick, thick, 0,
+			     InsertColor, 2);
+	      pPa = pPa->PaNext;
 	    }
 	}
       else if (pointselect != 0)
@@ -186,7 +214,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case TEXT('6'):
 	  case TEXT('7'):
 	  case TEXT('8'):
-	    /* 8 characteristic points */
+	    /* 8 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
@@ -210,7 +238,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case 'c':
 	  case 'P':
 	  case 'Q':
-	    /* 4 characteristic points */
+	    /* 4 control points */
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
@@ -221,7 +249,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'W':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
@@ -230,7 +258,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'X':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
@@ -239,7 +267,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'Y':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
@@ -248,7 +276,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'Z':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
@@ -260,14 +288,14 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case 'h':
 	  case '<':
 	  case '>':
-	    /* 2 characteristic points */
+	    /* 2 control points */
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
 			   0, InsertColor, 2);
 	    break;
 	  case 't':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
@@ -276,7 +304,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'b':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
@@ -287,14 +315,14 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case 'v':
 	  case '^':
 	  case 'V':
-	    /* 2 characteristic points */
+	    /* 2 control points */
 	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
 			   0, InsertColor, 2);
 	    break;
 	  case 'l':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
@@ -303,7 +331,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 			   0, InsertColor, 2);
 	    break;
 	  case 'r':
-	    /* 3 characteristic points */
+	    /* 3 control points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
@@ -314,7 +342,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case '\\':
 	  case 'O':
 	  case 'e':
-	    /* 2 characteristic points */
+	    /* 2 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
@@ -323,7 +351,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	  case '/':
 	  case 'o':
 	  case 'E':
-	    /* 2 characteristic points */
+	    /* 2 control points */
 	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
 			   0, InsertColor, 2);
 	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
@@ -338,7 +366,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 		 pAb->AbVertPos.PosEdge == Bottom))
 	      {
 		/* draw a \ */
-		/* 2 characteristic points */
+		/* 2 control points */
 		DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			       0, InsertColor, 2);
 		DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
@@ -347,7 +375,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	    else
 	      {
 		/* draw a / */
-		/* 2 characteristic points */
+		/* 2 control points */
 		DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
 			       0, InsertColor, 2);
 		DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
