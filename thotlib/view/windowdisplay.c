@@ -107,17 +107,17 @@ int                 fg;
    if (active && ShowReference ())
      {
 	if (TtWDepth == 1)
-	   /* On modifie la trame des caracteres */
+	   /* Modify the fill style of the characters */
 	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
 	else
-	   /* Couleur des boites actives */
+	   /* Modify the color of the active boxes */
 	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
      }
    else if (RO && ShowReadOnly () && ColorPixel (fg) == cblack.pixel)
-      /* Couleur du ReadOnly */
+      /* Color of ReadOnly parts */
       XSetForeground (TtDisplay, TtLineGC, RO_Color);
    else
-      /* Couleur de la boite */
+      /* Color of the box */
       XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
 #endif /* _WINDOWS */
 }
@@ -154,7 +154,7 @@ int                 fg;
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
 #endif /* _WINDOWS */
-   /* Charge la bonne couleur */
+   /* Load the correct color */
    LoadColor (disp, RO, active, fg);
 }
 
@@ -210,13 +210,13 @@ int                 y2;
 
 
 /*----------------------------------------------------------------------
-  SpaceToCar substitute in text the space chars to their visual
+  SpaceToChar substitute in text the space chars to their visual
   equivalents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SpaceToCar (unsigned char *text)
+static void         SpaceToChar (unsigned char *text)
 #else  /* __STDC__ */
-static void         SpaceToCar (text)
+static void         SpaceToChar (text)
 unsigned char      *text;
 
 #endif /* __STDC__ */
@@ -371,7 +371,7 @@ int                 fg;
 	     ptcar = TtaGetMemory (lg + 1);
 	     strncpy (ptcar, &buff[i - 1], lg);
 	     ptcar[lg] = '\0';
-	     SpaceToCar (ptcar);	/* substitute spaces */
+	     SpaceToChar (ptcar);	/* substitute spaces */
 #ifdef _WINDOWS
 	     WinLoadGC (WIN_curHdc, TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
@@ -458,7 +458,7 @@ int                 fg;
    int                 middle;	/* cross-over position   */
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
-   int                 decal;	/* shifting of drawing   */
+   int                 shift;	/* shifting of drawing   */
 
    if (lg > 0)
      {
@@ -468,10 +468,10 @@ int                 fg;
 	fheight = FontHeight (font);
 	ascent = FontAscent (font);
 	thickness = ((fheight / 20) + 1) * (thick + 1);
-	decal = (2 - thick) * thickness;
-	height = y + decal;
-	bottom = y + ascent + decal;
-	middle = y + height / 2 + decal;
+	shift = (2 - thick) * thickness;
+	height = y + shift;
+	bottom = y + ascent + shift;
+	middle = y + height / 2 + shift;
 
 	/*
 	 * for an underline independant of the font add
@@ -900,7 +900,7 @@ int                 fg;
    int                 xc, yc, xd, yd;
    float               width, height;
    ThotPoint           point[3];
-   Pixmap              modele;
+   Pixmap              pattern;
 
    width = 5 + thick;
    height = 10;
@@ -928,12 +928,12 @@ int                 fg;
    point[1].y = yc;
    point[2].x = xd;
    point[2].y = yd;
-   modele = CreatePattern (0, RO, active, fg, fg, 1);
-   if (modele != 0)
+   pattern = CreatePattern (0, RO, active, fg, fg, 1);
+   if (pattern != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pattern);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pattern);
      }
 #endif /* _WINDOWS */
 }
@@ -1383,7 +1383,7 @@ int                 pattern;
 
 {
    /*int eps2; */
-   Pixmap              modele;
+   Pixmap              pat;
 
 #ifdef _WINDOWS
    HBRUSH              hBrush;
@@ -1397,14 +1397,14 @@ int                 pattern;
    /*eps2 = thick > 1; */
 
    /* Fill in the rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (modele != 0)
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
      {
 #ifndef _WINDOWS
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
 			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
 #endif /* _WINDOWS */
 #ifdef _WINDOWS
 	WIN_GetDeviceContext (frame);
@@ -1459,7 +1459,7 @@ int                 pattern;
 {
 #ifndef _WINDOWS
    ThotPoint           point[5];
-   Pixmap              modele;
+   Pixmap              pat;
 
    width = width - thick - 1;
    height = height - thick - 1;
@@ -1478,13 +1478,13 @@ int                 pattern;
    point[3].y = point[1].y;
 
    /* Fill in the diamond */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (modele != 0)
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 5, Convex, CoordModeOrigin);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
@@ -1614,7 +1614,7 @@ int                 pattern;
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
-   Pixmap              modele;
+   Pixmap              pat;
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -1640,12 +1640,12 @@ int                 pattern;
    points[nb - 1].y = points[0].y;
 
    /* Fill in the polygone */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (modele != 0)
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
@@ -1958,7 +1958,7 @@ C_points           *controls;
    int                 i, j;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
-   Pixmap              modele;
+   Pixmap              pat;
 
    /* allocate the list of points */
    npoints = 0;
@@ -2021,13 +2021,13 @@ C_points           *controls;
    PolyNewPoint ((int) x2, (int) y2);
 
    /* Fill in the polygone */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
 #ifndef _WINDOWS
-   if (modele != 0)
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 #endif /* _WINDOWS */
 
@@ -2078,7 +2078,7 @@ int                 pattern;
    int                 arc, xf, yf;
    XArc                xarc[4];
    XSegment            seg[4];
-   Pixmap              modele;
+   Pixmap              pat;
    ThotPoint           point[13];
 
    width -= thick;
@@ -2139,8 +2139,8 @@ int                 pattern;
    seg[3].y2 = seg[1].y2;
 
    /* Fill in the figure */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (modele != 0)
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
      {
 	/* Polygone inscrit: (seg0)       */
 	/*                   0--1         */
@@ -2182,12 +2182,12 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
@@ -2229,7 +2229,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-   Pixmap              modele;
+   Pixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2237,14 +2237,14 @@ int                 pattern;
    y += thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
 #ifndef _WINDOWS
-   if (modele != 0)
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, width, height, 0, 360 * 64);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 #endif /* _WINDOWS */
 
@@ -2500,7 +2500,7 @@ int                 pattern;
    int                 arc, arc2, xf, yf;
    XArc                xarc[4];
    XSegment            seg[5];
-   Pixmap              modele;
+   Pixmap              pat;
    ThotPoint           point[13];
 
    width -= thick;
@@ -2573,9 +2573,9 @@ int                 pattern;
      }
 
    /* Fill in the figure */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
 
-   if (modele != 0)
+   if (pat != 0)
      {
 	/* Polygone:         (seg0)       */
 	/*                   0--1         */
@@ -2617,12 +2617,12 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
@@ -2674,7 +2674,7 @@ int                 pattern;
 #ifndef _WINDOWS
    int                 px7mm, shiftX;
    double              A;
-   Pixmap              modele;
+   Pixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2682,13 +2682,13 @@ int                 pattern;
    y += FrameTable[frame].FrTopMargin + thick / 2;
 
    /* Fill in the rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (modele != 0)
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, width, height, 0, 360 * 64);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
@@ -2943,19 +2943,19 @@ int                 pattern;
 
 #endif /* __STDC__ */
 {
-   Pixmap              modele;
+   Pixmap              pat;
 
    /* Fill the rectangle associated to the given frame */
-   modele = CreatePattern (0, RO, active, fg, 0, pattern);
+   pat = CreatePattern (0, RO, active, fg, 0, pattern);
 #ifndef _WINDOWS
-   if (modele != 0)
+   if (pat != 0)
      {
-	XSetTile (TtDisplay, TtGreyGC, modele);
+	XSetTile (TtDisplay, TtGreyGC, pat);
 	if (w != 0)
 	   XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
 	else
 	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-	XFreePixmap (TtDisplay, modele);
+	XFreePixmap (TtDisplay, pat);
      }
 #endif /* _WINDOWS */
 }

@@ -7,7 +7,7 @@
  
 /*
  * context.c : 
- *     Module de gestion des contextes de documents.
+ *     Handle the context of documents.
  */
 
 #include "thot_gui.h"

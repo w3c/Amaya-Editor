@@ -749,7 +749,7 @@ int                 delta;
 	     if (pFrame->FrAbstractBox->AbInLine)
 		FrameUpdating = FALSE;
 
-	     /* It lacks a pice of the concrete image at the frame top */
+	     /* It lacks a piece of the concrete image at the frame top */
 	     else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 	       {
 		  /* Fill on top, so shift the whole concrete image */

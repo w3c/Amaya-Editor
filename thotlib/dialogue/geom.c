@@ -21,9 +21,9 @@
 #undef EXPORT
 #define EXPORT extern
 #include "frame_tv.h"
-static int          PasGrille = 1;
+static int          GridSize = 1;
 
-#define ALIGNE(val) ((val + (PasGrille/2)) / PasGrille) * PasGrille
+#define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
 
 #include "appli_f.h"
 #include "windowdisplay_f.h"
@@ -205,7 +205,7 @@ PtrTextBuffer       Bbuffer;
 
 {
 #ifndef _WINDOWS
-   float               rapportX, rapportY;
+   float               ratioX, ratioY;
    int                 width, height;
    int                 e, dx, dy;
    int                 ret, f;
@@ -218,8 +218,8 @@ PtrTextBuffer       Bbuffer;
    width = Bbuffer->BuPoints[0].XCoord;
    height = Bbuffer->BuPoints[0].YCoord;
    /* computes the trasformation foctors between the box and the abstract box */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
    width = PointToPixel (width / 1000);
    height = PointToPixel (height / 1000);
 
@@ -253,9 +253,9 @@ PtrTextBuffer       Bbuffer;
 	     /* current pointer position */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	     /* coordinate checking */
-	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
+	     newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
-	     newy = ALIGNE (newy - FrameTable[frame].FrTopMargin - y);
+	     newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
 	     newy += y;
 	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
@@ -295,8 +295,8 @@ PtrTextBuffer       Bbuffer;
 	  {
 	     XNextEvent (TtDisplay, &event);
 	     /* coordinate checking */
-	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
-	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+	     newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	     newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	     /* CHKR_LIMIT to size of the box */
 	     if (newx < x)
 		lastx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
@@ -333,8 +333,8 @@ PtrTextBuffer       Bbuffer;
 			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
 			      /* update the abstract box buffer */
-			      newx = (int) ((float) newx * rapportX);
-			      newy = (int) ((float) newy * rapportY);
+			      newx = (int) ((float) newx * ratioX);
+			      newy = (int) ((float) newy * ratioY);
 			      AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
 
 			      if (event.xbutton.button != Button1)
@@ -407,7 +407,7 @@ boolean             close;
 
 {
 #ifndef _WINDOWS
-   float               rapportX, rapportY;
+   float               ratioX, ratioY;
    int                 width, height;
    int                 e;
    int                 ret, f;
@@ -421,8 +421,8 @@ boolean             close;
    width = Bbuffer->BuPoints[0].XCoord;
    height = Bbuffer->BuPoints[0].YCoord;
    /* distortion ratios between the abstract box and the box */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
    width = PointToPixel (width / 1000);
    height = PointToPixel (height / 1000);
 
@@ -450,8 +450,8 @@ boolean             close;
 	XNextEvent (TtDisplay, &event);
 
 	/* check the coordinates */
-	newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
-	newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+	newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	/* are limited to the box size */
 	/* Update the X position */
 	if (newx < x)
@@ -491,8 +491,8 @@ boolean             close;
 		    newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 		    ModifyPointInPolyline (Bbuffer, point, newx, newy);
 		    /* update the abstract box buffer */
-		    newx = (int) ((float) newx * rapportX);
-		    newy = (int) ((float) newy * rapportY);
+		    newx = (int) ((float) newx * ratioX);
+		    newy = (int) ((float) newy * ratioY);
 		    ModifyPointInPolyline (Pbuffer, point, newx, newy);
 		    ret = 1;
 		    break;
@@ -578,7 +578,7 @@ boolean             close;
 
 {
 #ifndef _WINDOWS
-   float               rapportX, rapportY;
+   float               ratioX, ratioY;
    int                 width, height;
    int                 e, dx, dy;
    int                 ret, f;
@@ -592,8 +592,8 @@ boolean             close;
    width = Bbuffer->BuPoints[0].XCoord;
    height = Bbuffer->BuPoints[0].YCoord;
    /* the box size *ompute the distortion ratios between box and abstract box */
-   rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-   rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
    width = PointToPixel (width / 1000);
    height = PointToPixel (height / 1000);
 
@@ -626,9 +626,9 @@ boolean             close;
 	     /* current cursor location */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	     /* check the coordinates */
-	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
+	     newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
-	     newy = ALIGNE (newy - FrameTable[frame].FrTopMargin - y);
+	     newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
 	     newy += y;
 	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
@@ -678,8 +678,8 @@ boolean             close;
 	     XNextEvent (TtDisplay, &event);
 
 	     /* check the coordinates */
-	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
-	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+	     newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	     newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	     /* CHKR_LIMIT them to the box area */
 	     if (newx < x)
 	       {
@@ -735,8 +735,8 @@ boolean             close;
 			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, point, newx, newy);
 			      /* update the abstact box buffer */
-			      newx = (int) ((float) newx * rapportX);
-			      newy = (int) ((float) newy * rapportY);
+			      newx = (int) ((float) newx * ratioX);
+			      newy = (int) ((float) newy * ratioY);
 			      AddPointInPolyline (Pbuffer, point, newx, newy);
 
 			      if (event.xbutton.button != Button1)
@@ -834,9 +834,9 @@ int                 DimY;
       *y = ymin;
 
    /* the grid origin is base on the englobing box origin */
-   dx = ALIGNE (*x - xmin);
+   dx = DO_ALIGN (*x - xmin);
    *x = xmin + dx;
-   dy = ALIGNE (*y - ymin);
+   dy = DO_ALIGN (*y - ymin);
    *y = ymin + dy;
    XMapRaised (TtDisplay, w);
    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
@@ -854,9 +854,9 @@ int                 DimY;
 	     /* get the cursor location */
 	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
 	     /* check the coordinates are withing limits */
-	     nx = ALIGNE (nx - FrameTable[frame].FrLeftMargin - xmin);
+	     nx = DO_ALIGN (nx - FrameTable[frame].FrLeftMargin - xmin);
 	     nx += xmin;
-	     ny = ALIGNE (ny - FrameTable[frame].FrTopMargin - ymin);
+	     ny = DO_ALIGN (ny - FrameTable[frame].FrTopMargin - ymin);
 	     ny += ymin;
 	     if (nx < xmin || nx > xmax || ny < ymin || ny > ymax)
 		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
@@ -885,13 +885,13 @@ int                 DimY;
 		      case ButtonPress:
 			 if (PosX)
 			   {
-			      xm = xmin + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - xmin);
+			      xm = xmin + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - xmin);
 			   }
 			 else
 			    xm = *x;
 			 if (PosY)
 			   {
-			      ym = ymin + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - ymin);
+			      ym = ymin + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - ymin);
 			   }
 			 else
 			    ym = *y;
@@ -955,7 +955,7 @@ int                 DimY;
 			 if (DimX)
 			   {
 			      dx = (int) event.xmotion.x - xm;
-			      nx = xmin + ALIGNE (*x + *width + dx - xmin);
+			      nx = xmin + DO_ALIGN (*x + *width + dx - xmin);
 			      dx = nx - *x - *width;
 			   }
 			 else
@@ -964,7 +964,7 @@ int                 DimY;
 			 if (DimY)
 			   {
 			      dy = (int) event.xmotion.y - ym;
-			      ny = ymin + ALIGNE (*y + *height + dy - ymin);
+			      ny = ymin + DO_ALIGN (*y + *height + dy - ymin);
 			      dy = ny - *y - *height;
 			   }
 			 else
@@ -1017,7 +1017,7 @@ int                 DimY;
 				 /* check that we are still within limits */
 				 if (nx + dx > xmax)
 				   {
-				      dx = xmin + ALIGNE (xmax - xmin) - nx;
+				      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
 				      warpx = xmax;
 				   }
 			      }
@@ -1032,7 +1032,7 @@ int                 DimY;
 				 dx -= *width;
 				 if (nx + dx > xmax)
 				   {
-				      dx = xmin + ALIGNE (xmax - xmin) - nx;
+				      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
 				      warpx = xmax;
 				   }
 			      }
@@ -1077,7 +1077,7 @@ int                 DimY;
 				 /* check for limits */
 				 if (ny + dy > ymax)
 				   {
-				      dy = ymin + ALIGNE (ymax - ymin) - ny;
+				      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
 				      warpy = ymax;
 				   }
 			      }
@@ -1092,7 +1092,7 @@ int                 DimY;
 				 dy -= *height;
 				 if (ny + dy > ymax)
 				   {
-				      dy = ymin + ALIGNE (ymax - ymin) - ny;
+				      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
 				      warpy = ymax;
 				   }
 			      }
@@ -1234,9 +1234,9 @@ int                 ym;
 		      {
 			 /* compute the new box origin */
 			 nx = *x + (int) event.xmotion.x - xm;
-			 dx = xmin + ALIGNE (nx - xmin) - *x;
+			 dx = xmin + DO_ALIGN (nx - xmin) - *x;
 			 ny = *y + (int) event.xmotion.y - ym;
-			 dy = ymin + ALIGNE (ny - ymin) - *y;
+			 dy = ymin + DO_ALIGN (ny - ymin) - *y;
 		      }
 		    else
 		      {
@@ -1268,7 +1268,7 @@ int                 ym;
 			   }
 			 else
 			   {
-			      nx = xmin + ALIGNE (xmax - width - xmin);		/*cote droit */
+			      nx = xmin + DO_ALIGN (xmax - width - xmin);		/*cote droit */
 			      warpx = xm + nx - *x;
 			   }
 		      }
@@ -1295,7 +1295,7 @@ int                 ym;
 			   }
 			 else
 			   {
-			      ny = ymin + ALIGNE (ymax - height - ymin);	/*cote inferieur */
+			      ny = ymin + DO_ALIGN (ymax - height - ymin);	/*cote inferieur */
 			      warpy = ym + ny - *y;
 			   }
 		      }
@@ -1374,12 +1374,12 @@ int                 ym;
 
 {
 #ifndef _WINDOWS
-#define c_sup 0
-#define c_milieuh 1
-#define c_inf 2
-#define c_gauche 0
-#define c_milieuv 1
-#define c_droit 2
+#define C_TOP 0
+#define C_HCENTER 1
+#define C_BOTTOM 2
+#define C_LEFT 0
+#define C_VCENTER 1
+#define C_RIGHT 2
 
    int                 ret, e, dx, dy, dl, dh;
    int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
@@ -1390,21 +1390,21 @@ int                 ym;
    /* Use the reference point to move the box */
    if (xr == x)
      {
-	ref_v = c_gauche;
+	ref_v = C_LEFT;
 	xr += 2;		/* small shift for drawing */
 	/* Box increased when X delta increase */
 	HorizontalDirection = 1;
      }
    else if (xr == x + *width)
      {
-	ref_v = c_droit;
+	ref_v = C_RIGHT;
 	xr -= 2;		/* small shift for drawing */
 	/* Box shortened when X delta increase */
 	HorizontalDirection = -1;
      }
    else
      {
-	ref_v = c_milieuv;
+	ref_v = C_VCENTER;
 	/* Direction depends of original cursor location in the frame */
 	if (xm < xr)
 	   HorizontalDirection = -1;
@@ -1414,21 +1414,21 @@ int                 ym;
 
    if (yr == y)
      {
-	ref_h = c_sup;
+	ref_h = C_TOP;
 	yr += 2;		/* small shift for drawing */
 	/* Box increased when Y delta increase */
 	VerticalDirection = 1;
      }
    else if (yr == y + *height)
      {
-	ref_h = c_inf;
+	ref_h = C_BOTTOM;
 	yr -= 2;		/* small shift for drawing */
 	/* Box shortened when Y delta increase */
 	VerticalDirection = -1;
      }
    else
      {
-	ref_h = c_milieuh;
+	ref_h = C_HCENTER;
 	/* Direction depends of original cursor location in the frame */
 	if (ym < yr)
 	   VerticalDirection = -1;
@@ -1473,7 +1473,7 @@ int                 ym;
 		 case MotionNotify:
 		    if (event.xbutton.window == w)
 		      {
-			 /* comput the deltas */
+			 /* compute the deltas */
 			 dl = (int) event.xmotion.x - xm;
 			 dh = (int) event.xmotion.y - ym;
 		      }
@@ -1491,15 +1491,15 @@ int                 ym;
 		       if (xmin == xmax)
 			  /* X moves frozen */
 			  dl = 0;
-		       else if (ref_v == c_milieuv
+		       else if (ref_v == C_VCENTER
 			     && *width + (2 * dl * HorizontalDirection) < 0)
 			 {
-			    dl = -ALIGNE (*width / 2) * HorizontalDirection;
+			    dl = -DO_ALIGN (*width / 2) * HorizontalDirection;
 			    warpx = xm + (dl * HorizontalDirection);
 			 }
 		       else if (*width + (dl * HorizontalDirection) < 0)
 			 {
-			    dl = -ALIGNE (*width) * HorizontalDirection;
+			    dl = -DO_ALIGN (*width) * HorizontalDirection;
 			    warpx = xm + (dl * HorizontalDirection);
 			 }
 
@@ -1507,15 +1507,15 @@ int                 ym;
 		       if (ymin == ymax)
 			  /* Y moves frozen */
 			  dh = 0;
-		       else if (ref_h == c_milieuh
+		       else if (ref_h == C_HCENTER
 			      && *height + (2 * dh * VerticalDirection) < 0)
 			 {
-			    dh = -(*height * VerticalDirection * PasGrille) / (2 * PasGrille);
+			    dh = -(*height * VerticalDirection * GridSize) / (2 * GridSize);
 			    warpy = ym + (dh * VerticalDirection);
 			 }
 		       else if (*height + dh < 0)
 			 {
-			    dh = -(*height * VerticalDirection * PasGrille) / PasGrille;
+			    dh = -(*height * VerticalDirection * GridSize) / GridSize;
 			    warpy = ym + (dh * VerticalDirection);
 			 }
 
@@ -1523,23 +1523,23 @@ int                 ym;
 		    if (dl != 0)
 		      {
 			 dl = dl * HorizontalDirection;		/* Take care for direction */
-			 if (ref_v == c_milieuv)
+			 if (ref_v == C_VCENTER)
 			   {
-			      dx = xmin + ALIGNE (x - (dl / 2) - xmin) - x;
+			      dx = xmin + DO_ALIGN (x - (dl / 2) - xmin) - x;
 			      /* Check the move is within limits */
 			      if (x + dx < xmin)
 				 dx = xmin - x;		/*left side */
 			      if (x + *width - dx > xmax)
-				 dx = x + *width - xmin - ALIGNE (xmax - xmin);		/*cote droit */
+				 dx = x + *width - xmin - DO_ALIGN (xmax - xmin);		/*cote droit */
 
 			      /* modify width for real */
 			      dl = -(dx * 2);
 			      if (dx != 0)
 				 warpx = xm - (dx * HorizontalDirection);
 			   }
-			 else if (ref_v == c_droit)
+			 else if (ref_v == C_RIGHT)
 			   {
-			      dx = xmin + ALIGNE (x - dl - xmin) - x;
+			      dx = xmin + DO_ALIGN (x - dl - xmin) - x;
 			      /* Check the move is within limits */
 			      if (x + dx < xmin)
 				 dx = xmin - x;		/*left side */
@@ -1552,9 +1552,9 @@ int                 ym;
 			 else
 			   {
 			      dx = 0;
-			      dl = xmin + ALIGNE (x + *width + dl - xmin) - x - *width;
+			      dl = xmin + DO_ALIGN (x + *width + dl - xmin) - x - *width;
 			      if (x + *width + dl > xmax)
-				 dl = xmin + ALIGNE (xmax - xmin) - x - *width;		/*cote droit */
+				 dl = xmin + DO_ALIGN (xmax - xmin) - x - *width;		/*cote droit */
 			      if (dl != 0)
 				 warpx = xm + dl;
 			   }
@@ -1566,22 +1566,22 @@ int                 ym;
 		    if (dh != 0)
 		      {
 			 dh = dh * VerticalDirection;	/* Take care for direction */
-			 if (ref_h == c_milieuh)
+			 if (ref_h == C_HCENTER)
 			   {
-			      dy = ymin + ALIGNE (y - (dh / 2) - ymin) - y;
+			      dy = ymin + DO_ALIGN (y - (dh / 2) - ymin) - y;
 			      /* Check the move is within limits */
 			      if (y + dy < ymin)
 				 dy = ymin - y;		/*upper border */
 			      if (y + *height - dy > ymax)
-				 dy = y + *height - ymin - ALIGNE (ymax - ymin);	/*cote inferieur */
+				 dy = y + *height - ymin - DO_ALIGN (ymax - ymin);	/*cote inferieur */
 			      /* change the height for real */
 			      dh = -(dy * 2);
 			      if (dy != 0)
 				 warpy = ym - (dy * VerticalDirection);
 			   }
-			 else if (ref_h == c_inf)
+			 else if (ref_h == C_BOTTOM)
 			   {
-			      dy = ymin + ALIGNE (y - dh - ymin) - y;
+			      dy = ymin + DO_ALIGN (y - dh - ymin) - y;
 			      /* Check the move is within limits */
 			      if (y + dy < ymin)
 				 dy = ymin - y;		/*upper border */
@@ -1593,9 +1593,9 @@ int                 ym;
 			 else
 			   {
 			      dy = 0;
-			      dh = ymin + ALIGNE (y + *height + dh - ymin) - y - *height;
+			      dh = ymin + DO_ALIGN (y + *height + dh - ymin) - y - *height;
 			      if (y + *height + dh > ymax)
-				 dh = ymin + ALIGNE (ymax - ymin) - y - *height;	/*cote inf */
+				 dh = ymin + DO_ALIGN (ymax - ymin) - y - *height;	/*cote inf */
 			      if (dh != 0)
 				 warpy = ym + dh;
 			   }

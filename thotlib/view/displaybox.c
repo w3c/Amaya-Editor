@@ -754,10 +754,10 @@ int                 frame;
 			  arrow = 3;
 		       DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow);
 		       break;
-		    case 'B':	/* Beziers (ouvertes) */
-		    case 'A':	/* Beziers (ouvertes) forward arrow */
-		    case 'F':	/* Beziers (ouvertes) backward arrow */
-		    case 'D':	/* Beziers (ouvertes) arrows on both directions */
+		    case 'B':	/* Beziers (open) */
+		    case 'A':	/* Beziers (open) forward arrow */
+		    case 'F':	/* Beziers (open) backward arrow */
+		    case 'D':	/* Beziers (open) arrows on both directions */
 		       if (pAb->AbPolyLineShape == 'B')
 			  arrow = 0;
 		       else if (pAb->AbPolyLineShape == 'A')

@@ -107,19 +107,19 @@ unsigned short     *blue;
 /*----------------------------------------------------------------------
    CreatePattern loads and return a pixmap pattern.
    active parameter indicate if the box is active.
-   parameters fg, bg, and motif indicate respectively
+   parameters fg, bg, and pattern indicate respectively
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
+unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-unsigned long       CreatePattern (disp, RO, active, fg, bg, motif)
+unsigned long       CreatePattern (disp, RO, active, fg, bg, pattern)
 int                 disp;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 {
@@ -138,7 +138,7 @@ int                 motif;
    BgPixel = ColorPixel (bg);
 
 #ifndef _WINDOWS
-   switch (motif)
+   switch (pattern)
 	 {
 	    case 1:
 	       pattern = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
@@ -267,7 +267,7 @@ int                 motif;
 	DeleteObject (WIN_LastBitmap);
 	WIN_LastBitmap = 0;
      }
-   switch (motif)
+   switch (pattern)
 	 {
 	    case 1:
 	       bitmap.bmWidth = gray8_width;

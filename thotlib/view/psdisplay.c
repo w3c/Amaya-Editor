@@ -782,9 +782,9 @@ int                 fg;
    225, 270 ou 315.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
+void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                DrawArrow (frame, thick, style, x, y, l, h, orientation, RO, func, fg)
+void                DrawArrow (frame, thick, style, x, y, l, h, direction, RO, func, fg)
 int                 frame;
 int                 thick;
 int                 style;
@@ -792,7 +792,7 @@ int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 orientation;
+int                 direction;
 int                 RO;
 int                 func;
 int                 fg;
@@ -824,46 +824,46 @@ int                 fg;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   if (orientation == 0)
+   if (direction == 0)
      {
 	/* draw a right arrow */
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, ym, xf, ym, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, ym, xf, ym, thick, lg, lg);
      }
-   else if (orientation == 45)
+   else if (direction == 45)
      {
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, yf, xf, y, thick, lg, lg);
      }
-   else if (orientation == 90)
+   else if (direction == 90)
      {
 	/* draw a bottom-up arrow */
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, yf, xm, y, thick, lg, lg);
      }
-   else if (orientation == 135)
+   else if (direction == 135)
      {
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, y, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, yf, x, y, thick, lg, lg);
      }
-   else if (orientation == 180)
+   else if (direction == 180)
      {
 	/* draw a left arrow */
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, ym, x, ym, thick, lg, lg);
      }
-   else if (orientation == 225)
+   else if (direction == 225)
      {
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, yf, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, y, x, yf, thick, lg, lg);
      }
-   else if (orientation == 270)
+   else if (direction == 270)
      {
 	/* draw a top-down arrow */
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, y, xm, yf, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, y, xm, yf, thick, lg, lg);
      }
-   else if (orientation == 315)
+   else if (direction == 315)
      {
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, thick, lg, lg);

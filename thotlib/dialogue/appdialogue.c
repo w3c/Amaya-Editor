@@ -26,6 +26,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "inites_f.h"
 #include "LiteClue_f.h"
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
@@ -1043,12 +1044,31 @@ ThotWidget          toplevel;
 {
    Arg                 args[MAX_ARGS];
    int                 n;
+   int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
+   char                *user_delay;
+   ThotColor           bg;
+
    if (liteClue != NULL) return;
    liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
                                    toplevel, NULL);
+
+   
+   user_delay = TtaGetEnvString("TOOLTIPDELAY");
+   if (user_delay != NULL) {
+       if (sscanf(user_delay,"%d",&wait_ms) != 1) {
+           TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
+	   wait_ms = 500;
+       }
+   }
+   bg = ColorPixel(ColorNumber("yellow"));
    n = 0;
+   XtSetArg (args[n], XtNbackground, bg);
+   n++;
    XtSetArg (args[n], XtNfont, DefaultFont);
    n++;
+   XtSetArg (args[n], XgcNwaitperiod, wait_ms);
+   n++;
+   XtSetValues (liteClue, args, n);
 }
 #endif /* _WINDOWS */
 
