@@ -201,35 +201,36 @@
 199 **Templates...
 200 **Annotate selection
 201 **Annotate document
-202 **Move to selection
-203 **Move to stored XPointer
-204 **Post annotation
-205 **Delete annotation
-206 **Load annotations
-207 **Customize query...
-208 **Local filter...
-209 **Configure...
-210 **About Amaya
-211 Amaya hakkýnda
-212 **Browsing
-213 Tarama
-214 Seçme
-215 Arama
-216 Görünümler
-217 Birim yaratma
-218 Baðlantýlar
-219 Yeniden yapýlandýrma
-220 Tablolar
-221 **Graphics
-222 Matematik
-223 Görüntü haritalarý
-224 Tarz tanýmlarý
-225 Özellikler
-226 Yazým hatalarý aranýyor
-227 Sayfa yerleþtirme
-228 Bastýrma
-229 Numaralandýrmasý
-230 **Annotations
-231 Kitap oluþturma
-232 **ShortCuts
-233 Amaya yapýlandýrmasý
+202 **Reply to annotation
+203 **Move to selection
+204 **Move to stored XPointer
+205 **Post annotation
+206 **Delete annotation
+207 **Load annotations
+208 **Customize query...
+209 **Local filter...
+210 **Configure...
+211 **About Amaya
+212 Amaya hakkýnda
+213 **Browsing
+214 Tarama
+215 Seçme
+216 Arama
+217 Görünümler
+218 Birim yaratma
+219 Baðlantýlar
+220 Yeniden yapýlandýrma
+221 Tablolar
+222 **Graphics
+223 Matematik
+224 Görüntü haritalarý
+225 Tarz tanýmlarý
+226 Özellikler
+227 Yazým hatalarý aranýyor
+228 Sayfa yerleþtirme
+229 Bastýrma
+230 Numaralandýrmasý
+231 **Annotations
+232 Kitap oluþturma
+233 **ShortCuts
+234 Amaya yapýlandýrmasý

@@ -232,7 +232,7 @@ Alt <Key>t , Alt <Key>o:           SetOnOffBDO()
 #Annotations
 Ctrl <Key>n , Ctrl <Key>s:	   AnnotateSelection()
 Ctrl <Key>n , Ctrl <Key>a:	   AnnotateDocument()
-Ctrl <Key>n , Ctrl <Key>r:	   CustomQuery()
+Ctrl <Key>n , Ctrl <Key>r:	   ReplyToAnnotation()
 Ctrl <Key>n , Ctrl <Key>p:	   PostAnnotation()
 Ctrl <Key>n , Ctrl <Key>d:	   DeleteAnnotation()
 Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()

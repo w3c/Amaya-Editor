@@ -201,35 +201,36 @@
 199 Templates...
 200 Annotate selection
 201 Annotate document
-202 Move to selection
-203 Move to stored XPointer
-204 Post annotation
-205 Delete annotation
-206 Load annotations
-207 Customize query...
-208 Local filter...
-209 Configure...
-210 About Amaya
-211 About Amaya at W3C
-212 Browsing
-213 Selecting
-214 Searching
-215 Views
-216 Creating elements
-217 Links
-218 Restructuring
-219 Tables
-220 Math
-221 Graphics
-222 Image maps
-223 Style sheets
-224 Attributes
-225 Spell Checking
-226 Publishing
-227 Printing
-228 Numbering
-229 Making books
-230 Annotations
-231 Configuring Amaya
-232 ShortCuts
-233 Accessibility in Amaya
+202 Reply to annotation
+203 Move to selection
+204 Move to stored XPointer
+205 Post annotation
+206 Delete annotation
+207 Load annotations
+208 Customize query...
+209 Local filter...
+210 Configure...
+211 About Amaya
+212 About Amaya at W3C
+213 Browsing
+214 Selecting
+215 Searching
+216 Views
+217 Creating elements
+218 Links
+219 Restructuring
+220 Tables
+221 Math
+222 Graphics
+223 Image maps
+224 Style sheets
+225 Attributes
+226 Spell Checking
+227 Publishing
+228 Printing
+229 Numbering
+230 Making books
+231 Annotations
+232 Configuring Amaya
+233 ShortCuts
+234 Accessibility in Amaya
