@@ -3101,13 +3101,13 @@ static void SetAttrParseMe (Element el, Document doc)
  -----------------------------------------------------------------------*/
 static void SetContentAfterEntity (char *entityName, Element el, Document doc)
 {
-  char	        bufEntity[10];
-  ThotBool      found;
-  int           value;
-  Language      lang;
+  char	         bufEntity[10];
+  ThotBool       found;
+  int            value;
+  Language       lang;
 #ifdef _I18N_   
-  char         *ptr;
-  int           i;
+  unsigned char *ptr;
+  int            i;
 #endif /* _I18N_ */
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);

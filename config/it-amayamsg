@@ -217,7 +217,7 @@
 215 XML non valido - Mostro gli errori di parsificazione?
 216 Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?
 217 Caratteri non validi
-218 Con profilo di documento:
+218 Profilo di documento:
 219 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
 220 La codifica per questo documento non e` supportata da Amaya
 221 Editando e salvando questo documento il suo tipo verrà cambiato

@@ -1231,27 +1231,9 @@ void CleanUpParsingErrors ()
   ----------------------------------------------------------------------*/
 void CheckParsingErrors (Document doc)
 {
-#ifdef PROFILE
-  char      *ptr, *reload, profile;
-  /* current Amaya profile */
-  profile = TtaGetEnvString ("Profile");
-  if (!profile)
-    profile = "";
-#else /* PROFILE */
   char      *ptr, *reload;
-  char       profile [20];
-
-  if (TtaGetDocumentProfile(doc) == L_Basic)
-    strcpy (profile, "XHTML Basic");
-  else if (TtaGetDocumentProfile(doc) == L_Strict)
-    strcpy (profile, "XHTML 1.0 Strict");
-  else if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-    strcpy (profile, "XHTML 1.1");
-  else if (TtaGetDocumentProfile(doc) == L_Transitional)
-    strcpy (profile, "XHTML Transitional");
-  else
-    strcpy (profile, "");
-#endif /* PROFILE */
+  char       profile [200];
+  int        prof;
 
   if (ErrFile)
     {
@@ -1301,14 +1283,36 @@ void CheckParsingErrors (Document doc)
 	{
 	  /* Some elements or attributes are not supported */
 	  /* in the current document profile */
-	  InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			 profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
+	  prof = TtaGetDocumentProfile (doc);
+	  if (prof == L_Basic)
+	    {
+	      strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+	      strcat (profile, " XHTML Basic");
+	    }
+	  else if (prof == L_Strict)
+	    {
+	      strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+	      if (DocumentMeta[doc]->xmlformat)
+		strcat (profile, " XHTML 1.0 Strict");
+	      else
+		strcat (profile, " HTML 4.0 Strict");
+	    }
+	  else if (prof == L_Xhtml11)
+	    {
+	      strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+	      strcat (profile, " XHTML 1.1");
+	    }
+	  else if (prof == L_Transitional)
+	    strcpy (profile, "");
+
+	  InitConfirm3L (doc, 1, profile, NULL,
+			 TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
-	  {
-	    ShowLogFile (doc, 1);
-	    ShowSource (doc, 1);
-	  }
+	    {
+	      ShowLogFile (doc, 1);
+	      ShowSource (doc, 1);
+	    }
 	}
       CleanUpParsingErrors ();
     }
