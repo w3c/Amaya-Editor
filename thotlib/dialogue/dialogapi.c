@@ -2312,29 +2312,25 @@ int                 ref;
       return (catval);
 }
 
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WIN_ListOpenDirectory
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
 #ifdef __STDC__
-void WIN_ListOpenDirectory (int ref, int parentRef, char* directory, char* suffix)
+void WIN_ListOpenDirectory (HWND parent, char* fileName)
 #else  /* __STDC__ */
-void WIN_ListOpenDirectory (ref, parentRef, directory, suffix)
-int   ref; 
-int   parentRef; 
-char* directory; 
-char* suffix;
+void WIN_ListOpenDirectory (parent, fileName)
+HWND parent;
+char* fileName;
 #endif /* __STDC__ */
 {
     static OPENFILENAME OpenFileName;
 
-    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
-    char*               dirPath = (char*) TtaGetMemory (strlen (directory) + strlen (suffix) + 2) ;
  	char                szFilter[] = APPFILENAMEFILTER;
 	char                szFileName[256];
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
+    OpenFileName.hwndOwner         = parent; 
     OpenFileName.hInstance         = hInstance ; 
     OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
     OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
@@ -2352,17 +2348,10 @@ char* suffix;
     OpenFileName.lCustData         = 0; 
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
  
-    if (GetOpenFileName (&OpenFileName)) 
-	   sprintf (docToOpen, "%s", OpenFileName.lpstrFile);
+    if (GetOpenFileName (&OpenFileName)) {
+	   strcpy (fileName, OpenFileName.lpstrFile);
+	}
 
-#if 0
-   hWnd = CreateWindow ("listbox", NULL, WS_CHILDWINDOW | WS_VISIBLE | LBS_STANDARD,
-			10, cyValue, 140, 100, parentCatalogue->Cat_Widget, (HMENU) 1, hInstance, NULL);
-   cyValue += 110;
-   sprintf (dirPath, "*%s", suffix);
-   /* sprintf (dirPath, "%s%c*.*", directory, DIR_SEP); */
-   SendMessage (hWnd, LB_DIR, 0x37, (LPARAM) suffix);
-#endif 
 }
 
 /*----------------------------------------------------------------------
