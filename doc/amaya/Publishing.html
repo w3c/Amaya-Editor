@@ -160,13 +160,14 @@ follows:</p>
         is not set, or that the proxy server and the <a
         href="http://www.w3.org/Amaya/User/Put.html">target server are
         configured to work with the PUT</a> method.</li>
-      <li><b>Amaya</b> does not currently contact the remote server (in case
-        of an "http://..." destination) to check whether such a document
-        already exists.</li>
+      <li><b>Amaya</b>
+         does not currently contact the remote server (in case of an
+        "http://..." destination) to check whether such a document already
+        exists.</li>
     </ul>
   </li>
   <li>Clicking on <strong>Browse</strong> lets you select a local directory
-    and file name:
+    and file name: 
     <ul>
       <li>The <strong>Document directories</strong> selector shows the
         directories contained in the current directory. It should be used to
@@ -177,8 +178,16 @@ follows:</p>
   </li>
   <li>Clicking on <strong>Clear</strong> removes current contents of both the
     Document location field and the Images location field.</li>
-  <li>Clicking on <strong>Change Charset</strong> ...</li>
-  <li>Clicking on <strong>Change Mime Type</strong> ...</li>
+  <li>Clicking on <strong>Change Charset</strong> will bring up a pop-up
+    window that will allow you to change the charset of the document. This
+    option will only work with documents that support the notion of charset,
+    such as HTML and XML ones. This option when saving both remote and local
+    documents..</li>
+  <li>Clicking on <strong>Change Mime Type</strong> will bring up a pop-up
+    window where you can select the MIME type of the document. If the MIME
+    type you're looking for is not proposed, you can type it in yourself.
+    This button is only active when saving a document to a server (local
+    filesystems don't store the MIME metadata information yet.).</li>
   <li>Clicking on <strong>Cancel</strong> aborts the command.</li>
 </ul>
 
@@ -189,7 +198,7 @@ displays a dialog box that allows you to save the current document in various
 formats. Clicking the <strong>Text</strong> button from the <strong>Document
 format</strong> menu saves the document in text form, in a local file. The
 HTML mark-up is replaced by spaces, newlines, etc. A list of all URIs used in
-the document is happended to that file. </p>
+the document is happended to that file.</p>
 </div>
 
 <p><a href="SpellChecking.html"><img alt="previous" src="../Icons/left.gif"

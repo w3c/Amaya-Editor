@@ -173,13 +173,14 @@ sont utilisés comme suit :</p>
         que le proxy http n'est pas mis, ou que le serveur proxy et le <a
         href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
         configurés pour travailler avec la méthode PUT</a>.</li>
-      <li><b>Amaya</b> ne contacte pas le serveur lointain (dans le cas d'une
-        destination "http://..." destination) pour contrôler si un tel
-        document existe déjà.</li>
+      <li><b>Amaya</b>
+         ne contacte pas le serveur lointain (dans le cas d'une destination
+        "http://..." destination) pour contrôler si un tel document existe
+        déjà.</li>
     </ul>
   </li>
   <li>En clicquant sur <strong>Butiner</strong> l'utilisateur peur choisir le
-    répertoire et le fichier de sauvegarde :
+    répertoire et le fichier de sauvegarde : 
     <ul>
       <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
         contenus dans le répertoire courant. Il devrait être utilisé pour
@@ -190,8 +191,17 @@ sont utilisés comme suit :</p>
   </li>
   <li>Le bouton <strong>RAZ</strong> annule le contenu des champs Adresse du
     document et Répertoire des images.</li>
-  <li>Le bouton <strong>Chager Charset</strong> ...</li>
-  <li>Le bouton <strong>Changer le type MIME</strong> ...</li>
+  <li>Le bouton <strong>Changer Charset</strong> permet de changer le charset
+    du document. En activant ce bouton, un dialogue apparaîtra dans l'écran
+    vous proposant une liste des charsets disponibles. Notez que cette option
+    n'est pas valable que pour les documents supportant la notion de charset,
+    tels que les fichiers HTML ou XML. Cette option est valable pour la
+    sauvegarde locale et distante d'un document.</li>
+  <li>Le bouton <strong>Changer le type MIME</strong> permet de changer le
+    type MIME d'un document lors d'une sauvegarde sur un serveur distant. En
+    activant ce bouton, un dialogue apparaîtra vous proposant un certain
+    nombre de types MIME. Vous pourrez également saisir un type MIME
+    diffèrent de ceux qui sont proposés..</li>
   <li>Le bouton <strong>Annuler</strong> avorte la commande.</li>
 </ul>
 
@@ -202,7 +212,7 @@ sont utilisés comme suit :</p>
 le document courant dans des formats différents.Le bouton
 <strong>Text</strong> du menu <strong>Format de document</strong> sauve le
 document sous forme de texte, dans un fichier local. Les balises HTML sont
-remplcacées par des espaces, sauts de lignes, etc. La liste de tous les URIs
+remplacées par des espaces, sauts de lignes, etc. La liste de tous les URIs
 utilisés dans le document est listées dans ce fichier.</p>
 </div>
 
