@@ -4310,8 +4310,7 @@ CHAR_T*             data;
        switch (val)
 	 {
 	 case 1:
-     case mAddId:
-       /* we need to memorize the document number... how to do that? */
+	   /* we need to memorize the document number... how to do that? */
 	   ChangeIDAttribute (IdElemName, 1, TRUE);
 	   break;
 	 case 2:
@@ -4965,7 +4964,7 @@ View                view;
   strcpy (&s[i], TEXT("Remove id"));
   TtaNewSheet (BaseDialog + MakeIdMenu,
 	       TtaGetViewFrame (document, view),
-	       TEXT("id handler menu"),
+	       TEXT("ID Handler menu"),
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
 		  BaseDialog + MakeIdMenu,
