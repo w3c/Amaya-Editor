@@ -132,15 +132,17 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   FILE               *file;
   PtrTabMsg           currenttable;
   PtrTabMsg           previoustable;
+  CHARSET             encoding;
   char                pBuffer[MAX_TXT_LEN];
   char                fileName[MAX_TXT_LEN];
-  char               *s;
+  char               *s, *lan, *ptr;
   unsigned char       pBuff[MAX_TXT_LEN];
   int                 origineid;
   int                 num;
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-  strcpy (fileName, TtaGetVarLANG ());
+  lan = TtaGetVarLANG ();
+  strcpy (fileName, lan);
   fileName[2] = '-';
   strcpy (&fileName[3], msgName);
   SearchFile (fileName, 2, pBuffer);
@@ -182,15 +184,44 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	{
 	  fscanf (file, "%500s\n]", pBuff);
 	  if (!strncasecmp (pBuff, "utf8", 4))
-	    DialogCharset = UTF_8;
+	    encoding = UTF_8;
 	  else
-	    DialogCharset = ISO_8859_1;
+	    encoding = ISO_8859_1;
 	}
       else
 	{
 	  fseek (file, 0L, 0);
-	  DialogCharset = ISO_8859_1;
+	  encoding = ISO_8859_1;
 	}
+
+      if (!strcmp (lan, "hu") || !strcmp (lan, "pl") || !strcmp (lan, "zh"))
+	/* Central Europe */
+#ifdef _WINDOWS
+	DialogCharset = WINDOWS_1250;
+#else /* _WINDOWS */
+	DialogCharset = ISO_8859_2;
+#endif /* _WINDOWS */
+      else if (!strcmp (lan, "fi"))
+	/* Baltic RIM */
+#ifdef _WINDOWS
+	DialogCharset = WINDOWS_1257;
+#else /* _WINDOWS */
+	DialogCharset = ISO_8859_4;
+#endif /* _WINDOWS */
+      else if (!strcmp (lan, "tr"))
+	/* Turkish */
+#ifdef _WINDOWS
+	DialogCharset = WINDOWS_1254;
+#else /* _WINDOWS */
+	DialogCharset = ISO_8859_9;
+#endif /* _WINDOWS */
+      else
+	/* Latin 1 */
+#ifdef _WINDOWS
+	DialogCharset = WINDOWS_1252;
+#else /* _WINDOWS */
+	DialogCharset = ISO_8859_1;
+#endif /* _WINDOWS */
 
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
@@ -198,7 +229,15 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	{
     	  s = TtaGetMemory (strlen (pBuff) + 1);
      	  strcpy (s, AsciiTranslate (pBuff));
-     	  currenttable->TabMessages[num] = s;
+	  if (encoding == UTF_8 && DialogCharset != UTF_8)
+	    {
+	      /* convert the string */
+	      ptr = TtaConvertMbsToByte (s, DialogCharset);
+	      currenttable->TabMessages[num] = ptr;
+	      TtaFreeMemory (s);
+	    }
+	  else
+	    currenttable->TabMessages[num] = s;
 	}
       fclose (file);
     }

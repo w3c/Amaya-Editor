@@ -554,7 +554,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	}
       /* convert the string if necessary */
       TtaFreeMemory (SString);
-      SString = TtaConvertByteToCHAR (pSearchedString, ISO_8859_1);
+      SString = TtaConvertByteToCHAR (pSearchedString, DialogCharset);
       SStringLen = ustrlen (SString);
       break;
     case NumZoneTextReplace:
