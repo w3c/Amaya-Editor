@@ -315,6 +315,9 @@ libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
 #    $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
 # fi)
 
+# Because redland 0.9.14 forces the check on a glib-2.0 function, we remove the
+# results of the configure to force its non use.
+
 redland_config: @MAKEREDLAND@ force
 	@(if test ! -e "$(THOTDIR)/../$(REDLAND)"  ; then \
 	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
@@ -337,6 +340,11 @@ redland_config: @MAKEREDLAND@ force
 			--without-openssl-digests \
 		        --cache-file=$$localdir/config.cache; \
 		$(ECHO) "redland is configured" ; \
+	        cd raptor ; \
+		echo "Patching the raptor_config.h file to avoid including glib2-0" ; \
+	        $(CP) raptor_config.h raptor_config.h.orig ; \
+	        $(SED) "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
+			raptor_config.h.orig > raptor_config.h ; \
 	  fi)
 
 
