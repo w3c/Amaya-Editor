@@ -605,7 +605,8 @@ Document            doc;
 					colVSpan[cRef] = colVSpan[cRef-1];
 					i++;
 				      }
-				  else if (i < span && hspan < MAX_COLS)
+				  else if (i < span && hspan < MAX_COLS &&
+					    colVSpan[cRef] == 0)
 				    {
 				      /* differs the management of the colspan */
 				      differredHSpan[hspan] = cell;
