@@ -31,7 +31,7 @@
 #define THOT_EXPORT
 #include "platform_tv.h"
 
-/* DEBUG_REGISTRY enable the Registry debug messages */
+/* #define DEBUG_REGISTRY enable the Registry debug messages */
 
 /*----------------------------------------------------------------------
    									
@@ -76,6 +76,7 @@ static int          AppRegistryInitialized = 0;
 static int          AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
 static char        *AppRegistryEntryAppli = NULL;
+static char         CurrentDir[MAX_PATH];
 
 static char        *Thot_Dir;
 
@@ -508,6 +509,10 @@ char               *name;
     */
    if (!strcasecmp("appname", name)) return(AppRegistryEntryAppli);
 
+   if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd"))) {
+       return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+   }
+
    /*
     * First lookup in the System defaults.
     */
@@ -630,10 +635,20 @@ static int          IsThotDir (const char *path)
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (TtaFileExist (filename))
+#ifdef DEBUG_REGISTRY
+   fprintf (stderr, "TtaFileExist (%s)\n", filename);
+#endif
+   if (TtaFileExist (filename)) {
+#ifdef DEBUG_REGISTRY
+      fprintf (stderr, "IsThotDir(%s) : True\n", path);
+#endif
       return (1);
-   else
+   } else {
+#ifdef DEBUG_REGISTRY
+      fprintf (stderr, "IsThotDir(%s) : False\n", path);
+#endif
       return (0);
+   }
 }
 
 #ifdef WWW_MSWINDOWS
@@ -924,7 +939,13 @@ char               *appArgv0;
    char               *dir_end;
    char               *appName;
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+#ifndef __CYGWIN32__
+   extern int _fmode;
+
+   _fmode = _O_BINARY;
+#endif
+#else /* ! _WINDOWS */
    struct stat         stat_buf;
 
 #endif /* _WINDOWS */

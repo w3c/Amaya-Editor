@@ -55,7 +55,11 @@ char               *filename;
    int                 filedes;
    struct stat         statinfo;
 
+#ifdef __CYGWIN32__
+   filedes = open (filename, 0 + O_BINARY);
+#else
    filedes = open (filename, 0);
+#endif
    if (filedes < 0)
       status = 0;
    else
@@ -483,7 +487,11 @@ ThotFileMode        mode;
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* WWW_MSWINDOWS */
+#ifdef __CYGWIN32__
+   ret = open (name, mode | O_BINARY, 0777);
+#else
    ret = open (name, mode, 0777);
+#endif
 #endif /* !WWW_MSWINDOWS */
    return ret;
 }
@@ -646,12 +654,20 @@ char               *targetFileName;
 
    if (strcmp (sourceFileName, targetFileName) != 0)
      {
+#ifdef __CYGWIN32__
+	if ((targetf = fopen (targetFileName, "wb")) == NULL)
+#else
 	if ((targetf = fopen (targetFileName, "w")) == NULL)
+#endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
+#ifdef __CYGWIN32__
+	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
+#else
 	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
+#endif
 	       {
 		  /* cannot read the source file */
 		  fclose (targetf);
@@ -695,9 +711,17 @@ char               *file2;
 
     if (file1 == NULL) return(FALSE);
     if (file2 == NULL) return(FALSE);
+#ifdef __CYGWIN32__
+    f1 = fopen(file1,"rb");
+#else
     f1 = fopen(file1,"r");
+#endif
     if (f1 == NULL) return(FALSE);
+#ifdef __CYGWIN32__
+    f2 = fopen(file2,"rb");
+#else
     f2 = fopen(file2,"r");
+#endif
     if (f2 == NULL) {
 	fclose(f1);
         return(FALSE);

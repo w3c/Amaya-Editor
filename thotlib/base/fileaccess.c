@@ -103,13 +103,13 @@ char      car;
    if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
-   };
+   }
    *sval |= ((((int) car) & LMASK) << DECAL_1);
  
    if (!TtaReadByte (file, &car)) {
       *sval = 0;
       return FALSE;
-   };
+   }
    *sval |= (((int) car) & LMASK);
 
    return TRUE;
@@ -239,7 +239,11 @@ char               *filename;
 
 #endif /* __STDC__ */
 {
+#ifdef __CYGWIN32__
+   return fopen (filename, "rb");
+#else
    return fopen (filename, "r");
+#endif
 }
 
 
@@ -270,7 +274,11 @@ char               *filename;
 
 #endif /* __STDC__ */
 {
+#ifdef __CYGWIN32__
+   return fopen (filename, "wb+");
+#else
    return fopen (filename, "w+");
+#endif
 }
 
 

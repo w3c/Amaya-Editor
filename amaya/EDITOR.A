@@ -4,10 +4,10 @@ USES
 	HTML, Lookup, NoStructSelect
 #ifdef AMAYA_PLUGIN
        , Plugin
-#endif /* AMAYA_PLUGIN */
+#endif
 #ifdef AMAYA_JAVA
        , Java
-#endif /* AMAYA_JAVA */
+#endif
        ;
 
 DEFAULT

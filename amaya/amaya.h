@@ -8,6 +8,7 @@
 #ifndef AMAYA_H
 #define AMAYA_H
 
+
 /* Thot interface */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -25,6 +26,7 @@
 #include "reference.h"
 #include "tree.h"
 #include "view.h"
+
 
 /* Included headerfiles */
 #include "EDITOR.h"
@@ -156,6 +158,10 @@ typedef enum _AHTReqStatus
      HT_ERR = 32          /* an error happened during the request */
   }
 AHTReqStatus;
+
+#ifdef _WINDOWS
+typedef int XtInputId;
+#endif 
 
 /* The structure used for requests */
 
@@ -316,5 +322,6 @@ THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 #define EOL     '\n'
 #define TAB     '\t'
 #define SPACE    ' '
+
 
 #endif /* AMAYA_H */

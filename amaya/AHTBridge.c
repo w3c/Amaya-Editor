@@ -275,7 +275,9 @@ XtInputId          *id;
 	   HTTrace ("Callback.... No callback found\n");
 	/* experimental */
 	/* remove the Xt input which caused this callback */
+#ifdef WWW_XWINDOWS
 	XtRemoveInput (*id);
+#endif
 	/* put some more code to correctly destroy this request ?*/
 	return (0);
      }

@@ -291,11 +291,11 @@ AHTReqContext      *me;
 
 	if (me->error_stream != (char *) NULL)
 	  HT_FREE (me->error_stream);
-	
+#ifdef WWW_XWINDOWS	
 	if (me->read_xtinput_id || me->write_xtinput_id ||
             me->except_xtinput_id)
           RequestKillAllXtevents(me);
-
+#endif
 	TtaFreeMemory ((void *) me);
 
 	Amaya->open_requests--;

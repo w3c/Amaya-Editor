@@ -1832,7 +1832,8 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-	strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya/");
+       /*	strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya/"); */
+	strcpy (LastURLName, "/users/guetari/test.html");
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else if (IsW3Path (s))
