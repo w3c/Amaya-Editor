@@ -233,7 +233,7 @@ AnnotMeta *annot;
   anchor = TtaNewElement (source_doc, elType);
   
   /*
-  ** insert the anchor 
+  ** insert the anchor in the document tree
   */
 
   firstElType = TtaGetElementType (first);
@@ -320,6 +320,11 @@ AnnotMeta *annot;
 	    /* we add it where it was declared, although we may
 	       not see it at all */
 	    TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
+      else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	{
+	  /* add it before the image */
+	  TtaInsertSibling (anchor, first, TRUE, source_doc);
 	}
       else 
 	{
