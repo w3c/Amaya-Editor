@@ -2343,6 +2343,7 @@ void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
 				int attr)
 {
   char           css_command[buflen+20];
+  int            i;
 
   switch (attr)
     {
@@ -2359,10 +2360,36 @@ void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
        sprintf (css_command, "font-size: %s", value);
        break;
     case MathML_ATTR_lspace:
-       sprintf (css_command, "padding-left: %s", value);
-       break;
     case MathML_ATTR_rspace:
-       sprintf (css_command, "padding-right: %s", value);
+       if (attr == MathML_ATTR_lspace)
+	 strcpy (css_command, "padding-left: ");
+       else
+	 strcpy (css_command, "padding-right: ");
+       /* is the value a named space? */
+       if (strcmp (value, "veryverythinmathspace") == 0)
+	 strcat (css_command, "0.0555556em");
+       else if (strcmp (value, "verythinmathspace") == 0)
+	 strcat (css_command, "0.111111em");
+       else if (strcmp (value, "thinmathspace") == 0)
+	 strcat (css_command, "0.166667em");
+       else if (strcmp (value, "mediummathspace") == 0)
+	 strcat (css_command, "0.222222em");
+       else if (strcmp (value, "thickmathspace") == 0)
+	 strcat (css_command, "0.277778em");
+       else if (strcmp (value, "verythickmathspace") == 0)
+	 strcat (css_command, "0.333333em");
+       else if (strcmp (value, "veryverythickmathspace") == 0)
+	 strcat (css_command, "0.388889em");
+       else
+	 {
+	   strcat (css_command, value);
+	   /* does the value contain an unit at the end? */
+	   i = strlen (value) - 1;
+	   if ((value[i] <= '9' && value[i] >= '0') ||
+	       value[i] == '.')
+	     /* it's just a number. Add the (implicit) unit: em */
+	     strcat (css_command, "em");
+	 }
        break;
     }
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
