@@ -2293,6 +2293,7 @@ void TtaAppendAnim (Element element, void *anim)
   ----------------------------------------------------------------------*/
 void *TtaCopyPath (void *void_src)
 {
+#ifdef _GL
   int npoints;
 
   AnimPath *pop_path = (AnimPath *) void_src;
@@ -2314,6 +2315,8 @@ void *TtaCopyPath (void *void_src)
   memcpy (new_path->Tangent_angle, pop_path->Tangent_angle, npoints * sizeof(float));
 
   return new_path;
+#endif _GL
+  return NULL;
 }
 /*----------------------------------------------------------------------
    TtaCopyAnim : Copy anim linked list 

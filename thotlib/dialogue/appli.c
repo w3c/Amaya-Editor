@@ -689,7 +689,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int            frame;
   Dimension   width, height;
-#ifdef _GL
+#ifdef IV
   int         forever = 0;
 #endif /* _GL */
  
