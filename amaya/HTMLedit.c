@@ -98,6 +98,7 @@ void                SetTargetContent (Document doc, Attribute attrNAME)
 void                LinkToPreviousTarget (Document doc, View view)
 {
    Element             el;
+   Attribute           attr;
    int                 firstSelectedChar, i;
 
    if (!TtaGetDocumentAccessMode (doc))
@@ -117,7 +118,7 @@ void                LinkToPreviousTarget (Document doc, View view)
    if (el != NULL)
      {
        /* Look if there is an enclosing anchor element */
-       el = SearchAnchor (doc, el, TRUE, TRUE);
+       el = SearchAnchor (doc, el, &attr, TRUE);
        if (el == NULL)
 	 {
 	   /* The link element is a new created one */
@@ -233,11 +234,13 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    if (isHTML)
      {
        attrType.AttrSSchema = HTMLSSchema;
-       if (elType.ElTypeNum == HTML_EL_Quotation ||
-	   elType.ElTypeNum == HTML_EL_Block_Quote ||
+       if (elType.ElTypeNum == HTML_EL_Block_Quote ||
+	   elType.ElTypeNum == HTML_EL_Quotation ||
 	   elType.ElTypeNum == HTML_EL_INS ||
 	   elType.ElTypeNum == HTML_EL_DEL)
 	 attrType.AttrTypeNum = HTML_ATTR_cite;
+       else if (elType.ElTypeNum == HTML_EL_FRAME)
+	 attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
        else
 	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
      }
@@ -800,14 +803,14 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 void                CreateAnchor (Document doc, View view, ThotBool createLink)
 {
   Element             first, last, el, next, parent;
-  Element             parag, prev, child, anchor;
+  Element             parag, prev, child, anchor, ancestor;
   SSchema             HTMLSSchema;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
   int                 c1, cN, lg, i;
-  ThotBool            noAnchor;
+  ThotBool            noAnchor, ok;
 
   parag = NULL;
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -827,7 +830,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
     {
       /* check whether the selection is within an anchor */
       if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-	el = SearchAnchor (doc, first, TRUE, TRUE);
+	el = SearchAnchor (doc, first, &attr, TRUE);
       else
 	el = NULL;
       if (el != NULL)
@@ -837,7 +840,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	{
 	  el = first;
 	  noAnchor = FALSE;
-	  
+
 	  while (!noAnchor && el != NULL)
 	    {
 	      elType = TtaGetElementType (el);
@@ -874,6 +877,8 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 		  elType.ElTypeNum != HTML_EL_Superscript &&
 		  elType.ElTypeNum != HTML_EL_Span &&
 		  elType.ElTypeNum != HTML_EL_BDO &&
+		  elType.ElTypeNum != HTML_EL_simple_ruby &&
+		  elType.ElTypeNum != HTML_EL_complex_ruby &&
 		  elType.ElTypeNum != HTML_EL_IFRAME )
 		noAnchor = TRUE;
 	      if (el == last)
@@ -916,12 +921,35 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	      return;
 	    }
 	  /* check if the anchor to be created is within an anchor element */
-	  else if (SearchAnchor (doc, first, TRUE, TRUE) != NULL ||
-		   SearchAnchor (doc, last, TRUE, TRUE) != NULL)
+	  else
 	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2),
-			    NULL);
-	      return;
+	      ok = TRUE;
+	      ancestor = SearchAnchor (doc, first, &attr, TRUE);
+	      if (ancestor)
+		{
+	          elType = TtaGetElementType (ancestor);
+		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")
+		      && elType.ElTypeNum == HTML_EL_Anchor)
+		    ok = FALSE;
+		}
+	      if (ok)
+		{
+		  ancestor = SearchAnchor (doc, last, &attr, TRUE);
+		  if (ancestor)
+		    {
+		      elType = TtaGetElementType (ancestor);
+		      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")
+			  && elType.ElTypeNum == HTML_EL_Anchor)
+			ok = FALSE;
+		    }
+		}
+	      if (!ok)
+		{
+		  TtaSetStatus (doc, 1,
+				TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2),
+				NULL);
+		  return;
+		}
 	    }
 
 	  /* stop displaying changes that will be made in the document */
@@ -2582,59 +2610,103 @@ void                SetOnOffBDO (Document document, View view)
    SetCharFontOrPhrase (document, HTML_EL_BDO);
 }
 
-
 /*----------------------------------------------------------------------
-  SearchAnchor return the enclosing Anchor element with:
-  - a HREF attribute if link is TRUE
-  - a NAME attribute if name is TRUE
+  SearchAnchor return the enclosing anchor element.
+  If name is true, take into account Anchor(HTML) elements with a name
+  attribute.
   ----------------------------------------------------------------------*/
-Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool name)
+Element    SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
+			 ThotBool name)
 {
    AttributeType       attrType;
    Attribute           attr;
    ElementType         elType;
-   Element             elAnchor;
-   int                 typeNum;
-   SSchema             HTMLschema;
+   Element             elAnchor, ancestor;
+   SSchema             XLinkSchema;
 
-   attr = NULL;
    elAnchor = NULL;
-   HTMLschema = TtaGetSSchema ("HTML", doc);
-   if (!HTMLschema)
-     return NULL;
-   elType = TtaGetElementType (element);
-   if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT &&
-       TtaSameSSchemas (elType.ElSSchema, HTMLschema))
-      /* search an ancestor of type AREA */
-      typeNum = HTML_EL_AREA;
-   else
-      /* search an ancestor of type Anchor */
-      typeNum = HTML_EL_Anchor;
-
-   if (elType.ElTypeNum == typeNum &&
-       TtaSameSSchemas (elType.ElSSchema, HTMLschema))
-      elAnchor = element;
-   else
+   *HrefAttr = NULL;
+   /* get the XLink SSchema for the document, if the document uses it */
+   XLinkSchema = TtaGetSSchema ("XLink", doc);
+   /* check the element and its ancestors */
+   ancestor = element;
+   do
      {
-	elType.ElTypeNum = typeNum;
-	elType.ElSSchema = HTMLschema;
-	elAnchor = TtaGetTypedAncestor (element, elType);
+       attr = NULL;
+       elType = TtaGetElementType (ancestor);
+       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	 /* the current element belongs to the HTML namespace */
+	 {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   if (name && elType.ElTypeNum == HTML_EL_Anchor)
+	     /* look for a name attribute */
+	     {
+	       attrType.AttrTypeNum = HTML_ATTR_NAME;
+	       attr = TtaGetAttribute (ancestor, attrType);
+	     }
+	   if (!attr)
+	     {
+	       if (elType.ElTypeNum == HTML_EL_LINK ||
+		   elType.ElTypeNum == HTML_EL_Anchor ||
+		   elType.ElTypeNum == HTML_EL_AREA)
+		 {
+		   /* look for a href attribute */
+		   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		   attr = TtaGetAttribute (ancestor, attrType);
+		 }
+	       else if (elType.ElTypeNum == HTML_EL_FRAME)
+		 {
+		   /* look for a src attribute */
+		   attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+		   attr = TtaGetAttribute (ancestor, attrType);
+		 }
+	       else if (elType.ElTypeNum == HTML_EL_Block_Quote ||
+			elType.ElTypeNum == HTML_EL_Quotation ||
+			elType.ElTypeNum == HTML_EL_INS ||
+			elType.ElTypeNum == HTML_EL_DEL)
+		 /* look for a cite attribute */
+		 {
+		   attrType.AttrTypeNum = HTML_ATTR_cite;
+		   attr = TtaGetAttribute (ancestor, attrType);
+		 }
+	     }
+	 }
+       else if (!attr &&
+		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	 /* the current element belongs to the SVG namespace */
+	 {
+	   if (elType.ElTypeNum == GraphML_EL_use_ ||
+	       elType.ElTypeNum == GraphML_EL_a)
+	     /* look for the corresponding href attribute */
+	     {
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	       attr = TtaGetAttribute (ancestor, attrType);
+	     }
+	 }
+       else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink"))
+	 {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = XLink_ATTR_href_;
+	   attr = TtaGetAttribute (ancestor, attrType);
+	 }
+       if (!attr && XLinkSchema)
+	 /* the document uses XLink. Check whether the current element has
+	    a xlink:href attribute */
+	 {
+	   attrType.AttrSSchema = XLinkSchema;
+	   attrType.AttrTypeNum = XLink_ATTR_href_;
+	   attr = TtaGetAttribute (ancestor, attrType);
+	 }
+       if (attr)
+	 {
+	   elAnchor = ancestor;
+	   *HrefAttr = attr;
+	 }
+       else
+	 ancestor = TtaGetParent (ancestor);
      }
-
-   attrType.AttrSSchema = HTMLschema;
-   if (link)
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-   else
-      attrType.AttrTypeNum = HTML_ATTR_NAME;
-   if (!link || !name)
-     while (elAnchor != NULL && attr == NULL)
-       {
-	 /* get the attribute of element Anchor */
-	 attr = TtaGetAttribute (elAnchor, attrType);
-	 if (attr == NULL)
-	   /* we are not looking for any anchor */
-	   elAnchor = TtaGetTypedAncestor (elAnchor, elType);
-       }
+   while (elAnchor == NULL && ancestor != NULL);
    return elAnchor;
 }
 

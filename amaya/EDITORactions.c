@@ -2029,6 +2029,7 @@ void                CreateIFrame (Document document, View view)
 void                CreateOrChangeLink (Document doc, View view)
 {
    Element             el;
+   Attribute           attr;
    int                 firstSelectedChar, i;
 
    if (!TtaGetDocumentAccessMode (doc))
@@ -2040,7 +2041,7 @@ void                CreateOrChangeLink (Document doc, View view)
    if (el != NULL)
      {
        /* Look if there is an enclosing anchor element */
-       el = SearchAnchor (doc, el, TRUE, TRUE);
+       el = SearchAnchor (doc, el, &attr, TRUE);
        if (el == NULL)
 	 {
 	   /* The link element is a new created one */

@@ -112,7 +112,7 @@ extern void SetOnOffBDO ( Document document,
                           View view );
 extern Element SearchAnchor ( Document doc,
                               Element element,
-                              ThotBool link,
+                              Attribute *HrefAttr,
                               ThotBool name );
 extern void UpdateAtom ( Document doc,
                          char *url,
@@ -227,7 +227,7 @@ extern void SetOnOffBDO (/* Document document,
                             View view */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
-                                ThotBool link,
+                                Attribute *HrefAttr,
                                 ThotBool name */);
 extern void UpdateAtom (/* Document doc,
                            char *url,

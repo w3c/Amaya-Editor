@@ -60,8 +60,8 @@ Element		HighlightElement = NULL;
 Attribute	HighLightAttribute = NULL;
 
 /* Some prototypes */
-static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc);
-
+static ThotBool     FollowTheLink (Element anchor, Element elSource,
+				   Attribute HrefAttr, Document doc);
 
 /* the structure used for the Forward and Backward buttons history callbacks */
 typedef struct _FollowTheLink_context {
@@ -489,7 +489,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   Document            doc;
   Element             anchor;
   AttributeType       attrType;
-  Attribute           PseudoAttr;
+  Attribute           PseudoAttr, HrefAttr;
   SSchema             docSchema; 
   View                view;
   FollowTheLink_context      *ctx = (FollowTheLink_context *) context;
@@ -553,7 +553,11 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
 	      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	    {
 	      /* the target is a HTML link element, follow this link */
-	      FollowTheLink (elFound, elSource, doc);
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	      HrefAttr = TtaGetAttribute (elFound, attrType);
+	      if (HrefAttr)
+		FollowTheLink (elFound, elSource, HrefAttr, doc);
 	      return;
 	    }
 	  else
@@ -625,10 +629,11 @@ ThotBool IsCSSLink (Element el, Document doc)
   double click on the elSource element.
   The parameter doc is the document that contains the origin element.
   ----------------------------------------------------------------------*/
-static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
+static ThotBool FollowTheLink (Element anchor, Element elSource,
+			       Attribute HrefAttr, Document doc)
 {
    AttributeType          attrType;
-   Attribute              HrefAttr, PseudoAttr, attr;
+   Attribute              PseudoAttr, attr;
    ElementType            elType;
    Document               targetDocument, reldoc;
    SSchema                HTMLSSchema;
@@ -639,18 +644,10 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
    int                    method;
    FollowTheLink_context *ctx;
    ThotBool		  isHTML, history;
-#ifdef ANNOTATIONS
-   ThotBool               isAnnotLink;
-#endif /* ANNOTATIONS */
 
-   if (anchor == NULL)
+   if (anchor == NULL || HrefAttr == NULL)
      return FALSE;
-
    info = NULL;
-   HrefAttr = NULL;
-#ifdef ANNOTATIONS
-   isAnnotLink = FALSE;
-#endif /* ANNOTATIONS */
    elType = TtaGetElementType (anchor);
    attrType.AttrTypeNum = 0;
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -658,172 +655,125 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
      isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
    else
      isHTML = FALSE;
-   /* search the HREF or CITE attribute */
-   if (isHTML &&
-       (elType.ElTypeNum == HTML_EL_Quotation ||
-	elType.ElTypeNum == HTML_EL_Block_Quote ||
-	elType.ElTypeNum == HTML_EL_INS ||
-	elType.ElTypeNum == HTML_EL_DEL))
-     {
-       attrType.AttrSSchema = HTMLSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_cite;
-     }
-   else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
-     {
-       attrType.AttrSSchema = HTMLSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-     }
-   else if (isHTML)
-     {
-       attrType.AttrSSchema = HTMLSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-     }
-   else if ((elType.ElTypeNum == GraphML_EL_a ||
-	     elType.ElTypeNum == GraphML_EL_use_) &&
-	    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-     /* it's an SVG anchor or use element, look for an xlink:href attr. */
-     {
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
-     }
-   if (attrType.AttrTypeNum)
-     HrefAttr = TtaGetAttribute (anchor, attrType);
-   if (!HrefAttr)
-     {
-       attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
-       attrType.AttrTypeNum = XLink_ATTR_href_;
-#ifdef ANNOTATIONS
-       /* is it an annotation link? */
-       if (elType.ElSSchema == attrType.AttrSSchema &&
-	   elType.ElTypeNum == XLink_EL_XLink)
-	 isAnnotLink = TRUE;
-#endif /* ANNOTATIONS */
-       if (attrType.AttrSSchema)
-	 HrefAttr = TtaGetAttribute (anchor, attrType);
-     }
 
-   if (HrefAttr != NULL)
+   targetDocument = 0;
+   PseudoAttr = NULL;
+   /* get a buffer for the target URL */
+   length = TtaGetTextAttributeLength (HrefAttr);
+   length++;
+   url = TtaGetMemory (length);
+   if (url != NULL)
      {
-       targetDocument = 0;
-       PseudoAttr = NULL;
-       /* get a buffer for the target URL */
-       length = TtaGetTextAttributeLength (HrefAttr);
-       length++;
-       url = TtaGetMemory (length);
-       if (url != NULL)
+       elType = TtaGetElementType (anchor);
+       if (isHTML && elType.ElTypeNum == HTML_EL_Anchor)
 	 {
-	   elType = TtaGetElementType (anchor);
-	   if (isHTML && elType.ElTypeNum == HTML_EL_Anchor)
+	   /* it's an HTML anchor */
+	   /* attach an attribute PseudoClass = active */
+	   attrType.AttrSSchema = HTMLSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+	   PseudoAttr = TtaGetAttribute (anchor, attrType);
+	   if (PseudoAttr == NULL)
 	     {
-	       /* it's an HTML anchor */
-	       /* attach an attribute PseudoClass = active */
-	       attrType.AttrSSchema = HTMLSSchema;
-	       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-	       PseudoAttr = TtaGetAttribute (anchor, attrType);
-	       if (PseudoAttr == NULL)
-		 {
-		   PseudoAttr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (anchor, PseudoAttr, doc);
-		 }
-	       TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
+	       PseudoAttr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (anchor, PseudoAttr, doc);
 	     }
-	   /* get the URL itself */
-	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
-	   /* suppress white spaces at the end */
-	   length--;
-	   while (url[length] == ' ')
-	     url[length--] = EOS;
-	   /* save the complete URL of the source document */
-	   length = strlen (DocumentURLs[doc])+1;
-	   sourceDocUrl = TtaGetMemory (length);
-	   strcpy (sourceDocUrl, DocumentURLs[doc]);
-	   /* save the context */
-	   ctx = TtaGetMemory (sizeof (FollowTheLink_context));
-	   ctx->anchor = anchor;
-	   ctx->doc = doc;
-	   ctx->url = url;
-	   ctx->elSource = elSource;
-	   ctx->sourceDocUrl = sourceDocUrl;
-	   TtaSetSelectionMode (TRUE);
-	   if (url[0] == '#')
+	   TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
+	 }
+       /* get the URL itself */
+       TtaGiveTextAttributeValue (HrefAttr, url, &length);
+       /* suppress white spaces at the end */
+       length--;
+       while (url[length] == ' ')
+	 url[length--] = EOS;
+       /* save the complete URL of the source document */
+       length = strlen (DocumentURLs[doc])+1;
+       sourceDocUrl = TtaGetMemory (length);
+       strcpy (sourceDocUrl, DocumentURLs[doc]);
+       /* save the context */
+       ctx = TtaGetMemory (sizeof (FollowTheLink_context));
+       ctx->anchor = anchor;
+       ctx->doc = doc;
+       ctx->url = url;
+       ctx->elSource = elSource;
+       ctx->sourceDocUrl = sourceDocUrl;
+       TtaSetSelectionMode (TRUE);
+       if (url[0] == '#')
+	 {
+	   /* the target element is part of the same document */
+	   targetDocument = doc;
+	   /* manually invoke the callback */
+	   FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
+				   (void *) ctx);
+	   /*
+	     if (PseudoAttr != NULL)
+	     TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	   */
+	   
+	 }
+       else
+	 /* the target element seems to be in another document */
+	 {
+	   strncpy (documentURL, url, MAX_LENGTH - 1);
+	   documentURL[MAX_LENGTH - 1] = EOS;
+	   url[0] = EOS;
+	   /* is the source element an image map? */
+	   if (HTMLSSchema)
 	     {
-	       /* the target element is part of the same document */
-	       targetDocument = doc;
-	       /* manually invoke the callback */
-	       FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
-				       (void *) ctx);
-	       /*
-		 if (PseudoAttr != NULL)
-		 TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	       */
-	       
+	       attrType.AttrSSchema = HTMLSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+	       attr = TtaGetAttribute (elSource, attrType);
+	       if (attr != NULL)
+		 /* it's an image map */
+		 {
+		   info = GetActiveImageInfo (doc, elSource);
+		   if (info != NULL)
+		     {
+		       /* @@ what do we do with the precedent parameters?*/
+		       strcat (documentURL, info);
+		       TtaFreeMemory (info);
+		     }
+		 }
+	     }
+	   /* interrupt current transfer */
+	   StopTransfer (doc, 1);	   
+	   /* get the referred document */
+#ifdef ANNOTATIONS
+	   /* is it an annotation link? */
+	   if (elType.ElSSchema == attrType.AttrSSchema &&
+	       elType.ElTypeNum == XLink_EL_XLink)
+	     {
+	       /* loading an annotation */
+	       reldoc = 0;
+	       method = CE_ANNOT;
+	       history = FALSE;
 	     }
 	   else
-	     /* the target element seems to be in another document */
-	     {
-	       strncpy (documentURL, url, MAX_LENGTH - 1);
-	       documentURL[MAX_LENGTH - 1] = EOS;
-	       url[0] = EOS;
-	       /* is the source element an image map? */
-	       if (HTMLSSchema)
-		 {
-		   attrType.AttrSSchema = HTMLSSchema;
-		   attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-		   attr = TtaGetAttribute (elSource, attrType);
-		   if (attr != NULL)
-		     /* it's an image map */
-		     {
-		       info = GetActiveImageInfo (doc, elSource);
-		       if (info != NULL)
-			 {
-			   /* @@ what do we do with the precedent parameters?*/
-			   strcat (documentURL, info);
-			   TtaFreeMemory (info);
-			 }
-		     }
-		 }
-	       /* interrupt current transfer */
-	       StopTransfer (doc, 1);	   
-	       /* get the referred document */
-#ifdef ANNOTATIONS
-	       if (isAnnotLink)
-		 {
-		   /* loading an annotation */
-		   reldoc = 0;
-		   method = CE_ANNOT;
-		   history = FALSE;
-		 }
-	       else
 #endif /* ANNOTATIONS */
+	     {
+	       reldoc = doc;
+	       method = CE_RELATIVE;
+	       history = TRUE;
+	       if (isHTML && elType.ElTypeNum == HTML_EL_LINK &&
+		   IsCSSLink (anchor, doc))
 		 {
-		   reldoc = doc;
-		   method = CE_RELATIVE;
-		   history = TRUE;
-		   if (isHTML && elType.ElTypeNum == HTML_EL_LINK &&
-		       IsCSSLink (anchor, doc))
-		     {
-		       /* opening a CSS */
-		       reldoc = 0;
-		       method = CE_CSS;
-		       history = FALSE;
-		       /* normalize the URL */
-		       strcpy (buffer, documentURL);
-		       NormalizeURL (buffer, doc, documentURL,
-				     documentname, NULL);
-		     }
+		   /* opening a CSS */
+		   reldoc = 0;
+		   method = CE_CSS;
+		   history = FALSE;
+		   /* normalize the URL */
+		   strcpy (buffer, documentURL);
+		   NormalizeURL (buffer, doc, documentURL, documentname, NULL);
 		 }
-	       if (method != CE_RELATIVE || InNewWindow ||
-		   CanReplaceCurrentDocument (doc, 1))
-		 /* Load the new document */
-		 targetDocument = GetHTMLDocument (documentURL, NULL,
-						   reldoc, 
-						   doc, 
-						   method, history, 
-						   (void *) FollowTheLink_callback,
-						   (void *) ctx);
 	     }
-	   return (TRUE);
+	   if (method != CE_RELATIVE || InNewWindow ||
+	       CanReplaceCurrentDocument (doc, 1))
+	     /* Load the new document */
+	     targetDocument = GetHTMLDocument (documentURL, NULL, reldoc, doc, 
+					       method, history, 
+					       (void *) FollowTheLink_callback,
+					       (void *) ctx);
 	 }
+       return (TRUE);
      }
    return (FALSE);
 }
@@ -865,7 +815,7 @@ static void DblClickOnButton (Element element, Document document)
 static ThotBool ActivateElement (Element element, Document document)
 {
    AttributeType       attrType;
-   Attribute           attr;
+   Attribute           attr, HrefAttr;
    Element             anchor, elFound, ancestor;
    ElementType         elType, elType1;
    SSchema             HTMLschema, SvgSchema, XLinkSchema;
@@ -898,6 +848,13 @@ static ThotBool ActivateElement (Element element, Document document)
      ok = TRUE;
    else if (isHTML &&
 	    (elType.ElTypeNum == HTML_EL_LINK ||
+	     elType.ElTypeNum == HTML_EL_Anchor ||
+	     elType.ElTypeNum == HTML_EL_AREA ||
+	     elType.ElTypeNum == HTML_EL_FRAME ||
+	     elType.ElTypeNum == HTML_EL_Block_Quote ||
+	     elType.ElTypeNum == HTML_EL_Quotation ||
+	     elType.ElTypeNum == HTML_EL_INS ||
+	     elType.ElTypeNum == HTML_EL_DEL ||
 	     elType.ElTypeNum == HTML_EL_C_Empty ||
 	     elType.ElTypeNum == HTML_EL_Radio_Input ||
 	     elType.ElTypeNum == HTML_EL_Checkbox_Input ||
@@ -906,9 +863,7 @@ static ThotBool ActivateElement (Element element, Document document)
 	     elType.ElTypeNum == HTML_EL_Submit_Input ||
 	     elType.ElTypeNum == HTML_EL_Reset_Input ||
 	     elType.ElTypeNum == HTML_EL_BUTTON_ ||
-	     elType.ElTypeNum == HTML_EL_File_Input ||
-	     elType.ElTypeNum == HTML_EL_FRAME ||
-	     elType.ElTypeNum == HTML_EL_Anchor))
+	     elType.ElTypeNum == HTML_EL_File_Input))
      ok = TRUE;
    else if (isXLink)
      ok = TRUE;
@@ -937,7 +892,7 @@ static ThotBool ActivateElement (Element element, Document document)
 	    elType1.ElTypeNum == HTML_EL_Reset_Input)
 	   /* it 's a double click on a submit or reset button */
 	   {
-	     /* interrupt current transfer */
+	     /* interrupt current transfer and submit the corresponding form */
 	     StopTransfer (document, 1);	   
 	     SubmitForm (document, element);
 	   }
@@ -1015,226 +970,29 @@ static ThotBool ActivateElement (Element element, Document document)
      }
 
    /* Search the anchor or LINK element */
-   if (!isXLink)
-     {
-       anchor = SearchAnchor (document, element, TRUE, FALSE);
-       if (!anchor)
-	 {
-	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
-			  elType.ElTypeNum == HTML_EL_FRAME))
-	     anchor = element;
-	   else if (isSVG && (elType.ElTypeNum == GraphML_EL_use_ ||
-			      elType.ElTypeNum == GraphML_EL_a))
-	     anchor = element;
-	   else if (HTMLschema)
-	     {
-	       elType1.ElTypeNum = HTML_EL_LINK;
-	       elType1.ElSSchema = HTMLschema;
-	       anchor = TtaGetTypedAncestor (element, elType1);
-	     }
-	   if (!anchor)
-	     {
-	       /* look for an enclosing SVG anchor */
-	       SvgSchema =  TtaGetSSchema ("GraphML", document);
-	       if (SvgSchema)
-		 {
-		   elType1.ElTypeNum = GraphML_EL_a;
-	           elType1.ElSSchema = SvgSchema;
-	           anchor = TtaGetTypedAncestor (element, elType1);
-		   if (!anchor)
-		     {
-		       elType1.ElTypeNum = GraphML_EL_use_;
-		       anchor = TtaGetTypedAncestor (element, elType1);
-		     }
-		 }
-	     }
-	 }
-     }
+   anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
+
+   if (anchor && HrefAttr)
+     return (FollowTheLink (anchor, element, HrefAttr, document));
    else
-     anchor = NULL;
-
-   /* if not found, search a cite or href attribute (from HTML or XLink
-      namespaces) on an ancestor */
-   if (anchor == NULL)
-      {
-	ancestor = element;
-        XLinkSchema = TtaGetSSchema ("XLink", document);
-	do
-	   {
-	     attr = NULL;
-	     if (HTMLschema)
-	       {
-		 attrType.AttrSSchema = HTMLschema;
-		 attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		 attr = TtaGetAttribute (ancestor, attrType);
-		 if (!attr)
-		   {
-		     attrType.AttrTypeNum = HTML_ATTR_cite;
-		     attr = TtaGetAttribute (ancestor, attrType);
-		   }
-	       }
-	     if (!attr)
-	       {
-		 attrType.AttrSSchema = XLinkSchema;
-		 attrType.AttrTypeNum = XLink_ATTR_href_;
-		 attr = TtaGetAttribute (ancestor, attrType);
-	       }
-	     if (attr)
-	       anchor = ancestor;
-	     else
-	       ancestor = TtaGetParent (ancestor);
-	   }
-	while (anchor == NULL && ancestor != NULL);
-      }
-
-   return (FollowTheLink (anchor, element, document));
+     return FALSE;
 }
 
 /*----------------------------------------------------------------------
-  DisplayUrlAnchor displays the url when an anchor is selectionned
+  DisplayUrlAnchor displays the url when an anchor is selected
   ----------------------------------------------------------------------*/
 static void DisplayUrlAnchor (Element element, Document document)
 {
-   AttributeType       attrType;
-   Attribute           HrefAttr = NULL;
-   Element             anchor, ancestor;
-   ElementType         elType, elType1;
-   SSchema             HTMLschema, XLinkSchema, SVGschema;
-   ThotBool	       ok, isHTML, isXLink;
-   char               *url, *pathname, *documentname;
+   Attribute           HrefAttr;
+   Element             anchor;
+   char                *url, *pathname, *documentname;
    int                 length;
 
-   elType = TtaGetElementType (element);
-   HTMLschema = TtaGetSSchema ("HTML", document);
-   if (HTMLschema)
-     isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
-   else
-     isHTML = FALSE;
-   isXLink = FALSE;
-   if (!isHTML)
-     {
-       XLinkSchema = TtaGetSSchema ("XLink", document);
-       if (XLinkSchema)
-	 isXLink = TtaSameSSchemas (elType.ElSSchema, XLinkSchema);
-     }
-    
-   /* Check if the current element is interested in display url */
-   ok = FALSE;
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
-       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
-     /* it's a basic element. It is interested whatever its namespace */
-     ok = TRUE;
-   else if (isHTML &&
-	    (elType.ElTypeNum == HTML_EL_LINK ||
-	     elType.ElTypeNum == HTML_EL_FRAME ||
-	     elType.ElTypeNum == HTML_EL_Anchor))
-     ok = TRUE;
-   else if (isXLink)
-     ok = TRUE;
-   
-   /* Search an HTML anchor or LINK element (from the HTML namespace) */
-   if (!isXLink)
-     {
-       anchor = SearchAnchor (document, element, TRUE, FALSE);
-       if (anchor == NULL)
-	 {
-	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
-			  elType.ElTypeNum == HTML_EL_FRAME))
-	     anchor = element;
-	   else if (HTMLschema)
-	     {
-	       elType1.ElTypeNum = HTML_EL_LINK;
-	       elType1.ElSSchema = HTMLschema;
-	       anchor = TtaGetTypedAncestor (element, elType1);
-	     }
-	 }
-     }
-   else
-     anchor = NULL;
-   
-   /* if not found, search a cite or href attribute (from HTML, XLink
-      namespaces) on an ancestor */
-   if (anchor == NULL)
-     {
-       ancestor = element;
-       XLinkSchema = TtaGetSSchema ("XLink", document);
-       SVGschema = TtaGetSSchema ("GraphML", document);
-       do
-	 {
-	   HrefAttr = NULL;
-	   if (HTMLschema)
-	     {
-	       attrType.AttrSSchema = HTMLschema;
-	       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	       HrefAttr = TtaGetAttribute (ancestor, attrType);
-	       if (!HrefAttr)
-		 {
-		   attrType.AttrTypeNum = HTML_ATTR_cite;
-		   HrefAttr = TtaGetAttribute (ancestor, attrType);
-		 }
-	     }
-	   if (!HrefAttr && XLinkSchema)
-	     {
-	       attrType.AttrSSchema = XLinkSchema;
-	       attrType.AttrTypeNum = XLink_ATTR_href_;
-	       HrefAttr = TtaGetAttribute (ancestor, attrType);
-	     }
-	   if (!HrefAttr && SVGschema)
-	     {
-	       attrType.AttrSSchema = SVGschema;
-	       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
-	       HrefAttr = TtaGetAttribute (ancestor, attrType);
-	     }
-	   if (HrefAttr)
-	     anchor = ancestor;
-	   else
-	     ancestor = TtaGetParent (ancestor);
-	 }
-       while (anchor == NULL && ancestor != NULL);
-     }
+   /* Search an ancestor that acts as a link anchor */
+   HrefAttr = NULL;
+   anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
 
-   /* Search the HREF attribute */
-   if (anchor != NULL && HrefAttr == NULL)
-     {
-       elType = TtaGetElementType (anchor);
-       if (HTMLschema)
-	 {
-	   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
-	   if (isHTML)
-	     /* search the HREF or CITE attribute */
-	     {
-	       if (elType.ElTypeNum == HTML_EL_Quotation ||
-		   elType.ElTypeNum == HTML_EL_Block_Quote ||
-		   elType.ElTypeNum == HTML_EL_INS ||
-		   elType.ElTypeNum == HTML_EL_DEL)
-		 {
-		   attrType.AttrSSchema = HTMLschema;
-		   attrType.AttrTypeNum = HTML_ATTR_cite;
-		 }
-	       else if (elType.ElTypeNum == HTML_EL_FRAME)
-		 {
-		   attrType.AttrSSchema = HTMLschema;
-		   attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-		 }
-	       else
-		 {
-		   attrType.AttrSSchema = HTMLschema;
-		   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		 }
-	     }
-	   HrefAttr = TtaGetAttribute (anchor, attrType);
-	 }
-       else
-	 {
-	   attrType.AttrSSchema = TtaGetSSchema ("XLink", document);
-	   attrType.AttrTypeNum = XLink_ATTR_href_;
-	   HrefAttr = TtaGetAttribute (anchor, attrType);
-	 }
-     }
-
-   if (HrefAttr != NULL)
+   if (anchor && HrefAttr)
      {
        /* Get a buffer for the target URL */
        length = TtaGetTextAttributeLength (HrefAttr);
@@ -1242,7 +1000,7 @@ static void DisplayUrlAnchor (Element element, Document document)
        url = TtaGetMemory (length);
        if (url != NULL)
 	 {
-	   /* Get the URL itself */
+	   /* Get the URL */
 	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
 	   pathname = TtaGetMemory (MAX_LENGTH);
 	   documentname = TtaGetMemory (MAX_LENGTH);
@@ -1252,8 +1010,8 @@ static void DisplayUrlAnchor (Element element, Document document)
 	       strcat (pathname, url);
 	     }
 	   else
-	       /* Normalize the URL */
-	       NormalizeURL (url, document, pathname, documentname, NULL);
+	     /* Normalize the URL */
+	     NormalizeURL (url, document, pathname, documentname, NULL);
 
 	   /* Display the URL in the status line */
 	   TtaSetStatus (document, 1, pathname, NULL);
