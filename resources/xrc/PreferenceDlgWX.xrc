@@ -10,9 +10,215 @@
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <object class="notebookpage">
             <label>GENERAL</label>
-            <object class="wxPanel" name="wxID_PAGE_GENERAL"/>
+            <object class="wxPanel" name="wxID_PAGE_GENERAL">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_HOMEPAGE">
+                        <label>Page de demarrage</label>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_COMBOBOX_HOMEPAGE">
+                        <content/>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_CHARMENUSIZE">
+                            <label>Taille caracteres des menus</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxSpinCtrl" name="wxID_CHARMENUSIZE_VALUE">
+                                <min>8</min>
+                                <max>20</max>
+                              </object>
+                              <option>1</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxStaticText" name="wxID_LABEL_CHARMENUSIZE_RANGE">
+                                <label>(8..20)</label>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                            </object>
+                          </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>1</option>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_CHARZOOM">
+                            <label>Zoom caracteres</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxTextCtrl" name="wxID_CHARZOOM_VALUE">
+                                <style></style>
+                              </object>
+                              <option>1</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxStaticText" name="wxID_LABEL_CHARZOOM_RANGE">
+                                <label>(10..1000)</label>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                            </object>
+                          </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>1</option>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_LG">
+                        <label>Langue des dialogues</label>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxChoice" name="wxID_CHOICE_LG">
+                        <content>
+                          <item>fr</item>
+                          <item>en</item>
+                        </content>
+                        <selection>0</selection>
+                      </object>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_CCLINE">
+                            <label>Activer le coller ligne a ligne</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_BACKUP">
+                            <label>Produire des fichiers de sauvegarde</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_SAVEGEO">
+                            <label>Sauver la geometrie en quittant</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_SHOWBUTTONS">
+                            <label>Montrer boutons</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_SHOWADDR">
+                            <label>Montrer adresse</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_SHOWTARGETS">
+                            <label>Montrer les cibles</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_NBSECTIONS">
+                            <label>Numeroter les sections</label>
+                          </object>
+                        </object>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxRadioBox" name="wxID_RADIO_QUICKAXX">
+                        <label>Acces rapides</label>
+                        <content>
+                          <item>Alt</item>
+                          <item>Ctrl</item>
+                          <item>Ignorer</item>
+                        </content>
+                        <dimension>3</dimension>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+              </object>
+            </object>
+            <selected>1</selected>
           </object>
-          <size>500,200</size>
+          <usenotebooksizer>1</usenotebooksizer>
+          <style>wxNB_FIXEDWIDTH</style>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
