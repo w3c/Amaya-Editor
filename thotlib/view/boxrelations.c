@@ -1756,6 +1756,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
+if (horizRef && pBox->BxType == BoTable)
+  printf ("ComputeDimRelation\n");
+
   /* Check the box visibility */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {

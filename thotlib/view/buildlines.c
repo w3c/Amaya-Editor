@@ -472,7 +472,8 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
 		boxes[max++] = pBox;
-		pBox->BxSpaceWidth = 0;
+		if (pBox->BxAbstractBox->AbLeafType == LtText)
+		  pBox->BxSpaceWidth = 0;
 	      }
 	  }
 	if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
@@ -1710,8 +1711,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 		(pAb->AbWidth.DimUnit == UnPercent ||
 		 (pAbRef &&
 		  (pAbRef == pBlock->BxAbstractBox ||
-		   pAbRef->AbBox->BxType == BoGhost/* ||
-		   pAbRef->AbBox->BxType == BoFloatGhost*/))))));
+		   pAbRef->AbBox->BxType == BoGhost))))));
   if (!variable && pBox && pAb &&
       pBlock->BxType == BoFloatBlock && pBox->BxType == BoBlock &&
       pAbRef == NULL && pAb->AbWidth.DimValue == -1)
@@ -2115,40 +2115,32 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* just to be sure the line structure is coherent */
 	      pLine->LiLastBox = pLine->LiFirstBox;
-#ifndef IV
-	      if (extensibleBlock)
+	      if (!extensibleBlock)
 		{
-		  if (pBlock->BxAbstractBox->AbEnclosing &&
-		      pBlock->BxAbstractBox->AbEnclosing->AbBox &&
-		      pBlock->BxAbstractBox->AbEnclosing->AbBox->BxW)
-		    val = pBlock->BxAbstractBox->AbEnclosing->AbBox->BxW;
+		  if (pNextBox->BxAbstractBox->AbFloat == 'N')
+		    val = pLine->LiXMax;
 		  else
-		    val = xi;
+		    val = pBlock->BxW;
+		  if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+		    val = val * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
+		  else if ((pNextBox->BxType == BoBlock ||
+			    pNextBox->BxType == BoFloatBlock) &&
+			   pNextBox->BxAbstractBox->AbDisplay == 'I' &&
+			   pNextBox->BxMaxWidth < val)
+		    {
+		      /* use the max between the enclosed and the enclosing widths */
+		      pNextBox->BxContentWidth = TRUE;
+		      val =  pNextBox->BxMaxWidth;
+		    }
+		  else
+		    pNextBox->BxContentWidth = FALSE;
+		  ResizeWidth (pNextBox, pBlock, NULL,
+			       val - pNextBox->BxWidth, 0, 0, 0, frame);
+		  /* recheck the line */
+		  //InitLine (pLine, pBlock, frame, indent,
+		  //    *floatL, *floatR, pNextBox,
+		  //	top, bottom, left, right, xAbs, yAbs);
 		}
-	      else
-#endif
-	      if (pNextBox->BxAbstractBox->AbFloat == 'N')
-		val = pLine->LiXMax;
-	      else
-		val = pBlock->BxW;
-	      if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-		val = val * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
-	      else if ((pNextBox->BxType == BoBlock ||
-		       pNextBox->BxType == BoFloatBlock) &&
-		        pNextBox->BxAbstractBox->AbDisplay == 'I' &&
-		       pNextBox->BxMaxWidth < val)
-		{
-		  /* use the max between the enclosed and the enclosing widths */
-		  pNextBox->BxContentWidth = TRUE;
-		  val =  pNextBox->BxMaxWidth;
-		}
-	      else
-		pNextBox->BxContentWidth = FALSE;
-	      ResizeWidth (pNextBox, pBlock, NULL,
-			   val - pNextBox->BxWidth, 0, 0, 0, frame);
-	      /* recheck if the line could be moved under floating boxes */
-	      InitLine (pLine, pBlock, frame, indent, *floatL, *floatR, pNextBox,
-			top, bottom, left, right, xAbs, yAbs);
 	    }
 	}
 
@@ -2649,7 +2641,9 @@ static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
    int                 l;
 
    /* Box justifiee -> met a jour sa largeur et les marques */
-   if (pBox->BxSpaceWidth && !pBox->BxAbstractBox->AbDead)
+   if (!pBox->BxAbstractBox->AbDead &&
+       pBox->BxAbstractBox->AbLeafType == LtText &&
+       pBox->BxSpaceWidth)
      {
 	/* blanc justifie - blanc de la police */
 	x = pBox->BxSpaceWidth - spaceWidth;
@@ -3854,7 +3848,8 @@ static void CompressLine (PtrLine pLine, PtrAbstractBox pAb, int xDelta,
 	if (!pBox->BxAbstractBox->AbNotInLine)
 	  {
 	    XMove (box, NULL, limit - box->BxXOrg, frame);
-	    if (box->BxAbstractBox->AbLeafType == LtText && box->BxNChars != 0)
+	    if (box->BxAbstractBox->AbLeafType == LtText &&
+		box->BxNChars != 0)
 	      {
 		diff = box->BxNSpaces * spaceValue;
 		box->BxW -= diff;

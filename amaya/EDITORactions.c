@@ -1876,7 +1876,7 @@ void CreateAddress (Document document, View view)
 void DoTableCreation (Document document)
 {
   ElementType         elType;
-  Element             el, new_, caption, cell, row;
+  Element             el, new_, cell, row;
   AttributeType       attrType;
   Attribute           attr;
   int                 firstChar, i;
@@ -1888,10 +1888,10 @@ void DoTableCreation (Document document)
   elType.ElTypeNum = HTML_EL_Table_;
   TtaCreateElement (elType, document);
   TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-  elType.ElTypeNum = HTML_EL_CAPTION;
-  caption = TtaNewTree (document, elType, "");
-  TtaInsertFirstChild (&caption, el, document);
-  TtaSelectElement (document, TtaGetFirstLeaf (caption));
+  //elType.ElTypeNum = HTML_EL_CAPTION;
+  //caption = TtaNewTree (document, elType, "");
+  //TtaInsertFirstChild (&caption, el, document);
+  //TtaSelectElement (document, TtaGetFirstLeaf (caption));
   /* close the undo sequence if it's still open */
   TtaCloseUndoSequence (document);
   if (el != NULL)
@@ -1943,6 +1943,7 @@ void DoTableCreation (Document document)
       else
 	/* replace the cell element by a data cell */
 	TtaChangeTypeOfElement (cell, document, HTML_EL_Data_cell);
+      TtaSelectElement (document, TtaGetFirstLeaf (cell));
       
       while (NumberCols > 1)
 	{
