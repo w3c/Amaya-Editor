@@ -61,7 +61,6 @@ static char*       Patterns_PS[] =
 /* Handling of loaded fonts */
 extern PtrFont      PostscriptFont;
 extern int          ColorPs;
-extern int          LastPageNumber, LastPageWidth, LastPageHeight;
 static char        *Scale = NULL;
 int                 X, Y;
 static int          SameBox = 0; /* 1 if the text is in the same box */
@@ -2095,37 +2094,6 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l,
    else
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       x, -y, xf, -yf, style, thick, 2);
-}
-
-
-/*----------------------------------------------------------------------
-   StorePageInfo store the page number, width and height of the page,
-   used later by DrawPage.
-  ----------------------------------------------------------------------*/
-void StorePageInfo (int pagenum, int width, int height)
-{
-   LastPageNumber = pagenum;
-   LastPageWidth = width;
-   LastPageHeight = height;
-}
-
-
-/*----------------------------------------------------------------------
-   psBoundingBox output the %%BoundingBox macro for Postscript.
-  ----------------------------------------------------------------------*/
-void psBoundingBox (int frame, int width, int height)
-{
-   FILE               *fout;
-
-   fout = (FILE *) FrRef[frame];
-   /* Since the origin of Postscript coordinates is the lower-left    */
-   /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
-   /* = 841 pts) and that Thot adds a 50 pts margin on top and height */
-   /* of the output image, here is the correct values :               */
-
-   fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
-	    50, 791 - height,
-	    50 + width, 791);
 }
 
 

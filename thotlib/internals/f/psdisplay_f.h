@@ -305,12 +305,6 @@ extern void DrawSlash ( int frame,
                         int h,
                         int direction,
                         int fg );
-extern void StorePageInfo ( int pagenum,
-                            int width,
-                            int height );
-extern void psBoundingBox ( int frame,
-                            int width,
-                            int height );
 extern void PaintWithPattern ( int frame,
                                int x,
                                int y,
@@ -622,12 +616,6 @@ extern void DrawSlash (/* int frame,
                           int h,
                           int direction,
                           int fg */);
-extern void StorePageInfo (/* int pagenum,
-                              int width,
-                              int height */);
-extern void psBoundingBox (/* int frame,
-                              int width,
-                              int height */);
 extern void PaintWithPattern (/* int frame,
                                  int x,
                                  int y,

@@ -34,7 +34,6 @@
 extern ThotColorStruct cblack;
 extern int             ColorPs;
 extern BOOL            autoScroll;
-extern int             LastPageNumber, LastPageWidth, LastPageHeight;
 
 int                    X, Y;
 
@@ -2569,25 +2568,6 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
   ----------------------------------------------------------------------*/
 void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 		      int width, int height, int fg, int bg, int pattern)
-{
-}
-
-/*----------------------------------------------------------------------
-  StorePageInfo and psBoundingBox are empty, they have no meaning in
-  this context and are kept for interface compatibility.
-  ----------------------------------------------------------------------*/
-void StorePageInfo (int pagenum, int width, int height)
-{
-#ifdef _WIN_PRINT
-   LastPageNumber = pagenum;
-   LastPageWidth = width;
-   LastPageHeight = height;
-#endif /* WIN_PRINT */
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void psBoundingBox (int frame, int width, int height)
 {
 }
 

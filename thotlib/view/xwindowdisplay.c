@@ -2558,19 +2558,6 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
      }
 }
 
-/*----------------------------------------------------------------------
-  StorePageInfo and psBoundingBox are empty, they have no meaning in
-  this context and are kept for interface compatibility.
-  ----------------------------------------------------------------------*/
-void StorePageInfo (int pagenum, int width, int height)
-{
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void psBoundingBox (int frame, int width, int height)
-{
-}
 
 /*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          

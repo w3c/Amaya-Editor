@@ -64,7 +64,6 @@
 int          PRINT;	/* Identification des messages */
 PtrFont      PostscriptFont;
 int          ColorPs;
-int          LastPageNumber, LastPageWidth, LastPageHeight;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
@@ -178,11 +177,8 @@ ThotBool WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, LPVOID pvReserved
 }
 
 /* ---------------------------------------------------------------------- *
- *                                                                        *
  *  FUNCTION:    AbortDlgProc (standard dialog procedure INPUTS/RETURNS)  *
- *                                                                        *
  *  COMMENTS:    Handles "Abort" dialog messages                          *
- *                                                                        *
  * ---------------------------------------------------------------------- */
 LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -212,11 +208,8 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 }
 
 /* ---------------------------------------------------------------------- *
- *                                                                        *
  *  FUNCTION:    AbortProc                                                *
- *                                                                        *
  *  COMMENTS:    Standard printing abort proc                             *
- *                                                                        *
  * ---------------------------------------------------------------------- */
 BOOL CALLBACK AbortProc (HDC hdc, int error)
 {
@@ -235,11 +228,8 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
 }
 
 /* ---------------------------------------------------------------------- *
- *                                                                        *
  *  FUNCTION: InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)   *
- *                                                                        *
  *  PURPOSE : Makes preliminary driver calls to set up print job.         *
- *                                                                        *
  *  RETURNS : TRUE  - if successful.                                      *
  *            FALSE - otherwise.                                          *
  * ---------------------------------------------------------------------- */
@@ -288,6 +278,24 @@ void WIN_ReleaseDeviceContext (void)
   TtDisplay = NULL;
 }
 #endif /* _WINDOWS */
+
+/*----------------------------------------------------------------------
+   psBoundingBox output the %%BoundingBox macro for Postscript.
+  ----------------------------------------------------------------------*/
+static void psBoundingBox (int frame, int width, int height)
+{
+   FILE               *fout;
+
+   fout = (FILE *) FrRef[frame];
+   /* Since the origin of Postscript coordinates is the lower-left    */
+   /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
+   /* = 841 pts) and that Thot adds a 50 pts margin on top and height */
+   /* of the output image, here is the correct values :               */
+
+   fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
+	    50, 791 - height, 50 + width, 791);
+}
+
 
 /*----------------------------------------------------------------------
    PrintPageFooter
@@ -403,35 +411,24 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
 static void NotePageNumber (FILE *fout)
 {
   NumberOfPages++;
-#ifdef _WINDOWS 
-  if (!TtPrinterDC)
-#endif
-    {
-      fprintf (fout, "%%%%Page: %d %d\n", NumberOfPages, NumberOfPages);
-      fflush (fout);
-    }
+#ifndef _WINDOWS 
+  fprintf (fout, "%%%%Page: %d %d\n", NumberOfPages, NumberOfPages);
+  fflush (fout);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-   DrawPage check whether a showpage is needed.
+  DrawPage
+  Store the width and height of the current page, then generate a
+  showpage is needed and increment the number of pages.
   ----------------------------------------------------------------------*/
-static void DrawPage (FILE *fout)
+static void DrawPage (FILE *fout, int pagenum, int width, int height)
 {
 #ifdef _WINDOWS 
   if (TtPrinterDC)
     EndPage (TtPrinterDC);
-  else
-    {
-      fprintf (fout, "%d %d %d nwpage\n", LastPageNumber,
-	       LastPageWidth, LastPageHeight);
-      fflush (fout);
-      /* Enforce loading the font when starting a new page */
-      PostscriptFont = NULL;
-      ColorPs = -1;
-    }
 #else  /* _WINDOWS */
-  fprintf (fout, "%d %d %d nwpage\n", LastPageNumber,
-	   LastPageWidth, LastPageHeight);
+  fprintf (fout, "%d %d %d nwpage\n", pagenum - 1, width, height);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
   PostscriptFont = NULL;
@@ -675,16 +672,38 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	{
 	  fflush (PSfile);
 	  FrRef[i] = (ThotWindow) PSfile;
-	  fprintf (PSfile, "%%!PS-Adobe-2.0\n");
-	  fprintf (PSfile, "%%%%Creator: Thot\n");
+	  fprintf (PSfile, "%%!PS-Adobe-3.0\n");
+	  fprintf (PSfile, "%%%%Creator: Thotlib\n");
 	  fprintf (PSfile, "%%%% Delete the last nwpage line command for an encapsulated PostScript\n");
-	  fprintf (PSfile, "%%%%CreationDate: Sat Nov  2 12:03:40 MET 1996\n");
-	  
-	  fprintf (PSfile, "%%%%PaginateView: (atend)\n");
+	  fprintf (PSfile, "%%%%Pages: (atend)\n");
 	  fprintf (PSfile, "%%%%EndComments\n\n");
 	  
 	  fprintf (PSfile, "/ThotDict 100 dict def\n");
 	  fprintf (PSfile, "ThotDict begin\n\n");
+	  fprintf (PSfile, "statusdict begin\n");
+
+	  if (manualFeed == 0)
+	    {
+	      if (!strcmp (pageSize, "A3"))
+		fprintf (PSfile, "a3tray\n");
+	    }
+	  else
+	    {
+	      fprintf (PSfile, "/manualfeed true def\n");
+	    }
+	  if (BlackAndWhite != 0)
+	    fprintf (PSfile, "1 setprocesscolors\n");
+	  fprintf (PSfile, "end\n");
+	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
+	  fprintf (PSfile, "/reduction %d def\n", Zoom);
+	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
+	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
+	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
+	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
+	  fprintf (PSfile, "/evenodd 0 def\n");
+	  fprintf (PSfile, "/HPrinterOff 0 def\n");
+	  fprintf (PSfile, "/VPrinterOff 0 def\n");
+	  fprintf (PSfile, "/user_orientation 0 def  \n");
 	  
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
 	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
@@ -1115,7 +1134,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 
 	  fprintf (PSfile, "/ReEncode	%% NewFont Font ReEncode\n");
 	  fprintf (PSfile, "  { findfont	%% load desired font\n");
-	  fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
+	  fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
 	  fprintf (PSfile, "    dup\n");
 	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
 	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
@@ -1134,7 +1153,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  
 	  fprintf (PSfile, "/ReEncodeOblique	%% NewFont Font ReEncodeOblique\n");
 	  fprintf (PSfile, "  { findfont	%% load desired font\n");
-	  fprintf (PSfile, "    dup maxlength dict /newfont exch def	%% allocate new fontdict\n");
+	  fprintf (PSfile, "    dup length dict /newfont exch def	%% allocate new fontdict\n");
 	  fprintf (PSfile, "    dup\n");
 	  fprintf (PSfile, "    { exch dup dup dup dup /FID ne exch /Encoding ne and exch /FontBBox ne and exch /FontMatrix ne and\n");
 	  fprintf (PSfile, "	{ exch newfont 3 1 roll put }\n");
@@ -1213,18 +1232,16 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "/pagesizeok\n");
 	  fprintf (PSfile, " { pop pop true } def\n\n");
 
-	  fprintf (PSfile, "/frstpage	%% first page\n");
-	  fprintf (PSfile, " { } bind def\n\n");
-	  
 	  fprintf (PSfile, "/nwpage		%% new page\n");
 	  fprintf (PSfile, " { /pagecounter pagecounter 1 add def\n");
 	  fprintf (PSfile, "   pagesizeok { pagenumberok { showpage }\n");
-	  fprintf (PSfile, "			     {erasepage } ifelse } \n");
-	  fprintf (PSfile, "	      { erasepage } ifelse\n");
+	  fprintf (PSfile, "			         {erasepage } ifelse } \n");
+	  fprintf (PSfile, "	          { erasepage } ifelse\n");
 	  fprintf (PSfile, "   grestore\n");
 	  fprintf (PSfile, "   VectMatrice pagecounter 4 mod get setmatrix \n");
 	  fprintf (PSfile, "   gsave UserMatrice concat } def\n\n");
 	  
+	  fprintf (PSfile, "/ppf 1 def\n");
 	  fprintf (PSfile, "/showpage { pagecounter ppf mod 0 eq {systemdict /showpage get exec} if } bind def\n");
 	  fprintf (PSfile, "/ejectpage { pagecounter ppf mod 0 ne {systemdict /showpage get exec} if } bind def\n\n");
 	  
@@ -1232,21 +1249,19 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 
 	  fprintf (PSfile, "/MatriceDict 9 dict def\n");
 	  fprintf (PSfile, "MatriceDict begin\n\n");
-
-	  fprintf (PSfile, "    /MatPortrait matrix def\n");
-	  fprintf (PSfile, "    /MatLandscape [0 1 -1 0 0 0] def\n\n");
-
-	  fprintf (PSfile, "    /defmat { \n");
-	  fprintf (PSfile, "	matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
+	  fprintf (PSfile, " /MatPortrait matrix def\n");
+	  fprintf (PSfile, " /MatLandscape [0 1 -1 0 0 0] def\n\n");
+	  fprintf (PSfile, " /defmat { \n");
+	  fprintf (PSfile, "    matrix concatmatrix matrix concatmatrix matrix currentmatrix matrix concatmatrix } bind def\n\n");
 
 	  fprintf (PSfile, "    /defdict_portrait {	%% dict defdict\n");
-	  fprintf (PSfile, "	/Portrait 3 dict def \n");
+	  fprintf (PSfile, "    /Portrait 3 dict def \n");
 	  fprintf (PSfile, "	Portrait begin\n");
-	  fprintf (PSfile, "	    /1ppf 2 dict def 1ppf begin\n");
-	  fprintf (PSfile, "		/VectMatrice [\n");
-	  fprintf (PSfile, "	    	    MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
-	  fprintf (PSfile, "		    dup dup dup ] def\n");
-	  fprintf (PSfile, "		/ppf 1 def\n");
+	  fprintf (PSfile, "	  /1ppf 2 dict def 1ppf begin\n");
+	  fprintf (PSfile, "	        /VectMatrice [\n");
+	  fprintf (PSfile, "	            MatPortrait MatScale1 [1 0 0 1 0 PHeight] defmat\n");
+	  fprintf (PSfile, "	        dup dup dup ] def\n");
+	  fprintf (PSfile, "	        /ppf 1 def\n");
 	  fprintf (PSfile, "	    end %% 1ppf dict\n");
 	  fprintf (PSfile, "	    /2ppf 2 dict def 2ppf begin\n");
 	  fprintf (PSfile, "		/VectMatrice [\n");
@@ -1333,57 +1348,23 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 
 	  fprintf (PSfile, "end %% Matrice dict\n\n");
 
+	  fprintf (PSfile, "%%%%EndProlog\n");
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%DEMARRAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 
-	  fprintf (PSfile, "/InitThot {\n");
-	  fprintf (PSfile, "    /UserMatrice \n");
-	  fprintf (PSfile, "	[reduction 100 div 0 0 2 index 0 0] \n");
-	  fprintf (PSfile, "	[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
-	  fprintf (PSfile, "        [1 0 0 1 0 0]\n");
-	  fprintf (PSfile, "	matrix concatmatrix def\n");
-	  fprintf (PSfile, "    MatriceDict begin\n");
-	  fprintf (PSfile, "    page_size cvlit load	 		%% get the page_size dict\n");
-	  fprintf (PSfile, "    begin defdict_portrait defdict_paysage	%% and init it\n");
-	  fprintf (PSfile, "    currentdict orientation cvlit get		%% get the orientation dict\n");
-	  fprintf (PSfile, "    nb_ppf cvlit get				%% get the nb_ppf dict\n");
-	  fprintf (PSfile, "    begin \n");
-	  fprintf (PSfile, "    VectMatrice 0 get setmatrix			%% init CTM\n");
-	  fprintf (PSfile, "    gsave UserMatrice concat\n");
-	  fprintf (PSfile, "    100 dict begin				%% working dict\n");
-	  fprintf (PSfile, "    } bind def\n\n");
-	  
-	  fprintf (PSfile, "/EndThot {\n");
-	  fprintf (PSfile, "   ejectpage\n");
-	  fprintf (PSfile, "   end end end end end} bind def	%%close all open dict\n\n");
-
-	  fprintf (PSfile, "%%%%EndProlog\n");
-	  fprintf (PSfile, "/user_orientation 0 def  \n");
-
-	  fprintf (PSfile, "statusdict begin\n");
-
-	  if (manualFeed == 0)
-	    {
-	      if (!strcmp (pageSize, "A3"))
-		fprintf (PSfile, "a3tray\n");
-	    }
-	  else
-	    {
-	      fprintf (PSfile, "/manualfeed true def\n");
-	    }
-	  if (BlackAndWhite != 0)
-	    fprintf (PSfile, "1 setprocesscolors\n");
-	  fprintf (PSfile, "end\n");
-	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
-	  fprintf (PSfile, "/reduction %d def\n", Zoom);
-	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
-	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
-	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
-	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
-	  fprintf (PSfile, "/evenodd 0 def\n");
-	  fprintf (PSfile, "/HPrinterOff 0 def\n");
-	  fprintf (PSfile, "/VPrinterOff 0 def\n");
-	  fprintf (PSfile, "InitThot\n");
-	  fprintf (PSfile, "frstpage\n");
+	  fprintf (PSfile, "/UserMatrice \n");
+	  fprintf (PSfile, "[reduction 100 div 0 0 2 index 0 0] \n");
+	  fprintf (PSfile, "[1 0 0 1 decalageH HPrinterOff add 72 mul 25.4 div decalageV VPrinterOff add 72 mul 25.4 div neg] matrix concatmatrix\n");
+	  fprintf (PSfile, "[1 0 0 1 0 0]\n");
+	  fprintf (PSfile, "matrix concatmatrix def\n");
+	  fprintf (PSfile, "MatriceDict begin\n");
+	  fprintf (PSfile, "page_size cvlit load	 		%% get the page_size dict\n");
+	  fprintf (PSfile, "begin defdict_portrait defdict_paysage	%% and init it\n");
+	  fprintf (PSfile, "currentdict orientation cvlit get		%% get the orientation dict\n");
+	  fprintf (PSfile, "nb_ppf cvlit get				%% get the nb_ppf dict\n");
+	  fprintf (PSfile, " begin \n");
+	  fprintf (PSfile, "  gsave VectMatrice 0 get setmatrix		%% init CTM\n");
+	  fprintf (PSfile, "  gsave UserMatrice concat\n");
+	  fprintf (PSfile, "  %%100 dict begin				%% working dict\n");
 	  NumberOfPages = 0;
 	  fflush (PSfile);
 	}
@@ -1421,8 +1402,9 @@ static void ClosePSFile (int frame)
   if (frame == 1)
     {
       /* Oui -> on ferme le fichier */
-      fprintf (PSfile, "%%%%%%%%Trailer\nEndThot\n%%%%%%%%PaginateView: %d\n", NumberOfPages);
-      
+      fprintf (PSfile, "grestore\n%%%%Trailer\n");
+      fprintf (PSfile, "end end end %%close all open dict\n");
+      fprintf (PSfile, "%%%%Pages: %d\n%%%%EOF\n", NumberOfPages);
       fclose (PSfile);
     }
   FrRef[frame] = 0;
@@ -1670,7 +1652,8 @@ static void PrintView (PtrDocument pDoc)
        if (pNextPageAb == NULL && rootAbsBox->AbBox != NULL)
 	 {
 	   pBox = rootAbsBox->AbBox;
-	   psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg, pBox->BxHeight + pBox->BxYOrg);
+	   psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg,
+			  pBox->BxHeight + pBox->BxYOrg);
 	 }
        SetMargins (NULL, NULL, NULL);
        /* Document sans marques de pages */
@@ -1690,10 +1673,11 @@ static void PrintView (PtrDocument pDoc)
 	 }
        else
 #endif /* _WINDOWS */
-	 PSfile = (FILE *) FrRef[CurrentFrame];
+       PSfile = (FILE *) FrRef[CurrentFrame];
        NotePageNumber (PSfile);
        DisplayFrame (CurrentFrame);
-       DrawPage (PSfile);
+       DrawPage (PSfile, pPageAb->AbElement->ElPageNumber,
+		 pPageAb->AbBox->BxWidth, PageHeight);
      }
    else
      {
@@ -1901,16 +1885,16 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   if (TtPrinterDC)
     {
     if (gbAbort)
-		AbortDoc (TtPrinterDC);
-	else 
-	{
-	  /* remove the Abort window */
-      DestroyWindow (GHwnAbort);
-
-	  /* end the document */
-      if ((EndDoc (TtPrinterDC)) <= 0)
-        WinErrorBox (NULL, "PrintDocument (2)");    
-	}
+      AbortDoc (TtPrinterDC);
+    else 
+      {
+	/* remove the Abort window */
+	DestroyWindow (GHwnAbort);
+	
+	/* end the document */
+	if ((EndDoc (TtPrinterDC)) <= 0)
+	  WinErrorBox (NULL, "PrintDocument (2)");    
+      }
     GHwnAbort = NULL;
     return 0;
     }
@@ -2113,10 +2097,8 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
 	  DisplayFrame (CurrentFrame);
 	  if (pNextPageAb)
 	    PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);
-	  DrawPage (PSfile);
-	  /* annule le volume du pave espace insere' en bas de page */
-	  StorePageInfo (pPageAb->AbElement->ElPageNumber,
-			 pPageAb->AbBox->BxWidth, PageHeight);
+	  DrawPage (PSfile, pPageAb->AbElement->ElPageNumber,
+		    pPageAb->AbBox->BxWidth, PageHeight);
 	}
 
       /* repositionne le pave racine en haut de l'image pour le calcul de la */
@@ -2776,6 +2758,3 @@ int main (int argc, char **argv)
    exit (0);
 #endif /* _WINDOWS */
 }
-
-
-

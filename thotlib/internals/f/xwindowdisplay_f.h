@@ -309,12 +309,6 @@ extern void DrawEllipsFrame ( int frame,
                               int fg,
                               int bg,
                               int pattern );
-extern void StorePageInfo ( int pagenum,
-                            int width,
-                            int height );
-extern void psBoundingBox ( int frame,
-                            int width,
-                            int height );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
 extern void Clear ( int frame,
@@ -655,12 +649,6 @@ extern void DrawEllipsFrame (/* int frame,
                                 int fg,
                                 int bg,
                                 int pattern */);
-extern void StorePageInfo (/* int pagenum,
-                              int width,
-                              int height */);
-extern void psBoundingBox (/* int frame,
-                              int width,
-                              int height */);
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
 extern void Clear (/* int frame,
