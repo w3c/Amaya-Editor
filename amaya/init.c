@@ -4456,6 +4456,8 @@ void ShowSource (Document doc, View view)
 	 /* Synchronize selections */
 	 event.document = doc;
 	 event.element = NULL;
+	 UpdateEditorMenus (sourceDoc);
+	 SetCharsetMenuOff (sourceDoc, 1);
 	 SynchronizeSourceView (&event);
        }
      TtaFreeMemory (localFile);
