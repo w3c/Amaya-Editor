@@ -2822,7 +2822,7 @@ int                 frame;
 	  {
 	     /* Il faut propager la modification de hauteur */
 	     propagateStatus = Propagate;
-	     /* We certainly need to re-check the height of enclosing element */
+	     /* We certainly need to re-check the height of enclosing elements */
 	     /*if (propagateStatus == ToChildren)
 	       RecordEnclosing (pBox, FALSE);*/
 	     ChangeDefaultHeight (pBox, pFirstBox, height, frame);

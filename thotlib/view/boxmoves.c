@@ -2191,8 +2191,9 @@ int                 frame;
 			UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
 		      }
 		    /* Si l'englobement n'est pas prevu en fin de traitement */
-		    else if (pAb->AbBox != PackBoxRoot
-			     && !IsParentBox (pAb->AbBox, PackBoxRoot))
+		    else if (pAb->AbBox != PackBoxRoot &&
+			     !IsParentBox (pAb->AbBox, PackBoxRoot) &&
+			     pAb->AbBox != pFromBox)
 		      /* differe le traitement de l'englobement   */
 		      /* quand la mise a jour a une origine externe  */
 		      if (Propagate != ToAll)
@@ -2215,8 +2216,8 @@ int                 frame;
 		  {
 		    /* La largeur de la boite mise en lignes est donnee par une */
 		    /* boite suivante, il faut verifier l'englobement vertical */
-		    if (!pAb->AbBox->BxType == BoTable)
-		    HeightPack (pAb, pSourceBox, frame);
+		    if (pAb->AbBox->BxType != BoTable)
+		      HeightPack (pAb, pSourceBox, frame);
 		    Propagate = ToSiblings;
 		  }
 	      }
@@ -2658,8 +2659,9 @@ int                 frame;
 		       /* Inclusion dans un bloc de ligne */
 		       EncloseInLine (pBox, frame, pAb);
 		     /* Si l'englobement n'est pas prevu en fin de traitement */
-		     else if (pAb->AbBox != PackBoxRoot
-			      && !IsParentBox (pAb->AbBox, PackBoxRoot))
+		     else if (pAb->AbBox != PackBoxRoot &&
+			      !IsParentBox (pAb->AbBox, PackBoxRoot) &&
+			      pAb->AbBox != pFromBox)
 		       /* differe le traitement de l'englobement   */
 		       /* quand la mise a jour a une origine externe  */
 		       if (Propagate != ToAll)

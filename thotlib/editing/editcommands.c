@@ -2175,6 +2175,7 @@ int                 editType;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();
+   pCell = NULL;
 
    /* Traitement de la Commande PASTE de l'application */
    if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !FromKeyboard)
@@ -2331,180 +2332,203 @@ int                 editType;
 		     CopyCommand ();
 	       }
 	  }
-	else if (editType == TEXT_DEL && pAb->AbLeafType == LtPolyLine)
+	else
 	  {
-	     if (pViewSel->VsIndBox != 0)
-	       {
-		  if (pBox->BxNChars <= 3)
-		     TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-		  else
-		    {
-		       /* Destruction du point courant de la polyline */
-		       charsDelta = pViewSel->VsIndBox;
-		       DeletePointInPolyline (&(pAb->AbPolyLineBuffer), charsDelta);
-		       DeletePointInPolyline (&(pBox->BxBuffer), charsDelta);
-		       (pBox->BxNChars)--;
-		       if (pBox->BxPictInfo != NULL)
-			 {
+	     /* check enclosing cell */
+	     pCell = GetParentCell (pBox);
+
+	    if (editType == TEXT_DEL && pAb->AbLeafType == LtPolyLine)
+	      {
+		if (pViewSel->VsIndBox != 0)
+		  {
+		    if (pBox->BxNChars <= 3)
+		      TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
+		    else
+		      {
+			/* Destruction du point courant de la polyline */
+			charsDelta = pViewSel->VsIndBox;
+			DeletePointInPolyline (&(pAb->AbPolyLineBuffer), charsDelta);
+			DeletePointInPolyline (&(pBox->BxBuffer), charsDelta);
+			(pBox->BxNChars)--;
+			if (pBox->BxPictInfo != NULL)
+			  {
 			    /* reevalue les points de controle */
 			    free ((char *) pBox->BxPictInfo);
 			    pBox->BxPictInfo = NULL;
-			 }
-		       (pAb->AbVolume)--;
-		       if (charsDelta == pBox->BxNChars)
+			  }
+			(pAb->AbVolume)--;
+			if (charsDelta == pBox->BxNChars)
 			  /* on vient de detruire le dernier point de la polyline */
 			  if (charsDelta == 1)
-			     charsDelta = 0;
+			    charsDelta = 0;
 			  else
-			     charsDelta = 1;
-		       pViewSel->VsIndBox = charsDelta;
-		       /* on force le reaffichage de la boite (+ les points de selection) */
-		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
-		    }
-	       }
-	     else
-	       {
-		  /* Destruction de toute la polyline */
-		  CutCommand (FALSE);
-		  pAb = NULL;	/* le traitement est termine */
-	       }
-	  }
-	else
-	  {
-	     /* regroupe ici les traitements realises par le mediateur */
-	     /* bloque affichage de la fenetre */
-	     if (editType != TEXT_COPY)
-		pFrame->FrReady = FALSE;
+			    charsDelta = 1;
+			pViewSel->VsIndBox = charsDelta;
+			/* on force le reaffichage de la boite (+ les points de selection) */
+			DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+		      }
+		  }
+		else
+		  {
+		    /* Destruction de toute la polyline */
+		    CutCommand (FALSE);
+		    pAb = NULL;	/* le traitement est termine */
+		  }
+	      }
+	    else
+	      {
+		/* regroupe ici les traitements realises par le mediateur */
+		/* bloque affichage de la fenetre */
+		if (editType != TEXT_COPY)
+		  pFrame->FrReady = FALSE;
+		
+		/* Si la selection debutait sur une boite de presentation */
+		/* il faut deplacer la selection sur le premier caractere */
+		/* de la boite de texte (ou en fin de boite vide)         */
+		if (editType != TEXT_COPY && pBox != pViewSel->VsBox)
+		  {
+		    ClearViewSelection (frame);	/* efface la selection */
+		    pViewSel->VsBox = pBox;
+		    pViewSel->VsBuffer = pBuffer;
+		    pViewSel->VsIndBuf = i;
+		    pViewSel->VsIndBox = charsDelta;
+		    pViewSel->VsXPos = 0;
+		    pViewSel->VsNSpaces = 0;
+		  }
+		
+		pLine = pFrame->FrSelectionBegin.VsLine;
 
-	     /* Si la selection debutait sur une boite de presentation */
-	     /* il faut deplacer la selection sur le premier caractere */
-	     /* de la boite de texte (ou en fin de boite vide)         */
-	     if (editType != TEXT_COPY && pBox != pViewSel->VsBox)
-	       {
-		  ClearViewSelection (frame);	/* efface la selection */
-		  pViewSel->VsBox = pBox;
-		  pViewSel->VsBuffer = pBuffer;
-		  pViewSel->VsIndBuf = i;
-		  pViewSel->VsIndBox = charsDelta;
-		  pViewSel->VsXPos = 0;
-		  pViewSel->VsNSpaces = 0;
-	       }
+		/* Initialisation du rectangle d'affichage */
+		DefClip (frame, 0, 0, 0, 0);
+		if (pBox->BxType == BoSplit)
+		  {
+		    pSelBox = pBox->BxNexChild;
+		    DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
+			     pSelBox->BxXOrg + pSelBox->BxWidth,
+			     pSelBox->BxYOrg + pSelBox->BxHeight);
+		  }
+		else
+		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			   pBox->BxXOrg + pBox->BxWidth,
+			   pBox->BxYOrg + pBox->BxHeight);
 
-	     pLine = pFrame->FrSelectionBegin.VsLine;
-
-	     /* Initialisation du rectangle d'affichage */
-	     DefClip (frame, 0, 0, 0, 0);
-	     if (pBox->BxType == BoSplit)
-	       {
-		  pSelBox = pBox->BxNexChild;
-		  DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg, pSelBox->BxXOrg + pSelBox->BxWidth,
-			   pSelBox->BxYOrg + pSelBox->BxHeight);
-	       }
-	     else
-		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
-			 pBox->BxYOrg + pBox->BxHeight);
-
-	     /* Est-ce que les dimensions de la boite dependent du contenu */
-	     pPavD1 = &pAb->AbWidth;
-	     if (pPavD1->DimIsPosition)
-		/* Boite elastique */
-		defaultWidth = FALSE;
-	     else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
-		defaultWidth = TRUE;
-	     else
-		defaultWidth = FALSE;
-
-	     pPavD1 = &pAb->AbHeight;
-	     if (pPavD1->DimIsPosition)
-		/* Boite elastique */
-		defaultHeight = FALSE;
-	     else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
-		defaultHeight = TRUE;
-	     else
-		/* Dimensions d'une boite terminale vide */
-		defaultHeight = FALSE;
-
-	     /* Traitement */
-	     if (editType == TEXT_INSERT && pAb->AbLeafType == LtPicture && !FromKeyboard)
-		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
-	     else if (editType == TEXT_CUT && !FromKeyboard)
-	       {
-		  SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
-		  if (ClipboardThot.BuLength == 0)
-		    {
-		       if (ThotLocalActions[T_deletenextchar] != NULL)
+		/* Est-ce que les dimensions de la boite dependent du contenu */
+		pPavD1 = &pAb->AbWidth;
+		if (pPavD1->DimIsPosition)
+		  /* Boite elastique */
+		  defaultWidth = FALSE;
+		else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
+		  defaultWidth = TRUE;
+		else
+		  defaultWidth = FALSE;
+		
+		pPavD1 = &pAb->AbHeight;
+		if (pPavD1->DimIsPosition)
+		  /* Boite elastique */
+		  defaultHeight = FALSE;
+		else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
+		  defaultHeight = TRUE;
+		else
+		  /* Dimensions d'une boite terminale vide */
+		  defaultHeight = FALSE;
+		
+		/* Traitement */
+		if (editType == TEXT_INSERT && pAb->AbLeafType == LtPicture && !FromKeyboard)
+		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		else if (editType == TEXT_CUT && !FromKeyboard)
+		  {
+		    SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
+		    if (ClipboardThot.BuLength == 0)
+		      {
+			if (ThotLocalActions[T_deletenextchar] != NULL)
 			  (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
-		       else
-			 {
+			else
+			  {
 			    TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
 			    /* Pas de reaffichage */
 			    DefClip (frame, 0, 0, 0, 0);
-
-			 }
-		       /* Il n'est pas necessaire de mettre a jour la selection */
-		       pAb = NULL;
-		    }
-		  else
-		     RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
-	       }
-	     else if (editType == TEXT_DEL && !FromKeyboard)
-		if (pAb->AbVolume == 0 ||
-		    pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar == pAb->AbVolume)
-		  {
-		     /* current selection is at the element end */
-		     if (ThotLocalActions[T_deletenextchar] != NULL)
+			  }
+			/* Il n'est pas necessaire de mettre a jour la selection */
+			pAb = NULL;
+		      }
+		    else
+		      RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		  }
+		else if (editType == TEXT_DEL && !FromKeyboard)
+		  if (pAb->AbVolume == 0 ||
+		      pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar == pAb->AbVolume)
+		    {
+		      /* current selection is at the element end */
+		      if (ThotLocalActions[T_deletenextchar] != NULL)
 			(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
-		     else
-		       {
+		      else
+			{
 			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
 			  /* Pas de reaffichage */
 			  DefClip (frame, 0, 0, 0, 0);
 			  pFrame->FrReady = TRUE;
-		       }
-		     /* Il n'est pas necessaire de mettre a jour la selection */
-		     pAb = NULL;
-		  }
-		else
-		   DeleteSelection (defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
-	     else if (editType == TEXT_PASTE && !FromKeyboard)
-	       {
-		  /* Verifie que l'alphabet du clipboard correspond a celui du pave */
-		  if (ClipboardLanguage == 0)
-		    ClipboardLanguage = TtaGetDefaultLanguage ();
-		  if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
-		    {
-		       /* charsDelta contient le nombre de carateres qui precedent dans la boite */
-		       NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage, TRUE);
-		       pBox = pViewSel->VsBox;
-		       if (pBox != NULL)
-			 {
-			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+			}
+		      /* Il n'est pas necessaire de mettre a jour la selection */
+		      pAb = NULL;
+		    }
+		  else
+		    DeleteSelection (defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		else if (editType == TEXT_PASTE && !FromKeyboard)
+		  {
+		    /* Verifie que l'alphabet du clipboard correspond a celui du pave */
+		    if (ClipboardLanguage == 0)
+		      ClipboardLanguage = TtaGetDefaultLanguage ();
+		    if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
+		      {
+			/* charsDelta contient le nombre de carateres qui precedent dans la boite */
+			NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage, TRUE);
+			pBox = pViewSel->VsBox;
+			if (pBox != NULL)
+			  {
+			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				     pBox->BxXOrg + pBox->BxWidth,
 				     pBox->BxYOrg + pBox->BxHeight);
 			    pAb = pBox->BxAbstractBox;
-			 }
-		       else
+			  }
+			else
 			  pAb = NULL;
-		    }
+		      }
 
-		  if (pAb != NULL)
-		     PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &ClipboardThot);
-	       }
-	     else if (editType == TEXT_COPY && !FromKeyboard)
-	       {
-		  SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
-		  /* Pas de reaffichage */
-		  DefClip (frame, 0, 0, 0, 0);
-		  /* Il n'est pas necessaire de mettre a jour la selection */
-		  pAb = NULL;
-	       }
-	     else if (editType == TEXT_X_PASTE && !FromKeyboard)
-		PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &XClipboard);
-	     else if (pAb->AbLeafType == LtPicture && FromKeyboard)
-		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
-	     else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
-		LoadSymbol ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
-	     else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
-		LoadShape ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		    if (pAb != NULL)
+		      PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &ClipboardThot);
+		  }
+		else if (editType == TEXT_COPY && !FromKeyboard)
+		  {
+		    SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
+		    /* Pas de reaffichage */
+		    DefClip (frame, 0, 0, 0, 0);
+		    /* Il n'est pas necessaire de mettre a jour la selection */
+		    pAb = NULL;
+		  }
+		else if (editType == TEXT_X_PASTE && !FromKeyboard)
+		  PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &XClipboard);
+		else if (pAb->AbLeafType == LtPicture && FromKeyboard)
+		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
+		  LoadSymbol ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
+		  LoadShape ((char) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	      }
+          }
+
+	if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	  {
+	    /* we have to propage position to cell children */
+	    savePropagate = Propagate;
+	    Propagate = ToChildren;
+	    pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock);
+	    if (pBlock != NULL)
+	      RecomputeLines (pBlock, NULL, NULL, frame);
+	    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	    /* restore propagate mode */
+	    Propagate = savePropagate;
+	    /* Manage differed enclosings */
+	    ComputeEnclosing (frame);
 	  }
 
 	if (pAb != NULL)
@@ -2527,21 +2551,6 @@ int                 editType;
 		       else
 			  pLastAb = pLastAb->AbEnclosing;
 		    }
-	       }
-
-	     /* check enclosing cell */
-	     pCell = GetParentCell (pBox);
-	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
-	       {
-		 /* we have to propage position to cell children */
-		 savePropagate = Propagate;
-		 Propagate = ToChildren;
-		 pBlock = SearchEnclosingType (pAb, BoBlock);
-		 if (pBlock != NULL)
-		   RecomputeLines (pBlock, NULL, NULL, frame);
-		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
-		 /* restore propagate mode */
-		 Propagate = savePropagate;
 	       }
 
 	     /* reaffiche si necessaire */

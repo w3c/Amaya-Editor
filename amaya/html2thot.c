@@ -605,6 +605,7 @@ static int          CharLevelElement[] =
    HTML_EL_Text_Input_Line, HTML_EL_Text_Input,
    HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
    HTML_EL_BR,
+   HTML_EL_Comment_,
    0};
 
 /* block level elements */
@@ -998,7 +999,7 @@ static char        *SkipSep (ptr)
 char               *ptr;
 #endif
 {
-  while (ptr != NULL && (*ptr == SPACE || *ptr == ','))
+  while (*ptr == SPACE || *ptr == ',')
     ptr++;
   return (ptr);
 }
@@ -1012,7 +1013,7 @@ static char        *SkipInt (ptr)
 char               *ptr;
 #endif
 {
-  while (ptr != NULL && *ptr != SPACE && *ptr != ',')
+  while (*ptr != EOS && *ptr != SPACE && *ptr != ',')
     ptr++;
   return (ptr);
 }
@@ -1160,7 +1161,7 @@ Document            document;
 	length = 1;
 	ptr3 = text;
 	/* add new points */
-	while (ptr3 != NULL)
+	while (*ptr3 != EOS)
 	  {
 	     x1 = y1 = 0;
 	     sscanf (ptr3, "%d", &x1);
