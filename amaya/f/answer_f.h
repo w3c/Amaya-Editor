@@ -15,9 +15,9 @@ extern BOOL AHTProgress ( HTRequest *request,
 extern BOOL AHTConfirm ( HTRequest * request,
                          HTAlertOpcode op,
                          int msgnum,
-                         const char * dfault,
+                         const char *dfault,
                          void *input,
-                         HTAlertPar * reply );
+                         HTAlertPar *reply );
 extern BOOL AHTPrompt ( HTRequest * request,
                         HTAlertOpcode op,
                         int msgnum,
@@ -54,9 +54,9 @@ extern BOOL AHTProgress (/* HTRequest *request,
 extern BOOL AHTConfirm (/* HTRequest * request,
                            HTAlertOpcode op,
                            int msgnum,
-                           const char * dfault,
+                           const char *dfault,
                            void *input,
-                           HTAlertPar * reply */);
+                           HTAlertPar *reply */);
 extern BOOL AHTPrompt (/* HTRequest * request,
                           HTAlertOpcode op,
                           int msgnum,

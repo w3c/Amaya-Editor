@@ -8,8 +8,8 @@
 
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
-extern void HTTP_headers_set ( HTRequest * request,
-                               HTResponse * response,
+extern void HTTP_headers_set ( HTRequest *request,
+                               HTResponse *response,
                                void *context,
                                int status );
 extern char *HTTP_headers ( AHTHeaders *me,
@@ -66,8 +66,8 @@ extern void InitAmayaCache ( void );
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
-extern void HTTP_headers_set (/* HTRequest * request,
-                                 HTResponse * response,
+extern void HTTP_headers_set (/* HTRequest *request,
+                                 HTResponse *response,
                                  void *context,
                                  int status */);
 extern char *HTTP_headers (/* AHTHeaders *me,

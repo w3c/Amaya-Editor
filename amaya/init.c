@@ -4790,6 +4790,8 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE, L_Other);
        else if (method == CE_HELP)
 	 {
+	   /* add the URI in the combobox string */
+	   AddURLInCombobox (pathname, FALSE);
 	   /* need to create a new window for the document */
 	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE, L_Other);
 	   if (newdoc)
@@ -4811,8 +4813,12 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 }
 #endif /* ANNOTATIONS */
        else if (doc == 0 || InNewWindow)
-	 /* In case of initial document, open the view before loading */
-	 newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
+	 {
+	   /* In case of initial document, open the view before loading */
+	   /* add the URI in the combobox string */
+	   AddURLInCombobox (pathname, FALSE);
+	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
+	 }
        else
 	 {
 	   newdoc = doc;
@@ -6085,8 +6091,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
 	  len = strlen (docname) + 1;
-	  DocumentURLs[newdoc] = TtaGetMemory (len);
-	  strcpy (DocumentURLs[newdoc], docname);
+	  DocumentURLs[newdoc] = TtaStrdup (docname);
 	  DocumentSource[newdoc] = 0;
 	  /* add the URI in the combobox string */
 	  AddURLInCombobox (docname, FALSE);

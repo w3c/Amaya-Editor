@@ -304,7 +304,8 @@ static  HTAtom *AHTGuessAtom_for (char *urlName, char *contentType)
   Copies the headers in which the application is interested, doing
   any in-between conversions as needed.
   ----------------------------------------------------------------------*/
-void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context, int status)
+void HTTP_headers_set (HTRequest *request, HTResponse *response,
+		       void *context, int status)
 {
   AHTReqContext  *me;
   HTAtom         *tmp_atom = NULL;
@@ -1082,16 +1083,23 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 static int precondition_handler (HTRequest *request, HTResponse *response,
 				 void *context, int status)
 {
-  AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
+  AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-  ThotBool force_put;
+  ThotBool            force_put;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
 
   if (prompt)
-       force_put = (*prompt) (request, HT_A_CONFIRM,  HT_MSG_RULES,
-			      NULL, NULL, NULL);
+    {
+      if (me->method == METHOD_GET)
+	  /* @@@@ IV */
+	force_put = (*prompt) (request, HT_A_CONFIRM, status,
+			       NULL, NULL, NULL);
+      else
+	force_put = (*prompt) (request, HT_A_CONFIRM, HT_MSG_RULES,
+			       NULL, NULL, NULL);
+    }
   else
     force_put = NO;
   
@@ -1105,7 +1113,7 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
        * caused the 412 Precondition Failed status  *
        * code, otherwise we supose that the cause   *
        * was an eventual If header.                 */
-      if (HTRequest_preconditions(me->request)!=HT_NO_MATCH)
+      if (HTRequest_preconditions(me->request) != HT_NO_MATCH)
           noIf = NO;
       else
           noIf = YES;      
@@ -1148,7 +1156,8 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
 #ifdef DAV
       /* MKP: add an If header (lock information) only 
        * if there wasn't preconditions */
-      if (noIf!=YES) DAVAddIfHeader (me,HTAnchor_address(me->dest));
+      if (noIf != YES)
+	DAVAddIfHeader (me,HTAnchor_address(me->dest));
 #endif /* DAV */
       
       

@@ -177,8 +177,8 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
   opens a form to request user confirmation on an action.
   ----------------------------------------------------------------------*/
 BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
-		 const char * dfault,
-		 void *input, HTAlertPar * reply)
+		 const char *dfault,
+		 void *input, HTAlertPar *reply)
 {
   ThotBool         answer;
   char            *tmp_buf;
@@ -216,7 +216,16 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       TtaFreeMemory (tmp_buf);
       break;
     default:
-      return TRUE;
+      if (msgnum < 0)
+	{
+	  /* @@@@ IV */
+	  tmp_buf = TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
+	  sprintf (tmp_buf, "%s %d", TtaGetMessage (AMAYA, AM_ERROR), msgnum);
+	  InitConfirm3L (0, 0, me->urlName, tmp_buf, NULL, FALSE);
+	  TtaFreeMemory (tmp_buf);
+	}
+      else
+	return TRUE;
     }
 
   if (UserAnswer)
@@ -596,7 +605,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
        status =  200;
     }
 #endif  /* DAV */ 
-  else if (status <0)
+  else if (status < 0)
     {
       /*
       ** Here we deal with errors for which libwww does not
