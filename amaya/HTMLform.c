@@ -231,7 +231,7 @@ int                 mode;
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_NAME;
 	attrTypeS.AttrSSchema = attrType.AttrSSchema;
-	TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
 	while (el != NULL && TtaIsAncestor(el, ancestor))
 	  {
 	     if (attr != NULL)
