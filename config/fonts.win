@@ -16,16 +16,10 @@
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
-
-
-
-
 2;#baltic
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
-
-
 
 
 3;#russian
@@ -34,18 +28,10 @@
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
-
-
-
-
 6;#arabic
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
-
-
-
-
 
 
 7;#greek
@@ -54,16 +40,10 @@
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
-
-
-
-
 8;#hebrew;
 1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
 2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
-
-
 
 
 9;#Latin5 (Turkish)
@@ -78,15 +58,12 @@
 3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
-
 20;#Symbols (...)
 1;1=*-Symbol-*;
 
 
 21;#esstix (uncomment if you have those fonts in your system)
 #2;1=*-ESSTIXSix-*;2=*-ESSTIXSeven-*;3=*-esstixheight-*;4=*-esstixnine-*;5=*-esstixten-*;
-
-
 
 
 0;#Unicode (.or ... JAPANESe)

@@ -1476,10 +1476,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 		      PtrBox floatL, PtrBox floatR, PtrBox pBox,
 		      ThotBool xAbs, ThotBool yAbs)
 {
-  PtrFloat            pfloatL, pfloatR;
+  PtrFloat            pfloatL = NULL, pfloatR = NULL;
   PtrAbstractBox      pAb;
   char                clearL, clearR;
-  int                 bottomL, bottomR, left, y;
+  int                 bottomL = 0, bottomR = 0, left, y;
   int                 orgX, orgY, width;
   ThotBool            variable;
 

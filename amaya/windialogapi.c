@@ -3452,7 +3452,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg,
       /* set up the other fields */
 
       /* document URL */
-      SetDlgItemText (hwnDlg, IDC_DIURL, "URL");
+      SetDlgItemText (hwnDlg, IDC_DIURL, TtaGetMessage (AMAYA, AM_HREF_VALUE));
       if (DocumentURLs[doc] != NULL)
 	content = DocumentURLs[doc];
       else

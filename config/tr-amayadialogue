@@ -1,270 +1,270 @@
-# encoding= utf-8
+# encoding= utf8
 0 Dosya
 1 Dosya
 2 Dosya
 3 Dosya
 4 Dosya
 5 Düzenle
-6 Yapý
+6 Yapı
 7 XHTML
 8 XML
-9 Baðlantýlar
+9 Baglantılar
 10 Görünümler
 11 Tarz
 12 Özel
 13 Özellik
-14 **Annotations
-15 **Bookmarks
-16 **Cooperation
-17 Yardým
-18 Yeni
-19 **New XHTML 1.1 document...
-20 **New XHTML 1.0 Transitional document...
-21 **New XHTML 1.0 Strict document...
-22 **New XHTML 1.0 Basic document...
-23 **New MathML document...
-24 **New SVG document...
-25 **New CSS style sheet...
-26 **From template
-27 Belge aç...
-28 Yeni pencerede aç...
-29 Belgeyi yeniden yükle
-30 **Back
-31 **Forward
-32 Kaydet
-33 Ýsimle kaydet...
-34 **Synchronize
-35 **Modify doctype
-36 **Remove doctype
-37 **Set doctype to XHTML 1.1
+14 Eklemeler
+15 Birlikte çalışmak
+16 Yardım
+17 Yeni
+18 Yeni XHTML 1.1 dosyası...
+19 Yeni XHTML 1.0 Transitional dosyası...
+20 Yeni XHTML 1.0 Strict dosyası...
+21 Yeni XHTML 1.0 Basic dosyası...
+22 Yeni MathML dosyası...
+23 Yeni SVG dosyası...
+24 Yeni CSS düz dizayn...
+25 Model
+26 Belge aç...
+27 Yeni pencerede aç...
+28 Belgeyi yeniden yükle
+29 Geri
+30 Ileri
+31 Kaydet
+32 Isimle kaydet...
+33 Eşlemek
+34 doctype\'bı düzenle
+35 doctype\'bı sil
+36 XHTML 1.1 doctype\'bı değiştir/yarat
+37 XHTML 1.0 Transitional doctype\'bı değiştir/yarat
 38 **Set doctype to XHTML 1.0 Transitional
-39 **Set doctype to XHTML 1.0 Strict
-40 **Set doctype to XHTML 1.0 Basic
+39 XHTML 1.0 Basic doctype\'bı değiştir/yarat
+40 HTML 4.01 Transitional doctype\'bı değiştir/yarat
 41 **Set doctype to HTML 4.01 Transitional
-42 **Set doctype to HTML 4.01 Strict
-43 **Set doctype to XHTML 1.1 + MathML 2.0
-44 **Set doctype to MathML 2.0
-45 **Set doctype to SVG 1.0
-46 **Document Information
-47 **Setup and Print...
-48 Yapýlandýr ve yazdýr
-49 Belgeyi kapat
-50 Çýkýþ
-51 Görünümü kapat
-52 **Undo
-53 **Redo
-54 Kes
-55 Kopyala
-56 Yapýþtýr
-57 Temizle
-58 **Editor Mode
-59 Ara...
-60 Yazým hatalarý arama...
-61 Dönüþtür
-62 base
-63 meta
-64 Baðlantý (link)
-65 script
-66 style
-67 Yorum
-68 **Change Title...
-69 Adres (address)
-70 Alan haritasý (area)
-71 Daire
-72 Çokgen
-73 Dikdörtgen
-74 blockquote
-75 Kesme (br)
-76 Bölme (div)
-77 Form
-78 form
-79 **Button (input)
-80 Deðiþtir (input)
-81 **File selector (input)
-82 **Hidden (input)
-83 Görüntü (input)...
-84 **Password (input)
-85 Radio (input)
-86 Reset (input)
-87 Submit (input)
-88 Metin giriþi (input)
-89 fieldset
-90 label
-91 Seçenek (option)
-92 **Submenu (optgroup)
-93 Metin alaný (textarea)
-94 Baþlýk
-95 h1
-96 h2
-97 h3
-98 h4
-99 h5
-100 h6
-101 Yatay çizgi (hr)
-102 **Inline frame (iframe)
-103 Görüntü (img)...
-104 Liste
-105 Noktalý liste (ul)
-106 Numaralý liste (ol)
-107 Taným listesi (dl)
-108 Terim (dt)
-109 Taným (dd)
-110 noscript
-111 Nesne
-112 object
-113 Parametre (param)
-114 Paragraf (p)
-115 Preformatted (pre)
-116 ruby
-117 Tablo
-118 table
-119 Altyazý (caption)
-120 colgroup
-121 col
-122 thead
-123 tbody
-124 tfoot
-125 Sýra (tr)
-126 Veri hücresi (td)
-127 Baþlýk hücresi (th)
-128 **Delete table column
-129 Bilgi türü
-130 Vurgu (em)
-131 Kuvvetli (strong)
-132 Cite (cite)
-133 Taným (dfn)
-134 Kod (code)
-135 Deðiþken (var)
-136 Örnek (samp)
-137 Tuþtakýmý (kbd)
-138 **Abbreviation (abbr)
-139 **acronym
-140 **Insertion (ins)
-141 **Deletion (del)
-142 Karakter birimi
-143 Ýtalik (i)
-144 Kalýn (b)
-145 Teletype (tt)
-146 Büyük (big)
-147 Küçük (small)
-148 Alt (sub)
-149 Üst (sup)
-150 **Quotation (q)
-151 **BiDi override (bdo)
-152 Matematik
-153 Matematik (math)
-154 **Plain text (mtext)
-155 **Identifier (mi)
-156 **Number (mn)
-157 **Operator (mo)
-158 **Space (mspace)
-159 **Character (&xxx;)
-160 **InvisibleTimes
-161 **ApplyFunction
-162 Kök (mroot)
-163 Karekök (msqrt)
-164 **Enclose (menclose)
-165 Kesir (mfrac)
-166 Alt ve üstyazý (msubsup)
-167 altyazý (msub)
-168 üstyazý (msup)
-169 altýnda veya üstünde (munderover)
-170 altýnda (munder)
-171 üstünde (mover)
-172 Parantezler (mrow)
-173 Multiscripts (mmultiscripts)
-174 Matris (mtable)
-175 **Delete matrix column
-176 SVG
-177 **Show SVG Library
-178 **Add selection in SVG Library
-179 **XML elements...
-180 **Link to previous target
-181 Baðlantý yarat...
-182 Hedef yarat
-183 <A> tanýmý sil
-184 **Store selection as XPointer
-185 Tuþlarý göster
-186 Adres göster
-187 Yakýnlaþtýr
-188 **Show targets
-189 Uzaklaþtýr
-190 Harita alanlarýný göster
-191 **Show parsing errors
-192 Yapýyý göster
-193 Alternatif gösterim
-194 Baðlantýlarý göster
-195 Ýçindekileri göster
-196 **Show source
-197 Karakter tarzý...
-198 Renkler...
-199 Biçim...
-200 Arkaplan görüntüsü...
-201 Kural yarat...
-202 \'class\' uygula...
-203 **Link...
-204 **Open...
-205 **Disable...
-206 **Enable...
-207 **Remove...
-208 Bölüm numaralandýrmasý
-209 Kitap yap
-210 **Add/Remove IDs...
-211 **Preferences
-212 **General...
-213 **Browsing...
-214 **Publishing...
-215 **Cache...
-216 **Proxy...
-217 **Colors...
-218 **Window Geometry...
-219 **Language Negotiation...
-220 **Profiles...
-221 **Templates...
-222 **Annotate selection
-223 **Annotate document
-224 **Move to selection
-225 **Move to stored XPointer
-226 **Reply to annotation
-227 **Post to server
-228 **Delete
-229 **Load
-230 **Customize query...
-231 **Local filter...
+42 XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat
+43 MathML 2.0 doctype\'bı değiştir/yarat
+44 SVG 1.0 doctype'bı değiştir/yarat
+45 Doküman bilgisi
+46 Kur ve yazdır
+47 Yapılandır ve yazdır
+48 Belgeyi kapat
+49 Çıkış
+50 Görünümü kapat
+51 Geri al
+52 Iileri al
+53 Kes
+54 Kopyala
+55 Yapıştır
+56 Temizle
+57 Editör modu
+58 Ara...
+59 Yazım hataları ara...
+60 Dönüştür
+61 Temel
+62 meta
+63 Bağlantı (Link)
+64 script
+65 Dizayn
+66 Yorum
+67 Başlığı değiştir
+68 Address
+69 Aktif alan (area)
+70 Daire
+71 Çokgen
+72 Dikdörtgen
+73 Bloğu aktar (blockquote)
+74 Kesme (br)
+75 Bölme (div)
+76 Form
+77 Form (form)
+78 Düğme (giriş = input)
+79 Değiştir (input)
+80 Dosya seçili (input)
+81 Gizli (input)
+82 Görüntü (input)...
+83 şifre(input)(sifre)
+84 Radio düğmesi (input)
+85 Sıfırlamak (input)
+86 Onayla (input)
+87 Metin girişi (input)
+88 fieldset
+89 label
+90 Seçenek (option)
+91 Alt-menü
+92 Metin alanı (textarea)
+93 Başlık
+94 Birinci büyüklük başlığı(h1)
+95 Ikinci büyüklük başlığı (h2)
+96 Üçüncü büyüklük başlığı (h3)
+97 Dördüncü büyüklük başlığı (h4)
+98 Beşinci büyüklük başlığı (h5)
+99 Altıncı büyüklük başlığı (h6)
+100 Yatay çizgi (hr)
+101 çizgili çerçeve (iframe)
+102 Görüntü (img)...
+103 Liste
+104 Noktalı liste (ul)
+105 Numaralı liste (ol)
+106 Tanım listesi (dl)
+107 Terim (dt)
+108 Tanım (dd)
+109 noscript (Script yok)
+110 Nesne
+111 Nesne (object)
+112 Parametre (param)
+113 Paragraf (p)
+114 Tekrar sekillendirilmi (pre)
+115 ruby
+116 Tablo
+117 table
+118 Altyazi (caption)
+119 colgroup
+120 col ……..
+121 thead……
+122 tbody ……..
+123 tfoot………..
+124 Sıra (tr)
+125 Veri hücresi (td)
+126 Başlık hücresi (th)
+127 Tablodaki sütünları sil
+128 Bilgi türü
+129 Vurgu (em)
+130 Kuvvetli (strong)
+131 Metin aktarımı (cite)
+132 Tanım (dfn)
+133 Kod (code)
+134 Değişken (var)
+135 Örnek (samp)
+136 Klaviye (kbd)
+137 kısaltmak (abbr)
+138 acronym
+139 Araya Koy (ins)
+140 Sil (del)
+141 Karakter birimi
+142 Eğik (i)
+143 Kalın (b)
+144 Teletip) (tt)
+145 Büyük (big)
+146 Küçük (small)
+147 Alt (sub)
+148 Üst (sup)
+149 Alıntılama (q)
+150 BiDi (bdo)
+151 Matematik
+152 Yeni formül (math)
+153 Düz yazı (mtext)
+154 Teşhis eden (mi)
+155 Numara (mn)
+156 Oparatör (mo)
+157 Boşluk (mspace)
+158 Karakter (&xxx;)
+159 Kayip zaman
+160 Fonksiyonu onayla
+161 Kök (mroot)
+162 Karekök (msqrt)
+163 Kapsamak (menclose)
+164 Kesir (mfrac)
+165 Alt ve üstyazı (msubsup)
+166 altyazı (msub)
+167 üstyazı (msup)
+168 alt ve üst (munderover)
+169 alt (munder)
+170 üst (mover)
+171 Parantezler (mrow)
+172 Multiscripts (mmultiscripts)
+173 Matris (mtable)
+174 Matris sütununu sil
+175 SVG
+176 SVG kütüphanesini göster
+177 SVG kütüphanesine seçili alanı ekle
+178 XML elementlerin
+179 Önceki hedefe bağlantı
+180 Baglantı yarat...
+181 Hedef yarat
+182 tanımı sil
+183 seçilen alanı XPointer gibi kaydet
+184 Tusları göster
+185 Adres göster
+186 Yakınlaştır
+187 Hedefi göster
+188 Uzaklaştır
+189 Harita alanlarını göster
+190 Pars hatalarını göster
+191 Yapıyı göster
+192 Alternatif gösterim
+193 Bağlantıları göster
+194 Içindekileri göster
+195 kaynak göster
+196 Karakter tarzı...
+197 Renkler...
+198 Biçim...
+199 Arkaplan görüntüsü...
+200 Kural yarat...
+201 \'class\' uygula...
+202 Bağlantı
+203 Aç
+204 Olumsuzla
+205 Olumla
+206 Sil
+207 Bölüm numaralandırması
+208 Kitap yap
+209 IDs ekle/sil
+210 Tercih
+211 Genel
+212 Tarama...
+213 Derleme...
+214 Önbellekleme...
+215 Proxy...
+216 Renkler...
+217 Geometri...
+218 Ülke dilleri...
+219 Profiller...
+220 Sayfa modelleri
+221 Seçili alan ekleme
+222 Doküman eklemek
+223 Seçili alanı taşı
+224 Xpointer\'daki birikenleri taşı
+225 Tekrar ekle
+226 Server\'e kaydet
+227 Sil
+228 Yükle
+229 Kişisel ayarlama
+230 Sabit filitre
+231 Ayarlar
 232 **Configure...
-233 **Bookmark File
-234 **Edit Topics
-235 **View Bookmarks
-236 **Lock resource...
-237 **Unlock resource...
-238 **View resource properties...
-239 **Copy lock information...
-240 **Locked?
-241 **Preferences...
-242 **About Amaya
-243 Amaya hakkýnda
-244 **Index
-245 **Browsing
-246 Arama
-247 Tarama
-248 **Document
-249 Görünümler
-250 Tarz tanýmlarý
-251 **Characters
-252 Baðlantýlar
-253 Birim yaratma
-254 Yeniden yapýlandýrma
-255 Matematik
-256 Tablolar
-257 **Graphics
-258 **XML support
-259 Görüntü haritalarý
-260 Seçme
-261 Özellikler
-262 Yazým hatalarý aranýyor
-263 Sayfa yerleþtirme
-264 Bastýrma
-265 Numaralandýrmasý
+233 Tekrar okumayı kilidi aç
+234 Tekrar okuma ayarlarını göster
+235 kilitli bilgileri kopyala
+236 kitli mi?
+237 Ayarlar
+238 Amaya hakkında
+239 W3C deki Amaya hakkında
+240 Içerik
+241 Tarama
+242 Görünümler
+243 Seç
+244 Döküman
+245 Yarat
+246 Tarz tanımları
+247 karakterler
+248 Yeniden yapılandırma
+249 Bağlantılar
+250 Tablolar
+251 Aktif alan
+252 Matematik
+253 Grafik
+254 XML desteği
+255 Görüntü haritaları
+256 Yazı hataları arama
+257 Yazı hataları düzeltmek
+258 Bastırma
+259 Sayfa yerleştirme
+260 Numaralandır
+261 Kitap oluşturma
+262 Not ekleme
+263 Amaya yapılandırması
+264 Kısalmalar
+265 Amaya\'ya ulaşmak
 266 **Annotations
 267 Kitap oluþturma
 268 **ShortCuts

@@ -23,6 +23,9 @@
 #include "message.h"
 #include "appdialogue.h"
 
+#define THOT_EXPORT extern
+#include "edit_tv.h"
+
 /* Description d'une table de messages */
 typedef struct _TabMsg *PtrTabMsg;
 typedef struct _TabMsg
@@ -129,7 +132,6 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   FILE               *file;
   PtrTabMsg           currenttable;
   PtrTabMsg           previoustable;
-  CHARSET             encoding;
   char                pBuffer[MAX_TXT_LEN];
   char                fileName[MAX_TXT_LEN];
   char               *s;
@@ -176,18 +178,18 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 
       pBuff[0] = EOS;
       fscanf (file, "# %500s\n]", pBuff);
-      if (!strcasecmp (pBuff, "encoding="))
+      if (!strncasecmp (pBuff, "encoding=", 9))
 	{
 	  fscanf (file, "%500s\n]", pBuff);
-	  if (!strcasecmp (pBuff, "utf8"))
-	    encoding = UTF_8;
+	  if (!strncasecmp (pBuff, "utf8", 4))
+	    DialogCharset = UTF_8;
 	  else
-	    encoding = ISO_8859_1;
+	    DialogCharset = ISO_8859_1;
 	}
       else
 	{
 	  fseek (file, 0L, 0);
-	  encoding = ISO_8859_1;
+	  DialogCharset = ISO_8859_1;
 	}
 
       /* Load messages */

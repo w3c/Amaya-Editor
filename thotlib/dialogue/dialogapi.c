@@ -1916,7 +1916,9 @@ static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 	}
      }
+#ifdef _GTK
    return TRUE;
+#endif /* _GTK */
 }
 
 

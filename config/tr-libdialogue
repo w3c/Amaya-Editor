@@ -1,88 +1,88 @@
-# encoding= latin1
-0 X11 Hatası : %s\n
+# encoding= utf8
+0 X11 HatasÄ± : %s\n
 1 Onayla
-2 Alfabe dosyası yok
-3 Yeni görünüm eskisinin yerini alamaz
-4 Uyumsuz şemalar. %s yeniden derlenmeli
-5 Ölümcül hata: yazıtipleri bulunamadı
-6 Bellek tükendi
-7 Ölümcül Hata: X sistemine bağlanılamıyor
-8 Görünüm dosya yaratmadan önce değiştirildi
+2 Alfabe dosyasÄ± yok
+3 Yeni gÃ¶rÃ¼nÃ¼m eskisinin yerini alamaz
+4 Uyumsuz ÅŸemalar. %s yeniden derlenmeli
+5 Ã–lÃ¼mcÃ¼l hata: yazÄ±tipleri bulunamadÄ±
+6 Bellek tÃ¼kendi
+7 Ã–lÃ¼mcÃ¼l Hata: X sistemine baÄŸlanÄ±lamÄ±yor
+8 GÃ¶rÃ¼nÃ¼m dosya yaratmadan Ã¶nce deÄŸiÅŸtirildi
 9 Kural tablosu dolu.
-10 Yanlış dosya: %s.STR
-11 Yanlış dosya: %s.PRS
-12 %s belgesi yazdırıldı
-13 Ölçek (%)
-14 1 sayfa/kağıt
-15 2 sayfa/kağıt
-16 4 sayfa/kağıt
+10 YanlÄ±ÅŸ dosya: %s.STR
+11 YanlÄ±ÅŸ dosya: %s.PRS
+12 %s belgesi yazdÄ±rÄ±ldÄ±
+13 Ã–lÃ§ek
+14 1 sayfa/kaÄŸÄ±t
+15 2 sayfa/kaÄŸÄ±t
+16 4 sayfa/kaÄŸÄ±t
 17 %s
 18 Bellek yetersiz
-19 *** Amaya: Dönüşü olmayan HATA ***
-20 değiştirilen belgeler varsa kaydedilecek
-21 Geçersiz.TRA dosyası: %s
-22 %s is not a valid sibling for %s (%s)
-23 %s is not a valid child for %s (%s)
+19 *** Amaya: DÃ¶nÃ¼ÅŸÃ¼ olmayan HATA ***\n
+20 deÄŸiÅŸtirilen belgeler varsa kaydedilecek
+21 GeÃ§ersiz.TRA dosyasÄ±: %s
+22 %s %s iÃ§in gerÃ§ersiz bir kardeÅŸtir
+23 %s %s iÃ§in gerÃ§ersiz bir oÄŸuldur
 24 %s, sayfa %d
 25 Dil
-26 Özellik
+26 Ã–zellikler
 27 Standart sunum
 28 Uygula
 29 Karakterler
-30 Altçizgi
+30 AltÃ§izgi
 31 Grafikler
-32 Biçim
-33 Öntanımlı
+32 BiÃ§im
+33 Ã–ntanÄ±mlÄ±
 34 Hizala
-35 İçeriden
-36 Yazdır
+35 Ä°Ã§eriden
+36 YazdÄ±r
 37 Elle besleme
-38 Seçenekler
+38 SeÃ§enekler
 39 A4
 40 US
-41 Sayfa biçimi
+41 Sayfa biÃ§imi
 42 Tamam
 43 Dizinleri
-44 %s belgesi zaten var, üzerine yazmak ister misiniz?
-45 1. tuş yazı rengini ayarlar
-46 2. tuş arkaplan rengini ayarlar
-47 Yazıtipi ailesi
+44 %s belgesi zaten var, Ã¼zerine yazmak ister misiniz?
+45 Sol duÄŸme tuÅŸ yazÄ± rengini ayarlar
+46 Orta veya saÄŸ tuÅŸ arkaplan rengini ayarlar
+47 YazÄ±tipi ailesi
 48 Normal
-49 Kalın
-50 İtalik
+49 KalÄ±n
+50 Ä°talik
 51 Oblik
 52 Normal
-53 Kalın
+53 KalÄ±n
 54 Normal
-55 Altçizgi
+55 AltÃ§izgi
 56 Cross out
 57 Body boyu (pt)
-58 İçeriden (pt)
-59 Satır aralığı (pt)
-60 Satır aralığı
+58 Ä°Ã§eriden (pt)
+59 SatÄ±r aralÄ±ÄŸÄ± (pt)
+60 SatÄ±r aralÄ±ÄŸÄ±
 61 Belge kaydet
 62 Kapat, kaydetme
-63 Karakter tarzı
+63 Karakter tarzÄ±
 64 Renkler
 65 Sil
-66 Çıktı
+66 Ã‡Ä±ktÄ±
 67 PostScript dosya
-68 Yazıcı
-69 Arama
-70 BÜYÜK HARF = küçük harf
-71 ile değiştir
-72 Değiştir
-73 Değiştirme
-74 İstek üzerine değiştir
-75 Otomatik olarak değiştir
+68 YazÄ±cÄ±
+69 Metin arama
+70 BÃœYÃœK HARF = kÃ¼Ã§Ã¼k harf
+71 ile deÄŸiÅŸtir
+72 DeÄŸiÅŸtir
+73 DeÄŸiÅŸtirme
+74 Ä°stek Ã¼zerine deÄŸiÅŸtir
+75 Otomatik olarak deÄŸiÅŸtir
 76 Arama nerede
-77 Seçimden önce
-78 Seçim içi
-79 Seçimden sonra
-80 Tüm belgede
-81 Değiştirme
-82 Öntanımlı renkler
-83 kapamadan önce
+77 SeÃ§imden Ã¶nce
+78 SeÃ§im iÃ§i
+79 SeÃ§imden sonra
+80 TÃ¼m belgede
+81 DeÄŸiÅŸtirme
+82 Ã–ntanÄ±mlÄ± renkler
+83 kapamadan Ã¶nce
 84 Belgeyi kapa
 85 Matematik sembolleri
 86 Grafik
@@ -92,50 +92,50 @@
 90 Metin
 91 Grafik
 92 Simge
-93 Görüntü
+93 GÃ¶rÃ¼ntÃ¼
 94 Birim tipi
-95 önce
+95 Ã¶nce
 96 sonra
-97 civarında
+97 civarÄ±nda
 98 Ekle
-99 Yapıştır
-100 to create
+99 YapÄ±ÅŸtÄ±r
+100 YapÄ±lmalÄ±dÄ±r
 101 Ekle
 102 Sayfa kesmesi
 103 Birimin dili
-104 Alınan dil
-105 Bulunamadı
+104 AlÄ±nan dil
+105 BulunamadÄ±
 106 Ara
 107 Ara
 108 Salt-oku birim
-109 Değiştirilecek bir şey yok
+109 DeÄŸiÅŸtirilecek bir ÅŸey yok
 110 Standart karakterler
 111 Standart grafikler
-112 Standart biçim
+112 Standart biÃ§im
 113 Standart geometri
 114 pt
-115 Çizgi tarzı
-116 Çizgi ağırlığı
-117 Doldurma şekli
-118 Ayır
-119 Nesne türü
-120 Numaralı sayfaya git
+115 Ã‡izgi tarzÄ±
+116 Ã‡izgi aÄŸÄ±rlÄ±ÄŸÄ±
+117 Doldurma ÅŸekli
+118 AyÄ±r
+119 Nesne tÃ¼rÃ¼
+120 NumaralÄ± sayfaya git
 121 Herhangi
-122 Aranacak olan özellik
+122 Aranacak olan Ã¶zellik
 123 Aranacak olan tip
-124 Natures
-125 Özellik değeri
-126 Bilinmeyen özellik
-127 Vazgeç
-128 PostScript dönüşümünde hata
-129 Komut "%s" tarafından reddedildi.
-130 "%s" yaratılamadı
-131 Üstçizgi
-132 Üstçizgi
-133 **Events
-134 **Remove attribute
-135 **Left button sets the selection color
-136 **Middle or Right button sets the caret color
-137 **More ...
-138 **Get
-139 **Color
+124 Ã¶zellikler
+125 Ã–zellik deÄŸeri
+126 Bilinmeyen Ã¶zellik
+127 VazgeÃ§
+128 PostScript dÃ¶nÃ¼ÅŸÃ¼mÃ¼nde hata
+129 Komut "%s" tarafÄ±ndan reddedildi.
+130 "%s" yaratÄ±lamadÄ±
+131 ÃœstÃ§izgi
+132 DokÃ¼manÄ±n formasÄ±
+133 Olaylar
+134 Ã–zeliÄŸi sil
+135 Sol dÃ¼ÄŸme seÃ§ilin rengini deÄŸiÅŸtiriyor
+136 Orta ve saÄŸ dÃ¼ÄŸme kÃ¼rsÃ¶r\'Ã¼n rengini deÄŸiÅŸtiriyor
+137 DiÄŸer...
+138 Yenilendir
+139 Renk

@@ -1,23 +1,23 @@
-# encoding= latin1
-0 Önerilerin sayısı
+# encoding= utf8
+0 Ã–nerilerin sayÄ±sÄ±
 1 Kontrol ediliyor
 2 Atla ve sonraki
-3 Değiştir (+ sözlük)
-4 Değiştir ve sonraki
-5 Başka dil
-6 Atla (+ sozluk)
-7 words containing:
-8 Yazım hataları aranıyor...
-9 Roma rakamları
-10 Aldırma
-11 Hepsi büyük harf olan sözcükler
-12 Rakam içeren sözcükler
-13 Parametre dosya hatası
-14 Tuştakımı dosyası yok
-15 Belge sözlüğü kaydedilemiyor
-16 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
-17 "%s" sözcüğü belge sözlüğüne eklendi
-18 Yazım hataları arama sonu
-19 Yazım hatası araması iptal edildi
-20 Lütfen bir belge seçin
-21 Belge sözlüğü kaydedildi: %s
+3 DeÄŸiÅŸtir (+ sÃ¶zlÃ¼k)
+4 DeÄŸiÅŸtir
+5 BaÅŸka dil
+6 Atla (+ sÃ¶zlÃ¼k)
+7 Karakterleri iÃ§eren:
+8 YazÄ±m hatalarÄ± dÃ¼zelt...
+9 Roma rakamlarÄ±
+10 AldÄ±rma
+11 Hepsi bÃ¼yÃ¼k harf olan sÃ¶zcÃ¼kler
+12 Rakam iÃ§eren sÃ¶zcÃ¼kler
+13 Parametre dosya hatasÄ±
+14 TuÅŸtakÄ±mÄ± dosyasÄ± yok
+15 Belge sÃ¶zlÃ¼ÄŸÃ¼ kaydedilemiyor
+16 YanlÄ±ÅŸ sÃ¶zcÃ¼k "%s" bu sÃ¶zlÃ¼kte kabul edilmiyor
+17 "%s" sÃ¶zcÃ¼ÄŸÃ¼ belge sÃ¶zlÃ¼ÄŸÃ¼ne eklendi
+18 YazÄ±m hatalarÄ± arama sonu
+19 YazÄ±m hatasÄ± aramasÄ± iptal edildi
+20 LÃ¼tfen bir belge seÃ§in
+21 Belge sÃ¶zlÃ¼ÄŸÃ¼ kaydedildi: %s

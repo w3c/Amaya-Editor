@@ -117,6 +117,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  /* HEBREW_CHARSET */
 	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-8");
 	  break;
+	case '9':
+	  /* TURKISH */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-9");
+	  break;
 	case 'D':
 	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-13");
 	  break;

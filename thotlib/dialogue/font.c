@@ -472,7 +472,7 @@ static XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
     return NULL;
   else if (xf->min_byte1 == 0 && xf->max_byte1 == 0)
     {
-      if (c < xf->min_char_or_byte2 || c >= xf->max_char_or_byte2)
+      if ((unsigned int ) c < xf->min_char_or_byte2 || (unsigned int ) c >= xf->max_char_or_byte2)
 	return NULL;
       else
 	return &xf->per_char[c - xf->min_char_or_byte2];
@@ -1842,6 +1842,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 			c = 188;
 		    }
 		}
+#endif /* _WINDOWS */
+	    }
+	  else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
+	    {
+	      code = '9'; /* Turkish */
+	      pfont = &(fontset->FontIso_9);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1254;
+#else /* _WINDOWS */
+	      encoding = ISO_8859_9;
 #endif /* _WINDOWS */
 	    }
 	  else if (c < 0x17F)
