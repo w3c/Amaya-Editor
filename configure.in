@@ -217,15 +217,28 @@ if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
   fi
 fi
 
-# check if wxWindows gui should be used
-AC_ARG_WITH(wx, [  --with-wx               use wxWindows GUI toolkit (experimental)])
+# check for mesa library (OpenGL)
+AC_ARG_WITH(MESA,              [  --with-mesa               enable OpenGL canvas with internal MesaLib (only used with wxWidgets GUI) ])
+if test "$with_mesa" = "" ; then
+ if test "$enable_mesa" = "yes" ; then
+    with_mesa="yes"
+    with_gl="no"
+  else
+    with_mesa="no"
+  fi
+fi
+
+# check if wxWidgets gui should be used
+AC_ARG_WITH(wx, [  --with-wx               use wxWidgets GUI toolkit (experimental)])
 if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
   if test "$withval" = "no" ; then
     with_wx="no"
   else
     with_wx="yes"
-    # force opengl with wxWidgets
-    with_gl="yes"
+    # force mesa or opengl with wxWidgets (mesa is used in priority)
+    if test "$with_gl" = "no" ; then
+      with_mesa="yes"
+    fi
   fi
 fi
 
@@ -319,6 +332,46 @@ if test "$with_gtk" = "yes" ; then
   fi											      
 fi
 
+
+if test "$with_mesa" = "yes" ; then
+  # --------- compile Mesa library (opengl) --------------- #
+
+  # check that sources of Mesa exists
+  if test ! -f ../../Mesa/Makefile ; then
+    AC_MSG_ERROR(Mesa library sources not found (opengl). Please download Mesa sources (http://www.mesa3d.org/) or remove --with-gl option !)
+  fi
+
+  OLDDIR=`pwd`
+  cd ../../Mesa
+
+
+  echo "---> Compiling Mesa library."
+  if test "$OS_OPTIONS" = "-D_UNIX" ; then
+    # LINUX
+    make linux
+  fi
+  echo "---> Compiling Mesa library. - DONE"
+
+
+  echo "---> Install Mesa library into Amaya."
+  mkdir -p $OLDDIR/../Mesa
+  mkdir -p $OLDDIR/../Mesa/include
+  mkdir -p $OLDDIR/../Mesa/lib
+  cp -r include/GL $OLDDIR/../Mesa/include/
+  cp -r lib/* $OLDDIR/../Mesa/lib/
+  echo "---> Install Mesa library into Amaya. - DONE"
+
+
+  cd $OLDDIR
+
+  # this is the flags used to build amaya with OpenGL
+  GL_OPTIONS="-D_GL"
+  GL_INCLUDES="-I../../Mesa/include"
+  GL_LIBRARIES="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib -lGL -lGLU"
+  AC_SUBST(GL_INCLUDES)
+  AC_SUBST(GL_LIBRARIES)
+fi
+
 if test "$with_wx" = "yes" ; then
   
   # check that sources of wxWidgets exists
@@ -348,12 +401,19 @@ if test "$with_wx" = "yes" ; then
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
-	# SG: I've disabled other debug options because the lib has bugs when using these flags (maybe these flags are not often used by wxWidgets developpers )
+    # SG: I've disabled other debug options because the lib has bugs when using these flags \
+    # (maybe because these flags are not often used by wxWidgets developpers)
     # WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug --enable-debug_cntxt --enable-debug_gdb --enable-debug_info --enable-debug_flag --enable-mem_tracing"
   fi
-  
+
   # launch the configure
-  ../configure $WXCONFIGURE_OPTION
+  if test "$with_mesa" = "yes" ; then
+    # use internal OpenGL (mesa) libraries
+    ../configure CFLAGS="-I../../Mesa/include" CXXFLAGS="-I../../Mesa/include" CPPFLAGS="-I../../Mesa/include" LDFLAGS_GL="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+  else
+    # use OpenGL system libraries
+    ../configure $WXCONFIGURE_OPTION    
+  fi
 
   echo "---> Configuring wxWidgets library. - DONE"
   echo "---> Compiling wxWidgets library."
@@ -367,24 +427,43 @@ if test "$with_wx" = "yes" ; then
   echo "---> Compiling wxWidgets library. - DONE"
   # --------- compile wxWidgets library - DONE --------------- #
 
+
+  # --------- install wxWidgets library  --------------- #
+  echo "---> Install wxWidgets library into Amaya."
+  OLDDIR=$(pwd)
+  cd ../../wxWidgets
+  mkdir -p $OLDDIR/../wxWidgets
+  mkdir -p $OLDDIR/../wxWidgets/include
+  mkdir -p $OLDDIR/../wxWidgets/contrib
+  mkdir -p $OLDDIR/../wxWidgets/contrib/include
+  mkdir -p $OLDDIR/../wxWidgets/lib
+  cp -r include/* $OLDDIR/../wxWidgets/include/
+  cp -r contrib/include/* $OLDDIR/../wxWidgets/contrib/include/
+  cp -r AMAYABUILD/lib/* $OLDDIR/../wxWidgets/lib/
+  cp -pd AMAYABUILD/*-config $OLDDIR/../wxWidgets/
+  cd $OLDDIR
+  echo "---> Install wxWidgets library into Amaya. - DONE"
+  # --------- install wxWidgets library - DONE --------------- #
+
+
   # --------- configuring wxWidgets paths --------------- #
-  WXCONFIG=../../wxWidgets/AMAYABUILD/wx-config
-  # loop for absolute wxWidgets path : necessary to compile thotlib and amaya because they are in subdirectory
-  cd ../../wxWidgets/ && WXROOTDIR=`pwd` && WXCONFIG_ARGS="--prefix=$WXROOTDIR --exec-prefix=$WXROOTDIR/AMAYABUILD" && cd -
+  WXCONFIG=../wxWidgets/wx-config
+  # look for relative wxWidgets path : necessary to install into different paths amaya
+  WXCONFIG_ARGS="--prefix=../../wxWidgets --exec-prefix=../../wxWidgets"
   # check that wx-config exists
   if test ! -f $WXCONFIG ; then
-    AC_MSG_ERROR(Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/))
+    AC_MSG_ERROR(Cannot find wx-config. Please download wxWidgets (http://www.wxwidgets.org/))
   fi
   
   WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
-  WX_INCLUDES="-I$WXROOTDIR/contrib/include/ ${WX_INCLUDES}"
+  WX_INCLUDES="-I../../wxWidgets/contrib/include/ ${WX_INCLUDES}"
   AC_SUBST(WX_INCLUDES)
 
-  WX_LIBRARIES="-Wl,-rpath,$WXROOTDIR/AMAYABUILD/lib `$WXCONFIG $WXCONFIG_ARGS --libs`"
+  WX_LIBRARIES="-Wl,-rpath,../../wxWidgets/lib `$WXCONFIG $WXCONFIG_ARGS --libs`"
 
   # GL is used ?
-  if test "${with_gl}" = "yes" ; then
-    WX_LIBRARIES="${WX_LIBRARIES} `$WXCONFIG $WXCONFIG_ARGS --gl-libs`"
+  if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
+    WX_LIBRARIES="${WX_LIBRARIES} `$WXCONFIG $WXCONFIG_ARGS --libs=gl`"
 
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
     if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
@@ -417,7 +496,7 @@ dnl  ***************************************************************
 # if configure has option --with-graphiclibs then dont check for system graphic libs
 # force amaya static graphic libs to be used
 AC_ARG_WITH(graphiclibs, [  --with-graphiclibs     use static libjpeg, libpng.])
-if test "$with_graphiclibs" = "yes" -o "enable_graphiclibs" = "yes" ; then
+if test "$with_graphiclibs" = "yes" -o "$enable_graphiclibs" = "yes" ; then
   no_graphic="no"
 else
   no_graphic="yes"
@@ -537,7 +616,10 @@ dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
 
-if test "$with_gl" = "yes" ; then
+if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
+
+  # if with_gl is on then test system opengl library (GL & GLU)
+  if test "$with_gl" = "yes" ; then
 	# setup a list of standard paths int LDFLAGS
 	# for AC_CHECK_LIB library existance checks
 	LIBS_OLD=$LIBS
@@ -550,16 +632,17 @@ if test "$with_gl" = "yes" ; then
 		/usr/local/include		\
 		; \
 	do  if test -r "$ac_dir/GL/gl.h" ; then
-                gl_inc="yes"
-		GL_INC_I="$ac_dir"
-		if test "$ac_dir" != "/usr/include" ; then
-		   GL_INCLUDES="-I$ac_dir"
-		fi
-        AC_CHECK_LIB(GL,glBegin,,AC_MSG_ERROR(Cannot find OpenGL library. Please install OpenGL.))
-		AC_MSG_RESULT([yes])
-       	break	
-      fi
-	done	
+          gl_inc="yes"
+          GL_INC_I="$ac_dir"
+          if test "$ac_dir" != "/usr/include" ; then
+            GL_INCLUDES="-I$ac_dir"
+	  fi
+          AC_CHECK_LIB(GL,glBegin,,AC_MSG_ERROR(Cannot find OpenGL library. Please install OpenGL.))
+          AC_MSG_RESULT([yes])
+       	  break	
+        fi
+	done
+	
   	AC_MSG_CHECKING([GLU])	
 	for ac_dir in               		\
 		/usr/include 			\
@@ -567,26 +650,53 @@ if test "$with_gl" = "yes" ; then
 		/usr/local/include		\
 		; \
 	do  if test -r "$ac_dir/GL/glu.h" ; then
-                glu_inc="yes"
-		GL_INC_II="$ac_dir"
-		if test "$ac_dir" != "/usr/include" ; then
-			if test "$ac_dir" != "$GL_INC_I" ; then
-		   	    GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
-			fi
-		fi
-		# now test that glu version is >= 1.2
-        AC_CHECK_LIB(GLU,gluNewTess,,AC_CHECK_LIB(glu32,gluNewTess,,AC_MSG_ERROR(Cannot find OpenGL GLU lib or existing version is < 1.2. Pease upgrade your GLU library.)))
-		AC_MSG_RESULT([yes])
-       	break	
-      fi
-	done
+          glu_inc="yes"
+          GL_INC_II="$ac_dir"
+          if test "$ac_dir" != "/usr/include" ; then
+            if test "$ac_dir" != "$GL_INC_I" ; then
+              GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
+            fi
+          fi
+          # now test that glu version is >= 1.2
+          AC_CHECK_LIB(GLU,gluNewTess,,AC_CHECK_LIB(glu32,gluNewTess,,AC_MSG_ERROR(Cannot find OpenGL GLU lib or existing version is < 1.2. Pease upgrade your GLU library.)))
+          AC_MSG_RESULT([yes])
+       	  break	
+        fi
+        done
 	LDFLAGS=$LDFLAGS_OLD
 	LIBS=$LIBS_OLD
+    if test "$gl_inc" = "" ; then	        
+      AC_MSG_WARN(Opengl headers (gl.h) not found !!)
+      AC_MSG_WARN(Disabling opengl build !)
+      with_gl="no"
+      GL_OPTIONS=	
+      GL_INCLUDES=	
+      GL_LIBRARIES=
+      exit 1;
+    fi
+
+    if test "$glu_inc" = "" ; then
+      AC_MSG_WARN(Glu headers (glu.h) not found !!)
+      AC_MSG_WARN(Disabling opengl build !)
+  
+      with_gl="no"
+      GL_OPTIONS=	
+      GL_INCLUDES=	
+      GL_LIBRARIES=
+      exit 1;
+    fi
+    
+    GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
+    GL_OPTIONS="-D_GL"
+
+    AC_SUBST(GL_INCLUDES)
+    AC_SUBST(GL_LIBRARIES)
+  fi # if with_gl
 	
-	# check for gtkglarea.h only if gtk gui is selected
-	if test "$with_gtk" = "yes" ; then
-    	  AC_MSG_CHECKING([GTKGLAREA])	
-	  for ac_dir in               		\
+  # check for gtkglarea.h only if gtk gui is selected
+  if test "$with_gtk" = "yes" ; then
+    AC_MSG_CHECKING([GTKGLAREA])
+    for ac_dir in               		\
 	  	/usr/include/GL			\
 		/usr/include 			\
 		/usr/X11R6/include/GL   	\
@@ -594,42 +704,55 @@ if test "$with_gl" = "yes" ; then
 		/usr/local/include		\
 		/usr/local/include/GL		\
 		; \
-  	  do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
-                  gtkgl_inc="yes"
-	  	  if test "$ac_dir" != "/usr/include" ; then
-			  if test "$ac_dir" != "$GL_INC_II" ; then
-				  if test "$ac_dir" != "$GL_INC_I" ; then
-		   			  GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
-				  fi
-			  fi
-		  fi
-		  AC_MSG_RESULT([yes])
-       	 	  break	
-    	      fi
-	  done
-	  GTKGL_LIBS="-lgtkgl"
-	else
-  	  gtkgl_inc="ignore"
-	  GTKGL_LIBS=""
-	fi
+    do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
+      gtkgl_inc="yes"
+        if test "$ac_dir" != "/usr/include" ; then
+          if test "$ac_dir" != "$GL_INC_II" ; then
+            if test "$ac_dir" != "$GL_INC_I" ; then
+              GTK_GL_INCLUDES="-I$ac_dir"
+            fi
+          fi
+        fi
+        AC_MSG_RESULT([yes])
+        break	
+    fi
+    done
+    GTK_GL_LIBRARIES="-lgtkgl"
 
-  	AC_MSG_CHECKING([freetype])	
-	for ac_dir in               		\
-		/usr/include 			\
-		/usr/X11R6/include 		\
-		/usr/local/include		\
-		/opt/local/include		\
-		/usr/X11R6/include/freetype2	\
-		; \
-	do  if test -r "$ac_dir/ft2build.h" ; then
-                freetype_inc="yes"
-		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
-       	        AC_MSG_RESULT([yes])	
-		break	
-    	    fi
-	done	
-        AC_MSG_CHECKING([Xft])	
-	for ac_dir in               		\
+    if test "$gtkgl_inc" = "" ; then
+      AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
+      AC_MSG_WARN(Disabling opengl build !)
+      with_gl="no"
+      exit 1;
+    fi
+    AC_SUBST(GTK_GL_INCLUDES)
+    AC_SUBST(GTK_GL_LIBRARIES)
+  fi
+
+  # checking for freetype lib (fonts library)
+  if test ! -f $(which freetype-config) ; then
+    AC_MSG_ERROR(Cannot find freetype library (font load/display routines). Please install it.)
+  fi
+  FREETYPE_INCLUDES=`freetype-config --cflags`
+  FREETYPE_LIBRARIES=`freetype-config --libs`
+  AC_SUBST(FREETYPE_INCLUDES)
+  AC_SUBST(FREETYPE_LIBRARIES)
+
+
+  # checking for xft lib
+  # (not used because xft-config doesn't exist on debian stable)
+  #if test ! -f $(which xft-config) ; then
+  #  AC_MSG_ERROR(Cannot find Xft library. Please install it.)
+  #fi
+  #XFT_INCLUDES=`xft-config --cflags`
+  #XFT_LIBRARIES=`xft-config --libs`
+  #AC_SUBST(XFT_INCLUDES)
+  #AC_SUBST(XFT_LIBRARIES)
+
+  # START CHECKING XFT #
+  # checking for Xft (old way)
+  AC_MSG_CHECKING([Xft])
+  for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
@@ -644,99 +767,71 @@ if test "$with_gl" = "yes" ; then
 		/usr/X11R6/include/X11/Xft2	\
 		/usr/local/include/X11/Xft2	\
 		; \
-	do  if test -r "$ac_dir/Xft.h" ; then
-                xft_inc="yes"
-		GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
-       	        AC_MSG_RESULT([yes])	
-		break	
-    	    fi
-	done	
-	AC_MSG_CHECKING([gcc3])	
-	for ac_dir in               		\
+  do  if test -r "$ac_dir/Xft.h" ; then
+    xft_inc="yes"
+    XFT_INCLUDES="-I$ac_dir"
+    AC_MSG_RESULT([yes])	
+    break	
+  fi
+  done	
+  if test "$xft_inc" = "" ; then
+    AC_MSG_WARN(Xft 2 headers (Xft.h) not found !!)
+    AC_MSG_WARN(Disabling opengl build !)
+      with_gl="no"
+      exit 1;
+  fi
+
+  AC_MSG_CHECKING([Xft-library])
+  for ac_dir in               		\
+		/usr/lib 			\
+		/usr/X11R6/lib	 		\
+		/usr/local/lib	 		\
+		; \
+  do  if test -r "$ac_dir/libXft.so" ; then
+    xft_lib="yes"
+    XFT_LIBRARIES="-L$ac_dir -lXft"
+    AC_MSG_RESULT([yes])
+    break	
+  fi
+  done	
+  if test "$xft_lib" = "" ; then
+    AC_MSG_WARN(Xft 2 librarie (libXft.so) not found !!)
+    AC_MSG_WARN(Disabling opengl build !)
+      with_gl="no"
+      exit 1;
+  fi
+  AC_SUBST(XFT_INCLUDES)
+  AC_SUBST(XFT_LIBRARIES)
+  # END CHECKING XFT #
+
+
+  AC_MSG_CHECKING([gcc3])	
+  for ac_dir in               		\
 		/usr/lib 			\
 		/usr/X11R6/lib 		\
 		/usr/local/lib		\
 		; \
-	do  if test -r "$ac_dir/libstdc++.so.5" ; then
-                stdglu_inc="yes"
-       	        AC_MSG_RESULT([yes])	
-		break
-    	    fi
-	done
-	if test "$gl_inc" = "" ; then	        
-	 	AC_MSG_WARN(Opengl headers (gl.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=	
-		GL_LIBRARIES=
-	        exit 1;
-	fi
-	if test "$glu_inc" = "" ; then
-	 	AC_MSG_WARN(Glu headers (glu.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=	
-		GL_LIBRARIES=
-	        exit 1;
-	fi
+  do  if test -r "$ac_dir/libstdc++.so.5" ; then
+    stdglu_inc="yes"
+    STDCPP_LIBRARIES="-lstdc++"
+    STDCPP_INCLUDES=""
+    AC_MSG_RESULT([yes])	
+    break
+  fi
+  done
+  AC_SUBST(STDCPP_INCLUDES)
+  AC_SUBST(STDCPP_LIBRARIES)
 
-	if test "$gtkgl_inc" = "" ; then
-	 	AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=	
-		GL_LIBRARIES=
-	        exit 1;
-	fi
+  NOPRINT=""
+  PRINTIFNOTGL=" print_prog"
 
-	if test "$freetype_inc" = "" ; then
-	 	AC_MSG_WARN(Freetype 2 headers (ft2build.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=
-		GL_LIBRARIES=
-	        exit 1;
-	fi
-	if test "$xft_inc" = "" ; then
-	 	AC_MSG_WARN(Xft 2 headers (Xft.h) not found !!)
-	   	AC_MSG_WARN(Disabling opengl build !)
-	   	with_gl="no"
-	    	GL_OPTIONS=	
-	        GL_INCLUDES=
-		GL_LIBRARIES=
-	        exit 1;
-	fi
-	if test "$gl_inc" = "yes" ; then
-		if test "$glu_inc" = "yes" ; then
-			if test "$gtkgl_inc" = "yes" -o "$gtkgl_inc" = "ignore" ; then
-	                    if test "$freetype_inc" = "yes" ; then
-	                    	if test "$xft_inc" = "yes" ; then
-			    		if test "$stdglu_inc" = "yes" ; then
-					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lXft -lfreetype -lGL -lGLU ${GTKGL_LIBS} -lstdc++"
-					else
-					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lXft -lfreetype -lGL -lGLU ${GTKGL_LIBS}"
-					fi				
-					GL_OPTIONS="-D_GL"
-				fi
-			    fi
-			fi
-		fi
-	fi
-AC_SUBST(GL_INCLUDES)
-AC_SUBST(GL_LIBRARIES)
-dnl PRINTIFNOTGL=" "
-dnl #NOPRINT="#"
-NOPRINT=""
-PRINTIFNOTGL=" print_prog"
-else
-NOPRINT=""
-PRINTIFNOTGL=" print_prog"
-fi
+else # if with_gl or with_mesa
+
+  NOPRINT=""
+  PRINTIFNOTGL=" print_prog"
+
+fi # if with_gl or with_mesa
+
 AC_SUBST(PRINTIFNOTGL)
 AC_SUBST(NOPRINT)
 
@@ -1281,7 +1376,10 @@ if test "$build_amaya" = "yes" ; then
     fi
     echo Amaya configured with internationalization suppport
     if test "$with_gl" = "yes" ; then
-	echo Amaya configured with OpenGL Canvas Rendering \(experimental\)
+	echo Amaya configured with OpenGL Canvas Rendering \(System library\) \(experimental\)
+    fi
+    if test "$with_mesa" = "yes" ; then
+	echo Amaya configured with OpenGL Canvas Rendering \(MesaLib\) \(experimental\)
     fi
     if test "$with_dav" = "yes" ; then
 	echo Amaya configured with WebDAV support \(experimental\)
