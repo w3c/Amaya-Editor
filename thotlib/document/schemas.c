@@ -60,6 +60,7 @@ static APresentation LoadedPSchema[MAX_PSCHEMAS];
 static AStructure LoadedSSchema[MAX_SSCHEMAS];
 
 #include "config_f.h"
+#include "content_f.h"
 #include "memory_f.h"
 #include "readstr_f.h"
 #include "schemas_f.h"
@@ -842,9 +843,11 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 				 PtrDocument pDoc)
 {
   int                  size, i;
+#ifndef NODISPLAY
   PtrDocSchemasDescr   pPfS;
   PtrPSchema           pPSchExt;
   PtrHandlePSchema     pHSP, pHSPNext;
+#endif
 
   *ret = 0;
 #ifndef NODISPLAY
@@ -1683,12 +1686,14 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
 void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 			       Document document)
 {
-  PtrSSchema           pSS;
-  PtrPSchema           pPSch, pPSchExt;
-  int                  i, size;
+  PtrSSchema           pSS, pPSch;
   PtrDocument          pDoc;
   PtrDocSchemasDescr   pPfS;
+#ifndef NODISPLAY
+  PtrPSchema           pPSchExt;
   PtrHandlePSchema     pHSP, pHSPNext;
+#endif
+  int                  i, size;
 
   attrType->AttrTypeNum = -1;           /* -1 means failure */
   pSS = (PtrSSchema) attrType->AttrSSchema;
@@ -2338,7 +2343,6 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
   PtrSSchema          pSS;
   PtrPSchema          pPSch;
   PtrDocSchemasDescr  pPfS;
-  PtrPRule            nextPRule;
   int                 i;
 
   pDoc = LoadedDocument[document - 1];
@@ -2466,7 +2470,6 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
   PtrSRule            pRe1;
   PtrAttribute        pAttr;
   PtrTtAttribute      pAttr1;
-  ElementType        *elType;
   char                text[100];
   char                startName[MAX_NAME_LENGTH+1];
   char                endName[MAX_NAME_LENGTH+3];
