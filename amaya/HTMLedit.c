@@ -1361,6 +1361,11 @@ NotifyElement      *event;
 		  TtaNextSibling (&nextchild);
 		  TtaRemoveTree (child, doc);
 		  TtaInsertSibling (child, anchor, TRUE, doc);
+		  /* if anchor is the pasted element, it has been registered
+		     in the editing history for the Undo command.  It will be
+		     deleted, so its children have to be registered too. */
+		  if (anchor == el)
+		     TtaRegisterElementCreate (child, doc);
 		  child = nextchild;
 		}
 	      TtaDeleteTree (anchor, doc);

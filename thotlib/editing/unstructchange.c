@@ -656,12 +656,6 @@ void                PasteCommand ()
 	else
 	  /* on a effectivement colle' le contenu du buffer */
 	  {
-	    /* register the pasted elements in the editing history */
-	    OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
-				 lastChar-1);
-	    for (i = 0; i < NCreatedElements; i++)
-	      AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-	    CloseHistorySequence (pDoc);
 	    /* il faudra changer les labels lors du prochain Coller */
 	    ChangeLabel = TRUE;
 	    if (pSplitText != NULL)
@@ -683,10 +677,19 @@ void                PasteCommand ()
 	    /* Note les references sortantes colle'es */
 	    for (i = 0; i < NCreatedElements; i++)
 	      RegisterExternalRef (CreatedElement[i], pDoc, TRUE);
+	    /* register the pasted elements in the editing history */
+	    OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
+				 lastChar-1);
+	    for (i = 0; i < NCreatedElements; i++)
+	      if (CreatedElement[i])
+	         AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
 	    /* envoie l'evenement ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
 	      NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
 			     IdentDocument (DocOfSavedElements));
+	    /* close the history sequence after applications have possibly
+	       registered more changes to the pasted elements */
+	    CloseHistorySequence (pDoc);
 	    
 	    TtaClearViewSelections ();
 	    for (i = 0; i < NCreatedElements; i++)
