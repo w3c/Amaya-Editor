@@ -451,7 +451,6 @@ ThotBool            state;
    int                 i;
 
    if ((actionName == NULL) || (!Prof_BelongTable(actionName))) 
-     //   if (actionName == NULL)  
        return;			/* pas de nom d'action declare */
 
    lg = strlen (actionName);

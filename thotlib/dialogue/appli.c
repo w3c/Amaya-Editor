@@ -37,6 +37,10 @@
 #include "appdialogue.h"
 #include "thotcolor.h"
 
+#ifdef _WINDOWS
+#include "winsys.h"
+#endif /* _WINDOWS */
+
 #define MAX_ARGS 20
 
 #ifndef _WINDOWS
@@ -1360,7 +1364,6 @@ LPARAM      lParam;
     return 0;
 
   case WM_CLOSE:
-       DestroyWindow (hwnd);
   case WM_DESTROY:
     if (!viewClosed) {
       FrameToView (frame, &doc, &view);
@@ -1609,7 +1612,9 @@ LPARAM lParam;
                      wParam != 0x37      &&
                      wParam != 0x38      &&
 					 wParam != 0x39)
-				 break; 
+                    break;
+                 /* if (wParam == VK_RETURN && IS_NT)
+                    break; */
 
             case WM_SYSCHAR:
             case WM_CHAR:

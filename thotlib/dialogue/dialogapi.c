@@ -1189,6 +1189,7 @@ caddr_t             call_d;
       || (catalogue->Cat_Type == CAT_DIALOG))
     TtaDestroyDialogue (catalogue->Cat_Ref);
 }
+
 #ifndef _WINDOWS
 #ifndef _GTK
 /*----------------------------------------------------------------------
@@ -7326,7 +7327,6 @@ ThotBool            remanent;
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
          WinErrorBox (WIN_Main_Wd);
-      DestroyMenu (w);
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
           UpdateWindow (w);

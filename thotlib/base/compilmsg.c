@@ -43,11 +43,11 @@ STRING              text;
 		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
 		if ( pText )
 		{
-			// Set caret to end of current text
+			/* Set caret to end of current text */
 			int ndx = GetWindowTextLength (COMPWnd);
 			SetFocus (COMPWnd);   
 			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-			// Append text
+			/* Append text */
 			sprintf( pText, "%s\r\n", text );
 			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
@@ -79,11 +79,11 @@ int                 msgType;
 		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
 		if ( pText )
 		{
-			// Set caret to end of current text
+			/* Set caret to end of current text */
 			int ndx = GetWindowTextLength (COMPWnd);
 			SetFocus (COMPWnd);   
 			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-			// Append text
+			/* Append text */
 			sprintf( pText, "%s\r\n", text );
 			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
