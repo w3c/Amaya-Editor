@@ -189,6 +189,8 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
   *checkProfile = TRUE;
   elType->ElTypeNum = 0;
   profile = TtaGetDocumentProfile (doc);
+  if (profile == L_Annot)
+    profile = L_Other;
   /* case sensitive comparison for xml documents */
   xmlformat = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat);
 
@@ -294,6 +296,8 @@ char *GetXMLElementName (ElementType elType, Document doc)
 	ptr = NULL;
 
       profile = TtaGetDocumentProfile (doc);
+      if (profile == L_Annot)
+	profile = L_Other;
       if (ptr)
 	do
 	  {
@@ -445,6 +449,8 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     c = attrName[0];
 
   profile = TtaGetDocumentProfile (doc);
+  if (profile == L_Annot)
+    profile = L_Other;
   /* look for the first concerned entry in the table */
   while (ptr[i].XMLattribute[0] < c &&  ptr[i].XMLattribute[0] != EOS)
     i++;
@@ -516,6 +522,8 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 	ptr = XHTMLAttributeMappingTable;
       
       profile = TtaGetDocumentProfile (doc);
+      if (profile == L_Annot)
+	profile = L_Other;
       if (ptr)
 	do
 	  {

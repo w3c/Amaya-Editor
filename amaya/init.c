@@ -1336,7 +1336,7 @@ void CheckParsingErrors (Document doc)
 	      strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
 	      strcat (profile, " XHTML 1.1");
 	    }
-	  else if (prof == L_Transitional)
+	  else
 	    strcpy (profile, "");
 
 	  InitConfirm3L (doc, 1, profile, NULL,
