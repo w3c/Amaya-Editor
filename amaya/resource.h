@@ -249,6 +249,10 @@
 #define MAKEIDMENU                      545
 #define SAVEASDIALOG1                   546
 #define DOCINFOMENU                     547
+#define IDD_DIALOG1                     548
+#define IDD_DIALOG2                     549
+#define IDD_DIALOG4                     550
+#define IDC_CURSOR1                     551
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -735,7 +739,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        548
+#define _APS_NEXT_RESOURCE_VALUE        552
 #define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1561
 #define _APS_NEXT_SYMED_VALUE           101

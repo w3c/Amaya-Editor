@@ -795,7 +795,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
       AttrForm = hwnDlg;
       GetClientRect (hwnDlg, &rect);
       hDC = GetDC (hwnDlg);
-      SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
+      SelectObject (hDC, newFont);
       GetTextMetrics (hDC, &tm);
       cxChar = tm.tmAveCharWidth;
       cyChar = tm.tmHeight + tm.tmExternalLeading;
@@ -1572,7 +1572,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
       wndLangList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 40, 310, 200, hwnDlg, (HMENU) 1, 
+				  10, 20, 310, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
