@@ -476,6 +476,7 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_shape, "rect", HTML_ATTR_shape_VAL_rectangle},
    {HTML_ATTR_shape, "circle", HTML_ATTR_shape_VAL_circle},
    {HTML_ATTR_shape, "poly", HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, "default", HTML_ATTR_shape_VAL_default_},
 
    {HTML_ATTR_valuetype, "data", HTML_ATTR_valuetype_VAL_data_},
    {HTML_ATTR_valuetype, "ref", HTML_ATTR_valuetype_VAL_ref},
