@@ -393,9 +393,14 @@ static int          NumberOfCharRead = 0; /* number of characters read in the
 static ThotBool     EmptyLine = TRUE;	  /* no printable character encountered
 					     yet in the current line */
 static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
-					     yet in the file */
+			        	     yet in the file */
 static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
+
+/* Static variables used for the call to the XML parser */
+static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
+static ThotBool     NotToReadFile = FALSE;
+static int	    LastCharInPreviousFileBuffer = 0;
 
 /* input buffer */
 #define MaxBufferLength 1000
@@ -3065,6 +3070,10 @@ CHAR_T              c;
       CloseBuffer ();
       ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
       theGI[MaxMsgLength - 1] = WC_EOS;
+      /*** there may be a namespace prefix in front of the tag name ****/
+      /*** We consider ":" as separator character ***/      
+      /* Must the first or the last ":" character be consedered ? */
+
       InitBuffer ();
       if (HTMLcontext.lastElementClosed &&
 	  (HTMLcontext.lastElement == rootElement))
@@ -3076,7 +3085,6 @@ CHAR_T              c;
       if (!ustrcmp (theGI, TEXT("math")) ||
 	  !ustrcmp (theGI, TEXT("svg")) ||
 	  !ustrcmp (theGI, TEXT("xmlgraphics")))
-	/*** there may be a namespace prefix in front of the tag name ****/
 	/* a <math> or <svg> tag has been read */
 #ifdef EXPAT_PARSER
 	StopParsing ();
@@ -3088,7 +3096,20 @@ CHAR_T              c;
 	  else
 	     ustrcpy (schemaName, TEXT("GraphML"));
 	  /* get back to the beginning of the tag in the input buffer */
-          CurrentBufChar = StartOfTagIndx;
+	  /* "NotToReadFile" boolean means that we get back in the */
+	  /* previous input buffer */	
+	  /* That case happens when the "<" and ">" characters for that */
+	  /* tag has not been read in the same input buffer */
+	  if ((StartOfTagIndx <= 0) || (StartOfTagIndx > CurrentBufChar))
+	    {
+	      NotToReadFile = TRUE;
+	      if (StartOfTagIndx < 0)
+		CurrentBufChar = LastCharInPreviousFileBuffer;
+	      else
+		CurrentBufChar = StartOfTagIndx;
+	    }
+	  else
+	    CurrentBufChar = StartOfTagIndx;
 	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
 			 HTMLcontext.doc, &HTMLcontext.lastElement,
 			 &HTMLcontext.lastElementClosed,
@@ -4994,25 +5015,42 @@ ThotBool*       endOfFile;
     else
        {
        if (*index == 0)
-	  {
-          res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	  if (res <= 0)
+	 {
+	   if (NotToReadFile)
+	     NotToReadFile = FALSE;
+	   else
 	     {
-	     /* error or end of file */
-	     *endOfFile = TRUE;
-	     charRead = WC_EOS;
-	     LastCharInFileBuffer = 0;
+	       strcpy (PreviousFileBuffer, FileBuffer);
+	       LastCharInPreviousFileBuffer = LastCharInFileBuffer;
+	       res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	       if (res <= 0)
+		 {
+		   /* error or end of file */
+		   *endOfFile = TRUE;
+		   charRead = WC_EOS;
+		   LastCharInFileBuffer = 0;
+		 }
+	       else
+		 LastCharInFileBuffer = res - 1;
 	     }
-	  else
-	     LastCharInFileBuffer = res - 1;
-	  }
-       if (*endOfFile == FALSE)
-	  {
-          char* mbsBuff = &FileBuffer[(*index)];
-	  (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
-	  if (*index > LastCharInFileBuffer)
+	 }
+       if (NotToReadFile)
+	 {
+	   char* mbsBuff = &PreviousFileBuffer[(*index)];
+	   (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
+	   if (*index > LastCharInPreviousFileBuffer)
 	     *index = 0;
-	  }
+	 }
+       else
+	 {
+	   if (*endOfFile == FALSE)
+	     {
+	       char* mbsBuff = &FileBuffer[(*index)];
+	       (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
+	       if (*index > LastCharInFileBuffer)
+		 *index = 0;
+	     }
+	 }
        }
 #else  /* !_I18N_ */
     if (buffer != NULL)
@@ -5025,24 +5063,40 @@ ThotBool*       endOfFile;
     else
        {
        if (*index == 0)
-	  {
-	  res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	  if (res <= 0)
+	 {
+	   if (NotToReadFile)
+	     NotToReadFile = FALSE;
+	   else
 	     {
-             /* error or end of file */
-             *endOfFile = TRUE;
-	     charRead = WC_EOS;
-	     LastCharInFileBuffer = 0;
+	       strcpy (PreviousFileBuffer, FileBuffer);
+	       LastCharInPreviousFileBuffer = LastCharInFileBuffer;
+	       res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	       if (res <= 0)
+		 {
+		   /* error or end of file */
+		   *endOfFile = TRUE;
+		   charRead = WC_EOS;
+		   LastCharInFileBuffer = 0;
+		 }
+	       else
+		 LastCharInFileBuffer = res - 1;
 	     }
-	  else
-	     LastCharInFileBuffer = res - 1;
-	  }
-       if (*endOfFile == FALSE)
-	  {
-          charRead = FileBuffer[(*index)++];
-          if (*index > LastCharInFileBuffer)
-             *index = 0;
-	  }
+	 }
+       if (NotToReadFile)
+	 {
+	   charRead = PreviousFileBuffer[(*index)++];
+	   if (*index > LastCharInPreviousFileBuffer)
+	     *index = 0;
+	 }
+       else
+	 {
+	   if (*endOfFile == FALSE)
+	     {
+	       charRead = FileBuffer[(*index)++];
+	       if (*index > LastCharInFileBuffer)
+		 *index = 0;
+	     }
+	 }
        }
 #endif /* !_I18N_ */
     return charRead;
