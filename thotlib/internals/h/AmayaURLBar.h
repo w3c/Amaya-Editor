@@ -3,10 +3,13 @@
 #ifndef __AMAYAURLBAR_H__
 #define __AMAYAURLBAR_H__
 
-#include "wx/combobox.h"
+#include "wx/panel.h"
 
 class AmayaFrame;
 class AmayaWindow;
+
+class wxComboBox;
+class wxBitmapButton;
 
 /*
  * =====================================================================================
@@ -16,7 +19,7 @@ class AmayaWindow;
  *      Created:  06/05/2004 04:45:34 PM CET
  * =====================================================================================
  */
-class AmayaURLBar : public wxComboBox
+class AmayaURLBar : public wxPanel
 {
 public:
   DECLARE_DYNAMIC_CLASS(AmayaURLBar)
@@ -29,23 +32,18 @@ public:
   void OnURLText( wxCommandEvent& event );
   void OnURLTextEnter( wxCommandEvent& event );
 
-  void OnSize( wxSizeEvent& event );
-  void ReSize( int width, int height );
-
- protected:
-  typedef enum
-    {
-      URL_NOT_SELECTED,
-      URL_SELECTED,
-      URL_ACTIVATED
-    } AmayaURLState;
+  void Clear();
+  void Append( const wxString & newurl );
+  void SetValue( const wxString & newurl );
+  wxString GetValue();
 
  protected:
   DECLARE_EVENT_TABLE()
   
   AmayaWindow * m_pAmayaWindowParent;
-  AmayaURLState m_NewURLSelectedState;
-  bool          m_URLLocked;
+
+  wxComboBox * m_pComboBox;
+  wxBitmapButton * m_pValidateButton;
 };
 
 #endif // __AMAYAURLBAR_H__

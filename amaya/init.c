@@ -6862,18 +6862,18 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WX
    wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaApp::conv_ascii );
 
-   stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.gif") );
-   stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.gif") );
-   iconSave      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.gif") );
-   iconSaveNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.gif") );
-   iconFind      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/find.gif") );
-   iconReload    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/reload.gif") );
-   iconHome      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/home.gif") );
-   iconBack      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.gif") );
-   iconBackNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.gif") );
-   iconForward   = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.gif") );
-   iconForwardNo = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.gif") );
-   iconPrint     = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/print.gif") );
+   stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
+   stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
+   iconSave      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.png") );
+   iconSaveNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.png") );
+   iconFind      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/find.png") );
+   iconReload    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/reload.png") );
+   iconHome      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/home.png") );
+   iconBack      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.png") );
+   iconBackNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.png") );
+   iconForward   = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.png") );
+   iconForwardNo = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.png") );
+   iconPrint     = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/print.png") );
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
