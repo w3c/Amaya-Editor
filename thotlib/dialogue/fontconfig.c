@@ -91,26 +91,33 @@ static ThotBool IsXLFDName (char *font)
   ----------------------------------------------------------------------*/
 static int IsXLFDPatterneAFont (char *pattern)
 {
-#ifdef _GTK
+#ifndef _WINDOWS
   char **fontlist;
   int count=0;  
 
   if (IsXLFDName (pattern))
     {
+#ifdef _GTK
       fontlist = XListFonts (GDK_DISPLAY(), 
 			     pattern, 
 			     1, 
 			     &count);
-      if (count)
+#else /*_GTK*/
+      fontlist = XListFonts (TtDisplay, 
+			     pattern, 
+			     1, 
+			     &count);
+#endif /*_GTK*/
+	 if (count)
 	{
 	  XFreeFontNames(fontlist);
 	  return 1;      
 	}
     }
   return 0;
-#else /*_GTK*/
+#else /*_WINDOWS*/
   return IsXLFDName (pattern);  
-#endif /*_GTK*/
+#endif /*_WINDOWS*/
 }
 #endif /*_GL*/
 /*----------------------------------------------------------------------

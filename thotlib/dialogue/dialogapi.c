@@ -1237,8 +1237,10 @@ static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
 #ifdef _GTK
   struct Cat_Context *catalogue;
-
+  
   catalogue = (struct Cat_Context *) data;
+  if (catalogue == NULL || widget == NULL)
+    return;
 #endif /* _GTK */
   /* Le widget est detruit */
   if (catalogue->Cat_Type == CAT_FORM || catalogue->Cat_Type == CAT_SHEET ||
@@ -1248,6 +1250,8 @@ static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 #ifdef _GTK
+
+
 /*----------------------------------------------------------------------
   Callback for a scrolled window (click) @JK
   ----------------------------------------------------------------------*/
@@ -1256,14 +1260,16 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
   struct Cat_Context *catalogue;
   GtkWidget          *window;
 
-  catalogue = (struct Cat_Context *) data;
-  window = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (widget), "window");
-  if (GTK_WIDGET_HAS_GRAB (window))
-    {
-      gtk_grab_remove (window);
-      gdk_pointer_ungrab (GDK_CURRENT_TIME);
-      gdk_keyboard_ungrab (GDK_CURRENT_TIME);
-    }
+  catalogue = (struct Cat_Context *) data;  
+  window = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (widget), 
+					      "window");
+  if (window)
+    if (GTK_WIDGET_HAS_GRAB (window))
+      {
+	gtk_grab_remove (window);
+	gdk_pointer_ungrab (GDK_CURRENT_TIME);
+	gdk_keyboard_ungrab (GDK_CURRENT_TIME);
+      }
   CallMenuGTK ((ThotWidget) widget, catalogue);
   return (FALSE);
 }
@@ -1271,8 +1277,10 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 /*----------------------------------------------------------------------
   Callback for a scrolled window (button press)
   ----------------------------------------------------------------------*/
-static gboolean scr_popup_button_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
+static gboolean scr_popup_button_press (GtkWidget *widget, 
+					GdkEventButton *event, 
+					gpointer data)
+{ 
   return CallPopGTK (widget, data);
 }
 
@@ -1293,15 +1301,94 @@ static gboolean scr_popup_key_press (GtkWidget *widget, GdkEventKey *event, gpoi
     return FALSE;
 }
 
-#if 0
-/*----------------------------------------------------------------------
-  Callback for a scrolled window (keypress)
-  ----------------------------------------------------------------------*/
-static gboolean scr_popup_focus_out (GtkWidget *widget, GdkEventKey *event, gpointer data)
+gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
 {
+  GdkEventButton *event;
+  int x,y;
+
+  switch (AllEvent->type)
+    {
+    case GDK_BUTTON_RELEASE:
+      {
+	event = (GdkEventButton *)AllEvent;
+	x = (int) event->x;
+	y = (int) event->y;
+	if (x < w->allocation.x || 
+	      x > w->allocation.x + w->allocation.width ||
+	      y > w->allocation.y + w->allocation.height ||
+	      y < w->allocation.y)
+	  {
+	    formKillGTK (w, NULL, (gpointer) data);
+	  }
+      }
+      return FALSE;
+    case GDK_LEAVE_NOTIFY:
+      /*We could hide the widget there ?*/
+      return FALSE;
+
+    default:
+      break;
+    }
   return FALSE;
 }
-#endif /* 0 */
+
+#if 0
+/**
+   LIST ALL GTK EVENT ON A WIDGET
+ */
+gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
+{
+
+  g_print ("\nevent!\t");
+  
+  switch (AllEvent->type)
+    {
+    case GDK_CLIENT_EVENT:
+      g_print ("expose");
+      return FALSE;
+
+    case GDK_EXPOSE:
+      g_print ("expose");
+      return FALSE;
+
+    case GDK_PROPERTY_NOTIFY:
+      g_print ("property notify");
+      return FALSE;
+
+    case GDK_BUTTON_PRESS:
+      g_print ("button press");
+      return FALSE;
+
+    case GDK_BUTTON_RELEASE:
+      g_print ("button release");
+      return FALSE;
+
+    case GDK_MOTION_NOTIFY:
+      g_print ("Motion");
+      return FALSE;
+
+    case GDK_FOCUS_CHANGE:
+      g_print ("focus");
+      return FALSE;
+
+    case GDK_LEAVE_NOTIFY:
+      g_print ("leave notify");
+      return FALSE;
+
+    case GDK_ENTER_NOTIFY:
+      g_print ("enter notify");
+      return FALSE;
+
+    case GDK_KEY_PRESS:
+      g_print ("keypress");
+      return FALSE;
+    
+    default:
+      break;
+    }
+  return FALSE;
+}
+#endif /*0*/
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
@@ -3428,7 +3515,6 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	  }
     }
 }
-
 /*----------------------------------------------------------------------
    TtaNewScrollPopup cre'e un pop-up menu :                                 
    The parameter ref donne la re'fe'rence pour l'application.         
@@ -3546,13 +3632,10 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	listBox = NULL;
 #else /* _WINDOWS */
       menu =  gtk_window_new (GTK_WINDOW_POPUP);
+      
       /* signals */
       ConnectSignalGTK (GTK_OBJECT (menu),
-			"delete_event",
-			GTK_SIGNAL_FUNC (formKillGTK),
-			(gpointer) catalogue);
-      ConnectSignalGTK (GTK_OBJECT (menu),
-			"unmap_event",
+			"destroy",
 			GTK_SIGNAL_FUNC (formKillGTK),
 			(gpointer) catalogue);
       /* properties */
@@ -3588,6 +3671,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 				      GTK_POLICY_AUTOMATIC);
       /* add the scrwindow to its container */
       gtk_container_add (GTK_CONTAINER (event_box), scr_window);
+     
 #endif /* _WINDOWS */
       catalogue->Cat_Widget = menu;
       catalogue->Cat_Ref = ref;
@@ -3689,17 +3773,23 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 		      first = w;
 		    
 		    /* memorize the parent window */
-		    gtk_object_set_data (GTK_OBJECT (w), "window", (gpointer) menu);
+		    gtk_object_set_data (GTK_OBJECT (w), 
+					 "window", 
+					 (gpointer) menu);
 		    
 		    /* for debugging, memorize the widget name */
-		    gtk_object_set_data (GTK_OBJECT (w), "item", (gpointer) 
+		    gtk_object_set_data (GTK_OBJECT (w), 
+					 "item", (gpointer) 
 					 (TtaStrdup (menu_item)));
-		    
+
+
 		    /* get the key press */
 		    gtk_signal_connect (GTK_OBJECT (w), "key_press_event",
 					GTK_SIGNAL_FUNC (scr_popup_key_press),
 					(gpointer ) catalogue);
+
 		    /* get the click */
+		    
 		    ConnectSignalGTK (GTK_OBJECT (w), 
 				      "button-press-event",
 				      GTK_SIGNAL_FUNC (scr_popup_button_press),
@@ -3731,7 +3821,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       if (menu && glist)
 	{
 	  gtklist = gtk_list_new ();
-	  gtk_widget_show (GTK_WIDGET (gtklist));
 	  gtk_list_append_items (GTK_LIST (gtklist), glist);
 
 	  /* allow multiple items to be selected */
@@ -3740,12 +3829,20 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 
 	  /* store the value of the gtklist and the menu inside the popup object (we will
 	   use them later in the popup callback) */
-	  gtk_object_set_data (GTK_OBJECT (menu), "window", (gpointer) menu);
-	  gtk_object_set_data (GTK_OBJECT (menu), "gtklist", (gpointer) gtklist);
+	  gtk_object_set_data (GTK_OBJECT (menu), 
+			       "window", (gpointer) menu);
+	  gtk_object_set_data (GTK_OBJECT (menu), 
+			       "gtklist", (gpointer) gtklist);
 	  /* We'll use enter notify events to figure out when to transfer
 	   * the grab to the list
 	   */
-	  gtk_widget_set_events (gtklist, GDK_ENTER_NOTIFY_MASK);
+	  gtk_widget_set_events (gtklist, 
+				 GDK_ALL_EVENTS_MASK);
+	  
+	  gtk_signal_connect (GTK_OBJECT (menu), "event",
+				    GTK_SIGNAL_FUNC (listeventGTK), 
+				    (gpointer)catalogue);
+
 	  /* add the gtk list to the scr window */
 	  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scr_window), gtklist);
 	  /* tie the scrolling of the list to the scrolled window */
@@ -3756,9 +3853,14 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 					       gtk_scrolled_window_get_vadjustment
 					       (GTK_SCROLLED_WINDOW (scr_window)));
 	  /* give the focus to the gtklist */
-	  /* gtk_window_set_focus (GTK_WINDOW (menu), GTK_WIDGET (first)); */
+	  gtk_window_set_focus (GTK_WINDOW (menu), GTK_WIDGET (first));
+
 	  /* show everything */
+
+/* show everything */
 	  gtk_grab_add (menu);
+
+
 	  GTK_LIST (gtklist)->drag_selection = TRUE;
 	  gdk_pointer_grab (menu->window, TRUE,
 			    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
@@ -3766,6 +3868,10 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 			    NULL, NULL, GDK_CURRENT_TIME);
  	  gtk_widget_grab_focus (menu);
 	  gdk_keyboard_grab (menu->window, TRUE, GDK_CURRENT_TIME);
+
+
+	  gtk_widget_show (GTK_WIDGET (gtklist)); 
+	 
 	}
 #endif /* _WINDOWS */
 #else /* _WINDOWS || GTK*/

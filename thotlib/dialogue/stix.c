@@ -514,10 +514,6 @@ void GetMathFontFromChar (char typesymb,
 			  void **font,
 			  int height)
 {
-  static ThotBool IsStixOk = TRUE;
-
-  if (IsStixOk)
-    {
       switch (typesymb)
 	{
 	  /*integral, union...*/
@@ -538,17 +534,12 @@ void GetMathFontFromChar (char typesymb,
 	case ']':
 	case '<':
 	case '>':
-	  *font = LoadStixFont (7, height);
+	  if (height > 2)
+	    *font = LoadStixFont (7, height);
 	  break;
 	default:
 	  *font = NULL;	  
 	  return;
 	break;
       }
-    
-    if (*font == NULL)
-      IsStixOk = FALSE;
-    else
-      IsStixOk = TRUE;
-    }
 }

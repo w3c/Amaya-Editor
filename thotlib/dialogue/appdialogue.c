@@ -2070,7 +2070,8 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 }
 #else /* _GTK */
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+APP_TextCallbackGTK : :  Callback to set url in box when Enter key pressed
+----------------------------------------------------------------------*/
 gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
 {
   Document            doc;
@@ -2093,40 +2094,29 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
 }
 
 /*----------------------------------------------------------------------
+APP_TextEnterGTK : Callback to set url in box when clicked (as activate does)
  ----------------------------------------------------------------------*/
-gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
+gboolean APP_TextEnterGTK (GtkWidget *w, GdkEvent *event, int frame)
 {
-  Document            doc;
-  View                view;
-  char               *text;
-  GtkEntry           *text_widget;
+  GtkWidget *entry, *scr_win;
 
-  if (FrameTable[frame].Text_Zone == w)
+  switch (event->type)
     {
-      FrameToView (frame, &doc, &view);
-      text_widget = GTK_ENTRY (w);
-      text = gtk_entry_get_text (GTK_ENTRY (w));
-      (*FrameTable[frame].Call_Text) (doc, view, text);
-      return TRUE;
-    }
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
-gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
-			   gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT (widget), "MouseIn", (gpointer) TRUE);
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
-gboolean LeaveCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
-			   gpointer user_data)
-{
-  gtk_object_set_data (GTK_OBJECT (widget), "MouseIn", (gpointer) FALSE);
+    case GDK_BUTTON_RELEASE:
+      scr_win = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w),  
+						   "scr_win");	
+      if (GTK_WIDGET_VISIBLE(scr_win))
+	{
+       	  gtk_widget_hide (scr_win);
+	  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
+						     "entry");
+     	  gtk_signal_emit_by_name (GTK_OBJECT(entry),
+				   "activate");
+	  return FALSE;
+	}	
+  default:
+    break;
+ }
   return FALSE;
 }
 #endif /* _GTK */
@@ -2380,35 +2370,39 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      g_list_free (combo1_items);
 	    }
 	  w = GTK_COMBO (combo)->entry;
+	  ComboList = GTK_COMBO (combo)->list;
 	  if (editable)
 	    {/* Normal combobox in Amaya */
 	      gtk_combo_disable_activate (GTK_COMBO (combo));
-	      /* callback to know if the mouse is over the edit zone or not */
-	      ConnectSignalGTK (GTK_OBJECT (w), "enter-notify-event",
-				GTK_SIGNAL_FUNC (EnterCallbackGTK),
-				(gpointer)frame);
-	      ConnectSignalGTK (GTK_OBJECT (w), "leave-notify-event",
-				GTK_SIGNAL_FUNC (LeaveCallbackGTK),
-				(gpointer)frame);
 	      if (procedure)
 		{
 		  /* execute APP_TextCallback GTK when pressing enter */
 		  gtk_signal_connect_after (GTK_OBJECT (w), "activate",
 					    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
 					    (gpointer)frame);
+
+                  gtk_object_set_data (GTK_OBJECT (ComboList), 
+                                "entry", 
+                                (gpointer) w);
+		  gtk_object_set_data (GTK_OBJECT (ComboList), 
+                                "scr_win", 
+                                (gpointer) GTK_COMBO (combo)->popwin);
+		  gtk_signal_connect (GTK_OBJECT (ComboList), "event",
+				      GTK_SIGNAL_FUNC (APP_TextEnterGTK), 
+				      (void *)frame);
+		  
 		  FrameTable[frame].Call_Text = (Proc) procedure;
 		  gtk_widget_show_all (row->parent->parent);
 		}
 	      else
 		gtk_widget_show_all (row->parent);
-	    }
+	    } 
 	  else
 	    {/* Open SVG library in Amaya */
 	      gtk_combo_disable_activate (GTK_COMBO (combo));
 	      /* Make the text zone non editable */
 	      gtk_entry_set_editable (GTK_ENTRY (w), FALSE);
 	      /* GTK_WIDGET_UNSET_FLAGS(GTK_ENTRY(w), GTK_CAN_FOCUS); */
-	      ComboList = GTK_COMBO (combo)->list;
 	      gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
 	      if (procedure)
 		{
