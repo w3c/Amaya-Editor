@@ -1162,7 +1162,7 @@ void CreateImage (Document doc, View view)
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
-  char              *name;
+  char              *name, *shortURL, *docname;
   int                c1, i, j, cN, length;
   NotifyElement      event;
 
@@ -1189,7 +1189,17 @@ void CreateImage (Document doc, View view)
 	    {
 	      length = TtaGetTextAttributeLength (attr) + 1;
 	      if (length < MAX_LENGTH)
-		TtaGiveTextAttributeValue (attr, LastURLImage, &length);
+		{
+		  /* get a buffer for the attribute value */
+		  length = MAX_LENGTH;
+		  shortURL = TtaGetMemory (length);
+		  docname = TtaGetMemory (length);
+		  /* copy the SRC attribute into the buffer */
+		  TtaGiveTextAttributeValue (attr, shortURL, &length);
+		  NormalizeURL (shortURL, doc, LastURLImage, docname, NULL);
+		  TtaFreeMemory (shortURL);
+		  TtaFreeMemory (docname);
+		}
 	    }
 	  /* display the image dialogue box */
 	  event.element = firstSelEl;
