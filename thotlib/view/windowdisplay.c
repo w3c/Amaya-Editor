@@ -1605,7 +1605,7 @@ static void  DoDrawPolygon (int frame, int thick, int style,
        SelectObject (display, hOldBrush);
        DeleteObject (hPen);
        DeleteObject (hBrush);
-	   DeleteObject ((HGDIOBJ) pat);
+       DeleteObject ((HGDIOBJ) pat);
      }
 
    /* how to stroke the polygon */
@@ -1795,42 +1795,6 @@ static void         PolySplit (float a1, float b1, float a2, float b2,
 
 	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
 	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
-	  }
-     }
-}
-
-/*----------------------------------------------------------------------
-  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
-  ----------------------------------------------------------------------*/
-static void         QuadraticSplit (float a1, float b1, float a2, float b2,
-				    float a3, float b3,
-				    ThotPoint **points, int *npoints,
-				    int *maxpoints)
-{
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, i, j;
-   float               sx, sy;
-   float               xmid, ymid;
-
-   stack_deep = 0;
-   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
-
-   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
-     {
-	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
-			 maxpoints);
-	else
-	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx   = (float) MIDDLE_OF (x1, x2);
-	     sy   = (float) MIDDLE_OF (y1, y2);
-	     xmid = (float) MIDDLE_OF (sx, tx);
-	     ymid = (float) MIDDLE_OF (sy, ty);
-
-	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
-	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
 	  }
      }
 }
@@ -2154,29 +2118,6 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
 }
 
 /*----------------------------------------------------------------------
-  DrawCurrent
-  Draws the polyline or polygon corresponding to the list of points
-  contained in buffer points.
-  Parameter path is a pointer to the list of path segments
-  fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-static void  DrawCurrent (int frame, int thick, int style,
-			  ThotPoint *points, int npoints,
-			  int fg, int bg, int pattern)
-{
-  if (npoints > 1)
-    {
-      if (npoints == 2)
-	/* only two points, that's a single segment */
-	DrawOneLine (frame, thick, style, points[0].x, points[0].y,
-		     points[1].x, points[1].y, fg);
-      else
-	/* draw a polyline or a ploygon */
-	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
-    }
-}
-
-/*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
@@ -2184,67 +2125,92 @@ static void  DrawCurrent (int frame, int thick, int style,
 void            DrawPath (int frame, int thick, int style, int x, int y,
 			  PtrPathSeg path, int fg, int bg, int pattern)
 {
-  ThotPoint           *points;
-  int                 npoints, maxpoints;
   PtrPathSeg          pPa;
-  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  float               x1, y1, cx1, cy1, x2, y2;
+  HDC                 display;
+  Pixmap              pat;
+  HPEN                hPen;
+  HPEN                hOldPen;
+  HDC                 display;
+  LOGBRUSH            logBrush;
+  HBRUSH              hBrush = NULL;
+  HBRUSH              hOldBrush;
+  POINT               ptCurve[3];
 
   if (thick > 0 || fg >= 0)
     {
+#ifdef _WIN_PRINT
+      display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+      WIN_GetDeviceContext (frame);
+      display = TtDisplay;
+#endif /* _WIN_PRINT */
+      pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+      if (pat != NULL)
+	{
+	  logBrush.lbColor = ColorPixel (bg);
+	  logBrush.lbStyle = BS_SOLID;
+	  hBrush = CreateBrushIndirect (&logBrush); 
+	  hOldBrush = SelectObject (display, hBrush);
+	  Polygon (display, points, npoints);
+	  SelectObject (display, hOldBrush);
+	}
+      if (thick <= 0)
+	hPen = CreatePen (PS_NULL, 0, ColorPixel (fg));
+      else
+	switch (style)
+	  {
+	  case 3:
+	    hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
+	    break;
+	  case 4:
+	    hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
+	    break;
+	  default:
+	    hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
+	    break;
+	  }
+      hOldPen = SelectObject (display, hPen);
+
       y += FrameTable[frame].FrTopMargin;
-      /* alloue la liste des points */
-      maxpoints = ALLOC_POINTS;
-      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
-      npoints = 0;
+      BeginPath (display);
       pPa = path;
       while (pPa)
 	{
-	  if (pPa->PaNewSubpath)
+	  if (pPa->PaNewSubpath || !pPa->PaPrevious)
 	    /* this path segment starts a new subpath */
-	    /* if some points are already stored, display the line
-	       they represent */
-	    if (npoints > 1)
-	      {
-		DrawCurrent (frame, thick, style, points, npoints, fg, bg,
-			     pattern);
-		npoints = 0;
-	      }
+	    {
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      MoveToEx (display, x1, y1, NULL);
+	    }
 
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
 	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x1, (int) y1, &points, &npoints, &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      LineTo (display, x2, y2);
 	      break;
 
 	    case PtCubicBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+	      ptCurve[0].x = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel,
+			     NULL, ViewFrameTable[frame - 1].FrMagnification));
+	      ptCurve[0].y = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel,
+			     NULL, ViewFrameTable[frame - 1].FrMagnification));
+	      ptCurve[1].x = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel,
+			     NULL, ViewFrameTable[frame - 1].FrMagnification));
+	      ptCurve[1].y = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel,
+                             NULL, ViewFrameTable[frame - 1].FrMagnification));
+	      ptCurve[2].x = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+	      ptCurve[2].y = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx2 = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-			 &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      PolyBezierTo (display, &ptCurve[0], 3);
 	      break;
 
 	    case PtQuadraticBezier:
@@ -2260,9 +2226,13 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2, &points, &npoints,
-			      &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      ptCurve[0].x = x1+((2*(cx1-x1))/3);
+	      ptCurve[0].y = y1+((2*(cy1-y1))/3);
+	      ptCurve[1].x = x2+((2*(cx1-x2))/3);
+	      ptCurve[1].y = y2+((2*(cy1-y2))/3);
+	      ptCurve[2].x = x2;
+	      ptCurve[2].y = y2;
+	      PolyBezierTo (display, &ptCurve[0], 3);
 	      break;
 
 	    case PtEllipticalArc:
@@ -2271,12 +2241,17 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	    }
 	  pPa = pPa->PaNext;
 	}
-      /* if some points are left in the buffer, display the line they
-	 represent */
-      if (npoints > 1)
-	DrawCurrent (frame, thick, style, points, npoints, fg, bg, pattern);
-      /* free the table of points */
-      free (points);
+      EndPath (display);
+      StrokeAndFillPath (display);
+      DeleteObject (hPen);
+      if (pat)
+	{
+	  DeleteObject (hBrush);
+	  DeleteObject ((HGDIOBJ) pat);
+	}
+#ifndef _WIN_PRINT
+      WIN_ReleaseDeviceContext ();
+#endif /* _WIN_PRINT */
     }
 }
 
