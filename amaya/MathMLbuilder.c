@@ -2507,13 +2507,13 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
   char            *value;
-  char            *ptr;
-  int              length, val;
+  char            *ptr, *spanPtr;
+  int              length, val, rowspan, i, cellVal;
   ElementType      elType, rowType, cellType;
   Element          row, nextRow, cell;
   ThotBool         stop;
-  AttributeType    attrType;
-  Attribute        intAttr;
+  AttributeType    attrType, rowspanType;
+  Attribute        intAttr, rowspanAttr;
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != MathML_EL_MTABLE ||
@@ -2542,6 +2542,8 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
   val = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_MLineBelow;
+  rowspanType.AttrSSchema = elType.ElSSchema;
+  rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
 
   /* check all rows within the table */
   elType.ElTypeNum = MathML_EL_TableRow;
@@ -2611,8 +2613,40 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
 	      !strcmp (TtaGetSSchemaName (cellType.ElSSchema), "MathML"))
 	    /* that's a mtd element. Process it */
 	    {
+	      /* by default, use the value for the current row */
+	      cellVal = val;
+	      /* is there a rowspan attribute on that cell? */
+	      /* it would require we take the value for a following row */
+	      rowspanAttr = TtaGetAttribute (cell, rowspanType);
+	      if (!rowspanAttr)
+		rowspan = 1;
+	      else
+		rowspan = TtaGetAttributeValue (rowspanAttr);
+	      /* skip (rowspan - 1) words in the value of attribute rowlines */
+	      if (rowspan > 1)
+		{
+		  spanPtr = ptr;
+		  for (i = 1; i < rowspan && *spanPtr != EOS; i++)
+		    {
+		      spanPtr = TtaSkipBlanks (spanPtr);
+		      if (*spanPtr != EOS && *spanPtr != ' ')
+			{
+			  if (!strncasecmp (spanPtr, "none", 4))
+			    cellVal = 0;
+			  else if (!strncasecmp (spanPtr, "solid", 5))
+			    cellVal = MathML_ATTR_MLineBelow_VAL_solid_;
+			  else if (!strncasecmp (spanPtr, "dashed", 6))
+			    cellVal = MathML_ATTR_MLineBelow_VAL_dashed_;
+			  else
+			    cellVal = 0;
+			}
+		      /* skip the word that has been processed */
+		      while (*spanPtr != EOS && *spanPtr != ' ')
+			spanPtr++;
+		    }
+		}
 	      intAttr = TtaGetAttribute (cell, attrType);
-	      if (val == 0)
+	      if (cellVal == 0)
 		{
 		  if (intAttr)
 		    /* remove attribute MLineBelow */
@@ -2626,7 +2660,7 @@ void HandleRowlinesAttribute (Attribute attr, Element el, Document doc,
 		      intAttr = TtaNewAttribute (attrType);
 		      TtaAttachAttribute (cell, intAttr, doc);
 		    }
-		  TtaSetAttributeValue (intAttr, val, cell, doc);
+		  TtaSetAttributeValue (intAttr, cellVal, cell, doc);
 		}
 	    }
 	  TtaNextSibling (&cell);
@@ -2648,12 +2682,12 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
 {
   char            *value;
   char            *ptr;
-  int              length, val;
+  int              length, val, colspan, i;
   ElementType      elType;
   Element          row, cell, nextCell;
   ThotBool         stop;
-  AttributeType    attrType;
-  Attribute        intAttr;
+  AttributeType    attrType, colspanType;
+  Attribute        intAttr, colspanAttr;
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != MathML_EL_MTABLE ||
@@ -2681,6 +2715,8 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
   val = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_MLineOnTheRight;
+  colspanType.AttrSSchema = elType.ElSSchema;
+  colspanType.AttrTypeNum = MathML_ATTR_columnspan;
 
   /* check all cells in all rows in the table */
   elType.ElTypeNum = MathML_EL_TableRow;
@@ -2734,22 +2770,32 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
 		  else
 		    if (*ptr != EOS)
 		      {
-			/* get next word in the attribute value */
-			ptr = TtaSkipBlanks (ptr);
-			/* process that word */
-			if (*ptr != EOS && *ptr != ' ')
+			/* is there a colspan attribute on that cell? */
+			colspanAttr = TtaGetAttribute (cell, colspanType);
+			if (!colspanAttr)
+			  colspan = 1;
+			else
+			  colspan = TtaGetAttributeValue (colspanAttr);
+			/* skip (colspan - 1) words in the attribute */
+			for (i = 1; i <= colspan && *ptr != EOS; i++)
 			  {
-			    if (!strncasecmp (ptr, "none", 4))
-			      val = 0;
-			    else if (!strncasecmp (ptr, "solid", 5))
-			      val = MathML_ATTR_MLineOnTheRight_VAL_solid_;
-			    else if (!strncasecmp (ptr, "dashed", 6))
-			      val = MathML_ATTR_MLineOnTheRight_VAL_dashed_;
-			    else
-			      val = 0;
-			    /* skip the word that has been processed */
-			    while (*ptr != EOS && *ptr != ' ')
-			      ptr++;
+			    /* get next word in the attribute value */
+			    ptr = TtaSkipBlanks (ptr);
+			    /* process that word */
+			    if (*ptr != EOS && *ptr != ' ')
+			      {
+				if (!strncasecmp (ptr, "none", 4))
+				  val = 0;
+				else if (!strncasecmp (ptr, "solid", 5))
+				  val = MathML_ATTR_MLineOnTheRight_VAL_solid_;
+				else if (!strncasecmp (ptr, "dashed", 6))
+				  val = MathML_ATTR_MLineOnTheRight_VAL_dashed_;
+				else
+				  val = 0;
+				/* skip the word that has been processed */
+				while (*ptr != EOS && *ptr != ' ')
+				  ptr++;
+			      }
 			  }
 		      }
 		}

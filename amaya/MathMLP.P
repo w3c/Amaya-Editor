@@ -449,6 +449,8 @@ BOXES
 	Height: Enclosing . Height;
 	LineWeight: 1 pt;
         Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Solid;
 	Background: Creator =;
@@ -462,6 +464,8 @@ BOXES
 	Height: Enclosing . Height;
 	LineWeight: 1 pt;
         Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Dotted;
 	Background: Creator =;
@@ -471,10 +475,12 @@ BOXES
 	END;
  SolidRowLine: BEGIN
 	HorizPos: Left = Creator . Left;
-	VertPos: Bottom = Enclosing . Bottom;
+        VertPos: Bottom = Enclosing . Bottom;
 	Height: 1 pt;
 	LineWeight: 1 pt;
         Width: Creator . Width;
+	HorizOverflow: yes;
+	VertOverflow: yes;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
 	Background: Creator =;
@@ -488,6 +494,8 @@ BOXES
 	Height: 1 pt;
 	LineWeight: 1 pt;
         Width: Creator . Width;
+	HorizOverflow: yes;
+	VertOverflow: yes;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Dotted;
 	Background: Creator =;
