@@ -8,6 +8,8 @@
 #ifndef AMAYA_H 
 #define AMAYA_H
 
+#include <dmalloc.h>
+
 /* Thot interface */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -100,6 +102,7 @@ typedef enum _ClickEvent {
 #define AttrHREFForm    20
 #define AttrHREFText    21
 #define FormAnswer      22
+#define RealmText       23
 #define AnswerText      24
 #define NameText        25
 #define PasswordText    26
