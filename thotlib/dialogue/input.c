@@ -1218,7 +1218,7 @@ ThotTranslations      InitTranslations (char *appliname)
   ThotBool            isSpecialKey1, isSpecialKey2;
 
   /* clean up the access key table */
-  for (i = 1; i <= MAX_DOCUMENTS; i++)
+  for (i = 0; i < MAX_DOCUMENTS; i++)
     DocAccessKey[i] = NULL;
 
   appHome = TtaGetEnvString ("APP_HOME");

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -172,17 +172,8 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    MapMathMLAttribute (CHAR_T *attrName, AttributeType *attrType,
 			    STRING elementName, ThotBool *level, Document doc)
-#else
-void    MapMathMLAttribute (attrName, attrType, elementName, level, doc)
-STRING         attrName;
-AttributeType *attrType;
-STRING	       elementName;
-ThotBool      *level;
-Document       doc;
-#endif
 {
   attrType->AttrSSchema = GetMathMLSSchema (doc);
   MapXMLAttribute (MATH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
@@ -193,16 +184,9 @@ Document       doc;
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        MapMathMLAttributeValue (STRING AttrVal,
 				     AttributeType attrType,
 				     int *value)
-#else
-void        MapMathMLAttributeValue (AttrVal, attrType, value)
-STRING              AttrVal;
-AttributeType       attrType;
-int		   *value;
-#endif
 {
    int                 i;
 
@@ -224,16 +208,9 @@ int		   *value;
    MapMathMLEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void	MapMathMLEntity (STRING entityName,
 			 STRING entityValue,
 			 STRING alphabet)
-#else
-void	MapMathMLEntity (entityName, entityValue, alphabet)
-STRING  entityName;
-STRING  entityValue;
-STRING  alphabet;
-#endif
 {
    int	i;
   ThotBool       found;
@@ -248,7 +225,7 @@ STRING  alphabet;
       i--;
       entityValue[0] = (UCHAR_T) pMathEntityTable[i].charCode;
       entityValue[1] = EOS;
-      *alphabet = "G";
+      *alphabet = 'G';
       /* *alphabet = pMathEntityTable[i].charAlphabet;*/
     }
   else
@@ -263,16 +240,8 @@ STRING  alphabet;
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    MathMLEntityCreated (USTRING entityValue, Language lang,
 			     STRING entityName, Document doc)
-#else
-void    MathMLEntityCreated (entityValue, lang, entityName, doc)
-USTRING     entityValue;
-Language    lang;
-STRING      entityName;
-Document    doc;
-#endif
 {
    ElementType	 elType;
    Element	 elText;
@@ -329,17 +298,9 @@ Document    doc;
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  MathMLEntityCreatedWithExpat (int entityValue,
 				    STRING entityName,
 				    ParserData *XmlContext)
-#else
-void  MathMLEntityCreatedWithExpat (entityValue, entityName, XmlContext)
-int         entityValue;
-STRING      entityName;
-ParserData *XmlContext;
-
-#endif
 {
   ElementType	 elType;
   Element	 elText;
@@ -394,13 +355,7 @@ ParserData *XmlContext;
   ElementNeedsPlaceholder
   returns TRUE if element el needs a sibling placeholder.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool     ElementNeedsPlaceholder (Element el)
-#else
-ThotBool     ElementNeedsPlaceholder (el)
-Element el;
- 
-#endif
 {
   ElementType   elType;
   Element	child, parent;
@@ -460,13 +415,7 @@ Element el;
 /*----------------------------------------------------------------------
   CreatePlaceholders
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	CreatePlaceholders (Element el, Document doc)
-#else
-static void	CreatePlaceholders (el, doc)
-   Element	el;
-   Document	doc;
-#endif
 {
    Element	sibling, prev, constr, child;
    Attribute	attr;
@@ -564,12 +513,7 @@ static void	CreatePlaceholders (el, doc)
   Return the next sibling of element el that is not an XMLcomment element.
   Return el itself if it's not a comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	NextNotComment (Element* el, Element* prev)
-#else
-static void	NextNotComment (el, prev)
-   Element	*el;
-#endif
 {
    ElementType	elType;
 
@@ -591,16 +535,7 @@ static void	NextNotComment (el, prev)
   If they are not, wrap them in elements of these types.
   If element el have too many or not enough children, return FALSE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int type3, Document doc)
-#else
-static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
-   Element	el;
-   int		type1;
-   int		type2;
-   int		type3;
-   Document	doc;
-#endif
 {
   Element	child, new, prev;
   ElementType	elType, childType;
@@ -712,14 +647,7 @@ static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
    Put a IntHorizStretch attribute on element el if it contains only
    a MO element that is a stretchable symbol.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
-#else /* __STDC__*/
-void SetSingleIntHorizStretchAttr (el, doc, selEl)
-  Element	el;
-  Document	doc;
-  Element*	selEl;
-#endif /* __STDC__*/
 {
   Element	child, sibling, textEl, symbolEl;
   ElementType	elType;
@@ -823,13 +751,7 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
    Put a IntHorizStretch attribute on all children of element el which
    contain only a MO element that is a stretchable symbol.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetIntHorizStretchAttr (Element el, Document doc)
-#else /* __STDC__*/
-static void SetIntHorizStretchAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
 {
   Element	child;
 
@@ -851,15 +773,7 @@ static void SetIntHorizStretchAttr (el, doc)
    a MUNDER of a MOVER) contains only a MO element that is a vertically
    stretchable symbol.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
-#else /* __STDC__*/
-void SetIntVertStretchAttr (el, doc, base, selEl)
-  Element	el;
-  Document	doc;
-  int		base;
-  Element*	selEl;
-#endif /* __STDC__*/
 {
   Element	child, sibling, textEl, symbolEl, parent, operator;
   ElementType	elType;
@@ -970,13 +884,7 @@ void SetIntVertStretchAttr (el, doc, base, selEl)
    Put a IntPlaceholder attribute on all Construct elements in the
    subtree of root el.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetIntPlaceholderAttr (Element el, Document doc)
-#else /* __STDC__*/
-static void SetIntPlaceholderAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
 {
   Element	child;
   ElementType	elType;
@@ -1013,13 +921,7 @@ static void SetIntPlaceholderAttr (el, doc)
    the original MathML structure.  Create all Thot elements defined
    in the MathML S schema.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
-#else /* __STDC__*/
-static void BuildMultiscript (elMMULTISCRIPT, doc)
-  Element	elMMULTISCRIPT;
-  Document	doc;
-#endif /* __STDC__*/
 {
   Element	elem, base, next, group, pair, script, prevPair, prevScript;
   ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
@@ -1169,14 +1071,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
    Create an element of type wrapperType as a child of element el and
    move all chidren of element el within the new element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CreateWrapper (Element el, int wrapperType, Document doc)
-#else /* __STDC__*/
-static void CreateWrapper (el, wrapperType, doc)
-Element el;
-int wrapperType;
-Document doc;
-#endif /* __STDC__*/
 {
    Element       wrapper, child, prevChild, nextChild;
    ElementType   elType;
@@ -1210,14 +1105,7 @@ Document doc;
    If placeholder, associate an attribute IntPlaceholder with all
    cells generated in the MathML table.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
-#else /* __STDC__*/
-void CheckMTable (elMTABLE, doc, placeholder)
-  Element	elMTABLE;
-  Document	doc;
-  ThotBool      placeholder;
-#endif /* __STDC__*/
 {
   ElementType	elType;
   Element	MTableHead, MTableBody, row, nextRow, el, prevRow, cell,
@@ -1350,13 +1238,7 @@ void CheckMTable (elMTABLE, doc, placeholder)
    The content of a MI element has been created or modified.
    Create or change attribute IntFontstyle for that element accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetFontstyleAttr (Element el, Document doc)
-#else /* __STDC__*/
-void SetFontstyleAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -1453,13 +1335,7 @@ void SetFontstyleAttr (el, doc)
    The content of a MO element has been created or modified.
    Create or change attribute IntAddSpace for that element accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetIntAddSpaceAttr (Element el, Document doc)
-#else /* __STDC__*/
-void SetIntAddSpaceAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
 {
   Element	textEl, previous;
   ElementType	elType;
@@ -1587,15 +1463,7 @@ void SetIntAddSpaceAttr (el, doc)
    ChangeTypeOfElement
    Change the type of element elem into newTypeNum
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
-#else /* __STDC__*/
-void ChangeTypeOfElement (elem, doc, newTypeNum)
-     Element elem;
-     Document doc;
-     int newTypeNum;
-#endif /* __STDC__*/
- 
 {
      Element    prev, next, parent;
 
@@ -1625,12 +1493,7 @@ void ChangeTypeOfElement (elem, doc, newTypeNum)
    Return TRUE if element el is a child of a MROW element or an
    inferred MROW element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool      ChildOfMRowOrInferred (Element el)
-#else
-ThotBool      ChildOfMRowOrInferred (el)
-Element                 el;
-#endif
 {
    ElementType	 elType;
    Element       parent;
@@ -1664,14 +1527,7 @@ Element                 el;
       a single fence character, transform the MO into a MF and the fence
       character into a Thot stretchable symbol.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      CheckFence (Element el, Document doc)
-#else
-void      CheckFence (el, doc)
-Element                 el;
-Document		doc;
-
-#endif
 {
    ElementType	 elType;
    Element	 content;
@@ -1774,15 +1630,7 @@ Document		doc;
    Create FencedSeparator elements within the fencedExpression
    according to attribute separators of the MFENCED element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool record)
-#else
-void      CreateFencedSeparators (fencedExpression, doc, record)
-Element		fencedExpression;
-Document	doc;
-ThotBool        record;
-
-#endif
+void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool record)
 {
    ElementType	 elType;
    Element	 child, separator, leaf, next, prev, mfenced;
@@ -1860,14 +1708,7 @@ ThotBool        record;
    Transform the content of a MFENCED element: create elements
    OpeningFence, FencedExpression, ClosingFence and FencedSeparator.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      TransformMFENCED (Element el, Document doc)
-#else
-static void      TransformMFENCED (el, doc)
-Element		el;
-Document	doc;
-
-#endif
 {
    ElementType	 elType;
    Element	 child, fencedExpression, leaf, fence, next, prev,
@@ -2002,15 +1843,7 @@ Document	doc;
  Subscript or  Superscript child of el.
  If value is NULL, remove the Thot VertPos rule.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathMLScriptShift (Document doc, Element el, STRING value, int attr)
-#else /* __STDC__*/
-void MathMLScriptShift (doc, el, value, attr)
-  Document doc;
-  Element el;
-  STRING value;
-  int attr;
-#endif /* __STDC__*/
 {
   ElementType         elType;
   Element             script, child;
@@ -2071,15 +1904,7 @@ void MathMLScriptShift (doc, el, value, attr)
    att (which is subscriptshift or superscriptshift), generate the
    corresponding Thot presentation rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     SetScriptShift (Element el, Document doc, int att)
-#else
-static void     SetScriptShift (el, doc, att)
-Element		el;
-Document	doc;
-int             att;
-
-#endif
 {
    AttributeType     attrType;
    ElementType       elType;
@@ -2109,15 +1934,7 @@ int             att;
    MathMLElementComplete
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      MathMLElementComplete (Element el, Document doc, int *error)
-#else
-void      MathMLElementComplete (el, doc, error)
-Element		el;
-Document	doc;
-int             *error;
-
-#endif
 {
    ElementType		elType, parentType;
    Element		child, parent, new, prev, next;
@@ -2316,14 +2133,7 @@ int             *error;
 /*----------------------------------------------------------------------
  SetFontfamily
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetFontfamily (Document doc, Element el, STRING value)
-#else /* __STDC__*/
-void SetFontfamily (doc, el, value)
-  Document doc;
-  Element el;
-  STRING value;
-#endif /* __STDC__*/
 {
 #define buflen 50
   CHAR_T           css_command[buflen+20];
@@ -2337,14 +2147,7 @@ void SetFontfamily (doc, el, value)
  The MathML attribute linthickness is associated with element el. Generate
  the corresponding style property for this element. 
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathMLlinethickness (Document doc, Element el, STRING value)
-#else /* __STDC__*/
-void MathMLlinethickness (doc, el, value)
-  Document doc;
-  Element el;
-  STRING value;
-#endif /* __STDC__*/
 {
 #define buflen 50
   CHAR_T           css_command[buflen+20];
@@ -2364,15 +2167,7 @@ void MathMLlinethickness (doc, el, value)
  The MathML attribute attr is associated with element el. Generate
  the corresponding style property for this element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr)
-#else /* __STDC__*/
-void MathMLAttrToStyleProperty (doc, el, value, attr)
-  Document doc;
-  Element el;
-  STRING value;
-  int attr;
-#endif /* __STDC__*/
 {
   CHAR_T           css_command[buflen+20];
 
@@ -2405,14 +2200,7 @@ void MathMLAttrToStyleProperty (doc, el, value, attr)
  A scriptlevel attribute with value value is associated with element el.
  Generate the corresponding style property for this element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathMLSetScriptLevel (Document doc, Element el, STRING value)
-#else /* __STDC__*/
-void MathMLSetScriptLevel (doc, el, value)
-  Document doc;
-  Element el;
-  STRING value;
-#endif /* __STDC__*/
 {
   PresentationValue   pval;
   PresentationContext ctxt;
@@ -2488,15 +2276,7 @@ void MathMLSetScriptLevel (doc, el, value)
  the element.
  If value is NULL, remove the corresponding Thot presentation rule.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
-#else /* __STDC__*/
-void MathMLSpacingAttr (doc, el, value, attr)
-  Document doc;
-  Element el;
-  STRING value;
-  int attr;
-#endif /* __STDC__*/
 {
   ElementType         elType;
   PresentationValue   pval;
@@ -2553,15 +2333,7 @@ void MathMLSpacingAttr (doc, el, value, attr)
    The XML parser has completed parsing attribute attr (as well as its value)
    that is associated with element el in document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
-#else
-void      MathMLAttributeComplete (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
 {
    AttributeType     attrType;
    int		     attrKind;
@@ -2692,14 +2464,7 @@ Document	doc;
 /*----------------------------------------------------------------------
    MathMLGetDTDName
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      MathMLGetDTDName (STRING DTDname, STRING elementName)
-#else
-void      MathMLGetDTDName (DTDname, elementName)
-STRING DTDname;
-STRING elementName;
-
-#endif
 {
    /* no other DTD allowed within MathML elements */
    ustrcpy (DTDname, TEXT(""));

@@ -1773,7 +1773,7 @@ void    TtaLockTableFormatting ()
   ----------------------------------------------------------------------*/
 static void    UnlockTableFormatting ()
 {
-  PtrLockRelations    pLockRel;
+  PtrLockRelations    pLockRel, first;
   PtrAbstractBox      table, cell;
   Propagation         savpropage;
   int                 i;
@@ -1792,7 +1792,9 @@ static void    UnlockTableFormatting ()
 	the contrained width of each column and table starting
 	form the most embedded to the enclosing table
       */
-      pLockRel = DifferedChecks;
+      first = DifferedChecks;
+      DifferedChecks = NULL;
+      pLockRel = first;
       while (pLockRel->LockRNext != NULL)
 	pLockRel = pLockRel->LockRNext;
       while (pLockRel != NULL)
@@ -1829,7 +1831,7 @@ static void    UnlockTableFormatting ()
 	Second, reformat all tables starting
 	form the enclosing table to the most embedded
       */
-      pLockRel = DifferedChecks;
+      pLockRel = first;
       while (pLockRel != NULL)
 	{
 	  /* Manage all locked tables */
@@ -1854,7 +1856,7 @@ static void    UnlockTableFormatting ()
       /*
 	Then, check all table heighs form the most embedded to the enclosing table
       */
-      pLockRel = DifferedChecks;
+      pLockRel = first;
       while (pLockRel->LockRNext != NULL)
 	pLockRel = pLockRel->LockRNext;
       while (pLockRel != NULL)
@@ -1880,10 +1882,10 @@ static void    UnlockTableFormatting ()
 
       /* Now, free allocated blocks */
       Propagate = savpropage;
-      while (DifferedChecks != NULL)
+      while (first != NULL)
 	{
-	  pLockRel = DifferedChecks;
-	  DifferedChecks = DifferedChecks->LockRNext;
+	  pLockRel = first;
+	  first = pLockRel->LockRNext;
 	  TtaFreeMemory (pLockRel);
 	}
     }
