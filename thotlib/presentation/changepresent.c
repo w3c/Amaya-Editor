@@ -159,15 +159,15 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
    		heritent de cette regle et si oui leur applique		
    		l'heritage et on les r'eaffiche si display est TRUE
   ----------------------------------------------------------------------*/
-void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
-			   PtrDocument pDoc, ThotBool display)
+void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
+		   PtrDocument pDoc, ThotBool display)
 {
    PtrElement          pEl;
    int                 view;
-   PtrAbstractBox      pAbbCur;
-   PtrPRule            pPRule;
+   PtrAbstractBox      pAbCur, pPRP;
+   PtrPRule            pRule;
    PtrPSchema          pSchP;
-   PtrAttribute        pAttrib;
+   PtrAttribute        pAttr;
 
    pEl = pAb->AbElement;
    view = pAb->AbDocView;
@@ -175,36 +175,36 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
      {
 	/* l'element a un frere suivant. Celui-ci herite-t-il de son
 	   precedent ? */
-	pAbbCur = NULL;
-	while (pEl->ElNext != NULL && pAbbCur == NULL)
+	pAbCur = NULL;
+	while (pEl->ElNext != NULL && pAbCur == NULL)
 	  {
 	     pEl = pEl->ElNext;
-	     pAbbCur = pEl->ElAbstractBox[view - 1];
+	     pAbCur = pEl->ElAbstractBox[view - 1];
 	     /* saute les paves de presentation */
-	     while (pAbbCur && pAbbCur->AbPresentationBox)
-	        pAbbCur = pAbbCur->AbNext;
-	     if (pAbbCur)
-		if (pAbbCur->AbDead)
-		   pAbbCur = NULL;
+	     while (pAbCur && pAbCur->AbPresentationBox)
+	        pAbCur = pAbCur->AbNext;
+	     if (pAbCur)
+		if (pAbCur->AbDead)
+		   pAbCur = NULL;
 	  }
-	if (pAbbCur)
+	if (pAbCur)
 	  {
-	     /* il y a un element suivant dont le pave pAbbCur pourrait
+	     /* il y a un element suivant dont le pave pAbCur pourrait
 		heriter de pAb. Cherche sa regle de presentation */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
-				     TRUE, &pAttrib);
-	     if (pPRule)
+	     pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,
+				     TRUE, &pAttr);
+	     if (pRule)
 	       {
-		  if (pPRule->PrPresMode == PresInherit &&
-		      pPRule->PrInheritMode == InheritPrevious)
+		  if (pRule->PrPresMode == PresInherit &&
+		      pRule->PrInheritMode == InheritPrevious)
 		     /* la regle de cet element herite du precedent,
 			on applique la regle */
-		     if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
+		     if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
 		       {
-			  SetChange (pAbbCur, ruleType, (FunctionType)0);
-			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  SetChange (pAbCur, ruleType, (FunctionType)0);
+			  ApplyInherit (ruleType, pAbCur, pDoc, display);
 			  if (display)
-			    RedispAbsBox (pAbbCur, pDoc);
+			    RedispAbsBox (pAbCur, pDoc);
 		       }
 	       }
 	  }
@@ -213,41 +213,50 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
    if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
       /* l'element a des descendants. Ceux-ci heritent-t-il de leur */
       /* ascendant ? */
-      ApplyRuleSubTree (pEl, ruleType, pDoc, &pPRule, view, display);
+      ApplyRuleSubTree (pEl, ruleType, pDoc, &pRule, view, display);
    if (pEl->ElParent)
      {
 	/* l'element a un ascendant. Celui-ci herite-t-il de son premier */
 	/* descendant ? */
-	pAbbCur = NULL;
-	while (pEl->ElParent && !pAbbCur)
+	pAbCur = NULL;
+	while (pEl->ElParent && !pAbCur)
 	  {
 	     pEl = pEl->ElParent;
 	     /* saute les paves de presentation */
-	     pAbbCur = pEl->ElAbstractBox[view - 1];
-	     while (pAbbCur && pAbbCur->AbPresentationBox)
-	        pAbbCur = pAbbCur->AbNext;
-	     if (pAbbCur)
-		if (pAbbCur->AbDead)
-		   pAbbCur = NULL;
+	     pAbCur = pEl->ElAbstractBox[view - 1];
+	     while (pAbCur && pAbCur->AbPresentationBox)
+	        pAbCur = pAbCur->AbNext;
+	     if (pAbCur)
+		if (pAbCur->AbDead)
+		   pAbCur = NULL;
 	  }
-	if (pAbbCur)
+	if (pAbCur)
 	  {
-	     /* il y a un element ascendant dont le pave pAbbCur pourrait
+             /* apply delayed rules */
+	     do
+	       {
+		 pPRP = pAbCur;
+		 GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
+		 if (pRule != NULL)
+		   ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr);
+	       }
+	     while (pRule);
+
+	     /* il y a un element ascendant dont le pave pAbCur pourrait
 		heriter de pAb */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
-				     TRUE, &pAttrib);
-	     if (pPRule != NULL)
-		if (pPRule->PrPresMode == PresInherit &&
-		    pPRule->PrInheritMode == InheritChild)
-		   /* la regle de cet element herite du descendant, on */
-		   /* applique la regle */
-		   if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-		     {
-		       SetChange (pAbbCur, ruleType, (FunctionType)0);
-		       ApplyInherit (ruleType, pAbbCur, pDoc, display);
-		       if (display)
-			 RedispAbsBox (pAbbCur, pDoc);
-		     }
+	     pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,
+				     TRUE, &pAttr);
+	     if (pRule && pRule->PrPresMode == PresInherit &&
+		 pRule->PrInheritMode == InheritChild)
+	       /* la regle de cet element herite du descendant, on */
+	       /* applique la regle */
+	       if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
+		 {
+		   SetChange (pAbCur, ruleType, (FunctionType)0);
+		   ApplyInherit (ruleType, pAbCur, pDoc, display);
+		   if (display)
+		     RedispAbsBox (pAbCur, pDoc);
+		 }
 	  }
      }
 
@@ -257,80 +266,80 @@ void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
      {
 	/* on regarde d'abord les paves crees devant (par CreateBefore) */
 	pEl = pAb->AbElement;
-	pAbbCur = pAb->AbPrevious;
-	while (pAbbCur != NULL)
-	   if (!pAbbCur->AbPresentationBox || pAbbCur->AbElement != pEl)
+	pAbCur = pAb->AbPrevious;
+	while (pAbCur != NULL)
+	   if (!pAbCur->AbPresentationBox || pAbCur->AbElement != pEl)
 	      /* ce n'est pas un pave de presentation de l'element, on arrete*/
-	      pAbbCur = NULL;
+	      pAbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
-					TRUE, &pAttrib);
-		if (pPRule != NULL)
-		   if (pPRule->PrPresMode == PresInherit &&
-		       pPRule->PrInheritMode == InheritCreator)
+		pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttr);
+		if (pRule != NULL)
+		   if (pRule->PrPresMode == PresInherit &&
+		       pRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur,
 			 on l'applique */
-		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
+		      if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
 			{
-			  SetChange (pAbbCur, ruleType, (FunctionType)0);
-			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  SetChange (pAbCur, ruleType, (FunctionType)0);
+			  ApplyInherit (ruleType, pAbCur, pDoc, display);
 			  if (display)
-			    RedispAbsBox (pAbbCur, pDoc);
+			    RedispAbsBox (pAbCur, pDoc);
 			}
 		/* examine le pave precedent */
-		pAbbCur = pAbbCur->AbPrevious;
+		pAbCur = pAbCur->AbPrevious;
 	     }
 	/* on regarde les paves crees derriere (par CreateAfter) */
-	pAbbCur = pAb->AbNext;
-	while (pAbbCur != NULL)
-	   if (!pAbbCur->AbPresentationBox || pAbbCur->AbElement != pEl)
+	pAbCur = pAb->AbNext;
+	while (pAbCur != NULL)
+	   if (!pAbCur->AbPresentationBox || pAbCur->AbElement != pEl)
 	      /* ce n'est pas un pave de presentation de l'element, on arrete*/
-	      pAbbCur = NULL;
+	      pAbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
-					TRUE, &pAttrib);
-		if (pPRule != NULL)
-		   if (pPRule->PrPresMode == PresInherit &&
-		       pPRule->PrInheritMode == InheritCreator)
+		pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttr);
+		if (pRule != NULL)
+		   if (pRule->PrPresMode == PresInherit &&
+		       pRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur,
 			 on l'applique */
-		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
+		      if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
 			{
-			  SetChange (pAbbCur, ruleType, (FunctionType)0);
-			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  SetChange (pAbCur, ruleType, (FunctionType)0);
+			  ApplyInherit (ruleType, pAbCur, pDoc, display);
 			  if (display)
-			    RedispAbsBox (pAbbCur, pDoc);
+			    RedispAbsBox (pAbCur, pDoc);
 			}
 		/* examine le pave suivant */
-		pAbbCur = pAbbCur->AbNext;
+		pAbCur = pAbCur->AbNext;
 	     }
 	/* on regarde les paves crees au niveau inferieur (par CreateFirst et
 	   CreateLast) */
-	pAbbCur = pAb->AbFirstEnclosed;
-	while (pAbbCur)
+	pAbCur = pAb->AbFirstEnclosed;
+	while (pAbCur)
 	  {
-	    if (pAbbCur->AbPresentationBox && pAbbCur->AbElement == pEl)
+	    if (pAbCur->AbPresentationBox && pAbCur->AbElement == pEl)
 	      /* c'est un pave de presentation de l'element, on le traite */
 	      {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
-					TRUE, &pAttrib);
-		if (pPRule)
-		  if (pPRule->PrPresMode == PresInherit &&
-		      pPRule->PrInheritMode == InheritCreator)
+		pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttr);
+		if (pRule)
+		  if (pRule->PrPresMode == PresInherit &&
+		      pRule->PrInheritMode == InheritCreator)
 		    /* la regle de ce pave herite de son createur,
 		       on l'applique */
-		    if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
+		    if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
 		      {
-			SetChange (pAbbCur, ruleType, (FunctionType)0);
-			ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			SetChange (pAbCur, ruleType, (FunctionType)0);
+			ApplyInherit (ruleType, pAbCur, pDoc, display);
 			if (display)
-			  RedispAbsBox (pAbbCur, pDoc);
+			  RedispAbsBox (pAbCur, pDoc);
 		      }
 	      }
 	    /* examine le pave suivant */
-	    pAbbCur = pAbbCur->AbNext;
+	    pAbCur = pAbCur->AbNext;
 	  }
      }
 }
@@ -604,7 +613,7 @@ PtrAbstractBox AbsBoxOfEl (PtrElement pEl, int view)
   ApplyNewRule applique au pave courant la regle de		
   presentation specifique qui vient d'etre creee.		
   ----------------------------------------------------------------------*/
-void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
+void    ApplyNewRule (PtrDocument pDoc, PtrPRule pRule, PtrElement pEl)
 {
   PtrAbstractBox      pAb;
   int                 view;
@@ -615,7 +624,7 @@ void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
     if (pEl->ElAbstractBox[view - 1] != NULL)
       /* l'element traite' a un pave dans cette view */
       if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
-	  pDoc->DocView[view - 1].DvPSchemaView == pPRule->PrViewNum)
+	  pDoc->DocView[view - 1].DvPSchemaView == pRule->PrViewNum)
 	{
 	  /* c'est une view de meme type que la view traitee, on */
 	  /* traite le pave de l'element dans cette view */
@@ -632,13 +641,13 @@ void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 	  while (!stop);
 	      if (pAb != NULL)
 		/* applique la regle de presentation specifique a ce pave' */
-		  if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
+		  if (ApplyRule (pRule, NULL, pAb, pDoc, NULL))
 		    {
-		      if (pPRule->PrType == PtFunction)
-			SetChange (pAb, pPRule->PrType, (FunctionType)pPRule->PrPresFunction);
+		      if (pRule->PrType == PtFunction)
+			SetChange (pAb, pRule->PrType, (FunctionType)pRule->PrPresFunction);
 		      else
-			SetChange (pAb, pPRule->PrType, (FunctionType)0);
-		      ApplyInherit (pPRule->PrType, pAb, pDoc, TRUE);
+			SetChange (pAb, pRule->PrType, (FunctionType)0);
+		      ApplyInherit (pRule->PrType, pAb, pDoc, TRUE);
 		      /* indique le pave a faire reafficher */
 		      RedispAbsBox (pAb, pDoc);
 		    }
@@ -653,7 +662,7 @@ void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
 			      RuleSet rules, int viewToApply)
 {
-   PtrPRule            pPRule, pR, pRS;
+   PtrPRule            pRule, pR, pRS;
    NotifyPresentation  notifyPres;
    RuleSet             rulesS;
    Document            doc;
@@ -662,19 +671,19 @@ static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
 
    /* type de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
-   pPRule = pEl->ElFirstPRule;
-   if (pPRule == NULL)
+   pRule = pEl->ElFirstPRule;
+   if (pRule == NULL)
      return;
    pR = NULL;
    found = FALSE;
    doc = IdentDocument (pDoc);
    /* manage all specific presentation rules of the element if it still exists */
-   while (pPRule && pEl->ElStructSchema)
-      if (pPRule->PrViewNum != viewSch || !RuleSetIn (pPRule->PrType, rules))
+   while (pRule && pEl->ElStructSchema)
+      if (pRule->PrViewNum != viewSch || !RuleSetIn (pRule->PrType, rules))
 	 /* skip this rule */
 	{
-	   pR = pPRule;
-	   pPRule = pR->PrNextPRule;
+	   pR = pRule;
+	   pRule = pR->PrNextPRule;
 	}
       else
 	{
@@ -682,12 +691,12 @@ static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
 	   /* la regle concerne la view traitee */
 	   /* retire la regle de la chaine des regles de presentation */
 	   /* specifique de l'element */
-	   pRS = pPRule->PrNextPRule;	/* regle a traiter apres */
+	   pRS = pRule->PrNextPRule;	/* regle a traiter apres */
 	   notifyPres.event = TtePRuleDelete;
 	   notifyPres.document = doc;
 	   notifyPres.element = (Element) pEl;
-	   notifyPres.pRule = (PRule) pPRule;
-	   notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
+	   notifyPres.pRule = (PRule) pRule;
+	   notifyPres.pRuleType = NumTypePRuleAPI (pRule);
 	   if (!CallEventType ((NotifyEvent *) & notifyPres, TRUE))
 	     {
 		if (pR == NULL)
@@ -698,18 +707,18 @@ static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
 		/* applique la regle standard de meme type que la regle courante */
 		/* aux paves de l'element qui existent dans les vues de meme type */
 		/* que la view active. */
-		ApplyStandardRule (pEl, pDoc, pPRule->PrType, pPRule->PrPresFunction, viewSch);
+		ApplyStandardRule (pEl, pDoc, pRule->PrType, pRule->PrPresFunction, viewSch);
 		notifyPres.event = TtePRuleDelete;
 		notifyPres.document = doc;
 		notifyPres.element = (Element) pEl;
 		notifyPres.pRule = NULL;
-		notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
+		notifyPres.pRuleType = NumTypePRuleAPI (pRule);
 		/* libere la regle */
-		FreePresentRule (pPRule, pEl->ElStructSchema);
+		FreePresentRule (pRule, pEl->ElStructSchema);
 		CallEventType ((NotifyEvent *) & notifyPres, FALSE);
 	     }
 	   /* passe a la regle suivante */
-	   pPRule = pRS;
+	   pRule = pRS;
 	}
 
    if (!found && pEl->ElParent)
