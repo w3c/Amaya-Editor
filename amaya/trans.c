@@ -874,7 +874,6 @@ Document doc;
 	  inputFile = TtaReadOpen (tmpfilename);
       if (inputFile != NULL)
 	{
-	  bufHTML[szHTML++] = charRead;
 	  charRead = getc (inputFile);
           while (charRead != EOF && szHTML < BUFFER_LEN - 1)
             {
@@ -883,6 +882,7 @@ Document doc;
             }
  	}
       TtaReadClose (inputFile);  
+      TtaFileUnlink (tmpfilename);  
       if (charRead == EOF)
 	result = TRUE;
   /*}*/
