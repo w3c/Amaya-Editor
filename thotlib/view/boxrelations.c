@@ -1286,7 +1286,14 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       switch (refEdge)
 	{
 	case Top:
-	  y += t;
+	  if (t)
+	    {
+	      if (pRefBox->BxTBorder + pRefBox->BxTPadding > 0)
+		y += t;
+	      else if (t > pBox->BxTMargin)
+		/* collapsing margins */
+		y = y + t - pBox->BxTMargin;
+	    }
 	  break;
 	case Left:
 	  x += l;
