@@ -124,7 +124,7 @@
 <label define="Style">
 	<message xml:lang="en">&amp;Style</message>
 	<message xml:lang="fr">&amp;Style</message>
-	<message xml:lang="de">>&amp;Formate</message>
+	<message xml:lang="de">&amp;Formate</message>
 	<message xml:lang="it">&amp;Stile</message>
 	<message xml:lang="tr">&amp;Tarz</message>
 	<message xml:lang="es">E&amp;stilo</message>
@@ -134,7 +134,7 @@
 <label define="Special">
 	<message xml:lang="en">Spe&amp;cial</message>
 	<message xml:lang="fr">Spé&amp;cial</message>
-	<message xml:lang="de">>&amp;Extras</message>
+	<message xml:lang="de">&amp;Extras</message>
 	<message xml:lang="it">S&amp;peciale</message>
 	<message xml:lang="tr">&amp;Özel</message>
 	<message xml:lang="es">Es&amp;pecial</message>
