@@ -525,7 +525,7 @@ PtrDocument         pDoc;
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
 	frame = pDoc->DocViewFrame[vue - 1];
-	if (frame != 0 && FrameTable[frame].MenuAttr != -1)
+	if (frame != 0 && FrameTable[frame].MenuSelect != -1)
 	  {
 	     menuID = FrameTable[frame].MenuSelect;
 	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
