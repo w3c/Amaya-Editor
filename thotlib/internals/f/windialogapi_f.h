@@ -8,7 +8,7 @@
 /*
  * WIndows Dialogue API routines for Amaya
  *
- * Author: R. Guetari (W3C/INRIA)
+ * Author: I. Vatton (W3C/INRIA)
  *
  */
 #ifdef _WINDOWS

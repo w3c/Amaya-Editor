@@ -6,8 +6,8 @@
  */
 
 /* Unicode Routines
- * Authors: R. Guetari (W3C/INRIA)
- *          I. Vatton (W3C/INRIA)
+ * Authors: I. Vatton (W3C/INRIA)
+ *          R. Guetari (W3C/INRIA)
  */
 
 #include <stdio.h>

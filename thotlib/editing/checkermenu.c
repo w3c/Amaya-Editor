@@ -8,7 +8,7 @@
 /*
  * User interface for spell checking
  *
- * Authors: H. Richy (IRISA)
+ * Authors: I. Vatton, H. Richy (IRISA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */

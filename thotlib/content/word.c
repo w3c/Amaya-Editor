@@ -17,7 +17,7 @@
 /*
  * This module locates words in Thot documents.
  *
- * Authors: H. Richy, E. Picheral (INRIA)
+ * Authors: I.Vatton, H. Richy, E. Picheral (INRIA)
  *
  */
 

@@ -11,8 +11,7 @@
  * "Prof_" prefix is called by an extern module.
  * Profile files are coded in ISO-latin
  *
- * Authors: L. Bonameau - Amaya profiles
-            I. Vatton - review of the code
+ * Authors: I. Vatton, L. Bonameau
  *
  */
 

@@ -8,8 +8,7 @@
 /*
  * This module Implements the Undo API
  *
- * Authors: S. Bonhomme (INRIA)
- *          I. Vatton (INRIA)
+ * Authors: I. Vatton, S. Bonhomme (INRIA)
  *          
  */
 #include "thot_sys.h"

@@ -141,7 +141,6 @@ DISPLAY_OBJ = \
 	image/gifhandler.o \
 	image/jpeghandler.o \
 	image/picture.o \
-	image/picturebase.o \
 	image/pnghandler.o \
 	image/xbmhandler.o \
 	image/xpmattrib.o \

@@ -330,50 +330,6 @@ extern Display     *TtaGetCurrentDisplay (void);
 extern void         TtaGiveSelectPosition (Document document, Element element, View view, /*OUT*/ int *X, /*OUT*/ int *Y);
 
 /*----------------------------------------------------------------------
-   TtaRegisterPixmap
-
-   Register a pre-loaded Pixmap into the database.
-
-   Parameters:
-   name : the name of the image.
-   pix : pointer to the existing pixmap.
-
-   Return value:
-   none
-
-  ----------------------------------------------------------------------*/
-extern void         TtaRegisterPixmap ( STRING name, Pixmap pix );
-
-/*----------------------------------------------------------------------
-   TtaLoadImage
-
-   Load an image from disk into the database.
-
-   Parameters:
-   name : the name of the image.
-   path : the full pathname referencing the image file.
-
-   Return value:
-   The created pixmap
-
-  ----------------------------------------------------------------------*/
-extern Pixmap       TtaLoadImage ( STRING name, STRING path );
-
-/*----------------------------------------------------------------------
-   TtaGetImage
-
-   Get an image from the database.
-
-   Parameters:
-   name : the name of the image.
-
-   Return value:
-   The pixmap or NULL if not found.
-
-  ----------------------------------------------------------------------*/
-extern Pixmap       TtaGetImage ( STRING name ); 
-
-/*----------------------------------------------------------------------
    TtaSetMultiKey
 
    Enables or disables the multikey support
@@ -428,9 +384,6 @@ extern Pixel        TtaGetButtonColor ( /* void */ );
 extern int          TtaGetScreenDepth ( /* void */ );
 extern Display     *TtaGetCurrentDisplay ( /* void */ );
 extern void         TtaGiveSelectPosition ( /* Document document, Element element, View view, int *X, int *Y */ );
-extern void         TtaRegisterPixmap (/* STRING name, Pixmap pix */);
-extern Pixmap       TtaLoadImage (/* STRING name, STRING path */);
-extern Pixmap       TtaGetImage (/* STRING name */);
 extern void         TtaSetMultikey (/* ThotBool value*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -191,55 +191,57 @@ CSSInfoPtr      css;
 		    }
 		}
 	    }
-
-	  /* look for the next link with rel="STYLESHEET" */
-	  nextLink = pInfo->PiLink;
-	  while (!found && nextLink != NULL)
+	  if (pInfo)
 	    {
-	      nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
-	      if (nextLink)
+	      /* look for the next link with rel="STYLESHEET" */
+	      nextLink = pInfo->PiLink;
+	      while (!found && nextLink != NULL)
 		{
-		  attr = TtaGetAttribute (nextLink, attrType);
-		  if (attr != 0)
+		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
+		  if (nextLink)
 		    {
-		      /* get a buffer for the attribute value */
-		      length = MAX_LENGTH;
-		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
-		    }
-		  /* search if the previous CSS has a presentation schema */
-		  if (found)
-		    {
-		      /* there is another linked CSS style sheet after */
-		      oldcss = CSSList;
-		      while (oldcss != NULL)
+		      attr = TtaGetAttribute (nextLink, attrType);
+		      if (attr != 0)
 			{
-			  if (oldcss != css && oldcss->documents[doc] &&
-			      oldcss->category == CSS_EXTERNAL_STYLE)
+			  /* get a buffer for the attribute value */
+			  length = MAX_LENGTH;
+			  TtaGiveTextAttributeValue (attr, buffer, &length);
+			  found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
+			}
+		      /* search if the previous CSS has a presentation schema */
+		      if (found)
+			{
+			  /* there is another linked CSS style sheet after */
+			  oldcss = CSSList;
+			  while (oldcss != NULL)
 			    {
-			      /* check if it includes a presentation schema
-				 for that structure */
-			      pInfo = oldcss->infos;
-			      while (pInfo != NULL && pInfo->PiDoc != doc)
-				pInfo = pInfo->PiNext;
-			      if (pInfo != NULL && pInfo->PiLink == nextLink)
+			      if (oldcss != css && oldcss->documents[doc] &&
+				  oldcss->category == CSS_EXTERNAL_STYLE)
 				{
-				  pIS = pInfo->PiSchemas;
-				  while (pIS && pIS->PiSSchema != sSchema)
-				    pIS = pIS->PiSNext;
-				  if (pIS && pIS->PiPSchema)
+				  /* check if it includes a presentation schema
+				     for that structure */
+				  pInfo = oldcss->infos;
+				  while (pInfo != NULL && pInfo->PiDoc != doc)
+				    pInfo = pInfo->PiNext;
+				  if (pInfo != NULL && pInfo->PiLink == nextLink)
 				    {
-				      /* link before that presentation schema */
-				      before = TRUE;
-				      prevS = pIS->PiPSchema;
+				      pIS = pInfo->PiSchemas;
+				      while (pIS && pIS->PiSSchema != sSchema)
+					pIS = pIS->PiSNext;
+				      if (pIS && pIS->PiPSchema)
+					{
+					  /* link before that presentation schema */
+					  before = TRUE;
+					  prevS = pIS->PiPSchema;
+					}
+				      else
+					found = FALSE;
 				    }
-				  else
-				    found = FALSE;
+				  oldcss = NULL;
 				}
-			      oldcss = NULL;
+			      else
+				oldcss = oldcss->NextCSS;
 			    }
-			  else
-			    oldcss = oldcss->NextCSS;
 			}
 		    }
 		}

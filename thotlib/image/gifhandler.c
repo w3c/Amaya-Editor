@@ -16,7 +16,7 @@
 
 /*
  *
- * Authors: N. Layaida (INRIA)
+ * Authors: I. Vatton, N. Layaida (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
  

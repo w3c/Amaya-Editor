@@ -8,8 +8,8 @@
 /*
  * Windows Dialogue API routines for Amaya
  *
- * Authors: R. Guetari (W3C/INRIA)
- *          I. Vatton (INRIA)
+ * Authors:  I. Vatton (INRIA), R. Guetari (W3C/INRIA)
+ *
  */
 #ifdef _WINDOWS
 #include <windows.h>

@@ -17,7 +17,7 @@
 /*
  * Spell checking
  *
- * Author: H. Richy (INRISA)
+ * Authors: I. Vatton (INRIA), H. Richy (INRIA)
  *
  */
 

@@ -6,7 +6,7 @@
  */
 
 /* Unicode Routines
- * Author: R. Guetari (W3C/INRIA)
+ * Authors: I. Vatton, R. Guetari (W3C/INRIA)
  */
 
 #include <stdio.h>

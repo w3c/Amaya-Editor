@@ -8,7 +8,7 @@
 /*
  * Amaya saving functions.
  *
- * Authors: D. Veillard, I. Vatton
+ * Authors: I. Vatton, D. Veillard
  *          R. Guetari: Unicode and Windows version
  *
  */

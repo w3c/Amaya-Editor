@@ -7,8 +7,7 @@
  
 /*
  *
- * Author: S Bonhomme
- *         I. Vatton (W3C/INRIA): XML extension
+ * Authors: I. Vatton (W3C/INRIA), S Bonhomme
  *
  */
 

@@ -17,7 +17,7 @@
 /*
  * xpmhandler.c  Pixmap V3.4.c
  *
- * Author: N. Layaida (INRIA)
+ * Author: I. Vatton, N. Layaida (INRIA)
  *         R. Guetari (W3C/INRIA) - Unicode and Windows version.
  */
 

@@ -9,7 +9,7 @@
  * Amaya browser functions called form Thot and declared in HTML.A.
  * These functions concern links and other HTML general features.
  *
- * Authors: L. Bonameau, S. Bonhomme (INRIA) - HTML templates
+ * Authors: I. Vatton, L. Bonameau, S. Bonhomme (INRIA)
  *
  */
 

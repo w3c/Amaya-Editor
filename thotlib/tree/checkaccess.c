@@ -11,7 +11,7 @@
  *     functions,
  *   - default Thot access control functions.
  * 
- * Author: D. Decouchant
+ * Authors: I. Vatton (INRIA), D. Decouchant
  * 
  */
 
