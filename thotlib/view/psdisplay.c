@@ -128,7 +128,7 @@ char                car;
 	       default:
 		  fprintf (fout, "\\%o", (unsigned char) car);
 	    }
-}				/*Transcode */
+}
 
 
 /*----------------------------------------------------------------------
@@ -172,19 +172,15 @@ int                 num;
    pattern, or the drawing color, or the background color,
    or keep it transparent, depending on pattern value.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 static void         FillWithPattern (fout, fg, bg, pattern)
 FILE               *fout;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    unsigned short      red;
    unsigned short      green;
@@ -235,7 +231,6 @@ static int          CurrentFont (FILE * fout, ptrfont font)
 static int          CurrentFont (fout, font)
 FILE               *fout;
 ptrfont             font;
-
 #endif /* __STDC__ */
 {
    int                 i, retour;
@@ -279,21 +274,18 @@ ptrfont             font;
       return (1);
    else
       return (0);
-}				/*CurrentFont */
+}
+
 
 /*----------------------------------------------------------------------
    DrawPage check whether a showpage is needed.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawPage (FILE * fout)
-
 #else  /* __STDC__ */
 void                DrawPage (fout)
 FILE               *fout;
-
 #endif /* __STDC__ */
-
 {
    if (EndOfPage == 1)
      {
@@ -321,11 +313,8 @@ FILE               *fout;
  
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, StartOfCurrentBlock, RO, active, fg)
 char               *buff;
@@ -342,9 +331,7 @@ int                 StartOfCurrentBlock;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    char               *ptcar;
    int                 j, encoding, width;
@@ -434,17 +421,14 @@ int                 fg;
      }
    else
       return (0);
-}				/*DrawString */
+}
 
 
 /*----------------------------------------------------------------------
    DisplayUnderline draw the underline, overline or cross line
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, func, fg)
 int                 frame;
@@ -457,9 +441,7 @@ int                 lg;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 fheight;	/* font height           */
    int                 ascent;	/* font ascent           */
@@ -515,17 +497,14 @@ int                 fg;
 		    break;
 	      }
      }
-}				/*DisplayUnderline */
+}
 
 
 /*----------------------------------------------------------------------
    DrawRadical Draw a radical symbol.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawRadical (frame, thick, x, y, l, h, font, RO, func, fg)
 int                 frame;
@@ -538,9 +517,7 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 ex, fh;
    FILE               *fout;
@@ -570,7 +547,8 @@ int                 fg;
 	       PixelToPoint (x + (fh / 2)), PixelToPoint (y + h),
 	       PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
 
-}				/*DrawRadical */
+}
+
 
 /*----------------------------------------------------------------------
    DrawIntegral draw an integral. depending on type :
@@ -578,11 +556,8 @@ int                 fg;
    - contour if type = 1
    - double if type = 2.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawIntegral (frame, thick, x, y, l, h, type, font, RO, func, fg)
 int                 frame;
@@ -596,9 +571,7 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    FILE               *fout;
    int                 ey, ym, yf;
@@ -656,7 +629,8 @@ int                 fg;
 		fprintf (fout, "-%d %d (o) c\n", ym, x);
 	  }
      }
-}				/*DrawIntegral */
+}
+
 
 /*----------------------------------------------------------------------
    DrawSigma draw a Sigma symbol.
@@ -674,7 +648,6 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
 {
    FILE               *fout;
@@ -692,7 +665,7 @@ int                 fg;
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\345) c\n", y, x);
-}				/*DrawSigma */
+}
 
 
 /*----------------------------------------------------------------------
@@ -728,7 +701,8 @@ int                 fg;
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\325) c\n", y, x);
-}				/*DrawPi */
+}
+
 
 /*----------------------------------------------------------------------
    DrawUnion draw an Union symbol.
@@ -763,7 +737,8 @@ int                 fg;
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\310) c\n", y, x);
-}				/*DrawUnion */
+}
+
 
 /*----------------------------------------------------------------------
    DrawIntersection draw an intersection symbol.
@@ -798,7 +773,7 @@ int                 fg;
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\307) c\n", y, x);
-}				/*DrawIntersection */
+}
 
 
 /*----------------------------------------------------------------------
@@ -821,7 +796,6 @@ int                 orientation;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
 {
    int                 xm, ym, xf, yf, lg;
@@ -894,16 +868,14 @@ int                 fg;
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, thick, lg, lg);
      }
-}				/*DrawArrow */
+}
+
 
 /*----------------------------------------------------------------------
    DrawBracket draw an opening or closing bracket (depending on direction)
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawBracket (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
@@ -917,9 +889,7 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 ey, yf;
    FILE               *fout;
@@ -959,16 +929,14 @@ int                 fg;
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
      }
-}				/*DrawBracket */
+}
+
 
 /*----------------------------------------------------------------------
    DrawParenthesis draw a closing or opening parenthesis (direction).
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawParenthesis (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
@@ -982,9 +950,7 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 ey, yf;
    FILE               *fout;
@@ -1024,16 +990,14 @@ int                 fg;
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
      }
-}				/*DrawParenthesis */
+}
+
 
 /*----------------------------------------------------------------------
    DrawBrace draw an opening of closing brace (depending on direction).
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawBrace (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
@@ -1047,9 +1011,7 @@ ptrfont             font;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 ey, yf;
    FILE               *fout;
@@ -1089,7 +1051,8 @@ int                 fg;
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\374) (\\375) (\\376) (\\357) s4\n", x, yf, y, Scale);
      }
-}				/*DrawBrace */
+}
+
 
 /*----------------------------------------------------------------------
    DrawRectangle draw a rectangle located at (x, y) in frame,
@@ -1098,8 +1061,6 @@ int                 fg;
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawRectangle (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -1117,9 +1078,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 xf, yf;
    FILE               *fout;
@@ -1141,6 +1100,7 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
 }
 
+
 /*----------------------------------------------------------------------
    DrawSegments draw a set of segments.
    Parameter buffer is a pointer to the list of control points.
@@ -1155,10 +1115,8 @@ int                 pattern;
    - a backward arrow has to be drawn (2)
    - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
-
 #else  /* __STDC__ */
 void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow)
 int                 frame;
@@ -1172,9 +1130,7 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 arrow;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
    float               xp, yp;
@@ -1240,6 +1196,7 @@ int                 arrow;
 	       FloatToInt (xp), FloatToInt (yp), thick, lg, lg);
 }
 
+
 /*----------------------------------------------------------------------
    DrawPolygon draw a polygone.
    Parameter buffer is a pointer to the list of control points.
@@ -1250,10 +1207,8 @@ int                 arrow;
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawPolygon (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1268,9 +1223,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
    float               xp, yp;
@@ -1324,10 +1277,8 @@ int                 pattern;
    - both backward and forward arrows have to be drawn (3)
    Parameter control indicate the control points.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
-
 #else  /* __STDC__ */
 void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
 int                 frame;
@@ -1342,7 +1293,6 @@ int                 active;
 int                 fg;
 int                 arrow;
 C_points           *controls;
-
 #endif /* __STDC__ */
 {
    PtrTextBuffer       adbuff;
@@ -1425,9 +1375,8 @@ C_points           *controls;
    /* forward arrow */
    if (arrow == 1 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
-
-
 }
+
 
 /*----------------------------------------------------------------------
    DrawSpline draw a closed curb.
@@ -1440,10 +1389,8 @@ C_points           *controls;
    color, background color and fill pattern.
    Parameter controls contains the list of control points.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
-
 #else  /* __STDC__ */
 void                DrawSpline (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern, controls)
 int                 frame;
@@ -1459,7 +1406,6 @@ int                 fg;
 int                 bg;
 int                 pattern;
 C_points           *controls;
-
 #endif /* __STDC__ */
 {
    PtrTextBuffer       adbuff;
@@ -1513,16 +1459,14 @@ C_points           *controls;
 
 }
 
+
 /*----------------------------------------------------------------------
    DrawDiamond draw a diamond.
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawDiamond (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawDiamond (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1537,9 +1481,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, xf, ym, yf;
    FILE               *fout;
@@ -1561,15 +1503,14 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, thick, 4);
 }
 
+
 /*----------------------------------------------------------------------
    DrawOval draw a rectangle with smoothed corners.
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawOval (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawOval (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1584,9 +1525,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 arc, xf, yf;
    FILE               *fout;
@@ -1612,15 +1551,14 @@ int                 pattern;
 	    arc);
 }
 
+
 /*----------------------------------------------------------------------
    DrawEllips draw an ellips (or a circle).
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawEllips (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawEllips (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1635,9 +1573,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, ym;
    FILE               *fout;
@@ -1672,11 +1608,8 @@ int                 pattern;
 /*----------------------------------------------------------------------
    DrawCorner draw a corner.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawCorner (frame, thick, style, x, y, l, h, coin, RO, func, fg)
 int                 frame;
@@ -1690,9 +1623,7 @@ int                 coin;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xf, yf;
    FILE               *fout;
@@ -1727,16 +1658,15 @@ int                 fg;
 	 }
 }
 
+
 /*----------------------------------------------------------------------
    DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
    and with an horizontal line at 6mm from top.
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawRectangleFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1751,9 +1681,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 arc, xf, yf;
    FILE               *fout;
@@ -1779,16 +1707,14 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, thick, 2);
 }
 
+
 /*----------------------------------------------------------------------
    DrawEllips draw an ellips (or a circle).
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawEllipsFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -1803,9 +1729,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    int                 px7mm, shiftX;
    int                 xm, ym;
@@ -1848,15 +1772,13 @@ int                 pattern;
      }
 }
 
+
 /*----------------------------------------------------------------------
    DrawVerticalLine draw a vertical line aligned top center or bottom
    depending on align value.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
@@ -1870,9 +1792,7 @@ int                 align;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 ym, yf, xf;
    FILE               *fout;
@@ -1901,17 +1821,15 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
-}				/*DrawHorizontalLine */
+}
+
 
 /*----------------------------------------------------------------------
    DrawVerticalLine draw a vertical line aligned left center or right
    depending on align value.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
-
 #else  /* __STDC__ */
 void                DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
@@ -1925,9 +1843,7 @@ int                 align;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, yf, xf;
    FILE               *fout;
@@ -1956,7 +1872,8 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
-}				/*DrawVerticalLine */
+}
+
 
 /*----------------------------------------------------------------------
    DrawPoints draw a line of dot.
@@ -1972,7 +1889,6 @@ int                 lgboite;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
 {
    int                 xcour, ycour;	/*encoding */
@@ -1993,7 +1909,8 @@ int                 fg;
 
 	fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
      }
-}				/*DrawPoints */
+}
+
 
 /*----------------------------------------------------------------------
    DrawSlash draw a slash or backslash depending on direction.
@@ -2013,7 +1930,6 @@ int                 direction;
 int                 RO;
 int                 func;
 int                 fg;
-
 #endif /* __STDC__ */
 {
    int                 xf, yf;
@@ -2040,7 +1956,8 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
-}				/*DrawSlash */
+}
+
 
 /*----------------------------------------------------------------------
    StorePageInfo store the page number, width and height of the page,
@@ -2053,13 +1970,13 @@ void                StorePageInfo (pagenum, width, height)
 int                 pagenum;
 int                 width;
 int                 height;
-
 #endif /* __STDC__ */
 {
    LastPageNumber = pagenum;
    LastPageWidth = width;
    LastPageHeight = height;
 }
+
 
 /*----------------------------------------------------------------------
    psBoundingBox output the %%BoundingBox macro for Postscript.
@@ -2071,7 +1988,6 @@ void                psBoundingBox (frame, width, height)
 int                 frame;
 int                 width;
 int                 height;
-
 #endif /* __STDC__ */
 {
    FILE               *fout;
@@ -2088,16 +2004,16 @@ int                 height;
 	    50 + PixelToPoint (width), 791);
 }
 
-/*
+
+/*----------------------------------------------------------------------
    EndOfString check wether string end by suffix.
- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */
 int                 EndOfString (string, suffix)
 char               *string;
 char               *suffix;
-
 #endif /* __STDC__ */
 {
    int                 string_lenght, suffix_lenght;
@@ -2109,6 +2025,7 @@ char               *suffix;
    else
       return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
+
 
 /*----------------------------------------------------------------------
    PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
@@ -2132,7 +2049,6 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
 {
    int                 xf, yf;
@@ -2153,4 +2069,4 @@ int                 pattern;
 	y = PixelToPoint (y);
 	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", pattern, x, yf, xf, yf, xf, y, x, y);
      }
-}				/*PaintWithPattern */
+}

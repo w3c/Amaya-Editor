@@ -599,34 +599,7 @@ boolean             vertRef;
 		       }
 		     if (pChildBox->BxVertFlex || pChildBox->BxYOutOfStruct)
 			placeenY = FALSE;
-		     /* detecte les erreurs d'englobement de la boite englobee */
-		     if (!eclate && pChildBox->BxType != BoPicture
-		     /* Ne verifie pas les boites placees par relation hors-structure */
-			 && !pChildBox->BxXOutOfStruct && !pChildBox->BxYOutOfStruct)
-			if (pChildAb->AbHorizEnclosing && placeenX
-			    && (pChildBox->BxXOrg < 0 || pChildBox->BxXOrg > width))
-			  {
-			     if (HighlightBoxErrors)
-				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
-			  }
-			else if (pChildAb->AbVertEnclosing && placeenY
-				 && (pChildBox->BxYOrg < 0 || pChildBox->BxYOrg > height))
-			  {
-			     if (HighlightBoxErrors)
-				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_VERT_POS), AbsBoxType (pChildAb));
-			  }
-			else if (pChildBox->BxWidth < 0)
-			  {
-			     pChildBox->BxWidth = 1;
-			     if (HighlightBoxErrors)
-				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
-			  }
-			else if (pChildBox->BxHeight < 0)
-			  {
-			     pChildBox->BxHeight = 1;
-			     if (HighlightBoxErrors)
-				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
-			  }
+
 		     /* decale la boite positionnee en X dans l'englobante */
 		     if (horizRef && newX)
 		       {

@@ -1119,7 +1119,7 @@ int                *carIndex;
 		    if (!pAb->AbPresentationBox && pAb->AbVolume != 0 && pCurrentBox->BxPictInfo != NULL)
 		      {
 
-			 /* Il faut se proteger des boites de taille negative */
+			 /* box size has to be positive */
 			 if (pCurrentBox->BxWidth < 0)
 			    ChangeWidth (pCurrentBox, pCurrentBox, NULL, 10 - pCurrentBox->BxWidth, 0, frame);
 			 if (pCurrentBox->BxHeight < 0)

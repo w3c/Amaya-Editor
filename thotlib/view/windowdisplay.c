@@ -49,20 +49,22 @@ static int          stack_deep;
 #include "inites_f.h"
 #include "buildlines_f.h"
 
+/*----------------------------------------------------------------------
+  Nothing to do at the end of page.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPage (FILE * fout)
 #else  /* __STDC__ */
 void                DrawPage (fout)
 FILE               *fout;
-
 #endif /* __STDC__ */
 {
 }
 
-/**
- *      FontOrig update and (x, y) location before DrawString
- *		accordingly to the ascent of the font used.
- **/
+/*----------------------------------------------------------------------
+  FontOrig update and (x, y) location before DrawString
+  accordingly to the ascent of the font used.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
 #else  /* __STDC__ */
@@ -82,12 +84,11 @@ int                *pY;
 }
 
 
-/**
- *      LoadColor load the given color in the drawing Graphic Context.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
+/*----------------------------------------------------------------------
+  LoadColor load the given color in the drawing Graphic Context.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         LoadColor (int disp, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -122,12 +123,11 @@ int                 fg;
 }
 
 
-/**
- *      InitDrawing update the Graphic Context accordingly to parameters.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
+/*----------------------------------------------------------------------
+  InitDrawing update the Graphic Context accordingly to parameters.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitDrawing (int disp, int style, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -159,9 +159,9 @@ int                 fg;
 }
 
 
-/**
- *      FinishDrawing update the Graphic Context accordingly to parameters.
- **/
+/*----------------------------------------------------------------------
+      FinishDrawing update the Graphic Context accordingly to parameters.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FinishDrawing (int disp, int RO, int active)
 #else  /* __STDC__ */
@@ -179,9 +179,9 @@ int                 active;
 }
 
 
-/**
- *   DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
- **/
+/*----------------------------------------------------------------------
+  DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 #else  /* __STDC__ */
@@ -209,10 +209,10 @@ int                 y2;
 }
 
 
-/**
- *       SpaceToCar substitute in text the space chars to their visual
- *		equivalents.
- **/
+/*----------------------------------------------------------------------
+  SpaceToCar substitute in text the space chars to their visual
+  equivalents.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SpaceToCar (unsigned char *text)
 #else  /* __STDC__ */
@@ -252,12 +252,11 @@ unsigned char      *text;
 }
 
 
-/**
- *      DrawChar draw a char at location (x, y) in frame and with font.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
+/*----------------------------------------------------------------------
+  DrawChar draw a char at location (x, y) in frame and with font.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawChar (unsigned char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -298,21 +297,21 @@ int                 fg;
    FinishDrawing (0, RO, active);
 }
 
-/**
- *	DrawString draw a char string of lg chars beginning at buff[i].
- *		Drawing starts at (x, y) in frame and using font.
- *		lgboite gives the width of the final box or zero,
- *		this is used only by the thot formmating engine.
- *		bl indicate taht there is a space before the string
- *		hyphen indicate whether an hyphen char has to be added.
- *		debutbloc is 1 if the text is at a paragraph beginning
- *		(no justification of first spaces).
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- *
- *              Returns the lenght of the string drawn.
- **/
+/*----------------------------------------------------------------------
+  DrawString draw a char string of lg chars beginning at buff[i].
+  Drawing starts at (x, y) in frame and using font.
+  lgboite gives the width of the final box or zero,
+  this is used only by the thot formmating engine.
+  bl indicates taht there is a space before the string
+  hyphen indicates whether an hyphen char has to be added.
+  debutbloc is 1 if the text is at a paragraph beginning
+  (no justification of first spaces).
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  
+  Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -408,34 +407,33 @@ int                 fg;
       return (0);
 }
 
-/**
- *      DisplayUnderline draw the underline, overline or cross line
- *		added to some text of lenght lg, using font and located
- *		at (x, y) in frame. 
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- *              thick indicate thickness : thin (0) thick (1)
- *              Type indicate the kind of drawing :
- *              - 0 = none
- *              - 1 = underlined
- *              - 2 = overlined
- *              - 3 = cross-over
- *
- *                               (x,y)
- *            __________________+______________________________\_/__
- *           /|\    I    I          /|\       /|\   /|\         |
- *            |     I\  /I           |         |     |       ___|height
- *            |  ___I_\/_I_______    |ascent   |     |middle   / \
- *    fheight |     I    I  I  \     |         |     |
- *            |     I    I  I  |     |         |  __\|/
- *            |  ___I____I__I__/____\|/        | bottom
- *            |             I             ____\|/
- *            |             I
- *           \|/____________I_
- *
- **/
-
+/*----------------------------------------------------------------------
+  DisplayUnderline draw the underline, overline or cross line
+  added to some text of lenght lg, using font and located
+  at (x, y) in frame. 
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  thick indicates thickness : thin (0) thick (1)
+  Type indicates the kind of drawing :
+  - 0 = none
+  - 1 = underlined
+  - 2 = overlined
+  - 3 = cross-over
+  
+                  (x,y)
+          __________________+_______________________________\_/__
+          /|\    I    I          /|\       /|\   /|\         |
+           |     I\  /I           |         |     |       ___|height
+           |  ___I_\/_I_______    |ascent   |     |middle   / \
+   fheight |     I    I  I  \     |         |     |
+           |     I    I  I  |     |         |  __\|/
+           |  ___I____I__I__/____\|/        | bottom
+           |             I             ____\|/
+	   |             I
+	  \|/____________I_
+	      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -510,12 +508,11 @@ int                 fg;
 }
 
 
-/**
- *      DrawPoints draw a line of dot.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
+/*----------------------------------------------------------------------
+  DrawPoints draw a line of dot.
+  RO indicates whether it's a read-only box active indicates if the box
+  is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -567,14 +564,11 @@ int                 fg;
      }
 }
 
-/**
- *      DrawRadical Draw a radical symbol.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawRadical Draw a radical symbol.
+  RO indicates whether it's a read-only box active indicates if the box
+  is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
@@ -611,20 +605,17 @@ int                 fg;
 }
 
 
-/**
- *      DrawIntegral draw an integral. depending on type :
- *              - simple if type = 0
- *              - contour if type = 1
- *              - double if type = 2.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawIntegral draw an integral. depending on type :
+  - simple if type = 0
+  - contour if type = 1
+  - double if type = 2.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawIntegral (frame, thick, x, y, l, h, type, font, RO, active, fg)
 int                 frame;
@@ -638,9 +629,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, yf, yend, exnum, delta;
 
@@ -677,19 +666,17 @@ int                 fg;
 		font, RO, active, fg);
 }
 
-/**
- *      AfMonoSymb draw a one glyph symbol.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
 
-
+/*----------------------------------------------------------------------
+  DrawMonoSymb draw a one glyph symbol.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AfMonoSymb (char symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
-
+static void         DrawMonoSymb (char symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
-static void         AfMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
+static void         DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
 char                symb;
 int                 frame;
 int                 x;
@@ -700,9 +687,7 @@ int                 RO;
 int                 active;
 ptrfont             font;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, yf;
 
@@ -712,16 +697,14 @@ int                 fg;
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
-/**
- *      DrawSigma draw a Sigma symbol.
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
 
-
+/*----------------------------------------------------------------------
+  DrawSigma draw a Sigma symbol.
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawSigma (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
@@ -733,9 +716,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, ym, fh;
 
@@ -743,7 +724,7 @@ int                 fg;
    if (h < fh * 2 && l <= CharacterWidth ('\345', font))
      {
 	/* Only one glyph needed */
-	AfMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
+	DrawMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
@@ -762,18 +743,14 @@ int                 fg;
      }
 }
 
-/**
- *      DrawPi draw a PI symbol.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
-
+/*----------------------------------------------------------------------
+  DrawPi draw a PI symbol.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawPi (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
@@ -785,9 +762,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 fh;
 
@@ -795,7 +770,7 @@ int                 fg;
    if (h < fh * 2 && l <= CharacterWidth ('\325', font))
      {
 	/* Only one glyph needed */
-	AfMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
+	DrawMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
@@ -811,17 +786,14 @@ int                 fg;
      }
 }
 
-/**
- *      DrawIntersection draw an intersection symbol.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawIntersection draw an intersection symbol.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawIntersection (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
@@ -833,9 +805,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 arc, fh;
 
@@ -843,7 +813,7 @@ int                 fg;
    if (h < fh * 2 && l <= CharacterWidth ('\307', font))
      {
 	/* Only one glyph needed */
-	AfMonoSymb ('\307', frame, x, y, l, h, RO, active, font, fg);
+	DrawMonoSymb ('\307', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
@@ -862,17 +832,15 @@ int                 fg;
      }
 }
 
-/**
- *      DrawUnion draw an Union symbol.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
 
-
+/*----------------------------------------------------------------------
+  DrawUnion draw an Union symbol.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawUnion (frame, x, y, l, h, font, RO, active, fg)
 int                 frame;
@@ -884,9 +852,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 arc, fh;
 
@@ -894,7 +860,7 @@ int                 fg;
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
      {
 	/* Only one glyph needed */
-	AfMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
+	DrawMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
@@ -913,9 +879,9 @@ int                 fg;
      }
 }
 
-/**
- *      TraceFleche draw the end of an arrow.
- **/
+/*----------------------------------------------------------------------
+  TraceFleche draw the end of an arrow.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TraceFleche (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -972,19 +938,16 @@ int                 fg;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawArrow draw an arrow following the indicated direction in degrees :
- *              0 (right arrow), 45, 90, 135, 180,
- *              225, 270 ou 315.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawArrow draw an arrow following the indicated direction in degrees :
+  0 (right arrow), 45, 90, 135, 180,
+  225, 270 ou 315.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawArrow (frame, thick, style, x, y, l, h, orientation, RO, active, fg)
 int                 frame;
@@ -998,9 +961,7 @@ int                 orientation;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, ym, xf, yf;
 
@@ -1059,14 +1020,12 @@ int                 fg;
    FinishDrawing (0, RO, active);
 }
 
-/**
- *      DrawBracket draw an opening or closing bracket (depending on direction)
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawBracket draw an opening or closing bracket (depending on direction)
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
 
@@ -1145,17 +1104,14 @@ int                 fg;
      }
 }
 
-/**
- *      DrawParenthesis draw a closing or opening parenthesis (direction).
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawParenthesis draw a closing or opening parenthesis (direction).
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
-
 #else  /* __STDC__ */
 void                DrawParenthesis (frame, thick, x, y, l, h, direction, font, RO, active, fg)
 int                 frame;
@@ -1169,9 +1125,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, yf, yend, exnum, delta;
 
@@ -1252,14 +1206,12 @@ int                 fg;
 }
 
 
-/**
- *      DrawBrace draw an opening of closing brace (depending on direction).
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawBrace draw an opening of closing brace (depending on direction).
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
 
@@ -1400,17 +1352,15 @@ int                 fg;
      }
 }
 
-/**
- *      DrawRectangle draw a rectangle located at (x, y) in frame,
- *		of geometry width x height.
- *		thick indicate the thickness of the lines.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawRectangle draw a rectangle located at (x, y) in frame,
+  of geometry width x height.
+  thick indicates the thickness of the lines.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -1479,15 +1429,13 @@ int                 pattern;
      }
 }
 
-/**
- *      DrawDiamond draw a diamond.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawDiamond draw a diamond.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -1550,26 +1498,25 @@ int                 pattern;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawSegments draw a set of segments.
- *		Parameter buffer is a pointer to the list of control points.
- *		nb indicate the number of points.
- *		The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              fg parameter gives the drawing color.
- *              arrow parameter indicate whether :
- *              - no arrow have to be drawn (0)
- *              - a forward arrow has to be drawn (1)
- *              - a backward arrow has to be drawn (2)
- *              - both backward and forward arrows have to be drawn (3)
- **/
-
+/*----------------------------------------------------------------------
+  DrawSegments draw a set of segments.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  fg parameter gives the drawing color.
+  arrow parameter indicates whether :
+  - no arrow have to be drawn (0)
+  - a forward arrow has to be drawn (1)
+  - a backward arrow has to be drawn (2)
+  - both backward and forward arrows have to be drawn (3)
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
+void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
 
 #else  /* __STDC__ */
-void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, fleche)
+void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1580,7 +1527,7 @@ int                 nb;
 int                 RO;
 int                 active;
 int                 fg;
-int                 fleche;
+int                 arrow;
 
 #endif /* __STDC__ */
 
@@ -1615,7 +1562,7 @@ int                 fleche;
 
 
    /* backward arrow  */
-   if (fleche == 2 || fleche == 3)
+   if (arrow == 2 || arrow == 3)
       TraceFleche (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
 
    /* Draw the border */
@@ -1624,7 +1571,7 @@ int                 fleche;
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
-   if (fleche == 1 || fleche == 3)
+   if (arrow == 1 || arrow == 3)
       TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 
    /* free the table of points */
@@ -1632,17 +1579,16 @@ int                 fleche;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawPolygon draw a polygone.
- *		Parameter buffer is a pointer to the list of control points.
- *		nb indicate the number of points.
- *		The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
-
+/*----------------------------------------------------------------------
+  DrawPolygon draw a polygone.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
 
@@ -1715,15 +1661,14 @@ int                 pattern;
 }
 
 
-/**
- *	PolyNewPoint : add a new point to the current polyline.
- **/
+/*----------------------------------------------------------------------
+  PolyNewPoint : add a new point to the current polyline.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      PolyNewPoint (int x, int y)
 #else  /* __STDC__ */
 static boolean      PolyNewPoint (x, y)
 int                 x, y;
-
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
@@ -1754,15 +1699,14 @@ int                 x, y;
    return (TRUE);
 }
 
-/**
- *   push_stack : push a spline on the stack.
- **/
+/*----------------------------------------------------------------------
+  PushStack : push a spline on the stack.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         push_stack (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+static void         PushStack (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 #else  /* __STDC__ */
-static void         push_stack (x1, y1, x2, y2, x3, y3, x4, y4)
+static void         PushStack (x1, y1, x2, y2, x3, y3, x4, y4)
 float               x1, y1, x2, y2, x3, y3, x4, y4;
-
 #endif /* __STDC__ */
 {
    StackPoint         *stack_ptr;
@@ -1782,13 +1726,13 @@ float               x1, y1, x2, y2, x3, y3, x4, y4;
    stack_deep++;
 }
 
-/**
- *   pop_stack : pop a spline from the stack.
- **/
+/*----------------------------------------------------------------------
+  PopStack : pop a spline from the stack.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      pop_stack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
+static boolean      PopStack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
 #else  /* __STDC__ */
-static boolean      pop_stack (x1, y1, x2, y2, x3, y3, x4, y4)
+static boolean      PopStack (x1, y1, x2, y2, x3, y3, x4, y4)
 float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 
 #endif /* __STDC__ */
@@ -1812,9 +1756,9 @@ float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 }
 
 
-/**
- *   PolySplit : split a poly line and push the results on the stack.
- **/
+/*----------------------------------------------------------------------
+  PolySplit : split a poly line and push the results on the stack.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PolySplit (float a1, float b1, float a2, float b2, float a3, float b3, float a4, float b4)
 #else  /* __STDC__ */
@@ -1829,9 +1773,9 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
    float               tx1, ty1, tx2, ty2, xmid, ymid;
 
    stack_deep = 0;
-   push_stack (a1, b1, a2, b2, a3, b3, a4, b4);
+   PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
 
-   while (pop_stack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
 	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
 	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
@@ -1850,34 +1794,33 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 	     xmid = MIDDLE_OF (sx2, tx1);
 	     ymid = MIDDLE_OF (sy2, ty1);
 
-	     push_stack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
-	     push_stack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
+	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
+	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
 	  }
      }
 }
 
 
-/**
- *      DrawCurb draw an open curb.
- *		Parameter buffer is a pointer to the list of control points.
- *		nb indicate the number of points.
- *		The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              fg indicate the drawing color
- *              arrow parameter indicate whether :
- *              - no arrow have to be drawn (0)
- *              - a forward arrow has to be drawn (1)
- *              - a backward arrow has to be drawn (2)
- *              - both backward and forward arrows have to be drawn (3)
- *              Parameter control indicate the control points.
- **/
-
+/*----------------------------------------------------------------------
+  DrawCurb draw an open curb.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  fg indicates the drawing color
+  arrow parameter indicates whether :
+  - no arrow have to be drawn (0)
+  - a forward arrow has to be drawn (1)
+  - a backward arrow has to be drawn (2)
+  - both backward and forward arrows have to be drawn (3)
+  Parameter control indicates the control points.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
+void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
+void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1888,7 +1831,7 @@ int                 nb;
 int                 RO;
 int                 active;
 int                 fg;
-int                 fleche;
+int                 arrow;
 C_points           *controls;
 
 #endif /* __STDC__ */
@@ -1921,7 +1864,7 @@ C_points           *controls;
    cy2 = (controls[j].ly * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
 
    /* backward arrow  */
-   if (fleche == 2 || fleche == 3)
+   if (arrow == 2 || arrow == 3)
       TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
 
    for (i = 2; i < nb; i++)
@@ -1971,7 +1914,7 @@ C_points           *controls;
 #endif /* _WINDOWS */
 
    /* Forward arrow */
-   if (fleche == 1 || fleche == 3)
+   if (arrow == 1 || arrow == 3)
       TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
 
    FinishDrawing (0, RO, active);
@@ -1979,18 +1922,17 @@ C_points           *controls;
    free ((char *) points);
 }
 
-/**
- *      DrawSpline draw a closed curb.
- *		Parameter buffer is a pointer to the list of control points.
- *		nb indicate the number of points.
- *		The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *              Parameter controls contains the list of control points.
- **/
-
+/*----------------------------------------------------------------------
+  DrawSpline draw a closed curb.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  Parameter controls contains the list of control points.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
 
@@ -2102,17 +2044,15 @@ C_points           *controls;
    /* free the table of points */
    free ((char *) points);
 }
-/*fin */
-
-/**
- *      DrawOval draw a rectangle with smoothed corners.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
 
 
+/*----------------------------------------------------------------------
+  DrawOval draw a rectangle with smoothed corners.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -2261,15 +2201,13 @@ int                 pattern;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawEllips draw an ellips (or a circle).
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawEllips draw an ellips (or a circle).
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -2321,15 +2259,13 @@ int                 pattern;
      }
 }
 
-/**
- *      DrawVerticalLine draw a vertical line aligned top center or bottom
- *		depending on align value.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawVerticalLine draw a vertical line aligned top center or bottom
+  depending on align value.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
 
@@ -2366,15 +2302,13 @@ int                 fg;
      }
 }
 
-/**
- *      DrawVerticalLine draw a vertical line aligned left center or right
- *		depending on align value.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawVerticalLine draw a vertical line aligned left center or right
+  depending on align value.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
 
@@ -2413,14 +2347,12 @@ int                 fg;
 }
 
 
-/**
- *      DrawSlash draw a slash or backslash depending on direction.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Le parame`tre indique la couleur du trace'.
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawSlash draw a slash or backslash depending on direction.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Le parame`tre indique la couleur du trace'.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int active, int fg)
 
@@ -2457,14 +2389,12 @@ int                 fg;
 }
 
 
-/**
- *      DrawCorner draw a corner.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawCorner draw a corner.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int RO, int active, int fg)
 
@@ -2539,16 +2469,14 @@ int                 fg;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
- *              and with an horizontal line at 6mm from top.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
-
-
+/*----------------------------------------------------------------------
+  DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
+  and with an horizontal line at 6mm from top.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -2566,9 +2494,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
 #ifndef _WINDOWS
    int                 arc, arc2, xf, yf;
@@ -2714,14 +2640,14 @@ int                 pattern;
 #endif /* _WINDOWS */
 }
 
-/**
- *      DrawEllipsFrame draw an ellipse at 7mm under the top of the
- *		enclosing box.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
+/*----------------------------------------------------------------------
+  DrawEllipsFrame draw an ellipse at 7mm under the top of the
+  enclosing box.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -2786,47 +2712,41 @@ int                 pattern;
 #endif /* _WINDOWS */
 }
 
-/**
- * StorePageInfo and psBoundingBox are empty, they have no meaning in
- * 		this context and are kept for interface compatibility.
- **/
-
+/*----------------------------------------------------------------------
+  StorePageInfo and psBoundingBox are empty, they have no meaning in
+  this context and are kept for interface compatibility.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                StorePageInfo (int pagenum, int width, int height)
-
 #else  /* __STDC__ */
 void                StorePageInfo (pagenum, width, height)
 int                 pagenum;
 int                 width;
 int                 height;
-
 #endif /* __STDC__ */
-
 {
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                psBoundingBox (int frame, int width, int height)
-
 #else  /* __STDC__ */
 void                psBoundingBox (frame, width, height)
 int                 frame;
 int                 width;
 int                 height;
-
 #endif /* __STDC__ */
-
 {
 }
 
 
-/**
- *  Clear clear the area of frame located at (x, y) and of size width x height.
- **/
-
+/*----------------------------------------------------------------------
+  Clear clear the area of frame located at (x, y) and of size width x height.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Clear (int frame, int width, int height, int x, int y)
-
 #else  /* __STDC__ */
 void                Clear (frame, width, height, x, y)
 int                 frame;
@@ -2834,9 +2754,7 @@ int                 width;
 int                 height;
 int                 x;
 int                 y;
-
 #endif /* __STDC__ */
-
 {
    ThotWindow          w;
 
@@ -2863,9 +2781,9 @@ int                 y;
 }
 
 
-/**
- *      WChaine draw a string in frame, at location (x, y) and using font.
- **/
+/*----------------------------------------------------------------------
+  WChaine draw a string in frame, at location (x, y) and using font.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WChaine (ThotWindow w, char *string, int x, int y, ptrfont font, ThotGC GClocal)
 #else  /* __STDC__ */
@@ -2893,10 +2811,10 @@ ThotGC              GClocal;
 }
 
 
-/**
- *      VideoInvert switch to inverse video the area of frame located at
- *		(x,y) and of size width x height.
- **/
+/*----------------------------------------------------------------------
+  VideoInvert switch to inverse video the area of frame located at
+  (x,y) and of size width x height.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                VideoInvert (int frame, int width, int height, int x, int y)
 #else  /* __STDC__ */
@@ -2925,10 +2843,10 @@ int                 y;
 }
 
 
-/**
- *      Scroll do a scrolling/Bitblt of frame of a width x height area
- *		from (xd,yd) to (xf,yf).
- **/
+/*----------------------------------------------------------------------
+  Scroll do a scrolling/Bitblt of frame of a width x height area
+  from (xd,yd) to (xf,yf).
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 #else  /* __STDC__ */
@@ -2958,9 +2876,9 @@ int                 yf;
 }
 
 
-/**
- *      EndOfString check wether string end by suffix.
- **/
+/*----------------------------------------------------------------------
+  EndOfString check wether string end by suffix.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */
@@ -2981,9 +2899,9 @@ char               *suffix;
 }
 
 
-/**
- *      XFlushOutput enforce updating of the calculated image for frame.
- **/
+/*----------------------------------------------------------------------
+  XFlushOutput enforce updating of the calculated image for frame.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XFlushOutput (int frame)
 #else  /* __STDC__ */
@@ -2998,15 +2916,15 @@ int                 frame;
 }
 
 
-/**
- *      PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
- *		located on (x , y) and geometry width x height, using the
- *		given pattern.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- **/
+/*----------------------------------------------------------------------
+  PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
+  located on (x , y) and geometry width x height, using the
+  given pattern.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */

@@ -515,20 +515,20 @@ OpRelation          op;
       pRefBox = pAb->AbHorizPos.PosAbRef->AbBox;
 
    /* Met a jour les relations de la boite */
-   i = 1;
+   i = 0;
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
      {
-	if (pPosRel->PosRTable[i - 1].ReBox == NULL)
+	if (pPosRel->PosRTable[i].ReBox == NULL)
 	  {
 	     pPosRel = pPosRel->PosRNext;
-	     i = 0;
+	     i = -1;
 	  }
 	/* Est-ce une relation avec le repere de position ? */
-	else if (pPosRel->PosRTable[i - 1].ReRefEdge == oldPosEdge
-		 && pPosRel->PosRTable[i - 1].ReBox == pRefBox
-		 && pPosRel->PosRTable[i - 1].ReOp != OpHorizRef)
-	   pPosRel->PosRTable[i - 1].ReRefEdge = newPosEdge;
+	else if (pPosRel->PosRTable[i].ReRefEdge == oldPosEdge
+		 && pPosRel->PosRTable[i].ReBox == pRefBox
+		 && pPosRel->PosRTable[i].ReOp != OpHorizRef)
+	   pPosRel->PosRTable[i].ReRefEdge = newPosEdge;
 	i++;
      }
 }
@@ -604,20 +604,20 @@ OpRelation          op;
       pRefBox = pAb->AbVertPos.PosAbRef->AbBox;
 
    /* Met a jour les relations de la boite */
-   i = 1;
+   i = 0;
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
      {
-	if (pPosRel->PosRTable[i - 1].ReBox == NULL)
+	if (pPosRel->PosRTable[i].ReBox == NULL)
 	  {
 	     pPosRel = pPosRel->PosRNext;
-	     i = 0;
+	     i = -1;
 	  }
 	/* Est-ce une relation avec le repere de position ? */
-	else if (pPosRel->PosRTable[i - 1].ReRefEdge == oldPosEdge
-		 && pPosRel->PosRTable[i - 1].ReBox == pRefBox
-		 && pPosRel->PosRTable[i - 1].ReOp != OpVertRef)
-	   pPosRel->PosRTable[i - 1].ReRefEdge = newPosEdge;
+	else if (pPosRel->PosRTable[i].ReRefEdge == oldPosEdge
+		 && pPosRel->PosRTable[i].ReBox == pRefBox
+		 && pPosRel->PosRTable[i].ReOp != OpVertRef)
+	   pPosRel->PosRTable[i].ReRefEdge = newPosEdge;
 	i++;
      }
 }
@@ -1072,11 +1072,11 @@ int                 frame;
 		  pPosRel = pBox->BxPosRelations;
 		  while (pPosRel != NULL)
 		    {
-		       i = 1;
-		       notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		       while (i <= MAX_RELAT_POS && notEmpty)
+		       i = 0;
+		       notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		       while (i < MAX_RELAT_POS && notEmpty)
 			 {
-			    pRelation = &pPosRel->PosRTable[i - 1];
+			    pRelation = &pPosRel->PosRTable[i];
 			    if (pRelation->ReBox->BxAbstractBox != NULL)
 			      {
 				 /* Relation hors-struture sur l'origine de la boite */
@@ -1099,10 +1099,11 @@ int                 frame;
 			      }
 
 			    i++;
-			    if (i <= MAX_RELAT_POS)
-			       notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+			    if (i < MAX_RELAT_POS)
+			       notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 			 }
-		       pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+		       /* next block */
+		       pPosRel = pPosRel->PosRNext;
 		    }
 
 		  /* Decale des boites englobees dont l'origine depend de l'englobante */
@@ -1227,11 +1228,11 @@ int                 frame;
 		  pPosRel = pBox->BxPosRelations;
 		  while (pPosRel != NULL)
 		    {
-		       i = 1;
-		       notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		       while (i <= MAX_RELAT_POS && notEmpty)
+		       i = 0;
+		       notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		       while (i < MAX_RELAT_POS && notEmpty)
 			 {
-			    pRelation = &pPosRel->PosRTable[i - 1];
+			    pRelation = &pPosRel->PosRTable[i];
 			    if (pRelation->ReBox->BxAbstractBox != NULL)
 			      {
 				 /* Relation hors-struture sur l'origine de la boite */
@@ -1254,14 +1255,16 @@ int                 frame;
 				    MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
 			      }
 			    i++;
-			    if (i <= MAX_RELAT_POS)
-			       notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			    if (i < MAX_RELAT_POS)
+			       notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 			 }
-		       pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+		       /* next block */
+		       pPosRel = pPosRel->PosRNext;
 		    }
 
 		  /* traite les fils englobes ou places par rapport a l'englobante */
-		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;	/* Traite le niveau inferieur */
+		  /* Traite le niveau inferieur */
+		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  toVertPack = FALSE;
 		  /* Si la boite est en cours de deplacement -> il faut transmettre */
 		  /* la valeur de l'origine plutot que la valeur du decalage        */
@@ -1393,11 +1396,11 @@ int                 frame;
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
-				  i = 1;
-				  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-				  while (i <= MAX_RELAT_POS && notEmpty)
+				  i = 0;
+				  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+				  while (i < MAX_RELAT_POS && notEmpty)
 				    {
-				       pRelation = &pPosRel->PosRTable[i - 1];
+				       pRelation = &pPosRel->PosRTable[i];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* cote gauche */
@@ -1416,10 +1419,11 @@ int                 frame;
 					 }
 
 				       i++;
-				       if (i <= MAX_RELAT_POS)
-					  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+				       if (i < MAX_RELAT_POS)
+					  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 				    }
-				  pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+				  /* next block */
+				  pPosRel = pPosRel->PosRNext;
 			       }
 			  }
 
@@ -1431,14 +1435,14 @@ int                 frame;
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
-				  i = 1;
-				  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-				  while (i <= MAX_RELAT_POS && notEmpty)
+				  i = 0;
+				  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+				  while (i < MAX_RELAT_POS && notEmpty)
 				    {
-				       pRelation = &pPosRel->PosRTable[i - 1];
+				       pRelation = &pPosRel->PosRTable[i];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
-					    /* reference verticale */
+					    /* vertical reference */
 					    if (pRelation->ReRefEdge == VertRef)
 					       if (pRelation->ReOp == OpHorizRef)
 						  MoveVertRef (pRelation->ReBox, pFromBox, delta, frame);
@@ -1449,15 +1453,17 @@ int                 frame;
 					       else if (pRelation->ReOp == OpHorizDep)
 						 {
 						    XMove (pRelation->ReBox, pBox, delta, frame);
-						    toMove = TRUE;	/* Il faut verifier l'englobement */
+						    /* verify enclosing */
+						    toMove = TRUE;
 						 }
 					 }
 
 				       i++;
-				       if (i <= MAX_RELAT_POS)
-					  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+				       if (i < MAX_RELAT_POS)
+					  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 				    }
-				  pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+				  /* next block */
+				  pPosRel = pPosRel->PosRNext;
 			       }
 
 			     /* deplace des boites incluses */
@@ -1599,11 +1605,11 @@ int                 frame;
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
-				  i = 1;
-				  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-				  while (i <= MAX_RELAT_POS && notEmpty)
+				  i = 0;
+				  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+				  while (i < MAX_RELAT_POS && notEmpty)
 				    {
-				       pRelation = &pPosRel->PosRTable[i - 1];
+				       pRelation = &pPosRel->PosRTable[i];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* cote superieur */
@@ -1621,8 +1627,8 @@ int                 frame;
 					 }
 
 				       i++;
-				       if (i <= MAX_RELAT_POS)
-					  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+				       if (i < MAX_RELAT_POS)
+					  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 				    }
 				  pPosRel = pPosRel->PosRNext;
 			       }
@@ -1636,11 +1642,11 @@ int                 frame;
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
-				  i = 1;
-				  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-				  while (i <= MAX_RELAT_POS && notEmpty)
+				  i = 0;
+				  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+				  while (i < MAX_RELAT_POS && notEmpty)
 				    {
-				       pRelation = &pPosRel->PosRTable[i - 1];
+				       pRelation = &pPosRel->PosRTable[i];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* reference horizontale */
@@ -1655,15 +1661,17 @@ int                 frame;
 						 {
 						    /* deplace une voisine */
 						    YMove (pRelation->ReBox, pBox, delta, frame);
-						    toMove = TRUE;	/* Il faut verifier l'englobement */
+						    /* verify enclosing */
+						    toMove = TRUE;
 						 }
 					 }
 
 				       i++;
-				       if (i <= MAX_RELAT_POS)
-					  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+				       if (i < MAX_RELAT_POS)
+					  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 				    }
-				  pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+				  /* next block */
+				  pPosRel = pPosRel->PosRNext;
 			       }
 
 			     /* Deplacement de boites incluses ? */
@@ -1768,8 +1776,8 @@ int                 frame;
 	   if (!pBox->BxAbstractBox->AbDead)
 	     {
 		/* verifie que la largeur d'une boite ne devient pas negative */
-		if (Propagate != ToSiblings && delta < 0 && -delta > pBox->BxWidth)
-		   delta = -pBox->BxWidth;
+	       /*if (Propagate != ToSiblings && delta < 0 && -delta > pBox->BxWidth)
+		   delta = -pBox->BxWidth;*/
 		/* Valeurs limites avant deplacement */
 		i = pBox->BxXOrg;
 		j = i + pBox->BxWidth;
@@ -1863,11 +1871,11 @@ int                 frame;
 		if (toMove)
 		   while (pPosRel != NULL)
 		     {
-			i = 1;
-			notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-			while (i <= MAX_RELAT_POS && notEmpty)
+			i = 0;
+			notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+			while (i < MAX_RELAT_POS && notEmpty)
 			  {
-			     pRelation = &pPosRel->PosRTable[i - 1];
+			     pRelation = &pPosRel->PosRTable[i];
 			     if (pRelation->ReBox->BxAbstractBox != NULL)
 				/* Ignore la relation inverse de la boite elastique */
 				if (!pBox->BxHorizFlex
@@ -1940,8 +1948,8 @@ int                 frame;
 					 }
 
 			     i++;
-			     if (i <= MAX_RELAT_POS)
-				notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+			     if (i < MAX_RELAT_POS)
+				notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 			  }
 			pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
 		     }
@@ -1971,11 +1979,11 @@ int                 frame;
 				  pPosRel = pNextBox->BxPosRelations;
 				  while (pPosRel != NULL)
 				    {
-				       i = 1;
-				       notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-				       while (i <= MAX_RELAT_POS && notEmpty)
+				       i = 0;
+				       notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+				       while (i < MAX_RELAT_POS && notEmpty)
 					 {
-					    pRelation = &pPosRel->PosRTable[i - 1];
+					    pRelation = &pPosRel->PosRTable[i];
 					    if (pRelation->ReOp == OpHorizInc
 						&& pRelation->ReRefEdge != VertRef)
 					       switch (pAb->AbHorizPos.PosRefEdge)
@@ -2019,8 +2027,8 @@ int                 frame;
 						     }
 
 					    i++;
-					    if (i <= MAX_RELAT_POS)
-					       notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+					    if (i < MAX_RELAT_POS)
+					       notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 					 }
 				       pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
 				    }
@@ -2033,13 +2041,14 @@ int                 frame;
 		pDimRel = pBox->BxWidthRelations;
 		while (pDimRel != NULL)
 		  {
-		     i = 1;
-		     pNextBox = pDimRel->DimRTable[i - 1];
-		     while (i <= MAX_RELAT_DIM && pNextBox != NULL)
+		     i = 0;
+		     pNextBox = pDimRel->DimRTable[i];
+		     while (i < MAX_RELAT_DIM && pNextBox != NULL)
 		       {
 			  pAb = pNextBox->BxAbstractBox;
 			  /* Est-ce la meme dimension ? */
-			  if (pDimRel->DimRSame[i - 1])		/* Oui => Changement de largeur */
+			  if (pDimRel->DimRSame[i])
+			    /* Oui => Changement de largeur */
 			    {
 			       if (pAb->AbWidth.DimUnit == UnPercent)
 				  /* Le changement de taille est un pourcentage */
@@ -2060,7 +2069,8 @@ int                 frame;
 				 {
 				    pLine = SearchLine (pNextBox);
 				    if (pLine == NULL)
-				       orgTrans = 0;	/* la ligne n'est pas encore construite */
+				      /* la ligne n'est pas encore construite */
+				       orgTrans = 0;
 				    else
 				       orgTrans = pLine->LiHeight - pNextBox->BxHeight;
 				 }
@@ -2073,8 +2083,8 @@ int                 frame;
 			    }
 
 			  i++;
-			  if (i <= MAX_RELAT_DIM)
-			     pNextBox = pDimRel->DimRTable[i - 1];
+			  if (i < MAX_RELAT_DIM)
+			     pNextBox = pDimRel->DimRTable[i];
 		       }
 		     pDimRel = pDimRel->DimRNext;
 		  }
@@ -2193,8 +2203,8 @@ int                 frame;
 	   if (!pBox->BxAbstractBox->AbDead)
 	     {
 		/* verifie que la hauteur d'une boite ne devient pas negative */
-		if (Propagate != ToSiblings && delta < 0 && -delta > pBox->BxHeight)
-		   delta = -pBox->BxHeight;
+	       /*if (Propagate != ToSiblings && delta < 0 && -delta > pBox->BxHeight)
+		   delta = -pBox->BxHeight;*/
 		/* Valeurs limites avant deplacement */
 		i = pBox->BxYOrg;
 		j = i + pBox->BxHeight;
@@ -2287,11 +2297,11 @@ int                 frame;
 		if (toMove)
 		   while (pPosRel != NULL)
 		     {
-			i = 1;
-			notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-			while (i <= MAX_RELAT_POS && notEmpty)
+			i = 0;
+			notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			while (i < MAX_RELAT_POS && notEmpty)
 			  {
-			     pRelation = &pPosRel->PosRTable[i - 1];
+			     pRelation = &pPosRel->PosRTable[i];
 			     if (pRelation->ReBox->BxAbstractBox != NULL)
 				/* Ignore la relation inverse de la boite elastique */
 				if (!pBox->BxVertFlex
@@ -2370,10 +2380,11 @@ int                 frame;
 					       break;
 					 }
 			     i++;
-			     if (i <= MAX_RELAT_POS)
-				notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			     if (i < MAX_RELAT_POS)
+				notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 			  }
-			pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+			/* next block */
+			pPosRel = pPosRel->PosRNext;
 		     }
 
 		/* Note si la boite est placee en absolu ou non */
@@ -2414,11 +2425,11 @@ int                 frame;
 			       pPosRel = pNextBox->BxPosRelations;
 			       while (pPosRel != NULL)
 				 {
-				    i = 1;
-				    notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-				    while (i <= MAX_RELAT_POS && notEmpty)
+				    i = 0;
+				    notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+				    while (i < MAX_RELAT_POS && notEmpty)
 				      {
-					 pRelation = &pPosRel->PosRTable[i - 1];
+					 pRelation = &pPosRel->PosRTable[i];
 					 if (pRelation->ReOp == OpVertInc
 					 && pRelation->ReRefEdge != HorizRef)
 					   {
@@ -2463,10 +2474,10 @@ int                 frame;
 						    }
 					   }
 					 i++;
-					 if (i <= MAX_RELAT_POS)
-					    notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+					 if (i < MAX_RELAT_POS)
+					    notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 				      }
-				    /* Bloc suivant */
+				    /* next block */
 				    pPosRel = pPosRel->PosRNext;
 				 }
 			    }
@@ -2478,14 +2489,14 @@ int                 frame;
 		pDimRel = pBox->BxHeightRelations;
 		while (pDimRel != NULL)
 		  {
-		     i = 1;
-		     pNextBox = pDimRel->DimRTable[i - 1];
-		     while (i <= MAX_RELAT_DIM && pNextBox != NULL)
+		     i = 0;
+		     pNextBox = pDimRel->DimRTable[i];
+		     while (i < MAX_RELAT_DIM && pNextBox != NULL)
 		       {
 			  pAb = pNextBox->BxAbstractBox;
 
 			  /* Est-ce la meme dimension ? */
-			  if (pDimRel->DimRSame[i - 1])
+			  if (pDimRel->DimRSame[i])
 			     /* Oui => Changement de hauteur */
 			    {
 			       /* L'heritage porte sur la hauteur de la ligne ? */
@@ -2520,8 +2531,8 @@ int                 frame;
 			       ChangeWidth (pNextBox, pSourceBox, NULL, orgTrans, 0, frame);
 			    }
 			  i++;
-			  if (i <= MAX_RELAT_DIM)
-			     pNextBox = pDimRel->DimRTable[i - 1];
+			  if (i < MAX_RELAT_DIM)
+			     pNextBox = pDimRel->DimRTable[i];
 		       }
 		     /* Bloc suivant */
 		     pDimRel = pDimRel->DimRNext;
@@ -2719,11 +2730,11 @@ int                 frame;
 		if (toMove)
 		   while (pPosRel != NULL)
 		     {
-			i = 1;
-			notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-			while (i <= MAX_RELAT_POS && notEmpty)
+			i = 0;
+			notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			while (i < MAX_RELAT_POS && notEmpty)
 			  {
-			     pRelation = &pPosRel->PosRTable[i - 1];
+			     pRelation = &pPosRel->PosRTable[i];
 			     if (pRelation->ReBox->BxAbstractBox != NULL)
 			       {
 				  /* cote gauche */
@@ -2783,10 +2794,11 @@ int                 frame;
 			     /* a pu detruire le chainage des boites deplacees */
 			     pBox->BxMoved = pFromBox;
 			     i++;
-			     if (i <= MAX_RELAT_POS)
-				notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			     if (i < MAX_RELAT_POS)
+				notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 			  }
-			pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
+			/* next block */
+			pPosRel = pPosRel->PosRNext;
 		     }
 
 		/* Si le calcul de la largeur de la boite englobante est a refaire */
@@ -2920,11 +2932,11 @@ int                 frame;
 		if (toMove)
 		   while (pPosRel != NULL)
 		     {
-			i = 1;
-			notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-			while (i <= MAX_RELAT_POS && notEmpty)
+			i = 0;
+			notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			while (i < MAX_RELAT_POS && notEmpty)
 			  {
-			     pRelation = &pPosRel->PosRTable[i - 1];
+			     pRelation = &pPosRel->PosRTable[i];
 			     if (pRelation->ReBox->BxAbstractBox != NULL)
 			       {
 				  /* cote superieur */
@@ -2982,8 +2994,8 @@ int                 frame;
 			     /* a pu detruire le chainage des boites deplacees */
 			     pBox->BxMoved = pFromBox;
 			     i++;
-			     if (i <= MAX_RELAT_POS)
-				notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			     if (i < MAX_RELAT_POS)
+				notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 			  }
 			/* Bloc suivant */
 			pPosRel = pPosRel->PosRNext;
