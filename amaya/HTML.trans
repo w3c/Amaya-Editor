@@ -410,7 +410,27 @@ Remove SPAN: SPAN{*+};
 	{
 	*>:*;
 	}
+
+Remove Subscript: SUB{*+};
+	{
+	* > :*;
+	}
 	
+Remove Superscript: SUP{*+};
+	{
+	* > :*;
+	}
+	
+Remove Quotation: Q{*+};
+	{
+        * > :*;
+	}
+
+Remove BiDi: BDO{*+};
+	{
+        * > :*;
+	}
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Global Document transformation tests !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
