@@ -75,21 +75,9 @@ ELEMENTS
 			ElemNew.Post -> CreerUnLien;
 		END;
 
-  	PartieOrigineLien :
-		BEGIN
-			ElemNew.Post -> CreerUnLien;
-			ElemDelete.Pre -> DeleteALien;
-		END;
-
-  	PartieDestinationLien :
-		BEGIN
-			ElemNew.Post -> CreerUnLien;
-			ElemDelete.Pre -> DeleteALien;
-		END;
-
 	FlecheCreuse :
 		BEGIN
-			ElemNew.Post -> CreerUneForme;
+			ElemNew.Post -> CreerUnLien;
 		END;
 
 	Fleche :

@@ -145,7 +145,7 @@ RotationHorizPolyligne (Polyligne, Doc, h, l)
   while (i > 1)
     {
       TtaGivePolylinePoint (Polyligne, i, UnPixel, &x, &y);
-      TtaModifyPointInPolyline (Polyligne, i - 1, UnPixel, x, h - y, Doc);
+      TtaModifyPointInPolyline (Polyligne, i - 1, UnPixel, l - x, y, Doc);
       i--;
     }
   TtaChangeLimitOfPolyline (Polyligne, UnPixel, l, h, Doc);
@@ -205,7 +205,7 @@ RotationVertPolyligne (Polyligne, Doc, h, l)
          Voir commentaire precedent expliquant le -1
        */
 
-      TtaModifyPointInPolyline (Polyligne, i - 1, UnPixel, l - x, y, Doc);
+      TtaModifyPointInPolyline (Polyligne, i - 1, UnPixel, x, h - y, Doc);
       i--;
     }
   TtaChangeLimitOfPolyline (Polyligne, UnPixel, l, h, Doc);
@@ -523,7 +523,6 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
       while (TtaGetElementType (Temp).ElTypeNum == Draw3_EL_Groupe)
 	{
 	  GetValAttrPosition (Temp, &AHO, &AVO, Fleche->document);
-	  /*    TtaGiveBoxPosition (Temp, VuePrincipale, UnPixel, &AHO, &AVO); */
 	  CoinXO += AHO;
 	  CoinYO += AVO;
 	  Temp = TtaGetParent (Temp);
@@ -533,20 +532,15 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
       while (TtaGetElementType (Temp).ElTypeNum == Draw3_EL_Groupe)
 	{
 	  GetValAttrPosition (Temp, &AHO, &AVO, Fleche->document);
-	  /*    TtaGiveBoxPosition (Temp, VuePrincipale, UnPixel, &AHO, &AVO); */
 	  CoinXD += AHO;
 	  CoinYD += AVO;
 	  Temp = TtaGetParent (Temp);
 	}
       AHO = AVO = 0;
     }
+
   GetValAttrTaille (NoeudOrig, &HO, &LO, Fleche->document);
   GetValAttrTaille (NoeudDest, &HD, &LD, Fleche->document);
-
-  /*
-     TtaGiveBoxSize (NoeudOrig, VuePrincipale, UnPixel, &HO, &LO);
-     TtaGiveBoxSize (NoeudDest, VuePrincipale, UnPixel, &HD, &LD);
-   */
 
   CentreXO = CoinXO + (LO / 2);
   CentreYO = CoinYO + (HO / 2);
@@ -608,7 +602,7 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
   else
     {
       PositionHoriz = AGauche;
-      Type |= ROTATION_V;
+      Type |= ROTATION_H;
       if (TypeLien == 'c')
 	{
 	  Type |= VERS_LA_DROITE;
@@ -705,9 +699,9 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
 	}
       else
 	{
-	  Type |= ROTATION_H;
+	  Type |= ROTATION_V;
 	  if (PositionHoriz == AGauche)
-	    Type |= ROTATION_V;
+	    Type |= ROTATION_H;
 	  FlecheY = CentreYD;
 	  FlecheH = ABS (FlecheY - CentreYO);
 	}
@@ -718,7 +712,7 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
       FlecheY = CoinYD + HD;
       if (Type & VERS_LE_BAS)	/* UnPeuAGauche ou a Droite */
 	{
-	  Type |= ROTATION_H;
+	  Type |= ROTATION_V;
 	  if (TypeLien == 'c')
 	    {
 	      FlecheY = CoinYD + HD;
@@ -732,7 +726,7 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
 	}
       else
 	{
-	  Type |= ROTATION_H;
+	  Type |= ROTATION_V;
 	  if (PositionHoriz == ADroite)
 	    {
 	      Type |= VERS_LE_BAS;
@@ -901,29 +895,29 @@ TracerLienComposite (Lien, Doc)
       NBLien = 0;
       while (Elem != NULL)
 	{
-	  if ((TtaGetElementType (Elem).ElTypeNum
-	       == Draw3_EL_PartieOrigineLien) ||
-	      (TtaGetElementType (Elem).ElTypeNum
-	       == Draw3_EL_PartieDestinationLien))
-	    {
-	      NBLien++;
+	    if ((TtaGetElementType (Elem).ElTypeNum 
+	       == Draw3_EL_LienSimple) || 
+	      (TtaGetElementType (Elem).ElTypeNum 
+	       == Draw3_EL_FlecheCreuse)) 
+	    { 
+ 	      NBLien++; 
 	      GetValAttrPosition (Elem, &TempX, &TempY, Doc);
-	      GetValAttrTaille (Elem, &TempH, &TempL, Doc);
-	      if (Hauteur == 10)	/* C'est la Hauteur a determiner */
-		{
-		  if ((TempX + (TempL / 2)) < X)
-		    X = TempX + (TempL / 2);
-		  if ((TempX + (TempL / 2)) > L)
-		    L = TempX + (TempL / 2);
-		}
-	      else
-		{
-		  if ((TempY + (TempH / 2)) < Y)
-		    Y = TempY + (TempH / 2);
-		  if ((TempY + (TempH / 2)) > H)
-		    H = TempY + (TempH / 2);
-		}
-	    }
+ 	      GetValAttrTaille (Elem, &TempH, &TempL, Doc); 
+ 	      if (Hauteur == 10)	/* C'est la Hauteur a determiner */
+		{ 
+ 		  if ((TempX + (TempL / 2)) < X)
+ 		    X = TempX + (TempL / 2); 
+ 		  if ((TempX + (TempL / 2)) > L)
+ 		    L = TempX + (TempL / 2); 
+ 		} 
+ 	      else
+ 		{
+ 		  if ((TempY + (TempH / 2)) < Y) 
+ 		    Y = TempY + (TempH / 2);
+		  if ((TempY + (TempH / 2)) > H) 
+ 		    H = TempY + (TempH / 2);
+		 }  
+	    } 
 	  TtaNextLoadedReference (Lien, Doc, &Elem, &Att, &AutreDoc);
 	}
       if (Hauteur == 10)
@@ -975,7 +969,7 @@ TracerLienComposite (Lien, Doc)
 /*!BF
    ------------------------------------------------------------------------------
    *
-   * Function      : TracerOrigineLien
+   * Function      : TracerBrancheLien
    * Result        : void
    * Parameters
    * Name          Type          Usage
@@ -983,217 +977,168 @@ TracerLienComposite (Lien, Doc)
    * Lien               Element         Lien a tracer
    * Doc                Document        Document qui inclue le lien
    *
-   * Functionality : Trace le trait associe au lien origine entre une boite et
-   * la partie centrale du lien.
+   * Functionality : Trace le trait associe au lien entre une boite et
+   * la partie centrale d'un lien composite.
    ------------------------------------------------------------------------------
    !EF */
 
 #ifdef __STDC__
 
 void 
-TracerOrigineLien (Element Lien, Document Doc)
+TracerBrancheLien (NotifyElement * fleche)
 
 #else /* __STDC__ */
 
 void 
-TracerOrigineLien (Lien, Doc)
-     Element Lien;
-     Document Doc;
+TracerBrancheLien (fleche)
+NotifyElement * fleche;
+
 
 #endif /* __STDC__ */
 
 {
-  Element GraphicNode, Origine, Destination;
-  Attribute AttOrigine, AttDestination;
+  Element Extremite, Origine, Destination;
+  Attribute AttExtremite;
   View VuePrincipale;
   AttributeType AttRef;
   Document TargetDoc = 0;
   char DocName[1];
   int LC_Largeur, LC_Hauteur, LC_PosX, LC_PosY;
   int Largeur, Hauteur, PosX, PosY;
+  int TypeLien;
+  Element Lien;
+  Document Doc;
+  char Type;
+  enum
+    {
+      VersLien,DepuisLien
+    }
+  SensBranche;
 
+  Lien=fleche->element;
+  Doc=fleche->document;
   DocName[0] = '\0';
+  TtaGiveActiveView(&TargetDoc,&VuePrincipale);
 
-  /* On regarde dans quel sens est le Lien Composite (Horizontal ou Vertical) */
-
+  TypeLien = TtaGetElementType(Lien).ElTypeNum;
   AttRef.AttrSSchema = TtaGetSSchema ("Draw3", Doc);
+
   AttRef.AttrTypeNum = Draw3_ATTR_Origine_lien;
-  AttOrigine = TtaGetAttribute (Lien, AttRef);
-  AttRef.AttrTypeNum = Draw3_ATTR_Terminaison;
-  AttDestination = TtaGetAttribute (Lien, AttRef);
-
-  TtaGiveReferenceAttributeValue (AttOrigine, &Origine, DocName,
-				  &TargetDoc);
-  TtaGiveReferenceAttributeValue (AttDestination, &Destination, DocName,
-				  &TargetDoc);
-  TtaGiveActiveView(&TargetDoc,&VuePrincipale);
-/*   VuePrincipale = TtaGetViewFromName (Doc, "The_draw"); */
-
-  AjusterBoite (Origine, Doc);
-
-  GetValAttrPosition (Origine, &PosX, &PosY, Doc);
-  TtaGiveBoxSize (Origine, Doc, VuePrincipale, UnPixel, &Largeur, &Hauteur);
-  GetValAttrPosition (Destination, &LC_PosX, &LC_PosY, Doc);
-  TtaGiveBoxSize (Destination, Doc, VuePrincipale, UnPixel, &LC_Largeur, &LC_Hauteur);
-
-  if (LC_Largeur > LC_Hauteur)
-    LC_Hauteur = 10;
-  else
-    LC_Largeur = 10;
-
-  if (LC_Largeur == 10)		/* LienComposite Vertical donc on trace  */
-    {				/* un trait Horizontal (perpendiculaire) */
-      PosX = PosX + Largeur;
-      PosY = PosY + (Hauteur / 2) - 5;	/* -5 car 10 d'epaisseur */
-      Hauteur = 10;
-      Largeur = LC_PosX + 5 - PosX;
+  AttExtremite = TtaGetAttribute (Lien, AttRef);
+  TtaGiveReferenceAttributeValue (AttExtremite, &Extremite, DocName, &TargetDoc);
+  if(TtaGetElementType(Extremite).ElTypeNum == Draw3_EL_LienComposite) 
+    {
+      SensBranche=DepuisLien;
+      Origine = Extremite;
     }
   else
     {
-      PosX = PosX + (Largeur / 2) - 5;
-      PosY = PosY + Hauteur;
-      Largeur = 10;
-      Hauteur = LC_PosY + 5 - PosY;
+      SensBranche=VersLien;
+      Destination = Extremite;
     }
-
-  GraphicNode = TtaGetFirstChild (Lien);
-  DetruirePolygone (GraphicNode, Doc);
-  TtaSetGraphicsShape (GraphicNode, 'S', Doc);
-
-  if (LC_Largeur == 10)
-    {
-      TtaAddPointInPolyline (GraphicNode, 1, UnPixel, 0, 5, Doc);
-      TtaAddPointInPolyline (GraphicNode, 2, UnPixel, Largeur / 2, 5, Doc);
-      TtaAddPointInPolyline (GraphicNode, 3, UnPixel, Largeur, 5, Doc);
-    }
-  else
-    {
-      TtaAddPointInPolyline (GraphicNode, 1, UnPixel, 5, 0, Doc);
-      TtaAddPointInPolyline (GraphicNode, 2, UnPixel, 5, Hauteur / 2, Doc);
-      TtaAddPointInPolyline (GraphicNode, 3, UnPixel, 5, Hauteur, Doc);
-    }
-
-  TtaChangeLimitOfPolyline (GraphicNode, UnPixel, Largeur, Hauteur, Doc);
-  RemoveAttr (Lien, Draw3_ATTR_Largeur, Doc);
-  SetAttrPosition (Lien, PosX, PosY - 1, Doc);	/* +1+3 */
-  SetAttrTaille (Lien, Hauteur, Largeur, Doc);
-  TracerLienComposite (Destination, Doc);
-
-  return;
-}
-
-/*!BF
-   ------------------------------------------------------------------------------
-   *
-   * Function      : TracerDestinationLien
-   * Result        : void
-   * Parameters
-   * Name          Type          Usage
-   * ----          ----          -----
-   * Lien               Element         Lien a tracer
-   * Doc                Document        Document qui inclue le lien
-   *
-   * Functionality : Trace le trait associe au lien origine entre une boite et
-   * la partie centrale du lien.
-   ------------------------------------------------------------------------------
-   !EF */
-
-#ifdef __STDC__
-
-void 
-TracerDestinationLien (Element Lien, Document Doc)
-
-#else /* __STDC__ */
-
-void 
-TracerDestinationLien (Lien, Doc)
-     Element Lien;
-     Document Doc;
-
-#endif /* __STDC__ */
-
-{
-  Element GraphicNode, Origine, Destination;
-  Attribute AttOrigine, AttDestination;
-  View VuePrincipale;
-  AttributeType AttRef;
-  Document TargetDoc = 0;
-  char DocName[1];
-  int LC_Largeur, LC_Hauteur, LC_PosX, LC_PosY;
-  int Largeur, Hauteur, PosX, PosY;
-
-  DocName[0] = '\0';
-
-  /* On regarde dans quel sens est le Lien Composite (Horizontal ou Vertical) */
-
-  AttRef.AttrSSchema = TtaGetSSchema ("Draw3", Doc);
-  AttRef.AttrTypeNum = Draw3_ATTR_Origine;
-  AttOrigine = TtaGetAttribute (Lien, AttRef);
+  
   AttRef.AttrTypeNum = Draw3_ATTR_Terminaison_lien;
-  AttDestination = TtaGetAttribute (Lien, AttRef);
-  TtaGiveReferenceAttributeValue (AttOrigine, &Origine, DocName,
-				  &TargetDoc);
-  TtaGiveReferenceAttributeValue (AttDestination, &Destination, DocName,
-				  &TargetDoc);
-  TtaGiveActiveView(&TargetDoc,&VuePrincipale);
-/*   VuePrincipale = TtaGetViewFromName (Doc, "The_draw"); */
-  /* TtaGiveBoxPosition (Origine, VuePrincipale, UnPixel, &LC_PosX, &LC_PosY); */
+  AttExtremite = TtaGetAttribute (Lien, AttRef);
+  TtaGiveReferenceAttributeValue (AttExtremite, &Extremite, DocName, &TargetDoc);
+ if(TtaGetElementType(Extremite).ElTypeNum == Draw3_EL_LienComposite) 
+    {
+      if(SensBranche==DepuisLien)
+	Destination = Extremite;
+      else
+	Origine = Extremite;
+    }
+  else
+    {
+      SensBranche=DepuisLien;
+      Destination = Extremite;
+    }
+ if(Origine == NULL || Destination==NULL)
+   {
+     TtaDeleteTree(Lien,Doc);
+     return;
+   }
   GetValAttrPosition (Origine, &LC_PosX, &LC_PosY, Doc);
   TtaGiveBoxSize (Origine, Doc, VuePrincipale, UnPixel, &LC_Largeur, &LC_Hauteur);
-
-  AjusterBoite (Destination, Doc);
-  /* TtaGiveBoxPosition (Destination, VuePrincipale, UnPixel, &PosX, &PosY); */
   GetValAttrPosition (Destination, &PosX, &PosY, Doc);
   TtaGiveBoxSize (Destination, Doc, VuePrincipale, UnPixel, &Largeur, &Hauteur);
-
-  if (LC_Largeur > LC_Hauteur)
-    LC_Hauteur = 10;
-  else
-    LC_Largeur = 10;
-
-  if (LC_Largeur == 10)		/* LienComposite Vertical donc on trace  */
-    {				/* un trait Horizontal (perpendiculaire) */
-      LC_PosX = LC_PosX + 5;
-      PosY = PosY + (Hauteur / 2) - 5;	/* -5 car 10 d'epaisseur */
-      Hauteur = 10;
-      Largeur = PosX + 5 - LC_PosX;
-      PosX = LC_PosX;
+  if (LC_Largeur > LC_Hauteur)/* LienComposite Vertical donc on trace  */
+    {				/* un lien  Horizontal (perpendiculaire) */
+      LC_Hauteur = 10;
+      Type = VERS_LE_BAS;
+      if(PosY<LC_PosY)		/* objet au dessus du lien composite */
+	{
+	  PosY = PosY + Hauteur;
+	  Hauteur = LC_PosY  - PosY +5;
+	  if (SensBranche==DepuisLien)
+	    Type |= ROTATION_V;
+	}
+      else			/* objet en dessous du lien composite */
+	{
+	  Hauteur = PosY - LC_PosY - 5;
+	  PosY = LC_PosY + 5;
+	  if (SensBranche==VersLien)
+	    Type|=ROTATION_V;
+	}
+      PosX = PosX + (Largeur / 2) - 5;  
+      switch (TypeLien) 
+	{
+	case Draw3_EL_LienSimple:
+	  Largeur = 0;	  
+	  break;
+	case Draw3_EL_FlecheCreuse:
+	  Largeur = 10;	  
+	  break;
+	}
     }
   else
     {
-      PosX = PosX + (Largeur / 2) - 5;
-      LC_PosY = LC_PosY + 5;
-      Largeur = 10;
-      Hauteur = PosY + 5 - LC_PosY;
-      PosY = LC_PosY;
-    }
+      LC_Largeur = 10;
+      Type = VERS_LA_DROITE;
+      if(PosX<LC_PosX)		/* objet a gauche du lien composite */
+	{
+	  PosX = PosX + Largeur;
+	  Largeur = LC_PosX - PosX +5;
+	  if (SensBranche==DepuisLien)
+	    Type |= ROTATION_H;
+	}
+      else			/* objet a droite du lien composite */
+	{
+	  Largeur = PosX - LC_PosX - 5;
+	  PosX = LC_PosX+5;
+	  if (SensBranche==VersLien)
+	    Type|=ROTATION_H;
+	}
+      PosY = PosY + (Hauteur / 2) - 5;  
+      switch (TypeLien) 
+	{
+	case Draw3_EL_LienSimple:
+	  Hauteur = 0;	  
+ 	  break;
+	case Draw3_EL_FlecheCreuse:
+	  Hauteur = 10;	  
+	  break;
+	}
+  }
 
-  GraphicNode = TtaGetFirstChild (Lien);
-  DetruirePolygone (GraphicNode, Doc);
-  TtaSetGraphicsShape (GraphicNode, 'S', Doc);
-
-  if (LC_Largeur == 10)
-    {
-      TtaAddPointInPolyline (GraphicNode, 1, UnPixel, 0, 5, Doc);
-      TtaAddPointInPolyline (GraphicNode, 2, UnPixel, Largeur / 2, 5, Doc);
-      TtaAddPointInPolyline (GraphicNode, 3, UnPixel, Largeur, 5, Doc);
-    }
-  else
-    {
-      TtaAddPointInPolyline (GraphicNode, 1, UnPixel, 5, 0, Doc);
-      TtaAddPointInPolyline (GraphicNode, 2, UnPixel, 5, Hauteur / 2, Doc);
-      TtaAddPointInPolyline (GraphicNode, 3, UnPixel, 5, Hauteur, Doc);
-    }
-
-  TtaChangeLimitOfPolyline (GraphicNode, UnPixel, Largeur, Hauteur, Doc);
-
-  RemoveAttr (Lien, Draw3_ATTR_Largeur, Doc);
-  SetAttrPosition (Lien, PosX, PosY - 1, Doc);	/* +1+3 */
+  SetAttrPosition (Lien, PosX, PosY, Doc);
   SetAttrTaille (Lien, Hauteur, Largeur, Doc);
   TracerLienComposite (Origine, Doc);
-
-  return;
+  switch (TypeLien) 
+    {
+    case Draw3_EL_LienSimple:
+      TracerLienSimple (fleche, Type, 10,
+			PosX , PosY,
+			Hauteur , Largeur);
+      break;
+    case Draw3_EL_FlecheCreuse:
+      TracerFleche (fleche, Type, 10,
+		    PosX, PosY,
+		    Hauteur, Largeur);
+      break; 
+    }
+  
 }
+
 
 
 /*!BF
@@ -1375,8 +1320,12 @@ PositionnerFleche (fleche)
   TtaGiveReferenceAttributeValue (AttOrigine, &Origine, DocName, &TargetDoc);
   TtaGiveReferenceAttributeValue (AttDestination, &Destination, DocName,
 				  &TargetDoc);
-/*   AjusterBoite (Origine, fleche->document); */
-/*   AjusterBoite (Destination, fleche->document); */
+  if((TtaGetElementType(Origine).ElTypeNum == Draw3_EL_LienComposite) ||
+     (TtaGetElementType(Destination).ElTypeNum == Draw3_EL_LienComposite))
+    { /* c'est une branche de lien composite */
+      TracerBrancheLien (fleche);
+      return;
+    }
   CalculerFleche (fleche, 'c', Origine, Destination);
 
   return;
@@ -1427,11 +1376,19 @@ PositionnerLien (fleche)
   TtaGiveReferenceAttributeValue (AttOrigine, &Origine, DocName, &TargetDoc);
   TtaGiveReferenceAttributeValue (AttDestination, &Destination, DocName,
 				  &TargetDoc);
-  AjusterBoite (Origine, fleche->document);
-  AjusterBoite (Destination, fleche->document);
-  CalculerFleche (fleche, 's', Origine, Destination);
+ /*  AjusterBoite (Origine, fleche->document); */
+/*   AjusterBoite (Destination, fleche->document); */
+  if((TtaGetElementType(Origine).ElTypeNum == Draw3_EL_LienComposite) ||
+     (TtaGetElementType(Destination).ElTypeNum == Draw3_EL_LienComposite))
+    { /* c'est une branche de lien composite */
+      TracerBrancheLien (fleche);
+      return;
+    }
 
-  return;
+
+ CalculerFleche (fleche, 's', Origine, Destination);
+
+ return;
 }
 
 /*!BF
@@ -1472,12 +1429,7 @@ RePositionnerLien (lien)
     case Draw3_EL_FlecheCreuse:
       PositionnerFleche (lien);
       break;
-    case Draw3_EL_PartieOrigineLien:
-      TracerOrigineLien (lien->element, lien->document);
-      break;
-    case Draw3_EL_PartieDestinationLien:
-      TracerDestinationLien (lien->element, lien->document);
-      break;
+    
     }
   return;
 }

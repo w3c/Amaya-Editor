@@ -409,7 +409,7 @@ GetValAttrAncre (Element element, int *posHO, int *posVO,
 #else /* __STDC__ */
 
 void 
-GetValAttrAncre (element, posHO, posVO,, posHD, posVD, doc)
+GetValAttrAncre (element, posHO, posVO, posHD, posVD, doc)
      Element element;
      int *posHO, *posVO, *posHD, *posVD;
      Document doc;
@@ -435,7 +435,16 @@ GetValAttrAncre (element, posHO, posVO,, posHD, posVD, doc)
     *posVO = 0;
   else
     *posVO = TtaGetAttributeValue (TtaGetAttribute (element, PVO));
-}
+
+  if (TtaGetAttribute (element, PHD) == NULL)
+    *posHD = 0;
+  else
+    *posHD = TtaGetAttributeValue (TtaGetAttribute (element, PHD));
+
+  if (TtaGetAttribute (element, PVD) == NULL)
+    *posVD = 0;
+  else
+    *posVD = TtaGetAttributeValue (TtaGetAttribute (element, PVD));}
 
 /*----------------------------------------------------------------------
    *

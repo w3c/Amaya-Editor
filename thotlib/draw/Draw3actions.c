@@ -175,8 +175,8 @@ boolean DeleteAnElement (event)
 	  switch (TtaGetElementType (Fleche).ElTypeNum)
 	    {
 	    case Draw3_EL_LienSimple:
-	    case Draw3_EL_PartieOrigineLien:
-	    case Draw3_EL_PartieDestinationLien:
+	      /* case Draw3_EL_PartieOrigineLien:
+		 case Draw3_EL_PartieDestinationLien: */
 	      Target.element = Fleche;
 	      Target.document = Doc;
 	      DeleteALien (&Target);
@@ -388,6 +388,9 @@ void CreerUnLien (event)
     case Draw3_EL_LienSimple:
       PositionnerLien (event);
       break;
+    case Draw3_EL_FlecheCreuse:
+      PositionnerFleche (event);
+      break;
     case Draw3_EL_LienComposite:
       TtaSetDisplayMode (event->document,
 			 DisplayImmediately);
@@ -404,20 +407,7 @@ void CreerUnLien (event)
 	TtaSetGraphicsShape (GraphicNode, 'v',
 			     event->document);
       break;
-    case Draw3_EL_PartieOrigineLien:
-      GraphicNode = TtaGetFirstChild (event->element);
-      TtaSetGraphicsShape (GraphicNode, 'S',
-			   event->document);
-      TracerOrigineLien (event->element,
-			 event->document);
-      break;
-    case Draw3_EL_PartieDestinationLien:
-      GraphicNode = TtaGetFirstChild (event->element);
-      TtaSetGraphicsShape (GraphicNode, 'S',
-			   event->document);
-      TracerDestinationLien (event->element,
-			     event->document);
-      break;
+    
     }
   TtaSetDisplayMode (event->document, DisplayImmediately);
   return;
@@ -446,8 +436,8 @@ boolean DeleteALien (event)
      NotifyElement *event;
 #endif /* __STDC__ */
 {
-  Element Lien;
-  Attribute AttReference;
+  Element LienT,LienO;
+  Attribute AttReferenceT,AttReferenceO;
   AttributeType AttRef;
   Document TargetDoc = 0;
   char DocName[50];
@@ -458,36 +448,29 @@ boolean DeleteALien (event)
   switch (TtaGetElementType (event->element).ElTypeNum)
     {
     case Draw3_EL_LienSimple:
+      AttRef.AttrSSchema = TtaGetSSchema ("Draw3", event->document);
+      AttRef.AttrTypeNum = Draw3_ATTR_Terminaison_lien; 
+      AttReferenceT = TtaGetAttribute (event->element, AttRef);
+      if(AttReferenceT!=NULL) 
+	TtaGiveReferenceAttributeValue (AttReferenceT, &LienT,
+					DocName, &TargetDoc);
+      AttRef.AttrTypeNum = Draw3_ATTR_Origine_lien;
+      AttReferenceO = TtaGetAttribute (event->element, AttRef);
+      if(AttReferenceO!=NULL) 
+	TtaGiveReferenceAttributeValue (AttReferenceO, &LienO,
+					DocName, &TargetDoc);
+
       TtaDeleteTree (event->element, event->document);
-      TtaSetDisplayMode (event->document, mode);
-      return TRUE;
-    case Draw3_EL_PartieOrigineLien:
-      AttRef.AttrSSchema = TtaGetSSchema ("Draw3",
-					  event->document);
-      AttRef.AttrTypeNum = Draw3_ATTR_Terminaison;
-      AttReference = TtaGetAttribute (event->element,
-				      AttRef);
-      TtaGiveReferenceAttributeValue (AttReference, &Lien,
-				      DocName, &TargetDoc);
-      TtaDeleteTree (event->element, event->document);
-      if (Lien != NULL)
-	TracerLienComposite (Lien, event->document);
-      TtaSetDisplayMode (event->document, mode);
-      return TRUE;
-    case Draw3_EL_PartieDestinationLien:
-      AttRef.AttrSSchema = TtaGetSSchema ("Draw3",
-					  event->document);
-      AttRef.AttrTypeNum = Draw3_ATTR_Origine;
-      AttReference = TtaGetAttribute (event->element,
-				      AttRef);
-      TtaGiveReferenceAttributeValue (AttReference, &Lien,
-				      DocName, &TargetDoc);
-      TtaDeleteTree (event->element, event->document);
-      if (Lien != NULL)
-	TracerLienComposite (Lien, event->document);
-      TtaSetDisplayMode (event->document, mode);
-      return TRUE;
+
+      if (LienT != NULL && 
+	  TtaGetElementType(LienT).ElTypeNum == Draw3_EL_LienComposite)
+	TracerLienComposite (LienT, event->document);
+
+      if (LienO != NULL && 
+	  TtaGetElementType(LienO).ElTypeNum == Draw3_EL_LienComposite)
+	TracerLienComposite (LienO, event->document);
     }
+  TtaSetDisplayMode (event->document, mode);
   return TRUE;
 }
 
@@ -569,14 +552,7 @@ void ModifyAttributeDim (event)
       break;
     case Draw3_EL_LienComposite:
       break;
-    case Draw3_EL_PartieOrigineLien:
-      TracerOrigineLien (event->element,
-			 event->document);
-      break;
-    case Draw3_EL_PartieDestinationLien:
-      TracerDestinationLien (event->element,
-			     event->document);
-      break;
+
     case Draw3_EL_Fleche:
       TtaGiveActiveView(&Doc,&VuePrincipale);
       if (!VuePrincipale)
@@ -686,7 +662,7 @@ void ModifyAttributePos (event)
       SetAttrPosition (event->element, CoinX + 1, CoinY + 3,
 		       event->document);
       break;
-    case Draw3_EL_PartieOrigineLien:
+      /*    case Draw3_EL_PartieOrigineLien:
       TtaGiveActiveView(&Doc,&VuePrincipale);
       if (!VuePrincipale)
 	return;
@@ -714,11 +690,11 @@ void ModifyAttributePos (event)
 		       event->document);
       TracerDestinationLien (event->element,
 			     event->document);
-      break;
+      break;*/
     case Draw3_EL_Fleche:
       TtaGiveActiveView(&Doc,&VuePrincipale);
       if (!VuePrincipale)
-	return;
+	return; 
       TtaGiveBoxSize (event->element, event->document, VuePrincipale,
 		      UnPixel, &Largeur, &Hauteur);
       GetValAttrPosition (event->element, &CoinX, &CoinY,

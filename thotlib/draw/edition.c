@@ -223,16 +223,16 @@ InsererLienGroupe (Lien, Groupe, Doc)
   TypeAttOrigine.AttrSSchema =
     TypeAttDestination.AttrSSchema =
     TtaGetSSchema ("Draw3", Doc);
-  if (TtaGetElementType (Lien).ElTypeNum !=
-      Draw3_EL_PartieDestinationLien)
+ /*  if (TtaGetElementType (Lien).ElTypeNum != */
+/*       Draw3_EL_PartieDestinationLien) */
     TypeAttOrigine.AttrTypeNum = Draw3_ATTR_Origine_lien;
-  else
-    TypeAttOrigine.AttrTypeNum = Draw3_ATTR_Origine;
-  if (TtaGetElementType (Lien).ElTypeNum !=
-      Draw3_EL_PartieOrigineLien)
+/*   else */
+/*     TypeAttOrigine.AttrTypeNum = Draw3_ATTR_Origine; */
+/*   if (TtaGetElementType (Lien).ElTypeNum != */
+/*       Draw3_EL_PartieOrigineLien) */
     TypeAttDestination.AttrTypeNum = Draw3_ATTR_Terminaison_lien;
-  else
-    TypeAttDestination.AttrTypeNum = Draw3_ATTR_Terminaison;
+/*   else */
+/*     TypeAttDestination.AttrTypeNum = Draw3_ATTR_Terminaison; */
   AttO = TtaGetAttribute (Lien, TypeAttOrigine);
   AttD = TtaGetAttribute (Lien, TypeAttDestination);
   Document = 0;
@@ -491,8 +491,8 @@ void ObjetsGrouper (Doc)
 	{
 	case Draw3_EL_LienSimple:
 	case Draw3_EL_FlecheCreuse:
-	case Draw3_EL_PartieOrigineLien:
-	case Draw3_EL_PartieDestinationLien:
+/* 	case Draw3_EL_PartieOrigineLien: */
+/* 	case Draw3_EL_PartieDestinationLien: */
 	  TabSelectLien[j] = Selected;
 	  j++;
 	  break;
@@ -620,6 +620,8 @@ void ObjetsGrouper (Doc)
       Courant = TabSelectObjet[i--];
     }
   TtaDeleteTree (Groupe, Doc);
+  TtaGiveBoxSize(LeGroupe, Doc, VuePrincipale, UnPixel,&X,&Y);
+  SetAttrTaille(LeGroupe,Y,X,Doc);
   TtaSetDisplayMode (Doc, DisplayImmediately);
   return;
 }

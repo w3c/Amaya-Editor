@@ -73,8 +73,6 @@
 #include "Icons/lien1.xpm"
 #include "Icons/lien2.xpm"
 #include "Icons/lien3.xpm"
-#include "Icons/lien4.xpm"
-#include "Icons/lien5.xpm"
 
 #include "Icons/AngleDroit.xpm"
 #include "Icons/AngleRond.xpm"
@@ -588,8 +586,8 @@ CreerPaletteLien (Menu, Pere, Langue)
 #endif /* __STDC__ */
 
 {
-  static Pixmap TabFormes[5] =
-  {0, 0, 0, 0, 0};
+  static Pixmap TabFormes[3] =
+  {0, 0, 0};
 
   TtaNewSheet (Menu, Pere, 0, 0, TtaGetMessage(DrawMsgTable,DRW_LINK_TYPES),
 	       0, "", FALSE, 1, 'L',D_DONE);
@@ -599,12 +597,7 @@ CreerPaletteLien (Menu, Pere, Langue)
     TabFormes[1] = TtaCreatePixmapLogo (lien2_xpm);
   if (TabFormes[2] == 0)
     TabFormes[2] = TtaCreatePixmapLogo (lien3_xpm);
-  if (TabFormes[3] == 0)
-    TabFormes[3] = TtaCreatePixmapLogo (lien4_xpm);
-  if (TabFormes[4] == 0)
-    TabFormes[4] = TtaCreatePixmapLogo (lien5_xpm);
-  TtaNewIconMenu (LIEN_PREMIERE_LIGNE, Menu, 0, NULL, 5, &TabFormes[0], TRUE);
-
+  TtaNewIconMenu (LIEN_PREMIERE_LIGNE, Menu, 0, NULL, 3, &TabFormes[0], TRUE);
 }
 
 /*!BF
@@ -1095,18 +1088,18 @@ TraiterEvtPaletteLien (ref, typedata, data)
 			CurrentDoc);
       Event.document = CurrentDoc;
       Event.element = Nouveau;
-      CreerUneForme (&Event);
+      CreerUnLien (&Event);
       return;
     case 2:
       TtaAskFirstCreation ();
       NouveauType.ElTypeNum = Draw3_EL_LienComposite;
       break;
-    case 3:
-      NouveauType.ElTypeNum = Draw3_EL_PartieOrigineLien;
-      break;
-    case 4:
-      NouveauType.ElTypeNum = Draw3_EL_PartieDestinationLien;
-      break;
+  /*   case 3: */
+/*       NouveauType.ElTypeNum = Draw3_EL_PartieOrigineLien; */
+/*       break; */
+/*     case 4: */
+/*       NouveauType.ElTypeNum = Draw3_EL_PartieDestinationLien; */
+/*       break; */
     }
 
   TtaSetCursorWatch (0, 0);
