@@ -1244,16 +1244,19 @@ int             frame;
 				    }
 				}
 			      if (pAttr->AeAttrNum == attrHSpan &&
-				       pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 				{
 				  foundH = TRUE;
-				  if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
-				    {
-				      span = pAttr->AeAttrValue;
-				      /* it could be an invalid span */
-				      if (cRef + span > cNumber)
-					span = cNumber - cRef;
-				    }
+				  if (pAttr->AeAttrType == AtEnumAttr ||
+				      pAttr->AeAttrType == AtNumAttr)
+				     /* ignore values less or equal to 1 */
+				     if (pAttr->AeAttrValue > 1)
+				       {
+				         span = pAttr->AeAttrValue;
+				         /* it could be an invalid span */
+				         if (cRef + span > cNumber)
+					   span = cNumber - cRef;
+				       }
 				}
 			      pAttr = pAttr->AeNext;
 			    }
