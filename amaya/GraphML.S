@@ -348,7 +348,8 @@ EXCEPT
    script:	        NoMove, NoResize, NoShowBox, NoCreate;
    style__:             NoMove, NoResize, NoShowBox, NoCreate;
    foreignObject:       MoveResize, HighlightChildren, NoCreate;
-   PICTURE:             NoMove, NoResize;
+   GRAPHICS:	        SelectParent;
+   PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
 
    id:                  CssId;
