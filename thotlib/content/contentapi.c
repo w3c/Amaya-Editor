@@ -2342,8 +2342,16 @@ static ThotPictInfo *GetImageDesc (Element element)
 	     {
 	       while (pAb->AbPresentationBox)
 		 pAb = pAb->AbNext;
-	       /* the background exist or will exist soon */
+	       /* the background exists or will exist soon */
 	       found = (pAb->AbPictBackground != NULL || pAb->AbAspectChange);
+	       if (found)
+		 imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
+	       else
+		 {
+		 found = (pAb->AbPictListStyle != NULL || pAb->AbAspectChange);
+		 if (found)
+		   imageDesc = (ThotPictInfo *) pAb->AbPictListStyle;
+		 }
 	     }
 	   view++;
 	 }
@@ -2351,14 +2359,12 @@ static ThotPictInfo *GetImageDesc (Element element)
 
        if (!found)
 	 TtaError (ERR_invalid_element_type);
-       else
-	 imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
      }
    else if (((PtrElement) element)->ElTerminal &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
      TtaError (ERR_invalid_element_type);
    else
-       imageDesc = (ThotPictInfo *) (((PtrElement) element)->ElPictInfo);
+     imageDesc = (ThotPictInfo *) (((PtrElement) element)->ElPictInfo);
    return imageDesc;
 }
 

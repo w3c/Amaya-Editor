@@ -2512,6 +2512,15 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		   TtaFreeMemory (pAb->AbPictBackground);
 		   pAb->AbPictBackground = NULL;
 		 }
+
+	       if (pAb->AbLeafType == LtCompound && pAb->AbPictListStyle)
+		 {
+		   image = (ThotPictInfo *)pAb->AbPictBackground;
+		   CleanPictInfo (image);
+		   TtaFreeMemory (pAb->AbPictListStyle);
+		   pAb->AbPictListStyle = NULL;
+		 }
+
 	       /* free the abstract box */
 	       FreeAbstractBox (pAb);
 	     }

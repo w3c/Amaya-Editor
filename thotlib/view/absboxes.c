@@ -192,13 +192,20 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	  case LtCompound:
 	    if (pAb->AbPictBackground != NULL)
 	      {
-		/* in this particular case we need to free filename */
 		image = (ThotPictInfo *)pAb->AbPictBackground;
 		TtaFreeMemory (image->PicFileName);
 		/* ce n'est pas un element image */
 		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictBackground);
 		pAb->AbPictBackground = NULL;
+	      }
+	    if (pAb->AbPictListStyle != NULL)
+	      {
+		image = (ThotPictInfo *)pAb->AbPictListStyle;
+		/* ce n'est pas un element image */
+		CleanPictInfo (image);
+		TtaFreeMemory (pAb->AbPictListStyle);
+		pAb->AbPictListStyle = NULL;
 	      }
 	    break;
 	  default:
