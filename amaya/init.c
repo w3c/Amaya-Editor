@@ -5377,7 +5377,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *tmp, *ptr;
   int               val;
-
+#if defined(_MOTIF) || defined(_WINDOWS)
+  int               i;
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
   ThotBool          change, updated;
 
   tmp = NULL;
