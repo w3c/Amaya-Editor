@@ -1842,7 +1842,7 @@ static void FreeAFont (int i)
 	  /* move this entry to the freed position */
 	  TtFonts[i] = TtFonts[j];
 	  TtFontMask[i] = TtFontMask[j];
-#ifdef _WINDOWS
+#ifndef _WINDOWS
 	  TtPatchedFont[i] = TtPatchedFont[j];
 #endif /* _WINDOWS */
 	  strncpy (&TtFontName[i * MAX_FONTNAME],
