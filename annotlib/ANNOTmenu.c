@@ -977,14 +977,7 @@ static void BuildAnnotTypesSelector ()
   ustrcpy (s, TEXT(""));
   i = 0;
 
-  annotClass = ANNOT_FindRDFResource (&annot_schema_list,
-				      ANNOTATION_PROP,
-				      FALSE);
-
-  if (!annotClass)
-    annotClass = ANNOT_FindRDFResource (&annot_schema_list,
-					FALLBACK_ANNOTATION_PROP,
-					TRUE);
+  annotClass = ANNOTATION_CLASS;
 
   if (annotClass && annotClass->class)
     {
@@ -1060,14 +1053,7 @@ Document doc;
   ustrcpy (s, TEXT(""));
   i = 0;
 
-  annotClass = ANNOT_FindRDFResource (&annot_schema_list,
-				      ANNOTATION_PROP,
-				      FALSE);
-
-  if (!annotClass)
-    annotClass = ANNOT_FindRDFResource (&annot_schema_list,
-					FALLBACK_ANNOTATION_PROP,
-					TRUE);
+  annotClass = ANNOTATION_CLASS;
 
   if (annotClass && annotClass->class)
     {

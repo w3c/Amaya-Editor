@@ -958,12 +958,12 @@ View view;
 			  + sizeof (TEXT("?replace_source="))
 			  + ustrlen (annot->annot_url)
 			  + sizeof (TEXT("&rdftype="))
-			  + sizeof (ANNOTATION_PROP)
+			  + strlen (ANNOTATION_CLASSNAME)
 			  + 1);
       usprintf (url,"%s?replace_source=%s&rdftype=%s",
 		annotPostServer,
 		annot->annot_url,
-		ANNOTATION_PROP);
+		ANNOTATION_CLASSNAME);
       free_url = TRUE;
     }
   else

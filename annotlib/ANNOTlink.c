@@ -553,9 +553,7 @@ ThotBool useDocRoot;
   annot->mdate = TtaStrdup (annot->cdate);
 
   /* Annotation type */
-  annot->type = ANNOT_FindRDFResource (&annot_schema_list,
-				       DEFAULT_ANNOT_TYPE,
-				       FALSE);
+  annot->type = ANNOTATION_CLASS;
 
   /* Annotation XPointer */
   annot->xptr = XPointer_build (source_doc, 1, useDocRoot);

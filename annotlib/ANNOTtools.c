@@ -647,10 +647,11 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
   /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
-	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
-	  "xmlns:http=\"http://www.w3.org/1999/xx/http#\"\n"
- 	  "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n");
+	  "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+	  "xmlns:a=\"%s\"\n"
+	  "xmlns:http=\"" HTTP_NS "\"\n"
+ 	  "xmlns:d=\"" DC_NS "\">\n",
+	   ANNOT_NS);
 
   /*write each annotation entry */
   annot_ptr = annot_list;
@@ -666,9 +667,9 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 		   "<r:Description>\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"%s\" />\n", FALLBACK_ANNOTATION_PROP);
+		   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
 
-	  if (annot->type)
+	  if (annot->type && annot->type != ANNOTATION_CLASS)
 	    fprintf (fp, 
 		     "<r:type resource=\"%s\" />\n",
 		     annot->type->name);
@@ -765,20 +766,20 @@ Document doc;
   /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
-	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
-	  "xmlns:xlink=\"http://www.w3.org/1999/xx/xlink#\"\n"
-	  "xmlns:http=\"http://www.w3.org/1999/xx/http#\"\n"
- 	  "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n");
+	  "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+	  "xmlns:a=\"%s\"\n"
+	  "xmlns:http=\"" HTTP_NS "\"\n"
+ 	  "xmlns:d=\"" DC_NS "\">\n",
+	   ANNOT_NS);
 
   /* beginning of the annotation's  metadata  */
   fprintf (fp,
 	   "<r:Description>\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"%s\" />\n", FALLBACK_ANNOTATION_PROP);
+		   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
 
-	  if (annot->type)
+	  if (annot->type && annot->type != ANNOTATION_CLASS)
 	    fprintf (fp, 
 		     "<r:type resource=\"%s\" />\n",
 		     annot->type->name);

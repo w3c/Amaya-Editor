@@ -40,13 +40,18 @@
 #
 
 /* RDF Property names */
-#define DEFAULT_ANNOT_TYPE TEXT("http://www.w3.org/1999/xx/annotation-ns#Comment")
-#define RDF_TYPE  TEXT("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+
+#define RDFMS_NS TEXT("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+#define RDF_TYPE  TEXT( RDFMS_NS "type")
 #define RDFS_LABEL TEXT("http://www.w3.org/2000/01/rdf-schema#label")
 #define RDFS_SUBCLASSOF TEXT("http://www.w3.org/2000/01/rdf-schema#subClassOf")
-#define ANNOTATION_PROP TEXT("http://www.w3.org/1999/xx/annotation-ns#Annotation")
+
+#define DC_NS TEXT("http://purl.org/dc/elements/1.0/")
+#define HTTP_NS TEXT("http://www.w3.org/1999/xx/http#")
+
+#define ANNOT_LOCAL_NAME "Annotation"
 #define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
-#define FALLBACK_ANNOTATION_PROP TEXT(FALLBACK_ANNOTATION_NS "Annotation")
+#define FALLBACK_ANNOTATION_CLASSNAME TEXT( FALLBACK_ANNOTATION_NS ANNOT_LOCAL_NAME )
 
 /* Structures and global variables */
 
@@ -173,6 +178,9 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 /* RDF Schema entry */
 
 extern List *annot_schema_list;  /* a list of schemas */
+extern CHAR_T *ANNOT_NS;
+extern CHAR_T *ANNOTATION_CLASSNAME;
+extern RDFClassP ANNOTATION_CLASS;
 
 typedef struct _RDFStatement
 {

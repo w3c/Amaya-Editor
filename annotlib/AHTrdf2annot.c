@@ -27,23 +27,19 @@
 /* 
  * Namespace and Property names used in an Annotation Description 
  */
-static const char * DC_NS = "http://purl.org/dc/elements/1.0/";
 static const char * DC_CREATOR = "creator";
 static const char * DC_DATE    = "date";
 
-static const char * ANNOT_NS = "http://www.w3.org/1999/xx/annotation-ns#";
-static const char * ANNOT_ANNOTATES = "annotates";
+static const char * ANNOT_ANNOTATES  = "annotates";
 static const char * ANNOT_BODY       = "body";
 static const char * ANNOT_CONTEXT    = "context";
 static const char * ANNOT_CREATED    = "created";
 static const char * ANNOT_ANNOTATION = "Annotation";
 
-static const char * HTTP_NS  = "http://www.w3.org/1999/xx/http#";
 static const char * HTTP_BODY           = "Body";
 static const char * HTTP_CONTENT_LENGTH = "ContentLength";
 static const char * HTTP_CONTENT_TYPE   = "ContentType";
 
-static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 static const char * RDFMS_TYPE = "type";
 
 static char* find_last_annotURL = NULL;

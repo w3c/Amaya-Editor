@@ -35,9 +35,6 @@
 /* 
  * Namespace and Property names used in an Annotation Description 
  */
-static const char * DC_NS = "http://purl.org/dc/elements/1.0/";
-static const char * ANNOT_NS = "http://www.w3.org/1999/xx/annotation-ns#";
-static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
 static RDFResourceP subclassOfP = NULL;
 static RDFResourceP typeP = NULL;
@@ -46,6 +43,9 @@ static RDFPropertyP labelP = NULL;
 /********************** global variables ***********************/
 
 List *annot_schema_list = NULL;  /* a list of schemas */
+CHAR_T *ANNOT_NS = NULL;	/* the Annotation namespace name to use */
+CHAR_T *ANNOTATION_CLASSNAME = NULL;
+RDFClassP ANNOTATION_CLASS;
 
 typedef struct _ReadCallbackContext
 {
@@ -386,6 +386,56 @@ void SCHEMA_ReadSchema (doc, namespace_URI)
       TtaSetStatus (doc, 1, "Annotation schema downloaded", NULL); /* @@ */
 }
 
+/*------------------------------------------------------------
+   FreeAnnotNS
+  ------------------------------------------------------------
+   Frees resources associated with the base annotation namespace name
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+static void FreeAnnotNS (void)
+#else /* __STDC__ */
+static void FreeAnnotNS ( /* void */ )
+#endif /* __STDC__ */
+{
+  if (ANNOT_NS)
+    {
+      TtaFreeMemory (ANNOT_NS);
+      ANNOT_NS = NULL;
+      TtaFreeMemory (ANNOTATION_CLASSNAME);
+      ANNOTATION_CLASSNAME = NULL;
+    }
+}
+
+
+/*------------------------------------------------------------
+   SetAnnotNS
+  ------------------------------------------------------------
+   Sets the base annotation namespace name
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetAnnotNS (char *ns_name)
+#else /* __STDC__ */
+static void SetAnnotNS ()
+     char *ns_name;
+#endif /* __STDC__ */
+{
+  ANNOT_NS = TtaStrdup (ns_name);
+  ANNOTATION_CLASSNAME = TtaGetMemory (strlen(ns_name)
+				       + strlen(ANNOT_LOCAL_NAME)
+				       + 1);
+  ustrcpy (ANNOTATION_CLASSNAME, ns_name);
+  ustrcat (ANNOTATION_CLASSNAME, ANNOT_LOCAL_NAME);
+
+  ANNOTATION_CLASS = ANNOT_FindRDFResource (&annot_schema_list,
+					    ANNOTATION_CLASSNAME,
+					    FALSE);
+
+  if (!ANNOTATION_CLASS)
+    ANNOTATION_CLASS = ANNOT_FindRDFResource (&annot_schema_list,
+					      FALLBACK_ANNOTATION_CLASSNAME,
+					      TRUE);
+}
+
 
 /*------------------------------------------------------------
    SCHEMA_InitSchemas
@@ -409,6 +459,8 @@ void SCHEMA_InitSchemas (doc)
   thotdir = TtaGetEnvString ("THOTDIR");
   app_home = TtaGetEnvString ("APP_HOME");
 
+  FreeAnnotNS();
+
   len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
 
   buffer = TtaGetMemory(len);
@@ -423,6 +475,7 @@ void SCHEMA_InitSchemas (doc)
 	{
 	  /* RRS @@ installation error */
 	  TtaFreeMemory (buffer);
+	  SetAnnotNS (FALLBACK_ANNOTATION_NS);
 	  return;
 	}
     }
@@ -432,6 +485,7 @@ void SCHEMA_InitSchemas (doc)
   if (!fp)
     {
       /* RRS @@ installation error */
+      SetAnnotNS (FALLBACK_ANNOTATION_NS);
       return;
     }
 
@@ -464,11 +518,14 @@ void SCHEMA_InitSchemas (doc)
 	   from the Web using the namespace name */
 	{
 	  SCHEMA_ReadSchema (doc, nsname);
+	  if (!ANNOT_NS)	/* is this the first schema listed? */
+	    SetAnnotNS (nsname);
 	  continue;
 	}
 
       /* both namespace name and [local] filename were specified;
 	 read the schema from the specified file */
+      nsname = TtaStrdup (nsname); /* we might overwrite buffer */
       fname = cp;
       while (*cp && !isspace (*cp)) cp++;
       *cp = '\0';		/* terminate filename */
@@ -517,7 +574,11 @@ void SCHEMA_InitSchemas (doc)
       if (TtaFileExist (fname))
 	{
 	  HTRDF_parseFile (fname, triple_handler, &annot_schema_list);
+	  if (!ANNOT_NS)	/* is this the first schema listed? */
+	    SetAnnotNS (nsname);
 	}
+
+      TtaFreeMemory (nsname);
       /* RRS @@ else config error */
     }
 
@@ -590,4 +651,5 @@ void SCHEMA_FreeRDFModel()
   subclassOfP = NULL;
   typeP = NULL;
   labelP = NULL;
+  FreeAnnotNS();
 }
