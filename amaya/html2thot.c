@@ -4926,8 +4926,28 @@ char               *HTMLbuf;
 		       if (match)
 			  /* transition found. Activate the transition */
 			 {
-			    /* call the procedure associated with the transition */
 			    NormalTransition = TRUE;
+
+			    /* Special case: '<' within a SCRIPT element */
+			    if (currentState == 1)
+			       /* the previous character was '<' in a text */
+			       if (trans->newState == 2)
+				  /* the current character is not '/', '!', '<'
+				     or space */
+				  if (Within (HTML_EL_SCRIPT, HTMLSSchema))
+				     /* we are within a SCRIPT element */
+				     {
+				     /* put '<' and the character read in the
+					text buffer */
+				     PutInBuffer ('<');
+				     PutInBuffer (charRead);
+				     charRead = EOS;
+				     /* and return to state 0: reading text */
+				     currentState = 0;
+				     NormalTransition = FALSE;
+				     }
+
+			    /* call the procedure associated with the transition */
 			    if (trans->action != NULL)
 			       (*(trans->action)) (charRead);
 			    if (NormalTransition)
