@@ -2626,7 +2626,8 @@ static int          LoopForStop (AHTReqContext * me)
  
   while (me->reqStatus != HT_END && me->reqStatus != HT_ERR
 	 && me->reqStatus != HT_ABORT && AmayaIsAlive () &&
-	 GetMessage (&msg, NULL, 0, 0))
+/*	 GetMessage (&msg, NULL, 0, 0))*/
+	 GetMessageW (&msg, NULL, 0, 0)) // force unicode version
     {
       if (msg.message != WM_QUIT)
 	TtaHandleOneEvent (&msg);

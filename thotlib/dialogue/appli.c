@@ -3118,7 +3118,8 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       TtaFetchOneEvent (&event);
       TtaHandleOneEvent (&event);
 #else /* _WINDOWS */
-      GetMessage (&event, NULL, 0, 0);
+/*      GetMessage (&event, NULL, 0, 0);*/
+      GetMessageW (&event, NULL, 0, 0); // force unicode version
       curFrame = GetFrameNumber (event.hwnd);
       TtaHandleOneEvent (&event);
       SetCursor (cursor);

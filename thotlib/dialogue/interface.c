@@ -1161,7 +1161,8 @@ void TtaMainLoop ()
   while (1)
     {
 #ifdef _WINDOWS
-      if (GetMessage (&ev, NULL, 0, 0))
+      /*if (GetMessageW (&ev, NULL, 0, 0))*/
+      if (GetMessageW (&ev, NULL, 0, 0)) // force unicode version
 	  {
 #else  /* !_WINDOWS */
       TtaFetchOneEvent (&ev);

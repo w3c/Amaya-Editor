@@ -971,7 +971,8 @@ ThotBool ThotCreatePalette (int x, int y)
      }
    ShowWindow (HwndColorPal, SW_SHOWNORMAL);
    UpdateWindow (HwndColorPal);
-   while (GetMessage (&msg, NULL, 0, 0))
+/*   while (GetMessage (&msg, NULL, 0, 0))*/
+   while (GetMessageW (&msg, NULL, 0, 0)) // force unicode version
      {
        frame = GetFrameNumber (msg.hwnd);
        TranslateMessage (&msg);
