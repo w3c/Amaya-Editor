@@ -796,7 +796,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	    value = AlignLeft;
 	    break;
 	  }
-       if (!PRuleMessagePre (pEl, pPRule, value, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
 	 {
 	   pPRule->PrAdjust = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
