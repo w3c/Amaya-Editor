@@ -141,6 +141,7 @@ static void AddElement (unsigned char *element)
                       case '<':
 		      case '=':
 		      case '%':
+		      case '@':
 			 EscapeChar (&tmp[1], *element);
 			 AddToBuffer (tmp);
 			 break;
@@ -756,8 +757,8 @@ void SubmitForm (Document doc, Element element)
    int                 method;
    ThotBool	       found, withinForm;
 
-   action = (char *) NULL;
-   buffer = (char *) NULL;
+   buffer = NULL;
+   action = NULL;
 
    /* find out the characteristics of the button which was pressed */
    found = FALSE;
