@@ -134,27 +134,37 @@ typedef struct _TtAttrTable
         PtrTtAttribute TtAttr[1];
 } TtAttrTable;
 
+typedef struct _NumTable
+{
+  int           Num[1];
+} NumTable;
+
+typedef struct _BoolTable
+{
+  ThotBool      Bln[1];
+} BoolTable;
+
 typedef struct _StructSchema *PtrSSchema;
 
-/* A rule defining a type in a structure schema */
+/* A rule defining an element type in a structure schema */
 typedef struct _SRule
 {
 	Name       SrName;	    /* left-hand symbol of the rule =
-				       type defined by the rule */
+				       element type defined by the rule */
         Name       SrOrigName;      /* real name of the rule */
 	int 	   SrNDefAttrs;     /* 0..MAX_DEFAULT_ATTR, number of
 				       attributes with a default value */
-        /* numbers of default value attributes */
-	int        SrDefAttr[MAX_DEFAULT_ATTR];  
-        /* default values of these attributes, in the same order */ 
-	int        SrDefAttrValue[MAX_DEFAULT_ATTR];  
+	int        SrDefAttr[MAX_DEFAULT_ATTR]; /* default value attributes */
+	int        SrDefAttrValue[MAX_DEFAULT_ATTR];/* default values of these
+				       attributes, in the same order */
 	ThotBool   SrDefAttrModif[MAX_DEFAULT_ATTR];
-        /* 0..MAX_LOCAL_ATTR, number of attributes that can apply to the type*/
-	int 	   SrNLocalAttrs;
-        /* numbers of the attributes that can apply to the type */ 
-	int        SrLocalAttr[MAX_LOCAL_ATTR];  
-        /* the local attribute of same rank is mandatory */
-	ThotBool   SrRequiredAttr[MAX_LOCAL_ATTR];
+	int 	   SrNLocalAttrs;   /* number of attributes that can apply to
+				       the element type, i.e. size of tables
+				       SrLocalAttr and SrRequiredAttr */
+	NumTable*  SrLocalAttr;     /* attributes that can apply to the
+				       element type */ 
+	BoolTable* SrRequiredAttr;  /* indicate whether the local attribute of
+				       same rank is mandatory */
 	ThotBool   SrUnitElem;      /* it is an exported unit */
 	ThotBool   SrRecursive;     /* recursive rule */
 	ThotBool   SrRecursDone;    /* already applied recursive rule */

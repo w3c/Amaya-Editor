@@ -213,10 +213,20 @@ static ThotBool     ReadSRule (BinFile file, SRule *pSRule)
       TtaReadBool (file, &pSRule->SrDefAttrModif[j]);
 
    TtaReadShort (file, &pSRule->SrNLocalAttrs);
-   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
-      TtaReadShort (file, &pSRule->SrLocalAttr[j]);
-   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
-      TtaReadBool (file, &pSRule->SrRequiredAttr[j]);
+   if (pSRule->SrNLocalAttrs <= 0)
+     {
+       pSRule->SrLocalAttr = NULL;
+       pSRule->SrRequiredAttr = NULL;
+     }
+   else
+     {
+       pSRule->SrLocalAttr = (NumTable*) TtaGetMemory (pSRule->SrNLocalAttrs * sizeof (int));
+       for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+	 TtaReadShort (file, &pSRule->SrLocalAttr->Num[j]);
+       pSRule->SrRequiredAttr = (BoolTable*) TtaGetMemory (pSRule->SrNLocalAttrs * sizeof (ThotBool));
+       for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+	 TtaReadBool (file, &pSRule->SrRequiredAttr->Bln[j]);
+     }
 
    TtaReadBool (file, &pSRule->SrUnitElem);
    TtaReadBool (file, &pSRule->SrRecursive);

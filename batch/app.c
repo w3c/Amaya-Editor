@@ -1290,9 +1290,9 @@ static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
 	  }
 	fprintf (Hfile, " %d\n", r+1);
 
-	if (pRule->SrNLocalAttrs > 0)
+	if (pRule->SrNLocalAttrs > 0 && pRule->SrLocalAttr)
 	   for (i = 0; i < pRule->SrNLocalAttrs; i++)
-	      WriteAttribute (Hfile, pRule->SrLocalAttr[i] - 1);
+	      WriteAttribute (Hfile, pRule->SrLocalAttr->Num[i] - 1);
      }
 }
 

@@ -957,10 +957,10 @@ static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 
   /* parcourt tous les attributs locaux definis dans la regle */
   for (i = 0; i < pSRule->SrNLocalAttrs; i++)
-    if (pSRule->SrRequiredAttr[i])
+    if (pSRule->SrRequiredAttr->Bln[i])
       /* cet attribut local est requis */
       {
-	att = pSRule->SrLocalAttr[i];
+	att = pSRule->SrLocalAttr->Num[i];
 	/* cherche si l'element possede cet attribut */
 	pAttr = pEl->ElFirstAttr;
 	found = FALSE;

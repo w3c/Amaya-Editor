@@ -1481,34 +1481,6 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
     /* no presentation schema, failure */
     return;
 
-  /* extend the attribute table if it's full */
-  if (pSS->SsNAttributes >= pSS->SsAttrTableSize)
-    {
-      /* add 10 new entries */
-      size = pSS->SsNAttributes + 10;
-      i = size * sizeof (PtrTtAttribute);
-      pSS->SsAttribute = (TtAttrTable*) realloc (pSS->SsAttribute, i);
-      /* extend all tables that map attributes */
-      i = size * sizeof (PtrAttributePres);
-      pPSch->PsAttrPRule = (AttrPresTable*) realloc (pPSch->PsAttrPRule, i);
-      i = size * sizeof (int);
-      pPSch->PsNAttrPRule = (NumberTable*) realloc (pPSch->PsNAttrPRule, i);
-      i = size * sizeof (int);
-      pPSch->PsNHeirElems = (NumberTable*) realloc (pPSch->PsNHeirElems, i);
-      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || !pPSch->PsNAttrPRule ||
-	  !pPSch->PsNHeirElems)
-	{
-	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	  return;
-	}
-      else
-	{
-	  pSS->SsAttrTableSize = size;
-	  for (i = pSS->SsNAttributes; i < size; i++)
-	    pSS->SsAttribute->TtAttr[i] = NULL;
-	}
-    }
-
   /* free all element and attribute inherit tables */
   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
     if (pPSch->PsInheritedAttr[i])
@@ -1523,7 +1495,39 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 	pPSch->PsComparAttr->CATable[i] = NULL;
       }
 
-  /* Add a new attribute type */
+  /* extend the attribute table if it's full */
+  if (pSS->SsNAttributes >= pSS->SsAttrTableSize)
+    {
+      /* add 10 new entries */
+      size = pSS->SsNAttributes + 10;
+      i = size * sizeof (PtrTtAttribute);
+      pSS->SsAttribute = (TtAttrTable*) realloc (pSS->SsAttribute, i);
+      /* extend all tables that map attributes */
+      i = size * sizeof (PtrAttributePres);
+      pPSch->PsAttrPRule = (AttrPresTable*) realloc (pPSch->PsAttrPRule, i);
+      i = size * sizeof (int);
+      pPSch->PsNAttrPRule = (NumberTable*) realloc (pPSch->PsNAttrPRule, i);
+      i = size * sizeof (int);
+      pPSch->PsNHeirElems = (NumberTable*) realloc (pPSch->PsNHeirElems, i);
+      i = size * sizeof (int);
+      pPSch->PsNComparAttrs = (NumberTable*) realloc (pPSch->PsNComparAttrs,i);
+      i = size * sizeof (ComparAttrTable*);
+      pPSch->PsComparAttr = (CompAttrTbTb*) realloc (pPSch->PsComparAttr, i);
+      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || !pPSch->PsNAttrPRule ||
+	  !pPSch->PsNHeirElems)
+	{
+	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	  return;
+	}
+      else
+	{
+	  pSS->SsAttrTableSize = size;
+	  for (i = pSS->SsNAttributes; i < size; i++)
+	    pSS->SsAttribute->TtAttr[i] = NULL;
+	}
+    }
+
+  /* Append a new attribute type */
   i = pSS->SsNAttributes;
   pSS->SsAttribute->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
   if (pSS->SsAttribute->TtAttr[i] == NULL)
@@ -1537,6 +1541,13 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
+
+  /* no presentation rule nor inherit tables for this new attribute */
+  pPSch->PsAttrPRule->AttrPres[i] = NULL;
+  pPSch->PsNAttrPRule->Num[i] = 0;
+  pPSch->PsNHeirElems->Num[i] = 0;
+  pPSch->PsNComparAttrs->Num[i] = 0;
+  pPSch->PsComparAttr->CATable[i] = NULL;
 
   /* Initialize and insert the presentation rules */
   /* associed with this new attribute */
@@ -1885,6 +1896,8 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
       strncpy (pSS->SsRule[pSS->SsNRules].SrOrigName, XMLName, MAX_NAME_LENGTH);
       pSS->SsRule[pSS->SsNRules].SrNDefAttrs = 0;
       pSS->SsRule[pSS->SsNRules].SrNLocalAttrs = 0;
+      pSS->SsRule[pSS->SsNRules].SrLocalAttr = NULL;
+      pSS->SsRule[pSS->SsNRules].SrRequiredAttr = NULL;
       pSS->SsRule[pSS->SsNRules].SrUnitElem = FALSE;
       pSS->SsRule[pSS->SsNRules].SrRecursive = FALSE;
       pSS->SsRule[pSS->SsNRules].SrExportedElem = FALSE;

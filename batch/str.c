@@ -77,12 +77,13 @@ static Name         CurName;	   /* left name of the last met rule */
 static int          CurNum;	   /* index of this name in the identifiers
 				      table */
 static int          CurNLocAttr;   /* number of local attributes attached to
-				      CurName */
-static int          CurLocAttr[MAX_LOCAL_ATTR]; /* local attributes attached
-						   to CurName */
-static ThotBool     CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' booleans of
-						   local attributes associated
-						   to CurName */
+				      element CurName */
+static int          LocAttrTableSize; /* current size of tables CurLocAttr and
+				      CurReqAttr */
+static NumTable    *CurLocAttr;    /* local attributes attached to element
+				      element CurName */
+static BoolTable   *CurReqAttr;    /* 'Required' booleans of local attributes
+                                      associated to element CurName */
 static ThotBool     CurUnit;	   /* the last met rule is a exported unit */
 static ThotBool     Equal;	   /* it is the equality rule*/
 static ThotBool     Option;	   /* it is an aggregate optional component */
@@ -151,6 +152,8 @@ static void InitBasicType (SRule *pRule, char *name, BasicType typ)
    pRule->SrNDefAttrs = 0;
    pRule->SrRecursive = False;
    pRule->SrNLocalAttrs = 0;
+   pRule->SrLocalAttr = NULL;
+   pRule->SrRequiredAttr = NULL;
    pRule->SrNInclusions = 0;
    pRule->SrNExclusions = 0;
    pRule->SrRefImportedDoc = False;
@@ -235,6 +238,8 @@ static void         Initialize ()
    pRule->SrNDefAttrs = 0;
    pRule->SrRecursive = False;
    pRule->SrNLocalAttrs = 0;
+   pRule->SrLocalAttr = NULL;
+   pRule->SrRequiredAttr = NULL;
    pRule->SrNInclusions = 0;
    pRule->SrNExclusions = 0;
    pRule->SrRefImportedDoc = False;
@@ -259,6 +264,9 @@ static void         Initialize ()
    CurName[0] = '\0';
    CurNum = 0;
    CurNLocAttr = 0;
+   LocAttrTableSize = 20;
+   CurLocAttr =  (NumTable*) TtaGetMemory (LocAttrTableSize * sizeof (int));
+   CurReqAttr =  (BoolTable*) TtaGetMemory (LocAttrTableSize * sizeof (ThotBool));
    CurUnit = False;
    Equal = False;
    Sign = 1;
@@ -330,6 +338,8 @@ static void         Undefined (int n)
 		pRule->SrName[j] = pIdent->SrcIdentifier[j];
 	     pRule->SrName[pIdent->SrcIdentLen] = '\0';
 	     pRule->SrNLocalAttrs = 0;
+	     pRule->SrLocalAttr = NULL;
+	     pRule->SrRequiredAttr = NULL;
 	     pRule->SrNInclusions = 0;
 	     pRule->SrNExclusions = 0;
 	     pRule->SrRefImportedDoc = False;
@@ -613,6 +623,22 @@ static void         RightIdentifier (int n, indLine wi)
 }
 
 /*----------------------------------------------------------------------
+   CopyLocReqAttr
+  ----------------------------------------------------------------------*/
+static void CopyLocReqAttr (SRule *pRule)
+{
+  int i;
+
+  pRule->SrLocalAttr = (NumTable*) TtaGetMemory (pRule->SrNLocalAttrs * sizeof (int));
+  pRule->SrRequiredAttr = (BoolTable*) TtaGetMemory (pRule->SrNLocalAttrs * sizeof (ThotBool));
+  for (i = 0; i < pRule->SrNLocalAttrs; i++)
+    {
+      pRule->SrLocalAttr->Num[i] = CurLocAttr->Num[i];
+      pRule->SrRequiredAttr->Bln[i] = CurReqAttr->Bln[i];
+    }
+}
+
+/*----------------------------------------------------------------------
    NewRule                                                         
   ----------------------------------------------------------------------*/
 static void         NewRule (indLine wi)
@@ -656,11 +682,7 @@ static void         NewRule (indLine wi)
 			   inputLine, LineNum);
 	else
 	   pRule->SrNLocalAttrs = CurNLocAttr;
-	for (i = 0; i < pRule->SrNLocalAttrs; i++)
-	  {
-	     pRule->SrLocalAttr[i] = CurLocAttr[i];
-	     pRule->SrRequiredAttr[i] = CurReqAttr[i];
-	  }
+	CopyLocReqAttr (pRule);
 	pRule->SrUnitElem = CurUnit;
 	pRule->SrRecursive = False;
 	pRule->SrExportedElem = False;
@@ -897,6 +919,8 @@ static void         InitRule (SRule * pRule)
    pRule->SrName[0] = '\0';
    pRule->SrNDefAttrs = 0;
    pRule->SrNLocalAttrs = 0;
+   pRule->SrLocalAttr = NULL;
+   pRule->SrRequiredAttr = NULL;
    pRule->SrUnitElem = False;
    pRule->SrRecursive = False;
    pRule->SrExportedElem = False;
@@ -1030,10 +1054,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CompilExtens)
 	       /* within the extension rule */
 	       pAttr = pSSchema->SsAttribute->TtAttr[CurExtensRule->
-			    SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
+			  SrLocalAttr->Num[CurExtensRule->SrNLocalAttrs - 1] - 1];
 	     else
 	       /* within the structure rule */
-	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr[CurNLocAttr - 1] - 1];
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr->Num[CurNLocAttr - 1] - 1];
 	     if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 	       /* no value defined */
 	       CompilerMessage (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE,
@@ -1121,10 +1145,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CompilExtens)
 	       /* within extension rule */
 	       pAttr = pSSchema->SsAttribute->TtAttr[CurExtensRule->
-			    SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
+		       SrLocalAttr->Num[CurExtensRule->SrNLocalAttrs - 1] - 1];
 	     else
 	       /* within structure rule */
-	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr[CurNLocAttr - 1] - 1];
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr->Num[CurNLocAttr - 1] - 1];
 	     if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 	       /* no value defined */
 	       CompilerMessage (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE,
@@ -1140,11 +1164,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 				    LineNum);
 		 else
 		   pRule->SrNLocalAttrs = CurNLocAttr;
-		 for (i = 0; i < pRule->SrNLocalAttrs; i++)
-		   {
-		     pRule->SrLocalAttr[i] = CurLocAttr[i];
-		     pRule->SrRequiredAttr[i] = CurReqAttr[i];
-		   }
+		 CopyLocReqAttr (pRule);
 		 CurBasicElem = 0;
 		 CurNLocAttr = 0;
 	       }
@@ -1485,6 +1505,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
 		   strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 		   pRule->SrNLocalAttrs = 0;
+		   pRule->SrLocalAttr = NULL;
+		   pRule->SrRequiredAttr = NULL;
 		   pRule->SrNDefAttrs = 0;
 		   pRule->SrUnitElem = False;
 		   pRule->SrConstruct = CsNatureSchema;
@@ -2178,26 +2200,30 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   if (CompilLocAttr)
 		     /* local attribute */
 		     {
-		     if (CurNLocAttr >= MAX_LOCAL_ATTR)
-		       /* too many local attributes for this element */
-		       CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_ATTRS,
-					inputLine, LineNum);
-		     else if (CompilExtens)
+		     if (CurNLocAttr >= LocAttrTableSize)
+		       {
+			 LocAttrTableSize += 20;
+			 CurLocAttr = (NumTable*) realloc (CurLocAttr,
+                                         LocAttrTableSize * sizeof (int));
+			 CurReqAttr = (BoolTable*) realloc (CurReqAttr,
+					 LocAttrTableSize * sizeof (ThotBool));
+		       }
+		     if (CompilExtens)
 		       /* within extension rule */
 		       {
 			 CurExtensRule->SrNLocalAttrs++;
-			 CurExtensRule->SrLocalAttr[CurExtensRule->
+			 CurExtensRule->SrLocalAttr->Num[CurExtensRule->
 			    SrNLocalAttrs - 1] = pSSchema->SsNAttributes;
-			 CurExtensRule->SrRequiredAttr[CurExtensRule->
+			 CurExtensRule->SrRequiredAttr->Bln[CurExtensRule->
 				     SrNLocalAttrs - 1] = MandatoryAttr;
 			 MandatoryAttr = False;
 		       }
 		     else
 		       /* within structure rule */
 		       {
-			 CurLocAttr[CurNLocAttr] =
+			 CurLocAttr->Num[CurNLocAttr] =
 			   Identifier[nb - 1].SrcIdentDefRule;
-			 CurReqAttr[CurNLocAttr] = MandatoryAttr;
+			 CurReqAttr->Bln[CurNLocAttr] = MandatoryAttr;
 			 CurNLocAttr++;
 			 MandatoryAttr = False;
 		       }

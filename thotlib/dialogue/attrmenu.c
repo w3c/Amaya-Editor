@@ -1118,17 +1118,19 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 0; att < pRe1->SrNLocalAttrs; att++)
 		  if (nbOfEntries - *nbEvent < MAX_MENU &&
-		      !AttrHasException (ExcInvisible, pRe1->SrLocalAttr[att], pSS) &&
-		      TteItemMenuAttr (pSS, pRe1->SrLocalAttr[att], firstSel, SelDoc))
+		      !AttrHasException (ExcInvisible,
+					 pRe1->SrLocalAttr->Num[att], pSS) &&
+		      TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[att],
+				       firstSel, SelDoc))
 		    {
 		      /* conserve le schema de structure et le numero */
 		      /* d'attribut de cette nouvelle entree du menu */
 		      AttrStruct[nbOfEntries] = pSS;
-		      AttrNumber[nbOfEntries] = pRe1->SrLocalAttr[att];
-		      AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr[att];
+		      AttrNumber[nbOfEntries] = pRe1->SrLocalAttr->Num[att];
+		      AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr->Bln[att];
 		      /* is it an event attribute */
 		      AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
-						 pRe1->SrLocalAttr[att], pSS);
+					     pRe1->SrLocalAttr->Num[att], pSS);
 		      if (AttrEvent[nbOfEntries])
 			(*nbEvent)++;
 		      nbOfEntries++;

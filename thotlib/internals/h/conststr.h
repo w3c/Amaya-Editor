@@ -20,8 +20,6 @@
 				   aggregate */
 #define MAX_DEFAULT_ATTR 10	/* maximum number of default attributes in a
 				   structure rule */	
-#define MAX_LOCAL_ATTR 25	/* maximum number of local attributes in a
-				   structure rule */
 #define MAX_MAND_ATTR 10	/* maximum number of mandatory attributes in a
 				   structure rule */
 #define MAX_ATTR_VAL 20		/* maximum number of values for an enumerated

@@ -769,7 +769,7 @@ typedef struct _PresentSchema
 					   StructSchema.SsRule */
   NumberTable	*PsNHeirElems;         /* indicates for each attribute,
 					  in the same order as in the table
-					  StructSchema.AsAttribute, the number
+					  StructSchema.SsAttribute, the number
 					  of elements that can inherit from the
 					  attribute */
   int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* for each element, in
@@ -784,13 +784,13 @@ typedef struct _PresentSchema
 					  attributes inherited by the element*/
   NumberTable   *PsNComparAttrs;       /* indicates for each attribute,
 					  in the same order as in
-					  the table StructSchema.SsRule, the
-					  number of attributes comparing
+					  the table StructSchema.SsAttribute,
+					  the number of attributes comparing
 					  themselves to the attribute in order
 					  to deduce the presentation */
-  CompAttrTbTb  *PsComparAttr;         /* points for each attribute,
+  CompAttrTbTb  *PsComparAttr;         /* points for each attribute
 					  in the same order as in the table
-					  StructSchema.SsRule, on the table
+					  StructSchema.SsAttribute on the table
 					  indicating which attribute compare
 					  themselves to the attribute in order
 					  to deduce a presentation */

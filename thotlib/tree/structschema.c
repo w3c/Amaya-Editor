@@ -221,7 +221,7 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
 	    /* verify the local attributes defined in this rule */
 	    for (i = 1; i <= pRe1->SrNLocalAttrs && !found; i++)
 	      {
-		att = pRe1->SrLocalAttr[i - 1];
+		att = pRe1->SrLocalAttr->Num[i - 1];
 		if (whichName == SCHEMA_NAME)
 		  name = pSS->SsAttribute->TtAttr[att - 1]->AttrOrigName;
 		else
@@ -2338,12 +2338,12 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
 	   /* l'attribut est defini dans le meme schema que l'element */
 	   pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 	   for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
-	     if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
+	     if (pRe1->SrLocalAttr->Num[locAtt] == pNewAttr->AeAttrNum)
 	       /* l'attribut fait partie des attributs locaux de ce */
 	       /* type d'element, on peut l'appliquer a l'element */
 	       {
 		 allowed = TRUE;
-		 *mandatory = pRe1->SrRequiredAttr[locAtt];
+		 *mandatory = pRe1->SrRequiredAttr->Bln[locAtt];
 	       }
 	 }
        else if (pNewAttr->AeAttrSSchema->SsExtension)
@@ -2358,12 +2358,12 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
 	       /* on cherche si l'attribut fait partie des attributs locaux */
 	       /* de cette regle d'extension */
 	       for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
-		 if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
+		 if (pRe1->SrLocalAttr->Num[locAtt] == pNewAttr->AeAttrNum)
 		   /* l'attribut fait partie des attributs locaux */
 		   /* on peut l'appliquer a l'element */
 		   {
 		     allowed = TRUE;
-		     *mandatory = pRe1->SrRequiredAttr[locAtt];
+		     *mandatory = pRe1->SrRequiredAttr->Bln[locAtt];
 		   }
 	   }
      }

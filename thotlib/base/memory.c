@@ -1365,6 +1365,7 @@ void GetSchStruct (PtrSSchema * pSS)
   ----------------------------------------------------------------------*/
 void FreeSchStruc (PtrSSchema pSS)
 {
+  int        i;
 
   if (pSS->SsExtensBlock != NULL)
     {
@@ -1382,7 +1383,7 @@ void FreeSchStruc (PtrSSchema pSS)
   pSS->SsExtensBlock = NULL;
 #ifdef DEBUG_MEMORY
   int i;
-  for (i = 0; i < SsNAttributes; i++)
+  for (i = 0; i < pSS->SsNAttributes; i++)
     free (pSS->SsAttribute->TtAttr[i]);
   free (pSS->SsAttribute);
   TtaFreeMemory (pSS);
@@ -1391,6 +1392,13 @@ void FreeSchStruc (PtrSSchema pSS)
   PtFree_SchStruct = pSS;
   NbFree_SchStruct++;
 #endif
+  for (i = 0; i < MAX_RULES_SSCHEMA + 2; i++)
+    {
+      if (pSS->SsRule[i].SrLocalAttr)
+	TtaFreeMemory (pSS->SsRule[i].SrLocalAttr);
+      if (pSS->SsRule[i].SrRequiredAttr)
+	TtaFreeMemory (pSS->SsRule[i].SrRequiredAttr);
+    }
   NbUsed_SchStruct--;
 }
 

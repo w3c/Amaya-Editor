@@ -768,7 +768,7 @@ static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
 	 pSRule = &pSSchema->SsRule[pSSchema->SsRootElem - 1];
 	 j = 1;
 	 while (j <= pSRule->SrNLocalAttrs && !ok)
-	   if (pSRule->SrLocalAttr[j - 1] == att)
+	   if (pSRule->SrLocalAttr->Num[j - 1] == att)
 	     ok = True;
 	   else
 	     j++;

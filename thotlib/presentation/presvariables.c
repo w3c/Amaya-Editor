@@ -52,6 +52,8 @@ static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
    strcpy (NewAlias->SrName, "Counter alias");
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
+   NewAlias->SrLocalAttr = NULL;
+   NewAlias->SrRequiredAttr = NULL;
    NewAlias->SrUnitElem = FALSE;
    NewAlias->SrRecursive = FALSE;
    NewAlias->SrExportedElem = FALSE;

@@ -395,7 +395,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
 	  {
 	     found = FALSE;
 	     for (att = 0; att < pSRule->SrNLocalAttrs && !found; att++)
-		if (pSRule->SrLocalAttr[att] == pAttr->AeAttrNum)
+		if (pSRule->SrLocalAttr->Num[att] == pAttr->AeAttrNum)
 		   /* c'est bien un attribut local du type de l'element */
 		   found = TRUE;
 	     if (!found)

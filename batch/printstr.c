@@ -607,10 +607,10 @@ static void         wrrule (int r, SRule * pRegleExtens)
 	     writenb (r);
 	     printf ("\n");
 
-	     if (pRe1->SrNLocalAttrs > 0)
+	     if (pRe1->SrNLocalAttrs > 0 && pRe1->SrLocalAttr)
 	       {
-		 for (i = 1; i <= pRe1->SrNLocalAttrs; i++)
-		   wrattr (pRe1->SrLocalAttr[i - 1]);
+		 for (i = 0; i < pRe1->SrNLocalAttrs; i++)
+		   wrattr (pRe1->SrLocalAttr->Num[i]);
 	       }
 	     return;
 	  }
@@ -635,14 +635,15 @@ static void         wrrule (int r, SRule * pRegleExtens)
 	      OpenComment ();
 	    wrnomregle (r);
 	  }
-	if (pRe1->SrNLocalAttrs > 0)
+	if (pRe1->SrNLocalAttrs > 0 &&
+	    pRe1->SrRequiredAttr && pRe1->SrLocalAttr)
 	  {
 	     printf (" (ATTR ");
-	     for (i = 1; i <= pRe1->SrNLocalAttrs; i++)
+	     for (i = 0; i < pRe1->SrNLocalAttrs; i++)
 	       {
-		  if (pRe1->SrRequiredAttr[i - 1])
+		  if (pRe1->SrRequiredAttr->Bln[i])
 		     printf ("!");
-		  wrattr (pRe1->SrLocalAttr[i - 1]);
+		  wrattr (pRe1->SrLocalAttr->Num[i]);
 		  if (i == pRe1->SrNLocalAttrs)
 		     printf (")");
 		  else

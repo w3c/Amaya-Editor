@@ -69,12 +69,12 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 
   /* parcourt tous les attributs locaux definis dans la regle */
   for (i = 0; (pDoc->DocSSchema != NULL) && (i < pSRule->SrNLocalAttrs); i++)
-    if (pSRule->SrRequiredAttr[i])
+    if (pSRule->SrRequiredAttr->Bln[i])
       /* cet attribut local est obligatoire */
       if (pDoc->DocSSchema != NULL)
 	/* le document n'a pas ete ferme' entre-temps */
 	{
-	  att = pSRule->SrLocalAttr[i];
+	  att = pSRule->SrLocalAttr->Num[i];
 	  /* cherche si l'element possede cet attribut */
 	  pAttr = pEl->ElFirstAttr;
 	  found = FALSE;
