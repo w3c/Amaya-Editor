@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -249,6 +249,9 @@ alt="General Preferences Menu" /></p>
   <dt><strong>Produire des fichiers de sauvegarde</strong></dt>
     <dd>Si cette option est active Amaya va produire périodiquement un
       fichier de sauvegarde pour chaque document édité.</dd>
+  <dt><strong>Sauver la géométrie en quittant</strong></dt>
+    <dd>La géométrie courante des fenêtres sera automatiquement sauvegardée
+      en quittant l'application..</dd>
   <dt><strong>Montrer boutons</strong></dt>
     <dd>Contrôle si Amaya affiche les barres de boutons dans chaque vue
       principale de document.</dd>
@@ -357,6 +360,9 @@ domaines spécifiques.</p>
 <p style="text-align: center"><img src="../images/PublishMenu-fr.gif"
 alt="Publish Preferences Menu" /></p>
 <dl>
+  <dt><strong>Charset pour les nouveaux documents</strong></dt>
+    <dd>Définit le charset (groupe de caractères) utilisé pour les nouveaux
+      documents.</dd>
   <dt><strong>Utiliser le type MIME application/xhtml+xml pour les documents
   XHTML</strong></dt>
     <dd>Lorsqu'elle est active, cette option associe le nouveau (et officiel)
