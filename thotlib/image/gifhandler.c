@@ -1181,7 +1181,6 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
   unsigned short      rmask, gmask, bmask;
 
   bit_data = NULL;
-  bit_mask = NULL;
   switch (depth)
     {
     case 1:
@@ -1218,7 +1217,6 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
-      alpha = bit_mask;
       ind = 0; /* pixel index */
 	  if (depth == 15)
 	  {
@@ -1353,12 +1351,6 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
   else
     SetBitmapBits (newimage, width * height * (depth / 8), bit_data);
   TtaFreeMemory (bit_data);
-  if (bit_mask)
-    {
-      *mask = CreateComatibleBitmap (hDC, width, height);
-      SetBitmapBits (newimage, width * height, bit_mask);
-      TtaFreeMemory (bit_mask);
-    }
   return (newimage);
 }
 #endif /* _WINDOWS */
