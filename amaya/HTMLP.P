@@ -2587,16 +2587,10 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	LineBreak: Yes;
-	Size: Enclosing * 70 %;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Links_view
 		Visibility: 0;
-	END;
-
- C_BR:
-	BEGIN
-	HorizRef: * . Bottom;
 	END;
 
  Italic_text:
