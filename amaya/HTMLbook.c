@@ -643,9 +643,9 @@ void CallbackPrint (int ref, int typedata, char *data)
 	  if (PaperPrint == PP_PS)
 	    {
 	      PaperPrint = PP_PRINTER;
-#ifndef _WINGUI
+#ifdef _GTK
 	      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
-#endif /* !_WINGUI */
+#endif /* _GTK */
 	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;
@@ -653,9 +653,9 @@ void CallbackPrint (int ref, int typedata, char *data)
 	  if (PaperPrint == PP_PRINTER)
 	    {
 	      PaperPrint = PP_PS;
-#ifndef _WINGUI
+#ifdef _GTK
 	      TtaSetTextForm (BasePrint + PPrinterName, PSfile);
-#endif /* !_WINGUI */
+#endif /* _GTK */
 	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;

@@ -29,14 +29,23 @@ private:
     // Override base class functions of a wxDialog.
   void OnPrintButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
-
+  void OnPaperFormatBox( wxCommandEvent& event );
+  void OnPaperOrientationBox( wxCommandEvent& event );
+  void OnPaperDispositionBox( wxCommandEvent& event );
+  void OnOutputBox( wxCommandEvent& event );
+  void OnManualChkBox( wxCommandEvent& event );
+  void OnTocChkBox( wxCommandEvent& event );
+  void OnLinksChkBox( wxCommandEvent& event );
+  void OnPrintUrlChkBox( wxCommandEvent& event );
+  void OnIgnoreCssChkBox( wxCommandEvent& event );
+  void OnTypePrinter ( wxCommandEvent& event );
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
 private:
-  int   m_iarea;
-  int   m_ireplace;
-  bool  m_case;
+  wxString   m_PPrinter;
+  wxString   m_PS;
+  int        m_printer;
 };
 
 #endif  //__PRINTDLGWX_H__
