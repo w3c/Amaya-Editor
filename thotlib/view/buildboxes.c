@@ -2917,6 +2917,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   pBlock = NULL;
   result = FALSE;
   condition = FALSE;
+  savpropage = Propagate;
   pParent = pAb->AbEnclosing;
   inLine = FALSE;
   inLineFloat = FALSE;
@@ -3113,7 +3114,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       
       /* Faut-il dechainer la boite englobante ? */
       ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
-      savpropage = Propagate;
       Propagate = ToSiblings;	/* Limite la propagation sur le descendance */
       pBox = CreateBox (pAb, frame, inLine, inLineFloat, &i);
       
