@@ -1056,7 +1056,6 @@ Document            document;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   int                 view;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)

@@ -54,6 +54,7 @@
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
+#include "documentapi_f.h"
 #include "docs_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"

@@ -14,7 +14,7 @@
 #include "typemedia.h"
 #include "picture.h"
 #include "frame.h"
-
+#include "application.h"
 #include "memory_f.h"
 
 

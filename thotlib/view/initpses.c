@@ -29,6 +29,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "application.h"
 #include "frame_tv.h"
 #include "thotcolor_tv.h"
 

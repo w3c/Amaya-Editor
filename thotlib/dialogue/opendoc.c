@@ -191,7 +191,7 @@ Name                name;
 
    /* zone de saisie du nom du schema de presentation */
    TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema, TtaGetMessage (LIB, TMSG_PRES), 30, 1, FALSE);
-#  endif /* !_WINDOWS
+#  endif /* !_WINDOWS */
    /* presentation par defaut */
    if (pSchStr->SsExtension)
       /* c'est une extension de schema, il n'y a pas de regle racine */

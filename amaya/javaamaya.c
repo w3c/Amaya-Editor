@@ -8,9 +8,11 @@
 #include "amaya.h"
 #include "css.h"
 #include "javaamaya.h"
+#include "parser.h"
 
-#include "EDITstyle_f.h"
 #include "css_f.h"
+#include "EDITstyle_f.h"
+#include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"

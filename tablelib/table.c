@@ -37,19 +37,21 @@
 #include "appdialogue_tv.h"
 
 /* procedures importees de l'Editeur */
-#include "tree_f.h"
-#include "structcreation_f.h"
-#include "exceptions_f.h"
-#include "memory_f.h"
-#include "createabsbox_f.h"
-#include "changeabsbox_f.h"
-#include "presrules_f.h"
-#include "structselect_f.h"
+
+#include "attributeapi_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
+#include "changeabsbox_f.h"
+#include "createabsbox_f.h"
+#include "displayview_f.h"
+#include "exceptions_f.h"
+#include "memory_f.h"
+#include "presrules_f.h"
 #include "references_f.h"
+#include "structcreation_f.h"
+#include "structselect_f.h"
 #include "table2_f.h"
-
+#include "tree_f.h"
 
 /* exceptions definies dans Tableau */
 #include "exc_Table.h"

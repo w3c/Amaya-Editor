@@ -37,6 +37,7 @@
 #include "styleparser_f.h"
 #include "templates_f.h"
 #include "XMLparser_f.h"
+#include "UIcss_f.h"
 
 typedef UCHAR_T entityName[10];
 typedef struct _CharEntityEntry
@@ -1090,7 +1091,9 @@ static int          StackLevel = 0;	     /* first free element on the
 /* information about the input file */
 #define INPUT_FILE_BUFFER_SIZE 2000
 static CHAR_T	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
+#ifdef _I18N_
 static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
+#endif
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
 static CHAR_T	    PreviousBufChar = EOS;    /* previous character read */

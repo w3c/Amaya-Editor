@@ -546,7 +546,8 @@ void *context;
 
 #endif /* __STDC__ */
 {
-   STRING              pathname;
+/***
+   STRING              pathname;	***/
    STRING              tempfile;
    FetchImage_context *FetchImage_ctx;
    LoadedImageDesc    *desc;

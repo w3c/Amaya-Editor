@@ -463,40 +463,6 @@ PtrCondition        c2;
 }
 
 /*----------------------------------------------------------------------
-  CompareCondLists : Compare lists of conditions, we expect these
-  lists to be sorted.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          CompareCondLists (PtrCondition c1, PtrCondition c2)
-#else  /* __STDC__ */
-static int          CompareCondLists (c1, c2)
-PtrCondition        c1;
-PtrCondition        c2;
-#endif /* !__STDC__ */
-{
-  int                 res;
-
-  do
-    {
-      if (c1 == c2)
-	return (0);
-      if (c1 == NULL)
-	return (-1);
-      if (c2 == NULL)
-	return (+1);
-      res = CompareCond (c1, c2);
-      if (res != 0)
-	return (res);
-      c1 = c1->CoNextCondition;
-      c2 = c2->CoNextCondition;
-    }
-  while (1);
-  /* NOTREACHED */
-  return (0);
-}
-
-
-/*----------------------------------------------------------------------
   AddCond : add a new condition in a presentation rule, respecting
   the order of the list.
   ----------------------------------------------------------------------*/
