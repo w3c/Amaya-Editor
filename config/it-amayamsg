@@ -110,7 +110,7 @@
 109 Operazione completata con codice %s
 110 Il server non ha compreso la sintassi della richiesta
 111 Il server non ha nuove informazioni da inviare
-112 Questo metodo non è consentito per %s
+112 Questo metodo non è consentito
 113 Identificazione richiesta per accedere a %s
 114 Verifica in corso ...
 115 Il salvataggio su %s è fallito, salvo su disco ?

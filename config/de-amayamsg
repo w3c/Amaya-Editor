@@ -110,7 +110,7 @@
 109 Operation wurde beendet mit Code %s .
 110 Der Server konnte die Anfragesyntax nicht verstehen
 111 Der Server hat keine neue Informationen zurückzusenden
-112 Diese Methode ist nicht erlaubt für: %s
+112 Diese Methode ist nicht erlaubt
 113 Bitte einloggen für den Zugriff auf: %s
 114 Überprüfe ...
 115 Speichern unter %s fehlerhaft, Speichern auf Festplatte?

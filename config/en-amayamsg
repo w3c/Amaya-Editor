@@ -110,7 +110,7 @@
 109 Operation completed with a %s status code
 110 Server did not understand the request syntax
 111 Server has no new information to send back
-112 This method is not allowed for %s
+112 This method is not allowed
 113 Please authenticate to access %s
 114 Verifying ...
 115 Saving to %s failed, Save to disk ?

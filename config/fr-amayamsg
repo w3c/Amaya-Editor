@@ -110,7 +110,7 @@
 109 L'opération a fini avec un code %s
 110 Le serveur n'a pas compris la syntaxe de la requête
 111 La réponse du serveur n'a pas de corps
-112 Cette opération n'est pas permise pour %s
+112 Cette opération n'est pas permise
 113 L'accès à %s requiert votre authentification
 114 Vérification ...
 115 La sauvegarde distante de %s a échouée, sauvegarder sur disque ?
