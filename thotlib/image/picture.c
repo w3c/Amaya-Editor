@@ -2331,7 +2331,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			yBox = im->rgb_height;
 		    }
 #ifndef _GL
-		  gdk_imlib_render(im, (gint)xBox, (gint)yBox);
+		  gdk_imlib_render(im, (gint)wBox, (gint)hBox);
 		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
 		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GL */
