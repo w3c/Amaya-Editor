@@ -1164,6 +1164,40 @@ CHAR_T*              info;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3)
+#else
+void                InitConfirm3L (document, view, label)
+Document            document;
+View                view;
+CHAR_T*              label1;
+CHAR_T*              label2;
+CHAR_T*              label3;
+#endif
+{
+#ifndef _WINDOWS
+   /* Confirm form */
+   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
+	       TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
+   /* open as many label widgets as \n we find in the label */
+   if (label1 && *label1 != WC_EOS)
+     TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
+   /* open as many label widgets as \n we find in the label */
+   if (label2 && *label2 != WC_EOS)
+     TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
+   if (label3 && *label3  != WC_EOS)
+     TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+   /* wait for an answer */
+   TtaWaitShowDialogue ();
+#  else  /* _WINDOWS */
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
+#  endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                InitConfirm (Document document, View view, CHAR_T* label)
 #else
 void                InitConfirm (document, view, label)

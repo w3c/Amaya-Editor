@@ -1184,14 +1184,13 @@ ThotBool            use_preconditions;
     {
       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
       ResetStop (document);
-      usprintf (msg, TEXT("%s %s \n%s\n%s"),
+      usprintf (msg, TEXT("%s %s"),
 		TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		url,
-		AmayaLastHTTPErrorMsg,
-		TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		url);
       if (confirm)
 	{
-	  InitConfirm (document, view, msg);
+	  InitConfirm3L (document, view, msg, AmayaLastHTTPErrorMsg, 
+			 TtaGetMessage (AMAYA, AM_SAVE_DISK));
 	  if (UserAnswer)
 	    res = -1;
 	  else
@@ -1336,18 +1335,12 @@ ThotBool         use_preconditions;
 	{
 	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 	  ResetStop (doc);
-	  if (AmayaLastHTTPErrorMsg[0] != WC_EOS)
-	    usprintf (msg, TEXT("%s %s --> %s"),
-		      TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		      url,
-		      AmayaLastHTTPErrorMsg);
-	  else
-	    usprintf (msg, TEXT("%s %s"),
-		      TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		      url);
+	  usprintf (msg, TEXT("%s %s"),
+		    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		    url);
 	  if (confirm)
 	    {
-	      InitConfirm (doc, view, msg);
+	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL);
 	      if (UserAnswer)
 		res = -1;
 	      else
@@ -1376,11 +1369,10 @@ ThotBool         use_preconditions;
 		{
 		  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 		  ResetStop (doc);
-		  usprintf (msg, TEXT("%s %s \n%s"),
+		  usprintf (msg, TEXT("%s %s"),
 			    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			    pImage->originalName, 
-			    AmayaLastHTTPErrorMsg);
-		  InitConfirm (doc, view, msg);
+			    pImage->originalName);
+		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL);
 		  /* erase the last status message */
 		  TtaSetStatus (doc, view, TEXT(""), NULL);
 		  if (UserAnswer)
