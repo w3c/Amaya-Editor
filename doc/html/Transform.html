@@ -19,7 +19,7 @@
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /> <a href="Manual.html"><img border="0"
-        src="../images/doc48x.gif" alt="Doc"></a></p>
+        src="../images/doc48x.gif" alt="Doc" /></a></p>
       </td>
       <td><p><a href="editing_documents/the_transform_command.html" accesskey="p">
 	    <img alt="previous" src="../images/left.gif" /></a> 
@@ -46,7 +46,7 @@ be added during an editing session.</p>
 <p><strong>Warning</strong>: As the description of transformations may
 contain tags, do<strong> not </strong>edit the <code>HTML.trans</code> file
 with <strong>Amaya</strong>. You can use any text editor.</p>
-<hr>
+<hr />
 
 <h2>Syntax of the Amaya transformation language</h2>
 
@@ -140,7 +140,7 @@ moved to a different place in the destination.</p>
 <p>If the source tag or the name in the left part of a rules is present more
 than once in the pattern, the rule transforms all the elements matching an
 occurrence of the tag in the pattern.</p>
-<hr>
+<hr />
 
 <h2>Transformation process</h2>
 
@@ -169,7 +169,7 @@ href="http://opera.inrialpes.fr/opera/papers9696.html"><em>Interactively
 Restructuring HTML Documents</em></a>, a paper presented at the <a
 href="http://www5conf.inria.fr/">5th international WWW conference</a> in
 Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
-<hr>
+<hr />
 
 <h2><a name="L235">Examples</a></h2>
 <ul>
@@ -186,8 +186,7 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     When the rule is first applied, the resulting structure is empty, so
     there is no UL element in which the LI can be created. Therefore an UL is
     first created, then the rule can be applied.</p>
-    <p></p>
-  </li>
+    </li>
   <li>The second example transforms a definition list into a table.
     <pre>Table: DL{(DT|DD)+}; 
    { 
@@ -220,14 +219,13 @@ TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
     of the table (cell_content).</p>
     <p>The second rule expresses that the contents of each cell have to be
     moved to the place of the original table.</p>
-    <p></p>
   </li>
-  <li>See the file <code>amaya/HTML.trans</code> for more transformation
+  <li>See the file <kbd>amaya/HTML.trans</kbd> for more transformation
     examples.</li>
 </ul>
 <hr />
 <address>
-  <p><a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a></p>
+  <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a>
 
   <p>$Date$</p>
   
