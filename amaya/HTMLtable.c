@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -38,14 +38,8 @@ static ThotBool     NewTable = FALSE;
    returns the cell that corresponds to the Column_head element colhead
    in a given row.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      GetCellFromColumnHead (Element row, Element colhead, ThotBool inMath)
-#else
-static Element      GetCellFromColumnHead (row, colhead, inMath)
-Element             row;
-Element             colhead;
-ThotBool            inMath;
-#endif
+static Element GetCellFromColumnHead (Element row, Element colhead,
+				      ThotBool inMath)
 {
    Element             cell, currentcolhead;
    ThotBool            found;
@@ -91,15 +85,8 @@ ThotBool            inMath;
    returns the cell that corresponds to the Column_head element colhead
    or a previous or next colhead in a given row.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      GetCloseCellFromColumnHead (Element row, Element colhead, ThotBool before, ThotBool inMath)
-#else
-static Element      GetCloseCellFromColumnHead (row, colhead, before, inMath)
-Element             row;
-Element             colhead;
-ThotBool            before;
-ThotBool            inMath;
-#endif
+static Element GetCloseCellFromColumnHead (Element row, Element colhead,
+					   ThotBool before, ThotBool inMath)
 {
   Element             col, child;
   ElementType         elType;
@@ -123,15 +110,8 @@ ThotBool            inMath;
 /*----------------------------------------------------------------------
    RelateCellWithColumnHead relates a cell with a Column_head.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RelateCellWithColumnHead (Element cell, Element colhead, Document doc, ThotBool inMath)
-#else
-static void         RelateCellWithColumnHead (cell, colhead, doc, inMath)
-Element             cell;
-Element             colhead;
-Document            doc;
-ThotBool            inMath;
-#endif
+static void RelateCellWithColumnHead (Element cell, Element colhead,
+				      Document doc, ThotBool inMath)
 {
   ElementType         elType;
   AttributeType       attrType;
@@ -163,18 +143,10 @@ ThotBool            inMath;
    cell according to the before value.
    Return the created empty cell.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, ThotBool before, Document doc, ThotBool inMath, ThotBool placeholder)
-#else
-static Element      AddEmptyCellInRow (row, colhead, sibling, before, doc, inMath, placeholder)
-Element             row;
-Element             colhead;
-Element             sibling;
-ThotBool            before;
-Document            doc;
-ThotBool            inMath;
-ThotBool            placeholder
-#endif
+static Element AddEmptyCellInRow (Element row, Element colhead,
+				  Element sibling, ThotBool before,
+				  Document doc, ThotBool inMath,
+				  ThotBool placeholder)
 {
   Element             lastcell, constr;
   ElementType         elType;
@@ -228,17 +200,9 @@ ThotBool            placeholder
   The parameter before indicates if the lastcolhead precedes or follows
   the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      NewColumnHead (Element lastcolhead, ThotBool before, ThotBool last, Element row, Document doc, ThotBool inMath)
-#else
-static Element      NewColumnHead (lastcolhead, before, last, row, doc, inMath)
-Element             lastcolhead;
-ThotBool            before;
-ThotBool            last;
-Element             row;
-Document            doc;
-ThotBool            inMath;
-#endif
+static Element NewColumnHead (Element lastcolhead, ThotBool before,
+			      ThotBool last, Element row, Document doc,
+			      ThotBool inMath)
 {
    Element             colhead, currentrow;
    Element             group, groupdone;
@@ -375,17 +339,8 @@ ThotBool            inMath;
    "row", according to span. Return the row which is the   
    bottom of the spanning cell.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      SetRowExt (Element cell, Element row, int span, Document doc, ThotBool inMath)
-#else
-static Element      SetRowExt (cell, row, span, doc, inMath)
-Element             cell;
-Element             row;
-int                 span;
-Document            doc;
-ThotBool            inMath;
-
-#endif
+static Element SetRowExt (Element cell, Element row, int span, Document doc,
+			  ThotBool inMath)
 {
    Element             spannedrow, nextspannedrow, ret;
    ElementType         elType;
@@ -434,15 +389,7 @@ ThotBool            inMath;
 /*----------------------------------------------------------------------
    MaximumRowSpan                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          MaximumRowSpan (Element row, int span, ThotBool inMath)
-#else
-static int          MaximumRowSpan (row, span, inMath)
-Element             row;
-int                 span;
-ThotBool            inMath;
-
-#endif
+static int MaximumRowSpan (Element row, int span, ThotBool inMath)
 {
    ElementType         elType;
    AttributeType       attrType;
@@ -495,15 +442,8 @@ ThotBool            inMath;
   The parameter ifEmpty makes removing optional.
   Returns TRUE if the column has been removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool     RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty, ThotBool inMath)
-#else
-ThotBool     RemoveColumn (colhead, doc, ifEmpty, inMath)
-Element      colhead;
-Document     doc;
-ThotBool     ifEmpty;
-ThotBool     inMath;
-#endif
+ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
+		       ThotBool inMath)
 {
   Element             row, firstrow;
   Element             cell, group, table;
@@ -655,16 +595,8 @@ ThotBool     inMath;
 /*----------------------------------------------------------------------
   CheckAllRows
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           CheckAllRows (Element table, Document doc, ThotBool placeholder,
-			     ThotBool deleteLastEmptyColumns)
-#else
-void           CheckAllRows (table, doc, placeholder, deleteLastEmptyColumns)
-Element        table;
-Document       doc;
-ThotBool       placeholder;
-ThotBool       deleteLastEmptyColumns;
-#endif
+void CheckAllRows (Element table, Document doc, ThotBool placeholder,
+		   ThotBool deleteLastEmptyColumns)
 {
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead, prevColhead;
@@ -1014,14 +946,7 @@ ThotBool       deleteLastEmptyColumns;
 /*----------------------------------------------------------------------
    CheckTable      Check a table and create the missing elements.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CheckTable (Element table, Document doc)
-#else
-void                CheckTable (table, doc)
-Element             table;
-Document            doc;
-
-#endif
 {
   ElementType         elType;
   Element             el, columnHeads, thead, tfoot, firstcolhead,
@@ -1218,14 +1143,7 @@ Document            doc;
   NewCell  a new cell has been created in a HTML table.
   If genrateColumn is TRUE, the new cell generates a new column.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewCell (Element cell, Document doc, ThotBool genrateColumn)
-#else
-void                NewCell (cell, doc, genrateColumn)
-Element             cell;
-Document            doc;
-ThotBool            genrateColumn;
-#endif
+void NewCell (Element cell, Document doc, ThotBool genrateColumn)
 {
   Element             newcell, row;
   Element             colhead;
@@ -1337,13 +1255,7 @@ ThotBool            genrateColumn;
 
    a new cell has been created in a table
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CellCreated (NotifyElement * event)
-#else
-void                CellCreated (event)
-NotifyElement      *event;
-
-#endif
 {
    Element             cell, row;
    Document            doc;
@@ -1372,13 +1284,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    CellPasted                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CellPasted (NotifyElement * event)
-#else
-void                CellPasted (event)
-NotifyElement      *event;
-
-#endif
 {
    Element             cell, nextcell, row;
    Document            doc;
@@ -1415,13 +1321,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    PreDeleteRow                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PreDeleteRow (Element row, Document doc)
-#else
-static void         PreDeleteRow (row, doc)
-Element             row;
-Document            doc;
-#endif
 {
    Element             cell;
    ElementType         elType;
@@ -1463,13 +1363,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    DeleteRow                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteRow (NotifyElement * event)
-#else
-ThotBool            DeleteRow (event)
-NotifyElement      *event;
-
-#endif
 {
   if (CurrentDeletedRow == NULL)
     {
@@ -1484,13 +1378,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    RowDeleted                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RowDeleted (NotifyElement * event)
-#else
-void                RowDeleted (event)
-NotifyElement      *event;
-
-#endif
 {
   Element             rowgroup, table;
   ElementType         elType;
@@ -1519,12 +1407,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    DeleteCell                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteCell (NotifyElement * event)
-#else
-ThotBool            DeleteCell (event)
-NotifyElement      *event;
-#endif
 {
   Element             cell;
   ElementType         elType;
@@ -1581,12 +1464,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    CellDeleted                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CellDeleted (NotifyElement * event)
-#else
-void                CellDeleted (event)
-NotifyElement      *event;
-#endif
 {
   Element             cell, col, child;
   ElementType         elType;
@@ -1633,13 +1511,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    TableCreated                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TableCreated (NotifyElement * event)
-#else
-void                TableCreated (event)
-NotifyElement      *event;
-
-#endif
 {
    Element             table;
    Document            doc;
@@ -1668,12 +1540,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    TablebodyDeleted                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TablebodyDeleted (NotifyElement * event)
-#else
-void                TablebodyDeleted (event)
-NotifyElement      *event;
-#endif
 {
   Element             sibling, table;
   ElementType	      elType;
@@ -1708,13 +1575,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    RowCreated                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RowCreated (NotifyElement * event)
-#else
-void                RowCreated (event)
-NotifyElement      *event;
-
-#endif
 {
   Element             row, table;
   ElementType         elType;
@@ -1755,12 +1616,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    RowPasted                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RowPasted (NotifyElement * event)
-#else
-void               <RowPasted (event)
-NotifyElement      *event;
-#endif
 {
   Element             row, table;
   ElementType         elType;
@@ -1801,16 +1657,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
    ChangeColSpan                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeColSpan (Element cell, int oldspan, int newspan, Document doc)
-#else
-static void         ChangeColSpan (cell, oldspan, newspan, doc)
-Element             cell;
-int                 oldspan;
-int                 newspan;
-Document            doc;
-
-#endif
+static void ChangeColSpan (Element cell, int oldspan, int newspan, Document doc)
 {
    Element             table;
    ElementType         elType;
@@ -1834,13 +1681,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    ColspanCreated                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ColspanCreated (NotifyAttribute * event)
-#else
-void                ColspanCreated (event)
-NotifyAttribute    *event;
-
-#endif
 {
    int                 span;
 
@@ -1857,13 +1698,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    RegisterColspan                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            RegisterColspan (NotifyAttribute * event)
-#else
-ThotBool            RegisterColspan (event)
-NotifyAttribute    *event;
-
-#endif
 {
    PreviousColSpan = TtaGetAttributeValue (event->attribute);
    return FALSE;		/* let Thot perform normal operation */
@@ -1872,13 +1707,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    ColspanModified                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ColspanModified (NotifyAttribute * event)
-#else
-void                ColspanModified (event)
-NotifyAttribute    *event;
-
-#endif
 {
   Element             cell;
   Attribute           attr;
@@ -1902,13 +1731,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    ColspanDeleted
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ColspanDeleted (NotifyAttribute * event)
-#else
-void                ColspanDeleted (event)
-NotifyAttribute    *event;
-
-#endif
+void ColspanDeleted (NotifyAttribute * event)
 {
   if (PreviousColSpan > 1)
      ChangeColSpan (event->element, PreviousColSpan, 1, event->document);
@@ -1917,16 +1740,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    ChangeRowSpan
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
-#else
-static void         ChangeRowSpan (cell, oldspan, newspan, doc)
-Element             cell;
-int                 oldspan;
-int                 newspan;
-Document            doc;
-
-#endif
+static void ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
 {
    Element             table;
    ElementType         elType;
@@ -1953,13 +1767,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    RowspanCreated                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RowspanCreated (NotifyAttribute * event)
-#else
-void                RowspanCreated (event)
-NotifyAttribute    *event;
-
-#endif
 {
    int                 span;
 
@@ -1975,13 +1783,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    RegisterRowspan                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            RegisterRowspan (NotifyAttribute * event)
-#else
-ThotBool            RegisterRowspan (event)
-NotifyAttribute    *event;
-
-#endif
 {
    PreviousRowSpan = TtaGetAttributeValue (event->attribute);
    return FALSE;		/* let Thot perform normal operation */
@@ -1990,13 +1792,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    RowspanModified                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RowspanModified (NotifyAttribute * event)
-#else
-void                RowspanModified (event)
-NotifyAttribute    *event;
-
-#endif
+void RowspanModified (NotifyAttribute * event)
 {
    Element             cell;
    Attribute           attr;
@@ -2020,13 +1816,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    RowspanDeleted
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               RowspanDeleted (NotifyAttribute * event)
-#else
-void               RowspanDeleted (event)
-NotifyAttribute    *event;
-
-#endif
+void RowspanDeleted (NotifyAttribute * event)
 {
    if (PreviousRowSpan > 1)
       ChangeRowSpan (event->element, PreviousRowSpan, 1, event->document);
