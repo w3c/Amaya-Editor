@@ -31,7 +31,7 @@
 static int          ValEpaisseur (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 static int          ValEpaisseur (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
@@ -51,7 +51,7 @@ PtrAbstractBox             pAb;
 static void         DisplayImage (PtrBox pBox, int frame)
 #else  /* __STDC__ */
 static void         DisplayImage (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -60,8 +60,8 @@ int                 frame;
    int                 larg, i;
    int                 haut;
    int                 op, RO;
-   ViewFrame            *pFrame;
-   PtrBox            pBo1;
+   ViewFrame          *pFrame;
+   PtrBox              pBo1;
 
    DrawPage ((FILE *) FrRef[frame]);
 
@@ -103,7 +103,7 @@ int                 frame;
 	  }
 	/* For changing drawing color */
 	DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
-		     pBox->BxAbstractBox->AbBackground, 0);
+		       pBox->BxAbstractBox->AbBackground, 0);
 
 	i = pBo1->BxYOrg + pBo1->BxHeight - dy;
 	if (haut > i)
@@ -118,7 +118,7 @@ int                 frame;
 	     /* Compute the origin alignment */
 	     dy = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	     DrawPoints (frame, pBox->BxXOrg + pBox->BxWidth - pFrame->FrXOrg, dy,
-		    pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
+	      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
 	  }
      }
 }				/* function DisplayImage */
@@ -134,7 +134,7 @@ static void         DisplaySymbol (PtrBox pBox, int frame)
 
 #else  /* __STDC__ */
 static void         DisplaySymbol (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -144,10 +144,10 @@ int                 frame;
    int                 fg;
    int                 bg;
    ptrfont             font;
-   PtrBox            mbox;
+   PtrBox              mbox;
    int                 op, RO;
-   PtrAbstractBox             pAbbox1;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pAbbox1;
+   ViewFrame          *pFrame;
    boolean             withbackground;
 
    /* Search for the box defining the enclosing constraints */
@@ -274,16 +274,16 @@ int                 frame;
 void                DisplayEmptyBox (PtrBox pBox, int frame, char modele)
 #else  /* __STDC__ */
 void                DisplayEmptyBox (pBox, frame, modele)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 char                modele;
 
 #endif /* __STDC__ */
 {
-   PtrBox            mbox;
+   PtrBox              mbox;
    int                 op, RO;
-   PtrAbstractBox             pAbbox1;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pAbbox1;
+   ViewFrame          *pFrame;
    int                 xd, yd;
 
    /* Search for the box defining the enclosing constraints */
@@ -318,8 +318,8 @@ char                modele;
 
 	   if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 	      DrawRectangle (frame, 2, 0, xd, yd, pBox->BxWidth,
-			pBox->BxHeight, RO, op, pBox->BxAbstractBox->AbForeground,
-			   pBox->BxAbstractBox->AbBackground, 0);
+		  pBox->BxHeight, RO, op, pBox->BxAbstractBox->AbForeground,
+			     pBox->BxAbstractBox->AbBackground, 0);
 	   else
 	      Trame (frame, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op,
 		     pBox->BxAbstractBox->AbForeground,
@@ -335,19 +335,19 @@ char                modele;
 static void         DisplayGraph (PtrBox pBox, int frame)
 #else  /* __STDC__ */
 static void         DisplayGraph (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
 {
    int                 i, xd, yd;
-   PtrBox            mbox;
+   PtrBox              mbox;
    int                 op, RO;
    int                 fg;
    int                 bg;
    int                 style;
-   PtrAbstractBox             pv;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pv;
+   ViewFrame          *pFrame;
 
    /* Search for the box defining the enclosing constraints */
    if (pBox->BxAbstractBox->AbEnclosing == NULL)
@@ -439,19 +439,19 @@ int                 frame;
 		    case '8':
 		    case 'R':
 		       DrawRectangle (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'C':
 		       DrawOval (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'L':
 		       DrawDiamond (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'c':
 		       DrawEllips (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'h':
 		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
@@ -484,40 +484,40 @@ int                 frame;
 		       break;
 		    case 'E':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 45, RO, op, fg);
+				  pBox->BxHeight, 45, RO, op, fg);
 		       break;
 		    case '^':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 90, RO, op, fg);
+				  pBox->BxHeight, 90, RO, op, fg);
 		       break;
 		    case 'O':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 135, RO, op, fg);
+				  pBox->BxHeight, 135, RO, op, fg);
 		       break;
 		    case '<':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 180, RO, op, fg);
+				  pBox->BxHeight, 180, RO, op, fg);
 		       break;
 		    case 'o':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 225, RO, op, fg);
+				  pBox->BxHeight, 225, RO, op, fg);
 		       break;
 		    case 'V':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 270, RO, op, fg);
+				  pBox->BxHeight, 270, RO, op, fg);
 		       break;
 		    case 'e':
 		       DrawArrow (frame, i, style, xd, yd, pBox->BxWidth,
-				 pBox->BxHeight, 315, RO, op, fg);
+				  pBox->BxHeight, 315, RO, op, fg);
 		       break;
 
 		    case 'P':
 		       DrawRectangleFrame (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'Q':
 		       DrawEllipsFrame (frame, i, style, xd, yd, pBox->BxWidth,
-			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'W':
 		       DrawCorner (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
@@ -560,13 +560,13 @@ void                PolyTransform (PtrBox pBox)
 
 #else  /* __STDC__ */
 void                PolyTransform (pBox)
-PtrBox            pBox;
+PtrBox              pBox;
 
 #endif /* __STDC__ */
 
 {
    float               xRatio, yRatio, pointIndex;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i;
    int                 j, val;
 
@@ -633,20 +633,20 @@ static void         DrawPolyLine (PtrBox pBox, int frame)
 
 #else  /* __STDC__ */
 static void         DrawPolyLine (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
 
 {
    int                 i, xd, yd;
-   PtrBox            mbox;
+   PtrBox              mbox;
    int                 op, RO;
    int                 fg;
    int                 bg;
    int                 style, fleche;
-   PtrAbstractBox             pv;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pv;
+   ViewFrame          *pFrame;
 
    /* If no point is defined, no need to draw it */
    if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
@@ -742,14 +742,14 @@ int                 frame;
 		       break;
 		    case 'p':	/* polygon */
 		       DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-			     pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern);
+			 pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 's':	/* closed spline */
 		       /* compute control points */
 		       if (pBox->BxPictInfo == NULL)
 			  pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 		       DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
-				 pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern, (C_points *) pBox->BxPictInfo);
+				   pBox->BxNChars, RO, op, fg, bg, pv->AbFillPattern, (C_points *) pBox->BxPictInfo);
 		       break;
 		    default:
 		       break;
@@ -778,16 +778,16 @@ static void         DisplayJustifiedText (PtrBox pBox, int frame)
 
 #else  /* __STDC__ */
 static void         DisplayJustifiedText (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 indbuff;
    int                 restbl;
-   PtrTextBuffer      newbuff;
+   PtrTextBuffer       newbuff;
    int                 newind;
    int                 newbl, lg;
    int                 charleft, dc;
@@ -798,12 +798,12 @@ int                 frame;
    int                 fg;
    int                 bg;
    unsigned char       car;
-   PtrBox            mbox;
+   PtrBox              mbox;
    int                 RO;
    int                 op;
-   PtrAbstractBox             pAbbox1;
-   ViewFrame            *pFrame;
-   PtrTextBuffer      pBu1;
+   PtrAbstractBox      pAbbox1;
+   ViewFrame          *pFrame;
+   PtrTextBuffer       pBu1;
    boolean             blockbegin;
    boolean             withbackground;
    boolean             withline;
@@ -934,8 +934,8 @@ int                 frame;
 	      /* Do we need to draw a background */
 	      if (withbackground)
 		 DrawRectangle (frame, 0, 0, x, y,
-			      pBox->BxWidth + pBox->BxXOrg - pFrame->FrXOrg - x,
-			      FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
+			  pBox->BxWidth + pBox->BxXOrg - pFrame->FrXOrg - x,
+				FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
 	      while (charleft > 0)
 		{
 		   pBu1 = adbuff;
@@ -997,7 +997,7 @@ int                 frame;
 			x += DrawString (pBu1->BuContent, dc, nbcar, frame, x, y, pBox->BxFont,
 			pBox->BxWidth, bl, withline, blockbegin, RO, op, fg);
 			DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
-				pBox->BxThickness, pBox->BxWidth, RO, op, fg);
+			      pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
 			if ((unsigned char) pBu1->BuContent[indbuff - 1] == BREAK_LINE && !ShowSpace)
 			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
@@ -1005,7 +1005,7 @@ int                 frame;
 		   else
 		     {
 			x += DrawString (pBu1->BuContent, dc, nbcar, frame, x, y,
-			     pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg);
+			    pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg);
 			bl = 0;
 			/* Skip to next buffer */
 			if (pBu1->BuNext == NULL)
@@ -1031,7 +1031,7 @@ int                 frame;
 		   /* Compute the origin alignment */
 		   y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 		   DrawPoints (frame, pBox->BxXOrg + pBox->BxWidth - pFrame->FrXOrg, y,
-			     pBox->BxEndOfBloc, RO, op, fg);
+			       pBox->BxEndOfBloc, RO, op, fg);
 		}
 	   }
 }				/* function DisplayJustifiedText */
@@ -1043,7 +1043,7 @@ int                 frame;
 void                DisplayBox (PtrBox pBox, int frame)
 #else  /* __STDC__ */
 void                DisplayBox (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */

@@ -376,7 +376,7 @@ static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, c
 #else  /* __STDC__ */
 static int          NextWord (font, buffer, rank, word, width)
 ptrfont             font;
-PtrTextBuffer     *buffer;
+PtrTextBuffer      *buffer;
 int                *rank;
 char                word[MAX_CHAR];
 int                *width;
@@ -388,7 +388,7 @@ int                *width;
    int                 lg, nbcar;
    boolean             encore;
    boolean             changedebut;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
 
    /* Initialisations */
    word[0] = '\0';
@@ -530,7 +530,7 @@ int                 HyphenLastWord (ptrfont font, Language langue, PtrTextBuffer
 int                 HyphenLastWord (font, langue, buffer, rank, width, hyphen)
 ptrfont             font;
 Language            langue;
-PtrTextBuffer     *buffer;
+PtrTextBuffer      *buffer;
 int                *rank;
 int                *width;
 boolean            *hyphen;
@@ -538,7 +538,7 @@ boolean            *hyphen;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i, lghyphen;
    int                 longueur, nbcar;
    int                 largeur, lgcar;
@@ -623,7 +623,7 @@ boolean            *hyphen;
 			 {
 			    /* Il faut changer de buffer */
 			    i++;
-			    *rank = i - adbuff->BuLength;		/* nouvelle position */
+			    *rank = i - adbuff->BuLength;	/* nouvelle position */
 			    adbuff = adbuff->BuNext;
 			 }
 		       else
@@ -648,7 +648,7 @@ boolean             CanHyphen (PtrBox pBox)
 
 #else  /* __STDC__ */
 boolean             CanHyphen (pBox)
-PtrBox            pBox;
+PtrBox              pBox;
 
 #endif /* __STDC__ */
 
@@ -661,7 +661,7 @@ PtrBox            pBox;
 /*PhL */ if (TtaExistPatternList (langue))
 	   /*PhL *//* il existe une table de pattern */
 /*PhL */ return TRUE;
-/*PhL */ 
+/*PhL */
 	else
 	  {
 	     /* pas de table de patterns : on cherche a charger un dico */
@@ -678,7 +678,7 @@ PtrBox            pBox;
 		return FALSE;
 	     else
 		return FALSE;
-/*PhL */ 
+/*PhL */
 	  }
      }
    else

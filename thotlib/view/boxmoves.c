@@ -33,7 +33,7 @@
    une boi^te englobante a une relation hors-structure.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                IsXYPosComplete (PtrBox pBox, boolean *horizRef, boolean *vertRef)
+void                IsXYPosComplete (PtrBox pBox, boolean * horizRef, boolean * vertRef)
 #else  /* __STDC__ */
 void                IsXYPosComplete (pBox, horizRef, vertRef)
 PtrBox              pBox;
@@ -42,7 +42,7 @@ boolean            *vertRef;
 
 #endif /* __STDC__ */
 {
-   PtrBox           pParentBox;
+   PtrBox              pParentBox;
 
    pParentBox = pBox;
    *vertRef = (Propagate != ToSiblings);
@@ -77,10 +77,11 @@ boolean             IsXPosComplete (PtrBox pBox)
 #else  /* __STDC__ */
 boolean             IsXPosComplete (pBox)
 PtrBox              pBox;
+
 #endif /* __STDC__ */
 {
-   PtrBox           pParentBox;
-   boolean          Ok;
+   PtrBox              pParentBox;
+   boolean             Ok;
 
    pParentBox = pBox;
    Ok = (Propagate != ToSiblings);
@@ -111,8 +112,8 @@ PtrBox              pBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox           pParentBox;
-   boolean          Ok;
+   PtrBox              pParentBox;
+   boolean             Ok;
 
    pParentBox = pBox;
    Ok = (Propagate != ToSiblings);
@@ -134,11 +135,12 @@ PtrBox              pBox;
    pRefBox.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean           IsParentBox (PtrBox pBox, PtrBox pRefBox)
+boolean             IsParentBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
-boolean           IsParentBox (pBox, pRefBox)
-PtrBox            pBox;
-PtrBox            pRefBox;
+boolean             IsParentBox (pBox, pRefBox)
+PtrBox              pBox;
+PtrBox              pRefBox;
+
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -166,11 +168,12 @@ PtrBox            pRefBox;
    boite pRefBox et n'est pas la boite pBox.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean    IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
+static boolean      IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
-static boolean    IsSiblingBox (pBox, pRefBox)
-PtrBox            pBox;
-PtrBox            pRefBox;
+static boolean      IsSiblingBox (pBox, pRefBox)
+PtrBox              pBox;
+PtrBox              pRefBox;
+
 #endif /* __STDC__ */
 {
    if (pRefBox == pBox)
@@ -202,14 +205,15 @@ PtrAbstractBox      pAb;
 boolean             horizRef;
 boolean             vertRef;
 boolean             inAbtractBox;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer     pSourceBuff, pTargetBuff;
-   PtrBox            pBox;
-   int               xMax, yMax;
-   int               val, i, j;
-   float             xRatio, yRatio;
-   int               pointIndex;
+   PtrTextBuffer       pSourceBuff, pTargetBuff;
+   PtrBox              pBox;
+   int                 xMax, yMax;
+   int                 val, i, j;
+   float               xRatio, yRatio;
+   int                 pointIndex;
 
    pBox = pAb->AbBox;
    j = 1;
@@ -300,8 +304,8 @@ boolean             inAbtractBox;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox     pChildAb;
-   char               shape;
+   PtrAbstractBox      pChildAb;
+   char                shape;
 
    if (pAb->AbLeafType == LtCompound && !inAbtractBox)
      {
@@ -448,16 +452,17 @@ void                XEdgesExchange (PtrBox pBox, OpRelation op)
 void                XEdgesExchange (pBox, op)
 PtrBox              pBox;
 OpRelation          op;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pAb;
-   PtrPosRelations  pPosRel;
-   int              i;
-   BoxEdge          oldPosEdge;
-   BoxEdge          newPosEdge;
-   BoxEdge          oldDimEdge;
-   BoxEdge          newDimEdge;
-   PtrBox           pRefBox;
+   PtrAbstractBox      pAb;
+   PtrPosRelations     pPosRel;
+   int                 i;
+   BoxEdge             oldPosEdge;
+   BoxEdge             newPosEdge;
+   BoxEdge             oldDimEdge;
+   BoxEdge             newDimEdge;
+   PtrBox              pRefBox;
 
    pAb = pBox->BxAbstractBox;
 
@@ -537,16 +542,17 @@ void                YEdgesExchange (PtrBox pBox, OpRelation op)
 void                YEdgesExchange (pBox, op)
 PtrBox              pBox;
 OpRelation          op;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pAb;
-   PtrPosRelations  pPosRel;
-   int              i;
-   BoxEdge          oldPosEdge;
-   BoxEdge          newPosEdge;
-   BoxEdge          oldDimEdge;
-   BoxEdge          newDimEdge;
-   PtrBox           pRefBox;
+   PtrAbstractBox      pAb;
+   PtrPosRelations     pPosRel;
+   int                 i;
+   BoxEdge             oldPosEdge;
+   BoxEdge             newPosEdge;
+   BoxEdge             oldDimEdge;
+   BoxEdge             newDimEdge;
+   PtrBox              pRefBox;
 
    pAb = pBox->BxAbstractBox;
 
@@ -586,7 +592,7 @@ OpRelation          op;
 
    /* Modifie enventuellement le dessin de la boite */
    if (oldPosEdge != newPosEdge)
-     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+      MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 
    /* Note la boite qui fixe la position de la boite elastique */
    if (pAb->AbVertPos.PosAbRef == NULL)
@@ -621,17 +627,17 @@ OpRelation          op;
    autre hauteur.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height, int frame)
+void                ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height, int frame)
 #else  /* __STDC__ */
-void              ChangeDefaultHeight (pBox, pSourceBox, height, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-int               height;
-int               frame;
+void                ChangeDefaultHeight (pBox, pSourceBox, height, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+int                 height;
+int                 frame;
 
 #endif /* __STDC__ */
 {
-   int            delta;
+   int                 delta;
 
    if (pBox != NULL)
      {
@@ -676,17 +682,18 @@ int               frame;
    autre largeur.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width, int spaceDelta, int frame)
+void                ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void              ChangeDefaultWidth (pBox, pSourceBox, width, spaceDelta, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-int               width;
-int               spaceDelta;
-int               frame;
+void                ChangeDefaultWidth (pBox, pSourceBox, width, spaceDelta, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+int                 width;
+int                 spaceDelta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   int            delta;
+   int                 delta;
 
    if (pBox != NULL)
      {
@@ -732,19 +739,19 @@ int               frame;
    boi^te sera modifie'e.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
+void                ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void              ChangeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-PtrBox            pFromBox;
-int               delta;
-int               spaceDelta;
-int               frame;
+void                ChangeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 spaceDelta;
+int                 frame;
 
 #endif /* __STDC__ */
 {
-   int            width;
+   int                 width;
 
    if (pBox != NULL)
      {
@@ -793,17 +800,18 @@ int               frame;
    boi^te sera modifie'e.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
+void                ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void              ChangeHeight (pBox, pSourceBox, pFromBox, delta, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-PtrBox            pFromBox;
-int               delta;
-int               frame;
+void                ChangeHeight (pBox, pSourceBox, pFromBox, delta, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   int            height;
+   int                 height;
 
    if (pBox != NULL)
      {
@@ -862,9 +870,9 @@ boolean             horizRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pAb;
-   BoxEdge          oldPosEdge;
-   int              translation;
+   PtrAbstractBox      pAb;
+   BoxEdge             oldPosEdge;
+   int                 translation;
 
    pAb = pBox->BxAbstractBox;
    translation = 0;
@@ -990,16 +998,17 @@ void                XMoveAllEnclosed (pBox, delta, frame)
 PtrBox              pBox;
 int                 delta;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pChildAb;
-   PtrBox           pChildBox;
-   PtrBox           pParentBox;
-   BoxRelation     *pRelation;
-   PtrPosRelations  pPosRel;
-   int              i;
-   boolean          notEmpty;
-   boolean          toHorizPack;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pChildBox;
+   PtrBox              pParentBox;
+   BoxRelation        *pRelation;
+   PtrPosRelations     pPosRel;
+   int                 i;
+   boolean             notEmpty;
+   boolean             toHorizPack;
 
    if (pBox != NULL && (delta != 0 || pBox->BxXToCompute))
      {
@@ -1017,7 +1026,7 @@ int                 frame;
 	/* Si la boite est mise en lignes */
 	if (pBox->BxType == BoSplit)
 	  {
-	    /* decale les boites de coupure */
+	     /* decale les boites de coupure */
 	     pChildBox = pBox->BxNexChild;
 	     while (pChildBox != NULL)
 	       {
@@ -1142,16 +1151,17 @@ void                YMoveAllEnclosed (pBox, delta, frame)
 PtrBox              pBox;
 int                 delta;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pChildAb;
-   PtrBox           pChildBox;
-   PtrBox           pParentBox;
-   BoxRelation     *pRelation;
-   PtrPosRelations  pPosRel;
-   int              i;
-   boolean          notEmpty;
-   boolean          toVertPack;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pChildBox;
+   PtrBox              pParentBox;
+   BoxRelation        *pRelation;
+   PtrPosRelations     pPosRel;
+   int                 i;
+   boolean             notEmpty;
+   boolean             toVertPack;
 
    if (pBox != NULL && (delta != 0 || pBox->BxYToCompute))
      {
@@ -1169,7 +1179,7 @@ int                 frame;
 	/* Si la boite est mise en lignes */
 	if (pBox->BxType == BoSplit)
 	  {
-	    /* decale les boites de coupure */
+	     /* decale les boites de coupure */
 	     pChildBox = pBox->BxNexChild;
 	     while (pChildBox != NULL)
 	       {
@@ -1205,7 +1215,7 @@ int                 frame;
 		       else
 			  DefClip (frame, pBox->BxXOrg - i, pBox->BxYOrg - i,
 				   pBox->BxXOrg + pBox->BxWidth + i,
-				   pBox->BxYOrg + pBox->BxHeight - delta + i);
+				 pBox->BxYOrg + pBox->BxHeight - delta + i);
 		    }
 
 		  /* decale les boites qui ont des relations hors-structure avec */
@@ -1290,25 +1300,25 @@ int                 frame;
    frametre frame et les boites qui en dependent.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
+void                MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void              MoveVertRef (pBox, pFromBox, delta, frame)
-PtrBox            pBox;
-PtrBox            pFromBox;
-int               delta;
-int               frame;
+void                MoveVertRef (pBox, pFromBox, delta, frame)
+PtrBox              pBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 frame;
 
 #endif /* __STDC__ */
 {
-   int                i, j, k;
-   PtrAbstractBox     pAb;
-   PtrAbstractBox     pCurrentAb;
-   PtrBox             pNextBox;
-   PtrBox             pRefBox;
-   PtrPosRelations    pPosRel;
-   BoxRelation       *pRelation;
-   boolean            toMove;
-   boolean            notEmpty;
+   int                 i, j, k;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrBox              pNextBox;
+   PtrBox              pRefBox;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   boolean             toMove;
+   boolean             notEmpty;
 
    if (pBox != NULL && delta != 0)
      {
@@ -1328,7 +1338,7 @@ int               frame;
 		   else
 		     {
 			if (pNextBox->BxMoved == NULL)
-			  /* boite ancetre */
+			   /* boite ancetre */
 			   pRefBox = pNextBox;
 			pNextBox = pNextBox->BxMoved;
 		     }
@@ -1391,12 +1401,12 @@ int               frame;
 					    /* cote droit */
 					    /* milieu vertical */
 					    if (pRelation->ReBox != pBox
-					    && pRelation->ReRefEdge != VertRef)
+						&& pRelation->ReRefEdge != VertRef)
 					       if (pRelation->ReOp == OpHorizRef)
 						  MoveVertRef (pRelation->ReBox, pBox, delta, frame);
 					       else if ((pRelation->ReOp == OpHorizDep
 							 && pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
-						    || pRelation->ReOp == OpWidth)
+					       || pRelation->ReOp == OpWidth)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
 					       else if (pRelation->ReOp == OpHorizDep)
 						  XMove (pRelation->ReBox, pBox, delta, frame);
@@ -1431,7 +1441,7 @@ int               frame;
 						  MoveVertRef (pRelation->ReBox, pFromBox, delta, frame);
 					       else if ((pRelation->ReOp == OpHorizDep
 							 && pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
-						    || pRelation->ReOp == OpWidth)
+					       || pRelation->ReOp == OpWidth)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
 					       else if (pRelation->ReOp == OpHorizDep)
 						 {
@@ -1496,24 +1506,25 @@ int               frame;
    frame frame et les boites qui en dependent.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
+void                MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void              MoveHorizRef (pBox, pFromBox, delta, frame)
-PtrBox            pBox;
-PtrBox            pFromBox;
-int               delta;
-int               frame;
+void                MoveHorizRef (pBox, pFromBox, delta, frame)
+PtrBox              pBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   int               i, j, k;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrBox            pNextBox;
-   PtrBox            pRefBox;
-   PtrPosRelations   pPosRel;
-   BoxRelation      *pRelation;
-   boolean           toMove;
-   boolean           notEmpty;
+   int                 i, j, k;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrBox              pNextBox;
+   PtrBox              pRefBox;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   boolean             toMove;
+   boolean             notEmpty;
 
    if (pBox != NULL && delta != 0)
      {
@@ -1600,7 +1611,7 @@ int               frame;
 						  MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
 					       else if ((pRelation->ReOp == OpVertDep
 							 && pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
-						    || pRelation->ReOp == OpHeight)
+							|| pRelation->ReOp == OpHeight)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
 					       else if (pRelation->ReOp == OpVertDep)
 						  YMove (pRelation->ReBox, pBox, delta, frame);
@@ -1635,7 +1646,7 @@ int               frame;
 						  MoveHorizRef (pRelation->ReBox, pFromBox, delta, frame);
 					       else if ((pRelation->ReOp == OpVertDep
 							 && pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
-						    || pRelation->ReOp == OpHeight)
+							|| pRelation->ReOp == OpHeight)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
 					       else if (pRelation->ReOp == OpVertDep)
 						 {
@@ -1717,31 +1728,32 @@ int               frame;
    quand la boite texte appartient a` une ligne justifiee.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
+void                ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void              ResizeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-PtrBox            pFromBox;
-int               delta;
-int               spaceDelta;
-int               frame;
+void                ResizeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 spaceDelta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pNextBox;
-   PtrLine           pLine;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrPosRelations   pPosRel;
-   PtrDimRelations   pDimRel;
-   BoxRelation      *pRelation;
-   ViewSelection    *pViewSel;
-   int               i, j, k;
-   int               orgTrans, middleTrans, endTrans;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
-   boolean           externalRef;
+   PtrBox              pNextBox;
+   PtrLine             pLine;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrPosRelations     pPosRel;
+   PtrDimRelations     pDimRel;
+   BoxRelation        *pRelation;
+   ViewSelection      *pViewSel;
+   int                 i, j, k;
+   int                 orgTrans, middleTrans, endTrans;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
+   boolean             externalRef;
 
    if (pBox != NULL && delta != 0)
      {
@@ -1814,7 +1826,7 @@ int               frame;
 		/* n'est pas encore placee dans l'image concrete   */
 		    && !pBox->BxXToCompute
 		    && !pBox->BxYToCompute
-		    && (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
+		  && (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
 		  {
 		     if (pCurrentAb->AbLeafType == LtText)
 		       {
@@ -1873,7 +1885,7 @@ int               frame;
 						       XMove (pBox, NULL, -orgTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-						    || pRelation->ReOp == OpWidth)
+					       || pRelation->ReOp == OpWidth)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, TRUE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  XMove (pRelation->ReBox, pBox, orgTrans, frame);
@@ -1894,7 +1906,7 @@ int               frame;
 						       XMove (pBox, NULL, -middleTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-						    || pRelation->ReOp == OpWidth)
+					       || pRelation->ReOp == OpWidth)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, TRUE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  XMove (pRelation->ReBox, pBox, middleTrans, frame);
@@ -1915,7 +1927,7 @@ int               frame;
 						       XMove (pBox, NULL, -endTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-						    || pRelation->ReOp == OpWidth)
+					       || pRelation->ReOp == OpWidth)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, TRUE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  XMove (pRelation->ReBox, pBox, endTrans, frame);
@@ -1962,7 +1974,7 @@ int               frame;
 					 {
 					    pRelation = &pPosRel->PosRTable[i - 1];
 					    if (pRelation->ReOp == OpHorizInc
-					    && pRelation->ReRefEdge != VertRef)
+						&& pRelation->ReRefEdge != VertRef)
 					       switch (pAb->AbHorizPos.PosRefEdge)
 						     {
 							   /* milieu vertical */
@@ -2024,7 +2036,7 @@ int               frame;
 		       {
 			  pAb = pNextBox->BxAbstractBox;
 			  /* Est-ce la meme dimension ? */
-			  if (pDimRel->DimRSame[i - 1])	/* Oui => Changement de largeur */
+			  if (pDimRel->DimRSame[i - 1])		/* Oui => Changement de largeur */
 			    {
 			       if (pAb->AbWidth.DimUnit == UnPercent)
 				  /* Le changement de taille est un pourcentage */
@@ -2045,7 +2057,7 @@ int               frame;
 				 {
 				    pLine = SearchLine (pNextBox);
 				    if (pLine == NULL)
-				       orgTrans = 0;		/* la ligne n'est pas encore construite */
+				       orgTrans = 0;	/* la ligne n'est pas encore construite */
 				    else
 				       orgTrans = pLine->LiHeight - pNextBox->BxHeight;
 				 }
@@ -2065,7 +2077,7 @@ int               frame;
 		  }
 
 		/* respecte les contraintes d'englobement */
-		pAb = pCurrentAb->AbEnclosing;		/* pave pere */
+		pAb = pCurrentAb->AbEnclosing;	/* pave pere */
 		if (!toMove)
 		  {
 		     /* Si la boite n'est pas fille d'une boite eclatee */
@@ -2105,7 +2117,7 @@ int               frame;
 			    }
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != PackBoxRoot
-				 && !IsParentBox (pAb->AbBox, PackBoxRoot))
+				   && !IsParentBox (pAb->AbBox, PackBoxRoot))
 			     /* differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propagate != ToAll)
@@ -2119,7 +2131,7 @@ int               frame;
 		     else if (!pCurrentAb->AbNew
 			      && Propagate == ToSiblings
 			      && pCurrentAb->AbLeafType == LtCompound
-			    && pCurrentAb->AbInLine && !pBox->BxYToCompute)
+			      && pCurrentAb->AbInLine && !pBox->BxYToCompute)
 			/* La largeur de la boite mise en lignes est donnee par une */
 			/* boite suivante, il faut verifier l'englobement vertical */
 			HeightPack (pAb, pSourceBox, frame);
@@ -2140,31 +2152,32 @@ int               frame;
    dependent.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
+void                ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void              ResizeHeight (pBox, pSourceBox, pFromBox, delta, frame)
-PtrBox            pBox;
-PtrBox            pSourceBox;
-PtrBox            pFromBox;
-int               delta;
-int               frame;
+void                ResizeHeight (pBox, pSourceBox, pFromBox, delta, frame)
+PtrBox              pBox;
+PtrBox              pSourceBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pNextBox;
-   PtrLine           pLine;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrPosRelations   pPosRel;
-   PtrDimRelations   pDimRel;
-   BoxRelation      *pRelation;
-   ptrfont           font;
-   int               i, j, k;
-   int               orgTrans, middleTrans, endTrans;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
-   boolean           externalRef;
-   float             value;
+   PtrBox              pNextBox;
+   PtrLine             pLine;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrPosRelations     pPosRel;
+   PtrDimRelations     pDimRel;
+   BoxRelation        *pRelation;
+   ptrfont             font;
+   int                 i, j, k;
+   int                 orgTrans, middleTrans, endTrans;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
+   boolean             externalRef;
+   float               value;
 
    if (pBox != NULL && delta != 0)
      {
@@ -2216,7 +2229,7 @@ int               frame;
 		  {
 		     /* L'origine de la boite et le cote inferieur sont deplaces */
 		     orgTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta) / 2;
-		     endTrans = delta + orgTrans;		/* corrige les erreurs d'arrondi */
+		     endTrans = delta + orgTrans;	/* corrige les erreurs d'arrondi */
 		     middleTrans = 0;
 		  }
 /*=> Point fixe sur le cote inferieur */
@@ -2237,7 +2250,7 @@ int               frame;
 		/* n'est pas encore placee dans l'image concrete   */
 		    && !pBox->BxXToCompute
 		    && !pBox->BxYToCompute
-		    && (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
+		  && (orgTrans != 0 || pCurrentAb->AbFirstEnclosed == NULL))
 		  {
 		     if (pCurrentAb->AbLeafType == LtText)
 		       {
@@ -2296,7 +2309,7 @@ int               frame;
 						       YMove (pBox, NULL, -orgTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-						    || pRelation->ReOp == OpHeight)
+							|| pRelation->ReOp == OpHeight)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, FALSE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  YMove (pRelation->ReBox, pBox, orgTrans, frame);
@@ -2317,7 +2330,7 @@ int               frame;
 						       YMove (pBox, NULL, -middleTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-						    || pRelation->ReOp == OpHeight)
+							|| pRelation->ReOp == OpHeight)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, FALSE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  YMove (pRelation->ReBox, pBox, middleTrans, frame);
@@ -2345,7 +2358,7 @@ int               frame;
 						       YMove (pBox, NULL, -endTrans, frame);
 						 }
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-						    || pRelation->ReOp == OpHeight)
+							|| pRelation->ReOp == OpHeight)
 						  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, FALSE);
 					       else if (pRelation->ReBox != pSourceBox)
 						  YMove (pRelation->ReBox, pBox, endTrans, frame);
@@ -2404,7 +2417,7 @@ int               frame;
 				      {
 					 pRelation = &pPosRel->PosRTable[i - 1];
 					 if (pRelation->ReOp == OpVertInc
-					   && pRelation->ReRefEdge != HorizRef)
+					 && pRelation->ReRefEdge != HorizRef)
 					   {
 					      switch (pAb->AbVertPos.PosRefEdge)
 						    {
@@ -2470,7 +2483,7 @@ int               frame;
 
 			  /* Est-ce la meme dimension ? */
 			  if (pDimRel->DimRSame[i - 1])
-			    /* Oui => Changement de hauteur */
+			     /* Oui => Changement de hauteur */
 			    {
 			       /* L'heritage porte sur la hauteur de la ligne ? */
 			       if (pAb->AbEnclosing == pCurrentAb
@@ -2478,7 +2491,7 @@ int               frame;
 				 {
 				    pLine = SearchLine (pNextBox);
 				    if (pLine == NULL)
-				      /* la ligne n'est pas encore construite */
+				       /* la ligne n'est pas encore construite */
 				       orgTrans = 0;
 				    else
 				       orgTrans = pLine->LiHeight - pNextBox->BxHeight;
@@ -2496,11 +2509,11 @@ int               frame;
 			     /* Non => Changement de largeur */
 			    {
 			       if (pAb->AbWidth.DimUnit == UnPercent)
-				 /* Le changement de taille est un pourcentage */
-				 orgTrans = pBox->BxHeight * pAb->AbWidth.DimValue / 100 - pNextBox->BxWidth;
+				  /* Le changement de taille est un pourcentage */
+				  orgTrans = pBox->BxHeight * pAb->AbWidth.DimValue / 100 - pNextBox->BxWidth;
 			       else
-				 /* + ou - une constante */
-				 orgTrans = delta;
+				  /* + ou - une constante */
+				  orgTrans = delta;
 			       ChangeWidth (pNextBox, pSourceBox, NULL, orgTrans, 0, frame);
 			    }
 			  i++;
@@ -2544,7 +2557,7 @@ int               frame;
 			     EncloseInLine (pBox, frame, pAb);
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != PackBoxRoot
-				 && !IsParentBox (pAb->AbBox, PackBoxRoot))
+				   && !IsParentBox (pAb->AbBox, PackBoxRoot))
 			     /* differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propagate != ToAll)
@@ -2597,25 +2610,26 @@ int               frame;
    de delta. On respecte les contraintes de position.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
+void                XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void              XMove (pBox, pFromBox, delta, frame)
-PtrBox            pBox;
-PtrBox            pFromBox;
-int               delta;
-int               frame;
+void                XMove (pBox, pFromBox, delta, frame)
+PtrBox              pBox;
+PtrBox              pFromBox;
+int                 delta;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pNextBox;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrPosRelations   pPosRel;
-   BoxRelation      *pRelation;
-   int               i, j, k;
-   boolean           toComplete;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
+   PtrBox              pNextBox;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   int                 i, j, k;
+   boolean             toComplete;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
 
    if (pBox != NULL && delta != 0)
      {
@@ -2802,18 +2816,19 @@ PtrBox              pBox;
 PtrBox              pFromBox;
 int                 delta;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pNextBox;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrPosRelations   pPosRel;
-   BoxRelation      *pRelation;
-   int               i, j, k;
-   boolean           toComplete;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
+   PtrBox              pNextBox;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   int                 i, j, k;
+   boolean             toComplete;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
 
    if (pBox != NULL && delta != 0)
      {
@@ -3001,21 +3016,22 @@ void                WidthPack (pAb, pSourceBox, frame)
 PtrAbstractBox      pAb;
 PtrBox              pSourceBox;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   int               val, width;
-   int               x, i, j, k;
-   PtrAbstractBox    pChildAb;
-   PtrAbstractBox    pRelativeAb;
-   PtrAbstractBox    pRefAb;
-   PtrBox            pChildBox;
-   PtrBox            pRelativeBox;
-   PtrBox            pBox;
-   AbDimension      *pDimAb;
-   AbPosition       *pPosAb;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
+   int                 val, width;
+   int                 x, i, j, k;
+   PtrAbstractBox      pChildAb;
+   PtrAbstractBox      pRelativeAb;
+   PtrAbstractBox      pRefAb;
+   PtrBox              pChildBox;
+   PtrBox              pRelativeBox;
+   PtrBox              pBox;
+   AbDimension        *pDimAb;
+   AbPosition         *pPosAb;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
 
    /* verifie que la largeur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
@@ -3041,7 +3057,7 @@ int                 frame;
 	/* Initialise la position extreme gauche sur le cote droit actuel */
 	val = x + pBox->BxWidth;
 	notEmpty = FALSE;
-	toMove = FALSE;	/* on n'a rien deplace */
+	toMove = FALSE;		/* on n'a rien deplace */
 
 	/* Le cote gauche de la plus a gauche des boites englobees doit */
 	/* etre colle au cote gauche de la boite englobante et la       */
@@ -3074,10 +3090,10 @@ int                 frame;
 			    }
 			  /* La position de la boite depend de la taille de l'englobante ? */
 			  else if (pRelativeAb->AbHorizPos.PosAbRef == pAb
-				&& (pRelativeAb->AbHorizPos.PosRefEdge != Left
-				    || (pRelativeAb->AbWidth.DimAbRef == pAb
-					&& !pRelativeAb->AbWidth.DimIsPosition
-			  && pChildAb->AbHorizPos.PosRefEdge != Left)))
+			      && (pRelativeAb->AbHorizPos.PosRefEdge != Left
+				  || (pRelativeAb->AbWidth.DimAbRef == pAb
+				      && !pRelativeAb->AbWidth.DimIsPosition
+			       && pChildAb->AbHorizPos.PosRefEdge != Left)))
 			     i = x + pChildBox->BxWidth;
 			  /* La taille de la boite depend d'une boite externe ? */
 			  else if (pChildBox->BxWOutOfStruct)
@@ -3086,7 +3102,7 @@ int                 frame;
 			       if (IsParentBox (pRefAb->AbBox, pBox)
 				   && pRefAb->AbWidth.DimAbRef == NULL
 				   && pRefAb->AbWidth.DimValue == 0
-				&& pRefAb->AbBox->BxWidth == pBox->BxWidth)
+				 && pRefAb->AbBox->BxWidth == pBox->BxWidth)
 				  i = x;
 			       else
 				  /* evalue l'encadrement et l'englobement */
@@ -3110,7 +3126,7 @@ int                 frame;
 
 	val = -val + x;		/* Decalage de la position extreme gauche */
 	if (notEmpty)
-	   width += val;		/* Nouvelle position extreme droite */
+	   width += val;	/* Nouvelle position extreme droite */
 	if (width == x && pAb->AbVolume == 0)
 	   GiveTextSize (pAb, &width, &x, &i);
 	else
@@ -3219,21 +3235,22 @@ void                HeightPack (pAb, pSourceBox, frame)
 PtrAbstractBox      pAb;
 PtrBox              pSourceBox;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   int               val, haut;
-   int               y, i, j, k;
-   PtrAbstractBox    pChildAb;
-   PtrAbstractBox    pRelativeAb;
-   PtrAbstractBox    pRefAb;
-   PtrBox            pChildBox;
-   PtrBox            pRelativeBox;
-   PtrBox            pBox;
-   AbDimension      *pDimAb;
-   AbPosition       *pPosAb;
-   boolean           notEmpty;
-   boolean           toMove;
-   boolean           absoluteMove;
+   int                 val, haut;
+   int                 y, i, j, k;
+   PtrAbstractBox      pChildAb;
+   PtrAbstractBox      pRelativeAb;
+   PtrAbstractBox      pRefAb;
+   PtrBox              pChildBox;
+   PtrBox              pRelativeBox;
+   PtrBox              pBox;
+   AbDimension        *pDimAb;
+   AbPosition         *pPosAb;
+   boolean             notEmpty;
+   boolean             toMove;
+   boolean             absoluteMove;
 
    /* verifie que la hauteur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
@@ -3296,10 +3313,10 @@ int                 frame;
 			    }
 			  /* La position de la boite depend de la taille de englobante ? */
 			  else if (pRelativeAb->AbVertPos.PosAbRef == pAb
-				   && (pRelativeAb->AbVertPos.PosRefEdge != Top
-				       || (pRelativeAb->AbHeight.DimAbRef == pAb
-					   && !pRelativeAb->AbHeight.DimIsPosition
-			     && pChildAb->AbVertPos.PosRefEdge != Top)))
+				&& (pRelativeAb->AbVertPos.PosRefEdge != Top
+				    || (pRelativeAb->AbHeight.DimAbRef == pAb
+				     && !pRelativeAb->AbHeight.DimIsPosition
+				 && pChildAb->AbVertPos.PosRefEdge != Top)))
 			     i = y + pChildBox->BxHeight;
 			  /* La taille de la boite depend d'une boite externe ? */
 			  else if (pChildBox->BxHOutOfStruct)
@@ -3308,7 +3325,7 @@ int                 frame;
 			       if (IsParentBox (pRefAb->AbBox, pBox)
 				   && pRefAb->AbHeight.DimAbRef == NULL
 				   && pRefAb->AbHeight.DimValue == 0
-				&& pRefAb->AbBox->BxHeight == pBox->BxHeight)
+			       && pRefAb->AbBox->BxHeight == pBox->BxHeight)
 				  i = y;
 			       else
 				  /* evalue l'encadrement et l'englobement */
@@ -3369,7 +3386,7 @@ int                 frame;
 				     else
 					i += val;
 				     DefClip (frame, pChildBox->BxXOrg - k, i - k, pChildBox->BxXOrg
-					      + pChildBox->BxWidth + k, j + k);
+					   + pChildBox->BxWidth + k, j + k);
 				  }
 
 				if (IsYPosComplete (pChildBox))

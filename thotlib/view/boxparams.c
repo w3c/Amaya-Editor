@@ -47,7 +47,7 @@ int                 Zoom;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
@@ -75,7 +75,7 @@ int                *Zoom;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
@@ -106,15 +106,15 @@ int                 Zoom;
    int                 c1;
    int                 cN;
    int                 h;
-   PtrAbstractBox             pAb;
-   PtrAbstractBox             pv1;
-   PtrAbstractBox             pvN;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pv1;
+   PtrAbstractBox      pvN;
    int                 x, y;
    boolean             unique;
 
    /* boolean         retour; */
-   ViewFrame            *pFrame;
-   ViewSelection            *pViewSel;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
 
    CloseInsertion ();
    c1 = 0;

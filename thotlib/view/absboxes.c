@@ -54,13 +54,13 @@ char               *AbsBoxType (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 char               *AbsBoxType (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
    SRule              *pR;
-   PresentationBox             *pBo1;
+   PresentationBox    *pBo1;
    PtrElement          pEl;
 
    if (pAb == NULL)
@@ -99,15 +99,15 @@ void                LibAbbView (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 void                LibAbbView (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb, pAbbNext;
-   PtrTextBuffer      pBT, pBTSuiv;
+   PtrAbstractBox      pAbb, pAbbNext;
+   PtrTextBuffer       pBT, pBTSuiv;
    PtrDelayedPRule     pDelPR, pNextDelPR;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
    PtrElement          pEl;
    boolean             libAb;
 
@@ -115,7 +115,7 @@ PtrAbstractBox             pAb;
    boolean             ok;
 
 #else  /* __COLPAGE__ */
-   PresentationBox             *pBox;
+   PresentationBox    *pBox;
    PtrDocument         pDoc;
    int                 assoc;
 
@@ -323,8 +323,8 @@ PtrElement          pEl;
 #ifdef __COLPAGE__
 {
    int                 v;
-   PtrAbstractBox             pAbb, pAbbNext;
-   PtrAbstractBox             pDupNext;
+   PtrAbstractBox      pAbb, pAbbNext;
+   PtrAbstractBox      pDupNext;
    boolean             stop;
    boolean             stop1;
 
@@ -373,7 +373,7 @@ PtrElement          pEl;
 
 {
    int                 v;
-   PtrAbstractBox             pAbb, pAbbNext;
+   PtrAbstractBox      pAbb, pAbbNext;
    boolean             stop;
 
    if (pEl != NULL)
@@ -416,12 +416,12 @@ void                FreeDeadAbstractBoxes (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 void                FreeDeadAbstractBoxes (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb, pAbbNext;
+   PtrAbstractBox      pAbb, pAbbNext;
 
 
    if (pAb != NULL)
@@ -453,13 +453,13 @@ void                RecursEvalCP (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 void                RecursEvalCP (pAb, pDoc)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb, pAbbR;
+   PtrAbstractBox      pAbb, pAbbR;
 
    pAbb = pAb;
    if (pAbb != NULL)
@@ -489,7 +489,7 @@ void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, bool
 
 #else  /* __STDC__ */
 void                AddAbsBoxes (pAbbRoot, pDoc, head)
-PtrAbstractBox             pAbbRoot;
+PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
 boolean             head;
 
@@ -497,8 +497,8 @@ boolean             head;
 
 #ifdef __COLPAGE__
 {
-   PtrAbstractBox             pAb;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pAbbox1;
    PtrElement          pEl;
    boolean             complete;
 
@@ -520,9 +520,9 @@ boolean             head;
 #else  /* __COLPAGE__ */
 
 {
-   PtrAbstractBox             pAb, pAbbReDisp, pAbbR, PcFirst, PcLast, pAbb;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, PcFirst, PcLast, pAbb;
    boolean             stop;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
    PtrElement          pEl;
    boolean             complete;
 
@@ -682,11 +682,11 @@ boolean             head;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean              IsBreakable (PtrAbstractBox pAb)
+boolean             IsBreakable (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 boolean             IsBreakable (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
@@ -694,11 +694,11 @@ PtrAbstractBox             pAb;
    boolean             result;
    int                 index;
    PtrPSchema          pSchP;
-   PtrSSchema        pSchS;
-   PtrAbstractBox             pAbbox1;
+   PtrSSchema          pSchS;
+   PtrAbstractBox      pAbbox1;
 
    result = FALSE;
-   
+
    /* boucle sur les paves englobants */
    while (pAb != NULL && !result)
      {
@@ -740,13 +740,13 @@ void                KillPresRight (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 void                KillPresRight (pAb, pDoc)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbbEnclosing, pAbb, pAbbR;
+   PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
    boolean             stop;
 
    if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
@@ -757,7 +757,7 @@ PtrDocument         pDoc;
 	     /* on saute le pave corps de page, pour ne pas detruire ses paves */
 	     /* de presentation */
 	     if (!(pAbbEnclosing->AbElement->ElTerminal
-		   && pAbbEnclosing->AbElement->ElLeafType == LtPageColBreak))
+		 && pAbbEnclosing->AbElement->ElLeafType == LtPageColBreak))
 	       {
 		  pAbbEnclosing->AbTruncatedTail = TRUE;
 		  /* cherche et supprime les paves crees par CreateLast */
@@ -774,7 +774,7 @@ PtrDocument         pDoc;
 			    while (pAbb->AbNext != NULL)
 			       pAbb = pAbb->AbNext;
 			    while (pAbb->AbPresentationBox)
-			       pAbb = pAbb->AbPrevious;	/* on saut le bas de page */
+			       pAbb = pAbb->AbPrevious;		/* on saut le bas de page */
 			    /* et le filet */
 			    pAbb = pAbb->AbFirstEnclosed;	/* 1er element du corps de page */
 			    /* TODO descendre les paves de colonne */
@@ -851,13 +851,13 @@ void                DestrAbbNext (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 void                DestrAbbNext (pAb, pDoc)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             PavRac, pAbb2, pAbb1, pAbbR;
+   PtrAbstractBox      PavRac, pAbb2, pAbb1, pAbbR;
 
    PavRac = NULL;
    pAbb1 = pAb;
@@ -945,13 +945,13 @@ void                KillPresSibling (PtrAbstractBox pAbbSibling, boolean ElemIsB
 
 #else  /* __STDC__ */
 void                KillPresSibling (pAbbSibling, ElemIsBefore, pDoc, pAbbR, pAbbReDisp, volsupp, pAb, exceptRep)
-PtrAbstractBox             pAbbSibling;
+PtrAbstractBox      pAbbSibling;
 boolean             ElemIsBefore;
 PtrDocument         pDoc;
-PtrAbstractBox            *pAbbR;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox     *pAbbR;
+PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             exceptRep;
 
 #endif /* __STDC__ */
@@ -998,13 +998,13 @@ static void         KillPresSibling (PtrAbstractBox pAbbSibling, boolean ElemIsB
 
 #else  /* __STDC__ */
 static void         KillPresSibling (pAbbSibling, ElemIsBefore, pDoc, pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith)
-PtrAbstractBox             pAbbSibling;
+PtrAbstractBox      pAbbSibling;
 boolean             ElemIsBefore;
 PtrDocument         pDoc;
-PtrAbstractBox            *pAbbR;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox     *pAbbR;
+PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             exceptCrWith;
 
 #endif /* __STDC__ */
@@ -1058,26 +1058,26 @@ static void         KillPresEnclosing (PtrAbstractBox pAb, boolean head, PtrDocu
 
 #else  /* __STDC__ */
 static void         KillPresEnclosing (pAb, head, pDoc, pAbbReDisp, volsupp, exceptRep)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             head;
 PtrDocument         pDoc;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
 boolean             exceptRep;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbbEnclosing, pAbb, pAbbR;
+   PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
    boolean             stop;
 
    *volsupp = 0;
    /* Detruit les paves de presentation crees par les regles */
    /* CreateBefore et CreateAfter de pAb. */
    KillPresSibling (pAb->AbPrevious, TRUE,
-		  pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptRep);
+		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptRep);
    KillPresSibling (pAb->AbNext, FALSE,
-		  pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptRep);
+		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptRep);
    /* traite les paves englobants */
    pAbbEnclosing = pAb->AbEnclosing;
    while (pAbbEnclosing != NULL)
@@ -1124,7 +1124,7 @@ boolean             exceptRep;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 /* suppression du saut des marques de page de debut d'element */
 			 stop = TRUE;
 		      else
@@ -1149,7 +1149,7 @@ boolean             exceptRep;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1206,7 +1206,7 @@ boolean             exceptRep;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1231,7 +1231,7 @@ boolean             exceptRep;
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox
 			       || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1271,17 +1271,17 @@ static void         KillPresEnclosing (PtrAbstractBox pAb, boolean head, PtrDocu
 
 #else  /* __STDC__ */
 static void         KillPresEnclosing (pAb, head, pDoc, pAbbReDisp, volsupp, exceptCrWith)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             head;
 PtrDocument         pDoc;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
 boolean             exceptCrWith;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbbEnclosing, pAbb, pAbbR;
+   PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
    boolean             stop;
    PtrElement          pEl1;
 
@@ -1289,9 +1289,9 @@ boolean             exceptCrWith;
    /* Detruit les paves de presentation crees par les regles */
    /* CreateBefore et CreateAfter de pAb. */
    KillPresSibling (pAb->AbPrevious, TRUE,
-		  pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
+		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
    KillPresSibling (pAb->AbNext, FALSE,
-		  pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
+		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
    /* traite les paves englobants */
    pAbbEnclosing = pAb->AbEnclosing;
    while (pAbbEnclosing != NULL)
@@ -1312,7 +1312,7 @@ boolean             exceptCrWith;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 /* saute les marques de page de debut d'element */
 			{
 			   pEl1 = pAbb->AbElement;
@@ -1341,7 +1341,7 @@ boolean             exceptCrWith;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1378,7 +1378,7 @@ boolean             exceptCrWith;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1399,7 +1399,7 @@ boolean             exceptCrWith;
 		      if (pAbb == NULL)
 			 stop = TRUE;
 		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			       || pAbb->AbElement != pAbbEnclosing->AbElement)
+			     || pAbb->AbElement != pAbbEnclosing->AbElement)
 			 stop = TRUE;
 		      else
 			{
@@ -1439,7 +1439,7 @@ static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, bo
 
 #else  /* __STDC__ */
 static void         SupprAbsBoxes (pAbbRoot, pDoc, head, dvol)
-PtrAbstractBox             pAbbRoot;
+PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
 boolean             head;
 int                *dvol;
@@ -1447,13 +1447,13 @@ int                *dvol;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, pAbbSibling, pAbbReDisp, pAbbR;
+   PtrAbstractBox      pAb, pAbbSibling, pAbbReDisp, pAbbR;
    int                 volsupp, volpres;
    boolean             stop, stop1;
    PtrElement          pEl1;
 
 #ifdef __COLPAGE__
-   PtrAbstractBox             pAbb;
+   PtrAbstractBox      pAbb;
    int                 view, nbpages;
    boolean             caspage;
 
@@ -1505,7 +1505,7 @@ int                *dvol;
 			else if (!pAb->AbPresentationBox)
 			   stop1 = TRUE;
 			else if (pAb->AbFirstEnclosed != NULL &&
-			pAb->AbFirstEnclosed->AbElement == pAb->AbElement)
+			  pAb->AbFirstEnclosed->AbElement == pAb->AbElement)
 			   /* un pave de presentation cree' par la regle FnCreateEnclosing */
 			   /* on le considere comme un pave' d'element structure' */
 			   stop1 = TRUE;
@@ -1639,7 +1639,7 @@ static void         AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement 
 #else  /* __STDC__ */
 static void         AddVolView (VolOpt, pAbbRoot, pElMiddle, pDoc)
 int                 VolOpt;
-PtrAbstractBox             pAbbRoot;
+PtrAbstractBox      pAbbRoot;
 PtrElement          pElMiddle;
 PtrDocument         pDoc;
 
@@ -1648,7 +1648,7 @@ PtrDocument         pDoc;
 {
    boolean             add, suppress, midHead, stop;
    int                 view, volprec, dvol;
-   PtrAbstractBox             pAbbPrevious, pAbbParent;
+   PtrAbstractBox      pAbbPrevious, pAbbParent;
 
    /* evalue d'abord s'il faut ajouter ou supprimer des paves */
    add = FALSE;
@@ -1759,7 +1759,7 @@ PtrDocument         pDoc;
    int                 view;
 
 #ifdef __COLPAGE__
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 nb;
 
 #endif /* __COLPAGE__ */
@@ -1785,7 +1785,7 @@ PtrDocument         pDoc;
 			 PageBreak + 1)
 		       {
 			  nb = NbPages (pAb);
-			  pDoc->DocViewNPages[view ] = nb;
+			  pDoc->DocViewNPages[view] = nb;
 			  pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
 		       }
 		     else
@@ -1793,7 +1793,7 @@ PtrDocument         pDoc;
 			pDoc->DocViewFreeVolume[view] =
 			   pDoc->DocViewVolume[view] - pDoc->DocViewRootAb[view]->AbVolume;
 		     AddVolView (pDoc->DocViewVolume[view], pDoc->DocViewRootAb[view],
-			       pEl, pDoc);
+				 pEl, pDoc);
 		  }
 	     }
 	else
@@ -1821,8 +1821,8 @@ PtrDocument         pDoc;
 		      pDoc->DocAssocVolume[pEl->ElAssocNum - 1] -
 		      pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume;
 		AddVolView (pDoc->DocAssocVolume[pEl->ElAssocNum - 1],
-		     pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0],
-			  pEl, pDoc);
+		  pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0],
+			    pEl, pDoc);
 	     }
      }
 }
@@ -1853,7 +1853,7 @@ int                 frame;
    PtrDocument         pDoc;
    int                 view, h;
    boolean             assoc;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
 
 #ifdef __COLPAGE__
    PtrElement          pElRoot, pEl;
@@ -1977,7 +1977,7 @@ int                 frame;
    PtrDocument         pDoc;
    int                 view, h;
    boolean             assoc;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
 
 #ifdef __COLPAGE__
 
@@ -2073,22 +2073,21 @@ int                 frame;
       boolean             openedView, creation, stop;
       PtrElement          pElAscent, pElPage;
       PtrElement          pAsc[MaxAsc];
-      int                 NumAsc, i, volsupp, frame, nAssoc, boxType,
-                          h;
-      PtrAbstractBox             pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr,
+      int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
+      PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr,
                           pAbbReDisp, pAbbRoot, pPrevious;
 
 #ifndef __COLPAGE__
-      int         nR;
+      int                 nR;
 
 #endif /* __COLPAGE__ */
       PtrElement          pEl1;
-      PtrAbstractBox             pAbbox1;
+      PtrAbstractBox      pAbbox1;
       boolean             complete;
 
 #ifdef __COLPAGE__
       int                 viewSch, tour;
-      PtrAbstractBox             pAbbPage, pAbb;
+      PtrAbstractBox      pAbbPage, pAbb;
       PtrElement          pElRoot, pElChild, pElRef;
       boolean             found, pagedView, vueassoc, toCreate;
       PtrPSchema          pSchPage;
@@ -2226,7 +2225,7 @@ int                 frame;
 			       if (pElPage != NULL && pElPage->ElViewPSchema == viewSch
 				   && (pElPage->ElPageType == PgBegin
 				       || pElPage->ElPageType == PgComputed
-				 || pElPage->ElPageType == PgUser))
+				       || pElPage->ElPageType == PgUser))
 				  found = TRUE;
 			       else
 				  pEl1 = pElPage;
@@ -2281,7 +2280,7 @@ int                 frame;
 		       {
 			  /* la racine n'a pas de pave, on le cree (sans la descendance) */
 			  pAbbRoot = AbsBoxesCreate (pElRoot, pDoc, view, TRUE,
-						 FALSE, &complete);
+						     FALSE, &complete);
 			  pDoc->DocViewRootAb[view - 1] = pAbbRoot;
 			  pAbbRoot->AbTruncatedHead = TRUE;
 			  pAbbRoot->AbTruncatedTail = TRUE;
@@ -2327,7 +2326,7 @@ int                 frame;
 			  /* cree juste le pave, sans sa descendance et sans lui */
 			  /* appliquer les regles de presentation. */
 			  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, FALSE,
-					     &complete);
+						      &complete);
 			  pPrevious = pAsc[i - 1]->ElAbstractBox[view - 1];
 			  if (pPrevious != NULL)
 			    {
@@ -2361,7 +2360,7 @@ int                 frame;
 					      pAbbox1 = pAbbPage->AbFirstEnclosed;
 					      while (pAbbox1->AbNext != NULL)
 						 pAbbox1 = pAbbox1->AbNext;
-					      pAbbox1->AbNext = pPrevious;		/* en queue */
+					      pAbbox1->AbNext = pPrevious;	/* en queue */
 					      pPrevious->AbPrevious = pAbbox1;
 					   }
 				      }
@@ -2445,7 +2444,7 @@ int                 frame;
 			      /* haut ou de bas de page ? */
 			     {
 				pElPage = PageElAssoc (pElAscent, pDoc->DocView[view - 1].
-						       DvPSchemaView, &boxType);
+						   DvPSchemaView, &boxType);
 				if (pElPage != NULL)
 
 				   /* Il s'affiche dans une haut ou bas de page, c'est la */
@@ -2672,7 +2671,7 @@ int                 frame;
 			  {
 			     pEl1 = pAsc[i - 1];
 			     if (pEl1->ElStructSchema->SsPSchema->PsBuildAll[pEl1
-							      ->ElTypeNumber - 1])
+							->ElTypeNumber - 1])
 				/* cet element a la regle Gather */
 				/* cree le pave avec toute sa descendance, si */
 				/* ce n'est pas encore fait */
@@ -2769,7 +2768,7 @@ int                 frame;
 		     }
 		}		/* V4 : fin cas vue non paginee , V3 fin Vue existe */
 	   }			/* V4 : fin pEl != NULL , V3 : fin pEl->ElAbstractBox[] == NULL */
-    }
+   }
 
 
 /*----------------------------------------------------------------------
@@ -2786,9 +2785,9 @@ int                 frame;
    void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *volBefore, int *volAfter, int *volTree)
 #else  /* __STDC__ */
    void                VolumeTree (pAbbRoot, pAbbFirst, pAbbLast, volBefore, volAfter, volTree)
-   PtrAbstractBox             pAbbRoot;
-   PtrAbstractBox             pAbbFirst;
-   PtrAbstractBox             pAbbLast;
+   PtrAbstractBox      pAbbRoot;
+   PtrAbstractBox      pAbbFirst;
+   PtrAbstractBox      pAbbLast;
    int                *volBefore;
    int                *volAfter;
    int                *volTree;
@@ -2884,7 +2883,7 @@ int                 frame;
       int                 volBefore, volPresent;
       boolean             after;
       int                 position;
-      PtrAbstractBox             pAbbRoot, pAb;
+      PtrAbstractBox      pAbbRoot, pAb;
       PtrElement          pElSuiv;
 
       position = 0;
@@ -3016,7 +3015,7 @@ int                 frame;
 
 #else  /* __STDC__ */
    void                AffPaveDebug (pAb)
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
@@ -3027,7 +3026,7 @@ int                 frame;
 	{
 	   pEl = pAb->AbElement;
 	   printf ("contexte pAb = %x", (int) pAb, " %s",
-		   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	   printf ("pres = %d", pAb->AbPresentationBox);
 	   printf ("\n");
 	   printf ("pere = %x", (int) pAb->AbEnclosing);
@@ -3044,7 +3043,7 @@ int                 frame;
 	   if (pAb->AbNext != NULL)
 	      printf (" %s",
 		      pAb->AbNext->AbElement->ElStructSchema->SsRule[pAb->AbNext->AbElement->ElTypeNumber
-							     - 1].SrName);
+							       - 1].SrName);
 	   printf ("\n");
 	   if (pAb->AbPreviousRepeated != NULL)
 	      printf (" dup precedent = %x", (int) pAb->AbPreviousRepeated);
@@ -3071,12 +3070,12 @@ int                 frame;
 
 #else  /* __STDC__ */
    boolean             AbsBoxOk (pAb)
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
    {
-      PtrAbstractBox             pAbb, pAbbox1;
+      PtrAbstractBox      pAbb, pAbbox1;
       PtrElement          pEl;
       boolean             correct, allKill;
       int                 AbDocView;
@@ -3112,7 +3111,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans i.a : l'elem n'a que des paves pres %s",
-		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	}
@@ -3123,7 +3122,7 @@ int                 frame;
 	{
 	   correct = FALSE;
 	   printf ("Erreur dans l'i.a. : pave de pres duplique %s",
-		   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	   printf ("\n");
 	}
       /* deuxieme verification */
@@ -3134,7 +3133,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans l'i.a.:l'elem pointe sur pAb %s",
-		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	}
@@ -3149,7 +3148,7 @@ int                 frame;
 	     {
 		correct = FALSE;
 		printf ("Erreur dans l'i.a.: la racine a des dupliques %s",
-		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	   else
@@ -3163,7 +3162,7 @@ int                 frame;
 			  correct = FALSE;
 			  printf ("Erreur dans l'i.a.: l'ascendant devrait etre dup %s",
 				  pAbb->AbElement->ElStructSchema->SsRule[pAbb->AbElement->ElTypeNumber
-							     - 1].SrName);
+							       - 1].SrName);
 			  printf ("\n");
 		       }
 		     pAbb = pAbb->AbEnclosing;
@@ -3173,7 +3172,7 @@ int                 frame;
 		  {
 		     correct = FALSE;
 		     printf ("Erreur i.a.: dup en dehors un corps de page %s",
-		     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+			     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		     printf ("\n");
 		  }
 	     }
@@ -3186,4 +3185,3 @@ int                 frame;
    }
 /** fin ajout */
 #endif /* __COLPAGE__ */
-

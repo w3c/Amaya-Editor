@@ -49,20 +49,21 @@
 void                GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
 void                GetClickedBox (result, pRootAb, frame, x, y, pointselect)
-PtrBox           *result;
-PtrAbstractBox             pRootAb;
+PtrBox             *result;
+PtrAbstractBox      pRootAb;
 int                 frame;
 int                 x;
 int                 y;
 int                *pointselect;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrBox            pSelBox, pBox;
-   PtrBox            pCurrentBox;
+   PtrAbstractBox      pAb;
+   PtrBox              pSelBox, pBox;
+   PtrBox              pCurrentBox;
    int                 dist;
    int                 pointIndex;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
    int                 d;
 
    pBox = NULL;
@@ -107,11 +108,11 @@ int                *pointselect;
 			    if (x > d)
 			       pointIndex = 1;
 			    d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
-					 pBox->BxWidth, pBox->BxHeight);
+					     pBox->BxWidth, pBox->BxHeight);
 			 }
 		       else
 			  d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
-				       pBox->BxWidth, pBox->BxHeight);
+					      pBox->BxWidth, pBox->BxHeight);
 		    }
 		  else
 		     d = dist + 1;

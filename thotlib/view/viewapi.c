@@ -302,7 +302,7 @@ Element             subtree;
 			AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView - 1], 1, pDoc, FALSE);
 #endif /* __COLPAGE__ */
 		  nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
-		    allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
+		      allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
 		  assoc = TRUE;
 	       }
 	     else
@@ -313,7 +313,7 @@ Element             subtree;
 		     AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView, pDoc, FALSE);
 #endif /* __COLPAGE__ */
 		  nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
-		   allViews[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
+		     allViews[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
 		  assoc = FALSE;
 	       }
 	     if (nView == 0)
@@ -528,7 +528,7 @@ boolean             complete;
 	FreeDeadAbstractBoxes (pAbbRoot);
 
 	/* Shows that one must apply presentation rules of the root abstract box, for example
-           to rebuild presentaion boxes, created by the root and destroyed */
+	   to rebuild presentaion boxes, created by the root and destroyed */
 	pAbbRoot->AbSize = -1;
 #ifdef __COLPAGE__
 	pAbbRoot->AbTruncatedTail = TRUE;
@@ -1251,7 +1251,7 @@ PtrDocument         pDoc;
 	  {
 	     finished = TRUE;
 	     /* If the abstract box of the previous element is complete in queue,
-                the element will have its abstract box in the existing image */
+	        the element will have its abstract box in the existing image */
 	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
 		result = TRUE;
 	     else
@@ -2008,8 +2008,8 @@ Document            document;
 	   /* l'element qui precede la partie detruite devient dernier */
 	   ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
 	/* traitement particulier aux tableaux */
-      if (ThotLocalActions[T_createhairline]!=NULL)
-        (*ThotLocalActions[T_createhairline])(pPrevious, pEl, pDoc);
+	if (ThotLocalActions[T_createhairline] != NULL)
+	   (*ThotLocalActions[T_createhairline]) (pPrevious, pEl, pDoc);
      }
    /* reevalue l'image de toutes les vues */
    AbstractImageUpdated (pDoc);
@@ -2501,14 +2501,14 @@ boolean             suppression;
       pOldAttr = AttributeValue (pEl, pAttr);
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pAttr->AeAttrSSchema->SsPSchema->
-	       PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+		  PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pAttr->AeAttrSSchema->SsPSchema->
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
       pAttrAsc = GetTypedAttrAncestor (pEl, pAttr->AeAttrNum,
-				     pAttr->AeAttrSSchema, &pElAttr);
+				       pAttr->AeAttrSSchema, &pElAttr);
    else
       pAttrAsc = NULL;
    if (pOldAttr != NULL)
@@ -2577,7 +2577,7 @@ Document            document;
       return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pAttr->AeAttrSSchema->SsPSchema->
-	       PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+		  PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pAttr->AeAttrSSchema->SsPSchema->
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    /* d'abord on applique les regles de presentation liees */
@@ -2625,7 +2625,7 @@ Document            document;
 
 {
    boolean             inheritance, comparaison;
-   PtrAttribute         pAttrAsc;
+   PtrAttribute        pAttrAsc;
    PtrElement          pElAttr;
 
    if (LoadedDocument[document - 1] == NULL)
@@ -2638,14 +2638,14 @@ Document            document;
       return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pAttr->AeAttrSSchema->SsPSchema->
-	       PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+		  PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pAttr->AeAttrSSchema->SsPSchema->
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
       pAttrAsc = GetTypedAttrAncestor (pEl, pAttr->AeAttrNum,
-				     pAttr->AeAttrSSchema, &pElAttr);
+				       pAttr->AeAttrSSchema, &pElAttr);
    else
       pAttrAsc = NULL;
    if (pAttrAsc != NULL)
@@ -2882,7 +2882,7 @@ DisplayMode         newDisplayMode;
 			    documentNewSelection[document - 1].SDDerCar == 0)
 			       /* selection d'un element complet */
 			       SelectElement (LoadedDocument[document - 1],
-					 (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
+					      (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
 			    else
 			       /* selection d'une chaine */
 			       SelectString (LoadedDocument[document - 1],
@@ -2898,7 +2898,7 @@ DisplayMode         newDisplayMode;
 			 {
 			    ExtendSelection ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
 				documentNewSelection[document - 1].SDCarExt,
-				      FALSE, FALSE, FALSE);
+					     FALSE, FALSE, FALSE);
 			    /* il n'y a plus d'extension de selection a etablir */
 			    documentNewSelection[document - 1].SDElemExt = NULL;
 			 }

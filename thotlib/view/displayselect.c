@@ -31,15 +31,15 @@ static void         DisplayBoxSelection (int frame, PtrBox pBox, int pointselect
 #else  /* __STDC__ */
 static void         DisplayBoxSelection (frame, pBox, pointselect)
 int                 frame;
-PtrBox            pBox;
+PtrBox              pBox;
 int                 pointselect;
 
 #endif /* __STDC__ */
 {
-   PtrBox            pChildBox;
-   ViewFrame            *pFrame;
-   PtrAbstractBox             pAb;
-   PtrTextBuffer      pBuffer;
+   PtrBox              pChildBox;
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb;
+   PtrTextBuffer       pBuffer;
    int                 leftX, rightX;
    int                 topY, bottomY;
    int                 minX;
@@ -104,8 +104,8 @@ int                 pointselect;
 			 }
 		       if (pointselect == 0 || pointselect == i)
 			  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH,
-				   leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000) - 2,
-				   topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000) - 2);
+				       leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000) - 2,
+				       topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000) - 2);
 		       j++;
 		    }
 	       }
@@ -265,10 +265,11 @@ void                SetNewSelectionStatus (frame, pAb, status)
 int                 frame;
 PtrAbstractBox      pAb;
 boolean             status;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox        pChildAb;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pChildAb;
+   ViewFrame          *pFrame;
 
    if (pAb != NULL)
      {
@@ -309,12 +310,13 @@ static void         DisplayStringSelection (frame, leftX, rightX, pBox)
 int                 frame;
 int                 leftX;
 int                 rightX;
-PtrBox            pBox;
+PtrBox              pBox;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pParentBox;
-   ViewFrame            *pFrame;
-   PtrAbstractBox             pAb;
+   PtrBox              pParentBox;
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb;
    int                 width, height;
    int                 topY, h;
 
@@ -380,12 +382,12 @@ boolean             status;
 
 #endif /* __STDC__ */
 {
-   PtrBox            pBox;
-   PtrBox            pSelBox;
-   PtrAbstractBox    pAb;
-   ViewFrame        *pFrame;
-   ViewSelection    *pViewSel;
-   ViewSelection    *pViewSelEnd;
+   PtrBox              pBox;
+   PtrBox              pSelBox;
+   PtrAbstractBox      pAb;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
+   ViewSelection      *pViewSelEnd;
 
    /* On ne visualise la selection que si la selection est coherente */
    pFrame = &ViewFrameTable[frame - 1];
@@ -416,10 +418,10 @@ boolean             status;
 		  /* Est-ce que la selection debute en fin de boite ? */
 		  if (pViewSel->VsXPos == pSelBox->BxWidth)
 		     DisplayStringSelection (frame, pViewSel->VsXPos,
-				  pSelBox->BxWidth + 2, pViewSel->VsBox);
+				     pSelBox->BxWidth + 2, pViewSel->VsBox);
 		  else
 		     DisplayStringSelection (frame, pViewSel->VsXPos, pSelBox->BxWidth,
-				  pViewSel->VsBox);
+					     pViewSel->VsBox);
 		  /* Parcours les boites coupees soeurs */
 		  if (pSelBox->BxType == BoPiece || pSelBox->BxType == BoDotted)
 		    {

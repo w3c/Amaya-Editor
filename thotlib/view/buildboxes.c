@@ -3,7 +3,7 @@
  */
 
 /* 
- gestion des Images abstraites
+   gestion des Images abstraites
  */
 
 #include "thot_sys.h"
@@ -96,13 +96,13 @@ C_points           *cp;
 C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 #else  /* __STDC__ */
 C_points           *ComputeControlPoints (buffer, nb)
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 
 #endif /* __STDC__ */
 {
    C_points           *controls;
-   PtrTextBuffer      pBuffer;
+   PtrTextBuffer       pBuffer;
    int                 i, j;
    float               dx, dy;
    float               x, y, x1, y1, x2, y2, x3, y3;
@@ -242,6 +242,7 @@ int                 nChars;
 ptrfont             font;
 int                *width;
 int                *nSpaces;
+
 #endif /* __STDC__ */
 {
    int                 i, j;
@@ -254,7 +255,7 @@ int                *nSpaces;
       spaceWidth = CarWidth (_SPACE_, font);
    else
       spaceWidth = *nSpaces;
-   i = *width;	/* Index dans le buffer */
+   i = *width;			/* Index dans le buffer */
    *nSpaces = 0;
    *width = 0;
 
@@ -296,15 +297,16 @@ static void         GivePictureSize (pAb, width, height)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
+
 #endif /* __STDC__ */
 {
-   ptrfont      font;
-   PtrBox       pBox;
-   PictInfo    *picture;
+   ptrfont             font;
+   PtrBox              pBox;
+   PictInfo           *picture;
 
    pBox = pAb->AbBox;
    picture = (PictInfo *) pBox->BxPictInfo;
-   /***todo: revoir la condition suivante... definition d'une image vide */
+/***todo: revoir la condition suivante... definition d'une image vide */
    if (pAb->AbVolume == 0 || picture == NULL)
      {
 	font = pBox->BxFont;
@@ -323,12 +325,13 @@ int                *height;
    GiveSymbolSize evalue les dimensions de la boite du pave Symbol.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
+void                GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
-void       GiveSymbolSize (pAb, width, height)
+void                GiveSymbolSize (pAb, width, height)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
+
 #endif /* __STDC__ */
 {
    ptrfont             font;
@@ -403,12 +406,13 @@ int                *height;
    GiveGraphicSize evalue les dimensions de la boite du pave Graphique 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
+void                GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
-void      GiveGraphicSize (pAb, width, height)
+void                GiveGraphicSize (pAb, width, height)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
+
 #endif /* __STDC__ */
 {
    ptrfont             font;
@@ -449,16 +453,17 @@ int                *height;
    GivePolylineSize evalue les dimensions de la boite du PolyLine.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       GivePolylineSize (PtrAbstractBox pAb, int *width, int *height)
+static void         GivePolylineSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
-static void       GivePolylineSize (pAb, width, height)
+static void         GivePolylineSize (pAb, width, height)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
+
 #endif /* __STDC__ */
 {
-   int                max;
-   PtrTextBuffer      pBuffer;
+   int                 max;
+   PtrTextBuffer       pBuffer;
 
    /* Si le pave est vide on prend une dimension par defaut */
    pBuffer = pAb->AbPolyLineBuffer;
@@ -487,10 +492,11 @@ int                *height;
 static void         FreePolyline (PtrBox pBox)
 #else  /* __STDC__ */
 static void         FreePolyline (pBox)
-PtrBox            pBox;
+PtrBox              pBox;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pBuffer;
+   PtrTextBuffer       pBuffer;
 
    if (pBox->BxBuffer != NULL)
      {
@@ -521,13 +527,14 @@ PtrBox            pBox;
    GiveTextSize evalue les dimensions de la boite du pave Texte.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      GiveTextSize (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
+void                GiveTextSize (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
 #else  /* __STDC__ */
-void      GiveTextSize (pAb, width, height, nSpaces)
+void                GiveTextSize (pAb, width, height, nSpaces)
 PtrAbstractBox      pAb;
 int                *width;
 int                *height;
 int                *nSpaces;
+
 #endif /* __STDC__ */
 {
    ptrfont             font;
@@ -558,26 +565,27 @@ int                *nSpaces;
    pAb dans la fenetree^tre frame.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
+void                GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
 #else  /* __STDC__ */
-void       GiveEnclosureSize (pAb, frame, width, height)
+void                GiveEnclosureSize (pAb, frame, width, height)
 PtrAbstractBox      pAb;
 int                 frame;
 int                *width;
 int                *height;
+
 #endif /* __STDC__ */
 {
-   int               val, x, y;
-   boolean           toJustify;
-   boolean           still;
-   boolean           orgXComplete;
-   boolean           orgYComplete;
-   PtrAbstractBox    pChildAb;
-   PtrAbstractBox    pFirstAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrBox            pChildBox, pBox;
-   PtrBox            pCurrentBox;
-   PtrLine           pLine;
+   int                 val, x, y;
+   boolean             toJustify;
+   boolean             still;
+   boolean             orgXComplete;
+   boolean             orgYComplete;
+   PtrAbstractBox      pChildAb;
+   PtrAbstractBox      pFirstAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrBox              pChildBox, pBox;
+   PtrBox              pCurrentBox;
+   PtrLine             pLine;
 
    pBox = NULL;
    pCurrentBox = pAb->AbBox;
@@ -646,7 +654,7 @@ int                *height;
 		  /* Il y a au moins une boite non vide */
 		  GetLine (&pLine);
 		  pLine->LiFirstBox = pBox;
-		  pLine->LiXMax = 3000;	/* Dimension maximale possible */
+		  pLine->LiXMax = 3000;		/* Dimension maximale possible */
 #ifdef __COLPAGE__
 		  FillLine (pLine, ViewFrameTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
 #else  /* __COLPAGE__ */
@@ -839,7 +847,8 @@ int                *height;
 static boolean      IsAbstractBoxEmpty (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 static boolean      IsAbstractBoxEmpty (pAb)
-PtrAbstractBox         pAb;
+PtrAbstractBox      pAb;
+
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
@@ -864,10 +873,11 @@ PtrAbstractBox         pAb;
    avant le pave designe'.                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAbstractBox      PreviousLeafAbstractBox (PtrAbstractBox pAb)
+static PtrAbstractBox PreviousLeafAbstractBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-static PtrAbstractBox      PreviousLeafAbstractBox (pAb)
-PtrAbstractBox             pAb;
+static PtrAbstractBox PreviousLeafAbstractBox (pAb)
+PtrAbstractBox      pAb;
+
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pPreviousAb;
@@ -969,28 +979,29 @@ PtrAbstractBox             pAb;
    La fonction rend l'adresse de la boite.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox     CreateBox (PtrAbstractBox pAb, int frame, boolean inLines, int *carIndex)
+static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, boolean inLines, int *carIndex)
 #else  /* __STDC__ */
-static PtrBox     CreateBox (pAb, frame, inLines, carIndex)
+static PtrBox       CreateBox (pAb, frame, inLines, carIndex)
 PtrAbstractBox      pAb;
 int                 frame;
 boolean             inLines;
 int                *carIndex;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   PtrBox            pBox;
-   PtrBox            pMainBox;
-   PtrBox            pCurrentBox;
-   int               width, i;
-   int               height;
-   TypeUnit          unit;
-   boolean           enclosedWidth;
-   boolean           enclosedHeight;
-   boolean           split;
-   ptrfont           font;
-   PictInfo         *picture;
-   char              alphabet;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pBox;
+   PtrBox              pMainBox;
+   PtrBox              pCurrentBox;
+   int                 width, i;
+   int                 height;
+   TypeUnit            unit;
+   boolean             enclosedWidth;
+   boolean             enclosedHeight;
+   boolean             split;
+   ptrfont             font;
+   PictInfo           *picture;
+   char                alphabet;
 
    if (pAb->AbDead)
       return (NULL);
@@ -1153,7 +1164,7 @@ int                *carIndex;
 			 pChildAb = pChildAb->AbNext;
 		      }
 		    pCurrentBox->BxSpaceWidth = 0;	/* pas d'englobement vertical en cours */
-		    pCurrentBox->BxNPixels = 0;	/* pas d'englobement horizontal en cours */
+		    pCurrentBox->BxNPixels = 0;		/* pas d'englobement horizontal en cours */
 		    GiveEnclosureSize (pAb, frame, &width, &height);
 		    break;
 		 default:
@@ -1203,19 +1214,20 @@ int                *carIndex;
    designee.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrLine            SearchLine (PtrBox pBox)
+PtrLine             SearchLine (PtrBox pBox)
 #else  /* __STDC__ */
-PtrLine            SearchLine (pBox)
-PtrBox            pBox;
+PtrLine             SearchLine (pBox)
+PtrBox              pBox;
+
 #endif /* __STDC__ */
 {
-   PtrLine           pLine;
-   int               yBox, yLine;
-   boolean           still;
-   PtrBox            pBoxPiece;
-   PtrBox            pBoxInLine;
-   PtrBox            pCurrentBox;
-   PtrAbstractBox    pAb;
+   PtrLine             pLine;
+   int                 yBox, yLine;
+   boolean             still;
+   PtrBox              pBoxPiece;
+   PtrBox              pBoxInLine;
+   PtrBox              pCurrentBox;
+   PtrAbstractBox      pAb;
 
    /* Recherche la ligne englobante */
    pLine = NULL;
@@ -1332,28 +1344,29 @@ PtrBox            pBox;
    deux boites, donc seule la boite coupee est mise a jour.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
+void                BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
 #else  /* __STDC__ */
-void          BoxUpdate (pBox, pLine, charDelta, spaceDelta, wDelta, adjustDelta, hDelta, frame, splitBox)
-PtrBox            pBox;
-PtrLine           pLine;
-int               charDelta;
-int               spaceDelta;
-int               wDelta;
-int               adjustDelta;
-int               hDelta;
-int               frame;
-boolean           splitBox;
+void                BoxUpdate (pBox, pLine, charDelta, spaceDelta, wDelta, adjustDelta, hDelta, frame, splitBox)
+PtrBox              pBox;
+PtrLine             pLine;
+int                 charDelta;
+int                 spaceDelta;
+int                 wDelta;
+int                 adjustDelta;
+int                 hDelta;
+int                 frame;
+boolean             splitBox;
+
 #endif /* __STDC__ */
 {
-   int              j;
-   PtrBox           box1;
-   PtrBox           pMainBox;
-   PtrLine          ligne;
-   Propagation      savpropage;
-   PtrAbstractBox   pAb;
-   AbPosition      *pPosAb;
-   AbDimension     *pDimAb;
+   int                 j;
+   PtrBox              box1;
+   PtrBox              pMainBox;
+   PtrLine             ligne;
+   Propagation         savpropage;
+   PtrAbstractBox      pAb;
+   AbPosition         *pPosAb;
+   AbDimension        *pDimAb;
 
    ligne = pLine;
    /* Traitement particulier aux boites de coupure */
@@ -1461,15 +1474,16 @@ boolean           splitBox;
 void                RemoveBoxes (PtrAbstractBox pAb, boolean toRemake, int frame)
 #else  /* __STDC__ */
 void                RemoveBoxes (pAb, toRemake, frame)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             toRemake;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   boolean           changeSelectBegin;
-   boolean           changeSelectEnd;
-   PtrBox            pCurrentBox;
+   PtrAbstractBox      pChildAb;
+   boolean             changeSelectBegin;
+   boolean             changeSelectEnd;
+   PtrBox              pCurrentBox;
 
    if (pAb != NULL)
      {
@@ -1530,9 +1544,10 @@ static void         CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 static void         CheckDefaultPositions (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox   pNextAb;
+   PtrAbstractBox      pNextAb;
 
    /* Est-ce que la boite avait une regle par defaut ? */
    if (pAb->AbEnclosing != NULL)
@@ -1601,44 +1616,45 @@ static boolean      ComputeUpdates (PtrAbstractBox pAb, int frame)
 static boolean      ComputeUpdates (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   int               width, height;
-   int               nSpaces;
-   int               i, charDelta, adjustDelta;
-   PtrLine           pLine;
-   PtrAbstractBox    pSiblingAb;
-   PtrBox            pNextBox;
-   PtrBox            pSiblingBox;
-   PtrBox            pMainBox;
-   PtrBox            pLastBox;
-   PtrBox            pBox;
-   TypeUnit          unit;
-   Propagation       savpropage;
-   ViewFrame        *pFrame;
-   AbDimension      *pDimAb;
-   AbPosition       *pPosAb;
-   boolean           condition;
-   boolean           result;
-   boolean           orgXComplete;
-   boolean           orgYComplete;
+   int                 width, height;
+   int                 nSpaces;
+   int                 i, charDelta, adjustDelta;
+   PtrLine             pLine;
+   PtrAbstractBox      pSiblingAb;
+   PtrBox              pNextBox;
+   PtrBox              pSiblingBox;
+   PtrBox              pMainBox;
+   PtrBox              pLastBox;
+   PtrBox              pBox;
+   TypeUnit            unit;
+   Propagation         savpropage;
+   ViewFrame          *pFrame;
+   AbDimension        *pDimAb;
+   AbPosition         *pPosAb;
+   boolean             condition;
+   boolean             result;
+   boolean             orgXComplete;
+   boolean             orgYComplete;
 
    pFrame = &ViewFrameTable[frame - 1];
    pLastBox = NULL;
    nSpaces = 0;			/* nombre de blancs */
-   charDelta = 0;			/* nombre de caracteres */
-   adjustDelta = 0;			/* largeur avec des blancs justifies */
+   charDelta = 0;		/* nombre de caracteres */
+   adjustDelta = 0;		/* largeur avec des blancs justifies */
    width = 0;
    height = 0;
    pMainBox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
-   pBox = pAb->AbBox;	/* boite du pave */
+   pBox = pAb->AbBox;		/* boite du pave */
    result = FALSE;
 
    /* On prepare le reaffichage */
    if (!pAb->AbNew
        && (pAb->AbDead || pAb->AbChange
-	   || pAb->AbWidthChange || pAb->AbHeightChange || pAb->AbHorizPosChange
-	   || pAb->AbVertPosChange || pAb->AbHorizRefChange || pAb->AbVertRefChange
+       || pAb->AbWidthChange || pAb->AbHeightChange || pAb->AbHorizPosChange
+    || pAb->AbVertPosChange || pAb->AbHorizRefChange || pAb->AbVertRefChange
 	   || pAb->AbAspectChange || pAb->AbSizeChange))
      {
 	/* Est-ce que la boite est coupee ? */
@@ -1701,8 +1717,8 @@ int                 frame;
 	     /* On etabli le chainage pour inserer en fin les nouvelles boites */
 	     /* Faut-il dechainer la boite englobante ? */
 	     if (pSiblingBox == NULL)
-		pMainBox->BxNext = NULL;		/* debut du chainage */
-	     pLastBox = pMainBox->BxPrevious;		/* on memorise la derniere boite */
+		pMainBox->BxNext = NULL;	/* debut du chainage */
+	     pLastBox = pMainBox->BxPrevious;	/* on memorise la derniere boite */
 	     pMainBox->BxPrevious = pSiblingBox;	/* fin provisoire du chainage */
 	  }
 
@@ -1759,7 +1775,7 @@ int                 frame;
 	       }
 
 	     /* On verifie la coherence des positions par defaut */
-	     /***CheckDefaultPositions(pAb, frame);***/
+/***CheckDefaultPositions(pAb, frame);***/
 	     pAb->AbChange = FALSE;
 	     result = TRUE;
 	  }
@@ -1850,7 +1866,7 @@ int                 frame;
 	   pSiblingBox->BxNext = pNextBox;
 
 	/* On verifie la coherence des positions par defaut */
-	/***CheckDefaultPositions(pAb, frame);*/
+/***CheckDefaultPositions(pAb, frame);*/
 	result = TRUE;
      }
    else
@@ -1898,10 +1914,10 @@ int                 frame;
 
 	     if (pAb->AbLeafType == LtText)
 		pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage), pAb->AbFont,
-				    pAb->AbHighlight, height, unit, frame);
+				     pAb->AbHighlight, height, unit, frame);
 	     else if (pAb->AbLeafType == LtSymbol)
 		pBox->BxFont = ThotLoadFont ('G', pAb->AbFont,
-				    pAb->AbHighlight, height, unit, frame);
+				     pAb->AbHighlight, height, unit, frame);
 	     else
 		pBox->BxFont = ThotLoadFont ('L', 'T', 0, height, unit, frame);
 
@@ -1936,7 +1952,7 @@ int                 frame;
 				   adjustDelta = width + i * nSpaces + pBox->BxNPixels - pBox->BxWidth;
 				   width = pBox->BxWidth;	/* On prend la largeur justifiee */
 				}
-			      charDelta = pAb->AbVolume - pBox->BxNChars;		/* ecart de caracteres */
+			      charDelta = pAb->AbVolume - pBox->BxNChars;	/* ecart de caracteres */
 			      nSpaces -= pBox->BxNSpaces;	/* ecart de blancs */
 			      pBox->BxBuffer = pAb->AbText;
 			      break;
@@ -1973,7 +1989,7 @@ int                 frame;
 					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
 					  {
 					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
-					     pSiblingAb = NULL;	/* on arrete */
+					     pSiblingAb = NULL;		/* on arrete */
 					  }
 					else
 					   pSiblingAb = pSiblingAb->AbEnclosing;
@@ -1998,7 +2014,7 @@ int                 frame;
 					if (pSiblingBox->BxHorizFlex || pSiblingBox->BxVertFlex)
 					  {
 					     MirrorShape (pAb, pSiblingBox->BxHorizInverted, pSiblingBox->BxVertInverted, FALSE);
-					     pSiblingAb = NULL;	/* on arrete */
+					     pSiblingAb = NULL;		/* on arrete */
 					  }
 					else
 					   pSiblingAb = pSiblingAb->AbEnclosing;
@@ -2134,9 +2150,9 @@ int                 frame;
 				   /* On evalue la hauteur du bloc de ligne */
 				   pLine = pBox->BxLastLine;
 				   if (pLine == NULL || pBox->BxType == BoGhost)
-				     height = pBox->BxHeight;
+				      height = pBox->BxHeight;
 				   else
-				     height = pLine->LiYOrg + pLine->LiHeight;
+				      height = pLine->LiYOrg + pLine->LiHeight;
 				}
 			      else
 				 GiveEnclosureSize (pAb, frame, &width, &height);
@@ -2162,9 +2178,9 @@ int                 frame;
 	     /* Les reperes Position et Dimension doivent etre differents */
 	     /* Ces reperes ne peuvent pas etre l'axe de reference        */
 	     if (pAb->AbWidth.DimIsPosition
-		 && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
-		     || pAb->AbHorizPos.PosEdge == VertMiddle
-		     || pAb->AbHorizPos.PosEdge == VertRef))
+	     && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
+		 || pAb->AbHorizPos.PosEdge == VertMiddle
+		 || pAb->AbHorizPos.PosEdge == VertRef))
 	       {
 		  if (pAb->AbWidth.DimPosition.PosEdge == Left)
 		     pAb->AbHorizPos.PosEdge = Right;
@@ -2201,9 +2217,9 @@ int                 frame;
 	     /* Les reperes Position et Dimension doivent etre differents */
 	     /* Ces reperes ne peuvent pas etre l'axe de reference        */
 	     if (pAb->AbHeight.DimIsPosition
-		 && (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge
-		     || pAb->AbVertPos.PosEdge == HorizMiddle
-		     || pAb->AbVertPos.PosEdge == HorizRef))
+	     && (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge
+		 || pAb->AbVertPos.PosEdge == HorizMiddle
+		 || pAb->AbVertPos.PosEdge == HorizRef))
 	       {
 		  if (pAb->AbHeight.DimPosition.PosEdge == Top)
 		     pAb->AbVertPos.PosEdge = Bottom;
@@ -2274,8 +2290,9 @@ int                 frame;
 void                RecordEnclosing (PtrBox pBox, boolean horizRef)
 #else  /* __STDC__ */
 void                RecordEnclosing (pBox, horizRef)
-PtrBox            pBox;
+PtrBox              pBox;
 boolean             horizRef;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -2302,10 +2319,10 @@ boolean             horizRef;
 	  }
 
 	if (i == MAX_RELAT_DIM)
-	  /* Bloc suivant */
-	  pDimRel = pDimRel->DimRNext;
+	   /* Bloc suivant */
+	   pDimRel = pDimRel->DimRNext;
 	else
-	  toCreate = FALSE;
+	   toCreate = FALSE;
      }
 
    /* Faut-il creer un nouveau bloc de relations ? */
@@ -2332,6 +2349,7 @@ void                ComputeEnclosing (int frame)
 #else  /* __STDC__ */
 void                ComputeEnclosing (frame)
 int                 frame;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -2381,14 +2399,15 @@ void                RebuildConcreteImage (int frame)
 #else  /* __STDC__ */
 void                RebuildConcreteImage (frame)
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   boolean           condition;
-   boolean           status;
-   ViewFrame        *pFrame;
-   PtrAbstractBox    pAb;
-   PtrBox            pCurrentBox;
-   int               width, height;
+   boolean             condition;
+   boolean             status;
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb;
+   PtrBox              pCurrentBox;
+   int                 width, height;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
@@ -2413,7 +2432,7 @@ int                 frame;
 		    }
 	       }
 	     if (!pCurrentBox->BxContentHeight
-		 || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+	      || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
 		  condition = ComputeDimRelation (pAb, frame, FALSE);
@@ -2472,10 +2491,11 @@ static void         ClearFlexibility (PtrAbstractBox pAb, int frame)
 static void         ClearFlexibility (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   PtrBox            pCurrentBox;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pCurrentBox;
 
    if (pAb->AbNew)
       return;
@@ -2486,7 +2506,7 @@ int                 frame;
 	if (pCurrentBox->BxHorizFlex && pAb->AbWidthChange)
 	  {
 	     DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-		  pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		      pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
@@ -2505,7 +2525,7 @@ int                 frame;
 	  {
 	     if (!pCurrentBox->BxHorizFlex || !pAb->AbWidthChange)
 		DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-		  pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
 	       {
@@ -2538,9 +2558,10 @@ void                ClearConcreteImage (int frame)
 #else  /* __STDC__ */
 void                ClearConcreteImage (frame)
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   ViewFrame        *pFrame;
+   ViewFrame          *pFrame;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
@@ -2555,7 +2576,7 @@ int                 frame;
 	pFrame->FrReady = TRUE;	/* La frame est affichable */
 	DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
 	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
-		 &pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
+			&pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
      }
 }
 
@@ -2570,18 +2591,19 @@ static boolean      IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 static boolean      IsAbstractBoxUpdated (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   PtrAbstractBox    pFirstAb;
-   PtrAbstractBox    pNewAb; 
-   PtrLine           pLine;
-   PtrBox            pBox;
-   PtrBox            pCurrentBox;
-   boolean           toUpdate;
-   boolean           result;
-   boolean           change;
-   Propagation       propStatus;
+   PtrAbstractBox      pChildAb;
+   PtrAbstractBox      pFirstAb;
+   PtrAbstractBox      pNewAb;
+   PtrLine             pLine;
+   PtrBox              pBox;
+   PtrBox              pCurrentBox;
+   boolean             toUpdate;
+   boolean             result;
+   boolean             change;
+   Propagation         propStatus;
 
    change = FALSE;
    if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
@@ -2681,7 +2703,7 @@ int                 frame;
 		       /* On prend la derniere boite avant */
 		       pFirstAb = pFirstAb->AbPrevious;
 		       if (pFirstAb == NULL)
-			  pLine = NULL;	/* toutes les lignes */
+			  pLine = NULL;		/* toutes les lignes */
 		       else
 			 {
 			    pBox = pFirstAb->AbBox;
@@ -2760,19 +2782,20 @@ boolean             ChangeConcreteImage (frame, pageHeight, pAb)
 int                 frame;
 int                *pageHeight;
 PtrAbstractBox      pAb;
+
 #endif /* __STDC__ */
 {
-   boolean           change;
-   boolean           result;
-   PtrAbstractBox    pParentAb;
-   PtrAbstractBox    pChildAb;
-   ViewFrame        *pFrame;
-   PtrLine           pLine;
-   PtrBox            pBox;
-   PtrBox            pParentBox;
-   PtrBox            pChildBox;
-   int               savevisu = 0;
-   int               savezoom = 0;
+   boolean             change;
+   boolean             result;
+   PtrAbstractBox      pParentAb;
+   PtrAbstractBox      pChildAb;
+   ViewFrame          *pFrame;
+   PtrLine             pLine;
+   PtrBox              pBox;
+   PtrBox              pParentBox;
+   PtrBox              pChildBox;
+   int                 savevisu = 0;
+   int                 savezoom = 0;
 
    result = TRUE;
    pLine = NULL;
@@ -2787,7 +2810,7 @@ PtrAbstractBox      pAb;
 	pFrame = &ViewFrameTable[frame - 1];
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAb->AbEnclosing != NULL
-		 || pAb->AbPrevious != NULL || pAb->AbNext != NULL))
+			 || pAb->AbPrevious != NULL || pAb->AbNext != NULL))
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
 	/* On detruit toute la vue */
 	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
@@ -2942,9 +2965,9 @@ PtrAbstractBox      pAb;
 	     ComputeEnclosing (frame);
 	     /* Verification de la mise en page */
 	     if (*pageHeight > 0)
-	       /* changement de la signification de page */
-	       /* si superieur a 0 : mode pagination et coupure demandee */
-	       result = SetPageBreakPosition (pFrame->FrAbstractBox, pageHeight);
+		/* changement de la signification de page */
+		/* si superieur a 0 : mode pagination et coupure demandee */
+		result = SetPageBreakPosition (pFrame->FrAbstractBox, pageHeight);
 	     if (*pageHeight != 0)
 	       {
 		  /* retablit le zoom et la visibilite courants */

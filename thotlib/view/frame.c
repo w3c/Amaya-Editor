@@ -42,7 +42,7 @@ int                *YOrg;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    pFrame = &ViewFrameTable[frame - 1];
    *XOrg = pFrame->FrXOrg;
@@ -68,7 +68,7 @@ int                 yf;
 
 {
    int                 width, height;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
@@ -148,7 +148,7 @@ int                 yf;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
 
    pFrame = &ViewFrameTable[frame - 1];
@@ -195,8 +195,8 @@ int                 delta;
 #endif /* __STDC__ */
 
 {
-   PtrBox            pBox;
-   PtrBox            min, max;
+   PtrBox              pBox;
+   PtrBox              min, max;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
@@ -207,10 +207,10 @@ int                 delta;
    boolean             toadd;
    int                 plane;
    int                 nextplane;
-   PtrBox            firstbox;
-   ViewFrame            *pFrame;
-   PtrBox            pBo1;
-   PtrBox            pBo2;
+   PtrBox              firstbox;
+   ViewFrame          *pFrame;
+   PtrBox              pBo1;
+   PtrBox              pBo2;
 
    /* are new abstract boxes needed */
    toadd = FALSE;
@@ -306,7 +306,7 @@ int                 delta;
 			 }
 		       else if (pBo1->BxAbstractBox->AbDepth < plane)
 			 {
-			  /* keep the lowest value for plane depth */
+			    /* keep the lowest value for plane depth */
 			    if (plane == nextplane)
 			       nextplane = pBo1->BxAbstractBox->AbDepth;
 			    else if (pBo1->BxAbstractBox->AbDepth > nextplane)
@@ -489,18 +489,18 @@ int                 delta;
 
 
 #ifdef __STDC__
-static void                AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
+static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
 
 #else  /* __STDC__ */
-static void                AddBoxToCreate (tocreate, pBox, frame)
-PtrBox           *tocreate;
-PtrBox            pBox;
+static void         AddBoxToCreate (tocreate, pBox, frame)
+PtrBox             *tocreate;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
    int                 i;
 
    /* Look for and ancestor abstract boxe with PavGraphCreation flag set */
@@ -557,8 +557,8 @@ int                 delta;
 #endif /* __STDC__ */
 
 {
-   PtrBox            pBox;
-   PtrBox            min /*, max */ ;
+   PtrBox              pBox;
+   PtrBox              min /*, max */ ;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
@@ -569,12 +569,12 @@ int                 delta;
    boolean             toadd;
    int                 plane;
    int                 nextplane;
-   PtrBox            firstbox;
-   ViewFrame            *pFrame;
-   PtrBox            pBo1;
-   PtrAbstractBox             pAbbox1;
-   PtrBox            pBo2;
-   PtrBox            ToCreate;
+   PtrBox              firstbox;
+   ViewFrame          *pFrame;
+   PtrBox              pBo1;
+   PtrAbstractBox      pAbbox1;
+   PtrBox              pBo2;
+   PtrBox              ToCreate;
    int                 i;
 
    /* are new abstract boxes needed */
@@ -600,7 +600,7 @@ int                 delta;
 	/* Search the first visible box or the one below */
 	pBox = pFrame->FrAbstractBox->AbBox->BxNext;
 	if (pBox == NULL)
-	   pBox = pFrame->FrAbstractBox->AbBox;	/* empty document */
+	   pBox = pFrame->FrAbstractBox->AbBox;		/* empty document */
 
 	ontop = TRUE;
 	min = NULL;
@@ -624,9 +624,9 @@ int                 delta;
 
 		  /* Will this volume be on top ? */
 		  if (ontop)
-                     if (pBox->BxYOrg + pBox->BxHeight < height - h / 4)
+		     if (pBox->BxYOrg + pBox->BxHeight < height - h / 4)
 		       {
-                          if ((pBox->BxType != BoPiece &&
+			  if ((pBox->BxType != BoPiece &&
 			       pBox->BxType != BoDotted) ||
 			      pBox->BxNexChild == NULL)
 			     vol += pBox->BxAbstractBox->AbVolume;
@@ -668,9 +668,9 @@ int                 delta;
 				    pAbbox1 = NULL;
 				 }
 			       else if ((pAbbox1->AbHorizPos.PosUserSpecified)
-					|| (pAbbox1->AbVertPos.PosUserSpecified)
-					|| (pAbbox1->AbWidth.DimUserSpecified)
-					|| (pAbbox1->AbHeight.DimUserSpecified))
+				    || (pAbbox1->AbVertPos.PosUserSpecified)
+				      || (pAbbox1->AbWidth.DimUserSpecified)
+				    || (pAbbox1->AbHeight.DimUserSpecified))
 				  i = 1;
 			       else
 				  pAbbox1 = pAbbox1->AbEnclosing;
@@ -906,9 +906,10 @@ void                DisplayFrame (int frame)
 #else  /* __STDC__ */
 void                DisplayFrame (frame)
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
    int                 w, h;
 
    /* Check that the frame exists */

@@ -60,7 +60,7 @@ extern int          NumberOfPages;
 extern int          EndOfPage;
 int                 X, Y;
 static int          LastPageNumber, LastPageWidth, LastPageHeight;
-static int          SameBox = 0;/* SameBox = 1 if the text is in the same box */
+static int          SameBox = 0;	/* SameBox = 1 if the text is in the same box */
 static int          NbWhiteSp;
 
 /* Handling of loaded fonts */
@@ -356,7 +356,7 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   encoding = 0;			/* BUG */
+   encoding = 0;		/* BUG */
 
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
@@ -465,12 +465,12 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   int                 fheight; /* font height           */
-   int                 ascent;  /* font ascent           */
-   int                 bottom;  /* underline position    */
-   int                 middle;  /* cross-over position   */
-   int                 height;  /* overline position     */
-   int                 thickness;/* thickness of drawing */
+   int                 fheight;	/* font height           */
+   int                 ascent;	/* font ascent           */
+   int                 bottom;	/* underline position    */
+   int                 middle;	/* cross-over position   */
+   int                 height;	/* overline position     */
+   int                 thickness;	/* thickness of drawing */
 
    int                 l_start;	/* start of the line     */
    int                 l_end;	/* end of the line       */
@@ -490,13 +490,13 @@ int                 fg;
 	l_start = X;		/* get current X value (cf DrawString) */
 	l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
 
-        /*
-         * for an underline independant of the font add
-         * the following lines here :
-         *         thickness = 1;
-         *         height = y + 2 * thickness;
-         *         bottom = y + ascent + 3;
-         */
+	/*
+	 * for an underline independant of the font add
+	 * the following lines here :
+	 *         thickness = 1;
+	 *         height = y + 2 * thickness;
+	 *         bottom = y + ascent + 3;
+	 */
 
 	switch (type)
 	      {
@@ -638,7 +638,7 @@ int                 fg;
 	else
 	  {
 	     fprintf (fout, "-%d %d (\\362) c\n", ym, x);
-	     if (type == 1) /* contour integral */
+	     if (type == 1)	/* contour integral */
 		fprintf (fout, "-%d %d (o) c\n", ym, x);
 	  }
      }
@@ -656,7 +656,7 @@ int                 fg;
 	else
 	  {
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n", x, yf, y, Scale);
-	     if (type == 1) /* contour integral */
+	     if (type == 1)	/* contour integral */
 		fprintf (fout, "-%d %d (o) c\n", ym, x);
 	  }
      }
@@ -958,7 +958,7 @@ int                 fg;
    else
      {
 	/* Drawn with more than one glyph */
-	if (direction == 0)		/* Trace un crochet ouvrant */
+	if (direction == 0)	/* Trace un crochet ouvrant */
 	   fprintf (fout, "%d -%d -%d %s (\\351) (\\352) (\\353) s3\n", x + 1, yf, y, Scale);
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
@@ -1170,7 +1170,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1184,7 +1184,7 @@ int                 arrow;
    float               xp, yp;
    int                 prevx, prevy;
    int                 lg;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
@@ -1208,7 +1208,7 @@ int                 arrow;
 	       FloatToInt ((float) buffer->BuPoints[2].XCoord / 1000 + x),
 	       FloatToInt ((float) buffer->BuPoints[2].YCoord / 1000 + y),
 	       FloatToInt ((float) buffer->BuPoints[1].XCoord / 1000 + x),
-      FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), thick, lg, lg);
+	       FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), thick, lg, lg);
 
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1265,7 +1265,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1278,7 +1278,7 @@ int                 pattern;
 {
    int                 i, j;
    float               xp, yp;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
@@ -1339,7 +1339,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1349,7 +1349,7 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i, j;
    int                 lg;
    int                 lastx, lasty, newx, newy;
@@ -1455,7 +1455,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1466,7 +1466,7 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i, j;
    float               x0, y0, x1, y1, x2, y2, x3, y3;
    FILE               *fout;
@@ -2093,8 +2093,8 @@ int                 height;
 }
 
 /*
-     EndOfString check wether string end by suffix.
-*/
+   EndOfString check wether string end by suffix.
+ */
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */

@@ -3,7 +3,7 @@
  */
 
 /*
-    -- Modifications des images abstraites.
+   -- Modifications des images abstraites.
    Ce module effectue les modifications des images abstraites des documents
    et demande au Mediateur le reaffichage incremental. 
    V. Quint    
@@ -39,7 +39,7 @@
 #include "searchref_f.h"
 #include "writepivot_f.h"
 
-static PtrAbstractBox      pAbbBegin[MAX_VIEW_DOC];
+static PtrAbstractBox pAbbBegin[MAX_VIEW_DOC];
 
 
 /*----------------------------------------------------------------------
@@ -51,13 +51,13 @@ static boolean      IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
 
 #else  /* __STDC__ */
 static boolean      IsEnclosing (pAbb1, pAbb2)
-PtrAbstractBox             pAbb1;
-PtrAbstractBox             pAbb2;
+PtrAbstractBox      pAbb1;
+PtrAbstractBox      pAbb2;
 
 #endif /* __STDC__ */
 {
    boolean             ret;
-   PtrAbstractBox             pAbb;
+   PtrAbstractBox      pAbb;
 
    if (pAbb2 == NULL || pAbb1 == pAbb2)
       ret = TRUE;
@@ -82,17 +82,17 @@ PtrAbstractBox             pAbb2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAbstractBox             Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
+PtrAbstractBox      Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
 
 #else  /* __STDC__ */
-PtrAbstractBox             Enclosing (pAbb1, pAbb2)
-PtrAbstractBox             pAbb1;
-PtrAbstractBox             pAbb2;
+PtrAbstractBox      Enclosing (pAbb1, pAbb2)
+PtrAbstractBox      pAbb1;
+PtrAbstractBox      pAbb2;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb;
+   PtrAbstractBox      pAbb;
    boolean             found;
 
    if (pAbb1 == NULL)
@@ -127,17 +127,17 @@ void                SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl, 
 
 #else  /* __STDC__ */
 void                SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule, pRule)
-PtrPRule       *pRuleView1;
+PtrPRule           *pRuleView1;
 PtrElement          pEl;
 int                 view;
 PRuleType           typeRule;
-PtrPRule       *pRule;
+PtrPRule           *pRule;
 
 #endif /* __STDC__ */
 
 {
    boolean             found;
-   PtrPRule        pR;
+   PtrPRule            pR;
 
    pR = *pRule;
    *pRuleView1 = NULL;
@@ -209,32 +209,32 @@ PtrPRule       *pRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrPRule        GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, boolean isElPage, boolean attr, PtrAttribute * pAttr)
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, boolean isElPage, boolean attr, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-PtrPRule        GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, isElPage, attr, pAttr)
+PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, isElPage, attr, pAttr)
 PtrElement          pEl;
 PtrPSchema         *pSPR;
-PtrSSchema       *pSSR;
+PtrSSchema         *pSSR;
 int                 presNum;
 PtrPSchema          pSchP;
 int                 view;
 PRuleType           typeRule;
 boolean             isElPage;
 boolean             attr;
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
    int                 index;
-   PtrPRule        pRule, pRuleSpecView1, pRuleView1;
-   PtrSSchema        pSchS;
+   PtrPRule            pRule, pRuleSpecView1, pRuleView1;
+   PtrSSchema          pSchS;
    boolean             stop;
-   PtrPRule        pR;
-   PtrAttribute         pA;
+   PtrPRule            pR;
+   PtrAttribute        pA;
    PtrElement          pElAttr;
-   InheritAttrTable     *inheritTable;
+   InheritAttrTable   *inheritTable;
    int                 l;
    PtrPSchema          pSP;
    PtrHandlePSchema    pHd;
@@ -418,7 +418,7 @@ PtrAttribute        *pAttr;
 					     /* regle du type cherche' pour la vue voulue */
 					     if (pRule->PrCond == NULL ||
 						 CondPresentation (pRule->PrCond, pEl, *pAttr,
-					       view, (*pAttr)->AeAttrSSchema))
+					     view, (*pAttr)->AeAttrSSchema))
 						/* les conditions d'application de la regle */
 						/* sont satisfaites */
 					       {
@@ -561,24 +561,24 @@ PtrAttribute        *pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrPRule        SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, boolean attr, PtrAttribute * pAttr)
+PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, boolean attr, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-PtrPRule        SearchRulepAb (pDoc, pAb, pSPR, typeRule, attr, pAttr)
+PtrPRule            SearchRulepAb (pDoc, pAb, pSPR, typeRule, attr, pAttr)
 PtrDocument         pDoc;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrPSchema         *pSPR;
 PRuleType           typeRule;
 boolean             attr;
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
    int                 presNum;
-   PtrAbstractBox             pAbbox1;
-   PtrSSchema        pSSR;
-   PtrPRule        pRuleFound;
+   PtrAbstractBox      pAbbox1;
+   PtrSSchema          pSSR;
+   PtrPRule            pRuleFound;
 
    if (pAb == NULL)
       pRuleFound = NULL;
@@ -590,8 +590,8 @@ PtrAttribute        *pAttr;
 	else
 	   presNum = 0;
 	pRuleFound = GlobalSearchRulepEl (pAbbox1->AbElement, pSPR, &pSSR, presNum,
-		  pAbbox1->AbPSchema, pDoc->DocView[pAbbox1->AbDocView - 1].DvPSchemaView,
-				 typeRule, FALSE, attr, pAttr);
+					  pAbbox1->AbPSchema, pDoc->DocView[pAbbox1->AbDocView - 1].DvPSchemaView,
+					  typeRule, FALSE, attr, pAttr);
      }
    return pRuleFound;
 }
@@ -606,13 +606,13 @@ PtrAttribute        *pAttr;
 static boolean      IsDiffPosition (AbPosition abPos, AbPosition * abPosit, boolean isInverted)
 #else  /* __STDC__ */
 static boolean      IsDiffPosition (abPos, abPosit, isInverted)
-AbPosition         abPos;
-AbPosition        *abPosit;
+AbPosition          abPos;
+AbPosition         *abPosit;
 boolean             isInverted;
 
 #endif /* __STDC__ */
 {
-   AbPosition        *pAbbox1;
+   AbPosition         *pAbbox1;
    boolean             different;
 
    pAbbox1 = &abPos;
@@ -655,13 +655,13 @@ static boolean      IsDiffDimension (AbDimension abDim, AbDimension * abDimens)
 
 #else  /* __STDC__ */
 static boolean      IsDiffDimension (abDim, abDimens)
-AbDimension        abDim;
-AbDimension       *abDimens;
+AbDimension         abDim;
+AbDimension        *abDimens;
 
 #endif /* __STDC__ */
 
 {
-   AbDimension       *pAbbox1;
+   AbDimension        *pAbbox1;
    boolean             different;
 
    pAbbox1 = &abDim;
@@ -697,25 +697,25 @@ static boolean      IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR, PtrPSchema p
 
 #else  /* __STDC__ */
 static boolean      IsNewPosOrDim (pAb, pR, pSPR, levelPos, pDoc, pAttr)
-PtrAbstractBox             pAb;
-PtrPRule        pR;
+PtrAbstractBox      pAb;
+PtrPRule            pR;
 PtrPSchema          pSPR;
-Level              levelPos;
+Level               levelPos;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    boolean             ret;
-   AbPosition         abPosit;
-   AbDimension        Dimens;
-   PosRule           *pRe1;
-   DimensionRule       *pRelD1;
-   PtrPRule        pRegleDim;
+   AbPosition          abPosit;
+   AbDimension         Dimens;
+   PosRule            *pRe1;
+   DimensionRule      *pRelD1;
+   PtrPRule            pRegleDim;
    PtrPSchema          pSPRDim;
-   PtrAttribute         pAttrDim;
-   AbPosition         abDimElast;
+   PtrAttribute        pAttrDim;
+   AbPosition          abDimElast;
 
 #ifdef __COLPAGE__
    boolean             bool;
@@ -746,7 +746,7 @@ PtrAttribute         pAttr;
 		    pRe1 = &pR->PrPosRule;
 		    if (pRe1->PoRelation == levelPos || pRe1->PoRelation == RlReferred
 			|| (pRe1->PoRelation == RlSameLevel
-			    && (levelPos == RlPrevious || levelPos == RlNext))
+			  && (levelPos == RlPrevious || levelPos == RlNext))
 #ifndef __COLPAGE__
 			|| nextToPage
 #endif /* __COLPAGE__ */
@@ -962,7 +962,7 @@ PtrAttribute         pAttr;
 			  /* ce n'est pas une dimension absolue */
 			  if (pRelD1->DrRelation == levelPos
 			      || (pRelD1->DrRelation == RlSameLevel
-				  && (levelPos == RlPrevious || levelPos == RlNext)))
+			  && (levelPos == RlPrevious || levelPos == RlNext)))
 			     if (pR->PrType == PtHeight)
 				/* hauteur */
 			       {
@@ -1005,8 +1005,8 @@ static boolean      ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb, PtrDocum
 
 #else  /* __STDC__ */
 static boolean      ReapplRef (pRef, pAb, pDoc)
-PtrAbstractBox             pRef;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pRef;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1014,11 +1014,11 @@ PtrDocument         pDoc;
 {
    boolean             ret;
    PtrPSchema          pSPR;
-   PtrAttribute         pAttr;
-   PtrPRule        pR;
-   PtrAbstractBox             pAbbox1;
-   AbPosition        *pPosAb;
-   AbDimension       *pDimAb;
+   PtrAttribute        pAttr;
+   PtrPRule            pR;
+   PtrAbstractBox      pAbbox1;
+   AbPosition         *pPosAb;
+   AbDimension        *pDimAb;
 
 #ifdef __COLPAGE__
    boolean             bool;
@@ -1204,19 +1204,19 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrPRule        FunctionRule (PtrElement pEl, PtrPSchema * pSchP)
+PtrPRule            FunctionRule (PtrElement pEl, PtrPSchema * pSchP)
 
 #else  /* __STDC__ */
-PtrPRule        FunctionRule (pEl, pSchP)
+PtrPRule            FunctionRule (pEl, pSchP)
 PtrElement          pEl;
 PtrPSchema         *pSchP;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRule;
+   PtrPRule            pRule;
    int                 index;
-   PtrSSchema        pSchS;
+   PtrSSchema          pSchS;
 
    pRule = NULL;
    SearchPresSchema (pEl, pSchP, &index, &pSchS);
@@ -1249,14 +1249,14 @@ void                SetDeadAbsBox (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 void                SetDeadAbsBox (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
    int                 vol;
-   PtrAbstractBox             pAbb;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbb;
+   PtrAbstractBox      pAbbox1;
 
    pAb->AbDead = TRUE;
    /* met a jour le volume des paves englobants dans la vue */
@@ -1288,14 +1288,14 @@ void                ApplyRefAbsBoxSupp (PtrAbstractBox pAb, PtrAbstractBox * pAb
 
 #else  /* __STDC__ */
 void                ApplyRefAbsBoxSupp (pAb, pAbbReDisp, pDoc)
-PtrAbstractBox             pAb;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox      pAb;
+PtrAbstractBox     *pAbbReDisp;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb;
+   PtrAbstractBox      pAbb;
 
    *pAbbReDisp = pAb;
    /* cherche d'abord dans le pave englobant */
@@ -1339,18 +1339,18 @@ void                ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox 
 
 #else  /* __STDC__ */
 void                ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, pAbbReDisp, pDoc)
-PtrAbstractBox             pAbbFirst;
-PtrAbstractBox             pAbbLast;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox      pAbbFirst;
+PtrAbstractBox      pAbbLast;
+PtrAbstractBox     *pAbbReDisp;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAbb;
-   PtrPRule        pRule;
+   PtrAbstractBox      pAbb;
+   PtrPRule            pRule;
    PtrPSchema          pSPR;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    /* cherche la pave minimum a reafficher a priori */
    if (pAbbLast == pAbbFirst)
@@ -1483,21 +1483,21 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrAbstractBox      AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres, PtrPSchema pSchP)
+static PtrAbstractBox AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres, PtrPSchema pSchP)
 
 #else  /* __STDC__ */
-static PtrAbstractBox      AbsBoxPresType (pAbb, pRPres, pSchP)
-PtrAbstractBox             pAbb;
-PtrPRule        pRPres;
+static PtrAbstractBox AbsBoxPresType (pAbb, pRPres, pSchP)
+PtrAbstractBox      pAbb;
+PtrPRule            pRPres;
 PtrPSchema          pSchP;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, pAbbMain;
+   PtrAbstractBox      pAb, pAbbMain;
    boolean             found, stop;	/* 1er pave de l'element dans la vue */
-   int        boxType;
-   PtrAbstractBox             pAbbPres;
+   int                 boxType;
+   PtrAbstractBox      pAbbPres;
 
 
    boxType = pRPres->PrPresBox[0];	/* numero de type de la boite cherchee */
@@ -1602,9 +1602,9 @@ static void         ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP, Ptr
 
 #else  /* __STDC__ */
 static void         ApplFunctionPresRules (pRule, pSchP, pAttr, pDoc, pEl, change, first)
-PtrPRule        pRule;
+PtrPRule            pRule;
 PtrPSchema          pSchP;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 PtrElement          pEl;
 boolean             change;
@@ -1614,9 +1614,9 @@ boolean             first;
 
 {
    int                 view;
-   PtrAbstractBox             pAb, pAbbReDisp;
+   PtrAbstractBox      pAb, pAbbReDisp;
    boolean             stop;
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
    PtrCondition        pCond;
 
    if (pRule != NULL)
@@ -1651,7 +1651,7 @@ boolean             first;
 				   /* cree le pave de presentation dans la vue */
 				  {
 				     pAb = CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
-					    pAttr, view, pSchP, FALSE, TRUE);
+					   pAttr, view, pSchP, FALSE, TRUE);
 				     if (pAb != NULL)
 					/* un pave de presentation a ete cree */
 					/* change les regles des autres paves qui peuvent */
@@ -1663,7 +1663,7 @@ boolean             first;
 					  if (AssocView (pEl))
 					     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 						Enclosing (pAbbReDisp,
-						  pDoc->DocAssocModifiedAb[pEl->
+					      pDoc->DocAssocModifiedAb[pEl->
 							   ElAssocNum - 1]);
 					  else
 					     pDoc->DocViewModifiedAb[view - 1] =
@@ -1737,12 +1737,12 @@ boolean             change;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRPres;
+   PtrPRule            pRPres;
    PtrPSchema          pSchP;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    PtrElement          pElAttr;
    int                 l;
-   InheritAttrTable     *inheritTable;
+   InheritAttrTable   *inheritTable;
 
    if (pEl != NULL)
      {
@@ -1825,12 +1825,12 @@ int                *boxType;
    PtrPSchema          pSchP;
    int                 index, b;
    PtrElement          pElPage, pAsc, pElRef;
-   PtrPRule        pR, pRP;
-   PtrSSchema        pSchS;
+   PtrPRule            pR, pRP;
+   PtrSSchema          pSchS;
    PtrReference        pRef;
    boolean             stop, stop1, ref;
    PtrPSchema          pSc1;
-   PresentationBox             *pBo1;
+   PresentationBox    *pBo1;
 
    pElPage = NULL;
    *boxType = 0;
@@ -1941,8 +1941,8 @@ int                *boxType;
 					else
 					  {
 					     if (pRP->PrType == PtFunction
-					       && (pRP->PrPresFunction == FnCreateBefore
-					       || pRP->PrPresFunction == FnCreateAfter)
+						 && (pRP->PrPresFunction == FnCreateBefore
+						     || pRP->PrPresFunction == FnCreateAfter)
 						 && pRP->PrViewNum == viewNb)
 						/* c'est une regle de creation de boite de haut */
 						/* ou de bas de page */
@@ -1950,7 +1950,7 @@ int                *boxType;
 						/* d'elements associes ? */
 					       {
 						  pBo1 = &pSchP->PsPresentBox[pRP->
-							    PrPresBox[0] - 1];
+							  PrPresBox[0] - 1];
 						  if (pBo1->PbContent == ContElement
 						      && pBo1->PbContElem == pEl->ElTypeNumber)
 						     *boxType = pRP->PrPresBox[0];
@@ -2011,7 +2011,7 @@ int                *boxType;
 			  else if (pElPage->ElViewPSchema == viewNb
 				   && (pElPage->ElPageType == PgBegin
 				       || pElPage->ElPageType == PgComputed
-				 || pElPage->ElPageType == PgUser))
+				       || pElPage->ElPageType == PgUser))
 			     stop = TRUE;
 			  else
 			     stop = FALSE;
@@ -2057,7 +2057,7 @@ static void         BoiteElAssoc (pEl, viewNb, pDoc, pAbbReDisp)
 PtrElement          pEl;
 int                 viewNb;
 PtrDocument         pDoc;
-PtrAbstractBox            *pAbbReDisp;
+PtrAbstractBox     *pAbbReDisp;
 
 #endif /* __STDC__ */
 
@@ -2065,9 +2065,9 @@ PtrAbstractBox            *pAbbReDisp;
    PtrPSchema          pSchP;
    int                 index, boxType, TypeP;
    PtrElement          pElPage;
-   PtrAbstractBox             pAbbPage, pAbbPageThread;
-   PtrPRule        pRule;
-   PtrSSchema        pSchS;
+   PtrAbstractBox      pAbbPage, pAbbPageThread;
+   PtrPRule            pRule;
+   PtrSSchema          pSchS;
    boolean             found, stop;
    int                 viewSch;
 
@@ -2119,7 +2119,7 @@ PtrAbstractBox            *pAbbReDisp;
 				  pRule = NULL;
 			       else if (pRule->PrType == PtFunction)
 				  if (pRule->PrPresFunction == FnCreateBefore
-				      || pRule->PrPresFunction == FnCreateAfter)
+				  || pRule->PrPresFunction == FnCreateAfter)
 				     if (pRule->PrPresBox[0] == boxType)
 					if (pRule->PrViewNum == viewSch)
 					   found = TRUE;
@@ -2131,8 +2131,8 @@ PtrAbstractBox            *pAbbReDisp;
 			 {
 			    pElPage->ElAbstractBox[viewNb - 1] = pAbbPageThread;
 			    pAbbPage = CrAbsBoxesPres (pElPage, pDoc, pRule,
-						 pElPage->ElStructSchema, NULL,
-						 viewNb, pSchP, FALSE, TRUE);
+					      pElPage->ElStructSchema, NULL,
+						viewNb, pSchP, FALSE, TRUE);
 			    *pAbbReDisp = pAbbPage;
 			    /* il faut reafficher ce pave */
 			    pElPage->ElAbstractBox[viewNb - 1] = pAbbPageThread->
@@ -2165,15 +2165,15 @@ static void         DestroyNewAbsBox (PtrAbstractBox * pAbbFirst, PtrAbstractBox
 
 #else  /* __STDC__ */
 static void         DestroyNewAbsBox (pAbbFirst, pAbbLast)
-PtrAbstractBox            *pAbbFirst;
-PtrAbstractBox            *pAbbLast;
+PtrAbstractBox     *pAbbFirst;
+PtrAbstractBox     *pAbbLast;
 
 #endif /* __STDC__ */
 
 {
    int                 vol;
-   PtrAbstractBox             pAb, pAbb;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAb, pAbb;
+   PtrAbstractBox      pAbbox1;
 
    pAb = *pAbbFirst;
    while (pAb != NULL)
@@ -2234,8 +2234,8 @@ boolean             ContainEl (PtrElement pEl, int typeEl, PtrSSchema pStr, int 
 #else  /* __STDC__ */
 boolean             ContainEl (pEl, typeEl, pStr, viewSch, pElCont)
 PtrElement          pEl;
-int         typeEl;
-PtrSSchema        pStr;
+int                 typeEl;
+PtrSSchema          pStr;
 int                 viewSch;
 PtrElement         *pElCont;
 
@@ -2292,8 +2292,8 @@ int                 viewSch;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRule;
-   PtrSSchema        pSchS;
+   PtrPRule            pRule;
+   PtrSSchema          pSchS;
    PtrPSchema          pSchP;
    PtrElement          pE;
    int                 index;
@@ -2402,13 +2402,13 @@ int                 viewNb;
 
 {
    int                 view, firstView, lastView;
-   PtrAbstractBox             pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
    boolean             existingView, stop, assoc;
    boolean             complete;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
    int                 frame, h;
    boolean             paginatedView, bool, found;
-   PtrAbstractBox             pAbbRoot, pAbb1, pAbb;
+   PtrAbstractBox      pAbbRoot, pAbb1, pAbb;
    PtrElement          pEl1, pElCont;
 
    if (pEl != NULL)
@@ -2439,8 +2439,8 @@ int                 viewNb;
 		    {
 		       pAbbRoot = pDoc->DocViewRootAb[view - 1];
 		       paginatedView = (pAbbRoot->AbFirstEnclosed != NULL
-				  && pAbbRoot->AbFirstEnclosed->AbElement->
-				     ElTypeNumber == PageBreak + 1);
+				   && pAbbRoot->AbFirstEnclosed->AbElement->
+					ElTypeNumber == PageBreak + 1);
 		       frame = pDoc->DocViewFrame[view - 1];
 		    }
 	       }
@@ -2453,8 +2453,8 @@ int                 viewNb;
 		       pAbbRoot = pDoc->DocAssocRoot[pEl->ElAssocNum - 1]
 			  ->ElAbstractBox[0];
 		       paginatedView = (pAbbRoot->AbFirstEnclosed != NULL
-				  && pAbbRoot->AbFirstEnclosed->AbElement->
-				     ElTypeNumber == PageBreak + 1);
+				   && pAbbRoot->AbFirstEnclosed->AbElement->
+					ElTypeNumber == PageBreak + 1);
 		       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 		    }
 	       }
@@ -2490,7 +2490,7 @@ int                 viewNb;
 		       /* on detruit toute l'image */
 		       /* abstraite qui suit pour construire correctement la page */
 		       if (ContainEl (pEl, PageBreak + 1, pDoc->DocSSchema,
-				   pDoc->DocView[view - 1].DvPSchemaView, &pElCont)
+			    pDoc->DocView[view - 1].DvPSchemaView, &pElCont)
 			   || ContainPageColRule (pEl, pDoc->DocView[view - 1].DvPSchemaView))
 			 {	/* destruction des paves des elements qui suivent pEl */
 			    /* on recherche le pave de l'element suivant */
@@ -2564,7 +2564,7 @@ int                 viewNb;
 			    /* on cree les paves de l'element ainsi que des */
 			    /* elements contenus dans la page */
 			    pAb = AbsBoxesCreate (pAbbRoot->AbElement, pDoc, view, TRUE,
-					      TRUE, &complete);
+						  TRUE, &complete);
 			 }	/* fin cas ContainEl != NULL */
 		       /* ou regle page ou colonne pour pEl */
 		       else
@@ -2590,7 +2590,7 @@ int                 viewNb;
 				 do
 				    if (pAbbLast->AbPresentationBox
 					&& pAbbLast->AbNext != NULL
-				    && pAbbLast->AbNext->AbElement == pEl)
+				      && pAbbLast->AbNext->AbElement == pEl)
 				       pAbbLast = pAbbLast->AbNext;
 				    else if (pAbbLast->AbNextRepeated != NULL)
 				       pAbbLast = pAbbLast->AbNextRepeated;
@@ -2621,7 +2621,7 @@ int                 viewNb;
 				      {
 					 pAb = pAbbFirst;
 					 while (pAb != NULL && pAb != pAbbRoot
-					      && pAb->AbElement->ElTypeNumber !=
+					  && pAb->AbElement->ElTypeNumber !=
 						PageBreak + 1)
 					   {
 					      pAbbSibling = pAb->AbPrevious;
@@ -2690,7 +2690,7 @@ int                 viewNb;
 				      /* on remonte la hierarchie jusqu'a la racine */
 				      pAb = pAbbLast;
 				      while (pAb != NULL && pAb != pAbbRoot
-					     && pAb->AbElement->ElTypeNumber !=
+					  && pAb->AbElement->ElTypeNumber !=
 					     PageBreak + 1)
 					{
 					   /* supprime tous ses freres suivants */
@@ -2721,7 +2721,7 @@ int                 viewNb;
 					   while (pAbbSibling->AbNext != NULL
 						  && pAbbSibling->AbNext->AbElement == pAb->AbElement)
 					      pAbbSibling = pAbbSibling->AbNext;
-					   pAbbSibling = pAbbSibling->AbNext;		/* premier pave de la page suivante */
+					   pAbbSibling = pAbbSibling->AbNext;	/* premier pave de la page suivante */
 					   /* si il existe une page suivante */
 					   /* on la detruit (et les suivantes) */
 					   while (pAbbSibling != NULL)
@@ -2786,10 +2786,10 @@ int                 viewNb;
 
 {
    int                 view, firstView, lastView;
-   PtrAbstractBox             pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
    boolean             existingView, stop, assoc;
    boolean             complete;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
 
    if (pEl != NULL)
      {
@@ -3010,7 +3010,7 @@ int                 viewNb;
 		       if (AssocView (pEl))
 			  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
 			     Enclosing (pAbbReDisp,
-				 pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+			     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 		       else
 			  pDoc->DocViewModifiedAb[view - 1] =
 			     Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
@@ -3033,7 +3033,7 @@ static void         PosBoolAbsBoxCh (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 static void         PosBoolAbsBoxCh (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
@@ -3086,11 +3086,12 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst, PcLast;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst,
+                       PcLast;
    PtrElement          pElChild;
    boolean             stop;
    PtrElement          pEl1;
-   PtrAbstractBox             pPavFollow;
+   PtrAbstractBox      pPavFollow;
 
    pAbbReDisp = NULL;
    pAb = pEl->ElAbstractBox[view - 1];
@@ -3311,11 +3312,12 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst, PcLast;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst,
+                       PcLast;
    PtrElement          pElChild;
    boolean             stop;
    PtrElement          pEl1;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
 
    pAb = pEl->ElAbstractBox[view - 1];
    if (pAb == NULL)
@@ -3407,7 +3409,7 @@ int                 view;
 		     /* il s'agit d'un autre element, on arrete */
 		     pAb = NULL;
 		  else if (pAbbox1->AbElement->ElTerminal
-			   && pAbbox1->AbElement->ElLeafType == LtPageColBreak)
+			&& pAbbox1->AbElement->ElLeafType == LtPageColBreak)
 		     /* c'est un pave de haut ou bas de page, on n'en */
 		     /* traite qu'un */
 		     pAb = NULL;
@@ -3542,22 +3544,22 @@ void                RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocumen
 #else  /* __STDC__ */
 void                RedispRef (pRef, pAb, pDocRef)
 PtrReference        pRef;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDocRef;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pElRef;
-   PtrAbstractBox             pAbb, pPavRef;
+   PtrAbstractBox      pAbb, pPavRef;
    int                 v, frame, j, h;
-   PtrPRule        pRule;
+   PtrPRule            pRule;
    boolean             found, redisp, stop, same;
-   PtrTextBuffer      bufCopy, BufOriginal;
+   PtrTextBuffer       bufCopy, BufOriginal;
    PtrPSchema          pSPR;
-   PtrAttribute         pAttr;
-   PtrPRule        pRe1;
-   PtrAbstractBox             pAbbox1;
+   PtrAttribute        pAttr;
+   PtrPRule            pRe1;
+   PtrAbstractBox      pAbbox1;
    boolean             complete;
 
 #ifdef __COLPAGE__
@@ -3669,7 +3671,7 @@ PtrDocument         pDocRef;
 				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
 				      found = (strcmp (pRe1->PrPresBoxName,
-							pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
+						       pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
 				}
@@ -3747,7 +3749,7 @@ void                RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 void                RedispAllReferences (pAb, pDoc)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -3756,7 +3758,7 @@ PtrDocument         pDoc;
    PtrElement          pEl;
    PtrReference        pRef;
    int                 level;
-   PtrExternalDoc       pDocExt;
+   PtrExternalDoc      pDocExt;
    PtrDocument         pDocRef;
 
    pEl = pAb->AbElement;
@@ -3789,22 +3791,22 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrAbstractBox      SearchAbsBoxBackward (PtrAbstractBox pAbb1, boolean Test, PtrSSchema pSchStr, PtrPSchema pSchP, int Typ, boolean Pres)
+static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAbb1, boolean Test, PtrSSchema pSchStr, PtrPSchema pSchP, int Typ, boolean Pres)
 
 #else  /* __STDC__ */
-static PtrAbstractBox      SearchAbsBoxBackward (pAbb1, Test, pSchStr, pSchP, Typ, Pres)
-PtrAbstractBox             pAbb1;
+static PtrAbstractBox SearchAbsBoxBackward (pAbb1, Test, pSchStr, pSchP, Typ, Pres)
+PtrAbstractBox      pAbb1;
 boolean             Test;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 PtrPSchema          pSchP;
-int        Typ;
+int                 Typ;
 boolean             Pres;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             p, s;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      p, s;
+   PtrAbstractBox      pAbbox1;
 
    p = NULL;
    if (Test)
@@ -3851,20 +3853,20 @@ boolean             Pres;
    NULL si echec.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAbstractBox             AbsBoxFromElOrPres (PtrAbstractBox pAb, boolean pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
+PtrAbstractBox      AbsBoxFromElOrPres (PtrAbstractBox pAb, boolean pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
 #else  /* __STDC__ */
-PtrAbstractBox             AbsBoxFromElOrPres (pAb, pres, typeElOrPres, pSchP, pSchStr)
-PtrAbstractBox             pAb;
+PtrAbstractBox      AbsBoxFromElOrPres (pAb, pres, typeElOrPres, pSchP, pSchStr)
+PtrAbstractBox      pAb;
 boolean             pres;
-int        typeElOrPres;
+int                 typeElOrPres;
 PtrPSchema          pSchP;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAbbResult, pAbbForward, pAbbAscent;
+   PtrAbstractBox      pAbbResult, pAbbForward, pAbbAscent;
    boolean             stop;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
 
    pAbbResult = NULL;
    if (pAb != NULL)
@@ -3913,7 +3915,7 @@ PtrSSchema        pSchStr;
 			    else if (!pAbbox1->AbPresentationBox
 				     && pAbbox1->AbElement->ElTypeNumber == typeElOrPres
 				     && (pSchStr == NULL
-			       || pAbbox1->AbElement->ElStructSchema == pSchStr))
+					 || pAbbox1->AbElement->ElStructSchema == pSchStr))
 			       pAbbResult = pAbbAscent;
 			    /* trouve */
 			    if (pAbbResult == NULL)
@@ -4041,16 +4043,16 @@ static void         ComputeContent (boxType, nv, pDoc, pSS, pSchP, pElBegin, red
 int                 boxType;
 int                 nv;
 PtrDocument         pDoc;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrElement          pElBegin;
 boolean             redisp;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 frame, h;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
 
    FindFirstAbsBox (pElBegin, nv);
    pAb = pAbbBegin[nv - 1];
@@ -4111,16 +4113,16 @@ boolean             redisp;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb, pAbbFollow;
+   PtrAbstractBox      pAb, pAbbFollow;
    int                 frame, h;
    boolean             found, stop;
-   PtrPRule        pRCre;
+   PtrPRule            pRCre;
    PtrPSchema          pSPR;
-   PtrSSchema        pSSR;
-   PtrAttribute         pAttr;
+   PtrSSchema          pSSR;
+   PtrAttribute        pAttr;
    int                 viewSch;
-   PtrAbstractBox             pAbbox1;
-   PtrPRule        pRe1;
+   PtrAbstractBox      pAbbox1;
+   PtrPRule            pRe1;
    int                 presNum;
 
    FindFirstAbsBox (pElBegin, nv);
@@ -4144,7 +4146,7 @@ boolean             redisp;
 	     if (pAbbox1->AbEnclosing->AbPresentationBox)
 		presNum = pAbbox1->AbEnclosing->AbTypeNum;
 	     pRCre = GlobalSearchRulepEl (pAbbox1->AbElement, &pSPR, &pSSR, presNum, NULL,
-			       viewSch, PtFunction, TRUE, FALSE, &pAttr);
+				  viewSch, PtFunction, TRUE, FALSE, &pAttr);
 	     stop = FALSE;
 	     do
 		if (pRCre == NULL)
@@ -4237,7 +4239,7 @@ int                 boxType;
 boolean             presBox;
 int                 counter;
 int                 nv;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrDocument         pDoc;
 PtrElement          pElBegin;
@@ -4245,22 +4247,22 @@ boolean             redisp;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb, pAbb, pAbbNext;
+   PtrAbstractBox      pAb, pAbb, pAbbNext;
    PtrElement          pEl;
    int                 frame, h;
    boolean             stop, isCreated, depend, boxok, page;
-   PtrPRule        pRCre;
+   PtrPRule            pRCre;
    PtrPSchema          pSPR, pSchPOrig;
-   PtrSSchema        pSSR;
-   PtrAttribute         pAttr;
+   PtrSSchema          pSSR;
+   PtrAttribute        pAttr;
    int                 viewSch;
-   PtrAbstractBox             pAbbox1;
-   PtrPRule        pRe1;
+   PtrAbstractBox      pAbbox1;
+   PtrPRule            pRe1;
    PtrCondition        pCond;
    int                 presNum;
 
 #ifdef __COLPAGE__
-   PtrAbstractBox             pPrevious, pRac;
+   PtrAbstractBox      pPrevious, pRac;
    PtrElement          pElRac;
 
 #endif /* __COLPAGE__ */
@@ -4292,7 +4294,7 @@ boolean             redisp;
 #ifdef __COLPAGE__
 		       && (pAbbox1->AbElement->ElPageType == PgBegin
 			   || pAbbox1->AbElement->ElPageType == PgComputed
-			 || pAbbox1->AbElement->ElPageType == PgUser)
+			   || pAbbox1->AbElement->ElPageType == PgUser)
 #endif /* __COLPAGE__ */
 		       && pAbbox1->AbLeafType == LtCompound)
 		      /* c'est un element Marque de page */
@@ -4314,7 +4316,7 @@ boolean             redisp;
 		  if (pAb->AbPresentationBox)
 		     presNum = boxType;
 		  pRCre = GlobalSearchRulepEl (pAb->AbElement, &pSPR, &pSSR, presNum, NULL,
-				    viewSch, PtFunction, TRUE, FALSE, &pAttr);
+				  viewSch, PtFunction, TRUE, FALSE, &pAttr);
 		  stop = FALSE;
 		  do
 		     if (pRCre == NULL)
@@ -4390,7 +4392,7 @@ boolean             redisp;
 						      /* cherche le premier corps de page: on saute */
 						      /* le (les ?) premier haut de page eventuel */
 						      while (pAbb != NULL && pAbb->AbElement == pEl
-							  && pAbb->AbPresentationBox)
+							     && pAbb->AbPresentationBox)
 							 pAbb = pAbb->AbNext;
 						      /* pAbb est le premier corps de page */
 						      /* les premiers fils de la racine sont ses */
@@ -4464,7 +4466,7 @@ boolean             redisp;
 					    while (!isCreated && pAbb != NULL)
 					       if (pAbb->AbPresentationBox
 						   && pAbb->AbTypeNum == pRe1->PrPresBox[0]
-						   && pAbb->AbPSchema == pSPR)
+						 && pAbb->AbPSchema == pSPR)
 						  isCreated = TRUE;
 					       else
 						  pAbb = pAbb->AbNext;
@@ -4477,7 +4479,7 @@ boolean             redisp;
 						   && pAbb->AbElement == pAb->AbElement)
 					       if (pAbb->AbPresentationBox
 						   && pAbb->AbTypeNum == pRe1->PrPresBox[0]
-						   && pAbb->AbPSchema == pSPR)
+						 && pAbb->AbPSchema == pSPR)
 						  isCreated = TRUE;
 					       else
 						  pAbb = pAbb->AbNext;
@@ -4491,7 +4493,7 @@ boolean             redisp;
 					    /* sont definies a partir du corps de page qui est au meme niveau */
 					    /* que pAb */
 					    if (pEl->ElTerminal
-					     && pEl->ElLeafType == LtPageColBreak)
+						&& pEl->ElLeafType == LtPageColBreak)
 					      {
 						 pAbbNext = pEl->ElAbstractBox[nv - 1];
 						 pAbb = pAbbNext->AbFirstEnclosed;
@@ -4569,17 +4571,17 @@ static void         AttachCounterValue (pEl, pElIncluded, pDocIncluded, NmAttr, 
 PtrElement          pEl;
 PtrElement          pElIncluded;
 PtrDocument         pDocIncluded;
-Name                 NmAttr;
+Name                NmAttr;
 int                 counter;
 PtrPSchema          pSchP;
-PtrSSchema        pSchS;
+PtrSSchema          pSchS;
 
 #endif /* __STDC__ */
 
 {
    int                 att;
-   PtrAttribute         pAttr;
-   TtAttribute           *pTtAttr;
+   PtrAttribute        pAttr;
+   TtAttribute        *pTtAttr;
    boolean             found;
 
    if (pElIncluded != NULL)
@@ -4630,10 +4632,10 @@ void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name n
 void                TransmitCounterVal (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
 PtrDocument         pDoc;
-Name                 nameAttr;
+Name                nameAttr;
 int                 counter;
 PtrPSchema          pSchP;
-PtrSSchema        pSchS;
+PtrSSchema          pSchS;
 
 #endif /* __STDC__ */
 
@@ -4641,7 +4643,7 @@ PtrSSchema        pSchS;
    PtrElement          pElIncluded;
    PtrReference        pRef;
    PtrDocument         pDocIncluded;
-   DocumentIdentifier     IdentDocIncluded;
+   DocumentIdentifier  IdentDocIncluded;
 
    /* verifie d'abord qu'il s'agit bien d'une inclusion de document */
    {
@@ -4677,17 +4679,17 @@ PtrElement          pElBegin;
 PtrDocument         pDoc;
 int                 counter;
 PtrPSchema          pSchP;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 boolean             redisp;
 
 #endif /* __STDC__ */
 
 {
    int                 util, view;
-   Counter           *pCo1;
+   Counter            *pCo1;
    PtrElement          pEl;
    int                 regle;
-   Counter           *pCounter;
+   Counter            *pCounter;
    PtrElement          pElRoot;
 
    /* ce code etait precedemment plus loin */
@@ -4696,7 +4698,7 @@ boolean             redisp;
    for (util = 1; util <= pCo1->CnNPresBoxes; util++)
       if (AssocView (pElBegin))
 	 ComputeContent (pCo1->CnPresBox[util - 1], 1, pDoc, pSS, pSchP, pElBegin,
-			redisp);
+			 redisp);
       else
 	 for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
@@ -4707,7 +4709,7 @@ boolean             redisp;
 		    du compteur */
 		 if (!pCo1->CnMinMaxPresBox[util - 1])
 		    ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-				   pElBegin, redisp);
+				    pElBegin, redisp);
 		 else
 		   {
 		      /* On determine le debut de l'image abstraite */
@@ -4719,11 +4721,11 @@ boolean             redisp;
 			{
 			   pAbbBegin[view - 1] = NULL;
 			   ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-					  pElRoot, redisp);
+					   pElRoot, redisp);
 			}
 		      else
 			 ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-					pElBegin, redisp);
+					 pElBegin, redisp);
 		   }
 	      }
    /* On traite toutes les boites dont la creation est conditionnee par */
@@ -4731,7 +4733,7 @@ boolean             redisp;
    for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
       if (AssocView (pElBegin))
 	 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], 1, pSchP, pDoc, pElBegin,
-			   redisp);
+			     redisp);
       else
 	 for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
@@ -4742,7 +4744,7 @@ boolean             redisp;
 		    de max du compteur */
 		 if (!pCo1->CnMinMaxCreatedBox[util - 1])
 		    ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
-				      pElBegin, redisp);
+					pElBegin, redisp);
 		 else
 		   {
 		      /* On determine le debut de l'image abstraite */
@@ -4754,11 +4756,11 @@ boolean             redisp;
 			{
 			   pAbbBegin[view - 1] = NULL;
 			   ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
-					     pElRoot, redisp);
+					       pElRoot, redisp);
 			}
 		      else
 			 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
-					   pElBegin, redisp);
+					     pElBegin, redisp);
 		   }
 	      }
    /* On traite toutes les boites qui creent d'autres boites selon la */
@@ -4766,8 +4768,8 @@ boolean             redisp;
    for (util = 1; util <= pCo1->CnNCreators; util++)
       if (AssocView (pElBegin))
 	 ComputeCreation (pCo1->CnCreator[util - 1],
-			 pCo1->CnPresBoxCreator[util - 1], counter, 1, pSS, pSchP,
-			 pDoc, pElBegin, redisp);
+		   pCo1->CnPresBoxCreator[util - 1], counter, 1, pSS, pSchP,
+			  pDoc, pElBegin, redisp);
       else
 	 for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
@@ -4778,8 +4780,8 @@ boolean             redisp;
 		    du compteur */
 		 if (!pCo1->CnMinMaxCreator[util - 1])
 		    ComputeCreation (pCo1->CnCreator[util - 1],
-				  pCo1->CnPresBoxCreator[util - 1], counter, view,
-				    pSS, pSchP, pDoc, pElBegin, redisp);
+			    pCo1->CnPresBoxCreator[util - 1], counter, view,
+				     pSS, pSchP, pDoc, pElBegin, redisp);
 		 else
 		   {
 		      /* On determine le debut de l'image abstraite */
@@ -4791,13 +4793,13 @@ boolean             redisp;
 			{
 			   pAbbBegin[view - 1] = NULL;
 			   ComputeCreation (pCo1->CnCreator[util - 1],
-				  pCo1->CnPresBoxCreator[util - 1], counter, view,
-					   pSS, pSchP, pDoc, pElRoot, redisp);
+			    pCo1->CnPresBoxCreator[util - 1], counter, view,
+					 pSS, pSchP, pDoc, pElRoot, redisp);
 			}
 		      else
 			 ComputeCreation (pCo1->CnCreator[util - 1],
-					 pCo1->CnPresBoxCreator[util - 1], counter, view, pSS, pSchP,
-					 pDoc, pElBegin, redisp);
+					  pCo1->CnPresBoxCreator[util - 1], counter, view, pSS, pSchP,
+					  pDoc, pElBegin, redisp);
 		   }
 	      }
    /* On traite les regles de transmission des valeurs du compteur */
@@ -4812,7 +4814,7 @@ boolean             redisp;
 		/* c'est le type de document auquel le compteur est */
 		/* transmis, on applique la regle de transmission */
 		TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
-				  counter, pSchP, pSS);
+				    counter, pSchP, pSS);
 	     /* cherche le document inclus suivant */
 	     pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS);
 	  }
@@ -4843,11 +4845,11 @@ boolean             redisp;
 {
    int                 counter, oper, i;
    PtrPSchema          pSchP;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
    int                 index;
    boolean             trigger;
-   Counter           *pCo1;
-   CntrItem            *pCp1;
+   Counter            *pCo1;
+   CntrItem           *pCp1;
    SRule              *pRe1;
 
    /* si l'element pElModif est une marque de page, renumerote les */
@@ -4983,7 +4985,7 @@ PtrElement          pElBegin;
 PtrDocument         pDoc;
 int                 counter;
 PtrPSchema          pSchP;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -5007,7 +5009,7 @@ static void         SetChange (PtrAbstractBox pAbb, PRuleType typeRule)
 
 #else  /* __STDC__ */
 static void         SetChange (pAbb, typeRule)
-PtrAbstractBox             pAbb;
+PtrAbstractBox      pAbb;
 PRuleType           typeRule;
 
 #endif /* __STDC__ */
@@ -5072,10 +5074,10 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRPres;
-   PtrAbstractBox             pAbbChild;
+   PtrPRule            pRPres;
+   PtrAbstractBox      pAbbChild;
    PtrPSchema          pSPR;
-   PtrAttribute         pA;
+   PtrAttribute        pA;
 
 #ifdef __COLPAGE__
    boolean             bool;
@@ -5117,7 +5119,7 @@ PtrDocument         pDoc;
 		else if (typeRule == PtDepth || typeRule == PtLineStyle ||
 			 typeRule == PtLineWeight ||
 			 typeRule == PtFillPattern ||
-		  typeRule == PtBackground || typeRule == PtForeground)
+		       typeRule == PtBackground || typeRule == PtForeground)
 		   pAb->AbAspectChange = TRUE;
 		else
 		   pAb->AbChange = TRUE;
@@ -5150,18 +5152,18 @@ static boolean      ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP, PtrAbstra
 
 #else  /* __STDC__ */
 static boolean      ApplyPresRuleAb (pRule, pSchP, pAb, pDoc, pAttr)
-PtrPRule        pRule;
+PtrPRule            pRule;
 PtrPSchema          pSchP;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRegle2;
+   PtrPRule            pRegle2;
    PtrPSchema          pSchP2;
-   PtrAttribute         pAttr2;
+   PtrAttribute        pAttr2;
    boolean             ret;
 
 #ifdef __COLPAGE__
@@ -5193,7 +5195,7 @@ PtrAttribute         pAttr;
 		    if (pRule->PrType == PtVertPos)
 		      {
 			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
-					    TRUE, &pAttr2);
+						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
 			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, &bool))
@@ -5205,7 +5207,7 @@ PtrAttribute         pAttr;
 		    else
 		      {
 			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
-					    TRUE, &pAttr2);
+						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
 			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, &bool))
@@ -5229,7 +5231,7 @@ PtrAttribute         pAttr;
 		    if (pRule->PrType == PtHorizPos)
 		      {
 			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
-					    TRUE, &pAttr2);
+						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
 			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, &bool))
@@ -5241,7 +5243,7 @@ PtrAttribute         pAttr;
 		    else
 		      {
 			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
-					    TRUE, &pAttr2);
+						  TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 #ifdef __COLPAGE__
 			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, &bool))
@@ -5271,23 +5273,24 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocum
 #else  /* __STDC__ */
 void                UpdatePresAttr (pEl, pAttr, pDoc, remove, inherit, pAttrComp)
 PtrElement          pEl;
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 boolean             remove;
 boolean             inherit;
-PtrAttribute         pAttrComp;
+PtrAttribute        pAttrComp;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pR, pRuleView1, pRuleNext, pRNA, pRSpecif, pRS, pRP;
+   PtrPRule            pR, pRuleView1, pRuleNext, pRNA, pRSpecif, pRS,
+                       pRP;
    int                 view, viewSch, val;
    PRuleType           typeRule;
-   FunctionType           TFonct;
-   PtrAbstractBox             pAbb, pReaff, pPR, pAbbNext, pAbbChild;
+   FunctionType        TFonct;
+   PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild;
    boolean             appl, stop, sameType, found;
    PtrPSchema          pSchP, pSPR;
-   PtrAttribute         pAttrib;
+   PtrAttribute        pAttrib;
    PtrElement          pEl1;
    boolean             existingView;
    boolean             complete;
@@ -5296,7 +5299,7 @@ PtrAttribute         pAttrComp;
 
 #ifdef __COLPAGE__
    boolean             TRep;
-   PtrAbstractBox             pPE;
+   PtrAbstractBox      pPE;
 
 #endif /* __COLPAGE__ */
 
@@ -5415,11 +5418,11 @@ PtrAttribute         pAttrComp;
 #ifndef __COLPAGE__
 			       || TFonct == FnCreateWith
 #endif /* __COLPAGE__ */
-			 || TFonct == FnCreateFirst || TFonct == FnCreateLast)
+		       || TFonct == FnCreateFirst || TFonct == FnCreateLast)
 			   && !remove)
 			  /* il faut creer un pave de presentation */
 			  pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
-					  pSchP, FALSE, TRUE);
+						 pSchP, FALSE, TRUE);
 		       /* traite les paves crees par la regle de visibilite ou de */
 		       /* creation */
 		       /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
@@ -5495,7 +5498,7 @@ PtrAttribute         pAttrComp;
 					      if (pRSpecif == NULL)
 						 stop = TRUE;
 					      else if (pRSpecif->PrViewNum == viewSch &&
-						 pRSpecif->PrType == typeRule)
+					       pRSpecif->PrType == typeRule)
 						 stop = TRUE;	/* trouve' */
 					      else
 						{
@@ -5575,7 +5578,7 @@ PtrAttribute         pAttrComp;
 				 /* on passe au duplique suivant */
 				 pAbb = pAbb->AbNextRepeated;
 			      }
-			    while (pAbb != NULL);		/* fin boucle des dupliques */
+			    while (pAbb != NULL);	/* fin boucle des dupliques */
 #endif /* __COLPAGE__ */
 			 }
 
@@ -5585,7 +5588,7 @@ PtrAttribute         pAttrComp;
 #ifndef __COLPAGE__
 			       || TFonct == FnCreateWith
 #endif /* __COLPAGE__ */
-			 || TFonct == FnCreateFirst || TFonct == FnCreateLast)
+		       || TFonct == FnCreateFirst || TFonct == FnCreateLast)
 			   && remove)
 			  /* on supprime un attribut qui portait une regle de */
 			  /* creation ; il faut detruire le pave de presentation que */
@@ -5600,7 +5603,7 @@ PtrAttribute         pAttrComp;
 			    if (TFonct == FnCreateAfter || TFonct == FnCreateLast)
 			       while (pAbb->AbNextRepeated != NULL)
 				  pAbb = pAbb->AbNextRepeated;
-			    pPE = pAbb;	/* pour paves repetes */
+			    pPE = pAbb;		/* pour paves repetes */
 			    /* on boucle sur les paves de presentation repetes */
 			    do
 			      {
@@ -5763,9 +5766,9 @@ PtrElement         *pLib;
    boolean             equal, stop;
    PtrElement          pEl2, pEVoisin;
    int                 view, dvol;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    PtrElement          pEl1;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pAbbox1;
 
    equal = FALSE;
    if (pEl != NULL)
@@ -5801,7 +5804,7 @@ PtrElement         *pLib;
 					     stop = TRUE;
 					  }
 					else if (!pEVoisin->ElTerminal
-					|| pEVoisin->ElLeafType != LtPageColBreak)
+						 || pEVoisin->ElLeafType != LtPageColBreak)
 					   stop = TRUE;
 					else
 					   pEVoisin = pEVoisin->ElNext;

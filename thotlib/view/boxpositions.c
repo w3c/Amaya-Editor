@@ -38,6 +38,7 @@ static void         SetYCompleteForOutOfStruct (pBox, visibility, frame)
 PtrBox              pBox;
 int                 visibility;
 int                 frame;
+
 #endif /* __STDC__ */
 {
    PtrPosRelations     pPosRel;
@@ -87,6 +88,7 @@ static void         SetXCompleteForOutOfStruct (pBox, visibility, frame)
 PtrBox              pBox;
 int                 visibility;
 int                 frame;
+
 #endif /* __STDC__ */
 {
    PtrPosRelations     pPosRel;
@@ -136,9 +138,10 @@ int                 frame;
 static void         OnPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
 static void         OnPage (pAb, height, isPageBreakChanged)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                *height;
 boolean            *isPageBreakChanged;
+
 #endif /* __STDC__ */
 {
    if (pAb != NULL)
@@ -175,9 +178,10 @@ static void         OutOfPage (pAb, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
 int                *height;
 boolean            *isPageBreakChanged;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pParentAb;
+   PtrAbstractBox      pParentAb;
 
    if (pAb != NULL)
      {
@@ -210,7 +214,7 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAbb;
+   PtrAbstractBox      pAbb;
 
    pAbb = pAb;
    pAbb->AbOnPageBreak = FALSE;
@@ -242,20 +246,21 @@ PtrAbstractBox      pAb;
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetPageIndicators (PtrAbstractBox pAb, int *height, boolean *isPageBreakChanged)
+static void         SetPageIndicators (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
 static void         SetPageIndicators (pAb, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
 int                *height;
 boolean            *isPageBreakChanged;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   PtrBox            pBox;
-   PtrBox            pPreviousBox;
-   PtrBox            pFirstBox;
-   int               org;
-   boolean           toContinue;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pBox;
+   PtrBox              pPreviousBox;
+   PtrBox              pFirstBox;
+   int                 org;
+   boolean             toContinue;
 
    /* A priori la limite de page n'est pas deplacee */
    *isPageBreakChanged = FALSE;
@@ -380,9 +385,9 @@ boolean            *isPageBreakChanged;
 		  /* colonne qu'on evalue la coupure */
 		  while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
 			 && (pChildAb->AbElement->ElPageType == ColBegin
-			  || pChildAb->AbElement->ElPageType == ColComputed
-		       || pChildAb->AbElement->ElPageType == ColUser
-			 || pChildAb->AbElement->ElPageType == ColGroup)
+			   || pChildAb->AbElement->ElPageType == ColComputed
+			     || pChildAb->AbElement->ElPageType == ColUser
+			     || pChildAb->AbElement->ElPageType == ColGroup)
 			 && pChildAb->AbNext != NULL)
 		     pChildAb = pChildAb->AbNext;
 #endif /* __COLPAGE__ */
@@ -411,6 +416,7 @@ boolean             SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 boolean             SetPageBreakPosition (pAb, page)
 PtrAbstractBox      pAb;
 int                *page;
+
 #endif /* __STDC__ */
 {
    int                 height;
@@ -452,6 +458,7 @@ int                 visibility;
 int                 frame;
 boolean             horizRef;
 boolean             vertRef;
+
 #endif /* __STDC__ */
 {
    int                 x, y, i;
@@ -597,25 +604,25 @@ boolean             vertRef;
 			    && (pChildBox->BxXOrg < 0 || pChildBox->BxXOrg > width))
 			  {
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
+				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildAb->AbVertEnclosing && placeenY
-			       && (pChildBox->BxYOrg < 0 || pChildBox->BxYOrg > height))
+				 && (pChildBox->BxYOrg < 0 || pChildBox->BxYOrg > height))
 			  {
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_VERT_POS), AbsBoxType (pChildAb));
+				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_VERT_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildBox->BxWidth < 0)
 			  {
 			     pChildBox->BxWidth = 1;
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
+				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
 			  }
 			else if (pChildBox->BxHeight < 0)
 			  {
 			     pChildBox->BxHeight = 1;
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
+				TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
 			  }
 		     /* decale la boite positionnee en X dans l'englobante */
 		     if (horizRef && newX)
@@ -632,8 +639,8 @@ boolean             vertRef;
 			       MoveBoxEdge (pChildBox, box1, OpHorizDep, x, frame, TRUE);
 			    }
 			  else if (!placeenX)
-			    /* il faut deplacer tout le contenu de la boite */
-			    XMoveAllEnclosed (pChildBox, x, frame);
+			     /* il faut deplacer tout le contenu de la boite */
+			     XMoveAllEnclosed (pChildBox, x, frame);
 			  else
 			     pChildBox->BxXOrg += x;
 
@@ -647,7 +654,7 @@ boolean             vertRef;
 			      && !pBox->BxHorizFlex)
 			    {
 			       if (HighlightBoxErrors)
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -669,7 +676,7 @@ boolean             vertRef;
 					    pChildBox->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpHorizDep
-					     && pRelation->ReBox->BxXOutOfStruct
+						&& pRelation->ReBox->BxXOutOfStruct
 						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxHorizFlex)
@@ -723,8 +730,8 @@ boolean             vertRef;
 			       MoveBoxEdge (pChildBox, box1, OpVertDep, y, frame, FALSE);
 			    }
 			  else if (!placeenY)
-			    /* il faut deplacer tout le contenu de la boite */
-			    YMoveAllEnclosed (pChildBox, y, frame);
+			     /* il faut deplacer tout le contenu de la boite */
+			     YMoveAllEnclosed (pChildBox, y, frame);
 			  else
 			     pChildBox->BxYOrg += y;
 			  /* La boite est placee */
@@ -737,7 +744,7 @@ boolean             vertRef;
 			      && !pBox->BxVertFlex)
 			    {
 			       if (HighlightBoxErrors)
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -759,7 +766,7 @@ boolean             vertRef;
 					    pChildBox->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpVertDep
-					     && pRelation->ReBox->BxYOutOfStruct
+						&& pRelation->ReBox->BxYOutOfStruct
 						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxVertFlex)
@@ -838,11 +845,12 @@ boolean             pointVal;
 int                *ht;
 int                *pos;
 int                *nChars;
+
 #endif /* __STDC__ */
 {
-   PtrBox            box1;
-   PtrBox            pChildBox;
-   PtrTextBuffer      adbuff;
+   PtrBox              box1;
+   PtrBox              pChildBox;
+   PtrTextBuffer       adbuff;
    int                 height;
    int                 org, i;
    int                 hfont;
@@ -979,8 +987,8 @@ boolean             vertRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pChildAb;
-   PtrBox            pBox;
+   PtrAbstractBox      pChildAb;
+   PtrBox              pBox;
 
    pBox = pAb->AbBox;
    if (pBox == NULL)

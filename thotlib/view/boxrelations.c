@@ -34,15 +34,16 @@
    rapport au pave englobant.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAbstractBox   GetPosRelativeAb (PtrAbstractBox pCurrentAb, boolean horizRef)
+static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, boolean horizRef)
 #else  /* __STDC__ */
-static PtrAbstractBox   GetPosRelativeAb (pCurrentAb, horizRef)
+static PtrAbstractBox GetPosRelativeAb (pCurrentAb, horizRef)
 PtrAbstractBox      pCurrentAb;
 boolean             horizRef;
+
 #endif /* __STDC__ */
 {
-   boolean          still;
-   PtrAbstractBox   pAb;
+   boolean             still;
+   PtrAbstractBox      pAb;
 
    still = TRUE;
    pAb = pCurrentAb->AbPrevious;
@@ -80,14 +81,15 @@ boolean             horizRef;
    dimension de pOrginBox).                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
+static void         InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
 #else  /* __STDC__ */
-static void       InsertPosRelation (pOrginBox, pTargetBox, op, originEdge, targetEdge)
-PtrBox            pOrginBox;
-PtrBox            pTargetBox;
-OpRelation        op;
-BoxEdge           originEdge;
-BoxEdge           targetEdge;
+static void         InsertPosRelation (pOrginBox, pTargetBox, op, originEdge, targetEdge)
+PtrBox              pOrginBox;
+PtrBox              pTargetBox;
+OpRelation          op;
+BoxEdge             originEdge;
+BoxEdge             targetEdge;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -160,8 +162,8 @@ BoxEdge           targetEdge;
 	     if (empty)
 		loop = FALSE;
 	     else
-	       /* Bloc suivant */
-	       pPosRel = pPosRel->PosRNext;
+		/* Bloc suivant */
+		pPosRel = pPosRel->PosRNext;
 	  }
 
 	/* Faut-il creer un nouveau bloc de relations ? */
@@ -188,13 +190,14 @@ BoxEdge           targetEdge;
    pTargetBox).                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
+static void         InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
 #else  /* __STDC__ */
-static void       InsertDimRelation (pOrginBox, pTargetBox, sameDimension, horizRef)
-PtrBox            pOrginBox;
-PtrBox            pTargetBox;
-boolean           sameDimension;
-boolean           horizRef;
+static void         InsertDimRelation (pOrginBox, pTargetBox, sameDimension, horizRef)
+PtrBox              pOrginBox;
+PtrBox              pTargetBox;
+boolean             sameDimension;
+boolean             horizRef;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -261,14 +264,15 @@ boolean           horizRef;
    droite.                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAbstractBox      NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
+static PtrAbstractBox NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
 #else  /* __STDC__ */
-static PtrAbstractBox      NextAbToCheck (pAb, pRefAb)
-PtrAbstractBox             pAb;
-PtrAbstractBox             pRefAb;
+static PtrAbstractBox NextAbToCheck (pAb, pRefAb)
+PtrAbstractBox      pAb;
+PtrAbstractBox      pRefAb;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox          pNextAb;
+   PtrAbstractBox      pNextAb;
 
    /* Il y a un premier fils different du pave reference ? */
    if (pAb->AbFirstEnclosed != NULL && pAb->AbFirstEnclosed != pRefAb)
@@ -320,10 +324,11 @@ static void         PropagateXOutOfStruct (pCurrentAb, status, enclosed)
 PtrAbstractBox      pCurrentAb;
 boolean             status;
 boolean             enclosed;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pAb;
-   PtrBox            pBox;
+   PtrAbstractBox      pAb;
+   PtrBox              pBox;
 
    /* Recherche un pave frere qui depend ce celui-ci */
    if (pCurrentAb->AbEnclosing == NULL)
@@ -350,7 +355,7 @@ boolean             enclosed;
 	     PropagateXOutOfStruct (pAb, status, pAb->AbHorizEnclosing);
 	  }
 	else if (pAb->AbWidth.DimIsPosition
-	&& pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb && !pAb->AbWidthChange)
+		 && pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb && !pAb->AbWidthChange)
 	   /* Dependance de dimension */
 	   pBox->BxWOutOfStruct = status;
 
@@ -370,10 +375,11 @@ static void         PropagateYOutOfStruct (pCurrentAb, status, enclosed)
 PtrAbstractBox      pCurrentAb;
 boolean             status;
 boolean             enclosed;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pAb;
-   PtrBox            pBox;
+   PtrAbstractBox      pAb;
+   PtrBox              pBox;
 
    /* Recherche un pave frere qui depend ce celui-ci */
    if (pCurrentAb->AbEnclosing == NULL)
@@ -399,7 +405,7 @@ boolean             enclosed;
 	     PropagateYOutOfStruct (pAb, status, pAb->AbVertEnclosing);
 	  }
 	else if (pAb->AbHeight.DimIsPosition
-	&& pAb->AbHeight.DimPosition.PosAbRef == pCurrentAb && !pAb->AbHeightChange)
+		 && pAb->AbHeight.DimPosition.PosAbRef == pCurrentAb && !pAb->AbHeightChange)
 	   pBox->BxHOutOfStruct = status;
 
 	/* passe au pave suivant */
@@ -415,22 +421,23 @@ boolean             enclosed;
    jour et les relations de dependance sont enregistrees.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void                ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
-void              ComputePosRelation (rule, pBox, frame, horizRef)
-AbPosition        rule;
-PtrBox            pBox;
-int               frame;
-boolean           horizRef;
+void                ComputePosRelation (rule, pBox, frame, horizRef)
+AbPosition          rule;
+PtrBox              pBox;
+int                 frame;
+boolean             horizRef;
+
 #endif /* __STDC__ */
 {
-   int               x, y, dist;
-   PtrAbstractBox    pAb;
-   PtrAbstractBox    pCurrentAb;
-   PtrBox            pCurrentBox;
-   BoxEdge           refEdge, localEdge;
-   OpRelation        op;
-   AbPosition       *pPosAb;
+   int                 x, y, dist;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   PtrBox              pCurrentBox;
+   BoxEdge             refEdge, localEdge;
+   OpRelation          op;
+   AbPosition         *pPosAb;
 
    /* On calcule la position de reference */
    op = (OpRelation) 0;
@@ -531,7 +538,7 @@ boolean           horizRef;
 		    {
 		       if (pAb->AbBox->BxXOutOfStruct
 			   || (pAb->AbBox->BxHorizFlex)
-			   || (pAb->AbBox->BxWOutOfStruct && refEdge != Left))
+			 || (pAb->AbBox->BxWOutOfStruct && refEdge != Left))
 			 {
 			    /* La boite herite la relation hors-structure */
 			    /* ou bien elle est liee a une dimension hors-structure */
@@ -856,18 +863,19 @@ boolean           horizRef;
    Retourne son adresse sinon NULL.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox            GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox              GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
-PtrBox            GetHPosRelativePos (pBox, pPreviousBox)
-PtrBox            pBox;
-PtrBox            pPreviousBox;
+PtrBox              GetHPosRelativePos (pBox, pPreviousBox)
+PtrBox              pBox;
+PtrBox              pPreviousBox;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pRelativeBox;
-   PtrPosRelations   pPosRel;
-   BoxRelation      *pRelation;
-   int               i;
-   boolean           notEmpty;
+   PtrBox              pRelativeBox;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   int                 i;
+   boolean             notEmpty;
 
    /* On verifie que la boite n'a pas deja ete examinee */
    if (pPreviousBox != NULL)
@@ -951,16 +959,16 @@ PtrBox            pPreviousBox;
 			    }
 			  else
 			    {
-			      i++;
-			      if (i <= MAX_RELAT_POS)
-				notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			       i++;
+			       if (i <= MAX_RELAT_POS)
+				  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
 			    }
 		       }
 		     else
 		       {
-			 i++;
-			 if (i <= MAX_RELAT_POS)
-			   notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			  i++;
+			  if (i <= MAX_RELAT_POS)
+			     notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
 		       }
 	       }
 	     /* Bloc suivant */
@@ -986,19 +994,19 @@ PtrBox            pPreviousBox;
    Retourne son adresse sinon NULL.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox            GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox              GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
-PtrBox            GetVPosRelativeBox (pBox, pPreviousBox)
-PtrBox            pBox;
-PtrBox            pPreviousBox;
+PtrBox              GetVPosRelativeBox (pBox, pPreviousBox)
+PtrBox              pBox;
+PtrBox              pPreviousBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox            pRelativeBox;
-   PtrPosRelations   pPosRel;
-   BoxRelation      *pRelation;
-   int               i;
-   boolean           notEmpty;
+   PtrBox              pRelativeBox;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   int                 i;
+   boolean             notEmpty;
 
    /* On verifie que la boite n'a pas deja ete examinee */
    if (pPreviousBox != NULL)
@@ -1120,19 +1128,20 @@ boolean             ComputeDimRelation (pAb, frame, horizRef)
 PtrAbstractBox      pAb;
 int                 frame;
 boolean             horizRef;
+
 #endif /* __STDC__ */
 {
-   int               val, delta, i;
-   PtrBox            pRefBox;
-   PtrBox            pBox;
-   PtrAbstractBox    pParentAb;
-   PtrAbstractBox    pChildAb;
-   boolean           inLine;
-   boolean           defaultDim;
-   ptrfont           font;
-   OpRelation        op;
-   AbDimension      *pDimAb;
-   AbPosition       *pPosAb;
+   int                 val, delta, i;
+   PtrBox              pRefBox;
+   PtrBox              pBox;
+   PtrAbstractBox      pParentAb;
+   PtrAbstractBox      pChildAb;
+   boolean             inLine;
+   boolean             defaultDim;
+   ptrfont             font;
+   OpRelation          op;
+   AbDimension        *pDimAb;
+   AbPosition         *pPosAb;
 
    pBox = pAb->AbBox;
    /* a priori, la dimension ne depend pas de son contenu */
@@ -1164,7 +1173,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1202,7 +1211,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1496,9 +1505,9 @@ boolean             horizRef;
 					   /* Il y a une erreur de dimension */
 					   /* Erreur sur le schema de presentation */
 					   if (horizRef)
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 					   else
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 
 					}
 				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
@@ -1533,7 +1542,7 @@ boolean             horizRef;
 			 {
 			    /* Si c'est un heritage on note l'indication hors-structure */
 			    if (pChildAb->AbHorizPos.PosAbRef == pAb
-			      && pChildAb->AbHorizPos.PosRefEdge != Left)
+				&& pChildAb->AbHorizPos.PosRefEdge != Left)
 			      {
 				 if (!IsXPosComplete (pChildAb->AbBox))
 				    /* la boite  est maintenant placee en absolu */
@@ -1683,7 +1692,7 @@ boolean             horizRef;
 			  delta = 0;
 		       else
 			  delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-			  (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight);
+					      (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight);
 		    }
 		  else
 		     /* Convert the distance value */
@@ -1755,20 +1764,21 @@ boolean             horizRef;
    est VRAI ou FAUX est mis a` jour.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void                ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
-void              ComputeAxisRelation (rule, pBox, frame, horizRef)
-AbPosition        rule;
-PtrBox            pBox;
-int               frame;
-boolean           horizRef;
+void                ComputeAxisRelation (rule, pBox, frame, horizRef)
+AbPosition          rule;
+PtrBox              pBox;
+int                 frame;
+boolean             horizRef;
+
 #endif /* __STDC__ */
 {
-   int            x, y, dist;
-   PtrBox         pCurrentBox;
-   PtrAbstractBox pAb;
-   PtrAbstractBox pCurrentAb;
-   BoxEdge        refEdge, localEdge;
+   int                 x, y, dist;
+   PtrBox              pCurrentBox;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
+   BoxEdge             refEdge, localEdge;
 
    /* Calcule la position de reference */
    pAb = rule.PosAbRef;
@@ -1934,6 +1944,7 @@ PtrAbstractBox      pCurrentAb;
 boolean             Pos;
 boolean             Axe;
 boolean             horizRef;
+
 #endif /* __STDC__ */
 {
    int                 i, found;
@@ -1986,7 +1997,7 @@ boolean             horizRef;
 		     if (i == MAX_RELAT_POS)
 			pRelation->ReBox = NULL;
 		     else
-		       /* il faut reexaminer cette entree */
+			/* il faut reexaminer cette entree */
 			i--;
 		  }
 		/* Si c'est une relation en X */
@@ -1996,9 +2007,9 @@ boolean             horizRef;
 		     if (pRelation->ReBox == pTargetBox
 			 && ((Axe && pRelation->ReOp == OpHorizRef)
 			     || (Pos && pRelation->ReOp == OpHorizInc)
-			  || (Pos && pCurrentAb == NULL && pRelation->ReOp == OpHorizDep)
+			     || (Pos && pCurrentAb == NULL && pRelation->ReOp == OpHorizDep)
 		     /* Ni Axe ni Pos quand il s'agit d'une dimension elastique */
-			     || (!Pos && !Axe && pRelation->ReOp == OpWidth)))
+			   || (!Pos && !Axe && pRelation->ReOp == OpWidth)))
 		       {
 			  found = i;
 			  pPreviousPosRel = pPosRel;
@@ -2006,7 +2017,7 @@ boolean             horizRef;
 
 		     /* Est-ce la relation de position du pave pCurrentAb ? */
 		     else if (found == 0 && Pos && pRelation->ReOp == OpHorizDep
-			      && pCurrentAb != NULL && pRelation->ReBox == pTargetBox)
+		     && pCurrentAb != NULL && pRelation->ReBox == pTargetBox)
 		       {
 			  pAb = pRelation->ReBox->BxAbstractBox;
 			  pAb = pAb->AbHorizPos.PosAbRef;
@@ -2031,9 +2042,9 @@ boolean             horizRef;
 		else if (pRelation->ReBox == pTargetBox
 			 && ((Axe && pRelation->ReOp == OpVertRef)
 			     || (Pos && pRelation->ReOp == OpVertInc)
-			  || (Pos && pCurrentAb == NULL && pRelation->ReOp == OpVertDep)
+			     || (Pos && pCurrentAb == NULL && pRelation->ReOp == OpVertDep)
 		   /* Ni Axe ni Pos quand il s'agit d'une dimension elastique */
-			     || (!Pos && !Axe && pRelation->ReOp == OpHeight)))
+			  || (!Pos && !Axe && pRelation->ReOp == OpHeight)))
 		  {
 		     found = i;
 		     pPreviousPosRel = pPosRel;
@@ -2041,7 +2052,7 @@ boolean             horizRef;
 
 		/* Est-ce la relation de position du pave pCurrentAb ? */
 		else if (found == 0 && Pos && pRelation->ReOp == OpVertDep
-			 && pCurrentAb != NULL && pRelation->ReBox == pTargetBox)
+		    && pCurrentAb != NULL && pRelation->ReBox == pTargetBox)
 		  {
 		     pAb = pRelation->ReBox->BxAbstractBox;
 		     pAb = pAb->AbVertPos.PosAbRef;
@@ -2200,8 +2211,8 @@ boolean             horizRef;
 	     result = TRUE;
 	  }
 	else
-	  /* On n'a pas trouve */
-	  result = FALSE;
+	   /* On n'a pas trouve */
+	   result = FALSE;
      }
    return result;
 }
@@ -2216,10 +2227,11 @@ void                ClearXOutOfStructRelation (PtrBox pTargetBox)
 #else  /* __STDC__ */
 void                ClearXOutOfStructRelation (pTargetBox)
 PtrBox              pTargetBox;
+
 #endif /* __STDC__ */
 {
-   PtrBox           pOrginBox;
-   PtrAbstractBox   pAb;
+   PtrBox              pOrginBox;
+   PtrAbstractBox      pAb;
 
    pAb = pTargetBox->BxAbstractBox;
 
@@ -2356,11 +2368,11 @@ boolean             horizRef;
 			    if (pCurrentAb != pAb && pCurrentAb->AbBox != NULL)
 			       /* Si c'est un heritage on retire l'indication hors-structure */
 			       if (pCurrentAb->AbBox->BxXOutOfStruct
-			       && pCurrentAb->AbHorizPos.PosAbRef == pAb)
+				   && pCurrentAb->AbHorizPos.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxXOutOfStruct = FALSE;
 			       else if (pCurrentAb->AbBox->BxWOutOfStruct
 					&& pCurrentAb->AbWidth.DimIsPosition
-			       && pCurrentAb->AbWidth.DimPosition.PosAbRef == pAb)
+					&& pCurrentAb->AbWidth.DimPosition.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxWOutOfStruct = FALSE;
 
 			    pCurrentAb = pCurrentAb->AbNext;
@@ -2381,11 +2393,11 @@ boolean             horizRef;
 			    if (pCurrentAb != pAb && pCurrentAb->AbBox != NULL)
 			       /* Si c'est un heritage on retire l'indication hors-structure */
 			       if (pCurrentAb->AbBox->BxYOutOfStruct
-			       && pCurrentAb->AbVertPos.PosAbRef == pAb)
+				   && pCurrentAb->AbVertPos.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxYOutOfStruct = FALSE;
 			       else if (pCurrentAb->AbBox->BxHOutOfStruct
 					&& pCurrentAb->AbHeight.DimIsPosition
-			       && pCurrentAb->AbHeight.DimPosition.PosAbRef == pAb)
+					&& pCurrentAb->AbHeight.DimPosition.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxHOutOfStruct = FALSE;
 
 			    pCurrentAb = pCurrentAb->AbNext;
@@ -2427,11 +2439,12 @@ boolean             horizRef;
    relation.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              ClearAxisRelation (PtrBox pOrginBox, boolean horizRef)
+void                ClearAxisRelation (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
-void              ClearAxisRelation (pOrginBox, horizRef)
-PtrBox            pOrginBox;
-boolean           horizRef;
+void                ClearAxisRelation (pOrginBox, horizRef)
+PtrBox              pOrginBox;
+boolean             horizRef;
+
 #endif /* __STDC__ */
 {
    boolean             loop;
@@ -2485,10 +2498,11 @@ void                ClearAllRelations (PtrBox pTargetBox)
 #else  /* __STDC__ */
 void                ClearAllRelations (pTargetBox)
 PtrBox              pTargetBox;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrAbstractBox             pCurrentAb;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
 
    pCurrentAb = pTargetBox->BxAbstractBox;
    pAb = pCurrentAb->AbEnclosing;
@@ -2548,8 +2562,8 @@ int                 frame;
 #endif /* __STDC__ */
 {
    boolean             loop;
-   PtrAbstractBox             pAb;
-   PtrAbstractBox             pCurrentAb;
+   PtrAbstractBox      pAb;
+   PtrAbstractBox      pCurrentAb;
 
 
    pAb = pOrginBox->BxAbstractBox;
@@ -2711,4 +2725,3 @@ int                 frame;
      }
 
 }
-

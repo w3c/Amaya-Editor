@@ -66,15 +66,16 @@ int                 frame;
 int                 x;
 int                 y;
 int                 button;
+
 #endif /* __STDC__ */
 {
-   int               index;
-   PtrBox            pBox;
-   PtrTextBuffer     pBuffer;
-   PtrAbstractBox    pAb;
-   int               charsNumber;
-   int               spacesNumber;
-   ViewFrame        *pFrame;
+   int                 index;
+   PtrBox              pBox;
+   PtrTextBuffer       pBuffer;
+   PtrAbstractBox      pAb;
+   int                 charsNumber;
+   int                 spacesNumber;
+   ViewFrame          *pFrame;
 
    if (frame >= 1)
      {
@@ -163,7 +164,7 @@ int                 height;
 
 #endif /* __STDC__ */
 {
-   int              value;
+   int                 value;
 
    /* prend le centre de la boite */
    width /= 2;
@@ -229,15 +230,16 @@ static boolean      InPolyline (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      buff, pLastBuffer;
-   int                cross;
-   int                i, max;
-   int                prevX, prevY;
-   int                nextX, nextY;
-   PtrBox             box;
-   boolean            OK;
+   PtrTextBuffer       buff, pLastBuffer;
+   int                 cross;
+   int                 i, max;
+   int                 prevX, prevY;
+   int                 nextX, nextY;
+   PtrBox              box;
+   boolean             OK;
 
    box = pAb->AbBox;
    x -= box->BxXOrg;
@@ -349,9 +351,9 @@ int                 y;
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox     GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int *pointselect)
+static PtrBox       GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-static PtrBox     GetPolylinePoint (pAb, x, y, pointselect)
+static PtrBox       GetPolylinePoint (pAb, x, y, pointselect)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
@@ -362,8 +364,8 @@ int                *pointselect;
    int                 i, j, nb;
    int                 X1, Y1;
    int                 X2, Y2;
-   PtrTextBuffer      adbuff;
-   PtrBox            box;
+   PtrTextBuffer       adbuff;
+   PtrBox              box;
    boolean             OK;
 
    Y1 = 0;
@@ -437,7 +439,7 @@ int                *pointselect;
 static boolean      InShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
 static boolean      InShape (pAb, x, y)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 x;
 int                 y;
 
@@ -450,7 +452,7 @@ int                 y;
    int                 nextX, nextY;
    int                 arc;
    float               value1, value2;
-   PtrBox            box;
+   PtrBox              box;
    boolean             OK;
 
    box = pAb->AbBox;
@@ -619,18 +621,18 @@ int                 y;
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox     IsOnShape (PtrAbstractBox pAb, int x, int y)
+static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static PtrBox     IsOnShape (pAb, x, y)
+static PtrBox       IsOnShape (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
 
 #endif /* __STDC__ */
 {
-   PtrBox            pBox;
-   int               controlPoint;
-   int               arc;
+   PtrBox              pBox;
+   int                 controlPoint;
+   int                 arc;
 
    /* coordonnees relatives a la boite (calculs plus simples) */
    pBox = pAb->AbBox;
@@ -721,13 +723,13 @@ int                 y;
 	    case 'W':
 	       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
 		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-	       IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 		  return (pBox);
 	       break;
 	    case 'X':
 	       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
 		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight) ||
-	       IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
 		  return (pBox);
 	       break;
 	    case 'Y':
@@ -756,7 +758,7 @@ int                 y;
 	       break;
 	    case 'b':
 	       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
-	       IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
 		  return (pBox);
 	       break;
 	    case 'v':
@@ -773,7 +775,7 @@ int                 y;
 	       break;
 	    case 'r':
 	       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
-	       IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 		  return (pBox);
 	       break;
 	    case '\\':
@@ -804,18 +806,18 @@ int                 y;
    des paves qui englobe le point designe ou NULL.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAbstractBox             GetClickedAbsBox (int frame, int xRef, int yRef)
+PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
-PtrAbstractBox             GetClickedAbsBox (frame, xRef, yRef)
+PtrAbstractBox      GetClickedAbsBox (frame, xRef, yRef)
 int                 frame;
 int                 xRef;
 int                 yRef;
 
 #endif /* __STDC__ */
 {
-   ViewFrame        *pFrame;
-   PtrBox            pBox;
-   int               pointselect;
+   ViewFrame          *pFrame;
+   PtrBox              pBox;
+   int                 pointselect;
 
    pFrame = &ViewFrameTable[frame - 1];
    pBox = NULL;
@@ -837,17 +839,18 @@ int                 yRef;
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox            GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
+PtrBox              GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
 #else  /* __STDC__ */
-PtrBox            GetEnclosingClickedBox (pAb, higherX, lowerX, y, pointselect)
+PtrBox              GetEnclosingClickedBox (pAb, higherX, lowerX, y, pointselect)
 PtrAbstractBox      pAb;
 int                 higherX;
 int                 lowerX;
 int                 y;
 int                *pointselect;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pBox;
+   PtrBox              pBox;
 
    *pointselect = 0;
 
@@ -916,19 +919,19 @@ int                *pointselect;
    suivant du pere.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAbstractBox             SearchNextAbsBox (PtrAbstractBox pAb)
+PtrAbstractBox      SearchNextAbsBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-PtrAbstractBox             SearchNextAbsBox (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      SearchNextAbsBox (pAb)
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
    if (pAb->AbFirstEnclosed != NULL)
-     /*le premier fils */
-     return (pAb->AbFirstEnclosed);
+      /*le premier fils */
+      return (pAb->AbFirstEnclosed);
    else if (pAb->AbNext != NULL)
-     /*le suivant */
-     return (pAb->AbNext);
+      /*le suivant */
+      return (pAb->AbNext);
    else if (pAb->AbEnclosing != NULL)
      {
 	/* Le suivant d'un pere */
@@ -961,7 +964,7 @@ int                 dist;
 
 #endif /* __STDC__ */
 {
-   int              value;
+   int                 value;
 
    value = GetDistance (x - xRef, ANCHOR_SIZE) + GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
    if (value < dist)
@@ -983,8 +986,9 @@ int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value
 int                 GetShapeDistance (xRef, yRef, pBox, value)
 int                 xRef;
 int                 yRef;
-PtrBox            pBox;
+PtrBox              pBox;
 int                 value;
+
 #endif /* __STDC__ */
 {
    int                 distance;
@@ -1103,22 +1107,22 @@ int                 value;
    xRef,yRef dans l'image concrete.                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox            GetClickedLeafBox (int frame, int xRef, int yRef)
+PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
-PtrBox            GetClickedLeafBox (frame, xRef, yRef)
+PtrBox              GetClickedLeafBox (frame, xRef, yRef)
 int                 frame;
 int                 xRef;
 int                 yRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrBox            pSelBox, pBox;
-   PtrBox            pCurrentBox;
+   PtrAbstractBox      pAb;
+   PtrBox              pSelBox, pBox;
+   PtrBox              pCurrentBox;
    int                 max;
    int                 pointIndex;
    int                 d;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    pBox = NULL;
    pSelBox = NULL;
@@ -1194,7 +1198,7 @@ int                 yRef;
 static void         GiveMovingArea (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
 static void         GiveMovingArea (pAb, frame, horizRef, min, max)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 frame;
 boolean             horizRef;
 int                *min;
@@ -1202,7 +1206,7 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pParentAb;
+   PtrAbstractBox      pParentAb;
 
    /* Valeurs par defaut */
    *min = 0;
@@ -1295,7 +1299,7 @@ int                *max;
 static boolean      CanBeTranslated (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
 static boolean      CanBeTranslated (pAb, frame, horizRef, min, max)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 frame;
 boolean             horizRef;
 int                *min;
@@ -1303,16 +1307,16 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox    pParentAb;
-   PtrBox            pBox;
-   PtrElement        pEl;
-   PtrDocument       pDoc;
-   boolean           ok;
+   PtrAbstractBox      pParentAb;
+   PtrBox              pBox;
+   PtrElement          pEl;
+   PtrDocument         pDoc;
+   boolean             ok;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
    pEl = pAb->AbElement;
-   pDoc = DocumentOfElement(pEl); 
+   pDoc = DocumentOfElement (pEl);
 
    /* Deplacement nul si ok est faux */
    if (horizRef)
@@ -1322,20 +1326,20 @@ int                *max;
    *max = *min;
 
    if (pDoc->DocReadOnly)
-     ok = FALSE;
+      ok = FALSE;
    else if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
-   /* For Amaya only !!!!!!!!!!!! */
+      /* For Amaya only !!!!!!!!!!!! */
       ok = FALSE;
    else if (pEl->ElIsCopy)
-    ok = FALSE;
-  else if (ElementIsReadOnly(pEl))
-    ok = FALSE;
-  else if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
-  else if (horizRef &&TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
-  else if (!horizRef && TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
+      ok = FALSE;
+   else if (ElementIsReadOnly (pEl))
+      ok = FALSE;
+   else if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
+   else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
+   else if (!horizRef && TypeHasException (ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
    /* Box de presentation */
    else if (pAb->AbPresentationBox)
       ok = FALSE;
@@ -1457,10 +1461,11 @@ void                ApplyDirectTranslate (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pBox;
-   PtrAbstractBox             pAb;
+   PtrBox              pBox;
+   PtrAbstractBox      pAb;
    boolean             still, okH, okV;
    int                 x, width;
    int                 y, height;
@@ -1468,7 +1473,7 @@ int                 ym;
    int                 yr, xmax;
    int                 ymin;
    int                 ymax;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
    int                 pointselect;
 
    pFrame = &ViewFrameTable[frame - 1];
@@ -1484,7 +1489,7 @@ int                 ym;
 
 	if (ThotLocalActions[T_selecbox] != NULL)
 	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
-					 &pointselect);
+					    &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;
 	else
@@ -1541,7 +1546,7 @@ int                 ym;
 		       /* Deplacement d'un point de la polyline */
 		       x = pBox->BxXOrg - pFrame->FrXOrg;
 		       y = pBox->BxYOrg - pFrame->FrYOrg;
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		       /* Note si le trace est ouvert ou ferme */
 		       still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
 		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, still);
@@ -1602,7 +1607,7 @@ int                 ym;
 			      break;
 			}
 
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		  /* On retablit les positions par rapport a la fenetre */
 		  xmin -= pFrame->FrXOrg;
 		  xmax -= pFrame->FrXOrg;
@@ -1631,7 +1636,7 @@ int                 ym;
 static boolean      CanBeResized (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
 static boolean      CanBeResized (pAb, frame, horizRef, min, max)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 frame;
 boolean             horizRef;
 int                *min;
@@ -1639,88 +1644,88 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-  boolean           ok;
-  PtrBox            pBox;
-  PtrAbstractBox    pParentAb;
-  PtrElement pEl;
-  PtrDocument pDoc;
-  
-  pBox = pAb->AbBox;
-  pParentAb = pAb->AbEnclosing;
-  pEl = pAb->AbElement;
-  pDoc = DocumentOfElement(pEl); 
+   boolean             ok;
+   PtrBox              pBox;
+   PtrAbstractBox      pParentAb;
+   PtrElement          pEl;
+   PtrDocument         pDoc;
 
-  if (horizRef)
-    *min = pBox->BxXOrg;
-  else
-    *min = pBox->BxYOrg;
-  *max = *min;
+   pBox = pAb->AbBox;
+   pParentAb = pAb->AbEnclosing;
+   pEl = pAb->AbElement;
+   pDoc = DocumentOfElement (pEl);
 
-  if (pDoc->DocReadOnly)
-    ok = FALSE;
-  else if (!TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-   /* For Amaya only !!!!!!!!!!!! */
-       ok = FALSE;
-  else if (pEl->ElIsCopy)
-    ok = FALSE;
-  else if (ElementIsReadOnly(pEl))
-    ok = FALSE;
-  else if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
-  else if (horizRef && TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
-  else if (!horizRef && TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-    ok = FALSE;
-  /* Box de presentation */
-  else if (pAb->AbPresentationBox)
-    ok = FALSE;
-  /* Box elastique */
-  else if (horizRef && pAb->AbWidth.DimIsPosition)
-    ok = FALSE;
-  else if (!horizRef && pAb->AbHeight.DimIsPosition)
-    ok = FALSE;
-  /* Box racine */
-  else if (pParentAb == NULL)
-    {
-      if ((horizRef && pAb->AbWidth.DimValue == 0)
-	  || (!horizRef && pAb->AbHeight.DimValue == 0))
-	ok = FALSE;
-      else
-	ok = TRUE;
-    }
-  /* Texte mise en lignes */
-  else if (pAb->AbLeafType == LtText
-	   && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
-    ok = FALSE;
-  /* Il est impossible de modifier si la dimension du contenu */
-  /* d'une boite construite ou de type texte                  */
-  else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
-    if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
-      ok = FALSE;
-    else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
-      ok = FALSE;
-    else
-      ok = TRUE;
-  else
-    ok = TRUE;
-  
-  if (horizRef)
-    if (ok)
-      GiveMovingArea (pAb, frame, horizRef, min, max);
-    else
-      {
-	*min = pBox->BxXOrg;
-	*max = *min + pBox->BxWidth;
-      }
-  else if (ok)
-    GiveMovingArea (pAb, frame, horizRef, min, max);
-  else
-    {
+   if (horizRef)
+      *min = pBox->BxXOrg;
+   else
       *min = pBox->BxYOrg;
-      *max = *min + pBox->BxHeight;
-    }
-  
-  return ok;
+   *max = *min;
+
+   if (pDoc->DocReadOnly)
+      ok = FALSE;
+   else if (!TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+      /* For Amaya only !!!!!!!!!!!! */
+      ok = FALSE;
+   else if (pEl->ElIsCopy)
+      ok = FALSE;
+   else if (ElementIsReadOnly (pEl))
+      ok = FALSE;
+   else if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
+   else if (horizRef && TypeHasException (ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
+   else if (!horizRef && TypeHasException (ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+      ok = FALSE;
+   /* Box de presentation */
+   else if (pAb->AbPresentationBox)
+      ok = FALSE;
+   /* Box elastique */
+   else if (horizRef && pAb->AbWidth.DimIsPosition)
+      ok = FALSE;
+   else if (!horizRef && pAb->AbHeight.DimIsPosition)
+      ok = FALSE;
+   /* Box racine */
+   else if (pParentAb == NULL)
+     {
+	if ((horizRef && pAb->AbWidth.DimValue == 0)
+	    || (!horizRef && pAb->AbHeight.DimValue == 0))
+	   ok = FALSE;
+	else
+	   ok = TRUE;
+     }
+   /* Texte mise en lignes */
+   else if (pAb->AbLeafType == LtText
+	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
+      ok = FALSE;
+   /* Il est impossible de modifier si la dimension du contenu */
+   /* d'une boite construite ou de type texte                  */
+   else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
+      if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
+	 ok = FALSE;
+      else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
+	 ok = FALSE;
+      else
+	 ok = TRUE;
+   else
+      ok = TRUE;
+
+   if (horizRef)
+      if (ok)
+	 GiveMovingArea (pAb, frame, horizRef, min, max);
+      else
+	{
+	   *min = pBox->BxXOrg;
+	   *max = *min + pBox->BxWidth;
+	}
+   else if (ok)
+      GiveMovingArea (pAb, frame, horizRef, min, max);
+   else
+     {
+	*min = pBox->BxYOrg;
+	*max = *min + pBox->BxHeight;
+     }
+
+   return ok;
 }
 
 
@@ -1738,10 +1743,11 @@ void                ApplyDirectResize (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
+
 #endif /* __STDC__ */
 {
-   PtrBox            pBox;
-   PtrAbstractBox             pAb;
+   PtrBox              pBox;
+   PtrAbstractBox      pAb;
    boolean             still, okH, okV;
    int                 x, width;
    int                 y, height;
@@ -1749,7 +1755,7 @@ int                 ym;
    int                 yr, xmax;
    int                 ymin;
    int                 ymax;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    int                 pointselect;
 
@@ -1766,7 +1772,7 @@ int                 ym;
 	/* designation style Grenoble */
 	if (ThotLocalActions[T_selecbox] != NULL)
 	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
-					 &pointselect);
+					    &pointselect);
 	if (pBox == NULL)
 	   pAb = NULL;
 	else
@@ -1852,7 +1858,7 @@ int                 ym;
 			 break;
 		   }
 
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox));
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox));
 	     /* On retablit les positions par rapport a la fenetre */
 	     xmin -= pFrame->FrXOrg;
 	     if (okH)
@@ -1887,8 +1893,9 @@ int                 ym;
 void                DirectCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
 void                DirectCreation (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
+
 #endif /* __STDC__ */
 {
    int                 x, y;
@@ -1896,8 +1903,8 @@ int                 frame;
    int                 xr, yr;
    int                 xmin, xmax;
    int                 Ymin, Ymax;
-   ViewFrame            *pFrame;
-   PtrAbstractBox             pAb;
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb;
    boolean             modPosition, modDimension;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
@@ -1985,18 +1992,18 @@ int                 frame;
 	/* Determine les limites de deplacement de la boite */
 	GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
 	GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_CREATING_BOX), AbsBoxType (pAb));
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX), AbsBoxType (pAb));
 	/* On retablit les positions par rapport a la fenetre */
 	xmin -= pFrame->FrXOrg;
 	xmax -= pFrame->FrXOrg;
 	Ymin -= pFrame->FrYOrg;
 	Ymax -= pFrame->FrYOrg;
 	UserGeometryCreate (frame, &x, &y, xr, yr, &width, &height,
-		      xmin, xmax, Ymin, Ymax,
-		      pAb->AbHorizPos.PosUserSpecified,
-		      pAb->AbVertPos.PosUserSpecified,
-		      pAb->AbWidth.DimUserSpecified,
-		      pAb->AbHeight.DimUserSpecified);
+			    xmin, xmax, Ymin, Ymax,
+			    pAb->AbHorizPos.PosUserSpecified,
+			    pAb->AbVertPos.PosUserSpecified,
+			    pAb->AbWidth.DimUserSpecified,
+			    pAb->AbHeight.DimUserSpecified);
 
 	/* Notification de la boite saisie */
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
@@ -2028,12 +2035,13 @@ int                 frame;
 void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
 #else  /* __STDC__ */
 void                LocateClickedChar (pBox, pBuffer, x, index, charsNumber, spacesNumber)
-PtrBox            pBox;
-PtrTextBuffer     *pBuffer;
+PtrBox              pBox;
+PtrTextBuffer      *pBuffer;
 int                *x;
 int                *index;
 int                *charsNumber;
 int                *spacesNumber;
+
 #endif /* __STDC__ */
 {
    int                 dx;
@@ -2150,12 +2158,12 @@ int                *spacesNumber;
 
 	/* On a trouve le caractere : Recadre la position x */
 	if (dx == *x)
-	  /* BAlignment OK */
+	   /* BAlignment OK */
 	   *index = newIndex;
 	else if (dx > *x)
 	  {
 #ifdef STRUCT_EDIT
-	    /* BAlignment sur le caractere */
+	     /* BAlignment sur le caractere */
 	     *x = dx - charWidth;
 	     if (c == _SPACE_)
 	       {

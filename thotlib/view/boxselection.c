@@ -44,12 +44,12 @@
 static void         ClearAbstractBoxSelection (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 static void         ClearAbstractBoxSelection (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pChildAb;
-   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox      pChildAb;
+   PtrAbstractBox      pAbbox1;
 
    pAbbox1 = pAb;
    if (pAbbox1->AbSelected)
@@ -81,9 +81,10 @@ void                SwitchSelection (int frame, boolean toShow)
 void                SwitchSelection (frame, toShow)
 int                 frame;
 boolean             toShow;
+
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    /* visualisation la selection locale */
    if (frame > 0)
@@ -106,9 +107,10 @@ void                ClearViewSelMarks (int frame)
 #else  /* __STDC__ */
 void                ClearViewSelMarks (frame)
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    if (frame > 0)
      {
@@ -134,7 +136,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    if (frame > 0)
      {
@@ -157,12 +159,12 @@ int                 frame;
   ----------------------------------------------------------------------*/
 void                ClearAllViewSelection ()
 {
-   int              frame;
+   int                 frame;
 
    /* annule et on bascule dans chaque frame la selection courante */
    for (frame = 0; frame < MAX_FRAME; frame++)
       if (ViewFrameTable[frame].FrAbstractBox != NULL)
-	 ClearViewSelection (frame+1);
+	 ClearViewSelection (frame + 1);
 }
 
 
@@ -178,10 +180,11 @@ int                 frame;
 int                 xDelta;
 int                 spaceDelta;
 int                 charDelta;
+
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFrame;
-   ViewSelection        *pViewSel;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
 
    pFrame = &ViewFrameTable[frame - 1];
    pViewSel = &pFrame->FrSelectionBegin;
@@ -203,19 +206,20 @@ int                 charDelta;
    selection et rend le pointeur sur le buffer precedent.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTextBuffer      DeleteBuffer (PtrTextBuffer pBuffer, int frame)
+PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 #else  /* __STDC__ */
-PtrTextBuffer      DeleteBuffer (pBuffer, frame)
-PtrTextBuffer      pBuffer;
-int                frame;
+PtrTextBuffer       DeleteBuffer (pBuffer, frame)
+PtrTextBuffer       pBuffer;
+int                 frame;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pNextBuffer;
-   PtrTextBuffer      pPreviousBuffer;
-   int                length;
-   ViewFrame         *pFrame;
-   ViewSelection     *pViewSel;
-   ViewSelection     *pViewSelEnd;
+   PtrTextBuffer       pNextBuffer;
+   PtrTextBuffer       pPreviousBuffer;
+   int                 length;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
+   ViewSelection      *pViewSelEnd;
 
    pNextBuffer = pBuffer->BuNext;
    pPreviousBuffer = pBuffer->BuPrevious;
@@ -273,14 +277,15 @@ int                frame;
    ainsi que son indice dans ce buffer.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LocateBuffer (PtrTextBuffer *pBuffer, int *index)
+static void         LocateBuffer (PtrTextBuffer * pBuffer, int *index)
 #else  /* __STDC__ */
 static void         LocateBuffer (pBuffer, index)
-PtrTextBuffer     *pBuffer;
-int               *index;
+PtrTextBuffer      *pBuffer;
+int                *index;
+
 #endif /* __STDC__ */
 {
-   boolean            still;
+   boolean             still;
 
    still = (*pBuffer != NULL);
    while (still)
@@ -315,20 +320,21 @@ int               *index;
    et la ligne contenant la boite VsLine.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ComputeViewSelMarks (ViewSelection *selMark)
+void                ComputeViewSelMarks (ViewSelection * selMark)
 #else  /* __STDC__ */
 void                ComputeViewSelMarks (selMark)
 ViewSelection      *selMark;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer    pBuffer;
-   PtrTextBuffer    pSelBuffer;
-   PtrBox           pBox;
-   int              beginInd, x;
-   int              spaceWidth;
-   int              max, i;
-   int              dummy;
-   boolean          stop;
+   PtrTextBuffer       pBuffer;
+   PtrTextBuffer       pSelBuffer;
+   PtrBox              pBox;
+   int                 beginInd, x;
+   int                 spaceWidth;
+   int                 max, i;
+   int                 dummy;
+   boolean             stop;
 
    if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
      {
@@ -340,12 +346,12 @@ ViewSelection      *selMark;
 	     if (pSelBuffer->BuPrevious == NULL)
 		pSelBuffer = pBox->BxBuffer;
 	     else
-	       /* En debut de buffer */
-	       pSelBuffer = pSelBuffer->BuPrevious;
+		/* En debut de buffer */
+		pSelBuffer = pSelBuffer->BuPrevious;
 	     i = pSelBuffer->BuLength;
 	  }
 	else
-	  /* En fin ou en cours de buffer */
+	   /* En fin ou en cours de buffer */
 	   i = selMark->VsIndBuf - 1;
 	stop = FALSE;
 
@@ -470,12 +476,12 @@ boolean             alone;
 
 #endif /* __STDC__ */
 {
-   PtrLine            adligne;
-   PtrTextBuffer      pBuffer;
-   int                ind, charIndex;
-   PtrBox             pBox;
-   ViewFrame         *pFrame;
-   ViewSelection     *pViewSel;
+   PtrLine             adligne;
+   PtrTextBuffer       pBuffer;
+   int                 ind, charIndex;
+   PtrBox              pBox;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
 
    /* Verifie s'il faut reformater le dernier paragraphe edite */
    if (ThotLocalActions[T_updateparagraph] != NULL)
@@ -534,7 +540,7 @@ boolean             alone;
 		       pViewSel = &pFrame->FrSelectionBegin;
 		       pViewSel->VsBox = pBox;
 		       if (endSelection && pAb->AbLeafType != LtPlyLine && pAb->AbLeafType != LtPicture)
-			 /* tout selectionne */
+			  /* tout selectionne */
 			  pViewSel->VsIndBox = 0;
 		       else
 			  pViewSel->VsIndBox = firstChar;
@@ -671,9 +677,10 @@ boolean             IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
 boolean             IsAbstractBoxDisplayed (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
+
 #endif /* __STDC__ */
 {
-   int              min, max;
+   int                 min, max;
 
    if (pAb == NULL)
       return FALSE;

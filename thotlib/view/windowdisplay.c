@@ -4,7 +4,7 @@
 
 /*
  * windowdisplay.c : handling of low level drawing routines, both for
- *	X-Window and MS-Windows (incomplete).
+ *      X-Window and MS-Windows (incomplete).
  */
 
 #include "thot_sys.h"
@@ -273,7 +273,9 @@ int                 fg;
    ThotWindow          w;
 
 #ifdef NEW_WILLOWS
-   char                str[2] = {car, 0};
+   char                str[2] =
+   {car, 0};
+
 #endif /* NEW_WILLOWS */
 
    w = FrRef[frame];
@@ -338,6 +340,7 @@ int                 fg;
 
 #ifdef NEW_WILLOWS
    SIZE                size;
+
 #endif
 
    w = FrRef[frame];
@@ -455,7 +458,7 @@ int                 fg;
    int                 bottom;	/* underline position    */
    int                 middle;	/* cross-over position   */
    int                 height;	/* overline position     */
-   int                 thickness;/* thickness of drawing */
+   int                 thickness;	/* thickness of drawing */
    int                 decal;	/* shifting of drawing   */
 
    if (lg > 0)
@@ -659,18 +662,18 @@ int                 fg;
 	   DrawChar ('\364', frame, xm, yf, font, RO, active, fg);
 	if (exnum)
 	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
-	else			
+	else
 	   DrawChar ('\364', frame, xm, yf + ((delta - CarHeight ('\364', font)) / 2), font, RO, active, fg);
      }
 
    if (type == 2)		/* double integral */
       DrawIntegral (frame, thick, x + (CarWidth ('\364', font) / 2),
-		   y, l, h, -1, font, RO, active, fg);
+		    y, l, h, -1, font, RO, active, fg);
 
    else if (type == 1)		/* contour integral */
       DrawChar ('o', frame, x + ((l - CarWidth ('o', font)) / 2),
-	     y + (h - CarHeight ('o', font)) / 2 - FontAscent (font) + CarAscent ('o', font),
-	     font, RO, active, fg);
+		y + (h - CarHeight ('o', font)) / 2 - FontAscent (font) + CarAscent ('o', font),
+		font, RO, active, fg);
 }
 
 /**
@@ -1022,7 +1025,7 @@ int                 fg;
    else if (orientation == 90)
      {
 	/* draw a bottom-up arrow */
-	DoDrawOneLine (frame, xm, y, xm, yf);	
+	DoDrawOneLine (frame, xm, y, xm, yf);
 	TraceFleche (frame, xm, yf, xm, y, thick, RO, active, fg);
      }
    else if (orientation == 135)
@@ -1044,7 +1047,7 @@ int                 fg;
    else if (orientation == 270)
      {
 	/* draw a top-down arrow */
-	DoDrawOneLine (frame, xm, y, xm, yf);	
+	DoDrawOneLine (frame, xm, y, xm, yf);
 	TraceFleche (frame, xm, y, xm, yf, thick, RO, active, fg);
      }
    else if (orientation == 315)
@@ -1215,7 +1218,7 @@ int                 fg;
 		     DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
-		  else		
+		  else
 		     DrawChar ('\347', frame, xm, yf + ((delta - CarHeight ('\347', font)) / 2), font, RO, active, fg);
 	       }
 	  }
@@ -1240,7 +1243,7 @@ int                 fg;
 		     DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
-		  else		
+		  else
 		     DrawChar ('\367', frame, xm, yf + ((delta - CarHeight ('\367', font)) / 2), font, RO, active, fg);
 	       }
 	  }
@@ -1389,7 +1392,7 @@ int                 fg;
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
-		  else	
+		  else
 		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
@@ -1571,7 +1574,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1584,7 +1587,7 @@ int                 fleche;
 #ifndef NEW_WILLOWS
    ThotPoint          *points;
    int                 i, j;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
 
    if (thick == 0)
       return;
@@ -1649,7 +1652,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1663,7 +1666,7 @@ int                 pattern;
 #ifndef NEW_WILLOWS
    ThotPoint          *points;
    int                 i, j;
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    Pixmap              modele;
 
    /* Allocate a table of points */
@@ -1761,7 +1764,7 @@ float               x1, y1, x2, y2, x3, y3, x4, y4;
 
 #endif /* __STDC__ */
 {
-   StackPoint               *stack_ptr;
+   StackPoint         *stack_ptr;
 
    if (stack_deep == MAX_STACK)
       return;
@@ -1789,7 +1792,7 @@ float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 
 #endif /* __STDC__ */
 {
-   StackPoint               *stack_ptr;
+   StackPoint         *stack_ptr;
 
    if (stack_deep == 0)
       return (FALSE);
@@ -1879,7 +1882,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -1889,7 +1892,7 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i, j;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
@@ -1997,7 +2000,7 @@ int                 thick;
 int                 style;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 RO;
 int                 active;
@@ -2008,7 +2011,7 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      adbuff;
+   PtrTextBuffer       adbuff;
    int                 i, j;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
@@ -2775,7 +2778,7 @@ int                 pattern;
 	     A = 1.0 - sqrt (1 - A * A);
 	     shiftX = width * A * 0.5 + 0.5;
 	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
-			x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
 	  }
 	FinishDrawing (0, RO, active);
      }

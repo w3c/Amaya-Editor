@@ -49,8 +49,8 @@
 void                GetClickedStructBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
 void                GetClickedStructBox (result, pRootAb, frame, x, y, pointselect)
-PtrBox           *result;
-PtrAbstractBox             pRootAb;
+PtrBox             *result;
+PtrAbstractBox      pRootAb;
 int                 frame;
 int                 x;
 int                 y;
@@ -58,12 +58,12 @@ int                *pointselect;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrBox            pSelBox, pBox;
-   PtrBox            pCurrentBox;
+   PtrAbstractBox      pAb;
+   PtrBox              pSelBox, pBox;
+   PtrBox              pCurrentBox;
    int                 dist;
    int                 pointIndex;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    /* On admet une erreur de precision de DELTA_SEL dans la designation */
    dist = x - DELTA_SEL;
