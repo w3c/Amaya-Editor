@@ -4164,8 +4164,8 @@ PtrAbstractBox      pAb;
 
    /* les deltas de dimension que l'on va appliquer sont ceux 
       de la boite par defaut avec laquelle on a cree l'image */
-   height = PixelToPoint (pAb->AbBox->BxHeight);
-   width = PixelToPoint (pAb->AbBox->BxWidth);
+   height = PixelToPoint (pAb->AbBox->BxH);
+   width = PixelToPoint (pAb->AbBox->BxW);
 
    /* traite le changement de largeur */
 
