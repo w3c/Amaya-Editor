@@ -1494,20 +1494,21 @@
 	<message xml:lang="it">Modelli...</message>
 	<message xml:lang="es">Plantillas...</message>
 </label>
-<label define="BAnnotate">
-	<message xml:lang="en">Annotate</message>
-	<message xml:lang="fr">Ajouter annotation</message>
-	<message xml:lang="de">Anmerken</message>
-	<message xml:lang="it">Annota</message>
-	<message xml:lang="tr">Annotate</message>
-	<message xml:lang="es">Anotar</message>
+<label define="BAnnotateSel">
+	<message xml:lang="en">Annotate Selection</message>
 </label>
-<label define="BFilterAnnotations">
-	<message xml:lang="en">Local filter...</message>
-	<message xml:lang="fr">Filtrer local...</message>
-	<message xml:lang="de">Lokaler filter...</message>
-	<message xml:lang="it">Filtro locale...</message>
-	<message xml:lang="es">Filtro local...</message>
+<label define="BAnnotateDocument">
+	<message xml:lang="en">Annotate document</message>
+</label>
+<label define="BPostAnnot">
+	<message xml:lang="en">Post annotation</message>
+	<message xml:lang="fr">Enregister une annotation</message>
+	<message xml:lang="de">Anmerkung veröffentlichen</message>
+	<message xml:lang="it">Registra annotazione</message>
+	<message xml:lang="es">Post anotacion</message>
+</label>
+<label define="BDeleteAnnot">
+	<message xml:lang="en">Delete annotation</message>
 </label>
 <label define="BLoadAnnots">
 	<message xml:lang="en">Load annotations</message>
@@ -1523,12 +1524,12 @@
 	<message xml:lang="it">Personalizza la richiesta</message>
 	<message xml:lang="es">Personalizar consulta...</message>
 </label>
-<label define="BPostAnnot">
-	<message xml:lang="en">Post annotation</message>
-	<message xml:lang="fr">Enregister une annotation</message>
-	<message xml:lang="de">Anmerkung veröffentlichen</message>
-	<message xml:lang="it">Registra annotazione</message>
-	<message xml:lang="es">Post anotacion</message>
+<label define="BFilterAnnotations">
+	<message xml:lang="en">Local filter...</message>
+	<message xml:lang="fr">Filtrer local...</message>
+	<message xml:lang="de">Lokaler filter...</message>
+	<message xml:lang="it">Filtro locale...</message>
+	<message xml:lang="es">Filtro local...</message>
 </label>
 <label define="BConfigure">
 	<message xml:lang="en">Configure...</message>
