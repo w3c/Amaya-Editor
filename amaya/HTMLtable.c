@@ -23,7 +23,6 @@
 #include "Mathedit_f.h"
 
 static Element      CurrentRow = NULL;
-static Element      CurrentColumn = NULL;
 static Element      CurrentCell;
 static int          PreviousColSpan;
 static int          PreviousRowSpan;

@@ -1113,8 +1113,8 @@ void CutCommand (ThotBool save)
   Document            doc;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
-  int                 firstChar, lastChar, nextChar, NSiblings, last, i,
-                      firstCharInit, lastCharInit, prevDepth, nextDepth;
+  int                 firstChar, lastChar, nextChar, NSiblings, last, i;
+  int                 firstCharInit, lastCharInit, prevDepth, nextDepth;
   ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
   ThotBool            recorded, lock;
 
@@ -1491,17 +1491,12 @@ void CutCommand (ThotBool save)
 				/* record that deletion in the history */
 				  AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
 				  if (WholeColumnSelected)
-				    {
 				    /* change the value of "info" in the latest cell
 				       deletion recorded in the Undo queue.
 				       The goal is to allow procedure CellPasted
 				       to regenerate only one column head when
 				       undoing the operation */
-				      if (pEl == NULL)
-					TtaChangeInfoLastRegisteredElem (doc, 4);
-				      else
-					TtaChangeInfoLastRegisteredElem (doc, 3);
-				    }
+				    TtaChangeInfoLastRegisteredElem (doc, 3);
 				}
 			      recorded = FALSE;
 			      
