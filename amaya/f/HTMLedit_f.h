@@ -22,6 +22,7 @@ extern void SetREFattribute ( Element element,
 extern void ChangeTitle ( Document doc,
                           View view );
 extern void SetNewTitle ( Document doc );
+extern void TitleModified ( NotifyOnTarget *event );
 extern void SelectDestination ( Document doc,
                                 Element el,
                                 ThotBool withUndo );
@@ -121,7 +122,6 @@ extern Element SearchAnchor ( Document doc,
 extern void UpdateAtom ( Document doc,
                          char *url,
                          char *title );
-extern void TitleModified ( NotifyOnTarget * event );
 
 #else /* __STDC__ */
 
@@ -141,6 +141,7 @@ extern void SetREFattribute (/* Element element,
 extern void ChangeTitle (/* Document doc,
                             View view */);
 extern void SetNewTitle (/* Document doc */);
+extern void TitleModified (/* NotifyOnTarget *event */);
 extern void SelectDestination (/* Document doc,
                                   Element el,
                                   ThotBool withUndo */);
@@ -240,7 +241,6 @@ extern Element SearchAnchor (/* Document doc,
 extern void UpdateAtom (/* Document doc,
                            char *url,
                            char *title */);
-extern void TitleModified (/* NotifyOnTarget * event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

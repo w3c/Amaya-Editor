@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1789,7 +1789,7 @@ static ThotBool     CheckSelectionLevel (Document doc)
 	    }
 	}
       if (myLastSelect != NULL &&
-	  (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
+	  (llc == 0 || (llc > 0 && llc >= TtaGetElementVolume (myLastSelect))))
 	{
 	  /* searching for the last selected element */
 	  nextLast = myLastSelect;
@@ -1870,7 +1870,7 @@ static ThotBool     CheckSelectionLevel (Document doc)
    Gives the next selected element, accordingly  to extension given by
    CheckSelectionLevel
   ----------------------------------------------------------------------*/
-static void         MyNextSelectedElement (Document doc, Element * elSelect)
+static void MyNextSelectedElement (Document doc, Element * elSelect)
 {
   Element             elFirst;
   int                 fc, lc;

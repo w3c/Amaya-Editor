@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1275,10 +1275,10 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
    user indique si l'insertion est demandee par l'utilisateur.	
    inTree indique si l'element est deja en place dans l'arbre.	
   ----------------------------------------------------------------------*/
-ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc,
-				    int typeNum, PtrSSchema pSS,
-				    ThotBool before, ThotBool user,
-				    ThotBool inTree)
+ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
+			 int typeNum, PtrSSchema pSS,
+			 ThotBool before, ThotBool user,
+			 ThotBool inTree)
 {
   PtrSSchema          pAscSS;
   PtrSRule            pRule;

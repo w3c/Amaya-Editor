@@ -197,7 +197,8 @@ static void MathSetAttributes (Element el, Document doc, Element* selEl)
 /*----------------------------------------------------------------------
    SplitTextInMathML
    Split element el and the enclosing element (MO, MI, MN or MTEXT).
-   Parameter index indicates the position where the text has to be split.
+   Parameter index indicates the rank of the character before which the
+   element must be cut.
    Return the text element created within the next enclosing element.
   ----------------------------------------------------------------------*/
 static Element SplitTextInMathML (Document doc, Element el, int index,
@@ -255,7 +256,7 @@ static Element SplitTextInMathML (Document doc, Element el, int index,
        {
        if (withinMrow)
 	  TtaRegisterElementReplace (parent, doc);
-       TtaSplitText (el, index-1, doc);
+       TtaSplitText (el, index, doc);
        /* split before the second part of the text */
        TtaNextSibling (&el);
        }
@@ -789,7 +790,7 @@ static void         CreateMathConstruct (int construct)
 	    {
 	      /* split the text to insert the Math element */
 	      TtaRegisterElementReplace (sibling, doc);
-	      TtaSplitText (sibling, c1-1, doc);
+	      TtaSplitText (sibling, c1, doc);
 	      /* take the second part of the split text element */
 	      TtaNextSibling (&sibling);
 	      TtaRegisterElementCreate (sibling, doc);
@@ -1825,13 +1826,13 @@ static void CreateCharStringElement (int typeNum, Document doc)
 	   {
 	   if (lastChar == 0 && (firstChar == 0 || firstSel != lastSel))
 	      lastChar = TtaGetElementVolume (lastSel);
-	   el = SplitTextInMathML (doc, lastSel, lastChar + 1, &mrowCreated);
+	   el = SplitTextInMathML (doc, lastSel, lastChar, &mrowCreated);
 	   } 
 	 else if (elType.ElTypeNum == MathML_EL_MGLYPH)
 	   {
 	   if (lastChar == 0)
 	      lastChar = TtaGetElementVolume (lastSel);
-	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+	   el = SplitTextInMathML (doc, lastSel, lastChar, &mrowCreated);
 	   }
 	 elType = TtaGetElementType (firstSel);
 	 if ((elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
@@ -3260,7 +3261,7 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
 	    {
 	      /* split the text to insert the new text */
 	      TtaRegisterElementReplace (firstSel, document);
-	      TtaSplitText (firstSel, firstChar-1, document);
+	      TtaSplitText (firstSel, firstChar, document);
 	      /* take the second part of the split text element */
 	      sibling = firstSel;
 	      TtaNextSibling (&sibling);
@@ -3496,7 +3497,7 @@ void SetMathCharFont (Document doc, int attribute)
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
      /* the last selected element is a character string. Split it */
      {
-     leaf = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+     leaf = SplitTextInMathML (doc, lastSel, lastChar, &mrowCreated);
      if (firstSel != lastSel)
 	lastSel = TtaGetParent (lastSel);
      }

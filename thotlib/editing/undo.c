@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1998-2001
+ *  (c) COPYRIGHT INRIA 1998-2002
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -696,7 +696,7 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-void                CancelLastSequenceFromHistory (PtrDocument pDoc)
+void CancelLastSequenceFromHistory (PtrDocument pDoc)
 {
    ThotBool	stop;
 
@@ -755,7 +755,7 @@ static void AttachAttr (PtrElement pEl, PtrAttribute pAttr, int rank,
    If reverse, the editing operation descriptor will decribe the reverse
    editing operation when returning.
   ----------------------------------------------------------------------*/
-static void	UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
+static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 {
    PtrEditOperation	editOp;
    PtrElement		pEl, pSibling,
@@ -804,7 +804,7 @@ static void	UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
    	     i = editOp->EoLastSelectedChar;
           else
-   	     i = TtaGetTextLength ((Element)(editOp->EoFirstSelectedEl));
+   	     i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl));
           TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
 			   editOp->EoFirstSelectedChar, i);
           }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -911,7 +911,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
    Parameters:
    element: the text element to be divided. A new text element containing
    the second part of the text is created as the next sibling.
-   position: rank of the character after which the element must be cut.
+   position: rank of the character before which the element must be cut.
    document: the document to which the element belongs.
   ----------------------------------------------------------------------*/
 void TtaSplitText (Element element, int position, Document document)
@@ -935,7 +935,7 @@ void TtaSplitText (Element element, int position, Document document)
    else
      {
 	pNextEl = ((PtrElement) element)->ElNext;
-	SplitTextElement ((PtrElement) element, position + 1,
+	SplitTextElement ((PtrElement) element, position,
 			  LoadedDocument[document - 1], FALSE, &secondPart,
 			  FALSE);
 #ifndef NODISPLAY

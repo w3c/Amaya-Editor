@@ -133,7 +133,7 @@ extern void TtaDeleteTextContent (Element element, int position, int length,
    Parameters:
    element: the text element to be divided. A new text element containing
    the second part of the text is created as the next sibling.
-   position: rank of the character after which the element must be cut.
+   position: rank of the character before which the element must be cut.
    document: the document to which the element belongs.
   ----------------------------------------------------------------------*/
 extern void TtaSplitText (Element element, int position, Document document);

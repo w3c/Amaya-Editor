@@ -83,7 +83,7 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
 	     {
 	       pointIndex = 0;
 	       graphicBox = NULL;
-	       if (pAb->AbPresentationBox ||
+	       if ((pAb->AbPresentationBox && !pAb->AbCanBeModified) ||
 		   pAb->AbLeafType == LtGraphics ||
 		   pAb->AbLeafType == LtPolyLine ||
 		   pAb->AbLeafType == LtPath)

@@ -344,59 +344,63 @@ ThotBool            TtaIsSelectionEmpty ()
 }
 
 /*----------------------------------------------------------------------
-   TtaGiveFirstSelectedElement
+  TtaGiveFirstSelectedElement
 
-   Returns the first element in the current selection in a given document.
-   If this element is a Text element and if only a substring is selected,
-   return also the rank of the first and last characters in the selection.
-   Parameter:
-   document: the document for which the selection is asked.
-   Return values:
-   selectedElement: the first selected element, NULL if no element is
-   selected in the document.
-   firstCharacter: rank of the first character in the selection, or 0 if the
-   whole element is in the selection.
-   lastCharacter: rank of the last character in the selection, or 0 if the
-   whole element is in the selection.
+  Returns the first element in the current selection in a given document.
+  If this element is a Text element and if only a substring is selected,
+  return also the rank of the first and last characters in the selection.
+  Parameter:
+  document: the document for which the selection is asked.
+  Return values:
+  selectedElement: the first selected element, NULL if no element is
+  selected in the document.
+  firstCharacter: rank of the first selected character in the element, or
+  0 if the whole element is selected.
+  lastCharacter: rank of the last selected character in the element, or
+  0 if the whole element is in the selection, or firstCharacter - 1 for
+  a position.
   ----------------------------------------------------------------------*/
 void  TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
 				   int *firstCharacter, int *lastCharacter)
 {
-   PtrDocument         pDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            ok;
+  PtrDocument         pDoc;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   *selectedElement = NULL;
-   *firstCharacter = 0;
-   *lastCharacter = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-     TtaError (ERR_invalid_document_parameter);
-   else
+  UserErrorCode = 0;
+  *selectedElement = NULL;
+  *firstCharacter = 0;
+  *lastCharacter = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
       /* Parameter document is correct */
-     {
-       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
-				 &firstChar, &lastChar);
-       if (ok)
-	 if (pDoc == LoadedDocument[document - 1])
-	   {
-	     *selectedElement = (Element) firstSelection;
-	     *firstCharacter = firstChar;
-	     if (lastSelection == firstSelection)
-	       {
-	       if (lastChar > firstChar)
-		 *lastCharacter = lastChar - 1;
-	       else
-		 *lastCharacter = lastChar;
-	       }
-	     else if (firstChar != 0 && lastChar == 0)
-	       *lastCharacter = firstSelection->ElVolume;
-	   }
-     }
+      ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				&firstChar, &lastChar);
+      if (ok)
+	if (pDoc == LoadedDocument[document - 1])
+	  {
+	    *selectedElement = (Element) firstSelection;
+	    *firstCharacter = firstChar;
+	    if (lastSelection == firstSelection)
+	      {
+		/* only one element */
+		if (SelPosition)
+		  /* a position */
+		  *lastCharacter = firstChar - 1;
+		else
+		  *lastCharacter = lastChar;
+	      }
+	    else if (firstChar > 0 && lastChar == 0)
+	      /* the selection starts in the middle of the element */
+	      *lastCharacter = firstSelection->ElVolume;
+	  }
+    }
 }
 
 
@@ -418,43 +422,43 @@ void  TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-void  TtaGiveNextSelectedElement (Document document, Element *selectedElement,
-				  int *firstCharacter, int *lastCharacter)
+void TtaGiveNextSelectedElement (Document document, Element *selectedElement,
+				 int *firstCharacter, int *lastCharacter)
 {
-   PtrDocument         pDoc;
-   PtrElement          pEl;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            ok;
+  PtrDocument         pDoc;
+  PtrElement          pEl;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   *firstCharacter = 0;
-   *lastCharacter = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-     TtaError (ERR_invalid_document_parameter);
-   else
+  UserErrorCode = 0;
+  *firstCharacter = 0;
+  *lastCharacter = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
       /* Parameter document is correct */
-     {
-	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
-				  &firstChar, &lastChar);
-	if (!ok)
-	   *selectedElement = NULL;
-	else if (pDoc != LoadedDocument[document - 1])
-	   *selectedElement = NULL;
-	else
-	  {
-	     pEl = NextInSelection ((PtrElement) * selectedElement, lastSelection);
-	     *selectedElement = (Element) pEl;
-	     if (pEl == lastSelection && lastChar > 0)
-	       {
-		  *firstCharacter = 1;
-		  *lastCharacter = lastChar - 1;
-	       }
-	  }
-     }
+      ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				&firstChar, &lastChar);
+      if (!ok)
+	*selectedElement = NULL;
+      else if (pDoc != LoadedDocument[document - 1])
+	*selectedElement = NULL;
+      else
+	{
+	  pEl = NextInSelection ((PtrElement) *selectedElement, lastSelection);
+	  *selectedElement = (Element) pEl;
+	  if (pEl == lastSelection && lastChar > 0)
+	    {
+	      *firstCharacter = 1;
+	      *lastCharacter = lastChar;
+	    }
+	}
+    }
 }
 
 
@@ -491,59 +495,66 @@ void  TtaGiveNextElement (Document document, Element *element, Element last)
 
 
 /*----------------------------------------------------------------------
-   TtaGiveLastSelectedElement
+  TtaGiveLastSelectedElement
 
-   Returns the last element in the current selection in a given document.
-   If this element is a Text element and if only a substring is selected,
-   return also the rank of the first and last characters in the selection.
-   Parameter:
-   document: the document for which the selection is asked.
-   Return values:
-   selectedElement: the last selected element, NULL if no element is
-   selected in the document.
-   firstCharacter: rank of the first character in the selection, or 0 if the
-   whole element is in the selection.
-   lastCharacter: rank of the last character in the selection, or 0 if the
-   whole element is in the selection.
+  Returns the last element in the current selection in a given document.
+  If this element is a Text element and if only a substring is selected,
+  return also the rank of the first and last characters in the selection.
+  Parameter:
+  document: the document for which the selection is asked.
+  Return values:
+  selectedElement: the last selected element, NULL if no element is
+  selected in the document.
+  firstCharacter: rank of the first selected character in the element, or
+  0 if the whole element is in the selection.
+  lastCharacter: rank of the last selected character in the element, or
+  0 if the whole element is in the selection, or firstCharacter - 1 for
+  a position.
   ----------------------------------------------------------------------*/
-void   TtaGiveLastSelectedElement (Document document, Element *selectedElement,
-				   int *firstCharacter, int *lastCharacter)
+void TtaGiveLastSelectedElement (Document document, Element *selectedElement,
+				 int *firstCharacter, int *lastCharacter)
 {
-   PtrDocument         pDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            ok;
+  PtrDocument         pDoc;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   *selectedElement = NULL;
-   *firstCharacter = 0;
-   *lastCharacter = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-     TtaError (ERR_invalid_document_parameter);
-   else
+  UserErrorCode = 0;
+  *selectedElement = NULL;
+  *firstCharacter = 0;
+  *lastCharacter = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
       /* Parameter document is correct */
-     {
-       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
-				 &firstChar, &lastChar);
-       if (ok)
-	 if (pDoc == LoadedDocument[document - 1])
-	   {
-	     *selectedElement = (Element) lastSelection;
-	     if (lastSelection == firstSelection)
-	       {
-		 *firstCharacter = firstChar;
-		 if (lastChar > firstChar)
-		   *lastCharacter = lastChar - 1;
-		 else
-		   *lastCharacter = lastChar;
-	       }
-	     else if (lastChar > 0)
-	       *lastCharacter = lastChar - 1;
-	   }
-     }
+      ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				&firstChar, &lastChar);
+      if (ok)
+	if (pDoc == LoadedDocument[document - 1])
+	  {
+	    *selectedElement = (Element) lastSelection;
+	    if (lastSelection == firstSelection)
+	      {
+		/* only one element */
+		*firstCharacter = firstChar;
+		if (SelPosition)
+		  /* a position */
+		  *lastCharacter = firstChar - 1;
+		else
+		  *lastCharacter = lastChar;
+	      }
+	    else if (lastChar > 0)
+	      {
+		/* the selection ends in the middle of the element */
+		*firstCharacter = 1;
+		*lastCharacter = lastChar;
+	      }
+	  }
+    }
 }
 
 

@@ -575,7 +575,7 @@ void UpdateStylePost (NotifyAttribute * event)
    DoApplyClass
    Put a class attribute on all selected elements
   ----------------------------------------------------------------------*/
-static void         DoApplyClass (Document doc)
+static void DoApplyClass (Document doc)
 {
   Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
 		      firstChild, lastChild, parent;
@@ -619,8 +619,8 @@ static void         DoApplyClass (Document doc)
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      /* it's a text element */
      {
-     lg = TtaGetTextLength (lastSelectedEl);
-     if (lastSelectedChar < lg && lastSelectedChar != 0)
+     lg = TtaGetElementVolume (lastSelectedEl);
+     if (lastSelectedChar < lg && lastSelectedChar > 1)
 	/* the last selected element is only partly selected. Split it */
 	TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
      else
@@ -674,7 +674,7 @@ static void         DoApplyClass (Document doc)
 	/* that element is only partly selected. Split it */
 	{
 	el = firstSelectedEl;
-	TtaSplitText (firstSelectedEl, firstSelectedChar - 1, doc);
+	TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
 	TtaNextSibling (&firstSelectedEl);
 	if (lastSelectedEl == el)
 	   {

@@ -1346,7 +1346,7 @@ void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
    else if ((lastChar == 0 && firstChar == 0) || lastSel != firstSel)
       SelectElement (pDoc, firstSel, TRUE, TRUE);
    else
-      SelectString (pDoc, firstSel, 1, lastChar - 1);
+      SelectString (pDoc, firstSel, 1, lastChar);
 
    if (lastSel != firstSel)
      {
@@ -1357,6 +1357,6 @@ void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
       else if (lastChar == 0)
 	 ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
       else
-	 ExtendSelection (lastSel, lastChar - 1, TRUE, FALSE, FALSE);
+	 ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
      }
 }

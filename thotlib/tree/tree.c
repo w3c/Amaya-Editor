@@ -215,14 +215,13 @@ ThotBool ElementIsReadOnly (PtrElement pEl)
   ----------------------------------------------------------------------*/
 ThotBool CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
 {
-register Proc InsertNearFunction;
+  register Proc InsertNearFunction;
+  ThotBool      isForbidden;
 
    if ((InsertNearFunction = ThotLocalActions[T_checkInsertNearElement]) == NULL)
      return FALSE; /* No function => Insertion is authorized! */
    else
      {
-ThotBool isForbidden;
-
        (*InsertNearFunction) (pEl, beforeElement, &isForbidden);
        return isForbidden;
      }

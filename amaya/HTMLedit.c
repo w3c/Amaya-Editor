@@ -95,7 +95,7 @@ void                SetTargetContent (Document doc, Attribute attrNAME)
    If current selection is within an anchor, change that link, otherwise
    create a link.
   ----------------------------------------------------------------------*/
-void                LinkToPreviousTarget (Document doc, View view)
+void LinkToPreviousTarget (Document doc, View view)
 {
    Element             el;
    Attribute           attr;
@@ -845,7 +845,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    CreateAnchor
    Create a link or target element.                  
   ----------------------------------------------------------------------*/
-void                CreateAnchor (Document doc, View view, ThotBool createLink)
+void CreateAnchor (Document doc, View view, ThotBool createLink)
 {
   Element             first, last, el, next, parent;
   Element             parag, prev, child, anchor, ancestor, duplicate;
@@ -1019,7 +1019,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	  /* if its a text leaf which is partly selected, split it */
 	  if (lastChar >= 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	    {
-	      lg = TtaGetTextLength (last);
+	      lg = TtaGetElementVolume (last);
 	      if (lastChar < lg)
 		/* split the last text */
 		{
@@ -1083,7 +1083,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	      /* split the first selected text element */
 	      el = first;
 	      TtaRegisterElementReplace (first, doc);
-	      TtaSplitText (first, firstChar - 1, doc);
+	      TtaSplitText (first, firstChar, doc);
 	      TtaNextSibling (&first);
 	      TtaRegisterElementCreate (first, doc);
 	      if (last == el)
@@ -2138,7 +2138,7 @@ void CheckNewLines (NotifyOnTarget *event)
    CreateTarget
    Create a target element.                          
   ----------------------------------------------------------------------*/
-void                CreateTarget (Document doc, View view)
+void CreateTarget (Document doc, View view)
 {
    CreateAnchor (doc, view, FALSE);
 }
@@ -2152,7 +2152,7 @@ void                CreateTarget (Document doc, View view)
    If it's a deletion for a SPAN element, remove that element if it's
    not needed.
   ----------------------------------------------------------------------*/
-void                UpdateAttrID (NotifyAttribute * event)
+void UpdateAttrID (NotifyAttribute * event)
 {
    Element	firstChild, lastChild;
 
@@ -2743,7 +2743,7 @@ ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
    SetOnOffEmphasis
    The Emphasis button or menu item has been clicked
   ----------------------------------------------------------------------*/
-void                SetOnOffEmphasis (Document document, View view)
+void SetOnOffEmphasis (Document document, View view)
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2767,7 +2767,7 @@ void                SetOnOffEmphasis (Document document, View view)
    SetOnOffStrong
    The Strong button or menu item has been clicked
   ----------------------------------------------------------------------*/
-void                SetOnOffStrong (Document document, View view)
+void SetOnOffStrong (Document document, View view)
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2790,7 +2790,7 @@ void                SetOnOffStrong (Document document, View view)
 /*----------------------------------------------------------------------
    SetOnOffCite
   ----------------------------------------------------------------------*/
-void                SetOnOffCite (Document document, View view)
+void SetOnOffCite (Document document, View view)
 {
   SetCharFontOrPhrase (document, HTML_EL_Cite);
 }
@@ -2799,7 +2799,7 @@ void                SetOnOffCite (Document document, View view)
 /*----------------------------------------------------------------------
    SetOnOffDefinition
   ----------------------------------------------------------------------*/
-void                SetOnOffDefinition (Document document, View view)
+void SetOnOffDefinition (Document document, View view)
 {
   SetCharFontOrPhrase (document, HTML_EL_Def);
 }
@@ -2809,7 +2809,7 @@ void                SetOnOffDefinition (Document document, View view)
    SetOnOffCode
    The Code button or menu item has been clicked
   ----------------------------------------------------------------------*/
-void                SetOnOffCode (Document document, View view)
+void SetOnOffCode (Document document, View view)
 {
   Element             selectedEl;
   ElementType         elType;
@@ -2833,7 +2833,7 @@ void                SetOnOffCode (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffVariable
   ----------------------------------------------------------------------*/
-void                SetOnOffVariable (Document document, View view)
+void SetOnOffVariable (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Variable);
 }
@@ -2842,7 +2842,7 @@ void                SetOnOffVariable (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffSample
   ----------------------------------------------------------------------*/
-void                SetOnOffSample (Document document, View view)
+void SetOnOffSample (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Sample);
 }
@@ -2851,7 +2851,7 @@ void                SetOnOffSample (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffKeyboard
   ----------------------------------------------------------------------*/
-void                SetOnOffKeyboard (Document document, View view)
+void SetOnOffKeyboard (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Keyboard);
 }
@@ -2860,7 +2860,7 @@ void                SetOnOffKeyboard (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffAbbr
   ----------------------------------------------------------------------*/
-void                SetOnOffAbbr (Document document, View view)
+void SetOnOffAbbr (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_ABBR);
 }
@@ -2869,7 +2869,7 @@ void                SetOnOffAbbr (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffAcronym
   ----------------------------------------------------------------------*/
-void                SetOnOffAcronym (Document document, View view)
+void SetOnOffAcronym (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_ACRONYM);
 }
@@ -2878,7 +2878,7 @@ void                SetOnOffAcronym (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffINS
   ----------------------------------------------------------------------*/
-void                SetOnOffINS (Document document, View view)
+void SetOnOffINS (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_INS);
 }
@@ -2887,7 +2887,7 @@ void                SetOnOffINS (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffDEL
   ----------------------------------------------------------------------*/
-void                SetOnOffDEL (Document document, View view)
+void SetOnOffDEL (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_DEL);
 }
@@ -2896,7 +2896,7 @@ void                SetOnOffDEL (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffItalic
   ----------------------------------------------------------------------*/
-void                SetOnOffItalic (Document document, View view)
+void SetOnOffItalic (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Italic_text);
 }
@@ -2905,7 +2905,7 @@ void                SetOnOffItalic (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffBold
   ----------------------------------------------------------------------*/
-void                SetOnOffBold (Document document, View view)
+void SetOnOffBold (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Bold_text);
 }
@@ -2914,7 +2914,7 @@ void                SetOnOffBold (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffTeletype
   ----------------------------------------------------------------------*/
-void                SetOnOffTeletype (Document document, View view)
+void SetOnOffTeletype (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Teletype_text);
 }
@@ -2923,7 +2923,7 @@ void                SetOnOffTeletype (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffBig
   ----------------------------------------------------------------------*/
-void                SetOnOffBig (Document document, View view)
+void SetOnOffBig (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Big_text);
 }
@@ -2932,7 +2932,7 @@ void                SetOnOffBig (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffSmall
   ----------------------------------------------------------------------*/
-void                SetOnOffSmall (Document document, View view)
+void SetOnOffSmall (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Small_text);
 }
@@ -2941,7 +2941,7 @@ void                SetOnOffSmall (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffSub
   ----------------------------------------------------------------------*/
-void                SetOnOffSub (Document document, View view)
+void SetOnOffSub (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Subscript);
 }
@@ -2950,7 +2950,7 @@ void                SetOnOffSub (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffSup
   ----------------------------------------------------------------------*/
-void                SetOnOffSup (Document document, View view)
+void SetOnOffSup (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Superscript);
 }
@@ -2959,7 +2959,7 @@ void                SetOnOffSup (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffQuotation
   ----------------------------------------------------------------------*/
-void                SetOnOffQuotation (Document document, View view)
+void SetOnOffQuotation (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_Quotation);
 }
@@ -2968,7 +2968,7 @@ void                SetOnOffQuotation (Document document, View view)
 /*----------------------------------------------------------------------
   SetOnOffBDO
   ----------------------------------------------------------------------*/
-void                SetOnOffBDO (Document document, View view)
+void SetOnOffBDO (Document document, View view)
 {
    SetCharFontOrPhrase (document, HTML_EL_BDO);
 }
@@ -2979,8 +2979,8 @@ void                SetOnOffBDO (Document document, View view)
   If name is true, take into account Anchor(HTML) elements with a name
   attribute.
   ----------------------------------------------------------------------*/
-Element    SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
-			 ThotBool name)
+Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
+		      ThotBool name)
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -3104,7 +3104,7 @@ void UpdateAtom (Document doc, char *url, char *title)
    XChangeProperty (dpy, win, property_name, XA_STRING, 8, PropModeReplace,
 		    v, v_size);
    TtaFreeMemory (v);
-#endif /* !_WINDOWS */
-#endif /* !_GTK */
+#endif /* _WINDOWS */
+#endif /* _GTK */
 }
 

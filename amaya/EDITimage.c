@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1132,7 +1132,7 @@ void                SRCattrModified (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   CreateImage
   ----------------------------------------------------------------------*/
-void                CreateImage (Document doc, View view)
+void CreateImage (Document doc, View view)
 {
   Element            sibling;
   ElementType        elType;

@@ -1567,7 +1567,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	/* dummy box */
 	return (NULL);
       else if (pAb->AbLeafType == LtGraphics &&
-	       pAb->AbPresentationBox &&
+	       (pAb->AbPresentationBox) &&
 	       pAb->AbShape == '0')
 	/* it's also a dummy box */
 	return (NULL);

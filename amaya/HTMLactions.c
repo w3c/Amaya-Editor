@@ -2407,7 +2407,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
      if (!done)
        {
 	  /* split that text leaf if it is not entirely selected */
-	  length = TtaGetTextLength (lastEl);
+	  length = TtaGetElementVolume (lastEl);
 	  if (lastSelectedChar != 0 && lastSelectedChar < length)
 	     {
 	       TtaRegisterElementReplace (lastEl, document);	     
@@ -2453,16 +2453,16 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	    {
 	       elem = selectedEl;
 	       TtaRegisterElementReplace (selectedEl, document);
-	       TtaSplitText (selectedEl, firstSelectedChar - 1, document);
+	       TtaSplitText (selectedEl, firstSelectedChar, document);
 	       TtaNextSibling (&selectedEl);
 	       TtaRegisterElementCreate (selectedEl, document);
 	       if (lastSelectedElem == firstSelectedElem)
 		 {
 		   lastSelectedElem = selectedEl;
-		   lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
+		   lastSelectedChar = lastSelectedChar - firstSelectedChar + 2;
 		 }
 	       firstSelectedElem = selectedEl;
-	       firstSelectedChar = 0;
+	       firstSelectedChar = 1;
 	       if (elem == lastEl)
 		  lastEl = selectedEl;	       
 	    }

@@ -48,7 +48,6 @@ ThotBool TtaPrepareUndo (Document document)
    Open a sequence of editing operations in the history.
 
    Parameters:
-
    document: the concerned document
    firstSel: indicate the selection that must be set when the operation 
    will be undone. If null, the current selection is recorded.
@@ -75,10 +74,14 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
 	{
 	  /* gets the current selection */
 	  TtaGiveFirstSelectedElement (document, &firstSel, &firstSelChar, &i);
-	  /* gets the last selected element */
-	  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastSelChar);
 	  if (SelPosition)
-	    firstSelChar = lastSelChar + 1;
+	    {
+	      lastSelChar = i;
+	      lastSel = firstSel;
+	    }
+	  else
+	    /* gets the last selected element */
+	    TtaGiveLastSelectedElement (document, &lastSel, &i, &lastSelChar);
 	}
 
       /* inits the history sequence */
@@ -92,10 +95,8 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
    TtaCloseUndoSequence
 
    Close a sequence of editing operations in the history.
-
    Parameters:
    document: the concerned document
-
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/

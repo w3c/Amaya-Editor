@@ -475,7 +475,7 @@ void CreateBreak (Document document, View view)
   insert the element type.
   Return TRUE if it succeeds.
   ----------------------------------------------------------------------*/
-static Element   InsertWithinHead (Document document, View view, int elementT)
+static Element InsertWithinHead (Document document, View view, int elementT)
 {
    ElementType         elType;
    Element             el, firstSel, lastSel, head, parent, new, title;
@@ -562,7 +562,7 @@ static Element   InsertWithinHead (Document document, View view, int elementT)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateBase (Document document, View view)
+void CreateBase (Document document, View view)
 {
   Element             el;
 
@@ -574,7 +574,7 @@ void                CreateBase (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateMeta (Document document, View view)
+void CreateMeta (Document document, View view)
 {
   Element             el;
 
@@ -587,7 +587,7 @@ void                CreateMeta (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateLinkInHead (Document document, View view)
+void CreateLinkInHead (Document document, View view)
 {
   Element             el;
 
@@ -605,7 +605,7 @@ void                CreateLinkInHead (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateStyle (Document document, View view)
+void CreateStyle (Document document, View view)
 {
   Element             el, child;
   ElementType         elType;
@@ -633,7 +633,7 @@ void                CreateStyle (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateComment (Document document, View view)
+void CreateComment (Document document, View view)
 {
    ElementType         elType;
 
@@ -648,7 +648,7 @@ void                CreateComment (Document document, View view)
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
-void                CreateScript (Document document, View view)
+void CreateScript (Document document, View view)
 {
    SSchema             docSchema;
    ElementType         elType;
@@ -695,103 +695,101 @@ void                CreateScript (Document document, View view)
 /*----------------------------------------------------------------------
   HTMLelementAllowed
   ----------------------------------------------------------------------*/
-static ThotBool     HTMLelementAllowed (Document document)
+static ThotBool HTMLelementAllowed (Document document)
 {
-   ElementType         elType;
-   Element             el, ancestor, sibling;
-   int                 firstChar, lastChar;
+  ElementType         elType;
+  Element             el, ancestor, sibling;
+  int                 firstChar, lastChar;
 
-   if (!TtaGetDocumentAccessMode (document))
-      /* the document is in ReadOnly mode */
-      return FALSE;
+  if (!TtaGetDocumentAccessMode (document))
+    /* the document is in ReadOnly mode */
+    return FALSE;
 
-   TtaGiveFirstSelectedElement (document, &el, &firstChar, &lastChar);
-   if (el == NULL)
-      /* no selection */
-      return FALSE;
+  TtaGiveFirstSelectedElement (document, &el, &firstChar, &lastChar);
+  if (el == NULL)
+    /* no selection */
+    return FALSE;
          
-   elType = TtaGetElementType (el);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     /* within an HTML element */
-      return TRUE;
-   else
-     /* not within an HTML element */
-     {
-     /* if the selection is at the beginning or at the end of an equation
-        or a drawing, TtaCreateElement will create the new HTML element right
-        before or after the MathML or Graphics object. */
-     if (!TtaIsSelectionEmpty())
+  elType = TtaGetElementType (el);
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+    /* within an HTML element */
+    return TRUE;
+  else
+    /* not within an HTML element */
+    {
+      /* if the selection is at the beginning or at the end of an equation
+	 or a drawing, TtaCreateElement will create the new HTML element right
+	 before or after the MathML or Graphics object. */
+      if (!TtaIsSelectionEmpty())
         return FALSE;
-
-     if (firstChar <= 1)
+      
+      if (firstChar <= 1)
         /* selection starts at the beginning of an element */
         {
-	sibling = el;
-	ancestor = el;
-        TtaPreviousSibling (&sibling);
-	while (sibling == NULL && ancestor != NULL)
-	  {
-	    ancestor = TtaGetParent (ancestor);
-	    if (ancestor)
-	      {
-		elType = TtaGetElementType (ancestor);
-		if (!strcmp(TtaGetSSchemaName (elType.ElSSchema),
-			     "HTML"))
-		  /* this is an HTML element */
-		  return TRUE;
-		sibling = ancestor;
-		TtaPreviousSibling (&sibling);
-	      }
-	  }
+	  sibling = el;
+	  ancestor = el;
+	  TtaPreviousSibling (&sibling);
+	  while (sibling == NULL && ancestor != NULL)
+	    {
+	      ancestor = TtaGetParent (ancestor);
+	      if (ancestor)
+		{
+		  elType = TtaGetElementType (ancestor);
+		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		    /* this is an HTML element */
+		    return TRUE;
+		  sibling = ancestor;
+		  TtaPreviousSibling (&sibling);
+		}
+	    }
         }
      
-     if (lastChar == 0 || lastChar >=  TtaGetElementVolume (el))
+      if ((lastChar == 0 && firstChar == 0) ||
+	  lastChar >=  TtaGetElementVolume (el))
         /* selection is at the end of an element */
         {
-	sibling = el;
-	ancestor = el;
-        TtaNextSibling (&sibling);
-	while (sibling == NULL && ancestor != NULL)
-	  {
-	    ancestor = TtaGetParent (ancestor);
-	    if (ancestor)
-	      {
-		elType = TtaGetElementType (ancestor);
-		if (!strcmp(TtaGetSSchemaName (elType.ElSSchema),
-			     "HTML"))
-		  /* this is an HTML element */
-		  return TRUE;
-		sibling = ancestor;
-		TtaNextSibling (&sibling);
-	      }
-	  }
+	  sibling = el;
+	  ancestor = el;
+	  TtaNextSibling (&sibling);
+	  while (sibling == NULL && ancestor != NULL)
+	    {
+	      ancestor = TtaGetParent (ancestor);
+	      if (ancestor)
+		{
+		  elType = TtaGetElementType (ancestor);
+		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		    /* this is an HTML element */
+		    return TRUE;
+		  sibling = ancestor;
+		  TtaNextSibling (&sibling);
+		}
+	    }
         }
-     
-     return FALSE;
-     }
+      return FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
   CreateHTMLelement
   ----------------------------------------------------------------------*/
-static void         CreateHTMLelement (int typeNum, Document document)
+static void CreateHTMLelement (int typeNum, Document document)
 {
-   ElementType         elType;
+  ElementType         elType;
 
-   if (HTMLelementAllowed (document))
-     {
-     TtaSetDisplayMode (document, SuspendDisplay);
-     elType.ElSSchema = TtaGetSSchema ("HTML", document);
-     elType.ElTypeNum = typeNum;
-     TtaCreateElement (elType, document);
-     TtaSetDisplayMode (document, DisplayImmediately);
-     }
+  if (HTMLelementAllowed (document))
+    {
+      TtaSetDisplayMode (document, SuspendDisplay);
+      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      elType.ElTypeNum = typeNum;
+      TtaCreateElement (elType, document);
+      TtaSetDisplayMode (document, DisplayImmediately);
+    }
 }
 
 /*----------------------------------------------------------------------
   CreateParagraph
   ----------------------------------------------------------------------*/
-void                CreateParagraph (Document document, View view)
+void CreateParagraph (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Paragraph, document);
 }
@@ -799,7 +797,7 @@ void                CreateParagraph (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading1
   ----------------------------------------------------------------------*/
-void                CreateHeading1 (Document document, View view)
+void CreateHeading1 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H1, document);
 }
@@ -807,7 +805,7 @@ void                CreateHeading1 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading2
   ----------------------------------------------------------------------*/
-void                CreateHeading2 (Document document, View view)
+void CreateHeading2 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H2, document);
 }
@@ -815,7 +813,7 @@ void                CreateHeading2 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading3
   ----------------------------------------------------------------------*/
-void                CreateHeading3 (Document document, View view)
+void CreateHeading3 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H3, document);
 }
@@ -823,7 +821,7 @@ void                CreateHeading3 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading4
   ----------------------------------------------------------------------*/
-void                CreateHeading4 (Document document, View view)
+void CreateHeading4 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H4, document);
 }
@@ -831,7 +829,7 @@ void                CreateHeading4 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading5
   ----------------------------------------------------------------------*/
-void                CreateHeading5 (Document document, View view)
+void CreateHeading5 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H5, document);
 }
@@ -840,7 +838,7 @@ void                CreateHeading5 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeading6
   ----------------------------------------------------------------------*/
-void                CreateHeading6 (Document document, View view)
+void CreateHeading6 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H6, document);
 }
@@ -849,7 +847,7 @@ void                CreateHeading6 (Document document, View view)
 /*----------------------------------------------------------------------
   CreateList
   ----------------------------------------------------------------------*/
-void                CreateList (Document document, View view)
+void CreateList (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Unnumbered_List, document);
 }
@@ -857,7 +855,7 @@ void                CreateList (Document document, View view)
 /*----------------------------------------------------------------------
   CreateNumberedList
   ----------------------------------------------------------------------*/
-void                CreateNumberedList (Document document, View view)
+void CreateNumberedList (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Numbered_List, document);
 }
@@ -865,7 +863,7 @@ void                CreateNumberedList (Document document, View view)
 /*----------------------------------------------------------------------
   CreateDefinitionList
   ----------------------------------------------------------------------*/
-void                CreateDefinitionList (Document document, View view)
+void CreateDefinitionList (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Definition_List, document);
 }
@@ -873,7 +871,7 @@ void                CreateDefinitionList (Document document, View view)
 /*----------------------------------------------------------------------
   CreateDefinitionTerm
   ----------------------------------------------------------------------*/
-void                CreateDefinitionTerm (Document document, View view)
+void CreateDefinitionTerm (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Term, document);
 }
@@ -881,7 +879,7 @@ void                CreateDefinitionTerm (Document document, View view)
 /*----------------------------------------------------------------------
   CreateDefinitionDef
   ----------------------------------------------------------------------*/
-void                CreateDefinitionDef (Document document, View view)
+void CreateDefinitionDef (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Definition, document);
 }
@@ -889,7 +887,7 @@ void                CreateDefinitionDef (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHorizontalRule
   ----------------------------------------------------------------------*/
-void                CreateHorizontalRule (Document document, View view)
+void CreateHorizontalRule (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Horizontal_Rule, document);
 }
@@ -897,7 +895,7 @@ void                CreateHorizontalRule (Document document, View view)
 /*----------------------------------------------------------------------
   CreateBlockQuote
   ----------------------------------------------------------------------*/
-void                CreateBlockQuote (Document document, View view)
+void CreateBlockQuote (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Block_Quote, document);
 }
@@ -905,7 +903,7 @@ void                CreateBlockQuote (Document document, View view)
 /*----------------------------------------------------------------------
   CreatePreformatted
   ----------------------------------------------------------------------*/
-void                CreatePreformatted (Document document, View view)
+void CreatePreformatted (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Preformatted, document);
 }
@@ -918,7 +916,7 @@ void                CreatePreformatted (Document document, View view)
   If some text/elements are selected, create a simple ruby element at that
   position and move the selected elements within the rb element.
   ----------------------------------------------------------------------*/
-void                CreateRuby (Document document, View view)
+void CreateRuby (Document document, View view)
 {
   ElementType   elType;
   Element       el, selEl, rbEl, rubyEl, firstEl, lastEl, nextEl, prevEl;
@@ -1008,8 +1006,8 @@ void                CreateRuby (Document document, View view)
 		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 		    /* it's a text element */
 		    {
-		      lg = TtaGetTextLength (lastEl);
-		      if (lastSelectedChar < lg && lastSelectedChar != 0)
+		      lg = TtaGetElementVolume (lastEl);
+		      if (lastSelectedChar < lg && lastSelectedChar > 1)
 			/* the last selected element is only partly selected.
 			   Split it */
 			TtaSplitText (lastEl, lastSelectedChar, document);
@@ -1022,7 +1020,7 @@ void                CreateRuby (Document document, View view)
 		      /* that element is only partly selected. Split it */
 		      {
 			el = firstEl;
-			TtaSplitText (firstEl, firstSelectedChar-1, document);
+			TtaSplitText (firstEl, firstSelectedChar, document);
 			TtaNextSibling (&firstEl);
 			if (lastEl == el)
 			  /* we have to change the end of selection because the
@@ -1115,7 +1113,7 @@ void                CreateRuby (Document document, View view)
 /*----------------------------------------------------------------------
   CreateAddress
   ----------------------------------------------------------------------*/
-void                CreateAddress (Document document, View view)
+void CreateAddress (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Address, document);
 }
@@ -1123,7 +1121,7 @@ void                CreateAddress (Document document, View view)
 /*----------------------------------------------------------------------
   CreateTable
   ----------------------------------------------------------------------*/
-void                CreateTable (Document document, View view)
+void CreateTable (Document document, View view)
 {
    ElementType         elType;
    Element             el, new, cell, row;
@@ -1260,7 +1258,7 @@ void                CreateTable (Document document, View view)
 /*----------------------------------------------------------------------
   CreateCaption
   ----------------------------------------------------------------------*/
-void                CreateCaption (Document document, View view)
+void CreateCaption (Document document, View view)
 {
    ElementType         elType;
    Element             el;
@@ -1296,7 +1294,7 @@ void                CreateCaption (Document document, View view)
 /*----------------------------------------------------------------------
   CreateColgroup
   ----------------------------------------------------------------------*/
-void                CreateColgroup (Document document, View view)
+void CreateColgroup (Document document, View view)
 {
    ElementType         elType;
    Element             el, child;
@@ -1368,7 +1366,7 @@ void                CreateColgroup (Document document, View view)
 /*----------------------------------------------------------------------
   CreateCol
   ----------------------------------------------------------------------*/
-void                CreateCol (Document document, View view)
+void CreateCol (Document document, View view)
 {
    ElementType         elType;
    Element             el, child;
@@ -1443,7 +1441,7 @@ void                CreateCol (Document document, View view)
 /*----------------------------------------------------------------------
   CreateTHead
   ----------------------------------------------------------------------*/
-void                CreateTHead (Document document, View view)
+void CreateTHead (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_thead, document);
 }
@@ -1451,7 +1449,7 @@ void                CreateTHead (Document document, View view)
 /*----------------------------------------------------------------------
   CreateTBody
   ----------------------------------------------------------------------*/
-void                CreateTBody (Document document, View view)
+void CreateTBody (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_tbody, document);
 }
@@ -1459,7 +1457,7 @@ void                CreateTBody (Document document, View view)
 /*----------------------------------------------------------------------
   CreateTFoot
   ----------------------------------------------------------------------*/
-void                CreateTFoot (Document document, View view)
+void CreateTFoot (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_tfoot, document);
 }
@@ -1467,7 +1465,7 @@ void                CreateTFoot (Document document, View view)
 /*----------------------------------------------------------------------
   CreateRow
   ----------------------------------------------------------------------*/
-void                CreateRow (Document document, View view)
+void CreateRow (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Table_row, document);
 }
@@ -1475,7 +1473,7 @@ void                CreateRow (Document document, View view)
 /*----------------------------------------------------------------------
   CreateDataCell
   ----------------------------------------------------------------------*/
-void                CreateDataCell (Document document, View view)
+void CreateDataCell (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Data_cell, document);
 }
@@ -1483,7 +1481,7 @@ void                CreateDataCell (Document document, View view)
 /*----------------------------------------------------------------------
   CreateHeadingCell
   ----------------------------------------------------------------------*/
-void                CreateHeadingCell (Document document, View view)
+void CreateHeadingCell (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Heading_cell, document);
 }
@@ -1492,7 +1490,7 @@ void                CreateHeadingCell (Document document, View view)
   DeleteColumn
   Delete a column in a table.
   ----------------------------------------------------------------------*/
-void                DeleteColumn (Document document, View view)
+void DeleteColumn (Document document, View view)
 {
   Element             el, cell, colHead, selCell, leaf;
   ElementType         elType;
@@ -1574,7 +1572,7 @@ void                DeleteColumn (Document document, View view)
    	GetEnclosingForm creates if necessary and returns the	
    		enclosing form element.				
   ----------------------------------------------------------------------*/
-Element             GetEnclosingForm (Document document, View view)
+Element GetEnclosingForm (Document document, View view)
 {
    Element             el;
    ElementType         elType;
@@ -1617,7 +1615,7 @@ Element             GetEnclosingForm (Document document, View view)
 
    withinP is TRUE if the current selection is within a paragraph in a form.
   ----------------------------------------------------------------------*/
-static Element      InsertForm (Document doc, View view, ThotBool *withinP)
+static Element InsertForm (Document doc, View view, ThotBool *withinP)
 {
    ElementType         elType;
    Element             el, parent, form;
@@ -1694,7 +1692,7 @@ static Element      InsertForm (Document doc, View view, ThotBool *withinP)
 /*----------------------------------------------------------------------
   CreateForm
   ----------------------------------------------------------------------*/
-void                CreateForm (Document doc, View view)
+void CreateForm (Document doc, View view)
 {
   Element           el;
   ThotBool          withinP;
@@ -1708,7 +1706,7 @@ void                CreateForm (Document doc, View view)
   - within an existing paragraph generates input + text
   - in other case generates a paragraph including text + input + text
   ----------------------------------------------------------------------*/
-static void         CreateInputElement (Document doc, View view, int elInput)
+static void CreateInputElement (Document doc, View view, int elInput)
 {
    ElementType         elType;
    Element             el, input, parent;
@@ -1782,7 +1780,7 @@ static void         CreateInputElement (Document doc, View view, int elInput)
 /*----------------------------------------------------------------------
   CreateFieldset
   ----------------------------------------------------------------------*/
-void                CreateFieldset (Document document, View view)
+void CreateFieldset (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_FIELDSET, document);
 }
@@ -1790,7 +1788,7 @@ void                CreateFieldset (Document document, View view)
 /*----------------------------------------------------------------------
   CreateToggle
   ----------------------------------------------------------------------*/
-void                CreateToggle (Document doc, View view)
+void CreateToggle (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Checkbox_Input);
 }
@@ -1798,7 +1796,7 @@ void                CreateToggle (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateRadio
   ----------------------------------------------------------------------*/
-void                CreateRadio (Document doc, View view)
+void CreateRadio (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Radio_Input);
 }
@@ -1806,7 +1804,7 @@ void                CreateRadio (Document doc, View view)
 /*----------------------------------------------------------------------
   UpdateAttrSelected
   ----------------------------------------------------------------------*/
-void                UpdateAttrSelected (NotifyAttribute * event)
+void UpdateAttrSelected (NotifyAttribute * event)
 {
    OnlyOneOptionSelected (event->element, event->document, FALSE);
 }
@@ -1814,7 +1812,7 @@ void                UpdateAttrSelected (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   AttrSelectedDeleted
   ----------------------------------------------------------------------*/
-void                AttrSelectedDeleted (NotifyAttribute * event)
+void AttrSelectedDeleted (NotifyAttribute * event)
 {
    Element	menu;
 
@@ -1825,7 +1823,7 @@ void                AttrSelectedDeleted (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   DeleteAttrSelected
   ----------------------------------------------------------------------*/
-ThotBool            DeleteAttrSelected (NotifyAttribute * event)
+ThotBool DeleteAttrSelected (NotifyAttribute * event)
 {
    return TRUE;			/* refuse to delete this attribute */
 }
@@ -1833,7 +1831,7 @@ ThotBool            DeleteAttrSelected (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   CreateOption
   ----------------------------------------------------------------------*/
-void                CreateOption (Document doc, View view)
+void CreateOption (Document doc, View view)
 {
    ElementType         elType;
    Element             el, new;
@@ -1860,7 +1858,7 @@ void                CreateOption (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateOptGroup
   ----------------------------------------------------------------------*/
-void                CreateOptGroup (Document document, View view)
+void CreateOptGroup (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_OptGroup, document);
 }
@@ -1868,7 +1866,7 @@ void                CreateOptGroup (Document document, View view)
 /*----------------------------------------------------------------------
   CreateTextInput
   ----------------------------------------------------------------------*/
-void                CreateTextInput (Document doc, View view)
+void CreateTextInput (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Text_Input);
 }
@@ -1876,7 +1874,7 @@ void                CreateTextInput (Document doc, View view)
 /*----------------------------------------------------------------------
   CreatePasswordInput
   ----------------------------------------------------------------------*/
-void                CreatePasswordInput (Document doc, View view)
+void CreatePasswordInput (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Password_Input);
 }
@@ -1884,7 +1882,7 @@ void                CreatePasswordInput (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateTextArea
   ----------------------------------------------------------------------*/
-void                CreateTextArea (Document doc, View view)
+void CreateTextArea (Document doc, View view)
 {
    CreateInputElement (doc, view, HTML_EL_Text_Area);
 }
@@ -1893,7 +1891,7 @@ void                CreateTextArea (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateImageInput
   ----------------------------------------------------------------------*/
-void                CreateImageInput (Document doc, View view)
+void CreateImageInput (Document doc, View view)
 {
   AttributeType       attrType;
   Attribute           attr;
@@ -1976,7 +1974,7 @@ void                CreateImageInput (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateFileInput
   ----------------------------------------------------------------------*/
-void                CreateFileInput (Document doc, View view)
+void CreateFileInput (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_File_Input);
 }
@@ -1984,7 +1982,7 @@ void                CreateFileInput (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateHiddenInput
   ----------------------------------------------------------------------*/
-void                CreateHiddenInput (Document doc, View view)
+void CreateHiddenInput (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Hidden_Input);
 }
@@ -1992,7 +1990,7 @@ void                CreateHiddenInput (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateLabel
   ----------------------------------------------------------------------*/
-void                CreateLabel (Document doc, View view)
+void  CreateLabel (Document doc, View view)
 {
   CreateHTMLelement (HTML_EL_LABEL, doc);
 }
@@ -2000,7 +1998,7 @@ void                CreateLabel (Document doc, View view)
 /*----------------------------------------------------------------------
   CreatePushButton
   ----------------------------------------------------------------------*/
-void                CreatePushButton (Document doc, View view)
+void  CreatePushButton (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_BUTTON_);
 }
@@ -2008,7 +2006,7 @@ void                CreatePushButton (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateSubmit
   ----------------------------------------------------------------------*/
-void                CreateSubmit (Document doc, View view)
+void  CreateSubmit (Document doc, View view)
 {
   CreateInputElement (doc, view, HTML_EL_Submit_Input);
 }
@@ -2016,7 +2014,7 @@ void                CreateSubmit (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateReset
   ----------------------------------------------------------------------*/
-void                CreateReset (Document doc, View view)
+void  CreateReset (Document doc, View view)
 {
    CreateInputElement (doc, view, HTML_EL_Reset_Input);
 }
@@ -2024,7 +2022,7 @@ void                CreateReset (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateDivision
   ----------------------------------------------------------------------*/
-void                CreateDivision (Document document, View view)
+void  CreateDivision (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Division, document);
 }
@@ -2032,7 +2030,7 @@ void                CreateDivision (Document document, View view)
 /*----------------------------------------------------------------------
   CreateNOSCRIPT
   ----------------------------------------------------------------------*/
-void                CreateNOSCRIPT (Document document, View view)
+void  CreateNOSCRIPT (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_NOSCRIPT, document);
 }
@@ -2040,7 +2038,7 @@ void                CreateNOSCRIPT (Document document, View view)
 /*----------------------------------------------------------------------
   CreateObject
   ----------------------------------------------------------------------*/
-void                CreateObject (Document document, View view)
+void  CreateObject (Document document, View view)
 {
    ElementType         elType;
    Element             child, el;
@@ -2086,7 +2084,7 @@ void                CreateObject (Document document, View view)
 /*----------------------------------------------------------------------
   CreateParameter
   ----------------------------------------------------------------------*/
-void                CreateParameter (Document document, View view)
+void  CreateParameter (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_Parameter, document);
 }
@@ -2094,7 +2092,7 @@ void                CreateParameter (Document document, View view)
 /*----------------------------------------------------------------------
   CreateIFrame
   ----------------------------------------------------------------------*/
-void                CreateIFrame (Document document, View view)
+void  CreateIFrame (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_IFRAME, document);
 }
@@ -2104,7 +2102,7 @@ void                CreateIFrame (Document document, View view)
    If current selection is within an anchor, change that link, otherwise
    create a link.
   ----------------------------------------------------------------------*/
-void                CreateOrChangeLink (Document doc, View view)
+void  CreateOrChangeLink (Document doc, View view)
 {
    Element             el;
    Attribute           attr;
@@ -2145,7 +2143,7 @@ void                CreateOrChangeLink (Document doc, View view)
    DeleteAnchor
    Delete the surrounding anchor.                    
   ----------------------------------------------------------------------*/
-void                DeleteAnchor (Document doc, View view)
+void DeleteAnchor (Document doc, View view)
 {
    Element             firstSelectedElement, lastSelectedElement, anchor,
                        child, next, previous;
@@ -2249,7 +2247,7 @@ void                DeleteAnchor (Document doc, View view)
        if (firstSelectedElement == lastSelectedElement)
 	  i = lastSelectedChar;
        else
-	  i = TtaGetTextLength (firstSelectedElement);
+	  i = TtaGetElementVolume (firstSelectedElement);
        TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
      }
    else
@@ -2439,7 +2437,7 @@ void FilterAnnot (Document document, View view)
   MoveAnnotationXPtr
   Move an annotation to the value stored in the XPointer
   ----------------------------------------------------------------------*/
-void                MoveAnnotationXPtr (Document document, View view)
+void  MoveAnnotationXPtr (Document document, View view)
 {
 #ifdef ANNOTATIONS
   ANNOT_Move (document, view, FALSE);
@@ -2450,7 +2448,7 @@ void                MoveAnnotationXPtr (Document document, View view)
   MoveAnnotationSel
   Move an annotation in a document to the current selection
   ----------------------------------------------------------------------*/
-void                MoveAnnotationSel (Document document, View view)
+void  MoveAnnotationSel (Document document, View view)
 {
 #ifdef ANNOTATIONS
   ANNOT_Move (document, view, TRUE);
