@@ -37,16 +37,6 @@ RULES
    MathML:
 	begin
 	Use XLinkT for XLink;
-        if Charset
-           Create '<?xml version="1.0"';
-        if Charset and not Charset = 'unknown'
-           BEGIN
-           Create ' encoding="';
-	   Create Charset;
-	   Create '"';
-           END;
-        if Charset
-           Create '?>\12';
 	Create '\12<math xmlns="http://www.w3.org/1998/Math/MathML"';
 	Create Attributes;
 	Create '>\12';
@@ -1486,6 +1476,14 @@ ATTRIBUTES
 	create SAN;
 	create 'xml:space="preserve"';
 	end;
+
+TextTRANSLATE
+	BEGIN
+{ 	'\42' -> '&quot;'; }	{ quotation mark = APL quote, U+0022 ISOnum }
+	'\46' -> '&amp;';	{ ampersand, U+0026 ISOnum }
+	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
+	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
+	END;
 
 TextTRANSLATE Grec
  
