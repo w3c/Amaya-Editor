@@ -2243,7 +2243,8 @@ ThotBool            history;
     CheckDocHeader (pathname, &xmlDec, &withDoctype,
 		    &isXML, &parsingLevel, &charset, &thotType);
 
-  if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML)
+  /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
+  if (charset == UNDEFINED_CHARSET)
     {
       if (tempfile[0] != WC_EOS)
 	CheckCharsetInMeta (tempfile, &metacharset);
