@@ -1125,6 +1125,7 @@ BOXES
 	BorderBottomStyle: Solid;
 	BorderRightStyle: Solid;
 	Background: Creator =;
+	Foreground: Creator =;
 	FillPattern: backgroundcolor;
 	Depth: Creator =;
 	IN Structure_view
