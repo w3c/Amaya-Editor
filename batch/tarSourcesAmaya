@@ -11,7 +11,6 @@
 AMAYAVERSION=1.1a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -28,7 +27,7 @@ amaya/Makefile.libwww \
 amaya/Makefile.math \
 amaya/README.amaya \
 amaya/COPYRIGHT \
-amaya/COPYRIGHT.html \
+amaya/AmayaPage.html \
 amaya/AHTBridge.c \
 amaya/AHTFWrite.c \
 amaya/AHTErrors.h \
@@ -108,77 +107,20 @@ amaya/trans.c \
 amaya/trans.h \
 amaya/transparse.c \
 amaya/*.xpm \
+amaya/*.bmp \
 amaya/*.gif \
 config/amaya.keyboard \
 config/en-amayadialogue \
 config/en-amayamsg \
-config/en-javamsg \
 config/fr-amayadialogue \
 config/fr-amayamsg \
-config/fr-javamsg \
 config/thot.ini \
 config/java.properties \
-javalib/JavaDialog.c \
-javalib/JavaTypes.c \
-javalib/JavaTypes.def \
-javalib/JavaTypes.h \
-javalib/JavaVMaccesses.h \
-javalib/JavaWWWInterf.c \
-javalib/JavaX11Interf.c \
-javalib/JavaX11Interf.h \
-javalib/Makefile.in \
-javalib/Makefile.java \
-javalib/Makefile.javanosrc \
-javalib/Makefile.javasrc \
-javalib/biss_awt_APIstubs.c \
-javalib/biss_awt_APIstubs.h \
-javalib/debug_stubs.c \
-javalib/debug_stubs.h \
-javalib/events.c \
-javalib/events.h \
-javalib/javamsg.h \
-javalib/kaffeine.c \
-javalib/kaffeine.h \
-javalib/w3c_thotlib_APIExtra_stubs.c \
-javalib/w3c_thotlib_APIExtra_stubs.h \
-javalib/f/JavaDialog_f.h \
-javalib/f/JavaTypes_f.h \
-javalib/f/JavaWWWInterf_f.h \
-javalib/f/JavaX11Interf_f.h \
-javalib/f/biss_awt_APIstubs_f.h \
-javalib/f/debug_stubs_f.h \
-javalib/f/events_f.h \
-javalib/f/kaffeine_f.h \
-javalib/f/w3c_thotlib_APIExtra_stubs_f.h \
 pluginlib/Makefile.in \
 pluginlib/Makefile.plugin \
 pluginlib/*.c \
 pluginlib/*.h \
 pluginlib/f/*.h \
-classes/amaya.zip \
-classes/biss.zip \
-classes/classes.zip \
-classes/jigsaw.zip \
-classes/sources.zip \
-classes/thotlib.zip \
-classes/lib/ \
-classes/Makefile \
-kaffe-0.9.1/configure \
-kaffe-0.9.1/ChangeLog \
-kaffe-0.9.1/Makefile.in \
-kaffe-0.9.1/NOTES \
-kaffe-0.9.1/README \
-kaffe-0.9.1/config \
-kaffe-0.9.1/config.guess \
-kaffe-0.9.1/config.sub \
-kaffe-0.9.1/configure \
-kaffe-0.9.1/configure.in \
-kaffe-0.9.1/include \
-kaffe-0.9.1/install-sh \
-kaffe-0.9.1/kaffe \
-kaffe-0.9.1/license.terms \
-kaffe-0.9.1/packages \
-kaffe-0.9.1/test \
 w3c-libwww-5.0a/COPYRIGH \
 w3c-libwww-5.0a/CERN \
 w3c-libwww-5.0a/COPYING \

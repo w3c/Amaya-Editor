@@ -32,14 +32,12 @@ do
    Thot/config/en-amayadialogue \
    Thot/config/en-printdialogue \
    Thot/config/en-amayamsg \
-   Thot/config/en-javamsg \
    Thot/config/en-libdialogue \
    Thot/config/en-transdialogue \
    Thot/config/en-corrdialogue \
    Thot/config/fr-amayadialogue \
    Thot/config/fr-printdialogue \
    Thot/config/fr-amayamsg \
-   Thot/config/fr-javamsg \
    Thot/config/fr-libdialogue \
    Thot/config/fr-transdialogue \
    Thot/config/fr-corrdialogue \
@@ -50,7 +48,7 @@ do
    Thot/$MACH/bin/print \
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
-   Thot/amaya/COPYRIGHT.html \
+   Thot/amaya/AmayaPage.html \
    Thot/amaya/HTML.STR \
    Thot/amaya/HTML.conf \
    Thot/amaya/HTML.trans \

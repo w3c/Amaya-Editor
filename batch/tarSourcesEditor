@@ -34,7 +34,6 @@ config/en-compildialogue \
 config/en-corrdialogue \
 config/en-drawdialogue \
 config/en-grmdialogue \
-config/en-javamsg \
 config/en-inddialogue \
 config/en-itfdialogue \
 config/en-libdialogue \
@@ -51,7 +50,6 @@ config/fr-compildialogue \
 config/fr-corrdialogue \
 config/fr-drawdialogue \
 config/fr-grmdialogue \
-config/fr-javamsg \
 config/fr-inddialogue \
 config/fr-itfdialogue \
 config/fr-libdialogue \

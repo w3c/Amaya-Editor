@@ -38,6 +38,7 @@ Thot/config.h.in \
 Thot/config.sub \
 Thot/configure \
 Thot/configure.in \
+Thot/Makefile.in \
 Thot/install-sh \
 Thot/stamp-h.in \
 Thot/Options.in \
@@ -53,9 +54,6 @@ Thot/libpng/zlib/Makefile.in \
 Thot/thotlib/include/Makefile.in \
 Thot/tools/cextract-1.7/Makefile.in \
 Thot/tools/mkdep/Makefile.in \
-Thot/configure \
-Thot/configure.in \
-Thot/Makefile.in \
 Thot/doc/Appman.html \
 Thot/doc/Appman.toc.html \
 Thot/doc/APIman.html \
@@ -135,7 +133,6 @@ Thot/config/en-compildialogue \
 Thot/config/en-corrdialogue \
 Thot/config/en-drawdialogue \
 Thot/config/en-grmdialogue \
-Thot/config/en-javamsg \
 Thot/config/en-inddialogue \
 Thot/config/en-itfdialogue \
 Thot/config/en-libdialogue \
@@ -158,7 +155,6 @@ Thot/config/fr-compildialogue \
 Thot/config/fr-corrdialogue \
 Thot/config/fr-drawdialogue \
 Thot/config/fr-grmdialogue \
-Thot/config/fr-javamsg \
 Thot/config/fr-inddialogue \
 Thot/config/fr-itfdialogue \
 Thot/config/fr-libdialogue \
@@ -859,10 +855,6 @@ Thot/tools/cextract-1.7/parse.c \
 Thot/tools/cextract-1.7/patchlevel.h \
 Thot/tools/cextract-1.7/proto.h \
 Thot/tools/cextract-1.7/xtract.h \
-Thot/tools/dns_daemon/Makefile \
-Thot/tools/dns_daemon/dns_daemon.c \
-Thot/tools/javastub/Makefile \
-Thot/tools/javastub/javastub.c \
 Thot/schemas/exc_Table.h \
  | $COMPRESS  > $DEST/thot-src-$THOTVERSION.tar.gz
 

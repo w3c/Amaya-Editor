@@ -1,8 +1,13 @@
 #!/bin/sh
 cd ../..
-THOTVERSION=2.1b
+THOTVERSION=2.1d
 THOTDIR=/tahiti/diffusion/opera
 PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
+cd $THOTDIR
+rm solaris2 LINUX-ELF
+ln -s solaris-www solaris2
+ln -s LINUX-ELF-www LINUX-ELF
+cd ..
 
 DIR=/afs/.inria.fr/common/usr/local/thot/$THOTVERSION
 echo "Intallation version " $DIR
@@ -50,15 +55,8 @@ mkdir $DIR
    cp -p Thot/doc/thoteditor/Thotman-E.PIV $DIR/doc/thoteditor/
    cp -p Thot/doc/thoteditor/Thotman-E.EXT $DIR/doc/thoteditor/
    cp -p Thot/doc/thoteditor/Thotman-F.PIV $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/mainwindow.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/opera.xpm $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/outils.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/palette1.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/palette2.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/polygones.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/thot.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/thotdraw.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/traits.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/*.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/*.xpm $DIR/doc/thoteditor/
  mkdir $DIR/doc/thoteditor/manual_html
    cp -p Thot/doc/thoteditor/manual_html/*.html $DIR/doc/thoteditor/manual_html/
  mkdir $DIR/dicopar
@@ -135,15 +133,8 @@ mkdir $DIR
    cp -p Thot/doc/thoteditor/Thotman-E.PIV $DIR/doc/thoteditor/
    cp -p Thot/doc/thoteditor/Thotman-E.EXT $DIR/doc/thoteditor/
    cp -p Thot/doc/thoteditor/Thotman-F.PIV $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/mainwindow.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/opera.xpm $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/outils.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/palette1.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/palette2.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/polygones.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/thot.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/thotdraw.gif $DIR/doc/thoteditor/
-   cp -p Thot/doc/thoteditor/traits.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/*.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/*.xpm $DIR/doc/thoteditor/
  mkdir $DIR/doc/thoteditor/manual_html
    cp -p Thot/doc/thoteditor/manual_html/*.html $DIR/doc/thoteditor/manual_html/
  mkdir $DIR/dicopar

@@ -1,8 +1,13 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=1.0b
+AMAYAVERSION=1.1a
 THOTDIR=/tahiti/diffusion/opera
 PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
+cd $THOTDIR
+rm solaris2 LINUX-ELF
+ln -s solaris-www solaris2
+ln -s LINUX-ELF-www LINUX-ELF
+cd ..
 
 DIR=/afs/.inria.fr/common/usr/local/amaya/$AMAYAVERSION
 echo "Intallation version " $DIR
@@ -16,14 +21,11 @@ mkdir $DIR
    cp -p Thot/config/en-libdialogue $DIR/config/
    cp -p Thot/config/en-transdialogue $DIR/config/
    cp -p Thot/config/en-corrdialogue $DIR/config/
-   cp -p Thot/config/en-javamsg $DIR/config/
    cp -p Thot/config/fr-amayadialogue $DIR/config/
    cp -p Thot/config/fr-amayamsg $DIR/config/
    cp -p Thot/config/fr-libdialogue $DIR/config/
    cp -p Thot/config/fr-transdialogue $DIR/config/
    cp -p Thot/config/fr-corrdialogue $DIR/config/
-   cp -p Thot/config/fr-javamsg $DIR/config/
-   cp -p Thot/config/java.properties $DIR/config/
  ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
@@ -35,8 +37,11 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
- mkdir $DIR/classes
-   cp -p Thot/classes/*.zip $DIR/classes/
+   cp -p Thot/amaya/MathML.STR $DIR/amaya/
+   cp -p Thot/amaya/MathMLP.PRS $DIR/amaya/
+   cp -p Thot/amaya/MathMLT.TRA $DIR/amaya/
+   cp -p Thot/amaya/MathML.trans $DIR/amaya/
+   cp -p Thot/amaya/*.gif $DIR/amaya/
  ln -s ../../thot/Current/fonts $DIR/fonts
 
 for MACH in $PLATFORMS
@@ -45,7 +50,6 @@ do
  mkdir $DIR/$MACH/bin
    cp -p Thot/$MACH/bin/amaya $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
-   cp -p Thot/$MACH/bin/dns_daemon $DIR/$MACH/bin/
 done
 
 DIR=/mnt/amaya/$AMAYAVERSION
@@ -79,8 +83,6 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
- mkdir $DIR/classes
-   cp -p Thot/classes/*.zip $DIR/classes/
  ln -s ../../thot/Current/fonts $DIR/fonts
 
 for MACH in $PLATFORMS
@@ -89,6 +91,5 @@ do
  mkdir $DIR/$MACH/bin
    cp -p Thot/$MACH/bin/amaya $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
-   cp -p Thot/$MACH/bin/dns_daemon $DIR/$MACH/bin/
 done
 echo "Fin installation"
