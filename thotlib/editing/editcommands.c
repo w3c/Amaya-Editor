@@ -1,21 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
- * Module dedicated to manage user commands.
+ * This module handles user commands.
  *
  * Author: I. Vatton (INRIA)
  *
@@ -85,12 +76,14 @@ static boolean      FromKeyboard;
 #include "font_f.h"
 #include "frame_f.h"
 #include "geom_f.h"
+#include "language_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
 #include "scroll_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
+#include "structschema_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
@@ -99,7 +92,6 @@ static boolean      FromKeyboard;
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
-#include "language_f.h"
 
 #ifdef _WINDOWS 
 #include "win_f.h"
@@ -2693,6 +2685,59 @@ int                 editType;
 }
 
 /*----------------------------------------------------------------------
+  RemoveEmptyTextLeaf
+  pEl is an empty text leaf.  Remove it from the abstract tree, as well
+  as all its ascendants that are empty.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RemoveEmptyTextLeaf (PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void RemoveEmptyTextLeaf (pEl, pDoc)
+PtrElement pEl;
+PtrDocument pDoc;
+
+#endif  /* __STDC__ */
+{
+   PtrElement	pAsc;
+   Document	doc;
+   NotifyElement notifyEl;
+   PtrElement	pSibling;
+   int		nSiblings;
+
+   pAsc = pEl;
+   /* get the highest level empty ancestor */
+   while (pAsc->ElParent &&
+	  pAsc->ElParent->ElVolume == 0 &&	/* empty element */
+	  pAsc->ElParent->ElParent &&		/* don't delete the root elem*/
+	  CanCutElement (pAsc->ElParent, pDoc, NULL))	/* don't delete
+							  protected elements */
+       pAsc = pAsc->ElParent;
+   if (!SendEventSubTree (TteElemDelete, pDoc, pAsc, TRUE))
+      /* application is OK to delete that element */
+      {
+      /* prepare the event to be sent after deletion */
+      doc = (Document) IdentDocument (pDoc);
+      notifyEl.event = TteElemDelete;
+      notifyEl.document = doc;
+      notifyEl.element = (Element) (pAsc->ElParent);
+      notifyEl.elementType.ElTypeNum = pAsc->ElTypeNumber;
+      notifyEl.elementType.ElSSchema = (SSchema) (pAsc->ElStructSchema);
+      nSiblings = 0;
+      pSibling = pAsc;
+      while (pSibling->ElPrevious != NULL)
+         {
+         nSiblings++;
+         pSibling = pSibling->ElPrevious;
+         }
+      notifyEl.position = nSiblings;
+      /* delete the empty element */
+      TtaDeleteTree ((Element)pAsc, doc);
+      /* send event TteElemDelete.Post to the application */
+      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+      }
+}
+
+/*----------------------------------------------------------------------
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2711,6 +2756,7 @@ int                 keyboard;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
   ViewFrame          *pFrame;
+  PtrElement	      pEl, pElDelete;
   ptrfont             font;
   LeafType            nat;
   Propagation         savePropagate;
@@ -2721,6 +2767,9 @@ int                 keyboard;
   int                 visib, zoom;
   int                 ind;
   int                 previousChars;
+  PtrDocument         pDoc;
+  int                 view;
+  boolean             assoc;
   boolean             beginOfBox;
   boolean             toDelete;
   boolean             toSplit;
@@ -2754,9 +2803,26 @@ int                 keyboard;
 	  if (pViewSel->VsBox != 0)
 	    {
 	      pAb = pViewSel->VsBox->BxAbstractBox;
+	      pEl = pAb->AbElement;
+	      /* CloseInsertion may call the application, which may delete
+		 element pEl.  Check that pEl is still here after
+		 CloseInsertion */
 	      CloseInsertion ();
+
+	      pElDelete = NULL;
+	      if (pEl && pEl->ElStructSchema)
+		 /* element pEl is still here */
+	         if (pEl->ElVolume == 0)
+		    /* it's empty.  Delete it after deletenextchar */
+		    pElDelete = pEl;
+
 	      if (ThotLocalActions[T_deletenextchar] != NULL)
 		(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, TRUE);
+	      if (pElDelete && pElDelete->ElStructSchema)
+		 {
+		 GetDocAndView (frame, &pDoc, &view, &assoc);
+		 RemoveEmptyTextLeaf (pElDelete, pDoc);
+		 }
 	    }
 	}
       else

@@ -3902,6 +3902,7 @@ BOXES
 	Width: 0.4;
 	Size: Creator =;
 	LineWeight: 1 px;
+	Foreground: Creator =;
 	FillPattern: foregroundcolor;
 	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
@@ -3915,6 +3916,7 @@ BOXES
 	Width: 0.4;
 	Size: Creator =;
 	LineWeight: 1 px;
+	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
@@ -3927,6 +3929,7 @@ BOXES
 	Width: 0.4;
 	Size: Creator =;
 	LineWeight: 1 px;
+	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
@@ -3940,6 +3943,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
+	Foreground: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3949,6 +3953,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
+	Foreground: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3958,6 +3963,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
+	Foreground: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3967,6 +3973,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
+	Foreground: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3976,6 +3983,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
+	Foreground: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;

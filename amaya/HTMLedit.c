@@ -774,11 +774,59 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
+ ElementDeleted
+ An element has been deleted. If it was the only child of element
+ BODY, create a first paragraph.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ElementDeleted (NotifyElement *event)
+#else /* __STDC__*/
+void ElementDeleted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  Element	child, el;
+  ElementType	elType;
+  boolean	empty;
+
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == HTML_EL_BODY)
+     {
+     child = TtaGetFirstChild (event->element);
+     empty = TRUE;
+     while (empty && child)
+	{
+        elType = TtaGetElementType (child);
+	if (elType.ElTypeNum != HTML_EL_Comment_ &&
+	    elType.ElTypeNum != HTML_EL_Invalid_element)
+	   empty = FALSE;
+        else
+	   TtaNextSibling (&child);
+	}
+     if (empty)
+	{
+	elType.ElTypeNum = HTML_EL_Paragraph;
+	child = TtaNewTree (event->document, elType, "");
+	TtaInsertFirstChild (&child, event->element, event->document);
+	do
+	   {
+	   el = TtaGetFirstChild (child);
+	   if (el)
+	      child = el;
+	   }
+	while (el);
+	TtaSelectElement (event->document, child);
+	}
+     }
+  /* code to be written */
+}
+
+/*----------------------------------------------------------------------
    ElementPasted
    An element has been pasted in a HTML document.
    Check Pseudo paragraphs.
    If the pasted element has a NAME attribute, change its value if this
-   NAME already used in the document.
+   NAME is already used in the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ElementPasted (NotifyElement * event)

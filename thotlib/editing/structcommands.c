@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles the ChangeType, Surround, Copy, Cut, and Paste commands
  *
@@ -1056,13 +1047,14 @@ boolean             save;
 {
    PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                        pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
-                       pSel, pEl1, pA,
+                       pSel, pEl1, pA, firstSelInit, lastSelInit,
 		       pAncestor[MAX_ANCESTOR],
 		       pAncestorPrev[MAX_ANCESTOR],
 		       pAncestorNext[MAX_ANCESTOR];
    PtrDocument         pSelDoc;
    NotifyElement       notifyEl;
-   int                 firstChar, lastChar, nextChar, NSiblings, last, i;
+   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
+                       firstCharInit, lastCharInit;
    boolean             oneAtLeast, cutPage, stop, pageSelected, cutAll,
                        canCut;
 
@@ -1098,7 +1090,13 @@ boolean             save;
 		else
 		   /* pas d'element protege', on peut couper */
 		  {
-		     /* annule d'abord la selection */
+                     /* conserve la selection initiale pour pouvoir la
+                        retablir au cas ou la commande ne ferait rien */
+                     firstSelInit = firstSel;
+                     lastSelInit = lastSel;
+                     firstCharInit = firstChar;
+                     lastCharInit = lastChar;
+		     /* annule la selection */
 		     TtaClearViewSelections ();
 		     /* encore rien detruit */
 		     oneAtLeast = FALSE;
@@ -1151,7 +1149,7 @@ boolean             save;
 				    }
 			       while (cutAll && pEl != NULL);
 			    }
-			  if (cutAll)
+			  if (cutAll && CanCutElement (firstSel->ElParent, pSelDoc, NULL))
 			    {
 			       /* on fait comme si c'etait le pere qui etait
 			          selectionne' */
@@ -1535,17 +1533,44 @@ boolean             save;
                                        pSelDoc->DocModified = TRUE;
 				    }
 				  else
-				     /* il n'y a pas eu de fusion, l'element suivant */
-				     /* sera a selectionner en entier */
+				     /* il n'y a pas eu de fusion, l'element
+                                        suivant sera a selectionner en entier*/
 				     nextChar = 0;
-				  /* applique les regles de presentation */
-				  /* conditionnelles des elements qui precedent */
-				  /* ou suivent la partie detruite. */
+				  /* applique les regles de presentation
+				     conditionnelles des elements qui precedent
+				     ou suivent la partie detruite. */
 			       }
-			  if (oneAtLeast)
-			     /* on a effectivement detruit quelque chose, on termine le traitement */
+			  if (!oneAtLeast)
+			    /* on n'a rien detruit. Retablit la slection
+                               initiale */
 			    {
-			       /* verifie si les elements voisins deviennent premier ou */
+                            if (lastCharInit > 0)
+                               lastCharInit--;
+                            if (firstCharInit > 1)
+                               {
+                               if (firstSelInit == lastSelInit)
+                                  i = lastCharInit;
+                               else
+                                  i = 0;
+                               SelectString (pSelDoc, firstSelInit,
+                                             firstCharInit, i);
+                               }
+                            else if ((lastCharInit == 0 && firstCharInit!=1) ||
+                                      lastSelInit != firstSelInit)
+                               SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
+                            else
+                               SelectString (pSelDoc, firstSelInit, 1,
+                                             lastCharInit);
+                            if (lastSelInit != firstSelInit)
+                               ExtendSelection (lastSelInit, lastCharInit,
+                                                TRUE, FALSE, FALSE);
+			    }
+			  else
+			     /* on a effectivement detruit quelque chose, on
+                                termine le traitement */
+			    {
+			       /* verifie si les elements voisins deviennent
+                                  premier ou */
 			       /* dernier parmi leurs freres */
 			       ProcessFirstLast (pPrev, pNext, pSelDoc);
 			       if (pPrev != NULL)

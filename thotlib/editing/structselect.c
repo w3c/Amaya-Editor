@@ -2523,7 +2523,7 @@ boolean             check;
 void                SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 
 #else  /* __STDC__ */
-void                SelectStringWithEvent (pDoc, pEl, first)
+void                SelectPositionWithEvent (pDoc, pEl, first)
 PtrDocument         pDoc;
 PtrElement          pEl;
 int                 first;

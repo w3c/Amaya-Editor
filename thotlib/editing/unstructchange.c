@@ -927,9 +927,7 @@ boolean		    before
 {
    PtrElement          pSibling;
    boolean	           ret;
-#  ifndef _WINDOWS 
-   PtrElement          child;
-#  endif /* _WINDOWS */
+
    ret = FALSE;
    if (before)
       pSibling = pEl->ElPrevious;
@@ -1581,7 +1579,8 @@ boolean             before;
 		     if (before)
 		       {
 			  /* set selection after the last character of the string */
-			  MoveCaret (pDoc, pSibling, pSibling->ElTextLength + 1);
+			  SelectPositionWithEvent (pDoc, pSibling,
+						   pSibling->ElTextLength + 1);
 			  /* simulate a backspace */
 			  InsertChar (frame, '\177', -1);
 		       }
@@ -1771,6 +1770,10 @@ boolean             before;
 	   /* selectionne */
 	   if (pSel != NULL)
 	     {
+	     if (pSel->ElVolume > 0)
+		/* the first element moved is not empty. Select its first
+		   or last character, depending on "before" */
+		{
 		pSel = FirstLeaf (pSel);
 		if (!pSel->ElTerminal)
 		   SelectElement (pDoc, pSel, TRUE, TRUE);
@@ -1796,6 +1799,30 @@ boolean             before;
 		      SelectElement (pDoc, pSel->ElNext, TRUE, TRUE);
 		else
 		   SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
+		}
+	     else
+		/* the first element moved is empty. Select the closest
+		   character */
+		{
+		if (pSel->ElPrevious != NULL)
+		   {
+		   pSel = LastLeaf (pSel->ElPrevious);
+		   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+		      MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
+		   else
+		      SelectElement (pDoc, pSel, TRUE, TRUE);
+		   }
+		else if (pSel->ElNext != NULL)
+		   {
+		   pSel = FirstLeaf (pSel->ElPrevious);
+		   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+		      MoveCaret (pDoc, pSel, 1);
+		   else
+		      SelectElement (pDoc, pSel, TRUE, TRUE);
+		   }
+		else
+		   SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
+		}
 	     }
 	}
 }
