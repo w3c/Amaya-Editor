@@ -3033,7 +3033,7 @@ static Document LoadDocument (Document doc, char *pathname,
   Document            newdoc = 0;
   DocumentType        docType;
 #ifdef ANNOTATIONS
-  DocumentType        annotBodyType;
+  DocumentType        annotBodyType = docHTML;
 #endif /* ANNOTATIONS */
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
@@ -3742,7 +3742,7 @@ void Reload_callback (int doc, int status, char *urlName,
   char              *form_data;
   char              *initial_url;
   ClickEvent         method;
-  Document           res;
+  Document           res = 0;
   Element            el;
   RELOAD_context    *ctx;
   ThotBool           stopped_flag = FALSE;
