@@ -1109,7 +1109,8 @@ int                 arrow;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-
+   xp = yp = 0;
+   prevx = prevy = 0;
    if (thick == 0)
       return;
 
