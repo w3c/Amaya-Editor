@@ -6352,7 +6352,7 @@ if test "${GCC}" = "yes"; then
 fi
 
 
-AMAYA_VER="4.4"
+AMAYA_VER="5.1"
 
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
@@ -7037,6 +7037,9 @@ if test "$build_amaya" = "yes" ; then
 fi
 
 if test "$no_motif" = yes ; then
+    echo "Amaya configured with GTK"
+else
+if test "$no_motif" = yes ; then
     echo "Motif seems not installed on this machine"
     echo "Amaya need Motif 1.2 or 2.0"
 else
@@ -7049,6 +7052,7 @@ if test "$motif_libraries" = "" ; then
     echo "Motif libraries were not found"
     echo "Amaya might not compile"
     echo "Edit your Option file"
+fi
 fi
 fi
 fi
