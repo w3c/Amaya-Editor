@@ -29,20 +29,17 @@
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "edit_tv.h"
+#include "modif_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
-
-
-/* X Clipboard */
-static struct _TextBuffer XClipboard;
-
-/* Thot Clipboard */
-static struct _TextBuffer ClipboardThot;
 
 /* Thot Clipboard information */
 static PictInfo     PictClipboard;
 static LeafType     ClipboardType;
 static Language     ClipboardLanguage = 0;
+
+/* X Clipboard */
+static struct _TextBuffer XClipboard;
 
 /* paragraphe to be reformatted after insertion */
 static PtrAbstractBox LastInsertParagraph;
@@ -1815,6 +1812,11 @@ PtrTextBuffer       clipboard;
 		  pFrame = &ViewFrameTable[frame - 1];
 		  if (pAb->AbLeafType == LtText && *charsDelta < pAb->AbVolume)
 		    {
+		       /* enable the Paste command */
+		       if (FirstSavedElement == NULL &&
+			   ClipboardThot.BuLength == 0)
+			 SwitchPaste (TRUE);
+
 		       ClipboardLanguage = pAb->AbLanguage;
 		       /* sauve le texte selectionne dans la feuille */
 		       i = 1;	/* Indice de debut */

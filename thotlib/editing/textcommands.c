@@ -220,6 +220,8 @@ View                view;
    int                 indpos, xpos;
    boolean             ok;
 
+   indpos = 0;
+   xpos = 0;
    if (code == 9)
      {
 	if (ThotLocalActions[T_editfunc] != NULL)

@@ -644,7 +644,7 @@ STRUCT
 	   datapagesize = Text; IntWidthPxl; IntWidthPercent) =
 	 { datapagesize }
 	BEGIN
-	CAPTION	;						{ CAPTION }
+	CAPTION;						{ CAPTION }
 	Table_head = LIST OF (Column_head);
       ? thead;							{ THEAD }
 	Table_body = LIST OF (tbody);

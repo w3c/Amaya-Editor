@@ -20,33 +20,34 @@
 
 typedef struct _Frame_Ctl
 {
-  short         FrTopMargin;    /* Marge au sommet de la fenetre	  */
-  short         FrLeftMargin;   /* Marge a bas de la fenetre		  */
-  short 	FrWidth;	/* Largeur de la fenetre                  */
-  short 	FrHeight;      	/* Hauteur de la fenetre                  */
-  int		FrDoc;		/* Ident du document affiche      	  */
-  int		FrView;		/* Vue du document affichee		  */
-  ThotWidget	WdScrollV;	/* Le widget Scroll Vertical              */
-  ThotWidget 	WdScrollH;	/* Le widget Scroll Horizontal            */
-  ThotWidget 	WdFrame;	/* Le widget de la fenetre                */
-  ThotWidget	WdStatus;	/* Le widget de status courant            */
-  struct _Menu_Ctl *FrMenus;	/* Contexte du premier menu		  */
-  int		MenuAttr;	/* Identification menu attributs ou 0	  */
-  int		MenuSelect;	/* Identification menu selection ou 0	  */
-  ThotWidget	WdMenus[MAX_MENU];	/* Widget du menu      		  */
-  boolean	ActifMenus[MAX_MENU];	/* Menus actifs      		  */
+  short         FrTopMargin;    /* Window Top Margin			  */
+  short         FrLeftMargin;   /* Window Left Margin			  */
+  short 	FrWidth;	/* Window Width				  */
+  short 	FrHeight;      	/* Window Height			  */
+  int		FrDoc;		/* Document ID				  */
+  int		FrView;		/* Document View			  */
+  ThotWidget	WdScrollV;	/* Widget of Vertical Scroll              */
+  ThotWidget 	WdScrollH;	/* Widget of Horizontal Scroll            */
+  ThotWidget 	WdFrame;	/* Widget of the Document Frame           */
+  ThotWidget	WdStatus;	/* Widget of the Document status          */
+  struct _Menu_Ctl *FrMenus;	/* First menu context			  */
+  int		MenuAttr;	/* Attributes menu ID or -1		  */
+  int		MenuSelect;	/* Selection menu ID or -1		  */
+  int		MenuPaste;	/* Menu including the Paste command or -1 */
+  int           EntryPaste;	/* Entry number of the Paste command	  */
+  int		MenuUndo;	/* Menu including the Undo command or -1  */
+  int           EntryUndo;	/* Entry number of the Undo command	  */
+  ThotWidget	WdMenus[MAX_MENU];	/* List of menu Widgets		  */
+  boolean	ActifMenus[MAX_MENU];	/* Active Menus   		  */
+  Proc  	Call_Button[MAX_BUTTON];/* List of button Callbacks	  */
 #ifndef _WINDOWS
-  ThotWidget	Button[MAX_BUTTON];	/* Widget des boutons		  */
+  ThotWidget	Button[MAX_BUTTON];	/* List of button Widgets	  */
 #else  /* _WINDOWS */
-  TBBUTTON*	Button[MAX_BUTTON];	/* Widget des boutons		  */
+  TBBUTTON*	Button[MAX_BUTTON];	/* List of button Widgets	  */
+  ThotWidget    Label[MAX_TEXTZONE];    /* Labels of text zones           */
 #endif /* _WINDOWS */
-  Proc  	Call_Button[MAX_BUTTON];/* Callback des boutons		  */
-  ThotWidget	Text_Zone[MAX_TEXTZONE];/* Widget des boutons		  */
-#ifdef _WINDOWS
-  ThotWidget    Label[MAX_TEXTZONE];  /* Labels of text zones             */
-  /* boolean       showLogo; */
-#endif /* _WINDOWS */
-  Proc  	Call_Text[MAX_TEXTZONE];/* Callback des boutons		  */
+  ThotWidget	Text_Zone[MAX_TEXTZONE];/* List of text-zone Widgets	  */
+  Proc  	Call_Text[MAX_TEXTZONE];/* List of text-zone Callbacks	  */
 }Frame_Ctl;
 #endif /* !NODISPLAY */
 

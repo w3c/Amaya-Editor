@@ -71,36 +71,38 @@ static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 #define M_EQUIV 1
 #define M_RESDYN 2
 
-#include "res_f.h"
+#include "absboxes_f.h"
+#include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
-#include "attrpresent_f.h"
 #include "attributes_f.h"
-#include "search_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
-#include "contentapi_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "exceptions_f.h"
-#include "absboxes_f.h"
+#include "attrpresent_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
+#include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "content_f.h"
+#include "contentapi_f.h"
+#include "createabsbox_f.h"
+#include "editcommands_f.h"
+#include "exceptions_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
 #include "selectmenu_f.h"
-#include "fileaccess_f.h"
+#include "res_f.h"
+#include "search_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
+#include "undo_f.h"
+#include "views_f.h"
 
 /* element types proposed in menu Surround */
 static int          typeNumSurround[MAX_MENU];	/* type */
@@ -667,6 +669,9 @@ void                FreeSavedElements ()
      }
    FirstSavedElement = NULL;
    DocOfSavedElements = NULL;
+   /* disable Paste command */
+   if (ClipboardThot.BuLength != 0)
+     SwitchPaste (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -693,6 +698,10 @@ PtrElement          pParent;
      {
 	if (FirstSavedElement == NULL)
 	  {
+	    /* enable the Paste command */
+	    if (ClipboardThot.BuLength == 0)
+	      SwitchPaste (TRUE);
+
 	     FirstSavedElement = pNewPasteEl;
 	     pPasteEl = NULL;
 	     pNewPasteEl->PePrevious = NULL;
@@ -2307,7 +2316,7 @@ PtrSSchema          newSSchema;
    PtrElement          pEl;
    Element             El;
    ElementType         elType;
-   int                 ent, method;
+   int                 ent, method = 0;
    boolean             ok;
    boolean             done = FALSE;
 
@@ -2447,6 +2456,7 @@ PtrDocument	 pDoc;
    PtrElement	pElem, Sibling, pList, pF, pSplit;
    boolean	ok;
 
+   Sibling = NULL;
    *splitElem = FALSE;
    *pSplitEl = NULL;
    *pElSplit = NULL;

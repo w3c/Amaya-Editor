@@ -27,6 +27,7 @@
 #include "tree.h"
 #include "content.h"
 #include "registry.h"
+#include "selection.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -103,6 +104,13 @@ union
    /* maximum number of editing operations recorded in the history */
 #define MAX_EDIT_HISTORY_LENGTH 20
 
+#include "appdialogue_f.h"
+#include "actions_f.h"
+#include "callback_f.h"
+#include "contentapi_f.h"
+#include "memory_f.h"
+#include "tree_f.h"
+
 /****** Reset history (ClearHistory) when loading or reloading a document ****/
 
 /*----------------------------------------------------------------------
@@ -134,11 +142,48 @@ static void UpdateHistoryLength (diff, pDoc)
 {
    if (NbEditsInHistory == 0 && diff > 0)
      /* enable Undo command */
-     /**********/;
+     SwitchUndo (pDoc, TRUE);
    NbEditsInHistory += diff;
    if (NbEditsInHistory == 0 && diff < 0)
      /* disable Undo command */
-     /**********/;
+     SwitchUndo (pDoc, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   FreeSavedElementsHist
+   free the saved elements associated with editing operation editOp
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void FreeSavedElementsHist (PtrEditOperation editOp, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void FreeSavedElementsHist (editOp, pDoc)
+PtrEditOperation editOp;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrElement	pEl;
+
+   pEl = editOp->EoSavedElement;
+   if (pEl)
+      {
+      /* if the saved selection is in the freed element, cancel it */
+      if (editOp->EoFirstSelectedEl)
+	 if (ElemIsWithinSubtree (editOp->EoFirstSelectedEl, pEl))
+	    {
+	    editOp->EoFirstSelectedEl = NULL;
+	    editOp->EoLastSelectedEl = NULL;
+	    }
+      if (editOp->EoLastSelectedEl)
+	 if (ElemIsWithinSubtree (editOp->EoLastSelectedEl, pEl))
+	    {
+	    editOp->EoFirstSelectedEl = NULL;
+	    editOp->EoLastSelectedEl = NULL;
+	    }
+      /* free the saved element */
+      DeleteElement (&pEl, pDoc);
+      }
+   editOp->EoSavedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -245,6 +290,8 @@ PtrDocument pDoc;
    LastEdit = NULL;
    NbEditsInHistory = 0;
    EditSequence = FALSE;
+   /* disable Undo command */
+   SwitchUndo (pDoc, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -580,14 +627,14 @@ View                view;
              if (LastEdit->EoFirstSelectedEl == LastEdit->EoLastSelectedEl)
    	        i = LastEdit->EoLastSelectedChar;
              else
-   	        i = TtaGetTextLength (LastEdit->EoFirstSelectedEl);
-             TtaSelectString (doc, LastEdit->EoFirstSelectedEl,
+   	        i = TtaGetTextLength ((Element)(LastEdit->EoFirstSelectedEl));
+             TtaSelectString (doc, (Element)(LastEdit->EoFirstSelectedEl),
 			      LastEdit->EoFirstSelectedChar, i);
              }
            else
-             TtaSelectElement (doc, LastEdit->EoFirstSelectedEl);
+             TtaSelectElement (doc, (Element)(LastEdit->EoFirstSelectedEl));
            if (LastEdit->EoFirstSelectedEl != LastEdit->EoLastSelectedEl)
-             TtaExtendSelection (doc, LastEdit->EoLastSelectedEl,
+             TtaExtendSelection (doc, (Element)(LastEdit->EoLastSelectedEl),
 			         LastEdit->EoLastSelectedChar);
 	   }
          doit = FALSE;
@@ -633,7 +680,7 @@ View                view;
                TtaInsertSibling ((Element)(LastEdit->EoSavedElement),
 			  (Element)(LastEdit->EoPreviousSibling), FALSE, doc);
             else
-               TtaInsertFirstChild (&(LastEdit->EoSavedElement),
+               TtaInsertFirstChild ((Element *)&(LastEdit->EoSavedElement),
 				    (Element)(LastEdit->EoParent), doc);
             /* send event ElemPaste.Post to the application */
             NotifySubTree (TteElemPaste, pDoc, LastEdit->EoSavedElement, 0);

@@ -2952,7 +2952,7 @@ BOXES
 	END;
 
  ATTR_MAXLENGTH: BEGIN
-	Content: Text ' maxlenght=';
+	Content: Text ' maxlength=';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;

@@ -41,6 +41,7 @@
 #define THOT_EXPORT extern
 #include "font_tv.h"
 #include "edit_tv.h"
+#include "modif_tv.h"
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "appdialogue_tv.h"
@@ -476,8 +477,7 @@ Proc                procedure;
    built-in action, or override a previously defined user action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                TteAddUserMenuAction (char *actionName, UserProc procedure,
-                                      void *arg)
+int                TteAddUserMenuAction (char *actionName, UserProc procedure, void *arg)
 
 #else  /* __STDC__ */
 int                TteAddUserMenuAction (actionName, procedure, arg)
@@ -1027,14 +1027,14 @@ int                 frame;
    de menu.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame)
+static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame, int doc)
 #else  /* __STDC__ */
-static void         BuildPopdown (ptrmenu, ref, button, frame)
+static void         BuildPopdown (ptrmenu, ref, button, frame, doc)
 Menu_Ctl           *ptrmenu;
 int                 ref;
 ThotWidget          button;
 int                 frame;
-
+int                 doc;
 #endif /* __STDC__ */
 {
    int                 i, j;
@@ -1046,10 +1046,16 @@ int                 frame;
    boolean             withEquiv;
    Item_Ctl           *ptritem;
    char               *ptr;
+#ifndef _WINDOWS 
+   char                fontname[100];
+   char                text[20];
+#else _WINDOWS
+   HMENU               hMenu;
 
-#  ifdef _WINDOWS
    currentFrame = frame;
+   hMenu = GetMenu (frame);
 #  endif /* _WINDOWS */
+
    /* Construit le pulldown attache au bouton */
    item = 0;
    i = 0;
@@ -1097,6 +1103,18 @@ int                 frame;
 			    j += lg;
 			 }
 		    }
+		  /* Is it the Paste command */
+		  if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
+		    {
+		      FrameTable[frame].MenuPaste = ref;
+		      FrameTable[frame].EntryPaste = item;
+		    }
+		  /* Is it the Undo command */
+		  if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
+		    {
+		      FrameTable[frame].MenuUndo = ref;
+		      FrameTable[frame].EntryUndo = item;
+		    }
 		  MenuActionList[action].ActionActive[frame] = TRUE;
 	       }
 	  }
@@ -1105,7 +1123,7 @@ int                 frame;
      }
 
 #  ifdef _WINDOWS
-   currentMenu = button ;
+   currentMenu = button;
 #  endif /* _WINDOWS */
 
    /* Creation du Pulldown avec ou sans equiv */
@@ -1113,6 +1131,43 @@ int                 frame;
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, equiv);
    else
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, NULL);
+
+   if (FrameTable[frame].MenuPaste == ref &&
+       ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
+	doc == 0 || LoadedDocument[doc - 1]->DocReadOnly))
+     {
+       /* initialize the Paste entry */
+#ifdef _WINDOWS
+       EnableMenuItem (hMenu, ref + FrameTable[frame].EntryPaste, MFS_GRAYED);
+#else  /* !_WINDOWS */
+       if (TtWDepth > 1)
+	 TtaRedrawMenuEntry (ref, FrameTable[frame].EntryPaste, NULL, InactiveB_Color, 0);
+       else
+	 {
+	   FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	   TtaRedrawMenuEntry (ref, FrameTable[frame].EntryPaste, fontname, -1, 0);
+	 }
+#endif /* _WINDOWS */
+     }
+
+   if (FrameTable[frame].MenuUndo == ref)
+     {
+       /* initialize the Undo entry */
+#ifdef _WINDOWS
+       EnableMenuItem (hMenu, ref + FrameTable[frame].EntryUndo, MFS_GRAYED);
+#else  /* !_WINDOWS */
+       if (TtWDepth > 1)
+	 TtaRedrawMenuEntry (ref, FrameTable[frame].EntryUndo, NULL, InactiveB_Color, 0);
+       else
+	 {
+	   FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	   TtaRedrawMenuEntry (ref, FrameTable[frame].EntryUndo, fontname, -1, 0);
+	 }
+#endif /* _WINDOWS */
+     }
+#  ifdef _WINDOWS
+   currentMenu = button;
+#  endif /* _WINDOWS */
 
    /* traite les sous-menus de l'item de menu */
    item = 0;
@@ -1203,7 +1258,7 @@ Pixmap              icon;
 		ptrmenu = NULL;
 	  }
 
-/**** creation de la fenetre principale ****/
+        /**** creation de la fenetre principale ****/
 	if (n == 0)
 	  {
 	     WithMessages = FALSE;
@@ -1220,7 +1275,7 @@ Pixmap              icon;
 	wind_pixmap = XCreateBitmapFromData (TtDisplay, XDefaultRootWindow (TtDisplay),
 		      logowindow_bits, logowindow_width, logowindow_height);
 #       endif
-/**** creation des menus ****/
+        /**** creation des menus ****/
 	ptrmenu = MainMenuList;
 	FrameTable[0].FrMenus = ptrmenu;
 	ref = MAX_LocalMenu;	/* reference du menu construit */
@@ -1229,7 +1284,7 @@ Pixmap              icon;
 	  {
 	     /* Enregistre le widget du menu */
 	     FrameTable[0].ActifMenus[i] = TRUE;
-	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
+	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0, 0);
 	     ptrmenu = ptrmenu->NextMenu;
 	     ref += MAX_ITEM;
 	     i++;
@@ -2215,7 +2270,6 @@ char               *text;
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSwitchCommands (Document document, View view)
@@ -2223,7 +2277,6 @@ void                TtcSwitchCommands (Document document, View view)
 void                TtcSwitchCommands (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -2311,7 +2364,7 @@ View                view;
      }
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
-}				/*TtcSwitchCommands */
+}
 
 
 /*----------------------------------------------------------------------
@@ -2564,6 +2617,8 @@ int                 doc;
 	   /* Initialise les menus dynamiques */
 	   FrameTable[frame].MenuAttr = -1;
 	   FrameTable[frame].MenuSelect = -1;
+	   FrameTable[frame].MenuPaste = -1;
+	   FrameTable[frame].MenuUndo = -1;
 #          ifndef _WINDOWS
 	   menu_bar = 0;
 #          endif /* !_WINDOWS */ 
@@ -2612,7 +2667,7 @@ int                 doc;
 		   else if (ptrmenu->MenuSelect) 
 		     FrameTable[frame].MenuSelect = ptrmenu->MenuID;
 		   else 
-		     BuildPopdown (ptrmenu, ref, w, frame);
+		     BuildPopdown (ptrmenu, ref, w, frame, doc);
 #                  ifdef _WINDOWS
 		   AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
 #                  else  /* !_WINDOWS */
@@ -3073,7 +3128,8 @@ int                 menu;
 
 
 /*----------------------------------------------------------------------
-   FindMenu recherche le menu menuID dans la fenetree^tre.            
+  FindMenu returns the menu index and its context if this menu is
+  displayed in this specific frame or -1.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
@@ -3088,9 +3144,9 @@ Menu_Ctl          **ctxmenu;
    Menu_Ctl           *ptrmenu;
    int                 m;
 
-   /* Recherche le bon menu */
-   m = 1;			/* index de menu */
-   /* recherche cet item dans la liste des menus de la fenetre */
+   /* Look for the menu */
+   m = 1;			/* menu index */
+   /* look for that menu in the menu list */
    ptrmenu = FrameTable[frame].FrMenus;
    while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
      {
@@ -3100,16 +3156,24 @@ Menu_Ctl          **ctxmenu;
 
    *ctxmenu = ptrmenu;
    if (ptrmenu == NULL)
-      return (-1);
+     /* menu not found */
+     return (-1);
    else if (ptrmenu->MenuView != 0 && ptrmenu->MenuView != FrameTable[frame].FrView)
-      return (-1);
+     /* menu found but that frame is not concerned */
+     return (-1);
    else
-      return (m);
+     /* ok */
+     return (m);
 }
 
 
 /*----------------------------------------------------------------------
-   FindItemMenu recherche le menu, et l'item de la fenetree^tre.              
+  FindItemMenu returns all information concerning that dialogue entry
+  in this specific frame:
+  - menu index or -1
+  - submenu index or 0
+  - item index or 0
+  - action index or -1
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FindItemMenu (int frame, int menuID, int itemID, int *menu, int *submenu, int *item, int *action)
@@ -3133,68 +3197,202 @@ int                *action;
    j = 0;
    i = 0;
    sm = 0;
+   /* look for that menu in the menu list */
    m = FindMenu (frame, menuID, &ptrmenu);
    found = (m != -1);
    if (found)
      {
-	/* Recherche l'item dans le menu ou un sous-menu */
-	ptr = ptrmenu->ItemsList;
-	found = FALSE;
-	max = ptrmenu->ItemsNb;
-	ptrsmenu = NULL;
-	while (ptrmenu != NULL && !found)
-	  {
-	     while (i < max && !found)
-	       {
-		  j = ptr[i].ItemAction;
-		  if (j == -1)
-		     i++;	/* separateur */
-		  else if (ptr[i].ItemType == 'M')
-		    {
-		       /* recherche dans le sous-menu */
-		       sm = i + 1;
-		       ptrsmenu = ptr[i].SubMenu;
-		       i = 0;
-		       ptr = ptrsmenu->ItemsList;
-		       max = ptrsmenu->ItemsNb;
-		    }
-		  else if (ptr[i].ItemID != itemID)
-		     i++;	/* ce n'est pas l'action */
-		  else
-		     found = TRUE;
-	       }
-
-	     /* faut-il sortir du sous-menu ? */
-	     if (!found && ptrsmenu != NULL)
-	       {
-		  /* reprend la recherche dans le menu */
-		  i = sm;
-		  sm = 0;
-		  ptrsmenu = NULL;
-		  ptr = ptrmenu->ItemsList;
-		  max = ptrmenu->ItemsNb;
-	       }
-	     else
-		/* on a parcouru tout le menu : cet itemID n'existe pas */
-		ptrmenu = NULL;
-	  }
+       /* search that item in the item list or in submenus */
+       ptr = ptrmenu->ItemsList;
+       found = FALSE;
+       max = ptrmenu->ItemsNb;
+       ptrsmenu = NULL;
+       while (ptrmenu != NULL && !found)
+	 {
+	   while (i < max && !found)
+	     {
+	       j = ptr[i].ItemAction;
+	       if (j == -1)
+		 i++;	/* separator */
+	       else if (ptr[i].ItemType == 'M')
+		 {
+		   /* search in that submenu */
+		   sm = i + 1;
+		   ptrsmenu = ptr[i].SubMenu;
+		   i = 0;
+		   ptr = ptrsmenu->ItemsList;
+		   max = ptrsmenu->ItemsNb;
+		 }
+	       else if (ptr[i].ItemID != itemID)
+		 i++;	/* it's not that one */
+	       else
+		 found = TRUE;
+	     }
+	   
+	   /* do we close the search in a submenu? */
+	   if (!found && ptrsmenu != NULL)
+	     {
+	       /* continue the search in the menu */
+	       i = sm;
+	       sm = 0;
+	       ptrsmenu = NULL;
+	       ptr = ptrmenu->ItemsList;
+	       max = ptrmenu->ItemsNb;
+	     }
+	   else
+	     /* we close the menu search and this itemID doesn't exist */
+	     ptrmenu = NULL;
+	 }
      }
 
-   /* est-ce que l'on a trouve ? */
+   /* do we sucess? */
    if (found)
      {
-	*menu = m;
-	*submenu = sm;
-	*item = i;
-	*action = j;
+       /* yes */
+       *menu = m;
+       *submenu = sm;
+       *item = i;
+       *action = j;
      }
    else
      {
-	*menu = -1;
-	*submenu = 0;
-	*item = 0;
-	*action = -1;
+       /* no */
+       *menu = -1;
+       *submenu = 0;
+       *item = 0;
+       *action = -1;
      }
+}
+
+/*----------------------------------------------------------------------
+  SwitchUndo enables (on=TRUE) or disables (on=FALSE) the Undo
+  entry in all document frames.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SwitchUndo (PtrDocument pDoc, boolean on)
+#else  /* __STDC__ */
+void         SwitchUndo (pDoc, on)
+PtrDocument  pDoc;
+boolean      on;
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS 
+  char                fontname[100];
+  char                text[20];
+#else _WINDOWS
+  HMENU               hMenu;
+#endif /* _WINDOWS */
+  int                 view, assoc, frame;
+  int                 ref, item;
+
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	{
+	  frame = pDoc->DocViewFrame[view];
+	  if (ref != -1 && FrameTable[frame].MenuUndo != -1)
+	    {
+	      ref = FrameTable[frame].MenuUndo;
+	      item = FrameTable[frame].EntryUndo;
+#ifdef _WINDOWS
+	      hMenu = GetMenu (frame);
+	      if (on)
+		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+	      else
+		EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	      if (on)
+		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	      else if (TtWDepth > 1)
+		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	      else
+		{
+		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+		}
+#endif /* _WINDOWS */
+	    }
+	}
+    }
+  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+    {
+      frame = pDoc->DocAssocFrame[assoc];
+      if (frame != 0 && FrameTable[frame].MenuUndo != -1)
+	{
+	  ref = FrameTable[frame].MenuUndo;
+	  item = FrameTable[frame].EntryUndo;
+#ifdef _WINDOWS
+	  hMenu = GetMenu (frame);
+	  if (on)
+	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+	  else
+	    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	  if (on)
+	    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	  else if (TtWDepth > 1)
+	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	  else
+	    {
+	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+	    }
+#endif /* _WINDOWS */
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SwitchPaste enables (on=TRUE) or disables (on=FALSE) the Paste
+  entry in all frames.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SwitchPaste (boolean on)
+#else  /* __STDC__ */
+void         SwitchPaste (on)
+boolean      on;
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS 
+  char                fontname[100];
+  char                text[20];
+#else _WINDOWS
+  HMENU               hMenu;
+#endif /* _WINDOWS */
+  int                 frame;
+  int                 ref, item;
+
+  frame = 1;
+  while (frame <= MAX_FRAME)
+    {
+      if (FrameTable[frame].WdFrame != 0 && FrameTable[frame].FrDoc != 0 &&
+	  !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
+	{
+	  ref = FrameTable[frame].MenuPaste;
+	  item = FrameTable[frame].EntryPaste;
+	  if (ref != -1)
+	    {
+#ifdef _WINDOWS
+	      hMenu = GetMenu (frame);
+	      if (on)
+		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+	      else
+		EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	      if (on)
+		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	      else if (TtWDepth > 1)
+		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	      else
+		{
+		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+		}
+#endif /* _WINDOWS */
+	    }
+	}
+      frame++;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3227,60 +3425,60 @@ int                 menuID;
 #endif
 
    if (document == 0 && view == 0)
-      frame = 0;
+     frame = 0;
    else
-      frame = GetWindowNumber (document, view);
+     frame = GetWindowNumber (document, view);
 
-   /* Si les parametres sont invalides */
+   /* Check parameters */
    if (frame > MAX_FRAME)
-      return;
+     return;
    else if ((FrameTable[frame].WdFrame) == 0)
-      return;
+     return;
 
    menu = FindMenu (frame, menuID, &ptrmenu);
    if (menu != -1)
      {
-	menu--;
-	if (FrameTable[frame].ActifMenus[menu])
-	  {
-	     /* Recupere le widget du bouton */
-	     w = FrameTable[frame].WdMenus[menu];
-	     if (w != 0)
-	       {
-		  FrameTable[frame].ActifMenus[menu] = FALSE;
-		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-		  /* Desactive */
-#         ifdef _WINDOWS
-		  WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
-#         else  /* !_WINDOWS */
-		  TtaSetPulldownOff (ref, w);
-#         endif /* _WINDOWS */
-
-#ifndef _WINDOWS
-		  /* Visualise le bouton inactif */
-		  if (TtWDepth > 1)
-		    {
-		       /* Changement de couleur */
-		       n = 0;
-		       XtSetArg (args[n], XmNforeground, InactiveB_Color);
-		       n++;
-		       XtSetValues (w, args, n);
-		       XtManageChild (w);
-		    }
-		  else
-		    {
-		       /* Changement de police de caracteres */
-		       font = XmFontListCreate ((XFontStruct *) IFontDialogue, XmSTRING_DEFAULT_CHARSET);
-		       n = 0;
-		       XtSetArg (args[n], XmNfontList, font);
-		       n++;
-		       XtSetValues (w, args, n);
-		       XtManageChild (w);
-		       XmFontListFree (font);
-		    }
+       menu--;
+       if (FrameTable[frame].ActifMenus[menu])
+	 {
+	   /* Get the button widget */
+	   w = FrameTable[frame].WdMenus[menu];
+	   if (w != 0)
+	     {
+	       FrameTable[frame].ActifMenus[menu] = FALSE;
+	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+	       /* Disable */
+#ifdef _WINDOWS
+	       WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
+#else  /* !_WINDOWS */
+	       TtaSetPulldownOff (ref, w);
 #endif /* _WINDOWS */
-	       }
-	  }
+	       
+#ifndef _WINDOWS
+	       /* Set the button inactive */
+	       if (TtWDepth > 1)
+		 {
+		   /* Change the color */
+		   n = 0;
+		   XtSetArg (args[n], XmNforeground, InactiveB_Color);
+		   n++;
+		   XtSetValues (w, args, n);
+		   XtManageChild (w);
+		 }
+	       else
+		 {
+		   /* Change the font */
+		   font = XmFontListCreate ((XFontStruct *) IFontDialogue, XmSTRING_DEFAULT_CHARSET);
+		   n = 0;
+		   XtSetArg (args[n], XmNfontList, font);
+		   n++;
+		   XtSetValues (w, args, n);
+		   XtManageChild (w);
+		   XmFontListFree (font);
+		 }
+#endif /* _WINDOWS */
+	     }
+	 }
      }
 }
 
@@ -3311,54 +3509,54 @@ int                 menuID;
 #endif
 
    if (document == 0 && view == 0)
-      frame = 0;
+     frame = 0;
    else
-      frame = GetWindowNumber (document, view);
+     frame = GetWindowNumber (document, view);
 
-   /* Si les parametres sont invalides */
+   /* Check parameters */
    if (frame > MAX_FRAME)
-      return;
+     return;
    else if ((FrameTable[frame].WdFrame) == 0)
-      return;
+     return;
 
    menu = FindMenu (frame, menuID, &ptrmenu);
    if (menu != -1)
      {
-	menu--;
-	if (!FrameTable[frame].ActifMenus[menu])
-	  {
-	     /* Recupere le widget du bouton */
-	     w = FrameTable[frame].WdMenus[menu];
-	     if (w != 0)
-	       {
-		  FrameTable[frame].ActifMenus[menu] = TRUE;
-		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-		  /* Desactive */
+       menu--;
+       if (!FrameTable[frame].ActifMenus[menu])
+	 {
+	   /* Get the button widget */
+	   w = FrameTable[frame].WdMenus[menu];
+	   if (w != 0)
+	     {
+	       FrameTable[frame].ActifMenus[menu] = TRUE;
+	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+	       /* Enaable */
 #         ifdef _WINDOWS
-		  WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
+	       WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
 #         else /* !_WINDOWS */
-		  TtaSetPulldownOn (ref, w);
+	       TtaSetPulldownOn (ref, w);
 #         endif /* _WINDOWS */
 
 #ifndef _WINDOWS
-		  /* Visualise le bouton actif */
-		  if (TtWDepth > 1)
-		    {
-		       /* Changement de couleur */
-		       XtSetArg (args[0], XmNforeground, Black_Color);
-		       XtSetValues (w, args, 1);
-		       XtManageChild (w);
-		    }
-		  else
-		    {
-		       /* Changement de police de caracteres */
-		       XtSetArg (args[0], XmNfontList, DefaultFont);
-		       XtSetValues (w, args, 1);
-		       XtManageChild (w);
-		    }
+	       /* Set the button active */
+	       if (TtWDepth > 1)
+		 {
+		   /* Change the color */
+		   XtSetArg (args[0], XmNforeground, Black_Color);
+		   XtSetValues (w, args, 1);
+		   XtManageChild (w);
+		 }
+	       else
+		 {
+		   /* Change the font */
+		   XtSetArg (args[0], XmNfontList, DefaultFont);
+		   XtSetValues (w, args, 1);
+		   XtManageChild (w);
+		 }
 #endif
-	       }
-	  }
+	     }
+	 }
      }
 }
 
@@ -3383,6 +3581,7 @@ boolean             on;
    int                 menu, submenu;
    int                 item, action;
 
+   /* Check parameters */
    if (menuID == 0 || itemID == 0)
       return;
    if (document == 0 && view == 0)
@@ -3390,26 +3589,26 @@ boolean             on;
    else
       frame = GetWindowNumber (document, view);
 
-   /* Si les parametres sont invalides */
    if (frame > MAX_FRAME)
       return;
    else if ((FrameTable[frame].WdFrame) == 0)
       return;
 
 
-   /* Recherche les bons indices de menu, sous-menu et item */
+   /* Search the menu, submenu and item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
    if (menu >= 0 && item >= 0)
      {
-	/* on a trouve */
+	/* entry found */
 	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	if (submenu != 0)
 	   ref += submenu * MAX_MENU * MAX_ITEM;
-#   ifdef _WINDOWS
+	/* enable the entry */
+#ifdef _WINDOWS
 	WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
-#   else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	TtaSetToggleMenu (ref, item, on);
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 }
 
@@ -3426,7 +3625,6 @@ Document            document;
 View                view;
 int                 menuID;
 int                 itemID;
-
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -3434,48 +3632,48 @@ int                 itemID;
    int                 menu, submenu;
    int                 item;
    int                 action;
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    char                fontname[100];
    char                text[20];
-#  else _WINDOWS
+#else _WINDOWS
    HMENU               hMenu;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-   /* Si les parametres sont invalides */
+   /* Check parameters */
    if (document == 0 && view == 0)
-      frame = 0;
+     frame = 0;
    else
-      frame = GetWindowNumber (document, view);
-   if (frame > MAX_FRAME)
-      return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-      return;
+     frame = GetWindowNumber (document, view);
 
-   /* Recherche les bons indices de menu, sous-menu et item */
+   if (frame > MAX_FRAME)
+     return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+     return;
+
+   /* Search the menu, submenu and item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
    if (action > 0)
-      /* l'action existe et le menu est actif */
-      if (MenuActionList[action].ActionActive[frame])
-	{
-	   /* desactive l'action pour la fenetre */
-	   MenuActionList[action].ActionActive[frame] = FALSE;
-	   /* desactive l'entree de menu */
-	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-	   if (submenu != 0)
-	      ref += submenu * MAX_MENU * MAX_ITEM;
-#      ifdef _WINDOWS
-       hMenu = GetMenu (TtaGetViewFrame (document, view));
-	   EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#      else  /* !_WINDOWS */
-	   if (TtWDepth > 1)
-	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	   else
-	     {
-		FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-	     }
-#      endif /* _WINDOWS */
-	}
+     if (MenuActionList[action].ActionActive[frame])
+       {
+	 /* entry found and active */
+	 MenuActionList[action].ActionActive[frame] = FALSE;
+	 ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+	 if (submenu != 0)
+	   ref += submenu * MAX_MENU * MAX_ITEM;
+	 /* enable the entry */
+#ifdef _WINDOWS
+	 hMenu = GetMenu (TtaGetViewFrame (document, view));
+	 EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	 if (TtWDepth > 1)
+	   TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	 else
+	   {
+	     FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	     TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+	   }
+#endif /* _WINDOWS */
+       }
 }
 
 
@@ -3525,12 +3723,12 @@ int                 itemID;
 	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
 	      ref += submenu * MAX_MENU * MAX_ITEM;
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        hMenu = GetMenu (TtaGetViewFrame (document, view));
 	   EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-#      else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	}
 }
 

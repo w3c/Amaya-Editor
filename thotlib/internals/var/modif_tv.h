@@ -13,4 +13,7 @@
 THOT_EXPORT PtrPasteElem FirstSavedElement;
 
 /* the document from which saved elements have been copied or cut */
-THOT_EXPORT PtrDocument DocOfSavedElements;
+THOT_EXPORT PtrDocument  DocOfSavedElements;
+
+/* Thot Clipboard */
+THOT_EXPORT struct _TextBuffer ClipboardThot;

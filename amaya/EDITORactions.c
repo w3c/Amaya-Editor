@@ -405,26 +405,6 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateScript (Document document, View view)
-#else  /* __STDC__ */
-void                CreateScript (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-  Element             el;
-
-
-  el = InsertWithinHead (document, view, HTML_EL_SCRIPT);
-  if (el != NULL)
-    TtaSelectElement (document, el);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateStyle (Document document, View view)
 #else  /* __STDC__ */
 void                CreateStyle (document, view)
@@ -460,6 +440,56 @@ View                view;
      {
        elType.ElTypeNum = HTML_EL_Comment_;
        TtaInsertElement (elType, document);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateScript (Document document, View view)
+#else  /* __STDC__ */
+void                CreateScript (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SSchema             docSchema;
+   ElementType         elType;
+   Element             el, head;
+   int                 i, j;
+
+   /* test if we have to insert a script in the document head */
+   head = NULL;
+   docSchema = TtaGetDocumentSSchema (document);
+   TtaGiveFirstSelectedElement (document, &el, &i, &j);
+   if (el != NULL)
+     {
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum != HTML_EL_HEAD || strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	 {
+	   if (!strcmp(TtaGetSSchemaName (docSchema), "HTML"))
+	     {
+	       /* it's a HTML document search the head element */
+	       elType.ElTypeNum = HTML_EL_HEAD;
+	       head = TtaSearchTypedElement (elType, SearchForward,  TtaGetMainRoot (document));
+	     }
+	 }
+     }
+
+   if (el == NULL || el == head  || TtaIsAncestor (el, head))
+     /* insert within the head */
+     InsertWithinHead (document, view, HTML_EL_SCRIPT);
+   else
+     {
+       /* create Script within the body */
+       elType.ElSSchema = docSchema;
+       if (strcmp(TtaGetSSchemaName (docSchema), "HTML") == 0)
+	 {
+	   elType.ElTypeNum = HTML_EL_SCRIPT;
+	   TtaCreateElement (elType, document);
+	 }
      }
 }
 
@@ -831,84 +861,97 @@ View                view;
       return;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) {
-      /* check the selection */
-      displayTableForm = TtaIsSelectionEmpty ();
-      if (displayTableForm) {
-         NumberRows = 2;
-         NumberCols = 2;
-         TBorder = 1;
-#        ifdef _WINDOWS
-         CreateTableDlgWindow (BaseDialog, TableForm, TableCols, TableRows, TableBorder, NumberCols, NumberRows, TBorder);
-#        else  /* !_WINDOWS */
-         TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1), TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
-         TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-         TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-         TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_BORDER), 1, 50, TRUE);
-         TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
-         TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
-         TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
-         TtaSetDialoguePosition ();
-         TtaShowDialogue (BaseDialog + TableForm, FALSE);
-         /* wait for an answer */
-         TtaWaitShowDialogue ();
-#        endif /* !_WINDOWS */
-         if (!UserAnswer)
-            return;
-	  } else {
-             NumberRows = 0;
-             NumberCols = 0;
-             TBorder = 1;
-	  } 
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       /* check the selection */
+       displayTableForm = TtaIsSelectionEmpty ();
+       if (displayTableForm)
+	 {
+	   NumberRows = 2;
+	   NumberCols = 2;
+	   TBorder = 1;
+#ifdef _WINDOWS
+	   CreateTableDlgWindow (BaseDialog, TableForm, TableCols, TableRows, TableBorder, NumberCols, NumberRows, TBorder);
+#else  /* !_WINDOWS */
+	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1), TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
+	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_BORDER), 1, 50, TRUE);
+	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
+	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
+	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
+	   TtaSetDialoguePosition ();
+	   TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	   /* wait for an answer */
+	   TtaWaitShowDialogue ();
+#endif /* !_WINDOWS */
+	   if (!UserAnswer)
+	     return;
+	 }
+       else
+	 {
+	   NumberRows = 0;
+	   NumberCols = 0;
+	   TBorder = 1;
+	 } 
 
-      TtaSetDisplayMode (document, SuspendDisplay);
-      elType.ElTypeNum = HTML_EL_Table;
-      TtaCreateElement (elType, document);
-
-      /* get the new Table element */
-      TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-      if (el != NULL)
+       TtaSetDisplayMode (document, SuspendDisplay);
+       elType.ElTypeNum = HTML_EL_Table;
+       TtaCreateElement (elType, document);
+       
+       /* get the new Table element */
+       TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
+       if (el != NULL)
          el = TtaGetTypedAncestor (el, elType);
-      if (el != NULL) {
-         /* if the Table has no Border attribute, create one */
-         attrType.AttrSSchema = elType.ElSSchema;
-         attrType.AttrTypeNum = HTML_ATTR_Border;
-         attr = TtaGetAttribute (el, attrType);
-         if (attr == NULL && TBorder > 0) {
-            /* create the Border attribute */
-            attr = TtaNewAttribute (attrType);
-            TtaAttachAttribute (el, attr, document);
-            TtaSetAttributeValue (attr, TBorder, el, document);
-		 } else if (attr != NULL && TBorder == 0)
-                TtaRemoveAttribute (el, attr, document);
-         if (NumberCols > 1) {
-            elType.ElTypeNum = HTML_EL_Table_cell;
-            cell = TtaSearchTypedElement (elType, SearchInTree, el);
-            if (cell == NULL) {
-               /* no table cell found, it must be a data cell */
-               elType.ElTypeNum = HTML_EL_Data_cell;
-               cell = TtaSearchTypedElement (elType, SearchInTree, el);
-			} 
-            while (NumberCols > 1) {
-                  new = TtaNewTree (document, elType, "");
-                  TtaInsertSibling (new, cell, FALSE, document);
-                  NumberCols--;
-			}
+       if (el != NULL)
+	 {
+	   /* if the Table has no Border attribute, create one */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Border;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr == NULL && TBorder > 0)
+	     {
+	       /* create the Border attribute */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, document);
+	       TtaSetAttributeValue (attr, TBorder, el, document);
+	     }
+	   else if (attr != NULL && TBorder == 0)
+	     TtaRemoveAttribute (el, attr, document);
+
+	   if (NumberCols > 1)
+	     {
+	       elType.ElTypeNum = HTML_EL_Table_cell;
+	       cell = TtaSearchTypedElement (elType, SearchInTree, el);
+	       if (cell == NULL)
+		 {
+		   /* no table cell found, it must be a data cell */
+		   elType.ElTypeNum = HTML_EL_Data_cell;
+		   cell = TtaSearchTypedElement (elType, SearchInTree, el);
 		 } 
-         if (NumberRows > 1) {
-            elType.ElTypeNum = HTML_EL_Table_row;
-            row = TtaSearchTypedElement (elType, SearchInTree, el);
-            while (NumberRows > 1) {
-                  new = TtaNewTree (document, elType, "");
-                  TtaInsertSibling (new, row, FALSE, document);
-                  NumberRows--;
-			}
-		 } 
-         CheckAllRows (el, document);
-	  } 
-      TtaSetDisplayMode (document, DisplayImmediately);
-   }
-} 
+	       while (NumberCols > 1)
+		 {
+		   new = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new, cell, FALSE, document);
+		   NumberCols--;
+		 }
+	     } 
+	   if (NumberRows > 1)
+	     {
+	       elType.ElTypeNum = HTML_EL_Table_row;
+	       row = TtaSearchTypedElement (elType, SearchInTree, el);
+	       while (NumberRows > 1)
+		 {
+		   new = TtaNewTree (document, elType, "");
+		   TtaInsertSibling (new, row, FALSE, document);
+		   NumberRows--;
+		 }
+	     } 
+	   CheckAllRows (el, document);
+	 } 
+       TtaSetDisplayMode (document, DisplayImmediately);
+     }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

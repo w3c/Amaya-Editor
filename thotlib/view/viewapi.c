@@ -37,8 +37,8 @@
 #include "platform_tv.h"
 #include "page_tv.h"
 #include "select_tv.h"
-#include "frame_tv.h"
 #include "edit_tv.h"
+#include "frame_tv.h"
 #include "boxes_tv.h"
 #include "platform_tv.h"
 #include "thotcolor_tv.h"
@@ -1221,9 +1221,7 @@ char               *viewName;
    Return values:
    document: the active document.
    view: the active view.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaGiveActiveView (Document * document, View * view)
 #else  /* __STDC__ */
@@ -1257,8 +1255,6 @@ View               *view;
    ExtinguishOrLightSelection bascule la selection courante dans      
    toutes les vues du document pDoc.                               
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 static void         ExtinguishOrLightSelection (PtrDocument pDoc, boolean lighted)
 #else  /* __STDC__ */
@@ -1270,12 +1266,12 @@ boolean             lighted;
    int                 view;
    int                 assoc;
 
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
-      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	 SwitchSelection (pDoc->DocViewFrame[view - 1], lighted);
-   for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
-      if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 SwitchSelection (pDoc->DocAssocFrame[assoc - 1], lighted);
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	 SwitchSelection (pDoc->DocViewFrame[view], lighted);
+   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+      if (pDoc->DocAssocFrame[assoc] > 0)
+	 SwitchSelection (pDoc->DocAssocFrame[assoc], lighted);
 }
 
 
@@ -1294,22 +1290,22 @@ PtrDocument         pDoc;
   int                 view, frame;
   int                 assoc;
 
-  for (view = 1; view <= MAX_VIEW_DOC; view++)
+  for (view = 0; view < MAX_VIEW_DOC; view++)
     {
-      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+      if (pDoc->DocView[view].DvPSchemaView > 0)
 	{
-	  CleanImageView (view, FALSE, pDoc, FALSE);
+	  CleanImageView (view + 1, FALSE, pDoc, FALSE);
 	  /* selection is no more displayed */
-	  frame = pDoc->DocViewFrame[view - 1];
+	  frame = pDoc->DocViewFrame[view];
 	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
 	}
     }
-  for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
+  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
     {
-      frame = pDoc->DocAssocFrame[assoc - 1];
+      frame = pDoc->DocAssocFrame[assoc];
       if (frame > 0)
 	{
-	  CleanImageView (assoc, TRUE, pDoc, FALSE);
+	  CleanImageView (assoc + 1, TRUE, pDoc, FALSE);
 	  /* selection is no more displayed */
 	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
 	}

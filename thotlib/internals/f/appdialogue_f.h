@@ -84,6 +84,9 @@ extern void DestroyFrame ( int frame );
 extern int FindMenu ( int frame,
                       int menuID,
                       Menu_Ctl ** ctxmenu );
+extern void SwitchUndo ( PtrDocument pDoc,
+                         boolean on );
+extern void SwitchPaste ( boolean on );
 extern void TtaSetMenuOff ( Document document,
                             View view,
                             int menuID );
@@ -189,6 +192,9 @@ extern void DestroyFrame (/* int frame */);
 extern int FindMenu (/* int frame,
                         int menuID,
                         Menu_Ctl ** ctxmenu */);
+extern void SwitchUndo (/* PtrDocument pDoc,
+                           boolean on */);
+extern void SwitchPaste (/* boolean on */);
 extern void TtaSetMenuOff (/* Document document,
                               View view,
                               int menuID */);

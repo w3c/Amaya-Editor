@@ -88,7 +88,7 @@ Document            document;
 {
    PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
    char               *ptr;
-   int                 length, l, delta;
+   int                 length, l, delta = 0;
    PtrElement          pEl;
 
 #ifndef NODISPLAY

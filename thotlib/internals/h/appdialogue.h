@@ -20,59 +20,66 @@
 
 #include "frame.h"
 
-/* Structures utilisees dans les table d'actions d'interface */
+/* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char 		*ActionName;	/* Nom externe de l'action		*/
-  UserProc 	User_Action;	/* Adresse de la procedure utilisateur	*/
-  void 		*User_Arg;	/* Argument de la procedure utilisateur	*/
-  Proc 		Call_Action;	/* Adresse de la procedure standard	*/
-  char 		*ActionEquiv;	/* Equivalent clavier de l'action	*/
+  char 		*ActionName;	/* External name of the action		*/
+  UserProc 	User_Action;	/* Address of the User procedure (Java)	*/
+  void 		*User_Arg;	/* Arguments of the User procedure	*/
+  Proc 		Call_Action;	/* Address C procedure            	*/
+  char 		*ActionEquiv;	/* Displayed text for shortcuts		*/
   boolean	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
-/* Contextes des menus et des items de menus */
+/* Structure to declare a Menu Item */
 typedef struct _Item_Ctl
 {
-  int		ItemID;		/* Identification du nom de l'item	*/
+  int		ItemID;		/* ID of the menu item			*/
   char		ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
   				/* 'S'=Separator, 'M'=Menu		*/
   union
   {
     struct
     {
-      int	_ItemAction;	/* Identification de l'action associee	*/
+      int	_ItemAction;	/* ID of the linked action		*/
 
     } s0;
     struct
     {
-      struct _Menu_Ctl	*_SubMenu; /* Contexte du sous-menu attache'	*/
+      struct _Menu_Ctl	*_SubMenu; /* Pointer to the linked sub-menu	*/
     } s1;
   } u;
 }Item_Ctl;
 #define ItemAction u.s0._ItemAction
 #define SubMenu u.s1._SubMenu
 
+/* Structure to declare a Menu */
 typedef struct _Menu_Ctl
 {
-  int		MenuID;		/* Identification du nom du menu	*/
-  int		MenuView;	/* Numero de la vue concernee ou 0	*/
-  boolean	MenuAttr;	/* Le menu est le menu attribut		*/
-  boolean	MenuSelect;	/* Le menu est le menu de selection	*/
-  boolean	MenuHelp;	/* Le menu est le menu d'aide		*/
-  int		ItemsNb;	/* Nombre d'items dans le menu		*/
-  Item_Ctl	*ItemsList;	/* Contexte du premier item		*/
-  struct _Menu_Ctl	*NextMenu;	/* Contexte du menu suivant    	*/
+  int		MenuID;		/* ID of the menu			*/
+  int		MenuView;	/* Specific view number or Null		*/
+  boolean	MenuAttr;	/* This menu is the attributes menu	*/
+  boolean	MenuSelect;	/* This menu is the select menu		*/
+  boolean	MenuHelp;	/* This menu is the help menu		*/
+  int		ItemsNb;	/* Number of items in the menu menu	*/
+  Item_Ctl	*ItemsList;	/* Pointer to the first item structure	*/
+  struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/
 }Menu_Ctl;
 
+/* Structure to associate menus and specific structure schemas */
 typedef struct _SchemaMenu_Ctl
 {
-  char		*SchemaName;	/* Nom du schema concerne		*/
-  Menu_Ctl	*SchemaMenu;	/* Contexte du premier menu		*/
-  struct _SchemaMenu_Ctl *NextSchema;	/* Contexte suivant	       	*/
+  char		*SchemaName;	/* Structure schema name		*/
+  Menu_Ctl	*SchemaMenu;	/* Pointer to the first menu		*/
+  struct _SchemaMenu_Ctl *NextSchema;	/* Next association	       	*/
 }SchemaMenu_Ctl;
 
-/* Indices dans la table des traitements internes et optionnels de Thot */
+/*
+  Predefined indexes in the internal default Thot actions table.
+  This table is used by the Thotlib to accede optional actions. It tests
+  the availability of the current action (code loaded by the application)
+  before calling it.
+  */
 #define T_colors	0
 #define T_keyboard	1
 #define T_imagemenu	2
@@ -187,8 +194,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_xmlparsedoc			107
 #define MAX_LOCAL_ACTIONS               108
 
-/* Indices des actions internes accessibles au clavier et
-   non presentees dans les menus */
+/*
+ Predefined idexes of Thot actions which could be linked to shortcuts even
+ if they are not part of any menu.
+ */
 #define CMD_DeletePrevChar	1
 #define CMD_DeleteSelection	2
 #define CMD_BackwardChar	3

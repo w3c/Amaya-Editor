@@ -27,7 +27,7 @@ extern void AddEditOpInHistory (/* PtrElement pEl,
                                    boolean save,
                                    boolean removeWhenUndoing */);
 extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
-extern void OpenHistorySequence (/* PtrDocument pDoc
+extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement firstSel,
                                     PtrElement lastSel,
                                     int firstSelChar,

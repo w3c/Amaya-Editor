@@ -6103,7 +6103,6 @@ Document            doc;
 	       elType.ElTypeNum == HTML_EL_ISINDEX ||
 	       elType.ElTypeNum == HTML_EL_BASE ||
 	       elType.ElTypeNum == HTML_EL_STYLE_ ||
-	       elType.ElTypeNum == HTML_EL_SCRIPT ||
 	       elType.ElTypeNum == HTML_EL_META ||
 	       elType.ElTypeNum == HTML_EL_LINK)
 	/* this element should be a child of HEAD */
@@ -6115,13 +6114,19 @@ Document            doc;
 	      elType.ElTypeNum = HTML_EL_HEAD;
 	      *elHead = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (elHead, rootElement, doc);
+	      /* create also the title */
+	      elType.ElTypeNum = HTML_EL_TITLE;
+	      lastChild = TtaNewTree (doc, elType, "");
+	      TtaInsertFirstChild (&lastChild, *elHead, doc);
+	    }
+	  else
+	    {
+	      elType.ElTypeNum = HTML_EL_TITLE;
+	      lastChild = TtaSearchTypedElement (elType, SearchForward, *elHead);
 	    }
 	  /* move the element as the last child of the HEAD element */
 	  TtaRemoveTree (el, doc);
-	  if (lastChild == NULL)
-	    TtaInsertFirstChild (&el, *elHead, doc);
-	  else
-	    TtaInsertSibling (el, lastChild, FALSE, doc);
+	  TtaInsertSibling (el, lastChild, FALSE, doc);
 	  lastChild = el;
 	}
       /* get next child of the root */
