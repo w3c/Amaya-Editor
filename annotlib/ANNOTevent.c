@@ -371,7 +371,8 @@ void ANNOT_Quit ()
 
 /*-----------------------------------------------------------------------
    ANNOT_FreeDocumentResource
-  -----------------------------------------------------------------------
+   Frees all the annotation resources that are associated with
+   Document doc
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -391,11 +392,15 @@ Document doc;
     {
       if (doc == i)
 	continue;
-      if (DocumentTypes[i] == docAnnot
+      if (DocumentURLs[i] && DocumentTypes[i] == docAnnot
 	  && DocumentMeta[i]->source_doc == doc)
 	{
-	  DocumentTypes[i] = docHTML;
-	  CloseDocument (i, 1);
+	  /* insist, until the user saves the annotation.
+	     It'd be nice to keep the annotation open, even if the
+	     doc disappears
+	  */
+	  while (DocumentURLs[i])
+	    CloseDocument (i, 1);
 	}
     }
   /* free the memory */
