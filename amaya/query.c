@@ -1332,17 +1332,31 @@ int                 status;
 		     me->status_urlName);
        break;
 
+     case HT_NOT_MODIFIED:
+       if (PROT_TRACE)
+	 HTTrace ("Load End.... NOT MODIFIED (%s)", me->status_urlName ? me->status_urlName :" <UNKNOWN>");
+       break;
+       
      case HT_ERROR:
        cbf = HTAlert_find (HT_A_MESSAGE);
        if (cbf)
 	 (*cbf) (request, HT_A_MESSAGE, HT_MSG_NULL, NULL,
 		 HTRequest_error (request), NULL);
-       break;
-       
        if (PROT_TRACE)
            HTTrace ("Load End.... ERROR: Can't access `%s\'\n", me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
        TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
        break;
+
+     case HTERR_TIMEOUT:
+       cbf = HTAlert_find (HT_A_MESSAGE);
+       if (cbf)
+	 (*cbf) (request, HT_A_MESSAGE, HT_MSG_NULL, NULL,
+		 HTRequest_error (request), NULL);
+       if (PROT_TRACE)
+           HTTrace ("Load End.... REQUEST TIMEOUT: Can't access `%s\'\n", me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
+       break;
+
      default:
        if (PROT_TRACE)
 	 HTTrace ("Load End.... UNKNOWN RETURN CODE %d\n", status);
@@ -2395,14 +2409,55 @@ void                QueryInit ()
 #endif /* !_WINDOWS */
 
 #ifdef HTDEBUG
-   /* an undocumented option for being able to generate an HTTP protocol trace */
+   /* an undocumented option for being able to generate an HTTP protocol
+      trace.  The flag can take values from 1-10, which are interpreted as
+      different kinds of debug traces. Value 99 means a complete trace.
+      0 or other values means No Debug.1 No Debug (default), up to Full debug, respectively. */
    if (TtaGetEnvInt ("ENABLE_LIBWWW_DEBUG", &tmp_i))
-     WWW_TraceFlag = tmp_i;
+     {
+       switch (tmp_i)
+	 {
+	 case 1:
+	   WWW_TraceFlag = SHOW_URI_TRACE;
+	   break;
+	 case 2:
+	   WWW_TraceFlag = SHOW_BIND_TRACE;
+	   break;
+	 case 3:
+	   WWW_TraceFlag = SHOW_THREAD_TRACE;
+	   break;
+	 case 4:
+	   WWW_TraceFlag = SHOW_STREAM_TRACE;
+	   break;
+	 case 5:
+	   WWW_TraceFlag = SHOW_PROTOCOL_TRACE;
+	   break;
+	 case 6:
+	   WWW_TraceFlag = SHOW_MEM_TRACE;
+	   break;
+	 case 7:
+	   WWW_TraceFlag = SHOW_URI_TRACE;
+	   break;
+	 case 8:
+	   WWW_TraceFlag = SHOW_AUTH_TRACE;
+	   break;
+	 case 9:
+	   WWW_TraceFlag = SHOW_ANCHOR_TRACE;
+	   break;
+	 case 10 :
+	   WWW_TraceFlag = SHOW_CORE_TRACE; 
+	   break;
+	 case 99 :
+	   WWW_TraceFlag = SHOW_ALL_TRACE;
+	   break;
+	 default:
+	   WWW_TraceFlag = 0;
+	   break;
+	 }
+     }
    else
      WWW_TraceFlag = 0;
 #endif /* HTDEBUG */
-
-   TtaGetEnvBoolean ("ENABLE_FTP", &FTPURL_flag);
 
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
@@ -2411,9 +2466,10 @@ void                QueryInit ()
    /* Trace activation (for debugging) */
    /***
     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | SHOW_PROTOCOL_TRACE;
-    WWW_TraceFlag |= 0xFFFFFFFFl;
     ***/
 #endif
+
+   TtaGetEnvBoolean ("ENABLE_FTP", &FTPURL_flag);
 
    /* Setting up different network parameters */
 
