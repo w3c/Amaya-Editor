@@ -559,8 +559,8 @@ ThotBool        removed;
 
 
 /*----------------------------------------------------------------------
-  GetStyleContents return a buffer that contains the whole text of the
-  style element or NULL if the element is empty.
+  GetStyleContents returns a buffer that contains the whole text of the
+  style element el. It returns NULL if the element is empty.
   The buffer should be freed by the caller.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
