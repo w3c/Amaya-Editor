@@ -1749,9 +1749,6 @@ static void       StartOfXmlStartElement (char *name)
   ThotBool        isAllowed = TRUE;
   char           *buffer, *ptr, *elementName, *nsURI;
   PtrParserCtxt   savParserCtxt = NULL;
-#ifdef XML_GENERIC
-  char           *s;
-#endif /* XML_GENERIC */
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
@@ -1796,23 +1793,8 @@ static void       StartOfXmlStartElement (char *name)
   if (currentParserCtxt == NULL)
     {
 #ifdef XML_GENERIC
-      /* Select root context */
-      s = TtaGetSSchemaName (DocumentSSchema);
-      if ((strcmp (s, "HTML") == 0) ||
-	  (strcmp (s, "SVG") == 0) ||
-	  (strcmp (s, "MathML") == 0) ||
-	  (strcmp (s, "Annot") == 0))
-	{
-	  /* Not supported namespace within a supported DTD */
-	  /* For the moment, we just ignore the namespace */
-	  currentParserCtxt = savParserCtxt;
-	  UnknownNS = TRUE;
-	}
-      else
-	{
-	  /* generic xml document */
-	  currentParserCtxt = GenericXmlParserCtxt;
-	}
+      /* assign the generic context */
+      currentParserCtxt = GenericXmlParserCtxt;
 #else /*XML_GENERIC*/
       currentParserCtxt = savParserCtxt;
       UnknownNS = TRUE;
@@ -2034,9 +2016,6 @@ static void       EndOfXmlElement (char *name)
    char          *mappedName = NULL;
    ThotBool       highEnoughLevel = TRUE;
    PtrParserCtxt  savParserCtxt = NULL;
-#ifdef XML_GENERIC
-   char          *s;
-#endif /* XML_GENERIC */
    
   UnknownNS = FALSE;
   UnknownElement = FALSE;
@@ -2079,23 +2058,8 @@ static void       EndOfXmlElement (char *name)
   if (currentParserCtxt == NULL)
     {
 #ifdef XML_GENERIC
-      /* Select root context */
-      s = TtaGetSSchemaName (DocumentSSchema);
-      if ((strcmp (s, "HTML") == 0) ||
-	  (strcmp (s, "SVG") == 0) ||
-	  (strcmp (s, "MathML") == 0) ||
-	  (strcmp (s, "Annot") == 0))
-	{
-	  /* Not supported namespace within a supported DTD */
-	  /* For the moment, we just ignore the namespace */
-	  currentParserCtxt = savParserCtxt;
-	  UnknownNS = TRUE;
-	}
-      else
-	{
-	  /* generic xml document */
-	  currentParserCtxt = GenericXmlParserCtxt;
-	}
+      /* assign the generic context */
+      currentParserCtxt = GenericXmlParserCtxt;
 #else /*XML_GENERIC*/
       currentParserCtxt = savParserCtxt;
       UnknownNS = TRUE;
@@ -2847,7 +2811,6 @@ static void      EndOfAttributeName (char *xmlName)
    char         *buffer;
    char         *attrName, *nsURI;
    char         *ptr = NULL;
-   char         *s = NULL;
    PtrParserCtxt savParserCtxt = NULL;
    unsigned char msgBuffer[MaxMsgLength];
 
@@ -2919,26 +2882,8 @@ static void      EndOfAttributeName (char *xmlName)
    if (currentParserCtxt == NULL)
      {
 #ifdef XML_GENERIC
-       /* Select root context */
-       s = TtaGetSSchemaName (DocumentSSchema);
-       if ((strcmp (s, "HTML") == 0) ||
-	   (strcmp (s, "SVG") == 0) ||
-	   (strcmp (s, "MathML") == 0) ||
-	   (strcmp (s, "Annot") == 0))
-	 /* It is not a generic xml document */
-	 /* generate an "unknown_attr" attribute */
-	 {
-	   currentParserCtxt = savParserCtxt;
-	   sprintf (msgBuffer, 
-		    "Namespace not supported for the attribute \"%s\"",
-		    xmlName);
-	   XmlParseError (errorParsing, msgBuffer, 0);
-	   UnknownXmlAttribute (attrName, nsURI);
-	   UnknownAttr = TRUE;
-	 }
-       else
-	 /* We assign the generic XML context by default */ 
-	 currentParserCtxt = GenericXmlParserCtxt;
+       /* We assign the generic XML context by default */ 
+       currentParserCtxt = GenericXmlParserCtxt;
 #else /* XML_GENERIC */
        currentParserCtxt = savParserCtxt;
        sprintf (msgBuffer, 

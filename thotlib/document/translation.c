@@ -3371,12 +3371,15 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
      {
      /* cherche le schema de traduction qui s'applique a l'element */
      pTSch = GetTranslationSchema (pEl->ElStructSchema);
-     if (pTSch == NULL)	 
+     if (pTSch == NULL)
+       { 
+	 ExportXmlDocument (pDoc, pEl, TRUE);
 	 return;
+       }
      
      /* Is this element associated with a prefix ? */
      /* We search for a prefix :
-           - when the structure schema of pEl is different from its parent's one
+           - when the structure schema of pEl is different from the parent's one
            - if pEl is the (main) root element 
      */ 
      if ((pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem) ||
