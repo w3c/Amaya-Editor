@@ -53,9 +53,6 @@ extern int TtaAddToolBarButton ( int window_id,
                                  char * functionName,
                                  void (*procedure) (),
                                  ThotBool status );
-extern void TtaInitFrameToolBarButton ( int frame_id,
-                                        void (*procedure) (),
-                                        ThotBool state );
 
 #else /* __STDC__ */
 
@@ -106,9 +103,6 @@ extern int TtaAddToolBarButton ( int window_id,
                                    char * functionName,
                                    void (*procedure) (),
                                    ThotBool status );
-extern void TtaInitFrameToolBarButton ( int frame_id,
-                                          void (*procedure) (),
-                                          ThotBool state );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
