@@ -2113,11 +2113,17 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		  pAsc = pAsc->ElParent;
 		while (pAsc &&
 		       !ElemIsAnAncestor (pAsc, LastSelectedElement));
-	      /* is the current selection within a single table cell? */
-	      while (pAsc && !TypeHasException (ExcIsCell,
-						pAsc->ElTypeNumber,
-						pAsc->ElStructSchema))
+	      /* is the current selection within a single cell of the
+		 current table ? */
+	      while (pAsc &&
+		     !TypeHasException (ExcIsCell, pAsc->ElTypeNumber,
+					pAsc->ElStructSchema) &&
+		     !TypeHasException (ExcIsTable, pAsc->ElTypeNumber,
+					pAsc->ElStructSchema))
 		pAsc = pAsc->ElParent;
+	      if (pAsc && !TypeHasException (ExcIsCell, pAsc->ElTypeNumber,
+					     pAsc->ElStructSchema))
+		pAsc = NULL;
 	      if (SelectedColumn)
 		/* we are already in column selection mode */
 		{
@@ -3309,7 +3315,7 @@ void SelectAround (int val)
 	      /* we are in column selection mode */
 	      {
 	      if (WholeColumnSelected)
-		/* the whole column is alread selected. Select the enclosing
+		/* the whole column is already selected. Select the enclosing
 		   table */
 		{
 		  pParent = SelectedColumn->ElParent;
