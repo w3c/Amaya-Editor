@@ -204,7 +204,7 @@ View                viewform;
 		  if (ok)
 		     /* pas d'annulation */
 		    {
-		       if (save)
+		       if (save && ThotLocalActions[T_writedocument])
 			  /* l'utilisateur demande a sauver le document */
 			  ok = (* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4);
 		       if (ok)
