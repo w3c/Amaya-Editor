@@ -811,6 +811,10 @@ void checkChannelMasks(int n, fd_set *readfds, fd_set *writefds, int *nb) {
 	    if (FD_ISSET(channel->chan, readfds)) {
 	        FD_CLR(channel->chan, readfds);
 
+#ifdef DEBUG_CHANNELS
+                printf("Read I/O on fd %d\n", channel->chan);
+#endif
+
 	        /*
 		 * An I/O is ready for this channel.
 		 */
@@ -830,6 +834,10 @@ void checkChannelMasks(int n, fd_set *readfds, fd_set *writefds, int *nb) {
 	    if (channel->chan > n) break; /* sorted by increasing order */
 	    if (FD_ISSET(channel->chan, writefds)) {
 	        FD_CLR(channel->chan, writefds);
+
+#ifdef DEBUG_CHANNELS
+                printf("Write I/O on fd %d\n", channel->chan);
+#endif
 
 	        /*
 		 * An I/O is ready for this channel.

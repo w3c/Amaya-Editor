@@ -246,10 +246,10 @@ rerun_select:
 		use_extra_timer = 1;
 	    } else {
 	        /*
-		 * No time-out at all enforce 1 sec...
+		 * No time-out at all enforce 25 msec...
 		 */
-		tm.tv_sec = 1;
-		tm.tv_usec = 0;
+		tm.tv_sec = 0;
+		tm.tv_usec = 25000;
 		use_extra_timer = 0;
 	    }
 	} else {
