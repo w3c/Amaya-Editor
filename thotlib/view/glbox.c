@@ -18,10 +18,12 @@
 #ifdef _GL
 
 #ifdef _WINDOWS
-#include <windows.h>
-#else /* _WINDOWS*/
-#include <gtkgl/gtkglarea.h>
-#endif /* _WINDOWS*/
+  #include <windows.h>
+#endif /* _WINDOWS */
+
+#ifdef _GTK
+  #include <gtkgl/gtkglarea.h>
+#endif /* _GTK */
 
 #include <GL/gl.h>
 
@@ -108,6 +110,7 @@
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
 #define ALLOC_POINTS    300
 #define MESA
+
 #define FEEDBUFFERSIZE 32768
 
 /*if just computing bounding box*/
@@ -635,19 +638,24 @@ ThotBool GL_prepare (int frame)
 #ifdef _TESTSWAP
       FrameTable[frame].DblBuffNeedSwap = TRUE;
 #endif /*_TESTSWAP*/
-      if (FrRef[frame])
+
 #ifdef _WINDOWS
-	if (GL_Windows[frame])
-	  {
-	    GL_Windows[frame] = GetDC (FrRef[frame]);
-	    wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
-	    return TRUE;
-	  }
-#else /*_WINDOWS*/
-      if (FrameTable[frame].WdFrame)
-	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	  return TRUE;
+    if (FrRef[frame])
+      if (GL_Windows[frame])
+      {
+        GL_Windows[frame] = GetDC (FrRef[frame]);
+        wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
+        return TRUE;
+      }
 #endif /*_WINDOWS*/
+
+#ifdef _GTK      
+      if (FrRef[frame])
+        if (FrameTable[frame].WdFrame)
+	        if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+	          return TRUE;
+#endif /* #ifdef _GTK */
+
     }
   return FALSE;
 }
@@ -664,19 +672,21 @@ void GL_Swap (int frame)
       glDisable (GL_SCISSOR_TEST);
 
 #ifdef _WINDOWS
-
       if (FrRef[frame])
-	if (GL_Windows[frame])
-	  {
-	    SwapBuffers (GL_Windows[frame]);
-	    ReleaseDC (FrRef[frame], GL_Windows[frame] );
-	  }
-#else
+        if (GL_Windows[frame])
+          {
+            SwapBuffers (GL_Windows[frame]);
+            ReleaseDC (FrRef[frame], GL_Windows[frame] );
+          }
+#endif /* _WINDOWS */
+
+#ifdef _GTK      
       if (FrameTable[frame].WdFrame)
-	{
-	  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
-	}
-#endif /*_WINDOWS*/
+      {
+        gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+      }
+#endif /* #ifdef _GTK */
+      
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }

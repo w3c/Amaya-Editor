@@ -17,10 +17,12 @@
 #ifdef _GL
 
 #ifdef _WINDOWS
-#include <windows.h>
-#else /* _WINDOWS*/
-#include <gtkgl/gtkglarea.h>
+  #include <windows.h>
 #endif /* _WINDOWS*/
+
+#ifdef _GTK
+  #include <gtkgl/gtkglarea.h>
+#endif /* _GTK */
 
 #include <GL/gl.h>
 
@@ -143,12 +145,14 @@ void TtaChangePlay (int frame)
 	if (FrameTable[frame].Anim_play)
 	  {
 	    if (AnimTimer == 0)
+
 #ifdef _GTK
 	      AnimTimer = gtk_timeout_add (FRAME_TIME,
 					   (gpointer) GL_DrawAll, 
 					   (gpointer)   NULL); 
 	   	      
-#else /*_GTK*/
+#endif /* #ifdef _GTK */
+
 #ifdef _WINDOWS
 	    {
 	      /* SetTimer(FrMainRef[frame],                
@@ -163,7 +167,7 @@ void TtaChangePlay (int frame)
 				    (TIMERPROC) MyTimerProc);
 	    }    
 #endif /*_WINDOWS*/
-#endif /*_GTK*/
+
 	    FrameTable[frame].BeginTime = 0;
 	    FrameTable[frame].LastTime = 0;
 	  }
@@ -181,12 +185,13 @@ void TtaChangePlay (int frame)
 
 #ifdef _GTK
 		  gtk_timeout_remove (AnimTimer); 	
-#else /*_GTK*/
+#endif /* #ifdef _GTK */
+      
 #ifdef _WINDOWS
 		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
 		  KillTimer (NULL, AnimTimer);
 #endif /*_WINDOWS*/
-#endif /*_GTK*/
+
 		  AnimTimer = 0; 
 		}
 	    }

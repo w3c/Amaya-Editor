@@ -24,7 +24,8 @@
 
 #include "SVG.h"
 #include "HTML.h"
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 #include "Graph.xpm"
 #include "GraphNo.xpm"
 #include "line.xpm"
@@ -39,7 +40,8 @@
 #include "label.xpm"
 #include "text.xpm"
 #include "group.xpm"
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
 #include "libmanag_f.h"
 #include "anim_f.h"
 #include "SVGedit_f.h"
@@ -53,9 +55,9 @@ static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
 
 #ifdef _WINDOWS
-#include "wininclude.h"
-#define iconGraph 22
-#define iconGraphNo 22
+  #include "wininclude.h"
+  #define iconGraph 22
+  #define iconGraphNo 22
 #endif /* _WINDOWS */
 
 #include "EDITimage_f.h"
@@ -67,9 +69,10 @@ static ThotBool InCreation = FALSE;
 #include "HTMLpresentation_f.h"
 #include "init_f.h"
 #include "XLinkedit_f.h"
+
 #ifdef _GTK
-/* used for the close palette callback*/
-ThotWidget CatWidget(int ref);
+  /* used for the close palette callback*/
+  ThotWidget CatWidget(int ref);
 #endif/*  _GTK */
 
 #ifdef _SVG
@@ -2017,7 +2020,8 @@ static void ShowGraphicsPalette (Document doc, View view)
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
      return;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
   if (!PaletteDisplayed)
     {
       PaletteDisplayed = TRUE;
@@ -2035,6 +2039,7 @@ static void ShowGraphicsPalette (Document doc, View view)
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
+
 #ifdef _GTK
       w =   CatWidget (GraphDialogue + FormGraph);
       gtk_signal_connect (GTK_OBJECT (w), 
@@ -2047,9 +2052,13 @@ static void ShowGraphicsPalette (Document doc, View view)
 			GTK_SIGNAL_FUNC (CloseSvgPalette), 
 			(gpointer)(GraphDialogue + FormGraph));
 #endif /*_GTK*/
-#else /* _WINDOWS */
+      
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+      
+#ifdef _WINDOWS
   CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
 #endif /* _WINDOWS */
+  
 }
 #endif /* _SVG */
 
@@ -2059,7 +2068,8 @@ static void ShowGraphicsPalette (Document doc, View view)
 void InitSVG ()
 {
 #ifdef _SVG
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
@@ -2074,7 +2084,8 @@ void InitSVG ()
    mIcons[9] = TtaCreatePixmapLogo (label_xpm);
    mIcons[10] = TtaCreatePixmapLogo (text_xpm);
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+   
    GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
 }

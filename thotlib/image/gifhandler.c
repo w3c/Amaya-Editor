@@ -17,9 +17,11 @@
 #include "frame.h"
 #include "libmsg.h"
 #include "message.h"
+
 #ifdef _WINDOWS
-#include "winsys.h"
+  #include "winsys.h"
 #endif /* _WINDOWS */
+
 #include "xpm.h"
 #include "thotcolor.h"
 
@@ -34,19 +36,29 @@
 #include "inites_f.h"
 #include "gifhandler_f.h"
 #include "picture_f.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
+
 #include "application.h"
 
 #define	MAXCOLORMAPSIZE		256
-#ifndef _WINDOWS
-#define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
-#else/*_WINDOWS*/
-#define COLORMAPSCALE 1;
-int     PngTransparentColor;
-#endif /*_WINDOWS*/
 
+#ifdef _NOGUI
+  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#endif /* _NOGUI */
+
+#if defined(_MOTIF) || defined(_GTK)
+  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+
+#ifdef _WINDOWS
+  #define COLORMAPSCALE 1;
+  int     PngTransparentColor;
+#endif /* _WINDOWS */
+
+  
 #define CM_RED		0
 #define CM_GREEN	1
 #define CM_BLUE		2
@@ -339,12 +351,14 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].red   = GifScreen.ColorMap[0][i] * COLORMAPSCALE;
 	   colrs[i].green = GifScreen.ColorMap[1][i] * COLORMAPSCALE;
 	   colrs[i].blue  = GifScreen.ColorMap[2][i] * COLORMAPSCALE;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 	   colrs[i].pixel = i;
-#ifndef _GTK
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _GTK */
-#endif  /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _MOTIF
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
+#endif /* #ifdef _MOTIF */
 	 }
 
        for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -352,12 +366,14 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].red = 0;
 	   colrs[i].green = 0;
 	   colrs[i].blue = 0;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 	   colrs[i].pixel = i;
-#ifndef _GTK
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _MOTIF
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
+#endif /* #ifdef _MOTIF */
 	 }
      }
 
@@ -400,12 +416,13 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = localColorMap[0][i] * COLORMAPSCALE;
 	       colrs[i].green = localColorMap[1][i] * COLORMAPSCALE;
 	       colrs[i].blue  = localColorMap[2][i] * COLORMAPSCALE;
-#ifndef _WINDOWS
-	       colrs[i].pixel = i;
-#ifndef _GTK
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#if defined(_MOTIF) || defined(_GTK)
+	   colrs[i].pixel = i;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _MOTIF
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
+#endif /* #ifdef _MOTIF */
 	     }
 
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -413,12 +430,14 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = 0;
 	       colrs[i].green = 0;
 	       colrs[i].blue  = 0;
-#ifndef _WINDOWS
-	       colrs[i].pixel = i;
-#ifndef _GTK
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+	   colrs[i].pixel = i;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _MOTIF
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
+#endif /* #ifdef _MOTIF */
 	     }
 	   data = ReadGifImage (fd, w, h, localColorMap,
 				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
@@ -649,7 +668,8 @@ int LWZReadByte (FILE *fd, int flag, int input_code_size)
    return code;
 }
 
-#ifndef _GTK
+
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
@@ -661,7 +681,7 @@ static int highbit (unsigned long ul)
   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
-#endif /* !_GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 /*----------------------------------------------------------------------
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
@@ -674,7 +694,8 @@ int highbit16 (unsigned long ul)
   for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
-#ifndef _GTK
+
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
@@ -723,8 +744,9 @@ static int nbbits (unsigned long ul)
       return (8);
    }
 }
-#endif /* !_GTK */
-#ifndef _WINDOWS
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+
+#if defined(_MOTIF) || defined(_GTK)
 #ifndef _GL
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
@@ -734,9 +756,9 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix)
 {
   XImage             *newmask;
-#ifndef _GTK
+#ifdef _MOTIF
   ThotGC              tmp_gc;
-#endif /* _GTK */
+#endif /* _MOTIF */
   Pixmap              pmask;
   unsigned short     *spixels;
   unsigned char      *data_ptr, *max_data;
@@ -908,7 +930,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 	}
     }
 
-#ifndef _GTK
+#ifdef _MOTIF
   pmask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
   if ((pmask == (Pixmap) None) || (newmask == NULL))
     {
@@ -925,7 +947,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
       XDestroyImage (newmask);
       XFreeGC (TtDisplay, tmp_gc);
     }
-#endif /* _GTK */
+#endif /* _MOTIF */
   return (pmask);
 }
 #endif /* _GL */
@@ -934,7 +956,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   Make an image of appropriate depth for display from image data.
   The parameter ncolors gives the number of colors in the image.
   ----------------------------------------------------------------------*/
-#ifndef _GTK
+#ifdef _MOTIF
 static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 			  int height, int depth, ThotColorStruct *colrs,
 			  int ncolors, ThotBool withAlpha,
@@ -1160,8 +1182,10 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
     }
    return (newimage);
 }
-#endif /* _GTK */
-#else /* _WINDOWS */
+#endif /* _MOTIF */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
   The parameter ncolors gives the number of colors in the image.
@@ -1430,9 +1454,8 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 		     int ncolors, ThotColorStruct *colrs,
 		     ThotBool withAlpha, ThotBool grayScale)
-{
-#ifndef _WINDOWS
-#ifndef _GTK
+{ 
+#ifdef _MOTIF
   Pixmap              img;
   XImage             *image;
   int                 size;
@@ -1446,7 +1469,10 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
   XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);
   XDestroyImage (image);
-#else /* _GTK */
+  return (img);  
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   Pixmap              img;
   unsigned long       FgPixel;
   unsigned long       BgPixel;
@@ -1459,13 +1485,18 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   /* TODO */
 
   img = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-
-#endif /* !_GTK */
   return (img);
-#else /* _WINDOWS */
+#endif /* !_GTK */
+  
+
+#ifdef _WINDOWS
   return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
 	  colrs, ncolors, withAlpha, grayScale);
 #endif /* _WINDOWS */
+
+#ifdef _NOGUI
+  return 0;
+#endif /* #ifdef _NOGUI */  
 }
 
 
@@ -1478,9 +1509,11 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
    unsigned char      *bit_data;
    FILE               *fp;
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    fp = fopen (datafile, "r");
-#else  /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */   
+
+#ifdef _WINDOWS
    fp = fopen (datafile, "rb");
 #endif /* _WINDOWS */
 
@@ -1620,10 +1653,13 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	i = TtaGetThotColor (colrs[GifTransparent].red, colrs[GifTransparent].green,
 			     colrs[GifTransparent].blue);
       imageDesc->PicBgMask = i;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)      
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+      
     }
   TtaFreeMemory (buffer);
 #endif /*_GL*/
@@ -1777,7 +1813,7 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   ThotColorStruct     colrs[256];
   unsigned char      *data;
   int                 picW, picH;
@@ -1789,7 +1825,7 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
 		 GifTransparent, bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------

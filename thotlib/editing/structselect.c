@@ -53,8 +53,9 @@
 #include "tree_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
+
 #ifdef _GTK
-#include "gtk-functions.h"
+  #include "gtk-functions.h"
 #endif /*_GTK*/
 
 
@@ -74,11 +75,6 @@ static int          SelectedPictureEdge;/* if the current selection is a
 					   is on the left side or that the
 					   whole picture is selected */
 #define MAX_TRANSMIT 10
-
-
-#ifdef _GTK
-#include "gtk-functions.h"
-#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    TtaSetCurrentKeyboard

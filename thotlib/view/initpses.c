@@ -153,8 +153,7 @@ unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
    FgPixel = ColorPixel (fg);
    BgPixel = ColorPixel (bg);
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
    switch (pattern)
 	 {
 	    case 1:
@@ -277,8 +276,7 @@ unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
 	       pat = None;
 	       break;
 	 }
-#endif /* !_GTK */
-#endif /* !_WINDOW */
+#endif /* #ifdef _MOTIF */
    return pat;
 }
 

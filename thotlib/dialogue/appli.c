@@ -519,9 +519,6 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
   ----------------------------------------------------------------------*/
 void XFlushOutput (int frame)
 {
-#if !defined(_MOTIF) && !defined(_GTK)
-  return;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */  
 #ifdef _MOTIF
    XFlush (TtDisplay);
 #endif /* _MOTIF */
@@ -533,10 +530,6 @@ void XFlushOutput (int frame)
   ----------------------------------------------------------------------*/
 void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 {
-#if !defined(_MOTIF) && !defined(_GTK)
-  return;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
 #if defined(_MOTIF) || defined(_GTK)
   XExposeEvent       *event = (XExposeEvent *) ev;
   ViewFrame          *pFrame;
@@ -579,10 +572,6 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
   ----------------------------------------------------------------------*/
 static void FrameRedraw (int frame, Dimension width, Dimension height)
 {
-#if !defined(_MOTIF) && !defined(_GTK)
-  return;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
 #if defined(_MOTIF) || defined(_GTK)
   int                 dx, dy, view;
   NotifyWindow        notifyDoc;

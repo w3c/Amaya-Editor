@@ -264,6 +264,16 @@ if test "$with_motif" = "no" -o "$with_motif" = "" ; then
   fi
 fi
 
+# check if no gui is enable
+AC_ARG_WITH(nogui, [  --with-nogui            do not use GUI toolkit ])
+if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
+  with_nogui="yes"
+  with_motif="no"
+  no_motif=yes
+  with_gtk="no"
+  NOGUI_OPTIONS="-D_NOGUI"
+fi
+
 if test "$with_motif" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo 
@@ -1146,8 +1156,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
+THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
@@ -1394,6 +1404,10 @@ if test "$with_motif" = "yes" ; then
   fi
 fi
 
+if test "$with_nogui" = "yes" ; then
+  echo "Amaya configured with no GUI toolkit"
+fi
+  
 echo ""
 echo "Now type \"make\" (GNU make preferably) to build the binaries"
 echo ""

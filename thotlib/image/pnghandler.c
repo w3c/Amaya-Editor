@@ -18,8 +18,9 @@
 #include "picture.h"
 #include "frame.h"
 #include "message.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
@@ -101,9 +102,10 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 };
 
 static png_color        Std_color_cube[128];
+
 #ifdef _WINDOWS     
-extern ThotBool         pic2print;
-extern int              PngTransparentColor;
+  extern ThotBool         pic2print;
+  extern int              PngTransparentColor;
 #endif /* _WINDOWS */
 
 char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
@@ -390,15 +392,17 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  colors[i].red   = info_ptr->palette[i].red;
 	  colors[i].green = info_ptr->palette[i].green;
 	  colors[i].blue  = info_ptr->palette[i].blue;
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)    
 	  colors[i].red   = info_ptr->palette[i].red << 8;
 	  colors[i].green = info_ptr->palette[i].green << 8;
 	  colors[i].blue  = info_ptr->palette[i].blue << 8;
 	  colors[i].pixel = i;
-#ifndef _GTK
+#ifdef _MOTIF
 	  colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	}
     }
   else if (color_type == PNG_COLOR_TYPE_RGB)
@@ -420,14 +424,16 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	      colors[i].red = Std_color_cube[i].red;
 	      colors[i].green = Std_color_cube[i].green;
 	      colors[i].blue = Std_color_cube[i].blue;
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+        
+#if defined(_MOTIF) || defined(_GTK)        
 	      colors[i].red = Std_color_cube[i].red << 8;
 	      colors[i].green = Std_color_cube[i].green << 8;
 	      colors[i].blue = Std_color_cube[i].blue << 8;
-#ifndef _GTK
+#ifdef _MOTIF
 	      colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* ! _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	    }
 	}
     }
@@ -448,14 +454,16 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  *ncolors = 16; 
 	  for (i = 0; i < 15; i++)
 	    {
-#ifdef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	      colors[i].red = colors[i].green = colors[i].blue = i;
-#else /* _WINDOWS */
-	      colors[i].red = colors[i].green = colors[i].blue = i << 8;
-#ifndef _GTK
-	      colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _GTK */
 #endif /* _WINDOWS */
+        
+#if defined(_MOTIF) || defined(_GTK)        
+	      colors[i].red = colors[i].green = colors[i].blue = i << 8;
+#ifdef _MOTIF
+	      colors[i].flags = DoRed|DoGreen|DoBlue;
+#endif /* _MOTIF */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	    }
 	}
     }
@@ -637,11 +645,14 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   unsigned char *bit_data;
   FILE           *fp;
       
-#ifndef _WINDOWS  
+#if defined(_MOTIF) || defined(_GTK)
   fp = fopen (datafile, "r");
-#else  /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
+#ifdef _WINDOWS
   fp = fopen (datafile, "rb");
 #endif /* _WINDOWS */
+
   if (fp != NULL)
     {
       bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha,
@@ -750,10 +761,13 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	/* register the transparent color index */
 	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
       imageDesc->PicBgMask = bg;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+      
+#if defined(_MOTIF) || defined(_GTK)      
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+      
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   TtaFreeMemory (buffer);
@@ -784,7 +798,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   ThotColorStruct *colrs;
   unsigned char   *data;
   int              picW, picH;
@@ -800,7 +814,7 @@ void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   TtaFreeMemory (data);
   /* free the table of colors */
   TtaFreeMemory (colrs);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------

@@ -9,9 +9,10 @@
 #define _DIALOG_H_
 
 
-#ifndef _WINDOWS
-#include <X11/Intrinsic.h>
-#endif
+#if defined(_MOTIF) || defined(_GTK)
+  #include <X11/Intrinsic.h>
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
 #include "typebase.h"
 #include "tree.h"
 

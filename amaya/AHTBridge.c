@@ -17,7 +17,7 @@
  *
  */
 #ifdef _GTK
-#include <glib.h>
+  #include <glib.h>
 #endif /* _GTK */
 
 #define THOT_EXPORT extern
@@ -33,20 +33,20 @@
 #define THD_TRACE 1
 #endif
 
-#ifndef _WINDOWS
-#ifndef _GTK
-/* Amaya's X appcontext */
-extern ThotAppContext app_cont;
-#endif /* !_GTK */
+#ifdef _MOTIF
+  /* Amaya's X appcontext */
+  extern ThotAppContext app_cont;
+#endif /* #ifdef _MOTIF */
 
-/* Private functions */
-static void         RequestRegisterReadXtevent (SOCKET);
-static void         RequestKillReadXtevent (SOCKET);
-static void         RequestRegisterWriteXtevent ( SOCKET);
-static void         RequestKillWriteXtevent (SOCKET);
-static void         RequestRegisterExceptXtevent ( SOCKET);
-static void         RequestKillExceptXtevent (SOCKET);
-#endif /* !_WINDOWS */
+#if defined(_MOTIF) || defined(_GTK)
+  /* Private functions */
+  static void         RequestRegisterReadXtevent (SOCKET);
+  static void         RequestKillReadXtevent (SOCKET);
+  static void         RequestRegisterWriteXtevent ( SOCKET);
+  static void         RequestKillWriteXtevent (SOCKET);
+  static void         RequestRegisterExceptXtevent ( SOCKET);
+  static void         RequestKillExceptXtevent (SOCKET);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 /* Private variables */
 
@@ -63,21 +63,29 @@ static const HTEventType ReadBits = HTEvent_READ | HTEvent_ACCEPT | HTEvent_CLOS
 static const HTEventType WriteBits = HTEvent_WRITE | HTEvent_CONNECT;
 static const HTEventType ExceptBits = HTEvent_OOB;
 
-#ifndef _GTK
-typedef struct sStatus {
-  XtInputId read;             /* the different Xt Id's */
-  XtInputId write;
-  XtInputId except;
-} SocketStatus;
-#endif /*! _GTK */
+#ifdef _MOTIF
+  typedef struct sStatus {
+    XtInputId read;             /* the different Xt Id's */
+    XtInputId write;
+    XtInputId except;
+  } SocketStatus;
+#endif /*! #ifdef _MOTIF */
 
 #ifdef _GTK
-typedef struct sStatus {
-  gint read;             /* the different GTK Id's */
-  gint write;
-  gint except;
-} SocketStatus;
+  typedef struct sStatus {
+    gint read;             /* the different GTK Id's */
+    gint write;
+    gint except;
+  } SocketStatus;
 #endif /* _GTK */
+
+#ifdef _NOGUI
+  typedef struct sStatus {
+    int read;
+    int write;
+    int except;
+  } SocketStatus;
+#endif /* #ifdef _NOGUI */
 
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
@@ -99,8 +107,7 @@ static SocketStatus persSockets[SOCK_TABLE_SIZE];
   the state of the request and, if it's an asynchronous request, deletes
   the memory allocated to it.
   -------------------------------------------------------------------*/
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
 void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 {
    int                 status;  /* the status result of the libwwww call */
@@ -145,7 +152,9 @@ void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 
    return (0);
 }
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
 static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputCondition condition)
 {
    int                 status;  /* the status result of the libwwww call */
@@ -188,8 +197,7 @@ static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputConditio
      }
    /***   CanDoStop_set (TRUE); **/
 }
-#endif /* !_GTK */
-#endif /* !_WINDOWS */
+#endif /* _GTK */
 
 /*--------------------------------------------------------------------
   ProcessTerminateRequest
@@ -315,10 +323,8 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, con
    return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
-#endif /* WINDOWS but should be an else */
-/* #else  */ /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   AHTEvent_register
   callback called by libwww whenever a socket is open and associated
@@ -328,7 +334,7 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, con
   ----------------------------------------------------------------------*/
 int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 {
-  int  status;
+  int  status = 0;
 
   if (sock == INVSOC)
     {
@@ -338,7 +344,7 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
       return (0);
     }
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	/* need something special for HTEvent_CLOSE */
   if (type & ReadBits)
     RequestRegisterReadXtevent (sock);
@@ -348,19 +354,20 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
   
   if (type & ExceptBits)
     RequestRegisterExceptXtevent (sock);
-#endif	 /* !_WINDOWS */
+#endif	 /* #if defined(_MOTIF) || defined(_GTK) */
   
 #ifdef _WINDOWS   
   /* under windows, libwww requires an explicit FD_CLOSE registration 
      to detect HTTP responses not having a Content-Length header */
   status = HTEventList_register (sock, type | HTEvent_CLOSE , event);
-#else
-  status = HTEventList_register (sock, type, event);
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)  
+  status = HTEventList_register (sock, type, event);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
   
   return (status);
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   AHTEvent_unregister
@@ -376,7 +383,7 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
   if (sock == INVSOC)
     return HT_OK;
 
-#ifndef _WINDOWS   
+#if defined(_MOTIF) || defined(_GTK)
    /* remove the Xt event hooks */
    if (type & ReadBits) 
      RequestKillReadXtevent (sock);
@@ -386,7 +393,7 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
    
    if (type & ExceptBits) 
      RequestKillExceptXtevent (sock);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
    /* @@@ if this is the default for windows, no need to have AHTEvent_..
       in windows!! */
@@ -397,7 +404,7 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
    return (status);
 }
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 /* Private functions */
 
 /*----------------------------------------------------------------------
@@ -444,14 +451,17 @@ static void RequestRegisterReadXtevent (SOCKET sock)
 
   if (!persSockets[v].read)
     {
-#ifndef _GTK
+      
+#ifdef _MOTIF
       persSockets[v].read  =
 	XtAppAddInput (app_cont,
 		       sock,
 		       (XtPointer) XtInputReadMask,
 		       (XtInputCallbackProc) AHTCallback_bridge,
 		       (XtPointer) XtInputReadMask);
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
      persSockets[v].read  =
        gdk_input_add ((gint) sock,
 		      GDK_INPUT_READ,
@@ -485,13 +495,17 @@ static void RequestKillReadXtevent (SOCKET sock)
 	fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
 		 persSockets[v].read);
 #endif /* DEBUG_LIBWWW */
-#ifndef _GTK
+
+#ifdef _MOTIF
       XtRemoveInput (persSockets[v].read);
       persSockets[v].read = (XtInputId) NULL;
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       gdk_input_remove (persSockets[v].read);
       persSockets[v].read = (gint) 0;
 #endif /* !_GTK */
+
     }
 }
 
@@ -506,20 +520,22 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
 
   if (!persSockets[v].write)
     {   
-#ifndef _GTK
+#ifdef _MOTIF
       persSockets[v].write =
 	XtAppAddInput (app_cont,
 		       sock,
 		   (XtPointer) XtInputWriteMask,
 		   (XtInputCallbackProc) AHTCallback_bridge,
 		   (XtPointer) XtInputWriteMask);
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
      persSockets[v].write  =
        gdk_input_add ((gint) sock,
 		      GDK_INPUT_WRITE,
 		      AHTCallback_bridgeGTK,
 		      (gpointer) sock);
-#endif /* !_GTK */
+#endif /* _GTK */
 
 #ifdef DEBUG_LIBWWW   
   if (THD_TRACE)
@@ -549,13 +565,17 @@ static void RequestKillWriteXtevent (SOCKET sock)
 		 "%lu\n",
 		 persSockets[v].write);
 #endif /* DEBUG_LIBWWW */
-#ifndef _GTK
+      
+#ifdef _MOTIF
       XtRemoveInput (persSockets[v].write);
       persSockets[v].write =  (XtInputId) NULL;
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       gdk_input_remove (persSockets[v].write);
       persSockets[v].write = (gint) 0;
-#endif /* !_GTK */
+#endif /* _GTK */
+
     }
 }
 
@@ -571,20 +591,23 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
 
    if (!persSockets[v].except)
      {
-#ifndef _GTK   
+#ifdef _MOTIF
        persSockets[v].except =
 	 XtAppAddInput (app_cont,
 			sock,
 			(XtPointer) XtInputExceptMask,
 			(XtInputCallbackProc) AHTCallback_bridge,
 			(XtPointer) XtInputExceptMask);
-#else  /* _GTK */
+#endif /* _MOTIF */
+       
+#ifdef _GTK
      persSockets[v].except  =
        gdk_input_add ((gint) sock,
 		      GDK_INPUT_EXCEPTION,
 		      AHTCallback_bridgeGTK,
 		      (gpointer) sock);
-#endif /* !_GTK */
+#endif /* _GTK */
+     
 #ifdef DEBUG_LIBWWW      
    if (THD_TRACE)
      fprintf (stderr, "RegisterExceptXtEvent: adding XtInput %lu Socket %d\n",
@@ -610,13 +633,17 @@ static void RequestKillExceptXtevent (SOCKET sock)
 	fprintf (stderr, "UnregisterExceptXtEvent: Clearing Except XtInputs "
 		 "%lu\n", persSockets[v].except);
 #endif /* DEBUG_LIBWWW */
-#ifndef _GTK
+
+#ifdef _MOTIF
       XtRemoveInput (persSockets[v].except);
       persSockets[v].except = (XtInputId) NULL;
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       gdk_input_remove (persSockets[v].except);
       persSockets[v].except = (gint) 0;
-#endif /* !_GTK */
+#endif /* _GTK */
+      
     }
 }
 
@@ -635,11 +662,19 @@ struct _HTTimer {
 
 struct _AmayaTimer {
   HTTimer *libwww_timer;
-#ifndef _GTK
+
+#ifdef _MOTIF
   XtIntervalId xt_timer;
-#else  /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   guint  xt_timer;
-#endif /* !_GTK */
+#endif /* _GTK */
+
+#ifdef _NOGUI
+  unsigned int xt_timer;
+#endif /* #ifdef _NOGUI */  
+  
 };
 
 typedef struct _AmayaTimer AmayaTimer;
@@ -651,7 +686,7 @@ static HTList *Timers = NULL;
   called by the system event loop. Timers shouldn't be restarted
   on exiting.
   ----------------------------------------------------------------------*/
-#ifndef _GTK
+#ifdef _MOTIF
 void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 {
   HTList *cur, *last;
@@ -682,8 +717,9 @@ void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 
   return (0);
 }
+#endif /* _MOTIF */
 
-#else  /* _GTK */
+#ifdef _GTK
 /*----------------------------------------------------------------------
   TimerCallbackGTK
   The callback returns FALSE to destroy the timer that called it.
@@ -721,7 +757,7 @@ gboolean TimerCallbackGTK (gpointer id)
 
   return (FALSE);
 }
-#endif /* !_GTK */
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   KillAllTimers
@@ -764,14 +800,18 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
     /* remove the old timer */
       if (me->xt_timer) 
 	{
-#ifndef _GTK
+
+#ifdef _MOTIF
 	  XtRemoveTimeOut (me->xt_timer);
 	  me->xt_timer = (XtIntervalId) NULL;
-#else  /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
 	  gtk_timeout_remove (me->xt_timer);
 	  me->xt_timer = (guint) 0;
 #endif /* !_GTK */
-	}
+
+  }
     }
   else
     {
@@ -783,16 +823,19 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
     }
 
   /* add a new time out */
-#ifndef _GTK
+#ifdef _MOTIF
   me->xt_timer = XtAppAddTimeOut (app_cont,
 				 me->libwww_timer->millis,
 				 (XtTimerCallbackProc) TimerCallback,
 				 (XtPointer *) (void *) me);
-#else  /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   me->xt_timer = gtk_timeout_add ((guint32) me->libwww_timer->millis,
 				  (GtkFunction) TimerCallbackGTK,
 				  (gpointer) me);
-#endif /* !_GTK */
+#endif /* _GTK */
+  
 }
 
 /*----------------------------------------------------------------------
@@ -818,14 +861,17 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
   if (me)
     {
       /* remove the Xt timer */
-#ifndef _GTK
+#ifdef _MOTIF
       XtRemoveTimeOut (me->xt_timer);
-#else  /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       gtk_timeout_remove (me->xt_timer);
-#endif /* !_GTK */
+#endif /* _GTK */
+      
       /* and the element from the list */
       HTList_removeObject (Timers, me);
       TtaFreeMemory (me);
     }
 }
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */

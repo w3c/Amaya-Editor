@@ -80,7 +80,7 @@ static Proc         AppClosingFunction = NULL;
 ThotBool            PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -168,11 +168,18 @@ ThotWidget TtaGetViewFrame (Document document, View view)
       return 0;
     }
   else
+
 #ifdef _WINDOWS
     return (FrMainRef[frame]);
-#else  /* _WINDOWS */
-    return (FrameTable[frame].WdFrame);
 #endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)
+    return (FrameTable[frame].WdFrame);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _NOGUI
+    return 0;
+#endif /* #ifdef _NOGUI */
 }
 #endif
 
@@ -209,9 +216,9 @@ static void ErrorHandler ()
 static void QuitHandler ()
 {
    signal (SIGINT, ErrorHandler);
-#  ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
    signal (SIGQUIT, SIG_DFL);
-#  endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
    signal (SIGTERM, ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
@@ -221,11 +228,11 @@ static void QuitHandler ()
 #endif /* _GTK && !NODISPLAY */	
      exit (1);
    }
-#  ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    signal (SIGINT, QuitHandler);
    signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#  endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -233,11 +240,11 @@ static void QuitHandler ()
   ----------------------------------------------------------------------*/
 void InitErrorHandler ()
 {
-#  ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    signal (SIGBUS, ErrorHandler);
    signal (SIGHUP, ErrorHandler);
    signal (SIGQUIT, QuitHandler);
-#  endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
    signal (SIGSEGV, ErrorHandler);
 #  ifdef SIGABRT

@@ -1224,7 +1224,7 @@ void DisplayEmptyBoxLoadResources ()
 
 
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
    TtaGetCurrentDisplay
    Returns the current display descriptor.
@@ -1234,7 +1234,7 @@ Display *TtaGetCurrentDisplay ()
    UserErrorCode = 0;
    return TtDisplay;
 }
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 
 /*----------------------------------------------------------------------

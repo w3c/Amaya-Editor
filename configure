@@ -869,6 +869,7 @@ Optional Packages:
   --with-gl               enable Opengl canvas (experimental)
   --with-gtk              use GTK GUI toolkit
   --with-motif            use MOTIF GUI toolkit
+  --with-nogui            do not use GUI toolkit
   --with-graphic-libs     use static libjpeg, libpng.
   --without-i18n          disable internationalization support
   --with-dav              enable WebDAV support (experimental)
@@ -13726,6 +13727,21 @@ if test "$with_motif" = "no" -o "$with_motif" = "" ; then
   fi
 fi
 
+# check if no gui is enable
+
+# Check whether --with-nogui or --without-nogui was given.
+if test "${with_nogui+set}" = set; then
+  withval="$with_nogui"
+
+fi;
+if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
+  with_nogui="yes"
+  with_motif="no"
+  no_motif=yes
+  with_gtk="no"
+  NOGUI_OPTIONS="-D_NOGUI"
+fi
+
 if test "$with_motif" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo
@@ -14660,8 +14676,8 @@ echo "$as_me: WARNING: Disabling WebDAV build !" >&2;}
 fi
 
 
-THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
+THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
@@ -16119,6 +16135,10 @@ if test "$with_motif" = "yes" ; then
       fi
     fi
   fi
+fi
+
+if test "$with_nogui" = "yes" ; then
+  echo "Amaya configured with no GUI toolkit"
 fi
 
 echo ""

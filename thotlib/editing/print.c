@@ -32,8 +32,8 @@
 #include "thotcolor.h"
 
 #ifdef _WINDOWS
-#include "thotprinter_f.h"
-#include "resource.h"
+  #include "thotprinter_f.h"
+  #include "resource.h"
 #endif /* _WINDOWS */
 
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
@@ -125,7 +125,7 @@ static ThotWindow    thotWindow;
 #include "tree_f.h"
 
 #ifdef _WINDOWS 
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #include "glwindowdisplay.h"
@@ -147,12 +147,12 @@ extern int          errno;
 #ifdef _GTK
   GtkWidget *window;
   GtkWidget *pbar;
-/* Printed page counter  */
-static int pg_counter = 0;
-/* permits to cancel current printing */
-static int gabort = FALSE;
-
+  /* Printed page counter  */
+  static int pg_counter = 0;
+  /* permits to cancel current printing */
+  static int gabort = FALSE;
 #endif /* _GTK */
+
 static int button_quit = FALSE;
 #ifdef _WINDOWS
 HBITMAP          WIN_LastBitmap = 0;
@@ -424,10 +424,10 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
 static void NotePageNumber (FILE *fout)
 {
   NumberOfPages++;
-#ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
   fprintf (fout, "%%%%Page: %d %d\n", NumberOfPages, NumberOfPages);
   fflush (fout);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -437,19 +437,23 @@ static void NotePageNumber (FILE *fout)
   ----------------------------------------------------------------------*/
 static void DrawPage (FILE *fout, int pagenum, int width, int height)
 {
+
 #ifdef _WINDOWS 
   if (TtPrinterDC)
     EndPage (TtPrinterDC);
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)  
   fprintf (fout, "%d %d %d nwpage\n", pagenum - 1, width, height);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
   PostscriptFont = NULL;
   ColorPs = -1;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
 }
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
@@ -472,7 +476,7 @@ static int XWindowFatalError (Display *dpy)
     TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
   return (0);
 }
-#endif /* _WINDOWS && _GTK*/
+#endif /* _MOTIF */
 
 
 /*----------------------------------------------------------------------
@@ -568,7 +572,8 @@ static void FirstFrame (char *server)
 	FrRef[i] = 0;
    /* Ouverture du serveur X-ThotWindow */
       /*Connexion au serveur X impossible */
-#if !defined(_WINDOWS) && !defined(_GTK)
+
+#ifdef _MOTIF
    TtDisplay = XOpenDisplay (server);
    if (!TtDisplay)
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
@@ -580,10 +585,12 @@ static void FirstFrame (char *server)
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
    Black_Color = BlackPixel (TtDisplay, TtScreen);
    White_Color = WhitePixel (TtDisplay, TtScreen);
-#endif /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+   
    DefaultBColor = 0;
    DefaultFColor = 1;
    InitDocColors ("thot");
+
 #ifdef _GTK
    TtDisplay = XOpenDisplay (server);
 #ifndef _GL
@@ -676,12 +683,12 @@ static void InitTable (int i, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 static int OpenPSFile (PtrDocument pDoc, int *volume)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   FILE               *PSfile;
   char              tmp[MAX_PATH];
   char              fileName[256];
   int                 len;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
   int                 i;
 
   /* Est-ce la premiere creation de frame ? */
@@ -689,7 +696,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
   while (FrRef[i] != 0)
     i++;
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   if (i == 1)
     {
       /* On construit le nom du fichier PostScript */
@@ -1443,7 +1450,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
       PSfile = (FILE *) FrRef[1];
       FrRef[i] = (ThotWindow) PSfile;
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   InitTable (i, pDoc);
   *volume = 16000;
@@ -1969,7 +1976,9 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     else
       return (-1); /** The .ps file was not generated for any raison **/
     }
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)  
   if (firstFrame != 0)
     {
       ClosePSFile (firstFrame);
@@ -1977,7 +1986,8 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     }
   else
       return (-1); /** The .ps file was not generated for any raison **/
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
 }
 
 
@@ -2193,10 +2203,8 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   ----------------------------------------------------------------------*/
 static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
 {
-#ifndef _WINDOWS
-#ifdef _GTK
   
-#else /* _GTK */
+#ifdef _MOTIF
    Atom                atom;
    XClientMessageEvent event;
 
@@ -2217,8 +2225,8 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
        XSendEvent (TtDisplay, clientWindow, TRUE, NoEventMask, (ThotEvent *) & event);
        XSync (TtDisplay, FALSE);
      }
-#endif /* _GTK */
-#endif /* ! _WINDOWS */
+#endif /* _MOTIF */
+
 }
 
 /*----------------------------------------------------------------------
@@ -2227,12 +2235,16 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
+
 #ifdef _GTK
     gtk_window_set_title (GTK_WINDOW (window),text); 
     button_quit = TRUE;
-#else	/* _GTK */
-  ClientSend (thotWindow, text, TMSG_LIB_STRING);
 #endif /* _GTK */
+    
+#if defined(_MOTIF) || defined(_WINDOWS)
+  ClientSend (thotWindow, text, TMSG_LIB_STRING);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
 }
 
 /*----------------------------------------------------------------------
@@ -2243,23 +2255,31 @@ void DisplayMessage (char *text, int msgType)
 {
   if (msgType == FATAL)
     {
+
 #ifdef _GTK
       gtk_window_set_title (GTK_WINDOW (window),text);
       button_quit = TRUE;
-#else	/* _GTK */
-      ClientSend (thotWindow, text, TMSG_LIB_STRING);
 #endif /* _GTK */
+
+#if defined(_MOTIF) || defined(_WINDOWS)      
+      ClientSend (thotWindow, text, TMSG_LIB_STRING);
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+      
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
 	  if ((unlink (tempDir)) == -1)
 	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 	}
+      
 #ifdef _GTK 
       gtk_main_iteration_do(TRUE);
-#else	/* _GTK */
-      exit (1);
 #endif /* _GTK */
+      
+#if defined(_MOTIF) || defined(_WINDOWS)      
+      exit (1);
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+      
     }
 }
 
@@ -2547,10 +2567,11 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   int        argc;
   char**   argv;
 #endif /*_WINDOWS_DLL*/
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 int main (int argc, char **argv)
 {
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2825,10 +2846,10 @@ int main (int argc, char **argv)
     }
   
   /* At least one view is mandatory */
-#ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
   if (!viewFound)
     usage (argv[0]);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
   
   length = strlen (name);
   if (!realNameFound)
@@ -2897,9 +2918,12 @@ int main (int argc, char **argv)
 #endif /*_WINDOWS_DLL*/
 
   buttonCommand = buttonCmd;
-#else /* _WINDOWS */
-  DOT_PER_INCH = 90;
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)  
+  DOT_PER_INCH = 90;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
    /* Initialisation des polices de caracteres */
    InitDialogueFonts ("thot");
    /* Initialise the color table */
@@ -2961,20 +2985,24 @@ int main (int argc, char **argv)
 	 {
 	   if (!strcmp (destination, "PSFILE"))
 	     {
+         
 #ifdef _WINDOWS 
 	       sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
 	       CopyFile (cmd, printer, FALSE);
-#else  /* !_WINDOWS */
+#endif  /* !_WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)         
 	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
 	       if (system (cmd) != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
 	       else
 	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+         
 	     }
 	   else
 	     {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	       if (NCopies > 1)
 		 sprintf (cmd, "%s -#%d -T%s %s/%s.ps", printer, NCopies, realName, tempDir, name);
 	       else
@@ -2984,7 +3012,7 @@ int main (int argc, char **argv)
 		 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
 	       else
 		 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	     }
 	 }
        else
@@ -3022,13 +3050,16 @@ int main (int argc, char **argv)
 	    WinErrorBox (NULL, "PrintDoc (4)");
 	  }
       }
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+      
+#if defined(_MOTIF) || defined(_GTK)      
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
 	  system (cmd);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+    
     }
    TtaFreeMemory (realName);
-#ifndef _WINDOWS
+
 #ifdef _GTK
    if (!button_quit)
        gtk_exit (0);
@@ -3037,9 +3068,11 @@ int main (int argc, char **argv)
        return (0);
        }
 #endif /* _GTK */	
+#if defined(_MOTIF) || defined(_GTK)
    exit (0);
-
-#else /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+   
+#ifdef _WINDOWS
 #ifdef _WINDOWS_DLL
    return;
 #else /*_WINDOWS_DLL*/

@@ -52,7 +52,7 @@ static int          OldHeight;
 #include "interface.h"
 
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 
@@ -557,7 +557,7 @@ void ChangeTitle (Document doc, View view)
 #endif /* _I18N_ */
 
        CurrentDocument = doc;
-#ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
        TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
 		   TtaGetMessage (AMAYA, AM_CHANGE_TITLE), TRUE, 2, 'L', D_CANCEL);
        TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "",
@@ -566,9 +566,12 @@ void ChangeTitle (Document doc, View view)
        TtaSetTextForm (BaseDialog + TitleText, Answer_text);
        TtaSetDialoguePosition ();
        TtaShowDialogue (BaseDialog + TitleForm, FALSE);
-#else /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _WINDOWS       
        CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINDOWS */
+       
      }
 }
 
@@ -643,10 +646,12 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
    AttributeType       attrType;
    char               *buffer = NULL;
    int                 length;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 i;
    char                s[MAX_LENGTH];
-#endif
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+   
    ThotBool            isHTML;
    ThotBool            fromButton = FALSE;
 
@@ -739,7 +744,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  }
 
     TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 	/* Dialogue form for open URL or local */
 	i = 0;
 	strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -764,7 +770,9 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	strcat (s, DocumentName);*/
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
-#else  /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
+#ifdef _WINDOWS
 	if (LinkAsXmlCSS || LinkAsCSS)
 	  /* select a CSS file */
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
@@ -774,6 +782,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
 			       DocSelect, DirSelect, docText);
 #endif  /* _WINDOWS */
+
      }
 }
 
@@ -3815,8 +3824,7 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
   ----------------------------------------------------------------------*/
 void UpdateAtom (Document doc, char *url, char *title)
 {
-#ifndef _GTK
-#ifndef _WINDOWS
+#ifdef _MOTIF
    static Atom         property_name = 0;
    char               *v;
    int                 v_size;
@@ -3837,7 +3845,6 @@ void UpdateAtom (Document doc, char *url, char *title)
    XChangeProperty (dpy, win, property_name, XA_STRING, 8, PropModeReplace,
 		    v, v_size);
    TtaFreeMemory (v);
-#endif /* _WINDOWS */
-#endif /* _GTK */
+#endif /* _MOTIF */
 }
 

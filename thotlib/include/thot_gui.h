@@ -19,6 +19,7 @@
 
 #define MAX_LENGTH     512
 #define MAX_EXT         10
+
 #ifdef _WINDOWS
 /****************************************************************
  *								*
@@ -112,7 +113,17 @@ typedef int            ThotIcon;
 #include "simx.h"
 typedef XColor    ThotColorStruct;
 
-#else  /* !_WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _GL  
+  typedef struct GL_point 
+  {
+    float x;
+    float y;
+  } ThotPoint;
+#endif /*_GL*/
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 /************************************************************************
  *									*
  * standard Unix interface : based on Motif + Intrinsics + X-Window	*
@@ -130,7 +141,8 @@ typedef XColor    ThotColorStruct;
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <X11/Intrinsic.h>
-#if !defined(_GTK)  && !defined(NODISPLAY)
+
+#if defined(_MOTIF)  && !defined(NODISPLAY)
 #include <Xm/MwmUtil.h>
 #include <Xm/BulletinB.h>
 #include <Xm/CascadeB.h>
@@ -155,18 +167,19 @@ typedef XColor    ThotColorStruct;
 #include <Xm/ToggleB.h>
 #include <Xm/Xm.h>
 #include <Xm/PushBG.h>
-#endif /* !_GTK && !NODISPLAY */
+#endif /* #if defined(_MOTIF)  && !defined(NODISPLAY) */
 
 #ifdef _GTK
-#include <gtk/gtk.h>
-#include <gdk/gdk.h>
-#include <gdk/gdkkeysyms.h> /* for keycode */
+  #include <gtk/gtk.h>
+  #include <gdk/gdk.h>
+  #include <gdk/gdkkeysyms.h> /* for keycode */
+
 #ifndef _GL
-#ifndef _GTK2
-#include <gdk_imlib.h>      /* for load image (jpg, gif, tiff...) */
-#else /* _GTK2 */
-#include <gdk/gdkpixbuf.h>  /* for load image (jpg, gif, tiff...) */
-#endif /* !_GTK2 */
+  #ifndef _GTK2
+    #include <gdk_imlib.h>      /* for load image (jpg, gif, tiff...) */
+  #else /* _GTK2 */
+    #include <gdk/gdkpixbuf.h>  /* for load image (jpg, gif, tiff...) */
+  #endif /* !_GTK2 */
 #endif /* _GL */
 
 typedef GtkWidget     *ThotWidget;
@@ -179,15 +192,11 @@ typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
 typedef GdkFont       *PtrFont;
 typedef GdkCursor     *ThotCursor;
+
 #ifndef _GL
-typedef GdkPoint       ThotPoint;
-#else /* _GL */
-typedef struct GL_point 
-{
-  float x;
-  float y;
-} ThotPoint;
-#endif /*_GL*/
+  typedef GdkPoint       ThotPoint;
+#endif /* _GL */
+
 typedef GdkEvent       ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
@@ -202,7 +211,9 @@ typedef struct
 
 typedef _Thot_icon    *ThotIcon;
 typedef GdkPixmap     *ThotPixmap;
-#else /* _GTK */
+#endif  /* _GTK */
+
+#ifdef _MOTIF
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
 typedef ThotWidget     ThotButton;
@@ -220,7 +231,30 @@ typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
 typedef Pixmap         ThotIcon;
-#endif /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _NOGUI
+typedef void *         ThotWidget;
+typedef void *         ThotWindow;
+typedef ThotWidget     ThotButton;
+typedef ThotWidget     ThotMenu;
+typedef int            ThotBitmap;
+typedef int            ThotGC;
+typedef unsigned long  ThotColor;
+typedef XColor         ThotColorStruct;
+typedef int *          PtrFont;
+typedef void *         ThotCursor;
+#ifndef _GL
+typedef XPoint         ThotPoint;
+#endif /* #ifndef _GL */
+typedef void *         ThotEvent;
+typedef void *         ThotKeyEvent;
+typedef void *         ThotComposeStatus;
+typedef void *         ThotAppContext;
+typedef void *         ThotTranslations;
+typedef int         ThotIcon;
+#endif /* #ifdef _NOGUI */
+
 /* button states */
 #define TBSTYLE_BUTTON  0
 #define TBSTYLE_CHECK   1
@@ -228,7 +262,8 @@ typedef Pixmap         ThotIcon;
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
 
-#endif /* ! _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+
 
 #endif /* THOT_GUI_H */
 

@@ -26,7 +26,7 @@
 #include "appdialogue.h"
 
 #ifdef _GL
-#include "glwindowdisplay.h"
+  #include "glwindowdisplay.h"
 #endif /*_GL*/
 
 /* variables */
@@ -1283,6 +1283,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
 {
+  
 #ifdef _GTK
   unsigned char     *buffer = NULL;
   int                len;
@@ -1301,8 +1302,9 @@ void TtcCopyToClipboard (Document doc, View view)
 	TtaFreeMemory (Xbuffer);
       Xbuffer = NULL;
     }
-#else /* _GTK */
-#ifndef _WINDOWS
+#endif /* _GTK */
+  
+#ifdef _MOTIF
   int                  frame;
   ThotWindow           w, wind;
   XSelectionClearEvent clear;
@@ -1328,14 +1330,16 @@ void TtcCopyToClipboard (Document doc, View view)
       XSetSelectionOwner (TtDisplay, XA_PRIMARY, wind, CurrentTime);
       w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
     }
-#endif /* _WINDOWS */
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#ifndef _WINDOWS
   /* Annule le cutbuffer courant */
   XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
-#endif /* _WINDOWS */
-#endif /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _WINDOWS
+  /* Store the current selection */
+  ClipboardLength = CopyXClipboard (&Xbuffer, view);
+#endif /* #ifdef _WINDOWS */
 }
 
 

@@ -32,8 +32,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, unsigned long bgPixel, int *width,
 		    int *height, int zoom)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   Pixmap              pixmap;
   Pixmap              bitmap;
   int                 status;
@@ -56,12 +55,19 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       XFreePixmap (TtDisplay, bitmap);
       return (pixmap);
     }
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   return (Drawable)NULL;
 #endif /* _GTK */
-#else /* _WINDOWS */
+  
+#ifdef _WINDOWS
   return NULL;
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _NOGUI
+  return NULL;
+#endif /* #ifdef _NOGUI */ 
 }
 
 
@@ -71,8 +77,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, unsigned int bgPixel)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   XImage             *pict;
   Pixmap              pix;
   int                 delta;
@@ -162,8 +167,7 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
       XDestroyImage (pict);
       XFreePixmap (TtDisplay, pix);
     }
-#endif /* !_GTK */
-#endif /* !_WINDOWS */
+#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -171,10 +175,11 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   ----------------------------------------------------------------------*/
 ThotBool IsXbmFormat (char *fn)
 {
-#ifndef _GTK
 #ifdef _WINDOWS
    return (FALSE);
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF   
    Pixmap              bitmap = None;
    int                 status;
    int                 w, h;
@@ -184,9 +189,14 @@ ThotBool IsXbmFormat (char *fn)
    if (bitmap != None)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);
-#endif /* !_WINDOWS */
-#else /* _GTK */
+#endif /* _MOTIF */
+   
+#ifdef _GTK
    return FALSE;
-#endif /* !_GTK */
+#endif /* _GTK */
+
+#ifdef _NOGUI
+  return NULL;
+#endif /* #ifdef _NOGUI*/   
 }
 

@@ -39,9 +39,9 @@
   ----------------------------------------------------------------------*/
 Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 {
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return 0;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
+#endif /* #ifdef _NOGUI */
   
 #ifdef _MOTIF
    if (bits != NULL)

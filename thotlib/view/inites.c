@@ -500,9 +500,9 @@ ThotColor ColorPixel (int num)
  ----------------------------------------------------------------------*/
 void             TtaFreeThotColor (int num)
 {
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+#endif /* #ifdef _NOGUI */  
   
   if (num < NColors + NbExtColors && num >= NColors)
   {
@@ -543,9 +543,9 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
    
    ThotBool            found;
 
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return 0;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+#endif /* #ifdef _NOGUI */  
    
    /*
     * lookup for the color number among the color set allocated

@@ -41,20 +41,26 @@ void CleanPictInfo (PictInfo *imageDesc)
 #ifndef _GL
       if (imageDesc->PicPixmap != None)
 	{
-#ifndef _GTK
+
+#if defined(_MOTIF) || defined(_WINDOWS)
 	  FreePixmap (imageDesc->PicMask);
 	  FreePixmap (imageDesc->PicPixmap);
-#else /*_GTK*/
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS)    */ 
+
+#ifdef _GTK
 	  /*Frees imlib struct that contains the real ref to pics */
 	  if (imageDesc->im)
 	    gdk_imlib_destroy_image (imageDesc->im);
 #endif /* _GTK */
-	  imageDesc->PicMask = None;
+
+    imageDesc->PicMask = None;
 	  imageDesc->PicPixmap = None;
 	}
+
 #ifdef _WINDOWS
 	imageDesc->PicBgMask = -1;
 #endif /* _WINDOWS */
+
 #else /*_GL*/
     FreeGlTexture (imageDesc);
 #endif /*_GL*/

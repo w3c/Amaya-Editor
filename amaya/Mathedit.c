@@ -29,7 +29,9 @@
 #ifdef _WINDOWS
 #define iconMath   21 
 #define iconMathNo 21 
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
 static ThotIcon	   iconMath;
 static ThotIcon	   iconMathNo;
 
@@ -49,7 +51,13 @@ static ThotIcon	   iconMathNo;
 #include "mscript.xpm"
 #include "matrix.xpm"
 #include "greek.xpm"
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _NOGUI
+static ThotIcon	   iconMath;
+static ThotIcon	   iconMathNo;
+#endif /* #ifdef _NOGUI */
+
 
 static int      MathButton;
 static Pixmap	mIcons[14];
@@ -68,14 +76,18 @@ static Element	LastDeletedElement = NULL;
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "UIcss_f.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
+
 #include "XLinkedit_f.h"
+
 #ifdef _GTK
-/* used for teh close palette callback*/
-ThotWidget CatWidget(int ref);
+  /* used for teh close palette callback*/
+  ThotWidget CatWidget(int ref);
 #endif/*  _GTK */
+
 /* Function name table */
 typedef char     functName[10];
 static  functName  functionName[] =
@@ -1149,7 +1161,9 @@ static void         CreateMathConstruct (int construct)
 	  NumberCols = 2;
 #ifdef _WINDOWS
 	  CreateMatrixDlgWindow (NumberCols, NumberRows);
-#else  /* !_WINDOWS */
+#endif /* !_WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)    
 	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 		      TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
 	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
@@ -1162,7 +1176,8 @@ static void         CreateMathConstruct (int construct)
 	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+    
 	  if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
 	    /* the user decided to abort the command */
 	    {
@@ -1484,7 +1499,7 @@ static void CreateMathMenu (Document doc, View view)
      /* the document is in ReadOnly mode */
      return;
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   if (!InitMaths)
     {
       InitMaths = TRUE;
@@ -1514,7 +1529,9 @@ static void CreateMathMenu (Document doc, View view)
 #endif /*_GTK*/
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
-#else /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK)  */
+  
+#ifdef _WINDOWS
   CreateMathDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINDOWS */
 }
@@ -2434,7 +2451,7 @@ static ThotBool MathMoveBackward ()
   ----------------------------------------------------------------------*/
 void InitMathML ()
 {
-#ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
    iconMath = (ThotIcon) TtaCreatePixmapLogo (Math_xpm);
    iconMathNo = (ThotIcon) TtaCreatePixmapLogo (MathNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
@@ -2451,7 +2468,8 @@ void InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
   TtaSetMoveForwardCallback ((Func) MathMoveForward);
@@ -3655,9 +3673,12 @@ void CreateMathEntity (Document document, View view)
   if (firstSel != lastSel)
     return;
   MathMLEntityName[0] = EOS;
+
 #ifdef _WINDOWS
   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
-#else
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)  
   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	      TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
   TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
@@ -3667,7 +3688,8 @@ void CreateMathEntity (Document document, View view)
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
   TtaWaitShowDialogue ();
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
   if (MathMLEntityName[0] != EOS)
     InsertMathEntity (MathMLEntityName, document);
 }

@@ -18,8 +18,9 @@
 *********************************/
 
 #ifdef _WINDOWS
-#include <string.h>
+  #include <string.h>
 #endif /* !_WINDOWS */
+
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
 
@@ -28,9 +29,11 @@
 #include "amaya.h"
 #include "init_f.h"
 #include <sys/types.h>
+
 #ifndef _WINDOWS
-#include <unistd.h>
+  #include <unistd.h>
 #endif
+
 #include <fcntl.h>
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
@@ -74,10 +77,16 @@ struct _HTError
 
 /* libwww default parameters */
 #ifdef _WINDOWS
-#define CACHE_DIR_NAME "\\libwww-cache\\"
-#else
-#define CACHE_DIR_NAME "/libwww-cache/"
-#endif
+  #define CACHE_DIR_NAME "\\libwww-cache\\"
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+  #define CACHE_DIR_NAME "/libwww-cache/"
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _NOGUI
+  #define CACHE_DIR_NAME "/libwww-cache/"
+#endif /* #ifdef _NOGUI */
 
 #define DEFAULT_CACHE_SIZE 10
 #define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
@@ -147,12 +156,14 @@ int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, H
   ----------------------------------------------------------------------*/
 static int set_cachelock (char *filename)
 {
-  int status;
+  int status = 0;
 #ifdef _WINDOWS
 
   status = TtaFileExist (filename);
   return ((status) ? 0 : -1);
-#else
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   struct flock lock;
  
   lock.l_type = F_WRLCK;
@@ -174,7 +185,8 @@ static int set_cachelock (char *filename)
       fd_cachelock = 0;
     }
   return (status);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+
 }
 
 /*----------------------------------------------------------------------
@@ -184,19 +196,17 @@ static int set_cachelock (char *filename)
   ----------------------------------------------------------------------*/
 static int clear_cachelock (void)
 {
-#ifdef _WINDOWS
-  return 0;
-#else
-  int status;
+  int status = 0;  
 
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   if (!fd_cachelock)
     return (-1);
  
   status = close (fd_cachelock);
   fd_cachelock = 0;
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
   return (status);
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -212,7 +222,9 @@ static int test_cachelock (char *filename)
     return 0;
   else
     return -1;
-#else
+#endif
+  
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   struct flock lock;
   int fd, status;
 
@@ -235,7 +247,7 @@ static int test_cachelock (char *filename)
   if (lock.l_type == F_UNLCK)
     return (0); /* false, region is not locked by another proc */
   return (lock.l_pid); /* true, return pid of lock owner */
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 }
 
 #endif /* AMAYA_WWW_CACHE */
@@ -642,13 +654,13 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	  
        if (me->error_stream != (char *) NULL)
 	 HT_FREE (me->error_stream);
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS	
        if (me->read_xtinput_id || me->write_xtinput_id ||
 	   me->except_xtinput_id)
 	 RequestKillAllXtevents(me);
 #endif /* WWW_XWINDOWS */
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
        
        if (me->reqStatus == HT_ABORT)
 	 {
@@ -726,11 +738,13 @@ static void         Thread_deleteAll (void)
 	    {
 	      if (me->request)
 		{
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS 
 		  RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+      
 		  if (!HTRequest_kill (me->request))
 		    AHTReqContext_delete (me);
 		}
@@ -788,12 +802,13 @@ int                 AHTOpen_file (HTRequest * request)
 
   if (!(me->output) && 
       (me->output != stdout) && 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
       (me->output = fopen (me->outputfile, "w")) == NULL)
-#else /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#ifdef _WINDOWS    
       (me->output = fopen (me->outputfile, "wb")) == NULL)  
-#endif /* !_WINDOWS */
-    {
+#endif /* _WINDOWS */
+      {
       me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
@@ -1807,9 +1822,11 @@ static void         AHTProtocolInit (void)
   HTProtocol_add ("http", "buffered_tcp", HTTP_PORT, NO, HTLoadHTTP, NULL);
 #ifdef _WINDOWS
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
-#else
-  HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
 #endif /* _WINDOWS */
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+  HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+
 #ifdef AMAYA_WWW_CACHE
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
 #endif /* AMAYA_WWW_CACHE */
@@ -1859,9 +1876,11 @@ static void         AHTNetInit (void)
 #ifdef AMAYA_LOST_UPDATE
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+  
    /**** for later ?? ****/
    /*  HTNet_addAfter(HTInfoFilter, 	NULL,		NULL, HT_ALL,		HT_FILTER_LATE); */
   /* @@ JK: Filters for doing ftp authentication */
@@ -1878,9 +1897,11 @@ static void         AHTNetInit (void)
 static void         AHTAlertInit (void)
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
-#ifdef __WINDOWS
+
+#ifdef _WINDOWS /* <<-- SG : it was __WINDOWS : I replace it with _WINDOWS */
    HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
 #endif /* _WINDOWS */
+   
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
@@ -1942,8 +1963,9 @@ static void RecCleanCache (char *dirname)
       status = FindNextFile (hFindFile, &ffd);
     }
   FindClose (hFindFile);
-
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   DIR *dp;
   struct stat st;
 #ifdef HAVE_DIRENT_H
@@ -1994,7 +2016,7 @@ static void RecCleanCache (char *dirname)
 	}
     }
   closedir (dp);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 }
 #endif /* AMAYA_WWW_CACHE */
 
@@ -2481,12 +2503,12 @@ void         QueryInit ()
    HTEventInit ();
 #endif /* _WINDOWS */
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
    HTEvent_setRegisterCallback ((void *) AHTEvent_register);
    HTEvent_setUnregisterCallback ((void *) AHTEvent_unregister);
    HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
 #ifdef HTDEBUG
    /* an undocumented option for being able to generate an HTTP protocol
@@ -2615,11 +2637,13 @@ void         QueryInit ()
   ----------------------------------------------------------------------*/
 static int          LoopForStop (AHTReqContext * me)
 {
+  int  status_req = HT_OK;
+  
 #ifdef _WINDOWS
   MSG msg;
   unsigned long libwww_msg;
   HWND old_active_window, libwww_window;
-  int  status_req = HT_OK;
+
 
   old_active_window = GetActiveWindow ();
   libwww_window = HTEventList_getWinHandle (&libwww_msg);
@@ -2636,9 +2660,10 @@ static int          LoopForStop (AHTReqContext * me)
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
     exit (0);
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)  
    ThotEvent                ev;
-   int                 status_req = HT_OK;
 
    /* to test the async calls  */
    /* Loop while waiting for new events, exists when the request is over */
@@ -2652,7 +2677,8 @@ static int          LoopForStop (AHTReqContext * me)
          if (TtaFetchOneAvailableEvent (&ev))
 	   TtaHandleOneEvent (&ev);
    }
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
    switch (me->reqStatus) {
 	  case HT_ERR:
           case HT_ABORT:
@@ -2683,11 +2709,11 @@ void QueryClose ()
      a non-existent Amaya window */
   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   /** need to erase all existing timers too **/
    HTTimer_registerSetTimerCallback (NULL);
    HTTimer_registerDeleteTimerCallback (NULL);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
   HTHost_setActivateRequestCallback (NULL);
   Thread_deleteAll ();
  
@@ -3070,7 +3096,9 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
        /* force windows SYNC requests to always be non preemptive */
        HTRequest_setPreemptive (me->request, YES);
      }
-#else /* !_WINDOWS */
+#endif /* !_WINDOWS */
+   
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
@@ -3082,7 +3110,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
      generated
      ****/
    HTRequest_setPreemptive (me->request, NO);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
    /*
    ** Make sure that the first request is flushed immediately and not
@@ -3423,9 +3451,12 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    StrAllocCopy (fileURL, "file:");
    strcpy (file_name, fileName);
    StrAllocCat (fileURL, file_name);
-#else
-   fileURL = HTParse (fileName, "file:/", PARSE_ALL);
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+   fileURL = HTParse (fileName, "file:/", PARSE_ALL);
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+
    me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
    strcpy (url_name, me->urlName);
@@ -3673,14 +3704,14 @@ void                StopAllRequests (int docid)
 			 }
 		       cur = Amaya->reqlist;
 		     }
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS
 		   /* to be on the safe side, remove all outstanding 
 		      X events */
 		   else 
 		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 		 }
 	     }
 	   /* Delete remaining channels */
@@ -3807,8 +3838,9 @@ ThotBool CheckSingleInstance (char *pid_dir)
   else
     return FALSE;
 
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
 
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   int instances;
   char *ptr;
   pid_t pid;
@@ -3873,7 +3905,8 @@ ThotBool CheckSingleInstance (char *pid_dir)
     }
   closedir (dp);
   return (instances == 0);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+
 }
 
 /*----------------------------------------------------------------------
@@ -3881,7 +3914,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
   ----------------------------------------------------------------------*/
 void FreeAmayaCache (void)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   char str[MAX_LENGTH];
   pid_t pid;
 
@@ -3890,7 +3923,7 @@ void FreeAmayaCache (void)
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
   if (TtaFileExist (str))
     TtaFileUnlink (str);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 }
 
 /*----------------------------------------------------------------------
@@ -3904,16 +3937,16 @@ void InitAmayaCache (void)
   int i;
   char str[MAX_LENGTH];
   char *ptr;
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   pid_t pid;
   int fd_pid;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   /* create the temp dir for the Amaya pid */
   sprintf (str, "%s%cpid", TempFileDirectory, DIR_SEP);
   TtaMakeDirectory (str);
-#endif
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 
   /* protection against dir names that have . in them to avoid
      erasing everything  by accident */
@@ -3953,7 +3986,7 @@ void InitAmayaCache (void)
       TtaMakeDirectory (str);
     }
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   /* register this instance of Amaya */
   pid = getpid ();
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
@@ -3962,7 +3995,7 @@ void InitAmayaCache (void)
     close (fd_pid);
   else
     printf ("Couldn't create fd_pid %s\n", str);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 }
 
 /*-----------------------------------------------------------------------

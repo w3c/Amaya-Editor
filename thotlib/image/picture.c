@@ -82,7 +82,7 @@ static char*    PictureMenu;
   static unsigned char *PictureLogo;
 #else /*_GL*/
   
-  #if defined(_WINDOWS) || defined(_MOTIF)
+  #if defined(_WINDOWS) || defined(_MOTIF) || defined(_NOGUI)
     static Pixmap   PictureLogo;
   #endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
   
@@ -1223,8 +1223,13 @@ void FreePixmap (Pixmap pixmap)
   if (!DeleteObject ((HBITMAP)pixmap))
     WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINDOWS */
-  
+
 #endif /*_GL*/
+
+#ifdef _NOGUI
+  return;
+#endif /* _NOGUI */
+
 }
 
 
@@ -2293,7 +2298,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 #ifdef _GL
 	       !glIsTexture (imageDesc->TextureBind))	    
 #else /*_GL*/
-               imageDesc->PicPixmap == None)
+               (imageDesc->PicPixmap == None))
 #endif /*_GL*/
 	    {
 	      /* need to load or to rescale the picture */
@@ -2423,7 +2428,11 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 							  (FILE *) drawable,
 							  bgColor);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
+
+#ifdef _NOGUI
+  return;
+#endif /* _NOGUI */  
+
 #ifdef _GL
 if (PrintingGL)
 {
@@ -3062,6 +3071,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #if defined(_MOTIF) || defined(_WINDOWS)
   Drawable            drw = None;
 #endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+
+#ifdef _NOGUI
+  Drawable            drw = None;
+#endif /* _NOGUI */
   
   PtrAbstractBox      pAb;
   Picture_Report      status;

@@ -176,7 +176,9 @@ typedef BOOL        ThotBool;
 
 #define Dimension int
 
-#else /* _WINDOWS *//***********************************WINDOWS**/
+#endif /* _WINDOWS *//***********************************WINDOWS**/
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 /* Unix definitions */
 typedef unsigned char   ThotBool;
 #define ThotPid_get()	getpid()
@@ -193,8 +195,8 @@ typedef unsigned char   ThotBool;
 #define WC_DIR_STR  "/"
 #define WC_PATH_STR ":"
 
-#endif /* _WINDOWS */
-/********************************************************WINDOWS**/
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
 #ifdef _I18N_
 #define ___TEXT___(str) L##str
 #else  /* !_I18N_ */

@@ -849,6 +849,10 @@ int CharacterAscent (int c, PtrFont font)
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
   
 #endif /*_GL*/
+
+#ifdef _NOGUI
+  return 0;
+#endif /* _NOGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -879,6 +883,10 @@ int FontAscent (PtrFont font)
 #endif /* _GTK */
 
 #endif /*_GL*/
+
+#ifdef _NOGUI
+  return 0;
+#endif /* #ifdef _NOGUI */    
 }
 
 /*----------------------------------------------------------------------
@@ -925,6 +933,10 @@ int FontHeight (PtrFont font)
 #endif /* _MOTIF */
 
 #endif /*_GL*/
+
+#ifdef _NOGUI
+  return 0;
+#endif /* #ifdef _NOGUI */        
 }
 
 /*----------------------------------------------------------------------
@@ -1467,9 +1479,9 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
   return NULL;
 #endif /* _WINDOWS */
 
-#if !defined(_GTK) && !defined(_MOTIF) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return NULL;
-#endif /* #if !defined(_GTK) && !defined(_MOTIF) && !defined(_WINDOWS) */
+#endif /* #ifdef _NOGUI */    
 }
  
 /*----------------------------------------------------------------------

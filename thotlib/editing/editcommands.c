@@ -96,11 +96,11 @@ static ThotBool     FromKeyboard;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS 
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #ifdef _GL
-#include "glwindowdisplay.h"
+  #include "glwindowdisplay.h"
 #endif /*_GL*/
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the
@@ -315,9 +315,9 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
-#if !defined(_WINDOWS) && !defined (_GTK)
+#ifdef _MOTIF
   ThotEvent              event;
-#endif /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
   int                 nChars;
   int                 i, j;
   int                 ind;
@@ -493,8 +493,7 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	}
     }
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   /* remove waiting expose events */
   while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
     {
@@ -505,8 +504,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	  XtDispatchEvent (&event);
 	}
     }
-#endif /*_GTK */
-#endif /* !_WINDOWS */
+#endif /* _MOTIF */
+
   return (notified);
 }
 
@@ -1314,10 +1313,10 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 	      pAb->AbElement->ElNPoints = pAb->AbVolume;
 	      pBox->BxNChars = pAb->AbVolume;
 	      DisplayPointSelection (frame, pBox, 0);
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	      pBox->BxXRatio = 1;
 	      pBox->BxYRatio = 1;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	    }
 
 	  /* on force le reaffichage de la boite (+ les points de selection) */
@@ -3930,13 +3929,13 @@ void TtcInclude (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document doc, View view)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    DisplayMode         dispMode;
    int                 frame;
-#ifndef _GTK
+#ifdef _MOTIF
    int                 i;
    ThotWindow          w, wind;
-#endif /* _GTK */
+#endif /* _MOTIF */
 
    if (doc == 0)
       return;
@@ -3965,7 +3964,9 @@ void TtcPasteFromClipboard (Document doc, View view)
 #ifdef _GTK
    if (Xbuffer)
      PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
-#else
+#endif /* _GTK */
+   
+#ifdef _MOTIF
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
    wind = FrRef[frame];
    if (w == None)
@@ -3978,12 +3979,14 @@ void TtcPasteFromClipboard (Document doc, View view)
    else
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
 			 wind, CurrentTime);
-#endif /* _GTK*/
+#endif /* _MOTIF */
+   
    /* just manage differed enclosing rules */
    ComputeEnclosing (frame);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, dispMode);
-#endif /* _WINDOWS */
+   
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -4157,9 +4160,12 @@ void TtcPaste (Document doc, View view)
 	  else 
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
-#else /* _WINDOWS */
-	  ContentEditing (TEXT_PASTE);
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)    
+	  ContentEditing (TEXT_PASTE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+    
 	  if (!lock)
 	    /* unlock table formatting */
 	    (*ThotLocalActions[T_unlock]) ();

@@ -23,9 +23,11 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "document.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "platform_tv.h"
@@ -1397,21 +1399,27 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 		     int *height)
 {
-#ifndef _WINDOWS
+  
+#if defined(_MOTIF) || defined(_GTK)
   int                 frame;
   ThotWidget          widget;
+
 #ifdef _GTK
   ThotWidget          tmpw;
   gint                wx, wy;
-#else /* ! _GTK */  
+#endif /* _GTK */
+
+#ifdef _MOTIF  
   int                 n;
   Arg                 args[20];
-#endif /* ! _GTK */
+#endif /* _MOTIF */
+  
   Position            x, y;
   Dimension           w, h;
 
   frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
+
 #ifdef _GTK
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
   w = tmpw->allocation.width;
@@ -1433,8 +1441,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 	}
       tmpw = tmpw->parent;
     }
-  
-#else /* !_GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF  
   widget = XtParent (XtParent (XtParent (widget)));
 
   /* Ask X what's the geometry of the frame */
@@ -1448,14 +1457,17 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
-#endif /* !_GTK */
+#endif /* _MOTIF */
+  
   /* convert the result into mm */
   *xmm = x;
   /* take into account the window manager headband */
   *ymm = y - 18;
   *width = w;
   *height = h;
-#else /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _WINDOWS
   int  frame;
   HWND hWnd;
   RECT rect;
@@ -1473,7 +1485,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       *width = (int) (rect.right - rect.left);
       *height = (int) (rect.bottom - rect.top);
     }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

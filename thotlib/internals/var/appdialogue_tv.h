@@ -14,22 +14,26 @@
 THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
+
 #ifdef _WINDOWS
-#include <windows.h>
-#ifndef __GNUC__
-#include <commctrl.h>
-#endif /* __GNUC__ */
-THOT_EXPORT WNDCLASSEX         RootShell;
-THOT_EXPORT HMENU              currentMenu;
-THOT_EXPORT HINSTANCE          hInstance;
-THOT_EXPORT int                currentFrame;
-THOT_EXPORT BOOL               buttonCommand;
-#else /* _WINDOWS */
-THOT_EXPORT ThotWidget	       RootShell;
-#ifndef _GTK
-THOT_EXPORT ThotTranslations   TextTranslations;
-#endif /* _GTK */
+  #include <windows.h>
+  #ifndef __GNUC__
+    #include <commctrl.h>
+  #endif /* __GNUC__ */
+  THOT_EXPORT WNDCLASSEX         RootShell;
+  THOT_EXPORT HMENU              currentMenu;
+  THOT_EXPORT HINSTANCE          hInstance;
+  THOT_EXPORT int                currentFrame;
+  THOT_EXPORT BOOL               buttonCommand;
 #endif /* _WINDOWS */
+
+//#if defined(_MOTIF) || defined(_GTK)
+//THOT_EXPORT ThotWidget	       RootShell;
+//#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#ifdef _MOTIF
+THOT_EXPORT ThotTranslations   TextTranslations;
+#endif /* #ifdef _MOTIF */
+
 THOT_EXPORT ThotAppContext     app_cont;
 THOT_EXPORT Proc	       CurrentCallbackAPI;
 

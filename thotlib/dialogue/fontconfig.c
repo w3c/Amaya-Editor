@@ -91,9 +91,9 @@ static ThotBool IsXLFDName (char *font)
   return (k == 2) ? TRUE : FALSE;
 #endif /*_WINDOWS*/
 
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return FALSE;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
+#endif /* _NOGUI */
   
 }
 
@@ -122,9 +122,9 @@ static int IsXLFDPatterneAFont (char *pattern)
   return IsXLFDName (pattern);  
 #endif /*_WINDOWS*/
 
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+#ifdef _NOGUI
   return 0;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+#endif /* _NOGUI */  
 
 }
 #endif /*_GL*/
@@ -222,10 +222,6 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 static int getFontFamily (int indline, unsigned char *line, char *word)
 {
   int             indword;
-
-  #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
-  return 0;
-  #endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
 
   /* copy the word from the line*/
   indword = 0;

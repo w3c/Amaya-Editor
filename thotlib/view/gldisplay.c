@@ -17,10 +17,12 @@
 #ifdef _GL
 
 #ifdef _WINDOWS
-#include <windows.h>
-#else /* _WINDOWS*/
-#include <gtkgl/gtkglarea.h>
+  #include <windows.h>
 #endif /* _WINDOWS*/
+
+#ifdef _GTK
+  #include <gtkgl/gtkglarea.h>
+#endif /* #ifdef _GTK */
 
 #include <GL/gl.h>
 

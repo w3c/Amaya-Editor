@@ -27,8 +27,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #define PARAM_INCREMENT 50
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 
@@ -47,10 +48,10 @@ static int          last_buffer_char; /* gives the index of the last char + 1 ad
 static int          documentStatus;
 
 #ifdef _WINDOWS 
-extern HWND         FrMainRef [12];
-extern int          ActiveFrame;
-Document            opDoc;
-Element             opOption [200];
+  extern HWND         FrMainRef [12];
+  extern int          ActiveFrame;
+  Document            opDoc;
+  Element             opOption [200];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1439,14 +1440,20 @@ void SelectOneOption (Document doc, Element el)
 
 	       TtaFreeMemory (buffer);
 
-	       if (multipleOptions)
-		 for (i = 0; i < nbitems; i++)
-		   if (selected[i])
+
 #ifdef _WINDOWS
-		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
-#else  /* _WINDOWS */
-	             TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+  if (multipleOptions)
+    for (i = 0; i < nbitems; i++)
+		  if (selected[i])         
+		    WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+  if (multipleOptions)
+    for (i = 0; i < nbitems; i++)
+      if (selected[i])         
+        TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 		     
 	       if (nbsubmenus > 0)
 		 {
@@ -1529,17 +1536,26 @@ void SelectOneOption (Document doc, Element el)
 			   /* create the submenu */
 #ifdef _WINDOWS
 			   TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#else  /* !_WINDOWS */
+#endif  /* !_WINDOWS */
+         
+#if defined(_MOTIF) || defined(_GTK)         
 			   TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+         
+#ifdef _WINDOWS
 			   if (multipleOptions)
 			     for (i = 0; i < nbsubitems; i++)
 			       if (subSelected[nbsubmenus][i])
-#ifdef _WINDOWS
-				 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [ActiveFrame]);
-#else  /* !_WINDOWS */
-			         TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
-#endif /* _WINDOWS */
+               WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [ActiveFrame]);
+#endif  /* !_WINDOWS */
+         
+#if defined(_MOTIF) || defined(_GTK)
+			   if (multipleOptions)
+			     for (i = 0; i < nbsubitems; i++)
+			       if (subSelected[nbsubmenus][i])
+               TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+             
 			   nbsubmenus++;
 			   nbitems++;	/* item number in the main menu */
 			 }  
@@ -1550,9 +1566,11 @@ void SelectOneOption (Document doc, Element el)
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
 	       ReturnOptionMenu = -1;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 	       TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+         
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
 	       if (nbsubmenus == 0)
@@ -1572,13 +1590,17 @@ void SelectOneOption (Document doc, Element el)
 		     }
 		   else
 		     { /* an item in a submenu */
+
 #ifdef _WINDOWS
 		       el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
 		       sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+           
+#if defined(_MOTIF) || defined(_GTK)           
 		       el = subOptions[ReturnOptionMenu - 1][ReturnOption];
 		       sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+           
 		     }
 		   modified = TtaIsDocumentModified (doc);	  
 		   if (!multipleOptions)
