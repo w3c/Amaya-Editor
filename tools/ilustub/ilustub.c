@@ -75,7 +75,7 @@ Type tabType[1000] = {
 { 0, TYPE_IN, "boolean","BOOLEAN",	"boolean",		NULL},
 { 0, TYPE_IN, "int",	"INTEGER",	"CORBA_long",		NULL},
 { 1, TYPE_IN, "char",	"ilu.CString",	"char *",		NULL},
-{ 1, TYPE_OUT,"char",	"ilu.CString",	"char *",		NULL},
+{ 1, TYPE_OUT,"char",	"ilu.CString",	"char **",		NULL},
 };
 
 /*
@@ -943,8 +943,8 @@ void dump_ilu(FILE *out) {
      * Dump the main TYPE for this interface.
      */
     fprintf(out, "TYPE %s = OBJECT\n", package);
-    if (nbFunctions > 0)
-	fprintf(out, "  METHODS\n");
+    fprintf(out, "  METHODS\n");
+    if (nbFunctions == 0) fprintf(out, "    dummy()\n");
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];
 	t = &tabType[f->type];
@@ -977,8 +977,7 @@ void dump_ilu(FILE *out) {
 	    fprintf(out,"\n\"%s\"", f->comment);
 	 *****/
     }
-    if (nbFunctions > 0)
-	fprintf(out, "\n  END;\n");
+    fprintf(out, "\n  END;\n");
     fprintf(out,"\n");
 }
 
@@ -1066,6 +1065,12 @@ void dump_stubs(FILE *out) {
     /*
      * Dump each function.
      */
+    if (nbFunctions == 0) {
+        fprintf(out,"/*\n * Dummy function.\n */\n");
+	fprintf(out,"void server_%s_%s_dummy(%s_%s object, ILU_C_ENVIRONMENT *env) {}\n",
+	        interface_name, package,
+		interface_name, package);
+    }
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];
 	rt = &tabType[f->type];

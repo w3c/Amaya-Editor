@@ -62,7 +62,7 @@ typedef struct _Type {
  * add more type as needed.
  */
 
-int nbTypes = 5;
+int nbTypes = 6;
 Type tabType[1000] = {
 { 0, TYPE_IN, "void",	"",		"void",			NULL},
 { 0, TYPE_IN, "boolean","boolean",	"jbool",		NULL},
@@ -413,10 +413,9 @@ static int parse_type(char **next, inout retval)
 	*next = p;
         for (i = 0; i < nbTypes;i++)
 	    if ((!strcmp(name, tabType[i].name)) &&
-	        (indir == tabType[i].indir)) {
-		if ((retval & TYPE_OUT) == (tabType[i].retval & TYPE_OUT))
+	        (indir == tabType[i].indir) &&
+		((retval & TYPE_OUT) == (tabType[i].retval & TYPE_OUT)))
 		    return(i);
-	    }
 
 	if (verbose) {
 	    fprintf(stderr,"Function %s : unknown type \"%s ",

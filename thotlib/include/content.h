@@ -266,7 +266,7 @@ extern int          TtaGetTextLength (Element element);
    language: language of the text.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveTextContent (Element element, /*OUT*/ char *buffer, /*INOUT*/ int *length, /*OUT*/ Language * language);
+extern void         TtaGiveTextContent (Element element, /*OUT*/ char *buffer, /*INOUT*/ int *length, /*OUT*/ Language *language);
 
 /*----------------------------------------------------------------------
    TtaGiveSubString
