@@ -1472,7 +1472,7 @@ CHAR_T*             GIname;
   else
     {
       newElement = NULL;
-      if (rootElement != NULL &&
+      if (rootElement != NULL && stackLevel <= 1 &&
 	  elType.ElTypeNum == rootElType.ElTypeNum &&
 	  elType.ElSSchema == rootElType.ElSSchema)
 	/* the corresponding Thot element is the root of the */
