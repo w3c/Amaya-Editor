@@ -399,22 +399,23 @@ int                 scroll;
 				    pBottomBox = pBox;
 				 pTopBox = pBox;
 			      }
-                            if (pBox->BxType == BoPicture)
+
+			    if (y >= frameymin
+				&& pBox->BxYOrg <= frameymax
+				&& x >= framexmin
+				&& pBox->BxXOrg <= framexmax)
+			      DisplayBox (pBox, frame);
+                            else if (pBox->BxType == BoPicture)
 			      {
 				if (!((y >= pFrame->FrYOrg) &&
 				      (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
 				      (x >= pFrame->FrXOrg) &&
 				      (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
 				  UnmapImage ((PictInfo *)pBox->BxPictInfo);
-				else if (((PictInfo *)pBox->BxPictInfo)->PicPixmap >= PLUGIN_FORMAT)
+				else if (((PictInfo *)pBox->BxPictInfo)->PicType >= PLUGIN_FORMAT)
 				  /* redisplay plugins */
 				  DisplayBox (pBox, frame);
 			      }
-			    else if (y >= frameymin
-				     && pBox->BxYOrg <= frameymax
-				     && x >= framexmin
-				     && pBox->BxXOrg <= framexmax)
-			      DisplayBox (pBox, frame);
 
 			    /* Skip to next box */
 			    if (pBox->BxPrevious == pBox)
@@ -822,7 +823,7 @@ int                 scroll;
 				 (x >= pFrame->FrXOrg) &&
 				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
 			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
-			   else if (((PictInfo *)pBox->BxPictInfo)->PicPixmap >= PLUGIN_FORMAT)
+			   else if (((PictInfo *)pBox->BxPictInfo)->PicType >= PLUGIN_FORMAT)
 			     /* redisplay plugins */
 			     DisplayBox (pBox, frame);
 			 }
