@@ -242,7 +242,7 @@ void  UpdateStyleSheet (char *url, char *tempdoc)
 		if (UserCSS && !strcmp (css->url, UserCSS))
 		  LoadUserStyleSheet (doc);
 		else
-		  LoadStyleSheet (url, doc, NULL, NULL,
+		  LoadStyleSheet (css->url, doc, NULL, NULL,
 				  css->media[doc],
 				  css->category == CSS_USER_STYLE);
 		/* Restore the display mode */
