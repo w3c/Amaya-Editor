@@ -22,6 +22,7 @@
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
 #include "panel.h"
+#include "editcommands_f.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -43,6 +44,7 @@ typedef struct _XmlEntity
 } XmlEntity;
 
 MathMLEntityHash AmayaMathMLPanel::m_MathMLEntityHash;
+int * AmayaMathMLPanel::m_pActiveFiltre = NULL;
 
 /*
  *--------------------------------------------------------------------------------------
@@ -61,16 +63,14 @@ AmayaMathMLPanel::AmayaMathMLPanel( wxWindow * p_parent_window, AmayaNormalWindo
 
   // setup labels
   RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX("Maths"/*TtaGetMessage(LIB,TMSG_MATHML)*/));
-
-
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML)));
 
   m_pList = XRCCTRL(*this,"wxID_PANEL_MATH_LIST",wxComboBox);
 
-  /*
-  m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
+  m_OffColour = XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
-  */
+
+  RefreshButtonState();
 
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
@@ -111,21 +111,18 @@ int AmayaMathMLPanel::GetPanelType()
  */
 void AmayaMathMLPanel::RefreshToolTips()
 {  
-#if 0
-  const char ** p_tooltip_array = PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel;
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H1]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H2]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H3]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_BULLET]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_NL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_DL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_IMG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_LINK]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_TABLE]));
-#endif /* 0 */
+  XRCCTRL(*this,"wxID_PANEL_MATH_INSERT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INSERT)));
+  
+  XRCCTRL(*this,"wxID_PANEL_MATH_F1",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_GREEK_ALPHABET)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F2",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_GREEK_CAP)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F3",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F4",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_OPERATOR)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F5",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F6",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL_NEG)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F7",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MISC)));
+
+  // TODO
+  //XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CUSTOM)));
 }
 
 /*
@@ -139,7 +136,6 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButton") );
 
-  //  TtaExecuteMenuAction ("CreateMath", doc, view);
   //  TtaExecuteMenuAction ("CreateMENCLOSE", doc, view);
 
   Document doc;
@@ -148,8 +144,9 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 
   int id       = event.GetId();
   int amaya_id = -1;
-
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_BMATH")) )
+    TtaExecuteMenuAction ("CreateMath", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
     TtaExecuteMenuAction ("CreateMROW", doc, view);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SQRT")) )
     TtaExecuteMenuAction ("CreateMSQRT", doc, view);
@@ -185,7 +182,12 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre1( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre1") );
+  m_pActiveFiltre = filtre_greek;
   DoFilter( filtre_greek );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -198,7 +200,12 @@ void AmayaMathMLPanel::OnButtonFiltre1( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre2( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre2") );
+  m_pActiveFiltre = filtre_greek_maj;
   DoFilter( filtre_greek_maj );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -211,7 +218,12 @@ void AmayaMathMLPanel::OnButtonFiltre2( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre3( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre3") );
+  m_pActiveFiltre = filtre_maths;
   DoFilter( filtre_maths );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -224,7 +236,12 @@ void AmayaMathMLPanel::OnButtonFiltre3( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre4( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre4") );
+  m_pActiveFiltre = filtre_operateurs;
   DoFilter( filtre_operateurs );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -237,7 +254,12 @@ void AmayaMathMLPanel::OnButtonFiltre4( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre5( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre5") );
+  m_pActiveFiltre = filtre_relations_binaires;
   DoFilter( filtre_relations_binaires );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -250,7 +272,12 @@ void AmayaMathMLPanel::OnButtonFiltre5( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre6( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre6") );
+  m_pActiveFiltre = filtre_relations_binaires_negation;
   DoFilter( filtre_relations_binaires_negation );
+
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -263,7 +290,12 @@ void AmayaMathMLPanel::OnButtonFiltre6( wxCommandEvent& event )
 void AmayaMathMLPanel::OnButtonFiltre7( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre7") );
+  m_pActiveFiltre = filtre_divers;
   DoFilter( filtre_divers );
+  
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 }
 
 /*
@@ -275,6 +307,9 @@ void AmayaMathMLPanel::OnButtonFiltre7( wxCommandEvent& event )
  */
 void AmayaMathMLPanel::DoFilter( int * filtre )
 {
+  if (!filtre)
+    return;
+
   m_pList->Clear();
   int element_id = 0;
   while ( filtre[element_id] != -1 )
@@ -289,6 +324,67 @@ void AmayaMathMLPanel::DoFilter( int * filtre )
 
 /*
  *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  RefreshButtonState
+ * Description:  this method is called to refresh the button colors
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::RefreshButtonState()
+{
+  if (m_pActiveFiltre == filtre_greek)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F1", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_greek_maj)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F2", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F2", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_maths)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F3", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F3", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_operateurs)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F4", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F4", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_relations_binaires)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F5", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F5", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_relations_binaires_negation)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F6", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F6", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == filtre_divers)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  if (m_pActiveFiltre == NULL /*filtre_custom*/)
+    XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  else
+    XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonInsert
+ * Description:  this method is called wants to insert a char
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonInsert( wxCommandEvent& event )
+{
+  if (m_pList->GetSelection() != wxNOT_FOUND)
+    {
+      int charactere = m_pActiveFiltre[m_pList->GetSelection()];
+      InsertChar (TtaGiveActiveFrame(), charactere, -1);
+      CloseTextInsertion ();
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
@@ -296,40 +392,32 @@ void AmayaMathMLPanel::DoFilter( int * filtre )
  */
 void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
 {
-  XmlEntity *MathEntityTable = (XmlEntity *)p.param1;
-
-  // initialize entity hashtable
-  int entity_id = 0;
-  while (MathEntityTable[entity_id].charCode != -1)
+  int action = (int)p.param1;
+  if (action == wxMATHML_ACTION_INIT)
     {
-      m_MathMLEntityHash[MathEntityTable[entity_id].charCode] = TtaConvMessageToWX(MathEntityTable[entity_id].charName);
-      entity_id++;
+      XmlEntity *MathEntityTable = (XmlEntity *)p.param2;
+      
+      // initialize entity hashtable
+      int entity_id = 0;
+      while (MathEntityTable[entity_id].charCode != -1)
+	{
+	  m_MathMLEntityHash[MathEntityTable[entity_id].charCode] = TtaConvMessageToWX(MathEntityTable[entity_id].charName);
+	  entity_id++;
+	}
+
+      // now select the default filter
+      if (!m_pActiveFiltre)
+	{
+	  m_pActiveFiltre = filtre_greek;
+	  DoFilter( m_pActiveFiltre );
+	  RefreshButtonState();
+	}
     }
-
-
-#if 0
-  bool * p_checked_array = (bool *)p.param1;
-
-  wxLogDebug(_T("AmayaMathMLPanel::SendDataToPanel") );
-
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-
-  Refresh();
-  Layout();
-#endif /* 0 */
+  else if (action == wxMATHML_ACTION_REFRESH)
+    {
+      DoFilter( m_pActiveFiltre );
+      RefreshButtonState();
+    }
 }
 
 /*
@@ -343,14 +431,7 @@ void AmayaMathMLPanel::DoUpdate()
 {
   wxLogDebug( _T("AmayaMathMLPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
-
-#if 0  
-  // force to refresh the strong, emphasis... button states
-  Document doc;
-  View view;
-  TtaGetActiveView( &doc, &view );
-  TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
-#endif /* 0 */
+  DoFilter( m_pActiveFiltre );
 }
 
 
@@ -371,6 +452,7 @@ bool AmayaMathMLPanel::IsActive()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_BMATH"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_FENCE"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SQRT"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_ROOT"), AmayaMathMLPanel::OnButton ) 
@@ -390,6 +472,7 @@ BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaMathMLPanel::OnButtonFiltre5 )
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaMathMLPanel::OnButtonFiltre6 )
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaMathMLPanel::OnButtonFiltre7 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_INSERT"), AmayaMathMLPanel::OnButtonInsert ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

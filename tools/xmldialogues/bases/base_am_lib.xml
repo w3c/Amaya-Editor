@@ -1886,6 +1886,37 @@
 	<message xml:lang="en">Use F2 key to select the parent element</message>
 	<message xml:lang="fr">Utiliser la touche F2 pour sélectionner l'élément englobant</message>
 </label>
+<label define="TMSG_MATHML">
+	<message xml:lang="en">Maths</message>
+	<message xml:lang="fr">Maths</message>
+	<message xml:lang="de">Formel</message>
+	<message xml:lang="it">Formule matematiche</message>
+	<message xml:lang="tr">Matematik</message>
+	<message xml:lang="es">MathML</message>
+	<message xml:lang="pt">Matemática</message>
+	<message xml:lang="fi">Matematiikka</message>
+	<message xml:lang="ru">Математика</message>
+</label>
+<label define="TMSG_MISC">
+	<message xml:lang="en">Misc</message>
+	<message xml:lang="fr">Divers</message>
+</label>
+<label define="TMSG_BINARY_REL">
+	<message xml:lang="en">Binary relations</message>
+	<message xml:lang="fr">Relations binaires</message>
+</label>
+<label define="TMSG_BINARY_REL_NEG">
+	<message xml:lang="en">Binary relations of negation</message>
+	<message xml:lang="fr">Relations binaires de négation</message>
+</label>
+<label define="TMSG_OPERATOR">
+	<message xml:lang="en">Operators</message>
+	<message xml:lang="fr">Opérateurs</message>
+</label>
+<label define="TMSG_GREEK_CAP">
+	<message xml:lang="en">Greek alphabet (capital)</message>
+	<message xml:lang="fr">Alphabet grec (majuscules)</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

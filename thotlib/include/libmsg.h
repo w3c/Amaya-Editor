@@ -181,6 +181,12 @@
 #define TMSG_APPLY_CLASS		176
 #define TMSG_SEL_CLASS		177
 #define TMSG_USE_F2		178
-#define TMSG_LIB_MSG_MAX		179
+#define TMSG_MATHML		179
+#define TMSG_MISC		180
+#define TMSG_BINARY_REL		181
+#define TMSG_BINARY_REL_NEG		182
+#define TMSG_OPERATOR		183
+#define TMSG_GREEK_CAP		184
+#define TMSG_LIB_MSG_MAX		185
 
 #endif

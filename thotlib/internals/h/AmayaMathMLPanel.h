@@ -19,7 +19,15 @@ WX_DECLARE_HASH_MAP( int, wxString, wxIntegerHash, wxIntegerEqual, MathMLEntityH
 
 class AmayaMathMLPanel : public AmayaSubPanel
 {
-public:
+ public:
+  typedef enum
+    {
+      wxMATHML_ACTION_UNKNOWN,
+      wxMATHML_ACTION_INIT,
+      wxMATHML_ACTION_REFRESH,
+    } wxMATHML_ACTION;
+  
+ public:
   DECLARE_DYNAMIC_CLASS(AmayaMathMLPanel)
 
   AmayaMathMLPanel( wxWindow * p_parent_window = NULL
@@ -36,6 +44,7 @@ public:
   virtual void DoUpdate();
 
   void DoFilter( int * filtre );
+  void RefreshButtonState();
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -47,10 +56,14 @@ public:
   void OnButtonFiltre5( wxCommandEvent& event );
   void OnButtonFiltre6( wxCommandEvent& event );
   void OnButtonFiltre7( wxCommandEvent& event );
+  void OnButtonInsert( wxCommandEvent& event );
 
   wxComboBox * m_pList;
+  wxColour m_OffColour;
+  wxColour m_OnColour;
 
   static MathMLEntityHash m_MathMLEntityHash;
+  static int * m_pActiveFiltre;
 };
 
 #endif // __AMAYAMATHMLPANEL_H__
