@@ -8,32 +8,23 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "thotlib_Interface_stubs.h"
-#include "thotlib_Document_stubs.h"
-#include "thotlib_Application_stubs.h"
-#include "thotlib_Tree_stubs.h"
-#include "thotlib_Presentation_stubs.h"
-#include "thotlib_Language_stubs.h"
-#include "thotlib_Registry_stubs.h"
-#include "thotlib_Pivot_stubs.h"
 #include "StubPreamble.h"
 #include "jtypes.h"
 #include "native.h"
 
-/***********************
-#include "config.h"
-#include "gtypes.h"
-#include "access.h"
-#include "object.h"
-#include "constants.h"
-#include "classMethod.h"
-#include "baseClasses.h"
-#include "thread.h"
-#include "support.h"
-#include "slib.h"
-#include "errors.h"
-#include "exception.h"
- *************************/
+#include "thotlib_APIApplication_stubs.h"
+#include "thotlib_APIDocument_stubs.h"
+#include "thotlib_APITree_stubs.h"
+#include "thotlib_APIContent_stubs.h"
+#include "thotlib_APIAttribute_stubs.h"
+#include "thotlib_APIReference_stubs.h"
+#include "thotlib_APILanguage_stubs.h"
+#include "thotlib_APIPresentation_stubs.h"
+#include "thotlib_APIView_stubs.h"
+#include "thotlib_APISelection_stubs.h"
+#include "thotlib_APIInterface_stubs.h"
+#include "thotlib_APIRegistry_stubs.h"
+#include "thotlib_APIDialog_stubs.h"
 
 #define BISS_AWT "-Dawt.toolkit=biss.awt.kernel.Toolkit"
 
@@ -107,13 +98,17 @@ char *app_name;
  */
 static void register_stubs(void)
 {
-   register_thotlib_Interface_stubs();
-   register_thotlib_Document_stubs();
-   register_thotlib_Application_stubs();
-   register_thotlib_Tree_stubs();
-   register_thotlib_Presentation_stubs();
-   register_thotlib_Language_stubs();
-   register_thotlib_Registry_stubs();
-   register_thotlib_Pivot_stubs();
+   register_thotlib_APIApplication_stubs();
+   register_thotlib_APIDocument_stubs();
+   register_thotlib_APITree_stubs();
+   register_thotlib_APIContent_stubs();
+   register_thotlib_APIAttribute_stubs();
+   register_thotlib_APIReference_stubs();
+   register_thotlib_APILanguage_stubs();
+   register_thotlib_APIPresentation_stubs();
+   register_thotlib_APIView_stubs();
+   register_thotlib_APISelection_stubs();
+   register_thotlib_APIInterface_stubs();
+   register_thotlib_APIRegistry_stubs();
 }
 

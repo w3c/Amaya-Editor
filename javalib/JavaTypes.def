@@ -1,0 +1,31 @@
+#
+#  Type Convertion table between C types and their Java equivalents.
+#
+#  Intdirect   C type     Java type  Java internal   convert?
+#
+#  To complete java types handled by javastubs
+       0       char          char       int
+       0       unsigned      int        jint
+#  These are in fact enums
+       0       AccessRight   int        jint
+       0       SearchDomain  int        jint
+       0       DisplayMode   int        jint
+       0       TypeUnit      int        jint
+#  These are pointer disguised in ints
+       0       SSchema       int        jint
+       0       Element       int        jint 
+       0       Attribute     int        jint 
+       0       PRule         int        jint
+       0       ThotWidget    int        jint
+#  These are true ints
+       0       Document      int        jint
+       0       View          int        jint
+       0       Language      char       jint
+       0       Pixel         int        jint
+#  These are structs { SSchema + int } packed in a 64 bit Java long
+#  Shame :-o
+       0       ElementType   long       jlong    yes
+       0       AttributeType long       jlong    yes
+#  Tricky : interfacing directy with objects when using
+#  pointer to objects.
+       1       Element       Element    "struct Hthotlib_Element*" yes

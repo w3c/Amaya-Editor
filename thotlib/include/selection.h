@@ -16,6 +16,9 @@
  
 #ifndef _SELECTION_H_
 #define _SELECTION_H_
+#include "typebase.h"
+#include "tree.h"
+#include "document.h"
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
