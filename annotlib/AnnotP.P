@@ -238,7 +238,8 @@ RULES
  Description:
 	BEGIN
 	Visibility: Enclosing =;
-	Width: Enclosing . Width;
+{	Width: Enclosing . Width; }
+	Width: Enclosed . Width;
 	MarginTop: 0.2;
 	PaddingTop: 0.2;
 	PaddingLeft: MARGIN;

@@ -336,7 +336,7 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	  {
 	    annot = AnnotMeta_new ();
 	    annot->annot_url = TtaStrdup (ptr_annot_url);
-	    List_add (listP, (void*) annot);
+	    List_add (listP, (void *) annot);
 	  }
 	else
 	  return NULL;		/* if lookup fails, allow create next time */

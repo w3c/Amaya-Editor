@@ -886,7 +886,7 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
 /*-----------------------------------------------------------------------
   ANNOT_UpdateThreadItem
   Updates the metadata of a thread item.
-  @@ If we published the roof ot the thread, update all references
+  @@ If we published the root of the thread, update all references
   to this item.
   -----------------------------------------------------------------------*/
 void ANNOT_UpdateThreadItem (Document doc, AnnotMeta *annot, char *body_url)

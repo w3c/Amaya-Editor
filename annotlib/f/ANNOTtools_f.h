@@ -6,8 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void List_addEnd ( List **me,
+                          void *object );
 extern void List_add ( List **me,
-                       char *object );
+                       void *object );
 extern void List_delFirst ( List **me );
 extern ThotBool List_delCharObj ( void *obj );
 extern void List_delAll ( List **me,
@@ -53,6 +55,9 @@ extern char *AnnotList_searchAnnotURL ( Document source_doc,
 extern ThotBool AnnotList_delAnnot ( List **list,
                                      char *url,
                                      ThotBool useAnnotUrl );
+extern int AnnotThread_UpdateReplyTo ( List *thread_list,
+                                       char *new_url,
+                                       char *prev_url );
 extern Document AnnotThread_searchRoot ( char *root );
 extern Document AnnotThread_searchThreadDoc ( char *annot_url );
 extern void AnnotThread_sortThreadList ( List **thread_list );
@@ -70,6 +75,7 @@ extern void AnnotList_writeIndex ( char *indexFile,
                                    List *thread_list );
 extern char * ANNOT_PreparePostBody ( Document doc );
 extern char *StrdupDate ( void );
+extern time_t StrDateToCalTime ( char *strDate );
 extern Element SearchAnnotation ( Document doc,
                                   char *annotDoc );
 extern ThotBool ReplaceLinkToAnnotation ( Document doc,
@@ -104,8 +110,10 @@ extern ThotBool Annot_IsReplyTo ( Document doc_annot );
 
 #else /* __STDC__ */
 
+extern void List_addEnd (/* List **me,
+                            void *object */);
 extern void List_add (/* List **me,
-                         char *object */);
+                         void *object */);
 extern void List_delFirst (/* List **me */);
 extern ThotBool List_delCharObj (/* void *obj */);
 extern void List_delAll (/* List **me,
@@ -151,6 +159,9 @@ extern char *AnnotList_searchAnnotURL (/* Document source_doc,
 extern ThotBool AnnotList_delAnnot (/* List **list,
                                        char *url,
                                        ThotBool useAnnotUrl */);
+extern int AnnotThread_UpdateReplyTo (/* List *thread_list,
+                                         char *new_url,
+                                         char *prev_url */);
 extern Document AnnotThread_searchRoot (/* char *root */);
 extern Document AnnotThread_searchThreadDoc (/* char *annot_url */);
 extern void AnnotThread_sortThreadList (/* List **thread_list */);
@@ -168,6 +179,7 @@ extern void AnnotList_writeIndex (/* char *indexFile,
                                      List *thread_list */);
 extern char * ANNOT_PreparePostBody (/* Document doc */);
 extern char *StrdupDate (/* void */);
+extern time_t StrDateToCalTime (/* char *strDate */);
 extern Element SearchAnnotation (/* Document doc,
                                     char *annotDoc */);
 extern ThotBool ReplaceLinkToAnnotation (/* Document doc,

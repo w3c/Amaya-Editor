@@ -960,19 +960,25 @@ void ANNOT_Post_callback (int doc, int status,
 			  if it's now empty */
 
 		       /* erase the reference to the local annotation reference in the local thread */
-		       if (isReplyTo)
-			 {
-			   if (
+		       if (
 #ifdef ANNOT_ON_ANNOT
-			       (isReplyTo 
-				&& AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
+			   (isReplyTo 
+			    && AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
 #endif /* ANNOT_ON_ANNOT */
-			       (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0))
-			     LINK_SaveLink (source_doc, isReplyTo);
-			   else
-			     LINK_DeleteLink (source_doc, isReplyTo);
+			   (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0))
+			 {
+			   /* @@ JK: to be tested */
+			   /* update the thread item that are children of this annotation */
+			   if (isReplyTo && AnnotMetaData[doc].thread->annotations 
+			       && previous_annot_url != AnnotMetaData[doc].annot_url)
+			     AnnotThread_UpdateReplyTo (AnnotMetaData[doc].thread->annotations,
+							AnnotMetaData[doc].annot_url,
+							previous_annot_url);
+			   LINK_SaveLink (source_doc, isReplyTo);
 			 }
-
+		       else
+			 LINK_DeleteLink (source_doc, isReplyTo);
+		       
 #ifdef ANNOT_ON_ANNOT
 		       /* update the index entry if we posted an annotation that has other annotations
 			  glued to it */
@@ -992,7 +998,6 @@ void ANNOT_Post_callback (int doc, int status,
 			 }
 		       if (update_index_file)
 			 LINK_UpdateAnnotationIndexFile (previous_annot_url,  AnnotMetaData[doc].annot_url);
-		       /* update the threads that follow this annotation */
 #endif /* ANNOT_ON_ANNOT */
 		     }
 		   
@@ -1260,6 +1265,9 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
 				    void * context)
 {
   RAISESOURCEDOC_context *ctx;
+#ifdef ANNOT_ON_ANNOT
+  AnnotMeta *annot;
+#endif /* ANNOT_ON_ANNOT */
 
   /* restore REMOTELOAD contextext's */  
   ctx = (RAISESOURCEDOC_context *) context;
@@ -1279,6 +1287,7 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
 	 the thread item */
       if (ctx->has_thread)
 	  ANNOT_ToggleThread (ctx->doc_annot, doc, TRUE);
+      
 #endif /* ANNOT_ON_ANNOT */
     }
   else
@@ -1512,10 +1521,21 @@ void ANNOT_Delete_callback (int doc, int status,
 	}
 
       /* update the annotation index or delete it if it's empty */
-      if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
+      if (
+#ifdef ANNOT_ON_ANNOT
+	  AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0 ||
+#endif /* ANNOT_ON_ANNOT */
+	  AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
 	LINK_SaveLink (source_doc, isReplyTo);
       else
 	LINK_DeleteLink (source_doc, isReplyTo);
+      
+#ifdef ANNOT_ON_ANNOT
+      /* erase and redisplay the thread items */
+      ANNOT_DeleteThread (source_doc);
+      if (AnnotThread[source_doc].annotations)
+	ANNOT_BuildThread (source_doc);
+#endif /* ANNOT_ON_ANNOT */
     }
   else 
     {

@@ -36,6 +36,9 @@
 #include "fetchXMLname_f.h"
 #include "AHTURLTools_f.h"
 
+/* libwww includes */
+#include "HTHash.h"
+
 /* schema includes */
 #include "Annot.h"
 #include "XLink.h"
@@ -52,11 +55,35 @@
  **
  ****************************************************************/
 /* ------------------------------------------------------------
+   List_addEnd
+   Adds a new element to the end of a linked
+   list.
+   ------------------------------------------------------------*/
+void List_addEnd (List **me, void *object)
+{
+  List *new;
+  List *tmp;
+
+  new = (List *) malloc (sizeof (List));
+  new->object = object;
+  new->next = NULL;
+  if (!*me)
+    *me = new;
+  else
+    {
+      tmp = *me;
+      while (tmp->next)
+	tmp = tmp->next;
+      tmp->next = new;
+    }
+}
+
+/* ------------------------------------------------------------
    List_add
    Adds a new element to the beginning of a linked
    list.
    ------------------------------------------------------------*/
-void List_add (List **me, char *object)
+void List_add (List **me, void *object)
 {
   List *new;
 
@@ -767,6 +794,36 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
 }
 
 /*------------------------------------------------------------
+   AnnotThread_UpdateReplyTo
+   ------------------------------------------------------------*/
+int AnnotThread_UpdateReplyTo (List *thread_list,
+			       char *new_url,
+			       char *prev_url)
+{
+#ifdef ANNOT_ON_ANNOT
+  AnnotMeta *annot;
+  List *item;
+  int count;
+
+  item = thread_list;
+  count = 0;
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      if (annot->inReplyTo && strcasecmp (annot->inReplyTo, prev_url))
+	{
+	  TtaFreeMemory (annot->inReplyTo);
+	  annot->inReplyTo = TtaStrdup (new_url);
+	  count++;
+	}
+      item = item->next;
+    }
+  return (count);
+#endif /* ANNOT_ON_ANNOT */
+}
+
+
+/*------------------------------------------------------------
    AnnotThread_searchRoot
    Returns the doc reference of the thread that corresponds to 
    the root URL.
@@ -821,6 +878,89 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 #endif /* ANNOT_ON_ANNOT */
 }
 
+#ifdef ANNOT_ON_ANNOT
+/**********************************
+ Thread sort algorithm adapted from
+ Jamie Zawinski's <jwz@jwz.org>
+ http://www.jwz.org/doc/threading.html
+ *********************************/
+
+
+typedef struct _Container
+{
+  struct _Container *parent; /* id of the parent of this item */
+  struct _Container *child;  /* children linked to this thread item*/
+  struct _Container *next;   /* sibling of this thread item */
+  AnnotMeta *annot;
+} Container;;
+
+HTHashtable *id_table;
+
+static Container * ThreadItem_new (void)
+{
+  Container *me;
+
+  me = TtaGetMemory (sizeof (Container));
+  memset (me, 0, sizeof (Container));
+  return (me);
+}
+
+static void  ThreadItem_delete (Container *item)
+{
+  Container *me = item;
+
+  if (me->child)
+    ThreadItem_delete (me->child);
+  if (me->next)
+    ThreadItem_delete (me->next);
+  TtaFreeMemory (me);
+}
+
+/*------------------------------------------------------------
+  ConvertContainerToList
+  ------------------------------------------------------------*/
+static void ConvertContainerToList (List **result, Container *container)
+{
+  Container *container_tmp;
+  Container *tmp2;
+
+  container_tmp = container;
+  while (container_tmp)
+    {
+      if (container->annot)
+	List_addEnd (result, (void *) container->annot);
+      if (container->child)
+	ConvertContainerToList (result, container->child);
+      tmp2 = container_tmp;
+      container_tmp = container_tmp->next;
+      tmp2->next = NULL;
+      ThreadItem_delete (container);
+    }
+}
+
+/*------------------------------------------------------------
+  Container_promoteChild
+  ------------------------------------------------------------*/
+static void Container_promoteChild (Container *root, Container *tmp_entry)
+{
+  Container *tmp;
+
+  if (tmp_entry == root)
+    return;
+
+  if (!root)
+    root = tmp_entry;
+  else
+    {
+      tmp = root;
+      while (tmp->next)
+	tmp = tmp->next;
+      tmp->next = tmp_entry;
+      tmp_entry->next = NULL;
+    }
+}
+#endif /* ANNOT_ON_ANNOT */
+
 /*------------------------------------------------------------
    AnnotThread_sortThreadList
    Sorts the thread list pointed by annotlist by InReplyTos.
@@ -828,10 +968,146 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 void AnnotThread_sortThreadList (List **thread_list)
 {
 #ifdef ANNOT_ON_ANNOT
+  List *annot_list, *list_cur, *list_tmp;
+  AnnotMeta *annot_cur;
+  int i;
+  Container *cur_entry;
+  Container *par_entry;
+  Container *tmp_entry;
+  Container *root;
+  HTArray *keys;
+  char *url;
+
+  list_cur = *thread_list;
+
+  if (!list_cur)
+    return;
+
+  id_table = HTHashtable_new (0);
+
+  /* create a container for the root */
+  annot_cur = (AnnotMeta *) list_cur->object;
+  root = ThreadItem_new ();
+  HTHashtable_addObject (id_table, annot_cur->rootOfThread, root);
+  while (list_cur)
+    {      
+      annot_cur = (AnnotMeta *) list_cur->object;
+
+      /* create the message container */
+      /* use either body_url or annot_url */
+      if (IsFilePath (annot_cur->annot_url))
+	url = annot_cur->body_url;
+      else
+	url = annot_cur->annot_url;
+      /* url = annot_cur->annot_url; */
+      cur_entry = (Container *) HTHashtable_object (id_table, url);
+      if (!cur_entry)
+	{
+	  cur_entry = ThreadItem_new ();
+	  HTHashtable_addObject (id_table, url, cur_entry);
+	}
+      cur_entry->annot = annot_cur;
+	
+      /* insert the message container to its parent */
+      par_entry = (Container *) HTHashtable_object (id_table, annot_cur->inReplyTo);
+      if (!par_entry)
+	{
+	  par_entry = ThreadItem_new ();
+	  HTHashtable_addObject (id_table, annot_cur->inReplyTo, par_entry);
+	}	
+      /* add the link from the child to the parent */
+      cur_entry->parent = par_entry;
+      
+      /* insert it with its siblings */
+      if (!par_entry->child)
+	par_entry->child = cur_entry;
+      else
+	{
+	  tmp_entry = par_entry->child;
+	  while (tmp_entry->next)
+	    tmp_entry = tmp_entry->next;
+	  tmp_entry->next = cur_entry;
+	}
+      list_cur = list_cur->next;
+    }
+
+  /* find the root set */
+  keys = HTHashtable_keys (id_table);
+  list_tmp = NULL;
+  for (i = 0; i < HTArray_size (keys); i++)
+    {
+      tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
+      if (tmp_entry->parent == NULL)
+	{
+	  if (tmp_entry->annot != NULL)
+	    Container_promoteChild (root, tmp_entry);
+	  else if (tmp_entry->child == NULL)
+	    /* destroy */
+	    ThreadItem_delete (tmp_entry);
+	  else 
+	    {
+	      /* promote to parent */
+	      Container_promoteChild (root, tmp_entry);
+	    }
+	}
+    }
+  for (i = 0; i< HTArray_size (keys); i++)
+    HT_FREE (HTArray_data(keys)[i]);
+
+  HTArray_delete (keys);
+  HTHashtable_delete(id_table);
+
+  /* all is sorted by reply to, now sort it according to dates */
+  
+  /* copy the result to annot_list. The children of root are live replies.
+   The brothers of root have messages that have lost their in-reply-to parents */
+  annot_list = NULL;
+  tmp_entry = root;
+  while (tmp_entry)
+    {
+      ConvertContainerToList (&annot_list, tmp_entry->child);
+      tmp_entry = tmp_entry->next;
+    }
+  *thread_list = annot_list;
+#endif /* ANNOT_ON_ANNOT */
+}
+
+#ifdef ANNOT_ON_ANNOT
+/*------------------------------------------------------------
+   AnnotThread_position
+   Returns the position of a thread item in a thread list.
+   ------------------------------------------------------------*/
+static int AnnotThread_position (List *list_item, List *thread_list)
+{
+  int i = 0;
+  List *tmp;
+
+  tmp = thread_list;
+  while (tmp && tmp != list_item)
+    {
+      i++;
+      tmp = tmp->next;
+    }
+  if (!tmp)
+    return 0;
+  else
+    return i;
+}
+
+/*------------------------------------------------------------
+   AnnotThread_sortByDate
+   Sorts the thread list pointed by annotlist by InReplyTo
+   and by modified date.
+   ------------------------------------------------------------*/
+static void AnnotThread_sortByDate (List **thread_list)
+{
   char *rootOfThread;
+  char *annot_url;
   char *annot_next_url;
+  time_t date_cur;
+  time_t date_next;
   ThotBool swap;
-  List *annot_list, *list_cur, *list_next, *list_tmp;
+  List *annot_list, *list_cur, *list_next, *list_tmp, *list_tmp_next;
 
   AnnotMeta *annot_cur, *annot_next;
 
@@ -840,7 +1116,7 @@ void AnnotThread_sortThreadList (List **thread_list)
   if (!annot_list)
     return;
 
-  /* sort of bubble sort on InReplyTo. Top = rootOfThread */
+  /* sort of bubble sort on InReplyTo and mdate */
   
   list_cur = annot_list;
   annot_cur = (AnnotMeta *) list_cur->object;
@@ -851,45 +1127,71 @@ void AnnotThread_sortThreadList (List **thread_list)
   while (list_cur)
     {
       annot_cur = (AnnotMeta *) list_cur->object;
-      if (!strcasecmp (annot_cur->inReplyTo, rootOfThread))
-	{
-	  /* sorted, we skip it */
-	  list_cur = list_cur->next;
-	  continue;;
-	}
+      date_cur = StrDateToCalTime (annot_cur->mdate);
+      if (IsFilePath (annot_cur->annot_url))
+	annot_url = annot_cur->body_url;
+      else
+	annot_url = annot_cur->annot_url;
 
       list_next = list_cur->next;
-      if (!list_next)
-	/* we have finished */
-	break;
-
       swap = FALSE;
       while (list_next)
 	{
+	  if (list_next == list_cur)
+	    {
+	      list_next = list_next->next;
+	      continue;
+	    }
 	  annot_next = (AnnotMeta *) list_next->object;
 	  if (IsFilePath (annot_next->annot_url))
 	    annot_next_url = annot_next->body_url;
 	  else
 	    annot_next_url = annot_next->annot_url;
-	  if (!strcasecmp (annot_next_url, annot_cur->inReplyTo))
+
+	  date_next = StrDateToCalTime (annot_next->mdate);
+	  if (!strcasecmp (annot_next_url, annot_url)
+	      && date_cur > date_next)
 	    {
 	      /* swap */
 
-	      /* previous */
+	      /* find the end of this mini thread (including its reply-tos) */
+	      list_tmp_next = list_next->next;
+	      while (list_tmp_next)
+		{
+		  annot_next = (AnnotMeta *) list_tmp_next->object;
+		  if (strcasecmp (annot_next->inReplyTo, annot_next_url))
+		    break;
+		  if (IsFilePath (annot_next->annot_url))
+		    annot_next_url = annot_next->body_url;
+		  else
+		    annot_next_url = annot_next->annot_url;
+		  list_tmp_next = list_tmp_next->next;
+		}
+
+	      /* move the next item of the mini-thread to the element before this one */
+	      list_tmp = list_cur;
+	      while (list_tmp->next != list_next)
+		list_tmp = list_tmp->next;
+	      list_tmp->next = list_tmp_next;
+	      
+	      /* insert the mini thread before the current item */
 	      if (list_cur == annot_list)
-		annot_list = list_cur->next;
+		annot_list = list_next;
 	      else
 		{
 		  list_tmp = annot_list;
 		  while (list_tmp->next != list_cur)
 		    list_tmp = list_tmp->next;
-		  list_tmp->next = list_cur->next;
+		  list_tmp->next = list_next;
 		}
-	      /* insert it after in-reply-to */
-	      list_cur->next = list_next->next;
-	      list_next->next = list_cur;
 
-	      /* and start again */
+	      /* make the end point to list cur */
+	      list_tmp = list_next;
+	      while (list_tmp->next != list_tmp_next)
+		list_tmp = list_tmp->next;
+	      list_tmp->next = list_cur;
+
+	      /* start again from zero */
 	      list_cur = annot_list;
 	      swap = TRUE;
 	      break;
@@ -902,11 +1204,11 @@ void AnnotThread_sortThreadList (List **thread_list)
 	   was already in place. We leave it there for the moment. */
 	list_cur = list_cur->next;
     }
-
+  
   if (*thread_list != annot_list)
     *thread_list = annot_list;
-#endif /* ANNOT_ON_ANNOT */
 }
+#endif /* ANNOT_ON_ANNOT */
 
 /*------------------------------------------------------------
    Annot_isSameURL
@@ -1390,6 +1692,7 @@ char * ANNOT_PreparePostBody (Document doc)
    StrDupDate
    Returns a pointer to a memalloc'd string containing the current date.
    It's up to the caller to free this memory.
+   @@ JK: Ralph, you need to add the TZ info here.
    ------------------------------------------------------------*/
 char *StrdupDate (void)
 {
@@ -1410,6 +1713,36 @@ char *StrdupDate (void)
 	   localDate->tm_min,
 	   localDate->tm_sec);
   return (strDate);
+}
+
+/* ------------------------------------------------------------
+   StrDateToCalTime
+   Converts a string date of form:
+   YYYY-MM-DDTHH:MM:SS
+   into calendar time represenation (that is, number of seconds
+   since the Unix epoch).
+   ------------------------------------------------------------*/
+time_t StrDateToCalTime (char *strDate)
+{
+  struct tm scanLocal;
+  time_t cal_date;
+
+  memset (&scanLocal, 0, sizeof (scanLocal));
+  
+  sscanf (strDate, "%04d-%02d-%02dT%02d:%02d:%02d",
+	  &scanLocal.tm_year,
+	  &scanLocal.tm_mon,
+	  &scanLocal.tm_mday,
+	  &scanLocal.tm_hour,
+	  &scanLocal.tm_min,
+	  &scanLocal.tm_sec);
+
+  scanLocal.tm_year -= 1900;
+  scanLocal.tm_mon--;
+
+  cal_date = mktime(&scanLocal);
+
+  return (cal_date);
 }
 
 /***************************************************
