@@ -32,6 +32,7 @@
 #include "dialogapi_f.h"
 #include "callback_f.h"
 #include "appdialogue_wx_f.h"
+#include "appdialogue_wx.h"
 
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
@@ -515,6 +516,8 @@ void AmayaNormalWindow::SetMenuBar( wxMenuBar * p_menu_bar )
     {
       wxFrame::SetMenuBar( p_menu_bar );
 
+      // the menu need to be synchronized with FrameTable.EnabledMenus array
+      TtaRefreshMenuStats( p_menu_bar );
 
       // create a dummy menu bar to avoid ugly effects when a frame is closed
       if ( m_pDummyMenuBar )

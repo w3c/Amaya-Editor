@@ -16,6 +16,7 @@ extern int           TtaGetFrameDocumentId( int frame_id );
 extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
 extern int           TtaGetActiveWindowId();
 extern wxMenu *      TtaGetContextMenu( int window_id, int page_id, int frame_id );
+extern void          TtaRefreshMenuStats( wxMenuBar * p_menu_bar );
 
 extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
 extern int TtaMakeFrame( const char * schema_name,

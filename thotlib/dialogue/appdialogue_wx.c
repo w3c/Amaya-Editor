@@ -1205,3 +1205,52 @@ wxMenu * TtaGetContextMenu( int window_id, int page_id, int frame_id )
 }
 #endif /* _WX */
 
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  TtaRefreshMenuStats - 
+  this function should be called to synchronize the menu stats (enable/disable)
+  with FrameTable.EnabledMenus array.
+  params:
+    + p_menu_bar : the menu bar to synchronize
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
+{
+  // find the frame owner
+  int        frame_id = 1;
+  ThotBool   found = FALSE;
+  while (frame_id <= MAX_FRAME && !found)
+    {
+      found = (FrameTable[frame_id].WdFrame && FrameTable[frame_id].WdFrame->GetMenuBar() == p_menu_bar);
+      if (!found)
+        frame_id++;
+    }
+  if (!found)
+    {
+      wxASSERT_MSG(FALSE, _T("Trying to refresh an orphan menubar"));
+      return;
+    }
+
+  // the frame owner has been found, update it !
+  int menu_id = 0;
+  int top_menu_id = 0;
+  wxMenu * p_menu = NULL;
+  while ( menu_id < MAX_MENU )
+    {
+      p_menu = FrameTable[frame_id].WdMenus[menu_id];
+      if (p_menu)
+	{
+	  // find the corrsponding menu position in the Top Menubar
+	  top_menu_id = p_menu_bar->FindMenu(p_menu->GetTitle());
+	  // we must check that the menu has been found because the contextual menu do not have a title
+	  if (top_menu_id >= 0)
+	    {
+	      // it has been found, update it
+	      p_menu_bar->EnableTop(top_menu_id, FrameTable[frame_id].EnabledMenus[menu_id]);
+	    }
+	}
+      menu_id++;
+    }
+}
+#endif /* _WX */
