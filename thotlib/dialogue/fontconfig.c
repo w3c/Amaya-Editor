@@ -36,6 +36,8 @@
 typedef struct FontFamilyConfig
 {
   char *highlight[6];
+  ThotBool is_xlfd[6];
+  ThotBool is_xlfd_checked[6];
   /*
   char *bold;
   char *italic;
@@ -339,7 +341,12 @@ static FontScript **FontConfigLoad ()
 			       TtaGetMemory (sizeof (FontFamilyConfig));
 			     /*reads all highlights*/
 			     for (font_style = 0; font_style < MAX_FONT_STYLE; font_style++)
-			       fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
+			       {
+				 fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
+				 fontsscript_tab[script]->family[font_face_index]->is_xlfd_checked[font_style] = FALSE;
+				 fontsscript_tab[script]->family[font_face_index]->is_xlfd[font_style] = FALSE;
+			       }
+			     
 			     font_style = 0;
 			     while (indline != 0 &&
 				    indline < MAX_TXT_LEN)
@@ -476,10 +483,16 @@ char *FontLoadFromConfig (char script,
 	       Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_PCLFONTDEBUG*/
 #ifndef _GL
-      if (IsXLFDPatterneAFont (Fonttab[intscript]->family[font_face_index]->highlight[font_style]))
+      if (Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] == FALSE)
+	{
+	  Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style] = IsXLFDPatterneAFont (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
+	  Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] = TRUE;
+	}
+      if (Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style])
 	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
       else
 	return NULL;
+
 #else /*_GL*/
       return  (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_GL*/
