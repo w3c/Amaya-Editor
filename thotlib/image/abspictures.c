@@ -228,7 +228,7 @@ int                *desc;
 
 
 /*----------------------------------------------------------------------
-   FnCopy d'un PictInfo                                      
+   Copie d'un PictInfo                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CopyPictInfo (int *Imdcopie, int *Imdsource)

@@ -1402,6 +1402,8 @@ static void         TextToDocument ()
 	     first = FALSE;
 	  }
 	else
+	   /* the new Text element should be the first child of the latest
+	      element encountered */
 	  {
 	     parent = lastElement;
 	     first = !IsCharacterLevelElement (parent);
