@@ -2,7 +2,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>La paleta Matemáticas y el menú Xml &gt; Matemáticas</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/">
+  <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -128,7 +128,7 @@ disponibles son:</p>
      or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo>&Integral;</mo>
+          <mo largeop="true">&Integral;</mo>
           <mn>0</mn>
           <mo>&infin;</mo>
         </msubsup>
@@ -155,7 +155,7 @@ disponibles son:</p>
   <li>Expresión con expresión encima o abajo, <code>munderover</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo>&Sum;</mo>
+        <mo movablelimits="false">&Sum;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>

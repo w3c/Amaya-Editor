@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
@@ -91,7 +91,8 @@ disponibles sont :</p>
         </mrow>
         <mn>3</mn>
       </mroot>
-    </math></li>
+    </math>
+  </li>
   <li>Racine carrée ( <code>msqrt)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
@@ -101,13 +102,15 @@ disponibles sont :</p>
           <mn>1</mn>
         </mrow>
       </msqrt>
-    </math></li>
+    </math>
+  </li>
   <li>Englobe (<code>menclose)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
-    </math></li>
+    </math>
+  </li>
   <li>Fraction (<code>mfrac)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
@@ -118,7 +121,8 @@ disponibles sont :</p>
           <mn>1</mn>
         </mrow>
       </mfrac>
-    </math></li>
+    </math>
+  </li>
   <li>Indice et exposant Expression (<code>msubsup)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
@@ -130,34 +134,38 @@ disponibles sont :</p>
         </mrow>
         <mi>n</mi>
       </msubsup>
-    </math> or <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math>
+     or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo>&Integral;</mo>
+          <mo largeop="true">&Integral;</mo>
           <mn>0</mn>
           <mo>&infin;</mo>
         </msubsup>
         <mi></mi>
       </mrow>
-    </math></li>
+    </math>
+  </li>
   <li>Indice (<code>msub)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
-    </math></li>
+    </math>
+  </li>
   <li>Exposant (<code>msup)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
-    </math></li>
+    </math>
+  </li>
   <li>Dessous et dessus (<code>munderover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo>&Sum;</mo>
+        <mo movablelimits="false">&Sum;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>
@@ -165,14 +173,16 @@ disponibles sont :</p>
         </mrow>
         <mi>n</mi>
       </munderover>
-    </math></li>
+    </math>
+  </li>
   <li>Dessous (<code>munder)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
         <mo>&OverBar;</mo>
       </munder>
-    </math></li>
+    </math>
+  </li>
   <li>Dessus (<code>mover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
@@ -183,7 +193,8 @@ disponibles sont :</p>
         </mover>
         <mi>y</mi>
       </mrow>
-    </math></li>
+    </math>
+  </li>
   <li>Parenthèses (<code>mrow)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
@@ -195,7 +206,8 @@ disponibles sont :</p>
         </mrow>
         <mo fence="true">)</mo>
       </mrow>
-    </math></li>
+    </math>
+  </li>
   <li>Multiscripts (<code>mmultiscripts)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
@@ -206,7 +218,8 @@ disponibles sont :</p>
         <mi>k</mi>
         <mi>l</mi>
       </mmultiscripts>
-    </math></li>
+    </math>
+  </li>
   <li>Matrice ou table (<code>mtable)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
@@ -227,14 +240,16 @@ disponibles sont :</p>
           </mtd>
         </mtr>
       </mtable>
-    </math></li>
+    </math>
+  </li>
 </ul>
 
 <p>Le dernier item de la palette <strong>Math</strong> ( <math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
-</math> ) affiche une autre palette à partir de laquelle vous pouvez insérer
-des symboles mathématiques et des caractères grecs.</p>
+</math>
+ ) affiche une autre palette à partir de laquelle vous pouvez insérer des
+symboles mathématiques et des caractères grecs.</p>
 
 <h4><a id="Entering">Entrer des constructions à partir du clavier.</a></h4>
 
@@ -268,7 +283,8 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
     <mo>+</mo>
     <mi>b</mi>
   </mrow>
-</math></p>
+</math>
+</p>
 
 <p>il suffit de taper cette séquence de 6 caractères : <code>x=2a+b</code>
 (n'oubliez pas de cliquer d'abord sur l'entrée Math du menu
@@ -296,7 +312,8 @@ Opérateur (mo) du menu Eléments/Math.</p>
     <mn>1</mn>
     <mi>x</mi>
   </mfrac>
-</math></p>
+</math>
+</p>
 
 <p>ne tapez pas simplement la séquence de caractères <code>f(x)=</code> .
 Vous obtiendriez:</p>
@@ -311,7 +328,8 @@ Vous obtiendriez:</p>
     <mn>1</mn>
     <mi>x</mi>
   </mfrac>
-</math></p>
+</math>
+</p>
 
 <p>Utilisez plutôt la commande Prentheses du menu Eléments/Math ou de la
 palette.</p>
@@ -360,7 +378,8 @@ utile pour éviter l'ambiguïté. Observez l'exemple suivant :</p>
     <mo>+</mo>
     <mn>1</mn>
   </mrow>
-</math> 
+</math>
+ 
 
 <p>Lorsque vous déplacez le point d'insertion aprés le caractère<em>b</em>,
 il n'est pas évident de distinguer si vous voulez ajouter quelquechose <em>à
@@ -397,7 +416,8 @@ fraction dans la formule ci-dessous est un lien vers la page d'accueil du W3C
       </msqrt>
     </mfrac>
   </mrow>
-</math> 
+</math>
+ 
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
 apparaître la page d'accueil du W3C.</p>
