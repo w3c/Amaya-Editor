@@ -633,7 +633,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
 	/* FrameUpdating creation of Area and selection of destination */
-	SelectDestination (doc, el, FALSE);
+	SelectDestination (doc, el, FALSE, FALSE);
      }
    if (newElem)
       TtaRegisterElementCreate (newElem, doc);

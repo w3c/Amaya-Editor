@@ -26,7 +26,8 @@ extern void SetNewTitle ( Document doc );
 extern void TitleModified ( NotifyOnTarget *event );
 extern void SelectDestination ( Document doc,
                                 Element el,
-                                ThotBool withUndo );
+                                ThotBool withUndo,
+                                ThotBool clickFirst );
 extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
@@ -149,7 +150,8 @@ extern void SetNewTitle (/* Document doc */);
 extern void TitleModified (/* NotifyOnTarget *event */);
 extern void SelectDestination (/* Document doc,
                                   Element el,
-                                  ThotBool withUndo */);
+                                  ThotBool withUndo,
+                                  ThotBool clickFirst */);
 extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,

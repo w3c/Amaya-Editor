@@ -268,7 +268,7 @@ void InsertCssInXml (Document doc, View view)
 	  TtaRegisterElementCreate (el, doc);
 	  TtaInsertFirstChild (&el, piLine, doc);
 	  /* Select a new destination */
-	  SelectDestination (doc, el, FALSE);
+	  SelectDestination (doc, el, FALSE, FALSE);
 	}
     }
   TtaCloseUndoSequence (doc);

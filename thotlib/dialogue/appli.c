@@ -2377,7 +2377,7 @@ gboolean GtkLiningSelection (gpointer data)
 #ifndef _GTK
 void FrameCallback (int frame, void *evnt)
 #else /* _GTK */
-     gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
+gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* _GTK */
 {
 #ifndef _GTK
@@ -2418,6 +2418,7 @@ void FrameCallback (int frame, void *evnt)
   else if (event == NULL)
     return FALSE;
   else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
+    /* see CharTranslationGTK for GDK_KEY_PRESS */
 #endif /* _GTK */
     /* Amaya is waiting for a selection */
     {

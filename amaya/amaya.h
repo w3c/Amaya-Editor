@@ -387,6 +387,7 @@ THOT_EXPORT Document   IncludedDocument;
 THOT_EXPORT Element    AttrHREFelement;
 THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
+THOT_EXPORT ThotBool  AttrHREFundoable;
 THOT_EXPORT ThotBool  IsNewAnchor;
 THOT_EXPORT ThotBool  UseLastTarget;
 THOT_EXPORT ThotBool  LinkAsCSS;

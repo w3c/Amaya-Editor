@@ -5802,6 +5802,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* !_WINDOWS */
 	}
       else if (val == 3)
+	/* allow one to click the target */
+	SelectDestination (AttrHREFdocument, AttrHREFelement, AttrHREFundoable, TRUE);
+      else if (val == 4)
 	{
 	  /* Clear button */
 	  AttrHREFvalue[0] = EOS;

@@ -141,6 +141,14 @@
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Tyhjennä</message>
 </label>
+<label define="AM_CLICK">
+	<message xml:lang="en">Click</message>
+	<message xml:lang="fr">Clic</message>
+	<message xml:lang="de">Klick</message>
+	<message xml:lang="it">Click</message>
+	<message xml:lang="es">Clic</message>
+	<message xml:lang="pt">Clique</message>
+</label>
 <label define="AM_SAVED">
 	<message xml:lang="en">Document saved: %s</message>
 	<message xml:lang="fr">Document sauvé : %s</message>

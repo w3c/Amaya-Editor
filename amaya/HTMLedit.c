@@ -59,7 +59,6 @@ static int          OldHeight;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static ThotBool AttrHREFundoable = FALSE;
 
 /*----------------------------------------------------------------------
    SetTargetContent
@@ -631,9 +630,12 @@ void TitleModified (NotifyOnTarget *event)
 
 /*----------------------------------------------------------------------
    SelectDestination
-   Select the destination of the el Anchor.     
+   Select the destination of the el Anchor.
+   The parameter clickFirst is TRUE when the user choose to click the
+   target.
   ----------------------------------------------------------------------*/
-void SelectDestination (Document doc, Element el, ThotBool withUndo)
+void SelectDestination (Document doc, Element el, ThotBool withUndo,
+			ThotBool clickFirst)
 {
    Element             targetEl;
    ElementType	       elType;
@@ -650,7 +652,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
    ThotBool            fromButton = FALSE;
 
    fromButton = TtaIsButtonActivated (doc, 1);
-   if (fromButton)
+   if (fromButton || clickFirst)
      {
        /* ask the user to select target document and target anchor */
        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
@@ -661,7 +663,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
        else
 	 isHTML = FALSE;
        
-       if (targetDoc != 0 && targetEl != NULL && DocumentURLs[targetDoc] != NULL)
+       if (targetDoc && targetEl && DocumentURLs[targetDoc])
 	 {
 	   if (isHTML)
 	     {
@@ -737,10 +739,12 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
 	i += strlen (&s[i]) + 1;
 	strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
 	i += strlen (&s[i]) + 1;
+	strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLICK));
+	i += strlen (&s[i]) + 1;
 	strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 	
 	TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, s,
+		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 4, s,
 		     TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
@@ -1103,7 +1107,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 				       TargetName);
 		    else
 		      /* select the destination */
-		      SelectDestination (doc, first, TRUE);
+		      SelectDestination (doc, first, TRUE, FALSE);
 		  }
 		else
 		  /* cannot create an anchor here */
@@ -1380,7 +1384,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	SetREFattribute (anchor, doc, TargetDocumentURL, TargetName);
       else
 	/* Select the destination */
-	SelectDestination (doc, anchor, FALSE);
+	SelectDestination (doc, anchor, FALSE, FALSE);
       /* The anchor element must have an HREF attribute */
       /* create an attribute PseudoClass = link */
       attrType.AttrSSchema = elType.ElSSchema;

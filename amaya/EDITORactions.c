@@ -940,7 +940,7 @@ void CreateLinkInHead (Document document, View view)
       UseLastTarget = FALSE;
       IsNewAnchor = TRUE;
       /* Select a new destination */
-      SelectDestination (document, el, FALSE);
+      SelectDestination (document, el, FALSE, FALSE);
     }
 }
 
@@ -2497,7 +2497,7 @@ void  CreateOrChangeLink (Document doc, View view)
 	   /* The link element already exists */
 	   IsNewAnchor = FALSE;
 	   /* There is an anchor. Just select a new destination */
-	   SelectDestination (doc, el, TRUE);
+	   SelectDestination (doc, el, TRUE, FALSE);
 	 }
      }
 }
