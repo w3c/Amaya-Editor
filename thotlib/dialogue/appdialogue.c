@@ -2336,7 +2336,7 @@ int                *infos;
    haut (s'ils sont positifs).                                        
    Le parametre texte donne le titre de la fenetree^tre.                      
    Le parametre schema donne le nom du sche'ma pour lequel on cre'e   
-   la fenetree^tre de document (NULL pour la fenetree^tre application).       
+   la fenetre de document (NULL pour la fenetree^tre application).       
    Le parametre name donne le titre de la fenetree^tre.                       
    Le paramentre doc donne le numero du document.                     
    Retourne :                                                         

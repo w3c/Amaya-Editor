@@ -1421,6 +1421,21 @@ The <code>position</code> field has no meaning.
 </dl>
 
 <dl>
+<dt>ElemClick.Pre (NotifyElement):</dt>
+
+<dd>The user has just clicked on the element <code>element</code>. The
+selection has not already changed. This event is accepted for all elements
+(references or not). The <code>position</code> field has no meaning.
+</dl>
+
+<dl>
+<dt>ElemClick.Post (NotifyElement):</dt>
+
+<dd>The selection has just clicked on the element <code>element</code>. It's
+similar to the Pre event because Thot doesn't do anything for this event.
+</dl>
+
+<dl>
 <dt>ElemActivate.Pre (NotifyElement):</dt>
 
 <dd>The user has just double-clicked on the element <code>element</code>. The
@@ -2011,6 +2026,7 @@ typedef enum {
   TteElemDelete,
   TteElemSelect,
   TteElemExtendSelect,
+  TteElemClick,
   TteElemActivate,
   TteElemSetReference,
   TteElemInclude,

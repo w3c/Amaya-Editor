@@ -91,8 +91,6 @@ int                 button;
    PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
    PtrElement          el;
-   Document            doc;
-   int                 view;
    int                 charsNumber;
    int                 spacesNumber;
    ViewFrame          *pFrame;

@@ -607,7 +607,7 @@ PtrAttribute       *pAttr;
    des attributs porte's par l'element auquel correspond   
    pAb.                                                   
    Au retour, pSPR contient un pointeur sur le schema de   
-   structure auquel appartient la regle.                   
+   presenrtation auquel appartient la regle.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, FunctionType typeFunc, boolean attr, PtrAttribute * pAttr)

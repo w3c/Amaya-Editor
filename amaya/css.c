@@ -46,7 +46,9 @@ CSSInfoPtr      css;
 {
   PInfoPtr            pInfo;
   PSchema             pSchema, nSchema, prevS;
-  boolean             found;
+  Element             prevLink, nextLink;
+  ElementType	      elType;
+  boolean             found, before;
 
   if (sSchema == NULL)
     sSchema = TtaGetDocumentSSchema (doc);
@@ -78,16 +80,81 @@ CSSInfoPtr      css;
   /* create the presentation schema for this structure */
   nSchema = TtaNewPSchema ();
   pSchema = TtaGetFirstPSchema (doc, sSchema);
-  prevS = NULL;
-  while (pSchema != NULL)
-    {
-      prevS = pSchema;
-      TtaNextPSchema (&pSchema, doc, NULL);
-    }
-  TtaAddPSchema (nSchema, prevS, TRUE, doc, sSchema);
-
   pInfo->PiSSchema = sSchema;
   pInfo->PiPSchema = nSchema;
+  /* chain the presentation schema at the right position */
+  prevS = NULL;
+  before = FALSE;
+  if (css->category == CSS_DOCUMENT_STYLE)
+    /* add in first position */
+    before = TRUE;
+  else if (css->category == CSS_USER_STYLE)
+    {
+      /* add in last position */
+      while (pSchema != NULL)
+	{
+	  prevS = pSchema;
+	  TtaNextPSchema (&pSchema, doc, NULL);
+	}
+    }
+  else
+    {
+      /* check the order among its external style sheets */
+      if (pInfo->PiLink != NULL)
+	{
+	  elType = TtaGetElementType (pInfo->PiLink);
+	  prevLink = TtaSearchTypedElement (elType, SearchBackward, pInfo->PiLink);
+	  if (prevLink == NULL)
+	    nextLink = TtaSearchTypedElement (elType, SearchForward, pInfo->PiLink);
+	}
+      else
+	{
+	  prevLink = NULL;
+	  nextLink = NULL;
+	}
+      css = CSSList;
+      while (css != NULL)
+	{
+	  if (css->documents[doc])
+	    if (prevLink == NULL &&
+		((css->category == CSS_USER_STYLE && nextLink == NULL) ||
+		 css->category == CSS_DOCUMENT_STYLE))
+	      {
+		pInfo = css->infos;
+		while (pInfo != NULL && pInfo->PiDoc != doc)
+		  pInfo = pInfo->PiNext;
+		if (pInfo != NULL)
+		  prevS = pInfo->PiPSchema;
+		before = (css->category == CSS_USER_STYLE);
+		break;
+	      }
+	    else if (css->category == CSS_EXTERNAL_STYLE)
+	      {
+		/* check where the new css should be linked */
+		pInfo = css->infos;
+		while (pInfo != NULL && pInfo->PiDoc != doc)
+		  pInfo = pInfo->PiNext;
+		if (pInfo != NULL)
+		  if (pInfo->PiLink != prevLink)
+		    {
+		      /* link after this presentation schema */
+		      before = FALSE;
+		      prevS = pInfo->PiPSchema;
+		      break;
+		    }
+		  else if (pInfo->PiLink != nextLink)
+		    {
+		      /* link before this presentation schema */
+		      before = TRUE;
+		      prevS = pInfo->PiPSchema;
+		      break;
+		    }
+	      }
+	  css = css->NextCSS;
+	}
+    }
+  /* link the new presentation schema */
+  TtaAddPSchema (nSchema, prevS, before, doc, sSchema);
   return (nSchema);
 }
 

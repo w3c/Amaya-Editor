@@ -37,6 +37,14 @@ Extensions 2.0:
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
 
+* The 409 HTTP error message (conflict) is now shown in a popup window.
+
+* The VERIFY_PUBLISH option is now turned off by default
+
+* Added DEFLATE content encoding support under Windows
+
+* Support of disconnected browsing mode thru the libwww cache
+
 * Command SaveAs allows you to save a document in XHTML, following the
   specifications and guidelines of the latest XHTML draft.
 
@@ -53,10 +61,15 @@ Extensions 2.0:
 
 * Implementing a new policy of colors management.
 
+* It's now possible to browse with a simple-click or a double-click. By default
+  Amaya uses the double-click, but it could be switched to simple-click in the
+  General preference menu.
+
 * New version of the Thot API:
   - Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix
     dialogue API.
   - New functions: TtaGiveNextElement, TtaGetFirstLeaf, TtaGetLastLeaf
+  - A new Thot event: TteElemClick
 
 * All user Amaya preferences and personal files are collected into a
   home directory. By default this directory is $HOME/.amaya on Unix
@@ -67,14 +80,6 @@ Extensions 2.0:
   - thot.rc personal preferences. This file is generated and updated thru
     the Special/Preferences menu.
   - and other temporary files and directories used by Amaya.
-
-* The 409 HTTP error message (conflict) is now shown in a popup window.
-
-* The VERIFY_PUBLISH option is now turned off by default
-
-* Added DEFLATE content encoding support under Windows
-
-* Support of disconnected browsing mode thru the libwww cache
 
 * After a paste command, the selection is now set at the end of the pasted
   text where the user could continue to insert text.

@@ -253,14 +253,11 @@ SSchema		    nature;
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter doc is OK */
-      if (pSchS->SsFirstPSchemaExtens != NULL)
-         TtaError (ERR_invalid_parameter);
-      else
-        {
-	ok = TRUE;
-	oldHd = NULL;
-        }
+     {
+       ok = TRUE;
+       oldHd = pSchS->SsFirstPSchemaExtens;
+     }
+
    if (ok)
      {
 	GetHandleSchPres (&newHd);
