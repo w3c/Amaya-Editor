@@ -2485,9 +2485,10 @@ int                 frame;
 	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#endif /* _WINDOWS */
         /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ; */
+#else  /* _WINDOWS */
         DestroyWindow (FrMainRef[frame]);
+#endif /* _WINDOWS */
 	FrRef[frame] = 0;
 #ifdef _WINDOWS
         FrMainRef [0] = 0 ;
