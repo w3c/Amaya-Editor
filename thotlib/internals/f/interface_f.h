@@ -15,6 +15,11 @@ extern void TtaInstallMultiKey ( void );
 extern int TtaGetIsoKeysym ( ThotEvent * event,
                              KeySym keysym );
 extern int TtaHandleMultiKeyEvent ( ThotEvent * event );
+extern void TtaSetMainLoop ( ExternalMainLoop loop,
+                             ExternalFetchEvent fetch,
+                             ExternalFetchAvailableEvent fetchavail );
+extern void TtaFetchOneEvent ( ThotEvent *ev );
+extern boolean TtaFetchOneAvailableEvent ( ThotEvent *ev );
 extern void TtaHandleOneEvent ( ThotEvent * ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
@@ -41,6 +46,11 @@ extern void TtaInstallMultiKey (/* void */);
 extern int TtaGetIsoKeysym (/* ThotEvent * event,
                                KeySym keysym */);
 extern int TtaHandleMultiKeyEvent (/* ThotEvent * event */);
+extern void TtaSetMainLoop (/* ExternalMainLoop loop,
+                               ExternalFetchEvent fetch,
+                               ExternalFetchAvailableEvent fetchavail */);
+extern void TtaFetchOneEvent (/* ThotEvent *ev */);
+extern boolean TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
 extern void TtaHandleOneEvent (/* ThotEvent * ev */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);

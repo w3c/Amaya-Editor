@@ -25,33 +25,6 @@
 
 /************************************************************************
  *									*
- *		Kaffe Specific stuff, need to be isolated		*
- *									*
- ************************************************************************/
-
-#include "gtypes.h"
-#include "access.h"
-#include "object.h"
-#include "constants.h"
-#include "classMethod.h"
-#include "baseClasses.h"
-#include "thread.h"
-#include "support.h"
-#include "slib.h"
-#include "errors.h"
-#include "exception.h"
-
-void
-throwOutOfMemory ()
-{
-        if (OutOfMemoryError != NULL)
-                throwException(OutOfMemoryError);
-        fprintf (stderr, "(Insufficient memory)\n");
-        exit (-1);
-}
-
-/************************************************************************
- *									*
  *		FRONT END for the APPLICATION				*
  *									*
  ************************************************************************/
@@ -102,6 +75,102 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
+extern int threadedFileDescriptor(int fd);
+extern void yieldThread();
+extern int blockOnFile(int fd, int op);
+
+static int AmayaEventLoopInitialized = 0;
+static int x_window_socket;
+
+/*----------------------------------------------------------------------
+  InitializeEventLoop
+
+  Initialize the AmayaEventLoop environment, including the network
+  interface, Java, etc...
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitAmayaEventLoop (void)
+#else
+void                InitAmayaEventLoop ()
+#endif
+{
+    char *env_value;
+    char  new_env[1024];
+
+    /*
+     * Mark that everything is initialized BEFORE starting the
+     * Java Runtime ...
+     */
+    AmayaEventLoopInitialized = 1;
+
+    /*
+     * set up the environment
+     */
+    strcpy(new_env,"CLASSPATH=");
+    env_value  = TtaGetEnvString("CLASSPATH");
+    if (env_value)
+       strcat(new_env, env_value);
+    env_value = getenv("CLASSPATH");
+    if (env_value) {
+       strcat(new_env,":");
+       strcat(new_env,env_value);
+    }
+    putenv(TtaStrdup(new_env));
+    strcpy(new_env,"KAFFEHOME=");
+    env_value  = TtaGetEnvString("KAFFEHOME");
+    if (env_value)
+       strcat(new_env, env_value);
+    putenv(TtaStrdup(new_env));
+
+    /*
+     * Register the X-Window socket as an input channel
+     */
+    x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
+    threadedFileDescriptor(x_window_socket);
+
+    /*
+     * Startup the Java environment. We should never return
+     * from this call, but InitJava will call TtaMainLoop again
+     * on the Application thread.
+     */
+    InitJava("amaya");
+
+}
+
+/*----------------------------------------------------------------------
+  AmayaSelect
+
+  This routine provide a shared select() syscall needed to multiplex
+  the various packages (libWWW, Java, X-Windows ...) needing I/O in
+  the Amaya program.
+  ----------------------------------------------------------------------*/
+
+static int NbAmayaSelect = 0;
+
+#ifdef __STDC__
+int                AmayaSelect (int  n,  fd_set  *readfds,  fd_set  *writefds,
+       fd_set *exceptfds, struct timeval *timeout)
+#else
+int                AmayaSelect (n, readfds, writefds, exceptfds, timeout)
+int  n;
+fd_set  *readfds;
+fd_set  *writefds;
+fd_set *exceptfds;
+struct timeval *timeout;
+ThotEvent *ev;
+#endif
+{
+    int res;
+
+    NbAmayaSelect++;
+
+    /* Just a test for now ... */
+    if (n <= x_window_socket) n = x_window_socket + 1;
+    res = select(n, readfds, writefds, exceptfds, timeout);
+
+    return(res);
+}
+
 /*----------------------------------------------------------------------
   AmayaHandleOneEvent
 
@@ -125,6 +194,7 @@ ThotEvent *ev;
   it has to handle network traffic. If an X-Window event is available,
   the routine should fetch it from the queue in the ev argument and return.
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
 void                AmayaFetchEvent (ThotAppContext app_ctxt, ThotEvent *ev)
 #else
@@ -141,7 +211,13 @@ ThotEvent *ev;
      XtAppProcessEvent (app_ctxt, XtIMXEvent);
      status = XtAppPending (app_ctxt);
   }
+
+  /*
+   * Need to check whether something else has to be scheduled.
+   */
+  blockOnFile(x_window_socket, 0);
   XtAppNextEvent (app_ctxt, ev);
+
 #else  /* WWW_XWINDOWS */
 #endif /* !WWW_XWINDOWS */
 }
@@ -201,6 +277,12 @@ ThotAppContext app_ctxt;
    MSG                 msg;
 #endif
 
+   /*
+    * initialize the whole context if needed.
+    */
+   if (!AmayaEventLoopInitialized) 
+      InitAmayaEventLoop();
+
    /* Loop waiting for the events */
    while (1)
      {
@@ -227,6 +309,7 @@ void                QueryInit ()
 void                QueryInit ()
 #endif
 {
+   TtaSetMainLoop (AmayaEventLoop, AmayaFetchEvent, AmayaFetchAvailableEvent);
 }
 
 /*----------------------------------------------------------------------

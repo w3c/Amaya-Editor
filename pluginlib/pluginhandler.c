@@ -56,7 +56,7 @@ extern char*          pluginPath;
 
 int                   pluginIndex;
 #ifdef AMAYA_PLUGIN
-extern int            currentPlugin;
+int                   currentPlugin = 0;
 #else  /* AMAYA_PLUGIN */
 int                   currentPlugin = 0;
 #endif /* AMAYA_PLUGIN */

@@ -12,6 +12,8 @@ extern void EnSpellCheck ( Document document,
                            View view );
 extern void FrSpellCheck ( Document document,
                            View view );
+extern void CreateBreak ( Document document,
+                          View view );
 extern void CreateIsIndex ( Document document,
                             View view );
 extern void CreateLinkInHead ( Document document,
@@ -122,6 +124,8 @@ extern void EnSpellCheck (/* Document document,
                              View view */);
 extern void FrSpellCheck (/* Document document,
                              View view */);
+extern void CreateBreak (/* Document document,
+                            View view */);
 extern void CreateIsIndex (/* Document document,
                               View view */);
 extern void CreateLinkInHead (/* Document document,

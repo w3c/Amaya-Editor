@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * registry.c : common access method for all the configuration
  *              dependancies of Thot.
  *
@@ -1189,11 +1180,10 @@ char               *appArgv0;
 
 
 /*----------------------------------------------------------------------
-   SearchFile recherche un fichier en suivant les indications      
-   donnees par dir.                                        
-   Retourne 1 avec le nom absolu dans fullName si on       
-   le trouve et 0 sinon.                                   
-   Suivant la valeur de dir, on cherche dans:              
+   SearchFile look for a file following the guideline given by dir
+   Returns 1 with fullName set to the absolute pathname if found,
+   0 otherwise.                                   
+   Depending on dir value, the file is looked for in:
    - 0 : /                                                 
    - 1 : ThotDir                                           
    - 2 : ThotDir/bin                                       
@@ -1223,10 +1213,10 @@ char               *fullName;
    switch (dir)
 	 {
 	    case 1:
-	       /* Recherche dans les schemas et les documents */
+	       /* Lookup in schema and documents path */
 	       strcat (fullName, fileName);
 	       ret = TtaFileExist (fullName);
-	       /* Recherche le fichier dans les directories de schemas */
+	       /* lookup in shemas path */
 	       i = 0;
 	       j = 0;
 	       imagepath = SchemaPath;
@@ -1242,7 +1232,7 @@ char               *fullName;
 		    ret = TtaFileExist (fullName);
 		 }
 
-	       /* continue la recheche dans les repertoires de documents */
+	       /* lookup in document path */
 	       i = 0;
 	       j = 0;
 	       imagepath = SchemaPath;
@@ -1260,7 +1250,7 @@ char               *fullName;
 	       break;
 
 	    case 2:
-	       /* Recherche dans config */
+	       /* lookup in config */
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, "config");
 	       strcat (fullName, DIR_STR);
@@ -1268,7 +1258,7 @@ char               *fullName;
 	       break;
 
 	    case 3:
-	       /* Recherche dans batch */
+	       /* lookup in batch */
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, "batch");
 	       strcat (fullName, DIR_STR);
@@ -1280,7 +1270,7 @@ char               *fullName;
 	       strcat (fullName, fileName);
 	 }
 
-   /* on cherche le fichier */
+   /* general search */
    ret = TtaFileExist (fullName);
    if (ret == 0)
      {

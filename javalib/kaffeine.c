@@ -30,6 +30,7 @@
 #define BISS_AWT "-Dawt.toolkit=biss.awt.kernel.Toolkit"
 
 extern void initialise(void);
+static void register_stubs(void);
 
 /*
  * This method is needed by the Kaffe interpreter.
@@ -61,7 +62,7 @@ char *app_name;
 {
     object* args;
     stringClass** str;
-    char startupClass[256];
+    char initClass[256];
 
     fprintf(stderr, "Initialize Java Runtime\n");
 
@@ -74,31 +75,33 @@ char *app_name;
     fprintf(stderr, "Java Runtime Initialized\n");
 
     /* Build the init class name */
-    strcpy(startupClass, app_name);
-    strcat(startupClass, "Init");
+    strcpy(initClass, app_name);
+    strcat(initClass, "Init");
 
     /* Build an array of strings as the arguments */
-    args = AllocObjectArray(4, "Ljava/lang/String;");
+    args = AllocObjectArray(1, "Ljava/lang/String;");
 
     /* Build each string and put into the array */
     str = (stringClass**)(args + 1);
-    str[0] = makeJavaString("1", 1);
-    str[1] = makeJavaString("2", 1);
-    str[2] = makeJavaString("3", 1);
-    str[3] = makeJavaString("4", 1);
+    str[0] = makeJavaString(app_name, strlen(app_name));
 
-    /* lauch the init class */
-    do_execute_java_class_method(startupClass, "main",
+    /* lauch the init class for the application */
+    do_execute_java_class_method(initClass, "main",
+                   "([Ljava/lang/String;)V", args);
+
+    /* Start the application loop of events */
+    do_execute_java_class_method("thotlib.Document", "main",
                    "([Ljava/lang/String;)V", args);
 }
 
-void HelloWorld_tst_thread()
+void thotlib_Document_TtaMainLoop()
 {
-   fprintf(stderr,"tst_thread() called\n");
+   fprintf(stderr,"thotlib_Document_TtaMainLoop called\n");
+   TtaMainLoop();
 }
 
-void register_stubs(void)
+static void register_stubs(void)
 {
-   addExternalNativeFunc("HelloWorld_tst_thread", HelloWorld_tst_thread);
+   addExternalNativeFunc("thotlib_Document_TtaMainLoop", thotlib_Document_TtaMainLoop);
 }
 

@@ -50,7 +50,7 @@ by lack of time.
 Here is a simple recipe explaining how to build on one of the supported
 target:</P>
 <UL>
-<LI>cd to <CODE>Amaya</CODE>/<STRONG>Target</STRONG> directory.
+<LI>cd to <CODE>Thot</CODE>/<STRONG>Target</STRONG> directory.
 <LI>copy the <CODE>Makefile.orig</CODE> file to <CODE>Makefile</CODE>. Edit
 the first top lines to change <CODE>THOTDIR</CODE> to the base of the current
 <STRONG>Amaya</STRONG> tree e.g:
@@ -62,8 +62,7 @@ and <CODE>libz.a</CODE> as well as the <CODE>config.h</CODE> file describing
 the <STRONG>Target</STRONG>. If these files are lacking, fetch the appropriate
 thot-libs-<STRONG>Target</STRONG>-xxx.tar.gz and
 <CODE>amaya-libs-</CODE><STRONG>Target</STRONG><CODE>-yyy.tar.gz</CODE> <A
-href="SourceDist.html">distribution</A>
-file and install it.
+href="SourceDist.html">distribution</A> file and install it.
 <LI>type in the following command:
 <P>
 <CODE>make</CODE></P>
@@ -240,8 +239,7 @@ directory ?
 <LI>is the <CODE>Thot/</CODE><STRONG>Target</STRONG><CODE>/config.h</CODE>
 file present ? If not, fetch the the appropriate
 <CODE>amaya-libs-</CODE><STRONG>target</STRONG><CODE>-xxx.tar.gz</CODE> <A
-href="SourceDist.html">distribution</A>
-file and install it.
+href="SourceDist.html">distribution</A> file and install it.
 <LI>are <CODE>../makes/Make.files</CODE> and
 <CODE>../makes/Makes.depends</CODE> files present ? If not, make will try to
 build them but with some versions of make this is not
@@ -307,8 +305,7 @@ namely <CODE>libwww.a</CODE>, <CODE>libjpeg.a</CODE>, <CODE>libpng.a</CODE>
 and <CODE>libz.a</CODE> for the <STRONG>Target</STRONG>. If these files are
 lacking, fetch the appropriate
 <CODE>amaya-libs-</CODE><STRONG>target</STRONG><CODE>-xxx.tar.gz</CODE>  <A
-href="SourceDist.html">distribution</A>
-file and install it.
+href="SourceDist.html">distribution</A> file and install it.
 <LI>Check that the precompiled libraries are not corrupted e.g.:
 <P>
 <CODE>file libwww.a</CODE></P>
@@ -358,7 +355,9 @@ start:</P>
 <LI>Check that the shared libraries needed by amaya are found on the system.
 The command
 <P>
-<CODE>ldd bin/amaya</CODE></P>
+<CODE>ldd bin/amaya           on Suns or Linux</CODE></P>
+<P>
+<CODE>chatr bin/amaya         on HP's</CODE></P>
 <P>
 should print all the shared libraries needed by amaya and the path to the
 corresponding libraries in the system.</P>
@@ -387,7 +386,6 @@ release.</P>
 <HR>
 <ADDRESS>
 <A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date:
-1997/01/0617:31:40$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
 </BODY>
 </HTML>
