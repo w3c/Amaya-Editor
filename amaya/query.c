@@ -1264,9 +1264,8 @@ View view;
 
   HTCacheMode_setExpires(HT_EXPIRES_AUTO);
   HTCacheInit (cache_dir, cache_size);
-  HTCacheMode_setEnabled (NO);
   /* set a new concurrent cache lock */
-  strcpy (strptr, ".lock");
+  strcat (strptr, ".lock");
   if (set_cachelock (strptr) == -1)
     /* couldn't open the .lock file, so, we close the cache to
        be in the safe side */
@@ -1277,8 +1276,6 @@ View view;
       HTCacheTerminate ();
       HTCacheMode_setEnabled (NO);
     }
-  else
-    HTCacheMode_setEnabled (YES);
 #ifdef DEBUG_LIBWWW
   fprintf (stderr, "set a cache lock\n");
 #endif /* DEBUG_LIBWWW */
