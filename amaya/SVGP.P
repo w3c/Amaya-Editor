@@ -344,6 +344,60 @@ RULES
 		END;		
 	END;
 
+   desc:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: ALT_Visibility;
+		Line;
+		END;
+	END;
+
+   title:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: ALT_Visibility;
+		Line;
+		END;
+	END;
+
+   metadata:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: ALT_Visibility;
+		Line;
+		END;
+	END;
+
    g:
 	BEGIN
 	CreateBefore (ElementName);
@@ -378,12 +432,10 @@ RULES
 		END;
 	END;
 
-   path:
+   symbol_:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
@@ -393,10 +445,81 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	END;
+
+   use_:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   image:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   switch:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view BEGIN
+		Height: Enclosed . Height;
+		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+   style__:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    rect:
@@ -441,6 +564,24 @@ RULES
 		Visibility: 0;
 	END;
 
+   line_:
+	BEGIN
+	CreateBefore (ElementName);
+        HorizPos: Left = Enclosing . Left UserSpecified;
+        VertPos:  Top = Enclosing . Top UserSpecified;
+        Width: Right = Enclosing . Left;
+        Height:  Bottom = Enclosing . Top;
+       	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
    ellipse:
 	BEGIN
 	CreateBefore (ElementName);
@@ -457,24 +598,6 @@ RULES
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: TAG_Font;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   line_:
-	BEGIN
-	CreateBefore (ElementName);
-        HorizPos: Left = Enclosing . Left UserSpecified;
-        VertPos:  Top = Enclosing . Top UserSpecified;
-        Width: Right = Enclosing . Left;
-        Height:  Bottom = Enclosing . Top;
-       	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
 		Visibility: 0;
@@ -500,6 +623,27 @@ RULES
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   path:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
@@ -560,97 +704,6 @@ RULES
 		END;	
 	END;
 
-   use_:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   image:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
-	Width: Enclosed . Width;
-        Height: Enclosed . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   symbol_:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   desc:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	IN Alternate_view BEGIN
-		Visibility: ALT_Visibility;
-		Line;
-		END;
-	END;
-
-   title:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	IN Alternate_view BEGIN
-		Visibility: ALT_Visibility;
-		Line;
-		END;
-	END;
-
    a:
 	BEGIN
 	CreateBefore (ElementName);
@@ -684,41 +737,6 @@ RULES
 		END;
 	END;
 
-   style__:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	END;
-
-   switch:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view BEGIN
-		Height: Enclosed . Height;
-		Width: Enclosing . Width;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
    foreignObject:
 	BEGIN
 	CreateBefore (ElementName);
@@ -743,21 +761,24 @@ RULES
 		END;
 	END;
 
-   metadata:
+  DOCTYPE:
 	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
+		Width: Enclosing . Width ;
 		END;
-	IN Alternate_view BEGIN
-		Visibility: ALT_Visibility;
-		Line;
+	END;
+
+  DOCTYPE_line:
+	BEGIN
+	Visibility: 0;
+	IF First CreateFirst(DOCTYPE_S);
+	IF Last CreateLast(DOCTYPE_E);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -801,27 +822,6 @@ RULES
 	        Width: Enclosed . Width;
 		END;
         END;
-
-  DOCTYPE:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosing . Width ;
-		END;
-	END;
-
-  DOCTYPE_line:
-	BEGIN
-	Visibility: 0;
-	IF First CreateFirst(DOCTYPE_S);
-	IF Last CreateLast(DOCTYPE_E);
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
 
   CDATA:
 	BEGIN
@@ -972,6 +972,45 @@ ATTRIBUTES
 	   CreateLast (IndexBox);
 	END;
 
+  requiredFeatures:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  requiredExtensions:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  systemLanguage:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  externalResourcesRequired:
+	CreateBefore (AttrNameAndValue);
+
+  fill:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke_width:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   font_family:
 	BEGIN
 	CreateBefore(AttrName);
@@ -1099,10 +1138,47 @@ ATTRIBUTES
 	Weight: Enclosing =;
 	END;
 
+  direction_ = ltr_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;	
+  direction_ = rtl_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  direction_ =  inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: Enclosing =;
+	END;
+
   text_decoration:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	END;
+
+  unicode_bidi = normal_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	UnicodeBidi: Normal;
+	END;
+  unicode_bidi = embed_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	UnicodeBidi: Embed;
+	END;
+  unicode_bidi = bidi_override:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	UnicodeBidi: Override;
+	END;
+  unicode_bidi = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	UnicodeBidi: Enclosing =;
 	END;
 
   viewBox:
@@ -1138,31 +1214,13 @@ ATTRIBUTES
 	   VertPos: Top = Previous . Bottom;
 	END;
 
-  height_:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
   width_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  fill:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  stroke:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  stroke_width:
+  height_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1174,34 +1232,43 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  requiredFeatures:
+  preserveAspectRatio:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  requiredExtensions:
+  xlink_href:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  systemLanguage:
+  type:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  externalResourcesRequired:
-	CreateBefore (AttrNameAndValue);
-
-  d:
+  media:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  pathLength:
+  title_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  rx:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  ry:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1228,18 +1295,6 @@ ATTRIBUTES
 	END;
 
   r:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  rx:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  ry:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1275,6 +1330,18 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  d:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  pathLength:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   dx:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1287,37 +1354,7 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  xlink_href:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  preserveAspectRatio:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
   target_:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  type:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  media:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  title_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);

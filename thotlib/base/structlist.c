@@ -1233,7 +1233,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "%c", pAb->AbDirection);
 		     break;
 	       }
-	fprintf (fileDescriptor, "Bidi:");
+	fprintf (fileDescriptor, " Bidi:");
 	switch (pAb->AbUnicodeBidi)
 	       {
 		  case 'N':

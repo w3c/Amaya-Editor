@@ -30,6 +30,9 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
    {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
 
+   {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
+   {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
+
    {SVG_ATTR_font_style, "inherit", SVG_ATTR_font_style_VAL_inherit},
    {SVG_ATTR_font_style, "italic", SVG_ATTR_font_style_VAL_italic},
    {SVG_ATTR_font_style, "normal", SVG_ATTR_font_style_VAL_normal_},
@@ -54,8 +57,14 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_font_weight, "lighter", SVG_ATTR_font_weight_VAL_lighter},
    {SVG_ATTR_font_weight, "normal", SVG_ATTR_font_weight_VAL_normal_},
 
-   {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
-   {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
+   {SVG_ATTR_direction_, "ltr", SVG_ATTR_direction__VAL_ltr_},
+   {SVG_ATTR_direction_, "rtl", SVG_ATTR_direction__VAL_rtl_},
+   {SVG_ATTR_direction_, "inherit", SVG_ATTR_direction__VAL_inherit},
+
+   {SVG_ATTR_unicode_bidi, "normal", SVG_ATTR_unicode_bidi_VAL_normal_},
+   {SVG_ATTR_unicode_bidi, "embed", SVG_ATTR_unicode_bidi_VAL_embed_},
+   {SVG_ATTR_unicode_bidi, "bidi-override", SVG_ATTR_unicode_bidi_VAL_bidi_override},
+   {SVG_ATTR_unicode_bidi, "inherit", SVG_ATTR_unicode_bidi_VAL_inherit},
 
    {0, "", 0}			/* Last entry. Mandatory */
 };

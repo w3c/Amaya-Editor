@@ -51,6 +51,42 @@ RULES
 	Create '</svg>\12' After;
 	END;
 
+   desc:
+	BEGIN
+	create SOT;
+	create 'desc';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'desc>\12' after;
+	END;
+
+   title:
+	BEGIN
+	create SOT;
+	create 'title';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'title>\12' after;
+	END;
+
+   metadata:
+	BEGIN
+	create SOT;
+	create 'metadata';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'metadata>\12' after;
+	END;
+
    g:
 	BEGIN
 	if within use_
@@ -77,23 +113,79 @@ RULES
 	create 'defs>\12' after;
 	END;
 
-   path:
+   symbol_:
+	BEGIN
+	if within use_
+           Ignore;
+	create SOT;
+	create 'symbol';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'symbol>\12' after;
+	END;
+
+   use_:
 	BEGIN
 	create SOT;
-	create 'path';
-	indent +6;
+	create 'use';
 	create attributes;
 	if IntEmptyShape
 		create CloseEmptyTagNL;
-	indent -6;
 	if not IntEmptyShape
 		BEGIN
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'path>\12' after;
+		create 'use>\12' after;
 		END;
+	END;
+
+   image:
+	BEGIN
+	create SOT;
+	create 'image';
+	indent +7;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -7;	
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'image>\12' after;
+		END;
+	END;
+
+   switch:
+	BEGIN
+	create SOT;
+	create 'switch';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'switch>\12' after;
+	END;
+
+   style__:
+	BEGIN
+	create SOT;
+	create 'style';
+	create attributes;
+	create '><![CDATA[\12';
+	indent +2;
+	indent -2 after;
+        create '\12]]>' after;
+	create SCT after;
+	create 'style>\12' after;
 	END;
 
    rect:
@@ -134,25 +226,6 @@ RULES
 		END;
 	END;
 
-   ellipse:
-	BEGIN
-	create SOT;
-	create 'ellipse';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'ellipse>\12' after;
-		END;
-	END;
-
    line_:
 	BEGIN
 	create SOT;
@@ -169,6 +242,25 @@ RULES
 		indent -2 after;
 		create SCT after;
 		create 'line>\12' after;
+		END;
+	END;
+
+   ellipse:
+	BEGIN
+	create SOT;
+	create 'ellipse';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'ellipse>\12' after;
 		END;
 	END;
 
@@ -210,6 +302,25 @@ RULES
 		END;
 	END;
 
+   path:
+	BEGIN
+	create SOT;
+	create 'path';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'path>\12' after;
+		END;
+	END;
+
    text_:
 	BEGIN
 	create SOT;
@@ -234,80 +345,6 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'tspan>\12' after;
-	END;
-
-   use_:
-	BEGIN
-	create SOT;
-	create 'use';
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'use>\12' after;
-		END;
-	END;
-
-   image:
-	BEGIN
-	create SOT;
-	create 'image';
-	indent +7;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -7;	
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'image>\12' after;
-		END;
-	END;
-
-   symbol_:
-	BEGIN
-	if within use_
-           Ignore;
-	create SOT;
-	create 'symbol';
-	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'symbol>\12' after;
-	END;
-
-   desc:
-	BEGIN
-	create SOT;
-	create 'desc';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'desc>\12' after;
-	END;
-
-   title:
-	BEGIN
-	create SOT;
-	create 'title';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'title>\12' after;
 	END;
 
    a:
@@ -335,31 +372,6 @@ RULES
 	create 'script>\12' after;
 	END;
 
-   style__:
-	BEGIN
-	create SOT;
-	create 'style';
-	create attributes;
-	create '><![CDATA[\12';
-	indent +2;
-	indent -2 after;
-        create '\12]]>' after;
-	create SCT after;
-	create 'style>\12' after;
-	END;
-
-   switch:
-	BEGIN
-	create SOT;
-	create 'switch';
-	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'switch>\12' after;
-	END;
-
    foreignObject:
 	BEGIN
 	create SOT;
@@ -372,17 +384,15 @@ RULES
 	create 'foreignObject>\12' after;
 	END;
 
-   metadata:
-	BEGIN
-	create SOT;
-	create 'metadata';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'metadata>\12' after;
+   DOCTYPE: BEGIN
+	NoLineBreak;
+	Create '<!DOCTYPE ';
+	NoTranslation;
+	Create '>\12' After;
 	END;
+
+   DOCTYPE_line:
+	if not last create '\12' after;
 
    XMLcomment:
 	BEGIN
@@ -406,30 +416,6 @@ RULES
    XMLPI_line:
 	if not last create '\12' after;
 
-   Unknown_namespace:
-	BEGIN
-	NoTranslation;
-	Create '\12';
-        Create Content;
-	Remove;
-	Create Attributes;
-	Create '>';
-	END;
-
-   SVG_Image: BEGIN
-	Remove;
-	END;
-
-   DOCTYPE: BEGIN
-	NoLineBreak;
-	Create '<!DOCTYPE ';
-	NoTranslation;
-	Create '>\12' After;
-	END;
-
-   DOCTYPE_line:
-	if not last create '\12' after;
-
    CDATA: BEGIN
 	NoLineBreak;
 	Create '<![CDATA[';
@@ -440,6 +426,16 @@ RULES
    CDATA_line:
 	if not last create '\12' after;
 
+   Unknown_namespace:
+	BEGIN
+	NoTranslation;
+	Create '\12';
+        Create Content;
+	Remove;
+	Create Attributes;
+	Create '>';
+	END;
+
    TEXT_UNIT:
         if immediately within text_
 	    create '\12' after;
@@ -449,6 +445,10 @@ RULES
 
    PICTURE_UNIT:
 	Remove;
+
+   SVG_Image: BEGIN
+	Remove;
+	END;
 
 ATTRIBUTES
 
@@ -510,6 +510,65 @@ ATTRIBUTES
         create Namespace;
         create DoubleQuote;
 	end;
+
+   requiredFeatures:
+	BEGIN
+	create SAN;
+	create 'requiredFeatures="';
+	create requiredFeatures;
+	create DoubleQuote;
+	END;
+
+   requiredExtensions:
+	BEGIN
+	create SAN;
+	create 'requiredExtensions="';
+	create requiredExtensions;
+	create DoubleQuote;
+	END;
+
+   systemLanguage:
+	BEGIN
+	create SAN;
+	create 'systemLanguage="';
+	create systemLanguage;
+	create DoubleQuote;
+	END;
+
+   externalResourcesRequired = false:
+	BEGIN
+	create SAN;
+	create 'externalResourcesRequired="false"';
+	END;
+   externalResourcesRequired = true:
+	BEGIN
+	create SAN;
+	create 'externalResourcesRequired="true"';
+	END;
+
+   fill:
+	BEGIN
+	create SAN;
+	create 'fill="';
+	create fill;
+	create DoubleQuote;
+	END;
+
+   stroke:
+	BEGIN
+	create SAN;
+	create 'stroke="';
+	create stroke;
+	create DoubleQuote;
+	END;
+
+   stroke_width:
+	BEGIN
+	create SAN;
+	create 'stroke-width="';
+	create stroke_width;
+	create DoubleQuote;
+	END;
 
    font_family:
 	BEGIN
@@ -635,12 +694,49 @@ ATTRIBUTES
 	create 'font-weight="inherit"';
 	END;
 
+   direction_ = ltr_:
+	BEGIN
+	create SAN;
+	create 'direction="ltr"';
+	END;
+   direction_ = rtl_:
+	BEGIN
+	create SAN;
+	create 'direction="rtl"';
+	END;
+   direction_ = inherit:
+	BEGIN
+	create SAN;
+	create 'direction="inherit"';
+	END;
+
    text_decoration:
 	BEGIN
 	create SAN;
 	create 'text-decoration="';
 	create text_decoration;
 	create DoubleQuote;
+	END;
+
+   unicode_bidi = normal_:
+	BEGIN
+	create SAN;
+	create 'unicode-bidi="normal"';
+	END;
+   unicode_bidi = embed_:
+	BEGIN
+	create SAN;
+	create 'unicode-bidi="embed"';
+	END;
+   unicode_bidi = bidi_override:
+	BEGIN
+	create SAN;
+	create 'unicode-bidi="bidi-override"';
+	END;
+   unicode_bidi = inherit:
+	BEGIN
+	create SAN;
+	create 'unicode-bidi="inherit"';
 	END;
 
    viewBox:
@@ -667,14 +763,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   height_:
-	BEGIN
-	create SAN;
-	create 'height="';
-	create height_;
-	create DoubleQuote;
-	END;
-
    width_:
 	BEGIN
 	create SAN;
@@ -683,27 +771,11 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   fill:
+   height_:
 	BEGIN
 	create SAN;
-	create 'fill="';
-	create fill;
-	create DoubleQuote;
-	END;
-
-   stroke:
-	BEGIN
-	create SAN;
-	create 'stroke="';
-	create stroke;
-	create DoubleQuote;
-	END;
-
-   stroke_width:
-	BEGIN
-	create SAN;
-	create 'stroke-width="';
-	create stroke_width;
+	create 'height="';
+	create height_;
 	create DoubleQuote;
 	END;
 
@@ -715,62 +787,59 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   requiredFeatures:
+   preserveAspectRatio:
 	BEGIN
 	create SAN;
-	create 'requiredFeatures="';
-	create requiredFeatures;
+	create 'preserveAspectRatio="';
+	create preserveAspectRatio;
 	create DoubleQuote;
 	END;
 
-   requiredExtensions:
+   xlink_href:
 	BEGIN
 	create SAN;
-	create 'requiredExtensions="';
-	create requiredExtensions;
+	create 'xlink:href="';
+	create xlink_href;
 	create DoubleQuote;
 	END;
 
-   systemLanguage:
+   type:
 	BEGIN
 	create SAN;
-	create 'systemLanguage="';
-	create systemLanguage;
+	create 'type="';
+	create type;
 	create DoubleQuote;
 	END;
 
-   externalResourcesRequired = false:
+   media:
 	BEGIN
 	create SAN;
-	create 'externalResourcesRequired="false"';
-	END;
-   externalResourcesRequired = true:
-	BEGIN
-	create SAN;
-	create 'externalResourcesRequired="true"';
-	END;
-
-   points:
-	BEGIN
-	create SAN;
-	create 'points="';
-	create points;
+	create 'media="';
+	create media;
 	create DoubleQuote;
 	END;
 
-   d:
+   title_:
 	BEGIN
 	create SAN;
-	create 'd="';
-	create d;
+	create 'title="';
+	create title_;
 	create DoubleQuote;
 	END;
 
-   pathLength:
+   rx:
 	BEGIN
 	create SAN;
-	create 'pathLength="';
-	create pathLength;
+	create 'rx="';
+	create rx;
+	create DoubleQuote;
+	END;
+
+   ry:
+	BEGIN
+	create SAN;
+	create 'ry="';
+	create ry;
 	create DoubleQuote;
 	END;
 
@@ -795,22 +864,6 @@ ATTRIBUTES
 	create SAN;
 	create 'r="';
 	create r;
-	create DoubleQuote;
-	END;
-
-   rx:
-	BEGIN
-	create SAN;
-	create 'rx="';
-	create rx;
-	create DoubleQuote;
-	END;
-
-   ry:
-	BEGIN
-	create SAN;
-	create 'ry="';
-	create ry;
 	create DoubleQuote;
 	END;
 
@@ -846,6 +899,30 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   points:
+	BEGIN
+	create SAN;
+	create 'points="';
+	create points;
+	create DoubleQuote;
+	END;
+
+   d:
+	BEGIN
+	create SAN;
+	create 'd="';
+	create d;
+	create DoubleQuote;
+	END;
+
+   pathLength:
+	BEGIN
+	create SAN;
+	create 'pathLength="';
+	create pathLength;
+	create DoubleQuote;
+	END;
+
    dx:
 	BEGIN
 	create SAN;
@@ -862,51 +939,11 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   xlink_href:
-	BEGIN
-	create SAN;
-	create 'xlink:href="';
-	create xlink_href;
-	create DoubleQuote;
-	END;
-
-   preserveAspectRatio:
-	BEGIN
-	create SAN;
-	create 'preserveAspectRatio="';
-	create preserveAspectRatio;
-	create DoubleQuote;
-	END;
-
    target_:
 	BEGIN
 	create SAN;
 	create 'target="';
 	create target_;
-	create DoubleQuote;
-	END;
-
-   type:
-	BEGIN
-	create SAN;
-	create 'type="';
-	create type;
-	create DoubleQuote;
-	END;
-
-   media:
-	BEGIN
-	create SAN;
-	create 'media="';
-	create media;
-	create DoubleQuote;
-	END;
-
-   title_:
-	BEGIN
-	create SAN;
-	create 'title="';
-	create title_;
 	create DoubleQuote;
 	END;
 

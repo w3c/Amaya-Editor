@@ -47,7 +47,13 @@ w600: 600
 w700: 700
 w800: 800
 w900: 900
+direction_: direction
+ltr_: ltr
+rtl_: rtl
 text_decoration: text-decoration
+unicode_bidi: unicode-bidi
+embed_: embed
+bidi_override: bidi-override
 DOCTYPE: doctype
 CDATA: cdata
 

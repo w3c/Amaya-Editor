@@ -41,7 +41,9 @@ STRUCT
 	      font_variant = normal_, small_caps, inherit;
 	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
 			    w400, w500, w600, w700, w800, w900, inherit;
+	      direction_ = ltr_, rtl_, inherit; 
 	      text_decoration = text;
+	      unicode_bidi = normal_, embed_, bidi_override, inherit;
 	      viewBox = text;
 	      x = text;
               y = text;
@@ -49,7 +51,8 @@ STRUCT
 	      height_ = text;
 	      RealLang = Yes_;
 	      Charset = text)
-        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA, Unknown_namespace);
+        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
+	                               Unknown_namespace);
 
    desc = TEXT;
 	
@@ -62,7 +65,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform = text)
         = LIST OF (GraphicsElement);
 
@@ -71,8 +74,18 @@ STRUCT
 	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform;
+	      { graphicsElementEvents })
+        = LIST OF (GraphicsElement);
+
+   symbol_  { not in SVG Tiny }
+	(ATTR externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_decoration; unicode_bidi;
+	      viewBox;
+	      preserveAspectRatio = text; 
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
@@ -82,7 +95,7 @@ STRUCT
 	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents }
 	      x; 
@@ -93,16 +106,6 @@ STRUCT
               desc; title; metadata;
 	      END;
 	
-   symbol_  { not in SVG Tiny }
-	(ATTR externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      viewBox;
-	      preserveAspectRatio = text; 
-	      { graphicsElementEvents })
-        = LIST OF (GraphicsElement);
-
 { Images }
 
    image
@@ -128,27 +131,11 @@ STRUCT
 	      { PresentationAttributes-All }
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform;
 	      { graphicsElementEvents })
 	= LIST OF (CASE OF
 		      GraphicsElement; foreignObject;
-	              END);
-
-{ Hyperlinking }
-
-   a
-        (ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      transform;
-	      { graphicsElementEvents }
-	      target_ = text)
-	= LIST OF (CASE OF
-		      GraphicsElement; TextComponent;
 	              END);
 
 { Styling }
@@ -259,7 +246,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform;
 	      x;
 	      y;
@@ -272,7 +259,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      x;
               y;
 	      dx;
@@ -309,6 +296,26 @@ STRUCT
    { feTile }
    { feTurbulence }
 
+{ Interactivity }
+
+   { cursor }
+
+{ Linking }
+
+   a
+        (ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_decoration; unicode_bidi;
+	      transform;
+	      { graphicsElementEvents }
+	      target_ = text)
+	= LIST OF (CASE OF
+		      GraphicsElement; TextComponent;
+	              END);
+
 { Scripting }
 
    script_  { not in SVG Tiny }
@@ -341,7 +348,7 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
+	      direction_; text_decoration; unicode_bidi;
 	      transform;
 	      x; 
               y;
@@ -373,10 +380,6 @@ STRUCT
 { Patterns }
 
    { pattern }
-
-{ Cursors }
-
-   { cursor }
 
 { Views }
 
