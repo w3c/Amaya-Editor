@@ -918,23 +918,24 @@ static void         AHTProfile_delete (void)
 static void         AHTProfile_delete ()
 #endif				/* __STDC__ */
 {
-   if (HTLib_isInitialized ())
-     {
+ 
+  /* free the Amaya global context */
+  HTList_delete (Amaya->docid_status);
+  HTList_delete (Amaya->reqlist);
+  TtaFreeMemory (Amaya);
+  
+  if (HTLib_isInitialized ())
+    {
+      
+      /* Clean up the persistent cache (if any) */
+      HTCacheTerminate ();
 
-	/* Clean up the persistent cache (if any) */
-	HTCacheTerminate ();
+      /* Clean up all the global preferences */
+      HTFormat_deleteAll ();
 
-	/* Clean up all the global preferences */
-	HTFormat_deleteAll ();
-
-	/* Terminate libwww */
-	HTLibTerminate ();
-     }
-
-   /* free the global context */
-   HTList_delete (Amaya->docid_status);
-   HTList_delete (Amaya->reqlist);
-   TtaFreeMemory (Amaya);
+      /* Terminate libwww */
+      HTLibTerminate ();
+    }
 }
 
 /*----------------------------------------------------------------------
