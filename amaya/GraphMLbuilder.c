@@ -81,11 +81,12 @@ void    MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *va
      i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
      do
-       if (!strcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue,AttrVal))
+       if (!strcmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	 *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
        else
 	 i++;
-     while (*value <= 0 && GraphMLAttrValueMappingTable[i].ThotAttr != 0);
+     while (*value == 0 &&
+	    GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------

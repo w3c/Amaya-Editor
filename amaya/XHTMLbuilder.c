@@ -1420,25 +1420,20 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 void    MapHTMLAttributeValue (char          *AttrVal,
 			       AttributeType  attrType,
 			       int           *value)
-
 {
-   int  i;
+  int  i;
 
-   *value = 0;
-   i = 0;
-
-   while (XhtmlAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
-	  XhtmlAttrValueMappingTable[i].ThotAttr != 0)
-       i++;
-
-   if (XhtmlAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
-     {
-       do
-           if (!strcmp (XhtmlAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	       *value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
-	   else 
-	       i++;
-       while (*value <= 0 &&
-	      XhtmlAttrValueMappingTable[i].ThotAttr != 0);
-     }
+  *value = 0;
+  i = 0;
+  while (XhtmlAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
+	 XhtmlAttrValueMappingTable[i].ThotAttr != 0)
+    i++;
+  if (XhtmlAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
+    do
+      if (!strcmp (XhtmlAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	*value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
+      else 
+	i++;
+    while (*value <= 0 &&
+	   XhtmlAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
 }

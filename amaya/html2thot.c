@@ -2247,33 +2247,33 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
   ----------------------------------------------------------------------*/
 int           MapAttrValue (int thotAttr, char* attrVal)
 {
-   int        i, value;
+  int        i, value;
 
-   value = -1;
-   i = 0;
-   while (XhtmlAttrValueMappingTable[i].ThotAttr != thotAttr &&
-	  XhtmlAttrValueMappingTable[i].ThotAttr != 0)
-      i++;
-   if (XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr)
-      do
-	 if (attrVal[1] == EOS && (thotAttr == HTML_ATTR_NumberStyle ||
-				   thotAttr == HTML_ATTR_ItemStyle))
-	    /* attributes NumberStyle (which is always 1 character long) */
-	    /* and ItemStyle (only when its length is 1) are */
-	    /* case sensistive. Compare their exact value */
-	    if (attrVal[0] == XhtmlAttrValueMappingTable[i].XMLattrValue[0])
-	       value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
-	    else
-	       i++;
-	 else
-	    /* for other attributes, uppercase and lowercase are */
-	    /* equivalent */
-	    if (!strcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
-	       value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
-	    else
-	       i++;
-      while (value < 0 && XhtmlAttrValueMappingTable[i].ThotAttr != 0);
-   return value;
+  value = -1;
+  i = 0;
+  while (XhtmlAttrValueMappingTable[i].ThotAttr != thotAttr &&
+	 XhtmlAttrValueMappingTable[i].ThotAttr != 0)
+    i++;
+  if (XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr)
+    do
+      if (attrVal[1] == EOS && (thotAttr == HTML_ATTR_NumberStyle ||
+				thotAttr == HTML_ATTR_ItemStyle))
+	/* attributes NumberStyle (which is always 1 character long) */
+	/* and ItemStyle (only when its length is 1) are */
+	/* case sensistive. Compare their exact value */
+	if (attrVal[0] == XhtmlAttrValueMappingTable[i].XMLattrValue[0])
+	  value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
+	else
+	  i++;
+      else
+	/* for other attributes, uppercase and lowercase are */
+	/* equivalent */
+	if (!strcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
+	  value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
+	else
+	  i++;
+    while (value < 0 && XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr);
+  return value;
 }
 
 /*----------------------------------------------------------------------

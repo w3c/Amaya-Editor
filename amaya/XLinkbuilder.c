@@ -49,17 +49,8 @@ static AttrValueMapping XLinkAttrValueMappingTable[] =
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     MapXLinkAttribute (char *attrName, AttributeType *attrType,
 			    char *elementName, ThotBool *level, Document doc)
-#else
-void     MapXLinkAttribute (Attr, attrType, elementName, level, doc)
-char        *attrName;
-AttributeType *attrType;
-char*        elementName;
-ThotBool      *level;
-Document       doc;
-#endif
 {
   attrType->AttrSSchema = GetXLinkSSchema (doc);
   MapXMLAttribute (XLINK_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
@@ -70,44 +61,30 @@ Document       doc;
    Search in the Attribute Value Mapping Table the entry for the attribute
    and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MapXLinkAttributeValue (char* AttrVal, AttributeType attrType, int *value)
-#else
-void                MapXLinkAttributeValue (AttrVal, attrType, value)
-char*             AttrVal;
-AttributeType       attrType;
-int		   *value;
-#endif
+void   MapXLinkAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 {
-   int                 i;
+  int                 i;
 
-   *value = 0;
-   i = 0;
-   while (XLinkAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
-	  XLinkAttrValueMappingTable[i].ThotAttr != 0)
-      i++;
-   if (XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
-      do
-	if (!strcasecmp (XLinkAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	   *value = XLinkAttrValueMappingTable[i].ThotAttrValue;
-	else
-	   i++;
-      while (*value <= 0 && XLinkAttrValueMappingTable[i].ThotAttr != 0);
+  *value = 0;
+  i = 0;
+  while (XLinkAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
+	 XLinkAttrValueMappingTable[i].ThotAttr != 0)
+    i++;
+  if (XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
+    do
+      if (!strcmp (XLinkAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	*value = XLinkAttrValueMappingTable[i].ThotAttrValue;
+      else
+	i++;
+    while (*value == 0 &&
+	   XLinkAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------
    XLinkAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      XLinkAttributeComplete (Attribute attr, Element el, Document doc)
-#else
-void      XLinkAttributeComplete (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
 {
    AttributeType	attrType;
    int			attrKind;
