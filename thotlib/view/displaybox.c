@@ -1275,80 +1275,80 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       LocateFirstChar (pBox, rtl, &adbuff, &indbuff);
       left = 0; /* start position of the selection */
       right = 0; /* end position of the selection */
+      /* check if the box is selected */
+      if (pBox == pFrame->FrSelectionBegin.VsBox ||
+	  pBox == pFrame->FrSelectionEnd.VsBox)
+	{
+	  selected = TRUE;
+	  if (pFrame->FrSelectOnePosition)
+	    {
+	      left = pFrame->FrSelectionBegin.VsXPos;
+	      right = left + 2;
+	    }
+	  else
+	    {
+	      /* almost one character is selected */
+	      if (pBox == pFrame->FrSelectionBegin.VsBox)
+		left = pFrame->FrSelectionBegin.VsXPos;
+	      if (pBox == pFrame->FrSelectionEnd.VsBox)
+		right = pFrame->FrSelectionEnd.VsXPos;
+	      else
+		right = pBox->BxW;
+	      DisplayStringSelection (frame, left, right, t, pBox);
+	      /* extra margins are already taken into account */
+	      left += x - l;
+	      right += x - l;
+	    }
+	}
+      else if (selected &&
+	       (pFrame->FrSelectionBegin.VsBox == NULL ||
+		pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox ) &&
+	       (pFrame->FrSelectionEnd.VsBox == NULL ||
+		pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+	{
+	  /* the whole box is selected */
+	  DisplayBgBoxSelection (frame, pBox);
+	  right = x + pBox->BxWidth;
+	}
+      else if (pBox->BxType == BoPiece ||
+	       pBox->BxType == BoScript ||
+	       pBox->BxType == BoDotted)
+	{
+	  /* check if the box in within the selection */
+	  if (pFrame->FrSelectionBegin.VsBox &&
+	      pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
+	    {
+	      nbox = pFrame->FrSelectionBegin.VsBox;
+	      while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
+		     nbox != pBox)
+		nbox = nbox->BxNexChild;
+	      if (nbox == pBox)
+		{
+		  /* it's within the current selection */
+		  selected = TRUE;
+		  DisplayBgBoxSelection (frame, pBox);
+		  right = x + pBox->BxWidth;
+		}
+	    }
+	  else if (pFrame->FrSelectionEnd.VsBox &&
+		   pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
+	    {
+	      nbox = pBox->BxNexChild;
+	      while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
+		nbox = nbox->BxNexChild;
+	      if (nbox == pFrame->FrSelectionEnd.VsBox)
+		{
+		  /* it's within the current selection */
+		  selected = TRUE;
+		  DisplayBgBoxSelection (frame, pBox);
+		  right = x + pBox->BxWidth;
+		}
+	    }
+	}
+
       /* Search the first displayable char */
       if (charleft > 0 && adbuff)
 	{
-	  /* check if the box is selected */
-	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
-		   pBox == pFrame->FrSelectionEnd.VsBox)
-	    {
-	      selected = TRUE;
-	      if (pFrame->FrSelectOnePosition)
-		{
-		  left = pFrame->FrSelectionBegin.VsXPos;
-		  right = left + 2;
-		}
-	      else
-		{
-		  /* almost one character is selected */
-		  if (pBox == pFrame->FrSelectionBegin.VsBox)
-		    left = pFrame->FrSelectionBegin.VsXPos;
-		  if (pBox == pFrame->FrSelectionEnd.VsBox)
-		    right = pFrame->FrSelectionEnd.VsXPos;
-		  else
-		    right = pBox->BxW;
-		  DisplayStringSelection (frame, left, right, t, pBox);
-		  /* extra margins are already taken into account */
-		  left += x - l;
-		  right += x - l;
-		}
-	    }
-	  else if (selected &&
-		   (pFrame->FrSelectionBegin.VsBox == NULL ||
-		    pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox ) &&
-		   (pFrame->FrSelectionEnd.VsBox == NULL ||
-		    pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
-	    {
-	      /* the whole box is selected */
-	      DisplayBgBoxSelection (frame, pBox);
-	      right = x + pBox->BxWidth;
-	    }
-	  else if (pBox->BxType == BoPiece ||
-		   pBox->BxType == BoScript ||
-		   pBox->BxType == BoDotted)
-	    {
-	      /* check if the box in within the selection */
-	      if (pFrame->FrSelectionBegin.VsBox &&
-		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
-		{
-		  nbox = pFrame->FrSelectionBegin.VsBox;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
-			 nbox != pBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pBox)
-		    {
-		      /* it's within the current selection */
-		      selected = TRUE;
-		      DisplayBgBoxSelection (frame, pBox);
-		      right = x + pBox->BxWidth;
-		    }
-		}
-	      else if (pFrame->FrSelectionEnd.VsBox &&
-		       pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
-		{
-		  nbox = pBox->BxNexChild;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pFrame->FrSelectionEnd.VsBox)
-		    {
-		      /* it's within the current selection */
-		      selected = TRUE;
-		      DisplayBgBoxSelection (frame, pBox);
-		      right = x + pBox->BxWidth;
-		    }
-		}
-	    }
-
 	  /* there is almost one character to display */
 	  do
 	    {

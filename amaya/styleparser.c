@@ -254,7 +254,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "quotes", 6) &&
       strncasecmp (deb, "table-layout", 12) &&
       strncasecmp (deb, "visibility", 10) &&
-      strncasecmp (deb, "windows", 7))
+      strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
   *ptr = c;
   return (ptr);

@@ -86,9 +86,7 @@ static float Clipx, Clipy, ClipxMax, ClipyMax;
 #endif /* _GL */
 
 
-#ifdef _GL 
-
-
+#ifdef _GL
 /*----------------------------------------------------------------------
   ComputePropandAngle : interpolate proportion of each point over
   total list of point
@@ -154,6 +152,7 @@ static void ComputePropandAngle (AnimPath   *pop_path)
   pop_path->Tangent_angle = angle;
 }
 #endif /* _GL */
+
 /*----------------------------------------------------------------------
   populate_path_proportion : 
 
@@ -181,6 +180,7 @@ void populate_path_proportion (void *anim_info)
   ComputePropandAngle (pop_path);
 #endif /* _GL */
 }
+
 /*----------------------------------------------------------------------
   populate_values_proportion : interpolate proportion of each point over
   total path length
@@ -229,8 +229,8 @@ static PtrTransform GetTransformation (PtrTransform Trans,
     }
   return Trans;   
 }
-#ifdef _NEXT
 
+#ifdef _NEXT
 /*----------------------------------------------------------------------
  TtaAnimationReplaceTransform 
   ----------------------------------------------------------------------*/
@@ -277,6 +277,7 @@ static void SetBaseClipping ()
   ClipyMax = -1;
   ClipxMax = -1;
 }
+
 /*----------------------------------------------------------------------
   UpdateClipping : Define Area to be recomputed by animation
   ----------------------------------------------------------------------*/
@@ -296,6 +297,7 @@ static void UpdateClipping (PtrAbstractBox pAb, int w, int h)
       Max (ClipyMax, (box->BxClipY + box->BxClipH));
     }
 }
+
 /*----------------------------------------------------------------------
   interpolate_double_value : Compute a the value corresponding to a time
   using the "regle de trois" ("rule of tree")
@@ -306,6 +308,7 @@ static double interpolate_double_value (float from, float to,
 {
   return ((double)from + ((current_time / duration)  * (double)(to - from)));
 }
+
 /*----------------------------------------------------------------------
   ApplyStrokeColorToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -319,6 +322,7 @@ static void ApplyStrokeColorToAllBoxes (PtrAbstractBox pAb, int result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyFillColorToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -332,6 +336,7 @@ static void ApplyFillColorToAllBoxes (PtrAbstractBox pAb, int result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyOpacityToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -349,6 +354,7 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyXToAllBoxes  : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -387,6 +393,7 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyYToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -427,6 +434,7 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyWidthToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -440,6 +448,7 @@ static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   ApplyHeightToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -453,6 +462,7 @@ static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
       pAb = pAb->AbNext;
     }
 }
+
 /*----------------------------------------------------------------------
   : Recursivly apply the property
   ----------------------------------------------------------------------*/
@@ -514,6 +524,7 @@ static void animate_box_color (PtrElement El,
 	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
       }
 }
+
 /*----------------------------------------------------------------------
   animate_box_animate : Animate any property of an element				
   ----------------------------------------------------------------------*/
@@ -608,6 +619,7 @@ static void animate_box_set (PtrElement El,
       animate_box_color (El, animated, current_time);    
     }
 }
+
 /*----------------------------------------------------------------------
   animate_box_animate : Animate any property of an element				
   ----------------------------------------------------------------------*/
@@ -721,6 +733,7 @@ static void animate_box_animate (PtrElement El,
       animate_box_color (El, animated, current_time);    
     }
 }
+
 /*----------------------------------------------------------------------
   animate_box_transformation : animate the scale, translate, skew, rotate...
   ----------------------------------------------------------------------*/
@@ -1057,6 +1070,7 @@ static int is_animated_now (Animated_Element *animated, AnimTime *current_time)
   else
     return NOT_ANIMATING;
 }
+
 /*----------------------------------------------------------------------
   animate_box : animate a a box using all animation that apply on him
   ----------------------------------------------------------------------*/
@@ -1151,11 +1165,10 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 #endif /* _GL */
 
 /*----------------------------------------------------------------------
-  Animate_boxes : Animate All animated boxe 
-and define region that need redisplay
+  Animate_boxes: Animates All animated boxe and define the region that 
+  needs to be redisplayed.
   ----------------------------------------------------------------------*/
-ThotBool Animate_boxes (int frame, 
-		    AnimTime current_time)
+ThotBool Animate_boxes (int frame, AnimTime current_time)
 {
 #ifdef _GL 
   Animated_Cell *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
