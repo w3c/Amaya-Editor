@@ -154,7 +154,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("ALIGN"), TEXT("H4"), TEXT('A'), HTML_ATTR_TextAlign},
    {TEXT("ALIGN"), TEXT("H5"), TEXT('A'), HTML_ATTR_TextAlign},
    {TEXT("ALIGN"), TEXT("H6"), TEXT('A'), HTML_ATTR_TextAlign},
-   {TEXT("ALIGN"), TEXT("HR"), TEXT('A'), HTML_ATTR_TextAlign},
+   {TEXT("ALIGN"), TEXT("HR"), TEXT('A'), HTML_ATTR_Align},
    {TEXT("ALIGN"), TEXT("IFRAME"), TEXT('A'), HTML_ATTR_Alignment},
    {TEXT("ALIGN"), TEXT("IMAGE"), TEXT('A'), HTML_ATTR_Alignment},
    {TEXT("ALIGN"), TEXT("IMG"), TEXT('A'), HTML_ATTR_Alignment},

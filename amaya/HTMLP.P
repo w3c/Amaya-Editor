@@ -9071,54 +9071,32 @@ ATTRIBUTES
 		END;
 	END;
 
- Align (Table) = left_:
-	BEGIN
-	CreateFirst(ALIGN_LEFT);
-	HorizPos: Left = Enclosing . Left;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view
-	   HorizPos: Left = Enclosing . Left;
-	END;
- Align (Table) = center_:
-	BEGIN
-	CreateFirst(ALIGN_CENTER);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view
-	   HorizPos: Left = Enclosing . Left;
-	END;
- Align (Table) = right_:
-	BEGIN
-	CreateFirst(ALIGN_RIGHT);
-	HorizPos: Right = Enclosing . Right;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view
-	   HorizPos: Left = Enclosing . Left;
-	END;
-
- Align (Horizontal_Rule) = left_:
+ Align = left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
 	HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
- Align (Horizontal_Rule) = center_:
+ Align = center_:
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
- Align (Horizontal_Rule) = right_:
+ Align = right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
 
  TextAlign = left_:
