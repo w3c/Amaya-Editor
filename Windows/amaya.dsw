@@ -1,4 +1,4 @@
-Microsoft Developer Studio Workspace File, Format Version 6.00
+Microsoft Developer Studio Workspace File, Format Version 5.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
@@ -20,6 +20,15 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name thotprinter
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libjpeg
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libpng
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libThotTable
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -32,12 +41,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name libjpeg
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libpng
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -104,15 +107,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name libjpeg
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libpng
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libThotTable
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -130,6 +124,12 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name printlib
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libjpeg
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libpng
     End Project Dependency
 }}}
 

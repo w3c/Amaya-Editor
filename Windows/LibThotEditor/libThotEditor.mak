@@ -27,6 +27,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -41,16 +43,11 @@ ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Release" "libjpeg - Win32 Release"\
- "$(OUTDIR)\libThotEditor.lib"
+ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ENDIF 
 
-!IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
@@ -113,7 +110,6 @@ CLEAN :
 	-@erase "$(INTDIR)\keyboards.obj"
 	-@erase "$(INTDIR)\labelalloc.obj"
 	-@erase "$(INTDIR)\language.obj"
-	-@erase "$(INTDIR)\lookup.obj"
 	-@erase "$(INTDIR)\memory.obj"
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\modiftype.obj"
@@ -200,7 +196,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 RSC=rc.exe
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -210,37 +205,6 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -310,7 +274,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\keyboards.obj" \
 	"$(INTDIR)\labelalloc.obj" \
 	"$(INTDIR)\language.obj" \
-	"$(INTDIR)\lookup.obj" \
 	"$(INTDIR)\memory.obj" \
 	"$(INTDIR)\message.obj" \
 	"$(INTDIR)\modiftype.obj" \
@@ -409,16 +372,11 @@ ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Debug" "libjpeg - Win32 Debug"\
- "$(OUTDIR)\libThotEditor.lib"
+ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ENDIF 
 
-!IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
@@ -481,7 +439,6 @@ CLEAN :
 	-@erase "$(INTDIR)\keyboards.obj"
 	-@erase "$(INTDIR)\labelalloc.obj"
 	-@erase "$(INTDIR)\language.obj"
-	-@erase "$(INTDIR)\lookup.obj"
 	-@erase "$(INTDIR)\memory.obj"
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\modiftype.obj"
@@ -568,7 +525,6 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 RSC=rc.exe
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -578,37 +534,6 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -678,7 +603,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\keyboards.obj" \
 	"$(INTDIR)\labelalloc.obj" \
 	"$(INTDIR)\language.obj" \
-	"$(INTDIR)\lookup.obj" \
 	"$(INTDIR)\memory.obj" \
 	"$(INTDIR)\message.obj" \
 	"$(INTDIR)\modiftype.obj" \
@@ -765,66 +689,39 @@ LIB32_OBJS= \
 
 !ENDIF 
 
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 
 !IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" ==\
  "libThotEditor - Win32 Debug"
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-"libjpeg - Win32 Release" : 
-   cd "\Amaya\Windows\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
-   cd "..\LibThotEditor"
-
-"libjpeg - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-"libjpeg - Win32 Debug" : 
-   cd "\Amaya\Windows\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
-   cd "..\LibThotEditor"
-
-"libjpeg - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-"libpng - Win32 Release" : 
-   cd "\Amaya\Windows\libpng"
-   $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
-   cd "..\LibThotEditor"
-
-"libpng - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\libpng"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Release"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-"libpng - Win32 Debug" : 
-   cd "\Amaya\Windows\libpng"
-   $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
-   cd "..\LibThotEditor"
-
-"libpng - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\libpng"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Debug"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\view\absboxes.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -3864,7 +3761,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3903,7 +3800,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3934,7 +3831,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3973,7 +3870,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -5690,6 +5587,7 @@ DEP_CPP_DISPL=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\displaybox_f.h"\
+	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
@@ -5749,6 +5647,7 @@ DEP_CPP_DISPL=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\displaybox_f.h"\
+	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
@@ -5808,6 +5707,7 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
 	"..\..\thotlib\internals\f\windowdisplay_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -5865,6 +5765,7 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
 	"..\..\thotlib\internals\f\windowdisplay_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -8297,7 +8198,6 @@ SOURCE=..\..\thotlib\image\jpeghandler.c
 DEP_CPP_JPEGH=\
 	"..\..\libjpeg\jconfig.h"\
 	"..\..\libjpeg\jerror.h"\
-	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
@@ -8361,7 +8261,6 @@ NODEP_CPP_JPEGH=\
 
 DEP_CPP_JPEGH=\
 	"..\..\libjpeg\jconfig.h"\
-	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpeglib.h"\
 	"..\..\thotlib\include\appaction.h"\
@@ -8554,7 +8453,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -8594,7 +8493,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -8721,38 +8620,6 @@ DEP_CPP_LANGU=\
 	
 
 "$(INTDIR)\language.obj" : $(SOURCE) $(DEP_CPP_LANGU) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\dialogue\lookup.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-
-"$(INTDIR)\lookup.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_LOOKU=\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	
-
-"$(INTDIR)\lookup.obj" : $(SOURCE) $(DEP_CPP_LOOKU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10126,7 +9993,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -10186,7 +10053,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -11463,7 +11330,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -11542,7 +11409,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -13466,7 +13333,7 @@ DEP_CPP_SEARCHR=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -13547,7 +13414,7 @@ DEP_CPP_SEARCHR=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -14758,7 +14625,7 @@ DEP_CPP_STRUCTM=\
 	"..\..\thotlib\internals\h\modif.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -14853,7 +14720,7 @@ DEP_CPP_STRUCTM=\
 	"..\..\thotlib\internals\h\modif.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -15650,7 +15517,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -15693,7 +15560,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -15725,7 +15592,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -15768,7 +15635,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -15799,7 +15666,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -15870,7 +15737,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -17843,7 +17710,7 @@ DEP_CPP_WRITEP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -17920,7 +17787,7 @@ DEP_CPP_WRITEP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
