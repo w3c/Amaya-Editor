@@ -836,7 +836,6 @@ Document            doc;
   int                 len, base, i;
   Language            lang;
   ThotBool            found, empty, insertNewLine;
-#define BU_LEN 100
 
   /* check whether it's an element type or a class name */
   elType = TtaGetElementType (ClassReference);
@@ -1232,7 +1231,6 @@ void                CreateClass (Document doc, View view)
 void                CreateClass (doc, view)
 Document            doc;
 View                view;
-
 #endif /* __STDC__ */
 {
   Attribute           attr;
@@ -1241,6 +1239,7 @@ View                view;
   ElementType         elType;
   CHAR_T              a_class[50];
   STRING              elHtmlName;
+  STRING              schName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
 
@@ -1261,7 +1260,30 @@ View                view;
   elType = TtaGetElementType (ClassReference);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
-    ClassReference = TtaGetParent (ClassReference);
+    {
+      ClassReference = TtaGetParent (ClassReference);
+      elType = TtaGetElementType (ClassReference);
+    }
+
+  /* check if the element has an style attribute */
+  schName = TtaGetSSchemaName (elType.ElSSchema);
+  if (ustrcmp (schName, TEXT("MathML")) == 0)
+    attrType.AttrTypeNum = MathML_ATTR_style_;
+  else
+#ifdef GRAPHML
+  if (ustrcmp (schName, TEXT("GraphML")) == 0)
+    attrType.AttrTypeNum = GraphML_ATTR_style_;
+  else
+#endif
+    {
+      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+    }
+  attr = TtaGetAttribute (ClassReference, attrType);
+  if (attr == NULL)
+    /* no attribute style */
+    return;
+
   /* update the class name selector. */
   elHtmlName = GITagName (ClassReference);
   if (elHtmlName[0] == TEXT('?'))
@@ -1280,24 +1302,16 @@ View                view;
 #endif /* !_WINDOWS */
       
       /* preselect the entry corresponding to the class of the element. */
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
-	{
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = MathML_ATTR_class;
-	}
+      if (!ustrcmp (schName, TEXT("MathML")))
+	attrType.AttrTypeNum = MathML_ATTR_class;
       else
 #ifdef GRAPHML
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
-	  {
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = GraphML_ATTR_class;
-	  }
+	if (!ustrcmp (schName, TEXT("GraphML")))
+	  attrType.AttrTypeNum = GraphML_ATTR_class;
 	else
 #endif
-	  {
-	    attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	    attrType.AttrTypeNum = HTML_ATTR_Class;
-	  }
+	  attrType.AttrTypeNum = HTML_ATTR_Class;
+
       attr = TtaGetAttribute (ClassReference, attrType);
       if (attr)
 	{
