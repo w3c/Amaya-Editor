@@ -97,6 +97,18 @@ extern void         TtaSetAttributeReference (Attribute attribute, Element eleme
 extern void         TtaCopyAttributeReference (Attribute attribute, Element element, Attribute source);
 
 /* ----------------------------------------------------------------------
+   TtaCopyIncludedElem
+
+   Up to date the value of inclusion element with the value of its source.
+
+   Parameters:
+   element: the element to be up to dated.
+   document: the document that contains the element.
+
+   ---------------------------------------------------------------------- */
+extern void	    TtaCopyIncludedElem (Element element, Document document);
+
+/* ----------------------------------------------------------------------
    TtaUpdateInclusionElements
 
    Up to date the value of inclusions that belong to the document.

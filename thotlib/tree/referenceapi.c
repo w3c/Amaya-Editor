@@ -510,6 +510,51 @@ Attribute           source;
 
 
 /* ----------------------------------------------------------------------
+   TtaCopyIncludedElem
+
+   Up to date the value of inclusion element with the value of its source.
+
+   Parameters:
+   element: the element to be up to dated.
+   document: the document that contains the element.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void		TtaCopyIncludedElem (Element element, Document document)
+#else  /* __STDC__ */
+void		TtaCopyIncludedElem (element, document)
+Element		element;
+Document	document;
+
+#endif /* __STDC__ */
+
+{
+   UserErrorCode = 0;
+
+   /* Checks the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     {
+        TtaError (ERR_invalid_document_parameter);
+        return;
+     }
+   if (LoadedDocument[document - 1] == NULL)
+     {
+        TtaError (ERR_invalid_document_parameter);
+        return;
+     }
+
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+        return;
+     }
+
+   CopyIncludedElem ((PtrElement)element, LoadedDocument[document - 1]);
+}
+
+
+/* ----------------------------------------------------------------------
    TtaUpdateInclusionElements
 
    Up to date the value of inclusions that belong to the document.
@@ -603,12 +648,16 @@ Document           *targetDocument;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal ||
-	    ((PtrElement) element)->ElLeafType != LtReference)
+            ( !((PtrElement) element)->ElIsCopy &&
+	       ((PtrElement) element)->ElLeafType != LtReference ))
       /* It is not a reference */
       TtaError (ERR_invalid_element_type);
    else
      {
-	if (((PtrElement) element)->ElReference != NULL)
+        if (((PtrElement) element)->ElIsCopy)
+           *target = (Element) ReferredElement (((PtrElement) element)->ElSource,
+                                                &iDocExt, &pDocExt);
+	else if (((PtrElement) element)->ElReference != NULL)
 	   *target = (Element) ReferredElement (((PtrElement) element)->ElReference,
 						&iDocExt, &pDocExt);
 	if (!DocIdentIsNull (iDocExt))

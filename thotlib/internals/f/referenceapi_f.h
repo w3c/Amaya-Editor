@@ -23,6 +23,8 @@ extern void TtaSetAttributeReference ( Attribute attribute,
 extern void TtaCopyAttributeReference ( Attribute attribute,
                                         Element element,
                                         Attribute source );
+extern void TtaCopyIncludedElem ( Element element,
+                                  Document document );
 extern void TtaUpdateInclusionElements ( Document document,
                                          boolean loadExternalDoc,
                                          boolean removeExclusions );
@@ -70,6 +72,8 @@ extern void TtaSetAttributeReference (/* Attribute attribute,
 extern void TtaCopyAttributeReference (/* Attribute attribute,
                                           Element element,
                                           Attribute source */);
+extern void TtaCopyIncludedElem (/* Element element,
+                                    Document document */);
 extern void TtaUpdateInclusionElements (/* Document document,
                                            boolean loadExternalDoc,
                                            boolean removeExclusions */);
