@@ -768,7 +768,8 @@ ThotBool             IsW3Path (const char *path)
       strncmp (path, "news:", 5)   && 
       strncmp (path, "gopher:", 7) &&
       strncmp (path, "mailto:", 7) && 
-      strncmp (path, "archie:", 7))
+      strncmp (path, "archie:", 7) &&
+      strncmp (path, "https:", 6))
     return FALSE;
   return TRUE;
 }

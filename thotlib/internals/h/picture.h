@@ -55,9 +55,9 @@ typedef struct
   Pixmap         PicAlpha;
 #ifdef _GL
   unsigned int         TextureBind;
-  int            DisplayList;
-  int            xorig;
-  int            yorig;
+  int                  DisplayList;
+  int                  xorig;
+  int                  yorig;
 #endif /* _GL */
 #ifdef _WINDOWS
   int            PicMask;        /* Mask color */

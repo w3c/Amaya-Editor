@@ -61,26 +61,13 @@
 #include "inites_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
+
 #ifdef _GL
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
-
-gboolean GL_DrawCallback (ThotWidget widget, 
-			  GdkEventExpose *event, 
-			  gpointer data);
-gboolean  GL_Init (ThotWidget widget, 
-		   GdkEventExpose *event, 
-		   gpointer data);
-gboolean GL_FocusIn (ThotWidget widget, 
-		     GdkEventExpose *event, 
-		     gpointer data);
-gboolean GL_FocusOut (ThotWidget widget, 
-		      GdkEventExpose *event, 
-		      gpointer data);
-gboolean  GL_Destroy (ThotWidget widget, 
-		      GdkEventExpose *event, 
-		      gpointer data);
+#include "glwindowdisplay.h"
 #endif/*  _GL */
+
 /*static    Time   t1;*/
 #else /* _GTK */
 #include "input_f.h"
@@ -2600,8 +2587,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    int attrlist[] = {
       GDK_GL_RGBA,
       GDK_GL_DOUBLEBUFFER,
-      /* GDK_GL_ALPHA_SIZE, 1, */
-      /* GDK_GL_DEPTH_SIZE, 1, */
       GDK_GL_NONE
    };
    /* in order to share textures 
@@ -2983,7 +2968,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   g_print("Error creating GtkGLArea!\n");
 		   exit(0);
 		 }
-	       GL_context = drawing_area;
+	       GL_context = (GtkGLArea *) drawing_area;
 	     }
 	   else
 	     {

@@ -42,61 +42,12 @@
 #include "displayselect_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
-#include "frame_f.h"
+#include "frame_f.h" 
 #include "picture_f.h"
 #include "xwindowdisplay_f.h"
 
 #ifdef _GL
-
-#include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
-
-/* 
-   stupid animation render testing
-   in order to vizualise renderings 
-   times */
-void make_carre()
-{
-  static float k = 0.0;
-  static float l = 0.0;
-
-glPushMatrix();
-         k += 15.0;
-         k = k > 500.0 ? 0 : k;
-	 l += 0.05;
-	 l = l > 1.0 ? 0 : l;
-	 glTranslatef( 0.0, k, 0.0);
-	 glBegin(GL_QUADS);
-	 glColor4f(1.0-l, 0.0, 1.0, 1-l);
-	 glVertex2i(  0, 20 );/* haut gauche*/
-	 glColor4f(1.0, 0.0, 1.0-l, 0.75-l);
-	 glVertex2i( 20, 20);/* haut droit*/
-	 glColor4f(0.5, 0.5, 1.0-l, 0.75-l);
-	 glVertex2i( 20, 0);/* bas droit*/
-	 glColor4f(0.5, 0.5, 1.0-l, 0.25-l);
-	 glVertex2i(  0, 0);/* bas gauche */
-	 glEnd();
-glPopMatrix(); 
-}
-
-extern ThotBool GL_Modif;
-
-/*----------------------------------------------------------------------
-   GL_prepare: If a modif has been done
-  ----------------------------------------------------------------------*/
-ThotBool GL_prepare (GtkWidget *widget)
-{  
-  GL_Modif = TRUE; 
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-   GL_realize : can we cancel if no modifs ?
-  ----------------------------------------------------------------------*/
-void GL_realize (GtkWidget *widget)
-{
-  return;
-}
+#include "glwindowdisplay.h"
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
@@ -830,7 +781,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       bottom = top + h;
       tVol = bVol = 0;
       delta = top - h / 2;
-      topBox = NULL;
+      pRootBox = topBox = NULL;
+      y = 0;      
       /* used to store boxes created on the fly */
       create = NULL;
       /* Redraw from top to bottom all filled boxes */

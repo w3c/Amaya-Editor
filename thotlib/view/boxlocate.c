@@ -1068,7 +1068,24 @@ static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
 	  break;
 
 	case PtEllipticalArc:
-	  /**** to do ****/
+	  x1 = pPa->XStart;
+	  y1 = pPa->YStart;
+	  x2 = pPa->XEnd;
+	  y2 = pPa->YEnd;
+	  cx1 = pPa->XRadius; 
+	  cy1 = pPa->YRadius; 	  
+	  EllipticSplit ( frame, 0, 0,
+			  (double) x1, (double) y1, 
+			  (double) x2, (double) y2, 
+			  (double) cx1, (double) cy1,
+			  fmod(pPa->XAxisRotation, 360), 
+			  pPa->LargeArc, pPa->Sweep,
+			  &points, npoints, &maxpoints);
+	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
 	  break;
 	}
       pPa = pPa->PaNext;

@@ -6,8 +6,9 @@
  */
 
 /*
- * Handle Opengl Fonts with Freetype 2
- * ( bitmap font || antialiased texture font)
+ * Handle Opengl Fonts with Freetype 2 
+ * (http://www.freetype.org)
+ * ( Here we make glyph to bitmap font || antialiased texture font)
  * Based on FTGLIB a very good C++ lib that handles fonts in opengl
  * ( http://homepages.paradise.net.nz/henryj/code/index.html )
  * 
@@ -75,7 +76,28 @@ static void FaceKernAdvance (FT_Face face,
     }
 }
 
+/*-------------------------------------------
+  MakeAlphaBitmap : Make antialiased bitmap
+--------------------------------------------*/
+static unsigned char *MakeAlphaBitmap (unsigned char *source,
+				int destWidth, int destHeight, int Pitch)
+{
+  unsigned char *data, *ptr;
+  int x, y, current;;
 
+  current = 0;
+  data = (unsigned char *) malloc (destWidth * destHeight * sizeof (unsigned char));
+  for (y = destHeight; y > 0; y--)
+    {
+      ptr = source + (y * destWidth - Pitch);
+      for (x = 0; x < destWidth; x++)
+	{
+	  *( data + current) = *(ptr++);
+	  current++;
+	}
+    }
+  return data;
+}
 
 /*-----------------------------
   Bitmap specific handling
@@ -88,14 +110,18 @@ static GL_glyph  *MakeBitmapGlyph(GL_font *font, unsigned int g)
   FT_Glyph        Glyph;
   int             destWidth, destHeight, 
                   srcWidth, srcHeight, 
-                  srcPitch, x, y;
+                  srcPitch;
   char *data;
+  int err;
 
-  FT_Load_Glyph( *font->face, g,  FT_LOAD_DEFAULT);
+  data = NULL;
+
+  FT_Load_Glyph (*font->face, g,  FT_LOAD_NO_HINTING);
   FT_Get_Glyph( (*(font->face))->glyph, &Glyph);
+
   if(Glyph)
     {
-      FT_Error err = FT_Glyph_To_Bitmap( &Glyph, ft_render_mode_mono, 0, 1);
+      err = FT_Glyph_To_Bitmap( &Glyph, ft_render_mode_normal, 0, 1);
       if( err || ft_glyph_format_bitmap != Glyph->format)
 	{
 	  FT_Done_Glyph (Glyph);
@@ -111,24 +137,15 @@ static GL_glyph  *MakeBitmapGlyph(GL_font *font, unsigned int g)
 	  srcPitch = source->pitch;
 	  destWidth = srcWidth;
 	  destHeight = srcHeight;  
-	  if( destWidth && destHeight)
-	    {
-	      data = (unsigned char*) malloc (srcPitch * destHeight * sizeof (unsigned char));
-	      for(y = 0; y < srcHeight; y++)
-		{
-		  destHeight--;
-		  for(x = 0; x < srcPitch; x++)
-		    *( data + ( destHeight * srcPitch + x)) = *( source->buffer 
-							      + ( y * srcPitch) 
-							      + x);
-		}
-	      destHeight = srcHeight;
-	    }  
+	  if (destWidth && destHeight)
+	      data = MakeAlphaBitmap (source->buffer, 
+				      destWidth, destHeight, 
+				      srcPitch);  
 	  FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
 	  BitmapGlyph->data = data;
 	  BitmapGlyph->advance = (float) (Glyph->advance.x >> 16);
 	  BitmapGlyph->pos.x = bitmap->left;
-	  BitmapGlyph->pos.y = srcHeight - bitmap->top;   
+	  BitmapGlyph->pos.y = destHeight - bitmap->top;   
 	  BitmapGlyph->dimension.x = destWidth;
 	  BitmapGlyph->dimension.y = destHeight;  	  
 	  FT_Done_Glyph (Glyph);
@@ -140,23 +157,21 @@ static GL_glyph  *MakeBitmapGlyph(GL_font *font, unsigned int g)
 }
 
 static int BitmapGlyphRender (GL_glyph *glyph, FT_Vector pen)
-{
+{				    
   if(glyph->data)
     {
-      /* Move the glyph origin */
-      glBitmap( 0, 0, 0.0, 0.0, 
-		pen.x + glyph->pos.x, 
+      glBitmap( 0, 0, 0.0, 0.0,
+		pen.x, 
 		pen.y - glyph->pos.y, 
 		(const GLubyte *) 0 );
-      glBitmap( glyph->dimension.x, 
-		glyph->dimension.y, 
-		0.0f, 
-		0.0, 0.0, 0.0, 
-		(const GLubyte *) glyph->data);      
-      /* Restore the glyph origin */
+      glDrawPixels(glyph->dimension.x,
+		   glyph->dimension.y,
+		   GL_ALPHA,
+		   GL_UNSIGNED_BYTE,
+		   (const GLubyte *) glyph->data);
       glBitmap( 0, 0, 0.0, 0.0, 
-		-pen.x - glyph->pos.x, 
-		-pen.y + glyph->pos.y, 
+		- pen.x, 
+		- pen.y + glyph->pos.y, 
 		(const GLubyte *) 0 );
     }
   return glyph->advance;
@@ -166,10 +181,10 @@ static void BitmapFontMakeGlyphList (GL_font *font)
 {
   int c;
 
-  font->glyphList = (GL_glyph **) malloc ( sizeof(GL_glyph) * (*(font->face))->num_glyphs );
+  font->glyphList = (GL_glyph **) malloc ( sizeof(GL_glyph *) * (*(font->face))->num_glyphs );
   for (c = 0; c < (*(font->face))->num_glyphs; c++)
     {
-      if (FALSE)
+      if (TRUE)
 	font->glyphList[c] = MakeBitmapGlyph (font, c);
       else
 	font->glyphList[c] = NULL;
@@ -229,6 +244,13 @@ static float SizeWidth(GL_font *font)
       return (*(font->face))->size->metrics.max_advance >> 6;
 }
 
+/*------------------------------------------------------------
+  MakeTextureGlyph : 
+  Turn Glyph into Alpha bitmap then store it in texture objects 
+  (Video card memory Resident.)
+  Texture are in the card max size texture and 
+  several Glyph are stored in one texture.
+ -----------------------------------------------------------*/
 static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g, 
 				   int *remGlyphs,int  *numTextures,
 				   GLuint glTextureID[], 
@@ -236,7 +258,7 @@ static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g,
 {
   unsigned char   *data = NULL;
   float           glyphHeight,glyphWidth; 
-  int             srcPitch,destWidth, destHeight, y, x,
+  int             srcPitch,destWidth, destHeight,
                   err, textureWidth, textureHeight;
   FT_BitmapGlyph  bitmap;
   FT_Bitmap*      source;
@@ -249,8 +271,7 @@ static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g,
   if (Glyph)
     {
       glyphHeight = SizeHeight (font);
-      glyphWidth = SizeWidth (font);      
-      /* Is there a current texture */
+      glyphWidth = SizeWidth (font);   
       if (*numTextures == 0)
 	{
 	  glTextureID[0] = TextureFontCreateTexture (&textureWidth, &textureHeight, 
@@ -290,10 +311,7 @@ static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g,
       destHeight = source->rows;
       if (destWidth && destHeight)
 	{
-	  data = (unsigned char *) malloc (destWidth * destHeight * sizeof (unsigned char));
-	  for(y = 0; y < destHeight; y++)
-	    for(x = 0; x < destWidth; x++)
-	      *( data + ( y * destWidth  + x)) = *( source->buffer + ( y * srcPitch) + x);
+	  data = MakeAlphaBitmap (source->buffer, destWidth, destHeight, srcPitch);
 	   if(activeTextureID != glTextureID[(*numTextures)-1])
 	     {
 	       glBindTexture( GL_TEXTURE_2D, glTextureID[(*numTextures)-1]);
@@ -309,7 +327,7 @@ static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g,
       BitmapGlyph->dimension.x = destWidth;
       BitmapGlyph->dimension.y = destHeight; 
       BitmapGlyph->pos.x = bitmap->left;
-      BitmapGlyph->pos.y = bitmap->top;   
+      BitmapGlyph->pos.y = destHeight - bitmap->top;   
       BitmapGlyph->advance = Glyph->advance.x >> 16;
       info->uv[0].x = (float) (*xOffset) / (float) (textureWidth);
       info->uv[0].y = (float) (*yOffset) / (float) (textureHeight);
@@ -394,16 +412,20 @@ static int TextureGlyphRender(GL_glyph *glyph, FT_Vector pen)
       glBegin (GL_QUADS);
       glTexCoord2f (info->uv[0].x, info->uv[0].y);
       glVertex2f (pen.x + glyph->pos.x,
-		  pen.y + glyph->pos.y);  
+		  pen.y + glyph->pos.y );  
+
       glTexCoord2f (info->uv[0].x, info->uv[1].y);
       glVertex2f (pen.x + glyph->pos.x,
 		  pen.y + glyph->pos.y - glyph->dimension.y);
+
       glTexCoord2f (info->uv[1].x, info->uv[1].y);
       glVertex2f (pen.x + glyph->dimension.x + glyph->pos.x,
 		  pen.y + glyph->pos.y - glyph->dimension.y);
+
       glTexCoord2f (info->uv[1].x, info->uv[0].y);
       glVertex2f (pen.x + glyph->dimension.x + glyph->pos.x,	
-		  pen.y + glyph->pos.y);
+		  pen.y + glyph->pos.y );
+
       glEnd ();
     }
   return glyph->advance;
@@ -443,6 +465,7 @@ static void FontClose (GL_font *font)
 #ifndef MESA
   GL_textureinfo *info;
 #endif/* MESA */
+
   if (font)
     {
       numglyphs = (*(font->face))->num_glyphs;
@@ -454,13 +477,18 @@ static void FontClose (GL_font *font)
 	  info = (GL_textureinfo *) font->glyphList[c]->data; 
 	  /* free textures */
 	  if (glIsTexture (info->textureid))
-	    glDeleteTextures (1, &(info->textureid));
+	    glDeleteTextures (1, &(info->textureid));	    
 #endif/* MESA */
-	  free (font->glyphList[c]->data);
-	  free (font->glyphList[c]);
+	  if (font->glyphList[c] != NULL)
+	    {
+	      if (font->glyphList[c]->data != NULL)
+		free (font->glyphList[c]->data);
+	      free (font->glyphList[c]);
+	    }
 	}
       free (font->glyphList); 
       free (font);
+      font = NULL;
     }
   
 }
@@ -475,7 +503,7 @@ static GL_font *FontOpen (const char* fontname)
   if (!init_done)
     FTLibraryInit ();
   font = (GL_font *) malloc (sizeof (GL_font));
-  font->face = (FT_Face *) malloc (sizeof (FT_Face));
+  font->face = (FT_Face *) malloc (sizeof (FT_Face *));
   font->glyphList = NULL;
   err = FT_New_Face( FTlib, fontname, 0, font->face);
   if(err)
@@ -483,20 +511,12 @@ static GL_font *FontOpen (const char* fontname)
       font->face = 0;
       return NULL;
     }
-  else
-    {
-      if( !(*font->face)->charmap)
-	{
-	  FT_Set_Charmap( *(font->face), (*font->face)->charmaps[0]);
-	}
-      /*  font->face->charmap->encoding; */
-    }
   return font; 
 }
 
 
 static void FontBBox (GL_font *font,
-	  const char* string,
+	  char* string,
 	  float *llx, float *lly, 
 	  float *llz, float *urx, 
 	  float *ury, float *urz)
@@ -509,7 +529,8 @@ static void FontBBox (GL_font *font,
   *llx = *lly = *llz = *urx = *ury = *urz = 0;
   c = string;
   left = FT_Get_Char_Index (*(font->face), *c);
-  while( *c)
+  right = 0;
+  while (*c)
     {
       if( !font->glyphList[left])
 	  font->glyphList[left] = MakeGlyph (font, left);
@@ -557,8 +578,8 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding)
 {
   int err;
 
-  err = FT_Select_Charmap (*(font->face), encoding );
-  return !err;
+  err = FT_Select_Charmap (*(font->face), encoding);
+  return err;
 }
 
 static int FontAscender (GL_font *font) 
@@ -595,13 +616,14 @@ static float FontAdvance (GL_font *font, const char* string)
   return width;
 }
 
-static void FontRender (GL_font *font, const char* string )
+
+static int FontRender (GL_font *font, const char* string )
 {
   FT_Vector pen;
   FT_Vector kernAdvance;
   int advance;
   unsigned int left, right;
-  unsigned char* c = (unsigned char*)string;
+  unsigned char* c = (unsigned char*) string;
 
   pen.x = 0; 
   pen.y = 0;  
@@ -622,13 +644,14 @@ static void FontRender (GL_font *font, const char* string )
       left = right;
       c++;
     }
+  return pen.x;
 }
 
 
 /* Generic Calls */ 
-void gl_draw_text (void* gl_void_font, const char *str)
+int gl_draw_text (void* gl_void_font, const char *str)
 {    
-  FontRender ((GL_font *) gl_void_font, str);
+  return FontRender ((GL_font *) gl_void_font, str);
 }
 
 void gl_font_delete (void *gl_void_font)
@@ -648,7 +671,7 @@ int gl_font_ascent (void *gl_void_font)
   return (FontAscender((GL_font *) gl_void_font));
 }
 
-int gl_font_char_width (void *gl_void_font, const char c)
+int gl_font_char_width (void *gl_void_font, char c)
 {
   char character_only[2];
    
@@ -658,7 +681,7 @@ int gl_font_char_width (void *gl_void_font, const char c)
   return (FontAdvance ((GL_font *) gl_void_font, character_only)); 
 }
 
-int gl_font_char_height (void *gl_void_font, const char *c)
+int gl_font_char_height (void *gl_void_font, char *c)
 {
   float llx;            /*  The bottom left near most ?? in the x axis */
   float lly;            /*  The bottom left near most ?? in the y axis */
@@ -673,7 +696,7 @@ int gl_font_char_height (void *gl_void_font, const char *c)
    return ((int) (ury - lly));
 }
 
-int gl_font_char_ascent (void *gl_void_font, const char *c)
+int gl_font_char_ascent (void *gl_void_font, char *c)
 {
   float llx, lly, llz, urx, ury, urz;          
 
@@ -687,34 +710,78 @@ int gl_font_char_ascent (void *gl_void_font, const char *c)
 void *gl_font_init (const char *font_filename, char alphabet, int size)
 {
   GL_font* gl_font = NULL;
-
-      gl_font = FontOpen (font_filename);
-      if (gl_font != NULL)
-	{         
-	  FontFaceSize (gl_font, size, 72);
-	  /* switch alphabet <= DEFAULT_CHARSET; */
-	  /* From the freetype docs... http://www.freetype.org/
-	     "By default, when a new face object is created, 
-	     (freetype) lists all the charmaps contained in the font face 
-	     and selects the one that supports Unicode character codes 
-	     if it finds one. 
-	     Otherwise, it tries to find support for Latin-1, then ASCII."
-	     Here are encoding possible value as a parameter :
-	     ft_encoding_none	ft_encoding_symbol
-	     ft_encoding_unicode	ft_encoding_latin_2
-	     ft_encoding_sjis	ft_encoding_gb2312
-	     ft_encoding_big5	ft_encoding_wansung
-	     ft_encoding_johab	ft_encoding_adobe_standard
-	     ft_encoding_adobe_expert ft_encoding_adobe_custom
-	     ft_encoding_apple_roman 
-	  */	
-	  if (alphabet == 'G')
-	    FontCharMap (gl_font, ft_encoding_symbol);
-	  else 	  
-	    FontCharMap (gl_font, ft_encoding_unicode);	  
-	  return (void *) gl_font; 
+  int err;
+  
+  err= 0;
+  gl_font = FontOpen (font_filename);
+  if (gl_font != NULL)
+    {        
+      /* switch alphabet <= DEFAULT_CHARSET; */
+      /* From the freetype docs... http://www.freetype.org/
+	 "By default, when a new face object is created, 
+	 (freetype) lists all the charmaps contained in the font face 
+	 and selects the one that supports Unicode character codes 
+	 if it finds one. 
+	 Otherwise, it tries to find support for Latin-1, then ASCII."
+	 Here are encoding possible value as a parameter :
+	 ft_encoding_none	ft_encoding_symbol
+	 ft_encoding_unicode	ft_encoding_latin_2
+	 ft_encoding_sjis	ft_encoding_gb2312
+	 ft_encoding_big5	ft_encoding_wansung
+	 ft_encoding_johab	ft_encoding_adobe_standard
+	 ft_encoding_adobe_expert ft_encoding_adobe_custom
+	 ft_encoding_apple_roman 
+      */	
+      if (alphabet == 'G' && 0)
+	{
+	  err = FontCharMap (gl_font, ft_encoding_symbol);
 	}
-      return NULL;
+      else 
+	{
+	  err = FontCharMap (gl_font, ft_encoding_unicode);
+	}
+      if (err)
+	{
+	  FT_Done_Face (*(gl_font->face));
+	  free (gl_font);
+	  return NULL;
+	}
+      FontFaceSize (gl_font, size, 72);	 	  
+      return (void *) gl_font; 
+    }
+  return NULL;
+}
+  
+
+int UnicodeFontRender (void *gl_font, wchar_t *string )
+{
+  FT_Vector pen;
+  FT_Vector kernAdvance;
+  int advance;
+  unsigned int left, right;
+  GL_font* font;
+
+  font = (GL_font *) gl_font;
+  pen.x = 0; 
+  pen.y = 0;
+  left = FT_Get_Char_Index (*(font->face), (FT_ULong) *string);
+  if (!font->glyphList[left])
+      font->glyphList[left] = MakeGlyph (font, left);
+  while (*string)
+    {
+      right = FT_Get_Char_Index (*(font->face), *(string + 1));
+      if(!font->glyphList[right])
+	font->glyphList[right] = MakeGlyph (font, right);
+      FaceKernAdvance( *(font->face), left, right, &kernAdvance);
+      advance = RenderGlyph (font->glyphList[left], pen); 
+      kernAdvance.x = advance + kernAdvance.x;
+      /*	kernAdvance.y = advance.y + kernAdvance.y; */
+      pen.x += kernAdvance.x;
+      pen.y += kernAdvance.y;
+      left = right;
+      string++;
+    }
+  return pen.x;
 }
 
 #endif /* _GL */

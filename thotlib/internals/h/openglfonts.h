@@ -62,12 +62,12 @@ static GL_font       *FontOpen (const char* fontname);
 static void          FontClose (GL_font *font);
 static int           FontAscender (GL_font *font);
 static int           FontDescender (GL_font *font);
-static void          FontRender (GL_font *font, const char* string );
+static int           FontRender (GL_font *font, const char* string );
 static void          FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res );
 static int           FontCharMap (GL_font *font, FT_Encoding encoding);
 
 static void          FontBBox (GL_font *font,
-			       const char* string,
+			       char* string,
 			       float *llx, float *lly, 
 			       float *llz, float *urx, 
 			       float  *ury, float *urz);

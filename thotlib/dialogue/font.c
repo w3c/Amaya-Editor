@@ -82,6 +82,8 @@ static SpecFont   FirstFontSel = NULL;
 /* ~/Amaya/thotlib/internals/h */
 #include "openglfont.h"
 
+
+
 /*----------------------------------------------------------------------
  GL_FontIInit 
  Use Freetype2 and 
@@ -95,9 +97,11 @@ void *GL_LoadFont (char alphabet, int family,
   char filename[2048];
 
   size = LogicalPointsSizes[size];
-  /* if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[ActiveFrame].WdFrame))) */
-    if (GetFontFilename(xlfd, filename))
-      return ( gl_font_init (filename, alphabet, size)); 
+  if (GetFontFilename(alphabet, family, 
+		      highlight, size, 
+		      UseLucidaFamily, UseAdobeFamily,
+		      filename))
+      return (gl_font_init (filename, alphabet, size)); 
   return NULL;
 }
 #endif /* _GL */
@@ -978,7 +982,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  ptfont->script  = script;
 	  ptfont->family    = family;
 	  ptfont->highlight = highlight;
-      size = LogicalPointsSizes[size];
+	  size = LogicalPointsSizes[size];
 	  ptfont->size      = size;
 	  ActiveFont = WIN_LoadFont (script, family, highlight, size);
 	  if (TtPrinterDC != 0)

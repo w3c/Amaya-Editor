@@ -36,16 +36,14 @@
 static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
+
 #ifdef _GL
- 
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
 #ifdef GL_MESA_window_pos
 #define MESA
 #endif
-/* timer */
-#include <unistd.h>
-#include <sys/timeb.h>
+#include "glwindowdisplay.h"
 #endif /*_GL*/
 
 static gchar *null_string;
@@ -494,87 +492,7 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 #ifdef _GL
 
-/* if a refresh is needed, it is TRUE*/
-ThotBool GL_Modif = FALSE;
-ThotBool GL_Drawing = FALSE;
 #define TIMER_PRECISION 5
-
-/* Testing purpose function 
-   Drawing grid (for canvas geometry tests)*/
-void DrawGrid(int width, int height)
-{  
-  GLfloat grid2x2[2][2][3];
-
-
-  grid2x2[0][0][0] = 0.0;
-  grid2x2[0][0][1] = 0.0;
-  grid2x2[0][0][2] = 0.0;
-
-  grid2x2[0][1][0] = width;
-  grid2x2[0][1][1] = 0.0;
-  grid2x2[0][1][2] = 0.0;
-
-
-  grid2x2[1][0][0] = 0.0;
-  grid2x2[1][0][1] = height;
-  grid2x2[1][0][2] = 0.0;
-
-  grid2x2[1][1][0] = width;
-  grid2x2[1][1][1] = height;
-  grid2x2[1][1][2] = 0.0;
-  
-  glColor3f(1.0, 0.0, 0.0);
-  glEnable(GL_MAP2_VERTEX_3);  
-  glMap2f(GL_MAP2_VERTEX_3,    
-	  0.0, 1.0,  /* U ranges 0..1 */    
-	  3,         /* U stride, 3 floats per coord */    
-	  2,         /* U is 2nd order, ie. linear */    
-	  0.0, 1.0,  /* V ranges 0..1 */    
-	  2 * 3,     /* V stride, row is 2 coords, 3 floats per coord */    
-	  2,         /* V is 2nd order, ie linear */    
-	  (GLfloat *) grid2x2);  /* control points */ 
-  glMapGrid2f(    5, 0.0, 1.0,    6, 0.0, 1.0);
-  glEvalMesh2(GL_LINE,    0, 5,   
-	      /* Starting at 0 mesh 5 steps (rows). */    
-	      0, 6);  /* Starting at 0 mesh 6 steps (columns). */
-}
-
-/*----------------------------------------------------------------------
- GL_DrawAll : Only function that Really Draw opengl !!
-  ----------------------------------------------------------------------*/
-static void GL_DrawAll (ThotWidget widget, int frame)
-{  
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    { 	  
-      /* prevent other computation at 
-       the same time*/
-      GL_Drawing = TRUE;  
-     
-      /* Redraw ALL THE CANVAS (Animation testing)
-       usually only modified buffer will be copied 
-      into the frame buffer */      
-            
-     /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
-      /* 		FrameTable[frame].WdFrame->allocation.height); */
-
-      DefClip (frame, -1, -1, -1, -1); 
-      RedrawFrameBottom (frame, 0, NULL);      
-      /*a resfresh indicator*/
-     /*  make_carre();	  */  
-
-      /* Double Buffering */
-      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-      glFlush ();
-      /* Paints a background color 
-	 Have to discard it if 
-	 background image exist in document
-      Clear is after buffer swapping as it take 
-      times and is asynchronous with Amaya computation*/     
-      /* glClear(GL_COLOR_BUFFER_BIT); */          
-
-      GL_Drawing = FALSE;
-    }
-}
 
 /*---------------------------------------------------------------------
  Idle_draw_GTK :
@@ -585,47 +503,16 @@ static void GL_DrawAll (ThotWidget widget, int frame)
  ----------------------------------------------------------------------*/
 gboolean Idle_draw_GTK (GtkWidget *widget)
 {
-  struct timeb	before;
-  struct timeb	after;
-  int	dsec;	
-  int	dms; 
-  int   fps;
-
   int   frame;
-
+      
   /* permits user to do dialog action*/
   /*  while (gtk_events_pending())   */
   /*  {  */ 
   /* gtk_main_iteration();   */
   /*  }   */
   
-  /* draw and calculate draw time 
-     bench that helps finding bottlenecks...*/
-
-  /*uncomment below for animated mode*/
-  /*  ftime(&before); */
-   /*    if (before.time > 7) */
-   /*      GL_Modif=TRUE; */
-   if (GL_Modif && !GL_Drawing && !FrameUpdating)	
-     { 
-       ftime(&before);
-
-      frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
-      ActiveFrame = frame;
-      
-      GL_DrawAll (widget, frame);
-      GL_Modif = FALSE;
-      
-      ftime(&after);	
-
-      dsec = after.time - before.time;	
-      dms = after.millitm - before.millitm;
-      if (dms > 0 )
-	{
-	  g_print (" %d fps \t", (int) 1000/dms);
-	  g_print ("=>\t %is %ims / frame\n", dsec, dms);
-	}
-    }
+  frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
+  GL_DrawAll (widget, frame);      
   return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -716,113 +603,18 @@ gboolean  GL_Init (ThotWidget widget,
 {
   int      timer, frame;
   GTimer   *gtimer;
-  static dialogfont_enabled = FALSE;
+  static ThotBool dialogfont_enabled = FALSE;
 
   frame = (int) data;
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     { 
-      /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-      g_print("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
-	      (char *)glGetString(GL_VERSION), 
-	      (char *)glGetString(GL_RENDERER));   
-      /* g_print("%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
-
-
-      glClearColor (1, 1, 1, 0);
-      /* only enable it when needed 
-	 (color mix and better antialiasing)*/
-      glDisable (GL_BLEND);
-      /* Fast Transparency*/
-      glAlphaFunc (GL_GREATER, .01);
-      glEnable (GL_ALPHA_TEST); 
-      /* no fog*/
-      glDisable (GL_FOG);
-      /* No lights */
-      glDisable (GL_LIGHTING);
-      glDisable (GL_LIGHT0);
-      glDisable (GL_AUTO_NORMAL);
-      glDisable (GL_NORMALIZE);
-      glDisable (GL_COLOR_MATERIAL);
-      /* No z axis (SVG is 2d) until X3D */
-      glDisable (GL_DEPTH_TEST);
-      /* No stencil buffer (one day perhaps, for background)*/
-      glDisable (GL_STENCIL_TEST);
-
-      /* svg viewports will use it, one day*/
-      glDisable (GL_SCISSOR_TEST);	 
-
-      /* Polygon are alway filled (until now)
-	 Because Thot draws outlined polygons with lines
-	 so...  if blending svg => GL_FRONT_AND_BACK*/
-      glPolygonMode( GL_FRONT, GL_FILL );
-     
-      /* Doesn't compute hidden drawing 
-	 Doesn't work for our tesselated
-	 polygons   not CGW oriented...*/
-      /* glEnable (GL_CULL_FACE); */
-      /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
-
-      /*(needed for gradients)*/
-      glShadeModel (GL_SMOOTH);
-#ifdef MESA
-      /* No Texture and pixel drawing enhancement*/
-      glDisable (GL_DITHER); 
-      if (1)
-	{
-	  glEnable (GL_POINT_SMOOTH); 
-	  glEnable (GL_LINE_SMOOTH);    
-	  /* glEnable (GL_POLYGON_SMOOTH); */  
-	  
-	  /* glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); */
-	  /* 	  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); */
-	  /* 	  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);  */
-	  
-	  glEnable (GL_BLEND);  
-	  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
-	}
-      else
-	{
-	  /* No AntiAliasing*/ 
-	  glDisable (GL_LINE_SMOOTH); 
-	  glDisable (GL_POINT_SMOOTH);
-	  glDisable (GL_POLYGON_SMOOTH); 
-	}
-      glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST ); 
-#else /*!MESA*/
-      /*Hardware opengl may support better rendering*/
-      glEnable (GL_DITHER);
-      /*  Antialiasing 
-	  Those Options give better 
-	  quality image upon performance loss
-	  Must be a user Option  */
-      glEnable (GL_LINE_SMOOTH); 
-      glEnable (GL_POINT_SMOOTH); 
-      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-      glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-      /* Not recommended for hardware cards... 
-	 Global Antialiasing is done elsewhere...*/
-      /*  glEnable (GL_POLYGON_SMOOTH);   */
-      /* smooth polygon antialiasing */
-      /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
-      /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
-
-      /* For transparency and beautiful antialiasing*/
-       glEnable (GL_BLEND); 
-       glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-#endif /*MESA*/    
-
-      /* Bitmap font Text writing (even in texture font)*/
-      glPixelStorei( GL_UNPACK_ALIGNMENT, 1); 
-
+      
+      SetGlPipelineState();
       if (!dialogfont_enabled)
 	{
 	  InitDialogueFonts ("");
 	  dialogfont_enabled = TRUE;
 	}
-
-      if (GL_Err())
-	g_print ("Bad INIT\n"); 
 
       timer = gtk_timeout_add (TIMER_PRECISION, (GtkFunction) Idle_draw_GTK, widget);  
       gtk_object_set_data (GTK_OBJECT (widget),"timeout",(gpointer) timer);  
@@ -858,21 +650,15 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     {
       if (height < (widget->allocation.height - 50))
 	{
-	  /*We copy region content of the back buffer 
-	    on the exposed region 
-	    => opengl region buffer swapping */
-	  y = y + height;
-	  glRasterPos2i (x, y);
-	  glDrawBuffer (GL_FRONT);       
-	  glReadBuffer (GL_BACK);
-	  y = widget->allocation.height - y;
-	  glCopyPixels (x, y, width, height, GL_COLOR);  
-	  glDrawBuffer (GL_BACK);
-	  glFlush ();
+	  GL_BackBufferRegionSwapping (x, y, 
+				    width, height,
+				    widget->allocation.height);
 	}
       else
-	GL_DrawAll (widget, frame);
-	
+	{
+	  GL_ActivateDrawing();
+	  GL_DrawAll (widget, frame);
+	}	
     }
   return FALSE;
 }
@@ -892,17 +678,8 @@ void FrameResizedGTK (GtkWidget *widget,
   if (widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
-	glViewport (0, 0, width, height);
-	glMatrixMode (GL_PROJECTION);      
-	glLoadIdentity (); 
-	/* Invert the opengl coordinate system
-	   to get the same as Thot	  
-	   (opengl Y origin  is the left up corner
-	   and the left bottom is negative !!)	*/
-	glOrtho (0,  width, height, 0, -1, 1); 
-	/* Needed for 3d only...*/
-        glMatrixMode (GL_MODELVIEW);
-	glLoadIdentity (); 
+	GLResize (width, height);
+	
 	GL_DrawAll (widget, frame);
       }
 }

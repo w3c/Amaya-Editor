@@ -35,14 +35,6 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
-#ifdef _GTK
-#ifdef _GL
-#include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
-
-#endif /*_GL*/
-#endif /*_GTK*/
-
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
@@ -936,13 +928,17 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
     }
   return TRUE;
 }
-
+int GL_UnicodeDrawString (int fg, 
+			  CHAR_T *str, float x, float y, 
+			  int hyphen, int frame,
+			  void *GL_font, int end);
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
   the space sizes to ajust line length to the size of the frame.
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
   ----------------------------------------------------------------------*/
+#if defined(_GL) && !defined(_I18N_)
 static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				  ThotBool selected)
 {
@@ -1200,8 +1196,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (nbcar > 0)
 		    {
 		      y1 = y + BoxFontBase (pBox->BxFont);
-                      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-				       0, bl, 0, blockbegin, fg, shadow);
+
+                      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
+				       0, bl, 0, blockbegin, fg, shadow); 
+
+
 		      /* all previous spaces are declared */
 		      bl = 0;
 		    }
@@ -1257,7 +1256,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (nbcar > 0)
 		    {
 		      y1 = y + BoxFontBase (pBox->BxFont);
-		      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+		       x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 				       0, bl, x, blockbegin, fg, shadow);
 		    }
 		  nbcar = 0;
@@ -1363,7 +1362,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       TtaFreeMemory (buffer);
     }
 }
-
+#endif /* _GL  !I18N*/
 
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.
@@ -1589,69 +1588,9 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	}
     }
 }
-
-
-#ifdef _GL 
-
-/*-------------------------------
- saveBuffer :
- Take a picture (tga) of the backbuffer.
- mainly for debug purpose, but could be used for a
- C remplacment of Batik 
---------------------------------*/
-void saveBuffer (int width, int height)
-{
-  static int z = 0;
-  FILE *screenFile;
-  unsigned char *Data;
-  int length;
-
-  unsigned char cGarbage = 0, type,mode,aux, pixelDepth;
-  short int iGarbage = 0;
-  int i;
-
-  z++;
-  if (z != 500)
-    return;
-  length = width * height * 4;
-  Data = TtaGetMemory (sizeof (unsigned char) * length);
-  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);
-  screenFile = fopen("screenshot.tga", "w");
-  pixelDepth = 32;
-  /* compute image type: 2 for RGB(A), 3 for greyscale*/
-  mode = pixelDepth / 8;
-  if ((pixelDepth == 24) || (pixelDepth == 32))
-    type = 2;
-  else
-    type = 3;
-  /* convert the image data from RGB(a) to BGR(A)*/
-  if (mode >= 3)
-    for (i=0; i < width * height * mode ; i+= mode) {
-      aux = Data[i];
-      Data[i] = Data[i+2];
-      Data[i+2] = aux;
-      Data[i+3] = 255;
-    }
-  /* write the header*/
-  fwrite(&cGarbage, sizeof(unsigned char), 1,screenFile);
-  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
-  fwrite(&type, sizeof(unsigned char), 1, screenFile);  
-  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
-  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
-  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);
-  fwrite(&iGarbage, sizeof(short int), 1, screenFile);
-  fwrite(&iGarbage, sizeof(short int), 1, screenFile);  
-  fwrite(&width, sizeof(short int), 1, screenFile);
-  fwrite(&height, sizeof(short int), 1, screenFile);
-  fwrite(&pixelDepth, sizeof(unsigned char), 1, screenFile);  
-  fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
-  fwrite(Data, sizeof(unsigned char), length, screenFile);
-  fclose(screenFile);
-  free(Data);
-}
-
+#ifdef _GL
 extern ThotBool GL_Drawing;
-#endif /*_GL*/
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
@@ -1667,7 +1606,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #ifdef _GL
   ThotBool           AbstractBoxModified;
 
-  AbstractBoxModified = ComputeUpdates (box->BxAbstractBox, frame);
+ AbstractBoxModified = ComputeUpdates (box->BxAbstractBox, frame);
   /* No modification and no drawing
    so there is no need to compute anything !!*/
   /*are we drawing ?*/
@@ -1679,7 +1618,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	return; 
     }  
 #endif /* _GL */
- 
+
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
 

@@ -1183,7 +1183,9 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
 
    if (PolylineOK (element, document))
      {
-      if (rank <= 0 || x < 0 || y < 0)
+       /* Cannot found why this two test
+	were here, as it works for me */
+       if (rank <= 0)/* || x < 0 || y < 0)*/
 	 TtaError (ERR_invalid_parameter);
       else if (unit != UnPoint && unit != UnPixel)
 	 TtaError (ERR_invalid_parameter);
@@ -1309,8 +1311,8 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
 
    if (PolylineOK (element, document))
      {
-      if (x < 0 || y < 0)
-	 TtaError (ERR_invalid_parameter);
+       if (x < 0 || y < 0) 
+	 TtaError (ERR_invalid_parameter); 
       else if (unit != UnPoint && unit != UnPixel)
 	 TtaError (ERR_invalid_parameter);
       else
