@@ -1120,6 +1120,7 @@ void UndisplayElement (PtrElement pEl, Document document)
    ThotBool            stop;
    PtrDocument         pDoc;
    int                 savePageHeight;
+   ThotBool            immediat;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
@@ -1135,6 +1136,7 @@ void UndisplayElement (PtrElement pEl, Document document)
    /* on retire simplement l'element de l'arbre abstrait */
    /* sauf si c'est la racine car son pave n'avait pas ete detruit */
    /* il faut donc executer la suite de la procedure */
+   immediat = documentDisplayMode[document - 1] == DisplayImmediately;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
      {
        if (pEl->ElParent == NULL)
@@ -1200,7 +1202,7 @@ void UndisplayElement (PtrElement pEl, Document document)
 	   PageHeight = 1;
 	while (pE != NULL)
 	  {
-	     UpdateNumbers (pNext, pE, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+	     UpdateNumbers (pNext, pE, pDoc, immediat);
 	     pE = pE->ElNext;
 	  }
 	PageHeight = savePageHeight;
@@ -1248,13 +1250,13 @@ void UndisplayElement (PtrElement pEl, Document document)
    if (pEl != NULL)
      {
 	/* reaffiche les paves qui copient les elements detruits */
-	RedisplayCopies (pEl, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayCopies (pEl, pDoc, immediat);
 	/* la renumerotation est faite plus haut */
 	/* reaffiche les references aux elements detruits */
 	/* et enregistre les references sortantes coupees */
 	/* ainsi que les elements coupe's qui sont reference's par */
 	/* d'autres documents */
-	RedisplayEmptyReferences (pEl, &pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayEmptyReferences (pEl, &pDoc, immediat);
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
         if (pEl->ElStructSchema)

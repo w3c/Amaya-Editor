@@ -296,54 +296,71 @@ PtrReference SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl,
    return pRef;
 }
 
-
 /*----------------------------------------------------------------------
-   NewReferredElDescr cree un descripteur d'element referenc'e et le met en    
-   tete de la chaine pour le document pointe par pDoc.     
+  LinkReferredElDescr links the descriptor at the first position 
+  in the document list of references.
   ----------------------------------------------------------------------*/
-PtrReferredDescr    NewReferredElDescr (PtrDocument pDoc)
+void LinkReferredElDescr (PtrReferredDescr pRefD, PtrDocument pDoc)
 {
-   PtrReferredDescr    pRefD;
-
-   GetReferredDescr (&pRefD);
-   /* insere le nouveau descripteur au debut de la chaine des */
-   /* descripteurs de references du document. Le premier descripteur */
-   /* de document est bidon. */
-   pRefD->RePrevious = pDoc->DocReferredEl;
-   pRefD->ReNext = pRefD->RePrevious->ReNext;
-   pRefD->RePrevious->ReNext = pRefD;
-   if (pRefD->ReNext != NULL)
-      pRefD->ReNext->RePrevious = pRefD;
-
-   return pRefD;
+  /* The first descriptor is never used */
+  pRefD->RePrevious = pDoc->DocReferredEl;
+  pRefD->ReNext = pRefD->RePrevious->ReNext;
+  pRefD->RePrevious->ReNext = pRefD;
+  if (pRefD->ReNext)
+    pRefD->ReNext->RePrevious = pRefD;
 }
 
 /*----------------------------------------------------------------------
-   DeleteReferredElDescr supprime le descripteur d'element reference' pointe'
-   par pRefD.                                                
+   NewReferredElDescr creates a new descriptor and links it at the
+   first position in the document list of references.
   ----------------------------------------------------------------------*/
-void                DeleteReferredElDescr (PtrReferredDescr pRefD)
+PtrReferredDescr NewReferredElDescr (PtrDocument pDoc)
 {
-   PtrExternalDoc      pExtDoc, pNextExtDoc;
+  PtrReferredDescr    pRefD;
 
-   if (pRefD != NULL)
-      /* Le premier descripteur de la chaine des descripteurs du document */
-      /* est bidon. */
-     {
-	pRefD->RePrevious->ReNext = pRefD->ReNext;
-	if (pRefD->ReNext != NULL)
-	   pRefD->ReNext->RePrevious = pRefD->RePrevious;
-	pExtDoc = pRefD->ReExtDocRef;
-	/* libere les descripteurs de documents referencant */
-	while (pExtDoc != NULL)
-	  {
-	     pNextExtDoc = pExtDoc->EdNext;
-	     FreeExternalDoc (pExtDoc);
-	     pExtDoc = pNextExtDoc;
-	  }
-	/* libere le descripteur d'element reference' */
-	FreeReferredDescr (pRefD);
-     }
+  GetReferredDescr (&pRefD);
+  LinkReferredElDescr (pRefD, pDoc);
+  return pRefD;
+}
+
+/*----------------------------------------------------------------------
+  UnlinkReferredElDescr unlinks the descriptor from the document
+  list of references.
+  ----------------------------------------------------------------------*/
+void UnlinkReferredElDescr (PtrReferredDescr pRefD)
+{
+  if (pRefD->RePrevious)
+    pRefD->RePrevious->ReNext = pRefD->ReNext;
+  if (pRefD->ReNext)
+    pRefD->ReNext->RePrevious = pRefD->RePrevious;
+  pRefD->RePrevious = NULL;
+  pRefD->ReNext = NULL;
+}
+
+/*----------------------------------------------------------------------
+  DeleteReferredElDescr removes the descriptor and unlinks it
+  from the document list of references.                                   
+  ----------------------------------------------------------------------*/
+void DeleteReferredElDescr (PtrReferredDescr pRefD)
+{
+  PtrExternalDoc      pExtDoc, pNextExtDoc;
+
+  if (pRefD)
+    /* Le premier descripteur de la chaine des descripteurs du document */
+    /* est bidon. */
+    {
+      UnlinkReferredElDescr (pRefD);
+      pExtDoc = pRefD->ReExtDocRef;
+      /* libere les descripteurs de documents referencant */
+      while (pExtDoc)
+	{
+	  pNextExtDoc = pExtDoc->EdNext;
+	  FreeExternalDoc (pExtDoc);
+	  pExtDoc = pNextExtDoc;
+	}
+      /* libere le descripteur d'element reference' */
+      FreeReferredDescr (pRefD);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -352,75 +369,71 @@ void                DeleteReferredElDescr (PtrReferredDescr pRefD)
    le descripteur d'element reference' qui lui est         
    attache'.                                               
   ----------------------------------------------------------------------*/
-void                DeleteAllReferences (PtrElement pEl)
+void DeleteAllReferences (PtrElement pEl)
 {
-   PtrReference        pRef, pNextRef;
+  PtrReference        pRef, pNextRef;
 
-   if (pEl != NULL)
-     {
-	if (pEl->ElReferredDescr != NULL)
-	  {
-	     pRef = pEl->ElReferredDescr->ReFirstReference;
-	     while (pRef != NULL)
-	       {
-		  pNextRef = pRef->RdNext;
-		  if (pRef->RdAttribute != NULL)
-		     /* c'est un attribut-reference, on supprime l'attribut */
-		     {
-		     RemoveAttribute (pRef->RdElement, pRef->RdAttribute);
-		     DeleteAttribute (pRef->RdElement, pRef->RdAttribute);
-		     }
-		  else
-		    {
-		       pRef->RdReferred = NULL;
-		       pRef->RdNext = NULL;
-		       pRef->RdPrevious = NULL;
-		    }
-		  pRef = pNextRef;
-	       }
-
-	  }
-     }
+  if (pEl && pEl->ElReferredDescr)
+    {
+      pRef = pEl->ElReferredDescr->ReFirstReference;
+      while (pRef)
+	{
+	  pNextRef = pRef->RdNext;
+	  if (pRef->RdAttribute)
+	    /* c'est un attribut-reference, on supprime l'attribut */
+	    {
+	      RemoveAttribute (pRef->RdElement, pRef->RdAttribute);
+	      DeleteAttribute (pRef->RdElement, pRef->RdAttribute);
+	    }
+	  else
+	    {
+	      pRef->RdReferred = NULL;
+	      pRef->RdNext = NULL;
+	      pRef->RdPrevious = NULL;
+	    }
+	  pRef = pNextRef;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
    DeleteReference de'chaine la reference pointee par pRef.          
   ----------------------------------------------------------------------*/
-void                DeleteReference (PtrReference pRef)
+void DeleteReference (PtrReference pRef)
 {
-   if (pRef->RdPrevious == NULL)	/* premier de la chaine */
-     {
+  if (pRef->RdPrevious == NULL)	/* premier de la chaine */
+    {
       /* dechaine l'element du descripteur de reference */
       if (pRef->RdNext == NULL)
 	{
-	   /* c'etait la seule reference, on la supprime */
-	   if (pRef->RdReferred != NULL)
-	     {
-		pRef->RdReferred->ReFirstReference = NULL;
-		if (pRef->RdReferred->ReExternalRef)
-		   DeleteReferredElDescr (pRef->RdReferred);
-		else
-		   DeleteAllReferences (pRef->RdReferred->ReReferredElem);
-	     }
+	  /* c'etait la seule reference, on la supprime */
+	  if (pRef->RdReferred)
+	    {
+	      pRef->RdReferred->ReFirstReference = NULL;
+	      if (pRef->RdReferred->ReExternalRef)
+		DeleteReferredElDescr (pRef->RdReferred);
+	      else
+		DeleteAllReferences (pRef->RdReferred->ReReferredElem);
+	    }
 	}
-      else if (pRef->RdReferred != NULL)
-	 pRef->RdReferred->ReFirstReference = pRef->RdNext;
-     }
-   if (pRef->RdPrevious != NULL)
-      pRef->RdPrevious->RdNext = pRef->RdNext;
-   if (pRef->RdNext != NULL)
-      pRef->RdNext->RdPrevious = pRef->RdPrevious;
-   pRef->RdPrevious = NULL;
-   pRef->RdNext = NULL;
-   pRef->RdReferred = NULL;
-   pRef->RdInternalRef = TRUE;
+      else if (pRef->RdReferred)
+	pRef->RdReferred->ReFirstReference = pRef->RdNext;
+    }
+  if (pRef->RdPrevious != NULL)
+    pRef->RdPrevious->RdNext = pRef->RdNext;
+  if (pRef->RdNext != NULL)
+    pRef->RdNext->RdPrevious = pRef->RdPrevious;
+  pRef->RdPrevious = NULL;
+  pRef->RdNext = NULL;
+  pRef->RdReferred = NULL;
+  pRef->RdInternalRef = TRUE;
 }
 
 /*----------------------------------------------------------------------
    CancelReference annule la reference de l'element pEl			
    (pEl doit etre terminal et de nature Refer).            
   ----------------------------------------------------------------------*/
-void                CancelReference (PtrElement pEl, PtrDocument pDoc)
+void CancelReference (PtrElement pEl, PtrDocument pDoc)
 {
   PtrElement          pAsc, pChild, pC1;
   PtrTextBuffer       pTxtBuf, pNextTxtBuf;
@@ -1053,7 +1066,7 @@ void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
   /* pour copier des elements inclus */
   if (loadExternalDoc)
     for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
-      if (pExternalDoc[extDocNum] != NULL)
+      if (pExternalDoc[extDocNum] && pExternalDoc[extDocNum] != pDoc)
 	{
 	  DeleteAllTrees (pExternalDoc[extDocNum]);
 	  FreeDocumentSchemas (pExternalDoc[extDocNum]);

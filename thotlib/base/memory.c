@@ -967,7 +967,7 @@ void FreeNamespaceDeclarations (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    GetDocument alloue un descripteur de document.                  
   ----------------------------------------------------------------------*/
-void GetDocument (PtrDocument * pDoc)
+void GetDocument (PtrDocument *pDoc)
 {
    PtrDocument         pNewDoc;
 
@@ -1017,6 +1017,9 @@ void FreeDocument (PtrDocument pDoc)
        pDoc->DocViewSubTree[i] = NULL;
        pDoc->DocViewModifiedAb[i] = NULL;
      }
+   /* libere le 1er descripteur de reference (bidon) */
+   FreeReferredDescr (pDoc->DocReferredEl);
+   pDoc->DocReferredEl = NULL;
    pDoc->DocLabels = NULL;
    FreeNamespaceDeclarations (pDoc);
 #ifdef DEBUG_MEMORY
@@ -1037,12 +1040,12 @@ void GetAttributePres (AttributePres **pAP)
   AttributePres          *pNewAP;
 
   pNewAP = (AttributePres *) TtaGetMemory (sizeof (AttributePres));
+  *pAP = pNewAP;
   if (pNewAP)
     {
       memset (pNewAP, 0, sizeof (AttributePres));
-      pNewAP->ApMatch = 0;
+      pNewAP->ApMatch = CoWord;
     }
-  *pAP = pNewAP;
 }
 
 /*----------------------------------------------------------------------
@@ -1060,7 +1063,7 @@ void FreeAttributePres (AttributePres *pAP)
 /*----------------------------------------------------------------------
    GetSchPres alloue un schema de presentation.                    
   ----------------------------------------------------------------------*/
-void GetSchPres (PtrPSchema * pSP)
+void GetSchPres (PtrPSchema *pSP)
 {
    PtrPSchema          pNewSP;
 

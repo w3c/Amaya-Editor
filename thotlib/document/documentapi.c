@@ -233,7 +233,7 @@ void UnloadTree (Document document)
   PtrDocument      pDoc;
 
   pDoc = LoadedDocument[document - 1];
-  if (pDoc != NULL)
+  if (pDoc)
      {
        /* remove the selection on the document */
        if (ThotLocalActions[T_resetsel])

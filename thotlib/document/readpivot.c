@@ -179,31 +179,30 @@ PtrDocument GetPtrDocument (DocumentIdentifier docIdent)
   ----------------------------------------------------------------------*/
 static void FreeUnusedReferredElemDesc (PtrDocument pDoc)
 {
-   PtrReferredDescr    pRefD, pPrevRefD;
+  PtrReferredDescr    pRefD, pPrevRefD;
 
-   pRefD = pDoc->DocReferredEl;
-   do
-      /* parcourt la chaine des descripteurs de reference du document */
-     {
-	/* (Le premier descripteur de la chaine est bidon) */
-	pRefD = pRefD->ReNext;
-	if (pRefD != NULL)
-	   if (!pRefD->ReExternalRef)
-	      if (pRefD->ReExtDocRef == NULL)
-		 if (pRefD->ReFirstReference == NULL)
-		   {
-		      if (pRefD->ReReferredElem != NULL)
-			 pRefD->ReReferredElem->ElReferredDescr = NULL;
-		      pRefD->ReReferredElem = NULL;
-		      pPrevRefD = pRefD->RePrevious;
-		      pPrevRefD->ReNext = pRefD->ReNext;
-		      if (pRefD->ReNext != NULL)
-			 pRefD->ReNext->RePrevious = pPrevRefD;
-		      FreeReferredDescr (pRefD);
-		      pRefD = pPrevRefD;
-		   }
-     }
-   while (pRefD != NULL);
+  pRefD = pDoc->DocReferredEl;
+  do
+    /* parcourt la chaine des descripteurs de reference du document */
+    {
+      /* (Le premier descripteur de la chaine est bidon) */
+      pRefD = pRefD->ReNext;
+      if (pRefD && !pRefD->ReExternalRef &&
+	  pRefD->ReExtDocRef == NULL &&
+	  pRefD->ReFirstReference == NULL)
+	{
+	  if (pRefD->ReReferredElem)
+	    pRefD->ReReferredElem->ElReferredDescr = NULL;
+	  pRefD->ReReferredElem = NULL;
+	  pPrevRefD = pRefD->RePrevious;
+	  pPrevRefD->ReNext = pRefD->ReNext;
+	  if (pRefD->ReNext)
+	    pRefD->ReNext->RePrevious = pPrevRefD;
+	  FreeReferredDescr (pRefD);
+	  pRefD = pPrevRefD;
+	}
+    }
+  while (pRefD);
 }
 
 /*----------------------------------------------------------------------
@@ -294,20 +293,17 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
    Les schemas de structure et de presentation utilises par le document   
    ne sont pas liberes...                                  
   ----------------------------------------------------------------------*/
-void                DeleteAllTrees (PtrDocument pDoc)
+void DeleteAllTrees (PtrDocument pDoc)
 {
    int              view;
 
-   if (pDoc != NULL)
+   if (pDoc)
      {
 	/* libere tout l'arbre du document et ses descripteurs de reference */
 	DeleteElement (&pDoc->DocDocElement, pDoc);
 	/* document views are now empty */
 	for (view = 0; view < MAX_VIEW_DOC; view++)
 	   pDoc->DocViewRootAb[view] = NULL;
-	/* libere le 1er descripteur de reference (bidon) */
-	FreeReferredDescr (pDoc->DocReferredEl);
-	pDoc->DocReferredEl = NULL;
      }
 }
 
@@ -316,7 +312,7 @@ void                DeleteAllTrees (PtrDocument pDoc)
    ReadDimensionType lit un type de dimension dans le fichier et	
    	retourne sa valeur.                                             
   ----------------------------------------------------------------------*/
-static ThotBool     ReadDimensionType (BinFile file)
+static ThotBool ReadDimensionType (BinFile file)
 {
    char c;
 

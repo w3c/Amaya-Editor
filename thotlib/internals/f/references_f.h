@@ -15,7 +15,10 @@ extern PtrReference SearchExternalReferenceToElem ( PtrElement pEl,
                                                     PtrDocument *pDocRef,
                                                     PtrExternalDoc *pExtDoc,
                                                     ThotBool nextExtDoc );
+extern void LinkReferredElDescr ( PtrReferredDescr pRefD,
+                                  PtrDocument pDoc );
 extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
+extern void UnlinkReferredElDescr ( PtrReferredDescr pRefD );
 extern void DeleteReferredElDescr ( PtrReferredDescr pRefD );
 extern void DeleteAllReferences ( PtrElement pEl );
 extern void DeleteReference ( PtrReference pRef );
@@ -53,7 +56,10 @@ extern PtrReference SearchExternalReferenceToElem (/* PtrElement pEl,
                                                       PtrDocument *pDocRef,
                                                       PtrExternalDoc *pExtDoc,
                                                       ThotBool nextExtDoc */);
+extern void LinkReferredElDescr (/* PtrReferredDescr pRefD,
+                                    PtrDocument pDoc */);
 extern PtrReferredDescr NewReferredElDescr (/* PtrDocument pDoc */);
+extern void UnlinkReferredElDescr (/* PtrReferredDescr pRefD */);
 extern void DeleteReferredElDescr (/* PtrReferredDescr pRefD */);
 extern void DeleteAllReferences (/* PtrElement pEl */);
 extern void DeleteReference (/* PtrReference pRef */);

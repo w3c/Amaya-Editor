@@ -8,6 +8,7 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
+extern int SizetoLogical ( int real_world_size );
 extern int CharacterWidth ( int c,
                             PtrFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
@@ -33,6 +34,11 @@ extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern PtrFont LoadFont ( char *name );
+extern void GeneratePoscriptFont ( char r_name[10],
+                                   char script,
+                                   int family,
+                                   int highlight,
+                                   int size );
 extern void FontIdentifier ( char script,
                              int family,
                              int highlight,
@@ -65,6 +71,7 @@ extern void ThotFreeAllFonts ( void );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
+extern int SizetoLogical (/* int real_world_size */);
 extern int CharacterWidth (/* int c,
                               PtrFont font */);
 extern int SpecialCharBoxWidth (/* CHAR_T c */);
@@ -90,6 +97,11 @@ extern int BoxFontBase (/* SpecFont specfont */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern PtrFont LoadFont (/* char *name */);
+extern void GeneratePoscriptFont (/* char r_name[10],
+                                     char script,
+                                     int family,
+                                     int highlight,
+                                     int size */);
 extern void FontIdentifier (/* char script,
                                int family,
                                int highlight,

@@ -56,13 +56,11 @@ static Name         nameBuffer;
 
    Change the type of a given element.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
-
    Parameters:
    element: the concerned element
    typeNum: new type for the element
-
    ---------------------------------------------------------------------- */
-void             ChangeElementType (Element element, int typeNum)
+void ChangeElementType (Element element, int typeNum)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -78,14 +76,11 @@ void             ChangeElementType (Element element, int typeNum)
    TtaNewElement
 
    Creates a new element of a given type.
-
    Parameters:
    document: the document for which the element is created.
    elementType: type of the element to be created.
-
    Return value:
    the created element.
-
    ---------------------------------------------------------------------- */
 Element TtaNewElement (Document document, ElementType elementType)
 {
@@ -95,28 +90,24 @@ Element TtaNewElement (Document document, ElementType elementType)
   element = NULL;
   if (elementType.ElSSchema == NULL)
     TtaError (ERR_invalid_parameter);
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (elementType.ElTypeNum < 1 ||
+	   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+    TtaError (ERR_invalid_element_type);
   else
-    /* Checks the parameter document */
-    if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-    else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-    else
-      /* Parameter document is ok */
-      if (elementType.ElTypeNum < 1 ||
-	  elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
-	TtaError (ERR_invalid_element_type);
-      else
-	{
-	  element = NewSubtree (elementType.ElTypeNum,
-				(PtrSSchema) (elementType.ElSSchema),
-				LoadedDocument[document - 1], FALSE, TRUE,
-				TRUE, TRUE);
-	  if (element != NULL)
-	    if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
-	      if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
-		element->ElPairIdent = 0;
-	}
+    {
+      element = NewSubtree (elementType.ElTypeNum,
+			    (PtrSSchema) (elementType.ElSSchema),
+			    LoadedDocument[document - 1], FALSE, TRUE,
+			    TRUE, TRUE);
+      if (element &&
+	  element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement &&
+	  !element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
+	element->ElPairIdent = 0;
+    }
   return ((Element) element);
 }
 
@@ -125,72 +116,54 @@ Element TtaNewElement (Document document, ElementType elementType)
 
    Creates a new element of a given type and all its descendants, according
    to the structure schema.
-
    Parameters:
    document: the document for which the tree is created.
    elementType: type of the root element of the tree to be created.
    label: label of the root element to be created. Empty string if the value
    of the label is undefined.
-
    Return value:
    the root element of the created tree.
-
    ---------------------------------------------------------------------- */
-Element             TtaNewTree (Document document, ElementType elementType, char* label)
+Element TtaNewTree (Document document, ElementType elementType, char* label)
 {
-   PtrElement          element;
-
-   UserErrorCode = 0;
-   element = NULL;
-   if (elementType.ElSSchema == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* Parameter document is ok */
-      if (elementType.ElTypeNum < 1 ||
-   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
-   else
-     {
-	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-			  LoadedDocument[document - 1], TRUE, TRUE, TRUE,
-			      (ThotBool)(*label == EOS));
-	if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
-	   if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
-	      element->ElPairIdent = 0;
-	if (*label != EOS)
-	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
-     }
-   return ((Element) element);
+  PtrElement          element;
+  
+  UserErrorCode = 0;
+  element = NULL;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (elementType.ElTypeNum < 1 ||
+	   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
+			    LoadedDocument[document - 1], TRUE, TRUE, TRUE,
+			    (ThotBool)(*label == EOS));
+      if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
+	if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
+	  element->ElPairIdent = 0;
+      if (*label != EOS)
+	strncpy (element->ElLabel, label, MAX_LABEL_LEN);
+    }
+  return ((Element) element);
 }
 
 /* ----------------------------------------------------------------------
    TtaNewTranscludedElement
 
    Creates a new element that is a dynamic copy of another element.
-
    Parameters:
    document: the document for which the element is created.
    orig:     the element that is copied.
-
    Return value:
    the created element.
-
    ---------------------------------------------------------------------- */
-Element             TtaNewTranscludedElement (Document document, Element orig)
+Element TtaNewTranscludedElement (Document document, Element orig)
 {
    PtrElement          element;
    PtrReference        pRef;
@@ -198,19 +171,11 @@ Element             TtaNewTranscludedElement (Document document, Element orig)
    UserErrorCode = 0;
    element = NULL;
    if (orig == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
       /* Parameter document is ok */
      {
@@ -248,7 +213,7 @@ Element             TtaNewTranscludedElement (Document document, Element orig)
    affecte aussi un nouveau label a tous les elements du           
    sous-arbre de racine pElem.                                     
    ------------------------------------------------------------ */
-static void         TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
+static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
 {
    PtrElement          pSon;
    PtrReferredDescr    pDescRef;
@@ -334,81 +299,73 @@ static void         TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pD
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
-				Document destinationDocument, Element parent)
+Element TtaCopyTree (Element sourceElement, Document sourceDocument,
+		     Document destinationDocument, Element parent)
 {
-   PtrElement          element;
-   PtrElement          ancestor;
-   PtrSSchema          pSS, nextExtension;
+  PtrElement          element;
+  PtrElement          ancestor;
+  PtrSSchema          pSS, nextExtension;
 
-   UserErrorCode = 0;
-   element = NULL;
-   /* verifies the parameters Document */
-   if (sourceDocument < 1 || sourceDocument > MAX_DOCUMENTS ||
-       destinationDocument < 1 || destinationDocument > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[sourceDocument - 1] == NULL ||
-	    LoadedDocument[destinationDocument - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameters Document are ok */
-   if (sourceElement == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-       /* Looks for the structure schema to use for the copy */
-       if (sourceDocument == destinationDocument)
-	 pSS = ((PtrElement) sourceElement)->ElStructSchema;
-       else
-	 {
-	   pSS = NULL;
-	   ancestor = (PtrElement) parent;
-	   while (pSS == NULL && ancestor != NULL)
-	     if (!strcmp (ancestor->ElStructSchema->SsName,
-			   ((PtrElement) sourceElement)->ElStructSchema->SsName))
-	       pSS = ancestor->ElStructSchema;
-	     else
-	       ancestor = ancestor->ElParent;
-	   if (pSS == NULL)
-	     {
-	       if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
-		 {
-		   nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
-		   while (nextExtension != NULL)
-		     {
-		       if (!strcmp (nextExtension->SsName,
-				     ((PtrElement) sourceElement)->ElStructSchema->SsName))
-			 break;
-		       nextExtension = nextExtension->SsNextExtens;
-		     }
-		   if (nextExtension == NULL)
-		     TtaError (ERR_invalid_parameter);
-		   pSS = nextExtension;
-		 }
-	       else if (!strcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
-			((PtrElement) sourceElement)->ElStructSchema->SsName))
-		 pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
-	       else if (((PtrElement) sourceElement)->ElTerminal)
-		 pSS = ((PtrElement) parent)->ElStructSchema;
-	       else
-		 pSS = ((PtrElement) sourceElement)->ElStructSchema;
-	     }
-	 }
-       /* Copying */
-       element = CopyTree (((PtrElement) sourceElement),
-			   LoadedDocument[sourceDocument - 1], pSS,
-			   LoadedDocument[destinationDocument - 1],
-			   (PtrElement) parent,
-			   TRUE, TRUE, FALSE);
-       TransRef (element, element, LoadedDocument[destinationDocument - 1]);
-     }
-   return ((Element) element);
+  UserErrorCode = 0;
+  element = NULL;
+  /* verifies the parameters Document */
+  if (sourceDocument < 1 || sourceDocument > MAX_DOCUMENTS ||
+      destinationDocument < 1 || destinationDocument > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[sourceDocument - 1] == NULL ||
+	   LoadedDocument[destinationDocument - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (sourceElement == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      /* Looks for the structure schema to use for the copy */
+      if (sourceDocument == destinationDocument)
+	pSS = ((PtrElement) sourceElement)->ElStructSchema;
+      else
+	{
+	  pSS = NULL;
+	  ancestor = (PtrElement) parent;
+	  while (pSS == NULL && ancestor != NULL)
+	    if (!strcmp (ancestor->ElStructSchema->SsName,
+			 ((PtrElement) sourceElement)->ElStructSchema->SsName))
+	      pSS = ancestor->ElStructSchema;
+	    else
+	      ancestor = ancestor->ElParent;
+	  if (pSS == NULL)
+	    {
+	      if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
+		{
+		  nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
+		  while (nextExtension != NULL)
+		    {
+		      if (!strcmp (nextExtension->SsName,
+				   ((PtrElement) sourceElement)->ElStructSchema->SsName))
+			break;
+		      nextExtension = nextExtension->SsNextExtens;
+		    }
+		  if (nextExtension == NULL)
+		    TtaError (ERR_invalid_parameter);
+		  pSS = nextExtension;
+		}
+	      else if (!strcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
+				((PtrElement) sourceElement)->ElStructSchema->SsName))
+		pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
+	      else if (((PtrElement) sourceElement)->ElTerminal)
+		pSS = ((PtrElement) parent)->ElStructSchema;
+	      else
+		pSS = ((PtrElement) sourceElement)->ElStructSchema;
+	    }
+	}
+      /* Copying */
+      element = CopyTree (((PtrElement) sourceElement),
+			  LoadedDocument[sourceDocument - 1], pSS,
+			  LoadedDocument[destinationDocument - 1],
+			  (PtrElement) parent,
+			  TRUE, TRUE, FALSE);
+      TransRef (element, element, LoadedDocument[destinationDocument - 1]);
+    }
+  return ((Element) element);
 }
 
 /* ---------------------------------------------------------------------- *
@@ -852,10 +809,11 @@ void TtaInsertSibling (Element newElement, Element sibling,
 		       ThotBool before, Document document)
 {
 #ifndef NODISPLAY
-   PtrElement          pNeighbour;
+  PtrElement          pNeighbour;
 
 #endif
-   PtrElement          pEl;
+  PtrElement          pEl;
+  PtrDocument         pDoc;
 
    UserErrorCode = 0;
    if (newElement == NULL || sibling == NULL)
@@ -879,6 +837,7 @@ void TtaInsertSibling (Element newElement, Element sibling,
      TtaError (ERR_element_does_not_match_DTD);
    else
      {
+       pDoc = LoadedDocument[document - 1];
        if (before)
 	 {
 #ifndef NODISPLAY
@@ -897,24 +856,26 @@ void TtaInsertSibling (Element newElement, Element sibling,
 	 }
        /* treats the exclusions of the created element */
        pEl = (PtrElement) newElement;
-       if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-	 RemoveExcludedElem (&pEl, LoadedDocument[document - 1]);
-       if (pEl != NULL)
+       if (pDoc->DocCheckingMode & STR_CHECK_MASK)
+	 RemoveExcludedElem (&pEl, pDoc);
+       if (pEl)
 	 {
+	   if (pEl->ElReferredDescr)
+	     /* the descriptor should be linked to the current document */
+	     LinkReferredElDescr (pEl->ElReferredDescr, pDoc);
 	   /* Dealing with exceptions */
-	   CreateWithException (pEl, LoadedDocument[document - 1]);
+	   CreateWithException (pEl, pDoc);
 	   /* If element pair, chain it with its homologue */
-	   if (((PtrElement) newElement)->ElStructSchema->SsRule->SrElem[((PtrElement) newElement)->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
-	     GetOtherPairedElement ((PtrElement) newElement);
+	   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
+	     GetOtherPairedElement (pEl);
 #ifndef NODISPLAY
 	   /* treats the required attributs of created elements */
-	   if ((LoadedDocument[document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
-	     AttachMandatoryAttributes (pEl, LoadedDocument[document - 1]);
-	   if (pNeighbour != NULL)
-	     /* The inserted element is not the first nor the last between its brothers */
+	   if (pDoc->DocCheckingMode & ATTR_MANDATORY_MASK)
+	     AttachMandatoryAttributes (pEl, pDoc);
+	   if (pNeighbour)
+	     /* The inserted element is neither the first nor the last */
 	     sibling = NULL;
-	   RedisplayNewElement (document, pEl,
-				(PtrElement) sibling, before, TRUE);
+	   RedisplayNewElement (document, pEl, (PtrElement) sibling, before, TRUE);
 #endif /* NODISPLAY */
 	 }
      }
@@ -936,105 +897,105 @@ void TtaAskFirstCreation ()
    Inserts an element in a tree, as the first child of a given element.
    The element to be inserted must not yet be part of a document.
    This function can also be used for attaching an option to a choice.
-
    Parameters:
    newElement: the element (or root of the tree) to be inserted.
    parent: an element belonging to a tree.
    document: the document to which both elements belong.
-
    Return parameter:
    If newElement is an option that replaces the choice, newElement takes
    the value of parent.
    ---------------------------------------------------------------------- */
-void TtaInsertFirstChild (Element *newElement, Element parent,
-			  Document document)
+void TtaInsertFirstChild (Element *newElement, Element parent, Document document)
 {
 #ifndef NODISPLAY
-   PtrElement          pNeighbour;
-
+  PtrElement          pNeighbour;
 #endif
-   ThotBool            ok;
-   PtrElement          pSon;
+  PtrElement          pSon, pParent;
+  PtrDocument         pDoc;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   ok = FALSE;
-   if (*newElement == NULL || parent == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (((PtrElement) (*newElement))->ElParent != NULL)
-      TtaError (ERR_element_already_inserted);
-   else if (*newElement == parent)
-      TtaError (ERR_invalid_parameter);
-   /* Checks the parameter document */
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   /* Parameter document is ok ? */
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else if (((PtrElement) parent)->ElTerminal)
-      TtaError (ERR_element_does_not_match_DTD);
-   else
-     {
-	if (((PtrElement) parent)->ElStructSchema->SsRule->SrElem[((PtrElement) parent)->ElTypeNumber - 1]->SrConstruct == CsChoice)
-	  {
+  UserErrorCode = 0;
+  ok = FALSE;
+  if (*newElement == NULL || parent == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (((PtrElement) (*newElement))->ElParent != NULL)
+    TtaError (ERR_element_already_inserted);
+  else if (*newElement == parent)
+    TtaError (ERR_invalid_parameter);
+  /* Checks the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  /* Parameter document is ok ? */
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (((PtrElement) parent)->ElTerminal)
+    TtaError (ERR_element_does_not_match_DTD);
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      pParent = (PtrElement) parent;
+      if (pParent->ElStructSchema->SsRule->SrElem[pParent->ElTypeNumber - 1]->SrConstruct == CsChoice)
+	{
 #ifndef NODISPLAY
-	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
-			   LoadedDocument[document - 1]);
+	  InsertOption (pParent, (PtrElement *) newElement, pDoc);
 #else
-	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, LoadedDocument[document - 1], FALSE);
+	  InsertElemInChoice (pParent, (PtrElement *) newElement, pDoc, FALSE);
 #endif
-	     ok = TRUE;
-	  }
-	else if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-		 && !AllowedFirstChild ((PtrElement) parent, 
-					LoadedDocument[document - 1],
-					((PtrElement) (*newElement))->ElTypeNumber, 
-					((PtrElement) (*newElement))->ElStructSchema, 
-					FALSE, FALSE))
-	   TtaError (ERR_element_does_not_match_DTD);
-	else
-	  {
-	     pSon = ((PtrElement) parent)->ElFirstChild;
-	     if (pSon != NULL)
-	       {
-		if (pSon->ElTerminal && pSon->ElLeafType == LtPageColBreak)
-		   /* Ignore the page marks */
-		   SkipPageBreakBegin (&pSon);
-		else
-		   pSon = NULL;
-	       }
-	     if (pSon != NULL)
-		/* There is page marks, the element is inserted after these marks */
-		InsertElementAfter (pSon, (PtrElement) (*newElement));
-	     else
-		InsertFirstChild ((PtrElement) parent, (PtrElement) (*newElement));
-	     ok = TRUE;
-	  }
-
-	if (ok)
-	  {
+	  ok = TRUE;
+	}
+      else if (((pDoc)->DocCheckingMode & STR_CHECK_MASK)
+	       && !AllowedFirstChild (pParent, pDoc,
+				      ((PtrElement) (*newElement))->ElTypeNumber, 
+				      ((PtrElement) (*newElement))->ElStructSchema, 
+				      FALSE, FALSE))
+	TtaError (ERR_element_does_not_match_DTD);
+      else
+	{
+	  pSon = pParent->ElFirstChild;
+	  if (pSon)
+	    {
+	      if (pSon->ElTerminal && pSon->ElLeafType == LtPageColBreak)
+		/* Ignore the page marks */
+		SkipPageBreakBegin (&pSon);
+	      else
+		pSon = NULL;
+	    }
+	  if (pSon)
+	    /* There is page marks, the element is inserted after these marks */
+	    InsertElementAfter (pSon, (PtrElement) (*newElement));
+	  else
+	    InsertFirstChild (pParent, (PtrElement) (*newElement));
+	  ok = TRUE;
+	}
+      
+      if (ok)
+	{
+	  pSon = (PtrElement) (*newElement);
 #ifndef NODISPLAY
-	     pNeighbour = ((PtrElement) (*newElement))->ElNext;
-	     /* ignore the following page marks */
-	     FwdSkipPageBreak (&pNeighbour);
+	  pNeighbour = pSon->ElNext;
+	  /* ignore the following page marks */
+	  FwdSkipPageBreak (&pNeighbour);
 #endif
-	     /* Treats the exclusions in the created element */
-	     if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK)
-		RemoveExcludedElem ((PtrElement *) newElement, LoadedDocument[document - 1]);
-	     if ((PtrElement) (*newElement) != NULL)
-	       {
-		  /* Dealing with exceptions */
-		  CreateWithException ((PtrElement) (*newElement),
-				       LoadedDocument[document - 1]);
+	  /* Treats the exclusions in the created element */
+	  if (pDoc->DocCheckingMode & STR_CHECK_MASK)
+	    RemoveExcludedElem ((PtrElement *) newElement, pDoc);
+	  pSon = (PtrElement) (*newElement);
+	  if (pSon)
+	    {
+	      if (pSon->ElReferredDescr)
+		/* the descriptor should be linked to the current document */
+		LinkReferredElDescr (pSon->ElReferredDescr, pDoc);
+	      /* Dealing with exceptions */
+	      CreateWithException (pSon, pDoc);
 #ifndef NODISPLAY
-		  /* treats the required attibutes of the created elements */
-		  if ((LoadedDocument [document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
-		     AttachMandatoryAttributes ((PtrElement) (*newElement), LoadedDocument[document - 1]);
-		  RedisplayNewElement (document, (PtrElement) (*newElement),
-				    pNeighbour, TRUE, TRUE);
+	      /* treats the required attibutes of the created elements */
+	      if (pDoc->DocCheckingMode & ATTR_MANDATORY_MASK)
+		AttachMandatoryAttributes (pSon, pDoc);
+	      RedisplayNewElement (document, pSon, pNeighbour, TRUE, TRUE);
 #endif
-	       }
-	  }
-     }
+	    }
+	}
+    }
 }
 
 /* ----------------------------------------------------------------------
@@ -1046,11 +1007,9 @@ void TtaInsertFirstChild (Element *newElement, Element parent,
    is simply inserted at that position. If one or several characters and/or
    elements are selected, the new element is created before the first selected
    character/element and the selected characters/elements are not changed.
-
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.
-
    ---------------------------------------------------------------------- */
 void TtaInsertElement (ElementType elementType, Document document)
 {
@@ -1078,15 +1037,14 @@ void TtaInsertElement (ElementType elementType, Document document)
    TtaRemoveTree
 
    Removes a tree (or a single element) from its tree, without freeing it.
-
    Parameters:
    element: the element (or root of the tree) to be removed.
    document: the document containing the element to be removed.
-
    ---------------------------------------------------------------------- */
-void                TtaRemoveTree (Element element, Document document)
+void TtaRemoveTree (Element element, Document document)
 {
    PtrDocument         pDoc;
+   PtrElement          pEl = (PtrElement) element;
    ThotBool            root;
 
    UserErrorCode = 0;
@@ -1101,16 +1059,18 @@ void                TtaRemoveTree (Element element, Document document)
       /* Parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
-	root = (((PtrElement) element)->ElParent == NULL);
+	root = (pEl->ElParent == NULL);
 #ifndef NODISPLAY
-	UndisplayElement ((PtrElement) element, document);
+	UndisplayElement (pEl, document);
 #else
-	RemoveElement ((PtrElement) element);
+	RemoveElement (pEl);
 #endif
-	if (root)
-	   if (pDoc->DocDocElement == (PtrElement) element)
-	      /* The main tree is cleared */
-	      pDoc->DocDocElement = NULL;
+	if (pEl->ElReferredDescr)
+	  /* the descriptor if no longer linked to the current document */
+	  UnlinkReferredElDescr (pEl->ElReferredDescr);
+	if (root && pDoc->DocDocElement == (PtrElement) element)
+	  /* The main tree is cleared */
+	  pDoc->DocDocElement = NULL;
      }
 }
 
@@ -1118,12 +1078,11 @@ void                TtaRemoveTree (Element element, Document document)
    TtaSetElementLineNumber
 
    Set the line number of a given element.
-
    Parameter:
    element: the element.
    nb: line number of the element.
    ---------------------------------------------------------------------- */
-void                TtaSetElementLineNumber (Element element, int nb)
+void TtaSetElementLineNumber (Element element, int nb)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -1138,14 +1097,12 @@ void                TtaSetElementLineNumber (Element element, int nb)
    Sets the access rights for a given element.  Access rights apply only during
    the current editing session; they are not saved with the document. They must
    be set each time the document is loaded.
-
    Parameters:
    element: the element.
    right: access right for that element (ReadOnly, ReadWrite, Hidden).
    document: the document to which the element belongs.
    ---------------------------------------------------------------------- */
-void                TtaSetAccessRight (Element element, AccessRight right,
-				       Document document)
+void TtaSetAccessRight (Element element, AccessRight right, Document document)
 {
 #ifndef NODISPLAY
   AccessRight         oldAccessRight;
@@ -1373,11 +1330,10 @@ int                 TtaGetStructureChecking (Document document)
    TtaSetCheckingMode
 
    Changes checking mode.
-
    Parameter:
    strict: if TRUE, the presence of all mandatory elements is checked.
    ---------------------------------------------------------------------- */
-void                TtaSetCheckingMode (ThotBool strict)
+void TtaSetCheckingMode (ThotBool strict)
 {
    FullStructureChecking = strict;
 }
@@ -1387,19 +1343,17 @@ void                TtaSetCheckingMode (ThotBool strict)
 
    Returns the root element of the associated tree that follows the
    tree to which a given element belongs.
-
    Parameters:
    document: the document.
    root: the element for which the next associated tree is searched.
    That element does not need to be the root of a tree.
    If root is NULL or if root is an element in the main tree, the
    root of the first associated tree is returned.
-
    Return parameter:
    root: the root element of the next associated tree.
    NULL if there is no next associated tree for the document.
    ---------------------------------------------------------------------- */
-void                TtaNextAssociatedRoot (Document document, Element * root)
+void TtaNextAssociatedRoot (Document document, Element * root)
 {
    PtrElement          nextRoot;
 
@@ -1412,28 +1366,26 @@ void                TtaNextAssociatedRoot (Document document, Element * root)
    TtaGetFirstChild
 
    Returns the first child element of a given element.
-
    Parameter:
    parent: the element for which the first child element is asked.
-
    Return value:
    the first child element of parent; NULL if parent has no child.
    ---------------------------------------------------------------------- */
 Element TtaGetFirstChild (Element parent)
 {
    PtrElement          child;
+   PtrElement          pParent = (PtrElement) parent;
 
    UserErrorCode = 0;
    child = NULL;
    if (parent == NULL)
      TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) parent)->ElTerminal &&
-	    ((PtrElement) parent)->ElFirstChild != NULL)
+   else if (!pParent->ElTerminal && pParent->ElFirstChild)
      {
-       if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
+       if (pParent->ElFirstChild->ElParent != pParent)
 	 TtaError (ERR_incorrect_tree);
        else
-	 child = ((PtrElement) parent)->ElFirstChild;
+	 child = pParent->ElFirstChild;
      }
    return ((Element) child);
 }
@@ -1442,29 +1394,27 @@ Element TtaGetFirstChild (Element parent)
    TtaGetLastChild
 
    Returns the last child element of a given element.
-
    Parameter:
    parent: the element for which the last child element is asked.
-
    Return value:
    the last child element of parent; NULL if parent has no child.
    ---------------------------------------------------------------------- */
-Element             TtaGetLastChild (Element parent)
+Element TtaGetLastChild (Element parent)
 {
    PtrElement          child;
+   PtrElement          pParent = (PtrElement) parent;
 
    UserErrorCode = 0;
    child = NULL;
    if (parent == NULL)
      TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) parent)->ElTerminal &&
-	    ((PtrElement) parent)->ElFirstChild != NULL)
+   else if (!pParent->ElTerminal && pParent->ElFirstChild)
      {
-       if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
+       if (pParent->ElFirstChild->ElParent != pParent)
 	 TtaError (ERR_incorrect_tree);
        else
 	 {
-	   child = ((PtrElement) parent)->ElFirstChild;
+	   child = pParent->ElFirstChild;
 	   while (child->ElNext != NULL)
 	     child = child->ElNext;
 	 }
@@ -1476,14 +1426,12 @@ Element             TtaGetLastChild (Element parent)
    TtaGetFirstLeaf
 
    Returns the first leaf element of a given element.
-
    Parameter:
    parent: the element for which the first leaf element is asked.
-
    Return value:
    the first leaf element of parent; parent itself if it has no leaf
    ---------------------------------------------------------------------- */
-Element             TtaGetFirstLeaf (Element parent)
+Element TtaGetFirstLeaf (Element parent)
 {
    Element          leaf;
 
@@ -2033,7 +1981,6 @@ int TtaIsLeaf (ElementType elementType)
    TtaGetConstructOfType
 
    Returns the construct of an element type
-
    Parameter:
    elementType: the element type of interest.
    Return value:
@@ -2109,7 +2056,7 @@ Construct TtaGetConstructOfType (ElementType elementType)
    Return value:
    the cardinal of that element type (integer value).
    ---------------------------------------------------------------------- */
-int           TtaGetCardinalOfType (ElementType elementType)
+int TtaGetCardinalOfType (ElementType elementType)
 {
    int           result;
    PtrSRule      pRule;
@@ -2164,8 +2111,8 @@ int           TtaGetCardinalOfType (ElementType elementType)
    typesArray: a array of element types.
    size: the number of types actually inserted in the array
    ---------------------------------------------------------------------- */
-void           TtaGiveConstructorsOfType (ElementType **typesArray,
-					  int *size,ElementType elementType)
+void TtaGiveConstructorsOfType (ElementType **typesArray,
+				int *size, ElementType elementType)
 { 
    PtrSRule      pRule;
    int i;
@@ -2298,8 +2245,7 @@ void           TtaGiveConstructorsOfType (ElementType **typesArray,
    componentType is allowed in the aggregate or if aggregateType is not
    an aggregate.
    ---------------------------------------------------------------------- */
-int           TtaGetRankInAggregate (ElementType componentType,
-				     ElementType aggregateType)
+int TtaGetRankInAggregate (ElementType componentType, ElementType aggregateType)
 {
    int		rank, i;
    PtrSRule     pRule;
@@ -2336,7 +2282,7 @@ int           TtaGetRankInAggregate (ElementType componentType,
    Return value:
    TRUE if this component is optional.
    ---------------------------------------------------------------------- */
-ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
+ThotBool TtaIsOptionalInAggregate (int rank, ElementType elementType)
 {
    ThotBool       result;
    PtrSRule       pRule;
@@ -2370,7 +2316,7 @@ ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
    Return value:
    the construct that defines the structure of that element.
    ---------------------------------------------------------------------- */
-Construct           TtaGetConstruct (Element element)
+Construct TtaGetConstruct (Element element)
 {
    Construct           result;
 
@@ -2392,7 +2338,7 @@ Construct           TtaGetConstruct (Element element)
    Return Value:
    access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).
    ---------------------------------------------------------------------- */
-AccessRight         TtaGetAccessRight (Element element)
+AccessRight TtaGetAccessRight (Element element)
 {
    AccessRight         right;
 
@@ -2425,15 +2371,12 @@ AccessRight         TtaGetAccessRight (Element element)
    TtaIsHolophrasted
 
    Tests whether a given element is holphrasted or not.
-
    Parameter:
    element: the element to be tested.
-
    Return Value:
    1 if the element is holphrasted, 0 if not.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsHolophrasted (Element element)
+int TtaIsHolophrasted (Element element)
 {
    int                 result;
 
@@ -2455,15 +2398,12 @@ int                 TtaIsHolophrasted (Element element)
    TtaIsReadOnly
 
    Tests whether a given element is protected against user modifications (ReadOnly).
-
    Parameter:
    element: the element to be tested.
-
    Return Value:
    1 if the element is protected, 0 if not.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsReadOnly (Element element)
+int TtaIsReadOnly (Element element)
 {
    int                 result;
 
@@ -2491,7 +2431,7 @@ int                 TtaIsReadOnly (Element element)
    1 if the element is hidden, 0 if not.
 
    ---------------------------------------------------------------------- */
-int                 TtaIsHidden (Element element)
+int TtaIsHidden (Element element)
 {
    int                 result;
 
@@ -2512,15 +2452,12 @@ int                 TtaIsHidden (Element element)
 
    Tests whether a given element is (in) an included element. An included element
    is a "live" copy of another element.
-
    Parameter:
    element: the element to be tested.
-
    Return Value:
    1 if the element is included, 0 if not.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsInAnInclusion (Element element)
+int TtaIsInAnInclusion (Element element)
 {
    int                 result;
    PtrElement          pAsc;
@@ -2544,16 +2481,13 @@ int                 TtaIsInAnInclusion (Element element)
    TtaIsAncestor
 
    Tests if an element is an ancestor of another element.
-
    Parameters:
    element: an element.
    ancestor: the supposed ancestor of element.
-
    Return value:
    1 if ancestor in an ancestor of element, 0 if not.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsAncestor (Element element, Element ancestor)
+int TtaIsAncestor (Element element, Element ancestor)
 {
    int                 result;
 
@@ -2574,16 +2508,13 @@ int                 TtaIsAncestor (Element element, Element ancestor)
 
    Tests if an element precedes another element in the preorder traversal
    of the tree.
-
    Parameters:
    element1: the first element.
    element2: the second element.
-
    Return value:
    1 if the first element precedes the second element, 0 if not.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsBefore (Element element1, Element element2)
+int TtaIsBefore (Element element1, Element element2)
 {
    int                 result;
 
@@ -2603,15 +2534,12 @@ int                 TtaIsBefore (Element element1, Element element2)
    TtaIsFirstPairedElement
 
    Indicates if a given paired element is the first or the second of the pair.
-
    Parameter:
    element: the paired element.
-
    Return value:
    1 if it is the first element of the pair, 0 if it is the second.
-
    ---------------------------------------------------------------------- */
-int                 TtaIsFirstPairedElement (Element element)
+int TtaIsFirstPairedElement (Element element)
 {
    int                 result;
 
@@ -2633,21 +2561,18 @@ int                 TtaIsFirstPairedElement (Element element)
 
    Checks whether an element of a given type can be inserted in an
    abstract tree as an immediate sibling of an existing element.
-
    Parameters:
    elementType: element type to be checked.
    sibling: an existing element which is part of an abstract tree.
    before: if TRUE, checks if insertion is allowed before element "sibling".
    If FALSE, checks if insertion is allowed after element "sibling".
    document: the document to which element "sibling" belongs.
-
    Return value:
    TRUE if that element type can be inserted, FALSE if the structure
    schema does not allow that insertion.
-
    ---------------------------------------------------------------------- */
-ThotBool         TtaCanInsertSibling (ElementType elementType, Element sibling,
-				      ThotBool before, Document document)
+ThotBool TtaCanInsertSibling (ElementType elementType, Element sibling,
+			      ThotBool before, Document document)
 {
    ThotBool            ret;
 
@@ -2679,20 +2604,18 @@ ThotBool         TtaCanInsertSibling (ElementType elementType, Element sibling,
 
    Checks whether an element of a given type can be inserted in an
    abstract tree as the first child of an existing element (parent).
-
    Parameters:
    elementType: element type to be checked.
    parent: an existing element which is part of an abstract tree.
    document: the document to which element parent belongs.
-
    Return value:
    TRUE if that element type can be inserted, FALSE if the structure
    schema does not allow that insertion.
-
    ---------------------------------------------------------------------- */
-ThotBool       TtaCanInsertFirstChild (ElementType elementType, Element parent,
-				       Document document)
+ThotBool TtaCanInsertFirstChild (ElementType elementType, Element parent,
+				 Document document)
 {
+   PtrElement          pParent = (PtrElement) parent;
    ThotBool            ret;
 
    UserErrorCode = 0;
@@ -2711,7 +2634,7 @@ ThotBool       TtaCanInsertFirstChild (ElementType elementType, Element parent,
    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
-      ret = AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
+      ret = AllowedFirstChild (pParent, LoadedDocument[document - 1],
 			       elementType.ElTypeNum,
 			       (PtrSSchema) (elementType.ElSSchema),
 			       FALSE, FALSE);
@@ -2725,17 +2648,14 @@ ThotBool       TtaCanInsertFirstChild (ElementType elementType, Element parent,
    Returns one of the elements that have been copied into the ``clipboard''
    by the last Copy or Cut command. (This function is available only in the
    ThotEditor library).
-
    Parameter:
    element: NULL if the first element of the clipboard is asked;
    an element of the clipboard if the next one is asked.
-
    Return parameter:
    element: the asked element if it exists, or NULL if there is no next
    element in the clipboard or if the clipboard is empty.
-
    ---------------------------------------------------------------------- */
-void                TtaNextCopiedElement (Element * element)
+void TtaNextCopiedElement (Element * element)
 {
    PtrPasteElem        next;
 
@@ -2777,7 +2697,7 @@ void                TtaNextCopiedElement (Element * element)
    the document from which the current content of the clipboard has been
    copied or cut; 0 if the clipboard is empty.
    ---------------------------------------------------------------------- */
-Document            TtaGetCopiedDocument ()
+Document TtaGetCopiedDocument ()
 {
    UserErrorCode = 0;
    if (DocOfSavedElements == NULL)
@@ -2789,7 +2709,7 @@ Document            TtaGetCopiedDocument ()
 
 /* ----------------------------------------------------------------------
    ---------------------------------------------------------------------- */
-static PtrElement   SearchLabel (char *label, PtrElement pEl)
+static PtrElement SearchLabel (char *label, PtrElement pEl)
 {
    PtrElement          pE, pFound;
 
@@ -2841,7 +2761,7 @@ Element TtaSearchElementByLabel (char *searchedLabel, Element element)
 
 /* ----------------------------------------------------------------------
    ---------------------------------------------------------------------- */
-static PtrElement   SearchSSchema (SSchema sschema, PtrElement pEl)
+static PtrElement SearchSSchema (SSchema sschema, PtrElement pEl)
 {
    PtrElement          pE, pFound;
 
@@ -2906,7 +2826,7 @@ Element TtaSearchElementBySchema (SSchema sschema, Element element)
    Return values:
    the element found, or NULL if not found.
    ---------------------------------------------------------------------- */
-Element  TtaSearchEmptyElement (SearchDomain scope, Element element)
+Element TtaSearchEmptyElement (SearchDomain scope, Element element)
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -2944,7 +2864,7 @@ Element  TtaSearchEmptyElement (SearchDomain scope, Element element)
    Return value:
    the paired element.
    ---------------------------------------------------------------------- */
-Element             TtaSearchOtherPairedElement (Element element)
+Element TtaSearchOtherPairedElement (Element element)
 {
    PtrElement          pairedElement;
 
@@ -2971,7 +2891,7 @@ Element             TtaSearchOtherPairedElement (Element element)
    the first sibling element, or NULL if there are
    only page breaks.
    ---------------------------------------------------------------------- */
-Element             TtaSearchNoPageBreak (Element element, ThotBool forward)
+Element TtaSearchNoPageBreak (Element element, ThotBool forward)
 {
    PtrElement          noPage;
 
@@ -3003,7 +2923,7 @@ Element             TtaSearchNoPageBreak (Element element, ThotBool forward)
    attributes are not included in the DTD.
 
    ---------------------------------------------------------------------- */
-ThotBool            TtaHasHiddenException (ElementType elType)
+ThotBool TtaHasHiddenException (ElementType elType)
 {
   return TypeHasException (ExcHidden, elType.ElTypeNum, 
 			   (PtrSSchema) elType.ElSSchema);
@@ -3017,7 +2937,7 @@ ThotBool            TtaHasHiddenException (ElementType elType)
    attributes are not included in the DTD.
 
    ---------------------------------------------------------------------- */
-ThotBool            TtaHasInvisibleException (AttributeType attrType)
+ThotBool TtaHasInvisibleException (AttributeType attrType)
 {
   return TypeHasException (ExcInvisible, attrType.AttrTypeNum, 
 			   (PtrSSchema) attrType.AttrSSchema);
@@ -3029,7 +2949,7 @@ ThotBool            TtaHasInvisibleException (AttributeType attrType)
    Returns TRUE if the elType has the CreateNL exception
    (Preformatted, STYLE_, SCRIPT_ andText_Area HTML elements
    ---------------------------------------------------------------------- */
-ThotBool            TtaHasReturnCreateNLException (ElementType elType)
+ThotBool TtaHasReturnCreateNLException (ElementType elType)
 {
   return TypeHasException (ExcReturnCreateNL, elType.ElTypeNum, 
 			   (PtrSSchema) elType.ElSSchema);

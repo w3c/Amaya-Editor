@@ -674,9 +674,9 @@ typedef struct _AttributePres
     {
       Name  	  _ApString_;	/* the value triggering the application of the
 				   presentation rules */
-      CondMatch   _ApMatch_;    /* matching condition: substring, word, ... */
       PtrPRule    _ApTextFirstPRule_; /* first rule in the string of rules
 					 to apply for this value */
+      CondMatch   _ApMatch_;    /* matching condition: substring, word, ... */
     } s2;
     struct        /* enumerated attribute */
     {

@@ -32,11 +32,11 @@ extern void FreeReference ( PtrReference pRef );
 extern void GetAbstractBox ( PtrAbstractBox *pAb );
 extern void FreeAbstractBox ( PtrAbstractBox pAb );
 extern void FreeNamespaceDeclarations ( PtrDocument pDoc );
-extern void GetDocument ( PtrDocument * pDoc );
+extern void GetDocument ( PtrDocument *pDoc );
 extern void FreeDocument ( PtrDocument pDoc );
 extern void GetAttributePres ( AttributePres **pAP );
 extern void FreeAttributePres ( AttributePres *pAP );
-extern void GetSchPres ( PtrPSchema * pSP );
+extern void GetSchPres ( PtrPSchema *pSP );
 extern void FreeSchPres ( PtrPSchema pSP,
                           PtrSSchema pSS );
 extern void GetHandleSchPres ( PtrHandlePSchema * pHSP );
@@ -105,11 +105,11 @@ extern void FreeReference (/* PtrReference pRef */);
 extern void GetAbstractBox (/* PtrAbstractBox *pAb */);
 extern void FreeAbstractBox (/* PtrAbstractBox pAb */);
 extern void FreeNamespaceDeclarations (/* PtrDocument pDoc */);
-extern void GetDocument (/* PtrDocument * pDoc */);
+extern void GetDocument (/* PtrDocument *pDoc */);
 extern void FreeDocument (/* PtrDocument pDoc */);
 extern void GetAttributePres (/* AttributePres **pAP */);
 extern void FreeAttributePres (/* AttributePres *pAP */);
-extern void GetSchPres (/* PtrPSchema * pSP */);
+extern void GetSchPres (/* PtrPSchema *pSP */);
 extern void FreeSchPres (/* PtrPSchema pSP,
                             PtrSSchema pSS */);
 extern void GetHandleSchPres (/* PtrHandlePSchema * pHSP */);
