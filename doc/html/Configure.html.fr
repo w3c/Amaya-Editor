@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -243,18 +243,18 @@ alt="General Preferences Menu" /></p>
     <dd>Contrôle si les cibles de liens sont visualisées ou non. Montrer les
       cibles peut aider quand on veut <a href="Links.html.fr#L245">créer de
       nouveaux liens</a>. Cette option agit immédiatement sur toutes les vues
-      formatées de documents.
+      formatées de documents. 
       <p></p>
     </dd>
   <dt><strong>Numéroter les sections</strong></dt>
     <dd>Contrôle si les <a href="Numbering.html.fr">sections sont
       numérotées</a> ou non. Cette option agit immédiatement sur toutes les
-      vues formatées de documents.
+      vues formatées de documents. 
       <p></p>
     </dd>
   <dt><strong>Exporter CR/LF</strong> (Windows uniquement)</dt>
     <dd>Indique si les fins de lignes des fichiers produits par Amaya se
-      terminent par CR/LF (format DOS) ou par un simple LF (format standard).
+      terminent par CR/LF (format DOS) ou par un simple LF (format standard). 
       <p></p>
     </dd>
   <dt><strong>Activer le FTP (expérimental)</strong></dt>
@@ -502,11 +502,10 @@ alt="Profiles  menu" /></p>
 utilisateur. Vous pouvez utiliser des profils pour cacher ou visualiser des
 boutons ou des menus d'Amaya. Ce menu vous permet de choisir un fichier de
 définition de profil donné et d'en sélectionner un parmi les profils proposés
-dans ce fichier. Amaya propose cinq profils en édition : <em>XHTML 1.0
-Transitional (editor et mini-editor), XHTML 1.0 Strict, XHTML Basic, XHTML
-1.1</em>, et deux profils en navigation : <em>XHTML 1.0 Transitional (browser
-et mini-browser)</em>, chacun avec des capacités différentes. Les changements
-de profil seront effectifs au prochain lancement d'Amaya.</p>
+dans ce fichier. Amaya propose deux profils en édition <em>(editor et
+mini-editor)</em> et deux profils en navigation<em>(browser et
+mini-browser)</em>, chacun avec des capacités différentes. Les changements de
+profil seront effectifs au prochain lancement d'Amaya.</p>
 
 <h4><a name="Templates">Modèles de pages</a></h4>
 
