@@ -93,7 +93,6 @@ int  Window_Curs;
 
 CHAR_T docToOpen [256];
 CHAR_T DocToOpen [256];
-extern ThotBool IsViewClosed;
 /* extern bmpID;  */
 #endif /* _WINDOWS */
 
@@ -5181,9 +5180,6 @@ View                view;
    ThotBool         documentClosed;
 
    /* invalid current loading */
-#  ifdef _WINDOWS
-   IsViewClosed = TRUE;
-#  endif /* _WINDOWS */
 
    W3Loading = 0;
 
