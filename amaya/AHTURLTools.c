@@ -292,7 +292,7 @@ char *PicTypeToMIME (PicType contentType)
       mime_type ="image/png";
       break;
     case svg_type:
-      mime_type ="image/svg";
+      mime_type ="image/svg+xml";
       break;
    case unknown_type:
    default:
