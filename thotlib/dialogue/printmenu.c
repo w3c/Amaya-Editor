@@ -590,7 +590,8 @@ Document            document;
       return /* FATAL_EXIT_CODE */;
    }
 
-   ptrMainProc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand);
+   ptrMainProc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, 
+	            TtWDepth, name, dir, hInstance, buttonCommand);
    FreeLibrary (hLib);
 
    if (!IsWindowEnabled (FrRef[currentFrame]))

@@ -1390,7 +1390,7 @@ LPARAM      lParam;
     UpdateWindow (hwndClient);
     SetWindowText (hwnd, wTitle);
     DragAcceptFiles (hwnd, TRUE);
-    return 0;
+    return 0L;
 
   case WM_PALETTECHANGED: 
     if ((HWND) wParam != hwnd)
@@ -1401,34 +1401,34 @@ LPARAM      lParam;
 	  UpdateColors (hDC);
 	ReleaseDC (hwnd, hDC);
       }
-    return 0;
+    return 0L;
 
   case WM_VSCROLL:
     WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-    return 0;
+    return 0L;
 
   case WM_HSCROLL:
     WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
-    return 0;
+    return 0L;
 
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
     WIN_APP_TextCallback (hwndTextEdit, frame);
     SetFocus (FrRef [frame]);
-    return 0;
+    return 0L;
 
   case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
        if (frame != -1)
           SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
-    return 0;
+    return 0L;
 
   case WM_DROPFILES:
        if (frame != -1)
           SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
-    return 0;
+    return 0L;
 	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
@@ -1436,7 +1436,7 @@ LPARAM      lParam;
        if (frame != -1)
           SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
-    return 0;
+    return 0L;
 
   case WM_NOTIFY: {
     LPNMHDR pnmh = (LPNMHDR) lParam;
@@ -1451,7 +1451,7 @@ LPARAM      lParam;
       LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
       CopyToolTipText (frame, lpttt);
     }
-    return 0;
+    return 0L;
   }
 
   case WM_COMMAND:
@@ -1462,7 +1462,7 @@ LPARAM      lParam;
       buttonCommand = FALSE;
       WIN_ThotCallBack (hwnd, wParam, lParam);
     }
-    return 0;
+    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 
   case WM_CLOSE:
        if (frame <= MAX_FRAME) {
@@ -1471,7 +1471,7 @@ LPARAM      lParam;
            CloseView (pDoc, view, assoc);
            FrMainRef[frame] = 0;
 	   }
-    return 0;
+    return 0L;
 
   case WM_DESTROY:
        FrMainRef[frame] = 0;
@@ -1479,11 +1479,11 @@ LPARAM      lParam;
           for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
               if (FrMainRef[frameNDX] != 0) 
                  /* there is still an active frame */
-                 return 0;
+                 return 0L;
           TtaQuit();
 	   }
     PostQuitMessage (0);
-    return 0;
+    return 0L;
         
   case WM_SIZE: {
     int    cx = LOWORD (lParam);
@@ -1554,7 +1554,7 @@ LPARAM      lParam;
 
     SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
     SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
-    return 0;
+    return 0L;
   }
 
   default: 

@@ -8,8 +8,8 @@
 /*
  * Windows Dialogue API routines for Amaya
  *
- * Author: R. Guetari (W3C/INRIA)
- *
+ * Authors: R. Guetari (W3C/INRIA)
+ *          I. Vatton (INRIA)
  */
 #ifdef _WINDOWS
 #include <windows.h>
@@ -99,7 +99,6 @@ static CHAR_T       currentFileToPrint [MAX_PATH];
 static CHAR_T       attDlgTitle [100];
 static CHAR_T       mathEntityName[MAX_TXT_LEN];
 static CHAR_T       szBuffer[MAX_BUFF];
-static CHAR_T*      lpPrintTemplateName = NULL;
 static CHAR_T*      classList;
 static CHAR_T*      langList;
 static CHAR_T*      saveList;
@@ -189,50 +188,108 @@ static CHAR_T*      string_par1;
 static CHAR_T*      string_par2;
 
 static ThotBool     ReleaseFocus;
+static ThotBool     initialized = 0;
+static PRINTDLG     Pdlg;
 static char         text[1024];
-static int          initialized = 0;
 
 
-ThotWindow                wordButton;
-ThotWindow                hwnListWords;
-ThotWindow                hwndCurrentWord;
-ThotWindow                hwndLanguage;
-ThotWindow                ghwndAbort;
-ThotWindow                ghwndMain;
+ThotWindow          wordButton;
+ThotWindow          hwnListWords;
+ThotWindow          hwndCurrentWord;
+ThotWindow          hwndLanguage;
+ThotWindow          ghwndAbort;
+ThotWindow          ghwndMain;
 CHAR_T              currentWord [MAX_WORD_LEN];
 ThotBool            gbAbort;
 
 /* ------------------------------------------------------------------------ *
- *                                                                          *
- *  FUNCTION   : GetPrinterDC()                                             *
- *                                                                          *
- *  PURPOSE    : Read WIN.INI for default printer and create a DC for it.   *
- *                                                                          *
- *  RETURNS    : A handle to the DC if successful or NULL otherwise.        *
- *                                                                          *
- * ------------------------------------------------------------------------ */
+   GetPrinterDC()
+   Call the Windows print dialogue and returns a handle to the DC if 
+   successful or NULL otherwise.
+  ------------------------------------------------------------------------ */
 HDC PASCAL GetPrinterDC ()
 {
-  PRINTDLG    printDlg;
+  LPDEVMODE   lpDevMode;
 
-  memset(&printDlg, 0, sizeof(PRINTDLG));
-  printDlg.lStructSize = sizeof(PRINTDLG);
-  printDlg.Flags       = PD_RETURNDC;
-  printDlg.hwndOwner   = GetCurrentWindow ();
-  printDlg.hInstance   = (HANDLE) NULL;
-  
   /* Display the PRINT dialog box. */
-  if (PrintDlg (&printDlg))
-    {
-      if (lpPrintTemplateName)
+  if (!initialized)
+  {
+    /* initialize the pinter context */
+    memset(&Pdlg, 0, sizeof(PRINTDLG));
+    Pdlg.lStructSize = sizeof(PRINTDLG);
+	Pdlg.nCopies = 1;
+    Pdlg.Flags       = PD_RETURNDC;
+    Pdlg.hInstance   = (HANDLE) NULL;
+	initialized = TRUE;
+  }
+
+  Pdlg.hwndOwner   = GetCurrentWindow ();
+  if (PrintDlg (&Pdlg))
+  {
+    if (Pdlg.hDevMode)
 	{
-          TtaFreeMemory (lpPrintTemplateName);
-	  lpPrintTemplateName = (CHAR_T*) 0;
+      lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+	    /* landscape */
+	    ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (CHAR_T*) 1);
+	  else
+		/* portrait */
+	    ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (CHAR_T*) 0);
+	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
+		/* A4 */
+	    ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 0);
+	  else
+		/* US */
+	    ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 1);
+	  GlobalUnlock (Pdlg.hDevMode);
 	}
-      return (printDlg.hDC);       
-    }
+    return (Pdlg.hDC);
+  }
   else
     return NULL;
+}
+
+
+/* ------------------------------------------------------------------------ *
+   ReusePrinterDC()
+   Call the Windows print dialogue or reuse the previous context.
+  ------------------------------------------------------------------------ */
+void ReusePrinterDC ()
+{
+  LPDEVNAMES  lpDevNames;
+  LPDEVMODE   lpDevMode;
+  LPSTR       lpDriverName, lpDeviceName, lpPortName;
+
+  /* Display the PRINT dialog box. */
+  if (!initialized)
+    TtPrinterDC = GetPrinterDC();
+  else if (Pdlg.hDevNames)
+  {
+    lpDevNames = (LPDEVNAMES) GlobalLock (Pdlg.hDevNames);
+	lpDriverName = (LPSTR) lpDevNames + lpDevNames->wDriverOffset;
+	lpDeviceName = (LPSTR) lpDevNames + lpDevNames->wDeviceOffset;
+	lpPortName = (LPSTR) lpDevNames + lpDevNames->wOutputOffset;
+	GlobalUnlock (Pdlg.hDevNames);
+    if (Pdlg.hDevMode)
+	{
+      lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
+	  GlobalUnlock (Pdlg.hDevMode);
+	}
+  }
+  
+  if (TtPrinterDC)
+  {
+	WinInitPrinterColors ();    
+	EnableWindow (ghwndMain, FALSE);
+	ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+	ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
+	if (TtPrinterDC)
+	{
+	  DeleteDC (TtPrinterDC);
+	  TtPrinterDC = NULL;
+	}
+  }
 }
 
 /* ----------------------------------------------------------------------*/
@@ -245,14 +302,15 @@ void WinInitPrinterColors ()
 {
    int        palSize;
 
-   if (initialized)
-      return;
-   palSize = GetDeviceCaps (TtPrinterDC, SIZEPALETTE);
-   if (palSize == 0)
-      TtIsPrinterTrueColor = TRUE;
-   else  
+   if (!initialized)
+   {
+     palSize = GetDeviceCaps (TtPrinterDC, SIZEPALETTE);
+     if (palSize == 0)
+       TtIsPrinterTrueColor = TRUE;
+     else  
        TtIsPrinterTrueColor = FALSE;
-   initialized = TRUE;
+     initialized = TRUE;
+   }
 }
 
 
@@ -627,7 +685,6 @@ LPARAM lParam;
 	      WinInitPrinterColors ();
 	      
 	      EnableWindow (ghwndMain, FALSE);
-	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 0);
 	      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
 	      if (TtPrinterDC)
@@ -727,71 +784,6 @@ LPARAM  lParam;
     }
   return TRUE;
 }
-#ifdef IV
-/*-----------------------------------------------------------------------
- MatrixDlgProc
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK MatrixDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK MatrixDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-  ThotBool ok;
-  int      val;
-
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (1, BMatrix));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL), TtaGetMessage (AMAYA, AM_COLS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS), TtaGetMessage (AMAYA, AM_ROWS));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      
-      SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
-      SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
-      break;
-      
-    case WM_COMMAND:
-      if (HIWORD (wParam) == EN_UPDATE)
-	{
-	  if (LOWORD (wParam) == IDC_NUMCOLEDIT)
-	    {
-	      val = GetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, &ok, TRUE);
-	      if (ok)
-		ThotCallback (tabCols, INTEGER_DATA, (CHAR_T*) val);
-	    }
-	  else if (LOWORD (wParam) == IDC_NUMROWSEDIT)
-	    {
-	      val = GetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, &ok, TRUE);
-	      if (ok)
-		ThotCallback (tabRows, INTEGER_DATA, (CHAR_T*) val);
-	    } 
-	}
-      
-      switch (LOWORD (wParam))
-	{
-	case ID_CONFIRM:
-	  ThotCallback (tabForm, INTEGER_DATA, (CHAR_T*) 1);
-	  EndDialog (hwnDlg, ID_CONFIRM);
-	  break;
-	  
-	case IDCANCEL:
-	  ThotCallback (tabForm, INTEGER_DATA, (CHAR_T*) 0);
-	  EndDialog (hwnDlg, IDCANCEL);
-	  break;
-	}
-      break;
-    default: return FALSE;
-    }
-  return TRUE;
-}
-#endif /* IV */
 
 /*-----------------------------------------------------------------------
   AttrItemsDlgProc
@@ -2008,81 +2000,6 @@ LPARAM lParam;
   return TRUE;
 }
 
-#ifdef IV
-/*-----------------------------------------------------------------------
- CreateRuleDlgProc
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK CreateRuleDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK CreateRuleDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-  int  index = 0;
-  UINT i = 0;
-
-
-  switch (msg) {
-  case WM_INITDIALOG:
-    SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
-    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-    SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-    
-    wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				10, 10, 200, 130, hwnDlg, (HMENU) 1, 
-				(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-    
-    SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
-    while (i < nbClass && classList[index] != '\0') {
-      SendMessage (wndListRule, LB_INSERTSTRING, i, (LPARAM) &classList[index]); 
-      index += ustrlen (&classList[index]) + 1;	/* Longueur de l'intitule */
-      i++;
-    }
-    
-    wndEditRule	= CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-				10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
-				(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-    
-    SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
-    break;
-    
-  case WM_COMMAND:
-    if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
-      itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
-      itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-      SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
-    }
-    else if (HIWORD (wParam) == EN_UPDATE) {
-      GetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer, sizeof (szBuffer) - 1);
-    }
-    
-    switch (LOWORD (wParam)) {
-    case ID_CONFIRM:
-      ThotCallback (classSelect, STRING_DATA, szBuffer);
-      ThotCallback (classForm, INTEGER_DATA, (CHAR_T*) 1);
-      EndDialog (hwnDlg, ID_CONFIRM);
-      break;
-      
-    case ID_DONE:
-      ThotCallback (classForm, INTEGER_DATA, (CHAR_T*) 0);
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-      
-    case WM_CLOSE:
-    case WM_DESTROY:
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-    }
-    break;
-  default: return FALSE;
-  }
-  return TRUE;
-}
-#endif /* IV */
 
 /*-----------------------------------------------------------------------
  ------------------------------------------------------------------------*/
@@ -2170,7 +2087,7 @@ LPARAM lParam;
       if (withEdit)
 	{
 	  wndEditRule	= CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
+					10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
 					(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
@@ -2183,6 +2100,9 @@ LPARAM lParam;
 	  itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
 	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+	  if (withEdit)
+	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
+	  else
 	  ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
 	}
       else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK)
@@ -2191,26 +2111,45 @@ LPARAM lParam;
 	    break;
 	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
-	  ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
-	  ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 1);
+	  if (withEdit)
+	  {
+	    ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
+	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 1);
+	  }
+	  else
+	  {
+	    ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
+	    ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 1);
+	  }
 	  EndDialog (hwnDlg, ID_CONFIRM);
-	  return 0;
+	  return FALSE;
 	}
-      else if (HIWORD (wParam) == EN_UPDATE)
+      else if (withEdit && HIWORD (wParam) == EN_UPDATE)
 	{
 	  GetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer, sizeof (szBuffer) - 1);
+	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
 	}
 
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 1);
 	  if (withEdit)
+	  {
+	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 1);
 	    EndDialog (hwnDlg, ID_CONFIRM);
+	  }
+	  else
+	  {
+	    ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 1);
+      return FALSE;
+	  }
 	  break;
 	  
 	case ID_DONE:
-	  ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 0);
+	  if (withEdit)
+	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 0);
+	  else
+	    ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 0);
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	  
@@ -4009,7 +3948,7 @@ STRING class_list;
   nbClass     = (UINT)nb_class;
   classList   = class_list;
   withEdit = FALSE;
-  DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL/*parent*/, (DLGPROC) ApplyClassDlgProc);
 }
 
 /*-----------------------------------------------------------------------

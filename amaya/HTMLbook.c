@@ -408,7 +408,7 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
-   PrintAs prints the document using predefined parameters.
+   PrintDocument prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
 #ifdef __STDC__
 static void         PrintDocument (Document doc, View view)
@@ -531,8 +531,9 @@ void                PrintAs (doc, view)
 Document            doc;
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS 
-  SetupAndPrint (doc, view);
+#ifdef _WINDOWS
+  DocPrint = doc;
+  ReusePrinterDC ();
 #else /* _WINDOWS */
   PrintDocument (doc, view);
 #endif /* _WINDOWS */
