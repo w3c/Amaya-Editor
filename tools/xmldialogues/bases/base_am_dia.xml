@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="33" last_update="Mon Dec 11 17:17:49 CET 2000">
+<base version="34" last_update="Thu Feb 22 17:28:35 CET 2001">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -233,11 +233,11 @@
 	<message xml:lang="es">Sinchronizar</message>
 </label>
 <label define="BDocInfo">
-	<message xml:lang="en">Document Info</message>
-	<message xml:lang="fr">Infos document</message>
-	<message xml:lang="de">Infos Dokument</message>
-	<message xml:lang="it">Infos documento</message>
-	<message xml:lang="es">Infos documento</message>
+	<message xml:lang="en">File Information</message>
+	<message xml:lang="fr">Informations sur le fichier</message>
+	<message xml:lang="de">Dateiinformationen</message>
+	<message xml:lang="it">Informazioni sul file</message>
+	<message xml:lang="es">Información de fichero</message>
 </label>
 <label define="BSetUpandPrint">
 	<message xml:lang="en">Setup and Print...</message>
