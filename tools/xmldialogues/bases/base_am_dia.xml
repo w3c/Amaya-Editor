@@ -1081,6 +1081,9 @@
 	<message xml:lang="tr">&lt;A> tanýmý sil</message>
 	<message xml:lang="es">Borrar ancla</message>
 </label>
+<label define="BMemorizeXPtr">
+	<message xml:lang="en">Memorize XPointer</message>
+</label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show buttonbar</message>
 	<message xml:lang="fr">Montrer boutons</message>
@@ -1549,6 +1552,12 @@
 	<message xml:lang="it">Annota il documento</message>
 	<message xml:lang="de">Dokument kommentieren</message>
 	<message xml:lang="es">Anotar documento</message>
+</label>
+<label define="BMoveAnnotSel">
+	<message xml:lang="en">Reassign annotation (current selection)</message>
+</label>
+<label define="BMoveAnnotXPtr">
+	<message xml:lang="en">Reassign annotation (memorized XPointer)</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
