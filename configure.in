@@ -595,20 +595,18 @@ if test "$with_gl" = "yes" ; then
 		if test "$ac_dir" != "/usr/include" ; then
 		   GL_INCLUDES="-I$ac_dir"
 		fi
+                AC_CHECK_LIB(GL,glBegin,,AC_MSG_ERROR(Cannot find OpenGL library. Please install OpenGL.))
 		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
 	done	
   	AC_MSG_CHECKING([GLU])	
 	for ac_dir in               		\
-		/usr/include/GL			\
 		/usr/include 			\
-		/usr/X11R6/include/GL   	\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
-		/usr/local/include/GL		\
 		; \
-	do  if test -r "$ac_dir/glu.h" ; then
+	do  if test -r "$ac_dir/GL/glu.h" ; then
                 glu_inc="yes"
 		GL_INC_II="$ac_dir"
 		if test "$ac_dir" != "/usr/include" ; then
@@ -616,6 +614,8 @@ if test "$with_gl" = "yes" ; then
 		   	    GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
 			fi
 		fi
+		# now test that glu version is >= 1.2
+                AC_CHECK_LIB(GLU,gluNewTess,,AC_CHECK_LIB(glu32,gluNewTess,,AC_MSG_ERROR(Cannot find OpenGL GLU lib or existing version is < 1.2. Pease upgrade your GLU library.)))
 		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
