@@ -189,7 +189,7 @@ static ThotBool	     ImmediatelyAfterTag = FALSE;
 static ThotBool	     HTMLStyleAttribute = FALSE;
 static ThotBool	     XMLSpaceAttribute = FALSE;
 static ThotBool      ParsingCDATA = FALSE;
-static ThotBool      IgnoreCommentAndPi = FALSE;;
+static ThotBool      IgnoreCommentAndPi = FALSE;
 static char	     currentElementContent = ' ';
 static char	     currentElementName[40];
 
@@ -3450,7 +3450,7 @@ static void      CreateXmlComment (char *commentValue)
 /*----------------------------------------------------------------------
    XmlStyleSheetPi
   ---------------------------------------------------------------------*/
-static void      XmlStyleSheetPi (char *PiData)
+static void      XmlStyleSheetPi (char *PiData, Element piEl)
 {
    int           length, i, j;
    char         *ptr, *end;
@@ -3565,7 +3565,7 @@ static void      XmlStyleSheetPi (char *PiData)
 		   css_info = NULL;
 		   /* get the CSS URI in UTF-8 */
 		   css_href = ReallocUTF8String (css_href, XMLcontext.doc);
-		   LoadStyleSheet (css_href, XMLcontext.doc, NULL,
+		   LoadStyleSheet (css_href, XMLcontext.doc, piEl,
 				   css_info, css_media, FALSE);
 		   TtaFreeMemory (css_href);
 		 }
@@ -3683,7 +3683,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
    /* Call the treatment that correspond to that PI */
    /* For the moment, Amaya supports only the "xml-stylesheet" PI */
    if (!strcmp (piTarget, "xml-stylesheet"))
-     XmlStyleSheetPi (piData);
+     XmlStyleSheetPi (piData, piEl);
    /* Warnings about PI are no longer reported */
    /*
    else
@@ -3778,7 +3778,7 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
       ParseDoctypeElement ("-->", 3);
       return;
     }
-  if (!IgnoreCommentAndPi) 
+  if (!IgnoreCommentAndPi)
     CreateXmlComment ((char*) data);
 }
 
@@ -4089,7 +4089,7 @@ static void     Hndl_PI (void *userData,
       ParseDoctypeElement ("?>", 2);
       return;
     }
-  if (!IgnoreCommentAndPi) 
+  if (!IgnoreCommentAndPi)
     CreateXmlPi ((char*) target, (char*) pidata);
 }
 
@@ -4371,10 +4371,10 @@ static void  InitializeXmlParsingContext (Document doc,
   UnknownElement = FALSE;
   XMLRootName[0] = EOS;
   XMLrootClosed = FALSE;
-  IgnoreCommentAndPi = FALSE;
   ParsingCDATA = FALSE;
   VirtualDoctype = FALSE;
   ShowParsingErrors =  TRUE;
+  IgnoreCommentAndPi = FALSE;
 
   htmlLineRead = 0;
   htmlCharRead = 0;
@@ -4697,9 +4697,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   htmlCharRead = 0;
   
   /* When we parse an external xml file, we ignore comments and PIs */
+  IgnoreCommentAndPi = TRUE;
   /* (otherwise they are displayed in structure view) */
   /* and we don't report parsing errors */
-  IgnoreCommentAndPi = TRUE;
   savParsingError = ShowParsingErrors;
   ShowParsingErrors = FALSE;
 

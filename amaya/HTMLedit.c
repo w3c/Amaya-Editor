@@ -179,36 +179,84 @@ ThotBool RemoveAccessKey (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
    RemoveLink
-   Destroy the link element and remove CSS rules when the
-   link points to a CSS file.
+   Destroy the link element (HTML) or PI element (others) and 
+   remove CSS rules when the link points to a CSS file.
   ----------------------------------------------------------------------*/
 void RemoveLink (Element el, Document doc)
 {
+  Element	    elText;
   ElementType	    elType;
   AttributeType     attrType;
   Attribute         attr;
-  char              buffer[MAX_LENGTH];
+  char             *s, *ptr = NULL, *end = NULL;
+  char              buffer[MAX_LENGTH], cssname[MAX_LENGTH];
   char              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
-  int               length;
+  int               length, piNum;
+  Language          lang;
 
-  /* Search the refered image */
+  /* Search the "nature" of the link */
   elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  if (IsCSSLink (el, doc))
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
     {
-      /* it's a link to a style sheet. Remove that style sheet */
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
+      /* (X)HTML document, well, we search within a hlink element */
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (IsCSSLink (el, doc))
 	{
-	  /* copy the HREF attribute into the buffer */
-	  length = MAX_LENGTH;
-	  TtaGiveTextAttributeValue (attr, buffer, &length);
-	  NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	  RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
+	  /* it's a link to a style sheet. Remove that style sheet */
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      /* copy the HREF attribute into the buffer */
+	      length = MAX_LENGTH;
+	      TtaGiveTextAttributeValue (attr, buffer, &length);
+	      NormalizeURL (buffer, doc, pathname, documentname, NULL);
+	      RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
+	    }
 	}
     }
+  else
+    {
+      if (strcmp (s, "MathML") == 0)
+	piNum = MathML_EL_XMLPI;
+      else if (strcmp (s, "SVG") == 0)
+	piNum = SVG_EL_XMLPI;
+      else
+	piNum = XML_EL_xmlpi;
+      if (elType.ElTypeNum == piNum)
+	{
+	  /* We search within an xml PI element */
+	  elType.ElTypeNum = 1;
+	  elText = TtaSearchTypedElement (elType, SearchInTree, el);
+	  if (elText != NULL)
+	    {
+	      length = MAX_LENGTH - 1;
+	      TtaGiveTextContent (elText, buffer, &length, &lang);
+	      buffer[length++] = EOS;
+	      printf ("\ncss buffer : '%s'\n", buffer);
+	      /* Search the name of the stylesheet */
+	      ptr = strstr (buffer, "href");
+	      if (ptr != NULL)
+		{
+		  ptr = strstr (ptr, "\"");
+		  ptr++;
+		}
+	      if (ptr != NULL)
+		{
+		  end = strstr (ptr, "\"");
+		  *end = EOS;
+		  strcpy (cssname, ptr);
+		}
+			
+	      NormalizeURL (cssname, doc, pathname, documentname, NULL);
+	      RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
+	    }
+	}
+    }
+  return;
 }
+
 /*----------------------------------------------------------------------
    DeleteLink                                              
   ----------------------------------------------------------------------*/
@@ -227,14 +275,15 @@ ThotBool DeleteLink (NotifyElement * event)
 void SetREFattribute (Element element, Document doc, char *targetURL,
 		      char *targetName)
 {
-   ElementType	       elType;
+   ElementType	       elType, piType;
    AttributeType       attrType;
    Attribute           attr;
+   Element             piEl;
    SSchema	       HTMLSSchema;
-   char               *value, *base;
+   char               *value, *base, *s;
    char                tempURL[MAX_LENGTH];
    char                buffer[MAX_LENGTH];
-   int                 length;
+   int                 length, piNum;
    ThotBool            new, oldStructureChecking, isHTML;
 
    if (AttrHREFundoable)
@@ -323,16 +372,33 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   LinkAsXmlCSS = FALSE;
 
 	   /* Load the CSS style sheet */
-	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL, FALSE);
-	   /* We use the Latin_Script language to avoid the spell_chekcer */
-	   /* to check this element */
-	   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");
-	   if (*value == EOS)
-	     strcat (buffer, "./");
-	   else
-	     strcat (buffer, value);
-	   strcat (buffer, "\"");
-	   TtaSetTextContent (element, buffer, Latin_Script, doc);
+	   if (elType.ElTypeNum == 1)
+	     {
+	       piEl = TtaGetParent (element);
+	       piEl = TtaGetParent (piEl);
+	       piType = TtaGetElementType (piEl);
+	       s = TtaGetSSchemaName (piType.ElSSchema);
+	       if (strcmp (s, "MathML") == 0)
+		 piNum = MathML_EL_XMLPI;
+	       else if (strcmp (s, "SVG") == 0)
+		 piNum = SVG_EL_XMLPI;
+	       else
+		 piNum = XML_EL_xmlpi;
+	       if (piType.ElTypeNum == piNum)
+		 {
+		   /* The CSS is linked with the PI element */
+		   LoadStyleSheet (targetURL, doc, piEl, NULL, CSS_ALL, FALSE);
+		   /* We use the Latin_Script language to avoid the spell_chekcer */
+		   /* to check this element */
+		   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");
+		   if (*value == EOS)
+		     strcat (buffer, "./");
+		   else
+		     strcat (buffer, value);
+		   strcat (buffer, "\"");
+		   TtaSetTextContent (element, buffer, Latin_Script, doc);
+		 }
+	     }
 	 }
      }
    else

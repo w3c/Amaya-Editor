@@ -9,7 +9,7 @@
 extern ThotBool AddLoadedImage ( char *name,
                                  char *pathname,
                                  Document doc,
-                                 LoadedImageDesc ** desc );
+                                 LoadedImageDesc **desc );
 extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                             Document doc );
 extern LoadedImageDesc *SearchLoadedDocImage ( Document doc,
@@ -44,7 +44,7 @@ extern ThotBool DeletePicture ( NotifyElement *event );
 extern ThotBool AddLoadedImage (/* char *name,
                                    char *pathname,
                                    Document doc,
-                                   LoadedImageDesc ** desc */);
+                                   LoadedImageDesc **desc */);
 extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
                                               Document doc */);
 extern LoadedImageDesc *SearchLoadedDocImage (/* Document doc,

@@ -175,10 +175,12 @@ void  MapGenericXmlElement (char *XMLName, ElementType *elType,
    Create a processing instruction containing the reference to 
    a CSS stylesheet.
   ----------------------------------------------------------------------*/
-Element InsertCssInXml (Document doc, View view)
+void InsertCssInXml (Document doc, View view)
 {
   Element      piEl, piLine, root, el;
   ElementType  elType;
+  char        *s;
+  int          piNum, piLineNum;
   int          j, firstChar, lastChar;
   Element      firstSel, lastSel;
 
@@ -188,7 +190,24 @@ Element InsertCssInXml (Document doc, View view)
   /* Create an xmlpi element */
   el = NULL;
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  elType.ElTypeNum = XML_EL_xmlpi;
+
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "MathML") == 0)
+    {
+      piNum = MathML_EL_XMLPI;
+      piLineNum = MathML_EL_XMLPI_line;
+    }
+  else if (strcmp (s, "SVG") == 0)
+    {
+      piNum = SVG_EL_XMLPI;
+      piLineNum = SVG_EL_XMLPI_line;
+    }
+  else
+    {
+      piNum = XML_EL_xmlpi;
+      piLineNum = XML_EL_xmlpi_line;
+    }
+  elType.ElTypeNum = piNum;
   /* give current position */
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &j);
   TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
@@ -208,7 +227,7 @@ Element InsertCssInXml (Document doc, View view)
 	  TtaInsertFirstChild (&piEl, root, doc);
 	}
       /* Create a xmlpi_line element as the first child of element xmlpi */
-      elType.ElTypeNum = XML_EL_xmlpi_line;
+      elType.ElTypeNum = piLineNum;
       piLine = TtaNewElement (doc, elType);
       TtaRegisterElementCreate (piLine, doc);
       if (piLine != NULL)
@@ -226,5 +245,5 @@ Element InsertCssInXml (Document doc, View view)
   TtaCloseUndoSequence (doc);
   TtaSetStructureChecking (1, doc);
  
-  return (el);
+  return;
 }
