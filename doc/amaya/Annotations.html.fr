@@ -13,13 +13,13 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        alt="Amaya" src="../Icons/amaya.gif" /></td>
+      <td><img alt="W3C" src="../../images/WWW/w3c_home" /> <img
+        alt="Amaya" src="../images/amaya.gif" /></td>
       <td><p><a href="MakeBook.html.fr" accesskey="p"><img
-        alt="previous" src="../Icons/left.gif" /></a> <a
+        alt="previous" src="../images/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../Icons/up.gif" /></a> <a href="Configure.html.fr"
-        accesskey="n"><img alt="next" src="../Icons/right.gif"
+        src="../images/up.gif" /></a> <a href="Configure.html.fr"
+        accesskey="n"><img alt="next" src="../images/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -63,13 +63,13 @@ href="http://www.w3.org/RDF/">RDF</a> pour décrire les annotations.</p>
 <strong>serveur(s) d'annotations</strong>. Lorsqu'un document est chargé,
 Amaya interroge chacun de ces serveurs et recherche les annotations relatives
 à ce document. Chaque annotation est ensuite représentée par l'icône suivante
-<img src="../Icons/annot.png" alt="Crayon representant une annotation" /> qui
+<img src="../images/annot.png" alt="Crayon representant une annotation" /> qui
 est ajoutée au document (voir figure ci-dessous). Lorsque l'utilisateur clique
 sur l'icône d'annotation, le passage annoté est mis en évidence. Si
 l'utilisateur double-clique sur l'icône alors le contenu de l'annotation ainsi
 que les autres méta-données lui sont présentées dans une nouvelle fenêtre.</p>
 
-<p style="text-align: center"><img src="../Icons/annotationicon.png"
+<p style="text-align: center"><img src="../images/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
 <p>Une annotation possède plusieurs propriétés :</p>
@@ -123,7 +123,7 @@ d'annotations sur lequel les annotations distantes sont enregistrées.</p>
 <p>La plupart des commandes utilisées pour la gestion des annotations se
 trouvent dans le menu d'annotations représenté ci dessous.</p>
 
-<p style="text-align: center"><img src="../Icons/annotationsmenu_fr.png"
+<p style="text-align: center"><img src="../images/annotationsmenu_fr.png"
 alt="Annotations menu" /></p>
 
 <h3 id="Configurat">Menu de configuration pour les annotations</h3>
@@ -133,7 +133,7 @@ figure suivante montre la version Windows de ce menu. La version Unix a une
 interface utilisateur légèrement différente mais offre les mêmes
 fonctionnalités.</p>
 
-<p style="text-align: center"><img src="../Icons/configurebox.png"
+<p style="text-align: center"><img src="../images/configurebox.png"
 alt="configuration dialog box" /></p>
 
 <p></p>
@@ -201,7 +201,7 @@ s'affichera (figure suivante). Le contenu de cette fenêtre montre les
 méta-données de l'annotation à l'intérieur d'un cadre et le
 <strong>corps</strong> de l'annotation à l'extérieur.</p>
 
-<p style="text-align: center"><img src="../Icons/annotationwindow.png"
+<p style="text-align: center"><img src="../images/annotationwindow.png"
 alt="annotation window" /></p>
 
 <p></p>
@@ -296,7 +296,7 @@ enregistrée, comme montré dans la figure suivante.</p>
 
 <p></p>
 
-<p style="text-align: center"><img src="../Icons/localfilter.png"
+<p style="text-align: center"><img src="../images/localfilter.png"
 alt="local filter dialog box" /></p>
 
 <h3 id="Navigating">Activer des annotations</h3>
@@ -312,7 +312,7 @@ navigation d'un lien d'annotation vers un autre même si l'annotation ne peut
 être vue par tous les utilisateurs à cause d'une indisponibilité ou des
 caractéristiques du support utilisé.</p>
 
-<p style="text-align: center"><img src="../Icons/linkwindow.png"
+<p style="text-align: center"><img src="../images/linkwindow.png"
 alt="Link window shows annotations" /></p>
 
 <h3 id="Moving">Déplacer des annotations</h3>
@@ -391,7 +391,7 @@ ID de celui-ci. Amaya avertit l'utilisateur s'il détecte une annotation
 orpheline au chargement. Les annotations orphelines sont visibles dans la vue
 <strong>Liens</strong> du document et sont symbolisées par l'icône des
 annotations sur laquelle est superposé un point d'interrogation <img
-src="../Icons/annotorp.png" alt="Orphan annotation icon" />.</p>
+src="../images/annotorp.png" alt="Orphan annotation icon" />.</p>
 
 <p>Une annotation est dite <strong>trompeuse</strong> lorsqu'elle ne pointe
 pas sur la bonne partie du document. En reprenant notre exemple, nous pouvons
@@ -422,9 +422,9 @@ soucier de la position de celui-ci dans la structure du document.</p>
 </div>
 
 <p><a href="MakeBook.html.fr"><img alt="previous" 
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../Icons/up.gif" /></a> <a href="Configure.html.fr"><img
-alt="next" src="../Icons/right.gif" /></a></p>
+src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+src="../images/up.gif" /></a> <a href="Configure.html.fr"><img
+alt="next" src="../images/right.gif" /></a></p>
 <hr />
 </body>
 </html>

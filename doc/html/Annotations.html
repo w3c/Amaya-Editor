@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Annotations in Amaya</title>
+  <meta name="GENERATOR" content="amaya 5.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/WWW/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></td>
+      <td><p><a href="MakeBook.html" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Configure.html" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ul>
+  <li><a href="#What">What is an Annotation</a></li>
+  <li><a href="#Local">Local and Remote Annotations</a></li>
+  <li><a href="#Annotation">Annotations Menu</a></li>
+  <li><a href="#Configurat">Configuration Settings for Annotations</a></li>
+  <li><a href="#Creating1">Creating an Annotation</a></li>
+  <li><a href="#Deleting">Deleting an Annotation</a></li>
+  <li><a href="#Loading">Loading and Presenting Annotations</a></li>
+  <li><a href="#Navigating">Navigating Annotations</a></li>
+  <li><a href="#Moving">Moving Annotations</a></li>
+  <li><a href="#Issues1">Issues with Annotations and Modified
+  Documents</a></li>
+</ul>
+
+<div id="Annotations">
+<h2>Annotations in Amaya</h2>
+
+<h3><a name="What">What is an Annotation?</a></h3>
+
+<p>Annotations are comments, notes, explanations, or other types of external
+remarks that can be attached to a Web document or a selected part of the
+document. As they are external, it is possible to annotate any Web document
+independently, without needing to edit that document. From the technical
+point of view, annotations are usually seen as <strong>metadata,</strong> as
+they give additional information about an existing piece of data. In this
+project, we use a special <strong><a
+href="http://www.w3.org/RDF/">RDF</a></strong> <a
+href="http://www.w3.org/2000/10/annotation-ns">annotation schema</a> for
+describing annotations.</p>
+
+<p>Annotations can be stored locally or in one or more <strong>annotation
+servers</strong>. When a document is browsed, Amaya queries each of these
+servers, requesting the annotations related to that document. Currently Amaya
+presents annotations with pencil annotation icons ( <img
+src="../images/annot.png" alt="Annotation pencil icon" /> )that are visually
+embedded in the document, as shown in the figure below. If the user
+single-clicks on an annotation icon, the text that was annotated is
+highlighted. If the user double-clicks on this icon, the annotation text and
+other metadata are presented in a separate window.</p>
+
+<p style="text-align: center"><img src="../images/annotationicon.png"
+alt="annotation icon (= pencil)" /></p>
+
+<p>An annotation has many properties including:</p>
+<ul>
+  <li>Physical location: is the annotation stored in a local file system or
+    in an annotation server</li>
+  <li>Scope: is the annotation associated to a whole document or just to a
+    fragment of this document</li>
+  <li>Annotation type: 'Annotation', 'Comment', 'Query', ...</li>
+</ul>
+
+<h3 id="Local">Local and remote annotations</h3>
+
+<p>Amaya can store annotation data in a local file system (called "local
+annotations") or in the Web (called "remote annotations"). <strong>Remote
+annotations</strong> are stored in annotation servers and can be downloaded
+and stored by anyone having the correct access rights, such as is the case of
+other HTML documents. We also refer to remote annotations as <strong>shared
+or public annotations</strong>, as they can be seen by other people. If you
+wish to install your own annotation server, please refer to <a
+href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotation-Server-HOWTO</a>.</p>
+
+<p>The user doesn't need a server to make <strong>local annotations</strong>.
+Local annotations are stored under the <a
+href="/home/kahan/Amaya/doc/amaya/Configure.html">user preferences
+directory</a>, in a special directory called <code>annotations</code>, and
+can be seen only by their owner (according to the system access right setup).
+This directory is made of three kinds of files:</p>
+<dl>
+  <dt><strong>annot.index</strong></dt>
+    <dd>associates URLs with the files where the metadata of the annotations
+      are stored.</dd>
+  <dt><strong>index + random suffix</strong></dt>
+    <dd>a file that stores the metadata of the annotations related to a given
+      URL. The metadata is specified with RDF.</dd>
+  <dt><strong>annot + random suffix.html</strong></dt>
+    <dd>contains the body of an annotation, stored as XHTML.</dd>
+</dl>
+
+<p>At any time, a user can convert a local annotation to a shared one, by
+using the <strong>Annotations/Post annotation</strong> menu entry. If this
+operation is successful, the local annotation will be deleted, as it will
+have been moved to an annotation server. The following section describes how
+to set up the name of the server to which annotations should be posted.</p>
+
+<h3 id="Annotation">Annotations Menu</h3>
+
+<p>Most of the commands needed for handling annotations can be found from the
+Annotations menu shown below. The commands are explained later in this
+document in the context of users' goals when handling annotations.</p>
+
+<p style="text-align: center"><img src="../images/annotationsmenu.png"
+alt="Annotations menu" /></p>
+
+<h3 id="Configurat">Configuration Settings for Annotations</h3>
+
+<p>The annotations configuration menu is found under
+the<strong>Annotations/Configure</strong> menu entry. The following figure
+shows the Windows version of this menu. The Unix version has a slightly
+different user interface, but the same functionalities.</p>
+
+<p style="text-align: center"><img src="../images/configurebox.png"
+alt="configuration dialog box" /></p>
+
+<p></p>
+<dl>
+  <dt><strong>Annotation user</strong></dt>
+    <dd>A field that is associated with each new annotation as the
+      <strong>author</strong> of the annotation. By default, Amaya uses the
+      login name of the user when building the author metadata field. The
+      annotation user setting allows a user to change this name to a more
+      significant one, for example, from <code>u1723242</code> (which makes
+      happy my system administrator) to <code>marja</code> (which other
+      people normally use when talking with me)<code>.</code></dd>
+  <dt><strong>Annotation servers</strong></dt>
+    <dd>This setting tells Amaya what servers it should contact when looking
+      for annotations. You can specify one or more servers. We use the
+      reserved server name <strong>localhost</strong> to tell Amaya we want
+      to search the local annotations. It doesn't mean we're running a local
+      annotation server. If that were the case, we would need to give its
+      complete URL. Under Unix, the annotation servers are specified as a
+      space separated list. Under Windows, they are added one after the other
+      by directly typing their names in the dialog box, using the
+      <code>Return</code> key to add a new one. By default, the annotation
+      servers field is initialized to <code>localhost</code>. 
+      <p><em>TIP</em>: If you want to temporarily disable an annotation
+      server, add a "-" char before its URL. Amaya will ignore it.</p>
+    </dd>
+  <dt><strong>Autoload local annotations/Autoload remote
+  annotations</strong></dt>
+    <dd>These setting tells Amaya whether or not to request annotations
+      automatically (that is, query the annotation servers ) every time that
+      a URL is browsed. If it's not checked, then the user has to manually
+      invoke the <strong>Load annotations</strong> function from the
+      <strong>Annotations</strong> menu. Note that the if you check the
+      <code>autoload remote annotations</code>option, there may be a delay
+      when Amaya resolves the DNS name of the annotation servers. By default,
+      both these options are turned off.</dd>
+  <dt><strong>Disable remote autoload at each startup</strong></dt>
+    <dd>If this option is checked, Amaya will reset the <code>autoload remote
+      annotations</code> option at launch time. This option can be useful if
+      you're working offline from time to time, but still want to autoload
+      the local annotations, and the remote ones from time to time, for
+      example, when going on-line for a while.</dd>
+  <dt><strong>Annotation post server</strong></dt>
+    <dd><p>This setting defines the server to which the annotations are
+      posted. Local annotations are always saved to the local repository,
+      regardless of the value of this setting. By default, this setting is
+      empty. Note that the post server is not automatically included in the
+      list of servers to be queried; you must enter the post server name in
+      both places, in whatever order you choose.</p>
+    </dd>
+</dl>
+
+<h3 id="Creating">Creating an Annotation</h3>
+
+<p>This version of Amaya support two kinds of annotations: annotations that
+apply to a whole document and annotations that apply to a specific point or
+selection in a document.</p>
+
+<p>To annotate a whole document, just select the <strong>Annotations/Annotate
+document</strong> menu entry. To annotate a point, put the caret in any point
+in the document and select the <strong>Annotations/Annotate
+selection</strong> menu entry. To annotate a selection, make a selection in
+the document, and then use the <strong>Annotations/Annotate
+selection</strong> menu entry. In all of these cases, an annotation window
+will appear (see following figure). The content of this window shows the
+<strong>metadata</strong> of the annotation, inside a box, and the
+<strong>body</strong> of the annotation.</p>
+
+<p style="text-align: center"><img src="../images/annotationwindow.png"
+alt="annotation window" /></p>
+
+<p></p>
+
+<p>Currently, the metadata consists of the <strong>author's name</strong>,
+the <strong>title of the annotated document</strong>, the <strong>type of the
+annotation</strong>, the <strong>date of creation</strong>, and the
+<strong>date of the last modification</strong> . Some of the metadata fields
+have special properties. The <strong>source document</strong> field is also a
+link that points back to the annotated text. If the user double-clicks on it,
+as when following any other link with Amaya, the annotated document will be
+raised and the annotated text will be highlighted. The <strong>annotation
+types</strong> field allows the user to classify the annotation and change
+its type. Double-click on the text "annotation type" to see the list of types
+available. We'll describe later how users can also define their own
+annotation types. Finally, the <strong>Last modified</strong> field is
+updated automatically each time that an annotation is saved.</p>
+
+<p>Below the header area is the <strong>annotation body area</strong>. It
+shows the current content, and it can be edited as if we were editing any
+other HTML document,. N.B., we don't support yet the use of images inside the
+body. Some of the features may not be ready in the initial release, such as
+the Structure view.</p>
+
+<p>Saving an annotation is equivalent to saving any other document with
+Amaya. The user just needs to select the <strong>File/Save</strong> command
+(or use its equivalent shortcut or button menu). Local annotations are saved
+to the annotations directory and remote annotations are saved to the
+annotation post server where they are stored if the user has write access. To
+convert a local annotation into a shared one, the user needs to use the
+<strong>Annotations/Post annotation</strong> command and the annotation will
+be saved to the <strong>Post server</strong> as defined in the configuration
+menu. If this operation is successful, the local annotation will be removed
+and further save operations will go directly to that annotation server. In
+the initial release, Amaya does not support an operation to save a copy of a
+remote annotation in the local annotations directory.</p>
+
+<p>Some commands applied to the document in the <strong>Amaya Document
+window</strong> will be applied to annotation document in the
+<strong>Annotation window</strong>. For instance, the body of an annotation
+can be printed with <strong>File/Print</strong> command, or reloaded with
+<strong>File/Reload document</strong> command. (Note: some of these may not
+be implemented yet.)</p>
+
+<h3 id="Deleting">Deleting an Annotation</h3>
+
+<p>The <strong>Annotations/Delete annotation</strong> menu command lets you
+delete an annotation. You can invoke this command from an open annotation
+window. You can also delete an annotation from the annotated document by
+first selecting the annotation by doing a simple click on the annotation
+icon, and then calling this menu command.</p>
+
+<h3 id="Loading">Loading and Presenting Annotations</h3>
+
+<p>The <strong>Load annotations</strong> command tells amaya to load the
+annotations that are associated to the URL of the document that is being
+browsed in that window. Amaya will query the annotations servers, as set up
+in the <strong>Annotations/Configure</strong> dialogue, asking for any
+relevant annotation.</p>
+
+<p>The annotations can also be loaded automatically whenever a new page is
+loaded by selecting the <strong>Autoload annotations</strong> checkbox in the
+<strong>Annotations/Configure</strong> dialogue.</p>
+
+<p>Note that in this version of Amaya, querying an annotation server will
+return <em>all</em> the the annotations that are associated to to a document.
+In a future version, it may be possible to use a customized query menu to
+refine the query string that is sent to the servers.</p>
+
+<p>The <strong>Annotations/Local filter</strong> menu allows a user to show
+or hide the annotation icons from the document window, for example, to
+concentrate on those that really interest him, or, to make it easier to read
+a heavily annotated document. The user can <strong>show</strong> or
+<strong>hide</strong> annotations by three types of metadata: by the name of
+the annotation's <strong>author</strong>, by the <strong>type</strong> of
+annotation, and by the <strong>annotation server</strong> name. To apply any
+of these filters, you need to click on the text box to select a given type of
+annotations, and then on the corresponding action button. The <strong>Show
+all</strong> and <strong>Hide all</strong> commands apply to all the
+annotations.A small and uncomfortable prefix character shows the status of a
+given entry. This character can be either a space (' '), a star ('*') or a
+signet ('-') to say that annotations belonging to this given entry are all
+visible, all hidden, or partially visible, respectively.</p>
+
+<p>Note that the filter menus only show you the annotations it knows about at
+the moment of its invocation. If you add new annotations in the meantime,
+you'll need to destroy this menu and invoke it again to see them.</p>
+
+<p>Note that for each annotation, the annotation user is shown by
+concatenating the author's name to the name of the annotation server where
+the annotation is stored, as shown in the following figure.</p>
+
+<p></p>
+
+<p style="text-align: center"><img src="../images/localfilter.png"
+alt="local filter dialog box" /></p>
+
+<h3 id="Navigating">Navigating Annotations</h3>
+
+<p>Annotations appear as links in the <strong>Link window</strong> which can
+be activated by the <strong>Views/ Show links</strong> command. Annotations
+in this window are marked with the same pencil icon as the annotations in the
+document window. The <strong>Link window</strong> shows all the annotations,
+without taking into account whether they have been hidden with the
+<strong>Annotation Local Filter</strong> menu. As with the document window, a
+single-click on the annotation will select the annotated text in the document
+window and a double click will open the annotation. This is an example of how
+to navigate from one annotation link to another even if the annotation cannot
+be seen by the user because of disabilities or because of the characteristics
+of the used device.</p>
+
+<p></p>
+
+<p style="text-align: center"><img src="../images/linkwindow.png"
+alt="Link window shows annotations" /></p>
+
+<h3 id="Moving">Moving annotations</h3>
+
+<p>Amaya also lets you to move an annotation to any other part of the same
+document. This is interesting, for example, to handle <a
+href="#Issues1">orphan and misleading annotations</a>. You can move an
+annotation to either the current selection or to the value of a stored
+XPointer. For the moment, it is only possible to move annotations in the same
+document where they were created.</p>
+
+<p>To move an annotation to a current selection, first open the annotation
+window. Then, click on the annotated document and select something on it.
+Then, on the Annotation Window, invoke the <strong>Annotations/Move to
+selection</strong>menu. Amaya will then move the annotation icon to the text
+you selected and will mark the annotation document as modified. In order to
+make this change effective, you will have to save the annotation. Otherwise,
+you will loose the change. Similarly to the creation of annotations, you can
+also move an annotation to the current position of the cursor (caret),
+without having to make a selection.</p>
+
+<p>You can also memorize the position where you want to move the annotation
+to, and then move them there. This is useful, for example, if you want to
+move many annotations to the same position or if you want to scroll elsewhere
+in the document before doing the move. To do this, make the selection (or
+just place the cursor) to the location where you want to move the annotation.
+Then, use the <strong>Link/Store link as XPointer</strong> menu to internally
+store an XPointer that represents that selection. Finally, in the Annotations
+window, use the <strong>Annotations/Move to stored XPointer</strong>menu to
+move the annotation to its new location. As before, you will have to save the
+annotation to make this change effective.</p>
+</div>
+
+<div id="Issues">
+<h3 id="Issues1">Issues with Annotations and Modified Documents</h3>
+
+<p>If you are using annotations with live documents (documents whose contents
+can be modified), you may encounter two kinds of problems: <strong>orphan
+annotations</strong> and <strong>misleading annotations</strong>. Let's first
+describe a bit more in detail how Amaya attaches annotations to documents.</p>
+
+<p>Amaya uses <strong><a
+href="http://www.w3.org/XML/Linking">XPointer</a></strong> to describe where
+an annotation should be attached to a document. XPointers are based in the
+structure of the document. To build an XPointer, for example for a selection,
+we start from the first point of the selection and walk backwards through the
+document's structure, until we find the root of the document. If an element
+has an ID attribute, we stop building the XPointer and we consider that the
+beginning of this XPointer is the element that has this ID attribute value.
+For example,. if you look at the HTML source for this document, you'll notice
+that this section (Issues with annotations...) is enclosed within a DIV
+element that has an ID attribute with the value "Issues". Here's an extract
+of the source code:</p>
+<pre>  &lt;div id="Issues"&gt;
+  &lt;h3&gt;&gt;Issues with ....&lt;/h3&gt;&gt;
+  &lt;p&gt;If you are using...&lt;/p&gt;
+  &lt;p&gt;Amaya uses &lt;strong&gt;XPointer&lt;/strong&gt;...&lt;/p&gt;
+  ...
+  &lt;/div&gt;</pre>
+
+<p>And here's the XPointer that points to the second paragraph::</p>
+
+<p style="text-align: center"><code>xpointer(id("Issues")/p[2])</code></p>
+
+<p>The above XPointer points to the second <code>p</code> element, from the
+element parent having an ID attribute with value "Issues". (In order to
+select a whole paragraph, we put the cursor in the paragraph and pressed the
+Escape (Unix) or F2 (Windows) key). Note that the use of the ID attribute
+allows the document author to move this whole section elsewhere on the
+document, without needing to update the XPointer. The XPointer doesn't depend
+on the elements that precede this particular DIV element.</p>
+
+<p>We say that an annotation becomes an <strong>orphan</strong> when it
+cannot be attached anymore to a document, that is, when the XPointer doesn't
+resolve anymore to any element in the structure. This happens when a
+document's structure is modified. For example, the above XPointer wouldn't
+resolve anymore if we destroyed the ID attribute "Issues". Amaya will warn
+you if it detects any orphan annotation while downloading a set of
+annotations from an annotation server. All orphan annotations are visible
+from the Links view and are associated with an icon that shows a question
+mark superimposed on the annotation pencil <img src="../images/annotorp.png"
+alt="Orphan annotation icon" />.</p>
+
+<p>We say that an annotation is <strong>misleading</strong> when it points to
+a wrong piece of information. Coming back to our example, we can create a
+misleading annotation if we exchange the first and second paragraph. The
+XPointer will continue to point to the second paragraph, although we would
+have liked it to point now to the first paragraph. This problem is even more
+common when you annotate a portion of text that may change. In the first
+release, Amaya does not warn the user if an annotation is misleading. A
+future release may notify users of the potential for an annotation to be
+misleading.</p>
+
+<p>How can you protect yourself?</p>
+
+<p>If you're the author of a document, try to use the ID attribute in
+strategic places, for example, in the DIV elements. Amaya allows you to
+automatically associate or remove an ID attribute to/from a set of elements
+by means of the <strong>Special/Make Add/Remove ID</strong> menu command. In
+the above example, we could have avoided the problem of misleading
+annotations if we had added an ID attribute to the second paragraph:</p>
+<pre>  &lt;p id="Amaya"&gt;Amaya uses...&lt;/p&gt;</pre>
+
+<p>An XPointer that points to this paragraph is</p>
+
+<p style="text-align: center"><code>xpointer(id("Amaya"))</code></p>
+
+<p>Thus, the Xpointer will point to the same paragraph, regardless of its
+position in the document's structure.</p>
+</div>
+
+<p><a href="MakeBook.html"><img alt="previous" src="../images/left.gif"
+/></a> <a href="Manual.html"><img alt="top" src="../images/up.gif" /></a> <a
+href="Configure.html"><img alt="next" src="../images/right.gif" /></a></p>
+<hr />
+</body>
+</html>

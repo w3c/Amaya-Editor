@@ -11,14 +11,14 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
-        <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
+      <td><p><img border="0" alt="W3C" src="../../../images/WWW/w3c_home" />
+        <img border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="structure.html.fr"><img alt="previous"
-        border="0" src="../../Icons/left.gif" /></a> <a
+        border="0" src="../../images/left.gif" /></a> <a
         href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="lists.html.fr"><img
-        alt="next" border="0" src="../../Icons/right.gif" /></a></p>
+        src="../../images/up.gif" /></a> <a href="lists.html.fr"><img
+        alt="next" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -36,9 +36,9 @@ filles d'éléments qui ont un contenu de type bloc. Notez que pour les tables
 de données, il existe des éléments spéciaux pour marquer les entêtes.</p>
 
 <p>Le premier des trois niveaux d'entête peut être créé depuis la barre
-d'outils en utilisant les icônes <img src="../../Icons/H1.gif" alt="H1 button"
-/>, <img src="../../Icons/H2.gif" alt="H2 button" />, <img
-src="../../Icons/H3.gif" alt="H3 button" />. Tous les niveaux d'entête peuvent
+d'outils en utilisant les icônes <img src="../../images/H1.gif" alt="H1 button"
+/>, <img src="../../images/H2.gif" alt="H2 button" />, <img
+src="../../images/H3.gif" alt="H3 button" />. Tous les niveaux d'entête peuvent
 être créés depuis le menu Éléments, ou en utilisant les raccourcis clavier.
 Les raccourcis clavier sont par défaut <kbd>control-1</kbd> pour
 <code>H1</code>, <kbd>control-2</kbd> pour <code>H2</code>, et pareil jusqu'à
@@ -51,10 +51,10 @@ une autre présentation.</p>
 </div>
 
 <p align="right"><a href="infoTypes.html.fr"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
-alt="top" border="0" src="../../Icons/up.gif" /></a> <a
+src="../../images/left.gif" /></a> <a href="../Manual.html.fr#There"><img
+alt="top" border="0" src="../../images/up.gif" /></a> <a
 href="structure.html.fr"><img alt="next" border="0"
-src="../../Icons/right.gif" /></a></p>
+src="../../images/right.gif" /></a></p>
 <hr />
 
 <p></p>

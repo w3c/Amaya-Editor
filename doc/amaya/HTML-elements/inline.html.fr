@@ -11,16 +11,16 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
-        <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
+      <td><p><img border="0" alt="W3C" src="../../../images/WWW/w3c_home" />
+        <img border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="../Manual.html.fr"></a></p>
 
         <p align="right"><a href="address.html.fr"><img alt="previous"
-        border="0" src="../../Icons/left.gif" /></a> <a
+        border="0" src="../../images/left.gif" /></a> <a
         href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="40styling.html.fr"><img
-        alt="next" border="0" src="../../Icons/right.gif" /></a></p>
+        src="../../images/up.gif" /></a> <a href="40styling.html.fr"><img
+        alt="next" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -139,8 +139,8 @@ utilisées pour changer la présentation des insertions et des suppressions.</p>
 </ol>
 
 <p>Deux types de mise en évidence peuvent être appliqués depuis la barre
-d'outils en utilisant les boutons <img src="../../Icons/Em.gif" alt="Emphasis"
-/> et <img src="../../Icons/Strong.gif" alt="Strong" /> , ou depuis le
+d'outils en utilisant les boutons <img src="../../images/Em.gif" alt="Emphasis"
+/> et <img src="../../images/Strong.gif" alt="Strong" /> , ou depuis le
 formulaire du sous-menu <strong>types information</strong> du menu
 <strong>Style</strong>. Il y a également des raccourcis clavier -
 <kbd>Shift-control-I</kbd> pour accentuer (parce que l'interprétation par
@@ -156,7 +156,7 @@ mise en évidence appropriée. Par exemple, placez le curseur quelque part sur
 un élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou
 la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et ensuite
 utilisez le raccourci clavier, menu item, ou le bouton <img
-src="../../Icons/Strong.gif" alt="Strong" /> - l'élément <code>STRONG</code>
+src="../../images/Strong.gif" alt="Strong" /> - l'élément <code>STRONG</code>
 sera désactivé.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
@@ -165,10 +165,10 @@ utilisées pour changer la présentation des deux types de mise en évidence.</p>
 </div>
 
 <p align="right"><a href="address.html.fr"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
-alt="top" border="0" src="../../Icons/up.gif" /></a> <a
+src="../../images/left.gif" /></a> <a href="../Manual.html.fr#There"><img
+alt="top" border="0" src="../../images/up.gif" /></a> <a
 href="40styling.html.fr"><img alt="next" border="0"
-src="../../Icons/right.gif" /></a></p>
+src="../../images/right.gif" /></a></p>
 <hr />
 </body>
 </html>
