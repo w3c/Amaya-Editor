@@ -34,16 +34,29 @@
 ################# AMAYA EDITOR
 # Give the list of visible functions
 <Editor>
-+amayabase
 +browsing
 +config
+#+templates
 +edit
+ShowButtons
+ShowAddress
+ZoomIn
+ZoomOut
 
 ################# WX AMAYA EDITOR
 <Editor_WX>
-+amayabase_WX
++config_WX
+#+templates
 +browsing_WX
 +edit
+ZoomIn
+ZoomOut
+
+################# AMAYA BROWSER
+<Browser>
++browsing
+ZoomIn
+ZoomOut
 
 ################# AMAYA DISPLAY
 <Display>
@@ -202,20 +215,6 @@ MoveItem
 #-------------------- Modules ---------------------------------------------
 # shorter list of functions
 ################# AMAYA FUNCTIONS
-[amayabase]
-+config
-#+templates
-ShowButtons
-ShowAddress
-ZoomIn
-ZoomOut
-
-[amayabase_WX]
-+config_WX
-#+templates
-ZoomIn
-ZoomOut
-
 ######### DAV MODULES
 [davbase]
 HelpWebDAV
