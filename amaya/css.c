@@ -546,7 +546,7 @@ char *GetStyleContents (Element el)
 
   buffer = NULL;
   /* get enough space to store UTF-8 characters */
-  length = TtaGetTextLength (el) + 10;
+  length = TtaGetElementVolume (el) * 6 + 1;
   if (length > 1)
     {
       /* get the length of the included text */
