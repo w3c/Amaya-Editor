@@ -61,6 +61,7 @@ RULES
 	BEGIN
 	PageBreak: No;
 	LineBreak: Yes;
+	LineWeight: 1 pt;
 	VertPos: Top = Previous . Bottom;
 	HorizPos: VMiddle = Previous . VMiddle;
 	END;

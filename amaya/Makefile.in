@@ -24,7 +24,7 @@ CONFIGFILES=XKeysymDB thot.ini amaya.keyboard en-amayadialogue \
 DICOFILES= *.ptn alphabet clavier
 
 AMAYAFILES=COPYRIGHT COPYRIGHT.html HTML.STR HTML.conf HTML.trans HTML.en \
-           HTML.fr HTML*.PRS HTML*.TRA
+           HTML.fr HTML*.PRS HTML*.TRA MathML.S MathMLP.P MathMLT.T
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -287,3 +287,30 @@ proto : ../bin/cextract
 	  fi ; \
 	 done)
 
+
+xml: $(AMAYA)/MathML.STR $(AMAYA)//MathMLP.PRS $(AMAYA)//MathMLT.TRA
+
+#
+# Structure schema compilation.
+#
+$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) MathML ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+#
+# Presentation schemas compilation
+#
+$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P
+	PRS=`pwd`/../bin/prs ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
+
+#
+# Traduction schemas compilation
+#
+$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T
+	TRA=`pwd`/../bin/tra ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT

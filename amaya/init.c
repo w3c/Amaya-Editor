@@ -46,6 +46,14 @@
 #include "Java.xpm"
 #endif /* AMAYA_JAVA */
 
+#ifdef MATHML
+#include "Math.xpm"
+#include "MathML.h"
+#define FormMaths 0
+#define MenuMaths 1
+#define MAX_MATHS  2
+#endif /* MATHML */
+
 #ifdef _WINDOWS
 #ifndef __GNUC__
 #include <direct.h>
@@ -85,6 +93,11 @@ static Pixmap       iconPlugin;
 #ifdef AMAYA_JAVA
 static Pixmap       iconJava;
 #endif /* AMAYA_JAVA */
+#ifdef MATHML
+static Pixmap       iconMath;
+static int          MathsDialogue;
+static boolean      InitMaths;
+#endif /* MATHML */
 
 #include "css_f.h"
 #include "HTMLhistory_f.h"
@@ -114,6 +127,158 @@ extern void CreateFormPlugin (Document, View);
 #include "javaamaya_f.h"
 extern void CreateFormJava (Document, View);
 #endif
+
+
+#ifdef MATHML
+
+/*----------------------------------------------------------------------
+   Callback procedure for dialogue events.                            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CallbackMaths (int ref, int typedata, char *data)
+#else
+void                CallbackMaths (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
+
+#endif
+{
+  Document           doc;
+  Element            first, el;
+  ElementType        elType;
+  SSchema            docSchema, mathSchema;
+  int                val, c1, i;
+
+  val = (int) data;
+  switch (ref - MathsDialogue)
+    {
+    case FormMaths:
+      InitMaths = FALSE;
+      TtaDestroyDialogue (ref);	   
+      break;
+    case MenuMaths:
+      doc = TtaGetSelectedDocument ();
+      if (doc == 0)
+	/* no document selected */
+	return;
+      TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+      /* Check whether the selected element is a math element */
+      elType = TtaGetElementType (first);
+      docSchema = TtaGetDocumentSSchema (doc);
+      if (TtaSameSSchemas (docSchema, elType.ElSSchema))
+	{
+	  /* the selection concerns an HTML element */
+	  if (elType.ElTypeNum == HTML_EL_XML)
+	    {
+	      do
+		{
+		  el = first;
+		  first = TtaGetFirstChild (el);
+		}
+	      while (first != NULL);
+	    }
+	  else
+	    {
+	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 < 1)
+		{
+		  /* split the text to insert the XML element */
+		  TtaSplitText (first, c1, doc);
+		  /* take the second part of the split text element */
+		  TtaNextSibling (&first);
+		}
+	      mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
+	      /* create the XML element before the first element */
+	      elType.ElTypeNum = HTML_EL_XML;
+	      el = TtaNewTree (doc, elType, "");
+	      TtaInsertSibling (el, first, TRUE, doc);
+	      el = TtaGetFirstChild (el);
+	    }
+	}
+      switch (val)
+	{
+	case 0:
+	  elType.ElTypeNum = MathML_EL_MROOT;
+	  break;
+	case 1:
+	  elType.ElTypeNum = MathML_EL_MSQRT;
+	  break;
+	case 2:
+	  elType.ElTypeNum = MathML_EL_MFRAC;
+	  break;
+	case 3:
+	  elType.ElTypeNum = MathML_EL_MSUBSUP;
+	  break;
+	case 4:
+	  elType.ElTypeNum = MathML_EL_MSUB;
+	  break;
+	case 5:
+	  elType.ElTypeNum = MathML_EL_MSUP;
+	  break;
+	case 6:
+	  elType.ElTypeNum = MathML_EL_MFENCE;
+	  break;
+	case 7:
+	  elType.ElTypeNum = MathML_EL_MN;
+	  break;
+	default:
+	  return;
+	}
+      TtaCreateElement (elType, doc);
+      break;
+    default:
+      break;
+    }
+}
+
+/*----------------------------------------------------------------------
+   CreateMaths creates the maths menus.           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMaths (Document doc, View view)
+#else
+void                CreateMaths (doc, view)
+Document            doc;
+View                view;
+
+#endif
+{
+  int               i;
+  char              s[MAX_LENGTH];
+
+  if (!InitMaths)
+    {
+      InitMaths = TRUE;
+
+      /* Dialogue form for answering text, user name and password */
+      TtaNewSheet (MathsDialogue + FormMaths, TtaGetViewFrame (doc, view), 
+		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
+		   0, NULL, TRUE, 1, 'L', D_DONE);
+      i = 0;
+      sprintf (&s[i], "%s", "BMROOT");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMSQRT");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMFRAC");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMSUBSUP");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMSUB");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMSUP");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMFENCE");
+      i += strlen (&s[i]) + 1;
+      sprintf (&s[i], "%s", "BMN");
+      TtaNewSubmenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
+		     TtaGetMessage (AMAYA, AM_REPEAT_MODE), 8, s, NULL, TRUE);
+      TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
+      TtaSetDialoguePosition ();
+    }
+  TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
+}
+#endif /* MATHML */
+
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -487,15 +652,22 @@ char               *text;
 #endif
 {
    ElementType         elType;
-   Element             el;
+   Element             el, child;
 
    /* search the Title element */
    el = TtaGetMainRoot (document);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_TITLE;
    el = TtaSearchTypedElement (elType, SearchForward, el);
-   el = TtaGetFirstChild (el);
-   TtaSetTextContent (el, text, TtaGetDefaultLanguage (), document);
+   child = TtaGetFirstChild (el);
+   if (child == NULL)
+     {
+       /* insert the text element */
+       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+       child = TtaNewElement (document, elType);
+       TtaInsertFirstChild  (&child, el, document);
+     }
+   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
    TtaSetDocumentModified (document);
 }
 
@@ -791,6 +963,12 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconJava, CreateFormJava,
 			   TtaGetMessage (AMAYA, AM_BUTTON_JAVA));
 #endif /* AMAYA_JAVA */
+#ifdef MATHML
+	     TtaAddButton (doc, 1, iconMath, CreateMaths,
+			   TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+	     InitMaths = FALSE;
+	     MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
+#endif /* MATHML */
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			     TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
@@ -1900,6 +2078,10 @@ NotifyEvent        *event;
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
 #endif
+#ifdef MATHML
+   iconMath = TtaCreatePixmapLogo (Math_xpm);
+   TtaRegisterPixmap("Math", iconMath);
+# endif /* MATHML */
 
    TargetName = NULL;
    /* initialize temporary directory for loaded files */

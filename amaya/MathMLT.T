@@ -9,6 +9,12 @@ LineLength 78;
 	
 RULES
 
+   MathML:
+	begin
+	create '<mrow>';
+	create '</mrow>' after;
+	end;
+
    MROW:
 	begin
 	create '<mrow>';
