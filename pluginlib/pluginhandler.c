@@ -5,12 +5,12 @@
  *
  */
 
-/* authors (alphabetical order):
- * - Ramzi GUETARI
+/* authors:
+ * - Ramzi GUETARI (W3C/INRIA)
  * - Nabil LAYAIDA
  * - Loay  SABRY-ISMAIL
  *
- * Last modification: Jan 09 1997
+ * Last modification: March 26 1997
  */
 
 #include "thot_gui.h"
@@ -42,9 +42,6 @@
 #include "pluginbrowse_f.h"
 #include "pluginapi_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |	BitmapOpenImageDrvr loading the driver.				| */
-/* ---------------------------------------------------------------------- */
 extern PluginInfo*    pluginTable [100];
 extern int            pluginCounter ;
 extern PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
@@ -72,11 +69,11 @@ int     indexHandler;
   refNum = GetPictTypeIndex (HandlersCounter);
   return refNum;
 #endif /* !NEW_WILLOWS */
-}/*FigOpenImageDrvr*/
+}
 
-/* ---------------------------------------------------------------------- */
-/* |	FigCloseImageDrvr close the driver.				| */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   AP_ClosePluginDriver
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 void AP_ClosePluginDriver (void)
@@ -84,12 +81,12 @@ void AP_ClosePluginDriver (void)
 void AP_ClosePluginDriver ()
 #endif /* __STDC__ */
 {
-}/*FigCloseImageDrvr*/
+}
 
 
-/* ---------------------------------------------------------------------- */
-/* |	FigInitImage: initializes the driver for an image		| */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   Ap_InitImage
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 void Ap_InitImage (void)
@@ -97,11 +94,11 @@ void Ap_InitImage (void)
 void Ap_InitImage ()
 #endif /* __STDC__ */
 {
-}/*FigInitImage*/
+}
 
-/* ---------------------------------------------------------------------- */
-/* |	FigDrawImage draws a fing within a drawable.		        | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   Ap_DrawPicture
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 void Ap_DrawPicture (PictInfo* imageDesc, int xif, int yif)
@@ -112,10 +109,10 @@ int       xif;
 int       yif;
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
     int   n;
     Arg   arg[10];
     
-    /*GetPictureFileName (imageDesc->PicFileName, fileName);*/
     if ((!imageDesc->created) && (!imageDesc->mapped)) {
        n = 0;
        XtSetArg (arg[n], XmNx, xif ); n++;
@@ -132,12 +129,12 @@ int       yif;
             imageDesc->mapped = TRUE;
          }
    }
-}/*FigDrawImage*/
+#endif /* !_WINDOWS */
+}
 
-/* ---------------------------------------------------------------------- */
-/* |	FigCreateImage lit et retourne le Fig lu dans le fichier 	| */
-/* |		fileName. Met a` jour xif, yif, wif, hif.	       	| */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   Ap_ProducePicture
+   ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable Ap_ProducePicture (int frame, PictInfo* imageDesc, char* fileName)
 #else /* __STDC__ */
@@ -150,14 +147,12 @@ char*     fileName;
 #ifdef NEW_WILLOWS
   return(NULL);
 #else  /* NEW_WILLOWS */
-  /* int     status;
-  int     w, h; */
   Pixmap  bitmap = None;
-  /* int     xHot, yHot; */
-  Widget  canvas;
+  ThotWidget  canvas;
   int     n;
   Arg     arg[10];
     
+#ifndef _WINDOWS
   n = 0;
   XtSetArg (arg[n], XmNwidth, imageDesc->PicWArea); n++;
   XtSetArg (arg[n], XmNheight, imageDesc->PicHArea); n++;
@@ -167,8 +162,6 @@ char*     fileName;
   canvas = (Widget) XmCreateDrawingArea (FrameTable[frame].WdFrame, "Dummy", arg, n);
   XtRealizeWidget (canvas);
   imageDesc->wid = canvas;
-
-  /*CreateInstance(XtWindow((Widget)canvas), TtDisplay, fileName);*/
 
   bitmap = XCreatePixmap (TtDisplay, TtRootWindow, imageDesc->PicWArea, imageDesc->PicHArea, TtWDepth);
   
@@ -182,13 +175,14 @@ char*     fileName;
   /* imageDesc->created     = FALSE;*/ /* A VERIFIER */
   imageDesc->mapped      = FALSE;
   return (Drawable) bitmap;
+#endif /* _WINDOWS */
 #endif /* !NEW_WILLOWS */
-}/*FigCreateImage*/
+}
 
 
-/* ---------------------------------------------------------------------- */
-/* |	FigPrintImage convertit un Fig en PostScript.		        | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   Ap_ProducePostscript
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 void Ap_ProducePostscript (char* fileName, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned int BackGroundPixel)
@@ -208,11 +202,10 @@ int          fd;
 unsigned int BackGroundPixel;
 #endif /* __STDC__ */
 {
-}/*BitmapPrintImage*/
-
+}
 
 /*----------------------------------------------------------------------
-  BitmapIsFormat teste si un fichier contient un bitmap X11.
+  Ap_MatchFormat
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -225,11 +218,7 @@ char* fileName;
 #ifdef NEW_WILLOWS
   return FALSE;
 #else  /* NEW_WILLOWS */
-  /*  int    status;
-  int    w, h; 
-  Pixmap bitmap = None;*/
   int    l; 
-  /* int xHot, yHot; */
 
   char    suffix [10];
   int     index1 = 0;
@@ -252,7 +241,7 @@ char* fileName;
   }
   return matched ;
 #endif /* !NEW_WILLOWS */
-}/*BitmapIsFormat*/
+}
 
 
 /*----------------------------------------------------------------------

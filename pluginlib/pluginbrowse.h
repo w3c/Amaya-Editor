@@ -6,7 +6,7 @@
  */
 
 /* author:
- * - Ramzi GUETARI
+ * - Ramzi GUETARI (W3C/INRIA)
  *
  * Last modification: Jan 23 1997
  */

@@ -546,7 +546,14 @@ NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStrea
     printf ("***** Ap_NewStream *****\n");
 #endif
 
-    (*stream_ptr) = (NPStream*) malloc (sizeof (NPStream));
+    (*stream_ptr)               = (NPStream*) malloc (sizeof (NPStream));
+    (*stream_ptr)->url          = NULL;
+    (*stream_ptr)->end          = 0;
+    (*stream_ptr)->pdata        = instance->pdata;
+    (*stream_ptr)->ndata        = NULL;
+    (*stream_ptr)->notifyData   = NULL;
+    (*stream_ptr)->end          = 0;
+    (*stream_ptr)->lastmodified = 0; 
     
     return NPERR_NO_ERROR;
 }
@@ -658,7 +665,7 @@ NPByteRange* rangeList;
 	  buffer = (char*) malloc (currentRangeList->length);
 	  count = fread (buffer, sizeof (char), currentRangeList->length, fptr);                
     }
-
+    free (buffer);
     fclose (fptr);
     return NPERR_NO_ERROR;
 }
@@ -733,6 +740,8 @@ int* amaya_minor;
 #   endif
     *plugin_major = NP_VERSION_MAJOR;
     *plugin_minor = NP_VERSION_MINOR;
+    *amaya_major  = 1;
+    *amaya_minor  = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -794,9 +803,9 @@ void Ap_InitializeAmayaTable ()
 #endif /* __STDC__ */
 {
     amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs));
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("Size of NPAmayaFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
-#endif
+#   endif
 
     amayaFunctionsTable->size          = ((uint16) (sizeof       (NPNetscapeFuncs)));
     amayaFunctionsTable->version       = ((uint16) (0));
@@ -844,19 +853,19 @@ int indexHandler;
     pluginTable[indexHandler]->pluginFunctionsTable->size = ((uint16) (sizeof (NPPluginFuncs)));
   
 #ifdef _WINDOWS
-  ptr_NP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
-  if (ptr_NP_Initialize == NULL) {
-    message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
-    sprintf (message, "relocation error: symbol not found: NP_Initialize referenced in %s", pluginTable [indexHandler]->pluginDL);
-  } else
-    ret = (*ptr_NP_Initialize) (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
+    ptr_NP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
+    if (ptr_NP_Initialize == NULL) {
+       message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
+       sprintf (message, "relocation error: symbol not found: NP_Initialize referenced in %s", pluginTable [indexHandler]->pluginDL);
+    } else
+         ret = (*ptr_NP_Initialize) (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
 #else  /* _WINDOWS */
-  ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
-  message = (char*) dlerror ();    
-  if (message) 
-    printf ("ERROR at Initialization: %s\n", message);
+    ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
+    message = (char*) dlerror ();    
+    if (message) 
+       printf ("ERROR at Initialization: %s\n", message);
   
-  ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
+    ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
 #endif /* _WINDOWS */
 }
 

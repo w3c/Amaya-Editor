@@ -7,7 +7,7 @@
 
 /*
  *
- * Author: Ramzi Guetari
+ * Author: Ramzi Guetari (W3C/INRIA)
  *
  */
 
