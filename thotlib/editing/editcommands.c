@@ -1985,10 +1985,15 @@ static void ContentEditing (int editType)
 	return;
       else
 	{
-	  if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
-	      !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	    /* close the current text insertion */
-	    CloseTextInsertion ();
+	  if (editType == TEXT_PASTE)
+	    CloseTextInsertionWithControl (FALSE);
+	  else
+	    {
+	      if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
+		  !ViewFrameTable[frame - 1].FrSelectOnePosition)
+		/* close the current text insertion */
+		CloseTextInsertion ();
+	    }
 	  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
 	  /* verifie qu'une selection courante est visualisee */
 	  if (pBox == NULL)
