@@ -2848,7 +2848,7 @@ CHAR_T   *PiData;
 	       /* the new XMLPI_line element */
 	       PiText = TtaNewElement (XMLcontext.doc, elTypeTxt);
 	       XmlSetElemLineNumber (PiText);
-	       TtaInsertFirstChild (&PiText, PiEl, XMLcontext.doc);
+	       TtaInsertFirstChild (&PiText, PiLineEl, XMLcontext.doc);
 	       TtaSetTextContent (PiText, TEXT(""), XMLcontext.language,
 				  XMLcontext.doc);
 	       i++;
