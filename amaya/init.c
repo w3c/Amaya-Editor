@@ -1929,6 +1929,7 @@ void *context;
   Document res;
   Element el;
   RELOAD_context *ctx;
+  boolean stopped_flag = FALSE;
 
   /* restore the context associated with the request */
   ctx = (RELOAD_context *) context;
@@ -1954,13 +1955,17 @@ void *context;
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
 	if (res != 0)
-	  FetchAndDisplayImages (res, AMAYA_NOCACHE);
-	TtaResetCursor (0, 0);
-	/* show the document at the same position as before Reload */
-	el = ElementAtPosition (newdoc, ctx->position);
-	TtaShowElement (newdoc, 1, el, ctx->distance);
+	  stopped_flag = FetchAndDisplayImages (res, AMAYA_NOCACHE);
+	if (stopped_flag == FALSE) 
+	  {
+	    TtaResetCursor (0, 0);
+	    /* show the document at the same position as before Reload */
+	    el = ElementAtPosition (newdoc, ctx->position);
+	    TtaShowElement (newdoc, 1, el, ctx->distance);
+	  }
      }
-  ResetStop(newdoc);
+  if (stopped_flag == FALSE)
+    ResetStop(newdoc);
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)
@@ -2512,6 +2517,7 @@ void *context;
    int                 i;
    boolean	       history;
    boolean             ok;
+   boolean             stopped_flag = FALSE;
    boolean             local_link;
    GETHTMLDocument_context *ctx;
    TTcbf              *cbf;
@@ -2578,7 +2584,7 @@ void *context;
 	       /* fetch and display all images referred by the document */
 	       if (doc == baseDoc)
 		 /* it's not a temporary document */
-		 ok = FetchAndDisplayImages (newdoc, 0);
+		   stopped_flag = FetchAndDisplayImages (newdoc, 0);
 	     }
 	 }
        else
@@ -2601,16 +2607,17 @@ void *context;
 	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       DocumentMeta[newdoc]->method = method;
+	       ResetStop(newdoc);
 	     }
 	   W3Loading = 0;	/* loading is complete now */
 	 }
-       
-       if (ok)
+ 
+       if (!stopped_flag)
 	 ResetStop(newdoc);
      }
 
    /* select the target if present */
-   if (ok && target != NULL && target[0] != EOS && newdoc != 0)
+   if (ok && !stopped_flag && target != NULL && target[0] != EOS && newdoc != 0)
      {
        /* attribute HREF contains the NAME of a target anchor */
        elFound = SearchNAMEattribute (newdoc, target, NULL);
@@ -2623,7 +2630,14 @@ void *context;
 	 }
      }
 
+   /*** if stopped_flag == true, how to deal with cbf? */
    /* if there's a callback associated with GetHTMLDocument, call it */
+
+   if (cbf && stopped_flag)
+     {
+       printf ("ohe, verification needed\n");
+     }
+
    if (cbf)
      (*cbf) (newdoc, status, pathname, tempfile, NULL, ctx_cbf);
 
@@ -3497,6 +3511,7 @@ char     *docname;
 {
   char                tempfile[MAX_LENGTH];
   int                 newdoc, len;
+  boolean             stopped_flag;
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -3531,11 +3546,14 @@ char     *docname;
 	}
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      FetchAndDisplayImages (newdoc, 0);
       TtaSetDocumentModified (newdoc);
-      DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
-      /* almost one file is restored */
-      TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+      stopped_flag = FetchAndDisplayImages (newdoc, 0);
+      if (!stopped_flag)
+	{
+	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
+	  /* almost one file is restored */
+	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	}
       /* unlink this saved file */
       TtaFileUnlink (tempdoc);
     }

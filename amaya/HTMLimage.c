@@ -703,6 +703,8 @@ void               *extra;
    FetchAndDisplayImages   fetch and display all images referred   
    by document doc. The flags may indicate extra transfer parameters,
    for example bypassing the cache.
+   Returns TRUE if the the transfer succeeds without being stopped;
+   Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             FetchAndDisplayImages (Document doc, int flags)
@@ -718,7 +720,7 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
    char               *currentURL;
-   boolean             status = TRUE;
+   boolean             stopped_flag;
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    if (FilesLoading[doc] == 0)
@@ -753,17 +755,12 @@ int                 flags;
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer was called */
 	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
-	  {
 	    /* the document has been removed */
-	    status = FALSE;
 	    break;
-	  }
+
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	  {
-	    status = TRUE;
 	    break;
-	  }
 #endif
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
@@ -774,10 +771,19 @@ int                 flags;
      }
    while (el != NULL);
 
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+   if (W3Loading != doc)
+       stopped_flag = FALSE;
+   else
+     stopped_flag = TRUE;
+#else
+   stopped_flag = FALSE;
+#endif
+
    /* Images fetching is now finished */
    TtaFreeMemory (currentURL);
 
-   return (status);
+   return (stopped_flag);
 }
 
 

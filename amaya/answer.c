@@ -78,7 +78,10 @@ HTAlertPar         *reply;
    switch (op)
 	 {
 	    case HT_PROG_TIMEOUT:
-	      TtaSetStatus (me->docid, 1, "Request timeout - server did not respond.", NULL);
+	      /* Message temporarily suppresed as it appears when pressing the Stop button */
+	      /*
+		TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_TIMEOUT), NULL);
+		*/
 	      break;
 	    case HT_PROG_DNS:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), (char *) input);

@@ -28,7 +28,7 @@
 #define DEFAULT_MAX_SOCKET 64 
 #define DEFAULT_DNS_TIMEOUT 60
 #define DEFAULT_PERSIST_TIMEOUT 60L
-#define DEFAULT_NET_EVENT_TIMEOUT 20000
+#define DEFAULT_NET_EVENT_TIMEOUT 60000
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
@@ -1561,7 +1561,7 @@ static void Cacheinit ()
   boolean cache_locked;
 
   /* activate cache? */
-  strptr = (char *) TtaGetEnvString ("USE_CACHE");
+  strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
   if (strptr && *strptr && strcasecmp (strptr, "yes" ))
     cache_enabled = NO;
   else
@@ -2723,13 +2723,16 @@ int                 docid;
 	       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
 #endif /* DEBUG_LIBWWW */
 
-	       if (me->reqStatus != HT_END)
+	       if (me->reqStatus != HT_END && me->reqStatus != HT_ABORT)
 		 {
 		   if ((me->mode & AMAYA_ASYNC)
 		       || (me->mode & AMAYA_IASYNC))
 		     async_flag = TRUE;
 		   else
 		     async_flag = FALSE;
+
+		   /* change the status to say that the request aborted */
+		   me->reqStatus = HT_ABORT;
 
 		   /* kill the request, using the appropriate function */
 		   if (me->request->net)
@@ -2743,12 +2746,9 @@ int                 docid;
 					       me->context_tcbf);
 
 		       if (async_flag) 
-			 /* erase the request context */
+			 /* explicitly free the request context for async
+			  requests. The sync requests context is freed by LoopForStop */
 			   AHTReqContext_delete (me);
-		       else
-			 /* just indicate that the request was stopped, the context
-			  will be liberated in the LoopForStop */
-			 me->reqStatus = HT_END;
 		     }
 		   cur = Amaya->reqlist;
 		 }

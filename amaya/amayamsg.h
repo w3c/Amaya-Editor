@@ -151,4 +151,5 @@ int                 AMAYA;
 #define AM_PRINT_URL                  139
 #define AM_AUTHENTICATION_REALM	      140
 #define AM_BUTTON_BrowseEdit          141
-#define AMAYA_MSG_MAX                 142
+#define AM_REQUEST_TIMEOUT	      142
+#define AMAYA_MSG_MAX                 143
