@@ -565,13 +565,11 @@ void AmayaAttributePanel::OnAutoRefresh( wxCommandEvent& event )
   if (m_pAutoRefresh->IsChecked())
     {
       m_pAttrList->Enable();
-      m_pVPanelParent->Enable();
       DoUpdate();
     }
   else
     {
       m_pAttrList->Disable();
-      m_pVPanelParent->Disable();
     }
 }
 
