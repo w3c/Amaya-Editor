@@ -1317,7 +1317,8 @@ RULES
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
@@ -1341,7 +1342,8 @@ RULES
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
@@ -1365,7 +1367,8 @@ RULES
 	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
 	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1385,7 +1388,8 @@ RULES
 	HorizPos: VMiddle = Enclosing . Left + 1 cm  UserSpecified;
 	VertPos:  HMiddle = Enclosing . Top + 1 cm  UserSpecified;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1405,7 +1409,8 @@ RULES
 	HorizPos: VMiddle = Enclosing . Left + 1.3 cm  UserSpecified;
 	VertPos:  HMiddle = Enclosing . Top + 0.8 cm  UserSpecified;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1424,7 +1429,8 @@ RULES
         Width: Right = Enclosing . Left + 4 pt;
         Height:  Bottom = Enclosing . Top + 4 pt;
        	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1439,7 +1445,8 @@ RULES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1455,7 +1462,8 @@ RULES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1475,7 +1483,8 @@ RULES
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1495,7 +1504,8 @@ RULES
 	VertPos:  HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1534,7 +1544,8 @@ RULES
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1604,6 +1615,8 @@ RULES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1652,7 +1665,8 @@ RULES
 	FillPattern: nopattern;
 	Background: transparent;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
