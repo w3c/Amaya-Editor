@@ -736,6 +736,7 @@
 #define IDC_SHOWBUTTONS                 1573
 #define IDC_LOADCSS                     1573
 #define IDC_NUMBER                      1574
+#define IDC_LOADOBJ                     1574
 #define ID_COPYSVGLIB                   1575
 #define ID_REFERSVGLIB                  1576
 #define ID_CREATELIBRARY                1577

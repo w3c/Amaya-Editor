@@ -164,6 +164,7 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 {
 	{AM_INIT_ALL, AM_BROWSE_MENU},
 	{IDC_LOADIMG, AM_LOAD_IMAGES},
+	{IDC_LOADOBJ, AM_LOAD_OBJECTS},
 	{IDC_LOADCSS, AM_LOAD_CSS},
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
 	{IDC_ENABLEFTP, AM_ENABLE_FTP},
@@ -2686,6 +2687,8 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
 {
   CheckDlgButton (hwnDlg, IDC_LOADIMG, (LoadImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_LOADOBJ, (LoadObjects) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_LOADCSS, (LoadCss) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
@@ -2728,6 +2731,9 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case IDC_LOADIMG:
 	  LoadImages = !LoadImages;
+	  break;
+	case IDC_LOADOBJ:
+	  LoadObjects = !LoadObjects;
 	  break;
 	case IDC_LOADCSS:
 	  LoadCss = !LoadCss;
