@@ -776,6 +776,9 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
   else
     Shared_Context = frame;
 #endif /*_NOSHARELIST*/
+  /* stop any current insertion of text in the old frame */
+  if (frame != ActiveFrame)
+    CloseTextInsertion ();
   ActiveFrame = frame;
   ReleaseDC (hwndClient, GL_Windows[frame]);
 }
@@ -1897,6 +1900,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       hwndTextEdit = GetFocus ();
       if (frame != -1)
 	{
+	  /* stop any current insertion of text in the old frame */
+	  if (frame != ActiveFrame)
+	    CloseTextInsertion ();
 	  ActiveFrame = frame;
 	  APP_TextCallback (hwndTextEdit, frame, NULL);
 	  SetFocus (FrRef [frame]);
@@ -1925,6 +1931,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     case WM_CHAR:
       if (frame != -1)
 	{
+	  /* stop any current insertion of text in the old frame */
+	  if (frame != ActiveFrame)
+	    CloseTextInsertion ();
 	  SetFocus (FrRef [frame]);
 	  ActiveFrame = frame;
 	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
@@ -2056,7 +2065,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   /* do not handle events if the Document is in NoComputedDisplay mode. */
   if (frame != -1)
     {
-      /*ActiveFrame = frame;*/
       FrameToView (frame, &document, &view);
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
 	     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
@@ -2271,8 +2279,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       SetFocus (FrRef[frame]);
       SetCapture (hwnd);
       /* stop any current insertion of text in the old frame */
-      ActiveFrame = ClickFrame;
-      CloseTextInsertion ();
+      if (frame != ActiveFrame)
+	CloseTextInsertion ();
       ClickFrame = frame;
       ActiveFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
@@ -3493,8 +3501,8 @@ void ChangeSelFrame (int frame)
 
   if (ActiveFrame != frame)
     {
+      CloseTextInsertion ();
       ActiveFrame = frame;
-
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();
     }
