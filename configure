@@ -879,6 +879,7 @@ Optional Packages:
   --with-gtk              use GTK GUI toolkit
   --with-wx               use wxWindows GUI toolkit (experimental)
   --with-nogui            do not use GUI toolkit
+  --with-wxdebug               compiles wxWidgets with debuging options
   --with-graphiclibs     use static libjpeg, libpng.
   --with-dav              enable WebDAV support (experimental)
 
@@ -14862,6 +14863,19 @@ if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
   NOGUI_OPTIONS="-D_NOGUI"
 fi
 
+# check if wxWidgets debug is enable
+
+# Check whether --with-wxdebug or --without-wxdebug was given.
+if test "${with_wxdebug+set}" = set; then
+  withval="$with_wxdebug"
+
+fi;
+if test "$with_wxdebug" = "yes" ; then
+  with_wxdebug="yes"
+else
+  with_wxdebug="no"
+fi
+
 if test "$with_wx" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo
@@ -14976,22 +14990,31 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
   echo "---> Configuring wxWidgets library."
   OLDDIR=`pwd`
   cd ../../wxWidgets/
-  mkdir AMAYABUILD
+  mkdir -p AMAYABUILD
   cd AMAYABUILD
+
   # remove old configure options
   rm -f configarg.cache
-  # launch the configure
+
+  # setup configure options
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
-    ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug
+    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode"
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
     { { echo "$as_me:$LINENO: error: TODO: configurer wxWidgets pour MACOSX" >&5
 echo "$as_me: error: TODO: configurer wxWidgets pour MACOSX" >&2;}
    { (exit 1); exit 1; }; }
-    # ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug
+    # WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode"
   fi
+  if test $with_wxdebug = yes ; then
+    WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug --enable-debug_cntxt --enable-debug_gdb --enable-debug_info --enable-debug_flag --enable-mem_tracing"
+  fi
+
+  # launch the configure
+  ../configure $WXCONFIGURE_OPTION
+
   echo "---> Configuring wxWidgets library. - DONE"
   echo "---> Compiling wxWidgets library."
   # compile the lib
@@ -15016,9 +15039,10 @@ echo "$as_me: error: Cannot find wx-config. Please install wxWidgets (http://www
   fi
 
   WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
+  WX_INCLUDES="-I$WXROOTDIR/contrib/include/ ${WX_INCLUDES}"
 
 
-  WX_LIBRARIES="-Wl,-rpath,$WXROOTDIR `$WXCONFIG $WXCONFIG_ARGS --libs`"
+  WX_LIBRARIES="-Wl,-rpath,$WXROOTDIR/AMAYABUILD/lib `$WXCONFIG $WXCONFIG_ARGS --libs`"
 
   # GL is used ?
   if test "${with_gl}" = "yes" ; then
@@ -17296,12 +17320,17 @@ if test "$with_gtk" = "yes" ; then
 fi
 
 if test "$with_wx" = "yes" ; then
-    echo "Amaya configured with wxWindows (experimental)"
+  if test "$with_wxdebug" = "yes" ; then
+    echo "Amaya configured with wxWidgets (experimental) with debug"
+  else
+    echo "Amaya configured with wxWidgets (experimental)"
+  fi
 fi
 
 if test "$with_nogui" = "yes" ; then
   echo "Amaya configured without GUI toolkit"
 fi
+
 
 echo ""
 echo "Now type \"make\" (GNU make preferably) to build the binaries"
