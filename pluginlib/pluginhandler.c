@@ -55,7 +55,11 @@ extern Pixmap         EpsfPictureLogo;
 extern char*          pluginPath;
 
 int                   pluginIndex;
+#ifdef AMAYA_PLUGIN
 extern int            currentPlugin;
+#else  /* AMAYA_PLUGIN */
+int                   currentPlugin = 0;
+#endif /* AMAYA_PLUGIN */
 static Pixmap         PictureLogo;
 
 #ifdef __STDC__
