@@ -180,10 +180,9 @@ RULES
 	create SOT;
 	create 'style';
 	create attributes;
-	create '><![CDATA[\12';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
-        create '\12]]>' after;
 	create SCT after;
 	create 'style>\12' after;
 	END;
@@ -364,10 +363,9 @@ RULES
 	create SOT;
 	create 'script';
 	create attributes;
-	create '><![CDATA[\12';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
-        create '\12]]>' after;
 	create SCT after;
 	create 'script>\12' after;
 	END;
