@@ -7635,7 +7635,7 @@ RULES
 		Height: Enclosing . Height;
 		VertPos: Top = Enclosing . Top;
 		END;
-	HorizRef: * . Bottom;
+	HorizRef: * . Top;
 	IN Structure_view BEGIN
 		Height: 1 px;
 		Width: 1 px;

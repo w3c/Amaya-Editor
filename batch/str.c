@@ -2863,7 +2863,7 @@ char              **argv;
       cmd [pIndex] = (char*) malloc (4 * sizeof (char));
       strcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      strcpy (cmd, "cpp ");
+      strcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {

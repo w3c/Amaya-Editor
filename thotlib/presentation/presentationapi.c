@@ -920,7 +920,7 @@ TypeUnit            unit;
 		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
-		  NewPosition (pAb, deltaX, deltaY, frame, FALSE);
+		  NewPosition (pAb, deltaX + pAb->AbBox->BxXOrg, deltaY + pAb->AbBox->BxYOrg, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -940,8 +940,8 @@ TypeUnit            unit;
    unit: the unit used for the values.
 
    Return parameters:
-   width: box width in points.
-   height: box height in points.
+   width: box width in units.
+   height: box height in units.
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1001,13 +1001,13 @@ int                *height;
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
 			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
-		       *width = PixelValue (*width, UnPercent, (PtrAbstractBox) x, 0);
-		       *height = PixelValue (*height, UnPercent, (PtrAbstractBox) y, 0);
+		       *width = LogicalValue (*width, UnPercent, (PtrAbstractBox) x, 0);
+		       *height = LogicalValue (*height, UnPercent, (PtrAbstractBox) y, 0);
 		    }
 		  else
 		    {
-		       *width = PixelValue (*width, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		       *height = PixelValue (*height, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		       *width = LogicalValue (*width, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		       *height = LogicalValue (*height, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
 	       }
 	  }

@@ -106,12 +106,12 @@ boolean             LinkReference ()
 }
 
 #ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
+void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, boolean Disp)
 #else  /* __STDC__ */
-void                NewPosition (pAb, DeltaX, DeltaY, frame, Disp)
+void                NewPosition (pAb, X, Y, frame, Disp)
 PtrAbstractBox      pAb;
-int                 DeltaX;
-int                 DeltaY;
+int                 X;
+int                 Y;
 int                 frame;
 boolean             Disp;
 

@@ -2246,7 +2246,7 @@ int                 editType;
    PtrTextBuffer       pBuffer;
    Propagation         savePropagate;
    PtrLine             pLine;
-   int                 xDelta, yDelta;
+   int                 x, y;
    int                 i, j;
 #ifdef IV
    int                 width, height;
@@ -2320,12 +2320,12 @@ int                 editType;
 		      {
 			/* Ajout de points dans une polyline */
 			still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-			xDelta = pBox->BxXOrg - pFrame->FrXOrg;
-			yDelta = pBox->BxYOrg - pFrame->FrYOrg;
+			x = pBox->BxXOrg - pFrame->FrXOrg;
+			y = pBox->BxYOrg - pFrame->FrYOrg;
 			i = pViewSel->VsIndBox;
 			draw = GetParentDraw (pBox);
 			pBox->BxNChars = PolyLineExtension (frame,
-							    &xDelta, &yDelta,
+							    &x, &y,
 							    pBox, draw,
 							    pBox->BxNChars,
 							    i, still);
@@ -2336,11 +2336,11 @@ int                 editType;
 			    /* on force le reaffichage de la boite (+ les points de selection) */
 			    width = pBox->BxWidth;
 			    height = pBox->BxHeight;
-			    xDelta += pFrame->FrXOrg;
-			    yDelta += pFrame->FrYOrg;
+			    x += pFrame->FrXOrg;
+			    y += pFrame->FrYOrg;
 			    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-			    if (xDelta != pBox->BxXOrg || yDelta != pBox->BxYOrg)
-			      NewPosition (pAb, xDelta, yDelta, frame, TRUE);
+			    if (x != pBox->BxXOrg || y != pBox->BxYOrg)
+			      NewPosition (pAb, x, y, frame, TRUE);
 			    width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
 			    height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
 			    if (width != pBox->BxWidth || height != pBox->BxHeight)
@@ -2397,7 +2397,7 @@ int                 editType;
 	       }
 
 	     /* Recherche le point d'insertion (&i non utilise) */
-	     GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &xDelta, &charsDelta);
+	     GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &x, &charsDelta);
 	     if (pBox == NULL)
 	       {
 		 /* take in account another box */
@@ -2439,7 +2439,7 @@ int                 editType;
 		CutCommand (FALSE);	/* Couper sans sauver */
 	     else if (editType == TEXT_CUT || editType == TEXT_COPY)
 	       {
-		  SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, 0, NULL, pAb, frame, &ClipboardThot);
+		  SaveInClipboard (&charsDelta, &spacesDelta, &x, 0, NULL, pAb, frame, &ClipboardThot);
 		  /* vide le clipboard du Mediateur */
 		  if (editType == TEXT_CUT && !FromKeyboard)
 		     CutCommand (TRUE);
@@ -2555,7 +2555,7 @@ int                 editType;
 		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if (editType == TEXT_CUT && !FromKeyboard)
 		  {
-		    SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
+		    SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer, pAb, frame, &ClipboardThot);
 		    if (ClipboardThot.BuLength == 0)
 		      {
 			if (ThotLocalActions[T_deletenextchar] != NULL)
@@ -2570,7 +2570,7 @@ int                 editType;
 			pAb = NULL;
 		      }
 		    else
-		      RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		      RemoveSelection (charsDelta, spacesDelta, x, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 		  }
 		else if (editType == TEXT_DEL && !FromKeyboard)
 		  if (pAb->AbVolume == 0 ||
@@ -2617,7 +2617,7 @@ int                 editType;
 		  }
 		else if (editType == TEXT_COPY && !FromKeyboard)
 		  {
-		    SaveInClipboard (&charsDelta, &spacesDelta, &xDelta, i, pBuffer, pAb, frame, &ClipboardThot);
+		    SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer, pAb, frame, &ClipboardThot);
 		    /* Pas de reaffichage */
 		    DefClip (frame, 0, 0, 0, 0);
 		    /* Il n'est pas necessaire de mettre a jour la selection */

@@ -1774,8 +1774,8 @@ int                 ym;
 		  UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
 
 		  /* On transmet la modification a l'editeur */
-		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
-		  y = y + pFrame->FrYOrg - pBox->BxYOrg;
+		  x = x + pFrame->FrXOrg;
+		  y = y + pFrame->FrYOrg;
 		  NewPosition (pBox->BxAbstractBox, x, y, frame, TRUE);
 	       }
 	  }

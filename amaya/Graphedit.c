@@ -622,15 +622,16 @@ boolean    GraphicsPRuleChange (event)
 #endif /* __STDC__*/
 {
   Element       el;
-  PRule presRule;
+  PRule         presRule;
   Document      doc;
   ElementType   elType;
-  AttributeType  attrType, otherAttrType;
+  AttributeType attrType, otherAttrType;
   Attribute     attr, otherAttr;
   DisplayMode   dispMode;
   int           presType;
-  int           mainView, xPos, yPos, width, height, val, otherVal;
-  boolean      ret;
+  int           mainView, i, val, unit;
+  int           xPos, yPos, width, height, otherVal;
+  boolean       ret;
  
   ret = FALSE; /* let Thot perform normal operation */
   presType = event->pRuleType;
@@ -672,9 +673,12 @@ boolean    GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_Group)
         {
           TtaGiveBoxPosition (el, doc, mainView, UnPoint, &xPos, &yPos);
-          val = TtaGetPRuleValue (presRule);
+	  unit = TtaGetPRuleUnit (presRule);
           if (presType == PRVertPos)
             {
+	      /* the new value is the old one plus the delta */
+	      TtaGiveBoxPosition (el, doc, mainView, unit, &val, &i);
+	      val += TtaGetPRuleValue (presRule);
               attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
               otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosX;
               otherVal = xPos;
@@ -682,6 +686,9 @@ boolean    GraphicsPRuleChange (event)
             }
           else
             {
+	      /* the new value is the old one plus the delta */
+	      TtaGiveBoxPosition (el, doc, mainView, unit, &i, &val);
+	      val += TtaGetPRuleValue (presRule);
               attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
               otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosY;
               otherVal = yPos;
@@ -714,7 +721,10 @@ boolean    GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_Spline ||
           elType.ElTypeNum == GraphML_EL_ClosedSpline)
         {
-          height = TtaGetPRuleValue (presRule);
+	  /* the new value is the old one plus the delta */
+	  unit = TtaGetPRuleUnit (presRule);
+	  TtaGiveBoxSize (el, doc, 1, unit, &i, &height);
+	  height += TtaGetPRuleValue (presRule);
           attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
           attr = TtaGetAttribute (el, attrType);
           if (attr == NULL)
@@ -739,7 +749,10 @@ boolean    GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_ClosedSpline ||
           elType.ElTypeNum == GraphML_EL_Text_)
         {
-          width = TtaGetPRuleValue (presRule);
+	  /* the new value is the old one plus the delta */
+	  unit = TtaGetPRuleUnit (presRule);
+	  TtaGiveBoxSize (el, doc, 1, unit, &width, &i);
+	  width += TtaGetPRuleValue (presRule);
           attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
           attr = TtaGetAttribute (el, attrType);
           if (attr == NULL)

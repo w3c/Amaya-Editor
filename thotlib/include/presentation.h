@@ -258,8 +258,8 @@ extern void         TtaSetPRuleView (PRule pRule, int view);
    element: the element of interest.
    document: the document to which the element belongs.
    view: the view.
-   deltaX: width increment in points (positive, negative or zero).
-   deltaY: height increment in points (positive, negative or zero).
+   deltaX: width increment in units (positive, negative or zero).
+   deltaY: height increment in units (positive, negative or zero).
    unit: the unit used for the values.
 
   ----------------------------------------------------------------------*/
@@ -274,8 +274,8 @@ extern void         TtaChangeBoxSize (Element element, Document document, View v
    element: the element of interest.
    document: the document to which the element belongs.
    view: the view.
-   deltaX: horizontal shift in points (positive, negative or zero).
-   deltaY: vertical shift in points (positive, negative or zero).
+   deltaX: horizontal shift in units (positive, negative or zero).
+   deltaY: vertical shift in units (positive, negative or zero).
    unit: the unit used for the values.
 
   ----------------------------------------------------------------------*/
@@ -293,8 +293,8 @@ extern void         TtaChangeBoxPosition (Element element, Document document, Vi
    unit: the unit used for the values.
 
    Return parameters:
-   width: box width in points.
-   height: box height in points.
+   width: box width in units.
+   height: box height in units.
 
   ----------------------------------------------------------------------*/
 extern void         TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
@@ -314,9 +314,9 @@ extern void         TtaGiveBoxSize (Element element, Document document, View vie
 
    Return parameters:
    xCoord: distance from the left edge of the parent box to the left
-   edge of the box, in points.
+   edge of the box, in units.
    yCoord:  distance from the upper edge of the parent box to the upper
-   edge of the box, in points.
+   edge of the box, in units.
 
   ----------------------------------------------------------------------*/
 extern void         TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);

@@ -715,20 +715,19 @@ int                 view;
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
-  NewPosition est appele' par le Mediateur, lorsque l'utilisateur
-  deplace une boite a l'ecran.
-  pAb est le pave deplace' et deltaX et deltaY representent l'amplitude
-  du deplacement en pixels.
-  frame indique la fenetre.				
-  display indique s'il faut reafficher ou simplement recalculer l'image.
+  NewPosition is called when the user moves a box.
+  pAb is the abstract box	
+  X and Y give the new dimensions in pixels.
+  frame is the frame.				
+  display is TRUE when it's necessary to redisplay the concrete image.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
+void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, boolean display)
 #else  /* __STDC__ */
-void                NewPosition (pAb, deltaX, deltaY, frame, display)
+void                NewPosition (pAb, X, Y, frame, display)
 PtrAbstractBox      pAb;
-int                 deltaX;
-int                 deltaY;
+int                 X;
+int                 Y;
 int                 frame;
 boolean             display;
 
@@ -741,14 +740,12 @@ boolean             display;
    PtrDocument         pDoc;
    PtrElement          pEl;
    PtrAbstractBox      pAbbCur;
-   PosRule            *pRe1;
    NotifyAttribute     notifyAttr;
-   int                 x, y;
+   int                 x, y, dx, dy;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
    int                 view;
    int                 value;
-   boolean             bValue;
    boolean             attr, stop, doit;
    boolean             isNew, reDisp, isLined;
 
@@ -782,7 +779,7 @@ boolean             display;
      }
    
    /* traite la position verticale */
-   if (deltaY != 0)
+   if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
      {
        /* cherche d'abord la regle de position qui s'applique a l'element */
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtVertPos, FnAny, FALSE, TRUE, &pAttr);
@@ -792,16 +789,20 @@ boolean             display;
 	   && pAb->AbVertPos.PosAbRef != NULL
 	   && !isLined)
 	 {
+	   dy = Y - pAb->AbBox->BxYOrg;
 	   if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	     {
 	       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 		 GetSizesFrame (frame, &x, &y);
 	       else
 		 y = pAb->AbEnclosing->AbBox->BxHeight;
-	       deltaY = LogicalValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
+	       dy = LogicalValue (dy, UnPercent, (PtrAbstractBox) y, 0);
 	     }
-	   else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	     deltaY = LogicalValue (deltaY, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	   else
+	     {
+	       dy = LogicalValue (dy, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     }
+
 	   /* cherche si la position verticale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewVPos */
 	   attr = FALSE;
@@ -826,7 +827,7 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
-		       pAttr->AeAttrValue += deltaY;
+		       pAttr->AeAttrValue += dy;
 		       /* fait reafficher les variables de presentation utilisant */
 		       /* l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
@@ -865,37 +866,27 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
-	       pRe1 = &pPRule->PrPosRule;
-	       bValue = pRe1->PoDistAttr;
-	       value = pRe1->PoDistance;
-	       if (pRe1->PoDistAttr)
-		 /* la distance est la valeur d'un attribut */
-		 pRe1->PoDistance = AttrValue (pAttr);
-	       pRe1->PoDistAttr = FALSE;
-	       /* modifie la distance dans la regle specifique */
-	       pRe1->PoDistance += deltaY;
-	       
+	       else
+		 dy += pPRule->PrPosRule.PoDistance;
+	       /* modify the distance in the specific rule */
+	       value = pPRule->PrPosRule.PoDistance;
+	       pPRule->PrPosRule.PoDistance = dy;
 	       /* envoie un message APP a l'application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
-		 {
-		   /* reset previous values */
-		   pRe1->PoDistAttr = bValue;
-		   pRe1->PoDistance = value;
-		 }
+		 /* reset previous values */
+		 pPRule->PrPosRule.PoDistance = value;
 	     }
 	   
 	   if (doit)
 	     {
-	       pDoc->DocModified = TRUE;
 	       /* le document est modifie' */
+	       pDoc->DocModified = TRUE;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if (pDoc->DocView[view - 1].DvSSchema ==
-		       pDoc->DocView[pAb->AbDocView - 1].DvSSchema
-		       && pDoc->DocView[view - 1].DvPSchemaView ==
-		       pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
+		   if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema
+		       && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -912,18 +903,19 @@ boolean             display;
 		       while (!stop);
 
 		       if (pAbbCur != NULL)
-			 /* applique la nouvelle regle de position verticale */
-		         ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
-
-			 pAbbCur->AbVertPosChange = TRUE;
-			 /* la position vert.du pave a change' */
-			 RedispAbsBox (pAbbCur, pDoc);
-			 reDisp = TRUE;
-			 /* il faut reafficher le pave */
-			 if (!AssocView (pEl))
-			   updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
-			 else
-			   updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			 {
+			   /* applique la nouvelle regle de position verticale */
+			   ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
+			   pAbbCur->AbVertPosChange = TRUE;
+			   /* la position vert.du pave a change' */
+			   RedispAbsBox (pAbbCur, pDoc);
+			   reDisp = TRUE;
+			   /* il faut reafficher le pave */
+			   if (!AssocView (pEl))
+			     updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			   else
+			     updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			 }
 		     }
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
@@ -934,7 +926,7 @@ boolean             display;
      }
 
    /* traite la position horizontale */
-   if (deltaX != 0)
+   if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
      /* cherche d'abord la regle de position qui s'applique a l'element */
      {
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
@@ -944,16 +936,20 @@ boolean             display;
 	   && pAb->AbHorizPos.PosAbRef != NULL
 	   && !isLined)
 	 {
+	   dx = X - pAb->AbBox->BxXOrg;
 	   if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	     {
 	       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 		 GetSizesFrame (frame, &x, &y);
 	       else
 		 x = pAb->AbEnclosing->AbBox->BxWidth;
-	       deltaX = LogicalValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
+	       dx = LogicalValue (dx, UnPercent, (PtrAbstractBox) x, 0);
 	     }
-	   else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	     deltaX = LogicalValue (deltaX, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	   else
+	     {
+	       dx = LogicalValue (dx, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	     }
+
 	   /* cherche si la position horizontale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewHPos */
 	   attr = FALSE;
@@ -978,7 +974,7 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
-		       pAttr->AeAttrValue += deltaX;
+		       pAttr->AeAttrValue += dx;
 		       /* fait reafficher les variables de presentation utilisant */
 		       /* l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
@@ -1013,35 +1009,27 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
-	       pRe1 = &pPRule->PrPosRule;
-	       bValue = pRe1->PoDistAttr;
-	       value = pRe1->PoDistance;
-	       if (pRe1->PoDistAttr)
-		 /* la distance est la valeur d'un attribut */
-		 pRe1->PoDistance = AttrValue (pAttr);
-	       pRe1->PoDistAttr = FALSE;
-	       /* change la distance dans la regle specifique */
-	       pRe1->PoDistance += deltaX;
+	       else
+		 dx += pPRule->PrPosRule.PoDistance;
+	       /* modify the distance in the specific rule */
+	       value = pPRule->PrPosRule.PoDistance;
+	       pPRule->PrPosRule.PoDistance = dx;
 	       
 	       /* envoie un message APP a l'application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
-		 {
-		   /* reset previous values */
-		   pRe1->PoDistAttr = bValue;
-		   pRe1->PoDistance = value;
-		 }
+		 /* reset previous values */
+		 pPRule->PrPosRule.PoDistance = value;
 	     }
 	   if (doit)
 	     {
-	       pDoc->DocModified = TRUE;	/* le document est modifie' */
+	       /* le document est modifie' */
+	       pDoc->DocModified = TRUE;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if ((pDoc->DocView[view - 1].DvSSchema ==
-			pDoc->DocView[pAb->AbDocView - 1].DvSSchema)
-		       && (pDoc->DocView[view - 1].DvPSchemaView ==
-			   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView))
+		   if ((pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema)
+		       && (pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView))
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -1056,18 +1044,21 @@ boolean             display;
 			 else
 			   pAbbCur = pAbbCur->AbNext;
 		       while (!stop);
+
 		       if (pAbbCur != NULL)
-			 /* applique la nouvelle regle de position verticale */
-		         ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
-			 pAbbCur->AbHorizPosChange = TRUE;
-			 /* indique le pave a reafficher */
-			 RedispAbsBox (pAbbCur, pDoc);
-			 /* il faut reafficher le pave */
-			 reDisp = TRUE;
-			 if (!AssocView (pEl))
-			   updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
-			 else
-			   updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			 {
+			   /* applique la nouvelle regle de position verticale */
+			   ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
+			   pAbbCur->AbHorizPosChange = TRUE;
+			   /* indique le pave a reafficher */
+			   RedispAbsBox (pAbbCur, pDoc);
+			   /* il faut reafficher le pave */
+			   reDisp = TRUE;
+			   if (!AssocView (pEl))
+			     updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			   else
+			     updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			 }
 		     }
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
@@ -1099,11 +1090,11 @@ boolean             display;
 #endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
-  NewDimension est appele par le Mediateur, lorsque l'utilisateur
-  deforme une boite a l'ecran. pAb est le pave deforme'	
-  width et height donnent les nouvelles dimensions en pixels.
-  frame indique la fenetre.				
-  display indique s'il faut reafficher ou simplement recalculer l'image.
+  NewDimension is called when the user resizes a box.
+  pAb is the abstract box	
+  width and height give the new dimensions in pixels.
+  frame is the frame.				
+  display is TRUE when it's necessary to redisplay the concrete image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewDimension (PtrAbstractBox pAb, int width, int height, int frame, boolean display)
@@ -1126,13 +1117,12 @@ boolean             display;
    NotifyAttribute     notifyAttr;
    Document            doc;
    DisplayMode         oldDisplayMode;
-   int                 x, y, dx, dy;
+   int                 dx, dy;
    int                 heightRef, widthRef;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
    int                 view;
    int                 value;
-   boolean             bValue, bAbs;
    boolean             attr, stop, doit;
    boolean             isNew, reDisp, ok;
 
@@ -1179,6 +1169,7 @@ boolean             display;
        
        if (ok)
 	 {
+	   dx = width - pAb->AbBox->BxWidth;
 	   if (pRStd->PrDimRule.DrUnit == UnPercent)
 	     {
 	       if (!pRStd->PrDimRule.DrAbsolute)
@@ -1192,21 +1183,12 @@ boolean             display;
 		 widthRef = pAb->AbEnclosing->AbBox->BxWidth;
 
 	       /* get the new percent value */
-	       x = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
-	       dx = x;
+	       dx = LogicalValue (dx, UnPercent, (PtrAbstractBox) widthRef, 0);
 	     }
 	   else
 	     {
-	       if (!pRStd->PrDimRule.DrAbsolute)
-		 /* the height is given by a delta */
-		 dx = width - pAb->AbWidth.DimAbRef->AbBox->BxWidth;
-	       else
-		 /* the height is absolute */
-		 dx = width;
-	       
 	       /* convert the new height in logical value */
 	       dx = LogicalValue (dx, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-	       x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
 	   /* cherche si la largeur de l'element est determinee par un */
@@ -1234,7 +1216,7 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
-		       pAttr->AeAttrValue = x;
+		       pAttr->AeAttrValue += dx;
 		       /* fait reafficher les variables de presentation */
 		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
@@ -1268,18 +1250,16 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
+	       else
+		 dx += pPRule->PrDimRule.DrValue;
 	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
-	       pPRule->PrDimRule.DrValue = x;
-
+	       pPRule->PrDimRule.DrValue = dx;
 	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
 		 /* reset the previous value */
 		 pPRule->PrDimRule.DrValue = value;
-	       else
-		 /* put the new internal value into the rule */
-		 pPRule->PrDimRule.DrValue = dx;
 	     }
 
 	   if (doit)
@@ -1305,6 +1285,7 @@ boolean             display;
 			 else
 			   pAbbCur = pAbbCur->AbNext;
 		       while (!stop);
+
 		       if (pAbbCur != NULL)
 			 /* applique la nouvelle regle specifique */
 			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr))
@@ -1324,13 +1305,7 @@ boolean             display;
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
 	       else
-		 {
-		   /* put the absolute value for the application */
-		   pPRule->PrDimRule.DrValue = x;
-		   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-		   /* restore the internal value into the rule */
-		   pPRule->PrDimRule.DrValue = dx;
-		 }
+		 PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	     }
 	 }
      }
@@ -1355,6 +1330,7 @@ boolean             display;
        
        if (ok)
 	 {
+	   dy = height - pAb->AbBox->BxHeight;
 	   if (pRStd->PrDimRule.DrUnit == UnPercent)
 	     {
 	       if (!pRStd->PrDimRule.DrAbsolute)
@@ -1368,21 +1344,12 @@ boolean             display;
 		 heightRef = pAb->AbEnclosing->AbBox->BxHeight;
 
 	       /* get the new percent value */
-	       y = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
-	       dy = y;
+	       dy = LogicalValue (dy, UnPercent, (PtrAbstractBox) heightRef, 0);
 	     }
 	   else
 	     {
-	       if (!pRStd->PrDimRule.DrAbsolute)
-		 /* the height is given by a delta */
-		 dy = height - pAb->AbWidth.DimAbRef->AbBox->BxHeight;
-	       else
-		 /* the height is absolute */
-		 dy = height;
-	       
 	       /* convert the new height in logical value */
 	       dy = LogicalValue (dy, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-	       y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
 	   /* cherche si la hauteur de l'element est determinee par un */
@@ -1409,7 +1376,7 @@ boolean             display;
 		     doit = FALSE;
 		   else
 		     {
-		       pAttr->AeAttrValue = y;
+		       pAttr->AeAttrValue += dy;
 		       /* fait reafficher les variables de presentation */
 		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
@@ -1443,19 +1410,16 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
-
+	       else
+		 dy += pPRule->PrDimRule.DrValue;
 	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
-	       pPRule->PrDimRule.DrValue = y;
-
+	       pPRule->PrDimRule.DrValue = dy;
 	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 	       if (!doit && !isNew)
 		 /* reset the previous value */
 		 pPRule->PrDimRule.DrValue = value;
-	       else
-		 /* put the new internal value into the rule */
-		 pPRule->PrDimRule.DrValue = dy;
 	     }
 	   
 	   if (doit)
@@ -1497,13 +1461,7 @@ boolean             display;
 	       if (attr)
 		 CallEventAttribute (&notifyAttr, FALSE);
 	       else
-		 {
-		   /* put the absolute value for the application */
-		   pPRule->PrDimRule.DrValue = y;
-		   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-		   /* restore the internal value into the rule */
-		   pPRule->PrDimRule.DrValue = dy;
-		 }
+		 PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	     }
 	 }
      }

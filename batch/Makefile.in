@@ -26,7 +26,7 @@ GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
-	$(CC) -DCPP="$(CPP)" $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 all : ../bin $(GRMS) $(COMPILERS) \
           ../bin/printstr ../bin/rescandialogue

@@ -374,7 +374,7 @@ NotifyPresentation *event;
 #define STYLELEN 1000
   char               buffer[15];
   int                presType;
-  int                w, h, unit;
+  int                w, h, unit, value, i;
   boolean            ret;
 
   el = event->element;
@@ -487,7 +487,7 @@ NotifyPresentation *event;
 #endif /* GRAPHML */
 		 elType.ElTypeNum == HTML_EL_Applet))
 	      {
-		/* store information in Width or Height attributes */
+		/* store information in Width or Height attribute */
 		if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
 		else
@@ -497,6 +497,7 @@ NotifyPresentation *event;
 		  }
 		TtaSwitchSelection (doc, 1, FALSE);
 		attrType.AttrSSchema = HTMLschema;
+		unit = TtaGetPRuleUnit (presRule);
 		if (presType == PRWidth)
 		  {
 		    attrType.AttrTypeNum = HTML_ATTR_Width__;
@@ -506,11 +507,13 @@ NotifyPresentation *event;
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
 		      }
-		    unit = TtaGetPRuleUnit (presRule);
+		    /* the new value is the old one plus the delta */
+		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
+		    value += TtaGetPRuleValue (presRule);
 		    if (unit == UnPercent)
-		      sprintf (buffer, "%d%%", TtaGetPRuleValue (presRule));
+		      sprintf (buffer, "%d%%", value);
 		    else
-		      sprintf (buffer, "%d", TtaGetPRuleValue (presRule));
+		      sprintf (buffer, "%d", value);
 		    TtaSetAttributeText (attr, buffer, el, doc);
 		    CreateAttrWidthPercentPxl (buffer, el, doc, w);
 		  }
@@ -523,10 +526,13 @@ NotifyPresentation *event;
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
 		      }
-		  TtaSetAttributeValue (attr, TtaGetPRuleValue (presRule), el, doc);
-		  /* update the associated map */
-		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		    UpdateImageMap (el, doc, -1, h);
+		    /* the new value is the old one plus the delta */
+		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
+		    value += TtaGetPRuleValue (presRule);
+		    TtaSetAttributeValue (attr, value, el, doc);
+		    /* update the associated map */
+		    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		      UpdateImageMap (el, doc, -1, h);
 		  }
 		TtaSwitchSelection (doc, 1, TRUE);
 		return (TRUE);

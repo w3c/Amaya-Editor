@@ -614,7 +614,7 @@ const char *target;
 #         ifdef PLUGIN_DEBUG
           printf ("AM_geturl: Passing the stream to AMAYA\n");
 #         endif
-          GetHTMLDocument (url, NULL, 0, 0, CE_FALSE, TRUE, NULL, NULL);
+          GetHTMLDocument (url, NULL, 0, 0, CE_ABSOLUTE, TRUE, NULL, NULL);
 	}
       else
 	{

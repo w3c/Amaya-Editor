@@ -1254,6 +1254,7 @@ NotifyElement      *event;
   return FALSE;
 }
 
+
 /*----------------------------------------------------------------------
   RemoveColumn remove the current colhead if it's empty.
   The parameter ifEmpty makes the removing optional.
@@ -1265,6 +1266,7 @@ boolean      RemoveColumn (Element colhead, Document doc, boolean ifEmpty, boole
 boolean      RemoveColumn (colhead, doc, ifEmpty, inMath)
 Element      colhead;
 Document     doc;
+boolean      ifEmpty;
 boolean      inMath;
 #endif
 {

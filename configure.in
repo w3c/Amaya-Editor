@@ -63,6 +63,8 @@ AC_CHECK_LIB(dl, dlopen)
 AC_PATH_X
 AC_PATH_XTRA
 
+X_PRE_LIBS="-lXp ${X_PRE_LIBS}"
+
 dnl
 dnl Checks for header files.
 dnl
