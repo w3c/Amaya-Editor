@@ -1,4 +1,3 @@
-
 /*
  *
  *  (c) COPYRIGHT INRIA, 1996.
