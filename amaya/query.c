@@ -1321,8 +1321,7 @@ static int check_handler (HTRequest * request, HTResponse * response,
   return HT_ERROR;
 }
 #endif /* AMAYA_LOST_UPDATE */
-/*---------------------------
--------------------------------------------
+/*--------------------------- -------------------------------------------
   terminate_handler
   this function is registered to handle the result of the request
   ----------------------------------------------------------------------*/
