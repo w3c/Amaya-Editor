@@ -225,6 +225,7 @@ AMAYA_OBJ = \
 	HTMLtable.o \
 	html2thot.o \
 	init.o \
+	libmanag.o \
 	MENUconf.o \
 	XLinkbuilder.o \
 	XLinkedit.o \

@@ -84,7 +84,9 @@
 #endif /* AMAYA_PLUGIN */
 
 #include "XPointer_f.h"
-
+#ifdef _SVGLIB
+#include "libmanag_f.h"
+#endif /* _SVGLIB */
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -389,6 +391,9 @@ char * DocumentTypeString (Document document)
       break;
     case docXml:
       result = "XML";
+      break;
+    case docLibrary:
+      result = "HTML";
       break;
     default:
       break;
@@ -903,6 +908,9 @@ static void  UpdateBrowserMenus (Document doc)
 #ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+      DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
       DocumentTypes[doc] == docImage)
     {
       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
@@ -1491,7 +1499,14 @@ static void         TextURL (Document doc, View view, char *text)
       if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
+#ifdef _SVGLIB
+	  if (DocumentTypes[doc] == docLibrary)
+	    {
+	      TtaSetTextZone (doc, view, 1, GetLibraryTitleFromPath (DocumentURLs[doc]));
+	    }
+#else /* !_SVGLIB */
 	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
+#endif /* _SVGLIB */
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
@@ -1922,7 +1937,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
 static void InitOpenDocForm (Document doc, View view, char *name, char *title,
-							 DocumentType docType)
+			                                 DocumentType docType)
 {
   char              s[MAX_LENGTH];
   ThotBool          remote;
@@ -1964,16 +1979,16 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
     {
       /* check if it's the default Welcome page */
 #ifndef _WINDOWS
-	  if (WelcomePage)
+      if (WelcomePage)
+	{
+	  getcwd (s, MAX_LENGTH);
+	  if (name[0] != EOS)
 	    {
-	      getcwd (s, MAX_LENGTH);
-	      if (name[0] != EOS)
-		{
-		  strcat (s, DIR_STR);
-		  strcat (s, name);
-		}
+	      strcat (s, DIR_STR);
+	      strcat (s, name);
 	    }
-	  else
+	}
+      else
 #endif /* _WINDOWS */
       if (name[0] == EOS)
 	strcpy (s, DocumentURLs[doc]);
@@ -1988,7 +2003,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
     }
 
 #ifdef  _WINDOWS
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name
 			  DocSelect, DirSelect, docType);
 #else /* WINDOWS */
   TtaSetTextForm (BaseDialog + URLName, s);
@@ -2005,7 +2020,7 @@ void  OpenDoc (Document doc, View view)
      {
        /* load the new document */
        InNewWindow = FALSE;
-	   /* no specific type requested */
+           /* no specific type requested */
        InitOpenDocForm (doc, view, "", TtaGetMessage (1, BOpenDoc), docText);
      }
 }
@@ -2254,7 +2269,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
   Document      old_doc;
   Element       root, comment, leaf;
   ElementType   elType;
-  char         *tmp, buffer[MAX_LENGTH];
+  char         *tmp, buffer[MAX_LENGTH], *string;
   int           x, y, w, h;
   int           requested_doc;
   Language	lang;
@@ -2288,7 +2303,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
 	  DocumentTypes[doc] == docXml ||
-	  DocumentTypes[doc] == docMath)
+	  DocumentTypes[doc] == docMath ||
+	  DocumentTypes[doc] == docLibrary)
 	{
 	  /* close the Alternate view if it is open */
 	  altView = TtaGetViewFromName (doc, "Alternate_view");
@@ -2416,6 +2432,15 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   h = 300;
 	   w = 580;
 	 }
+#ifdef _SVGLIB
+       else if (docType == docLibrary)
+	 {
+	   x+=500;
+	   y+=200;
+	   h = 500;
+	   w = 400;
+	 }
+#endif /* _SVGLIB */
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
        x = x + (doc - 1) * 10;
@@ -2578,6 +2603,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   AddMathButton (doc, 1);
 #ifdef _SVG
 	   AddGraphicsButton (doc, 1);
+#ifdef _SVGLIB
+	   AddLibraryButton (doc, 1);
+#endif /* _SVGLIB */
 #endif /* _SVG */
 #ifdef _SVGANIM
 	   AddAnimButton (doc, 1);
@@ -2586,7 +2614,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     {
 	       /* turn off the menus that don't make sense in the annotation view */
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       TRUE, TextURL);
+			       TRUE, TextURL, NULL);
 	       TtcSwitchCommands (doc, 1); /* no command open */
 	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
@@ -2594,9 +2622,24 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     }
 	   else
 	     {
+#ifdef _COMBOBOX
+#ifdef _SVGLIB
+	       /* Initialize SVG Library Buffer string */
+	       string = (char *) TtaGetMemory (MAX_LENGTH);
+	       if (docType == docLibrary)
+		 {
+		   string = InitSVGBufferForComboBox (string);
+		 }
+	       else
+		 {
+		   string = NULL;
+		 }
+#endif /* _SVGLIB */
+#else /* _COMBOBOX */
+	       string = NULL;
+#endif /* _COMBOBOX */
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       TRUE, TextURL);
-
+			       TRUE, TextURL, string);
 	       /* turn off the assign annotation buttons (should be
 		  contextual */
 	       TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
@@ -2636,10 +2679,13 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
    /* do we have to redraw buttons and menus? */
    if (!reinitialized)
      {
-       if ((docType == docHTML || docType == docImage || docType == docSVG ) &&
+       if ((docType == docHTML || docType == docImage || docType == docSVG ||
+	    /*rajouter si necessaire #ifdef _SVGLIB ...*/
+	    docType == docLibrary ) &&
 	   DocumentTypes[doc] != docHTML &&
 	   DocumentTypes[doc] != docImage &&
-	   DocumentTypes[doc] != docSVG)
+	   DocumentTypes[doc] != docSVG &&
+	   DocumentTypes[doc] != docLibrary)
 	 /* we need to update menus and buttons */
 	 reinitialized = TRUE;
        else if ((docType == docCSS || docType == docText) &&
@@ -2673,6 +2719,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef XML_GENERIC      
 	   DocumentTypes[doc] == docXml ||
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+	   DocumentTypes[doc] == docLibrary ||
+#endif _SVGLIB
 	   DocumentTypes[doc] == docMath)))
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
@@ -2690,6 +2739,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
 #endif /* _SVG */
+/*Etienne Ajouter peut être un SwitchIconSVGLib (doc, 1, FALSE) pour tourner le bouton en mode off*/
 	 if (ReadOnlyDocument[doc] || DocumentTypes[doc] != docMath)
 	   {
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
@@ -2747,6 +2797,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef XML_GENERIC      
 	      DocumentTypes[doc] == docXml ||
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+	      DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
 	      DocumentTypes[doc] == docMath)
        {
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
@@ -3001,7 +3054,14 @@ static Document LoadDocument (Document doc, char *pathname,
       if (isXML)
 	{
 	  /* it seems to be a XML document */
+#ifndef _SVGLIB
 	  docType = thotType;
+#else /* _SVGLIB */
+	  if (DocumentTypes[doc] == docLibrary)
+	    docType = docLibrary;
+	  else
+	    docType = thotType;
+#endif /* SVGLIB */
 	  unknown = FALSE;
 	}
      else if (IsCSSName (pathname))
@@ -3038,6 +3098,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
+#ifdef _SVGLIB
+      else if (IsLibraryName (pathname))
+	{
+	  docType = docLibrary;
+	  unknown = FALSE;
+	}
+#endif /* _SVGLIB */
       else if (parsingLevel != L_Other || IsHTMLName (pathname))
 	{
 	  /* it seems to be an HTML document */
@@ -3056,7 +3123,11 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (docType == docText || docType == docCSS ||
 	       docType == docSource || docType == docLog )
 	strcpy (local_content_type , "text/plain");
-      else if (docType == docHTML)
+      else if (docType == docHTML
+#ifdef _SVGLIB
+	       || docType == docLibrary
+#endif /* _SVGLIB */
+	       )
 	{
 	  if (isXML && AM_UseXHTMLMimeType () )
 	    strcpy (local_content_type , AM_XHTML_MIME_TYPE);
@@ -3347,7 +3418,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	      docType = docLog;
 	      newdoc = doc;
 	    }
-	  else if (docType != DocumentTypes[doc])
+	  else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
 	    /* replace the current document by a new one */
 	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
 	  else
@@ -3527,9 +3598,17 @@ static Document LoadDocument (Document doc, char *pathname,
 	    sprintf (s, "%s?%s", pathname, form_data);
 	  else
 	    strcpy (s, pathname);
-
+#ifdef _SVGLIB
+	  if (DocumentTypes[newdoc] == docLibrary)
+	    {
+	      s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
+	    }
+	  if (s)
+	    TtaSetTextZone (newdoc, 1, 1, s);
+#else /* !_SVGLIB */
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
+#endif /* _SVGLIB */
 	}
 
       tempdir = TtaGetMemory (MAX_LENGTH);
@@ -3545,7 +3624,10 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* ANNOTATIONS */
 #ifdef XML_GENERIC
 	  docType == docXml ||
-#endif /* XML_GENERIC */    
+#endif /* XML_GENERIC */
+#ifdef _SVGLIB
+	  docType == docLibrary ||
+#endif _SVGLIB
 	  docType == docMath)
 	plainText = FALSE;
       else
@@ -3913,6 +3995,9 @@ void ShowSource (Document document, View view)
 #ifdef XML_GENERIC      
        DocumentTypes[document] != docXml &&
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+       DocumentTypes[document] != docLibrary &&
+#endif /* _SVGLIB */
        DocumentTypes[document] != docMath)
      /* it's not an HTML or an XML document */
      return;
@@ -3927,7 +4012,11 @@ void ShowSource (Document document, View view)
      if (TtaIsDocumentModified (document))
        {
 	 SetNamespacesAndDTD (document);
-	 if (DocumentTypes[document] == docHTML)
+	 if (
+#ifdef _SVGLIB
+       DocumentTypes[document] == docLibrary ||
+#endif /* _SVGLIB */
+       DocumentTypes[document] == docHTML)
 	   {
 	     if (TtaGetDocumentProfile(document) == L_Xhtml11)
 	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
@@ -4344,7 +4433,16 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	       /* save the document name into the document table */
 	       s = TtaStrdup (pathname);
 	       DocumentURLs[newdoc] = s;
+#ifdef _SVGLIB
+	       if (DocumentTypes[newdoc] == docLibrary)
+		 {
+		   s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
+		 }
+	       if (s)
+		 TtaSetTextZone (newdoc, 1, 1, s);
+#else /* !_SVGLIB */
 	       TtaSetTextZone (newdoc, 1, 1, s);
+#endif /* _SVGLIB */
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
 		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
@@ -4479,6 +4577,10 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    else if (IsXMLName (documentname))
      docType = docXml;
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+   else if (IsLibraryName (documentname))
+     docType = docLibrary;
+#endif /* _SVGLIB */
    else if (CE_event == CE_CSS)
      docType = docCSS;
    else
@@ -4983,6 +5085,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  else if (IsXMLName (tempfile))
 		    NewDocType = docXml;
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+		  else if (IsLibraryName (tempfile))
+		    NewDocType = docLibrary;
+#endif _SVGLIB
 		  else
 		    NewDocType = docHTML;
 		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
@@ -6177,7 +6283,7 @@ void InitAmaya (NotifyEvent * event)
    iconTable = (ThotIcon) TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = (ThotIcon) TtaCreatePixmapLogo (TableNo_xpm);
 #else /* _GTK */
- stopR = TtaCreatePixmapLogo (stopR_xpm);
+   stopR = TtaCreatePixmapLogo (stopR_xpm);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
    iconSave = TtaCreatePixmapLogo (save_xpm);
    iconSaveNo = TtaCreatePixmapLogo (saveNo_xpm);
@@ -6215,6 +6321,10 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
+#ifdef _SVGLIB
+   iconLibSVG = TtaCreatePixmapLogo (libsvg_xpm);
+/*   iconLibSVGNo = TtaCreatePixmapLogo (libsvgNo_xpm);*/  
+#endif /* _SVGLIB */
 #endif /* !_GTK */
    
 #ifdef AMAYA_PLUGIN
@@ -6382,6 +6492,9 @@ void InitAmaya (NotifyEvent * event)
     InitDAV();
 #endif /* DAV */
 
+#ifdef _SVGLIB
+    InitLibrary();
+#endif /* _SVGLIB */
    
    CurrentDocument = 0;
    DocBook = 0;

@@ -9,6 +9,8 @@
 extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                 View view );
+extern void AddLibraryButton ( Document doc,
+                               View view );
 extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
@@ -24,6 +26,8 @@ extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void InitSVG (/* void */);
 extern void AddGraphicsButton (/* Document doc,
                                   View view */);
+extern void AddLibraryButton (/* Document doc,
+                                 View view */);
 extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);

@@ -516,6 +516,7 @@ ThotBool IsHTMLName (const char *path)
 	  !strcmp (nsuffix, "jsp") ||
 	  !strcmp (nsuffix, "xht") ||
 	  !strcmp (nsuffix, "xhtm") ||
+	  !strcmp (nsuffix, "lhtml") ||
 	  !strcmp (nsuffix, "xhtml"))
 	return (TRUE);
       else if (!strcmp (nsuffix, "gz"))
@@ -536,6 +537,7 @@ ThotBool IsHTMLName (const char *path)
 	      !strcmp (nsuffix, "jsp") ||
 	      !strcmp (nsuffix, "xht") ||
 	      !strcmp (nsuffix, "xhtm") ||
+	      !strcmp (nsuffix, "lhtml") ||
 	      !strcmp (nsuffix, "xhtml"))
 	    return (TRUE);
 	  else

@@ -49,6 +49,10 @@
 #include "davlib_f.h"
 #endif
 
+#ifdef _SVGLIB
+#include "libmanag_f.h"
+#endif /* _SVGLIB */
+
 /* info about the last element highlighted when synchronizing with the
    source view */
 Document	HighlightDocument = 0;
@@ -1439,6 +1443,42 @@ ThotBool SimpleClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  SimpleLClick     The user has clicked an element.         
+  ----------------------------------------------------------------------*/
+ThotBool SimpleLClick (NotifyElement *event)
+{
+#ifdef _SVGLIB
+  ElementType       elType;
+
+  if (DocumentTypes[event->document] == docLibrary)
+    {
+      /* Check the sschema of the document (HTML) */
+      elType.ElSSchema = TtaGetDocumentSSchema (event->document);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	{
+	  /* check the element type */
+	  elType = TtaGetElementType (event->element);
+	  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* Activate Library dialogue because he has selected picture into the document */
+	    /* Now we are going to browse the document tree to take the url models */
+	    {
+	      /* Browse the document tree to save model url */
+	      SaveSVGURL (event->document, event->element);
+	      /* Browse the document tree to view line selected */
+	      ChangeSVGLibraryLinePresentation (event->document, event->element);
+	      /* Show Drop dialog option */
+	      CopyOrReference (event->document, 1);
+	      return TRUE;
+	    }
+	}
+    }
+#endif /* _SVGLIB */
+  /* don't let Thot perform normal operation if there is an activation */
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
   SimpleRClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
 ThotBool SimpleRClick (NotifyElement *event)
@@ -2197,6 +2237,9 @@ void SynchronizeSourceView (NotifyElement *event)
    otherDoc = 0;
    otherDocIsStruct = FALSE;
    if (DocumentTypes[doc] == docHTML ||
+#ifdef _SVGLIB
+       DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
        DocumentTypes[doc] == docMath ||
        DocumentTypes[doc] == docSVG  ||
        DocumentTypes[doc] == docXml)
@@ -2211,6 +2254,9 @@ void SynchronizeSourceView (NotifyElement *event)
       for (i = 1; i < DocumentTableLength; i++)
          if (DocumentURLs[i] != NULL)
 	    if (DocumentTypes[i] == docHTML ||
+#ifdef _SVGLIB
+		DocumentTypes[i] == docLibrary ||
+#endif /* _SVGLIB */
 		DocumentTypes[i] == docMath ||
 		DocumentTypes[i] == docSVG ||
 		DocumentTypes[i] == docXml)
@@ -2295,6 +2341,15 @@ void SynchronizeSourceView (NotifyElement *event)
 		   attrType.AttrTypeNum = XML_ATTR_Highlight;
 		   val = XML_ATTR_Highlight_VAL_Yes_;
 		 }
+#ifdef _SVGLIB
+	       else if (DocumentTypes[otherDoc] == docLibrary)
+		 {
+		   attrType.AttrSSchema = TtaGetSSchema ("HTML",
+							 otherDoc);
+		   attrType.AttrTypeNum = HTML_ATTR_Highlight;
+		   val = HTML_ATTR_Highlight_VAL_Yes_;
+		 }
+#endif /* _SVGLIB */
 	       else
 		 {
 		   attrType.AttrSSchema = NULL;
@@ -2665,3 +2720,4 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	}
     }
 }
+

@@ -714,7 +714,11 @@ void SaveDocumentAs (Document doc, View view)
      strcpy (UserMimeType, DocImageMimeType (doc));
    else
      {
-       if (DocumentTypes[doc] == docHTML)
+       if (
+/*#ifdef _SVGLIB
+	   DocumentTypes[doc] == docLibrary ||
+#endif*/ /* _SVGLIB */
+	   DocumentTypes[doc] == docHTML)
 	 {
 	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat &&
 	       AM_UseXHTMLMimeType () )
@@ -1168,6 +1172,9 @@ void RedisplaySourceFile (Document doc)
   NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML ||
+#ifdef _SVGLIB
+      DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
       DocumentTypes[doc] == docSVG ||
 #ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
@@ -1734,6 +1741,9 @@ Document GetDocFromSource (Document sourceDoc)
 #ifdef XML_GENERIC      
 	    DocumentTypes[i] == docXml ||
 #endif /* XML_GENERIC */
+#ifdef _SVGLIB
+	    DocumentTypes[i] == docLibrary ||
+#endif /* _SVGLIB */
 	    DocumentTypes[i] == docMath)
            if (DocumentSource[i] == sourceDoc)
 	      xmlDoc = i;
@@ -1764,6 +1774,9 @@ void Synchronize (Document document, View view)
      {
        if (DocumentTypes[document] == docHTML ||
 	   DocumentTypes[document] == docSVG ||
+#ifdef _SVGLIB
+	   DocumentTypes[document] == docLibrary ||
+#endif /* _SVGLIB */
 	   DocumentTypes[document] == docMath)
            /* it's a structured document */
 	  otherDoc = DocumentSource[document];
@@ -1784,13 +1797,20 @@ void Synchronize (Document document, View view)
 
    if (DocumentTypes[document] == docHTML ||
        DocumentTypes[document] == docSVG ||
+#ifdef _SVGLIB
+       DocumentTypes[document] == docLibrary ||
+#endif /* _SVGLIB */
        DocumentTypes[document] == docMath)
      /* it's the structured form of the document */
      {
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
        SetNamespacesAndDTD (document);
-       if (DocumentTypes[document] == docHTML)
+       if (
+#ifdef _SVGLIB
+	   DocumentTypes[document] == docLibrary ||
+#endif /* _SVGLIB */
+	   DocumentTypes[document] == docHTML)
 	 {
 	   if (TtaGetDocumentProfile(document) == L_Xhtml11)
 	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
@@ -2029,7 +2049,11 @@ void SaveDocument (Document doc, View view)
       else
 	{
 	  SetNamespacesAndDTD (doc);
-	  if (DocumentTypes[doc] == docHTML)
+	  if (
+#ifdef _SVGLIB
+	      DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
+	      DocumentTypes[doc] == docHTML)
 	    if (SaveAsXML)
 	      {
 		if (TtaGetDocumentProfile(doc) == L_Xhtml11)
@@ -2070,7 +2094,11 @@ void SaveDocument (Document doc, View view)
   if (newLineNumbers)
     {
      /* line numbers have been changed in the saved document */
-     if (DocumentTypes[doc] == docHTML)
+     if (
+#ifdef _SVGLIB
+	 DocumentTypes[doc] == docLibrary ||
+#endif /* _SVGLIB */
+	 DocumentTypes[doc] == docHTML)
         /* It's a HTML document. If the source view is open, redisplay the
 	   source. */
        RedisplaySourceFile (doc);

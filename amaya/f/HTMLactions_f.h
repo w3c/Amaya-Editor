@@ -36,6 +36,7 @@ extern void AccessKeyHandler ( Document doc,
 extern ThotBool IgnoreEvent ( NotifyElement *event );
 extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
+extern ThotBool SimpleLClick ( NotifyElement *event );
 extern ThotBool SimpleRClick ( NotifyElement *event );
 extern ThotBool AnnotSimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
@@ -82,6 +83,7 @@ extern void AccessKeyHandler (/* Document doc,
 extern ThotBool IgnoreEvent (/* NotifyElement *event */);
 extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);
+extern ThotBool SimpleLClick (/* NotifyElement *event */);
 extern ThotBool SimpleRClick (/* NotifyElement *event */);
 extern ThotBool AnnotSimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,

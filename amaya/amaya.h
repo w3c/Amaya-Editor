@@ -213,6 +213,31 @@ typedef enum _ClickEvent {
 #define PPagesPerSheet   7
 #define PRINT_MAX_REF	 8
 
+#define FormLibrary              1
+#define CopySVGLibSelection      2
+#define ReferToSVGLibSelection   3
+#define AddSVGModel              4
+#define NewSVGFileURL            5
+#define SVGLibCatalogueTitle     6
+#define SVGLibraryLabel          7
+#define SVGLibraryLabel1         8
+#define SVGLibraryLabel2         9
+#define SVGLibraryLabel3        10
+#define NewSVGLibraryTitle      11
+#define NewSVGLibrary           12
+#define SVGLibraryURL           13
+#define SVGFileDir              14
+#define SVGFileSel              15
+#define SVGFilter               16
+#define SVGLibraryDir           17
+#define SVGLibrarySel           18
+#define LibraryFilter           19
+#define SVGFileBrowser          20
+#define SVGFileBrowserText      21
+#define SVGLibFileBrowser       22
+#define SVGLibFileBrowserText   23
+#define LIBRARY_MAX_REF         24
+
 #define ImageURL	1
 #define ImageLabel	2
 #define ImageLabel2	3
@@ -348,6 +373,7 @@ THOT_EXPORT int        NumberCols;
 THOT_EXPORT int        TBorder;
 THOT_EXPORT int        ReturnOptionMenu;
 THOT_EXPORT int        IdDoc;
+THOT_EXPORT int        BaseLibrary;
 THOT_EXPORT Document   CurrentDocument;
 THOT_EXPORT Document   SavingDocument;
 THOT_EXPORT Document   SavingObject;
@@ -411,7 +437,8 @@ typedef enum
   docLog,
   docSVG,
   docMath,
-  docXml
+  docXml,
+  docLibrary
 } DocumentType;
 
 
