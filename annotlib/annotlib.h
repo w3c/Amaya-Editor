@@ -40,6 +40,7 @@
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
   int     annotNum;
+  CHAR_T *annot_url; /* url of the annotation node */
   CHAR_T *source_url; /* document that was annotated */
   /* the internal Amaya Xpath */
   CHAR_T labf[10]; 

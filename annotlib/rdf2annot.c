@@ -27,6 +27,8 @@
 static char **cdata_buff;
 static int  cdata_buff_len;
 
+char *tmp_buff;
+
 /* set to true whenever we find an element that has a parseType attribute
 set to literal. Everything that's parsed from that moment will be stored as
 is in the buffer, until the end tag of the element */
@@ -64,11 +66,11 @@ static void RDF_StrAllocCat (const char *txt, int txtlen)
    Extracts the id (or in this case the thotlib labels)
    from a URL and reoves this info from the URL.
    ------------------------------------------------------------*/
-static void ParseIdFragment (AnnotMeta *annot)
+static void ParseIdFragment (AnnotMeta *annot, char *buff)
 {
   CHAR_T *c, *d;
   
-  c = ustrrchr (annot->source_url, TEXT('#'));
+  c = strchr (buff, TEXT('#'));
   if (c)
     {
       *c = WC_EOS;
@@ -123,29 +125,55 @@ static void start_hndl(void *data, const char *el, const char **attr)
   int set_literal = 0;
   char *char_p;
 
-  if (!strcmp (el, "a:Annotation"))
+  if (!strcmp (el, "r:Description"))
     /* the start of a new annotation, we add it to the list */
     {
       annot =  AnnotMeta_new ();
       List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
-	  annot->source_url = strdup ((char *) attr[1]);
+	  annot->annot_url = strdup ((char *) attr[1]);
     }
-  else if (!strcmp (el, "xlink:href")) 
+  else if (!strcmp (el, "a:annotates")) 
     {
       if (attr[0] && !strcmp (attr[0], "r:resource"))
 	{
 	  annot->source_url = strdup ((char *) attr[1]);
-	  /* extract the "id" fragment from the URL */
-	  ParseIdFragment (annot);
 	} 
     }
   else if (!strcmp (el, "d:creator")) 
     cdata_buff = &(annot->author);
-  else if (!strcmp (el, "d:date"))
+  else if (!strcmp (el, "a:created")) 
     cdata_buff = &(annot->cdate);
+  else if (!strcmp (el, "d:date"))
+    cdata_buff = &(annot->mdate);
   else if (!strcmp (el, "r:type"))
-    cdata_buff = &(annot->type);
+    {
+      if (attr[0] && !strcmp (attr[0], "resource") && attr[1])
+	{
+	  if (!strcmp (attr[1],
+		       "http://www.w3.org/1999/xx/annotation-ns#Annotation"))
+	    {
+	      /* this is the default, so we don't save it */
+	    }
+	  else
+	    {
+	      int l = sizeof ("http://www.w3.org/1999/xx/annotation-ns#")-1;
+	      if (strncmp (attr[1],
+			   "http://www.w3.org/1999/xx/annotation-ns#", l) == 0)
+		{
+		  if (*attr[1]+l)
+		      annot->type = strdup (attr[1]+l);
+		}
+	      else 
+		annot->type = strdup (attr[1]);
+	    }
+	}
+    }
+  else if (!strcmp (el, "a:context"))
+    {
+      tmp_buff = NULL;
+      cdata_buff = &tmp_buff;
+    }
   else if (!strcmp (el, "http:ContentType"))
     cdata_buff = &(annot->content_type);
   else if (!strcmp (el, "http:ContentLength"))
@@ -195,15 +223,19 @@ static void end_hndl(void *data, const char *el)
 
   if (literal)
     add_unparsed ((XML_Parser) data);
-  else if (cdata_buff_len > 0)
+  else
     {
-      /* add the final EOS char to the buffer and clean up the
-	 cdata variable so that it's ready for the next element */
-      (*cdata_buff)[cdata_buff_len] = '\0';
-      cdata_buff = NULL;
-      cdata_buff_len = 0;
+      if (cdata_buff_len > 0)
+	{
+	  /* add the final EOS char to the buffer and clean up the
+	     cdata variable so that it's ready for the next element */
+	  (*cdata_buff)[cdata_buff_len] = '\0';
+	  cdata_buff = NULL;
+	  cdata_buff_len = 0;
+	}
+      if (!strcmp (el, "a:context"))
+	  ParseIdFragment (annot, tmp_buff);
     }
-
 }  /* End of end_hndl */
 
 /* ------------------------------------------------------------
@@ -226,7 +258,7 @@ static void  char_hndl (void *data, const char *txt, int txtlen)
    ------------------------------------------------------------*/
 static void handler_init (XML_Parser p)
 {
-  XML_SetElementHandler(p, start_hndl, end_hndl);
+  XML_SetElementHandler (p, start_hndl, end_hndl);
   XML_SetCharacterDataHandler (p, char_hndl);
   XML_UseParserAsHandlerArg (p);
   literal = 0;
