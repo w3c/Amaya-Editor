@@ -2729,8 +2729,11 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 		}
 	    }
 
-	  pAb->AbNew = rebuild;
-	  if (rebuild)
+	  if (pAb->AbDead)
+	    pAb->AbNew = FALSE;
+	  else
+	    pAb->AbNew = rebuild;
+	  if (pAb->AbNew)
 	    {
 	      /* Faut-il restaurer les regles d'une boite elastique */
 	      if (pBox->BxHorizFlex && pBox->BxHorizInverted)
@@ -2769,6 +2772,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    }
 #endif /* _GL */
 	  ClearAllRelations (pAb->AbBox, frame);
+	  if (PackBoxRoot == pAb->AbBox)
+	    PackBoxRoot = NULL;
 	  pAb->AbBox = FreeBox (pAb->AbBox);
 	  pAb->AbBox = NULL;
 	}
@@ -3037,7 +3042,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 /*----------------------------------------------------------------------
   TransmitDeadStatus marks all children of a dead abstract box.
   ----------------------------------------------------------------------*/
-static void TransmitDeadStatus (PtrAbstractBox pAb)
+static void TransmitDeadStatus (PtrAbstractBox pAb, ThotBool status)
 {
   PtrAbstractBox  pChild;
 
@@ -3046,8 +3051,8 @@ static void TransmitDeadStatus (PtrAbstractBox pAb)
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
 	{ 
-	  pChild->AbDead = TRUE;
-	  TransmitDeadStatus (pChild);
+	  pChild->AbDead = status;
+	  TransmitDeadStatus (pChild, status);
 	  pChild = pChild->AbNext;
 	}
     }
@@ -3394,7 +3399,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   else if (pAb->AbDead)
     {
       /* mark all children */
-      TransmitDeadStatus (pAb);
+      TransmitDeadStatus (pAb, TRUE);
       AnyWidthUpdate = TRUE;
       if (pAb->AbLeafType == LtPolyLine)
 	FreePolyline (pBox);	/* libere la liste des buffers de la boite */
@@ -4462,6 +4467,39 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
      result = FALSE;
    else
      {
+       /* rebuild of abstract box withe a new floating child */
+       if (!pAb->AbDead && pAb->AbEnclosing)
+	 {
+	   pChildAb = pAb->AbFirstEnclosed;
+	   while (pChildAb)
+	     {
+	       if (pChildAb->AbNew && !pChildAb->AbDead &&
+		   pChildAb->AbFloat != 'N')
+		 {
+		   /* a new floating child is added */
+		   if (pAb->AbBox && 
+		       pAb->AbBox->BxType != BoCell && 
+		       pAb->AbBox->BxType != BoRow && 
+		       pAb->AbBox->BxType != BoTable && 
+		       pAb->AbBox->BxType != BoBlock && 
+		       pAb->AbBox->BxType != BoFloatBlock)
+		     {
+		       /* the current box will become a block */
+		       pAb->AbDead = TRUE;
+		       /* remove boxes */
+		       ComputeUpdates (pAb, frame);
+		       /* regenerate boxes */
+		       pAb->AbDead = FALSE;
+		       TransmitDeadStatus (pAb, FALSE);
+		       pAb->AbNew = TRUE;
+		     }
+		   pChildAb = NULL;
+		 }
+	       else
+		 pChildAb = pChildAb->AbNext;
+	     }
+	 }
+
        if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
 	 result = FALSE;
        else if (pAb->AbDead || pAb->AbNew)
@@ -4472,7 +4510,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 	   /* work is done */
 	   BoxInWork[BiwIndex--] = NULL;
 	   propStatus = Propagate;
-	   Propagate = ToAll;	/* On passe en mode normal de propagation */
+	   Propagate = ToAll;	/* standard propagation */
 	   CheckDefaultPositions (pAb, frame);
 	   Propagate = propStatus;
 	 }
@@ -4638,7 +4676,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 void CheckScrollingWidth (int frame)
 {
   PtrAbstractBox      pAb;
-  PtrBox              pBox;
+  PtrBox              pBox, box;
   ViewFrame          *pFrame;
   int                 max, org;
   int                 w, h;
@@ -4660,6 +4698,7 @@ void CheckScrollingWidth (int frame)
 	    {
 	      /* take the first leaf box */
 	      pBox = pBox->BxNext;
+	      box = pBox;
 	      while (pBox)
 		{
 		  /* check if this box is displayed outside the document box */
@@ -4677,7 +4716,10 @@ void CheckScrollingWidth (int frame)
 		  if (pBox->BxXOrg + pBox->BxLMargin < org)
 		    org = pBox->BxXOrg + pBox->BxLMargin;
 #endif /*  _GL */
-		  pBox = pBox->BxNext;
+		  if (pBox->BxNext == box)
+		    printf ("Cycle\n");
+		  else
+		    pBox = pBox->BxNext;
 		}
 	    }
 	  FrameTable[frame].FrScrollOrg = org;

@@ -1953,7 +1953,7 @@ PtrBox FreeBox (PtrBox pBox)
    PtrPosRelations     nepos;
    PtrDimRelations     pDimRel;
    PtrDimRelations     nedim;
-   PtrBox              nextBox, box;
+   PtrBox              nextBox;
 
    /* get next child */
    if (pBox->BxType == BoSplit ||
@@ -1994,7 +1994,6 @@ PtrBox FreeBox (PtrBox pBox)
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pBox);
 #else
-   box = PtFree_Box;
    if (pBox)
      {
        /* Don't use BxNext field because it's used when removing break lines */

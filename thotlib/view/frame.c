@@ -303,11 +303,11 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
       if (dx >= 0)
 	x2 += dx; /* the box will be moved to the right */
       else
-	x1 -= dx; /* the box will be moved to the left */
+	x1 += dx; /* the box will be moved to the left */
       if (dy >= 0)
 	y2 += dy; /* the box will be moved to the bottom */
       else
-	y1 -= dy; /* the box will be moved to the top */
+	y1 += dy; /* the box will be moved to the top */
       if (dw > 0)
 	x2 += dw;
       if (dy > 0)

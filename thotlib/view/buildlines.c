@@ -3125,7 +3125,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	if (pChildAb == NULL)
 	  still = FALSE;
 	/* Is the abstract box dead? */
-	else if (pChildAb->AbDead || pChildAb->AbNew)
+	else if (pChildAb->AbDead || pChildAb->AbNew || pChildAb->AbBox == NULL)
 	  pChildAb = pChildAb->AbNext;
         else if  (pChildAb->AbNotInLine &&
 		  pChildAb->AbDisplay == 'U')
