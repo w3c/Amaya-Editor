@@ -309,8 +309,11 @@ static void ReadSchema_callback (Document doc, int status,
   if (status == HT_OK)
     {
 #ifdef RAPTOR_RDF_PARSER
+#ifdef AM_REDLAND
+      rdfxml_parser=raptor_new_parser ("rdfxml");
+#else
       rdfxml_parser=raptor_new ();
-      
+#endif /* AM_REDLAND */ 
       if (!rdfxml_parser)
 	return;
 
@@ -348,9 +351,11 @@ static void ReadSchema_callback (Document doc, int status,
     }  
 
 #ifdef RAPTOR_RDF_PARSER
-  raptor_free (rdfxml_parser);
 #ifdef AM_REDLAND
   raptor_free_uri (uri);
+  raptor_free_parser (rdfxml_parser);
+#else
+  raptor_free (rdfxml_parser);
 #endif /* AM_REDLAND */
   TtaFreeMemory (full_file_name);
   TtaFreeMemory (parse_ctx);

@@ -585,14 +585,24 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
   annot_list = NULL;
 
 #ifdef RAPTOR_RDF_PARSER
+#ifdef AM_REDLAND
+  rdfxml_parser = raptor_new_parser ("rdfxml");
+#else
   rdfxml_parser=raptor_new();
+#endif /* AM_REDLAND */
 
   if(!rdfxml_parser) {
      AnnotList_free (annot_list);
      /* do not free rdf_model here; it may not have been empty to start */
      annot_list = NULL;
-     if (rdfxml_parser)
-       raptor_free(rdfxml_parser);
+     if (rdfxml_parser) 
+       {
+#ifdef AM_REDLAND
+	 raptor_free_parser(rdfxml_parser);
+#else
+	 raptor_free(rdfxml_parser);
+#endif /* AM_REDLAND */
+       }
      return NULL;
   }  
 

@@ -103,11 +103,12 @@ void BM_Init (void)
 	}
     }
 
+  /* initialize it anyway, as this gets raptor initialized too */
+  redland_init ();
+  
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
-  redland_init ();
-  
   /* The TopicURL menu */
   InitTopicURL ();
 
@@ -166,12 +167,14 @@ void BM_FreeConf ()
   -----------------------------------------------------------------------*/
 void BM_Quit (void)
 {
+  /* we always initialize and close redland, because raptor depends on it */
+  redland_free ();
+
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   /* save the bookmark file */
   BM_save (LocalBookmarksFile);
-  redland_free ();
   BM_FreeConf ();
 }
 

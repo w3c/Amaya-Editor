@@ -44,6 +44,14 @@
 #include "f/BMevent_f.h"
 #endif /* BOOKMARKS */
 
+/* RDF parser */
+#ifdef AM_REDLAND
+#ifndef BOOKMARKS
+#include "librdf.h"
+#include "raptor.h"
+#endif /* BOOKMARKS */
+#endif /* AM_REDLAND */
+
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
@@ -334,6 +342,15 @@ void ANNOT_Init ()
   /* create the directory where we'll store the annotations if it
      doesn't exist */
   TtaMakeDirectory (annotDir);
+
+  /* initializes raptor if we're using redland and not using bookmarks.
+   Redland initializes raptor itself in that case */
+#ifdef AM_REDLAND
+#ifndef BOOKMARKS
+  /* initializes raptor */
+  raptor_init ();
+#endif /* BOOKMARKS */
+#endif /* AM_REDLAND */
 }
 
 /*-----------------------------------------------------------------------
@@ -369,6 +386,14 @@ void ANNOT_Quit ()
   ANNOT_FreeConf ();
   SCHEMA_FreeAnnotSchema ();
   schema_init = FALSE;
+
+  /* frees raptor if we're using redland and not using bookmarks.
+     Redland frees raptor itself in that case */
+#ifdef AM_REDLAND
+#ifndef BOOKMARKS
+  raptor_finish ();
+#endif /* BOOKMARKS */
+#endif /* AM_REDLAND */
 }
 
 /*-----------------------------------------------------------------------
